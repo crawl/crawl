@@ -1,295 +1,8 @@
-##############################################################################
-# Random vaults, minivaults and canonical entry vaults go here; asciiart 
-# entry vaults go in asciiart.des and "edgy" entry vaults go in tricky.des.  
-# Special levels (including V:8!) should go to splev.des. Do NOT put special 
-# levels here, or they could be selected when the game seeks random vaults.
-#
-#  Key:
-#  ----
-#  x - DNGN_ROCK_WALL
-#  X - DNGN_PERMAROCK_WALL -> should always be undiggable! -- bwr
-#  c - DNGN_STONE_WALL
-#  v - DNGN_METAL_WALL
-#  b - DNGN_GREEN_CRYSTAL_WALL
-#  a - DNGN_WAX_WALL
-#  . - DNGN_FLOOR
-#  + - DNGN_CLOSED_DOOR
-#  = - DNGN_SECRET_DOOR
-#  @ - entry point - must be on outside and, except in ORIENT:float layouts,
-#      must always be on a particular side or sides - see templates
-#  W - shallow water
-#  w - deep water - Entry vault makers: this may receive water creatures!
-#  l - lava - Entry vault makers, note that this may receive lava creatures!
-#      (Use the no_monster_gen tag to prevent both of these effects.)
-#  >< - extra stairs - you can leave level by these but will never be placed o
-#                      them from another level
-#  }{ - stairs 82/86 - You must be able to reach these from each other. The {
-#       upstair is also the stair on which the player will enter the dungeon for
-#       entry vaults.
-#  )( - stairs 83/87
-#  ][ - stairs 84/88
-#  I - orcish idol (does nothing)
-#  ^ - random trap
-#  ~ - random trap suitable for the branch and depth the map is being used.
-#
-#  A - Vestibule gateway (opened by Horn). 
-#  B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc,
-#      in order.
-#  C - Random Altar.
-#  F - Typically a Granite Statue, but may be Orange or Silver (1 in 100) 
-#  G - Granite statue (does nothing)
-#  H - orange crystal statue (attacks mind)
-#  S - Silver statue (summons demons). Avoid using (rare).
-#  T - Water fountain
-#  U - Magic fountain
-#  V - Permanently dry fountain
-#  
-#  $ - gold
-#  % - normal item
-#  * - higher level item (good)
-#  | - acquirement-level item (almost guaranteed excellent)
-#  O - place an appropriate rune here. For portal vaults, place the portal here.
-#  P - maybe place a rune here (50%)
-#  R - honeycomb (2/3) or royal jelly (1/3)
-#  Z - the Orb of Zot
-#
-#  d-k - item array item. See section below on ITEM: arrays for more info.
-#
-#  0 - normal monster
-#  9 - +5 depth monster
-#  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
-#      this way.
-#  1-7 - monster array monster. See section below on MONS: arrays for more 
-#      information
-#
-#  A vault always has its body between MAP and ENDMAP commands. Furthermore,
-#  several other additional commands are possible (some of them mandatory).
-# 
-#  NAME:
-#  ----
-#  Each vault/level/map must have a unique name. Underscores and digits are ok.
-#
-#  ORIENT: (north | northwest | ... | float | encompass)
-#  ------
-#  Some kind of ORIENT: line is mandatory, unless you want the vault to be a
-#  minivault, which is usually not what you want. Valid values are:
-#  "float": The dungeon builder will put your vault wherever it wants to.
-#  "some_direction": The vault will lie along the mentioned side of the map:
-#         xxxxxxxxxx       xxxxxxxxxxxxx
-#         xORIENT:Nx       xORIENT:NW|..
-#         x.VAULT..x       x.VAULT...|..
-#         x--------x       x---------|..
-#         xrest....x       xrest........
-#         x...of...x       x.....of.....
-#         x...levelx       x.......level
-#  ...which brings us to padding. With any some_direction orientation, you need
-#  6 layers of x-padding along any level-edge that the vault borders. For
-#  instance, if your map is ORIENT: north, you must have a 6 deep border of
-#  rock wall (or any other kind of wall) along the northern, eastern, and
-#  western edges of the map.
-#  "encompass": the vault completely occupies the entire level. Padding is 
-#  needed on all 4 sides.
-# 
-#  ITEM:
-#  ----
-#  These are used to help place specified items at specific places within a
-#  vault. They create an array with up to 8 positions. What's in the first 
-#  position in the array will be used when the dungeon builder sees a "d" in 
-#  the vault definition, the second will be used for "e"s, etc. Positions are
-#  comma-separated; several ITEM: lines are possible as well. 
-#  Positions can contain multiple possibilities, one of which the builder will
-#  choose randomly. Separate such multiple possibilities using a slash. Note 
-#  that "nothing" (without the quotes) is a valid possibility. The random 
-#  choice is done for each individual occurence of the letter.
-#  You can also give possibilities a "weight," which affects their chance of
-#  being picked. The default weight is 10. The chance to pick a possibility is
-#  [possibility's weight: / sum of all weight:s in that array position]
-#  Modifiers: 
-#  "good_item" makes the builder try to make the item a good one.
-#  "any" by itself gives random choice; you can combine "any" with "good_item."
-#  "any book", "any misc" etc. gives a random item of that class.
-#
-#  Limitations: You can't affect stack quantity for stackable items, nor can you
-#  affect curse status nor item race, nor can you give specific egos, nor can
-#  give fixedarts. You also can't lay down corpses, skeletons, or chunks.
-# 
-#  MONS:
-#  ----
-#  These are used to help place specific monsters at specific places in a
-#  vault. They create an array with up to 7 positions. What's in the first
-#  position in the array will be used when the dungeon builder sees a "1"
-#  in the vault definition, the second for "2," etc. Note that if, for
-#  example, you place a 3 on the map, but your MONS: line has no third
-#  position, the 3 will be filled with RANDOM_MONSTER.
-#  Individual monsters may be prefixed with the "generate_awake" (without
-#  the quotes). Use this sparingly.
-#  Note that 8, 9, 0 also place monsters (see the table above).
-# 
-#  CHANCE:
-#  ------
-#  For entry vaults and any other vaults randomly picked from among a set,
-#  this type of line affects the likelihood of the given vault being picked in
-#  a given game. The default CHANCE: is 10. The likelihood of a vault getting
-#  picked is:
-#  [vault's CHANCE: / sum of all CHANCE:s of vaults of that type]
-#  !!! Note for entry vault builders: really high values like CHANCE:5000
-#  almost guarantee that a vault will be picked, and thus are great
-#  for testing. !!!
-# 
-#  TAGS:
-#  ----
-#  Tags go an a TAGS: line and are space-separated. Valid tags are:
-#  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
-#  "generate_awake": Monsters placed (using MONS, KMONS) in this vault will be
-#                    generated awake.
-#  "no_item_gen":   Prevents random item generation in the vault. Items 
-#                   explicitly placed by the vault are not affected.
-#  "no_monster_gen": Prevents random monster generation at the time of
-#                   the vault's creation. Highly advised for entry vaults with
-#                   a player-hostile geography, MUST-HAVE for those with water
-#                   or lava.
-#  "no_pool_fixup": prevents water squares next to land from being randomly 
-#                   converted from deep water (the default) to shallow.
-#  "branch_entry" eg. "orc_entry", "lair_entry" etc. If chosen, these maps
-#                   will contain the stairs for that branch. Use "O" to place
-#                   the stairs. Branch entries should go to splev.des.
-# 
-#  FLAGS:
-#  -----
-#  Flags go on a FLAGS: line and are space-separated. Valid flags are:
-#  "no_rotate":  Normally, the dungeon builder can, at its whim, rotate your 
-#                vault. This flag tells it, "hey, don't do that to my vault!"
-#  "no_hmirror": Like no_rotate, but for horizontal mirroring.
-#  "no_vmirror": Like no_rotate, but for vertical mirroring.
-# 
-#  SHUFFLE:
-#  -------
-#  This allows you to randomly permute glyphs on the map. There are two ways:
-#  SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
-#           could, for example, swap all occurences of "1" with "2", 
-#           as well as swapping all "3" with "w" (or any other of the 23
-#           possibilities).
-#  SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
-#           will either do nothing or swap all "1" with "3" and then also
-#           swap "2" with "w" everywhere.
-#
-#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
-#  and substitutions will be applied in order. You can also put multiple 
-#  SHUFFLEs on one line, comma-separated. Shuffles cannot use , or /. All spaces
-#  are stripped before shuffling.
-#  
-#  SUBST:
-#  ------
-#  The SUBST: directive allows you to specify a placeholder symbol that is
-#  replaced with a random glyph from a set. For instance:
-#  SUBST:  ? = TUV
-#          will replace occurrences of ? with one of TUV.
-#  SUBST:  ? = T U V
-#          does the same thing - whitespace is not significant.
-#  SUBST:  ? = T:20 U V
-#          makes T twice as likely to be used as U or V (the default weight 
-#          is 10). Note that there has to be at least one space before and after
-#          T:20 and that whitespace in T:20 is not permitted.
-#  SUBST:  ? : TUV
-#          replaces occurrences of ? with one of TUV, and guarantees that all
-#          occurrences of ? will get the same replacement symbol.
-#
-#  The placeholder and replacement symbols can be any non-space, printable
-#  character, including : and =, apart from commas - "SUBST: = = +=:123def" is
-#  valid.
-#
-#  SUBST: lines can safely replace symbols with themselves:
-#
-#  SUBST: w = wW
-#
-#  Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and will be
-#  applied in order. Multiple substitutions can be performed on one line, using
-#  commas.
-#
-#  KFEAT:
-#  -----
-#  The KFEAT: directive allows you to specify a placeholder symbol that is
-#  replaced with another symbol, named feature, trap, or shop. Eg.:
-#  
-#  KFEAT: Z = C / needle trap / antique armour shop / altar of Zin
-#
-#  Replaces occurrences of Z with C (random altar), a needle trap, an
-#  antique armour shop, or an altar of Zin. Different instances of Z may
-#  receive different replacements. To force a single replacement for all Z,
-#  use:
-#
-#  KFEAT: Z : C / needle trap / antique armour shop
-#
-#  You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx directives
-#  allow you to assign arbitrary definitions to any symbol.
-#
-#  The placeholder used by KFEAT can be shared by KITEM and KMONS. See below.
-#  If the placeholder is shared, all defined Kxxxx operations for the
-#  placeholder are performed.
-#
-#  KMONS:
-#  -----
-#  KMONS: allows you to specify a placeholder symbol that indicates the 
-#  position of a monster (or monsters).
-#
-#  KMONS: ? = orc priest / deep elf priest
-#
-#  Using KMONS: allows you to exceed the 7 slot limit for monsters. It is also
-#  useful if you want to place a monster on a non-floor square (used in 
-#  association with a KFEAT:). Eg:
-#
-#  KFEAT: Z = W
-#  KMONS: Z = rat
-#
-#  (Places a rat on a shallow water square for all occurrences of Z.)
-#
-#  KITEM:
-#  -----
-#  KITEM: places the specified item at all occurrences of the placeholder. It
-#  can be combined with KFEAT and KMONS for the same placeholder. Eg:
-#
-#  KITEM: ? = potion of healing / potion of restore abilities
-#
-#
-#  Note that a lot of the vaults are in there mainly to add some
-#  interest to the scenery, and are not the lethal treasure-fests you
-#  find in Angband (not that there's anything wrong with that)
-# 
-#  Guidelines for creating new vault maps:
-#  ---------------------------------------
-#
-#  If your map is not a minivault or a floating vault, make sure the side(s)
-#  forming the border have a rock wall padding at least 6 deep. For instance,
-#  if your map is ORIENT: north, you must have a 6 deep border of rock wall 
-#  (or any other kind of wall) along the northern, eastern, and western edges 
-#  of the map. If you're doing a fullscreen map (encompass), you must pad all 
-#  around the map with 6 layers of wall. For ORIENT: encompass maps, you 
-#  don't need to explicitly include the padding provided you make the map 
-#  small enough that the padding can be provided automatically.
-# 
-#  You do not have to place all of the stairs unless the level is full screen,
-#  in which case you must place all except the extra stairs (> and <). The <>
-#  stairs can be put anywhere and in any quantities but do not have to be 
-#  there. Any of the other stairs which are not present in the vault will be 
-#  randomly placed outside it. Also generally try to avoid rooms with no exit.
-#
-#  You can use the templates below to build vaults. The entry point '@' must 
-#  be present (except full-screen vaults where it must not and orient:float 
-#  maps, where it is optional - the builder will randomly convert '.' spaces 
-#  on edges to entry points if needed) and be on an edge of the vault.
-#
-#  Minivaults are handled very differently from regular vaults and special
-#  levels. They're placed *after* normal map generation, whereas normal 
-#  vaults are placed before generating the rest of the level. There's no way 
-#  to guarantee generation of a minivault on a particular level, whereas 
-#  vaults can be forced to appear using a PLACE: attribute.
-#
-# I think that's all. Have fun!
-#
 ###############################################################################
-
-# Set the default depth for vaults.
-default-depth: 12-26
+# vaults.des - entry vaults, random vaults, minivaults, pan vaults
+#              (entries for branches should go to splev.des,
+#              some entry vaults are better put in tricky.des or asciiart.des)
+###############################################################################
 
 ##############################################################################
 # Entry vaults
@@ -300,16 +13,17 @@ NAME: lemuel_entry_001
 TAGS: entry
 ORIENT: float
 SHUFFLE: {[
+SUBST: !:cvxGT
 FLAGS: no_rotate
 MAP
 xxxxxx.@.xxxxxx
-xxxxxx.x.xxxxxx
+xxxxxx.!.xxxxxx
 xxxxxx...xxxxxx
-xxxxxx.x.xxxxxx
+xxxxxx.!.xxxxxx
 xxxxxx...xxxxxx
-xxxxxx.x.xxxxxx
+xxxxxx.!.xxxxxx
 xxxxxx...xxxxxx
-xxxxxx.x.xxxxxx
+xxxxxx.!.xxxxxx
 xxxxxx...xxxxxx
 xxxxxx...xxxxxx
 x.............x
@@ -326,25 +40,26 @@ ENDMAP
 NAME: lemuel_entry_002
 TAGS: entry
 ORIENT: float
-SHUFFLE: {[
+SHUFFLE: {[, abc
+SUBST: a=+, b=x, c=x
 MAP
 ......x@x......
-....xxx.xxx....
+....xax.xcx....
 ...xx.....xx...
-..xx.......xx..
+..xb.......bx..
 .xx.........xx.
-xx...........xx
+xc...........ax
 x.............x
 x......{......x
 x.....[.(.....x
 x......<......x
 x.............x
 xx...........xx
-.xx.........xx.
+.xc.........bx.
 ..xx.......xx..
-...xx.....xx...
+...xa.....xc...
 ....xx...xx....
-.....xx.xx.....
+.....bx.xa.....
 ......x@x......
 ENDMAP
 
@@ -381,21 +96,22 @@ ENDMAP
 NAME: lemuel_entry_004
 TAGS: entry
 ORIENT: float
-SHUFFLE: {[
+SHUFFLE: {[, '?!
+SUBST: ':.+, ?:x, !:x
 MAP
 xxxxxxxxxxx@xxxxxx
 xxxxxxxxxxx.xxxxxx
 xx..............xx
 xx..............xx
-xx..xx.xxxxxxx..xx
-xx..x.......(x..xx
-xx...........x...@
-xx..x........x..xx
+xx..xx!?'xxxxx..xx
+xx..'.......(x..xx
+xx..!........x...@
+xx..?........x..xx
 xx..x...{....x..xx
-xx..x........x..xx
-@...x...........xx
-xx..x[.......x..xx
-xx..xxxxxxx.xx..xx
+xx..x........?..xx
+@...x........!..xx
+xx..x[.......'..xx
+xx..xxxxx'?!xx..xx
 xx..............xx
 xx..............xx
 xxxxxx.xxxxxxxxxxx
@@ -409,7 +125,7 @@ NAME: lemuel_entry_005_a
 TAGS: entry no_monster_gen
 ORIENT: float
 SHUFFLE: {[(
-CHANCE: 5
+CHANCE: 3
 MAP  
 xxxxxxxxxxxxxxxxxxx  
 xxxxx{...(...[xxxxx  
@@ -428,13 +144,13 @@ xxxxx.........xwwwx
 xxxxx.........xxwwx  
 xxxxx.........xxxwx  
 xxxxx.........xxxxx  
-xxxxx.........xxxxx  
+xxxxx....@....xxxxx  
 ENDMAP
 
 NAME: lemuel_entry_005_b
 TAGS: entry no_monster_gen
 ORIENT: float
-CHANCE: 5
+CHANCE: 7
 SHUFFLE: {[(, XYZ
 SUBST: X=W, Y=w, Z=w
 MAP  
@@ -455,7 +171,7 @@ xxxxx.........xwwwx
 xxxxx.........xxwwx  
 xxxxx.........xxxwx  
 xxxxx.........xxxxx  
-xxxxx.........xxxxx  
+xxxxx....@....xxxxx  
 ENDMAP
 
 ##############################################################################
@@ -484,7 +200,7 @@ xxxxxx..??xxxxxxxxx
 xxxxxx?x.xxxxxxxxxx  
 xxxxxxx?.?xxxxxxxxx  
 xxxxxxxx..?xxxxxxxx  
-xxxxxxxxxx.xxxxxxxx  
+xxxxxxxxxx@xxxxxxxx  
 ENDMAP  
 
 ##############################################################################
@@ -493,7 +209,7 @@ ENDMAP
 NAME: lemuel_entry_007_funnel  
 TAGS: entry no_monster_gen
 ORIENT: float
-SUBST: c : x.
+SUBST: c : x.c
 MAP  
 xxxxxxxxxxxxxxx
 x{.....(.....[x
@@ -510,7 +226,7 @@ xxxxxx...xxxxxx
 xxxxxx...xxxxxx
 xxxxxx...xxxxxx
 xxxxxx+++xxxxxx
-xxxxxx...xxxxxx
+xxxxxx.@.xxxxxx
 ENDMAP
 
 ##############################################################################
@@ -542,9 +258,9 @@ xxxxxxx..2.....xxxx
 xxxxxxx..2..22xxxxx
 xxx.........xxxxxxx
 xx..xx......xxxxxxx
-...xxxxx.....xxxxxx
+@..xxxxx.....xxxxxx
 xxxxxxxxxx....xxxxx
-xxxxxxxxxxxx...xxxx
+xxxxxxxxxxxx.@.xxxx
 ENDMAP
 
 ###################################
@@ -677,14 +393,13 @@ xxxxx..{..xxxxx
 xxxx(.....[xxxx
 xxxx.......xxxx
 xxxx.......xxxx
-xxxx.......xxxx
 xxxx..lll..xxxx
 xxxx.lllll.xxxx
 xxxx.ll%ll.xxxx
+xxxx.ll>ll.xxxx
 xxxx.ll%ll.xxxx
 xxxx.lllll.xxxx
 xxxx..lll..xxxx
-xxxx.......xxxx
 xxxx.......xxxx
 xxx.........xxx
 x.............x
@@ -1183,8 +898,9 @@ ENDMAP
 ################################################################
 # Circular labyrinths
 
-NAME: david_entry_011_lab
+NAME: david_entry_011_a
 TAGS: entry no_monster_gen
+CHANCE: 3
 FLAGS: no_rotate
 SHUFFLE: {[(
 ORIENT: float
@@ -1214,11 +930,9 @@ xxxxxxxxxxx...........xxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-########################################
-# Another circular labyrinth
-
-NAME: david_entry_012_lab
+NAME: david_entry_011_b
 TAGS: entry no_monster_gen
+CHANCE: 1
 FLAGS: no_rotate
 ORIENT: float
 SHUFFLE: {[(
@@ -1248,38 +962,85 @@ xxxxxxxxxxx...........xxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-########################################
-# Circular labyrinth episode III
-
-NAME: david_entry_013_lab
+NAME: david_entry_011_c
 TAGS: entry no_monster_gen
+CHANCE: 6
 FLAGS: no_rotate
 ORIENT: float
-SHUFFLE: {[(
+SHUFFLE: {[(, ab, cd, ef, gh, ij, kl, mn
+SUBST: a=., c=., e=., g=., i=., k=., m=.
+SUBST: b=x, d=x, f=x, h=x, j=x, l=x, n=x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx.....x.....xxxxxxxxxxx
-xxxxxxxx........x........xxxxxxxx
+xxxxxxxxxxx.....h.....xxxxxxxxxxx
+xxxxxxxx........h........xxxxxxxx
 xxxxx.......xxxxxxxxx.......xxxxx
 xxxx.....xxxx.......xxxx.....xxxx
 xxx....xxx.............xxx....xxx
-xx....xx.....xxxxxxx...........xx
-xx.........xxx.....xxx....xx...xx
-x....xxxxxxx.........xx....x....x
+xx....xx.....xxxxxxx.....gg....xx
+xx....i....xxx.....xxx....xx...xx
+x....xxxxjjx.........xx....x....x
 x...xx........xxxxx...xx...xx...x
-x...x....xxxxxx...xx...x....x...x
-x...x....x.....[{(.....xxxxxx...x
-x...x....x...xx...xx...x........x
-x...xx...xx...xxxxx...xx...xxxxxx
-x.........xx...x.....xx....x.....
+x...x....xlllxx...xx...x....x...x
+x...x....x...k.[{(.m...xffffx...x
+x...x....x...xx...xx...x....e...x
+x...xx...xx...xxnxx...xx...xxxxxx
+x....c....xx...x.....xx....x.....
 xx...xx....xxx.x...xxx....xx....@
 xx....xx.....xxxxxxx.....xx......
-xxx....xxx.....x.......xxx....xxx
-xxxx.....xxxx..x....xxxx.....xxxx
-xxxxx.......xxxxx.xxx.......xxxxx
-xxxxxxxx.......x.........xxxxxxxx
-xxxxxxxxxxx....x......xxxxxxxxxxx
+xxx....xxx.....d.......xxx....xxx
+xxxx.....xxxx..d....xxxx.....xxxx
+xxxxx.......xxxxxaxxx.......xxxxx
+xxxxxxxx.......b.........xxxxxxxx
+xxxxxxxxxxx....b......xxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#####################################################################
+# Three rhombi
+
+NAME: david_entry_012
+TAGS: entry no_monster_gen
+SHUFFLE: WYZ{/wyz(
+SUBST:   Z=x, Y=x, W=@, C==+x
+SUBST:   z=@, y=+, w=x 
+MAP
+xxxZxxxxxxxxxx
+xxxYxxxxxxxxxx
+xxx.xxxx.xxxxx
+xx...xx.x+xxxx
+x..{..+xx.xxxx
+xx...xxx...xxx
+xxx.xxx.....xx
+xxxCxx...(...W
+xxx.xxx.....xx
+xx...xxx...xxx
+x..[..+xx.xxxx
+xx...xx.x+xxxx
+xxx.xxxx.xxxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+#####################################################################
+# A shrine (no altar)
+
+NAME: david_entry_013
+TAGS: entry no_monster_gen no_pool_fixup
+SHUFFLE: AB/CD, lw
+SUBST:   A=@, B=+, C=x, D=l
+MAP
+xxxxxxxxCxxxxxxxx
+xlllllllDlllllllx
+xlllll.....lllllx
+xll....WWW....llx
+xl...WWW.WWW...lx
+AB..WWW.{..WW..lx
+xl...WWW.WWW...lx
+xll....WWW....llx
+xlllll.....lllllx
+xlllllllllllllllx
+xxxxxxxxxxxxxxxxx
 ENDMAP
 
 #####################################################################
@@ -1686,6 +1447,7 @@ MONS: kobold, hobgoblin / goblin / giant bat
 ITEM: stone, dart
 ORIENT: float
 FLAGS: no_rotate 
+SUBST: w : w l:1
 MAP
 xxxxxxxxxxxxx..........@
 xxxxxwwwwwwww2..........
@@ -1705,8 +1467,9 @@ ENDMAP
 ##############################################################################
 # The humble fractal
 
-NAME: david_entry_017_fractal
+NAME: david_entry_017_a
 TAGS: entry no_monster_gen
+CHANCE: 2
 ORIENT: float
 FLAGS: no_rotate 
 KFEAT: X = teleport trap
@@ -1737,6 +1500,21 @@ xxx.....................x
 xx....................G.x
 @......................Xx
 xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_entry_017_b
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 8
+SHUFFLE: cv
+MAP
+x@xxxxxxxxxxxxxxxxxxxx@x
+x......................x
+x.cccccc......cccccc...x
+x......................x
+x.vv..vv......vv..vv...x
+x......................x
+xxxxxxxxxx{}xxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -1846,7 +1624,8 @@ NAME: david_022_central
 TAGS: entry
 MONS: gnoll, jackal, worm
 ORIENT: float
-SHUFFLE: {[(<, 123
+SHUFFLE: {[(<, 0123, @ABC
+SUBST: A=@x, B=@x, C=@x
 MAP
 xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxx...........xxxxxxxxxxx
@@ -1860,7 +1639,7 @@ xx..xxxxx......xxx......xxxxx..xx
 xx.xxxxx......xx1xx......xxxxx.xx
 x..xxxx......xx.%.xx......xxxx..x
 x.xxxx......xx.....xx......xxxx.x
-@.......(..xx1%.}.%1xx..[.......@
+A.......(..xx1%.}.%1xx..[.......C
 x.xxxx......xx.....xx......xxxx.x
 x..xxxx......xx.%.xx......xxxx..x
 xx.xxxxx......xx1xx......xxxxx.xx
@@ -1872,7 +1651,7 @@ xxxxxx..xxxxx...{...xxxxx..xxxxxx
 xxxxxxx...xxxx.....xxxx...xxxxxxx
 xxxxxxxxx...xxx...xxx...xxxxxxxxx
 xxxxxxxxxxx...........xxxxxxxxxxx
-xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxBxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -2198,7 +1977,6 @@ TAGS: entry no_monster_gen
 MONS: generate_awake jelly 
 ITEM: dart
 ORIENT: float
-KFEAT: X = teleport trap
 SHUFFLE: {[(
 MAP
 xxxxxxxxxxxxxxxxxxxxx....@.....
@@ -2207,7 +1985,7 @@ xxx............xxxxxx..........
 xx................xxxxxxxxxxxxx
 xx....vvvv.......xx.....xxxxxxx
 .....vv1dvvv.....x...{.....xxxx
-@....vddd+Xvv................xx
+@....vdddd>vv................xx
 .....vvddvvv...x....vvv.......x
 xxx...vvvvv...xx...vvvvv..(...x
 xxx..........xx....vvvvv.....xx
@@ -2225,12 +2003,11 @@ NAME: david_028_sounds_drone
 TAGS: entry no_monster_gen
 MONS: generate_awake boring beetle
 FLAGS: no_rotate
-KFEAT: X = teleport trap
 ORIENT: float
 SHUFFLE: {[(<
 MAP
 xxx.....@....ccccc....@.....xxx
-xx...........cxXxc...........xx
+xx...........cx>xc...........xx
 x............cxxxc............x
 .............cxxxc.............
 .............cxxxc.............
@@ -2238,7 +2015,7 @@ x............cxxxc............x
 .............cxxxc.............
 ccccccccccccccxxxcccccccccccccc
 cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
-cXxxxxxxxxxxxxx1xxxxxxxxxxxxxXc
+c>xxxxxxxxxxxxx1xxxxxxxxxxxxx>c
 cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
 ccccccccccccccxxxcccccccccccccc
 .............cxxxc.............
@@ -2246,7 +2023,7 @@ ccccccccccccccxxxcccccccccccccc
 .............cxxxc.............
 .............cxxxc.............
 x............cxxxc............x
-xx...........cxXxc...........xx
+xx...........cx>xc...........xx
 xxx.....@....ccccc....@.....xxx
 ENDMAP
 
@@ -2257,7 +2034,7 @@ NAME: david_entry_029
 TAGS: entry 
 ORIENT: float
 SHUFFLE: [{
-SUBST: ':'.x, '=.x
+SUBST: ' : . x ':40, '=.x
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxx''xx''''''xx''xx
@@ -2287,7 +2064,7 @@ NAME: david_entry_030
 TAGS: entry 
 ORIENT: float
 SHUFFLE: {[(
-SUBST: ':'.x, '=.x
+SUBST: ' : . x ':40, '=.x
 MAP
 xxxxxxx'.@.'xxxxx
 xxxxxx'..'...'xxx
@@ -2315,7 +2092,8 @@ TAGS: entry no_monster_gen
 ORIENT: float
 MONS: goblin, rat, giant bat
 SHUFFLE: {[(
-SUBST: ?:?.w, ?=.w, ':'.x, '=.x
+SUBST: ? : . w ?:40, ' : . x ':40
+SUBST: ? = . w, ' = . x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx?xx1.'xxxxxxxx'.33x
@@ -2343,7 +2121,8 @@ NAME: david_entry_032
 TAGS: entry no_monster_gen
 ORIENT: float
 SHUFFLE: {[(
-SUBST: ?:?.w, ?=.w, ':'.x, '=.x
+SUBST: ? : . w ?:40, ' : . x ':40
+SUBST: ? = . w, ' = . x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwww?......'''....''.
@@ -2412,7 +2191,7 @@ NAME: david_entry_034
 TAGS: entry 
 ORIENT: float
 SHUFFLE: {[(, +'
-SUBST: ':'x+, '=x+
+SUBST: ' : x + ':40, '=x+
 MAP
 xxxxxxx.@.xxxxxxx
 x.....x...x.....x
@@ -2759,7 +2538,7 @@ NAME: david_entry_042
 TAGS: entry 
 ORIENT: float
 SHUFFLE: {[(
-SUBST: ':'.x, '=x.
+SUBST: ' : . x ':40, '=x.
 MAP
 xxxx@xxxxxxxxx
 xxxx.xxxx...xx
@@ -2786,7 +2565,7 @@ NAME: david_entry_043
 TAGS: entry 
 ORIENT: float
 SHUFFLE: {[(
-SUBST: ':'.x, '=x., ":".c, "=.c
+SUBST: ' : . x ':40, '=x., " : . c ":40, "=.c
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxx.....xxxxxxxxxxxxxx
@@ -2831,7 +2610,7 @@ ORIENT: float
 CHANCE: 5
 SHUFFLE: {[(
 MAP
-xxxxxx..xxx
+xxxxxx@.xxx
 x(.xx..xxxx
 x..x...+..x
 x..x..xx.[x
@@ -2840,7 +2619,7 @@ x=xx..xxxxx
 x%x..xxxxxx
 xxx..x...{x
 xx...+....x
-xx..xxxxxxx
+xx.@xxxxxxx
 ENDMAP
 
 NAME: david_entry_045_b
@@ -2849,7 +2628,7 @@ ORIENT: float
 CHANCE: 5
 SHUFFLE: {[(
 MAP
-xxxxxx..xxx
+xxxxxx@.xxx
 x(.xx..xxxx
 x..x...+..x
 x..x..xx.[x
@@ -2858,7 +2637,7 @@ xxxx..xxxxx
 x%=..xxxxxx
 xxx..x...{x
 xx...+....x
-xx..xxxxxxx
+xx.@xxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -2869,7 +2648,7 @@ TAGS: entry
 ORIENT: float
 SHUFFLE: {[(
 MAP
-xx.(..x..xx.
+xx.(.@x..xx@
 xx...xx...=.
 .....xxx..xx
 ....xxx...x.
@@ -2879,7 +2658,7 @@ x..xxx...xx.
 ..xxx.{.xxx.
 ..xx....xx..
 .xxxx..xx...
-xxx....xx..[
+xxx....xx@.[
 ENDMAP
 
 ##############################################################################
@@ -3159,7 +2938,7 @@ MAP
 ..xxxx.........xxxx..
 ..xxxxxxxx+xxxxxxxx..
 .....................
-.....................
+....................@
 ENDMAP
 
 ##############################################################################
@@ -3245,7 +3024,7 @@ MAP
 .......cc..........cc.........
 ..f....cc....cc....cc......}..
 .............cc...............
-..............................
+.............................@
 ENDMAP
 
 NAME: david_entry_056_b
@@ -3270,7 +3049,7 @@ MAP
 .....cc............cc.....
 ............cc............
 ............cc............
-..........................
+.........................@
 ENDMAP
 
 ##############################################################################
@@ -3279,14 +3058,15 @@ ENDMAP
 NAME: david_entry_057_a_altar
 TAGS: entry 
 ORIENT: float
-SHUFFLE: {[
+SHUFFLE: {[AB
 MONS: gnoll / orc priest, large zombie / giant beetle
-CHANCE: 2
+SUBST: A=., B=.
+CHANCE: 3
 MAP
-@.............@
+@....B........@
 ..............[
 ..xxxxxxxxxxxxx
-..xcccccccccccx
+A.xcccccccccccx
 ..xcclllc.2..cx
 ..xcllllc....cx
 ..xcl...c1...cx
@@ -3301,18 +3081,19 @@ ENDMAP
 NAME: david_entry_057_b_altar
 TAGS: entry 
 ORIENT: float
-SHUFFLE: {[
+SHUFFLE: {[AB
+SUBST: A=., B=.
 MONS: gnoll / orc priest, large zombie / giant beetle
-CHANCE: 2
+CHANCE: 3
 MAP
-@.............@
+@...B.........@
 ..............[
 ..xxxx=xxxxxxxx
 ..xccc=cccccccx
 ..xcclllc.2..cx
 ..xcllllc....cx
 ..xcl...c1...cx
-..xcl>C.x....cx
+.Axcl>C.x....cx
 ..xcl...c....cx
 ..xcllllc....cx
 ..xcclllc...]cx
@@ -3323,17 +3104,18 @@ ENDMAP
 NAME: david_entry_057_c_altar
 TAGS: entry 
 ORIENT: float
-SHUFFLE: {[
+SHUFFLE: {[AB
+SUBST: A=., B=.
 MONS: gnoll / orc priest, large zombie / giant beetle
 CHANCE: 2
 MAP
-@.............@
+@.....B.......@
 ..............[
 ..xxxxxxxxxxxxx
 ..xcccccccccccx
 ..xcclllc.2..cx
 ..xcllllc....cx
-..xcl...c1...cx
+.Axcl...c1...cx
 ..xcl.C.=....cx
 ..xcl...c....cx
 ..xcllllc....cx
@@ -3345,38 +3127,17 @@ ENDMAP
 NAME: david_entry_057_d_altar
 TAGS: entry 
 ORIENT: float
-SHUFFLE: {[
+SHUFFLE: {[AB
+SUBST: A=., B=.
 MONS: gnoll / orc priest, large zombie / giant beetle
 CHANCE: 2
 MAP
-@.............@
+@......A......@
 ..............[
 ..xxxxxxxxxxxxx
 ..xcccccccccccx
 ..xcclllc.2..cx
-..xcllllc....cx
-..xcl...c1...cx
-..xcl.C.=....cx
-..xcl...c....cx
-..xcllllc....cx
-..xcclllc...]cx
-..xcccccccccccx
-@{xxxxxxxxxxxxx
-ENDMAP
-
-NAME: david_entry_057_e_altar
-TAGS: entry 
-ORIENT: float
-SHUFFLE: {[
-MONS: gnoll / orc priest, large zombie / giant beetle
-CHANCE: 2
-MAP
-@.............@
-..............[
-..xxxxxxxxxxxxx
-..xcccccccccccx
-..xcclllc.2..cx
-..xcllllc....cx
+B.xcllllc....cx
 ..xcl...c1...cx
 ..xcl>T.x....cx
 ..xcl...c....cx
@@ -3560,7 +3321,7 @@ TAGS: entry
 CHANCE: 4
 ORIENT: float
 MAP
-.....
+@....
 .xxx.
 .+{+.
 xxxxx
@@ -3571,7 +3332,7 @@ TAGS: entry
 CHANCE: 4
 ORIENT: float
 MAP
-.....
+@....
 .xxx.
 .+{+.
 .xxx.
@@ -3598,7 +3359,7 @@ TAGS: entry
 CHANCE: 3
 ORIENT: float
 MAP
-.......
+@......
 .xxxxx.
 .x...x.
 .+.{.+.
@@ -3611,7 +3372,7 @@ TAGS: entry
 CHANCE: 3
 ORIENT: float
 MAP
-....xx
+@...xx
 .xx+xx
 .x...x
 .+.{.+
@@ -3624,12 +3385,12 @@ TAGS: entry
 CHANCE: 3
 ORIENT: float
 MAP
-.xxxxxx
+@xxxxxx
 .xxxxxx
 .x...xx
 .+.{.+.
 xx...x.
-xxxxxx.
+xxxxxx@
 ENDMAP
 
 ##############################################################################
@@ -3641,7 +3402,7 @@ CHANCE: 4
 ORIENT: float
 MAP
 xxxxx
-..{..
+..{.@
 xxxxx
 ENDMAP
 
@@ -3653,7 +3414,7 @@ SHUFFLE: vcb
 MAP
 xxxxx
 xvvvx
-.({[.
+.({[@
 xvvvx
 xxxxx
 ENDMAP
@@ -3664,7 +3425,7 @@ CHANCE: 3
 ORIENT: float
 MAP
 xxxx
-x{..
+x{.@
 xxxx
 ENDMAP
 
@@ -3705,7 +3466,7 @@ MAP
 ...wwwwwwwwwwwwwwwwwwwwwww...
 ...wwwwwwwwwwwwwwwwwwwwwww...
 .............................
-.............................
+............................@
 ENDMAP
 
 ##############################################################################
@@ -3966,7 +3727,7 @@ b..........aaa.....b
 b..........aaa.....b
 b..........aaa...d.b
 b...................
-bbbbbbbbbbbbbbbbbb..
+bbbbbbbbbbbbbbbbbb.@
 ENDMAP
 
 ##############################################################################
@@ -3997,7 +3758,7 @@ b...ccc.ccc.ccc.c...bbbbbbb
 b...................bbbbbbb
 b....d..............bbbbbbb
 b...................bbbbbbb
-bbbb...bbbbbbbbbbbbbbbbbbbb
+bbbb.@.bbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
 ##############################################################################
@@ -4018,7 +3779,7 @@ cccccccccccccccccccccc+ccccc
 c..........................c
 c.d........................c
 c..........................c
-c...cccccccccccccccccccccccc
+c.@.cccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
@@ -4044,7 +3805,7 @@ c...xxxxxxxxx.xxxxxxxxxx........c
 c...............................c
 c...............................c
 c................................
-ccccccccccccccccccccccccccccccc..
+ccccccccccccccccccccccccccccccc.@
 ENDMAP
 
 ##############################################################################
@@ -4058,7 +3819,7 @@ SHUFFLE: bc
 MAP
 bbbccccccccccccccccccccccccccccccccccccccccccccc
 b{b........................................+..+.
-b[+........................................+..+.
+b[+........................................+..+@
 b(b........................................+..+.
 bbbccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
@@ -4074,22 +3835,22 @@ FLAGS: no_rotate no_hmirror no_vmirror
 SHUFFLE: {[(<   
 SHUFFLE: cx
 MAP
-cccccccccccccccc..cccccccccccccccccc
+cccccccccccccccc@@cccccccccccccccccc
 c..................................c
 c...x...............xx.............c
 c..xxxxxx..........xxxxxxxx........c
 c.xxxxxxxx.........xxxxxxxxxxx.....c
 c..xxxxxxxx.........xxxxxxxxxxxx...c
 c.....xxxx..............xxxxxxxxx..c
-.......xx........[<..........xxxxx..
-.......xxx.......({............xxx..
+@......xx........[<..........xxxxx.@
+@......xxx.......({............xxx.@
 c.......xxx.....................xx.c
 c.......xxx.....................xx.c
 c........xxx...........xxxxxxxxxxx.c
 c........xxx..........xxxxxxxxxxx..c
 c.........xx.........xxxxxxxxxxx...c
 c..................................c
-cccccccccccccccc..cccccccccccccccccc
+cccccccccccccccc@@cccccccccccccccccc
 ENDMAP
 
 ##############################################################################
@@ -4185,7 +3946,7 @@ NAME: matt_entry_004
 TAGS: entry
 ORIENT: float
 SHUFFLE: {[(
-SUBST: ':'.x, '=x.
+SUBST: ':.x':40, '=x.
 MAP
 xxxxxxx@xxxxxxxxxxxxx@xxxxxxx
 x....x..'.x.................x
@@ -4373,7 +4134,7 @@ MONS: rat, goblin, giant bat, kobold
 ITEM: sausage / beef jerky, nothing, nothing
 SHUFFLE: {[(, 234, ef~
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.xxxxxxxxxxx.xxxxxxxxxxxx
 xxxxxxxxxxxxxxx...xxxxxxxxx...xxxxxxxxxxx
@@ -4385,7 +4146,7 @@ xxxxxxxxxx.xxx.....xxx.xxx.....xxx.xxxxxx
 xxxxxxxxx...xxx...xxx...xxx...xxx...xxxxx
 xxxxxxxx.....xxx.xxx.....xxxexxx.....xxxx
 xxxxxxx.......xx+xx..1.1..xx+xx.......xxx
-xxxxxx....[....+.+...1d....+.+~...3....+.
+xxxxxx....[....+.+...1d....+.+~...3....+@
 xxxxxxx.......xx+xx...1...xx+xx.......xxx
 xxxxxxxx.....xxx.xxx.....xxxfxxx.....xxxx
 xxxxxxxxx...xxx...xxx...xxx...xxx...xxxxx
@@ -4397,7 +4158,7 @@ xxxxxxxxxxxxxx.....xxxxxxx.....xxxxxxxxxx
 xxxxxxxxxxxxxxx...xxxxxxxxx...xxxxxxxxxxx
 xxxxxxxxxxxxxxxx.xxxxxxxxxxx.xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -4428,7 +4189,7 @@ xxx...xxcccccccccccccccccccc(....cx
 xxx.x..+...................+.....cx
 xc...x.cccccccccccccccc=cccc.....cx
 xccx.xccxxxxxxxxxxxxxxxdxxxcccccccx
-xxxx.xxxxxxxxxxxxxxxxxx=xxxxxxxxxxx
+xxxx@xxxxxxxxxxxxxxxxxx=xxxxxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -4464,8 +4225,9 @@ NAME: entry_elethiomel_005_a
 TAGS: entry no_monster_gen
 ORIENT: float
 MONS: rat / nothing, hobgoblin / goblin / nothing
-SHUFFLE: {[(, '"/AB, !?/CD
-SUBST: ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x
+SHUFFLE: {[(, '"XY/ABVW, !?/CD
+SUBST: ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, V=x, W=x, Y=@x
+KFEAT: X = teleport trap / floor
 MAP
 xxxxxxxxxx@xxxxxxxxxx
 xxxxxxxxxx.xxxxxxxxxx
@@ -4476,7 +4238,7 @@ xc%.2.cc.....cc11.$cx
 xc%.2.=..G.G..=11..cx
 xc%...cc.....cc11.$cx
 xxcccccc.....ccccccxx
-''''''"..G.G..?!!!!!!
+YX''''"..G.G..?!!!!!!
 xxcccccc.....ccccccxx
 xxxxxxcG.....Gcxxxxxx
 xxxxxxc.[.{.(.cxxxxxx
@@ -4488,9 +4250,9 @@ NAME: entry_elethiomel_005_b
 TAGS: entry no_monster_gen
 ORIENT: float
 MONS: rat / nothing, hobgoblin / goblin / nothing
-SHUFFLE: {[(, '"/AB, !?/CD
-SUBST: ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x
-KFEAT: X = teleport trap
+SHUFFLE: {[(, '"/AB, !?XY/CDVW
+SUBST: ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, Y=@x, V=x, W=x
+KFEAT: X = teleport trap / floor
 MAP
 xxxxxxxxxx@xxxxxxxxxx
 xxxxxxxxxx.xxxxxxxxxx
@@ -4501,7 +4263,7 @@ xc%.2.cc.....cc11.$cx
 xcX.2.c..G.G..c11.Xcx
 xc%...cc.....cc11.$cx
 xxcccccc.....ccccccxx
-''''''"..G.G..?!!!!!!
+''''''"..G.G..?!!!!XY
 xxcccccc.....ccccccxx
 xxxxxxcG.....Gcxxxxxx
 xxxxxxc.[.{.(.cxxxxxx
@@ -4519,14 +4281,14 @@ SHUFFLE: {[(, XY/AB
 KFEAT: X = teleport trap
 SUBST: Y=x, A=., B==
 MAP
-xxxxxxx.xxxxxxx...xxxxxxx
+xxxxxxx@xxxxxxx.@.xxxxxxx
 xxxxxxx.xxxxxx...xxxxxxxx
 xxxxxxx.xxxxx...xxxxxxxxx
-xxxxx...xxxx...xxxxxxxxxx
+xxxxx....xxx...xxxxxxxxxx
 xxxxx{....x...xxxxxxxxxxx
 xxxxx........xxxxxxxxxxxx
 x].XY........xxxxxxxxxxxx
-xxxxx.[..................
+xxxxx.[.................@
 xxxxx.......(.xxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -4565,14 +4327,14 @@ ORIENT: float
 FLAGS: no_rotate
 SHUFFLE: {[(
 MAP
-xxxxxxxxxxxxxxx.xxxxxxxxx
+xxxxxxxxxxxxxxx@xxxxxxxxx
 xxxxxbbbbxxxxxx.xxxxxxxxx
 xxbbbb..bxxxxxx.xxxxxxxxx
 xbb.....bbxxxxx.xxxbbbxxx
 xb...{...bbxxxx.xbbb.bbxx
 xbbb......bbbbb.bb....bbx
 xxxbbbb.......bb.......bx
-.......bb..........[...bx
+@......bb..........[...bx
 xxxxxxxbb.....bb.......bx
 xxxxbbbb......bbbbbbbb.bx
 xxbbb......bbb.xxxxxxbbbx
@@ -4580,7 +4342,7 @@ xxb....(..bbxx.xxxxxxxxxx
 xxbbb.....bxxx.xxxxxxxxxx
 xxxxbbb...bxxx.xxxxxxxxxx
 xxxxxxbbbbbxxx.xxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxxxxxx@xxxxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -4595,24 +4357,27 @@ xxxxx.xxxxxx.xxxxx
 xxxxx.xxxxxx.xxxxx
 xxxxx..xxxx..xxxxx
 xxxxx..xxxx..xxxxx
-x.................
+x................@
 xxx...x.xx.x...xxx
 xxxxx..x..x..xxxxx
 xxxxx.x.<{.x.xxxxx
 xxxxx.x.[(.x.xxxxx
 xxxxx.xx..x..xxxxx
 xxx...x.xx.x...xxx
-x.................
+x................@
 xxxxx..xxxx..xxxxx
 xxxxx..xxxx..xxxxx
 xxxxx.xxxxxx.xxxxx
 xxxxx.xxxxxx.xxxxx
-xxxxx.xxxxxx.xxxxx
+xxxxx@xxxxxx@xxxxx
 ENDMAP
 
 ##############################################################################
 # Regular vaults
 ##############################################################################
+
+# Set the default depth for vaults.
+default-depth: 12-26
 
 ##############################################################################
 # Dummy probability balancer vault for depths 1-11.
@@ -4641,49 +4406,38 @@ ORIENT: float
 TAGS: no_monster_gen
 DEPTH: 5-9
 
-SHUFFLE: ZT/nN
+SHUFFLE: rR/sS/uU/vV/wW/yY/zZ, uU/nN
+SUBST: r=n, R=N, s=n, S=N
 SUBST: n=., N=@
-SHUFFLE: YS/nN
-SUBST: n=., N=@
-SHUFFLE: XR/nN
-SUBST: n=., N=@
-SHUFFLE: WQ/nN
-SUBST: n=., N=@
-SHUFFLE: VP/nN
-SUBST: n=., N=@
-SHUFFLE: UO/nN
-SUBST: n=., N=@
-SUBST: Z=x,Y=x,X=x,W=x,V=x,U=x,T=x,S=x,R=x,Q=x,P=x,O=x
+SUBST: u=x, v=x, w=x, y=x, z=x
+SUBST: U=x, V=x, W=x, Y=x, Z=x
 
-SUBST: 1 = 1:20 .
-SUBST: 2 = 2.
-SUBST: 3 = 23
-SUBST: 4 = 24
+SUBST: 1 = 1:20 ., 2=2., 3=23, 4=24
 MONS: jackal/hound, human, Edmund/Jessica/Sigmund, Michael/Ijyb/Psyche
 MONS: sheep/nothing
  
 MAP
-xxxxxxxxxx@xxxxxxxxxxxxxxxxxxxOxxxxxxxxx
-xxxxxxxxxxx..xxxxxxxxx1xxxxxxUxxxxxxxxxx
-xxxxxxxxxxxxx..xxxxxx111xxxxxUxxxxxxxxxx
-xxxZZZxxxxxxxxx.xxxxxx1xxxxxxUxxxxxxxxxx
-TZZxZxZxx555xx.xxxxxxx1xxxxxUxxxxxxxxxxx
-xxxxxxxZxx5xxx.xxx..x1xxxxxUxxxxxxxxxxxx
-xxxxxxxZxx5xxxx......xxxxxUUxxxxxxxxxxxx
-xxxxxxxZxxx5xx...2...cccxxxUxxxxxxxxxxxx
-xxxxxxZxxxx....2224..+$cxxUxxxxxxxxxxxxx
-xxxxxxxZ.......2ll22.cccxxxUxxxxxxxxxxxx
-xxxxxxxxx......3222.xxxxxxxUxxxxxxxxxxxx
-xxxxxxxxxYxxxx2.......xx...xVVVVxxxxxxxx
-xxxxxxxxYxxxx.......xx..xxxxxxxxVxxxxxxx
-xxxxxxYYxxxxxXxxxxx.xxWxxxxxxxxxxVVxxxxx
-xxxYxYxxxxxxXxxxxxxx.xxWxxxxxxxxxVxxxxxx
-xYYYYxxxxxxxxXXXXXxxxxxxWxxxxxxxVxxxxxxx
-xYxxxxxxxxxxxxxxxXXxxxxxxWWxxxxxxVVxxxxx
-SxxxxxxxxxxxxxxxxxXxxxxxxxxWxxxxxxxVVVVP
-xxxxxxxxxxxxxxxxXXxxxxxxxxxxWxxxxxxxxxxx
-xxxxxxxxxxxxXXXXxxxxxxxxxxxxWxxxxxxxxxxx
-xxxxxxxxxxxRxxxxxxxxxxxxxxxxQxxxxxxxxxxx
+xxxxxxxxxxSxxxxxxxxxxxxxxxxxxxUxxxxxxxxx
+xxxxxxxxxxxssxxxxxxxxx1xxxxxxuxxxxxxxxxx
+xxxxxxxxxxxxxssxxxxxx111xxxxxuxxxxxxxxxx
+xxxzzzxxxxxxxxxsxxxxxx1xxxxxxuxxxxxxxxxx
+Zzzxzxzxx555xxsxxxxxxx1xxxxxuxxxxxxxxxxx
+xxxxxxxzxx5xxx.xxx..x1xxxxxuxxxxxxxxxxxx
+xxxxxxxzxx5xxxx......xxxxxuuxxxxxxxxxxxx
+xxxxxxzxxxx5xx...2...cccxxxuxxxxxxxxxxxx
+xxxxxxzxxxx....2224..+$cxxuxxxxxxxxxxxxx
+xxxxxxxz.......2ll22.cccxxxuxxxxxxxxxxxx
+xxxxxxxxx......3222.xxxxxxuxxxxxxxxxxxxx
+xxxxxxxxxyxxxx2.......xxuuxxvvvvxxxxxxxx
+xxxxxxxxyxxxx.......xx..vxvvxxxxvxxxxxxx
+xxxxxxyyxxxxxrxxxxx.xxwxxvxxxxxxxvvxxxxx
+xxxyxyxxxxxxrxxrxxxx.xxwxxxxxxxxxvxxxxxx
+xyyyyxxxxxxxxrrxrrxxxxxxwxxxxxxxvxxxxxxx
+xyxxxxxxxxxxxxxrxrrxxxxxxwwxxxxxxvvxxxxx
+YxxxxxxxxxxxxxxxxxrxxxxxxxxwxxxxxxxvvxvV
+xxxxxxxxxxxxxxxxrrxxxxxxxxxxwxxxxxxxxvxx
+xxxxxxxxxxxxrrrrxxxxxxxxxxxxwxxxxxxxxxxx
+xxxxxxxxxxxRxxxxxxxxxxxxxxxxWxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -4760,7 +4514,7 @@ MONS: ogre / iron devil / w:5 nothing
 ITEM: potion of heal wounds / speed / berserk rage
 SHUFFLE: {(
 MAP
-xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx@xxxxxxxxxx
 xxxxxxxxx...xxxxxxxxx
 xxxxxxxxx...xxxxxxxxx
 xxxxxxxxxx1xxxxxxxxxx
@@ -4830,8 +4584,8 @@ ITEM:   good_item demon blade / good_item demon whip / good_item demon trident /
 ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
-
 MAP
+..........................
 .......bbbbbbbbbbbb.......
 ....bbbb..........bbbb....
 ..bbb....llllllll....bbb..
@@ -4840,8 +4594,8 @@ MAP
 .b....llllll??llllll....b.
 .b...?lll??.....?lll?...b.
 .b...?ll?...111...ll?...b.
-.+...?l?...11211d..l?...b.
-.+...?l?...12A21|f.l?...b.
+@+...?l?...11211d..l?...b.
+@+...?l?...12A21|f.l?...b.
 .b...?ll...11211d.ll?...b.
 .b...?lll?..111..lll?...b.
 .b....llll?.....llll....b.
@@ -4850,6 +4604,7 @@ MAP
 ..bbb....llllllll....bbb..
 ....bbbb..........bbbb....
 .......bbbbbbbbbbbb.......
+..........................
 ENDMAP
 
 ###################################
@@ -4858,10 +4613,10 @@ NAME:   hellmouth_3
 MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / nothing
 ORIENT: float
-SUBST:  ?:?.l, ?=l.
+SUBST:  ? : . l ?:40, ?=l.
 MAP
-................l.............
-..............................
+................??............
+...........................??.
 ....??..........l?............
 ...?ll?........?l?............
 ..?lll?.........l.............
@@ -4875,9 +4630,9 @@ MAP
 ........?lllll1ll?............
 .........??llllll......?......
 ...........?llll?.....ll?.....
-............?ll?.......ll?....
-..............................
-...................l..........
+..?.........?ll?.......ll?....
+.?............................
+..................??..........
 ENDMAP
 
 ##############################################################################
@@ -4887,7 +4642,7 @@ ORIENT: float
 DEPTH: 4-8
 SHUFFLE: 23, 34
 MONS: rat / nothing, grey rat / nothing
-MONS: green rat / nothing, orange rat / nothing
+MONS: green rat / nothing, orange rat / w:30 rat
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -4983,12 +4738,13 @@ ENDMAP
 #############################################################################
 # Insect pit (Lemuel)
 
-NAME: insect_pit
+NAME:   insect_pit
 ORIENT: float
-DEPTH: 5-12
-
-MONS: giant beetle w:20 / giant cockroach w:30 / butterfly w:20 / bumblebee / giant centipede / giant mite w:30 / giant mosquito / giant blowfly / scorpion / redback w:5
-
+DEPTH:  5-12
+SUBST:  1 = 1:70 2:60 3:25
+MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20 
+MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito 
+MONS:   giant blowfly / scorpion / redback w:5
 MAP
 ccccccccccc+ccccccccccc
 c.....................c
@@ -5038,10 +4794,99 @@ xxxxx...........................xxxxxx
 ENDMAP
 
 #############################################################################
+# Oklob assault
 
-NAME: vault_1
-ORIENT: north
+NAME:    oklob_1
+DEPTH:   16-27
+ORIENT:  float
+MONS:    plant, oklob plant
+SUBST:   ? = 1 2:5 '
+SHUFFLE: '"
+SUBST:   ' : w .:5
+SUBST:   " = .
+MAP
+.................
+.................
+......'''''......
+.....''???''.....
+....''?????''....
+....''?????''....
+.....''???''.....
+......'''''......
+.................
+.................
+ENDMAP
 
+#############################################################################
+# Oklob gauntlet
+
+NAME:    oklob_2
+DEPTH:   18-27
+ORIENT:  float
+MONS:    plant, oklob plant
+SHUFFLE: ]})yY / defzZ
+SUBST:   '=12w, "=ww.
+SUBST:   d=|*, e=|*, f=|*, y=., Y=@, z=x, Z=x
+SHUFFLE: xxxc
+MAP
+yyyyyyYyyyyyy
+xxxx.]}).xxxx
+x'ww.....ww'x
+x'"......."'x
+x'"......."'x
+x'"......."'x
+x'"......."'x
+x'"......."'x
+x'ww.....ww'x
+xxxxxx+xxxxxx
+ENDMAP
+
+#############################################################################
+# Oklob shooting range
+
+NAME:    oklob_3
+DEPTH:   21-27
+ORIENT:  float
+SHUFFLE: ab" / AB'
+SUBST:   a=[, b=(, A=., B=., "=., ':>', '=>.
+SHUFFLE: [{
+SUBST:   x : y:1 x:5 .:30
+SUBST:   x = x:2 .
+SHUFFLE: xcv
+SUBST:   y = x
+MONS:    oklob plant / w:2 plant
+MAP
+xxxxxxxxxxxxxxx
+xxxx...1...xxxx
+xx...........xx
+xx...........xx
+x......"......x
+x......'......x
+x1...aA{Bb...1x
+x......'......x
+x......"......x
+xx...........xx
+xx...........xx
+xxxx...1...xxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+
+NAME:    vault_1
+ORIENT:  north
+MONS:    shapeshifter, shapeshifter, glowing shapeshifter
+MONS:    silver statue, nothing
+SUBST:   E=E.
+SHUFFLE: abcd, $*, |ABCDE, nm, 45
+SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
+SUBST:   a = = x:8, b = = x:30, c=x, d=x
+SUBST:   * = * |:1
+SHUFFLE: opq
+SUBST:   o=+
+SHUFFLE: pqrs
+SUBST:   p=+, q=+, r=x, s=x
+SHUFFLE: xxxxc
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -5050,38 +4895,37 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx....x........x........x.................................xxxxxxxxxxxx
-xxxxxxxxxx|=8...x........+........x......x....x1...x2...x2...x3...x...xxxxxxxxxx
-xxxxxxxxxx|x....x........x........x....................................xxxxxxxxx
+xxxxxxxxxxxx....xE.......x........x.................................xxxxxxxxxxxx
+xxxxxxxxx%E+3...x........+........x......x....x1...x2...x2...x3...x..Dxxxxxxxxxx
+xxxxxxxxx%Ex....x........x.......Ex..................................DDxxxxxxxxx
 xxxxxxxxxxxxxxxx+xxx+xxxxxxxxxxxxxx..................................xxxxxxxxxxx
-xxxxxxxxx.......x.................+...................................8xxxxxxxxx
+xxxxxxxxx.......x.................+.5................................8Dxxxxxxxxx
 xxxxxxxxx.......x.................x..................................xxxxxxxxxxx
-xxxxxxxxx.......+........3........xx+xx................................xxxxxxxxx
-xxxxxxxxx.......x.................x...x..x....x1...x2...x2...x3...x...xxxxxxxxxx
+xxxxxxxxx.......+........8........xx+xx..............................DDxxxxxxxxx
+xxxxxxxxx.......x.................x...x..x....x1...x2...x2...x3...x..Dxxxxxxxxxx
 xxxxxxxxx.......x.................x...x.............................xxxxxxxxxxxx
-xxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx.........................x.S.x...xxxxxx..................|||||xxxxxxxxx
-xxxxxxxxx....xxxxxxxxxxxxxxxxxx...x...x......xxxxxx..................||xxxxxxxxx
-xxxxxxxxx....x...$$$$x****.999x...x...x.........xxxxxx.................xxxxxxxxx
-xxxxxxxxx....+...$$$$x****....x...x...+............xxxxxx.........8....xxxxxxxxx
-xxxxxxxxx....x...$$$$x****....+...x...x...............xxxxxx...........xxxxxxxxx
-xxxxxxxxx....x...$$$$x****....x...x999x..................xxxxxx........xxxxxxxxx
-xxxxxxxxx....xxxxxxxxxxxxxxxxxx...x...xxx...................xxxxxx.....xxxxxxxxx
+xxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxaxaxaxbxbxbxcxcxcxxxxxxxxxxxxx
+xxxxxxxxx.........................x.4.x...xxxxxxEEE...............|||||xxxxxxxxx
+xxxxxxxxx...xxxxxxxxxxxxxxxxxxx...x...x......xxxxxx..................||xxxxxxxxx
+xxxxxxxxx...x....$$$$x****.mmmx...x...x.........xxxxxx.................xxxxxxxxx
+xxxxxxxxx...+....$$$$x****....x...x...+............xxxxxx.........8....xxxxxxxxx
+xxxxxxxxx...x....$$$$x****....+...x...x...............xxxxxx...........xxxxxxxxx
+xxxxxxxxx...xnnn.$$$$x****....x...x999x..................xxxxxx........xxxxxxxxx
+xxxxxxxxx...xxxxxxxxxxxxxxxxxxx...x...xxx...................xxxxxx.....xxxxxxxxx
 xxxxxxxxx.........................x...xxxxxx...................xxxxxx..xxxxxxxxx
-xxxxxxxxxxxxx+xxxxxxxx+xxxxxxx+xxxx...xxxxxx+xxxxxxxx+xxxxxxxx+xxxxxxx=xxxxxxxxx
-xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
-xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
-xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
-xxxxxxxxx....1....x...2...x...3...x...x....3....x....2...x......1......xxxxxxxxx
-xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
-xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
-xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxxxxxxx+xxxxxxx+xxxxxxx+xxxx...xxxxxxoxxxxxxxxpxxxxxxxxqxxxxxdxdxxxxxxxxx
+xxxxxxxxxxx.......x.......x.......x...x.........xE.......x.............xxxxxxxxx
+xxxxxxxxxxx.......x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxxxx.......x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxxxx...1...x...2...x...3...x...x....3....r....2...s......1......xxxxxxxxx
+xxxxxxxxxxx.......x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxxxxE.....ExE.....ExE.....Ex...x.........x........x.............xxxxxxxxx
+xxxxxxxxxxxAAAAAAAxBBBBBBBxCCCCCCCx...xE.......ExE.......x............Exxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: shapeshifter, shapeshifter, glowing shapeshifter
 
 ##############################################################################
 # A cell vault
@@ -5400,14 +5244,15 @@ ENDMAP
 ############################################################################
 # Another thingy vault
 
-NAME: vault_9
+NAME:   vault_9
 ORIENT: southeast
-
+SUBST:  ' = ^ .:50
+MONS:   orange crystal statue
 MAP
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx^xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
-xx.....^...............^.....xxxxxxxxxxx
+xx.....''''''''.''''''''.....xxxxxxxxxxx
 x..bb..xxxxxxxxxxxxxxxxx..bb..xxxxxxxxxx
 x..b...xxxxxxxxxxxxxxxxx...b..xxxxxxxxxx
 x...b..xxxxbbbbbbbbbxxxx..b...xxxxxxxxxx
@@ -5415,18 +5260,18 @@ x..bb..xxbbb.......bbbxx..bb..xxxxxxxxxx
 x......xxb....9.9....bxx......xxxxxxxxxx
 x..bb..xbb..%$$$$$%..bbx..bb..xxxxxxxxxx
 x...b..xb..0%$***$%0..bx..b...xxxxxxxxxx
-x..b...xb..0%$*H*$%0..bx...b..xxxxxxxxxx
+x..b...xb..0%$*1*$%0..bx...b..xxxxxxxxxx
 x...b..xb..0%$***$%0..bx..b...xxxxxxxxxx
 x..b...xb...%$$$$$%...bx...b..xxxxxxxxxx
 x...b..xbb.900000009.bbx..b...xxxxxxxxxx
 x..b...xxb...........bxx...b..xxxxxxxxxx
 x..bb..xxbbb..9.9..bbbxx..bb..xxxxxxxxxx
-x......xxxxbbbb.bbbbxxxx......xxxxxxxxxx
+x......xxxxbbbb'bbbbxxxx......xxxxxxxxxx
 x..bb..xxxxxxxb=bxxxxxxx..bb..xxxxxxxxxx
 x..b...xxxxxxxx=xxxxxxxx...b..xxxxxxxxxx
-x...b..xxxxxxxx^xxxxxxxx..b...xxxxxxxxxx
+x...b..xxxxxxxx'xxxxxxxx..b...xxxxxxxxxx
 x..b....xxxxxxx=xxxxxxx....b..xxxxxxxxxx
-x...b...^.............^...b...xxxxxxxxxx
+x...b...'''''''.'''''''...b...xxxxxxxxxx
 x..b....xxxxxxxxxxxxxxx....b..xxxxxxxxxx
 x..bb..xxxxxxxxxxxxxxxxx..bb..xxxxxxxxxx
 xx....xxxxxxxxxxxxxxxxxxx....xxxxxxxxxxx
@@ -5489,6 +5334,8 @@ ENDMAP
 NAME: orc_temple
 ORIENT: southwest
 FLAGS: no_rotate
+MONS: orc warlord, orc priest, orc high priest, orc warrior, orc wizard
+MONS: orc knight, orc sorcerer
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
@@ -5527,17 +5374,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: orc warlord, orc priest, orc high priest, orc warrior, orc wizard
-MONS: orc knight, orc sorcerer
 
 #############################################################################
 # Matthew Ludivico (my_map)
 
 NAME: my_map
 ORIENT: southwest
-
 # The hell hounds can be deadly at lower levels.
 DEPTH: 18-27
+MONS: hell hound, necromancer, wizard, orange demon, rotting devil
+MONS: hell knight, great orb of eyes
 
 MAP
 xxxxxxxxxx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -5576,8 +5422,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: hell hound, necromancer, wizard, orange demon, rotting devil
-MONS: hell knight, great orb of eyes
 
 ###########################################################################
 # Farm and country (Matthew Ludivico)
@@ -5585,6 +5429,8 @@ MONS: hell knight, great orb of eyes
 NAME: farm_and_country
 ORIENT: encompass
 DEPTH: 16-27
+MONS: death yak, plant, griffon, killer bee, ogre, oklob plant
+MONS: wandering mushroom
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -5659,14 +5505,14 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: death yak, plant, griffon, killer bee, ogre, oklob plant
-MONS: wandering mushroom
 
 #############################################################################
 # Fort Yaktaur (Matthew Ludivico)
 
 NAME: fort_yaktaur
 ORIENT: southeast
+MONS: yaktaur, death yak, minotaur, random
+MONS: yak, gnoll, random
 
 MAP
 .........@....wwwwwwwwwwwwwwwwwxxxxxxxxx
@@ -5705,8 +5551,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: yaktaur, death yak, minotaur, random
-MONS: yak, gnoll, random
 
 ########################################################################
 # box level (John Savard)
@@ -5827,11 +5671,12 @@ ENDMAP
 NAME: david_greed
 DEPTH: 10-26
 ITEM: nothing / any good_item
-SHUFFLE: d|, HS
+MONS: silver statue / orange crystal statue / ice statue
+SHUFFLE: d|
 MAP
 xxxxxxxxx
 xbbbbbbbx
-xbH...Sbx
+xb1...1bx
 xb.....bx
 xb.....bx
 xbb.|.bbx
@@ -5864,7 +5709,6 @@ ENDMAP
 ##############################################################################
 
 NAME: minivault_1
-
 MAP
 ............
 ..xxxx=xxx..
@@ -5881,9 +5725,7 @@ MAP
 ENDMAP
 
 ###################################
-
 NAME: minivault_2
-
 MAP
 ............
 ..xxxx.xxxx.
@@ -5900,12 +5742,9 @@ MAP
 ENDMAP
 
 ###################################
-
 NAME: minitemple
-
 # More common than the others.
 CHANCE: 20
-
 MAP
 ............
 .cccccccccc.
@@ -5922,9 +5761,7 @@ MAP
 ENDMAP
 
 ###################################
-
 NAME: minivault_4
-
 MAP
 ............
 ....xwxx....
@@ -5941,9 +5778,7 @@ MAP
 ENDMAP
 
 ###################################
-
 NAME: minivault_5
-
 MAP
 ............
 .x.xxxxxxxx.
@@ -5962,7 +5797,7 @@ ENDMAP
 ###################################
 # Wizard's laboratory
 NAME: minivault_6
-
+MONS: wizard, small abomination, large abomination
 MAP
 ............
 .ccccccc+cc.
@@ -5978,13 +5813,11 @@ MAP
 ............
 ENDMAP
 
-MONS: wizard, small abomination, large abomination
 
 ###################################
 # Beehive minivault
-
 NAME: minivault_7
-
+MONS: queen bee, killer bee, killer bee larva
 MAP
 ............
 ....aaaa....
@@ -6000,12 +5833,10 @@ MAP
 ............
 ENDMAP
 
-MONS: queen bee, killer bee, killer bee larva
-
 ###################################
 # Lava pond
 NAME: minivault_8
-
+MONS: molten gargoyle
 MAP
 x.x.x.x.x.x.
 .c.c.c.c.c.x
@@ -6021,14 +5852,10 @@ x.c.c.c.c.c.
 .x.x.x.x.x.x
 ENDMAP
 
-MONS: molten gargoyle
-
 ###################################
 # Evil zoo
-
 NAME: minivault_9
 DEPTH: 15-27
-
 MAP
 ............
 .==========.
@@ -6047,7 +5874,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_10
-
 MAP
 ............
 .xxxx..xxxx.
@@ -6067,7 +5893,7 @@ ENDMAP
 # Multicoloured onion
 
 NAME: minivault_11
-
+SHUFFLE: bcva
 MAP
 ............
 .+xxxxxxxx+.
@@ -6087,7 +5913,6 @@ ENDMAP
 # Closed-box minivault
 
 NAME: minivault_12
-
 MAP
 ............
 .xxxxxxxxxx.
@@ -6105,20 +5930,27 @@ ENDMAP
 
 ###################################
 # Little trap spiral
-
 NAME: minivault_13
-
+SHUFFLE: AB, CD, EH/FG
+KFEAT: A = any trap
+KFEAT: C = any trap
+KFEAT: E = any trap
+KFEAT: H = any trap
+KITEM: A = gold / nothing
+KITEM: B = gold / nothing
+KITEM: C = gold / nothing
+KITEM: D = gold / nothing
 MAP
 ............
 .xxxxxxxxxx.
-.=.^x..=.9x.
-.x.$=.^x..x.
+.=.Ax.C=.9x.
+.x.B=.Dx..x.
 .xxxxxxxx=x.
 .x.8+|0x8.x.
 .x8$x.|x..x.
 .xx=xxxx=xx.
-.x.9=^.x..x.
-.x..x.^=9.x.
+.x.9=EFx..x.
+.x..xGH=9.x.
 .xxxxxxxxxx.
 ............
 ENDMAP
@@ -6148,7 +5980,6 @@ ENDMAP
 
 NAME: minivault_15
 MONS: silver statue / ice statue
-
 MAP
 ............
 ............
@@ -6167,9 +5998,10 @@ ENDMAP
 ###################################
 
 NAME: minivault_16
-SHUFFLE: SFH1
-MONS: ice statue
-
+CHANCE: 40
+# as this replaces the former statue only minivaults
+SHUFFLE: F111
+MONS: orange crystal statue / silver statue / ice statue
 MAP
 ............
 ............
@@ -6188,7 +6020,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_19
-
 MAP
 ............
 .xx......xx.
@@ -6225,7 +6056,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_21
-
 MAP
 ............
 .^xxxxxxxx^.
@@ -6244,7 +6074,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_22
-
+SUBST: $ : $ *:5
 MAP
 ............
 .....xx.....
@@ -6263,7 +6093,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_23
-
 MAP
 x.x.x.x.x.x.
 .x.x.x.x.x.x
@@ -6282,7 +6111,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_24
-
 MAP
 ............
 ....xxxx....
@@ -6301,7 +6129,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_25
-
 MAP
 ............
 .xx+xxxxxxx.
@@ -6320,7 +6147,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_26
-
 MAP
 c..........c
 .c...cc...c.
@@ -6339,7 +6165,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_27
-
 MAP
 ............
 .x.xxxxxxxx.
@@ -6358,7 +6183,6 @@ ENDMAP
 ###################################
 
 NAME: minivault_28
-
 MAP
 ............
 .xxxx.xxxx..
@@ -6379,7 +6203,6 @@ ENDMAP
 
 NAME: minivault_29
 MONS: queen ant, soldier ant, giant ant, ant larva
-
 MAP
 .3......3...
 ...x.xx.x.2.
@@ -6399,7 +6222,6 @@ ENDMAP
 # Solitary fountain
 NAME: solitary_fountain
 SUBST: ?=TUV
-
 MAP
 .....
 .....
@@ -6413,7 +6235,6 @@ ENDMAP
 
 NAME: fountainhead
 SUBST: ?=TUV
-
 MAP
 ..............
 ..xxxw..wxxx..
@@ -6433,16 +6254,16 @@ ENDMAP
 
 ###################################
 # jmf: Multi-god temple thing
-
 NAME: multi_god_temple
-
+SHUFFLE: abc
+SUBST: a:=, b:x, c:x
 MAP
 ............
-.=xxxxxxxx=.
+.axxxxxxxxa.
 .x9......9x.
-.xT......Tx.
+.bT......Tb.
 .x..C..C..x.
-.xT......Tx.
+.cT......Tc.
 .xxxxxxxxxx.
 .xxx$$$$xxx.
 .xx8....8xx.
@@ -6453,9 +6274,7 @@ ENDMAP
 
 ###################################
 # jmf: Another multi-god temple thing
-
 NAME: multi_god_temple2
-
 MAP
 ............
 ..vvvvvvvv..
@@ -6473,19 +6292,20 @@ ENDMAP
 
 ###################################
 # Billiards (David Ploog)
-
 NAME: billiards
-MONS: orc wizard
-
+MONS: orc wizard, deep elf conjurer 
+SHUFFLE: 1*/2d
+SUBST: * = * |:1 %:4
+SUBST: d = * |
 MAP
 ...............
-.bbbbbb.bbbbbb.
+.bbbbbbbbbbbbb.
 .b.1.........b.
 .b..........1b.
-.b...........b.
-......*b.....b.
-.b....b%.......
-.b...........b.
+.bb..........b.
+......*bbbbb.b.
+.b.bbbb*.......
+.b..........bb.
 .b1..........b.
 .b.........1.b.
 .bbbbbbbbbbbbb.
@@ -6495,14 +6315,14 @@ ENDMAP
 ##############################################################################
 # Dispersion (David)
 #
-NAME: dispersion
+NAME:  dispersion
+DEPTH: 13-26
 SUBST: Y = 89
 KITEM: 8 = % / * / w:1 |
 KITEM: 9 = % / * / w:1 |
 KFEAT: X = teleport trap
 KFEAT: Z = teleport trap / w:30 x
 SHUFFLE: xcvb
-DEPTH: 13-26
 MAP
 ............
 ............
@@ -6528,14 +6348,12 @@ NAME: fake_naga_vault
 DEPTH: 15-26
 MONS: mimic, guardian naga
 MAP
-...........
-.xxxxxxxxx.
-.x1111111x.
-.x1111111x.
-.x1111111x.
-.x11.2.11x.
-.xxxx+xxxx.
-...........
+xxxxxxxxx
+x1111111x
+x1111111x
+x1111111x
+x11.2.11x
+xxxx+xxxx
 ENDMAP
 
 ##############################################################################
@@ -6579,7 +6397,6 @@ ENDMAP
 NAME: rand_demon_1
 TAGS: pan
 MONS: pandemonium demon, random, random, random, random, random
-
 MAP
 ............
 .xx.xx.x.xx.
@@ -6601,7 +6418,6 @@ NAME: rand_demon_2
 TAGS: pan
 MONS: pandemonium demon, greater demon, common demon
 MONS: common demon, random, random
-
 MAP
 ............
 .xxxxxxxx3x.
@@ -6622,7 +6438,6 @@ ENDMAP
 NAME: rand_demon_3
 TAGS: pan
 MONS: pandemonium demon, common demon, common demon
-
 MAP
 ............
 .x.x.x3x.x..
@@ -6643,7 +6458,6 @@ ENDMAP
 NAME: rand_demon_4
 TAGS: pan
 MONS: pandemonium demon, any demon, any demon
-
 MAP
 ............
 .xxxxxxxxx..
@@ -6664,7 +6478,6 @@ ENDMAP
 NAME: rand_demon_5
 TAGS: pan
 MONS: pandemonium demon, any demon, any demon
-
 MAP
 ............
 ...xxxxxx...
@@ -6685,7 +6498,6 @@ ENDMAP
 NAME: rand_demon_6
 TAGS: pan
 MONS: pandemonium demon, any demon, any demon
-
 MAP
 ............
 ............
@@ -6706,7 +6518,6 @@ ENDMAP
 NAME: rand_demon_7
 TAGS: pan
 MONS: pandemonium demon, any demon, greater demon
-
 MAP
 ............
 .xxx....xxx.
@@ -6727,7 +6538,6 @@ ENDMAP
 NAME: rand_demon_8
 TAGS: pan
 MONS: pandemonium demon, greater demon, any demon
-
 MAP
 ............
 ....xxxxxxx.
@@ -6748,7 +6558,6 @@ ENDMAP
 NAME: rand_demon_9
 TAGS: pan
 MONS: pandemonium demon, any demon, greater demon
-
 MAP
 ............
 .xxxxxxxxxx.

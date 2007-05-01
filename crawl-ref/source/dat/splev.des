@@ -1,298 +1,12 @@
 ##############################################################################
-# splev.des: special levels definitions.
-#
-# If you want to define random vaults and minivaults, they should go 
-# to vaults.des.
-#
-#  Key:
-#  ----
-#  x - DNGN_ROCK_WALL
-#  X - DNGN_PERMAROCK_WALL -> should always be undiggable! -- bwr
-#  c - DNGN_STONE_WALL
-#  v - DNGN_METAL_WALL
-#  b - DNGN_GREEN_CRYSTAL_WALL
-#  a - DNGN_WAX_WALL
-#  . - DNGN_FLOOR
-#  + - DNGN_CLOSED_DOOR
-#  = - DNGN_SECRET_DOOR
-#  @ - entry point - must be on outside and, except in ORIENT:float layouts,
-#      must always be on a particular side or sides - see templates
-#  W - shallow water
-#  w - deep water - Entry vault makers: this may receive water creatures!
-#  l - lava - Entry vault makers, note that this may receive lava creatures!
-#      (Use the no_monster_gen tag to prevent both of these effects.)
-#  >< - extra stairs - you can leave level by these but will never be placed o
-#                      them from another level
-#  }{ - stairs 82/86 - You must be able to reach these from each other. The {
-#       upstair is also the stair on which the player will enter the dungeon for
-#       entry vaults.
-#  )( - stairs 83/87
-#  ][ - stairs 84/88
-#  I - orcish idol (does nothing)
-#  ^ - random trap
-#  ~ - random trap suitable for the branch and depth the map is being used.
-#
-#  A - Vestibule gateway (opened by Horn). 
-#  B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc,
-#      in order.
-#  C - Random Altar.
-#  F - Typically a Granite Statue, but may be Orange or Silver (1 in 100) 
-#  G - Granite statue (does nothing)
-#  H - orange crystal statue (attacks mind)
-#  S - Silver statue (summons demons). Avoid using (rare).
-#  T - Water fountain
-#  U - Magic fountain
-#  V - Permanently dry fountain
-#  
-#  $ - gold
-#  % - normal item
-#  * - higher level item (good)
-#  | - acquirement-level item (almost guaranteed excellent)
-#  O - place an appropriate rune here. For portal vaults, place the portal here.
-#  P - maybe place a rune here (50%)
-#  R - honeycomb (2/3) or royal jelly (1/3)
-#  Z - the Orb of Zot
-#
-#  d-k - item array item. See section below on ITEM: arrays for more info.
-#
-#  0 - normal monster
-#  9 - +5 depth monster
-#  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
-#      this way.
-#  1-7 - monster array monster. See section below on MONS: arrays for more 
-#      information
-#
-#  A vault always has its body between MAP and ENDMAP commands. Furthermore,
-#  several other additional commands are possible (some of them mandatory).
-# 
-#  NAME:
-#  ----
-#  Each vault/level/map must have a unique name. Underscores and digits are ok.
-#
-#  ORIENT: (north | northwest | ... | float | encompass)
-#  ------
-#  Some kind of ORIENT: line is mandatory, unless you want the vault to be a
-#  minivault, which is usually not what you want. Valid values are:
-#  "float": The dungeon builder will put your vault wherever it wants to.
-#  "some_direction": The vault will lie along the mentioned side of the map:
-#         xxxxxxxxxx       xxxxxxxxxxxxx
-#         xORIENT:Nx       xORIENT:NW|..
-#         x.VAULT..x       x.VAULT...|..
-#         x--------x       x---------|..
-#         xrest....x       xrest........
-#         x...of...x       x.....of.....
-#         x...levelx       x.......level
-#  ...which brings us to padding. With any some_direction orientation, you need
-#  6 layers of x-padding along any level-edge that the vault borders. For
-#  instance, if your map is ORIENT: north, you must have a 6 deep border of
-#  rock wall (or any other kind of wall) along the northern, eastern, and
-#  western edges of the map.
-#  "encompass": the vault completely occupies the entire level. Padding is 
-#  needed on all 4 sides.
-# 
-#  ITEM:
-#  ----
-#  These are used to help place specified items at specific places within a
-#  vault. They create an array with up to 8 positions. What's in the first 
-#  position in the array will be used when the dungeon builder sees a "d" in 
-#  the vault definition, the second will be used for "e"s, etc. Positions are
-#  comma-separated; several ITEM: lines are possible as well. 
-#  Positions can contain multiple possibilities, one of which the builder will
-#  choose randomly. Separate such multiple possibilities using a slash. Note 
-#  that "nothing" (without the quotes) is a valid possibility. The random 
-#  choice is done for each individual occurence of the letter.
-#  You can also give possibilities a "weight," which affects their chance of
-#  being picked. The default weight is 10. The chance to pick a possibility is
-#  [possibility's weight: / sum of all weight:s in that array position]
-#  Modifiers: 
-#  "good_item" makes the builder try to make the item a good one.
-#  "any" by itself gives random choice; you can combine "any" with "good_item."
-#  "any book", "any misc" etc. gives a random item of that class.
-#
-#  Limitations: You can't affect stack quantity for stackable items, nor can you
-#  affect curse status nor item race, nor can you give specific egos, nor can
-#  give fixedarts. You also can't lay down corpses, skeletons, or chunks.
-# 
-#  MONS:
-#  ----
-#  These are used to help place specific monsters at specific places in a
-#  vault. They create an array with up to 7 positions. What's in the first
-#  position in the array will be used when the dungeon builder sees a "1"
-#  in the vault definition, the second for "2," etc. Note that if, for
-#  example, you place a 3 on the map, but your MONS: line has no third
-#  position, the 3 will be filled with RANDOM_MONSTER.
-#  Individual monsters may be prefixed with the "generate_awake" (without
-#  the quotes). Use this sparingly.
-#  Note that 8, 9, 0 also place monsters (see the table above).
-# 
-#  CHANCE:
-#  ------
-#  For entry vaults and any other vaults randomly picked from among a set,
-#  this type of line affects the likelihood of the given vault being picked in
-#  a given game. The default CHANCE: is 10. The likelihood of a vault getting
-#  picked is:
-#  [vault's CHANCE: / sum of all CHANCE:s of vaults of that type]
-#  !!! Note for entry vault builders: really high values like CHANCE:5000
-#  almost guarantee that a vault will be picked, and thus are great
-#  for testing. !!!
-# 
-#  TAGS:
-#  ----
-#  Tags go an a TAGS: line and are space-separated. Valid tags are:
-#  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
-#  "generate_awake": Monsters placed (using MONS, KMONS) in this vault will be
-#                    generated awake.
-#  "no_item_gen":   Prevents random item generation in the vault. Items 
-#                   explicitly placed by the vault are not affected.
-#  "no_monster_gen": Prevents random monster generation at the time of
-#                   the vault's creation. Highly advised for entry vaults with
-#                   a player-hostile geography, MUST-HAVE for those with water
-#                   or lava.
-#  "no_pool_fixup": prevents water squares next to land from being randomly 
-#                   converted from deep water (the default) to shallow.
-#  "branch_entry" eg. "orc_entry", "lair_entry" etc. If chosen, these maps
-#                   will contain the stairs for that branch. Use "O" to place
-#                   the stairs. Branch entries should go to splev.des.
-# 
-#  FLAGS:
-#  -----
-#  Flags go on a FLAGS: line and are space-separated. Valid flags are:
-#  "no_rotate":  Normally, the dungeon builder can, at its whim, rotate your 
-#                vault. This flag tells it, "hey, don't do that to my vault!"
-#  "no_hmirror": Like no_rotate, but for horizontal mirroring.
-#  "no_vmirror": Like no_rotate, but for vertical mirroring.
-# 
-#  SHUFFLE:
-#  -------
-#  This allows you to randomly permute glyphs on the map. There are two ways:
-#  SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
-#           could, for example, swap all occurences of "1" with "2", 
-#           as well as swapping all "3" with "w" (or any other of the 23
-#           possibilities).
-#  SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
-#           will either do nothing or swap all "1" with "3" and then also
-#           swap "2" with "w" everywhere.
-#
-#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
-#  and substitutions will be applied in order. You can also put multiple 
-#  SHUFFLEs on one line, comma-separated. Shuffles cannot use , or /. All spaces
-#  are stripped before shuffling.
-#  
-#  SUBST:
-#  ------
-#  The SUBST: directive allows you to specify a placeholder symbol that is
-#  replaced with a random glyph from a set. For instance:
-#  SUBST:  ? = TUV
-#          will replace occurrences of ? with one of TUV.
-#  SUBST:  ? = T U V
-#          does the same thing - whitespace is not significant.
-#  SUBST:  ? = T:20 U V
-#          makes T twice as likely to be used as U or V (the default weight 
-#          is 10). Note that there has to be at least one space before and after
-#          T:20 and that whitespace in T:20 is not permitted.
-#  SUBST:  ? : TUV
-#          replaces occurrences of ? with one of TUV, and guarantees that all
-#          occurrences of ? will get the same replacement symbol.
-#
-#  The placeholder and replacement symbols can be any non-space, printable
-#  character, including : and =, apart from commas - "SUBST: = = +=:123def" is
-#  valid.
-#
-#  SUBST: lines can safely replace symbols with themselves:
-#
-#  SUBST: w = wW
-#
-#  Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and will be
-#  applied in order. Multiple substitutions can be performed on one line, using
-#  commas.
-#
-#  KFEAT:
-#  -----
-#  The KFEAT: directive allows you to specify a placeholder symbol that is
-#  replaced with another symbol, named feature, trap, or shop. Eg.:
-#  
-#  KFEAT: Z = C / needle trap / antique armour shop / altar of Zin
-#
-#  Replaces occurrences of Z with C (random altar), a needle trap, an
-#  antique armour shop, or an altar of Zin. Different instances of Z may
-#  receive different replacements. To force a single replacement for all Z,
-#  use:
-#
-#  KFEAT: Z : C / needle trap / antique armour shop
-#
-#  You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx directives
-#  allow you to assign arbitrary definitions to any symbol.
-#
-#  The placeholder used by KFEAT can be shared by KITEM and KMONS. See below.
-#  If the placeholder is shared, all defined Kxxxx operations for the
-#  placeholder are performed.
-#
-#  KMONS:
-#  -----
-#  KMONS: allows you to specify a placeholder symbol that indicates the 
-#  position of a monster (or monsters).
-#
-#  KMONS: ? = orc priest / deep elf priest
-#
-#  Using KMONS: allows you to exceed the 7 slot limit for monsters. It is also
-#  useful if you want to place a monster on a non-floor square (used in 
-#  association with a KFEAT:). Eg:
-#
-#  KFEAT: Z = W
-#  KMONS: Z = rat
-#
-#  (Places a rat on a shallow water square for all occurrences of Z.)
-#
-#  KITEM:
-#  -----
-#  KITEM: places the specified item at all occurrences of the placeholder. It
-#  can be combined with KFEAT and KMONS for the same placeholder. Eg:
-#
-#  KITEM: ? = potion of healing / potion of restore abilities
-#
-#
-#  Note that a lot of the vaults are in there mainly to add some
-#  interest to the scenery, and are not the lethal treasure-fests you
-#  find in Angband (not that there's anything wrong with that)
-# 
-#  Guidelines for creating new vault maps:
-#  ---------------------------------------
-#
-#  If your map is not a minivault or a floating vault, make sure the side(s)
-#  forming the border have a rock wall padding at least 6 deep. For instance,
-#  if your map is ORIENT: north, you must have a 6 deep border of rock wall 
-#  (or any other kind of wall) along the northern, eastern, and western edges 
-#  of the map. If you're doing a fullscreen map (encompass), you must pad all 
-#  around the map with 6 layers of wall. For ORIENT: encompass maps, you 
-#  don't need to explicitly include the padding provided you make the map 
-#  small enough that the padding can be provided automatically.
-# 
-#  You do not have to place all of the stairs unless the level is full screen,
-#  in which case you must place all except the extra stairs (> and <). The <>
-#  stairs can be put anywhere and in any quantities but do not have to be 
-#  there. Any of the other stairs which are not present in the vault will be 
-#  randomly placed outside it. Also generally try to avoid rooms with no exit.
-#
-#  You can use the templates below to build vaults. The entry point '@' must 
-#  be present (except full-screen vaults where it must not and orient:float 
-#  maps, where it is optional - the builder will randomly convert '.' spaces 
-#  on edges to entry points if needed) and be on an edge of the vault.
-#
-#  Minivaults are handled very differently from regular vaults and special
-#  levels. They're placed *after* normal map generation, whereas normal 
-#  vaults are placed before generating the rest of the level. There's no way 
-#  to guarantee generation of a minivault on a particular level, whereas 
-#  vaults can be forced to appear using a PLACE: attribute.
-#
-# I think that's all. Have fun!
-#
-###############################################################################
+# splev.des: special levels definitions, including branch ends, 
+#            the Ecumenical Temple versions, pan levels and branch entries
+##############################################################################
 
-NAME: vestibule_of_hell
-PLACE: Hell
-ORIENT: encompass
-
-# [dshaligram] If modifying the Vestibule, ensure that:
+#############################################################################
+# Vestibule of Hell and Geryon
+#
+# If modifying the Vestibule, ensure that:
 #
 #  * The portal to Dis is surrounded by floor squares and nothing but floor 
 #    squares.
@@ -305,6 +19,15 @@ ORIENT: encompass
 #
 # If you don't do this, the portals will not be unbarred correctly when 
 # Geryon's horn is sounded.
+
+NAME: vestibule_of_hell
+PLACE: Hell
+ORIENT: encompass
+
+MONS: Geryon, Murray / nothing
+
+SHUFFLE: 2de
+ITEM: nothing, nothing, nothing
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -379,11 +102,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: Geryon, Murray / nothing
-MONS: random, random, random, random, random
-
-SHUFFLE: 2de
-ITEM: nothing, nothing, nothing
 
 #############################################################################
 # Dispater's castle - rest of level filled up with plan_4 (irregular city)
@@ -1111,15 +829,16 @@ SUBST:   Z = 9:10 8:30 .:40
 SUBST:   c = x .:20
 
 # general loot and additional features
-SUBST:   | = | *:2
-SUBST:   * = * |:2
 SUBST:   / : / .:3
 SUBST:   / = 8 9 ^ * | .:50
-SHUFFLE: klmnopqr
+SUBST:   | = | *:2
+SUBST:   * = * |:2
+SHUFFLE: klmnopqs
 SUBST:   k : ^ x =:3 .:40
 SUBST:   l : ^ x =:3 .:40
 SUBST:   m : ^ x =:3 .:80
 SUBST:   n : ^ x =:3 .:80
+SUBST:   o=., p=., q=., s=.
 
 MONS: vault guard
 
@@ -1170,7 +889,7 @@ xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxxxxxxx
 xxxxxxxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxxxxxxx
 xxxxxxxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....x...Y..Z..Y..Y..Z..Y..Y...x..xxxxxxxxx
 xxxxxxxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....c.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxxxxxxx
-xxxxxxxxxooxx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.xrrxxxxxxxxx
+xxxxxxxxxooxx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.xssxxxxxxxxx
 xxxxxxxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxxxxxxx
 xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxxxxxxx
 xxxxxxxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxxxxxxx
@@ -1862,7 +1581,7 @@ ENDMAP
 # slime_pit
 
 NAME:    slime_pit
-PLACE:   Slime:$
+PLACE:   Slime:6
 ORIENT:  encompass
 MONS:    royal jelly, acid blob, great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
@@ -1950,7 +1669,7 @@ NAME: hall_of_blades
 PLACE: Blade
 ORIENT: north
 MONS: dancing weapon
-SHUFFLE: cvx
+SHUFFLE: cv
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2003,21 +1722,19 @@ SUBST:   C = c:1000 =
 KFEAT:   1 = any trap / w:20 floor
 KMONS:   1 = Orb Guardian
 KFEAT:   8 = any trap / w:20 floor
-KMONS:   8 = 8
-KFEAT:   F = ^ / .
-KMONS:   F = orange crystal statue / silver statue / ice statue
 SHUFFLE: ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE: Aa / Bb 
-KFEAT:   A = ^
-SUBST:   B = ^
-SUBST:   a=F, b=F:18 HS
-SUBST:   ^ = ^ .:20
+KFEAT:   A = any trap / w:30 floor
+KFEAT:   B = any trap / w:10 floor
+SUBST:   a=F, b=6 F
+SUBST:   ^ = ^ .:10
 SUBST:   ! = ^ .:40
-SUBST:   . = .:5000 ^
+SUBST:   . = .:500 ^
 
 #monsters
 MONS:    Orb Guardian, Killer Klown, electric golem, orb of fire, ancient lich
-SUBST:   8=8., 5=5.
+MONS:    orange crystal statue / silver statue / ice statue
+SUBST:   8=8., 8=8., 5=5.
 SHUFFLE: 234
 SUBST:   ? = .:8 ?
 SUBST:   ? : KLM
@@ -2037,29 +1754,29 @@ xxxxxxxxxxxcccc.............ccccxxxxxxxxxxxxxxxxxcccc.............ccccxxxxxxxxxx
 xxxxxxxxxxcc...................cccxxxxxxxxxxxxxccc...................ccxxxxxxxxx
 xxxxxxxxxcc..........3...........ccxxxxxxxxxxxcc...........3..........ccxxxxxxxx
 xxxxxxxxxc..8.....................cXXXXXXXXXXXc.....................8..cxxxxxxxx
-xxxxxxxxxc.......?..?.......8.....XXX...1...XXX.....8.......?..?.......cxxxxxxxx
-xxxxxxxxxcc.............?.........XX..1...1..XX.........?.............ccxxxxxxxx
+xxxxxxxxxc.......?..?.....8.8.....XXX...1...XXX.....8.8.....?..?.......cxxxxxxxx
+xxxxxxxxxcc.8...........?.........XX..1...1..XX.........?...........8.ccxxxxxxxx
 xxxxxxxxxxcc......................X1...!!!...1X......................ccxxxxxxxxx
-xxxxxxxxxxxcc.....4....2....8........1.!Z!.1........8....2....4.....ccxxxxxxxxxx
+xxxxxxxxxxxcc.....4....2....8.8......1.!Z!.1......8.8....2....4.....ccxxxxxxxxxx
 xxxxxxxxxxcc....?...?.....?...?...X1...!!!...1X...?...?.....?....?...ccxxxxxxxxx
 xxxxxxxxxcc.......?....?..........XX..1...1..XX..........?....2.......ccxxxxxxxx
-xxxxxxxxxc..................8.....XXX...1...XXX.....8..................cxxxxxxxx
+xxxxxxxxxc.....8..........8.8.....XXX...1...XXX.....8.8..........8.....cxxxxxxxx
 xxxxxxxxxc...8....................cXXXXXXXXXXXc....................8...cxxxxxxxx
-xxxxxxxxxcc.....8...8............ccccccccccccccc............8...8.....ccxxxxxxxx
-xxxxxxxxxxcc...................ccccccccccccccccccc...................ccxxxxxxxxx
+xxxxxxxxxcc.....8.8.8..8.........ccccccccccccccc........8...8.8.8.....ccxxxxxxxx
+xxxxxxxxxxcc...............8...ccccccccccccccccccc...8............8..ccxxxxxxxxx
 xxxxxxxxxxxcc........8..8...ccccccccccccccccccccccccc...8..8........ccxxxxxxxxxx
 xxxxxxxxxxxxcca111acCCCCCCCcccccccccccccccccccccccccccCCCCCCCcb111bccxxxxxxxxxxx
 xxxxxxxxxxxcc...............AA1.ccccccccccccccccc.1BB...............ccxxxxxxxxxx
-xxxxxxxxxxcc.....8..8.......cc1...ccccccccccccc...1cc.......8..8.....ccxxxxxxxxx
-xxxxxxxxxcc............8.8...ccc...ccccccccccc...ccc...8.8............ccxxxxxxxx
-xxxxxxxxxc....8....8..........ccc...............ccc..........8....8....cxxxxxxxx
-xxxxxxxxxc.......8....8...8.5.cxcc.............ccxc.5.8...8....8.......cxxxxxxxx
-xxxxxxxxxc..8.......8.........cxxc.............cxxc.........8.......8..cxxxxxxxx
-xxxxxxxxxc.....8........8.....cxxcc.1...1...1.ccxxc..............8.....cxxxxxxxx
-xxxxxxxxxc...8...8...8.....8..cxxxc...........cxxxc..8.....8...8...8...cxxxxxxxx
-xxxxxxxxxc...............8....cxxcc...........ccxxc....8...............cxxxxxxxx
-xxxxxxxxxcc...5..8....8......ccxxc.............cxxcc......8....8..5...ccxxxxxxxx
-xxxxxxxxxxcc.......8....8...ccxxcc.............ccxxcc...8....8.......ccxxxxxxxxx
+xxxxxxxxxxcc...8.8..8.8.....cc1...ccccccccccccc...1cc.......8..8.8.8.ccxxxxxxxxx
+xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxx
+xxxxxxxxxc.8..8....8.8........ccc...............ccc.....8....8..8.8....cxxxxxxxx
+xxxxxxxxxc..8..8.8....8.8.8.5.cxcc.............ccxc.5.8.8.8....8.8...8.cxxxxxxxx
+xxxxxxxxxc..8.....8.8.......8.cxxc.............cxxc8........8.....8.8..cxxxxxxxx
+xxxxxxxxxc.8...8......8.8.....cxxcc.1...1...1.ccxxc......8.......8.....cxxxxxxxx
+xxxxxxxxxc8..8...8.8.8.8...8.8cxxxc...........cxxxc8.8..8..8.8.8...8.8.cxxxxxxxx
+xxxxxxxxxc.....8.........8....cxxcc...........ccxxc....8.8.............cxxxxxxxx
+xxxxxxxxxcc...5..8..8.8....8.ccxxc.............cxxcc8.....8....8..5.8.ccxxxxxxxx
+xxxxxxxxxxcc8......8....8.8.ccxxcc.............ccxxcc.8.8....8....8..ccxxxxxxxxx
 xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
 xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
 ENDMAP
@@ -2308,12 +2025,12 @@ ORIENT:  encompass
 SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
 SUBST:   A=|*, B=|*
 SUBST:   f = F, i = G, j = G, k = G, l = F
-SUBST:   I = G:1800 H S
-SUBST:   J = G:1500 H S
-SUBST:   K = G:1100 H S
-SUBST:   L = G:600 H S
+SUBST:   I = G:900 6
+SUBST:   J = G:750 6
+SUBST:   K = G:550 6
+SUBST:   L = G:300 6
 SUBST:   - = T
-SUBST:   _ = F G:5 H:5 ^:30 .:30
+SUBST:   _ = F 6 ^:30 .:30
 SUBST:   T = ^ .
 SUBST:   t = ~ .:50
 SUBST:   ' = ^ ':200
@@ -2323,6 +2040,7 @@ SUBST:   1 = 1 2:3 .
 SUBST:   3 = 3., 4 = 4., 5 = 5.
 
 MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
+MONS:    silver statue / orange crystal statue / ice statue
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2400,11 +2118,35 @@ ENDMAP
 ###############################################################################
 # Tomb:2
 
-NAME: tomb_2
-PLACE: Tomb:2
-
+NAME:    tomb_2
+PLACE:   Tomb:2
 # Can be rotated!
-ORIENT: encompass
+ORIENT:  encompass
+
+SHUFFLE: ABCD[, Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
+SUBST:   W=', w=c, Y=T, y=+, Z=T, z=+
+SUBST:   U=', u=c, V=T, v=+
+SUBST:   Q=', q=c, R=T, r=+, S=T, s=+
+
+SHUFFLE: ])}def
+SUBST:   d=", e=", f="
+
+SUBST:   T = ^ .
+SUBST:   ' = ^ ':100
+SUBST:   ' = 1:5 2:5 3:1 .:89
+SUBST:   " = ^ ":50
+SUBST:   " = 2:3 3:1 .:96
+
+# Number of ' symbols is 211+3=214, hence statistically in the lower 
+# circumference we'll have 10.7 mummies, another 10.7 guardian mummies
+# and 2.1 mummy priests.
+# Number of " symbols is 205+3=208, hence the upper circumference
+# has in mean 4.0 mummy priests and 8.3 guardian mummies.
+
+# Perhaps to do: use KFEAT to make mummies possibly appear at T spots.
+#                have clustering of 1, 2 in the lower area as before?
+
+MONS: mummy, guardian mummy, mummy priest, greater mummy
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2421,40 +2163,40 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc{...c......c.....3....c........c.......ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.....^c^........^c......2^c.......ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c...2.^+..2.....2^+^..2....+.......ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc.3.^c^.....c^.........c^2.....^c^......ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...^+^.....c..........c........c...2...ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccc+ccccccccccccccccccccccccccccccc....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc..^.c.............................c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.............................c..3.ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c..ccc4.................4ccc..c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c..ccc...................ccc..c..2.ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c..ccc.........1.........ccc..c)..}ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc.3..c..ccc.....2.......2.....ccc..cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.............................c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.............................c^2..ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c........c...........c........+....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc]...c.............................c^2..ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc.....3........(........3.....c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.............................c.^.^ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...^c........c...........c........ccc+cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....+.............................c..^.ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...^c.............................c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c..ccc.....2.......2.....ccc..c..2.ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc..ccc.........1.........ccc..c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c..ccc...................ccc..c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...^+..ccc4.................4ccc..c2...ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.............................c....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc.............................c..2.ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....c.............................ccc+cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc....+cccc+ccccccccccccccc+ccccccccc.^.^ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc.1.^^.c.^..c............c^.......c.3...ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...2..c.1..c.....1.1....c.....2..c.....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc......c....c..1......1.^c..2.....c...2.ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc..3...c.1..c...1...1..1^+........c.....ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc......c....c[...........c.......3c.....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c""""""c"""""{""""c""""""""c"""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c"""""TcT""""""""TcT""""""TcT""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c"""2"T+T""""""""T+T""2"""T+T""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc"""TcT""""TcT""""""""TcT""""""TcT""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""TT+T"""""c""""""""""c""""""""c"""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccc+ccccccccccccccccccccccccccccccc""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""TTc.............................c"3""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c.............................c""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""3"c..ccc4.................4ccc..c"""fccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c..ccc...................ccc..c""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c..ccc.........1.........ccc..c)""}ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c..ccc.....2.......2.....ccc..cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c.............................c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcce"""c.............................cT'''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c........c...........c........+T'''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc]""dc.............................cT'''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc.....3........(........3.....c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc''''c.............................c'QQQccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''Tc........c...........c........cccqcccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''T+.............................c'QQQccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''Tc.............................c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'ZZZc..ccc.....2.......2.....ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccczcc..ccc.........1.........ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'ZZZc..ccc...................ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccA'''c..ccc4.................4ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'YYYc.............................c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccycc.............................cRRR[ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'YYYc.............................ccrccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc''''ccccc+ccccccccccccccc+cccccccccRRR'ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc''''''c'TTTc''''''''''''cTT''''''c'''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''''WwW''UuU''''''''''VvV''''''SsS''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccB'''''c''''cC'''''''''''c''''''''c''''Dccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2479,19 +2221,21 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: mummy, guardian mummy, mummy priest, greater mummy
-MONS: random, random, random
 
 #############################################################################
 # Tomb:3
 
-NAME: tomb_3
-PLACE: Tomb:3
-ORIENT: encompass
+NAME:    tomb_3
+PLACE:   Tomb:3
+ORIENT:  encompass
+FLAGS:   no_rotate
 
-# Unless you have a square aspect ratio, Tomb:3 looks utterly lame when
-# rotated.
-FLAGS: no_rotate
+SUBST:   ' : " $ ':80
+SUBST:   ' = " $
+SUBST:   " = ^:1 .
+SUBST:   $ = *:2 |:1 $:17
+
+MONS:    mummy, guardian mummy, mummy priest, greater mummy
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2526,22 +2270,22 @@ xxxxxxxxxxxxxxcccc....2..........................2...ccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccc....2......................2....cccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccc............................cccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxccccccccc+ccc..................ccc+ccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccc....cc................cc....cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccc.......cc22222222222222cc......$cccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc....^.....cc............cc..^.....$ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc.^.........cc..........cc.....^.^.$ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc$...^...^..^.cc........cc..........$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc$$$...........cc222222cc.^........$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc|$$$...........c......c.....^...$$$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc||$$$$...^.....c......c^......$$$$$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc|||||$$.....^..c......c......$$$$$$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc|||||$........c......c...^.$$$$$$$$ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccc||||$$..^....c......c.....$$$$$$$cccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccc||||$.......c......c.....$$$$$$ccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc|||$$....^.c......c.^.^$$$$$$cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccc|||$^....cc..{...cc...$$$$$ccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccccc||$.....cc...(..cc..$$$$$cccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccc|$...cccc..[...cccc$$$$ccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc""""cc................cc""""cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc"""""""cc22222222222222cc"""""'$cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc""""""""""cc............cc"""""""'$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc'""""""""""cc..........cc""""""""'$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc$''""""""""""cc........cc"""""""""'$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc$$$'""""""""""cc222222cc""""""""''$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|$$$''"""""""""c......c"""""""''$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc||$$$$'""""""""c......c""""""'$$$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|||||$$'"""""""c......c"""""'$$$$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc|||||$'"""""""c......c""""'$$$$$$$$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccc||||$$'""""""c......c""""'$$$$$$$cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc||||$'""""""c......c""""'$$$$$$ccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc|||$$'"""""c......c"""'$$$$$$cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc|||$'""""cc..{...cc""'$$$$$ccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccc||$'""""cc...(..cc"'$$$$$cccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccc|$'""cccc..[...cccc$$$$ccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2566,8 +2310,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: mummy, guardian mummy, mummy priest, greater mummy
-MONS: random, random
 
 #############################################################################
 # Swamp:5
@@ -2799,33 +2541,36 @@ ENDMAP
 NAME: temple_garden
 TAGS: temple_entry no_monster_gen
 ORIENT: float
-SUBST: . = .:500 3:30 G:5 T U:5 V:5
+SUBST: . = .:800 3:30 G:5 T U:5 V:5
+SUBST: ' = .:300 3:30 G:5 T U:5 V:5
 SUBST: ! = .:200 3:30 G:5 T U:5 V:5
 SUBST: ? = .:100 3:30 G:5 T U:5 V:5
+SUBST: _=3., -=l.
 MONS: angel, iron devil, plant
 MAP
 ........................................xxxxxxxx
-..........................................llxxxx
-.........................................llllxxx
-......................!!!................lll2xxx
-....................!!!!!!!...............llllxx
-..................!!!!!!!!!!!...............lllx
-...............!!!!!!!!!!!!!!!!!.............llx
-..............!!!!!!!!!?!!!!!!!!!.............lx
-.............!!!!!!!!!???!!!!!!!!!.............x
-............!!!!!!!!!?????!!!!!!!!!.............
-...........!!!!!!!!!???????!!!!!!!!!............
-..........!!!!!!!!!????O????!!!!!!!!!...........
-...........!!!!!!!!!???????!!!!!!!!!............
-............!!!!!!!!!?????!!!!!!!!!.............
-x............!!!!!!!!!???!!!!!!!!!..............
-x.............!!!!!!!!!?!!!!!!!!!...............
-xx.............!!!!!!!!!!!!!!!!!................
-xxxx3.............!!!!!!!!!!!...................
-xxxxx3..............!!!!!!!.....................
-xxxx13................!!!.......................
-xxxxxx3.........................................
-xxxxxxxxxx......................................
+.....................'''''...............-llxxxx
+..................'''''''''''...........-llllxxx
+...............'''''''!!!'''''''........-lll2xxx
+............''''''''!!!!!!!''''''''......-llllxx
+...........'''''''!!!!!!!!!!!'''''''.......-lllx
+..........'''''!!!!!!!!!!!!!!!!!'''''........llx
+.........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
+........'''''!!!!!!!!!???!!!!!!!!!'''''........x
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
+.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......'''!!!!!!!!!????O????!!!!!!!!!'''........
+.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
+x.......'''''!!!!!!!!!???!!!!!!!!!'''''.........
+x........'''''!!!!!!!!!?!!!!!!!!!'''''..........
+xx._......'''''!!!!!!!!!!!!!!!!!'''''...........
+xxxx3......'''''''!!!!!!!!!!!'''''''............
+xxxxx3......''''''''!!!!!!!''''''''.............
+xxxx13_........'''''''!!!'''''''................
+xxxxxx3_..........'''''''''''...................
+xxxxxxxxxx...........'''''......................
+xxxxxxxxxxxx....................................
 ENDMAP
 
 ##############################################################################
@@ -3627,9 +3372,9 @@ ENDMAP
 NAME:    erik_hive_3
 TAGS:    hive_entry
 MONS:    killer bee larva, killer bee, queen bee, firedrake / w:5 nothing
-MONS:    nothing, nothing, nothing
-SHUFFLE: UVWXYZ, l4/c5/v6/w7
-SUBST:   c:l, v:l, 5:4, 6:4, l=.l, w=.w, U==, V=a, W=a, X=a, Y=a, Z=a, '=.a
+MONS:    nothing
+SHUFFLE: UVWXYZ, l4/l4/l4/w5
+SUBST:   l=.l, w=.w, U==, V=a, W=a, X=a, Y=a, Z=a, '=.a
 KMONS:   l = firedrake / w:200 nothing
 ORIENT:  float
 MAP

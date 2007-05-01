@@ -219,9 +219,9 @@ void mons_trap(struct monsters *monster)
                 && !silenced(you.x_pos, you.y_pos))
         {
             if (monsterNearby)
-                mpr("You hear a loud \"Zot\"!");
+                mpr("You hear a loud \"Zot\"!", MSGCH_SOUND);
             else
-                mpr("You hear a distant \"Zot\"!");
+                mpr("You hear a distant \"Zot\"!", MSGCH_SOUND);
         }
 
         // determine trap effects upon monster, based upon
