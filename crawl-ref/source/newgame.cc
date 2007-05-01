@@ -3890,8 +3890,9 @@ void give_items_skills()
             you.inv[5] = you.inv[4];
             
             you.inv[4].quantity = 5 + roll_dice(2, 5);
-            you.inv[5].quantity = 1 + random2(4);
+            set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
 
+            you.inv[5].quantity = 1 + random2(4);
             set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         }
 
