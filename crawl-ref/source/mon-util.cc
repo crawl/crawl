@@ -514,7 +514,7 @@ bool mons_player_visible( struct monsters *mon )
 
 unsigned char mons_char(int mc)
 {
-    return (unsigned char) smc->showchar;
+    return static_cast<unsigned char>(smc->showchar);
 }                               // end mons_char()
 
 char mons_itemuse(int mc)

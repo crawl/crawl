@@ -423,7 +423,7 @@ static bool is_safe_move(int x, int y)
         return (true);
 
     // We can also safely run through smoke.
-    const cloud_type ctype = (cloud_type) env.cloud[ cloud ].type;
+    const cloud_type ctype = env.cloud[ cloud ].type;
     return (!is_damaging_cloud(ctype));
 }
 
@@ -2837,7 +2837,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
         for (int x = 0; x < GXM - 1; ++x)
         {
             int grid = grd[x + 1][y + 1];
-            int envc = (unsigned char) env.map[x][y];
+            int envc = env.map[x][y];
 
             if ((x + 1 == you.x_pos && y + 1 == you.y_pos)
                     || (envc 

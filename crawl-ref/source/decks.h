@@ -13,12 +13,13 @@
 #ifndef DECKS_H
 #define DECKS_H
 
+#include "enum.h"
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: it_use_3 - religion
  * *********************************************************************** */
-void deck_of_cards(unsigned char which_deck);
+void deck_of_cards(deck_type which_deck);
 
 
 #endif

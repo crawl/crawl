@@ -414,7 +414,8 @@ static void hs_nextstring(const char *&inbuf, char *dest, size_t destsize)
     if (*inbuf == ':')
         inbuf++;
 
-    while (*inbuf && *inbuf != ':' && (p - dest) < (int) destsize - 1)
+    while (*inbuf && *inbuf != ':' &&
+           (p - dest) < static_cast<int>(destsize) - 1)
         *p++ = *inbuf++;
 
     // If we ran out of buffer, discard the rest of the field.
@@ -1051,7 +1052,7 @@ void scorefile_entry::init()
     name    = you.your_name;
 
 #ifdef MULTIUSER
-    uid = (int) getuid();
+    uid = static_cast<int>(getuid());
 #else
     uid = 0;
 #endif

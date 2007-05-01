@@ -74,7 +74,8 @@ static int dungeon_branch_depth( unsigned char branch )
 
 static bool is_noteworthy_dlevel( unsigned short place )
 {
-    const unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
+    const unsigned char branch =
+        static_cast<unsigned char>((place >> 8) & 0xFF);
     const int lev = (place & 0xFF);
 
     /* Special levels (Abyss, etc.) are always interesting */
@@ -372,7 +373,7 @@ void Note::save( FILE* fp ) const {
 
 void Note::load( FILE* fp )
 {
-    type = (NOTE_TYPES)(readLong( fp ));
+    type = static_cast<NOTE_TYPES>(readLong( fp ));
     turn = readLong( fp );
     packed_place = readShort( fp );
     first = readLong( fp );

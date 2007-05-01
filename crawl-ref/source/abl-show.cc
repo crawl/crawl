@@ -435,14 +435,11 @@ bool activate_ability(void)
 /*************************/
 {
     unsigned char keyin = 0;
-    unsigned char spc, spc2;
 
     int power;
     struct dist abild;
     struct bolt beam;
     struct dist spd;
-
-    unsigned char abil_used;
 
     if (you.berserker)
     {
@@ -505,23 +502,19 @@ bool activate_ability(void)
         }
     }
 
-    spc = (int) keyin;
-
-    if (!isalpha( spc ))
+    if (!isalpha( keyin ))
     {
         mpr("You can't do that.");
         return (false);
     }
 
-    spc2 = letter_to_index(spc);
+    const int abil_used = letter_to_index(keyin);
 
-    if (Curr_abil[spc2].which == -1)
+    if (Curr_abil[abil_used].which == -1)
     {
         mpr("You can't do that.");
         return (false);
     }
-
-    abil_used = spc2;
 
     // some abilities don't need a hunger check
     bool hungerCheck = true;
@@ -1609,7 +1602,7 @@ bool generate_abilities( bool check_confused )
         {
             if ( you.piety >= piety_breakpoint(i) )
             {
-                ability_type abil = god_abilities[(int)you.religion][i];
+                ability_type abil = god_abilities[you.religion][i];
                 if ( abil != ABIL_NON_ABILITY )
                     insert_ability(abil, check_confused);
             }
@@ -1752,9 +1745,9 @@ void set_god_ability_slots( void )
     int num = 0;
     for ( i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
-        if ( god_abilities[(int)you.religion][i] != ABIL_NON_ABILITY )
+        if ( god_abilities[you.religion][i] != ABIL_NON_ABILITY )
         {
-            set_god_ability_helper(god_abilities[(int)you.religion][i],
+            set_god_ability_helper(god_abilities[you.religion][i],
                                    (Options.lowercase_invocations ? 'a' : 'A') + num);
             ++num;
         }

@@ -215,7 +215,7 @@ static void adjust_spells(void)
         return;
     }
 
-    int input_1 = (int) keyin;
+    int input_1 = keyin;
 
     if (!isalpha( input_1 ))
     {
@@ -265,7 +265,7 @@ static void adjust_spells(void)
         return;
     }
 
-    int input_2 = (int) keyin;
+    int input_2 = keyin;
 
     if (!isalpha( input_2 ))
     {
@@ -335,7 +335,7 @@ static void adjust_ability(void)
         return;
     }
 
-    int input_1 = (int) keyin;
+    int input_1 = keyin;
 
     if (!isalpha( input_1 ))
     {
@@ -384,7 +384,7 @@ static void adjust_ability(void)
         return;
     }
 
-    int input_2 = (int) keyin;
+    int input_2 = keyin;
 
     if (!isalpha( input_2 ))
     {

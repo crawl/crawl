@@ -96,8 +96,8 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
                       int mode = TARG_ENEMY,
                       const char *prompt = NULL );
 
-void apply_area_cloud(int (*func) (int, int, int, int, kill_category),
-                      int x, int y, int pow, int number, int ctype,
+void apply_area_cloud(int (*func) (int, int, int, cloud_type, kill_category),
+                      int x, int y, int pow, int number, cloud_type ctype,
                       kill_category);
 
 const char *spelltype_name(unsigned int which_spelltype);

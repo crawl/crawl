@@ -608,7 +608,7 @@ void canned_msg(canned_message_type which_message)
 bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             bool interrupt_delays, bool noprompt )
 {
-    unsigned char tmp;
+    int tmp;
 
     if (interrupt_delays)
         interrupt_activity( AI_FORCE_INTERRUPT );
@@ -617,7 +617,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         if ( !noprompt )
             mpr(str, MSGCH_PROMPT);
 
-        tmp = (unsigned char) getch();
+        tmp = getch();
 
         if ((tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n') 
                 && safeanswer)

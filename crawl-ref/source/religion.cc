@@ -292,7 +292,7 @@ void dec_penance(int val)
 
 void inc_penance(int god, int val)
 {
-    if ((int) you.penance[god] + val > 200)
+    if (you.penance[god] + val > 200)
         you.penance[god] = 200;
     else
         you.penance[god] += val;
@@ -305,7 +305,7 @@ void inc_penance(int val)
 
 static void inc_gift_timeout(int val)
 {
-    if ((int) you.gift_timeout + val > 200)
+    if (you.gift_timeout + val > 200)
         you.gift_timeout = 200;
     else
         you.gift_timeout += val;
@@ -1694,7 +1694,7 @@ void gain_piety(char pgn)
              old_piety < piety_breakpoint(i) )
         {
             take_note(Note(NOTE_GOD_POWER, you.religion, i));
-            const char* pmsg = god_gain_power_messages[(int)you.religion][i];
+            const char* pmsg = god_gain_power_messages[you.religion][i];
             const char first = pmsg[0];
             if ( first )
             {
@@ -1743,7 +1743,7 @@ void lose_piety(char pgn)
             if ( you.piety < piety_breakpoint(i) &&
                  old_piety >= piety_breakpoint(i) )
             {
-                const char* pmsg=god_lose_power_messages[(int)you.religion][i];
+                const char* pmsg = god_lose_power_messages[you.religion][i];
                 const char first = pmsg[0];
                 if ( first )
                 {

@@ -222,7 +222,7 @@ const std::vector<std::string> &map_lines::get_lines() const
 void map_lines::add_line(const std::string &s)
 {
     lines.push_back(s);
-    if ((int) s.length() > map_width)
+    if (static_cast<int>(s.length()) > map_width)
         map_width = s.length();
 }
 
@@ -478,7 +478,7 @@ void map_lines::normalise(char fillch)
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         std::string &s = lines[i];
-        if ((int) s.length() < map_width)
+        if (static_cast<int>(s.length()) < map_width)
             s += std::string( map_width - s.length(), fillch );
     }
 }

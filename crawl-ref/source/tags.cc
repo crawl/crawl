@@ -1544,7 +1544,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
     {
         env.cloud[i].x = unmarshallByte(th);
         env.cloud[i].y = unmarshallByte(th);
-        env.cloud[i].type = unmarshallByte(th);
+        env.cloud[i].type = static_cast<cloud_type>(unmarshallByte(th));
         env.cloud[i].decay = unmarshallShort(th);
         env.cloud[i].whose = static_cast<kill_category>(unmarshallShort(th));
     }

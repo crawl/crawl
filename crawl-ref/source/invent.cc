@@ -722,15 +722,13 @@ std::vector<SelItem> prompt_invent_items(
 
 static int digit_to_index( char digit, operation_types oper ) {
     
-    int i;
-    unsigned int j;
-    char iletter = (char)(oper);
+    const char iletter = static_cast<char>(oper);
 
-    for ( i = 0; i < ENDOFPACK; ++i ) {
+    for ( int i = 0; i < ENDOFPACK; ++i ) {
         if (is_valid_item(you.inv[i])) {
             const std::string& r(you.inv[i].inscription);
             /* note that r.size() is unsigned */
-            for ( j = 0; j + 2 < r.size(); ++j ) {
+            for ( unsigned int j = 0; j + 2 < r.size(); ++j ) {
                 if ( r[j] == '@' &&
                      (r[j+1] == iletter || r[j+1] == '*') &&
                      r[j+2] == digit ) {
@@ -745,11 +743,10 @@ static int digit_to_index( char digit, operation_types oper ) {
 static bool has_warning_inscription(const item_def& item,
                                     operation_types oper)
 {
-    char iletter = (char)(oper);
-    unsigned int i;
+    const char iletter = static_cast<char>(oper);
     
     const std::string& r(item.inscription);
-    for ( i = 0; i + 1 < r.size(); ++i )
+    for ( unsigned int i = 0; i + 1 < r.size(); ++i )
         if (r[i] == '!' && (r[i+1] == iletter || r[i+1] == '*'))
             return true;
     return false;

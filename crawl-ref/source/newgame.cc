@@ -342,7 +342,7 @@ static unsigned char random_potion_description()
             || desc == PDESCS(PDC_CLEAR)
             || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
-    return (unsigned char) desc;
+    return static_cast<unsigned char>(desc);
 }
 
 // Determine starting depths of branches

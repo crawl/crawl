@@ -493,7 +493,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         }
 
         if (hard_reset)
-            place_cloud( CLOUD_GREY_SMOKE + random2(3),
+            place_cloud( random_smoke_type(),
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
 
@@ -731,8 +731,8 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 simple_monster_message( monster,
                                         " disappears in a puff of smoke!" );
 
-            place_cloud( CLOUD_GREY_SMOKE + random2(3), monster->x,
-                         monster->y, 1 + random2(3),
+            place_cloud( random_smoke_type(),
+                         monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
 
             if (monster->needs_transit())
@@ -820,7 +820,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                     simple_monster_message(monster,
                                 "'s corpse disappears in a puff of smoke!");
 
-                    place_cloud( CLOUD_GREY_SMOKE + random2(3),
+                    place_cloud( random_smoke_type(),
                                  monster->x, monster->y, 1 + random2(3),
                                  monster->kill_alignment() );
                 }

@@ -50,9 +50,9 @@ static int spell_list[NUM_SPELLS];
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
 static struct spell_desc *seekspell(int spellid);
-static bool cloud_helper( int (*func) (int, int, int, int, kill_category),
-                          int x, int y, 
-                          int pow, int ctype, kill_category );
+static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
+                         int x, int y, 
+                         int pow, cloud_type ctype, kill_category );
 
 /*
  *             BEGIN PUBLIC FUNCTIONS
@@ -523,9 +523,10 @@ int apply_area_within_radius( int (*func) (int, int, int, int),
 // We really need some sort of a queue structure, since ideally I'd like
 // to do a (shallow) breadth-first-search of the dungeon floor.
 // This ought to work okay for small clouds.
-void apply_area_cloud( int (*func) (int, int, int, int, kill_category),
+void apply_area_cloud( int (*func) (int, int, int, cloud_type, kill_category),
                        int x, int y,
-                       int pow, int number, int ctype, kill_category whose )
+                       int pow, int number, cloud_type ctype,
+                       kill_category whose )
 {
     int spread, clouds_left = number;
     int good_squares = 0, neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -811,9 +812,9 @@ static struct spell_desc *seekspell(int spell)
     return (&spelldata[spell_list[spell]]);
 }
 
-static bool cloud_helper( int (*func) (int, int, int, int, kill_category),
-                          int x, int y, 
-                          int pow, int ctype, kill_category whose )
+static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
+                         int x, int y, 
+                         int pow, cloud_type ctype, kill_category whose )
 {
     if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
     {

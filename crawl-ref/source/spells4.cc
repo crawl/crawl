@@ -62,7 +62,7 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
 // static int make_a_random_cloud(int x, int y, int pow, int ctype);
-static int make_a_rot_cloud(int x, int y, int pow, int ctype);
+static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype);
 static int quadrant_blink(int x, int y, int pow, int garbage);
 
 //void cast_animate_golem(int pow); // see actual function for reasoning {dlb}
@@ -990,7 +990,7 @@ static int ignite_poison_clouds( int x, int y, int pow, int garbage )
         }
     }
 
-    return ((int) did_anything);
+    return did_anything;
 }                               // end ignite_poison_clouds()
 
 static int ignite_poison_monsters(int x, int y, int pow, int garbage)
@@ -1501,7 +1501,7 @@ void cast_swap(int pow)
     apply_one_neighbouring_square( spell_swap_func, pow );
 }
 
-static int make_a_rot_cloud(int x, int y, int pow, int ctype)
+static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
 {
     int next = 0, obj = mgrd[x][y];
 
@@ -1537,7 +1537,8 @@ static int make_a_rot_cloud(int x, int y, int pow, int ctype)
     return 0;
 }                               // end make_a_rot_cloud()
 
-int make_a_normal_cloud(int x, int y, int pow, int ctype, kill_category whose)
+int make_a_normal_cloud(int x, int y, int pow, cloud_type ctype,
+                        kill_category whose)
 {
     place_cloud( ctype, x, y, 
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),

@@ -31,14 +31,7 @@
 #include "spl-cast.h"
 #include "stuff.h"
 
-// array sizes -- see notes below {dlb}
-#define DECK_WONDERS_SIZE 27
-#define DECK_SUMMONING_SIZE 11
-#define DECK_TRICKS_SIZE 11
-#define DECK_POWER_SIZE 17
-#define DECK_PUNISHMENT_SIZE 23
-
-enum CARDS                      // (unsigned char) deck_of_foo[]
+enum card_type
 {
     CARD_BLANK = 0,             //    0
     CARD_BUTTERFLY,
@@ -99,7 +92,7 @@ enum CARDS                      // (unsigned char) deck_of_foo[]
     CARD_RANDOM = 255           // must remain final member {dlb}
 };
 
-static unsigned char deck_of_wonders[] = 
+static card_type deck_of_wonders[] = 
 {
     CARD_BLANK,
     CARD_BUTTERFLY,
@@ -130,7 +123,7 @@ static unsigned char deck_of_wonders[] =
     CARD_PANDEMONIUM
 };
 
-static unsigned char deck_of_summoning[] = 
+static card_type deck_of_summoning[] = 
 {
     CARD_STATUE,
     CARD_DEMON_LESSER,
@@ -145,7 +138,7 @@ static unsigned char deck_of_summoning[] =
     CARD_HORROR_UNSEEN
 };
 
-static unsigned char deck_of_tricks[] = 
+static card_type deck_of_tricks[] = 
 {
     CARD_BLANK,
     CARD_BUTTERFLY,
@@ -160,7 +153,7 @@ static unsigned char deck_of_tricks[] =
     CARD_HASTEN
 };
 
-static unsigned char deck_of_power[] = 
+static card_type deck_of_power[] = 
 {
     CARD_BLANK,
     CARD_DEMON_COMMON,
@@ -183,7 +176,7 @@ static unsigned char deck_of_power[] =
 
 // Supposed to be bad, small chance of OK... Nemelex wouldn't like a game 
 // that didn't have some chance of "losing".
-static unsigned char deck_of_punishment[] = 
+static card_type deck_of_punishment[] = 
 {
     CARD_BLANK,
     CARD_BUTTERFLY,
@@ -210,22 +203,20 @@ static unsigned char deck_of_punishment[] =
     CARD_PANDEMONIUM
 };
 
-static void cards(unsigned char which_card);
+// array sizes -- see notes below {dlb}
+#define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
+#define DECK_WONDERS_SIZE ARRAYSIZE(deck_of_wonders)
+#define DECK_SUMMONING_SIZE ARRAYSIZE(deck_of_summoning)
+#define DECK_TRICKS_SIZE ARRAYSIZE(deck_of_tricks)
+#define DECK_POWER_SIZE ARRAYSIZE(deck_of_power)
+#define DECK_PUNISHMENT_SIZE ARRAYSIZE(deck_of_punishment)
 
-void deck_of_cards(unsigned char which_deck)
+static void cards(card_type which_card);
+
+void deck_of_cards(deck_type which_deck)
 {
-
-    // I really am not fond of how all of this works, the
-    // decks ought to be stored (possibly) in an array of
-    // pointers to int or as discrete arrays of int using
-    // the sizeof operator to determine upper bounds, and
-    // not defines, which is a bit clumsy given that you
-    // have to update two things presently (the array and
-    // the corresponding define) in order to add things to
-    // decks ... someone fix this, or I will {dlb}
-    unsigned char *card = deck_of_wonders;
-    unsigned char max_card = 0;
-    int i = 0;
+    card_type *deck = deck_of_wonders;
+    int max_card = 0;
     int brownie_points = 0;     // for passing to did_god_conduct() {dlb}
 
     mpr("You draw a card...");
@@ -233,39 +224,41 @@ void deck_of_cards(unsigned char which_deck)
     switch (which_deck)
     {
     case DECK_OF_WONDERS:
-        card = deck_of_wonders;
+        deck = deck_of_wonders;
         max_card = DECK_WONDERS_SIZE;
         break;
     case DECK_OF_SUMMONING:
-        card = deck_of_summoning;
+        deck = deck_of_summoning;
         max_card = DECK_SUMMONING_SIZE;
         break;
     case DECK_OF_TRICKS:
-        card = deck_of_tricks;
+        deck = deck_of_tricks;
         max_card = DECK_TRICKS_SIZE;
         break;
     case DECK_OF_POWER:
-        card = deck_of_power;
+        deck = deck_of_power;
         max_card = DECK_POWER_SIZE;
         break;
     case DECK_OF_PUNISHMENT:
-        card = deck_of_punishment;
+        deck = deck_of_punishment;
         max_card = DECK_PUNISHMENT_SIZE;
         break;
     }
 
-    i = (int) card[random2(max_card)];
+    card_type chosen = deck[random2(max_card)];
 
     if (one_chance_in(250))
     {
         mpr("This card doesn't seem to belong here.");
-        i = random2(NUM_CARDS);
+        chosen = static_cast<card_type>(random2(NUM_CARDS));
     }
 
-    if (i == CARD_BLANK && you.skills[SK_EVOCATIONS] > random2(30))
-        i = (int) card[random2(max_card)];
+    // High Evocations gives you another shot (but not at being punished...)
+    if (which_deck != DECK_OF_PUNISHMENT && chosen == CARD_BLANK &&
+        you.skills[SK_EVOCATIONS] > random2(30))
+        chosen = deck[random2(max_card)];
 
-    cards(i);
+    cards(chosen);
 
     // Decks of punishment aren't objects in the game,
     // its just Nemelex's form of punishment -- bwr
@@ -300,7 +293,7 @@ void deck_of_cards(unsigned char which_deck)
     return;
 }                               // end deck_of_cards()
 
-static void cards(unsigned char which_card)
+static void cards(card_type which_card)
 {
     FixedVector < int, 5 > dvar;
     FixedVector < int, 5 > mvar;
@@ -315,7 +308,6 @@ static void cards(unsigned char which_card)
 
     switch (which_card)
     {
-    default:
     case CARD_BLANK:
         mpr("It is blank.");
         break;
@@ -862,6 +854,11 @@ static void cards(unsigned char which_card)
     case CARD_IMPRISONMENT:
         mpr("You have drawn the Prison!");
         entomb();
+        break;
+
+    case NUM_CARDS:
+    case CARD_RANDOM:
+        mpr("You have drawn a buggy card!");
         break;
     }
 

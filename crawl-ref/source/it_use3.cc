@@ -22,6 +22,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "cloud.h"
 #include "decks.h"
 #include "direct.h"
 #include "effects.h"
@@ -849,7 +850,7 @@ void tome_of_power(char sc_read_2)
     case 8:
     case 9:
         mpr("A cloud of weird smoke pours from the book's pages!");
-        big_cloud( CLOUD_GREY_SMOKE + random2(3), KC_YOU,
+        big_cloud( random_smoke_type(), KC_YOU,
                    you.x_pos, you.y_pos, 20, 10 + random2(8) );
         return;
     case 1:

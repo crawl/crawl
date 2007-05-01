@@ -1463,7 +1463,7 @@ static void fsim_item(FILE *out,
                       int maxdam, unsigned long time)
 {
     double hitdam = hits? double(damage) / hits : 0.0;
-    int avspeed = (int) (time / iterations);
+    int avspeed = static_cast<int>(time / iterations);
     fprintf(out,
             " %-5s|  %3ld%%    |  %5.2f |    %5.2f  |"
             "   %5.2f |   %3d   |   %2ld\n",

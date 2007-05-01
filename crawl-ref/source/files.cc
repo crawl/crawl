@@ -129,7 +129,7 @@ static std::string uid_as_string()
 {
 #ifdef MULTIUSER
     char struid[20];
-    snprintf( struid, sizeof struid, "-%d", (int)getuid() );
+    snprintf( struid, sizeof struid, "-%d", static_cast<int>(getuid()) );
     return std::string(struid);
 #else
     return std::string();
@@ -1532,8 +1532,8 @@ void writeShort(FILE *file, short s)
 {
     char data[2];
     // High byte first - network order
-    data[0] = (char)((s >> 8) & 0xFF);
-    data[1] = (char)(s & 0xFF);
+    data[0] = static_cast<char>((s >> 8) & 0xFF);
+    data[1] = static_cast<char>(s & 0xFF);
 
     write2(file, data, sizeof(data));
 }

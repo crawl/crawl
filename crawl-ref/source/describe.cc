@@ -3121,7 +3121,8 @@ std::string get_item_description( const item_def &item, bool verbose,
                     << "x: " << item.x << " y: " << item.y
                     << " link: " << item.link
                     << " ident_type: "
-                    << get_ident_type(item.base_type, item.sub_type)
+                    << static_cast<int>(get_ident_type(item.base_type,
+                                                       item.sub_type))
                     << "$$";
     }
 #endif

@@ -115,7 +115,7 @@ int str_to_colour( const std::string &str, int default_colour )
         // Check if we have a direct colour index
         const char *s = str.c_str();
         char *es = NULL;
-        int ci = (int) strtol(s, &es, 10);
+        const int ci = static_cast<int>(strtol(s, &es, 10));
         if (s != (const char *) es && es && ci >= 0 && ci < 16)
             ret = ci;
     }
@@ -1786,7 +1786,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
         if (!SysEnv.crawl_dir)
-            SysEnv.crawl_dir = (char *) calloc(kPathLen, sizeof(char));
+            SysEnv.crawl_dir = (char*)calloc(kPathLen, sizeof(char));
 
         if (SysEnv.crawl_dir)
         {

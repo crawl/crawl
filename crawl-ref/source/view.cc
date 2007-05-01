@@ -1064,8 +1064,8 @@ static int find_next_intercept(double* accx, double* accy, const double slope)
         return 1;
     }
 
-    const double xtarget = (double)((int)(*accx) + 1);
-    const double ytarget = (double)((int)(*accy) + 1);
+    const double xtarget = (static_cast<int>(*accx) + 1);
+    const double ytarget = (static_cast<int>(*accy) + 1);
     const double xdistance = xtarget - *accx;
     const double ydistance = ytarget - *accy;
     const double distdiff = (xdistance * slope - ydistance);
@@ -1191,8 +1191,8 @@ static int shoot_ray( double accx, double accy, const double slope,
     for ( cellnum = 0; true; ++cellnum )
     {
         find_next_intercept( &accx, &accy, slope );
-        curx = (int)(accx);
-        cury = (int)(accy);
+        curx = static_cast<int>(accx);
+        cury = static_cast<int>(accy);
         if ( curx > maxrange || cury > maxrange )
             break;
 
@@ -1264,7 +1264,7 @@ static std::vector<int> find_nonduped_cellrays()
 
     std::vector<int> result;
     for (curidx=0, raynum=0;
-         raynum < (int)raylengths.size();
+         raynum < static_cast<int>(raylengths.size());
          curidx += raylengths[raynum++])
     {
         for (cellnum = 0; cellnum < raylengths[raynum]; ++cellnum)

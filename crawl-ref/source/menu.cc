@@ -331,7 +331,7 @@ void Menu::deselect_all(bool update_view)
 bool Menu::is_hotkey(int i, int key)
 {
     int end = first_entry + pagesize;
-    if (end > (int) items.size()) end = items.size();
+    if (end > static_cast<int>(items.size())) end = items.size();
 
     bool ishotkey = is_set(MF_SINGLESELECT)?
                         items[i]->is_primary_hotkey(key)

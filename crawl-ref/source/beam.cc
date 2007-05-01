@@ -2195,7 +2195,7 @@ static bool isBouncy(struct bolt &beam, unsigned char gridtype)
 
 static void beam_explodes(struct bolt &beam, int x, int y)
 {
-    int cloud_type;
+    cloud_type cl_type;
 
     // this will be the last thing this beam does.. set target_x
     // and target_y to hold explosion co'ords.
@@ -2272,8 +2272,8 @@ static void beam_explodes(struct bolt &beam, int x, int y)
     // cloud producer -- FOUL VAPOR (SWAMP DRAKE?)
     if (beam.name == "foul vapour")
     {
-        cloud_type = beam.flavour == BEAM_MIASMA? CLOUD_MIASMA : CLOUD_STINK;
-        big_cloud( cloud_type, whose_kill(beam), x, y, 0, 9 );
+        cl_type = beam.flavour == BEAM_MIASMA? CLOUD_MIASMA : CLOUD_STINK;
+        big_cloud( cl_type, whose_kill(beam), x, y, 0, 9 );
         return;
     }
 
@@ -2630,7 +2630,8 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
     {
         // polymorph randomly changes clouds in its path
         if (beam.flavour == BEAM_POLYMORPH)
-            env.cloud[ env.cgrid[x][y] ].type = 1 + random2(8);
+            env.cloud[ env.cgrid[x][y] ].type =
+                static_cast<cloud_type>(1 + random2(8));
 
         // now exit (all enchantments)
         if (beam.name[0] == '0')
@@ -2709,7 +2710,7 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
 // following two functions used with explosions:
 static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
 {
-    int cloud_type; 
+    cloud_type cl_type; 
     int duration;
 
     // first check: FIRE/COLD over water/lava
@@ -2729,58 +2730,58 @@ static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
         switch (beam.flavour)
         {
         case BEAM_POTION_STINKING_CLOUD:
-            cloud_type = CLOUD_STINK;
+            cl_type = CLOUD_STINK;
             break;
 
         case BEAM_POTION_POISON:
-            cloud_type = CLOUD_POISON;
+            cl_type = CLOUD_POISON;
             break;
 
         case BEAM_POTION_MIASMA:
-            cloud_type = CLOUD_MIASMA;
+            cl_type = CLOUD_MIASMA;
             break;
 
         case BEAM_POTION_BLACK_SMOKE:
-            cloud_type = CLOUD_BLACK_SMOKE;
+            cl_type = CLOUD_BLACK_SMOKE;
             break;
 
         case BEAM_POTION_FIRE:
-            cloud_type = CLOUD_FIRE;
+            cl_type = CLOUD_FIRE;
             break;
 
         case BEAM_POTION_COLD:
-            cloud_type = CLOUD_COLD;
+            cl_type = CLOUD_COLD;
             break;
 
         case BEAM_POTION_BLUE_SMOKE:
-            cloud_type = CLOUD_BLUE_SMOKE;
+            cl_type = CLOUD_BLUE_SMOKE;
             break;
 
         case BEAM_POTION_PURP_SMOKE:
-            cloud_type = CLOUD_PURP_SMOKE;
+            cl_type = CLOUD_PURP_SMOKE;
             break;
 
         case BEAM_POTION_RANDOM:
             switch (random2(10)) 
             {
-            case 0:  cloud_type = CLOUD_FIRE;           break;
-            case 1:  cloud_type = CLOUD_STINK;          break;
-            case 2:  cloud_type = CLOUD_COLD;           break;
-            case 3:  cloud_type = CLOUD_POISON;         break;
-            case 4:  cloud_type = CLOUD_BLACK_SMOKE;    break;
-            case 5:  cloud_type = CLOUD_BLUE_SMOKE;     break;
-            case 6:  cloud_type = CLOUD_PURP_SMOKE;     break;
-            default: cloud_type = CLOUD_STEAM;          break;
+            case 0:  cl_type = CLOUD_FIRE;           break;
+            case 1:  cl_type = CLOUD_STINK;          break;
+            case 2:  cl_type = CLOUD_COLD;           break;
+            case 3:  cl_type = CLOUD_POISON;         break;
+            case 4:  cl_type = CLOUD_BLACK_SMOKE;    break;
+            case 5:  cl_type = CLOUD_BLUE_SMOKE;     break;
+            case 6:  cl_type = CLOUD_PURP_SMOKE;     break;
+            default: cl_type = CLOUD_STEAM;          break;
             }
             break;
 
         case BEAM_POTION_STEAM:
         default:
-            cloud_type = CLOUD_STEAM;
+            cl_type = CLOUD_STEAM;
             break;
         }
 
-        place_cloud( cloud_type, x, y, duration, whose_kill(beam) );
+        place_cloud( cl_type, x, y, duration, whose_kill(beam) );
     }
 
     // then check for more specific explosion cloud types.

@@ -473,18 +473,18 @@ int stinking_cloud( int pow, bolt &beem )
     return (1);
 }                               // end stinking_cloud()
 
-int cast_big_c(int pow, int cty, kill_category whose, bolt &beam)
+int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
     big_cloud( cty, whose,
                beam.target_x, beam.target_y, pow, 8 + random2(3) );
     return (1);
 }                               // end cast_big_c()
 
-void big_cloud(int cloud_type, kill_category whose,
+void big_cloud(cloud_type cl_type, kill_category whose,
                int cl_x, int cl_y, int pow, int size)
 {
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
-                     cloud_type, whose);
+                     cl_type, whose);
 }                               // end big_cloud()
 
 static int healing_spell( int healed )

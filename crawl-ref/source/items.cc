@@ -1507,10 +1507,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
     // multiply both constants * 10
 
-    if ((int) you.burden + imass > carrying_capacity())
+    if (you.burden + imass > carrying_capacity())
     {
         // calculate quantity we can actually pick up
-        int part = (carrying_capacity() - (int)you.burden) / unit_mass;
+        int part = (carrying_capacity() - you.burden) / unit_mass;
 
         if (part < 1)
             return (0);
@@ -2010,7 +2010,7 @@ void update_corpses(double elapsedTime)
     if (elapsedTime <= 0.0)
         return;
 
-    const long rot_time = (long) (elapsedTime / 20.0);
+    const long rot_time = static_cast<long>(elapsedTime / 20.0);
 
     for (int c = 0; c < MAX_ITEMS; c++)
     {
@@ -2063,8 +2063,8 @@ void update_corpses(double elapsedTime)
         }
     }
 
-    int fountain_checks = (int)(elapsedTime / 1000.0);
-    if (random2(1000) < (int)(elapsedTime) % 1000)
+    int fountain_checks = static_cast<int>(elapsedTime / 1000.0);
+    if (random2(1000) < static_cast<int>(elapsedTime) % 1000)
         fountain_checks += 1;
 
     // dry fountains may start flowing again
@@ -2101,7 +2101,7 @@ void update_corpses(double elapsedTime)
 void update_level( double elapsedTime )
 {
     int m, i;
-    int turns = (int) (elapsedTime / 10.0);
+    const int turns = static_cast<int>(elapsedTime / 10.0);
 
 #if DEBUG_DIAGNOSTICS
     int mons_total = 0;

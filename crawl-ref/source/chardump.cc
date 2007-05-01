@@ -269,16 +269,16 @@ std::string munge_description(const std::string & inStr)
 
     outStr.reserve(inStr.length() + 32);
 
-    const long kIndent = 3;
-    long lineLen = kIndent;
+    const int kIndent = 3;
+    int lineLen = kIndent;
 
-    long i = 0;
+    unsigned int i = 0;
 
     outStr += std::string(kIndent, ' ');
 
-    while (i < (long) inStr.length())
+    while (i < inStr.length())
     {
-        char ch = inStr[i];
+        const char ch = inStr[i];
 
         if (ch == '$')
         {
@@ -310,8 +310,8 @@ std::string munge_description(const std::string & inStr)
         {
             std::string word;
 
-            while (i < (long) inStr.length()
-                   && lineLen + (long) word.length() < 79
+            while (i < inStr.length()
+                   && lineLen + word.length() < 79
                    && !isspace(inStr[i]) && inStr[i] != '$')
             {
                 word += inStr[i++];
@@ -884,7 +884,7 @@ static void sdump_spells(const std::string &, std::string & text)
                 for (int i = spell_line.length(); i < 68; i++)
                     spell_line += ' ';
 
-                itoa((int) spell_difficulty( spell ), tmp_quant, 10 );
+                itoa(spell_difficulty(spell), tmp_quant, 10 );
                 spell_line += tmp_quant;
                 spell_line += "\n";
 

@@ -1949,7 +1949,7 @@ static int place_monster_vector(std::vector<int> montypes,
     int not_used = 0;
     for (int i = 0; i < num_to_place; i++)
     {
-        if (place_monster( not_used, montypes[random2((int)montypes.size())],
+        if (place_monster( not_used, montypes[random2(montypes.size())],
                            level_number, BEH_SLEEP, MHITNOT, 
                            false, 1, 1, true, PROX_ANYWHERE, 250, 0,
                            no_monster_zones ))
@@ -3186,7 +3186,7 @@ static void dngn_place_item_explicit(int index, int x, int y,
 {
     item_list &sitems = place.map.items;
     
-    if (index < 0 || index >= (int) sitems.size())
+    if (index < 0 || index >= static_cast<int>(sitems.size()))
     {
         // Non-fatal, but we warn even in non-debug mode so there's incentive
         // to fix the problem.

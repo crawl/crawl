@@ -72,8 +72,8 @@ public:
 
     bool isAt(int xp, int yp) const { return x == xp && y == yp; }
     int  abs_pos() const { return abspos; }
-    int  getX() const { return (int) x; }
-    int  getY() const { return (int) y; }
+    int  getX() const { return x; }
+    int  getY() const { return y; }
 
     bool is_verified() const {  return verified; }
 

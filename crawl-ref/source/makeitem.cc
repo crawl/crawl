@@ -846,7 +846,6 @@ int items( int allow_uniques,       // not just true-false,
 {
     int temp_rand = 0;             // probability determination {dlb}
     int range_charges = 0;         // for OBJ_WANDS charge count {dlb}
-    int temp_value = 0;            // temporary value storage {dlb}
     int loopy = 0;                 // just another loop variable {dlb}
     int count = 0;                 // just another loop variable {dlb}
 
@@ -956,11 +955,11 @@ int items( int allow_uniques,       // not just true-false,
                 // pick a weapon based on rarity 
                 for (;;)
                 {
-                    temp_value = (unsigned char) random2(NUM_WEAPONS);
+                    const int wpntype = random2(NUM_WEAPONS);
 
-                    if (weapon_rarity(temp_value) >= random2(10) + 1)
+                    if (weapon_rarity(wpntype) >= random2(10) + 1)
                     {
-                        mitm[p].sub_type = temp_value;
+                        mitm[p].sub_type = static_cast<unsigned char>(wpntype);
                         break;
                     }
                 }

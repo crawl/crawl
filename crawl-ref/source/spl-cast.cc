@@ -216,7 +216,7 @@ char list_spells(void)
 
             gotoxy(77, wherey());
 
-            itoa( (int) spell_difficulty( spell ), sval, 10 );
+            itoa( spell_difficulty( spell ), sval, 10 );
             cprintf(sval);
         }
     }                           // end of j loop
@@ -569,7 +569,7 @@ int spell_enhancement( unsigned int typeflags )
 }                               // end spell_enhancement()
 
 // returns false if spell failed, and true otherwise
-bool cast_a_spell(void)
+bool cast_a_spell()
 {
     char spc = 0;
     char spc2 = 0;
@@ -2941,7 +2941,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             {
             case 0:
                 mprf("Smoke pours from your %s!", your_hand(true) );
-                big_cloud( CLOUD_GREY_SMOKE + random2(3), KC_YOU,
+                big_cloud( random_smoke_type(), KC_YOU,
                            you.x_pos, you.y_pos, 20, 7 + random2(7) );
                 break;
 

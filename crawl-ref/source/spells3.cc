@@ -62,7 +62,7 @@ bool cast_selective_amnesia(bool force)
         {
             mpr( "Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT );
 
-            keyin = (unsigned char) get_ch();
+            keyin = get_ch();
 
             if (keyin == ESCAPE)
                 return (false);        // early return {dlb}
@@ -977,7 +977,7 @@ int portal(void)
 
         for (;;)
         {
-            keyi = (unsigned char) get_ch();
+            keyi = get_ch();
 
             if (keyi == '<')
             {
@@ -1013,7 +1013,7 @@ int portal(void)
 
         for (;;)
         {
-            keyi = (unsigned char) get_ch();
+            keyi = get_ch();
 
             if (keyi == 'x')
             {

@@ -33,7 +33,7 @@ static bool cloud_spreads(const cloud_struct &cloud)
     }
 }
 
-static void new_cloud( int cloud, int type, int x, int y, int decay,
+static void new_cloud( int cloud, cloud_type type, int x, int y, int decay,
                        kill_category whose )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
@@ -47,7 +47,7 @@ static void new_cloud( int cloud, int type, int x, int y, int decay,
     env.cloud_no++;
 }
 
-static void place_new_cloud(int cltype, int x, int y, int decay,
+static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
                             kill_category whose)
 {
     if (env.cloud_no >= MAX_CLOUDS)
@@ -182,7 +182,7 @@ void move_cloud( int cloud, int new_x, int new_y )
 
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
-void check_place_cloud( int cl_type, int x, int y, int lifetime,
+void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
                         kill_category whose )
 {
     if (!in_bounds(x, y) || env.cgrid[x][y] != EMPTY_CLOUD)
@@ -194,7 +194,7 @@ void check_place_cloud( int cl_type, int x, int y, int lifetime,
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
-void place_cloud(int cl_type, int ctarget_x,
+void place_cloud(cloud_type cl_type, int ctarget_x,
                  int ctarget_y, int cl_range,
                  kill_category whose)
 {
@@ -272,4 +272,16 @@ bool is_opaque_cloud(unsigned char cloud_idx)
     const int ctype = env.cloud[cloud_idx].type;
     return ( ctype == CLOUD_BLACK_SMOKE ||
              (ctype >= CLOUD_GREY_SMOKE && ctype <= CLOUD_STEAM) );
+}
+
+cloud_type random_smoke_type()
+{
+    // excludes black (reproducing existing behaviour)
+    switch ( random2(3) )
+    {
+    case 0: return CLOUD_GREY_SMOKE;
+    case 1: return CLOUD_BLUE_SMOKE;
+    case 2: return CLOUD_PURP_SMOKE;
+    }
+    return CLOUD_DEBUGGING;
 }

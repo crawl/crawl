@@ -974,8 +974,8 @@ void throw_type( int lnchClass, int lnchType, int wepClass, int wepType,
 {
     if (wepClass == OBJ_MISSILES
         && lnchClass == OBJ_WEAPONS
-        && is_range_weapon_type((weapon_type) lnchType)
-        && wepType == fires_ammo_type((weapon_type) lnchType))
+        && is_range_weapon_type(static_cast<weapon_type>(lnchType))
+        && wepType == fires_ammo_type(static_cast<weapon_type>(lnchType)))
     {
         launched = true;
     }

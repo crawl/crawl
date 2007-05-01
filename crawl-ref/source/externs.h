@@ -304,8 +304,8 @@ struct ray_def
     int quadrant;
     int fullray_idx;            // for cycling: where did we come from?
     
-    int x() const { return (int)(accx); }
-    int y() const { return (int)(accy); }
+    int x() const { return static_cast<int>(accx); }
+    int y() const { return static_cast<int>(accy); }
     int advance();              // returns the direction taken (0,1,2)
     void advance_and_bounce();
     void regress();
@@ -1056,7 +1056,7 @@ struct cloud_struct
 {
     int           x;
     int           y;
-    int           type;
+    cloud_type    type;
     int           decay;
     kill_category whose;
 };

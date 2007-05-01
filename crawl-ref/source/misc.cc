@@ -314,7 +314,7 @@ void search_around( bool only_adjacent )
     return;
 }                               // end search_around()
 
-void in_a_cloud(void)
+void in_a_cloud()
 {
     int cl = env.cgrid[you.x_pos][you.y_pos];
     int hurted = 0;
@@ -462,6 +462,8 @@ void in_a_cloud(void)
         if (you.hp_max > 4 && coinflip())
             rot_hp(1);
 
+        break;
+    default:
         break;
     }
 
@@ -1847,7 +1849,7 @@ bool i_feel_safe(bool announce)
     if (in_bounds(you.x_pos, you.y_pos)
         && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
     {
-        const cloud_type type = (cloud_type)
+        const cloud_type type =
             env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
         if (is_damaging_cloud(type))
         {

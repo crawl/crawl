@@ -14,13 +14,15 @@
 
 #include "externs.h"
 
+cloud_type random_smoke_type();
+
 void delete_cloud( int cloud );
 void move_cloud( int cloud, int new_x, int new_y );
 
-void check_place_cloud( int cl_type, int x, int y, int lifetime,
+void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
                         kill_category whose );
-void place_cloud(int cl_type, int ctarget_x, int ctarget_y, int cl_range,
-                 kill_category whose);
+void place_cloud(cloud_type cl_type, int ctarget_x, int ctarget_y,
+                 int cl_range, kill_category whose);
 
 void manage_clouds(void);
 
