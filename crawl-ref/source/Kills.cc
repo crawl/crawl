@@ -347,7 +347,16 @@ static bool ends_with(const std::string &s, const char *suffixes[])
     return false;
 }
 
-// For monster names ending with these suffixes, we pluralize directly without
+std::string apostrophise(const std::string &name)
+{
+    if (name.empty())
+        return (name);
+
+    const char lastc = name[ name.length() - 1 ];
+    return (name + (lastc == 's' || lastc == 'x'? "'" : "'s"));
+}
+
+// For monster names ending with these suffixes, we pluralise directly without
 // attempting to use the "of" rule. For instance:
 // 
 //      moth of wrath           => moths of wrath but
@@ -361,18 +370,18 @@ static const char *modifier_suffixes[] =
     "zombie", "skeleton", "simulacrum", NULL,
 };
 
-// Pluralizes a monster name. This'll need to be updated for correctness
+// Pluralises a monster name. This'll need to be updated for correctness
 // whenever new monsters are added.
-std::string pluralize(const std::string &name, 
+std::string pluralise(const std::string &name, 
                       const char *no_of[])
 {
     std::string::size_type pos;
 
-    // Pluralize first word of names like 'eye of draining', but only if the
+    // Pluralise first word of names like 'eye of draining', but only if the
     // whole name is not suffixed by a modifier, such as 'zombie' or 'skeleton'
     if ( (pos = name.find(" of ")) != std::string::npos 
             && !ends_with(name, no_of) )
-        return pluralize(name.substr(0, pos)) + name.substr(pos);
+        return pluralise(name.substr(0, pos)) + name.substr(pos);
     else if (ends_with(name, "us"))
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
@@ -428,14 +437,14 @@ static std::string article_a(const std::string &name)
 }
 
 // For a non-unique monster, prefixes a suitable article if we have only one
-// kill, else prefixes a kill count and pluralizes the monster name.
+// kill, else prefixes a kill count and pluralises the monster name.
 static std::string n_names(const std::string &name, int n)
 {
     if (n > 1)
     {
         char buf[20];
         snprintf(buf, sizeof buf, "%d ", n);
-        return buf + pluralize(name, modifier_suffixes);
+        return buf + pluralise(name, modifier_suffixes);
     }
     else
         return article_a(name);
@@ -545,11 +554,11 @@ std::string kill_def::info(const kill_monster_desc &md) const
 
     if (!mons_is_unique(md.monnum))
     {
-        // Pluralize as needed
+        // Pluralise as needed
         name = n_names(name, kills);
 
         // We brand shapeshifters with the (shapeshifter) qualifier. This
-        // has to be done after doing pluralize(), else we get very odd plurals
+        // has to be done after doing pluralise(), else we get very odd plurals
         // :)
         if (md.modifier == kill_monster_desc::M_SHAPESHIFTER &&
                 md.monnum != MONS_SHAPESHIFTER &&

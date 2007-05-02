@@ -40,7 +40,7 @@ static void cull_lost(m_transit_list &mlist, int how_many)
         mlist.erase( mlist.begin() );
 }
 
-void add_monster_to_transit(level_id lid, const monsters &m)
+void add_monster_to_transit(const level_id &lid, const monsters &m)
 {
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);

@@ -534,11 +534,19 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
 
     ghost_demon player;
     player.init_player_ghost();
+    announce_ghost(player);
     gs.push_back(player);
 
     find_extra_ghosts( gs, n_extra_ghosts() );
 
     return (gs);
+}
+
+void ghost_demon::announce_ghost(const ghost_demon &g)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Saving ghost: %s", g.name.c_str());
+#endif
 }
 
 void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
@@ -551,6 +559,7 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
         if (menv[i].type == MONS_PLAYER_GHOST && menv[i].ghost.get())
         {
             // Bingo!
+            announce_ghost(*menv[i].ghost);
             gs.push_back( *menv[i].ghost );
             --n;
         }

@@ -61,13 +61,13 @@ enum habitat_type
 };
 
 static bool initialized_randmons = false;
-static std::vector<int> monsters_by_habitat[NUM_HABITATS];
+static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
 static struct monsterentry mondata[] = {
 #include "mon-data.h"
 };
 
-#define MONDATASIZE (sizeof(mondata)/sizeof(struct monsterentry))
+#define MONDATASIZE (sizeof(mondata)/sizeof(monsterentry))
 
 static int mspell_list[][7] = {
 #include "mon-spll.h"
@@ -196,7 +196,7 @@ static void initialize_randmons()
             if (invalid_monster_class(m))
                 continue;
             if (monster_habitable_grid(m, grid))
-                monsters_by_habitat[i].push_back(m);
+                monsters_by_habitat[i].push_back(static_cast<monster_type>(m));
         }
     }
     initialized_randmons = true;
@@ -213,10 +213,10 @@ monster_type random_monster_at_grid(int grid)
         initialize_randmons();
 
     const habitat_type ht = grid2habitat(grid);
-    const std::vector<int> &valid_mons = monsters_by_habitat[ht];
+    const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
     ASSERT(!valid_mons.empty());
     return valid_mons.empty()? MONS_PROGRAM_BUG
-                 : monster_type(valid_mons[ random2(valid_mons.size()) ]);
+                 : valid_mons[ random2(valid_mons.size()) ];
 }
 
 monster_type get_monster_by_name(std::string name, bool exact)
@@ -2558,7 +2558,13 @@ item_def *monsters::shield()
 
 std::string monsters::name(description_level_type desc) const
 {
-    return (ptr_monam(this, desc));
+    const bool possessive =
+        (desc == DESC_NOCAP_YOUR || desc == DESC_NOCAP_ITS);
+
+    if (possessive)
+        desc = DESC_NOCAP_THE;
+    std::string mname = ptr_monam(this, desc);
+    return (possessive? apostrophise(mname) : mname);
 }
 
 std::string monsters::name(description_level_type desc, bool force_vis) const
@@ -2584,7 +2590,7 @@ std::string monsters::conj_verb(const std::string &verb) const
     if (verb == "are")
         return ("is");
     
-    return (pluralize(verb));
+    return (pluralise(verb));
 }
 
 int monsters::id() const
@@ -3001,7 +3007,7 @@ bool monsters::needs_transit() const
             && !mons_is_summoned(this));
 }
 
-void monsters::set_transit(level_id dest)
+void monsters::set_transit(const level_id &dest)
 {
     add_monster_to_transit(dest, *this);
 }

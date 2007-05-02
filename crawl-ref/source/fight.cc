@@ -2455,7 +2455,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
             mprf("%s %s %s attack.",
                  defender->name(DESC_CAP_THE).c_str(),
                  defender->conj_verb("block").c_str(),
-                 attacker->name(DESC_NOCAP_YOUR).c_str());
+                 attacker->name(DESC_NOCAP_ITS).c_str());
 
         defender->shield_block_succeeded();
 
@@ -2794,7 +2794,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 mprf("%s %s strength from %s injuries!",
                      attacker->name(DESC_CAP_THE).c_str(),
                      attacker->conj_verb("draw").c_str(),
-                     defender->name(DESC_NOCAP_YOUR).c_str());
+                     defender->name(DESC_NOCAP_ITS).c_str());
             }
 
             // 4.1.2 actually drains max hp; we're being nicer and just doing
