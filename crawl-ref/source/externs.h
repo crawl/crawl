@@ -1170,11 +1170,13 @@ extern std::vector<ghost_demon> ghosts;
 
 struct system_environment
 {
-    char *crawl_name;
-    char *crawl_pizza;
-    char *crawl_rc;
-    char *crawl_dir;
-    char *home;                    // only used by MULTIUSER systems
+    std::string crawl_name;
+    std::string crawl_pizza;
+    std::string crawl_rc;
+    std::string crawl_dir;
+    std::string crawl_base;        // Directory from argv[0], may be used to
+                                   // locate datafiles.
+    std::string home;              // only used by MULTIUSER systems
     bool  board_with_nail;         // Easter Egg silliness
 
 #ifdef DGL_SIMPLE_MESSAGING

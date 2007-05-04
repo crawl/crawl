@@ -881,11 +881,11 @@ void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
 std::string read_init_file(bool runscript)
 {
     const char* locations_data[][2] = {
-        { SysEnv.crawl_rc, "" },
-        { SysEnv.crawl_dir, "init.txt" },
+        { SysEnv.crawl_rc.c_str(), "" },
+        { SysEnv.crawl_dir.c_str(), "init.txt" },
 #ifdef MULTIUSER
-        { SysEnv.home, "/.crawlrc" },
-        { SysEnv.home, "init.txt" },
+        { SysEnv.home.c_str(), "/.crawlrc" },
+        { SysEnv.home.c_str(), "init.txt" },
 #endif
         { "", "init.txt" },
 #ifdef WIN32CONSOLE
@@ -1526,10 +1526,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
-        clua.execfile(field.c_str());
-        if (clua.error.length())
-            fprintf(stderr, "Lua error: %s\n",
-                    clua.error.c_str());
+        const std::string lua_file = datafile_path(field, false, true);
+        if (lua_file.empty())
+        {
+            fprintf(stderr, "Unable to find lua file: %s\n", field.c_str());
+        }
+        else
+        {
+            clua.execfile(lua_file.c_str());
+            if (clua.error.length())
+                fprintf(stderr, "Lua error: %s\n", clua.error.c_str());
+        }
 #endif
     }
     else if (key == "colour" || key == "color")
@@ -1785,14 +1792,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
-        if (!SysEnv.crawl_dir)
-            SysEnv.crawl_dir = (char*)calloc(kPathLen, sizeof(char));
-
-        if (SysEnv.crawl_dir)
-        {
-            strncpy(SysEnv.crawl_dir, field.c_str(), kPathLen - 1);
-            SysEnv.crawl_dir[ kPathLen - 1 ] = 0;
-        }
+        SysEnv.crawl_dir = field;
     }
     else if (key == "race")
     {
@@ -2359,17 +2359,22 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 }
 
+static std::string check_string(const char *s)
+{
+    return (s? s : "");
+}
+
 void get_system_environment(void)
 {
     // The player's name
-    SysEnv.crawl_name = getenv("CRAWL_NAME");
+    SysEnv.crawl_name = check_string( getenv("CRAWL_NAME") );
 
     // The player's pizza
-    SysEnv.crawl_pizza = getenv("CRAWL_PIZZA");
+    SysEnv.crawl_pizza = check_string( getenv("CRAWL_PIZZA") );
 
     // The directory which contians init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
-    SysEnv.crawl_dir = getenv("CRAWL_DIR");
+    SysEnv.crawl_dir = check_string( getenv("CRAWL_DIR") );
 
 #ifdef DGL_SIMPLE_MESSAGING
     // Enable DGL_SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
@@ -2382,17 +2387,24 @@ void get_system_environment(void)
 #endif
 
     // The full path to the init file -- this over-rides CRAWL_DIR
-    SysEnv.crawl_rc = getenv("CRAWL_RC");
+    SysEnv.crawl_rc = check_string( getenv("CRAWL_RC") );
 
     // rename giant and giant spiked clubs
     SysEnv.board_with_nail = (getenv("BOARD_WITH_NAIL") != NULL);
 
 #ifdef MULTIUSER
     // The user's home directory (used to look for ~/.crawlrc file)
-    SysEnv.home = getenv("HOME");
+    SysEnv.home = check_string( getenv("HOME") );
 #endif
 }                               // end get_system_environment()
 
+static void set_crawl_base_dir(const char *arg)
+{
+    if (!arg)
+        return;
+
+    SysEnv.crawl_base = get_parent_directory(arg);
+}
 
 // parse args, filling in Options and game environment as we go.
 // returns true if no unknown or malformed arguments were found.
@@ -2426,6 +2438,8 @@ bool arg_seen[num_cmd_ops];
 
 bool parse_args( int argc, char **argv, bool rc_only )
 {
+    set_crawl_base_dir(argv[0]);
+    
     if (argc < 2)           // no args!
         return (true);
 
