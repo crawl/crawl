@@ -171,7 +171,7 @@ static std::string get_macro_file()
 {
     std::string dir =
         !Options.macro_dir.empty()? Options.macro_dir :
-        SysEnv.crawl_dir?           SysEnv.crawl_dir : "";
+        !SysEnv.crawl_dir.empty()?  SysEnv.crawl_dir : "";
     
     if (!dir.empty())
     {

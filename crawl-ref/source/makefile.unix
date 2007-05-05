@@ -155,8 +155,10 @@ install: $(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
 endif
-	mkdir -p $(DATADIR)/data
-	cp dat/*.des $(DATADIR)/data
+	mkdir -p $(DATADIR)/dat
+	cp dat/*.des $(DATADIR)/dat
+	cp dat/*.txt $(DATADIR)/dat
+	cp -r lua $(DATADIR)/dat
 	mkdir -p $(DATADIR)/docs
 	cp ../docs/*.txt $(DATADIR)/docs
 	chown -R $(INSTALL_UGRP) $(DATADIR)

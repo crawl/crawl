@@ -174,6 +174,7 @@
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
+    #define ALT_FILE_SEPARATOR '\\'
 
     // Uncomment to play sounds. winmm must be linked in if this is uncommented.
     // #define WINMM_PLAY_SOUNDS

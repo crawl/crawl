@@ -3784,6 +3784,32 @@ static bool monster_wants_weapon(const monsters *monster, const item_def &weap)
     return (true);
 }
 
+static bool is_item_jelly_edible(const item_def &item)
+{
+    // don't eat artefacts (note that unrandarts are randarts)
+    if (is_fixed_artefact(item) || is_random_artefact(item))
+        return (false);
+
+    // shouldn't eat stone things
+    //    - but what about wands and rings?
+    if (item.base_type == OBJ_MISSILES
+        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
+    {
+        return (false);
+    }
+
+    // don't eat special game items
+    if (item.base_type == OBJ_ORBS
+        || (item.base_type == OBJ_MISCELLANY 
+            && (item.sub_type == MISC_RUNE_OF_ZOT
+                || item.sub_type == MISC_HORN_OF_GERYON)))
+    {
+        return (false);
+    }
+
+    return (true);
+}
+
 //---------------------------------------------------------------
 //
 // handle_pickup
@@ -3816,28 +3842,9 @@ static bool handle_pickup(struct monsters *monster)
         {
             int quant = mitm[item].quantity;
 
-            // don't eat artefacts (note that unrandarts are randarts)
-            if (is_fixed_artefact(mitm[item]) ||
-                is_random_artefact(mitm[item]))
+            if (!is_item_jelly_edible(mitm[item]))
                 continue;
-
-            // shouldn't eat stone things
-            //    - but what about wands and rings?
-            if (mitm[item].base_type == OBJ_MISSILES
-                && (mitm[item].sub_type == MI_STONE
-                    || mitm[item].sub_type == MI_LARGE_ROCK))
-            {
-                continue;
-            }
-
-            // don't eat special game items
-            if (mitm[item].base_type == OBJ_ORBS
-                || (mitm[item].base_type == OBJ_MISCELLANY 
-                    && mitm[item].sub_type == MISC_RUNE_OF_ZOT))
-            {
-                continue;
-            }
-
+            
             if (mitm[igrd[monster->x][monster->y]].base_type != OBJ_GOLD)
             {
                 if (quant > max_eat - eaten)

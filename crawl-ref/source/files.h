@@ -27,8 +27,9 @@
 extern FixedArray<bool, MAX_LEVELS, NUM_BRANCHES> tmp_file_pairs;
 
 std::string datafile_path(const std::string &basename,
-                          bool croak_on_fail = true);
-
+                          bool croak_on_fail = true,
+                          bool test_base_path = false);
+std::string get_parent_directory(const std::string &filename);
 bool check_dir(const std::string &what, std::string &dir);
 
 bool travel_load_map( char branch, int absdepth );

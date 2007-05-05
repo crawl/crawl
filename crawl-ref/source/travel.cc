@@ -2237,7 +2237,6 @@ static int find_transtravel_stair(  const level_id &cur,
     for (int i = 0, count = stairs.size(); i < count; ++i)
     {
         stair_info &si = stairs[i];
-        
         int deltadist = li.distance_between(this_stair, &si);
         if (!this_stair)
         {
@@ -2250,7 +2249,8 @@ static int find_transtravel_stair(  const level_id &cur,
         // deltadist == 0 is legal (if this_stair is NULL), since the player
         // may be standing on the stairs. If two stairs are disconnected,
         // deltadist has to be negative.
-        if (deltadist < 0) continue;
+        if (deltadist < 0)
+            continue;
 
         int dist2stair = distance + deltadist;
         if (si.distance == -1 || si.distance > dist2stair)
@@ -2299,7 +2299,8 @@ static int find_transtravel_stair(  const level_id &cur,
             }
 
             // If we don't know where these stairs go, we can't take them.
-            if (!dest.is_valid()) continue;
+            if (!dest.is_valid())
+                continue;
 
             // We need to get the stairs at the new location and set the 
             // distance on them as well.
@@ -2768,13 +2769,12 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
     stair_distances.clear();
 
     // First we kill any stairs in 'stairs' that aren't there in 's'.
-    for (std::vector<stair_info>::iterator i = stairs.begin(); 
-            i != stairs.end(); ++i)
+    for (int i = ((int) stairs.size()) - 1; i >= 0; --i)
     {
         bool found = false;
         for (int j = s.size() - 1; j >= 0; --j)
         {
-            if (s[j] == i->position)
+            if (s[j] == stairs[i].position)
             {
                 found = true;
                 break;
@@ -2782,7 +2782,7 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
         }
 
         if (!found)
-            stairs.erase(i--);
+            stairs.erase(stairs.begin() + i);
     }
 
     // For each stair in 's', make sure we have a corresponding stair
@@ -2817,7 +2817,9 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
         }
     }
 
-    stair_distances.reserve( stairs.size() * stairs.size() );
+    const int nstairs = stairs.size();
+    stair_distances.reserve( nstairs * nstairs );
+    stair_distances.resize( nstairs * nstairs, 0 );
 }
 
 int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2) 
@@ -2829,7 +2831,7 @@ int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2)
     int i1 = get_stair_index(s1->position),
         i2 = get_stair_index(s2->position);
     if (i1 == -1 || i2 == -1) return 0;
-    
+
     return stair_distances[ i1 * stairs.size() + i2 ];
 }
 
@@ -2887,9 +2889,10 @@ void LevelInfo::save(FILE *file) const
     if (stair_count)
     {
         // Save stair distances as short ints.
-        for (int i = stair_count * stair_count - 1; i >= 0; --i)
+        const int sz = stair_distances.size();
+        for (int i = 0, n = stair_count * stair_count; i < n; ++i)
         {
-            if (i >= (int) stair_distances.size())
+            if (i >= sz)
                 writeShort(file, -1);
             else
                 writeShort(file, stair_distances[i]);

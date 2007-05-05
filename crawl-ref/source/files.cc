@@ -218,6 +218,19 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     return (files);
 }
 
+std::string get_parent_directory(const std::string &filename)
+{
+    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    if (pos != std::string::npos)
+        return filename.substr(0, pos + 1);
+#ifdef ALT_FILE_SEPARATOR
+    pos = filename.rfind(ALT_FILE_SEPARATOR);
+    if (pos != std::string::npos)
+        return filename.substr(0, pos + 1);
+#endif
+    return ("");
+}
+
 static bool file_exists(const std::string &name)
 {
     FILE *f = fopen(name.c_str(), "r");
@@ -277,9 +290,14 @@ static bool create_dirs(const std::string &dir)
     return (true);
 }
 
-std::string datafile_path(const std::string &basename, bool croak_on_fail)
+std::string datafile_path(const std::string &basename,
+                          bool croak_on_fail,
+                          bool test_base_path)
 {
-    std::string cdir = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
+    if (test_base_path && file_exists(basename))
+        return (basename);
+    
+    std::string cdir = !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "";
 
     const std::string rawbases[] = {
 #ifdef DATA_DIR_PATH
@@ -291,7 +309,6 @@ std::string datafile_path(const std::string &basename, bool croak_on_fail)
 
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
-        std::string("data") + FILE_SEPARATOR,
         std::string("docs") + FILE_SEPARATOR,
         std::string("..")+FILE_SEPARATOR+std::string("docs")+FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR,
@@ -312,6 +329,8 @@ std::string datafile_path(const std::string &basename, bool croak_on_fail)
     }
 
 #ifndef DATA_DIR_PATH
+    if (!SysEnv.crawl_base.empty())
+        bases.push_back(SysEnv.crawl_base);
     bases.push_back("");
 #endif
 

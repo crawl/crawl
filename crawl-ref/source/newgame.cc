@@ -384,9 +384,9 @@ bool new_game(void)
     // copy name into you.your_name if set from environment --
     // note that you.your_name could already be set from init.txt
     // this, clearly, will overwrite such information {dlb}
-    if (SysEnv.crawl_name)
+    if (!SysEnv.crawl_name.empty())
     {
-        strncpy( you.your_name, SysEnv.crawl_name, kNameLen );
+        strncpy( you.your_name, SysEnv.crawl_name.c_str(), kNameLen );
         you.your_name[ kNameLen - 1 ] = 0;
     }
 

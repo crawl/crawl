@@ -1033,8 +1033,8 @@ static void eating(unsigned char item_class, int item_type)
             restore_stat(STAT_ALL, false);
             break;
         case FOOD_PIZZA:
-            if (SysEnv.crawl_pizza && !one_chance_in(3))
-                snprintf(info, INFO_SIZE, "Mmm... %s", SysEnv.crawl_pizza);
+            if (!SysEnv.crawl_pizza.empty() && !one_chance_in(3))
+                mprf("Mmm... %s.", SysEnv.crawl_pizza.c_str());
             else
             {
                 temp_rand = random2(9);
