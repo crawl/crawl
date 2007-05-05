@@ -1149,7 +1149,13 @@ bool learn_spell(void)
         mpr("You are too confused!");
         return (false);
     }
-    
+
+    if (you.berserker)
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return (false);
+    }
+
     if (!which_spellbook( book, spell ))
         return (false);
 

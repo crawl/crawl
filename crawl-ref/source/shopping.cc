@@ -1317,7 +1317,7 @@ unsigned int item_value( item_def item, bool ident )
                     valued += 10 * item.plus;
 
                 if (item.sub_type == RING_SLAYING && item.plus2 > 0)
-                    valued += 10 * item.plus;
+                    valued += 10 * item.plus2;
             }
 
             switch (item.sub_type)
