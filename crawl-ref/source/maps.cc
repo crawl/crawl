@@ -369,6 +369,8 @@ void read_maps()
 {
     parse_maps( lc_desfile = datafile_path( "splev.des" ) );
     parse_maps( lc_desfile = datafile_path( "vaults.des" ) );
+    parse_maps( lc_desfile = datafile_path( "entry.des" ) );
+    parse_maps( lc_desfile = datafile_path( "ebranch.des" ) );
 
     for (int i = 0, size = Options.extra_levels.size(); i < size; ++i)
     {

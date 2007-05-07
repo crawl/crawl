@@ -1,0 +1,1038 @@
+##############################################################################
+# ebranch.des: Branch entries.
+##############################################################################
+
+##############################################################################
+# Portal vaults
+##############################################################################
+# These vaults are used when the dungeon builder tries to place a portal/stair
+# to a branch. There's no guarantee that one of these will be used because
+# portal vaults are placed last, after the rest of the level is generated, and 
+# will not be placed if they can't fit on the level without clobbering 
+# something.
+#
+# With portal vaults (as with minivaults), smaller is better, since the dungeon
+# builder will frequently not be able to fit large vaults in anywhere (it
+# doesn't try very hard).
+#
+# Note that the rune symbol (O) is used for the portal in portal vaults. If you
+# do not put an O anywhere in the vault, there will be no portal for that 
+# branch!
+#
+
+##############################################################################
+# Temple entries
+##############################################################################
+
+##############################################################################
+# hall with pillars
+#
+NAME: temple_hall_a
+TAGS: temple_entry
+CHANCE: 9
+ORIENT: float
+SUBST: ? : c:20 x v b G:5
+MAP
+ccccccccc
+c...O...c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c@..@..@c
+ENDMAP
+
+NAME: temple_hall_b
+TAGS: temple_entry
+CHANCE: 1
+ORIENT: float
+SUBST: ? : c:20 x v b G:5
+SHUFFLE: defghij
+SUBST: d==, e=c, f=c, g=c, h=c, i=c, j=c
+MAP
+ccccccccc
+c...O...c
+cdefghijc
+c...G...c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c@..@..@c
+ENDMAP
+
+##############################################################################
+# stairs with fountains
+#
+NAME: temple_fountains
+TAGS: temple_entry
+ORIENT: float
+SUBST: ? : T:30 U
+MAP
+...?...
+.......
+.?.O.?.
+.......
+...?...
+ENDMAP
+
+##############################################################################
+# stairs with statues
+#
+NAME: temple_statues
+TAGS: temple_entry
+ORIENT: float
+MAP
+GOG
+ENDMAP
+
+##############################################################################
+# the green room
+#
+NAME: temple_green
+TAGS: temple_entry
+ORIENT: float
+SUBST: ? = @=+b
+SUBST: ! = =+@
+MAP
+bbbb!bbbb
+b.......b
+b.......b
+?...O...?
+b.......b
+b.......b
+bbbb?bbbb
+ENDMAP
+
+##############################################################################
+# where's the temple?
+#
+NAME: temple_secret_doors
+TAGS: temple_entry
+ORIENT: float
+SUBST: ? : ?:40 T:30 U, ? = T:30 U, X = c:1 =
+MAP
+cccccc@cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+ccccccXcccccc
+ccccc?.?ccccc
+@...X.O.=...@
+ccccc?.?ccccc
+ccccccXcccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc@cccccc
+ENDMAP
+
+##############################################################################
+# temple in pool
+#
+NAME: temple_pool
+TAGS: temple_entry no_monster_gen no_pool_fixup
+ORIENT: float
+MAP
+.....wwwww......
+...wwwwwwwww....
+.wwwwwwwwwwwww..
+wwwwww...wwwwww.
+wwwwww.O.wwwwww.
+wwwwww...wwwwww.
+wwwwwww.wwwwwww.
+.wwwwww.wwwwww..
+...wwww.wwww....
+.....ww.ww......
+................
+ENDMAP
+
+##############################################################################
+# The garden of good and evil
+#
+NAME: temple_garden
+TAGS: temple_entry no_monster_gen
+ORIENT: float
+SUBST: . = .:900 3:30 G:5 T U:5 V:5
+SUBST: ' = .:300 3:30 G:5 T U:5 V:5
+SUBST: ! = .:200 3:30 G:5 T U:5 V:5
+SUBST: ? = .:100 3:30 G:5 T U:5 V:5
+SUBST: _=3., -=l.
+MONS: angel, iron devil, plant
+MAP
+........................................xxxxxxxx
+.....................'''''...............-llxxxx
+..................'''''''''''...........-llllxxx
+...............'''''''!!!'''''''........-lll2xxx
+............''''''''!!!!!!!''''''''......-llllxx
+...........'''''''!!!!!!!!!!!'''''''.......-lllx
+..........'''''!!!!!!!!!!!!!!!!!'''''........llx
+.........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
+........'''''!!!!!!!!!???!!!!!!!!!'''''........x
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
+.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......'''!!!!!!!!!????O????!!!!!!!!!'''........
+.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
+x.......'''''!!!!!!!!!???!!!!!!!!!'''''.........
+x........'''''!!!!!!!!!?!!!!!!!!!'''''..........
+xx._......'''''!!!!!!!!!!!!!!!!!'''''...........
+xxxx3......'''''''!!!!!!!!!!!'''''''............
+xxxxx3......''''''''!!!!!!!''''''''.............
+xxxx13_........'''''''!!!'''''''................
+xxxxxx3_..........'''''''''''...................
+xxxxxxxxxx...........'''''......................
+xxxxxxxxxxxx....................................
+ENDMAP
+
+##############################################################################
+# Orcish Mines entries
+##############################################################################
+# Dummy Orc entry
+
+NAME:   orc_0_dummy
+TAGS:   orc_entry
+CHANCE: 50
+ORIENT: float
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Freedom of Choice 
+#
+NAME: david_orc_1_choice
+TAGS: orc_entry
+MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
+ITEM: % / scroll of teleport / scroll of remove curse / scroll of identify
+ITEM: % / w:2 * / scroll of blinking / scroll of recharging / scroll of fear
+SHUFFLE: %1
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxOxxxxxxxxxxxx
+xxxxxxxxx.......xxxxxxxxx
+xxxxxx.............xxxxxx
+xxxx....x.......x....xxxx
+xxx....xxx.....xxx....xxx
+xx.....xxx.I.I.xxx..I..xx
+xx......x.......x......xx
+x..x.x..x..x=x..x..x+x..x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x.x%1.x.x.x2e2x.x.x3d3x.x
+x.x.%1x.x.x2e2x.x.xd3dx.x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x..x.x..x..x=x..x..x+x..x
+x.......+.......+.......x
+xx.....xxx.I.I.xxx..I..xx
+xxx...xxxxx...xxxxx...xxx
+xxx.@.xxxxxxxxxxxxx.@.xxx
+ENDMAP
+
+##############################################################################
+# Generic Orc entry
+#
+NAME: david_orc_2
+TAGS: orc_entry
+MONS: weight:50 orc / orc warrior / nothing
+ORIENT: float
+MAP
+xxxx..@..xxxx
+x.....I.....x
+x...........x
+.....111.....
+@I...1O1...I@
+.....111.....
+x...........x
+x.....I.....x
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Orcish monsters near stair
+#
+NAME: david_orc_3
+TAGS: orc_entry
+MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
+MONS: nothing / orc warrior / warg / orc priest
+ORIENT: float
+MAP
+1.....@....11
+1............
+.............
+......21.....
+@.....O.....@
+.....12......
+.............
+.............
+11..@......11
+ENDMAP
+
+#############################################################################
+# The Orc Outfitter
+#
+NAME: orc_david_3
+TAGS: orc_entry
+ORIENT: float
+MONS: weight:30 orc / orc warrior / weight:1 orc knight
+KFEAT: X = armour shop / .
+KFEAT: Y = weapon shop / .
+SUBST: ? = 1 $
+MAP
+@.........@
+...??..??..
+.?.........
+.?.X.O.Y.?.
+.........?.
+...??...?..
+@.........@
+ENDMAP
+
+#############################################################################
+# Wary orcs
+#
+NAME: david_orc_4
+TAGS: orc_entry
+ORIENT: float
+FLAGS: no_rotate
+SHUFFLE: XYZ
+SUBST: ? = I F
+# around 4% of these entries have a dangerous statue
+SUBST: a = ~:4  .
+SUBST: b = ~:8  .
+SUBST: c = ~:12 .
+SUBST: d = ~:16 .
+KFEAT: X = .
+KFEAT: Y = blade trap
+KFEAT: Z = blade trap
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xx?xxx?xxx?xxx?xxxxxxx
+xaaaxbbbxcccxdddx.lllx
+.aaaabbbbccccdddx.Xllx
+@aaaabbbbccccddd+.YOlx
+.aaaabbbbccccdddx.Zllx
+xaaaxbbbxcccxdddx.lllx
+xx?xxx?xxx?xxx?xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+# The Mess
+#
+NAME:    david_orc_5
+TAGS:    orc_entry
+ORIENT:  float
+KFEAT:   C = altar of Yredelemnul / altar of Makhleb / altar of Trog
+MONS:    orc priest / nothing, orc / w:5 orc warrior / w:1 orc knight
+SUBST:   x : cxv
+SHUFFLE: () / XY
+SUBST:   X=., Y=. 
+MAP
+xxxxxxxxxxxxxxx
+x.....)O(.....x
+x......1......x
+x2..T.1C1.T..2x
+x2222..1..2222x
+x22222.I.22222x
+xxI+IxxxxxI+Ixx
+...@.......@...
+ENDMAP
+
+##############################################################################
+# Caught partying
+#
+NAME:  erik_orc_1
+TAGS:  orc_entry
+MONS:  orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
+# The drake's name is Bobby. Since you did ask.
+KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / w:2 potion of speed / w:2 potion of might
+ITEM:  club, potion of confusion, slice of pizza, sausage / weight:40 nothing
+ITEM:  potion of confusion / potion of water
+SHUFFLE: defO
+FLAGS: no_rotate
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........g..........2x...w4xxx
+x.....1...32...1......x1...wxxx
+x.........xx.....e..........xxx
+@.......f...1g............3.x$x
+x..x1.................O...x.xhx
+x..x1...1........2..1....gx.xhx
+x......2....g.........d.1.x1+hx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# C'mon, you *gotta* have a *fort*!
+#
+NAME: erik_orc_2
+TAGS: orc_entry no_pool_fixup
+MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
+MONS: weight:100 orc knight / orc warrior
+ORIENT: float
+FLAGS: no_rotate
+SUBST: c = c:1000 x
+MAP
+.............................
+.Iwwwwwwwwwwwwwwwwwwwwwwwwww.
+.wIwwwwwwwwwwwwwwwwwwwwwwwww.
+.ww2ccccccccccccccccccccccww.
+.ww.c.......3.3.3......w2cww.
+.wwxx........3.3.......cccww.
+.122........3.I.3......4Ocww.
+.wwxx........3.3.......cccww.
+.ww.c.......3.3.3......w2cww.
+.ww2ccccccccccccccccccccccww.
+.wIwwwwwwwwwwwwwwwwwwwwwwwww.
+.Iwwwwwwwwwwwwwwwwwwwwwwwwww.
+.............................
+ENDMAP
+
+
+##############################################################################
+# Just like home
+#
+NAME:   erik_orc_3
+TAGS:   orc_entry no_item_gen
+MONS:   orc / weight:2 goblin / weight:2 hobgoblin / nothing
+MONS:   orc warrior / orc priest / orc wizard / nothing
+MONS:   warg / ogre / nothing
+ORIENT: float
+SUBST:  ? = x . $:1
+MAP
+xxx.xxxxxxxxxxxxxxxxxxx
+xxx?.x?x?xx?xxx??xx?xxx
+xx..xxx..1.xxx....13xxx
+xx.x??x.x1xx?x.21xx?..x
+xx...x..xxx.2..1.x.x??.
+xx?x.....?x.x..x.x1?.xx
+xx..??12x?x.1.1?x.x??xx
+xxx..x..x??O.x..x.xx.xx
+x?..?x......x?.x.??x.xx
+xx.x??.x.x..?x..xx.x?xx
+x?xx?xx.x??...x.1x.1??x
+xx..xxx...x.x.x.1?1.xxx
+x?.2....xx2.x...xx.x??x
+xxx??xx..xx.xx.x?..xxxx
+xx..1.x.x.3...x2.x1..xx
+..x??x.xxx..xxxx??.??xx
+xx?.??.11.x?xxx..x..xxx
+x??xxxx???xx?xxx??x.?xx
+xxxxxxxxxxxxxxxxxxxx.xx
+ENDMAP
+
+##############################################################################
+# Orc-henge
+#
+NAME: erik_orc_4
+TAGS: orc_entry
+MONS: human/goblin/hobgoblin/weight:2 orc, orc priest, orc
+MONS: orc priest/orc wizard/weight:2 goblin/nothing, orc warrior/warg
+ORIENT: float
+SUBST: ? : c:20 .
+SUBST: Z : c:20 .
+SUBST: X : c:20 .
+SUBST: v : c:20 .
+SUBST: b : c:20 .
+KITEM: 2 = knife
+#
+MAP
+..............................
+...............ZZ.............
+.........??....ZZ....vv.......
+.........??..........vv.......
+....XX.......33533............
+....XX........1.2........bb...
+.........4....xxx...4....bb...
+.............33533............
+..bb..........................
+..bb...........O..........??..
+........4.............4...??..
+..................4...........
+...ZZ.........................
+...ZZ......4............vv....
+........................vv....
+.......cc..........vv.........
+.......cc....??....vv.........
+.............??...............
+..............................
+ENDMAP
+
+##############################################################################
+# Vaults entries
+##############################################################################
+# Dummy Vaults entry
+
+NAME:   vaults_0_dummy
+TAGS:   vault_entry
+CHANCE: 60
+ORIENT: float
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Generic Vaults entry
+#
+NAME:    david_vaults_1
+TAGS:    vault_entry
+MONS:    weight:20 nothing / weight:30 human / necromancer / wizard
+ORIENT:  float
+SHUFFLE: !=
+SUBST:   ! = x
+SUBST:   ' : cxv
+MAP
+xxxxx.@.'''''
+x...+...'...'
+x...x...'...'
+x!x=x111'...'
+@.x.x111+.O.'
+x.x.x111'...'
+x.x.x...'...'
+x.+.x...'...'
+xxxxx.@.'''''
+ENDMAP
+
+##############################################################################
+# Vault monsters near stair 
+#
+NAME: david_vaults_2
+TAGS: vault_entry
+MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
+MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre-mage
+MONS: weight:100 nothing / shapeshifter
+SHUFFLE: 123
+ORIENT: float
+MAP
+1111..@......
+111..........
+111..........
+1............
+@.....O.....@
+.............
+.............
+.............
+....@........
+ENDMAP
+
+##############################################################################
+# Vaults patterns 0: vanguard
+#
+NAME: david_vaults_3
+TAGS: vault_entry
+ORIENT: float
+MONS: human, human / Donald, human / Michael, human / Norris, human / Wayne
+SHUFFLE: 2345
+MAP
+@..........@
+....1131....
+...1....1...
+..1......1..
+..2..O{..1..
+..1..()..4..
+..1......1..
+...1....1...
+....1511....
+@..........@
+ENDMAP
+
+##############################################################################
+# Vaults patterns I
+#
+NAME: david_vaults_4
+TAGS: vault_entry
+ORIENT: float
+SHUFFLE: 123456
+MONS: dragon / golden dragon / ice dragon / iron dragon / shadow dragon / storm dragon
+MONS: freezing wraith / shadow wraith / wight / wraith
+MONS: deep troll / iron troll / rock troll / troll
+MONS: cyclops / ettin / fire giant / frost giant / hill giant / stone giant / titan
+MONS: necromancer / shapeshifter / vault guard / wizard
+MONS: nothing
+MONS: shapeshifter / weight:30 nothing
+SUBST: 1=.1, 2=.2, 3=.3, 4=.4, 5=.5, *:*.%
+SUBST: x : xcv
+MAP
+@..........@
+.xxxxxxxxxx.
+.x..12345.x.
+.x.xxxxx..x.
+.x.x***x..x.
+.x.+**Ox..x.
+.xxxxxxx..x.
+...777....x.
+.xx...xxxxx.
+@..........@
+ENDMAP
+
+##############################################################################
+# Vaults patterns II
+#
+NAME: david_vaults_5
+TAGS: vault_entry
+ORIENT: float
+SUBST: ! : ! .
+SUBST: ? : ? .
+SUBST: ? = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+SUBST: ! = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+MAP
+xxxxxxxxxxxxxx
+xOx!x!x?x!x?xx
+xx!x?x!x!x?x!x
+x!x!x!x?x!x?xx
+xx?x!x?x?x?x!x
+x!x?x.x.x.x.xx
+xx?x?x.x.x.x.x
+x?x?x!x?x.x.xx
+xx!x!x!x?x.x.x
+xxxxxxxxxxxxx@
+ENDMAP
+
+##############################################################################
+# The Guard of Blades
+ 
+NAME: erik_vaults_1
+TAGS: vault_entry
+MONS: dancing weapon
+ORIENT: float
+SHUFFLE: vc 
+MAP
+.............
+.............
+.....v.v.....
+....vvvvv....
+.....1O1.....
+....vvvvv....
+.....v.v.....
+.............
+.............
+ENDMAP
+ 
+ 
+##############################################################################
+# Above As Below
+ 
+NAME: erik_vaults_2
+TAGS: vault_entry
+MONS: vault guard
+ORIENT: float
+SHUFFLE: vx
+MAP
+vvvvvv.vvvvvv
+vvvvvv.vvvvvv
+vvvvbb.bbvvvv
+vvvvb111bvvvv
+.....1O1.....
+vvvvb111bvvvv
+vvvvbb.bbvvvv
+vvvvvv.vvvvvv
+vvvvvv.vvvvvv
+ENDMAP
+
+##############################################################################
+# Lair entries
+##############################################################################
+# Dummy Lair entry
+NAME:   lair_0_dummy
+TAGS:   orc_lair
+CHANCE: 60
+ORIENT: float
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Generic Lair entry
+#
+NAME:    david_lair_1
+TAGS:    lair_entry
+MONS:    giant lizard / sheep, giant snail / elephant slug / nothing
+MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
+SHUFFLE: 12
+ORIENT:  float
+MAP
+xxxx..@..xxxx
+xx.........xx
+x..42...44..x
+..44..1......
+@....1O3....@
+...4......4..
+x...4..2....x
+xx.........xx
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Shrubbed Lair entry
+#
+NAME:   david_lair_2
+TAGS:   lair_entry
+MONS:   plant, firedrake
+SUBST:  ' = 1.
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xx111111111xx
+x112.'111111x
+x11.O.'111''.
+x11'..111'..@
+x111111''....
+x1''11......x
+xx.''..'...xx
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Lair monsters near stair 
+#
+NAME: david_lair_3
+TAGS: lair_entry
+MONS: w:50 nothing / w:30 giant slug / w:30 giant snail
+MONS: w:100 nothing / w:40 yak / sheep / death yak
+MONS: w:100 nothing / w:20 giant iguana / w:20 giant lizard / gila monster / komodo dragon
+MONS: green rat / grey rat / orange rat / quokka / rat
+MONS: w:90 nothing / w:30 giant frog / blink frog / giant brown frog / spiny frog
+SHUFFLE: 12345
+ORIENT: float
+MAP
+111...@......
+111..........
+11........2..
+.............
+@.....O.....@
+...2.........
+........2....
+.............
+....@........
+ENDMAP
+
+########################################################################
+# Obligatory Oklob Plant Lair Entry Vault,
+# a.k.a. let's see just how many new-in-DCSS vault-features we can use at once
+#
+NAME: erik_lair_1
+TAGS: lair_entry no_monster_gen no_pool_fixup
+MONS: plant, fungus, oklob plant, boulder beetle
+ORIENT: float
+SHUFFLE: 124w
+SHUFFLE: cG
+SUBST: ? = %.
+KMONS: O = oklob plant
+MAP
+..............@.........
+..........x.............
+..........x........x....
+..xxcxx.................
+..?..............x...?..
+............?.....xG....
+...xGx............x.....
+...xx..................@
+......?.................
+...................x....
+...xG..............c....
+.....x....c2w4..........
+..?..G.....4O1..........
+..........cw21..........
+.....xx............GG...
+@....x....xx............
+.....x..................
+........................
+...............?...x....
+..xx..?...c........x....
+...x...............x....
+............xx..........
+..?...?............?....
+........................
+..............@.........
+ENDMAP
+
+##############################################################################
+# A boring Lair entry vault.
+# 
+NAME: erik_lair_2
+TAGS: lair_entry
+MONS: generate_awake boring beetle / nothing / rat, generate_awake boring beetle
+# Rats are boring.
+ORIENT: float
+SUBST: ? = c x $ .
+MAP
+xxxxxxxxx?xxxx
+xxxxxx?xxxx?xx
+?xx?xxxxxxx?xx
+xxxxxx121xxxxx
+?xxxxx1O1xxx?x
+xxx??x111xxx?x
+xxxxxxxx??xxxx
+x?xxxx?xxxxx?x
+xxxxxxxxx?xxxx
+ENDMAP
+
+########################################################################
+# Welcome to Lair Island. We make great pancakes.
+#
+NAME: erik_lair_3
+TAGS: lair_entry
+MONS: w:50 troll / Snorg, w:30 hound / jackal / w:20 war dog
+ORIENT: float
+SUBST: ? = w.
+MAP
+.@........wwwwww?.....
+..?.?.?..wwwwwww.?..?.
+..??w..wwwwwwwww?.??..
+...??w.wwwwwwww?www?..
+...wwww?wwwwwwwwww??..
+..wwwwww??w??w2wwww..@
+..wwwwww??....wwww???.
+......1..2.2O2.wwww...
+..?wwwww???2.2www.ww?.
+.....wwww2..w.2www....
+..wwwwwwwww?.wwww???..
+@..wwwwwwwwwwwwwww....
+....?ww..ww?www..w....
+....?......??.w..???..
+...........?...@......
+ENDMAP
+
+########################################################################
+# Dragon's Lair, for generous values of Dragon
+#
+NAME: erik_lair_4
+TAGS: lair_entry
+MONS: steam dragon / mottled dragon / swamp drake
+MONS: w:20 giant iguana / komodo dragon / giant gecko / giant lizard / nothing
+FLAGS: no_rotate
+SUBST: ? = x.c
+SHUFFLE: %*RO
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx?xxx?x*?xxx?.2.xxxx
+xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
+xxxxxxxxxxxxx?....xxx...2....??????..????x..%xxxx
+xx?xx???xxxxx..xx??xx??..........?...???..??x=.?x
+@......xxx.2.xx?xxxxxx?x?x??.......1...2.x.xxx.?x
+xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?xxx$xx
+xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??xx?x
+xxxxxxxxxxxxxxxxxxxxx??.xxx?xx????..???2??.2O?xxx
+xxxxxxxxxxxxxxxxxxxxx?R?xxxxxxxxxx.xxx?xxx?xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Orcish Takeover!
+# 
+NAME: erik_lair_5
+TAGS: lair_entry
+MONS: orc, warg/giant snail, orc warrior/warg, orc priest/orc wizard/plant
+ORIENT: float
+MAP
+xxxx..@..xxxx
+xx.........xx
+x...2...44..x
+...4..1......
+@....1O3....@
+..........4..
+x...4..2....x
+xx.........xx
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Hive entries
+##############################################################################
+# Dummy entry
+#
+NAME: hive_0
+TAGS: hive_entry
+ORIENT: float
+CHANCE: 60
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Standard hive
+#
+NAME: david_hive_1
+TAGS: hive_entry
+MONS: queen bee, killer bee, killer bee larva
+ORIENT: float
+MAP
+............
+....aaaa....
+..a2a2aaaa..
+..aaRa3a2a..
+.aa2aRa2aaa.
+.a3aOa1aRa2.
+.aa3aRaRa2a.
+.aaa2a2a3aa.
+..a3aRa2aa..
+...aa2aa2a..
+....aaaa....
+............
+ENDMAP
+
+##############################################################################
+# Hive monsters near stair
+#
+NAME: david_hive_2
+TAGS: hive_entry generate_awake
+MONS: nothing / killer bee / killer bee larva
+MONS: queen bee
+ORIENT: float
+MAP
+1111..@.....1
+1211.........
+1111.........
+.............
+@.....O.....@
+.............
+.............
+.............
+1...@.......1
+ENDMAP
+
+#############################################################################
+# Cooperation Not Competition (Rot)
+#
+NAME: hive_david_3
+TAGS: hive_entry
+ORIENT: float
+ITEM: honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
+MONS: killer bee larva / killer bee, queen bee
+MONS: giant ant / soldier ant, queen ant
+MONS: yellow wasp / nothing, red wasp / yellow wasp
+MONS: bumblebee
+SHUFFLE: XY, VW, defgOR, 34/56
+SUBST: V==, W=a, X==, Y=a
+SUBST: ? = a .:20
+SUBST: 1 : 1 7:2
+SUBST: 7 = 7 .
+MAP
+............................
+.....??........??aaa?aaa???.
+...?aaa?......?aaOaaaadaa?..
+.?aaa.aa??.....?aa=.aa=eaa?.
+.aa333.aaa.......a?a11aaa?..
+.aaR43..=...T...a.1aea1.a?..
+.?a.33.aaa......aa.1a2a1aa?.
+.?aa.3aa??.....aaaVa1a1aYaa.
+..?aaaa?.......?aagW..aXfaa.
+...????.........?aaaaaaaaa?.
+.................??aaa?a??..
+............................
+ENDMAP
+
+##############################################################################
+# Bears Won't Share
+#
+NAME: erik_hive_1
+TAGS: hive_entry
+MONS: w:200 bear / polar bear, grizzly bear, black bear
+MONS: killer bee, queen bee, killer bee larva
+ITEM: honeycomb, royal jelly
+SUBST: ? = a.
+SHUFFLE: 123, deO
+ORIENT: float
+MAP
+.......................
+............?aaa???....
+...........aaa4aaaaa...
+..........?a4e6d564a?..
+......2...?a6?4?4O6a?..
+...........?a64?a4a....
+....1......?aaaaaa?....
+.......3.....????......
+.......................
+ENDMAP
+
+##############################################################################
+# Bucolic
+#
+NAME: erik_hive_2
+TAGS: hive_entry
+MONS: plant, killer bee
+SUBST: 1 = 1.
+SUBST: 2 = 2.
+ORIENT: float
+MAP
+.....................
+.1.....2.......1.1...
+...1.....1...2..1....
+.....2.........1.....
+.1.2....1....2.....2.
+......2.....1....21..
+.1...1...1...........
+.....2.....1.21...2..
+.......1.O......21...
+...1.......1.........
+...2.....1....1..2...
+.....11.2....2...11..
+...1..1....1.........
+....2.......2....1...
+....1...1.....1......
+.....................
+ENDMAP
+
+##############################################################################
+# Object lesson
+#
+NAME:    erik_hive_3
+TAGS:    hive_entry
+MONS:    killer bee larva, killer bee, queen bee, firedrake / w:5 nothing
+MONS:    nothing
+SHUFFLE: UVWXYZ, l4/l4/l4/w5
+SUBST:   l=.l, w=.w, U==, V=a, W=a, X=a, Y=a, Z=a, '=.a
+KMONS:   l = firedrake / w:200 nothing
+ORIENT:  float
+MAP
+..................
+.'.aa'aa.'.'......
+..aaRa'...a'.'a...
+.'a2'Y.aaaX.aa.'..
+.aV.1aaa'1aaa.'.a.
+..aa21'2O2aaa4.aa.
+.'.Zaa2131Waaaa...
+.'aaaaaRaUa..aa'..
+..aa.4aaa.a.'.a...
+.aa...aaa.aa......
+.a..aaaa.'........
+..''..a..a.llllll.
+....'..aaa.llllll.
+.......''..llllll.
+..................
+ENDMAP
