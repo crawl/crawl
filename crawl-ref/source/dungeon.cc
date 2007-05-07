@@ -3365,6 +3365,13 @@ static int vault_grid( vault_placement &place,
         break;
     }
 
+    if ((vgrid == '=' || vgrid == '+')
+        && (vx == place.x || vy == place.y || vx == place.x + place.width - 1
+            || vy == place.y + place.height - 1))
+    {
+        targets.push_back( coord_def(vx, vy) );
+    }
+
     // then, handle grids that place "stuff" {dlb}:
     switch (vgrid)              // yes, I know this is a bit ugly ... {dlb}
     {
