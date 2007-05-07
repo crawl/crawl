@@ -1219,6 +1219,13 @@ static void zappy( zap_type z_type, int power, struct bolt &pbolt )
         pbolt.obvious_effect = true;
         break;
     }                           // end of switch
+
+    if ( wearing_amulet(AMU_INACCURACY) )
+    {
+        pbolt.hit -= 5;
+        if ( pbolt.hit < 0 )
+            pbolt.hit = 0;
+    }
 }                               // end zappy()
 
 /*  NEW (GDL):
