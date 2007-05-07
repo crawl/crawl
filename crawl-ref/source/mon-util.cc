@@ -514,7 +514,10 @@ bool mons_player_visible( struct monsters *mon )
 
 unsigned char mons_char(int mc)
 {
-    return static_cast<unsigned char>(smc->showchar);
+    if (mc == MONS_DANCING_WEAPON)
+        return coinflip() ? '(' : ')';
+    else
+        return static_cast<unsigned char>(smc->showchar);
 }                               // end mons_char()
 
 char mons_itemuse(int mc)

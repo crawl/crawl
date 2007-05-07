@@ -1186,7 +1186,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 // understood why liches are hungry and not true undead beings ... {dlb}:
 static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 {
-    int poison_resistance_level = player_res_poison();
+    const int poison_resistance_level = player_res_poison();
     int this_chunk_effect = which_chunk_type;
 
     // determine the initial effect of eating a particular chunk {dlb}:
