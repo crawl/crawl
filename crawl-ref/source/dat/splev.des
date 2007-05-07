@@ -24,10 +24,7 @@ NAME: vestibule_of_hell
 PLACE: Hell
 ORIENT: encompass
 
-MONS: Geryon, Murray / nothing
-
-SHUFFLE: 2de
-ITEM: nothing, nothing, nothing
+MONS: Geryon
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -64,10 +61,10 @@ xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
 xxxxxxxxxx.l.l.l.l.l.................................................xxxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l...................................................xxxxxxxxxx
 xxxxxxxxxl.l.l.l.l.l..................................................xxxxxxxxxx
-xxxxxxxxx.l.l.l.A.l.l..............e..}1]..2..........................=Axxxxxxxx
+xxxxxxxxx.l.l.l.A.l.l.................}1].............................=Axxxxxxxx
 xxxxxxxxxl.l.l.l.l.l.l.................)..............................xxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l.l.................................................xxxxxxxxxx
-xxxxxxxxxx.l.l.l.l.l.l.................d.............................xxxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l.l...............................................xxxxxxxxxxx
 xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
 xxxxxxxxxx.....l.l...................................................xxxxxxxxxxx
 xxxxxxxxxxx......................[...........(......................xxxxxxxxxxxx
@@ -326,9 +323,14 @@ ENDMAP
 ##############################################################################
 # Old Antaeus level
 
-NAME: antaeus_in_days_of_yore
-PLACE: Coc:7
-ORIENT: encompass
+NAME:    antaeus_in_days_of_yore
+PLACE:   Coc:7
+ORIENT:  encompass
+SHUFFLE: $|, 2X
+SUBST:   X=., 3=3.
+MONS: Antaeus, Ice Fiend, ice dragon, Ice Fiend
+
+
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -344,13 +346,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx................................xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx....cccccccccccc..cccccccccccc....xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx....ccccccccccccc2.ccccccccccccc....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....ccccccccccccc2Xccccccccccccc....xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx....cc..........................cc....xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx....cc............................cc....xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwwwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwwwwwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwwwwwwwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx....cc...ww.......3..........3.......ww...cc....xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx....cc...ww.......3....33....3.......ww...cc....xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx....cc...ww............................ww...cc....xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx....cc...ww....cccccccccccccccccccccc....ww...cc....xxxxxxxxxxxxxx
 xxxxxxxxxxxxx....cc...ww....cccccccccccccccccccccccc....ww...cc....xxxxxxxxxxxxx
@@ -361,13 +363,13 @@ xxxxxxxxx....cc...ww....cc.......wwwwwwwwwwwwww.......cc....ww...cc....xxxxxxxxx
 xxxxxxxxx....cc...ww...cc.....wwwwwwwwwwwwwwwwwwww.....cc...ww...cc....xxxxxxxxx
 xxxxxxxxx....cc..www..cc....wwwwwwwwwccccccwwwwwwwww....cc..www..cc....xxxxxxxxx
 xxxxxxxxx....cc..www.cc....wwwwwwwwccc2O12cccwwwwwwww....cc.www..cc....xxxxxxxxx
-xxxxxxxxx....cc..www.cc...wwwwwwwwcc2+....+2ccwwwwwwww...cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc...wwwwwwwwcc4+....+4ccwwwwwwww...cc.www..cc....xxxxxxxxx
 xxxxxxxxx....cc..www.cc...wwwwwwwwcc+cc++cc+ccwwwwwwww...cc.www..cc....xxxxxxxxx
-xxxxxxxxx....cc..www..c..wwwwwwwwwc|||c..c$$$cwwwwwwwww..c..www..cc....xxxxxxxxx
-xxxxxxxxx....cc..wwww.c.wwwwwwwwwwc|||c..c$$$cwwwwwwwwww.c.wwww..cc....xxxxxxxxx
-xxxxxxxxx....cc..wwww.c.wwwwwwwwwwcc||c..c$$ccwwwwwwwwww.c.wwww..cc....xxxxxxxxx
+xxxxxxxxx....cc..www3.c..wwwwwwwwwc|||c..c$$$cwwwwwwwww..c.3www..cc....xxxxxxxxx
+xxxxxxxxx....cc..wwww.c.wwwwwwwwwwc|||cXXc$$$cwwwwwwwwww.c.wwww..cc....xxxxxxxxx
+xxxxxxxxx....cc..wwww3c.wwwwwwwwwwcc||c..c$$ccwwwwwwwwww.c3wwww..cc....xxxxxxxxx
 xxxxxxxxx....cc..wwww.c.wwwwwwwwwwwcccc++ccccwwwwwwwwwww.c.wwww..cc....xxxxxxxxx
-xxxxxxxxx....cc..www..c..wwwwwwwwwwwwww..wwwwwwwwwwwwww..c..www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www3.c..wwwwwwwwwwwwww33wwwwwwwwwwwwww..c.3www..cc....xxxxxxxxx
 xxxxxxxxx....cc..www.cc...wwwwwwwwwwwwwwwwwwwwwwwwwwww...cc.www..cc....xxxxxxxxx
 xxxxxxxxx....cc..www.cc....wwwwwwwwwwwwwwwwwwwwwwwwwww...cc.www..cc....xxxxxxxxx
 xxxxxxxxx....cc..www.cc....wwwwwwwwwwwwwwwwwwwwwwwwww....cc.www..cc....xxxxxxxxx
@@ -378,7 +380,7 @@ xxxxxxxxxx....cc...ww....cc..........wwwwww..........cc....ww...cc....xxxxxxxxxx
 xxxxxxxxxxx....cc...ww....cc...T................T...cc....ww...cc....xxxxxxxxxxx
 xxxxxxxxxxxx....cc...ww....cc......................cc....ww...cc....xxxxxxxxxxxx
 xxxxxxxxxxxxx....cc...ww....ccccccccccc..ccccccccccc....ww...cc....xxxxxxxxxxxxx
-xxxxxxxxxxxxxx....cc...ww....cccccccccc2.cccccccccc....ww...cc....xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx....cc...ww....cccccccccc2Xcccccccccc....ww...cc....xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx....cc...ww............................ww...cc....xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx....cc...ww..........................ww...cc....xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwww..wwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxx
@@ -403,8 +405,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: Antaeus, Ice Fiend, ice dragon
-MONS: random, random, random, random
 
 ##############################################################################
 # Ereshkigal (Tartarus)
@@ -789,7 +789,7 @@ PLACE:   Vault:8
 ORIENT:  encompass
 
 # the rune's spot, occassionally put nasty on the rune
-SHUFFLE: OPQR, Rr
+SHUFFLE: Rr, OPQR
 SUBST:   r = |
 KMONS:   O = 8 / 9 / w:80 nothing
 KMONS:   P = 8 / 9 / w:80 nothing
@@ -1084,74 +1084,97 @@ ENDMAP
 ############################################################################
 ## alternative elf halls: gauntlets (David)
 
-NAME: elf_hall_gauntlet_moaty
-PLACE: Elf:7
-TAGS: no_pool_fixup
-FLAGS: no_rotate
-ORIENT: float
-CHANCE: 7
-MONS: deep elf high priest, deep elf demonologist
-MONS: deep elf annihilator, deep elf sorcerer
-MONS: deep elf death mage
-MONS: random, random
+NAME:    elf_hall_gauntlet_wide
+PLACE:   Elf:7
+TAGS:    no_pool_fixup
+FLAGS:   no_rotate
+ORIENT:  float
+CHANCE:  5
+MONS:    deep elf high priest, deep elf demonologist
+MONS:    deep elf annihilator, deep elf sorcerer
+MONS:    deep elf death mage
+SHUFFLE: 345
+SUBST:   4=4., 2=2., 5=5., 3=3.
+KMONS:   $ = weight:115 nothing / deep elf annihilator 
+KMONS:   * = weight:105 nothing / deep elf death mage
+KMONS:   | = weight:290 nothing / deep elf sorcerer
+SUBST:   | = | *:2 
+SUBST:   * = * |:3
 MAP
-ccccccccccccccccccccccccc
-c2ccccccc.......ccccccccc
-c.cccc....5...5....cccccc
-c.cc.................cccc
-c.c....3....4....3....c.c
-c.+.........U.........+.c
-c.c......2.2.2.2......c.c
-c.cc.................cc.c
-c.ccc.cccccc.cccccc.cc..c
-c.ccc.c.3.ww.ww.4.ccc...c
-c3ccc.....ww.ww.........c
-c$$$ccc...ww.ww...ccccc.c
-c$$$ccc.1.ww.ww.5.ccccc.c
-c$$$cccccccc.ccccccc12..c
-ccc+cccccccc.cccccccccc.c
-c|*|*|**|*ccWcc$|$*$|$|.c
-c**|*|||||ccWcc|$|$*$*$.c
-c5|*||4**|ccWcc$*$*$*$|3c
-c|**|*|||*cc.cc|$|$|$|$.c
-cccccccccccc.cccccccccccc
-xxxxxxxxxxxx@xxxxxxxxxxxx
+cccccccccccccccccccccccccc
+c2ccccccc........ccccccccc
+c.cccc2...5....5...2cccccc
+c.cc..................cccc
+c.c....3....45....3....c3c
+c.+........U..U........+.c
+c.c......2.2..2.2......c.c
+c.cc......3....4......cc.c
+c.ccc4cccccc..cccccc.cc..c
+c2ccc.c.3.ww..ww.4.ccc...c
+c.ccc..3..ww..ww..5......c
+c$$$ccc...ww..ww...ccccc.c
+c$$$ccc.1.ww..ww.5.ccccc.c
+c$$$cccccccc2.ccccccc122.c
+ccc+cccccccc..cccccccccc.c
+c|*|*|**|*cc..cc$|$*$|$|.c
+c**|*|||||cc..cc|$|$*$*$.c
+c*|*|||**|cc..cc$*$*$*$|.c
+c|**|*|||*cc..cc|$|$|$|$2c
+ccccccccccccWWcccccccccccc
+ccccccccccccWWcccccccccccc
+ccccccccccccWWcccccccccccc
+xxxxxxxxxxxx@@xxxxxxxxxxxx
 ENDMAP
 
 #######################################
 
-NAME: elf_hall_gauntlet_fiery
-PLACE: Elf:7
-FLAGS: no_rotate
-ORIENT: float
-CHANCE: 3
-MONS: deep elf high priest, deep elf demonologist
-MONS: deep elf annihilator, deep elf sorcerer
-MONS: deep elf death mage
-MONS: random, random
-SUBST: l = l w W
+NAME:    elf_hall_gauntlet_narrow
+PLACE:   Elf:7
+FLAGS:   no_rotate
+TAGS:    no_pool_fixup
+ORIENT:  float
+CHANCE:  5
+MONS:    deep elf high priest, deep elf demonologist
+MONS:    deep elf annihilator, deep elf sorcerer
+MONS:    deep elf death mage
+SHUFFLE: 345
+SUBST:   4=4., 2=2., 5=5., 3=3.
+SUBST:   l=lw 
+SHUFFLE: lw
+SHUFFLE: uU / yY / zZ
+SUBST:   U=@, u=., Y=c, y=c
+SHUFFLE: zZ / uU
+SUBST:   U=@, u=., Z=c, z=c
+KMONS:   $ = weight:115 nothing / deep elf annihilator 
+KMONS:   * = weight:105 nothing / deep elf death mage
+KMONS:   | = weight:290 nothing / deep elf sorcerer
+SUBST:   | = | *:2 
+SUBST:   * = * |:3
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc
-c.cccc....5...5....cccccc
+c.cccc2...5...5...2cccccc
 c.cc.................cccc
-c.c....3....4....3....c.c
+c.c....3....45...3....c3c
 c.+.........U.........+.c
 c.c......2.2.2.2......c.c
-c.cc.................cc.c
-c.ccc.cccccc.cccccc.cc..c
-c.ccc.c.3.ww.ww.4.ccc...c
-c3ccc.....ww.ww.........c
+c.cc......3...4......cc.c
+c.ccc4cccccc.cccccc.cc..c
+c2ccc.c.3.ww.ww.4.ccc...c
+c.ccc..3..ww.ww..5......c
 c$$$ccc...ww.ww...ccccc.c
 c$$$ccc.1.ww.ww.5.ccccc.c
-c$$$cccccccc.ccccccc12..c
-ccc+cccccccc.cccccccccc.c
+c$$$cccccccc.ccccccc122.c
+ccc+cccccccc2cccccccccc.c
 c|*|*|**|*cc.cc$|$*$|$|.c
 c**|*|||||cc.cc|$|$*$*$.c
-c5|*||4**|cclcc$*$*$*$|3c
-c|**|*|||*cclcc|$|$|$|$.c
-cccccccccccc.cccccccccccc
-xxxxxxxxxxxx@xxxxxxxxxxxx
+c||*||***|cc.cc$*$*$*$|.c
+c|**|*|||*cc.cc|$|$|$|$2c
+cccccccccccclcccccccccccc
+ccccccccccclllccccccccccc
+cccccccccc..c..cccccccccc
+Yyyyyyyyyy.ccc.zzzzzzzzzZ
+xxxxxxxxxxUucuUxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -1169,7 +1192,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ~ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce**|||**eccccccce%*%%%*%ec$$ccccxc
@@ -1178,14 +1204,14 @@ cx.d%c$ccccc...ccccccccc=ccc...ccccc$c*e.xc
 cx.d%cc=.c.cc.cc.|.ccccc.|.cc.cc.c.c==|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcccc$$$c*|*c...|...c...|...c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccccccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc*|*=c4.+.........ccccxc
-cxcccc....|....c.6cce|ecc6.c....|....ccccxc
+cxcccc.4..|....c.6cce|ecc6.c....|..4.ccccxc
 cxcccc=..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..=cccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.e|ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
@@ -1211,7 +1237,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%ecccccc=e**|||**ec$$ccccxc
@@ -1220,14 +1249,14 @@ cx.e*c$ccccc...=cccccc=ccccc...ccccc$c*e.xc
 cx.e%cc=.c.cc.cc...ccc=c...cc.cc.c.c=c|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
 cxccc=c$$|*|*c...c...U...c...c***|$$cccccxc
-cxcccc$$$c|**...4c...!...c4..3*||c$$$ccccxc
+cxcccc$$$c|**...4c.4.!.4.c4..3*||c$$$ccccxc
 cxcccc$$$c*|*c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccccccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...c=c...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc*|*cc4.+.........ccccxc
-cxcccc....|....c.6cce|ecc6.c....|....ccccxc
+cxcccc.4..|....c.6cce|ecc6.c....|..4.ccccxc
 cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.e|ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
@@ -1253,7 +1282,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%*%eccccccce**|||**ec$$=cccxc
@@ -1262,14 +1294,14 @@ cx.e|c$ccccc...ccc=ccccccccc...ccccc$c*e.xc
 cx.e*=c=.c.cc.cc...ccccc...cc.cc.c.c=c%e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$cc=ccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$c=ccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$c=ccxc
 cxcccc$$$c*|*c.......c.......c***c$$$c=ccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$c=ccxc
 cxccccccc...cccccc...?...cccccc...cccc=ccxc
 cxccccc.....?.ccc...ccc...ccc.?.....cc=ccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cc=ccxc
 cxcccc.........+.4cc*|*cc4.+.........c=ccxc
-cxcccc....|....c.6cce|ecc6.c....|....c=ccxc
+cxcccc.4..|....c.6cce|ecc6.c....|..4.c=ccxc
 cxccccc..c~c..cc...=c|cc...cc..c~c..cc=ccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc|e.xc
@@ -1295,7 +1327,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%eccccccce**|||**ec$$ccccxc
@@ -1304,14 +1339,14 @@ cx.e%c$ccccc...ccccccccccccc...ccccc$c*e.xc
 cx.e*cc=.c.cc.cc...ccccc...cc.cc.c.c=c|e.xc
 cxc..cc$.c**c=c..c..ccc..c..c=c|*c.$cc..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$c=cccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcccc$$$c*|*c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccccccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...=cc...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc*|*cc4.+.........ccccxc
-cxcccc....|....c.6cce|ecc6.c....|....ccccxc
+cxcccc.4..|....c.6cce|ecc6.c....|..4.ccccxc
 cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc*e.xc
@@ -1337,7 +1372,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd%%%%%%%dc==c===e%%%%%%%ec$$ccccxc
@@ -1346,14 +1384,14 @@ cx.e|=$ccccc...cccccc=cccccc...ccccc$c*e.xc
 cx.e*ccc.c.cc.cc...cc=cc...cc.cc.c.c=c|e.xc
 cxc..cc$.c**ccc..c..c=c..c..ccc|*c.$c=..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcccc$$$c*|*c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccccccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.c=|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc|||cc4.+.........ccccxc
-cxcccc....|....c.6cce|ecc6.c....|....=cccxc
+cxcccc.4..|....c.6cce|ecc6.c....|..4.=cccxc
 cxccccc..c~c..cc...cc|cc...cc..c~c..cc=ccxc
 cxc..c=ccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.e|=cc.~~~.ccccc.......ccccc.~~~.ccc|e.xc
@@ -1379,7 +1417,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%%%eccccccce**|||**ec$$ccccxc
@@ -1388,14 +1429,14 @@ cx.e|c$cccc=...cccccccc=cccc...ccccc$c*e.xc
 cx.e*cc=.c.cc.cc...ccccc...cc.cc.c.c=c|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
 cxcc=cc$$|*|*c...c...U...c...c***|$$c=cccxc
-cxcc=c$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcc=c$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcc=c$$$c*|*c.......c.......c***c$$$ccccxc
 cxcc=c$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccc=ccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc*|*cc4.+.........ccccxc
-cxcccc....|....c.6ccd|dcc6.c....|....ccccxc
+cxcccc.4..|....c.6ccd|dcc6.c....|..4.ccccxc
 cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.e*ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
@@ -1421,7 +1462,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd|*|||**dcccccccd*||*|**dc$$ccccxc
@@ -1430,14 +1474,14 @@ cx.e|c$ccccc...ccccccccccccc...ccccc$c%e.xc
 cx.e|c=c.c.cc.cc...ccccc...cc.cc.c.c=c%e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$c=..cxc
 cxcc=cc$$|*|*c...c...U...c...c***|$$cccccxc
-cxcc=c$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcc=c$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcc=c$$$c*|*c.......c.......c***c$$$ccccxc
 cxcc=c$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxcc=cccc...cccccc...?...cccccc...cccccccxc
 cxcc=cc.....?.ccc...ccc...ccc.?.....cccccxc
 cxccc=c.2.!.?.cc.6.cc%cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc*|%cc4.+.........ccccxc
-cxcccc....|....c.6cce%ecc6.c....|....ccccxc
+cxcccc.4..|....c.6cce%ecc6.c....|..4.ccccxc
 cxccc=c..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...c=c...cccccc+ccccc..cxc
 cx.e|ccc.~~~.ccccc.......ccccc.~~~.ccc*e.xc
@@ -1463,7 +1507,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce*|||||*ec==ccc=e*|||||*ec$$ccccxc
@@ -1472,14 +1519,14 @@ cx.e%c$ccccc...ccccc=c=ccccc...ccccc$c|e.xc
 cx.e%cc=.c.cc.cc...ccccc...cc.cc.c.cc=|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$cc=ccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$c=ccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$c=ccxc
 cxcccc$$$c*|*c.......c.......c***c$$$c=ccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$c=ccxc
 cxccccccc...cccccc...?...cccccc...cccc=ccxc
 cxccccc.....?.ccc...ccc...ccc.?.....==cccxc
 cxccccc.2.!.?.cc.6.cc%cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc*%*cc4.+.........ccccxc
-cxcccc....|....c.6cce|e=c6.c....|....ccccxc
+cxcccc.4..|....c.6cce|e=c6.c....|..4.ccccxc
 cxccc=c..c~c..cc...cc*cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.e%ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
@@ -1505,7 +1552,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$=e**|||**eccccccce%%|%|%%e=$$ccccxc
@@ -1514,14 +1564,14 @@ cx.d|c$ccccc...cccc=cc=ccccc...ccccc$c%d.xc
 cx.d|ccc.c.cc.cc...cc=cc...cc.c=.c.ccc%d.xc
 cxc..cc$.c|*ccc..c..=cc..c..ccc|*c.$cc..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcccc$$$c*||c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccccccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc||*cc4.+.........ccccxc
-cxcccc....|....c.6c=e|ecc6.c....|....ccccxc
+cxcccc.4..|....c.6c=e|ecc6.c....|..4.ccccxc
 cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
@@ -1547,7 +1597,10 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: !=15, ?=.?, ?:23
+SUBST: !=15, ?=.?, ?:23, 4=4.
+SUBST: % = % *:1
+SUBST: | = | *:2 
+SUBST: * = * |:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxccc====ccccc=======cccc====ccccccccccccxc
@@ -1558,14 +1611,14 @@ cx.e%c$ccccc...=cccccccccccc...ccccc$c%d.xc
 cx.e%ccc.c.cc.cc...ccccc...cc.cc.c.ccc%d.xc
 cxc..cc$.c|*ccc..c..ccc..c..ccc|*c.$cc..cxc
 cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
-cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c|**...4c.4.!.4.c4...*||c$$$ccccxc
 cxcccc$$$c*||c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
 cxccccccc...cccccc...?...cccccc...cccccccxc
 cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
 cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
 cxcccc.........+.4cc||*cc4.+.........ccccxc
-cxcccc....|....c.6ccd|dcc6.c....|....ccccxc
+cxcccc.4..|....c.6ccd|dcc6.c....|..4.ccccxc
 cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
 cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
@@ -1587,7 +1640,6 @@ MONS:    royal jelly, acid blob, great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
 SHUFFLE: ([{ 
-# of what use are the exits?
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2416,8 +2468,9 @@ ENDMAP
 ##############################################################################
 # hall with pillars
 #
-NAME: temple_hall
+NAME: temple_hall_a
 TAGS: temple_entry
+CHANCE: 9
 ORIENT: float
 SUBST: ? : c:20 x v b G:5
 MAP
@@ -2426,6 +2479,36 @@ c...O...c
 c.......c
 c.?...?.c
 c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c@..@..@c
+ENDMAP
+
+NAME: temple_hall_b
+TAGS: temple_entry
+CHANCE: 1
+ORIENT: float
+SUBST: ? : c:20 x v b G:5
+SHUFFLE: defghij
+SUBST: d==, e=c, f=c, g=c, h=c, i=c, j=c
+MAP
+ccccccccc
+c...O...c
+cdefghijc
+c...G...c
 c.......c
 c.?...?.c
 c.......c
@@ -2496,18 +2579,18 @@ ENDMAP
 NAME: temple_secret_doors
 TAGS: temple_entry
 ORIENT: float
-SUBST: ? = T:30 U
+SUBST: ? : ?:40 T:30 U, ? = T:30 U, X = c:1 =
 MAP
 cccccc@cccccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc.cccccc
-cccccc=cccccc
+ccccccXcccccc
 ccccc?.?ccccc
-@...=.O.=...@
+@...X.O.=...@
 ccccc?.?ccccc
-cccccc=cccccc
+ccccccXcccccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc.cccccc
@@ -2541,7 +2624,7 @@ ENDMAP
 NAME: temple_garden
 TAGS: temple_entry no_monster_gen
 ORIENT: float
-SUBST: . = .:800 3:30 G:5 T U:5 V:5
+SUBST: . = .:900 3:30 G:5 T U:5 V:5
 SUBST: ' = .:300 3:30 G:5 T U:5 V:5
 SUBST: ! = .:200 3:30 G:5 T U:5 V:5
 SUBST: ? = .:100 3:30 G:5 T U:5 V:5
@@ -2663,8 +2746,8 @@ NAME: orc_david_3
 TAGS: orc_entry
 ORIENT: float
 MONS: weight:30 orc / orc warrior / weight:1 orc knight
-KFEAT: X = armour shop / ~ / .
-KFEAT: Y = weapon shop / ~ / .
+KFEAT: X = armour shop / .
+KFEAT: Y = weapon shop / .
 SUBST: ? = 1 $
 MAP
 @.........@
@@ -2708,14 +2791,14 @@ ENDMAP
 #############################################################################
 # The Mess
 #
-NAME: david_orc_5
-TAGS: orc_entry
-ORIENT: float
-KFEAT: C = altar of Yredelemnul / altar of Makhleb / altar of Trog
-MONS:  orc priest / nothing, orc / w:5 orc warrior / w:1 orc knight
-SUBST: x : cxv
-SUBST: ( = ( .
-SUBST: ) = ) . 
+NAME:    david_orc_5
+TAGS:    orc_entry
+ORIENT:  float
+KFEAT:   C = altar of Yredelemnul / altar of Makhleb / altar of Trog
+MONS:    orc priest / nothing, orc / w:5 orc warrior / w:1 orc knight
+SUBST:   x : cxv
+SHUFFLE: () / XY
+SUBST:   X=., Y=. 
 MAP
 xxxxxxxxxxxxxxx
 x.....)O(.....x

@@ -1027,8 +1027,9 @@ ENDMAP
 
 NAME: david_entry_013
 TAGS: entry no_monster_gen no_pool_fixup
-SHUFFLE: AB/CD, lw
+SHUFFLE: ABl/CDl/abw/cdw
 SUBST:   A=@, B=+, C=x, D=l
+SUBST:   a=@, b=+, c=x, d=w
 MAP
 xxxxxxxxCxxxxxxxx
 xlllllllDlllllllx
@@ -1624,7 +1625,7 @@ NAME: david_022_central
 TAGS: entry
 MONS: gnoll, jackal, worm
 ORIENT: float
-SHUFFLE: {[(<, 0123, @ABC
+SHUFFLE: {[(], 0123, @ABC
 SUBST: A=@x, B=@x, C=@x
 MAP
 xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
@@ -1987,7 +1988,7 @@ xx....vvvv.......xx.....xxxxxxx
 .....vv1dvvv.....x...{.....xxxx
 @....vdddd>vv................xx
 .....vvddvvv...x....vvv.......x
-xxx...vvvvv...xx...vvvvv..(...x
+xxx...vvvvv...xx...vvvvv..}...x
 xxx..........xx....vvvvv.....xx
 xxx..........xx.....vvv......xx
 xxxx........xx..............xxx
@@ -2949,7 +2950,7 @@ TAGS: entry no_monster_gen
 ORIENT: float
 FLAGS: no_rotate
 CHANCE: 5
-SHUFFLE: {[(, lw
+SHUFFLE: lw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.........xxxxxxx
@@ -3221,7 +3222,7 @@ ORIENT: northwest
 SUBST: ?=l.
 CHANCE: 6
 KFEAT: X = teleport trap
-SHUFFLE: Cc
+SHUFFLE: Cc, {(.
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
@@ -3248,7 +3249,7 @@ TAGS: entry no_monster_gen
 ORIENT: northwest 
 CHANCE: 4
 KFEAT: X = teleport trap
-SHUFFLE: Cc
+SHUFFLE: Cc, {(.
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
@@ -3437,7 +3438,7 @@ TAGS: entry no_monster_gen
 ITEM: any, nothing, nothing
 ORIENT: float
 FLAGS: no_rotate
-SHUFFLE: {[(
+SHUFFLE: {[
 SHUFFLE: def
 
 # A test run with 50 tries had precisely one level without shallow water
@@ -4100,28 +4101,28 @@ NAME: entry_elethiomel_001
 TAGS: entry
 ORIENT: northwest
 FLAGS: no_rotate
-SHUFFLE: [({
-SUBST: ':'.x, '=x.
+SHUFFLE: [{
+SUBST: ' : . x ':40, '=x.
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''x.xxx..'xxx..xxxxxxxxx
-xxxxxxxxxx''........xx...''.........''...'.............xx...xx...xx
-xxxxxxxx'....ccccc...xxx.....ccccc......'....ccccc.............x..x
-xxxxxx....cccc...cccc.....cccc...cccc.....cccc...cccc.....''..xxx.@
-xxxxxx..ccc.........ccc+ccc.........ccc+ccc.........ccc....''..xxxx
-xxxxxx'.c......{......+.+......[......+.+......(......c...'.....xxx
-xxxxxx'.ccc.........ccc+ccc.........ccc+ccc.........ccc...''...xxxx
-xxxxxx....cccc...cccc.....cccc...cccc.....cccc...cccc......'..'.xxx
-xxxxxx.......ccccc......'....ccccc...........ccccc......'.....xxxxx
-xxxxxx'................'..xx..........xxxx..........'....'....xxxxx
-xxxxxx.''..xxx...''.....'..xx...xx.xxxxxxxxxx.x..'''..''.xxx''.xxxx
-xxxxxx'xxxxxxxxxxxxxx..xxx.xxx...xxxxxxxxxxxxxxxxxx....xxxxxx...xxx
-xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx@xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''xxxxxx
+xxxxxxxxxx''........xx...''.........''...'..xx...xx
+xxxxxxxx'....ccccc...xxx.....ccccc......'......x..@
+xxxxxx....cccc...cccc.....cccc...cccc.......''..xxx
+xxxxxx..ccc.........ccc+ccc.........ccc....''..xxxx
+xxxxxx'.c......{......+.+......[......+.........xxx
+xxxxxx'.ccc.........ccc+ccc.........ccc...''...xxxx
+xxxxxx....cccc...cccc.....cccc...cccc......'..'.xxx
+xxxxxx.......ccccc......'....ccccc......'.....xxxxx
+xxxxxx'................'..xx........'....'....xxxxx
+xxxxxx.''..xxx...''.....'..xx....'''..''.xxx''.xxxx
+xxxxxx'xxxxxxxxxxxxxx..xxx.xxx..xxx....xxxxxx...xxx
+xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx@xxxxxx@xxxxxxxx@xxx
 ENDMAP
 
 ##############################################################
@@ -6321,7 +6322,7 @@ SUBST: Y = 89
 KITEM: 8 = % / * / w:1 |
 KITEM: 9 = % / * / w:1 |
 KFEAT: X = teleport trap
-KFEAT: Z = teleport trap / w:30 x
+KFEAT: Z : teleport trap / w:30 x
 SHUFFLE: xcvb
 MAP
 ............
