@@ -91,7 +91,7 @@ static void explosion_map(struct bolt &beam, int x, int y,
 static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly);
 
 static void ench_animation( int flavour, const monsters *mon = NULL, bool force = false);
-static void zappy(char z_type, int power, struct bolt &pbolt);
+static void zappy(zap_type z_type, int power, struct bolt &pbolt);
 static void monster_die(monsters *mons, const bolt &beam);
 
 static std::set<std::string> beam_message_cache;
@@ -196,7 +196,7 @@ static void ench_animation( int flavour, const monsters *mon, bool force )
     zap_animation( element_colour( elem ), mon, force );
 }
 
-void zapping(char ztype, int power, struct bolt &pbolt)
+void zapping(zap_type ztype, int power, struct bolt &pbolt)
 {
 
 #if DEBUG_DIAGNOSTICS
@@ -263,7 +263,7 @@ dice_def calc_dice( int num_dice, int max_damage )
 
 // *do not* call this function directly (duh - it's static), need to
 // see zapping() for default values not set within this function {dlb}
-static void zappy( char z_type, int power, struct bolt &pbolt )
+static void zappy( zap_type z_type, int power, struct bolt &pbolt )
 {
     int temp_rand = 0;          // probability determination {dlb}
 

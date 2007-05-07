@@ -762,7 +762,6 @@ static bool disc_of_storms(void)
 {
     int temp_rand = 0;          // probability determination {dlb}
     int disc_count = 0;
-    unsigned char which_zap = 0;
 
     const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
     bool ret = false;
@@ -785,9 +784,9 @@ static bool disc_of_storms(void)
 
             temp_rand = random2(3);
 
-            which_zap = ((temp_rand > 1) ? ZAP_LIGHTNING :
-                         (temp_rand > 0) ? ZAP_ELECTRICITY
-                                         : ZAP_ORB_OF_ELECTRICITY);
+            zap_type which_zap = ((temp_rand > 1) ? ZAP_LIGHTNING :
+                                  (temp_rand > 0) ? ZAP_ELECTRICITY
+                                                  : ZAP_ORB_OF_ELECTRICITY);
 
             beam.source_x = you.x_pos;
             beam.source_y = you.y_pos;

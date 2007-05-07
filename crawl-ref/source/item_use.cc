@@ -2599,7 +2599,8 @@ void zap_wand(void)
     beam.source_y = you.y_pos;
     beam.set_target(zap_wand);
 
-    zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
+    zapping( static_cast<zap_type>(type_zapped),
+             30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
     if (beam.obvious_effect == 1 || you.inv[item_slot].sub_type == WAND_FIREBALL)
     {
