@@ -25,7 +25,9 @@ struct spell_desc
     unsigned int disciplines; // bitfield
     unsigned int flags;       // bitfield
     unsigned int level;
+    int power_cap;
     const char  *target_prompt;
+
 
     // If a monster is casting this, does it need a tracer?
     bool         ms_needs_tracer;
@@ -53,6 +55,8 @@ int spell_mana(spell_type which_spell);
 // * called from: chardump - it_use3 - player - spell - spl-book -
 // *              spells0 - spells3
 int spell_difficulty(spell_type which_spell);
+int spell_power_cap(spell_type spell);
+
 const char *get_spell_target_prompt( spell_type which_spell );
 
 bool spell_needs_tracer(spell_type spell);

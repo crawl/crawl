@@ -49,7 +49,7 @@ static int spell_list[NUM_SPELLS];
 
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
-static struct spell_desc *seekspell(int spellid);
+static struct spell_desc *seekspell(spell_type spellid);
 static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
                          int x, int y, 
                          int pow, cloud_type ctype, kill_category );
@@ -61,24 +61,22 @@ static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
 // all this does is merely refresh the internal spell list {dlb}:
 void init_spell_descs(void)
 {
-    unsigned int x = 0;
-
-    for (x = 0; x < NUM_SPELLS; x++)
-        spell_list[x] = -1;
+    for (int i = 0; i < NUM_SPELLS; i++)
+        spell_list[i] = -1;
 
     // can only use up to SPELLDATASIZE _MINUS ONE_, or the
     // last entry tries to set spell_list[SPELL_NO_SPELL] 
     // which corrupts the heap.
-    for (x = 0; x < SPELLDATASIZE - 1; x++)
-        spell_list[spelldata[x].id] = x;
+    for (unsigned int i = 0; i < SPELLDATASIZE - 1; i++)
+        spell_list[spelldata[i].id] = i;
 
-    for (x = 0; x < NUM_SPELLS; x++)
+    for (int i = 0; i < NUM_SPELLS; i++)
     {
-        if (spell_list[x] == -1)
-            spell_list[x] = spell_list[SPELL_NO_SPELL];
+        if (spell_list[i] == -1)
+            spell_list[i] = spell_list[SPELL_NO_SPELL];
     }
 
-    return;                     // return value should not matter here {dlb}
+    return;
 }                               // end init_spell_descs()
 
 int get_spell_slot_by_letter( char letter )
@@ -807,7 +805,7 @@ int spell_type2skill(unsigned int spelltype)
  */
 
 //jmf: simplified; moved init code to top function, init_spell_descs()
-static struct spell_desc *seekspell(int spell)
+static struct spell_desc *seekspell(spell_type spell)
 {
     return (&spelldata[spell_list[spell]]);
 }
@@ -823,4 +821,9 @@ static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
     }
 
     return false;
+}
+
+int spell_power_cap(spell_type spell)
+{
+    return seekspell(spell)->power_cap;
 }

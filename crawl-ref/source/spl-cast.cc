@@ -207,7 +207,7 @@ char list_spells(void)
             // 35--48 is the spell schools
             
             gotoxy(51, wherey());
-            cprintf("%s",spell_power_to_string(calc_spell_power(spell,true)));
+            cprintf("%s", spell_power_string(spell));
                      
             //gotoxy(58, wherey());
             gotoxy(65, wherey());
@@ -3510,8 +3510,14 @@ const char* failure_rate_to_string( int fail )
         : "Perfect";
 }
 
-const char* spell_power_to_string( int power )
+const char* spell_power_string( spell_type spell )
 {
+    const int powercap = spell_power_cap(spell);
+    if ( powercap == 0 )
+        return "N/A";
+    const int power = calc_spell_power(spell, true);
+    if ( power >= powercap )
+        return "Maximum";
     return
         (power > 100) ? "Enormous"   :
         (power >  90) ? "Huge"       :

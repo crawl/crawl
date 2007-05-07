@@ -51,6 +51,6 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                      int force_effect, const char *cause = NULL );
 
 const char* failure_rate_to_string( int fail );
-const char* spell_power_to_string( int power );
+const char* spell_power_string( spell_type spell );
 
 #endif

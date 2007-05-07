@@ -623,8 +623,8 @@ void cast_summon_butterflies(int pow)
 
 void cast_summon_large_mammal(int pow)
 {
-    int mon;
-    int temp_rand = random2(pow);
+    monster_type mon;
+    const int temp_rand = random2(pow);
 
     if (temp_rand < 10)
         mon = MONS_JACKAL;

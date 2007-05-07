@@ -280,7 +280,7 @@ static void zappy( zap_type z_type, int power, struct bolt &pbolt )
     //
     // The example characters are simplified to three stats:
     //
-    // - Intelligence: This magifies power, its very useful.
+    // - Intelligence: This magnifies power, it's very useful.
     //
     // - Skills: This represents the character having Spellcasting
     //   and the average of the component skills at this level.

@@ -874,7 +874,7 @@ static void sdump_spells(const std::string &, std::string & text)
                 for (int i = spell_line.length(); i < 41; ++i )
                     spell_line += ' ';
 
-                spell_line += spell_power_to_string(calc_spell_power(spell,true));
+                spell_line += spell_power_string(spell);
 
                 for (int i = spell_line.length(); i < 56; ++i )
                     spell_line += ' ';
