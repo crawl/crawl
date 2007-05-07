@@ -78,25 +78,11 @@ private:
     bool msuppressed;
 };
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void replay_messages(void);
+bool any_messages();
+void replay_messages();
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - it_use3 - items - religion
- * *********************************************************************** */
 void set_colour(char set_message_colour);
 
-
-// last updated 18mar2001 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-bool any_messages(void);
 
 // last updated 13oct2003 {dlb}
 /* ***********************************************************************
@@ -106,34 +92,45 @@ std::string get_last_messages(int mcount);
 
 int channel_to_colour( int channel, int param = 0 );
 
-struct setchan
+namespace msg
 {
-    setchan(msg_channel_type chan);
-    msg_channel_type m_chan;
-};
+    extern std::ostream stream;
+    std::ostream& streams(msg_channel_type chan = MSGCH_PLAIN);
 
-struct setparam
-{
-    setparam(int param);
-    int m_param;
-};
+    struct setparam
+    {
+        setparam(int param);
+        int m_param;
+    };
 
-std::ostream& operator<<(std::ostream& os, const setchan& sc);
-std::ostream& operator<<(std::ostream& os, const setparam& sp);
+    struct mute
+    {
+        mute(bool value = true);
+        bool m_value;
+    };
 
-class mpr_stream_buf : public std::streambuf
-{
-public:
-    mpr_stream_buf();
-protected:
-    int overflow(int c);
-private:
-    static const int INTERNAL_LENGTH = 500;
-    char internal_buf[500]; // if your terminal is wider than this, too bad
-    int internal_count;
-};
+    class mpr_stream_buf : public std::streambuf
+    {
+    public:
+        mpr_stream_buf(msg_channel_type chan);
+        void set_param(int p);
+        void set_muted(bool m);
+    protected:
+        int overflow(int c);
+    private:
+        static const int INTERNAL_LENGTH = 500;
+        char internal_buf[500]; // if your terminal is wider than this, too bad
+        int internal_count;
+        int param;
+        bool muted;
+        msg_channel_type channel;
+    };
 
-extern std::ostream mpr_stream;
+    void initialise_mpr_streams();
+    void deinitalise_mpr_streams();
+}
+
+std::ostream& operator<<(std::ostream& os, const msg::setparam& sp);
 
 
 #endif

@@ -16,6 +16,7 @@
 #include "AppHdr.h"
 #include "database.h"
 #include "direct.h"
+#include "message.h"
 #include "monplace.h"
 #include "stuff.h"
 #include "view.h"
@@ -346,6 +347,8 @@ void cio_cleanup()
 #ifdef WIN32CONSOLE
     deinit_libw32c();
 #endif
+
+    msg::deinitalise_mpr_streams();
 
     io_inited = false;
 }

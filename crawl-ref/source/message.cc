@@ -47,82 +47,102 @@ int New_Message_Count = 0;
 static bool suppress_messages = false;
 static void base_mpr(const char *inf, int channel, int param);
 
-// globals controlling message output
-// there must be a better way to do this!
-static bool mpr_stream_silent = false;
-static msg_channel_type mpr_stream_channel = MSGCH_PLAIN;
-static int mpr_stream_param = 0;
-
-std::ostream mpr_stream(new mpr_stream_buf);
-
-setchan::setchan(msg_channel_type chan)
+namespace msg
 {
-    m_chan = chan;
-}
+    std::ostream stream(new mpr_stream_buf(MSGCH_PLAIN));
+    std::vector<std::ostream*> stream_ptrs;
 
-setparam::setparam(int param)
-{
-    m_param = param;
-}
-
-std::ostream& operator<<(std::ostream& os, const setchan& sc)
-{
-    mpr_stream_channel = sc.m_chan;
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const setparam& sp)
-{
-    mpr_stream_param = sp.m_param;
-    return os;
-}
-
-mpr_stream_buf::mpr_stream_buf()
-{
-    for ( int i = 0; i < INTERNAL_LENGTH; ++i )
-        internal_buf[0] = 0;
-    internal_count = 0;
-}
-
-// again, can be improved
-int mpr_stream_buf::overflow(int c)
-{
-    if ( c == '\n' )
+    std::ostream& streams(msg_channel_type chan)
     {
-        // null-terminate the string
-        internal_buf[internal_count] = 0;
-
-        if ( !mpr_stream_silent )
-            mpr(internal_buf, mpr_stream_channel, mpr_stream_param);
-
-        internal_count = 0;
-
-        // reset to defaults (channel changing isn't sticky)
-        mpr_stream_channel = MSGCH_PLAIN;
-        mpr_stream_param = 0;
+        ASSERT(chan >= 0 &&
+               static_cast<unsigned int>(chan) < stream_ptrs.size());
+        return *stream_ptrs[chan];
     }
-    else
-        internal_buf[internal_count++] = c;
 
-    if ( internal_count + 3 > INTERNAL_LENGTH )
+    void initialise_mpr_streams()
     {
-        mpr("oops, hit overflow", MSGCH_DANGER);
-        internal_count = 0;
-        return std::streambuf::traits_type::eof();
+        for (int i = 0; i < NUM_MESSAGE_CHANNELS; ++i)
+        {
+            mpr_stream_buf* pmsb =
+                new mpr_stream_buf(static_cast<msg_channel_type>(i));
+            std::ostream* pos = new std::ostream(pmsb);
+            (*pos) << std::nounitbuf;
+            stream_ptrs.push_back(pos);
+        }
+        stream << std::nounitbuf;
     }
-    return 0;
+
+    void deinitalise_mpr_streams()
+    {
+        for (unsigned int i = 0; i < stream_ptrs.size(); ++i)
+            delete stream_ptrs[i];
+    }
+
+
+    setparam::setparam(int param)
+    {
+        m_param = param;
+    }
+
+    mpr_stream_buf::mpr_stream_buf(msg_channel_type chan) :
+        internal_count(0), muted(false), channel(chan)
+    {}
+
+    void mpr_stream_buf::set_param(int p)
+    {
+        this->param = p;
+    }
+
+    void mpr_stream_buf::set_muted(bool m)
+    {
+        this->muted = m;
+    }
+    
+    // again, can be improved
+    int mpr_stream_buf::overflow(int c)
+    {
+        if ( muted )
+            return 0;
+
+        if ( c == '\n' )
+        {
+            // null-terminate and print the string
+            internal_buf[internal_count] = 0;
+            mpr(internal_buf, channel, param);
+            
+            internal_count = 0;
+
+            // reset to defaults (param changing isn't sticky)
+            set_param(0);
+        }
+        else
+            internal_buf[internal_count++] = c;
+        
+        if ( internal_count + 3 > INTERNAL_LENGTH )
+        {
+            mpr("oops, hit overflow", MSGCH_DANGER);
+            internal_count = 0;
+            return std::streambuf::traits_type::eof();
+        }
+        return 0;
+    }
+}
+
+std::ostream& operator<<(std::ostream& os, const msg::setparam& sp)
+{
+    msg::mpr_stream_buf* ps = dynamic_cast<msg::mpr_stream_buf*>(os.rdbuf());
+    ps->set_param(sp.m_param);
+    return os;
 }
 
 no_messages::no_messages() : msuppressed(suppress_messages)
 {
     suppress_messages = true;
-    mpr_stream_silent = true;
 }
 
 no_messages::~no_messages()
 {
     suppress_messages = msuppressed;
-    mpr_stream_silent = msuppressed;
 }
 
 static char god_message_altar_colour( char god )

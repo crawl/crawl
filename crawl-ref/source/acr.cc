@@ -234,10 +234,10 @@ int main( int argc, char *argv[] )
     init_tutorial_options();
     if (game_start || Options.always_greet)
     {
-        mpr_stream << "Welcome, " << you.your_name << " the "
-                   << species_name( you.species,you.experience_level )
-                   << " " << you.class_name << "."
-                   << std::endl;
+        msg::stream << "Welcome, " << you.your_name << " the "
+                    << species_name( you.species,you.experience_level )
+                    << " " << you.class_name << "."
+                    << std::endl;
 
         // Starting messages can go here as this should only happen
         // at the start of a new game -- bwr
@@ -312,12 +312,11 @@ int main( int argc, char *argv[] )
             Options.tut_just_triggered = true;
             // print stats and everything
             prep_input();
-            int ch = 'x';
-            mpr_stream << setchan(MSGCH_TUTORIAL)
-                       << "Press any key to start the tutorial intro, "
-                       << "or Escape to skip it."
-                       << std::endl;
-            ch = c_getch();
+            msg::streams(MSGCH_TUTORIAL)
+                << "Press any key to start the tutorial intro, "
+                "or Escape to skip it."
+                << std::endl;
+            const int ch = c_getch();
 
             if (ch != ESCAPE)
                 tut_starting_screen();
@@ -2834,15 +2833,14 @@ static bool initialise(void)
     init_monsters(mcolour);     // this needs to be way up top {dlb}
     init_spell_descs();        // this needs to be way up top {dlb}
 
-    // Ensure no buffering on the mpr() stream.
-    mpr_stream << std::nounitbuf;
+    msg::initialise_mpr_streams();
 
     // init item array:
     for (int i = 0; i < MAX_ITEMS; i++)
-        init_item( i );
+        init_item(i);
 
     // empty messaging string
-    strcpy(info, "");
+    info[0] = 0;
 
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
