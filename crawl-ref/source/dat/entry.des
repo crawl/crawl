@@ -3224,7 +3224,7 @@ ORIENT: northwest
 SUBST: ?=l.
 CHANCE: 6
 KFEAT: X = teleport trap
-SHUFFLE: Cc, {(.
+SHUFFLE: Cc
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
@@ -3251,7 +3251,7 @@ TAGS: entry no_monster_gen
 ORIENT: northwest 
 CHANCE: 4
 KFEAT: X = teleport trap
-SHUFFLE: Cc, {(.
+SHUFFLE: Cc
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
