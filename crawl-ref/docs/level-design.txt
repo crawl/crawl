@@ -553,12 +553,13 @@ E.    Hints for level makers
   Technically, you make a minivault like a normal floating vault but 
   without an ORIENT: line. Note that minivaults used to be exclusively of
   size 12x12 but this restriction is gone. Still, the smaller the better.
-  
+
+  Where possible, use minivaults instead of regular vaults, because the dungeon
+  builder has greater freedom with the rest of the level layout when using
+  minivaults.
+
 * levdes.vim.
-  Your choice of editor can greatly affect your level building. While vi's
-  reputation may be close to Crawl's when it comes to fiendishness, there 
-  is a style file (levdes.vim in the dat directory) which helps tremendously
-  (it colours the various glyphs on the maps, and it highlights the syntax).
-  Even Windows users can profit from this by using gvim, a freeware vim
-  clone with a graphical user interface which knows shortcuts like Ctrl-X
-  etc.
+  If you use vim, the levdes.vim syntax highlighting script (provided
+  in the dat directory) can make level-editing far more pleasant by colouring
+  different features in maps and syntax-highlighting .des-file syntax. vim is
+  available for nearly all operating systems, including Windows.
