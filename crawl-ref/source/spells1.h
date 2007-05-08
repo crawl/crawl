@@ -79,7 +79,7 @@ int cast_fire_storm(int powc, bolt &beam);
 bool cast_revivification(int power);
 void cast_berserk(void);
 void cast_ring_of_flames(int power);
-int conjure_flame(int pow);
+bool conjure_flame(int pow);
 void extension(int pow);
 int fireball(int power, bolt &beam);
 int stinking_cloud(int pow, bolt &beam);

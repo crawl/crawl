@@ -998,7 +998,7 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_CONJURE_FLAME:
-        if (conjure_flame(powc) == -1)
+        if (!conjure_flame(powc))
             return (SPRET_ABORT);
         break;
 

@@ -401,7 +401,8 @@ void identify(int power)
     while (id_used > 0);
 }                               // end identify()
 
-int conjure_flame(int pow)
+// return whether the spell was actually cast
+bool conjure_flame(int pow)
 {
     struct dist spelld;
 
@@ -422,7 +423,7 @@ int conjure_flame(int pow)
         if (!spelld.isValid)
         {
             canned_msg(MSG_OK);
-            return (-1);
+            return false;
         }
 
         if (!see_grid(spelld.tx, spelld.ty))
@@ -431,15 +432,26 @@ int conjure_flame(int pow)
             continue;
         }
 
-        if (grid_is_solid(grd[ spelld.tx ][ spelld.ty ])
-            || mgrd[ spelld.tx ][ spelld.ty ] != NON_MONSTER 
-            || env.cgrid[ spelld.tx ][ spelld.ty ] != EMPTY_CLOUD)
+        const int cloud = env.cgrid[spelld.tx][spelld.ty];
+
+        if (grid_is_solid(grd[ spelld.tx ][ spelld.ty ]) ||
+            mgrd[ spelld.tx ][ spelld.ty ] != NON_MONSTER ||
+            (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
         {
             mpr( "There's already something there!" );
             continue;
         }
+        else if ( cloud != EMPTY_CLOUD )
+        {
+            // reinforce the cloud - but not too much
+            mpr( "The fire roars with new energy!" );
+            const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
+            env.cloud[cloud].decay += extra_dur * 5;
+            env.cloud[cloud].whose = KC_YOU;
+            return true;
+        }
 
-        break;    
+        break;
     }
 
     int durat = 5 + (random2(pow) / 2) + (random2(pow) / 2);
@@ -448,8 +460,8 @@ int conjure_flame(int pow)
         durat = 23;
 
     place_cloud( CLOUD_FIRE, spelld.tx, spelld.ty, durat, KC_YOU );
-    return (1);
-}                               // end cast_conjure_flame()
+    return true;
+}
 
 int stinking_cloud( int pow, bolt &beem )
 {
