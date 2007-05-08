@@ -162,8 +162,12 @@ static std::string spell_full_description(spell_type spell)
 
 char list_spells()
 {
-    slider_menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
-    spell_menu.set_title(new MenuEntry(" Your Spells                      Type            Power         Success   Level", MEL_TITLE));
+    Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
+    spell_menu.set_title(
+        new MenuEntry(
+            " Your Spells                      Type            "
+            "Power         Success   Level",
+            MEL_TITLE));
     spell_menu.set_highlighter(NULL);
 
     for ( int i = 0; i < 52; ++i )
@@ -173,7 +177,7 @@ char list_spells()
         if (spell != SPELL_NO_SPELL)
         {
             MenuEntry* me = new MenuEntry(spell_full_description(spell),
-                                          MEL_ITEM, 0, letter);
+                                          MEL_ITEM, 1, letter);
             spell_menu.add_entry(me);
         }
     }
