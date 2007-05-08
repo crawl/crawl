@@ -25,6 +25,7 @@
 #include "abl-show.h"
 
 #include <sstream>
+#include <iomanip>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -41,6 +42,7 @@
 #include "it_use2.h"
 #include "macro.h"
 #include "message.h"
+#include "menu.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "monplace.h"
@@ -74,17 +76,13 @@
 // it makes more sense to think of them as an array
 // of structs than two arrays that share common index
 // values -- well, doesn't it? {dlb}
-struct talent
-{
-    int which;
-    int fail;
-    bool is_invocation;
-};
 
-static FixedVector< talent, 52 >  Curr_abil;
-
-static bool insert_ability( int which_ability, bool check_conf );
 static void lugonu_bends_space();
+static int find_ability_slot( ability_type which_ability );
+static bool activate_talent(const talent& tal);
+static bool do_ability(const ability_def& abil);
+static void pay_ability_costs(const ability_def& abil);
+static std::string describe_talent(const talent& tal);
 
 // declaring this const messes up externs later, so don't do it
 ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -146,7 +144,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 // The four numerical fields are: MP, HP, food, and piety.
 // Note:  food_cost  = val + random2avg( val, 2 )
 //        piety_cost = val + random2( (val + 1) / 2 + 1 );
-static const struct ability_def Ability_List[] =
+static const ability_def Ability_List[] =
 {
     // NON_ABILITY should always come first
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, ABFLAG_NONE },
@@ -282,10 +280,11 @@ static const struct ability_def Ability_List[] =
 };
 
 
-const struct ability_def & get_ability_def( int abil )
+const struct ability_def & get_ability_def( ability_type abil )
 /****************************************************/
 {
-    for (unsigned int i = 0; i < sizeof( Ability_List ); i++) 
+    for (unsigned int i = 0;
+         i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++) 
     {
         if (Ability_List[i].ability == abil)
             return (Ability_List[i]);
@@ -294,40 +293,30 @@ const struct ability_def & get_ability_def( int abil )
     return (Ability_List[0]);
 }
 
-
-const char * get_ability_name_by_index( char index )
-/**************************************************/
-{
-    const struct ability_def &abil = get_ability_def( Curr_abil[index].which );
-
-    return (abil.name);
-}
-
 std::string print_abilities()
 {
     std::string text = "\n<w>a:</w> ";
 
-    bool have_any = false;
-    if (generate_abilities(false))
+    const std::vector<talent> talents = your_talents(false);
+
+    if ( talents.empty() )
+        text += "no special abilities";
+    else
     {
-        for (int i = 0; i < 52; ++i)
-            if (Curr_abil[i].which != ABIL_NON_ABILITY)
-            {
-                if (have_any)
-                    text += ", ";
-                text += get_ability_name_by_index(i);
-                have_any = true;
-            }
+        for (unsigned int i = 0; i < talents.size(); ++i)
+        {
+            if (i)
+                text += ", ";
+            text += get_ability_def(talents[i].which).name;
+        }
     }
-    if (!have_any)
-        text +=  "no special abilities";
 
     return text;
 }
  
-const std::string make_cost_description( const struct ability_def &abil )
-/***********************************************************************/
+const std::string make_cost_description( ability_type ability )
 {
+    const ability_def& abil = get_ability_def(ability);
     std::ostringstream ret;
     if (abil.mp_cost)
     {
@@ -339,7 +328,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.hp_cost)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << abil.hp_cost;
@@ -350,7 +339,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.food_cost)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Food";   // randomized and amount hidden from player
@@ -358,7 +347,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.piety_cost)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Piety";  // randomized and amount hidden from player
@@ -366,7 +355,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.flags & ABFLAG_BREATH)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Breath"; 
@@ -374,7 +363,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.flags & ABFLAG_DELAY)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Delay";
@@ -382,7 +371,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.flags & ABFLAG_PAIN)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Pain";
@@ -390,7 +379,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.flags & ABFLAG_EXHAUSTION)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Exhaustion";
@@ -398,127 +387,417 @@ const std::string make_cost_description( const struct ability_def &abil )
 
     if (abil.flags & ABFLAG_INSTANT)
     {
-        if (ret.str().length())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Instant"; // not really a cost, more of a bonus -bwr
     }
 
     // If we haven't output anything so far, then the effect has no cost
-    if (!ret.str().length())
+    if (ret.str().empty())
         ret << "None";
 
     return (ret.str());
 }
 
-std::vector<const char *> get_ability_names()
+static talent get_talent(ability_type ability, bool check_confused)
 {
-    std::vector<const char *> abils;
-    if (generate_abilities(false))
+    ASSERT(ability != ABIL_NON_ABILITY);
+
+    talent result;
+    result.which = ability;
+
+    int failure = 0;
+    bool perfect = false;  // is perfect
+    bool invoc = false;
+
+    if (check_confused)
     {
-        for (int i = 0; i < 52; ++i)
+        const ability_def &abil = get_ability_def(result.which);
+        if (you.conf && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
-            if (Curr_abil[i].which != ABIL_NON_ABILITY)
-                abils.push_back( get_ability_name_by_index(i) );
+            result.which = ABIL_NON_ABILITY;
+            return result;
         }
     }
-    return (abils);
+
+    // Look through the table to see if there's a preference, else 
+    // find a new empty slot for this ability. -- bwr
+    const int index = find_ability_slot( ability );
+    if ( index != -1 )
+        result.hotkey = index_to_letter(index);
+    else
+        result.hotkey = 0;      // means 'find later on'
+    
+    switch (ability)
+    {
+    // begin spell abilities
+    case ABIL_DELAYED_FIREBALL:
+    case ABIL_MUMMY_RESTORATION:
+        perfect = true;
+        failure = 0;
+        break;
+
+    // begin species abilities - some are mutagenic, too {dlb}
+    case ABIL_GLAMOUR:
+        failure = 50 - (you.experience_level * 2);
+        break;
+
+    case ABIL_SPIT_POISON:
+        failure = ((you.species == SP_NAGA) ? 20 : 40)
+                        - 10 * you.mutation[MUT_SPIT_POISON] 
+                        - you.experience_level;
+        break;
+
+    case ABIL_EVOKE_MAPPING:
+        failure = 30 - you.skills[SK_EVOCATIONS]; 
+        break;
+
+    case ABIL_MAPPING:
+        failure = 40 - 10 * you.mutation[MUT_MAPPING] - you.experience_level;
+        break;
+
+    case ABIL_BREATHE_FIRE:
+        failure = ((you.species == SP_RED_DRACONIAN) ? 30 : 50)
+                        - 10 * you.mutation[MUT_BREATHE_FLAMES]
+                        - you.experience_level;
+
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            failure -= 20;
+        break;
+
+    case ABIL_BREATHE_FROST:
+    case ABIL_BREATHE_POISON:
+    case ABIL_SPIT_ACID:
+    case ABIL_BREATHE_LIGHTNING:
+    case ABIL_BREATHE_POWER:
+    case ABIL_BREATHE_STICKY_FLAME:
+        failure = 30 - you.experience_level;
+
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            failure -= 20;
+        break;
+
+    case ABIL_BREATHE_STEAM:
+        failure = 20 - you.experience_level;
+
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            failure -= 20;
+        break;
+
+    case ABIL_FLY:              // this is for kenku {dlb}
+        failure = 45 - (3 * you.experience_level);
+        break;
+
+    case ABIL_FLY_II:           // this is for draconians {dlb}
+        failure = 45 - (you.experience_level + you.strength);
+        break;
+        // end species abilties (some mutagenic)
+
+        // begin demonic powers {dlb}
+    case ABIL_THROW_FLAME:
+    case ABIL_THROW_FROST:
+        failure = 10 - you.experience_level;
+        break;
+
+    case ABIL_SUMMON_MINOR_DEMON:
+        failure = 27 - you.experience_level;
+        break;
+
+    case ABIL_CHANNELING:
+    case ABIL_BOLT_OF_DRAINING:
+        failure = 30 - you.experience_level;
+        break;
+
+    case ABIL_CONTROL_DEMON:
+        failure = 35 - you.experience_level;
+        break;
+
+    case ABIL_SUMMON_DEMONS:
+        failure = 40 - you.experience_level;
+        break;
+
+    case ABIL_TO_PANDEMONIUM:
+        failure = 57 - (you.experience_level * 2);
+        break;
+
+    case ABIL_HELLFIRE:
+    case ABIL_RAISE_DEAD:
+        failure = 50 - you.experience_level;
+        break;
+
+    case ABIL_TORMENT:
+        failure = 60 - you.experience_level;
+        break;
+
+    case ABIL_BLINK:
+        failure = 30 - (10 * you.mutation[MUT_BLINK]) - you.experience_level;
+        break;
+
+    case ABIL_TELEPORTATION:
+        failure = ((you.mutation[MUT_TELEPORT_AT_WILL] > 1) ? 30 : 50) 
+                    - you.experience_level;
+        break;
+        // end demonic powers {dlb}
+
+        // begin transformation abilities {dlb}
+    case ABIL_END_TRANSFORMATION:
+        perfect = true;
+        failure = 0;
+        break;
+
+    case ABIL_BREATHE_HELLFIRE:
+        failure = 32 - you.experience_level;
+        break;
+        // end transformation abilities {dlb}
+        //
+        // begin item abilities - some possibly mutagenic {dlb}
+    case ABIL_EVOKE_TURN_INVISIBLE:
+    case ABIL_EVOKE_TELEPORTATION:
+        failure = 60 - 2 * you.skills[SK_EVOCATIONS];
+        break;
+
+    case ABIL_EVOKE_TURN_VISIBLE:
+    case ABIL_EVOKE_STOP_LEVITATING:
+        perfect = true;
+        failure = 0;
+        break;
+
+    case ABIL_EVOKE_LEVITATE:
+    case ABIL_EVOKE_BLINK:
+        failure = 40 - 2 * you.skills[SK_EVOCATIONS];
+        break;
+
+    case ABIL_EVOKE_BERSERK:
+        failure = 50 - 2 * you.skills[SK_EVOCATIONS];
+
+        if (you.species == SP_TROLL)
+            failure -= 30;
+        else if (player_genus(GENPC_DWARVEN) || you.species == SP_HILL_ORC 
+                || you.species == SP_OGRE)
+        {
+            failure -= 10;
+        }
+        break;
+        // end item abilities - some possibly mutagenic {dlb}
+
+        // begin invocations {dlb}
+    case ABIL_ELYVILON_PURIFICATION:
+        invoc = true;
+        failure = 20 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_ZIN_REPEL_UNDEAD:
+    case ABIL_TSO_REPEL_UNDEAD:
+    case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
+    case ABIL_OKAWARU_MIGHT:
+    case ABIL_ELYVILON_LESSER_HEALING:
+        invoc = true;
+        failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    // These three are Trog abilities... Invocations means nothing -- bwr
+    case ABIL_TROG_BERSERK:    // piety >= 30
+        invoc = true;
+        failure = 30 - you.piety;       // starts at 0%
+        break;
+
+    case ABIL_TROG_MIGHT:         // piety >= 50
+        invoc = true;
+        failure = 80 - you.piety;       // starts at 30%
+        break;
+
+    case ABIL_TROG_HASTE_SELF:       // piety >= 100
+        invoc = true;
+        failure = 160 - you.piety;      // starts at 60%
+        break;
+
+    case ABIL_YRED_ANIMATE_CORPSE:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_ZIN_HEALING:
+    case ABIL_TSO_SMITING:
+    case ABIL_OKAWARU_HEALING:
+    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
+    case ABIL_SIF_MUNA_FORGET_SPELL:
+    case ABIL_KIKU_ENSLAVE_UNDEAD:
+    case ABIL_YRED_ANIMATE_DEAD:
+    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
+    case ABIL_ELYVILON_HEALING:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+        invoc = true;
+        failure = 40 - you.intel - you.skills[SK_INVOCATIONS];
+        break;
+
+    case ABIL_YRED_RECALL_UNDEAD:
+        invoc = true;
+        failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
+        break;
+
+    case ABIL_ZIN_PESTILENCE:
+    case ABIL_TSO_ANNIHILATE_UNDEAD:
+        invoc = true;
+        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+    case ABIL_YRED_DRAIN_LIFE:
+        invoc = true;
+        failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        break;
+
+    case ABIL_ZIN_HOLY_WORD:
+    case ABIL_TSO_CLEANSING_FLAME:
+    case ABIL_ELYVILON_RESTORATION:
+    case ABIL_YRED_CONTROL_UNDEAD:
+    case ABIL_OKAWARU_HASTE:
+    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+        invoc = true;
+        failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        break;
+
+    case ABIL_ZIN_SUMMON_GUARDIAN:
+    case ABIL_TSO_SUMMON_DAEVA:
+    case ABIL_KIKU_INVOKE_DEATH:
+    case ABIL_ELYVILON_GREATER_HEALING:
+        invoc = true;
+        failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        break;
+
+        //jmf: following for to-be-created gods
+    case ABIL_CHARM_SNAKE:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_TRAN_SERPENT_OF_HELL:
+        invoc = true;
+        failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        break;
+
+    case ABIL_ROTTING:
+        invoc = true;
+        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
+        break;
+
+    case ABIL_TORMENT_II:
+        invoc = true;
+        failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
+        break;
+
+    case ABIL_RENOUNCE_RELIGION:
+        invoc = true;
+        perfect = true;
+        failure = 0;
+        break;
+
+        // end invocations {dlb}
+    default:
+        failure = -1;
+        break;
+    }
+
+    // Perfect abilities are things like "renounce religion", which
+    // shouldn't have a failure rate ever. -- bwr
+    if (failure <= 0 && !perfect)
+        failure = 1;
+
+    if (failure > 100)
+        failure = 100;
+
+    result.fail = failure;
+    result.is_invocation = invoc;
+
+    return result;
+
 }
 
-/*
-   Activates a menu which gives player access to all of their non-spell
-   special abilities - e.g. nagas' spit poison, or the Invocations you get
-   from worshipping. Generated dynamically - the function checks to see which
-   abilities you have every time.
- */
-bool activate_ability(void)
-/*************************/
+std::vector<const char*> get_ability_names()
 {
-    unsigned char keyin = 0;
+    std::vector<talent> talents = your_talents(false);
+    std::vector<const char*> result;
+    for ( unsigned int i = 0; i < talents.size(); ++i )
+        result.push_back(get_ability_def(talents[i].which).name);
+    return result;
+}
 
-    int power;
-    struct dist abild;
-    struct bolt beam;
-    struct dist spd;
-
+bool activate_ability()
+{
     if (you.berserker)
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
     }
 
-    // populate the array of structs {dlb}:
-    if (!generate_abilities(false))
+    std::vector<talent> talents = your_talents(false);
+    if ( talents.empty() )
     {
         mpr("Sorry, you're not good enough to have a special ability.");
-        return (false);
+        return false;
+    }
+    if ( you.conf )
+    {
+        talents = your_talents(true);
+        if ( talents.empty() )
+        {
+            mpr("You're too confused!");
+            return false;
+        }
     }
 
-    if (!generate_abilities(you.conf))
+    int selected = -1;
+    while ( selected < 0 )
     {
-        mpr("You're too confused!");
-        return (false);
-    }
+        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list)"
+                                   << std::endl;
 
-    bool  need_redraw = false;
-    bool  need_prompt = true;
-    bool  need_getch  = true;
+        const int keyin = get_ch();
 
-    for (;;)
-    {
-        if (need_redraw)
+        if ( keyin == '?' || keyin == '*' )
         {
-            mesclr( true );
-            redraw_screen();
+            selected = choose_ability_menu(talents);
         }
-
-        if (need_prompt)
-            mpr( "Use which ability? (? or * to list)", MSGCH_PROMPT );
-
-        if (need_getch)
-            keyin = get_ch();
-
-        need_redraw = false;
-        need_prompt = true;
-        need_getch  = true;
-
-        if (isalpha( keyin ))
-        {
-            break;
-        }
-        else if (keyin == '?' || keyin == '*')
-        {
-            keyin = show_abilities();
-
-            need_getch  = false;
-            need_redraw = true;
-            need_prompt = true;
-        }
-        else if (keyin == ESCAPE || keyin == ' ' 
-                || keyin == '\r' || keyin == '\n')
+        else if (keyin == ESCAPE || keyin == ' ' ||
+                 keyin == '\r' || keyin == '\n')
         {
             canned_msg( MSG_OK );    
             return (false);
         }
+        else if ( isalpha(keyin) )
+        {
+            // try to find the hotkey
+            for (unsigned int i = 0; i < talents.size(); ++i)
+            {
+                if ( talents[i].hotkey == keyin )
+                {
+                    selected = static_cast<int>(i);
+                    break;
+                }
+            }
+
+            // if we can't, cancel out
+            if ( selected < 0 )
+            {
+                mpr("You can't do that.");
+                return (false);
+            }
+        }
     }
 
-    if (!isalpha( keyin ))
-    {
-        mpr("You can't do that.");
-        return (false);
-    }
+    return activate_talent(talents[selected]);
+}
 
-    const int abil_used = letter_to_index(keyin);
-
-    if (Curr_abil[abil_used].which == -1)
-    {
-        mpr("You can't do that.");
-        return (false);
-    }
-
+static bool activate_talent(const talent& tal)
+{
     // some abilities don't need a hunger check
     bool hungerCheck = true;
-    switch (Curr_abil[abil_used].which)
+    switch (tal.which)
     {
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_EVOKE_STOP_LEVITATING:
@@ -538,21 +817,35 @@ bool activate_ability(void)
         return (false);
     }
 
-    // no turning back now... {dlb}
-    const struct ability_def abil = get_ability_def(Curr_abil[abil_used].which);
+    const ability_def& abil = get_ability_def(tal.which);
 
-    if (random2avg(100, 3) < Curr_abil[abil_used].fail)
+    // check that we can afford to pay the costs
+    if (!enough_mp( abil.mp_cost, false ))
+        return (false);
+
+    if (!enough_hp( abil.hp_cost, false ))
+        return (false);
+
+    // no turning back now... {dlb}
+    if (random2avg(100, 3) < tal.fail)
     {
         mpr("You fail to use your ability.");
         you.turn_is_over = true;
         return (false);
     }
 
-    if (!enough_mp( abil.mp_cost, false ))
-        return (false);
+    const bool success = do_ability(abil);
+    if ( success )
+        pay_ability_costs(abil);
+    return success;
+}
 
-    if (!enough_hp( abil.hp_cost, false ))
-        return (false);
+static bool do_ability(const ability_def& abil)
+{
+    int power;
+    struct dist abild;
+    struct bolt beam;
+    struct dist spd;
 
     // Note: the costs will not be applied until after this switch 
     // statement... it's assumed that only failures have returned! -- bwr
@@ -677,7 +970,7 @@ bool activate_ability(void)
             return (false);
         }
 
-        switch (Curr_abil[abil_used].which)
+        switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
             power = you.experience_level;
@@ -728,6 +1021,8 @@ bool activate_ability(void)
             zapping(ZAP_BREATHE_STEAM, you.experience_level, beam);
             break;
 
+        default:
+            break;
         }
 
         if (abil.ability != ABIL_SPIT_ACID)
@@ -735,7 +1030,7 @@ bool activate_ability(void)
             you.duration[DUR_BREATH_WEAPON] =
                 3 + random2(4) + random2(30 - you.experience_level) / 2;
 
-            if (Curr_abil[abil_used].which == ABIL_BREATHE_STEAM)
+            if (abil.ability == ABIL_BREATHE_STEAM)
                 you.duration[DUR_BREATH_WEAPON] /= 2;
         }
         break;
@@ -852,8 +1147,7 @@ bool activate_ability(void)
             return (false);
         }
 
-        zapping( (Curr_abil[abil_used].which == ABIL_THROW_FLAME ? ZAP_FLAME 
-                                                                 : ZAP_FROST),
+        zapping( (abil.ability == ABIL_THROW_FLAME ? ZAP_FLAME : ZAP_FROST),
                     you.experience_level * 3,
                     beam );
         break;
@@ -1312,18 +1606,21 @@ bool activate_ability(void)
         }
         break;
 
-    default:
+    case ABIL_NON_ABILITY:
         mpr("Sorry, you can't do that.");
         break;
     }
+    return true;
+}
 
+static void pay_ability_costs(const ability_def& abil)
+{
     // currently only delayed fireball is instantaneous -- bwr
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
-    // All failures should have returned by this point, so we'll 
-    // apply the costs -- its not too neat, but it works for now. -- bwr
     const int food_cost = abil.food_cost + random2avg(abil.food_cost, 2);
-    const int piety_cost = abil.piety_cost + random2((abil.piety_cost + 1) / 2 + 1);
+    const int piety_cost = abil.piety_cost +
+        random2((abil.piety_cost + 1) / 2 + 1);
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
@@ -1349,177 +1646,123 @@ bool activate_ability(void)
 
     if (piety_cost)
         lose_piety( piety_cost );
+}
 
-    return (true);
-}  // end activate_ability()
-
-
-// Lists any abilities the player may possess
-char show_abilities( void )
-/*************************/
+int choose_ability_menu(const std::vector<talent>& talents)
 {
-    int loopy = 0;
-    char lines = 0;
-    unsigned char anything = 0;
-    char ki;
-    bool can_invoke = false;
+    Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
+    abil_menu.set_highlighter(NULL);
+    abil_menu.set_title(new MenuEntry("  Ability                           Cost                    Success"));
 
-    const int num_lines = get_number_of_lines();
+    int numbers[52];
+    for ( int i = 0; i < 52; ++i )
+        numbers[i] = i;
 
-    for (loopy = 0; loopy < 52; loopy++)
+    bool found_invocations = false;
+
+    // first add all non-invocations
+    for ( unsigned int i = 0; i < talents.size(); ++i )
     {
-        if (Curr_abil[loopy].is_invocation)
+        if ( talents[i].is_invocation )
+            found_invocations = true;
+        else
         {
-            can_invoke = true;
-            break;
+            MenuEntry* me = new MenuEntry(describe_talent(talents[i]),
+                                          MEL_ITEM, 1, talents[i].hotkey);
+            me->data = reinterpret_cast<void*>(numbers+i);
+            abil_menu.add_entry(me);
         }
     }
-
-
-    clrscr();
-    cprintf("  Ability                           Cost                    Success");
-    lines++;
-
-    for (int do_invoke = 0; do_invoke < (can_invoke ? 2 : 1); do_invoke++)
+    
+    if ( found_invocations )
     {
-        if (do_invoke)
+        abil_menu.add_entry(new MenuEntry("    Invocations - ", MEL_SUBTITLE));
+        for ( unsigned int i = 0; i < talents.size(); ++i )
         {
-            anything++;
-            textcolor(BLUE);
-            cprintf(EOL "    Invocations - ");
-            textcolor(LIGHTGREY);
-            lines++;
-        }
-
-        for (loopy = 0; loopy < 52; loopy++)
-        {
-            if (lines > num_lines - 2)
+            if ( talents[i].is_invocation )
             {
-                gotoxy(1, num_lines);
-                cprintf("-more-");
-
-                ki = getch();
-
-                if (ki == ESCAPE)
-                {
-                    return (ESCAPE);
-                }
-
-                if (ki >= 'A' && ki <= 'z')
-                {
-                    return (ki);
-                }
-
-                if (ki == 0)
-                    ki = getch();
-
-                lines = 0;
-                clrscr();
-                gotoxy(1, 1);
-                anything = 0;
+                MenuEntry* me = new MenuEntry(describe_talent(talents[i]),
+                                              MEL_ITEM, 1, talents[i].hotkey);
+                me->data = reinterpret_cast<void*>(numbers+i);
+                abil_menu.add_entry(me);
             }
-
-            if (Curr_abil[loopy].which != ABIL_NON_ABILITY
-                && (do_invoke == Curr_abil[loopy].is_invocation))
-            {
-                anything++;
-
-                if (lines > 0)
-                    cprintf(EOL);
-
-                lines++;
-
-                const struct ability_def abil = get_ability_def( Curr_abil[loopy].which );
-
-                cprintf( " %c - %s", index_to_letter(loopy), abil.name );
-
-                // Output costs:
-                gotoxy( 35, wherey() );
-
-                std::string cost_str = make_cost_description( abil );
-
-                if (cost_str.length() > 24)
-                    cost_str = cost_str.substr( 0, 24 );
-
-                cprintf( "%s", cost_str.c_str() );
-
-                gotoxy(60, wherey());
-
-                cprintf( "%s", failure_rate_to_string(Curr_abil[loopy].fail));
-
-                gotoxy(70, wherey());
-            }                              // end if conditional
-        }                                  // end "for loopy"
-    }
-
-    if (anything > 0)
-    {
-        ki = getch();
-
-        if (ki >= 'A' && ki <= 'z')
-        {
-            return (ki);
         }
-
-        if (ki == 0)
-            ki = getch();
-
-        return (ki);
     }
 
-    ki = getch();
-
-    return (ki);
-}                               // end show_abilities()
-
-
-bool generate_abilities( bool check_confused )
-/*****************************/
-{
-    int loopy;
-
-    // fill array of structs with "empty" values {dlb}:
-    for (loopy = 0; loopy < 52; loopy++)
+    std::vector<MenuEntry*> sel = abil_menu.show();
+    redraw_screen();
+    if ( sel.empty() )
     {
-        Curr_abil[loopy].which = ABIL_NON_ABILITY;
-        Curr_abil[loopy].fail = 100;
-        Curr_abil[loopy].is_invocation = false;
+        return -1;
     }
+    else
+    {
+        ASSERT(sel.size() == 1);
+        ASSERT(sel[0]->hotkeys.size() == 1);
+        return (*(reinterpret_cast<int*>(sel[0]->data)));
+    }
+}
+
+const char* ability_name(ability_type ability)
+{
+    return get_ability_def(ability).name;
+}
+
+static std::string describe_talent(const talent& tal)
+{
+    ASSERT( tal.which != ABIL_NON_ABILITY );
+
+    const ability_def& abil = get_ability_def( tal.which );
+
+    std::ostringstream desc;
+    desc << std::left
+         << std::setw(30) << ability_name(tal.which)
+         << std::setw(24) << make_cost_description(tal.which)
+         << std::setw(10) << failure_rate_to_string(tal.fail);
+    return desc.str();
+}
+
+static void add_talent(std::vector<talent>& vec, const ability_type ability,
+                       bool check_confused)
+{
+    const talent t = get_talent(ability, check_confused);
+    if ( t.which != ABIL_NON_ABILITY )
+        vec.push_back(t);
+}
+
+std::vector<talent> your_talents( bool check_confused )
+{
+    std::vector<talent> talents;
 
     // first we do the racial abilities:
-    
-    // Mummies get the ability to restore HPs and stats, but it
-    // costs permanent MP (and those can never be recovered).  -- bwr
     if (you.species == SP_MUMMY && you.experience_level >= 13)
-    {
-        insert_ability( ABIL_MUMMY_RESTORATION, check_confused );
-    }
+        add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
     // checking for species-related abilities and mutagenic counterparts {dlb}:
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
         && ((you.species == SP_GREY_ELF && you.experience_level >= 5)
             || (you.species == SP_HIGH_ELF && you.experience_level >= 15)))
     {
-        insert_ability( ABIL_GLAMOUR, check_confused );
+        add_talent(talents, ABIL_GLAMOUR, check_confused);
     }
 
     if (you.species == SP_NAGA)
     {
         if (you.mutation[MUT_BREATHE_POISON])
-            insert_ability( ABIL_BREATHE_POISON, check_confused );
+            add_talent(talents, ABIL_BREATHE_POISON, check_confused );
         else
-            insert_ability( ABIL_SPIT_POISON, check_confused );
+            add_talent(talents, ABIL_SPIT_POISON, check_confused );
     }
     else if (you.mutation[MUT_SPIT_POISON])
     {
-        insert_ability( ABIL_SPIT_POISON, check_confused );
+        add_talent(talents, ABIL_SPIT_POISON, check_confused );
     }
 
     if (player_genus(GENPC_DRACONIAN))
     {
         if (you.experience_level >= 7)
         {
-            const int ability = (
+            const ability_type ability = (
                 (you.species == SP_GREEN_DRACONIAN)  ? ABIL_BREATHE_POISON :
                 (you.species == SP_RED_DRACONIAN)    ? ABIL_BREATHE_FIRE :
                 (you.species == SP_WHITE_DRACONIAN)  ? ABIL_BREATHE_FROST :
@@ -1528,9 +1771,9 @@ bool generate_abilities( bool check_confused )
                 (you.species == SP_PURPLE_DRACONIAN) ? ABIL_BREATHE_POWER :
                 (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :
                 (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME:
-                                                     -1);
-            if (ability != -1)
-                insert_ability( ability, check_confused );
+                                                     ABIL_NON_ABILITY);
+            if (ability != ABIL_NON_ABILITY)
+                add_talent(talents, ability, check_confused );
         }
     }
 
@@ -1538,7 +1781,7 @@ bool generate_abilities( bool check_confused )
     if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
         (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))
     {
-        insert_ability( ABIL_MAPPING, check_confused );
+        add_talent(talents, ABIL_MAPPING, check_confused );
     }
 
     if (!you.duration[DUR_CONTROLLED_FLIGHT] && !player_is_levitating())
@@ -1547,53 +1790,53 @@ bool generate_abilities( bool check_confused )
         // (until level 15, when it becomes permanent until revoked)
         //jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
-            insert_ability( ABIL_FLY, check_confused );
+            add_talent(talents, ABIL_FLY, check_confused );
         else if (player_genus(GENPC_DRACONIAN) && you.mutation[MUT_BIG_WINGS])
-            insert_ability( ABIL_FLY_II, check_confused );
+            add_talent(talents, ABIL_FLY_II, check_confused );
     }
 
     // demonic powers {dlb}:
     if (you.mutation[MUT_SUMMON_MINOR_DEMONS])
-        insert_ability( ABIL_SUMMON_MINOR_DEMON, check_confused );
+        add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
 
     if (you.mutation[MUT_SUMMON_DEMONS])
-        insert_ability( ABIL_SUMMON_DEMONS, check_confused );
+        add_talent(talents, ABIL_SUMMON_DEMONS, check_confused );
 
     if (you.mutation[MUT_HURL_HELLFIRE])
-        insert_ability( ABIL_HELLFIRE, check_confused );
+        add_talent(talents, ABIL_HELLFIRE, check_confused );
 
     if (you.mutation[MUT_CALL_TORMENT])
-        insert_ability( ABIL_TORMENT, check_confused );
+        add_talent(talents, ABIL_TORMENT, check_confused );
 
     if (you.mutation[MUT_RAISE_DEAD])
-        insert_ability( ABIL_RAISE_DEAD, check_confused );
+        add_talent(talents, ABIL_RAISE_DEAD, check_confused );
 
     if (you.mutation[MUT_CONTROL_DEMONS])
-        insert_ability( ABIL_CONTROL_DEMON, check_confused );
+        add_talent(talents, ABIL_CONTROL_DEMON, check_confused );
 
     if (you.mutation[MUT_PANDEMONIUM])
-        insert_ability( ABIL_TO_PANDEMONIUM, check_confused );
+        add_talent(talents, ABIL_TO_PANDEMONIUM, check_confused );
 
     if (you.mutation[MUT_CHANNEL_HELL])
-        insert_ability( ABIL_CHANNELING, check_confused );
+        add_talent(talents, ABIL_CHANNELING, check_confused );
 
     if (you.mutation[MUT_THROW_FLAMES])
-        insert_ability( ABIL_THROW_FLAME, check_confused );
+        add_talent(talents, ABIL_THROW_FLAME, check_confused );
 
     if (you.mutation[MUT_THROW_FROST])
-        insert_ability( ABIL_THROW_FROST, check_confused );
+        add_talent(talents, ABIL_THROW_FROST, check_confused );
 
     if (you.mutation[MUT_SMITE])
-        insert_ability( ABIL_BOLT_OF_DRAINING, check_confused );
+        add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused );
 
     if (you.duration[DUR_TRANSFORMATION])
-        insert_ability( ABIL_END_TRANSFORMATION, check_confused );
+        add_talent(talents, ABIL_END_TRANSFORMATION, check_confused );
 
     if (you.mutation[MUT_BLINK]) 
-        insert_ability( ABIL_BLINK, check_confused );
+        add_talent(talents, ABIL_BLINK, check_confused );
 
     if (you.mutation[MUT_TELEPORT_AT_WILL])
-        insert_ability( ABIL_TELEPORTATION, check_confused );
+        add_talent(talents, ABIL_TELEPORTATION, check_confused );
 
     // gods take abilities away until penance completed -- bwr
     if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
@@ -1604,42 +1847,42 @@ bool generate_abilities( bool check_confused )
             {
                 ability_type abil = god_abilities[you.religion][i];
                 if ( abil != ABIL_NON_ABILITY )
-                    insert_ability(abil, check_confused);
+                    add_talent(talents,abil, check_confused);
             }
         }
     }
 
     // and finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced( you.x_pos, you.y_pos ))
-        insert_ability( ABIL_RENOUNCE_RELIGION, check_confused );
+        add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused );
 
     //jmf: check for breath weapons -- they're exclusive of each other I hope!
     //     better make better ones first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
     {
-        insert_ability( ABIL_BREATHE_HELLFIRE, check_confused );
+        add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                                         || you.mutation[MUT_BREATHE_FLAMES])
     {
-        insert_ability( ABIL_BREATHE_FIRE, check_confused );
+        add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
     }
 
     // checking for unreleased delayed fireball
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
     {
-        insert_ability( ABIL_DELAYED_FIREBALL, check_confused );
+        add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused );
     }
 
     // evocations from items:
     if (scan_randarts(RAP_BLINK))
-        insert_ability( ABIL_EVOKE_BLINK, check_confused );
+        add_talent(talents, ABIL_EVOKE_BLINK, check_confused );
 
     if (wearing_amulet(AMU_RAGE) || scan_randarts(RAP_BERSERK))
-        insert_ability( ABIL_EVOKE_BERSERK, check_confused );
+        add_talent(talents, ABIL_EVOKE_BERSERK, check_confused );
 
     if (scan_randarts( RAP_MAPPING ))
-        insert_ability( ABIL_EVOKE_MAPPING, check_confused );
+        add_talent(talents, ABIL_EVOKE_MAPPING, check_confused );
 
     if (player_equip( EQ_RINGS, RING_INVISIBILITY )
         || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
@@ -1649,9 +1892,9 @@ bool generate_abilities( bool check_confused )
         // activatable item.  Wands and potions allow will have 
         // to time out. -- bwr
         if (you.invis)
-            insert_ability( ABIL_EVOKE_TURN_VISIBLE, check_confused );
+            add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused );
         else
-            insert_ability( ABIL_EVOKE_TURN_INVISIBLE, check_confused );
+            add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
     }
 
     //jmf: "upgrade" for draconians -- expensive flight
@@ -1665,27 +1908,52 @@ bool generate_abilities( bool check_confused )
         // have to time out (this makes the miscast effect actually
         // a bit annoying). -- bwr
         if (you.levitation) 
-            insert_ability( ABIL_EVOKE_STOP_LEVITATING, check_confused );
+            add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused );
         else
-            insert_ability( ABIL_EVOKE_LEVITATE, check_confused );
+            add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused );
     }
 
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )
         || scan_randarts( RAP_CAN_TELEPORT ))
     {
-        insert_ability( ABIL_EVOKE_TELEPORTATION, check_confused );
+        add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused );
     }
 
-    // this is a shameless kludge for the time being {dlb}:
-    // still shameless. -- bwr
-    for (loopy = 0; loopy < 52; loopy++)
+    // find hotkeys for the non-hotkeyed talents
+    for (unsigned int i = 0; i < talents.size(); ++i)
     {
-        if (Curr_abil[loopy].which != ABIL_NON_ABILITY)
-            return (true);
-    }
+        // skip preassigned hotkeys
+        if ( talents[i].hotkey != 0 )
+            continue;
 
-    return (false);
-}                               // end generate_abilities()
+        // try to find a free hotkey for i, starting from Z
+        for ( int k = 51; k >= 0; ++k )
+        {
+            const int kkey = index_to_letter(k);
+            bool good_key = true;
+
+            // check that it doesn't conflict with other hotkeys
+            for ( unsigned int j = 0; j < talents.size(); ++j )
+            {
+                if ( talents[j].hotkey == kkey )
+                {
+                    good_key = false;
+                    break;
+                }
+            }
+
+            if ( good_key )
+            {
+                talents[i].hotkey = k;
+                break;
+            }
+        }
+        // In theory, we could be left with an unreachable ability
+        // here (if you have 53 or more abilities simultaneously.)
+    }
+    
+    return talents;
+}
 
 // Note: we're trying for a behaviour where the player gets
 // to keep their assigned invocation slots if they get excommunicated
@@ -1693,7 +1961,7 @@ bool generate_abilities( bool check_confused )
 // the old invocation slots void and erase them).  We also try to 
 // protect any bindings the character might have made into the 
 // traditional invocation slots (A-E and X). -- bwr
-static void set_god_ability_helper( int abil, char letter )
+static void set_god_ability_helper( ability_type abil, char letter )
 {
     int i;
     const int index = letter_to_index( letter );
@@ -1755,370 +2023,37 @@ void set_god_ability_slots( void )
 }
 
 
-// returns index to Curr_abil, -1 on failure
-static int find_ability_slot( int which_ability )
-/***********************************************/
+// returns an index (0-51) if successful, -1 if you should
+// just use the next one
+static int find_ability_slot( ability_type which_ability )
 {
-    int  slot;
-    for (slot = 0; slot < 52; slot++)
+    for (int slot = 0; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == which_ability)
-            break;
+            return slot;
     }
 
     // no requested slot, find new one and make it preferred.
-    if (slot == 52)  
+
+    // skip over a-e if player prefers them for invocations
+    const int startpoint = (Options.lowercase_invocations ? 5 : 0);
+
+    for (int slot = startpoint; slot < 52; slot++)
     {
-        // skip over a-e if player prefers them for invocations
-        for (slot = (Options.lowercase_invocations ? 5 : 0); slot < 52; slot++)
-        {
-            if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
-                break;
-        }
-
-        // if we skipped over a-e to reserve them, try them now
-        if (Options.lowercase_invocations && slot == 52)
-        {
-            for (slot = 5; slot >= 0; slot--)
-            {
-                if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
-                    break;
-            }
-        }
-
-        // All letters are assigned, check Curr_abil and try to steal a letter
-        if (slot == 52)   
-        {
-            // backwards, to protect the low lettered slots from replacement
-            for (slot = 51; slot >= 0; slot--)
-            {
-                if (Curr_abil[slot].which == ABIL_NON_ABILITY)
-                    break;
-            }
-
-            // no slots at all == no hope of adding
-            if (slot < 0) 
-                return (-1);
-        }
-
-        // this ability now takes over this slot
-        you.ability_letter_table[slot] = which_ability;
+        if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
+            return slot;
     }
 
-    return (slot);
+    // if we skipped over a-e to reserve them, try them now
+    for (int slot = startpoint - 1; slot >= 0; slot--)
+    {
+        if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
+            return slot;
+    }
+
+    // All letters are assigned.
+    return -1;
 }
-
-static bool insert_ability( int which_ability, bool check_conf ) 
-/**********************************************/
-{
-    ASSERT( which_ability != ABIL_NON_ABILITY );
-
-    int failure = 0;
-    bool perfect = false;  // is perfect
-    bool invoc = false;
-
-    // Look through the table to see if there's a preference, else 
-    // find a new empty slot for this ability. -- bwr
-    const int slot = find_ability_slot( which_ability );
-    if (slot == -1)
-        return (false);
-
-    if (check_conf)
-    {
-        const ability_def &abil = get_ability_def(which_ability);
-        if (you.conf && !testbits(abil.flags, ABFLAG_CONF_OK))
-            return (false);
-    }
-
-    Curr_abil[slot].which = which_ability;
-
-    switch (which_ability)
-    {
-    // begin spell abilities
-    case ABIL_DELAYED_FIREBALL:
-    case ABIL_MUMMY_RESTORATION:
-        perfect = true;
-        failure = 0;
-        break;
-
-    // begin species abilities - some are mutagenic, too {dlb}
-    case ABIL_GLAMOUR:
-        failure = 50 - (you.experience_level * 2);
-        break;
-
-    case ABIL_SPIT_POISON:
-        failure = ((you.species == SP_NAGA) ? 20 : 40)
-                        - 10 * you.mutation[MUT_SPIT_POISON] 
-                        - you.experience_level;
-        break;
-
-    case ABIL_EVOKE_MAPPING:
-        failure = 30 - you.skills[SK_EVOCATIONS]; 
-        break;
-
-    case ABIL_MAPPING:
-        failure = 40 - 10 * you.mutation[MUT_MAPPING] - you.experience_level;
-        break;
-
-    case ABIL_BREATHE_FIRE:
-        failure = ((you.species == SP_RED_DRACONIAN) ? 30 : 50)
-                        - 10 * you.mutation[MUT_BREATHE_FLAMES]
-                        - you.experience_level;
-
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-            failure -= 20;
-        break;
-
-    case ABIL_BREATHE_FROST:
-    case ABIL_BREATHE_POISON:
-    case ABIL_SPIT_ACID:
-    case ABIL_BREATHE_LIGHTNING:
-    case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STICKY_FLAME:
-        failure = 30 - you.experience_level;
-
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-            failure -= 20;
-        break;
-
-    case ABIL_BREATHE_STEAM:
-        failure = 20 - you.experience_level;
-
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-            failure -= 20;
-        break;
-
-    case ABIL_FLY:              // this is for kenku {dlb}
-        failure = 45 - (3 * you.experience_level);
-        break;
-
-    case ABIL_FLY_II:           // this is for draconians {dlb}
-        failure = 45 - (you.experience_level + you.strength);
-        break;
-        // end species abilties (some mutagenic)
-
-        // begin demonic powers {dlb}
-    case ABIL_THROW_FLAME:
-    case ABIL_THROW_FROST:
-        failure = 10 - you.experience_level;
-        break;
-
-    case ABIL_SUMMON_MINOR_DEMON:
-        failure = 27 - you.experience_level;
-        break;
-
-    case ABIL_CHANNELING:
-    case ABIL_BOLT_OF_DRAINING:
-        failure = 30 - you.experience_level;
-        break;
-
-    case ABIL_CONTROL_DEMON:
-        failure = 35 - you.experience_level;
-        break;
-
-    case ABIL_SUMMON_DEMONS:
-        failure = 40 - you.experience_level;
-        break;
-
-    case ABIL_TO_PANDEMONIUM:
-        failure = 57 - (you.experience_level * 2);
-        break;
-
-    case ABIL_HELLFIRE:
-    case ABIL_RAISE_DEAD:
-        failure = 50 - you.experience_level;
-        break;
-
-    case ABIL_TORMENT:
-        failure = 60 - you.experience_level;
-        break;
-
-    case ABIL_BLINK:
-        failure = 30 - (10 * you.mutation[MUT_BLINK]) - you.experience_level;
-        break;
-
-    case ABIL_TELEPORTATION:
-        failure = ((you.mutation[MUT_TELEPORT_AT_WILL] > 1) ? 30 : 50) 
-                    - you.experience_level;
-        break;
-        // end demonic powers {dlb}
-
-        // begin transformation abilities {dlb}
-    case ABIL_END_TRANSFORMATION:
-        perfect = true;
-        failure = 0;
-        break;
-
-    case ABIL_BREATHE_HELLFIRE:
-        failure = 32 - you.experience_level;
-        break;
-        // end transformation abilities {dlb}
-        //
-        // begin item abilities - some possibly mutagenic {dlb}
-    case ABIL_EVOKE_TURN_INVISIBLE:
-    case ABIL_EVOKE_TELEPORTATION:
-        failure = 60 - 2 * you.skills[SK_EVOCATIONS];
-        break;
-
-    case ABIL_EVOKE_TURN_VISIBLE:
-    case ABIL_EVOKE_STOP_LEVITATING:
-        perfect = true;
-        failure = 0;
-        break;
-
-    case ABIL_EVOKE_LEVITATE:
-    case ABIL_EVOKE_BLINK:
-        failure = 40 - 2 * you.skills[SK_EVOCATIONS];
-        break;
-
-    case ABIL_EVOKE_BERSERK:
-        failure = 50 - 2 * you.skills[SK_EVOCATIONS];
-
-        if (you.species == SP_TROLL)
-            failure -= 30;
-        else if (player_genus(GENPC_DWARVEN) || you.species == SP_HILL_ORC 
-                || you.species == SP_OGRE)
-        {
-            failure -= 10;
-        }
-        break;
-        // end item abilities - some possibly mutagenic {dlb}
-
-        // begin invocations {dlb}
-    case ABIL_ELYVILON_PURIFICATION:
-        invoc = true;
-        failure = 20 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_ZIN_REPEL_UNDEAD:
-    case ABIL_TSO_REPEL_UNDEAD:
-    case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
-    case ABIL_OKAWARU_MIGHT:
-    case ABIL_ELYVILON_LESSER_HEALING:
-        invoc = true;
-        failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    // These three are Trog abilities... Invocations means nothing -- bwr
-    case ABIL_TROG_BERSERK:    // piety >= 30
-        invoc = true;
-        failure = 30 - you.piety;       // starts at 0%
-        break;
-
-    case ABIL_TROG_MIGHT:         // piety >= 50
-        invoc = true;
-        failure = 80 - you.piety;       // starts at 30%
-        break;
-
-    case ABIL_TROG_HASTE_SELF:       // piety >= 100
-        invoc = true;
-        failure = 160 - you.piety;      // starts at 60%
-        break;
-
-    case ABIL_YRED_ANIMATE_CORPSE:
-        invoc = true;
-        failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_ZIN_HEALING:
-    case ABIL_TSO_SMITING:
-    case ABIL_OKAWARU_HEALING:
-    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-    case ABIL_SIF_MUNA_FORGET_SPELL:
-    case ABIL_KIKU_ENSLAVE_UNDEAD:
-    case ABIL_YRED_ANIMATE_DEAD:
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_HEALING:
-        invoc = true;
-        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-        invoc = true;
-        failure = 40 - you.intel - you.skills[SK_INVOCATIONS];
-        break;
-
-    case ABIL_YRED_RECALL_UNDEAD:
-        invoc = true;
-        failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_ZIN_PESTILENCE:
-    case ABIL_TSO_ANNIHILATE_UNDEAD:
-        invoc = true;
-        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    case ABIL_YRED_DRAIN_LIFE:
-        invoc = true;
-        failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_ZIN_HOLY_WORD:
-    case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_ELYVILON_RESTORATION:
-    case ABIL_YRED_CONTROL_UNDEAD:
-    case ABIL_OKAWARU_HASTE:
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        invoc = true;
-        failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_ZIN_SUMMON_GUARDIAN:
-    case ABIL_TSO_SUMMON_DAEVA:
-    case ABIL_KIKU_INVOKE_DEATH:
-    case ABIL_ELYVILON_GREATER_HEALING:
-        invoc = true;
-        failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-        //jmf: following for to-be-created gods
-    case ABIL_CHARM_SNAKE:
-        invoc = true;
-        failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_TRAN_SERPENT_OF_HELL:
-        invoc = true;
-        failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_ROTTING:
-        invoc = true;
-        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
-        break;
-
-    case ABIL_TORMENT_II:
-        invoc = true;
-        failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_RENOUNCE_RELIGION:
-        invoc = true;
-        perfect = true;
-        failure = 0;
-        break;
-
-        // end invocations {dlb}
-    default:
-        failure = -1;
-        break;
-    }
-
-    // Perfect abilities are things like "renounce religion", which
-    // shouldn't have a failure rate ever. -- bwr
-    if (failure <= 0 && !perfect)
-        failure = 1;
-
-    if (failure > 100)
-        failure = 100;
-
-    Curr_abil[slot].fail = failure;
-    Curr_abil[slot].is_invocation = invoc;
-
-    return (true);
-}                               // end insert_ability()
 
 ////////////////////////////////////////////////////////////////////////////
 

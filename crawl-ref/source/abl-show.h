@@ -14,13 +14,15 @@
 #ifndef ABLSHOW_H
 #define ABLSHOW_H
 
+#include "enum.h"
+
 #include <string>
 #include <vector>
 
 // Structure for representing an ability:
 struct ability_def
 {
-    int                 ability;
+    ability_type        ability;
     const char *        name;
     unsigned int        mp_cost;        // magic cost of ability
     unsigned int        hp_cost;        // hit point cost of ability
@@ -29,22 +31,29 @@ struct ability_def
     unsigned int        flags;          // used for additonal cost notices
 };
 
-const struct ability_def & get_ability_def( int abil );
+struct talent
+{
+    ability_type which;
+    int hotkey;
+    int fail;
+    bool is_invocation;
+};
 
-const char * get_ability_name_by_index( char index );
+const struct ability_def & get_ability_def( ability_type abil );
 
-const std::string   make_cost_description( const struct ability_def &abil );
+const char* ability_name(ability_type ability);
+const std::string make_cost_description( ability_type ability );
+std::vector<const char*> get_ability_names();
+int choose_ability_menu(const std::vector<talent>& talents);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool activate_ability( void );     // handles all special abilities now
-char show_abilities( void );
-bool generate_abilities( bool check_conf );
-std::string print_abilities( void );
+bool activate_ability();
+std::vector<talent> your_talents( bool check_confused );
 
-std::vector<const char *> get_ability_names( void );
+std::string print_abilities( void );
 
 void set_god_ability_slots( void );
 

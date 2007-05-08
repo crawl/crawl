@@ -1067,7 +1067,8 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
-        you.ability_letter_table[i] = unmarshallShort(th);
+        you.ability_letter_table[i] =
+            static_cast<ability_type>(unmarshallShort(th));
 
     // how many skills?
     count_c = unmarshallByte(th);

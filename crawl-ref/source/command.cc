@@ -89,7 +89,7 @@ void adjust(void)
 {
     mpr( "Adjust (i)tems, (s)pells, or (a)bilities?", MSGCH_PROMPT );
 
-    unsigned char keyin = tolower( get_ch() );
+    const int keyin = tolower( get_ch() );
 
     if (keyin == 'i')
         adjust_item();
@@ -295,122 +295,103 @@ static void adjust_spells(void)
 
 static void adjust_ability(void)
 {
-    unsigned char index_1, index_2;
-    unsigned char nthing = 0;
+    const std::vector<talent> talents = your_talents(false);
 
-    bool needs_redraw = false;
-
-    if (!generate_abilities(false))
+    if ( talents.empty() )
     {
-        mpr( "You don't currently have any abilities." );
+        mpr("You don't currently have any abilities.");
         return;
     }
 
-  query:
-    mpr( "Adjust which ability?", MSGCH_PROMPT );
-
-    unsigned char keyin = get_ch();
-
-    if (keyin == '?' || keyin == '*')
+    int selected = -1;
+    while ( selected < 0 )
     {
-        if (keyin == '*' || keyin == '?')
+        msg::streams(MSGCH_PROMPT) << "Adjust which ability? (? or * to list)"
+                                   << std::endl;
+
+        const int keyin = get_ch();
+
+        if ( keyin == '?' || keyin == '*' )
         {
-            nthing = show_abilities();
-            needs_redraw = true;
+            selected = choose_ability_menu(talents);
         }
-
-        if (isalpha( nthing ) || nthing == ESCAPE)
-            keyin = nthing;
-        else
+        else if (keyin == ESCAPE || keyin == ' ' ||
+                 keyin == '\r' || keyin == '\n')
         {
-            mesclr( true );
-            goto query;
+            canned_msg( MSG_OK );
+            return;
         }
-    }
-
-    if (keyin == ESCAPE)
-    {
-        adjust_spells_cleanup(needs_redraw);
-        canned_msg( MSG_OK );
-        return;
-    }
-
-    int input_1 = keyin;
-
-    if (!isalpha( input_1 ))
-    {
-        adjust_spells_cleanup(needs_redraw);
-        mpr("You don't have that ability.");
-        return;
-    }
-
-    index_1 = letter_to_index( input_1 );
-
-    if (you.ability_letter_table[index_1] == ABIL_NON_ABILITY)
-    {
-        adjust_spells_cleanup(needs_redraw);
-        mpr("You don't have that ability.");
-        return;
-    }
-
-    // print out targeted spell:
-    mprf("%c - %s", input_1, get_ability_name_by_index( index_1 ) );
-
-    mpr( "Adjust to which letter?", MSGCH_PROMPT );
-
-    keyin = get_ch();
-
-    if (keyin == '?' || keyin == '*')
-    {
-        if (keyin == '*' || keyin == '?')
+        else if ( isalpha(keyin) )
         {
-            nthing = show_abilities();
-            needs_redraw = true;
-        }
+            // try to find the hotkey
+            for (unsigned int i = 0; i < talents.size(); ++i)
+            {
+                if ( talents[i].hotkey == keyin )
+                {
+                    selected = static_cast<int>(i);
+                    break;
+                }
+            }
 
-        if (isalpha( nthing ) || nthing == ESCAPE)
-            keyin = nthing;
-        else
-        {
-            mesclr( true );
-            goto query;
+            // if we can't, cancel out
+            if ( selected < 0 )
+            {
+                mpr("No such ability.");
+                return;
+            }
         }
     }
 
-    if (keyin == ESCAPE)
+    msg::stream << static_cast<char>(talents[selected].hotkey)
+                << " - "
+                << ability_name(talents[selected].which)
+                << std::endl;
+
+    const int index1 = letter_to_index(talents[selected].hotkey);
+    
+    msg::streams(MSGCH_PROMPT) << "Adjust to which letter?" << std::endl;
+    
+    const int keyin = get_ch();
+
+    if ( !isalpha(keyin) )
     {
-        adjust_spells_cleanup(needs_redraw);
-        canned_msg( MSG_OK );
+        canned_msg(MSG_HUH);
         return;
     }
 
-    int input_2 = keyin;
-
-    if (!isalpha( input_2 ))
+    const int index2 = letter_to_index(keyin);
+    if ( index1 == index2 )
     {
-        adjust_spells_cleanup(needs_redraw);
-        mpr("What?");
+        mpr("That would be singularly pointless.");
         return;
     }
 
-    adjust_spells_cleanup(needs_redraw);
-
-    index_2 = letter_to_index( input_2 );
+    // see if we moved something out
+    bool printed_message = false;
+    for ( unsigned int i = 0; i < talents.size(); ++i )
+    {
+        if ( talents[i].hotkey == keyin )
+        {
+            msg::stream << "Swapping with: "
+                        << static_cast<char>(keyin) << " - "
+                        << ability_name(talents[i].which)
+                        << std::endl;
+            printed_message = true;
+            break;
+        }
+    }
+    
+    if (!printed_message)
+        msg::stream << "Moving to: "
+                    << static_cast<char>(keyin) << " - "
+                    << ability_name(talents[selected].which)
+                    << std::endl;
 
     // swap references in the letter table:
-    int tmp = you.ability_letter_table[index_2];
-    you.ability_letter_table[index_2] = you.ability_letter_table[index_1];
-    you.ability_letter_table[index_1] = tmp;
-
-    // Note:  the input_2/index_1 and input_1/index_2 here is intentional.
-    // This is because nothing actually moves until generate_abilities is
-    // called again... fortunately that has to be done everytime because
-    // that's the silly way this system currently works.  -- bwr
-    mprf("%c - %s", input_2, get_ability_name_by_index( index_1 ) );
-
-    if (you.ability_letter_table[index_1] != ABIL_NON_ABILITY)
-        mprf("%c - %s", input_1, get_ability_name_by_index( index_2 ) );
-}                               // end adjust_ability()
+    ability_type tmp = you.ability_letter_table[index2];
+    you.ability_letter_table[index2] = you.ability_letter_table[index1];
+    you.ability_letter_table[index1] = tmp;
+}
 
 void list_armour()
 {    

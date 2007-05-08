@@ -4929,8 +4929,7 @@ static bool print_god_abil_desc( int god, int numpower )
     if ( abil != ABIL_NON_ABILITY )
     {
         const int spacesleft = 79 - buf.str().length();
-        const std::string cost =
-            "(" + make_cost_description(get_ability_def(abil)) + ")";
+        const std::string cost = "(" + make_cost_description(abil) + ")";
         buf << std::setw(spacesleft) << cost;
     }
     

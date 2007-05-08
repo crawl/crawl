@@ -679,7 +679,6 @@ public:
 
   FixedVector<bool, 50> had_book;
 
-  unsigned char betrayal;
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)
 
@@ -708,7 +707,7 @@ public:
   // In other words, the spell table contains hard links and the ability
   // table contains soft links.
   FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
-  FixedVector<int, 52>  ability_letter_table; // ref to ability by enum
+  FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
 
 public:
     player();
