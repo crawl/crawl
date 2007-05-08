@@ -3042,7 +3042,7 @@ static void give_potion(monsters *mon, int level)
     }
 }
 
-static int give_weapon(monsters *mon, int level)
+static item_make_species_type give_weapon(monsters *mon, int level)
 {
     const int bp = get_item_slot();
     bool force_item = false;
@@ -3051,7 +3051,7 @@ static int give_weapon(monsters *mon, int level)
         return (MAKE_ITEM_RANDOM_RACE);
 
     item_def &item = mitm[bp];
-    int item_race = MAKE_ITEM_RANDOM_RACE;
+    item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
 
     // this flags things to "goto give_armour" below ... {dlb}
     item.base_type = OBJ_UNASSIGNED;
@@ -3650,7 +3650,8 @@ static int give_weapon(monsters *mon, int level)
     return (item_race);
 }
 
-static void give_ammo(monsters *mon, int level, int item_race)
+static void give_ammo(monsters *mon, int level,
+                      item_make_species_type item_race)
 {
     // mv: gives ammunition
     // note that item_race is not reset for this section
@@ -3686,7 +3687,7 @@ void give_armour(monsters *mon, int level)
     if (bp == NON_ITEM)
         return;
 
-    int item_race = MAKE_ITEM_RANDOM_RACE;
+    item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
 
     int force_colour = 0; //mv: important !!! Items with force_colour = 0
                          //are colored defaultly after following
@@ -3795,11 +3796,24 @@ void give_armour(monsters *mon, int level)
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
-        if (!one_chance_in(3))
-            return;
-        // deliberate fall through {dlb}
-    case MONS_DONALD:
     case MONS_GREATER_NAGA:
+        item_race = MAKE_ITEM_NO_RACE;
+        if ( one_chance_in( mon->type == MONS_NAGA         ?  800 :
+                            mon->type == MONS_NAGA_WARRIOR ?  300 :
+                            mon->type == MONS_NAGA_MAGE    ?  200
+                                                           :  100))
+        {
+            mitm[bp].base_type = OBJ_ARMOUR;
+            mitm[bp].sub_type = ARM_NAGA_BARDING;
+        }
+        else if (mon->type == MONS_GREATER_NAGA || one_chance_in(3))
+        {
+            mitm[bp].base_type = OBJ_ARMOUR;
+            mitm[bp].sub_type = ARM_ROBE;
+        }
+        break;
+
+    case MONS_DONALD:
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_OGRE_MAGE:
@@ -3876,7 +3890,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     give_wand(mons, level_number);
     give_potion(mons, level_number);
     
-    const int item_race = give_weapon(mons, level_number);
+    const item_make_species_type item_race = give_weapon(mons, level_number);
     
     give_ammo(mons, level_number, item_race);
     give_armour(mons, 1 + level_number / 2);
