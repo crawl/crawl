@@ -265,7 +265,7 @@ protected:
 };
 
 feature_find::feature_find()
-    : travel_pathfind(), needed_features(), left_vault(false), vaults()
+    : travel_pathfind(), needed_features(), left_vault(true), vaults()
 {
     memset(needed_features, false, sizeof needed_features);
 }
