@@ -307,7 +307,7 @@ std::string print_abilities()
         {
             if (i)
                 text += ", ";
-            text += get_ability_def(talents[i].which).name;
+            text += ability_name(talents[i].which);
         }
     }
 
@@ -1711,8 +1711,6 @@ const char* ability_name(ability_type ability)
 static std::string describe_talent(const talent& tal)
 {
     ASSERT( tal.which != ABIL_NON_ABILITY );
-
-    const ability_def& abil = get_ability_def( tal.which );
 
     std::ostringstream desc;
     desc << std::left
