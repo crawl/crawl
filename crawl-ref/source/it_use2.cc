@@ -279,6 +279,13 @@ void unwield_item(char unw, bool showMsgs)
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
 
+    if ( you.inv[unw].base_type == OBJ_MISCELLANY &&
+         you.inv[unw].sub_type == MISC_LANTERN_OF_SHADOWS )
+    {
+        you.current_vision += 2;
+        setLOSRadius(you.current_vision);
+    }
+
     if (you.inv[unw].base_type == OBJ_WEAPONS)
     {
         if (is_fixed_artefact( you.inv[unw] ))

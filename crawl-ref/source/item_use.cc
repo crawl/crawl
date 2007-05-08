@@ -399,7 +399,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
         {
             if (showMsgs)
                 mpr("The area is filled with flickering shadows.");
-
+            
+            you.current_vision -= 2;
+            setLOSRadius(you.current_vision);
             you.special_wield = SPWLD_SHADOW;
         }
     }
