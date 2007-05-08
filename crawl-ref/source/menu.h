@@ -257,7 +257,7 @@ class slider_menu : public Menu
 {
 public:
     // Multiselect would be awkward to implement.
-    slider_menu(int flags = MF_SINGLESELECT);
+    slider_menu(int flags = MF_SINGLESELECT | MF_NOWRAP);
     void display();
     std::vector<MenuEntry *> show();
 

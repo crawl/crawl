@@ -15,10 +15,8 @@
 
 #include "AppHdr.h"
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include <sstream>
+#include <iomanip>
 
 #include "spl-cast.h"
 
@@ -128,119 +126,71 @@ static void surge_power(spell_type spell)
     }
 }                               // end surge_power()
 
-char list_spells(void)
+static std::string spell_full_description(spell_type spell)
 {
-    int j;
-    int lines = 0;
-    unsigned int anything = 0;
-    unsigned int i;
-    int ki;
+    std::ostringstream desc;
+
+    desc << std::left;
+
+    // spell name
+    desc << std::setw(30) << spell_title(spell);
+
+    // spell schools
     bool already = false;
-
-    const int num_lines = get_number_of_lines();
-    cursor_control coff(false);
-    
-    clrscr();
-
-    cprintf( " Your Spells                      Type            Power         Success   Level" );
-    lines++;
-
-    for (j = 0; j < 52; j++)
+    for ( int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
     {
-        if (lines > num_lines - 2)
+        if (spell_typematch(spell, (1<<i)))
         {
-            gotoxy(1, num_lines);
-            cprintf("-more-");
+            if (already)
+                desc << '/';
+            desc << spelltype_short_name(1 << i);
+            already = true;
+        }        
+    }
+    
+    const int so_far = desc.str().length();
+    if ( so_far < 46 )
+        desc << std::string(46 - so_far, ' ');
 
-            ki = getch();
+    // spell power, fail rate, level
+    desc << std::setw(14) << spell_power_string(spell)
+         << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+         << spell_difficulty(spell);
 
-            if (ki == ESCAPE)
-            {
-                return (ESCAPE);
-            }
+    return desc.str();
+}
 
-            if (isalpha( ki ))
-            {
-                return (ki);
-            }
+char list_spells()
+{
+    slider_menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
+    spell_menu.set_title(new MenuEntry(" Your Spells                      Type            Power         Success   Level", MEL_TITLE));
+    spell_menu.set_highlighter(NULL);
 
-            if (ki == 0)
-                ki = getch();
-
-            lines = 0;
-            clrscr();
-            gotoxy(1, 1);
-            anything = 0;
-        }
-
-        const char letter = index_to_letter(j);
-        const spell_type spell  = get_spell_by_letter(letter); 
-
+    for ( int i = 0; i < 52; ++i )
+    {
+        const char letter = index_to_letter(i);
+        const spell_type spell = get_spell_by_letter(letter);
         if (spell != SPELL_NO_SPELL)
         {
-            anything++;
-
-            if (lines > 0)
-                cprintf(EOL);
-
-            lines++;
-
-            cprintf( " %c - %s", letter, spell_title( spell ) );
-            gotoxy(35, wherey());
-
-            already = false;
-
-            for (i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            {
-                if (spell_typematch( spell, (1 << i) ))
-                {
-                    if (already)
-                        cprintf( "/" );
-
-                    cprintf( "%s", spelltype_short_name( 1 << i ) );
-                    already = true;
-                }
-            }
-
-            char sval[16];
-
-            // 35--48 is the spell schools
-            
-            gotoxy(51, wherey());
-            cprintf("%s", spell_power_string(spell));
-                     
-            //gotoxy(58, wherey());
-            gotoxy(65, wherey());
-
-            cprintf( "%s", failure_rate_to_string(spell_fail(spell)));
-
-            gotoxy(77, wherey());
-
-            itoa( spell_difficulty( spell ), sval, 10 );
-            cprintf(sval);
+            MenuEntry* me = new MenuEntry(spell_full_description(spell),
+                                          MEL_ITEM, 0, letter);
+            spell_menu.add_entry(me);
         }
-    }                           // end of j loop
-
-    if (anything > 0)
-    {
-        ki = getch();
-
-        if (ki >= 'A' && ki <= 'z')
-        {
-            return (ki);
-        }
-
-        if (ki == 0)
-            ki = getch();
-
-        return (anything);
     }
-
-    // was 35
-    ki = getch();
-
-    return (ki);
-}                               // end list_spells()
+    
+    std::vector<MenuEntry*> sel = spell_menu.show();
+    redraw_screen();
+    if ( sel.empty() )
+    {
+        return 0;
+    }
+    else
+    {
+        ASSERT(sel.size() == 1);
+        ASSERT(sel[0]->hotkeys.size() == 1);
+        return sel[0]->hotkeys[0];
+    }
+}
 
 static int apply_vehumet_wizardry_boost(spell_type spell, int chance)
 {

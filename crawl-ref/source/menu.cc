@@ -660,9 +660,9 @@ bool slider_menu::process_key(int key)
         return (false);
     }
 
-    if (selected == 0 && 
-            (key == CK_UP || key == CK_PGUP || key == '<' || key == ';') &&
-            Menu::is_set(MF_EASY_EXIT))
+    if (Menu::is_set(MF_NOWRAP) &&
+        selected == 0 &&
+        (key == CK_UP || key == CK_PGUP || key == '<' || key == ';'))
     {
         oldselect = selected;
         selected = -1;
@@ -862,9 +862,23 @@ bool slider_menu::fix_entry(int recurse_depth)
 void slider_menu::new_selection(int nsel)
 {
     if (nsel < 0)
-        nsel = 0;
-    if (nsel >= (int) items.size())
-        nsel = items.size() - 1;
+    {
+        if ( !is_set(MF_NOWRAP) )
+            do {
+                nsel += items.size();
+            } while ( nsel < 0 );
+        else
+            nsel = 0;
+    }
+    if (nsel >= static_cast<int>(items.size()))
+    {
+        if ( !is_set(MF_NOWRAP) )
+            do {
+                nsel -= items.size();
+            } while ( nsel >= static_cast<int>(items.size()) );
+        else
+            nsel = items.size() - 1;
+    }
 
     const int old = selected;
     selected = nsel;

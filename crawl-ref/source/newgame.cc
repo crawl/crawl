@@ -2185,7 +2185,7 @@ static void enter_player_name(bool blankOK)
             me->data = &existing_chars[i];
             char_menu.add_entry(me);
         }
-        char_menu.set_flags(MF_EASY_EXIT | MF_SINGLESELECT);
+        char_menu.set_flags(MF_NOWRAP | MF_SINGLESELECT);
     }
 
     do
