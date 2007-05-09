@@ -4885,7 +4885,7 @@ ORIENT: float
 DEPTH: 4-8
 SHUFFLE: 23, 34
 MONS: rat / nothing, grey rat / nothing
-MONS: green rat / nothing, orange rat / nothing
+MONS: green rat / nothing, orange rat / w:30 rat
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
