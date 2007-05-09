@@ -2005,7 +2005,7 @@ static level_id prompt_travel_depth(const level_id &id)
     int depth = get_nearest_level_depth(branch);
     for (;;)
     {
-        mesclr();
+        mesclr(true);
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %d) ", branches[branch].longname, depth);
 
