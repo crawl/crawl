@@ -2890,7 +2890,7 @@ static int give_weapon(monsters *mon, int level)
         if (one_chance_in(12) && level > 1)
         {
             item.base_type = OBJ_WEAPONS;
-            item.base_type = WPN_BLOWGUN;
+            item.sub_type = WPN_BLOWGUN;
             break;
         }
         // deliberate fall through {dlb}
@@ -2950,7 +2950,7 @@ static int give_weapon(monsters *mon, int level)
         if (one_chance_in(15) && level > 1)
         {
             item.base_type = OBJ_WEAPONS;
-            item.base_type = WPN_BLOWGUN;
+            item.sub_type = WPN_BLOWGUN;
             break;
         }
         // deliberate fall through {gdl}
