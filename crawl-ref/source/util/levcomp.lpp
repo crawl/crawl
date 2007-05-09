@@ -6,6 +6,7 @@
 // Based loosely on NetHack's lev_comp.l
 
 #include "AppHdr.h"
+#include "mapdef.h"
 #include "levcomp.tab.h"
 #include <cstring>
 #include <queue>
