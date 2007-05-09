@@ -165,8 +165,8 @@ void run_environment_effects();
 //
 unsigned short get_packed_place();
 
-unsigned short get_packed_place( unsigned char branch, int subdepth,
-                          char level_type );
+unsigned short get_packed_place( branch_type branch, int subdepth,
+                                 level_area_type level_type );
 
 int place_branch(unsigned short place);
 int place_depth(unsigned short place);

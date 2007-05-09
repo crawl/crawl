@@ -264,9 +264,9 @@ T unmarshall_long_as( struct tagHeader& th )
 level_id unmarshall_level_id( tagHeader& th )
 {
     level_id id;
-    id.branch = unmarshallByte(th);
+    id.branch = static_cast<branch_type>(unmarshallByte(th));
     id.depth = unmarshallLong(th);
-    id.level_type = unmarshallByte(th);
+    id.level_type = static_cast<level_area_type>(unmarshallByte(th));
     return (id);
 }
 

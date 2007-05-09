@@ -631,12 +631,12 @@ static const char *short_branch_name(int branch)
     return ("");
 }
 
-static int str_to_branch(const std::string &branch)
+static branch_type str_to_branch(const std::string &branch)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         if (branches[i].abbrevname && branches[i].abbrevname == branch)
-            return (i);
+            return (static_cast<branch_type>(i));
     }
     return (BRANCH_MAIN_DUNGEON);
 }
@@ -653,11 +653,11 @@ static const char *level_area_type_name(int level_type)
     return ("");
 }
 
-static int str_to_level_area_type(const std::string &s)
+static level_area_type str_to_level_area_type(const std::string &s)
 {
     for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
         if (s == level_type_names[i])
-            return (i);
+            return (static_cast<level_area_type>(i));
     return (LEVEL_DUNGEON);
 }
 
@@ -833,9 +833,9 @@ std::string scorefile_entry::short_kill_message() const
 
 // Maps a 0.1.x branch id to a 0.2 branch id. Ugh. Fortunately we need this
 // only to read old logfiles/scorefiles.
-int scorefile_entry::kludge_branch(int branch_01) const
+branch_type scorefile_entry::kludge_branch(int branch_01) const
 {
-    static int branch_map[] = {
+    static branch_type branch_map[] = {
         BRANCH_MAIN_DUNGEON, BRANCH_DIS, BRANCH_GEHENNA,
         BRANCH_VESTIBULE_OF_HELL, BRANCH_COCYTUS, BRANCH_TARTARUS,
         BRANCH_INFERNO, BRANCH_THE_PIT, BRANCH_MAIN_DUNGEON,
@@ -898,7 +898,7 @@ bool scorefile_entry::parse_obsolete_scoreline(const std::string &line)
         auxkilldata[0] = 0;
 
     dlvl = hs_nextint(inbuf);
-    level_type = hs_nextint(inbuf);
+    level_type = static_cast<level_area_type>(hs_nextint(inbuf));
     branch = kludge_branch( hs_nextint(inbuf) );
 
     final_hp = hs_nextint(inbuf);
@@ -1019,8 +1019,8 @@ void scorefile_entry::reset()
     death_source_name[0] = 0;
     auxkilldata[0] = 0;
     dlvl = 0;
-    level_type = 0;
-    branch = 0;
+    level_type = LEVEL_DUNGEON;
+    branch = BRANCH_MAIN_DUNGEON;
     final_hp = -1;
     final_max_hp = -1;
     final_max_max_hp = -1;

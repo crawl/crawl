@@ -100,8 +100,8 @@ public:
     std::string death_source_name;  // overrides death_source
     std::string auxkilldata;        // weapon wielded, spell cast, etc
     char        dlvl;               // dungeon level (relative)
-    char        level_type;         // what kind of level died on..
-    char        branch;             // dungeon branch
+    level_area_type level_type;     // what kind of level died on..
+    branch_type branch;             // dungeon branch
     int         final_hp;           // actual current HPs (probably <= 0)
     int         final_max_hp;       // net HPs after rot
     int         final_max_max_hp;   // gross HPs before rot
@@ -181,7 +181,7 @@ private:
     
     void init_from(const scorefile_entry &other);
 
-    int kludge_branch(int branch_01) const;
+    branch_type kludge_branch(int branch_01) const;
 };
 
 #endif  // HISCORES_H

@@ -33,6 +33,7 @@ struct Branch
     int (*mons_level_function)(int);
     int altar_chance;           // in percent
     int travel_shortcut;        // which key to press for travel
+    bool any_upstair_exits;     // any upstair exits the branch (Hell branches)
 };
 
 extern Branch branches[];

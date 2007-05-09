@@ -138,9 +138,9 @@ enum explore_stop_type
 struct level_id
 {
 public:
-    int branch;     // The branch in which the level is.
-    int depth;      // What depth (in this branch - starting from 1)
-    int level_type;
+    branch_type branch;     // The branch in which the level is.
+    int depth;              // What depth (in this branch - starting from 1)
+    level_area_type level_type;
 
 public:
     // Returns the level_id of the current level.
@@ -150,28 +150,39 @@ public:
     // 'pos' on the current level leads to.
     static level_id get_next_level_id(const coord_def &pos);
 
-    level_id() : branch(0), depth(-1), level_type(LEVEL_DUNGEON) { }
-    level_id(int br, int dep, int ltype = LEVEL_DUNGEON)
+    level_id()
+        : branch(BRANCH_MAIN_DUNGEON), depth(-1),
+          level_type(LEVEL_DUNGEON)
+    {
+    }
+    level_id(branch_type br, int dep, level_area_type ltype = LEVEL_DUNGEON)
         : branch(br), depth(dep), level_type(ltype)
     {
         if (level_type != LEVEL_DUNGEON)
-            branch = depth = -1;
+        {
+            depth = -1;
+            branch = NUM_BRANCHES;
+        }
     }
-    level_id(int ltype) : branch(-1), depth(-1), level_type(ltype) { }
+    level_id(level_area_type ltype)
+        : branch(BRANCH_MAIN_DUNGEON), depth(-1), level_type(ltype)
+    {
+    }
 
     unsigned short packed_place() const;
     std::string describe(bool long_name = false, bool with_number = true) const;
 
     void reset()
     {
-        branch = 0;
+        branch = BRANCH_MAIN_DUNGEON;
         depth  = -1;
         level_type = LEVEL_DUNGEON;
     }
     
     bool is_valid() const
     {
-        return (branch != -1 && depth != -1) || level_type != LEVEL_DUNGEON;
+        return (branch != NUM_BRANCHES && depth != -1)
+            || level_type != LEVEL_DUNGEON;
     }
 
     bool operator == ( const level_id &id ) const
@@ -384,7 +395,8 @@ public:
 
     // Get the LevelInfo for the specified level (defaults to the current
     // level).
-    LevelInfo& get_level_info(unsigned char branch = 0, int depth = -1)
+    LevelInfo& get_level_info(branch_type branch = BRANCH_MAIN_DUNGEON,
+                              int depth = -1)
     {
         return get_level_info( level_id(branch, depth) );
     }

@@ -1573,28 +1573,21 @@ void find_travel_pos(int youx, int youy,
  * Given a branch id, returns the parent branch. If the branch id is not found,
  * returns BRANCH_MAIN_DUNGEON.
  */
-int find_parent_branch(int br)
+branch_type find_parent_branch(branch_type br)
 {
     return branches[br].parent_branch;
 }
 
 extern std::map<branch_type, level_id> stair_level;
 
-void find_parent_branch(int br, int depth, 
-                        int *pb, int *pd)
+void find_parent_branch(branch_type br, int depth, 
+                        branch_type *pb, int *pd)
 {
-    const branch_type bran = static_cast<branch_type>(br);
-    if ( stair_level.find(bran) == stair_level.end() )
-    {
-        *pb = 0;
-        *pd = 0;        // Check depth before using *pb.
-    }
+    *pb = find_parent_branch(br);   // Check depth before using *pb.
+    if ( stair_level.find(br) == stair_level.end() )
+        *pd = 0;
     else
-    {
-        // XXX XXX FIXME Just read this from our data...
-        *pb = find_parent_branch(bran);
-        *pd = stair_level[bran].depth;
-    }
+        *pd = stair_level[br].depth;
 }
 
 // Appends the passed in branch/depth to the given vector, then attempts to 
@@ -1611,7 +1604,7 @@ void find_parent_branch(int br, int depth,
 // (Assuming, of course, that the vector started out empty.)
 //
 void trackback(std::vector<level_id> &vec, 
-               int branch, int subdepth)
+               branch_type branch, int subdepth)
 {
     if (subdepth < 1 || subdepth > MAX_LEVELS) return;
 
@@ -1620,7 +1613,7 @@ void trackback(std::vector<level_id> &vec,
 
     if (branch != BRANCH_MAIN_DUNGEON)
     {
-        int pb;
+        branch_type pb;
         int pd;
         find_parent_branch(branch, subdepth, &pb, &pd);
         if (pd)
@@ -1632,7 +1625,7 @@ void track_intersect(std::vector<level_id> &cur,
                      std::vector<level_id> &targ,
                      level_id *cx)
 {
-    cx->branch = 0;
+    cx->branch = BRANCH_MAIN_DUNGEON;
     cx->depth  = -1;
     
     int us = int(cur.size()) - 1, them = int(targ.size()) - 1;
@@ -1814,7 +1807,7 @@ static bool is_valid_branch(const Branch &br)
 
 static int prompt_travel_branch(int prompt_flags)
 {
-    unsigned char branch = BRANCH_MAIN_DUNGEON;     // Default
+    int branch = BRANCH_MAIN_DUNGEON;     // Default
     std::vector<branch_type> br =
         get_branches(
             (prompt_flags & TPF_SHOW_ALL_BRANCHES)?
@@ -1831,7 +1824,8 @@ static int prompt_travel_branch(int prompt_flags)
     
     bool waypoint_list = false;
     const int waycount = allow_waypoints? travel_cache.get_waypoint_count() : 0;
-    
+
+    level_id curr = level_id::current();
     for ( ; ; )
     {
         mesclr(true);
@@ -1891,6 +1885,8 @@ static int prompt_travel_branch(int prompt_flags)
             return (allow_updown? ID_UP : ID_CANCEL);
         case '>':
             return (allow_updown? ID_DOWN : ID_CANCEL);
+        case CONTROL('P'):
+            return find_parent_branch(curr.branch);
         case '*':
             if (waypoint_list || waycount)
                 waypoint_list = !waypoint_list;
@@ -1912,47 +1908,32 @@ static int prompt_travel_branch(int prompt_flags)
     }
 }
 
-static int prompt_travel_depth(branch_type branch)
+static int travel_depth_keyfilter(int &c)
 {
-    // Handle one-level branches by not prompting.
-    if (single_level_branch(branch))
-        return 1;
-
-    char buf[100];
-    int depth = get_nearest_level_depth(branch);
-
-    snprintf(buf, sizeof buf, "What level of %s do you want to go to? "
-            "[default %d] ", branches[branch].longname, depth);
-    mesclr();
-    mpr(buf, MSGCH_PROMPT);
-
-    if (cancelable_get_line( buf, sizeof buf ))
-        return 0;
-
-    if (*buf)
-        depth = atoi(buf);
-
-    return depth;
-}
-
-static bool is_hell_branch(int branch)
-{
-    return branch == BRANCH_DIS || branch == BRANCH_TARTARUS 
-        || branch == BRANCH_COCYTUS || branch == BRANCH_GEHENNA;
-
-}
-
-static level_pos find_up_level()
-{
-    level_id curr = level_id::current();
-    curr.depth--;
-
-    if (is_hell_branch(curr.branch))
+    switch (c)
     {
-        curr.branch = BRANCH_VESTIBULE_OF_HELL;
-        curr.depth  = 1;
-        return (curr);
+    case '<': case '>':
+        return (-1);
+    case '-':
+    case CONTROL('P'): case 'p':
+        c = '-';  // Make uniform.
+        return (-1);
+    default:
+        return (1);
     }
+}
+
+static bool is_easy_exiting_branch(int branch)
+{
+    return branches[branch].any_upstair_exits;
+}
+
+static level_id find_up_level(level_id curr, bool up_branch = false)
+{
+    --curr.depth;
+
+    if (up_branch || is_easy_exiting_branch(curr.branch))
+        curr.depth = 0;
 
     if (curr.depth < 1)
     {
@@ -1970,17 +1951,81 @@ static level_pos find_up_level()
                 return (parent);
             }
         }
-        return level_pos();
+        return level_id();
     }
 
     return (curr);
 }
 
-static level_pos find_down_level()
+static level_id find_up_level()
 {
-    level_id curr = level_id::current();
-    curr.depth++;
+    return (find_up_level(level_id::current()));
+}
+
+static level_id find_down_level(level_id curr)
+{
+    if (curr.depth < branches[curr.branch].depth)
+        ++curr.depth;
     return (curr);
+}
+
+static level_id find_down_level()
+{
+    return (find_down_level(level_id::current()));
+}
+
+static void travel_depth_munge(int munge_method, branch_type *br, int *depth)
+{
+    level_id lid(*br, *depth);
+    switch (munge_method)
+    {
+    case '<':
+        lid = find_up_level(lid);
+        break;
+    case '>':
+        lid = find_down_level(lid);
+        break;
+    case '-':
+        lid = find_up_level(lid, true);
+        break;
+    }
+    *br    = lid.branch;
+    *depth = lid.depth;
+    if (*depth < 1)
+        *depth = 1;
+}
+
+static level_id prompt_travel_depth(const level_id &id)
+{
+    branch_type branch = id.branch;
+    // Handle one-level branches by not prompting.
+    // if (single_level_branch(branch))
+    //    return level_id(branch, 1);
+
+    int depth = get_nearest_level_depth(branch);
+    for (;;)
+    {
+        mesclr();
+        mprf(MSGCH_PROMPT, "What level of %s? "
+             "(default %d) ", branches[branch].longname, depth);
+
+        char buf[100];
+        const int response =
+            cancelable_get_line( buf, sizeof buf, get_number_of_cols(),
+                                 NULL, travel_depth_keyfilter );
+
+        if (!response)
+        {
+            if (*buf)
+                depth = atoi(buf);
+            return level_id(branch, depth);
+        }
+        
+        if (response == ESCAPE)
+            return level_id(BRANCH_MAIN_DUNGEON, 0);
+
+        travel_depth_munge(response, &branch, &depth);
+    }
 }
 
 level_pos prompt_translevel_target(int prompt_flags)
@@ -2020,11 +2065,10 @@ level_pos prompt_translevel_target(int prompt_flags)
         return target;
     }
     
-    target.id.branch = branch;
+    target.id.branch = static_cast<branch_type>(branch);
 
     // User's chosen a branch, so now we ask for a level.
-    target.id.depth =
-        prompt_travel_depth(static_cast<branch_type>(target.id.branch));
+    target.id = prompt_travel_depth(target.id);
 
     if (target.id.depth < 1 || target.id.depth >= MAX_LEVELS)
         target.id.depth = -1;
@@ -2538,14 +2582,14 @@ level_id level_id::current()
 
 level_id level_id::get_next_level_id(const coord_def &pos)
 {
-    unsigned char gridc = grd[pos.x][pos.y];
+    int gridc = grd[pos.x][pos.y];
     level_id id = current();
 
     for ( int i = 0; i < NUM_BRANCHES; ++i )
     {
         if ( gridc == branches[i].entry_stairs )
         {
-            id.branch = i;
+            id.branch = static_cast<branch_type>(i);
             id.depth = 1;
             break;
         }
@@ -2592,9 +2636,9 @@ void level_id::save(FILE *file) const
 
 void level_id::load(FILE *file)
 {
-    branch     = readShort(file);
+    branch     = static_cast<branch_type>(readShort(file));
     depth      = readShort(file);
-    level_type = readShort(file);
+    level_type = static_cast<level_area_type>(readShort(file));
 }
 
 void level_pos::save(FILE *file) const
