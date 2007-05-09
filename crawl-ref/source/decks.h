@@ -20,6 +20,7 @@
  * called from: it_use_3 - religion
  * *********************************************************************** */
 void deck_of_cards(deck_type which_deck);
-
+deck_type subtype_to_decktype(int subtype);
+bool deck_triple_draw();
 
 #endif

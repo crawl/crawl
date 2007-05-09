@@ -37,6 +37,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "decks.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -126,7 +127,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_TROG_BERSERK, ABIL_TROG_MIGHT, ABIL_NON_ABILITY,
       ABIL_TROG_HASTE_SELF, ABIL_NON_ABILITY },
     // Nemelex
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+    { ABIL_NON_ABILITY, ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
@@ -267,6 +268,9 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_BEND_SPACE, "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
     { ABIL_LUGONU_SUMMON_DEMONS, "Summon Abyssal Servants", 7, 0, 100, 5, ABFLAG_NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 200, 40, ABFLAG_NONE },
+
+    // Nemelex
+    { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
@@ -1548,6 +1552,11 @@ static bool do_ability(const ability_def& abil)
         activate_notes(true);
         break;
 
+    case ABIL_NEMELEX_TRIPLE_DRAW:
+        if ( !deck_triple_draw() )
+            return false;
+        break;
+
     //jmf: intended as invocations from evil god(s):
     case ABIL_CHARM_SNAKE:
         cast_snake_charm( you.experience_level * 2
@@ -1714,7 +1723,7 @@ static std::string describe_talent(const talent& tal)
 
     std::ostringstream desc;
     desc << std::left
-         << std::setw(30) << ability_name(tal.which)
+         << std::setw(32) << ability_name(tal.which)
          << std::setw(24) << make_cost_description(tal.which)
          << std::setw(10) << failure_rate_to_string(tal.fail);
     return desc.str();

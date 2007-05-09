@@ -154,7 +154,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "haste yourself",
       "" },
     // Nemelex
-    { "", "", "", "", "" },
+    { "", "draw cards with careful consideration", "", "", "" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
       "call upon Elyvilon for purification",
@@ -230,7 +230,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "haste yourself",
       "" },
     // Nemelex
-    { "", "", "", "", "" },
+    { "", "draw cards with careful consideration", "", "", "" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
       "call upon Elyvilon for purification",

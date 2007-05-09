@@ -13,6 +13,7 @@
 #include "decks.h"
 
 #include <string.h>
+#include <iostream>
 
 #include "externs.h"
 
@@ -203,7 +204,6 @@ static card_type deck_of_punishment[] =
     CARD_PANDEMONIUM
 };
 
-// array sizes -- see notes below {dlb}
 #define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
 #define DECK_WONDERS_SIZE ARRAYSIZE(deck_of_wonders)
 #define DECK_SUMMONING_SIZE ARRAYSIZE(deck_of_summoning)
@@ -211,15 +211,75 @@ static card_type deck_of_punishment[] =
 #define DECK_POWER_SIZE ARRAYSIZE(deck_of_power)
 #define DECK_PUNISHMENT_SIZE ARRAYSIZE(deck_of_punishment)
 
-static void cards(card_type which_card);
+static const char* card_name(card_type card)
+{
+    switch (card)
+    {
+    case CARD_BLANK: return "a blank card";
+    case CARD_BUTTERFLY: return "Butterfly";
+    case CARD_WRAITH: return "the Wraith";
+    case CARD_EXPERIENCE: return "Experience";
+    case CARD_WEALTH: return "Wealth";
+    case CARD_INTELLIGENCE: return "the Brain";
+    case CARD_STRENGTH: return "Strength";
+    case CARD_QUICKSILVER: return "Quicksilver";
+    case CARD_STUPIDITY: return "Stupidity";
+    case CARD_WEAKNESS: return "Weakness";
+    case CARD_SLOTH: return "the Slug";
+    case CARD_SHUFFLE: return "Shuffle";
+    case CARD_FREAK: return "the Freak";
+    case CARD_DEATH: return "Death";
+    case CARD_NORMALITY: return "Normality";
+    case CARD_SHADOW: return "the Shadow";
+    case CARD_GATE: return "the Gate";
+    case CARD_STATUE: return "the Crystal Statue";
+    case CARD_ACQUISITION: return "Acquisition";
+    case CARD_HASTEN: return "Haste";
+    case CARD_DEMON_LESSER: return "a little demon";
+    case CARD_DEMON_COMMON: return "a demon";
+    case CARD_DEMON_GREATER: return "a huge demon";
+    case CARD_DEMON_SWARM: return "a swarm of little demons";
+    case CARD_YAK: return "a huge, shaggy yak";
+    case CARD_FIEND: return "a huge, scaly devil";
+    case CARD_DRAGON: return "a huge, scaly dragon";
+    case CARD_GOLEM: return "a statue";
+    case CARD_THING_FUGLY: return "a very ugly thing";
+    case CARD_LICH: return "a very irritated-looking skeletal thing";
+    case CARD_HORROR_UNSEEN:
+        return player_see_invis() ? "a hideous abomination" : "a blank card";
+    case CARD_BLINK: return "Blink";
+    case CARD_TELEPORT: return "the Portal of Delayed Transposition";
+    case CARD_TELEPORT_NOW: return "the Portal of Instantaneous Transposition";
+    case CARD_RAGE: return "Rage";
+    case CARD_LEVITY: return "Levity";
+    case CARD_VENOM: return "Venom";
+    case CARD_XOM: return "the card of Xom";
+    case CARD_SLOW: return "Slowness";
+    case CARD_DECAY: return "Decay";
+    case CARD_HEALING: return "the Elixir of Health";
+    case CARD_HEAL_WOUNDS: return "the Symbol of Immediate Regeneration";
+    case CARD_TORMENT: return "the Symbol of Torment";
+    case CARD_FOUNTAIN: return "the Fountain";
+    case CARD_ALTAR: return "the Altar";
+    case CARD_FAMINE: return "Famine";
+    case CARD_FEAST: return "the Feast";
+    case CARD_WILD_MAGIC: return "Wild Magic";
+    case CARD_VIOLENCE: return "Violence";
+    case CARD_PROTECTION: return "Protection";
+    case CARD_KNOWLEDGE: return "Knowledge";
+    case CARD_MAZE: return "the Maze";
+    case CARD_PANDEMONIUM: return "Pandemonium";
+    case CARD_IMPRISONMENT: return "the Prison";
+    case CARD_RULES_FOR_BRIDGE: return "the rules for contract bridge";
+    case NUM_CARDS: case CARD_RANDOM: return "a buggy card";
+    }
+    return "a very buggy card";
+}
 
-void deck_of_cards(deck_type which_deck)
+static card_type choose_one_card(deck_type which_deck, bool message)
 {
     card_type *deck = deck_of_wonders;
     int max_card = 0;
-    int brownie_points = 0;     // for passing to did_god_conduct() {dlb}
-
-    mpr("You draw a card...");
 
     switch (which_deck)
     {
@@ -249,7 +309,8 @@ void deck_of_cards(deck_type which_deck)
 
     if (one_chance_in(250))
     {
-        mpr("This card doesn't seem to belong here.");
+        if ( message )
+            mpr("This card doesn't seem to belong here.");
         chosen = static_cast<card_type>(random2(NUM_CARDS));
     }
 
@@ -257,6 +318,97 @@ void deck_of_cards(deck_type which_deck)
     if (which_deck != DECK_OF_PUNISHMENT && chosen == CARD_BLANK &&
         you.skills[SK_EVOCATIONS] > random2(30))
         chosen = deck[random2(max_card)];
+    return chosen;
+}
+static void cards(card_type which_card);
+
+// returns the deck type, of DECK_OF_PUNISHMENT if none
+deck_type subtype_to_decktype(int subtype)
+{
+    switch ( subtype )
+    {
+    case MISC_DECK_OF_WONDERS:
+        return DECK_OF_WONDERS;
+    case MISC_DECK_OF_POWER:
+        return DECK_OF_POWER;
+    case MISC_DECK_OF_SUMMONINGS:
+        return DECK_OF_SUMMONING;
+    case MISC_DECK_OF_TRICKS:
+        return DECK_OF_TRICKS;
+    default:                    // sentinel
+        return DECK_OF_PUNISHMENT;
+    }
+}
+
+bool deck_triple_draw()
+{
+    if (you.equip[EQ_WEAPON] == -1)
+    {
+        mpr("You aren't wielding a deck!");
+        return false;
+    }
+    item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+
+    if ( item.base_type != OBJ_MISCELLANY ||
+         subtype_to_decktype(item.sub_type) == DECK_OF_PUNISHMENT )
+    {
+        mpr("You aren't wielding a deck!");
+        return false;
+    }
+
+    const deck_type dtype = subtype_to_decktype(item.sub_type);
+    
+    if (item.plus == 1)
+    {
+        // only one card to draw, so just draw it
+        deck_of_cards(dtype);
+        return true;
+    }
+
+    const int num_to_draw = (item.plus < 3 ? item.plus : 3);
+    std::vector<card_type> draws;
+    for ( int i = 0; i < num_to_draw; ++i )
+        draws.push_back(choose_one_card(dtype, false));
+
+    mpr("You draw... (choose one card)");
+    for ( int i = 0; i < num_to_draw; ++i )
+        msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
+                                   << card_name(draws[i]) << std::endl;
+    int selected = -1;
+    while ( 1 )
+    {
+        int keyin = get_ch();
+        if ( isalpha(keyin) )
+            keyin = tolower(keyin);
+        if (keyin >= 'a' && keyin < 'a' + num_to_draw)
+        {
+            selected = keyin - 'a';
+            break;
+        }
+        else
+            canned_msg(MSG_HUH);
+    }
+    cards(draws[selected]);
+
+    // remove the cards from the deck
+    item.plus -= num_to_draw;
+    if (item.plus <= 0)
+    {
+        mpr("The deck of cards disappears in a puff of smoke.");
+        unwield_item(you.equip[EQ_WEAPON]);
+        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+    }
+
+    return true;
+}
+
+void deck_of_cards(deck_type which_deck)
+{
+    int brownie_points = 0;     // for passing to did_god_conduct() {dlb}
+
+    mpr("You draw a card...");
+    
+    const card_type chosen = choose_one_card(which_deck, true);
 
     cards(chosen);
 
