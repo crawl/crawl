@@ -2,6 +2,7 @@ typedef union
 {
     int i;
     const char *text;
+    raw_range range;
 } YYSTYPE;
 #define	BRANCHDEF	257
 #define	BRANCH	258
@@ -53,12 +54,15 @@ typedef union
 #define	QUOTE	304
 #define	OPAREN	305
 #define	CPAREN	306
-#define	INTEGER	307
-#define	STRING	308
-#define	MAP_LINE	309
-#define	MONSTER_NAME	310
-#define	ITEM_INFO	311
-#define	IDENTIFIER	312
+#define	COLON	307
+#define	STAR	308
+#define	NOT	309
+#define	INTEGER	310
+#define	STRING	311
+#define	MAP_LINE	312
+#define	MONSTER_NAME	313
+#define	ITEM_INFO	314
+#define	IDENTIFIER	315
 
 
 extern YYSTYPE yylval;
