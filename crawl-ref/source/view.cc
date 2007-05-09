@@ -686,11 +686,13 @@ void fire_monster_alerts()
         {
             if (player_monster_visible( monster )
                 && !mons_is_submerged( monster )
-                && !mons_friendly( monster )
-                && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+                && !mons_friendly( monster ))
             {
-                if (!mons_is_mimic( monster->type ))
+                if (!mons_class_flag( monster->type, M_NO_EXP_GAIN )
+                    && !mons_is_mimic( monster->type ))
+                {
                     interrupt_activity( AI_SEE_MONSTER, monster );
+                }
                 seen_monster( monster );
             }
         }

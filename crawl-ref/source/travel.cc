@@ -325,6 +325,15 @@ void toggle_exclude(int x, int y)
     }
 }
 
+static bool is_monster_blocked(int x, int y)
+{
+    const int mon = mgrd[x][y];
+    return (mon != NON_MONSTER
+            && player_monster_visible(&menv[mon])
+            && mons_is_stationary(&menv[mon])
+            && mons_was_seen(&menv[mon]));
+}
+
 /*
  * Returns true if the square at (x,y) is a dungeon feature the character
  * can't (under normal circumstances) safely cross.
@@ -340,9 +349,9 @@ static bool is_reseedable(int x, int y)
 {
     if (is_excluded(x, y))
         return (true);
-    unsigned char grid = grd[x][y];
+    int grid = grd[x][y];
     return (grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER ||
-             grid == DNGN_LAVA || is_trap(x, y));
+            grid == DNGN_LAVA || is_trap(x, y) || is_monster_blocked(x, y));
 }
 
 /*
@@ -365,25 +374,14 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
     if ((grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
         && is_terrain_changed(x, y))
     {
-        return (false);
+        const int c = get_envmap_char(x, y);
+        const int secret_door = grid_secret_door_appearance(x, y);
+        return (c != get_sightmap_char(secret_door)
+                && c != get_magicmap_char(secret_door));
     }
 
-    unsigned char mon = mgrd[x][y];
-    if (mon != NON_MONSTER)
-    {
-        // Kludge warning: navigating around zero-exp beasties uses knowledge
-        //                 that the player may not have (the player may not
-        //                 know that there's a plant at any given (x,y), but we
-        //                 know, because we're looking directly at the grid).
-        //                 Arguably the utility of this feature is greater than
-        //                 the information we're giving the player for free.
-        // Navigate around plants and fungi. Yet another tasty hack.
-        if (player_monster_visible(&menv[mon])
-            && mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
-        {
-            return (false);
-        }
-    }
+    if (!ignore_hostile && is_monster_blocked(x, y))
+        return (false);
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
@@ -404,7 +402,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
 static bool is_safe_move(int x, int y)
 {
-    unsigned char mon = mgrd[x][y];
+    int mon = mgrd[x][y];
     if (mon != NON_MONSTER)
     {
         // Stop before wasting energy on plants and fungi.
