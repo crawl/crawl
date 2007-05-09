@@ -2243,7 +2243,7 @@ void melee_attack::player_stab_check()
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(130) <= you.skills[SK_STABBING] + you.dex);
 
-    if (stab_attempt && you.religion == GOD_SHINING_ONE)
+    if (stab_attempt && you.religion == GOD_SHINING_ONE && !you.berserker)
     {
         if (!yesno("Really attack this helpless creature?", false, 'n'))
         {
