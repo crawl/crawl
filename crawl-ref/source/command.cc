@@ -516,54 +516,73 @@ static bool cmdhelp_textfilter(const std::string &tag)
 }
 
 static const char *level_map_help = 
-        "<h>Level Map ('<w>X</w><h>' in main screen):\n"
-        "<w>Esc</w> : leave level map (also Space)\n"
-        "<w>Dir.</w>: move cursor\n"
-        "<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far\n"
-        "<w>-</w>/<w>+</w> : scroll level map up/down\n"
-        "<w>.</w>   : travel (also <w>Enter</w> and <w>,</w> and <w>;</w>)\n"
-        "       (moves cursor to last travel\n"
-        "       destination if still on @)\n"
-        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
-        "<w>^</w>   : cycle through traps\n"
-        "<w>Tab</w> : cycle through shops and portals\n"
-        "<w>X</w>   : cycle through travel eXclusions\n"
-        "<w>W</w>   : cycle through waypoints\n"
-        "<w>*</w>   : cycle forward through stashes\n"
-        "<w>/</w>   : cycle backward through stashes\n"
-        "<w>_</w>   : cycle through altars\n"
-        "<w>Ctrl-X</w> : set travel eXclusion\n"
-        "<w>Ctrl-E</w> : Erase all travel exclusions\n"
-        "<w>Ctrl-W</w> : set Waypoint\n"
-        "<w>Ctrl-C</w> : Clear level and main maps\n"
-        " \n"
-        " \n"
-        " \n";
+    "<h>Level Map ('<w>X</w><h>' in main screen):\n"
+    "<w>Esc</w> : leave level map (also Space)\n"
+    "<w>Dir.</w>: move cursor\n"
+    "<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far\n"
+    "<w>-</w>/<w>+</w> : scroll level map up/down\n"
+    "<w>.</w>   : travel (also <w>Enter</w> and <w>,</w> and <w>;</w>)\n"
+    "       (moves cursor to last travel\n"
+    "       destination if still on @)\n"
+    "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+    "<w>^</w>   : cycle through traps\n"
+    "<w>Tab</w> : cycle through shops and portals\n"
+    "<w>X</w>   : cycle through travel eXclusions\n"
+    "<w>W</w>   : cycle through waypoints\n"
+    "<w>*</w>   : cycle forward through stashes\n"
+    "<w>/</w>   : cycle backward through stashes\n"
+    "<w>_</w>   : cycle through altars\n"
+    "<w>Ctrl-X</w> : set travel eXclusion\n"
+    "<w>Ctrl-E</w> : Erase all travel exclusions\n"
+    "<w>Ctrl-W</w> : set Waypoint\n"
+    "<w>Ctrl-C</w> : Clear level and main maps\n"
+    " \n"
+    " \n"
+    " \n";
 
 static const char *targeting_help =
-        "<h>Examine surroundings ('<w>x</w><h> in main):\n"
-        "<w>Esc</w> : cancel (also <w>Space</w>)\n"
-        "<w>Dir.</w>: move cursor in that direction\n"
-        "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
-        "<w>v</w> : describe monster under cursor\n"
-        "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
-        "<w>-</w> : cycle monsters backward\n"
-        "<w>*</w> : cycle objects forward\n"
-        "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
-        "<w>^</w>   : cycle through traps\n"
-        "<w>_</w>   : cycle through altars\n"
-        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
-        "<w>Tab</w> : cycle through shops and portals\n"
-        "<w>Ctrl-F</w> : cycle monster cycle mode\n"
-        " \n"
-        "<h>Targeting (like zapping wands/spells):\n"
-        "The keys from examining surroundings\n"
-        "work here, too. Additional keys are\n"
-        "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n" 
-        "<w>!</w> : fire at target and stop there\n"
-        "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
-        "<w>:</w> : hide beam\n"
-        "<w>Shift-Dir</w> : shoot straight-line beam\n";
+    "<h>Examine surroundings ('<w>x</w><h> in main):\n"
+    "<w>Esc</w> : cancel (also <w>Space</w>)\n"
+    "<w>Dir.</w>: move cursor in that direction\n"
+    "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
+    "<w>v</w> : describe monster under cursor\n"
+    "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
+    "<w>-</w> : cycle monsters backward\n"
+    "<w>*</w> : cycle objects forward\n"
+    "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
+    "<w>^</w>   : cycle through traps\n"
+    "<w>_</w>   : cycle through altars\n"
+    "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+    "<w>Tab</w> : cycle through shops and portals\n"
+    "<w>Ctrl-F</w> : cycle monster cycle mode\n"
+    " \n"
+    "<h>Targeting (like zapping wands/spells):\n"
+    "The keys from examining surroundings\n"
+    "work here, too. Additional keys are\n"
+    "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n" 
+    "<w>!</w> : fire at target and stop there\n"
+    "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
+    "<w>:</w> : hide beam\n"
+    "<w>Shift-Dir</w> : shoot straight-line beam\n";
+
+static const char *interlevel_travel_branch_help =
+    "<h>Interlevel Travel (choose a branch):\n"
+    " Use the shortcut letter for a branch to select the branch for travel.\n"
+    " <w>Enter</w>  : Repeat last interlevel travel.\n"
+    " <w>.</w>      : Travel to a level in the current branch.\n"
+    " <w><<</w>      : Go up the nearest stairs.\n"
+    " <w>></w>      : Go down the nearest stairs.\n"
+    " <w>Ctrl-P</w> : Travel to a level in the branch above this one.\n"
+    " <w>*</w>      : Show available waypoints (if any are set).\n"
+    " <w>0</w>-<w>9</w>    : Go to the numbered waypoint.\n";
+
+static const char *interlevel_travel_depth_help =
+    "<h>Interlevel Travel (go to a specific level in the selected branch)\n"
+    " Type in the level number you want to go to and hit Enter, or use:\n"
+    " <w>Enter</w>  : Go to the default level.\n"
+    " <w><<</w>      : Change the default to one level above the current.\n"
+    " <w>></w>      : Change default to one level below the current.\n"
+    " <w>-</w>/<w>p</w>    : Change default to the branch above this one.\n";
 
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the
@@ -647,12 +666,16 @@ static int keyhelp_keyfilter(int ch)
 }
 
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
-                              bool with_manual, int hotkey = 0)
+                              bool with_manual, bool easy_exit = false,
+                              int hotkey = 0)
 {
     formatted_scroller cmd_help;
     
-    // Set flags, and don't use easy exit.
-    cmd_help.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
+    // Set flags, and use easy exit if necessary.
+    int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP;
+    if (easy_exit)
+        flags |= MF_EASY_EXIT;
+    cmd_help.set_flags(flags, false);
     
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
@@ -758,7 +781,7 @@ void show_specific_help( const char* help )
         formatted_lines.push_back(
             formatted_string::parse_string(
                 lines[i], true, cmdhelp_textfilter));
-    show_keyhelp_menu(formatted_lines, false);
+    show_keyhelp_menu(formatted_lines, false, true);
 }
 
 void show_levelmap_help()
@@ -771,6 +794,15 @@ void show_targeting_help()
     show_specific_help( targeting_help );
 }
 
+void show_interlevel_travel_branch_help()
+{
+    show_specific_help( interlevel_travel_branch_help );
+}
+
+void show_interlevel_travel_depth_help()
+{
+    show_specific_help( interlevel_travel_depth_help );
+}
 
 void list_commands(bool wizard, int hotkey)
 {
@@ -994,7 +1026,7 @@ void list_commands(bool wizard, int hotkey)
             "stashes, and <w>Ctrl-E</w> to erase them.\n",
             true, true, cmdhelp_textfilter);
     
-    show_keyhelp_menu(cols.formatted_lines(), true, hotkey);
+    show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
 }
 
 void list_tutorial_help()

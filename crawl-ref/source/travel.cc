@@ -13,6 +13,7 @@
 #include "files.h"
 #include "FixAry.h"
 #include "branch.h"
+#include "command.h"
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
@@ -1852,33 +1853,38 @@ static int prompt_travel_branch(int prompt_flags)
                 mpr(line.c_str());
         }
 
-        std::string shortcuts;
-        if ((*trans_travel_dest && remember_targ)
-            || (allow_waypoints && (waycount || waypoint_list)))
+        std::string shortcuts = "(";
         {
-            shortcuts = "(";
-            if (waypoint_list)
-                shortcuts += "[*] lists branches";
-            else if (waycount)
-                shortcuts += "[*] lists waypoints";
+            std::vector<std::string> segs;
+            if (allow_waypoints)
+            {
+                if (waypoint_list)
+                    segs.push_back("[*] lists branches");
+                else if (waycount)
+                    segs.push_back("[*] lists waypoints");
+            }
             
             if (*trans_travel_dest && remember_targ)
-            {
-                if (waypoint_list || waycount)
-                    shortcuts += ", ";
+                segs.push_back(
+                    make_stringf("[Enter] for %s", trans_travel_dest) );
 
-                shortcuts += make_stringf("[Enter] for %s",
-                                          trans_travel_dest);
-            }
+            segs.push_back("[?] for help");
+
+            shortcuts += comma_separated_line(segs.begin(), segs.end(),
+                                              ", ", ", ");
             shortcuts += ") ";
         }
-        mprf(MSGCH_PROMPT, "Where do you want to go? %s", shortcuts.c_str());
+        mprf(MSGCH_PROMPT, "Where to? %s", shortcuts.c_str());
 
         int keyin = get_ch();
         switch (keyin)
         {
         case ESCAPE:
             return (ID_CANCEL);
+        case '?':
+            show_interlevel_travel_branch_help();
+            redraw_screen();
+            break;
         case '\n': case '\r':
             return (ID_REPEAT);
         case '<':
@@ -1907,21 +1913,6 @@ static int prompt_travel_branch(int prompt_flags)
             
             return (ID_CANCEL);
         }
-    }
-}
-
-static int travel_depth_keyfilter(int &c)
-{
-    switch (c)
-    {
-    case '<': case '>':
-        return (-1);
-    case '-':
-    case CONTROL('P'): case 'p':
-        c = '-';  // Make uniform.
-        return (-1);
-    default:
-        return (1);
     }
 }
 
@@ -1976,11 +1967,30 @@ static level_id find_down_level()
     return (find_down_level(level_id::current()));
 }
 
+static int travel_depth_keyfilter(int &c)
+{
+    switch (c)
+    {
+    case '<': case '>': case '?':
+        return (-1);
+    case '-':
+    case CONTROL('P'): case 'p':
+        c = '-';  // Make uniform.
+        return (-1);
+    default:
+        return (1);
+    }
+}
+
 static void travel_depth_munge(int munge_method, branch_type *br, int *depth)
 {
     level_id lid(*br, *depth);
     switch (munge_method)
     {
+    case '?':
+        show_interlevel_travel_depth_help();
+        redraw_screen();
+        return;
     case '<':
         lid = find_up_level(lid);
         break;
@@ -2009,7 +2019,7 @@ static level_id prompt_travel_depth(const level_id &id)
     {
         mesclr(true);
         mprf(MSGCH_PROMPT, "What level of %s? "
-             "(default %d) ", branches[branch].longname, depth);
+             "(default %d, [?] for help) ", branches[branch].longname, depth);
 
         char buf[100];
         const int response =
@@ -2046,7 +2056,7 @@ level_pos prompt_translevel_target(int prompt_flags)
     if (branch == ID_UP)
     {
         target = find_up_level();
-        if (target.id.depth > -1 && remember_targ)
+        if (target.id.depth > 0 && remember_targ)
             set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest,
                                     target);
         return (target);
@@ -2055,7 +2065,7 @@ level_pos prompt_translevel_target(int prompt_flags)
     if (branch == ID_DOWN)
     {
         target = find_down_level();
-        if (target.id.depth > -1 && remember_targ)
+        if (target.id.depth > 0 && remember_targ)
             set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest,
                                     target);
         return (target);
