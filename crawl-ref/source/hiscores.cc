@@ -631,16 +631,6 @@ static const char *short_branch_name(int branch)
     return ("");
 }
 
-static branch_type str_to_branch(const std::string &branch)
-{
-    for (int i = 0; i < NUM_BRANCHES; ++i)
-    {
-        if (branches[i].abbrevname && branches[i].abbrevname == branch)
-            return (static_cast<branch_type>(i));
-    }
-    return (BRANCH_MAIN_DUNGEON);
-}
-
 static const char *level_type_names[] =
 {
     "D", "Lab", "Abyss", "Pan"
@@ -691,7 +681,7 @@ void scorefile_entry::init_with_fields()
     death_type = str_to_kill_method(fields->str_field("ktyp"));
     death_source_name = fields->str_field("killer");
     auxkilldata = fields->str_field("kaux");
-    branch = str_to_branch(fields->str_field("br"));
+    branch = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
     dlvl   = fields->int_field("lvl");
     level_type = str_to_level_area_type(fields->str_field("ltyp"));
 

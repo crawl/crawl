@@ -24,20 +24,38 @@ enum map_flags
     MAPF_ROTATE            = 0x40      // may be rotated
 };
 
-class level_range
+struct raw_range
+{
+    branch_type branch;
+    int shallowest, deepest;
+    bool deny;
+};
+
+struct level_range
 {
 public:
+    branch_type branch;
     int shallowest, deepest;
+    bool deny;
 
 public:
-    level_range(int s = -1, int d = -1);
+    level_range(const raw_range &range);
+    level_range(branch_type br = BRANCH_MAIN_DUNGEON, int s = -1, int d = -1);
 
     void set(int s, int d = -1);
+    void set(const std::string &branch, int s, int d) throw (std::string);
+    
     void reset();
-    bool contains(int depth) const;
+    bool matches(const level_id &) const;
+    bool matches(int depth) const;
 
     bool valid() const;
     int span() const;
+
+    std::string describe() const;
+    std::string str_depth_range() const;
+
+    operator raw_range () const;
 };
 
 typedef std::pair<int,int> glyph_weighted_replacement_t;
@@ -328,6 +346,8 @@ private:
 
 typedef std::map<int, keyed_mapspec> keyed_specs;
 
+typedef std::vector<level_range> depth_ranges;
+
 // Not providing a constructor to make life easy for C-style initialisation.
 class map_def
 {
@@ -335,7 +355,8 @@ public:
     std::string     name;
     std::string     tags;
     std::string     place;
-    level_range     depth;
+
+    depth_ranges     depths;
     map_section_type orient;
     int             chance;
     long            flags;
@@ -355,7 +376,14 @@ public:
     void resolve();
     void fixup();
 
+    bool is_usable_in(const level_id &lid) const;
+    
     keyed_mapspec *mapspec_for_key(int key);
+
+    bool has_depth() const;
+    void add_depth(const level_range &depth);
+    void add_depths(depth_ranges::const_iterator s,
+                    depth_ranges::const_iterator e);
     
     std::string add_key_item(const std::string &s);
     std::string add_key_mons(const std::string &s);
@@ -369,6 +397,7 @@ public:
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;
+    bool has_tag_prefix(const std::string &tag) const;
 
 private:
     std::string add_key_field(

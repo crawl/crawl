@@ -3,6 +3,7 @@
 #include <cctype>
 
 #include "AppHdr.h"
+#include "branch.h"
 #include "describe.h"
 #include "direct.h"
 #include "invent.h"
@@ -122,17 +123,75 @@ static std::string split_key_item(const std::string &s,
 // level_range
 //
 
-level_range::level_range(int s, int d)
-    : shallowest(), deepest()
+level_range::level_range(branch_type br, int s, int d)
+    : branch(br), shallowest(), deepest(), deny(false)
 {
     set(s, d);
+}
+
+level_range::level_range(const raw_range &r)
+    : branch(r.branch), shallowest(r.shallowest), deepest(r.deepest),
+      deny(r.deny)
+{
+}
+
+std::string level_range::str_depth_range() const
+{
+    if (shallowest == -1)
+        return (":??");
+
+    if (shallowest == 1 && deepest >= branches[branch].depth)
+        return ("");
+
+    if (shallowest == deepest)
+        return make_stringf(":%d", shallowest);
+    
+    return make_stringf(":%d-%d", shallowest, deepest);
+}
+
+std::string level_range::describe() const
+{
+    return make_stringf("%s%s%s",
+                        deny? "!" : "",
+                        branch == NUM_BRANCHES? "Any" :
+                        branches[branch].abbrevname,
+                        str_depth_range().c_str());
+}
+
+level_range::operator raw_range () const
+{
+    raw_range r;
+    r.branch     = branch;
+    r.shallowest = shallowest;
+    r.deepest    = deepest;
+    r.deny       = deny;
+    return (r);
+}
+
+void level_range::set(const std::string &br, int s, int d)
+    throw (std::string)
+{
+    if (br == "any" || br == "Any")
+        branch = NUM_BRANCHES;
+    else
+    {
+        if ((branch = str_to_branch(br)) == NUM_BRANCHES)
+            throw make_stringf("Unknown branch: '%s'", br.c_str());
+    }
+
+    shallowest = s;
+    deepest    = d;
+
+    if (deepest < shallowest)
+        throw make_stringf("Level-range %s:%d-%d is malformed",
+                           br.c_str(), s, d);
 }
 
 void level_range::set(int s, int d)
 {
     shallowest = s;
     deepest    = d;
-    if (deepest == -1)
+    if (deepest == -1 || deepest < shallowest)
         deepest = shallowest;
 }
 
@@ -141,7 +200,16 @@ void level_range::reset()
     deepest = shallowest = -1;
 }
 
-bool level_range::contains(int x) const
+bool level_range::matches(const level_id &lid) const
+{
+    if (branch == NUM_BRANCHES)
+        return (matches(absdungeon_depth(lid.branch, lid.depth)));
+    else
+        return (branch == lid.branch
+                && lid.depth >= shallowest && lid.depth <= deepest);
+}
+
+bool level_range::matches(int x) const
 {
     // [ds] The level ranges used by the game are zero-based, adjust for that.
     ++x;
@@ -559,7 +627,7 @@ void map_def::init()
     place.clear();
     items.clear();
     keyspecs.clear();
-    depth.reset();
+    depths.clear();
     orient = MAP_NONE;
 
     // Base chance; this is not a percentage.
@@ -571,6 +639,38 @@ void map_def::init()
 
     map.clear();
     mons.clear();
+}
+
+bool map_def::is_usable_in(const level_id &lid) const
+{
+    bool any_matched = false;
+    for (int i = 0, size = depths.size(); i < size; ++i)
+    {
+        const level_range &lr = depths[i];
+        if (lr.matches(lid))
+        {
+            if (lr.deny)
+                return (false);
+            any_matched = true;
+        }
+    }
+    return (any_matched);
+}
+
+void map_def::add_depth(const level_range &range)
+{
+    depths.push_back(range);
+}
+
+void map_def::add_depths(depth_ranges::const_iterator s,
+                         depth_ranges::const_iterator e)
+{
+    depths.insert(depths.end(), s, e);
+}
+
+bool map_def::has_depth() const
+{
+    return (!depths.empty());
 }
 
 bool map_def::is_minivault() const
@@ -794,6 +894,12 @@ bool map_def::has_tag(const std::string &tagwanted) const
 {
     return !tags.empty() && !tagwanted.empty()
         && tags.find(" " + tagwanted + " ") != std::string::npos;
+}
+
+bool map_def::has_tag_prefix(const std::string &prefix) const
+{
+    return !tags.empty() && !prefix.empty()
+        && tags.find(" " + prefix) != std::string::npos;
 }
 
 keyed_mapspec *map_def::mapspec_for_key(int key)

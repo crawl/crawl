@@ -182,13 +182,13 @@ std::string prep_branch_level_name();
 
 // Get displayable depth in the current branch, given the absolute
 // depth.
-int subdungeon_depth(unsigned char branch, int depth);
+int subdungeon_depth(branch_type branch, int depth);
+
+// Get absolute depth given the displayable depth in the branch.
+int absdungeon_depth(branch_type branch, int subdepth);
 
 // Get displayable depth in the current branch.
 int player_branch_depth();
-
-// Get absolute depth given the displayable depth in the branch.
-int absdungeon_depth(unsigned char branch, int subdepth);
 
 bool single_level_branch(branch_type branch);
 //////////////////////////////////////////////////////////////////////

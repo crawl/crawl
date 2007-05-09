@@ -283,19 +283,19 @@ int random_map_for_place(const std::string &place, bool want_minivault)
     return (mapindex);
 }
 
-int random_map_for_depth(int depth, bool want_minivault)
+int random_map_for_depth(const level_id &place, bool want_minivault)
 {
     int mapindex = -1;
     int rollsize = 0;
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].depth.contains(depth) 
+        if (vdefs[i].is_minivault() == want_minivault
+            && vdefs[i].is_usable_in(place)
             // Tagged levels cannot be selected by depth. This is
             // the only thing preventing Pandemonium demon vaults from
             // showing up in the main dungeon.
             && !vdefs[i].has_tag("entry")
-            && !vdefs[i].has_tag("pan")
-            && vdefs[i].is_minivault() == want_minivault)
+            && !vdefs[i].has_tag("pan"))
         {
             rollsize += vdefs[i].chance;
 
@@ -305,7 +305,7 @@ int random_map_for_depth(int depth, bool want_minivault)
 
     if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
         mapindex = -1;
-
+    
     return (mapindex);
 }
 
@@ -319,8 +319,8 @@ int random_map_for_tag(const std::string &tag,
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
     {
         if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault
-            && (!check_depth || !vdefs[i].depth.valid()
-                || vdefs[i].depth.contains(you.your_level)))
+            && (!check_depth || !vdefs[i].has_depth()
+                || vdefs[i].is_usable_in(level_id::current())))
         {
             rollsize += vdefs[i].chance;
 

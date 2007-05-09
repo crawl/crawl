@@ -6,7 +6,7 @@
 
 extern map_def      lc_map;
 extern level_range  lc_range;
-extern level_range  lc_default_depth;
+extern depth_ranges lc_default_depths;
 extern std::string  lc_desfile;
 
 void reset_map_parser();

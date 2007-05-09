@@ -3,6 +3,7 @@
 #include "AppHdr.h"
 #include "libutil.h"
 #include "levcomp.h"
+#include "mapdef.h"
 #include "stuff.h"
 #include <map>
 
@@ -34,12 +35,26 @@ void yyerror(const char *e)
     end(1);
 }
 
+level_range set_range(const char *s, int start, int end)
+{
+    try
+    {
+        lc_range.set(s, start, end);
+    }
+    catch (const std::string &err)
+    {
+        yyerror(err.c_str());
+    }
+    return (lc_range);
+}
+
 %}
 
 %union
 {
     int i;
     const char *text;
+    raw_range range;
 }
 
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
@@ -58,10 +73,11 @@ void yyerror(const char *e)
 %token <i>      NO_HMIRROR NO_VMIRROR NO_ROTATE
 
 %token <i>      PANDEMONIC 
-%token <i>      DASH COMMA QUOTE OPAREN CPAREN
+%token <i>      DASH COMMA QUOTE OPAREN CPAREN COLON STAR NOT
 %token <i>      INTEGER
 
 %type  <i>      orient_name flagname
+%type  <range>  lev_range ext_range
 
 %token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
 %token <text>   IDENTIFIER
@@ -72,20 +88,19 @@ file            : definitions { }
                 ;
 
 definitions     : /* empty */               {}
-                | definition definitions    {}
+                | definitions definition    {}
                 ;
 
 definition      : def       {}
                 | level     {}
                 ;
 
-def             : defdepth
+def             : defdepth  {}
                 ;
 
-defdepth        : DEFAULT_DEPTH depth_range
-                {
-                    lc_default_depth = lc_range;
-                }
+defdepth        : DEFAULT_DEPTH 
+                  { lc_default_depths.clear(); }
+                  default_depth_ranges
                 ;
 
 level           : name metalines map_def metalines
@@ -123,6 +138,10 @@ level           : name metalines map_def metalines
                     if (lc_map.map.height() == 0)
                         yyerror("Must define map.");
 
+                    if (!lc_map.has_depth() && !lc_default_depths.empty())
+                        lc_map.add_depths(lc_default_depths.begin(),
+                                          lc_default_depths.end());
+
                     add_parsed_map( lc_map );
                 }
                 ;
@@ -130,7 +149,6 @@ level           : name metalines map_def metalines
 name            : NAME STRING
                 {
                     lc_map.init();
-                    lc_map.depth = lc_default_depth;
                     lc_map.name = $2;
 
                     map_load_info_t::const_iterator i = 
@@ -203,7 +221,7 @@ shuffle         : SHUFFLE shuffle_specifiers {}
                 ;
 
 shuffle_specifiers : shuffle_spec
-                   | shuffle_spec COMMA shuffle_specifiers
+                   | shuffle_specifiers COMMA shuffle_spec
                    ;
 
 shuffle_spec    : ITEM_INFO
@@ -300,20 +318,65 @@ place           : PLACE STRING
                 ;
 
 depth           : DEPTH {}
-                | DEPTH depth_range
+                | DEPTH extended_depth_ranges {}
+                ;
+
+default_depth_ranges : 
+                ext_range
                 {
-                    lc_map.depth = lc_range;
+                    lc_default_depths.push_back($1);
+                }
+
+                | default_depth_ranges COMMA ext_range
+                {
+                    lc_default_depths.push_back($3);
                 }
                 ;
 
-depth_range     : INTEGER DASH INTEGER
+extended_depth_ranges : 
+                ext_range
                 {
-                    lc_range.set($1, $3);
+                    lc_map.add_depth($1);
+                }
+
+                | extended_depth_ranges COMMA ext_range
+                {
+                    lc_map.add_depth($3);
+                }
+                ;
+
+ext_range       : lev_range     { $$ = $1; }
+                | NOT lev_range { $$ = $2; $$.deny = true; }
+                ;
+
+lev_range       : IDENTIFIER
+                {
+                    $$ = set_range($1, 1, 100);
+                }
+
+                | IDENTIFIER COLON STAR
+                {
+                    $$ = set_range($1, 1, 100);
+                }
+
+                | IDENTIFIER COLON INTEGER DASH INTEGER
+                {
+                    $$ = set_range($1, $3, $5);
+                }
+
+                | IDENTIFIER COLON INTEGER
+                {
+                    $$ = set_range($1, $3, $3);
+                }
+
+                | INTEGER DASH INTEGER
+                {
+                    $$ = set_range("Any", $1, $3);
                 }
 
                 | INTEGER
                 {
-                    lc_range.set($1);
+                    $$ = set_range("Any", $1, $1);
                 }
                 ;
 

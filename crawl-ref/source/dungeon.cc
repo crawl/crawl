@@ -177,6 +177,7 @@ static dgn_region_list no_monster_zones;
 static dgn_region_list no_item_zones;
 static dgn_region_list no_pool_fixup_zones;
 static dgn_region_list no_door_fixup_zones;
+static int minivault_chance = 3;
 
 static std::vector<vault_placement> level_vaults;
 
@@ -341,6 +342,7 @@ static void reset_level()
     no_item_zones.clear();
     no_pool_fixup_zones.clear();
     no_door_fixup_zones.clear();
+    minivault_chance = 3;
     
     // blank level with DNGN_ROCK_WALL
     make_box(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, DNGN_ROCK_WALL);
@@ -1177,8 +1179,18 @@ static void place_special_minivaults(int level_number, int level_type)
     if (level_type != LEVEL_DUNGEON)
         return;
 
-    int chance = level_number == 0? 50 : 100;
     std::set<int> used;
+    if (minivault_chance && one_chance_in(minivault_chance))
+    {
+        const int vault = random_map_for_depth(level_id::current(), true);
+        if (vault != -1)
+        {
+            build_minivaults(level_number, vault);
+            used.insert(vault);
+        }
+    }
+    
+    int chance = level_number == 0? 50 : 100;
     while (chance && random2(100) < chance)
     {
         const int vault = random_map_for_dlevel(level_number, true);
@@ -1216,7 +1228,7 @@ static builder_rc_type builder_normal(int level_number, char level_type,
     if (vault == -1
             && player_in_branch( BRANCH_MAIN_DUNGEON ) 
             && one_chance_in(9))
-        vault = random_map_for_depth(level_number);
+        vault = random_map_for_depth(level_id::current());
 
     if (vault != -1)
     {
@@ -1257,14 +1269,7 @@ static builder_rc_type builder_normal(int level_number, char level_type,
     if (level_number > 2 && level_number < 23 && one_chance_in(3))
     {
         plan_main(level_number, 0);
-
-        if (one_chance_in(3))
-        {
-            int mvault = random_map_for_depth(level_number, true);
-            if (mvault != -1)
-                build_minivaults(level_number, mvault);
-        }
-
+        minivault_chance = 3;
         return BUILD_SKIP;
     }
 
@@ -1276,17 +1281,7 @@ static builder_rc_type builder_normal(int level_number, char level_type,
     {
         // sometimes roguey_levels generate a special room
         roguey_level(level_number, sr);
-
-        if (player_in_branch( BRANCH_MAIN_DUNGEON )
-            && one_chance_in(4))
-        {
-            int mvault = random_map_for_depth(level_number, true);
-            if (mvault != -1)
-            {
-                build_minivaults(level_number, mvault);
-                return BUILD_SKIP;
-            }
-        }
+        minivault_chance = 4;
     }
     else
     {
@@ -1412,17 +1407,6 @@ static void builder_extras( int level_number, int level_type )
 
     if (level_number >= 11 && level_number <= 23 && one_chance_in(15))
         place_specific_stair(DNGN_ENTER_LABYRINTH);
-
-    if (player_in_branch( BRANCH_MAIN_DUNGEON )
-        && one_chance_in(3))
-    {
-        int mvault = random_map_for_depth(level_number, true);
-        if (mvault != -1)
-        {
-            build_minivaults(level_number, mvault);
-            return;
-        }
-    }
 
     if (level_number > 6 && one_chance_in(10))
     {

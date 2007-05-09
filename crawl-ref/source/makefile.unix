@@ -161,7 +161,7 @@ prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 		cd $(UTIL) && $(YACC) -d -b levcomp levcomp.ypp \
-			   && mv $(YTABC) levcomp.tab.cc
+			   && mv $(YTABC) levcomp.tab.cc || false
 
 $(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp
 		cd $(UTIL) && $(LEX) -olevcomp.lex.cc levcomp.lpp

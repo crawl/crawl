@@ -41,7 +41,7 @@ int vault_main(map_type vgrid,
 
 const map_def *map_by_index(int index);
 int random_map_for_place(const std::string &place, bool mini = false);
-int random_map_for_depth(int depth, bool want_minivault = false);
+int random_map_for_depth(const level_id &lid, bool want_minivault = false);
 int random_map_for_tag(const std::string &tag, bool want_minivault,
                        bool check_depth = false);
 void add_parsed_map(const map_def &md);

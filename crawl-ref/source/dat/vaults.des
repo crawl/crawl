@@ -1282,7 +1282,7 @@ ENDMAP
 # attribute makes the map a normal vault, and mayhem can result.
 
 # Default depth for minivaults.
-default-depth: 8-27
+default-depth: 8-27, !Orc, !Lair
 
 ##############################################################################
 # Minivault balancer
@@ -1299,23 +1299,25 @@ ENDMAP
 # Greed's colour
 
 NAME: david_greed
-DEPTH: 10-26
+DEPTH: 10-26, !Orc, !Lair
 ITEM: nothing / any good_item
 MONS: silver statue / orange crystal statue / ice statue
 SHUFFLE: d|
 MAP
-xxxxxxxxx
-xbbbbbbbx
-xb1...1bx
-xb.....bx
-xb.....bx
-xbb.|.bbx
-xxb.d.bxx
-xxb...bxx
-xxb...bxx
-xxb.*.bxx
-xxb...bxx
-xxx@I@xxx
+...........
+.xxxxxxxxx.
+.xbbbbbbbx.
+.xb1...1bx.
+.xb.....bx.
+.xb.....bx.
+.xbb.|.bbx.
+.xxb.d.bxx.
+.xxb...bxx.
+.xxb...bxx.
+.xxb.*.bxx.
+.xxb...bxx.
+.xxx@I@xxx.
+...........
 ENDMAP
 
 ##############################################################################
@@ -2201,4 +2203,125 @@ MAP
 .xx2=2=3x3x.
 .xxxxxxxx=x.
 ............
+ENDMAP
+
+############################################################################
+# Minivaults specific to particular branches
+############################################################################
+# Orcish mines minivaults:
+
+default-depth: Orc:*
+
+##################################
+# Dummy Orc minivault balancer.
+#
+NAME: mines_dummy
+TAGS: dummy
+CHANCE: 100
+MAP
+x
+ENDMAP
+
+###################################
+# minvault intended for Orc Mines
+# pond with fungi
+NAME: mines1_lemuel
+MONS: fungus, wandering mushroom
+SUBST: 1 = . 1 2:4
+SUBST: ? : w..
+SUBST: ! : ww.
+MAP
+..1...?.....
+....1???1...
+..1...??ww1.
+....1wwwwww.
+.11wwwwwwww.
+..www!!wwww.
+..ww!!www1..
+..1ww!ww11..
+1..1w!!w1...
+....!!1.....
+.1...1!.1...
+...........1
+ENDMAP
+
+###################################
+# minvault intended for Orc Mines
+# hidden treasure chamber
+NAME: mines2_lemuel
+SUBST: ? = x.
+MAP
+..........
+..?x=x?...
+.?xx-xx?..
+?xx$$$xx?.
+?xx$$$xx?.
+.?xxxxx?..
+...???....
+ENDMAP
+
+###################################
+# minvault intended for Orc Mines
+# treasure chamber with oklob pant
+NAME: mines3_lemuel
+SUBST: ? = +=.
+SUBST: ! = x.
+SUBST: $ = $:30 *
+MONS: oklob plant
+MAP
+.....!.!......
+....!x?x!.....
+....!x.xx!....
+...!xx..xx!...
+...!xxx..xx!..
+....!xxx.1x!..
+....!xxxx.x!..
+...!xxxxx.xx!.
+..!xx$$x..xxx.
+.!!xx$$?.xxxx.
+.!xxx$$xxxx!..
+..!xxxxxxx!...
+..............
+ENDMAP
+
+###################################
+# minvault intended for Orc Mines
+# mage tower -- either orc with assistants, or ogre with guards
+NAME: mines4_lemuel
+SUBST: ? = +=
+SUBST: d = $d
+SUBST: I = IG
+SHUFFLE: 112/334
+MONS: orc sorcerer,orc/orc wizard,ogre-mage,ogre/nothing
+ITEM: any book
+MAP
+...............
+...xxxx?xxxx...
+..xx2.....2xx..
+.xx.2xxxxx2.xx.
+.x..xxd1dxx..x.
+.x.Ix$$G$$xI.x.
+.x..xx222xx..x.
+.xx.2xx?xx2.xx.
+..xx..2.2..xx..
+...xxxxxxxxx...
+...............
+ENDMAP
+
+###################################
+# minvault intended for Orc Mines
+# warg stables, with goblin stableboy
+NAME: mines5_lemuel
+SUBST: ?: wx
+MONS: warg/wolf,goblin
+MAP
+...........
+.x???????x.
+.xwwwwwwwx.
+.xwwwwwwwx.
+.x1.1.1.1x.
+.x.1.1.1.x.
+.x1.2...1x.
+.xxxx+xxxx.
+...........
 ENDMAP

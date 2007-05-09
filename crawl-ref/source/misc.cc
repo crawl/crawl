@@ -2042,7 +2042,7 @@ std::string prep_branch_level_name()
     return prep_branch_level_name( get_packed_place() );
 }
 
-int absdungeon_depth(unsigned char branch, int subdepth)
+int absdungeon_depth(branch_type branch, int subdepth)
 {
     if (branch >= BRANCH_VESTIBULE_OF_HELL && branch <= BRANCH_THE_PIT)
         return subdepth + 27;
@@ -2058,7 +2058,7 @@ int absdungeon_depth(unsigned char branch, int subdepth)
     return subdepth;
 }
 
-int subdungeon_depth(unsigned char branch, int depth)
+int subdungeon_depth(branch_type branch, int depth)
 {
     return depth - absdungeon_depth(branch, 0);
 }
