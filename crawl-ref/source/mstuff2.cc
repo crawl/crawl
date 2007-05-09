@@ -1243,7 +1243,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         pbolt.name = item.name(DESC_PLAIN);
     }
     msg += ".";
-    mpr(msg.c_str());
+    if (monster->visible())
+        mpr(msg.c_str());
 
     // [dshaligram] When changing bolt names here, you must edit 
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
