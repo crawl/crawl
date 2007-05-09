@@ -1887,6 +1887,8 @@ static int prompt_travel_branch(int prompt_flags)
             return (allow_updown? ID_DOWN : ID_CANCEL);
         case CONTROL('P'):
             return find_parent_branch(curr.branch);
+        case '.':
+            return (curr.branch);
         case '*':
             if (waypoint_list || waycount)
                 waypoint_list = !waypoint_list;
