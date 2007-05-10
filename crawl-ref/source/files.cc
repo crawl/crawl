@@ -481,13 +481,15 @@ std::string get_prefs_filename()
     return get_savedir_filename("start", "ns", "prf");
 }
 
-static std::string get_level_suffix(int level, int where, level_area_type lt)
+static std::string get_level_suffix(int level, branch_type where,
+                                    level_area_type lt)
 {
     switch (lt)
     {
     default:
     case LEVEL_DUNGEON:
-        return (make_stringf("%02d%c", level, where + 'a'));
+        return (make_stringf("%02d%c", subdungeon_depth(where, level),
+                             where + 'a'));
     case LEVEL_LABYRINTH:
         return ("lab");
     case LEVEL_ABYSS:
@@ -497,7 +499,7 @@ static std::string get_level_suffix(int level, int where, level_area_type lt)
     }
 }
 
-std::string make_filename( const char *prefix, int level, int where,
+std::string make_filename( const char *prefix, int level, branch_type where,
                            level_area_type ltype, bool isGhost )
 {
     return get_savedir_filename( prefix, "",
@@ -533,7 +535,7 @@ static void write_tagged_file( FILE *dataFile, char majorVersion,
     }
 }
 
-bool travel_load_map( char branch, int absdepth )
+bool travel_load_map( branch_type branch, int absdepth )
 {
     // Try to open level savefile.
     FILE *levelFile = fopen(make_filename(you.your_name, absdepth, branch,
@@ -603,11 +605,14 @@ static coord_def find_nearby_stair(int stair_to_find, bool find_closest)
             if (grd[xpos][ypos] == stair_to_find)
             {
                 found++;
-                if (find_closest && dist < best_dist)
+                if (find_closest)
                 {
-                    best_dist = dist;
-                    result.x = xpos;
-                    result.y = ypos;
+                    if (dist < best_dist)
+                    {
+                        best_dist = dist;
+                        result.x = xpos;
+                        result.y = ypos;
+                    }
                 }
                 else if (one_chance_in( found ))
                 {

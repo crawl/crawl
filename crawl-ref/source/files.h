@@ -32,7 +32,7 @@ std::string datafile_path(const std::string &basename,
 std::string get_parent_directory(const std::string &filename);
 bool check_dir(const std::string &what, std::string &dir);
 
-bool travel_load_map( char branch, int absdepth );
+bool travel_load_map( branch_type branch, int absdepth );
 
 std::vector<player> find_saved_characters();
 
@@ -74,7 +74,7 @@ void save_ghost( bool force = false );
 /* ***********************************************************************
  * called from: files hiscores
  * *********************************************************************** */
-std::string make_filename( const char *prefix, int level, int branch,
+std::string make_filename( const char *prefix, int level, branch_type branch,
                            level_area_type lt, bool isGhost );
 
 void writeShort(FILE *file, short s);

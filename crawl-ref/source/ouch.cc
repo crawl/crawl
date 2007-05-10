@@ -845,17 +845,20 @@ void end_game( struct scorefile_entry &se )
         {
             if (tmp_file_pairs[level][dungeon])
             {
-                unlink(make_filename( you.your_name, level, dungeon,
-                                      LEVEL_DUNGEON, false ).c_str());
+                unlink(
+                    make_filename( you.your_name, level,
+                                   static_cast<branch_type>(dungeon),
+                                   LEVEL_DUNGEON, false ).c_str() );
             }
         }
     }
 
     // temp levels, if any
-    unlink( make_filename( you.your_name, 0, 0, LEVEL_ABYSS, false ).c_str() );
-    unlink( make_filename( you.your_name, 0, 0,
+    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
+                           LEVEL_ABYSS, false ).c_str() );
+    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
                            LEVEL_PANDEMONIUM, false ).c_str() );
-    unlink( make_filename( you.your_name, 0, 0,
+    unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
                            LEVEL_LABYRINTH, false ).c_str() );
 
     // create base file name
