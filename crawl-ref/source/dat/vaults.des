@@ -1282,7 +1282,7 @@ ENDMAP
 # attribute makes the map a normal vault, and mayhem can result.
 
 # Default depth for minivaults.
-default-depth: 8-27, !Orc, !Lair
+default-depth: 8-27, !Orc, !Lair, !Swamp, !Shoal
 
 ##############################################################################
 # Minivault balancer
@@ -1299,7 +1299,7 @@ ENDMAP
 # Greed's colour
 
 NAME: david_greed
-DEPTH: 10-26, !Orc, !Lair
+DEPTH: 10-26, !Orc, !Lair, !Swamp, !Shoal
 ITEM: nothing / any good_item
 MONS: silver statue / orange crystal statue / ice statue
 SHUFFLE: d|
@@ -1324,7 +1324,7 @@ ENDMAP
 # Defended altar
 
 NAME:    david_defended_altar
-DEPTH:   7-20
+DEPTH:   7-20, !Lair, !Swamp, !Shoal
 ITEM:    nothing
 SHUFFLE: 1I/2T
 MONS:    orc priest, deep elf priest / w:30 nothing
@@ -1487,7 +1487,7 @@ ENDMAP
 ###################################
 # Evil zoo
 NAME: minivault_9
-DEPTH: 15-27
+DEPTH: 15-27, !Orc, !Lair, !Swamp, !Shoal
 MAP
 ............
 .==========.
@@ -1948,7 +1948,7 @@ ENDMAP
 # Dispersion (David)
 #
 NAME:  dispersion
-DEPTH: 13-26
+DEPTH: 13-26, !Orc, !Lair, !Swamp, !Shoal
 SUBST: Y = 89
 KITEM: 8 = % / * / w:1 |
 KITEM: 9 = % / * / w:1 |
@@ -1977,15 +1977,17 @@ NAME: fake_naga_vault
 # Intentionally moved this deeper because explore will gladly run into the
 # room, and being hit by multiple mimics is un-fun.
 
-DEPTH: 15-26
+DEPTH: 15-26, !Orc, !Lair, !Swamp, !Shoal
 MONS: mimic, guardian naga
 MAP
-xxxxxxxxx
-x1111111x
-x1111111x
-x1111111x
-x11.2.11x
-xxxx+xxxx
+...........
+.xxxxxxxxx.
+.x1111111x.
+.x1111111x.
+.x1111111x.
+.x11.2.11x.
+.xxxx+xxxx.
+...........
 ENDMAP
 
 ##############################################################################
@@ -1997,10 +1999,12 @@ TAGS: no_monster_gen
 ITEM: potion of water w:20 / bread ration / meat ration / arrow / bolt / spear / any potion w:5
 SUBST: ? = +=
 MAP
-x?xx
-xddx
-xddx
-xxxx
+......
+.x?xx.
+.xddx.
+.xddx.
+.xxxx.
+......
 ENDMAP
 
 ##############################################################################
@@ -2223,7 +2227,6 @@ x
 ENDMAP
 
 ###################################
-# minvault intended for Orc Mines
 # pond with fungi
 NAME: mines1_lemuel
 MONS: fungus, wandering mushroom
@@ -2246,7 +2249,6 @@ MAP
 ENDMAP
 
 ###################################
-# minvault intended for Orc Mines
 # hidden treasure chamber
 NAME: mines2_lemuel
 SUBST: ? = x.
@@ -2261,7 +2263,6 @@ MAP
 ENDMAP
 
 ###################################
-# minvault intended for Orc Mines
 # treasure chamber with oklob pant
 NAME: mines3_lemuel
 SUBST: ? = +=.
@@ -2285,7 +2286,6 @@ MAP
 ENDMAP
 
 ###################################
-# minvault intended for Orc Mines
 # mage tower -- either orc with assistants, or ogre with guards
 NAME: mines4_lemuel
 SUBST: ? = +=
@@ -2309,7 +2309,6 @@ MAP
 ENDMAP
 
 ###################################
-# minvault intended for Orc Mines
 # warg stables, with goblin stableboy
 NAME: mines5_lemuel
 SUBST: ?: wx

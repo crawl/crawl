@@ -3183,7 +3183,8 @@ static void dngn_place_item_explicit(int index, int x, int y,
     dngn_place_item_explicit(spec, x, y, level);
 }
 
-static void dngn_place_monster(
+static bool dngn_place_monster(
+    const vault_placement &place,
     const mons_spec &monster_type_thing,
     int monster_level,
     int vx, int vy)
@@ -3191,6 +3192,10 @@ static void dngn_place_monster(
     if (monster_type_thing.mid != -1)
     {
         const int mid = monster_type_thing.mid;
+        const bool generate_awake =
+            monster_type_thing.generate_awake
+            || place.map.has_tag("generate_awake");
+
         int not_used;
 
         const int mlev = monster_type_thing.mlevel;
@@ -3207,18 +3212,35 @@ static void dngn_place_monster(
         if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
         {
             if (mons_is_unique(mid) && you.unique_creatures[mid])
-                return;
+                return (false);
             
             const int habitat = monster_habitat(mid);
             if (habitat != DNGN_FLOOR)
                 grd[vx][vy] = habitat;
         }
-            
-        place_monster( not_used, mid, monster_level,
-                       monster_type_thing.generate_awake?
-                       BEH_WANDER : BEH_SLEEP,
-                       MHITNOT, true, vx, vy, false );
+
+        return (place_monster( not_used, mid, monster_level,
+                               generate_awake? BEH_WANDER : BEH_SLEEP,
+                               MHITNOT, true, vx, vy, false ));
     }
+    return (false);
+}
+
+static bool dngn_place_one_monster(
+    const vault_placement &place,
+    mons_list &mons,
+    int monster_level,
+    int vx, int vy)
+{
+    for (int i = 0, size = mons.size(); i < size; ++i)
+    {
+        if (dngn_place_monster(place, mons.get_monster(i),
+                               monster_level, vx, vy))
+        {
+            return (true);
+        }
+    }
+    return (false);
 }
 
 static monster_type random_evil_statue()
@@ -3277,10 +3299,8 @@ static int vault_grid( vault_placement &place,
         else
             grd[vx][vy] = DNGN_FLOOR;
 
-        mons_spec mons = mapsp->get_mons();
-        if (place.map.has_tag("generate_awake"))
-            mons.generate_awake = true;
-        dngn_place_monster(mons, level_number, vx, vy);
+        mons_list &mons = mapsp->get_monsters();
+        dngn_place_one_monster(place, mons, level_number, vx, vy);
 
         item_list &items = mapsp->get_items();
         dngn_place_multiple_items(items, vx, vy, level_number);
@@ -3487,11 +3507,7 @@ static int vault_grid( vault_placement &place,
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
 
-        if (place.map.has_tag("generate_awake"))
-            monster_type_thing.generate_awake = true;
-
-        dngn_place_monster(monster_type_thing, monster_level,
-                           vx, vy);
+        dngn_place_monster(place, monster_type_thing, monster_level, vx, vy);
     }
 
     // again, this seems odd, given that this is just one of many

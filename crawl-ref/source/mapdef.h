@@ -56,6 +56,10 @@ public:
     std::string str_depth_range() const;
 
     operator raw_range () const;
+    operator std::string () const
+    {
+        return describe();
+    }
 };
 
 typedef std::pair<int,int> glyph_weighted_replacement_t;
@@ -331,7 +335,7 @@ public:
     std::string set_item(const std::string &s, bool fix);
 
     feature_spec get_feat();
-    mons_spec get_mons();
+    mons_list &get_monsters();
     item_list &get_items();
 
 private:

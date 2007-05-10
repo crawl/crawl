@@ -1531,9 +1531,9 @@ feature_spec keyed_mapspec::get_feat()
     return feat.get_feat(key_glyph);
 }
 
-mons_spec keyed_mapspec::get_mons()
+mons_list &keyed_mapspec::get_monsters()
 {
-    return (mons.size()? mons.get_monster(0) : mons_spec(-1));
+    return (mons);
 }
 
 item_list &keyed_mapspec::get_items()
