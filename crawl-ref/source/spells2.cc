@@ -237,9 +237,6 @@ int corpse_rot(int power)
 
     for (adx = minx; adx != maxx; adx += xinc)
     {
-        if (adx == 7 || adx == -7)
-            return 0;
-
         for (ady = miny; ady != maxy; ady += yinc)
         {
             if (see_grid(adx, ady))
@@ -322,9 +319,6 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
 
     for (adx = minx; adx != maxx; adx += xinc)
     {
-        if ((adx == 7) || (adx == -7))
-            return 0;
-
         for (ady = miny; ady != maxy; ady += yinc)
         {
             if (see_grid(adx, ady))
