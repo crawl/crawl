@@ -377,6 +377,18 @@ bool mons_is_stationary(const monsters *mons)
     return (mons_class_is_stationary(mons->type));
 }
 
+bool mons_is_icy(const monsters *mons)
+{
+    return (mons_is_icy(mons->type));
+}
+
+bool mons_is_icy(int mtype)
+{
+    return (mtype == MONS_ICE_BEAST
+            || mtype == MONS_SIMULACRUM_SMALL
+            || mtype == MONS_SIMULACRUM_LARGE);
+}
+
 bool invalid_monster(const monsters *mons)
 {
     return (!mons || mons->type == -1);
@@ -2626,6 +2638,12 @@ void monsters::attacking(actor * /* other */)
 {
 }
 
+bool monsters::can_go_berserk() const
+{
+    // Stub
+    return (false);
+}
+
 void monsters::go_berserk(bool /* intentional */)
 {
 }
@@ -3710,6 +3728,19 @@ void monsters::check_speed()
 #endif
         speed_increment = 140;
     }
+}
+
+void monsters::mutate()
+{
+    if (holiness() != MH_NATURAL)
+        return;
+
+    monster_polymorph(this, RANDOM_MONSTER, 100);
+}
+
+bool monsters::is_icy() const
+{
+    return (mons_is_icy(type));
 }
 
 /////////////////////////////////////////////////////////////////////////

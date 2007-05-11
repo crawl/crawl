@@ -1003,7 +1003,7 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
 // note that power is (as of yet) unused within this function -
 // may be worthy of consideration of later implementation, though,
 // so I'll still let the parameter exist for the time being {dlb}
-bool monster_polymorph( struct monsters *monster, int targetc, int power )
+bool monster_polymorph( monsters *monster, int targetc, int power )
 {
     char str_polymon[INFO_SIZE] = "";      // cannot use info[] here {dlb}
     bool player_messaged = false;

@@ -142,7 +142,10 @@ public:
     // (statues have only indirect attacks).
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other) = 0;
+    virtual bool can_go_berserk() const = 0;
+    virtual bool is_icy() const = 0;
     virtual void go_berserk(bool intentional) = 0;
+    virtual void mutate() = 0;
     virtual void hurt(const actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
@@ -711,6 +714,7 @@ public:
     bool can_swim() const;
     bool is_levitating() const;
     bool cannot_speak() const;
+    bool is_icy() const;
 
     kill_category kill_alignment() const;
 
@@ -746,7 +750,10 @@ public:
     bool cannot_fight() const;
 
     void attacking(actor *other);
+    bool can_go_berserk() const;
+    bool can_go_berserk(bool verbose) const;
     void go_berserk(bool intentional);
+    void mutate();
     void banish(const std::string &who = "");
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
@@ -963,7 +970,9 @@ public:
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     void attacking(actor *other);
+    bool can_go_berserk() const;
     void go_berserk(bool intentional);
+    void mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
     bool visible() const;
@@ -979,6 +988,7 @@ public:
 
     int levitates() const;
 
+    bool is_icy() const;
     bool paralysed() const;
     bool confused() const;
     bool asleep() const;

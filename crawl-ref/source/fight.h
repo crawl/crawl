@@ -124,6 +124,13 @@ public:
 
     int  calc_to_hit(bool random = true);
 
+    static std::string anon_name(description_level_type desc);
+    static std::string actor_name(const actor *a, description_level_type desc,
+                                  bool actor_visible);
+    static std::string pronoun(const actor *a, pronoun_type ptyp,
+                               bool actor_visible);
+    static std::string anon_pronoun(pronoun_type ptyp);
+
 private:
     void init_attack();
     bool is_water_attack(const actor *, const actor *) const;
@@ -137,6 +144,9 @@ private:
     std::string special_attack_punctuation();
     std::string attack_strength_punctuation();
 
+    std::string atk_name(description_level_type desc) const;
+    std::string def_name(description_level_type desc) const;
+
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
     void calc_elemental_brand_damage(int res, const char *verb);
@@ -149,6 +159,10 @@ private:
     void check_defender_train_dodging();
     void splash_defender_with_acid(int strength);
     void splash_monster_with_acid(int strength);
+    bool decapitate_hydra(int damage_done, int damage_type = -1);
+    bool chop_hydra_head( int damage_done,
+                          int dam_type,
+                          int wpn_brand );
 
     // Returns true if the defender is banished.
     bool distortion_affects_defender();

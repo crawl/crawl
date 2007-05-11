@@ -162,6 +162,13 @@ public:
     unsigned short packed_place() const;
     std::string describe(bool long_name = false, bool with_number = true) const;
 
+    void reset()
+    {
+        branch = 0;
+        depth  = -1;
+        level_type = LEVEL_DUNGEON;
+    }
+    
     bool is_valid() const
     {
         return (branch != -1 && depth != -1) || level_type != LEVEL_DUNGEON;
@@ -232,6 +239,12 @@ struct level_pos
     bool is_valid() const
     {
         return id.depth > -1 && pos.x != -1 && pos.y != -1;
+    }
+
+    void reset()
+    {
+        id.reset();
+        pos = coord_def(-1, -1);
     }
 
     void save(FILE *) const;
@@ -404,6 +417,7 @@ public:
     void set_level_excludes();
 
     void add_waypoint(int x = -1, int y = -1);
+    void delete_waypoint();
     unsigned char is_waypoint(const level_pos &lp) const;
     void list_waypoints() const;
     void travel_to_waypoint(int number);
