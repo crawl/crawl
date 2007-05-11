@@ -15,7 +15,7 @@ red devil
 The Red Devil is slightly shorter than a human, but muscular and covered in spikes and horns. Two short wings sprout from its shoulders.
 %%%%
 ettin
-A large, two headed humanoid. Most often seen wielding two weapons, so that the heads will have one less thing to bicker about.
+A large, two-headed humanoid. Most often seen wielding two weapons, so that the heads will have one less thing to bicker about.
 %%%%
 fungus
 A lumpy grey fungus, growing well in the dank underground dungeon.
@@ -57,7 +57,7 @@ killer bee
 A giant bee, bearing a deadly barb which can sting repeatedly.
 %%%%
 killer bee larva
-A small, powerless larva of killer bee.
+A small, powerless larva of a killer bee.
 %%%%
 manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
@@ -69,7 +69,7 @@ orc
 An ugly subterranean race, orcs combine the worst features of humans, pigs, and several other unpleasant creatures.
 %%%%
 quasit
-A small twisted demon with long sharply pointed tail.
+A small twisted demon with a long, sharply pointed tail.
 %%%%
 rat
 Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
@@ -323,7 +323,7 @@ necromancer
 A wizard specializing in the practice of death magic.
 %%%%
 wizard
-An rather eccentric person, dabbling in all sorts of arcanities
+A rather eccentric person, dabbling in all sorts of arcanities.
 %%%%
 orc priest
 A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It continually mumbles strange prayers. You should hope that they remain unheard.
@@ -335,7 +335,7 @@ human
 A remarkably nondescript person.  How odd!
 %%%%
 gnoll
-A taller and better equipped relative of goblins and orcs, somewhat doglike in appearance.
+A taller and better-equipped relative of goblins and orcs, somewhat doglike in appearance.
 %%%%
 clay golem
 A huge animated clay statue.
@@ -437,7 +437,7 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs.  Its thick scales give off an eerie green glow.
 %%%%
 war dog
-A vicious dog, trained to kill.  Its neck is protected by massive spiked collar.
+A vicious dog, trained to kill.  Its neck is protected by a massive spiked collar.
 %%%%
 grey rat
 A very large grey rat.
@@ -455,7 +455,7 @@ sheep
 A stupid woolly animal, with murder in its eyes.  It looks surprised.
 %%%%
 ghoul
-An undead humanoid creature created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from the decaying corpses in the same way a necrophage does.
+An undead humanoid creature created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from decaying corpses in the same way a necrophage does.
 %%%%
 hog
 A large, fat and very ugly pig.
@@ -618,7 +618,7 @@ A huge and disgusting gastropod.
 %%%%
 giant snail
 
-A huge and disgusting gastropod with light green shell.
+A huge and disgusting gastropod with a light green shell.
 %%%%
 spatial vortex
 
@@ -752,7 +752,7 @@ A small and twisted goblin, wearing some ugly blue rags.
 %%%%
 Sigmund
 
-An evil and spry old human, whose eyes twinkle with madness. Sigmund wields a nasty looking scythe.
+An evil and spry old human, whose eyes twinkle with madness. Sigmund wields a nasty-looking scythe.
 %%%%
 Blork the Orc
 
@@ -836,7 +836,7 @@ An evil berserker.
 %%%%
 Wayne
 
-A fat, evil dwarf in a stupid looking hat.
+A fat, evil dwarf in a stupid-looking hat.
 %%%%
 Duane
 

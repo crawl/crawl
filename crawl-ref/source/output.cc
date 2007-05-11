@@ -1555,7 +1555,7 @@ std::string status_mut_abilities()
 
       case SP_GHOUL:
           text += "saprovore 3";
-          text += ", deterioriation";
+          text += ", deterioration";
           have_any = true;
           break;
 
@@ -1915,7 +1915,7 @@ std::string status_mut_abilities()
             case MUT_DETERIORATION:
                 if (have_any)
                     text += ", ";
-                snprintf(info, INFO_SIZE, "deteriotation %d", level);
+                snprintf(info, INFO_SIZE, "deterioration %d", level);
                 text += info;
                 have_any = true;
                 break;

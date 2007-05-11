@@ -474,7 +474,7 @@ static std::string describe_demon(const monsters &mons)
         description += " lumpy ";
         break;
     case 28:
-        description += " armoured ";
+        description += "n armoured ";
         break;
     case 29:
         description += " carapaced ";
@@ -911,7 +911,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
             case WPN_BLOWGUN:
                 description += "A long, light tube, open at both ends.  Doing "
-                    "very little damage,  its main use is to fire poisoned "
+                    "very little damage, its main use is to fire poisoned "
                     "needles from afar.  It makes very little noise. ";
                 break;
 
@@ -1314,7 +1314,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 description += " 'maces and flails' category. ";
                 break;
             case SK_POLEARMS:
-                description += " 'pole-arms' category. ";
+                description += " 'polearms' category. ";
                 break;
             case SK_STAVES:
                 description += " 'staves' category. ";
@@ -1561,7 +1561,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
                     "the effects of fire and heat. ";
                 break;
             case ARM_STEAM_DRAGON_HIDE:
-                description += "The soft and supple scaley skin of "
+                description += "The soft and supple scaly skin of "
                     "a steam dragon. I suppose you could "
                     "wear it if you really wanted to. ";
                 break;
@@ -3496,10 +3496,10 @@ void describe_spell(spell_type spelled)
         break;
 
     case SPELL_CONFUSING_TOUCH:
-        description += "enchants the casters hands with magical energy. "
+        description += "enchants the caster's hands with magical energy. "
             "This energy is released when the caster touches "
             "a monster with their bare hands, and may induce "
-            "a state of confusing in the monster. ";
+            "a state of confusion in the monster. ";
         break;
 
     case SPELL_CONFUSE:
@@ -3568,7 +3568,7 @@ void describe_spell(spell_type spelled)
     case SPELL_POISON_ARROW:
         description += 
             "hurls a magical arrow of the most vile and noxious toxin.  "
-            "No living thing is completely immune to it's effects. ";
+            "No living thing is completely immune to its effects. ";
         break;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
@@ -3926,7 +3926,7 @@ void describe_spell(spell_type spelled)
 
     case SPELL_CORPSE_ROT:
         description += "rapidly accelerates the decomposition of any "
-            "corpses lying around the caster, emitting in"
+            "corpses lying around the caster, emitting in the "
             "process a foul miasmic vapour, which eats away "
             "at the life force of any creature it envelops. ";
         break;
@@ -4220,7 +4220,7 @@ void describe_spell(spell_type spelled)
     case SPELL_STICKS_TO_SNAKES:        // FIXME: description sucks
         description += "uses wooden items in the caster's grasp as raw "
             "material for a powerful summoning. Note that highly "
-            "enchanted items, such as wizard's staves, will not be "
+            "enchanted items, such as wizards' staves, will not be "
             "affected. ";
         // "Good examples of sticks include arrows, quarterstaves and clubs.";
         break;
@@ -4292,7 +4292,7 @@ void describe_spell(spell_type spelled)
     case SPELL_WARP_BRAND:
         description += "temporarily binds a localized warp field to the "
             "invoker's weapon. This spell is very dangerous to cast, "
-            "as the field is likely to effect the caster as well. ";
+            "as the field is likely to affect the caster as well. ";
         break;
 
     case SPELL_SILENCE:
@@ -4418,7 +4418,7 @@ void describe_spell(spell_type spelled)
         break;
 
     case SPELL_STONESKIN:
-        description += "hardens the one's skin to a degree determined "
+        description += "hardens one's skin to a degree determined "
             "by one's skill in Earth Magic. This only works on relatively "
             "normal flesh; it will aid neither the undead nor the bodily "
             "transformed.  The effects of this spell are boosted if the "
@@ -4426,7 +4426,7 @@ void describe_spell(spell_type spelled)
         break;
 
     case SPELL_SIMULACRUM:
-        description += "uses a piece of a flesh in hand to create a replica "
+        description += "uses a piece of flesh in hand to create a replica "
                        "of the original being out of ice. This magic is "
                        "unstable so eventually the replica will sublimate "
                        "into a freezing cloud, if it isn't hacked or melted "
@@ -4435,7 +4435,7 @@ void describe_spell(spell_type spelled)
 
     case SPELL_CONJURE_BALL_LIGHTNING:
         description += "allows the conjurer to create ball lightning.  "
-                        "Using the spell is not without risk - ball lighting "
+                        "Using the spell is not without risk - ball lightning "
                         "can be difficult to control. ";
         break;
 
@@ -4984,7 +4984,7 @@ void describe_god( int which_god, bool give_title )
         description = "Zin is an ancient and revered God, dedicated to the establishment of order" EOL
                       "and the destruction of the forces of chaos and night. Valued worshippers " EOL
                       "can gain sustenance in times of need, blessings on their weapons, and a " EOL
-                      "variety of powers useful in the fight against the evil, but must abstain " EOL
+                      "variety of powers useful in the fight against evil, but must abstain " EOL
                       "from the use of necromancy and other forms of unholy magic. Zin appreciates " EOL
                       "long-standing faith as well as sacrifices of valued objects.";
         break;
@@ -5060,7 +5060,7 @@ void describe_god( int which_god, bool give_title )
         description = "Nemelex is a strange and unpredictable trickster God, whose powers can be" EOL
                       "invoked through the magical packs of cards which Nemelex paints in the ichor" EOL
                       "of demons. Followers receive occasional gifts, and should use these gifts as" EOL
-                      "as much as possible. Offerings of any type of item are also appreciated.";
+                      "much as possible. Offerings of any type of item are also appreciated.";
         break;
 
     case GOD_ELYVILON:
