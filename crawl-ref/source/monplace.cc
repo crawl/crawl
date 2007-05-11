@@ -69,6 +69,13 @@ bool monster_habitable_grid(const monsters *m, int actual_grid)
                                    m->paralysed()));
 }
 
+inline static bool mons_airborne(int mcls, int flies, bool paralysed)
+{
+    if (flies == -1)
+        flies = mons_class_flies(mcls);
+    return (paralysed? flies == 2 : flies != 0);
+}
+
 // Can monsters of class monster_class live happily on actual_grid? Use flies
 // == true to pretend the monster can fly.
 //
@@ -76,7 +83,7 @@ bool monster_habitable_grid(const monsters *m, int actual_grid)
 // one check, so we no longer care if a water elemental springs into existence
 // on dry land, because they're supposed to be able to move onto dry land 
 // anyway.
-bool monster_habitable_grid(int monster_class, int actual_grid, bool flies,
+bool monster_habitable_grid(int monster_class, int actual_grid, int flies,
                             bool paralysed)
 {
     const int preferred_habitat = monster_habitat(monster_class);
@@ -84,7 +91,7 @@ bool monster_habitable_grid(int monster_class, int actual_grid, bool flies,
             // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
             // only have to check for the additional valid grids of deep
             // water and lava.
-            || (!paralysed && (flies || mons_class_flies(monster_class))
+            || (mons_airborne(monster_class, flies, paralysed)
                 && (actual_grid == DNGN_LAVA 
                     || actual_grid == DNGN_DEEP_WATER))
 

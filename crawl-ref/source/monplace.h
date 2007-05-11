@@ -94,7 +94,7 @@ void mark_interesting_monst(struct monsters* monster,
 
 bool grid_compatible(int grid_wanted, int actual_grid, bool generation = false);
 bool monster_habitable_grid(int monster_class, int actual_grid, 
-                            bool flies = false, bool paralysed = false);
+                            int flies = -1, bool paralysed = false);
 bool monster_habitable_grid(const monsters *m, int actual_grid);
 bool monster_can_submerge(int monster_class, int grid);
 
