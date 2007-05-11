@@ -612,22 +612,10 @@ bool evoke_wielded( void )
             break;
 
         case MISC_DECK_OF_WONDERS:
-            deck_of_cards(DECK_OF_WONDERS);
-            pract = 1;
-            break;
-
         case MISC_DECK_OF_SUMMONINGS:
-            deck_of_cards(DECK_OF_SUMMONING);
-            pract = 1;
-            break;
-
         case MISC_DECK_OF_TRICKS:
-            deck_of_cards(DECK_OF_TRICKS);
-            pract = 1;
-            break;
-
         case MISC_DECK_OF_POWER:
-            deck_of_cards(DECK_OF_POWER);
+            evoke_deck(wpn);
             pract = 1;
             break;
 

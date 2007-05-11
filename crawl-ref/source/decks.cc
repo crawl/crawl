@@ -32,67 +32,6 @@
 #include "spl-cast.h"
 #include "stuff.h"
 
-enum card_type
-{
-    CARD_BLANK = 0,             //    0
-    CARD_BUTTERFLY,
-    CARD_WRAITH,
-    CARD_EXPERIENCE,
-    CARD_WEALTH,
-    CARD_INTELLIGENCE,          //    5
-    CARD_STRENGTH,
-    CARD_QUICKSILVER,
-    CARD_STUPIDITY,
-    CARD_WEAKNESS,
-    CARD_SLOTH,                 //   10
-    CARD_SHUFFLE,
-    CARD_FREAK,
-    CARD_DEATH,
-    CARD_NORMALITY,
-    CARD_SHADOW,                //   15
-    CARD_GATE,
-    CARD_STATUE,
-    CARD_ACQUISITION,
-    CARD_HASTEN,
-    CARD_DEMON_LESSER,          //   20
-    CARD_DEMON_COMMON,
-    CARD_DEMON_GREATER,
-    CARD_DEMON_SWARM,
-    CARD_YAK,
-    CARD_FIEND,                 //   25
-    CARD_DRAGON,
-    CARD_GOLEM,
-    CARD_THING_FUGLY,
-    CARD_LICH,
-    CARD_HORROR_UNSEEN,         //   30
-    CARD_BLINK,
-    CARD_TELEPORT,
-    CARD_TELEPORT_NOW,
-    CARD_RAGE,
-    CARD_LEVITY,                //   35
-    CARD_VENOM,
-    CARD_XOM,
-    CARD_SLOW,
-    CARD_DECAY,
-    CARD_HEALING,               //   40
-    CARD_HEAL_WOUNDS,
-    CARD_TORMENT,
-    CARD_FOUNTAIN,
-    CARD_ALTAR,
-    CARD_FAMINE,                //   45
-    CARD_FEAST,
-    CARD_WILD_MAGIC,
-    CARD_VIOLENCE,
-    CARD_PROTECTION,
-    CARD_KNOWLEDGE,             //   50
-    CARD_MAZE,
-    CARD_PANDEMONIUM,
-    CARD_IMPRISONMENT,
-    CARD_RULES_FOR_BRIDGE,      //   54
-    NUM_CARDS,                  // must remain last regular member {dlb}
-    CARD_RANDOM = 255           // must remain final member {dlb}
-};
-
 static card_type deck_of_wonders[] = 
 {
     CARD_BLANK,
@@ -211,7 +150,7 @@ static card_type deck_of_punishment[] =
 #define DECK_POWER_SIZE ARRAYSIZE(deck_of_power)
 #define DECK_PUNISHMENT_SIZE ARRAYSIZE(deck_of_punishment)
 
-static const char* card_name(card_type card)
+const char* card_name(card_type card)
 {
     switch (card)
     {
@@ -340,19 +279,48 @@ deck_type subtype_to_decktype(int subtype)
     }
 }
 
-bool deck_triple_draw()
+static bool wielding_deck()
 {
-    if (you.equip[EQ_WEAPON] == -1)
+    if ( you.equip[EQ_WEAPON] == -1 )
+        return false;
+    const item_def& item = you.inv[you.equip[EQ_WEAPON]];
+    return ( item.base_type == OBJ_MISCELLANY &&
+             subtype_to_decktype(item.sub_type) != DECK_OF_PUNISHMENT );
+}
+
+bool deck_peek()
+{
+    if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
         return false;
     }
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+    if ( item.special != 0 )
+    {
+        mpr("You already know what the next card will be.");
+        return false;
+    }
+    const deck_type dtype = subtype_to_decktype(item.sub_type);
+    const card_type chosen = choose_one_card(dtype, false);
+    msg::stream << "You see " << card_name(chosen) << '.' << std::endl;
+    item.special = chosen + 1;
+    you.wield_change = true;
+    return true;
+}
 
-    if ( item.base_type != OBJ_MISCELLANY ||
-         subtype_to_decktype(item.sub_type) == DECK_OF_PUNISHMENT )
+bool deck_triple_draw()
+{
+    if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
+        return false;
+    }
+
+    item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+    if ( item.special != 0 )
+    {
+        mpr("You can't triple draw from a marked deck.");
         return false;
     }
 
@@ -398,52 +366,53 @@ bool deck_triple_draw()
         unwield_item(you.equip[EQ_WEAPON]);
         dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
     }
-
+    you.wield_change = true;
     return true;
+}
+
+void evoke_deck( item_def& deck )
+{
+    const deck_type which_deck = subtype_to_decktype(deck.sub_type);
+    mpr("You draw a card...");
+    if ( deck.special == 0 )
+    {
+        deck_of_cards(which_deck);
+    }
+    else
+    {
+        cards(static_cast<card_type>(deck.special - 1));
+        deck.special = 0;
+        you.wield_change = true;
+    }
+    deck.plus--;
+
+    int brownie_points = 0;
+    if ( deck.plus == 0 )
+    {
+        mpr("The deck of cards disappears in a puff of smoke.");       
+        unwield_item(you.equip[EQ_WEAPON]);            
+        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+
+        // these bonuses happen only when the deck expires {dlb}:
+        brownie_points = (coinflip() ? 2 : 1);
+
+        if (which_deck == DECK_OF_WONDERS)
+            brownie_points += 2;
+        else if (which_deck == DECK_OF_POWER)
+            brownie_points++;
+    }
+
+    // this bonus happens with every use {dlb}:
+    if (which_deck == DECK_OF_WONDERS || one_chance_in(3))
+        brownie_points++;
+
+    did_god_conduct(DID_CARDS, brownie_points);
 }
 
 void deck_of_cards(deck_type which_deck)
 {
-    int brownie_points = 0;     // for passing to did_god_conduct() {dlb}
-
-    mpr("You draw a card...");
-    
-    const card_type chosen = choose_one_card(which_deck, true);
-
-    cards(chosen);
-
-    // Decks of punishment aren't objects in the game,
-    // its just Nemelex's form of punishment -- bwr
-    if (which_deck != DECK_OF_PUNISHMENT)
-    {
-        you.inv[you.equip[EQ_WEAPON]].plus--;
-
-        if (you.inv[you.equip[EQ_WEAPON]].plus == 0)
-        {
-            mpr("The deck of cards disappears in a puff of smoke.");
-
-            unwield_item(you.equip[EQ_WEAPON]);
-
-            dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
-
-            // these bonuses happen only when the deck expires {dlb}:
-            brownie_points = (coinflip()? 2 : 1);
-
-            if (which_deck == DECK_OF_WONDERS)
-                brownie_points += 2;
-            else if (which_deck == DECK_OF_POWER)
-                brownie_points++;
-        }
-
-        // this bonus happens with every use {dlb}:
-        if (which_deck == DECK_OF_WONDERS || one_chance_in(3))
-            brownie_points++;
-
-        did_god_conduct(DID_CARDS, brownie_points);
-    }
-
-    return;
-}                               // end deck_of_cards()
+    cards(choose_one_card(which_deck, true));
+}
 
 static void cards(card_type which_card)
 {

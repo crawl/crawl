@@ -114,6 +114,7 @@ enum ability_type
     ABIL_LUGONU_SUMMON_DEMONS,
     ABIL_LUGONU_ABYSS_ENTER,
     ABIL_NEMELEX_TRIPLE_DRAW,
+    ABIL_NEMELEX_PEEK,
 
     ABIL_CHARM_SNAKE,
     ABIL_TRAN_SERPENT_OF_HELL,
@@ -505,6 +506,67 @@ enum canned_message_type               // canned_msg() - unsigned char
     MSG_SPELL_FIZZLES,
     MSG_HUH,
     MSG_EMPTY_HANDED
+};
+
+enum card_type
+{
+    CARD_BLANK = 0,             //    0
+    CARD_BUTTERFLY,
+    CARD_WRAITH,
+    CARD_EXPERIENCE,
+    CARD_WEALTH,
+    CARD_INTELLIGENCE,          //    5
+    CARD_STRENGTH,
+    CARD_QUICKSILVER,
+    CARD_STUPIDITY,
+    CARD_WEAKNESS,
+    CARD_SLOTH,                 //   10
+    CARD_SHUFFLE,
+    CARD_FREAK,
+    CARD_DEATH,
+    CARD_NORMALITY,
+    CARD_SHADOW,                //   15
+    CARD_GATE,
+    CARD_STATUE,
+    CARD_ACQUISITION,
+    CARD_HASTEN,
+    CARD_DEMON_LESSER,          //   20
+    CARD_DEMON_COMMON,
+    CARD_DEMON_GREATER,
+    CARD_DEMON_SWARM,
+    CARD_YAK,
+    CARD_FIEND,                 //   25
+    CARD_DRAGON,
+    CARD_GOLEM,
+    CARD_THING_FUGLY,
+    CARD_LICH,
+    CARD_HORROR_UNSEEN,         //   30
+    CARD_BLINK,
+    CARD_TELEPORT,
+    CARD_TELEPORT_NOW,
+    CARD_RAGE,
+    CARD_LEVITY,                //   35
+    CARD_VENOM,
+    CARD_XOM,
+    CARD_SLOW,
+    CARD_DECAY,
+    CARD_HEALING,               //   40
+    CARD_HEAL_WOUNDS,
+    CARD_TORMENT,
+    CARD_FOUNTAIN,
+    CARD_ALTAR,
+    CARD_FAMINE,                //   45
+    CARD_FEAST,
+    CARD_WILD_MAGIC,
+    CARD_VIOLENCE,
+    CARD_PROTECTION,
+    CARD_KNOWLEDGE,             //   50
+    CARD_MAZE,
+    CARD_PANDEMONIUM,
+    CARD_IMPRISONMENT,
+    CARD_RULES_FOR_BRIDGE,      //   54
+    NUM_CARDS,                  // must remain last regular member {dlb}
+    CARD_RANDOM = 255           // must remain final member {dlb}
 };
 
 enum char_set_type

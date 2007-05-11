@@ -15,12 +15,14 @@
 
 #include "enum.h"
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use_3 - religion
- * *********************************************************************** */
+#include "externs.h"
+
+const char* card_name(card_type card);
+void evoke_deck(item_def& deck);
 void deck_of_cards(deck_type which_deck);
 deck_type subtype_to_decktype(int subtype);
 bool deck_triple_draw();
+bool deck_peek();
+const char* card_name(card_type card);
 
 #endif

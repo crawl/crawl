@@ -756,12 +756,12 @@ static bool has_warning_inscription(const item_def& item,
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
-    char prompt[ITEMNAME_SIZE + 100];
     if ( has_warning_inscription(item, oper) )
     {
-        snprintf(prompt, sizeof prompt, "Really choose %s?",
-                 item.name(DESC_INVENTORY).c_str());
-        return yesno(prompt, false, 'n');
+        std::string prompt = "Really choose ";
+        prompt += item.name(DESC_INVENTORY);
+        prompt += '?';
+        return yesno(prompt.c_str(), false, 'n');
     }
     else
         return true;

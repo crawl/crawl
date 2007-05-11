@@ -463,12 +463,12 @@ static formatted_string tutorial_message_intro()
 
 static void tutorial_movement_info()
 {
-    std::string text;
-    text =  "To move your character, use the numpad; try Numlock both on and off. "
-            "If your system has no number pad, or if you are familiar with the vi "
-            "keys, movement is also possible with <w>hjklyubn<magenta>. A basic "
-            "command list can be found under <w>?<magenta>, and the most important "
-            "commands will be explained to you as it becomes necessary. ";
+    std::string text =
+        "To move your character, use the numpad; try Numlock both on and off. "
+        "If your system has no number pad, or if you are familiar with the vi "
+        "keys, movement is also possible with <w>hjklyubn<magenta>. A basic "
+        "command list can be found under <w>?<magenta>, and the most "
+        "important commands will be explained to you as it becomes necessary.";
     mesclr();
     print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 }
@@ -615,8 +615,7 @@ void tutorial_death_screen()
 
     mpr( "See you next game!", MSGCH_TUTORIAL);
 
-    for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
-        Options.tutorial_events[i] = 0;
+    Options.tutorial_events.init(false);
 }
 
 // if a character survives until Xp 5, the tutorial is declared finished

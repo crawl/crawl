@@ -127,7 +127,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_TROG_BERSERK, ABIL_TROG_MIGHT, ABIL_NON_ABILITY,
       ABIL_TROG_HASTE_SELF, ABIL_NON_ABILITY },
     // Nemelex
-    { ABIL_NON_ABILITY, ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NON_ABILITY,
+    { ABIL_NEMELEX_PEEK, ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
@@ -271,6 +271,7 @@ static const ability_def Ability_List[] =
 
     // Nemelex
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
+    { ABIL_NEMELEX_PEEK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
@@ -1554,6 +1555,11 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         if ( !deck_triple_draw() )
+            return false;
+        break;
+
+    case ABIL_NEMELEX_PEEK:
+        if ( !deck_peek() )
             return false;
         break;
 
