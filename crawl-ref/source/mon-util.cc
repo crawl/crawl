@@ -308,7 +308,7 @@ bool mons_is_stationary(const monsters *mons)
 
 bool mons_is_icy(const monsters *mons)
 {
-    return (mons->is_icy());
+    return (mons_is_icy(mons->type));
 }
 
 bool mons_is_icy(int mtype)

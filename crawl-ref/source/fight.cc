@@ -1488,10 +1488,11 @@ bool melee_attack::distortion_affects_defender()
 
     if (one_chance_in(3))
     {
-        special_damage_message =
-            make_stringf(
-                "Space warps horribly around %s!",
-                def_name(DESC_NOCAP_THE).c_str());
+        if (defender_visible)
+            special_damage_message =
+                make_stringf(
+                    "Space warps horribly around %s!",
+                    def_name(DESC_NOCAP_THE).c_str());
 
         special_damage += 3 + random2avg(24, 2);
         return (false);
@@ -2628,7 +2629,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "touch",
         "engulf",
         "claw",
-        "tail slap",
+        "tail-slap",
         "butt"
     };
 
