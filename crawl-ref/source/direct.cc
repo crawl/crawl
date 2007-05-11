@@ -654,8 +654,7 @@ void direction(struct dist& moves, targeting_type restricts,
                  !yesno("Really target yourself?"))
             {
                 mesclr();
-                mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
-                     target_mode_help_text(restricts));
+                show_prompt = true;
             }
             else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
