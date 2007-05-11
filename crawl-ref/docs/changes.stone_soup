@@ -1,3 +1,16 @@
+Stone Soup 0.2.5 (20070512)
+---------------------------
+* Fixed broken travel cache.
+* Applied Debian patch (Guus Sliepen).
+* Fixed paralysis cancelling monster levitation.
+* Combat grammar and out-of-sight combat message fixes.
+* Small chance of sealed entry vaults eliminated.
+* Moths of wrath regain rage attack.
+* Fixed pulsating lump mutation attack.
+* Waypoints can be deleted.
+* Acquirement handles books of minor magic and conjuration correctly.
+* Orcs and goblins may get blowguns.
+
 Stone Soup 0.2.4 (20070408)
 ---------------------------
 * Fixed another instance of monsters inheriting enchantments from other 
