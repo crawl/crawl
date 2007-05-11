@@ -1899,21 +1899,8 @@ bool i_feel_safe(bool announce)
         if (mons.size() == 1)
         {
             const monsters *m = mons[0];
-            switch (random2(3))
-            {
-            case 0:
-                mprf(MSGCH_WARN, "Not with %s in view!",
-                     ptr_monam(m, DESC_NOCAP_A));
-                break;
-            case 1:
-                mprf(MSGCH_WARN, "There's %s right there!",
-                     ptr_monam(m, DESC_NOCAP_A));
-                break;
-            case 2:
-                mprf(MSGCH_WARN, "Wait, there's %s in sight!",
-                     ptr_monam(m, DESC_NOCAP_A));
-                break;
-            }
+            mprf(MSGCH_WARN, "Not with %s in view!",
+                 ptr_monam(m, DESC_NOCAP_A));
         }
         else if (mons.size() > 1)
         {

@@ -178,6 +178,14 @@ menu_colour = white:Reached XP level
 # Message colours
 message_colour = lightcyan:LOW MAGIC WARNING
 
+# These lines will suppress extra feedback messages from travel/shift-running.
+
+# message_colour = mute:warning:comes into view
+# message_colour = mute:You start (searching|resting)
+# message_colour = mute:Done searching
+# message_colour = mute:(HP|Magic) restored
+# message_colour = mute:warning:Not with.*(in view|monsters around)
+
 ##### 4-j	Firing Commands #######################
 #
 # fire_items_start = a
