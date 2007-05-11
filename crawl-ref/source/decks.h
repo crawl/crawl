@@ -23,6 +23,7 @@ void deck_of_cards(deck_type which_deck);
 deck_type subtype_to_decktype(int subtype);
 bool deck_triple_draw();
 bool deck_peek();
+bool deck_stack();
 const char* card_name(card_type card);
 
 #endif

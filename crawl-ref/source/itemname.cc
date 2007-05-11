@@ -1332,12 +1332,11 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         else
         {
             buff << misc_type_name(item_typ, know_type);
-            if ( subtype_to_decktype(item_typ) != DECK_OF_PUNISHMENT &&
-                 this->special != 0 )
+            if ( is_deck(*this) && item_plus2 != 0 )
             {
                 // an inscribed deck!
                 buff << " {"
-                     << card_name(static_cast<card_type>(this->special - 1))
+                     << card_name(static_cast<card_type>(item_plus2 - 1))
                      << "}";
             }
         }

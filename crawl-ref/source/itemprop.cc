@@ -2133,6 +2133,15 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
             && !is_range_weapon(weapon);
 }
 
+bool is_deck(const item_def &item)
+{
+    return item.base_type == OBJ_MISCELLANY
+        && (item.sub_type == MISC_DECK_OF_TRICKS
+            || item.sub_type == MISC_DECK_OF_SUMMONINGS
+            || item.sub_type == MISC_DECK_OF_POWER
+            || item.sub_type == MISC_DECK_OF_WONDERS);
+}
+
 std::string item_base_name(const item_def &item)
 {
     switch ( item.base_type )

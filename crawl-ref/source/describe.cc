@@ -35,6 +35,7 @@
 
 #include "abl-show.h"
 #include "debug.h"
+#include "decks.h"
 #include "fight.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -3054,6 +3055,20 @@ static std::string describe_misc_item( const item_def &item )
     }
 
     description += "$";
+
+    if ( is_deck(item) && item.plus2 != 0 )
+    {
+        description += "$Next card(s): ";
+        description += card_name(static_cast<card_type>(item.plus2 - 1));
+        long spec = item.special;
+        while ( spec )
+        {
+            description += ", ";
+            description += card_name(static_cast<card_type>((spec & 0xFF)-1));
+            spec >>= 8;
+        }
+        description += "$";
+    }
 
     return (description);
 }

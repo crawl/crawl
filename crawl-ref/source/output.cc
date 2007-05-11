@@ -350,7 +350,8 @@ void print_stats(void)
                 textcolor(prefcol);
 
             cprintf("%s",
-                    wpn.name(DESC_INVENTORY, Options.terse_hand).c_str());
+                    wpn.name(DESC_INVENTORY,
+                             Options.terse_hand).substr(0,38).c_str());
             textcolor(LIGHTGREY);
         }
         else

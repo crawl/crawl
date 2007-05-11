@@ -20,6 +20,7 @@
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -171,33 +172,33 @@ const char* card_name(card_type card)
     case CARD_NORMALITY: return "Normality";
     case CARD_SHADOW: return "the Shadow";
     case CARD_GATE: return "the Gate";
-    case CARD_STATUE: return "the Crystal Statue";
+    case CARD_STATUE: return "a statue";
     case CARD_ACQUISITION: return "Acquisition";
     case CARD_HASTEN: return "Haste";
-    case CARD_DEMON_LESSER: return "a little demon";
+    case CARD_DEMON_LESSER: return "a demon";
     case CARD_DEMON_COMMON: return "a demon";
-    case CARD_DEMON_GREATER: return "a huge demon";
-    case CARD_DEMON_SWARM: return "a swarm of little demons";
-    case CARD_YAK: return "a huge, shaggy yak";
-    case CARD_FIEND: return "a huge, scaly devil";
-    case CARD_DRAGON: return "a huge, scaly dragon";
+    case CARD_DEMON_GREATER: return "a demon";
+    case CARD_DEMON_SWARM: return "a demon";
+    case CARD_YAK: return "a yak";
+    case CARD_FIEND: return "a devil";
+    case CARD_DRAGON: return "a dragon";
     case CARD_GOLEM: return "a statue";
     case CARD_THING_FUGLY: return "a very ugly thing";
-    case CARD_LICH: return "a very irritated-looking skeletal thing";
+    case CARD_LICH: return "a lich";
     case CARD_HORROR_UNSEEN:
-        return player_see_invis() ? "a hideous abomination" : "a blank card";
+        return player_see_invis() ? "an abomination" : "a blank card";
     case CARD_BLINK: return "Blink";
-    case CARD_TELEPORT: return "the Portal of Delayed Transposition";
-    case CARD_TELEPORT_NOW: return "the Portal of Instantaneous Transposition";
+    case CARD_TELEPORT: return "the Portal";
+    case CARD_TELEPORT_NOW: return "the Portal";
     case CARD_RAGE: return "Rage";
     case CARD_LEVITY: return "Levity";
     case CARD_VENOM: return "Venom";
     case CARD_XOM: return "the card of Xom";
     case CARD_SLOW: return "Slowness";
     case CARD_DECAY: return "Decay";
-    case CARD_HEALING: return "the Elixir of Health";
-    case CARD_HEAL_WOUNDS: return "the Symbol of Immediate Regeneration";
-    case CARD_TORMENT: return "the Symbol of Torment";
+    case CARD_HEALING: return "Health";
+    case CARD_HEAL_WOUNDS: return "Health";
+    case CARD_TORMENT: return "Torment";
     case CARD_FOUNTAIN: return "the Fountain";
     case CARD_ALTAR: return "the Altar";
     case CARD_FAMINE: return "Famine";
@@ -209,7 +210,7 @@ const char* card_name(card_type card)
     case CARD_MAZE: return "the Maze";
     case CARD_PANDEMONIUM: return "Pandemonium";
     case CARD_IMPRISONMENT: return "the Prison";
-    case CARD_RULES_FOR_BRIDGE: return "the rules for contract bridge";
+    case CARD_RULES_FOR_BRIDGE: return "the rules";
     case NUM_CARDS: case CARD_RANDOM: return "a buggy card";
     }
     return "a very buggy card";
@@ -283,9 +284,7 @@ static bool wielding_deck()
 {
     if ( you.equip[EQ_WEAPON] == -1 )
         return false;
-    const item_def& item = you.inv[you.equip[EQ_WEAPON]];
-    return ( item.base_type == OBJ_MISCELLANY &&
-             subtype_to_decktype(item.sub_type) != DECK_OF_PUNISHMENT );
+    return is_deck(you.inv[you.equip[EQ_WEAPON]]);
 }
 
 bool deck_peek()
@@ -296,7 +295,7 @@ bool deck_peek()
         return false;
     }
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
-    if ( item.special != 0 )
+    if ( item.plus2 != 0 )
     {
         mpr("You already know what the next card will be.");
         return false;
@@ -304,7 +303,67 @@ bool deck_peek()
     const deck_type dtype = subtype_to_decktype(item.sub_type);
     const card_type chosen = choose_one_card(dtype, false);
     msg::stream << "You see " << card_name(chosen) << '.' << std::endl;
-    item.special = chosen + 1;
+    item.plus2 = chosen + 1;
+    you.wield_change = true;
+    return true;
+}
+
+bool deck_stack()
+{
+    if ( !wielding_deck() )
+    {
+        mpr("You aren't wielding a deck!");
+        return false;
+    }
+    item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+    if ( item.plus2 != 0 )
+    {
+        mpr("You can't stack a marked deck.");
+        return false;
+    }
+    const int num_to_stack = (item.plus < 5 ? item.plus : 5);
+    const deck_type dtype = subtype_to_decktype(item.sub_type);
+
+    std::vector<card_type> draws;
+    for ( int i = 0; i < num_to_stack; ++i )
+        draws.push_back(choose_one_card(dtype, false));
+
+    if ( draws.size() == 1 )
+        mpr("There's only one card left!");
+    else
+        mpr("Order the cards (bottom to top)...", MSGCH_PROMPT);
+
+    item.special = 0;
+
+    while ( draws.size() > 1 )
+    {
+        for ( unsigned int i = 0; i < draws.size(); ++i )
+        {
+            msg::stream << (static_cast<char>(i + 'a')) << " - "
+                        << card_name(draws[i]) << std::endl;
+        }
+
+        int selected = -1;
+        while ( 1 )
+        {
+            const int keyin = tolower(get_ch());
+            if (keyin >= 'a' && keyin < 'a' + static_cast<int>(draws.size()))
+            {
+                selected = keyin - 'a';
+                break;
+            }
+            else
+            {
+                canned_msg(MSG_HUH);
+            }
+        }
+        item.special <<= 8;
+        item.special += draws[selected] + 1;
+        draws.erase(draws.begin() + selected);
+        mpr("Next card?", MSGCH_PROMPT);
+    }
+    item.plus2 = draws[0] + 1;
+    item.plus = num_to_stack;   // no more deck after the stack
     you.wield_change = true;
     return true;
 }
@@ -318,7 +377,7 @@ bool deck_triple_draw()
     }
 
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
-    if ( item.special != 0 )
+    if ( item.plus2 != 0 )
     {
         mpr("You can't triple draw from a marked deck.");
         return false;
@@ -345,9 +404,7 @@ bool deck_triple_draw()
     int selected = -1;
     while ( 1 )
     {
-        int keyin = get_ch();
-        if ( isalpha(keyin) )
-            keyin = tolower(keyin);
+        const int keyin = tolower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + num_to_draw)
         {
             selected = keyin - 'a';
@@ -370,18 +427,35 @@ bool deck_triple_draw()
     return true;
 }
 
+// In general, if the next cards in a deck are known, they will
+// be stored in plus2 (the next card) and special (up to 4 cards
+// after that, bitpacked.)
+// Hidden assumption: no more than 126 cards, otherwise the 5th
+// card could clobber the sign bit in special.
 void evoke_deck( item_def& deck )
 {
     const deck_type which_deck = subtype_to_decktype(deck.sub_type);
     mpr("You draw a card...");
-    if ( deck.special == 0 )
+    if ( deck.plus2 == 0 )
     {
         deck_of_cards(which_deck);
     }
     else
     {
-        cards(static_cast<card_type>(deck.special - 1));
-        deck.special = 0;
+        // draw the marked card
+        cards(static_cast<card_type>(deck.plus2 - 1));
+
+        // If there are more marked cards, shift them up
+        if ( deck.special )
+        {
+            const short next_card = (deck.special & 0xFF);
+            deck.special >>= 8;
+            deck.plus2 = next_card;
+        }
+        else
+        {
+            deck.plus2 = 0;
+        }
         you.wield_change = true;
     }
     deck.plus--;
@@ -881,7 +955,7 @@ static void cards(card_type which_card)
             mprf("A beautiful fountain of clear blue water grows from the "
                  "floor %s!",
                  (you.species == SP_NAGA || you.species == SP_CENTAUR) ?
-                 "before you!" : "at your feet!" );
+                 "before you" : "at your feet" );
             grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
         }
         else

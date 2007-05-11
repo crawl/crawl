@@ -148,6 +148,8 @@ bool is_shield(const item_def &item);
 bool is_shield_incompatible(const item_def &weapon, 
                             const item_def *shield = NULL);
 
+bool is_deck(const item_def &item);
+
 // Only works for armour/weapons/missiles
 std::string item_base_name(const item_def &item);
 const char* weapon_base_name(unsigned char subtype);
