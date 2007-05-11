@@ -259,7 +259,8 @@ static const char *target_mode_help_text(int mode)
     switch (mode)
     {
     case DIR_NONE:
-        return "? - help, Shift-Dir - shoot in a straight line";
+        return Options.target_unshifted_dirs? "? - help" :
+            "? - help, Shift-Dir - shoot in a straight line";
     case DIR_TARGET:
         return "? - help, Dir - move target cursor";
     default:
@@ -333,14 +334,18 @@ void direction(struct dist& moves, targeting_type restricts,
         }
     }
 
-    // Prompts might get scrolled off if you have too few lines available.
-    // We'll live with that.
-    if ( !just_looking )
-        mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
-             target_mode_help_text(restricts));
-
+    bool show_prompt = true;
     while (1)
     {
+        // Prompts might get scrolled off if you have too few lines available.
+        // We'll live with that.
+        if ( !just_looking && show_prompt )
+        {
+            mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
+                 target_mode_help_text(restricts));
+            show_prompt = false;
+        }
+
         // Reinit...this needs to be done every loop iteration
         // because moves is more persistent than loop_done.
         moves.isValid       = false;
@@ -611,6 +616,7 @@ void direction(struct dist& moves, targeting_type restricts,
             force_redraw = true;
             redraw_screen();
             mesclr(true);
+            show_prompt = true;
             break;
             
         default:
@@ -635,8 +641,7 @@ void direction(struct dist& moves, targeting_type restricts,
                  !yesno("Really target yourself?"))
             {
                 mesclr();
-                mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
-                     target_mode_help_text(restricts));
+                show_prompt = true;
             }
             else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
