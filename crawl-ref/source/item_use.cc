@@ -2137,7 +2137,11 @@ static int prompt_ring_to_remove(int new_ring)
     if (c == ESCAPE || c == ' ')
         return (-1);
 
-    int eqslot = c == lslot? EQ_LEFT_RING : EQ_RIGHT_RING;
+    const int eqslot = c == lslot? EQ_LEFT_RING : EQ_RIGHT_RING;
+
+    if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
+        return -1;
+
     return (you.equip[eqslot]);
 }
 
@@ -2152,7 +2156,10 @@ static bool swap_rings(int ring_slot)
     // Ask the player which existing ring is persona non grata.
     int unwanted = prompt_ring_to_remove(ring_slot);
     if (unwanted == -1)
+    {
+        canned_msg(MSG_OK);
         return (false);
+    }
 
     if (!remove_ring(unwanted, false))
         return (false);
@@ -2184,7 +2191,7 @@ bool puton_item(int item_slot, bool prompt_finger)
         return (false);
     }
 
-    bool is_amulet = jewellery_is_amulet( you.inv[item_slot] );
+    const bool is_amulet = jewellery_is_amulet( you.inv[item_slot] );
 
     if (!is_amulet)     // ie it's a ring
     {
@@ -2201,8 +2208,10 @@ bool puton_item(int item_slot, bool prompt_finger)
     }
     else if (you.equip[EQ_AMULET] != -1)
     {
-        if (!remove_ring( you.equip[EQ_AMULET], true ))
-            return (false);
+        if (!check_warning_inscriptions(you.inv[you.equip[EQ_AMULET]],
+                                        OPER_REMOVE) ||
+            !remove_ring( you.equip[EQ_AMULET], true ))
+            return false;
 
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
@@ -2367,7 +2376,7 @@ void jewellery_remove_effects(item_def &item)
 
 bool remove_ring(int slot, bool announce)
 {
-    int hand_used = 10;
+    equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
 
     if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1
@@ -2394,24 +2403,24 @@ bool remove_ring(int slot, bool announce)
     if (you.equip[EQ_LEFT_RING] != -1 && you.equip[EQ_RIGHT_RING] == -1
         && you.equip[EQ_AMULET] == -1)
     {
-        hand_used = 0;
+        hand_used = EQ_LEFT_RING;
     }
 
     if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] != -1
         && you.equip[EQ_AMULET] == -1)
     {
-        hand_used = 1;
+        hand_used = EQ_RIGHT_RING;
     }
 
     if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1
         && you.equip[EQ_AMULET] != -1)
     {
-        hand_used = 2;
+        hand_used = EQ_AMULET;
     }
 
-    if (hand_used == 10)
+    if (hand_used == EQ_NONE)
     {
-        int equipn = 
+        const int equipn = 
             slot == -1? prompt_invent_item( "Remove which piece of jewellery?",
                                             MT_INVSELECT,
                                             OBJ_JEWELLERY, true, true, true,
@@ -2431,11 +2440,11 @@ bool remove_ring(int slot, bool announce)
         }
 
         if (you.equip[EQ_LEFT_RING] == equipn)
-            hand_used = 0;
+            hand_used = EQ_LEFT_RING;
         else if (you.equip[EQ_RIGHT_RING] == equipn)
-            hand_used = 1;
+            hand_used = EQ_RIGHT_RING;
         else if (you.equip[EQ_AMULET] == equipn)
-            hand_used = 2;
+            hand_used = EQ_AMULET;
         else
         {
             mpr("You aren't wearing that.");
@@ -2445,37 +2454,36 @@ bool remove_ring(int slot, bool announce)
 
     if (you.equip[EQ_GLOVES] != -1 
         && item_cursed( you.inv[you.equip[EQ_GLOVES]] )
-        && (hand_used == 0 || hand_used == 1))
+        && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
     }
 
-    if (you.equip[hand_used + EQ_LEFT_RING] == -1)
+    if (you.equip[hand_used] == -1)
     {
         mpr("I don't think you really meant that.");
         return (false);
     }
 
-    if (item_cursed( you.inv[you.equip[hand_used + EQ_LEFT_RING]] ))
+    if (item_cursed( you.inv[you.equip[hand_used]] ))
     {
         if (announce)
             mprf("%s is stuck to you!",
-                 you.inv[you.equip[hand_used + EQ_LEFT_RING]].name(DESC_CAP_YOUR).c_str());
+                 you.inv[you.equip[hand_used]].name(DESC_CAP_YOUR).c_str());
         else
             mpr("It's stuck to you!");
 
-        set_ident_flags( you.inv[you.equip[hand_used + EQ_LEFT_RING]], 
-                         ISFLAG_KNOW_CURSE );
+        set_ident_flags( you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE );
         return (false);
     }
 
-    ring_wear_2 = you.equip[hand_used + EQ_LEFT_RING];
-    you.equip[hand_used + EQ_LEFT_RING] = -1;
+    ring_wear_2 = you.equip[hand_used];
+    you.equip[hand_used] = -1;
 
     jewellery_remove_effects(you.inv[ring_wear_2]);
 
-    you.time_taken = you.time_taken * 5 / 10;
+    you.time_taken /= 2;
     you.turn_is_over = true;
 
     return (true);

@@ -1301,17 +1301,17 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         }
         else
         {
-            if (item_typ < AMU_RAGE) // rings
-            {
-                buff << ring_secondary_string(this->special / 13)
-                     << ring_primary_string(this->special % 13)
-                     << " ring";
-            }
-            else                    // amulets
+            if ( jewellery_is_amulet(*this) )
             {
                 buff << amulet_secondary_string(this->special / 13)
                      << amulet_primary_string(this->special % 13)
                      << " amulet";
+            }
+            else                // i.e., an amulet
+            {
+                buff << ring_secondary_string(this->special / 13)
+                     << ring_primary_string(this->special % 13)
+                     << " ring";
             }
         }
         break;
