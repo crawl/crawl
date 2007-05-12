@@ -1087,7 +1087,6 @@ static bool do_ability(const ability_def& abil)
         else
         {
             cast_fly( you.experience_level * 2 );
-            // you.attribute[ATTR_EXPENSIVE_FLIGHT] = 1;  // unused
         }
         break;
 

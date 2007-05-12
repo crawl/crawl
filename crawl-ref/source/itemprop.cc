@@ -2062,10 +2062,6 @@ size_type item_size( const item_def &item )
         break;
 
     case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_PORTABLE_ALTAR_OF_NEMELEX)
-        {
-            size = SIZE_SMALL;
-        }
         break;
 
     case OBJ_CORPSES:

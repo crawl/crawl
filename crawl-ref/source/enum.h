@@ -176,13 +176,6 @@ enum actor_type
     ACT_MONSTER
 };
 
-enum ammunition_description_type
-{
-    DAMMO_ORCISH = 3,                  //    3
-    DAMMO_ELVEN,
-    DAMMO_DWARVEN                      //    5
-};
-
 // Various ways to get the acquirement effect.
 enum acquirement_agent_type
 {
@@ -241,18 +234,6 @@ enum armour_type
     NUM_ARMOURS
 };
 
-// these are for the old system (still used for reading old files)
-enum armour_description_type
-{
-    DARM_PLAIN,                 // added for the heck of it, 15 Apr 2000 {dlb}
-    DARM_EMBROIDERED_SHINY = 1, // which it is dependent upon armour subtype {dlb}
-    DARM_RUNED,
-    DARM_GLOWING,
-    DARM_ELVEN,
-    DARM_DWARVEN,                      //    5
-    DARM_ORCISH
-};
-
 enum armour_property_type
 {
     PARM_AC,                           //    0
@@ -262,26 +243,12 @@ enum armour_property_type
 enum attribute_type
 {
     ATTR_DIVINE_LIGHTNING_PROTECTION,  //    0
-    // ATTR_SPEC_AIR,                  // don't use this!
-    // ATTR_SPEC_EARTH,
-    ATTR_CONTROL_TELEPORT = 3,         // obsolete
-    ATTR_WALK_SLOWLY,
-    ATTR_TRANSFORMATION,               //    5
+    ATTR_TRANSFORMATION,
     ATTR_CARD_COUNTDOWN,
-    ATTR_CARD_TABLE,
     ATTR_NUM_DEMONIC_POWERS,
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
-    ATTR_EXPENSIVE_FLIGHT,      //jmf: flag for "manual flight" (ie wings)
-    ATTR_DEMONIC_SCALES,        //jmf: remember which kind of scales to improve
-    ATTR_WALLS,
-    ATTR_LAST_WALLS,
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
-    ATTR_DEMONIC_POWER_1,
-    ATTR_DEMONIC_POWER_2,
-    ATTR_DEMONIC_POWER_3,
-    ATTR_DEMONIC_POWER_4,
-    ATTR_DEMONIC_POWER_5,       // 19
     NUM_ATTRIBUTES = 30         // must be at least 30
 };
 
@@ -1824,7 +1791,6 @@ enum misc_item_type
     MISC_RUNE_OF_ZOT,
     MISC_DECK_OF_TRICKS,               //   15
     MISC_DECK_OF_POWER,
-    MISC_PORTABLE_ALTAR_OF_NEMELEX,
     NUM_MISCELLANY // mv: used for random generation
 };
 
@@ -3505,13 +3471,6 @@ enum stat_type
   NUM_STATS, // added for increase_stats() {dlb}
   STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
   STAT_RANDOM = 255 // leave at 255, added for increase_stats() handling {dlb}
-};
-
-enum statue_type
-{
-    STATUE_SILVER,
-    STATUE_ORANGE_CRYSTAL,
-    NUM_STATUE_TYPES
 };
 
 enum status_redraw_flag_type

@@ -831,7 +831,6 @@ static void tag_construct_you(struct tagHeader &th)
 
     marshallShort(th, you.magic_contamination);
     marshallShort(th, you.backlight);
-    marshallString(th, you.last_altar_inscription.c_str(), 80);
 }
 
 static void tag_construct_you_items(struct tagHeader &th)
@@ -1134,7 +1133,6 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
 
     you.magic_contamination = unmarshallShort(th);
     you.backlight = unmarshallShort(th);
-    you.last_altar_inscription = unmarshallString(th, 80);
 }
 
 static void tag_read_you_items(struct tagHeader &th, char minorVersion)

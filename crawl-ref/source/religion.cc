@@ -413,34 +413,22 @@ static void do_god_gift()
 
         case GOD_NEMELEX_XOBEH:
             if (random2(200) <= you.piety
-                && (!you.attribute[ATTR_CARD_TABLE] || one_chance_in(3))
+                && one_chance_in(3)
                 && !you.attribute[ATTR_CARD_COUNTDOWN]
                 && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
             {
                 int thing_created = NON_ITEM;
                 unsigned char gift_type = MISC_DECK_OF_TRICKS;
 
-                if (!you.attribute[ATTR_CARD_TABLE])
-                {
-                    thing_created = items( 1, OBJ_MISCELLANY,
-                                           MISC_PORTABLE_ALTAR_OF_NEMELEX, 
-                                           true, 1, 250 );
-
-                    if (thing_created != NON_ITEM)
-                        you.attribute[ATTR_CARD_TABLE] = 1;
-                }
-                else
-                {
-                    if (random2(200) <= you.piety && one_chance_in(4))
-                        gift_type = MISC_DECK_OF_SUMMONINGS;
-                    if (random2(200) <= you.piety && coinflip())
-                        gift_type = MISC_DECK_OF_WONDERS;
-                    if (random2(200) <= you.piety && one_chance_in(4))
-                        gift_type = MISC_DECK_OF_POWER;
-
-                    thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
-                                           true, 1, 250 );
-                }
+                if (random2(200) <= you.piety && one_chance_in(4))
+                    gift_type = MISC_DECK_OF_SUMMONINGS;
+                if (random2(200) <= you.piety && coinflip())
+                    gift_type = MISC_DECK_OF_WONDERS;
+                if (random2(200) <= you.piety && one_chance_in(4))
+                    gift_type = MISC_DECK_OF_POWER;
+                
+                thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
+                                       true, 1, 250 );
 
                 if (thing_created != NON_ITEM)
                 {
@@ -696,6 +684,10 @@ void pray()
     }
 
     mprf(MSGCH_PRAY, "You offer a prayer to %s.", god_name(you.religion));
+
+    // Nemelexites can offer everywhere
+    if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD )
+        offer_items();
 
     you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
                                             + (random2(you.piety) / 20);

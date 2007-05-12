@@ -2990,12 +2990,6 @@ static std::string describe_misc_item( const item_def &item )
         case MISC_DECK_OF_POWER:
             description += "A deck of powerful magical cards. ";
             break;
-        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
-            description +=
-                "An altar to Nemelex Xobeh, built for easy assembly and "
-                "disassembly.  Evoke it to place it on a clear patch of floor, "
-                "then pick it up again when you've finished. ";
-            break;
         default:
             DEBUGSTR("Unknown misc item (2)");
         }
@@ -3042,12 +3036,6 @@ static std::string describe_misc_item( const item_def &item )
             break;
         case MISC_DISC_OF_STORMS:
             description += "A grey disc. ";
-            break;
-        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
-            description +=
-                "An altar to Nemelex Xobeh, built for easy assembly and "
-                "disassembly.  Evoke it to place on a clear patch of floor, "
-                "then pick it up again when you've finished. ";
             break;
         default:
             DEBUGSTR("Unknown misc item");

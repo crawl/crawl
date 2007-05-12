@@ -639,26 +639,6 @@ bool evoke_wielded( void )
                 pract = (coinflip() ? 2 : 1);
             break;
 
-        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
-            if (player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
-            {
-                mpr( "Don't you think this level already has more than "
-                     "enough altars?" );
-            }
-            else if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
-                mpr("You need a clear area to place this item.");
-            else
-            {
-                mpr("You unfold the altar and place it on the floor.");
-                you.last_altar_inscription =
-                    you.inv[you.equip[EQ_WEAPON]].inscription;
-                grd[you.x_pos][you.y_pos] = DNGN_ALTAR_NEMELEX_XOBEH;
-                dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
-                seen_notable_thing(
-                    DNGN_ALTAR_NEMELEX_XOBEH, you.x_pos, you.y_pos);
-            }
-            break;
-
         default:
             did_work = false;
             break;

@@ -699,8 +699,6 @@ static const char* misc_type_name(int type, bool known)
         case MISC_STONE_OF_EARTH_ELEMENTALS:
             return "stone of earth elementals";
         case MISC_BOTTLED_EFREET: return "bottled efreet";
-        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
-            return "portable altar of Nemelex";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -730,8 +728,6 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DISC_OF_STORMS: return "grey disc";
         case MISC_STONE_OF_EARTH_ELEMENTALS: return "nondescript stone";
         case MISC_BOTTLED_EFREET: return "sealed bronze flask";
-        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
-            return "portable altar of Nemelex";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:

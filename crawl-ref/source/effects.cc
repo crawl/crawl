@@ -1115,7 +1115,6 @@ bool acquirement(object_class_type force_class, int agent)
                     type_wanted = random2(NUM_MISCELLANY);
                 while (type_wanted == MISC_HORN_OF_GERYON
                     || type_wanted == MISC_RUNE_OF_ZOT
-                    || type_wanted == MISC_PORTABLE_ALTAR_OF_NEMELEX
                     || type_wanted == MISC_CRYSTAL_BALL_OF_FIXATION
                     || type_wanted == MISC_EMPTY_EBONY_CASKET);
                 break;

@@ -1048,11 +1048,7 @@ bool origin_describable(const item_def &item)
             && (!is_stackable_item(item) || is_rune(item))
             && item.quantity == 1
             && item.base_type != OBJ_CORPSES
-            && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK)
-            // Portable altars cannot be tracked meaningfully with Crawl's
-            // current handling for portable altars.
-            && (item.base_type != OBJ_MISCELLANY || 
-                    item.sub_type != MISC_PORTABLE_ALTAR_OF_NEMELEX));
+            && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK));
 }
 
 std::string article_it(const item_def &item)
@@ -1187,7 +1183,6 @@ bool pickup_single_item(int link, int qty)
 
 void pickup()
 {
-    int m = 0;
     int keyin = 'x';
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
@@ -1201,51 +1196,6 @@ void pickup()
     {
         mpr("You can't reach the floor from up here.");
         return;
-    }
-
-    // Fortunately, the player is prevented from testing their
-    // portable altar in the Ecumenical Temple. -- bwr
-    if (grd[you.x_pos][you.y_pos] == DNGN_ALTAR_NEMELEX_XOBEH
-        && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
-    {
-        if (inv_count() >= ENDOFPACK)
-        {
-            mpr("There is a portable altar here, "
-                "but you can't carry anything else.");
-            return;
-        }
-
-        if (yesno("There is a portable altar here. Pick it up?"))
-        {
-            for (m = 0; m < ENDOFPACK; m++)
-            {
-                if (!is_valid_item( you.inv[m] ))
-                {
-                    item_def& item = you.inv[m];
-                    item.base_type = OBJ_MISCELLANY;
-                    item.sub_type = MISC_PORTABLE_ALTAR_OF_NEMELEX;
-                    item.plus = 0;
-                    item.plus2 = 0;
-                    item.special = 0;
-                    item.colour = LIGHTMAGENTA;
-                    item.quantity = 1;
-                    item.inscription = you.last_altar_inscription;
-                    set_ident_flags( item, ISFLAG_IDENT_MASK );
-
-                    item.x = -1;
-                    item.y = -1;
-                    item.link = m;
-
-                    burden_change();
-
-                    mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
-                    break;
-                }
-            }
-
-            grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
-            unnotice_altar();
-        }
     }
 
     int o = igrd[you.x_pos][you.y_pos];

@@ -2785,7 +2785,6 @@ int items( int allow_uniques,       // not just true-false,
             while //mv: never generated
                ((mitm[p].sub_type == MISC_RUNE_OF_ZOT)
                 || (mitm[p].sub_type == MISC_HORN_OF_GERYON)
-                || (mitm[p].sub_type == MISC_PORTABLE_ALTAR_OF_NEMELEX)
                 // mv: others are possible but less often
                 // btw. chances of generating decks are almost the same as
                 // before, other chances are now distributed more steadily
