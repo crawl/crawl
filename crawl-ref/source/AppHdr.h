@@ -330,10 +330,6 @@
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 
-// bwr: allow player to destroy items in inventory (but not equipped items)
-// See comment at items.cc::cmd_destroy_item() for details/issues.
-// #define ALLOW_DESTROY_ITEM_COMMAND
-
 // bwr: set this to non-zero if you want to know the pluses, "runed" status 
 // of the monster's weapons in the hiscore file.
 // #define HISCORE_WEAPON_DETAIL   1

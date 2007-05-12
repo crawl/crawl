@@ -1352,12 +1352,6 @@ void process_command( command_type cmd )
         check_item_knowledge();
         break;
 
-#ifdef ALLOW_DESTROY_ITEM_COMMAND
-    case CMD_DESTROY_ITEM:
-        cmd_destroy_item();
-        break;
-#endif
-
     case CMD_REPLAY_MESSAGES:
         replay_messages();
         redraw_screen();
