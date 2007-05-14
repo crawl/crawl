@@ -2059,7 +2059,15 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
     {
         gotoxy(1, 1);
         textcolor(WHITE);
-        cprintf("Level %s", level_description_string().c_str());
+        cprintf("%-*s",
+                get_number_of_cols() - 1,
+                ("Level " + level_description_string()).c_str());
+
+        const formatted_string help =
+            formatted_string::parse_string("(Press <w>?</w> for help)");
+        textcolor(LIGHTGREY);
+        gotoxy(get_number_of_cols() - std::string(help).length() + 1, 1);
+        help.display();
     }
 
     gotoxy(1, top);

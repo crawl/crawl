@@ -160,20 +160,45 @@ ENDMAP
 ##############################################################################
 # temple in pool
 #
-NAME: temple_pool
-TAGS: temple_entry no_monster_gen no_pool_fixup
-ORIENT: float
+NAME:    temple_pool_a
+TAGS:    temple_entry no_monster_gen no_pool_fixup
+CHANCE:  5
+FLAGS:   no_rotate
+ORIENT:  float
+SHUFFLE: XY
+SUBST:   Y=w, X=.
 MAP
 .....wwwww......
 ...wwwwwwwww....
 .wwwwwwwwwwwww..
 wwwwww...wwwwww.
+wwwwww.O.YYYYYY.
+wwwwww...wwwwww.
+wwwwwwwXwwwwwww.
+.wwwwwwXwwwwww..
+...wwwwXwwww....
+.....wwXww......
+................
+ENDMAP
+
+NAME:    temple_pool_b
+TAGS:    temple_entry no_monster_gen
+CHANCE:  5
+FLAGS:   no_rotate
+ORIENT:  float
+SHUFFLE: ABCDEFGHIJKL
+SUBST:   A=W, B=W, C=W, D=w, E=w, F=w, G=w, H=w, I=w, J=w, K=w, L=w
+MAP
+.....wwwww......
+...wABwwwDEw....
+.wwwCwwwwwFwww..
+wwwwww...wwwwww.
 wwwwww.O.wwwwww.
 wwwwww...wwwwww.
-wwwwwww.wwwwwww.
-.wwwwww.wwwwww..
-...wwww.wwww....
-.....ww.ww......
+wwwwLwwwwwGwwww.
+.wwwKJwwwIHwww..
+...wwwwwwwww....
+.....wwwww......
 ................
 ENDMAP
 
