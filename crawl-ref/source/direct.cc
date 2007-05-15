@@ -133,7 +133,8 @@ static command_type read_direction_key(bool just_looking = false)
     case '>': return CMD_TARGET_FIND_DOWNSTAIR;
 
     case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
-    case 'p': case 'f': case 't': return CMD_TARGET_PREV_TARGET;
+    case 'p': return CMD_TARGET_PREV_TARGET;
+    case 'f': case 't': return CMD_TARGET_MAYBE_PREV_TARGET;
         
     case '-': return CMD_TARGET_CYCLE_BACK;
     case '+': case '=':  return CMD_TARGET_CYCLE_FORWARD;
@@ -384,6 +385,14 @@ void direction(struct dist& moves, targeting_type restricts,
              || key_command == CMD_TARGET_OBJ_CYCLE_BACK))
         {
             target_unshifted = false;
+        }
+
+        if ( key_command == CMD_TARGET_MAYBE_PREV_TARGET )
+        {
+            if ( moves.tx == you.x_pos && moves.ty == you.y_pos )
+                key_command = CMD_TARGET_PREV_TARGET;
+            else
+                key_command = CMD_TARGET_SELECT;
         }
 
         bool need_beam_redraw = false;
