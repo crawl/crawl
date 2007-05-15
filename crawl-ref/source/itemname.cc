@@ -47,7 +47,7 @@ static bool is_random_name_vowel( char let );
 static char retvow(int sed);
 static char retlet(int sed);
 
-static bool is_tried_type( int basetype, int subtype )
+static bool is_tried_type( object_class_type basetype, int subtype )
 {
     switch ( basetype )
     {
@@ -432,7 +432,7 @@ static const char* wand_secondary_string(int s)
     case 12: return "worn ";
     case 13: return "encrusted ";
     case 14: return "runed ";
-    case 15: return  "sharpened ";
+    case 15: return "sharpened ";
     default: return "buggily ";
     }
 }

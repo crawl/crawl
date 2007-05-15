@@ -1963,6 +1963,7 @@ std::vector<talent> your_talents( bool check_confused )
             if ( good_key )
             {
                 talents[i].hotkey = k;
+                you.ability_letter_table[k] = talents[i].which;
                 break;
             }
         }
@@ -2059,14 +2060,20 @@ static int find_ability_slot( ability_type which_ability )
     for (int slot = startpoint; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
+        {
+            you.ability_letter_table[slot] = which_ability;
             return slot;
+        }
     }
 
     // if we skipped over a-e to reserve them, try them now
     for (int slot = startpoint - 1; slot >= 0; slot--)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
+        {
+            you.ability_letter_table[slot] = which_ability;
             return slot;
+        }
     }
 
     // All letters are assigned.

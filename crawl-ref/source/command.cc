@@ -387,7 +387,7 @@ static void adjust_ability(void)
                     << ability_name(talents[selected].which)
                     << std::endl;
 
-    // swap references in the letter table:
+    // swap references in the letter table
     ability_type tmp = you.ability_letter_table[index2];
     you.ability_letter_table[index2] = you.ability_letter_table[index1];
     you.ability_letter_table[index1] = tmp;

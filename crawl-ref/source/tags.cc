@@ -1146,7 +1146,6 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     for (i = 0; i < count_c; ++i)
     {
         you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
-        you.inv[i].inscription.clear();
         you.inv[i].base_type =
             static_cast<object_class_type>(unmarshallByte(th));
         you.inv[i].sub_type = (unsigned char) unmarshallByte(th);
