@@ -2669,6 +2669,7 @@ enum operation_types
     OPER_THROW = 't',
     OPER_EXAMINE = 'v',
     OPER_FIRE = 'f',
+    OPER_PRAY = 'p',
     OPER_ANY = 0
 };
 

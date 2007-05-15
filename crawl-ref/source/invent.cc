@@ -740,8 +740,8 @@ static int digit_to_index( char digit, operation_types oper ) {
     return -1;
 }
 
-static bool has_warning_inscription(const item_def& item,
-                                    operation_types oper)
+bool has_warning_inscription(const item_def& item,
+                             operation_types oper)
 {
     const char iletter = static_cast<char>(oper);
     

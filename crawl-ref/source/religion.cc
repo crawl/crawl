@@ -41,6 +41,7 @@
 #include "describe.h"
 #include "effects.h"
 #include "food.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -599,6 +600,30 @@ static void do_god_gift()
     }                           // end of gift giving
 }
 
+static bool is_risky_sacrifice(const item_def& item)
+{
+    return item.base_type == OBJ_ORBS || is_rune(item);
+}
+
+static bool confirm_pray_sacrifice()
+{
+    for ( int i = igrd[you.x_pos][you.y_pos]; i != NON_ITEM;
+          i = mitm[i].link )
+    {
+        const item_def& item = mitm[i];
+        if ( is_risky_sacrifice(item) ||
+             has_warning_inscription(item, OPER_PRAY) )
+        {
+            std::string prompt = "Really sacrifice ";
+            prompt += item.name(DESC_NOCAP_A);
+            prompt += '?';
+            if ( !yesno(prompt.c_str(), false, 'n') )
+                return false;
+        }
+    }
+    return true;
+}
+
 std::string god_prayer_reaction()
 {
     std::string result;
@@ -683,9 +708,15 @@ void pray()
         return;
     }
 
+    // Nemelexites can abort out now instead of offering something
+    // they don't want to lose
+    if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD &&
+         !confirm_pray_sacrifice() )
+        return;
+
     mprf(MSGCH_PRAY, "You offer a prayer to %s.", god_name(you.religion));
 
-    // Nemelexites can offer everywhere
+    // ...otherwise, they offer what they're standing on
     if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD )
         offer_items();
 
@@ -2498,7 +2529,7 @@ void offer_items()
 {
     if (you.religion == GOD_NO_GOD)
         return;
-       
+      
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
