@@ -1150,6 +1150,7 @@ static const char *wizard_string( int i )
            (i ==  13) ? "A    : set all skills to level"      :
            (i ==  15) ? "b    : controlled blink"             :
            (i ==  20) ? "B    : banish yourself to the Abyss" :
+           (i ==  25) ? "c    : card effect"                  :
            (i ==  30) ? "g    : add a skill"                  :
            (i ==  35) ? "G    : remove all monsters"          :
            (i ==  40) ? "h/H  : heal yourself (super-Heal)"   :
@@ -1163,6 +1164,7 @@ static const char *wizard_string( int i )
            (i == 120) ? "s    : gain 20000 skill points"      :
            (i == 130) ? "S    : set skill to level"           :
            (i == 140) ? "t    : tweak object properties"      :
+           (i == 145) ? "T    : make a trap"                  :
            (i == 150) ? "X    : Receive a gift from Xom"      :
            (i == 160) ? "z/Z  : cast any spell by number/name":
            (i == 200) ? "$    : get 1000 gold"                :
@@ -1180,7 +1182,8 @@ static const char *wizard_string( int i )
            (i == 320) ? "?    : list wizard commands"         :
            (i == 330) ? "|    : acquire all unrand artefacts" :
            (i == 340) ? "+    : turn item into random artefact" :
-           (i == 350) ? "=    : sum skill points"
+           (i == 350) ? "=    : sum skill points"             :
+           (i == 360) ? "@    : set stats"
                       : "");
 
 #else

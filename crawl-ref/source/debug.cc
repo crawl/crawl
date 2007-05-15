@@ -17,6 +17,8 @@
 #include "AppHdr.h"
 #include "debug.h"
 
+#include <iostream>
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -35,8 +37,9 @@
 #include "externs.h"
 
 #include "branch.h"
-#include "direct.h"
+#include "decks.h"
 #include "describe.h"
+#include "direct.h"
 #include "dungeon.h"
 #include "fight.h"
 #include "files.h"
@@ -2081,6 +2084,23 @@ void debug_set_stats()
     you.redraw_dexterity = true;
     you.redraw_intelligence = true;
     you.redraw_evasion = true;
+}
+
+void debug_card()
+{
+    msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
+    char buf[80];
+    if (cancelable_get_line(buf, sizeof buf))
+        return;
+    for ( int i = 0; i < NUM_CARDS; ++i )
+    {
+        const card_type c = static_cast<card_type>(i);
+        if ( strstr(card_name(c), buf) != NULL )
+        {
+            card_effect(c);
+            break;
+        }
+    }
 }
 
 #endif

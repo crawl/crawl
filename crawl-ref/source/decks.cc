@@ -260,7 +260,6 @@ static card_type choose_one_card(deck_type which_deck, bool message)
         chosen = deck[random2(max_card)];
     return chosen;
 }
-static void cards(card_type which_card);
 
 // returns the deck type, of DECK_OF_PUNISHMENT if none
 deck_type subtype_to_decktype(int subtype)
@@ -413,7 +412,7 @@ bool deck_triple_draw()
         else
             canned_msg(MSG_HUH);
     }
-    cards(draws[selected]);
+    card_effect(draws[selected]);
 
     // remove the cards from the deck
     item.plus -= num_to_draw;
@@ -443,7 +442,7 @@ void evoke_deck( item_def& deck )
     else
     {
         // draw the marked card
-        cards(static_cast<card_type>(deck.plus2 - 1));
+        card_effect(static_cast<card_type>(deck.plus2 - 1));
 
         // If there are more marked cards, shift them up
         if ( deck.special )
@@ -485,10 +484,10 @@ void evoke_deck( item_def& deck )
 
 void deck_of_cards(deck_type which_deck)
 {
-    cards(choose_one_card(which_deck, true));
+    card_effect(choose_one_card(which_deck, true));
 }
 
-static void cards(card_type which_card)
+void card_effect(card_type which_card)
 {
     FixedVector < int, 5 > dvar;
     FixedVector < int, 5 > mvar;
@@ -1058,4 +1057,4 @@ static void cards(card_type which_card)
     }
 
     return;
-}                               // end cards()
+}

@@ -24,6 +24,6 @@ deck_type subtype_to_decktype(int subtype);
 bool deck_triple_draw();
 bool deck_peek();
 bool deck_stack();
-const char* card_name(card_type card);
+void card_effect(card_type which_card);
 
 #endif

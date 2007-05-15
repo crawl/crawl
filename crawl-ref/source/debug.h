@@ -150,4 +150,6 @@ void debug_make_trap( void );
 void debug_make_shop( void );
 void debug_set_stats( void );
 
+void debug_card();
+
 #endif

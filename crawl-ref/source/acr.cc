@@ -529,6 +529,11 @@ static void handle_wizard_command( void )
         }
         break;
 
+    case 'c':
+        // draw a card
+        debug_card();
+        break;
+
     case 'h':
         you.rotting = 0;
         you.poisoning = 0;
