@@ -1161,7 +1161,6 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
         {
             char username[80] = "The";
             char scratch[INFO_SIZE];
-            char tmp[80];
 
 #ifdef MULTIUSER
             if (uid > 0)
@@ -1175,11 +1174,9 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
                 }
             }
 #endif
-
-            make_time_string( real_time, tmp, sizeof(tmp) );
-
             snprintf( scratch, INFO_SIZE, "%s game lasted %s (%ld turns).",
-                      username, tmp, num_turns );
+                      username, make_time_string(real_time).c_str(),
+                      num_turns );
 
             line += scratch;
             line += hiscore_newline_string();

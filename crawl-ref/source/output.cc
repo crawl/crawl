@@ -806,13 +806,10 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     if (you.real_time != -1)
     {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        char buff[200];
-        make_time_string( curr, buff, sizeof(buff), true );
-
         snprintf(buf, sizeof buf,
                  "Play time  : %10s\n"
                  "Turns      : %10ld\n",
-                 buff, you.num_turns );
+                 make_time_string(curr).c_str(), you.num_turns );
         cols.add_formatted(0, buf, true);
     }
 
@@ -1010,12 +1007,9 @@ void print_overview_screen()
     if (you.real_time != -1)
     {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        char buff[200];
-        make_time_string( curr, buff, sizeof(buff), true );
-
         snprintf(time_turns, sizeof time_turns,
                  " Turns: %ld, Time: %s",
-                 you.num_turns, buff );
+                 you.num_turns, make_time_string(curr, true).c_str() );
     }
 
     int linelength = strlen(you.your_name) + strlen(title)

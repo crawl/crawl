@@ -1016,10 +1016,9 @@ static void experience_check()
     if (you.real_time != -1)
     {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        char buff[200];
-
-        mprf("Play time: %s (%ld turns)",
-             make_time_string(curr, buff, sizeof buff), you.num_turns );
+        msg::stream << "Play time: " << make_time_string(curr)
+                    << " (" << you.num_turns << " turns)"
+                    << std::endl;
     }
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))

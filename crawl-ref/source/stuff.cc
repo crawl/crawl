@@ -21,6 +21,9 @@
 #include "stuff.h"
 #include "view.h"
 
+#include <sstream>
+#include <iomanip>
+
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -65,29 +68,28 @@
 #include "view.h"
 
 // Crude, but functional.
-char *const make_time_string( time_t abs_time, char *const buff, int buff_size,
-                              bool terse )
+std::string make_time_string( time_t abs_time, bool terse )
 {
     const int days  = abs_time / 86400;
     const int hours = (abs_time % 86400) / 3600;
     const int mins  = (abs_time % 3600) / 60;
     const int secs  = abs_time % 60;
 
-    char day_buff[32];
+    std::ostringstream buff;
+    buff << std::setfill('0');
 
     if (days > 0)
     {
         if (terse)
-            snprintf(day_buff, sizeof day_buff, "%d, ", days);
+            buff << days << ", ";
         else
-            snprintf( day_buff, sizeof(day_buff), "%d day%s, ", 
-                  days, (days > 1) ? "s" : "" );
+            buff << days << (days > 1 ? " days" : "day");
     }
 
-    snprintf( buff, buff_size, "%s%02d:%02d:%02d", 
-              (days > 0) ? day_buff : "", hours, mins, secs );
-
-    return (buff);
+    buff << std::setw(2) << hours << ':'
+         << std::setw(2) << mins << ':'
+         << std::setw(2) << secs;
+    return buff.str();
 }
 
 void set_redraw_status( unsigned long flags )

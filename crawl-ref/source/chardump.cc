@@ -375,12 +375,8 @@ static void dump_stats( std::string & text )
     if (you.real_time != -1)
     {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        char buff[200];
-
-        make_time_string( curr, buff, sizeof(buff) );
-
         text += "Play time: ";
-        text += buff;
+        text += make_time_string(curr);
 
         text += "       Number of turns: ";
         itoa( you.num_turns, st_prn, 10 );
