@@ -848,9 +848,11 @@ static void clear_env_map()
 
 static void clear_clouds()
 {
+    for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
+        delete_cloud( clouty );
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
-            env.cgrid[i][j] = EMPTY_CLOUD;
+            ASSERT(env.cgrid[i][j] == EMPTY_CLOUD);
 }
 
 static void grab_followers(std::vector<follower>& followers)
@@ -917,15 +919,10 @@ void load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
 
     you.prev_targ = MHITNOT;
 
-    // Don't delete clouds just because the player saved and restarted.
+    // We clear twice - on save and on load.
+    // Once would be enough...
     if (load_mode != LOAD_RESTART_GAME)
-    {
-        // XXX XXX FIXME shouldn't this just go into clear_clouds()?
-        for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
-            delete_cloud( clouty );
-
-        ASSERT( env.cloud_no == 0 );
-    }
+        clear_clouds();
 
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL)
@@ -992,6 +989,7 @@ void load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
     if (just_created_level)
         clear_env_map();
 
+    // Here's the second cloud clearing, on load (see above)
     if (load_mode != LOAD_RESTART_GAME)
         clear_clouds();
 

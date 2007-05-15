@@ -15,6 +15,7 @@
 #include "AppHdr.h"
 
 #include <string>
+#include <iostream>
 #include <stdio.h>
 
 #include "externs.h"
@@ -34,6 +35,7 @@
 #include "items.h"
 #include "invent.h"
 #include "makeitem.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -72,10 +74,9 @@ void do_monster_rot(int mon);
 
 //jmf: FIXME: put somewhere else (misc.cc?)
 // A feeble attempt at Nethack-like completeness for cute messages.
-const char *your_hand( bool plural )
+std::string your_hand( bool plural )
 {
-    static char hand_buff[80];
-
+    std::string result;
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     default:
@@ -84,33 +85,33 @@ const char *your_hand( bool plural )
     case TRAN_STATUE:
         if (you.species == SP_TROLL || you.species == SP_GHOUL)
         {
-            strcpy(hand_buff, "claw");
+            result = "claw";
             break;
         }
         // or fall-through
     case TRAN_ICE_BEAST:
     case TRAN_LICH:
-        strcpy(hand_buff, "hand");
+        result = "hand";
         break;
     case TRAN_SPIDER:
-        strcpy(hand_buff, "front leg");
+        result = "front leg";
         break;
     case TRAN_SERPENT_OF_HELL:
     case TRAN_DRAGON:
-        strcpy(hand_buff, "foreclaw");
+        result = "foreclaw";
         break;
     case TRAN_BLADE_HANDS:
-        strcpy(hand_buff, "scythe-like blade");
+        result = "scythe-like blade";
         break;
     case TRAN_AIR:
-        strcpy(hand_buff, "misty tendril");
+        result = "misty tendril";
         break;
     }
 
     if (plural)
-        strcat(hand_buff, "s");
+        result += 's';
 
-    return (hand_buff);
+    return result;
 }
 
 // I need to make some debris for metal, crystal and stone.
@@ -668,7 +669,8 @@ void cast_sticks_to_snakes(int pow)
 
     if (weapon == -1)
     {
-        mprf("Your %s feel slithery!", your_hand(true));
+        msg::stream << "Your " << your_hand(true) << " feel slithery!"
+                    << std::endl;
         return;
     }
 
@@ -765,7 +767,8 @@ void cast_sticks_to_snakes(int pow)
     }
     else
     {
-        mprf("Your %s feel slithery!", your_hand(true));
+        msg::stream << "Your " << your_hand(true) << " feel slithery!"
+                    << std::endl;
     }
 
 }                               // end cast_sticks_to_snakes()
@@ -1879,7 +1882,8 @@ void cast_evaporate(int pow)
 
     if (potion == -1)
     {
-        mprf("Wisps of steam play over your %s!", your_hand(true) );
+        msg::stream << "Wisps of steam play over your " << your_hand(true)
+                    << std::endl;
         return;
     } 
     else if (you.inv[potion].base_type != OBJ_POTIONS)

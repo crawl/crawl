@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 
 #include "externs.h"
 
@@ -475,7 +476,7 @@ failed_spell:
     if ( wpn != -1 )
         mpr("Your weapon vibrates crazily for a second.");
     else
-        mprf(MSGCH_PLAIN, "Your %s twitch.", your_hand(true));        
+        msg::stream <<"Your " << your_hand(true) << " twitch" << std::endl;
 }                               // end dancing_weapon()
 
 static bool monster_on_level(int monster)

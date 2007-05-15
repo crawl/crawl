@@ -1954,15 +1954,15 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(10))
             {
             case 0:
-                mprf("Sparks fly from your %s!", your_hand(true) );
+                msg::stream << "Sparks fly from your " << your_hand(true)
+                            << '!' << std::endl;
                 break;
-
             case 1:
                 mpr("The air around you crackles with energy!");
                 break;
-
             case 2:
-                mprf("Wisps of smoke drift from your %s.", your_hand(true));
+                msg::stream << "Wisps of smoke drift from your "
+                            << your_hand(true) << '.' << std::endl;
                 break;
             case 3:
                 mpr("You feel a strange surge of energy!");
@@ -1994,7 +1994,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(2))
             {
             case 0:
-                mprf("Smoke pours from your %s!", your_hand(true));
+                msg::stream << "Smoke pours from your " << your_hand(true)
+                            << '!' << std::endl;
                 big_cloud( CLOUD_GREY_SMOKE, KC_YOU,
                            you.x_pos, you.y_pos, 20,
                            7 + random2(7) );
@@ -2076,7 +2077,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(10))
             {
             case 0:
-                mprf("Your %s glow momentarily.", your_hand(true) );
+                msg::stream << "Your " << your_hand(true)
+                            << " glow momentarily." << std::endl;
                 break;
             case 1:
                 mpr("The air around you crackles with energy!");
@@ -2751,7 +2753,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(10))
             {
             case 0:
-                mprf("Your %s glow momentarily.", your_hand(true));
+                msg::stream << "Your " << your_hand(true)
+                            << " glow momentarily." << std::endl;
                 break;
             case 1:
                 mpr("The air around you crackles with energy!");
@@ -2854,13 +2857,15 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(10))
             {
             case 0:
-                mprf("Sparks fly from your %s!", your_hand(true));
+                msg::stream << "Sparks fly from your " << your_hand(true)
+                            << '!' << std::endl;
                 break;
             case 1:
                 mpr("The air around you burns with energy!");
                 break;
             case 2:
-                mprf("Wisps of smoke drift from your %s.", your_hand(true));
+                msg::stream << "Wisps of smoke drift from your "
+                            << your_hand(true) << '.' << std::endl;
                 break;
             case 3:
                 mpr("You feel a strange surge of energy!");
@@ -2894,7 +2899,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(2))
             {
             case 0:
-                mprf("Smoke pours from your %s!", your_hand(true) );
+                msg::stream << "Smoke pours from your "
+                            << your_hand(true) << "!" << std::endl;
                 big_cloud( random_smoke_type(), KC_YOU,
                            you.x_pos, you.y_pos, 20, 7 + random2(7) );
                 break;
@@ -3000,14 +3006,15 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("A chill runs through your body.");
                 break;
             case 2:
-                mprf("Wisps of condensation drift from your %s.",
-                     your_hand(true));
+                msg::stream << "Wisps of condensation drift from your "
+                            << your_hand(true) << "." << std::endl;
                 break;
             case 3:
                 mpr("You feel a strange surge of energy!");
                 break;
             case 4:
-                mprf("Your %s feel numb with cold.", your_hand(true));
+                msg::stream << "Your " << your_hand(true)
+                            << " feel numb with cold." << std::endl;
                 break;
             case 5:
                 mpr("A chill runs through your body.");
@@ -3093,7 +3100,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 expose_player_to_element(BEAM_COLD, 9);
                 break;
             case 1:
-                mprf("Freezing gasses pour from your %s!", your_hand(true));
+                msg::stream << "Freezing gasses pour from your "
+                            << your_hand(true) << "!" << std::endl;
                 big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20,
                           8 + random2(4));
                 break;
@@ -3116,7 +3124,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("You are showered with tiny particles of grit.");
                 break;
             case 2:
-                mprf("Sand pours from your %s.", your_hand(true));
+                msg::stream << "Sand pours from your "
+                            << your_hand(true) << "." << std::endl;
                 break;
             case 3:
                 mpr("You feel a surge of energy from the ground.");
@@ -3220,7 +3229,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("You feel momentarily weightless.");
                 break;
             case 2:
-                mprf("Wisps of vapour drift from your %s.", your_hand(true));
+                msg::stream << "Wisps of vapour drift from your "
+                            << your_hand(true) << "." << std::endl;
                 break;
             case 3:
                 mpr("You feel a strange surge of energy!");
@@ -3229,8 +3239,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("You feel electric!");
                 break;
             case 5:
-                mprf("Sparks of electricity dance between your %s.",
-                     your_hand(true));
+                msg::stream << "Sparks of electricity dance between your "
+                            << your_hand(true) << "." << std::endl;
                 break;
             case 6:
                 mpr("You are blasted with air!");
@@ -3275,7 +3285,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                      KILLED_BY_WILD_MAGIC, cause);
                 break;
             case 1:
-                mprf("Noxious gasses pour from your %s!", your_hand(true));
+                msg::stream << "Noxious gasses pour from your "
+                            << your_hand(true) << "!" << std::endl;
                 big_cloud(CLOUD_STINK, KC_YOU, you.x_pos, you.y_pos, 20,
                           9 + random2(4));
                 break;
@@ -3306,7 +3317,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 explosion(beam);
                 break;
             case 1:
-                mprf("Venomous gasses pour from your %s!", your_hand(true));
+                msg::stream << "Venomous gasses pour from your "
+                            << your_hand(true) << "!" << std::endl;
                 big_cloud( CLOUD_POISON, KC_YOU, you.x_pos, you.y_pos, 20,
                            8 + random2(5) );
                 break;
@@ -3328,8 +3340,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("You feel slightly ill.");
                 break;
             case 2:
-                mprf("Wisps of poison gas drift from your %s.",
-                     your_hand(true));
+                msg::stream << "Wisps of poison gas drift from your "
+                            << your_hand(true) << "." << std::endl;
                 break;
             case 3:
                 mpr("You feel a strange surge of energy!");
@@ -3373,7 +3385,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
 
             case 1:
-                mprf("Noxious gasses pour from your %s!", your_hand(true) );
+                msg::stream << "Noxious gasses pour from your "
+                            << your_hand(true) << "!" << std::endl;
                 place_cloud(CLOUD_STINK, you.x_pos, you.y_pos,
                             2 + random2(4), KC_YOU);
                 break;
@@ -3425,7 +3438,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 poison_player( 10 + random2avg(19, 2) );
                 break;
             case 1:
-                mprf("Venomous gasses pour from your %s!", your_hand(true));
+                msg::stream << "Venomous gasses pour from your "
+                            << your_hand(true) << "!" << std::endl;
                 big_cloud(CLOUD_POISON, KC_YOU, you.x_pos, you.y_pos, 20,
                           7 + random2(7));
                 break;

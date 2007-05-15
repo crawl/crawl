@@ -61,33 +61,13 @@ std::string InvTitle::get_text() const
 InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
 {
     data = const_cast<item_def *>( item );
-        
-    if (i.base_type == OBJ_GOLD)
-    {
-        // XXX XXX FIXME XXX XXX Why the special-casing?
-        char buf[ITEMNAME_SIZE];
-        snprintf(buf, sizeof buf, "%d gold piece%s", i.quantity, 
-                 (i.quantity > 1? "s" : ""));
-        text = buf;
-    }
-    else
-    {
-        text = i.name(in_inventory(i)? DESC_INVENTORY_EQUIP : DESC_NOCAP_A,
-                      false);
-    }
+    text = i.name(DESC_NOCAP_A, false);
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-    {
-        // FIXME: This is HORRIBLE! We're skipping the inventory letter prefix 
-        // which looks like this: "a - ".
-        text = text.substr( 4 );
         add_hotkey(index_to_letter( i.link ));
-    }
     else
-    {
-        // Dummy hotkey for gold or non-inventory items.
-        add_hotkey(' ');
-    }
+        add_hotkey(' ');        // dummy hotkey
+
     add_class_hotkeys(i);
 
     quantity = i.quantity;

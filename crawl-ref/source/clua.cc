@@ -1112,10 +1112,10 @@ static int l_item_subtype(lua_State *ls)
             const char *s = NULL;
             if (item->base_type == OBJ_JEWELLERY)
             {
-                if (item->sub_type < AMU_RAGE)
-                    s = ring_types[item->sub_type];
-                else
+                if (jewellery_is_amulet(*item))
                     s = amulet_types[ item->sub_type - AMU_RAGE ];
+                else
+                    s = ring_types[item->sub_type];
             }
             
             if (s)

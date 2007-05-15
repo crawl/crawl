@@ -371,8 +371,6 @@ bool mons_pan(int mcls)
     // malign beings
     case MONS_EFREET:
     case MONS_RAKSHASA:
-    //case MONS_RAKSHASA_FAKE:    //jmf: FIXME: really create these?
-                                  // I'm guessing not -- bwr
     // golems
     case MONS_CLAY_GOLEM:
     case MONS_CRYSTAL_GOLEM:

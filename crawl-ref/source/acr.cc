@@ -2015,7 +2015,8 @@ static void decrement_durations()
         you.confusing_touch--;
     else if (you.confusing_touch == 1)
     {
-        mprf(MSGCH_DURATION, "Your %s stop glowing.", your_hand(true) );
+        msg::streams(MSGCH_DURATION) << "Your " << your_hand(true)
+                                     << " stop glowing." << std::endl;
         you.confusing_touch = 0;
     }
 

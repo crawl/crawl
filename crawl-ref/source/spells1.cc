@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 #include "externs.h"
 
@@ -1089,8 +1090,8 @@ void cast_ring_of_flames(int power)
 
 void cast_confusing_touch(int power)
 {
-    mprf("Your %s begin to glow %s.",
-         your_hand(true), (you.confusing_touch ? "brighter" : "red") ); 
+    msg::stream << "Your " << your_hand(true) << " begin to glow "
+                << (you.confusing_touch ? "brighter" : "red") << std::endl;
 
     you.confusing_touch += 5 + (random2(power) / 5);
 

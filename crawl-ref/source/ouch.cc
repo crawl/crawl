@@ -28,6 +28,7 @@
 
 #include <string.h>
 #include <string>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -307,7 +308,7 @@ void weapon_acid( char acid_strength )
 
     if (hand_thing == -1)
     {
-        mprf("Your %s burn!", your_hand(true) );
+        msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
         ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );  
     }
     else if (random2(20) <= acid_strength)
