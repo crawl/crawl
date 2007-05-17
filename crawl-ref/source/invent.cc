@@ -61,7 +61,16 @@ std::string InvTitle::get_text() const
 InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
 {
     data = const_cast<item_def *>( item );
-    text = i.name(DESC_NOCAP_A, false);
+
+    if ( in_inventory(i) && i.base_type != OBJ_GOLD )
+    {
+        // We need to do this in order to get the 'wielded' annotation.
+        // We then toss out the first four characters, which look
+        // like this: "a - ". Ow. FIXME.
+        text = i.name(DESC_INVENTORY_EQUIP, false).substr(4);
+    }
+    else
+        text = i.name(DESC_NOCAP_A, false);
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
         add_hotkey(index_to_letter( i.link ));
