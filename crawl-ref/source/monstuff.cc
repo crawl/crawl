@@ -987,6 +987,15 @@ static bool valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_PROGRAM_BUG
         || new_mclass == MONS_SHAPESHIFTER
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
+
+        // These require manual setting of mons.number to indicate
+        // what they are a simulacrum/zombie of, which we currently
+        // aren't smart enough to handle.
+        || new_mclass == MONS_SIMULACRUM_LARGE
+        || new_mclass == MONS_SIMULACRUM_SMALL
+        || new_mclass == MONS_ZOMBIE_SMALL
+        || new_mclass == MONS_ZOMBIE_LARGE
+
         // These shouldn't happen anyways (demons unaffected + holiness check), 
         // but if we ever do have polydemon, these will be needed:
         || new_mclass == MONS_PLAYER_GHOST
@@ -1009,8 +1018,7 @@ static bool valid_morph( monsters *monster, int new_mclass )
 // so I'll still let the parameter exist for the time being {dlb}
 bool monster_polymorph( monsters *monster, int targetc, int power )
 {
-    char str_polymon[INFO_SIZE] = "";      // cannot use info[] here {dlb}
-    bool player_messaged = false;
+    std::string str_polymon;
     int source_power, target_power, relax;
     int tries = 1000;
 
@@ -1047,11 +1055,8 @@ bool monster_polymorph( monsters *monster, int targetc, int power )
                 || target_power > source_power + (relax * 3) / 2));
     }
 
-    if(!valid_morph( monster, targetc )) {
-        strcat( str_polymon, " looks momentarily different.");
-        player_messaged = simple_monster_message( monster, str_polymon );
-        return (player_messaged);
-    }
+    if (!valid_morph( monster, targetc ))
+        return simple_monster_message(monster, "looks momentarily different.");
 
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.
@@ -1068,29 +1073,30 @@ bool monster_polymorph( monsters *monster, int targetc, int power )
         (!player_see_invis());
 
     if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
-        strcat( str_polymon, " changes into " );
+        str_polymon = " changes into ";
     else if (targetc == MONS_PULSATING_LUMP)
-        strcat( str_polymon, " degenerates into " );
+        str_polymon = " degenerates into ";
     else
-        strcat( str_polymon, " evaporates and reforms as " );
+        str_polymon = " evaporates and reforms as ";
 
     if (invis)
-        strcat( str_polymon, "something you cannot see!" );
+        str_polymon += "something you cannot see!";
     else
     {
-        strcat( str_polymon, monam( NULL, 250, targetc, true, DESC_NOCAP_A ) );
+        str_polymon += monam( NULL, 250, targetc, true, DESC_NOCAP_A );
 
         if (targetc == MONS_PULSATING_LUMP)
-            strcat( str_polymon, " of flesh" );
+            str_polymon += " of flesh";
 
-        strcat( str_polymon, "!" );
+        str_polymon += "!";
     }
 
-    player_messaged = simple_monster_message( monster, str_polymon );
+    const bool player_messaged = simple_monster_message(monster,
+                                                        str_polymon.c_str() );
 
     // the actual polymorphing:
-    int old_hp = monster->hit_points;
-    int old_hp_max = monster->max_hit_points;
+    const int old_hp = monster->hit_points;
+    const int old_hp_max = monster->max_hit_points;
 
     /* deal with mons_sec */
     monster->type = targetc;
