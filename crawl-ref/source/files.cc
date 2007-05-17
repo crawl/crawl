@@ -852,7 +852,7 @@ static void clear_clouds()
         delete_cloud( clouty );
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
-            ASSERT(env.cgrid[i][j] == EMPTY_CLOUD);
+            env.cgrid[i][j] = EMPTY_CLOUD;
 }
 
 static void grab_followers(std::vector<follower>& followers)
