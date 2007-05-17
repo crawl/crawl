@@ -1883,7 +1883,7 @@ void cast_evaporate(int pow)
     if (potion == -1)
     {
         msg::stream << "Wisps of steam play over your " << your_hand(true)
-                    << std::endl;
+                    << '.' << std::endl;
         return;
     } 
     else if (you.inv[potion].base_type != OBJ_POTIONS)
@@ -2051,59 +2051,59 @@ void cast_fulsome_distillation( int powc )
     const bool big_monster = (mons_type_hit_dice( mitm[corpse].plus ) >= 5);
     const bool power_up = (rotten && big_monster);
 
-    int potion_type = POT_WATER;
+    potion_type pot_type = POT_WATER;
 
     switch (mitm[corpse].plus)
     {
     case MONS_GIANT_BAT:             // extracting batty behaviour : 1
     case MONS_UNSEEN_HORROR:         // extracting batty behaviour : 7
     case MONS_GIANT_BLOWFLY:         // extracting batty behaviour : 5
-        potion_type = POT_CONFUSION;
+        pot_type = POT_CONFUSION;
         break;
 
     case MONS_RED_WASP:              // paralysis attack : 8
     case MONS_YELLOW_WASP:           // paralysis attack : 4
-        potion_type = POT_PARALYSIS;
+        pot_type = POT_PARALYSIS;
         break;
 
     case MONS_SNAKE:                 // clean meat, but poisonous attack : 2
     case MONS_GIANT_ANT:             // clean meat, but poisonous attack : 3
-        potion_type = (power_up ? POT_POISON : POT_CONFUSION);
+        pot_type = (power_up ? POT_POISON : POT_CONFUSION);
         break;
 
     case MONS_ORANGE_RAT:            // poisonous meat, but draining attack : 3
-        potion_type = (power_up ? POT_DECAY : POT_POISON);
+        pot_type = (power_up ? POT_DECAY : POT_POISON);
         break;
 
     case MONS_SPINY_WORM:            // 12
-        potion_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
+        pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
         break;
 
     default:
         switch (mons_corpse_effect( mitm[corpse].plus ))
         {
         case CE_CLEAN:
-            potion_type = (power_up ? POT_CONFUSION : POT_WATER);
+            pot_type = (power_up ? POT_CONFUSION : POT_WATER);
             break;
 
         case CE_CONTAMINATED:
-            potion_type = (power_up ? POT_DEGENERATION : POT_POISON);
+            pot_type = (power_up ? POT_DEGENERATION : POT_POISON);
             break;
 
         case CE_POISONOUS:
-            potion_type = (power_up ? POT_STRONG_POISON : POT_POISON);
+            pot_type = (power_up ? POT_STRONG_POISON : POT_POISON);
             break;
 
         case CE_MUTAGEN_RANDOM: 
         case CE_MUTAGEN_GOOD:   // unused
         case CE_RANDOM:         // unused
-            potion_type = POT_MUTATION;
+            pot_type = POT_MUTATION;
             break;
 
         case CE_MUTAGEN_BAD:    // unused
         case CE_ROTTEN:         // actually this only occurs via mangling 
         case CE_HCL:            // necrophage
-            potion_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
+            pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
             break;
 
         case CE_NOCORPSE:       // shouldn't occur
@@ -2116,37 +2116,39 @@ void cast_fulsome_distillation( int powc )
     // If not powerful enough, we downgrade the potion
     if (random2(50) > powc + 10 * rotten)
     {
-        switch (potion_type)
+        switch (pot_type)
         {
         case POT_DECAY: 
         case POT_DEGENERATION: 
         case POT_STRONG_POISON: 
-            potion_type = POT_POISON;
+            pot_type = POT_POISON;
             break;
 
         case POT_MUTATION: 
         case POT_POISON: 
-            potion_type = POT_CONFUSION;
+            pot_type = POT_CONFUSION;
             break;
 
         case POT_PARALYSIS: 
-            potion_type = POT_SLOWING;
+            pot_type = POT_SLOWING;
             break;
 
         case POT_CONFUSION: 
         case POT_SLOWING: 
         default:
-            potion_type = POT_WATER;
+            pot_type = POT_WATER;
             break;
         }
     }
 
     // We borrow the corpse's object to make our potion:
     mitm[corpse].base_type = OBJ_POTIONS;
-    mitm[corpse].sub_type = potion_type;
+    mitm[corpse].sub_type = pot_type;
     mitm[corpse].quantity = 1;
     mitm[corpse].plus = 0;
     mitm[corpse].plus2 = 0;
+    mitm[corpse].flags = 0;
+    mitm[corpse].inscription.clear();
     item_colour( mitm[corpse] );  // sets special as well
 
     mprf("You extract %s from the corpse.",
