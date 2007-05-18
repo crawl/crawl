@@ -52,6 +52,12 @@
  * *********************************************************************** */
 #define BUILD_DATE __DATE__
 
+#ifdef BUILD_REVISION
+#define VERSION_DETAIL "r" BUILD_REVISION "/" BUILD_DATE
+#else
+#define VERSION_DETAIL BUILD_DATE
+#endif
+
 #define SAVE_MAJOR_VERSION 2
 
 #endif
