@@ -126,7 +126,7 @@ bool potion_effect( char pot_eff, int pow )
 
     case POT_LEVITATION:
         mprf("You feel %s buoyant.",
-             (!player_is_levitating()) ? " very" : " more");
+             (!player_is_levitating()) ? "very" : "more");
 
         if (!player_is_levitating())
             mpr("You gently float upwards from the floor.");
