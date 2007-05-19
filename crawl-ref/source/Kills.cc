@@ -505,14 +505,12 @@ void kill_def::add_place(unsigned short place, bool force)
 
 std::string kill_def::base_name(const kill_monster_desc &md) const
 {
-    char monnamebuf[ITEMNAME_SIZE];     // Le sigh.
-
+    std::string name;
     if (md.monnum == MONS_PANDEMONIUM_DEMON)
-        strcpy(monnamebuf, "demon lord");
+        name = "demon lord";
     else
-        moname(md.monnum, true, DESC_PLAIN, monnamebuf);
+        name = mons_type_name(md.monnum, DESC_PLAIN);
 
-    std::string name = monnamebuf;
     switch (md.modifier)
     {
       case kill_monster_desc::M_ZOMBIE:

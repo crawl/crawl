@@ -768,7 +768,7 @@ void scorefile_entry::set_score_fields() const
     
     fields->add_field("sc", "%ld", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
-    fields->add_field("killer", death_source_desc());
+    fields->add_field("killer", death_source_desc().c_str());
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
@@ -945,8 +945,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             // but now we pass it in as a string through the scorefile
             // entry to be appended in hiscores_format_single in long or
             // medium scorefile formats.
-            // It still isn't used in monam for anything but flying weapons
-            // though
             if (death_type == KILLED_BY_MONSTER 
                 && monster->inv[MSLOT_WEAPON] != NON_ITEM)
             {
@@ -977,9 +975,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                     auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
             }
 
-            death_source_name =
-                monam( monster, monster->number, monster->type, true,
-                       DESC_NOCAP_A, monster->inv[MSLOT_WEAPON] );
+            death_source_name = str_monam(*monster, DESC_NOCAP_A, true);
         }
     }
     else
@@ -1196,14 +1192,14 @@ const char *scorefile_entry::damage_verb() const
                               "Annihilated";
 }
 
-const char *scorefile_entry::death_source_desc() const
+std::string scorefile_entry::death_source_desc() const
 {
     if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
         return ("");
 
+    // XXX no longer handles mons_num correctly! FIXME
     return (!death_source_name.empty()? 
-            death_source_name.c_str()
-            : monam( NULL, mon_num, death_source, true, DESC_NOCAP_A ) );
+            death_source_name : mons_type_name(death_source, DESC_NOCAP_A));
 }
 
 std::string scorefile_entry::damage_string(bool terse) const
@@ -1498,14 +1494,12 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += death_source_desc();
         else if (oneline)
-            desc += std::string("slain by ") + death_source_desc();
+            desc += "slain by " + death_source_desc();
         else
         {
-            snprintf( scratch, sizeof scratch, "%s by %s",
-                        damage_verb(),
-                        death_source_desc() );
-
-            desc += scratch;
+            desc += damage_verb();
+            desc += " by ";
+            desc += death_source_desc();
         }
 
         // put the damage on the weapon line if there is one

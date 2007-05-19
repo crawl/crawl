@@ -2213,8 +2213,6 @@ static void fill_monster_pit( spec_room &sr,
 #if DEBUG_DIAGNOSTICS
     for (i = 0; i < num_types; i++)
     {
-        char buff[ ITEMNAME_SIZE ];
-
         const int delta = ((i > 0) ? pit_list[i].rare - pit_list[i - 1].rare 
                                    : pit_list[i].rare);
 
@@ -2222,7 +2220,7 @@ static void fill_monster_pit( spec_room &sr,
                                 / static_cast<float>( rare_sum );
 
         mprf( MSGCH_DIAGNOSTICS, "%6.2f%%: %s", perc,
-              moname( pit_list[i].type, true, DESC_PLAIN, buff ) );
+              mons_type_name( pit_list[i].type, DESC_PLAIN).c_str() );
     }
 #endif
 

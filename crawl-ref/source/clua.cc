@@ -1996,9 +1996,7 @@ struct MonsterWrap
 
 static int l_mons_name(lua_State *ls, monsters *mons, const char *attr)
 {
-    char monnamebuf[ITEMNAME_SIZE];     // Le sigh.
-    moname(mons->type, true, DESC_PLAIN, monnamebuf);
-    lua_pushstring(ls, monnamebuf);
+    lua_pushstring(ls, mons_type_name(mons->type, DESC_PLAIN).c_str());
     return (1);
 }
 

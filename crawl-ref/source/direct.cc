@@ -1497,7 +1497,7 @@ static void describe_cell(int mx, int my)
 
         const int mon_wep = menv[i].inv[MSLOT_WEAPON];
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
-        mprf("%s. ('v' to describe)", ptr_monam(&(menv[i]), DESC_CAP_A));
+        mprf("%s. ('v' to describe)", str_monam(menv[i], DESC_CAP_A).c_str());
 
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {

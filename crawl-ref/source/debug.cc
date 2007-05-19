@@ -927,7 +927,7 @@ void stethoscope(int mwh)
 
     // print type of monster
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
-         monam( &menv[i], menv[i].number, menv[i].type, true, DESC_CAP_THE ),
+         str_monam(menv[i], DESC_CAP_THE, true).c_str(),
          i, menv[i].type, menv[i].x, menv[i].y,
          ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
           (menv[i].attitude == ATT_HOSTILE)  ? "hostile" :
@@ -963,8 +963,7 @@ void stethoscope(int mwh)
          ((menv[i].foe == MHITYOU)            ? "you" :
           (menv[i].foe == MHITNOT)            ? "none" :
           (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
-          : monam( &menv[menv[i].foe], menv[menv[i].foe].number,
-                   menv[menv[i].foe].type, true, DESC_PLAIN )),
+          : str_monam(menv[menv[i].foe], DESC_PLAIN, true).c_str()),
          menv[i].foe, 
          menv[i].foe_memory,          
          menv[i].target_x, menv[i].target_y );
@@ -1098,7 +1097,7 @@ void debug_item_scan( void )
                     if (menv[j].inv[k] == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)", 
-                             j, ptr_monam( &menv[j], DESC_CAP_A ),
+                             j, str_monam( menv[j], DESC_CAP_A ).c_str(),
                              menv[j].x, menv[j].y );
                     }
                 }
@@ -1155,19 +1154,18 @@ void debug_item_scan( void )
     // Quickly scan monsters for "program bug"s.
     for (i = 0; i < MAX_MONSTERS; i++)
     {
-        const struct monsters *const monster = &menv[i];
+        const monsters& monster = menv[i];
 
-        if (monster->type == -1)
+        if (monster.type == -1)
             continue;
 
-        moname( monster->type, true, DESC_PLAIN, name );
-
-        if (strcmp( name, "program bug" ) == 0)
+        if (str_monam(monster, DESC_PLAIN, true).find("questionable") !=
+            std::string::npos)
         {
             mprf( MSGCH_WARN, "Program bug detected!" );
             mprf( MSGCH_WARN,
                   "Buggy monster detected: monster #%d; position (%d,%d)",
-                  i, monster->x, monster->y );
+                  i, monster.x, monster.y );
         }   
     }
 }
@@ -1683,9 +1681,7 @@ static std::string fsim_time_string()
 
 static void fsim_mon_stats(FILE *o, const monsters &mon)
 {
-    char buf[ITEMNAME_SIZE];
-    fprintf(o, "Monster   : %s\n",
-            moname(mon.type, true, DESC_PLAIN, buf));
+    fprintf(o, "Monster   : %s\n", str_monam(mon, DESC_PLAIN, true).c_str());
     fprintf(o, "HD        : %d\n", mon.hit_dice);
     fprintf(o, "AC        : %d\n", mon.ac);
     fprintf(o, "EV        : %d\n", mon.ev);
@@ -1693,12 +1689,11 @@ static void fsim_mon_stats(FILE *o, const monsters &mon)
 
 static void fsim_title(FILE *o, int mon, int ms)
 {
-    char buf[ITEMNAME_SIZE];
     fprintf(o, CRAWL " version " VERSION "\n\n");
     fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
             species_name(you.species, you.experience_level),
             you.class_name,
-            moname(menv[mon].type, true, DESC_PLAIN, buf),
+            str_monam(menv[mon], DESC_PLAIN, true).c_str(),
             Options.fsim_rounds,
             fsim_time_string().c_str());
     fprintf(o, "Experience: %d\n", you.experience_level);

@@ -140,7 +140,7 @@ void tag_followers( void )
 
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
-                 ptr_monam( fmenv, DESC_CAP_THE ) );
+                 str_monam( *fmenv, DESC_CAP_THE ).c_str() );
 #endif  
         }
     }
@@ -1089,7 +1089,7 @@ void zap_los_monsters()
             
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
-                 ptr_monam(mon, DESC_PLAIN) );
+                 str_monam(*mon, DESC_PLAIN).c_str() );
 #endif
             monster_die(mon, KILL_DISMISSED, 0);
         }

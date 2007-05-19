@@ -534,7 +534,7 @@ static int healing_spell( int healed )
 
     if (heal_monster(monster, healed, false))
     {
-        mprf("You heal %s.", ptr_monam( monster, DESC_NOCAP_THE ));
+        mprf("You heal %s.", str_monam( *monster, DESC_NOCAP_THE ).c_str());
 
         if (monster->hit_points == monster->max_hit_points)
             simple_monster_message( monster, " is completely healed." );

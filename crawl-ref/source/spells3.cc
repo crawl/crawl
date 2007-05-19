@@ -202,7 +202,7 @@ int cast_smiting(int power, dist &beam)
     {
         monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        mprf("You smite %s!", ptr_monam( monster, DESC_NOCAP_THE ));
+        mprf("You smite %s!", str_monam( *monster, DESC_NOCAP_THE ).c_str());
 
         // Maxes out at around 40 damage at 27 Invocations, which is plenty
         // in my book (the old max damage was around 70, which seems excessive.
@@ -235,7 +235,7 @@ int airstrike(int power, dist &beam)
         monster = &menv[mgrd[beam.tx][beam.ty]];
 
         mprf("The air twists around and strikes %s!",
-             ptr_monam( monster, DESC_NOCAP_THE ));
+             str_monam( *monster, DESC_NOCAP_THE ).c_str());
 
         hurted = 8 + random2( random2(4) + (random2(power) / 6)
                               + (random2(power) / 7) );

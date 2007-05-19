@@ -41,7 +41,7 @@ void init_cap(char * str)
 void imp_taunt( const monsters *mons )
 {
     char buff[80];
-    const char *mon_name = ptr_monam( mons, DESC_CAP_THE );
+    const std::string mon_name = str_monam( *mons, DESC_CAP_THE );
 
     snprintf( buff, sizeof(buff), 
               "%s, thou %s!", 
@@ -51,14 +51,14 @@ void imp_taunt( const monsters *mons )
     init_cap( buff );
 
     // XXX: Not pretty, but stops truncation...
-    if (strlen( mon_name ) + 11 + strlen( buff ) >= 79)
+    if (mon_name.length() + 11 + strlen( buff ) >= 79)
     {
-        mprf(MSGCH_TALK, "%s shouts:", mon_name );
+        mprf(MSGCH_TALK, "%s shouts:", mon_name.c_str() );
         mprf(MSGCH_TALK, "%s", buff );
     }
     else
     {
-        mprf(MSGCH_TALK, "%s shouts, \"%s\"", mon_name, buff );
+        mprf(MSGCH_TALK, "%s shouts, \"%s\"", mon_name.c_str(), buff );
     }
 }
 
@@ -82,7 +82,7 @@ void demon_taunt( const monsters *mons )
     };
   
     char buff[80];
-    const char *mon_name = ptr_monam( mons, DESC_CAP_THE );
+    const std::string mon_name = str_monam( *mons, DESC_CAP_THE );
     const char *voice = sound_list[ mons_shouts(mons->type) ];
 
     if (coinflip())
@@ -127,14 +127,14 @@ void demon_taunt( const monsters *mons )
     init_cap( buff );
 
     // XXX: Not pretty, but stops truncation...
-    if (strlen(mon_name) + strlen(voice) + strlen(buff) + 5 >= 79)
+    if (mon_name.length() + strlen(voice) + strlen(buff) + 5 >= 79)
     {
-        mprf(MSGCH_TALK, "%s %s:", mon_name, voice );
+        mprf(MSGCH_TALK, "%s %s:", mon_name.c_str(), voice );
         mprf(MSGCH_TALK, "%s",  buff);
     }
     else
     {
-        mprf(MSGCH_TALK, "%s %s, \"%s\"", mon_name, voice, buff );
+        mprf(MSGCH_TALK, "%s %s, \"%s\"", mon_name.c_str(), voice, buff );
     }
 }
 

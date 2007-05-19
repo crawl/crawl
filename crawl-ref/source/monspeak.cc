@@ -154,10 +154,10 @@ bool mons_speaks(const monsters *monster)
     // scare the player.  In order to accomidate this intent, we're
     // falsely categorizing various things in the function as spells and
     // danger warning... everything else just goes into the talk channel -- bwr
-    int msg_type = MSGCH_TALK;
+    msg_channel_type msg_type = MSGCH_TALK;
 
-    const char *m_name = ptr_monam(monster, DESC_CAP_THE);
-    strcpy(info, m_name);
+    const std::string m_name = str_monam(*monster, DESC_CAP_THE);
+    strcpy(info, m_name.c_str());
 
     if (monster->has_ench(ENCH_INVIS))
         return false;
@@ -386,8 +386,8 @@ bool mons_speaks(const monsters *monster)
             switch (random2(11))
             {
             case 0:
-                snprintf( info, INFO_SIZE, "%s %s, \"WAIT FOR ME!\"", m_name,
-                        coinflip() ? "shouts" : "yells");
+                snprintf( info, INFO_SIZE, "%s %s, \"WAIT FOR ME!\"",
+                          m_name.c_str(), coinflip() ? "shouts" : "yells");
                 strcat(info, you.your_name);
                 strcat(info, ", could you help me?\"");
                 break;
@@ -426,28 +426,29 @@ bool mons_speaks(const monsters *monster)
             switch (random2(20))    // speaks for unfriendly fleeing monsters
             {
             case 0:
-                snprintf( info, INFO_SIZE, "%s %s, \"Help!\"", m_name, coinflip()? "yells" : "wails");
+                snprintf( info, INFO_SIZE, "%s %s, \"Help!\"", m_name.c_str(),
+                          coinflip()? "yells" : "wails");
                 break;
             case 1:
-                snprintf( info, INFO_SIZE, "%s %s, \"Help!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"Help!\"", m_name.c_str(),
                         coinflip() ? "cries" : "screams"); break;
             case 2:
                 snprintf( info, INFO_SIZE, "%s %s, \"Why can't we all just get along?\"",
-                        m_name, coinflip() ? "begs" : "pleads");
+                        m_name.c_str(), coinflip() ? "begs" : "pleads");
                 break;
             case 3:
-                snprintf( info, INFO_SIZE, "%s %s trips in trying to escape.", m_name,
+                snprintf( info, INFO_SIZE, "%s %s trips in trying to escape.", m_name.c_str(),
                         coinflip() ? "nearly" : "almost");
                 break;
             case 4:
-                snprintf( info, INFO_SIZE, "%s %s, \"Of all the rotten luck!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"Of all the rotten luck!\"", m_name.c_str(),
                         coinflip() ? "mutters" : "mumbles");
                 break;
             case 5:
-                snprintf( info, INFO_SIZE, "%s %s, \"Oh dear! Oh dear!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"Oh dear! Oh dear!\"", m_name.c_str(),
                         coinflip() ? "moans" : "wails");
             case 6:
-                snprintf( info, INFO_SIZE, "%s %s, \"Damn and blast!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"Damn and blast!\"", m_name.c_str(),
                         coinflip() ? "mutters" : "mumbles");
                 break;
             case 7:
@@ -457,25 +458,25 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " shouts, \"No! I'll never do that again!\"");
                 break;
             case 9:
-                snprintf( info, INFO_SIZE, "%s %s", m_name,
+                snprintf( info, INFO_SIZE, "%s %s", m_name.c_str(),
                         coinflip() ? "begs for mercy." : "cries, \"Mercy!\"");
                 break;
             case 10:
-                snprintf( info, INFO_SIZE, "%s %s, \"%s!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"%s!\"", m_name.c_str(),
                         coinflip() ? "blubbers" : "cries",
                         coinflip() ? "Mommeee" : "Daddeee");
                 break;
             case 11:
-                snprintf( info, INFO_SIZE, "%s %s, \"Please don't kill me!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"Please don't kill me!\"", m_name.c_str(),
                         coinflip() ? "begs" : "pleads");
                 break;
             case 12:
-                snprintf( info, INFO_SIZE, "%s %s, \"Please don't hurt me!\"", m_name,
+                snprintf( info, INFO_SIZE, "%s %s, \"Please don't hurt me!\"", m_name.c_str(),
                         coinflip() ? "begs" : "pleads");
                 break;
             case 13:
                 snprintf( info, INFO_SIZE, "%s %s, \"Please, I have a lot of children...\"",
-                        m_name, coinflip() ? "begs" : "pleads");
+                        m_name.c_str(), coinflip() ? "begs" : "pleads");
                 break;
             case 14:
                 strcat(info, " tries to recover lost courage.");
@@ -486,8 +487,9 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " gives up.");
                 break;
             case 19:
-                snprintf( info, INFO_SIZE, "%s looks really %s.", m_name,
-                        coinflip() ? "scared stiff" : "rattled");
+                snprintf( info, INFO_SIZE, "%s looks really %s.",
+                          m_name.c_str(),
+                          coinflip() ? "scared stiff" : "rattled");
                 break;
             }
         }
@@ -586,7 +588,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 3:
                 snprintf( info, INFO_SIZE, "%s shouts, \"%s!!!\"",
-                  m_name, coinflip() ? "ATTACK" : "DIE");
+                  m_name.c_str(), coinflip() ? "ATTACK" : "DIE");
                 break;
             case 4:
                 strcat(info, " says, \"How do you enjoy it?\"");
@@ -608,14 +610,14 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 10:
                 snprintf( info, INFO_SIZE, "%s says, \"Don't try to defend, it's %s.\"",
-                        m_name, coinflip() ? "pointless" : "senseless");
+                        m_name.c_str(), coinflip() ? "pointless" : "senseless");
                 break;
             case 11:
                 strcat(info, " bares his teeth.");
                 break;
             case 12:
                 snprintf( info, INFO_SIZE, "%s says, \"I'll show you few %s.\"",
-                        m_name, coinflip() ? "tricks" : "ploys.");
+                        m_name.c_str(), coinflip() ? "tricks" : "ploys.");
                 break;
             case 13:
                 strcat(info, " screams, \"I want your blood.\"");
@@ -849,7 +851,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " casts a spell.");
                 mpr(info, MSGCH_MONSTER_SPELL);
 
-                strcpy(info, m_name);
+                strcpy(info, m_name.c_str());
                 strcat(info, " becomes larger for a moment.");
                 msg_type = MSGCH_MONSTER_ENCHANT;
                 break;
@@ -858,7 +860,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " casts a spell.");
                 mpr(info, MSGCH_MONSTER_SPELL);
 
-                strcpy(info, m_name);
+                strcpy(info, m_name.c_str());
                 strcat(info, "'s fingertips start to glow.");
                 msg_type = MSGCH_MONSTER_ENCHANT;
                 break;

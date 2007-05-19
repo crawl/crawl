@@ -402,7 +402,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
         std::string msg;
 
         if (player_monster_visible( &menv[id] ))
-            msg = ptr_monam( &menv[id], DESC_CAP_A );
+            msg = str_monam( menv[id], DESC_CAP_A );
         else if (shoved)
             msg = "Something";
 
@@ -1178,14 +1178,12 @@ void mark_interesting_monst(struct monsters* monster, char behaviour)
         interesting = false;
     // Don't waste time on moname() if user isn't using this option
     else if ( Options.note_monsters.size() > 0 )
-    {
-        char namebuf[ITEMNAME_SIZE];
-        moname(monster->type, true, DESC_NOCAP_A, namebuf);
-        
-        std::string iname = namebuf;
-        
-        for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
-            if (Options.note_monsters[i].matches(iname)) {
+    {        
+        const std::string iname = mons_type_name(monster->type, DESC_NOCAP_A);
+        for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
+        {
+            if (Options.note_monsters[i].matches(iname))
+            {
                 interesting = true;
                 break;
             }    
@@ -1346,7 +1344,7 @@ bool player_angers_monster(monsters *creation)
                  && player_monster_visible(creation) )
             {
                 mprf("%s is enraged by your holy aura!",
-                     ptr_monam(creation, DESC_CAP_THE));
+                     str_monam(*creation, DESC_CAP_THE).c_str());
             }
         }
         return (true);

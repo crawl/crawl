@@ -849,12 +849,11 @@ void melee_attack::player_announce_hit()
     if (!verb_degree.empty() && verb_degree[0] != ' ')
         verb_degree = " " + verb_degree;
     
-    mprf("You %s %s%s%s%s",
-         attack_verb.c_str(),
-         ptr_monam(def, DESC_NOCAP_THE),
-         verb_degree.c_str(),
-         debug_damage_number().c_str(),
-         attack_strength_punctuation().c_str());
+    msg::stream << "You " << attack_verb << ' '
+                << str_monam(*def, DESC_NOCAP_THE)
+                << verb_degree << debug_damage_number()
+                << attack_strength_punctuation()
+                << std::endl;
 }
 
 std::string melee_attack::player_why_missed()
@@ -873,9 +872,8 @@ void melee_attack::player_warn_miss()
     if (def->behaviour != BEH_SLEEP)
         behaviour_event( def, ME_WHACK, MHITYOU );
 
-    mprf("%s%s.",
-         player_why_missed().c_str(),
-         ptr_monam(def, DESC_NOCAP_THE));
+    msg::stream << player_why_missed() << str_monam(*def, DESC_NOCAP_THE)
+                << std::endl;
 }
 
 bool melee_attack::player_hits_monster()
@@ -1999,9 +1997,8 @@ bool melee_attack::player_check_monster_died()
         player_monattk_hit_effects(true);
 
         if (def->type == MONS_GIANT_SPORE || def->type == MONS_BALL_LIGHTNING)
-            mprf("You %s %s.", attack_verb.c_str(),
-                 ptr_monam(def, DESC_NOCAP_THE));
-
+            msg::stream << "You " << attack_verb << ' '
+                        << str_monam(*def, DESC_NOCAP_THE) << '.' << std::endl;
         monster_die(def, KILL_YOU, 0);
 
         return (true);
@@ -3378,29 +3375,29 @@ static void stab_message( struct monsters *defender, int stab_bonus )
         if (r<3)
         {
             mprf( "You strike %s from a blind spot!",
-                  ptr_monam(defender, DESC_NOCAP_THE) );
+                  str_monam(*defender, DESC_NOCAP_THE).c_str() );
         }
         else
         {
             mprf( "You catch %s momentarily off-guard.",
-                  ptr_monam(defender, DESC_NOCAP_THE) );
+                  str_monam(*defender, DESC_NOCAP_THE).c_str() );
         }
         break;
     case 2:     // confused/fleeing
         if (r<4)
         {
             mprf( "You catch %s completely off-guard!",
-                  ptr_monam(defender, DESC_NOCAP_THE) );
+                  str_monam(*defender, DESC_NOCAP_THE).c_str() );
         }
         else
         {
             mprf( "You strike %s from behind!",
-                  ptr_monam(defender, DESC_NOCAP_THE) );
+                  str_monam(*defender, DESC_NOCAP_THE).c_str() );
         }
         break;
     case 1:
         mprf( "%s fails to defend %s.", 
-              ptr_monam(defender, DESC_CAP_THE), 
+              str_monam(*defender, DESC_CAP_THE).c_str(), 
               mons_pronoun( defender->type, PRONOUN_REFLEXIVE ) );
         break;
     } // end switch

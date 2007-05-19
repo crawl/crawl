@@ -1850,7 +1850,7 @@ void show_skills()
     int scrln = 3, scrcol = 1;
 
     // Don't want the help line to appear too far down a big window.
-    int bottom_line = ((num_lines > 30) ? 30 : num_lines);
+    const int bottom_line = ((num_lines > 30) ? 30 : num_lines);
 
     for (i = 0; i < ndisplayed_skills; ++i)
     {

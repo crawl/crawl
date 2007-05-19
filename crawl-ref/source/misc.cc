@@ -1898,9 +1898,9 @@ bool i_feel_safe(bool announce)
         // Announce the presence of monsters (Eidolos).
         if (mons.size() == 1)
         {
-            const monsters *m = mons[0];
+            const monsters &m = *mons[0];
             mprf(MSGCH_WARN, "Not with %s in view!",
-                 ptr_monam(m, DESC_NOCAP_A));
+                 str_monam(m, DESC_NOCAP_A).c_str());
         }
         else if (mons.size() > 1)
         {

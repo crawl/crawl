@@ -1020,9 +1020,7 @@ static std::string origin_monster_name(const item_def &item)
         return ("a player ghost");
     else if (monnum == MONS_PANDEMONIUM_DEMON)
         return ("a demon");
-    char monnamebuf[ITEMNAME_SIZE];     // Le sigh.
-    moname(monnum, true, DESC_NOCAP_A, monnamebuf);
-    return (monnamebuf);
+    return mons_type_name(monnum, DESC_NOCAP_A);
 }
 
 static std::string origin_monster_desc(const item_def &item)

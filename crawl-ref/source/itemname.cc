@@ -1216,11 +1216,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
             if (this->quantity > 1)
                 buff << "s";
 
-            buff << " of ";
-
-            char tmp_buff[ITEMNAME_SIZE];
-            moname( it_plus, true, DESC_PLAIN, tmp_buff );
-            buff << tmp_buff << " flesh";
+            buff << " of " << mons_type_name(it_plus, DESC_PLAIN) << " flesh";
             break;
         }
         }
@@ -1395,11 +1391,11 @@ std::string item_def::name_aux( bool terse, bool ident ) const
 
     case OBJ_CORPSES:
         if (item_typ == CORPSE_BODY && this->special < 100)
-            buff << "rotting ";
         {
-            char tmp_buff[ITEMNAME_SIZE];
-            moname( it_plus, true, DESC_PLAIN, tmp_buff );
-            buff << tmp_buff << " ";
+            buff << "rotting ";
+        }
+        {
+            buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
             if (item_typ == CORPSE_BODY)
                 buff << "corpse";
             else if (item_typ == CORPSE_SKELETON)

@@ -934,10 +934,11 @@ inline static void monster_warning(activity_interrupt_type ai,
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
 #ifndef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_WARN, "%s comes into view.", ptr_monam(mon, DESC_CAP_A));
+        mprf(MSGCH_WARN, "%s comes into view.",
+             str_monam(*mon, DESC_CAP_A).c_str());
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
-        fs.cprintf("%s (", ptr_monam(mon, DESC_PLAIN));
+        fs.cprintf("%s (", str_monam(*mon, DESC_PLAIN, true).c_str());
         fs.add_glyph( mon );
         fs.cprintf(") in view: (%d,%d), see_grid: %s",
              mon->x, mon->y,

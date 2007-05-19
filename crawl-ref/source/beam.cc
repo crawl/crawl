@@ -24,6 +24,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdarg>
+#include <iostream>
 #include <set>
 
 #ifdef DOS
@@ -1969,7 +1970,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
     case BEAM_INVISIBILITY:               /* 5 = invisibility */
         // Store the monster name before it becomes an "it" -- bwr
     {
-        const std::string monster_name = ptr_monam(monster, DESC_CAP_THE);
+        const std::string monster_name = str_monam(*monster, DESC_CAP_THE);
         
         if (!monster->has_ench(ENCH_INVIS)
             && monster->add_ench(ENCH_INVIS))
@@ -2946,7 +2947,7 @@ static std::string beam_zapper(const bolt &beam)
     else if (bsrc == MHITNOT)
         return ("");
     else
-        return ptr_monam( &menv[bsrc], DESC_PLAIN );
+        return str_monam( menv[bsrc], DESC_PLAIN );
 }
 
 // return amount of extra range used up by affectation of the player
@@ -3512,7 +3513,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     {
         mprf(MSGCH_DIAGNOSTICS,
              "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d", 
-             ptr_monam( mon, DESC_PLAIN ), hurt, raw_damage, hurt_final );
+             str_monam(*mon, DESC_PLAIN).c_str(),hurt, raw_damage, hurt_final);
     }
 #endif
 
@@ -3584,9 +3585,8 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
         // if the PLAYER cannot see the monster, don't tell them anything!
         if (player_monster_visible( &menv[tid] ) && mons_near(mon))
         {
-            mprf("The %s misses %s.", 
-                    beam.name.c_str(), 
-                    ptr_monam(mon, DESC_NOCAP_THE));
+            msg::stream << "The " << beam.name << " misses "
+                        << str_monam(*mon, DESC_NOCAP_THE) << std::endl;
         }
         return (0);
     }
@@ -3595,11 +3595,11 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     if (mons_near(mon))
     {
         mprf("The %s %s %s.",
-                beam.name.c_str(),
-                engulfs? "engulfs" : "hits",
-                player_monster_visible(&menv[tid])? 
-                    ptr_monam(mon, DESC_NOCAP_THE)
-                  : "something");
+             beam.name.c_str(),
+             engulfs? "engulfs" : "hits",
+             player_monster_visible(&menv[tid])? 
+             str_monam(*mon, DESC_NOCAP_THE).c_str()
+             : "something");
     }
     else
     {

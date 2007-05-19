@@ -190,8 +190,7 @@ void init_monsters(FixedVector < unsigned short, 1000 > &colour)
     //unsigned int x = 0;    // must be unsigned to match size_t {dlb}
 
     // first, fill static array with dummy values {dlb};
-    for (x = 0; x < NUM_MONSTERS; x++)
-        mon_entry[x] = -1;
+    mon_entry.init(-1);
 
     // next, fill static array with location of entry in mondata[] {dlb}:
     for (x = 0; x < MONDATASIZE; x++)
@@ -1362,103 +1361,81 @@ void define_monster(int index)
     mons.enchantments.clear();
 }                               // end define_monster()
 
-std::string str_monam(const monsters *mon, description_level_type desc,
+std::string str_monam(const monsters& mon, description_level_type desc,
                       bool force_seen)
 {
-    return (ptr_monam(mon, desc, force_seen));
-}
-
-/* ------------------------- monam/moname ------------------------- */
-const char *ptr_monam( const monsters *mon, description_level_type desc,
-                       bool force_seen )
-{
-    // We give an item type description for mimics now, note that 
-    // since gold mimics only have one description (to match the
-    // examine code in direct.cc), we won't bother going through
-    // this for them. -- bwr
-    if (mons_is_mimic( mon->type ) && mon->type != MONS_GOLD_MIMIC)
-    {
-        // XXX Ugly hack - FIXME XXX
-        static char mimic_name_buff[ ITEMNAME_SIZE ];
-
-        item_def item;
-        get_mimic_item( mon, item );
-        strncpy(mimic_name_buff, item.name(desc).c_str(),
-                sizeof mimic_name_buff);
-
-        return (mimic_name_buff);
-    }
-
-    return (monam( mon, mon->number, mon->type,
-                   force_seen || player_monster_visible( mon ), 
-                   desc, mon->inv[MSLOT_WEAPON] ));
-}
-
-const char *monam( const monsters *mon,
-                   int mons_num, int mons, bool vis, 
-                   description_level_type desc, int mons_wpn )
-{
-    static char gmo_n[ ITEMNAME_SIZE ];
-    char gmo_n2[ ITEMNAME_SIZE ] = "";
-
-    gmo_n[0] = 0;
-
-    // If you can't see the critter, let moname() print [Ii]t.
-    if (!vis)
-    {
-        moname( mons, vis, desc, gmo_n );
-        return (gmo_n);
-    }
-
-    // These need their description level handled here instead of
-    // in monam().
-    if (mons == MONS_SPECTRAL_THING || mons_genus(mons) == MONS_DRACONIAN)
-    {
+    // Handle non-visible case first
+    if ( !force_seen && !player_monster_visible(&mon) )
+    {       
         switch (desc)
         {
-        case DESC_CAP_THE:
-            strcpy(gmo_n, "The");
-            break;
-        case DESC_NOCAP_THE:
-            strcpy(gmo_n, "the");
-            break;
-        case DESC_CAP_A:
-            strcpy(gmo_n, "A");
-            break;
-        case DESC_NOCAP_A:
-            strcpy(gmo_n, "a");
-            break;
-        case DESC_PLAIN:         /* do nothing */ ;
+        case DESC_CAP_THE: case DESC_CAP_A:
+            return "It";
+        case DESC_NOCAP_THE: case DESC_NOCAP_A: case DESC_PLAIN:
+            return "it";
         default:
-            break;
-            //default: DEBUGSTR("bad desc flag");
+            mpr("XXX OOPS!", MSGCH_DIAGNOSTICS);
+            return "it (buggy)";
         }
     }
 
-    switch (mons)
+    // Assumed visible from now on
+
+    // Various special cases:
+    // non-gold mimics, dancing weapons, ghosts, Pan demons
+    if ( mons_is_mimic(mon.type) && mon.type != MONS_GOLD_MIMIC )
     {
-    case MONS_ZOMBIE_SMALL: 
-    case MONS_ZOMBIE_LARGE:
-        moname(mons_num, vis, desc, gmo_n);
-        strcat(gmo_n, " zombie");
-        break;
+        item_def item;
+        get_mimic_item( &mon, item );
+        return item.name(desc);
+    }
 
-    case MONS_SKELETON_SMALL: 
-    case MONS_SKELETON_LARGE:
-        moname(mons_num, vis, desc, gmo_n);
-        strcat(gmo_n, " skeleton");
-        break;
+    if (mon.type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
+    {
+        item_def item = mitm[mon.inv[MSLOT_WEAPON]];
+        unset_ident_flags( item, ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES );
+        return item.name(desc);
+    }
 
-    case MONS_SIMULACRUM_SMALL: 
-    case MONS_SIMULACRUM_LARGE:
-        moname(mons_num, vis, desc, gmo_n);
-        strcat(gmo_n, " simulacrum");
-        break;
+    if (mon.type == MONS_PLAYER_GHOST)
+        return mon.ghost->name + "'s ghost";
 
+    if (mon.type == MONS_PANDEMONIUM_DEMON)
+        return mon.ghost->name;
+
+    std::string result;
+
+    // Start building the name string.
+
+    // Start with the prefix.
+    // (Uniques don't get this, because their names are proper nouns.)
+    if ( !mons_is_unique(mon.type) )
+    {
+        switch (desc)
+        {
+        case DESC_CAP_THE:   result = "The "; break;
+        case DESC_NOCAP_THE: result = "the "; break;
+        case DESC_CAP_A:     result = "A ";   break;
+        case DESC_NOCAP_A:   result = "a ";   break;
+        case DESC_PLAIN: default:             break;
+        }
+    }
+
+    // Some monsters might want the name of a different creature.
+    int nametype = mon.type;
+
+    // Tack on other prefixes.
+    switch (mon.type)
+    {
     case MONS_SPECTRAL_THING: 
-        strcat(gmo_n, " spectral ");
-        moname(mons_num, vis, DESC_PLAIN, gmo_n2);
-        strcat(gmo_n, gmo_n2);
+        result += "spectral ";
+        nametype = mon.number;
+        break;
+
+    case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
+    case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
+    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
+        nametype = mon.number;
         break;
 
     case MONS_DRACONIAN_CALLER:
@@ -1468,153 +1445,82 @@ const char *monam( const monsters *mon,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
-        if (desc != DESC_PLAIN)
-            strcat( gmo_n, " " );
-
-        switch (mons_num)
+        switch (mon.number)
         {
         default: break;
-        case MONS_BLACK_DRACONIAN:   strcat(gmo_n, "black ");   break;
-        case MONS_MOTTLED_DRACONIAN: strcat(gmo_n, "mottled "); break;
-        case MONS_YELLOW_DRACONIAN:  strcat(gmo_n, "yellow ");  break;
-        case MONS_GREEN_DRACONIAN:   strcat(gmo_n, "green ");   break;
-        case MONS_PURPLE_DRACONIAN:  strcat(gmo_n, "purple ");  break;
-        case MONS_RED_DRACONIAN:     strcat(gmo_n, "red ");     break;
-        case MONS_WHITE_DRACONIAN:   strcat(gmo_n, "white ");   break;
-        case MONS_PALE_DRACONIAN:    strcat(gmo_n, "pale ");    break;
+        case MONS_BLACK_DRACONIAN:   result += "black ";   break;
+        case MONS_MOTTLED_DRACONIAN: result += "mottled "; break;
+        case MONS_YELLOW_DRACONIAN:  result += "yellow ";  break;
+        case MONS_GREEN_DRACONIAN:   result += "green ";   break;
+        case MONS_PURPLE_DRACONIAN:  result += "purple ";  break;
+        case MONS_RED_DRACONIAN:     result += "red ";     break;
+        case MONS_WHITE_DRACONIAN:   result += "white ";   break;
+        case MONS_PALE_DRACONIAN:    result += "pale ";    break;
         }
-
-        moname( mons, vis, DESC_PLAIN, gmo_n2 );
-        strcat( gmo_n, gmo_n2 );
-        break;
-
-    case MONS_DANCING_WEAPON:
-        // safety check -- if we don't have/know the weapon use default name
-        if (mons_wpn == NON_ITEM)
-            moname( mons, vis, desc, gmo_n );
-        else 
-        {
-            item_def item = mitm[mons_wpn];
-            unset_ident_flags( item, ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES );
-            strncpy( gmo_n, item.name(desc).c_str(), sizeof gmo_n );
-        }
-        break;
-
-    case MONS_PLAYER_GHOST:
-        strcpy(gmo_n, mon->ghost->name.c_str());
-        strcat(gmo_n, "'s ghost");
-        break;
-
-    case MONS_PANDEMONIUM_DEMON:
-        strcpy(gmo_n, mon->ghost->name.c_str());
-        break;
-
-    default:
-        moname(mons, vis, desc, gmo_n);
         break;
     }
 
-    return (gmo_n);
-}                               // end monam()
+    // Add the base name.
+    result += seekmonster(nametype)->name;
 
-const char *moname(int mons_num, bool vis, description_level_type descrip,
-                   char glog[ ITEMNAME_SIZE ])
+    // Add suffixes.
+    switch (mon.type)
+    {
+    case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
+        result += " zombie"; break;
+    case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
+        result += " skeleton"; break;
+    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
+        result += " simulacrum"; break;
+    }
+
+    // Vowel fix: Change 'a orc' to 'an orc'
+    if ( result.length() >= 3 &&
+         (result[0] == 'a' || result[0] == 'A') &&
+         isblank(result[1]) &&
+         is_vowel(result[2]) )
+    {
+        result.insert(1, "n");
+    }
+
+    // All done.
+    return result;
+}
+
+std::string mons_type_name(int type, description_level_type desc )
 {
-    glog[0] = 0;
-
-    char gmon_name[ ITEMNAME_SIZE ] = "";
-    strcpy( gmon_name, seekmonster( mons_num )->name );
-
-    if (!vis)
+    std::string result;
+    if ( !mons_is_unique(type) )
     {
-        switch (descrip)
+        switch (desc)
         {
-        case DESC_CAP_THE:
-        case DESC_CAP_A:
-            strcpy(glog, "It");
-            break;
-        case DESC_NOCAP_THE:
-        case DESC_NOCAP_A:
-        case DESC_PLAIN:
-            strcpy(glog, "it");
-            break;
-        case DESC_NOCAP_YOUR:
-            strcpy(glog, "its");
-            break;
-        case DESC_CAP_YOUR:
-            strcpy(glog, "Its");
-            break;
-        default:
-            strcpy(glog, "Its buggy");
-        }
-
-        strcpy(gmon_name, glog);
-        return (glog);
-    }
-
-    if (!mons_is_unique( mons_num )) 
-    {
-        switch (descrip)
-        {
-        case DESC_CAP_THE:
-        case DESC_CAP_YOUR:
-            strcpy(glog, "The ");
-            break;
-        case DESC_NOCAP_THE:
-        case DESC_NOCAP_YOUR:
-            strcpy(glog, "the ");
-            break;
-        case DESC_CAP_A:
-            strcpy(glog, "A");
-            break;
-        case DESC_NOCAP_A:
-            strcpy(glog, "a");
-            break;
-        case DESC_PLAIN:
-        default:
-            break;
-        // default: DEBUGSTR("bad monster descrip flag");
-        }
-
-        if (descrip == DESC_CAP_A || descrip == DESC_NOCAP_A)
-        {
-            switch (toupper(gmon_name[0]))
-            {
-            case 'A':
-            case 'E':
-            case 'I':
-            case 'O':
-            case 'U':
-                strcat(glog, "n ");
-                break;
-
-            default:
-                strcat(glog, " ");
-                break;
-            }
+        case DESC_CAP_THE:   result = "The "; break;
+        case DESC_NOCAP_THE: result = "the "; break;
+        case DESC_CAP_A:     result = "A ";   break;
+        case DESC_NOCAP_A:   result = "a ";   break;
+        case DESC_PLAIN: default:             break;
         }
     }
 
-    strcat(glog, gmon_name);
+    result += seekmonster(type)->name;
 
-    if ((descrip == DESC_CAP_YOUR || descrip == DESC_NOCAP_YOUR) && *glog)
+    // Vowel fix: Change 'a orc' to 'an orc'
+    if ( result.length() >= 3 &&
+         (result[0] == 'a' || result[0] == 'A') &&
+         isblank(result[1]) &&
+         is_vowel(result[2]) )
     {
-        const int lastch = glog[ strlen(glog) - 1 ];
-        if (lastch == 's' || lastch == 'x')
-            strcat(glog, "'");
-        else
-            strcat(glog, "'s");
+        result.insert(1, "n");
     }
-
-    return (glog);
-}                               // end moname()
+    return result;
+}
 
 /* ********************* END PUBLIC FUNCTIONS ********************* */
 
 // see mons_init for initialization of mon_entry array.
 static monsterentry *seekmonster(int p_monsterid)
 {
-    int me = p_monsterid != -1? mon_entry[p_monsterid] : -1;
+    const int me = p_monsterid != -1? mon_entry[p_monsterid] : -1;
 
     if (me >= 0)                // PARANOIA
         return (&mondata[me]);
@@ -2415,7 +2321,7 @@ std::string monsters::name(description_level_type desc) const
 
     if (possessive)
         desc = DESC_NOCAP_THE;
-    std::string mname = ptr_monam(this, desc);
+    std::string mname = str_monam(*this, desc);
     return (possessive? apostrophise(mname) : mname);
 }
 

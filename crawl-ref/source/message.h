@@ -16,6 +16,7 @@
 
 #include <string>
 #include <streambuf>
+#include <iostream>
 
 #include "externs.h"
 

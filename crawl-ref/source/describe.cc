@@ -4592,7 +4592,7 @@ void describe_monsters(monsters& mons)
 {
     std::ostringstream description;
 
-    description << ptr_monam( &mons, DESC_CAP_A ) << "$$";
+    description << str_monam( mons, DESC_CAP_A ) << "$$";
     
     // Note: Nearly all of the "long" descriptions have moved to 
     // mon-data.h, in an effort to give them some locality with the
@@ -4609,7 +4609,7 @@ void describe_monsters(monsters& mons)
     // than what we have today.
     //
     // -peterb 4/14/07
-    description << getLongDescription(ptr_monam(&mons, DESC_PLAIN));
+    description << getLongDescription(str_monam(mons, DESC_PLAIN));
 
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))

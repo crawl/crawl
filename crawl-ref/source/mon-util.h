@@ -121,22 +121,12 @@ struct monsterentry
  * *********************************************************************** */
 void init_monsters( FixedVector<unsigned short, 1000>& colour );
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: bang - beam - debug - direct - effects - fight - item_use -
- *              monstuff - mstuff2 - ouch - spells1 - spells2 - spells3 -
- *              spells4
- * *********************************************************************** */
-// mons_wpn only important for dancing weapons -- bwr
-const char *monam(const monsters *mon,
-                  int mons_num, int mons, bool vis,
-                  description_level_type desc, int mons_wpn = NON_ITEM);
+// this is the old monam(), ptr_monam()
+std::string str_monam(const monsters& mon, description_level_type desc,
+                      bool force_seen = false);
 
-// these front for monam
-const char *ptr_monam(const monsters *mon, description_level_type desc,
-                      bool force_seen = false);
-std::string str_monam(const monsters *mon, description_level_type desc,
-                      bool force_seen = false);
+// this is the old moname()
+std::string mons_type_name(int type, description_level_type desc );
                   
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -343,14 +333,6 @@ void mons_load_spells( monsters *mon, int book );
  * called from: dungeon - fight
  * *********************************************************************** */
 void define_monster(int mid);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: debug - itemname - mon-util
- * *********************************************************************** */
-const char *moname(int mcl, bool vis, description_level_type descrip,
-                   char glog[ ITEMNAME_SIZE ]);
 
 
 #ifdef DEBUG_DIAGNOSTICS

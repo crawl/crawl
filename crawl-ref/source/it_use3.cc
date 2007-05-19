@@ -70,7 +70,7 @@ void special_wielded()
     case SPWLD_SING:
         if (makes_noise)
         {
-            const char* suffixes[32] = {
+            const char* suffixes[] = {
                 "hums a little tune.", "breaks into glorious song!",
                 "sings.", "sings loudly.", "chimes melodiously.",
                 "makes a horrible noise.", "sings off-key.",
@@ -84,8 +84,11 @@ void special_wielded()
                 "makes a popping sound.", "sings a sudden staccato note.",
                 "says 'Hi! I'm the Singing Sword!'.", "whispers something.",
                 "speaks gibberish.", "raves incoherently",
-                "yells in some weird language." };
-            mprf("The Singing Sword %s", suffixes[random2(32)]);
+                "yells in some weird language."
+            };
+            const int num_suffixes = sizeof(suffixes) / sizeof(suffixes[0]);
+            msg::stream << "The Singing Sword "
+                        << suffixes[random2(num_suffixes)] << std::endl;
         }
         break;
 

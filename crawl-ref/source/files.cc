@@ -882,7 +882,7 @@ static void grab_followers(std::vector<follower>& followers)
                 continue;
 
 #if DEBUG_DIAGNOSTICS
-            mprf( "%s is following.", ptr_monam( fmenv, DESC_CAP_THE ) );
+            mprf( "%s is following.", str_monam(*fmenv, DESC_CAP_THE).c_str());
 #endif
 
             follower f(*fmenv);
