@@ -3464,18 +3464,18 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 const char* failure_rate_to_string( int fail )
 {
     return
-        (fail == 100) ? "Useless"   :
-        (fail >   90) ? "Terrible"  :
-        (fail >   80) ? "Cruddy"    :
-        (fail >   70) ? "Bad"       :
-        (fail >   60) ? "Very Poor" :
-        (fail >   50) ? "Poor"      :
-        (fail >   40) ? "Fair"      :
-        (fail >   30) ? "Good"      :
-        (fail >   20) ? "Very Good" :
-        (fail >   10) ? "Great"     :
-        (fail >    0) ? "Excellent" 
-        : "Perfect";
+        (fail == 100) ? "Useless" : // 0% success chance
+        (fail > 77) ? "Terrible"  : // 0-5%
+        (fail > 71) ? "Cruddy"    : // 5-10%
+        (fail > 64) ? "Bad"       : // 10-20%
+        (fail > 59) ? "Very Poor" : // 20-30%
+        (fail > 50) ? "Poor"      : // 30-50%
+        (fail > 40) ? "Fair"      : // 50-70%
+        (fail > 35) ? "Good"      : // 70-80%
+        (fail > 28) ? "Very Good" : // 80-90%
+        (fail > 22) ? "Great"     : // 90-95%
+        (fail >  0) ? "Excellent" : // 95-100%
+        "Perfect";                  // 100%
 }
 
 const char* spell_power_string( spell_type spell )
