@@ -10,12 +10,23 @@ A huge black bat.
 %%%%
 centaur
 A hybrid with the torso of a human atop the body of a large horse.
+
+"When Peleus, some distance away, saw him torn apart by the frightful wound he shouted: “Accept this tribute to the dead, at least, Crantor, dearest of youths, ” and with his powerful arm, he hurled his ash spear, at full strength, at Demoleon.  It ruptured the ribcage, and stuck quivering in the bone. The centaur pulled out the shaft minus its head (he tried with difficulty to reach that also) but the head was caught in his lung. The pain itself strengthened his will: wounded, he reared up at his enemy and beat the hero down with his hooves. Peleus received the resounding blows on helmet and shield, and defending his upper arms, and controlling the weapon he held out, with one blow through the arm he pierced the bi-formed breast.'"
+	-Ovid, _Metamorphoses_, XII 330
 %%%%
 red devil
 The Red Devil is slightly shorter than a human, but muscular and covered in spikes and horns. Two short wings sprout from its shoulders.
 %%%%
 ettin
 A large, two-headed humanoid. Most often seen wielding two weapons, so that the heads will have one less thing to bicker about.
+
+"But he had not been long in his hiding-hole, before the awful Ettin came in; and no sooner was he in, than he was heard crying:
+
+"Snouk but and snouk ben,
+I find the smell of an earthly man,
+Be he living, or be he dead,
+His heart this night shall kitchen my bread."
+	-Joseph Jacobs, _The Red Ettin_
 %%%%
 fungus
 A lumpy grey fungus, growing well in the dank underground dungeon.
@@ -46,6 +57,9 @@ A small, ugly minor demon.
 %%%%
 phantom
 A transparent man-like undead spirit.
+
+"Who wondrous things concerning our welfare, And straunge phantomes doth lett us ofte foresee."
+	-Spenser, _The Faerie Queene_ II. xii. 47 
 %%%%
 elephant slug
 A huge grey slug with folds of wrinkled skin.
@@ -61,6 +75,9 @@ A small, powerless larva of a killer bee.
 %%%%
 manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
+
+"Ctesias writeth, that in Æthiopia likewise there is a beast which he calleth Mantichora, having three rankes of teeth, which when they meet togither are let in one within another like the teeth of combes: with the face and eares of a man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile armed with a sting like a scorpion: his voice resembleth the noise of a flute and trumpet sounded together: very swift he is, and mans flesh of all others hee most desireth."
+	-Pliny the Elder, _Natural History_, Book 8, Chapter XXI
 %%%%
 necrophage
 A vile undead creation of the most unholy necromancy, these creatures are made from the decaying corpses of humanoid creatures.  They exist to spread disease and decay, and gain power from the decaying corpses of other beings.
@@ -141,6 +158,22 @@ An undead figure covered in bandages and embalming fluids, compelled to walk by 
 %%%%
 guardian naga
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+
+"The insensible son of Pandu sank down till he reached the Naga kingdom.
+Nagas, furnished with fangs containing virulent venom, bit him by
+thousands. The vegetable poison, mingled in the blood of the son of the
+Wind god, was neutralised by the snake-poison. The serpents had bitten
+all over his frame, except his chest, the skin of which was so tough that
+their fangs could not penetrate it.
+
+"On regaining consciousness, the son of Kunti burst his bands and began
+to press the snakes down under the ground. A remnant fled for life, and
+going to their king Vasuki, represented, 'O king of snakes, a man drowned
+under the water, bound in chords of shrubs; probably he had drunk poison.
+For when he fell amongst us, he was insensible. But when we began to bite
+him, he regained his senses, and bursting his fetters, commenced laying
+at us. May it please Your Majesty to enquire who is.'"
+	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 ogre
 A larger, uglier and fatter relative of orcs and goblins.
@@ -225,6 +258,11 @@ A large, fat mushroom.
 %%%%
 efreet
 A huge and muscular figure engulfed in a cloud of searing flame.
+"When the hoopoe returned to Solomon (he told him the news), and he responded (to Sheba's people): "Are you giving me money? What GOD has given me is far better than what He has given you. You are the ones to rejoice in such gifts."
+(To the hoopoe, he said,) "Go back to them (and let them know that) we will come to them with forces they cannot imagine. We will evict them, humiliated and debased."
+He said, "O you elders, which of you can bring me her mansion, before they arrive here as submitters?"
+One afrit from the jinns said, "I can bring it to you before you stand up. I am powerful enough to do this."
+	-The Quran, Sura 27 Al-Naml
 %%%%
 brain worm
 A slimy mauve worm with a greatly distended head.
@@ -459,6 +497,11 @@ An undead humanoid creature created from a decaying corpse by some unholy means 
 %%%%
 hog
 A large, fat and very ugly pig.
+
+"Fern came slowly down the stairs. Her eyes were red from crying. As she approached her chair, the carton wobbled, and there was a scratching noise. Fern looked at her father. Then she lifted the lid of the carton. There, inside, looking up at her, was the newborn pig. It was a white one. The morning light shone through its ears, turning them pink.
+
+"He's yours," said Mr. Arable. "Saved from an untimely death. And may the good Lord forgive me for this foolishness."
+	-E.B. White, _Charlotte's Web_
 %%%%
 giant mosquito
 A huge, bloated mosquito. It looks diseased.
@@ -471,6 +514,22 @@ A great troll, plated with thick scales of rusty iron.
 %%%%
 naga
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+
+"The insensible son of Pandu sank down till he reached the Naga kingdom.
+Nagas, furnished with fangs containing virulent venom, bit him by
+thousands. The vegetable poison, mingled in the blood of the son of the
+Wind god, was neutralised by the snake-poison. The serpents had bitten
+all over his frame, except his chest, the skin of which was so tough that
+their fangs could not penetrate it.
+
+"On regaining consciousness, the son of Kunti burst his bands and began
+to press the snakes down under the ground. A remnant fled for life, and
+going to their king Vasuki, represented, 'O king of snakes, a man drowned
+under the water, bound in chords of shrubs; probably he had drunk poison.
+For when he fell amongst us, he was insensible. But when we began to bite
+him, he regained his senses, and bursting his fetters, commenced laying
+at us. May it please Your Majesty to enquire who is.'"
+	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 fire giant
 A huge ruddy humanoid with bright hair.
@@ -662,9 +721,41 @@ A shadowy figure clothed in profound darkness.
 naga mage
 
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
+
+"The insensible son of Pandu sank down till he reached the Naga kingdom.
+Nagas, furnished with fangs containing virulent venom, bit him by
+thousands. The vegetable poison, mingled in the blood of the son of the
+Wind god, was neutralised by the snake-poison. The serpents had bitten
+all over his frame, except his chest, the skin of which was so tough that
+their fangs could not penetrate it.
+
+"On regaining consciousness, the son of Kunti burst his bands and began
+to press the snakes down under the ground. A remnant fled for life, and
+going to their king Vasuki, represented, 'O king of snakes, a man drowned
+under the water, bound in chords of shrubs; probably he had drunk poison.
+For when he fell amongst us, he was insensible. But when we began to bite
+him, he regained his senses, and bursting his fetters, commenced laying
+at us. May it please Your Majesty to enquire who is.'"
+	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 naga warrior
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
+
+"The insensible son of Pandu sank down till he reached the Naga kingdom.
+Nagas, furnished with fangs containing virulent venom, bit him by
+thousands. The vegetable poison, mingled in the blood of the son of the
+Wind god, was neutralised by the snake-poison. The serpents had bitten
+all over his frame, except his chest, the skin of which was so tough that
+their fangs could not penetrate it.
+
+"On regaining consciousness, the son of Kunti burst his bands and began
+to press the snakes down under the ground. A remnant fled for life, and
+going to their king Vasuki, represented, 'O king of snakes, a man drowned
+under the water, bound in chords of shrubs; probably he had drunk poison.
+For when he fell amongst us, he was insensible. But when we began to bite
+him, he regained his senses, and bursting his fetters, commenced laying
+at us. May it please Your Majesty to enquire who is.'"
+	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 orc warlord
 
@@ -923,6 +1014,22 @@ A hideous glowing apparition.
 greater naga
 
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
+
+"The insensible son of Pandu sank down till he reached the Naga kingdom.
+Nagas, furnished with fangs containing virulent venom, bit him by
+thousands. The vegetable poison, mingled in the blood of the son of the
+Wind god, was neutralised by the snake-poison. The serpents had bitten
+all over his frame, except his chest, the skin of which was so tough that
+their fangs could not penetrate it.
+
+"On regaining consciousness, the son of Kunti burst his bands and began
+to press the snakes down under the ground. A remnant fled for life, and
+going to their king Vasuki, represented, 'O king of snakes, a man drowned
+under the water, bound in chords of shrubs; probably he had drunk poison.
+For when he fell amongst us, he was insensible. But when we began to bite
+him, he regained his senses, and bursting his fetters, commenced laying
+at us. May it please Your Majesty to enquire who is.'"
+	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 skeletal dragon
 
