@@ -1386,7 +1386,7 @@ void melee_attack::calc_elemental_brand_damage(
 {
     special_damage = resist_adjust_damage(res, random2(damage_done) / 2 + 1);
 
-    if (special_damage > 0 && verb)
+    if (special_damage > 0 && verb && needs_message)
     {
         special_damage_message = make_stringf(
             "%s %s %s%s",
