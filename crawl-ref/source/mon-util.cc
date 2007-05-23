@@ -1800,6 +1800,7 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 
     case SPELL_NO_SPELL:
         ret = false;
+        break;
 
     default:
         if (!targ_adj && (get_spell_flags(monspell) & SPTYP_SUMMONING))
