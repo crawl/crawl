@@ -193,6 +193,25 @@ void lowercase(std::string &s)
         s[i] = tolower(s[i]);
 }
 
+bool ends_with(const std::string &s, const std::string &suffix)
+{
+    if (s.length() < suffix.length())
+        return false;
+    return (s.substr(s.length() - suffix.length()) == suffix);
+}
+
+int ends_with(const std::string &s, const char *suffixes[])
+{
+    if (!suffixes)
+        return (0);
+    for (int i = 0; suffixes[i]; ++i)
+    {
+        if (ends_with(s, suffixes[i]))
+            return (1 + i);
+    }
+    return (0);
+}
+
 std::string replace_all(std::string s,
                         const std::string &find,
                         const std::string &repl)

@@ -423,6 +423,69 @@ xxxxx...........................xxwwwx
 xxxxx...........................xxxxxx
 ENDMAP
 
+#################################
+# An Ice Statue vault
+NAME: ice1_lemuel
+MONS: ice statue
+TAGS: no_pool_fixup
+ORIENT: float
+SUBST: * : *$
+SUBST: * = |:5 * .
+SUBST: T = TU
+SHUFFLE: xb/cc
+MAP
+xxxxxxxxx
+xbbbbbbbx
+xb*****bx
+xb*****bx
+xb.....bx
+xb.....bx
+xb.....bx
+xb.....bx
+xbwwwwwbx
+xbww1wwbx
+xbwwwwwbx
+xb.....bx
+xb.....bx
+xb.....bx
+xb.....bx
+xb.....bx
+xbT.@.Tbx
+ENDMAP
+
+#################################
+#Another Ice Statue vault
+NAME: ice2_lemuel
+DEPTH: D:12-27, Lair, Swamp, Coc
+TAGS: no_pool_fixup no_mons_gen
+ORIENT: float
+SUBST: T = TU
+SUBST: W = w:20 W .:5
+MONS: ice statue
+MONS: ice devil w:5/blue devil w:5/ice dragon/freezing wraith/nothing w:30
+MONS: white imp/ice beast w:30/polar bear/nothing w:50
+MAP
+T..................T
+..WWW..........WWW..
+.WWWWW........WWWWW.
+WWWWWWwww..wwwWWWWWW
+WWW3WwwwwwwwwwwW3WWW
+WW333wwwwwwwwww333WW
+.WW3WwwwwwwwwwwW3WW.
+.WWWWwwwwwwwwwwWWWW.
+..WWWwww||||wwwWWW..
+...WWwww|12|wwwwW...
+..WWWwww||||wwwWWW..
+.WWWWwwwwwwwwwwWWWW.
+.WW3WwwwwwwwwwwW3WW.
+WW333wwwwwwwwww333WW
+WWW3WwwwwwwwwwwW3WWW
+WWWWWWwww..wwwWWWWWW
+.WWWWW........WWWWW.
+..WWW..........WWW..
+T..................T
+ENDMAP
+
 #############################################################################
 # Oklob assault
 
@@ -2323,4 +2386,47 @@ MAP
 .x1.2...1x.
 .xxxx+xxxx.
 ...........
+ENDMAP
+
+#############################
+# Pond minivault
+NAME: pond
+DEPTH: D:8-27, Lair
+MONS: plant w:30/fungus
+MONS: giant frog w:30/giant brown frog/snake/rat/green rat/swamp drake w:2
+MONS: giant mosquito
+SUBST: ! : w.
+SUBST: 2 : 23
+SUBST: 2 = 2.
+SUBST: 3 = 3.
+SUBST: . = . 1:1
+KFEAT: ? = *
+KMONS: ? = plant
+TAGS: no_monster_gen
+MAP
+..wwwww...
+.wwwwwwww2
+.wwwwwwwww
+.2wwwwwwww
+..ww222ww.
+.wwww222w.
+wwww!!22ww
+www!!!?ww.
+.ww!!!www.
+.2w!!!ww2.
+....!!w...
+ENDMAP
+
+##############################
+# Secret library minivault
+NAME: library
+DEPTH: 1-27
+ITEM: any book w:20/any scroll/nothing
+MAP
+......
+.x=xx.
+.xddx.
+.xddx.
+.xxxx.
+......
 ENDMAP

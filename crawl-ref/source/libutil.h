@@ -29,6 +29,13 @@ int unmangle_direction_keys(int keyin, int keymap = 0,
 
 void lowercase(std::string &s);
 void uppercase(std::string &s);
+bool ends_with(const std::string &s, const std::string &suffix);
+
+/**
+ * Returns 1 + the index of the first suffix that matches the given string,
+ * 0 if no suffixes match.
+ */
+int  ends_with(const std::string &s, const char *suffixes[]);
 
 std::string strip_filename_unsafe_chars(const std::string &s);
 

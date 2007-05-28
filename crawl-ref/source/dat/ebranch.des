@@ -515,6 +515,117 @@ MAP
 ..............................
 ENDMAP
 
+#########################
+# Orcs are a clue, episode I
+#
+NAME: hiddenorc1_lemuel
+TAGS: orc_entry
+ORIENT: float
+MONS: orc w:40/orc wizard w:2/orc priest w:2, orc warrior
+SUBST: ? = .x
+SUBST: ! : .$
+MAP
+x??@....@....@??x
+xx??.........??xx
+xxx??1111111??xxx
+xxxx??11111??xxxx
+xxxxx??111??xxxxx
+xxxxxx??1??xxxxxx
+xxxxxxx?2?xxxxxxx
+xxxxxxxv=vxxxxxxx
+xxxxxxx!!!xxxxxxx
+xxxxxxx!O!xxxxxxx
+xxxxxxx!!!xxxxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+#########################
+# Orcs are a clue, episode II
+#
+NAME: hiddenorc2_lemuel
+TAGS: orc_entry
+ORIENT: float
+MONS: orc w:20/orc wizard w:2/orc priest w:2/orc warrior w:1
+SUBST: a : x.
+SUBST: b : x.
+SUBST: c : x.
+SUBST: d : x.
+SUBST: ? = @ x:20 + =
+SUBST: ! : .$
+MAP
+xx?xxxxxxx?xx
+x111xxxxx111x
+?111aaaaa111?
+x111xxxxx111x
+xxbx=xxx=xcxx
+xxbxx!!!xxcxx
+xxbxx!O!xxcxx
+xxbxx!!!xxcxx
+xxbx=xxx=xcxx
+x111xxxxx111x
+?111ddddd111x
+x111xxxxx111?
+xx?xxxxxxx@xx
+ENDMAP
+
+#######################
+# Haunted orc entrance
+#
+NAME: zombieorc1_lemuel
+TAGS: orc_entry
+ORIENT: float
+MONS: orc zombie/orc skeleton w:2/goblin zombie w:2/hobgoblin zombie w:2/goblin skeleton w:1/hobgoblin skeleton w:1
+MONS: ogre zombie/troll zombie w:3/hill giant zombie w:1
+MONS: hungry ghost/phantom/wraith, orc sorcerer/orc priest/nothing
+SUBST:  ? = x . $:1
+MAP
+xxx.xxxxxxxxxxxxxxxxxxx
+xxx?.x?x?xx?xxx??xx?xxx
+xx..xxx..1.xxx....11xxx
+xx.x??x.x1xx?x.21xx?..x
+xx...x..xxx.2..1.x.x??.
+xx?x.....?x.x..x.x1?.xx
+xx..??12x?x31.1?x.x??xx
+xxx..x..x??O3x..x.xx.xx
+x?..?x....34x?.x.??x.xx
+xx.x??.x.x..?x..xx.x?xx
+x?xx?xx.x??...x.1x.1??x
+xx..xxx...x.x.x.1?1.xxx
+x?.2....xx2.x...xx.x??x
+xxx??xx..xx.xx.x?..xxxx
+xx..1.x.x.1...x2.x1..xx
+..x??x.xxx..xxxx??.??xx
+xx?.??.11.x?xxx..x..xxx
+x??xxxx???xx?xxx??x.?xx
+xxxxxxxxxxxxxxxxxxxx.xx
+ENDMAP
+
+#######################
+# Haunted orc entrance
+#
+NAME: zombieorc2_lemuel
+TAGS: orc_entry
+ORIENT: float
+MONS: orc zombie/orc skeleton w:2/goblin zombie w:2/hobgoblin zombie w:2/goblin skeleton w:1/hobgoblin skeleton w:1
+MONS: ogre zombie/troll zombie w:3/hill giant zombie w:1
+MONS: hungry ghost/phantom/wraith, orc sorcerer/orc priest
+SUBST: 4 = 34
+SUBST: ? = x . $:1
+MAP
+MAP
+xxxxx..@..xxxxx
+x21....I....12x
+x11...111...11x
+x.............x
+..1...343...1..
+@I1...2O2...1I@
+..1...212...1..
+x.............x
+x11...111...11x
+x21....I....12x
+xxxxx..@..xxxxx
+ENDMAP
+
 ##############################################################################
 # Vaults entries
 ##############################################################################

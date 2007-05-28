@@ -329,24 +329,6 @@ kill_def::kill_def(const struct monsters *mon) : kills(0), exp(0)
     add_kill(mon, get_packed_place());
 }
 
-static bool ends_with(const std::string &s, const char *suffix)
-{
-    std::string other = suffix;
-    if (s.length() < other.length()) return false;
-    return (s.substr(s.length() - other.length()) == other);
-}
-
-static bool ends_with(const std::string &s, const char *suffixes[])
-{
-    if (!suffixes) return false;
-    for ( ; *suffixes; suffixes++)
-    {
-        if (ends_with(s, *suffixes))
-            return true;
-    }
-    return false;
-}
-
 std::string apostrophise(const std::string &name)
 {
     if (name.empty())

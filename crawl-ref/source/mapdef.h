@@ -176,14 +176,17 @@ private:
 
 struct mons_spec
 {
-    int mid;
+    int  mid;
+    int  monnum;              // The zombified monster for zombies, or head
+                              // count for hydras.
     int  genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
 
-    mons_spec(int id = RANDOM_MONSTER, int gw = 10, int ml = 0,
+    mons_spec(int id = RANDOM_MONSTER, int num = 250,
+              int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false)
-        : mid(id), genweight(gw), mlevel(ml), fix_mons(_fixmons),
+        : mid(id), monnum(num), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken)
     {
     }
@@ -223,7 +226,11 @@ private:
     };
 
 private:
-    int mons_by_name(std::string name) const;
+    mons_spec mons_by_name(std::string name) const;
+    void get_zombie_type(std::string s, mons_spec &spec) const;
+    mons_spec get_hydra_spec(const std::string &name) const;
+    mons_spec get_zombified_monster(const std::string &name,
+                                    monster_type zomb) const;
     mons_spec_slot parse_mons_spec(std::string spec);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;

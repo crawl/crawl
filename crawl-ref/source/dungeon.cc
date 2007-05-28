@@ -3183,20 +3183,17 @@ static void dngn_place_item_explicit(int index, int x, int y,
 
 static bool dngn_place_monster(
     const vault_placement &place,
-    const mons_spec &monster_type_thing,
+    const mons_spec &mspec,
     int monster_level,
     int vx, int vy)
 {
-    if (monster_type_thing.mid != -1)
+    if (mspec.mid != -1)
     {
-        const int mid = monster_type_thing.mid;
+        const int mid = mspec.mid;
         const bool generate_awake =
-            monster_type_thing.generate_awake
-            || place.map.has_tag("generate_awake");
+            mspec.generate_awake || place.map.has_tag("generate_awake");
 
-        int not_used;
-
-        const int mlev = monster_type_thing.mlevel;
+        const int mlev = mspec.mlevel;
         if (mlev)
         {
             if (mlev > 0)
@@ -3217,9 +3214,11 @@ static bool dngn_place_monster(
                 grd[vx][vy] = habitat;
         }
 
+        int not_used;
         return (place_monster( not_used, mid, monster_level,
                                generate_awake? BEH_WANDER : BEH_SLEEP,
-                               MHITNOT, true, vx, vy, false ));
+                               MHITNOT, true, vx, vy, false,
+                               PROX_ANYWHERE, mspec.monnum));
     }
     return (false);
 }

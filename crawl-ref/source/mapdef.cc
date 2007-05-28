@@ -1042,37 +1042,38 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
     for (int i = 0, ssize = specs.size(); i < ssize; ++i)
     {
         std::string s = specs[i];
-        int weight = find_weight(s);
-        int mlevel = 0;
-        if (weight == TAG_UNFOUND || weight <= 0)
-            weight = 10;
+        mons_spec mspec;
 
-        bool fixmons = strip_tag(s, "fix_mons");
-        const bool generate_awake = strip_tag(s, "generate_awake");
+        mspec.genweight = find_weight(s);
+        if (mspec.genweight == TAG_UNFOUND || mspec.genweight <= 0)
+            mspec.genweight = 10;
+
+        mspec.fix_mons = strip_tag(s, "fix_mons");
+        mspec.generate_awake = strip_tag(s, "generate_awake");
 
         trim_string(s);
 
-        int mid = RANDOM_MONSTER;
-
         if (s == "8")
-            mlevel = -8;
+            mspec.mlevel = -8;
         else if (s == "9")
-            mlevel = -9;
-        else if (check_mimic(s, &mid, &fixmons))
+            mspec.mlevel = -9;
+        else if (check_mimic(s, &mspec.mid, &mspec.fix_mons))
             ;
         else if (s != "0")
         {
-            mid = mons_by_name(s);
+            const mons_spec nspec = mons_by_name(s);
 
-            if (mid == MONS_PROGRAM_BUG)
+            if (mspec.mid == MONS_PROGRAM_BUG)
             {
                 error = make_stringf("unrecognised monster \"%s\"", s.c_str());
                 return (slot);
             }
+
+            mspec.mid = nspec.mid;
+            mspec.monnum = nspec.monnum;
         }
 
-        slot.mlist.push_back(
-            mons_spec(mid, weight, mlevel, fixmons, generate_awake) );
+        slot.mlist.push_back(mspec);
     }
 
     return (slot);
@@ -1094,7 +1095,66 @@ std::string mons_list::add_mons(const std::string &s, bool fix)
     return (error);
 }
 
-int mons_list::mons_by_name(std::string name) const
+void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
+{
+    static const char *zombie_types[] =
+    {
+        " zombie", " skeleton", " simulacrum", NULL
+    };
+
+    // This order must match zombie_types, indexed from one. 
+    static const monster_type zombie_montypes[][2] =
+    {
+        { MONS_PROGRAM_BUG, MONS_PROGRAM_BUG },
+        { MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE },
+        { MONS_SKELETON_SMALL, MONS_SKELETON_LARGE },
+        { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE }
+    };
+
+    const int mod = ends_with(s, zombie_types);
+    if (!mod)
+    {
+        const std::string &spectre = "spectral ";
+        if (s.find(spectre) == 0)
+        {
+            s = s.substr(spectre.length());
+            spec.mid = MONS_SPECTRAL_THING;
+            spec.monnum = get_monster_by_name(s, true);
+            if (!mons_zombie_size(spec.monnum))
+                spec.mid = MONS_PROGRAM_BUG;
+            return;
+        }
+        spec.mid = MONS_PROGRAM_BUG;
+        return;
+    }
+
+    s = s.substr(0, s.length() - strlen(zombie_types[mod - 1]));
+    trim_string(s);
+    
+    spec.monnum = get_monster_by_name(s, true);
+
+    const int zombie_size = mons_zombie_size(spec.monnum);
+    if (!zombie_size)
+    {
+        spec.mid = MONS_PROGRAM_BUG;
+        return;
+    }
+
+    spec.mid = zombie_montypes[mod][zombie_size - 1];
+}
+
+mons_spec mons_list::get_hydra_spec(const std::string &name) const
+{
+    int nheads = atoi(name.c_str());
+    if (nheads < 1)
+        nheads = 250; // Choose randomly, doesn't mean a 250-headed hydra.
+    else if (nheads > 19)
+        nheads = 19;
+
+    return mons_spec(MONS_HYDRA, nheads);
+}
+
+mons_spec mons_list::mons_by_name(std::string name) const
 {
     lowercase(name);
 
@@ -1148,6 +1208,14 @@ int mons_list::mons_by_name(std::string name) const
 
     if (name == "large abomination")
         return (MONS_ABOMINATION_LARGE);
+
+    if (ends_with(name, "-headed hydra"))
+        return get_hydra_spec(name);
+
+    mons_spec spec;
+    get_zombie_type(name, spec);
+    if (spec.mid != MONS_PROGRAM_BUG)
+        return (spec);
 
     return (get_monster_by_name(name, true));
 }
