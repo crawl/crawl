@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 #ifdef DOS
 #include <conio.h>
@@ -375,7 +376,6 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     if (monster->type == -1)
         return;
     
-    int xom_will_act = 0;
     int monster_killed = monster_index(monster);
     bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
@@ -536,15 +536,6 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
             // killing triggers tutorial lesson
             tutorial_inspect_kill();
 
-            // Xom doesn't care who you killed:
-            if (you.religion == GOD_XOM 
-                && random2(70) <= 10 + monster->hit_dice)
-            {
-                // postpone Xom action until after the monster dies
-                xom_will_act = 1 + random2(monster->hit_dice);
-            }
-
-            // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills,
             // Only affects monsters friendly when created.
             if (!created_friendly)
@@ -810,7 +801,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 if (monster->type == MONS_SIMULACRUM_SMALL
                     || monster->type == MONS_SIMULACRUM_LARGE)
                 {
-                    simple_monster_message( monster, " vaporizes!" );
+                    simple_monster_message( monster, " vaporises!" );
 
                     place_cloud( CLOUD_COLD, monster->x, monster->y,
                                  1 + random2(3), monster->kill_alignment() );
@@ -839,9 +830,6 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                             || killer == KILL_YOU
                             || pet_kill);
     monster_cleanup(monster);
-
-    if ( xom_will_act )
-        Xom_acts(true, xom_will_act, false);    
 }                                                   // end monster_die
 
 void monster_cleanup(monsters *monster)
@@ -1013,23 +1001,46 @@ static bool valid_morph( monsters *monster, int new_mclass )
     return (monster_habitable_grid(new_mclass, current_tile));
 }        // end valid_morph()
 
-// note that power is (as of yet) unused within this function -
-// may be worthy of consideration of later implementation, though,
-// so I'll still let the parameter exist for the time being {dlb}
-bool monster_polymorph( monsters *monster, int targetc, int power )
+static bool is_poly_power_unsuitable(
+    poly_power_type power,
+    int src_pow,
+    int tgt_pow,
+    int relax)
+{
+    switch (power)
+    {
+    case PPT_LESS:
+        return (tgt_pow > src_pow - 3 + (relax * 3) / 2)
+            || (power == PPT_LESS && (tgt_pow < src_pow - (relax / 2)));
+    case PPT_MORE:
+        return (tgt_pow < src_pow + 2 - relax)
+            || (power == PPT_MORE && (tgt_pow > src_pow + relax));
+    default:
+    case PPT_SAME:
+        return (tgt_pow < src_pow - relax)
+            || (tgt_pow > src_pow + (relax * 3) / 2);
+    }
+}
+
+/*
+ * if targetc == RANDOM_MONSTER then relpower indicates the desired
+ * power of the new monster relative to the current monster.
+ * Relaxation still takes effect when needed no matter what relpower
+ * says.
+ */
+bool monster_polymorph( monsters *monster, monster_type targetc,
+                        poly_power_type power )
 {
     std::string str_polymon;
     int source_power, target_power, relax;
     int tries = 1000;
-
-    UNUSED( power );
 
     // Used to be mons_power, but that just returns hit_dice 
     // for the monster class.  By using the current hit dice 
     // the player gets the opportunity to use draining more 
     // effectively against shapeshifters. -- bwr
     source_power = monster->hit_dice;
-    relax = 2;
+    relax = 1;
 
     if (targetc == RANDOM_MONSTER)
     {
@@ -1044,15 +1055,15 @@ bool monster_polymorph( monsters *monster, int targetc, int power )
 
             target_power = mons_power( targetc );
 
-            if (one_chance_in(100))
+            if (one_chance_in(200))
                 relax++;
 
             if (relax > 50)
                 return (simple_monster_message( monster, " shudders." ));
         }
         while (tries-- && (!valid_morph( monster, targetc )
-                || target_power < source_power - relax
-                || target_power > source_power + (relax * 3) / 2));
+                           || is_poly_power_unsuitable(power, source_power,
+                                                       target_power, relax)));
     }
 
     if (!valid_morph( monster, targetc ))

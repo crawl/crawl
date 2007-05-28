@@ -109,7 +109,7 @@ public:
     int         str;                // final str (useful for nickname)
     int         intel;              // final int
     int         dex;                // final dex (useful for nickname)
-    int         god;                // god
+    god_type    god;                // god
     int         piety;              // piety 
     int         penance;            // penance
     char        wiz_mode;           // character used wiz mode

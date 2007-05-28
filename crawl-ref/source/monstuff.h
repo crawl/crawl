@@ -14,6 +14,7 @@
 #ifndef MONSTUFF_H
 #define MONSTUFF_H
 
+#include "mon-util.h"
 
 // useful macro
 #define SAME_ATTITUDE(x) (mons_friendly(x)?BEH_FRIENDLY:BEH_HOSTILE)
@@ -33,12 +34,13 @@ int  get_mimic_colour( const monsters *mimic );
    * *********************************************************************** */
 void alert_nearby_monsters(void);
 
-
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
-   * called from: beam - effects - monstuff
-   * *********************************************************************** */
-bool monster_polymorph(struct monsters *monster, int targetc, int power);
+enum poly_power_type {
+    PPT_LESS,
+    PPT_MORE,
+    PPT_SAME
+};
+bool monster_polymorph(monsters *monster, monster_type targetc,
+                       poly_power_type p = PPT_SAME);
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************

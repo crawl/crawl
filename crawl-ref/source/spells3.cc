@@ -40,6 +40,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "spells1.h"
 #include "spells4.h"
 #include "spl-cast.h"
@@ -590,7 +591,7 @@ void you_teleport(void)
     return;
 }                               // end you_teleport()
 
-void you_teleport2( bool allow_control, bool new_abyss_area )
+static bool teleport_player( bool allow_control, bool new_abyss_area )
 {
     bool is_controlled = (allow_control && !you.conf
                           && player_control_teleport()
@@ -599,7 +600,7 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
     {
         mpr("You feel a strange sense of stasis.");
-        return;
+        return false;
     }
 
     // after this point, we're guaranteed to teleport. Kill the appropriate
@@ -616,7 +617,7 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
     {
         abyss_teleport( new_abyss_area );
         you.pet_target = MHITNOT;
-        return;
+        return true;
     }
 
     FixedVector < int, 2 > plox;
@@ -693,7 +694,17 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
                || mgrd[you.x_pos][you.y_pos] != NON_MONSTER
                || env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD);
     }
-}                               // end you_teleport()
+    return !is_controlled;
+}
+
+void you_teleport_now( bool allow_control, bool new_abyss_area )
+{
+    const bool randtele = teleport_player(allow_control, new_abyss_area);
+    // Xom is amused by uncontrolled teleports that land you in a
+    // dangerous place.
+    if (randtele && player_in_a_dangerous_place())
+        xom_is_stimulated(255);
+}
 
 bool entomb(void)
 {

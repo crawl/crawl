@@ -301,4 +301,8 @@
 // it wants to be used in case labels.
 #define CONTROL( xxx )          ((xxx) - 'A' + 1)
 
+#define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
+
+#define MIN(x, y) MINIMUM(x, y)
+
 #endif

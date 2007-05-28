@@ -45,7 +45,7 @@ std::string get_savedir_path(const std::string &shortpath);
 
 std::string get_prefs_filename();
 
-void load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth, 
+bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth, 
            int old_level, branch_type where_were_you2 );
 
 // last updated 12may2000 {dlb}

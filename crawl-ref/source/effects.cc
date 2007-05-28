@@ -36,6 +36,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills2.h"
 #include "spells3.h"
 #include "spells4.h"
@@ -154,7 +155,10 @@ void banished(int gate_type, const std::string &who)
 
     down_stairs(true, you.your_level, gate_type);  // heh heh
     untag_followers(); // safety
-}                               // end banished()
+
+    if (gate_type == DNGN_ENTER_ABYSS || gate_type == DNGN_ENTER_PANDEMONIUM)
+        xom_is_stimulated(255);
+}
 
 bool forget_spell(void)
 {
@@ -297,9 +301,14 @@ void direct_effect(struct bolt &pbolt)
     case DMNBM_BRAIN_FEED:
         // lose_stat() must come last {dlb}
         if (one_chance_in(3) && lose_stat(STAT_INTELLIGENCE, 1))
+        {
             mpr("Something feeds on your intellect!");
+            xom_is_stimulated(50);
+        }
         else
+        {
             mpr("Something tries to feed on your intellect!");
+        }
         break;
     }
 
@@ -351,7 +360,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         else if (check_mons_resist_magic( monster, pbolt.ench_power ))
             simple_monster_message(monster, " resists.");
         else
-            monster_polymorph(monster, RANDOM_MONSTER, 100);
+            monster_polymorph(monster, RANDOM_MONSTER);
         break;
     }
 
@@ -1138,12 +1147,11 @@ bool acquirement(object_class_type force_class, int agent)
     else
     {
         randart_properties_t  proprt;
-
         for (int item_tries = 0; item_tries < 50; item_tries++)
         {
             // BCR - unique is now used for food quantity.
             thing_created = items( unique, class_wanted, type_wanted, true, 
-                    MAKE_GOOD_ITEM, 250 );
+                                   MAKE_GOOD_ITEM, 250 );
 
             if (thing_created == NON_ITEM)
                 continue;

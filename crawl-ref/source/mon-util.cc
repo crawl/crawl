@@ -2361,10 +2361,14 @@ bool monsters::fumbles_attack(bool verbose)
 {
     if (floundering() && one_chance_in(4))
     {
-        if (verbose && !silenced(you.x_pos, you.y_pos)
-            && !silenced(x, y))
+        if (verbose)
         {
-            mprf(MSGCH_SOUND, "You hear a splashing noise.");
+            const bool can_see =
+                mons_near(this) && player_monster_visible(this);
+            if (can_see)
+                mprf("%s splashes around in the water.");
+            else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
+                mprf(MSGCH_SOUND, "You hear a splashing noise.");
         }
         return (true);
     }
@@ -3384,7 +3388,7 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
         if (type == MONS_GLOWING_SHAPESHIFTER 
             || random2(1000) < mod_speed( 250, spd ))
         {
-            monster_polymorph(this, RANDOM_MONSTER, 0);
+            monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
         }
         break;
 
@@ -3392,7 +3396,7 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
         if (type == MONS_SHAPESHIFTER 
             || random2(1000) < mod_speed( 1000 / ((15 * hit_dice) / 5), spd ))
         {
-            monster_polymorph(this, RANDOM_MONSTER, 0);
+            monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
         }
         break;
 
@@ -3479,10 +3483,10 @@ kill_category monsters::kill_alignment() const
     return (attitude == ATT_FRIENDLY? KC_FRIENDLY : KC_OTHER);
 }
 
-void monsters::sicken(int amount)
+bool monsters::sicken(int amount)
 {
     if (holiness() != MH_NATURAL || (amount /= 2) < 1)
-        return;
+        return (false);
 
     if (!has_ench(ENCH_SICK)
         && mons_near(this) && player_monster_visible(this))
@@ -3492,6 +3496,8 @@ void monsters::sicken(int amount)
     }
 
     add_ench(mon_enchant(ENCH_SICK, amount));
+
+    return (true);
 }
 
 int monsters::base_speed(int mcls)
@@ -3643,7 +3649,7 @@ void monsters::mutate()
     if (holiness() != MH_NATURAL)
         return;
 
-    monster_polymorph(this, RANDOM_MONSTER, 100);
+    monster_polymorph(this, RANDOM_MONSTER);
 }
 
 bool monsters::is_icy() const

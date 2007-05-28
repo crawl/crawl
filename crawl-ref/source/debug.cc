@@ -1386,22 +1386,22 @@ void debug_get_religion(void)
     if (specs[0] == '\0')
         return;
 
-    int god = -1;
+    god_type god = GOD_NO_GOD;
 
     for (int i = 1; i < NUM_GODS; i++)
     {
         char name[80];
-        strncpy( name, god_name(i), sizeof( name ) );
+        strncpy( name, god_name(static_cast<god_type>(i)), sizeof( name ) );
 
         char *ptr = strstr( strlwr(name), strlwr(specs) );
         if (ptr != NULL)
         {
-            god = i;
+            god = static_cast<god_type>(i);
             break;
         }
     }
 
-    if (god == -1)
+    if (god == GOD_NO_GOD)
         mpr( "That god doesn't seem to be taking followers today." );
     else
     {

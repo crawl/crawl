@@ -50,6 +50,7 @@
 #include "makeitem.h"
 #include "misc.h"
 #include "monplace.h"
+#include "monstuff.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "notes.h"
@@ -66,7 +67,8 @@
 #include "tutorial.h"
 #include "view.h"
 
-const char *sacrifice[] = {
+const char *sacrifice[] =
+{
     // Zin
     " glows silver and disappears.",
     // TSO
@@ -257,7 +259,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 
 void altar_prayer(void);
 void dec_penance(int god, int val);
-void divine_retribution(int god);
+void divine_retribution(god_type god);
 void inc_penance(int god, int val);
 void inc_penance(int val);
 
@@ -279,7 +281,7 @@ static bool is_good_god(god_type god)
         god == GOD_ELYVILON;
 }
 
-void dec_penance(int god, int val)
+void dec_penance(god_type god, int val)
 {
     if (you.penance[god] > 0)
     {
@@ -419,7 +421,7 @@ static void do_god_gift()
                 && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
             {
                 int thing_created = NON_ITEM;
-                unsigned char gift_type = MISC_DECK_OF_TRICKS;
+                int gift_type = MISC_DECK_OF_TRICKS;
 
                 if (random2(200) <= you.piety && one_chance_in(4))
                     gift_type = MISC_DECK_OF_SUMMONINGS;
@@ -429,7 +431,7 @@ static void do_god_gift()
                     gift_type = MISC_DECK_OF_POWER;
                 
                 thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
-                                       true, 1, 250 );
+                                       true, 1, MAKE_ITEM_RANDOM_RACE );
 
                 if (thing_created != NON_ITEM)
                 {
@@ -500,7 +502,7 @@ static void do_god_gift()
                 int thing_called = random_undead_servant(GOD_YREDELEMNUL);
                 if (create_monster( thing_called, 0, BEH_FRIENDLY, 
                                     you.x_pos, you.y_pos, 
-                                    you.pet_target, 250 ) != -1)
+                                    you.pet_target, MAKE_ITEM_RANDOM_RACE ) != -1)
                 {
                     simple_god_message(" grants you an undead servant!");
                     more();
@@ -567,7 +569,8 @@ static void do_god_gift()
                         success = acquirement(OBJ_BOOKS, you.religion);
                     else
                     {
-                        int thing_created = items(1, OBJ_BOOKS, gift, true, 1, 250);
+                        int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
+                                                  MAKE_ITEM_RANDOM_RACE);
                         if (thing_created == NON_ITEM)
                             return;
 
@@ -684,26 +687,7 @@ void pray()
     }
     else if (you.religion == GOD_XOM)
     {
-        if (one_chance_in(100))
-        {
-            // Every now and then, Xom listens
-            // This is for flavour, not effect, so praying should not be
-            // encouraged.
-
-            // Xom is nicer to experienced players
-            bool nice = (27 <= random2( 27 + you.experience_level ));
-
-            // and he's not very nice even then
-            int sever = (nice) ? random2( random2( you.experience_level ) )
-                               : you.experience_level;
-
-            // bad results are enforced, good are not
-            bool force = !nice;
-
-            Xom_acts( nice, 1 + sever, force );
-        }
-        else
-            mpr("Xom ignores you.");
+        mpr("Xom ignores you.");
 
         return;
     }
@@ -743,7 +727,7 @@ void pray()
         do_god_gift();
 }                               // end pray()
 
-char *god_name( int which_god, bool long_name ) // mv - rewritten
+const char *god_name( god_type which_god, bool long_name ) // mv - rewritten
 {
     static char godname_buff[80];
 
@@ -873,404 +857,10 @@ char *god_name( int which_god, bool long_name ) // mv - rewritten
     return (godname_buff);
 }                               // end god_name()
 
-void god_speaks( int god, const char *mesg )
+void god_speaks( god_type god, const char *mesg )
 {
     mpr( mesg, MSGCH_GOD, god );
 }                               // end god_speaks()
-
-void Xom_acts(bool niceness, int sever, bool force_sever)
-{
-    // niceness = false - bad, true - nice
-    int temp_rand;              // probability determination {dlb}
-    bool done_bad = false;      // flag to clarify logic {dlb}
-    bool done_good = false;     // flag to clarify logic {dlb}
-
-    struct bolt beam;
-
-    if (sever < 1)
-        sever = 1;
-
-    if (!force_sever)
-        sever = random2(sever);
-
-    if (sever == 0)
-        return;
-
-  okay_try_again:
-
-    if (!niceness || one_chance_in(3))
-    {
-        // begin "Bad Things"
-        done_bad = false;
-
-        // this should always be first - it will often be called
-        // deliberately, with a low sever value
-        if (random2(sever) <= 2)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "Xom notices you." :
-                (temp_rand == 1) ? "Xom's attention turns to you for a moment.":
-                (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                                 : "You hear Xom's maniacal laughter.");
-
-            miscast_effect( SPTYP_RANDOM, 5 + random2(10), random2(100), 0, 
-                            "the capriciousness of Xom" );
-
-            done_bad = true;
-        }
-        else if (random2(sever) <= 2)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"Suffer!\"" :
-                (temp_rand == 1) ? "Xom's malign attention turns to you for a moment." :
-                (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                                 : "You hear Xom's maniacal laughter.");
-
-            lose_stat(STAT_RANDOM, 1 + random2(3), true);
-
-            done_bad = true;
-        }
-        else if (random2(sever) <= 2)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "Xom notices you." :
-                (temp_rand == 1) ? "Xom's attention turns to you for a moment.":
-                (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                                 : "You hear Xom's maniacal laughter.");
-
-            miscast_effect( SPTYP_RANDOM, 5 + random2(15), random2(250), 0, 
-                            "the capriciousness of Xom" );
-
-            done_bad = true;
-        }
-        else if (!you.is_undead && random2(sever) <= 3)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"You need some minor adjustments, mortal!\"" :
-                (temp_rand == 1) ? "\"Let me alter your pitiful body.\"" :
-                (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                                 : "You hear Xom's maniacal laughter.");
-
-            mpr("Your body is suffused with distortional energy.");
-
-            set_hp(1 + random2(you.hp), false);
-            deflate_hp(you.hp_max / 2, true);
-
-            bool failMsg = true;
-            for (int i = 0; i < 4; i++)
-            {
-                if (!mutate(100, failMsg))
-                    failMsg = false;
-            }
-
-            done_bad = true;
-        }
-        else if (!you.is_undead && random2(sever) <= 3)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"You have displeased me, mortal.\"" :
-                (temp_rand == 1) ? "\"You have grown too confident for your meagre worth.\"" :
-                (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                                 : "You hear Xom's maniacal laughter.");
-
-            if (one_chance_in(4))
-            {
-                drain_exp();
-                if (random2(sever) > 3)
-                    drain_exp();
-                if (random2(sever) > 3)
-                    drain_exp();
-            }
-            else
-            {
-                mpr("A wave of agony tears through your body!");
-                set_hp(1 + (you.hp / 2), false);
-            }
-
-            done_bad = true;
-        }
-        else if (random2(sever) <= 3)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"Time to have some fun!\"" :
-                (temp_rand == 1) ? "\"Fight to survive, mortal.\"" :
-                (temp_rand == 2) ? "\"Let's see if it's strong enough to survive yet.\""
-                                 : "You hear Xom's maniacal laughter.");
-
-            if (one_chance_in(4) && (you.equip[EQ_WEAPON] != -1) )
-                dancing_weapon(100, true);      // nasty, but fun
-            else
-            {
-                create_monster(MONS_NEQOXEC + random2(5), 3,
-                    BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
-
-                if (one_chance_in(3))
-                    create_monster(MONS_NEQOXEC + random2(5), 3,
-                        BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
-
-                if (one_chance_in(4))
-                    create_monster(MONS_NEQOXEC + random2(5), 3,
-                        BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
-
-                if (one_chance_in(3))
-                    create_monster(MONS_HELLION + random2(10), 3,
-                        BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
-
-                if (one_chance_in(4))
-                    create_monster(MONS_HELLION + random2(10), 3,
-                        BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
-            }
-
-            done_bad = true;
-        }
-        else if (you.your_level == 0)
-        {
-            // this should remain the last possible outcome {dlb}
-            temp_rand = random2(3);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"You have grown too comfortable in your little world, mortal!\"" :
-                (temp_rand == 1) ? "Xom casts you into the Abyss!"
-                                 : "The world seems to spin as Xom's maniacal laughter rings in your ears.");
-
-            banished(DNGN_ENTER_ABYSS, "Xom");
-
-            done_bad = true;
-        }
-    }                           // end "Bad Things"
-    else
-    {
-        // begin "Good Things"
-        done_good = false;
-
-// Okay, now for the nicer stuff (note: these things are not necessarily nice):
-        if (random2(sever) <= 2)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"Go forth and destroy!\"" :
-                (temp_rand == 1) ? "\"Go forth and destroy, mortal!\"" :
-                (temp_rand == 2) ? "Xom grants you a minor favour."
-                                 : "Xom smiles on you.");
-
-            switch (random2(7))
-            {
-            case 0:
-                potion_effect(POT_HEALING, 150);
-                break;
-            case 1:
-                potion_effect(POT_HEAL_WOUNDS, 150);
-                break;
-            case 2:
-                potion_effect(POT_SPEED, 150);
-                break;
-            case 3:
-                potion_effect(POT_MIGHT, 150);
-                break;
-            case 4:
-                potion_effect(POT_INVISIBILITY, 150);
-                break;
-            case 5:
-                if (one_chance_in(6))
-                    potion_effect(POT_EXPERIENCE, 150);
-                else
-                {
-                    you.berserk_penalty = NO_BERSERK_PENALTY;
-                    potion_effect(POT_BERSERK_RAGE, 150);
-                }
-                break;
-            case 6:
-                you.berserk_penalty = NO_BERSERK_PENALTY;
-                potion_effect(POT_BERSERK_RAGE, 150);
-                break;
-            }
-
-            done_good = true;
-        }
-        else if (random2(sever) <= 4)
-        {
-            temp_rand = random2(3);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"Serve the mortal, my children!\"" :
-                (temp_rand == 1) ? "Xom grants you some temporary aid."
-                                 : "Xom opens a gate.");
-
-            create_monster( MONS_NEQOXEC + random2(5), 3, 
-                            BEH_FRIENDLY, you.x_pos, you.y_pos, 
-                            you.pet_target, 250 );
-
-            create_monster( MONS_NEQOXEC + random2(5), 3, 
-                            BEH_FRIENDLY, you.x_pos, you.y_pos, 
-                            you.pet_target, 250 );
-
-            if (random2( you.experience_level ) >= 8)
-            {
-                create_monster( MONS_NEQOXEC + random2(5), 3, 
-                                BEH_FRIENDLY, you.x_pos, you.y_pos, 
-                                you.pet_target, 250 );
-            }
-
-            if (random2( you.experience_level ) >= 8)
-            {
-                create_monster( MONS_HELLION + random2(10), 3,
-                                BEH_FRIENDLY, you.x_pos, you.y_pos,
-                                you.pet_target, 250 );
-            }
-
-            if (random2( you.experience_level ) >= 8)
-            {
-                create_monster( MONS_HELLION + random2(10), 3,
-                                BEH_FRIENDLY, you.x_pos, you.y_pos,
-                                you.pet_target, 250 );
-            }
-
-            done_good = true;
-        }
-        else if (random2(sever) <= 3)
-        {
-            temp_rand = random2(3);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"Take this token of my esteem.\"" :
-                (temp_rand == 1) ? "Xom grants you a gift!"
-                                 : "Xom's generous nature manifests itself.");
-
-            if (grid_destroys_items(grd[you.x_pos][you.y_pos])) {
-                // How unfortunate. I'll bet Xom feels sorry for you.
-                mprf(MSGCH_SOUND,
-                     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
-            }
-            else
-            {
-                int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM, true,
-                                              you.experience_level * 3, 250);
-
-                move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-
-                if (thing_created != NON_ITEM)
-                {
-                    origin_acquired(mitm[thing_created], GOD_XOM);
-                    canned_msg(MSG_SOMETHING_APPEARS);
-                    more();
-                }
-            }
-
-            done_good = true;
-        }
-        else if (random2(sever) <= 4)
-        {
-            const int demon = (random2(you.experience_level) < 6)
-                                                ? MONS_WHITE_IMP + random2(5)
-                                                : MONS_NEQOXEC + random2(5);
-
-            if (create_monster( demon, 0, BEH_FRIENDLY, you.x_pos, you.y_pos,
-                                                 you.pet_target, 250 ) != -1)
-            {
-                temp_rand = random2(3);
-
-                god_speaks(GOD_XOM,
-                    (temp_rand == 0) ? "\"Serve the mortal, my child!\"" :
-                    (temp_rand == 1) ? "Xom grants you a demonic servitor."
-                                     : "Xom opens a gate.");
-            }
-            else
-            {
-                god_speaks(GOD_XOM, "You hear Xom cackling.");
-            }
-
-            done_good = true;   // well, for Xom, trying == doing {dlb}
-        }
-        else if (random2(sever) <= 4)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"Take this instrument of destruction!\"" :
-                (temp_rand == 1) ? "\"You have earned yourself a gift.\"" :
-                (temp_rand == 2) ? "Xom grants you an implement of death."
-                                 : "Xom smiles on you.");
-
-            if (acquirement(OBJ_WEAPONS, GOD_XOM))
-                more();
-
-            done_good = true;
-        }
-        else if (!you.is_undead && random2(sever) <= 5)
-        {
-            temp_rand = random2(4);
-
-            god_speaks(GOD_XOM,
-                (temp_rand == 0) ? "\"You need some minor adjustments, mortal!\"" :
-                (temp_rand == 1) ? "\"Let me alter your pitiful body.\"" :
-                (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                                 : "You hear Xom's maniacal chuckling.");
-
-            mpr("Your body is suffused with distortional energy.");
-
-            set_hp(1 + random2(you.hp), false);
-            deflate_hp(you.hp_max / 2, true);
-
-            if (coinflip() || !give_cosmetic_mutation())
-                give_good_mutation();
-
-            done_good = true;
-        }
-        else if (random2(sever) <= 2)
-        {
-            // this should remain the last possible outcome {dlb}
-            if (!one_chance_in(8))
-                you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-
-            god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
-
-            beam.beam_source = NON_MONSTER;
-            beam.type = SYM_BURST;
-            beam.damage = dice_def( 3, 30 );
-            beam.flavour = BEAM_ELECTRICITY;
-            beam.target_x = you.x_pos;
-            beam.target_y = you.y_pos;
-            beam.name = "blast of lightning";
-            beam.colour = LIGHTCYAN;
-            beam.thrower = KILL_MISC;
-            beam.aux_source = "Xom's lightning strike";
-            beam.ex_size = 2;
-            beam.is_tracer = false;
-            beam.is_explosion = true;
-
-            explosion(beam);
-
-            if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] == 1)
-            {
-                mpr("Your divine protection wanes.");
-                you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
-            }
-
-            done_good = true;
-        }
-    }                           // end "Good Things"
-
-    if (done_bad || done_good )
-        return;
-    if ( one_chance_in(4) ) {
-        god_speaks(GOD_XOM, "Xom's attention is distracted from you.");
-        return;
-    }
-    goto okay_try_again;
-}                               // end Xom_acts()
 
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
@@ -1674,8 +1264,12 @@ bool did_god_conduct( int thing_done, int level )
     return (ret);
 }
 
-void gain_piety(char pgn)
+void gain_piety(int pgn)
 {
+    // Xom uses piety differently...
+    if (you.religion == GOD_XOM)
+        return;
+ 
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
     {
@@ -1750,7 +1344,7 @@ void gain_piety(char pgn)
         do_god_gift();
 }
 
-void lose_piety(char pgn)
+void lose_piety(int pgn)
 {
     int old_piety = you.piety;
 
@@ -1791,7 +1385,7 @@ void lose_piety(char pgn)
     }
 }
 
-static void lugonu_retribution(int god)
+static void lugonu_retribution(god_type god)
 {
     if (coinflip())
     {
@@ -1806,7 +1400,7 @@ static void lugonu_retribution(int god)
         simple_god_message("'s wrath finds you!", god);
         mpr("Space warps around you!");
         if (!one_chance_in(3))
-            you_teleport2(false);
+            you_teleport_now(false);
         else
             random_blink(false);
 
@@ -1848,7 +1442,7 @@ static void lugonu_retribution(int god)
     }
 }
 
-void divine_retribution( int god )
+void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
@@ -1874,14 +1468,8 @@ void divine_retribution( int god )
     switch (god)
     {
     case GOD_XOM:
-        {
-            // One in ten chance that Xom might do something good...
-            // but that isn't forced, bad things are though
-            bool nice = one_chance_in(10);
-            bool force = !nice;
-
-            Xom_acts(nice, you.experience_level, force);
-        }
+        // One in ten chance that Xom might do something good...
+        xom_acts(one_chance_in(10), abs(you.piety - 100));
         break;
 
     case GOD_SHINING_ONE:
@@ -2343,7 +1931,7 @@ void divine_retribution( int god )
 
 void excommunication(void)
 {
-    const int old_god = you.religion;
+    const god_type old_god = you.religion;
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
@@ -2358,7 +1946,7 @@ void excommunication(void)
     switch (old_god)
     {
     case GOD_XOM:
-        Xom_acts( false, (you.experience_level * 2), true );
+        xom_acts( false, abs(you.piety - 100) * 2);
         inc_penance( old_god, 50 );
         break;
 
@@ -2613,7 +2201,7 @@ void offer_items()
     }
 }
 
-void god_pitch(unsigned char which_god)
+void god_pitch(god_type which_god)
 {
     mprf("You kneel at the altar of %s.", god_name(which_god));
     more();
@@ -2660,8 +2248,19 @@ void god_pitch(unsigned char which_god)
 
     //jmf: moved up so god_speaks gives right colour
     you.religion = static_cast<god_type>(which_god);
-    you.piety = 15;             // to prevent near instant excommunication
-    you.gift_timeout = 0; 
+
+    if (you.religion == GOD_XOM)
+    {
+        // Xom uses piety and gift_timeout differently.
+        you.piety = 100;
+        you.gift_timeout = random2(40) + random2(40);
+    }
+    else
+    {
+        you.piety = 15;             // to prevent near instant excommunication
+        you.gift_timeout = 0;
+    }
+    
     set_god_ability_slots();    // remove old god's slots, reserve new god's
 #ifdef DGL_WHEREIS
     whereis_record();
@@ -2742,7 +2341,7 @@ void handle_god_time(void)
         // why we do it this way... it requires only one pass and doesn't
         // require an array.
 
-        int which_god = GOD_NO_GOD;
+        god_type which_god = GOD_NO_GOD;
         unsigned int count = 0;
 
         for (int i = GOD_NO_GOD; i < NUM_GODS; i++)
@@ -2751,7 +2350,7 @@ void handle_god_time(void)
             {
                 count++;
                 if (one_chance_in(count))
-                    which_god = i;
+                    which_god = static_cast<god_type>(i);
             }
         }
 
@@ -2765,9 +2364,47 @@ void handle_god_time(void)
         switch (you.religion)
         {
         case GOD_XOM:
-            if (one_chance_in(75))
-                Xom_acts(true, you.experience_level + random2(15), true);
+        {
+            // Xom semi-randomly drifts your piety.
+            int delta;
+            const char *origfavour = describe_xom_favour();
+            const bool good = you.piety >= 100;
+            int size = abs(you.piety - 100);
+            delta = (random2(1000) < 511) ? 1 : -1;
+            size += delta;
+            you.piety = 100 + (good ? size : -size);
+            const char *newfavour = describe_xom_favour();
+            if (strcmp(origfavour, newfavour))
+            {
+                // Dampen oscillation across announcement boundaries:
+                size += delta * 2;
+                you.piety = 100 + (good ? size : -size);
+            }
+            
+            // ... but he gets bored... (I re-use gift_timeout for
+            // this instead of making a separate field because I don't
+            // want to learn how to save and restore a new field). In
+            // this usage, the "gift" is the gift you give to Xom of
+            // something interesting happening.
+            if (you.gift_timeout == 1)
+            {
+                mpr("Xom is getting BORED.");
+                you.gift_timeout = 0;
+            }
+            else if (you.gift_timeout > 1)
+            {
+                you.gift_timeout -= random2(2);
+            }
+
+            if (one_chance_in(20))
+            {
+                // If you.gift_timeout was == 0, then Xom was BORED.
+                // He HATES that.
+                xom_acts(you.gift_timeout > 0 && you.piety > 100,
+                         abs(you.piety - 100));
+            }
             break;
+        }
 
         case GOD_ZIN:           // These gods like long-standing worshippers
         case GOD_ELYVILON:
@@ -2831,7 +2468,7 @@ void handle_god_time(void)
 }                               // end handle_god_time()
 
 // yet another wrapper for mpr() {dlb}:
-void simple_god_message(const char *event, int which_deity)
+void simple_god_message(const char *event, god_type which_deity)
 {
     char buff[ INFO_SIZE ];
 
@@ -2843,7 +2480,7 @@ void simple_god_message(const char *event, int which_deity)
     god_speaks( which_deity, buff );
 }
 
-char god_colour( char god ) //mv - added
+int god_colour( god_type god ) //mv - added
 {
     switch (god)
     {

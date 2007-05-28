@@ -386,7 +386,8 @@ const char *get_class_name( int which_job );
  * *********************************************************************** */
 void contaminate_player(int change, bool statusOnly = false);
 
-void poison_player( int amount, bool force = false );
+/* @return true iff they were poisoned (false if they are immune) */
+bool poison_player( int amount, bool force = false );
 void reduce_poison_player( int amount );
 
 void confuse_player( int amount, bool resistable = true );
@@ -398,7 +399,8 @@ void dec_slow_player();
 void haste_player( int amount );
 void dec_haste_player();
 
-void disease_player( int amount );
+/* return true iff they were diseased */
+bool disease_player( int amount );
 void dec_disease_player();
 
 void rot_player( int amount );

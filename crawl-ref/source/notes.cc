@@ -255,16 +255,20 @@ std::string Note::describe( bool when, bool where, bool what ) const
                    << spell_title(static_cast<spell_type>(first));
             break;
         case NOTE_GET_GOD:
-            result << "Became a worshipper of " << god_name(first, true);
+            result << "Became a worshipper of "
+                   << god_name(static_cast<god_type>(first), true);
             break;
         case NOTE_LOSE_GOD:
-            result << "Fell from the grace of " << god_name(first);
+            result << "Fell from the grace of "
+                   << god_name(static_cast<god_type>(first));
             break;
         case NOTE_MOLLIFY_GOD:
-            result << "Was forgiven by " << god_name(first);
+            result << "Was forgiven by "
+                   << god_name(static_cast<god_type>(first));
             break;
         case NOTE_GOD_GIFT:
-            result << "Received a gift from " << god_name(first);
+            result << "Received a gift from "
+                   << god_name(static_cast<god_type>(first));
             break;
         case NOTE_ID_ITEM:
             result << "Identified " << name;
@@ -288,7 +292,8 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << name << " changed form";
             break;
         case NOTE_GOD_POWER:
-            result << "Acquired " << god_name(first) << "'s "
+            result << "Acquired "
+                   << god_name(static_cast<god_type>(first)) << "'s "
                    << number_to_ordinal(real_god_power(first, second)+1)
                    << " power";
             break;

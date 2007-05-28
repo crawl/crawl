@@ -2439,7 +2439,7 @@ static void special_room(int level_number, spec_room &sr)
                                             : OBJ_POTIONS);       // 1 in 11
 
                 thing_created = items( 1, obj_type, OBJ_RANDOM, true,
-                                       level_number * 3, 250 );
+                                       level_number * 3, MAKE_ITEM_RANDOM_RACE);
 
                 if (thing_created != NON_ITEM)
                 {
@@ -3458,9 +3458,9 @@ static int vault_grid( vault_placement &place,
                             || vgrid == 'Z') ? MAKE_GOOD_ITEM :
                            (vgrid == '*')    ? 5 + (level_number * 2)
                                              : level_number);
-
+            
             item_made = items( 1, which_class, which_type, true, 
-                               which_depth, spec );
+                               which_depth, spec );          
 
             if (item_made != NON_ITEM)
             {
@@ -3946,16 +3946,14 @@ void place_spec_shop( int level_number,
             item_level = level_number + random2((level_number + 1) * 3);
         }
 
-        if (one_chance_in(4))
-            item_level = MAKE_GOOD_ITEM;
-
         // don't generate gold in shops!  This used to be possible with
         // General Stores (see item_in_shop() below)   (GDL)
-        while(true)
+        while (true)
         {
             const int subtype = representative? j : OBJ_RANDOM;
             orb = items( 1, item_in_shop(env.shop[i].type), subtype, true,
-                         item_level, 250 );
+                         one_chance_in(4)? MAKE_GOOD_ITEM : item_level,
+                         MAKE_ITEM_RANDOM_RACE );
 
             if (orb != NON_ITEM 
                 && mitm[orb].base_type != OBJ_GOLD
@@ -4781,7 +4779,7 @@ static void labyrinth_level(int level_number)
                   /* (temp_rand == 8) */              : OBJ_STAVES);
 
         const int treasure_item = items( 1, glopop, OBJ_RANDOM, true, 
-                                         level_number * 3, 250 );
+                                         level_number * 3, MAKE_ITEM_RANDOM_RACE );
 
         if (treasure_item != NON_ITEM)
         {
@@ -5070,7 +5068,7 @@ static bool treasure_area(int level_number, unsigned char ta1_x,
                 continue;
 
             item_made = items( 1, OBJ_RANDOM, OBJ_RANDOM, true,
-                               random2( level_number * 2 ), 250 );
+                               random2( level_number * 2 ), MAKE_ITEM_RANDOM_RACE );
 
             if (item_made != NON_ITEM)
             {

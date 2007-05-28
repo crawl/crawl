@@ -4571,7 +4571,6 @@ void give_items_skills()
         break;
 
     case JOB_CHAOS_KNIGHT:
-        you.piety = 25;         // irrelevant for Xom, of course
         you.inv[0].quantity = 1;
         you.inv[0].base_type = OBJ_WEAPONS;
         you.inv[0].sub_type = WPN_SHORT_SWORD;
@@ -4665,9 +4664,20 @@ void give_items_skills()
         }
 
         if (you.religion == GOD_XOM)
+        {
             you.skills[SK_FIGHTING]++;
-        else  // you.religion == GOD_MAKHLEB
+            // the new (piety-aware) Xom uses piety in his own special way...
+            // (namely, 100 is neutral)
+            you.piety = 100;
+            // the new (piety-aware) Xom uses gift_timeout in his own special
+            // way... (namely, a countdown to becoming bored)
+            you.gift_timeout = random2(40) + random2(40);
+        }
+        else // Makhleb
+        {
+            you.piety = 25;
             you.skills[SK_INVOCATIONS] = 2;
+        }
 
         break;
 

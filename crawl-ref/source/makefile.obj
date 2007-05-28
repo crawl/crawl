@@ -75,6 +75,7 @@ transfor.o \
 travel.o \
 tutorial.o \
 view.o \
+xom.o \
 Kills.o \
 mt19937ar.o \
 clua.o

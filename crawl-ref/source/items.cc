@@ -1119,7 +1119,7 @@ std::string origin_desc(const item_def &item)
                 break;
             default:
                 if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
-                    desc += std::string(god_name(iorig)) 
+                    desc += std::string(god_name(static_cast<god_type>(iorig))) 
                             + " gifted " + article_it(item) + " to you ";
                 else
                     // Bug really.
@@ -3043,4 +3043,9 @@ int item_def::book_number() const
     return (base_type == OBJ_BOOKS?   sub_type      :
             base_type == OBJ_STAVES?  sub_type + 40 :
             -1);
+}
+
+bool item_def::cursed() const
+{
+    return (item_cursed(*this));
 }

@@ -934,6 +934,11 @@ equipment_type get_armour_slot( const item_def &item )
     return (Armour_prop[ Armour_index[item.sub_type] ].slot);
 }
 
+equipment_type get_armour_slot( armour_type arm )
+{
+    return (Armour_prop[ Armour_index[arm] ].slot);
+}
+
 bool jewellery_is_amulet( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_JEWELLERY );

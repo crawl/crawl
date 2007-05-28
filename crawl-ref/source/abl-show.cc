@@ -949,7 +949,7 @@ static bool do_ability(const ability_def& abil)
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
     case ABIL_TELEPORTATION:          // teleport mut
         if (you.mutation[MUT_TELEPORT_AT_WILL] == 3)
-            you_teleport2( true, true ); // instant and to new area of Abyss
+            you_teleport_now( true, true ); // instant and to new area of Abyss
         else
             you_teleport();
 

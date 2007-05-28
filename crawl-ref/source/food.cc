@@ -739,27 +739,32 @@ static void eat_chunk( int chunk_effect )
         case CE_MUTAGEN_RANDOM:
             mpr("This meat tastes really weird.");
             mutate(100);
+            xom_is_stimulated(100);
             break;
 
         case CE_MUTAGEN_BAD:
             mpr("This meat tastes *really* weird.");
             give_bad_mutation();
+            xom_is_stimulated(random2(200));
             break;
 
         case CE_HCL:
             rot_player( 10 + random2(10) );
-            disease_player( 50 + random2(100) );
+            if (disease_player( 50 + random2(100) ))
+                xom_is_stimulated(random2(100));
             break;
 
         case CE_POISONOUS:
             mpr("Yeeuch - this meat is poisonous!");
-            poison_player( 3 + random2(4) );
+            if (poison_player( 3 + random2(4) ))
+                xom_is_stimulated(random2(128));
             break;
 
         case CE_ROTTEN:
         case CE_CONTAMINATED:
             mpr("There is something wrong with this meat.");
-            disease_player( 50 + random2(100) );
+            if (disease_player( 50 + random2(100) ))
+                xom_is_stimulated(random2(100));
             break;
 
         // note that this is the only case that takes time and forces redraw

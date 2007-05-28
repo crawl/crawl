@@ -822,18 +822,21 @@ void tome_of_power(char sc_read_2)
         mpr("A cloud of weird smoke pours from the book's pages!");
         big_cloud( random_smoke_type(), KC_YOU,
                    you.x_pos, you.y_pos, 20, 10 + random2(8) );
+        xom_is_stimulated(16);
         return;
     case 1:
     case 14:
         mpr("A cloud of choking fumes pours from the book's pages!");
         big_cloud(CLOUD_POISON, KC_YOU,
                   you.x_pos, you.y_pos, 20, 7 + random2(5));
+        xom_is_stimulated(64);
         return;
 
     case 2:
     case 13:
         mpr("A cloud of freezing gas pours from the book's pages!");
         big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20, 8 + random2(5));
+        xom_is_stimulated(64);
         return;
 
     case 5:
@@ -862,8 +865,8 @@ void tome_of_power(char sc_read_2)
         beam.is_explosion = true;
 
         explosion(beam);
+        xom_is_stimulated(255);
         return;
-
 
     case 10:
         if (create_monster( MONS_ABOMINATION_SMALL, 6, BEH_HOSTILE,
@@ -872,6 +875,7 @@ void tome_of_power(char sc_read_2)
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
         }
+        xom_is_stimulated(255);
         return;
     }
 
@@ -929,6 +933,7 @@ void skill_manual(char sc_read_2)
     {
         mpr("The book looks somewhat more worn.");
     }
+    xom_is_stimulated(14);
 }                               // end skill_manual()
 
 static bool box_of_beasts(void)
@@ -963,6 +968,7 @@ static bool box_of_beasts(void)
                             you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
         {
             mpr("...and something leaps out!");
+            xom_is_stimulated(14);
             ret = true;
         }
     }

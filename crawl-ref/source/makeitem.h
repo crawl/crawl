@@ -18,4 +18,9 @@ void item_colour( item_def &item );
 void init_rod_mp(item_def &item);
 void give_item(int mid, int level_number);
 
+jewellery_type get_random_ring_type();
+jewellery_type get_random_amulet_type();
+armour_type get_random_body_armour_type(int level);
+armour_type get_random_armour_type(int item_level);
+
 #endif

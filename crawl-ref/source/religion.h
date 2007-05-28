@@ -16,24 +16,33 @@
 
 #include "enum.h"
 
-void simple_god_message( const char *event, int which_deity = GOD_NO_GOD );
+void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);
-char *god_name(int which_god,bool long_name=false); //mv
+const char *god_name(god_type which_god, bool long_name = false); //mv
 void dec_penance(int val);
-void dec_penance(int god, int val);
-void Xom_acts(bool niceness, int sever, bool force_sever);
+void dec_penance(god_type god, int val);
 bool did_god_conduct(int thing_done, int pgain);
 void excommunication(void);
-void gain_piety(char pgn);
-void god_speaks( int god, const char *mesg );
-void lose_piety(char pgn);
+void gain_piety(int pgn);
+void god_speaks(god_type god, const char *mesg );
+void lose_piety(int pgn);
 void offer_corpse(int corpse);
 std::string god_prayer_reaction();
 void pray();
 void handle_god_time(void);
-char god_colour(char god);
-void god_pitch(unsigned char which_god);
+int god_colour(god_type god);
+void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 void offer_items();
+
+bool xom_is_nice();
+void xom_is_stimulated(int maxinterestingness);
+void xom_acts(bool niceness, int sever);
+const char *describe_xom_favour();
+
+inline void xom_acts(int sever)
+{
+    xom_acts(xom_is_nice(), sever);
+}
 
 #endif

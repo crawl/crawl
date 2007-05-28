@@ -450,7 +450,10 @@ bool melee_attack::attack()
     identify_mimic(def);
 
     if (attacker->fumbles_attack())
+    {
+        xom_is_stimulated(14); // Xom thinks that is funny.
         return (false);
+    }
 
     // Allow god to get offended, etc.
     attacker->attacking(defender);
@@ -2077,6 +2080,9 @@ int melee_attack::player_to_hit(bool random_factor)
     {
         if (wpn_skill != SK_FIGHTING)
         {
+            if (you.skills[wpn_skill] < 1 && player_in_a_dangerous_place())
+                xom_is_stimulated(14); // Xom thinks that is mildly amusing.
+
             your_to_hit += maybe_random2(you.skills[wpn_skill] + 1,
                                          random_factor);
         }

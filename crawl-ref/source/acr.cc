@@ -659,7 +659,7 @@ static void handle_wizard_command( void )
         break;
 
     case 'X':
-        Xom_acts(true, 20, true);
+        xom_acts(abs(you.piety - 100));
         break;
 
     case 'z':
@@ -1811,7 +1811,7 @@ static void decrement_durations()
     else if (you.duration[DUR_TELEPORT] == 1)
     {
         // only to a new area of the abyss sometimes (for abyss teleports)
-        you_teleport2( true, one_chance_in(5) ); 
+        you_teleport_now( true, one_chance_in(5) ); 
         you.duration[DUR_TELEPORT] = 0;
     }
 
@@ -2200,9 +2200,9 @@ static void world_reacts()
     {   
         // this is instantaneous
         if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
-            you_teleport2( true ); 
+            you_teleport_now( true ); 
         else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
-            you_teleport2( false, true ); // to new area of the Abyss
+            you_teleport_now( false, true ); // to new area of the Abyss
     }
 
     if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
@@ -3053,9 +3053,8 @@ static void move_player(int move_x, int move_y)
     {
         struct monsters *mon = &menv[targ_monst];
 
-        // you can swap places with a friendly monster if you
-        // can see it and you're not confused
-        if (mons_friendly( mon ) && player_monster_visible( mon ) && !you.conf)
+        // you can swap places with a friendly monster if you're not confused
+        if (mons_friendly( mon ) && !you.conf)
         {
             if (swap_places( mon ))
                 swap = true;

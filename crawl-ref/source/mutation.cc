@@ -40,6 +40,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
+#include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
@@ -1149,27 +1150,68 @@ void display_mutations()
         getch();
 }
 
-bool mutate(int which_mutation, bool failMsg)
+static int calc_mutation_amusement_value(int which_mutation)
 {
-    int  mutat = which_mutation;
-    bool force_mutation = false;        // is mutation forced?
-    bool demonspawn = false;            // demonspawn mutation?
-    int  i;
+    int amusement = 16 * (11 - mutation_rarity[which_mutation]);
 
-    if (which_mutation >= 2000)
+    switch (which_mutation)
     {
-        demonspawn       = true;
-        force_mutation   = true;
-        mutat           -= 2000;
-        which_mutation  -= 2000;
+    case MUT_TOUGH_SKIN:
+    case MUT_STRONG:
+    case MUT_CLEVER:
+    case MUT_AGILE:
+    case MUT_POISON_RESISTANCE:
+    case MUT_TELEPORT_CONTROL:
+    case MUT_MAGIC_RESISTANCE:
+    case MUT_TELEPORT_AT_WILL:
+    case MUT_MAPPING:
+    case MUT_CLARITY:
+    case MUT_MUTATION_RESISTANCE:
+        amusement /= 2;  // not funny
+        break;
+    
+    case MUT_CARNIVOROUS:
+    case MUT_HERBIVOROUS:
+    case MUT_FAST_METABOLISM:
+    case MUT_WEAK:
+    case MUT_DOPEY:
+    case MUT_CLUMSY:
+    case MUT_TELEPORT:
+    case MUT_FAST:
+    case MUT_DEFORMED:
+    case MUT_SPIT_POISON:
+    case MUT_BREATHE_FLAMES:
+    case MUT_BLINK:
+    case MUT_HORNS:
+    case MUT_LOST:
+    case MUT_BERSERK:
+    case MUT_DETERIORATION:
+    case MUT_BLURRY_VISION:
+    case MUT_FRAIL:
+    case MUT_CLAWS:
+    case MUT_HOOVES:
+    case MUT_BREATHE_POISON:
+    case MUT_STINGER:
+    case MUT_BIG_WINGS:
+    case MUT_BLUE_MARKS:
+    case MUT_GREEN_MARKS:
+        amusement *= 2; // funny!
+        break;
+
+    default:
+        break;
     }
 
-    if (which_mutation >= 1000) // must give mutation without failure
-    {
+    return (amusement);
+}
+
+bool mutate(int which_mutation, bool failMsg, bool force_mutation,
+            bool demonspawn)
+{
+    int mutat = which_mutation;
+
+    if (demonspawn)
         force_mutation = true;
-        mutat -= 1000;
-        which_mutation -= 1000;
-    }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
@@ -1241,10 +1283,42 @@ bool mutate(int which_mutation, bool failMsg)
                || you.mutation[mutat] > 13
                || random2(10) >= mutation_rarity[mutat] + you.demon_pow[mutat]);
     }
+    else if (which_mutation == 101)
+    {
+        do
+        {
+            mutat = random2(NUM_MUTATIONS);
 
-    if (you.mutation[mutat] >= 3
-        && (mutat != MUT_STRONG && mutat != MUT_CLEVER && mutat != MUT_AGILE)
-        && (mutat != MUT_WEAK && mutat != MUT_DOPEY && mutat != MUT_CLUMSY))
+            if (one_chance_in(1000))
+                return false;
+            if (one_chance_in(5))
+            {
+                switch (random2(8))
+                {
+                case 0: mutat = MUT_WEAK; break;
+                case 1: mutat = MUT_DOPEY; break;
+                case 2: mutat = MUT_CLUMSY; break;
+                case 3: mutat = MUT_DEFORMED; break;
+                case 4: mutat = MUT_LOST; break;
+                case 5: mutat = MUT_DETERIORATION; break;
+                case 6: mutat = MUT_BLURRY_VISION; break;
+                case 7: mutat = MUT_FRAIL; break;
+                }
+            }
+        }
+        while ((you.mutation[mutat] >= 3
+                && (mutat != MUT_STRONG && mutat != MUT_CLEVER
+                    && mutat != MUT_AGILE) && (mutat != MUT_WEAK
+                                               && mutat != MUT_DOPEY
+                                               && mutat != MUT_CLUMSY))
+               || you.mutation[mutat] > 13
+               || random2(10) >= mutation_rarity[mutat] + you.demon_pow[mutat]);
+    }
+    else if (you.mutation[mutat] >= 3
+             && (mutat != MUT_STRONG && mutat != MUT_CLEVER
+                 && mutat != MUT_AGILE)
+             && (mutat != MUT_WEAK && mutat != MUT_DOPEY
+                 && mutat != MUT_CLUMSY))
     {
         return false;
     }
@@ -1272,7 +1346,7 @@ bool mutate(int which_mutation, bool failMsg)
                 mutat = MUT_BREATHE_POISON;
 
                 // breathe poison replaces spit poison (so it takes the slot)
-                for (i = 0; i < 52; i++)
+                for (int i = 0; i < 52; i++)
                 {
                     if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
                         you.ability_letter_table[i] = ABIL_BREATHE_POISON;
@@ -1461,14 +1535,13 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
-
     case MUT_HOOVES:            //jmf: like horns
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         if (you.equip[EQ_BOOTS] != -1)
         {
             FixedVector < char, 8 > removed;
 
-            for (i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
+            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
             {
                 removed[i] = 0;
             }
@@ -1489,7 +1562,7 @@ bool mutate(int which_mutation, bool failMsg)
         {
             FixedVector < char, 8 > removed;
 
-            for (i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
+            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
             {
                 removed[i] = 0;
             }
@@ -1512,7 +1585,7 @@ bool mutate(int which_mutation, bool failMsg)
 
             FixedVector < char, 8 > removed;
 
-            for (i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
+            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
             {
                 removed[i] = 0;
             }
@@ -1605,10 +1678,14 @@ bool mutate(int which_mutation, bool failMsg)
 
     you.mutation[mutat]++;
 
+    /* amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor */
+    int amusementvalue = calc_mutation_amusement_value(mutat);
+    xom_is_stimulated(amusementvalue);
+
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
     /* remember, some mutations don't get this far (eg frail) */
     return true;
-}                               // end mutation()
+}
 
 int how_mutated(void)
 {
@@ -1659,8 +1736,10 @@ bool delete_mutation(int which_mutation)
                 return false;
         }
         while ((you.mutation[mutat] == 0
-                   && (mutat != MUT_STRONG && mutat != MUT_CLEVER && mutat != MUT_AGILE) 
-                   && (mutat != MUT_WEAK && mutat != MUT_DOPEY && mutat != MUT_CLUMSY))
+                && (mutat != MUT_STRONG && mutat != MUT_CLEVER
+                    && mutat != MUT_AGILE) 
+                && (mutat != MUT_WEAK && mutat != MUT_DOPEY
+                    && mutat != MUT_CLUMSY))
                || random2(10) >= mutation_rarity[mutat]
                || you.demon_pow[mutat] >= you.mutation[mutat]);
     }
@@ -2191,55 +2270,19 @@ bool perma_mutate(int which_mut, char how_much)
 {
     char levels = 0;
 
-    if (mutate(which_mut + 2000))
+    if (mutate(which_mut, false, true, true))
         levels++;
 
-    if (how_much >= 2 && mutate(which_mut + 2000))
+    if (how_much >= 2 && mutate(which_mut, false, true, true))
         levels++;
 
-    if (how_much >= 3 && mutate(which_mut + 2000))
+    if (how_much >= 3 && mutate(which_mut, false, true, true))
         levels++;
 
     you.demon_pow[which_mut] = levels;
 
     return (levels > 0);
 }                               // end perma_mutate()
-
-bool give_good_mutation(bool failMsg)
-{
-    int temp_rand = 0;          // probability determination {dlb}
-    int which_good_one = 0;
-
-    temp_rand = random2(25);
-
-    which_good_one = ((temp_rand >= 24) ? MUT_TOUGH_SKIN :
-                      (temp_rand == 23) ? MUT_STRONG :
-                      (temp_rand == 22) ? MUT_CLEVER :
-                      (temp_rand == 21) ? MUT_AGILE :
-                      (temp_rand == 20) ? MUT_HEAT_RESISTANCE :
-                      (temp_rand == 19) ? MUT_COLD_RESISTANCE :
-                      (temp_rand == 18) ? MUT_SHOCK_RESISTANCE :
-                      (temp_rand == 17) ? MUT_REGENERATION :
-                      (temp_rand == 16) ? MUT_TELEPORT_CONTROL :
-                      (temp_rand == 15) ? MUT_MAGIC_RESISTANCE :
-                      (temp_rand == 14) ? MUT_FAST :
-                      (temp_rand == 13) ? MUT_ACUTE_VISION :
-                      (temp_rand == 12) ? MUT_GREEN_SCALES :
-                      (temp_rand == 11) ? MUT_BLACK_SCALES :
-                      (temp_rand == 10) ? MUT_GREY_SCALES :
-                      (temp_rand ==  9) ? MUT_BONEY_PLATES :
-                      (temp_rand ==  8) ? MUT_REPULSION_FIELD :
-                      (temp_rand ==  7) ? MUT_POISON_RESISTANCE :
-                      (temp_rand ==  6) ? MUT_TELEPORT_AT_WILL :
-                      (temp_rand ==  5) ? MUT_SPIT_POISON :
-                      (temp_rand ==  4) ? MUT_MAPPING :
-                      (temp_rand ==  3) ? MUT_BREATHE_FLAMES :
-                      (temp_rand ==  2) ? MUT_BLINK :
-                      (temp_rand ==  1) ? MUT_CLARITY
-                                        : MUT_ROBUST);
-
-    return (mutate(which_good_one, failMsg));
-}                               // end give_good_mutation()
 
 bool give_bad_mutation(bool forceMutation, bool failMsg)
 {
@@ -2261,10 +2304,7 @@ bool give_bad_mutation(bool forceMutation, bool failMsg)
                      (temp_rand ==  1) ? MUT_BLURRY_VISION
                                        : MUT_FRAIL);
 
-    if (forceMutation)
-        which_bad_one += 1000;
-
-    return (mutate(which_bad_one), failMsg);
+    return mutate(which_bad_one, failMsg, forceMutation);
 }                               // end give_bad_mutation()
 
 //jmf: might be useful somewhere (eg Xom or transmigration effect)

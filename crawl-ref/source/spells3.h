@@ -139,7 +139,7 @@ void you_teleport(void);
 /* ***********************************************************************
  * called from: ability - acr - decks - effects - fight - misc - spells
  * *********************************************************************** */
-void you_teleport2( bool allow_control, bool new_abyss_area = false );
+void you_teleport_now( bool allow_control, bool new_abyss_area = false );
 
 
 #endif

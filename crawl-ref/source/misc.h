@@ -201,4 +201,6 @@ int str_to_shoptype(const std::string &s);
 
 bool do_autopray();
 
+bool player_in_a_dangerous_place();
+
 #endif

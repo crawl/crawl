@@ -153,19 +153,23 @@ bool potion_effect( char pot_eff, int pow )
 
             poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2) 
                                                     : 3 + random2avg(13, 2)) );
+            xom_is_stimulated(128);
         }
         break;
 
     case POT_SLOWING:
         slow_player( 10 + random2(pow) );
+        xom_is_stimulated(64);
         break;
 
     case POT_PARALYSIS:
         you.paralyse(2 + random2( 6 + you.paralysis ));
+        xom_is_stimulated(64);
         break;
 
     case POT_CONFUSION:
         confuse_player( 3 + random2(8) );
+        xom_is_stimulated(128);
         break;
 
     case POT_INVISIBILITY:
@@ -193,6 +197,7 @@ bool potion_effect( char pot_eff, int pow )
     case POT_DEGENERATION:
         mpr("There was something very wrong with that liquid!");
         lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
+        xom_is_stimulated(64);
         break;
 
     // Don't generate randomly - should be rare and interesting
@@ -200,7 +205,10 @@ bool potion_effect( char pot_eff, int pow )
         if (you.is_undead)
             mpr( "You feel terrible." );
         else
+        {
             rot_player( 10 + random2(10) );
+            xom_is_stimulated(64);
+        }
         break;
 
     case POT_WATER:
@@ -249,6 +257,7 @@ bool potion_effect( char pot_eff, int pow )
 
     case POT_BERSERK_RAGE:
         go_berserk(true);
+        xom_is_stimulated(64);
         break;
 
     case POT_CURE_MUTATION:

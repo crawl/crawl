@@ -2090,7 +2090,7 @@ void poison_monster( monsters *monster,
     if (new_pois.degree > old_pois.degree)
     {
         simple_monster_message( monster, 
-                                !old_pois.degree? " looks ill." 
+                                !old_pois.degree? " is poisoned." 
                                                 : " looks even sicker." );
     }
 
@@ -3711,7 +3711,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         if (check_mons_resist_magic( mon, beam.ench_power ))
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
-        if (monster_polymorph(mon, RANDOM_MONSTER, 100))
+        if (monster_polymorph(mon, RANDOM_MONSTER))
             beam.obvious_effect = true;
 
         return (MON_AFFECTED);
@@ -3744,7 +3744,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         if (check_mons_resist_magic( mon, beam.ench_power ))
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
-        if (monster_polymorph(mon, MONS_PULSATING_LUMP, 100))
+        if (monster_polymorph(mon, MONS_PULSATING_LUMP))
             beam.obvious_effect = true;
 
         return (MON_AFFECTED);

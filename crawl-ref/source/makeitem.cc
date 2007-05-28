@@ -844,6 +844,8 @@ int items( int allow_uniques,       // not just true-false,
                                     // item_race also gives type of rune!
            const dgn_region_list &forbidden) 
 {
+    const bool make_good_item = (item_level == MAKE_GOOD_ITEM);
+    
     int temp_rand = 0;             // probability determination {dlb}
     int range_charges = 0;         // for OBJ_WANDS charge count {dlb}
     int loopy = 0;                 // just another loop variable {dlb}
@@ -864,7 +866,7 @@ int items( int allow_uniques,       // not just true-false,
         return (NON_ITEM);
 
     // cap item_level unless an acquirement-level item {dlb}:
-    if (item_level > 50 && item_level != MAKE_GOOD_ITEM)
+    if (item_level > 50 && !make_good_item)
         item_level = 50;
 
     // determine base_type for item generated {dlb}:
@@ -1037,7 +1039,7 @@ int items( int allow_uniques,       // not just true-false,
 
         ASSERT(!is_fixed_artefact(mitm[p]) && !is_random_artefact(mitm[p]));
 
-        if (item_level == MAKE_GOOD_ITEM 
+        if (make_good_item
             && force_type != OBJ_RANDOM
             && (mitm[p].sub_type == WPN_CLUB || mitm[p].sub_type == WPN_SLING))
         {
@@ -1215,7 +1217,7 @@ int items( int allow_uniques,       // not just true-false,
         // if we allow acquirement-type items to be orcish, then 
         // there's a good chance that we'll just strip them of 
         // their ego type at the bottom of this function. -- bwr
-        if (item_level == MAKE_GOOD_ITEM 
+        if (make_good_item
             && get_equip_race( mitm[p] ) == ISFLAG_ORCISH)
         {
             set_equip_race( mitm[p], ISFLAG_NO_RACE );
@@ -1246,7 +1248,7 @@ int items( int allow_uniques,       // not just true-false,
         mitm[p].plus2 += race_plus2;
 
         if ((random2(200) <= 50 + item_level
-                || item_level == MAKE_GOOD_ITEM
+                || make_good_item
                 || is_demonic(mitm[p]))
             // nobody would bother enchanting a club
             && mitm[p].sub_type != WPN_CLUB
@@ -1258,7 +1260,7 @@ int items( int allow_uniques,       // not just true-false,
             do
             {
                 if (random2(300) <= 100 + item_level
-                    || item_level == MAKE_GOOD_ITEM
+                    || make_good_item
                     || is_demonic( mitm[p] ))
                 {
                     // note: this doesn't guarantee special enchantment
@@ -1605,19 +1607,18 @@ int items( int allow_uniques,       // not just true-false,
 
                 count++;
             }
-            while (item_level == MAKE_GOOD_ITEM 
+            while (make_good_item
                     && mitm[p].special == SPWPN_NORMAL 
                     && count < 5);
 
             // if acquired item still not ego... enchant it up a bit.
-            if (item_level == MAKE_GOOD_ITEM && mitm[p].special == SPWPN_NORMAL)
+            if (make_good_item && mitm[p].special == SPWPN_NORMAL)
             {
                 mitm[p].plus  += 2 + random2(3);
                 mitm[p].plus2 += 2 + random2(3);
             }
 
-            const int chance = (item_level == MAKE_GOOD_ITEM) ? 200 
-                                                              : item_level; 
+            const int chance = (make_good_item) ? 200 : item_level; 
 
             // odd-looking, but this is how the algorithm compacts {dlb}:
             for (loopy = 0; loopy < 4; loopy++)
@@ -1767,7 +1768,7 @@ int items( int allow_uniques,       // not just true-false,
         else
         {
             // decide specials:
-            if (item_level == MAKE_GOOD_ITEM)
+            if (make_good_item)
                 temp_rand = random2(150);
             else
                 temp_rand = random2(2000 - 55 * item_level);
@@ -1816,42 +1817,7 @@ int items( int allow_uniques,       // not just true-false,
             mitm[p].sub_type = force_type;
         else
         {
-            mitm[p].sub_type = random2(3);
-
-            if (random2(35) <= item_level + 10)
-            {
-                mitm[p].sub_type = random2(5);
-                if (one_chance_in(4))
-                    mitm[p].sub_type = ARM_ANIMAL_SKIN;
-            }
-
-            if (random2(60) <= item_level + 10)
-                mitm[p].sub_type = random2(8);
-
-            if (10 + item_level >= random2(400) && one_chance_in(20))
-                mitm[p].sub_type = ARM_DRAGON_HIDE + random2(7);
-
-            if (10 + item_level >= random2(500) && one_chance_in(20))
-            {
-                mitm[p].sub_type = ARM_STEAM_DRAGON_HIDE + random2(11);
-
-                if (mitm[p].sub_type == ARM_ANIMAL_SKIN && one_chance_in(20))
-                    mitm[p].sub_type = ARM_CRYSTAL_PLATE_MAIL;
-            }
-
-            // secondary armours:
-            if (one_chance_in(5))
-            {
-                mitm[p].sub_type = ARM_SHIELD + random2(5);
-
-                if (mitm[p].sub_type == ARM_SHIELD)                 // 33.3%
-                {
-                    if (coinflip())
-                        mitm[p].sub_type = ARM_BUCKLER;             // 50.0%
-                    else if (one_chance_in(3))
-                        mitm[p].sub_type = ARM_LARGE_SHIELD;        // 16.7%
-                }
-            }
+            mitm[p].sub_type = get_random_armour_type(item_level);
         }
 
         if (mitm[p].sub_type == ARM_HELMET)
@@ -2034,7 +2000,7 @@ int items( int allow_uniques,       // not just true-false,
 
 
         if (50 + item_level >= random2(250)
-            || item_level == MAKE_GOOD_ITEM
+            || make_good_item
             || (mitm[p].sub_type == ARM_HELMET 
                 && get_helmet_type(mitm[p]) == THELM_WIZARD_HAT))
         {
@@ -2044,7 +2010,7 @@ int items( int allow_uniques,       // not just true-false,
                 mitm[p].plus += random2(3);
 
             if (30 + item_level >= random2(350)
-                && (item_level == MAKE_GOOD_ITEM
+                && (make_good_item
                     || (!get_equip_race(mitm[p]) == ISFLAG_ORCISH
                         || (mitm[p].sub_type <= ARM_PLATE_MAIL && coinflip()))))
             {
@@ -2242,7 +2208,7 @@ int items( int allow_uniques,       // not just true-false,
         // Make sure you don't get a hide from acquirement (since that
         // would be an enchanted item which somehow didn't get converted
         // into armour).
-        if (item_level == MAKE_GOOD_ITEM)
+        if (make_good_item)
             hide2armour(mitm[p]); // what of animal hides? {dlb}
 
         // skin armours + Crystal PM don't get special enchantments
@@ -2583,8 +2549,9 @@ int items( int allow_uniques,       // not just true-false,
         // otherwise, determine jewellery type {dlb}:
         if (force_type == OBJ_RANDOM)
         {
-            mitm[p].sub_type = (!one_chance_in(4) ? random2(24)   // rings
-                                                  : AMU_RAGE + random2(10));
+            mitm[p].sub_type =
+                (!one_chance_in(4) ? get_random_ring_type()
+                                   : get_random_amulet_type());
 
             // Adjusted distribution here -- bwr
             if ((mitm[p].sub_type == RING_INVISIBILITY
@@ -2826,10 +2793,16 @@ int items( int allow_uniques,       // not just true-false,
     default:
         mitm[p].base_type = OBJ_GOLD;
 
-        // Note that acquirement level gold gives much less than the
-        // price of a scroll of acquirement (520 gold). -- bwr
-        if (item_level == MAKE_GOOD_ITEM)
-            quant = 50 + random2avg(100, 2) + random2avg(100, 2);
+        // Acquirement now gives more gold: The base price of a scroll
+        // of acquirement is 520 gold. The expected value of the gold
+        // it produces is about 480. So you cannot consistently make a
+        // profit by buying scrolls of acquirement. However, there is
+        // a very low chance you'll get lucky and receive up to 2296!
+        // This is quite rare: 50% of the time you'll get less than
+        // 360 gold and 90% of the time you'll get less than 900 and
+        // 99% of the time you'll get less than 1500. --Zooko
+        if (make_good_item)
+            quant = 150 + random2(150) + random2(random2(random2(2000)));
         else
             quant = 1 + random2avg(19, 2) + random2(item_level);
         break;
@@ -3894,3 +3867,84 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     give_ammo(mons, level_number, item_race);
     give_armour(mons, 1 + level_number / 2);
 }                               // end give_item()
+
+jewellery_type get_random_amulet_type()
+{
+    return (jewellery_type)
+        (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+}
+
+static jewellery_type get_raw_random_ring_type()
+{
+    return (jewellery_type) (RING_REGENERATION + random2(NUM_RINGS));
+}
+
+jewellery_type get_random_ring_type()
+{
+    const jewellery_type j = get_raw_random_ring_type();
+    // Adjusted distribution here -- bwr
+    if ((j == RING_INVISIBILITY
+         || j == RING_REGENERATION
+         || j == RING_TELEPORT_CONTROL
+         || j == RING_SLAYING)
+        && !one_chance_in(3))
+    {
+        return get_raw_random_ring_type();
+    }
+
+    return (j);
+}
+
+armour_type get_random_body_armour_type(int item_level)
+{
+    for (int tries = 100; tries > 0; --tries)
+    {
+        const armour_type tr = get_random_armour_type(item_level);
+        if (get_armour_slot(tr) == EQ_BODY_ARMOUR)
+            return (tr);
+    }
+    return (ARM_ROBE);
+}
+
+// FIXME: Need to clean up this mess.
+armour_type get_random_armour_type(int item_level)
+{
+    int armtype = random2(3);
+    
+    if (random2(35) <= item_level + 10)
+    {
+        armtype = random2(5);
+        if (one_chance_in(4))
+            armtype = ARM_ANIMAL_SKIN;
+    }
+
+    if (random2(60) <= item_level + 10)
+        armtype = random2(8);
+
+    if (10 + item_level >= random2(400) && one_chance_in(20))
+        armtype = ARM_DRAGON_HIDE + random2(7);
+
+    if (10 + item_level >= random2(500) && one_chance_in(20))
+    {
+        armtype = ARM_STEAM_DRAGON_HIDE + random2(11);
+
+        if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
+            armtype = ARM_CRYSTAL_PLATE_MAIL;
+    }
+
+    // secondary armours:
+    if (one_chance_in(5))
+    {
+        armtype = ARM_SHIELD + random2(5);
+
+        if (armtype == ARM_SHIELD)                 // 33.3%
+        {
+            if (coinflip())
+                armtype = ARM_BUCKLER;             // 50.0%
+            else if (one_chance_in(3))
+                armtype = ARM_LARGE_SHIELD;        // 16.7%
+        }
+    }
+
+    return static_cast<armour_type>(armtype);
+}

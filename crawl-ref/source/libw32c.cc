@@ -1,3 +1,5 @@
+#if defined(WIN32CONSOLE)
+
 /*
  *  File:       libw32c.cc
  *  Summary:    Functions for windows32 console mode support
@@ -977,3 +979,5 @@ int get_number_of_cols()
 {
     return (80);
 }
+
+#endif /* #if defined(WIN32CONSOLE) */

@@ -154,7 +154,7 @@ public:
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;
     virtual void poison(actor *attacker, int amount = 1) = 0;
-    virtual void sicken(int amount) = 0;
+    virtual bool sicken(int amount) = 0;
     virtual void paralyse(int strength) = 0;
     virtual void slow_down(int strength) = 0;
     virtual void confuse(int strength) = 0;
@@ -434,6 +434,7 @@ public:
     std::string name(description_level_type descrip,
                      bool terse = false, bool ident = false) const;
     bool has_spells() const;
+    bool cursed() const;
     int  book_number() const;
 
     void clear()
@@ -598,7 +599,6 @@ public:
   unsigned int gold;
   int char_class;
   char class_name[30];
-  // char speed;              // now unused
   int time_taken;
 
   char shield_blocks;         // number of shield blocks since last action
@@ -773,7 +773,7 @@ public:
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1);
-    void sicken(int amount);
+    bool sicken(int amount);
     void paralyse(int str);
     void slow_down(int str);
     void confuse(int strength);
@@ -1018,7 +1018,7 @@ public:
     int melee_evasion(const actor *attacker) const;
 
     void poison(actor *agent, int amount = 1);
-    void sicken(int strength);
+    bool sicken(int strength);
     void paralyse(int str);
     void slow_down(int str);
     void confuse(int strength);

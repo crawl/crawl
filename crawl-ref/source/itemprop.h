@@ -58,7 +58,8 @@ bool armour_is_hide( const item_def &item, bool inc_made = false );
 bool armour_not_shiny( const item_def &item );
 int armour_str_required( const item_def &arm );
 
-equipment_type  get_armour_slot( const item_def &item );
+equipment_type get_armour_slot( const item_def &item );
+equipment_type get_armour_slot( armour_type arm );
 
 bool jewellery_is_amulet( const item_def &item );
 bool check_jewellery_size( const item_def &item, size_type size );

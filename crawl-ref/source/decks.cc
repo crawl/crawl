@@ -144,7 +144,6 @@ static card_type deck_of_punishment[] =
     CARD_PANDEMONIUM
 };
 
-#define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
 #define DECK_WONDERS_SIZE ARRAYSIZE(deck_of_wonders)
 #define DECK_SUMMONING_SIZE ARRAYSIZE(deck_of_summoning)
 #define DECK_TRICKS_SIZE ARRAYSIZE(deck_of_tricks)
@@ -889,7 +888,7 @@ void card_effect(card_type which_card)
 
     case CARD_TELEPORT_NOW:
         mpr( "You have drawn the Portal of Instantaneous Transposition." );
-        you_teleport2( true, true );  // in abyss, always to new area
+        you_teleport_now( true, true );  // in abyss, always to new area
         break;
 
     case CARD_RAGE:
@@ -913,7 +912,7 @@ void card_effect(card_type which_card)
 
     case CARD_XOM:
         mpr("You have drawn the card of Xom!");
-        Xom_acts( true, 5 + random2( you.skills[SK_EVOCATIONS] ), true );
+        xom_acts( true, 5 + random2( you.skills[SK_EVOCATIONS] ));
         break;
 
     case CARD_SLOW:

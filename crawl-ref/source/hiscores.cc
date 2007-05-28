@@ -651,15 +651,15 @@ static level_area_type str_to_level_area_type(const std::string &s)
     return (LEVEL_DUNGEON);
 }
 
-static int str_to_god(const std::string &god)
+static god_type str_to_god(const std::string &god)
 {
     if (god.empty())
         return GOD_NO_GOD;
     
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
-        if (god_name(i) == god)
-            return (i);
+        if (god_name(static_cast<god_type>(i)) == god)
+            return (static_cast<god_type>(i));
     }
     return (GOD_NO_GOD);
 }
@@ -898,7 +898,7 @@ bool scorefile_entry::parse_obsolete_scoreline(const std::string &line)
     str = hs_nextint(inbuf);
     intel = hs_nextint(inbuf);
     dex = hs_nextint(inbuf);
-    god = hs_nextint(inbuf);
+    god = static_cast<god_type>(hs_nextint(inbuf));
     piety = hs_nextint(inbuf);
     penance = hs_nextint(inbuf);
 
@@ -1014,7 +1014,7 @@ void scorefile_entry::reset()
     intel = -1;
     dex = -1;
     damage = -1;
-    god = -1;
+    god = GOD_NO_GOD;
     piety = -1;
     penance = -1;
     wiz_mode = 0;

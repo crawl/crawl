@@ -893,7 +893,7 @@ static void grab_followers(std::vector<follower>& followers)
     }
 }
 
-void load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
+bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
            int old_level, branch_type old_branch )
 {
     std::vector<follower> followers;
@@ -1063,6 +1063,8 @@ void load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
     save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
+
+    return just_created_level;
 }                               // end load()
 
 void save_level(int level_saved, level_area_type old_ltype,

@@ -619,7 +619,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
         }
 
         if (item_cursed( you.inv[item_wield_2] ))
+        {
             mpr("It sticks to your hand!");
+            xom_is_stimulated(64);
+        }
     }
 
     if (showMsgs)
@@ -2096,6 +2099,7 @@ void jewellery_wear_effects(item_def &item)
         mprf("Oops, that %s feels deathly cold.", 
                 jewellery_is_amulet(item)? "amulet" : "ring");
         learned_something_new(TUT_YOU_CURSED);
+        xom_is_stimulated(128);
     }
 
     // cursed or not, we know that since we've put the ring on
@@ -2552,7 +2556,9 @@ void zap_wand(void)
         return;
     }
 
-    if (item_type_known( you.inv[item_slot] ))
+    const bool alreadyknown = item_type_known(you.inv[item_slot]);
+    const bool dangerous = player_in_a_dangerous_place();
+    if (alreadyknown)
     {
         if (you.inv[item_slot].sub_type == WAND_HASTING
             || you.inv[item_slot].sub_type == WAND_HEALING
@@ -2603,6 +2609,12 @@ void zap_wand(void)
             type_zapped = ZAP_NEGATIVE_ENERGY;
         if (one_chance_in(17))
             type_zapped = ZAP_ENSLAVEMENT;
+        if (dangerous)
+        {
+            // Xom loves it when you use a Wand of Random Effects and
+            // there is a dangerous monster nearby...
+            xom_is_stimulated(256);
+        }
     }
 
     beam.source_x = you.x_pos;
@@ -2653,6 +2665,13 @@ void zap_wand(void)
 
     exercise( SK_EVOCATIONS, 1 );
     alert_nearby_monsters();
+
+    if (!alreadyknown && dangerous)
+    {
+        // Xom loves it when you use an unknown wand and there is a
+        // dangerous monster nearby...
+        xom_is_stimulated(256);
+    }
 
     you.turn_is_over = true;
 }                               // end zap_wand()
@@ -2727,6 +2746,14 @@ void drink(void)
         return;
     }
 
+    const bool alreadyknown = item_type_known(you.inv[item_slot]);
+
+    // The "> 1" part is to reduce the amount of times that Xom is
+    // stimulated when you are a low-level 1 trying your first unknown
+    // potions on monsters.
+    const bool dangerous =
+        player_in_a_dangerous_place() && (you.experience_level > 1);
+    
     if (potion_effect( you.inv[item_slot].sub_type, 40 ))
     {
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
@@ -2738,6 +2765,12 @@ void drink(void)
     {
         set_ident_type( you.inv[item_slot].base_type, 
                         you.inv[item_slot].sub_type, ID_TRIED_TYPE );
+    }
+    if (!alreadyknown && dangerous)
+    {
+        // Xom loves it when you drink an unknown potion and there is
+        // a dangerous monster nearby...
+        xom_is_stimulated(256);
     }
 
     dec_inv_item_quantity( item_slot, 1 );
@@ -2795,6 +2828,9 @@ bool drink_fountain(void)
                            (temp_rand > 19) ? POT_GAIN_DEXTERITY  //0.4%
                                             : POT_GAIN_INTELLIGENCE);//0.4%
     }
+
+    if (fountain_effect != POT_WATER)
+        xom_is_stimulated(64);
 
     potion_effect(fountain_effect, 100);
 
@@ -3022,6 +3058,7 @@ bool enchant_weapon( int which_stat, bool quiet )
         item.plus++;
     }
 
+    xom_is_stimulated(16);
     return (true);
 }
 
@@ -3112,6 +3149,7 @@ static bool enchant_armour( void )
 
     do_uncurse_item( item );
     you.redraw_armour_class = 1;
+    xom_is_stimulated(16);
     return (true);
 }
 
@@ -3237,6 +3275,10 @@ void read_scroll(void)
         mpr("As you read the scroll, it crumbles to dust.");
         // Actual removal of scroll done afterwards. -- bwr
     }
+
+    bool alreadyknown = get_ident_type( OBJ_SCROLLS, you.inv[item_slot].sub_type ) == ID_KNOWN_TYPE;
+
+    bool dangerous = player_in_a_dangerous_place();
 
     // scrolls of paper are also exempted from this handling {dlb}:
     if (scroll_type != SCR_PAPER)
@@ -3531,6 +3573,13 @@ void read_scroll(void)
 
     set_ident_type( OBJ_SCROLLS, scroll_type, 
                     (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );
+
+    if (!alreadyknown && dangerous)
+    {
+         // Xom loves it when you read an unknown scroll and there is
+         // a dangerous monster nearby...
+        xom_is_stimulated(256);
+    }
 }                               // end read_scroll()
 
 void examine_object(void)
@@ -3559,6 +3608,9 @@ void use_randart(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
+    const bool alreadyknown = item_type_known(item);
+    const bool dangerous = player_in_a_dangerous_place();
+
     randart_properties_t proprt;
     randart_wpn_properties( item, proprt );
 
@@ -3575,4 +3627,11 @@ void use_randart(const item_def &item)
 
     if (proprt[RAP_NOISES])
         you.special_wield = 50 + proprt[RAP_NOISES];
+
+    if (!alreadyknown && dangerous)
+    {
+        // Xom loves it when you use an unknown random artifact and
+        // there is a dangerous monster nearby...
+        xom_is_stimulated(256);
+    }
 }

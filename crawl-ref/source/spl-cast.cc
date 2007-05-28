@@ -909,9 +909,6 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
             miscast_effect( sptype, spell_mana(spc2),
                             spell_fail(spc2) - spfl, 100 );
 
-            if (you.religion == GOD_XOM && random2(75) < spell_mana(spc2))
-                Xom_acts(coinflip(), spell_mana(spc2), false);
-
             return (SPRET_FAIL);
         }
     }
@@ -1899,7 +1896,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 /*  sp_type is the type of the spell
  *  mag_pow is overall power of the spell or effect (ie its level)
  *  mag_fail is the degree to which you failed
- *  force_effect forces a certain effect to occur. Currently unused.
+ *  force_effect forces a certain severity of effect to occur.
  */
     struct bolt beam;
     bool failMsg = true;
@@ -2251,7 +2248,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("Space warps around you!");
 
                 if (one_chance_in(3))
-                    you_teleport2( true );
+                    you_teleport_now( true );
                 else
                     random_blink( false );
 
@@ -2284,7 +2281,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 1:
                 mpr("Space warps crazily around you!");
-                you_teleport2( true );
+                you_teleport_now( true );
 
                 ouch(9 + random2avg(17, 2), 0, KILLED_BY_WILD_MAGIC, cause);
                 potion_effect(POT_CONFUSION, 60);
@@ -3458,6 +3455,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
         break;                  // end poison
     }
 
+    xom_is_stimulated(spec_effect);
     return (true);
 }                               // end miscast_effect()
 

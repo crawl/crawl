@@ -62,7 +62,9 @@
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "misc.h"
 #include "mon-util.h"
+#include "monstuff.h"
 #include "notes.h"
 #include "player.h"
 #include "randart.h"
@@ -126,6 +128,7 @@ int check_your_resists(int hurted, int flavour)
         else if (resist < 0)
         {
             mpr("It burns terribly!");
+            xom_is_stimulated(200);
             hurted *= 15;
             hurted /= 10;
         }
@@ -141,6 +144,7 @@ int check_your_resists(int hurted, int flavour)
         else if (resist < 0)
         {
             mpr("You feel a terrible chill!");
+            xom_is_stimulated(200);
             hurted *= 15;
             hurted /= 10;
         }
@@ -213,6 +217,7 @@ int check_your_resists(int hurted, int flavour)
         else if (resist < 0)
         {
             mpr("You feel a painful chill!");
+            xom_is_stimulated(200);
             hurted *= 13;
             hurted /= 10;
         }
@@ -229,6 +234,7 @@ int check_your_resists(int hurted, int flavour)
         else if (resist < 0)
         {
             mpr("It burns terribly!");
+            xom_is_stimulated(200);
             hurted *= 15;
             hurted /= 10;
         }
@@ -420,6 +426,7 @@ void item_corrode( int itco )
     if (!it_resists)
     {
         how_rusty--;
+        xom_is_stimulated(64);
 
         if (item.base_type == OBJ_WEAPONS)
             item.plus2 = how_rusty;
@@ -538,6 +545,8 @@ static void expose_invent_to_element( beam_type flavour, int strength )
                  (num_dest > 1) ? "were" : "was" );
             break;
         }
+
+        xom_is_stimulated((num_dest > 1) ? 32 : 16);
     }
 }
 
@@ -602,6 +611,7 @@ void lose_level(void)
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
     you.redraw_experience = 1;
+    xom_is_stimulated(255);
 }                               // end lose_level()
 
 void drain_exp(void)
@@ -646,6 +656,7 @@ void drain_exp(void)
     if (exp_drained > 0)
     {
         mpr("You feel drained.");
+        xom_is_stimulated(20);
         you.experience -= exp_drained;
         you.exp_available -= exp_drained;
 
@@ -662,6 +673,60 @@ void drain_exp(void)
             lose_level();
     }
 }                               // end drain_exp()
+
+static void xom_checks_damage(kill_method_type death_type,
+                              int dam, int death_source)
+{
+    //if (you.hp <= dam)
+    //    xom_is_stimulated(32);
+
+    if ((death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
+        || death_source < 0 || death_source >= MAX_MONSTERS)
+    {
+        return ;
+    }
+    
+    int amusementvalue = 1;
+
+    const monsters *monster = &menv[death_source];
+
+    if (!monster->alive())
+        return;
+
+    int leveldif = monster->hit_dice - you.experience_level;
+
+    if (leveldif == 0)
+        leveldif = 1;
+
+    /* Note that Xom is amused when you are significantly hurt
+     * by a creature of higher level than yourself as well as
+     * by a creatured of lower level than yourself. */
+    amusementvalue += leveldif * leveldif * dam;
+    
+    if (!player_monster_visible(monster))
+        amusementvalue += 10;
+    
+    if (monster->speed < (int) player_movement_speed())
+        amusementvalue += 8;
+    
+    if (death_type != KILLED_BY_BEAM)
+    {
+        if (you.skills[SK_RANGED_COMBAT] <= (you.experience_level / 4))
+            amusementvalue += 2;
+    }
+    else
+    {
+        if (you.skills[SK_FIGHTING] <= (you.experience_level / 4))
+            amusementvalue += 2;
+    }
+
+    if (player_in_a_dangerous_place())
+        amusementvalue += 2;
+            
+    amusementvalue /= (you.hp > 0) ? you.hp : 1;
+  
+    xom_is_stimulated(amusementvalue);
+}
 
 // death_source should be set to zero for non-monsters {dlb}
 void ouch( int dam, int death_source, kill_method_type death_type,
@@ -688,15 +753,6 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     {
         switch (you.religion)
         {
-        case GOD_XOM:
-            if (random2(you.hp_max) > you.hp && dam > random2(you.hp)
-                                                    && one_chance_in(5))
-            {
-                simple_god_message( " protects you from harm!" );
-                return;
-            }
-            break;
-
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
@@ -718,13 +774,20 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr
         if (dam > 0 && you.hp_max <= dam * 2)
-            mpr( "Ouch!  That really hurt!", MSGCH_DANGER );
+            mpr( "Ouch! That really hurt!", MSGCH_DANGER );
 
-        if (you.hp > 0 && Options.hp_warning
-            && you.hp <= (you.hp_max * Options.hp_warning) / 100)
+        if (you.hp > 0)
         {
-            mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
+            if (Options.hp_warning
+                && you.hp <= (you.hp_max * Options.hp_warning) / 100)
+            {
+                mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
+            }
+
+            xom_checks_damage(death_type, dam, death_source);
+            return;
         }
+        
         take_note(
                 Note(
                     NOTE_HP_CHANGE, 
@@ -734,8 +797,6 @@ void ouch( int dam, int death_source, kill_method_type death_type,
                         .death_description(scorefile_entry::DDV_TERSE)
                         .c_str()) );
 
-        if (you.hp > 0)
-            return;
     }
 
 #ifdef WIZARD

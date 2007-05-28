@@ -2792,9 +2792,8 @@ void level_change(void)
                 you.hp, you.hp_max, you.magic_points, you.max_magic_points);
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
-        if (you.religion == GOD_XOM)
-            Xom_acts(true, you.experience_level, true);
-            
+        xom_is_stimulated(16);
+
         learned_something_new(TUT_NEW_LEVEL);   
             
     }
@@ -4221,10 +4220,10 @@ void contaminate_player(int change, bool statusOnly)
          (change > 0) ? "more" : "less" );
 }
 
-void poison_player( int amount, bool force )
+bool poison_player( int amount, bool force )
 {
     if ((!force && player_res_poison()) || amount <= 0)
-        return;
+        return false;
 
     const int old_value = you.poisoning;
     you.poisoning += amount;
@@ -4238,6 +4237,7 @@ void poison_player( int amount, bool force )
         mprf("You are %spoisoned.", (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_POISON);
     }
+    return true;
 }
 
 void reduce_poison_player( int amount )
@@ -4280,6 +4280,8 @@ void confuse_player( int amount, bool resistable )
         // XXX: which message channel for this message?
         mprf("You are %sconfused.", (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_ENCHANTED);
+
+        xom_is_stimulated(you.conf - old_value);
     }
 }
 
@@ -4392,9 +4394,9 @@ void dec_haste_player( void )
     }
 }
 
-void disease_player( int amount )
+bool disease_player( int amount )
 {
-    you.sicken(amount);
+    return you.sicken(amount);
 }
 
 void dec_disease_player( void )
@@ -5111,7 +5113,7 @@ void player::blink()
 void player::teleport(bool now, bool abyss_shift)
 {
     if (now)
-        you_teleport2(true, abyss_shift);
+        you_teleport_now(true, abyss_shift);
     else
         you_teleport();
 }
@@ -5126,12 +5128,6 @@ void player::hurt(const actor *agent, int amount)
         // Should never happen!
         ASSERT(false);
         ouch(amount, 0, KILLED_BY_SOMETHING);
-    }
-
-    if (religion == GOD_XOM && hp <= hp_max / 3
-        && one_chance_in(10))
-    {
-        Xom_acts(true, experience_level, false);
     }
 }
 
@@ -5196,16 +5192,18 @@ kill_category player::kill_alignment() const
     return (KC_YOU);
 }
 
-void player::sicken(int amount)
+bool player::sicken(int amount)
 {
     if (is_undead || amount <= 0)
-        return;
+        return (false);
 
     mpr( "You feel ill." );
 
     const int tmp = disease + amount;
     disease = (tmp > 210) ? 210 : tmp;
-    learned_something_new(TUT_YOU_SICK);    
+    learned_something_new(TUT_YOU_SICK);
+
+    return (true);
 }
 
 bool player::can_see_invisible() const

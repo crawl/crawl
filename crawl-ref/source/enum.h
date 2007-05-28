@@ -1532,7 +1532,9 @@ enum item_type_id_state_type  // used for values in id[4][50]
 
 enum jewellery_type
 {
-    RING_REGENERATION,                 //    0
+    RING_FIRST_RING = 0,
+    
+    RING_REGENERATION = RING_FIRST_RING, //    0
     RING_PROTECTION,
     RING_PROTECTION_FROM_FIRE,
     RING_POISON_RESISTANCE,
@@ -1556,7 +1558,12 @@ enum jewellery_type
     RING_FIRE,
     RING_ICE,
     RING_TELEPORT_CONTROL,             //   23
-    AMU_RAGE = 35,                     //   35
+
+    NUM_RINGS,                         //   24, keep as last ring; can overlap
+                                       //   safely with first amulet.
+
+    AMU_FIRST_AMULET = 35,
+    AMU_RAGE = AMU_FIRST_AMULET,       //   35
     AMU_RESIST_SLOW,
     AMU_CLARITY,
     AMU_WARDING,
@@ -1566,6 +1573,7 @@ enum jewellery_type
     AMU_CONTROLLED_FLIGHT,
     AMU_INACCURACY,
     AMU_RESIST_MUTATION,
+    
     NUM_JEWELLERY
 };
 

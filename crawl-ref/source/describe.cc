@@ -4940,18 +4940,43 @@ static bool print_god_abil_desc( int god, int numpower )
     return true;
 }
 
+static std::string describe_favour_generic(god_type which_god)
+{
+    std::string godname = god_name(which_god);
+    return (you.piety > 130) ? "A prized avatar of " + godname + ".":
+        (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
+        (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
+        (you.piety >  40) ? godname + " is most pleased with you." :
+        (you.piety >  20) ? godname + " has noted your presence." :
+        (you.piety >   5) ? godname + " is noncommittal."
+        : "You are beneath notice.";
+}
+
 //---------------------------------------------------------------
 //
 // describe_god
 //
-// Describes all gods. Accessible through altars (by praying), or
-// by the ^ key if player is a worshipper.
+// Describes the player's standing with his deity. 
 //
 //---------------------------------------------------------------
 
-void describe_god( int which_god, bool give_title )
+std::string describe_favour(god_type which_god)
 {
+    if (player_under_penance())
+    {
+        const int penance = you.penance[which_god];
+        return (penance >= 50) ? "Godly wrath is upon you!" :
+            (penance >= 20) ? "You've transgressed heavily! Be penitent!" :
+            (penance >= 5 ) ? "You are under penance." 
+                            : "You should show more discipline.";
+    }
 
+    return (which_god == GOD_XOM)?
+            describe_xom_favour() : describe_favour_generic(which_god);
+}
+
+void describe_god( god_type which_god, bool give_title )
+{
     const char *description; // mv: tmp string used for printing description
     int         colour;      // mv: colour used for some messages
 
@@ -5146,8 +5171,7 @@ void describe_god( int which_god, bool give_title )
                 break;
 
             case GOD_XOM:
-                cprintf( (you.experience_level >= 20) ? "Xom's favourite toy"
-                                                      : "Toy" );
+                cprintf("Toy");
             break;
 
             default: 
@@ -5181,31 +5205,7 @@ void describe_god( int which_god, bool give_title )
     } 
     else
     {
-        if (player_under_penance()) //mv: penance check
-        {
-            cprintf( (you.penance[which_god] >= 50) ? "Godly wrath is upon you!" :
-                     (you.penance[which_god] >= 20) ? "You've transgressed heavily! Be penitent!" :
-                     (you.penance[which_god] >= 5 ) ? "You are under penance." 
-                                                    : "You should show more discipline." );
-
-        }
-        else
-        {
-            if (which_god == GOD_XOM)
-                cprintf("You are ignored.");
-            else
-            {
-                cprintf( (you.piety > 130) ? "A prized avatar of %s.":
-                         (you.piety > 100) ? "A shining star in the eyes of %s." :
-                         (you.piety >  70) ? "A rising star in the eyes of %s." :
-                         (you.piety >  40) ? "%s is most pleased with you." :
-                         (you.piety >  20) ? "%s has noted your presence." :
-                         (you.piety >   5) ? "%s is noncommittal."
-                                           : "You are beneath %s's notice.",
-                         god_name(which_god));
-            }
-        }
-        //end of favour
+        cprintf(describe_favour(which_god).c_str());
 
         //mv: following code shows abilities given from god (if any)
         textcolor(LIGHTGRAY);

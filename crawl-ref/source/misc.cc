@@ -26,8 +26,9 @@
 #include <io.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
 
 #ifdef DOS
 #include <conio.h>
@@ -984,7 +985,12 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
         break;
     }
 
-    load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
+    const bool newlevel =
+        load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth,
+             old_level, old_where);
+    
+    if (newlevel)
+        xom_is_stimulated(49);
 
     unsigned char pc = 0;
     unsigned char pt = random2avg(28, 3);
@@ -1350,7 +1356,7 @@ void handle_traps(char trt, int i, bool trap_known)
         if (scan_randarts(RAP_PREVENT_TELEPORTATION))
             mpr("You feel a weird sense of stasis.");
         else
-            you_teleport2( true );
+            you_teleport_now( true );
         break;
 
     case TRAP_AMNESIA:
@@ -1843,8 +1849,8 @@ bool i_feel_safe(bool announce)
     int yend = you.y_pos + 9, xend = you.x_pos + 9;
     if ( xstart < 0 ) xstart = 0;
     if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = 0;
-    if ( ystart >= GYM ) yend = 0;
+    if ( xend >= GXM ) xend = GXM;
+    if ( ystart >= GYM ) yend = GYM;
 
     if (in_bounds(you.x_pos, you.y_pos)
         && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
@@ -1883,14 +1889,15 @@ bool i_feel_safe(bool announce)
                     {
                         if (announce)
                             mons.push_back(mon);
-                        else {
-                                tutorial_first_monster(*mon);
+                        else
+                        {
+                            tutorial_first_monster(*mon);
                             return false;
+                        }
                     }
                 }
             }
         }
-    }
     }
 
     if (announce)
@@ -2055,6 +2062,112 @@ int player_branch_depth()
     return subdungeon_depth(you.where_are_you, you.your_level);
 }
 
+static const char *shop_types[] = {
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "wand",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general"
+};
+
+int str_to_shoptype(const std::string &s)
+{
+    if (s == "random" || s == "any")
+        return (SHOP_RANDOM);
+    
+    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
+    {
+        if (s == shop_types[i])
+            return (i);
+    }
+    return (-1);
+}
+
+/* Decides whether autoprayer Right Now is a good idea. */
+static bool should_autopray()
+{
+    if ( Options.autoprayer_on == false ||
+         you.religion == GOD_NO_GOD ||
+         you.duration[DUR_PRAYER] ||
+         grid_altar_god( grd[you.x_pos][you.y_pos] ) != GOD_NO_GOD ||
+         !i_feel_safe() )
+        return false;
+
+    // We already know that we're not praying now. So if you
+    // just autoprayed, there's a problem.
+    if ( you.just_autoprayed )
+    {
+        mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
+        Options.autoprayer_on = false;
+        return false;
+    }
+
+    return true;
+}
+
+/* Actually performs autoprayer. */
+bool do_autopray()
+{
+    if ( you.turn_is_over )     // can happen with autopickup, I think
+        return false;
+
+    if ( should_autopray() )
+    {
+        pray();
+        you.just_autoprayed = true;
+        return true;
+    }
+    else
+    {
+        you.just_autoprayed = false;
+        return false;
+    }
+}
+
+// general threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters
+// highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters
+void monster_threat_values(double *general, double *highest)
+{
+    double sum = 0;
+    int highest_xp = -1;
+
+    monsters *monster = NULL;
+    for (int it = 0; it < MAX_MONSTERS; it++)
+    {
+        monster = &menv[it];
+
+        if (monster->alive() && mons_near(monster) && !mons_friendly(monster))
+        {
+            const int xp = exper_value(monster);
+            const double log_xp = log(xp);
+            sum += log_xp;
+            if (xp > highest_xp)
+            {
+                highest_xp = xp;
+                *highest   = log_xp;
+            }
+        }
+    }
+
+    *general = sum;
+}
+
+bool player_in_a_dangerous_place()
+{
+    const double logexp = log(you.experience);
+    double gen_threat = 0.0, hi_threat = 0.0;
+    monster_threat_values(&gen_threat, &hi_threat);
+
+    return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // Living breathing dungeon stuff.
 //
@@ -2129,74 +2242,5 @@ void run_environment_effects()
 
             apply_environment_effect( sfx_seeds[i] );
         }
-    }
-}
-
-static const char *shop_types[] = {
-    "weapon",
-    "armour",
-    "antique weapon",
-    "antique armour",
-    "antiques",
-    "jewellery",
-    "wand",
-    "book",
-    "food",
-    "distillery",
-    "scroll",
-    "general"
-};
-
-int str_to_shoptype(const std::string &s)
-{
-    if (s == "random" || s == "any")
-        return (SHOP_RANDOM);
-    
-    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
-    {
-        if (s == shop_types[i])
-            return (i);
-    }
-    return (-1);
-}
-
-/* Decides whether autoprayer Right Now is a good idea. */
-static bool should_autopray()
-{
-    if ( Options.autoprayer_on == false ||
-         you.religion == GOD_NO_GOD ||
-         you.duration[DUR_PRAYER] ||
-         grid_altar_god( grd[you.x_pos][you.y_pos] ) != GOD_NO_GOD ||
-         !i_feel_safe() )
-        return false;
-
-    // We already know that we're not praying now. So if you
-    // just autoprayed, there's a problem.
-    if ( you.just_autoprayed )
-    {
-        mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
-        Options.autoprayer_on = false;
-        return false;
-    }
-
-    return true;
-}
-
-/* Actually performs autoprayer. */
-bool do_autopray()
-{
-    if ( you.turn_is_over )     // can happen with autopickup, I think
-        return false;
-
-    if ( should_autopray() )
-    {
-        pray();
-        you.just_autoprayed = true;
-        return true;
-    }
-    else
-    {
-        you.just_autoprayed = false;
-        return false;
     }
 }

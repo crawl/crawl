@@ -12,6 +12,8 @@
 #include <termios.h>
 #include <conio.h>
 
+#if defined(DOS)
+
 static bool cursor_is_enabled = true;
 
 void init_libdos()
@@ -88,3 +90,5 @@ int get_number_of_cols()
 {
     return (80);
 }
+
+#endif /* #if defined(DOS) */

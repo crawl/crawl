@@ -542,11 +542,8 @@ static void sdump_religion(const std::string &, std::string & text)
 
         if (!player_under_penance())
         {
-            if (you.religion != GOD_XOM) // Xom doesn't care
-            {
-                text += god_prayer_reaction();
-                text += "\n";
-            }
+            text += god_prayer_reaction();
+            text += "\n";
         }
         else
         {

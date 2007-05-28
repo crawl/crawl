@@ -35,6 +35,7 @@
 #include "output.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "travel.h"
@@ -741,9 +742,11 @@ static void armour_wear_effects(const int item_slot)
     if (is_random_artefact( arm ))
         use_randart( item_slot );
 
-    if (item_cursed( arm )) {
+    if (item_cursed( arm ))
+    {
         mpr( "Oops, that feels deathly cold." );
         learned_something_new(TUT_YOU_CURSED);
+        xom_is_stimulated(128);
     }
 
     if (eq_slot == EQ_SHIELD)

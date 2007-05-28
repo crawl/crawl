@@ -226,8 +226,8 @@ int channel_to_colour( int channel, int param )
         case MSGCH_GOD:
         case MSGCH_PRAY:
             ret = (Options.channels[ channel ] == MSGCOL_DEFAULT)
-                                    ? god_colour( param )
-                                    : god_message_altar_colour( param );
+                ? god_colour( static_cast<god_type>(param) )
+                : god_message_altar_colour( param );
             break;
 
         case MSGCH_DURATION:
