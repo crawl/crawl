@@ -995,6 +995,8 @@ void display_notes()
             return;
         linebreak_string(suffix, spaceleft - 4, spaceleft);
         std::vector<std::string> parts = split_string("\n", suffix);
+        if ( parts.size() == 0 ) // disregard empty notes
+            continue;
         scr.add_entry(new MenuEntry(prefix + parts[0]));
         for ( unsigned int j = 1; j < parts.size(); ++j )
             scr.add_entry(new MenuEntry(std::string(prefix.length()-2, ' ') +
