@@ -87,7 +87,7 @@ lua_file = lua/trapwalk.lua
 # target_oos = false
 # target_los_first = false
 # confirm_self_target = false
-# default_target = true
+# default_target = false
 # target_unshifted_dirs = true
 
 ##### 4-c	Passive Sightings #####################

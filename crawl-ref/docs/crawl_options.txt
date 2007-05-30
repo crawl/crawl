@@ -372,11 +372,14 @@ confirm_self_target = true
         selecting the character as the target of a non-friendly-targeted spell 
         (i.e., something other than haste, healing or invisibility.)
 
-default_target = false
-        If set to true, targeting will start on either your previous target
-        (if it is still visible) or the closest monster (if not) rather
-        than on the character. If no monsters are in view, targeting will
-        start on the character regardless.
+default_target = true
+        If set to true (the default), targeting will start on either
+        your previous target (if it is still visible) or the closest
+        monster (if not) rather than on the character. If no monsters
+        are in view, targeting will start on the character regardless.
+
+        If default_target = false, the targeting cursor will always start
+        aimed at the character.
 
 target_unshifted_dirs = false
         If set to true, targeting will use the old Stone Soup 0.1 / Crawl 4.0

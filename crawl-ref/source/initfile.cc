@@ -596,7 +596,7 @@ void game_options::reset_options()
     hp_warning             = 10;
     magic_point_warning    = 0;
     confirm_self_target    = true;
-    default_target         = false;
+    default_target         = true;
     safe_autopickup        = true;
     autopickup_no_burden   = false;
     use_notes              = true;
