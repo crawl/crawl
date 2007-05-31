@@ -150,7 +150,7 @@ stab_brand = hi:blue
 # easy_quit_item_prompts = false
 # easy_exit_menu = true
 # default_autoprayer = true
-# sort_menus = (auto:5 | true | false)
+# sort_menus = pickup: true : basename, qualname, curse, qty
 
 ##### 4-i	Messages and Display Enhancements #####
 #

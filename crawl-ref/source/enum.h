@@ -904,7 +904,12 @@ enum description_level_type
     DESC_PLAIN,                        // 6
     DESC_NOCAP_ITS,                    // 7
     DESC_INVENTORY_EQUIP,              // 8
-    DESC_INVENTORY                     // 9
+    DESC_INVENTORY,                    // 9
+
+    // Partial item names.
+    DESC_BASENAME,                     // Base name of item subtype
+    DESC_QUALNAME                      // Name without articles, quantities,
+                                       // enchantments.
 };
 
 enum dragon_class_type
@@ -1722,9 +1727,12 @@ enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
 
 enum menu_type
 {
-    MT_INVSELECT,                      // General - select single item
+    MT_ANY = -1,
+    
     MT_INVLIST,                        // List inventory
-    MT_DROP
+    MT_DROP,
+
+    MT_PICKUP
 };
 
 // if you mess with this list, you'll need to make changes in initfile.cc

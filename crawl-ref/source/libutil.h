@@ -30,6 +30,8 @@ int unmangle_direction_keys(int keyin, int keymap = 0,
 void lowercase(std::string &s);
 void uppercase(std::string &s);
 bool ends_with(const std::string &s, const std::string &suffix);
+std::string pluralise(const std::string &name, 
+                      const char *no_of[] = NULL);
 
 /**
  * Returns 1 + the index of the first suffix that matches the given string,

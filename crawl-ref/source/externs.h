@@ -442,7 +442,8 @@ public:
         *this = item_def();
     }
 private:
-    std::string name_aux( bool terse, bool ident ) const;
+    std::string name_aux( description_level_type desc,
+                          bool terse, bool ident ) const;
 };
 
 class input_history
@@ -1241,6 +1242,43 @@ struct feature_override
     feature_def             override;
 };
 
+class InvEntry;
+typedef int (*item_sort_fn)(const InvEntry *a, const InvEntry *b);
+struct item_comparator
+{
+    item_sort_fn cmpfn;
+    bool negated;
+
+    item_comparator(item_sort_fn cfn, bool neg = false)
+        : cmpfn(cfn), negated(neg)
+    {
+    }
+    int compare(const InvEntry *a, const InvEntry *b) const
+    {
+        return (negated? -cmpfn(a, b) : cmpfn(a, b));
+    }
+};
+typedef std::vector<item_comparator> item_sort_comparators;
+
+struct menu_sort_condition
+{
+public:
+    menu_type mtype;
+    int       sort;
+    item_sort_comparators cmp;
+
+public:
+    menu_sort_condition(menu_type mt = MT_INVLIST, int sort = 0);
+    menu_sort_condition(const std::string &s);
+
+    bool matches(menu_type mt) const;
+
+private:
+    void set_menu_type(std::string &s);
+    void set_sort(std::string &s);
+    void set_comparators(std::string &s);
+};
+
 class InitLineInput;
 struct game_options 
 {
@@ -1394,8 +1432,7 @@ public:
     std::vector<colour_mapping> menu_colour_mappings;
     std::vector<message_colour_mapping> message_colour_mappings;
 
-    int        sort_menus;        // 0 = always, -1 = never, number = beyond
-                                  // that size.
+    std::vector<menu_sort_condition> sort_menus;
 
     int         dump_kill_places; // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
@@ -1522,6 +1559,7 @@ private:
                                 const std::string &interrupt_names,
                                 bool append_interrupts,
                                 bool remove_interrupts);
+    void set_menu_sort(std::string field);
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;

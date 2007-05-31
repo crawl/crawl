@@ -28,6 +28,7 @@
 #include "Kills.h"
 #include "files.h"
 #include "defines.h"
+#include "invent.h"
 #include "libutil.h"
 #include "player.h"
 #include "stash.h"
@@ -619,8 +620,9 @@ void game_options::reset_options()
     travel_stair_cost      = 500;
     travel_exclude_radius2 =  68;
 
-    // Don't sort menus by default.
-    sort_menus             = -1;
+    // Sort only pickup menus by default.
+    sort_menus.clear();
+    set_menu_sort("pickup: true");
 
     tc_reachable           = BLUE;
     tc_excluded            = LIGHTMAGENTA;
@@ -1301,6 +1303,17 @@ void game_options::add_message_colour_mapping(const std::string &field)
 
     message_colour_mapping m = { parse_message_filter( cmap[1] ), col };
     message_colour_mappings.push_back( m );
+}
+
+// Option syntax is:
+// sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
+void game_options::set_menu_sort(std::string field)
+{
+    if (field.empty())
+        return;
+    
+    menu_sort_condition cond(field);
+    sort_menus.push_back(cond);
 }
 
 void game_options::read_option_line(const std::string &str, bool runscript)
@@ -2042,7 +2055,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif // WIZARD
     else if (key == "sort_menus")
     {
-        sort_menus = read_bool_or_number(field, sort_menus, "auto:");
+        std::vector<std::string> frags = split_string(";", field);
+        for (int i = 0, size = frags.size(); i < size; ++i)
+        {
+            if (frags[i].empty())
+                continue;
+            set_menu_sort(frags[i]);
+        }
     }
     else if (key == "travel_delay")
     {
@@ -2699,4 +2718,78 @@ int game_options::o_colour(const char *name, int def) const
     tolower_string(val);
     int col = str_to_colour(val);
     return (col == -1? def : col);
+}
+
+///////////////////////////////////////////////////////////////////////
+// menu_sort_condition
+
+menu_sort_condition::menu_sort_condition(menu_type _mt, int _sort)
+    : mtype(_mt), sort(_sort), cmp()
+{
+}
+
+menu_sort_condition::menu_sort_condition(const std::string &s)
+    : mtype(MT_ANY), sort(-1), cmp()
+{
+    std::string cp = s;
+    set_menu_type(cp);
+    set_sort(cp);
+    set_comparators(cp);
+}
+
+bool menu_sort_condition::matches(menu_type mt) const
+{
+    return (mtype == MT_ANY || mtype == mt);
+}
+
+void menu_sort_condition::set_menu_type(std::string &s)
+{
+    static struct
+    {
+        const std::string mname;
+        menu_type mtype;
+    } menu_type_map[] =
+      {
+          { "any:",    MT_ANY       },
+          { "inv:",    MT_INVLIST   },
+          { "drop:",   MT_DROP      },
+          { "pickup:", MT_PICKUP    }
+      };
+
+    for (unsigned mi = 0; mi < ARRAYSIZE(menu_type_map); ++mi)
+    {
+        const std::string &name = menu_type_map[mi].mname;
+        if (s.find(name) == 0)
+        {
+            s = s.substr(name.length());
+            mtype = menu_type_map[mi].mtype;
+            break;
+        }
+    }
+}
+
+void menu_sort_condition::set_sort(std::string &s)
+{
+    // Strip off the optional sort clauses and get the primary sort condition.
+    std::string::size_type trail_pos = s.find(':');
+    if (s.find("auto:") == 0)
+        trail_pos = s.find(':', trail_pos + 1);
+
+    std::string sort_cond =
+        trail_pos == std::string::npos? s : s.substr(0, trail_pos);
+
+    trim_string(sort_cond);
+    sort = read_bool_or_number(sort_cond, sort, "auto:");
+
+    if (trail_pos != std::string::npos)
+        s = s.substr(trail_pos + 1);
+    else
+        s.clear();
+}
+
+void menu_sort_condition::set_comparators(std::string &s)
+{
+    init_item_sort_comparators(
+        cmp,
+        s.empty()? "basename, qualname, curse, qty" : s);
 }

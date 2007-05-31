@@ -143,7 +143,7 @@ static void adjust_item(void)
         return;
     }
 
-    from_slot = prompt_invent_item( "Adjust which item?", MT_INVSELECT, -1 );
+    from_slot = prompt_invent_item( "Adjust which item?", MT_INVLIST, -1 );
     if (from_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -154,7 +154,7 @@ static void adjust_item(void)
 
     to_slot = prompt_invent_item(
                     "Adjust to which letter?", 
-                    MT_INVSELECT, 
+                    MT_INVLIST, 
                     -1, 
                     false, 
                     false );

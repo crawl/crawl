@@ -368,7 +368,7 @@ void identify(int power)
 
     do
     {
-        item_slot = prompt_invent_item( "Identify which item?", MT_INVSELECT,
+        item_slot = prompt_invent_item( "Identify which item?", MT_INVLIST,
                                         OSEL_UNIDENT, true, true, false );
         if (item_slot == PROMPT_ABORT)
         {

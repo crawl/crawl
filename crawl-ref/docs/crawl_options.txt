@@ -652,15 +652,78 @@ default_autoprayer = false
         to ignore the prayer messages (see the documentation for
         runrest_ignore_message).
 
-sort_menus = (true | false | auto:X)
-        When set to true, items are sorted by description in inventory and
-        pickup menus. When set to false (the default), items are ordered by
-        equipment slot. 
-        When set to a number - using a syntax of the form 
-         sort_menus = auto:5
-        - items are sorted by their description if the total number of items in
-        that category is at least that number; in the example, having 4 
-        kinds of potions would not sort them, but having 5 would.
+sort_menus = [menu:](true | false | auto:X)[:sort_order]
+        Controls if and how items are sorted in inventory and pickup
+        menus.
+
+        When sort_menus = false (the default), items are not sorted,
+        and will be ordered by inventory letter (or in the order
+        they're stacked for items on the floor).
+
+        When sort_menus = true, items are sorted by base name,
+        qualified name, curse status and quantity.
+
+        If sort_menus = auto:X, items are sorted if there are at least
+        X items in the same category. For instance:
+            sort_menus = auto:5
+        will sort item classes that have at least 5 items. For
+        instance, having 4 kinds of potions would not sort them, but
+        having 5 would.
+
+        You can explicitly specify sort criteria in the sort_menus
+        option as:
+            sort_menus = true : basename, qualname, curse, qty
+
+        The available sort criteria are:
+        
+        * basename:
+          This is the name of the item type. The basename for all of
+          "a +0 robe", "an embroidered robe" and "the cursed +2 robe
+          of Ponies" is just "robe".
+
+        * qualname:
+          The name of the item without articles (a/an/the),
+          quantities, enchantments, or curse-status. The qualified
+          names for the robes described above are "robe", "embroidered
+          robe" and "robe of Ponies", respectively.
+
+        * fullname:
+          This is the name of the item as displayed in menus
+          (including quantities, curse-status, etc.)
+
+        * curse:
+          Curse-status of the item (if known). Uncursed items show up
+          first.
+
+        * qty:
+          The quantity for stackable items (such as scrolls, potions,
+          etc.)
+
+        * slot:
+          The inventory letter for items in inventory; irrelevant for
+          items on the floor.
+
+        The default sort criteria are: "basename, qualname, curse, qty".
+
+        You can ask for a descending order sort by prefixing one or
+        more sort criteria with > as:
+            sort_menus = true : basename, >qty
+
+        You can also request sorting only for specific menus:
+            sort_menus = pickup: true
+        or
+            sort_menus = inv: true
+        (Menu types must be specified as name:, with no space between
+        name and colon.)
+
+        The menu selectors available are:
+
+        pickup: All pickup menus, stash-search menus, etc. for items not
+                in your inventory.
+        drop:   The item drop menu.
+        inv:    Inventory listings for any command (but not for dropping
+                items).
+        any:    All menus; this is the default when unspecified.
         
 
 4-i     Messages and Display Enhancements.

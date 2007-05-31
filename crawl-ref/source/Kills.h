@@ -12,8 +12,6 @@
 #include <stdio.h>
 #include "enum.h"
 
-std::string pluralise(const std::string &name, 
-                      const char *no_of[] = NULL);
 std::string apostrophise(const std::string &name);
 
 struct monsters;

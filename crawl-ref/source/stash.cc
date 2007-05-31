@@ -361,7 +361,10 @@ std::string Stash::stash_item_name(const item_def &item)
 class StashMenu : public InvMenu
 {
 public:
-    StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false) { }
+    StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false)
+    {
+        set_type(MT_PICKUP);
+    }
     unsigned char getkey() const;
 public:
     bool can_travel;

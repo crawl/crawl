@@ -82,6 +82,30 @@ InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
     quantity = i.quantity;
 }
 
+const std::string &InvEntry::get_basename() const
+{
+    if (basename.empty())
+        basename = item->name(DESC_BASENAME);
+    return (basename);
+}
+
+const std::string &InvEntry::get_qualname() const
+{
+    if (qualname.empty())
+        qualname = item->name(DESC_QUALNAME);
+    return (qualname);
+}
+
+const std::string &InvEntry::get_fullname() const
+{
+    return (text);
+}
+
+const bool InvEntry::is_item_cursed() const
+{
+    return (item_ident(*item, ISFLAG_KNOW_CURSE) && item_cursed(*item));
+}
+
 std::string InvEntry::get_text() const
 {
     std::ostringstream tstr;
@@ -259,9 +283,132 @@ void InvMenu::load_inv_items(int item_selector,
     }
 }
 
-static bool compare_menu_entries(const MenuEntry* a, const MenuEntry* b)
+template <std::string (*proc)(const InvEntry *a)>
+int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
-    return (*a < *b);
+    return (proc(a).compare(proc(b)));
+}
+
+template <typename T, T (*proc)(const InvEntry *a)>
+int compare_item(const InvEntry *a, const InvEntry *b)
+{
+    return (int(proc(a)) - int(proc(b)));
+}
+
+// C++ needs anonymous subs already!
+std::string sort_item_basename(const InvEntry *a)
+{
+    return a->get_basename();
+}
+std::string sort_item_qualname(const InvEntry *a)
+{
+    return a->get_qualname();
+}
+std::string sort_item_fullname(const InvEntry *a)
+{
+    return a->get_fullname();
+}
+int sort_item_qty(const InvEntry *a)
+{
+    return a->quantity;
+}
+int sort_item_slot(const InvEntry *a)
+{
+    return a->item->link;
+}
+bool sort_item_curse(const InvEntry *a)
+{
+    return a->is_item_cursed();
+}
+
+static bool compare_invmenu_items(const InvEntry *a, const InvEntry *b,
+                                  const item_sort_comparators *cmps)
+{
+    for (item_sort_comparators::const_iterator i = cmps->begin();
+         i != cmps->end();
+         ++i)
+    {
+        const int cmp = i->compare(a, b);
+        if (cmp)
+            return (cmp < 0);
+    }
+    return (false);
+}
+
+struct menu_entry_comparator
+{
+    const menu_sort_condition *cond;
+    
+    menu_entry_comparator(const menu_sort_condition *c)
+        : cond(c)
+    {
+    }
+
+    bool operator () (const MenuEntry* a, const MenuEntry* b) const
+    {
+        const InvEntry *ia = dynamic_cast<const InvEntry *>(a);
+        const InvEntry *ib = dynamic_cast<const InvEntry *>(b);
+        return compare_invmenu_items(ia, ib, &cond->cmp);
+    }
+};
+
+void init_item_sort_comparators(item_sort_comparators &list,
+                                const std::string &set)
+{
+    static struct
+    {
+        const std::string cname;
+        item_sort_fn cmp;
+    } cmp_map[]  =
+      {
+          { "basename", compare_item_str<sort_item_basename> },
+          { "qualname", compare_item_str<sort_item_qualname> },
+          { "fullname", compare_item_str<sort_item_fullname> },
+          { "curse",    compare_item<bool, sort_item_curse> },
+          { "qty",      compare_item<int, sort_item_qty> },
+          { "slot",     compare_item<int, sort_item_slot> },
+      };
+    
+    list.clear();
+    std::vector<std::string> cmps = split_string(",", set);
+    for (int i = 0, size = cmps.size(); i < size; ++i)
+    {
+        std::string s = cmps[i];
+        if (s.empty())
+            continue;
+        
+        const bool negated = s[0] == '>';
+        if (s[0] == '<' || s[0] == '>')
+            s = s.substr(1);
+
+        for (unsigned ci = 0; ci < ARRAYSIZE(cmp_map); ++ci)
+            if (cmp_map[ci].cname == s)
+            {
+                list.push_back( item_comparator( cmp_map[ci].cmp, negated ) );
+                break;
+            }
+    }
+
+    if (list.empty())
+        list.push_back(
+            item_comparator(compare_item_str<sort_item_fullname>));
+}
+
+const menu_sort_condition *InvMenu::find_menu_sort_condition() const
+{
+    for (int i = 0, size = Options.sort_menus.size(); i < size; ++i)
+        if (Options.sort_menus[i].matches(type))
+            return &Options.sort_menus[i];
+    return (NULL);
+}
+
+void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
+                        const menu_sort_condition *cond)
+{
+    if (!cond || cond->sort == -1 || (int) invitems.size() < cond->sort)
+        return;
+    
+    std::sort( invitems.begin(), invitems.end(), menu_entry_comparator(cond) );
 }
 
 void InvMenu::load_items(const std::vector<const item_def*> &mitems,
@@ -273,6 +420,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
 
     menu_letter ckey;
     std::vector<InvEntry*> items_in_class;
+
+    const menu_sort_condition *cond = find_menu_sort_condition();
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
@@ -287,10 +436,7 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             items_in_class.push_back( new InvEntry(*mitems[j]) );
         }
 
-        if (Options.sort_menus != -1 &&
-            (int)items_in_class.size() >= Options.sort_menus)
-            std::sort( items_in_class.begin(), items_in_class.end(),
-                       compare_menu_entries );
+        sort_menu(items_in_class, cond);
 
         for (unsigned int j = 0; j < items_in_class.size(); ++j)
         {
@@ -432,12 +578,14 @@ std::string item_class_name( int type, bool terse )
 }
 
 std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
-                                   const char *title, bool noselect )
+                                   const char *title, bool noselect,
+                                   menu_type mtype )
 {
     std::vector<SelItem> selected;
     if (!items.empty())
     {
         InvMenu menu;
+        menu.set_type(mtype);
         menu.set_title(title);
         menu.load_items(items);
         menu.set_flags(noselect ? MF_NOSELECT : MF_MULTISELECT);

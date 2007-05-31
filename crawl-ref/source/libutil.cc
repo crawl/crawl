@@ -212,6 +212,60 @@ int ends_with(const std::string &s, const char *suffixes[])
     return (0);
 }
 
+// Pluralises a monster or item name. This'll need to be updated for
+// correctness whenever new monsters/items are added.
+std::string pluralise(const std::string &name, 
+                      const char *no_of[])
+{
+    std::string::size_type pos;
+
+    // Pluralise first word of names like 'eye of draining' or
+    // 'scrolls labeled FOOBAR', but only if the whole name is not
+    // suffixed by a supplied modifier, such as 'zombie' or 'skeleton'
+    if ( (pos = name.find(" of ")) != std::string::npos 
+            && !ends_with(name, no_of) )
+        return pluralise(name.substr(0, pos)) + name.substr(pos);
+    else if ( (pos = name.find(" labeled ")) != std::string::npos
+              && !ends_with(name, no_of) )
+        return pluralise(name.substr(0, pos)) + name.substr(pos);
+    else if (ends_with(name, "us"))
+        // Fungus, ufetubus, for instance.
+        return name.substr(0, name.length() - 2) + "i";
+    else if (ends_with(name, "larva") || ends_with(name, "amoeba"))
+        // Giant amoebae sounds a little weird, to tell the truth.
+        return name + "e";
+    else if (ends_with(name, "ex"))
+        // Vortex; vortexes is legal, but the classic plural is cooler.
+        return name.substr(0, name.length() - 2) + "ices";
+    else if (ends_with(name, "cyclops"))
+        return name.substr(0, name.length() - 1) + "es";
+    else if (ends_with(name, "y"))
+        return name.substr(0, name.length() - 1) + "ies";
+    else if (ends_with(name, "elf") || ends_with(name, "olf"))
+        // Elf, wolf. Dwarfs can stay dwarfs, if there were dwarfs.
+        return name.substr(0, name.length() - 1) + "ves";
+    else if (ends_with(name, "mage"))
+        // mage -> magi
+        return name.substr(0, name.length() - 1) + "i";
+    else if ( ends_with(name, "sheep") || ends_with(name, "manes")
+            || ends_with(name, "fish") )
+        // Maybe we should generalise 'manes' to ends_with("es")?
+        return name;
+    else if (ends_with(name, "ch") || ends_with(name, "sh") 
+            || ends_with(name, "x"))
+        // To handle cockroaches, fish and sphinxes. Fish will be netted by
+        // the previous check anyway.
+        return name + "es";
+    else if (ends_with(name, "um"))
+        // simulacrum -> simulacra
+        return name.substr(0, name.length() - 2) + "a";
+    else if (ends_with(name, "efreet"))
+        // efreet -> efreeti. Not sure this is correct.
+        return name + "i";
+
+    return name + "s";
+}
+
 std::string replace_all(std::string s,
                         const std::string &find,
                         const std::string &repl)

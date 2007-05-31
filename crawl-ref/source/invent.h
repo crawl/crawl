@@ -56,6 +56,9 @@ private:
     static bool show_prices;
     static void set_show_prices(bool doshow);
 
+    mutable std::string basename;
+    mutable std::string qualname;
+    
     friend class InvShowPrices;
 
 public:
@@ -63,6 +66,11 @@ public:
 
     InvEntry( const item_def &i );
     std::string get_text() const;
+
+    const std::string &get_basename() const;
+    const std::string &get_qualname() const;
+    const std::string &get_fullname() const;
+    const bool        is_item_cursed() const;
 
 private:
     void add_class_hotkeys(const item_def &i);
@@ -79,7 +87,7 @@ class InvMenu : public Menu
 {
 public:
     InvMenu(int mflags = MF_MULTISELECT) 
-        : Menu(mflags), type(MT_INVSELECT), pre_select(NULL),
+        : Menu(mflags), type(MT_INVLIST), pre_select(NULL),
           title_annotate(NULL)
     {
     }
@@ -119,6 +127,9 @@ public:
 protected:
     bool process_key(int key);
     void do_preselect(InvEntry *ie);
+    void sort_menu(std::vector<InvEntry*> &items,
+                   const menu_sort_condition *cond);
+    const menu_sort_condition *find_menu_sort_condition() const;
 
 protected:
     menu_type type;
@@ -140,7 +151,8 @@ int prompt_invent_item( const char *prompt,
 
 std::vector<SelItem> select_items(
                         const std::vector<const item_def*> &items, 
-                        const char *title, bool noselect = false );
+                        const char *title, bool noselect = false,
+                        menu_type mtype = MT_PICKUP );
 
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
@@ -186,5 +198,8 @@ std::string item_class_name(int type, bool terse = false);
 
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
 bool has_warning_inscription(const item_def& item, operation_types oper);
+
+void init_item_sort_comparators(item_sort_comparators &list,
+                                const std::string &set);
 
 #endif

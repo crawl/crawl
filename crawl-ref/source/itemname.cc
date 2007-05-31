@@ -88,7 +88,7 @@ std::string item_def::name(description_level_type descrip,
 {
     std::ostringstream buff;
 
-    const std::string auxname = this->name_aux(terse, ident);
+    const std::string auxname = this->name_aux(descrip, terse, ident);
     const bool startvowel = is_vowel(auxname[0]);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
@@ -154,7 +154,8 @@ std::string item_def::name(description_level_type descrip,
             break;
         }
 
-        buff << this->quantity << " ";
+        if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME)
+            buff << this->quantity << " ";
     }
     else
     {
@@ -904,16 +905,25 @@ static void output_with_sign(std::ostream& os, int val)
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-std::string item_def::name_aux( bool terse, bool ident ) const
+std::string item_def::name_aux( description_level_type desc,
+                                bool terse, bool ident ) const
 {
     // Shortcuts
     const int item_typ = this->sub_type;
     const int it_plus = this->plus;
     const int item_plus2 = this->plus2;
 
-    const bool know_curse = ident || item_ident(*this, ISFLAG_KNOW_CURSE);
+    const bool basename = desc == DESC_BASENAME;
+    const bool qualname = desc == DESC_QUALNAME;
+    
+    const bool know_curse =
+        !basename && !qualname
+        && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
+    
     const bool know_type = ident || item_type_known(*this);
-    const bool know_pluses = ident || item_ident(*this, ISFLAG_KNOW_PLUSES);
+    const bool know_pluses =
+        !basename && !qualname
+        && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
 
     bool need_plural = true;
     int brand;
@@ -965,7 +975,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         // Now that we can have "glowing elven" weapons, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (!know_pluses && !terse)
+        if (!know_pluses && !terse && !basename)
         {
             switch (get_equip_desc( *this ))
             {
@@ -978,30 +988,35 @@ std::string item_def::name_aux( bool terse, bool ident ) const
             }
         } 
 
-        // always give racial type (it does have game effects)
-        buff << racial_description_string(*this, terse);
+        if (!basename)
+        {
+            // always give racial type (it does have game effects)
+            buff << racial_description_string(*this, terse);
 
-        if (know_type && !terse &&
-            (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
-            buff << "vampiric ";
+            if (know_type && !terse &&
+                (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
+                buff << "vampiric ";
 
-        buff << item_base_name(*this);
-        if ( know_type )
-            buff << weapon_brand_name(*this, terse);
+            buff << item_base_name(*this);
+            if ( know_type )
+                buff << weapon_brand_name(*this, terse);
 
-        if (know_curse && item_cursed(*this) && terse)
-            buff << " (curse)";
+            if (know_curse && item_cursed(*this) && terse)
+                buff << " (curse)";
+        }
         break;
 
     case OBJ_MISSILES:
-        need_plural = false;
         brand = get_ammo_brand( *this );
 
-        if (brand == SPMSL_POISONED)
-            buff << ((terse) ? "poison " : "poisoned ");
+        if (!basename)
+        {
+            if (brand == SPMSL_POISONED)
+                buff << ((terse) ? "poison " : "poisoned ");
         
-        if (brand == SPMSL_CURARE)
-            buff << ((terse) ? "curare " : "curare-tipped ");
+            if (brand == SPMSL_CURARE)
+                buff << ((terse) ? "curare " : "curare-tipped ");
+        }
 
         if (know_pluses)
         {
@@ -1022,10 +1037,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         default:            buff << "hysterical raisin"; break;
         }
 
-        if (this->quantity > 1)
-            buff << "s";
-
-        if (know_type)
+        if (know_type && !basename)
         {
             switch (brand)
             {
@@ -1063,7 +1075,8 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
 
-        if (is_random_artefact( *this ))
+        // When asking for the base item name, randartism is ignored.
+        if (is_random_artefact( *this ) && !basename)
         {
             buff << randart_armour_name(*this);
             break;
@@ -1072,7 +1085,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         // Now that we can have "glowing elven" armour, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (!know_pluses && !terse)
+        if (!know_pluses && !terse & !basename)
         {
             switch (get_equip_desc( *this ))
             {
@@ -1099,11 +1112,15 @@ std::string item_def::name_aux( bool terse, bool ident ) const
             }
         }
 
-        // always give racial description (has game effects)
-        buff << racial_description_string(*this, terse);
+        if (!basename)
+        {
+            // always give racial description (has game effects)
+            buff << racial_description_string(*this, terse);
+        }
 
         buff << item_base_name(*this);
 
+        if (!basename)
         {
             const special_armour_type sparm = get_armour_ego_type( *this );
 
@@ -1115,7 +1132,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
             }
         }
 
-        if (know_curse && item_cursed(*this) && terse)
+        if (know_curse && item_cursed(*this) && terse && !basename)
             buff << " (curse)";
         break;
 
@@ -1136,13 +1153,9 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         break;
 
     case OBJ_POTIONS:
-        need_plural = false;
         if (know_type)
         {
-            buff << "potion";
-            if ( this->quantity > 1 )
-                buff << "s";
-            buff << " of " << potion_type_name(item_typ);
+            buff << "potion of " << potion_type_name(item_typ);
         }
         else
         {
@@ -1174,9 +1187,6 @@ std::string item_def::name_aux( bool terse, bool ident ) const
                                     : potion_colours[pcolour];
 
             buff << qualifier << clr << " potion";
-
-            if (this->quantity > 1)
-                buff << "s";
         }
         break;
 
@@ -1189,50 +1199,35 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         case FOOD_APPLE: buff << "apple"; break;
         case FOOD_CHOKO: buff << "choko"; break;
         case FOOD_HONEYCOMB: buff << "honeycomb"; break;
-        case FOOD_ROYAL_JELLY: buff << "royal jell"; break;
+        case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_SNOZZCUMBER: buff << "snozzcumber"; break;
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_APRICOT: buff << "apricot"; break;
         case FOOD_ORANGE: buff << "orange"; break;
         case FOOD_BANANA: buff << "banana"; break;
-        case FOOD_STRAWBERRY: buff << "strawberr"; break;
+        case FOOD_STRAWBERRY: buff << "strawberry"; break;
         case FOOD_RAMBUTAN: buff << "rambutan"; break;
         case FOOD_LEMON: buff << "lemon"; break;
         case FOOD_GRAPE: buff << "grape"; break;
         case FOOD_SULTANA: buff << "sultana"; break;
         case FOOD_LYCHEE: buff << "lychee"; break;
-        case FOOD_BEEF_JERKY: buff << "beef jerk"; break;
+        case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHEESE: buff << "cheese"; break;
         case FOOD_SAUSAGE: buff << "sausage"; break;
         case FOOD_CHUNK:
-        {
-            need_plural = false;
-
             if (this->special < 100)
                 buff << "rotting ";
 
-            buff << "chunk";
-
-            if (this->quantity > 1)
-                buff << "s";
-
-            buff << " of " << mons_type_name(it_plus, DESC_PLAIN) << " flesh";
+            buff << "chunk of "
+                 << mons_type_name(it_plus, DESC_PLAIN)
+                 << " flesh";
             break;
         }
-        }
-
-        if (item_typ == FOOD_ROYAL_JELLY || item_typ == FOOD_STRAWBERRY
-            || item_typ == FOOD_BEEF_JERKY)
-            buff << ((this->quantity > 1) ? "ie" : "y");
 
         break;
 
     case OBJ_SCROLLS:
-        need_plural = false;
-        buff << "scroll";
-        if ( this->quantity > 1 )
-            buff << "s";
-        buff << " ";
+        buff << "scroll ";
 
         if (know_type)
         {
@@ -1270,7 +1265,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
             }
         }
 
-        if (is_random_artefact( *this ))
+        if (is_random_artefact( *this ) && !basename)
         {
             buff << randart_jewellery_name(*this);
             break;
@@ -1278,7 +1273,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
 
         if (know_type)
         {
-            if (know_pluses && ring_has_pluses(*this))
+            if (know_pluses && ring_has_pluses(*this) && !basename && !qualname)
             {
                 output_with_sign(buff, it_plus);
 
@@ -1310,13 +1305,9 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         break;
 
     case OBJ_MISCELLANY:
-        need_plural = false;
         if ( item_typ == MISC_RUNE_OF_ZOT )
         {
             buff << rune_type_name(it_plus) << " rune";
-
-            if (this->quantity > 1)
-                buff << "s";
 
             if (know_type)
                 buff << " of Zot";
@@ -1409,8 +1400,12 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         buff << "!";
     }
 
+    // One plural to rule them all.
+    if (need_plural && this->quantity > 1 && !basename && !qualname)
+        buff.str( pluralise(buff.str()) );
+
     // Disambiguation
-    if (!terse && know_type)
+    if (!terse && !basename && know_type)
     {
         switch (this->base_type)
         {
@@ -1464,9 +1459,6 @@ std::string item_def::name_aux( bool terse, bool ident ) const
              << ",pl2:" << item_plus2 << ",sp:" << this->special
              << ",qu:" << this->quantity << ")";
     }
-
-    if (need_plural && this->quantity > 1)
-        buff << "s";
 
     return buff.str();
 }

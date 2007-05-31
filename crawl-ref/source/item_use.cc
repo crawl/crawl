@@ -209,7 +209,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         if (!auto_wield)
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
-                            MT_INVSELECT, OSEL_WIELD, 
+                            MT_INVLIST, OSEL_WIELD, 
                             true, true, true, '-', NULL, OPER_WIELD);
         else
             item_slot = PROMPT_GOT_SPECIAL;
@@ -650,7 +650,7 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
         canned_msg(MSG_TOO_BERSERK);
     else
     {
-        slot = prompt_invent_item( mesg.c_str(), MT_INVSELECT, OBJ_ARMOUR,
+        slot = prompt_invent_item( mesg.c_str(), MT_INVLIST, OBJ_ARMOUR,
                                    true, true, true, 0, NULL,
                                    oper );
 
@@ -1069,7 +1069,7 @@ void throw_anything(void)
     }
 
     throw_slot = prompt_invent_item( "Throw which item? (* to show all)",
-                                     MT_INVSELECT,
+                                     MT_INVLIST,
                                      OBJ_MISSILES, true, true, true, 0, NULL,
                                      OPER_THROW );
     if (throw_slot == PROMPT_ABORT)
@@ -2286,7 +2286,7 @@ bool puton_ring(int slot, bool prompt_finger)
         item_slot = slot;
     else
         item_slot = prompt_invent_item( "Put on which piece of jewellery?",
-                        MT_INVSELECT, OBJ_JEWELLERY );
+                        MT_INVLIST, OBJ_JEWELLERY );
 
     if (item_slot == PROMPT_ABORT)
     {
@@ -2426,7 +2426,7 @@ bool remove_ring(int slot, bool announce)
     {
         const int equipn = 
             slot == -1? prompt_invent_item( "Remove which piece of jewellery?",
-                                            MT_INVSELECT,
+                                            MT_INVLIST,
                                             OBJ_JEWELLERY, true, true, true,
                                             0, NULL, OPER_REMOVE)
                       : slot;
@@ -2518,7 +2518,7 @@ void zap_wand(void)
     }
 
     item_slot = prompt_invent_item( "Zap which item?",
-                                    MT_INVSELECT,
+                                    MT_INVLIST,
                                     OBJ_WANDS,
                                     true, true, true, 0, NULL,
                                     OPER_ZAP );
@@ -2687,7 +2687,7 @@ void inscribe_item()
     }
     item_slot = prompt_invent_item(
                     "Inscribe which item? ", 
-                    MT_INVSELECT, 
+                    MT_INVLIST, 
                     OSEL_ANY );
     if (item_slot == PROMPT_ABORT)
     {
@@ -2731,7 +2731,7 @@ void drink(void)
     }
 
     item_slot = prompt_invent_item( "Drink which item?",
-                                    MT_INVSELECT, OBJ_POTIONS,
+                                    MT_INVLIST, OBJ_POTIONS,
                                     true, true, true, 0, NULL,
                                     OPER_QUAFF );
     if (item_slot == PROMPT_ABORT)
@@ -3227,7 +3227,7 @@ void read_scroll(void)
 
     int item_slot = prompt_invent_item(
                         "Read which item?", 
-                        MT_INVSELECT, 
+                        MT_INVLIST, 
                         OBJ_SCROLLS );
     if (item_slot == PROMPT_ABORT)
     {
@@ -3585,7 +3585,7 @@ void read_scroll(void)
 void examine_object(void)
 {
     int item_slot = prompt_invent_item( "Examine which item?", 
-                                        MT_INVSELECT, -1,
+                                        MT_INVLIST, -1,
                                         true, true, true, 0, NULL,
                                         OPER_EXAMINE );
     if (item_slot == PROMPT_ABORT)
