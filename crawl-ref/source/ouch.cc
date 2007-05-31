@@ -420,7 +420,7 @@ void item_corrode( int itco )
     if (!suppress_msg)
     {
         mprf("%s %s", item.name(DESC_CAP_YOUR).c_str(),
-             (it_resists) ? " resists." : " is eaten away!");
+             (it_resists) ? "resists." : "is eaten away!");
     }
 
     if (!it_resists)

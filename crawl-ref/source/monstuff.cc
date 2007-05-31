@@ -2237,9 +2237,6 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible( monster ))
-            break;
-
         if (one_chance_in(3))
             used = plant_spit(monster, beem);
 
@@ -4838,13 +4835,8 @@ forget_it:
         do_move_monster(monster, mmov_x, mmov_y);
 }                               // end monster_move()
 
-static bool plant_spit(monsters *monster, bolt &pbolt)
+static void setup_plant_spit(monsters *monster, bolt &pbolt)
 {
-    bool didSpit = false;
-
-    char spit_string[INFO_SIZE];
-
-    // setup plant spit
     pbolt.name = "acid";
     pbolt.type = SYM_ZAP;
     pbolt.range = 9;
@@ -4856,6 +4848,15 @@ static bool plant_spit(monsters *monster, bolt &pbolt)
     pbolt.hit = 20 + (3 * monster->hit_dice);
     pbolt.thrower = KILL_MON_MISSILE;
     pbolt.aux_source.clear();
+}
+
+static bool plant_spit(monsters *monster, bolt &pbolt)
+{
+    bool didSpit = false;
+
+    char spit_string[INFO_SIZE];
+
+    setup_plant_spit(monster, pbolt);
 
     // fire tracer
     fire_tracer(monster, pbolt);
