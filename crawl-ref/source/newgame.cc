@@ -1358,7 +1358,6 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_MINOTAUR:
         case SP_MOUNTAIN_DWARF:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
