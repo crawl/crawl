@@ -665,6 +665,7 @@ LUARET1(you_turn_is_over, boolean, you.turn_is_over)
 LUARET1(you_name, string, you.your_name)
 LUARET1(you_race, string, species_name(you.species, you.experience_level))
 LUARET1(you_class, string, get_class_name(you.char_class))
+LUARET1(you_god, string, god_name(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, string, hunger_level())
@@ -733,6 +734,7 @@ static const struct luaL_reg you_lib[] =
     { "name"        , you_name },
     { "race"        , you_race },
     { "class"       , you_class },
+    { "god"         , you_god },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "hunger"      , you_hunger },

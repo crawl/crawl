@@ -325,6 +325,7 @@ bool evoke_wielded( void )
     }
 
     item_def& wpn = you.inv[wield];
+    bool unevokable = false;
 
     switch (wpn.base_type)
     {
@@ -456,8 +457,13 @@ bool evoke_wielded( void )
                 break;
 
             default:
+                unevokable = true;
                 break;
             }
+        }
+        else
+        {
+            unevokable = true;
         }
         break;
 
@@ -494,6 +500,10 @@ bool evoke_wielded( void )
                     you.wield_change = true;
                 }
             }
+        }
+        else
+        {
+            unevokable = true;
         }
         break;
 
@@ -644,11 +654,13 @@ bool evoke_wielded( void )
 
         default:
             did_work = false;
+            unevokable = true;
             break;
         }
         break;
 
     default:
+        unevokable = true;
         break;
     }
 
@@ -657,7 +669,8 @@ bool evoke_wielded( void )
     else if (pract > 0)
         exercise( SK_EVOCATIONS, pract );
 
-    you.turn_is_over = true;
+    if (!unevokable)
+        you.turn_is_over = true;
 
     return (did_work);
 }                               // end evoke_wielded()
