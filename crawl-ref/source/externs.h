@@ -1414,9 +1414,10 @@ public:
     unsigned    detected_monster_colour;    // Colour of detected monsters
     unsigned    detected_item_colour;       // Colour of detected items
 
-    unsigned    heap_brand;     // Highlight heaps of items in the playing area
-    unsigned    stab_brand;     // Highlight monsters that are stabbable
-    unsigned    may_stab_brand; // Highlight potential stab candidates
+    unsigned    heap_brand;       // Highlight heaps of items
+    unsigned    stab_brand;       // Highlight monsters that are stabbable
+    unsigned    may_stab_brand;   // Highlight potential stab candidates
+    unsigned    stair_item_brand; // Highlight stairs covered by items.
 
     int         explore_stop;      // Stop exploring if a previously unseen
                                    // item comes into view

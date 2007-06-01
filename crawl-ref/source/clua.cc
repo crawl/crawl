@@ -24,6 +24,7 @@
 #include "output.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
 #include "stuff.h"

@@ -30,7 +30,8 @@ The contents of this text are:
                 detected_monster_colour, detected_item_colour, 
                 remembered_monster_colour, colour_map, clean_map
 4-d     Branding (Item and Monster Highlighting).
-                heap_brand, friend_brand, stab_brand, may_stab_brand 
+                heap_brand, friend_brand, stab_brand, may_stab_brand,
+                stair_item_brand
 4-e     Level Map Functions.
                 level_map_cursor_step, level_map_title, item_colour
 4-f     Travel and Exploration. 
@@ -411,10 +412,10 @@ clean_map = false
 4-d     Branding (Item and monster highlighting).
 -------------------------------------------------
 
-Branding refers to displaying particular monsters (e.g. summons) or items in a 
-special way; special as in reversing fore- and background. There are several 
-branding choices (these will not work everywhere; it depends on OS and 
-terminal):
+Branding refers to displaying particular monsters (e.g. summons) or
+items in a special way; special as in reversing fore- and background.
+There are several branding choices (these will not work everywhere; it
+depends on OS and terminal):
    standout         -- often the same as reverse, might be underline or dim
    bold             -- used by colour curses for brightening foreground colours
    blink            -- used by colour curses for brightening background colours
@@ -424,19 +425,20 @@ terminal):
    highlight:colour -- set background colour of branded monsters to "colour"
 The last can be abbreviated to hi:colour.
 See part Technical (6-) for dos_use_background_intensity under Windows and DOS.
-By default, there is no branding activated.
 
-heap_brand
+By default, no brands are active apart from stair_item_brand.
+
+heap_brand = none
         Brand heaps of items (more than one item or stack). For example
           heap_brand = reverse
 
-friend_brand
+friend_brand = none
         Brand friends in some way. This is very helpful for summoners. E.g.
           friend_brand = hi:green
         shows friends with a green background. If the friend is itself green, 
         it'll show up as black on green.
 
-stab_brand
+stab_brand = none
         Some deities object to you stabbing monsters. Certain classes 
         specialise in stabbing monsters. Still other characters are happy if 
         they spot a monster before the monster spots them. In all these cases, 
@@ -445,11 +447,15 @@ stab_brand
         the normal 'brand' options apply. For example
           stab_brand = hi:blue
 
-may_stab_brand 
-        Stabbing may be possible even if the monster is not asleep (if it's 
-        confused or distracted, for instance). This option brands monsters that
-        you *might* be able to stab. Primarily useful for worshippers of The 
-        Shining One. Purists may consider this unnecessarily spoily.
+may_stab_brand = none
+        Stabbing may be possible even if the monster is not asleep (if
+        it's confused or distracted, for instance). This option brands
+        monsters that you *might* be able to stab.
+
+stair_item_brand = reverse
+        Brands stairs that would otherwise be hidden by items. If you
+        use this brand, the items on the square are hidden by the stair
+        symbol (<, >, or portal) and the stair symbol is branded.
 
 
 4-e     Level Map Functions.

@@ -714,11 +714,13 @@ void game_options::reset_options()
     sc_entries             = 0;
     sc_format              = -1;
 
-    friend_brand    = CHATTR_NORMAL;
-    heap_brand      = CHATTR_NORMAL;
-    stab_brand      = CHATTR_NORMAL;
-    may_stab_brand  = CHATTR_NORMAL;
-    no_dark_brand   = true;
+    friend_brand     = CHATTR_NORMAL;
+    heap_brand       = CHATTR_NORMAL;
+    stab_brand       = CHATTR_NORMAL;
+    may_stab_brand   = CHATTR_NORMAL;
+    stair_item_brand = CHATTR_REVERSE;
+    
+    no_dark_brand    = true;
 
 #ifdef WIZARD
     wiz_mode      = WIZ_NO;
@@ -1655,6 +1657,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "may_stab_brand")
     {
         may_stab_brand = curses_attribute(field);
+    }
+    else if (key == "stair_item_brand")
+    {
+        stair_item_brand = curses_attribute(field);
     }
     else if (key == "no_dark_brand")
     {

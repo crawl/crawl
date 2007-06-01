@@ -238,6 +238,8 @@ static unsigned colflag2brand(int colflag)
         return (Options.stab_brand);
     case COLFLAG_MAYSTAB:
         return (Options.may_stab_brand);
+    case COLFLAG_STAIR_ITEM:
+        return (Options.stair_item_brand);
     default:
         return (CHATTR_NORMAL);
     }
@@ -298,7 +300,7 @@ static void get_symbol( int x, int y,
         *ch = Feature[object].symbol;
 
         // Don't clobber with BLACK, because the colour should be already set.
-        if (Feature[object].colour != BLACK)
+        if (!*colour && Feature[object].colour != BLACK)
             *colour = Feature[object].colour;
 
         // Note anything we see that's notable
@@ -450,7 +452,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     unsigned tc = travel_colour? 
                         get_travel_colour(x, y)
                       : DARKGREY;
-
+    
     if (map_flags & MAP_DETECTED_ITEM)
         tc = Options.detected_item_colour;
     
@@ -475,6 +477,12 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
+
+    if (Options.stair_item_brand
+        && is_stair(grid_value) && igrd[x + 1][y + 1] != NON_ITEM)
+    {
+        tc |= COLFLAG_STAIR_ITEM;
+    }
 
     return fix_colour(tc);
 }
@@ -826,16 +834,22 @@ void item_grid()
                     {
                         const item_def &eitem = mitm[igrd[count_x][count_y]];
                         unsigned short &ecol = env.show_col[ix][iy];
-                        
-                        ecol = (grd[count_x][count_y] == DNGN_SHALLOW_WATER)?
-                                        CYAN
-                                      : eitem.colour;
 
-                        if (eitem.link != NON_ITEM)
+                        const int grid = grd[count_x][count_y];
+                        if (Options.stair_item_brand && is_stair(grid))
+                            ecol |= COLFLAG_STAIR_ITEM;
+                        else
                         {
-                            ecol |= COLFLAG_ITEM_HEAP;
+                            ecol = (grid == DNGN_SHALLOW_WATER)?
+                                CYAN
+                                : eitem.colour;
+
+                            if (eitem.link != NON_ITEM)
+                            {
+                                ecol |= COLFLAG_ITEM_HEAP;
+                            }
+                            env.show[ix][iy] = get_item_dngn_code( eitem );
                         }
-                        env.show[ix][iy] = get_item_dngn_code( eitem );
                     }
                 }
             }
