@@ -2223,6 +2223,11 @@ bool monsters::swimming() const
     return (grid_is_watery(grid) && monster_habitat(type) == DNGN_DEEP_WATER);
 }
 
+bool monsters::submerged() const
+{
+    return (mons_is_submerged(this));
+}
+
 bool monsters::floundering() const
 {
     const int grid = grd[x][y];

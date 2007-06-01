@@ -319,6 +319,21 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     return (true);
 }
 
+// Given an adjacent monster, returns true if the player can hit it (the
+// monster should either not be submerged or submerged in shallow water,
+// if the player has a polearm).
+bool player_can_hit_monster(const monsters *mons)
+{
+    if (!mons_is_submerged(mons))
+        return (true);
+
+    if (grd(mons->pos()) != DNGN_SHALLOW_WATER)
+        return (false);
+
+    const item_def *weapon = you.weapon();
+    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+}
+
 bool player_can_swim()
 {
     return you.can_swim();
@@ -4647,6 +4662,11 @@ bool player::can_swim() const
 bool player::swimming() const
 {
     return in_water() && can_swim();
+}
+
+bool player::submerged() const
+{
+    return (false);
 }
 
 bool player::has_spell(int spell) const

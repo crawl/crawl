@@ -336,6 +336,9 @@ void melee_attack::init_attack()
     attacker_visible = attacker->visible();
     defender_visible = defender && defender->visible();
     needs_message = attacker_visible || defender_visible;
+
+    if (defender && defender->submerged())
+        unarmed_ok = false;
 }
 
 std::string melee_attack::actor_name(const actor *a,

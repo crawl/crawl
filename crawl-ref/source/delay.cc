@@ -957,7 +957,7 @@ static void paranoid_option_disable( activity_interrupt_type ai,
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
-        if (mon && !player_monster_visible(mon))
+        if (mon && !player_monster_visible(mon) && !mons_is_submerged(mon))
         {
             std::vector<std::string> deactivatees;
             if (Options.autoprayer_on)

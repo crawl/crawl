@@ -116,6 +116,7 @@ public:
     
     virtual coord_def pos() const = 0;
     virtual bool      swimming() const = 0;
+    virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
     
     virtual size_type body_size(int psize = PSIZE_TORSO,
@@ -743,6 +744,7 @@ public:
     
     coord_def pos() const;
     bool      swimming() const;
+    bool      submerged() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       damage_type(int attk = -1);
@@ -968,6 +970,7 @@ public:
     bool      alive() const;
     coord_def pos() const;
     bool      swimming() const;
+    bool      submerged() const;
     bool      can_drown() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;

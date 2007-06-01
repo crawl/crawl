@@ -28,6 +28,7 @@ int player_equip( int slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 int player_damage_type( void );
 int player_damage_brand( void );
+bool player_can_hit_monster(const monsters *mons);
 
 bool player_is_shapechanged(void);
 
