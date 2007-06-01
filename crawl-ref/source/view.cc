@@ -299,9 +299,10 @@ static void get_symbol( int x, int y,
     {
         *ch = Feature[object].symbol;
 
+        const int colmask = *colour & CHATTR_COLMASK;
         // Don't clobber with BLACK, because the colour should be already set.
-        if (!*colour && Feature[object].colour != BLACK)
-            *colour = Feature[object].colour;
+        if (Feature[object].colour != BLACK)
+            *colour = Feature[object].colour | colmask;
 
         // Note anything we see that's notable
         if (Feature[object].notable)
