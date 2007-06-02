@@ -2716,6 +2716,13 @@ static void open_door(int move_x, int move_y, bool check_confused)
         // convenience
         dx = you.x_pos + door_move.dx;
         dy = you.y_pos + door_move.dy;
+
+        if (!in_bounds(dx, dy) || grd[dx][dy] != DNGN_CLOSED_DOOR)
+        {
+            mpr( "There's no door there." );
+            // Don't lose a turn.
+            return;
+        }
     }
 
     if (grd[dx][dy] == DNGN_CLOSED_DOOR)
