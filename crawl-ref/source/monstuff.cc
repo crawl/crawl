@@ -1102,8 +1102,8 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
         str_polymon += "!";
     }
 
-    const bool player_messaged = simple_monster_message(monster,
-                                                        str_polymon.c_str() );
+    bool player_messaged =
+        simple_monster_message(monster, str_polymon.c_str() );
 
     // the actual polymorphing:
     const int old_hp = monster->hit_points;
@@ -1125,6 +1125,13 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     if (mons_class_flag( monster->type, M_INVIS ))
         monster->add_ench(ENCH_INVIS);
+
+    if (!player_messaged && mons_near(monster)
+        && player_monster_visible(monster))
+    {
+        mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
+        player_messaged = true;
+    }
 
     monster->hit_points = monster->max_hit_points
                                 * ((old_hp * 100) / old_hp_max) / 100
