@@ -1149,11 +1149,11 @@ double ray_def::reflect(double p, double c) const
 
 double ray_def::reflect(bool rx, double oldx, double newx) const
 {
-    if (rx? abs(slope) > 1.0 : abs(slope) < 1.0)
+    if (rx? fabs(slope) > 1.0 : fabs(slope) < 1.0)
         return (reflect(oldx, floor(oldx) + 0.5));
 
-    const int flnew = newx;
-    const int flold = oldx;
+    const double flnew = floor(newx);
+    const double flold = floor(oldx);
     return (reflect(oldx,
                     flnew > flold? flnew :
                     flold > flnew? flold :
@@ -1241,7 +1241,7 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
     // If we want to minimize the number of moves on the ray, look one
     // step ahead and see if we can get a diagonal.
     
-    const coord_def old(accx, accy);
+    const coord_def old(static_cast<int>(accx), static_cast<int>(accy));
     const int ret = raw_advance();
 
     if (ret == 2 || (target && pos() == *target))
@@ -1250,7 +1250,7 @@ int ray_def::advance(bool shortest_possible, const coord_def *target)
     const double maccx = accx, maccy = accy;
     if (raw_advance() != 2)
     {
-        const coord_def second(accx, accy);
+        const coord_def second(static_cast<int>(accx), static_cast<int>(accy));
         // If we can convert to a diagonal, do so.
         if ((second - old).abs() == 2)
             return (2);
