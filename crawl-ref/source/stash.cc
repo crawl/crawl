@@ -457,8 +457,8 @@ std::string Stash::description() const
     {
         char additionals[50];
         snprintf(additionals, sizeof additionals, 
-                " (+%lu)", 
-                (unsigned long) (sz - 1));
+                " (...%ld)", 
+                 (unsigned long) (sz - 1));
         desc += additionals;
     }
     return (desc);
