@@ -3173,33 +3173,30 @@ static void handle_read_book( int item_slot )
         skill_manual(item_slot);
         return;
     }
-    else
+    
+    while (true)
     {
         // Spellbook
         spell = read_book( you.inv[item_slot], RBOOK_READ_SPELL );
+
+        if (spell < 'a' || spell > 'h')     //jmf: was 'g', but 8=h
+        {
+            mesclr( true );
+            return;
+        }
+
+        spell_index = letter_to_index( spell );
+
+        const spell_type nthing =
+            which_spell_in_book(you.inv[item_slot].sub_type, spell_index);
+        if (nthing == SPELL_NO_SPELL)
+        {
+            mesclr( true );
+            return;
+        }
+
+        describe_spell( nthing );
     }
-
-    if (spell < 'a' || spell > 'h')     //jmf: was 'g', but 8=h
-    {
-        mesclr( true );
-        return;
-    }
-
-    spell_index = letter_to_index( spell );
-
-    spell_type nthing =
-        which_spell_in_book(you.inv[item_slot].sub_type, spell_index);
-    if (nthing == SPELL_NO_SPELL)
-    {
-        mesclr( true );
-        return;
-    }
-
-    describe_spell( nthing );
-    redraw_screen();
-
-    mesclr( true );
-    return;
 }
 
 void read_scroll(void)
