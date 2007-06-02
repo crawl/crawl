@@ -1742,7 +1742,7 @@ bool ms_requires_tracer(spell_type monspell)
 bool ms_direct_nasty(spell_type monspell)
 {
     return (spell_needs_foe(monspell)
-            && !(get_spell_flags(monspell) & SPTYP_SUMMONING));
+            && !spell_typematch(monspell, SPTYP_SUMMONING));
 }
 
 // Spells a monster may want to cast if fleeing from the player, and 
@@ -1761,7 +1761,7 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
         return (true);
 
     default:
-        if ((get_spell_flags(monspell) & SPTYP_SUMMONING) && one_chance_in(4))
+        if (spell_typematch(monspell, SPTYP_SUMMONING) && one_chance_in(4))
             return (true);
         break;
     }
@@ -1803,7 +1803,7 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
         break;
 
     default:
-        if (!targ_adj && (get_spell_flags(monspell) & SPTYP_SUMMONING))
+        if (!targ_adj && spell_typematch(monspell, SPTYP_SUMMONING))
             ret = true;
         break;
     }
