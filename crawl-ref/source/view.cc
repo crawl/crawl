@@ -90,9 +90,6 @@ void monster_grid(bool do_updates);
 
 static int get_item_dngn_code(const item_def &item);
 static void set_show_backup( int ex, int ey );
-
-// Applies EC_ colour substitutions and brands.
-static unsigned fix_colour(unsigned raw_colour);
 static int get_viewobj_flags(int viewobj);
 
 int get_message_window_height()
@@ -247,7 +244,7 @@ static unsigned colflag2brand(int colflag)
 }
 #endif
 
-static unsigned fix_colour(unsigned raw_colour)
+unsigned real_colour(unsigned raw_colour)
 {
     // This order is important - is_element_colour() doesn't want to see the
     // munged colours returned by dos_brand, so it should always be done 
@@ -315,7 +312,7 @@ static void get_symbol( int x, int y,
         *ch = mons_char( object - DNGN_START_OF_MONSTERS );
     }
 
-    *colour = fix_colour(*colour);
+    *colour = real_colour(*colour);
 }
 
 void get_item_symbol(unsigned int object, unsigned short *ch,
@@ -329,7 +326,7 @@ void get_item_symbol(unsigned int object, unsigned short *ch,
         if (Feature[object].colour != BLACK)
             *colour = Feature[object].colour;
     }
-    *colour = fix_colour(*colour);
+    *colour = real_colour(*colour);
 
 }
 
@@ -461,13 +458,13 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     if (map_flags & MAP_DETECTED_MONSTER)
     {
         tc = Options.detected_monster_colour;
-        return fix_colour(tc);
+        return real_colour(tc);
     }
 
     // XXX: [ds] If we've an important colour, override other feature
     // colouring. Yes, this is hacky. Story of my life.
     if (tc == LIGHTGREEN || tc == LIGHTMAGENTA)
-        return fix_colour(tc);
+        return real_colour(tc);
 
     if (item_colour && is_envmap_item(x + 1, y + 1))
         return get_envmap_col(x + 1, y + 1);
@@ -486,7 +483,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         tc |= COLFLAG_STAIR_ITEM;
     }
 
-    return fix_colour(tc);
+    return real_colour(tc);
 }
 
 void clear_map(bool clear_detected_items, bool clear_detected_monsters)
@@ -1657,7 +1654,6 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir,
                bool find_shortest )
 {
-    
     int cellray, inray;
     const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
     const int signy = ((targety - sourcey >= 0) ? 1 : -1);
@@ -1692,11 +1688,12 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 bool blocked = false;
                 coord_def c1, c3;
                 int real_length = 0;
-                for ( inray = 0; inray < cellray; ++inray )
+                for ( inray = 0; inray <= cellray; ++inray )
                 {
                     const int xi = signx * ray_coord_x[inray + cur_offset];
                     const int yi = signy * ray_coord_y[inray + cur_offset];
-                    if (grid_is_solid(grd[sourcex + xi][sourcey + yi]))
+                    if (inray < cellray
+                        && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
                         blocked = true;
                         break;
@@ -1726,10 +1723,6 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                         c1 = unaliased_ray[real_length - 1];
                     }
                 }
-
-                if (find_shortest)
-                    unaliased_ray.push_back(
-                        coord_def(signx * absx, signy * absy));
 
                 int cimbalance = 0;
                 // If this ray is a candidate for shortest, calculate

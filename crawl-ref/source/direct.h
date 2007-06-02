@@ -49,6 +49,11 @@ inline int view2gridY(int vy)
     return (you.y_pos + vy - VIEW_CY);
 }
 
+inline coord_def view2grid(const coord_def &pos)
+{
+    return coord_def( view2gridX(pos.x), view2gridY(pos.y) );
+}
+
 inline int grid2viewX(int gx)
 {
     return (gx - you.x_pos + VIEW_CX);
@@ -57,6 +62,11 @@ inline int grid2viewX(int gx)
 inline int grid2viewY(int gy)
 {
     return (gy - you.y_pos + VIEW_CY);
+}
+
+inline coord_def grid2view(const coord_def &pos)
+{
+    return coord_def( grid2viewX(pos.x), grid2viewY(pos.y) );
 }
 
 #endif

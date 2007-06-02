@@ -562,7 +562,7 @@ static const char *targeting_help =
     "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n" 
     "<w>!</w> : fire at target and stop there\n"
     "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
-    "<w>:</w> : hide beam\n"
+    "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir</w> : shoot straight-line beam\n";
 
 static const char *interlevel_travel_branch_help =

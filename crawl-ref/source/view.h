@@ -120,6 +120,9 @@ int get_screen_glyph( int x, int y );
 void get_item_symbol(unsigned int object, unsigned short *ch,
                      unsigned short *colour);
 
+// Applies EC_ colour substitutions and brands.
+unsigned real_colour(unsigned raw_colour);
+
 void set_envmap_char( int x, int y, unsigned char chr );
 unsigned get_envmap_char(int x, int y);
 void set_envmap_detected_item(int x, int y, bool detected = true);

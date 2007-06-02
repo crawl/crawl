@@ -271,6 +271,25 @@ static const char *target_mode_help_text(int mode)
     }
 }
 
+static void draw_ray_glyph(const coord_def &pos, int colour,
+                           int glych, int mcol)
+{
+    int mid = mgrd(pos);
+    if (mid != NON_MONSTER)
+    {
+        const monsters *mons = &menv[mid];
+        if (mons->alive() && player_monster_visible(mons))
+        {
+            glych  = get_screen_glyph(pos.x, pos.y);
+            colour = mcol;
+        }
+    }
+    const coord_def vp = grid2view(pos);
+    gotoxy(vp.x, vp.y);
+    textcolor( real_colour(colour) );
+    putch(glych);
+}
+
 //---------------------------------------------------------------
 //
 // direction
@@ -731,22 +750,21 @@ void direction(dist& moves, targeting_type restricts,
         {
             viewwindow(true, false);
             if ( show_beam &&
-                 in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
+                 in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) &&
+                 moves.target() != you.pos() )
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
                 ray_def raycopy = ray; // temporary copy to work with
-                textcolor(MAGENTA);
-                while ( raycopy.x() != moves.tx || raycopy.y() != moves.ty )
+                while ( raycopy.pos() != moves.target() )
                 {
-                    if ( raycopy.x() != you.x_pos || raycopy.y() != you.y_pos )
+                    if ( raycopy.pos() != you.pos() )
                     {
                         // Sanity: don't loop forever if the ray is problematic
                         if ( !in_los(raycopy.x(), raycopy.y()) )
                             break;
-                        gotoxy( grid2viewX(raycopy.x()),
-                                grid2viewY(raycopy.y()));
-                        cprintf("*");
+                        draw_ray_glyph(raycopy.pos(), MAGENTA, '*',
+                                       MAGENTA | COLFLAG_REVERSE);
                     }
                     raycopy.advance_through(moves.target());
                 }
