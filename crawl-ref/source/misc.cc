@@ -1603,14 +1603,19 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         mpr("You try to escape, but your burden drags you down!");
     }
 
-    if (escape && move_player_to_grid( empty[0], empty[1], false, false, true ))
+    if (escape)
     {
-        mpr("You manage to scramble free!");
+        const coord_def pos(empty[0], empty[1]);
+        if (in_bounds(pos) && !is_grid_dangerous(grd(pos)))
+        {
+            mpr("You manage to scramble free!");
+            move_player_to_grid( empty[0], empty[1], false, false, true );
 
-        if (terrain == DNGN_LAVA)
-            expose_player_to_element( BEAM_LAVA, 14 );
+            if (terrain == DNGN_LAVA)
+                expose_player_to_element( BEAM_LAVA, 14 );
 
-        return (true);
+            return (true);
+        }
     }
 
     mpr("You drown...");
