@@ -1005,7 +1005,7 @@ bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
 
     // This should fix the "monster occuring under the player" bug?
     if (mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
-        monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true);
+        monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true, true);
 
     // actually "move" the followers if applicable
     if ((you.level_type == LEVEL_DUNGEON
