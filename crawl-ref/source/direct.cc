@@ -291,7 +291,7 @@ static const char *target_mode_help_text(int mode)
 //           dx,dy          direction delta for DIR_DIR
 //
 //---------------------------------------------------------------
-void direction(struct dist& moves, targeting_type restricts,
+void direction(dist& moves, targeting_type restricts,
                int mode, bool just_looking, const char *prompt)
 {
     // NOTE: Even if just_looking is set, moves is still interesting,
@@ -466,8 +466,17 @@ void direction(struct dist& moves, targeting_type restricts,
             break;
             
         case CMD_TARGET_HIDE_BEAM:
-            show_beam = false;
-            need_beam_redraw = true;
+            if (show_beam)
+            {
+                show_beam = false;
+                need_beam_redraw = true;
+            }
+            else
+            {
+                show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+                                     true, ray, 0, true);
+                need_beam_redraw = show_beam;
+            }
             break;
             
         case CMD_TARGET_FIND_YOU:
@@ -696,7 +705,8 @@ void direction(struct dist& moves, targeting_type restricts,
         {
             have_moved = true;
             show_beam = show_beam &&
-                find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
+                find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
+                         0, true);
         }
 
         if ( force_redraw )
@@ -738,7 +748,7 @@ void direction(struct dist& moves, targeting_type restricts,
                                 grid2viewY(raycopy.y()));
                         cprintf("*");
                     }
-                    raycopy.advance();
+                    raycopy.advance_through(moves.target());
                 }
                 textcolor(LIGHTGREY);
             }
@@ -762,7 +772,7 @@ static void extend_move_to_edge(dist &moves)
     int mx = 0, my = 0;
 
     if (moves.dx > 0)
-        mx = (GXM  - 1) - you.x_pos;
+        mx = (GXM - 1) - you.x_pos;
     if (moves.dx < 0)
         mx = you.x_pos;
 

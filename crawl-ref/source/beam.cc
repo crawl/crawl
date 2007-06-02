@@ -1262,11 +1262,12 @@ static void zappy( zap_type z_type, int power, struct bolt &pbolt )
  */
 
 
-void fire_beam( struct bolt &pbolt, item_def *item )
+void fire_beam( bolt &pbolt, item_def *item )
 {
     bool beamTerminate;     // has beam been 'stopped' by something?
     int tx = 0, ty = 0;     // test(new) x,y - integer
     int rangeRemaining;
+    bool did_bounce = false;
     cursor_control coff(false);
 
     beam_message_cache.clear();
@@ -1302,11 +1303,12 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     {
         ray.fullray_idx = -1;   // to quiet valgrind
         find_ray( pbolt.source_x, pbolt.source_y,
-                  pbolt.target_x, pbolt.target_y, true, ray);
+                  pbolt.target_x, pbolt.target_y, true, ray,
+                  0, true );
     }
 
     if ( !pbolt.aimed_at_feet )
-        ray.advance();
+        ray.advance_through(pbolt.target());
 
     // give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
@@ -1351,16 +1353,19 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             else
             {
                 // BEGIN bounce case
-                if (!isBouncy(pbolt, grd[tx][ty])) {
-                    ray.regress();
+                if (!isBouncy(pbolt, grd[tx][ty]))
+                {
+                    ray.regress(pbolt.target());
                     tx = ray.x();
                     ty = ray.y();
                     break;          // breaks from line tracing
                 }
 
+                did_bounce = true;
+
                 // bounce
                 do {
-                    ray.regress();
+                    ray.regress(pbolt.target());
                     ray.advance_and_bounce();
                     --rangeRemaining;
                 } while ( rangeRemaining > 0 &&
@@ -1458,7 +1463,11 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             }
 
         }
-        ray.advance();
+
+        if (!did_bounce)
+            ray.advance_through(pbolt.target());
+        else
+            ray.advance(true);
     } // end- while !beamTerminate
 
     // the beam has finished, and terminated at tx, ty

@@ -248,40 +248,52 @@ struct coord_def
 
     int distance_from(const coord_def &b) const;
     
-    bool operator == (const coord_def &other) const {
+    bool operator == (const coord_def &other) const
+    {
         return x == other.x && y == other.y;
     }
 
-    bool operator != (const coord_def &other) const {
+    bool operator != (const coord_def &other) const
+    {
         return !operator == (other);
     }
 
-    bool operator <  (const coord_def &other) const {
+    bool operator <  (const coord_def &other) const
+    {
         return (x < other.x) || (x == other.x && y < other.y);
     }
 
-    const coord_def &operator += (const coord_def &other) {
+    const coord_def &operator += (const coord_def &other)
+    {
         x += other.x;
         y += other.y;
         return (*this);
     }
     
-    const coord_def &operator -= (const coord_def &other) {
+    const coord_def &operator -= (const coord_def &other)
+    {
         x -= other.x;
         y -= other.y;
         return (*this);
     }
     
-    coord_def operator + (const coord_def &other) const {
+    coord_def operator + (const coord_def &other) const
+    {
         coord_def copy = *this;
         copy += other;
         return (copy);
     }
 
-    coord_def operator - (const coord_def &other) const {
+    coord_def operator - (const coord_def &other) const
+    {
         coord_def copy = *this;
         copy -= other;
         return (copy);
+    }
+
+    int abs() const
+    {
+        return (x * x + y * y);
     }
 };
 
@@ -295,6 +307,7 @@ struct dice_def
 
 struct ray_def
 {
+public:
     double accx;
     double accy;
     double slope;
@@ -304,12 +317,25 @@ struct ray_def
     // Quadrant 4: up-right
     int quadrant;
     int fullray_idx;            // for cycling: where did we come from?
-    
+
+public:
     int x() const { return static_cast<int>(accx); }
     int y() const { return static_cast<int>(accy); }
-    int advance();              // returns the direction taken (0,1,2)
+    coord_def pos() const { return coord_def(accx, accy); }
+    
+    // returns the direction taken (0,1,2)
+    int advance(bool shorten = false, const coord_def *p = NULL);
+    int advance_through(const coord_def &point);
     void advance_and_bounce();
-    void regress();
+    void regress(const coord_def &point);
+
+private:
+    int raw_advance();
+    double reflect(bool x, double oldc, double newc) const;
+    double reflect(double x, double c) const;
+    void set_reflect_point(const double oldx, const double oldy,
+                           double *newx, double *newy,
+                           bool blocked_x, bool blocked_y);
 };
 
 // output from direction() function:
@@ -328,6 +354,12 @@ struct dist
 
     // internal use - ignore
     int  prev_target;   // previous target
+
+    // target - source (source == you.pos())
+    coord_def target() const
+    {
+        return coord_def(tx, ty);
+    }
 };
 
 struct bolt
@@ -384,6 +416,11 @@ public:
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     int  killer() const;
+
+    coord_def target() const
+    {
+        return (coord_def(target_x, target_y));
+    }
 };
 
 struct run_check_dir

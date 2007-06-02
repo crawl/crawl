@@ -27,6 +27,7 @@
 #include "view.h"
 
 #include <string.h>
+#include <cmath>
 
 #ifdef DOS
 #include <conio.h>
@@ -1144,6 +1145,50 @@ static int find_next_intercept(double* accx, double* accy, const double slope)
     return rc;
 }
 
+double ray_def::reflect(double p, double c) const
+{
+    return (c + c - p);
+}
+
+double ray_def::reflect(bool rx, double oldx, double newx) const
+{
+    if (rx? abs(slope) > 1.0 : abs(slope) < 1.0)
+        return (reflect(oldx, floor(oldx) + 0.5));
+
+    const int flnew = newx;
+    const int flold = oldx;
+    return (reflect(oldx,
+                    flnew > flold? flnew :
+                    flold > flnew? flold :
+                    (newx + oldx) / 2));
+}
+
+void ray_def::set_reflect_point(const double oldx, const double oldy,
+                                double *newx, double *newy,
+                                bool blocked_x, bool blocked_y)
+{
+    if (blocked_x == blocked_y)
+    {
+        // What to do?
+        *newx = oldx;
+        *newy = oldy;
+        return;
+    }
+
+    if (blocked_x)
+    {
+        ASSERT(int(oldy) != int(*newy));
+        *newy = oldy;
+        *newx = reflect(true, oldx, *newx);
+    }
+    else
+    {
+        ASSERT(int(oldx) != int(*newx));
+        *newx = oldx;
+        *newy = reflect(false, oldy, *newy);
+    }
+}
+
 void ray_def::advance_and_bounce()
 {
     // 0 = down-right, 1 = down-left, 2 = up-left, 3 = up-right
@@ -1152,9 +1197,14 @@ void ray_def::advance_and_bounce()
         { 1, 3, 2 }, { 0, 2, 3 }, { 3, 1, 0 }, { 2, 0, 1 }
     };
     int oldx = x(), oldy = y();
-    int rc = advance();
+    const double oldaccx = accx, oldaccy = accy;
+    int rc = advance(true);
     int newx = x(), newy = y();
     ASSERT( grid_is_solid(grd[newx][newy]) );
+
+    const bool blocked_x = grid_is_solid(grd[oldx][newy]);
+    const bool blocked_y = grid_is_solid(grd[newx][oldy]);
+    
     if ( double_is_zero(slope) || slope > 100.0 )
         quadrant = bouncequad[quadrant][2];
     else if ( rc != 2 )
@@ -1162,8 +1212,6 @@ void ray_def::advance_and_bounce()
     else
     {
         ASSERT( (oldx != newx) && (oldy != newy) );
-        bool blocked_x = grid_is_solid(grd[oldx][newy]);
-        bool blocked_y = grid_is_solid(grd[newx][oldy]);
         if ( blocked_x && blocked_y )
             quadrant = bouncequad[quadrant][rc];
         else if ( blocked_x )
@@ -1171,18 +1219,54 @@ void ray_def::advance_and_bounce()
         else
             quadrant = bouncequad[quadrant][0];
     }
-    advance();
+
+    set_reflect_point(oldaccx, oldaccy, &accx, &accy, blocked_x, blocked_y);
 }
 
-void ray_def::regress()
+void ray_def::regress(const coord_def &point)
 {
     int opp_quadrant[4] = { 2, 3, 0, 1 };
     quadrant = opp_quadrant[quadrant];
-    advance();
+    advance(true, &point);
     quadrant = opp_quadrant[quadrant];
 }
 
-int ray_def::advance()
+int ray_def::advance_through(const coord_def &target)
+{
+    return (advance(true, &target));
+}
+
+int ray_def::advance(bool shortest_possible, const coord_def *target)
+{
+    if (!shortest_possible)
+        return (raw_advance());
+    
+    // If we want to minimize the number of moves on the ray, look one
+    // step ahead and see if we can get a diagonal.
+    
+    const coord_def old(accx, accy);
+    const int ret = raw_advance();
+
+    if (ret == 2 || (target && pos() == *target))
+        return (ret);
+    
+    const double maccx = accx, maccy = accy;
+    if (raw_advance() != 2)
+    {
+        const coord_def second(accx, accy);
+        // If we can convert to a diagonal, do so.
+        if ((second - old).abs() == 2)
+            return (2);
+    }
+
+    // No diagonal, so roll back.
+    accx = maccx;
+    accy = maccy;
+
+    return (ret);
+}
+
+int ray_def::raw_advance()
 {
     int rc;
     switch ( quadrant )
@@ -1566,9 +1650,12 @@ static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
 // If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
 // assume that ray is appropriately filled in, and look for the next
 // ray in that cycle direction.
+// If find_shortest is true, examine all rays that hit the target and
+// take the shortest (starting at ray.fullray_idx).
 
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
-               bool allow_fallback, ray_def& ray, int cycle_dir )
+               bool allow_fallback, ray_def& ray, int cycle_dir,
+               bool find_shortest )
 {
     
     int cellray, inray;
@@ -1577,6 +1664,10 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     const int absx = signx * (targetx - sourcex);
     const int absy = signy * (targety - sourcey);
     int cur_offset = 0;
+    int shortest = INFINITE_DISTANCE;
+    int imbalance = INFINITE_DISTANCE;
+    std::vector<coord_def> unaliased_ray;
+    
     for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
     {
         const int fullray = cyclic_offset( fray, cycle_dir, ray.fullray_idx,
@@ -1591,25 +1682,94 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
             if ( ray_coord_x[cellray + cur_offset] == absx &&
                  ray_coord_y[cellray + cur_offset] == absy )
             {
+                if (find_shortest)
+                {
+                    unaliased_ray.clear();
+                    unaliased_ray.push_back(coord_def(0, 0));
+                }
 
                 // check if we're blocked so far
                 bool blocked = false;
+                coord_def c1, c3;
+                int real_length = 0;
                 for ( inray = 0; inray < cellray; ++inray )
                 {
-                    if (grid_is_solid(
-                            grd[sourcex
-                                + signx * ray_coord_x[inray + cur_offset]]
-                               [sourcey
-                                + signy * ray_coord_y[inray + cur_offset]]))
+                    const int xi = signx * ray_coord_x[inray + cur_offset];
+                    const int yi = signy * ray_coord_y[inray + cur_offset];
+                    if (grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
-                        blocked = true;                   
+                        blocked = true;
                         break;
+                    }
+
+                    if (find_shortest)
+                    {
+                        c3 = coord_def(xi, yi);
+
+                        // We've moved at least two steps if inray > 0.
+                        if (inray)
+                        {
+                            // Check for a perpendicular corner on the ray and
+                            // pretend that it's a diagonal.
+                            if ((c3 - c1).abs() != 2)
+                                ++real_length;
+                            else
+                            {
+                                // c2 was a dud move, pop it off
+                                unaliased_ray.pop_back();
+                            }
+                        }
+                        else
+                            ++real_length;
+                        
+                        unaliased_ray.push_back(c3);
+                        c1 = unaliased_ray[real_length - 1];
                     }
                 }
 
-                if ( !blocked )
+                if (find_shortest)
+                    unaliased_ray.push_back(
+                        coord_def(signx * absx, signy * absy));
+
+                int cimbalance = 0;
+                // If this ray is a candidate for shortest, calculate
+                // the imbalance. I'm defining 'imbalance' as the
+                // number of consecutive diagonal or orthogonal moves
+                // in the ray. This is a reasonable measure of deviation from
+                // the Bresenham line between our selected source and
+                // destination.
+                if (!blocked && find_shortest && shortest >= real_length)
+                {
+                    int diags = 0, straights = 0;
+                    for (int i = 1, size = unaliased_ray.size(); i < size;
+                         ++i)
+                    {
+                        const int dist =
+                            (unaliased_ray[i] - unaliased_ray[i - 1]).abs();
+                        if (dist == 2)
+                        {
+                            straights = 0;
+                            if (++diags > cimbalance)
+                                cimbalance = diags;
+                        }
+                        else
+                        {
+                            diags = 0;
+                            if (++straights > cimbalance)
+                                cimbalance = straights;
+                        }
+                    }
+                }
+
+                if ( !blocked
+                     && (!find_shortest
+                         || shortest > real_length
+                         || (shortest == real_length
+                             && imbalance > cimbalance)) )
                 {
                     // success!
+                    shortest  = real_length;
+                    imbalance = cimbalance;
                     ray = fullrays[fullray];
                     ray.fullray_idx = fullray;
                     if ( sourcex > targetx )
@@ -1619,11 +1779,16 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                     ray.accx += sourcex;
                     ray.accy += sourcey;
                     set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
-                    return true;
+                    if (!find_shortest)
+                        return true;
                 }
             }
         }
     }
+
+    if (find_shortest && shortest != INFINITE_DISTANCE)
+        return (true);
+    
     if ( allow_fallback )
     {
         ray.accx = sourcex + 0.5;

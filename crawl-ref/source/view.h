@@ -156,7 +156,8 @@ void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();
 
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
-               bool allow_fallback, ray_def& ray, int cycle_dir = 0 );
+               bool allow_fallback, ray_def& ray, int cycle_dir = 0,
+               bool find_shortest = false );
 
 dungeon_char_type dchar_by_name(const std::string &name);
 
