@@ -67,34 +67,39 @@
 #include "tutorial.h"
 #include "view.h"
 
+// Item offer messages for the gods:
+// & is replaced by "is" or "are" as appropriate for the item.
+// % is replaced by "s" or "" as appropriate.
 const char *sacrifice[] =
 {
+    // No god
+    " & eaten by a ravening swarm of bugs.",
     // Zin
-    " glows silver and disappears.",
+    " glow% silver and disappear%.",
     // TSO
-    " glows a brilliant golden colour and disappears.",
+    " glow% a brilliant golden colour and disappear%.",
     // Kikubaaqudgha
-    " rots away in an instant.",
+    " rot% away in an instant.",
     // Yredelemnul
-    " crumbles to dust.",
+    " crumble% to dust.",
     // Xom (no sacrifices)
-    " is eaten by a bug.",
+    " & eaten by a bug.",
     // Vehumet
-    " explodes into nothingness.",
+    " explode% into nothingness.",
     // Okawaru
-    " is consumed in a burst of flame.",
+    " & consumed in a burst of flame.",
     // Makhleb
-    " is consumed in a roaring column of flame.",
+    " & consumed in a roaring column of flame.",
     // Sif Muna
-    " glows faintly for a moment, then is gone.",
+    " glow% faintly for a moment, and & gone.",
     // Trog
-    " is consumed in a roaring column of flame.",
+    " & consumed in a roaring column of flame.",
     // Nemelex
-    " glows with a rainbow of weird colours and disappears.",
+    " glow% with a rainbow of weird colours and disappear%.",
     // Elyvilon
-    " evaporates.",
+    " evaporate%.",
     // Lugonu
-    " is consumed by the void."
+    " & consumed by the void."
 };
 
 const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -2052,6 +2057,18 @@ static bool bless_weapon( int god, int brand, int colour )
     return (false);
 }
 
+static std::string sacrifice_message(god_type god, const item_def &item)
+{
+    const char *msg = sacrifice[god];
+    const char *be = item.quantity == 1? "is" : "are";
+
+    // "The bread ration evaporates", "The arrows evaporate" - the s suffix
+    // is for verbs.
+    const char *ssuffix = item.quantity == 1? "s" : "";
+
+    return (replace_all(replace_all(msg, "%", ssuffix), "&", be));
+}
+
 void altar_prayer(void)
 {
     mpr( "You kneel at the altar and pray." );
@@ -2135,7 +2152,7 @@ void offer_items()
         case GOD_MAKHLEB:
         case GOD_NEMELEX_XOBEH:
             mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice[you.religion - 1]);
+                 sacrifice_message(you.religion, mitm[i]).c_str());
 
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -2153,7 +2170,7 @@ void offer_items()
 
         case GOD_SIF_MUNA:
             mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice[you.religion - 1]);
+                 sacrifice_message(you.religion, mitm[i]).c_str());
 
             if (value >= 150)
                 gain_piety(1 + random2(3));
@@ -2167,7 +2184,7 @@ void offer_items()
                 break;
 
             mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice[you.religion - 1]);
+                 sacrifice_message(you.religion, mitm[i]).c_str());
 
             gain_piety(1);
             destroy_item(i);
@@ -2181,7 +2198,7 @@ void offer_items()
             }
 
             mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice[you.religion - 1]);
+                 sacrifice_message(you.religion, mitm[i]).c_str());
 
             if (random2(value) >= random2(50) 
                 || (mitm[i].base_type == OBJ_WEAPONS 
@@ -2299,7 +2316,7 @@ void god_pitch(god_type which_god)
 void offer_corpse(int corpse)
 {
     mprf("%s%s", mitm[corpse].name(DESC_CAP_THE).c_str(),
-         sacrifice[you.religion - 1]);
+         sacrifice_message(you.religion, mitm[corpse]).c_str());
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 }                               // end offer_corpse()
