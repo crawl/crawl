@@ -555,6 +555,14 @@ static int get_mons_colour(const monsters *mons)
     return (col);
 }
 
+static std::set<const monsters*> monsters_seen_this_turn;
+
+static bool mons_was_seen_this_turn(const monsters *mons)
+{
+    return (monsters_seen_this_turn.find(mons) !=
+            monsters_seen_this_turn.end());
+}
+
 void monster_grid(bool do_updates)
 {
     struct monsters *monster = 0;       // NULL {dlb}
@@ -679,6 +687,15 @@ void monster_grid(bool do_updates)
             if (!mons_is_mimic( monster->type ))
                 set_show_backup(ex, ey);
 
+            if (player_monster_visible(monster)
+                && !mons_is_submerged(monster)
+                && !mons_friendly(monster)
+                && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
+                && !mons_is_mimic(monster->type))
+            {
+                monsters_seen_this_turn.insert(monster);
+            }
+
             env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
             env.show_col[ex][ey] = get_mons_colour( monster );
         }                       // end "if (monster->type != -1 && mons_ner)"
@@ -691,9 +708,10 @@ void fire_monster_alerts()
     {
         monsters *monster = &menv[s];
 
-        if (monster->type != -1 && mons_near(monster))
+        if (monster->alive() && mons_near(monster))
         {
-            if (player_monster_visible( monster )
+            if ((player_monster_visible(monster)
+                 || mons_was_seen_this_turn(monster))
                 && !mons_is_submerged( monster )
                 && !mons_friendly( monster ))
             {
@@ -706,6 +724,8 @@ void fire_monster_alerts()
             }
         }
     }
+
+    monsters_seen_this_turn.clear();
 }
 
 bool check_awaken(int mons_aw)
