@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF15890C128CA5002C7D7A /* xom.cc */; };
 		7B0EFD840BD12EEB00002671 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD4C0BD12EEB00002671 /* lapi.c */; };
 		7B0EFD850BD12EEB00002671 /* lapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B0EFD4D0BD12EEB00002671 /* lapi.h */; settings = {ATTRIBUTES = (); }; };
 		7B0EFD860BD12EEB00002671 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B0EFD4E0BD12EEB00002671 /* lauxlib.c */; };
@@ -320,6 +321,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4CEF15890C128CA5002C7D7A /* xom.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = xom.cc; sourceTree = "<group>"; };
 		7B0EFD420BD12E9200002671 /* liblua.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblua.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B0EFD4C0BD12EEB00002671 /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7B0EFD4D0BD12EEB00002671 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -817,6 +819,7 @@
 				7BDEBB300BB4CB5C008DF39F /* tutorial.h */,
 				7B237E140A8EC9D000580F30 /* view.cc */,
 				7B237E130A8EC9D000580F30 /* view.h */,
+				4CEF15890C128CA5002C7D7A /* xom.cc */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
@@ -1075,6 +1078,7 @@
 				7BDEBB360BB4CB93008DF39F /* format.cc in Sources */,
 				7B973FFD0BE3AA8400AAE35B /* database.cc in Sources */,
 				7B9740070BE3AC8000AAE35B /* makeitem.cc in Sources */,
+				4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
