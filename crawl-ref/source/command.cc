@@ -541,7 +541,7 @@ static const char *level_map_help =
     " \n";
 
 static const char *targeting_help =
-    "<h>Examine surroundings ('<w>x</w><h> in main):\n"
+    "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
     "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
@@ -554,13 +554,13 @@ static const char *targeting_help =
     "<w>_</w>   : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
     "<w>Tab</w> : cycle through shops and portals\n"
-    "<w>Ctrl-F</w> : cycle monster cycle mode\n"
+    "<w>Ctrl-F</w> : change monster targeting mode\n"
     " \n"
-    "<h>Targeting (like zapping wands/spells):\n"
-    "The keys from examining surroundings\n"
-    "work here, too. Additional keys are\n"
+    "<h>Targeting (zapping wands, casting spells, etc.):\n"
+    "The keys from examine surroundings also work here.\n"
+    "In addition, you can use:\n"
     "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n" 
-    "<w>!</w> : fire at target and stop there\n"
+    "<w>!</w> : fire at target and stop there (may hit submerged creatures)\n"
     "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir</w> : shoot straight-line beam\n";

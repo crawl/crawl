@@ -70,34 +70,34 @@ static FixedArray < bool, 19, 19 > explode_map;
 // helper functions (some of these, esp. affect(), should probably
 // be public):
 static void sticky_flame_monster( int mn, kill_category who, int hurt_final );
-static bool affectsWall(const bolt &beam, int wall_feature);
-static bool isBouncy(struct bolt &beam, unsigned char gridtype);
+static bool affects_wall(const bolt &beam, int wall_feature);
+static bool isBouncy(bolt &beam, unsigned char gridtype);
 static int beam_source(const bolt &beam);
 static std::string beam_zapper(const bolt &beam);
-static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
-static bool beam_term_on_target(struct bolt &beam, int x, int y);
-static void beam_explodes(struct bolt &beam, int x, int y);
-static int  affect_wall(struct bolt &beam, int x, int y);
-static int  affect_place_clouds(struct bolt &beam, int x, int y);
-static void affect_place_explosion_clouds(struct bolt &beam, int x, int y);
-static int  affect_player(struct bolt &beam);
-static void affect_items(struct bolt &beam, int x, int y);
-static int  affect_monster(struct bolt &beam, struct monsters *mon);
-static int  affect_monster_enchantment(struct bolt &beam, struct monsters *mon);
+static void beam_drop_object( bolt &beam, item_def *item, int x, int y );
+static bool beam_term_on_target(bolt &beam, int x, int y);
+static void beam_explodes(bolt &beam, int x, int y);
+static int  affect_wall(bolt &beam, int x, int y);
+static int  affect_place_clouds(bolt &beam, int x, int y);
+static void affect_place_explosion_clouds(bolt &beam, int x, int y);
+static int  affect_player(bolt &beam);
+static void affect_items(bolt &beam, int x, int y);
+static int  affect_monster(bolt &beam, monsters *mon);
+static int  affect_monster_enchantment(bolt &beam, monsters *mon);
 static void beam_paralyses_monster( bolt &pbolt, monsters *monster );
-static int  range_used_on_hit(struct bolt &beam);
-static void explosion1(struct bolt &pbolt);
-static void explosion_map(struct bolt &beam, int x, int y,
+static int  range_used_on_hit(bolt &beam);
+static void explosion1(bolt &pbolt);
+static void explosion_map(bolt &beam, int x, int y,
     int count, int dir, int r);
-static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly);
+static void explosion_cell(bolt &beam, int x, int y, bool drawOnly);
 
 static void ench_animation( int flavour, const monsters *mon = NULL, bool force = false);
-static void zappy(zap_type z_type, int power, struct bolt &pbolt);
+static void zappy(zap_type z_type, int power, bolt &pbolt);
 static void monster_die(monsters *mons, const bolt &beam);
 
 static std::set<std::string> beam_message_cache;
 
-static bool beam_is_blockable( struct bolt &pbolt )
+static bool beam_is_blockable( bolt &pbolt )
 {
     // BEAM_ELECTRICITY is added here because chain lighting is not 
     // a true beam (stops at the first target it gets to and redirects
@@ -197,7 +197,7 @@ static void ench_animation( int flavour, const monsters *mon, bool force )
     zap_animation( element_colour( elem ), mon, force );
 }
 
-void zapping(zap_type ztype, int power, struct bolt &pbolt)
+void zapping(zap_type ztype, int power, bolt &pbolt)
 {
 
 #if DEBUG_DIAGNOSTICS
@@ -264,7 +264,7 @@ dice_def calc_dice( int num_dice, int max_damage )
 
 // *do not* call this function directly (duh - it's static), need to
 // see zapping() for default values not set within this function {dlb}
-static void zappy( zap_type z_type, int power, struct bolt &pbolt )
+static void zappy( zap_type z_type, int power, bolt &pbolt )
 {
     int temp_rand = 0;          // probability determination {dlb}
 
@@ -1339,7 +1339,7 @@ void fire_beam( bolt &pbolt, item_def *item )
         if (grid_is_solid(grd[tx][ty]))
         {
             // first, check to see if this beam affects walls.
-            if (affectsWall(pbolt, grd[tx][ty]))
+            if (affects_wall(pbolt, grd[tx][ty]))
             {
                 // should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
@@ -1507,7 +1507,7 @@ void fire_beam( bolt &pbolt, item_def *item )
 
 // returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
 // attack -- damage from clouds and branded weapons handled elsewhere.
-int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
+int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                            int hurted, bool doFlavouredEffects )
 {
     // if we're not doing flavored effects, must be preliminary
@@ -1686,7 +1686,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
 
             if (one_chance_in( 3 + 2 * mons_res_negative_energy(monster) ))
             {
-                struct bolt beam;
+                bolt beam;
                 beam.flavour = BEAM_SLOW;
                 mons_ench_f2( monster, beam );
             }
@@ -1803,7 +1803,7 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
 {
     int i;                      // loop variable {dlb}
     bool msg_generated = false;
-    struct monsters *monster;
+    monsters *monster;
 
     viewwindow(0, false);
 
@@ -1896,7 +1896,7 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
    returns MON_UNAFFECTED if monster is immune to enchantment
    returns MON_AFFECTED in all other cases (already enchanted, etc)
  */
-int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
+int mons_ench_f2(monsters *monster, bolt &pbolt)
 {
     switch (pbolt.flavour)      /* put in magic resistance */
     {
@@ -2137,7 +2137,7 @@ void sticky_flame_monster( int mn, kill_category who, int levels )
  * into account, as well as the monster's intelligence.
  *
  */
-void fire_tracer(const monsters *monster, struct bolt &pbolt)
+void fire_tracer(const monsters *monster, bolt &pbolt)
 {
     // don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer = true;
@@ -2198,7 +2198,7 @@ void mimic_alert(monsters *mimic)
     monster_teleport( mimic, !one_chance_in(3) );
 }                               // end mimic_alert()
 
-static bool isBouncy(struct bolt &beam, unsigned char gridtype)
+static bool isBouncy(bolt &beam, unsigned char gridtype)
 {
     if (beam.name[0] == '0')
         return false;
@@ -2210,7 +2210,7 @@ static bool isBouncy(struct bolt &beam, unsigned char gridtype)
     return (false);
 }
 
-static void beam_explodes(struct bolt &beam, int x, int y)
+static void beam_explodes(bolt &beam, int x, int y)
 {
     cloud_type cl_type;
 
@@ -2318,7 +2318,7 @@ static void beam_explodes(struct bolt &beam, int x, int y)
     }
 }
 
-static bool beam_term_on_target(struct bolt &beam, int x, int y)
+static bool beam_term_on_target(bolt &beam, int x, int y)
 {
     if (beam.flavour == BEAM_LINE_OF_SIGHT)
     {
@@ -2326,7 +2326,7 @@ static bool beam_term_on_target(struct bolt &beam, int x, int y)
         return (true);
     }
 
-    // generic - all explosion-type beams can be targetted at empty space,
+    // generic - all explosion-type beams can be targeted at empty space,
     // and will explode there.  This semantic also means that a creature
     // in the target cell will have no chance to dodge or block, so we
     // DON'T affect() the cell if this function returns true!
@@ -2346,17 +2346,13 @@ static bool beam_term_on_target(struct bolt &beam, int x, int y)
     if (beam.name == "ball of vapour")
         return (true);
 
-    // [dshaligram] We have to decide what beams are eligible for stopping on
-    // target.
-    /*
     if (beam.aimed_at_spot && x == beam.target_x && y == beam.target_y)
         return (true);
-        */
 
     return (false);
 }
 
-static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
+static void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 {
     ASSERT( item != NULL );
 
@@ -2414,7 +2410,7 @@ static bool found_player(const bolt &beam, int x, int y)
     return (grid_distance(x, y, you.x_pos, you.y_pos) <= dist);
 }
 
-int affect(struct bolt &beam, int x, int y)
+int affect(bolt &beam, int x, int y)
 {
     // extra range used by hitting something
     int rangeUsed = 0;
@@ -2428,7 +2424,7 @@ int affect(struct bolt &beam, int x, int y)
         if (beam.is_tracer)          // tracers always stop on walls.
             return (BEAM_STOP);
 
-        if (affectsWall(beam, grd[x][y]))
+        if (affects_wall(beam, grd[x][y]))
         {
             rangeUsed += affect_wall(beam, x, y);
         }
@@ -2464,16 +2460,25 @@ int affect(struct bolt &beam, int x, int y)
     // if there is a monster at this location, affect it
     // submerged monsters aren't really there -- bwr
     int mid = mgrd[x][y];
-    if (mid != NON_MONSTER && !menv[mid].has_ench( ENCH_SUBMERGED ))
+    if (mid != NON_MONSTER)
     {
-        if (!beam.is_big_cloud
-            && (!beam.is_explosion || beam.in_explosion_phase))
+        monsters *mons = &menv[mid];
+
+        // Monsters submerged in shallow water can be targeted by beams
+        // aimed at that spot.
+        if (!mons->submerged()
+            || (beam.aimed_at_spot && beam.target() == mons->pos()
+                && grd(mons->pos()) == DNGN_SHALLOW_WATER))
         {
-            rangeUsed += affect_monster( beam, &menv[mid] );
-        }
+            if (!beam.is_big_cloud
+                && (!beam.is_explosion || beam.in_explosion_phase))
+            {
+                rangeUsed += affect_monster( beam, &menv[mid] );
+            }
         
-        if (beam_term_on_target(beam, x, y))
-            return (BEAM_STOP);
+            if (beam_term_on_target(beam, x, y))
+                return (BEAM_STOP);
+        }
     }
 
     return (rangeUsed);
@@ -2496,7 +2501,7 @@ static bool is_superhot(const bolt &beam)
                 && beam.in_explosion_phase);
 }
 
-static bool affectsWall(const bolt &beam, int wall)
+static bool affects_wall(const bolt &beam, int wall)
 {
     // digging
     if (beam.flavour == BEAM_DIGGING)
@@ -2518,7 +2523,7 @@ static bool affectsWall(const bolt &beam, int wall)
 }
 
 // return amount of extra range used up by affectation of this wall.
-static int affect_wall(struct bolt &beam, int x, int y)
+static int affect_wall(bolt &beam, int x, int y)
 {
     int rangeUsed = 0;
 
@@ -2634,7 +2639,7 @@ static int affect_wall(struct bolt &beam, int x, int y)
     return (rangeUsed);
 }
 
-static int affect_place_clouds(struct bolt &beam, int x, int y)
+static int affect_place_clouds(bolt &beam, int x, int y)
 {
     if (beam.in_explosion_phase)
     {
@@ -2725,7 +2730,7 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
 }
 
 // following two functions used with explosions:
-static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
+static void affect_place_explosion_clouds(bolt &beam, int x, int y)
 {
     cloud_type cl_type; 
     int duration;
@@ -2830,7 +2835,7 @@ static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
     }
 }
 
-static void affect_items(struct bolt &beam, int x, int y)
+static void affect_items(bolt &beam, int x, int y)
 {
     char objs_vulnerable = -1;
 
@@ -2878,7 +2883,7 @@ static int beam_ouch_agent(const bolt &beam)
 }
 
 // A little helper function to handle the calling of ouch()...
-static void beam_ouch( int dam, struct bolt &beam )
+static void beam_ouch( int dam, bolt &beam )
 {
     // The order of this is important.
     if (YOU_KILL( beam.thrower ) && beam.aux_source.empty())
@@ -2960,7 +2965,7 @@ static std::string beam_zapper(const bolt &beam)
 }
 
 // return amount of extra range used up by affectation of the player
-static int affect_player( struct bolt &beam )
+static int affect_player( bolt &beam )
 {
     int beamHit;
 
@@ -3358,12 +3363,13 @@ static int beam_source(const bolt &beam)
 }
 
 // return amount of range used up by affectation of this monster
-static int affect_monster(struct bolt &beam, struct monsters *mon)
+static int affect_monster(bolt &beam, monsters *mon)
 {
     const int tid = mgrd[mon->x][mon->y];
     const int mons_type = menv[tid].type;
     const int thrower = YOU_KILL(beam.thrower)? KILL_YOU_MISSILE 
                                               : KILL_MON_MISSILE;
+    const bool submerged = mon->submerged();
 
     int hurt;
     int hurt_final;
@@ -3433,6 +3439,10 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
         // BEGIN non-tracer enchantment
 
+        // Submerged monsters are unaffected by enchantments.
+        if (submerged)
+            return (0);
+        
         // nasty enchantments will annoy the monster, and are considered
         // naughty (even if a monster might resist)
         if (nasty_beam(mon, beam))
@@ -3484,7 +3494,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
 
     // BEGIN non-enchantment (could still be tracer)
-    if (mon->has_ench(ENCH_SUBMERGED) && !beam.aimed_at_feet)
+    if (submerged && !beam.aimed_at_spot)
         return (0);                   // missed me!
 
     // we need to know how much the monster _would_ be hurt by this, before
@@ -3492,6 +3502,21 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
     // Roll the damage:
     hurt = roll_dice( beam.damage );
+
+    // Water absorbs some of the damage for submerged monsters.
+    if (submerged)
+    {
+        // Can't hurt submerged water creatures with electricity.
+        if (beam.flavour == BEAM_ELECTRICITY)
+        {
+            if (see_grid(mon->x, mon->y))
+                mprf("The %s arcs harmlessly into the water.",
+                     beam.name.c_str());
+            return (BEAM_STOP);
+        }
+
+        hurt = hurt * 2 / 3;
+    }
 
     hurt_final = hurt;
 
@@ -3679,7 +3704,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     return (range_used_on_hit(beam));
 }
 
-static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
+static int affect_monster_enchantment(bolt &beam, monsters *mon)
 {
     if (beam.flavour == BEAM_TELEPORT) // teleportation
     {
@@ -3915,7 +3940,7 @@ deathCheck:
 
 
 // extra range used on hit
-static int  range_used_on_hit(struct bolt &beam)
+static int  range_used_on_hit(bolt &beam)
 {
     // non-beams can only affect one thing (player/monster)
     if (!beam.is_beam)
@@ -3976,11 +4001,11 @@ static int  range_used_on_hit(struct bolt &beam)
 }
 
 /*
-   Takes a bolt struct and refines it for use in the explosion function. Called
+   Takes a bolt and refines it for use in the explosion function. Called
    from missile() and beam() in beam.cc. Explosions which do not follow from
    beams (eg scrolls of immolation) bypass this function.
  */
-static void explosion1(struct bolt &pbolt)
+static void explosion1(bolt &pbolt)
 {
     int ex_size = 1;
     // convenience
@@ -4110,7 +4135,7 @@ static void explosion1(struct bolt &pbolt)
 
 // for each cell affected by the explosion, affect() is called.
 
-void explosion( struct bolt &beam, bool hole_in_the_middle )
+void explosion( bolt &beam, bool hole_in_the_middle )
 {
     int r = beam.ex_size;
 
@@ -4219,7 +4244,7 @@ void explosion( struct bolt &beam, bool hole_in_the_middle )
         more();
 }
 
-static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly)
+static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
 {
     bool random_beam = false;
     int realx = beam.target_x + x;
@@ -4248,7 +4273,7 @@ static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly)
     if (!drawOnly)
     {
         affect_items(beam, realx, realy);
-        if (affectsWall(beam, grd[realx][realy]))
+        if (affects_wall(beam, grd[realx][realy]))
             affect_wall(beam, realx, realy);
     }
 
@@ -4274,7 +4299,7 @@ static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly)
     }
 }
 
-static void explosion_map( struct bolt &beam, int x, int y,
+static void explosion_map( bolt &beam, int x, int y,
                            int count, int dir, int r )
 {
     // 1. check to see out of range
@@ -4295,7 +4320,7 @@ static void explosion_map( struct bolt &beam, int x, int y,
     // solid cells at the center of the explosion.
     if (dngn_feat < DNGN_GREEN_CRYSTAL_WALL || dngn_feat == DNGN_WAX_WALL)
     {
-        if (!(x==0 && y==0) && !affectsWall(beam, dngn_feat))
+        if (!(x==0 && y==0) && !affects_wall(beam, dngn_feat))
             return;
     }
 
@@ -4326,7 +4351,7 @@ static void explosion_map( struct bolt &beam, int x, int y,
 // only enchantments should need the actual monster type
 // to determine this;  non-enchantments are pretty
 // straightforward.
-bool nasty_beam(struct monsters *mon, struct bolt &beam)
+bool nasty_beam(monsters *mon, bolt &beam)
 {
     // take care of non-enchantments
     if (beam.name[0] != '0')

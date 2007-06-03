@@ -1838,6 +1838,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "default_target")
     {
         default_target = read_bool( field, default_target );
+        if (default_target)
+            target_unshifted_dirs = false;
     }
     else if (key == "safe_autopickup")
     {
@@ -2350,6 +2352,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "target_unshifted_dirs")
     {
         target_unshifted_dirs = read_bool(field, target_unshifted_dirs);
+        if (target_unshifted_dirs)
+            default_target = false;
     }
     else if (key == "drop_mode")
     {

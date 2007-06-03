@@ -382,12 +382,21 @@ default_target = true
         If default_target = false, the targeting cursor will always start
         aimed at the character.
 
+        default_target is mutually exclusive with
+        target_unshifted_dirs. Using default_target will automatically
+        disable target_unshifted_dirs.
+
 target_unshifted_dirs = false
-        If set to true, targeting will use the old Stone Soup 0.1 / Crawl 4.0
-        targeting keymap where unshifted direction keys fire in that direction
-        immediately. The default is to use the new targeting keymap where
-        unshifted direction keys move the targeting cursor (and shifted
-        directions fire in the given direction immediately).
+        If set to true, targeting will use the old Stone Soup 0.1 /
+        Crawl 4.0 targeting keymap where unshifted direction keys fire
+        in that direction immediately. The default is to use the new
+        targeting keymap where unshifted direction keys move the
+        targeting cursor (and shifted directions fire in the given
+        direction immediately).
+
+        If you use target_unshifted_dirs, default_target will be
+        automatically disabled.
+
 
 4-c     Passive Sightings (via detection and remembrance).
 -----------------------------------------------------------
