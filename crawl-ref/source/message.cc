@@ -354,7 +354,8 @@ void mprf( int channel, const char *format, ... )
 {
     va_list  argp;
     va_start( argp, format );
-    do_message_print( channel, 0, format, argp );
+    do_message_print( channel, channel == MSGCH_GOD? you.religion : 0,
+                      format, argp );
     va_end( argp );
 }
 

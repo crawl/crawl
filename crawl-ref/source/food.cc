@@ -302,8 +302,7 @@ bool butchery(void)
                 mpr("You start hacking away.");
 
             if (you.duration[DUR_PRAYER] &&
-                (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
-                 you.religion == GOD_TROG))
+                god_likes_butchery(you.religion))
             {
                 offer_corpse(objl);
                 destroy_item(objl);
@@ -315,6 +314,12 @@ bool butchery(void)
                     work_req = 0;
 
                 start_delay(DELAY_BUTCHER, work_req, objl, mitm[objl].special);
+
+                if (you.duration[DUR_PRAYER]
+                    && god_hates_butchery(you.religion))
+                {
+                    did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
+                }
             }
         }
 

@@ -1087,6 +1087,9 @@ bool did_god_conduct( int thing_done, int level )
         {
         case GOD_KIKUBAAQUDGHA:
         case GOD_YREDELEMNUL:
+        case GOD_VEHUMET:
+        case GOD_MAKHLEB:
+        case GOD_LUGONU:
             simple_god_message(" accepts your slave's kill.");
             ret = true;
             if (random2(level + 10 - you.experience_level/3) > 5)
@@ -2151,7 +2154,7 @@ void offer_items()
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_NEMELEX_XOBEH:
-            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
                  sacrifice_message(you.religion, mitm[i]).c_str());
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2169,7 +2172,7 @@ void offer_items()
             break;
 
         case GOD_SIF_MUNA:
-            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
                  sacrifice_message(you.religion, mitm[i]).c_str());
 
             if (value >= 150)
@@ -2183,7 +2186,7 @@ void offer_items()
             if (mitm[i].base_type != OBJ_CORPSES)
                 break;
 
-            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
                  sacrifice_message(you.religion, mitm[i]).c_str());
 
             gain_piety(1);
@@ -2197,7 +2200,7 @@ void offer_items()
                 break;
             }
 
-            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
                  sacrifice_message(you.religion, mitm[i]).c_str());
 
             if (random2(value) >= random2(50) 
@@ -2313,9 +2316,20 @@ void god_pitch(god_type which_god)
     redraw_skill( you.your_name, player_title() );
 }                               // end god_pitch()
 
+bool god_likes_butchery(god_type god)
+{
+    return (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
+            you.religion == GOD_TROG || you.religion == GOD_LUGONU);
+}
+
+bool god_hates_butchery(god_type god)
+{
+    return (god == GOD_ELYVILON);
+}
+
 void offer_corpse(int corpse)
 {
-    mprf("%s%s", mitm[corpse].name(DESC_CAP_THE).c_str(),
+    mprf(MSGCH_GOD, "%s%s", mitm[corpse].name(DESC_CAP_THE).c_str(),
          sacrifice_message(you.religion, mitm[corpse]).c_str());
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
