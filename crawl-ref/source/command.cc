@@ -582,7 +582,9 @@ static const char *interlevel_travel_depth_help =
     " <w>Enter</w>  : Go to the default level.\n"
     " <w><<</w>      : Change the default to one level above the current.\n"
     " <w>></w>      : Change default to one level below the current.\n"
-    " <w>-</w>/<w>p</w>    : Change default to the branch above this one.\n";
+    " <w>-</w>/<w>p</w>    : Change default to the branch above this one.\n"
+    " <w>$</w>      : Change default to deepest visited level in this branch."
+    "\n";
 
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the

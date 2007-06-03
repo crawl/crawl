@@ -1960,6 +1960,17 @@ static level_id find_down_level(level_id curr)
     return (curr);
 }
 
+static level_id find_deepest_explored(level_id curr)
+{
+    for (int i = branches[curr.branch].depth; i > 0; --i)
+    {
+        const level_id lid(curr.branch, i);
+        if (travel_cache.find_level_info(lid))
+            return (lid);
+    }
+    return (curr);
+}
+
 static level_id find_down_level()
 {
     return (find_down_level(level_id::current()));
@@ -1974,6 +1985,8 @@ static int travel_depth_keyfilter(int &c)
     case '-':
     case CONTROL('P'): case 'p':
         c = '-';  // Make uniform.
+        return (-1);
+    case '$':
         return (-1);
     default:
         return (1);
@@ -1997,6 +2010,9 @@ static void travel_depth_munge(int munge_method, branch_type *br, int *depth)
         break;
     case '-':
         lid = find_up_level(lid, true);
+        break;
+    case '$':
+        lid = find_deepest_explored(lid);
         break;
     }
     *br    = lid.branch;
