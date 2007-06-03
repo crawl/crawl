@@ -1639,6 +1639,39 @@ static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
     }
 }
 
+static const double VERTICAL_SLOPE = 10000.0;
+static double calc_slope(double x, double y)
+{
+    if (double_is_zero(x))
+        return (VERTICAL_SLOPE);
+
+    const double slope = y / x;
+    return (slope > VERTICAL_SLOPE? VERTICAL_SLOPE : slope);
+}
+
+static double slope_factor(const ray_def &ray)
+{
+    double xdiff = fabs(ray.accx - 0.5), ydiff = fabs(ray.accy - 0.5);
+
+    if (double_is_zero(xdiff) && double_is_zero(ydiff))
+        return ray.slope;
+    const double slope = calc_slope(ydiff, xdiff);
+    return (slope + ray.slope) / 2.0;
+}
+
+static bool superior_ray(int shortest, int imbalance,
+                         int raylen, int rayimbalance,
+                         double slope_diff, double ray_slope_diff)
+{
+    if (shortest != raylen)
+        return (shortest > raylen);
+
+    if (imbalance != rayimbalance)
+        return (imbalance > rayimbalance);
+
+    return (slope_diff > ray_slope_diff);
+}
+
 // Find a nonblocked ray from sx, sy to tx, ty. Return false if no
 // such ray could be found, otherwise return true and fill ray
 // appropriately.
@@ -1659,9 +1692,11 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     const int signy = ((targety - sourcey >= 0) ? 1 : -1);
     const int absx = signx * (targetx - sourcex);
     const int absy = signy * (targety - sourcey);
+    const double want_slope = calc_slope(absx, absy);
     int cur_offset = 0;
     int shortest = INFINITE_DISTANCE;
     int imbalance = INFINITE_DISTANCE;
+    double slope_diff = VERTICAL_SLOPE * 10.0;
     std::vector<coord_def> unaliased_ray;
     
     for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
@@ -1754,17 +1789,25 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                     }
                 }
 
+                const double ray_slope_diff =
+                    find_shortest? fabs(slope_factor(fullrays[fullray])
+                                      - want_slope)
+                    : 0.0;
+
                 if ( !blocked
-                     && (!find_shortest
-                         || shortest > real_length
-                         || (shortest == real_length
-                             && imbalance > cimbalance)) )
+                     &&  (!find_shortest
+                          || superior_ray(shortest, imbalance,
+                                          real_length, cimbalance,
+                                          slope_diff, ray_slope_diff)))
                 {
                     // success!
-                    shortest  = real_length;
-                    imbalance = cimbalance;
-                    ray = fullrays[fullray];
+                    ray        = fullrays[fullray];
                     ray.fullray_idx = fullray;
+
+                    shortest   = real_length;
+                    imbalance  = cimbalance;
+                    slope_diff = ray_slope_diff;
+
                     if ( sourcex > targetx )
                         ray.accx = 1.0 - ray.accx;
                     if ( sourcey > targety )
@@ -1787,7 +1830,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
         ray.accx = sourcex + 0.5;
         ray.accy = sourcey + 0.5;
         if ( targetx == sourcex )
-            ray.slope = 10000.0;
+            ray.slope = VERTICAL_SLOPE;
         else
         {
             ray.slope = targety - sourcey;

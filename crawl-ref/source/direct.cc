@@ -831,6 +831,11 @@ bool in_vlos(int x, int y)
             && (env.show[x - LOS_SX][y] || (x == VIEW_CX && y == VIEW_CY));
 }
 
+bool in_vlos(const coord_def &pos)
+{
+    return (in_vlos(pos.x, pos.y));
+}
+
 bool in_los(int x, int y)
 {
     const int tx = x + VIEW_CX - you.x_pos,

@@ -31,6 +31,7 @@ bool in_los_bounds(int x, int y);
 bool in_viewport_bounds(int x, int y);
 bool in_los(int x, int y);
 bool in_vlos(int x, int y);
+bool in_vlos(const coord_def &pos);
 
 int dos_direction_unmunge(int doskey);
 
