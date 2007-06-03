@@ -31,6 +31,7 @@
 
 #include "beam.h"
 #include "debug.h"
+#include "delay.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -3021,6 +3022,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_CHARM:
         if (!quiet)
             simple_monster_message(this, " is no longer charmed.");
+
+        // and fire activity interrupts
+        interrupt_activity(AI_SEE_MONSTER,
+                           activity_interrupt_data(this, "uncharm"));
 
         // reevaluate behaviour
         behaviour_event(this, ME_EVAL);
