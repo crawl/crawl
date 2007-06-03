@@ -258,6 +258,10 @@ int channel_to_colour( int channel, int param )
             ret = WHITE;
             break;
 
+        case MSGCH_MUTATION:
+            ret = LIGHTRED;
+            break;
+
         case MSGCH_TUTORIAL:
             ret = MAGENTA;
             break;
