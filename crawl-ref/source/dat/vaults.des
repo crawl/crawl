@@ -2075,6 +2075,7 @@ ENDMAP
 
 NAME: columns_hall
 MAP
+.............................
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .............................
 ..x..x..x..x..x..x..x..x..x..
@@ -2082,6 +2083,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ..x..x..x..x..x..x..x..x..x..
 .............................
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.............................
 ENDMAP
 
 #############################################################################

@@ -2319,7 +2319,7 @@ static void world_reacts()
         you.attribute[ATTR_WAS_SILENCED] = its_quiet;
     }
 
-    viewwindow(1, false);
+    viewwindow(true, false);
 
     if (you.paralysis > 0 && any_messages())
         more();
@@ -2338,6 +2338,7 @@ static void world_reacts()
 
         mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
                     50, 50, LEVEL_DUNGEON, prox );
+        viewwindow(true, false);
     }
 
     // place Abyss monsters.
@@ -2345,11 +2346,15 @@ static void world_reacts()
     {
         mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
                     50, 50, LEVEL_ABYSS, PROX_ANYWHERE );
+        viewwindow(true, false);
     }
 
     // place Pandemonium monsters
     if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
+    {
         pandemonium_mons();
+        viewwindow(true, false);
+    }
 
     // No monsters in the Labyrinth, or the Ecumenical Temple
     return;
