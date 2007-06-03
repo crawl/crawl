@@ -3023,9 +3023,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, " is no longer charmed.");
 
-        // and fire activity interrupts
-        interrupt_activity(AI_SEE_MONSTER,
-                           activity_interrupt_data(this, "uncharm"));
+        if (mons_near(this) && player_monster_visible(this))
+        {
+            // and fire activity interrupts
+            interrupt_activity(AI_SEE_MONSTER,
+                               activity_interrupt_data(this, "uncharm"));
+        }
 
         // reevaluate behaviour
         behaviour_event(this, ME_EVAL);
