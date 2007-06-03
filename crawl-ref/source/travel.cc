@@ -2491,6 +2491,10 @@ void start_travel(int x, int y)
     if (x == you.x_pos && y == you.y_pos)
         return ;
 
+    // Remember where we're going so we can easily go back if interrupted.
+    you.travel_x = x;
+    you.travel_y = y;
+
     if (!i_feel_safe(true))
         return;
     
@@ -2498,10 +2502,6 @@ void start_travel(int x, int y)
     you.running = RMODE_TRAVEL;
     you.running.x = x;
     you.running.y = y;
-
-    // Remember where we're going so we can easily go back if interrupted.
-    you.travel_x = x;
-    you.travel_y = y;
 
     // Check whether we can get to the square.
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
