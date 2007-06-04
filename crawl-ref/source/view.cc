@@ -655,7 +655,8 @@ void monster_grid(bool do_updates)
             {
                 // ripple effect?
                 if (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
-                    && !mons_flies(monster))
+                    && !mons_flies(monster)
+                    && env.cgrid(monster->pos()) == EMPTY_CLOUD)
                 {
                     set_show_backup(ex, ey);
                     env.show[ex][ey] = DNGN_INVIS_EXPOSED;
