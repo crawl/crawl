@@ -372,8 +372,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
                         int tpy = py;
                         px = you.x_pos;
                         py = you.y_pos;
-                        you.x_pos = tpx;
-                        you.y_pos = tpy;
+                        you.moveto(tpx, tpy);
                     }
 
                     proxOK = (pval > 0);

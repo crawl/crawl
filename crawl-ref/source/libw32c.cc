@@ -559,11 +559,12 @@ void textcolor(int c)
 
 void clear_message_window()
 {
-   PCHAR_INFO pci = screen + SCREENINDEX(0, VIEW_EY);
+   PCHAR_INFO pci = screen + SCREENINDEX(crawl_view.msgp.x - 1,
+                                         crawl_view.msgp.y - 1);
    const int ncols = get_number_of_cols();
    for (int x = 0; x < ncols; x++)
    {
-      for (int y = 0; y < get_message_window_height(); y++)
+      for (int y = 0; y < crawl_view.msgsz.y; y++)
       {
          pci->Char.AsciiChar = ' ';
          pci->Attributes = 0;
@@ -574,39 +575,37 @@ void clear_message_window()
    COORD source;
    SMALL_RECT target;
 
-   source.X = 0;
-   source.Y = VIEW_EY;
-   target.Left = 0;
-   target.Top = VIEW_EY;
+   source.X = crawl_view.msgp.x - 1;
+   source.Y = crawl_view.msgp.y - 1;
+   target.Left = crawl_view.msgp.x - 1;
+   target.Top = crawl_view.msgp.y - 1;
    target.Right = get_number_of_cols() - 1;
    target.Bottom = get_number_of_lines() - 1;
 
    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
 }
 
-extern int get_message_window_height();
 static void scroll_message_buffer()
 {
-    memmove( screen + SCREENINDEX(0, VIEW_EY),
-             screen + SCREENINDEX(0, VIEW_EY + 1),
-             get_message_window_height() * get_number_of_cols() 
-                                         * sizeof(*screen) );
+    memmove( screen + SCREENINDEX(crawl_view.msgp.x - 1, crawl_view.msgp.y - 1),
+             screen + SCREENINDEX(crawl_view.msgp.x - 1, crawl_view.msgp.y),
+             crawl_view.msgsz.y * get_number_of_cols() * sizeof(*screen) );
 }
 
 static void scroll_message_window()
 {
     SMALL_RECT scroll_rectangle, clip_rectangle;
-    scroll_rectangle.Left   = 0;
-    scroll_rectangle.Top    = VIEW_EY + 1;
+    scroll_rectangle.Left   = crawl_view.msgp.x - 1;
+    scroll_rectangle.Top    = crawl_view.msgp.y;
     scroll_rectangle.Right  = get_number_of_cols() - 1;
     scroll_rectangle.Bottom = get_number_of_lines() - 1;
 
     clip_rectangle          = scroll_rectangle;
-    clip_rectangle.Top      = VIEW_EY;
+    clip_rectangle.Top      = crawl_view.msgp.y - 1;
 
     COORD new_origin;
-    new_origin.X            = 0;
-    new_origin.Y            = VIEW_EY;
+    new_origin.X            = crawl_view.msgp.x;
+    new_origin.Y            = crawl_view.msgp.y - 1;
 
     CHAR_INFO fill;
     fill.Char.AsciiChar     = ' ';
@@ -629,7 +628,8 @@ void message_out(int which_line, int colour, const char *s, int firstcol,
     if (!firstcol)
         firstcol = Options.delay_message_clear? 2 : 1;
 
-    gotoxy(firstcol, which_line + VIEW_EY + 1);
+    gotoxy(firstcol - 1 + crawl_view.viewp.x,
+           which_line + crawl_view.viewp.y);
     textcolor(colour);
 
     cprintf("%s", s);

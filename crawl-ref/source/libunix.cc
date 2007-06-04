@@ -234,10 +234,8 @@ static void handle_hangup(int)
 static WINDOW *Message_Window;
 static void setup_message_window()
 {
-    extern int get_message_window_height();
-    
-    Message_Window = newwin( get_message_window_height(), get_number_of_cols(),
-                             VIEW_EY, 0 );
+    Message_Window = newwin( crawl_view.msgsz.y, crawl_view.msgsz.x,
+                             crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 );
     if (!Message_Window)
     {
         fprintf(stderr, "Unable to create message window!");
@@ -258,8 +256,6 @@ void clear_message_window()
 void message_out(int which_line, int color, const char *s, int firstcol,
                  bool newline)
 {
-    extern int get_message_window_height();
-
     wattrset( Message_Window, curs_fg_attr(color) );
 
     if (!firstcol)
@@ -269,7 +265,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     
     mvwaddstr(Message_Window, which_line, firstcol, s);
 
-    if (newline && which_line == get_message_window_height() - 1)
+    if (newline && which_line == crawl_view.msgsz.y - 1)
     {
         int x, y;
         getyx(Message_Window, y, x);
@@ -282,7 +278,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     {
         int x, y;
         getyx(Message_Window, y, x);
-        move(y + VIEW_EY, x);
+        move(y + crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 + x);
     }
 
     wrefresh(Message_Window);
@@ -327,6 +323,7 @@ void unixcurses_startup( void )
 
     scrollok(stdscr, TRUE);
 
+    crawl_view.init_geometry();
     setup_message_window();
 }
 

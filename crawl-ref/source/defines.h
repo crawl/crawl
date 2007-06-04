@@ -109,6 +109,9 @@
 #define Y_ABYSS_WIDTH           (Y_ABYSS_2 - Y_ABYSS_1 + 1)
 #define Y_ABYSS_CENTER          (Y_ABYSS_1 + Y_ABYSS_WIDTH / 2)
 
+#define LOS_RADIUS 8
+#define ENV_SHOW_OFFSET (LOS_RADIUS + 1)
+#define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 #define LOS_SX     8
 #define LOS_EX    25
 #define LOS_SY     1

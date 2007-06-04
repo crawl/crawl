@@ -221,8 +221,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             }
 
             // have to move now so fall_into_a_pool will work
-            you.x_pos = x;
-            you.y_pos = y;
+            you.moveto(x, y);
 
             viewwindow( true, false );
 
@@ -271,8 +270,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     }
 
     // move the player to location
-    you.x_pos = x;
-    you.y_pos = y;
+    you.moveto(x, y);
 
     viewwindow( true, false );
 
@@ -3248,7 +3246,7 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80])
 
     print_it[40] = 0;
 
-    gotoxy(40, 1);
+    gotoxy(crawl_view.hudp.x, 1);
 
     textcolor( LIGHTGREY );
     cprintf( "%s", print_it );
@@ -5252,4 +5250,18 @@ void player::mutate()
 bool player::is_icy() const
 {
     return (attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST);
+}
+
+void player::moveto(int x, int y)
+{
+    x_pos = x;
+    y_pos = y;
+    crawl_view.set_player_at(coord_def(x, y));
+}
+
+void player::moveto(const coord_def &c)
+{
+    x_pos = c.x;
+    y_pos = c.y;
+    crawl_view.set_player_at(c);
 }

@@ -334,6 +334,8 @@ void cio_init()
     init_libdos();
 #endif
 
+    crawl_view.init_geometry();
+    
     io_inited = true;
 }
 
@@ -1050,9 +1052,9 @@ void zap_los_monsters()
 {
     losight(env.show, grd, you.x_pos, you.y_pos);
 
-    for (int y = LOS_SY; y <= LOS_EY; ++y)
+    for (int y = crawl_view.vlos1.y; y <= crawl_view.vlos2.y; ++y)
     {
-        for (int x = LOS_SX; x <= LOS_EX; ++x)
+        for (int x = crawl_view.vlos1.x; x <= crawl_view.vlos2.x; ++x)
         {
             if (!in_vlos(x, y))
                 continue;

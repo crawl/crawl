@@ -152,8 +152,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         mpr("You blink.");
 
         succ = true;
-        you.x_pos = tx;
-        you.y_pos = ty;
+        you.moveto(tx, ty);
 
         if (you.level_type == LEVEL_ABYSS)
         {

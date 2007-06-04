@@ -28,6 +28,7 @@
 
 #include <string.h>
 #include <cmath>
+#include <sstream>
 
 #ifdef DOS
 #include <conio.h>
@@ -41,6 +42,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "direct.h"
+#include "dungeon.h"
 #include "initfile.h"
 #include "insult.h"
 #include "itemprop.h"
@@ -76,6 +78,7 @@ static FixedVector<feature_def, NUM_FEATURES> Feature;
 
 typedef unsigned short screen_buffer_t;
 
+crawl_view_geometry crawl_view;
 FixedArray < unsigned int, 20, 19 > Show_Backup;
 
 unsigned char show_green;
@@ -91,11 +94,6 @@ void monster_grid(bool do_updates);
 static int get_item_dngn_code(const item_def &item);
 static void set_show_backup( int ex, int ey );
 static int get_viewobj_flags(int viewobj);
-
-int get_message_window_height()
-{
-    return (get_number_of_lines() - VIEW_EY);
-}
 
 unsigned get_envmap_char(int x, int y)
 {
@@ -1977,25 +1975,27 @@ void draw_border(void)
     clrscr();
     redraw_skill( you.your_name, player_title() );
 
-    gotoxy(40, 2);
+    const int xcol = crawl_view.hudp.x;
+    
+    gotoxy(xcol, 2);
     cprintf( "%s %s", species_name( you.species, you.experience_level ), 
                      (you.wizard ? "*WIZARD*" : "" ) );
 
-    gotoxy(40,  3); cprintf("HP:");
-    gotoxy(40,  4); cprintf("Magic:");
-    gotoxy(40,  5); cprintf("AC:");
-    gotoxy(40,  6); cprintf("EV:");
-    gotoxy(40,  7); cprintf("Str:");
-    gotoxy(40,  8); cprintf("Int:");
-    gotoxy(40,  9); cprintf("Dex:");
-    gotoxy(40, 10); cprintf("Gold:");
+    gotoxy(xcol,  3); cprintf("HP:");
+    gotoxy(xcol,  4); cprintf("Magic:");
+    gotoxy(xcol,  5); cprintf("AC:");
+    gotoxy(xcol,  6); cprintf("EV:");
+    gotoxy(xcol,  7); cprintf("Str:");
+    gotoxy(xcol,  8); cprintf("Int:");
+    gotoxy(xcol,  9); cprintf("Dex:");
+    gotoxy(xcol, 10); cprintf("Gold:");
     if (Options.show_turns)
     {
-        gotoxy(55, 10);
+        gotoxy(xcol + 15, 10);
         cprintf("Turn:");
     }
-    gotoxy(40, 11); cprintf("Experience:");
-    gotoxy(40, 12); cprintf("Level");
+    gotoxy(xcol, 11); cprintf("Experience:");
+    gotoxy(xcol, 12); cprintf("Level");
 }                               // end draw_border()
 
 // Determines if the given feature is present at (x, y) in _grid_ coordinates.
@@ -3549,9 +3549,6 @@ std::string screenshot( bool fullscreen )
 {
     UNUSED( fullscreen );
 
-    const int X_SIZE = VIEW_WIDTH;
-    const int Y_SIZE = VIEW_HEIGHT;
-
     // [ds] Screenshots need to be straight ASCII. We will now proceed to force
     // the char and feature tables back to ASCII.
     FixedVector<unsigned char, NUM_DCHAR_TYPES> char_table_bk;
@@ -3564,35 +3561,32 @@ std::string screenshot( bool fullscreen )
     int firstpopline  = -1;
     int lastpopline   = -1;
 
-    char lines[Y_SIZE][X_SIZE + 1];
-    for (int count_y = 0; count_y < Y_SIZE; count_y++)
+    std::vector<std::string> lines(crawl_view.viewsz.y);
+    for (int count_y = 1; count_y <= crawl_view.viewsz.y; count_y++)
     {
         int lastnonspace = -1;
         
-        for (int count_x = 0; count_x < X_SIZE; count_x++)
+        for (int count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
         {
             // in grid coords
-            const int gx = count_x + you.x_pos - 16;
-            const int gy = count_y + you.y_pos - 8;
+            const coord_def gc = view2grid(coord_def(count_x, count_y));
 
-            int ch = (!map_bounds(gx, gy)) 
-                        ? 0 
-                        : (count_x < 8 || count_x > 24) 
-                            ? get_envmap_char(gx, gy) 
-                            : (gx == you.x_pos && gy == you.y_pos)
-                                ? you.symbol 
-                                : get_screen_glyph(gx, gy);
-
+            int ch =
+                (!map_bounds(gc)) ? 0 
+                : (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y) 
+                : (gc == you.pos()) ? you.symbol 
+                : get_screen_glyph(gc.x, gc.y);
+            
             if (ch && !isprint(ch)) 
             {
                 // [ds] Evil hack time again. Peek at grid, use that character.
-                int object = grd[gx][gy];
+                int object = grd(gc);
                 unsigned short glych, glycol = 0;
 
                 if (object == DNGN_SECRET_DOOR)
-                    object = grid_secret_door_appearance( gx, gy );
+                    object = grid_secret_door_appearance( gc.x, gc.y );
 
-                get_symbol( gx, gy, object, &glych, &glycol );
+                get_symbol( gc.x, gc.y, object, &glych, &glycol );
                 ch = glych;
             }
             
@@ -3612,17 +3606,17 @@ std::string screenshot( bool fullscreen )
                     firstpopline = count_y;
             }
 
-            lines[count_y][count_x] = ch;
+            lines[count_y - 1] += ch;
         }
 
-        lines[count_y][lastnonspace + 1] = 0;
+        lines[count_y - 1].erase(lastnonspace + 1);
     }
 
     // Restore char and feature tables
     Options.char_table = char_table_bk;
     init_feature_table();
 
-    std::string ss;
+    std::ostringstream ss;
     if (firstpopline != -1 && lastpopline != -1) 
     {
         if (firstnonspace == -1)
@@ -3630,17 +3624,14 @@ std::string screenshot( bool fullscreen )
 
         for (int i = firstpopline; i <= lastpopline; ++i) 
         {
-            char *curr = lines[i];
-
-            while (*curr && curr - lines[i] < firstnonspace)
-                curr++;
-
-            ss += curr;
-            ss += EOL;
+            const std::string &ref = lines[i - 1];
+            if (firstnonspace < (int) ref.length())
+                ss << ref.substr(firstnonspace);
+            ss << EOL;
         }
     }
 
-    return (ss);
+    return (ss.str());
 }
 
 static int viewmap_flash_colour()
@@ -3667,11 +3658,9 @@ static int viewmap_flash_colour()
 //---------------------------------------------------------------
 void viewwindow(bool draw_it, bool do_updates)
 {
-    const int X_SIZE = VIEW_WIDTH;
-    const int Y_SIZE = VIEW_HEIGHT;
-    const int BUFFER_SIZE = 1550;
-
-    FixedVector < screen_buffer_t, BUFFER_SIZE > buffy;
+    std::vector<screen_buffer_t> buffy(
+        crawl_view.viewsz.y * crawl_view.viewsz.x * 2);
+    
     int count_x, count_y;
 
     losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
@@ -3700,31 +3689,32 @@ void viewwindow(bool draw_it, bool do_updates)
         if (flash_colour == BLACK)
             flash_colour = viewmap_flash_colour();
 
-        for (count_y = 0; count_y < Y_SIZE; count_y++)
+        for (count_y = 1; count_y <= crawl_view.viewsz.y; count_y++)
         {
-            for (count_x = 0; count_x < X_SIZE; count_x++)
+            for (count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
             {
                 // in grid coords
-                const int gx = count_x + you.x_pos - 16;
-                const int gy = count_y + you.y_pos - 8;
+                const int gx = view2gridX(count_x);
+                const int gy = view2gridY(count_y);
 
                 if (Options.tutorial_left && in_bounds(gx, gy)
-                    && count_x >= 8 && count_x <= 24)
+                    && crawl_view.in_grid_los(coord_def(gx, gy)))
                 {
                     const int ex = gx - you.x_pos + 9;
                     const int ey = gy - you.y_pos + 9;
 
-                    int object = env.show[ex][ey];
-
+                    const int object = env.show[ex][ey];
                     if (object)
                     {
                         if (is_feature('>',gx,gy))
                             learned_something_new(TUT_SEEN_STAIRS,gx,gy);
                         else if (is_feature('_',gx,gy))
                             learned_something_new(TUT_SEEN_ALTAR,gx,gy);
-                        else if (grd[gx][gy] == DNGN_CLOSED_DOOR && see_grid( gx, gy ))
+                        else if (grd[gx][gy] == DNGN_CLOSED_DOOR
+                                 && see_grid( gx, gy ))
                             learned_something_new(TUT_SEEN_DOOR,gx,gy);
-                        else if (grd[gx][gy] == DNGN_ENTER_SHOP && see_grid( gx, gy ))
+                        else if (grd[gx][gy] == DNGN_ENTER_SHOP
+                                 && see_grid( gx, gy ))
                             learned_something_new(TUT_SEEN_SHOP,gx,gy);
                     }
                 }
@@ -3736,7 +3726,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount] = 0;
                     buffy[bufcount + 1] = DARKGREY;
                 }
-                else if (count_x < 8 || count_x > 24)
+                else if (!crawl_view.in_grid_los(coord_def(gx, gy)))
                 {
                     // outside the env.show area
                     buffy[bufcount] = get_envmap_char( gx, gy );
@@ -3875,12 +3865,11 @@ void viewwindow(bool draw_it, bool do_updates)
         // avoiding unneeded draws when running
         if (!you.running || (you.running < 0 && Options.travel_delay > -1))
         {
-            gotoxy( 1, 1 );
-
             bufcount = 0;
-            for (count_y = 0; count_y < Y_SIZE; count_y++)
+            for (count_y = 0; count_y < crawl_view.viewsz.y; count_y++)
             {
-                for (count_x = 0; count_x < X_SIZE; count_x++)
+                gotoxy( crawl_view.viewp.x, crawl_view.viewp.y + count_y );
+                for (count_x = 0; count_x < crawl_view.viewsz.x; count_x++)
                 {
 #ifdef USE_CURSES
                     buffy[bufcount] = cset_adjust( buffy[bufcount] );
@@ -3889,8 +3878,6 @@ void viewwindow(bool draw_it, bool do_updates)
                     putch( buffy[bufcount] );
                     bufcount += 2;
                 }
-
-                gotoxy( 1, count_y + 2 );
             }
         }
 
@@ -3899,3 +3886,129 @@ void viewwindow(bool draw_it, bool do_updates)
 #endif
     }
 }                               // end viewwindow()
+
+//////////////////////////////////////////////////////////////////////////////
+// crawl_view_geometry
+
+const int crawl_view_geometry::message_min_lines;
+const int crawl_view_geometry::hud_min_width;
+const int crawl_view_geometry::hud_min_gutter;
+const int crawl_view_geometry::hud_max_gutter;
+
+crawl_view_geometry::crawl_view_geometry()
+    : termsz(80, 24), viewp(1, 1), viewsz(33, 17),
+      hudp(40, 1), hudsz(41, 17),
+      msgp(1, viewp.y + viewsz.y), msgsz(80, 7)
+{
+}
+
+void crawl_view_geometry::init_view()
+{
+    set_player_at(you.pos(), true);
+}
+
+void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
+{
+    if (centre)
+    {
+        vgrdc = c;
+    }
+    else
+    {
+        const coord_def oldc = vgrdc;
+        const int xmarg =
+            Options.scroll_margin_x + LOS_RADIUS <= viewhalfsz.x
+            ? Options.scroll_margin_x
+            : viewhalfsz.x - LOS_RADIUS;
+        const int ymarg =
+            Options.scroll_margin_y + LOS_RADIUS <= viewhalfsz.y
+            ? Options.scroll_margin_y
+            : viewhalfsz.y - LOS_RADIUS;
+        
+        if (Options.view_lock_x)
+            vgrdc.x = c.x;
+        else if (c.x - LOS_RADIUS < vgrdc.x - viewhalfsz.x + xmarg)
+            vgrdc.x = c.x - LOS_RADIUS + viewhalfsz.x - xmarg;
+        else if (c.x + LOS_RADIUS > vgrdc.x + viewhalfsz.x - xmarg)
+            vgrdc.x = c.x + LOS_RADIUS - viewhalfsz.x + xmarg;
+
+        if (Options.view_lock_y)
+            vgrdc.y = c.y;
+        else if (c.y - LOS_RADIUS < vgrdc.y - viewhalfsz.y + ymarg)
+            vgrdc.y = c.y - LOS_RADIUS + viewhalfsz.y - ymarg;
+        else if (c.y + LOS_RADIUS > vgrdc.y + viewhalfsz.y - ymarg)
+            vgrdc.y = c.y + LOS_RADIUS - viewhalfsz.y + ymarg;
+
+        if (vgrdc != oldc && Options.center_on_scroll)
+            vgrdc = c;
+
+        if (!Options.center_on_scroll && Options.symmetric_scroll
+            && !Options.view_lock_x
+            && !Options.view_lock_y
+            && (c - last_player_pos).abs() == 2
+            && (vgrdc - oldc).abs() == 1)
+        {
+            const coord_def dp = c - last_player_pos;
+            const coord_def dc = vgrdc - oldc;
+            if ((dc.x == dp.x) != (dc.y == dp.y))
+                vgrdc = oldc + dp;
+        }
+    }
+
+    glos1 = c - coord_def(LOS_RADIUS, LOS_RADIUS);
+    glos2 = c + coord_def(LOS_RADIUS, LOS_RADIUS);
+
+    vlos1 = glos1 - vgrdc + view_centre();
+    vlos2 = glos2 - vgrdc + view_centre();
+
+    last_player_pos = c;
+}
+
+void crawl_view_geometry::init_geometry()
+{
+    termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
+
+    // If the terminal is too small, exit with an error.
+    if (termsz.x < 80 || termsz.y < 24)
+        end(1, false, "Terminal too small (%d,%d), need at least (80,24)",
+            termsz.x, termsz.y);
+
+
+    int freeheight = termsz.y - message_min_lines;
+
+    // Make the viewport as tall as possible.
+    viewsz.y = freeheight < Options.view_max_height?
+        freeheight : Options.view_max_height;
+
+    // Make sure we're odd-sized.
+    if (!(viewsz.y % 2))
+        --viewsz.y;
+
+    // The message pane takes all lines not used by the viewport.
+    msgp  = coord_def(1, viewsz.y + 1);
+    msgsz = coord_def(termsz.x, termsz.y - viewsz.y);
+
+    int freewidth = termsz.x - (hud_min_width + hud_min_gutter);
+    // Make the viewport as wide as possible.
+    viewsz.x = freewidth < Options.view_max_width?
+        freewidth : Options.view_max_width;
+
+    if (!(viewsz.x % 2))
+        --viewsz.x;
+
+    // The hud appears after the viewport + gutter.
+    hudp = coord_def(viewsz.x + 1 + hud_min_gutter, 1);
+
+    // HUD size never changes, but we may increase the gutter size (up to
+    // the current max of 6).
+    if (hudp.x + hudsz.x - 1 < termsz.x)
+    {
+        const int hudmarg = termsz.x - (hudp.x + hudsz.x - 1);
+        const int hud_increase_max = hud_max_gutter - hud_min_gutter;
+        hudp.x += hudmarg > hud_increase_max? hud_increase_max : hudmarg;
+    }
+
+    viewhalfsz = viewsz / 2;
+    
+    init_view();
+}

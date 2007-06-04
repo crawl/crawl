@@ -85,8 +85,8 @@ static char find_square_wrapper( int tx, int ty,
                                  bool wrap = false,
                                  int los = LOS_ANY);
 
-static char find_square( unsigned char xps, unsigned char yps, 
-                         FixedVector<char, 2> &mfp, char direction,
+static char find_square( int xps, int yps, 
+                         FixedVector<char, 2> &mfp, int direction,
                          bool (*targ)(int, int, int),
                          int mode = TARG_ANY,
                          bool wrap = false,
@@ -827,8 +827,9 @@ static void describe_oos_square(int x, int y)
 
 bool in_vlos(int x, int y)
 {
-    return in_los_bounds(x, y) 
-            && (env.show[x - LOS_SX][y] || (x == VIEW_CX && y == VIEW_CY));
+    return in_los_bounds(x, y)
+        && (env.show(view2show(coord_def(x, y)))
+            || coord_def(x, y) == grid2view(you.pos()));
 }
 
 bool in_vlos(const coord_def &pos)
@@ -838,13 +839,7 @@ bool in_vlos(const coord_def &pos)
 
 bool in_los(int x, int y)
 {
-    const int tx = x + VIEW_CX - you.x_pos,
-              ty = y + VIEW_CY - you.y_pos;
-    
-    if (!in_los_bounds(tx, ty))
-        return (false);
-
-    return (x == you.x_pos && y == you.y_pos) || env.show[tx - LOS_SX][ty];
+    return (in_vlos(grid2view(coord_def(x, y))));
 }
 
 static bool find_monster( int x, int y, int mode )
@@ -929,12 +924,12 @@ static int next_los(int dir, int los, bool wrap)
 
 bool in_viewport_bounds(int x, int y)
 {
-    return (x >= VIEW_SX && x <= VIEW_EX && y >= VIEW_SY && y <= VIEW_EY);
+    return crawl_view.in_view_viewport(coord_def(x, y));
 }
 
 bool in_los_bounds(int x, int y)
 {
-    return !(x > LOS_EX || x < LOS_SX || y > LOS_EY || y < LOS_SY);
+    return crawl_view.in_view_los(coord_def(x, y));
 }
 
 //---------------------------------------------------------------
@@ -951,8 +946,8 @@ bool in_los_bounds(int x, int y)
 // monsters will be targeted.
 //
 //---------------------------------------------------------------
-static char find_square( unsigned char xps, unsigned char yps,
-                         FixedVector<char, 2> &mfp, char direction,
+static char find_square( int xps, int yps,
+                         FixedVector<char, 2> &mfp, int direction,
                          bool (*find_targ)( int x, int y, int mode ),
                          int mode, bool wrap, int los )
 {
@@ -961,8 +956,8 @@ static char find_square( unsigned char xps, unsigned char yps,
 
     int temp_xps = xps;
     int temp_yps = yps;
-    char x_change = 0;
-    char y_change = 0;
+    int x_change = 0;
+    int y_change = 0;
 
     bool onlyVis = false, onlyHidden = false;
 
@@ -977,8 +972,8 @@ static char find_square( unsigned char xps, unsigned char yps,
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
-            const bool vis = (env.show[xps - 8][yps] 
-                              || (xps == VIEW_CX && yps == VIEW_CY));
+            const bool vis = (env.show(view2show(coord_def(xps, yps)))
+                              || view2grid(coord_def(xps, yps)) == you.pos());
             
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
@@ -1001,9 +996,17 @@ static char find_square( unsigned char xps, unsigned char yps,
     onlyVis     = (los & LOS_VISIBLE);
     onlyHidden  = (los & LOS_HIDDEN);
 
-    const int minx = VIEW_SX, maxx = VIEW_EX,
-              miny = VIEW_SY - VIEW_Y_DIFF, maxy = VIEW_EY + VIEW_Y_DIFF,
-              ctrx = VIEW_CX, ctry = VIEW_CY;
+    int radius = 0;
+    if (crawl_view.viewsz.x > crawl_view.viewsz.y)
+        radius = crawl_view.viewsz.x - LOS_RADIUS - 1;
+    else
+        radius = crawl_view.viewsz.y - LOS_RADIUS - 1;
+
+    const coord_def vyou = grid2view(you.pos());
+    
+    const int minx = vyou.x - radius, maxx = vyou.x + radius,
+              miny = vyou.y - radius, maxy = vyou.y + radius,
+              ctrx = vyou.x, ctry = vyou.y;
 
     while (temp_xps >= minx - 1 && temp_xps <= maxx
                 && temp_yps <= maxy && temp_yps >= miny - 1)
@@ -1135,17 +1138,17 @@ static char find_square( unsigned char xps, unsigned char yps,
         //if (!in_los_bounds(temp_xps, temp_yps))
         //    continue;
 
-        if (temp_xps < minx - 1 || temp_xps > maxx
-                || temp_yps < VIEW_SY || temp_yps > VIEW_EY)
+        if (!crawl_view.in_grid_viewport(coord_def(targ_x, targ_y)))
             continue;
 
-        if (targ_x < 1 || targ_x >= GXM || targ_y < 1 || targ_y >= GYM)
+        if (!in_bounds(targ_x, targ_y))
             continue;
 
         if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
             continue;
 
-        if (find_targ(targ_x, targ_y, mode)) {
+        if (find_targ(targ_x, targ_y, mode))
+        {
             mfp[0] = temp_xps;
             mfp[1] = temp_yps;
             return (1);

@@ -555,6 +555,17 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
+    view_max_width = VIEW_EX;
+    view_max_height = VIEW_EY;
+
+    view_lock_x = true;
+    view_lock_y = true;
+
+    center_on_scroll = false;
+    symmetric_scroll = true;
+    scroll_margin_x   = 4;
+    scroll_margin_y   = 4;
+
     autopickup_on = true;
     autoprayer_on = false;
 
@@ -1855,6 +1866,62 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         messaging = read_bool(field, messaging);
     }
 #endif
+    else if (key == "view_max_width")
+    {
+        view_max_width = atoi(field.c_str());
+        if (view_max_width < VIEW_EX)
+            view_max_width = VIEW_EX;
+        else if (view_max_width > GXM + 1)
+            view_max_width = GXM + 1;
+    }
+    else if (key == "view_max_height")
+    {
+        view_max_height = atoi(field.c_str());
+        if (view_max_height < VIEW_EY)
+            view_max_height = VIEW_EY;
+        else if (view_max_height > GYM + 1)
+            view_max_height = GYM + 1;
+    }
+    else if (key == "view_lock_x")
+    {
+        view_lock_x = read_bool(field, view_lock_x);
+    }
+    else if (key == "view_lock_y")
+    {
+        view_lock_y = read_bool(field, view_lock_y);
+    }
+    else if (key == "view_lock")
+    {
+        const bool lock = read_bool(field, true);
+        view_lock_x = view_lock_y = lock;
+    }
+    else if (key == "center_on_scroll")
+    {
+        center_on_scroll = read_bool(field, center_on_scroll);
+    }
+    else if (key == "symmetric_scroll")
+    {
+        symmetric_scroll = read_bool(field, symmetric_scroll);
+    }
+    else if (key == "scroll_margin_x")
+    {
+        scroll_margin_x = atoi(field.c_str());
+        if (scroll_margin_x < 0)
+            scroll_margin_x = 0;
+    }
+    else if (key == "scroll_margin_y")
+    {
+        scroll_margin_y = atoi(field.c_str());
+        if (scroll_margin_y < 0)
+            scroll_margin_y = 0;
+    }
+    else if (key == "scroll_margin")
+    {
+        int scrollmarg = atoi(field.c_str());
+        if (scrollmarg < 0)
+            scrollmarg = 0;
+        scroll_margin_x = scroll_margin_y = scrollmarg;
+    }    
     else if (key == "use_notes")
     {
         use_notes = read_bool( field, use_notes );

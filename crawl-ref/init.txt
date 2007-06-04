@@ -111,7 +111,15 @@ stab_brand = hi:blue
 # level_map_title = false
 # item_colour = false
 
-##### 4-f	Travel and Exploration #################
+##### 4-f	Viewport Options  ###################
+# view_max_width   = 33
+# view_max_height  = 17
+# view_lock        = false
+# center_on_scroll = true
+# symmetric_scroll = false
+# scroll_margin    = 4
+
+##### 4-g	Travel and Exploration #################
 #
 # travel_colour = false
 # travel_delay = 20
@@ -135,12 +143,12 @@ stab_brand = hi:blue
 # runrest_ignore_poison = 4:100
 # trapwalk_safe_hp = dart:15, needle:25, spear:50
 
-##### 4-g	Stashes ###############################
+##### 4-h	Stashes ###############################
 #
 # stash_tracking = (all | explicit | dropped)
 # stash_filter = 14, 4:21
 
-##### 4-h	Command Enhancements ##################
+##### 4-i	Command Enhancements ##################
 #
 # auto_list = false
 # lowercase_invocations = false
@@ -153,7 +161,7 @@ stab_brand = hi:blue
 # default_autoprayer = true
 # sort_menus = pickup: true : basename, qualname, curse, qty
 
-##### 4-i	Messages and Display Enhancements #####
+##### 4-j	Messages and Display Enhancements #####
 #
 # hp_warning = 10
 # mp_warning = 10
@@ -187,20 +195,20 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # message_colour = mute:(HP|Magic) restored
 # message_colour = mute:warning:Not with.*(in view|monsters around)
 
-##### 4-j	Firing Commands #######################
+##### 4-k	Firing Commands #######################
 #
 # fire_items_start = a
 # fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 
-##### 4-k	Channels ##############################
+##### 4-l	Channels ##############################
 #
 # channel.multiturn = mute
 
-##### 4-l	Inscriptions ##########################
+##### 4-m	Inscriptions ##########################
 #
 # autoinscribe = royal jell:=g
 
-##### 4-m	Macro related Options #################
+##### 4-n	Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true

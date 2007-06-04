@@ -42,32 +42,37 @@ std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern);
 
 inline int view2gridX(int vx)
 {
-    return (you.x_pos + vx - VIEW_CX);
+    return (crawl_view.vgrdc.x + vx - crawl_view.view_centre().x);
 }
 
 inline int view2gridY(int vy)
 {
-    return (you.y_pos + vy - VIEW_CY);
+    return (crawl_view.vgrdc.y + vy - crawl_view.view_centre().y);
 }
 
 inline coord_def view2grid(const coord_def &pos)
 {
-    return coord_def( view2gridX(pos.x), view2gridY(pos.y) );
+    return pos - crawl_view.view_centre() + crawl_view.vgrdc;
 }
 
 inline int grid2viewX(int gx)
 {
-    return (gx - you.x_pos + VIEW_CX);
+    return (gx - crawl_view.vgrdc.x + crawl_view.view_centre().x);
 }
 
 inline int grid2viewY(int gy)
 {
-    return (gy - you.y_pos + VIEW_CY);
+    return (gy - crawl_view.vgrdc.y + crawl_view.view_centre().y);
 }
 
 inline coord_def grid2view(const coord_def &pos)
 {
-    return coord_def( grid2viewX(pos.x), grid2viewY(pos.y) );
+    return (pos - crawl_view.vgrdc + crawl_view.view_centre());
+}
+
+inline coord_def view2show(const coord_def &pos)
+{
+    return (pos - crawl_view.vlos1 + coord_def(1, 1));
 }
 
 #endif

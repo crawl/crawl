@@ -282,8 +282,7 @@ void area_shift(void)
         }
     }
 
-    you.x_pos = 45;
-    you.y_pos = 35;
+    you.moveto(45, 35);
 
     generate_area(5, 5, (GXM - 5), (GYM - 5));
 
@@ -331,8 +330,7 @@ void abyss_teleport( bool new_area )
 
         if (i < 100)
         {
-            you.x_pos = x;
-            you.y_pos = y;
+            you.moveto(x, y);
             return;
         }
     }
@@ -384,8 +382,7 @@ void abyss_teleport( bool new_area )
 
     ASSERT( env.cloud_no == 0 ); 
 
-    you.x_pos = 45;
-    you.y_pos = 35;
+    you.moveto(45, 35);
 
     generate_area( 10, 10, (GXM - 10), (GYM - 10) );
 

@@ -34,32 +34,37 @@ The contents of this text are:
                 stair_item_brand
 4-e     Level Map Functions.
                 level_map_cursor_step, level_map_title, item_colour
-4-f     Travel and Exploration. 
+4-f     Viewport Display Options.
+                view_max_width, view_max_height, view_lock_x,
+                view_lock_y, view_lock, center_on_scroll,
+                symmetric_scroll, scroll_margin_x, scroll_margin_y,
+                scroll_margin
+4-g     Travel and Exploration. 
                 travel_delay, travel_avoid_terrain,
                 travel_exclude_radius2, travel_stop_message,
                 explore_greedy, explore_stop, runrest_ignore_message,
                 runrest_ignore_poison, trapwalk_safe_hp, tc_reachable,
                 tc_dangerous, tc_excluded, tc_exclude_circle
-4-g     Stashes.
+4-h     Stashes.
                 stash_tracking, stash_filter
-4-h     Command Enhancements.
+4-i     Command Enhancements.
                 auto_list, lowercase_invocations, easy_open, easy_butcher, 
                 easy_unequip, easy_confirm, easy_quit_item_prompts, 
                 easy_exit_menu, default_autoprayer, sort_menus
-4-i     Message and Display Improvements.
+4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, always_greet,
                 terse_hand, delay_message_clear, menu_colour, message_colour,
                 increasing_skill_progress, show_inventory_weights,
                 show_turns
-4-j     Missiles.
+4-k     Missiles.
                 fire_items_start, fire_order
-4-k     Message Channels.
+4-l     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, multiturn, talk, intrinsic_gain, mutation,
                 monster_spell, monster_enchant, monster_damage, rotten_meat
-4-l     Inscriptions.
+4-m     Inscriptions.
                 autoinscribe
-4-m     Macro related Options.
+4-n     Macro related Options.
                 flush.failure, flush.command, flush.message
 5-  Character Dump.
 5-a     Items and Kills.
@@ -481,7 +486,79 @@ item_colour = true
         Colours items on level-map.
 
 
-4-f     Travel and Exploration.
+4-f     Viewport Display Options
+--------------------------------
+
+The viewport is the portion of the map that is displayed during normal
+play. The viewport is 33x17 by default, but if you use larger terminal
+sizes, you can set these options to make the game show a larger
+viewport. (These options are not fully available on DOS.)
+
+None of these options affects gameplay. In particular, your character's
+line-of-sight is unaffected by these options.
+
+view_max_width = 33
+        Sets the maximum width of the viewport (defaults to 33).
+        Making this larger will allow Crawl to show a wider viewport
+        on larger terminals.
+
+view_max_height = 17
+        Similar to view_max_width, but sets the viewport's maximum 
+        height.
+
+* Note that using large viewports can slow the game down.
+
+view_lock_x = true
+        Keeps the player character centered horizontally in the
+        viewport, continuously scrolling the viewport to match the
+        PC's movements. If this is not set, the player character can
+        move horizontally within the viewport, and the viewport will
+        scroll only when the character's line-of-sight reaches the
+        left or right edge.
+
+view_lock_y = true
+        Keeps the character centered vertically in the viewport.
+
+view_lock = true
+        Aliased option that sets both view_lock_x and view_lock_y.
+
+center_on_scroll = false
+        If this is set, the viewport centers on the player character
+        whenever it scrolls (this option is irrelevant if view_lock_x
+        and view_lock_y are set).
+
+symmetric_scroll = true
+        If this is set, the viewport will scroll in a manner consistent
+        with the character movement that caused the scroll.
+
+        To illustrate, let's say the PC is at the lower edge of the
+        viewport, but is near the horizontal center. Now the PC moves
+        diagonally down and right, forcing the viewport to scroll up
+        one line. If symmetric_scroll is set, the viewport will also
+        scroll left one column to match the PC's diagonal movement. If
+        symmetric_scroll is not set, the viewport will only scroll up,
+        not horizontally. symmetric_scroll can be less disorienting
+        than free scrolling.
+
+        This option is not relevant if view_lock or center_on_scroll
+        are set.
+
+scroll_margin_x = 4
+        How far from the left or right edges scrolling starts. By
+        default, if the PC's circle of line-of-sight is closer than 4
+        squares from the edge, the viewport scrolls. If set at zero,
+        the viewport scrolls only when the LOS circle reaches the
+        viewport edge.
+
+scroll_margin_y = 4
+        How far from the top or bottom edges scrolling starts.
+
+scroll_margin = 4
+        An aliased option that sets both scroll_margin_x and 
+        scroll_margin_y.
+
+
+4-g     Travel and Exploration.
 -------------------------------
 
 travel_delay = 20
@@ -580,7 +657,7 @@ tc_exclude_circle = red
         excluded_circle: the colour for travel exclusions apart from centre 
 
 
-4-g     Stashes.
+4-h     Stashes.
 ----------------
 
 stash_tracking = (all | explicit | dropped)
@@ -604,7 +681,7 @@ stash_tracking = (all | explicit | dropped)
         squares. You can still use Ctrl-S and Ctrl-E as above.
 
 
-4-h     Command Enhancements.
+4-i     Command Enhancements.
 -----------------------------
 
 auto_list = true
@@ -741,7 +818,7 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         any:    All menus; this is the default when unspecified.
         
 
-4-i     Messages and Display Enhancements.
+4-j     Messages and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
@@ -827,7 +904,7 @@ show_turns = false
         This option controls whether the turn counter (of turns elapsed) is
         displayed in the main view.
 
-4-j     Missiles.
+4-k     Missiles.
 -----------------
 
 fire_items_start = a
@@ -847,7 +924,7 @@ fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 
 <See also pickup_thrown in A.4a.>
 
-4-k     Message Channels.
+4-l     Message Channels.
 -------------------------
 
 Crawl communicates to the players with its message window. Every message
@@ -892,7 +969,7 @@ Note that the template init.txt sets
 in order to help new players. You may want to comment out this option, if 
 the messages are too verbose.
 
-4-l     Inscriptions.
+4-m     Inscriptions.
 ---------------------
 
 In Crawl, items can be manually inscribed with the '{' command. This adds a 
@@ -921,7 +998,7 @@ autoinscribe = <regex>:<inscription>
           autoinscribe = wand of healing:!z
 
 
-4-m     Macro related Options.
+4-n     Macro related Options.
 ------------------------------
 
 flush.failure = true

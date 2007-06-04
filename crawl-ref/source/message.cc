@@ -459,7 +459,7 @@ static void mpr_check_patterns(const std::string& message, int channel,
 static void mpr_store_messages(const std::string& message,
                                int channel, int param)
 {
-    const int num_lines = get_message_window_height();
+    const int num_lines = crawl_view.msgsz.y;
 
     // Prompt lines are presumably shown to / seen by the player accompanied
     // by a request for input, which should do the equivalent of a more(); to
@@ -516,7 +516,7 @@ static int prepare_message(const std::string& imsg, int channel, int param)
     {
         mpr_check_patterns(imsg, channel, param);
         flush_input_buffer( FLUSH_ON_MESSAGE );
-        const int num_lines = get_message_window_height();
+        const int num_lines = crawl_view.msgsz.y;
     
         if (New_Message_Count == num_lines - 1)
             more();
@@ -610,7 +610,7 @@ void formatted_message_history(const std::string st, int channel, int param)
 
     flush_input_buffer( FLUSH_ON_MESSAGE );
 
-    const int num_lines = get_message_window_height();
+    const int num_lines = crawl_view.msgsz.y;
 
     if (New_Message_Count == num_lines - 1)
         more();
@@ -652,13 +652,13 @@ void more(void)
     char keypress = 0;
 
     if (Options.tutorial_left)
-        message_out(get_message_window_height() - 1,
+        message_out(crawl_view.msgsz.y - 1,
                     LIGHTGREY,
                     "--more--                        "
                     "Press Ctrl-P to reread old messages",
                     2, false);
     else
-        message_out(get_message_window_height() - 1,
+        message_out(crawl_view.msgsz.y - 1,
                     LIGHTGREY, "--more--", 2, false);
 
     do

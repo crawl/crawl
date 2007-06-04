@@ -810,8 +810,7 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
     }
     
     const coord_def where_to_go = find_nearby_stair(stair_taken, find_first);
-    you.x_pos = where_to_go.x;
-    you.y_pos = where_to_go.y;
+    you.moveto(where_to_go);
 }
 
 static void close_level_gates()
@@ -999,9 +998,9 @@ bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
     }
     else if (load_mode != LOAD_RESTART_GAME && you.level_type == LEVEL_ABYSS)
     {
-        you.x_pos = 45;
-        you.y_pos = 35;
+        you.moveto(45, 35);
     }
+    crawl_view.set_player_at(you.pos(), true);
 
     // This should fix the "monster occuring under the player" bug?
     if (mgrd[you.x_pos][you.y_pos] != NON_MONSTER)

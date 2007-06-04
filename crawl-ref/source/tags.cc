@@ -1042,8 +1042,9 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.base_magic_points = unmarshallShort(th);
     you.base_magic_points2 = unmarshallShort(th);
 
-    you.x_pos = unmarshallShort(th);
-    you.y_pos = unmarshallShort(th);
+    const int x = unmarshallShort(th);
+    const int y = unmarshallShort(th);
+    you.moveto(x, y);
 
     unmarshallString(th, you.class_name, 30);
 

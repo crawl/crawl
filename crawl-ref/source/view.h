@@ -23,8 +23,6 @@
 void init_char_table(char_set_type set);
 void init_feature_table();
 
-int get_message_window_height();
-
 /* ***********************************************************************
  * called from: dump_screenshot - chardump
  * *********************************************************************** */

@@ -1490,10 +1490,7 @@ static int spell_swap_func(int x, int y, int pow, int message)
         int old_y = defender->y;
 
         if (swap_places( defender ))
-        {
-            you.x_pos = old_x;
-            you.y_pos = old_y;
-        }
+            you.moveto(old_x, old_y);
     }
 
     return 1;
@@ -3038,8 +3035,7 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
             break;
     }
 
-    you.x_pos = tx;
-    you.y_pos = ty;
+    you.moveto(tx, ty);
     return 1;
 }
 

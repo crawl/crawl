@@ -662,8 +662,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
         if (is_controlled)
         {
-            you.x_pos = plox[0];
-            you.y_pos = plox[1];
+            you.moveto(plox[0], plox[1]);
 
             if ((grd[you.x_pos][you.y_pos] != DNGN_FLOOR
                     && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
@@ -693,7 +692,12 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
                    && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
                || mgrd[you.x_pos][you.y_pos] != NON_MONSTER
                || env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD);
+
+        // Necessary to update the view centre.
+        you.moveto(you.pos());
     }
+    crawl_view.set_player_at(you.pos(), true);
+
     return !is_controlled;
 }
 

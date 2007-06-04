@@ -56,6 +56,11 @@ struct dgn_region
         return dgn_region(left, top, right - left + 1, bottom - top + 1);
     }
 
+    static dgn_region absolute(const coord_def &c1, const coord_def &c2)
+    {
+        return dgn_region(c1.x, c1.y, c2.x, c2.y);
+    }
+
     static bool between(int val, int low, int high)
     {
         return (val >= low && val <= high);
@@ -63,8 +68,13 @@ struct dgn_region
 
     bool contains(const coord_def &p) const
     {
-        return (p.x >= pos.x && p.x < pos.x + size.x
-                && p.y >= pos.y && p.y < pos.y + size.y);
+        return contains(p.x, p.y);
+    }
+
+    bool contains(int xp, int yp) const
+    {
+        return (xp >= pos.x && xp < pos.x + size.x
+                && yp >= pos.y && yp < pos.y + size.y);
     }
     
     bool fully_contains(const coord_def &p) const

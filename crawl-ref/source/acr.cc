@@ -894,7 +894,8 @@ static void input()
 
     handle_delay();
 
-    gotoxy(VIEW_CX, VIEW_CY);
+    const coord_def cwhere = grid2view(you.pos());
+    gotoxy(cwhere.x, cwhere.y);
 
     if ( you_are_delayed() )
     {
@@ -1127,6 +1128,7 @@ void process_command( command_type cmd )
         {
             mpr("Clearing level map.");
             clear_map();
+            crawl_view.set_player_at(you.pos(), true);
         }
         break;
 
@@ -1347,6 +1349,7 @@ void process_command( command_type cmd )
 #endif
         plox[0] = 0;
         show_map(plox, true);
+        crawl_view.set_player_at(you.pos(), true);
         redraw_screen();
         if (plox[0] > 0)
             start_travel(plox[0], plox[1]);
@@ -1450,7 +1453,7 @@ void process_command( command_type cmd )
 #endif
 
     case CMD_SAVE_GAME:
-        if (yesno("Save game and exit?", true, 'n'))
+        if (yesno("Save game and exit? ", true, 'n'))
             save_game(true);
         break;
 

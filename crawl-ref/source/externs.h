@@ -277,19 +277,30 @@ struct coord_def
         y -= other.y;
         return (*this);
     }
+
+    const coord_def &operator /= (int div)
+    {
+        x /= div;
+        y /= div;
+        return (*this);
+    }
     
     coord_def operator + (const coord_def &other) const
     {
         coord_def copy = *this;
-        copy += other;
-        return (copy);
+        return (copy += other);
     }
 
     coord_def operator - (const coord_def &other) const
     {
         coord_def copy = *this;
-        copy -= other;
-        return (copy);
+        return (copy -= other);
+    }
+
+    coord_def operator / (int div) const
+    {
+        coord_def copy = *this;
+        return (copy /= div);
     }
 
     int abs() const
@@ -756,6 +767,11 @@ public:
     bool operator < (const player &p) const;
 
 public:
+    // Low-level move the player to (x, y). Use these functions instead of
+    // changing x_pos and y_pos directly.
+    void moveto(int x, int y);
+    void moveto(const coord_def &c);
+    
     bool in_water() const;
     bool can_swim() const;
     bool is_levitating() const;
@@ -1141,8 +1157,10 @@ struct crawl_environment
     FixedArray< unsigned short, GXM, GYM >    map;    // discovered terrain
     FixedArray< map_colour, GXM, GYM >        map_col; // map colours
 
-    FixedArray< unsigned int, 19, 19>        show;      // view window char 
-    FixedArray< unsigned short, 19, 19>      show_col;  // view window colour
+    FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+                                             show;      // view window char 
+    FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+                                             show_col;  // view window colour
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     unsigned char cloud_no;
@@ -1226,6 +1244,72 @@ struct system_environment
 };
 
 extern system_environment SysEnv;
+
+struct crawl_view_geometry
+{
+public:
+    coord_def termsz;              // Size of the terminal.
+    coord_def viewp;               // Left-top pos of viewport.
+    coord_def viewsz;              // Size of the viewport (play area).
+    coord_def hudp;                // Left-top pos of status area.
+    coord_def hudsz;               // Size of the status area.
+    coord_def msgp;                // Left-top pos of the message pane.
+    coord_def msgsz;               // Size of the message pane.
+
+    coord_def vgrdc;               // What grid pos is at the centre of the view
+                                   // usually you.pos().
+
+    coord_def viewhalfsz;
+
+    coord_def glos1, glos2;        // LOS limit grid coords (inclusive)
+    coord_def vlos1, vlos2;        // LOS limit viewport coords (inclusive)
+
+    static const int message_min_lines = 7;
+    static const int hud_min_width  = 41;
+    static const int hud_min_gutter = 3;
+    static const int hud_max_gutter = 6;
+
+private:
+    coord_def last_player_pos;
+    
+public:
+    crawl_view_geometry();
+    void init_geometry();
+
+    void init_view();
+    void set_player_at(const coord_def &c, bool force_centre = false);
+
+    coord_def view_centre() const
+    {
+        return viewp + viewhalfsz;
+    }
+
+    bool in_grid_los(const coord_def &c) const
+    {
+        return (c.x >= glos1.x && c.x <= glos2.x
+                && c.y >= glos1.y && c.y <= glos2.y);
+    }
+
+    bool in_view_los(const coord_def &c) const
+    {
+        return (c.x >= vlos1.x && c.x <= vlos2.x
+                && c.y >= vlos1.y && c.y <= vlos2.y);
+    }
+
+    bool in_view_viewport(const coord_def &c) const
+    {
+        return (c.x >= viewp.x && c.y >= viewp.y
+                && c.x < viewp.x + viewsz.x
+                && c.y < viewp.y + viewsz.y);
+    }
+
+    bool in_grid_viewport(const coord_def &c) const
+    {
+        return in_view_viewport(c - vgrdc + view_centre());
+    }
+};
+
+extern crawl_view_geometry crawl_view;
 
 struct message_filter
 {
@@ -1348,6 +1432,26 @@ public:
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
 #endif
+
+    int         view_max_width;
+    int         view_max_height;
+
+    // The view lock variables force centering the viewport around the PC @
+    // at all times (the default). If view locking is not enabled, the viewport
+    // scrolls only when the PC hits the edge of it.
+    bool        view_lock_x;
+    bool        view_lock_y;
+
+    // For an unlocked viewport, this will center the viewport when scrolling.
+    bool        center_on_scroll;
+
+    // If symmetric_scroll is set, for diagonal moves, if the view
+    // scrolls at all, it'll scroll diagonally.
+    bool        symmetric_scroll;
+
+    // How far from the viewport edge is scrolling forced.
+    int         scroll_margin_x;
+    int         scroll_margin_y;
 
     bool        autopickup_on;
     bool        autoprayer_on;
