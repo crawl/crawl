@@ -843,6 +843,7 @@ static void handle_run_delays(const delay_queue_item &delay)
     }
 
     if (you.running && !you.turn_is_over
+        && you_are_delayed()
         && !is_run_delay(current_delay_action()))
     {
         handle_delay();
