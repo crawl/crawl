@@ -1478,7 +1478,7 @@ std::string str_monam(const monsters& mon, description_level_type desc,
     // Vowel fix: Change 'a orc' to 'an orc'
     if ( result.length() >= 3 &&
          (result[0] == 'a' || result[0] == 'A') &&
-         isblank(result[1]) &&
+         result[1] == ' ' &&
          is_vowel(result[2]) )
     {
         result.insert(1, "n");
@@ -1508,7 +1508,7 @@ std::string mons_type_name(int type, description_level_type desc )
     // Vowel fix: Change 'a orc' to 'an orc'
     if ( result.length() >= 3 &&
          (result[0] == 'a' || result[0] == 'A') &&
-         isblank(result[1]) &&
+         result[1] == ' ' &&
          is_vowel(result[2]) )
     {
         result.insert(1, "n");
