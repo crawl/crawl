@@ -3382,7 +3382,9 @@ static void monster_regenerate(monsters *monster)
         
         || (monster->type == MONS_FIRE_ELEMENTAL 
             && (grd[monster->x][monster->y] == DNGN_LAVA
-                || env.cgrid[monster->x][monster->y] == CLOUD_FIRE))
+                || (env.cgrid(monster->pos()) != EMPTY_CLOUD
+                    && env.cloud[env.cgrid(monster->pos())].type
+                       == CLOUD_FIRE)))
 
         || (monster->type == MONS_WATER_ELEMENTAL 
             && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
