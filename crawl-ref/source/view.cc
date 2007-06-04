@@ -3276,7 +3276,7 @@ void init_feature_table( void )
             Feature[i].symbol = Options.char_table[ DCHAR_STAIRS_DOWN ];
             Feature[i].notable = true;
             Feature[i].map_colour = RED;
-            Feature[i].seen_colour = LIGHTRED;
+            Feature[i].seen_colour = YELLOW;
             break;
 
         case DNGN_ENTER_ZOT:
@@ -3305,8 +3305,8 @@ void init_feature_table( void )
         case DNGN_RETURN_RESERVED_4:
             Feature[i].colour = YELLOW;
             Feature[i].symbol = Options.char_table[ DCHAR_STAIRS_UP ];
-            Feature[i].map_colour = BLUE;
-            Feature[i].seen_colour = LIGHTBLUE;
+            Feature[i].map_colour  = GREEN;
+            Feature[i].seen_colour = YELLOW;
             break;
 
         case DNGN_RETURN_FROM_ZOT:
