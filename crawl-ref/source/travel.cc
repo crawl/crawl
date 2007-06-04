@@ -2927,9 +2927,9 @@ void LevelInfo::load(FILE *file)
             travel_hell_entry = si.destination;
     }
 
+    stair_distances.clear();
     if (stair_count)
     {
-        stair_distances.clear();
         stair_distances.reserve(stair_count * stair_count);
         for (int i = stair_count * stair_count - 1; i >= 0; --i)
             stair_distances.push_back( readShort(file) );
@@ -3145,10 +3145,18 @@ void TravelCache::save(FILE *file) const
     writeByte(file, TC_MAJOR_VERSION);
     writeByte(file, TC_MINOR_VERSION);
 
-    // How many levels do we have?
-    writeShort(file, levels.size());
+    int level_count = 0;
+    for (travel_levels_map::const_iterator i = levels.begin();
+         i != levels.end(); ++i)
+    {
+        if (i->first.level_type == LEVEL_DUNGEON)
+            ++level_count;
+    }
+    
+    // Write level count:
+    writeShort(file, level_count);
 
-    // Save all the levels we have
+    // Save all the LEVEL_DUNGEON levels we have
     std::map<level_id, LevelInfo>::const_iterator i =
                 levels.begin();
     for ( ; i != levels.end(); ++i)
@@ -3174,7 +3182,8 @@ void TravelCache::load(FILE *file)
     // Check version. If not compatible, we just ignore the file altogether.
     unsigned char major = readByte(file),
                   minor = readByte(file);
-    if (major != TC_MAJOR_VERSION || minor != TC_MINOR_VERSION) return ;
+    if (major != TC_MAJOR_VERSION || minor != TC_MINOR_VERSION)
+        return ;
 
     int level_count = readShort(file);
     for (int i = 0; i < level_count; ++i)
