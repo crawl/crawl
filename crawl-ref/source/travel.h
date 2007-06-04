@@ -447,7 +447,8 @@ private:
     void fixup_levels();
 
 private:
-    std::map<level_id, LevelInfo> levels;
+    typedef std::map<level_id, LevelInfo> travel_levels_map;
+    travel_levels_map levels;
     level_pos waypoints[TRAVEL_WAYPOINT_COUNT];
 };
 
