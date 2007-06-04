@@ -811,7 +811,7 @@ static void handle_run_delays(const delay_queue_item &delay)
         return;
     }
 
-    if ( you.turn_is_over )
+    if (you.turn_is_over)
         return;
 
     command_type cmd = CMD_NO_CMD;
@@ -840,6 +840,12 @@ static void handle_run_delays(const delay_queue_item &delay)
     {
         pop_delay();
         update_turn_count();
+    }
+
+    if (you.running && !you.turn_is_over
+        && !is_run_delay(current_delay_action()))
+    {
+        handle_delay();
     }
 }
 
