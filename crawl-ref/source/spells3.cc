@@ -696,7 +696,6 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
         // Necessary to update the view centre.
         you.moveto(you.pos());
     }
-    crawl_view.set_player_at(you.pos(), true);
 
     return !is_controlled;
 }

@@ -1349,7 +1349,6 @@ void process_command( command_type cmd )
 #endif
         plox[0] = 0;
         show_map(plox, true);
-        crawl_view.set_player_at(you.pos(), true);
         redraw_screen();
         if (plox[0] > 0)
             start_travel(plox[0], plox[1]);
