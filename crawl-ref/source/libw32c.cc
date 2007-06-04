@@ -57,12 +57,7 @@
 
 #include <excpt.h>
 #include <stdarg.h>
-#include <windef.h>
-#include <winbase.h>
-#include <wingdi.h>
-#include <winuser.h>
-#include <winnls.h>
-#include <wincon.h>
+#include <windows.h>
 
 // END -- WINDOWS INCLUDES
 
@@ -75,6 +70,7 @@
 #include "AppHdr.h"
 #include "version.h"
 #include "defines.h"
+#include "stuff.h"
 #include "view.h"
 #include "libutil.h"
 
@@ -92,9 +88,9 @@ static int cx=0, cy=0;
 //static FILE *foo = NULL;  //DEBUG
 
 // and now, for the screen buffer
-static CHAR_INFO screen[80 * WIN_NUMBER_OF_LINES];
+static CHAR_INFO *screen = NULL;
 static COORD screensize;
-#define SCREENINDEX(x,y) (x)+80*(y)
+#define SCREENINDEX(x,y) ((x)+screensize.X*(y))
 static bool buffering = false;
 // static const char *windowTitle = "Crawl " VERSION;
 static unsigned InputCP, OutputCP;
@@ -253,7 +249,7 @@ void writeChar(char c)
 
    // update x position
    cx += 1;
-   if (cx >= 80) cx = 80;
+   if (cx >= screensize.X) cx = screensize.X;
 }
 
 void enable_smart_cursor(bool cursor)
@@ -383,9 +379,21 @@ void init_libw32c(void)
    }
 
    // set up screen size
-   screensize.X = 80;
-   screensize.Y = get_number_of_lines();
 
+   CONSOLE_SCREEN_BUFFER_INFO cinf;
+   if (::GetConsoleScreenBufferInfo(outbuf, &cinf))
+   {
+       screensize.X = cinf.srWindow.Right - cinf.srWindow.Left + 1;
+       screensize.Y = cinf.srWindow.Bottom - cinf.srWindow.Top + 1;
+   }
+   else
+   {
+       screensize.X = 80;
+       screensize.Y = 25;
+   }
+
+   screen = new CHAR_INFO[screensize.X * screensize.Y];
+   
    // initialise text color
    textcolor(DARKGREY);
 
@@ -397,7 +405,6 @@ void init_libw32c(void)
 
    //DEBUG
    //foo = fopen("debug.txt", "w");
-
 
    // JWM, 06/12/2004: Code page setting, as XP does not use ANSI 437 by
    // default.
@@ -435,6 +442,9 @@ void deinit_libw32c(void)
    _setcursortype_internal(true);
    textcolor(DARKGREY);
 
+   delete [] screen;
+   screen = NULL;
+   
    // finally, restore title
    SetConsoleTitle( oldTitle );
 }
@@ -485,13 +495,11 @@ void clrscr(void)
    COORD source;
    SMALL_RECT target;
 
-   const int num_lines = get_number_of_lines();
-
    PCHAR_INFO pci = screen;
 
-   for(x=0; x<80; x++)
+   for(x = 0; x < screensize.X; x++)
    {
-      for(y=0; y<num_lines; y++)
+      for(y = 0; y < screensize.Y; y++)
       {
          pci->Char.AsciiChar = ' ';
          pci->Attributes = 0;
@@ -503,8 +511,8 @@ void clrscr(void)
    source.Y = 0;
    target.Left = 0;
    target.Top = 0;
-   target.Right = 79;
-   target.Bottom = num_lines - 1;
+   target.Right = screensize.X - 1;
+   target.Bottom = screensize.Y - 1;
 
    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
 
@@ -514,24 +522,22 @@ void clrscr(void)
 
 void gotoxy(int x, int y)
 {
-   const int num_lines = get_number_of_lines();
-
    // always flush on goto
    bFlush();
 
    // bounds check
-   if (x<1)
-      x=1;
-   if (x>80)
-      x=80;
-   if (y<1)
-      y=1;
-   if (y>num_lines)
-      y=num_lines;
+   if (x < 1)
+      x = 1;
+   if (x > screensize.X)
+      x = screensize.X;
+   if (y < 1)
+      y = 1;
+   if (y > screensize.Y)
+      y = screensize.Y;
 
    // change current cursor
-   cx = x-1;
-   cy = y-1;
+   cx = x - 1;
+   cy = y - 1;
 
    // if cursor is not NOCURSOR, update screen
    if (cursor_is_enabled)
@@ -561,8 +567,7 @@ void clear_message_window()
 {
    PCHAR_INFO pci = screen + SCREENINDEX(crawl_view.msgp.x - 1,
                                          crawl_view.msgp.y - 1);
-   const int ncols = get_number_of_cols();
-   for (int x = 0; x < ncols; x++)
+   for (int x = 0; x < screensize.X; x++)
    {
       for (int y = 0; y < crawl_view.msgsz.y; y++)
       {
@@ -579,8 +584,8 @@ void clear_message_window()
    source.Y = crawl_view.msgp.y - 1;
    target.Left = crawl_view.msgp.x - 1;
    target.Top = crawl_view.msgp.y - 1;
-   target.Right = get_number_of_cols() - 1;
-   target.Bottom = get_number_of_lines() - 1;
+   target.Right = screensize.X - 1;
+   target.Bottom = screensize.Y - 1;
 
    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
 }
@@ -589,7 +594,7 @@ static void scroll_message_buffer()
 {
     memmove( screen + SCREENINDEX(crawl_view.msgp.x - 1, crawl_view.msgp.y - 1),
              screen + SCREENINDEX(crawl_view.msgp.x - 1, crawl_view.msgp.y),
-             crawl_view.msgsz.y * get_number_of_cols() * sizeof(*screen) );
+             crawl_view.msgsz.y * screensize.X * sizeof(*screen) );
 }
 
 static void scroll_message_window()
@@ -597,8 +602,8 @@ static void scroll_message_window()
     SMALL_RECT scroll_rectangle, clip_rectangle;
     scroll_rectangle.Left   = crawl_view.msgp.x - 1;
     scroll_rectangle.Top    = crawl_view.msgp.y;
-    scroll_rectangle.Right  = get_number_of_cols() - 1;
-    scroll_rectangle.Bottom = get_number_of_lines() - 1;
+    scroll_rectangle.Right  = screensize.X - 1;
+    scroll_rectangle.Bottom = screensize.Y - 1;
 
     clip_rectangle          = scroll_rectangle;
     clip_rectangle.Top      = crawl_view.msgp.y - 1;
@@ -618,7 +623,7 @@ static void scroll_message_window()
     scroll_message_buffer();
 
     // Cursor also scrolls up so prompts don't look brain-damaged.
-    if (wherey() == get_number_of_lines())
+    if (wherey() == screensize.Y)
         gotoxy(wherex(), wherey() - 1);
 }
 
@@ -628,13 +633,13 @@ void message_out(int which_line, int colour, const char *s, int firstcol,
     if (!firstcol)
         firstcol = Options.delay_message_clear? 2 : 1;
 
-    gotoxy(firstcol - 1 + crawl_view.viewp.x,
-           which_line + crawl_view.viewp.y);
+    gotoxy(firstcol - 1 + crawl_view.msgp.x,
+           which_line + crawl_view.msgp.y);
     textcolor(colour);
 
     cprintf("%s", s);
 
-    if (newline && which_line == get_message_window_height() - 1)
+    if (newline && which_line == crawl_view.msgsz.y - 1)
         scroll_message_window();
 }
 
@@ -972,12 +977,12 @@ bool setBuffering( bool value )
 
 int get_number_of_lines()
 {
-    return (25);
+    return (screensize.Y);
 }
 
 int get_number_of_cols()
 {
-    return (80);
+    return (screensize.X);
 }
 
 #endif /* #if defined(WIN32CONSOLE) */

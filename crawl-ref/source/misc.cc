@@ -1143,7 +1143,7 @@ void new_level(void)
 {
     textcolor(LIGHTGREY);
 
-    gotoxy(46, 12);
+    gotoxy(crawl_view.hudp.x + 6, 12);
 
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );

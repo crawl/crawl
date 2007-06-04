@@ -5,8 +5,6 @@
 #ifndef LIBW32C_H
 #define LIBW32C_H
 
-#define WIN_NUMBER_OF_LINES     25
-
 #include <string>
 #include <stdarg.h>
 

@@ -126,6 +126,7 @@ ifneq ($(OPATH),$(INSTALLDIR))
 endif
 		mkdir $(INSTALLDIR)\dat 2>nul || echo "" >nul
 		copy /y dat\*.des $(INSTALLDIR)\dat
+		copy /y dat\*.txt $(INSTALLDIR)\dat
 		copy /y ..\init.txt $(INSTALLDIR)
 
 clean:
