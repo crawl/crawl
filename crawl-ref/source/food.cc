@@ -162,14 +162,6 @@ static bool find_butchering_implement()
         {
             mpr("Switching to a butchering implement.");
             wield_weapon( true, i, false );
-
-            // Account for the weapon switch...we're doing this here
-            // since the above switch may reveal information about the
-            // weapon (curse status, ego type).  So even if the
-            // character fails to or decides not to butcher past this
-            // point, they have achieved something and there should be
-            // a cost.
-            start_delay( DELAY_UNINTERRUPTIBLE, 1 );
             return true;
         }
     }
@@ -226,7 +218,8 @@ bool butchery(void)
     // It makes more sense that you first find out if there's anything
     // to butcher, *then* decide to actually butcher it.
     // The old code did it the other way.
-    if ( !can_butcher && you.berserker ) {
+    if ( !can_butcher && you.berserker )
+    {
         mpr ("You are too berserk to search for a butchering knife!");
         return (false);
     }
@@ -309,7 +302,12 @@ bool butchery(void)
             }
             else
             {
-                int work_req = 4 - (++mitm[objl].plus2);
+                // If we didn't switch weapons, we get in one turn of butchery;
+                // otherwise the work has to happen in the delay.
+                if (!wpn_switch)
+                    ++mitm[objl].plus2;
+                
+                int work_req = 4 - mitm[objl].plus2;
                 if (work_req < 0)
                     work_req = 0;
 
@@ -327,8 +325,7 @@ bool butchery(void)
         if (!new_cursed && wpn_switch)
             start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
 
-        you.turn_is_over = true;
-    
+        you.turn_is_over = true;    
         return true;
     }
 
