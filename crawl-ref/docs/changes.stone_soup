@@ -1,3 +1,18 @@
+Stone Soup 0.2.6 (20070606)
+---------------------------
+* Fixed travel cache corruption when visiting Abyss/Lab/Pan.
+* Fixed clouds being hidden by submerged monsters.
+* Fixed bogus item flags being set on distilled potions.
+* Fixed kenku getting permanent levitation if already levitating when
+  levelling up to XL 15.
+* Fixed special damage messages being produced for monster vs monster fights
+  that are not in LOS.
+* Fixed monsters not being shown on the view until one turn after being
+  generated.
+* Removed "You mutate" messages, changed default colour for mutation channel
+  to light red.
+* Delays were taking more turns than intended, fixed.
+
 Stone Soup 0.2.5 (20070512)
 ---------------------------
 * Fixed broken travel cache.
