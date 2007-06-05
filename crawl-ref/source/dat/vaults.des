@@ -71,75 +71,6 @@ xxxxxxxxxxxRxxxxxxxxxxxxxxxxWxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Wet chambers - two mutually exclusive versions (Onia Ninara)
-#
-NAME:    onia_ninara_007_chamber_of_wet_secrets
-ORIENT:  float
-TAGS:    no_monster_gen no_pool_fixup
-MONS:    centaur, brown snake, electrical eel
-ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
-SUBST:   ; = .:60 w W ?
-KFEAT:   ? = spear trap / blade trap / w:20 floor
-DEPTH:   8-13
-MAP
-.ccccccc.
-.c;;2Wdc.
-.ccWccec.
-.c;w;c3c.
-.c;wWccc.
-.cWw;w;c.
-.c;ww;cc.
-.c;w;Wwc.
-.c1wW;wc.
-.c$w?wTc.
-.ccc=ccc.
-.........
-ENDMAP
-
-NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
-ORIENT:  float
-TAGS:    no_monster_gen no_pool_fixup
-MONS:    yaktaur captain, grey snake/yellow snake, storm dragon
-ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
-ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds
-SUBST:   ; = .:60 w W ?
-KFEAT:   ? = Zot trap / floor
-SHUFFLE: de
-DEPTH:   20-26
-MAP
-.ccccccc.
-.c;;2Wdc.
-.ccWcc|c.
-.c;w;c3c.
-.c;wWccc.
-.cWw?w;c.
-.c;ww;cc.
-.c;w;Wwc.
-.c1wW;wc.
-.c$w?wUc.
-.ccc=ccc.
-.........
-ENDMAP
-
-##############################################################################
-# Loot vs monsters (Onia Ninara)
-#
-NAME:    onia_ninara_009_dug_in_and_dangerous
-ORIENT:  float
-DEPTH:   8-26
-SHUFFLE: vcb
-SUBST:   ? = %:90 *:30 |
-MAP
-...........
-.vvGvvvGvv.
-.v1119111v.
-.xxxxxxxxx.
-.v???v???v.
-.vvGvvvGvv.
-.....@.....
-ENDMAP
-
-##############################################################################
 # Rubicon
 #
 NAME:    erik_rubicon_a
@@ -2153,6 +2084,74 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .............................
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .............................
+ENDMAP
+
+##############################################################################
+# Wet chambers - two mutually exclusive versions (Onia Ninara)
+#
+NAME:    onia_ninara_007_chamber_of_wet_secrets
+TAGS:    no_monster_gen no_pool_fixup
+MONS:    centaur, brown snake, electrical eel
+ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
+SUBST:   ; = .:60 w W ?
+KFEAT:   ? = spear trap / blade trap / w:20 floor
+DEPTH:   8-13
+MAP
+.........
+.ccccccc.
+.c;;2Wdc.
+.ccWccec.
+.c;w;c3c.
+.c;wWccc.
+.cWw;w;c.
+.c;ww;cc.
+.c;w;Wwc.
+.c1wW;wc.
+.c$w?wTc.
+.ccc=ccc.
+.........
+ENDMAP
+
+NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
+TAGS:    no_monster_gen no_pool_fixup
+MONS:    yaktaur captain, grey snake/yellow snake, storm dragon
+ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
+ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds
+SUBST:   ; = .:60 w W ?
+KFEAT:   ? = Zot trap / floor
+SHUFFLE: de
+DEPTH:   20-26
+MAP
+.........
+.ccccccc.
+.c;;2Wdc.
+.ccWcc|c.
+.c;w;c3c.
+.c;wWccc.
+.cWw?w;c.
+.c;ww;cc.
+.c;w;Wwc.
+.c1wW;wc.
+.c$w?wUc.
+.ccc=ccc.
+.........
+ENDMAP
+
+##############################################################################
+# Loot vs monsters (Onia Ninara)
+#
+NAME:    onia_ninara_009_dug_in_and_dangerous
+DEPTH:   8-26
+SHUFFLE: vcb
+SUBST:   ? = %:90 *:30 |
+MAP
+...........
+.vvGvvvGvv.
+.v1119111v.
+.xxxxxxxxx.
+.v???v???v.
+.vvGvvvGvv.
+.....@.....
 ENDMAP
 
 #############################################################################
