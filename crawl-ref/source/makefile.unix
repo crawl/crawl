@@ -87,7 +87,7 @@ LIB = -lncurses -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
 CFWARN := -Wall -Wwrite-strings \
-	-Wshadow -Wconversion -pedantic
+	-Wshadow -pedantic
 
 CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS)
 
