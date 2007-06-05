@@ -1180,7 +1180,7 @@ bool mutate(int which_mutation, bool failMsg)
         if ((!wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
                 || one_chance_in(10))
         {
-            mpr( "Your body decomposes!" );
+            mpr( "Your body decomposes!", MSGCH_MUTATION );
 
             if (coinflip())
                 lose_stat( STAT_RANDOM, 1 );
@@ -1194,7 +1194,7 @@ bool mutate(int which_mutation, bool failMsg)
         }
 
         if (failMsg)
-            mpr("You feel odd for a moment.");
+            mpr("You feel odd for a moment.", MSGCH_MUTATION);
 
         return (false);
     }
@@ -1203,7 +1203,7 @@ bool mutate(int which_mutation, bool failMsg)
         && !force_mutation && !one_chance_in(10))
     {
         if (failMsg)
-            mpr("You feel odd for a moment.");
+            mpr("You feel odd for a moment.", MSGCH_MUTATION);
 
         return (false);
     }
@@ -1213,7 +1213,7 @@ bool mutate(int which_mutation, bool failMsg)
         && (you.mutation[MUT_MUTATION_RESISTANCE] == 3 || !one_chance_in(3)))
     {
         if (failMsg)
-            mpr("You feel odd for a moment.");
+            mpr("You feel odd for a moment.", MSGCH_MUTATION);
 
         return (false);
     }
@@ -1320,9 +1320,6 @@ bool mutate(int which_mutation, bool failMsg)
 
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
         return false;
-
-    //jmf: added some checks for new mutations
-    mpr("You mutate.", MSGCH_MUTATION);
 
     // find where these things are actually changed
     // -- do not globally force redraw {dlb}
@@ -1649,7 +1646,7 @@ bool delete_mutation(int which_mutation)
     if (you.mutation[MUT_MUTATION_RESISTANCE] > 1
         && (you.mutation[MUT_MUTATION_RESISTANCE] == 3 || coinflip()))
     {
-        mpr("You feel rather odd for a moment.");
+        mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
         return false;
     }
 
@@ -1673,8 +1670,6 @@ bool delete_mutation(int which_mutation)
 
     if (you.demon_pow[mutat] >= you.mutation[mutat])
         return false;
-
-    mpr("You mutate.", MSGCH_MUTATION);
 
     switch (mutat)
     {

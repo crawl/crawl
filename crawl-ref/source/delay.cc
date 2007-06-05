@@ -144,6 +144,11 @@ void stop_delay( void )
 
     delay_queue_item delay = you.delay_queue.front(); 
 
+    const bool butcher_swap_warn =
+        delay.type == DELAY_BUTCHER
+        && (you.delay_queue.size() >= 2
+            && you.delay_queue[1].type == DELAY_WEAPON_SWAP);
+    
     // At the very least we can remove any queued delays, right 
     // now there is no problem with doing this... note that
     // any queuing here can only happen from a single command,
@@ -156,7 +161,12 @@ void stop_delay( void )
     {
     case DELAY_BUTCHER:
         // Corpse keeps track of work in plus2 field, see handle_delay() -- bwr
-        mpr( "You stop butchering the corpse." );
+        if (butcher_swap_warn)
+            mpr("You stop butchering the corpse; not switching back to "
+                "primary weapon.",
+                MSGCH_WARN);
+        else
+            mpr( "You stop butchering the corpse." );
         pop_delay();
         break;
 
@@ -320,7 +330,8 @@ void handle_delay( void )
         {
             // special < 100 is the rottenness check
             if ( (mitm[delay.parm1].special < 100) &&
-                 (delay.parm2 >= 100) ) {
+                 (delay.parm2 >= 100) )
+            {
                 mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
                 delay.parm2 = 99; // don't give the message twice
             }
@@ -330,9 +341,10 @@ void handle_delay( void )
         }
         else
         {
-            // corpse is no longer valid!
-            stop_delay();
-            return;
+            // corpse is no longer valid! End the butchering normally
+            // instead of using stop_delay() so that the player switches
+            // back to their main weapon if necessary.
+            delay.duration = 0;
         }
     }
     if ( delay.type == DELAY_MULTIDROP )
@@ -545,19 +557,28 @@ static void finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_BUTCHER:
-        snprintf(info, INFO_SIZE, "You finish %s the corpse into pieces.",
-                 (you.species == SP_TROLL ||
-                  you.species == SP_GHOUL) ? "ripping" : "chopping" );
-        mpr(info);
-
-        turn_corpse_into_chunks( mitm[ delay.parm1 ] );
-
-        if (you.berserker && you.berserk_penalty != NO_BERSERK_PENALTY)
+    {
+        const item_def &item = mitm[delay.parm1];
+        if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
-            mpr("You enjoyed that.");
-            you.berserk_penalty = 0;
+            mprf("You finish %s the corpse into pieces.",
+                 (you.species==SP_TROLL || you.species == SP_GHOUL) ? "ripping"
+                 : "chopping");
+
+            turn_corpse_into_chunks( mitm[ delay.parm1 ] );
+
+            if (you.berserker && you.berserk_penalty != NO_BERSERK_PENALTY)
+            {
+                mpr("You enjoyed that.");
+                you.berserk_penalty = 0;
+            }
+        }
+        else
+        {
+            mpr("You stop butchering the corpse.");
         }
         break;
+    }
 
     case DELAY_DROP_ITEM:
         // Note:  checking if item is droppable is assumed to 
@@ -617,8 +638,10 @@ static void finish_delay(const delay_queue_item &delay)
 
     you.wield_change = true;
     print_stats();  // force redraw of the stats
-    you.turn_is_over = true;
     pop_delay();
+
+    // Chain onto the next delay.
+    handle_delay();
 }
 
 static void armour_wear_effects(const int item_slot)
@@ -799,7 +822,7 @@ static void handle_run_delays(const delay_queue_item &delay)
         return;
     }
 
-    if ( you.turn_is_over )
+    if (you.turn_is_over)
         return;
 
     command_type cmd = CMD_NO_CMD;
@@ -828,6 +851,13 @@ static void handle_run_delays(const delay_queue_item &delay)
     {
         pop_delay();
         update_turn_count();
+    }
+
+    if (you.running && !you.turn_is_over
+        && you_are_delayed()
+        && !is_run_delay(current_delay_action()))
+    {
+        handle_delay();
     }
 }
 

@@ -2761,7 +2761,14 @@ void level_change(void)
                 if (you.experience_level == 5)
                     mpr("You have gained the ability to fly.", MSGCH_INTRINSIC_GAIN);
                 else if (you.experience_level == 15)
+                {
                     mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                    if (you.levitation)
+                    {
+                        you.levitation = 100;
+                        you.duration[DUR_CONTROLLED_FLIGHT] = 100;
+                    }
+                }
                 break;
 
             case SP_MERFOLK:
