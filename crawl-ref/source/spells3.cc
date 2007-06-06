@@ -1058,7 +1058,7 @@ int portal(void)
 
         you.your_level = target_level - 1;
 
-        down_stairs( true, old_level, DNGN_STONE_STAIRS_DOWN_I );
+        down_stairs( old_level, DNGN_STONE_STAIRS_DOWN_I );
         untag_followers();
     }
 

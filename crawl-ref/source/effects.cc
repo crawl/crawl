@@ -153,7 +153,7 @@ void banished(int gate_type, const std::string &who)
         take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
     }
 
-    down_stairs(true, you.your_level, gate_type);  // heh heh
+    down_stairs(you.your_level, gate_type);  // heh heh
     untag_followers(); // safety
 
     if (gate_type == DNGN_ENTER_ABYSS || gate_type == DNGN_ENTER_PANDEMONIUM)

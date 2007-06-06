@@ -609,7 +609,7 @@ static void finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_DESCENDING_STAIRS:
-        down_stairs( false, delay.parm1 );
+        down_stairs( delay.parm1 );
         untag_followers();
         break;
 
