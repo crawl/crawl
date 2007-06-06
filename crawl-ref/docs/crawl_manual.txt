@@ -1973,14 +1973,17 @@ Movement:
     or  / direction     is found (like a monster).
         Ctrl-G          Interlevel travel (to arbitrary dungeon levels 
                         or waypoints). Remembers old destinations if 
-                        interrupted.
+                        interrupted. This command has its own set of
+                        shortcuts; use ? to get help on them.
         Ctrl-O          Auto-explore. Setting the option explore_greedy 
                         to true makes Ctrl-O also run to interesting 
                         items (those that get picked up automatically) 
                         or piles (checking the contents). 
                         Autoexploration will open doors on its own 
                         except if you set easy_open to false.
-        Ctrl-W          Set waypoint (check the option show_waypoints).
+        Ctrl-W          Set waypoint (a digit between 0 and 9). Check 
+                        the option show_waypoints. You can go to a
+                        waypoint by pressing Ctrl-G and the digit.
 
 Resting and Searching:
         s, Del          Rests and searches (these are the same) for one 
@@ -2079,9 +2082,17 @@ In-game toggles:
                         if you are using autoprayer.)
 
 Stashes:
-        Ctrl-F          Find (this searches in stashes and shops, you 
+        Ctrl-F          Find. This searches in stashes and shops, you 
                         can use regular expressions and also terms like
-                        'long blades', 'shop', 'altar', 'artifacts').
+                        'long blades', 'shop', 'altar', 'artifact'.
+                        If you are looking for altars to a special god,
+                        a seach for 'Trog' etc. works. If all items are
+                        stashed (the default), then a string like 'D:13'
+                        will list all known items on that level.
+                        Once the list of all found places is displayed,
+                        you can cause auto-travel to go there (press the
+                        associated letter) or you can examine the items
+                        (press ? followed by the letter).
         Ctrl-S          Mark stash (this is only necessary with option
                         'stash_tracking = explicit').
         Ctrl-E          Erase stash (ignores the square from stash 
@@ -2090,7 +2101,9 @@ Stashes:
 Level map ('X')
 ---------------
 The level map (brought up by 'X' in the main screen) uses the whole 
-screen to show the dungeon.
+screen to show the dungeon. The first line of that screen usually gives
+the name of the level and a hint on the help screen. You can use the
+level_map_title option to get rid of that.
         Esc, Space      Leave level map.
         ?               Level map help.
         -               Scroll level map up
@@ -2133,21 +2146,16 @@ also examine stashed items outside current view using the option
 target_oos = true (if using this, check the option target_los_first).
         x, Esc, Space   Return to playing mode.
         ?               Special help screen.
-        *               Cycle objects forward.
+        * or '          Cycle objects forward.
         / or ;          Cycle objects backward.
         + or =          Cycle monsters forward.
         -               Cycle monsters backward.
         direction       Move cursor.
         . or Enter      Travel to cursor (also Del).
-        v               Describe monster under cursor (and shows the
-                        monster's weapons, wounding and enchantments).
+        v               Describe feature or monster under cursor.
         >               Cycle downstairs.
         <               Cycle upstairs.
         _               Cycle through altars.
-        *               Cycle forwards through stashes (if the option
-                        stash_tracking is set to all, this cycles 
-                        through all items and piles).
-        /               Cycles backward through stashes.
         Tab             Cycle shops and portals.
 
 Targeting
@@ -2159,16 +2167,26 @@ work, with the exception of Space (which fires).
         Esc or x        Stop targeting.
         ?               Special help screen.
         . or Enter      Fire at cursor direction (also Del and Space).
-        !               Fires at cursor position, and stops there. This 
-                        can be useful to avoid damaging pets, or to 
-                        attack submerged water creatures.
-        p or t or f     Fire at previous target (if still in sight).
-        Ctrl-F          Toggle target modes (between enemies, all, 
+        !               Fires at cursor position, and stops there with 
+                        slighty reduced impact. This can be useful to 
+                        avoid damaging pets, or to attack submerged 
+                        water creatures. 
+        p               Fires at previous target (if still in sight).
+        f or t          Smart-firing: fires at previous target, if it is
+                        still in sight; and else fires at the cursor 
+                        position. Together with the default_target (which
+                        is on by default) this allows to start shooting
+                        at an opponent with 'ff' and then keep firing 
+                        with 'ff'.
+        :               Toggles display of the beam path.    
+        Ctrl-F          Toggles target modes (between enemies, all, 
                         friends; see also option target_zero_exp).
      Shift-Direction    Fires straight in that direction. You can go 
                         back to the old targeting mode (allowing 
                         straight firing by pressing just the direction 
                         key) using the option target_unshifted_dirs.
+                        Note that target_unshifted_dirs is mutually
+                        exclusive with default_target.
 
 Shortcuts in lists (like multidrop):
 ------------------------------------
