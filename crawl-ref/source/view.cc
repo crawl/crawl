@@ -3610,7 +3610,8 @@ std::string screenshot( bool fullscreen )
             lines[count_y - 1] += ch;
         }
 
-        lines[count_y - 1].erase(lastnonspace + 1);
+        if (lastnonspace < (int) lines[count_y - 1].length())
+            lines[count_y - 1].erase(lastnonspace + 1);
     }
 
     // Restore char and feature tables

@@ -889,11 +889,6 @@ void list_commands(bool wizard, int hotkey)
 
     cols.add_formatted(
             0,
-            level_map_help,
-            true, true, cmdhelp_textfilter);
-
-    cols.add_formatted(
-            0,
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
             "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
@@ -990,11 +985,6 @@ void list_commands(bool wizard, int hotkey)
             "<w>~</w> : add macro\n"
             "<w>=</w> : reassign inventory/spell letters"
             " \n",
-            true, true, cmdhelp_textfilter);
-
-    cols.add_formatted(
-            1,
-            targeting_help,
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(            
