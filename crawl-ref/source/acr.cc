@@ -498,7 +498,7 @@ static void handle_wizard_command( void )
             banished( DNGN_ENTER_ABYSS );
         else
         {
-            down_stairs(true, you.your_level, DNGN_EXIT_ABYSS);
+            down_stairs(you.your_level, DNGN_EXIT_ABYSS);
             untag_followers();
         }
         break;

@@ -729,7 +729,7 @@ void up_stairs(void)
     }
 }                               // end up_stairs()
 
-void down_stairs( bool remove_stairs, int old_level, int force_stair )
+void down_stairs( int old_level, int force_stair )
 {
     int i;
     char old_level_type = you.level_type;
@@ -955,9 +955,6 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
 
     if (you.level_type == LEVEL_PANDEMONIUM)
         stair_taken = DNGN_TRANSIT_PANDEMONIUM;
-
-    if (remove_stairs)
-        grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
 
     switch (you.level_type)
     {

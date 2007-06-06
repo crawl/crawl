@@ -411,8 +411,7 @@ void level_travel( int delta )
     }
 
     you.your_level = new_level - 1;
-    grd[you.x_pos][you.y_pos] = DNGN_STONE_STAIRS_DOWN_I;
-    down_stairs(true, old_level);
+    down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
     untag_followers();
 }                               // end level_travel()
 
