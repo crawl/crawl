@@ -330,7 +330,8 @@ chose any dungeon level; the game will then take the shortest path to
 reach this destination. You can also use autotravel on the level map 
 ('X'): move the cursor to the place where you want to go and hit Enter. 
 There are several shortcuts when choosing destinations: try '<' and '>'
-to quickly reach the staircases. 
+to quickly reach the staircases.
+
 When your autotravel gets interrupted, Crawl will remember the previous 
 destination. Hitting Ctrl-G again and following with Enter puts the 
 cursor on that square. See Appendix 4 for all commands and shortcuts in
@@ -343,7 +344,7 @@ optimal: by manual exploration you can save turns, but auto-explore will
 usually save real time.
 
 If you like the use of automated exploration, take note of the option
-setting 'greedy_explore = true' in the init file. This will cause Crawl
+setting 'explore_greedy = true' in the init file. This will cause Crawl
 to run to and pick up all items seen which are on the autopickup list. 
 It also makes the character go to piles of items, in order to check the
 contents.
@@ -981,7 +982,7 @@ is displayed in a light blue colour.
 
 
 ------------------------------------------------------------------------
-K.                      KEYMAPS, MACROS, OPTIONS, PERFORMANCE
+K.             KEYMAPS, MACROS, OPTIONS, PERFORMANCE
 ------------------------------------------------------------------------
 
 Crawl supports redefining keys via key maps. This is useful when your 
@@ -1012,9 +1013,9 @@ the box for Linux, Windows, OS/X, and to some lesser extent DOS and
 Unix). If, for some reason, you find Crawl runs unacceptably slowly on 
 your machine, there are a few measures which may improve the situation:
  - avoid greedy autoexplore 
- - set the option stash_tracking = explicit 
- - set travel_delay = 0 to avoid screen output (this might 
-   be useful if playing on a remote server)
+ - set the option stash_tracking = explicit
+ - set travel_delay = -1 to avoid screen redraws during travel (this
+   might be useful if playing on a remote server)
 
 
 ------------------------------------------------------------------------
