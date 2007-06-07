@@ -824,10 +824,7 @@ static unsigned read_symbol(std::string s)
     }
 
     char *tail;
-    int feat = strtol(s.c_str(), &tail, base);
-    if (feat < 0)
-        feat = 0;
-    return static_cast<unsigned>(feat);
+    return (strtoul(s.c_str(), &tail, base));
 }
 
 void game_options::add_feature_override(const std::string &text)
