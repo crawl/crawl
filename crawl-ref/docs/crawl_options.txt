@@ -1172,6 +1172,10 @@ char_set = (ascii | ibm | dec | unicode)
         Windows users will want to use the IBM character set, Unix users will
         prefer DEC or plain ASCII.
 
+        On Unix, Crawl may be built with Unicode support, in which case you
+        can use char_set = unicode to use unicode characters in the map
+        display.
+
 cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any
         Can be used to change individual characters in a specific character 
         set (the character set used for display is determined by the char_set 
