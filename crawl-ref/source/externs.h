@@ -1132,13 +1132,18 @@ struct trap_struct
     unsigned char       type;
 };
 
-struct map_colour
+struct map_cell
 {
-    short colour;
-    short flags;
+    short object;           // The object: monster, item, feature, or cloud.
+    unsigned short flags;   // Flags describing the mappedness of this square.
+    unsigned short colour;
 
-    operator short () const { return colour; }
-    void clear()            { colour = flags = 0; }
+    map_cell() : object(0), flags(0), colour(0) { }
+    void clear() { flags = object = colour = 0; }
+
+    unsigned glyph() const;
+    bool known() const;
+    bool seen() const;
 };
 
 struct crawl_environment
@@ -1154,8 +1159,7 @@ struct crawl_environment
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid
 
-    FixedArray< unsigned short, GXM, GYM >    map;    // discovered terrain
-    FixedArray< map_colour, GXM, GYM >        map_col; // map colours
+    FixedArray< map_cell, GXM, GYM >        map;    // discovered terrain
 
     FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
                                              show;      // view window char 
@@ -1188,8 +1192,11 @@ struct game_state
 
     int seen_hups;          // Set to true if SIGHUP received.
 
+    bool unicode_ok;        // Is unicode support available?
+
     game_state() : need_save(false), saving_game(false),
-                   updating_scores(false), shopping(false), seen_hups(0)
+        updating_scores(false), shopping(false), seen_hups(0),
+        unicode_ok(false)
     {
     }
 };
@@ -1352,8 +1359,8 @@ struct message_colour_mapping
 
 struct feature_def
 {
-    unsigned short      symbol;          // symbol used for seen terrain
-    unsigned short      magic_symbol;    // symbol used for magic-mapped terrain
+    unsigned            symbol;          // symbol used for seen terrain
+    unsigned            magic_symbol;    // symbol used for magic-mapped terrain
     unsigned short      colour;          // normal in LoS colour
     unsigned short      map_colour;      // colour when out of LoS on display
     unsigned short      seen_colour;     // map_colour when is_terrain_seen()
@@ -1508,7 +1515,7 @@ public:
     bool        lowercase_invocations;          // prefer lowercase invocations
 
     char_set_type  char_set;
-    FixedVector<unsigned char, NUM_DCHAR_TYPES> char_table;
+    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;    // used for setting up curses colour table (8 or 16)
     
@@ -1689,7 +1696,7 @@ private:
     void clear_cset_overrides();
     void add_cset_override(char_set_type set, const std::string &overrides);
     void add_cset_override(char_set_type set, dungeon_char_type dc,
-                           unsigned char symbol);
+                           unsigned symbol);
     void add_feature_override(const std::string &);
 
     void add_message_colour_mappings(const std::string &);

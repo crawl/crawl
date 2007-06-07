@@ -1028,7 +1028,8 @@ void list_tutorial_help()
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines());
 
-    unsigned short ch, colour;
+    unsigned ch;
+    unsigned short colour;
 
     std::ostringstream text;
     text <<

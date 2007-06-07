@@ -15,5 +15,13 @@ void clear_to_end_of_line();
 void message_out(int mline, int colour, const char *str, int firstcol = 0,
                  bool newline = true);
 void clear_message_window();
+inline void update_screen()
+{
+}
+
+inline void putwch(unsigned c)
+{
+    putch(static_cast<char>(c));
+}
 
 #endif

@@ -37,6 +37,7 @@ void window(int x, int y, int lx, int ly);
 int wherex(void);
 int wherey(void);
 void putch(char c);
+void putwch(unsigned c);
 int getch(void);
 int getch_ck(void);
 int key_to_command(int);
@@ -44,6 +45,7 @@ int getche(void);
 int kbhit(void);
 void delay(int ms);
 void textbackground(int c);
+void update_screen();
 
 void enable_smart_cursor(bool cursor);
 bool is_smart_cursor_enabled();

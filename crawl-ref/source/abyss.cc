@@ -71,14 +71,7 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
     FixedVector < unsigned char, 5 > replaced;
 
     // nuke map
-    for (i = 0; i < GXM; i++)
-    {
-        for (j = 0; j < GYM; j++)
-        {
-            env.map[i][j] = 0;
-            env.map_col[i][j].clear();
-        }
-    }
+    env.map.init(map_cell());
 
     // generate level composition vector
     for (i = 0; i < 5; i++)

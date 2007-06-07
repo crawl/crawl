@@ -1167,12 +1167,12 @@ wiz_mode = (no | never | yes)
           no    -- still allows player to enter wizard mode after start of game
           never -- never allow a wizard command to be used
 
-char_set = (ascii | ibm | dec)
+char_set = (ascii | ibm | dec | unicode)
         Chooses different character sets for the game play screen. DOS and
         Windows users will want to use the IBM character set, Unix users will
         prefer DEC or plain ASCII.
 
-cset_ascii, cset_ibm, cset_dec, cset_any
+cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any
         Can be used to change individual characters in a specific character 
         set (the character set used for display is determined by the char_set 
         option). The syntax is the same for all of these; cset_any changes
@@ -1194,10 +1194,13 @@ cset_XXX = <dungeon_character_name : symbol>
         for water creatures submerged in shallow water, or invisible creatures
         wading in shallow water.
 
-        Symbols can be specified using a letter, or by a number (decimal code).
+        Symbols can be specified using a letter, or by a number (decimal code),
+        or a hexadecimal number (prefixed with x):
+        
         For an example on IBM displays,
-            cset_ibm = wall:219, arch:0
-        shows walls as solid blocks and shops and portals as '0'.
+            cset_ibm = wall:219, arch:0, wavy:x7E
+        shows walls as solid blocks, shops and portals as '0', and water as
+        '~'.
 
 feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
                     <levelmap_magic_colour>, <levelmap_seen_colour> }
@@ -1223,8 +1226,16 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
         descriptions strung together on the same line separated by semicolons.
 
         Examples:
-            feature = rock wall { , , red }  # shows rock walls in red
-            feature = metal wall {#}         # use '#' for metal walls
+         * Colour rock walls red:
+            feature = rock wall { , , red }
+         * Use # for metal walls in all character sets:
+            feature = metal wall {#}
+
+        Symbols can be specified as with cset:
+            feature = metal wall {#}
+            feature = metal wall {35}
+            feature = metal wall {x23}
+        all do the same thing.
 
 classic_item_colours = false
         Crawl uses 4.0 b26/0.1.x-like item colours if classic_item_colours is

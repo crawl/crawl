@@ -333,10 +333,15 @@ void cio_init()
 #ifdef DOS
     init_libdos();
 #endif
-
-    crawl_view.init_geometry();
     
     io_inited = true;
+    
+    crawl_view.init_geometry();
+
+    if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
+        end(1, false,
+            "Unicode glyphs are not available, please change your "
+            "char_set option");
 }
 
 void cio_cleanup()

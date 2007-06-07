@@ -2860,11 +2860,7 @@ static bool initialise(void)
 
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
-    env.map.init(0);
-
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
-            env.map_col[i][j].clear();
+    env.map.init(map_cell());
 
     you.unique_creatures.init(false);
     you.unique_items.init(UNIQ_NOT_EXISTS);

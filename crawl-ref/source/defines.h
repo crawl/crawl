@@ -88,11 +88,11 @@
 // Note: these boundaries are exclusive for the zone the player can move/dig,
 // and are inclusive for the area that we display on the map.
 // Note: that the right (bottom) boundary is one smaller here.
-#define X_BOUND_1               BOUNDARY_BORDER
+#define X_BOUND_1               (-1 + BOUNDARY_BORDER)
 #define X_BOUND_2               (GXM - BOUNDARY_BORDER)
 #define X_WIDTH                 (X_BOUND_2 - X_BOUND_1 + 1)
 
-#define Y_BOUND_1               BOUNDARY_BORDER
+#define Y_BOUND_1               (-1 + BOUNDARY_BORDER)
 #define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
@@ -112,26 +112,9 @@
 #define LOS_RADIUS 8
 #define ENV_SHOW_OFFSET (LOS_RADIUS + 1)
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
-#define LOS_SX     8
-#define LOS_EX    25
-#define LOS_SY     1
-#define LOS_EY    17
 
-#define VIEW_SX    1
-#define VIEW_EX   33
-#define VIEW_SY    1
-#define VIEW_EY   17
-
-#define VIEW_WIDTH  (VIEW_EX - VIEW_SX + 1)
-#define VIEW_HEIGHT (VIEW_EY - VIEW_SY + 1)
-
-#define VIEW_Y_DIFF  (((VIEW_EX - VIEW_SX + 1) - (VIEW_EY - VIEW_SY + 1)) / 2) 
-
-// View centre must be the same as LOS centre.
-// VIEW_CX == 17
-#define VIEW_CX   ((VIEW_SX + VIEW_EX) / 2)
-// VIEW_CY == 9
-#define VIEW_CY   ((VIEW_SY + VIEW_EY) / 2)
+#define VIEW_MIN_WIDTH  33
+#define VIEW_MIN_HEIGHT 17
 
 // max traps per level
 #define MAX_TRAPS 30

@@ -711,6 +711,11 @@ void putch(char c)
    writeChar(c);
 }
 
+void putwch(unsigned c)
+{
+    putch((char) c);
+}
+
 // translate virtual keys
 
 #define VKEY_MAPPINGS 10
@@ -959,6 +964,11 @@ int getConsoleString(char *buf, int maxlen)
 
    // return # of bytes read
    return (int)nread;
+}
+
+void update_screen()
+{
+    bFlush();
 }
 
 bool setBuffering( bool value )

@@ -17,8 +17,9 @@ DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
 
-# Include path for curses or ncurses.
-INCLUDES = -I/usr/include/ncurses
+# Change this to y if you want to use Unicode glyphs in the map, and you have
+# libncursesw available.
+UNICODE_GLYPHS = n
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
 DOYACC := y
@@ -43,6 +44,17 @@ INSTALLDIR   := /usr/games
 
 LEX  := flex
 YACC := bison -y
+
+ifeq ($(UNICODE_GLYPHS),y)
+# Include path for (n)curses with Unicode support.
+INCLUDES = -I/usr/include/ncursesw
+LIBCURS  = ncursesw
+EXTRA_FLAGS += -DUNICODE_GLYPHS
+else
+# Include path for curses or ncurses (non-Unicode).
+INCLUDES = -I/usr/include/ncurses
+LIBCURS  = ncurses
+endif
 
 ifeq ($(LUASRC),)
 LUASRC := util/lua/src
@@ -82,7 +94,7 @@ EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
 endif
 
-LIB = -lncurses -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
+LIB = -l$(LIBCURS) -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 

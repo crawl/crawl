@@ -555,8 +555,8 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
-    view_max_width = VIEW_EX;
-    view_max_height = VIEW_EY;
+    view_max_width = VIEW_MIN_WIDTH;
+    view_max_height = VIEW_MIN_HEIGHT;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -805,20 +805,29 @@ void game_options::clear_feature_overrides()
     feature_overrides.clear();
 }
 
-static unsigned short read_symbol(std::string s)
+static unsigned read_symbol(std::string s)
 {
     if (s.empty())
         return (0);
+
     if (s.length() == 1)
         return s[0];
 
-    if (s[0] == '\\')
+    if (s.length() > 1 && s[0] == '\\')
         s = s.substr(1);
-    
-    int feat = atoi(s.c_str());
+
+    int base = 10;
+    if (s.length() > 1 && s[0] == 'x')
+    {
+        s = s.substr(1);
+        base = 16;
+    }
+
+    char *tail;
+    int feat = strtol(s.c_str(), &tail, base);
     if (feat < 0)
         feat = 0;
-    return static_cast<unsigned short>(feat);
+    return static_cast<unsigned>(feat);
 }
 
 void game_options::add_feature_override(const std::string &text)
@@ -875,8 +884,8 @@ void game_options::add_cset_override(
         if (dc == NUM_DCHAR_TYPES)
             continue;
         
-        unsigned char symbol = 
-            static_cast<unsigned char>(read_symbol(mapping[1]));
+        unsigned symbol = 
+            static_cast<unsigned>(read_symbol(mapping[1]));
 
         if (set == NUM_CSET)
             for (int c = 0; c < NUM_CSET; ++c)
@@ -887,7 +896,7 @@ void game_options::add_cset_override(
 }
 
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
-                                     unsigned char symbol)
+                                     unsigned symbol)
 {
     cset_override[set][dc] = symbol;
 }
@@ -1483,7 +1492,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 char_set = CSET_IBM;
             else if (field == "dec")
                 char_set = CSET_DEC;
-            else 
+            else if (field == "utf" || field == "unicode")
+                char_set = CSET_UNICODE;
+            else
             {
                 fprintf( stderr, "Bad character set: %s\n", field.c_str() );
                 valid = false;
@@ -1640,6 +1651,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             cs = CSET_IBM;
         else if (cset == "dec")
             cs = CSET_DEC;
+        else if (cset == "utf" || cset == "unicode")
+            cs = CSET_UNICODE;
 
         add_cset_override(cs, field);
     }
@@ -1869,16 +1882,19 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "view_max_width")
     {
         view_max_width = atoi(field.c_str());
-        if (view_max_width < VIEW_EX)
-            view_max_width = VIEW_EX;
+        if (view_max_width < VIEW_MIN_WIDTH)
+            view_max_width = VIEW_MIN_WIDTH;
+
+        // Allow the view to be one larger than GXM because the view width
+        // needs to be odd, and GXM is even.
         else if (view_max_width > GXM + 1)
             view_max_width = GXM + 1;
     }
     else if (key == "view_max_height")
     {
         view_max_height = atoi(field.c_str());
-        if (view_max_height < VIEW_EY)
-            view_max_height = VIEW_EY;
+        if (view_max_height < VIEW_MIN_HEIGHT)
+            view_max_height = VIEW_MIN_HEIGHT;
         else if (view_max_height > GYM + 1)
             view_max_height = GYM + 1;
     }

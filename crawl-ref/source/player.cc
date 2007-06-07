@@ -299,7 +299,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 const int type = trap_category( env.trap[id].type );
 
                 grd[you.x_pos][you.y_pos] = type;
-                set_envmap_char(you.x_pos, you.y_pos, get_sightmap_char(type));
+                set_envmap_obj(you.x_pos, you.y_pos, type);
             }
 
             // not easy to blink onto a trap without setting it off:
@@ -2193,10 +2193,7 @@ void forget_map(unsigned char chance_forgotten)
         for (ycount = 0; ycount < GYM; ycount++)
         {
             if (random2(100) < chance_forgotten)
-            {
-                env.map[xcount][ycount] = 0;
-                env.map_col[xcount][ycount].clear();
-            }
+                env.map[xcount][ycount].clear();
         }
     }
 }                               // end forget_map()

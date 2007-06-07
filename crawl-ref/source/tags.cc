@@ -1301,9 +1301,9 @@ static void tag_construct_level(struct tagHeader &th)
         for (count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
-            marshallShort(th, env.map[count_x][count_y]);
-            marshallShort(th, env.map_col[count_x][count_y].colour);
-            marshallShort(th, env.map_col[count_x][count_y].flags);
+            marshallShort(th, env.map[count_x][count_y].object);
+            marshallShort(th, env.map[count_x][count_y].colour);            
+            marshallShort(th, env.map[count_x][count_y].flags);
             marshallByte(th, env.cgrid[count_x][count_y]);
         }
     }
@@ -1522,13 +1522,9 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         {
             grd[i][j] = unmarshallByte(th);
             
-            env.map[i][j] = (unsigned short) unmarshallShort(th);
-            
-            if ((env.map[i][j] & 0xFF) == 201)       // what is this??
-                env.map[i][j] = (env.map[i][j] & 0xFF00U) | 239;
-
-            env.map_col[i][j].colour = unmarshallShort(th);
-            env.map_col[i][j].flags  = unmarshallShort(th);
+            env.map[i][j].object = unmarshallShort(th);
+            env.map[i][j].colour = unmarshallShort(th);
+            env.map[i][j].flags  = unmarshallShort(th);
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = (unsigned char) unmarshallByte(th);

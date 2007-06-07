@@ -96,11 +96,6 @@ static int targeting_cmd_to_compass( command_type command );
 static void describe_oos_square(int x, int y);
 static void extend_move_to_edge(dist &moves);
 
-static bool is_mapped(int x, int y)
-{
-    return (is_player_mapped(x, y));
-}
-
 static command_type read_direction_key(bool just_looking = false)
 {
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
@@ -818,7 +813,7 @@ static void describe_oos_square(int x, int y)
 {
     mpr("You can't see that place.");
     
-    if (!in_bounds(x, y) || !is_mapped(x, y))
+    if (!in_bounds(x, y) || !is_terrain_seen(x, y))
         return;
 
     describe_stash(x, y);
@@ -861,7 +856,7 @@ static bool find_monster( int x, int y, int mode )
 static bool find_feature( int x, int y, int mode )
 {
     // The stair need not be in LOS if the square is mapped.
-    if (!in_los(x, y) && (!Options.target_oos || !is_mapped(x, y)))
+    if (!in_los(x, y) && (!Options.target_oos || !is_terrain_seen(x, y)))
         return (false);
 
     return is_feature(mode, x, y);
@@ -873,7 +868,8 @@ static bool find_object(int x, int y, int mode)
     // The square need not be in LOS if the stash tracker knows this item.
     return (item != NON_ITEM
             && (in_los(x, y)
-                || (Options.target_oos && is_mapped(x, y) && is_stash(x, y))));
+                || (Options.target_oos && is_terrain_seen(x, y)
+                    && is_stash(x, y))));
 }
 
 static int next_los(int dir, int los, bool wrap)

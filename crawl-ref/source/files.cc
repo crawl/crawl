@@ -835,23 +835,14 @@ static void close_level_gates()
 
 static void clear_env_map()
 {
-    for (int i = 0; i < GXM; i++)
-    {
-        for (int j = 0; j < GYM; j++)
-        {
-            env.map[i][j] = 0;
-            env.map_col[i][j].clear();
-        }
-    }
+    env.map.init(map_cell());
 }
 
 static void clear_clouds()
 {
     for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
         delete_cloud( clouty );
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
-            env.cgrid[i][j] = EMPTY_CLOUD;
+    env.cgrid.init(EMPTY_CLOUD);
 }
 
 static void grab_followers(std::vector<follower>& followers)

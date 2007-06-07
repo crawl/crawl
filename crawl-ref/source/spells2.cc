@@ -76,7 +76,7 @@ unsigned char detect_traps( int pow )
                 traps_found++;
 
                 grd[ etx ][ ety ] = trap_category( env.trap[count_x].type );
-                set_envmap_char(etx, ety, get_magicmap_char(grd[etx][ety]));
+                set_envmap_obj(etx, ety, grd[etx][ety]);
                 set_terrain_mapped(etx, ety);
             }
         }
@@ -104,7 +104,7 @@ unsigned char detect_items( int pow )
 
             if (igrd[i][j] != NON_ITEM)
             {
-                set_envmap_char(i, j, get_magicmap_char(DNGN_ITEM_DETECTED));
+                set_envmap_obj(i, j, DNGN_ITEM_DETECTED);
                 set_envmap_detected_item(i, j);
             }
         }
@@ -159,7 +159,7 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
         }
     }
 
-    set_envmap_char(gridx, gridy, mons_char(mon->type));
+    set_envmap_obj(gridx, gridy, mon->type + DNGN_START_OF_MONSTERS);
     set_envmap_detected_mons(gridx, gridy);
 }
 

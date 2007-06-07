@@ -32,12 +32,9 @@ void update_excludes();
 bool is_stair(unsigned gridc);
 bool is_travelable_stair(unsigned gridc);
 command_type stair_direction(int stair_feat);
-bool is_player_mapped(unsigned char envch);
 command_type direction_to_command( char x, char y );
 bool is_resting( void );
 bool can_travel_interlevel();
-
-bool is_player_mapped(int grid_x, int grid_y);
 
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);

@@ -92,7 +92,7 @@ static unsigned char curr_waypoints[GXM][GYM];
 static signed char curr_traps[GXM][GYM];
 #endif
 
-static FixedArray< unsigned short, GXM, GYM >  mapshadow;
+static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
 const signed char TRAVERSABLE = 1;
 const signed char IMPASSABLE = 0;
@@ -109,26 +109,9 @@ static void populate_stair_distances(const level_pos &target);
 static bool is_greed_inducing_square(const LevelStashes *ls,
                                      const coord_def &c);
 
-bool is_player_mapped(int grid_x, int grid_y)
+bool is_player_seen(int grid_x, int grid_y)
 {
-    return (is_player_mapped( env.map[grid_x - 1][grid_y - 1] ));
-}
-
-// Determines whether the player has seen this square, given the user-visible
-// character. 
-//
-// The player is assumed to have seen the square if:
-// a. The square is mapped (the env map char is not zero)
-// b. The square was *not* magic-mapped.
-//
-// FIXME: There's better ways of doing this with the new view.cc.
-bool is_player_mapped(unsigned char envch)
-{
-    // Note that we're relying here on mapch(DNGN_FLOOR) != mapch2(DNGN_FLOOR)
-    // and that no *other* dungeon feature renders as mapch(DNGN_FLOOR).
-    // The check for a ~ is to ensure explore stops for items turned up by
-    // detect items.
-    return envch && envch != get_magicmap_char(DNGN_FLOOR) && envch != '~';
+    return (is_terrain_seen(grid_x, grid_y));
 }
 
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
@@ -167,14 +150,6 @@ inline bool is_player_altar(unsigned char grid)
 inline bool is_player_altar(const coord_def &c)
 {
     return is_player_altar(grd[c.x][c.y]);
-}
-
-// Copies FixedArray src to FixedArray dest. 
-//
-inline void copy(const FixedArray<unsigned short, GXM, GYM> &src, 
-                 FixedArray<unsigned short, GXM, GYM> &dest)
-{
-    dest = src;
 }
 
 #ifdef CLUA_BINDINGS
@@ -297,8 +272,11 @@ void toggle_exclude(int x, int y)
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         return;
 
-    if (x <= 0 || x >= GXM || y <= 0 || y >= GYM) return;
-    if (!env.map[x - 1][y - 1]) return;
+    if (!in_bounds(x, y))
+        return;
+    
+    if (!is_terrain_known(x, y))
+        return;
     
     if (is_exclude_root(x, y))
     {
@@ -374,10 +352,9 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
     if ((grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
         && is_terrain_changed(x, y))
     {
-        const int c = get_envmap_char(x, y);
+        const int c = get_envmap_obj(x, y);
         const int secret_door = grid_secret_door_appearance(x, y);
-        return (c != get_sightmap_char(secret_door)
-                && c != get_magicmap_char(secret_door));
+        return (c != secret_door);
     }
 
     if (!ignore_hostile && is_monster_blocked(x, y))
@@ -686,7 +663,7 @@ bool prompt_stop_explore(int es_why)
 inline static void check_interesting_square(int x, int y,
                                             explore_discoveries &ed)
 {
-    const coord_def pos(x + 1, y + 1);
+    const coord_def pos(x, y);
     
     if (ES_item)
     {
@@ -760,7 +737,7 @@ static bool is_valid_explore_target(int x, int y)
             const int ax = x + xi, ay = y + yi;
             if (!in_bounds(ax, ay))
                 continue;
-            if (!is_player_mapped( get_envmap_char(ax, ay) ))
+            if (!is_terrain_seen(ax, ay))
                 return (true);
         }
     }
@@ -883,12 +860,11 @@ command_type travel()
         // feature, stop exploring.
 
         explore_discoveries discoveries;
-        for (int y = 0; y < GYM - 1; ++y)
+        for (int y = 0; y < GYM; ++y)
         {
-            for (int x = 0; x < GXM - 1; ++x)
+            for (int x = 0; x < GXM; ++x)
             {
-                if (!is_player_mapped(mapshadow[x][y])
-                    && is_player_mapped((unsigned char) env.map[x][y]))
+                if (!mapshadow[x][y].seen() && is_terrain_seen(x, y))
                 {
                     check_interesting_square(x, y, discoveries);
                 }
@@ -898,7 +874,7 @@ command_type travel()
         if (discoveries.prompt_stop())
             stop_running();
 
-        copy(env.map, mapshadow);
+        mapshadow = env.map;
     }
 
     if (you.running.is_explore())
@@ -2546,7 +2522,7 @@ void start_explore(bool grab_items)
     }
     
     // Clone shadow array off map
-    copy(env.map, mapshadow);
+    mapshadow = env.map;
 
     you.running.x = you.running.y = 0;
     start_running();
@@ -2903,23 +2879,22 @@ int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2)
 
 void LevelInfo::get_stairs(std::vector<coord_def> &st)
 {
-    // These are env map coords, not grid coordinates.
-    for (int y = 0; y < GYM - 1; ++y)
+    for (int y = 0; y < GYM; ++y)
     {
-        for (int x = 0; x < GXM - 1; ++x)
+        for (int x = 0; x < GXM; ++x)
         {
-            int grid = grd[x + 1][y + 1];
-            int envc = env.map[x][y];
+            int grid = grd[x][y];
+            int envc = env.map[x][y].object;
 
-            if ((x + 1 == you.x_pos && y + 1 == you.y_pos)
+            if ((x == you.x_pos && y == you.y_pos)
                     || (envc 
                         && is_travelable_stair(grid) 
-                        && (is_terrain_seen(x + 1, y + 1)
-                            || !is_branch_stair(x + 1, y + 1))))
+                        && (is_terrain_seen(x, y)
+                            || !is_branch_stair(x, y))))
             {
                 // Convert to grid coords, because that's what we use
                 // everywhere else.
-                const coord_def stair(x + 1, y + 1);
+                const coord_def stair(x, y);
                 st.push_back(stair);
             }
         }

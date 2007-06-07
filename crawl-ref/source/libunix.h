@@ -25,6 +25,7 @@ void fakecursorxy(int x, int y);
 int itoa(int value, char *strptr, int radix);
 int kbhit(void);
 int putch(unsigned char chr);
+int putwch(unsigned chr);
 int stricmp(const char *str1, const char *str2);
 int translate_keypad(int keyin);
 int wherex(void);

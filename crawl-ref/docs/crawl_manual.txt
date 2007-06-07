@@ -1035,7 +1035,7 @@ newsgroup rec.games.roguelike.misc. Flag queries with -crawl- as other
 games are also discussed there. All topics related to this game usually
 meet a warm response, including tales of victories (going under 'YAVP',
 i.e. 'Yet Another Victory Post'), especially first victories (YAFVP) as
-well as sad stories of deceasedcharacters (being 'YAAD' or 'YASD', i.e.
+well as sad stories of deceased characters (being 'YAAD' or 'YASD', i.e.
 'Yet Another Annoying/Stupid Death'). Some players, especially those on
 crawl.akrasiac.org, also frequent ##crawl on IRC's freenode network.
 

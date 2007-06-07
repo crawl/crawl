@@ -802,7 +802,8 @@ void tutorial_first_monster(const monsters& mon)
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
         return;
 
-    unsigned short ch, col;
+    unsigned ch;
+    unsigned short col;
     get_mons_glyph(&mon, &ch, &col);
 
     std::string text = "<magenta>That ";
@@ -849,10 +850,14 @@ void tutorial_first_monster(const monsters& mon)
 
 void tutorial_first_item(const item_def& item)
 {
-    if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] || Options.tut_just_triggered)
+    if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]
+        || Options.tut_just_triggered)
+    {
         return;
+    }
 
-    unsigned short ch, col;
+    unsigned ch;
+    unsigned short col;
     get_item_glyph(&item, &ch, &col);
 
     std::string text = "<magenta>That ";
@@ -882,7 +887,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         return;
 
     std::ostringstream text;
-    unsigned short ch, colour;
+    unsigned ch;
+    unsigned short colour;
     const int ex = x - you.x_pos + 9;
     const int ey = y - you.y_pos + 9;
     int object;

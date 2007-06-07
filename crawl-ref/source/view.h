@@ -110,19 +110,20 @@ void clear_map(bool clear_items = true, bool clear_mons = true);
 
 bool is_feature(int feature, int x, int y);
 
-void get_item_glyph(const item_def *item, unsigned short *glych,
+void get_item_glyph(const item_def *item, unsigned *glych,
                     unsigned short *glycol);
-void get_mons_glyph(const monsters *mons, unsigned short *glych,
+void get_mons_glyph(const monsters *mons, unsigned *glych,
                     unsigned short *glycol);
 int get_screen_glyph( int x, int y ); 
-void get_item_symbol(unsigned int object, unsigned short *ch,
+void get_item_symbol(unsigned int object, unsigned *ch,
                      unsigned short *colour);
 
 // Applies EC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour);
 
-void set_envmap_char( int x, int y, unsigned char chr );
+void set_envmap_obj( int x, int y, int object );
 unsigned get_envmap_char(int x, int y);
+int get_envmap_obj(int x, int y);
 void set_envmap_detected_item(int x, int y, bool detected = true);
 void set_envmap_detected_mons(int x, int y, bool detected = true);
 void set_envmap_col( int x, int y, int colour, int flags );
@@ -150,8 +151,8 @@ bool see_grid( int grx, int gry );
 
 std::string screenshot(bool fullscreen = false);
 
-unsigned char get_sightmap_char(int feature);
-unsigned char get_magicmap_char(int feature);
+unsigned get_sightmap_char(int feature);
+unsigned get_magicmap_char(int feature);
 
 void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();

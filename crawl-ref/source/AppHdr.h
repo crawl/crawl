@@ -54,6 +54,14 @@
 //
 // #define CLUA_BINDINGS
 
+// Enable support for Unicode character glyphs. Note that this needs
+// to be accompanied by changes to linker and compiler options and may
+// not be available on all platforms. In most cases you want to set
+// this option from your makefile, not directly in AppHdr.h (See
+// INSTALL for more details.)
+// 
+// #define UNICODE_GLYPHS
+
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
 // considerably if you have a lot of saves lying around (even more so

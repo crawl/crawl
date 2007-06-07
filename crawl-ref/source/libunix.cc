@@ -47,6 +47,10 @@
 #include "externs.h"
 #include "files.h"
 
+#ifdef UNICODE_GLYPHS
+#include <locale.h>
+#endif
+
 #include <termios.h>
 
 static struct termios def_term;
@@ -64,11 +68,12 @@ static struct termios game_term;
 #endif
 
 // Character set variable
-int Character_Set = CHARACTER_SET;
+static int Character_Set = CHARACTER_SET;
 
 // Globals holding current text/backg. colors
-short FG_COL = WHITE;
-short BG_COL = BLACK;
+static short FG_COL = WHITE;
+static short BG_COL = BLACK;
+static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
@@ -180,6 +185,10 @@ static void termio_init()
 #endif
 
     tcsetattr(0, TCSAFLUSH, &game_term);
+
+#ifdef UNICODE_GLYPHS
+    crawl_state.unicode_ok = !!setlocale(LC_ALL, "");
+#endif
 }
 
 
@@ -410,6 +419,18 @@ int putch(unsigned char chr)
     return (addch(chr));
 }
 
+int putwch(unsigned chr)
+{
+#ifdef UNICODE_GLYPHS
+    if (chr <= 127)
+        return (putch(chr));
+
+    wchar_t c = chr;
+    return (addnwstr(&c, 1));
+#else
+    return (putch(static_cast<unsigned char>(chr)));
+#endif
+}
 
 char getche()
 {
@@ -570,7 +591,7 @@ static int curs_fg_attr(int col)
 
 void textcolor(int col)
 {
-    attrset( curs_fg_attr(col) );
+    attrset( Current_Colour = curs_fg_attr(col) );
 }
 
 static int curs_bg_attr(int col)
@@ -629,7 +650,7 @@ static int curs_bg_attr(int col)
 
 void textbackground(int col)
 {
-    attrset( curs_bg_attr(col) );
+    attrset( Current_Colour = curs_bg_attr(col) );
 }
 
 
@@ -638,28 +659,31 @@ int gotoxy(int x, int y)
     return (move(y - 1, x - 1));
 }
 
-static unsigned oldch, oldmangledch;
-static int faked_x = -1, faked_y;
-
-void fakecursorxy(int x, int y)
+#ifdef UNICODE_GLYPHS
+typedef cchar_t char_info;
+inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
-    if (oldch && faked_x != -1
-        && mvinch(faked_y, faked_x) == oldmangledch)
-    {
-        if (faked_x != x - 1 || faked_y != y - 1)
-            mvaddch(faked_y, faked_x, oldch);
-        else
-            return;
-    }
-    
-    const unsigned c      = mvinch(y - 1, x - 1);
-    const int ch          = c & A_CHARTEXT;
-    const unsigned colour = c & A_COLOR;
+    return (a.attr == b.attr && *a.chars == *b.chars);
+}
+inline char_info character_at(int y, int x)
+{
+    cchar_t c;
+    mvin_wch(y, x, &c);
+    return (c);
+}
+inline bool valid_char(const cchar_t &c)
+{
+    return *c.chars;
+}
+inline void write_char_at(int y, int x, const cchar_t &ch)
+{
+    move(y, x);
+    add_wchnstr(&ch, 1);
+}
+static void flip_colour(cchar_t &ch)
+{
+    const unsigned colour = (ch.attr & A_COLOR);
     const int pair        = PAIR_NUMBER(colour);
-
-    faked_x = x - 1;
-    faked_y = y - 1;
-    oldch   = c;
 
     int fg     = pair & 7;
     int bg     = (pair >> 3) & 7;
@@ -671,9 +695,56 @@ void fakecursorxy(int x, int y)
     }
 
     const int newpair = (fg * 8 + bg);
-    
-    mvaddch( y - 1, x - 1,  oldmangledch = ((ch & 127) | COLOR_PAIR(newpair)) );
+    ch.attr = COLOR_PAIR(newpair);
+}
+#else // ! UNICODE_GLYPHS
+typedef unsigned char_info;
+#define character_at(y,x)    mvinch(y,x)
+#define valid_char(x) (x)
+#define write_char_at(y,x,c) mvaddch(y, x, c)
 
+#define char_info_character(c) ((c) & A_CHARTEXT)
+#define char_info_colour(c)    ((c) & A_COLOR)
+
+static void flip_colour(unsigned &ch)
+{
+    const unsigned colour = char_info_colour(ch);
+    const int pair        = PAIR_NUMBER(colour);
+
+    int fg     = pair & 7;
+    int bg     = (pair >> 3) & 7;
+
+    if (pair == 63)
+    {
+        fg    = COLOR_WHITE;
+        bg    = COLOR_BLACK;
+    }
+
+    const int newpair = (fg * 8 + bg);
+    ch = ((ch & 127) | COLOR_PAIR(newpair));
+}
+#endif
+
+static char_info oldch, oldmangledch;
+static int faked_x = -1, faked_y;
+
+void fakecursorxy(int x, int y)
+{
+    if (valid_char(oldch) && faked_x != -1
+        && character_at(faked_y, faked_x) == oldmangledch)
+    {
+        if (faked_x != x - 1 || faked_y != y - 1)
+            write_char_at(faked_y, faked_x, oldch);
+        else
+            return;
+    }
+    
+    char_info c = character_at(y - 1, x - 1);
+    oldch   = c;
+    faked_x = x - 1;
+    faked_y = y - 1;
+    flip_colour(c);
+    write_char_at( y - 1, x - 1, oldmangledch = c);
     move(y - 1, x - 1);
 }
 
