@@ -55,7 +55,6 @@ void quit_game(void)
 }                               // end quit_game()
 
 static const char *features[] = {
-    "",
     "Stash-tracking",
 
 #ifdef CLUA_BINDINGS
@@ -69,20 +68,22 @@ static const char *features[] = {
 #else
     "Glob patterns",
 #endif
+
+#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS)
+    "Sound support",
+#endif
+
+#ifdef UNICODE_GLYPHS
+    "Unicode glyphs",
+#endif
 };
 
 void version(void)
 {
     mpr( "This is " CRAWL " " VERSION " (" VERSION_DETAIL ")." );
-    
-    std::string feats = "Features: ";
-    for (int i = 1, size = sizeof features / sizeof *features; i < size; ++i)
-    {
-        if (i > 1)
-            feats += ", ";
-        feats += features[i];
-    }
-    mpr(feats.c_str());
+    mprf("Features: %s",
+         comma_separated_line(features, features + ARRAYSIZE(features))
+             .c_str());
 }                               // end version()
 
 void adjust(void)
