@@ -48,6 +48,7 @@
 #include "files.h"
 
 #ifdef UNICODE_GLYPHS
+#include <wchar.h>
 #include <locale.h>
 #endif
 
@@ -167,6 +168,26 @@ static void setup_colour_pairs( void )
     init_pair(63, COLOR_BLACK, Options.background);
 }          // end setup_colour_pairs()
 
+#ifdef UNICODE_GLYPHS
+static std::string unix_glyph2string(unsigned gly)
+{
+    char buf[50];  // Overkill, I know.
+    wchar_t wcbuf[2];
+    wcbuf[0] = gly;
+    wcbuf[1] = 0;
+    if (wcstombs(buf, wcbuf, sizeof buf) != (size_t) -1)
+        return (buf);
+
+    return std::string(1, gly);
+}
+
+static int unix_multibyte_strlen(const std::string &s)
+{
+    const char *cs = s.c_str();
+    size_t len = mbsrtowcs(NULL, &cs, 0, NULL);
+    return (len == (size_t) -1? s.length() : len);
+}
+#endif
 
 static void termio_init()
 {
@@ -187,7 +208,11 @@ static void termio_init()
     tcsetattr(0, TCSAFLUSH, &game_term);
 
 #ifdef UNICODE_GLYPHS
-    crawl_state.unicode_ok = !!setlocale(LC_ALL, "");
+    if ((crawl_state.unicode_ok = !!setlocale(LC_ALL, "")))
+    {
+        crawl_state.glyph2strfn = unix_glyph2string;
+        crawl_state.multibyte_strlen = unix_multibyte_strlen;
+    }
 #endif
 }
 
@@ -271,7 +296,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
         firstcol = Options.delay_message_clear? 1 : 0;
     else
         firstcol--;
-    
+
     mvwaddstr(Message_Window, which_line, firstcol, s);
 
     if (newline && which_line == crawl_view.msgsz.y - 1)
@@ -393,7 +418,6 @@ int itoa(int value, char *strptr, int radix)
     }
     return (OK);                /* Me? Fail? Nah. */
 }
-
 
 int cprintf(const char *format,...)
 {

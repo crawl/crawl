@@ -114,7 +114,10 @@ void get_item_glyph(const item_def *item, unsigned *glych,
                     unsigned short *glycol);
 void get_mons_glyph(const monsters *mons, unsigned *glych,
                     unsigned short *glycol);
-int get_screen_glyph( int x, int y ); 
+unsigned get_screen_glyph( int x, int y );
+std::string stringize_glyph(unsigned glyph);
+int multibyte_strlen(const std::string &s);
+
 void get_item_symbol(unsigned int object, unsigned *ch,
                      unsigned short *colour);
 

@@ -1194,9 +1194,12 @@ struct game_state
 
     bool unicode_ok;        // Is unicode support available?
 
+    std::string (*glyph2strfn)(unsigned glyph);
+    int (*multibyte_strlen)(const std::string &s);
+
     game_state() : need_save(false), saving_game(false),
         updating_scores(false), shopping(false), seen_hups(0),
-        unicode_ok(false)
+        unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL)
     {
     }
 };

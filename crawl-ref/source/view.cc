@@ -3544,13 +3544,12 @@ void init_feature_table( void )
     }
 }
 
-int get_screen_glyph( int x, int y ) 
+unsigned get_screen_glyph( int x, int y ) 
 {
-    const int ex = x - you.x_pos + 9;
-    const int ey = y - you.y_pos + 9;
+    const coord_def ep = view2show(grid2view(coord_def(x,y)));
 
-    int             object = env.show[ex][ey];
-    unsigned short  colour = env.show_col[ex][ey];
+    int             object = env.show(ep);
+    unsigned short  colour = env.show_col(ep);
     unsigned        ch;
 
     if (!object)
@@ -3561,6 +3560,22 @@ int get_screen_glyph( int x, int y )
 
     get_symbol( x, y, object, &ch, &colour );
     return (ch);
+}
+
+std::string stringize_glyph(unsigned glyph)
+{
+    if (crawl_state.glyph2strfn)
+        return (*crawl_state.glyph2strfn)(glyph);
+
+    return std::string(1, glyph);
+}
+
+int multibyte_strlen(const std::string &s)
+{
+    if (crawl_state.multibyte_strlen)
+        return (*crawl_state.multibyte_strlen)(s);
+
+    return (s.length());
 }
 
 // Returns a string containing an ASCII representation of the map. If fullscreen

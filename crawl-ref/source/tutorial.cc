@@ -1051,7 +1051,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "the responding faith you'll be asked for confirmation.";
           break;
       case TUT_SEEN_SHOP:
-          text << "The <yellow>" << static_cast<char>(get_screen_glyph(x,y))
+          text << "The <yellow>" << stringize_glyph(get_screen_glyph(x,y))
                << "<magenta> is a shop. You can enter it by typing "
               "<w><<<magenta>.";
           break;
@@ -1059,7 +1059,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (you.num_turns < 1)
           	return;
 
-          text << "The <w>" << static_cast<char>(get_screen_glyph(x,y))
+          text << "The <w>" << stringize_glyph(get_screen_glyph(x,y))
                << "<magenta> is a closed door. You can open it by walking into it. "
                   "Sometimes it is useful to close a door. Do so by pressing "
                   "<w>c<magenta>, followed by the direction.";

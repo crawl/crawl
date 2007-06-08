@@ -1640,7 +1640,9 @@ static void describe_cell(int mx, int my)
 
     std::string feature_desc = feature_description(mx, my);
 #ifdef DEBUG_DIAGNOSTICS
-    mprf("(%d,%d): %s", mx, my, feature_desc.c_str());
+    mprf("(%d,%d): %s - %s", mx, my,
+         stringize_glyph(get_screen_glyph(mx, my)).c_str(),
+         feature_desc.c_str());
 #else
     mpr(feature_desc.c_str());
 #endif

@@ -556,7 +556,6 @@ static void mpr_formatted_output(formatted_string fs, int colour)
         need_prefix = false;
     }
 
-
     for ( unsigned i = 0; i < fs.ops.size(); ++i )
     {
         switch ( fs.ops[i].type )
@@ -567,7 +566,7 @@ static void mpr_formatted_output(formatted_string fs, int colour)
         case FSOP_TEXT:
             message_out(Message_Line, colour, fs.ops[i].text.c_str(), curcol,
                         false);
-            curcol += fs.ops[i].text.length();
+            curcol += multibyte_strlen(fs.ops[i].text);
             break;
         case FSOP_CURSOR:
             break;
@@ -595,7 +594,7 @@ void formatted_mpr(const formatted_string& fs, int channel, int param)
 // output given string as formatted message, but check patterns
 // for string stripped of tags and store original tagged string
 // for message history
-void formatted_message_history(const std::string st, int channel, int param)
+void formatted_message_history(const std::string &st, int channel, int param)
 {
     if (suppress_messages)
         return;
@@ -787,7 +786,7 @@ void replay_messages(void)
                         textcolor( colour );
                         gotoxy(curcol, wherey());
                         cprintf(fs.ops[j].text.c_str());
-                        curcol += fs.ops[j].text.length();
+                        curcol += multibyte_strlen(fs.ops[j].text);
                         break;
                     case FSOP_CURSOR:
                         break;
