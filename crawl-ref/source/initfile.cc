@@ -568,6 +568,7 @@ void game_options::reset_options()
 
     autopickup_on = true;
     autoprayer_on = false;
+    show_more_prompt = true;
 
     show_turns = false;
 

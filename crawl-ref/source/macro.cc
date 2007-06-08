@@ -40,8 +40,9 @@
 #include <deque>
 #include <vector>
 
-#include <stdio.h>      // for snprintf
-#include <ctype.h>      // for tolower
+#include <cstdio>      // for snprintf
+#include <cctype>      // for tolower
+#include <cstdlib>
 
 #include "externs.h"
 #include "stuff.h"
@@ -213,12 +214,36 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
+static int read_key_code(std::string s)
+{
+    if (s.empty())
+        return (0);
+
+    int base = 10;
+    if (s[0] == 'x')
+    {
+        s = s.substr(1);
+        base = 16;
+    }
+    else if (s[0] == '^')
+    {
+        // ^A = 1, etc.
+        return (1 + toupper(s[1]) - 'A');
+    }
+
+    char *tail;
+    return strtol(s.c_str(), &tail, base);
+}
+
 /* 
  * Takes as argument a string, and returns a sequence of keys described
- * by the string. Most characters produce their own ASCII code. There
- * are two special cases: 
+ * by the string. Most characters produce their own ASCII code. These
+ * are the cases: 
  *   \\ produces the ASCII code of a single \
- *   \{123} produces 123 (decimal) 
+ *   \{123} produces 123 (decimal)
+ *   \{^A}  produces 1 (Ctrl-A)
+ *   \{x40} produces 64 (hexadecimal code)
+ *   \{!more} or \{!m} disables -more- prompt until the end of the macro.
  */
 static keyseq parse_keyseq( std::string s ) 
 {
@@ -231,26 +256,29 @@ static keyseq parse_keyseq( std::string s )
         buf2keyseq(s.c_str(), v);
         return (v);
     }
-    
-    for (std::string::iterator i = s.begin(); i != s.end(); i++) 
+
+    bool more_reset = false;
+    for (int i = 0, size = s.length(); i < size; ++i) 
     {
-        char c = *i;
+        char c = s[i];
         
         switch (state) 
         {           
         case 0: // Normal state
-            if (c == '\\') {
+            if (c == '\\')
                 state = 1;
-            } else {
+            else
                 v.push_back(c);
-            }
             break;          
 
         case 1: // Last char is a '\' 
-            if (c == '\\') {
+            if (c == '\\')
+            {
                 state = 0;
                 v.push_back(c);
-            } else if (c == '{') {
+            }
+            else if (c == '{')
+            {
                 state = 2;
                 num = 0;
             } 
@@ -258,14 +286,28 @@ static keyseq parse_keyseq( std::string s )
             break;
 
         case 2: // Inside \{}
-            if (c == '}') {
-                v.push_back(num);
-                state = 0;
-            } else if (c >= '0' && c <= '9') {
-                num = num * 10 + c - '0';
-            } 
-            // XXX Error handling
+        {
+            const std::string::size_type clb = s.find('}', i);
+            if (clb == std::string::npos)
+                break;
+
+            const std::string arg = s.substr(i, clb - i);
+            if (!more_reset && (arg == "!more" || arg == "!m"))
+            {
+                more_reset = true;
+                v.push_back(KEY_MACRO_MORE_PROTECT);
+            }
+            else
+            {
+                const int key = read_key_code(arg);
+                if (key)
+                    v.push_back(key);
+            }
+
+            state = 0;
+            i = clb;
             break;
+        }
         }
     }
     
@@ -295,10 +337,14 @@ static std::string vtostr( const keyseq &seq )
     for (keyseq::const_iterator i = v->begin(); i != v->end(); i++) 
     {
         if (*i <= 32 || *i > 127) {
-            char buff[10];
-
-            snprintf( buff, sizeof(buff), "\\{%d}", *i );
-            s += std::string( buff );
+            if (*i == KEY_MACRO_MORE_PROTECT)
+                s += "\\{!more}";
+            else
+            {
+                char buff[20];
+                snprintf( buff, sizeof(buff), "\\{%d}", *i );
+                s += std::string( buff );
+            }
 
             // Removing the stringstream code because its highly 
             // non-portable.  For starters, people and compilers 
@@ -353,15 +399,30 @@ static void macro_del( macromap &mapref, keyseq key )
     mapref.erase( key );    
 }
 
-
 /*
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros. 
  */
-static void macro_buf_add( keyseq actions ) 
+static void macro_buf_add( const keyseq &actions, bool reverse = false ) 
 {
-    for (keyseq::iterator i = actions.begin(); i != actions.end(); i++)
-        Buffer.push_back(*i);   
+    keyseq act(actions.size());
+    bool need_more_reset = false;
+    for (keyseq::const_iterator i = actions.begin(); i != actions.end();
+         ++i)
+    {
+        int key = *i;
+        if (key == KEY_MACRO_MORE_PROTECT)
+        {
+            key = KEY_MACRO_DISABLE_MORE;
+            need_more_reset = true;
+        }
+        act.push_back(key);
+    }
+    if (need_more_reset)
+        act.push_back(KEY_MACRO_ENABLE_MORE);
+
+    Buffer.insert( reverse? Buffer.begin() : Buffer.end(),
+                   act.begin(), act.end() );
 }
 
 /*
@@ -377,7 +438,8 @@ void macro_buf_add( int key )
  * Adds keypresses from a sequence into the internal keybuffer. Does some
  * O(N^2) analysis to the sequence to replace macros. 
  */
-static void macro_buf_add_long( keyseq actions, macromap &keymap = Keymaps[KC_DEFAULT] ) 
+static void macro_buf_add_long( keyseq actions,
+                                macromap &keymap = Keymaps[KC_DEFAULT] ) 
 {
     keyseq tmp;
     
@@ -400,7 +462,8 @@ static void macro_buf_add_long( keyseq actions, macromap &keymap = Keymaps[KC_DE
             
             // Found a macro. Add the expansion (action) of the 
             // macro into the buffer. 
-            if (result.size() > 0) {
+            if (result.size() > 0)
+            {
                 macro_buf_add( result );
                 break;
             }
@@ -436,7 +499,7 @@ static void macro_buf_apply_command_macro( void )
     // find the longest match from the start of the buffer and replace it
     while (tmp.size() > 0)
     {
-        keyseq  result = Macros[tmp]; 
+        const keyseq &result = Macros[tmp]; 
 
         if (result.size() > 0)
         {
@@ -444,10 +507,7 @@ static void macro_buf_apply_command_macro( void )
             for (unsigned int i = 0; i < tmp.size(); i++)
                 Buffer.pop_front();
 
-            // Add macro to front:
-            for (keyseq::reverse_iterator k = result.rbegin(); k != result.rend(); k++)
-                Buffer.push_front(*k);  
-
+            macro_buf_add(result, true);
             break;  
         }
 
@@ -582,7 +642,15 @@ int getch_with_command_macros( void )
 void flush_input_buffer( int reason )
 {
     if (Options.flush_input[ reason ])
-        Buffer.clear();
+    {
+        while (!Buffer.empty())
+        {
+            const int key = Buffer.front();
+            Buffer.pop_front();
+            if (key == KEY_MACRO_ENABLE_MORE)
+                Options.show_more_prompt = true;
+        }
+    }
 }
 
 void macro_add_query( void )
@@ -738,4 +806,17 @@ void macro_userfn(const char *keys, const char *regname)
     // Converting 'keys' to a key sequence is the difficulty. Doing it portably
     // requires a mapping of key names to whatever getch() spits back, unlikely
     // to happen in a hurry.
+}
+
+bool is_synthetic_key(int key)
+{
+    switch (key)
+    {
+    case KEY_MACRO_ENABLE_MORE:
+    case KEY_MACRO_DISABLE_MORE:
+    case KEY_MACRO_MORE_PROTECT:
+        return (true);
+    default:
+        return (false);
+    }
 }

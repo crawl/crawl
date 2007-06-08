@@ -1102,6 +1102,14 @@ void process_command( command_type cmd )
         start_running( RDIR_RIGHT, RMODE_START );
         break;
 
+    case CMD_DISABLE_MORE:
+        Options.show_more_prompt = false;
+        break;
+
+    case CMD_ENABLE_MORE:
+        Options.show_more_prompt = true;
+        break;
+        
     case CMD_TOGGLE_AUTOPICKUP:
         toggle_flag( &Options.autopickup_on, "Autopickup");
         break;
@@ -2528,6 +2536,8 @@ command_type keycode_to_command( keycode_type key )
 {
     switch ( key )
     {
+    case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
+    case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
     case 'b': return CMD_MOVE_DOWN_LEFT;
     case 'h': return CMD_MOVE_LEFT;
     case 'j': return CMD_MOVE_DOWN;
@@ -2648,7 +2658,9 @@ keycode_type get_next_keycode()
 
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
     keyin = unmangle_direction_keys(getch_with_command_macros());
-    mesclr();
+
+    if (!is_synthetic_key(keyin))
+        mesclr();
 
     return (keyin);
 }

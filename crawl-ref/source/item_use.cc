@@ -48,6 +48,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "macro.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -1218,6 +1219,7 @@ void shoot_thing(void)
     if (you.berserker)
     {
         canned_msg(MSG_TOO_BERSERK);
+        flush_input_buffer( FLUSH_ON_FAILURE );        
         return;
     }
 
@@ -1226,6 +1228,7 @@ void shoot_thing(void)
     if (item == ENDOFPACK)
     {
         mpr("No suitable missiles.");
+        flush_input_buffer( FLUSH_ON_FAILURE );
         return;
     }
 

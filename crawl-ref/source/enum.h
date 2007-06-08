@@ -750,6 +750,10 @@ enum command_type
     CMD_TARGET_WIZARD_MAKE_FRIENDLY,
     CMD_TARGET_HELP,
 
+    // Disable/enable -more- prompts.
+    CMD_DISABLE_MORE,
+    CMD_ENABLE_MORE,
+    
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD
 

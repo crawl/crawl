@@ -2179,7 +2179,7 @@ static int find_feature(unsigned char feature, int curs_x, int curs_y,
                 int x = cx + dx, y = cy + dy;
                 if (!in_bounds(x, y))
                     continue;
-                if (is_feature(feature, x, y + 1))
+                if (is_feature(feature, x, y))
                 {
                     ++matchcount;
                     if (!ignore_count--)
@@ -2240,8 +2240,8 @@ static int find_feature( const std::vector<coord_def>& features,
             if (forward? !ignore_count-- : --ignore_count == 1)
             {
                 // We want to cursor to (x,y)
-                *move_x = coord.x - (start_x + curs_x);
-                *move_y = coord.y - (start_y + curs_y);
+                *move_x = coord.x - (start_x + curs_x - 1);
+                *move_y = coord.y - (start_y + curs_y - 1);
                 return matchcount;
             }
             else if (!forward || firstx == -1)
@@ -2256,8 +2256,8 @@ static int find_feature( const std::vector<coord_def>& features,
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
     {
-        *move_x = firstx - (start_x + curs_x);
-        *move_y = firsty - (start_y + curs_y);
+        *move_x = firstx - (start_x + curs_x - 1);
+        *move_y = firsty - (start_y + curs_y - 1);
         return firstmatch;
     }
     return 0;

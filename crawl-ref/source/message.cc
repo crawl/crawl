@@ -649,22 +649,24 @@ void mesclr( bool force )
 
 void more(void)
 {
-    char keypress = 0;
+    if (Options.show_more_prompt)
+    {
+        char keypress = 0;
 
-    if (Options.tutorial_left)
-        message_out(crawl_view.msgsz.y - 1,
-                    LIGHTGREY,
-                    "--more--                        "
-                    "Press Ctrl-P to reread old messages",
-                    2, false);
-    else
-        message_out(crawl_view.msgsz.y - 1,
-                    LIGHTGREY, "--more--", 2, false);
+        if (Options.tutorial_left)
+            message_out(crawl_view.msgsz.y - 1,
+                        LIGHTGREY,
+                        "--more--                        "
+                        "Press Ctrl-P to reread old messages",
+                        2, false);
+        else
+            message_out(crawl_view.msgsz.y - 1,
+                        LIGHTGREY, "--more--", 2, false);
 
-    do
-        keypress = getch();
-    while (keypress != ' ' && keypress != '\r' && keypress != '\n');
-
+        do
+            keypress = getch();
+        while (keypress != ' ' && keypress != '\r' && keypress != '\n');
+    }
     mesclr(true);
 }                               // end more()
 

@@ -1462,6 +1462,7 @@ public:
 
     bool        autopickup_on;
     bool        autoprayer_on;
+    bool        show_more_prompt;
 
     bool        show_turns;     // Show turns used in HUD.
 

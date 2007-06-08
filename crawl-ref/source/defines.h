@@ -292,4 +292,10 @@
 
 #define MIN(x, y) MINIMUM(x, y)
 
+
+// Synthetic keys:
+#define KEY_MACRO_MORE_PROTECT -10
+#define KEY_MACRO_DISABLE_MORE -1
+#define KEY_MACRO_ENABLE_MORE  -2
+
 #endif

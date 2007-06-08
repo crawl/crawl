@@ -45,6 +45,7 @@ void macro_userfn(const char *keys, const char *registryname);
 void macro_buf_add(int key);
 
 bool is_userfunction(int key);
+bool is_synthetic_key(int key);
 
 const char *get_userfunction(int key);
 
