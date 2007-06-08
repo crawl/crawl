@@ -1833,16 +1833,16 @@ static int prompt_travel_branch(int prompt_flags)
             if (allow_waypoints)
             {
                 if (waypoint_list)
-                    segs.push_back("[*] lists branches");
+                    segs.push_back("* - list branches");
                 else if (waycount)
-                    segs.push_back("[*] lists waypoints");
+                    segs.push_back("* - list waypoints");
             }
             
             if (*trans_travel_dest && remember_targ)
                 segs.push_back(
-                    make_stringf("[Enter] for %s", trans_travel_dest) );
+                    make_stringf("Enter - %s", trans_travel_dest) );
 
-            segs.push_back("[?] for help");
+            segs.push_back("? - help");
 
             shortcuts += comma_separated_line(segs.begin(), segs.end(),
                                               ", ", ", ");
@@ -2009,7 +2009,7 @@ static level_id prompt_travel_depth(const level_id &id)
     {
         mesclr(true);
         mprf(MSGCH_PROMPT, "What level of %s? "
-             "(default %d, [?] for help) ", branches[branch].longname, depth);
+             "(default %d, ? - help) ", branches[branch].longname, depth);
 
         char buf[100];
         const int response =
