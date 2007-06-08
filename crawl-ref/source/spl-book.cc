@@ -1051,10 +1051,6 @@ unsigned char read_book( item_def &book, int action )
     /* Put special book effects in another function which can be called from
        memorise as well */
 
-    // reading spell descriptions doesn't take time:
-    if (action != RBOOK_READ_SPELL)
-        you.turn_is_over = true;
-
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
     return (key2);
@@ -1209,7 +1205,6 @@ bool learn_spell(void)
         if (you.spells[i] == specspell)
         {
             mpr("You already know that spell!");
-            you.turn_is_over = true;
             return (false);
         }
     }
@@ -1219,14 +1214,12 @@ bool learn_spell(void)
     if (player_spell_levels() < levels_needed)
     {
         mpr("You can't memorise that many levels of magic yet!");
-        you.turn_is_over = true;
         return (false);
     }
 
     if (you.experience_level < spell_difficulty(specspell))
     {
         mpr("You're too inexperienced to learn that spell!");
-        you.turn_is_over = true;
         return (false);
     }
 
