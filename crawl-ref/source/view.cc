@@ -112,7 +112,7 @@ unsigned map_cell::glyph() const
 
 bool map_cell::known() const
 {
-    return (object && (flags & (MAP_SEEN_FLAG | MAP_MAGIC_MAPPED_FLAG)));
+    return (object && (flags & MAP_GRID_KNOWN));
 }
 
 bool map_cell::seen() const
