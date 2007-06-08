@@ -422,7 +422,7 @@ int putch(unsigned char chr)
 int putwch(unsigned chr)
 {
 #ifdef UNICODE_GLYPHS
-    if (chr <= 127)
+    if (chr <= 127 || Options.char_set != CSET_UNICODE)
         return (putch(chr));
 
     wchar_t c = chr;
