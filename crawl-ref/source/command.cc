@@ -569,7 +569,11 @@ static const char *targeting_help =
 static const char *interlevel_travel_branch_help =
     "<h>Interlevel Travel (choose a branch):\n"
     " Use the shortcut letter for a branch to select the branch for travel.\n"
-    " <w>Enter</w>  : Repeat last interlevel travel.\n"
+    "\n"
+    " Once you select a branch, you will be prompted for a depth in that\n"
+    " branch (more help is available there).\n"
+    "\n"
+   " <w>Enter</w>  : Repeat last interlevel travel.\n"
     " <w>.</w>      : Travel to a level in the current branch.\n"
     " <w><<</w>      : Go up the nearest stairs.\n"
     " <w>></w>      : Go down the nearest stairs.\n"
