@@ -878,7 +878,9 @@ void melee_attack::player_warn_miss()
     if (def->behaviour != BEH_SLEEP)
         behaviour_event( def, ME_WHACK, MHITYOU );
 
-    msg::stream << player_why_missed() << str_monam(*def, DESC_NOCAP_THE)
+    msg::stream << player_why_missed()
+                << str_monam(*def, DESC_NOCAP_THE)
+                << "."
                 << std::endl;
 }
 
