@@ -1937,18 +1937,33 @@ void show_skills()
         }
     }
 
-    // if any more skills added, must adapt letters to go into caps
-    gotoxy(1, bottom_line-1);
-    textcolor(LIGHTGREY);
-    cprintf("Press the letter of a skill to choose whether you want to practise it.");
-
-    if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
+    if (Options.tutorial_left)
     {
+      textcolor(MAGENTA);
+      gotoxy(1, bottom_line-5);
+      formatted_string::parse_block(
+        "This screen shows the skill set of your character. You can pick up new" EOL
+        "skills by performing the corresponding actions. The number next to the" EOL
+        "skill is your current level, the higher the better. The blue percent  " EOL
+        "value shows your progress towards the next skill level. You can toggle" EOL
+        "which skills to train by pressing their slot letters. A <darkgrey>greyish<magenta> skill " EOL
+        "will increase at a decidedly slower rate and ease training of others. ",
+        false).display();
+    }
+    else
+    {
+      // if any more skills added, must adapt letters to go into caps
+      gotoxy(1, bottom_line-1);
+      textcolor(LIGHTGREY);
+      cprintf("Press the letter of a skill to choose whether you want to practise it.");
+      if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
+      {
         gotoxy(1, bottom_line);
         formatted_string::parse_string("Press '!' to toggle between "
                                        "<blue>progress</blue> and "
                                        "<red>aptitude</red> "
                                        "display.").display();
+      }
     }
 
     int get_thing = getch();

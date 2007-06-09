@@ -3693,7 +3693,8 @@ enum tutorial_event_type
     TUT_YOU_MUTATED,        // 40
     TUT_NEW_ABILITY,  
     TUT_WIELD_WEAPON,
-    TUT_EVENTS_NUM          // 43
+    TUT_FLEEING_MONSTER,
+    TUT_EVENTS_NUM          // 44
 }; // for numbers higher than 45 change size of tutorial_events in externs.h
 
 enum tutorial_types

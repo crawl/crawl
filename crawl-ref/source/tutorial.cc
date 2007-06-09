@@ -342,6 +342,8 @@ static std::string tut_debug_list(int event)
           return "gained a divine ability";
       case TUT_WIELD_WEAPON:
           return "wielded an unsuitable weapon";
+      case TUT_FLEEING_MONSTER:
+          return "made a monster flee";
       default:
           return "faced a bug";
     }
@@ -806,6 +808,9 @@ void tutorial_first_monster(const monsters& mon)
     unsigned short col;
     get_mons_glyph(&mon, &ch, &col);
 
+    if (ch == ' ') // happens if monster standing on dropped corpse or item
+       return;
+
     std::string text = "<magenta>That ";
     text += colour_to_tag(col);
     text += ch;
@@ -822,24 +827,28 @@ void tutorial_first_monster(const monsters& mon)
     if (Options.tutorial_type == TUT_RANGER_CHAR)
     {
         text =  "However, as a hunter you will want to deal with it using your "
-                "bow. Do this as follows: <w>wbf+.<magenta> where <w>wb<magenta> "
-                "wields the bow, <w>f<magenta> fires appropriate ammunition "
-                "(your arrows) and enters targeting mode. <w>+<magenta> and "
-                "<w>-<magenta> allow you to select the proper monster. Finally, "
-                "<w>Enter<magenta> or <w>.<magenta> fire. If you miss, "
-                "<w>ff<magenta> fires at the previous target again.";
+                "bow. Do this as follows: <w>wbff<magenta> where <w>wb<magenta> "
+                "wields the bow, and <w>ff<magenta> fires appropriate ammunition "
+                "(your arrows) at the nearest hostile monster. If you'd like to "
+                "choose a new monster you can type <w>f<magenta> followed by "
+                "<w>+<magenta> or <w>-<magenta> instead to cycle through the "
+                "available targets. Then press <w>Enter<magenta>, <w>f<magenta> "
+                "or <w>.<magenta> to fire. If you miss, <w>ff<magenta> fires at "
+                "the previous target again.";
         print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
     else if (Options.tutorial_type == TUT_MAGIC_CHAR)
     {
-        text =  "However, as a conjurer you will want to deal with it using magic."
-                "Do this as follows: <w>Za+.<magenta> where <w>Za<magenta> zaps "
+        text =  "However, as a conjurer you will want to deal with it using magic. "
+                "Do this as follows: <w>Za.<magenta> where <w>Za<magenta> zaps "
                 "the first spell you know, ";
         text += spell_title(get_spell_by_letter('a'));
-        text += ", and enters targeting mode. <w>+<magenta> and <w>-<magenta> "
-                "allow you to select the proper target. Finally, <w>Enter<magenta> "
-                "or <w>.<magenta> fire. If you miss, <w>Zap<magenta> will "
-                "fire at the previous target again.";
+        text += ", and <w>.<magenta> shoots at the targetted monster (the closest "
+                "hostile monster). To target a different monster, use <w>+<magenta> "
+                "or <w>-<magenta> to cycle through the available targets. "
+                "<w>Enter<magenta>, <w>f<magenta> or <w>.<magenta> will fire. If you "
+                "miss, <w>Za<magenta> followed by any of the aforementioned keys "
+                "will fire at it again.";
         print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
 
@@ -911,8 +920,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
           text << "You have picked up a spellbook ('<w>"
                << static_cast<char>(ch)
-               <<
-              "'<magenta>). You can read it by typing <w>r<magenta>, "
+               << "'<magenta>). You can read it by typing <w>r<magenta>, "
               "memorise spells via <w>M<magenta> and cast a memorised "
               "spell with <w>Z<magenta>.";
           
@@ -923,16 +931,14 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           }
           break;
       case TUT_SEEN_WEAPON:
-          text <<
-              "This is the first weapon ('<w>(<magenta>') you've picked up. "
+          text << "This is the first weapon ('<w>(<magenta>') you've picked up. "
               "Use <w>w<magenta> to wield it, but be aware that this weapon "
               "might train a different skill from your current one. You can "
               "view the weapon's properties with <w>v<magenta>.";
 
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
           {
-              text <<
-                  "\nAs you're already trained in Axes you should stick "
+              text << "\nAs you're already trained in Axes you should stick "
                   "with these. Checking other axes can be worthwhile.";
           }
           break;
@@ -1034,6 +1040,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
           break;
       case TUT_SEEN_TRAPS:
+          object = env.show[ex][ey];
+          colour = env.show_col[ex][ey];
+          get_item_symbol( object, &ch, &colour );
           text << "Oops... you just triggered a trap. An unwary adventurer will "
                   "occasionally stumble into one of these nasty constructions "
                   "depicted by <w>^<magenta>. They can do physical damage (with "
@@ -1081,8 +1090,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           {
               text << "\nTo dedicate your kills to "
                    << god_name(you.religion)
-                   << " <w>p<magenta>ray before battle. Not all gods will be "
-                      "pleased by doing this.";
+                   << " <w>p<magenta>ray before battle. Note that not all gods "
+                      "will be pleased about you doing this.";
           }
           break;
       case TUT_NEW_LEVEL:
@@ -1249,7 +1258,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (you.species == SP_CENTAUR)
               text << " As a four-legged centaur you are particularly quick - "
                       "running is an option! ";
-          if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.berserker)
+          if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.berserker
+              && !you.hunger)
           {
               text << "\nAlso, with "
                    << god_name(you.religion)
@@ -1278,6 +1288,20 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
               text << "You can easily switch between weapons in slots a and "
                       "b by pressing <w>'<magenta>.";
           }
+          break;
+      case TUT_FLEEING_MONSTER:
+          if (!Options.tutorial_type == TUT_BERSERK_CHAR)
+              return;
+              
+          text << "While unsporting, it is sometimes useful to attack a fleeing "
+                  "monster by throwing something after it. To do this, press "
+                  "<w>t<magenta>, choose a throwing weapon, e.g. one of your "
+                  "spears, use <w>+<magenta> to select a monster and press "
+                  "<w>.<magenta>, <w>f<magenta> or <w>Enter<magenta>. The closest "
+                  "monster will be autoselected. If you've got the fire_order "
+                  "option set you can directly use <w>ff<magenta> or "
+                  "<w>f+.<magenta> instead; the game will pick the first weapon "
+                  "that fits the option.";
           break;
       case TUT_SEEN_MONSTER:
       case TUT_SEEN_FIRST_OBJECT:

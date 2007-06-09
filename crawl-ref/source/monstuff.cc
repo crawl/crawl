@@ -1462,6 +1462,8 @@ void behaviour_event( monsters *mon, int event, int src,
         // assume monsters know where to run from, even
         // if player is invisible.
         setTarget = true;
+        if (see_grid(mon->x, mon->y))
+           learned_something_new(TUT_FLEEING_MONSTER);
         break;
 
     case ME_CORNERED:
