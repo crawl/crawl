@@ -1953,14 +1953,14 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     pbolt.damage.size  = dice_mult * pbolt.damage.size / 100;
     pbolt.damage.size += slayDam;
 
-    scale_dice( pbolt.damage );
-
     // only add bonuses if we're throwing something sensible
     if (thrown || launched || wepClass == OBJ_WEAPONS)
     {
         pbolt.hit += ammoHitBonus + lnchHitBonus;
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
+
+    scale_dice( pbolt.damage );
 
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS,

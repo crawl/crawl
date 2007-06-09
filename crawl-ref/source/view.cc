@@ -2504,7 +2504,8 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
         case CONTROL('F'):
         case CONTROL('W'):
-            travel_cache.add_waypoint(start_x + curs_x, start_y + curs_y);
+            travel_cache.add_waypoint(start_x + curs_x - 1,
+                                      start_y + curs_y - 1);
             // We need to do this all over again so that the user can jump
             // to the waypoint he just created.
             features.clear();
@@ -2516,7 +2517,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         case CONTROL('E'):
         case CONTROL('X'):
             {
-                int x = start_x + curs_x, y = start_y + curs_y;
+                int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
                 if (getty == CONTROL('X'))
                     toggle_exclude(x, y);
                 else
