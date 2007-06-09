@@ -405,7 +405,7 @@ static void macro_del( macromap &mapref, keyseq key )
  */
 static void macro_buf_add( const keyseq &actions, bool reverse = false ) 
 {
-    keyseq act(actions.size());
+    keyseq act;
     bool need_more_reset = false;
     for (keyseq::const_iterator i = actions.begin(); i != actions.end();
          ++i)
