@@ -1072,7 +1072,6 @@ static builder_rc_type builder_by_type(int level_number, char level_type)
             {
                 "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
             };
-            you.unique_creatures[MONS_MNOLEG + which_demon] = true;
 
             const int vault = 
                 random_map_for_tag(pandemon_level_names[which_demon], false);
