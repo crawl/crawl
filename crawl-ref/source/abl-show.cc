@@ -1709,7 +1709,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
         }
     }
 
-    std::vector<MenuEntry*> sel = abil_menu.show();
+    std::vector<MenuEntry*> sel = abil_menu.show_ab();
     redraw_screen();
     if ( sel.empty() )
     {

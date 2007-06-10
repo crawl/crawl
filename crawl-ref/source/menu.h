@@ -185,6 +185,7 @@ public:
 
     void reset();
     std::vector<MenuEntry *> show(bool reuse_selections = false);
+    std::vector<MenuEntry *> show_ab(bool reuse_selections = false);
     std::vector<MenuEntry *> selected_entries() const;
 
     size_t item_count() const    { return items.size(); }
@@ -222,6 +223,7 @@ protected:
 
 protected:
     void do_menu();
+    void do_menu_ab();
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
