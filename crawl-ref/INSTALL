@@ -50,6 +50,12 @@ Lua support requires liblua, which you can build by downloading the
 sources from www.lua.org. On most Unixes, you can also use the native
 package management system to easily install lua.
 
+Unicode support needs libncursesw and its header files; these are
+usually available in your operating system's package-management
+system. Unicode is not supported on Windows or DOS. Some systems, such
+as Mac OS X, may have Unicode support available in libncurses itself
+(i.e., without a separate libncursesw).
+
 
 Makefile system
 ---------------
@@ -347,14 +353,18 @@ annoying than building Lua (you have to roll your own makefile), but
 not by much.
 
 
-Unicode
--------
+Unicode (Unix only)
+-------------------
 
 Modern Unixes may support Unicode terminals (particularly xterms). If
 you have a terminal that can display Unicode characters, and an
 ncurses library that can handle Unicode (libncursesw, and its devel
 headers), you can build Crawl to display Unicode in the map: set
 UNICODE_GLYPHS = y in makefile.unix.
+
+On Mac OS X, libncurses includes Unicode support; makefile.unix should
+detect Mac OS automatically and link to libncurses when
+UNICODE_GLYPHS=y.
 
 NOTE: You may have libncursesw, but not have the header files; check
 that you have the header files installed as well, or you'll get a lot
@@ -363,4 +373,13 @@ of errors. Crawl expects the ncursesw headers to be in
 
 After compiling Crawl with Unicode support, you still need to add the
 line "char_set = unicode" in your .crawlrc to tell Crawl to use
-Unicode.
+Unicode. You may also need to set the locale in your terminal (notably
+on Mac OS) if the encoding does not default to UTF-8. To check this,
+run "locale charmap", which should say "UTF-8". If your encoding is
+not UTF-8, you can force it to UTF-8 on most systems by doing "export
+LC_ALL=en_US.UTF-8" or the equivalent, depending on your language
+locale and what shell you're using.
+
+If you're playing Crawl on a remote machine, the character encoding
+needs to be UTF-8 on the server, *and* your local terminal (where
+you're running telnet/ssh) needs to be able to decode UTF-8.
