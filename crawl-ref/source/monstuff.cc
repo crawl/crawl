@@ -988,7 +988,10 @@ static bool valid_morph( monsters *monster, int new_mclass )
         // but if we ever do have polydemon, these will be needed:
         || new_mclass == MONS_PLAYER_GHOST
         || new_mclass == MONS_PANDEMONIUM_DEMON
+
+        // Other poly-unsuitable things
         || new_mclass == MONS_ROYAL_JELLY
+        || new_mclass == MONS_ORB_GUARDIAN
         || new_mclass == MONS_ORANGE_STATUE
         || new_mclass == MONS_SILVER_STATUE
         || new_mclass == MONS_ICE_STATUE

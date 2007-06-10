@@ -63,7 +63,9 @@ static struct termios game_term;
 
 // Its best if curses comes at the end (name conflicts with Solaris). -- bwr
 #ifndef CURSES_INCLUDE_FILE
+    #ifndef _XOPEN_SOURCE_EXTENDED
     #define _XOPEN_SOURCE_EXTENDED
+    #endif
     #include <curses.h>
 #else
     #include CURSES_INCLUDE_FILE
