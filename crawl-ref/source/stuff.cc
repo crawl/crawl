@@ -322,6 +322,8 @@ bool see_grid(unsigned char grx, unsigned char gry)
 static bool io_inited = false;
 void cio_init()
 {
+    io_inited = true;
+
 #ifdef UNIX
     unixcurses_startup();
 #endif
@@ -333,8 +335,6 @@ void cio_init()
 #ifdef DOS
     init_libdos();
 #endif
-    
-    io_inited = true;
     
     crawl_view.init_geometry();
 
