@@ -2001,8 +2001,8 @@ static level_id prompt_travel_depth(const level_id &id)
 {
     branch_type branch = id.branch;
     // Handle one-level branches by not prompting.
-    // if (single_level_branch(branch))
-    //    return level_id(branch, 1);
+    if (single_level_branch(branch))
+        return level_id(branch, 1);
 
     int depth = get_nearest_level_depth(branch);
     for (;;)
