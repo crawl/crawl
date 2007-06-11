@@ -1,3 +1,8 @@
+Stone Soup 0.2.7 (20070611)
+---------------------------
+* Pandemonium unique demons (Cerebov et al.) were not being generated, fixed.
+* Banishment converted any dungeon feature under the player to floor, fixed.
+
 Stone Soup 0.2.6 (20070606)
 ---------------------------
 * Fixed travel cache corruption when visiting Abyss/Lab/Pan.
