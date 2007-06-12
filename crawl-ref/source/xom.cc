@@ -502,14 +502,15 @@ static bool xom_is_good(int sever)
             god_speaks(GOD_XOM,
                        (temp_rand == 0) ? "\"Serve the mortal, my child!\"" :
                        (temp_rand == 1) ? "Xom grants you a demonic assistant."
-                       : "Xom opens a gate so that something can appear.");
+                       : "Xom opens a gate.");
                     
             done = true;
         }
     }
     else if ((random2(sever) <= 6) && there_are_monsters_nearby())
     {
-        if (monsters* mon = get_random_nearby_monster())
+        monsters* mon = get_random_nearby_monster();
+        if (mon && mon->holiness() == MH_NATURAL)
         {
             temp_rand = random2(4);
                 
@@ -588,7 +589,8 @@ static bool xom_is_good(int sever)
         { 
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
             lightningprot = true;
-        } else
+        }
+        else
             lightningprot = false;
         mpr("The area is suffused with divine lightning!");
                 
