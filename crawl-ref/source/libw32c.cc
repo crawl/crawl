@@ -609,7 +609,7 @@ static void scroll_message_window()
     clip_rectangle.Top      = crawl_view.msgp.y - 1;
 
     COORD new_origin;
-    new_origin.X            = crawl_view.msgp.x;
+    new_origin.X            = crawl_view.msgp.x - 1;
     new_origin.Y            = crawl_view.msgp.y - 1;
 
     CHAR_INFO fill;
