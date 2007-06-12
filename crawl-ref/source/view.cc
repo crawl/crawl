@@ -307,7 +307,8 @@ static void get_symbol( int x, int y,
 
     if (object < NUM_FEATURES)
     {
-        *ch = Feature[object].symbol;
+        *ch = magic_mapped? Feature[object].magic_symbol
+                          : Feature[object].symbol;
 
         if (colour)
         {
