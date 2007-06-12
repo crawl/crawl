@@ -121,8 +121,8 @@ static void surge_power(spell_type spell)
              (enhanced == 2)  ? " strong" :
              (enhanced > 2)   ? " huge"
                               : "",
-             (enhanced < 0) ? " numb sensation."
-                            : " surge of power!");
+             (enhanced < 0) ? "numb sensation."
+                            : "surge of power!");
     }
 }                               // end surge_power()
 
