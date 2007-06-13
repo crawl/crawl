@@ -651,17 +651,20 @@ static const char *chunk_flavour_phrase(bool likes_chunks)
     const char *phrase =
         likes_chunks? "tastes great." : "tastes terrible.";
 
-    const int gourmand = you.duration[DUR_GOURMAND];
-    if (gourmand >= GOURMAND_MAX)
-        phrase = 
-            one_chance_in(8)? "tastes like chicken!"
-                            : "tastes great.";
-    else if (gourmand > GOURMAND_MAX * 75 / 100)
-        phrase = "tastes very good.";
-    else if (gourmand > GOURMAND_MAX * 50 / 100)
-        phrase = "tastes good.";
-    else if (gourmand > GOURMAND_MAX * 25 / 100)
-        phrase = "is not very appetising.";
+    if (!likes_chunks)
+    {
+        const int gourmand = you.duration[DUR_GOURMAND];
+        if (gourmand >= GOURMAND_MAX)
+            phrase = 
+                one_chance_in(1000)? "tastes like chicken!"
+                                   : "tastes great.";
+        else if (gourmand > GOURMAND_MAX * 75 / 100)
+            phrase = "tastes very good.";
+        else if (gourmand > GOURMAND_MAX * 50 / 100)
+            phrase = "tastes good.";
+        else if (gourmand > GOURMAND_MAX * 25 / 100)
+            phrase = "is not very appetising.";
+    }
 
     return (phrase);
 }
