@@ -1797,9 +1797,47 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     return (hurted);
 }                               // end mons_adjust_flavoured()
 
+static bool monster_resists_mass_enchantment(monsters *monster,
+                                             enchant_type wh_enchant,
+                                             int pow)
+{
+    // assuming that the only mass charm is control undead:
+    if (wh_enchant == ENCH_CHARM)
+    {
+        if (mons_friendly(monster))
+            return (true);
+
+        if (mons_class_holiness(monster->type) != MH_UNDEAD)
+            return (true);
+
+        if (check_mons_resist_magic( monster, pow ))
+        {
+            simple_monster_message(monster, mons_immune_magic(monster) ?
+                                   " is unaffected." : " resists.");
+            return (true);
+        }
+    }
+    else if (wh_enchant == ENCH_CONFUSION
+             || mons_holiness(monster) == MH_NATURAL)
+    {
+        if (check_mons_resist_magic( monster, pow ))
+        {
+            simple_monster_message(monster, mons_immune_magic(monster) ?
+                                   " is unaffected." : " resists.");
+            return (true);
+        }
+    }
+    else  // trying to enchant an unnatural creature doesn't work
+    {
+        simple_monster_message(monster, " is unaffected.");
+        return (true);
+    }
+
+    return (false);
+}
 
 // Enchants all monsters in player's sight.
-bool mass_enchantment( int wh_enchant, int pow, int origin )
+bool mass_enchantment( enchant_type wh_enchant, int pow, int origin )
 {
     int i;                      // loop variable {dlb}
     bool msg_generated = false;
@@ -1817,41 +1855,13 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
-        // assuming that the only mass charm is control undead:
-        if (wh_enchant == ENCH_CHARM)
-        {
-            if (mons_friendly(monster))
-                continue;
-
-            if (mons_class_holiness(monster->type) != MH_UNDEAD)
-                continue;
-
-            if (check_mons_resist_magic( monster, pow ))
-            {
-                simple_monster_message(monster, mons_immune_magic(monster) ?
-                                       " is unaffected." : " resists.");
-                continue; 
-            }
-        }
-        else if (mons_holiness(monster) == MH_NATURAL)
-        {
-            if (check_mons_resist_magic( monster, pow ))
-            {
-                simple_monster_message(monster, mons_immune_magic(monster) ?
-                                       " is unaffected." : " resists.");
-                continue;
-            }
-        }
-        else  // trying to enchant an unnatural creature doesn't work
-        {
-            simple_monster_message(monster, " is unaffected.");
-            continue;
-        }
-
-        if (monster->has_ench(static_cast<enchant_type>(wh_enchant)))
+        if (monster->has_ench(wh_enchant))
             continue;
 
-        if (monster->add_ench(static_cast<enchant_type>(wh_enchant)))
+        if (monster_resists_mass_enchantment(monster, wh_enchant, pow))
+            continue;        
+
+        if (monster->add_ench(wh_enchant))
         {
             if (player_monster_visible( monster ))
             {
