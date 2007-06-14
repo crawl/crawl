@@ -300,6 +300,19 @@ static bool is_good_god(god_type god)
         god == GOD_ELYVILON;
 }
 
+bool is_priest_god(god_type god)
+{
+    switch (god)
+    {
+    case GOD_ZIN:
+    case GOD_YREDELEMNUL:
+    case GOD_BEOGH:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 void dec_penance(god_type god, int val)
 {
     if (you.penance[god] > 0)
@@ -755,6 +768,9 @@ const char *god_name( god_type which_god, bool long_name ) // mv - rewritten
     case GOD_NO_GOD:
         sprintf(godname_buff, "No God");
         break;
+    case GOD_RANDOM:
+        sprintf(godname_buff, "random");
+        break;
     case GOD_ZIN:
         sprintf(godname_buff, "Zin%s", long_name ? " the Law-Giver" : "");
         break;
@@ -939,6 +955,7 @@ bool did_god_conduct( int thing_done, int level )
             piety_change = -level;
             // no penance as Beogh is not a good god
             ret = true;
+            break;
         default:
             break;
         }
@@ -1856,210 +1873,130 @@ void divine_retribution( god_type god )
         break;
 
     case GOD_BEOGH:
-             
         // orcish theme
         switch (random2(8))
         {
-          case 0: // smiting (25%)
-          case 1:
-                 divine_hurt = 10 + random2(10);
-
-                 for (loopy = 0; loopy < 5; loopy++)
-                    divine_hurt += random2( you.experience_level );
-                    
-                 if (!player_under_penance() && you.piety > random2(400))
-                 {
-                    snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                               "of %s... this time.", god_name(GOD_BEOGH));
+        case 0: // smiting (25%)
+        case 1:
+            divine_hurt = 10 + random2(10);
+            
+            for (loopy = 0; loopy < 5; loopy++)
+                divine_hurt += random2( you.experience_level );
+            
+            if (!player_under_penance() && you.piety > random2(400))
+            {
+                snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
+                         "of %s... this time.", god_name(GOD_BEOGH));
                     god_speaks(you.religion, info);
-                 }
-                 else
-                 {
-                    simple_god_message( " smites you!", god );
-                    ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
-                    dec_penance( GOD_BEOGH, 1 );
-                 }
-                 break;
+            }
+            else
+            {
+                simple_god_message( " smites you!", god );
+                ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
+                dec_penance( GOD_BEOGH, 1 );
+            }
+            break;
 // taken from makeitem.cc and spells3.cc:
-          case 2: // send out one or two dancing weapons of orc slaying (12.5%)
-          {
-                // check num of (hostile) orcs around
-                int num_wpn = 0;
-                for (int i=0 ;i <= random2(2); i++)
+        case 2: // send out one or two dancing weapons of orc slaying (12.5%)
+        {
+            // check num of (hostile) orcs around
+            int num_wpn = 0;
+            for (int i=0 ;i <= random2(2); i++)
+            {
+                bool created = false;
+                
+                // first create item
+                int it = get_item_slot();
+                if (it != NON_ITEM)
                 {
-                   bool created = false;
-                   
-                   // first create item
-                   int it = get_item_slot();
-                   if (it != NON_ITEM)
-                   {
-                      item_def &item = mitm[it];
+                    item_def &item = mitm[it];
+                    
+                    item.quantity = 1;
+                    item.base_type = OBJ_WEAPONS;
+                    // any melee weapon
+                    item.sub_type = WPN_CLUB + random2(13); 
+                    
+                    set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
+                    // just how good should this weapon be?
+                    item.plus = random2(3);
+                    item.plus2 = random2(3);
                       
-                      item.quantity = 1;
-                      item.base_type = OBJ_WEAPONS;
-                      // any melee weapon
-                      item.sub_type = WPN_CLUB + random2(13); 
+                    if (coinflip())
+                        item.flags |= ISFLAG_CURSED;
 
-                      set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
-                      // just how good should this weapon be?
-                      item.plus = random2(3);
-                      item.plus2 = random2(3);
+                    set_ident_type( item.base_type, item.sub_type,
+                                    ID_KNOWN_TYPE );
+                    
+                    // for debugging + makes things more interesting
+                    // (doesn't seem to have any effect, though)
+                    set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+                    set_ident_flags( item, ISFLAG_IDENT_MASK );
 
-                      if (coinflip())
-                         item.flags |= ISFLAG_CURSED;
-
-                      set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
-                      // for debugging + makes things more interesting
-                      // (doesn't seem to have any effect, though)
-                      set_ident_flags( item, ISFLAG_KNOW_PLUSES );
-                      set_ident_flags( item, ISFLAG_IDENT_MASK );
-
-                      // now create monster
-                      int mons = create_monster( MONS_DANCING_WEAPON, 0,
-                             BEH_HOSTILE, you.x_pos, you.y_pos, MHITYOU, 250 );
+                    // now create monster
+                    int mons =
+                        create_monster( MONS_DANCING_WEAPON, 0,
+                                        BEH_HOSTILE, you.x_pos, you.y_pos,
+                                        MHITYOU, 250 );
                                        
-                      // hand item information over to monster
-                      if (mons != -1 && mons != NON_MONSTER)
-                      {
-                         mitm[it] = item;
-                         mitm[it].quantity = 1;
-                         mitm[it].x = 0;
-                         mitm[it].y = 0;
-                         mitm[it].link = NON_ITEM;
-                         menv[mons].inv[MSLOT_WEAPON] = it;
-                         created = true;
-                         num_wpn++;
-
-                         if (coinflip()) // 50% chance of weapon disappearing on "death"
-                            menv[mons].flags |= MF_HARD_RESET;
-                      }
-                   }
-                   if (!created) // didn't work out! delete item
-                   {
-                      mitm[it].base_type = OBJ_UNASSIGNED;
-                      mitm[it].quantity = 0;
-                   }
-                }
-                if (num_wpn > 0)
-                {
-                   snprintf(info, INFO_SIZE, " throws %s of orc slaying at you.",
-                           num_wpn > 1 ? "implements" : "an implement");
-                   simple_god_message(info, god);
-                   break;
-                } // else fall through
-          }
-          default: // send orcs after you (5/8)
-          {
-
-                int points = you.experience_level * 2 + 3
-                             + random2(you.experience_level * 3);
-
-                // "natural" bands
-                if (points >= 30) // min: lvl 6, always: lvl 15
-                   punisher = MONS_ORC_HIGH_PRIEST;
-                else if (points >= 24) // min: lvl 5, always: lvl 11
-                   punisher = MONS_ORC_KNIGHT;
-                else if (points >= 18) // min: lvl 4, always: lvl 8
-                   punisher = MONS_ORC_WARLORD;
-                else if (points >= 12) // min: lvl 2, always: lvl 5
-                   punisher = MONS_ORC_WARRIOR;
-                else
-                   punisher = MONS_ORC;
-
-                int mons = create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
-                                          you.y_pos, MHITYOU, 250, true);
-                                        
-                if (mons != -1 && mons != NON_MONSTER)
-                    simple_god_message(" sends forth an army of orcs.", god);
-                else
-                    simple_god_message(" is still gathering forces against you.", god);
-
-/*
-                success = false;
-                int count = 0;
-                int points = 3 + you.experience_level * 3;
-
-                // artificial choice of band members
-                while (points > 0 || count <= 1)
-                {
-                    if (points > 30 && coinflip())
-                    {
-                        // quick reduction for large values
-                        punisher = MONS_ORC_HIGH_PRIEST;
-                        points -= 25;
-                        break;
-                    }
-                    else
-                    {
-                        switch (random2(15))
-                        {
-                          case 0: //(1/15)
-                            punisher = MONS_ORC_SORCERER;
-                            points -= 20;
-                            break;
-                            
-                          case 1: //(1/15)
-                            punisher = MONS_ORC_WARLORD;
-                            points -= 18;
-                            break;
-                            
-                          case 2: //(1/15)
-                            punisher = MONS_ORC_KNIGHT;
-                            points -= 15;
-                            break;
-
-                          case 3:
-                          case 4: //(2/15)
-                            punisher = MONS_ORC_WARRIOR;
-                            points -= 10;
-                            break;
-
-                          case 5:
-                          case 6:
-                          case 7: //(1/5)
-                            punisher = MONS_ORC_PRIEST;
-                            points -= 7;
-                            break;
-
-                          case 8:
-                          case 9: //(2/15)
-                            punisher = MONS_ORC_WIZARD;
-                            punisher -= 5;
-                            break;
-
-                          default: //(1/3)
-                            punisher = MONS_ORC;
-                            points -= 3;
-                        }
-                    }
-
-                    int mons = create_monster(punisher, 0, BEH_HOSTILE,
-                                        you.x_pos, you.y_pos, MHITYOU, 250);
+                    // hand item information over to monster
                     if (mons != -1 && mons != NON_MONSTER)
                     {
-                        count++;
-                        success = true;
-                        // just to make sure
-                        menv[mons].flags |= MF_CONVERT_ATTEMPT;
+                        mitm[it] = item;
+                        mitm[it].quantity = 1;
+                        mitm[it].x = 0;
+                        mitm[it].y = 0;
+                        mitm[it].link = NON_ITEM;
+                        menv[mons].inv[MSLOT_WEAPON] = it;
+                        created = true;
+                        num_wpn++;
+
+                        // 50% chance of weapon disappearing on "death"
+                        if (coinflip())
+                            menv[mons].flags |= MF_HARD_RESET;
                     }
                 }
-                
-                if (success)
+                if (!created) // didn't work out! delete item
                 {
-                    std::string army_size;
-                    if (count > 5)
-                      army_size = "an army of";
-                    else
-                      army_size = "some";
-                      
-                    snprintf(info, INFO_SIZE, " sends forth %s orcs.", army_size.c_str());
-                    simple_god_message(info, god);
+                    mitm[it].base_type = OBJ_UNASSIGNED;
+                    mitm[it].quantity = 0;
                 }
-                else
-                    simple_god_message(" is still gathering forces against you.", god);
-*/
-          }
-          break;
+            }
+            if (num_wpn > 0)
+            {
+                snprintf(info, INFO_SIZE, " throws %s of orc slaying at you.",
+                         num_wpn > 1 ? "implements" : "an implement");
+                simple_god_message(info, god);
+                break;
+            } // else fall through
+        }
+        default: // send orcs after you (5/8)
+        {
+
+            int points = you.experience_level * 2 + 3
+                + random2(you.experience_level * 3);
+
+            // "natural" bands
+            if (points >= 30) // min: lvl 6, always: lvl 15
+                punisher = MONS_ORC_HIGH_PRIEST;
+            else if (points >= 24) // min: lvl 5, always: lvl 11
+                punisher = MONS_ORC_KNIGHT;
+            else if (points >= 18) // min: lvl 4, always: lvl 8
+                punisher = MONS_ORC_WARLORD;
+            else if (points >= 12) // min: lvl 2, always: lvl 5
+                punisher = MONS_ORC_WARRIOR;
+            else
+                punisher = MONS_ORC;
+
+            int mons = create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
+                                      you.y_pos, MHITYOU, 250, true);
+                                        
+            if (mons != -1 && mons != NON_MONSTER)
+                simple_god_message(" sends forth an army of orcs.", god);
+            else
+                simple_god_message(" is still gathering forces against you.",
+                                   god);
+            break;
+        }
         }
         break;
 

@@ -38,6 +38,7 @@
 #include "branch.h"
 #include "files.h"
 #include "hiscores.h"
+#include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -649,19 +650,6 @@ static level_area_type str_to_level_area_type(const std::string &s)
         if (s == level_type_names[i])
             return (static_cast<level_area_type>(i));
     return (LEVEL_DUNGEON);
-}
-
-static god_type str_to_god(const std::string &god)
-{
-    if (god.empty())
-        return GOD_NO_GOD;
-    
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
-    {
-        if (god_name(static_cast<god_type>(i)) == god)
-            return (static_cast<god_type>(i));
-    }
-    return (GOD_NO_GOD);
 }
 
 void scorefile_entry::init_with_fields()

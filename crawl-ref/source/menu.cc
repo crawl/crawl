@@ -668,12 +668,12 @@ void slider_menu::set_limits(int y1, int y2)
 void slider_menu::select_search(const std::string &s)
 {
     std::string srch = s;
-    tolower_string(srch);
+    lowercase(srch);
 
     for (int i = 0, size = items.size(); i < size; ++i)
     {
         std::string text = items[i]->get_text();
-        tolower_string(text);
+        lowercase(text);
 
         std::string::size_type found = text.find(srch);
         if (found != std::string::npos 

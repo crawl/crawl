@@ -27,8 +27,9 @@ void cursorxy(int x, int y);
 int unmangle_direction_keys(int keyin, int keymap = 0,
                             bool fake_ctrl = true, bool fake_shift = true);
 
-void lowercase(std::string &s);
-void uppercase(std::string &s);
+std::string lowercase_string(std::string s);
+std::string &lowercase(std::string &s);
+std::string &uppercase(std::string &s);
 bool ends_with(const std::string &s, const std::string &suffix);
 std::string pluralise(const std::string &name, 
                       const char *no_of[] = NULL);

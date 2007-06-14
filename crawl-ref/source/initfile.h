@@ -17,8 +17,9 @@
 #include <string>
 #include <cstdio>
 
-std::string & trim_string( std::string &str );
-std::string & tolower_string( std::string &str );
+#include "enum.h"
+
+god_type str_to_god(std::string god);
 int str_to_colour( const std::string &str, int default_colour = -1 );
 const char* colour_to_str( unsigned char colour );
 

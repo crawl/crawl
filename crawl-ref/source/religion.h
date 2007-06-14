@@ -16,6 +16,7 @@
 
 #include "enum.h"
 
+bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);
 const char *god_name(god_type which_god, bool long_name = false); //mv

@@ -722,7 +722,7 @@ void monster_grid(bool do_updates)
                 && mons_player_visible(monster) && !mons_is_sleeping(monster)
                 && !mons_is_confused(monster) && !mons_is_paralysed(monster))
             {
-               monster->flags |= MF_CONVERT_ATTEMPT;
+                monster->flags |= MF_CONVERT_ATTEMPT;
 
                int hd = monster->hit_dice;
 
@@ -735,10 +735,10 @@ void monster_grid(bool do_updates)
                        && get_weapon_brand( you.inv[wpn] ) == SPWPN_ORC_SLAYING
                        && coinflip()) // 50% chance of conversion failing
                    {
-                      snprintf(info, INFO_SIZE, "%s flinches from your weapon.",
-                          monster->name(DESC_CAP_THE).c_str());
-                      mpr(info);
-                      continue;
+                       snprintf(info, INFO_SIZE, "%s flinches from your weapon.",
+                                monster->name(DESC_CAP_THE).c_str());
+                       mpr(info);
+                       continue;
                    }
                        
                    if (player_monster_visible(monster)) // show reaction
@@ -795,18 +795,18 @@ void monster_grid(bool do_updates)
                      && mons_player_visible(monster) && !mons_is_sleeping(monster)
                      && !mons_is_confused(monster) && !mons_is_paralysed(monster))
             {      // reconversion if no longer Beogh
-                   
-                   monster->attitude = ATT_HOSTILE;
-                   monster->behaviour = BEH_HOSTILE;
-                   // CREATED_FRIENDLY stays -> no piety bonus on killing these
-
-                   // give message only sometimes
-                   if (player_monster_visible(monster) && random2(4)) 
-                   {
-                     snprintf(info, INFO_SIZE, "%s deserts you.",
-                          monster->name(DESC_CAP_THE).c_str());
-                     mpr(info, MSGCH_MONSTER_ENCHANT);
-                   }
+                
+                monster->attitude = ATT_HOSTILE;
+                monster->behaviour = BEH_HOSTILE;
+                // CREATED_FRIENDLY stays -> no piety bonus on killing these
+                
+                // give message only sometimes
+                if (player_monster_visible(monster) && random2(4)) 
+                {
+                    snprintf(info, INFO_SIZE, "%s deserts you.",
+                             monster->name(DESC_CAP_THE).c_str());
+                    mpr(info, MSGCH_MONSTER_ENCHANT);
+                }
             } // end of Beogh routine
 
         }                       // end "if (monster->type != -1 && mons_ner)"

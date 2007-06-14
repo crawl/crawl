@@ -180,17 +180,24 @@ std::string make_stringf(const char *s, ...)
     return (buf);
 }
 
-void uppercase(std::string &s)
+std::string &uppercase(std::string &s)
 {
-    /* yes, this is bad, but std::transform() has its own problems */
-    for (unsigned int i = 0; i < s.size(); ++i)
+    for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = toupper(s[i]);
+    return (s);
 }
 
-void lowercase(std::string &s)
+std::string &lowercase(std::string &s)
 {
-    for (unsigned int i = 0; i < s.size(); ++i)
+    for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = tolower(s[i]);
+    return (s);
+}
+
+std::string lowercase_string(std::string s)
+{
+    lowercase(s);
+    return (s);
 }
 
 bool ends_with(const std::string &s, const std::string &suffix)
@@ -461,7 +468,7 @@ std::string trimmed_string( std::string s )
 }
 
 // also used with macros
-std::string & trim_string( std::string &str )
+std::string &trim_string( std::string &str )
 {
     str.erase( 0, str.find_first_not_of( " \t\n\r" ) );
     str.erase( str.find_last_not_of( " \t\n\r" ) + 1 );

@@ -1497,7 +1497,7 @@ public:
     int         book;           // auto-choose book for character
     int         chaos_knight;   // choice of god for Chaos Knights (Xom/Makleb)
     int         death_knight;   // choice of god/necromancy for Death Knights
-    int         priest;         // choice of god for priests (Zin/Yred)
+    god_type    priest;         // choice of god for priests (Zin/Yred)
     bool        random_pick;    // randomly generate character
     int         hp_warning;     // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -1659,7 +1659,8 @@ public:
     std::string prev_name;
     char        prev_race;
     char        prev_cls;
-    int         prev_ck, prev_dk, prev_pr;
+    int         prev_ck, prev_dk;
+    god_type    prev_pr;
     int         prev_weapon;
     int         prev_book;
     bool        prev_randpick;

@@ -127,7 +127,8 @@ static char letter_to_class(int keyn);
 
 static char ng_race, ng_cls;
 static bool ng_random;
-static int ng_ck, ng_dk, ng_pr;
+static int ng_ck, ng_dk;
+static god_type ng_pr;
 static int ng_weapon;
 static int ng_book;
 

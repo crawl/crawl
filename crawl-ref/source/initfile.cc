@@ -31,6 +31,7 @@
 #include "invent.h"
 #include "libutil.h"
 #include "player.h"
+#include "religion.h"
 #include "stash.h"
 #include "stuff.h"
 #include "travel.h"
@@ -40,8 +41,6 @@
 const std::string game_options::interrupt_prefix = "interrupt_";
 game_options Options;
 
-std::string &tolower_string( std::string &str );
-
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
 const static int   obj_syms_len = 16;
 
@@ -50,6 +49,24 @@ static void read_startup_prefs();
 template<class A, class B> void append_vector(A &dest, const B &src)
 {
     dest.insert( dest.end(), src.begin(), src.end() );
+}
+
+god_type str_to_god(std::string god)
+{
+    if (god.empty())
+        return (GOD_NO_GOD);
+
+    lowercase(god);
+    
+    if (god == "random")
+        return (GOD_RANDOM);
+    
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    {
+        if (lowercase_string(god_name(static_cast<god_type>(i))) == god)
+            return (static_cast<god_type>(i));
+    }
+    return (GOD_NO_GOD);
 }
 
 const std::string cols[16] =
@@ -304,19 +321,6 @@ static int str_to_class( const std::string &str )
         index = get_class_index_by_name( str.c_str() );
 
     return ((index != -1) ? index_to_letter( index ) : 0); 
-}
-
-std::string & tolower_string( std::string &str )
-{
-    if (str.length()) 
-    {
-        for (std::string::iterator cp = str.begin(); cp != str.end(); cp++) 
-        {
-            *cp = tolower( *cp );
-        }
-    }
-
-    return (str);
 }
 
 static bool read_bool( const std::string &field, bool def_value )
@@ -1005,12 +1009,10 @@ static void write_newgame_options(FILE *f)
                 Options.prev_dk == DK_YREDELEMNUL? "yredelemnul" :
                                             "random");
     }
-    if (Options.prev_pr != GOD_NO_GOD)
+    if (is_priest_god(Options.prev_pr) || Options.prev_pr == GOD_RANDOM)
     {
         fprintf(f, "priest = %s\n",
-                Options.prev_pr == GOD_ZIN? "zin" :
-                Options.prev_pr == GOD_YREDELEMNUL? "yredelemnul" :
-                                            "random");
+                lowercase_string(god_name(Options.prev_pr)).c_str());
     }
 
     if (Options.prev_book != SBT_NO_SELECTION )
@@ -1393,8 +1395,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
     // Clean up our data...
-    tolower_string( trim_string( key ) );
-    tolower_string( trim_string( subkey ) );
+    lowercase( trim_string( key ) );
+    lowercase( trim_string( subkey ) );
 
     // some fields want capitals... none care about external spaces
     trim_string( field );
@@ -1415,7 +1417,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries")
     {
-        tolower_string( field );
+        lowercase( field );
     }
 
     // everything not a valid line is treated as a comment
@@ -1734,11 +1736,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "priest")
     {
         // choose this weapon for classes that get choice
-        if (field == "zin")
-            priest = GOD_ZIN;
-        else if (field == "yredelemnul")
-            priest = GOD_YREDELEMNUL;
-        else if (field == "random")
+        priest = str_to_god(field);
+        if (!is_priest_god(priest))
             priest = GOD_RANDOM;
     }
     else if (key == "fire_items_start")
@@ -2806,7 +2805,7 @@ int game_options::o_colour(const char *name, int def) const
 {
     std::string val = o_str(name);
     trim_string(val);
-    tolower_string(val);
+    lowercase(val);
     int col = str_to_colour(val);
     return (col == -1? def : col);
 }

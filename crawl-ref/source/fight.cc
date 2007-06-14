@@ -1002,15 +1002,11 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
             && you.species == SP_HILL_ORC)
         {
             if (you.religion == GOD_BEOGH)
-            {
-              damage++;
-            }
+                damage++;
               
             if (coinflip())
-        {
-            damage++;
+                damage++;
         }
-    }
     }
 
     return (damage);
