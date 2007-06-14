@@ -99,7 +99,9 @@ const char *sacrifice[] =
     // Elyvilon
     " evaporate%.",
     // Lugonu
-    " & consumed by the void."
+    " & consumed by the void.",
+    // Beogh
+    " crumble% into the ground."
 };
 
 const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -178,7 +180,12 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "bend space around yourself",
       "summon the demons of the Abyss to your aid",
       "",
-      "gate yourself to the Abyss" }
+      "gate yourself to the Abyss" },
+    // Beogh
+    { "",
+      "smite your foes",
+      "gain orcish followers",
+      "", "" }
 };
 
 const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -258,7 +265,12 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "bend space around yourself",
       "summon the demons of the Abyss to your aid",
       "",
-      "gate yourself to the Abyss" }
+      "gate yourself to the Abyss" },
+    // Beogh
+    { "",
+      "smite your foes",
+      "gain orcish followers",
+      "", "" }
 };
 
 
@@ -267,6 +279,7 @@ void dec_penance(int god, int val);
 void divine_retribution(god_type god);
 void inc_penance(int god, int val);
 void inc_penance(int val);
+int followers_abandon_you(void); // Beogh
 
 static bool is_evil_god(god_type god)
 {
@@ -275,6 +288,7 @@ static bool is_evil_god(god_type god)
         god == GOD_MAKHLEB ||
         god == GOD_YREDELEMNUL ||
         god == GOD_VEHUMET ||
+        god == GOD_BEOGH ||
         god == GOD_LUGONU;
 }
 
@@ -855,6 +869,9 @@ const char *god_name( god_type which_god, bool long_name ) // mv - rewritten
     case GOD_LUGONU:
         sprintf(godname_buff, "Lugonu%s", long_name? " the Unformed" : "");
         break;
+    case GOD_BEOGH:
+        sprintf(godname_buff, "Beogh%s", long_name? " the Brigand" : "");
+        break;
     default:
         sprintf(godname_buff, "The Buggy One (%d)", which_god);
     }
@@ -918,6 +935,10 @@ bool did_god_conduct( int thing_done, int level )
             penance = level * 3;
             ret = true;
             break;
+        case GOD_BEOGH:
+            piety_change = -level;
+            // no penance as Beogh is not a good god
+            ret = true;
         default:
             break;
         }
@@ -953,6 +974,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_TROG:
+        case GOD_BEOGH:
         case GOD_LUGONU:
             simple_god_message(" accepts your offering.");
             ret = true;
@@ -981,6 +1003,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
         case GOD_TROG:
+        case GOD_BEOGH:
         case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
@@ -1034,6 +1057,16 @@ bool did_god_conduct( int thing_done, int level )
         }
         break;
 
+    case DID_DEDICATED_KILL_PRIEST:
+        if (you.religion == GOD_BEOGH)
+        {
+            simple_god_message(" appreciates your killing of a heretic priest.");
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
+        }
+        break;
+        
     case DID_DEDICATED_KILL_WIZARD:
         if (you.religion == GOD_TROG) 
         {
@@ -1109,6 +1142,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
+        case GOD_BEOGH:
         case GOD_LUGONU:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
@@ -1338,8 +1372,13 @@ void gain_piety(int pgn)
                     snprintf(info, INFO_SIZE, "You can now %s.", pmsg);
                     god_speaks(you.religion, info);
                 }
-            }
             learned_something_new(TUT_NEW_ABILITY);
+        }
+            if (you.religion == GOD_BEOGH)
+            {
+                // every piety level change also affects AC from orcish gear
+                you.redraw_armour_class = 1;
+            }
         }
     }
 
@@ -1387,6 +1426,11 @@ void lose_piety(int pgn)
                         snprintf(info,INFO_SIZE,"You can no longer %s.",pmsg);
                         god_speaks(you.religion, info);
                     }
+                }
+                if (you.religion == GOD_BEOGH)
+                {
+                    // every piety level change also affects AC from orcish gear
+                    you.redraw_armour_class = 1;
                 }
             }
         }
@@ -1811,6 +1855,214 @@ void divine_retribution( god_type god )
         }
         break;
 
+    case GOD_BEOGH:
+             
+        // orcish theme
+        switch (random2(8))
+        {
+          case 0: // smiting (25%)
+          case 1:
+                 divine_hurt = 10 + random2(10);
+
+                 for (loopy = 0; loopy < 5; loopy++)
+                    divine_hurt += random2( you.experience_level );
+                    
+                 if (!player_under_penance() && you.piety > random2(400))
+                 {
+                    snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
+                               "of %s... this time.", god_name(GOD_BEOGH));
+                    god_speaks(you.religion, info);
+                 }
+                 else
+                 {
+                    simple_god_message( " smites you!", god );
+                    ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
+                    dec_penance( GOD_BEOGH, 1 );
+                 }
+                 break;
+// taken from makeitem.cc and spells3.cc:
+          case 2: // send out one or two dancing weapons of orc slaying (12.5%)
+          {
+                // check num of (hostile) orcs around
+                int num_wpn = 0;
+                for (int i=0 ;i <= random2(2); i++)
+                {
+                   bool created = false;
+                   
+                   // first create item
+                   int it = get_item_slot();
+                   if (it != NON_ITEM)
+                   {
+                      item_def &item = mitm[it];
+                      
+                      item.quantity = 1;
+                      item.base_type = OBJ_WEAPONS;
+                      // any melee weapon
+                      item.sub_type = WPN_CLUB + random2(13); 
+
+                      set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
+                      // just how good should this weapon be?
+                      item.plus = random2(3);
+                      item.plus2 = random2(3);
+
+                      if (coinflip())
+                         item.flags |= ISFLAG_CURSED;
+
+                      set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
+                      // for debugging + makes things more interesting
+                      // (doesn't seem to have any effect, though)
+                      set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+                      set_ident_flags( item, ISFLAG_IDENT_MASK );
+
+                      // now create monster
+                      int mons = create_monster( MONS_DANCING_WEAPON, 0,
+                             BEH_HOSTILE, you.x_pos, you.y_pos, MHITYOU, 250 );
+                                       
+                      // hand item information over to monster
+                      if (mons != -1 && mons != NON_MONSTER)
+                      {
+                         mitm[it] = item;
+                         mitm[it].quantity = 1;
+                         mitm[it].x = 0;
+                         mitm[it].y = 0;
+                         mitm[it].link = NON_ITEM;
+                         menv[mons].inv[MSLOT_WEAPON] = it;
+                         created = true;
+                         num_wpn++;
+
+                         if (coinflip()) // 50% chance of weapon disappearing on "death"
+                            menv[mons].flags |= MF_HARD_RESET;
+                      }
+                   }
+                   if (!created) // didn't work out! delete item
+                   {
+                      mitm[it].base_type = OBJ_UNASSIGNED;
+                      mitm[it].quantity = 0;
+                   }
+                }
+                if (num_wpn > 0)
+                {
+                   snprintf(info, INFO_SIZE, " throws %s of orc slaying at you.",
+                           num_wpn > 1 ? "implements" : "an implement");
+                   simple_god_message(info, god);
+                   break;
+                } // else fall through
+          }
+          default: // send orcs after you (5/8)
+          {
+
+                int points = you.experience_level * 2 + 3
+                             + random2(you.experience_level * 3);
+
+                // "natural" bands
+                if (points >= 30) // min: lvl 6, always: lvl 15
+                   punisher = MONS_ORC_HIGH_PRIEST;
+                else if (points >= 24) // min: lvl 5, always: lvl 11
+                   punisher = MONS_ORC_KNIGHT;
+                else if (points >= 18) // min: lvl 4, always: lvl 8
+                   punisher = MONS_ORC_WARLORD;
+                else if (points >= 12) // min: lvl 2, always: lvl 5
+                   punisher = MONS_ORC_WARRIOR;
+                else
+                   punisher = MONS_ORC;
+
+                int mons = create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
+                                          you.y_pos, MHITYOU, 250, true);
+                                        
+                if (mons != -1 && mons != NON_MONSTER)
+                    simple_god_message(" sends forth an army of orcs.", god);
+                else
+                    simple_god_message(" is still gathering forces against you.", god);
+
+/*
+                success = false;
+                int count = 0;
+                int points = 3 + you.experience_level * 3;
+
+                // artificial choice of band members
+                while (points > 0 || count <= 1)
+                {
+                    if (points > 30 && coinflip())
+                    {
+                        // quick reduction for large values
+                        punisher = MONS_ORC_HIGH_PRIEST;
+                        points -= 25;
+                        break;
+                    }
+                    else
+                    {
+                        switch (random2(15))
+                        {
+                          case 0: //(1/15)
+                            punisher = MONS_ORC_SORCERER;
+                            points -= 20;
+                            break;
+                            
+                          case 1: //(1/15)
+                            punisher = MONS_ORC_WARLORD;
+                            points -= 18;
+                            break;
+                            
+                          case 2: //(1/15)
+                            punisher = MONS_ORC_KNIGHT;
+                            points -= 15;
+                            break;
+
+                          case 3:
+                          case 4: //(2/15)
+                            punisher = MONS_ORC_WARRIOR;
+                            points -= 10;
+                            break;
+
+                          case 5:
+                          case 6:
+                          case 7: //(1/5)
+                            punisher = MONS_ORC_PRIEST;
+                            points -= 7;
+                            break;
+
+                          case 8:
+                          case 9: //(2/15)
+                            punisher = MONS_ORC_WIZARD;
+                            punisher -= 5;
+                            break;
+
+                          default: //(1/3)
+                            punisher = MONS_ORC;
+                            points -= 3;
+                        }
+                    }
+
+                    int mons = create_monster(punisher, 0, BEH_HOSTILE,
+                                        you.x_pos, you.y_pos, MHITYOU, 250);
+                    if (mons != -1 && mons != NON_MONSTER)
+                    {
+                        count++;
+                        success = true;
+                        // just to make sure
+                        menv[mons].flags |= MF_CONVERT_ATTEMPT;
+                    }
+                }
+                
+                if (success)
+                {
+                    std::string army_size;
+                    if (count > 5)
+                      army_size = "an army of";
+                    else
+                      army_size = "some";
+                      
+                    snprintf(info, INFO_SIZE, " sends forth %s orcs.", army_size.c_str());
+                    simple_god_message(info, god);
+                }
+                else
+                    simple_god_message(" is still gathering forces against you.", god);
+*/
+          }
+          break;
+        }
+        break;
+
     case GOD_OKAWARU:
         {
             // warrior theme:
@@ -1937,6 +2189,70 @@ void divine_retribution( god_type god )
     return;
 }                               // end divine_retribution()
 
+// upon excommunication, (now ex) Beogh adepts lose their orcish followers
+int followers_abandon_you()
+{
+     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+     int yend = you.y_pos + 9, xend = you.x_pos + 9;
+     if ( xstart < 0 ) xstart = 0;
+     if ( ystart < 0 ) ystart = 0;
+     if ( xend >= GXM ) xend = GXM;
+     if ( ystart >= GYM ) yend = GYM;
+     
+     bool reconvert = false;
+     int num_reconvert = 0;
+
+     std::vector<const monsters *> mons;
+     // monster check
+     for ( int y = ystart; y < yend; ++y )
+     {
+         for ( int x = xstart; x < xend; ++x )
+         {
+
+             const unsigned char targ_monst = mgrd[x][y];
+             if ( targ_monst != NON_MONSTER )
+             {
+                 struct monsters *monster = &menv[targ_monst];
+                 if ( mons_species(monster->type) == MONS_ORC
+                      && monster->attitude == ATT_FRIENDLY
+                      && (monster->flags & MF_CONVERT_ATTEMPT))
+                 {
+
+                     if (mons_player_visible(monster)
+                         && !mons_is_confused(monster)
+                         && !mons_is_paralysed(monster))
+                     {
+                        monster->attitude = ATT_HOSTILE;
+                        monster->behaviour = BEH_HOSTILE;
+                        // for now CREATED_FRIENDLY stays
+
+                        if (player_monster_visible(monster))
+                        {
+                           num_reconvert++; // only visible ones
+                        }
+                        reconvert = true;
+                     }
+                 }
+             }
+         }
+     }
+     if (reconvert) // maybe all of them invisible
+     {
+        snprintf(info, INFO_SIZE, "%s booms out: \"Who do you think you are?\"",
+                   god_name(GOD_BEOGH));
+        god_speaks(GOD_BEOGH, info);
+
+        if (num_reconvert > 0)
+        {
+           snprintf(info, INFO_SIZE, "Your follower%s decide%s to abandon you.",
+                (num_reconvert > 1) ? "s" : "", (num_reconvert > 1) ? "" : "s");
+           mpr(info, MSGCH_MONSTER_ENCHANT);
+           return 1;
+        }
+     }
+     return 0;
+}
+
 void excommunication(void)
 {
     const god_type old_god = you.religion;
@@ -1990,6 +2306,15 @@ void excommunication(void)
 
     case GOD_TROG:
         simple_god_message( " does not appreciate desertion!", old_god );
+
+        // Penance has to come before retribution to prevent "mollify"
+        inc_penance( old_god, 50 );
+        divine_retribution( old_god );
+        break;
+
+    case GOD_BEOGH:
+        simple_god_message( " does not appreciate desertion!", old_god );
+        followers_abandon_you(); // check if friendly orcs around -> hostile
 
         // Penance has to come before retribution to prevent "mollify"
         inc_penance( old_god, 50 );
@@ -2231,7 +2556,8 @@ void god_pitch(god_type which_god)
 
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
         && (which_god == GOD_ZIN || which_god == GOD_SHINING_ONE
-            || which_god == GOD_ELYVILON))
+            || which_god == GOD_ELYVILON) ||
+          which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
     {
         simple_god_message(" does not accept worship from those such as you!",
                            which_god);
@@ -2319,7 +2645,8 @@ void god_pitch(god_type which_god)
 bool god_likes_butchery(god_type god)
 {
     return (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
-            you.religion == GOD_TROG || you.religion == GOD_LUGONU);
+            you.religion == GOD_TROG || you.religion == GOD_BEOGH ||
+            you.religion == GOD_LUGONU);
 }
 
 bool god_hates_butchery(god_type god)
@@ -2459,6 +2786,7 @@ void handle_god_time(void)
 
         case GOD_OKAWARU: // These gods accept corpses, so they time-out faster
         case GOD_TROG:
+        case GOD_BEOGH:
             if (one_chance_in(14))
                 lose_piety(1);
             if (you.piety < 1)
@@ -2526,6 +2854,7 @@ int god_colour( god_type god ) //mv - added
     case GOD_MAKHLEB:
     case GOD_VEHUMET:
     case GOD_TROG:
+    case GOD_BEOGH:
     case GOD_LUGONU:
         return(LIGHTRED);
 

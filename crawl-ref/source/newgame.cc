@@ -3604,11 +3604,20 @@ void give_items_skills()
 
         you.skills[SK_INVOCATIONS] = 4;
 
+        // disallow invalid choices
+        if (you.species != SP_HILL_ORC && Options.priest == GOD_BEOGH)
+            Options.priest = GOD_NO_GOD;
+
         if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
             ng_pr = you.religion = static_cast<god_type>( Options.priest );
         else if (Options.random_pick || Options.priest == GOD_RANDOM)
         {
             you.religion = coinflip() ? GOD_YREDELEMNUL : GOD_ZIN;
+            
+            // for orcs 50% chance of Beogh instead
+            if (you.species == SP_HILL_ORC && coinflip())
+                you.religion = GOD_BEOGH;
+                
             ng_pr = GOD_RANDOM;
         }
         else
@@ -3621,6 +3630,14 @@ void give_items_skills()
             textcolor( LIGHTGREY );
             cprintf("a - Zin (for traditional priests)" EOL);
             cprintf("b - Yredelemnul (for priests of death)" EOL);
+            if (you.species == SP_HILL_ORC)
+                cprintf("c - Beogh (priest of Orcs)" EOL);
+                
+            textcolor( BROWN );
+            cprintf(EOL "* - random choice" EOL);
+
+            if (Options.prev_pr == GOD_BEOGH && you.species != SP_HILL_ORC)
+               Options.prev_pr = GOD_NO_GOD;
 
             if (Options.prev_pr != GOD_NO_GOD)
             {
@@ -3628,6 +3645,7 @@ void give_items_skills()
                 cprintf(EOL "Enter - %s" EOL,
                         Options.prev_pr == GOD_ZIN? "Zin" :
                         Options.prev_pr == GOD_YREDELEMNUL? "Yredelemnul" :
+                        Options.prev_pr == GOD_BEOGH? "Beogh" :
                                             "Random");
             }
 
@@ -3639,14 +3657,17 @@ void give_items_skills()
             {
                 keyn =  Options.prev_pr == GOD_ZIN? 'a' :
                         Options.prev_pr == GOD_YREDELEMNUL? 'b' :
-                                            '?';
+                        Options.prev_pr == GOD_BEOGH? 'c' :
+                                            '*';
 
             }
             
             switch (keyn)
             {
-            case '?':
+            case '*':
                 you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
+                if (you.species == SP_HILL_ORC && coinflip())
+                    you.religion = GOD_BEOGH;
                 break;
             case 'a':
                 you.religion = GOD_ZIN;
@@ -3654,11 +3675,17 @@ void give_items_skills()
             case 'b':
                 you.religion = GOD_YREDELEMNUL;
                 break;
+            case 'c':
+                if (you.species == SP_HILL_ORC)
+                {
+                   you.religion = GOD_BEOGH;
+                   break;
+                } // else fall through
             default:
                 goto getkey;
             }
 
-            ng_pr = keyn == '?'? GOD_RANDOM : you.religion;
+            ng_pr = keyn == '*'? GOD_RANDOM : you.religion;
         }
         break;
 
@@ -4505,6 +4532,9 @@ void give_items_skills()
             cprintf("a - Necromantic magic" EOL);
             cprintf("b - the god Yredelemnul" EOL);
 
+            textcolor( BROWN );
+            cprintf(EOL "* - random choice" EOL);
+
             if (Options.prev_dk != DK_NO_SELECTION)
             {
                 textcolor(BROWN);
@@ -4522,12 +4552,12 @@ void give_items_skills()
             {
                 keyn = Options.prev_dk == DK_NECROMANCY? 'a' :
                        Options.prev_dk == DK_YREDELEMNUL? 'b' :
-                                                          '?';
+                                                          '*';
             }
             
             switch (keyn)
             {
-            case '?':
+            case '*':
                 choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
                 break;
             case 'a':
@@ -4541,7 +4571,7 @@ void give_items_skills()
                 goto getkey1;
             }
 
-            ng_dk = keyn == '?'? DK_RANDOM : choice;
+            ng_dk = keyn == '*'? DK_RANDOM : choice;
         }
 
         switch (choice)
@@ -4622,6 +4652,9 @@ void give_items_skills()
             cprintf("a - Xom of Chaos" EOL);
             cprintf("b - Makhleb the Destroyer" EOL);
 
+            textcolor( BROWN );
+            cprintf(EOL "* - random choice" EOL);
+
             if (Options.prev_ck != GOD_NO_GOD)
             {
                 textcolor(BROWN);
@@ -4641,12 +4674,12 @@ void give_items_skills()
             {
                 keyn = Options.prev_ck == GOD_XOM? 'a' :
                        Options.prev_ck == GOD_MAKHLEB? 'b' :
-                                                    '?';
+                                                    '*';
             }
 
             switch (keyn)
             {
-            case '?':
+            case '*':
                 you.religion = coinflip()? GOD_XOM : GOD_MAKHLEB;
                 break;
             case 'a':
@@ -4659,7 +4692,7 @@ void give_items_skills()
                 goto getkey2;
             }
 
-            ng_ck = keyn == '?'? GOD_RANDOM : you.religion;
+            ng_ck = keyn == '*'? GOD_RANDOM : you.religion;
         }
 
         if (you.religion == GOD_XOM)

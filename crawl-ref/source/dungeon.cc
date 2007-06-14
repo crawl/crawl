@@ -3717,13 +3717,14 @@ static dungeon_feature_type pick_an_altar()
             break;
 
         case BRANCH_ORCISH_MINES:       // violent gods
-            temp_rand = random2(5);
+            temp_rand = random2(10); // 50% chance of Beogh
 
             altar_type = ((temp_rand == 0) ? DNGN_ALTAR_VEHUMET :
                           (temp_rand == 1) ? DNGN_ALTAR_MAKHLEB :
                           (temp_rand == 2) ? DNGN_ALTAR_OKAWARU :
-                          (temp_rand == 3) ? DNGN_ALTAR_TROG
-                                           : DNGN_ALTAR_XOM);
+                          (temp_rand == 3) ? DNGN_ALTAR_TROG :
+                          (temp_rand == 4) ? DNGN_ALTAR_XOM
+                                           : DNGN_ALTAR_BEOGH);
             break;
 
         case BRANCH_VAULTS: // "lawful" gods
@@ -3761,7 +3762,8 @@ static dungeon_feature_type pick_an_altar()
                                                       random2(NUM_GODS - 1));
             }
             while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH
-                   || altar_type == DNGN_ALTAR_LUGONU);
+                   || altar_type == DNGN_ALTAR_LUGONU
+                   || altar_type == DNGN_ALTAR_BEOGH);
             break;
         }
     }

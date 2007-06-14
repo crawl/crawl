@@ -486,7 +486,7 @@ static const char *kill_method_names[] =
     "quitting", "draining", "starvation", "freezing", "burning", "wild_magic",
     "xom", "statue", "rotting", "targeting", "spore", "tso_smiting",
     "petrification", "unknown", "something", "falling_down_stairs", "acid",
-    "curare", "melting", "bleeding",
+    "curare", "melting", "bleeding", "bog_smiting",
 };
 
 const char *kill_method_name(kill_method_type kmt)
@@ -1714,6 +1714,11 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_TSO_SMITING:
         desc += terse? "smote by Shining One" : "Smote by The Shining One";
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_BEOGH_SMITING:
+        desc += terse? "smote by Beogh" : "Smote by Beogh";
         needs_damage = true;
         break;
 

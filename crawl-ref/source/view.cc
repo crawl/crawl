@@ -712,6 +712,103 @@ void monster_grid(bool do_updates)
 
             env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
             env.show_col[ex][ey] = get_mons_colour( monster );
+
+            // for followers of Beogh, decide whether orcs will join you
+            if (mons_species(monster->type) == MONS_ORC
+                && you.religion == GOD_BEOGH
+                && !(monster->flags & MF_CONVERT_ATTEMPT)
+               // && !mons_is_unique(monster->type) // does not work on Blork
+                && monster->foe == MHITYOU
+                && mons_player_visible(monster) && !mons_is_sleeping(monster)
+                && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+            {
+               monster->flags |= MF_CONVERT_ATTEMPT;
+
+               int hd = monster->hit_dice;
+
+               if (you.piety >= 75 && !you.penance[GOD_BEOGH] &&
+                   random2(you.piety/9) > random2(hd) + hd + random2(5))
+               {
+                   int wpn = you.equip[EQ_WEAPON];
+                   if (wpn != -1
+                       && you.inv[wpn].base_type == OBJ_WEAPONS
+                       && get_weapon_brand( you.inv[wpn] ) == SPWPN_ORC_SLAYING
+                       && coinflip()) // 50% chance of conversion failing
+                   {
+                      snprintf(info, INFO_SIZE, "%s flinches from your weapon.",
+                          monster->name(DESC_CAP_THE).c_str());
+                      mpr(info);
+                      continue;
+                   }
+                       
+                   if (player_monster_visible(monster)) // show reaction
+                   {
+                       std::string reaction;
+                       
+                       switch (random2(3))
+                       {
+                          case 1: reaction = " stares at you in amazement and kneels.";
+                                  break;
+                          case 2: reaction = " relaxes his fighting stance and smiles at you.";
+                                  break;
+                         default: reaction = " falls on his knees before you.";
+                       }
+
+                       snprintf(info, INFO_SIZE, "%s%s",
+                          monster->name(DESC_CAP_THE).c_str(),reaction.c_str());
+                       mpr(info, MSGCH_MONSTER_ENCHANT);
+
+                       if (random2(3))
+                       {
+                          switch (random2(4))
+                          {
+                             case 0: reaction = "shouts, \"I'll follow thee gladly!\"";
+                                     break;
+                             case 1: reaction = "shouts, \"Surely Beogh must have sent you!\"";
+                                     break;
+                             case 2: reaction = "asks, \"Are you our saviour?\"";
+                                     break;
+                            default: reaction = "says, \"I'm so glad you are here now.\"";
+                          }
+
+                          snprintf(info, INFO_SIZE, "He %s", reaction.c_str());
+                          mpr(info, MSGCH_TALK);
+                       }
+
+                   }
+
+                   monster->attitude = ATT_FRIENDLY;
+                   monster->behaviour = BEH_GOD_GIFT; // alternative to BEH_FRIENDLY
+                   // not really "created" friendly, but should it become
+                   // hostile later on, it won't count as a good kill
+                   monster->flags |= MF_CREATED_FRIENDLY;
+                   monster->flags |= MF_GOD_GIFT;
+               }
+            }
+            else if (mons_species(monster->type) == MONS_ORC
+                     && you.species == SP_HILL_ORC
+                     && !(you.religion == GOD_BEOGH)
+//                     && monster->foe == MHITYOU
+                     && monster->attitude == ATT_FRIENDLY
+                     && (monster->flags & MF_CONVERT_ATTEMPT)
+                     && (monster->flags & MF_GOD_GIFT)
+                     && mons_player_visible(monster) && !mons_is_sleeping(monster)
+                     && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+            {      // reconversion if no longer Beogh
+                   
+                   monster->attitude = ATT_HOSTILE;
+                   monster->behaviour = BEH_HOSTILE;
+                   // CREATED_FRIENDLY stays -> no piety bonus on killing these
+
+                   // give message only sometimes
+                   if (player_monster_visible(monster) && random2(4)) 
+                   {
+                     snprintf(info, INFO_SIZE, "%s deserts you.",
+                          monster->name(DESC_CAP_THE).c_str());
+                     mpr(info, MSGCH_MONSTER_ENCHANT);
+                   }
+            } // end of Beogh routine
+
         }                       // end "if (monster->type != -1 && mons_ner)"
     }                           // end "for s"
 }                               // end monster_grid()
@@ -2058,6 +2155,7 @@ bool is_feature(int feature, int x, int y)
         case DNGN_ALTAR_NEMELEX_XOBEH:
         case DNGN_ALTAR_ELYVILON:
         case DNGN_ALTAR_LUGONU:
+        case DNGN_ALTAR_BEOGH:
             return true;
         default:
             return false;
@@ -3441,6 +3539,14 @@ void init_feature_table( void )
             Feature[i].notable = true;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = GREEN;
+            break;
+
+        case DNGN_ALTAR_BEOGH:
+            Feature[i].colour = EC_UNHOLY;
+            Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
+            Feature[i].notable = true;
+            Feature[i].map_colour = DARKGREY;
+            Feature[i].seen_colour = RED;
             break;
 
         case DNGN_BLUE_FOUNTAIN:

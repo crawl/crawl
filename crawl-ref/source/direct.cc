@@ -1228,6 +1228,10 @@ std::string feature_description(int grid)
     case DNGN_GREEN_CRYSTAL_WALL:
         return ("A wall of green crystal.");
     case DNGN_ORCISH_IDOL:
+        if (you.species == SP_HILL_ORC)
+        {
+           return ("An idol of Beogh.");
+        }
         return ("An orcish idol.");
     case DNGN_WAX_WALL:
         return ("A wall of solid wax.");
@@ -1366,6 +1370,8 @@ std::string feature_description(int grid)
         return ("A silver altar of Elyvilon.");
     case DNGN_ALTAR_LUGONU:
         return ("A corrupted altar of Lugonu.");
+    case DNGN_ALTAR_BEOGH:
+        return ("A roughly hewn altar of Beogh.");
     case DNGN_BLUE_FOUNTAIN:
         return ("A fountain of clear blue water.");
     case DNGN_SPARKLING_FOUNTAIN:

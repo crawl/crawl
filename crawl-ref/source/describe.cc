@@ -5104,6 +5104,14 @@ void describe_god( god_type which_god, bool give_title )
             "to cause bloodshed and disorder in the world, and must do so unflaggingly to" EOL
             "earn Lugonu's favour.";
         break;
+
+    case GOD_BEOGH: 
+        description = "Beogh is a deity worshipped by the cave orcs native to parts of the dungeon." EOL
+                      "Only proper orcs may devote their service to Beogh, proving their devotion  " EOL
+                      "with kills and remnants. Pious orcs may gain the priestly power of smiting. " EOL 
+                      "Also, there are rumours that the orcs still look out for their Messiah. ";
+        break;
+
     default:
         description = "God of Program Bugs is a weird and dangerous God and his presence should" EOL
                       "be reported to dev-team.";
@@ -5135,6 +5143,7 @@ void describe_god( god_type which_god, bool give_title )
                     (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
                     (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
                     (which_god == GOD_LUGONU) ? "Agent of Entropy" :
+                    (which_god == GOD_BEOGH) ? "Messiah" :
                     (which_god == GOD_XOM) ? "Teddy Bear" : 
                         "Bogy the Lord of the Bugs"); // Xom and no god is handled before
         }
@@ -5169,7 +5178,15 @@ void describe_god( god_type which_god, bool give_title )
                           (you.piety >    5) ? "Believer"
                                              : "Sinner" );
                 break;
-
+            case GOD_BEOGH:
+                cprintf ( (you.piety >= 120) ? "Saint" :
+                          (you.piety >= 100) ? "High Priest" :
+                          (you.piety >=  75) ? "Missionary" :
+                          (you.piety >=  50) ? "Priest" :
+                          (you.piety >=  30) ? "Disciple" :
+                          (you.piety >    5) ? "Believer"
+                                             : "Sinner" );
+                 break;
             case GOD_XOM:
                 cprintf("Toy");
             break;
@@ -5237,6 +5254,13 @@ void describe_god( god_type which_god, bool give_title )
                 cprintf("Praying to %s will provide sustenance if starving."
                         EOL, god_name(which_god));
         }
+
+        if (which_god == GOD_BEOGH && you.piety >= 30)
+        {
+            have_any = true;
+            cprintf( "%s supports the use of orcish gear." EOL, 
+                     god_name(which_god));
+        } 
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())

@@ -1511,6 +1511,21 @@ int player_AC(void)
                 racial_bonus++;
             else
                 racial_bonus += 2;
+                
+            // an additional bonus for Beogh worshippers
+            if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH])
+            {
+                if (you.piety >= 120)
+                    racial_bonus *= 6;
+                else if (you.piety >= 100)
+                    racial_bonus *= 5;
+                else if (you.piety >= 75)
+                    racial_bonus *= 4;
+                else if (you.piety >= 50)
+                    racial_bonus *= 3;
+                else if (you.piety >= 30)
+                    racial_bonus *= 2;
+            }
         }
 
         AC += ac_value * (15 + you.skills[SK_ARMOUR] + racial_bonus) / 15;

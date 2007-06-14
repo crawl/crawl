@@ -116,6 +116,7 @@ enum ability_type
     ABIL_NEMELEX_TRIPLE_DRAW,
     ABIL_NEMELEX_PEEK,
     ABIL_NEMELEX_STACK_DECK,
+    ABIL_BEOGH_SMITING,
 
     ABIL_CHARM_SNAKE,
     ABIL_TRAN_SERPENT_OF_HELL,
@@ -781,7 +782,7 @@ enum conduct_type
     DID_DEDICATED_KILL_DEMON,
     DID_DEDICATED_KILL_NATURAL_EVIL,    // unused
     DID_DEDICATED_KILL_WIZARD,
-    DID_DEDICATED_KILL_PRIEST,          // unused
+    DID_DEDICATED_KILL_PRIEST,
 
     // [dshaligram] No distinction between killing Angels during prayer or
     //              otherwise, borrowed from bwr 4.1.
@@ -1091,6 +1092,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_NEMELEX_XOBEH,          //  190
     DNGN_ALTAR_ELYVILON,               //  191
     DNGN_ALTAR_LUGONU,
+    DNGN_ALTAR_BEOGH,
 
     DNGN_BLUE_FOUNTAIN = 200,          //  200
     DNGN_DRY_FOUNTAIN_I,
@@ -1392,6 +1394,7 @@ enum god_type
     GOD_NEMELEX_XOBEH,
     GOD_ELYVILON,
     GOD_LUGONU,
+    GOD_BEOGH,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM  = 100
@@ -1657,6 +1660,7 @@ enum kill_method_type
     KILLED_BY_CURARE,                  
     KILLED_BY_MELTING,
     KILLED_BY_BLEEDING,
+    KILLED_BY_BEOGH_SMITING,
 
     NUM_KILLBY
 };
@@ -2397,7 +2401,9 @@ enum monster_flag_type
     MF_KNOWN_MIMIC        = 0x100, // Mimic that has taken a swing at the PC,
                                    // or that the player has inspected with ?
     MF_BANISHED           = 0x200, // Monster that has been banished.
-    MF_HARD_RESET         = 0x400  // Summoned, should not drop gear on reset
+    MF_HARD_RESET         = 0x400, // Summoned, should not drop gear on reset
+    MF_CONVERT_ATTEMPT    = 0x800  // Orcs only: seen player and was converted
+                                   // (or not)
 };
 
 enum mon_dam_level_type

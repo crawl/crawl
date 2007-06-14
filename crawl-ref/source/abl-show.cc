@@ -136,7 +136,11 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE,
       ABIL_LUGONU_SUMMON_DEMONS, ABIL_NON_ABILITY,
-      ABIL_LUGONU_ABYSS_ENTER }
+      ABIL_LUGONU_ABYSS_ENTER },
+    // Beogh
+    { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -273,6 +277,9 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
     { ABIL_NEMELEX_PEEK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
     { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 150, 6, ABFLAG_NONE },
+
+    // Beogh
+    { ABIL_BEOGH_SMITING, "Smiting", 3, 0, 50, 2, ABFLAG_NONE },
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
@@ -625,6 +632,7 @@ static talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_HEALING:
     case ABIL_TSO_SMITING:
+    case ABIL_BEOGH_SMITING:
     case ABIL_OKAWARU_HEALING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
@@ -1566,6 +1574,13 @@ static bool do_ability(const ability_def& abil)
     case ABIL_NEMELEX_STACK_DECK:
         if ( !deck_stack() )
             return false;
+        break;
+
+    case ABIL_BEOGH_SMITING:
+        if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
+                         false ) == SPRET_ABORT)
+            return (false);
+        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 
     //jmf: intended as invocations from evil god(s):

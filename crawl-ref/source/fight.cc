@@ -999,10 +999,18 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         }
         
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
-            && you.species == SP_HILL_ORC && coinflip())
+            && you.species == SP_HILL_ORC)
+        {
+            if (you.religion == GOD_BEOGH)
+            {
+              damage++;
+            }
+              
+            if (coinflip())
         {
             damage++;
         }
+    }
     }
 
     return (damage);
@@ -2114,6 +2122,12 @@ int melee_attack::player_to_hit(bool random_factor)
             {
                 your_to_hit += (random_factor && coinflip() ? 2 : 1);
             }
+            else if (get_equip_race(*weapon) == ISFLAG_ORCISH
+                     && you.religion == GOD_BEOGH)
+            {
+                your_to_hit++;
+            }
+
         }
         else if (item_is_staff( *weapon ))
         {
