@@ -203,7 +203,7 @@ bool grid_destroys_items( int grid )
 // returns 0 if grid is not an altar, else it returns the GOD_* type
 god_type grid_altar_god( unsigned char grid )
 {
-    if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_LUGONU)
+    if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_BEOGH)
         return (static_cast<god_type>( grid - DNGN_ALTAR_ZIN + 1 ));
 
     return (GOD_NO_GOD);

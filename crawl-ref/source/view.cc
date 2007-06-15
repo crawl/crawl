@@ -783,6 +783,9 @@ void monster_grid(bool do_updates)
                    // hostile later on, it won't count as a good kill
                    monster->flags |= MF_CREATED_FRIENDLY;
                    monster->flags |= MF_GOD_GIFT;
+                   
+                   // to avoid immobile "followers"
+                   behaviour_event(monster, ME_ALERT, MHITYOU);
                }
             }
             else if (mons_species(monster->type) == MONS_ORC

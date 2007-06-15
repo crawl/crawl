@@ -1724,7 +1724,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
         }
     }
 
-    std::vector<MenuEntry*> sel = abil_menu.show_ab();
+    bool tutorial = (Options.tutorial_left > 0);
+    std::vector<MenuEntry*> sel = abil_menu.show(false, tutorial);
     redraw_screen();
     if ( sel.empty() )
     {

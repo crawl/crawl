@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 #include "menu.h"
 #include "macro.h"
+#include "tutorial.h"
 #include "view.h"
 #include "initfile.h"
 
@@ -95,7 +96,7 @@ void Menu::reset()
     first_entry = 0;
 }
 
-std::vector<MenuEntry *> Menu::show(bool reuse_selections)
+std::vector<MenuEntry *> Menu::show(bool reuse_selections, bool tut_abil)
 {
     cursor_control cs(false);
     
@@ -109,64 +110,18 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
 
-    do_menu();
-    
-    return (sel);
-}
-
-std::vector<MenuEntry *> Menu::show_ab(bool reuse_selections)
-{
-    cursor_control cs(false);
-
-    if (reuse_selections)
-        get_selected(&sel);
-    else
-        deselect_all(false);
-
-    // Lose lines for the title + room for -more- line.
-    pagesize = get_number_of_lines() - !!title - 1;
-    if (max_pagesize > 0 && pagesize > max_pagesize)
-        pagesize = max_pagesize;
-
-    do_menu_ab();
+    do_menu(tut_abil);
 
     return (sel);
 }
 
-void Menu::do_menu_ab()
+void Menu::do_menu(bool tut_abil)
 {
     draw_menu();
-    if (Options.tutorial_left)
+    if (tut_abil)
     {
-      const int bottom_line = (get_number_of_lines() > 30) ? 30 : get_number_of_lines();
-      textcolor(MAGENTA);
-      gotoxy(1, bottom_line-5);
-      std::string text =
-        "This screen shows your character's set of talents. You can gain new   " EOL
-        "abilities via certain items, through religion or by way of mutations. " EOL
-        "Activation of an ability usually comes at a cost, e.g. nutrition or   " EOL
-        "Magic power. ";
-      if (you.religion == GOD_TROG) text +=
-        "<w>Renounce Religion<magenta> will make your character leave your god" EOL
-        "(and usually anger said god), while <w>Berserk<magenta> temporarily increases your" EOL
-        "damage output in melee fights.";
-        
-      formatted_string::parse_block(text, false).display();
+      tut_describe_abilities();
     }
-
-    alive = true;
-    while (alive)
-    {
-        int keyin = getchm(c_getch);
-        
-        if (!process_key( keyin ))
-            return;
-    }
-}
-
-void Menu::do_menu()
-{
-    draw_menu();
 
     alive = true;
     while (alive)
