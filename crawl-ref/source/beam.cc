@@ -2476,9 +2476,10 @@ int affect(bolt &beam, int x, int y)
 
         // Monsters submerged in shallow water can be targeted by beams
         // aimed at that spot.
-        if (!mons->submerged()
-            || (beam.aimed_at_spot && beam.target() == mons->pos()
-                && grd(mons->pos()) == DNGN_SHALLOW_WATER))
+        if (mons->alive()
+            && (!mons->submerged()
+                || (beam.aimed_at_spot && beam.target() == mons->pos()
+                    && grd(mons->pos()) == DNGN_SHALLOW_WATER)))
         {
             if (!beam.is_big_cloud
                 && (!beam.is_explosion || beam.in_explosion_phase))
