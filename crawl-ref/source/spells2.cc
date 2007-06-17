@@ -657,9 +657,9 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
     }
 
     // the real function begins here {dlb}:
-    char *ptr_stat = 0;         // NULL {dlb}
-    char *ptr_stat_max = 0;     // NULL {dlb}
-    char *ptr_redraw = 0;       // NULL {dlb}
+    char *ptr_stat = NULL;
+    char *ptr_stat_max = NULL;
+    bool *ptr_redraw = NULL;
 
     std::string msg = "You feel your ";
 

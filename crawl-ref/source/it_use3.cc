@@ -509,6 +509,14 @@ bool evoke_wielded( void )
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
+        
+        if ( is_deck(wpn) )
+        {
+            evoke_deck(wpn);
+            pract = 1;
+            break;
+        }
+
         switch (wpn.sub_type)
         {
         case MISC_BOTTLED_EFREET:
@@ -622,14 +630,6 @@ bool evoke_wielded( void )
                     menv[midx].flags |= MF_CREATED_FRIENDLY;
                 // no practice
             }
-            break;
-
-        case MISC_DECK_OF_WONDERS:
-        case MISC_DECK_OF_SUMMONINGS:
-        case MISC_DECK_OF_TRICKS:
-        case MISC_DECK_OF_POWER:
-            evoke_deck(wpn);
-            pract = 1;
             break;
 
         case MISC_BOX_OF_BEASTS:

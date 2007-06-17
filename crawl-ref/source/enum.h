@@ -450,21 +450,21 @@ enum branch_type                // you.where_are_you
 
 enum builder_rc_type
 {
-    BUILD_QUIT = -1,                 // all done, don't continue
-    BUILD_SKIP = 1,                 // skip further generation
-    BUILD_CONTINUE = 0              // continue generation
+    BUILD_QUIT = -1,            // all done, don't continue
+    BUILD_SKIP = 1,             // skip further generation
+    BUILD_CONTINUE = 0          // continue generation
 };
 
-enum burden_state_type                 // you.burden_state
+enum burden_state_type          // you.burden_state
 {
-    BS_UNENCUMBERED,                   //    0
-    BS_ENCUMBERED = 2,                 //    2
-    BS_OVERLOADED = 5                  //    5
+    BS_UNENCUMBERED,            //    0
+    BS_ENCUMBERED = 2,          //    2
+    BS_OVERLOADED = 5           //    5
 };
 
-enum canned_message_type               // canned_msg() - unsigned char
+enum canned_message_type
 {
-    MSG_SOMETHING_APPEARS,             //    0
+    MSG_SOMETHING_APPEARS,
     MSG_NOTHING_HAPPENS,
     MSG_YOU_RESIST,
     MSG_TOO_BERSERK,
@@ -479,63 +479,59 @@ enum canned_message_type               // canned_msg() - unsigned char
 
 enum card_type
 {
-    CARD_BLANK = 0,             //    0
-    CARD_BUTTERFLY,
-    CARD_WRAITH,
-    CARD_EXPERIENCE,
-    CARD_WEALTH,
-    CARD_INTELLIGENCE,          //    5
-    CARD_STRENGTH,
-    CARD_QUICKSILVER,
-    CARD_STUPIDITY,
-    CARD_WEAKNESS,
-    CARD_SLOTH,                 //   10
+    CARD_BLANK = 0,
+    CARD_PORTAL,                // "the mover"
+    CARD_WARP,                  // "the jumper"
+    CARD_SWAP,                  // "swap"
+    CARD_VELOCITY,              // "the runner"
+
+    CARD_TOMB,                  // "the wall"
+    CARD_BANSHEE,               // "the scream"
+    CARD_DAMNATION,             // banishment
+    CARD_SOLITUDE,              // dispersal
+    CARD_WARPWRIGHT,            // create teleport trap
+    
+    CARD_VITRIOL,               // acid damage
+    CARD_FLAME,                 // fire damage
+    CARD_FROST,                 // cold damage
+    CARD_HAMMER,                // pure damage
+    
+    CARD_ELIXIR,                // healing
+    CARD_BATTLELUST,            // melee boosts
+    CARD_METAMORPHOSIS,         // transformation
+    CARD_HELM,                  // defense
+    CARD_BLADE,                 // weapon boosts
+    CARD_SHADOW,                // assassin skills
+    
+    CARD_SUMMON_ANIMAL,
+    CARD_SUMMON_DEMON,
+    CARD_SUMMON_WEAPON,
+    CARD_SUMMON_ANY,
+
+    CARD_POTION,
+    CARD_FOCUS,
     CARD_SHUFFLE,
-    CARD_FREAK,
-    CARD_DEATH,
-    CARD_NORMALITY,
-    CARD_SHADOW,                //   15
-    CARD_GATE,
-    CARD_STATUE,
-    CARD_ACQUISITION,
-    CARD_HASTEN,
-    CARD_DEMON_LESSER,          //   20
-    CARD_DEMON_COMMON,
-    CARD_DEMON_GREATER,
-    CARD_DEMON_SWARM,
-    CARD_YAK,
-    CARD_FIEND,                 //   25
-    CARD_DRAGON,
-    CARD_GOLEM,
-    CARD_THING_FUGLY,
-    CARD_LICH,
-    CARD_HORROR_UNSEEN,         //   30
-    CARD_BLINK,
-    CARD_TELEPORT,
-    CARD_TELEPORT_NOW,
-    CARD_RAGE,
-    CARD_LEVITY,                //   35
-    CARD_VENOM,
-    CARD_XOM,
-    CARD_SLOW,
-    CARD_DECAY,
-    CARD_HEALING,               //   40
-    CARD_HEAL_WOUNDS,
-    CARD_TORMENT,
-    CARD_FOUNTAIN,
-    CARD_ALTAR,
-    CARD_FAMINE,                //   45
-    CARD_FEAST,
+
+    CARD_EXPERIENCE,
     CARD_WILD_MAGIC,
-    CARD_VIOLENCE,
-    CARD_PROTECTION,
-    CARD_KNOWLEDGE,             //   50
-    CARD_MAZE,
-    CARD_PANDEMONIUM,
-    CARD_IMPRISONMENT,
-    CARD_RULES_FOR_BRIDGE,      //   54
-    NUM_CARDS,                  // must remain last regular member {dlb}
-    CARD_RANDOM = 255           // must remain final member {dlb}
+    CARD_GENETIC_ENGINEER,      // remove one *bad* mutation
+
+    CARD_MAP,                   // magic mapping
+    CARD_DOWSING,               // detect SD/traps/items/monsters
+    CARD_SPADE,                 // dig
+    CARD_TROWEL,                // create feature/vault
+    CARD_MINEFIELD,             // plant traps
+
+    CARD_GENIE,                 // acquirement OR rotting/deterioration
+    CARD_BARGAIN,               // shopping discount
+    CARD_WRATH,                 // Godly wrath
+    CARD_WRAITH,                // drain XP
+    CARD_XOM,
+    CARD_FEAST,
+    CARD_FAMINE,
+    CARD_CURSE,                 // Curse your items
+
+    NUM_CARDS
 };
 
 enum char_set_type
@@ -842,13 +838,21 @@ enum startup_book_type
     SBT_RANDOM
 };
 
+enum deck_rarity_type
+{
+    DECK_RARITY_COMMON,
+    DECK_RARITY_RARE,
+    DECK_RARITY_LEGENDARY
+};
+
 enum deck_type
 {
-    DECK_OF_WONDERS,                   //    0
+    // pure decks
+    DECK_OF_ESCAPE,
+    DECK_OF_DESTRUCTION,
+    DECK_OF_DUNGEONS,
     DECK_OF_SUMMONING,
-    DECK_OF_TRICKS,
-    DECK_OF_POWER,
-    DECK_OF_PUNISHMENT
+    DECK_OF_WONDERS
 };
 
 // When adding new delays, update their names in delay.cc, or bad things will
@@ -1805,18 +1809,29 @@ enum misc_item_type
     MISC_AIR_ELEMENTAL_FAN,
     MISC_LAMP_OF_FIRE,
     MISC_STONE_OF_EARTH_ELEMENTALS,
-    MISC_LANTERN_OF_SHADOWS,           //    5
+    MISC_LANTERN_OF_SHADOWS,
     MISC_HORN_OF_GERYON,
     MISC_BOX_OF_BEASTS,
-    MISC_DECK_OF_WONDERS,
-    MISC_DECK_OF_SUMMONINGS,
-    MISC_CRYSTAL_BALL_OF_ENERGY,       //   10
+    MISC_CRYSTAL_BALL_OF_ENERGY,
     MISC_EMPTY_EBONY_CASKET,
     MISC_CRYSTAL_BALL_OF_FIXATION,
     MISC_DISC_OF_STORMS,
+
+    // pure decks
+    MISC_DECK_OF_ESCAPE,
+    MISC_DECK_OF_DESTRUCTION,
+    MISC_DECK_OF_DUNGEONS,
+    MISC_DECK_OF_SUMMONING,
+    MISC_DECK_OF_WONDERS,
+    MISC_DECK_OF_PUNISHMENT,
+
+    // mixed decks
+    MISC_DECK_OF_WAR,
+    MISC_DECK_OF_CHANGES,
+    MISC_DECK_OF_DEFENSE,
+
     MISC_RUNE_OF_ZOT,
-    MISC_DECK_OF_TRICKS,               //   15
-    MISC_DECK_OF_POWER,
+
     NUM_MISCELLANY // mv: used for random generation
 };
 

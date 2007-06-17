@@ -193,8 +193,8 @@ bool forget_spell(void)
 bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
 {
     bool statLowered = false;   // must initialize to false {dlb}
-    char *ptr_stat = 0;         // NULL {dlb}
-    char *ptr_redraw = 0;       // NULL {dlb}
+    char *ptr_stat = NULL;
+    bool *ptr_redraw = NULL;
     char newValue = 0;          // holds new value, for comparison to old {dlb}
 
     // begin outputing message: {dlb}

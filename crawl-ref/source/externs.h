@@ -629,16 +629,16 @@ public:
   int symbol;
   int colour;
 
-  char redraw_hit_points;
-  char redraw_magic_points;
-  char redraw_strength;
-  char redraw_intelligence;
-  char redraw_dexterity;
-  char redraw_experience;
-  char redraw_armour_class;
+  bool redraw_hit_points;
+  bool redraw_magic_points;
+  bool redraw_strength;
+  bool redraw_intelligence;
+  bool redraw_dexterity;
+  bool redraw_experience;
+  bool redraw_armour_class;
 
-  char redraw_gold;
-  char redraw_evasion;
+  bool redraw_gold;
+  bool redraw_evasion;
 
   unsigned char flash_colour;
 

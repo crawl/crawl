@@ -2757,7 +2757,8 @@ void drink(void)
     const bool dangerous =
         player_in_a_dangerous_place() && (you.experience_level > 1);
     
-    if (potion_effect( you.inv[item_slot].sub_type, 40 ))
+    if (potion_effect(static_cast<potion_type>(you.inv[item_slot].sub_type),
+                      40))
     {
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
 
@@ -2786,7 +2787,7 @@ bool drink_fountain(void)
 {
     bool gone_dry = false;
     int temp_rand;              // for probability determinations {dlb}
-    int fountain_effect = POT_WATER;    // for fountain effects {dlb}
+    potion_type fountain_effect = POT_WATER;    // for fountain effects {dlb}
 
     switch (grd[you.x_pos][you.y_pos])
     {

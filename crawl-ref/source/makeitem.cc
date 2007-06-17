@@ -714,6 +714,16 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_MISCELLANY:
+        if ( is_deck(item) )
+        {
+            item.colour = GREEN;
+            if ( one_chance_in(10) )
+                item.colour = LIGHTMAGENTA; // legendary
+            if ( one_chance_in(5) )
+                item.colour = (coinflip() ? MAGENTA : BROWN);
+            break;
+        }
+
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
@@ -808,11 +818,7 @@ void item_colour( item_def &item )
         case MISC_EMPTY_EBONY_CASKET:
             item.colour = DARKGREY;
             break;
-
-        case MISC_DECK_OF_SUMMONINGS:
-        case MISC_DECK_OF_WONDERS:
-        case MISC_DECK_OF_TRICKS:
-        case MISC_DECK_OF_POWER:
+          
         default:
             item.colour = random_colour();
             break;
@@ -2748,18 +2754,21 @@ int items( int allow_uniques,       // not just true-false,
         if (force_type == OBJ_RANDOM)
         {
             do
+            {
                 mitm[p].sub_type = random2(NUM_MISCELLANY);
-            while //mv: never generated
+            }
+            while
+                //mv: never generated
                ((mitm[p].sub_type == MISC_RUNE_OF_ZOT)
                 || (mitm[p].sub_type == MISC_HORN_OF_GERYON)
-                // mv: others are possible but less often
-                // btw. chances of generating decks are almost the same as
-                // before, other chances are now distributed more steadily
-                || (mitm[p].sub_type == MISC_DECK_OF_POWER && !one_chance_in(12))
-                || (mitm[p].sub_type == MISC_DECK_OF_SUMMONINGS && !one_chance_in(3))
-                || (mitm[p].sub_type == MISC_DECK_OF_TRICKS && !one_chance_in(3))
-                || (mitm[p].sub_type == MISC_DECK_OF_WONDERS && !one_chance_in(3))
-                );
+                || (mitm[p].sub_type == MISC_DECK_OF_PUNISHMENT)
+                // pure decks are rare in the dungeon
+                || ((mitm[p].sub_type == MISC_DECK_OF_ESCAPE ||
+                     mitm[p].sub_type == MISC_DECK_OF_DESTRUCTION ||
+                     mitm[p].sub_type == MISC_DECK_OF_DUNGEONS ||
+                     mitm[p].sub_type == MISC_DECK_OF_SUMMONING ||
+                     mitm[p].sub_type == MISC_DECK_OF_WONDERS) &&
+                    !one_chance_in(5)));
 
             // filling those silly empty boxes -- bwr
             if (mitm[p].sub_type == MISC_EMPTY_EBONY_CASKET 
@@ -2773,15 +2782,8 @@ int items( int allow_uniques,       // not just true-false,
             mitm[p].sub_type = force_type;
         }
 
-        if (mitm[p].sub_type == MISC_DECK_OF_WONDERS
-            || mitm[p].sub_type == MISC_DECK_OF_SUMMONINGS
-            || mitm[p].sub_type == MISC_DECK_OF_POWER)
-        {
+        if ( is_deck(mitm[p]) )
             mitm[p].plus = 4 + random2(10);
-        }
-
-        if (mitm[p].sub_type == MISC_DECK_OF_TRICKS)
-            mitm[p].plus = 6 + random2avg(15, 2);
 
         if (mitm[p].sub_type == MISC_RUNE_OF_ZOT)
             mitm[p].plus = item_race;

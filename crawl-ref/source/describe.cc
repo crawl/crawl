@@ -2889,9 +2889,11 @@ static std::string describe_misc_item( const item_def &item )
 
     description.reserve(100);
 
+    const misc_item_type subtype = static_cast<misc_item_type>(item.sub_type);
+
     if (item_type_known(item))
     {
-        switch (item.sub_type)
+        switch (subtype)
         {
         case MISC_BOTTLED_EFREET:
             description +=
@@ -2943,17 +2945,60 @@ static std::string describe_misc_item( const item_def &item )
                 "A magical box containing many wild beasts. One may "
                 "allow them to escape by opening the box's lid. ";
             break;
-        case MISC_DECK_OF_WONDERS:
+        case MISC_DECK_OF_ESCAPE:
             description +=
-                "A deck of highly mysterious and magical cards. One may "
-                "draw a random card from it, but should be prepared to "
-                "suffer the possible consequences! ";
+                "A deck of magical cards, mainly dealing with various "
+                "forms of escape. Incautious use may lead to being "
+                "dumped from the frying pan into the fire! ";
             break;
-        case MISC_DECK_OF_SUMMONINGS:
+        case MISC_DECK_OF_DESTRUCTION:
+            description +=
+                "A deck of magical cards, most of which hurl death "
+                "and destruction at one's foes (or, if unlucky, at oneself.) ";
+            break;
+        case MISC_DECK_OF_DUNGEONS:
+            description +=
+                "A deck of magical cards which deal with shaping the "
+                "dungeon. Unlike most other decks, the cards from this deck "
+                "tend to be ignored by Nemelex, who prefers more amusing "
+                "pursuits. ";
+            break;
+        case MISC_DECK_OF_SUMMONING:
             description +=
                 "A deck of magical cards, depicting a range of weird and "
                 "wondrous creatures. ";
             break;
+
+        case MISC_DECK_OF_WONDERS:
+            description +=
+                "A deck of highly mysterious and magical cards, which can "
+                "permanently alter the drawer's physical and mental "
+                "condition, for better or worse. ";
+            break;
+
+        case MISC_DECK_OF_PUNISHMENT:
+            description +=
+                "A deck of magical cards which wreak havoc on the user. ";
+            break;
+
+        case MISC_DECK_OF_WAR:
+            description +=
+                "A deck of magical cards which are useful before and during "
+                "battle. ";
+            break;
+
+        case MISC_DECK_OF_CHANGES:
+            description +=
+                "A deck of magical cards which induce changes in the user "
+                "or his environment. ";
+            break;
+            
+        case MISC_DECK_OF_DEFENSE:
+            description +=
+                "A deck of magical cards, most of which defend the user "
+                "from harm in various ways. ";
+            break;
+
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             description +=
                 "A magical device which can be used to restore one's "
@@ -2979,24 +3024,20 @@ static std::string describe_misc_item( const item_def &item )
                 "hands of one skilled in air elemental magic, but cannot "
                 "be used by one who is not a conductor. ";
             break;
+
         case MISC_RUNE_OF_ZOT:
             description +=
                 "A talisman which allows entry into Zot's domain. ";
             break;
-        case MISC_DECK_OF_TRICKS:
-            description +=
-                "A deck of magical cards, full of amusing tricks. ";
+
+        case NUM_MISCELLANY:
+            description += "A buggy miscellaneous item.";
             break;
-        case MISC_DECK_OF_POWER:
-            description += "A deck of powerful magical cards. ";
-            break;
-        default:
-            DEBUGSTR("Unknown misc item (2)");
         }
     }
     else
     {
-        switch (item.sub_type)
+        switch (subtype)
         {
         case MISC_BOTTLED_EFREET:
             description += "A heavy bronze flask, warm to the touch. ";
@@ -3025,10 +3066,16 @@ static std::string describe_misc_item( const item_def &item )
         case MISC_EMPTY_EBONY_CASKET:
             description += "A small black box. I wonder what's inside? ";
             break;
+
+        case MISC_DECK_OF_ESCAPE:
+        case MISC_DECK_OF_DESTRUCTION:
+        case MISC_DECK_OF_DUNGEONS:
+        case MISC_DECK_OF_SUMMONING:
         case MISC_DECK_OF_WONDERS:
-        case MISC_DECK_OF_TRICKS:
-        case MISC_DECK_OF_POWER:
-        case MISC_DECK_OF_SUMMONINGS:
+        case MISC_DECK_OF_PUNISHMENT:
+        case MISC_DECK_OF_WAR:
+        case MISC_DECK_OF_CHANGES:
+        case MISC_DECK_OF_DEFENSE:
             description += "A deck of cards. ";
             break;
         case MISC_RUNE_OF_ZOT:
@@ -3037,8 +3084,9 @@ static std::string describe_misc_item( const item_def &item )
         case MISC_DISC_OF_STORMS:
             description += "A grey disc. ";
             break;
-        default:
-            DEBUGSTR("Unknown misc item");
+        case NUM_MISCELLANY:
+            description += "A buggy miscellaneous item. ";
+            break;
         }
     }
 

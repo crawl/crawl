@@ -20,7 +20,7 @@
  * called from: ability - beam - decks - item_use - misc - religion -
  *              spell - spells - spells1
  * *********************************************************************** */
-bool potion_effect(char pot_eff, int pow);
+bool potion_effect(potion_type pot_eff, int pow);
 
 
 /* ***********************************************************************

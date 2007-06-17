@@ -3738,7 +3738,7 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
 {
     char *ptr_stat = NULL;
     char *ptr_stat_max = NULL;
-    char *ptr_redraw = NULL;
+    bool *ptr_redraw = NULL;
 
 
     // sanity - is non-zero amount?

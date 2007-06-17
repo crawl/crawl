@@ -452,18 +452,32 @@ static void do_god_gift()
                 && !you.attribute[ATTR_CARD_COUNTDOWN]
                 && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
             {
-                int thing_created = NON_ITEM;
-                int gift_type = MISC_DECK_OF_TRICKS;
+                misc_item_type gift_type;
+                if ( random2(200) <= you.piety )
+                {
+                    // make a pure deck
+                    misc_item_type pure_decks[] = {
+                        MISC_DECK_OF_ESCAPE,
+                        MISC_DECK_OF_DESTRUCTION,
+                        MISC_DECK_OF_DUNGEONS,
+                        MISC_DECK_OF_SUMMONING,
+                        MISC_DECK_OF_WONDERS
+                    };
+                    gift_type = pure_decks[random2(ARRAYSIZE(pure_decks))];
+                }
+                else
+                {
+                    // make a mixed deck
+                    misc_item_type mixed_decks[] = {
+                        MISC_DECK_OF_WAR,
+                        MISC_DECK_OF_CHANGES,
+                        MISC_DECK_OF_DEFENSE
+                    };
+                    gift_type = mixed_decks[random2(ARRAYSIZE(mixed_decks))];
+                }
 
-                if (random2(200) <= you.piety && one_chance_in(4))
-                    gift_type = MISC_DECK_OF_SUMMONINGS;
-                if (random2(200) <= you.piety && coinflip())
-                    gift_type = MISC_DECK_OF_WONDERS;
-                if (random2(200) <= you.piety && one_chance_in(4))
-                    gift_type = MISC_DECK_OF_POWER;
-                
-                thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
-                                       true, 1, MAKE_ITEM_RANDOM_RACE );
+                int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
+                                           true, 1, MAKE_ITEM_RANDOM_RACE );
 
                 if (thing_created != NON_ITEM)
                 {
@@ -2047,7 +2061,7 @@ void divine_retribution( god_type god )
         // like Xom, this might actually help the player -- bwr
         simple_god_message(" makes you draw from the Deck of Punishment.",
                            god);
-        deck_of_cards(DECK_OF_PUNISHMENT);
+        draw_from_deck_of_punishment();
         break;
 
     case GOD_SIF_MUNA:

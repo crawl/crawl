@@ -677,16 +677,33 @@ static const char* rune_type_name(int p)
     }
 }
 
+static const char* deck_rarity_name(deck_rarity_type rarity)
+{
+    switch (rarity)
+    {
+    case DECK_RARITY_COMMON:    return "common";
+    case DECK_RARITY_RARE:      return "rare";
+    case DECK_RARITY_LEGENDARY: return "legendary";
+    }
+    return "buggy rarity";
+}
+
 static const char* misc_type_name(int type, bool known)
 {
     if (known)
     {
         switch ( static_cast<misc_item_type>(type) )
         {
-        case MISC_DECK_OF_POWER: return "deck of power";
-        case MISC_DECK_OF_SUMMONINGS: return "deck of summonings";
-        case MISC_DECK_OF_TRICKS: return "deck of tricks";
+        case MISC_DECK_OF_ESCAPE: return "deck of escape";
+        case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
+        case MISC_DECK_OF_DUNGEONS: return "deck of dungeons";
+        case MISC_DECK_OF_SUMMONING: return "deck of summonings";
         case MISC_DECK_OF_WONDERS: return "deck of wonders";
+        case MISC_DECK_OF_PUNISHMENT: return "deck of punishment";
+        case MISC_DECK_OF_WAR: return "deck of war";
+        case MISC_DECK_OF_CHANGES: return "deck of changes";
+        case MISC_DECK_OF_DEFENSE: return "deck of defense";
+
         case MISC_CRYSTAL_BALL_OF_ENERGY: return "crystal ball of energy";
         case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
         case MISC_CRYSTAL_BALL_OF_SEEING: return "crystal ball of seeing";
@@ -710,10 +727,15 @@ static const char* misc_type_name(int type, bool known)
     {
         switch ( static_cast<misc_item_type>(type) )
         {
-        case MISC_DECK_OF_POWER:
-        case MISC_DECK_OF_SUMMONINGS:
-        case MISC_DECK_OF_TRICKS:
+        case MISC_DECK_OF_ESCAPE:
+        case MISC_DECK_OF_DESTRUCTION:
+        case MISC_DECK_OF_DUNGEONS:
+        case MISC_DECK_OF_SUMMONING:
         case MISC_DECK_OF_WONDERS:
+        case MISC_DECK_OF_PUNISHMENT:
+        case MISC_DECK_OF_WAR:
+        case MISC_DECK_OF_CHANGES:
+        case MISC_DECK_OF_DEFENSE:
             return "deck of cards";
         case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_CRYSTAL_BALL_OF_FIXATION:
@@ -1314,6 +1336,10 @@ std::string item_def::name_aux( description_level_type desc,
         }
         else
         {
+            if ( is_deck(*this) )
+            {
+                buff << deck_rarity_name(deck_rarity(*this)) << ' ';
+            }
             buff << misc_type_name(item_typ, know_type);
             if ( is_deck(*this) && item_plus2 != 0 )
             {

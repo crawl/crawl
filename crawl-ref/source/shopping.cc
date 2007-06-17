@@ -1451,9 +1451,6 @@ unsigned int item_value( item_def item, bool ident )
             case MISC_BOTTLED_EFREET:
                 valued += 350;
                 break;
-            case MISC_DECK_OF_TRICKS:
-                valued += 100;
-                break;
             default:
                 valued += 400;
             }

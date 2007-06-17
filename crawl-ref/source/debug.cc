@@ -2092,7 +2092,7 @@ void debug_card()
         const card_type c = static_cast<card_type>(i);
         if ( strstr(card_name(c), buf) != NULL )
         {
-            card_effect(c);
+            card_effect(c, DECK_RARITY_LEGENDARY);
             break;
         }
     }

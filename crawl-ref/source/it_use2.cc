@@ -41,7 +41,7 @@
 #include "view.h"
 
 // From an actual potion, pow == 40 -- bwr
-bool potion_effect( char pot_eff, int pow )
+bool potion_effect( potion_type pot_eff, int pow )
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
 
@@ -277,6 +277,10 @@ bool potion_effect( char pot_eff, int pow )
         }
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4));
+        break;
+        
+    case NUM_POTIONS:
+        mpr("You feel bugginess flow through your body.");
         break;
     }
 

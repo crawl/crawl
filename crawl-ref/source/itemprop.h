@@ -150,6 +150,7 @@ bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = NULL);
 
 bool is_deck(const item_def &item);
+deck_rarity_type deck_rarity(const item_def &item);
 
 // Only works for armour/weapons/missiles
 std::string item_base_name(const item_def &item);
