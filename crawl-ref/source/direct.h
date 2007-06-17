@@ -33,6 +33,8 @@ bool in_los(int x, int y);
 bool in_vlos(int x, int y);
 bool in_vlos(const coord_def &pos);
 
+void describe_floor();
+
 int dos_direction_unmunge(int doskey);
 
 std::string feature_description(int mx, int my);

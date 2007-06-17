@@ -529,6 +529,7 @@ static const char *level_map_help =
     "<w>^</w>   : cycle through traps\n"
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>X</w>   : cycle through travel eXclusions\n"
+    "<w>x</w>   : change the radius of a travel exclusion\n"
     "<w>W</w>   : cycle through waypoints\n"
     "<w>*</w>   : cycle forward through stashes\n"
     "<w>/</w>   : cycle backward through stashes\n"

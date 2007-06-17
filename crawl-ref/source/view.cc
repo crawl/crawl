@@ -190,8 +190,12 @@ int get_envmap_col(int x, int y)
 
 bool is_terrain_known( int x, int y )
 {
-    return (env.map[x][y].flags
-            & (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG));
+    return (env.map[x][y].known());
+}
+
+bool is_terrain_known(const coord_def &p)
+{
+    return (env.map(p).known());
 }
 
 bool is_terrain_seen( int x, int y )
@@ -2493,6 +2497,15 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
     update_screen();
 }
 
+static void reset_travel_colours(std::vector<coord_def> &features)
+{
+    // We now need to redo travel colours
+    features.clear();
+    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+    // Sort features into the order the player is likely to prefer.
+    arrange_features(features);
+}
+
 // show_map() now centers the known map along x or y.  This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
@@ -2616,24 +2629,31 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             arrange_features(features);
             move_x = move_y = 0;
             break;
+
+        // Cycle the radius of an exclude.
+        case 'x':
+        {
+            const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
+            if (is_exclude_root(p))
+                cycle_exclude_radius(p);
+            reset_travel_colours(features);
+            move_x = move_y = 0;
+            break;
+        }
+        
         case CONTROL('E'):
         case CONTROL('X'):
-            {
-                int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
-                if (getty == CONTROL('X'))
-                    toggle_exclude(x, y);
-                else
-                    clear_excludes();
+        {
+            int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
+            if (getty == CONTROL('X'))
+                toggle_exclude(coord_def(x, y));
+            else
+                clear_excludes();
 
-                // We now need to redo travel colours
-                features.clear();
-                find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
-                // Sort features into the order the player is likely to prefer.
-                arrange_features(features);
-
-                move_x = move_y = 0;
-            }
+            reset_travel_colours(features);
+            move_x = move_y = 0;
             break;
+        }
             
         case 'b':
         case '1':

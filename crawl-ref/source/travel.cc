@@ -42,7 +42,7 @@
 #endif
 
 #define TC_MAJOR_VERSION ((unsigned char) 4)
-#define TC_MINOR_VERSION ((unsigned char) 6)
+#define TC_MINOR_VERSION ((unsigned char) 7)
 
 enum IntertravelDestination
 {
@@ -66,7 +66,7 @@ TravelCache travel_cache;
 static std::vector<stair_info> curr_stairs;
 
 // Squares that are not safe to travel to on the current level.
-static std::vector<coord_def> curr_excludes;
+static std::vector<travel_exclude> curr_excludes;
 
 // This is where we last tried to take a stair during interlevel travel.
 // Note that last_stair.depth should be set to -1 before initiating interlevel
@@ -185,44 +185,40 @@ static const char *trap_name(int x, int y)
 /*
  * Returns true if the character can cross this dungeon feature.
  */
-inline bool is_traversable(unsigned char grid)
+inline bool is_traversable(int grid)
 {
-    return traversable_terrain[(int) grid] == TRAVERSABLE;
+    return traversable_terrain[grid] == TRAVERSABLE;
 }
 
-static bool is_excluded(int x, int y, const std::vector<coord_def> &exc)
+static bool is_excluded(const coord_def &p,
+                        const std::vector<travel_exclude> &exc)
 {
     for (int i = 0, count = exc.size(); i < count; ++i)
     {
-        const coord_def &c = exc[i];
-        int dx = c.x - x,
-            dy = c.y - y;
-        if (dx * dx + dy * dy <= Options.travel_exclude_radius2)
-            return true;
+        if ((exc[i].pos - p).abs() < exc[i].radius_sq())
+            return (true);
     }
-    return false;
+    return (false);
 }
 
-inline static bool is_excluded(const coord_def &c, 
-                               const std::vector<coord_def> &exc)
+inline static bool is_excluded(const coord_def &p)
 {
-    return is_excluded(c.x, c.y, exc);
+    return is_excluded(p, curr_excludes);
 }
 
-inline static bool is_excluded(int x, int y)
-{
-    return is_excluded(x, y, curr_excludes);
-}
-
-static bool is_exclude_root(int x, int y)
+static travel_exclude *find_exclude_root(const coord_def &p)
 {
     for (int i = 0, count = curr_excludes.size(); i < count; ++i)
     {
-        const coord_def &c = curr_excludes[i];
-        if (c.x == x && c.y == y)
-            return true;
+        if (curr_excludes[i].pos == p)
+            return (&curr_excludes[i]);
     }
-    return false;
+    return (NULL);
+}
+
+bool is_exclude_root(const coord_def &p)
+{
+    return (find_exclude_root(p));
 }
 
 const char *run_mode_name(int runmode)
@@ -266,34 +262,70 @@ void clear_excludes()
     }
 }
 
-void toggle_exclude(int x, int y)
+void cycle_exclude_radius(const coord_def &p)
 {
-    // Sanity checks
+    if (travel_exclude *exc = find_exclude_root(p))
+    {
+        int &curr_radius = exc->radius;
+
+        switch (curr_radius)
+        {
+        case LOS_RADIUS: curr_radius = 1; break;
+        case 1         : curr_radius = 4; break;
+        case 4         : curr_radius = LOS_RADIUS; break;
+        }
+        
+        if (can_travel_interlevel())
+        {
+            LevelInfo &li = travel_cache.get_level_info(level_id::current());
+            li.update();
+        }
+    }
+}
+
+void toggle_exclude(const coord_def &p)
+{
+    if (is_exclude_root(p))
+        set_exclude(p, 0);
+    else
+        set_exclude(p, LOS_RADIUS);
+}
+
+void set_exclude(const coord_def &p, int radius)
+{
+    // Sanity checks; excludes can be set in Pan and regular dungeon
+    // levels only.
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         return;
 
-    if (!in_bounds(x, y))
+    if (!in_bounds(p))
         return;
     
-    if (!is_terrain_known(x, y))
+    if (!is_terrain_known(p))
         return;
-    
-    if (is_exclude_root(x, y))
+
+    if (is_exclude_root(p))
     {
         for (int i = 0, count = curr_excludes.size(); i < count; ++i)
         {
-            const coord_def &c = curr_excludes[i];
-            if (c.x == x && c.y == y)
+            if (curr_excludes[i].pos == p)
             {
-                curr_excludes.erase( curr_excludes.begin() + i );
-                break ;
+                if (!radius)
+                {
+                    curr_excludes.erase( curr_excludes.begin() + i );
+                    break ;
+                }
+                else
+                {
+                    curr_excludes[i].radius = radius;
+                    return;
+                }
             }
         }
     }
     else
     {
-        const coord_def c(x, y);
-        curr_excludes.push_back(c);
+        curr_excludes.push_back(travel_exclude(p, radius));
     }
 
     if (can_travel_interlevel())
@@ -325,7 +357,7 @@ static bool is_monster_blocked(int x, int y)
  */
 static bool is_reseedable(int x, int y)
 {
-    if (is_excluded(x, y))
+    if (is_excluded(coord_def(x, y)))
         return (true);
     int grid = grd[x][y];
     return (grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER ||
@@ -373,7 +405,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
                                     "s", trap_name(x, y)))
 #endif
             )
-            && !is_excluded(x, y);
+        && !is_excluded(coord_def(x, y));
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
@@ -1040,12 +1072,10 @@ command_type direction_to_command( char x, char y )
     return CMD_NO_CMD;
 }
 
-static void fill_exclude_radius(const coord_def &c)
+static void fill_exclude_radius(const travel_exclude &exc)
 {
-    int radius = 0;
-    while (radius * radius < Options.travel_exclude_radius2)
-        radius++;
-
+    const int radius = exc.radius;
+    const coord_def &c = exc.pos;
     for (int y = c.y - radius; y <= c.y + radius; ++y)
     {
         for (int x = c.x - radius; x <= c.x + radius; ++x)
@@ -1054,9 +1084,11 @@ static void fill_exclude_radius(const coord_def &c)
                     || travel_point_distance[x][y])
                 continue;
 
-            if (is_exclude_root(x, y))
+            const coord_def p(x, y);
+
+            if (is_exclude_root(p))
                 travel_point_distance[x][y] = PD_EXCLUDED;
-            else if (is_excluded(x, y))
+            else if (is_excluded(p))
                 travel_point_distance[x][y] = PD_EXCLUDED_RADIUS;
         }
     }
@@ -1301,11 +1333,11 @@ const coord_def travel_pathfind::pathfind(run_mode_type rmode)
     {
         for (int i = 0, size = curr_excludes.size(); i < size; ++i)
         {
-            const coord_def &exc = curr_excludes[i];
+            const travel_exclude &exc = curr_excludes[i];
             // An exclude - wherever it is - is always a feature.
-            if (std::find(features->begin(), features->end(), exc) 
+            if (std::find(features->begin(), features->end(), exc.pos)
                     == features->end())
-                features->push_back(exc);
+                features->push_back(exc.pos);
 
             fill_exclude_radius(exc);
         }
@@ -1414,7 +1446,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             && dc != start)
         {
             if (features &&
-                (is_trap(dc.x, dc.y) || is_exclude_root(dc.x, dc.y)))
+                (is_trap(dc.x, dc.y) || is_exclude_root(dc)))
             {
                 features->push_back(dc);
             }
@@ -1425,8 +1457,8 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             // Appropriate mystic number. Nobody else should check
             // this number, since this square is unsafe for travel.
             point_distance[dc.x][dc.y] = 
-                is_exclude_root(dc.x, dc.y)? PD_EXCLUDED :
-                is_excluded(dc.x, dc.y)    ? PD_EXCLUDED_RADIUS :
+                is_exclude_root(dc)   ? PD_EXCLUDED :
+                is_excluded(dc)       ? PD_EXCLUDED_RADIUS :
                 PD_TRAP;
         }
         return (false);
@@ -1451,9 +1483,9 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         if (ignore_hostile)
         {
             point_distance[dc.x][dc.y] = -point_distance[dc.x][dc.y];
-            if (is_exclude_root(dc.x, dc.y))
+            if (is_exclude_root(dc))
                 point_distance[dc.x][dc.y] = PD_EXCLUDED;
-            else if (is_excluded(dc.x, dc.y))
+            else if (is_excluded(dc))
                 point_distance[dc.x][dc.y] = PD_EXCLUDED_RADIUS;
         }
 
@@ -1473,7 +1505,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             }
         }
 
-        if (features && dc != start && is_exclude_root(dc.x, dc.y))
+        if (features && dc != start && is_exclude_root(dc))
             features->push_back(dc);
     }
 
@@ -2386,7 +2418,7 @@ static bool loadlev_populate_stair_distances(const level_pos &target)
         return false;
     }
 
-    std::vector<coord_def> old_excludes = curr_excludes;
+    std::vector<travel_exclude> old_excludes = curr_excludes;
 
     curr_excludes.clear();
     LevelInfo &li = travel_cache.get_level_info(target.id);
@@ -2946,8 +2978,8 @@ void LevelInfo::save(FILE *file) const
     {
         for (int i = 0, count = excludes.size(); i < count; ++i)
         {
-            writeShort(file, excludes[i].x);
-            writeShort(file, excludes[i].y);
+            writeCoord(file, excludes[i].pos);
+            writeShort(file, excludes[i].radius);
         }
     }
 }
@@ -2984,9 +3016,9 @@ void LevelInfo::load(FILE *file)
         for (int i = 0; i < nexcludes; ++i)
         {
             coord_def c;
-            c.x = readShort(file);
-            c.y = readShort(file);
-            excludes.push_back(c);
+            readCoord(file, c);
+            const int radius = readShort(file);
+            excludes.push_back(travel_exclude(c, radius));
         }
     }
 }

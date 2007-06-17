@@ -139,6 +139,7 @@ void set_terrain_seen( int x, int y );
 bool is_terrain_known( int x, int y );
 bool is_terrain_seen( int x, int y );
 bool is_terrain_changed( int x, int y );
+bool is_terrain_known(const coord_def &p);
 
 inline bool is_terrain_seen(const coord_def &c)
 {

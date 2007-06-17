@@ -1207,6 +1207,39 @@ std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)
     return (features);
 }
 
+void describe_floor()
+{
+    const int grid = grd(you.pos());
+
+    std::string prefix = "There is ";
+    std::string feat;
+    std::string suffix = " here.";
+    switch (grid)
+    {
+    case DNGN_FLOOR:
+        return;
+
+    case DNGN_ENTER_SHOP:
+        prefix = "There is an entrance to ";
+        break;
+
+    default:
+        break;
+    }
+
+    feat = feature_description(you.x_pos, you.y_pos);
+    if (feat.empty())
+        return;
+    if (grid != DNGN_ENTER_SHOP)
+        feat[0] = tolower(feat[0]);
+    if (ends_with(feat, "."))
+        feat = feat.substr(0, feat.length() - 1);
+
+    mpr((prefix + feat + suffix).c_str());
+    if (grid == DNGN_ENTER_LABYRINTH)
+        mpr("Beware, for starvation awaits!");
+}
+
 std::string feature_description(int grid)
 {
     switch (grid)
@@ -1285,7 +1318,7 @@ std::string feature_description(int grid)
     case DNGN_ENTER_TARTARUS:
         return ("A gateway to the decaying netherworld of Tartarus.");
     case DNGN_ENTER_ABYSS:
-        return ("A gateway to the infinite Abyss.");
+        return ("A one-way gate to the infinite horrors of the Abyss.");
     case DNGN_EXIT_ABYSS:
         return ("A gateway leading out of the Abyss.");
     case DNGN_STONE_ARCH:
@@ -1390,15 +1423,14 @@ std::string feature_description(int grid)
 
 std::string feature_description(int mx, int my)
 {
-    int   trf;            // used for trap type??
-    
     const int grid = grd[mx][my];
-    std::string desc = feature_description(grid);
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_III:
+    {
+        int trf;
         for (trf = 0; trf < MAX_TRAPS; trf++)
         {
             if (env.trap[trf].x == mx
@@ -1438,17 +1470,15 @@ std::string feature_description(int mx, int my)
         case TRAP_NEEDLE:
             return ("A needle trap.");
         default:
-            mpr("An undefined trap. Huh?");
             error_message_to_player();
-            break;
+            return ("An undefined trap.");
         }
-        break;
+    }
     case DNGN_ENTER_SHOP:
         return (shop_name(mx, my));
     default:
-        break;
+        return (feature_description(grid));
     }
-    return (desc);
 }
 
 static void describe_mons_enchantment(const monsters &mons,

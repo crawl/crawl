@@ -25,10 +25,13 @@
 void initialise_travel();
 void stop_running(void);
 void travel_init_new_level();
-void toggle_exclude(int x, int y);
+void cycle_exclude_radius(const coord_def &p);
+void toggle_exclude(const coord_def &p);
+void set_exclude(const coord_def &p, int radius2);
 void clear_excludes();
 unsigned char is_waypoint(int x, int y);
 void update_excludes();
+bool is_exclude_root(const coord_def &p);
 bool is_stair(unsigned gridc);
 bool is_travelable_stair(unsigned gridc);
 command_type stair_direction(int stair_feat);
@@ -319,6 +322,22 @@ struct stair_info
     void load(FILE *);
 };
 
+struct travel_exclude
+{
+    coord_def pos;
+    int       radius;
+
+    travel_exclude(const coord_def &p, int r = LOS_RADIUS)
+        : pos(p), radius(r)
+    {
+    }
+
+    int radius_sq() const
+    {
+        return (radius * radius * 17 / 16);
+    }
+};
+
 // Information on a level that interlevel travel needs.
 struct LevelInfo
 {
@@ -341,7 +360,7 @@ struct LevelInfo
     void reset_distances();
     void set_level_excludes();
 
-    const std::vector<coord_def> &get_excludes() const
+    const std::vector<travel_exclude> &get_excludes() const
     {
         return excludes;
     }
@@ -375,7 +394,7 @@ private:
     std::vector<stair_info> stairs;
 
     // Squares that are not safe to travel to.
-    std::vector<coord_def> excludes;
+    std::vector<travel_exclude> excludes;
 
     std::vector<short> stair_distances;  // Dist between stairs
     level_id id;
