@@ -1645,7 +1645,7 @@ int player_AC(void)
 
         // brown gives: +2, +4, +5
         AC += (you.mutation[MUT_BROWN_SCALES] * 2)
-                            - (you.mutation[MUT_METALLIC_SCALES] == 3);
+                            - (you.mutation[MUT_BROWN_SCALES] == 3);
 
         // orange gives: +1, +3, +4
         AC += you.mutation[MUT_ORANGE_SCALES]
