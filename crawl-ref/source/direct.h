@@ -38,7 +38,8 @@ void describe_floor();
 int dos_direction_unmunge(int doskey);
 
 std::string feature_description(int mx, int my);
-std::string feature_description(int grid);
+std::string feature_description(dungeon_feature_type grid,
+                                trap_type tr = NUM_TRAPS);
 
 std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern);
 

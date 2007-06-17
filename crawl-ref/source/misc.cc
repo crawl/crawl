@@ -149,7 +149,7 @@ void turn_corpse_into_chunks( item_def &item )
     }
 }                               // end place_chunks()
 
-bool grid_is_wall( int grid )
+bool grid_is_wall( dungeon_feature_type grid )
 {
     return (grid == DNGN_ROCK_WALL
             || grid == DNGN_STONE_WALL
@@ -159,12 +159,12 @@ bool grid_is_wall( int grid )
             || grid == DNGN_PERMAROCK_WALL);
 }
 
-bool grid_is_opaque( int grid )
+bool grid_is_opaque( dungeon_feature_type grid )
 {
     return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);
 }
 
-bool grid_is_solid( int grid )
+bool grid_is_solid( dungeon_feature_type grid )
 {
     return (grid < MINMOVE);
 }
@@ -179,29 +179,29 @@ bool grid_is_solid(const coord_def &c)
     return (grid_is_solid(grd(c)));
 }
 
-bool grid_is_trap(int grid)
+bool grid_is_trap(dungeon_feature_type grid)
 {
     return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
               || grid == DNGN_TRAP_III);
 }
 
-bool grid_is_water( int grid )
+bool grid_is_water( dungeon_feature_type grid )
 {
     return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
 }
 
-bool grid_is_watery( int grid )
+bool grid_is_watery( dungeon_feature_type grid )
 {
     return (grid_is_water(grid) || grid == DNGN_BLUE_FOUNTAIN);
 }
 
-bool grid_destroys_items( int grid )
+bool grid_destroys_items( dungeon_feature_type grid )
 {
     return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
 }
 
 // returns 0 if grid is not an altar, else it returns the GOD_* type
-god_type grid_altar_god( unsigned char grid )
+god_type grid_altar_god( dungeon_feature_type grid )
 {
     if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_BEOGH)
         return (static_cast<god_type>( grid - DNGN_ALTAR_ZIN + 1 ));
@@ -211,15 +211,15 @@ god_type grid_altar_god( unsigned char grid )
 
 // returns DNGN_FLOOR for non-gods, otherwise returns the altar for
 // the god.
-int altar_for_god( god_type god )
+dungeon_feature_type altar_for_god( god_type god )
 {
     if (god == GOD_NO_GOD || god >= NUM_GODS)
         return (DNGN_FLOOR);  // Yeah, lame. Tell me about it.
 
-    return (DNGN_ALTAR_ZIN + god - 1);
+    return static_cast<dungeon_feature_type>(DNGN_ALTAR_ZIN + god - 1);
 }
 
-bool grid_is_branch_stairs( unsigned char grid )
+bool grid_is_branch_stairs( dungeon_feature_type grid )
 {
     return ((grid >= DNGN_ENTER_ORCISH_MINES && grid <= DNGN_ENTER_RESERVED_4)
             || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
@@ -237,7 +237,7 @@ int grid_secret_door_appearance( int gx, int gy )
             if ((abs(dx) + abs(dy)) % 2 == 0)
                 continue;
 
-            const int targ = grd[gx + dx][gy + dy];
+            const dungeon_feature_type targ = grd[gx + dx][gy + dy];
 
             if (!grid_is_wall( targ ))
                 continue;
@@ -253,7 +253,7 @@ int grid_secret_door_appearance( int gx, int gy )
                                 : ret);
 }
 
-const char *grid_item_destruction_message( unsigned char grid )
+const char *grid_item_destruction_message( dungeon_feature_type grid )
 {
     return grid == DNGN_DEEP_WATER? "You hear a splash."
          : grid == DNGN_LAVA      ? "You hear a sizzling splash."
@@ -1757,9 +1757,9 @@ bool trap_item(object_class_type base_type, char sub_type,
 }                               // end trap_item()
 
 // returns appropriate trap symbol for a given trap type {dlb}
-unsigned char trap_category(unsigned char trap_type)
+dungeon_feature_type trap_category(trap_type type)
 {
-    switch (trap_type)
+    switch (type)
     {
     case TRAP_TELEPORT:
     case TRAP_AMNESIA:
@@ -1795,6 +1795,12 @@ int trap_at_xy(int which_x, int which_y)
     // no idea how well this will be handled elsewhere: {dlb}
     return (-1);
 }                               // end trap_at_xy()
+
+trap_type trap_type_at_xy(int x, int y)
+{
+    const int idx = trap_at_xy(x, y);
+    return (idx == -1? NUM_TRAPS : env.trap[idx].type);
+}
 
 bool is_damaging_cloud(cloud_type type)
 {

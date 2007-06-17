@@ -49,7 +49,7 @@ static void seen_altar( god_type god, const coord_def& pos );
 static void seen_staircase(unsigned char which_staircase,const coord_def& pos);
 static void seen_other_thing(unsigned char which_thing, const coord_def& pos);
 
-void seen_notable_thing( int which_thing, int x, int y )
+void seen_notable_thing( dungeon_feature_type which_thing, int x, int y )
 {
     // Don't record in temporary terrain
     if (you.level_type != LEVEL_DUNGEON)
@@ -65,7 +65,7 @@ void seen_notable_thing( int which_thing, int x, int y )
         seen_other_thing( which_thing, pos );
 }
 
-static int portal_to_feature(portal_type p)
+static dungeon_feature_type portal_to_feature(portal_type p)
 {
     switch ( p )
     {
@@ -159,44 +159,6 @@ inline static std::string portal_description(portal_type portal)
     return feature_description( portal_to_feature(portal) );
 }
 
-static void get_matching_altars(
-    const base_pattern &pattern, std::vector<stash_search_result> &results)
-{
-    for ( altar_map_type::const_iterator na_iter = altars_present.begin();
-          na_iter != altars_present.end(); ++na_iter )
-    {
-        const std::string adesc =
-            altar_description(na_iter->second);
-        
-        if (pattern.matches(place_desc(na_iter->first) + adesc))
-        {
-            stash_search_result sr;
-            sr.pos   = na_iter->first;
-            sr.match = adesc;
-            results.push_back(sr);
-        }
-    }
-}
-
-static void get_matching_portals(
-    const base_pattern &pattern, std::vector<stash_search_result> &results)
-{
-    for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
-          pl_iter != portals_present.end(); ++pl_iter )
-    {
-        const std::string desc =
-            portal_description(pl_iter->second);
-        
-        if (pattern.matches(place_desc(pl_iter->first) + desc + " [portal]"))
-        {
-            stash_search_result sr;
-            sr.pos   = pl_iter->first;
-            sr.match = desc;
-            results.push_back(sr);
-        }
-    }
-}
-
 bool overmap_knows_portal(dungeon_feature_type portal)
 {
     for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
@@ -206,16 +168,6 @@ bool overmap_knows_portal(dungeon_feature_type portal)
             return (true);
     }
     return (false);
-}
-
-void get_matching_features(
-    const base_pattern &pattern, std::vector<stash_search_result> &results)
-{
-    if (!pattern.valid())
-        return;
-
-    get_matching_altars(pattern, results);
-    get_matching_portals(pattern, results);
 }
 
 std::string overview_description_string()

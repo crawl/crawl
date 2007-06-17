@@ -129,27 +129,30 @@ void weird_writing(char stringy[40]);
 /* ***********************************************************************
  * called from: acr - misc - mstuff2 - spells2 - spells3
  * *********************************************************************** */
-unsigned char trap_category(unsigned char trap_type);
+dungeon_feature_type trap_category(trap_type type);
 
-bool grid_is_wall(int grid);
-bool grid_is_opaque(int grid);
-bool grid_is_solid(int grid);
+int trap_at_xy(int x, int y);
+trap_type trap_type_at_xy(int x, int y);
+
+bool grid_is_wall(dungeon_feature_type grid);
+bool grid_is_opaque(dungeon_feature_type grid);
+bool grid_is_solid(dungeon_feature_type grid);
 bool grid_is_solid(int x, int y);
 bool grid_is_solid(const coord_def &c);
-bool grid_is_trap(int grid);
+bool grid_is_trap(dungeon_feature_type grid);
 
-bool grid_is_water(int grid);
-bool grid_is_watery( int grid );
-god_type grid_altar_god( unsigned char grid );
-int altar_for_god( god_type god );
-bool grid_is_branch_stairs( unsigned char grid );
+bool grid_is_water(dungeon_feature_type grid);
+bool grid_is_watery(dungeon_feature_type grid);
+god_type grid_altar_god( dungeon_feature_type grid );
+dungeon_feature_type altar_for_god( god_type god );
+bool grid_is_branch_stairs( dungeon_feature_type grid );
 int grid_secret_door_appearance( int gx, int gy );
-bool grid_destroys_items( int grid );
+bool grid_destroys_items( dungeon_feature_type grid );
 
 std::string cloud_name(cloud_type type);
 bool is_damaging_cloud(cloud_type type);
 
-const char *grid_item_destruction_message( unsigned char grid );
+const char *grid_item_destruction_message( dungeon_feature_type grid );
 
 void curare_hits_player(int agent, int degree);
 

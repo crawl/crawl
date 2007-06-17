@@ -2861,7 +2861,7 @@ int cast_apportation(int pow)
     }
 
     // Protect the player from destroying the item
-    const int grid = grd[ you.x_pos ][ you.y_pos ];
+    const dungeon_feature_type grid = grd[ you.x_pos ][ you.y_pos ];
 
     if (grid_destroys_items(grid))
     {

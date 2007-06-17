@@ -68,7 +68,7 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
 
     int temp_rand;              // probability determination {dlb}
 
-    FixedVector < unsigned char, 5 > replaced;
+    FixedVector<dungeon_feature_type, 5> replaced;
 
     // nuke map
     env.map.init(map_cell());
@@ -171,7 +171,9 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
             {
                 do
                 {
-                    grd[i][j] = DNGN_ALTAR_ZIN + random2(12);
+                    grd[i][j] =
+                        static_cast<dungeon_feature_type>(
+                            DNGN_ALTAR_ZIN + random2(12) );
                 }
                 while (grd[i][j] == DNGN_ALTAR_ZIN
                        || grd[i][j] == DNGN_ALTAR_SHINING_ONE

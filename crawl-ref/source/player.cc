@@ -151,9 +151,9 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     int id;
     // assuming that entering the same square means coming from above (levitate)
     const bool from_above = (you.x_pos == x && you.y_pos == y);
-    const int old_grid = (from_above) ? static_cast<int>(DNGN_FLOOR) 
+    const dungeon_feature_type old_grid = (from_above) ? DNGN_FLOOR
                                       : grd[you.x_pos][you.y_pos];
-    const int new_grid = grd[x][y];
+    const dungeon_feature_type new_grid = grd[x][y];
 
     // really must be clear
     ASSERT( !grid_is_solid( new_grid ) );
@@ -296,8 +296,8 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             {
                 trap_known = false;
 
-                const int type = trap_category( env.trap[id].type );
-
+                const dungeon_feature_type type =
+                    trap_category( env.trap[id].type );
                 grd[you.x_pos][you.y_pos] = type;
                 set_envmap_obj(you.x_pos, you.y_pos, type);
             }

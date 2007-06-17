@@ -1520,8 +1520,10 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
     {
         for (j = 0; j < gy; j++)
         {
-            grd[i][j] = unmarshallByte(th);
-            
+            grd[i][j] =
+                static_cast<dungeon_feature_type>(
+                    static_cast<unsigned char>(unmarshallByte(th)) );
+
             env.map[i][j].object = unmarshallShort(th);
             env.map[i][j].colour = unmarshallShort(th);
             env.map[i][j].flags  = unmarshallShort(th);
@@ -1568,7 +1570,9 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
     count = unmarshallShort(th);
     for (i = 0; i < count; ++i)
     {
-        env.trap[i].type = unmarshallByte(th);
+        env.trap[i].type =
+            static_cast<trap_type>(
+                static_cast<unsigned char>(unmarshallByte(th)) );
         env.trap[i].x = unmarshallByte(th);
         env.trap[i].y = unmarshallByte(th);
     }

@@ -44,7 +44,6 @@ void scale_dice( dice_def &dice, int threshold = 24 );
 
 
 int random2limit(int max, int limit);
-bool see_grid(unsigned char grx, unsigned char gry);
 int stepdown_value(int base_value, int stepping, int first_step, int last_step, int ceiling_value);
 int stat_mult( int stat_level, int value, int div = 20, int shift = 3 );
 int stat_div( int stat_level, int value, int div = 20, int shift = 3 );

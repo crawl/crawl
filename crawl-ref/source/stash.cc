@@ -10,6 +10,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "describe.h"
+#include "direct.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"
@@ -27,6 +28,7 @@
 #include "tags.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "view.h"
 
 #include <cctype>
 #include <cstdio>
@@ -35,7 +37,7 @@
 #include <algorithm>
 
 #define ST_MAJOR_VER ((unsigned char) 4)
-#define ST_MINOR_VER ((unsigned char) 6)
+#define ST_MINOR_VER ((unsigned char) 7)
 
 #define LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
@@ -253,8 +255,35 @@ bool Stash::pickup_eligible() const
     return (false);
 }
 
+bool Stash::is_boring_feature(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    // Discard spammy dungeon features.
+    case DNGN_SHALLOW_WATER: case DNGN_DEEP_WATER:
+    case DNGN_LAVA: case DNGN_OPEN_DOOR: case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II: case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_STONE_STAIRS_UP_I: case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III: case DNGN_ROCK_STAIRS_DOWN:
+    case DNGN_ROCK_STAIRS_UP: case DNGN_ENTER_SHOP:
+    case DNGN_UNDISCOVERED_TRAP:
+        return (true);
+    default:
+        return (grid_is_solid(feat));
+    }
+}
+
 void Stash::update()
 {
+    feat = grd[x][y];
+    trap = NUM_TRAPS;
+
+    if (is_boring_feature(feat))
+        feat = DNGN_FLOOR;
+
+    if (grid_is_trap(feat))
+        trap = trap_type_at_xy(x, y);
+    
     int objl = igrd[x][y];
     // If this is your position, you know what's on this square
     if (x == you.x_pos && y == you.y_pos)
@@ -286,11 +315,7 @@ void Stash::update()
         // There's something on this square. Take a squint at it.
         const item_def &item = mitm[objl];
 
-        // note item when first entering field of vision
-        // (only works with stashes enabled)        
-//        learned_something_new(TUT_SEEN_FIRST_OBJECT, x, y);
-//        learned_something_new(TUT_SEEN_FIRST_OBJECT, item);
-                tutorial_first_item(item);
+        tutorial_first_item(item);
 
         if (item.link == NON_ITEM)
             items.clear();
@@ -464,11 +489,20 @@ std::string Stash::description() const
     return (desc);
 }
 
+std::string Stash::feature_description() const
+{
+    if (feat == DNGN_FLOOR)
+        return ("");
+
+    return (::feature_description(feat, trap));
+}
+
 bool Stash::matches_search(const std::string &prefix,
                            const base_pattern &search,
                            stash_search_result &res) const
 {
-    if (!enabled || items.empty()) return false;
+    if (!enabled || (items.empty() && feat == DNGN_FLOOR))
+        return false;
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
@@ -497,6 +531,17 @@ bool Stash::matches_search(const std::string &prefix,
             }
         }
     }
+
+    if (!res.matches && feat != DNGN_FLOOR)
+    {
+        const std::string fdesc = feature_description();
+        if (!fdesc.empty() && search.matches(fdesc))
+        {
+            res.match = fdesc;
+            res.matches = 1;
+        }
+    }
+    
     if (res.matches)
     {
         res.stash = this;
@@ -577,6 +622,9 @@ void Stash::save(FILE *file) const
     writeByte(file, x);
     writeByte(file, y);
 
+    writeByte(file, feat);
+    writeByte(file, trap);
+
     // Note: Enabled save value is inverted logic, so that it defaults to true
     writeByte(file, 
         (unsigned char) ((verified? 1 : 0) | (!enabled? 2 : 0)) );
@@ -594,6 +642,14 @@ void Stash::load(FILE *file)
 
     x = readByte(file);
     y = readByte(file);
+
+    feat =
+        static_cast<dungeon_feature_type>(
+            static_cast<unsigned char>( readByte(file) ));
+    trap =
+        static_cast<trap_type>(
+            static_cast<unsigned char>( readByte(file) ));
+        
 
     unsigned char flags = readByte(file);
     verified = (flags & 1) != 0;
@@ -757,7 +813,8 @@ bool ShopInfo::matches_search(const std::string &prefix,
                               const base_pattern &search, 
                               stash_search_result &res) const
 {
-    if (items.empty() && visited) return false;
+    if (items.empty() && visited)
+        return false;
 
     bool match = false;
 
@@ -1000,9 +1057,9 @@ void LevelStashes::add_stash(int x, int y)
     }
     else
     {
-        Stash newStash(x, y);
-        if (!newStash.empty())
-            stashes[ newStash.abs_pos() ] = newStash;
+        Stash new_stash(x, y);
+        if (!new_stash.empty())
+            stashes[ new_stash.abs_pos() ] = new_stash;
     }
 }
 
@@ -1272,28 +1329,26 @@ void StashTracker::update_visible_stashes(
         return ;
 
     LevelStashes *lev = find_current_level();
-    for (int cy = 1; cy <= 17; ++cy)
+    for (int cy = crawl_view.glos1.y; cy <= crawl_view.glos2.y; ++cy)
     {
-        for (int cx = 9; cx <= 25; ++cx)
+        for (int cx = crawl_view.glos1.x; cx <= crawl_view.glos2.x; ++cx)
         {
-            int x = you.x_pos + cx - 17, y = you.y_pos + cy - 9;
-            if (x < 0 || x >= GXM || y < 0 || y >= GYM)
+            if (!in_bounds(cx, cy) || !see_grid(cx, cy))
                 continue;
 
-            if (!env.show[cx - 8][cy] && !(cx == 17 && cy == 9))
-                continue;
-
-            if ((!lev || !lev->update_stash(x, y))
-                    && mode == ST_AGGRESSIVE 
-                    && igrd[x][y] != NON_ITEM)
+            const dungeon_feature_type grid = grd[cx][cy];
+            if ((!lev || !lev->update_stash(cx, cy))
+                && mode == ST_AGGRESSIVE 
+                && (igrd[cx][cy] != NON_ITEM
+                    || !Stash::is_boring_feature(grid)))
             {
                 if (!lev)
                     lev = &get_current_level();
-                lev->add_stash(x, y);
+                lev->add_stash(cx, cy);
             }
 
-            if (grd[x][y] == DNGN_ENTER_SHOP)
-                get_shop(x, y);
+            if (grid == DNGN_ENTER_SHOP)
+                get_shop(cx, cy);
         }
     }
 
@@ -1377,8 +1432,6 @@ void StashTracker::get_matching_stashes(
         if (results.size() > SEARCH_SPAM_THRESHOLD)
             return;
     }
-
-    get_matching_features(search, results);
 
     level_id curr = level_id::current();
     for (unsigned i = 0; i < results.size(); ++i)

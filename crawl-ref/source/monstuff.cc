@@ -5046,7 +5046,7 @@ static void mons_in_cloud(monsters *monster)
     }
 }                               // end mons_in_cloud()
 
-int monster_habitat(int which_class)
+dungeon_feature_type monster_habitat(int which_class)
 {
     switch (which_class)
     {

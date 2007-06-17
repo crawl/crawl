@@ -1561,7 +1561,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         canned_msg( MSG_EMPTY_HANDED );
     }
 
-    const unsigned char my_grid = grd[you.x_pos][you.y_pos];
+    const dungeon_feature_type my_grid = grd[you.x_pos][you.y_pos];
 
     if ( !grid_destroys_items(my_grid)
          && !copy_item_to_grid( you.inv[item_dropped], 
@@ -1841,7 +1841,9 @@ void update_corpses(double elapsedTime)
                         if (one_chance_in(100))
                         {
                             if (grd[cx][cy] > DNGN_SPARKLING_FOUNTAIN)
-                                grd[cx][cy]--;
+                                grd[cx][cy] =
+                                    static_cast<dungeon_feature_type>(
+                                        grd[cx][cy] - 1);
                         }
                     }
                 }

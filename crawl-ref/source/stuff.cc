@@ -302,23 +302,6 @@ int random2limit(int max, int limit)
     return sum;
 }                               // end random2limit()
 
-// answers the question: "Is a grid within character's line of sight?"
-bool see_grid(unsigned char grx, unsigned char gry)
-{
-    if (grx > you.x_pos - 9 && grx < you.x_pos + 9
-                        && gry > you.y_pos - 9 && gry < you.y_pos + 9)
-    {
-        if (env.show[grx - you.x_pos + 9][gry - you.y_pos + 9] != 0)
-            return true;
-
-        // rare case: can player see self?  (of course!)
-        if (grx == you.x_pos && gry == you.y_pos)
-            return true;
-    }
-
-    return false;
-}                               // end see_grid()
-
 static bool io_inited = false;
 void cio_init()
 {

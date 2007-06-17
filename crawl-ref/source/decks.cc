@@ -972,12 +972,14 @@ void card_effect(card_type which_card)
         }
         else
         {
-            dvar1 = 179 + you.religion;
+            const dungeon_feature_type altar =
+                static_cast<dungeon_feature_type>(
+                    DNGN_ALTAR_ZIN + you.religion - 1 );
             
             mprf("An altar grows from the floor %s!",
                  (you.species == SP_NAGA || you.species == SP_CENTAUR)
                  ? "before you" : "at your feet");
-            grd[you.x_pos][you.y_pos] = dvar1;
+            grd[you.x_pos][you.y_pos] = altar;
         }
         break;
 

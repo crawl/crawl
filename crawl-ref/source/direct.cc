@@ -1196,7 +1196,8 @@ std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)
     {
         for (int i = 0; i < NUM_FEATURES; ++i)
         {
-            std::string fdesc = feature_description(i);
+            std::string fdesc =
+                feature_description(static_cast<dungeon_feature_type>(i));
             if (fdesc.empty())
                 continue;
 
@@ -1240,8 +1241,39 @@ void describe_floor()
         mpr("Beware, for starvation awaits!");
 }
 
-std::string feature_description(int grid)
+std::string feature_description(dungeon_feature_type grid,
+                                trap_type trap)
 {
+    if (grid_is_trap(grid) && trap != NUM_TRAPS)
+    {
+        switch (trap)
+        {
+        case TRAP_DART:
+            return ("A dart trap.");
+        case TRAP_ARROW:
+            return ("An arrow trap.");
+        case TRAP_SPEAR:
+            return ("A spear trap.");
+        case TRAP_AXE:
+            return ("An axe trap.");
+        case TRAP_TELEPORT:
+            return ("A teleportation trap.");
+        case TRAP_AMNESIA:
+            return ("An amnesia trap.");
+        case TRAP_BLADE:
+            return ("A blade trap.");
+        case TRAP_BOLT:
+            return ("A bolt trap.");
+        case TRAP_ZOT:
+            return ("A Zot trap.");
+        case TRAP_NEEDLE:
+            return ("A needle trap.");
+        default:
+            error_message_to_player();
+            return ("An undefined trap.");
+        }
+    }
+    
     switch (grid)
     {
     case DNGN_STONE_WALL:
@@ -1423,57 +1455,13 @@ std::string feature_description(int grid)
 
 std::string feature_description(int mx, int my)
 {
-    const int grid = grd[mx][my];
+    const dungeon_feature_type grid = grd[mx][my];
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_III:
-    {
-        int trf;
-        for (trf = 0; trf < MAX_TRAPS; trf++)
-        {
-            if (env.trap[trf].x == mx
-                && env.trap[trf].y == my)
-            {
-                break;
-            }
-
-            if (trf == MAX_TRAPS - 1)
-            {
-                mpr("Error - couldn't find that trap.");
-                error_message_to_player();
-                break;
-            }
-        }
-
-        switch (env.trap[trf].type)
-        {
-        case TRAP_DART:
-            return ("A dart trap.");
-        case TRAP_ARROW:
-            return ("An arrow trap.");
-        case TRAP_SPEAR:
-            return ("A spear trap.");
-        case TRAP_AXE:
-            return ("An axe trap.");
-        case TRAP_TELEPORT:
-            return ("A teleportation trap.");
-        case TRAP_AMNESIA:
-            return ("An amnesia trap.");
-        case TRAP_BLADE:
-            return ("A blade trap.");
-        case TRAP_BOLT:
-            return ("A bolt trap.");
-        case TRAP_ZOT:
-            return ("A Zot trap.");
-        case TRAP_NEEDLE:
-            return ("A needle trap.");
-        default:
-            error_message_to_player();
-            return ("An undefined trap.");
-        }
-    }
+        return feature_description(grid, trap_type_at_xy(mx, my));
     case DNGN_ENTER_SHOP:
         return (shop_name(mx, my));
     default:

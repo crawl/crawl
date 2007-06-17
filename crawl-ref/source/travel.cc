@@ -123,14 +123,14 @@ inline bool is_trap(int x, int y)
 }
 
 // Returns true if this feature takes extra time to cross.
-inline int feature_traverse_cost(unsigned char feature)
+inline int feature_traverse_cost(dungeon_feature_type feature)
 {
     return (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR? 2 :
             grid_is_trap(feature) ? 3 : 1);
 }
 
 // Returns true if the dungeon feature supplied is an altar.
-bool is_altar(unsigned char grid)
+bool is_altar(dungeon_feature_type grid)
 {
     return grid_altar_god(grid) != GOD_NO_GOD;
 }
@@ -140,7 +140,7 @@ bool is_altar(const coord_def &c)
     return is_altar(grd[c.x][c.y]);
 }
 
-inline bool is_player_altar(unsigned char grid)
+inline bool is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
     return you.religion != GOD_NO_GOD
@@ -409,6 +409,8 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
+// Travel uses this to check if the square the player is about to move to is
+// safe.
 static bool is_safe_move(int x, int y)
 {
     int mon = mgrd[x][y];
@@ -426,6 +428,15 @@ static bool is_safe_move(int x, int y)
         // b) Unfriendly, in which case we're in deep trouble, since travel
         //    should have been aborted already by the checks in view.cc.
     }
+
+    if (is_trap(x, y)
+#ifdef CLUA_BINDINGS
+        && !clua.callbooleanfn(false, "ch_cross_trap", 
+                               "s", trap_name(x, y))
+#endif
+        )
+        return (false);
+    
     const int cloud = env.cgrid[x][y];
     if (cloud == EMPTY_CLOUD)
         return (true);
@@ -1352,7 +1363,7 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
     // c is a known (explored) location - we never put unknown points in the
     // circumference vector, so we don't need to examine the map array, just the
     // grid array.
-    const int feature = grd(c);
+    const dungeon_feature_type feature = grd(c);
 
     // If this is a feature that'll take time to travel past, we simulate that
     // extra turn by taking this feature next turn, thereby artificially
@@ -3490,7 +3501,8 @@ explore_discoveries::explore_discoveries()
 {
 }
 
-std::string explore_discoveries::cleaned_feature_description(int grid) const
+std::string explore_discoveries::cleaned_feature_description(
+    dungeon_feature_type grid) const
 {
     std::string s = lowercase_first(feature_description(grid));
     if (s.length() && s[s.length() - 1] == '.')
@@ -3500,7 +3512,8 @@ std::string explore_discoveries::cleaned_feature_description(int grid) const
     return (s);
 }
 
-void explore_discoveries::found_feature(const coord_def &pos, int grid)
+void explore_discoveries::found_feature(const coord_def &pos,
+                                        dungeon_feature_type grid)
 {
     if (grid == DNGN_ENTER_SHOP && ES_shop)
     {

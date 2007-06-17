@@ -40,6 +40,7 @@
 #include "stuff.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "view.h"
 
 extern std::vector<SelItem> items_for_multidrop;
 

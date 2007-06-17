@@ -165,7 +165,6 @@ static void close_door(int move_x, int move_y);
 
 static void prep_input();
 static void input();
-static void middle_input();
 static void world_reacts();
 static command_type get_next_cmd();
 static keycode_type get_next_keycode();
@@ -678,7 +677,8 @@ static void handle_wizard_command( void )
         get_input_line( specs, sizeof( specs ) );
 
         if (specs[0] != '\0')
-            grd[you.x_pos][you.y_pos] = atoi(specs);
+            grd[you.x_pos][you.y_pos] =
+                static_cast<dungeon_feature_type>( atoi(specs) );
         break;
 
     case ']':
@@ -890,8 +890,6 @@ static void input()
         return;
     }
     
-    middle_input();
-
     if (need_to_autopickup())
         autopickup();
 
@@ -2180,6 +2178,11 @@ static void check_banished()
 
 static void world_reacts()
 {
+    if (Options.stash_tracking)
+        stashes.update_visible_stashes(
+            Options.stash_tracking == STM_ALL? 
+            StashTracker::ST_AGGRESSIVE :
+            StashTracker::ST_PASSIVE);
 
     bool its_quiet;             //jmf: for silence messages
 
@@ -2668,15 +2671,6 @@ keycode_type get_next_keycode()
     return (keyin);
 }
 
-static void middle_input()
-{
-    if (Options.stash_tracking)
-        stashes.update_visible_stashes(
-            Options.stash_tracking == STM_ALL? 
-            StashTracker::ST_AGGRESSIVE :
-            StashTracker::ST_PASSIVE);
-}
-
 /*
    Opens doors and handles some aspects of untrapping. If either move_x or
    move_y are non-zero,  the pair carries a specific direction for the door
@@ -3070,7 +3064,7 @@ static void move_player(int move_x, int move_y)
 
     const int targ_x = you.x_pos + move_x;
     const int targ_y = you.y_pos + move_y;
-    const unsigned char targ_grid  =  grd[ targ_x ][ targ_y ];
+    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
     const unsigned char targ_monst = mgrd[ targ_x ][ targ_y ];
     const bool          targ_solid = grid_is_solid(targ_grid);
 

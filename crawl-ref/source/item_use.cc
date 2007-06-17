@@ -2803,6 +2803,9 @@ bool drink_fountain(void)
 
         mpr("You drink the sparkling water.");
         break;
+
+    default:
+        break;
     }
 
     if (grd[you.x_pos][you.y_pos] == DNGN_SPARKLING_FOUNTAIN)
@@ -2858,6 +2861,9 @@ bool drink_fountain(void)
             if (temp_rand > 40) // 18% probability
                 grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
         }
+        break;
+
+    default:
         break;
     }
 

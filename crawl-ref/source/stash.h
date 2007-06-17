@@ -36,6 +36,7 @@ class Stash
 public:
     Stash(int xp = -1, int yp = -1);
 
+    static bool is_boring_feature(dungeon_feature_type feat);
     static void filter(object_class_type base_type, unsigned char sub_type);
     static void filter(const std::string &filt);
 
@@ -45,6 +46,7 @@ public:
     void load(FILE*);
 
     std::string description() const;
+    std::string feature_description() const;
 
     bool show_menu(const std::string &place, bool can_travel) const;
 
@@ -67,7 +69,7 @@ public:
 
     bool empty() const
     {
-        return items.empty() && enabled;
+        return enabled && items.empty() && feat == DNGN_FLOOR;
     }
 
     bool isAt(int xp, int yp) const { return x == xp && y == yp; }
@@ -85,6 +87,9 @@ private:
     bool verified;      // Is this correct to the best of our knowledge?
     unsigned char x, y;
     int  abspos;
+    dungeon_feature_type feat;
+    trap_type trap;
+    
     std::vector<item_def>   items;
 
     /*

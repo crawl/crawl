@@ -250,6 +250,9 @@ void mons_trap(struct monsters *monster)
         mons_ench_f2(monster, beem);
         damage_taken = 0;      // just to be certain {dlb}
         break;
+
+    default:
+        break;
     }
 
 

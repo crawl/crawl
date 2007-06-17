@@ -121,7 +121,7 @@ void handle_monsters(void);
  * called from: acr - bang - beam - direct - dungeon - fight - files -
  *              monplace - mstuff2 - spells3 - view
  * *********************************************************************** */
-int monster_habitat(int which_class);
+dungeon_feature_type monster_habitat(int which_class);
 
 
 /* ***********************************************************************

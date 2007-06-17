@@ -1129,7 +1129,7 @@ struct trap_struct
 {
     unsigned char       x;
     unsigned char       y;
-    unsigned char       type;
+    trap_type        type;
 };
 
 struct map_cell
@@ -1154,7 +1154,7 @@ struct crawl_environment
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
 
-    FixedArray< unsigned char, GXM, GYM >    grid;  // terrain grid
+    FixedArray<dungeon_feature_type, GXM, GYM> grid;  // terrain grid
     FixedArray< unsigned char, GXM, GYM >    mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid

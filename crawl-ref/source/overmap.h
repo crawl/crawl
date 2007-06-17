@@ -15,13 +15,11 @@
 #include "stash.h"
 #include <vector>
 
-void seen_notable_thing( int which_thing, int x, int y );
+void seen_notable_thing( dungeon_feature_type which_thing, int x, int y );
 bool overmap_knows_portal(dungeon_feature_type portal);
 void display_overmap();
 void unnotice_labyrinth_portal();
 void unnotice_altar();
 std::string overview_description_string();
-void get_matching_features(
-    const base_pattern &pattern, std::vector<stash_search_result> &results);
 
 #endif

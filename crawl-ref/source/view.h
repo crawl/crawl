@@ -56,7 +56,9 @@ void find_features(const std::vector<coord_def>& features,
 /* ***********************************************************************
  * called from: direct - monstufff - view
  * *********************************************************************** */
-void losight(FixedArray<unsigned int, 19, 19>& sh, FixedArray<unsigned char, 80, 70>& gr, int x_p, int y_p);
+void losight(FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>& sh,
+             FixedArray<dungeon_feature_type, GXM, GYM>& gr,
+             int x_p, int y_p);
 
 
 // last updated 12may2000 {dlb}

@@ -1404,7 +1404,8 @@ void debug_get_religion(void)
         mpr( "That god doesn't seem to be taking followers today." );
     else
     {
-        grd[you.x_pos][you.y_pos] = 179 + god;
+        grd[you.x_pos][you.y_pos] =
+            static_cast<dungeon_feature_type>( DNGN_ALTAR_ZIN + god - 1 );
         god_pitch(god);
     }
 }                               // end debug_add_skills()

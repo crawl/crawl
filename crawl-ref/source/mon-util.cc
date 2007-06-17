@@ -2220,7 +2220,7 @@ coord_def monsters::pos() const
 
 bool monsters::swimming() const
 {
-    const int grid = grd[x][y];
+    const dungeon_feature_type grid = grd[x][y];
     return (grid_is_watery(grid) && monster_habitat(type) == DNGN_DEEP_WATER);
 }
 
@@ -2231,7 +2231,7 @@ bool monsters::submerged() const
 
 bool monsters::floundering() const
 {
-    const int grid = grd[x][y];
+    const dungeon_feature_type grid = grd[x][y];
     return (grid_is_water(grid)
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.

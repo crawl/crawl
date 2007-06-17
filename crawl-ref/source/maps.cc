@@ -123,7 +123,7 @@ static bool is_grid_clobbered(int sx, int sy, int width, int height)
     {
         for (int x = sx; x < sx + width; ++x)
         {
-            int grid = grd[x][y];
+            const dungeon_feature_type grid = grd[x][y];
 
             if (!grid_is_opaque(grid)
                 && grid != DNGN_FLOOR

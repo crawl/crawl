@@ -325,7 +325,8 @@ static void get_symbol( int x, int y,
 
         // Note anything we see that's notable
         if ((x || y) && Feature[object].notable)
-            seen_notable_thing( object, x, y );
+            seen_notable_thing( static_cast<dungeon_feature_type>(object),
+                                x, y );
     }
     else
     {
@@ -467,7 +468,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     if (!(map_flags & MAP_GRID_KNOWN))
         return (BLACK);
     
-    const int grid_value = grd[x][y];
+    const dungeon_feature_type grid_value = grd[x][y];
 
     unsigned tc = travel_colour? 
                         get_travel_colour(x, y)
@@ -493,7 +494,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     int feature_colour = DARKGREY;
     feature_colour = 
         is_terrain_seen(x, y)? Feature[grid_value].seen_colour 
-                                     : Feature[grid_value].map_colour;
+        : Feature[grid_value].map_colour;
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
@@ -2003,7 +2004,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
-             FixedArray < unsigned char, 80, 70 > &gr, int x_p, int y_p)
+             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p)
 {
     raycast();
     // go quadrant by quadrant
