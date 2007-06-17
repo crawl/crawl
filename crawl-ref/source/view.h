@@ -169,6 +169,8 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 
 dungeon_char_type dchar_by_name(const std::string &name);
 
+void handle_terminal_resize(bool redraw = true);
+
 #if defined(WIN32CONSOLE) || defined(DOS)
 unsigned short dos_brand( unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);

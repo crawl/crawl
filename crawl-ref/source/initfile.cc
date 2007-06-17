@@ -559,7 +559,7 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
-    view_max_width = VIEW_MIN_WIDTH;
+    view_max_width = VIEW_BASE_WIDTH;
     view_max_height = VIEW_MIN_HEIGHT;
 
     view_lock_x = true;
@@ -567,8 +567,8 @@ void game_options::reset_options()
 
     center_on_scroll = false;
     symmetric_scroll = true;
-    scroll_margin_x   = 4;
-    scroll_margin_y   = 4;
+    scroll_margin_x   = 2;
+    scroll_margin_y   = 2;
 
     autopickup_on = true;
     autoprayer_on = false;

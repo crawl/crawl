@@ -302,10 +302,9 @@ int random2limit(int max, int limit)
     return sum;
 }                               // end random2limit()
 
-static bool io_inited = false;
 void cio_init()
 {
-    io_inited = true;
+    crawl_state.io_inited = true;
 
 #ifdef UNIX
     unixcurses_startup();
@@ -329,7 +328,7 @@ void cio_init()
 
 void cio_cleanup()
 {
-    if (!io_inited)
+    if (!crawl_state.io_inited)
         return;
     
 #ifdef UNIX
@@ -342,7 +341,7 @@ void cio_cleanup()
 
     msg::deinitalise_mpr_streams();
 
-    io_inited = false;
+    crawl_state.io_inited = false;
 }
 
 void end(int exit_code, bool print_error, const char *format, ...)

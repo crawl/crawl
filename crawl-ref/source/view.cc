@@ -4131,10 +4131,9 @@ void crawl_view_geometry::init_geometry()
     termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
 
     // If the terminal is too small, exit with an error.
-    if (termsz.x < 80 || termsz.y < 24)
+    if ((termsz.x < 80 || termsz.y < 24) && !crawl_state.need_save)
         end(1, false, "Terminal too small (%d,%d), need at least (80,24)",
             termsz.x, termsz.y);
-
 
     int freeheight = termsz.y - message_min_lines;
 
@@ -4145,6 +4144,10 @@ void crawl_view_geometry::init_geometry()
     // Make sure we're odd-sized.
     if (!(viewsz.y % 2))
         --viewsz.y;
+
+    // If the view is too short, force it to minimum height.
+    if (viewsz.y < VIEW_MIN_HEIGHT)
+        viewsz.y = VIEW_MIN_HEIGHT;
 
     // The message pane takes all lines not used by the viewport.
     msgp  = coord_def(1, viewsz.y + 1);
@@ -4157,6 +4160,9 @@ void crawl_view_geometry::init_geometry()
 
     if (!(viewsz.x % 2))
         --viewsz.x;
+
+    if (viewsz.x < VIEW_MIN_WIDTH)
+        viewsz.x = VIEW_MIN_WIDTH;
 
     // The hud appears after the viewport + gutter.
     hudp = coord_def(viewsz.x + 1 + hud_min_gutter, 1);
@@ -4173,4 +4179,20 @@ void crawl_view_geometry::init_geometry()
     viewhalfsz = viewsz / 2;
     
     init_view();
+}
+
+////////////////////////////////////////////////////////////////////////////
+// Term resize handling (generic).
+
+void handle_terminal_resize(bool redraw)
+{
+    crawl_state.terminal_resized = false;
+    
+    if (crawl_state.terminal_resize_handler)
+        (*crawl_state.terminal_resize_handler)();
+    else
+        crawl_view.init_geometry();
+    
+    if (redraw)
+        redraw_screen();
 }

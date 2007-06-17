@@ -912,12 +912,18 @@ static void input()
         return;
     }
 
+    if (crawl_state.terminal_resized)
+        handle_terminal_resize();
+    
     {
         // Enable the cursor to read input. The cursor stays on while
         // the command is being processed, so subsidiary prompts
         // shouldn't need to turn it on explicitly.
         cursor_control con(true);
+
+        crawl_state.waiting_for_comand = true;
         command_type cmd = get_next_cmd();
+        crawl_state.waiting_for_comand = false;
 
         // [dshaligram] If get_next_cmd encountered a Lua macro
         // binding, your turn may be ended by the first invoke of the

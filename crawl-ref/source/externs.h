@@ -1182,9 +1182,14 @@ struct crawl_environment
 
 extern struct crawl_environment env;
 
-// Track stuff for SIGHUP handling.
+// Track various aspects of Crawl game state.
 struct game_state
 {
+    bool waiting_for_comand; // True when the game is waiting for a command.
+    bool terminal_resized;   // True if the term was resized and we need to
+                             // take action to handle it.
+    
+    bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
@@ -1195,11 +1200,14 @@ struct game_state
     bool unicode_ok;        // Is unicode support available?
 
     std::string (*glyph2strfn)(unsigned glyph);
-    int (*multibyte_strlen)(const std::string &s);
+    int  (*multibyte_strlen)(const std::string &s);
+    void (*terminal_resize_handler)();
 
-    game_state() : need_save(false), saving_game(false),
-        updating_scores(false), shopping(false), seen_hups(0),
-        unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL)
+    game_state() : waiting_for_comand(false), terminal_resized(false),
+                   io_inited(false), need_save(false), saving_game(false),
+                   updating_scores(false), shopping(false), seen_hups(0),
+                   unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL),
+                   terminal_resize_handler(NULL)
     {
     }
 };

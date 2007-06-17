@@ -46,6 +46,8 @@
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
+#include "stuff.h"
+#include "view.h"
 
 #ifdef UNICODE_GLYPHS
 #include <wchar.h>
@@ -192,6 +194,8 @@ static int unix_multibyte_strlen(const std::string &s)
 }
 #endif
 
+static void unix_handle_terminal_resize();
+
 static void termio_init()
 {
     tcgetattr(0, &def_term);
@@ -217,12 +221,16 @@ static void termio_init()
         crawl_state.multibyte_strlen = unix_multibyte_strlen;
     }
 #endif
+
+    crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
 
 
-int getch_ck() {
+int getch_ck()
+{
     int c = getch();
-    switch (c) {
+    switch (c)
+    {
     // [dshaligram] MacOS ncurses returns 127 for backspace.
     case 127:
     case KEY_BACKSPACE: return CK_BKSP;
@@ -239,8 +247,17 @@ int getch_ck() {
     }
 }
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE)
+#if defined(USE_UNIX_SIGNALS)
 
+static void handle_sigwinch(int)
+{
+    if (crawl_state.waiting_for_comand)
+        handle_terminal_resize();
+    else
+        crawl_state.terminal_resized = true;
+}
+
+#ifdef SIGHUP_SAVE
 /* [ds] This SIGHUP handling is primitive and far from safe, but it
  * should be better than nothing. Feel free to get rigorous on this.
  */
@@ -265,8 +282,9 @@ static void handle_hangup(int)
         exit(1);
     }
 }
+#endif // SIGHUP_SAVE
 
-#endif // USE_UNIX_SIGNALS && SIGHUP_SAVE
+#endif // USE_UNIX_SIGNALS
 
 static WINDOW *Message_Window;
 static void setup_message_window()
@@ -275,12 +293,21 @@ static void setup_message_window()
                              crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 );
     if (!Message_Window)
     {
-        fprintf(stderr, "Unable to create message window!");
-        exit(1);
+        if (crawl_state.need_save)
+            save_game(true);
+
+        // Never reaches here unless the game didn't need saving.
+        end(1, false, "Unable to create message window!");
     }
     
     scrollok(Message_Window, true);
     idlok(Message_Window, true);
+}
+
+static void unix_handle_terminal_resize()
+{
+    unixcurses_shutdown();
+    unixcurses_startup();
 }
 
 void clear_message_window()
@@ -337,6 +364,8 @@ void unixcurses_startup( void )
 #ifdef SIGHUP_SAVE
     signal(SIGHUP, handle_hangup);
 #endif
+
+    signal(SIGWINCH, handle_sigwinch);
     
 #endif
 
@@ -366,6 +395,12 @@ void unixcurses_startup( void )
 
 void unixcurses_shutdown()
 {
+    if (Message_Window)
+    {
+        delwin(Message_Window);
+        Message_Window = NULL;
+    }
+        
     // resetty();
     endwin();
 
@@ -379,6 +414,12 @@ void unixcurses_shutdown()
 #ifdef SIGINT
     signal(SIGINT, SIG_DFL);
 #endif
+
+#ifdef SIGHUP_SAVE
+    signal(SIGHUP, SIG_DFL);
+#endif
+
+    signal(SIGWINCH, SIG_DFL);
 #endif
 }
 

@@ -113,7 +113,8 @@
 #define ENV_SHOW_OFFSET (LOS_RADIUS + 1)
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
-#define VIEW_MIN_WIDTH  33
+#define VIEW_BASE_WIDTH 33
+#define VIEW_MIN_WIDTH  17
 #define VIEW_MIN_HEIGHT 17
 
 // max traps per level
