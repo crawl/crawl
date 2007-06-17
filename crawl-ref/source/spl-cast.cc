@@ -1901,15 +1901,13 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
     struct bolt beam;
     bool failMsg = true;
 
-    int loopj = 0;
-    int spec_effect = 0;
-    int hurted = 0;
+    int loopj;
 
     if (sp_type == SPTYP_RANDOM)
         sp_type = 1 << (random2(12));
 
-    spec_effect = (mag_pow * mag_fail * (10 + mag_pow) / 7
-                                                * WILD_MAGIC_NASTINESS) / 100;
+    int spec_effect = (mag_pow * mag_fail * (10 + mag_pow) / 7
+                       * WILD_MAGIC_NASTINESS) / 100;
 
     if (force_effect == 100
         && random2(40) > spec_effect && random2(40) > spec_effect)
@@ -1921,7 +1919,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
     // setup beam
     beam.is_tracer = false;
 
-    spec_effect = spec_effect / 100;
+    spec_effect /= 100;
 
 #if DEBUG_DIAGNOSTICS
     const int old_fail = spec_effect;
@@ -2131,7 +2129,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             case 1:
             case 2:
                 mpr("You sense a malignant aura.");
-                curse_an_item(0, 0);
+                curse_an_item(false);
                 break;
             case 3:
             case 4:
@@ -2148,12 +2146,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(4))
             {
             case 0:
-                do
-                {
-                    curse_an_item(0, 0);
-                    loopj = random2(3);
-                }
-                while (loopj != 0);
+                do {
+                    curse_an_item(false);
+                } while ( !one_chance_in(3) );
 
                 mpr("You sense an overwhelmingly malignant aura!");
                 break;
@@ -2257,8 +2252,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 5:
                 mpr("Space twists in upon itself!");
-
-                for (loopj = 0; loopj < 2 + random2(3); loopj++)
+                loopj = 2 + random2(3);
+                for (int i = 0; i < loopj; ++i)
                 {
                     create_monster( MONS_SPATIAL_VORTEX, 3, 
                                     BEH_HOSTILE, you.x_pos, you.y_pos, 
@@ -2372,8 +2367,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             {
             case 0:
                 mpr("Space twists in upon itself!");
-
-                for (loopj = 0; loopj < 2 + random2(3); loopj++)
+                loopj = 2 + random2(3);
+                for (int i = 0; i < loopj; ++i)
                 {
                     create_monster( MONS_SPATIAL_VORTEX, 3, 
                                     BEH_HOSTILE, you.x_pos, you.y_pos, 
@@ -3170,11 +3165,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                     mpr("Rocks fall onto you out of nowhere!");
                     break;
                 }
-
-                hurted = random2avg(13, 2) + 10;
-                hurted -= random2(1 + player_AC());
-
-                ouch(hurted, 0, KILLED_BY_WILD_MAGIC, cause);
+                ouch( random2avg(13,2) + 10 - random2(1 + player_AC()),
+                      0, KILLED_BY_WILD_MAGIC, cause);
                 break;
             }
             break;

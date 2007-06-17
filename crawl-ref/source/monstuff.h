@@ -67,7 +67,7 @@ void behaviour_event( struct monsters *mon, int event_type,
 /* ***********************************************************************
  * called from: fight - it_use3 - spells
  * *********************************************************************** */
-bool curse_an_item(char which, char power);
+bool curse_an_item(bool decay_potions);
 
 
 /* ***********************************************************************

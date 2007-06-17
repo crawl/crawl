@@ -1898,6 +1898,13 @@ static void decrement_durations()
         you.invis = 0;
     }
 
+    if ( you.duration[DUR_BARGAIN] > 1 )
+        you.duration[DUR_BARGAIN]--;
+    else if ( you.duration[DUR_BARGAIN] == 1 )
+    {
+        mpr("You feel less charismatic.", MSGCH_DURATION);
+    }
+
     if (you.conf > 0)
         reduce_confuse_player(1);
 

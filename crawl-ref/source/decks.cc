@@ -25,6 +25,7 @@
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
+#include "monstuff.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
@@ -443,7 +444,7 @@ int get_power_level(int power, deck_rarity_type rarity)
 }
 
 /* Actual card implementations follow. */
-void portal_card(int power, deck_rarity_type rarity)
+static void portal_card(int power, deck_rarity_type rarity)
 {
     const int control_level = get_power_level(power, rarity);
     bool instant = false;
@@ -474,7 +475,7 @@ void portal_card(int power, deck_rarity_type rarity)
         you.duration[DUR_CONTROL_TELEPORT] = 0;
 }
 
-void warp_card(int power, deck_rarity_type rarity)
+static void warp_card(int power, deck_rarity_type rarity)
 {
     const int control_level = get_power_level(power, rarity);
     if ( control_level >= 2 )
@@ -485,12 +486,12 @@ void warp_card(int power, deck_rarity_type rarity)
         random_blink(false);
 }
 
-void swap_monster_card(int power, deck_rarity_type rarity)
+static void swap_monster_card(int power, deck_rarity_type rarity)
 {
     // swap between you and another monster
 }
 
-void velocity_card(int power, deck_rarity_type rarity)
+static void velocity_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )
@@ -508,7 +509,7 @@ void velocity_card(int power, deck_rarity_type rarity)
     }
 }
 
-void damnation_card(int power, deck_rarity_type rarity)
+static void damnation_card(int power, deck_rarity_type rarity)
 {
     // pick a random monster nearby to banish
     int mons_count = 1;         // you
@@ -538,7 +539,7 @@ void damnation_card(int power, deck_rarity_type rarity)
     }
 }
 
-void warpwright_card(int power, deck_rarity_type rarity)
+static void warpwright_card(int power, deck_rarity_type rarity)
 {
     int count = 0;
     int fx = -1, fy = -1;
@@ -576,7 +577,7 @@ void warpwright_card(int power, deck_rarity_type rarity)
     }
 }
 
-void damaging_card( card_type card, int power, deck_rarity_type rarity )
+static void damaging_card( card_type card, int power, deck_rarity_type rarity )
 {
     dist target;
     bolt beam;
@@ -598,7 +599,7 @@ void damaging_card( card_type card, int power, deck_rarity_type rarity )
         zapping(ztype, random2(power/4), beam);
 }
 
-void elixir_card(int power, deck_rarity_type rarity)
+static void elixir_card(int power, deck_rarity_type rarity)
 {
     int power_level = get_power_level(power, rarity);
 
@@ -624,7 +625,7 @@ void elixir_card(int power, deck_rarity_type rarity)
     }
 }
 
-void battle_lust_card(int power, deck_rarity_type rarity)
+static void battle_lust_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )
@@ -637,7 +638,7 @@ void battle_lust_card(int power, deck_rarity_type rarity)
         potion_effect(POT_MIGHT, random2(power/4));
 }
 
-void metamorphosis_card(int power, deck_rarity_type rarity)
+static void metamorphosis_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     transformation_type trans;
@@ -648,7 +649,7 @@ void metamorphosis_card(int power, deck_rarity_type rarity)
     transform(random2(power/4), trans);
 }
 
-void helm_card(int power, deck_rarity_type rarity)
+static void helm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     bool do_forescry = false;
@@ -687,7 +688,7 @@ void helm_card(int power, deck_rarity_type rarity)
 // Do one of: vorpalise, sure blade, dancing weapon
 // XXX XXX FIXME Hard to do now, because you have to
 // wield the deck in order to evoke it!
-void blade_card(int power, deck_rarity_type rarity)
+static void blade_card(int power, deck_rarity_type rarity)
 {
     return;
     const int power_level = get_power_level(power, rarity);
@@ -705,7 +706,7 @@ void blade_card(int power, deck_rarity_type rarity)
     }
 }
 
-void shadow_card(int power, deck_rarity_type rarity)
+static void shadow_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 1 )
@@ -715,7 +716,7 @@ void shadow_card(int power, deck_rarity_type rarity)
     potion_effect(POT_INVISIBILITY, random2(power/4));
 }
 
-void potion_card(int power, deck_rarity_type rarity)
+static void potion_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     potion_type pot_effects[] = {
@@ -736,7 +737,7 @@ void potion_card(int power, deck_rarity_type rarity)
     potion_effect(pot, random2(power/4));
 }
 
-void focus_card(int power, deck_rarity_type rarity)
+static void focus_card(int power, deck_rarity_type rarity)
 {
     char* max_statp[] = { &you.max_strength, &you.max_intel, &you.max_dex };
     char* base_statp[] = { &you.strength, &you.intel, &you.dex };
@@ -768,14 +769,14 @@ void focus_card(int power, deck_rarity_type rarity)
     you.redraw_dexterity = true;
 }
 
-void shuffle_card(int power, deck_rarity_type rarity)
+static void shuffle_card(int power, deck_rarity_type rarity)
 {
     // not yet implemented
     // should shuffle *base* stat levels
     return;
 }
 
-void genetic_engineer_card(int power, deck_rarity_type rarity)
+static void genetic_engineer_card(int power, deck_rarity_type rarity)
 {
     mutation_type bad_mutations[] = {
         MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
@@ -795,7 +796,7 @@ void genetic_engineer_card(int power, deck_rarity_type rarity)
         delete_mutation(which_mut);
 }
 
-void dowsing_card(int power, deck_rarity_type rarity)
+static void dowsing_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     bool things_to_do[3] = { false, false, false };
@@ -816,19 +817,19 @@ void dowsing_card(int power, deck_rarity_type rarity)
         detect_creatures( random2(power/4) );
 }
 
-void trowel_card(int power, deck_rarity_type rarity)
+static void trowel_card(int power, deck_rarity_type rarity)
 {
     // not implemented yet
     return;
 }
 
-void minefield_card(int power, deck_rarity_type rarity)
+static void minefield_card(int power, deck_rarity_type rarity)
 {
     // not implemented yet
     return;
 }
 
-void genie_card(int power, deck_rarity_type rarity)
+static void genie_card(int power, deck_rarity_type rarity)
 {
     if ( coinflip() )
         acquirement( OBJ_RANDOM, AQ_CARD_ACQUISITION );
@@ -836,7 +837,38 @@ void genie_card(int power, deck_rarity_type rarity)
         potion_effect( coinflip() ? POT_DEGENERATION : POT_DECAY, 40 );
 }
 
-int card_power(deck_rarity_type rarity)
+static void godly_wrath()
+{
+    divine_retribution(static_cast<god_type>(random2(NUM_GODS)));
+}
+
+static void curse_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+
+    if ( power_level >= 2 )
+    {
+        // curse (almost) everything + decay
+        while ( curse_an_item(true) && !one_chance_in(1000) )
+            ;
+    }
+    else if ( power_level == 1 )
+    {
+        do                      // curse an average of four items
+        {
+            curse_an_item(false);
+        } while ( !one_chance_in(4) );
+    }
+    else
+    {
+        curse_an_item(false);   // curse 1.5 items
+        if ( coinflip() )
+            curse_an_item(false);
+    }
+}
+
+
+static int card_power(deck_rarity_type rarity)
 {
     int result = 0;
 
@@ -891,10 +923,13 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_TROWEL:           trowel_card(power, rarity); break;
     case CARD_MINEFIELD:        minefield_card(power, rarity); break;
     case CARD_GENIE:            genie_card(power, rarity); break;
+    case CARD_CURSE:            curse_card(power, rarity); break;
+    case CARD_WARPWRIGHT:       warpwright_card(power, rarity); break;
     case CARD_TOMB:             entomb(); break;
-
-    case CARD_WARPWRIGHT: case CARD_SPADE: case CARD_WRATH:
-    case CARD_WRAITH: case CARD_CURSE: case CARD_BARGAIN:
+    case CARD_WRAITH:           drain_exp(); lose_level(); break;
+    case CARD_WRATH:            godly_wrath(); break;
+        
+    case CARD_SPADE:
         mpr("Sorry, this card is not yet available.");
         break;
         
@@ -902,9 +937,13 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
         damaging_card(which_card, power, rarity);
         break;
 
+    case CARD_BARGAIN:
+        you.duration[DUR_BARGAIN] += random2(power) + random2(power);
+        break;
 
-    case CARD_MAP: magic_mapping( random2(power/10) + 15,
-                                  random2(power) );
+    case CARD_MAP:
+        magic_mapping( random2(power/10) + 15, random2(power) );
+        break;
 
     case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
 

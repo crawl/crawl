@@ -276,7 +276,6 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 
 void altar_prayer(void);
 void dec_penance(int god, int val);
-void divine_retribution(god_type god);
 void inc_penance(int god, int val);
 void inc_penance(int val);
 int followers_abandon_you(void); // Beogh

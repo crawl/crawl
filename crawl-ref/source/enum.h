@@ -1160,18 +1160,16 @@ enum duration_type
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
     DUR_DEFLECT_MISSILES,              //   15
-//jmf: new durations:
     DUR_FORESCRY,
     DUR_SEE_INVISIBLE,
-    DUR_WEAPON_BRAND, // general "branding" spell counter
+    DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_SILENCE,
-    DUR_GLAMOUR,                        //   20
-    DUR_CONDENSATION_SHIELD = 23,       //   23
+    DUR_GLAMOUR,                       //   20
+    DUR_CONDENSATION_SHIELD,
     DUR_STONESKIN,
-    DUR_REPEL_UNDEAD,                   //   25
-    DUR_STUN,
-    DUR_CUT,                            //   27
-    DUR_GOURMAND,                       //   28
+    DUR_REPEL_UNDEAD,
+    DUR_GOURMAND,
+    DUR_BARGAIN,                       //   25
     NUM_DURATIONS = 30                  //   must be at least 30
 };
 

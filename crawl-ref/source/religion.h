@@ -37,6 +37,7 @@ int piety_rank(int piety = -1);
 void offer_items();
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
+void divine_retribution(god_type god);
 
 bool xom_is_nice();
 void xom_is_stimulated(int maxinterestingness);

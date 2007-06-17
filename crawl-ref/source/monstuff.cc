@@ -193,14 +193,8 @@ int get_mimic_colour( const monsters *mimic )
 }
 
 // monster curses a random player inventory item:
-bool curse_an_item( char which, char power )
+bool curse_an_item( bool decay_potions )
 {
-    UNUSED( power );
-
-    /* use which later, if I want to curse weapon/gloves whatever
-       which, for now: 0 = non-mummy, 1 = mummy (potions as well)
-       don't change mitm.special of !odecay */
-
     int count = 0;
     int item  = ENDOFPACK;
 
@@ -218,7 +212,7 @@ bool curse_an_item( char which, char power )
                 continue;
 
             if (you.inv[i].base_type == OBJ_POTIONS 
-                && (which != 1 || you.inv[i].sub_type == POT_DECAY))
+                && (!decay_potions || you.inv[i].sub_type == POT_DECAY))
             {
                 continue;
             }
@@ -745,7 +739,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     {
         if (YOU_KILL(killer))
         {
-            if (curse_an_item(1, 0))
+            if (curse_an_item(true))
                 mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
         }
     }

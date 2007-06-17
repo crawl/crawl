@@ -96,7 +96,7 @@ void special_wielded()
         makes_noise = false;
 
         if (one_chance_in(30))
-            curse_an_item(0, 0);
+            curse_an_item(false);
         break;
 
     case SPWLD_VARIABLE:

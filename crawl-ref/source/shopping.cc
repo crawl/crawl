@@ -115,12 +115,12 @@ static void in_a_shop( char shoppy )
     FixedVector < int, 20 > shop_items;
 
     char st_pass[ ITEMNAME_SIZE ] = "";
-    unsigned int gp_value = 0;
     unsigned char ft;
     std::string purchasable;
 
     clrscr();
     int itty = 0;
+    int gp_value; // Should eliminate gotos instead of initializing here
 
     ShopInfo &si = stashes.get_shop(the_shop.x, the_shop.y);
 
@@ -174,6 +174,13 @@ static void in_a_shop( char shoppy )
 
         gp_value = the_shop.greed * item_value(mitm[itty], id_stock);
         gp_value /= 10;
+
+        if ( you.duration[DUR_BARGAIN] ) // 20% discount
+        {
+            gp_value *= 8;
+            gp_value /= 10;
+        }
+
         if (gp_value <= 1)
             gp_value = 1;
 
@@ -283,7 +290,12 @@ static void in_a_shop( char shoppy )
         goto purchase;
     }
 
-    gp_value = the_shop.greed * item_value(mitm[shop_items[ft]], id_stock)/10;
+    gp_value = the_shop.greed*item_value(mitm[shop_items[ft]],id_stock)/10;
+    if ( you.duration[DUR_BARGAIN] ) // 20% discount
+    {
+        gp_value *= 8;
+        gp_value /= 10;
+    }
 
     if (gp_value > you.gold)
     {

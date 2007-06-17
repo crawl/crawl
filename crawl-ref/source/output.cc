@@ -530,6 +530,12 @@ void print_stats(void)
             textcolor( YELLOW );  // no warning
             cprintf( "BWpn" );
         }
+        
+        if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 4)
+        {
+            dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
+            cprintf( "Brgn" );
+        }
 
         textcolor( LIGHTGREY );
     }

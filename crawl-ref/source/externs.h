@@ -647,7 +647,7 @@ public:
 
   unsigned long experience;
   int experience_level;
-  unsigned int gold;
+  int gold;
   int char_class;
   char class_name[30];
   int time_taken;
