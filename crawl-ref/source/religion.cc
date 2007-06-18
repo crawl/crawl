@@ -1985,17 +1985,17 @@ void divine_retribution( god_type god )
         default: // send orcs after you (5/8)
         {
 
-            int points = you.experience_level * 2 + 3
+            int points = you.experience_level + 3
                 + random2(you.experience_level * 3);
 
             // "natural" bands
-            if (points >= 30) // min: lvl 6, always: lvl 15
-                punisher = MONS_ORC_HIGH_PRIEST;
-            else if (points >= 24) // min: lvl 5, always: lvl 11
-                punisher = MONS_ORC_KNIGHT;
-            else if (points >= 18) // min: lvl 4, always: lvl 8
+            if (points >= 30) // min: lvl 7, always: lvl 27 
                 punisher = MONS_ORC_WARLORD;
-            else if (points >= 12) // min: lvl 2, always: lvl 5
+            else if (points >= 24) // min: lvl 6, always: lvl 21
+                punisher = MONS_ORC_HIGH_PRIEST;
+            else if (points >= 18) // min: lvl 4, always: lvl 15 
+                punisher = MONS_ORC_KNIGHT;
+            else if (points > 10) // min: lvl 3, always: lvl 8 
                 punisher = MONS_ORC_WARRIOR;
             else
                 punisher = MONS_ORC;
