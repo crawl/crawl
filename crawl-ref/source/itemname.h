@@ -37,7 +37,7 @@ bool item_type_known( const item_def &item );
 
 bool is_interesting_item( const item_def& item );
 
-int make_name( unsigned long seed, bool all_caps, char buff[ ITEMNAME_SIZE ] );
+std::string make_name( unsigned long seed, bool all_caps );
 
 /* ***********************************************************************
  * called from: acr

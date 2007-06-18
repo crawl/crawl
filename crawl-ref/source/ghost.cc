@@ -110,10 +110,7 @@ void ghost_demon::reset()
 
 void ghost_demon::init_random_demon()
 {
-    char st_p[ITEMNAME_SIZE];
-
-    make_name(random_int(), false, st_p);
-    name = st_p;
+    name = make_name(random_int(), false);
 
     // hp - could be defined below (as could ev, AC etc). Oh well, too late:
     values[ GVAL_MAX_HP ] = 100 + roll_dice( 3, 50 );

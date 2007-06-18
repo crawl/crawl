@@ -1550,9 +1550,8 @@ const shop_struct *get_shop(int sx, int sy)
     return (NULL);
 }
 
-const char *shop_name(int sx, int sy)
+std::string shop_name(int sx, int sy)
 {
-    static char sh_name[80];
     const shop_struct *cshop = get_shop(sx, sy);
 
     // paranoia
@@ -1567,43 +1566,40 @@ const char *shop_name(int sx, int sy)
 
     int shop_type = cshop->type;
 
-    char st_p[ITEMNAME_SIZE];
-
     unsigned long seed = static_cast<unsigned long>( cshop->keeper_name[0] )
-                    | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
-                    | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 16);
-    make_name( seed, false, st_p );
+        | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
+        | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 16);
 
-    strcpy(sh_name, st_p);
-    strcat(sh_name, "'s ");
+    std::string sh_name = make_name(seed, false);
+    sh_name += "'s ";
 
     if (shop_type == SHOP_WEAPON_ANTIQUE || shop_type == SHOP_ARMOUR_ANTIQUE)
-        strcat( sh_name, "Antique " );
+        sh_name += "Antique ";
 
-    strcat(sh_name, (shop_type == SHOP_WEAPON
-                     || shop_type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
-                    (shop_type == SHOP_ARMOUR
-                     || shop_type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
-
-                    (shop_type == SHOP_JEWELLERY)         ? "Jewellery" :
-                    (shop_type == SHOP_WAND)              ? "Magical Wand" :
-                    (shop_type == SHOP_BOOK)              ? "Book" :
-                    (shop_type == SHOP_FOOD)              ? "Food" :
-                    (shop_type == SHOP_SCROLL)            ? "Magic Scroll" :
-                    (shop_type == SHOP_GENERAL_ANTIQUE) ? "Assorted Antiques" :
-                    (shop_type == SHOP_DISTILLERY)        ? "Distillery" :
-                    (shop_type == SHOP_GENERAL)           ? "General Store"
-                                                          : "Bug");
-
+    sh_name +=
+        (shop_type == SHOP_WEAPON
+         || shop_type == SHOP_WEAPON_ANTIQUE) ? "Weapon" :
+        (shop_type == SHOP_ARMOUR
+         || shop_type == SHOP_ARMOUR_ANTIQUE) ? "Armour" :
+        
+        (shop_type == SHOP_JEWELLERY)         ? "Jewellery" :
+        (shop_type == SHOP_WAND)              ? "Magical Wand" :
+        (shop_type == SHOP_BOOK)              ? "Book" :
+        (shop_type == SHOP_FOOD)              ? "Food" :
+        (shop_type == SHOP_SCROLL)            ? "Magic Scroll" :
+        (shop_type == SHOP_GENERAL_ANTIQUE)   ? "Assorted Antiques" :
+        (shop_type == SHOP_DISTILLERY)        ? "Distillery" :
+        (shop_type == SHOP_GENERAL)           ? "General Store"
+                                              : "Bug";
 
     if (shop_type != SHOP_GENERAL
         && shop_type != SHOP_GENERAL_ANTIQUE && shop_type != SHOP_DISTILLERY)
     {
         int temp = sx + sy % 4;
-        strcat( sh_name, (temp == 0) ? " Shoppe" :
-                         (temp == 1) ? " Boutique" :
-                         (temp == 2) ? " Emporium"
-                                     : " Shop" );
+        sh_name += (temp == 0) ? " Shoppe" :
+                   (temp == 1) ? " Boutique" :
+                   (temp == 2) ? " Emporium"
+                               : " Shop";
     }
 
     return (sh_name);

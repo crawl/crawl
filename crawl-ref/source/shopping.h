@@ -26,11 +26,7 @@ void shop();
 
 const shop_struct *get_shop(int sx, int sy);
 
-// last updated 06mar2001 {gdl}
-/* ***********************************************************************
- * called from: items direct
- * *********************************************************************** */
-const char *shop_name(int sx, int sy);
+std::string shop_name(int sx, int sy);
 
 bool shoptype_identifies_stock(int shoptype);
 

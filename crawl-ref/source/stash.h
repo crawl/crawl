@@ -127,7 +127,7 @@ public:
     void write(std::ostream &os, bool identify = false) const;
 
     void reset() { items.clear(); visited = true; }
-    void set_name(const char *s) { name = s; }
+    void set_name(const std::string& s) { name = s; }
 
     void add_item(const item_def &item, unsigned price);
 

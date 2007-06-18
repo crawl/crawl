@@ -1257,15 +1257,11 @@ std::string item_def::name_aux( description_level_type desc,
         }
         else
         {
-            buff << "labeled ";
-            char buff3[ ITEMNAME_SIZE ];
-
             const unsigned long sseed = 
                 this->special 
                 + (static_cast<unsigned long>(it_plus) << 8)
                 + (static_cast<unsigned long>(OBJ_SCROLLS) << 16);
-            make_name( sseed, true, buff3 );
-            buff << buff3;
+            buff << "labeled " << make_name(sseed, true);
         }
         break;
 
@@ -1602,7 +1598,7 @@ void check_item_knowledge()
 
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
-int make_name( unsigned long seed, bool all_cap, char buff[ ITEMNAME_SIZE ] )
+std::string make_name( unsigned long seed, bool all_cap )
 {
     char name[ITEMNAME_SIZE];
     int  numb[17];
@@ -1856,23 +1852,17 @@ int make_name( unsigned long seed, bool all_cap, char buff[ ITEMNAME_SIZE ] )
         }
     }
 
-    if (len >= 3)
-        strncpy( buff, name, ITEMNAME_SIZE );
-    else
+    if (len < 4)
     {
-        strncpy( buff, "plog", ITEMNAME_SIZE );
+        strcpy(name, "plog");
         len = 4;
     }
 
-    buff[ ITEMNAME_SIZE - 1 ] = '\0';
-
     for (i = 0; i < len; i++)
-    {
-        if (all_cap || i == 0 || buff[i - 1] == ' ')
-            buff[i] = toupper( buff[i] );
-    }
+        if (all_cap || i == 0 || name[i - 1] == ' ')
+            name[i] = toupper( name[i] );
 
-    return (len); 
+    return name; 
 }                               // end make_name()
 
 bool is_random_name_space(char let)

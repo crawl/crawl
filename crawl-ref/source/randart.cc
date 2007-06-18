@@ -1221,9 +1221,7 @@ std::string randart_name( const item_def &item )
     }
     else
     {
-        char st_p[ITEMNAME_SIZE];
-
-        make_name(random_int(), false, st_p);
+        const std::string st_p = make_name(random_int(), false);
         result += item_base_name(item);
 
         if (one_chance_in(3))
@@ -1299,9 +1297,7 @@ std::string randart_armour_name( const item_def &item )
     }
     else
     {
-        char st_p[ITEMNAME_SIZE];
-
-        make_name(random_int(), false, st_p);
+        const std::string st_p = make_name(random_int(), false);
         result += item_base_name(item);
         if (one_chance_in(3))
         {
@@ -1334,9 +1330,6 @@ std::string randart_jewellery_name( const item_def &item )
                                       : unrand->unid_name);
     }
 
-    char st_p[ITEMNAME_SIZE];
-
-    // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     const long seed = calc_seed( item );
     push_rng_state();
     seed_rng( seed );
@@ -1385,8 +1378,7 @@ std::string randart_jewellery_name( const item_def &item )
     }
     else
     {
-        make_name(random_int(), false, st_p);
-
+        const std::string st_p = make_name(random_int(), false);
         result += (jewellery_is_amulet(item) ? "amulet" : "ring");
 
         if (one_chance_in(3))
