@@ -34,17 +34,17 @@ void set_unique_item_status( int base_type, int type, int status );
 /* ***********************************************************************
  * called from: itemname
  * *********************************************************************** */
-const char *randart_armour_name( const item_def &item );
+std::string randart_armour_name( const item_def &item );
 
 /* ***********************************************************************
  * called from: itemname
  * *********************************************************************** */
-const char *randart_name( const item_def &item );
+std::string randart_name( const item_def &item );
 
 /* ***********************************************************************
  * called from: itemname
  * *********************************************************************** */
-const char *randart_jewellery_name( const item_def &item );
+std::string randart_jewellery_name( const item_def &item );
 
 /* ***********************************************************************
  * called from: describe

@@ -978,7 +978,7 @@ static bool write_dump(
         mprf("Error opening file '%s'", file_name.c_str());
     
     return (succeeded);
-}                               // end dump_char()
+}
 
 void display_notes()
 {
@@ -995,7 +995,7 @@ void display_notes()
             return;
         linebreak_string(suffix, spaceleft - 4, spaceleft);
         std::vector<std::string> parts = split_string("\n", suffix);
-        if ( parts.size() == 0 ) // disregard empty notes
+        if ( parts.empty() ) // disregard pure-whitespace notes
             continue;
         scr.add_entry(new MenuEntry(prefix + parts[0]));
         for ( unsigned int j = 1; j < parts.size(); ++j )

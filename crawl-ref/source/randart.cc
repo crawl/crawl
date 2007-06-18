@@ -461,54 +461,8 @@ const char *rand_wpn_names[] = {
     " \"Xom's Favour\"",
     " \"Bingo\"",
     " \"Leviticus\"",
-// Not yet possible...
 /* 390: */
-    " of Joyful Slaughter",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-
-/* 390: */
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-    "\"\"",
-
-/* 340: */
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-
-/* 200: */
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    " of Joyful Slaughter"
 };
 
 const char *rand_armour_names[] = {
@@ -591,17 +545,7 @@ const char *rand_armour_names[] = {
     " of Decompression",
 
 /* 70: */
-    " of the Loofah",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-    " of ",
-// Sarcophagus
+    " of the Loofah"
 };
 
 // Remember: disallow unrandart creation in abyss/pan
@@ -655,7 +599,6 @@ static struct unrandart_entry unranddata[] = {
 #include "unrand.h"
 };
 
-char art_n[ITEMNAME_SIZE];
 static FixedVector < bool, NO_UNRANDARTS > unrandart_exist;
 
 static struct unrandart_entry *seekunrandart( const item_def &item );
@@ -1223,7 +1166,7 @@ int randart_wpn_property( const item_def &item, int prop )
     return (proprt[prop]);
 }
 
-const char *randart_name( const item_def &item )
+std::string randart_name( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_WEAPONS );
 
@@ -1233,76 +1176,75 @@ const char *randart_name( const item_def &item )
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
-    art_n[0] = 0;
-
-    // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     const long seed = calc_seed( item );
     push_rng_state();
     seed_rng( seed );
-
+    
+    std::string result;
+    
     if (!item_type_known(item))
     {
         switch (random2(21))
         {
-        case  0: strcat(art_n, "brightly glowing "); break;
-        case  1: strcat(art_n, "runed "); break;
-        case  2: strcat(art_n, "smoking "); break;
-        case  3: strcat(art_n, "bloodstained "); break;
-        case  4: strcat(art_n, "twisted "); break;
-        case  5: strcat(art_n, "shimmering "); break;
-        case  6: strcat(art_n, "warped "); break;
-        case  7: strcat(art_n, "crystal "); break;
-        case  8: strcat(art_n, "jewelled "); break;
-        case  9: strcat(art_n, "transparent "); break;
-        case 10: strcat(art_n, "encrusted "); break;
-        case 11: strcat(art_n, "pitted "); break;
-        case 12: strcat(art_n, "slimy "); break;
-        case 13: strcat(art_n, "polished "); break;
-        case 14: strcat(art_n, "fine "); break;
-        case 15: strcat(art_n, "crude "); break;
-        case 16: strcat(art_n, "ancient "); break;
-        case 17: strcat(art_n, "ichor-stained "); break;
-        case 18: strcat(art_n, "faintly glowing "); break;
-        case 19: strcat(art_n, "steaming "); break;
-        case 20: strcat(art_n, "shiny "); break;
+        case  0: result += "brightly glowing "; break;
+        case  1: result += "runed "; break;
+        case  2: result += "smoking "; break;
+        case  3: result += "bloodstained "; break;
+        case  4: result += "twisted "; break;
+        case  5: result += "shimmering "; break;
+        case  6: result += "warped "; break;
+        case  7: result += "crystal "; break;
+        case  8: result += "jewelled "; break;
+        case  9: result += "transparent "; break;
+        case 10: result += "encrusted "; break;
+        case 11: result += "pitted "; break;
+        case 12: result += "slimy "; break;
+        case 13: result += "polished "; break;
+        case 14: result += "fine "; break;
+        case 15: result += "crude "; break;
+        case 16: result += "ancient "; break;
+        case 17: result += "ichor-stained "; break;
+        case 18: result += "faintly glowing "; break;
+        case 19: result += "steaming "; break;
+        case 20: result += "shiny "; break;
         }
-
-        strcat(art_n, item_base_name(item).c_str());
+        
+        result += item_base_name(item);
         pop_rng_state();
-        return (art_n);
+        return result;
     }
 
     if (coinflip())
     {
-        strcat(art_n, item_base_name(item).c_str());
-        strcat(art_n, rand_wpn_names[random2(390)]);
+        result += item_base_name(item);
+        result += rand_wpn_names[random2(ARRAYSIZE(rand_wpn_names))];
     }
     else
     {
         char st_p[ITEMNAME_SIZE];
 
         make_name(random_int(), false, st_p);
-        strcat(art_n, item_base_name(item).c_str());
+        result += item_base_name(item);
 
         if (one_chance_in(3))
         {
-            strcat(art_n, " of ");
-            strcat(art_n, st_p);
+            result += " of ";
+            result += st_p;
         }
         else
         {
-            strcat(art_n, " \"");
-            strcat(art_n, st_p);
-            strcat(art_n, "\"");
+            result += " \"";
+            result += st_p;
+            result += "\"";
         }
     }
 
     pop_rng_state();
 
-    return (art_n);
+    return result;
 }
 
-const char *randart_armour_name( const item_def &item )
+std::string randart_armour_name( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
 
@@ -1312,79 +1254,77 @@ const char *randart_armour_name( const item_def &item )
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
-    art_n[0] = 0;
-
-    // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     const long seed = calc_seed( item );
     
     push_rng_state();
     seed_rng( seed );
 
+    std::string result;
+
     if (!item_type_known(item))
     {
         switch (random2(21))
         {
-        case  0: strcat(art_n, "brightly glowing "); break;
-        case  1: strcat(art_n, "runed "); break;
-        case  2: strcat(art_n, "smoking "); break;
-        case  3: strcat(art_n, "bloodstained "); break;
-        case  4: strcat(art_n, "twisted "); break;
-        case  5: strcat(art_n, "shimmering "); break;
-        case  6: strcat(art_n, "warped "); break;
-        case  7: strcat(art_n, "heavily runed "); break;
-        case  8: strcat(art_n, "jeweled "); break;
-        case  9: strcat(art_n, "transparent "); break;
-        case 10: strcat(art_n, "encrusted "); break;
-        case 11: strcat(art_n, "pitted "); break;
-        case 12: strcat(art_n, "slimy "); break;
-        case 13: strcat(art_n, "polished "); break;
-        case 14: strcat(art_n, "fine "); break;
-        case 15: strcat(art_n, "crude "); break;
-        case 16: strcat(art_n, "ancient "); break;
-        case 17: strcat(art_n, "ichor-stained "); break;
-        case 18: strcat(art_n, "faintly glowing "); break;
-        case 19: strcat(art_n, "steaming "); break;
-        case 20: strcat(art_n, "shiny "); break;
+        case  0: result += "brightly glowing "; break;
+        case  1: result += "runed "; break;
+        case  2: result += "smoking "; break;
+        case  3: result += "bloodstained "; break;
+        case  4: result += "twisted "; break;
+        case  5: result += "shimmering "; break;
+        case  6: result += "warped "; break;
+        case  7: result += "heavily runed "; break;
+        case  8: result += "jeweled "; break;
+        case  9: result += "transparent "; break;
+        case 10: result += "encrusted "; break;
+        case 11: result += "pitted "; break;
+        case 12: result += "slimy "; break;
+        case 13: result += "polished "; break;
+        case 14: result += "fine "; break;
+        case 15: result += "crude "; break;
+        case 16: result += "ancient "; break;
+        case 17: result += "ichor-stained "; break;
+        case 18: result += "faintly glowing "; break;
+        case 19: result += "steaming "; break;
+        case 20: result += "shiny "; break;
         }
-        strcat(art_n, item_base_name(item).c_str());
+        result += item_base_name(item);
         pop_rng_state();
-        return (art_n);
+        return result;
     }
-
+    
     if (coinflip())
     {
-        strcat(art_n, item_base_name(item).c_str());
-        strcat(art_n, rand_armour_names[random2(71)]);
+        result += item_base_name(item);
+        result += rand_armour_names[random2(ARRAYSIZE(rand_armour_names))];
     }
     else
     {
         char st_p[ITEMNAME_SIZE];
 
         make_name(random_int(), false, st_p);
-        strcat(art_n, item_base_name(item).c_str());
+        result += item_base_name(item);
         if (one_chance_in(3))
         {
-            strcat(art_n, " of ");
-            strcat(art_n, st_p);
+            result += " of ";
+            result += st_p;
         }
         else
         {
-            strcat(art_n, " \"");
-            strcat(art_n, st_p);
-            strcat(art_n, "\"");
+            result += " \"";
+            result += st_p;
+            result += "\"";
         }
     }
 
     pop_rng_state();
 
-    return (art_n);
+    return result;
 }
 
-const char *randart_jewellery_name( const item_def &item )
+std::string randart_jewellery_name( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_JEWELLERY );
 
-    int temp_rand = 0;          // probability determination {dlb}
 
     if (is_unrandom_artefact( item ))
     {
@@ -1396,75 +1336,76 @@ const char *randart_jewellery_name( const item_def &item )
 
     char st_p[ITEMNAME_SIZE];
 
-    art_n[0] = 0;
-
     // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     const long seed = calc_seed( item );
     push_rng_state();
     seed_rng( seed );
 
+    std::string result;
+
     if (!item_type_known(item))
     {
-        temp_rand = random2(21);
+        switch (random2(21))
+        {
+        case 0:  result += "brightly glowing"; break;
+        case 1:  result += "runed"; break;
+        case 2:  result += "smoking"; break;
+        case 3:  result += "ruby"; break;
+        case 4:  result += "twisted"; break;
+        case 5:  result += "shimmering"; break;
+        case 6:  result += "warped"; break;
+        case 7:  result += "crystal"; break;
+        case 8:  result += "diamond"; break;
+        case 9:  result += "transparent"; break;
+        case 10: result += "encrusted"; break;
+        case 11: result += "pitted"; break;
+        case 12: result += "slimy"; break;
+        case 13: result += "polished"; break;
+        case 14: result += "fine"; break;
+        case 15: result += "crude"; break;
+        case 16: result += "ancient"; break;
+        case 17: result += "emerald"; break;
+        case 18: result += "faintly glowing"; break;
+        case 19: result += "steaming"; break;
+        case 20: result += "shiny"; break;
+        }
 
-        strcat(art_n,  (temp_rand == 0)  ? "brightly glowing" :
-                       (temp_rand == 1)  ? "runed" :
-                       (temp_rand == 2)  ? "smoking" :
-                       (temp_rand == 3)  ? "ruby" :
-                       (temp_rand == 4)  ? "twisted" :
-                       (temp_rand == 5)  ? "shimmering" :
-                       (temp_rand == 6)  ? "warped" :
-                       (temp_rand == 7)  ? "crystal" :
-                       (temp_rand == 8)  ? "diamond" :
-                       (temp_rand == 9)  ? "transparent" :
-                       (temp_rand == 10) ? "encrusted" :
-                       (temp_rand == 11) ? "pitted" :
-                       (temp_rand == 12) ? "slimy" :
-                       (temp_rand == 13) ? "polished" :
-                       (temp_rand == 14) ? "fine" :
-                       (temp_rand == 15) ? "crude" :
-                       (temp_rand == 16) ? "ancient" :
-                       (temp_rand == 17) ? "emerald" :
-                       (temp_rand == 18) ? "faintly glowing" :
-                       (temp_rand == 19) ? "steaming"
-                                         : "shiny");
-
-        strcat(art_n, " ");
-        strcat(art_n, (item.sub_type < AMU_RAGE) ? "ring" : "amulet");
+        result += " ";
+        result += (jewellery_is_amulet(item) ? "amulet" : "ring");
 
         pop_rng_state();
 
-        return (art_n);
+        return result;
     }
 
     if (one_chance_in(5))
     {
-        strcat(art_n, (item.sub_type < AMU_RAGE) ? "ring" : "amulet");
-        strcat(art_n, rand_armour_names[random2(71)]);
+        result += (jewellery_is_amulet(item) ? "amulet" : "ring");
+        result += rand_armour_names[random2(ARRAYSIZE(rand_armour_names))];
     }
     else
     {
         make_name(random_int(), false, st_p);
 
-        strcat(art_n, (item.sub_type < AMU_RAGE) ? "ring" : "amulet");
+        result += (jewellery_is_amulet(item) ? "amulet" : "ring");
 
         if (one_chance_in(3))
         {
-            strcat(art_n, " of ");
-            strcat(art_n, st_p);
+            result += " of ";
+            result += st_p;
         }
         else
         {
-            strcat(art_n, " \"");
-            strcat(art_n, st_p);
-            strcat(art_n, "\"");
+            result += " \"";
+            result += st_p;
+            result += "\"";
         }
     }
 
     pop_rng_state();
 
-    return (art_n);
-}                               // end randart_ring_name()
+    return result;
+}
 
 static struct unrandart_entry *seekunrandart( const item_def &item )
 {
