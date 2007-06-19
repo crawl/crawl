@@ -912,6 +912,7 @@ static void input()
         return;
     }
 
+    crawl_state.check_term_size();
     if (crawl_state.terminal_resized)
         handle_terminal_resize();
     
@@ -921,9 +922,9 @@ static void input()
         // shouldn't need to turn it on explicitly.
         cursor_control con(true);
 
-        crawl_state.waiting_for_comand = true;
+        crawl_state.waiting_for_command = true;
         command_type cmd = get_next_cmd();
-        crawl_state.waiting_for_comand = false;
+        crawl_state.waiting_for_command = false;
 
         // [dshaligram] If get_next_cmd encountered a Lua macro
         // binding, your turn may be ended by the first invoke of the

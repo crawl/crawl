@@ -251,7 +251,7 @@ int getch_ck()
 
 static void handle_sigwinch(int)
 {
-    if (crawl_state.waiting_for_comand)
+    if (crawl_state.waiting_for_command)
         handle_terminal_resize();
 }
 

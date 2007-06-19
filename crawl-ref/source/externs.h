@@ -1185,7 +1185,7 @@ extern struct crawl_environment env;
 // Track various aspects of Crawl game state.
 struct game_state
 {
-    bool waiting_for_comand; // True when the game is waiting for a command.
+    bool waiting_for_command; // True when the game is waiting for a command.
     bool terminal_resized;   // True if the term was resized and we need to
                              // take action to handle it.
     
@@ -1202,13 +1202,20 @@ struct game_state
     std::string (*glyph2strfn)(unsigned glyph);
     int  (*multibyte_strlen)(const std::string &s);
     void (*terminal_resize_handler)();
+    void (*terminal_resize_check)();
 
-    game_state() : waiting_for_comand(false), terminal_resized(false),
+    game_state() : waiting_for_command(false), terminal_resized(false),
                    io_inited(false), need_save(false), saving_game(false),
                    updating_scores(false), shopping(false), seen_hups(0),
                    unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL),
-                   terminal_resize_handler(NULL)
+                   terminal_resize_handler(NULL), terminal_resize_check(NULL)
     {
+    }
+
+    void check_term_size() const
+    {
+        if (terminal_resize_check)
+            (*terminal_resize_check)();
     }
 };
 extern game_state crawl_state;
