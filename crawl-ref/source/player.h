@@ -280,7 +280,7 @@ void gain_exp(unsigned int exp_gained);
  * called from: acr - it_use2 - item_use - mutation - transfor - player -
  *              misc - stuff
  * *********************************************************************** */
-void modify_stat(unsigned char which_stat, char amount, bool suppress_msg);
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg);
 
 
 // last updated 19may2000 {dlb}

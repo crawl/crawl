@@ -95,18 +95,18 @@ extern std::string init_file_location;
 
 #define MIN_START_STAT       1
 
-static bool class_allowed(unsigned char speci, int char_class);
+static bool class_allowed(species_type speci, job_type char_class);
 static bool validate_player_name(bool verbose);
 static void choose_weapon(void);
 static void enter_player_name(bool blankOK);
-static void give_basic_knowledge(int which_job);
-static void give_basic_spells(int which_job);
-static void give_basic_mutations(unsigned char speci);
-static void give_last_paycheck(int which_job);
+static void give_basic_knowledge(job_type which_job);
+static void give_basic_spells(job_type which_job);
+static void give_basic_mutations(species_type speci);
+static void give_last_paycheck(job_type which_job);
 static void init_player(void);
-static void jobs_stat_init(int which_job);
+static void jobs_stat_init(job_type which_job);
 static void openingScreen(void);
-static void species_stat_init(unsigned char which_species);
+static void species_stat_init(species_type which_species);
 
 #ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
 static void give_random_wand( int slot );
@@ -118,8 +118,8 @@ static void give_random_secondary_armour( int slot );
 static bool give_wanderer_weapon( int slot, int wpn_skill );
 static void create_wanderer(void);
 static void give_items_skills(void);
-static char letter_to_species(int keyn);
-static char letter_to_class(int keyn);
+static species_type letter_to_species(int keyn);
+static job_type letter_to_class(int keyn);
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -185,7 +185,7 @@ static std::string get_opt_race_name(char race)
 
 static std::string get_opt_class_name(char oclass)
 {
-    int pcls  = letter_to_class(oclass);
+    int pcls = letter_to_class(oclass);
     return pcls != JOB_UNKNOWN? get_class_name(pcls) : "Random";
 }
 
@@ -241,8 +241,8 @@ static void pick_random_species_and_class( void )
     //
     int job_count = 0;
 
-    int species = -1;
-    int job = -1;
+    species_type species = SP_UNKNOWN;
+    job_type job = JOB_UNKNOWN;
 
     // for each valid (species, class) choose one randomly
     for (int sp = SP_HUMAN; sp < NUM_SPECIES; sp++)
@@ -254,24 +254,25 @@ static void pick_random_species_and_class( void )
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
         {
-            if (class_allowed(sp, cl))
+            if (class_allowed(static_cast<species_type>(sp),
+                              static_cast<job_type>(cl)))
             {
                 job_count++;
                 if (one_chance_in( job_count ))
                 {
-                    species = sp;
-                    job = cl;
+                    species = static_cast<species_type>(sp);
+                    job = static_cast<job_type>(cl);
                 }
             }
         }
     }
 
     // at least one job must exist in the game else we're in big trouble
-    ASSERT( species != -1 && job != -1 );
+    ASSERT( species != SP_UNKNOWN && job != JOB_UNKNOWN );
 
     // return draconian variety here
     if (species == SP_RED_DRACONIAN)
-        you.species = SP_RED_DRACONIAN + random2(9);
+        you.species = static_cast<species_type>(SP_RED_DRACONIAN + random2(9));
     else
         you.species = species;
 
@@ -528,6 +529,9 @@ static void racialise_starting_equipment()
 
                 case SP_HILL_ORC:
                     set_equip_race( you.inv[i], ISFLAG_ORCISH );
+                    break;
+                    
+                default:
                     break;
                 }
             }
@@ -857,7 +861,7 @@ static bool species_is_undead( unsigned char speci )
     return (speci == SP_MUMMY || speci == SP_GHOUL);
 }
 
-static bool class_allowed( unsigned char speci, int char_class )
+static bool class_allowed( species_type speci, job_type char_class )
 {
     switch (char_class)
     {
@@ -867,8 +871,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_WIZARD:
         if (species_is_undead( speci ))
@@ -887,8 +892,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_PRIEST:
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -912,8 +918,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_THIEF:
         if (species_is_undead( speci ))
@@ -929,8 +936,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_GLADIATOR:
         if (player_genus(GENPC_ELVEN, speci))
@@ -949,8 +957,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_NECROMANCER:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -973,8 +982,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_PALADIN:
         switch (speci)
@@ -983,8 +993,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_MOUNTAIN_DWARF:
         case SP_HIGH_ELF:
             return true;
+        default:
+            return false;
         }
-        return false;
 
     case JOB_ASSASSIN:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1002,8 +1013,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_OGRE_MAGE:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_BERSERKER:
         if (player_genus(GENPC_ELVEN, speci))
@@ -1026,8 +1038,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_HUNTER:
         if (player_genus(GENPC_DRACONIAN, speci))   // use bows
@@ -1057,8 +1070,9 @@ static bool class_allowed( unsigned char speci, int char_class )
             // spear
         case SP_MERFOLK:
             return true;
+        default:
+            return false;
         }
-        return false;
 
     case JOB_CONJURER:
         if (species_is_undead( speci ))
@@ -1077,8 +1091,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_MERFOLK:
         case SP_SLUDGE_ELF:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_ENCHANTER:
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -1097,8 +1112,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_SLUDGE_ELF:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_FIRE_ELEMENTALIST:
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -1119,8 +1135,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_ICE_ELEMENTALIST:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1144,8 +1161,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_SUMMONER:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1163,8 +1181,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_AIR_ELEMENTALIST:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1187,8 +1206,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_EARTH_ELEMENTALIST:
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -1211,8 +1231,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_CRUSADER:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1236,8 +1257,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_MERFOLK:
         case SP_SLUDGE_ELF:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_DEATH_KNIGHT:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1259,8 +1281,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_VENOM_MAGE:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1280,8 +1303,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_OGRE:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_CHAOS_KNIGHT:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1302,8 +1326,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_TRANSMUTER:
         if (species_is_undead( speci ))
@@ -1319,8 +1344,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_OGRE:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_HEALER:
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -1343,8 +1369,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_REAVER:
         if (species_is_undead( speci ))
@@ -1364,8 +1391,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_MERFOLK:
         case SP_SLUDGE_ELF:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_STALKER:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1385,8 +1413,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_OGRE_MAGE:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_MONK:
         if (species_is_undead( speci ))
@@ -1404,8 +1433,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_WARPER:
         if (player_genus(GENPC_DWARVEN, speci))
@@ -1427,8 +1457,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_TROLL:
         case SP_MERFOLK:
             return false;
+        default:
+            return true;
         }
-        return true;
 
     case JOB_WANDERER:
         switch (speci)
@@ -1438,8 +1469,9 @@ static bool class_allowed( unsigned char speci, int char_class )
         case SP_DEMONSPAWN:
         case SP_GHOUL:
             return true;
+        default:
+            return false;
         }
-        return false;
 
     case JOB_QUITTER:   // shouldn't happen since 'x' is handled specially
     default:
@@ -1647,7 +1679,7 @@ static void init_player(void)
     you.init();
 }
 
-static void give_last_paycheck(int which_job)
+static void give_last_paycheck(job_type which_job)
 {
     switch (which_job)
     {
@@ -1676,7 +1708,7 @@ static void give_last_paycheck(int which_job)
 // requires stuff::modify_all_stats() and works because
 // stats zeroed out by newgame::init_player()... recall
 // that demonspawn & demigods get more later on {dlb}
-static void species_stat_init(unsigned char which_species)
+static void species_stat_init(species_type which_species)
 {
     int sb = 0; // strength base
     int ib = 0; // intelligence base
@@ -1740,7 +1772,7 @@ static void species_stat_init(unsigned char which_species)
     modify_all_stats( sb, ib, db );
 }
 
-static void jobs_stat_init(int which_job)
+static void jobs_stat_init(job_type which_job)
 {
     int s = 0;   // strength mod
     int i = 0;   // intelligence mod
@@ -1795,7 +1827,7 @@ static void jobs_stat_init(int which_job)
     set_mp( mp, true );
 }
 
-static void give_basic_mutations(unsigned char speci)
+static void give_basic_mutations(species_type speci)
 {
     // We should switch over to a size-based system
     // for the fast/slow metabolism when we get around to it.
@@ -1860,7 +1892,7 @@ static void give_basic_mutations(unsigned char speci)
         you.demon_pow[i] = you.mutation[i];
 }
 
-static void give_basic_knowledge(int which_job)
+static void give_basic_knowledge(job_type which_job)
 {
     switch (which_job)
     {
@@ -1897,7 +1929,7 @@ static void give_basic_knowledge(int which_job)
     return;
 }                               // end give_basic_knowledge()
 
-static void give_basic_spells(int which_job)
+static void give_basic_spells(job_type which_job)
 {
     // wanderers may or may not already have a spell -- bwr
     if (which_job == JOB_WANDERER)
@@ -2785,7 +2817,7 @@ static void create_wanderer( void )
     you.equip[EQ_BODY_ARMOUR] = 2;
 }
 
-static char letter_to_class(int keyn)
+static job_type letter_to_class(int keyn)
 {
     if (keyn == 'a')
         return JOB_FIGHTER;
@@ -2846,7 +2878,7 @@ static char letter_to_class(int keyn)
     return JOB_UNKNOWN;
 }
 
-static char letter_to_species(int keyn)
+static species_type letter_to_species(int keyn)
 {
     switch (keyn)
     {
@@ -2885,7 +2917,7 @@ static char letter_to_species(int keyn)
     case 'q':
         return SP_OGRE_MAGE;
     case 'r':                   // draconian
-        return SP_RED_DRACONIAN + random2(9);    // random drac
+        return static_cast<species_type>(SP_RED_DRACONIAN + random2(9));
     case 's':
         return SP_CENTAUR;
     case 't':
@@ -2903,7 +2935,7 @@ static char letter_to_species(int keyn)
     case 'z':
         return SP_MERFOLK;
     default:
-        return 0;
+        return SP_UNKNOWN;
     }
 }
 
@@ -2989,7 +3021,7 @@ spec_query:
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
-                    !class_allowed(i, you.char_class))
+                !class_allowed(static_cast<species_type>(i), you.char_class))
                 continue;
 
             char buf[100];
@@ -3070,14 +3102,14 @@ spec_query:
             return false;
         }
         set_startup_options();
-        you.species = 0;
+        you.species = SP_UNKNOWN;
         you.char_class = JOB_UNKNOWN;
         return true;
     }
 
     if (keyn == CK_BKSP || keyn == ' ')
     {
-        you.species = 0;
+        you.species = SP_UNKNOWN;
         Options.race = 0;
         return true;
     }
@@ -3102,7 +3134,7 @@ spec_query:
         return !pick_tutorial();
     }
 
-    if (!(you.species = letter_to_species(keyn)))
+    if ((you.species = letter_to_species(keyn)) == SP_UNKNOWN)
     {
         switch (keyn)
         {
@@ -3119,7 +3151,7 @@ spec_query:
             goto spec_query;
         }
     }
-    if (you.species && you.char_class != JOB_UNKNOWN
+    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
             && !class_allowed(you.species, you.char_class))
         goto spec_query;
 
@@ -3136,13 +3168,12 @@ spec_query:
 bool choose_class(void)
 {
     char keyn;
-    int i,j;
 
     bool printed = false;
     if (Options.cls != 0)
         printed = true;
 
-    if (you.species && you.char_class != JOB_UNKNOWN)
+    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN)
         return true;
 
     ng_cls = 0;
@@ -3153,30 +3184,14 @@ job_query:
     {
         clrscr();
 
-        if (you.species)
+        if (you.species != SP_UNKNOWN)
         {
             textcolor( BROWN );
-            bool shortgreet = false;
-            if (strlen(you.your_name) || you.species)
-                cprintf("Welcome, ");
-            else
-            {
-                cprintf("Welcome.");
-                shortgreet = true;
-            }
-
+            cprintf("Welcome, ");
             textcolor( YELLOW );
-            if (strlen(you.your_name) > 0)
-            {
-                cprintf("%s", you.your_name);
-                if (you.species)
-                    cprintf(" the ");
-            }
-            if (you.species)
-                cprintf("%s", species_name(you.species,you.experience_level));
-
-            if (!shortgreet)
-                cprintf(".");
+            if (you.your_name[0])
+                cprintf("%s the ", you.your_name);
+            cprintf("%s.", species_name(you.species,you.experience_level));
         }
         else
         {
@@ -3187,17 +3202,15 @@ job_query:
 
         cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be:");
-        cprintf("  (Press ? for more information)"); 
-        cprintf(EOL EOL);
-
+        cprintf("You can be: (Press ? for more information)" EOL EOL);
         textcolor( LIGHTGREY );
 
-        j = 0;               // used within for loop to determine newline {dlb}
-
-        for (i = 0; i < NUM_JOBS; i++)
+        int j = 0;
+        for (int i = 0; i < NUM_JOBS; i++)
         {
-            if (you.species? !class_allowed(you.species, i) : i == JOB_QUITTER)
+            if (you.species != SP_UNKNOWN ?
+                !class_allowed(you.species, static_cast<job_type>(i)) :
+                i == JOB_QUITTER)
                 continue;
 
             char letter = index_to_letter(i);
@@ -3221,7 +3234,7 @@ job_query:
             cprintf(EOL);
 
         textcolor( BROWN );
-        if (!you.species)
+        if (you.species == SP_UNKNOWN)
             cprintf(EOL
                     "SPACE - Choose species first; * - Random Class; "
                     "! - Random Character; X - Quit"
@@ -3280,7 +3293,7 @@ job_query:
         set_startup_options();
 
         // Toss out old species selection, if any.
-        you.species = 0;
+        you.species = SP_UNKNOWN;
         you.char_class = JOB_UNKNOWN;
 
         return false;
@@ -3293,22 +3306,22 @@ job_query:
             // pick a job at random... see god retribution for proof this
             // is uniform. -- bwr
             int job_count = 0;
-            int job = -1;
+            job_type job = JOB_UNKNOWN;
 
-            for (i = 0; i < NUM_JOBS; i++)
+            for (int i = 0; i < NUM_JOBS; i++)
             {
                 if ( i == JOB_QUITTER )
                     continue;
 
-                if (!you.species || class_allowed(you.species, i))
+                if (you.species == SP_UNKNOWN ||
+                    class_allowed(you.species, static_cast<job_type>(i)))
                 {
                     job_count++;
                     if (one_chance_in( job_count ))
-                        job = i;
+                        job = static_cast<job_type>(i);
                 }
             }
-
-            ASSERT( job != -1 );  // at least one class should have been allowed
+            ASSERT( job != JOB_UNKNOWN );
             you.char_class = job;
 
             ng_cls = '*';
@@ -3325,7 +3338,7 @@ job_query:
         {
             return pick_tutorial();
         }        
-        else if ((keyn == ' ' && !you.species) ||
+        else if ((keyn == ' ' && you.species == SP_UNKNOWN) ||
                     keyn == 'x' || keyn == ESCAPE || keyn == CK_BKSP)
         {
             you.char_class = JOB_UNKNOWN;
@@ -4273,6 +4286,9 @@ void give_items_skills()
             you.inv[2].sub_type = BOOK_YOUNG_POISONERS;
             you.skills[SK_POISON_MAGIC] = 4;
             break;
+
+        default:
+            break;
         }
 
         if (you.species == SP_OGRE_MAGE)
@@ -4849,6 +4865,9 @@ void give_items_skills()
 
     case JOB_WANDERER:
         create_wanderer();
+        break;
+
+    default:
         break;
     }
 

@@ -1001,7 +1001,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.level_type = static_cast<level_area_type>( unmarshallByte(th) );
     you.synch_time = unmarshallByte(th);
     you.disease = unmarshallByte(th);
-    you.species = unmarshallByte(th);
+    you.species = static_cast<species_type>(unmarshallByte(th));
     you.hp = unmarshallShort(th);
     you.haste = unmarshallByte(th);
     you.might = unmarshallByte(th);
@@ -1028,7 +1028,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.experience = unmarshallLong(th);
     you.gold = unmarshallLong(th);
 
-    you.char_class = unmarshallByte(th);
+    you.char_class = static_cast<job_type>(unmarshallByte(th));
     you.experience_level = unmarshallByte(th);
     you.exp_available = unmarshallLong(th);
 

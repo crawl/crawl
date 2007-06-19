@@ -576,7 +576,8 @@ public:
   unsigned char prev_targ;
   char your_name[kNameLen];
 
-  unsigned char species;
+  species_type species;
+  job_type char_class;
 
   // Coordinates of last travel target; note that this is never used by
   // travel itself, only by the level-map to remember the last travel target.
@@ -648,7 +649,6 @@ public:
   unsigned long experience;
   int experience_level;
   int gold;
-  int char_class;
   char class_name[30];
   int time_taken;
 

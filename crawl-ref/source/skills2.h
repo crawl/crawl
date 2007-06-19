@@ -15,9 +15,9 @@
 #ifndef SKILLS2_H
 #define SKILLS2_H
 
-#include <stddef.h>  // For NULL
-
 #define MAX_SKILL_ORDER         100
+
+#include "enum.h"
 
 // last_updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -70,7 +70,7 @@ int calc_hp(void);
 /* ***********************************************************************
  * called from: newgame - skills - skills2
  * *********************************************************************** */
-int species_skills(int skill, int species);
+int species_skills(int skill, species_type species);
 
 
 // last_updated 24may2000 {dlb}

@@ -133,7 +133,7 @@ bool pick_tutorial()
         {
             // in this case, undo previous choices
             // set_startup_options(); 
-            you.species = 0;
+            you.species = SP_UNKNOWN;
             you.char_class = JOB_UNKNOWN;
             Options.race = 0;
             Options.cls = 0;

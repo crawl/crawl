@@ -2327,7 +2327,7 @@ unsigned int skill_exp_needed(int lev)
 }
 
 
-int species_skills(int skill, int species)
+int species_skills(int skill, species_type species)
 {
     return spec_skills[species - 1][skill];
 }

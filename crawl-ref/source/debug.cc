@@ -218,7 +218,7 @@ void debug_change_species( void )
     if (specs[0] == '\0')
         return;
 
-    int sp = -1;
+    species_type sp = SP_UNKNOWN;
 
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
@@ -231,15 +231,15 @@ void debug_change_species( void )
             if (ptr == sp_name && strlen(specs) > 0)
             {
                 // we prefer prefixes over partial matches
-                sp = i;
+                sp = static_cast<species_type>(i);
                 break;
             }
             else
-                sp = i;
+                sp = static_cast<species_type>(i);
         }
     }
 
-    if (sp == -1)
+    if (sp == SP_UNKNOWN)
         mpr( "That species isn't available." );
     else
     {

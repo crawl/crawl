@@ -2570,6 +2570,9 @@ void level_change(void)
                     case SP_BASE_DRACONIAN:
                         mpr("");
                         break;
+
+                    default:
+                        break;
                     }
                     more();
                     redraw_screen();
@@ -2793,6 +2796,10 @@ void level_change(void)
 
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_RANDOM, 1, false);
+                break;
+
+            case NUM_SPECIES:
+            case SP_UNKNOWN:
                 break;
             }
         }
@@ -3734,7 +3741,7 @@ int scan_randarts(char which_property, bool calc_unid)
     return (retval);
 }                               // end scan_randarts()
 
-void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg)
 {
     char *ptr_stat = NULL;
     char *ptr_stat_max = NULL;
@@ -3752,7 +3759,7 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
     std::string msg = "You feel ";
 
     if (which_stat == STAT_RANDOM)
-        which_stat = random2(NUM_STATS);
+        which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
     switch (which_stat)
     {
@@ -3775,6 +3782,9 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
         ptr_stat_max = &you.max_intel;
         ptr_redraw = &you.redraw_intelligence;
         msg += ((amount > 0) ? "clever." : "stupid.");
+        break;
+
+    default:
         break;
     }
 

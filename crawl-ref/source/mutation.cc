@@ -1069,6 +1069,9 @@ formatted_string describe_mutations()
         result += "You can tolerate rotten meat." EOL;
         have_any = true;
         break;
+
+    default:
+        break;
     }                           //end switch - innate abilities
     
     // a bit more stuff

@@ -1678,6 +1678,9 @@ std::string status_mut_abilities()
           text += "saprovore 1";
           have_any = true;
           break;
+
+      default:
+          break;
     }                           //end switch - innate abilities
 
     // a bit more stuff
