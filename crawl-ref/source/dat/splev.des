@@ -927,13 +927,14 @@ KFEAT:   Z = weight:2 teleport trap / .
 KFEAT:   z = teleport trap
 MONS:    naga / nothing, greater naga / nothing, guardian naga / nothing
 MONS:    naga warrior / nothing, naga mage / nothing
-SUBST:   ':'x, ":"x
+SHUFFLE: '"
+SUBST:   ':''x, ":"x
 SUBST:   ' = .:250 1 2 3 4:15 5:5
 SUBST:   " = .:250 1 2 3 4:5  5:15
 SUBST:   X=xc.+, Y=xc+
 SUBST:   T : T U V .:30 b
 SUBST:   _:.!, !:!.x, !=x .:2
-SHUFFLE: 123, 45
+SHUFFLE: 123, 45, ([<
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -959,11 +960,11 @@ xxxxxxxx!......_x.11.4..3..5.22.x_......!xxx
 xxxxxxx!...2...x..11.........22..x...1...!xx
 xxxxxxx!..2..._x......T...T......x_...1..!xx
 xxxxxx!...2...x..2.............1..x...1...!x
-xxxxxx!..2....x.........}.........x....1...!
-xxxxxx!.......x....T...).]...T.............@
+xxxxxx!..2....x.........{.........x....1...!
+xxxxxx!.......x....T...(.[...T.............@
 xxxxxx!..2....x.......ZZZZZ.......x....1...!
 xxxxxxx!..2..._x.................x_...1..!xx
-xxxxxxx!...2..._xx....T.<.T....xx_...1...!xx
+xxxxxxx!...2..._xx....T.}.T....xx_...1...!xx
 xxxxxxx!........._xx.........xx_.........!xx
 xxxxxxxx!.........._xxx...xxx_..........!xxx
 xxxxxxxxx!.............x.x.............!xxxx
