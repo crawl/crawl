@@ -12,15 +12,32 @@ extern "C" {
 #include <cstdio>
 #include <cstdarg>
 #include <string>
+#include <map>
 #include <set>
 
 #include "libutil.h"
 #include "externs.h"
 
+class CLua;
+class lua_call_throttle
+{
+public:
+    lua_call_throttle(CLua *handle);
+    ~lua_call_throttle();
+
+    static CLua *find_clua(lua_State *ls);
+    
+private:
+    CLua *lua;
+
+    typedef std::map<lua_State *, CLua *> lua_clua_map;
+    static lua_clua_map lua_map;
+};
+
 class CLua
 {
 public:
-    CLua();
+    CLua(bool managed);
     ~CLua();
 
     lua_State *state();
@@ -53,17 +70,36 @@ public:
 
     static int file_write(lua_State *ls);
 
+public:
     std::string error;
+
+    // If managed_vm is set, we have to take steps to control badly-behaved
+    // scripts.
+    bool managed_vm;
+    int throttle_unit_lines;
+    int throttle_sleep_ms;
+    int throttle_sleep_start, throttle_sleep_end;
+    int n_throttle_sleeps;
+    int mixed_call_depth;
+    int lua_call_depth;
+    int max_mixed_call_depth;
+    int max_lua_call_depth;
+
+    static const int MAX_THROTTLE_SLEEPS = 100;
+
 private:
     lua_State *_state;
     typedef std::set<std::string> sfset;
     sfset sourced_files;
     unsigned long uniqindex;
 
+private:
     void init_lua();
     void set_error(int err, lua_State *ls = NULL);
     void load_cmacro();
     void load_chooks();
+    void init_throttle();
+    void guard_pcall();
 
     void vfnreturns(const char *par, va_list va);
 
@@ -83,6 +119,8 @@ private:
 
         FILE *get_file();
     };
+
+    friend class lua_call_throttle;
 };
 
 class lua_text_pattern : public base_pattern
