@@ -1465,61 +1465,64 @@ void disarm_trap( struct dist &disa )
     exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level / 5));
 }                               // end disarm_trap()
 
-void weird_writing(char stringy[40])
+std::string weird_writing()
 {
-    int temp_rand = 0;          // for probability determinations {dlb}
+    int temp_rand;             // for probability determinations {dlb}
+    std::string result;
 
     temp_rand = random2(15);
+    result =
+        (temp_rand == 0) ? "writhing" :
+        (temp_rand == 1) ? "bold" :
+        (temp_rand == 2) ? "faint" :
+        (temp_rand == 3) ? "spidery" :
+        (temp_rand == 4) ? "blocky" :
+        (temp_rand == 5) ? "angular" :
+        (temp_rand == 6) ? "shimmering" :
+        (temp_rand == 7) ? "glowing"
+                         : "";
 
-    // you'll see why later on {dlb}
-    strcpy(stringy, (temp_rand == 0) ? "writhing" :
-                    (temp_rand == 1) ? "bold" :
-                    (temp_rand == 2) ? "faint" :
-                    (temp_rand == 3) ? "spidery" :
-                    (temp_rand == 4) ? "blocky" :
-                    (temp_rand == 5) ? "angular" :
-                    (temp_rand == 6) ? "shimmering" :
-                    (temp_rand == 7) ? "glowing" : "");
-
-    if (temp_rand < 8)
-        strcat(stringy, " ");   // see above for reasoning {dlb}
-
-    temp_rand = random2(14);
-
-    strcat(stringy, (temp_rand ==  0) ? "yellow" :
-                    (temp_rand ==  1) ? "brown" :
-                    (temp_rand ==  2) ? "black" :
-                    (temp_rand ==  3) ? "purple" :
-                    (temp_rand ==  4) ? "orange" :
-                    (temp_rand ==  5) ? "lime-green" :
-                    (temp_rand ==  6) ? "blue" :
-                    (temp_rand ==  7) ? "grey" :
-                    (temp_rand ==  8) ? "silver" :
-                    (temp_rand ==  9) ? "gold" :
-                    (temp_rand == 10) ? "umber" :
-                    (temp_rand == 11) ? "charcoal" :
-                    (temp_rand == 12) ? "pastel" :
-                    (temp_rand == 13) ? "mauve"
-                                      : "colourless");
-
-    strcat(stringy, " ");
+    if (!result.empty())
+        result += ' ';
 
     temp_rand = random2(14);
 
-    strcat(stringy, (temp_rand == 0) ? "writing" :
-                    (temp_rand == 1) ? "scrawl" :
-                    (temp_rand == 2) ? "sigils" :
-                    (temp_rand == 3) ? "runes" :
-                    (temp_rand == 4) ? "hieroglyphics" :
-                    (temp_rand == 5) ? "scrawl" :
-                    (temp_rand == 6) ? "print-out" :
-                    (temp_rand == 7) ? "binary code" :
-                    (temp_rand == 8) ? "glyphs" :
-                    (temp_rand == 9) ? "symbols"
-                                     : "text");
+    result +=
+        (temp_rand ==  0) ? "yellow" :
+        (temp_rand ==  1) ? "brown" :
+        (temp_rand ==  2) ? "black" :
+        (temp_rand ==  3) ? "purple" :
+        (temp_rand ==  4) ? "orange" :
+        (temp_rand ==  5) ? "lime-green" :
+        (temp_rand ==  6) ? "blue" :
+        (temp_rand ==  7) ? "grey" :
+        (temp_rand ==  8) ? "silver" :
+        (temp_rand ==  9) ? "gold" :
+        (temp_rand == 10) ? "umber" :
+        (temp_rand == 11) ? "charcoal" :
+        (temp_rand == 12) ? "pastel" :
+        (temp_rand == 13) ? "mauve"
+                          : "colourless";
 
-    return;
-}                               // end weird_writing()
+    result += ' ';
+
+    temp_rand = random2(14);
+
+    result +=
+        (temp_rand == 0) ? "writing" :
+        (temp_rand == 1) ? "scrawl" :
+        (temp_rand == 2) ? "sigils" :
+        (temp_rand == 3) ? "runes" :
+        (temp_rand == 4) ? "hieroglyphics" :
+        (temp_rand == 5) ? "scrawl" :
+        (temp_rand == 6) ? "print-out" :
+        (temp_rand == 7) ? "binary code" :
+        (temp_rand == 8) ? "glyphs" :
+        (temp_rand == 9) ? "symbols"
+                         : "text";
+
+    return result;
+}
 
 // returns true if we manage to scramble free.
 bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
@@ -1635,47 +1638,50 @@ bool scramble(void)
         return true;
 }                               // end scramble()
 
-void weird_colours(unsigned char coll, char wc[30])
+std::string weird_colours(unsigned char coll)
 {
     unsigned char coll_div16 = coll / 16; // conceivable max is then 16 {dlb}
+    std::string result;
 
     // Must start with a consonant!
-    strcpy(wc, (coll_div16 == 0 || coll_div16 ==  7) ? "brilliant" :
-               (coll_div16 == 1 || coll_div16 ==  8) ? "pale" :
-               (coll_div16 == 2 || coll_div16 ==  9) ? "mottled" :
-               (coll_div16 == 3 || coll_div16 == 10) ? "shimmering" :
-               (coll_div16 == 4 || coll_div16 == 11) ? "bright" :
-               (coll_div16 == 5 || coll_div16 == 12) ? "dark" :
-               (coll_div16 == 6 || coll_div16 == 13) ? "shining"
-                                                     : "faint");
+    result =
+        (coll_div16 == 0 || coll_div16 ==  7) ? "brilliant" :
+        (coll_div16 == 1 || coll_div16 ==  8) ? "pale" :
+        (coll_div16 == 2 || coll_div16 ==  9) ? "mottled" :
+        (coll_div16 == 3 || coll_div16 == 10) ? "shimmering" :
+        (coll_div16 == 4 || coll_div16 == 11) ? "bright" :
+        (coll_div16 == 5 || coll_div16 == 12) ? "dark" :
+        (coll_div16 == 6 || coll_div16 == 13) ? "shining"
+                                              : "faint";
 
-    strcat(wc, " ");
+    result += ' ';
 
     while (coll > 17)
         coll -= 10;
 
-    strcat(wc, (coll ==  0) ? "red" :
-               (coll ==  1) ? "purple" :
-               (coll ==  2) ? "green" :
-               (coll ==  3) ? "orange" :
-               (coll ==  4) ? "magenta" :
-               (coll ==  5) ? "black" :
-               (coll ==  6) ? "grey" :
-               (coll ==  7) ? "silver" :
-               (coll ==  8) ? "gold" :
-               (coll ==  9) ? "pink" :
-               (coll == 10) ? "yellow" :
-               (coll == 11) ? "white" :
-               (coll == 12) ? "brown" :
-               (coll == 13) ? "aubergine" :
-               (coll == 14) ? "ochre" :
-               (coll == 15) ? "leaf green" :
-               (coll == 16) ? "mauve" :
-               (coll == 17) ? "azure"
-                            : "colourless");
+    result +=
+        (coll ==  0) ? "red" :
+        (coll ==  1) ? "purple" :
+        (coll ==  2) ? "green" :
+        (coll ==  3) ? "orange" :
+        (coll ==  4) ? "magenta" :
+        (coll ==  5) ? "black" :
+        (coll ==  6) ? "grey" :
+        (coll ==  7) ? "silver" :
+        (coll ==  8) ? "gold" :
+        (coll ==  9) ? "pink" :
+        (coll == 10) ? "yellow" :
+        (coll == 11) ? "white" :
+        (coll == 12) ? "brown" :
+        (coll == 13) ? "aubergine" :
+        (coll == 14) ? "ochre" :
+        (coll == 15) ? "leaf green" :
+        (coll == 16) ? "mauve" :
+        (coll == 17) ? "azure"
+                     : "colourless";
 
-    return;
-}                               // end weird_colours()
+    return result;
+}
 
 bool go_berserk(bool intentional)
 {

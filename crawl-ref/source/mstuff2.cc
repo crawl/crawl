@@ -1977,14 +1977,9 @@ static int monster_abjuration(bool friendly, int pow, bool test)
 
 bool silver_statue_effects(monsters *mons)
 {
-    if ((mons_player_visible(mons) || one_chance_in(3))
-            && !one_chance_in(3))
+    if ((mons_player_visible(mons) || one_chance_in(3)) && !one_chance_in(3))
     {
-        char wc[30];
-
-        weird_colours( random2(256), wc );
-        std::string msg = "'s eyes glow ";
-        msg += wc;
+        const std::string msg = "'s eyes glow " + weird_colours(random2(256));
         simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
 
         create_monster( summon_any_demon((coinflip() ? DEMON_COMMON

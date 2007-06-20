@@ -378,14 +378,13 @@ void mons_direct_effect(struct bolt &pbolt, int i)
 
 void random_uselessness(unsigned char ru, unsigned char sc_read_2)
 {
-    char wc[30];
     int temp_rand = 0;          // probability determination {dlb}
 
     switch (ru)
     {
     case 0:
-        weird_colours(random2(256), wc);
-        mprf("The dust glows a %s colour!", wc);
+        msg::stream << "The dust glows a " << weird_colours(random2(256))
+                    << " colour!" << std::endl;
         break;
 
     case 1:
@@ -396,10 +395,9 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     case 2:
         if (you.equip[EQ_WEAPON] != -1)
         {
-            weird_colours(random2(256), wc);
-            mprf("%s glows %s for a moment.",
-                 you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR).c_str(),
-                 wc);
+            msg::stream << you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR)
+                        << " glows " << weird_colours(random2(256))
+                        << " for a moment." << std::endl;
         }
         else
         {
@@ -481,7 +479,6 @@ bool acquirement(object_class_type force_class, int agent)
     unsigned char type_wanted = OBJ_RANDOM;
 
     unsigned char unique = 1;
-    unsigned char acqc = 0;
 
     const int max_has_value = 100;
     FixedVector< int, max_has_value > already_has;
@@ -490,8 +487,7 @@ bool acquirement(object_class_type force_class, int agent)
     char best_any = 99;
     unsigned char keyin;
 
-    for (acqc = 0; acqc < max_has_value; acqc++)
-        already_has[acqc] = 0;
+    already_has.init(0);
 
     int spell_skills = 0;
     for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
@@ -530,7 +526,7 @@ bool acquirement(object_class_type force_class, int agent)
     else
         class_wanted = force_class;
 
-    for (acqc = 0; acqc < ENDOFPACK; acqc++)
+    for (int acqc = 0; acqc < ENDOFPACK; acqc++)
     {
         if (is_valid_item( you.inv[acqc] )
                 && you.inv[acqc].base_type == class_wanted)
@@ -1200,19 +1196,19 @@ bool acquirement(object_class_type force_class, int agent)
                 || thing.sub_type == BOOK_MINOR_MAGIC_II
                 || thing.sub_type == BOOK_MINOR_MAGIC_III)
             {
-                you.had_book[ BOOK_MINOR_MAGIC_I ] = 1;    
-                you.had_book[ BOOK_MINOR_MAGIC_II ] = 1;    
-                you.had_book[ BOOK_MINOR_MAGIC_III ] = 1;    
+                you.had_book[ BOOK_MINOR_MAGIC_I ] = true;
+                you.had_book[ BOOK_MINOR_MAGIC_II ] = true;
+                you.had_book[ BOOK_MINOR_MAGIC_III ] = true;
             }
             else if (thing.sub_type == BOOK_CONJURATIONS_I
                 || thing.sub_type == BOOK_CONJURATIONS_II)
             {
-                you.had_book[ BOOK_CONJURATIONS_I ] = 1;    
-                you.had_book[ BOOK_CONJURATIONS_II ] = 1;    
+                you.had_book[ BOOK_CONJURATIONS_I ] = true;
+                you.had_book[ BOOK_CONJURATIONS_II ] = true;
             }
             else
             {
-                you.had_book[ thing.sub_type ] = 1;    
+                you.had_book[ thing.sub_type ] = true;
             }
         }
         else if (thing.base_type == OBJ_JEWELLERY)

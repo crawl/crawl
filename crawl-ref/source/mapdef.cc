@@ -956,7 +956,7 @@ int mons_list::fix_demon(int demon) const
     demon = -100 - demon;
     if (demon == DEMON_RANDOM)
         demon = random2(DEMON_RANDOM);
-    return (summon_any_demon( demon ));
+    return (summon_any_demon( static_cast<demon_class_type>(demon) ));
 }
 
 mons_spec mons_list::pick_monster(mons_spec_slot &slot)

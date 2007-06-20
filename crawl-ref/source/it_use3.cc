@@ -798,11 +798,8 @@ void tome_of_power(char sc_read_2)
     spell_type spell_casted = SPELL_NO_SPELL;
     struct bolt beam;
 
-
-    char wc[40];
-    weird_writing( wc );
-    
-    mprf("The book opens to a page covered in %s.", wc);
+    msg::stream << "The book opens to a page covered in "
+                << weird_writing() << '.' << std::endl;
 
     you.turn_is_over = true;
 

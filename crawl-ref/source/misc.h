@@ -115,14 +115,14 @@ void up_stairs(void);
 /* ***********************************************************************
  * called from: acr - effects
  * *********************************************************************** */
-void weird_colours(unsigned char coll, char wc[30]);
+std::string weird_colours(unsigned char coll);
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: it_use3
  * *********************************************************************** */
-void weird_writing(char stringy[40]);
+std::string weird_writing();
 
 
 // last updated 3jun2000 {dlb}

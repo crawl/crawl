@@ -1028,21 +1028,21 @@ unsigned char read_book( item_def &book, int action )
 
     if (book.base_type == OBJ_BOOKS)
     {
-        you.had_book[ book.sub_type ] = 1;
+        you.had_book[ book.sub_type ] = true;
 
         if ( book.sub_type == BOOK_MINOR_MAGIC_I
             || book.sub_type == BOOK_MINOR_MAGIC_II
             || book.sub_type == BOOK_MINOR_MAGIC_III)
         {
-            you.had_book[BOOK_MINOR_MAGIC_I] = 1;
-            you.had_book[BOOK_MINOR_MAGIC_II] = 1;
-            you.had_book[BOOK_MINOR_MAGIC_III] = 1;
+            you.had_book[BOOK_MINOR_MAGIC_I] = true;
+            you.had_book[BOOK_MINOR_MAGIC_II] = true;
+            you.had_book[BOOK_MINOR_MAGIC_III] = true;
         }
         else if (book.sub_type == BOOK_CONJURATIONS_I
              || book.sub_type == BOOK_CONJURATIONS_II)
         {
-            you.had_book[BOOK_CONJURATIONS_I] = 1;
-            you.had_book[BOOK_CONJURATIONS_II] = 1;
+            you.had_book[BOOK_CONJURATIONS_I] = true;
+            you.had_book[BOOK_CONJURATIONS_II] = true;
         }
     }
 
