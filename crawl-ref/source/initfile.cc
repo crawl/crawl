@@ -1135,8 +1135,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
             {
 #ifdef CLUA_BINDINGS
                 clua.execstring(luacode.c_str());
-                if (clua.error.length())
-                    fprintf(stderr, "Lua error: %s\n", clua.error.c_str());
+                if (!clua.error.empty())
+                    mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
                 luacode.clear();
 #endif
             }
@@ -1150,9 +1150,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
             if (runscript)
             {
                 clua.execstring(luacode.c_str());
-                if (clua.error.length())
-                    fprintf(stderr, "Lua error: %s\n",
-                            clua.error.c_str());
+                if (!clua.error.empty())
+                    mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
             }
 #endif
             luacode.clear();
@@ -1185,10 +1184,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
         if (l_init)
             luacond += "]] )\n";
         clua.execstring(luacond.c_str());
-        if (clua.error.length())
-        {
-            mpr( ("Lua error: " + clua.error).c_str() );
-        }
+        if (!clua.error.empty())
+            mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
     }
 #endif
 
@@ -1535,8 +1532,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
         {
             clua.execfile(lua_file.c_str());
-            if (clua.error.length())
-                fprintf(stderr, "Lua error: %s\n", clua.error.c_str());
+            if (!clua.error.empty())
+                mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
         }
 #endif
     }
@@ -2344,7 +2341,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             pickup_mode = read_bool_or_number(field, pickup_mode, "auto:");
     }
     // Catch-all else, copies option into map
-    else
+    else if (runscript)
     {
 #ifdef CLUA_BINDINGS
         if (!clua.callbooleanfn(false, "c_process_lua_option", "ss", 
@@ -2352,8 +2349,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
         {
 #ifdef CLUA_BINDINGS
-            if (clua.error.length())
-                mpr(clua.error.c_str());
+            if (!clua.error.empty())
+                mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
 #endif
             named_options[key] = orig_field;
         }

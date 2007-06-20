@@ -42,6 +42,9 @@
 
 #include <cctype>
 
+#define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
+#define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
+
 #define CL_RESETSTACK_RETURN(ls, oldtop, retval) \
     if (true) \
     {\
@@ -53,9 +56,19 @@
     } \
     else
 
-CLua clua;
+static void clua_throttle_hook(lua_State *, lua_Debug *);
+static int clua_guarded_pcall(lua_State *);
 
-CLua::CLua() : _state(NULL), sourced_files(), uniqindex(0L)
+CLua clua(true);
+
+const int CLua::MAX_THROTTLE_SLEEPS;
+
+CLua::CLua(bool managed)
+    : error(), managed_vm(managed), throttle_unit_lines(10000),
+      throttle_sleep_ms(0), throttle_sleep_start(2),
+      throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
+      lua_call_depth(0), max_mixed_call_depth(8),
+      max_lua_call_depth(100), _state(NULL), sourced_files(), uniqindex(0L)
 {
 }
 
@@ -165,6 +178,29 @@ void CLua::set_error(int err, lua_State *ls)
     error = serr? serr : "<Unknown error>";
 }
 
+void CLua::init_throttle()
+{
+    if (!managed_vm)
+        return;
+    
+    if (throttle_unit_lines <= 0)
+        throttle_unit_lines = 500;
+
+    if (throttle_sleep_start < 1)
+        throttle_sleep_start = 1;
+
+    if (throttle_sleep_end < throttle_sleep_start)
+        throttle_sleep_end = throttle_sleep_start;
+    
+    if (!mixed_call_depth)
+    {
+        lua_sethook(_state, clua_throttle_hook,
+                    LUA_MASKCOUNT, throttle_unit_lines);
+        throttle_sleep_ms = 0;
+        n_throttle_sleeps = 0;
+    }
+}
+
 int CLua::execstring(const char *s, const char *context)
 {
     lua_State *ls = state();
@@ -174,6 +210,7 @@ int CLua::execstring(const char *s, const char *context)
         set_error(err, ls);
         return err;
     }
+    lua_call_throttle strangler(this);
     err = lua_pcall(ls, 0, 0, 0);
     set_error(err, ls);
     return err;
@@ -200,6 +237,7 @@ int CLua::execfile(const char *filename)
         return -1;
     
     int err = luaL_loadfile(ls, filename);
+    lua_call_throttle strangler(this);
     if (!err)
         err = lua_pcall(ls, 0, 0, 0);
     set_error(err);
@@ -399,6 +437,7 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     int argc = push_args(ls, params, args, copyto);
     if (retc == -1)
         retc = return_count(ls, params);
+    lua_call_throttle strangler(this);
     int err = lua_pcall(ls, argc, retc, 0);
     set_error(err, ls);
     return (!err);
@@ -481,6 +520,8 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     // Slide the function in front of its args and call it.
     if (nargs)
         lua_insert(ls, -nargs - 1);
+
+    lua_call_throttle strangler(this);
     int err = lua_pcall(ls, nargs, nret, 0);
     set_error(err, ls);
     return !err;
@@ -526,6 +567,18 @@ void CLua::init_lua()
 
     load_cmacro();
     load_chooks();
+
+    if (managed_vm)
+        guard_pcall();
+}
+
+void CLua::guard_pcall()
+{
+    // Replace Lua's pcall() with our own version which doesn't swallow
+    // 666: errors that we generate for buggy or malicious scripts that try
+    // to hog CPU.
+
+    lua_register(_state, "pcall", clua_guarded_pcall);
 }
 
 void CLua::load_chooks()
@@ -2324,6 +2377,95 @@ bool lua_text_pattern::translate() const
     }
 
     return translated;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+lua_call_throttle::lua_clua_map lua_call_throttle::lua_map;
+
+static void clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
+{
+    CLua *lua = lua_call_throttle::find_clua(ls);
+
+    // Co-routines can create a new Lua state; in such cases, we must
+    // fudge it.
+    if (!lua)
+        lua = &clua;
+    
+    if (lua)
+    {
+        if (!lua->throttle_sleep_ms)
+            lua->throttle_sleep_ms = lua->throttle_sleep_start;
+        else if (lua->throttle_sleep_ms < lua->throttle_sleep_end)
+            lua->throttle_sleep_ms *= 2;
+
+        ++lua->n_throttle_sleeps;
+
+        delay(lua->throttle_sleep_ms);
+
+        // Try to kill the annoying script.
+        if (lua->n_throttle_sleeps > CLua::MAX_THROTTLE_SLEEPS)
+        {
+            lua->n_throttle_sleeps = CLua::MAX_THROTTLE_SLEEPS;
+            luaL_error(ls, BUGGY_SCRIPT_ERROR);
+        }
+    }
+}
+
+// This function is a replacement for Lua's in-built pcall function. It behaves
+// like pcall in all respects (as documented in the Lua 5.1 reference manual),
+// but does not allow the Lua chunk/script to catch errors thrown by the
+// Lua-throttling code. This is necessary so that we can interrupt scripts that
+// are hogging CPU.
+//
+// If we did not intercept pcall, the script could do the equivalent
+// of this:
+// 
+//    while true do
+//      pcall(function () while true do end end)
+//    end
+//
+// And there's a good chance we wouldn't be able to interrupt the
+// deadloop because our errors would get caught by the pcall (more
+// levels of nesting would just increase the chance of the script
+// beating our throttling).
+//
+static int clua_guarded_pcall(lua_State *ls)
+{
+    const int nargs = lua_gettop(ls);
+    const int err = lua_pcall(ls, nargs - 1, LUA_MULTRET, 0);
+
+    if (err)
+    {
+        const char *errs = lua_tostring(ls, 1);
+        if (!errs || strstr(errs, BUGGY_SCRIPT_ERROR))
+            luaL_error(ls, errs? errs : BUGGY_PCALL_ERROR);
+    }
+    
+    lua_pushboolean(ls, !err);
+    lua_insert(ls, 1);
+
+    return (lua_gettop(ls));
+}
+
+lua_call_throttle::lua_call_throttle(CLua *_lua)
+    : lua(_lua)
+{
+    lua->init_throttle();
+    if (!lua->mixed_call_depth++)
+        lua_map[lua->state()] = lua;
+}
+
+lua_call_throttle::~lua_call_throttle()
+{
+    if (!--lua->mixed_call_depth)
+        lua_map.erase(lua->state());
+}
+
+CLua *lua_call_throttle::find_clua(lua_State *ls)
+{
+    lua_clua_map::iterator i = lua_map.find(ls);
+    return (i != lua_map.end()? i->second : NULL);
 }
 
 #endif // CLUA_BINDINGS

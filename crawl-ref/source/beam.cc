@@ -2439,7 +2439,8 @@ int affect(struct bolt &beam, int x, int y)
     // if there is a monster at this location, affect it
     // submerged monsters aren't really there -- bwr
     int mid = mgrd[x][y];
-    if (mid != NON_MONSTER && !menv[mid].has_ench( ENCH_SUBMERGED ))
+    if (mid != NON_MONSTER && menv[mid].alive()
+        && !menv[mid].has_ench( ENCH_SUBMERGED ))
     {
         if (!beam.is_big_cloud
             && (!beam.is_explosion || beam.in_explosion_phase))
