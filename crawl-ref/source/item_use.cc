@@ -3637,7 +3637,7 @@ void use_randart(const item_def &item)
 
     if (!alreadyknown && dangerous)
     {
-        // Xom loves it when you use an unknown random artifact and
+        // Xom loves it when you use an unknown random artefact and
         // there is a dangerous monster nearby...
         xom_is_stimulated(256);
     }

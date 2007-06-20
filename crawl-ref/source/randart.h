@@ -1,6 +1,6 @@
 /*
  *  File:       randart.cc
- *  Summary:    Random and unrandom artifact functions.
+ *  Summary:    Random and unrandom artefact functions.
  *  Written by: Linley Henzell
  *
  *  Change History (most recent first):

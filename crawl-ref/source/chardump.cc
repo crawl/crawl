@@ -12,7 +12,7 @@
  * <3> 6/13/99         BWR Improved spell listing
  * <2> 5/30/99         JDJ dump_spells dumps failure rates (from Brent).
  * <1> 4/20/99         JDJ Reformatted, uses string objects, split out 7
- *                         functions from dump_char, dumps artifact info.
+ *                         functions from dump_char, dumps artefact info.
  */
 
 #include "AppHdr.h"
@@ -561,7 +561,7 @@ static bool dump_item_origin(const item_def &item, int value)
     if (flags == IODS_EVERYTHING)
         return (true);
 
-    if (fs(IODS_ARTIFACTS)
+    if (fs(IODS_ARTEFACTS)
             && (is_random_artefact(item) || is_fixed_artefact(item))
             && item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return (true);
@@ -698,7 +698,7 @@ static void sdump_inventory(const std::string &, std::string & text)
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
 
-                        if (is_dumpable_artifact( you.inv[j], false ))
+                        if (is_dumpable_artefact( you.inv[j], false ))
                         {
                             text2 = get_item_description( you.inv[j], 
                                                           false,

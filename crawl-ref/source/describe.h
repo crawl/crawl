@@ -23,7 +23,7 @@
 /* ***********************************************************************
  * called from: chardump - spells4
  * *********************************************************************** */
-bool is_dumpable_artifact( const item_def &item, bool verbose );
+bool is_dumpable_artefact( const item_def &item, bool verbose );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

@@ -693,7 +693,7 @@ void game_options::reset_options()
     
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 7;
-    dump_item_origins      = IODS_ARTIFACTS | IODS_RODS;
+    dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
     dump_item_origin_price = -1;
 
     drop_mode              = DM_MULTI;
@@ -2377,8 +2377,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         for (int i = 0, count = choices.size(); i < count; ++i)
         {
             const std::string &ch = choices[i];
-            if (ch == "artifacts")
-                dump_item_origins |= IODS_ARTIFACTS;
+            if (ch == "artefacts" || ch == "artifacts"
+                    || ch == "artefact" || ch == "artifact")
+                dump_item_origins |= IODS_ARTEFACTS;
             else if (ch == "ego_arm" || ch == "ego armour" 
                     || ch == "ego_armour")
                 dump_item_origins |= IODS_EGO_ARMOUR;

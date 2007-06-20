@@ -10,7 +10,7 @@
  *      <4>      10/14/99     BCR     enummed describe_god()
  *      <3>      10/13/99     BCR     Added GOD_NO_GOD case in describe_god()
  *      <2>      5/20/99      BWR     Replaced is_artifact with
- *                                    is_dumpable_artifact
+ *                                    is_dumpable_artefact
  *      <1>      4/20/99      JDJ     Reformatted, uses string objects,
  *                                    split out 10 new functions from
  *                                    describe_item(), added
@@ -3113,7 +3113,7 @@ static std::string describe_misc_item( const item_def &item )
 //      Public Functions
 // ========================================================================
 
-bool is_dumpable_artifact( const item_def &item, bool verbose)
+bool is_dumpable_artefact( const item_def &item, bool verbose)
 {
     bool ret = false;
 
@@ -3135,7 +3135,7 @@ bool is_dumpable_artifact( const item_def &item, bool verbose)
     }
 
     return (ret);
-}                               // end is_dumpable_artifact()
+}
 
 
 //---------------------------------------------------------------
@@ -3261,13 +3261,13 @@ std::string get_item_description( const item_def &item, bool verbose,
                     << "." << (mass % 10)
                     << " aum. "; // arbitrary unit of mass
 
-        if ( is_dumpable_artifact(item, false) )
+        if ( is_dumpable_artefact(item, false) )
         {
             if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_WEAPONS)
-                description << "$$This ancient artifact cannot be changed "
+                description << "$$This ancient artefact cannot be changed "
                     "by magic or mundane means.";
             else
-                description << "$$It is an ancient artifact.";
+                description << "$$It is an ancient artefact.";
         }
     }
 

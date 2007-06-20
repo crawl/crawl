@@ -1033,7 +1033,7 @@ int items( int allow_uniques,       // not just true-false,
                 && random2(3000) <= 30 + (item_level * 3) && one_chance_in(12))
             {
 #ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "Making fixed artifact.");
+                mprf(MSGCH_DIAGNOSTICS, "Making fixed artefact.");
 #endif
                 if (make_item_fixed_artefact( mitm[p], (item_level == 51) ))
                 {

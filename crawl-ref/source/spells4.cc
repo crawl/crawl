@@ -530,9 +530,11 @@ static void cast_detect_magic(int pow)
     while (item != NON_ITEM)
     {
         next = mitm[item].link;
-        if (is_dumpable_artifact
-            (mitm[item].base_type, mitm[item].sub_type, mitm[item].plus,
-             mitm[item].plus2, mitm[item].special, 0, 0))
+        if (is_dumpable_artefact(mitm[item].base_type,
+                                 mitm[item].sub_type,
+                                 mitm[item].plus,
+                                 mitm[item].plus2,
+                                 mitm[item].special, 0, 0))
         {
             strong++;
             //FIXME: do checks for randart properties

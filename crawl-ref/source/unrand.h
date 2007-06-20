@@ -1,6 +1,6 @@
 /*
  *  File:       unrand.cc
- *  Summary:    Definitions for unrandom artifacts.
+ *  Summary:    Definitions for unrandom artefacts.
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
@@ -865,7 +865,7 @@
         0, -30                  // stealth
     }
     ,
-        "It's a really dark and malign artifact and no wise man would even touch it.",
+        "It's a really dark and malign artefact and no wise man would even touch it.",
         "",
         ""
 }

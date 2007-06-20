@@ -1340,7 +1340,7 @@ static int l_item_weap_skill(lua_State *ls)
     return (2);
 }
 
-static int l_item_artifact(lua_State *ls)
+static int l_item_artefact(lua_State *ls)
 {
     LUA_ITEM(item, 1);
     if (!item || !is_valid_item(*item))
@@ -1378,7 +1378,7 @@ static int l_item_branded(lua_State *ls)
 
 static const struct luaL_reg item_lib[] =
 {
-    { "artifact",          l_item_artifact },
+    { "artefact",          l_item_artefact },
     { "branded",           l_item_branded },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },

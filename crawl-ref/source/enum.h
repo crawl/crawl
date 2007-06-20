@@ -1518,7 +1518,7 @@ enum item_make_species_type
 enum item_origin_dump_selector
 {
     IODS_PRICE            = 0,      // Extra info is provided based on price
-    IODS_ARTIFACTS        = 1,      // Extra information on artifacts
+    IODS_ARTEFACTS        = 1,      // Extra information on artefacts
     IODS_EGO_ARMOUR       = 2,
     IODS_EGO_WEAPON       = 4,
     IODS_JEWELLERY        = 8,

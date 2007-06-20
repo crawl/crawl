@@ -921,7 +921,7 @@ void list_commands(bool wizard, int hotkey)
             "\n"
             "Searching in stashes allows regular\n"
             "expressions, and terms like 'altar'\n"
-            "or 'artifact' or 'long blades'.\n",
+            "or 'artefact' or 'long blades'.\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
