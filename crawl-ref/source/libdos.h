@@ -12,7 +12,7 @@ void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
 void clear_to_end_of_line();
 int getch_ck();
-void set_mouse_enabled(bool enabled) { }
+static inline void set_mouse_enabled(bool enabled) { }
 
 void message_out(int mline, int colour, const char *str, int firstcol = 0,
                  bool newline = true);
@@ -21,9 +21,6 @@ inline void update_screen()
 {
 }
 
-inline void putwch(unsigned c)
-{
-    putch(static_cast<char>(c));
-}
+void putwch(unsigned c);
 
 #endif

@@ -180,11 +180,13 @@
         #define vsnprintf(buf, size, format, args) vsprintf(buf, format, args)
     #endif
 
+    #include <dos.h>
+
 #elif defined(WIN32CONSOLE)
     #include "libw32c.h"
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
-    #define getstr(X,Y)         getConsoleString(X,Y)
+    #define getstr(X,Y)         get_console_string(X,Y)
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'

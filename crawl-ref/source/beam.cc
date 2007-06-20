@@ -1328,7 +1328,7 @@ void fire_beam( bolt &pbolt, item_def *item )
 #ifdef WIN32CONSOLE
     bool oldValue = true;
     if (!pbolt.is_tracer)
-        oldValue = setBuffering(false);
+        oldValue = set_buffering(false);
 #endif
 
     while(!beamTerminate)
@@ -1501,7 +1501,7 @@ void fire_beam( bolt &pbolt, item_def *item )
     // that's it!
 #ifdef WIN32CONSOLE
     if (!pbolt.is_tracer)
-        setBuffering(oldValue);
+        set_buffering(oldValue);
 #endif
 }                               // end fire_beam();
 
@@ -4193,7 +4193,7 @@ void explosion( bolt &beam, bool hole_in_the_middle )
 #ifdef WIN32CONSOLE
     bool oldValue = true;
     if (!beam.is_tracer)
-        oldValue = setBuffering(false);
+        oldValue = set_buffering(false);
 #endif
 
     // --------------------- begin boom ---------------
@@ -4247,7 +4247,7 @@ void explosion( bolt &beam, bool hole_in_the_middle )
 
 #ifdef WIN32CONSOLE
     if (!beam.is_tracer)
-        setBuffering(oldValue);
+        set_buffering(oldValue);
 #endif
 
     // duplicate old behaviour - pause after entire explosion

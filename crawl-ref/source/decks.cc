@@ -784,7 +784,7 @@ static void genetic_engineer_card(int power, deck_rarity_type rarity)
         MUT_BLURRY_VISION, MUT_FRAIL
     };
 
-    mutation_type which_mut;
+    mutation_type which_mut = NUM_MUTATIONS;
     int numfound = 0;
     for ( unsigned int i = 0; i < ARRAYSIZE(bad_mutations); ++i )
     {

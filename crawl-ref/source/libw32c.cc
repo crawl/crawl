@@ -69,6 +69,7 @@
 #include <stdio.h>
 #include "AppHdr.h"
 #include "version.h"
+#include "cio.h"
 #include "defines.h"
 #include "stuff.h"
 #include "view.h"

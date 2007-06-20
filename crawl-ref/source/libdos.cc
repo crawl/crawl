@@ -9,6 +9,7 @@
 // Every .cc must include AppHdr or bad things happen.
 #include "AppHdr.h"
 #include "externs.h"
+#include "cio.h"
 #include <termios.h>
 #include <conio.h>
 
@@ -125,6 +126,11 @@ int getch_ck()
 int m_getch()
 {
     return getch();
+}
+
+void putwch(unsigned c)
+{
+    putch(static_cast<char>(c));
 }
 
 #endif /* #if defined(DOS) */
