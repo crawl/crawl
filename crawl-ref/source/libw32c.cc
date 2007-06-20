@@ -221,8 +221,21 @@ void bFlush(void)
     }
 }
 
+void set_mouse_enabled(bool enabled)
+{
+    DWORD inmode;
+    if (::GetConsoleMode(inbuf, &inmode))
+    {
+        if (enabled)
+            inmode |= ENABLE_MOUSE_INPUT;
+        else
+            inmode &= ~ENABLE_MOUSE_INPUT;
+        
+        ::SetConsoleMode(inbuf, inmode);
+    }
+}
 
-void setStringInput(bool value)
+void set_string_input(bool value)
 {
     DWORD inmodes, outmodes;
     if (value == TRUE)
@@ -352,7 +365,7 @@ void init_libw32c(void)
     init_colors(oldTitle);
 
     // by default, set string input to false:  use char-input only
-    setStringInput( false );
+    set_string_input( false );
 
     // set up screen size
     set_w32_screen_size();
@@ -364,7 +377,7 @@ void init_libw32c(void)
     _setcursortype_internal(false);
 
     // buffering defaults to ON -- very important!
-    setBuffering(true);
+    set_buffering(true);
 
     crawl_state.terminal_resize_handler = w32_term_resizer;
     crawl_state.terminal_resize_check   = w32_check_screen_resize;
@@ -399,7 +412,7 @@ void deinit_libw32c(void)
         SetConsoleOutputCP(OutputCP);
 
     // restore console attributes for normal function
-    setStringInput(true);
+    set_string_input(true);
 
     // set cursor and normal textcolor
     _setcursortype_internal(true);
@@ -613,7 +626,7 @@ static void cprintf_aux(const char *s)
 
     // turn buffering ON (temporarily)
     bool oldValue = buffering;
-    setBuffering(true);
+    set_buffering(true);
 
     // loop through string
     char *p = (char *)s;
@@ -623,7 +636,7 @@ static void cprintf_aux(const char *s)
     }
 
     // reset buffering
-    setBuffering(oldValue);
+    set_buffering(oldValue);
 
     // flush string
     bFlush();
@@ -773,6 +786,11 @@ int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
     return vk_tr[1][mkey];
 }
 
+int m_getch()
+{
+    return getch();
+}
+
 int getch_ck(void)
 {
     INPUT_RECORD ir;
@@ -845,7 +863,7 @@ int getche(void)
 {
     // turn buffering off temporarily
     const bool oldValue = buffering;
-    setBuffering(false);
+    set_buffering(false);
 
     int val = getch();
 
@@ -853,7 +871,7 @@ int getche(void)
         putch(val);
 
     // restore buffering value
-    setBuffering(oldValue);
+    set_buffering(oldValue);
 
     return val;
 }
@@ -889,11 +907,11 @@ void textbackground(int c)
     UNUSED( c );
 }
 
-int getConsoleString(char *buf, int maxlen)
+int get_console_string(char *buf, int maxlen)
 {
     DWORD nread;
     // set console input to line mode
-    setStringInput( true );
+    set_string_input( true );
 
     // force cursor
     const bool oldValue = cursor_is_enabled;
@@ -920,7 +938,7 @@ int getConsoleString(char *buf, int maxlen)
 
     // reset console mode - also flushes if player has typed in
     // too long of a name so we don't get silly garbage on return.
-    setStringInput( false );
+    set_string_input( false );
 
     // restore old cursor
     if (w32_smart_cursor)
@@ -935,7 +953,7 @@ void update_screen()
     bFlush();
 }
 
-bool setBuffering( bool value )
+bool set_buffering( bool value )
 {
     bool oldValue = buffering;
 

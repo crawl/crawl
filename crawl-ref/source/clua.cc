@@ -9,6 +9,7 @@
 #include "abl-show.h"
 #include "command.h"
 #include "chardump.h"
+#include "cio.h"
 #include "delay.h"
 #include "food.h"
 #include "invent.h"

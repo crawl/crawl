@@ -24,7 +24,7 @@
 #endif
 
 #include "externs.h"
-
+#include "cio.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"

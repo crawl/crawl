@@ -1185,6 +1185,8 @@ extern struct crawl_environment env;
 // Track various aspects of Crawl game state.
 struct game_state
 {
+    bool mouse_enabled;     // True if mouse input is currently relevant.
+    
     bool waiting_for_command; // True when the game is waiting for a command.
     bool terminal_resized;   // True if the term was resized and we need to
                              // take action to handle it.
@@ -1204,11 +1206,12 @@ struct game_state
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 
-    game_state() : waiting_for_command(false), terminal_resized(false),
-                   io_inited(false), need_save(false), saving_game(false),
-                   updating_scores(false), shopping(false), seen_hups(0),
-                   unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL),
-                   terminal_resize_handler(NULL), terminal_resize_check(NULL)
+    game_state() : mouse_enabled(false), waiting_for_command(false),
+                   terminal_resized(false), io_inited(false), need_save(false),
+                   saving_game(false), updating_scores(false), shopping(false),
+                   seen_hups(0), unicode_ok(false), glyph2strfn(NULL),
+                   multibyte_strlen(NULL), terminal_resize_handler(NULL),
+                   terminal_resize_check(NULL)
     {
     }
 
@@ -1288,6 +1291,8 @@ public:
 
     coord_def glos1, glos2;        // LOS limit grid coords (inclusive)
     coord_def vlos1, vlos2;        // LOS limit viewport coords (inclusive)
+
+    coord_def mousep;              // Where the mouse is.
 
     static const int message_min_lines = 7;
     static const int hud_min_width  = 41;
@@ -1458,6 +1463,8 @@ public:
     bool        messaging;      // Check for messages.
 #endif
 
+    bool        mouse_input;
+    
     int         view_max_width;
     int         view_max_height;
 

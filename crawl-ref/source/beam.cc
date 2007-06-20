@@ -34,6 +34,7 @@
 
 #include "externs.h"
 
+#include "cio.h"
 #include "cloud.h"
 #include "effects.h"
 #include "enum.h"

@@ -10,6 +10,7 @@
 #include "notes.h"
 
 #include "branch.h"
+#include "cio.h"
 #include "files.h"
 #include "Kills.h"
 #include "hiscores.h"

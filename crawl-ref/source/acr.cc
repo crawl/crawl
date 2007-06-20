@@ -74,6 +74,7 @@
 #include "abyss.h"
 #include "branch.h"
 #include "chardump.h"
+#include "cio.h"
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
@@ -923,14 +924,23 @@ static void input()
         cursor_control con(true);
 
         crawl_state.waiting_for_command = true;
-        command_type cmd = get_next_cmd();
+        c_input_reset(true);
+        
+        const command_type cmd = get_next_cmd();
+
         crawl_state.waiting_for_command = false;
+
+        if (cmd != CMD_MOUSE_MOVE)
+            c_input_reset(false);
 
         // [dshaligram] If get_next_cmd encountered a Lua macro
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
             process_command( cmd );
+
+        if (cmd != CMD_MOUSE_MOVE)
+            c_input_reset(false, true);
     }
 
     if (you.turn_is_over)
@@ -1127,7 +1137,6 @@ void process_command( command_type cmd )
         break;
    
     case CMD_MAKE_NOTE:
-//        Options.tut_made_note = 0;
         make_user_note();
         break;
 
@@ -1342,13 +1351,6 @@ void process_command( command_type cmd )
         break;
 
     case CMD_EXPLORE:
-        if (Options.tut_explored)
-            Options.tut_explored = 0;
-        if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        {
-            mpr("It would help if you knew where you were, first.");
-            break;
-        }
         // Start exploring
         start_explore(Options.explore_greedy);
         break;
@@ -1414,8 +1416,36 @@ void process_command( command_type cmd )
         break;
 
     case CMD_SHOUT:
-        yell();                 /* in effects.cc */
+        yell();
         break;
+
+    case CMD_MOUSE_MOVE:
+        break;
+
+    case CMD_MOUSE_CLICK:
+    {
+        // XXX: We should probably use specific commands such as
+        // CMD_MOUSE_TRAVEL and get rid of CMD_MOUSE_CLICK and
+        // CMD_MOUSE_MOVE.
+        c_mouse_event cme = get_mouse_event();
+        if (cme && crawl_view.in_view_viewport(cme.pos))
+        {
+            const coord_def dest = view2grid(cme.pos);
+            if (cme.left_clicked())
+            {
+                if (in_bounds(dest))
+                    start_travel(dest.x, dest.y);
+            }
+            else if (cme.right_clicked())
+            {
+                if (see_grid(dest.x, dest.y))
+                    full_describe_square(dest);
+                else
+                    mpr("You can't see that place.");
+            }
+        }
+        break;
+    }
 
     case CMD_DISPLAY_CHARACTER_STATUS:
         display_char_status();
@@ -2668,6 +2698,9 @@ command_type keycode_to_command( keycode_type key )
     case CONTROL('W'): return CMD_FIX_WAYPOINT;
     case CONTROL('X'): return CMD_SAVE_GAME_NOW;
     case CONTROL('Z'): return CMD_SUSPEND_GAME;
+
+    case CK_MOUSE_MOVE:  return CMD_MOUSE_MOVE;
+    case CK_MOUSE_CLICK: return CMD_MOUSE_CLICK;
     default: return CMD_NO_CMD;
     }
 }

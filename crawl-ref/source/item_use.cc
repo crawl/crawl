@@ -35,6 +35,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "cio.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"

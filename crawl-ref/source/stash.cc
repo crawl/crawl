@@ -8,6 +8,7 @@
 
 #include "AppHdr.h"
 #include "chardump.h"
+#include "cio.h"
 #include "clua.h"
 #include "describe.h"
 #include "direct.h"

@@ -661,6 +661,9 @@ enum command_type
     CMD_RESISTS_SCREEN,
 
     CMD_READ_MESSAGES,
+    
+    CMD_MOUSE_MOVE,
+    CMD_MOUSE_CLICK,
 
     /* overmap commands */
     CMD_MAP_CLEAR_MAP,

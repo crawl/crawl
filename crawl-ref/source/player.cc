@@ -2930,8 +2930,6 @@ int check_stealth(void)
 
 void ability_increase(void)
 {
-    unsigned char keyin;
-
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
 
@@ -2940,34 +2938,28 @@ void ability_increase(void)
 
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 
-  get_key:
-    keyin = getch();
-    if (keyin == 0)
+    while (true)
     {
-        getch();
-        goto get_key;
+        const int keyin = getch();
+
+        switch (keyin)
+        {
+        case 's':
+        case 'S':
+            modify_stat(STAT_STRENGTH, 1, false);
+            return;
+
+        case 'i':
+        case 'I':
+            modify_stat(STAT_INTELLIGENCE, 1, false);
+            return;
+
+        case 'd':
+        case 'D':
+            modify_stat(STAT_DEXTERITY, 1, false);
+            return;
+        }
     }
-
-    switch (keyin)
-    {
-    case 's':
-    case 'S':
-        modify_stat(STAT_STRENGTH, 1, false);
-        return;
-
-    case 'i':
-    case 'I':
-        modify_stat(STAT_INTELLIGENCE, 1, false);
-        return;
-
-    case 'd':
-    case 'D':
-        modify_stat(STAT_DEXTERITY, 1, false);
-        return;
-    }
-
-    goto get_key;
-/* this is an infinite loop because it is reasonable to assume that you're not going to want to leave it prematurely. */
 }                               // end ability_increase()
 
 void display_char_status()

@@ -559,6 +559,8 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
+    mouse_input = false;
+    
     view_max_width = VIEW_BASE_WIDTH;
     view_max_height = VIEW_MIN_HEIGHT;
 
@@ -1873,6 +1875,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         messaging = read_bool(field, messaging);
     }
 #endif
+    else if (key == "mouse_input")
+    {
+        mouse_input = read_bool(field, mouse_input);
+    }
     else if (key == "view_max_width")
     {
         view_max_width = atoi(field.c_str());

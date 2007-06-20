@@ -37,6 +37,7 @@
 #include "externs.h"
 
 #include "command.h"
+#include "cio.h"
 #include "cloud.h"
 #include "clua.h"
 #include "debug.h"
@@ -2518,7 +2519,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
     char move_x = 0;
     char move_y = 0;
-    char getty = 0;
+    int getty = 0;
 
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
@@ -2605,8 +2606,10 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         redraw_map = true;
         cursorxy(curs_x, curs_y + top - 1);
 
+        c_input_reset(true);
         getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
                                         false, false);
+        c_input_reset(false);
 
         switch (getty)
         {
@@ -2641,7 +2644,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             move_x = move_y = 0;
             break;
         }
-        
+
         case CONTROL('E'):
         case CONTROL('X'):
         {
@@ -2805,6 +2808,46 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
                                             search_found, &move_x, &move_y);
             break;
         }
+
+        case CK_MOUSE_MOVE:
+            move_x = move_y = 0;
+            break;
+        
+        case CK_MOUSE_CLICK:
+        {
+            const c_mouse_event cme = get_mouse_event();
+            const coord_def curp(start_x + curs_x - 1, start_y + curs_y - 1);
+            const coord_def grdp =
+                cme.pos + coord_def(start_x - 1, start_y - top);
+            
+            if (cme.left_clicked() && in_bounds(grdp))
+            {
+                spec_place[0] = grdp.x;
+                spec_place[1] = grdp.y;
+                map_alive     = false;
+            }
+            else if (cme.scroll_up())
+            {
+                move_y = -block_step * ((curs_y - top + 1) / block_step + 1);
+                move_x = 0;
+            }
+            else if (cme.scroll_down())
+            {
+                move_y =
+                    block_step *
+                    ((get_number_of_lines() - curs_y + top - 1) / block_step
+                     + 1);
+                move_x = 0;
+            }
+            else if (cme.right_clicked())
+            {
+                const coord_def delta = grdp - curp;
+                move_y = delta.y;
+                move_x = delta.x;
+            }
+            break;
+        }
+
         case '.':
         case '\r':
         case 'S':

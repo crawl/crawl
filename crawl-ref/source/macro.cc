@@ -44,6 +44,7 @@
 #include <cctype>      // for tolower
 #include <cstdlib>
 
+#include "cio.h"
 #include "externs.h"
 #include "stuff.h"
 
@@ -577,7 +578,7 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
     int a;
     
     if (!rgetch)
-        rgetch = getch;
+        rgetch = m_getch;
 
     keys.push_back( a = rgetch() );
     
@@ -655,16 +656,14 @@ void flush_input_buffer( int reason )
 
 void macro_add_query( void )
 {
-    unsigned char input;
+    int input;
     bool keymap = false;
     KeymapContext keymc = KC_DEFAULT;
 
     mesclr();
-    mpr( "(m)acro, keymap [(k) default, (x) level-map or (t)argeting], (s)ave?", MSGCH_PROMPT );
-    input = getch();
-    if (input == 0)
-        input = getch();
-
+    mpr("(m)acro, keymap [(k) default, (x) level-map or (t)argeting], (s)ave?",
+        MSGCH_PROMPT);
+    input = m_getch();
     input = tolower( input );
     if (input == 'k')
     {
@@ -714,9 +713,7 @@ void macro_add_query( void )
         mprf(MSGCH_WARN, "Current Action: %s", vtostr(mapref[key]).c_str());
         mpr( "Do you wish to (r)edefine, (c)lear, or (a)bort?", MSGCH_PROMPT );
 
-        input = getch();
-        if (input == 0)
-            input = getch();
+        input = m_getch();
 
         input = tolower( input );
         if (input == 'a' || input == ESCAPE)

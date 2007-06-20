@@ -71,6 +71,7 @@
 
 #include "abl-show.h"
 #include "branch.h"
+#include "cio.h"
 #include "command.h"
 #include "files.h"
 #include "fight.h"

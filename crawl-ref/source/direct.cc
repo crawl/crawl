@@ -32,6 +32,7 @@
 
 #include "externs.h"
 
+#include "cio.h"
 #include "command.h"
 #include "debug.h"
 #include "describe.h"
@@ -416,7 +417,7 @@ void direction(dist& moves, targeting_type restricts,
         const int old_tx = moves.tx + (skip_iter ? 500 : 0); // hmmm...hack
         const int old_ty = moves.ty;
 
-        int i, mid, oid;
+        int i, mid;
 
         switch ( key_command )
         {
@@ -628,32 +629,8 @@ void direction(dist& moves, targeting_type restricts,
 #endif
             
         case CMD_TARGET_DESCRIBE:
-            // Don't give out information for things outside LOS
-            if (!see_grid(moves.tx, moves.ty))
-                break;
-
-            mid = mgrd[moves.tx][moves.ty];
-            oid = igrd[moves.tx][moves.ty];
-
-            if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
-            {
-                // First priority: monsters
-                describe_monsters(menv[mid]);
-            }
-            else if (oid != NON_ITEM)
-            {
-                // Second priority: objects
-                describe_item( mitm[oid] );
-            }
-            else
-            {
-                // Third priority: features
-                describe_feature_wide(moves.tx, moves.ty);
-            }
-
+            full_describe_square(moves.target());
             force_redraw = true;
-            redraw_screen();
-            mesclr(true);
             break;
 
         case CMD_TARGET_HELP:
@@ -735,10 +712,7 @@ void direction(dist& moves, targeting_type restricts,
             if ( !skip_iter )   // don't clear before we get a chance to see
                 mesclr(true);   // maybe not completely necessary
 
-            if ( !in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
-                describe_oos_square(moves.tx, moves.ty);
-            else if ( in_bounds(moves.tx, moves.ty) )
-                describe_cell(moves.tx, moves.ty);
+            terse_describe_square(moves.target());
         }
 
         if ( need_beam_redraw )
@@ -774,6 +748,43 @@ void direction(dist& moves, targeting_type restricts,
     // We need this for directional explosions, otherwise they'll explode one
     // square away from the player.
     extend_move_to_edge(moves);
+}
+
+void terse_describe_square(const coord_def &c)
+{
+    if (!see_grid(c.x, c.y))
+        describe_oos_square(c.x, c.y);
+    else if (in_bounds(c) )
+        describe_cell(c.x, c.y);
+}
+
+void full_describe_square(const coord_def &c)
+{
+    // Don't give out information for things outside LOS
+    if (!see_grid(c.x, c.y))
+        return;
+
+    const int mid = mgrd(c);
+    const int oid = igrd(c);
+
+    if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
+    {
+        // First priority: monsters
+        describe_monsters(menv[mid]);
+    }
+    else if (oid != NON_ITEM)
+    {
+        // Second priority: objects
+        describe_item( mitm[oid] );
+    }
+    else
+    {
+        // Third priority: features
+        describe_feature_wide(c.x, c.y);
+    }
+
+    redraw_screen();
+    mesclr(true);
 }
 
 static void extend_move_to_edge(dist &moves)

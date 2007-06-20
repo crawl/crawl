@@ -14,6 +14,7 @@
 #include "FixAry.h"
 #include "branch.h"
 #include "command.h"
+#include "cio.h"
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
@@ -2552,6 +2553,15 @@ void start_travel(int x, int y)
 
 void start_explore(bool grab_items)
 {
+    if (Options.tut_explored)
+        Options.tut_explored = 0;
+        
+    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    {
+        mpr("It would help if you knew where you were, first.");
+        return;
+    }
+        
     if (!i_feel_safe(true))
         return;
 

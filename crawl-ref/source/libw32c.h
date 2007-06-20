@@ -28,9 +28,9 @@ void textcolor(int c);
 void textattr(int c);
 void cprintf( const char *format, ... );
 // void cprintf(const char *s);
-void setStringInput(bool value);
-bool setBuffering(bool value);
-int getConsoleString(char *buf, int maxlen);
+void set_string_input(bool value);
+bool set_buffering(bool value);
+int get_console_string(char *buf, int maxlen);
 void print_timings(void);
 
 void window(int x, int y, int lx, int ly);
@@ -49,6 +49,7 @@ void update_screen();
 
 void enable_smart_cursor(bool cursor);
 bool is_smart_cursor_enabled();
+void set_mouse_enabled(bool enabled);
 
 #endif
 

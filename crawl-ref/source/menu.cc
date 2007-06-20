@@ -7,6 +7,7 @@
  */
 #include <cctype>
 #include "AppHdr.h"
+#include "cio.h"
 #include "menu.h"
 #include "macro.h"
 #include "tutorial.h"

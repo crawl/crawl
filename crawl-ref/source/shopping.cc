@@ -25,7 +25,7 @@
 #endif
 
 #include "externs.h"
-
+#include "cio.h"
 #include "describe.h"
 #include "invent.h"
 #include "items.h"

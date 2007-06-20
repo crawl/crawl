@@ -37,6 +37,7 @@
 #include "externs.h"
 
 #include "branch.h"
+#include "cio.h"
 #include "decks.h"
 #include "describe.h"
 #include "direct.h"

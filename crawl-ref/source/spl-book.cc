@@ -25,7 +25,7 @@
 #endif
 
 #include "externs.h"
-
+#include "cio.h"
 #include "debug.h"
 #include "delay.h"
 #include "food.h"
@@ -685,8 +685,8 @@ spell_type which_spell_in_book(int sbook_type, int spl)
 
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
-unsigned char spellbook_contents( item_def &book, int action,
-                                  formatted_string *fs )
+int spellbook_contents( item_def &book, int action,
+                        formatted_string *fs )
 {
     int spelcount = 0;
     int i, j;
@@ -827,7 +827,7 @@ unsigned char spellbook_contents( item_def &book, int action,
     if (fs)
         *fs = out;
 
-    unsigned char keyn = 0;
+    int keyn = 0;
     if (update_screen)
     {
         cursor_control coff(false);
@@ -835,9 +835,7 @@ unsigned char spellbook_contents( item_def &book, int action,
 
         out.display();
 
-        keyn = getch();
-        if (keyn == 0)
-            getch();
+        keyn = c_getch();
     }
 
     return (keyn);     // try to figure out that for which this is used {dlb}

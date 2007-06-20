@@ -43,6 +43,7 @@
 #include "libunix.h"
 #include "defines.h"
 
+#include "cio.h"
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
@@ -225,10 +226,83 @@ static void termio_init()
     crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
 
+void set_mouse_enabled(bool enabled)
+{
+#ifdef NCURSES_MOUSE_VERSION
+    const int mask = enabled? ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION : 0;
+    mousemask(mask, NULL);
+#endif
+}
+
+#ifdef NCURSES_MOUSE_VERSION
+static int proc_mouse_event(int c, const MEVENT *me)
+{
+    crawl_view.mousep.x = me->x + 1;
+    crawl_view.mousep.y = me->y + 1;
+
+    if (!crawl_state.mouse_enabled)
+        return (CK_MOUSE_MOVE);
+
+    c_mouse_event cme(crawl_view.mousep);
+    if (me->bstate & BUTTON1_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON1;
+    else if (me->bstate & BUTTON1_DOUBLE_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON1_DBL;
+    else if (me->bstate & BUTTON2_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON2;
+    else if (me->bstate & BUTTON2_DOUBLE_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON2_DBL;
+    else if (me->bstate & BUTTON3_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON3;
+    else if (me->bstate & BUTTON3_DOUBLE_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON3_DBL;
+    else if (me->bstate & BUTTON4_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON4;
+    else if (me->bstate & BUTTON4_DOUBLE_CLICKED)
+        cme.bstate |= c_mouse_event::BUTTON4_DBL;
+    
+    if (cme)
+    {
+        new_mouse_event(cme);
+        return (CK_MOUSE_CLICK);
+    }
+
+    return (CK_MOUSE_MOVE);
+}
+#endif
+
+static int raw_m_getch()
+{
+    const int c = getch();
+    switch (c)
+    {
+#ifdef NCURSES_MOUSE_VERSION
+    case KEY_MOUSE:
+    {
+        MEVENT me;
+        getmouse(&me);
+        return (proc_mouse_event(c, &me));
+    }
+#endif
+    default:
+        return (c);
+    }
+}
+
+int m_getch()
+{
+    int c;
+    do
+        c = raw_m_getch();
+    while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+           && !crawl_state.mouse_enabled);
+
+    return (c);
+}
 
 int getch_ck()
 {
-    int c = getch();
+    int c = m_getch();
     switch (c)
     {
     // [dshaligram] MacOS ncurses returns 127 for backspace.
@@ -389,6 +463,8 @@ void unixcurses_startup( void )
 
     crawl_view.init_geometry();
     setup_message_window();
+
+    set_mouse_enabled(false);
 }
 
 void unixcurses_shutdown()

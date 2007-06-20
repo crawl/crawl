@@ -1818,19 +1818,10 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-void show_skills()
+static void display_skill_table(bool show_aptitudes)
 {
-    int i;
-    int x;
-    menu_letter lcount;
-    bool show_aptitudes = false;
-
+    menu_letter lcount = 'a';
     const int num_lines = get_number_of_lines();
-
-    clrscr();
-
-  reprint_stuff:
-    lcount = 'a';
 
     gotoxy(1, 1);
     textcolor(LIGHTGREY);
@@ -1848,11 +1839,11 @@ void show_skills()
 #endif
 
     int scrln = 3, scrcol = 1;
-
+    int x;
     // Don't want the help line to appear too far down a big window.
     const int bottom_line = ((num_lines > 30) ? 30 : num_lines);
 
-    for (i = 0; i < ndisplayed_skills; ++i)
+    for (int i = 0; i < ndisplayed_skills; ++i)
     {
         x = skill_display_order[i];
 
@@ -1939,75 +1930,79 @@ void show_skills()
 
     if (Options.tutorial_left)
     {
-      textcolor(MAGENTA);
-      gotoxy(1, bottom_line-5);
-      formatted_string::parse_block(
-        "This screen shows the skill set of your character. You can pick up new" EOL
-        "skills by performing the corresponding actions. The number next to the" EOL
-        "skill is your current level, the higher the better. The blue percent  " EOL
-        "value shows your progress towards the next skill level. You can toggle" EOL
-        "which skills to train by pressing their slot letters. A <darkgrey>greyish<magenta> skill " EOL
-        "will increase at a decidedly slower rate and ease training of others. ",
-        false).display();
+        textcolor(MAGENTA);
+        gotoxy(1, bottom_line-5);
+        formatted_string::parse_block(
+            "This screen shows the skill set of your character. You can pick up new" EOL
+            "skills by performing the corresponding actions. The number next to the" EOL
+            "skill is your current level, the higher the better. The blue percent  " EOL
+            "value shows your progress towards the next skill level. You can toggle" EOL
+            "which skills to train by pressing their slot letters. A <darkgrey>greyish<magenta> skill " EOL
+            "will increase at a decidedly slower rate and ease training of others. ",
+            false).display();
     }
     else
     {
-      // if any more skills added, must adapt letters to go into caps
-      gotoxy(1, bottom_line-1);
-      textcolor(LIGHTGREY);
-      cprintf("Press the letter of a skill to choose whether you want to practise it.");
-      if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
-      {
-        gotoxy(1, bottom_line);
-        formatted_string::parse_string("Press '!' to toggle between "
-                                       "<blue>progress</blue> and "
-                                       "<red>aptitude</red> "
-                                       "display.").display();
-      }
+        // if any more skills added, must adapt letters to go into caps
+        gotoxy(1, bottom_line-1);
+        textcolor(LIGHTGREY);
+        cprintf("Press the letter of a skill to choose "
+                "whether you want to practise it.");
+        if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
+        {
+            gotoxy(1, bottom_line);
+            formatted_string::parse_string("Press '!' to toggle between "
+                                           "<blue>progress</blue> and "
+                                           "<red>aptitude</red> "
+                                           "display.").display();
+        }
     }
+}
 
-    int get_thing = getch();
-
-    if (get_thing == 0)
-        getch();
-    else
+void show_skills()
+{
+    bool show_aptitudes = false;
+    clrscr();
+    while (true)
     {
+        display_skill_table(show_aptitudes);
+
+        const int get_thing = getch();
         if (get_thing == '!' && (!player_genus(GENPC_DRACONIAN) ||
-                                  you.max_level >= 7))
+                                 you.max_level >= 7))
         {
             show_aptitudes = !show_aptitudes;
-            goto reprint_stuff;
+            continue;
         }
+        
         if ((get_thing >= 'a' && get_thing <= 'z')
             || (get_thing >= 'A' && get_thing <= 'Z'))
         {
-            lcount = 'a';       // toggle skill practise
+            menu_letter lcount = 'a';       // toggle skill practise
 
-            for (i = 0; i < ndisplayed_skills; i++)
+            int x;
+            for (int i = 0; i < ndisplayed_skills; i++)
             {
                 x = skill_display_order[i];
                 if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
                     continue;
-
+                
                 if (you.skills[x] == 0)
                     continue;
-
+            
                 if (get_thing == lcount)
                 {
                     you.practise_skill[x] = !you.practise_skill[x];
                     break;
                 }
-
+                
                 ++lcount;
             }
-
-            goto reprint_stuff;
+            continue;
         }
+        break;
     }
-
-    return;
 }
-
 
 const char *skill_name(int which_skill)
 {

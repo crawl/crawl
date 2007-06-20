@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "tutorial.h"
-
+#include "cio.h"
 #include "command.h"
 #include "files.h"
 #include "initfile.h"
