@@ -508,18 +508,10 @@ int div_rand_round( int num, int den )
     return (num / den + (random2(den) < num % den));
 }
 
-// I got so tired of seeing: ".. && random2(foo) == 0 && .." in the code
-// that I broke down and wrote this little -- very little -- function.
-// anyway, I think improving the readability of the code offsets whatever
-// overhead the additional (intermediary) function call added to Crawl -
-// we'll just make it up by tightening code elsewhere, right guys?
-// [use with == and != only .. never directly with comparisons or math]
-//                                                      -- 14jan2000 {dlb}
 bool one_chance_in(int a_million)
 {
     return (random2(a_million) == 0);
-}                               // end one_chance_in() - that's it? :P {dlb}
-
+}
 
 // simple little function to quickly modify all three stats
 // at once - does check for '0' modifiers to prevent needless

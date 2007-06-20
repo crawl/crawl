@@ -2215,12 +2215,8 @@ void forget_map(unsigned char chance_forgotten)
 
 void gain_exp( unsigned int exp_gained )
 {
-
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ) 
-        && !one_chance_in(20))
-    {
-        return;
-    }
+    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
+        exp_gained = div_rand_round( exp_gained, 4 );
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d", exp_gained );
