@@ -3522,8 +3522,12 @@ static void handle_monster_move(int i, monsters *monster)
                 || monster->type == MONS_NECROPHAGE
                 || monster->type == MONS_GHOUL))
         {
-            if (handle_pickup(monster))
-                continue;
+            // keep permanent friendlies from picking up stuff
+            if (monster->attitude != ATT_FRIENDLY)
+            {
+                if (handle_pickup(monster))
+                    continue;
+            } 
         }
 
         // calculates mmov_x, mmov_y based on monster target.

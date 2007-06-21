@@ -3586,11 +3586,11 @@ void init_feature_table( void )
             break;
 
         case DNGN_ALTAR_BEOGH:
-            Feature[i].colour = EC_UNHOLY;
+            Feature[i].colour = EC_BEOGH;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
             Feature[i].notable = true;
             Feature[i].map_colour = DARKGREY;
-            Feature[i].seen_colour = RED;
+            Feature[i].seen_colour = EC_BEOGH;
             break;
 
         case DNGN_BLUE_FOUNTAIN:

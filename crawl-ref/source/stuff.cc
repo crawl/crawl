@@ -883,6 +883,10 @@ int element_colour( int element, bool no_random )
                               : LIGHTBLUE;
         break;
 
+    case EC_BEOGH:
+        ret = (tmp_rand < 60) ? LIGHTRED : BROWN;
+        break;
+
     case EC_CRYSTAL:
         ret = (tmp_rand < 40) ? LIGHTGREY :
               (tmp_rand < 80) ? GREEN 

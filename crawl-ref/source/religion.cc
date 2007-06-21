@@ -960,13 +960,10 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
         case GOD_OKAWARU:
+        case GOD_BEOGH: // added penance to avoid killings for loot
+                        // deliberately no extra punishment for killing
             piety_change = -level;
             penance = level * 3;
-            ret = true;
-            break;
-        case GOD_BEOGH:
-            piety_change = -level;
-            // no penance as Beogh is not a good god
             ret = true;
             break;
         default:
@@ -1982,7 +1979,12 @@ void divine_retribution( god_type god )
                 break;
             } // else fall through
         }
-        default: // send orcs after you (5/8)
+        case 4: // 25%, relatively harmless
+        case 5: // in effect, only for penance
+            if (followers_abandon_you()) 
+               break;
+            // else fall through
+        default: // send orcs after you (3/8 to 5/8)
         {
 
             int points = you.experience_level + 3
@@ -2151,6 +2153,7 @@ int followers_abandon_you()
      
      bool reconvert = false;
      int num_reconvert = 0;
+     int num_followers = 0;
 
      std::vector<const monsters *> mons;
      // monster check
@@ -2168,6 +2171,8 @@ int followers_abandon_you()
                       && (monster->flags & MF_CONVERT_ATTEMPT))
                  {
 
+                     num_followers++;
+                     
                      if (mons_player_visible(monster)
                          && !mons_is_confused(monster)
                          && !mons_is_paralysed(monster))
@@ -2194,8 +2199,18 @@ int followers_abandon_you()
 
         if (num_reconvert > 0)
         {
-           snprintf(info, INFO_SIZE, "Your follower%s decide%s to abandon you.",
-                (num_reconvert > 1) ? "s" : "", (num_reconvert > 1) ? "" : "s");
+           std::string how_many;
+           if (num_reconvert == 1 and num_followers > 1)
+              how_many = "One of your";
+           else if (num_reconvert == num_followers)
+              how_many = "Your";
+           else
+              how_many = "Some of your";
+              
+           snprintf(info, INFO_SIZE, "%s follower%s decide%s to abandon you.",
+                how_many.c_str(),
+                (num_reconvert > 1) ? "s" : "",
+                (num_reconvert > 1) ? "" : "s");
            mpr(info, MSGCH_MONSTER_ENCHANT);
            return 1;
         }

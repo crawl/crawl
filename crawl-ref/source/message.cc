@@ -164,8 +164,10 @@ static char god_message_altar_colour( char god )
         return (CYAN);
 
     case GOD_YREDELEMNUL:
-    case GOD_BEOGH:
         return (coinflip() ? DARKGREY : RED);
+
+    case GOD_BEOGH:
+        return (coinflip() ? BROWN : LIGHTRED);
 
     case GOD_KIKUBAAQUDGHA:
         return (DARKGREY);

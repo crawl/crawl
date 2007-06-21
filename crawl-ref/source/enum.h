@@ -1198,6 +1198,7 @@ enum element_type
     EC_NECRO,           // necromancy stuff
     EC_UNHOLY,          // demonology stuff
     EC_VEHUMET,         // vehumet's odd-ball colours
+    EC_BEOGH,           // Beogh altar colours
     EC_CRYSTAL,         // colours of crystal
     EC_BLOOD,           // colours of blood
     EC_SMOKE,           // colours of smoke
