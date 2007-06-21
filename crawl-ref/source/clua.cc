@@ -49,10 +49,12 @@
     } \
     else
 
+static int clua_panic(lua_State *);
 static void clua_throttle_hook(lua_State *, lua_Debug *);
 static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize);
 static int clua_guarded_pcall(lua_State *);
-static int clua_panic(lua_State *);
+static int clua_dofile(lua_State *);
+static int clua_loadfile(lua_State *);
 
 CLua clua(true);
 
@@ -214,6 +216,28 @@ int CLua::execstring(const char *s, const char *context)
     return err;
 }
 
+bool CLua::is_path_safe(const char *s)
+{
+    return (!strstr(s, "..") && shell_safe(s));
+}
+
+int CLua::loadfile(lua_State *ls, const char *filename)
+{
+    if (!ls)
+        return (-1);
+
+    if (!is_path_safe(filename))
+    {
+        lua_pushstring(
+            ls,
+            make_stringf("invalid filename: %s", filename).c_str());
+        return (-1);
+    }
+    
+    const std::string file = datafile_path(filename, false);
+    return (luaL_loadfile(ls, file.c_str()));
+}
+
 int CLua::execfile(const char *filename)
 {
     if (sourced_files.find(filename) != sourced_files.end())
@@ -221,20 +245,8 @@ int CLua::execfile(const char *filename)
 
     sourced_files.insert(filename);
 
-    FILE *f = fopen(filename, "r");
-    if (f)
-        fclose(f);
-    else
-    {
-        error = std::string("Can't read ") + filename;
-        return -1;
-    }
-
     lua_State *ls = state();
-    if (!ls)
-        return -1;
-    
-    int err = luaL_loadfile(ls, filename);
+    int err = loadfile(ls, filename);
     lua_call_throttle strangler(this);
     if (!err)
         err = lua_pcall(ls, 0, 0, 0);
@@ -570,16 +582,11 @@ void CLua::init_lua()
     load_chooks();
 
     if (managed_vm)
-        guard_pcall();
-}
-
-void CLua::guard_pcall()
-{
-    // Replace Lua's pcall() with our own version which doesn't swallow
-    // 666: errors that we generate for buggy or malicious scripts that try
-    // to hog CPU.
-
-    lua_register(_state, "pcall", clua_guarded_pcall);
+    {
+        lua_register(_state, "pcall", clua_guarded_pcall);
+        lua_register(_state, "loadfile", clua_loadfile);
+        lua_register(_state, "dofile", clua_dofile);
+    }
 }
 
 void CLua::load_chooks()
@@ -2452,6 +2459,26 @@ static void clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
     }
 }
 
+lua_call_throttle::lua_call_throttle(CLua *_lua)
+    : lua(_lua)
+{
+    lua->init_throttle();
+    if (!lua->mixed_call_depth++)
+        lua_map[lua->state()] = lua;
+}
+
+lua_call_throttle::~lua_call_throttle()
+{
+    if (!--lua->mixed_call_depth)
+        lua_map.erase(lua->state());
+}
+
+CLua *lua_call_throttle::find_clua(lua_State *ls)
+{
+    lua_clua_map::iterator i = lua_map.find(ls);
+    return (i != lua_map.end()? i->second : NULL);
+}
+
 // This function is a replacement for Lua's in-built pcall function. It behaves
 // like pcall in all respects (as documented in the Lua 5.1 reference manual),
 // but does not allow the Lua chunk/script to catch errors thrown by the
@@ -2488,22 +2515,33 @@ static int clua_guarded_pcall(lua_State *ls)
     return (lua_gettop(ls));
 }
 
-lua_call_throttle::lua_call_throttle(CLua *_lua)
-    : lua(_lua)
+static int clua_loadfile(lua_State *ls)
 {
-    lua->init_throttle();
-    if (!lua->mixed_call_depth++)
-        lua_map[lua->state()] = lua;
+    const char *file = luaL_checkstring(ls, 1);
+    if (!file)
+        return (0);
+
+    const int err = CLua::loadfile(ls, file);
+    if (err)
+    {
+        const int place = lua_gettop(ls);
+        lua_pushnil(ls);
+        lua_insert(ls, place);
+        return (2);
+    }
+    return (1);
 }
 
-lua_call_throttle::~lua_call_throttle()
+static int clua_dofile(lua_State *ls)
 {
-    if (!--lua->mixed_call_depth)
-        lua_map.erase(lua->state());
-}
+    const char *file = luaL_checkstring(ls, 1);
+    if (!file)
+        return (0);
 
-CLua *lua_call_throttle::find_clua(lua_State *ls)
-{
-    lua_clua_map::iterator i = lua_map.find(ls);
-    return (i != lua_map.end()? i->second : NULL);
+    const int err = CLua::loadfile(ls, file);
+    if (err)
+        return (lua_error(ls));
+
+    lua_call(ls, 0, LUA_MULTRET);
+    return (lua_gettop(ls));
 }

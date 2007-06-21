@@ -26,6 +26,8 @@ bool ends_with(const std::string &s, const std::string &suffix);
 std::string pluralise(const std::string &name, 
                       const char *no_of[] = NULL);
 
+bool shell_safe(const char *file);
+
 /**
  * Returns 1 + the index of the first suffix that matches the given string,
  * 0 if no suffixes match.

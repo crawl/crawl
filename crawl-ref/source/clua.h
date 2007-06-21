@@ -73,6 +73,8 @@ public:
     bool runhook(const char *hook, const char *params, ...);
 
     static int file_write(lua_State *ls);
+    static int loadfile(lua_State *ls, const char *file);
+    static bool is_path_safe(const char *file);
 
 public:
     std::string error;
@@ -106,7 +108,6 @@ private:
     void load_cmacro();
     void load_chooks();
     void init_throttle();
-    void guard_pcall();
 
     void vfnreturns(const char *par, va_list va);
 
