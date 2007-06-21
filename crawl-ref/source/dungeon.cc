@@ -180,6 +180,8 @@ static int vault_grid( vault_placement &,
 static dungeon_feature_type pick_an_altar();
 static void place_altar();
 
+typedef std::list<coord_def> coord_list;
+
 //////////////////////////////////////////////////////////////////////////
 // Static data
 
@@ -2689,9 +2691,9 @@ static void build_rooms(const dgn_region_list &excluded,
         {
             myroom.size.set(3 + random2(8), 3 + random2(8));
             myroom.pos.set(
-                random_range(MAPGEN_BORDER + 1,
+                random_range(MAPGEN_BORDER,
                              GXM - MAPGEN_BORDER - 1 - myroom.size.x),
-                random_range(MAPGEN_BORDER + 1,
+                random_range(MAPGEN_BORDER,
                              GYM - MAPGEN_BORDER - 1 - myroom.size.y));
         }
         while (myroom.overlaps_any(excluded) && overlap_tries-- > 0);
@@ -2811,8 +2813,8 @@ static void dig_away_from(vault_placement &place, const coord_def &pos)
     {
         dig_at += dig_dir;
         
-        if (dig_at.x < MAPGEN_BORDER + 1 || dig_at.x > (GXM - MAPGEN_BORDER - 1)
-            || dig_at.y < MAPGEN_BORDER + 1
+        if (dig_at.x < MAPGEN_BORDER || dig_at.x > (GXM - MAPGEN_BORDER - 1)
+            || dig_at.y < MAPGEN_BORDER
             || dig_at.y > (GYM - MAPGEN_BORDER - 1))
         {
             break;
@@ -2930,9 +2932,9 @@ static coord_def find_random_grid(int grid, const dgn_region_list &excluded)
 {
     for (int i = 0; i < 100; ++i)
     {
-        coord_def c( random_range(MAPGEN_BORDER + 1,
+        coord_def c( random_range(MAPGEN_BORDER,
                                   GXM - MAPGEN_BORDER - 1),
-                     random_range(MAPGEN_BORDER + 1,
+                     random_range(MAPGEN_BORDER,
                                   GYM - MAPGEN_BORDER - 1) );
 
         if (unforbidden(c, excluded) && grd(c) == grid)
@@ -4666,8 +4668,131 @@ static bool octa_room(spec_room &sr, int oblique_max,
     return true;
 }                               // end octa_room()
 
+static void find_maze_neighbours(const coord_def &c, coord_list &ns)
+{
+    std::vector<coord_def> coords;
+
+    for (int yi = -2; yi <= 2; yi += 2)
+    {
+        for (int xi = -2; xi <= 2; xi += 2)
+        {
+            if (!!xi == !!yi)
+                continue;
+            
+            const coord_def cp(c.x + xi, c.y + yi);
+            if (cp.x >= MAPGEN_BORDER * 3 && cp.x < GXM - MAPGEN_BORDER * 3
+                && cp.y >= MAPGEN_BORDER * 3 && cp.y < GYM - MAPGEN_BORDER * 3)
+            {
+                coords.push_back(cp);
+            }
+        }
+    }
+
+    while (!coords.empty())
+    {
+        const int n = random2(coords.size());
+        ns.push_back(coords[n]);
+        coords.erase( coords.begin() + n );
+    }
+}
+
+static void labyrinth_maze_recurse(const coord_def &c)
+{
+    coord_list neighbours;
+    find_maze_neighbours(c, neighbours);
+
+    coord_list deferred;
+    for (coord_list::iterator i = neighbours.begin();
+         i != neighbours.end(); ++i)
+    {
+        const coord_def &nc = *i;
+
+        if (grd(nc) == DNGN_ROCK_WALL)
+        {
+            grd(nc) = DNGN_FLOOR;
+            grd(c + (nc - c) / 2) = DNGN_FLOOR;
+
+            if (!one_chance_in(3))
+                labyrinth_maze_recurse(nc);
+            else
+                deferred.push_back(nc);
+        }
+    }
+
+    for (coord_list::iterator i = deferred.begin(); i != deferred.end(); ++i)
+        labyrinth_maze_recurse(*i);
+}
+
+static coord_def random_point_in_lab()
+{
+    return coord_def( random_range(MAPGEN_BORDER * 3,
+                                   GXM - MAPGEN_BORDER * 3 - 1),
+                      random_range(MAPGEN_BORDER * 3,
+                                   GYM - MAPGEN_BORDER * 3 - 1) );
+}
+
+static void labyrinth_build_maze(coord_def &e)
+{
+    labyrinth_maze_recurse(random_point_in_lab());
+
+    do
+        e = random_point_in_lab();
+    while (grd(e) != DNGN_FLOOR);
+}
+
+static void labyrinth_place_items(const coord_def &end)
+{
+    int num_items = 8 + random2avg(9, 2);
+    for (int i = 0; i < num_items; i++)
+    {
+        int temp_rand = random2(11);
+
+        const object_class_type
+            glopop = ((temp_rand == 0 || temp_rand == 9)  ? OBJ_WEAPONS :
+                  (temp_rand == 1 || temp_rand == 10) ? OBJ_ARMOUR :
+                  (temp_rand == 2)                    ? OBJ_MISSILES :
+                  (temp_rand == 3)                    ? OBJ_WANDS :
+                  (temp_rand == 4)                    ? OBJ_MISCELLANY :
+                  (temp_rand == 5)                    ? OBJ_SCROLLS :
+                  (temp_rand == 6)                    ? OBJ_JEWELLERY :
+                  (temp_rand == 7)                    ? OBJ_BOOKS
+                  /* (temp_rand == 8) */              : OBJ_STAVES);
+
+        const int treasure_item =
+            items( 1, glopop, OBJ_RANDOM, true, 
+                   you.your_level * 3, MAKE_ITEM_RANDOM_RACE );
+
+        if (treasure_item != NON_ITEM)
+        {
+            mitm[treasure_item].x = end.x;
+            mitm[treasure_item].y = end.y;
+        }
+    }
+}
+
+static void labyrinth_place_exit(const coord_def &end)
+{
+    labyrinth_place_items(end);
+    mons_place( MONS_MINOTAUR, BEH_SLEEP, MHITNOT, true, end.x, end.y );
+    grd(end) = DNGN_ROCK_STAIRS_UP;
+}
+
 static void labyrinth_level(int level_number)
 {
+    coord_def end;
+    labyrinth_build_maze(end);
+    labyrinth_place_exit(end);
+    link_items();
+
+    // turn rock walls into undiggable stone or metal:
+    dungeon_feature_type wall_xform =
+        ((random2(50) > 10) ? DNGN_STONE_WALL   // 78.0%
+         : DNGN_METAL_WALL); // 22.0%
+
+    replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,wall_xform);
+
+    
+#ifdef OBSOLETE_LABYRINTH
     int keep_lx = 0, keep_ly = 0;
     int keep_lx2 = 0, keep_ly2 = 0;
     char start_point_x = 10;
@@ -4837,7 +4962,7 @@ static void labyrinth_level(int level_number)
          : DNGN_METAL_WALL); // 22.0%
 
     replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,wall_xform);
-
+#endif
 }                               // end labyrinth_level()
 
 static bool is_wall(int x, int y)
