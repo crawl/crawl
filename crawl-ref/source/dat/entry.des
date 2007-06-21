@@ -4481,7 +4481,6 @@ TAGS:    entry
 FLAGS:   no_rotate no_hmirror
 ORIENT:  float
 SHUFFLE: ({[<, 1234567
-CHANCE: 10000
 MONS: giant gecko/giant iguana/giant lizard/giant newt/gila monster/komodo dragon
 MONS: hog/jackal/wolf/hound/war dog
 MONS: giant cockroach/giant ant/butterfly/killer bee/bumbleebee/redback/giant mite

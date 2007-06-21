@@ -329,6 +329,9 @@ int random_map_for_tag(const std::string &tag,
         }
     }
 
+    if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
+        mapindex = -1;
+    
 #ifdef DEBUG_DIAGNOSTICS
     if (mapindex != -1)
         mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged '%s'",

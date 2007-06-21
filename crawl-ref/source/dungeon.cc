@@ -90,7 +90,8 @@ static bool make_box(int room_x1, int room_y1, int room_x2, int room_y2,
                      dungeon_feature_type avoid=DNGN_UNSEEN);
 static void replace_area(int sx, int sy, int ex, int ey,
                          dungeon_feature_type replace,
-                         dungeon_feature_type feature);
+                         dungeon_feature_type feature,
+                         const dgn_region_list &forbidden = dgn_region_list());
 static builder_rc_type builder_by_type(int level_number, char level_type);
 static builder_rc_type builder_by_branch(int level_number);
 static builder_rc_type builder_normal(int level_number, char level_type, spec_room &s);
@@ -169,7 +170,7 @@ static void jelly_pit(int level_number, spec_room &sr);
 static bool build_secondary_vault(int level_number, int vault, int rune_subst = -1);
 static bool build_vaults(int level_number, int vault_number, int rune_subst = -1,
                          bool build_only = false);
-static void build_minivaults(int level_number, int force_vault);
+static bool build_minivaults(int level_number, int force_vault);
 static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
                        FixedVector < object_class_type, 7 > &acq_item_class, 
@@ -2547,7 +2548,68 @@ static void beehive(spec_room &sr)
     mons_place( MONS_QUEEN_BEE, BEH_SLEEP, MHITNOT, true, queenx, queeny );
 }                               // end beehive()
 
-static void build_minivaults(int level_number, int force_vault)
+static bool safe_minivault_place(int v1x, int v1y,
+                                  const vault_placement &place)
+{
+    for (int vx = v1x; vx < v1x + place.width; vx++)
+    {
+        for (int vy = v1y; vy < v1y + place.height; vy++)
+        {
+            if ((grd[vx][vy] != DNGN_FLOOR
+                 && grd[vx][vy] != DNGN_ROCK_WALL
+                 && grd[vx][vy] != DNGN_CLOSED_DOOR
+                 && grd[vx][vy] != DNGN_SECRET_DOOR)
+                || igrd[vx][vy] != NON_ITEM
+                || mgrd[vx][vy] != NON_MONSTER)
+            {
+                return (false);
+            }
+        }
+    }
+    return (true);
+}
+
+static bool connected_minivault_place(int v1x, int v1y,
+                                      const vault_placement &place)
+{
+    /* must not be completely isolated: */
+    for (int vx = v1x; vx < v1x + place.width; vx++)
+    {
+        //  if (vx != v1x && vx != v1x + 12) continue;
+        for (int vy = v1y; vy < v1y + place.height; vy++)
+        {
+            if (grd[vx][vy] == DNGN_FLOOR
+                || grd[vx][vy] == DNGN_CLOSED_DOOR
+                || grd[vx][vy] == DNGN_SECRET_DOOR)
+                return (true);
+        }
+    }
+    return (false);
+}
+
+static bool find_minivault_place(const vault_placement &place,
+                                 int &v1x, int &v1y)
+{
+    // [ds] The margin around the edges of the map where the minivault
+    // won't be placed. Purely arbitrary as far as I can see.
+    const int margin = MAPGEN_BORDER * 2;
+
+    /* find a target area which can be safely overwritten: */
+    for (int tries = 0; tries < 600; ++tries)
+    {
+        v1x = random_range( margin, GXM - margin - place.width );
+        v1y = random_range( margin, GYM - margin - place.height );
+
+        if (!safe_minivault_place( v1x, v1y, place ))
+            continue;
+
+        if (connected_minivault_place(v1x, v1y, place))
+            return (true);
+    }
+    return (false);
+}
+
+static bool build_minivaults(int level_number, int force_vault)
 {
     // for some weird reason can't put a vault on level 1, because monster equip
     // isn't generated.
@@ -2568,62 +2630,17 @@ static void build_minivaults(int level_number, int force_vault)
     vault_placement place;
     vault_main(vgrid, place, force_vault);
 
-    level_vaults.push_back(place);
-
     int vx, vy;
     int v1x, v1y;
 
-    // [ds] The margin around the edges of the map where the minivault won't be
-    // placed. Purely arbitrary as far as I can see.
-    const int margin = 12;
+    if (!find_minivault_place(place, v1x, v1y))
+        return (false);
 
-    /* find a target area which can be safely overwritten: */
-    while(1)
-    {
-        v1x = random_range( margin, GXM - margin - place.width );
-        v1y = random_range( margin, GYM - margin - place.height );
-
-        for (vx = v1x; vx < v1x + place.width; vx++)
-        {
-            for (vy = v1y; vy < v1y + place.height; vy++)
-            {
-                // [ds] An escape hatch to keep from hanging forever looking
-                // for a good place.
-                if (one_chance_in(2000))
-                    return;
-
-                if ((grd[vx][vy] != DNGN_FLOOR
-                        && grd[vx][vy] != DNGN_ROCK_WALL
-                        && grd[vx][vy] != DNGN_CLOSED_DOOR
-                        && grd[vx][vy] != DNGN_SECRET_DOOR)
-                    || igrd[vx][vy] != NON_ITEM
-                    || mgrd[vx][vy] != NON_MONSTER)
-                {
-                    goto out_of_check;
-                }
-            }
-        }
-
-        /* must not be completely isolated: */
-        for (vx = v1x; vx < v1x + place.width; vx++)
-        {
-            //  if (vx != v1x && vx != v1x + 12) continue;
-            for (vy = v1y; vy < v1y + place.height; vy++)
-            {
-                if (grd[vx][vy] == DNGN_FLOOR
-                    || grd[vx][vy] == DNGN_CLOSED_DOOR
-                    || grd[vx][vy] == DNGN_SECRET_DOOR)
-                    goto break_out;
-            }
-        }
-
-      out_of_check:
-        continue;
-
-      break_out:
-        break;
-    }
-
+    place.x = v1x;
+    place.y = v1y;
+    
+    level_vaults.push_back(place);
+    
     for (vx = v1x; vx < v1x + place.width; vx++)
     {
         for (vy = v1y; vy < v1y + place.height; vy++)
@@ -2667,6 +2684,8 @@ static void build_minivaults(int level_number, int force_vault)
     if (place.map.has_tag("no_pool_fixup"))
         no_pool_fixup_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );
+
+    return (true);
 }                               // end build_minivaults()
 
 static void build_rooms(const dgn_region_list &excluded,
@@ -3545,12 +3564,12 @@ static int vault_grid( vault_placement &place,
 
 static void replace_area(
     int sx, int sy, int ex, int ey, dungeon_feature_type replace,
-    dungeon_feature_type feature)
+    dungeon_feature_type feature, const dgn_region_list &forbidden)
 {
     int x,y;
     for(x=sx; x<=ex; x++)
         for(y=sy; y<=ey; y++)
-            if (grd[x][y] == replace)
+            if (grd[x][y] == replace && unforbidden(coord_def(x, y), forbidden))
                 grd[x][y] = feature;
 }
 
@@ -4668,7 +4687,9 @@ static bool octa_room(spec_room &sr, int oblique_max,
     return true;
 }                               // end octa_room()
 
-static void find_maze_neighbours(const coord_def &c, coord_list &ns)
+static void find_maze_neighbours(const coord_def &c,
+                                 const dgn_region &region,
+                                 coord_list &ns)
 {
     std::vector<coord_def> coords;
 
@@ -4680,11 +4701,8 @@ static void find_maze_neighbours(const coord_def &c, coord_list &ns)
                 continue;
             
             const coord_def cp(c.x + xi, c.y + yi);
-            if (cp.x >= MAPGEN_BORDER * 3 && cp.x < GXM - MAPGEN_BORDER * 3
-                && cp.y >= MAPGEN_BORDER * 3 && cp.y < GYM - MAPGEN_BORDER * 3)
-            {
+            if (region.contains(cp))
                 coords.push_back(cp);
-            }
         }
     }
 
@@ -4696,47 +4714,38 @@ static void find_maze_neighbours(const coord_def &c, coord_list &ns)
     }
 }
 
-static void labyrinth_maze_recurse(const coord_def &c)
+static void labyrinth_maze_recurse(const coord_def &c, const dgn_region &where)
 {
     coord_list neighbours;
-    find_maze_neighbours(c, neighbours);
+    find_maze_neighbours(c, where, neighbours);
 
     coord_list deferred;
     for (coord_list::iterator i = neighbours.begin();
          i != neighbours.end(); ++i)
     {
         const coord_def &nc = *i;
-
-        if (grd(nc) == DNGN_ROCK_WALL)
-        {
-            grd(nc) = DNGN_FLOOR;
-            grd(c + (nc - c) / 2) = DNGN_FLOOR;
-
-            if (!one_chance_in(3))
-                labyrinth_maze_recurse(nc);
-            else
-                deferred.push_back(nc);
-        }
+        if (grd(nc) != DNGN_ROCK_WALL)
+            continue;
+        
+        grd(nc) = DNGN_FLOOR;
+        grd(c + (nc - c) / 2) = DNGN_FLOOR;
+        
+        if (!one_chance_in(5))
+            labyrinth_maze_recurse(nc, where);
+        else
+            deferred.push_back(nc);
     }
 
     for (coord_list::iterator i = deferred.begin(); i != deferred.end(); ++i)
-        labyrinth_maze_recurse(*i);
+        labyrinth_maze_recurse(*i, where);
 }
 
-static coord_def random_point_in_lab()
+static void labyrinth_build_maze(coord_def &e, const dgn_region &lab)
 {
-    return coord_def( random_range(MAPGEN_BORDER * 3,
-                                   GXM - MAPGEN_BORDER * 3 - 1),
-                      random_range(MAPGEN_BORDER * 3,
-                                   GYM - MAPGEN_BORDER * 3 - 1) );
-}
-
-static void labyrinth_build_maze(coord_def &e)
-{
-    labyrinth_maze_recurse(random_point_in_lab());
+    labyrinth_maze_recurse(lab.random_point(), lab);
 
     do
-        e = random_point_in_lab();
+        e = lab.random_point();
     while (grd(e) != DNGN_FLOOR);
 }
 
@@ -4777,19 +4786,90 @@ static void labyrinth_place_exit(const coord_def &end)
     grd(end) = DNGN_ROCK_STAIRS_UP;
 }
 
+static void init_minivault_placement(int vault, vault_placement &place)
+{
+    map_type vgrid;
+    vault_main(vgrid, place, vault);
+}
+
+static void labyrinth_dimension_adjust(int delta, int &ds, int &dw)
+{
+    if (delta > MAPGEN_BORDER)
+        delta = MAPGEN_BORDER;
+
+    if (delta)
+    {
+        if (delta & 1)
+            ++delta;
+
+        ds -= delta;
+        dw += delta * 2;
+    }
+}
+
 static void labyrinth_level(int level_number)
 {
-    coord_def end;
-    labyrinth_build_maze(end);
-    labyrinth_place_exit(end);
-    link_items();
+    dgn_region lab =
+        dgn_region::absolute( MAPGEN_BORDER * 5 / 2, MAPGEN_BORDER * 5 / 2,
+                              GXM - MAPGEN_BORDER * 5 / 2 - 1,
+                              GYM - MAPGEN_BORDER * 5 / 2 - 1 );
+    
+    // First decide if we're going to use a Lab minivault.
+    int vault = random_map_for_tag("lab", true, false);
+    vault_placement place;
+    if (vault != -1)
+    {
+        init_minivault_placement(vault, place);
 
-    // turn rock walls into undiggable stone or metal:
+        int ex = place.width / 4, ey = place.height / 4;
+
+        labyrinth_dimension_adjust(ex, lab.pos.x, lab.size.x);
+        labyrinth_dimension_adjust(ey, lab.pos.y, lab.size.y);
+    }
+    
+    coord_def end;
+    labyrinth_build_maze(end, lab);
+
+    if (vault == -1 || !build_minivaults(level_number, vault))
+    {
+        vault = -1;
+        labyrinth_place_exit(end);
+    }
+    else
+    {
+        const vault_placement &rplace = *(level_vaults.end() - 1);
+        if (rplace.map.has_tag("generate_loot"))
+        {
+            for (int y = rplace.y; y <= rplace.y + rplace.height - 1; ++y)
+            {
+                for (int x = rplace.x; x <= rplace.x + rplace.height - 1; ++x)
+                {
+                    if (grd[x][y] == DNGN_ROCK_STAIRS_UP)
+                    {
+                        labyrinth_place_items(coord_def(x, y));
+                        break;
+                    }
+                }
+            }
+        }
+        place.x = rplace.x;
+        place.y = rplace.y;
+        place.width = rplace.width;
+        place.height = rplace.height;
+    }
+
+        // turn rock walls into undiggable stone or metal:
     dungeon_feature_type wall_xform =
         ((random2(50) > 10) ? DNGN_STONE_WALL   // 78.0%
          : DNGN_METAL_WALL); // 22.0%
 
-    replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,wall_xform);
+    dgn_region_list vaults;
+    vaults.push_back(
+        dgn_region(place.x, place.y, place.width, place.height));
+    
+    replace_area(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, wall_xform, vaults);
+     
+    link_items();
 
     
 #ifdef OBSOLETE_LABYRINTH
@@ -6039,9 +6119,14 @@ bool dgn_region::overlaps_any(const dgn_region_list &regions) const
 coord_def dgn_region::random_edge_point() const
 {
     return random2(size.x + size.y) < size.x?
-        coord_def( random_range( pos.x, pos.x + size.x - 1 ),
+        coord_def( pos.x + random2(size.x),
                    coinflip()? pos.y : pos.y + size.y - 1 )
         :
         coord_def( coinflip()? pos.x : pos.x + size.x - 1,
-                   random_range( pos.y, pos.y + size.y - 1 ) );
+                   pos.y + random2(size.y) );
+}
+
+coord_def dgn_region::random_point() const
+{
+    return coord_def( pos.x + random2(size.x), pos.y + random2(size.y) );
 }

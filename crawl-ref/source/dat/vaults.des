@@ -2342,6 +2342,51 @@ MAP
 ............
 ENDMAP
 
+#############################################################################
+# Labyrinth minivaults
+#############################################################################
+# One layer of floor space *must* surround the minivault, or the player could
+# be trapped in the labyrinth (the dummy is exempt from this requirement).
+#
+# You can use the "generate_loot" tag to indicate that you're not explicitly
+# placing the loot and that the dungeon builder should generate random loot
+# (on the upstair). Note that this is not the default, and if you neither use
+# this tag nor provide loot in the map definition, the player will be
+# disappointed.
+#
+# You *must* place the minotaur(s) yourself!
+#############################################################################
+# Dummy balancer
+
+NAME: labyrinth_0
+TAGS: lab dummy
+CHANCE: 20
+
+MAP
+x
+ENDMAP
+
+#############################################################################
+# A simple lair.
+
+NAME: labyrinth_1
+TAGS: lab generate_loot no_pool_fixup
+MONS: minotaur
+SHUFFLE: def
+SUBST: d=^, e=^, f=.
+
+MAP
+.........
+.ccccccc.
+.cwwwwwc.
+.cww<wwc.
+.cwdefwc.
+.ccc1ccc.
+.c.....c.
+.ccc+ccc.
+.........
+ENDMAP
+
 ############################################################################
 # Minivaults specific to particular branches
 ############################################################################

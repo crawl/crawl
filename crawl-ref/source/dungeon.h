@@ -50,6 +50,7 @@ struct dgn_region
     }
 
     coord_def random_edge_point() const;
+    coord_def random_point() const;
 
     static dgn_region absolute(int left, int top, int right, int bottom)
     {
