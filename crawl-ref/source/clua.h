@@ -18,6 +18,10 @@ extern "C" {
 #include "libutil.h"
 #include "externs.h"
 
+#ifndef CLUA_MAX_MEMORY_USE
+#define CLUA_MAX_MEMORY_USE (6 * 1024)
+#endif
+
 class CLua;
 class lua_call_throttle
 {
@@ -76,6 +80,7 @@ public:
     // If managed_vm is set, we have to take steps to control badly-behaved
     // scripts.
     bool managed_vm;
+    bool shutting_down;
     int throttle_unit_lines;
     int throttle_sleep_ms;
     int throttle_sleep_start, throttle_sleep_end;
@@ -84,6 +89,8 @@ public:
     int lua_call_depth;
     int max_mixed_call_depth;
     int max_lua_call_depth;
+
+    long memory_used;
 
     static const int MAX_THROTTLE_SLEEPS = 100;
 

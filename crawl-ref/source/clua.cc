@@ -11,6 +11,7 @@
 #include "chardump.h"
 #include "cio.h"
 #include "delay.h"
+#include "files.h"
 #include "food.h"
 #include "invent.h"
 #include "initfile.h"
@@ -31,15 +32,7 @@
 #include "stuff.h"
 
 #include <cstring>
-
-#ifdef HASH_CONTAINERS
-#   include <hash_map>
-#   define CHMAP HASH_CONTAINER_NS::hash_map
-#else
-#   include <map>
-#   define CHMAP std::map
-#endif
-
+#include <map>
 #include <cctype>
 
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
@@ -57,23 +50,28 @@
     else
 
 static void clua_throttle_hook(lua_State *, lua_Debug *);
+static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize);
 static int clua_guarded_pcall(lua_State *);
+static int clua_panic(lua_State *);
 
 CLua clua(true);
 
 const int CLua::MAX_THROTTLE_SLEEPS;
 
 CLua::CLua(bool managed)
-    : error(), managed_vm(managed), throttle_unit_lines(10000),
+    : error(), managed_vm(managed), shutting_down(false),
+      throttle_unit_lines(10000),
       throttle_sleep_ms(0), throttle_sleep_start(2),
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
-      max_lua_call_depth(100), _state(NULL), sourced_files(), uniqindex(0L)
+      max_lua_call_depth(100), memory_used(0),
+      _state(NULL), sourced_files(), uniqindex(0L)
 {
 }
 
 CLua::~CLua()
 {
+    shutting_down = true;
     if (_state)
         lua_close(_state);
 }
@@ -546,9 +544,12 @@ void CLua::init_lua()
     if (_state)
         return;
 
-    _state = lua_open();
+    _state = managed_vm? lua_newstate(clua_allocator, this) : luaL_newstate();
     if (!_state)
         return;
+
+    lua_atpanic(_state, clua_panic);
+    
     luaopen_base(_state);
     luaopen_string(_state);
     luaopen_table(_state);
@@ -2168,7 +2169,7 @@ void lua_open_monsters(lua_State *ls)
 
 #define PATTERN_FLUSH_CEILING 100
 
-typedef CHMAP<std::string, text_pattern> pattern_map;
+typedef std::map<std::string, text_pattern> pattern_map;
 static pattern_map pattern_cache;
 
 static text_pattern &get_text_pattern(const std::string &s, bool checkcase)
@@ -2181,7 +2182,7 @@ static text_pattern &get_text_pattern(const std::string &s, bool checkcase)
         pattern_cache.clear();
 
     pattern_cache[s] = text_pattern(s, !checkcase);
-    return pattern_cache[s];
+    return (pattern_cache[s]);
 }
 
 static int lua_pmatch(lua_State *ls)
@@ -2379,6 +2380,48 @@ bool lua_text_pattern::translate() const
 //////////////////////////////////////////////////////////////////////////
 
 lua_call_throttle::lua_clua_map lua_call_throttle::lua_map;
+
+// A panic function for the Lua interpreter, usually called when it
+// runs out of memory when trying to load a file or a chunk of Lua from
+// an unprotected Lua op. The only cases of unprotected Lua loads are
+// loads of Lua code from .crawlrc, which is read at start of game.
+//
+// If there's an inordinately large .crawlrc (we're talking seriously
+// massive here) that wants more memory than we're willing to give
+// Lua, then the game will save and exit until the .crawlrc is fixed.
+//
+// Lua can also run out of memory during protected script execution,
+// such as when running a macro or some other game hook, but in such
+// cases the Lua interpreter will throw an exception instead of
+// panicking.
+//
+static int clua_panic(lua_State *ls)
+{
+    if (crawl_state.need_save && !crawl_state.saving_game
+        && !crawl_state.updating_scores)
+    {
+        save_game(true);
+    }
+    return (0);
+}
+
+static void *clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
+{
+    CLua *cl = static_cast<CLua *>( ud );
+    cl->memory_used += nsize - osize;
+
+    if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
+           && cl->mixed_call_depth)
+        return (NULL);
+    
+    if (!nsize)
+    {
+        free(ptr);
+        return (NULL);
+    }
+    else
+        return (realloc(ptr, nsize));
+}
 
 static void clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {

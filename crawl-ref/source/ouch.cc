@@ -736,7 +736,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     interrupt_activity( AI_HP_LOSS, &hpl );
 
     if (you.deaths_door && death_type != KILLED_BY_LAVA
-                                    && death_type != KILLED_BY_WATER)
+        && death_type != KILLED_BY_WATER)
     {
         return;
     }

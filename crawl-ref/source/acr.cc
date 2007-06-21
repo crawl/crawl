@@ -297,7 +297,8 @@ int main( int argc, char *argv[] )
             simple_god_message( " says: Go forth and aid the weak!" );
             break;
         case GOD_BEOGH:
-            simple_god_message( " says: Let disbelievers drown in blood!" );
+            simple_god_message(
+                " says: Drown the unbelievers in a sea of blood!");
             break;
         default:
             break;

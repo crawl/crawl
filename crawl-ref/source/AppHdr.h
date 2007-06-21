@@ -43,16 +43,18 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
-#if defined(GCC)
-#   define HASH_CONTAINER_NS __gnu_cxx
-#   define HASH_CONTAINERS
-#endif
-
-// Uncomment to enable the Crawl Lua bindings. You can also set this in your
-// makefile by adding -DCLUA_BINDINGS to the CFLAGS line (this is preferred to
-// editing AppHdr.h directly).
+// Uncomment to enable the Crawl Lua bindings. You can also set this
+// in your makefile by adding -DCLUA_BINDINGS to the CFLAGS line (this
+// is preferred to editing AppHdr.h directly).
 //
 // #define CLUA_BINDINGS
+
+// The maximum memory that the user-script Lua interpreter can
+// allocate, in kilobytes. This limit is enforced to prevent
+// badly-written or malicious user scripts from consuming too much
+// memory.
+//
+#define CLUA_MAX_MEMORY_USE (2 * 1024)
 
 // Enable support for Unicode character glyphs. Note that this needs
 // to be accompanied by changes to linker and compiler options and may
