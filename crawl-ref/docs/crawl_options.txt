@@ -76,8 +76,9 @@ The contents of this text are:
                 note_messages, note_all_spells
 6-  Miscellaneous.
 6-a     All OS.
-                macro_meta_entry, wiz_mode, colours, char_set, cset_ascii,
-                cset_ibm, cset_dec, feature, classic_item_colours
+                macro_meta_entry, mouse_input, wiz_mode, colours,
+                char_set, cset_ascii, cset_ibm, cset_dec, feature,
+                classic_item_colours
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix
@@ -1143,6 +1144,26 @@ macro_meta_entry = true
         macro_meta_entry lets you specify non-printable keycodes like \{3} when
         creating a macro. For instance, if you want to keymap 0 to Escape, you'd
         use a target keycode of \{27}.
+
+mouse_input = false
+        When enabled, the mouse_input option allows the game to use
+        mouse input events on certain platforms (Windows and Unix).
+        Note that the extent of mouse support varies greatly across
+        platforms and is strongly influenced by your terminal
+        settings.
+
+        On Unixes, you're only likely to get mouse support working
+        with ncurses in xterms (specifically your $TERM probably needs
+        to contain "xterm" for ncurses to activate its mouse events;
+        if you're running Crawl in GNU screen in an xterm, the mouse
+        will probably not work).
+
+        On Windows, you'll need to disable QuickEdit Mode on your
+        console for Crawl to use the mouse (QuickEdit is disabled by
+        default, so you shouldn't need to change anything if you're
+        using a stock console). You can disable QuickEdit by
+        right-clicking the titlebar of your command-prompt, selecting
+        Properties and disabling QuickEdit in the Options tab.
 
 colour.OLDCOLOUR = NEWCOLOUR
         Useful for terminals where some colours are hard to read (and cannot

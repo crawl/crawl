@@ -242,6 +242,9 @@ message_colour = lightcyan:LOW MAGIC WARNING
 #
 ##### 6-a	All OS ################################
 #
+# macro_meta_entry = false
+# mouse_input      = true
+#
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown

@@ -86,8 +86,6 @@ static int chsx=0, chex=0, chy=-1;
 // cursor position (start at 0,0 --> 1,1)
 static int cx=0, cy=0;
 
-//static FILE *foo = NULL;  //DEBUG
-
 // and now, for the screen buffer
 static CHAR_INFO *screen = NULL;
 static COORD screensize;
@@ -792,6 +790,40 @@ int m_getch()
     return getch();
 }
 
+static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
+{
+    const coord_def pos(mer.dwMousePosition.X + 1, mer.dwMousePosition.Y + 1);
+    crawl_view.mousep = pos;
+
+    if (!crawl_state.mouse_enabled)
+        return (0);
+    
+    c_mouse_event cme(pos);
+    if (mer.dwEventFlags & MOUSE_MOVED)
+        return (CK_MOUSE_MOVE);
+
+    if (mer.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED)
+        cme.bstate |= c_mouse_event::BUTTON1;
+    else if (mer.dwButtonState & RIGHTMOST_BUTTON_PRESSED)
+        cme.bstate |= c_mouse_event::BUTTON3;
+
+    if ((mer.dwEventFlags & MOUSE_WHEELED) && mer.dwButtonState)
+    {
+        if (!(mer.dwButtonState & 0x10000000UL))
+            cme.bstate |= c_mouse_event::BUTTON_SCRL_UP;
+        else
+            cme.bstate |= c_mouse_event::BUTTON_SCRL_DN;
+    }
+
+    if (cme)
+    {
+        new_mouse_event(cme);
+        return (CK_MOUSE_CLICK);
+    }
+
+    return (0);
+}
+
 int getch_ck(void)
 {
     INPUT_RECORD ir;
@@ -824,7 +856,7 @@ int getch_ck(void)
             switch (ir.EventType)
             {
             case KEY_EVENT:
-                kr = &(ir.Event.KeyEvent);
+                kr = &ir.Event.KeyEvent;
                 // ignore if it is a 'key up' - we only want 'key down'
                 if (kr->bKeyDown == true)
                 {
@@ -843,6 +875,11 @@ int getch_ck(void)
                 
             case WINDOW_BUFFER_SIZE_EVENT:
                 w32_handle_resize_event();
+                break;
+
+            case MOUSE_EVENT:
+                if ((key = w32_proc_mouse_event(ir.Event.MouseEvent)))
+                    waiting_for_event = false;
                 break;
             }
         }

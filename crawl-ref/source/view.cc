@@ -2255,9 +2255,9 @@ bool is_feature(int feature, int x, int y)
     }
 }
 
-static int find_feature(unsigned char feature, int curs_x, int curs_y, 
+static int find_feature(int feature, int curs_x, int curs_y, 
                          int start_x, int start_y, int anchor_x, int anchor_y,
-                         int ignore_count, char *move_x, char *move_y)
+                         int ignore_count, int *move_x, int *move_y)
 {
     int cx = anchor_x,
         cy = anchor_y;
@@ -2329,10 +2329,10 @@ void find_features(const std::vector<coord_def>& features,
 }
 
 static int find_feature( const std::vector<coord_def>& features,
-                         unsigned char feature, int curs_x, int curs_y, 
+                         int feature, int curs_x, int curs_y, 
                          int start_x, int start_y, 
                          int ignore_count, 
-                         char *move_x, char *move_y,
+                         int *move_x, int *move_y,
                          bool forward)
 {
     int firstx = -1, firsty = -1, firstmatch = -1;
@@ -2517,8 +2517,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     cursor_control ccon(!Options.use_fake_cursor);
     int i, j;
 
-    char move_x = 0;
-    char move_y = 0;
+    int move_x = 0, move_y = 0, scroll_y = 0;
     int getty = 0;
 
     // Vector to track all features we can travel to, in order of distance.
@@ -2658,7 +2657,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             move_x = move_y = 0;
             break;
         }
-            
+
         case 'b':
         case '1':
             move_x = -1;
@@ -2750,16 +2749,12 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         case '+':
             move_y = 20;
             move_x = 0;
+            scroll_y = 20;
             break;
         case '-':
             move_y = -20;
             move_x = 0;
-            break;
-        case '!':
-            mprf("Terrain seen: %s",
-                 is_terrain_seen(start_x + curs_x - 1,
-                                 start_y + curs_y - 1)? "yes" : "no");
-            more();
+            scroll_y = -20;
             break;
         case '<':
         case '>':
@@ -2827,18 +2822,9 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
                 map_alive     = false;
             }
             else if (cme.scroll_up())
-            {
-                move_y = -block_step * ((curs_y - top + 1) / block_step + 1);
-                move_x = 0;
-            }
+                scroll_y = -block_step;
             else if (cme.scroll_down())
-            {
-                move_y =
-                    block_step *
-                    ((get_number_of_lines() - curs_y + top - 1) / block_step
-                     + 1);
-                move_x = 0;
-            }
+                scroll_y = block_step;
             else if (cme.right_clicked())
             {
                 const coord_def delta = grdp - curp;
@@ -2896,23 +2882,14 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         {
             // Scrolling only happens when we don't have a large enough 
             // display to show the known map.
-            if (getty == '-' || getty == '+')
-            {
-                if (getty == '-')
-                    screen_y -= 20;
+            if (scroll_y < 0 && ((screen_y += scroll_y) <= min_y + half_screen))
+                screen_y = min_y + half_screen;
 
-                if (screen_y <= min_y + half_screen)
-                    screen_y = min_y + half_screen;
+            if (scroll_y > 0 && ((screen_y += scroll_y) >= max_y - half_screen))
+                screen_y = max_y - half_screen;
 
-                if (getty == '+')
-                    screen_y += 20;
-
-                if (screen_y >= max_y - half_screen)
-                    screen_y = max_y - half_screen;
-
-                continue;
-            }
-
+            scroll_y = 0;
+            
             if (curs_y + move_y < 1)
             {
                 screen_y += move_y;

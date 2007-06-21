@@ -1420,7 +1420,12 @@ void process_command( command_type cmd )
         break;
 
     case CMD_MOUSE_MOVE:
+    {
+        const coord_def dest = view2grid(crawl_view.mousep);
+        if (in_bounds(dest))
+            terse_describe_square(dest);
         break;
+    }
 
     case CMD_MOUSE_CLICK:
     {
