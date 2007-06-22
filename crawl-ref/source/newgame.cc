@@ -181,7 +181,7 @@ static bool prev_startup_options_set(void)
 static std::string get_opt_race_name(char race)
 {
     int prace = letter_to_species(race);
-    return prace? species_name(prace, 1) : "Random";
+    return prace && prace != SP_UNKNOWN? species_name(prace, 1) : "Random";
 }
 
 static std::string get_opt_class_name(char oclass)
@@ -3059,7 +3059,8 @@ spec_query:
         if (Options.prev_race)
         {
             if (prevraceok)
-                cprintf("Enter - %s", get_opt_race_name(Options.prev_race).c_str());
+                cprintf("Enter - %s",
+                        get_opt_race_name(Options.prev_race).c_str());
             if (prev_startup_options_set())
                 cprintf("%sTAB - %s", 
                         prevraceok? "; " : "",
