@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------
--- runrest.lua: (requires base.lua)
+-- runrest.lua:
 -- Controls shift-running and resting stop conditions.
 --
 -- To use this, add this line to your init.txt:

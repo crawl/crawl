@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- gearset.lua: (requires base.lua)
+-- gearset.lua:
 -- Allows for quick switching between two sets of equipment.
 --
 -- IMPORTANT

@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------
--- trapwalk.lua: (requires base.lua)
+-- trapwalk.lua:
 -- (Thanks to JPEG <erinacea@hotmail.de> for this script.)
 --
 -- Allows travel to cross traps provided you have sufficient HP to survive the
@@ -24,23 +24,22 @@
 
 function ch_cross_trap(trap)
 
-    if not options.trapwalk_safe_hp then
-	return false
-    end
+   if not options.trapwalk_safe_hp then
+      return false
+   end
 
-    local opt = options.trapwalk_safe_hp
+   local opt = options.trapwalk_safe_hp
 
-    local hpstr
-    _, _, hpstr = string.find(opt, trap .. "%s*:%s*(%d+)")
+   local hpstr
+   _, _, hpstr = string.find(opt, trap .. "%s*:%s*(%d+)")
 
-    if not hpstr then
-	return false
-    end
+   if not hpstr then
+      return false
+   end
 
-    local safe_hp = tonumber(hpstr)
-    local hp = you.hp()
+   local safe_hp = tonumber(hpstr)
+   local hp = you.hp()
 
-    -- finally compare current hp with safe limit
-    return hp >= safe_hp	
-
+   -- finally compare current hp with safe limit
+   return hp >= safe_hp	
 end

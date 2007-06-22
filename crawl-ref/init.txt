@@ -52,7 +52,6 @@
 
 ##### 3-  Lua Files #################################################
 #
-lua_file = lua/base.lua
 lua_file = lua/stash.lua
 lua_file = lua/wield.lua
 lua_file = lua/kills.lua

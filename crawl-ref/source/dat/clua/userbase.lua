@@ -1,12 +1,6 @@
 ---------------------------------------------------------------------------
--- base.lua:
--- Base Lua definitions that other Lua scripts rely on.
--- NOTE: Other Lua scripts may demonstrate buggy behaviour if you do
---       not source this file. If you're using no Lua scripts at all, you
---       needn't source base.lua.
---
--- To use this, add this line to your init.txt:
---   lua_file = lua/base.lua
+-- userbase.lua:
+-- Base Lua definitions that other Lua scripts rely on (auto-loaded).
 ---------------------------------------------------------------------------
 
 -- Lua global data

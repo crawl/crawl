@@ -588,6 +588,8 @@ void CLua::init_lua()
         lua_register(_state, "pcall", clua_guarded_pcall);
         lua_register(_state, "loadfile", clua_loadfile);
         lua_register(_state, "dofile", clua_dofile);
+
+        execfile("clua/userbase.lua", true);
     }
 }
 
