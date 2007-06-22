@@ -22,6 +22,7 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <cstdlib>
 
 #include <time.h>
 
@@ -332,6 +333,11 @@ struct coord_def
     int abs() const
     {
         return (x * x + y * y);
+    }
+
+    int rdist() const
+    {
+        return (MAXIMUM(::abs(x), ::abs(y)));
     }
 };
 

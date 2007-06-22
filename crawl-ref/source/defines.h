@@ -292,7 +292,7 @@
 #define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
 
 #define MIN(x, y) MINIMUM(x, y)
-
+#define MAX(x,y) (((x) > (y)) ? (x) : (y))
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

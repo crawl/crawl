@@ -259,11 +259,8 @@ static void reaching_weapon_attack(void)
         // if we're attacking more than a space away
         if ((x_distance > 1) || (y_distance > 1))
         {
-
-#define MAX(x,y) (((x) > (y)) ? (x) : (y))
             x_middle = MAX(beam.tx, you.x_pos) - (x_distance / 2);
             y_middle = MAX(beam.ty, you.y_pos) - (y_distance / 2);
-#undef MAX
 
             // if either the x or the y is the same, we should check for
             // a monster:

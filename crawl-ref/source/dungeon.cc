@@ -78,6 +78,17 @@ struct spec_room
     }
 };
 
+struct dist_feat
+{
+    int dist;
+    dungeon_feature_type feat;
+
+    dist_feat(int _d = 0, dungeon_feature_type _f = DNGN_UNSEEN)
+        : dist(_d), feat(_f)
+        {
+        }
+};
+
 // DUNGEON BUILDERS
 static void build_dungeon_level(int level_number, int level_type);
 static bool valid_dungeon_level(int level_number, int level_type);
@@ -4845,6 +4856,76 @@ static void pad_region(const dgn_region &reg, int pad_depth,
     }
 }
 
+static void change_walls_from_centre(const dgn_region &region,
+                                     const coord_def &centre,
+                                     bool  rectangular,
+                                     const dgn_region_list &forbidden,
+                                     dungeon_feature_type wall,
+                                     const std::vector<dist_feat> &ldist)
+{
+    if (ldist.empty())
+        return;
+
+    const coord_def &end = region.pos + region.size;
+    for (int y = region.pos.y; y < end.y; ++y)
+    {
+        for (int x = region.pos.x; x < end.x; ++x)
+        {
+            const coord_def c(x, y);
+            if (grd(c) != wall || !unforbidden(c, forbidden))
+                continue;
+
+            const int distance =
+                rectangular? (c - centre).rdist() : (c - centre).abs();
+
+            for (int i = 0, size = ldist.size(); i < size; ++i)
+            {
+                if (distance <= ldist[i].dist)
+                {
+                    grd(c) = ldist[i].feat;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// Called as:
+// change_walls_from_centre( region_affected, centre, rectangular, wall,
+//                           dist1, feat1, dist2, feat2, ..., 0 )
+// What it does:
+// Examines each square in region_affected, calculates its distance from
+// "centre" (the centre need not be in region_affected). If the distance is
+// less than or equal to dist1, and the feature == wall, then it is replaced
+// by feat1. Otherwise, if the distance <= dist2 and feature == wall, it is
+// replaced by feat2, and so on. A distance of 0 indicates the end of the
+// list of distances.
+//
+static void change_walls_from_centre(const dgn_region &region,
+                                     const coord_def &c,
+                                     bool  rectangular,
+                                     const dgn_region_list &forbidden,
+                                     dungeon_feature_type wall,
+                                     ...)
+{
+    std::vector<dist_feat> ldist;
+    
+    va_list args;
+    va_start(args, wall);
+
+    while (true)
+    {
+        const int dist = va_arg(args, int);
+        if (!dist)
+            break;
+        const dungeon_feature_type feat =
+            static_cast<dungeon_feature_type>( va_arg(args, int) );
+        ldist.push_back(dist_feat(dist, feat));
+    }
+
+    change_walls_from_centre(region, c, rectangular, forbidden, wall, ldist);
+}
+
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
@@ -4898,17 +4979,26 @@ static void labyrinth_level(int level_number)
         pad_region(dgn_region(place.x, place.y, place.width, place.height),
                    1, DNGN_FLOOR);
     }
-
-        // turn rock walls into undiggable stone or metal:
-    dungeon_feature_type wall_xform =
-        ((random2(50) > 10) ? DNGN_STONE_WALL   // 78.0%
-         : DNGN_METAL_WALL); // 22.0%
-
-    dgn_region_list vaults;
-    vaults.push_back(
-        dgn_region(place.x, place.y, place.width, place.height));
     
-    replace_area(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, wall_xform, vaults);
+    dgn_region_list vaults;
+    if (vault != -1)
+    {
+        vaults.push_back(
+            dgn_region(place.x, place.y, place.width, place.height));
+        end = coord_def(place.x + place.width / 2,
+                        place.y + place.height / 2);
+    }
+
+    change_walls_from_centre(lab, end, false, vaults, DNGN_ROCK_WALL,
+                             15 * 15, DNGN_METAL_WALL,
+                             34 * 34, DNGN_STONE_WALL,
+                             0);
+    
+    // turn rock walls into undiggable stone or metal:
+    // dungeon_feature_type wall_xform =
+    //    ((random2(50) > 10) ? DNGN_STONE_WALL   // 78.0%
+    //     : DNGN_METAL_WALL); // 22.0%
+    //replace_area(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, wall_xform, vaults);
      
     link_items();
 
