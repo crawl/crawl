@@ -216,17 +216,19 @@ int CLua::execstring(const char *s, const char *context)
     return err;
 }
 
-bool CLua::is_path_safe(const char *s)
+bool CLua::is_path_safe(std::string s, bool trusted)
 {
-    return (!strstr(s, "..") && shell_safe(s));
+    lowercase(s);
+    return (s.find("..") == std::string::npos && shell_safe(s.c_str())
+            && (trusted || s.find("clua") == std::string::npos));
 }
 
-int CLua::loadfile(lua_State *ls, const char *filename)
+int CLua::loadfile(lua_State *ls, const char *filename, bool trusted)
 {
     if (!ls)
         return (-1);
 
-    if (!is_path_safe(filename))
+    if (!is_path_safe(filename, trusted))
     {
         lua_pushstring(
             ls,
@@ -238,7 +240,7 @@ int CLua::loadfile(lua_State *ls, const char *filename)
     return (luaL_loadfile(ls, file.c_str()));
 }
 
-int CLua::execfile(const char *filename)
+int CLua::execfile(const char *filename, bool trusted)
 {
     if (sourced_files.find(filename) != sourced_files.end())
         return 0;
@@ -246,7 +248,7 @@ int CLua::execfile(const char *filename)
     sourced_files.insert(filename);
 
     lua_State *ls = state();
-    int err = loadfile(ls, filename);
+    int err = loadfile(ls, filename, trusted);
     lua_call_throttle strangler(this);
     if (!err)
         err = lua_pcall(ls, 0, 0, 0);
@@ -600,31 +602,7 @@ void CLua::load_chooks()
 
 void CLua::load_cmacro()
 {
-    static const char *c_macro =
-        "function c_macro(fn)"
-        "    if fn == nil then"
-        "        if c_macro_coroutine ~= nil then"
-        "            local coret, mret"
-        "            coret, mret = coroutine.resume(c_macro_coroutine)"
-        "            if not coret or not mret then"
-        "                c_macro_coroutine = nil"
-        "                c_macro_name      = nil"
-        "            end"
-        "            if not coret and mret then"
-        "                error(mret)"
-        "            end"
-        "            return (coret and mret)"
-        "        end"
-        "        return false"
-        "    end"
-        "    if _G[fn] == nil or type(_G[fn]) ~= 'function' then"
-        "        return false"
-        "    end"
-        "    c_macro_name = fn"
-        "    c_macro_coroutine = coroutine.create(_G[fn]) "
-        "    return c_macro() "
-        "end";
-    execstring(c_macro, "base");
+    execfile("clua/macro.lua", true);
 }
 
 /////////////////////////////////////////////////////////////////////

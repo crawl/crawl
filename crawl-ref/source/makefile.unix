@@ -33,14 +33,14 @@ MCHMOD_SAVEDIR := 775
 # The user:group to install the game as. 
 INSTALL_UGRP := games:games
 
-INSTALLDIR   := /usr/games
+INSTALLDIR   := /usr/games/crawl
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
 # Crawl for a single user.
 
-# SAVEDIR := /usr/games/crawl-saves/
-# DATADIR := /usr/games/crawl-data/
+# SAVEDIR := /usr/games/crawl/saves/
+# DATADIR := /usr/games/crawl/data/
 
 LEX  := flex
 YACC := bison -y
@@ -210,15 +210,16 @@ endif
 
 install: $(GAME)
 	[ -d $(INSTALLDIR) ] || mkdir -p $(INSTALLDIR)
-	$(COPY) $(GAME) ${INSTALLDIR}
+	$(COPY) $(GAME) $(INSTALLDIR)
 	chown $(INSTALL_UGRP) $(INSTALLDIR)/$(GAME)
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
 endif
-	mkdir -p $(DATADIR)/dat
+	mkdir -p $(DATADIR)/dat/clua
 	cp dat/*.des $(DATADIR)/dat
 	cp dat/*.txt $(DATADIR)/dat
+	cp dat/clua/*.lua $(DATADIR)/dat/clua
 	cp -r lua $(DATADIR)/dat
 	mkdir -p $(DATADIR)/docs
 	cp ../docs/*.txt $(DATADIR)/docs
@@ -228,6 +229,7 @@ ifneq ($(SAVEDIR),)
 	chown $(INSTALL_UGRP) $(SAVEDIR)
 	chmod $(MCHMOD_SAVEDIR) $(SAVEDIR)
 endif
+	ln -s $(INSTALLDIR)/$(GAME) /usr/local/bin/
 
 clean:
 	$(DELETE) *.o

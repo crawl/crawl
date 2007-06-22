@@ -285,10 +285,14 @@ static bool create_dirs(const std::string &dir)
     return (true);
 }
 
-std::string datafile_path(const std::string &basename,
+std::string datafile_path(std::string basename,
                           bool croak_on_fail,
                           bool test_base_path)
 {
+#if FILE_SEPARATOR != '/'
+    basename = replace_all_of(basename, "/", std::string(1, FILE_SEPARATOR));
+#endif
+    
     if (test_base_path && file_exists(basename))
         return (basename);
     
@@ -305,7 +309,7 @@ std::string datafile_path(const std::string &basename,
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
         std::string("docs") + FILE_SEPARATOR,
-        std::string("..")+FILE_SEPARATOR+std::string("docs")+FILE_SEPARATOR,
+        std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR,
         std::string(".") + FILE_SEPARATOR,
         "",

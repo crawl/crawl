@@ -64,7 +64,7 @@ public:
     void getregistry(const char *name);
 
     int execstring(const char *str, const char *context = "init.txt");
-    int execfile(const char *filename);
+    int execfile(const char *filename, bool trusted = false);
 
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
     bool callfn(const char *fn, int nargs, int nret = 1);
@@ -73,8 +73,8 @@ public:
     bool runhook(const char *hook, const char *params, ...);
 
     static int file_write(lua_State *ls);
-    static int loadfile(lua_State *ls, const char *file);
-    static bool is_path_safe(const char *file);
+    static int loadfile(lua_State *ls, const char *file, bool trusted = false);
+    static bool is_path_safe(std::string file, bool trusted = false);
 
 public:
     std::string error;

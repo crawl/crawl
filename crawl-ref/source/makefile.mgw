@@ -125,8 +125,10 @@ ifneq ($(OPATH),$(INSTALLDIR))
 		$(COPY) $(APPNAME) ${INSTALLDIR}
 endif
 		mkdir $(INSTALLDIR)\dat 2>nul || echo "" >nul
+		mkdir $(INSTALLDIR)\dat\clua 2>null || echo "">nul
 		copy /y dat\*.des $(INSTALLDIR)\dat
 		copy /y dat\*.txt $(INSTALLDIR)\dat
+		copy /y dat\clua\*.lua $(INSTALLDIR)\dat\clua
 		copy /y ..\init.txt $(INSTALLDIR)
 
 clean:
