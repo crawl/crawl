@@ -4807,6 +4807,44 @@ static void labyrinth_dimension_adjust(int delta, int &ds, int &dw)
     }
 }
 
+static void safe_set_feature(const coord_def &c, dungeon_feature_type feat)
+{
+    if (in_bounds(c))
+        grd(c) = feat;
+}
+
+static void pad_region(const dgn_region &reg, int pad_depth,
+                       dungeon_feature_type feat)
+{
+    const coord_def pstart = reg.pos - pad_depth;
+    const coord_def pend   = reg.pos + reg.size + pad_depth;
+    const coord_def end    = reg.pos + reg.size - 1;
+
+    for (int y = pstart.y; y < pend.y; ++y)
+    {
+        for (int x = 1; x <= pad_depth; ++x)
+        {
+            const coord_def c1(x + end.x, y);
+            safe_set_feature(c1, feat);
+
+            const coord_def c2(reg.pos.x - x, y);
+            safe_set_feature(c2, feat);
+        }
+    }
+
+    for (int x = end.x; x >= reg.pos.x; --x)
+    {
+        for (int y = 1; y <= pad_depth; ++y)
+        {
+            const coord_def c1(x, y + end.y);
+            safe_set_feature(c1, feat);
+
+            const coord_def c2(x, reg.pos.y - y);
+            safe_set_feature(c2, feat);
+        }
+    }
+}
+
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
@@ -4856,6 +4894,9 @@ static void labyrinth_level(int level_number)
         place.y = rplace.y;
         place.width = rplace.width;
         place.height = rplace.height;
+
+        pad_region(dgn_region(place.x, place.y, place.width, place.height),
+                   1, DNGN_FLOOR);
     }
 
         // turn rock walls into undiggable stone or metal:

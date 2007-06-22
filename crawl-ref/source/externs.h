@@ -270,11 +270,25 @@ struct coord_def
         y += other.y;
         return (*this);
     }
+
+    const coord_def &operator += (int offset)
+    {
+        x += offset;
+        y += offset;
+        return (*this);
+    }
     
     const coord_def &operator -= (const coord_def &other)
     {
         x -= other.x;
         y -= other.y;
+        return (*this);
+    }
+
+    const coord_def &operator -= (int offset)
+    {
+        x -= offset;
+        y -= offset;
         return (*this);
     }
 
@@ -291,7 +305,19 @@ struct coord_def
         return (copy += other);
     }
 
+    coord_def operator + (int other) const
+    {
+        coord_def copy = *this;
+        return (copy += other);
+    }
+
     coord_def operator - (const coord_def &other) const
+    {
+        coord_def copy = *this;
+        return (copy -= other);
+    }
+
+    coord_def operator - (int other) const
     {
         coord_def copy = *this;
         return (copy -= other);

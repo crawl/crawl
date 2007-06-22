@@ -1590,8 +1590,16 @@ std::string keyed_mapspec::set_item(const std::string &s, bool fix)
 {
     err.clear();
     item.clear();
-    
-    return (item.add_item(s, fix));
+
+    std::vector<std::string> segs = split_string(",", s);
+
+    for (int i = 0, size = segs.size(); i < size; ++i)
+    {
+        err = item.add_item(segs[i], fix);
+        if (!err.empty())
+            return (err);
+    }
+    return (err);
 }
 
 feature_spec keyed_mapspec::get_feat()
