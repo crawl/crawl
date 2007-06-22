@@ -162,13 +162,13 @@ static void save_newgame_options(void)
 
 static void set_startup_options(void)
 {
-    Options.race    = Options.prev_race;
-    Options.cls     = Options.prev_cls;
-    Options.weapon  = Options.prev_weapon;
+    Options.race         = Options.prev_race;
+    Options.cls          = Options.prev_cls;
+    Options.weapon       = Options.prev_weapon;
     Options.death_knight = Options.prev_dk;
     Options.chaos_knight = Options.prev_ck;
     Options.priest       = Options.prev_pr;
-    Options.book = Options.prev_book;
+    Options.book         = Options.prev_book;
 }
 
 static bool prev_startup_options_set(void)
@@ -192,7 +192,7 @@ static std::string get_opt_class_name(char oclass)
 
 static std::string prev_startup_description(void)
 {
-    if (Options.prev_race == '?' && Options.prev_cls == '?')
+    if (Options.prev_race == '*' && Options.prev_cls == '*')
         Options.prev_randpick = true;
 
     if (Options.prev_randpick)
@@ -3284,7 +3284,7 @@ job_query:
     if (keyn == '\t' && prev_startup_options_set())
     {
         if (Options.prev_randpick || 
-                (Options.prev_race == '?' && Options.prev_cls == '?'))
+                (Options.prev_race == '*' && Options.prev_cls == '*'))
         {
             Options.random_pick = true;
             ng_random = true;
@@ -3361,7 +3361,8 @@ job_query:
         }
     }
 
-    if (you.species && !class_allowed(you.species, you.char_class))
+    if (you.species != SP_UNKNOWN
+        && !class_allowed(you.species, you.char_class))
     {
         if (Options.cls != 0)
         {
@@ -3374,7 +3375,7 @@ job_query:
     if (ng_cls != '*')
         ng_cls = keyn;
 
-    return you.char_class != JOB_UNKNOWN && you.species;
+    return you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN;
 }
 
 

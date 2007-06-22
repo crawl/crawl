@@ -4531,6 +4531,7 @@ void player::init()
     experience_level = 1;
     max_level = 1;
     char_class = JOB_UNKNOWN;
+    species = SP_UNKNOWN;
 
     hunger = 6000;
     hunger_state = HS_SATIATED;

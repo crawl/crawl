@@ -986,7 +986,7 @@ static void write_newgame_options(FILE *f)
     fprintf(f, "name = %s\n", you.your_name);
 
     if (Options.prev_randpick)
-        Options.prev_race = Options.prev_cls = '?';
+        Options.prev_race = Options.prev_cls = '*';
 
     // Race selection
     if (Options.prev_race)
