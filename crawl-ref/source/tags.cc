@@ -1591,7 +1591,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.speed = unmarshallByte(th);
     // Avoid sign extension when loading files (Elethiomel's hang)
     m.speed_increment = (unsigned char) unmarshallByte(th);
-    m.behaviour = unmarshallByte(th);
+    m.behaviour = static_cast<beh_type>(unmarshallByte(th));
     m.x = unmarshallByte(th);
     m.y = unmarshallByte(th);
     m.target_x = unmarshallByte(th);
@@ -1658,7 +1658,7 @@ void tag_read_level_attitude(struct tagHeader &th)
 
     for (i = 0; i < count; i++)
     {
-        menv[i].attitude = unmarshallByte(th);
+        menv[i].attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
         menv[i].foe = unmarshallShort(th);
     }
 }
@@ -1709,7 +1709,7 @@ void tag_missing_level_attitude()
         }
 
         menv[i].attitude = (isFriendly)?ATT_FRIENDLY : ATT_HOSTILE;
-        menv[i].behaviour = new_beh;
+        menv[i].behaviour = static_cast<beh_type>(new_beh);
         menv[i].foe_memory = 0;
     }
 }

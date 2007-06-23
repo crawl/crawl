@@ -1626,7 +1626,7 @@ static void handle_behaviour(monsters *mon)
         }
 
         // track changes to state; attitude never changes here.
-        unsigned int new_beh = mon->behaviour;
+        beh_type new_beh = mon->behaviour;
         unsigned int new_foe = mon->foe;
 
         // take care of monster state changes

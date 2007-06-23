@@ -38,7 +38,7 @@
 
 static int band_member(band_type band, int power);
 static band_type choose_band( int mon_type, int power, int &band_size );
-static int place_monster_aux(int mon_type, char behaviour, int target,
+static int place_monster_aux(int mon_type, beh_type behaviour, int target,
     int px, int py, int power, int extra, bool first_band_member,
     int dur = 0);
 
@@ -141,7 +141,7 @@ static bool need_moderate_ood(int lev_mons)
             && one_chance_in(50));
 }
 
-bool place_monster(int &id, int mon_type, int power, char behaviour,
+bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                    int target, bool summoned, int px, int py, bool allow_bands,
                    proximity_type proximity, int extra, int dur,
                    const dgn_region_list &forbidden)
@@ -445,7 +445,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     return (true);
 }
 
-static int place_monster_aux( int mon_type, char behaviour, int target,
+static int place_monster_aux( int mon_type, beh_type behaviour, int target,
                               int px, int py, int power, int extra,
                               bool first_band_member, int dur )
 {
@@ -1165,7 +1165,7 @@ static int ood_limit() {
     return Options.ood_interesting;
 }
 
-void mark_interesting_monst(struct monsters* monster, char behaviour)
+void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 {
     bool interesting = false;
     
@@ -1202,7 +1202,7 @@ void mark_interesting_monst(struct monsters* monster, char behaviour)
 
 // PUBLIC FUNCTION -- mons_place().
 
-int mons_place( int mon_type, char behaviour, int target, bool summoned,
+int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
                 int px, int py, int level_type, proximity_type proximity,
                 int extra, int dur, bool permit_bands )
 {
@@ -1351,7 +1351,7 @@ bool player_angers_monster(monsters *creation)
     return (false);
 }
 
-int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
+int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands,
                     bool force_place, bool force_behaviour )
 {

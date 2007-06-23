@@ -799,8 +799,6 @@ static bool spell_is_uncastable(spell_type spell)
 // the casting.
 spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
 {
-    int dem_hor = 0;
-    int dem_hor2 = 0;
     struct dist spd;
     struct bolt beam;
 
@@ -1390,24 +1388,28 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
 
     case SPELL_DEMONIC_HORDE:
         mpr("You open a gate to Pandemonium!");
-        dem_hor2 = 3 + random2(5);
-        for (dem_hor = 0; dem_hor < 4 + dem_hor2; dem_hor++)
         {
-            summon_ice_beast_etc(powc, summon_any_demon(DEMON_LESSER));
+            const int num = 7 + random2(5);
+            for (int i = 0; i < num; ++i)
+            {
+                summon_ice_beast_etc(powc, summon_any_demon(DEMON_LESSER));
+            }
         }
         break;
 
     case SPELL_SUMMON_GREATER_DEMON:
         mpr("You open a gate to Pandemonium!");
 
-        dem_hor = ((random2(powc) <= 5) ? BEH_HOSTILE : BEH_CHARMED);
+        {
+            const beh_type dem_beh = ((random2(powc) <= 5)
+                                      ? BEH_HOSTILE : BEH_CHARMED);
 
-        if (dem_hor == BEH_CHARMED)
-            mpr("You don't feel so good about this...");
+            if (dem_beh == BEH_CHARMED)
+                mpr("You don't feel so good about this...");
 
-        create_monster( summon_any_demon(DEMON_GREATER), 5, dem_hor,
-                        you.x_pos, you.y_pos, MHITYOU, 250 );
-
+            create_monster( summon_any_demon(DEMON_GREATER), 5, dem_beh,
+                            you.x_pos, you.y_pos, MHITYOU, 250 );
+        }
         break;
 
     case SPELL_CORPSE_ROT:

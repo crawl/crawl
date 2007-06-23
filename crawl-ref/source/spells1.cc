@@ -688,83 +688,31 @@ void abjuration(int pow)
 // that's why we reduce levitation to 2, so that the player has a chance
 // to stop insta-death... sure the others could lead to death, but that's
 // not as direct as falling into deep water) -- bwr
-void antimagic( void )
+void antimagic()
 {
-    if (you.haste)
-        you.haste = 1;
+    int* direct_list[] = {
+        &you.haste, &you.slow, &you.paralysis, &you.conf,
+        &you.might, &you.invis, &you.fire_shield
+    };
 
-    if (you.slow)
-        you.slow = 1;
-
-    if (you.paralysis)
-        you.paralysis = 1;
-
-    if (you.conf)
-        you.conf = 1;
-
-    if (you.might)
-        you.might = 1;
-
+    duration_type dur_list[] = {
+        DUR_WEAPON_BRAND, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES, DUR_REGENERATION,
+        DUR_DEFLECT_MISSILES, DUR_SWIFTNESS, DUR_INSULATION, DUR_STONEMAIL,
+        DUR_CONTROLLED_FLIGHT, DUR_CONTROL_TELEPORT, DUR_RESIST_POISON,
+        DUR_RESIST_FIRE, DUR_RESIST_COLD, DUR_TRANSFORMATION, DUR_STONESKIN,
+        DUR_FORESCRY, DUR_SEE_INVISIBLE, DUR_SILENCE, DUR_CONDENSATION_SHIELD
+    };
+        
     if (you.levitation > 2)
         you.levitation = 2;
 
-    if (you.invis)
-        you.invis = 1;
+    for ( unsigned int i = 0; i < ARRAYSIZE(direct_list); ++i )
+        if ( *(direct_list[i]) > 1 )
+            *(direct_list[i]) = 1;
 
-    if (you.duration[DUR_WEAPON_BRAND])
-        you.duration[DUR_WEAPON_BRAND] = 1;
-
-    if (you.duration[DUR_ICY_ARMOUR])
-        you.duration[DUR_ICY_ARMOUR] = 1;
-
-    if (you.duration[DUR_REPEL_MISSILES])
-        you.duration[DUR_REPEL_MISSILES] = 1;
-
-    if (you.duration[DUR_REGENERATION])
-        you.duration[DUR_REGENERATION] = 1;
-
-    if (you.duration[DUR_DEFLECT_MISSILES])
-        you.duration[DUR_DEFLECT_MISSILES] = 1;
-
-    if (you.fire_shield)
-        you.fire_shield = 1;
-
-    if (you.duration[DUR_SWIFTNESS])
-        you.duration[DUR_SWIFTNESS] = 1;
-
-    if (you.duration[DUR_INSULATION])
-        you.duration[DUR_INSULATION] = 1;
-
-    if (you.duration[DUR_STONEMAIL])
-        you.duration[DUR_STONEMAIL] = 1;
-
-    if (you.duration[DUR_CONTROLLED_FLIGHT])
-        you.duration[DUR_CONTROLLED_FLIGHT] = 1;
-
-    if (you.duration[DUR_CONTROL_TELEPORT])
-        you.duration[DUR_CONTROL_TELEPORT] = 1;
-
-    if (you.duration[DUR_RESIST_POISON])
-        you.duration[DUR_RESIST_POISON] = 1;
-
-    if (you.duration[DUR_TRANSFORMATION])
-        you.duration[DUR_TRANSFORMATION] = 1;
-
-    //jmf: added following
-    if (you.duration[DUR_STONESKIN])
-        you.duration[DUR_STONESKIN] = 1;
-
-    if (you.duration[DUR_FORESCRY])
-        you.duration[DUR_FORESCRY] = 1;
-
-    if (you.duration[DUR_SEE_INVISIBLE])
-        you.duration[DUR_SEE_INVISIBLE] = 1;
-
-    if (you.duration[DUR_SILENCE])
-        you.duration[DUR_SILENCE] = 1;
-
-    if (you.duration[DUR_CONDENSATION_SHIELD])
-        you.duration[DUR_CONDENSATION_SHIELD] = 1;
+    for ( unsigned int i = 0; i < ARRAYSIZE(dur_list); ++i )
+        if ( you.duration[dur_list[i]] > 1 )
+            you.duration[dur_list[i]] = 1;
 
     contaminate_player( -1 * (1+random2(5)));
 }                               // end antimagic()

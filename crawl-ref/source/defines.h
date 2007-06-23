@@ -118,7 +118,7 @@
 #define VIEW_MIN_HEIGHT 17
 
 // max traps per level
-#define MAX_TRAPS 30
+#define MAX_TRAPS 100
 
 // max shops per level
 #define MAX_SHOPS 5

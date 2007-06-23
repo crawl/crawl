@@ -13,6 +13,8 @@
 #ifndef SPELLS2_H
 #define SPELLS2_H
 
+#include "enum.h"
+
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -25,14 +27,15 @@ bool brand_weapon(int which_brand, int power);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-int animate_a_corpse(int axps, int ayps, int corps_beh, int corps_hit, int class_allowed);
+int animate_a_corpse(int axps, int ayps, beh_type corps_beh,
+                     int corps_hit, int class_allowed);
 
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - it_use3 - monstuff - mstuff2 - spell
  * *********************************************************************** */
-int animate_dead(int power, int corps_beh, int corps_hit, int actual);
+int animate_dead(int power, beh_type corps_beh, int corps_hit, int actual);
 
 
 // last updated 24may2000 {dlb}
@@ -103,7 +106,7 @@ void cast_toxic_radiance(void);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void cast_twisted(int power, int corps_beh, int corps_hit);
+void cast_twisted(int power, beh_type corps_beh, int corps_hit);
 
 
 // last updated 24may2000 {dlb}

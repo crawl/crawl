@@ -37,7 +37,7 @@
  *              2 = don't place the monster near the player
  *              3 = place the monster near stairs (regardless of player pos)
  * *********************************************************************** */
-int mons_place( int mon_type, char behaviour, int target, bool summoned,
+int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
                 int px, int py, int level_type = LEVEL_DUNGEON, 
                 proximity_type proximity = PROX_ANYWHERE, int extra = 250,
                 int dur = 0, bool permit_bands = false );
@@ -48,7 +48,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
  *              items - monstuff - mstuff2 - religion - spell - spells -
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
-int create_monster( int cls, int dur, int beha, int cr_x, int cr_y, 
+int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y, 
                     int hitting, int zsec, bool permit_bands = false,
                     bool force_place = false, bool force_behaviour = false );
 
@@ -78,7 +78,7 @@ int summon_any_demon( demon_class_type demon_class );
  * mons_place().  If you need to put a monster somewhere,  use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
-bool place_monster( int &id, int mon_type, int power, char behaviour,
+bool place_monster( int &id, int mon_type, int power, beh_type behaviour,
                     int target, bool summoned, int px, int py, bool allow_bands,
                     proximity_type proximity = PROX_ANYWHERE, int extra = 250,
                     int dur = 0,
@@ -90,7 +90,7 @@ monster_type rand_dragon( dragon_class_type type );
  * called from: monplace monstuff
  * *********************************************************************** */
 void mark_interesting_monst(struct monsters* monster,
-                            char behaviour = BEH_SLEEP);
+                            beh_type behaviour = BEH_SLEEP);
 
 bool grid_compatible(int grid_wanted, int actual_grid, bool generation = false);
 bool monster_habitable_grid(int monster_class, int actual_grid, 

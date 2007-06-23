@@ -619,7 +619,7 @@ public:
 
   char special_wield;
   char deaths_door;
-  char fire_shield;
+  int fire_shield;
 
   double elapsed_time;        // total amount of elapsed time in the game
 
@@ -994,8 +994,8 @@ public:
     unsigned char target_y;
     FixedVector<int, 8> inv;
     monster_spells spells;
-    unsigned char attitude;            // from MONS_ATTITUDE
-    unsigned int behaviour;
+    mon_attitude_type attitude;
+    beh_type behaviour;
     unsigned int foe;
     mon_enchant_list enchantments;
     unsigned long flags;               // bitfield of boolean flags

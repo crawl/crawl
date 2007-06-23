@@ -887,6 +887,10 @@ int player_res_fire(bool calc_unid)
     if (you.species == SP_MUMMY)
         rf--;
 
+    // spells:
+    if (you.duration[DUR_RESIST_FIRE] > 0)
+        rf++;
+
     // mutations:
     rf += you.mutation[MUT_HEAT_RESISTANCE];
 
@@ -943,6 +947,10 @@ int player_res_cold(bool calc_unid)
 
     // randart weapons:
     rc += scan_randarts(RAP_COLD, calc_unid);
+
+    // spells:
+    if (you.duration[DUR_RESIST_COLD] > 0)
+        rc++;
 
     // mutations:
     rc += you.mutation[MUT_COLD_RESISTANCE];
@@ -3693,6 +3701,8 @@ int slaying_bonus(char which_affected)
         ret += player_equip( EQ_RINGS_PLUS2, RING_SLAYING );
         ret += scan_randarts(RAP_DAMAGE);
     }
+
+    ret += std::min(you.duration[DUR_SLAYING] / 13, 6);
 
     return (ret);
 }                               // end slaying_bonus()

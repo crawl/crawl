@@ -663,7 +663,7 @@ void cast_summon_large_mammal(int pow)
 
 void cast_sticks_to_snakes(int pow)
 {
-    int mon, i, behaviour;
+    int mon;
     int how_many = 0;
     int max = 1 + random2( 1 + you.skills[SK_TRANSMIGRATION] ) / 4;
     int dur = cap_int(3 + random2(pow) / 20, 5);
@@ -676,8 +676,8 @@ void cast_sticks_to_snakes(int pow)
         return;
     }
 
-    behaviour = item_cursed( you.inv[ weapon ] ) ? BEH_HOSTILE
-                                                 : BEH_FRIENDLY;
+    const beh_type behaviour = item_cursed( you.inv[ weapon ] )
+        ? BEH_HOSTILE : BEH_FRIENDLY;
 
     if ((you.inv[ weapon ].base_type == OBJ_MISSILES
          && (you.inv[ weapon ].sub_type == MI_ARROW)))
@@ -685,7 +685,7 @@ void cast_sticks_to_snakes(int pow)
         if (you.inv[ weapon ].quantity < max)
             max = you.inv[ weapon ].quantity;
 
-        for (i = 0; i <= max; i++)
+        for (int i = 0; i <= max; i++)
         {
             if (pow > 50 || (pow > 25 && one_chance_in(3))
                 || (get_ammo_brand(you.inv[weapon]) == SPMSL_POISONED

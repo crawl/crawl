@@ -48,8 +48,8 @@
 #include "stuff.h"
 #include "view.h"
 
-int raise_corpse( int corps, int corx, int cory, int corps_beh,
-                  int corps_hit, int actual );
+static int raise_corpse( int corps, int corx, int cory, beh_type corps_beh,
+                         int corps_hit, int actual );
 
 unsigned char detect_traps( int pow )
 {
@@ -287,7 +287,7 @@ int corpse_rot(int power)
     return 0;
 }                               // end corpse_rot()
 
-int animate_dead( int power, int corps_beh, int corps_hit, int actual )
+int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
 {
     UNUSED( power );
 
@@ -360,7 +360,7 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
     return number_raised;
 }                               // end animate_dead()
 
-int animate_a_corpse( int axps, int ayps, int corps_beh, int corps_hit,
+int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
                       int class_allowed )
 {
     if (igrd[axps][ayps] == NON_ITEM)
@@ -388,7 +388,7 @@ int animate_a_corpse( int axps, int ayps, int corps_beh, int corps_hit,
 }                               // end animate_a_corpse()
 
 int raise_corpse( int corps, int corx, int cory, 
-                  int corps_beh, int corps_hit, int actual )
+                  beh_type corps_beh, int corps_hit, int actual )
 {
     int returnVal = 1;
 
@@ -421,7 +421,7 @@ int raise_corpse( int corps, int corx, int cory,
     return returnVal;
 }                               // end raise_corpse()
 
-void cast_twisted(int power, int corps_beh, int corps_hit)
+void cast_twisted(int power, beh_type corps_beh, int corps_hit)
 {
     int total_mass = 0;
     int num_corpses = 0;
@@ -1344,7 +1344,7 @@ void summon_scorpions(int pow)
 void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
     int numsc = cap_int(2 + (random2(pow) / 4), 6);
-    int beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
+    beh_type beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
 
     switch (ibc)
     {
@@ -1445,7 +1445,7 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
             break;
         }                       // end switch
 
-        int behaviour = BEH_HOSTILE;  // default to unfriendly
+        beh_type behaviour = BEH_HOSTILE;  // default to unfriendly
 
         // Note: friendly, non-god_gift means spell.
         if (god_gift)

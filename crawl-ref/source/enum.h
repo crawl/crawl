@@ -514,7 +514,7 @@ enum card_type
 
     CARD_EXPERIENCE,
     CARD_WILD_MAGIC,
-    CARD_GENETIC_ENGINEER,      // remove one *bad* mutation
+    CARD_HELIX,                 // remove one *bad* mutation
 
     CARD_MAP,                   // magic mapping
     CARD_DOWSING,               // detect SD/traps/items/monsters
@@ -1147,32 +1147,35 @@ enum dungeon_feature_type
 
 enum duration_type
 {
-    DUR_LIQUID_FLAMES,                 //    0
+    DUR_LIQUID_FLAMES,          //  0
     DUR_ICY_ARMOUR,
     DUR_REPEL_MISSILES,
     DUR_PRAYER,
     DUR_REGENERATION,
-    DUR_SWIFTNESS,                     //    5
-    DUR_INSULATION,
+    DUR_SWIFTNESS,              //  5
     DUR_STONEMAIL,
     DUR_CONTROLLED_FLIGHT,
     DUR_TELEPORT,
-    DUR_CONTROL_TELEPORT,              //   10
-    DUR_RESIST_POISON,
-    DUR_BREATH_WEAPON,
+    DUR_CONTROL_TELEPORT,
+    DUR_BREATH_WEAPON,          // 10
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
-    DUR_DEFLECT_MISSILES,              //   15
+    DUR_DEFLECT_MISSILES,
     DUR_FORESCRY,
-    DUR_SEE_INVISIBLE,
+    DUR_SEE_INVISIBLE,          // 15
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_SILENCE,
-    DUR_GLAMOUR,                       //   20
+    DUR_GLAMOUR,
     DUR_CONDENSATION_SHIELD,
-    DUR_STONESKIN,
+    DUR_STONESKIN,              // 20
     DUR_REPEL_UNDEAD,
     DUR_GOURMAND,
-    DUR_BARGAIN,                       //   25
+    DUR_BARGAIN,
+    DUR_INSULATION,
+    DUR_RESIST_POISON,          // 25
+    DUR_RESIST_FIRE,
+    DUR_RESIST_COLD,
+    DUR_SLAYING,
     NUM_DURATIONS = 30                  //   must be at least 30
 };
 
@@ -1180,7 +1183,7 @@ enum duration_type
 // MUST match the order in initfile.cc or breakage results.
 enum element_type
 {
-    EC_FIRE = 32,       // fiery colours (must be first and > higest colour)
+    EC_FIRE = 32,       // fiery colours (must be first and > highest colour)
     EC_ICE,             // icy colours
     EC_EARTH,           // earthy colours
     EC_ELECTRICITY,     // electrical side of air

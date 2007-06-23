@@ -1886,6 +1886,38 @@ static void decrement_durations()
         you.duration[DUR_CONTROL_TELEPORT] = 0;
     }
 
+    if (you.duration[DUR_RESIST_FIRE] > 1)
+    {
+        you.duration[DUR_RESIST_FIRE]--;
+        if (you.duration[DUR_RESIST_FIRE] == 6)
+        {
+            mpr("Your fire resistance is about to expire.", MSGCH_DURATION);
+            if (coinflip())
+                you.duration[DUR_RESIST_FIRE]--;
+        }
+    }
+    else if (you.duration[DUR_RESIST_FIRE] == 1)
+    {
+        mpr("Your fire resistance expires.", MSGCH_DURATION);
+        you.duration[DUR_RESIST_FIRE] = 0;
+    }
+
+    if (you.duration[DUR_RESIST_COLD] > 1)
+    {
+        you.duration[DUR_RESIST_COLD]--;
+        if (you.duration[DUR_RESIST_COLD] == 6)
+        {
+            mpr("Your cold resistance is about to expire.", MSGCH_DURATION);
+            if (coinflip())
+                you.duration[DUR_RESIST_COLD]--;
+        }
+    }
+    else if (you.duration[DUR_RESIST_COLD] == 1)
+    {
+        mpr("Your cold resistance expires.", MSGCH_DURATION);
+        you.duration[DUR_RESIST_COLD] = 0;
+    }
+
     if (you.duration[DUR_RESIST_POISON] > 1)
     {
         you.duration[DUR_RESIST_POISON]--;
@@ -1900,6 +1932,16 @@ static void decrement_durations()
     {
         mpr("Your poison resistance expires.", MSGCH_DURATION);
         you.duration[DUR_RESIST_POISON] = 0;
+    }
+
+    if (you.duration[DUR_SLAYING] > 1)
+    {
+        you.duration[DUR_SLAYING]--;
+    }
+    else if (you.duration[DUR_SLAYING] == 1)
+    {
+        mpr("You feel less lethal.", MSGCH_DURATION);
+        you.duration[DUR_SLAYING] = 0;
     }
 
     if (you.duration[DUR_DEATH_CHANNEL] > 1)

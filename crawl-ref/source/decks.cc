@@ -82,7 +82,7 @@ DEFVEC(deck_of_summoning);
 
 static card_type a_deck_of_wonders[] = {
     CARD_POTION, CARD_FOCUS, CARD_SHUFFLE,
-    CARD_EXPERIENCE, CARD_WILD_MAGIC, CARD_GENETIC_ENGINEER
+    CARD_EXPERIENCE, CARD_WILD_MAGIC, CARD_HELIX
 };
 
 DEFVEC(deck_of_wonders);
@@ -132,7 +132,7 @@ const char* card_name(card_type card)
     case CARD_FOCUS: return "Focus";
     case CARD_SHUFFLE: return "Shuffle";
     case CARD_EXPERIENCE: return "Experience";
-    case CARD_GENETIC_ENGINEER: return "Genetics";
+    case CARD_HELIX: return "the Helix";
     case CARD_DOWSING: return "Dowsing";
     case CARD_TROWEL: return "the Trowel";
     case CARD_MINEFIELD: return "the Minefield";
@@ -577,6 +577,32 @@ static void warpwright_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void minefield_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);   
+    const int radius = power_level * 2 + 2;
+    for ( int dx = -radius; dx <= radius; ++dx )
+    {
+        for ( int dy = -radius; dy <= radius; ++dy )
+        {
+            if ( dx * dx + dy*dy > radius*radius + 1 )
+                continue;
+            if ( dx == 0 && dy == 0 )
+                continue;
+
+            const int rx = you.x_pos + dx;
+            const int ry = you.y_pos + dy;
+            if ( !in_bounds(rx, ry) )
+                continue;
+            if ( grd[rx][ry] == DNGN_FLOOR && trap_at_xy(rx,ry) == -1 &&
+                 one_chance_in(4 - power_level) )
+            {
+                place_specific_trap(rx, ry, TRAP_RANDOM);
+            }
+        }
+    }
+}
+
 static void damaging_card( card_type card, int power, deck_rarity_type rarity )
 {
     dist target;
@@ -629,9 +655,7 @@ static void battle_lust_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )
-    {
-        // temporary ring of slaying effect XXX
-    }
+        you.duration[DUR_SLAYING] = random2(power/6);
     else if ( power_level == 1 )
         go_berserk(false);
     else if ( power_level == 0 )
@@ -644,8 +668,10 @@ static void metamorphosis_card(int power, deck_rarity_type rarity)
     transformation_type trans;
     if ( power_level >= 2 )
         trans = (coinflip() ? TRAN_DRAGON : TRAN_LICH);
-    else
+    else if ( power_level == 1 )
         trans = (coinflip() ? TRAN_STATUE : TRAN_BLADE_HANDS);
+    else
+        trans = (coinflip() ? TRAN_SPIDER : TRAN_ICE_BEAST);
     transform(random2(power/4), trans);
 }
 
@@ -681,8 +707,33 @@ static void helm_card(int power, deck_rarity_type rarity)
         cast_forescry( random2(power/4) );
     if ( do_stoneskin )
         cast_stoneskin( random2(power/4) );
+    if ( num_resists )
+    {
+        const duration_type possible_resists[4] = {
+            DUR_RESIST_POISON, DUR_INSULATION,
+            DUR_RESIST_FIRE, DUR_RESIST_COLD
+        };
+        const char* resist_names[4] = {
+            "poison", "electricity", "fire", "cold"
+        };
+        for ( int i = 0; i < 4 && num_resists; ++i )
+        {
+            // if there are n left, of which we need to choose
+            // k, we have chance k/n of selecting the next item.
+            if ( random2(4-i) < num_resists )
+            {
+                // Add a temporary resist
+                you.duration[possible_resists[i]] += random2(power/7);
+                msg::stream << "You feel resistant to " << resist_names[i]
+                            << '.' << std::endl;
+                --num_resists;
+                if ( num_resists == 0 )
+                    break;
+            }
+        }
+    }
 
-    // XXX XXX FIXME handle do_shield, do_resist
+    // XXX XXX FIXME handle do_shield
 }
 
 // Do one of: vorpalise, sure blade, dancing weapon
@@ -776,7 +827,7 @@ static void shuffle_card(int power, deck_rarity_type rarity)
     return;
 }
 
-static void genetic_engineer_card(int power, deck_rarity_type rarity)
+static void helix_card(int power, deck_rarity_type rarity)
 {
     mutation_type bad_mutations[] = {
         MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
@@ -823,12 +874,6 @@ static void trowel_card(int power, deck_rarity_type rarity)
     return;
 }
 
-static void minefield_card(int power, deck_rarity_type rarity)
-{
-    // not implemented yet
-    return;
-}
-
 static void genie_card(int power, deck_rarity_type rarity)
 {
     if ( coinflip() )
@@ -867,6 +912,19 @@ static void curse_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void summon_demon_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    demon_class_type dct;
+    if ( power_level >= 2 )
+        dct = DEMON_GREATER;
+    else if ( power_level == 1 )
+        dct = DEMON_COMMON;
+    else
+        dct = DEMON_LESSER;
+    create_monster( dct, power/50, BEH_FRIENDLY, you.x_pos, you.y_pos,
+                    MHITYOU, 250 );
+}
 
 static int card_power(deck_rarity_type rarity)
 {
@@ -918,7 +976,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_FOCUS:            focus_card(power, rarity); break;
     case CARD_SHUFFLE:          shuffle_card(power, rarity); break;
     case CARD_EXPERIENCE:       potion_effect(POT_EXPERIENCE, power/4); break;
-    case CARD_GENETIC_ENGINEER: genetic_engineer_card(power, rarity); break;
+    case CARD_HELIX:            helix_card(power, rarity); break;
     case CARD_DOWSING:          dowsing_card(power, rarity); break;
     case CARD_TROWEL:           trowel_card(power, rarity); break;
     case CARD_MINEFIELD:        minefield_card(power, rarity); break;
@@ -928,6 +986,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_TOMB:             entomb(); break;
     case CARD_WRAITH:           drain_exp(); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
+    case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
         
     case CARD_SPADE:
         mpr("Sorry, this card is not yet available.");
@@ -954,16 +1013,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
         break;
 
     case CARD_SUMMON_ANIMAL: break;
-    case CARD_SUMMON_DEMON: break;
     case CARD_SUMMON_WEAPON: break;
     case CARD_SUMMON_ANY: break;
-
-
-            /* if (create_monster( summon_any_demon( DEMON_LESSER ), 6, 
-                                BEH_HOSTILE, you.x_pos, you.y_pos, 
-                                MHITYOU, 250 ) != -1) 
-            */
-
     case CARD_XOM: xom_acts(5 + random2(power/10)); break;
 
     case CARD_FAMINE:

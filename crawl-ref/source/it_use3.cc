@@ -674,7 +674,7 @@ bool evoke_wielded( void )
 
 static bool efreet_flask(void)
 {
-    const int behaviour = ((you.skills[SK_EVOCATIONS] > random2(20)) 
+    const beh_type behaviour = ((you.skills[SK_EVOCATIONS] > random2(20)) 
                                 ? BEH_FRIENDLY : BEH_HOSTILE);
 
     mpr("You open the flask...");
@@ -943,7 +943,7 @@ void skill_manual(char sc_read_2)
     xom_is_stimulated(14);
 }                               // end skill_manual()
 
-static bool box_of_beasts(void)
+static bool box_of_beasts()
 {
     int beasty = MONS_PROGRAM_BUG;      // error trapping {dlb}
     int temp_rand = 0;          // probability determination {dlb}
@@ -968,8 +968,8 @@ static bool box_of_beasts(void)
                   (temp_rand == 9) ? MONS_BROWN_SNAKE 
                                    : MONS_GIANT_LIZARD);
 
-        int beh = (one_chance_in(you.skills[SK_EVOCATIONS] + 5) ? BEH_HOSTILE
-                                                                : BEH_FRIENDLY);
+        beh_type beh = (one_chance_in(you.skills[SK_EVOCATIONS] + 5)
+                        ? BEH_HOSTILE : BEH_FRIENDLY);
 
         if (create_monster( beasty, 2 + random2(4), beh,
                             you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
