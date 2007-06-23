@@ -922,8 +922,8 @@ static void summon_demon_card(int power, deck_rarity_type rarity)
         dct = DEMON_COMMON;
     else
         dct = DEMON_LESSER;
-    create_monster( dct, power/50, BEH_FRIENDLY, you.x_pos, you.y_pos,
-                    MHITYOU, 250 );
+    create_monster( summon_any_demon(dct), std::min(power/50,6),
+                    BEH_FRIENDLY, you.x_pos, you.y_pos, MHITYOU, 250 );
 }
 
 static int card_power(deck_rarity_type rarity)
