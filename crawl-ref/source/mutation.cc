@@ -280,13 +280,13 @@ const char *mutation_descrip[][3] = {
      "You are mostly covered in smooth nacreous scales (AC + 3).",
      "You are completely covered in smooth nacreous scales (AC + 5)."},
 
-    {"You are partially covered in ridged grey scales (AC + 2, dex - 1).",
-     "You are mostly covered in ridged grey scales (AC + 4, dex - 1).",
-     "You are completely covered in ridged grey scales (AC + 6, dex - 2)."},
+    {"You are partially covered in ridged grey scales (AC + 2, Dex -1).",
+     "You are mostly covered in ridged grey scales (AC + 4, Dex -1).",
+     "You are completely covered in ridged grey scales (AC + 6, Dex -2)."},
 
-    {"You are partially covered in metallic scales (AC + 3, dex - 2).",
-     "You are mostly covered in metallic scales (AC + 7, dex - 3).",
-     "You are completely covered in metallic scales (AC + 10, dex - 4)."},
+    {"You are partially covered in metallic scales (AC + 3, Dex -2).",
+     "You are mostly covered in metallic scales (AC + 7, Dex -3).",
+     "You are completely covered in metallic scales (AC + 10, Dex -4)."},
 
     {"You are partially covered in black scales (AC + 1).",
      "You are mostly covered in black scales (AC + 3).",
@@ -297,8 +297,8 @@ const char *mutation_descrip[][3] = {
      "You are completely covered in white scales (AC + 5)."},
 
     {"You are partially covered in yellow scales (AC + 2).",
-     "You are mostly covered in yellow scales (AC + 4, dex - 1).",
-     "You are completely covered in yellow scales (AC + 6, dex - 2)."},
+     "You are mostly covered in yellow scales (AC + 4, Dex -1).",
+     "You are completely covered in yellow scales (AC + 6, Dex -2)."},
 
     {"You are partially covered in brown scales (AC + 2).",
      "You are mostly covered in brown scales (AC + 4).",
@@ -327,8 +327,8 @@ const char *mutation_descrip[][3] = {
      "You are completely covered in indigo scales (AC + 5)."},
 
     {"You are partially covered in knobbly red scales (AC + 2).",
-     "You are mostly covered in knobbly red scales (AC + 5, dex - 1).",
-     "You are completely covered in knobbly red scales (AC + 7, dex - 2)."},
+     "You are mostly covered in knobbly red scales (AC + 5, Dex -1).",
+     "You are completely covered in knobbly red scales (AC + 7, Dex -2)."},
 
     {"You are partially covered in iridescent scales (AC + 1).",
      "You are mostly covered in iridescent scales (AC + 2).",

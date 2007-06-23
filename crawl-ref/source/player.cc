@@ -2906,6 +2906,9 @@ int check_stealth(void)
             stealth += 20;
     }
 
+    if ( you.duration[DUR_STEALTH] )
+        stealth += 80;
+
     stealth += scan_randarts( RAP_STEALTH );
 
     if (player_is_levitating())

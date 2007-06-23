@@ -58,6 +58,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <string.h>            // for memcpy
+#include <iterator>
 
 #ifdef UNIX
 #include <sys/types.h>
@@ -126,6 +127,13 @@ static void marshall_monster(tagHeader &th, const monsters &m);
 static void unmarshall_monster(tagHeader &th, monsters &m);
 static void marshall_item(tagHeader &th, const item_def &item);
 static void unmarshall_item(tagHeader &th, item_def &item);
+
+template<typename T, typename T_iter>
+static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
+                              void (*T_marshall)(struct tagHeader&, const T&));
+template<typename T>
+static void unmarshall_vector(struct tagHeader& th, std::vector<T>& vec,
+                              T (*T_unmarshall)(struct tagHeader&));
 
 // provide a wrapper for file writing, just in case.
 int write2(FILE * file, const char *buffer, unsigned int count)
@@ -225,6 +233,28 @@ void marshallMap(struct tagHeader &th, const std::map<key,value>& data,
         key_marshall(th, ci->first);
         value_marshall(th, ci->second);
     }
+}
+
+template<typename T, typename T_iter>
+static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
+                              void (*T_marshall)(struct tagHeader&, const T&))
+{
+    marshallLong(th, std::distance(beg, end));
+    while ( beg != end )
+    {
+        T_marshall(th, *beg);
+        ++beg;
+    }
+}
+
+template<typename T>
+static void unmarshall_vector(struct tagHeader& th, std::vector<T>& vec,
+                              T (*T_unmarshall)(struct tagHeader&))
+{
+    vec.clear();
+    const long num_to_read = unmarshallLong(th);
+    for ( long i = 0; i < num_to_read; ++i )
+        vec.push_back( T_unmarshall(th) );
 }
 
 void marshall_level_id( tagHeader& th, const level_id& id )
@@ -1033,7 +1063,6 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
         you.skills[j] = unmarshallByte(th);
         you.practise_skill[j] = unmarshallByte(th);
         you.skill_points[j] = unmarshallLong(th);
-
         you.skill_order[j] = unmarshallByte(th);
     }
 
@@ -1101,7 +1130,6 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
     {
-        you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
         you.inv[i].base_type =
             static_cast<object_class_type>(unmarshallByte(th));
         you.inv[i].sub_type = (unsigned char) unmarshallByte(th);
@@ -1110,14 +1138,10 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
         you.inv[i].colour = (unsigned char) unmarshallByte(th);
         you.inv[i].flags = (unsigned long) unmarshallLong(th);
         you.inv[i].quantity = unmarshallShort(th);
-        you.inv[i].plus2 = unmarshallShort(th);
-        
+        you.inv[i].plus2 = unmarshallShort(th);       
         you.inv[i].orig_place  = unmarshallShort(th);
         you.inv[i].orig_monnum = unmarshallShort(th);
-
-        char insstring[80];
-        unmarshallString(th, insstring, 80);
-        you.inv[i].inscription = std::string(insstring);
+        you.inv[i].inscription = unmarshallString(th, 80);
 
         // these never need to be saved for items in the inventory -- bwr
         you.inv[i].x = -1;
@@ -1339,23 +1363,17 @@ static void unmarshall_item(tagHeader &th, item_def &item)
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
 
     item.slot = unmarshallByte(th);
-    item.inscription.clear();
 
     item.orig_place  = unmarshallShort(th);
-    item.orig_monnum = unmarshallShort(th);
-        
-    char insstring[80];
-    unmarshallString(th, insstring, 80);
-    item.inscription = std::string(insstring);
+    item.orig_monnum = unmarshallShort(th);        
+    item.inscription = unmarshallString(th, 80);
 }
 
 static void tag_construct_level_items(struct tagHeader &th)
 {
-    int i;
-
     // how many traps?
     marshallShort(th, MAX_TRAPS);
-    for (i = 0; i < MAX_TRAPS; ++i)
+    for (int i = 0; i < MAX_TRAPS; ++i)
     {
         marshallByte(th, env.trap[i].type);
         marshallByte(th, env.trap[i].x);
@@ -1364,7 +1382,7 @@ static void tag_construct_level_items(struct tagHeader &th)
 
     // how many items?
     marshallShort(th, MAX_ITEMS);
-    for (i = 0; i < MAX_ITEMS; ++i)
+    for (int i = 0; i < MAX_ITEMS; ++i)
         marshall_item(th, mitm[i]);
 }
 
@@ -1460,22 +1478,18 @@ void tag_construct_level_attitude(struct tagHeader &th)
 
 static void tag_read_level( struct tagHeader &th, char minorVersion )
 {
-    int i,j;
-    int gx, gy;
-
-    env.elapsed_time = (double)unmarshallFloat(th);
-
+    env.elapsed_time = unmarshallFloat(th);
     // map grids
     // how many X?
-    gx = unmarshallShort(th);
+    const int gx = unmarshallShort(th);
     // how many Y?
-    gy = unmarshallShort(th);
+    const int gy = unmarshallShort(th);
 
     env.turns_on_level = unmarshallLong(th);
     
-    for (i = 0; i < gx; i++)
+    for (int i = 0; i < gx; i++)
     {
-        for (j = 0; j < gy; j++)
+        for (int j = 0; j < gy; j++)
         {
             grd[i][j] =
                 static_cast<dungeon_feature_type>(
@@ -1493,8 +1507,8 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
     env.cloud_no = unmarshallShort(th);
 
     // how many clouds?
-    gx = unmarshallShort(th);
-    for (i = 0; i < gx; i++)
+    const int num_clouds = unmarshallShort(th);
+    for (int i = 0; i < num_clouds; i++)
     {
         env.cloud[i].x = unmarshallByte(th);
         env.cloud[i].y = unmarshallByte(th);
@@ -1504,8 +1518,8 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
     }
 
     // how many shops?
-    gx = unmarshallByte(th);
-    for (i = 0; i < gx; i++)
+    const int num_shops = unmarshallByte(th);
+    for (int i = 0; i < num_shops; i++)
     {
         env.shop[i].keeper_name[0] = unmarshallByte(th);
         env.shop[i].keeper_name[1] = unmarshallByte(th);
@@ -1520,12 +1534,9 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
 
 static void tag_read_level_items(struct tagHeader &th, char minorVersion)
 {
-    int i;
-    int count;
-
     // how many traps?
-    count = unmarshallShort(th);
-    for (i = 0; i < count; ++i)
+    const int trap_count = unmarshallShort(th);
+    for (int i = 0; i < trap_count; ++i)
     {
         env.trap[i].type =
             static_cast<trap_type>(
@@ -1535,8 +1546,8 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
     }
 
     // how many items?
-    count = unmarshallShort(th);
-    for (i = 0; i < count; ++i)
+    const int item_count = unmarshallShort(th);
+    for (int i = 0; i < item_count; ++i)
         unmarshall_item(th, mitm[i]);
 }
 

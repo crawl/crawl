@@ -1191,6 +1191,7 @@ enum duration_type
     DUR_RESIST_FIRE,
     DUR_RESIST_COLD,
     DUR_SLAYING,
+    DUR_STEALTH,
     NUM_DURATIONS
 };
 

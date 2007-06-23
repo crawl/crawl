@@ -1186,7 +1186,6 @@ struct crawl_environment
     FixedVector< trap_struct, MAX_TRAPS >    trap;  // trap list
 
     FixedVector< int, 20 >   mons_alloc;
-    int                      trap_known;
     double                   elapsed_time; // used during level load
 
     // Number of turns the player has spent on this level.

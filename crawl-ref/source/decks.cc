@@ -12,7 +12,6 @@
 #include "AppHdr.h"
 #include "decks.h"
 
-#include <string.h>
 #include <iostream>
 
 #include "externs.h"
@@ -470,15 +469,12 @@ static void portal_card(int power, deck_rarity_type rarity)
 
     const bool was_controlled = player_control_teleport();
     if ( controlled && !was_controlled )
-        you.duration[DUR_CONTROL_TELEPORT] = 1;
+        you.duration[DUR_CONTROL_TELEPORT] = 6; // long enough to kick in
 
     if ( instant )
         you_teleport_now( true );
     else
         you_teleport();
-
-    if ( controlled && !was_controlled )
-        you.duration[DUR_CONTROL_TELEPORT] = 0;
 }
 
 static void warp_card(int power, deck_rarity_type rarity)
@@ -591,7 +587,7 @@ static void minefield_card(int power, deck_rarity_type rarity)
     {
         for ( int dy = -radius; dy <= radius; ++dy )
         {
-            if ( dx * dx + dy*dy > radius*radius + 1 )
+            if ( dx*dx + dy*dy > radius*radius + 1 )
                 continue;
             if ( dx == 0 && dy == 0 )
                 continue;
@@ -613,8 +609,6 @@ static void damaging_card( card_type card, int power, deck_rarity_type rarity )
 {
     dist target;
     bolt beam;
- 
-    
     zap_type ztype;
     switch ( card )
     {
@@ -661,7 +655,7 @@ static void battle_lust_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )
-        you.duration[DUR_SLAYING] = random2(power/6);
+        you.duration[DUR_SLAYING] = random2(power/6) + 1;
     else if ( power_level == 1 )
         go_berserk(false);
     else if ( power_level == 0 )
@@ -729,7 +723,7 @@ static void helm_card(int power, deck_rarity_type rarity)
             if ( random2(4-i) < num_resists )
             {
                 // Add a temporary resist
-                you.duration[possible_resists[i]] += random2(power/7);
+                you.duration[possible_resists[i]] += random2(power/7) + 1;
                 msg::stream << "You feel resistant to " << resist_names[i]
                             << '.' << std::endl;
                 --num_resists;
@@ -766,10 +760,14 @@ static void blade_card(int power, deck_rarity_type rarity)
 static void shadow_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
+
     if ( power_level >= 1 )
     {
-        // XXX add a stealth attribute here
+        mpr( you.duration[DUR_STEALTH] ? "You feel more catlike." :
+             "You feel stealthy.");
+        you.duration[DUR_STEALTH] += random2(power/4) + 1;
     }
+
     potion_effect(POT_INVISIBILITY, random2(power/4));
 }
 

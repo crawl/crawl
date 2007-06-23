@@ -1869,6 +1869,14 @@ static void decrement_durations()
         you.duration[DUR_TELEPORT] = 0;
     }
 
+    if (you.duration[DUR_STEALTH] > 1)
+        you.duration[DUR_STEALTH]--;
+    else if (you.duration[DUR_STEALTH] == 1)
+    {
+        mpr("You feel less stealthy.", MSGCH_DURATION);
+        you.duration[DUR_STEALTH] = 0;
+    }
+
     if (you.duration[DUR_CONTROL_TELEPORT] > 1)
     {
         you.duration[DUR_CONTROL_TELEPORT]--;
