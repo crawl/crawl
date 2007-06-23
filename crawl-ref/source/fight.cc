@@ -81,8 +81,6 @@
 
 static void stab_message(struct monsters *defender, int stab_bonus);
 
-int weapon_str_weight( int wpn_class, int wpn_type );
-
 static inline int player_weapon_str_weight( void );
 static inline int player_weapon_dex_weight( void );
 
@@ -969,7 +967,7 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
 
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
-    if (you.might > 1)
+    if (you.duration[DUR_MIGHT] > 1)
         damage += 1 + random2(10);
     
     if (you.hunger_state == HS_STARVING)
@@ -1730,10 +1728,10 @@ bool melee_attack::apply_damage_brand()
         
         mons_ench_f2( def, beam_temp );
         
-        you.confusing_touch -= random2(20);
+        you.duration[DUR_CONFUSING_TOUCH] -= random2(20);
         
-        if (you.confusing_touch < 1)
-            you.confusing_touch = 1;
+        if (you.duration[DUR_CONFUSING_TOUCH] < 1)
+            you.duration[DUR_CONFUSING_TOUCH] = 1;
         break;
     }
     }
@@ -2078,7 +2076,7 @@ int melee_attack::player_to_hit(bool random_factor)
 
     const bool see_invis = player_see_invis();
     // if you can't see yourself, you're a little less acurate.
-    if (you.invis && !see_invis)
+    if (you.duration[DUR_INVIS] && !see_invis)
         your_to_hit -= 5;
 
     // fighting contribution
@@ -2157,15 +2155,15 @@ int melee_attack::player_to_hit(bool random_factor)
     if (hand_half_bonus)
         your_to_hit += maybe_random2(3, random_factor);
 
-    if (weapon && wpn_skill == SK_SHORT_BLADES && you.sure_blade)
+    if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
         your_to_hit += 5 +
-            (random_factor ? random2limit( you.sure_blade, 10 ) :
-             you.sure_blade / 2);
+            (random_factor ? random2limit( you.duration[DUR_SURE_BLADE], 10 ) :
+             you.duration[DUR_SURE_BLADE] / 2);
 
     // other stuff
     if (!weapon)
     {
-        if ( you.confusing_touch )
+        if ( you.duration[DUR_CONFUSING_TOUCH] )
             // just trying to touch is easier that trying to damage
             your_to_hit += maybe_random2(you.dex, random_factor);
 
@@ -2264,7 +2262,7 @@ void melee_attack::player_stab_check()
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 
-    if (stab_attempt && you.religion == GOD_SHINING_ONE && !you.berserker)
+    if (stab_attempt && you.religion == GOD_SHINING_ONE && !you.duration[DUR_BERSERKER])
     {
         if (!yesno("Really attack this helpless creature?", false, 'n'))
         {
@@ -2393,7 +2391,7 @@ int melee_attack::player_calc_base_unarmed_damage()
 {
     int damage = 3;
 
-    if (you.confusing_touch)
+    if (you.duration[DUR_CONFUSING_TOUCH])
     {
         // no base hand damage while using this spell
         damage = 0;

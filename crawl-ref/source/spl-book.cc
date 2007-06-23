@@ -1138,13 +1138,13 @@ bool learn_spell(void)
         return (false);
     }
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
     {
         mpr("You are too confused!");
         return (false);
     }
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);

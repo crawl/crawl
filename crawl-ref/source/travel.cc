@@ -449,7 +449,7 @@ static bool is_safe_move(int x, int y)
 
 static bool player_is_permalevitating()
 {
-    return you.levitation > 1 &&
+    return you.duration[DUR_LEVITATION] > 1 &&
             ((you.species == SP_KENKU && you.experience_level >= 15)
              || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ));
 }
@@ -891,7 +891,7 @@ command_type travel()
     command_type result = CMD_NO_CMD;
 
     // Abort travel/explore if you're confused or a key was pressed.
-    if (kbhit() || you.conf)
+    if (kbhit() || you.duration[DUR_CONF])
     {
         stop_running();
         return CMD_NO_CMD;

@@ -657,14 +657,7 @@ static void tag_construct_you(struct tagHeader &th)
 
     marshallByte(th,you.religion);
     marshallByte(th,you.piety);
-    marshallByte(th,you.invis);
-    marshallByte(th,you.conf);
-    marshallByte(th,you.paralysis);
-    marshallByte(th,you.slow);
-    marshallByte(th,you.fire_shield);
     marshallByte(th,you.rotting);
-    marshallByte(th,you.exhausted);
-    marshallByte(th,you.deaths_door);
     marshallByte(th,you.symbol);
     marshallByte(th,you.colour);
     marshallByte(th,you.pet_target);
@@ -675,7 +668,6 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.your_level);
     marshallByte(th,you.is_undead);
     marshallByte(th,you.special_wield);
-    marshallByte(th,you.berserker);
     marshallByte(th,you.berserk_penalty);
     marshallByte(th,you.level_type);
     marshallByte(th,you.synch_time);
@@ -683,26 +675,6 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.species);
 
     marshallShort(th, you.hp);
-
-    if (you.haste > 215)
-        you.haste = 215;
-
-    marshallByte(th,you.haste);
-
-    if (you.might > 215)
-        you.might = 215;
-
-    marshallByte(th,you.might);
-
-    if (you.levitation > 215)
-        you.levitation = 215;
-
-    marshallByte(th,you.levitation);
-
-    if (you.poisoning > 215)
-        you.poisoning = 215;
-
-    marshallByte(th,you.poisoning);
 
     marshallShort(th, you.hunger);
 
@@ -716,8 +688,6 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.strength);
     marshallByte(th,you.intel);
     marshallByte(th,you.dex);
-    marshallByte(th,you.confusing_touch);
-    marshallByte(th,you.sure_blade);
     marshallByte(th,you.hit_points_regeneration);
     marshallByte(th,you.magic_points_regeneration);
 
@@ -772,16 +742,16 @@ static void tag_construct_you(struct tagHeader &th)
     // how many durations?
     marshallByte(th, NUM_DURATIONS);
     for (j = 0; j < NUM_DURATIONS; ++j)
-        marshallByte(th,you.duration[j]);
+        marshallLong(th,you.duration[j]);
 
     // how many attributes?
-    marshallByte(th, 30);
-    for (j = 0; j < 30; ++j)
+    marshallByte(th, NUM_ATTRIBUTES);
+    for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallByte(th,you.attribute[j]);
 
     // how many mutations/demon powers?
-    marshallShort(th, 100);
-    for (j = 0; j < 100; ++j)
+    marshallShort(th, NUM_MUTATIONS);
+    for (j = 0; j < NUM_MUTATIONS; ++j)
     {
         marshallByte(th,you.mutation[j]);
         marshallByte(th,you.demon_pow[j]);
@@ -830,7 +800,6 @@ static void tag_construct_you(struct tagHeader &th)
     marshallLong( th, you.num_turns );
 
     marshallShort(th, you.magic_contamination);
-    marshallShort(th, you.backlight);
 }
 
 static void tag_construct_you_items(struct tagHeader &th)
@@ -879,10 +848,11 @@ static void tag_construct_you_items(struct tagHeader &th)
     // how many unique items?
     marshallByte(th, 50);
     for (j = 0; j < 50; ++j)
-    {
-        marshallByte(th,you.unique_items[j]);     /* unique items */
+        marshallByte(th,you.unique_items[j]);
+
+    marshallByte(th, NUM_BOOKS);
+    for (j = 0; j < NUM_BOOKS; ++j)
         marshallByte(th,you.had_book[j]);
-    }
 
     // how many unrandarts?
     marshallShort(th, NO_UNRANDARTS);
@@ -978,35 +948,23 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
 
     you.religion = static_cast<god_type>(unmarshallByte(th));
     you.piety = unmarshallByte(th);
-    you.invis = unmarshallByte(th);
-    you.conf = unmarshallByte(th);
-    you.paralysis = unmarshallByte(th);
-    you.slow = unmarshallByte(th);
-    you.fire_shield = unmarshallByte(th);
     you.rotting = unmarshallByte(th);
-    you.exhausted = unmarshallByte(th);
-    you.deaths_door = unmarshallByte(th);
     you.symbol = unmarshallByte(th);
     you.colour = unmarshallByte(th);
     you.pet_target = unmarshallByte(th);
 
     you.max_level = unmarshallByte(th);
     you.where_are_you = static_cast<branch_type>( unmarshallByte(th) );
-    you.char_direction = unmarshallByte(th);
+    you.char_direction = static_cast<game_direction_type>(unmarshallByte(th));
     you.your_level = unmarshallByte(th);
     you.is_undead = static_cast<undead_state_type>(unmarshallByte(th));
     you.special_wield = unmarshallByte(th);
-    you.berserker = unmarshallByte(th);
     you.berserk_penalty = unmarshallByte(th);
     you.level_type = static_cast<level_area_type>( unmarshallByte(th) );
     you.synch_time = unmarshallByte(th);
     you.disease = unmarshallByte(th);
     you.species = static_cast<species_type>(unmarshallByte(th));
     you.hp = unmarshallShort(th);
-    you.haste = unmarshallByte(th);
-    you.might = unmarshallByte(th);
-    you.levitation = unmarshallByte(th);
-    you.poisoning = unmarshallByte(th);
     you.hunger = unmarshallShort(th);
 
     // how many you.equip?
@@ -1019,8 +977,6 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.strength = unmarshallByte(th);
     you.intel = unmarshallByte(th);
     you.dex = unmarshallByte(th);
-    you.confusing_touch = unmarshallByte(th);
-    you.sure_blade = unmarshallByte(th);
     you.hit_points_regeneration = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
 
@@ -1087,7 +1043,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     // how many durations?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.duration[j] = (unsigned char) unmarshallByte(th);
+        you.duration[j] = unmarshallLong(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
@@ -1133,7 +1089,6 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.num_turns = unmarshallLong(th);
 
     you.magic_contamination = unmarshallShort(th);
-    you.backlight = unmarshallShort(th);
 }
 
 static void tag_read_you_items(struct tagHeader &th, char minorVersion)
@@ -1215,10 +1170,12 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     // how many unique items?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-    {
         you.unique_items[j] = unmarshallByte(th);
+
+    // how many books?
+    count_c = unmarshallByte(th);
+    for (j = 0; j < count_c; ++j)
         you.had_book[j] = unmarshallByte(th);
-    }
 
     // how many unrandarts?
     count_s = unmarshallShort(th);

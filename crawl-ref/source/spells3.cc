@@ -304,7 +304,7 @@ void sublimation(int power)
         || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_FOOD
         || you.inv[you.equip[EQ_WEAPON]].sub_type != FOOD_CHUNK)
     {
-        if (you.deaths_door)
+        if (you.duration[DUR_DEATHS_DOOR])
         {
             mpr( "A conflicting enchantment prevents the spell from "
                  "coming into effect." );
@@ -593,7 +593,7 @@ void you_teleport(void)
 
 static bool teleport_player( bool allow_control, bool new_abyss_area )
 {
-    bool is_controlled = (allow_control && !you.conf
+    bool is_controlled = (allow_control && !you.duration[DUR_CONF]
                           && player_control_teleport()
                           && allow_control_teleport());
 

@@ -286,7 +286,7 @@ bool transform(int pow, transformation_type which_trans)
     case TRAN_LICH:
         // also AC +3, cold +1, neg +3, pois +1, is_undead, res magic +50,
         // spec_death +1, and drain attack (if empty-handed)
-        if (you.deaths_door)
+        if (you.duration[DUR_DEATHS_DOOR])
         {
             mpr( "The transformation conflicts with an enchantment "
                  "already in effect." );

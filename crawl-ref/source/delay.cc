@@ -559,7 +559,7 @@ static void finish_delay(const delay_queue_item &delay)
 
             turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 
-            if (you.berserker && you.berserk_penalty != NO_BERSERK_PENALTY)
+            if (you.duration[DUR_BERSERKER] && you.berserk_penalty != NO_BERSERK_PENALTY)
             {
                 mpr("You enjoyed that.");
                 you.berserk_penalty = 0;
@@ -709,7 +709,7 @@ static void armour_wear_effects(const int item_slot)
             break;
 
         case SPARM_DARKNESS:
-            if (!you.invis)
+            if (!you.duration[DUR_INVIS])
                 mpr("You become transparent for a moment.");
             break;
 

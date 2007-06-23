@@ -395,15 +395,15 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
     
     // From time to time Trog gives you a little bonus
-    if (killer == KILL_YOU && you.berserker)
+    if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
     {
         if (you.religion == GOD_TROG
             && (!player_under_penance() && you.piety > random2(1000)))
         {
             int bonus = 3 + random2avg( 10, 2 );
 
-            you.berserker += bonus;
-            you.might += bonus;
+            you.duration[DUR_BERSERKER] += bonus;
+            you.duration[DUR_MIGHT] += bonus;
             haste_player( bonus );
 
             mpr( "You feel the power of Trog in you as your rage grows.",
@@ -413,8 +413,8 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         {
             int bonus = 2 + random2(4);
 
-            you.berserker += bonus;
-            you.might += bonus;
+            you.duration[DUR_BERSERKER] += bonus;
+            you.duration[DUR_MIGHT] += bonus;
             haste_player( bonus );
 
             mpr( "Your amulet glows a violent red." );
@@ -1536,7 +1536,7 @@ static void handle_behaviour(monsters *mon)
 
     // change proxPlayer depending on invisibility and standing
     // in shallow water
-    if (proxPlayer && you.invis)
+    if (proxPlayer && you.duration[DUR_INVIS])
     {
         if (!mons_player_visible( mon ))
             proxPlayer = false;
@@ -2016,8 +2016,8 @@ static void handle_nearby_ability(monsters *monster)
         {
             simple_monster_message(monster, " stares at you.");
 
-            if (you.paralysis < 10)
-                you.paralysis += 2 + random2(3);
+            if (you.duration[DUR_PARALYSIS] < 10)
+                you.duration[DUR_PARALYSIS] += 2 + random2(3);
         }
         break;
 
@@ -3359,7 +3359,7 @@ static void monster_add_energy(monsters *monster)
 
     monster->speed_increment += energy_gained;
 
-    if (you.slow > 0)
+    if (you.duration[DUR_SLOW] > 0)
         monster->speed_increment += energy_gained;
 }
 

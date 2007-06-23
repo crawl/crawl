@@ -1849,21 +1849,21 @@ void divine_retribution( god_type god )
                 break;
 
             case 3:
-                if (!you.paralysis)
+                if (!you.duration[DUR_PARALYSIS])
                 {
                     dec_penance(GOD_TROG, 3);
                     mpr( "You suddenly pass out!", MSGCH_WARN );
-                    you.paralysis = 2 + random2(6);
+                    you.duration[DUR_PARALYSIS] = 2 + random2(6);
                 }
                 break;
 
             case 4:
             case 5:
-                if (you.slow < 90)
+                if (you.duration[DUR_SLOW] < 90)
                 {
                     dec_penance( GOD_TROG, 1 );
                     mpr( "You suddenly feel exhausted!", MSGCH_WARN );
-                    you.exhausted = 100;
+                    you.duration[DUR_EXHAUSTED] = 100;
                     slow_player( 100 );
                 }
                 break;
@@ -2127,7 +2127,7 @@ void divine_retribution( god_type god )
         }
         else
         {
-            if (you.slow < 90)
+            if (you.duration[DUR_SLOW] < 90)
             {
                 mpr( "The divine experience leaves you feeling exhausted!",
                      MSGCH_WARN );

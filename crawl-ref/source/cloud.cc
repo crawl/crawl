@@ -138,7 +138,7 @@ void manage_clouds(void)
         }
 
         // double the amount when slowed - must be applied last(!):
-        if (you.slow)
+        if (you.duration[DUR_SLOW])
             dissipate *= 2;
 
         dissipate_cloud( cc, env.cloud[cc], dissipate );

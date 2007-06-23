@@ -618,8 +618,6 @@ public:
   runrest running;            // Nonzero if running/traveling.
 
   char special_wield;
-  char deaths_door;
-  int fire_shield;
 
   double elapsed_time;        // total amount of elapsed time in the game
 
@@ -692,33 +690,20 @@ public:
   burden_state_type burden_state;
   FixedVector<spell_type, 25> spells;
   char spell_no;
-  unsigned char char_direction;          //
+  game_direction_type char_direction;          //
 
   unsigned char pet_target;
 
   int your_level; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
-  // durational things. Why didn't I do this for haste etc 
-  // right from the start? Oh well.
+  // durational things
   FixedVector<int, NUM_DURATIONS> duration; 
 
-  int invis;
-  int conf;
-  int paralysis;
-  int slow;
-  int haste;
-  int might;
-  int levitation;
-
-  int poisoning;
   int rotting;
-  int berserker;
 
-  int exhausted;                      // fatigue counter for berserk
+  int berserk_penalty;                // penalty for moving while berserk
 
-  int berserk_penalty;                // pelnalty for moving while berserk
-
-  FixedVector<unsigned char, 30> attribute;        // see ATTRIBUTES in enum.h
+  FixedVector<unsigned char, NUM_ATTRIBUTES> attribute;
 
   undead_state_type is_undead;
 
@@ -752,15 +737,11 @@ public:
   FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
 
-  FixedVector<unsigned char, 100> mutation;
-  FixedVector<unsigned char, 100> demon_pow;
+  FixedVector<unsigned char, NUM_MUTATIONS> mutation;
+  FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
   unsigned char magic_contamination;
-  short backlight;
 
-  char confusing_touch;
-  char sure_blade;
-
-  FixedVector<bool, 50> had_book;
+  FixedVector<bool, NUM_BOOKS> had_book;
 
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)

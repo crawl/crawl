@@ -877,7 +877,7 @@ static void trowel_card(int power, deck_rarity_type rarity)
 static void genie_card(int power, deck_rarity_type rarity)
 {
     if ( coinflip() )
-        acquirement( OBJ_RANDOM, AQ_CARD_ACQUISITION );
+        acquirement( OBJ_RANDOM, AQ_CARD_GENIE );
     else
         potion_effect( coinflip() ? POT_DEGENERATION : POT_DECAY, 40 );
 }
@@ -953,6 +953,11 @@ static int card_power(deck_rarity_type rarity)
 void card_effect(card_type which_card, deck_rarity_type rarity)
 {
     const int power = card_power(rarity);
+#ifdef DEBUG_DIAGNOSTICS
+    msg::streams(MSGCH_DIAGNOSTICS) << "Card power: " << power
+                                    << ", rarity: " << static_cast<int>(rarity)
+                                    << std::endl;
+#endif
 
     msg::stream << "You have drawn " << card_name( which_card )
                 << '.' << std::endl;

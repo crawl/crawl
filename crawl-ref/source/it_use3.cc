@@ -310,7 +310,7 @@ bool evoke_wielded( void )
 
     int wield = you.equip[EQ_WEAPON];
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg( MSG_TOO_BERSERK );
         return (false);
@@ -342,7 +342,7 @@ bool evoke_wielded( void )
             switch (wpn.special)
             {
             case SPWPN_STAFF_OF_DISPATER:
-                if (you.deaths_door || !enough_hp(11, true) 
+                if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true) 
                     || !enough_mp(5, true))
                 {
                     break;
@@ -707,7 +707,7 @@ static bool ball_of_seeing(void)
 
     mpr("You gaze into the crystal ball.");
 
-    use = ((!you.conf) ? random2(you.skills[SK_EVOCATIONS] * 6) : random2(5));
+    use = ((!you.duration[DUR_CONF]) ? random2(you.skills[SK_EVOCATIONS] * 6) : random2(5));
 
     if (use < 2)
     {
@@ -1002,7 +1002,7 @@ static bool ball_of_energy(void)
 
     mpr("You gaze into the crystal ball.");
 
-    use = ((!you.conf) ? random2(you.skills[SK_EVOCATIONS] * 6) : random2(6));
+    use = ((!you.duration[DUR_CONF]) ? random2(you.skills[SK_EVOCATIONS] * 6) : random2(6));
 
     if (use < 2 || you.max_magic_points == 0)
     {
@@ -1046,8 +1046,8 @@ static bool ball_of_fixation(void)
     mpr("You gaze into the crystal ball.");
     mpr("You are mesmerised by a rainbow of scintillating colours!");
 
-    you.paralysis = 100;
-    you.slow = 100;
+    you.duration[DUR_PARALYSIS] = 100;
+    you.duration[DUR_SLOW] = 100;
 
     return (true);
 }                               // end ball_of_fixation()

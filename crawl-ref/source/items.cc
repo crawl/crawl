@@ -915,17 +915,8 @@ std::string origin_desc(const item_def &item)
             case AQ_SCROLL:
                 desc += "You acquired " + article_it(item) + " ";
                 break;
-            case AQ_CARD_ACQUISITION:
-                desc += "You drew \"Acquisition\" ";
-                break;
-            case AQ_CARD_VIOLENCE:
-                desc += "You drew \"Violence\" ";
-                break;
-            case AQ_CARD_PROTECTION:
-                desc += "You drew \"Protection\" ";
-                break;
-            case AQ_CARD_KNOWLEDGE:
-                desc += "You drew \"Knowledge\" ";
+            case AQ_CARD_GENIE:
+                desc += "You drew the Genie ";
                 break;
             case AQ_WIZMODE:
                 desc += "Your wizardly powers created " 
@@ -2235,10 +2226,10 @@ void handle_time( long time_delta )
     // about 1.5 points on average, so they can corrupt the player
     // quite quickly.  Wielding one for a short battle is OK, which is
     // as things should be.   -- GDL
-    if (you.invis && random2(10) < 6)
+    if (you.duration[DUR_INVIS] && random2(10) < 6)
         added_contamination++;
 
-    if (you.haste && !you.berserker && random2(10) < 6)
+    if (you.duration[DUR_HASTE] && !you.duration[DUR_BERSERKER] && random2(10) < 6)
         added_contamination++;
 
     // randarts are usually about 20x worse than running around invisible
@@ -2246,7 +2237,7 @@ void handle_time( long time_delta )
     added_contamination += random2(1 + scan_randarts(RAP_MUTAGENIC));
 
     // we take off about .5 points per turn
-    if (!you.invis && !you.haste && coinflip())
+    if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
         added_contamination -= 1;
 
     contaminate_player( added_contamination );
@@ -2507,7 +2498,7 @@ void handle_time( long time_delta )
     }
     else                        // exercise stealth skill:
     {
-        if (you.burden_state != BS_UNENCUMBERED || you.berserker)
+        if (you.burden_state != BS_UNENCUMBERED || you.duration[DUR_BERSERKER])
             return;
 
         if (you.special_wield == SPWLD_SHADOW)

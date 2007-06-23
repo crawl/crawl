@@ -860,7 +860,7 @@ bool check_awaken(int mons_aw)
         return (false);
 
     // berserkers aren't really concerned about stealth
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
         return (true);
 
     // Repel undead is a holy aura, to which evil creatures are sensitive.
@@ -3829,7 +3829,7 @@ static int viewmap_flash_colour()
 {
     if (you.special_wield == SPWLD_SHADOW)
         return (DARKGREY);
-    else if (you.berserker)
+    else if (you.duration[DUR_BERSERKER])
         return (RED);
 
     return (BLACK);

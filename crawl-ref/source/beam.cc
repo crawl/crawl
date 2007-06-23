@@ -2415,7 +2415,7 @@ static void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 static bool found_player(const bolt &beam, int x, int y)
 {
     const bool needs_fuzz = beam.is_tracer && !beam.can_see_invis 
-                            && you.invis;
+                            && you.duration[DUR_INVIS];
     const int dist = needs_fuzz? 2 : 0;
 
     return (grid_distance(x, y, you.x_pos, you.y_pos) <= dist);
@@ -2989,7 +2989,7 @@ static int affect_player( bolt &beam )
     if (beam.is_tracer)
     {
         // check can see player 
-        if (beam.can_see_invis || !you.invis
+        if (beam.can_see_invis || !you.duration[DUR_INVIS]
                 || fuzz_invis_tracer(beam))
         {
             if (beam.is_friendly)
@@ -3013,7 +3013,7 @@ static int affect_player( bolt &beam )
     beamHit = beam.hit;
 
     // Monsters shooting at an invisible player are very inaccurate.
-    if (you.invis && !beam.can_see_invis)
+    if (you.duration[DUR_INVIS] && !beam.can_see_invis)
         beamHit /= 2;
 
     if (beam.name[0] != '0') 
@@ -3114,16 +3114,16 @@ static int affect_player( bolt &beam )
         switch (beam.flavour)
         {
         case BEAM_BACKLIGHT:
-            if (!you.invis)
+            if (!you.duration[DUR_INVIS])
             {
-                if (you.backlight)
+                if (you.duration[DUR_BACKLIGHT])
                     mpr("You glow brighter.");
                 else
                     mpr("You are outlined in light.");
                 
-                you.backlight += random_range(15, 35);
-                if (you.backlight > 250)
-                    you.backlight = 250;
+                you.duration[DUR_BACKLIGHT] += random_range(15, 35);
+                if (you.duration[DUR_BACKLIGHT] > 250)
+                    you.duration[DUR_BACKLIGHT] = 250;
 
                 beam.obvious_effect = true;
             }

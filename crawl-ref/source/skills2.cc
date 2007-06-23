@@ -2200,7 +2200,7 @@ int calc_hp(void)
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
 
     // being berserk makes you resistant to damage. I don't know why.
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         hitp *= 15;
         hitp /= 10;

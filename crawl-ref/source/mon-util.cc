@@ -498,7 +498,7 @@ bool mons_monster_visible( struct monsters *mon, struct monsters *targ )
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_player_visible( struct monsters *mon )
 {
-    if (you.invis)
+    if (you.duration[DUR_INVIS])
     {
         if (player_in_water())
             return (true);

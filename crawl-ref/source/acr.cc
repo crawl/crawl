@@ -540,7 +540,7 @@ static void handle_wizard_command( void )
 
     case 'h':
         you.rotting = 0;
-        you.poisoning = 0;
+        you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         set_hp( abs(you.hp_max), false );
         set_hunger( 5000 + abs(you.hunger), true );
@@ -548,7 +548,7 @@ static void handle_wizard_command( void )
 
     case 'H':
         you.rotting = 0;
-        you.poisoning = 0;
+        you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
@@ -886,7 +886,7 @@ static void input()
         }
     }
  
-    if ( you.paralysis )
+    if ( you.duration[DUR_PARALYSIS] )
     {
         world_reacts();
         return;
@@ -976,7 +976,7 @@ static void go_upstairs()
     
     if (ygrd == DNGN_ENTER_SHOP)
     {
-        if ( you.berserker )
+        if ( you.duration[DUR_BERSERKER] )
             canned_msg(MSG_TOO_BERSERK);
         else
             shop();
@@ -1960,21 +1960,21 @@ static void decrement_durations()
         you.duration[DUR_DEATH_CHANNEL] = 0;
     }
 
-    if (you.invis > 1)
+    if (you.duration[DUR_INVIS] > 1)
     {
-        you.invis--;
+        you.duration[DUR_INVIS]--;
 
-        if (you.invis == 6)
+        if (you.duration[DUR_INVIS] == 6)
         {
             mpr("You flicker for a moment.", MSGCH_DURATION);
             if (coinflip())
-                you.invis--;
+                you.duration[DUR_INVIS]--;
         }
     }
-    else if (you.invis == 1)
+    else if (you.duration[DUR_INVIS] == 1)
     {
         mpr("You flicker back into view.", MSGCH_DURATION);
-        you.invis = 0;
+        you.duration[DUR_INVIS] = 0;
     }
 
     if ( you.duration[DUR_BARGAIN] > 1 )
@@ -1984,43 +1984,43 @@ static void decrement_durations()
         mpr("You feel less charismatic.", MSGCH_DURATION);
     }
 
-    if (you.conf > 0)
+    if (you.duration[DUR_CONF] > 0)
         reduce_confuse_player(1);
 
-    if (you.paralysis > 1)
-        you.paralysis--;
-    else if (you.paralysis == 1)
+    if (you.duration[DUR_PARALYSIS] > 1)
+        you.duration[DUR_PARALYSIS]--;
+    else if (you.duration[DUR_PARALYSIS] == 1)
     {
         mpr("You can move again.", MSGCH_DURATION);
-        you.paralysis = 0;
+        you.duration[DUR_PARALYSIS] = 0;
     }
 
-    if (you.exhausted > 1)
-        you.exhausted--;
-    else if (you.exhausted == 1)
+    if (you.duration[DUR_EXHAUSTED] > 1)
+        you.duration[DUR_EXHAUSTED]--;
+    else if (you.duration[DUR_EXHAUSTED] == 1)
     {
         mpr("You feel less fatigued.", MSGCH_DURATION);
-        you.exhausted = 0;
+        you.duration[DUR_EXHAUSTED] = 0;
     }
 
     dec_slow_player();
     dec_haste_player();
 
-    if (you.might > 1)
-        you.might--;
-    else if (you.might == 1)
+    if (you.duration[DUR_MIGHT] > 1)
+        you.duration[DUR_MIGHT]--;
+    else if (you.duration[DUR_MIGHT] == 1)
     {
         mpr("You feel a little less mighty now.", MSGCH_DURATION);
-        you.might = 0;
+        you.duration[DUR_MIGHT] = 0;
         modify_stat(STAT_STRENGTH, -5, true);
     }
 
-    if (you.berserker > 1)
-        you.berserker--;
-    else if (you.berserker == 1)
+    if (you.duration[DUR_BERSERKER] > 1)
+        you.duration[DUR_BERSERKER]--;
+    else if (you.duration[DUR_BERSERKER] == 1)
     {
         mpr( "You are no longer berserk.", MSGCH_DURATION );
-        you.berserker = 0;
+        you.duration[DUR_BERSERKER] = 0;
 
         //jmf: guilty for berserking /after/ berserk
         did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
@@ -2085,16 +2085,16 @@ static void decrement_durations()
         else
         {
             mpr("You pass out from exhaustion.", MSGCH_WARN);
-            you.paralysis += roll_dice( 1, 4 );
+            you.duration[DUR_PARALYSIS] += roll_dice( 1, 4 );
         }
-        if ( you.paralysis == 0 )
+        if ( you.duration[DUR_PARALYSIS] == 0 )
             mpr("You are exhausted.", MSGCH_WARN);
 
         // this resets from an actual penalty or from NO_BERSERK_PENALTY
         you.berserk_penalty = 0;
 
         int dur = 12 + roll_dice( 2, 12 );
-        you.exhausted += dur;
+        you.duration[DUR_EXHAUSTED] += dur;
         // for tutorial
         unsigned tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
         Options.tutorial_events[TUT_YOU_ENCHANTED] = 0;
@@ -2111,47 +2111,47 @@ static void decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.backlight > 0 && !--you.backlight && !you.backlit())
+    if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
         mpr("You are no longer glowing.", MSGCH_DURATION);
     
-    if (you.confusing_touch > 1)
-        you.confusing_touch--;
-    else if (you.confusing_touch == 1)
+    if (you.duration[DUR_CONFUSING_TOUCH] > 1)
+        you.duration[DUR_CONFUSING_TOUCH]--;
+    else if (you.duration[DUR_CONFUSING_TOUCH] == 1)
     {
         msg::streams(MSGCH_DURATION) << "Your " << your_hand(true)
                                      << " stop glowing." << std::endl;
-        you.confusing_touch = 0;
+        you.duration[DUR_CONFUSING_TOUCH] = 0;
     }
 
-    if (you.sure_blade > 1)
-        you.sure_blade--;
-    else if (you.sure_blade == 1)
+    if (you.duration[DUR_SURE_BLADE] > 1)
+        you.duration[DUR_SURE_BLADE]--;
+    else if (you.duration[DUR_SURE_BLADE] == 1)
     {
         mpr("The bond with your blade fades away.", MSGCH_DURATION);
-        you.sure_blade = 0;
+        you.duration[DUR_SURE_BLADE] = 0;
     }
 
-    if (you.levitation > 1)
+    if (you.duration[DUR_LEVITATION] > 1)
     {
         if (you.species != SP_KENKU || you.experience_level < 15)
-            you.levitation--;
+            you.duration[DUR_LEVITATION]--;
 
         if (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ))
-            you.levitation = 2;
+            you.duration[DUR_LEVITATION] = 2;
 
-        if (you.levitation == 10)
+        if (you.duration[DUR_LEVITATION] == 10)
         {
             mpr("You are starting to lose your buoyancy!", MSGCH_DURATION);
-            you.levitation -= random2(6);
+            you.duration[DUR_LEVITATION] -= random2(6);
 
             if (you.duration[DUR_CONTROLLED_FLIGHT] > 0)
-                you.duration[DUR_CONTROLLED_FLIGHT] = you.levitation;
+                you.duration[DUR_CONTROLLED_FLIGHT] = you.duration[DUR_LEVITATION];
         }
     }
-    else if (you.levitation == 1)
+    else if (you.duration[DUR_LEVITATION] == 1)
     {
         mpr("You float gracefully downwards.", MSGCH_DURATION);
-        you.levitation = 0;
+        you.duration[DUR_LEVITATION] = 0;
         burden_change();
         you.duration[DUR_CONTROLLED_FLIGHT] = 0;
 
@@ -2195,16 +2195,16 @@ static void decrement_durations()
 
     dec_disease_player();
 
-    if (you.poisoning > 0)
+    if (you.duration[DUR_POISONING] > 0)
     {
-        if (random2(5) <= (you.poisoning - 1))
+        if (random2(5) <= (you.duration[DUR_POISONING] - 1))
         {
-            if (you.poisoning > 10 && random2(you.poisoning) >= 8)
+            if (you.duration[DUR_POISONING] > 10 && random2(you.duration[DUR_POISONING]) >= 8)
             {
                 ouch(random2(10) + 5, 0, KILLED_BY_POISON);
                 mpr("You feel extremely sick.", MSGCH_DANGER);
             }
-            else if (you.poisoning > 5 && coinflip())
+            else if (you.duration[DUR_POISONING] > 5 && coinflip())
             {
                 ouch((coinflip()? 3 : 2), 0, KILLED_BY_POISON);
                 mpr("You feel very sick.", MSGCH_WARN);
@@ -2221,26 +2221,26 @@ static void decrement_durations()
         }
     }
 
-    if (you.deaths_door)
+    if (you.duration[DUR_DEATHS_DOOR])
     {
         if (you.hp > allowed_deaths_door_hp())
         {
             mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.paralysis += 5 + random2(5);
+            you.duration[DUR_PARALYSIS] += 5 + random2(5);
             confuse_player( 10 + random2(10) );
             you.hp_max--;
             deflate_hp(you.hp_max, false);
-            you.deaths_door = 0;
+            you.duration[DUR_DEATHS_DOOR] = 0;
         }
         else
-            you.deaths_door--;
+            you.duration[DUR_DEATHS_DOOR]--;
 
-        if (you.deaths_door == 10)
+        if (you.duration[DUR_DEATHS_DOOR] == 10)
         {
             mpr("Your time is quickly running out!", MSGCH_DURATION);
-            you.deaths_door -= random2(6);
+            you.duration[DUR_DEATHS_DOOR] -= random2(6);
         }
-        if (you.deaths_door == 1)
+        if (you.duration[DUR_DEATHS_DOOR] == 1)
         {
             mpr("Your life is in your own hands again!", MSGCH_DURATION);
             more();
@@ -2289,7 +2289,7 @@ static void world_reacts()
 
     run_environment_effects();
 
-    if ( !you.paralysis && !you.mutation[MUT_BLURRY_VISION] &&
+    if ( !you.duration[DUR_PARALYSIS] && !you.mutation[MUT_BLURRY_VISION] &&
          (you.mutation[MUT_ACUTE_VISION] >= 2 ||
           random2(50) < you.skills[SK_TRAPS_DOORS]) )
         search_around(false); // check nonadjacent squares too
@@ -2327,7 +2327,7 @@ static void world_reacts()
     // is only an unsigned char and is thus likely to overflow. -- bwr
     int tmp = static_cast< int >( you.hit_points_regeneration );
 
-    if (you.hp < you.hp_max && !you.disease && !you.deaths_door)
+    if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
         tmp += player_regen();
 
     while (tmp >= 100)
@@ -2385,19 +2385,19 @@ static void world_reacts()
 
     manage_clouds();
 
-    if (you.fire_shield > 0)
+    if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield();
 
     // food death check:
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
     {
-        if (!you.paralysis && one_chance_in(40))
+        if (!you.duration[DUR_PARALYSIS] && one_chance_in(40))
         {
             mpr("You lose consciousness!", MSGCH_FOOD);
-            you.paralysis += 5 + random2(8);
+            you.duration[DUR_PARALYSIS] += 5 + random2(8);
 
-            if (you.paralysis > 13)
-                you.paralysis = 13;
+            if (you.duration[DUR_PARALYSIS] > 13)
+                you.duration[DUR_PARALYSIS] = 13;
         }
 
         if (you.hunger <= 100)
@@ -2414,7 +2414,7 @@ static void world_reacts()
     {
         if (its_quiet)
         {
-            if (random2(30))
+            if (!one_chance_in(30))
                 mpr("You are enveloped in profound silence.", MSGCH_WARN);
             else
                 mpr("The dungeon seems quiet ... too quiet!", MSGCH_WARN);
@@ -2429,7 +2429,7 @@ static void world_reacts()
 
     viewwindow(true, false);
 
-    if (you.paralysis > 0 && any_messages())
+    if (you.duration[DUR_PARALYSIS] > 0 && any_messages())
         more();
 
     // place normal dungeon monsters,  but not in player LOS
@@ -2776,7 +2776,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
     struct dist door_move;
     int dx, dy;             // door x, door y
 
-    if (check_confused && you.conf && !one_chance_in(3))
+    if (check_confused && you.duration[DUR_CONF] && !one_chance_in(3))
     {
         move_x = random2(3) - 1;
         move_y = random2(3) - 1;
@@ -3085,7 +3085,7 @@ static void do_berserk_no_combat_penalty(void)
     if (you.berserk_penalty == NO_BERSERK_PENALTY)
         return;
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         you.berserk_penalty++;
 
@@ -3104,17 +3104,17 @@ static void do_berserk_no_combat_penalty(void)
 
         // I do these three separately, because the might and
         // haste counters can be different.
-        you.berserker -= you.berserk_penalty;
-        if (you.berserker < 1)
-            you.berserker = 1;
+        you.duration[DUR_BERSERKER] -= you.berserk_penalty;
+        if (you.duration[DUR_BERSERKER] < 1)
+            you.duration[DUR_BERSERKER] = 1;
 
-        you.might -= you.berserk_penalty;
-        if (you.might < 1)
-            you.might = 1;
+        you.duration[DUR_MIGHT] -= you.berserk_penalty;
+        if (you.duration[DUR_MIGHT] < 1)
+            you.duration[DUR_MIGHT] = 1;
 
-        you.haste -= you.berserk_penalty;
-        if (you.haste < 1)
-            you.haste = 1;
+        you.duration[DUR_HASTE] -= you.berserk_penalty;
+        if (you.duration[DUR_HASTE] < 1)
+            you.duration[DUR_HASTE] = 1;
     }
     return;
 }                               // end do_berserk_no_combat_penalty()
@@ -3128,7 +3128,7 @@ static void move_player(int move_x, int move_y)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
     {
         if (!one_chance_in(3))
         {
@@ -3146,7 +3146,7 @@ static void move_player(int move_x, int move_y)
             apply_berserk_penalty = true;
             return;
         }
-    } // end of if you.conf
+    } // end of if you.duration[DUR_CONF]
 
     if (you.running.check_stop_running())
     {
@@ -3168,7 +3168,7 @@ static void move_player(int move_x, int move_y)
         struct monsters *mon = &menv[targ_monst];
 
         // you can swap places with a friendly monster if you're not confused
-        if (mons_friendly( mon ) && !you.conf)
+        if (mons_friendly( mon ) && !you.duration[DUR_CONF])
         {
             if (swap_places( mon ))
                 swap = true;

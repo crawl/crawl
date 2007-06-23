@@ -184,10 +184,7 @@ enum acquirement_agent_type
     
     // Empty space for the gods
     
-    AQ_CARD_ACQUISITION = 100,
-    AQ_CARD_VIOLENCE,
-    AQ_CARD_PROTECTION,
-    AQ_CARD_KNOWLEDGE,
+    AQ_CARD_GENIE = 100,
 
     AQ_WIZMODE          = 200
 };
@@ -250,7 +247,7 @@ enum attribute_type
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
-    NUM_ATTRIBUTES = 30         // must be at least 30
+    NUM_ATTRIBUTES
 };
 
 enum band_type
@@ -1147,36 +1144,54 @@ enum dungeon_feature_type
 
 enum duration_type
 {
-    DUR_LIQUID_FLAMES,          //  0
+    DUR_INVIS,
+    DUR_CONF,
+    DUR_PARALYSIS,
+    DUR_SLOW,
+    DUR_HASTE,
+    DUR_MIGHT,
+    DUR_LEVITATION,
+    DUR_BERSERKER,
+    DUR_POISONING,
+
+    DUR_CONFUSING_TOUCH,
+    DUR_SURE_BLADE,
+    DUR_BACKLIGHT,
+    DUR_DEATHS_DOOR,
+    DUR_FIRE_SHIELD,
+
+    DUR_EXHAUSTED,              // fatigue counter for berserk
+
+    DUR_LIQUID_FLAMES,
     DUR_ICY_ARMOUR,
     DUR_REPEL_MISSILES,
     DUR_PRAYER,
     DUR_REGENERATION,
-    DUR_SWIFTNESS,              //  5
+    DUR_SWIFTNESS,
     DUR_STONEMAIL,
     DUR_CONTROLLED_FLIGHT,
     DUR_TELEPORT,
     DUR_CONTROL_TELEPORT,
-    DUR_BREATH_WEAPON,          // 10
+    DUR_BREATH_WEAPON,
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
     DUR_DEFLECT_MISSILES,
     DUR_FORESCRY,
-    DUR_SEE_INVISIBLE,          // 15
+    DUR_SEE_INVISIBLE,
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_SILENCE,
     DUR_GLAMOUR,
     DUR_CONDENSATION_SHIELD,
-    DUR_STONESKIN,              // 20
+    DUR_STONESKIN,
     DUR_REPEL_UNDEAD,
     DUR_GOURMAND,
     DUR_BARGAIN,
     DUR_INSULATION,
-    DUR_RESIST_POISON,          // 25
+    DUR_RESIST_POISON,
     DUR_RESIST_FIRE,
     DUR_RESIST_COLD,
     DUR_SLAYING,
-    NUM_DURATIONS = 30                  //   must be at least 30
+    NUM_DURATIONS
 };
 
 // various elemental colour schemes... used for abstracting random short lists

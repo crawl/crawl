@@ -537,7 +537,7 @@ bool cast_a_spell()
         return (false);
     }
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -616,7 +616,7 @@ bool cast_a_spell()
         return (false);
     }
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
         random_uselessness( 2 + random2(7), 0 );
     else
     {

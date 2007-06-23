@@ -187,7 +187,7 @@ void print_stats(void)
 
         gotoxy(xcol + 5, 7);
 
-        if (you.might)
+        if (you.duration[DUR_MIGHT])
             textcolor(LIGHTBLUE);  // no end of effect warning
         else if (you.strength < you.max_strength)
             textcolor(YELLOW);
@@ -499,19 +499,19 @@ void print_stats(void)
 
             if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
             {
-                dur_colour( MAGENTA, (you.levitation <= 10 && !perm) );
+                dur_colour( MAGENTA, (you.duration[DUR_LEVITATION] <= 10 && !perm) );
                 cprintf( "Fly " );
             }
             else
             {
-                dur_colour( BLUE, (you.levitation <= 10 && !perm) );
+                dur_colour( BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm) );
                 cprintf( "Lev " );
             }
         }
 
-        if (you.invis)
+        if (you.duration[DUR_INVIS])
         {
-            dur_colour( BLUE, (you.invis <= 6) );
+            dur_colour( BLUE, (you.duration[DUR_INVIS] <= 6) );
             cprintf( "Invis " );
         }
 
@@ -557,7 +557,7 @@ void print_stats(void)
         // using the '@' command.  Things like confusion and sticky flame
         // hide their amounts and are thus always the same colour (so
         // we're not really exposing any new information). --bwr
-        if (you.conf)
+        if (you.duration[DUR_CONF])
         {
             textcolor( RED );   // no different levels
             cprintf( "Conf " );
@@ -569,12 +569,12 @@ void print_stats(void)
             cprintf( "Fire " );
         }
 
-        if (you.poisoning)
+        if (you.duration[DUR_POISONING])
         {
             // We skip marking "quite" poisoned and instead mark the
             // levels where the rules for dealing poison damage change
             // significantly.  See acr.cc for that code. -- bwr
-            textcolor( bad_ench_colour( you.poisoning, 5, 10 ) );
+            textcolor( bad_ench_colour( you.duration[DUR_POISONING], 5, 10 ) );
             cprintf( "Pois " );
         }
 
@@ -605,14 +605,14 @@ void print_stats(void)
             cprintf( "Swift " );
         }
 
-        if (you.slow && !you.haste)
+        if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
         {
             textcolor( RED );  // no end of effect warning
             cprintf( "Slow" );
         }
-        else if (you.haste && !you.slow)
+        else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
         {
-            dur_colour( BLUE, (you.haste <= 6) );
+            dur_colour( BLUE, (you.duration[DUR_HASTE] <= 6) );
             cprintf( "Fast" );
         }
 
@@ -1385,32 +1385,32 @@ std::string status_mut_abilities()
 //    if (you.duration[DUR_SEE_INVISIBLE])
 //        text += "see invisible, ";
 
-    if (you.invis)
+    if (you.duration[DUR_INVIS])
         text += "invisible, ";
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
         text += "confused, ";
 
-    if (you.paralysis)
+    if (you.duration[DUR_PARALYSIS])
         text += "paralysed, ";
 
-    if (you.exhausted)
+    if (you.duration[DUR_EXHAUSTED])
         text += "exhausted, ";
 
-    if (you.might)
+    if (you.duration[DUR_MIGHT])
         text += "mighty, ";
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
         text += "berserking, ";
 
     if (player_is_levitating())
         text += "levitating, ";
 
-    if (you.poisoning)
+    if (you.duration[DUR_POISONING])
     {
-        text +=   (you.poisoning > 10) ? "extremely" :
-                  (you.poisoning > 5)  ? "very" :
-                  (you.poisoning > 3)  ? "quite"
+        text +=   (you.duration[DUR_POISONING] > 10) ? "extremely" :
+                  (you.duration[DUR_POISONING] > 5)  ? "very" :
+                  (you.duration[DUR_POISONING] > 3)  ? "quite"
                                        : "mildly";
         text += " poisoned, ";
     }
@@ -1426,14 +1426,14 @@ std::string status_mut_abilities()
     if (you.rotting || you.species == SP_GHOUL)
         text += "rotting, ";
 
-    if (you.confusing_touch)
+    if (you.duration[DUR_CONFUSING_TOUCH])
         text += "confusing touch, ";
 
-    if (you.sure_blade)
+    if (you.duration[DUR_SURE_BLADE])
         text += "bonded with blade, ";
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
-    if ( you.slow )
+    if ( you.duration[DUR_SLOW] )
         move_cost *= 2;
 
     text +=   (move_cost <   8) ? "very quick, " :
@@ -1441,11 +1441,11 @@ std::string status_mut_abilities()
               (move_cost == 10) ? "" :
               (move_cost <  13) ? "slow, " : "";
 
-    if (you.slow && !you.haste)
+    if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
         text += "slowed, ";
-    else if (you.haste && !you.slow)
+    else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
         text += "hasted, ";
-    else if (!you.haste && you.duration[DUR_SWIFTNESS])
+    else if (!you.duration[DUR_HASTE] && you.duration[DUR_SWIFTNESS])
         text += "swift, ";
 
     const int mr = player_res_magic();
@@ -1519,7 +1519,7 @@ std::string status_mut_abilities()
                          : "You feel confident with your ability to fight" );
     text += info;
 
-    if (you.deaths_door)
+    if (you.duration[DUR_DEATHS_DOOR])
         text += "\nYou are standing in death's doorway.";
 
     //----------------------------

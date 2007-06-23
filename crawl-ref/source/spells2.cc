@@ -805,7 +805,7 @@ void cast_toxic_radiance(void)
     mesclr();
 
     // determine whether the player is hit by the radiance: {dlb}
-    if (you.invis)
+    if (you.duration[DUR_INVIS])
     {
         mpr("The light passes straight through your body.");
     }

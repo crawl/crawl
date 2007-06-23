@@ -331,7 +331,7 @@ void in_a_cloud()
     switch (env.cloud[cl].type)
     {
     case CLOUD_FIRE:
-        if (you.fire_shield)
+        if (you.duration[DUR_FIRE_SHIELD])
             return;
 
         mpr("You are engulfed in roaring flames!");
@@ -548,7 +548,7 @@ void up_stairs(void)
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
     if (!player_is_levitating()
-        && you.conf 
+        && you.duration[DUR_CONF] 
         && (stair_find >= DNGN_STONE_STAIRS_UP_I 
             && stair_find <= DNGN_ROCK_STAIRS_UP)
         && random2(100) > you.dex)
@@ -931,7 +931,7 @@ void down_stairs( int old_level, int force_stair )
     }
 
     if (!player_is_levitating()
-        && you.conf 
+        && you.duration[DUR_CONF] 
         && (stair_find >= DNGN_STONE_STAIRS_DOWN_I 
             && stair_find <= DNGN_ROCK_STAIRS_DOWN)
         && random2(100) > you.dex)
@@ -1391,7 +1391,7 @@ void handle_traps(char trt, int i, bool trap_known)
 
 void disarm_trap( struct dist &disa )
 {
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -1565,7 +1565,7 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         expose_player_to_element( BEAM_LAVA, 14 );
     }
 
-    // a distinction between stepping and falling from you.levitation
+    // a distinction between stepping and falling from you.duration[DUR_LEVITATION]
     // prevents stepping into a thin stream of lava to get to the other side.
     if (scramble())
     {
@@ -1695,7 +1695,7 @@ bool go_berserk(bool intentional)
     mpr("You feel yourself moving faster!");
     mpr("You feel mighty!");
 
-    you.berserker += 20 + random2avg(19, 2);
+    you.duration[DUR_BERSERKER] += 20 + random2avg(19, 2);
 
     calc_hp();
     you.hp *= 15;
@@ -1703,11 +1703,11 @@ bool go_berserk(bool intentional)
 
     deflate_hp(you.hp_max, false);
 
-    if (!you.might)
+    if (!you.duration[DUR_MIGHT])
         modify_stat( STAT_STRENGTH, 5, true );
 
-    you.might += you.berserker;
-    haste_player( you.berserker );
+    you.duration[DUR_MIGHT] += you.duration[DUR_BERSERKER];
+    haste_player( you.duration[DUR_BERSERKER] );
 
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;

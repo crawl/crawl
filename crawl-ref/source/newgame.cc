@@ -693,7 +693,6 @@ bool new_game(void)
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     ASSERT(NUM_SPELLS < SPELL_NO_SPELL);
     ASSERT(NUM_JOBS < JOB_UNKNOWN);
-    ASSERT(NUM_ATTRIBUTES >= 30);
 
     init_player();
 

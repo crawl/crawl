@@ -208,7 +208,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             int entry_x = (stepped) ? you.x_pos : x;
             int entry_y = (stepped) ? you.y_pos : y;
 
-            if (stepped && !force && !you.conf)
+            if (stepped && !force && !you.duration[DUR_CONF])
             {
                 bool okay = yesno( "Do you really want to step there?", 
                                    false, 'n' );
@@ -262,7 +262,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
                     mpr("Moving in this stuff is going to be slow.");
 
-                    if (you.invis)
+                    if (you.duration[DUR_INVIS])
                         mpr( "... and don't expect to remain undetected." );
                 }
             }
@@ -713,11 +713,11 @@ int player_hunger_rate(void)
     // moved here from acr.cc... maintaining the >= 40 behaviour
     if (you.hunger >= 40)
     {
-        if (you.invis > 0)
+        if (you.duration[DUR_INVIS] > 0)
             hunger += 5;
 
         // berserk has its own food penalty -- excluding berserk haste
-        if (you.haste > 0 && !you.berserker)
+        if (you.duration[DUR_HASTE] > 0 && !you.duration[DUR_BERSERKER])
             hunger += 5;
     }
 
@@ -894,7 +894,7 @@ int player_res_fire(bool calc_unid)
     // mutations:
     rf += you.mutation[MUT_HEAT_RESISTANCE];
 
-    if (you.fire_shield)
+    if (you.duration[DUR_FIRE_SHIELD])
         rf += 2;
 
     // transformations:
@@ -955,7 +955,7 @@ int player_res_cold(bool calc_unid)
     // mutations:
     rc += you.mutation[MUT_COLD_RESISTANCE];
 
-    if (you.fire_shield)
+    if (you.duration[DUR_FIRE_SHIELD])
         rc -= 2;
 
     // transformations:
@@ -1190,7 +1190,7 @@ int player_spec_fire()
     // rings of fire:
     sf += player_equip( EQ_RINGS, RING_FIRE );
 
-    if (you.fire_shield)
+    if (you.duration[DUR_FIRE_SHIELD])
         sf++;
 
     return sf;
@@ -1446,7 +1446,7 @@ int player_speed(void)
 {
     int ps = 10;
 
-    if (you.haste)
+    if (you.duration[DUR_HASTE])
         ps /= 2;
 
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -1913,7 +1913,7 @@ int old_player_evasion(void)
 
     // We return 2 here to give the player some chance of not being hit,
     // repulsion fields still work while paralysed
-    if (you.paralysis)
+    if (you.duration[DUR_PARALYSIS])
         return (2 + you.mutation[MUT_REPULSION_FIELD] * 2);
 
     if (you.species == SP_CENTAUR)
@@ -2027,7 +2027,7 @@ int player_shield_class(void)   //jmf: changes for new spell
 
     if (shield == -1)
     {
-        if (!you.fire_shield && you.duration[DUR_CONDENSATION_SHIELD])
+        if (!you.duration[DUR_FIRE_SHIELD] && you.duration[DUR_CONDENSATION_SHIELD])
             base_shield = 2 + (you.skills[SK_ICE_MAGIC] / 6);  // max 6
         else
             return (0);
@@ -2786,9 +2786,9 @@ void level_change(void)
                 else if (you.experience_level == 15)
                 {
                     mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
-                    if (you.levitation)
+                    if (you.duration[DUR_LEVITATION])
                     {
-                        you.levitation = 100;
+                        you.duration[DUR_LEVITATION] = 100;
                         you.duration[DUR_CONTROLLED_FLIGHT] = 100;
                     }
                 }
@@ -2843,7 +2843,7 @@ void level_change(void)
 // - 12mar2000 {dlb}
 int check_stealth(void)
 {
-    if (you.special_wield == SPWLD_SHADOW || you.berserker)
+    if (you.special_wield == SPWLD_SHADOW || you.duration[DUR_BERSERKER])
         return (0);
 
     int stealth = you.dex * 3;
@@ -2884,7 +2884,7 @@ int check_stealth(void)
     else if (you.burden_state == BS_OVERLOADED)
         stealth /= 5;
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
         stealth /= 3;
 
     const int arm   = you.equip[EQ_BODY_ARMOUR];
@@ -2974,7 +2974,7 @@ void display_char_status()
 {
     if (you.is_undead)
         mpr( "You are undead." );
-    else if (you.deaths_door)
+    else if (you.duration[DUR_DEATHS_DOOR])
         mpr( "You are standing in death's doorway." );
     else
         mpr( "You are alive." );
@@ -3069,40 +3069,40 @@ void display_char_status()
     if (you.duration[DUR_SEE_INVISIBLE])
         mpr( "You can see invisible." );
 
-    if (you.invis)
+    if (you.duration[DUR_INVIS])
         mpr( "You are invisible." );
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
         mpr( "You are confused." );
 
-    if (you.paralysis)
+    if (you.duration[DUR_PARALYSIS])
         mpr( "You are paralysed." );
 
-    if (you.exhausted)
+    if (you.duration[DUR_EXHAUSTED])
         mpr( "You are exhausted." );
 
-    if (you.slow && you.haste)
+    if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
         mpr( "You are under both slowing and hasting effects." );
-    else if (you.slow)
+    else if (you.duration[DUR_SLOW])
         mpr( "Your actions are slowed." );
-    else if (you.haste)
+    else if (you.duration[DUR_HASTE])
         mpr( "Your actions are hasted." );
 
-    if (you.might)
+    if (you.duration[DUR_MIGHT])
         mpr( "You are mighty." );
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
         mpr( "You are possessed by a berserker rage." );
 
     if (player_is_levitating())
         mpr( "You are hovering above the floor." );
 
-    if (you.poisoning)
+    if (you.duration[DUR_POISONING])
     { 
         mprf("You are %s poisoned.",
-             (you.poisoning > 10) ? "extremely" :
-             (you.poisoning > 5)  ? "very" :
-             (you.poisoning > 3)  ? "quite"
+             (you.duration[DUR_POISONING] > 10) ? "extremely" :
+             (you.duration[DUR_POISONING] > 5)  ? "very" :
+             (you.duration[DUR_POISONING] > 3)  ? "quite"
                                   : "mildly" );
     }
 
@@ -3129,24 +3129,24 @@ void display_char_status()
     // prints a contamination message
     contaminate_player( 0, true );
 
-    if (you.confusing_touch)
+    if (you.duration[DUR_CONFUSING_TOUCH])
     {
         mprf("Your hands are glowing %s red.",
-             (you.confusing_touch > 40) ? "an extremely bright" :
-             (you.confusing_touch > 20) ? "bright"
+             (you.duration[DUR_CONFUSING_TOUCH] > 40) ? "an extremely bright" :
+             (you.duration[DUR_CONFUSING_TOUCH] > 20) ? "bright"
                                         : "a soft" );
     }
 
-    if (you.sure_blade)
+    if (you.duration[DUR_SURE_BLADE])
     {
         mprf("You have a %sbond with your blade.",
-             (you.sure_blade > 15) ? "strong " :
-             (you.sure_blade >  5) ? ""
+             (you.duration[DUR_SURE_BLADE] > 15) ? "strong " :
+             (you.duration[DUR_SURE_BLADE] >  5) ? ""
                                    : "weak " );
     }
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
-    if ( you.slow )
+    if ( you.duration[DUR_SLOW] )
         move_cost *= 2;
 
     const bool water  = player_in_water();
@@ -4258,13 +4258,13 @@ bool poison_player( int amount, bool force )
     if ((!force && player_res_poison()) || amount <= 0)
         return false;
 
-    const int old_value = you.poisoning;
-    you.poisoning += amount;
+    const int old_value = you.duration[DUR_POISONING];
+    you.duration[DUR_POISONING] += amount;
 
-    if (you.poisoning > 40)
-        you.poisoning = 40;
+    if (you.duration[DUR_POISONING] > 40)
+        you.duration[DUR_POISONING] = 40;
 
-    if (you.poisoning > old_value)
+    if (you.duration[DUR_POISONING] > old_value)
     {
         // XXX: which message channel for this message?
         mprf("You are %spoisoned.", (old_value > 0) ? "more " : "" );
@@ -4275,14 +4275,14 @@ bool poison_player( int amount, bool force )
 
 void reduce_poison_player( int amount )
 {
-    if (you.poisoning == 0 || amount <= 0)
+    if (you.duration[DUR_POISONING] == 0 || amount <= 0)
         return;
 
-    you.poisoning -= amount;
+    you.duration[DUR_POISONING] -= amount;
 
-    if (you.poisoning <= 0)
+    if (you.duration[DUR_POISONING] <= 0)
     {
-        you.poisoning = 0;
+        you.duration[DUR_POISONING] = 0;
         mpr( "You feel better.", MSGCH_RECOVERY );
     }
     else
@@ -4302,32 +4302,32 @@ void confuse_player( int amount, bool resistable )
         return;
     }
 
-    const int old_value = you.conf;
-    you.conf += amount;
+    const int old_value = you.duration[DUR_CONF];
+    you.duration[DUR_CONF] += amount;
 
-    if (you.conf > 40)
-        you.conf = 40;
+    if (you.duration[DUR_CONF] > 40)
+        you.duration[DUR_CONF] = 40;
 
-    if (you.conf > old_value)
+    if (you.duration[DUR_CONF] > old_value)
     {
         // XXX: which message channel for this message?
         mprf("You are %sconfused.", (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_ENCHANTED);
 
-        xom_is_stimulated(you.conf - old_value);
+        xom_is_stimulated(you.duration[DUR_CONF] - old_value);
     }
 }
 
 void reduce_confuse_player( int amount )
 {
-    if (you.conf == 0 || amount <= 0)
+    if (you.duration[DUR_CONF] == 0 || amount <= 0)
         return;
 
-    you.conf -= amount;
+    you.duration[DUR_CONF] -= amount;
 
-    if (you.conf <= 0)
+    if (you.duration[DUR_CONF] <= 0)
     {
-        you.conf = 0;
+        you.duration[DUR_CONF] = 0;
         mpr( "You feel less confused." );
     }
 }
@@ -4339,41 +4339,41 @@ void slow_player( int amount )
 
     if (wearing_amulet( AMU_RESIST_SLOW ))
         mpr("You feel momentarily lethargic.");
-    else if (you.slow >= 100)
+    else if (you.duration[DUR_SLOW] >= 100)
         mpr( "You already are as slow as you could be." );
     else
     {   
-        if (you.slow == 0)
+        if (you.duration[DUR_SLOW] == 0)
             mpr( "You feel yourself slow down." );
         else
             mpr( "You feel as though you will be slow longer." );
 
-        you.slow += amount;
+        you.duration[DUR_SLOW] += amount;
 
-        if (you.slow > 100)
-            you.slow = 100;
+        if (you.duration[DUR_SLOW] > 100)
+            you.duration[DUR_SLOW] = 100;
         learned_something_new(TUT_YOU_ENCHANTED);
     }
 }
 
 void dec_slow_player( void )
 {
-    if (you.slow > 1)
+    if (you.duration[DUR_SLOW] > 1)
     {
         // BCR - Amulet of resist slow affects slow counter
         if (wearing_amulet(AMU_RESIST_SLOW))
         {
-            you.slow -= 5;
-            if (you.slow < 1)
-                you.slow = 1;
+            you.duration[DUR_SLOW] -= 5;
+            if (you.duration[DUR_SLOW] < 1)
+                you.duration[DUR_SLOW] = 1;
         }
         else
-            you.slow--;
+            you.duration[DUR_SLOW]--;
     }
-    else if (you.slow == 1)
+    else if (you.duration[DUR_SLOW] == 1)
     {
         mpr("You feel yourself speed up.", MSGCH_DURATION);
-        you.slow = 0;
+        you.duration[DUR_SLOW] = 0;
     }
 }
 
@@ -4387,9 +4387,9 @@ void haste_player( int amount )
     if (amu_eff)
         mpr( "Your amulet glows brightly." );
 
-    if (you.haste == 0)
+    if (you.duration[DUR_HASTE] == 0)
         mpr( "You feel yourself speed up." );
-    else if (you.haste > 80 + 20 * amu_eff)
+    else if (you.duration[DUR_HASTE] > 80 + 20 * amu_eff)
         mpr( "You already have as much speed as you can handle." );
     else
     {
@@ -4397,33 +4397,33 @@ void haste_player( int amount )
         contaminate_player(1);
     }
 
-    you.haste += amount;
+    you.duration[DUR_HASTE] += amount;
 
-    if (you.haste > 80 + 20 * amu_eff)
-        you.haste = 80 + 20 * amu_eff;
+    if (you.duration[DUR_HASTE] > 80 + 20 * amu_eff)
+        you.duration[DUR_HASTE] = 80 + 20 * amu_eff;
 
     did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
 }
 
 void dec_haste_player( void )
 {
-    if (you.haste > 1)
+    if (you.duration[DUR_HASTE] > 1)
     {
         // BCR - Amulet of resist slow affects haste counter
         if (!wearing_amulet(AMU_RESIST_SLOW) || coinflip())
-            you.haste--;
+            you.duration[DUR_HASTE]--;
 
-        if (you.haste == 6)
+        if (you.duration[DUR_HASTE] == 6)
         {
             mpr( "Your extra speed is starting to run out.", MSGCH_DURATION );
             if (coinflip())
-                you.haste--;
+                you.duration[DUR_HASTE]--;
         }
     }
-    else if (you.haste == 1)
+    else if (you.duration[DUR_HASTE] == 1)
     {
         mpr( "You feel yourself slow down.", MSGCH_DURATION );
-        you.haste = 0;
+        you.duration[DUR_HASTE] = 0;
     }
 }
 
@@ -4502,28 +4502,13 @@ void player::init()
     
     just_autoprayed = false;
     berserk_penalty = 0;
-    berserker = 0;
-    conf = 0;
-    confusing_touch = 0;
-    deaths_door = 0;
     disease = 0;
     elapsed_time = 0;
-    exhausted = 0;
-    haste = 0;
-    invis = 0;
-    levitation = 0;
-    might = 0;
-    paralysis = 0;
-    poisoning = 0;
     rotting = 0;
-    fire_shield = 0;
-    slow = 0;
     special_wield = SPWLD_NONE;
-    sure_blade = 0;
     synch_time = 0;
 
     magic_contamination = 0;
-    backlight = 0;
 
     base_hp = 5000;
     base_hp2 = 5000;
@@ -4664,7 +4649,8 @@ coord_def player::pos() const
 
 bool player::is_levitating() const
 {
-    return (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON || levitation);
+    return (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
+            duration[DUR_LEVITATION]);
 }
 
 bool player::in_water() const
@@ -4804,7 +4790,7 @@ int player::damage_brand(int)
         if ( !is_range_weapon(inv[wpn]) )
             ret = get_weapon_brand( inv[wpn] );
     }
-    else if (confusing_touch)
+    else if (duration[DUR_CONFUSING_TOUCH])
         ret = SPWPN_CONFUSE;
     else if (mutation[MUT_DRAIN_LIFE])
         ret = SPWPN_DRAINING;
@@ -4936,7 +4922,7 @@ bool player::can_go_berserk() const
 
 bool player::can_go_berserk(bool verbose) const
 {
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         if (verbose)
             mpr("You're already berserk!");
@@ -4944,7 +4930,7 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (you.exhausted)
+    if (you.duration[DUR_EXHAUSTED])
     {
         if (verbose)
             mpr("You're too exhausted to go berserk.");
@@ -5005,12 +4991,12 @@ int player::warding() const
 
 bool player::paralysed() const
 {
-    return (paralysis);
+    return (duration[DUR_PARALYSIS]);
 }
 
 bool player::confused() const
 {
-    return (conf);
+    return (duration[DUR_CONF]);
 }
 
 int player::shield_block_penalty() const
@@ -5198,13 +5184,13 @@ void player::confuse(int str)
 void player::paralyse(int str)
 {
     mprf( "You %s the ability to move!",
-          (paralysis) ? "still haven't" : "suddenly lose" );
+          (duration[DUR_PARALYSIS]) ? "still haven't" : "suddenly lose" );
     
-    if (str > paralysis)
-        paralysis = str;
+    if (str > duration[DUR_PARALYSIS])
+        duration[DUR_PARALYSIS] = str;
     
-    if (paralysis > 13)
-        paralysis = 13;
+    if (duration[DUR_PARALYSIS] > 13)
+        duration[DUR_PARALYSIS] = 13;
 }
 
 void player::slow_down(int str)
@@ -5252,12 +5238,12 @@ bool player::can_see_invisible() const
 
 bool player::invisible() const
 {
-    return (invis);
+    return (duration[DUR_INVIS]);
 }
 
 bool player::backlit() const
 {
-    return (magic_contamination >= 5 || backlight);
+    return (magic_contamination >= 5 || duration[DUR_BACKLIGHT]);
 }
 
 void player::mutate()

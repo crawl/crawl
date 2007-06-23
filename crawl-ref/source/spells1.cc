@@ -55,7 +55,7 @@ int blink(void)
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS && !one_chance_in(3))
         mpr("The power of the Abyss keeps you in your place!");
-    else if (you.conf)
+    else if (you.duration[DUR_CONF])
         random_blink(false);
     else if (!allow_control_teleport(true))
     {
@@ -138,7 +138,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 
 #ifdef USE_SEMI_CONTROLLED_BLINK
     //jmf: add back control, but effect is cast_semi_controlled_blink(pow)
-    else if (player_control_teleport() && !you.conf
+    else if (player_control_teleport() && !you.duration[DUR_CONF]
              && allow_partial_control && allow_control_teleport())
     {
         mpr("You may select the general direction of your translocation.");
@@ -604,7 +604,7 @@ bool cast_revivification(int power)
 
 void cast_cure_poison(int mabil)
 {
-    if (!you.poisoning)
+    if (!you.duration[DUR_POISONING])
         canned_msg(MSG_NOTHING_HAPPENS);
     else
         reduce_poison_player( 2 + random2(mabil) + random2(3) );
@@ -616,12 +616,12 @@ void purification(void)
 {
     mpr("You feel purified!");
 
-    you.poisoning = 0;
+    you.duration[DUR_POISONING] = 0;
     you.rotting = 0;
-    you.conf = 0;
-    you.slow = 0;
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_SLOW] = 0;
     you.disease = 0;
-    you.paralysis = 0;          // can't currently happen -- bwr
+    you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
 }                               // end purification()
 
 int allowed_deaths_door_hp(void)
@@ -638,7 +638,7 @@ void cast_deaths_door(int pow)
 {
     if (you.is_undead)
         mpr("You're already dead!");
-    else if (you.deaths_door)
+    else if (you.duration[DUR_DEATHS_DOOR])
         mpr("Your appeal for an extension has been denied.");
     else
     {
@@ -648,10 +648,10 @@ void cast_deaths_door(int pow)
         set_hp( allowed_deaths_door_hp(), false );
         deflate_hp( you.hp_max, false );
 
-        you.deaths_door = 10 + random2avg(13, 3) + (random2(pow) / 10);
+        you.duration[DUR_DEATHS_DOOR] = 10 + random2avg(13, 3) + (random2(pow) / 10);
 
-        if (you.deaths_door > 25)
-            you.deaths_door = 23 + random2(5);
+        if (you.duration[DUR_DEATHS_DOOR] > 25)
+            you.duration[DUR_DEATHS_DOOR] = 23 + random2(5);
     }
 
     return;
@@ -690,12 +690,9 @@ void abjuration(int pow)
 // not as direct as falling into deep water) -- bwr
 void antimagic()
 {
-    int* direct_list[] = {
-        &you.haste, &you.slow, &you.paralysis, &you.conf,
-        &you.might, &you.invis, &you.fire_shield
-    };
-
     duration_type dur_list[] = {
+        DUR_HASTE, DUR_SLOW, DUR_PARALYSIS, DUR_CONF,
+        DUR_MIGHT, DUR_INVIS, DUR_FIRE_SHIELD,
         DUR_WEAPON_BRAND, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES, DUR_REGENERATION,
         DUR_DEFLECT_MISSILES, DUR_SWIFTNESS, DUR_INSULATION, DUR_STONEMAIL,
         DUR_CONTROLLED_FLIGHT, DUR_CONTROL_TELEPORT, DUR_RESIST_POISON,
@@ -703,12 +700,8 @@ void antimagic()
         DUR_FORESCRY, DUR_SEE_INVISIBLE, DUR_SILENCE, DUR_CONDENSATION_SHIELD
     };
         
-    if (you.levitation > 2)
-        you.levitation = 2;
-
-    for ( unsigned int i = 0; i < ARRAYSIZE(direct_list); ++i )
-        if ( *(direct_list[i]) > 1 )
-            *(direct_list[i]) = 1;
+    if (you.duration[DUR_LEVITATION] > 2)
+        you.duration[DUR_LEVITATION] = 2;
 
     for ( unsigned int i = 0; i < ARRAYSIZE(dur_list); ++i )
         if ( you.duration[dur_list[i]] > 1 )
@@ -721,33 +714,33 @@ void extension(int pow)
 {
     int contamination = random2(2);
 
-    if (you.haste)
+    if (you.duration[DUR_HASTE])
     {
         potion_effect(POT_SPEED, pow);
         contamination++;
     }
 
-    if (you.slow)
+    if (you.duration[DUR_SLOW])
         potion_effect(POT_SLOWING, pow);
 
 #if 0
-    if (you.paralysis)
+    if (you.duration[DUR_PARALYSIS])
         potion_effect(POT_PARALYSIS, pow);  // how did you cast extension?
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
         potion_effect(POT_CONFUSION, pow);  // how did you cast extension?
 #endif
 
-    if (you.might)
+    if (you.duration[DUR_MIGHT])
     {
         potion_effect(POT_MIGHT, pow);
         contamination++;  
     }
 
-    if (you.levitation)
+    if (you.duration[DUR_LEVITATION])
         potion_effect(POT_LEVITATION, pow);
 
-    if (you.invis)
+    if (you.duration[DUR_INVIS])
     {
         potion_effect(POT_INVISIBILITY, pow);
         contamination++;
@@ -765,12 +758,12 @@ void extension(int pow)
     if (you.duration[DUR_DEFLECT_MISSILES])
         deflection(pow);
 
-    if (you.fire_shield)
+    if (you.duration[DUR_FIRE_SHIELD])
     {
-        you.fire_shield += random2(pow / 20);
+        you.duration[DUR_FIRE_SHIELD] += random2(pow / 20);
 
-        if (you.fire_shield > 50)
-            you.fire_shield = 50;
+        if (you.duration[DUR_FIRE_SHIELD] > 50)
+            you.duration[DUR_FIRE_SHIELD] = 50;
 
         mpr("Your ring of flames roars with new vigour!");
     }
@@ -971,10 +964,10 @@ void cast_fly(int power)
     else
         mpr("You feel more buoyant.");
 
-    if (you.levitation + dur_change > 100)
-        you.levitation = 100;
+    if (you.duration[DUR_LEVITATION] + dur_change > 100)
+        you.duration[DUR_LEVITATION] = 100;
     else
-        you.levitation += dur_change;
+        you.duration[DUR_LEVITATION] += dur_change;
 
     if (you.duration[DUR_CONTROLLED_FLIGHT] + dur_change > 100)
         you.duration[DUR_CONTROLLED_FLIGHT] = 100;
@@ -1025,10 +1018,10 @@ void cast_teleport_control(int power)
 
 void cast_ring_of_flames(int power)
 {
-    you.fire_shield += 5 + (power / 10) + (random2(power) / 5);
+    you.duration[DUR_FIRE_SHIELD] += 5 + (power / 10) + (random2(power) / 5);
 
-    if (you.fire_shield > 50)
-        you.fire_shield = 50;
+    if (you.duration[DUR_FIRE_SHIELD] > 50)
+        you.duration[DUR_FIRE_SHIELD] = 50;
 
     mpr("The air around you leaps into flame!");
 
@@ -1038,12 +1031,12 @@ void cast_ring_of_flames(int power)
 void cast_confusing_touch(int power)
 {
     msg::stream << "Your " << your_hand(true) << " begin to glow "
-                << (you.confusing_touch ? "brighter" : "red") << std::endl;
+                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red") << std::endl;
 
-    you.confusing_touch += 5 + (random2(power) / 5);
+    you.duration[DUR_CONFUSING_TOUCH] += 5 + (random2(power) / 5);
 
-    if (you.confusing_touch > 50)
-        you.confusing_touch = 50;
+    if (you.duration[DUR_CONFUSING_TOUCH] > 50)
+        you.duration[DUR_CONFUSING_TOUCH] = 50;
 
 }                               // end cast_confusing_touch()
 
@@ -1060,15 +1053,15 @@ bool cast_sure_blade(int power)
     }
     else
     {
-        if (!you.sure_blade)
+        if (!you.duration[DUR_SURE_BLADE])
             mpr("You become one with your weapon.");
-        else if (you.sure_blade < 25)
+        else if (you.duration[DUR_SURE_BLADE] < 25)
             mpr("Your bond becomes stronger.");
 
-        you.sure_blade += 8 + (random2(power) / 10);
+        you.duration[DUR_SURE_BLADE] += 8 + (random2(power) / 10);
 
-        if (you.sure_blade > 25)
-            you.sure_blade = 25;
+        if (you.duration[DUR_SURE_BLADE] > 25)
+            you.duration[DUR_SURE_BLADE] = 25;
 
         success = true;
     }
@@ -1078,9 +1071,9 @@ bool cast_sure_blade(int power)
 
 void manage_fire_shield(void)
 {
-    you.fire_shield--;
+    you.duration[DUR_FIRE_SHIELD]--;
 
-    if (!you.fire_shield)
+    if (!you.duration[DUR_FIRE_SHIELD])
         return;
 
     char stx = 0, sty = 0;

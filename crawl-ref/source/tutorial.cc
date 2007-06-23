@@ -719,7 +719,7 @@ void tutorial_prayer_reminder()
 // occasionally remind injured characters of resting
 void tutorial_healing_reminder()
 {
-    if (you.poisoning && 2*you.hp < you.hp_max)
+    if (you.duration[DUR_POISONING] && 2*you.hp < you.hp_max)
     {
         if (Options.tutorial_events[TUT_NEED_POISON_HEALING])
             learned_something_new(TUT_NEED_POISON_HEALING);
@@ -728,7 +728,7 @@ void tutorial_healing_reminder()
     {
         if (Options.tutorial_events[TUT_NEED_HEALING]) 
             learned_something_new(TUT_NEED_HEALING);
-        else if (you.num_turns - Options.tut_last_healed >= 50 && !you.poisoning)
+        else if (you.num_turns - Options.tut_last_healed >= 50 && !you.duration[DUR_POISONING])
         {
             if (Options.tut_just_triggered)
                 return;
@@ -1258,7 +1258,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (you.species == SP_CENTAUR)
               text << " As a four-legged centaur you are particularly quick - "
                       "running is an option! ";
-          if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.berserker
+          if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.duration[DUR_BERSERKER]
               && !you.hunger)
           {
               text << "\nAlso, with "

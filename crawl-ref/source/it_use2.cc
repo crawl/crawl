@@ -64,10 +64,10 @@ bool potion_effect( potion_type pot_eff, int pow )
             set_hp(you.hp_max, false);
         }
 
-        you.poisoning = 0;
+        you.duration[DUR_POISONING] = 0;
         you.rotting = 0;
         you.disease = 0;
-        you.conf = 0;
+        you.duration[DUR_CONF] = 0;
         break;
 
     case POT_HEAL_WOUNDS:
@@ -88,7 +88,7 @@ bool potion_effect( potion_type pot_eff, int pow )
 
     case POT_MIGHT:
         {
-            bool were_mighty = (you.might > 0);
+            bool were_mighty = (you.duration[DUR_MIGHT] > 0);
 
             if (!were_mighty)
                 mpr( "You feel very mighty all of a sudden." );
@@ -99,14 +99,14 @@ bool potion_effect( potion_type pot_eff, int pow )
             }
 
             // conceivable max gain of +184 {dlb}
-            you.might += 35 + random2(pow);
+            you.duration[DUR_MIGHT] += 35 + random2(pow);
 
             if (!were_mighty)
                 modify_stat(STAT_STRENGTH, 5, true);
 
             // files.cc permits values up to 215, but ... {dlb}
-            if (you.might > 80)
-                you.might = 80;
+            if (you.duration[DUR_MIGHT] > 80)
+                you.duration[DUR_MIGHT] = 80;
 
             did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
         }
@@ -131,10 +131,10 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (!player_is_levitating())
             mpr("You gently float upwards from the floor.");
 
-        you.levitation += 25 + random2(pow);
+        you.duration[DUR_LEVITATION] += 25 + random2(pow);
 
-        if (you.levitation > 100)
-            you.levitation = 100;
+        if (you.duration[DUR_LEVITATION] > 100)
+            you.duration[DUR_LEVITATION] = 100;
 
         burden_change();
         break;
@@ -163,7 +163,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_PARALYSIS:
-        you.paralyse(2 + random2( 6 + you.paralysis ));
+        you.paralyse(2 + random2( 6 + you.duration[DUR_PARALYSIS] ));
         xom_is_stimulated(64);
         break;
 
@@ -173,19 +173,19 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_INVISIBILITY:
-        mpr( (!you.invis) ? "You fade into invisibility!"
-                          : "You fade further into invisibility." );
+        mpr( (!you.duration[DUR_INVIS]) ? "You fade into invisibility!"
+             : "You fade further into invisibility." );
 
         // now multiple invisiblity casts aren't as good -- bwr
-        if (!you.invis)
-            you.invis = 15 + random2(pow);
+        if (!you.duration[DUR_INVIS])
+            you.duration[DUR_INVIS] = 15 + random2(pow);
         else
-            you.invis += random2(pow);
+            you.duration[DUR_INVIS] += random2(pow);
 
-        if (you.invis > 100)
-            you.invis = 100;
+        if (you.duration[DUR_INVIS] > 100)
+            you.duration[DUR_INVIS] = 100;
 
-        you.backlight = 0;
+        you.duration[DUR_BACKLIGHT] = 0;
         break;
 
     // carnivore check here? {dlb}
@@ -452,8 +452,8 @@ void unwear_armour(char unw)
         break;
 
     case SPARM_DARKNESS:        // I do not understand this {dlb}
-        if (you.invis)
-            you.invis = 1;
+        if (you.duration[DUR_INVIS])
+            you.duration[DUR_INVIS] = 1;
         break;
 
     case SPARM_STRENGTH:
@@ -474,9 +474,9 @@ void unwear_armour(char unw)
         break;
 
     case SPARM_LEVITATION:
-        //you.levitation++;
-        if (you.levitation)
-            you.levitation = 1;
+        //you.duration[DUR_LEVITATION]++;
+        if (you.duration[DUR_LEVITATION])
+            you.duration[DUR_LEVITATION] = 1;
         break;
 
     case SPARM_MAGIC_RESISTANCE:

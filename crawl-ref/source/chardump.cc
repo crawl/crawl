@@ -446,7 +446,7 @@ static void dump_stats( std::string & text )
         if (you.hp < 1)
         {
             text += " ";
-            text += ((!you.deaths_door) ? "(dead)" : "(almost dead)");
+            text += ((!you.duration[DUR_DEATHS_DOOR]) ? "(dead)" : "(almost dead)");
         }
     }
 

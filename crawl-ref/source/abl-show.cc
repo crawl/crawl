@@ -427,7 +427,7 @@ static talent get_talent(ability_type ability, bool check_confused)
     if (check_confused)
     {
         const ability_def &abil = get_ability_def(result.which);
-        if (you.conf && !testbits(abil.flags, ABFLAG_CONF_OK))
+        if (you.duration[DUR_CONF] && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
             result.which = ABIL_NON_ABILITY;
             return result;
@@ -743,7 +743,7 @@ std::vector<const char*> get_ability_names()
 
 bool activate_ability()
 {
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -755,7 +755,7 @@ bool activate_ability()
         mpr("Sorry, you're not good enough to have a special ability.");
         return false;
     }
-    if ( you.conf )
+    if ( you.duration[DUR_CONF] )
     {
         talents = your_talents(true);
         if ( talents.empty() )
@@ -1076,13 +1076,13 @@ static bool do_ability(const ability_def& abil)
         if (you.experience_level > 14)
         {
             mpr("You feel very comfortable in the air.");
-            you.levitation = 100;
+            you.duration[DUR_LEVITATION] = 100;
             you.duration[DUR_CONTROLLED_FLIGHT] = 100;
         }
         break;
 
     case ABIL_FLY_II:           // Fly (Draconians, or anything else with wings)
-        if (you.exhausted)
+        if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to fly.");
             return (false);
@@ -1188,7 +1188,7 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TURN_VISIBLE:
         mpr("You feel less transparent.");
-        you.invis = 1;
+        you.duration[DUR_INVIS] = 1;
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
@@ -1198,7 +1198,7 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_STOP_LEVITATING:
         mpr("You feel heavy.");
-        you.levitation = 1;
+        you.duration[DUR_LEVITATION] = 1;
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -1925,7 +1925,7 @@ std::vector<talent> your_talents( bool check_confused )
         // Now you can only turn invisibility off if you have an
         // activatable item.  Wands and potions allow will have 
         // to time out. -- bwr
-        if (you.invis)
+        if (you.duration[DUR_INVIS])
             add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused );
         else
             add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused );
@@ -1941,7 +1941,7 @@ std::vector<talent> your_talents( bool check_confused )
         // activatable item.  Potions and miscast effects will 
         // have to time out (this makes the miscast effect actually
         // a bit annoying). -- bwr
-        if (you.levitation) 
+        if (you.duration[DUR_LEVITATION]) 
             add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused );
         else
             add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused );

@@ -80,7 +80,7 @@ bool can_wield(const item_def *weapon, bool say_reason)
 {
 #define SAY(x) if (say_reason) { x; } else 
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
         return false;
@@ -184,10 +184,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(NULL, true))
         return (false);
 
-    if (you.sure_blade)
+    if (you.duration[DUR_SURE_BLADE])
     {
         mpr("The bond with your blade fades away.");
-        you.sure_blade = 0;
+        you.duration[DUR_SURE_BLADE] = 0;
     }
 
     if (auto_wield)
@@ -648,7 +648,7 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
 
     if (inv_count() < 1)
         canned_msg(MSG_NOTHING_CARRIED);
-    else if (you.berserker)
+    else if (you.duration[DUR_BERSERKER])
         canned_msg(MSG_TOO_BERSERK);
     else
     {
@@ -1059,7 +1059,7 @@ void throw_anything(void)
     struct bolt beam;
     int throw_slot;
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -1217,7 +1217,7 @@ void shoot_thing(void)
 {
     struct bolt beam;  // passed in by reference, but never used here
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         flush_input_buffer( FLUSH_ON_FAILURE );        
@@ -1403,7 +1403,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     item.slot     = index_to_letter(item.link);
     origin_set_unknown(item);
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
     {
         thr.isTarget = true;
         thr.tx = you.x_pos + random2(13) - 6;
@@ -2037,7 +2037,7 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_INVISIBILITY:
-        if (!you.invis)
+        if (!you.duration[DUR_INVIS])
         {
             mpr("You become transparent for a moment.");
             ident = ID_KNOWN_TYPE;
@@ -2280,7 +2280,7 @@ bool puton_ring(int slot, bool prompt_finger)
         return (false);
     }
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -2356,14 +2356,14 @@ void jewellery_remove_effects(item_def &item)
 
     case RING_INVISIBILITY:
         // removing this ring effectively cancels all invisibility {dlb}
-        if (you.invis)
-            you.invis = 1;
+        if (you.duration[DUR_INVIS])
+            you.duration[DUR_INVIS] = 1;
         break;
 
     case RING_LEVITATION:
         // removing this ring effectively cancels all levitation {dlb}
-        if (you.levitation)
-            you.levitation = 1;
+        if (you.duration[DUR_LEVITATION])
+            you.duration[DUR_LEVITATION] = 1;
         break;
 
     case RING_MAGICAL_POWER:
@@ -2394,7 +2394,7 @@ bool remove_ring(int slot, bool announce)
         return (false);
     }
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -2515,7 +2515,7 @@ void zap_wand(void)
         return;
     }
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -2586,7 +2586,7 @@ void zap_wand(void)
         return;
     }
 
-    if (you.conf)
+    if (you.duration[DUR_CONF])
     {
         zap_wand.tx = you.x_pos + random2(13) - 6;
         zap_wand.ty = you.y_pos + random2(13) - 6;
@@ -2728,7 +2728,7 @@ void drink(void)
         return;
     }
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -3221,7 +3221,7 @@ void read_scroll(void)
     // added: scroll effects are never tracers.
     beam.is_tracer = false;
 
-    if (you.berserker)
+    if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -3291,7 +3291,7 @@ void read_scroll(void)
     // scrolls of paper are also exempted from this handling {dlb}:
     if (scroll_type != SCR_PAPER)
     {
-        if (you.conf)
+        if (you.duration[DUR_CONF])
         {
             random_uselessness(random2(9), item_slot);
             dec_inv_item_quantity( item_slot, 1 );

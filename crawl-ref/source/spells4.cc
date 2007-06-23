@@ -1169,7 +1169,7 @@ void cast_ignite_poison(int pow)
     }
 
     // player is poisoned
-    damage += roll_dice( you.poisoning, 6 );
+    damage += roll_dice( you.duration[DUR_POISONING], 6 );
 
     if (damage)
     {
@@ -1192,10 +1192,10 @@ void cast_ignite_poison(int pow)
 
         ouch( damage, 0, KILLED_BY_TARGETTING );
 
-        if (you.poisoning > 0)
+        if (you.duration[DUR_POISONING] > 0)
         {
             mpr( "You feel that the poison has left your system." );
-            you.poisoning = 0;
+            you.duration[DUR_POISONING] = 0;
         }
     }
 
@@ -2982,7 +2982,7 @@ void cast_sandblast(int pow, bolt &beam)
 
 void cast_condensation_shield(int pow)
 {
-    if (you.equip[EQ_SHIELD] != -1 || you.fire_shield)
+    if (you.equip[EQ_SHIELD] != -1 || you.duration[DUR_FIRE_SHIELD])
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
