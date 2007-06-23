@@ -933,7 +933,7 @@ static const struct luaL_reg kill_lib[] =
     { NULL, NULL }
 };
 
-void lua_open_kills(lua_State *ls)
+void luaopen_kills(lua_State *ls)
 {
     luaL_openlib(ls, "kills", kill_lib, 0);
 }

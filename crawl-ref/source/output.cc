@@ -1694,7 +1694,7 @@ std::string status_mut_abilities()
         have_any = true;
     }
 
-    for (unsigned i = 0; i < 100; i++)
+    for (unsigned i = 0; i < NUM_MUTATIONS; i++)
     {
         if (!you.mutation[i])
             continue;

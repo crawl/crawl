@@ -98,6 +98,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
+#include "luadgn.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "maps.h"
@@ -2971,6 +2972,9 @@ static bool initialise(void)
     // initialize tag system before we try loading anything!
     tag_init();
 
+    // set up the Lua interpreter for the dungeon builder.
+    init_dungeon_lua();
+    
     // Read special levels and vaults.
     read_maps();
 

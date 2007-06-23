@@ -102,6 +102,8 @@ static int write_vault(const map_def &mdef, map_type map,
 // Mirror the map if appropriate, resolve substitutable symbols (?),
 static void resolve_map(map_def &map)
 {
+    map.reinit();
+    map.run_lua(true);
     map.resolve();
     
     // Mirroring is possible for any map that does not explicitly forbid it.
@@ -370,10 +372,13 @@ static void parse_maps(const std::string &s)
 
 void read_maps()
 {
-    parse_maps( lc_desfile = datafile_path( "splev.des" ) );
-    parse_maps( lc_desfile = datafile_path( "vaults.des" ) );
-    parse_maps( lc_desfile = datafile_path( "entry.des" ) );
-    parse_maps( lc_desfile = datafile_path( "ebranch.des" ) );
+    static const char *map_files[] =
+    {
+        "entry.des", "splev.des", "vaults.des", "ebranch.des"
+    };
+
+    for (unsigned i = 0; i < ARRAYSIZE(map_files); ++i)
+        parse_maps( lc_desfile = datafile_path( map_files[i] ) );
 
     for (int i = 0, size = Options.extra_levels.size(); i < size; ++i)
     {

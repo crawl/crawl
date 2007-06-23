@@ -41,7 +41,7 @@ private:
 class CLua
 {
 public:
-    CLua(bool managed);
+    CLua(bool managed = true);
     ~CLua();
 
     lua_State *state();
@@ -63,6 +63,7 @@ public:
     void setregistry(const char *name);
     void getregistry(const char *name);
 
+    int loadstring(const char *str, const char *context);
     int execstring(const char *str, const char *context = "init.txt");
     int execfile(const char *filename, bool trusted = false);
 
@@ -160,5 +161,49 @@ private:
 extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);
+
+#define LUAWRAP(name, wrapexpr) \
+    static int name(lua_State *ls) \
+    {   \
+        wrapexpr; \
+        return (0); \
+    }
+
+#define PLUARET(type, val) \
+        lua_push##type(ls, val); \
+        return (1);
+
+#define LUARET1(name, type, val) \
+    static int name(lua_State *ls) \
+    { \
+        lua_push##type(ls, val); \
+        return (1); \
+    }
+
+#define LUARET2(name, type, val1, val2)  \
+    static int name(lua_State *ls) \
+    { \
+        lua_push##type(ls, val1); \
+        lua_push##type(ls, val2); \
+        return (2); \
+    }
+
+template <class T>
+inline static T *util_get_userdata(lua_State *ls, int ndx)
+{
+    return (lua_islightuserdata(ls, ndx))?
+            static_cast<T *>( lua_touserdata(ls, ndx) )
+          : NULL;
+}
+
+template <class T>
+inline static T *clua_get_userdata(lua_State *ls, const char *mt)
+{
+    return static_cast<T*>( luaL_checkudata( ls, 1, mt ) );
+}
+
+std::string quote_lua_string(const std::string &s);
+
+#define MAP_METATABLE "dgn.mtmap"
 
 #endif

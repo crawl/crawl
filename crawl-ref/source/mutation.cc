@@ -1087,7 +1087,7 @@ formatted_string describe_mutations()
 
     textcolor(LIGHTGREY);
 
-    for (i = 0; i < 100; i++)
+    for (i = 0; i < NUM_MUTATIONS; i++)
     {
         if (you.mutation[i] != 0)
         {
@@ -1691,7 +1691,7 @@ int how_mutated(void)
 {
     int j = 0;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         if (you.mutation[i] && you.demon_pow[i] < you.mutation[i])
         {

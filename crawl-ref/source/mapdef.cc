@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cstdarg>
 #include <cstdio>
 #include <cctype>
@@ -140,8 +141,8 @@ std::string level_range::str_depth_range() const
     if (shallowest == -1)
         return (":??");
 
-    if (shallowest == 1 && deepest >= branches[branch].depth)
-        return ("");
+    if (deepest >= branches[branch].depth)
+        return (shallowest == 1? "" : make_stringf("%d-", shallowest));
 
     if (shallowest == deepest)
         return make_stringf(":%d", shallowest);
@@ -187,6 +188,76 @@ void level_range::set(const std::string &br, int s, int d)
                            br.c_str(), s, d);
 }
 
+level_range level_range::parse(std::string s) throw (std::string)
+{
+    level_range lr;
+    trim_string(s);
+
+    if (s[0] == '!')
+    {
+        lr.deny = true;
+        s = trimmed_string(s.substr(1));
+    }
+
+    std::string::size_type cpos = s.find(':');
+    if (cpos == std::string::npos)
+        parse_partial(lr, s);
+    else
+    {
+        std::string branch = trimmed_string(s.substr(0, cpos));
+        std::string depth  = trimmed_string(s.substr(cpos + 1));
+        parse_depth_range(depth, &lr.shallowest, &lr.deepest);
+
+        lr.set(branch, lr.shallowest, lr.deepest);
+    }
+
+    return (lr);
+}
+
+void level_range::parse_partial(level_range &lr, const std::string &s)
+    throw (std::string)
+{
+    if (isdigit(s[0]))
+    {
+        lr.branch = NUM_BRANCHES;
+        parse_depth_range(s, &lr.shallowest, &lr.deepest);
+    }
+    else
+        lr.set(s, 1, 100);
+}
+
+void level_range::parse_depth_range(const std::string &s, int *l, int *h)
+    throw (std::string)
+{
+    if (s == "*")
+    {
+        *l = 1;
+        *h = 100;
+        return;
+    }
+    
+    std::string::size_type hy = s.find('-');
+    if (hy == std::string::npos)
+    {
+        *l = *h = atoi(s.c_str());
+        if (!*l)
+            throw std::string("Bad depth: ") + s;
+    }
+    else
+    {
+        *l = atoi(s.substr(0, hy).c_str());
+
+        std::string tail = s.substr(hy + 1);
+        if (tail.empty())
+            *h = 100;
+        else
+            *h = atoi(tail.c_str());
+
+        if (!*l || !*h || *l > *h)
+            throw std::string("Bad depth: ") + s;
+    }
+}
+
 void level_range::set(int s, int d)
 {
     shallowest = s;
@@ -214,6 +285,12 @@ bool level_range::matches(int x) const
     // [ds] The level ranges used by the game are zero-based, adjust for that.
     ++x;
     return (x >= shallowest && x <= deepest);
+}
+
+bool level_range::operator == (const level_range &lr) const
+{
+    return (deny == lr.deny && shallowest == lr.shallowest
+            && deepest == lr.deepest && branch == lr.branch);
 }
 
 bool level_range::valid() const
@@ -283,6 +360,11 @@ void map_lines::release_transforms()
 }
 
 const std::vector<std::string> &map_lines::get_lines() const
+{
+    return (lines);
+}
+
+std::vector<std::string> &map_lines::get_lines()
 {
     return (lines);
 }
@@ -388,6 +470,79 @@ std::string map_lines::add_shuffle(const std::string &raws)
         transforms.push_back( new shuffle_spec(s) );
 
     return (err);
+}
+
+void map_lines::remove_shuffle(const std::string &raw)
+{
+    std::string s = raw;
+    const std::string err = check_shuffle(s);
+    if (err.empty())
+    {
+        const shuffle_spec ss(s);
+        for (int i = 0, size = transforms.size(); i < size; ++i)
+        {
+            if (transforms[i]->type() == map_transformer::TT_SHUFFLE)
+            {
+                const shuffle_spec *other =
+                    dynamic_cast<shuffle_spec*>(transforms[i]);
+                if (ss == *other)
+                {
+                    delete transforms[i];
+                    transforms.erase( transforms.begin() + i );
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void map_lines::remove_subst(const std::string &raw)
+{
+    // Parsing subst specs is a pain, so we just let add_subst do the
+    // work, then pop the subst off the end of the vector.
+    if (add_subst(raw).empty())
+    {
+        map_transformer *sub = *transforms.rbegin();
+        subst_spec spec = *dynamic_cast<subst_spec*>(sub);
+        delete sub;
+        transforms.pop_back();
+
+        for (int i = 0, size = transforms.size(); i < size; ++i)
+        {
+            if (transforms[i]->type() == map_transformer::TT_SUBST)
+            {
+                subst_spec *cand = dynamic_cast<subst_spec*>(transforms[i]);
+                if (spec == *cand)
+                {
+                    delete cand;
+                    transforms.erase( transforms.begin() + i );
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void map_lines::clear_transforms(map_transformer::transform_type tt)
+{
+    if (transforms.empty())
+        return;
+    for (int i = transforms.size() - 1; i >= 0; --i)
+        if (transforms[i]->type() == tt)
+        {
+            delete transforms[i];
+            transforms.erase( transforms.begin() + i );
+        }
+}
+
+void map_lines::clear_shuffles()
+{
+    clear_transforms(map_transformer::TT_SHUFFLE);
+}
+
+void map_lines::clear_substs()
+{
+    clear_transforms(map_transformer::TT_SUBST);    
 }
 
 int map_lines::width() const
@@ -616,29 +771,143 @@ void map_lines::hmirror()
     solid_checked = false;
 }
 
+std::vector<std::string> map_lines::get_shuffle_strings() const
+{
+    std::vector<std::string> shuffles;
+    for (int i = 0, size = transforms.size(); i < size; ++i)
+        if (transforms[i]->type() == map_transformer::TT_SHUFFLE)
+            shuffles.push_back( transforms[i]->describe() );
+    return (shuffles);
+}
+
+std::vector<std::string> map_lines::get_subst_strings() const
+{
+    std::vector<std::string> substs;
+    for (int i = 0, size = transforms.size(); i < size; ++i)
+        if (transforms[i]->type() == map_transformer::TT_SUBST)
+            substs.push_back( transforms[i]->describe() );
+    return (substs);
+}
+
 ///////////////////////////////////////////////
 // map_def
 //
 
+map_def::map_def()
+    : name(), tags(), place(), depths(), orient(), chance(),
+      map(), mons(), items(), keyspecs(), prelude(), main(),
+      index_only(false), cache_offset(0L)
+{
+    init();
+}
+
 void map_def::init()
 {
+    orient = MAP_NONE;
     name.clear();
     tags.clear();
     place.clear();
+    depths.clear();
+    prelude.clear();
+    main.clear();
+    reinit();
+}
+
+void map_def::reinit()
+{
     items.clear();
     keyspecs.clear();
-    depths.clear();
-    orient = MAP_NONE;
 
     // Base chance; this is not a percentage.
     chance = 10;
 
-    // The map designer must explicitly disallow these if unwanted.
-    flags = MAPF_MIRROR_VERTICAL | MAPF_MIRROR_HORIZONTAL
-            | MAPF_ROTATE;
-
+    // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+}
+
+void map_def::set_file(const std::string &s)
+{
+    prelude.set_file(s);
+    main.set_file(s);
+}
+
+void map_def::run_strip_prelude()
+{
+    run_lua(false);
+    prelude.clear();
+}
+
+void map_def::strip_lua()
+{
+    prelude.clear();
+    main.clear();
+}
+
+std::string map_def::run_lua(bool run_main)
+{
+    dlua.callfn("dgn_set_map", "m", this);
+    int err = prelude.load(&dlua);
+    if (err == -1000)
+        lua_pushnil(dlua);
+    else if (err)
+        return (prelude.orig_error());
+
+    if (!run_main)
+        lua_pushnil(dlua);
+    else
+    {
+        err = main.load(&dlua);
+        if (err == -1000)
+            lua_pushnil(dlua);
+        else if (err)
+            return (main.orig_error());
+    }
+
+    if (!dlua.callfn("dgn_run_map", 2, 0))
+        return (dlua.error);
+    
+    // Clear the map setting.
+    dlua.callfn("dgn_set_map", 0, 0);
+
+    return (dlua.error);
+}
+
+std::string map_def::validate()
+{
+    std::string err = run_lua(true);
+    if (!err.empty())
+        return (err);
+    
+    if (orient == MAP_FLOAT || is_minivault())
+    {
+        if (map.width() > GXM - MAPGEN_BORDER * 2
+            || map.height() > GYM - MAPGEN_BORDER * 2)
+        {
+            return make_stringf(
+                     "%s is too big: %dx%d - max %dx%d",
+                     is_minivault()? "Minivault" : "Float",
+                     map.width(), map.height(),
+                     GXM - MAPGEN_BORDER * 2,
+                     GYM - MAPGEN_BORDER * 2);
+        }
+    }
+    else
+    {
+        if (map.width() > GXM
+            || map.height() > GYM)
+        {
+            return make_stringf(
+                     "Map is too big: %dx%d - max %dx%d",
+                     map.width(), map.height(),
+                     GXM, GYM);
+        }
+    }
+
+    if (map.height() == 0)
+        return ("Must define map.");
+
+    return ("");
 }
 
 bool map_def::is_usable_in(const level_id &lid) const
@@ -790,7 +1059,7 @@ coord_def map_def::float_place()
 
 void map_def::hmirror()
 {
-    if (!(flags & MAPF_MIRROR_HORIZONTAL))
+    if (has_tag("no_hmirror"))
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -812,7 +1081,7 @@ void map_def::hmirror()
 
 void map_def::vmirror()
 {
-    if (!(flags & MAPF_MIRROR_VERTICAL))
+    if (has_tag("no_vmirror"))
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -835,7 +1104,7 @@ void map_def::vmirror()
 
 void map_def::rotate(bool clock)
 {
-    if (!(flags & MAPF_ROTATE))
+    if (has_tag("no_rotate"))
         return;
 
 #define GMINM ((GXM) < (GYM)? (GXM) : (GYM))
@@ -938,6 +1207,16 @@ std::string map_def::add_key_feat(const std::string &s)
 std::string map_def::add_key_mons(const std::string &s)
 {
     return add_key_field(s, &keyed_mapspec::set_mons);
+}
+
+std::vector<std::string> map_def::get_shuffle_strings() const
+{
+    return map.get_shuffle_strings();
+}
+
+std::vector<std::string> map_def::get_subst_strings() const
+{
+    return map.get_subst_strings();
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -1092,6 +1371,26 @@ std::string mons_list::add_mons(const std::string &s, bool fix)
     
     mons.push_back( slotmons );
 
+    return (error);
+}
+
+std::string mons_list::set_mons(int index, const std::string &s)
+{
+    error.clear();
+
+    if (index < 0)
+        return (error = make_stringf("Index out of range: %d", index));
+    
+    mons_spec_slot slotmons = parse_mons_spec(s);
+    if (!error.empty())
+        return (error);
+
+    if (index >= (int) mons.size())
+    {
+        mons.reserve(index + 1);
+        mons.resize(index + 1, mons_spec_slot());
+    }
+    mons[index] = slotmons;
     return (error);
 }
 
@@ -1274,6 +1573,25 @@ std::string item_list::add_item(const std::string &spec, bool fix)
     }
     
     return (error);
+}
+
+std::string item_list::set_item(int index, const std::string &spec)
+{
+    error.clear();
+    if (index < 0)
+        return (error = make_stringf("Index %d out of range", index));
+    item_spec_slot sp = parse_item_spec(spec);
+    if (error.empty())
+    {
+        if (index >= (int) items.size())
+        {
+            items.reserve(index + 1);
+            items.resize(index + 1, item_spec_slot());
+        }
+        items.push_back(sp);
+    }
+    
+    return (error);    
 }
 
 item_spec item_list::parse_single_spec(std::string s)
@@ -1460,6 +1778,42 @@ map_transformer *subst_spec::clone() const
     return new subst_spec(*this);
 }
 
+map_transformer::transform_type subst_spec::type() const
+{
+    return (TT_SUBST);
+}
+
+std::string subst_spec::describe() const
+{
+    std::string subst(1, foo);
+    subst += std::string(" ") + (fix? ':' : '=');
+    for (int i = 0, size = repl.size(); i < size; ++i)
+    {
+        const glyph_weighted_replacement_t &gly = repl[i];
+        subst += " ";
+        subst += static_cast<char>(gly.first);
+        if (gly.second != 10)
+            subst += make_stringf(":%d", gly.second);
+    }
+    return (subst);
+}
+
+bool subst_spec::operator == (const subst_spec &other) const
+{
+    if (foo != other.foo || fix != other.fix)
+        return (false);
+
+    if (repl.size() != other.repl.size())
+        return (false);
+
+    for (int i = 0, size = repl.size(); i < size; ++i)
+    {
+        if (repl[i] != other.repl[i])
+            return (false);
+    }
+    return (true);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // shuffle_spec
 
@@ -1471,6 +1825,16 @@ void shuffle_spec::apply_transform(map_lines &map)
 map_transformer *shuffle_spec::clone() const
 {
     return new shuffle_spec(*this);
+}
+
+map_transformer::transform_type shuffle_spec::type() const
+{
+    return (TT_SHUFFLE);
+}
+
+std::string shuffle_spec::describe() const
+{
+    return (shuffle);
 }
 
 //////////////////////////////////////////////////////////////////////////

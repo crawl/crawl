@@ -39,16 +39,35 @@ static void clean()
     alloced = false;
 }
 
-static void settext()
+static void settext(bool trim_right = false, int strip_trailing = 0)
 {
     clean();
-    if ((yylval.text = strdup(yytext)))
+    char *newstring = NULL;
+    if ((yylval.text = newstring = strdup(yytext)))
+    {
         alloced = true;
+
+        char *s = NULL;
+        if (trim_right)
+        {
+            s = newstring + strlen(newstring) - 1;
+            while (isspace(*s) && s >= newstring)
+                *s-- = 0;
+        }
+        if (strip_trailing)
+        {
+            if (!s)
+                s = newstring + strlen(newstring) - 1;
+            while (s >= newstring && --strip_trailing >= 0)
+                *s-- = 0;
+        }
+    }
 }
 
 %}
 
 %x MAPDEF
+%x LUA
 %s ARGUMENT
 %s MNAME
 %s KEYWORDS
@@ -73,6 +92,18 @@ NSPACE [^\ \t\r\n]
 <MAPDEF>[\ ][^\ \r\n]   return CHARACTER;
 
 <MAPDEF>[ ]*\r?\n       ;
+
+<LUA>\s*\}\}[ \t]*$     { BEGIN(INITIAL); }
+<LUA>[^\r\n]+\}\}[ \t]*$ {
+                            settext(true, 2);
+                            BEGIN(INITIAL);
+                            return LUA_LINE;
+                        }
+<LUA>[^\r\n]+           {
+                            settext();
+                            return LUA_LINE;
+                        }
+<LUA>\r?\n               ;
 
 <KEYWORDS>[A-Za-z_0-9\-]+   {
                         settext();
@@ -116,16 +147,20 @@ NSPACE [^\ \t\r\n]
 
 ^[ \t]*#.*          ;
 
-^\s*MAP                { BEGIN(MAPDEF); }
+^\s*MAP             { BEGIN(MAPDEF); }
 
 
+^prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }      
+^lua[ \t]*\{\{      { BEGIN(LUA); return MAIN; }
+^[ \t]*\{\{         { BEGIN(LUA); return MAIN; }
 NAME:               { BEGIN(ARGUMENT); return NAME; }
-default-depth:      return DEFAULT_DEPTH;
-DEPTH:              return DEPTH;
-ORIENT:             return ORIENT;
+default-depth:      { BEGIN(ARGUMENT); return DEFAULT_DEPTH; }
+DEPTH:              { BEGIN(ARGUMENT); return DEPTH; }
+ORIENT:             { BEGIN(ARGUMENT); return ORIENT; }
 PLACE:              { BEGIN(ARGUMENT); return PLACE; }
 CHANCE:             return CHANCE;
-FLAGS:              return FLAGS;
+WEIGHT:             return CHANCE;
+FLAGS:              { BEGIN(KEYWORDS); return TAGS; }
 TAGS:               { BEGIN(KEYWORDS); return TAGS; }
 SUBST:              { BEGIN(ITEM_LIST); return SUBST; }
 MONS:               { BEGIN(MNAME); return MONS; }
@@ -135,42 +170,6 @@ SHUFFLE:            { BEGIN(ITEM_LIST); return SHUFFLE; }
 KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }
 KITEM:              { BEGIN(ARGUMENT); return KITEM; }
 KMONS:              { BEGIN(ARGUMENT); return KMONS; }
-
-BRANCHDEF:          return BRANCH;
-DEFAULT             return DEFAULT;
-DESC:               return DESC;
-BRANCH:             return BRANCH;
-ROOT_DEPTH:         return ROOT_DEPTH;
-FLOOR_COLOUR:       return FLOOR_COLOUR;
-ROCK_COLOUR:        return ROCK_COLOUR;
-
-LEVEL             return LEVEL;
-END               return END;
-PVAULT:             return PVAULT;
-PMINIVAULT:         return PMINIVAULT;
-
-ENTRY_MSG:          { BEGIN(ARGUMENT); return ENTRY_MSG; }
-EXIT_MSG:           { BEGIN(ARGUMENT); return EXIT_MSG; }
-
-MONSTERS          return MONSTERS;
-ENDMONSTERS       return ENDMONSTERS;
-
-
-pandemonic          return PANDEMONIC;
-no_hmirror          return NO_HMIRROR;
-no_vmirror          return NO_VMIRROR;
-no_rotate           return NO_ROTATE;
-
-encompass           return ENCOMPASS;
-north               return NORTH;
-south               return SOUTH;
-east                return EAST;
-west                return WEST;
-northeast           return NORTHEAST;
-northwest           return NORTHWEST;
-southeast           return SOUTHEAST;
-southwest           return SOUTHWEST;
-float               return FLOAT;
 
 -                   return DASH;
 ,                   return COMMA;
@@ -188,10 +187,6 @@ float               return FLOAT;
 \)                   return CPAREN;
 
 \"                  return QUOTE;
-
-:                   return COLON;
-\*                  return STAR;
-!                   return NOT;
 
 [a-zA-Z_][a-zA-Z_0-9]* {
                         settext();

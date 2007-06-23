@@ -12,17 +12,9 @@
 #include <string>
 #include <vector>
 
+#include "luadgn.h"
 #include "enum.h"
 #include "externs.h"
-
-enum map_flags
-{
-    MAPF_PANDEMONIUM_VAULT = 0x01,     // A pandemonium minivault.
-
-    MAPF_MIRROR_VERTICAL   = 0x10,     // The map may be mirrored vertically
-    MAPF_MIRROR_HORIZONTAL = 0x20,     // may be mirrored horizontally.
-    MAPF_ROTATE            = 0x40      // may be rotated
-};
 
 struct raw_range
 {
@@ -52,14 +44,24 @@ public:
     bool valid() const;
     int span() const;
 
+    static level_range parse(std::string lr) throw (std::string);
+    
     std::string describe() const;
     std::string str_depth_range() const;
+
+    bool operator == (const level_range &lr) const;
 
     operator raw_range () const;
     operator std::string () const
     {
         return describe();
     }
+
+private:
+    static void parse_partial(level_range &lr, const std::string &s)
+        throw (std::string);
+    static void parse_depth_range(const std::string &s, int *low, int *high)
+        throw (std::string);
 };
 
 typedef std::pair<int,int> glyph_weighted_replacement_t;
@@ -69,9 +71,18 @@ class map_lines;
 class map_transformer
 {
 public:
+    enum transform_type
+    {
+        TT_SHUFFLE,
+        TT_SUBST
+    };
+    
+public:
     virtual ~map_transformer() = 0;
     virtual void apply_transform(map_lines &map) = 0;
     virtual map_transformer *clone() const = 0;
+    virtual transform_type type() const = 0;
+    virtual std::string describe() const = 0;
 };
 
 class subst_spec : public map_transformer
@@ -88,6 +99,10 @@ public:
     
     void apply_transform(map_lines &map);
     map_transformer *clone() const;
+    transform_type type() const;
+    std::string describe() const;
+
+    bool operator == (const subst_spec &other) const;
 
 private:
     int foo;        // The thing to replace.
@@ -108,6 +123,12 @@ struct shuffle_spec : public map_transformer
     
     void apply_transform(map_lines &map);
     map_transformer *clone() const;
+    transform_type type() const;
+    std::string describe() const;
+    bool operator == (const shuffle_spec &other) const
+    {
+        return (shuffle == other.shuffle);
+    }
 };
 
 class map_lines
@@ -122,6 +143,10 @@ public:
     void add_line(const std::string &s);
     std::string add_subst(const std::string &st);
     std::string add_shuffle(const std::string &s);
+    void remove_shuffle(const std::string &s);
+    void remove_subst(const std::string &s);
+    void clear_shuffles();
+    void clear_substs();
 
     void set_orientation(const std::string &s);
 
@@ -146,6 +171,9 @@ public:
     void clear();
 
     const std::vector<std::string> &get_lines() const;
+    std::vector<std::string> &get_lines();
+    std::vector<std::string> get_shuffle_strings() const;
+    std::vector<std::string> get_subst_strings() const;
 
 private:
     void init_from(const map_lines &map);
@@ -155,6 +183,7 @@ private:
     void subst(std::string &s, subst_spec &spec);
     void subst(subst_spec &);
     void check_borders();
+    void clear_transforms(map_transformer::transform_type);
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
     std::string check_shuffle(std::string &s);
@@ -203,6 +232,7 @@ public:
 
     // Returns an error string if the monster is unrecognised.
     std::string add_mons(const std::string &s, bool fix_slot = false);
+    std::string set_mons(int slot, const std::string &s);
 
     size_t size() const { return mons.size(); }
 
@@ -275,6 +305,7 @@ public:
     size_t size() const { return items.size(); }
 
     std::string add_item(const std::string &spec, bool fix = false);
+    std::string set_item(int index, const std::string &spec);
 
 private:
     struct item_spec_slot
@@ -359,7 +390,6 @@ typedef std::map<int, keyed_mapspec> keyed_specs;
 
 typedef std::vector<level_range> depth_ranges;
 
-// Not providing a constructor to make life easy for C-style initialisation.
 class map_def
 {
 public:
@@ -369,8 +399,7 @@ public:
 
     depth_ranges     depths;
     map_section_type orient;
-    int             chance;
-    long            flags;
+    int              chance;
 
     map_lines       map;
     mons_list       mons;
@@ -378,8 +407,28 @@ public:
 
     keyed_specs     keyspecs;
 
+    dlua_chunk      prelude, main;
+
+private:
+    // This map has been loaded from an index, and not fully realised.
+    bool            index_only;
+    long            cache_offset;
+
 public:
+    map_def();
     void init();
+    void reinit();
+
+    void set_file(const std::string &s);
+    std::string run_lua(bool skip_main);
+    void run_strip_prelude();
+    void strip_lua();
+
+    std::string validate();
+
+    void add_prelude_line(int line,  const std::string &s);
+    void add_main_line(int line, const std::string &s);
+
     void hmirror();
     void vmirror();
     void rotate(bool clockwise);
@@ -410,6 +459,9 @@ public:
     bool has_tag(const std::string &tag) const;
     bool has_tag_prefix(const std::string &tag) const;
 
+    std::vector<std::string> get_shuffle_strings() const;
+    std::vector<std::string> get_subst_strings() const;
+    
 private:
     std::string add_key_field(
         const std::string &s,
@@ -419,5 +471,6 @@ private:
 
 std::string escape_string(std::string in, const std::string &toesc,
                           const std::string &escapewith);
+const char *map_section_name(int msect);
 
 #endif

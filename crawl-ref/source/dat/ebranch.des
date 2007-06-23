@@ -111,7 +111,9 @@ NAME: temple_statues
 TAGS: temple_entry
 ORIENT: float
 MAP
+...
 GOG
+...
 ENDMAP
 
 ##############################################################################

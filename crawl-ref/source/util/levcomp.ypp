@@ -1,8 +1,10 @@
 %{
 
 #include "AppHdr.h"
+#include "clua.h"
 #include "libutil.h"
 #include "levcomp.h"
+#include "luadgn.h"
 #include "mapdef.h"
 #include "stuff.h"
 #include <map>
@@ -59,28 +61,16 @@ level_range set_range(const char *s, int start, int end)
 
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
-%token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS ITEM
-%token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
-%token <i>      ROCK_COLOUR FLOOR_COLOUR
-%token <i>      ENCOMPASS FLOAT 
-%token <i>      NORTH EAST SOUTH WEST
-%token <i>      NORTHEAST SOUTHEAST SOUTHWEST NORTHWEST
-
-%token <i>      LEVEL END PVAULT PMINIVAULT MONSTERS ENDMONSTERS
+%token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM
+%token <i>      PRELUDE MAIN
 
 %token <i>      CHARACTER
 
-%token <i>      NO_HMIRROR NO_VMIRROR NO_ROTATE
-
-%token <i>      PANDEMONIC 
-%token <i>      DASH COMMA QUOTE OPAREN CPAREN COLON STAR NOT
+%token <i>      DASH COMMA QUOTE OPAREN CPAREN
 %token <i>      INTEGER
 
-%type  <i>      orient_name flagname
-%type  <range>  lev_range ext_range
-
 %token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
-%token <text>   IDENTIFIER
+%token <text>   IDENTIFIER LUA_LINE
 
 %%
 
@@ -98,50 +88,24 @@ definition      : def       {}
 def             : defdepth  {}
                 ;
 
-defdepth        : DEFAULT_DEPTH 
-                  { lc_default_depths.clear(); }
-                  default_depth_ranges
+defdepth        : DEFAULT_DEPTH STRING
+                {
+                    dgn_reset_default_depth();
+                    std::string err = dgn_set_default_depth($2);
+                    if (!err.empty())
+                        yyerror(make_stringf("Bad default-depth: %s (%s)",
+                                $2, err.c_str()).c_str());
+                }
                 ;
 
 level           : name metalines map_def metalines
                 {
-                    if (lc_map.orient == MAP_FLOAT
-                        || lc_map.is_minivault())
-                    {
-                        if (lc_map.map.width() > GXM - MAPGEN_BORDER * 2
-                            || lc_map.map.height() > GYM - MAPGEN_BORDER * 2)
-                        {
-                            char buf[300];
-                            snprintf(buf, sizeof buf, 
-                                 "%s is too big: %dx%d - max %dx%d",
-                                 lc_map.is_minivault()? "Minivault" : "Float",
-                                 lc_map.map.width(), lc_map.map.height(),
-                                 GXM - MAPGEN_BORDER * 2,
-                                 GYM - MAPGEN_BORDER * 2);
-                            yyerror(buf);
-                        }
-                    }
-                    else
-                    {
-                        if (lc_map.map.width() > GXM
-                            || lc_map.map.height() > GYM)
-                        {
-                            char buf[300];
-                            snprintf(buf, sizeof buf, 
-                                 "Map is too big: %dx%d - max %dx%d",
-                                 lc_map.map.width(), lc_map.map.height(),
-                                 GXM, GYM);
-                            yyerror(buf);
-                        }
-                    }
-
-                    if (lc_map.map.height() == 0)
-                        yyerror("Must define map.");
-
+                    std::string err = lc_map.validate();
+                    if (!err.empty())
+                        yyerror(err.c_str());
                     if (!lc_map.has_depth() && !lc_default_depths.empty())
                         lc_map.add_depths(lc_default_depths.begin(),
                                           lc_default_depths.end());
-
                     add_parsed_map( lc_map );
                 }
                 ;
@@ -176,7 +140,6 @@ metaline        : place
                 | depth
                 | chance
                 | orientation
-                | flags
                 | mons
                 | items
                 | subst
@@ -185,36 +148,57 @@ metaline        : place
                 | kfeat
                 | kitem
                 | kmons
+                | main_lua
+                | prelude_lua
                 ;
+
+main_lua        : MAIN main_lua_lines { }
+
+main_lua_lines  : /* empty */ { }
+                | main_lua_lines main_lua_line { }
+                ;
+
+main_lua_line   : LUA_LINE
+                {
+                    lc_map.main.add(yylineno, $1);
+                }
+
+prelude_lua     : PRELUDE prelude_lua_lines { }
+
+prelude_lua_lines : /* empty */ { }
+                | prelude_lua_lines prelude_lua_line { }
+                ;
+
+prelude_lua_line : LUA_LINE
+                {
+                    lc_map.prelude.add(yylineno, $1);
+                }
 
 kfeat           : KFEAT { }
                 | KFEAT STRING
                 {
-                    std::string err = lc_map.add_key_feat($2);
-                    if (!err.empty())
-                        yyerror(
-                            make_stringf("Bad arg to KFEAT: '%s' (%s)",
-                                $2, err.c_str()).c_str());
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("kfeat(\"%s\")", 
+                            quote_lua_string($2).c_str()));
                 }
 
 kmons           : KMONS { }
                 | KMONS STRING
                 {
-                    std::string err = lc_map.add_key_mons($2);
-                    if (!err.empty())
-                        yyerror(
-                            make_stringf("Bad arg to KMONS: '%s' (%s)",
-                                $2, err.c_str()).c_str());
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("kmons(\"%s\")", 
+                            quote_lua_string($2).c_str()));
                 }
 
 kitem           : KITEM { }
                 | KITEM STRING
                 {
-                    std::string err = lc_map.add_key_item($2);
-                    if (!err.empty())
-                        yyerror(
-                            make_stringf("Bad arg to KITEM: '%s' (%s)",
-                                $2, err.c_str()).c_str());
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("kitem(\"%s\")", 
+                            quote_lua_string($2).c_str()));
                 }
 
 shuffle         : SHUFFLE shuffle_specifiers {} 
@@ -226,23 +210,25 @@ shuffle_specifiers : shuffle_spec
 
 shuffle_spec    : ITEM_INFO
                 {
-                    std::string err = lc_map.map.add_shuffle($1);
-                    if (!err.empty())
-                        yyerror(
-                            make_stringf(
-                                "Bad shuffle argument: '%s' (%s)",
-                                $1, err.c_str() ).c_str() );
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("shuffle(\"%s\")", 
+                            quote_lua_string($1).c_str()));
                 }
 
 tags            : TAGS tagstrings {}
                 ;
 
 tagstrings      : /* empty */
-                | STRING tagstrings
+                | tagstrings tagstring
+                ;
+
+tagstring       : STRING
                 {
-                    lc_map.tags += " ";
-                    lc_map.tags += $1;
-                    lc_map.tags += " ";
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("tags(\"%s\")", 
+                            quote_lua_string($1).c_str()));
                 }
                 ;
 
@@ -255,12 +241,10 @@ subst_specifiers : subst_spec
 
 subst_spec      : ITEM_INFO
                 {
-                    std::string err = lc_map.map.add_subst($1);
-                    if (!err.empty())
-                        yyerror(
-                            make_stringf(
-                                "Bad SUBST argument: '%s' (%s)",
-                                $1, err.c_str() ).c_str() );
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("subst(\"%s\")", 
+                            quote_lua_string($1).c_str()));
                 }
                 ;
 
@@ -274,17 +258,10 @@ item_specifiers : item_specifier COMMA item_specifiers
 
 item_specifier  : ITEM_INFO
                 {
-                    std::string error = lc_map.items.add_item($1);
-                    if (error.size())
-                    {
-                        char errbuf[300];
-                        snprintf(errbuf, sizeof errbuf,
-                            "Invalid item descriptor: '%s' (%s)",
-                                $1, error.c_str());
-                        yyerror(errbuf);
-                    }
-                    if (lc_map.items.size() > 8)
-                        yyerror("Too many items specified (max 8)");
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("item(\"%s\")", 
+                            quote_lua_string($1).c_str()));
                 }
                 
 mons            : MONS {}
@@ -297,137 +274,48 @@ mnames          : mname COMMA mnames
 
 mname           : MONSTER_NAME
                 {
-                    std::string err = lc_map.mons.add_mons($1);
-                    if (!err.empty())
-                    {
-                        char buf[300];
-                        snprintf(buf, sizeof buf, 
-                                 "bad monster spec '%s' (%s)",
-                                 $1, err.c_str());
-                        yyerror(buf);
-                    }
-                    if (lc_map.mons.size() > 7)
-                        yyerror("Too many monsters specified (max 7)");
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("mons(\"%s\")", 
+                            quote_lua_string($1).c_str()));
                 }
                 ;
 
 place           : PLACE STRING
                 {
-                    lc_map.place = $2;
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("place(\"%s\")", 
+                            quote_lua_string($2).c_str()));
                 }
                 ;
 
 depth           : DEPTH {}
-                | DEPTH extended_depth_ranges {}
-                ;
-
-default_depth_ranges : 
-                ext_range
+                | DEPTH STRING 
                 {
-                    lc_default_depths.push_back($1);
-                }
-
-                | default_depth_ranges COMMA ext_range
-                {
-                    lc_default_depths.push_back($3);
-                }
-                ;
-
-extended_depth_ranges : 
-                ext_range
-                {
-                    lc_map.add_depth($1);
-                }
-
-                | extended_depth_ranges COMMA ext_range
-                {
-                    lc_map.add_depth($3);
-                }
-                ;
-
-ext_range       : lev_range     { $$ = $1; }
-                | NOT lev_range { $$ = $2; $$.deny = true; }
-                ;
-
-lev_range       : IDENTIFIER
-                {
-                    $$ = set_range($1, 1, 100);
-                }
-
-                | IDENTIFIER COLON STAR
-                {
-                    $$ = set_range($1, 1, 100);
-                }
-
-                | IDENTIFIER COLON INTEGER DASH INTEGER
-                {
-                    $$ = set_range($1, $3, $5);
-                }
-
-                | IDENTIFIER COLON INTEGER
-                {
-                    $$ = set_range($1, $3, $3);
-                }
-
-                | INTEGER DASH INTEGER
-                {
-                    $$ = set_range("Any", $1, $3);
-                }
-
-                | INTEGER
-                {
-                    $$ = set_range("Any", $1, $1);
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("depth(\"%s\")", 
+                            quote_lua_string($2).c_str()));
                 }
                 ;
 
 chance          : CHANCE INTEGER
                 {
-                    lc_map.chance = $2;
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("chance(\"%d\")", $2));
                 }
                 ;
 
 orientation     : ORIENT {}
-                | ORIENT orient_name
+                | ORIENT STRING
                 {
-                    lc_map.orient = (map_section_type) $2;
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("orient(\"%s\")", 
+                                     quote_lua_string($2).c_str()));
                 }
-                ;
-
-orient_name     : ENCOMPASS     { $$ = MAP_ENCOMPASS; }
-                | NORTH         { $$ = MAP_NORTH; }
-                | EAST          { $$ = MAP_EAST; }
-                | SOUTH         { $$ = MAP_SOUTH; }
-                | WEST          { $$ = MAP_WEST; }
-                | NORTHEAST     { $$ = MAP_NORTHEAST; }
-                | SOUTHEAST     { $$ = MAP_SOUTHEAST; }
-                | SOUTHWEST     { $$ = MAP_SOUTHWEST; }
-                | NORTHWEST     { $$ = MAP_NORTHWEST; }
-                | FLOAT         { $$ = MAP_FLOAT; }
-                ;
-
-flags           : FLAGS flagnames {}
-                ;
-
-flagnames       : /* empty */
-                | flagname flagnames
-                {
-                    switch ($1) {
-                    case NO_HMIRROR:
-                        lc_map.flags &= ~MAPF_MIRROR_HORIZONTAL;
-                        break;
-                    case NO_VMIRROR:
-                        lc_map.flags &= ~MAPF_MIRROR_VERTICAL;
-                        break;
-                    case NO_ROTATE:
-                        lc_map.flags &= ~MAPF_ROTATE;
-                        break;
-                    }
-                }
-                ;
-
-flagname        : NO_HMIRROR    { $$ = NO_HMIRROR; }
-                | NO_VMIRROR    { $$ = NO_VMIRROR; }
-                | NO_ROTATE     { $$ = NO_ROTATE;  }
                 ;
 
 map_def         : map_lines
@@ -439,7 +327,10 @@ map_lines       : map_line
 
 map_line        : MAP_LINE
                 {
-                    lc_map.map.add_line($1);
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("map(\"%s\")", 
+                                     quote_lua_string($1).c_str()));
                 }
                 ;
 

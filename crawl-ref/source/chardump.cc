@@ -907,7 +907,7 @@ static void sdump_mutations(const std::string &, std::string & text)
     // Can't use how_mutated() here, as it doesn't count demonic powers
     int xz = 0;
 
-    for (int xy = 0; xy < 100; xy++)
+    for (int xy = 0; xy < NUM_MUTATIONS; ++xy)
     {
         if (you.mutation[xy] > 0)
             xz++;

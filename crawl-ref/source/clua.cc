@@ -21,6 +21,7 @@
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mapdef.h"
 #include "message.h"
 #include "mon-util.h"
 #include "output.h"
@@ -201,15 +202,20 @@ void CLua::init_throttle()
     }
 }
 
+int CLua::loadstring(const char *s, const char *context)
+{
+    const int err = luaL_loadbuffer(state(), s, strlen(s), context);
+    set_error(err, state());
+    return err;
+}
+
 int CLua::execstring(const char *s, const char *context)
 {
+    int err = 0;
+    if ((err = loadstring(s, context)))
+        return (err);
+    
     lua_State *ls = state();
-    int err = luaL_loadbuffer(ls, s, strlen(s), context);
-    if (err)
-    {
-        set_error(err, ls);
-        return err;
-    }
     lua_call_throttle strangler(this);
     err = lua_pcall(ls, 0, 0, 0);
     set_error(err, ls);
@@ -248,7 +254,7 @@ int CLua::execfile(const char *filename, bool trusted)
     sourced_files.insert(filename);
 
     lua_State *ls = state();
-    int err = loadfile(ls, filename, trusted);
+    int err = loadfile(ls, filename, trusted || !managed_vm);
     lua_call_throttle strangler(this);
     if (!err)
         err = lua_pcall(ls, 0, 0, 0);
@@ -354,6 +360,7 @@ void CLua::vfnreturns(const char *format, va_list args)
 }
 
 static void push_monster(lua_State *ls, monsters *mons);
+static void push_map(lua_State *ls, map_def *map);
 static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
@@ -399,6 +406,9 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             break;
         case 'b':
             lua_pushboolean(ls, va_arg(args, int));
+            break;
+        case 'm':
+            push_map(ls, va_arg(args, map_def *));
             break;
         case 'M':
             push_monster(ls, va_arg(args, monsters *));
@@ -541,17 +551,16 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
 
 // Defined in Kills.cc because the kill bindings refer to Kills.cc local 
 // structs
-extern void lua_open_kills(lua_State *ls);
+extern void luaopen_kills(lua_State *ls);
 
-void lua_open_you(lua_State *ls);
-void lua_open_item(lua_State *ls);
-void lua_open_food(lua_State *ls);
-void lua_open_crawl(lua_State *ls);
-void lua_open_file(lua_State *ls);
-void lua_open_options(lua_State *ls);
-void lua_open_monsters(lua_State *ls);
-void lua_open_globals(lua_State *ls);
-
+void luaopen_you(lua_State *ls);
+void luaopen_item(lua_State *ls);
+void luaopen_food(lua_State *ls);
+void luaopen_crawl(lua_State *ls);
+void luaopen_file(lua_State *ls);
+void luaopen_options(lua_State *ls);
+void luaopen_monsters(lua_State *ls);
+void luaopen_globals(lua_State *ls);
 
 void CLua::init_lua()
 {
@@ -569,16 +578,16 @@ void CLua::init_lua()
     luaopen_table(_state);
 
     // Open Crawl bindings
-    lua_open_kills(_state);
-    lua_open_you(_state);
-    lua_open_item(_state);
-    lua_open_food(_state);
-    lua_open_crawl(_state);
-    lua_open_file(_state);
-    lua_open_options(_state);
-    lua_open_monsters(_state);
+    luaopen_kills(_state);
+    luaopen_you(_state);
+    luaopen_item(_state);
+    luaopen_food(_state);
+    luaopen_crawl(_state);
+    luaopen_file(_state);
+    luaopen_options(_state);
+    luaopen_monsters(_state);
 
-    lua_open_globals(_state);
+    luaopen_globals(_state);
 
     load_cmacro();
     load_chooks();
@@ -608,40 +617,6 @@ void CLua::load_cmacro()
 }
 
 /////////////////////////////////////////////////////////////////////
-
-#define LUAWRAP(name, wrapexpr) \
-    static int name(lua_State *ls) \
-    {   \
-        wrapexpr; \
-        return (0); \
-    }
-
-#define LUARET1(name, type, val) \
-    static int name(lua_State *ls) \
-    { \
-        lua_push##type(ls, val); \
-        return (1); \
-    }
-
-#define LUARET2(name, type, val1, val2)  \
-    static int name(lua_State *ls) \
-    { \
-        lua_push##type(ls, val1); \
-        lua_push##type(ls, val2); \
-        return (2); \
-    }
-
-template <class T> T *util_get_userdata(lua_State *ls, int ndx)
-{
-    return (lua_islightuserdata(ls, ndx))?
-            static_cast<T *>( lua_touserdata(ls, ndx) )
-          : NULL;
-}
-
-template <class T> T *clua_get_userdata(lua_State *ls, const char *mt)
-{
-    return static_cast<T*>( luaL_checkudata( ls, 1, mt ) );
-}
 
 static void clua_register_metatable(lua_State *ls, const char *tn, 
                                    const luaL_reg *lr,
@@ -806,7 +781,7 @@ static const struct luaL_reg you_lib[] =
     { NULL, NULL },
 };
 
-void lua_open_you(lua_State *ls)
+void luaopen_you(lua_State *ls)
 {
     luaL_openlib(ls, "you", you_lib, 0);
 }
@@ -1395,7 +1370,7 @@ static const struct luaL_reg item_lib[] =
     { NULL, NULL },
 };
 
-void lua_open_item(lua_State *ls)
+void luaopen_item(lua_State *ls)
 {
     luaL_openlib(ls, "item", item_lib, 0);
 }
@@ -1536,7 +1511,7 @@ static const struct luaL_reg food_lib[] =
     { NULL, NULL },
 };
 
-void lua_open_food(lua_State *ls)
+void luaopen_food(lua_State *ls)
 {
     luaL_openlib(ls, "food", food_lib, 0);
 }
@@ -1862,7 +1837,7 @@ static const struct luaL_reg crawl_lib[] =
     { NULL, NULL },
 };
 
-void lua_open_crawl(lua_State *ls)
+void luaopen_crawl(lua_State *ls)
 {
     clua_register_metatable(ls, REGEX_METATABLE, crawl_regex_ops,
                             crawl_regex_gc);
@@ -1882,7 +1857,7 @@ static const struct luaL_reg file_lib[] =
     { NULL, NULL },
 };
 
-void lua_open_file(lua_State *ls)
+void luaopen_file(lua_State *ls)
 {
     luaL_openlib(ls, "file", file_lib, 0);
 }
@@ -2002,7 +1977,7 @@ static int option_set(lua_State *ls)
 }
 
 #define OPT_METATABLE "options.optaccess"
-void lua_open_options(lua_State *ls)
+void luaopen_options(lua_State *ls)
 {
     int top = lua_gettop(ls);
 
@@ -2136,7 +2111,13 @@ static void push_monster(lua_State *ls, monsters *mons)
     mw->mons = mons;
 }
 
-void lua_open_monsters(lua_State *ls)
+static void push_map(lua_State *ls, map_def *map)
+{
+    map_def **mapref = clua_new_userdata<map_def *>(ls, MAP_METATABLE);
+    *mapref = map;
+}
+
+void luaopen_monsters(lua_State *ls)
 {
     luaL_newmetatable(ls, MONS_METATABLE);
     lua_pushstring(ls, "__index");
@@ -2191,12 +2172,11 @@ static int lua_pmatch(lua_State *ls)
     return (1);
 }
 
-void lua_open_globals(lua_State *ls)
+void luaopen_globals(lua_State *ls)
 {
     lua_pushcfunction(ls, lua_pmatch);
     lua_setglobal(ls, "pmatch");
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 // lua_text_pattern
@@ -2524,4 +2504,9 @@ static int clua_dofile(lua_State *ls)
 
     lua_call(ls, 0, LUA_MULTRET);
     return (lua_gettop(ls));
+}
+
+std::string quote_lua_string(const std::string &s)
+{
+    return replace_all_of(replace_all_of(s, "\\", "\\\\"), "\"", "\\\"");
 }
