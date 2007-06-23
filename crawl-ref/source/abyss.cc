@@ -55,18 +55,11 @@ void generate_abyss(void)
 }                               // end generate_abyss()
 
 
-static void generate_area(unsigned char gx1, unsigned char gy1,
-                          unsigned char gx2, unsigned char gy2)
+static void generate_area(int gx1, int gy1, int gx2, int gy2)
 {
-    unsigned char i, j;
-    unsigned char x1, x2, y1, y2;
-    unsigned char items_placed = 0;
-    int thickness = random2(70) + 30;
+    int items_placed = 0;
+    const int thickness = random2(70) + 30;
     int thing_created;
-    unsigned int rooms_done = 0;
-    unsigned int rooms_to_do = 0;
-
-    int temp_rand;              // probability determination {dlb}
 
     FixedVector<dungeon_feature_type, 5> replaced;
 
@@ -74,9 +67,9 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
     env.map.init(map_cell());
 
     // generate level composition vector
-    for (i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     {
-        temp_rand = random2(10000);
+        const int temp_rand = random2(10000);
 
         replaced[i] = ((temp_rand > 4926) ? DNGN_ROCK_WALL :    // 50.73%
                        (temp_rand > 2918) ? DNGN_STONE_WALL :   // 20.08%
@@ -89,47 +82,35 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
 
     if (one_chance_in(3))
     {
-        rooms_to_do = 1 + random2(10);
+        int rooms_to_do = 1 + random2(10);
 
-        while(true)
+        for ( int rooms_done = 0; rooms_done < rooms_to_do; ++rooms_done )
         {
-            x1 = 10 + random2(GXM - 20);
-            y1 = 10 + random2(GYM - 20);
-            x2 = x1 + 1 + random2(10);
-            y2 = y1 + 1 + random2(10);
+            const int x1 = 10 + random2(GXM - 20);
+            const int y1 = 10 + random2(GYM - 20);
+            const int x2 = x1 + 1 + random2(10);
+            const int y2 = y1 + 1 + random2(10);
 
             if (one_chance_in(100))
-                goto out_of_rooms;
-
-            for (i = x1; i < x2; i++)   // that is, [10,(GXM-1)]  {dlb}
-            {
-                for (j = y1; j < y2; j++)       // that is, [10,(GYM-1)]  {dlb}
-                {
-                    if (grd[i][j] != DNGN_UNSEEN)
-                        goto continued;
-                }
-            }
-
-            for (i = x1; i < x2; i++)   // that is, [10,(GXM-1)]  {dlb}
-            {
-                for (j = y1; j < y2; j++)       // that is, [10,(GYM-1)]  {dlb}
-                {
-                    grd[i][j] = DNGN_FLOOR;
-                }
-            }
-
-          continued:
-            rooms_done++;
-
-            if (rooms_done >= rooms_to_do)
                 break;
+
+            bool room_ok = true;
+
+            for (int i = x1; room_ok && i < x2; i++)
+                for (int j = y1; room_ok && j < y2; j++)
+                    if (grd[i][j] != DNGN_UNSEEN)
+                        room_ok = false;
+
+            if ( room_ok )
+                for (int i = x1; i < x2; i++)
+                    for (int j = y1; j < y2; j++)
+                        grd[i][j] = DNGN_FLOOR;
         }
     }
 
-  out_of_rooms:
-    for (i = gx1; i < gx2 + 1; i++)
+    for (int i = gx1; i <= gx2; i++)
     {
-        for (j = gy1; j < gy2 + 1; j++)
+        for (int j = gy1; j <= gy2; j++)
         {
             if (grd[i][j] == DNGN_UNSEEN && random2(100) <= thickness)
             {
@@ -144,8 +125,8 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
                     }
                     else
                     {
-                        thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM, true,
-                                              51, 250);
+                        thing_created = items(1, OBJ_RANDOM,
+                                              OBJ_RANDOM, true, 51, 250);
                     }
 
                     move_item_to_grid( &thing_created, i, j );
@@ -157,23 +138,23 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
         }
     }
 
-    for (i = gx1; i < gx2 + 1; i++)
+    for (int i = gx1; i <= gx2; i++)
     {
-        for (j = gy1; j < gy2 + 1; j++)
+        for (int j = gy1; j <= gy2; j++)
         {
             if (grd[i][j] == DNGN_UNSEEN)
                 grd[i][j] = replaced[random2(5)];
 
-            if (one_chance_in(7500))
+            if (one_chance_in(7500)) // place an exit
                 grd[i][j] = DNGN_EXIT_ABYSS;
 
-            if (one_chance_in(10000))
+            if (one_chance_in(10000)) // place an altar
             {
                 do
                 {
                     grd[i][j] =
                         static_cast<dungeon_feature_type>(
-                            DNGN_ALTAR_ZIN + random2(12) );
+                            DNGN_ALTAR_ZIN + random2(NUM_GODS) );
                 }
                 while (grd[i][j] == DNGN_ALTAR_ZIN
                        || grd[i][j] == DNGN_ALTAR_SHINING_ONE
