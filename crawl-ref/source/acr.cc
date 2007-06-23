@@ -1721,7 +1721,6 @@ static void decrement_durations()
             break;
         }
 
-        //you.attribute[ATTR_WEAPON_BRAND] = 0;
         mpr(msg.c_str(), MSGCH_DURATION);
         you.wield_change = true;
     }

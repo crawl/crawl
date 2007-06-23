@@ -915,7 +915,7 @@ void god_speaks( god_type god, const char *mesg )
 
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
-bool did_god_conduct( int thing_done, int level )
+bool did_god_conduct( conduct_type thing_done, int level )
 {
     bool ret = false;
     int piety_change = 0;
@@ -1271,7 +1271,7 @@ bool did_god_conduct( int thing_done, int level )
     case DID_DEDICATED_KILL_NATURAL_EVIL:       // unused
     case DID_NATURAL_EVIL_KILLED_BY_SERVANT:    // unused
     case DID_SPELL_NONUTILITY:                  // unused
-    default:
+    case NUM_CONDUCTS:
         break;
     }
 

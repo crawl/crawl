@@ -4949,7 +4949,7 @@ bool player::can_go_berserk(bool verbose) const
     return (true);
 }
 
-void player::god_conduct(int thing_done, int level)
+void player::god_conduct(conduct_type thing_done, int level)
 {
     ::did_god_conduct(thing_done, level);
 }

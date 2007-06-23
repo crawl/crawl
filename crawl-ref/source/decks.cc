@@ -382,10 +382,19 @@ void draw_from_deck_of_punishment()
 // card could clobber the sign bit in special.
 void evoke_deck( item_def& deck )
 {
+    int brownie_points = 0;
     mpr("You draw a card...");
     if ( deck.plus2 == 0 )
     {
         card_effect( choose_one_card(deck, true), deck_rarity(deck) );
+
+        if ( deck.sub_type != MISC_DECK_OF_PUNISHMENT )
+        {
+            // Nemelex likes gamblers.
+            brownie_points = 1;
+            if (one_chance_in(3))
+                brownie_points++;
+        }
     }
     else
     {
@@ -407,19 +416,16 @@ void evoke_deck( item_def& deck )
         you.wield_change = true;
     }
     deck.plus--;
-
-    int brownie_points = 0;
+    
     if ( deck.plus == 0 )
     {
         mpr("The deck of cards disappears in a puff of smoke.");       
         unwield_item(you.equip[EQ_WEAPON]);            
         dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
-
-        brownie_points = (coinflip() ? 2 : 1);
-    }
-
-    if (one_chance_in(3))
+        // Finishing the deck will earn a point, even if it
+        // was marked or stacked.
         brownie_points++;
+    }
 
     did_god_conduct(DID_CARDS, brownie_points);
 }
@@ -992,6 +998,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_WRAITH:           drain_exp(); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
     case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
+    case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
         
     case CARD_SPADE:
         mpr("Sorry, this card is not yet available.");
@@ -1020,7 +1027,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_SUMMON_ANIMAL: break;
     case CARD_SUMMON_WEAPON: break;
     case CARD_SUMMON_ANY: break;
-    case CARD_XOM: xom_acts(5 + random2(power/10)); break;
 
     case CARD_FAMINE:
         if (you.is_undead == US_UNDEAD)

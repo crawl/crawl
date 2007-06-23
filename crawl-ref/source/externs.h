@@ -199,7 +199,7 @@ public:
     virtual bool asleep() const { return (false); }
     virtual bool backlit() const = 0;
 
-    virtual void god_conduct(int thing_done, int level) { }
+    virtual void god_conduct(conduct_type thing_done, int level) { }
 
     virtual bool incapacitated() const
     {
@@ -838,7 +838,7 @@ public:
     void drain_stat(int stat, int amount);
 
     void expose_to_element(beam_type element, int strength = 0);
-    void god_conduct(int thing_done, int level);
+    void god_conduct(conduct_type thing_done, int level);
 
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
