@@ -101,7 +101,7 @@ defdepth        : DEFAULT_DEPTH STRING
                 }
                 ;
 
-level           : name metalines map_def metalines
+level           : name map_specs
                 {
                     lc_map.set_file(lc_desfile);
                     std::string err = lc_map.validate();
@@ -112,6 +112,14 @@ level           : name metalines map_def metalines
                                           lc_default_depths.end());
                     add_parsed_map(lc_map);
                 }
+                ;
+
+map_specs       : /* nothing */ 
+                | map_specs map_spec { }
+                ;
+
+map_spec        : metalines { }
+                | map_def   { }
                 ;
 
 name            : NAME STRING
@@ -137,7 +145,7 @@ name            : NAME STRING
                 ;
 
 metalines       : /* no metadata */
-                | metaline metalines
+                | metalines metaline
                 ;
 
 metaline        : place
