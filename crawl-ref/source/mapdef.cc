@@ -1931,9 +1931,9 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     }
     
     std::vector<dungeon_feature_type> feats =
-        features_by_desc( text_pattern(s, true) );
-    for (int i = 0, size = feats.size(); i < size; ++i)
-        list.push_back( feature_spec(feats[i], weight) );
+        features_by_desc( glob_pattern(s, true) );
+    if (!feats.empty())
+        list.push_back( feature_spec(feats[0], weight) );
 
     if (feats.empty())
         err = make_stringf("no features matching \"%s\"",

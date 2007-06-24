@@ -55,6 +55,15 @@ void *compile_pattern(const char *pattern, bool ignore_case = false);
 void free_compiled_pattern(void *cp);
 bool pattern_match(void *compiled_pattern, const char *text, int length);
 
+// Globs are always available.
+void *compile_glob_pattern(const char *pattern, bool ignore_case = false);
+void free_compiled_glob_pattern(void *cp);
+bool glob_pattern_match(void *compiled_pattern, const char *text, int length);
+
+typedef void *(*p_compile)(const char *pattern, bool ignore_case);
+typedef void (*p_free)(void *cp);
+typedef bool (*p_match)(void *compiled_pattern, const char *text, int length);
+
 std::string & trim_string( std::string &str );
 std::string trimmed_string( std::string s );
 
@@ -133,22 +142,23 @@ public:
     virtual bool matches(const std::string &s) const = 0;
 };
 
-class text_pattern : public base_pattern
+template <p_compile pcomp, p_free pfree, p_match pmatch>
+class basic_text_pattern : public base_pattern
 {
 public:
-    text_pattern(const std::string &s, bool icase = false) 
+    basic_text_pattern(const std::string &s, bool icase = false) 
         : pattern(s), compiled_pattern(NULL),
           isvalid(true), ignore_case(icase)
     {
     }
 
-    text_pattern()
+    basic_text_pattern()
         : pattern(), compiled_pattern(NULL),
          isvalid(false), ignore_case(false)
     {
     }
 
-    text_pattern(const text_pattern &tp)
+    basic_text_pattern(const basic_text_pattern &tp)
         : base_pattern(tp),
           pattern(tp.pattern),
           compiled_pattern(NULL),
@@ -157,19 +167,19 @@ public:
     {
     }
 
-    ~text_pattern()
+    ~basic_text_pattern()
     {
         if (compiled_pattern)
-            free_compiled_pattern(compiled_pattern);
+            pfree(compiled_pattern);
     }
 
-    const text_pattern &operator= (const text_pattern &tp)
+    const basic_text_pattern &operator= (const basic_text_pattern &tp)
     {
         if (this == &tp)
             return tp;
 
         if (compiled_pattern)
-            free_compiled_pattern(compiled_pattern);
+            pfree(compiled_pattern);
         pattern = tp.pattern;
         compiled_pattern = NULL;
         isvalid      = tp.isvalid;
@@ -177,13 +187,13 @@ public:
         return *this;
     }
 
-    const text_pattern &operator= (const std::string &spattern)
+    const basic_text_pattern &operator= (const std::string &spattern)
     {
         if (pattern == spattern)
             return *this;
 
         if (compiled_pattern)
-            free_compiled_pattern(compiled_pattern);
+            pfree(compiled_pattern);
         pattern = spattern;
         compiled_pattern = NULL;
         isvalid = true;
@@ -194,7 +204,7 @@ public:
     bool compile() const
     {
         return !empty()?
-            !!(compiled_pattern = compile_pattern(pattern.c_str(), ignore_case))
+            !!(compiled_pattern = pcomp(pattern.c_str(), ignore_case))
           : false;
     }
 
@@ -211,7 +221,7 @@ public:
 
     bool matches(const char *s, int length) const
     {
-        return valid() && pattern_match(compiled_pattern, s, length);
+        return valid() && pmatch(compiled_pattern, s, length);
     }
 
     bool matches(const char *s) const
@@ -236,5 +246,13 @@ private:
     bool ignore_case;
 };
 
+typedef
+basic_text_pattern<compile_pattern,
+                   free_compiled_pattern, pattern_match> text_pattern;
+
+typedef
+basic_text_pattern<compile_glob_pattern,
+                   free_compiled_glob_pattern,
+                   glob_pattern_match> glob_pattern;
 
 #endif

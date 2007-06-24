@@ -381,6 +381,40 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
     }
 }
 
+////////////////////////////////////////////////////////////////////
+// Basic glob (always available)
+
+struct glob_info
+{
+    std::string s;
+    bool ignore_case;
+};
+
+void *compile_glob_pattern(const char *pattern, bool icase) 
+{
+    // If we're using simple globs, we need to box the pattern with '*'
+    std::string s = std::string("*") + pattern + "*";
+    glob_info *gi = new glob_info;
+    if (gi)
+    {
+        gi->s = s;
+        gi->ignore_case = icase;
+    }
+    return gi;
+}
+
+void free_compiled_glob_pattern(void *compiled_pattern)
+{
+    delete static_cast<glob_info *>( compiled_pattern );
+}
+
+bool glob_pattern_match(void *compiled_pattern, const char *text, int length)
+{
+    glob_info *gi = static_cast<glob_info *>( compiled_pattern );
+    return glob_match(gi->s.c_str(), text, gi->ignore_case);
+}
+////////////////////////////////////////////////////////////////////
+
 #if defined(REGEX_PCRE)
 ////////////////////////////////////////////////////////////////////
 // Perl Compatible Regular Expressions
@@ -459,38 +493,20 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 
 ////////////////////////////////////////////////////////////////////
 #else
-////////////////////////////////////////////////////////////////////
-// Basic glob
 
-struct glob_info
+void *compile_pattern(const char *pattern, bool icase)
 {
-    std::string s;
-    bool ignore_case;
-};
-
-void *compile_pattern(const char *pattern, bool icase) 
-{
-    // If we're using simple globs, we need to box the pattern with '*'
-    std::string s = std::string("*") + pattern + "*";
-    glob_info *gi = new glob_info;
-    if (gi)
-    {
-        gi->s = s;
-        gi->ignore_case = icase;
-    }
-    return gi;
+    return compile_glob_pattern(pattern, icase);
 }
 
-void free_compiled_pattern(void *compiled_pattern)
+void free_compiled_pattern(void *cp)
 {
-    delete static_cast<glob_info *>( compiled_pattern );
+    free_compiled_glob_pattern(cp);
 }
 
 bool pattern_match(void *compiled_pattern, const char *text, int length)
 {
-    glob_info *gi = static_cast<glob_info *>( compiled_pattern );
-    return glob_match(gi->s.c_str(), text, gi->ignore_case);
+    return glob_pattern_match(compiled_pattern, text, length);
 }
-////////////////////////////////////////////////////////////////////
 
 #endif

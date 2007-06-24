@@ -43,7 +43,7 @@ std::string feature_description(int mx, int my);
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type tr = NUM_TRAPS);
 
-std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern);
+std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 inline int view2gridX(int vx)
 {

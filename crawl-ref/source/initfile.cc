@@ -855,7 +855,8 @@ void game_options::add_feature_override(const std::string &text)
         iprops.resize(5);
 
     trim_string(fname);
-    std::vector<dungeon_feature_type> feats = features_by_desc(fname);
+    std::vector<dungeon_feature_type> feats =
+        features_by_desc(text_pattern(fname));
     if (feats.empty())
         return;
 

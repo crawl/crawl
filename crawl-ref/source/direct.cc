@@ -1199,7 +1199,7 @@ static void describe_feature(int mx, int my, bool oos)
 }
 
 // Returns a vector of features matching the given pattern.
-std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)
+std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
 {
     std::vector<dungeon_feature_type> features;
 
