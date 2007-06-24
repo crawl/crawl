@@ -38,8 +38,8 @@ static int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
 ///////////////////////////////////////////////////////////////////////////
 // dlua_chunk
 
-dlua_chunk::dlua_chunk()
-    : file(), chunk(), first(-1), last(-1), error()
+dlua_chunk::dlua_chunk(const std::string &_context)
+    : file(), chunk(), context(_context), first(-1), last(-1), error()
 {
     clear();
 }
@@ -63,7 +63,8 @@ void dlua_chunk::add(int line, const std::string &s)
         first = line;
 
     if (line != last && last != -1)
-        chunk += "\n";
+        while (last++ < line)
+            chunk += '\n';
 
     chunk += " ";
     chunk += s;
@@ -86,7 +87,7 @@ int dlua_chunk::load(CLua *interp)
     if (trimmed_string(chunk).empty())
         return (-1000);
     return check_op(interp,
-                    interp->loadstring(chunk.c_str(), "dlua_chunk"));
+                    interp->loadstring(chunk.c_str(), context.c_str()));
 }
 
 int dlua_chunk::load_call(CLua *interp, const char *fn)
@@ -108,6 +109,67 @@ std::string dlua_chunk::orig_error() const
 bool dlua_chunk::empty() const
 {
     return trimmed_string(chunk).empty();
+}
+
+bool dlua_chunk::rewrite_chunk_errors(std::string &s) const
+{
+    if (s.find(context) == std::string::npos)
+        return (false);
+
+    // Our chunk is mentioned, go back through and rewrite lines.
+    std::vector<std::string> lines = split_string("\n", s);
+    std::string newmsg = lines[0];
+    bool wrote_prefix = false;
+    for (int i = 2, size = lines.size() - 1; i < size; ++i)
+    {
+        const std::string &st = lines[i];
+        if (st.find(context) != std::string::npos)
+        {
+            if (!wrote_prefix)
+            {
+                newmsg = get_chunk_prefix(st) + ": " + newmsg;
+                wrote_prefix = true;
+            }
+            else
+                newmsg += "\n" + rewrite_chunk_prefix(st);
+        }
+    }
+    s = newmsg;
+    return (true);
+}
+
+std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line) const
+{
+    std::string s = line;
+    const std::string contextm = "[string \"" + context + "\"]:";
+    const std::string::size_type ps = s.find(contextm);
+    if (ps == std::string::npos)
+        return (s);
+
+    std::string::size_type pe = s.find(':', ps + contextm.length());
+    if (pe != std::string::npos)
+    {
+        const std::string::size_type lns = ps + contextm.length();
+        const std::string line_num = s.substr(lns, pe - lns);
+        const int lnum = atoi(line_num.c_str());
+        s = s.substr(0, lns) + make_stringf("%d", lnum + first - 1)
+            + s.substr(pe);
+    }
+
+    return s.substr(0, ps) + (file.empty()? context : file) + ":"
+        + s.substr(ps + contextm.length());
+}
+
+std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
+{
+    std::string s = rewrite_chunk_prefix(sorig);
+    const std::string::size_type cpos = s.find(':');
+    if (cpos == std::string::npos)
+        return (s);
+    const std::string::size_type cnpos = s.find(':', cpos + 1);
+    if (cnpos == std::string::npos)
+        return (s);
+    return s.substr(0, cnpos);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -510,6 +572,7 @@ static const struct luaL_reg dgn_lib[] =
 void init_dungeon_lua()
 {
     dlua.execfile("clua/dungeon.lua");
+    luaopen_debug(dlua);
     luaL_newmetatable(dlua, MAP_METATABLE);
     lua_pop(dlua, 1);
     luaL_openlib(dlua, "dgn", dgn_lib, 0);

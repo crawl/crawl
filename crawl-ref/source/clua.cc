@@ -1815,6 +1815,41 @@ static int crawl_split(lua_State *ls)
     return (1);
 }
 
+LUARET1(crawl_game_started, boolean, crawl_state.need_save)
+
+static int crawl_err_trace(lua_State *ls)
+{
+    const int nargs = lua_gettop(ls);
+    const int err = lua_pcall(ls, nargs - 1, LUA_MULTRET, 0);
+
+    if (err)
+    {
+        // This code from lua.c:traceback() (mostly)
+        const char *errs = lua_tostring(ls, 1);
+        std::string errstr = errs? errs : "";
+        lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
+        if (!lua_istable(ls, -1))
+        {
+            lua_pop(ls, 1);
+            return lua_error(ls);
+        }
+        lua_getfield(ls, -1, "traceback");
+        if (!lua_isfunction(ls, -1))
+        {
+            lua_pop(ls, 2);
+            return lua_error(ls);
+        }
+        lua_pushvalue(ls, 1);
+        lua_pushinteger(ls, 2); // Skip crawl_err_trace and traceback.
+        lua_call(ls, 2, 1);
+
+        // What's on top should be the error.
+        lua_error(ls);
+    }
+    
+    return (lua_gettop(ls));    
+}
+
 static const struct luaL_reg crawl_lib[] =
 {
     { "mpr",            crawl_mpr },
@@ -1837,6 +1872,9 @@ static const struct luaL_reg crawl_lib[] =
     { "message_filter", crawl_message_filter },
     { "trim",           crawl_trim },
     { "split",          crawl_split },
+    { "game_started",   crawl_game_started },
+    { "err_trace",      crawl_err_trace },
+
     { NULL, NULL },
 };
 

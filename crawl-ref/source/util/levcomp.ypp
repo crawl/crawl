@@ -32,7 +32,10 @@ static map_load_info_t loaded_maps;
 
 void yyerror(const char *e)
 {
-    fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
+    if (strstr(e, lc_desfile.c_str()) == e)
+        fprintf(stderr, "%s\n", e);
+    else
+        fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
     end(1);
 }
@@ -100,13 +103,13 @@ defdepth        : DEFAULT_DEPTH STRING
 
 level           : name metalines map_def metalines
                 {
+                    lc_map.set_file(lc_desfile);
                     std::string err = lc_map.validate();
                     if (!err.empty())
                         yyerror(err.c_str());
                     if (!lc_map.has_depth() && !lc_default_depths.empty())
                         lc_map.add_depths(lc_default_depths.begin(),
                                           lc_default_depths.end());
-                    lc_map.set_file(lc_desfile);
                     add_parsed_map(lc_map);
                 }
                 ;

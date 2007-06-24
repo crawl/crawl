@@ -11,7 +11,7 @@ function dgn_map_meta_wrap(obj, tab)
    local meta = { }
    for fn, val in pairs(tab) do
       meta[fn] = function (...)
-                    return val(obj, ...)
+                    return crawl.err_trace(val, obj, ...)
                  end
    end
    meta.wrapped_instance = obj

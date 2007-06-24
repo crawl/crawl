@@ -437,8 +437,6 @@ public:
 
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
-    void run_strip_prelude();
-    void strip_main();
 
     std::string validate();
 
@@ -481,6 +479,7 @@ public:
 private:
     void write_depth_ranges(FILE *) const;
     void read_depth_ranges(FILE *);
+    std::string rewrite_chunk_errors(const std::string &s) const;
     
     std::string add_key_field(
         const std::string &s,

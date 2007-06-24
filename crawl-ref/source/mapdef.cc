@@ -813,7 +813,7 @@ std::vector<std::string> map_lines::get_subst_strings() const
 
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(),
-      map(), mons(), items(), keyspecs(), prelude(), main(),
+      map(), mons(), items(), keyspecs(), prelude("dlprelude"), main("dlmain"),
       index_only(false), cache_offset(0L)
 {
     init();
@@ -937,18 +937,6 @@ void map_def::set_file(const std::string &s)
     file = get_base_filename(s);
 }
 
-void map_def::run_strip_prelude()
-{
-    run_lua(false);
-    prelude.clear();
-}
-
-void map_def::strip_main()
-{
-    main.clear();
-    index_only = true;
-}
-
 std::string map_def::run_lua(bool run_main)
 {
     dlua.callfn("dgn_set_map", "m", this);
@@ -970,12 +958,21 @@ std::string map_def::run_lua(bool run_main)
     }
 
     if (!dlua.callfn("dgn_run_map", 2, 0))
-        return (dlua.error);
-    
+        return rewrite_chunk_errors(dlua.error);
+
     // Clear the map setting.
     dlua.callfn("dgn_set_map", 0, 0);
 
     return (dlua.error);
+}
+
+std::string map_def::rewrite_chunk_errors(const std::string &s) const
+{
+    std::string res = s;
+    if (prelude.rewrite_chunk_errors(res))
+        return (res);
+    main.rewrite_chunk_errors(res);
+    return (res);
 }
 
 std::string map_def::validate()

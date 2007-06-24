@@ -18,16 +18,19 @@ class dlua_chunk
 private:
     std::string file;
     std::string chunk;
+    std::string context;
     int first, last;     // First and last lines of the original source.
 
 private:
     int check_op(CLua *, int);
+    std::string rewrite_chunk_prefix(const std::string &line) const;
+    std::string get_chunk_prefix(const std::string &s) const;
     
 public:
     std::string error;
 
 public:
-    dlua_chunk();
+    dlua_chunk(const std::string &_context = "dlua_chunk");
     void clear();
     void add(int line, const std::string &line);
     void set_chunk(const std::string &s);
@@ -38,7 +41,8 @@ public:
 
     const std::string &lua_string() const { return chunk; }
     std::string orig_error() const;
-
+    bool rewrite_chunk_errors(std::string &err) const;
+    
     bool empty() const;
 };
 
