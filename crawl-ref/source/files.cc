@@ -40,8 +40,6 @@
 #endif
 
 #ifdef UNIX
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 #endif
@@ -50,6 +48,9 @@
 #include <io.h>
 #include <sys/types.h>
 #endif
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <dirent.h>
 

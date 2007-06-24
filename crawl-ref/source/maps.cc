@@ -18,6 +18,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <errno.h>
+#include <unistd.h>
 
 #include "dungeon.h"
 #include "enum.h"
