@@ -2528,7 +2528,7 @@ int melee_attack::mons_attk_delay()
 
 bool melee_attack::attack_shield_blocked(bool verbose)
 {
-    if (!defender_shield)
+    if (!defender_shield && defender->atype() != ACT_PLAYER)
         return (false);
 
     if (defender->incapacitated())
@@ -2541,6 +2541,11 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     if (attacker->invisible() && !defender->can_see_invisible())
         pro_block /= 3;
     
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Pro-block: %d, Con-block: %d",
+         pro_block, con_block);
+#endif
+
     if (pro_block >= con_block)
     {
         perceived_attack = true;

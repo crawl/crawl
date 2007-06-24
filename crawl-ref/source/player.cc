@@ -5011,16 +5011,21 @@ int player::shield_block_penalty() const
 
 int player::shield_bonus() const
 {
-    const item_def *sh = const_cast<player*>(this)->shield();
-    if (!sh)
+    const int shield_class = player_shield_class();
+    if (!shield_class)
         return (0);
-
-    const int stat =
-        sh->sub_type == ARM_BUCKLER?      dex :
-        sh->sub_type == ARM_LARGE_SHIELD? (3 * strength + dex) / 4:
-        (dex + strength) / 2;
     
-    return random2(player_shield_class()) 
+    int stat = 0;
+    if (const item_def *sh = const_cast<player*>(this)->shield())
+        stat = 
+            sh->sub_type == ARM_BUCKLER?      dex :
+            sh->sub_type == ARM_LARGE_SHIELD? (3 * strength + dex) / 4:
+            (dex + strength) / 2;
+    else
+        // Condensation shield is guided by the mind.
+        stat = intel / 2;
+
+    return random2(player_shield_class())
         + (random2(stat) / 4)
         + (random2(skill_bump(SK_SHIELDS)) / 4)
         - 1;
