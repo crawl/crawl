@@ -61,7 +61,7 @@ ifeq ($(YACC),)
 DOYACC :=
 endif
 
-OBJECTS := $(UTIL)levcomp.o $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
+OBJECTS := $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
 
 GAME_DEPENDS := $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(OBJECTS)
 
@@ -86,9 +86,6 @@ LINC :=
 ifneq ($(DOYACC),y)
 LINC += -I prebuilt
 endif
-
-$(UTIL)levcomp.o: $(UTIL)levcomp.cc
-		$(subst /,\,$(CXX) $(LINC) $(YCFLAGS) -o $@ -c $<)
 
 $(UTIL)levlex.o: $(UTIL)levlex.cc
 		$(subst /,\,$(CXX) $(LINC) $(YCFLAGS) -o $@ -c $<)
