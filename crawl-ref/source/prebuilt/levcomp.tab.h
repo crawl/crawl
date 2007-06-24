@@ -55,49 +55,23 @@
      ORIENT = 271,
      PLACE = 272,
      CHANCE = 273,
-     FLAGS = 274,
-     MONS = 275,
-     ITEM = 276,
-     ROOT_DEPTH = 277,
-     ENTRY_MSG = 278,
-     EXIT_MSG = 279,
-     ROCK_COLOUR = 280,
-     FLOOR_COLOUR = 281,
-     ENCOMPASS = 282,
-     FLOAT = 283,
-     NORTH = 284,
-     EAST = 285,
-     SOUTH = 286,
-     WEST = 287,
-     NORTHEAST = 288,
-     SOUTHEAST = 289,
-     SOUTHWEST = 290,
-     NORTHWEST = 291,
-     LEVEL = 292,
-     END = 293,
-     PVAULT = 294,
-     PMINIVAULT = 295,
-     MONSTERS = 296,
-     ENDMONSTERS = 297,
-     CHARACTER = 298,
-     NO_HMIRROR = 299,
-     NO_VMIRROR = 300,
-     NO_ROTATE = 301,
-     PANDEMONIC = 302,
-     DASH = 303,
-     COMMA = 304,
-     QUOTE = 305,
-     OPAREN = 306,
-     CPAREN = 307,
-     COLON = 308,
-     STAR = 309,
-     NOT = 310,
-     INTEGER = 311,
-     STRING = 312,
-     MAP_LINE = 313,
-     MONSTER_NAME = 314,
-     ITEM_INFO = 315,
-     IDENTIFIER = 316
+     MONS = 274,
+     ITEM = 275,
+     PRELUDE = 276,
+     MAIN = 277,
+     CHARACTER = 278,
+     DASH = 279,
+     COMMA = 280,
+     QUOTE = 281,
+     OPAREN = 282,
+     CPAREN = 283,
+     INTEGER = 284,
+     STRING = 285,
+     MAP_LINE = 286,
+     MONSTER_NAME = 287,
+     ITEM_INFO = 288,
+     IDENTIFIER = 289,
+     LUA_LINE = 290
    };
 #endif
 /* Tokens.  */
@@ -117,63 +91,37 @@
 #define ORIENT 271
 #define PLACE 272
 #define CHANCE 273
-#define FLAGS 274
-#define MONS 275
-#define ITEM 276
-#define ROOT_DEPTH 277
-#define ENTRY_MSG 278
-#define EXIT_MSG 279
-#define ROCK_COLOUR 280
-#define FLOOR_COLOUR 281
-#define ENCOMPASS 282
-#define FLOAT 283
-#define NORTH 284
-#define EAST 285
-#define SOUTH 286
-#define WEST 287
-#define NORTHEAST 288
-#define SOUTHEAST 289
-#define SOUTHWEST 290
-#define NORTHWEST 291
-#define LEVEL 292
-#define END 293
-#define PVAULT 294
-#define PMINIVAULT 295
-#define MONSTERS 296
-#define ENDMONSTERS 297
-#define CHARACTER 298
-#define NO_HMIRROR 299
-#define NO_VMIRROR 300
-#define NO_ROTATE 301
-#define PANDEMONIC 302
-#define DASH 303
-#define COMMA 304
-#define QUOTE 305
-#define OPAREN 306
-#define CPAREN 307
-#define COLON 308
-#define STAR 309
-#define NOT 310
-#define INTEGER 311
-#define STRING 312
-#define MAP_LINE 313
-#define MONSTER_NAME 314
-#define ITEM_INFO 315
-#define IDENTIFIER 316
+#define MONS 274
+#define ITEM 275
+#define PRELUDE 276
+#define MAIN 277
+#define CHARACTER 278
+#define DASH 279
+#define COMMA 280
+#define QUOTE 281
+#define OPAREN 282
+#define CPAREN 283
+#define INTEGER 284
+#define STRING 285
+#define MAP_LINE 286
+#define MONSTER_NAME 287
+#define ITEM_INFO 288
+#define IDENTIFIER 289
+#define LUA_LINE 290
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 54 "levcomp.ypp"
+#line 56 "levcomp.ypp"
 {
     int i;
     const char *text;
     raw_range range;
 }
 /* Line 1529 of yacc.c.  */
-#line 177 "levcomp.tab.h"
+#line 125 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
