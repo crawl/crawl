@@ -5025,7 +5025,7 @@ int player::shield_bonus() const
         // Condensation shield is guided by the mind.
         stat = intel / 2;
 
-    return random2(player_shield_class())
+    return random2(shield_class)
         + (random2(stat) / 4)
         + (random2(skill_bump(SK_SHIELDS)) / 4)
         - 1;

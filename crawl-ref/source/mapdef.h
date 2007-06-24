@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdio>
 
 #include "luadgn.h"
 #include "enum.h"
@@ -40,6 +41,9 @@ public:
     void reset();
     bool matches(const level_id &) const;
     bool matches(int depth) const;
+
+    void write(FILE *) const;
+    void read(FILE *);
 
     bool valid() const;
     int span() const;
@@ -390,6 +394,9 @@ typedef std::map<int, keyed_mapspec> keyed_specs;
 
 typedef std::vector<level_range> depth_ranges;
 
+// Lua chunks cannot exceed 512K. Which is plenty!
+const int LUA_CHUNK_MAX_SIZE = 512 * 1024;
+    
 class map_def
 {
 public:
@@ -413,16 +420,25 @@ private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
     long            cache_offset;
+    std::string     file;
 
 public:
     map_def();
     void init();
     void reinit();
 
+    void load();
+    
+    void write_index(FILE *) const;
+    void write_full(FILE *);
+
+    void read_index(FILE *);
+    void read_full(FILE *);
+
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
     void run_strip_prelude();
-    void strip_lua();
+    void strip_main();
 
     std::string validate();
 
@@ -463,6 +479,9 @@ public:
     std::vector<std::string> get_subst_strings() const;
     
 private:
+    void write_depth_ranges(FILE *) const;
+    void read_depth_ranges(FILE *);
+    
     std::string add_key_field(
         const std::string &s,
         std::string (keyed_mapspec::*set_field)(

@@ -31,29 +31,6 @@ DBM     *descriptionDB;
 
 static void generate_description_db();
 
-time_t file_modtime(const std::string &file)
-{
-    struct stat filestat;
-    if (stat(file.c_str(), &filestat))
-        return (0);
-
-    return (filestat.st_mtime);
-}
-
-// Returns true if file a is newer than file b.
-bool is_newer(const std::string &a, const std::string &b)
-{
-    return (file_modtime(a) > file_modtime(b));
-}
-
-void check_newer(const std::string &target,
-                 const std::string &dependency,
-                 void (*action)())
-{
-    if (is_newer(dependency, target))
-        action();
-}
-
 void databaseSystemInit()
 {
     if (!descriptionDB)

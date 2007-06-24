@@ -27,9 +27,7 @@
 #include "misc.h"
 #include "stuff.h"
 
-#include "levcomp.h"
-
-static int write_vault(const map_def &mdef, map_type mt, 
+static int write_vault(map_def &mdef, map_type mt, 
                        vault_placement &,
                        std::vector<vault_placement> *);
 static int apply_vault_definition(
@@ -80,10 +78,12 @@ int vault_main(
     return write_vault( vdefs[which_vault], vgrid, place, avoid );
 }          // end vault_main()
 
-static int write_vault(const map_def &mdef, map_type map, 
+static int write_vault(map_def &mdef, map_type map, 
                        vault_placement &place,
                        std::vector<vault_placement> *avoid)
 {
+    mdef.load();
+    
     // Copy the map so we can monkey with it.
     place.map = mdef;
 
@@ -354,8 +354,176 @@ const map_def *map_by_index(int index)
 /////////////////////////////////////////////////////////////////////////////
 // Reading maps from .des files.
 
+dlua_chunk lc_file_prelude;
+std::string lc_desfile;
+map_def     lc_map;
+level_range lc_range;
+depth_ranges lc_default_depths;
+
+std::set<std::string> map_files_read;
+
+extern int yylineno;
+
+void reset_map_parser()
+{
+    lc_map.init();
+    lc_range.reset();
+    lc_default_depths.clear();
+    lc_file_prelude.clear();
+
+    yylineno = 1;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+static bool checked_des_index_dir = false;
+
+#define DESCACHE_VER  1000
+
+static void check_des_index_dir()
+{
+    if (checked_des_index_dir)
+        return;
+    
+    std::string desdir = get_savedir_path("des");
+    if (!check_dir("Data file cache", desdir, true))
+        end(1, true, "Can't create data file cache: %s", desdir.c_str());
+
+    checked_des_index_dir = true;
+}
+
+std::string get_descache_path(const std::string &file,
+                              const std::string &ext)
+{
+    const std::string basename =
+        change_file_extension(get_base_filename(file), ext);
+    return get_savedir_path("des/" + basename);
+}
+
+static bool verify_file_version(const std::string &file)
+{
+    FILE *inf = fopen(file.c_str(), "rb");
+    if (!inf)
+        return (false);
+
+    const long ver = readLong(inf);
+    fclose(inf);
+
+    return (ver == DESCACHE_VER);
+}
+
+static bool verify_map_index(const std::string &base)
+{
+    return verify_file_version(base + ".idx");
+}
+
+static bool verify_map_full(const std::string &base)
+{
+    return verify_file_version(base + ".dsc");
+}
+
+static bool load_map_index(const std::string &base)
+{
+    FILE *inf = fopen((base + ".idx").c_str(), "rb");
+    // Discard version (it's been checked by verify_map_index).
+    readLong(inf);
+    const int nmaps = readShort(inf);
+    const int nexist = vdefs.size();
+    vdefs.resize( nexist + nmaps, map_def() );
+    for (int i = 0; i < nmaps; ++i)
+    {
+        vdefs[nexist + i].read_index(inf);
+        vdefs[nexist + i].set_file(base);
+    }
+    fclose(inf);
+
+    return (true);
+}
+
+static bool load_map_cache(const std::string &filename)
+{
+    check_des_index_dir();
+    const std::string descache_base = get_descache_path(filename, "");
+    
+    file_lock deslock(descache_base + ".lk", "rb", false);
+
+    if (is_newer(filename, descache_base + ".idx")
+        || is_newer(filename, descache_base + ".dsc"))
+        return (false);
+    
+    if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
+        return (false);
+
+    return load_map_index(descache_base);
+}
+
+static void write_map_prelude(const std::string &filebase)
+{
+    const std::string luafile = filebase + ".lua";
+    if (lc_file_prelude.empty())
+    {
+        unlink(luafile.c_str());
+        return;
+    }
+
+    FILE *outf = fopen(luafile.c_str(), "w");
+    if (!outf)
+        end(1, true, "Unable to open %s for writing", luafile.c_str());
+    fprintf(outf, "%s", lc_file_prelude.lua_string().c_str());
+    fclose(outf);
+}
+
+static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
+{
+    const std::string cfile = filebase + ".dsc";
+    FILE *outf = fopen(cfile.c_str(), "wb");
+    if (!outf)
+        end(1, true, "Unable to open %s for writing", cfile.c_str());
+
+    writeLong(outf, DESCACHE_VER);
+    for (size_t i = vs; i < ve; ++i)
+        vdefs[i].write_full(outf);
+    fclose(outf);
+}
+
+static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
+{
+    const std::string cfile = filebase + ".idx";
+    FILE *outf = fopen(cfile.c_str(), "wb");
+    if (!outf)
+        end(1, true, "Unable to open %s for writing", cfile.c_str());
+
+    writeLong(outf, DESCACHE_VER);
+    writeShort(outf, ve > vs? ve - vs : 0);
+    for (size_t i = vs; i < ve; ++i)
+        vdefs[i].write_index(outf);
+    fclose(outf);
+}
+
+static void write_map_cache(const std::string &filename, size_t vs, size_t ve)
+{
+    check_des_index_dir();
+
+    const std::string descache_base = get_descache_path(filename, "");
+    
+    file_lock deslock(descache_base + ".lk", "wb");
+    
+    write_map_prelude(descache_base);
+    write_map_full(descache_base, vs, ve);
+    write_map_index(descache_base, vs, ve);
+}
+
 static void parse_maps(const std::string &s)
 {
+    const std::string base = get_base_filename(s);
+    if (map_files_read.find(base) != map_files_read.end())
+        end(1, false, "Map file %s has already been read.", base.c_str());
+
+    map_files_read.insert(base);
+    
+    if (load_map_cache(s))
+        return;
+
     FILE *dat = fopen(s.c_str(), "r");
     if (!dat)
         end(1, true, "Failed to open %s for reading", s.c_str());
@@ -366,8 +534,11 @@ static void parse_maps(const std::string &s)
     extern FILE *yyin;
     yyin = dat;
 
+    size_t file_start = vdefs.size();
     yyparse();
     fclose(dat);
+
+    write_map_cache(s, file_start, vdefs.size());
 }
 
 void read_maps()
@@ -396,4 +567,18 @@ void add_parsed_map( const map_def &md )
 
     map.fixup();
     vdefs.push_back( map );
+}
+
+void run_map_preludes()
+{
+    for (int i = 0, size = vdefs.size(); i < size; ++i)
+    {
+        if (!vdefs[i].prelude.empty())
+        {
+            std::string err = vdefs[i].run_lua(true);
+            if (!err.empty())
+                mprf(MSGCH_WARN, "Lua error (map %s): %s",
+                     vdefs[i].name.c_str(), err.c_str());
+        }
+    }
 }

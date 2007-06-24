@@ -3,9 +3,9 @@
 #include "AppHdr.h"
 #include "clua.h"
 #include "libutil.h"
-#include "levcomp.h"
 #include "luadgn.h"
 #include "mapdef.h"
+#include "maps.h"
 #include "stuff.h"
 #include <map>
 
@@ -106,7 +106,8 @@ level           : name metalines map_def metalines
                     if (!lc_map.has_depth() && !lc_default_depths.empty())
                         lc_map.add_depths(lc_default_depths.begin(),
                                           lc_default_depths.end());
-                    add_parsed_map( lc_map );
+                    lc_map.set_file(lc_desfile);
+                    add_parsed_map(lc_map);
                 }
                 ;
 

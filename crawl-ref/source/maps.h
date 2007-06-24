@@ -47,5 +47,15 @@ int random_map_for_tag(const std::string &tag, bool want_minivault,
 void add_parsed_map(const map_def &md);
 
 void read_maps();
+void run_map_preludes();
+void reset_map_parser();
+std::string get_descache_path(const std::string &file,
+                              const std::string &ext);
+
+extern dlua_chunk map_file_prelude;
+extern std::string lc_desfile;
+extern map_def     lc_map;
+extern level_range lc_range;
+extern depth_ranges lc_default_depths;
 
 #endif

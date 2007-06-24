@@ -7,10 +7,12 @@
 #include "branch.h"
 #include "describe.h"
 #include "direct.h"
+#include "files.h"
 #include "invent.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapdef.h"
+#include "maps.h"
 #include "misc.h"
 #include "monplace.h"
 #include "mon-util.h"
@@ -134,6 +136,22 @@ level_range::level_range(const raw_range &r)
     : branch(r.branch), shallowest(r.shallowest), deepest(r.deepest),
       deny(r.deny)
 {
+}
+
+void level_range::write(FILE *outf) const
+{
+    writeShort(outf, branch);
+    writeShort(outf, shallowest);
+    writeShort(outf, deepest);
+    writeByte(outf, deny);
+}
+
+void level_range::read(FILE *inf)
+{
+    branch     = static_cast<branch_type>( readShort(inf) );
+    shallowest = readShort(inf);
+    deepest    = readShort(inf);
+    deny       = readByte(inf);
 }
 
 std::string level_range::str_depth_range() const
@@ -826,10 +844,97 @@ void map_def::reinit()
     mons.clear();
 }
 
+void map_def::write_full(FILE *outf)
+{
+    cache_offset = ftell(outf);
+    writeShort(outf, 0x1eaf);   // Level indicator.
+    writeString(outf, name);
+    writeString(outf, prelude.lua_string(), LUA_CHUNK_MAX_SIZE);
+    writeString(outf, main.lua_string(), LUA_CHUNK_MAX_SIZE);
+}
+
+void map_def::read_full(FILE *inf)
+{
+    // There's a potential race-condition here:
+    // - If someone modifies a .des file while there are games in progress,
+    // - a new Crawl process will overwrite the .dsc.
+    // - older Crawl processes trying to reading the new .dsc will be hosed.
+    // We could try to recover from the condition (by locking and
+    // reloading the index), but it's easier to save the game at this
+    // point and let the player reload.
+
+    if (readShort(inf) != 0x1eaf || readString(inf) != name)
+        save_game(true,
+                  make_stringf("Level file cache for %s is out-of-sync! "
+                               "Please reload your game.",
+                               file.c_str()).c_str());
+
+    prelude.set_chunk(readString(inf, LUA_CHUNK_MAX_SIZE));
+    main.set_chunk(readString(inf, LUA_CHUNK_MAX_SIZE));
+}
+
+void map_def::load()
+{
+    if (!index_only)
+        return;
+    
+    const std::string loadfile = get_descache_path(file, ".dsc");
+    FILE *inf = fopen(loadfile.c_str(), "r");
+    fseek(inf, cache_offset, SEEK_SET);
+    read_full(inf);
+    fclose(inf);
+
+    index_only = false;
+}
+
+void map_def::write_index(FILE *outf) const
+{
+    if (!cache_offset)
+        end(1, false, "Map %s: can't write index - cache offset not set!",
+            name.c_str());
+    writeString(outf, name);
+    writeShort(outf, orient);
+    writeLong(outf, chance);
+    writeLong(outf, cache_offset);
+    writeString(outf, tags);
+    writeString(outf, place);
+    write_depth_ranges(outf);
+    writeString(outf, prelude.lua_string(), LUA_CHUNK_MAX_SIZE);
+}
+
+void map_def::read_index(FILE *inf)
+{
+    name         = readString(inf);
+    orient       = static_cast<map_section_type>( readShort(inf) );
+    chance       = readLong(inf);
+    cache_offset = readLong(inf);
+    tags         = readString(inf);
+    place        = readString(inf);
+    read_depth_ranges(inf);
+    prelude.set_chunk(readString(inf, LUA_CHUNK_MAX_SIZE));
+    index_only   = true;
+}
+
+void map_def::write_depth_ranges(FILE *outf) const
+{
+    writeShort(outf, depths.size());
+    for (int i = 0, size = depths.size(); i < size; ++i)
+        depths[i].write(outf);
+}
+
+void map_def::read_depth_ranges(FILE *inf)
+{
+    depths.clear();
+    const int nranges = readShort(inf);
+    for (int i = 0; i < nranges; ++i)
+        depths[i].read(inf);
+}
+
 void map_def::set_file(const std::string &s)
 {
     prelude.set_file(s);
     main.set_file(s);
+    file = get_base_filename(s);
 }
 
 void map_def::run_strip_prelude()
@@ -838,10 +943,10 @@ void map_def::run_strip_prelude()
     prelude.clear();
 }
 
-void map_def::strip_lua()
+void map_def::strip_main()
 {
-    prelude.clear();
     main.clear();
+    index_only = true;
 }
 
 std::string map_def::run_lua(bool run_main)

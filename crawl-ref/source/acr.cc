@@ -3070,6 +3070,8 @@ static bool initialise(void)
     strncpy(you.your_name, yname.c_str(), kNameLen);
     you.your_name[kNameLen - 1] = 0;
 
+    run_map_preludes();
+    
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
     init_feature_table();

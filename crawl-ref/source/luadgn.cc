@@ -70,6 +70,11 @@ void dlua_chunk::add(int line, const std::string &s)
     last = line;
 }
 
+void dlua_chunk::set_chunk(const std::string &s)
+{
+    chunk = s;
+}
+
 int dlua_chunk::check_op(CLua *interp, int err)
 {
     error = interp->error;
@@ -472,9 +477,16 @@ static int dgn_kitem(lua_State *ls)
     return (0);
 }
 
+static int dgn_name(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    PLUARET(string, map->name.c_str());
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
+    { "name", dgn_name },
     { "depth", dgn_depth },
     { "place", dgn_place },
     { "tags",  dgn_tags },

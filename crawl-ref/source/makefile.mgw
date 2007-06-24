@@ -74,7 +74,7 @@ DOYACC :=
 endif
 
 # Do the levcomp stuff first because that's the most likely to fail.
-OBJECTS      := levcomp.tab.o levcomp.lex.o levcomp.o \
+OBJECTS      := levcomp.tab.o levcomp.lex.o \
 		$(OBJECTS)
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))

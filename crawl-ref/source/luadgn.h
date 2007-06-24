@@ -30,6 +30,7 @@ public:
     dlua_chunk();
     void clear();
     void add(int line, const std::string &line);
+    void set_chunk(const std::string &s);
     
     int load(CLua *interp);
     int load_call(CLua *interp, const char *function);

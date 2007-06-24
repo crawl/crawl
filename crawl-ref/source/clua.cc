@@ -1522,6 +1522,9 @@ void luaopen_food(lua_State *ls)
 
 static int crawl_mpr(lua_State *ls)
 {
+    if (!crawl_state.io_inited)
+        return (0);
+    
     const char *message = luaL_checkstring(ls, 1);
     if (!message)
         return (0);

@@ -130,8 +130,7 @@ UTIL = util/
 YTABC  := levcomp.tab.c
 YTABH  := levcomp.tab.h
 
-OBJECTS := $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(UTIL)levcomp.o \
-		$(OBJECTS)
+OBJECTS := $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(OBJECTS)
 
 ifeq ($(LEX),)
 DOYACC :=

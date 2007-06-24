@@ -226,6 +226,50 @@ std::string get_parent_directory(const std::string &filename)
     return ("");
 }
 
+std::string get_base_filename(const std::string &filename)
+{
+    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    if (pos != std::string::npos)
+        return filename.substr(pos + 1);
+#ifdef ALT_FILE_SEPARATOR
+    pos = filename.rfind(ALT_FILE_SEPARATOR);
+    if (pos != std::string::npos)
+        return filename.substr(pos + 1);
+#endif
+    return (filename);
+}
+
+std::string change_file_extension(const std::string &filename,
+                                  const std::string &ext)
+{
+    const std::string::size_type pos = filename.rfind('.');
+    return ((pos == std::string::npos? filename : filename.substr(0, pos))
+            + ext);
+}
+
+time_t file_modtime(const std::string &file)
+{
+    struct stat filestat;
+    if (stat(file.c_str(), &filestat))
+        return (0);
+
+    return (filestat.st_mtime);
+}
+
+// Returns true if file a is newer than file b.
+bool is_newer(const std::string &a, const std::string &b)
+{
+    return (file_modtime(a) > file_modtime(b));
+}
+
+void check_newer(const std::string &target,
+                 const std::string &dependency,
+                 void (*action)())
+{
+    if (is_newer(dependency, target))
+        action();
+}
+
 static bool file_exists(const std::string &name)
 {
     FILE *f = fopen(name.c_str(), "r");
@@ -351,13 +395,12 @@ std::string datafile_path(std::string basename,
     return ("");
 }
 
-bool check_dir(const std::string &whatdir, std::string &dir)
+bool check_dir(const std::string &whatdir, std::string &dir, bool silent)
 {
     if (dir.empty())
         return (true);
 
-    std::string sep = " ";
-    sep[0] = FILE_SEPARATOR;
+    const std::string sep(1, FILE_SEPARATOR);
 
     dir = replace_all_of(dir, "/", sep);
     dir = replace_all_of(dir, "\\", sep);
@@ -368,9 +411,10 @@ bool check_dir(const std::string &whatdir, std::string &dir)
 
     if (!dir_exists(dir) && !create_dirs(dir))
     {
-        fprintf(stderr, "%s \"%s\" does not exist "
-                        "and I can't create it.\n",
-                whatdir.c_str(), dir.c_str());
+        if (!silent)
+            fprintf(stderr, "%s \"%s\" does not exist "
+                    "and I can't create it.\n",
+                    whatdir.c_str(), dir.c_str());
         return (false);
     }
 
@@ -378,10 +422,17 @@ bool check_dir(const std::string &whatdir, std::string &dir)
 }
 
 // Given a simple (relative) name of a save file, returns the full path of 
-// the file in the Crawl saves directory.
+// the file in the Crawl saves directory. You can use path segments in
+// shortpath (separated by /) and get_savedir_path will canonicalise them
+// to the platform's native file separator.
 std::string get_savedir_path(const std::string &shortpath)
 {
-    return (Options.save_dir + shortpath);
+    const std::string file = Options.save_dir + shortpath;
+#if FILE_SEPARATOR != '/'
+    return (replace_all(file, "/", std::string(1, FILE_SEPARATOR)));
+#else
+    return (file);
+#endif
 }
 
 /*
@@ -1090,7 +1141,7 @@ void save_level(int level_saved, level_area_type old_ltype,
 }                               // end save_level()
 
 
-void save_game(bool leave_game)
+void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
     
@@ -1181,11 +1232,11 @@ void save_game(bool leave_game)
     DO_CHMOD_PRIVATE ( (basename + PACKAGE_SUFFIX).c_str() );
 #endif
 
-    cprintf( "See you soon, %s!" EOL , you.your_name );
 #ifdef DGL_WHEREIS
     whereis_record("saved");
 #endif
-    end(0);
+    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+        farewellmsg? farewellmsg : you.your_name);
 }                               // end save_game()
 
 // Saves the game without exiting.
@@ -1543,9 +1594,6 @@ void generate_random_demon()
     menv[rdem].pandemon_init();
 }                               // end generate_random_demon()
 
-// Largest string we'll save
-#define STR_CAP 1000
-
 void writeShort(FILE *file, short s)
 {
     char data[2];
@@ -1586,17 +1634,19 @@ void writeString(FILE* file, const std::string &s, int cap)
     write2(file, s.c_str(), length);
 }
 
-std::string readString(FILE *file)
+std::string readString(FILE *file, int cap)
 {
     short length = readShort(file);
     if (length > 0)
     {
-        if (length <= STR_CAP)
+        if (length <= cap)
         {
-            char buf[STR_CAP + 1];
+            char *buf = new char[length + 1];
             read2(file, buf, length);
             buf[length] = 0;
-            return (buf);
+            const std::string s = buf;
+            delete [] buf;
+            return (s);
         }
 
         end(1, false, "String too long: %d bytes\n", length);
