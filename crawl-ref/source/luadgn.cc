@@ -113,8 +113,16 @@ bool dlua_chunk::empty() const
 
 bool dlua_chunk::rewrite_chunk_errors(std::string &s) const
 {
-    if (s.find(context) == std::string::npos)
+    const std::string contextm = "[string \"" + context + "\"]:";
+    std::string::size_type dlwhere = s.find(contextm);
+    if (dlwhere == std::string::npos)
         return (false);
+
+    if (!dlwhere)
+    {
+        s = rewrite_chunk_prefix(s);
+        return (true);
+    }
 
     // Our chunk is mentioned, go back through and rewrite lines.
     std::vector<std::string> lines = split_string("\n", s);
