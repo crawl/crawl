@@ -762,7 +762,12 @@ static void helm_card(int power, deck_rarity_type rarity)
         }
     }
 
-    // XXX XXX FIXME handle do_shield
+    if ( do_shield )
+    {
+        if ( you.duration[DUR_MAGIC_SHIELD] == 0 )
+            mpr("A magical shield forms in front of you.");
+        you.duration[DUR_MAGIC_SHIELD] += random2(power/6) + 1;
+    }
 }
 
 // Do one of: vorpalise, sure blade, dancing weapon

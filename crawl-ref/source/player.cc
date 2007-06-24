@@ -2027,10 +2027,12 @@ int player_shield_class(void)   //jmf: changes for new spell
 
     if (shield == -1)
     {
-        if (!you.duration[DUR_FIRE_SHIELD] && you.duration[DUR_CONDENSATION_SHIELD])
-            base_shield = 2 + (you.skills[SK_ICE_MAGIC] / 6);  // max 6
-        else
-            return (0);
+        if (you.duration[DUR_MAGIC_SHIELD])
+            base_shield = 2 + you.skills[SK_EVOCATIONS] / 6;
+
+        if (!you.duration[DUR_FIRE_SHIELD] &&
+            you.duration[DUR_CONDENSATION_SHIELD])
+            base_shield += 2 + (you.skills[SK_ICE_MAGIC] / 6);  // max 6
     }
     else
     {

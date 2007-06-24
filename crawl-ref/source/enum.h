@@ -1192,6 +1192,7 @@ enum duration_type
     DUR_RESIST_COLD,
     DUR_SLAYING,
     DUR_STEALTH,
+    DUR_MAGIC_SHIELD,
     NUM_DURATIONS
 };
 

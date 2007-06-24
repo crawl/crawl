@@ -1843,6 +1843,15 @@ static void decrement_durations()
         you.redraw_armour_class = 1;
     }
 
+    if (you.duration[DUR_MAGIC_SHIELD] > 1)
+        you.duration[DUR_MAGIC_SHIELD]--;
+    else if (you.duration[DUR_MAGIC_SHIELD] == 1)
+    {
+        you.duration[DUR_MAGIC_SHIELD] = 0;
+        mpr("Your magical shield disappears.", MSGCH_DURATION);
+        you.redraw_armour_class = 1;
+    }
+
     if (you.duration[DUR_STONESKIN] > 1)
         you.duration[DUR_STONESKIN]--;
     else if (you.duration[DUR_STONESKIN] == 1)
