@@ -488,9 +488,57 @@ static void warp_card(int power, deck_rarity_type rarity)
         random_blink(false);
 }
 
+// Find a nearby monster to banish and return its index,
+// including you as a possibility with probability weight.
+static int choose_random_nearby_monster(int weight)
+{
+    int mons_count = weight;
+    int result = NON_MONSTER;
+
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = GXM;
+    if ( ystart >= GYM ) yend = GYM;
+
+    /* monster check */
+    for ( int y = ystart; y < yend; ++y )
+        for ( int x = xstart; x < xend; ++x )
+            if ( see_grid(x,y) && mgrd[x][y] != NON_MONSTER )
+                if ( one_chance_in(++mons_count) )
+                    result = mgrd[x][y];
+
+    return result;
+}
+
 static void swap_monster_card(int power, deck_rarity_type rarity)
 {
-    // swap between you and another monster
+    // Swap between you and another monster.
+    // Don't choose yourself unless there are no other monsters
+    // nearby.
+    const int mon_to_swap = choose_random_nearby_monster(0);
+    if ( mon_to_swap == NON_MONSTER )
+    {
+        mpr("You spin around.");
+    }
+    else
+    {
+        monsters& mon = menv[mon_to_swap];
+        const coord_def newpos = menv[mon_to_swap].pos();
+
+        // pick the monster up
+        mgrd[mon.x][mon.y] = NON_MONSTER;
+
+        mon.x = you.x_pos;
+        mon.y = you.y_pos;
+
+        // plunk it down
+        mgrd[mon.x][mon.y] = mon_to_swap;
+
+        // move you to its previous location
+        you.moveto(newpos);
+    }
 }
 
 static void velocity_card(int power, deck_rarity_type rarity)
@@ -513,32 +561,13 @@ static void velocity_card(int power, deck_rarity_type rarity)
 
 static void damnation_card(int power, deck_rarity_type rarity)
 {
-    // pick a random monster nearby to banish
-    int mons_count = 1;         // you
-    int mon_to_banish = NON_MONSTER;
-
-    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-    int yend = you.y_pos + 9, xend = you.x_pos + 9;
-    if ( xstart < 0 ) xstart = 0;
-    if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM;
-    if ( ystart >= GYM ) yend = GYM;
-
-    /* monster check */
-    for ( int y = ystart; y < yend; ++y )
-        for ( int x = xstart; x < xend; ++x )
-            if ( see_grid(x,y) && mgrd[x][y] != NON_MONSTER )
-                if ( one_chance_in(++mons_count) )
-                    mon_to_banish = mgrd[x][y];
+    // pick a random monster nearby to banish (or yourself)
+    const int mon_to_banish = choose_random_nearby_monster(1);
 
     if ( mon_to_banish == NON_MONSTER ) // banish yourself!
-    {
         banished(DNGN_ENTER_ABYSS);
-    }
     else
-    {
         menv[mon_to_banish].banish();
-    }
 }
 
 static void warpwright_card(int power, deck_rarity_type rarity)
@@ -874,7 +903,7 @@ static void dowsing_card(int power, deck_rarity_type rarity)
 
 static void trowel_card(int power, deck_rarity_type rarity)
 {
-    // not implemented yet
+    // not yet implemented
     return;
 }
 
@@ -888,7 +917,7 @@ static void genie_card(int power, deck_rarity_type rarity)
 
 static void godly_wrath()
 {
-    divine_retribution(static_cast<god_type>(random2(NUM_GODS)));
+    divine_retribution(static_cast<god_type>(random2(NUM_GODS-1) + 1));
 }
 
 static void curse_card(int power, deck_rarity_type rarity)
@@ -1022,9 +1051,9 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
                         random2(power), 0 );
         break;
 
-    case CARD_SUMMON_ANIMAL: break;
-    case CARD_SUMMON_WEAPON: break;
-    case CARD_SUMMON_ANY: break;
+    case CARD_SUMMON_ANIMAL: break; // not yet implemented
+    case CARD_SUMMON_WEAPON: break; // not yet implemented
+    case CARD_SUMMON_ANY: break; // not yet implemented
 
     case CARD_FAMINE:
         if (you.is_undead == US_UNDEAD)
