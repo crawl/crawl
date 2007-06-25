@@ -65,7 +65,8 @@ public:
 
     int loadstring(const char *str, const char *context);
     int execstring(const char *str, const char *context = "init.txt");
-    int execfile(const char *filename, bool trusted = false);
+    int execfile(const char *filename, bool trusted = false,
+                 bool die_on_fail = false);
 
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
     bool callfn(const char *fn, int nargs, int nret = 1);
@@ -74,7 +75,8 @@ public:
     bool runhook(const char *hook, const char *params, ...);
 
     static int file_write(lua_State *ls);
-    static int loadfile(lua_State *ls, const char *file, bool trusted = false);
+    static int loadfile(lua_State *ls, const char *file,
+                        bool trusted = false, bool die_on_fail = false);
     static bool is_path_safe(std::string file, bool trusted = false);
 
 public:

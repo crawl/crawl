@@ -579,7 +579,7 @@ static const struct luaL_reg dgn_lib[] =
 
 void init_dungeon_lua()
 {
-    dlua.execfile("clua/dungeon.lua");
+    dlua.execfile("clua/dungeon.lua", true, true);
     luaopen_debug(dlua);
     luaL_newmetatable(dlua, MAP_METATABLE);
     lua_pop(dlua, 1);

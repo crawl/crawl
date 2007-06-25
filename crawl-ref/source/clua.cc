@@ -229,7 +229,8 @@ bool CLua::is_path_safe(std::string s, bool trusted)
             && (trusted || s.find("clua") == std::string::npos));
 }
 
-int CLua::loadfile(lua_State *ls, const char *filename, bool trusted)
+int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
+                   bool die_on_fail)
 {
     if (!ls)
         return (-1);
@@ -242,11 +243,11 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted)
         return (-1);
     }
     
-    const std::string file = datafile_path(filename, false);
+    const std::string file = datafile_path(filename, die_on_fail);
     return (luaL_loadfile(ls, file.c_str()));
 }
 
-int CLua::execfile(const char *filename, bool trusted)
+int CLua::execfile(const char *filename, bool trusted, bool die_on_fail)
 {
     if (sourced_files.find(filename) != sourced_files.end())
         return 0;
@@ -254,7 +255,7 @@ int CLua::execfile(const char *filename, bool trusted)
     sourced_files.insert(filename);
 
     lua_State *ls = state();
-    int err = loadfile(ls, filename, trusted || !managed_vm);
+    int err = loadfile(ls, filename, trusted || !managed_vm, die_on_fail);
     lua_call_throttle strangler(this);
     if (!err)
         err = lua_pcall(ls, 0, 0, 0);
@@ -598,7 +599,7 @@ void CLua::init_lua()
         lua_register(_state, "loadfile", clua_loadfile);
         lua_register(_state, "dofile", clua_dofile);
 
-        execfile("clua/userbase.lua", true);
+        execfile("clua/userbase.lua", true, true);
     }
 }
 
@@ -613,7 +614,7 @@ void CLua::load_chooks()
 
 void CLua::load_cmacro()
 {
-    execfile("clua/macro.lua", true);
+    execfile("clua/macro.lua", true, true);
 }
 
 /////////////////////////////////////////////////////////////////////
