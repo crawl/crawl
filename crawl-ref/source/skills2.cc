@@ -169,49 +169,6 @@ const int spec_skills[ NUM_SPECIES ][40] =
      (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
-    {                           // SP_ELF (2)
-     120,                       // SK_FIGHTING
-     80,                        // SK_SHORT_BLADES
-     80,                        // SK_LONG_SWORDS
-     110,                       // SK_UNUSED_1
-     120,                       // SK_AXES
-     130,                       // SK_MACES_FLAILS
-     130,                       // SK_POLEARMS
-     100,                       // SK_STAVES
-     120,                       // SK_SLINGS
-     60,                        // SK_BOWS
-     100,                       // SK_CROSSBOWS
-     90,                        // SK_DARTS
-     80,                        // SK_RANGED_COMBAT
-     120,                       // SK_ARMOUR
-     80,                        // SK_DODGING
-     80,                        // SK_STEALTH
-     100,                       // SK_STABBING
-     120,                       // SK_SHIELDS
-     100,                       // SK_TRAPS_DOORS
-     110,                       // SK_UNARMED_COMBAT
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     (80 * 130) / 100,          // SK_SPELLCASTING
-     105,                       // SK_CONJURATIONS
-     70,                        // SK_ENCHANTMENTS
-     100,                       // SK_SUMMONINGS
-     120,                       // SK_NECROMANCY
-     100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMIGRATION
-     100,                       // SK_DIVINATIONS
-     100,                       // SK_FIRE_MAGIC
-     100,                       // SK_ICE_MAGIC
-     70,                        // SK_AIR_MAGIC
-     130,                       // SK_EARTH_MAGIC
-     110,                       // SK_POISON_MAGIC
-     (100 * 75) / 100,          // SK_INVOCATIONS
-     (80 * 75) / 100,           // SK_EVOCATIONS
-     },
-
     {                           // SP_HIGH_ELF (3)
      100,                       // SK_FIGHTING
      70,                        // SK_SHORT_BLADES

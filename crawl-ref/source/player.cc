@@ -402,7 +402,6 @@ bool player_genus(unsigned char which_genus, unsigned char species)
     case SP_BASE_DRACONIAN:
         return (which_genus == GENPC_DRACONIAN);
 
-    case SP_ELF:
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
@@ -796,7 +795,6 @@ int player_res_magic(void)
         break;
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
-    case SP_ELF:
     case SP_SLUDGE_ELF:
     case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
@@ -2299,19 +2297,6 @@ void level_change(void)
                     modify_stat(STAT_RANDOM, 1, false);
                 break;
 
-            case SP_ELF:
-                if (you.experience_level % 3)
-                    hp_adjust--;
-                else
-                    mp_adjust++;
-
-                if (!(you.experience_level % 4))
-                {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false );
-                }
-                break;
-
             case SP_HIGH_ELF:
                 if (you.experience_level == 15)
                 {
@@ -3360,7 +3345,6 @@ char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
         {
             switch (speci)
             {
-            case SP_ELF:
             default:
                 strcpy( species_buff, "Elf" );
                 break;
@@ -3553,7 +3537,6 @@ int species_exp_mod(char species)
             return 10;
         case SP_GNOME:
             return 11;
-        case SP_ELF:
         case SP_SLUDGE_ELF:
         case SP_NAGA:
         case SP_GHOUL:
@@ -4057,7 +4040,7 @@ void set_mp(int new_amount, bool max_too)
 
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] = 
-    { "XX", "Hu", "El", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
+    { "XX", "Hu", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
       "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM", "Dr", "Dr", 
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", 
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf" };
@@ -5122,7 +5105,7 @@ int player::mons_species() const
     {
     case SP_HILL_ORC:
         return (MONS_ORC);
-    case SP_ELF: case SP_HIGH_ELF: case SP_GREY_ELF:
+    case SP_HIGH_ELF: case SP_GREY_ELF:
     case SP_DEEP_ELF: case SP_SLUDGE_ELF:
         return (MONS_ELF);
     default:

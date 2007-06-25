@@ -3225,7 +3225,6 @@ enum special_wield_type                     // you.special_wield
 enum species_type
 {
     SP_HUMAN = 1,                      //    1
-    SP_ELF,
     SP_HIGH_ELF,
     SP_GREY_ELF,
     SP_DEEP_ELF,                       //    5

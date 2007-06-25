@@ -515,7 +515,6 @@ static void racialise_starting_equipment()
                 // now add appropriate species type mod
                 switch (you.species)
                 {
-                case SP_ELF:
                 case SP_HIGH_ELF:
                 case SP_GREY_ELF:
                 case SP_DEEP_ELF:
@@ -650,7 +649,6 @@ static void give_species_bonus_hp()
             inc_max_hp(1);
             break;
 
-        case SP_ELF:
         case SP_GREY_ELF:
         case SP_HIGH_ELF:
             dec_max_hp(1);
@@ -970,7 +968,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         switch (speci)
         {
         case SP_CENTAUR:
-        case SP_ELF:
         case SP_GHOUL:
         case SP_GNOME:
         case SP_GREY_ELF:
@@ -1054,7 +1051,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_CENTAUR:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
-        case SP_ELF:
         case SP_GREY_ELF:
         case SP_HIGH_ELF:
         case SP_HUMAN:
@@ -1218,7 +1214,6 @@ static bool class_allowed( species_type speci, job_type char_class )
 
         switch (speci)
         {
-        case SP_ELF:
         case SP_GREY_ELF:
         case SP_HALFLING:
         case SP_HIGH_ELF:
@@ -1267,7 +1262,6 @@ static bool class_allowed( species_type speci, job_type char_class )
 
         switch (speci)
         {
-        case SP_ELF:
         case SP_GHOUL:
         case SP_GNOME:
         case SP_GREY_ELF:
@@ -1294,7 +1288,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         switch (speci)
         {
         case SP_CENTAUR:
-        case SP_ELF:
         case SP_GNOME:
         case SP_GREY_ELF:
         case SP_HALFLING:
@@ -1726,7 +1719,6 @@ static void species_stat_init(species_type which_species)
     case SP_DEMIGOD:            sb =  7; ib =  7; db =  7;      break;  // 21+7
     case SP_DEMONSPAWN:         sb =  4; ib =  4; db =  4;      break;  // 12+7
 
-    case SP_ELF:                sb =  5; ib =  8; db =  8;      break;  // 21
     case SP_HIGH_ELF:           sb =  5; ib =  9; db =  8;      break;  // 22
     case SP_GREY_ELF:           sb =  4; ib =  9; db =  8;      break;  // 21
     case SP_DEEP_ELF:           sb =  3; ib = 10; db =  8;      break;  // 21
@@ -2880,63 +2872,17 @@ static job_type letter_to_class(int keyn)
 
 static species_type letter_to_species(int keyn)
 {
-    switch (keyn)
-    {
-    case 'a':
-        return SP_HUMAN;
-    case 'b':
-        return SP_ELF;
-    case 'c':
-        return SP_HIGH_ELF;
-    case 'd':
-        return SP_GREY_ELF;
-    case 'e':
-        return SP_DEEP_ELF;
-    case 'f':
-        return SP_SLUDGE_ELF;
-    case 'g':
-        return SP_HILL_DWARF;
-    case 'h':
-        return SP_MOUNTAIN_DWARF;
-    case 'i':
-        return SP_HALFLING;
-    case 'j':
-        return SP_HILL_ORC;
-    case 'k':
-        return SP_KOBOLD;
-    case 'l':
-        return SP_MUMMY;
-    case 'm':
-        return SP_NAGA;
-    case 'n':
-        return SP_GNOME;
-    case 'o':
-        return SP_OGRE;
-    case 'p':
-        return SP_TROLL;
-    case 'q':
-        return SP_OGRE_MAGE;
-    case 'r':                   // draconian
-        return static_cast<species_type>(SP_RED_DRACONIAN + random2(9));
-    case 's':
-        return SP_CENTAUR;
-    case 't':
-        return SP_DEMIGOD;
-    case 'u':
-        return SP_SPRIGGAN;
-    case 'v':
-        return SP_MINOTAUR;
-    case 'w':
-        return SP_DEMONSPAWN;
-    case 'x':
-        return SP_GHOUL;
-    case 'y':
-        return SP_KENKU;
-    case 'z':
-        return SP_MERFOLK;
-    default:
+    if ( keyn < 'a' || keyn > 'z' )
         return SP_UNKNOWN;
-    }
+    const int offset = keyn - 'a';
+    int rc;
+    if ( offset + SP_HUMAN < SP_RED_DRACONIAN )
+        rc = offset + SP_HUMAN;
+    else if ( offset + SP_HUMAN == SP_RED_DRACONIAN ) // random draco
+        rc = SP_RED_DRACONIAN + random2(9);
+    else                        // skip over draconian species
+        rc = offset + (SP_BASE_DRACONIAN - SP_RED_DRACONIAN) + 1;
+    return static_cast<species_type>(rc);
 }
 
 static char species_to_letter(int spec)
