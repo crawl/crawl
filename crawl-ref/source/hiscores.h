@@ -168,7 +168,6 @@ private:
     std::string death_source_desc() const;
     std::string damage_string(bool terse = false) const;
 
-    bool parse_obsolete_scoreline(const std::string &line);
     bool parse_scoreline(const std::string &line);
 
     void init_with_fields();
@@ -180,8 +179,6 @@ private:
     std::string make_oneline(const std::string &s) const;
     
     void init_from(const scorefile_entry &other);
-
-    branch_type kludge_branch(int branch_01) const;
 };
 
 #endif  // HISCORES_H

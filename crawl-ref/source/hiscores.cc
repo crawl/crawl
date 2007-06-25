@@ -75,9 +75,6 @@ static void hs_close(FILE *handle, const char *mode,
                      const std::string &filename);
 static bool hs_read(FILE *scores, scorefile_entry &dest);
 static void hs_write(FILE *scores, scorefile_entry &entry);
-static void hs_nextstring(const char *&inbuf, char *dest, size_t bufsize);
-static int hs_nextint(const char *&inbuf);
-static long hs_nextlong(const char *&inbuf);
 static time_t parse_time(const std::string &st);
 
 std::string score_file_name()
@@ -388,71 +385,9 @@ bool hs_read( FILE *scores, scorefile_entry &dest )
     return (dest.parse(inbuf));
 }
 
-static std::string hs_nextstring(const char *&inbuf, size_t destsize = 800)
-{
-    char *buf = new char[destsize];
-    if (!buf)
-        return ("");
-    hs_nextstring(inbuf, buf, destsize);
-    const std::string res = buf;
-    delete [] buf;
-    return (res);
-}
-
-static void hs_nextstring(const char *&inbuf, char *dest, size_t destsize)
-{
-    ASSERT(destsize > 0);
-
-    char *p = dest;
-
-    if (*inbuf == 0)
-    {
-        *p = 0;
-        return;
-    }
-
-    // assume we're on a ':'
-    if (*inbuf == ':')
-        inbuf++;
-
-    while (*inbuf && *inbuf != ':' &&
-           (p - dest) < static_cast<int>(destsize) - 1)
-        *p++ = *inbuf++;
-
-    // If we ran out of buffer, discard the rest of the field.
-    while (*inbuf && *inbuf != ':')
-        inbuf++;
-
-    *p = 0;
-}
-
-static int hs_nextint(const char *&inbuf)
-{
-    char num[20];
-    hs_nextstring(inbuf, num, sizeof num);
-
-    return (num[0] == 0 ? 0 : atoi(num));
-}
-
-static long hs_nextlong(const char *&inbuf)
-{
-    char num[20];
-    hs_nextstring(inbuf, num, sizeof num);
-
-    return (num[0] == 0 ? 0 : atol(num));
-}
-
 static int val_char( char digit )
 {
     return (digit - '0');
-}
-
-static time_t hs_nextdate(const char *&inbuf)
-{
-    char       buff[20];
-    hs_nextstring(inbuf, buff, sizeof buff);
-
-    return parse_time(buff);
 }
 
 static time_t parse_time(const std::string &st)
@@ -484,10 +419,11 @@ static const char *kill_method_names[] =
 {
     "mon", "pois", "cloud", "beam", "deaths_door", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
-    "quitting", "draining", "starvation", "freezing", "burning", "wild_magic",
-    "xom", "statue", "rotting", "targeting", "spore", "tso_smiting",
-    "petrification", "unknown", "something", "falling_down_stairs", "acid",
-    "curare", "melting", "bleeding", "bog_smiting",
+    "quitting", "draining", "starvation", "freezing", "burning",
+    "wild_magic", "xom", "statue", "rotting", "targeting", "spore",
+    "tso_smiting", "petrification", "unknown", "something",
+    "falling_down_stairs", "acid", "curare", "melting", "bleeding",
+    "bog_smiting"
 };
 
 const char *kill_method_name(kill_method_type kmt)
@@ -597,12 +533,15 @@ bool scorefile_entry::parse(const std::string &line)
     //    key=value. Colons are not allowed in key names, must be escaped to
     //    :: in values.
     //
-    // 0.2 only reads entries of type (3) and (4), and only writes entries of
-    // type (4). 0.3 or 0.4 may discontinue read support for (3).
+    // 0.3 only reads and writes entries of type (4).
 
     // Leading colon implies 4.0 style line:
     if (line[0] == ':')
-        return (parse_obsolete_scoreline(line));
+    {
+        end(1, false, "Cannot read 4.0-style scorefiles");
+        // Keep gcc happy:
+        return (false);
+    }
     else
         return (parse_scoreline(line));
 }
@@ -807,101 +746,6 @@ std::string scorefile_entry::short_kill_message() const
     msg[0] = tolower(msg[0]);
     trim_string(msg);
     return (msg);
-}
-
-// Maps a 0.1.x branch id to a 0.2 branch id. Ugh. Fortunately we need this
-// only to read old logfiles/scorefiles.
-branch_type scorefile_entry::kludge_branch(int branch_01) const
-{
-    static branch_type branch_map[] = {
-        BRANCH_MAIN_DUNGEON, BRANCH_DIS, BRANCH_GEHENNA,
-        BRANCH_VESTIBULE_OF_HELL, BRANCH_COCYTUS, BRANCH_TARTARUS,
-        BRANCH_INFERNO, BRANCH_THE_PIT, BRANCH_MAIN_DUNGEON,
-        BRANCH_MAIN_DUNGEON, BRANCH_ORCISH_MINES, BRANCH_HIVE,
-        BRANCH_LAIR, BRANCH_SLIME_PITS, BRANCH_VAULTS, BRANCH_CRYPT,
-        BRANCH_HALL_OF_BLADES, BRANCH_HALL_OF_ZOT, BRANCH_ECUMENICAL_TEMPLE,
-        BRANCH_SNAKE_PIT, BRANCH_ELVEN_HALLS, BRANCH_TOMB, BRANCH_SWAMP,
-        BRANCH_CAVERNS
-    };
-
-    if (branch_01 < 0
-        || branch_01 > (int) (sizeof(branch_map) / sizeof(*branch_map)))
-    {
-        return (BRANCH_MAIN_DUNGEON);
-    }
-    return branch_map[branch_01];
-}
-
-// [ds] This is the 4.0 b26 logfile parser. Old-style logs are now deprecated;
-// support for reading them may be discontinued in the next version.
-bool scorefile_entry::parse_obsolete_scoreline(const std::string &line)
-{
-    const char *inbuf = line.c_str();
-    
-    const int ver = hs_nextint(inbuf);
-    const int rel = hs_nextint(inbuf);
-
-    // this would be a good point to check for version numbers and branch
-    // appropriately
-
-    // acceptable versions are 0 (converted from old hiscore format) and 4
-    if (ver != 4 || rel < 2)
-        return (false);
-
-    points = hs_nextlong(inbuf);
-
-    name = hs_nextstring(inbuf);
-
-    uid = hs_nextlong(inbuf);
-    race = hs_nextint(inbuf);
-    cls = hs_nextint(inbuf);
-
-    race_class_name = hs_nextstring(inbuf, 6);
-
-    lvl = hs_nextint(inbuf);
-    best_skill = hs_nextint(inbuf);
-    best_skill_lvl = hs_nextint(inbuf);
-    death_type = hs_nextint(inbuf);
-    death_source = hs_nextint(inbuf);
-    mon_num = hs_nextint(inbuf);
-
-    death_source_name = hs_nextstring(inbuf);
-
-    // To try and keep the scorefile backwards compatible,
-    // we'll branch on version > 4.0 to read the auxkilldata
-    // text field.  
-    if (ver == 4 && rel >= 1)
-        auxkilldata = hs_nextstring( inbuf, ITEMNAME_SIZE );
-    else
-        auxkilldata[0] = 0;
-
-    dlvl = hs_nextint(inbuf);
-    level_type = static_cast<level_area_type>(hs_nextint(inbuf));
-    branch = kludge_branch( hs_nextint(inbuf) );
-
-    final_hp = hs_nextint(inbuf);
-    final_max_hp = hs_nextint(inbuf);
-    final_max_max_hp = hs_nextint(inbuf);
-    damage = hs_nextint(inbuf);
-    str = hs_nextint(inbuf);
-    intel = hs_nextint(inbuf);
-    dex = hs_nextint(inbuf);
-    god = static_cast<god_type>(hs_nextint(inbuf));
-    piety = hs_nextint(inbuf);
-    penance = hs_nextint(inbuf);
-
-    wiz_mode = hs_nextint(inbuf);
-
-    birth_time = hs_nextdate(inbuf);
-    death_time = hs_nextdate(inbuf);
-
-    real_time = hs_nextint(inbuf);
-    num_turns = hs_nextint(inbuf);
-
-    num_diff_runes = hs_nextint(inbuf);
-    num_runes = hs_nextint(inbuf);
-
-    return (true);
 }
 
 void scorefile_entry::init_death_cause(int dam, int dsrc, 
