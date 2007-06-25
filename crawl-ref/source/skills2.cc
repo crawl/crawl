@@ -1674,6 +1674,9 @@ const int spec_skills[ NUM_SPECIES ][40] =
      (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
+    // SP_ELF placeholder.
+    {
+    },
 
 
 /* ******************************************************

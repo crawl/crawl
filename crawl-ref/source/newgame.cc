@@ -2963,7 +2963,8 @@ spec_query:
         *linebuf = 0;
         for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
         {
-            if (i > SP_RED_DRACONIAN && i <= SP_BASE_DRACONIAN)
+            if ((i > SP_RED_DRACONIAN && i <= SP_BASE_DRACONIAN)
+                || i == SP_ELF)
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
