@@ -304,9 +304,17 @@ void search_around( bool only_adjacent )
                     i = trap_at_xy(srx, sry);
                     
                     if (i != -1)
+                    {
                         grd[srx][sry] = trap_category(env.trap[i].type);
-                    
-                    mpr("You found a trap!");
+                        mpr("You found a trap!");
+                    }
+                    else
+                    {
+                        // Maybe we shouldn't kill the trap for debugging
+                        // purposes - oh well.
+                        grd[srx][sry] = DNGN_FLOOR;
+                        mpr("You found a buggy trap! It vanishes!");
+                    }
                 }
             }
         }
