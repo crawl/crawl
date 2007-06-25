@@ -737,7 +737,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 break;
             case SPWPN_WRATH_OF_TROG:
                 description += "This was the favourite weapon of "
-                    "the old god Trog, before he lost it one day. "
+                    "the old god Trog, before it was lost one day. "
                     "It induces a bloodthirsty berserker rage in "
                     "anyone who uses it to strike another. ";
                 break;

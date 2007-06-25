@@ -613,7 +613,7 @@
         0, -50                                  // stealth (TSO hates backstab)
     }
     ,
-        "This sword was The Shining One's gift to one of his paladins." ,
+        "This sword was The Shining One's gift to a worshipper.",
         "A long sword made of one huge piece of crystal.",
         ""
 }
