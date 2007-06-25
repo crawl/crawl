@@ -406,6 +406,7 @@ bool player_genus(unsigned char which_genus, unsigned char species)
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
+    case SP_ELF:
         return (which_genus == GENPC_ELVEN);
 
     case SP_HILL_DWARF:
@@ -2789,8 +2790,7 @@ void level_change(void)
                     modify_stat(STAT_RANDOM, 1, false);
                 break;
 
-            case NUM_SPECIES:
-            case SP_UNKNOWN:
+            default:
                 break;
             }
         }
@@ -4040,7 +4040,7 @@ void set_mp(int new_amount, bool max_too)
 
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] = 
-    { "XX", "Hu", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
+    { "XX", "Hu", "El", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
       "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM", "Dr", "Dr", 
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", 
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf" };
@@ -4048,6 +4048,7 @@ static const char * Species_Abbrev_List[ NUM_SPECIES ] =
 int get_species_index_by_abbrev( const char *abbrev )
 {
     int i;
+    ASSERT(ARRAYSIZE(Species_Abbrev_List) == NUM_SPECIES);
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
         if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
