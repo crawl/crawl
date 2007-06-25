@@ -1406,6 +1406,17 @@ std::string status_mut_abilities()
     if (player_is_levitating())
         text += "levitating, ";
 
+    if (you.duration[DUR_BARGAIN])
+        text += "charismatic, ";
+
+    if (you.duration[DUR_SLAYING])
+        text += "deadly, ";
+
+    // DUR_STEALTHY handled in stealth printout
+
+    if (you.duration[DUR_MAGIC_SHIELD])
+        text += "shielded, ";
+
     if (you.duration[DUR_POISONING])
     {
         text +=   (you.duration[DUR_POISONING] > 10) ? "extremely" :
