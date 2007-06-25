@@ -2343,7 +2343,7 @@ MAP
 ENDMAP
 
 #############################################################################
-# Labyrinth minivaults
+# Labyrinth (minotaur) minivaults
 #############################################################################
 # One layer of floor space *must* surround the minivault, or the player could
 # be trapped in the labyrinth (the dummy is exempt from this requirement).
@@ -2355,11 +2355,14 @@ ENDMAP
 # disappointed.
 #
 # You *must* place the minotaur(s) yourself!
+#
+# Minivaults tagged "minotaur" will be used for the labyrinth finale (exit).
+# Minivaults tagged "lab" will be used randomly in the labyrinth.
 #############################################################################
 # Dummy balancer
 
 NAME: labyrinth_0
-TAGS: lab dummy
+TAGS: minotaur dummy
 CHANCE: 20
 
 MAP
@@ -2370,7 +2373,7 @@ ENDMAP
 # A simple lair.
 
 NAME: labyrinth_1
-TAGS: lab generate_loot no_pool_fixup
+TAGS: minotaur generate_loot no_pool_fixup
 MONS: minotaur
 SHUFFLE: def
 SUBST: d=^, e=^, f=.
@@ -2385,6 +2388,61 @@ MAP
 .c.....c.
 .ccc+ccc.
 .........
+ENDMAP
+
+############################################################################
+# Labyrinth dummy decorator
+NAME: lab_dummy
+TAGS: lab dummy
+CHANCE: 90
+MAP
+x
+ENDMAP
+
+############################################################################
+# Labyrinth furniture
+
+NAME: lab_furniture_1
+TAGS: lab
+MAP
+.....
+.xxx.
+.xxx.
+.xxx.
+.....
+ENDMAP
+
+############################################################################
+# Labyrinth furniture II
+
+NAME: lab_furniture_2
+TAGS: lab
+MAP
+.......
+..b.b..
+.bb.bb.
+...F...
+.bb.bb.
+..b.b..
+.......
+ENDMAP
+
+############################################################################
+# Labyrinth hedge
+
+NAME: lab_furniture_3
+TAGS: lab
+MONS: plant
+MAP
+.......
+.11111.
+.1ccc1.
+..1c1..
+..1c1..
+..1c1..
+.1ccc1.
+.11111.
+.......
 ENDMAP
 
 ############################################################################

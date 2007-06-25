@@ -202,9 +202,10 @@ static dgn_region_list no_monster_zones;
 static dgn_region_list no_item_zones;
 static dgn_region_list no_pool_fixup_zones;
 static dgn_region_list no_door_fixup_zones;
+static dgn_region_list vault_zones;
+static std::vector<vault_placement> level_vaults;
 static int minivault_chance = 3;
 
-static std::vector<vault_placement> level_vaults;
 
 static std::string level_name(int subdepth)
 {
@@ -367,6 +368,7 @@ static void reset_level()
     no_item_zones.clear();
     no_pool_fixup_zones.clear();
     no_door_fixup_zones.clear();
+    vault_zones.clear();
     minivault_chance = 3;
     
     // blank level with DNGN_ROCK_WALL
@@ -2562,6 +2564,9 @@ static void beehive(spec_room &sr)
 static bool safe_minivault_place(int v1x, int v1y,
                                   const vault_placement &place)
 {
+    dgn_region reg(v1x, v1y, place.width, place.height);
+    if (reg.overlaps_any(vault_zones))
+        return (false);
     for (int vx = v1x; vx < v1x + place.width; vx++)
     {
         for (int vy = v1y; vy < v1y + place.height; vy++)
@@ -2651,6 +2656,8 @@ static bool build_minivaults(int level_number, int force_vault)
     place.y = v1y;
     
     level_vaults.push_back(place);
+    vault_zones.push_back(
+        dgn_region(place.x, place.y, place.width, place.height));
     
     for (vx = v1x; vx < v1x + place.width; vx++)
     {
@@ -3077,6 +3084,8 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
     level_vaults.push_back(place);
+    vault_zones.push_back(
+        dgn_region(place.x, place.y, place.width, place.height));
 
     // If the map takes the whole screen or we were only requested to
     // build, our work is done.
@@ -4926,6 +4935,21 @@ static void change_walls_from_centre(const dgn_region &region,
     change_walls_from_centre(region, c, rectangular, forbidden, wall, ldist);
 }
 
+static void place_extra_lab_minivaults(int level_number)
+{
+    std::set<int> vaults_used;
+    while (true)
+    {
+        const int vault = random_map_for_tag("lab", true, false);
+        if (vault == -1 || vaults_used.find(vault) != vaults_used.end())
+            break;
+
+        vaults_used.insert(vault);
+        if (!build_minivaults(level_number, vault))
+            break;
+    }
+}
+
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
@@ -4934,7 +4958,7 @@ static void labyrinth_level(int level_number)
                               GYM - MAPGEN_BORDER * 5 / 2 - 1 );
     
     // First decide if we're going to use a Lab minivault.
-    int vault = random_map_for_tag("lab", true, false);
+    int vault = random_map_for_tag("minotaur", true, false);
     vault_placement place;
     if (vault != -1)
     {
@@ -4980,16 +5004,13 @@ static void labyrinth_level(int level_number)
                    1, DNGN_FLOOR);
     }
     
-    dgn_region_list vaults;
     if (vault != -1)
-    {
-        vaults.push_back(
-            dgn_region(place.x, place.y, place.width, place.height));
         end = coord_def(place.x + place.width / 2,
                         place.y + place.height / 2);
-    }
 
-    change_walls_from_centre(lab, end, false, vaults, DNGN_ROCK_WALL,
+    place_extra_lab_minivaults(level_number);
+
+    change_walls_from_centre(lab, end, false, vault_zones, DNGN_ROCK_WALL,
                              15 * 15, DNGN_METAL_WALL,
                              34 * 34, DNGN_STONE_WALL,
                              0);
