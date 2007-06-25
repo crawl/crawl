@@ -775,6 +775,7 @@ static void helm_card(int power, deck_rarity_type rarity)
 // wield the deck in order to evoke it!
 static void blade_card(int power, deck_rarity_type rarity)
 {
+    // not yet implemented
     return;
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )

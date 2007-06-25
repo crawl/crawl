@@ -1192,7 +1192,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISPLAY_INVENTORY:
-        get_invent(-1);
+        get_invent(OSEL_ANY);
         break;
 
     case CMD_EVOKE:

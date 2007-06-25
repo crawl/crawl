@@ -29,6 +29,7 @@
 #include "externs.h"
 
 #include "clua.h"
+#include "describe.h"
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
@@ -526,9 +527,16 @@ bool in_inventory( const item_def &i )
 
 unsigned char get_invent( int invent_type )
 {
-    unsigned char nothing = invent_select(NULL, MT_INVLIST, invent_type);
+    unsigned char select = invent_select(NULL, MT_INVLIST, invent_type,
+                                         MF_SINGLESELECT);
+    if ( isalpha(select) )
+    {
+        const int invidx = letter_to_index(select);
+        if ( is_valid_item(you.inv[invidx]) )
+            describe_item( you.inv[invidx] );
+    }            
     redraw_screen();
-    return (nothing);
+    return select;
 }                               // end get_invent()
 
 std::string item_class_name( int type, bool terse )
