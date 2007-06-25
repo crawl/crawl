@@ -179,7 +179,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    dice_def   dam_dice( 0, 5 + pow / 4 );  // number of dice set below
+    dice_def   dam_dice( 0, 5 + pow / 3 );  // number of dice set below
     const int  monster = mgrd[x][y];
 
     if (monster == NON_MONSTER)

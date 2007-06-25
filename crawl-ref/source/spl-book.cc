@@ -474,8 +474,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_DIG,
      SPELL_STATUE_FORM,
      SPELL_BOLT_OF_IRON,
-     SPELL_TOMB_OF_DOROKLOHE,
      SPELL_SHATTER,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL
      },
     // 41 - manuals of all kinds
