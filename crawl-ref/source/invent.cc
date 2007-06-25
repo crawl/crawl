@@ -271,6 +271,9 @@ void InvMenu::load_inv_items(int item_selector,
         case OBJ_WEAPONS:
             s = "You aren't carrying any weapons.";
             break;
+        case OSEL_UNIDENT:
+            s = "You don't have any unidentified items.";
+            break;
         default:
             s = "You aren't carrying any such object.";
             break;

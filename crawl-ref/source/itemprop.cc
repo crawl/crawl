@@ -510,6 +510,10 @@ unsigned long full_ident_mask( const item_def& item )
     default:
         break;
     }
+
+    if (item_type_known(item))
+        flagset &= (~ISFLAG_KNOW_TYPE);
+
     if ( is_random_artefact(item) ||
          is_fixed_artefact(item) )
     {
