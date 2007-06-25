@@ -355,11 +355,16 @@ const map_def *map_by_index(int index)
 /////////////////////////////////////////////////////////////////////////////
 // Reading maps from .des files.
 
-dlua_chunk lc_file_prelude;
+// All global preludes.
+std::vector<dlua_chunk> global_preludes;
+
+// Map-specific prelude.
+dlua_chunk lc_global_prelude("global_prelude");
 std::string lc_desfile;
 map_def     lc_map;
 level_range lc_range;
 depth_ranges lc_default_depths;
+bool lc_run_global_prelude = true;
 
 std::set<std::string> map_files_read;
 
@@ -370,16 +375,17 @@ void reset_map_parser()
     lc_map.init();
     lc_range.reset();
     lc_default_depths.clear();
-    lc_file_prelude.clear();
+    lc_global_prelude.clear();
 
     yylineno = 1;
+    lc_run_global_prelude = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
 static bool checked_des_index_dir = false;
 
-#define DESCACHE_VER  1000
+#define DESCACHE_VER  1001
 
 static void check_des_index_dir()
 {
@@ -425,7 +431,19 @@ static bool verify_map_full(const std::string &base)
 
 static bool load_map_index(const std::string &base)
 {
-    FILE *inf = fopen((base + ".idx").c_str(), "rb");
+    // If there's a global prelude, load that first.
+    FILE *inf = fopen((base + ".lux").c_str(), "rb");
+    if (inf)
+    {
+        lc_global_prelude.read(inf);
+        fclose(inf);
+
+        global_preludes.push_back( lc_global_prelude );
+    }
+    
+    inf = fopen((base + ".idx").c_str(), "rb");
+    if (!inf)
+        end(1, true, "Unable to read %s", (base + ".idx").c_str());
     // Discard version (it's been checked by verify_map_index).
     readLong(inf);
     const int nmaps = readShort(inf);
@@ -460,17 +478,15 @@ static bool load_map_cache(const std::string &filename)
 
 static void write_map_prelude(const std::string &filebase)
 {
-    const std::string luafile = filebase + ".lua";
-    if (lc_file_prelude.empty())
+    const std::string luafile = filebase + ".lux";
+    if (lc_global_prelude.empty())
     {
         unlink(luafile.c_str());
         return;
     }
 
-    FILE *outf = fopen(luafile.c_str(), "w");
-    if (!outf)
-        end(1, true, "Unable to open %s for writing", luafile.c_str());
-    fprintf(outf, "%s", lc_file_prelude.lua_string().c_str());
+    FILE *outf = fopen(luafile.c_str(), "wb");
+    lc_global_prelude.write(outf);
     fclose(outf);
 }
 
@@ -539,6 +555,7 @@ static void parse_maps(const std::string &s)
     yyparse();
     fclose(dat);
 
+    global_preludes.push_back( lc_global_prelude );
     write_map_cache(s, file_start, vdefs.size());
 }
 
@@ -572,6 +589,15 @@ void add_parsed_map( const map_def &md )
 
 void run_map_preludes()
 {
+    for (int i = 0, size = global_preludes.size(); i < size; ++i)
+    {
+        dlua_chunk &chunk = global_preludes[i];
+        if (!chunk.empty())
+        {
+            if (chunk.load_call(dlua, NULL))
+                mprf(MSGCH_WARN, "Lua error: %s", chunk.orig_error().c_str());
+        }
+    }
     for (int i = 0, size = vdefs.size(); i < size; ++i)
     {
         if (!vdefs[i].prelude.empty())

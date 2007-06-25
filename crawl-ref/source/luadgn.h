@@ -13,6 +13,9 @@
 
 extern CLua dlua;
 
+// Lua chunks cannot exceed 512K. Which is plenty!
+const int LUA_CHUNK_MAX_SIZE = 512 * 1024;
+
 class dlua_chunk
 {
 private:
@@ -27,7 +30,7 @@ private:
     std::string get_chunk_prefix(const std::string &s) const;
     
 public:
-    std::string error;
+    mutable std::string error;
 
 public:
     dlua_chunk(const std::string &_context = "dlua_chunk");
@@ -35,8 +38,8 @@ public:
     void add(int line, const std::string &line);
     void set_chunk(const std::string &s);
     
-    int load(CLua *interp);
-    int load_call(CLua *interp, const char *function);
+    int load(CLua &interp);
+    int load_call(CLua &interp, const char *function);
     void set_file(const std::string &s);
 
     const std::string &lua_string() const { return chunk; }
@@ -44,6 +47,9 @@ public:
     bool rewrite_chunk_errors(std::string &err) const;
     
     bool empty() const;
+
+    void write(FILE *) const;
+    void read(FILE *);
 };
 
 void init_dungeon_lua();

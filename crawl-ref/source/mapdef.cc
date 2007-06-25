@@ -849,8 +849,8 @@ void map_def::write_full(FILE *outf)
     cache_offset = ftell(outf);
     writeShort(outf, 0x1eaf);   // Level indicator.
     writeString(outf, name);
-    writeString(outf, prelude.lua_string(), LUA_CHUNK_MAX_SIZE);
-    writeString(outf, main.lua_string(), LUA_CHUNK_MAX_SIZE);
+    prelude.write(outf);
+    main.write(outf);
 }
 
 void map_def::read_full(FILE *inf)
@@ -869,8 +869,8 @@ void map_def::read_full(FILE *inf)
                                "Please reload your game.",
                                file.c_str()).c_str());
 
-    prelude.set_chunk(readString(inf, LUA_CHUNK_MAX_SIZE));
-    main.set_chunk(readString(inf, LUA_CHUNK_MAX_SIZE));
+    prelude.read(inf);
+    main.read(inf);
 }
 
 void map_def::load()
@@ -899,7 +899,7 @@ void map_def::write_index(FILE *outf) const
     writeString(outf, tags);
     writeString(outf, place);
     write_depth_ranges(outf);
-    writeString(outf, prelude.lua_string(), LUA_CHUNK_MAX_SIZE);
+    prelude.write(outf);
 }
 
 void map_def::read_index(FILE *inf)
@@ -911,7 +911,7 @@ void map_def::read_index(FILE *inf)
     tags         = readString(inf);
     place        = readString(inf);
     read_depth_ranges(inf);
-    prelude.set_chunk(readString(inf, LUA_CHUNK_MAX_SIZE));
+    prelude.read(inf);
     index_only   = true;
 }
 
@@ -940,7 +940,7 @@ void map_def::set_file(const std::string &s)
 std::string map_def::run_lua(bool run_main)
 {
     dlua.callfn("dgn_set_map", "m", this);
-    int err = prelude.load(&dlua);
+    int err = prelude.load(dlua);
     if (err == -1000)
         lua_pushnil(dlua);
     else if (err)
@@ -950,7 +950,7 @@ std::string map_def::run_lua(bool run_main)
         lua_pushnil(dlua);
     else
     {
-        err = main.load(&dlua);
+        err = main.load(dlua);
         if (err == -1000)
             lua_pushnil(dlua);
         else if (err)

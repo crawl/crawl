@@ -52,10 +52,11 @@ void reset_map_parser();
 std::string get_descache_path(const std::string &file,
                               const std::string &ext);
 
-extern dlua_chunk map_file_prelude;
 extern std::string lc_desfile;
 extern map_def     lc_map;
 extern level_range lc_range;
 extern depth_ranges lc_default_depths;
+extern dlua_chunk lc_global_prelude;
+extern bool lc_run_global_prelude;
 
 #endif

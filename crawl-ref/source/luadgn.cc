@@ -7,6 +7,7 @@
 
 #include "AppHdr.h"
 #include "clua.h"
+#include "files.h"
 #include "luadgn.h"
 #include "mapdef.h"
 
@@ -42,6 +43,26 @@ dlua_chunk::dlua_chunk(const std::string &_context)
     : file(), chunk(), context(_context), first(-1), last(-1), error()
 {
     clear();
+}
+
+void dlua_chunk::write(FILE *outf) const
+{
+    writeString(outf, chunk, LUA_CHUNK_MAX_SIZE);
+    if (!chunk.empty())
+    {
+        writeString(outf, file);
+        writeLong(outf, first);
+    }
+}
+
+void dlua_chunk::read(FILE *inf)
+{
+    chunk = readString(inf, LUA_CHUNK_MAX_SIZE);
+    if (!chunk.empty())
+    {
+        file  = readString(inf);
+        first = readLong(inf);
+    }
 }
 
 void dlua_chunk::clear()
@@ -82,15 +103,15 @@ int dlua_chunk::check_op(CLua *interp, int err)
     return (err);
 }
 
-int dlua_chunk::load(CLua *interp)
+int dlua_chunk::load(CLua &interp)
 {
     if (trimmed_string(chunk).empty())
         return (-1000);
-    return check_op(interp,
-                    interp->loadstring(chunk.c_str(), context.c_str()));
+    return check_op(&interp,
+                    interp.loadstring(chunk.c_str(), context.c_str()));
 }
 
-int dlua_chunk::load_call(CLua *interp, const char *fn)
+int dlua_chunk::load_call(CLua &interp, const char *fn)
 {
     int err = load(interp);
     if (err == -1000)
@@ -98,11 +119,12 @@ int dlua_chunk::load_call(CLua *interp, const char *fn)
     if (err)
         return (err);
 
-    return check_op(interp, interp->callfn(fn, 1, 0));
+    return check_op(&interp, !interp.callfn(fn, fn? 1 : 0, 0));
 }
 
 std::string dlua_chunk::orig_error() const
 {
+    rewrite_chunk_errors(error);
     return (error);
 }
 

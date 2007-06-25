@@ -89,6 +89,7 @@ definition      : def       {}
                 ;
 
 def             : defdepth  {}
+                | global_lua  {} 
                 ;
 
 defdepth        : DEFAULT_DEPTH STRING
@@ -104,6 +105,15 @@ defdepth        : DEFAULT_DEPTH STRING
 level           : name map_specs
                 {
                     lc_map.set_file(lc_desfile);
+                    
+                    if (lc_run_global_prelude && !lc_global_prelude.empty())
+                    {
+                        lc_global_prelude.set_file(lc_desfile);
+                        lc_run_global_prelude = false;
+                        if (lc_global_prelude.load_call(dlua, NULL))
+                            yyerror( lc_global_prelude.orig_error().c_str() );
+                    }
+
                     std::string err = lc_map.validate();
                     if (!err.empty())
                         yyerror(err.c_str());
@@ -163,6 +173,17 @@ metaline        : place
                 | main_lua
                 | prelude_lua
                 ;
+
+global_lua        : MAIN global_lua_lines { }
+
+global_lua_lines  : /* empty */ { }
+                | global_lua_lines global_lua_line { }
+                ;
+
+global_lua_line   : LUA_LINE
+                {
+                    lc_global_prelude.add(yylineno, $1);
+                }
 
 main_lua        : MAIN main_lua_lines { }
 

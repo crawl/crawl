@@ -394,9 +394,6 @@ typedef std::map<int, keyed_mapspec> keyed_specs;
 
 typedef std::vector<level_range> depth_ranges;
 
-// Lua chunks cannot exceed 512K. Which is plenty!
-const int LUA_CHUNK_MAX_SIZE = 512 * 1024;
-    
 class map_def
 {
 public:
