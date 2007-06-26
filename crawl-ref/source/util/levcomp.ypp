@@ -65,7 +65,7 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM
-%token <i>      PRELUDE MAIN
+%token <i>      PRELUDE MAIN VALIDATE VETO
 
 %token <i>      CHARACTER
 
@@ -114,7 +114,7 @@ level           : name map_specs
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
-                    std::string err = lc_map.validate();
+                    std::string err = lc_map.validate_map_def();
                     if (!err.empty())
                         yyerror(err.c_str());
                     if (!lc_map.has_depth() && !lc_default_depths.empty())
@@ -172,6 +172,8 @@ metaline        : place
                 | kmons
                 | main_lua
                 | prelude_lua
+                | validate_lua
+                | veto_lua
                 ;
 
 global_lua        : MAIN global_lua_lines { }
@@ -196,6 +198,28 @@ main_lua_line   : LUA_LINE
                     lc_map.main.add(yylineno, $1);
                 }
 
+validate_lua    : VALIDATE validate_lua_lines { }
+
+validate_lua_lines  : /* empty */ { }
+                | validate_lua_lines validate_lua_line { }
+                ;
+
+validate_lua_line   : LUA_LINE
+                {
+                    lc_map.validate.add(yylineno, $1);
+                }
+
+veto_lua        : VETO veto_lua_lines { }
+
+veto_lua_lines  : /* empty */ { }
+                | veto_lua_lines veto_lua_line { }
+                ;
+
+veto_lua_line   : LUA_LINE
+                {
+                    lc_map.veto.add(yylineno, $1);
+                }                
+                
 prelude_lua     : PRELUDE prelude_lua_lines { }
 
 prelude_lua_lines : /* empty */ { }

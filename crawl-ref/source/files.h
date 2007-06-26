@@ -53,8 +53,8 @@ void check_newer(const std::string &target,
                  const std::string &dependency,
                  void (*action)());
 
-bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth, 
-           int old_level, branch_type where_were_you2 );
+bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
+           bool was_a_labyrinth, int old_level, branch_type where_were_you2 );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

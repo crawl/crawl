@@ -808,6 +808,19 @@ std::vector<std::string> map_lines::get_subst_strings() const
 }
 
 ///////////////////////////////////////////////
+// dlua_set_map
+
+dlua_set_map::dlua_set_map(map_def *map)
+{
+    dlua.callfn("dgn_set_map", "m", map);    
+}
+
+dlua_set_map::~dlua_set_map()
+{
+    dlua.callfn("dgn_set_map", 0, 0);
+}
+
+///////////////////////////////////////////////
 // map_def
 //
 
@@ -828,6 +841,8 @@ void map_def::init()
     depths.clear();
     prelude.clear();
     main.clear();
+    validate.clear();
+    veto.clear();
     reinit();
 }
 
@@ -851,6 +866,8 @@ void map_def::write_full(FILE *outf)
     writeString(outf, name);
     prelude.write(outf);
     main.write(outf);
+    validate.write(outf);
+    veto.write(outf);
 }
 
 void map_def::read_full(FILE *inf)
@@ -871,6 +888,8 @@ void map_def::read_full(FILE *inf)
 
     prelude.read(inf);
     main.read(inf);
+    validate.read(inf);
+    veto.read(inf);
 }
 
 void map_def::load()
@@ -939,7 +958,8 @@ void map_def::set_file(const std::string &s)
 
 std::string map_def::run_lua(bool run_main)
 {
-    dlua.callfn("dgn_set_map", "m", this);
+    dlua_set_map mset(this);
+    
     int err = prelude.load(dlua);
     if (err == -1000)
         lua_pushnil(dlua);
@@ -960,10 +980,40 @@ std::string map_def::run_lua(bool run_main)
     if (!dlua.callfn("dgn_run_map", 2, 0))
         return rewrite_chunk_errors(dlua.error);
 
-    // Clear the map setting.
-    dlua.callfn("dgn_set_map", 0, 0);
-
     return (dlua.error);
+}
+
+bool map_def::test_lua_boolchunk(dlua_chunk &chunk)
+{
+    bool result = true;
+    dlua_set_map mset(this);
+    
+    int err = chunk.load(dlua);
+    if (err == -1000)
+        return (true);
+    else if (err)
+    {
+        mprf(MSGCH_WARN, "Lua error: %s", validate.orig_error().c_str());
+        return (true);
+    }
+
+    if (dlua.callfn("dgn_run_map", 1, 1))
+        dlua.fnreturns("b", &result);
+    else
+        mprf(MSGCH_WARN, "Lua error: %s",
+             rewrite_chunk_errors(dlua.error).c_str());
+
+    return (result);
+}
+
+bool map_def::test_lua_validate()
+{
+    return test_lua_boolchunk(validate);
+}
+
+bool map_def::test_lua_veto()
+{
+    return test_lua_boolchunk(veto);
 }
 
 std::string map_def::rewrite_chunk_errors(const std::string &s) const
@@ -971,11 +1021,15 @@ std::string map_def::rewrite_chunk_errors(const std::string &s) const
     std::string res = s;
     if (prelude.rewrite_chunk_errors(res))
         return (res);
-    main.rewrite_chunk_errors(res);
+    if (main.rewrite_chunk_errors(res))
+        return (res);
+    if (validate.rewrite_chunk_errors(res))
+        return (res);
+    veto.rewrite_chunk_errors(res);
     return (res);
 }
 
-std::string map_def::validate()
+std::string map_def::validate_map_def()
 {
     std::string err = run_lua(true);
     if (!err.empty())

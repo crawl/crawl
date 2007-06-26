@@ -116,22 +116,28 @@ void usleep( unsigned long time );
 int snprintf( char *str, size_t size, const char *format, ... );
 #endif
 
-// Sets a boolean to a new value in the scope of the object instance.
-class unwind_bool
+template <typename T>
+class unwind_var
 {
 public:
-    unwind_bool(bool &val_, bool newval) : val(val_), oldval(val_)
+    unwind_var(T &val_, T newval, T reset_to) : val(val_), oldval(reset_to)
     {
         val = newval;
     }
-    ~unwind_bool()
+    unwind_var(T &val_, T newval) : val(val_), oldval(val_)
+    {
+        val = newval;
+    }
+    ~unwind_var()
     {
         val = oldval;
     }
 private:
-    bool &val;
-    bool oldval;
+    T &val;
+    T oldval;
 };
+
+typedef unwind_var<bool> unwind_bool;
 
 class base_pattern
 {

@@ -43,7 +43,7 @@ void disarm_trap(struct dist &disa);
 /* ***********************************************************************
  * called from: acr - effects - spells3
  * *********************************************************************** */
-void down_stairs(int old_level, int force_stair = 0);
+void down_stairs(int old_level, dungeon_feature_type force_stair = DNGN_UNSEEN);
 
 
 // last updated 12may2000 {dlb}

@@ -28,7 +28,7 @@ struct vault_placement
     std::vector<coord_def> exits;
 
     vault_placement()
-        : x(-1), y(-1), width(0), height(0), map(),
+        : x(-1), y(-1), width(0), height(0), orient(0), map(),
           exits()
     {
     }

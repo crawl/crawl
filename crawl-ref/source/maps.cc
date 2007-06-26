@@ -37,7 +37,7 @@ static int apply_vault_definition(
                         vault_placement &,
                         std::vector<vault_placement> *);
 
-static void resolve_map(map_def &def);
+static bool resolve_map(map_def &def, const map_def &original);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,25 +87,35 @@ static int write_vault(map_def &mdef, map_type map,
     
     // Copy the map so we can monkey with it.
     place.map = mdef;
-
+    
     // Try so many times to place the map. This will always succeed
-    // unless there are conflicting map placements in 'avoid'.
-    int tries = 10;
-    do
-        resolve_map(place.map);
-    while ((place.orient =
-            apply_vault_definition(place.map, map, place, avoid)) == MAP_NONE
-           && tries-- > 0);
+    // unless there are conflicting map placements in 'avoid', or there
+    // is a map validate Lua hook that keeps rejecting the map.
+    int tries = 25;
 
+    while (tries-- > 0)
+    {
+        if (!resolve_map(place.map, mdef))
+            continue;
+
+        place.orient = apply_vault_definition(place.map, map,
+                                              place, avoid);
+
+        if (place.orient != MAP_NONE)
+            break;
+    }
     return (place.orient);
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
-static void resolve_map(map_def &map)
+static bool resolve_map(map_def &map, const map_def &original)
 {
     map.reinit();
     map.run_lua(true);
     map.resolve();
+
+    if (!map.test_lua_validate())
+        return (false);
     
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
@@ -118,6 +128,8 @@ static void resolve_map(map_def &map)
     // The map may also refuse to be rotated.
     if (coinflip())
         map.rotate( coinflip() );
+
+    return (true);
 }
 
 static bool is_grid_clobbered(int sx, int sy, int width, int height)
@@ -385,7 +397,7 @@ void reset_map_parser()
 
 static bool checked_des_index_dir = false;
 
-#define DESCACHE_VER  1001
+#define DESCACHE_VER  1002
 
 static void check_des_index_dir()
 {
@@ -577,6 +589,9 @@ void read_maps()
 
         parse_maps( lc_desfile );
     }
+
+    // Clean up cached environments.
+    dlua.callfn("dgn_flush_map_environments", 0, 0);
 }
 
 void add_parsed_map( const map_def &md )

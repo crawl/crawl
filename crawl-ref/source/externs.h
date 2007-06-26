@@ -759,6 +759,11 @@ public:
 
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
+  // Set when the character is going to a new level, to guard against levgen
+  // failures
+  dungeon_feature_type transit_stair;
+  bool entering_level;
+
   // Warning: these two are quite different.
   //
   // The spell table is an index to a specific spell slot (you.spells).

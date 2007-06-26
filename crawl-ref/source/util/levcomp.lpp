@@ -161,6 +161,10 @@ NSPACE [^\ \t\r\n]
 ^prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }      
 ^lua[ \t]*\{\{      { BEGIN(LUA); return MAIN; }
 ^[ \t]*\{\{         { BEGIN(LUA); return MAIN; }
+^validate[ \t]*\{\{ { BEGIN(LUA); return VALIDATE; }
+^veto[ \t]*\{\{     { BEGIN(LUA); return VETO; }
+
+
 NAME:               { BEGIN(ARGUMENT); return NAME; }
 default-depth:      { BEGIN(ARGUMENT); return DEFAULT_DEPTH; }
 DEPTH:              { BEGIN(ARGUMENT); return DEPTH; }

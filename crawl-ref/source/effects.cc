@@ -136,7 +136,7 @@ static std::string who_banished(const std::string &who)
     return (who.empty()? who : " (" + who + ")");
 }
 
-void banished(int gate_type, const std::string &who)
+void banished(dungeon_feature_type gate_type, const std::string &who)
 {
 #ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)

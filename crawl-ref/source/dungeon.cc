@@ -38,6 +38,7 @@
 #include "externs.h"
 #include "direct.h"
 #include "dungeon.h"
+#include "files.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -205,7 +206,7 @@ static dgn_region_list no_door_fixup_zones;
 static dgn_region_list vault_zones;
 static std::vector<vault_placement> level_vaults;
 static int minivault_chance = 3;
-
+static bool dgn_level_vetoed = false;
 
 static std::string level_name(int subdepth)
 {
@@ -243,9 +244,27 @@ static void place_altars()
  *********************************************************************/
 void builder(int level_number, int level_type)
 {
-    do
+    // 15 tries to build the level, after which we bail with a capital B.
+    int tries = 10;
+    while (tries-- > 0)
+    {
+        dgn_level_vetoed = false;
         build_dungeon_level(level_number, level_type);
-    while (!valid_dungeon_level(level_number, level_type));
+
+        if (!dgn_level_vetoed && valid_dungeon_level(level_number, level_type))
+            return;
+    }
+
+    save_game(true,
+              make_stringf("Unable to generate level for '%s'!",
+                           level_id::current().describe().c_str()).c_str());
+}
+
+static bool ensure_vault_placed(bool vault_success)
+{
+    if (!vault_success)
+        dgn_level_vetoed = true;
+    return (vault_success);
 }
 
 static coord_def find_level_feature(int feat)
@@ -413,21 +432,21 @@ static void build_layout_skeleton(int level_number, int level_type,
     {
         skip_build = builder_by_branch(level_number);
 
-        if (skip_build == BUILD_QUIT)
+        if (skip_build == BUILD_QUIT || dgn_level_vetoed)
             return;
     }
 
-    if (skip_build == BUILD_CONTINUE)
+    if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
     {
         // do 'normal' building.  Well, except for the swamp.
         if (!player_in_branch(BRANCH_SWAMP) &&
             !player_in_branch(BRANCH_SHOALS))
             skip_build = builder_normal(level_number, level_type, sr);
 
-        if (skip_build == BUILD_CONTINUE)
+        if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
         {
             skip_build = builder_basic(level_number);
-            if (skip_build == BUILD_CONTINUE)
+            if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
                 builder_extras(level_number, level_type);
         }
     }
@@ -548,7 +567,7 @@ static void build_dungeon_level(int level_number, int level_type)
     reset_level();
     build_layout_skeleton(level_number, level_type, sr);
 
-    if (you.level_type == LEVEL_LABYRINTH)
+    if (you.level_type == LEVEL_LABYRINTH || dgn_level_vetoed)
         return;
     
     // Try to place minivaults that really badly want to be placed. Still
@@ -572,6 +591,9 @@ static void build_dungeon_level(int level_number, int level_type)
 
     place_branch_entrances( level_number, level_type );
 
+    if (dgn_level_vetoed)
+        return;
+    
     check_doors();
 
     if (!player_in_branch( BRANCH_DIS ) && !player_in_branch( BRANCH_VAULTS ))
@@ -1117,7 +1139,7 @@ static builder_rc_type builder_by_type(int level_number, char level_type)
                 end(1, false, "Failed to find Pandemonium level %s!\n",
                     pandemon_level_names[which_demon]);
 
-            build_vaults(level_number, vault);
+            ensure_vault_placed( build_vaults(level_number, vault) );
         }
         else
         {
@@ -1187,7 +1209,7 @@ static builder_rc_type builder_by_branch(int level_number)
 
     if (vault != -1)
     {
-        build_vaults(level_number, vault);
+        ensure_vault_placed( build_vaults(level_number, vault) );
         return BUILD_SKIP;
     }
 
@@ -1267,7 +1289,7 @@ static builder_rc_type builder_normal(int level_number, char level_type,
 
     if (vault != -1)
     {
-        build_vaults(level_number, vault);
+        ensure_vault_placed( build_vaults(level_number, vault) );
         return BUILD_SKIP;
     }
 
@@ -3037,7 +3059,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
 
     const int gluggy = vault_main(vgrid, place, force_vault, &level_vaults);
 
-    if (gluggy == MAP_NONE)
+    if (gluggy == MAP_NONE || !gluggy)
         return (false);
 
     int vx, vy;

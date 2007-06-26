@@ -4040,10 +4040,10 @@ void set_mp(int new_amount, bool max_too)
 
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] = 
-    { "XX", "Hu", "El", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
+    { "XX", "Hu", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
       "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM", "Dr", "Dr", 
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", 
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf" };
+      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "El" };
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
@@ -4488,6 +4488,9 @@ void player::init()
 
     banished = false;
     banished_by.clear();
+
+    entering_level = false;
+    transit_stair  = DNGN_UNSEEN;
     
     just_autoprayed = false;
     berserk_penalty = 0;

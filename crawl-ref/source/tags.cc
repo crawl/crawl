@@ -830,6 +830,9 @@ static void tag_construct_you(struct tagHeader &th)
     marshallLong( th, you.num_turns );
 
     marshallShort(th, you.magic_contamination);
+
+    marshallShort(th, you.transit_stair);
+    marshallByte(th, you.entering_level);
 }
 
 static void tag_construct_you_items(struct tagHeader &th)
@@ -1118,6 +1121,9 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.num_turns = unmarshallLong(th);
 
     you.magic_contamination = unmarshallShort(th);
+
+    you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
+    you.entering_level = unmarshallByte(th);
 }
 
 static void tag_read_you_items(struct tagHeader &th, char minorVersion)

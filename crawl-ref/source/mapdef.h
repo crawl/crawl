@@ -394,6 +394,13 @@ typedef std::map<int, keyed_mapspec> keyed_specs;
 
 typedef std::vector<level_range> depth_ranges;
 
+class map_def;
+struct dlua_set_map
+{
+    dlua_set_map(map_def *map);
+    ~dlua_set_map();
+};
+
 class map_def
 {
 public:
@@ -411,7 +418,7 @@ public:
 
     keyed_specs     keyspecs;
 
-    dlua_chunk      prelude, main;
+    dlua_chunk      prelude, main, validate, veto;
 
 private:
     // This map has been loaded from an index, and not fully realised.
@@ -435,7 +442,13 @@ public:
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
 
-    std::string validate();
+    // Returns true if the validation passed.
+    bool test_lua_validate();
+
+    // Returns true if *not* vetoed, i.e., the map is good to go.
+    bool test_lua_veto();
+
+    std::string validate_map_def();
 
     void add_prelude_line(int line,  const std::string &s);
     void add_main_line(int line, const std::string &s);
@@ -476,6 +489,7 @@ public:
 private:
     void write_depth_ranges(FILE *) const;
     void read_depth_ranges(FILE *);
+    bool test_lua_boolchunk(dlua_chunk &);
     std::string rewrite_chunk_errors(const std::string &s) const;
     
     std::string add_key_field(

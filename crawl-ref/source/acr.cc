@@ -3023,8 +3023,10 @@ static bool initialise(void)
     calc_hp();
     calc_mp();
 
-    load( 82, (newc ? LOAD_START_GAME : LOAD_RESTART_GAME), false, 0, 
-          you.where_are_you );
+    load( you.entering_level? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
+          you.entering_level? LOAD_ENTER_LEVEL :
+          newc              ? LOAD_START_GAME : LOAD_RESTART_GAME,
+          true, -1, you.where_are_you );
 
 #if DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz

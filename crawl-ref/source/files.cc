@@ -939,9 +939,13 @@ static void grab_followers(std::vector<follower>& followers)
     }
 }
 
-bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
-           int old_level, branch_type old_branch )
+bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
+           bool was_a_labyrinth, int old_level, branch_type old_branch )
 {
+    unwind_var<dungeon_feature_type> stair(
+        you.transit_stair, stair_taken, DNGN_UNSEEN);
+    unwind_bool ylev(you.entering_level, true, false);
+    
     std::vector<follower> followers;
 
     bool just_created_level = false;
@@ -971,7 +975,7 @@ bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
         clear_clouds();
 
     // This block is to grab followers and save the old level to disk.
-    if (load_mode == LOAD_ENTER_LEVEL)
+    if (load_mode == LOAD_ENTER_LEVEL && old_level != -1)
     {
         grab_followers(followers);
 
@@ -1039,13 +1043,12 @@ bool load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
     if (load_mode != LOAD_RESTART_GAME)
         clear_clouds();
 
-    if (load_mode != LOAD_RESTART_GAME && you.level_type != LEVEL_ABYSS)
+    if (load_mode != LOAD_RESTART_GAME)
     {
-        place_player_on_stair(old_branch, stair_taken);
-    }
-    else if (load_mode != LOAD_RESTART_GAME && you.level_type == LEVEL_ABYSS)
-    {
-        you.moveto(45, 35);
+        if (you.level_type != LEVEL_ABYSS)
+            place_player_on_stair(old_branch, stair_taken);
+        else
+            you.moveto(45, 35);
     }
     crawl_view.set_player_at(you.pos(), true);
 
@@ -1149,7 +1152,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     /* Stashes */
     std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
     FILE *stashf = fopen(stashFile.c_str(), "wb");
-    if (stashf) {
+    if (stashf)
+    {
         stashes.save(stashf);
         fclose(stashf);
         DO_CHMOD_PRIVATE(stashFile.c_str());
@@ -1166,7 +1170,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     /* kills */
     std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
     FILE *killf = fopen(killFile.c_str(), "wb");
-    if (killf) {
+    if (killf)
+    {
         you.kills.save(killf);
         fclose(killf);
         DO_CHMOD_PRIVATE(killFile.c_str());
@@ -1175,7 +1180,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     /* travel cache */
     std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
     FILE *travelf = fopen(travelCacheFile.c_str(), "wb");
-    if (travelf) {
+    if (travelf)
+    {
         travel_cache.save(travelf);
         fclose(travelf);
         DO_CHMOD_PRIVATE(travelCacheFile.c_str());
@@ -1184,7 +1190,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     /* notes */
     std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
     FILE *notesf = fopen(notesFile.c_str(), "wb");
-    if (notesf) {
+    if (notesf)
+    {
         save_notes(notesf);
         fclose(notesf);
         DO_CHMOD_PRIVATE(notesFile.c_str());
@@ -1194,7 +1201,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     
     std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "wb");
-    if (tutorf) {
+    if (tutorf)
+    {
         save_tutorial(tutorf);
         fclose(tutorf);
         DO_CHMOD_PRIVATE(tutorFile.c_str());
@@ -1216,7 +1224,8 @@ void save_game(bool leave_game, const char *farewellmsg)
         return;
 
     // must be exiting -- save level & goodbye!
-    save_level(you.your_level, you.level_type, you.where_are_you);
+    if (!you.entering_level)
+        save_level(you.your_level, you.level_type, you.where_are_you);
 
     clrscr();
 
@@ -1347,7 +1356,8 @@ void restore_game(void)
 
     std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
     FILE *stashf = fopen(stashFile.c_str(), "rb");
-    if (stashf) {
+    if (stashf)
+    {
         stashes.load(stashf);
         fclose(stashf);
     }
@@ -1359,21 +1369,24 @@ void restore_game(void)
 
     std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
     FILE *killf = fopen(killFile.c_str(), "rb");
-    if (killf) {
+    if (killf)
+    {
         you.kills.load(killf);
         fclose(killf);
     }
 
     std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
     FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
-    if (travelf) {
+    if (travelf)
+    {
         travel_cache.load(travelf);
         fclose(travelf);
     }
 
     std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
     FILE *notesf = fopen(notesFile.c_str(), "rb");
-    if (notesf) {
+    if (notesf)
+    {
         load_notes(notesf);
         fclose(notesf);
     }
@@ -1382,7 +1395,8 @@ void restore_game(void)
     
     std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
-    if (tutorf) {
+    if (tutorf)
+    {
         load_tutorial(tutorf);
         fclose(tutorf);
     }

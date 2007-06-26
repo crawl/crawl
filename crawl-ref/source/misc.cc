@@ -533,7 +533,7 @@ void merfolk_start_swimming(void)
 
 void up_stairs(void)
 {
-    int stair_find = grd[you.x_pos][you.y_pos];
+    dungeon_feature_type stair_find = grd[you.x_pos][you.y_pos];
     const branch_type old_where = you.where_are_you;
     const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
 
@@ -653,7 +653,7 @@ void up_stairs(void)
         }
     }
 
-    const unsigned char stair_taken = stair_find;
+    const dungeon_feature_type stair_taken = stair_find;
 
     if (player_is_levitating())
     {
@@ -739,12 +739,12 @@ void up_stairs(void)
     }
 }                               // end up_stairs()
 
-void down_stairs( int old_level, int force_stair )
+void down_stairs( int old_level, dungeon_feature_type force_stair )
 {
     int i;
     char old_level_type = you.level_type;
     const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
-    const int stair_find =
+    const dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
     bool leave_abyss_pan = false;
@@ -955,7 +955,7 @@ void down_stairs( int old_level, int force_stair )
     if (you.level_type == LEVEL_DUNGEON)
         you.your_level++;
 
-    int stair_taken = stair_find;
+    dungeon_feature_type stair_taken = stair_find;
 
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         stair_taken = DNGN_FLOOR;
