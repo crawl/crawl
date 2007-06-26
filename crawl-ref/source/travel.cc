@@ -475,8 +475,9 @@ static void init_terrain_check()
     // Permanently levitating players can cross most hostile terrain.
     signed char trav = player_is_permalevitating()? 
                     TRAVERSABLE : IMPASSABLE;
-    
-    set_pass_feature(DNGN_DEEP_WATER, trav);
+
+    if (water != TRAVERSABLE)
+        set_pass_feature(DNGN_DEEP_WATER, trav);
     set_pass_feature(DNGN_LAVA, trav);
     set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
 }
