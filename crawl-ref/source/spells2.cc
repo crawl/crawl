@@ -1253,7 +1253,7 @@ int summon_elemental(int pow, int restricted_type,
 //jmf: beefed up higher-level casting of this (formerly lame) spell
 void summon_small_mammals(int pow)
 {
-    int thing_called = MONS_PROGRAM_BUG;        // error trapping{dlb}
+    monster_type thing_called = MONS_PROGRAM_BUG; // error trapping{dlb}
 
     int pow_spent = 0;
     int pow_left = pow + 1;
@@ -1273,33 +1273,16 @@ void summon_small_mammals(int pow)
 
         switch (pow_spent)
         {
-        case 75:
-        case 74:
-        case 38:
+        case 75: case 74: case 38:
             thing_called = MONS_ORANGE_RAT;
             break;
 
-        case 65:
-        case 64:
-        case 63:
-        case 27:
-        case 26:
-        case 25:
+        case 65: case 64: case 63: case 27: case 26: case 25:
             thing_called = MONS_GREEN_RAT;
             break;
 
-        case 57:
-        case 56:
-        case 55:
-        case 54:
-        case 53:
-        case 52:
-        case 20:
-        case 18:
-        case 16:
-        case 14:
-        case 12:
-        case 10:
+        case 57: case 56: case 55: case 54: case 53: case 52:
+        case 20: case 18: case 16: case 14: case 12: case 10:
             thing_called = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
             break;
 
@@ -1312,6 +1295,44 @@ void summon_small_mammals(int pow)
                         you.x_pos, you.y_pos, you.pet_target, 250 );
     }
 }                               // end summon_small_mammals()
+
+void summon_animals(int pow)
+{
+    // maybe we should just generate a Lair monster instead? (and
+    // guarantee that it is mobile)
+    const monster_type animals[] = {
+        MONS_BUMBLEBEE, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
+        MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
+        MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR, 
+        MONS_GIANT_SNAIL, MONS_BORING_BEETLE, MONS_GILA_MONSTER,
+        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND
+    };
+
+    int num_so_far = 0;
+    int power_left = pow + 1;
+
+    while ( power_left >= 0 && num_so_far < 8 )
+    {
+        // pick a random monster and subtract its cost
+        monster_type mon_chosen = animals[random2(ARRAYSIZE(animals))];
+        const int power_cost = mons_power(mon_chosen) * 3;
+
+        // allow a certain degree of overuse, but not too much
+        if ( power_cost >= power_left * 2 &&
+             num_so_far > 0 ) // at least one monster, in any case
+            break;
+
+        power_left -= power_cost;
+        num_so_far++;
+
+        if ( random2(pow) < 5 ) // unfriendly
+            create_monster( mon_chosen, 4, BEH_HOSTILE,
+                            you.x_pos, you.y_pos, MHITYOU, 250 );
+        else
+            create_monster( mon_chosen, 4, BEH_FRIENDLY,
+                            you.x_pos, you.y_pos, you.pet_target, 250 );
+    }
+}
 
 void summon_scorpions(int pow)
 {

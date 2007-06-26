@@ -965,6 +965,51 @@ static void summon_demon_card(int power, deck_rarity_type rarity)
                     BEH_FRIENDLY, you.x_pos, you.y_pos, MHITYOU, 250 );
 }
 
+static void summon_any_monster(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    monster_type mon_chosen = NUM_MONSTERS;
+    int chosen_x, chosen_y;
+    int num_tries;
+
+    if ( power_level == 0 )
+        num_tries = 1;
+    else if ( power_level == 1 )
+        num_tries = 4;
+    else
+        num_tries = 18;
+
+    for ( int i = 0; i < num_tries; ++i ) {
+        int dx, dy;
+        do {
+            dx = random2(3) - 1;
+            dy = random2(3) - 1;
+        } while ( dx == 0 && dy == 0 );
+        monster_type cur_try;
+        do {
+            cur_try = random_monster_at_grid(you.x_pos + dx, you.y_pos + dy);
+        } while ( mons_is_unique(cur_try) );
+
+        if ( mon_chosen == NUM_MONSTERS ||
+             mons_power(mon_chosen) < mons_power(cur_try) )
+        {
+            mon_chosen = cur_try;
+            chosen_x = you.x_pos;
+            chosen_y = you.y_pos;
+        }
+    }
+
+    if ( mon_chosen == NUM_MONSTERS ) // should never happen
+        return;
+    
+    if ( power_level == 0 && one_chance_in(4) )
+        create_monster( mon_chosen, 3, BEH_HOSTILE,
+                        chosen_x, chosen_y, MHITYOU, 250 );
+    else
+        create_monster( mon_chosen, 3, BEH_FRIENDLY,
+                        chosen_x, chosen_y, you.pet_target, 250 );
+}
+
 static int card_power(deck_rarity_type rarity)
 {
     int result = 0;
@@ -1031,9 +1076,13 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_WRAITH:           drain_exp(); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
     case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
+    case CARD_SUMMON_ANIMAL:    summon_animals(random2(power/3)); break;
+    case CARD_SUMMON_ANY:       summon_any_monster(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
         
     case CARD_SPADE:
+    case CARD_SUMMON_WEAPON:
+        // XXX not yet implemented
         mpr("Sorry, this card is not yet available.");
         break;
         
@@ -1057,9 +1106,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
                         random2(power), 0 );
         break;
 
-    case CARD_SUMMON_ANIMAL: break; // not yet implemented
-    case CARD_SUMMON_WEAPON: break; // not yet implemented
-    case CARD_SUMMON_ANY: break; // not yet implemented
 
     case CARD_FAMINE:
         if (you.is_undead == US_UNDEAD)

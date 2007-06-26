@@ -144,6 +144,8 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift = false);
  * *********************************************************************** */
 void summon_scorpions(int pow);
 
+void summon_animals(int pow);
+
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
