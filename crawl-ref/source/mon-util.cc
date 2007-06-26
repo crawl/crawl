@@ -2242,8 +2242,11 @@ bool monsters::floundering() const
 
 bool monsters::can_drown() const
 {
-    // Mummies can fall apart in water; demons can drown in water/lava.
-    return (!mons_res_asphyx(this) || mons_genus(type) == MONS_MUMMY
+    // Mummies can fall apart in water; ghouls and demons can drown in
+    // water/lava.
+    return (!mons_res_asphyx(this)
+            || mons_genus(type) == MONS_MUMMY
+            || mons_genus(type) == MONS_GHOUL
             || holiness() == MH_DEMONIC);
 }
 
