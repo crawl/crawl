@@ -606,12 +606,10 @@ static void finish_delay(const delay_queue_item &delay)
 
     case DELAY_ASCENDING_STAIRS:
         up_stairs();
-        untag_followers();
         break;
 
     case DELAY_DESCENDING_STAIRS:
         down_stairs( delay.parm1 );
-        untag_followers();
         break;
 
     case DELAY_INTERRUPTIBLE:

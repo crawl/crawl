@@ -418,7 +418,6 @@ void level_travel( int delta )
 
     you.your_level = new_level - 1;
     down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
-    untag_followers();
 }                               // end level_travel()
 
 static void wizard_go_to_level(const level_pos &pos)

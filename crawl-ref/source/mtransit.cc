@@ -17,7 +17,8 @@
 
 monsters_in_transit the_lost_ones;
 
-static void place_lost_monsters(m_transit_list &m);
+static void level_place_lost_monsters(m_transit_list &m);
+static void level_place_followers(m_transit_list &m);
 
 static void cull_lost(m_transit_list &mlist, int how_many)
 {
@@ -61,17 +62,26 @@ void add_monster_to_transit(const level_id &lid, const monsters &m)
         cull_lost(mlist, how_many);
 }
 
-void place_transiting_monsters()
+void place_lost_ones(void (*placefn)(m_transit_list &ml))
 {
     level_id c = level_id::current();
 
     monsters_in_transit::iterator i = the_lost_ones.find(c);
     if (i == the_lost_ones.end())
         return;
-
-    place_lost_monsters(i->second);
+    placefn(i->second);
     if (i->second.empty())
         the_lost_ones.erase(i);
+}
+
+void place_transiting_monsters()
+{
+    place_lost_ones(level_place_lost_monsters);
+}
+
+void place_followers()
+{
+    place_lost_ones(level_place_followers);
 }
 
 static bool place_lost_monster(follower &f)
@@ -79,7 +89,7 @@ static bool place_lost_monster(follower &f)
     return (f.place(false));
 }
 
-static void place_lost_monsters(m_transit_list &m)
+static void level_place_lost_monsters(m_transit_list &m)
 {
     for (m_transit_list::iterator i = m.begin();
          i != m.end(); )
@@ -91,6 +101,17 @@ static void place_lost_monsters(m_transit_list &m)
             continue;
 
         if (place_lost_monster(*mon))
+            m.erase(mon);
+    }
+}
+
+static void level_place_followers(m_transit_list &m)
+{
+    for (m_transit_list::iterator i = m.begin();
+         i != m.end(); )
+    {
+        m_transit_list::iterator mon = i++;
+        if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
             m.erase(mon);
     }
 }
@@ -128,7 +149,11 @@ bool follower::place(bool near_player)
                  m.name(DESC_PLAIN).c_str());
 #endif
             m.target_x = m.target_y = 0;
-            m.flags |= MF_JUST_SUMMONED;
+
+            if (m.flags & MF_TAKING_STAIRS)
+                m.flags &= ~MF_TAKING_STAIRS;
+            else
+                m.flags |= MF_JUST_SUMMONED;
             
             restore_mons_items(m);
             return (true);

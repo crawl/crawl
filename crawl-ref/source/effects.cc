@@ -154,7 +154,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     }
 
     down_stairs(you.your_level, gate_type);  // heh heh
-    untag_followers(); // safety
 
     if (gate_type == DNGN_ENTER_ABYSS || gate_type == DNGN_ENTER_PANDEMONIUM)
         xom_is_stimulated(255);

@@ -36,5 +36,6 @@ void add_monster_to_transit(const level_id &dest, const monsters &m);
 
 // Places (some of the) monsters eligible to be placed on this level.
 void place_transiting_monsters();
+void place_followers();
 
 #endif

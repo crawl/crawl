@@ -21,7 +21,6 @@
 std::string make_time_string(time_t abs_time, bool terse = false);
 void set_redraw_status( unsigned long flags );
 void tag_followers( void );
-void untag_followers( void );
 
 void seed_rng(void);
 void seed_rng(long seed);

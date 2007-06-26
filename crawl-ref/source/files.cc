@@ -901,7 +901,7 @@ static void clear_clouds()
     env.cgrid.init(EMPTY_CLOUD);
 }
 
-static void grab_followers(std::vector<follower>& followers)
+static void grab_followers()
 {
     for (int i = you.x_pos - 1; i < you.x_pos + 2; i++)
     {
@@ -931,8 +931,7 @@ static void grab_followers(std::vector<follower>& followers)
             mprf( "%s is following.", str_monam(*fmenv, DESC_CAP_THE).c_str());
 #endif
 
-            follower f(*fmenv);
-            followers.push_back(f);
+            fmenv->set_transit(level_id::current());
             fmenv->destroy_inventory();
             monster_cleanup(fmenv);
         }
@@ -946,8 +945,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.transit_stair, stair_taken, DNGN_UNSEEN);
     unwind_bool ylev(you.entering_level, true, false);
     
-    std::vector<follower> followers;
-
     bool just_created_level = false;
 
     std::string cha_fil = make_filename( you.your_name, you.your_level,
@@ -977,7 +974,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL && old_level != -1)
     {
-        grab_followers(followers);
+        grab_followers();
 
         if (!was_a_labyrinth)
             save_level( old_level, LEVEL_DUNGEON, old_branch );
@@ -1061,12 +1058,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
          || you.level_type == LEVEL_PANDEMONIUM)
         && load_mode == LOAD_ENTER_LEVEL)
     {
-        while (!followers.empty())
-        {
-            follower f = followers.front();
-            followers.erase(followers.begin());
-            f.place(true);
-        }
+        place_followers();
     }                       // end of moving followers
 
     // Load monsters in transit.

@@ -510,10 +510,7 @@ static void handle_wizard_command( void )
         if (you.level_type != LEVEL_ABYSS)
             banished( DNGN_ENTER_ABYSS );
         else
-        {
             down_stairs(you.your_level, DNGN_EXIT_ABYSS);
-            untag_followers();
-        }
         break;
 
     case 'g':

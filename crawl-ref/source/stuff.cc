@@ -146,15 +146,6 @@ void tag_followers( void )
     }
 }
 
-void untag_followers( void )
-{
-    for (int m = 0; m < MAX_MONSTERS; m++)
-    {
-        struct monsters *mon = &menv[m];
-        mon->flags &= (~MF_TAKING_STAIRS);
-    }
-}
-
 unsigned char get_ch(void)
 {
     unsigned char gotched = getch();
