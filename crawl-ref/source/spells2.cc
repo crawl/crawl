@@ -1311,15 +1311,20 @@ void summon_animals(int pow)
     int num_so_far = 0;
     int power_left = pow + 1;
 
+    const bool varied = coinflip();
+    monster_type mon_chosen;
+
     while ( power_left >= 0 && num_so_far < 8 )
     {
         // pick a random monster and subtract its cost
-        monster_type mon_chosen = animals[random2(ARRAYSIZE(animals))];
+        if ( varied || num_so_far == 0 )
+            mon_chosen = animals[random2(ARRAYSIZE(animals))];
+
         const int power_cost = mons_power(mon_chosen) * 3;
 
-        // allow a certain degree of overuse, but not too much
-        if ( power_cost >= power_left * 2 &&
-             num_so_far > 0 ) // at least one monster, in any case
+        // Allow a certain degree of overuse, but not too much.
+        // Guarantee at least two summons.
+        if ( power_cost >= power_left * 2 && num_so_far >= 2 )
             break;
 
         power_left -= power_cost;
