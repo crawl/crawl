@@ -2375,7 +2375,8 @@ bool monsters::fumbles_attack(bool verbose)
             const bool can_see =
                 mons_near(this) && player_monster_visible(this);
             if (can_see)
-                mprf("%s splashes around in the water.");
+                mprf("%s splashes around in the water.",
+                     this->name(DESC_CAP_THE).c_str());
             else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
                 mprf(MSGCH_SOUND, "You hear a splashing noise.");
         }
