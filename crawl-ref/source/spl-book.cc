@@ -158,12 +158,12 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 11 - Book of Spatial Translocations
     {SPELL_APPORTATION,
+     SPELL_PORTALED_PROJECTILE,
      SPELL_BLINK,
      SPELL_RECALL,
      SPELL_TELEPORT_OTHER,
      SPELL_TELEPORT_SELF,
      SPELL_CONTROL_TELEPORT,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
     // 12 - Book of Enchantments (fourth one)
@@ -435,7 +435,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 37 - Book of Mutations //jmf: now Morphology
+    // 37 - Book of Morphology
     {SPELL_FRAGMENTATION,
      SPELL_POLYMORPH_OTHER,
      SPELL_ALTER_SELF,

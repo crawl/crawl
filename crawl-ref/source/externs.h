@@ -1553,7 +1553,7 @@ public:
                                   // creating macros
 
     int         fire_items_start; // index of first item for fire command
-    FixedVector<int, NUM_FIRE_TYPES>  fire_order; // order for 'f' command
+    FixedVector<fire_type, NUM_FIRE_TYPES> fire_order; // order for 'f' command
 
     bool        auto_list;      // automatically jump to appropriate item lists
 

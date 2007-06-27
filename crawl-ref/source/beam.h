@@ -96,6 +96,8 @@ void mimic_alert( struct monsters *mimic );
 
 void zapping( zap_type ztype, int power, struct bolt &pbolt );
 
-int affect(struct bolt &beam, int x, int y);
+int affect(bolt &beam, int x, int y);
+
+void beam_drop_object( bolt &beam, item_def *item, int x, int y );
 
 #endif

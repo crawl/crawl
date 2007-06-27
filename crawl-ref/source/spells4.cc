@@ -30,6 +30,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "it_use2.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -2706,6 +2707,28 @@ void cast_twist(int pow)
     player_hurt_monster( mons, damage );
     return;
 }                               // end cast_twist()
+
+bool cast_portaled_projectile(int pow, bolt& beam)
+{
+    if ( pow > 50 )
+        pow = 50;
+
+    if ( grid_is_solid(beam.target_x, beam.target_y) )
+    {
+        mpr("You can't shoot at gazebos.");
+        return false;
+    }
+
+    const int idx = get_fire_item_index();
+    if ( idx == ENDOFPACK )
+    {
+        mpr("No suitable missiles.");
+        return false;
+    }
+
+    throw_it( beam, idx, true, random2(pow/4) );
+    return true;
+}
 
 //
 // This version of far strike is a bit too creative for level one, in

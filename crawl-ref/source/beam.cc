@@ -68,14 +68,12 @@ static int spready[] = { -1, 1, 0, 0 };
 static int opdir[]   = { 2, 1, 4, 3 };
 static FixedArray < bool, 19, 19 > explode_map;
 
-// helper functions (some of these, esp. affect(), should probably
-// be public):
+// helper functions (some of these should probably be public):
 static void sticky_flame_monster( int mn, kill_category who, int hurt_final );
 static bool affects_wall(const bolt &beam, int wall_feature);
 static bool isBouncy(bolt &beam, unsigned char gridtype);
 static int beam_source(const bolt &beam);
 static std::string beam_zapper(const bolt &beam);
-static void beam_drop_object( bolt &beam, item_def *item, int x, int y );
 static bool beam_term_on_target(bolt &beam, int x, int y);
 static void beam_explodes(bolt &beam, int x, int y);
 static int  affect_wall(bolt &beam, int x, int y);
@@ -2363,7 +2361,7 @@ static bool beam_term_on_target(bolt &beam, int x, int y)
     return (false);
 }
 
-static void beam_drop_object( bolt &beam, item_def *item, int x, int y )
+void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 {
     ASSERT( item != NULL );
 

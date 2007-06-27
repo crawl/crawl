@@ -1793,6 +1793,11 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
+    case SPELL_PORTALED_PROJECTILE:
+        if ( !cast_portaled_projectile(powc, beam) )
+            return SPRET_ABORT;
+        break;
+
     default:
         mpr("Invalid spell!");
         break;

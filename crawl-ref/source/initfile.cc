@@ -243,7 +243,7 @@ std::string weapon_to_str( int weapon )
     }
 }
 
-static unsigned int str_to_fire_types( const std::string &str )
+static fire_type str_to_fire_types( const std::string &str )
 {
     if (str == "launcher")
         return (FIRE_LAUNCHER);
@@ -264,7 +264,7 @@ static unsigned int str_to_fire_types( const std::string &str )
 }
 
 static void str_to_fire_order( const std::string &str, 
-                               FixedVector< int, NUM_FIRE_TYPES > &list )
+                               FixedVector< fire_type, NUM_FIRE_TYPES > &list )
 {
     int i;
     size_t pos = 0;

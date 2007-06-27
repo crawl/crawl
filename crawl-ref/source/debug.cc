@@ -1522,8 +1522,13 @@ static bool fsim_ranged_combat(FILE *out, int wskill, int mi,
         mon.hit_points = mon.max_hit_points;
         bolt beam;
         you.time_taken = player_speed();
-        if (throw_it(beam, thrown, &mon))
+
+        // throw_it() will decrease quantity by 1
+        inc_inv_item_quantity(thrown, 1);
+
+        if (throw_it(beam, thrown, true))
             hits++;
+
         you.hunger = hunger;
         time_taken += you.time_taken;
 

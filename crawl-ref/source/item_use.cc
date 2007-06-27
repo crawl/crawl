@@ -1347,17 +1347,16 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
 
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
-// Note: If dummy_target is non-NULL, throw_it fakes a bolt and calls
-// affect() on the monster's square.
+// Note: If teleport is true, assume that pbolt is already set up,
+// and teleport the projectile onto the square.
 //
 // Return value is only relevant if dummy_target is non-NULL, and returns
 // true if dummy_target is hit.
-bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
+bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
 {
     struct dist thr;
     char shoot_skill = 0;
 
-    char wepClass, wepType;     // ammo class and type
     char lnchClass, lnchType;   // launcher class and type
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
@@ -1370,25 +1369,18 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     bool thrown = false;        // item is sensible thrown item
     int slayDam = 0;
 
-    if (dummy_target)
-    {
-        thr.isValid = true;
-        thr.isCancel = false;
-        thr.tx = dummy_target->x;
-        thr.ty = dummy_target->y;
-    }
-    else
+    if (!teleport)
     {
         message_current_target();
         direction( thr, DIR_NONE, TARG_ENEMY );
-    }
 
-    if (!thr.isValid)
-    {
-        if (thr.isCancel)
-            canned_msg(MSG_OK);
-
-        return (false);
+        if (!thr.isValid)
+        {
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
+            
+            return (false);
+        }
     }
 
     // Must unwield before fire_beam() makes a copy in order to remove things
@@ -1415,7 +1407,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
     // even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
-    pbolt.set_target(thr);
+    if ( !teleport )
+        pbolt.set_target(thr);
 
     pbolt.flavour = BEAM_MISSILE;
     // pbolt.range is set below
@@ -1449,8 +1442,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     pbolt.aux_source.clear();
 
     // get the ammo/weapon type.  Convenience.
-    wepClass = item.base_type;
-    wepType = item.sub_type;
+    const object_class_type wepClass = item.base_type;
+    const int wepType = item.sub_type;
 
     // get the launcher class,type.  Convenience.
     if (you.equip[EQ_WEAPON] < 0)
@@ -1964,6 +1957,9 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
 
+    // Add in bonus (only from Portaled Projectile for now)
+    pbolt.hit += acc_bonus;
+
     scale_dice( pbolt.damage );
 
 #if DEBUG_DIAGNOSTICS
@@ -1988,14 +1984,20 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         item.flags |= ISFLAG_THROWN;
 
     bool hit = false;
-    // using copy, since the launched item might be differect (venom blowgun)
-    if (dummy_target)
-        hit = (affect( pbolt, dummy_target->x, dummy_target->y ) != 0);
+    if (teleport)
+    {
+        // Violating encapsulation somewhat...oh well.
+        hit = (affect( pbolt, pbolt.target_x, pbolt.target_y ) != 0);
+        beam_drop_object( pbolt, &item, pbolt.target_x, pbolt.target_y );
+    }
     else
     {
+        // Dropping item copy, since the launched item might be different
+        // (e.g. venom blowgun)
         fire_beam( pbolt, &item );
-        dec_inv_item_quantity( throw_2, 1 );
     }
+
+    dec_inv_item_quantity( throw_2, 1 );
 
     // throwing and blowguns are silent
     if (launched && lnchType != WPN_BLOWGUN)

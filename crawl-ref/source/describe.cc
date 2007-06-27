@@ -4526,6 +4526,11 @@ void describe_spell(spell_type spelled)
                        "power will cause some of the items to be lost in the "
                        "infinite void.";
         break;
+        
+    case SPELL_PORTALED_PROJECTILE:
+        description += "teleports a missile directly to its target, "
+            "greatly increasing its accuracy (but not damage.)";
+        break;
 
     default:
         DEBUGSTR("Bad spell");

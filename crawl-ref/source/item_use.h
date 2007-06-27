@@ -137,7 +137,7 @@ bool puton_item(int slot, bool prompt_finger = true);
 
 bool enchant_weapon( int which_stat, bool quiet = false );
 
-bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
+bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0);
 
 void inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher, 
