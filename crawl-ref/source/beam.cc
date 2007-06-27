@@ -1334,6 +1334,10 @@ void fire_beam( bolt &pbolt, item_def *item )
         tx = ray.x();
         ty = ray.y();
 
+        // shooting through clouds affects accuracy
+        if ( env.cgrid[tx][ty] != EMPTY_CLOUD )
+            pbolt.hit = std::max(pbolt.hit - 2, 0);
+
         // see if tx, ty is blocked by something
         if (grid_is_solid(grd[tx][ty]))
         {
@@ -2977,8 +2981,6 @@ static std::string beam_zapper(const bolt &beam)
 // return amount of extra range used up by affectation of the player
 static int affect_player( bolt &beam )
 {
-    int beamHit;
-
     // digging -- don't care.
     if (beam.flavour == BEAM_DIGGING)
         return (0);
@@ -3008,7 +3010,7 @@ static int affect_player( bolt &beam )
     beam.msg_generated = true;
 
     // use beamHit, NOT beam.hit, for modification of tohit.. geez!
-    beamHit = beam.hit;
+    int beamHit = beam.hit;
 
     // Monsters shooting at an invisible player are very inaccurate.
     if (you.duration[DUR_INVIS] && !beam.can_see_invis)

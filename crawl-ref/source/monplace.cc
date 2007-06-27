@@ -1343,7 +1343,7 @@ bool player_angers_monster(monsters *creation)
                  && player_monster_visible(creation) )
             {
                 mprf("%s is enraged by your holy aura!",
-                     str_monam(*creation, DESC_CAP_THE).c_str());
+                     creation->name(DESC_CAP_THE).c_str());
             }
         }
         return (true);
