@@ -250,6 +250,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(&you.inv[item_slot], true))
         return (false);
 
+    // check inscriptions
+    if ( !check_warning_inscriptions(you.inv[item_slot], OPER_WIELD) )
+        return false;
+
     // Go ahead and wield the weapon.
     if (you.equip[EQ_WEAPON] != -1)
         unwield_item(you.equip[EQ_WEAPON], show_weff_messages);
@@ -265,8 +269,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     wield_warning();
 
     // time calculations
-    you.time_taken *= 5;
-    you.time_taken /= 10;
+    you.time_taken /= 2;
 
     you.wield_change = true;
     you.turn_is_over = true;
