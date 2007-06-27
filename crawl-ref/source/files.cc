@@ -1648,10 +1648,9 @@ std::string readString(FILE *file, int cap)
     {
         if (length <= cap)
         {
-            char *buf = new char[length + 1];
+            char *buf = new char[length];
             read2(file, buf, length);
-            buf[length] = 0;
-            const std::string s = buf;
+            const std::string s(buf, length);
             delete [] buf;
             return (s);
         }

@@ -31,6 +31,7 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "travel.h"
 
 #include <cstring>
 #include <map>
@@ -202,11 +203,16 @@ void CLua::init_throttle()
     }
 }
 
-int CLua::loadstring(const char *s, const char *context)
+int CLua::loadbuffer(const char *buf, size_t size, const char *context)
 {
-    const int err = luaL_loadbuffer(state(), s, strlen(s), context);
+    const int err = luaL_loadbuffer(state(), buf, size, context);
     set_error(err, state());
     return err;
+}
+
+int CLua::loadstring(const char *s, const char *context)
+{
+    return loadbuffer(s, strlen(s), context);
 }
 
 int CLua::execstring(const char *s, const char *context)
@@ -711,6 +717,7 @@ LUARET1(you_levitating, boolean,
 LUARET1(you_flying, boolean,
         player_is_levitating() && wearing_amulet(AMU_CONTROLLED_FLIGHT))
 LUARET1(you_transform, string, transform_name())
+LUARET1(you_where, string, level_id::current().describe().c_str())
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 
 void lua_push_floor_items(lua_State *ls);
@@ -783,6 +790,8 @@ static const struct luaL_reg you_lib[] =
     { "stop_activity", you_stop_activity },
 
     { "floor_items",  you_floor_items },
+
+    { "where", you_where },
     { NULL, NULL },
 };
 

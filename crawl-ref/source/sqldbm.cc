@@ -1,7 +1,9 @@
 /*
- *  File:       sqldbm.c
+ *  File:       sqldbm.cc
  *  Summary:    dbm wrapper for SQLite
  *  Written by: Darshan Shaligram
+ *  
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-26T17:43:23.491102Z $
  */
 
 #include "AppHdr.h"
@@ -276,4 +278,4 @@ int dbm_store(SQL_DBM *db, const sql_datum &key, const sql_datum &value, int)
     return (err);
 }
 
-#endif
+#endif // USE_SQLITE_DBM

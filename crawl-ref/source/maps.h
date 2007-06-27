@@ -59,4 +59,6 @@ extern depth_ranges lc_default_depths;
 extern dlua_chunk lc_global_prelude;
 extern bool lc_run_global_prelude;
 
+const int MAP_CACHE_VERSION = 1003;
+
 #endif

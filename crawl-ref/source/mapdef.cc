@@ -862,7 +862,7 @@ void map_def::reinit()
 void map_def::write_full(FILE *outf)
 {
     cache_offset = ftell(outf);
-    writeShort(outf, 0x1eaf);   // Level indicator.
+    writeShort(outf, MAP_CACHE_VERSION);   // Level indicator.
     writeString(outf, name);
     prelude.write(outf);
     main.write(outf);
@@ -880,7 +880,7 @@ void map_def::read_full(FILE *inf)
     // reloading the index), but it's easier to save the game at this
     // point and let the player reload.
 
-    if (readShort(inf) != 0x1eaf || readString(inf) != name)
+    if (readShort(inf) != MAP_CACHE_VERSION || readString(inf) != name)
         save_game(true,
                   make_stringf("Level file cache for %s is out-of-sync! "
                                "Please reload your game.",

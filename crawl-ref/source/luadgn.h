@@ -21,14 +21,23 @@ class dlua_chunk
 private:
     std::string file;
     std::string chunk;
+    std::string compiled;
     std::string context;
     int first, last;     // First and last lines of the original source.
 
+    enum chunk_t
+    {
+        CT_EMPTY,
+        CT_SOURCE,
+        CT_COMPILED
+    };
+    
 private:
-    int check_op(CLua *, int);
+    int check_op(CLua &, int);
     std::string rewrite_chunk_prefix(const std::string &line) const;
     std::string get_chunk_prefix(const std::string &s) const;
-    
+    void release_compiled_chunk();
+
 public:
     mutable std::string error;
 

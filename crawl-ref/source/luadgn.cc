@@ -10,6 +10,8 @@
 #include "files.h"
 #include "luadgn.h"
 #include "mapdef.h"
+#include "stuff.h"
+#include <sstream>
 
 // Lua interpreter for the dungeon builder.
 CLua dlua(false);
@@ -40,29 +42,52 @@ static int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
 // dlua_chunk
 
 dlua_chunk::dlua_chunk(const std::string &_context)
-    : file(), chunk(), context(_context), first(-1), last(-1), error()
+    : file(), chunk(), compiled(), context(_context), first(-1),
+      last(-1), error()
 {
     clear();
 }
 
 void dlua_chunk::write(FILE *outf) const
 {
-    writeString(outf, chunk, LUA_CHUNK_MAX_SIZE);
-    if (!chunk.empty())
+    if (compiled.empty() && chunk.empty())
     {
-        writeString(outf, file);
-        writeLong(outf, first);
+        writeByte(outf, CT_EMPTY);
+        return;
     }
+    
+    if (!compiled.empty())
+    {
+        writeByte(outf, CT_COMPILED);
+        writeString(outf, compiled, LUA_CHUNK_MAX_SIZE);
+    }
+    else
+    {
+        writeByte(outf, CT_SOURCE);
+        writeString(outf, chunk, LUA_CHUNK_MAX_SIZE);
+    }
+        
+    writeString(outf, file);
+    writeLong(outf, first);
 }
 
 void dlua_chunk::read(FILE *inf)
 {
-    chunk = readString(inf, LUA_CHUNK_MAX_SIZE);
-    if (!chunk.empty())
+    clear();
+    chunk_t type = static_cast<chunk_t>(readByte(inf));
+    switch (type)
     {
-        file  = readString(inf);
-        first = readLong(inf);
+    case CT_EMPTY:
+        return;
+    case CT_SOURCE:
+        chunk = readString(inf, LUA_CHUNK_MAX_SIZE);
+        break;
+    case CT_COMPILED:
+        compiled = readString(inf, LUA_CHUNK_MAX_SIZE);
+        break;
     }
+    file  = readString(inf);
+    first = readLong(inf);
 }
 
 void dlua_chunk::clear()
@@ -71,6 +96,7 @@ void dlua_chunk::clear()
     chunk.clear();
     first = last = -1;
     error.clear();
+    compiled.clear();
 }
 
 void dlua_chunk::set_file(const std::string &s)
@@ -97,18 +123,48 @@ void dlua_chunk::set_chunk(const std::string &s)
     chunk = s;
 }
 
-int dlua_chunk::check_op(CLua *interp, int err)
+int dlua_chunk::check_op(CLua &interp, int err)
 {
-    error = interp->error;
+    error = interp.error;
     return (err);
+}
+
+static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
+                                      size_t sz, void *ud)
+{
+    std::ostringstream &out = *static_cast<std::ostringstream*>(ud);
+    out.write((const char *) p, sz);
+    return (0);
 }
 
 int dlua_chunk::load(CLua &interp)
 {
-    if (trimmed_string(chunk).empty())
+    if (!compiled.empty())
+        return check_op( interp,
+                         interp.loadbuffer(compiled.c_str(), compiled.length(),
+                                           context.c_str()) );
+
+    if (empty())
+    {
+        chunk.clear();
         return (-1000);
-    return check_op(&interp,
-                    interp.loadstring(chunk.c_str(), context.c_str()));
+    }
+    
+    int err = check_op( interp,
+                        interp.loadstring(chunk.c_str(), context.c_str()) );
+    if (err)
+        return (err);
+    std::ostringstream out;
+    err = lua_dump(interp, dlua_compiled_chunk_writer, &out);
+    if (err)
+    {
+        const char *e = lua_tostring(interp, -1);
+        error = e? e : "Unknown error compiling chunk";
+        lua_pop(interp, 2);
+    }
+    compiled = out.str();
+    chunk.clear();
+    return (err);
 }
 
 int dlua_chunk::load_call(CLua &interp, const char *fn)
@@ -119,7 +175,7 @@ int dlua_chunk::load_call(CLua &interp, const char *fn)
     if (err)
         return (err);
 
-    return check_op(&interp, !interp.callfn(fn, fn? 1 : 0, 0));
+    return check_op(interp, !interp.callfn(fn, fn? 1 : 0, 0));
 }
 
 std::string dlua_chunk::orig_error() const
@@ -575,6 +631,20 @@ static int dgn_name(lua_State *ls)
     PLUARET(string, map->name.c_str());
 }
 
+static int dgn_grid(lua_State *ls)
+{
+    const int x = luaL_checkint(ls, 1), y = luaL_checkint(ls, 2);
+    if (!map_bounds(x, y))
+        luaL_error(ls,
+                   make_stringf("(%d,%d) is out of bounds (%d-%d,%d-%d)",
+                                x, y,
+                                X_BOUND_1, X_BOUND_2,
+                                Y_BOUND_1, Y_BOUND_2).c_str());
+    if (lua_isnumber(ls, 3))
+        grd[x][y] = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
+    PLUARET(number, grd[x][y]);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -596,6 +666,7 @@ static const struct luaL_reg dgn_lib[] =
     { "kfeat", dgn_kfeat },
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
+    { "grid", dgn_grid },
     { NULL, NULL }
 };
 

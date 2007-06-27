@@ -63,6 +63,7 @@ public:
     void setregistry(const char *name);
     void getregistry(const char *name);
 
+    int loadbuffer(const char *buf, size_t size, const char *context);
     int loadstring(const char *str, const char *context);
     int execstring(const char *str, const char *context = "init.txt");
     int execfile(const char *filename, bool trusted = false,

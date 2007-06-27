@@ -397,8 +397,6 @@ void reset_map_parser()
 
 static bool checked_des_index_dir = false;
 
-#define DESCACHE_VER  1002
-
 static void check_des_index_dir()
 {
     if (checked_des_index_dir)
@@ -428,7 +426,7 @@ static bool verify_file_version(const std::string &file)
     const long ver = readLong(inf);
     fclose(inf);
 
-    return (ver == DESCACHE_VER);
+    return (ver == MAP_CACHE_VERSION);
 }
 
 static bool verify_map_index(const std::string &base)
@@ -509,7 +507,7 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
     if (!outf)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writeLong(outf, DESCACHE_VER);
+    writeLong(outf, MAP_CACHE_VERSION);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
     fclose(outf);
@@ -522,7 +520,7 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     if (!outf)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writeLong(outf, DESCACHE_VER);
+    writeLong(outf, MAP_CACHE_VERSION);
     writeShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_index(outf);
