@@ -1395,29 +1395,6 @@ bool acquirement(object_class_type force_class, int agent)
     return (true);
 }                               // end acquirement()
 
-// Remove the "empty" autoinscription, if present.
-// Return true if the inscription was there, false otherwise.
-bool remove_empty_inscription( item_def& item )
-{
-    const char* empty_inscription = "empty";
-    size_t p = item.inscription.find(empty_inscription);
-    if ( p != std::string::npos )
-    {
-        // found it, delete it
-        size_t prespace = 0;
-        // if preceded by a space, delete that too
-        if ( p != 0 && item.inscription[p-1] == ' ' )
-            prespace = 1;
-        item.inscription =
-            item.inscription.substr(0, p - prespace) +
-            item.inscription.substr(p + strlen(empty_inscription),
-                                    std::string::npos);
-        return true;
-    }
-    else
-        return false;
-}
-
 bool recharge_wand(void)
 {
     if (you.equip[EQ_WEAPON] == -1)
@@ -1431,7 +1408,6 @@ bool recharge_wand(void)
     int charge_gain = 0;
     if (wand.base_type == OBJ_WANDS)
     {
-        remove_empty_inscription(wand);
         switch (wand.sub_type)
         {
         case WAND_INVISIBILITY:
@@ -1455,6 +1431,9 @@ bool recharge_wand(void)
             charge_gain = 8;
             break;
         }
+
+        // don't display zap counts any more
+        wand.plus2 = ZAPCOUNT_UNKNOWN;
 
         mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
 

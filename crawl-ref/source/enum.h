@@ -3996,6 +3996,12 @@ enum zap_type
     NUM_ZAPS                           // must remain last member {dlb}
 };
 
+enum zap_count_type
+{
+    ZAPCOUNT_EMPTY = -1,
+    ZAPCOUNT_UNKNOWN = -2
+};
+
 enum zombie_size_type
 {
     Z_NOZOMBIE,

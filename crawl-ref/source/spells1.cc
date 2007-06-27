@@ -386,7 +386,6 @@ void identify(int power)
                         you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
 
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
-        remove_empty_inscription(you.inv[item_slot]);
         
         // output identified item
         mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());

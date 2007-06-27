@@ -2551,17 +2551,8 @@ void zap_wand(void)
     {
         // it's an empty wand, inscribe it that way
         canned_msg(MSG_NOTHING_HAPPENS);
+        you.inv[item_slot].plus2 = ZAPCOUNT_EMPTY;
         you.turn_is_over = true;
-        if ( !item_ident(you.inv[item_slot], ISFLAG_KNOW_PLUSES) )
-        {
-            if ( you.inv[item_slot].inscription.find("empty") ==
-                 std::string::npos )
-            {
-                if ( !you.inv[item_slot].inscription.empty() )
-                    you.inv[item_slot].inscription += ' ';
-                you.inv[item_slot].inscription += "empty";
-            }
-        }
         return;
     }
 
@@ -2654,7 +2645,12 @@ void zap_wand(void)
                         you.inv[item_slot].sub_type, ID_TRIED_TYPE );
     }
 
+    // take off a charge
     you.inv[item_slot].plus--;
+
+    // increment zap count
+    if ( you.inv[item_slot].plus2 >= 0 )
+        you.inv[item_slot].plus2++;
 
     if (get_ident_type( you.inv[item_slot].base_type, 
                         you.inv[item_slot].sub_type ) == ID_KNOWN_TYPE  
