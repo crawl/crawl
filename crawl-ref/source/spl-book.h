@@ -32,7 +32,7 @@ bool is_valid_spell_in_book( int splbook, int spell );
 /* ***********************************************************************
  * called from: it_use3 - item_use - spl-book
  * *********************************************************************** */
-unsigned char read_book( item_def &item, int action );
+unsigned char read_book( item_def &item, read_book_action_type action );
 
 
 // updated 24may2000 {dlb}
@@ -48,7 +48,7 @@ int staff_spell( int zap_device_2 );
 
 bool undead_cannot_memorise(spell_type spell, char being);
 
-int spellbook_contents( item_def &book, int action,
+int spellbook_contents( item_def &book, read_book_action_type action,
                         formatted_string *fs = NULL );
 
 int count_staff_spells(const item_def &item, bool need_id);

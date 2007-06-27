@@ -133,6 +133,11 @@ static god_type ng_pr;
 static int ng_weapon;
 static int ng_book;
 
+static species_type random_draconian_species()
+{
+    return static_cast<species_type>(SP_RED_DRACONIAN + random2(9));
+}
+
 static void reset_newgame_options(void)
 {
     ng_race = ng_cls = 0;
@@ -273,7 +278,7 @@ static void pick_random_species_and_class( void )
 
     // return draconian variety here
     if (species == SP_RED_DRACONIAN)
-        you.species = static_cast<species_type>(SP_RED_DRACONIAN + random2(9));
+        you.species = random_draconian_species();
     else
         you.species = species;
 
@@ -2879,7 +2884,7 @@ static species_type letter_to_species(int keyn)
     if ( offset + SP_HUMAN < SP_RED_DRACONIAN )
         rc = offset + SP_HUMAN;
     else if ( offset + SP_HUMAN == SP_RED_DRACONIAN ) // random draco
-        rc = SP_RED_DRACONIAN + random2(9);
+        rc = random_draconian_species();
     else                        // skip over draconian species
         rc = offset + (SP_BASE_DRACONIAN - SP_RED_DRACONIAN) + 1;
     return static_cast<species_type>(rc);

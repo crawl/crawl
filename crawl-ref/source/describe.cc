@@ -5040,7 +5040,8 @@ void describe_god( god_type which_god, bool give_title )
     if (which_god == GOD_NO_GOD) //mv:no god -> say it and go away
     {
         cprintf( EOL "You are not religious." );
-        goto end_god_info;
+        getch();
+        return;
     }
 
     colour = god_colour(which_god);
@@ -5322,9 +5323,6 @@ void describe_god( god_type which_god, bool give_title )
         if ( !have_any )
             cprintf( "None." EOL );
     }
-
-
-end_god_info: //end of everything (life, world, universe etc.)
 
     getch(); // wait until keypressed
 }          //mv: That's all folks.

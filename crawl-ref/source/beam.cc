@@ -3718,6 +3718,8 @@ static int affect_monster(bolt &beam, monsters *mon)
 
 static int affect_monster_enchantment(bolt &beam, monsters *mon)
 {
+    bool death_check = false;
+
     if (beam.flavour == BEAM_TELEPORT) // teleportation
     {
         if (check_mons_resist_magic( mon, beam.ench_power )
@@ -3806,7 +3808,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
 
         hurt_monster( mon, roll_dice( beam.damage ) );
 
-        goto deathCheck;
+        death_check = true;
     }
 
     if (beam.flavour == BEAM_ENSLAVE_UNDEAD 
@@ -3885,7 +3887,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
             hurt_monster( mon, roll_dice( beam.damage ) );
         }
 
-        goto deathCheck;
+        death_check = true;
     }
 
     if (beam.flavour == BEAM_DISINTEGRATION)     /* disrupt/disintegrate */
@@ -3895,7 +3897,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
 
         hurt_monster( mon, roll_dice( beam.damage ) );
 
-        goto deathCheck;
+        death_check = true;
     }
 
 
@@ -3933,9 +3935,8 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
     }
 
     // everything else?
-    return (mons_ench_f2(mon, beam));
-
-deathCheck:
+    if ( !death_check )
+        return (mons_ench_f2(mon, beam));
 
     if (mon->hit_points < 1)
         monster_die(mon, beam);

@@ -703,15 +703,27 @@ static void place_ellipse(int x, int y, int a, int b,
                 grd[i][j] = feat;
 }
 
-// count how many neighbours of grd[x][y] are the feature feat.
-static int count_neighbours(int x, int y, int feat)
+static int count_feature_in_box(int x0, int y0, int x1, int y1,
+                                dungeon_feature_type feat)
 {
     int result = 0;
-    for ( int i = -1; i <= 1; ++i )
-        for ( int j = -1; j <= 1; ++j )
-            if ( grd[x+i][y+j] == feat )
+    for ( int i = x0; i < x1; ++i )
+        for ( int j = y0; j < y1; ++j )
+            if ( grd[i][j] == feat )
                 ++result;
     return result;
+}
+
+static int count_antifeature_in_box(int x0, int y0, int x1, int y1,
+                                    dungeon_feature_type feat)
+{
+    return (x1-x0)*(y1-y0) - count_feature_in_box(x0,y0,x1,y1,feat);
+}
+
+// count how many neighbours of grd[x][y] are the feature feat.
+static int count_neighbours(int x, int y, dungeon_feature_type feat)
+{
+    return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
 }
 
 static void replace_in_grid(int x1, int y1, int x2, int y2,
@@ -3747,45 +3759,28 @@ static void place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
 
 static void many_pools(dungeon_feature_type pool_type)
 {
-    int pools = 0;
-    int i = 0, j = 0, k = 0, l = 0;
-    int m = 0, n = 0;
-    int no_pools = 20 + random2avg(9, 2);
-    int timeout = 0;
 
     if (player_in_branch( BRANCH_COCYTUS ))
         pool_type = DNGN_DEEP_WATER;
     else if (player_in_branch( BRANCH_GEHENNA ))
         pool_type = DNGN_LAVA;
 
-    do
+    const int num_pools = 20 + random2avg(9, 2);
+    int pools = 0;
+
+    for ( int timeout = 0; pools < num_pools && timeout < 30000; ++timeout )
     {
-        timeout++;
+        const int i = 6 + random2( GXM - 26 );
+        const int j = 6 + random2( GYM - 26 );
+        const int k = i + 2 + roll_dice( 2, 9 );
+        const int l = j + 2 + roll_dice( 2, 9 );
 
-        if (timeout >= 30000)
-            break;
-
-        i = 6 + random2( GXM - 26 );
-        j = 6 + random2( GYM - 26 );
-        k = i + 2 + roll_dice( 2, 9 );
-        l = j + 2 + roll_dice( 2, 9 );
-
-        for (m = i; m < k; m++)
+        if ( count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0 )
         {
-            for (n = j; n < l; n++)
-            {
-                if (grd[m][n] != DNGN_FLOOR)
-                    goto continue_pools;
-            }
+            place_pool(pool_type, i, j, k, l);
+            pools++;
         }
-
-        place_pool(pool_type, i, j, k, l);
-        pools++;
-
-      continue_pools:
-        continue;
     }
-    while (pools < no_pools);
 }                               // end many_pools()
 
 //jmf: generate altar based on where you are, or possibly randomly
@@ -3882,56 +3877,37 @@ static dungeon_feature_type pick_an_altar()
 
 static void place_altar()
 {
-    int px, py;
-    int i, j;
-    int k = 0, l = 0;
-    const dungeon_feature_type altar_type = pick_an_altar();
-
-    while(true)
+    for ( int numtry = 0; numtry < 5000; ++numtry )
     {
-      rand_px:
+        int px = 15 + random2(55);
+        int py = 15 + random2(45);
 
-        px = 15 + random2(55);
-        py = 15 + random2(45);
-        k++;
+        const int numfloors = count_feature_in_box(px-2, py-2, px+3, py+3,
+                                                   DNGN_FLOOR);
+        const int numgood =
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_ROCK_WALL) +
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_CLOSED_DOOR) +
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_SECRET_DOOR) +
+            count_feature_in_box(px-2, py-2, px+3, py+3, DNGN_FLOOR);
 
-        if (k == 5000)
-            return;
+        if ( numgood < 5*5 || numfloors == 0 )
+            continue;
 
-        l = 0;
+        bool mon_there;
 
-        for (i = px - 2; i < px + 3; i++)
-        {
-            for (j = py - 2; j < py + 3; j++)
-            {
-                if (grd[i][j] == DNGN_FLOOR)
-                    l++;
+        for (int i = px - 2; i <= px + 2; i++)
+            for (int j = py - 2; j <= py + 2; j++)
+                if (mgrd[i][j] != NON_MONSTER)
+                    mon_there = true;
 
-                if ((grd[i][j] != DNGN_ROCK_WALL
-                        && grd[i][j] != DNGN_CLOSED_DOOR
-                        && grd[i][j] != DNGN_SECRET_DOOR
-                        && grd[i][j] != DNGN_FLOOR)
-                    || mgrd[i][j] != NON_MONSTER)
-                {
-                    goto rand_px;
-                }
-            }
-        }
+        if ( mon_there )
+            continue;
 
-        if (l == 0)
-            goto rand_px;
-
-        for (i = px - 2; i < px + 3; i++)
-        {
-            for (j = py - 2; j < py + 3; j++)
-            {
+        for (int i = px - 2; i <= px + 2; i++)
+            for (int j = py - 2; j <= py + 2; j++)
                 grd[i][j] = DNGN_FLOOR;
-            }
-        }
-
-        grd[px][py] = altar_type;
-
-        return;
+        grd[px][py] = pick_an_altar();
+        break;
     }
 }                               // end place_altar()
 
@@ -4397,7 +4373,6 @@ static char plan_3()
        Of course, this can easily end up looking just like a make_trail level.
      */
     int i;
-    char cnx, cny;
     int roomsss = 30 + random2(90);
 
     bool exclusive = (one_chance_in(10) ? false : true);
@@ -4416,20 +4391,13 @@ static char plan_3()
 
         if (exclusive)
         {
-            for (cnx = romx1[which_room] - 1; cnx < romx2[which_room] + 1;
-                                                                        cnx++)
-            {
-                for (cny = romy1[which_room] - 1; cny < romy2[which_room] + 1;
-                                                                        cny++)
-                {
-                    if (grd[cnx][cny] != DNGN_ROCK_WALL)
-                        goto continuing;
-                }
-            }
+            int bx = romx1[which_room], by = romy1[which_room];
+            if (count_antifeature_in_box(bx-1,by-1,bx+2,by+2,DNGN_ROCK_WALL))
+                continue;
         }
 
         replace_area(romx1[which_room], romy1[which_room], romx2[which_room],
-                   romy2[which_room], DNGN_ROCK_WALL, DNGN_FLOOR);
+                     romy2[which_room], DNGN_ROCK_WALL, DNGN_FLOOR);
 
         if (which_room > 0 && !exclusive2)
         {
@@ -4455,8 +4423,6 @@ static char plan_3()
         if (which_room >= 29)
             break;
 
-      continuing:
-        continue;
     }
 
     if (exclusive2)
@@ -4497,7 +4463,6 @@ static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
     int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
     char b1x, b1y, b2x, b2y;
-    char cnx, cny;
     int i;
 
     temp_rand = random2(81);
@@ -4534,25 +4499,16 @@ static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
         if (forbid_x1 != 0 || forbid_x2 != 0)
         {
             if (b1x <= forbid_x2 && b1x >= forbid_x1
-                    && b1y <= forbid_y2 && b1y >= forbid_y1)
-            {
-                goto continuing;
-            }
-            else if (b2x <= forbid_x2 && b2x >= forbid_x1
-                    && b2y <= forbid_y2 && b2y >= forbid_y1)
-            {
-                goto continuing;
-            }
+                && b1y <= forbid_y2 && b1y >= forbid_y1)
+                continue;
+
+            if (b2x <= forbid_x2 && b2x >= forbid_x1
+                && b2y <= forbid_y2 && b2y >= forbid_y1)
+                continue;
         }
 
-        for (cnx = b1x - 1; cnx < b2x + 1; cnx++)
-        {
-            for (cny = b1y - 1; cny < b2y + 1; cny++)
-            {
-                if (grd[cnx][cny] != DNGN_FLOOR)
-                    goto continuing;
-            }
-        }
+        if (count_antifeature_in_box(b1x-1, b1y-1, b2x+1, b2y+1, DNGN_FLOOR))
+            continue;
 
         if (force_wall == NUM_FEATURES)
         {
@@ -4574,9 +4530,6 @@ static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
             replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
         else                    // odds:  72 in 210 {dlb}
             box_room(b1x, b2x - 1, b1y, b2y - 1, drawing);
-
-      continuing:
-        continue;
     }
 
     if (forbid_x1 == 0 && one_chance_in(4))     // a market square

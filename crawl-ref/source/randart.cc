@@ -856,17 +856,16 @@ void randart_wpn_properties( const item_def &item,
 {
     ASSERT( is_random_artefact( item ) ); 
 
-    const int aclass = item.base_type;
+    const object_class_type aclass = item.base_type;
     const int atype  = item.sub_type;
 
-    int i = 0;
     int power_level = 0;
 
     if (is_unrandom_artefact( item ))
     {
         struct unrandart_entry *unrand = seekunrandart( item );
 
-        for (i = 0; i < RA_PROPERTIES; i++)
+        for (int i = 0; i < RA_PROPERTIES; i++)
             proprt[i] = unrand->prpty[i];
 
         return;
@@ -886,8 +885,7 @@ void randart_wpn_properties( const item_def &item,
     if (power_level < 0)
         power_level = 0;
 
-    for (i = 0; i < RA_PROPERTIES; i++)
-        proprt[i] = 0;
+    proprt.init(0);
 
     if (aclass == OBJ_WEAPONS)  /* Only weapons get brands, of course */
     {
@@ -943,7 +941,6 @@ void randart_wpn_properties( const item_def &item,
             }
         }
 
-
         if (is_demonic(item))
         {
             switch (random2(9))
@@ -980,112 +977,112 @@ void randart_wpn_properties( const item_def &item,
             power_level++;
     }
 
-    if (one_chance_in(5))
-        goto skip_mods;
-
-    /* AC mod - not for armours or rings of protection */
-    if (one_chance_in(4 + power_level)
-        && aclass != OBJ_ARMOUR
-        && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION))
+    if (!one_chance_in(5))
     {
-        proprt[RAP_AC] = 1 + random2(3) + random2(3) + random2(3);
-        power_level++;
-        if (one_chance_in(4))
+        /* AC mod - not for armours or rings of protection */
+        if (one_chance_in(4 + power_level)
+            && aclass != OBJ_ARMOUR
+            && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION))
         {
-            proprt[RAP_AC] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
+            proprt[RAP_AC] = 1 + random2(3) + random2(3) + random2(3);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_AC] -= 1 + random2(3) + random2(3) + random2(3);
+                power_level--;
+            }
+        }
+
+        /* ev mod - not for rings of evasion */
+        if (one_chance_in(4 + power_level)
+            && (aclass != OBJ_JEWELLERY || atype != RING_EVASION))
+        {
+            proprt[RAP_EVASION] = 1 + random2(3) + random2(3) + random2(3);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_EVASION] -= 1 + random2(3) + random2(3)
+                    + random2(3);
+                power_level--;
+            }
+        }
+
+        /* str mod - not for rings of strength */
+        if (one_chance_in(4 + power_level)
+            && (aclass != OBJ_JEWELLERY || atype != RING_STRENGTH))
+        {
+            proprt[RAP_STRENGTH] = 1 + random2(3) + random2(2);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_STRENGTH] -= 1 + random2(3) + random2(3)
+                    + random2(3);
+                power_level--;
+            }
+        }
+
+        /* int mod - not for rings of intelligence */
+        if (one_chance_in(4 + power_level)
+            && (aclass != OBJ_JEWELLERY || atype != RING_INTELLIGENCE))
+        {
+            proprt[RAP_INTELLIGENCE] = 1 + random2(3) + random2(2);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_INTELLIGENCE] -= 1 + random2(3) + random2(3)
+                    + random2(3);
+                power_level--;
+            }
+        }
+
+        /* dex mod - not for rings of dexterity */
+        if (one_chance_in(4 + power_level)
+            && (aclass != OBJ_JEWELLERY || atype != RING_DEXTERITY))
+        {
+            proprt[RAP_DEXTERITY] = 1 + random2(3) + random2(2);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_DEXTERITY] -= 1 + random2(3) + random2(3)
+                    + random2(3);
+                power_level--;
+            }
         }
     }
 
-    /* ev mod - not for rings of evasion */
-    if (one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_EVASION))
+    if (random2(15) >= power_level && aclass != OBJ_WEAPONS &&
+        (aclass != OBJ_JEWELLERY || atype != RING_SLAYING))
     {
-        proprt[RAP_EVASION] = 1 + random2(3) + random2(3) + random2(3);
-        power_level++;
-        if (one_chance_in(4))
+        /* Weapons and rings of slaying can't get these */
+        if (one_chance_in(4 + power_level))  /* to-hit */
         {
-            proprt[RAP_EVASION] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
+            proprt[RAP_ACCURACY] = 1 + random2(3) + random2(2);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_ACCURACY] -= 1 + random2(3) + random2(3) +
+                    random2(3);
+                power_level--;
+            }
+        }
+
+        if (one_chance_in(4 + power_level))  /* to-dam */
+        {
+            proprt[RAP_DAMAGE] = 1 + random2(3) + random2(2);
+            power_level++;
+            if (one_chance_in(4))
+            {
+                proprt[RAP_DAMAGE] -= 1 + random2(3) + random2(3) + random2(3);
+                power_level--;
+            }
         }
     }
 
-    /* str mod - not for rings of strength */
-    if (one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_STRENGTH))
-    {
-        proprt[RAP_STRENGTH] = 1 + random2(3) + random2(2);
-        power_level++;
-        if (one_chance_in(4))
-        {
-            proprt[RAP_STRENGTH] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
-        }
-    }
+    bool done_powers = (random2(12 < power_level));
 
-    /* int mod - not for rings of intelligence */
-    if (one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_INTELLIGENCE))
-    {
-        proprt[RAP_INTELLIGENCE] = 1 + random2(3) + random2(2);
-        power_level++;
-        if (one_chance_in(4))
-        {
-            proprt[RAP_INTELLIGENCE] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
-        }
-    }
-
-    /* dex mod - not for rings of dexterity */
-    if (one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_DEXTERITY))
-    {
-        proprt[RAP_DEXTERITY] = 1 + random2(3) + random2(2);
-        power_level++;
-        if (one_chance_in(4))
-        {
-            proprt[RAP_DEXTERITY] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
-        }
-    }
-
-  skip_mods:
-    if (random2(15) < power_level 
-        || aclass == OBJ_WEAPONS
-        || (aclass == OBJ_JEWELLERY && atype == RING_SLAYING))
-    {
-        goto skip_combat;
-    }
-
-    /* Weapons and rings of slaying can't get these */
-    if (one_chance_in(4 + power_level))  /* to-hit */
-    {
-        proprt[RAP_ACCURACY] = 1 + random2(3) + random2(2);
-        power_level++;
-        if (one_chance_in(4))
-        {
-            proprt[RAP_ACCURACY] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
-        }
-    }
-
-    if (one_chance_in(4 + power_level))  /* to-dam */
-    {
-        proprt[RAP_DAMAGE] = 1 + random2(3) + random2(2);
-        power_level++;
-        if (one_chance_in(4))
-        {
-            proprt[RAP_DAMAGE] -= 1 + random2(3) + random2(3) + random2(3);
-            power_level--;
-        }
-    }
-
-  skip_combat:
-    if (random2(12) < power_level)
-        goto finished_powers;
-    
     /* res_fire */
-    if (one_chance_in(4 + power_level)
+    if (!done_powers
+        && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY
             || (atype != RING_PROTECTION_FROM_FIRE
                 && atype != RING_FIRE
@@ -1102,7 +1099,8 @@ void randart_wpn_properties( const item_def &item,
     }
 
     /* res_cold */
-    if (one_chance_in(4 + power_level)
+    if (!done_powers
+        && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY
             || (atype != RING_PROTECTION_FROM_COLD
                 && atype != RING_FIRE
@@ -1119,18 +1117,20 @@ void randart_wpn_properties( const item_def &item,
     }
 
     if (random2(12) < power_level || power_level > 7)
-        goto finished_powers;
+        done_powers = true;
 
     /* res_elec */
-    if (one_chance_in(4 + power_level)
+    if (!done_powers
+        && one_chance_in(4 + power_level)
         && (aclass != OBJ_ARMOUR || atype != ARM_STORM_DRAGON_ARMOUR))
     {
         proprt[RAP_ELECTRICITY] = 1;
         power_level++;
     }
 
-/* res_poison */
-    if (one_chance_in(5 + power_level)
+    /* res_poison */
+    if (!done_powers
+        && one_chance_in(5 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_POISON_RESISTANCE)
         && (aclass != OBJ_ARMOUR
             || atype != ARM_GOLD_DRAGON_ARMOUR
@@ -1141,7 +1141,8 @@ void randart_wpn_properties( const item_def &item,
     }
 
     /* prot_life - no necromantic brands on weapons allowed */
-    if (one_chance_in(4 + power_level)
+    if (!done_powers
+        && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_TELEPORTATION)
         && proprt[RAP_BRAND] != SPWPN_DRAINING
         && proprt[RAP_BRAND] != SPWPN_VAMPIRICISM
@@ -1152,7 +1153,8 @@ void randart_wpn_properties( const item_def &item,
     }
 
     /* res magic */
-    if (one_chance_in(4 + power_level)
+    if (!done_powers
+        && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC))
     {
         proprt[RAP_MAGIC] = 35 + random2(65);
@@ -1160,7 +1162,8 @@ void randart_wpn_properties( const item_def &item,
     }
 
     /* see_invis */
-    if (one_chance_in(4 + power_level)
+    if (!done_powers
+        && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_INVISIBILITY))
     {
         proprt[RAP_EYESIGHT] = 1;
@@ -1168,10 +1171,11 @@ void randart_wpn_properties( const item_def &item,
     }
 
     if (random2(12) < power_level || power_level > 10)
-        goto finished_powers;
+        done_powers = true;
 
     /* turn invis */
-    if (one_chance_in(10)
+    if (!done_powers
+        && one_chance_in(10)
         && (aclass != OBJ_JEWELLERY || atype != RING_INVISIBILITY))
     {
         proprt[RAP_INVISIBLE] = 1;
@@ -1179,21 +1183,23 @@ void randart_wpn_properties( const item_def &item,
     }
 
     /* levitate */
-    if (one_chance_in(10)
+    if (!done_powers
+        && one_chance_in(10)
         && (aclass != OBJ_JEWELLERY || atype != RING_LEVITATION))
     {
         proprt[RAP_LEVITATE] = 1;
         power_level++;
     }
 
-    if (one_chance_in(10))       /* blink */
+    if (!done_powers && one_chance_in(10))       /* blink */
     {
         proprt[RAP_BLINK] = 1;
         power_level++;
     }
 
     /* teleport */
-    if (one_chance_in(10)
+    if (!done_powers
+        && one_chance_in(10)
         && (aclass != OBJ_JEWELLERY || atype != RING_TELEPORTATION))
     {
         proprt[RAP_CAN_TELEPORT] = 1;
@@ -1201,98 +1207,95 @@ void randart_wpn_properties( const item_def &item,
     }
 
     /* go berserk */
-    if (one_chance_in(10) && (aclass != OBJ_JEWELLERY || atype != AMU_RAGE))
+    if (!done_powers
+        && one_chance_in(10)
+        && (aclass != OBJ_JEWELLERY || atype != AMU_RAGE))
     {
         proprt[RAP_BERSERK] = 1;
         power_level++;
     }
 
-    if (one_chance_in(10))       /* sense surr */
+    if (!done_powers && one_chance_in(10))       /* sense surr */
     {
         proprt[RAP_MAPPING] = 1;
         power_level++;
     }
 
-
-  finished_powers:
     /* Armours get less powers, and are also less likely to be
        cursed that wpns */
     if (aclass == OBJ_ARMOUR)
         power_level -= 4;
 
-    if (random2(17) >= power_level || power_level < 2)
-        goto finished_curses;
-
-    switch (random2(9))
+    if (power_level >= 2 && random2(17) < power_level)
     {
-    case 0:                     /* makes noise */
-        if (aclass != OBJ_WEAPONS)
+        switch (random2(9))
+        {
+        case 0:                     /* makes noise */
+            if (aclass != OBJ_WEAPONS)
+                break;
+            proprt[RAP_NOISES] = 1 + random2(4);
             break;
-        proprt[RAP_NOISES] = 1 + random2(4);
-        break;
-    case 1:                     /* no magic */
-        proprt[RAP_PREVENT_SPELLCASTING] = 1;
-        break;
-    case 2:                     /* random teleport */
-        if (aclass != OBJ_WEAPONS)
+        case 1:                     /* no magic */
+            proprt[RAP_PREVENT_SPELLCASTING] = 1;
             break;
-        proprt[RAP_CAUSE_TELEPORTATION] = 5 + random2(15);
-        break;
-    case 3:   /* no teleport - doesn't affect some instantaneous teleports */
-        if (aclass == OBJ_JEWELLERY && atype == RING_TELEPORTATION)
-            break;              /* already is a ring of tport */
-        if (aclass == OBJ_JEWELLERY && atype == RING_TELEPORT_CONTROL)
-            break;              /* already is a ring of tport ctrl */
-        proprt[RAP_BLINK] = 0;
-        proprt[RAP_CAN_TELEPORT] = 0;
-        proprt[RAP_PREVENT_TELEPORTATION] = 1;
-        break;
-    case 4:                     /* berserk on attack */
-        if (aclass != OBJ_WEAPONS)
+        case 2:                     /* random teleport */
+            if (aclass != OBJ_WEAPONS)
+                break;
+            proprt[RAP_CAUSE_TELEPORTATION] = 5 + random2(15);
             break;
-        proprt[RAP_ANGRY] = 1 + random2(8);
-        break;
-    case 5:                     /* susceptible to fire */
-        if (aclass == OBJ_JEWELLERY
-            && (atype == RING_PROTECTION_FROM_FIRE || atype == RING_FIRE
-                || atype == RING_ICE))
-            break;              /* already does this or something */
-        if (aclass == OBJ_ARMOUR
-            && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
-                || atype == ARM_GOLD_DRAGON_ARMOUR))
+        case 3:   /* no teleport - doesn't affect some instantaneous
+                   * teleports */
+            if (aclass == OBJ_JEWELLERY && atype == RING_TELEPORTATION)
+                break;              /* already is a ring of tport */
+            if (aclass == OBJ_JEWELLERY && atype == RING_TELEPORT_CONTROL)
+                break;              /* already is a ring of tport ctrl */
+            proprt[RAP_BLINK] = 0;
+            proprt[RAP_CAN_TELEPORT] = 0;
+            proprt[RAP_PREVENT_TELEPORTATION] = 1;
             break;
-        proprt[RAP_FIRE] = -1;
-        break;
-    case 6:                     /* susceptible to cold */
-        if (aclass == OBJ_JEWELLERY
-            && (atype == RING_PROTECTION_FROM_COLD || atype == RING_FIRE
-                || atype == RING_ICE))
-            break;              /* already does this or something */
-        if (aclass == OBJ_ARMOUR
-            && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
-                || atype == ARM_GOLD_DRAGON_ARMOUR))
+        case 4:                     /* berserk on attack */
+            if (aclass != OBJ_WEAPONS)
+                break;
+            proprt[RAP_ANGRY] = 1 + random2(8);
             break;
-        proprt[RAP_COLD] = -1;
-        break;
-    case 7:                     /* speed metabolism */
-        if (aclass == OBJ_JEWELLERY && atype == RING_HUNGER)
-            break;              /* already is a ring of hunger */
-        if (aclass == OBJ_JEWELLERY && atype == RING_SUSTENANCE)
-            break;              /* already is a ring of sustenance */
-        proprt[RAP_METABOLISM] = 1 + random2(3);
-        break;
-    case 8:   /* emits mutagenic radiation - increases magic_contamination */
-        /* property is chance (1 in ...) of increasing magic_contamination */
-        proprt[RAP_MUTAGENIC] = 2 + random2(4);
-        break;
+        case 5:                     /* susceptible to fire */
+            if (aclass == OBJ_JEWELLERY
+                && (atype == RING_PROTECTION_FROM_FIRE || atype == RING_FIRE
+                    || atype == RING_ICE))
+                break;              /* already does this or something */
+            if (aclass == OBJ_ARMOUR
+                && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                    || atype == ARM_GOLD_DRAGON_ARMOUR))
+                break;
+            proprt[RAP_FIRE] = -1;
+            break;
+        case 6:                     /* susceptible to cold */
+            if (aclass == OBJ_JEWELLERY
+                && (atype == RING_PROTECTION_FROM_COLD || atype == RING_FIRE
+                    || atype == RING_ICE))
+                break;              /* already does this or something */
+            if (aclass == OBJ_ARMOUR
+                && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                    || atype == ARM_GOLD_DRAGON_ARMOUR))
+                break;
+            proprt[RAP_COLD] = -1;
+            break;
+        case 7:                     /* speed metabolism */
+            if (aclass == OBJ_JEWELLERY && atype == RING_HUNGER)
+                break;              /* already is a ring of hunger */
+            if (aclass == OBJ_JEWELLERY && atype == RING_SUSTENANCE)
+                break;              /* already is a ring of sustenance */
+            proprt[RAP_METABOLISM] = 1 + random2(3);
+            break;
+        case 8:
+            /* emits mutagenic radiation - increases
+               magic_contamination.  property is chance (1 in ...) of
+               increasing magic_contamination */
+            proprt[RAP_MUTAGENIC] = 2 + random2(4);
+            break;
+        }
     }
 
-/*
-   26 - +to-hit (no wpns)
-   27 - +to-dam (no wpns)
- */
-
-finished_curses:
     if (one_chance_in(10) 
         && (aclass != OBJ_ARMOUR 
             || atype != ARM_CLOAK 

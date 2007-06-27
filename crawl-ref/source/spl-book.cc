@@ -685,7 +685,7 @@ spell_type which_spell_in_book(int sbook_type, int spl)
 
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
-int spellbook_contents( item_def &book, int action,
+int spellbook_contents( item_def &book, read_book_action_type action,
                         formatted_string *fs )
 {
     int spelcount = 0;
@@ -1010,7 +1010,7 @@ static bool player_can_read_spellbook( const item_def &book )
     return (true);
 }
 
-unsigned char read_book( item_def &book, int action )
+unsigned char read_book( item_def &book, read_book_action_type action )
 {
     unsigned char key2 = 0;
 
