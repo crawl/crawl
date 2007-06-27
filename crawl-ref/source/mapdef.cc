@@ -1075,7 +1075,7 @@ std::string map_def::validate_map_def()
     std::string err = run_lua(true);
     if (!err.empty())
         return (err);
-    
+
     if (orient == MAP_FLOAT || is_minivault())
     {
         if (map.width() > GXM - MAPGEN_BORDER * 2

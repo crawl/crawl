@@ -111,13 +111,15 @@ public:
     void add_point(const coord_def &pos);
     coord_def find_first_from(const coord_def &c, const dgn_region_list &vlts);
     bool points_connected_from(const coord_def &start);
+    bool any_point_connected_from(const coord_def &start);
+    bool has_exit_from(const coord_def &start);
 
     bool did_leave_vault() const { return left_vault; }
     
 protected:
     bool path_flood(const coord_def &c, const coord_def &dc);
 protected:
-    bool point_hunt;
+    bool point_hunt, want_exit;
     bool needed_features[NUM_FEATURES];
     std::vector<coord_def> needed_points;
     bool left_vault;
@@ -129,8 +131,8 @@ protected:
 
 template <typename fgrd, typename bound_check>
 flood_find<fgrd, bound_check>::flood_find(const fgrd &f, const bound_check &bc)
-    : travel_pathfind(), point_hunt(false), needed_features(),
-      needed_points(), left_vault(true), vaults(),
+    : travel_pathfind(), point_hunt(false), want_exit(false),
+      needed_features(), needed_points(), left_vault(true), vaults(),
       fgrid(f), bcheck(bc)
 {
     memset(needed_features, false, sizeof needed_features);
@@ -172,12 +174,41 @@ bool flood_find<fgrd, bound_check>::points_connected_from(
 }
 
 template <typename fgrd, typename bound_check>
+bool flood_find<fgrd, bound_check>::any_point_connected_from(
+    const coord_def &sp)
+{
+    if (needed_points.empty())
+        return (true);
+    set_floodseed(sp);
+    const size_t sz = needed_points.size();
+    pathfind(RMODE_EXPLORE);
+    return (needed_points.size() < sz);
+}
+
+template <typename fgrd, typename bound_check>
+bool flood_find<fgrd, bound_check>::has_exit_from(
+    const coord_def &sp)
+{
+    want_exit = true;
+    set_floodseed(sp);
+    return (pathfind(RMODE_EXPLORE) == coord_def(-1, -1));
+}
+
+template <typename fgrd, typename bound_check>
 bool flood_find<fgrd, bound_check>::path_flood(
     const coord_def &c,
     const coord_def &dc)
 {
     if (!bcheck(dc))
+    {
+        if (want_exit)
+        {
+            greedy_dist = 100;
+            greedy_place = coord_def(-1, -1);
+            return (true);
+        }
         return (false);
+    }
 
     if (!needed_points.empty())
     {

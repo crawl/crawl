@@ -647,19 +647,24 @@ static int dgn_grid(lua_State *ls)
     PLUARET(number, grd[x][y]);
 }
 
-static int dgn_points_connected(lua_State *ls)
+typedef
+flood_find<map_def::map_feature_finder, map_def::map_bounds_check>
+map_flood_finder;
+
+static int dgn_map_pathfind(lua_State *ls, int minargs,
+                            bool (map_flood_finder::*f)(const coord_def &))
 {
     MAP(ls, 1, map);
     const int nargs = lua_gettop(ls);
-    if (nargs < 5)
-        return luaL_error(ls,
-                          "Not enough points to test connectedness "
-                          "(need at least two)");
+    if (nargs < minargs)
+        return luaL_error
+            (ls,
+             make_stringf("Not enough points to test connectedness "
+                          "(need at least %d)", minargs / 2).c_str());
     
     map_def::map_feature_finder feat_finder(*map);
     map_def::map_bounds_check bounds_checker(*map);
-    flood_find<map_def::map_feature_finder, map_def::map_bounds_check>
-        finder(feat_finder, bounds_checker);
+    map_flood_finder finder(feat_finder, bounds_checker);
 
     for (int i = 4; i < nargs; i += 2)
     {
@@ -669,8 +674,22 @@ static int dgn_points_connected(lua_State *ls)
     }
 
     const coord_def pos(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
-    const bool connected = finder.points_connected_from(pos);
-    PLUARET(boolean, connected);
+    PLUARET(boolean, (finder.*f)(pos));    
+}
+
+static int dgn_points_connected(lua_State *ls)
+{
+    return dgn_map_pathfind(ls, 5, &map_flood_finder::points_connected_from);
+}
+
+static int dgn_any_point_connected(lua_State *ls)
+{
+    return dgn_map_pathfind(ls, 5, &map_flood_finder::any_point_connected_from);
+}
+
+static int dgn_has_exit_from(lua_State *ls)
+{
+    return dgn_map_pathfind(ls, 3, &map_flood_finder::has_exit_from);
 }
 
 static void dlua_push_coord(lua_State *ls, const coord_def &c)
@@ -734,6 +753,8 @@ static const struct luaL_reg dgn_lib[] =
     { "kmons", dgn_kmons },
     { "grid", dgn_grid },
     { "points_connected", dgn_points_connected },
+    { "any_point_connected", dgn_any_point_connected },
+    { "has_exit_from", dgn_has_exit_from },
     { "gly_point", dgn_gly_point },
     { "gly_points", dgn_gly_points },
     { "original_map", dgn_original_map },
@@ -757,6 +778,9 @@ void init_dungeon_lua()
     // Add additional function to the Crawl module.
     luaL_openlib(dlua, "crawl", crawl_lib, 0);
     dlua.execfile("clua/dungeon.lua", true, true);
+    if (!dlua.error.empty())
+        end(1, false, "Lua error: %s", dlua.error.c_str());
+    lua_getglobal(dlua, "dgn_run_map");
     luaopen_debug(dlua);
     luaL_newmetatable(dlua, MAP_METATABLE);
     lua_settop(dlua, 1);

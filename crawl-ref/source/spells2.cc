@@ -1312,7 +1312,7 @@ void summon_animals(int pow)
     int power_left = pow + 1;
 
     const bool varied = coinflip();
-    monster_type mon_chosen;
+    monster_type mon_chosen = MONS_PROGRAM_BUG;
 
     while ( power_left >= 0 && num_so_far < 8 )
     {

@@ -77,6 +77,15 @@ function dgn.places_connected(map, map_glyph, test_connect, ...)
    return test_connect(map, unpack(points))
 end
 
+function dgn.any_glyph_connected(map, ...)
+   return dgn.places_connected(map, dgn.gly_points, 
+                              dgn.any_point_connected, ...)
+end
+
+function dgn.has_exit_from_glyph(map, glyph)
+   return dgn.places_connected(map, dgn.gly_point, dgn.has_exit_from, glyph)
+end
+
 function dgn.glyphs_connected(map, ...)
    return dgn.places_connected(map, dgn.gly_point, dgn.points_connected, ...)
 end
