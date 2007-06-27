@@ -520,8 +520,8 @@ static bool xom_is_good(int sever)
                        (temp_rand == 2) ?
                                      "Xom's power touches on a nearby monster."
                        : "You hear Xom's avuncular chuckle.");
-            bool isFriendly = mons_friendly(mon);
-            if (isFriendly)
+
+            if (mons_friendly(mon))
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
             else
                 monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
@@ -715,21 +715,24 @@ static bool xom_is_bad(int sever)
         }
         else if ((random2(sever) <= 7) && there_are_monsters_nearby())
         {
-            struct monsters* mon = get_random_nearby_monster();
+            monsters* mon = get_random_nearby_monster();
             ASSERT (mon != NULL);
-            temp_rand = random2(4);
+            if ( mon->holiness() == MH_NATURAL )
+            {
+                temp_rand = random2(4);
                 
-            god_speaks(GOD_XOM,
-                       (temp_rand == 0) ? "\"This might be better!\"" :
-                       (temp_rand == 1) ? "\"Hum-dee-hum-dee-hum...\"" :
-                       (temp_rand == 2) ? "Xom's power touches on a nearby monster."
-                       : "You hear Xom's avuncular chuckle.");
-            bool isFriendly = mons_friendly(mon);
-            if (isFriendly)
-                monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
-            else
-                monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
-            done = true;
+                god_speaks(GOD_XOM,
+                           (temp_rand == 0) ? "\"This might be better!\"" :
+                           (temp_rand == 1) ? "\"Hum-dee-hum-dee-hum...\"" :
+                           (temp_rand == 2) ? "Xom's power touches on a nearby monster."
+                           : "You hear Xom's avuncular chuckle.");
+
+                if (mons_friendly(mon))
+                    monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
+                else
+                    monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
+                done = true;
+            }
         }
         else if (!you.is_undead && random2(sever) <= 8)
         {
