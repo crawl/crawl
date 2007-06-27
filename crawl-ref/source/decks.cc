@@ -969,7 +969,7 @@ static void summon_any_monster(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     monster_type mon_chosen = NUM_MONSTERS;
-    int chosen_x, chosen_y;
+    int chosen_x = 0, chosen_y = 0;
     int num_tries;
 
     if ( power_level == 0 )
