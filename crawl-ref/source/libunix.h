@@ -1,7 +1,6 @@
 #ifndef LIBUNIX_H
 #define LIBUNIX_H
 
-
 // Some replacement routines missing in gcc
 
 #ifndef O_BINARY

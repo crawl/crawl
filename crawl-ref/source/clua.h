@@ -207,6 +207,9 @@ inline static T *clua_get_userdata(lua_State *ls, const char *mt)
 
 std::string quote_lua_string(const std::string &s);
 
+class map_def;
+void clua_push_map(lua_State *ls, map_def *map);
+
 #define MAP_METATABLE "dgn.mtmap"
 
 #endif

@@ -183,7 +183,6 @@ KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }
 KITEM:              { BEGIN(ARGUMENT); return KITEM; }
 KMONS:              { BEGIN(ARGUMENT); return KMONS; }
 
--                   return DASH;
 ,                   return COMMA;
 
 [0-9]+              {
@@ -194,17 +193,6 @@ KMONS:              { BEGIN(ARGUMENT); return KMONS; }
 
 [\ \t]+             ;
 \r?\n               ;
-
-\(                   return OPAREN;
-\)                   return CPAREN;
-
-\"                  return QUOTE;
-
-[a-zA-Z_][a-zA-Z_0-9]* {
-                        settext();
-                        return IDENTIFIER;
-                    }
-
 .                   return CHARACTER;
 
 %%

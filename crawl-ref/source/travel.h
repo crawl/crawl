@@ -38,6 +38,7 @@ command_type stair_direction(int stair_feat);
 command_type direction_to_command( char x, char y );
 bool is_resting( void );
 bool can_travel_interlevel();
+bool is_traversable(int grid);
 
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);
@@ -518,6 +519,7 @@ public:
 protected:
     bool is_greed_inducing_square(const coord_def &c) const;
     bool path_examine_point(const coord_def &c);
+    virtual bool point_traverse_delay(const coord_def &c);
     virtual bool path_flood(const coord_def &c, const coord_def &dc);
     bool square_slows_movement(const coord_def &c);
     void check_square_greed(const coord_def &c);

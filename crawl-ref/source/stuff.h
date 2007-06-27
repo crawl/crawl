@@ -20,20 +20,21 @@
 
 std::string make_time_string(time_t abs_time, bool terse = false);
 void set_redraw_status( unsigned long flags );
-void tag_followers( void );
+void tag_followers();
+void untag_followers();
 
-void seed_rng(void);
+void seed_rng();
 void seed_rng(long seed);
 void push_rng_state();
 void pop_rng_state();
 
-void cf_setseed(void);
-bool coinflip(void);
+void cf_setseed();
+bool coinflip();
 int div_rand_round( int num, int den );
 bool one_chance_in(int a_million);
 int random2(int randmax);
 int random_range(int low, int high);
-unsigned long random_int(void);
+unsigned long random_int();
 int random2avg( int max, int rolls );
 int bestroll(int max, int rolls);
 
@@ -47,7 +48,7 @@ int stepdown_value(int base_value, int stepping, int first_step, int last_step, 
 int stat_mult( int stat_level, int value, int div = 20, int shift = 3 );
 int stat_div( int stat_level, int value, int div = 20, int shift = 3 );
 int skill_bump( int skill );
-unsigned char get_ch(void);
+unsigned char get_ch();
 
 void cio_init();
 void cio_cleanup();
@@ -56,7 +57,7 @@ void end(int exit_code, bool print_err = false,
 
 void modify_all_stats(int STmod, int IQmod, int DXmod);
 
-void redraw_screen(void);
+void redraw_screen();
 
 void canned_msg(canned_message_type which_message);
 
@@ -89,7 +90,7 @@ bool silenced(char x, char y);
 
 bool player_can_hear(char x, char y);
 
-unsigned char random_colour(void);
+unsigned char random_colour();
 unsigned char random_uncommon_colour();
 bool is_element_colour( int col );
 int  element_colour( int element, bool no_random = false );

@@ -60,3 +60,45 @@ function dgn_run_map(prelude, main)
       end
    end
 end
+
+--------------------------------------------------------------------
+
+function dgn.places_connected(map, map_glyph, test_connect, ...)
+   local points = { }
+   for _, glyph in ipairs( { ... } ) do
+      local x, y = map_glyph(map, glyph)
+      if x and y then
+         table.insert(points, x)
+         table.insert(points, y)
+      else
+         error("Can't find coords for '" .. glyph .. "'")
+      end
+   end
+   return test_connect(map, unpack(points))
+end
+
+function dgn.glyphs_connected(map, ...)
+   return dgn.places_connected(map, dgn.gly_point, dgn.points_connected, ...)
+end
+
+function dgn.orig_glyphs_connected(map, ...)
+   return dgn.places_connected(map, dgn.orig_gly_point,
+                               dgn.points_connected, ...)
+end
+
+function dgn.orig_fn(map, fnx, ...)
+   local original = dgn.original_map(map)
+   if not original then
+      error("Can't find original map for map '" .. dgn.name(map) .. "'")
+   end
+
+   return fnx(original, ...)
+end
+
+function dgn.orig_gly_point(map, glyph)
+   return dgn.orig_fn(map, dgn.gly_point, glyph)
+end
+
+function dgn.orig_gly_points(map, glyph)
+   return dgn.orig_fn(map, dgn.gly_points, glyph)
+end

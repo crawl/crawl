@@ -340,6 +340,7 @@ struct coord_def
         return (MAXIMUM(::abs(x), ::abs(y)));
     }
 };
+typedef bool (*coord_predicate)(const coord_def &c);
 
 struct dice_def
 {
@@ -1164,6 +1165,7 @@ struct map_cell
     bool seen() const;
 };
 
+typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 struct crawl_environment
 {
     unsigned char rock_colour;
@@ -1172,7 +1174,7 @@ struct crawl_environment
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
 
-    FixedArray<dungeon_feature_type, GXM, GYM> grid;  // terrain grid
+    feature_grid                             grid;  // terrain grid
     FixedArray< unsigned char, GXM, GYM >    mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid
@@ -1286,6 +1288,7 @@ struct system_environment
 #endif
 
     std::string scorefile;
+    std::vector<std::string> cmd_args;
 };
 
 extern system_environment SysEnv;

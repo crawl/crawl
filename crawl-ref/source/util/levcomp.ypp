@@ -62,18 +62,17 @@ level_range set_range(const char *s, int start, int end)
     raw_range range;
 }
 
-%token <i>      BRANCHDEF BRANCH DESC DEFAULT
+/* Two harmless shift/reduce conflicts */
+%expect 2
+
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM
 %token <i>      PRELUDE MAIN VALIDATE VETO
 
-%token <i>      CHARACTER
-
-%token <i>      DASH COMMA QUOTE OPAREN CPAREN
-%token <i>      INTEGER
+%token <i>      COMMA INTEGER CHARACTER
 
 %token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
-%token <text>   IDENTIFIER LUA_LINE
+%token <text>   LUA_LINE
 
 %%
 
@@ -124,12 +123,12 @@ level           : name map_specs
                 }
                 ;
 
-map_specs       : /* nothing */ 
+map_specs       : /* nothing */      { }
                 | map_specs map_spec { }
                 ;
 
-map_spec        : metalines { }
-                | map_def   { }
+map_spec        : metaline { }
+                | map_def  { }
                 ;
 
 name            : NAME STRING
@@ -154,10 +153,6 @@ name            : NAME STRING
                 }
                 ;
 
-metalines       : /* no metadata */
-                | metalines metaline
-                ;
-
 metaline        : place
                 | depth
                 | chance
@@ -176,7 +171,7 @@ metaline        : place
                 | veto_lua
                 ;
 
-global_lua        : MAIN global_lua_lines { }
+global_lua      : MAIN global_lua_lines { }
 
 global_lua_lines  : /* empty */ { }
                 | global_lua_lines global_lua_line { }
@@ -378,8 +373,8 @@ orientation     : ORIENT {}
 map_def         : map_lines
                 ;
 
-map_lines       : map_line
-                | map_line map_lines
+map_lines       : map_lines map_line
+                | map_line
                 ;
 
 map_line        : MAP_LINE

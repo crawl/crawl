@@ -36,7 +36,6 @@ private:
     int check_op(CLua &, int);
     std::string rewrite_chunk_prefix(const std::string &line) const;
     std::string get_chunk_prefix(const std::string &s) const;
-    void release_compiled_chunk();
 
 public:
     mutable std::string error;
@@ -64,5 +63,8 @@ public:
 void init_dungeon_lua();
 std::string dgn_set_default_depth(const std::string &s);
 void dgn_reset_default_depth();
+int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s);
+
+//////////////////////////////////////////////////////////////////////////
 
 #endif

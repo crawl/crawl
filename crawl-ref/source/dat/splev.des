@@ -935,6 +935,9 @@ SUBST:   X=xc.+, Y=xc+
 SUBST:   T : T U V .:30 b
 SUBST:   _:.!, !:!.x, !=x .:2
 SHUFFLE: 123, 45, ([<
+
+validate {{ return glyphs_connected('{', 'O') }}
+
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -87,6 +87,7 @@ static int write_vault(map_def &mdef, map_type map,
     
     // Copy the map so we can monkey with it.
     place.map = mdef;
+    place.map.original = &mdef;
     
     // Try so many times to place the map. This will always succeed
     // unless there are conflicting map placements in 'avoid', or there

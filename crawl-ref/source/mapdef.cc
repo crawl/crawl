@@ -343,6 +343,11 @@ map_lines::map_lines(const map_lines &map)
     init_from(map);
 }
 
+int map_lines::operator () (const coord_def &c) const
+{
+    return lines[c.y][c.x];
+}
+
 map_lines &map_lines::operator = (const map_lines &map)
 {
     if (this != &map)
@@ -827,7 +832,8 @@ dlua_set_map::~dlua_set_map()
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(),
       map(), mons(), items(), keyspecs(), prelude("dlprelude"), main("dlmain"),
-      index_only(false), cache_offset(0L)
+      validate("dlvalidate"), veto("dlveto"), index_only(false),
+      cache_offset(0L)
 {
     init();
 }
@@ -857,6 +863,11 @@ void map_def::reinit()
     // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+}
+
+int map_def::glyph_at(const coord_def &c) const
+{
+    return map(c);
 }
 
 void map_def::write_full(FILE *outf)
@@ -906,6 +917,36 @@ void map_def::load()
     index_only = false;
 }
 
+std::vector<coord_def> map_def::find_glyph(int glyph) const
+{
+    std::vector<coord_def> points;
+    for (int y = map.height() - 1; y >= 0; --y)
+    {
+        for (int x = map.width() - 1; x >= 0; --x)
+        {
+            const coord_def c(x, y);
+            if (map(c) == glyph)
+                points.push_back(c);
+        }
+    }
+    return (points);
+}
+
+coord_def map_def::find_first_glyph(int glyph) const
+{
+    for (int y = 0, height = map.height(); y < height; ++y)
+    {
+        for (int x = 0, width = map.width(); x < width; ++x)
+        {
+            const coord_def c(x, y);
+            if (map(c) == glyph)
+                return (c);
+        }
+    }
+
+    return coord_def(-1, -1);
+}
+
 void map_def::write_index(FILE *outf) const
 {
     if (!cache_offset)
@@ -953,6 +994,8 @@ void map_def::set_file(const std::string &s)
 {
     prelude.set_file(s);
     main.set_file(s);
+    validate.set_file(s);
+    veto.set_file(s);
     file = get_base_filename(s);
 }
 
@@ -987,7 +1030,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk)
 {
     bool result = true;
     dlua_set_map mset(this);
-    
+
     int err = chunk.load(dlua);
     if (err == -1000)
         return (true);
@@ -996,13 +1039,11 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk)
         mprf(MSGCH_WARN, "Lua error: %s", validate.orig_error().c_str());
         return (true);
     }
-
     if (dlua.callfn("dgn_run_map", 1, 1))
-        dlua.fnreturns("b", &result);
+        dlua.fnreturns(">b", &result);
     else
         mprf(MSGCH_WARN, "Lua error: %s",
              rewrite_chunk_errors(dlua.error).c_str());
-
     return (result);
 }
 

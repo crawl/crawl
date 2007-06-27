@@ -16,6 +16,9 @@
 
 #include "FixVec.h"
 #include "externs.h"
+#include "misc.h"
+#include "travel.h"
+#include "stuff.h"
 
 const int MAKE_GOOD_ITEM = 351;
 
@@ -89,18 +92,127 @@ struct dgn_region
 };
 
 void builder(int level_number, int level_type);
-
 void define_zombie(int mid, int ztype, int cs, int power);
-
 bool is_wall(int feature);
-
-bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
-                         trap_type spec_type);
-
-void place_spec_shop(int level_number, unsigned char shop_x,
-                     unsigned char shop_y, unsigned char force_s_type,
-                     bool representative = false );
-
+bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
+void place_spec_shop(int level_number, int shop_x, int shop_y,
+                     int force_s_type, bool representative = false);
 bool unforbidden(const coord_def &c, const dgn_region_list &forbidden);
+
+
+//////////////////////////////////////////////////////////////////////////
+template <typename fgrd, typename bound_check>
+class flood_find : public travel_pathfind
+{
+public:
+    flood_find(const fgrd &f, const bound_check &bc);
+
+    void add_feat(int feat);
+    void add_point(const coord_def &pos);
+    coord_def find_first_from(const coord_def &c, const dgn_region_list &vlts);
+    bool points_connected_from(const coord_def &start);
+
+    bool did_leave_vault() const { return left_vault; }
+    
+protected:
+    bool path_flood(const coord_def &c, const coord_def &dc);
+protected:
+    bool point_hunt;
+    bool needed_features[NUM_FEATURES];
+    std::vector<coord_def> needed_points;
+    bool left_vault;
+    dgn_region_list vaults;
+
+    const fgrd &fgrid;
+    const bound_check &bcheck;
+};
+
+template <typename fgrd, typename bound_check>
+flood_find<fgrd, bound_check>::flood_find(const fgrd &f, const bound_check &bc)
+    : travel_pathfind(), point_hunt(false), needed_features(),
+      needed_points(), left_vault(true), vaults(),
+      fgrid(f), bcheck(bc)
+{
+    memset(needed_features, false, sizeof needed_features);
+}
+
+template <typename fgrd, typename bound_check>
+void flood_find<fgrd, bound_check>::add_feat(int feat)
+{
+    if (feat >= 0 && feat < NUM_FEATURES)
+        needed_features[feat] = true;
+}
+
+template <typename fgrd, typename bound_check>
+coord_def
+flood_find<fgrd, bound_check>::find_first_from(
+    const coord_def &c,
+    const dgn_region_list &vlts)
+{
+    set_floodseed(c);
+    vaults = vlts;
+    return pathfind(RMODE_EXPLORE);
+}
+
+template <typename fgrd, typename bound_check>
+void flood_find<fgrd, bound_check>::add_point(const coord_def &c)
+{
+    needed_points.push_back(c);
+}
+
+template <typename fgrd, typename bound_check>
+bool flood_find<fgrd, bound_check>::points_connected_from(
+    const coord_def &sp)
+{
+    if (needed_points.empty())
+        return (true);
+    set_floodseed(sp);
+    pathfind(RMODE_EXPLORE);
+    return (needed_points.empty());
+}
+
+template <typename fgrd, typename bound_check>
+bool flood_find<fgrd, bound_check>::path_flood(
+    const coord_def &c,
+    const coord_def &dc)
+{
+    if (!bcheck(dc))
+        return (false);
+
+    if (!needed_points.empty())
+    {
+        std::vector<coord_def>::iterator i =
+            std::find(needed_points.begin(), needed_points.end(), dc);
+        if (i != needed_points.end())
+        {
+            needed_points.erase(i);
+            if (needed_points.empty())
+                return (true);
+        }
+    }
+
+    const dungeon_feature_type grid = fgrid(dc);
+    if (needed_features[ grid ])
+    {
+        unexplored_place = dc;
+        unexplored_dist  = traveled_distance;
+        return (true);
+    }
+
+    if (!is_traversable(grid)
+        && grid != DNGN_SECRET_DOOR
+        && !grid_is_trap(grid))
+    {
+        return (false);
+    }
+
+    if (!left_vault && unforbidden(dc, vaults))
+        left_vault = true;
+
+    good_square(dc);
+    
+    return (false);
+}
+//////////////////////////////////////////////////////////////////////////
 
 #endif

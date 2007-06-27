@@ -146,7 +146,13 @@ void tag_followers( void )
     }
 }
 
-unsigned char get_ch(void)
+void untag_followers()
+{
+    for (int m = 0; m < MAX_MONSTERS; m++)
+        menv[m].flags &= (~MF_TAKING_STAIRS);
+}
+
+unsigned char get_ch()
 {
     unsigned char gotched = getch();
 

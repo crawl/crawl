@@ -1871,7 +1871,8 @@ static void decrement_durations()
     else if (you.duration[DUR_TELEPORT] == 1)
     {
         // only to a new area of the abyss sometimes (for abyss teleports)
-        you_teleport_now( true, one_chance_in(5) ); 
+        you_teleport_now( true, one_chance_in(5) );
+        untag_followers();
         you.duration[DUR_TELEPORT] = 0;
     }
 

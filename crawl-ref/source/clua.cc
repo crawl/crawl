@@ -315,9 +315,7 @@ void CLua::fnreturns(const char *format, ...)
 
     va_list args;
     va_start(args, format);
-
     vfnreturns(format, args);
-
     va_end(args);
 }
 
@@ -367,7 +365,6 @@ void CLua::vfnreturns(const char *format, va_list args)
 }
 
 static void push_monster(lua_State *ls, monsters *mons);
-static void push_map(lua_State *ls, map_def *map);
 static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
@@ -415,7 +412,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             lua_pushboolean(ls, va_arg(args, int));
             break;
         case 'm':
-            push_map(ls, va_arg(args, map_def *));
+            clua_push_map(ls, va_arg(args, map_def *));
             break;
         case 'M':
             push_monster(ls, va_arg(args, monsters *));
@@ -583,7 +580,7 @@ void CLua::init_lua()
         return;
 
     lua_atpanic(_state, clua_panic);
-    
+
     luaopen_base(_state);
     luaopen_string(_state);
     luaopen_table(_state);
@@ -611,6 +608,8 @@ void CLua::init_lua()
 
         execfile("clua/userbase.lua", true, true);
     }
+
+    lua_settop(_state, 1);
 }
 
 void CLua::load_chooks()
@@ -1830,6 +1829,7 @@ static int crawl_split(lua_State *ls)
 }
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
+LUARET1(crawl_random2, number, random2( luaL_checkint(ls, 1) ))
 
 static int crawl_err_trace(lua_State *ls)
 {
@@ -1860,14 +1860,15 @@ static int crawl_err_trace(lua_State *ls)
         // What's on top should be the error.
         lua_error(ls);
     }
-    
-    return (lua_gettop(ls));    
+
+    return (lua_gettop(ls));
 }
 
 static const struct luaL_reg crawl_lib[] =
 {
     { "mpr",            crawl_mpr },
     { "mesclr",         crawl_mesclr },
+    { "random2",        crawl_random2 },
     { "redraw_screen",  crawl_redraw_screen },
     { "input_line",     crawl_input_line },
     { "c_input_line",   crawl_c_input_line},
@@ -2166,7 +2167,7 @@ static void push_monster(lua_State *ls, monsters *mons)
     mw->mons = mons;
 }
 
-static void push_map(lua_State *ls, map_def *map)
+void clua_push_map(lua_State *ls, map_def *map)
 {
     map_def **mapref = clua_new_userdata<map_def *>(ls, MAP_METATABLE);
     *mapref = map;

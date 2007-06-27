@@ -280,86 +280,15 @@ static coord_def find_level_feature(int feat)
     return coord_def(0, 0);
 }
 
-class feature_find : public travel_pathfind
-{
-public:
-    feature_find();
-
-    void add_feat(int feat);
-    coord_def find_first_from(const coord_def &c);
-
-    bool did_leave_vault() const { return left_vault; }
-    
-protected:
-    bool path_flood(const coord_def &c, const coord_def &dc);
-protected:
-    bool needed_features[NUM_FEATURES];
-    bool left_vault;
-    dgn_region_list vaults;
-};
-
-feature_find::feature_find()
-    : travel_pathfind(), needed_features(), left_vault(true), vaults()
-{
-    memset(needed_features, false, sizeof needed_features);
-}
-
-void feature_find::add_feat(int feat)
-{
-    if (feat >= 0 && feat < NUM_FEATURES)
-        needed_features[feat] = true;
-}
-
-coord_def feature_find::find_first_from(const coord_def &c)
-{
-    set_floodseed(c);
-
-    for (int i = 0, size = level_vaults.size(); i < size; ++i)
-    {
-        const vault_placement &p = level_vaults[i];
-        vaults.push_back( dgn_region(p.x, p.y, p.width, p.height) );
-    }
-    
-    return pathfind(RMODE_EXPLORE);
-}
-
-bool feature_find::path_flood(const coord_def &c, const coord_def &dc)
-{
-    if (!in_bounds(dc))
-        return (false);
-    
-    const dungeon_feature_type grid = grd(dc);
-    if (needed_features[ grid ])
-    {
-        unexplored_place = dc;
-        unexplored_dist  = traveled_distance;
-        return (true);
-    }
-
-    if (!is_travelsafe_square(dc.x, dc.y, false, true)
-        && grid != DNGN_SECRET_DOOR
-        && !grid_is_trap(grid))
-    {
-        return (false);
-    }
-
-    if (!left_vault && unforbidden(dc, vaults))
-        left_vault = true;
-
-    good_square(dc);
-    
-    return (false);
-}
-
 static bool has_connected_downstairs_from(const coord_def &c)
 {
-    feature_find ff;
+    flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds);
     ff.add_feat(DNGN_STONE_STAIRS_DOWN_I);
     ff.add_feat(DNGN_STONE_STAIRS_DOWN_II);
     ff.add_feat(DNGN_STONE_STAIRS_DOWN_III);
     ff.add_feat(DNGN_ROCK_STAIRS_DOWN);
 
-    coord_def where = ff.find_first_from(c);
+    coord_def where = ff.find_first_from(c, vault_zones);
     return (where.x || !ff.did_leave_vault());
 }
 
@@ -3353,6 +3282,62 @@ static monster_type random_evil_statue()
     return (MONS_PROGRAM_BUG);
 }
 
+// Grr, keep this in sync with vault_grid.
+dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
+{
+    if (rawfeat == -1)
+        rawfeat = map->glyph_at(c);
+    
+    keyed_mapspec *mapsp = map? map->mapspec_for_key(rawfeat) : NULL;
+    if (mapsp)
+    {
+        const feature_spec f = mapsp->get_feat();
+        if (f.feat >= 0)
+            return static_cast<dungeon_feature_type>(f.feat);
+        else if (f.glyph >= 0)
+            return map_feature(NULL, c, rawfeat);
+        else if (f.shop >= 0)
+            return (DNGN_ENTER_SHOP);
+        else if (f.trap >= 0)
+            return (DNGN_UNDISCOVERED_TRAP);
+
+        return (DNGN_FLOOR);
+    }
+
+    return ((rawfeat == 'x') ? DNGN_ROCK_WALL :
+            (rawfeat == 'X') ? DNGN_PERMAROCK_WALL :
+            (rawfeat == 'c') ? DNGN_STONE_WALL :
+            (rawfeat == 'v') ? DNGN_METAL_WALL :
+            (rawfeat == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
+            (rawfeat == 'a') ? DNGN_WAX_WALL :
+            (rawfeat == '+') ? DNGN_CLOSED_DOOR :
+            (rawfeat == '=') ? DNGN_SECRET_DOOR :
+            (rawfeat == 'w') ? DNGN_DEEP_WATER :
+            (rawfeat == 'W') ? DNGN_SHALLOW_WATER :
+            (rawfeat == 'l') ? DNGN_LAVA :
+            (rawfeat == '>') ? DNGN_ROCK_STAIRS_DOWN :
+            (rawfeat == '<') ? DNGN_ROCK_STAIRS_UP :
+            (rawfeat == '}') ? DNGN_STONE_STAIRS_DOWN_I :
+            (rawfeat == '{') ? DNGN_STONE_STAIRS_UP_I :
+            (rawfeat == ')') ? DNGN_STONE_STAIRS_DOWN_II :
+            (rawfeat == '(') ? DNGN_STONE_STAIRS_UP_II :
+            (rawfeat == ']') ? DNGN_STONE_STAIRS_DOWN_III :
+            (rawfeat == '[') ? DNGN_STONE_STAIRS_UP_III :
+            (rawfeat == 'A') ? DNGN_STONE_ARCH :
+            (rawfeat == 'B') ? DNGN_ALTAR_ZIN : 
+            (rawfeat == 'C') ? pick_an_altar() :   // f(x) elsewhere {dlb}
+            (rawfeat == 'F') ? DNGN_GRANITE_STATUE :
+            (rawfeat == 'I') ? DNGN_ORCISH_IDOL :
+            (rawfeat == 'S') ? DNGN_SILVER_STATUE :
+            (rawfeat == 'G') ? DNGN_GRANITE_STATUE :
+            (rawfeat == 'H') ? DNGN_ORANGE_CRYSTAL_STATUE :
+            (rawfeat == 'T') ? DNGN_BLUE_FOUNTAIN :
+            (rawfeat == 'U') ? DNGN_SPARKLING_FOUNTAIN :
+            (rawfeat == 'V') ? DNGN_PERMADRY_FOUNTAIN :
+            (rawfeat == '\0')? DNGN_ROCK_WALL :
+            DNGN_FLOOR); // includes everything else
+}
+
 // returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
 // temple - oh, well... {dlb}
@@ -3954,8 +3939,8 @@ static void place_shops(int level_number)
 }                               // end place_shops()
 
 void place_spec_shop( int level_number, 
-                      unsigned char shop_x, unsigned char shop_y,
-                      unsigned char force_s_type, bool representative )
+                      int shop_x, int shop_y,
+                      int force_s_type, bool representative )
 {
     int orb = 0;
     int i = 0;
@@ -5885,7 +5870,7 @@ static void jelly_pit(int level_number, spec_room &sr)
     fill_monster_pit( sr, pit_list, 90, MONS_PROGRAM_BUG, lordx, lordy );
 }
 
-bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
+bool place_specific_trap(int spec_x, int spec_y,
                          trap_type spec_type)
 {
     if (spec_type == TRAP_RANDOM)

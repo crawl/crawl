@@ -186,7 +186,7 @@ static const char *trap_name(int x, int y)
 /*
  * Returns true if the character can cross this dungeon feature.
  */
-inline bool is_traversable(int grid)
+bool is_traversable(int grid)
 {
     return traversable_terrain[grid] == TRAVERSABLE;
 }
@@ -1536,15 +1536,23 @@ void travel_pathfind::good_square(const coord_def &c)
     }
 }
 
-bool travel_pathfind::path_examine_point(const coord_def &c)
+bool travel_pathfind::point_traverse_delay(const coord_def &c)
 {
     if (square_slows_movement(c))
-        return (false);
+        return (true);
 
     // Greedy explore check should happen on (x,y), not (dx,dy) as for
     // regular explore.
     if (need_for_greed)
         check_square_greed(c);
+
+    return (false);
+}
+
+bool travel_pathfind::path_examine_point(const coord_def &c)
+{
+    if (point_traverse_delay(c))
+        return (false);
 
     // For each point, we look at all surrounding points. Take them orthogonals
     // first so that the travel path doesn't zigzag all over the map. Note the

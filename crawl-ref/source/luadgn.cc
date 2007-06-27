@@ -11,6 +11,7 @@
 #include "luadgn.h"
 #include "mapdef.h"
 #include "stuff.h"
+#include "dungeon.h"
 #include <sstream>
 
 // Lua interpreter for the dungeon builder.
@@ -33,7 +34,7 @@ inline static void dlua_pushcxxstring(lua_State *ls, const std::string &s)
     lua_pushstring(ls, s.c_str());
 }
 
-static int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
+int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
 {
     return dlua_gentable(ls, s, dlua_pushcxxstring);
 }
@@ -50,7 +51,7 @@ dlua_chunk::dlua_chunk(const std::string &_context)
 
 void dlua_chunk::write(FILE *outf) const
 {
-    if (compiled.empty() && chunk.empty())
+    if (empty())
     {
         writeByte(outf, CT_EMPTY);
         return;
@@ -186,13 +187,14 @@ std::string dlua_chunk::orig_error() const
 
 bool dlua_chunk::empty() const
 {
-    return trimmed_string(chunk).empty();
+    return compiled.empty() && trimmed_string(chunk).empty();
 }
 
 bool dlua_chunk::rewrite_chunk_errors(std::string &s) const
 {
     const std::string contextm = "[string \"" + context + "\"]:";
     std::string::size_type dlwhere = s.find(contextm);
+
     if (dlwhere == std::string::npos)
         return (false);
 
@@ -645,6 +647,70 @@ static int dgn_grid(lua_State *ls)
     PLUARET(number, grd[x][y]);
 }
 
+static int dgn_points_connected(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    const int nargs = lua_gettop(ls);
+    if (nargs < 5)
+        return luaL_error(ls,
+                          "Not enough points to test connectedness "
+                          "(need at least two)");
+    
+    map_def::map_feature_finder feat_finder(*map);
+    map_def::map_bounds_check bounds_checker(*map);
+    flood_find<map_def::map_feature_finder, map_def::map_bounds_check>
+        finder(feat_finder, bounds_checker);
+
+    for (int i = 4; i < nargs; i += 2)
+    {
+        const coord_def c(luaL_checkint(ls, i),
+                          luaL_checkint(ls, i + 1));
+        finder.add_point(c);
+    }
+
+    const coord_def pos(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
+    const bool connected = finder.points_connected_from(pos);
+    PLUARET(boolean, connected);
+}
+
+static void dlua_push_coord(lua_State *ls, const coord_def &c)
+{
+    lua_pushnumber(ls, c.x);
+    lua_pushnumber(ls, c.y);
+}
+
+static int dgn_gly_point(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    coord_def c = map->find_first_glyph(*luaL_checkstring(ls, 2));
+    if (c.x != -1 && c.y != -1)
+    {
+        dlua_push_coord(ls, c);
+        return (2);
+    }
+    return (0);
+}
+
+static int dgn_gly_points(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    std::vector<coord_def> cs = map->find_glyph(*luaL_checkstring(ls, 2));
+
+    for (int i = 0, size = cs.size(); i < size; ++i)
+        dlua_push_coord(ls, cs[i]);
+    return (cs.size() * 2);
+}
+
+static int dgn_original_map(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (map->original)
+        clua_push_map(ls, map->original);
+    else
+        lua_pushnil(ls);
+    return (1);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -667,14 +733,31 @@ static const struct luaL_reg dgn_lib[] =
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
     { "grid", dgn_grid },
+    { "points_connected", dgn_points_connected },
+    { "gly_point", dgn_gly_point },
+    { "gly_points", dgn_gly_points },
+    { "original_map", dgn_original_map },
+    { NULL, NULL }
+};
+
+static int crawl_args(lua_State *ls)
+{
+    return dlua_stringtable(ls, SysEnv.cmd_args);
+}
+
+static const struct luaL_reg crawl_lib[] =
+{
+    { "args", crawl_args },
     { NULL, NULL }
 };
 
 void init_dungeon_lua()
 {
+    luaL_openlib(dlua, "dgn", dgn_lib, 0);
+    // Add additional function to the Crawl module.
+    luaL_openlib(dlua, "crawl", crawl_lib, 0);
     dlua.execfile("clua/dungeon.lua", true, true);
     luaopen_debug(dlua);
     luaL_newmetatable(dlua, MAP_METATABLE);
-    lua_pop(dlua, 1);
-    luaL_openlib(dlua, "dgn", dgn_lib, 0);
+    lua_settop(dlua, 1);
 }

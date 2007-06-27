@@ -179,6 +179,8 @@ public:
     std::vector<std::string> get_shuffle_strings() const;
     std::vector<std::string> get_subst_strings() const;
 
+    int operator () (const coord_def &c) const;
+    
 private:
     void init_from(const map_lines &map);
     void release_transforms();
@@ -401,6 +403,9 @@ struct dlua_set_map
     ~dlua_set_map();
 };
 
+class map_def;
+dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat);
+
 class map_def
 {
 public:
@@ -420,6 +425,8 @@ public:
 
     dlua_chunk      prelude, main, validate, veto;
 
+    map_def         *original;
+
 private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
@@ -432,6 +439,9 @@ public:
     void reinit();
 
     void load();
+
+    std::vector<coord_def> find_glyph(int glyph) const;
+    coord_def find_first_glyph(int glyph) const;
     
     void write_index(FILE *) const;
     void write_full(FILE *);
@@ -485,6 +495,32 @@ public:
 
     std::vector<std::string> get_shuffle_strings() const;
     std::vector<std::string> get_subst_strings() const;
+
+    int glyph_at(const coord_def &c) const;
+
+public:
+    struct map_feature_finder
+    {
+        map_def &map;
+        map_feature_finder(map_def &map_) : map(map_) { }
+        // This may actually modify the underlying map by fixing KFEAT:
+        // feature slots, but that's fine by us.
+        dungeon_feature_type operator () (const coord_def &c) const
+        {
+            return (map_feature(&map, c, -1));
+        }
+    };
+
+    struct map_bounds_check
+    {
+        map_def &map;
+        map_bounds_check(map_def &map_) : map(map_) { }
+        bool operator () (const coord_def &c) const
+        {
+            return (c.x >= 0 && c.x < map.map.width()
+                    && c.y >= 0 && c.y < map.map.height());
+        }
+    };
     
 private:
     void write_depth_ranges(FILE *) const;

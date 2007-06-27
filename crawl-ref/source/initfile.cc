@@ -2566,6 +2566,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
     for(int i=0; i<num_cmd_ops; i++)
         arg_seen[i] = false;
 
+    if (SysEnv.cmd_args.empty())
+        for (int i = 1; i < argc; ++i)
+            SysEnv.cmd_args.push_back(argv[i]);
+    
     while(current < argc)
     {
         // get argument
