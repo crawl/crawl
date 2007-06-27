@@ -3893,7 +3893,7 @@ static void place_altar()
         if ( numgood < 5*5 || numfloors == 0 )
             continue;
 
-        bool mon_there;
+        bool mon_there = false;
 
         for (int i = px - 2; i <= px + 2; i++)
             for (int j = py - 2; j <= py + 2; j++)
@@ -4389,12 +4389,12 @@ static char plan_3()
         romx2[which_room] = romx1[which_room] + 2 + random2(8);
         romy2[which_room] = romy1[which_room] + 2 + random2(8);
 
-        if (exclusive)
-        {
-            int bx = romx1[which_room], by = romy1[which_room];
-            if (count_antifeature_in_box(bx-1,by-1,bx+2,by+2,DNGN_ROCK_WALL))
-                continue;
-        }
+        if (exclusive && count_antifeature_in_box(romx1[which_room] - 1,
+                                                  romy1[which_room] - 1,
+                                                  romx2[which_room] + 1,
+                                                  romy2[which_room] + 1,
+                                                  DNGN_ROCK_WALL))
+            continue;
 
         replace_area(romx1[which_room], romy1[which_room], romx2[which_room],
                      romy2[which_room], DNGN_ROCK_WALL, DNGN_FLOOR);
