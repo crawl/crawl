@@ -21,6 +21,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sstream>
+#include <iomanip>
 
 #ifdef DOS
 #include <conio.h>
@@ -129,7 +130,9 @@ std::string InvEntry::get_text() const
     if ( Options.show_inventory_weights )
     {
         const int mass = item_mass(*item);
-        tstr << " [" << (mass/10) << '.' << (mass%10) << " aum]";
+        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 1)
+             << std::right
+             << make_stringf("(%d.%d aum)", mass / 10, mass % 10);
     }
     return tstr.str();
 }
