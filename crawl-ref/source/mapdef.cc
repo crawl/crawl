@@ -1026,35 +1026,44 @@ std::string map_def::run_lua(bool run_main)
     return (dlua.error);
 }
 
-bool map_def::test_lua_boolchunk(dlua_chunk &chunk)
+bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
 {
-    bool result = true;
+    bool result = defval;
     dlua_set_map mset(this);
 
     int err = chunk.load(dlua);
     if (err == -1000)
-        return (true);
+        return (result);
     else if (err)
     {
-        mprf(MSGCH_WARN, "Lua error: %s", validate.orig_error().c_str());
-        return (true);
+        if (croak)
+            end(1, false, "Lua error: %s", validate.orig_error().c_str());
+        else
+            mprf(MSGCH_WARN, "Lua error: %s", validate.orig_error().c_str());
+        return (result);
     }
     if (dlua.callfn("dgn_run_map", 1, 1))
         dlua.fnreturns(">b", &result);
     else
-        mprf(MSGCH_WARN, "Lua error: %s",
-             rewrite_chunk_errors(dlua.error).c_str());
+    {
+        if (croak)
+            end(1, false, "Lua error: %s",
+                rewrite_chunk_errors(dlua.error).c_str());
+        else
+            mprf(MSGCH_WARN, "Lua error: %s",
+                 rewrite_chunk_errors(dlua.error).c_str());
+    }
     return (result);
 }
 
-bool map_def::test_lua_validate()
+bool map_def::test_lua_validate(bool croak)
 {
-    return test_lua_boolchunk(validate);
+    return validate.empty() || test_lua_boolchunk(validate, false, croak);
 }
 
 bool map_def::test_lua_veto()
 {
-    return test_lua_boolchunk(veto);
+    return !veto.empty() && test_lua_boolchunk(veto, true);
 }
 
 std::string map_def::rewrite_chunk_errors(const std::string &s) const
@@ -1076,6 +1085,8 @@ std::string map_def::validate_map_def()
     if (!err.empty())
         return (err);
 
+    test_lua_validate(true);
+    
     if (orient == MAP_FLOAT || is_minivault())
     {
         if (map.width() > GXM - MAPGEN_BORDER * 2

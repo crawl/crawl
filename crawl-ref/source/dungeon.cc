@@ -244,7 +244,7 @@ static void place_altars()
  *********************************************************************/
 void builder(int level_number, int level_type)
 {
-    // 15 tries to build the level, after which we bail with a capital B.
+    // N tries to build the level, after which we bail with a capital B.
     int tries = 10;
     while (tries-- > 0)
     {

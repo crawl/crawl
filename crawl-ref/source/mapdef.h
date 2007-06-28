@@ -453,7 +453,7 @@ public:
     std::string run_lua(bool skip_main);
 
     // Returns true if the validation passed.
-    bool test_lua_validate();
+    bool test_lua_validate(bool croak = false);
 
     // Returns true if *not* vetoed, i.e., the map is good to go.
     bool test_lua_veto();
@@ -525,7 +525,7 @@ public:
 private:
     void write_depth_ranges(FILE *) const;
     void read_depth_ranges(FILE *);
-    bool test_lua_boolchunk(dlua_chunk &);
+    bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     
     std::string add_key_field(

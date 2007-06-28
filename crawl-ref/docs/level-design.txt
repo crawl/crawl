@@ -5,8 +5,10 @@ Contents:  A. Introduction
            B. Sample map
            C. Map symbols
            D. Header information
-           E. Hints for level makers
-
+           E. Conditionalising levels
+           F. Validating levels
+           G. Hints for level makers
+           H. Lua reference
 
 A.   Introduction
 -----------------
@@ -89,15 +91,9 @@ minivault.
 B.   Sample Map
 ---------------
 
-Before explaining the many technical details of the level syntax, we give 
-a fictional temple entry so that you can the general map structure by way
-of example. This is a _bad_ entry - do not recycle it!
-
-First of all, each and every map consists of a name, a header and the actual
-map itself (order is often not important but try to stick to this one). 
-
-Note that lines starting with # are comments. The keywords are explained 
-very briefly after the map and in detail in the following sections.
+Before going into the technical details of the level-file syntax,
+let's look at an example - a branch entry for the Ecumenical Temple -
+to see what a map definition looks like.
 
 # name below:
 NAME:    a_useless_temple_entry_02
@@ -119,10 +115,18 @@ x2www1x
 xx1.1xx
 ENDMAP
 
+Every map consists of a name, a header and the actual map (the order
+is not important as long as the name comes first, but stick to this
+order for consistency).
+
+Lines starting with # are comments. The keywords available are
+explained briefly after the example map and in detail in the following
+sections.
+
 "ORIENT: float" tells the level builder that this entry can be anywhere on the
                 level; other ORIENT: values can force a map to one edge of the
                 level.
-"CHANCE: 5" makes it appear less often (default is 10).
+"CHANCE: 5" makes the map appear less often (default is 10).
 "TAGS: temple_entry" turns the 'O' on the map into stairs to the Temple.
 "FLAGS: no_rotate" forbids rotation (but mirroring is still allowed).
 "SHUFFLE: de" may replace all 'd' with 'e' in the map.
@@ -236,6 +240,9 @@ Monsters
 
 D.   Header information
 -----------------------
+
+(All declarations apart from NAME: are translated to Lua function
+calls behind the scenes. See the Lua reference for more information.)
 
 NAME:    a_string
          Each map must have a unique name. Underscores and digits are ok.
@@ -513,7 +520,205 @@ KITEM:   ? = potion of healing / potion of restore abilities
          KITEM: allows you to place multiple items on the same square:
            KITEM: ? = bread ration, potion of water, potion of porridge
 
-E.    Hints for level makers
+
+E.    Conditionalising levels
+-----------------------------
+
+Crawl translated level (.des) files into Lua code chunks and runs
+these chunks to produce the final level that is generated. While you
+don't need to use Lua for most levels, using Lua allows you to
+conditionalise or randomise levels with greater control.
+
+Let's take a simple example of randomisation:
+
+NAME: random_test
+# Put it on D:1 so it's easy to test.
+PLACE: D:1
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxx
+x........{........x
+xxxAxxxxxBxxxxxCxxx
+xxx.xxxxx.xxxxx.xxx
+xxx@xxxxx@xxxxx@xxx
+ENDMAP
+
+Now let's say you want A, B, and C to be randomly rock or floor, but B
+should be floor if both A and C are rock. Here's one way to do it (add
+these lines to the map definition):
+
+: local asolid, csolid
+: if crawl.random2(2) == 0 then
+:   asolid = true
+:   subst("A = x")
+: else
+:   subst("A = .")
+: end
+: if crawl.random2(2) == 0 then
+:   csolid = true
+:   subst("C = x")
+: else
+:   subst("C = .")
+: end
+: if asolid and csolid then
+:   subst("B = .")
+: else
+:   subst("B = .x")
+: end
+
+This code uses crawl.random2(N) which returns a number from 0 to N-1
+(in this case, returns 0 or 1). So we give A a 50% chance of being
+rock, and the same for C. If we made both A and C rock, we force B to
+be floor, otherwise we use a subst that gives B the same 50% chance of
+being rock.
+
+You can conditionalise on various factors, such as player experience
+level:
+
+NAME: condition_002
+DEPTH: 1-27
+ORIENT: float
+: if you.xl() > 18 then
+MONS: greater mummy
+: else
+MONS: deep elf priest / deep elf sorcerer / deep elf demonologist
+: end
+MAP
+xxxxxx
+x1...x
+x1...+
+x1...x
+xxxxxx
+ENDMAP
+
+Or based on where the map is being generated:
+
+NAME: condition_003
+DEPTH: Elf:*, Orc:*
+ORIENT: float
+: if you.branch() == "Orc" then
+MONS: orc priest, orc high priest
+: else
+MONS: deep elf priest, deep elf high priest
+: end
+MAP
+xxxxxx
+x1...x
+x2...+
+x1...x
+xxxxxx
+ENDMAP
+
+When conditionalising maps, remember that your Lua code executes in
+two contexts:
+
+1) An initial compilation phase before the game starts.
+2) The actual mapgen phase when the dungeon builder is at work.
+
+In context (1), you will not get useful answers from the Crawl Lua API
+in general, because the game hasn't started. This is generally
+ignorable (as in the case above) because the compilation phase just
+checks the syntax of your Lua code. If you conditionalise your map,
+however, you may run into compile failures. Take this variant, which
+(incorrectly) attempts to conditionalise the map:
+
+NAME: condition_004
+DEPTH: Elf:*, Orc:*
+ORIENT: float
+: if you.branch() == "Orc" then
+MONS: orc priest, orc high priest
+MAP
+xxxxxx
+x1...x
+x2.I.+
+x1...x
+xxxxxx
+ENDMAP
+: elseif you.branch() == "Elf" then
+MONS: deep elf priest, deep elf high priest
+MAP
+xxxxxx
+x1...x
+x2.U.+
+x1...x
+xxxxxx
+ENDMAP
+: end
+
+This map will break the compile with the cryptic message "Must define
+map." (to compound the confusion, the line number for this error will
+be the first line number of the map following the buggy map).
+
+This error is because although the map is Elf or Orc only, at compile
+time, the branch is *neither* Elf nor Orc.
+
+Lua code can detect the compile phase using crawl.game_started() which
+returns true only when the player has started a game (and will return
+false when the map is being initially compiled).
+
+For more details on the available Lua API and syntax, see the Lua
+reference section.
+
+
+F.    Validating levels
+-----------------------
+
+If you have a map with lots of transforms (SUBST and SHUFFLE), and
+want to guarantee that the map is sane after the transforms, you can
+use a validation hook.
+
+To take a very contrived example:
+
+NAME: contrived_001
+PLACE: D:2
+ORIENT: float
+TAGS: no_pool_fixup
+SUBST: .=.w
+SUBST: c=x.
+MAP
+xxxxxx
+x{.+.c
+x..+>x
+xxxxxx
+ENDMAP
+
+This map has a chance of leaving the player stuck on the upstair
+without access to the rest of the level if the two floor squares near
+the doors are substituted with deep water (from the SUBST line), or
+the 'c' glyph is substituted with rock. Since a cut-off vault is
+uncool, you can force connectedness with the rest of the level:
+
+validate {{ return has_exit_from_glyph('{') }}
+
+The has_exit_from_glyph() function returns true if it is possible to
+leave the vault (without digging, etc.) from the position of the {
+glyph. (This takes things like the merfolk ability to swim into
+account, so a merfolk character may see deep water between the stair
+and door.)
+
+The validate Lua returns false (or nil) to indicate that the map is
+invalid, which will force the dungeon builder to reapply transforms
+(SUBST and SHUFFLE) and validate the map again. If the map fails
+validation enough times, the dungeon builder will discard the entire
+level and retry (this may cause a different map to be selected,
+bypassing the buggy map).
+
+Going back to the example, if you just want to ensure that the player
+can reach the > downstair, you can use:
+
+validate {{ return glyphs_connected('{', '>') }}
+
+NOTE: You cannot use the colon-prefixed syntax for validation Lua. If
+you have a big block of code, use the multiline syntax:
+
+validate {{
+   -- This level is always cool.
+   crawl.mpr("This level is guaranteed perfect!")
+   return true
+}}
+
+
+G.    Hints for level makers
 ----------------------------
 
 * Technical stuff:
@@ -656,3 +861,163 @@ E.    Hints for level makers
   in the dat directory) can make level-editing far more pleasant by colouring
   different features in maps and syntax-highlighting .des-file syntax. vim is
   available for nearly all operating systems, including Windows.
+
+
+H.    Lua reference
+-------------------
+
+How maps are processed
+----------------------
+
+Crawl uses Lua heavily when dealing with .des files:
+
+* Level files are compiled into a series of Lua chunks. Each map can
+  have one or more Lua chunks associated with it: the prelude, the
+  body, and a validation chunk. The body is mandatory, but prelude and
+  validation chunks are necessary only if your map needs validation or
+  fancy selection criteria.
+
+* When first compiling a .des file, Crawl compiles each map's Lua
+  chunks, then compiles and runs the prelude, body and validation
+  immediately to verify that the Lua code is not broken. Lua errors at
+  this stage will cause Crawl to exit with an error message (hopefully
+  relevant). Note that the validation Lua chunk's return code is
+  completely ignored at this stage - it is only run to check for
+  syntax errors in the code.
+
+* When a new game is started, Crawl will run the Lua preludes for all
+  maps (most maps should have no prelude - map preludes slow the game
+  down). At this point, preludes can change the map's placement or
+  availability.
+
+* When the dungeon builder selects a map (based on TAGS, DEPTH,
+  PLACE), it re-runs the map prelude and the map body, applies
+  transforms (SUBST, SHUFFLE) if any, then calls the map's validation
+  Lua. If the map passes validation, the dungeon builder continues
+  with level-generation; otherwise, it restarts from the map prelude.
+
+The global prelude
+------------------
+
+Every .des file can have (at the start of the file) Lua code that is
+not associated with any specific map, but with all maps in the file.
+This is called the global prelude. The global prelude is run before
+running any other Lua code in the file, once during compilation, and
+once at start of game.
+
+You can use the global prelude to define functions and set up globals
+that the rest of the maps in the .des file use. If you have a lot of
+common code, you should probably add it to dungeon.lua instead.
+
+Syntax for using Lua in .des files
+----------------------------------
+
+* Colon-prefixed lines are individual Lua lines, extending to the end
+  of the line. E.g.
+
+  : crawl.mpr("Hello")
+
+  Colon-prefixed lines are always in the main Lua chunk, unless they occur
+  before any map definitions, in which case they go to the global prelude.
+
+* Lua blocks for the main (body) Lua
+  lua {{ <code> }}
+  or
+  lua {{
+      <code>
+  }}
+
+NOTE: Colon-prefixed lines, or lua {{ }} blocks defined before any
+map's NAME: directive will add the Lua code to the global prelude.
+
+* Lua blocks for the prelude:
+  prelude {{ <code> }}
+  or
+  prelude {{
+      <code>
+  }}
+
+* Lua blocks for the validate chunk:
+  validate {{ <code> }}
+  or
+  validate {{
+      <code>
+  }}
+
+
+Debugging Lua
+-------------
+
+Since Lua action happens in the guts of Crawl, it can be hard to tell
+what's going on. Lua debugging involves the time-honoured method of
+peppering your code with print statements:
+
+* Use error() or print() for compile-time work (i.e. when Crawl reads
+  the .des file). Note that print() just writes to the terminal and
+  keeps going, while error() forces Crawl to exit immediately (at
+  compile time; errors during level-generation are handled
+  differently).
+
+* Use crawl.mpr() for output when the game has started (at
+  level-generation time).
+
+It's very important that your finished level never croaks during
+level-generation. A Lua error at this stage is considered a validation
+failure.
+
+  
+Lua API reference
+-----------------
+a. The Map.
+b. Global game state.
+c. Character information.
+
+
+Lua API - the Map
+-----------------
+
+Lua functions dealing with the map are mostly grouped under the "dgn"
+module. For convenience, .des file Lua chunks are run in an environment
+such that function calls written as:
+
+fn(x, y, ...)
+
+are translated to
+
+dgn.fn(map, x, y, ...)
+
+where "map" is the reference to the map that the currently executing
+Lua chunk belongs to. This is only for Lua chunks that belong to a
+map, Lua code in the global prelude does not get this treatment
+(because the global prelude is not associated with any map).
+
+Functions in the dgn module:
+
+default_depth, name, depth, place, tags, tags_remove, chance, weight,
+orient, shuffle, shuffle_remove, subst, subst_remove, map, mons, item,
+kfeat, kitem, kmons, grid, points_connected, gly_point, gly_points,
+original_map, glyphs_connected, orig_glyphs_connected, orig_gly_point,
+orig_gly_points.
+
+
+Lua API - global game state
+---------------------------
+
+The "crawl" module provides functions that describe the game state or
+provide utility methods.
+
+mpr, mesclr, random2, redraw_screen, input_line, c_input_line, getch, kbhit,
+flush_input, sendkeys, playsound, runmacro, bindkey, setopt, msgch_num,
+msgch_name, regex, message_filter, trim, split, game_started, err_trace, args
+
+
+Lua API - character information
+-------------------------------
+
+The "you" module provides functions that describe the player character.
+
+turn_is_over, spells, abilities, name, race, class, god, hp, mp, hunger,
+strength, intelligence, dexterity, xl, exp, res_poison, res_fire, res_cold,
+res_draining, res_shock, res_statdrain, res_mutation, res_slowing, gourmand,
+levitating, flying, transform, stop_activity, floor_items, where, branch,
+subdepth, absdepth

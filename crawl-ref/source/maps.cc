@@ -112,10 +112,15 @@ static int write_vault(map_def &mdef, map_type map,
 static bool resolve_map(map_def &map, const map_def &original)
 {
     map.reinit();
-    map.run_lua(true);
+    std::string err = map.run_lua(true);
+    if (!err.empty())
+    {
+        mprf(MSGCH_WARN, "Lua error: %s", err.c_str());
+        return (false);
+    }
     map.resolve();
 
-    if (!map.test_lua_validate())
+    if (!map.test_lua_validate(false))
         return (false);
     
     // Mirroring is possible for any map that does not explicitly forbid it.

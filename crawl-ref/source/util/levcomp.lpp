@@ -156,13 +156,13 @@ NSPACE [^\ \t\r\n]
 
 ^\s*MAP             { BEGIN(MAPDEF); }
 
-^:                  { BEGIN(LUA_ONELINER); return MAIN; }
+^[ \t]*:                  { BEGIN(LUA_ONELINER); return MAIN; }
 
-^prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }      
-^lua[ \t]*\{\{      { BEGIN(LUA); return MAIN; }
+^[ \t]*prelude[ \t]*\{\{  { BEGIN(LUA); return PRELUDE; }      
+^[ \t]*lua[ \t]*\{\{      { BEGIN(LUA); return MAIN; }
 ^[ \t]*\{\{         { BEGIN(LUA); return MAIN; }
-^validate[ \t]*\{\{ { BEGIN(LUA); return VALIDATE; }
-^veto[ \t]*\{\{     { BEGIN(LUA); return VETO; }
+^[ \t]*validate[ \t]*\{\{ { BEGIN(LUA); return VALIDATE; }
+^[ \t]*veto[ \t]*\{\{     { BEGIN(LUA); return VETO; }
 
 
 NAME:               { BEGIN(ARGUMENT); return NAME; }

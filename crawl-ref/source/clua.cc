@@ -717,6 +717,9 @@ LUARET1(you_flying, boolean,
         player_is_levitating() && wearing_amulet(AMU_CONTROLLED_FLIGHT))
 LUARET1(you_transform, string, transform_name())
 LUARET1(you_where, string, level_id::current().describe().c_str())
+LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
+LUARET1(you_subdepth, number, level_id::current().depth)
+LUARET1(you_absdepth, number, you.your_level)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 
 void lua_push_floor_items(lua_State *ls);
@@ -770,8 +773,8 @@ static const struct luaL_reg you_lib[] =
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
-    { "exp"         , you_exp },
-    { "exp_points"  , you_exp_points },
+    { "xl"          , you_exp },
+    { "exp"         , you_exp_points },
 
     { "res_poison"  , you_res_poison },
     { "res_fire"    , you_res_fire   },
@@ -790,7 +793,10 @@ static const struct luaL_reg you_lib[] =
 
     { "floor_items",  you_floor_items },
 
-    { "where", you_where },
+    { "where",        you_where },
+    { "branch",       you_branch },
+    { "subdepth",     you_subdepth },
+    { "absdepth",     you_absdepth },
     { NULL, NULL },
 };
 
@@ -1543,14 +1549,19 @@ static int crawl_mpr(lua_State *ls)
         return (0);
 
     int ch = MSGCH_PLAIN;
-    const char *channel = lua_tostring(ls, 2);
-    if (channel)
-        ch = str_to_channel(channel);
-    if (ch == -1)
+    if (lua_isnumber(ls, 2))
+        ch = luaL_checkint(ls, 2);
+    else
+    {
+        const char *channel = lua_tostring(ls, 2);
+        if (channel)
+            ch = str_to_channel(channel);
+    }
+
+    if (ch < 0 || ch >= NUM_MESSAGE_CHANNELS)
         ch = MSGCH_PLAIN;
 
     mpr(message, ch);
-
     return (0);
 }
 
