@@ -127,9 +127,6 @@ void xom_is_stimulated(int maxinterestingness)
                     (interestingness > 25) ? "Xom is mildly amused." :
                     "Xom is interested."));
     }
-    
-    if (you.piety < 100 && coinflip())
-        you.piety = 200 - you.piety;
 }
 
 void xom_makes_you_cast_random_spell(int sever)
