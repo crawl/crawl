@@ -1441,7 +1441,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     pbolt.source_y = you.y_pos;
     pbolt.colour = item.colour;
 
-    pbolt.name = item.name(DESC_PLAIN);
+    pbolt.name = item.name(DESC_PLAIN, false, false, false);
 
     pbolt.thrower = KILL_YOU_MISSILE;
     pbolt.aux_source.clear();

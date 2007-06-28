@@ -84,7 +84,8 @@ std::string quant_name( const item_def &item, int quant,
 // buff must be at least ITEMNAME_SIZE if non-NULL. If NULL, a static
 // item buffer will be used.
 std::string item_def::name(description_level_type descrip,
-                           bool terse, bool ident) const
+                           bool terse, bool ident,
+                           bool with_inscription) const
 {
     std::ostringstream buff;
 
@@ -221,7 +222,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if ( !(this->inscription.empty()) )
+    if ( with_inscription && !(this->inscription.empty()) )
     {
         buff << " {";        
         if ( is_tried_type(this->base_type, this->sub_type) )
@@ -232,7 +233,7 @@ std::string item_def::name(description_level_type descrip,
         buff << " {tried}";
 
     return buff.str();
-}                               // end item_name()
+}
 
 
 static const char* fixed_artefact_name( const item_def& item, bool ident )

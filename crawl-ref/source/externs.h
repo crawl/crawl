@@ -515,7 +515,8 @@ public:
     }
 
     std::string name(description_level_type descrip,
-                     bool terse = false, bool ident = false) const;
+                     bool terse = false, bool ident = false,
+                     bool with_inscription = true ) const;
     bool has_spells() const;
     bool cursed() const;
     int  book_number() const;

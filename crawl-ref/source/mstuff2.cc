@@ -1247,7 +1247,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         msg += item.name(DESC_NOCAP_A);
 
         // build beam name
-        pbolt.name = item.name(DESC_PLAIN);
+        pbolt.name = item.name(DESC_PLAIN, false, false, false);
     }
     msg += ".";
     if (monster->visible())
