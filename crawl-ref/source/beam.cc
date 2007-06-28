@@ -3375,6 +3375,24 @@ static int beam_source(const bolt &beam)
                                           MHITYOU;
 }
 
+static int name_to_skill_level(const std::string& name)
+{
+    skill_type type = SK_RANGED_COMBAT;
+
+    if (name.find("dart") != std::string::npos)
+        type = SK_DARTS;
+    else if (name.find("needle") != std::string::npos)
+        type = SK_DARTS;
+    else if (name.find("bolt") != std::string::npos)
+        type = SK_CROSSBOWS;
+    else if (name.find("arrow") != std::string::npos)
+        type = SK_BOWS;
+    else if (name.find("stone") != std::string::npos)
+        type = SK_SLINGS;
+
+    return you.skills[type] + you.skills[SK_RANGED_COMBAT];
+}
+
 // return amount of range used up by affectation of this monster
 static int affect_monster(bolt &beam, monsters *mon)
 {
@@ -3691,15 +3709,35 @@ static int affect_monster(bolt &beam, monsters *mon)
             && beam.flavour != BEAM_POISON
             && beam.flavour != BEAM_POISON_ARROW)
         {
+            int num_levels = 0;
             // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
             if (beam.ench_power == AUTOMATIC_HIT
                 && random2(100) < 90 - (3 * mon->ac))
             {
-                poison_monster( mon, whose_kill(beam), 2 );
-            } 
+                num_levels = 2;
+            }
             else if (random2(hurt_final) - random2(mon->ac) > 0)
             {
-                poison_monster( mon, whose_kill(beam) );
+                num_levels = 1;
+            }
+
+            int num_success = 0;
+            if ( YOU_KILL(beam.thrower) )
+            {
+                const int skill_level = name_to_skill_level(beam.name);
+                if ( skill_level + 25 > random2(50) )
+                    num_success++;
+                if ( skill_level > random2(50) )
+                    num_success++;
+            }
+            else
+                num_success = 1;
+
+            if ( num_success )
+            {
+                if ( num_success == 2 )
+                    num_levels++;
+                poison_monster( mon, whose_kill(beam), num_levels );
             }
         }
 
