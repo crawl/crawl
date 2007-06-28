@@ -1407,6 +1407,8 @@ struct feature_def
     unsigned short      colour;          // normal in LoS colour
     unsigned short      map_colour;      // colour when out of LoS on display
     unsigned short      seen_colour;     // map_colour when is_terrain_seen()
+    unsigned short      em_colour;       // Emphasised colour when in LoS.
+    unsigned short      seen_em_colour;  // Emphasised colour when out of LoS
     bool                notable;         // gets noted when seen
     bool                seen_effect;     // requires special handling when seen
 };

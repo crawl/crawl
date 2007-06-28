@@ -356,6 +356,7 @@ struct LevelInfo
 
     stair_info *get_stair(int x, int y);
     stair_info *get_stair(const coord_def &pos);
+    bool know_stair(const coord_def &pos) const;
     int get_stair_index(const coord_def &pos) const;
 
     void reset_distances();
@@ -431,6 +432,7 @@ public:
         return (i != levels.end()? &i->second : NULL);
     }
 
+    bool know_stair(const coord_def &c) const;
     bool know_level(const level_id &lev) const
     {
         return levels.find(lev) != levels.end();

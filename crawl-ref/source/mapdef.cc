@@ -1550,7 +1550,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             const mons_spec nspec = mons_by_name(s);
 
-            if (mspec.mid == MONS_PROGRAM_BUG)
+            if (nspec.mid == MONS_PROGRAM_BUG)
             {
                 error = make_stringf("unrecognised monster \"%s\"", s.c_str());
                 return (slot);
@@ -1559,7 +1559,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.mid = nspec.mid;
             mspec.monnum = nspec.monnum;
         }
-
         slot.mlist.push_back(mspec);
     }
 

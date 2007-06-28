@@ -848,11 +848,11 @@ void game_options::add_feature_override(const std::string &text)
     std::string props = text.substr(spos + 1, epos - spos - 1);
     std::vector<std::string> iprops = split_string(",", props, true, true);
 
-    if (iprops.size() < 1 || iprops.size() > 5)
+    if (iprops.size() < 1 || iprops.size() > 7)
         return;
 
-    if (iprops.size() < 5)
-        iprops.resize(5);
+    if (iprops.size() < 7)
+        iprops.resize(7);
 
     trim_string(fname);
     std::vector<dungeon_feature_type> feats =
@@ -870,6 +870,8 @@ void game_options::add_feature_override(const std::string &text)
         fov.override.colour         = str_to_colour(iprops[2], BLACK);
         fov.override.map_colour     = str_to_colour(iprops[3], BLACK);
         fov.override.seen_colour    = str_to_colour(iprops[4], BLACK);
+        fov.override.em_colour      = str_to_colour(iprops[5], BLACK);
+        fov.override.seen_em_colour = str_to_colour(iprops[6], BLACK);
 
         feature_overrides.push_back(fov);
     }

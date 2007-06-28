@@ -2853,6 +2853,15 @@ stair_info *LevelInfo::get_stair(int x, int y)
     return get_stair(c);
 }
 
+bool LevelInfo::know_stair(const coord_def &c) const
+{
+    const int index = get_stair_index(c);
+    if (index == -1)
+        return (false);
+    const level_pos &lp = stairs[index].destination;
+    return (lp.is_valid());
+}
+
 stair_info *LevelInfo::get_stair(const coord_def &pos)
 {
     int index = get_stair_index(pos);
@@ -3065,6 +3074,12 @@ void LevelInfo::fixup()
                 && !si.destination.is_valid())
             si.destination = travel_hell_entry;
     }
+}
+
+bool TravelCache::know_stair(const coord_def &c) const
+{
+    travel_levels_map::const_iterator i = levels.find(level_id::current());
+    return (i == levels.end()? false : i->second.know_stair(c));
 }
 
 void TravelCache::travel_to_waypoint(int num)

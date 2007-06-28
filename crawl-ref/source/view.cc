@@ -303,6 +303,17 @@ static unsigned get_symbol(int object, unsigned short *colour,
     return (ch);
 }
 
+static int view_emphasised_colour(int x, int y, dungeon_feature_type feat,
+                                  int oldcolour, int newcolour)
+{
+    if (is_travelable_stair(feat) && !travel_cache.know_stair(coord_def(x, y)))
+    {
+        if (you.your_level || stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+            return (newcolour);
+    }
+    return (oldcolour);
+}
+
 static void get_symbol( int x, int y,
                         int object, unsigned *ch, 
                         unsigned short *colour,
@@ -312,20 +323,28 @@ static void get_symbol( int x, int y,
 
     if (object < NUM_FEATURES)
     {
-        *ch = magic_mapped? Feature[object].magic_symbol
-                          : Feature[object].symbol;
+        const feature_def &fdef = Feature[object];
+        
+        *ch = magic_mapped? fdef.magic_symbol
+                          : fdef.symbol;
 
         if (colour)
         {
             const int colmask = *colour & COLFLAG_MASK;
             // Don't clobber with BLACK, because the colour should be
             // already set.
-            if (Feature[object].colour != BLACK)
-                *colour = Feature[object].colour | colmask;
+            if (fdef.colour != BLACK)
+                *colour = fdef.colour | colmask;
+
+            if (fdef.em_colour != fdef.colour && fdef.em_colour)
+                *colour =
+                    view_emphasised_colour(
+                        x, y, static_cast<dungeon_feature_type>(object),
+                        *colour, fdef.em_colour | colmask);
         }
 
         // Note anything we see that's notable
-        if ((x || y) && Feature[object].notable)
+        if ((x || y) && fdef.notable)
             seen_notable_thing( static_cast<dungeon_feature_type>(object),
                                 x, y );
     }
@@ -493,9 +512,17 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         return get_envmap_col(x, y);
 
     int feature_colour = DARKGREY;
-    feature_colour = 
-        is_terrain_seen(x, y)? Feature[grid_value].seen_colour 
-        : Feature[grid_value].map_colour;
+    const bool terrain_seen = is_terrain_seen(x, y);
+    const feature_def &fdef = Feature[grid_value];
+    feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
+
+    if (terrain_seen && feature_colour != fdef.seen_em_colour
+        && fdef.seen_em_colour)
+    {
+        feature_colour =
+            view_emphasised_colour(x, y, grid_value, feature_colour,
+                                   fdef.seen_em_colour);
+    }
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
@@ -3150,6 +3177,10 @@ void apply_feature_overrides()
             feat.map_colour = ofeat.map_colour;
         if (ofeat.seen_colour)
             feat.seen_colour = ofeat.seen_colour;
+        if (ofeat.seen_em_colour)
+            feat.seen_em_colour = ofeat.seen_em_colour;
+        if (ofeat.em_colour)
+            feat.em_colour = ofeat.em_colour;
     }
 }
 
@@ -3164,6 +3195,8 @@ void init_feature_table( void )
         Feature[i].magic_symbol = 0;    // made equal to symbol if untouched
         Feature[i].map_colour = DARKGREY;
         Feature[i].seen_colour = BLACK;    // marks no special seen map handling
+        Feature[i].seen_em_colour = BLACK;
+        Feature[i].em_colour = BLACK;
 
         switch (i)
         {
@@ -3327,9 +3360,11 @@ void init_feature_table( void )
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
-            Feature[i].symbol = Options.char_table[ DCHAR_STAIRS_DOWN ];
-            Feature[i].colour = LIGHTGREY;
-            Feature[i].map_colour = RED;
+            Feature[i].symbol         = Options.char_table[ DCHAR_STAIRS_DOWN ];
+            Feature[i].colour         = LIGHTGREY;
+            Feature[i].em_colour      = WHITE;
+            Feature[i].map_colour     = RED;
+            Feature[i].seen_em_colour = WHITE;
             break;
 
         case DNGN_ROCK_STAIRS_UP:
@@ -3344,6 +3379,8 @@ void init_feature_table( void )
             Feature[i].symbol = Options.char_table[ DCHAR_STAIRS_UP ];
             Feature[i].colour = LIGHTGREY;
             Feature[i].map_colour = GREEN;
+            Feature[i].em_colour      = WHITE;
+            Feature[i].seen_em_colour = WHITE;
             break;
 
         case DNGN_ENTER_DIS:
@@ -3688,11 +3725,19 @@ void init_feature_table( void )
 
     for (int i = 0; i < NUM_FEATURES; ++i)
     {
-        if (!Feature[i].magic_symbol)
-            Feature[i].magic_symbol = Feature[i].symbol;
+        feature_def &f(Feature[i]);
+        
+        if (!f.magic_symbol)
+            f.magic_symbol = f.symbol;
 
-        if (Feature[i].seen_colour == BLACK)
-            Feature[i].seen_colour = Feature[i].map_colour;
+        if (f.seen_colour == BLACK)
+            f.seen_colour = f.map_colour;
+
+        if (f.seen_em_colour == BLACK)
+            f.seen_em_colour = f.seen_colour;
+
+        if (f.em_colour == BLACK)
+            f.em_colour = f.colour;
     }
 }
 

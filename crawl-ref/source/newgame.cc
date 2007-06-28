@@ -255,7 +255,8 @@ static void pick_random_species_and_class( void )
     {
         // we only want draconians counted once in this loop...
         // we'll add the variety lower down -- bwr
-        if (sp >= SP_WHITE_DRACONIAN && sp <= SP_BASE_DRACONIAN)
+        if ((sp >= SP_WHITE_DRACONIAN && sp <= SP_BASE_DRACONIAN)
+            || sp == SP_ELF)
             continue;
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
