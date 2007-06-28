@@ -112,8 +112,13 @@ static std::string split_key_item(const std::string &s,
     std::string substitute    = trimmed_string(s.substr(sep + 1));
 
     if (what_to_subst.length() != 1)
-        return make_stringf("selector '%s' must be exactly one character",
-                            what_to_subst.c_str());
+        return make_stringf(
+            "selector '%s' must be exactly one character in '%s'",
+            what_to_subst.c_str(), s.c_str());
+
+    if (substitute.empty())
+        return make_stringf("no substitute defined in '%s'",
+                            s.c_str());
 
     *key = what_to_subst[0];
     *arg = substitute;
