@@ -3633,7 +3633,7 @@ static int affect_monster(bolt &beam, monsters *mon)
         if (player_monster_visible( &menv[tid] ) && mons_near(mon))
         {
             msg::stream << "The " << beam.name << " misses "
-                        << str_monam(*mon, DESC_NOCAP_THE) << std::endl;
+                        << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
         }
         return (0);
     }

@@ -514,6 +514,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("You sense a holy aura.");
                     break;
 
+                case SPWPN_RETURNING:
+                    mpr("It wiggles slightly.");
+                    break;
+
                 case SPWPN_PAIN:
                     mpr("A searing pain shoots up your arm!");
                     break;
@@ -1367,6 +1371,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     int dice_mult = 100;
     bool launched = false;      // item is launched
     bool thrown = false;        // item is sensible thrown item
+    bool returning = false;     // item will return to pack
     int slayDam = 0;
 
     if (!teleport)
@@ -1790,6 +1795,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     // CALCULATIONS FOR THROWN WEAPONS
     if (thrown)
     {
+        returning = (get_weapon_brand(item) == SPWPN_RETURNING &&
+                     !one_chance_in(you.skills[SK_RANGED_COMBAT]+1));
         baseHit = 0;
 
         // since darts/rocks are missiles, they only use inv_plus
@@ -1994,10 +2001,14 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     {
         // Dropping item copy, since the launched item might be different
         // (e.g. venom blowgun)
-        fire_beam( pbolt, &item );
+        fire_beam(pbolt, returning ? NULL : &item);
     }
 
-    dec_inv_item_quantity( throw_2, 1 );
+    if ( returning )
+        msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
+                    << std::endl;
+    else
+        dec_inv_item_quantity( throw_2, 1 );
 
     // throwing and blowguns are silent
     if (launched && lnchType != WPN_BLOWGUN)

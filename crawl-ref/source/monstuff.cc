@@ -3274,7 +3274,22 @@ static bool handle_throw(monsters *monster, bolt & beem)
     if (mons_itemuse(monster->type) < MONUSE_OPEN_DOORS)
         return (false);
 
-    const int mon_item = monster->inv[MSLOT_MISSILE];
+    int mon_item;
+    const int mon_wpn = monster->inv[MSLOT_WEAPON];
+    bool returning = false;
+
+    // weapons of returning can be thrown
+    if ( mon_wpn != NON_ITEM &&
+         get_weapon_brand(mitm[mon_wpn]) == SPWPN_RETURNING )
+    {
+        mon_item = mon_wpn;
+        returning = true;
+    }
+    else
+    {
+        mon_item = monster->inv[MSLOT_MISSILE];
+    }
+
     if (mon_item == NON_ITEM || !is_valid_item( mitm[mon_item] ))
         return (false);
 
@@ -3308,7 +3323,7 @@ static bool handle_throw(monsters *monster, bolt & beem)
 
     throw_type( lnchClass, lnchType, wepClass, wepType, launched, thrown );
 
-    if (!launched && !thrown)
+    if (!launched && !thrown && !returning)
         return (false);
 
     // ok, we'll try it.

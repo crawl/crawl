@@ -3172,6 +3172,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_PAIN,                        //   15
     SPWPN_DISTORTION,
     SPWPN_REACHING,                    //   17
+    SPWPN_RETURNING,
     SPWPN_CONFUSE,
     SPWPN_RANDART_I = 25,              //   25
     SPWPN_RANDART_II,

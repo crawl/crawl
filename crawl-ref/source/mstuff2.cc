@@ -1006,11 +1006,10 @@ void throw_type( int lnchClass, int lnchType, int wepClass, int wepType,
 
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 {
-    // this was assumed during cleanup down below:
-    ASSERT( hand_used == monster->inv[MSLOT_MISSILE] );
-
     // XXX: ugly hack, but avoids adding dynamic allocation to this code
-    static char throw_buff[ ITEMNAME_SIZE ];
+    char throw_buff[ ITEMNAME_SIZE ];
+
+    bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING);
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1048,6 +1047,11 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // figure out if we're thrown or launched
     throw_type( lnchClass, lnchType, wepClass, wepType, launched, thrown );
+    if (returning)
+    {
+        launched = false;
+        thrown = true;
+    }
 
     // extract launcher bonuses due to magic
     if (launched)
@@ -1280,11 +1284,24 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     scale_dice(pbolt.damage);
 
     // decrease inventory
-    fire_beam( pbolt, &item );
+    bool really_returns;
+    if ( returning && !one_chance_in(mons_power(monster->type) + 3) )
+        really_returns = true;
+    else
+        really_returns = false;
 
-    if (dec_mitm_item_quantity( hand_used, 1 ))
-        monster->inv[MSLOT_MISSILE] = NON_ITEM;
+    fire_beam( pbolt, really_returns ? NULL : &item );
 
+    if ( really_returns )
+    {
+        msg::stream << "The weapon returns to "
+                    << monster->name(DESC_NOCAP_THE)
+                    << "'s hand!" << std::endl;
+    }
+
+    if ( !really_returns )
+        if (dec_mitm_item_quantity( hand_used, 1 ))
+            monster->inv[returning ? MSLOT_WEAPON : MSLOT_MISSILE] = NON_ITEM;
 
     return (true);
 }                               // end mons_throw()

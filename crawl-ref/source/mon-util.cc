@@ -1980,6 +1980,10 @@ bool mons_has_ranged_attack( const monsters *mon )
     const int weapon = mon->inv[MSLOT_WEAPON];
     const int ammo = mon->inv[MSLOT_MISSILE];
 
+    if ( weapon != NON_ITEM &&
+         get_weapon_brand(mitm[weapon]) == SPWPN_RETURNING )
+        return true;
+
     const int lnchClass = (weapon != NON_ITEM) ? mitm[weapon].base_type : -1;
     const int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
 

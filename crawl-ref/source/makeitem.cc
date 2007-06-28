@@ -1324,6 +1324,9 @@ int items( int allow_uniques,       // not just true-false,
 
 
                     case WPN_DAGGER:
+                        if (one_chance_in(4))
+                            set_weapon_special(p, SPWPN_RETURNING);
+
                         if (one_chance_in(10))
                             set_weapon_special(p, SPWPN_PAIN);
 
@@ -1434,6 +1437,10 @@ int items( int allow_uniques,       // not just true-false,
                         if (one_chance_in(10))
                             set_weapon_special(p, SPWPN_VAMPIRICISM);
 
+                        if (mitm[p].sub_type == WPN_HAND_AXE &&
+                            one_chance_in(10))
+                            set_weapon_special(p, SPWPN_RETURNING);
+
                         if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
@@ -1503,6 +1510,9 @@ int items( int allow_uniques,       // not just true-false,
 
                         if (one_chance_in(10))
                             set_weapon_special(p, SPWPN_VAMPIRICISM);
+
+                        if (mitm[p].sub_type == WPN_SPEAR && one_chance_in(6))
+                            set_weapon_special(p, SPWPN_RETURNING);
 
                         if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
