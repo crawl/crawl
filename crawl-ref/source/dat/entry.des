@@ -4456,7 +4456,7 @@ ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / potion of water
 SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
-SUBST:   A=x, B=x, C=x, E=x, F=x, a=, b=., c=., e=., f=.
+SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
 SUBST:   X = x =
 MAP
 xxxxxxxxx@xxxxxxx
@@ -4468,7 +4468,7 @@ x.X...x.......X.x
 xEx.x.x.xxxxx.xFx
 x...x.c...1dx...x
 xxxxxCxxxxxxxx.xx
-x...............x
+x.......>.......x
 x.xxxxxX.Xxxxxx.x
 x.....[x(x{.....x
 xxxxxxxxxxxxxxxxx

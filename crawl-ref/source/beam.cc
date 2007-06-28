@@ -1917,7 +1917,8 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         // try to remove haste, if monster is hasted
         if (monster->del_ench(ENCH_HASTE))
         {
-            if (simple_monster_message(monster, " is no longer moving quickly."))
+            if (simple_monster_message(monster,
+                                       " is no longer moving quickly."))
                 pbolt.obvious_effect = true;
 
             return (MON_AFFECTED);
