@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	Dungeon Crawl level design (.des) files.
 " Maintainer:	Darshan Shaligram <scintilla@gmail.com>
-" Last Change:	2007 Feb 20
+" Last Change:	2007 Jun 28
 " Remark:	Basic Vim syntax highlighting for Dungeon Crawl Stone Soup 
 "               level design (.des) files.
 "
@@ -18,7 +18,25 @@ elseif exists("b:current_syntax")
   finish
 endif
 
+if !exists("main_syntax")
+  let main_syntax = 'des'
+endif
+
+syn include @desLua syntax/lua.vim
+
 syn case match
+
+syn match desLuaBlock /\(lua\)\?\s\+{{/ contained
+syn match desOtherLuaBlock /^\(prelude\|lua\|validate\)\?\s*{{/ contained
+syn match desLuaBlockEnd /}}/ contained
+"syn match desColonLine /^\s*:/ contained
+
+syn cluster desLuaGroup contains=desLuaBlock,desOtherLuaBlock,desLuaBlockEnd
+
+syn region desLua start=/^\s*\(lua\)\?\s*{{/ end=/}}\s*$/ contains=@desLuaGroup,@desLua keepend
+syn region desLuaCol start=/^\s*:/ end=/$/ contains=@desLuaGroup,@desLua keepend
+syn region desVal start=/^\s*validate\?\s*{{/ end=/}}\s*$/ contains=@desLuaGroup,@desLua keepend
+syn region desPre start=/^\s*prelude\?\s*{{/ end=/}}\s*$/ contains=@desLuaGroup,@desLua keepend
 
 setlocal iskeyword+=:
 setlocal iskeyword+=-
@@ -72,6 +90,10 @@ hi link desDeclarator Statement
 hi link desSubstDec   Statement
 hi link desShuffleDec Statement
 hi link desMapBookend Statement
+hi link desLuaBlock   Statement
+hi link desOtherLuaBlock Statement
+hi link desLuaBlockEnd Statement
+"hi link desColonLine  Statement
 hi link desComment    Comment
 hi link desMap        String
 hi link desSubstArg   String
