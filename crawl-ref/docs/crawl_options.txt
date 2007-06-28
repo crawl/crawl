@@ -1228,7 +1228,8 @@ cset_XXX = <dungeon_character_name : symbol>
         '~'.
 
 feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
-                    <levelmap_magic_colour>, <levelmap_seen_colour> }
+                    <levelmap_magic_colour>, <levelmap_seen_colour>,
+                    <emphasised_colour>, <levelmap_emphasised_colour> }
         where <regex> is a regular expression describing a dungeon feature.
         This regex should match the description when using the 'x' command.
         In case the regex matches several descriptions, all such features are
@@ -1242,6 +1243,10 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
         'magic' always refers to magic mapping. So the <magicmap symbol> entry
         determines what symbol will be used for features only detected via
         magic mapping.
+
+        'emphasised_colour' refers to the colour used to highlight
+        unvisited stone stairs; for non-stair features, setting
+        emphasis colours does nothing useful.
 
         Leading parameters in the {...} list can be omitted by leaving them 
         blank and using placeholder commas. Trailing parameters can be omitted
