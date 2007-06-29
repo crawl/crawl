@@ -10,6 +10,7 @@
 #include "files.h"
 #include "luadgn.h"
 #include "mapdef.h"
+#include "maps.h"
 #include "stuff.h"
 #include "dungeon.h"
 #include <sstream>
@@ -730,6 +731,14 @@ static int dgn_original_map(lua_State *ls)
     return (1);
 }
 
+static int dgn_load_des_file(lua_State *ls)
+{
+    const std::string &file = luaL_checkstring(ls, 1);
+    if (!file.empty())
+        read_map(file);
+    return (0);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -758,6 +767,7 @@ static const struct luaL_reg dgn_lib[] =
     { "gly_point", dgn_gly_point },
     { "gly_points", dgn_gly_points },
     { "original_map", dgn_original_map },
+    { "load_des_file", dgn_load_des_file },
     { NULL, NULL }
 };
 

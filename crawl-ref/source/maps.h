@@ -47,6 +47,7 @@ int random_map_for_tag(const std::string &tag, bool want_minivault,
 void add_parsed_map(const map_def &md);
 
 void read_maps();
+void read_map(const std::string &file);
 void run_map_preludes();
 void reset_map_parser();
 std::string get_descache_path(const std::string &file,

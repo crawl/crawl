@@ -575,16 +575,16 @@ static void parse_maps(const std::string &s)
     write_map_cache(s, file_start, vdefs.size());
 }
 
+void read_map(const std::string &file)
+{
+    parse_maps( lc_desfile = datafile_path(file) );
+}
+
 void read_maps()
 {
-    static const char *map_files[] =
-    {
-        "entry.des", "splev.des", "vaults.des", "ebranch.des"
-    };
-
-    for (unsigned i = 0; i < ARRAYSIZE(map_files); ++i)
-        parse_maps( lc_desfile = datafile_path( map_files[i] ) );
-
+    if (dlua.execfile("clua/loadmaps.lua", true, true))
+        end(1, false, "Lua error: %s", dlua.error.c_str());
+    
     for (int i = 0, size = Options.extra_levels.size(); i < size; ++i)
     {
         lc_desfile = datafile_path( Options.extra_levels[i] + ".des", false );
