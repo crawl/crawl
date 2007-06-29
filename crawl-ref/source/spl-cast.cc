@@ -126,7 +126,7 @@ static void surge_power(spell_type spell)
     }
 }                               // end surge_power()
 
-static std::string spell_full_description(spell_type spell)
+static std::string spell_base_description(spell_type spell)
 {
     std::ostringstream desc;
 
@@ -143,18 +143,34 @@ static std::string spell_full_description(spell_type spell)
         {
             if (already)
                 desc << '/';
-            desc << spelltype_short_name(1 << i);
+            desc << spelltype_name(1 << i);
             already = true;
         }        
     }
     
     const int so_far = desc.str().length();
-    if ( so_far < 46 )
-        desc << std::string(46 - so_far, ' ');
+    if ( so_far < 60 )
+        desc << std::string(60 - so_far, ' ');
 
-    // spell power, fail rate, level
-    desc << std::setw(14) << spell_power_string(spell)
-         << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+    // spell fail rate, level
+    desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
+         << spell_difficulty(spell);
+
+    return desc.str();
+}
+
+static std::string spell_extra_description(spell_type spell)
+{
+    std::ostringstream desc;
+
+    desc << std::left;
+
+    // spell name
+    desc << std::setw(30) << spell_title(spell);
+
+    // spell power, hunger level, level
+    desc << std::setw(30) << spell_power_string(spell)
+         << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
     return desc.str();
@@ -162,13 +178,18 @@ static std::string spell_full_description(spell_type spell)
 
 char list_spells()
 {
-    Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
+    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
+        MF_ALWAYS_SHOW_MORE);
     spell_menu.set_title(
-        new MenuEntry(
+        new ToggleableMenuEntry(
             " Your Spells                      Type            "
-            "Power         Success   Level",
+            "              Success   Level",
+            " Your Spells                      Power           "
+            "              Hunger    Level",
             MEL_TITLE));
     spell_menu.set_highlighter(NULL);
+    spell_menu.set_more(formatted_string("Press '!' to toggle spell view."));
+    spell_menu.add_toggle_key('!');
 
     for ( int i = 0; i < 52; ++i )
     {
@@ -176,8 +197,10 @@ char list_spells()
         const spell_type spell = get_spell_by_letter(letter);
         if (spell != SPELL_NO_SPELL)
         {
-            MenuEntry* me = new MenuEntry(spell_full_description(spell),
-                                          MEL_ITEM, 1, letter);
+            ToggleableMenuEntry* me =
+                new ToggleableMenuEntry(spell_base_description(spell),
+                                        spell_extra_description(spell),
+                                        MEL_ITEM, 1, letter);
             spell_menu.add_entry(me);
         }
     }
@@ -525,12 +548,6 @@ int spell_enhancement( unsigned int typeflags )
 // returns false if spell failed, and true otherwise
 bool cast_a_spell()
 {
-    char spc = 0;
-    char spc2 = 0;
-    int spellh = 0;
-    unsigned char keyin = 0;
-    char unthing = 0;
-
     if (!you.spell_no)
     {
         mpr("You don't know any spells.");
@@ -550,27 +567,22 @@ bool cast_a_spell()
         return (false);
     }
 
-    // first query {dlb}:
+    int keyin = 0;              // silence stupid compilers
+
     for (;;)
     {
-        //jmf: FIXME: change to reflect range of known spells
         mpr( "Cast which spell ([?*] list)? ", MSGCH_PROMPT );
 
         keyin = get_ch();
 
         if (keyin == '?' || keyin == '*')
         {
-            unthing = list_spells();
+            keyin = list_spells();
 
             redraw_screen();
-            if (unthing == 2)
-                return (false);
 
-            if ( isalpha(unthing) )
-            {
-                keyin = unthing;
+            if ( isalpha(keyin) )
                 break;
-            }
             else
                 mesclr();
         }
@@ -578,23 +590,18 @@ bool cast_a_spell()
         {
             break;
         }
-
     }
 
     if (keyin == ESCAPE)
         return (false);
 
-    spc = (int) keyin;
-
-    if (!isalpha(spc))
+    if (!isalpha(keyin))
     {
         mpr("You don't know that spell.");
         return (false);
     }
 
-    const spell_type spell = get_spell_by_letter( spc );
-
-    spc2 = letter_to_index(spc);
+    const spell_type spell = get_spell_by_letter( keyin );
 
     if (spell == SPELL_NO_SPELL)
     {
@@ -632,14 +639,8 @@ bool cast_a_spell()
 
     if (!player_energy() && you.is_undead != US_UNDEAD)
     {
-        spellh = spell_hunger( spell );
-
-        // I wonder if a better algorithm is called for? {dlb}
-        spellh -= you.intel * you.skills[SK_SPELLCASTING];
-
-        if (spellh < 1)
-            spellh = 1;
-        else
+        const int spellh = spell_hunger( spell );
+        if (spellh > 0)
             make_hungry(spellh, true);
     }
 
@@ -3473,6 +3474,21 @@ const char* failure_rate_to_string( int fail )
         (fail > 22) ? "Great"     : // 90-95%
         (fail >  0) ? "Excellent" : // 95-100%
         "Perfect";                  // 100%
+}
+
+const char* spell_hunger_string( spell_type spell )
+{
+    const int hunger = spell_hunger(spell);
+    if ( hunger == 0 )
+        return "None";
+    else if ( hunger < 25 )
+        return "Minor";
+    else if ( hunger < 150 )
+        return "Moderate";
+    else if ( hunger < 500 )
+        return "Major";
+    else
+        return "Extreme";
 }
 
 const char* spell_power_string( spell_type spell )

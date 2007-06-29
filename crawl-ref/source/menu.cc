@@ -1382,3 +1382,32 @@ bool formatted_scroller::process_key( int keyin )
             
     return true;
 }
+
+int ToggleableMenu::pre_process(int key)
+{
+    if ( std::find(toggle_keys.begin(), toggle_keys.end(), key) !=
+         toggle_keys.end() )
+    {
+        // Toggle all menu entries
+        for ( unsigned int i = 0; i < items.size(); ++i )
+        {
+            ToggleableMenuEntry* const p =
+                dynamic_cast<ToggleableMenuEntry*>(items[i]);
+            if ( p )
+                p->toggle();
+        }
+
+        // Toggle title
+        ToggleableMenuEntry* const pt =
+            dynamic_cast<ToggleableMenuEntry*>(title);
+        if ( pt )
+            pt->toggle();
+
+        // Redraw
+        draw_menu();
+
+        // Don't further process the key
+        return 0;
+    }
+    return key;
+}

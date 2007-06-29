@@ -150,28 +150,26 @@ bool del_spell_from_memory_by_slot( int slot )
 
 int spell_hunger(spell_type which_spell)
 {
-    int level = seekspell(which_spell)->level;
+    const int level = spell_difficulty(which_spell);
 
-    switch (level)
-    {
-    case  1: return   50;
-    case  2: return   95;
-    case  3: return  160;
-    case  4: return  250;
-    case  5: return  350;
-    case  6: return  550;
-    case  7: return  700;
-    case  8: return  850;
-    case  9: return 1000;
-    case 10: return 1000;
-    case 11: return 1100;
-    case 12: return 1250;
-    case 13: return 1380;
-    case 14: return 1500;
-    case 15: return 1600;
-    default: return 1600 + (20 * level);
-    }
-}                               // end spell_hunger();
+    const int basehunger[] = {
+        50, 95, 160, 250, 350, 550, 700, 850, 1000
+    };
+
+    int hunger;
+
+    if ( level < 10 && level > 0 )
+        hunger = basehunger[level-1];
+    else
+        hunger = (basehunger[0] * level * level) / 4;
+
+    hunger -= you.intel * you.skills[SK_SPELLCASTING];
+
+    if ( hunger < 0 )
+        hunger = 0;
+
+    return hunger;
+}
 
 bool spell_needs_tracer(spell_type spell)
 {

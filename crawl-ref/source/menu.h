@@ -117,6 +117,20 @@ struct MenuEntry
     }
 };
 
+struct ToggleableMenuEntry : public MenuEntry
+{
+public:
+    std::string alt_text;
+
+    ToggleableMenuEntry( const std::string &txt = std::string(),
+                         const std::string &alt_txt = std::string(),
+                         MenuEntryLevel lev = MEL_ITEM,
+                         int qty = 0, int hotk = 0 ) :
+        MenuEntry(txt, lev, qty, hotk), alt_text(alt_txt) {}
+
+    void toggle() { text.swap(alt_text); }
+};
+
 class MenuHighlighter
 {
 public:
@@ -251,6 +265,19 @@ protected:
     
     virtual bool process_key( int keyin );
 };
+
+// Allows toggling by specific keys.
+class ToggleableMenu : public Menu
+{
+public:
+    ToggleableMenu( int _flags = MF_MULTISELECT ) : Menu(_flags) {}
+    void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
+protected:
+    virtual int pre_process(int key);
+
+    std::vector<int> toggle_keys;
+};
+
 
 // Uses a sliding selector rather than hotkeyed selection.
 class slider_menu : public Menu
