@@ -249,8 +249,12 @@ NAME:    a_string
 
 ORIENT:  (float |encompass | north | northwest | ... | southeast)
          
-         Some kind of ORIENT: line is mandatory, unless you want the vault to 
-         be a minivault. Valid values are:
+         Some kind of ORIENT: line is mandatory for vaults; skipping
+         ORIENT: makes your map a minivault. As a rule of thumb, if
+         you're writing a small random map, skip the ORIENT: line and
+         make it a minivault. For special levels and (branch) entry
+         vaults, you do need an ORIENT: line.
+         
          * "float": The dungeon builder puts your vault wherever it wants to.
          * "some_direction": The vault lies along that side of the map:
            xxxxxxxxxx       xxxxxxxxxxxxx
@@ -273,12 +277,17 @@ ORIENT:  (float |encompass | north | northwest | ... | southeast)
          be preferred to other ORIENT: settings for new vaults.
          
 
-DEPTH:   For random vaults and minivaults, this gives the range where the vault
-         may be placed in the dungeon. Branch entry vaults can also be
-         constrained by depth. E.g.
+DEPTH:   For random vaults, branch entry vaults, and minivaults, this
+         specifies the range of levels where the vault may be placed
+         in the dungeon. E.g.
          
            DEPTH: 7-20
-           
+
+         DEPTH: does not force a map to be placed in a particular place; it 
+         applies only when the dungeon builder is looking for a random vault
+         or minivault, so you can control at what depths your vault gets
+         placed.
+         
          A simple DEPTH: declaration that does not specify a branch
          applies to all branches. A map declared with depth 7-20 could
          be used in the Lair, for instance. (Lair:1 will be treated as
