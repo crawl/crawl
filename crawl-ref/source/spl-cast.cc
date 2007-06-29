@@ -24,6 +24,7 @@
 
 #include "beam.h"
 #include "cloud.h"
+#include "describe.h"
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
@@ -544,6 +545,24 @@ int spell_enhancement( unsigned int typeflags )
 
     return (enhanced);
 }                               // end spell_enhancement()
+
+void inspect_spells()
+{
+    if (!you.spell_no)
+    {
+        mpr("You don't know any spells.");
+        return;
+    }
+
+    // Maybe we should honour auto_list here, but if you want the
+    // description, you probably want the listing, too.
+    int keyin = list_spells();
+    if ( isalpha(keyin) )
+    {
+        describe_spell(get_spell_by_letter(keyin));
+        redraw_screen();
+    }
+}
 
 // returns false if spell failed, and true otherwise
 bool cast_a_spell()

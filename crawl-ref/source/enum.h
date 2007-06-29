@@ -560,7 +560,7 @@ enum cloud_type
 
 enum command_type
 {
-    CMD_NO_CMD = 1000,                 // 1000
+    CMD_NO_CMD = 1000,
     CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
     CMD_MOVE_DOWN,
@@ -570,7 +570,7 @@ enum command_type
     CMD_MOVE_DOWN_LEFT,
     CMD_MOVE_UP_RIGHT,
     CMD_MOVE_DOWN_RIGHT,
-    CMD_RUN_LEFT,                      // 1000 +  10
+    CMD_RUN_LEFT,
     CMD_RUN_DOWN,
     CMD_RUN_UP,
     CMD_RUN_RIGHT,
@@ -580,7 +580,7 @@ enum command_type
     CMD_RUN_DOWN_RIGHT,
     CMD_OPEN_DOOR_LEFT,
     CMD_OPEN_DOOR_DOWN,
-    CMD_OPEN_DOOR_UP,                  // 1000 +  20
+    CMD_OPEN_DOOR_UP,
     CMD_OPEN_DOOR_RIGHT,
     CMD_OPEN_DOOR_UP_LEFT,
     CMD_OPEN_DOOR_DOWN_LEFT,
@@ -590,7 +590,7 @@ enum command_type
     CMD_CLOSE_DOOR,
     CMD_REST,
     CMD_GO_UPSTAIRS,
-    CMD_GO_DOWNSTAIRS,                 // 1000 +  30
+    CMD_GO_DOWNSTAIRS,
     CMD_TOGGLE_AUTOPICKUP,
     CMD_PICKUP,
     CMD_DROP,
@@ -600,7 +600,7 @@ enum command_type
     CMD_EVOKE,
     CMD_WIELD_WEAPON,
     CMD_WEAPON_SWAP,
-    CMD_THROW,                         // 1000 +  40
+    CMD_THROW,
     CMD_FIRE,
     CMD_WEAR_ARMOUR,
     CMD_REMOVE_ARMOUR,
@@ -610,7 +610,7 @@ enum command_type
     CMD_LIST_ARMOUR,
     CMD_LIST_JEWELLERY,
     CMD_ZAP_WAND,
-    CMD_CAST_SPELL,                    // 1000 +  50
+    CMD_CAST_SPELL,
     CMD_MEMORISE_SPELL,
     CMD_USE_ABILITY,
     CMD_PRAY,
@@ -620,7 +620,7 @@ enum command_type
     CMD_LOOK_AROUND,
     CMD_SEARCH,
     CMD_SHOUT,
-    CMD_DISARM_TRAP,                   // 1000 +  60
+    CMD_DISARM_TRAP,
     CMD_CHARACTER_DUMP,
     CMD_DISPLAY_COMMANDS,
     CMD_DISPLAY_INVENTORY,
@@ -630,7 +630,8 @@ enum command_type
     CMD_DISPLAY_MAP,
     CMD_DISPLAY_OVERMAP,
     CMD_DISPLAY_RELIGION,
-    CMD_DISPLAY_CHARACTER_STATUS,      // 1000 +  70
+    CMD_DISPLAY_CHARACTER_STATUS,
+    CMD_DISPLAY_SPELLS,
     CMD_EXPERIENCE_CHECK,
     CMD_GET_VERSION,
     CMD_ADJUST_INVENTORY,
@@ -640,7 +641,7 @@ enum command_type
     CMD_SAVE_GAME,
     CMD_SAVE_GAME_NOW,
     CMD_SUSPEND_GAME,
-    CMD_QUIT,                          // 1000 +  80
+    CMD_QUIT,
     CMD_WIZARD,
     CMD_DESTROY_ITEM,
 

@@ -35,6 +35,8 @@ void exercise_spell( spell_type spell_ex, bool spc, bool divide );
  * *********************************************************************** */
 bool cast_a_spell( void );
 
+void inspect_spells();
+
 
 // last updaetd 12may2000 {dlb}
 /* ***********************************************************************

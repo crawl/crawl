@@ -1323,6 +1323,10 @@ void process_command( command_type cmd )
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
+    case CMD_DISPLAY_SPELLS:
+        inspect_spells();
+        break;
+
     case CMD_WEAPON_SWAP:
         wield_weapon(true);
         break;
@@ -2694,7 +2698,7 @@ command_type keycode_to_command( keycode_type key )
     case 'E': return CMD_EVOKE;
     case 'F': return CMD_NO_CMD;
     case 'G': return CMD_NO_CMD;
-    case 'I': return CMD_NO_CMD;
+    case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;
     case 'O': return CMD_DISPLAY_OVERMAP;
     case 'P': return CMD_WEAR_JEWELLERY;
