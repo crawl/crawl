@@ -1034,7 +1034,8 @@ void cast_ring_of_flames(int power)
 void cast_confusing_touch(int power)
 {
     msg::stream << "Your " << your_hand(true) << " begin to glow "
-                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red") << std::endl;
+                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
+                << "." << std::endl;
 
     you.duration[DUR_CONFUSING_TOUCH] += 5 + (random2(power) / 5);
 
