@@ -4994,6 +4994,7 @@ static void mons_in_cloud(monsters *monster)
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_STEAM:
+    {
         // couldn't be bothered coding for armour of res fire
 
         // what of whether it is wearing steam dragon armour? {dlb}
@@ -5005,13 +5006,15 @@ static void mons_in_cloud(monsters *monster)
         if (mons_res_fire(monster) > 0)
             return;
 
-        hurted += (random2(6) * 10) / speed;
+        const int steam_base_damage = steam_cloud_damage(env.cloud[wc]);
+        hurted += (random2avg(steam_base_damage, 2) * 10) / speed;
 
         if (mons_res_fire(monster) < 0)
-            hurted += (random2(6) * 10) / speed;
+            hurted += (random2(steam_base_damage / 2 + 1) * 10) / speed;
 
         hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
+    }
 
     case CLOUD_MIASMA:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
@@ -5049,6 +5052,11 @@ static void mons_in_cloud(monsters *monster)
         hurted = 0;
     else if (hurted > 0)
     {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s takes %d damage from cloud.",
+             monster->name(DESC_CAP_THE).c_str(),
+             hurted);
+#endif
         hurt_monster(monster, hurted);
 
         if (monster->hit_points < 1)

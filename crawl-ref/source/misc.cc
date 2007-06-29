@@ -437,6 +437,7 @@ void in_a_cloud()
         break;
 
     case CLOUD_STEAM:
+    {
         mpr("You are engulfed in a cloud of scalding steam!");
         if (player_res_steam() > 0)
         {
@@ -444,13 +445,22 @@ void in_a_cloud()
             return;
         }
 
-        hurted += (random2(6) * you.time_taken) / 10;
-        if (hurted < 0 || player_res_fire() > 0)
+        const int base_dam = steam_cloud_damage(env.cloud[cl]);
+        hurted += (random2avg(base_dam, 2) * you.time_taken) / 10;
+
+        const int res_fire = player_res_fire();
+        if (res_fire < 0)
+            hurted += (random2(base_dam / 2 + 1) * you.time_taken) / 10;
+        else if (res_fire)
+            hurted /= 1 + (res_fire / 2);
+
+        if (hurted < 0)
             hurted = 0;
 
         ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
               "steam" );
         break;
+    }
 
     case CLOUD_MIASMA:
         mpr("You are engulfed in a dark miasma.");

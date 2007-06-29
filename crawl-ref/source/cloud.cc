@@ -191,6 +191,18 @@ void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
     place_cloud( cl_type, x, y, lifetime, whose );
 }
 
+int steam_cloud_damage(const cloud_struct &cloud)
+{
+    int decay = cloud.decay;
+    if (decay > 60)
+        decay = 60;
+    else if (decay < 10)
+        decay = 10;
+
+    // Damage in range 3 - 16.
+    return ((decay * 13 + 20) / 50);
+}
+
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
