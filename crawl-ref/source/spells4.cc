@@ -1795,7 +1795,7 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
                 msg += "s";
             msg += ".";
             break;
-        case 4:
+        case 3:
             msg += " tilts its head.";
             break;
         }
