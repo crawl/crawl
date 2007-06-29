@@ -719,7 +719,7 @@ LUARET1(you_transform, string, transform_name())
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
 LUARET1(you_subdepth, number, level_id::current().depth)
-LUARET1(you_absdepth, number, you.your_level)
+LUARET1(you_absdepth, number, you.your_level + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 
 void lua_push_floor_items(lua_State *ls);
