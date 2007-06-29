@@ -51,6 +51,12 @@
 static int raise_corpse( int corps, int corx, int cory, beh_type corps_beh,
                          int corps_hit, int actual );
 
+static bool is_animatable_corpse(const item_def& item)
+{
+    return (item.base_type == OBJ_CORPSES &&
+            mons_zombie_size(item.plus) != Z_NOZOMBIE);
+}
+
 unsigned char detect_traps( int pow )
 {
     unsigned char traps_found = 0;
@@ -331,7 +337,7 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
                     // This searches all the items on the ground for a corpse
                     while (objl != NON_ITEM)
                     {
-                        if (mitm[objl].base_type == OBJ_CORPSES
+                        if (is_animatable_corpse(mitm[objl])
                             && !is_being_butchered(mitm[objl]))
                         {
                             number_raised += raise_corpse(objl, adx, ady,
@@ -362,29 +368,25 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
 
 int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
                       int class_allowed )
-{
-    if (igrd[axps][ayps] == NON_ITEM)
-        return 0;
-
+{    
+    int rc = 0;
     int objl = igrd[axps][ayps];
     // This searches all the items on the ground for a corpse
     while (objl != NON_ITEM)
     {
-        if (mitm[objl].base_type != OBJ_CORPSES
-             || (class_allowed == CORPSE_SKELETON
-                && mitm[objl].sub_type != CORPSE_SKELETON))
+        const item_def& item = mitm[objl];
+        if (is_animatable_corpse(item) &&
+            (class_allowed == CORPSE_BODY || item.sub_type == CORPSE_SKELETON))
         {
-            objl = mitm[objl].link;
-            continue;
+            rc = raise_corpse(objl, axps, ayps, corps_beh, corps_hit, 1);
+            if ( rc )
+                mpr("The dead are walking!");
+            break;
         }
-
-        if (raise_corpse(objl, axps, ayps,
-                         corps_beh, corps_hit, 1 ) > 0)
-            mpr("The dead are walking!");
-        break;
+        objl = item.link;
     }
 
-    return 0;
+    return rc;
 }                               // end animate_a_corpse()
 
 int raise_corpse( int corps, int corx, int cory, 
