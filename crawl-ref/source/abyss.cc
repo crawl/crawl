@@ -154,7 +154,7 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                 {
                     grd[i][j] =
                         static_cast<dungeon_feature_type>(
-                            DNGN_ALTAR_ZIN + random2(NUM_GODS) );
+                            DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
                 }
                 while (grd[i][j] == DNGN_ALTAR_ZIN
                        || grd[i][j] == DNGN_ALTAR_SHINING_ONE
