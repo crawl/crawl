@@ -198,7 +198,7 @@ public:
     unsigned char getkey() const { return lastch; }
 
     void reset();
-    std::vector<MenuEntry *> show(bool reuse_selections = false, bool tut_abil = false);
+    std::vector<MenuEntry *> show(bool reuse_selections = false);
     std::vector<MenuEntry *> selected_entries() const;
 
     size_t item_count() const    { return items.size(); }
@@ -235,7 +235,7 @@ protected:
     bool alive;
 
 protected:
-    void do_menu(bool tut_abil = false);
+    void do_menu();
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;

@@ -1321,20 +1321,20 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     Options.tutorial_left--;
 }
 
-void tut_describe_abilities()
+formatted_string tut_abilities_info()
 {
-    const int bottom_line = (get_number_of_lines() > 30) ? 30 : get_number_of_lines();
-    textcolor(MAGENTA);
-    gotoxy(1, bottom_line-5);
-    std::string text =
-      "This screen shows your character's set of talents. You can gain new   " EOL
-      "abilities via certain items, through religion or by way of mutations. " EOL
-      "Activation of an ability usually comes at a cost, e.g. nutrition or   " EOL
-      "Magic power. ";
-    if (you.religion == GOD_TROG) text +=
-      "<w>Renounce Religion<magenta> will make your character leave your god" EOL
-      "(and usually anger said god), while <w>Berserk<magenta> temporarily increases your" EOL
-      "damage output in melee fights.";
-
-    formatted_string::parse_block(text, false).display();
+    std::string text = "<magenta>"
+        "This screen shows your character's set of talents. You can gain new   " EOL
+        "abilities via certain items, through religion or by way of mutations. " EOL
+        "Activation of an ability usually comes at a cost, e.g. nutrition or   " EOL
+        "Magic power. ";
+    
+    if (you.religion == GOD_TROG)
+    {
+        text +=
+            "<w>Renounce Religion<magenta> will make your character leave your god" EOL
+            "(and usually anger said god), while <w>Berserk<magenta> temporarily increases your" EOL
+            "damage output in melee fights.";
+    }
+    return formatted_string::parse_string(text, false);
 }

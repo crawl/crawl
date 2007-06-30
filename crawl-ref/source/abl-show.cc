@@ -62,6 +62,7 @@
 #include "spells4.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "tutorial.h"
 #include "view.h"
 
 
@@ -1724,8 +1725,15 @@ int choose_ability_menu(const std::vector<talent>& talents)
         }
     }
 
-    bool tutorial = (Options.tutorial_left > 0);
-    std::vector<MenuEntry*> sel = abil_menu.show(false, tutorial);
+    if ( Options.tutorial_left )
+    {
+        // XXX This could be buggy if manage to pick up lots and lots
+        // of abilities during the tutorial.
+        abil_menu.set_more(tut_abilities_info());
+        abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                            MF_ALWAYS_SHOW_MORE);
+    }
+    std::vector<MenuEntry*> sel = abil_menu.show(false);
     redraw_screen();
     if ( sel.empty() )
     {

@@ -314,3 +314,22 @@ void formatted_string::fs_op::display() const
         break;
     }
 }
+
+int count_linebreaks(const formatted_string& fs)
+{
+    std::string::size_type where = 0;
+    const std::string s = fs;
+    int count = 0;
+    while ( 1 )
+    {
+        where = s.find(EOL, where);
+        if ( where == std::string::npos )
+            break;
+        else
+        {
+            ++count;
+            ++where;
+        }
+    }
+    return count;
+}

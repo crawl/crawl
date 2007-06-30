@@ -617,10 +617,6 @@ static int item_name_specialness(const item_def& item)
     return 0;
 }
 
-/*
- * Takes keyin as an argument because it will only display a long list of items
- * if ; is pressed.
- */
 void item_check(bool verbose)
 {
 

@@ -97,7 +97,7 @@ void Menu::reset()
     first_entry = 0;
 }
 
-std::vector<MenuEntry *> Menu::show(bool reuse_selections, bool tut_abil)
+std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
     cursor_control cs(false);
     
@@ -111,18 +111,14 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections, bool tut_abil)
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
 
-    do_menu(tut_abil);
+    do_menu();
 
     return (sel);
 }
 
-void Menu::do_menu(bool tut_abil)
+void Menu::do_menu()
 {
     draw_menu();
-    if (tut_abil)
-    {
-      tut_describe_abilities();
-    }
 
     alive = true;
     while (alive)
@@ -477,7 +473,7 @@ void Menu::draw_menu()
     }
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
     {
-        gotoxy( 1, y_offset + pagesize );
+        gotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
         more.display();
     }
 }

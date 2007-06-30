@@ -89,5 +89,6 @@ public:
     std::vector<fs_op> ops;
 };
 
+int count_linebreaks(const formatted_string& fs);
 
 #endif
