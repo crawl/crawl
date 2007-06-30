@@ -85,7 +85,7 @@ namespace msg
     }
 
     mpr_stream_buf::mpr_stream_buf(msg_channel_type chan) :
-        internal_count(0), muted(false), channel(chan)
+        internal_count(0), param(0), muted(false), channel(chan)
     {}
 
     void mpr_stream_buf::set_param(int p)

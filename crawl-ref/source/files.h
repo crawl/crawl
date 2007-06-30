@@ -96,6 +96,8 @@ void writeString(FILE* file, const std::string &s, int cap = STR_CAP);
 std::string readString(FILE *file, int cap = STR_CAP);
 void writeLong(FILE* file, long num);
 long readLong(FILE *file);
+void writeCoord(FILE *file, const coord_def &pos);
+void readCoord(FILE *file, coord_def &pos);
 
 FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);

@@ -868,9 +868,8 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 break;
 
             case WPN_HAND_AXE:
-                description += "An small axe designed for either hand combat "
+                description += "A small axe designed for either hand combat "
                                "or throwing. ";
-                               // "It might also make a good tool.";
                 break;
 
             case WPN_BATTLEAXE:

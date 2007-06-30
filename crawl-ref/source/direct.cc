@@ -36,6 +36,7 @@
 #include "command.h"
 #include "debug.h"
 #include "describe.h"
+#include "dungeon.h"
 #include "itemname.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -1675,9 +1676,13 @@ static void describe_cell(int mx, int my)
 
     std::string feature_desc = feature_description(mx, my);
 #ifdef DEBUG_DIAGNOSTICS
-    mprf("(%d,%d): %s - %s", mx, my,
+    std::string marker;
+    if (map_marker *mark = env.find_marker(coord_def(mx, my), MAT_ANY))
+        marker = " (" + mark->describe() + ")";
+    mprf("(%d,%d): %s - %s%s", mx, my,
          stringize_glyph(get_screen_glyph(mx, my)).c_str(),
-         feature_desc.c_str());
+         feature_desc.c_str(),
+         marker.c_str());
 #else
     mpr(feature_desc.c_str());
 #endif

@@ -1167,8 +1167,13 @@ struct map_cell
 };
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
+class map_marker;
+typedef std::multimap<coord_def, map_marker *> dgn_marker_map;
+typedef std::pair<coord_def, map_marker *> dgn_pos_marker;
+
 struct crawl_environment
 {
+public:
     unsigned char rock_colour;
     unsigned char floor_colour;
 
@@ -1193,11 +1198,21 @@ struct crawl_environment
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
     FixedVector< trap_struct, MAX_TRAPS >    trap;  // trap list
 
-    FixedVector< int, 20 >   mons_alloc;
+    FixedVector< int, 20 >                   mons_alloc;
+    dgn_marker_map                           markers;
+    
     double                   elapsed_time; // used during level load
 
     // Number of turns the player has spent on this level.
     int turns_on_level;
+
+public:
+    void add_marker(map_marker *);
+    void remove_marker(map_marker *);
+    void remove_markers_at(const coord_def &c);
+    map_marker *find_marker(const coord_def &c, map_marker_type) const;
+    std::vector<map_marker*> get_markers(const coord_def &c) const;
+    void clear_markers();
 };
 
 extern struct crawl_environment env;

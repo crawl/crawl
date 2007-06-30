@@ -75,9 +75,11 @@ int vault_main(
         vgrid[vx][MAP_SIDE] = 0;
     }
 
-    // NB - a return value of zero is not handled well by dungeon.cc (but there it is) 10mar2000 {dlb}
+    // Return value of zero forces dungeon.cc to regenerate the level, except
+    // for branch entry vaults where dungeon.cc just rejects the vault and
+    // places a vanilla entry.
     return write_vault( vdefs[which_vault], vgrid, place, avoid );
-}          // end vault_main()
+}
 
 static int write_vault(map_def &mdef, map_type map, 
                        vault_placement &place,
@@ -118,7 +120,12 @@ static bool resolve_map(map_def &map, const map_def &original)
         mprf(MSGCH_WARN, "Lua error: %s", err.c_str());
         return (false);
     }
-    map.resolve();
+    err = map.resolve();
+    if (!err.empty())
+    {
+        mprf(MSGCH_WARN, "Error: %s", err.c_str());
+        return (false);
+    }
 
     if (!map.test_lua_validate(false))
         return (false);

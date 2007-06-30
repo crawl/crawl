@@ -71,6 +71,7 @@
 
 #include "abl-show.h"
 #include "branch.h"
+#include "dungeon.h"
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
@@ -271,8 +272,8 @@ void marshall_level_pos( struct tagHeader& th, const level_pos& lpos )
     marshall_level_id(th, lpos.id);
 }
 
-template<typename key, typename value>
-void unmarshallMap(struct tagHeader& th, std::map<key,value>& data,
+template<typename key, typename value, typename map>
+void unmarshallMap(struct tagHeader& th, map& data,
                    key   (*key_unmarshall)  (tagHeader&),
                    value (*value_unmarshall)(tagHeader&) )
 {
@@ -281,7 +282,8 @@ void unmarshallMap(struct tagHeader& th, std::map<key,value>& data,
     for ( i = 0; i < len; ++i )
     {
         k = key_unmarshall(th);
-        data[k] = value_unmarshall(th);
+        std::pair<key, value> p(k, value_unmarshall(th));
+        data.insert(p);
     }
 }
 
@@ -307,6 +309,18 @@ level_pos unmarshall_level_pos( struct tagHeader& th )
     lpos.pos.y = unmarshallLong(th);
     lpos.id    = unmarshall_level_id(th);
     return lpos;
+}
+
+void marshallCoord(tagHeader &th, const coord_def &c)
+{
+    marshallShort(th, c.x);
+    marshallShort(th, c.y);
+}
+
+void unmarshallCoord(tagHeader &th, coord_def &c)
+{
+    c.x = unmarshallShort(th);
+    c.y = unmarshallShort(th);
 }
 
 union float_marshall_kludge
@@ -1270,9 +1284,6 @@ static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
 
 static void tag_construct_level(struct tagHeader &th)
 {
-    int i;
-    int count_x, count_y;
-
     marshallFloat(th, (float)you.elapsed_time);
 
     // map grids
@@ -1283,9 +1294,9 @@ static void tag_construct_level(struct tagHeader &th)
 
     marshallLong(th, env.turns_on_level);
 
-    for (count_x = 0; count_x < GXM; count_x++)
+    for (int count_x = 0; count_x < GXM; count_x++)
     {
-        for (count_y = 0; count_y < GYM; count_y++)
+        for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallShort(th, env.map[count_x][count_y].object);
@@ -1299,7 +1310,7 @@ static void tag_construct_level(struct tagHeader &th)
 
     // how many clouds?
     marshallShort(th, MAX_CLOUDS);
-    for (i = 0; i < MAX_CLOUDS; i++)
+    for (int i = 0; i < MAX_CLOUDS; i++)
     {
         marshallByte(th, env.cloud[i].x);
         marshallByte(th, env.cloud[i].y);
@@ -1310,7 +1321,7 @@ static void tag_construct_level(struct tagHeader &th)
 
     // how many shops?
     marshallByte(th, 5);
-    for (i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     {
         marshallByte(th, env.shop[i].keeper_name[0]);
         marshallByte(th, env.shop[i].keeper_name[1]);
@@ -1320,6 +1331,14 @@ static void tag_construct_level(struct tagHeader &th)
         marshallByte(th, env.shop[i].greed);
         marshallByte(th, env.shop[i].type);
         marshallByte(th, env.shop[i].level);
+    }
+
+    // how many markers
+    marshallShort(th, env.markers.size());
+    for (dgn_marker_map::const_iterator i = env.markers.begin();
+         i != env.markers.end(); ++i)
+    {
+        i->second->write(th);
     }
 }
 
@@ -1535,6 +1554,14 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         env.shop[i].greed = unmarshallByte(th);
         env.shop[i].type = unmarshallByte(th);
         env.shop[i].level = unmarshallByte(th);
+    }
+
+    env.clear_markers();
+    const int nmarkers = unmarshallShort(th);
+    for (int i = 0; i < nmarkers; ++i)
+    {
+        if (map_marker *mark = map_marker::read_marker(th))
+            env.add_marker(mark);
     }
 }
 

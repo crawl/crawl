@@ -2625,18 +2625,6 @@ void arrange_features(std::vector<coord_def> &features)
 //////////////////////////////////////////////////////////////////////////
 // Interlevel travel classes
 
-static void writeCoord(FILE *file, const coord_def &pos)
-{
-    writeShort(file, pos.x);
-    writeShort(file, pos.y);
-}
-
-static void readCoord(FILE *file, coord_def &pos)
-{
-    pos.x = readShort(file);
-    pos.y = readShort(file);
-}
-
 level_id level_id::current()
 {
     const level_id id(you.where_are_you,

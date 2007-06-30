@@ -55,6 +55,7 @@
 #include "randart.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "tags.h"
 #include "travel.h"
 
 #define MAX_PIT_MONSTERS   10
@@ -347,6 +348,9 @@ static void reset_level()
     // reset all shops
     for (unsigned char shcount = 0; shcount < 5; shcount++)
         env.shop[shcount].type = SHOP_UNASSIGNED;
+
+    // clear all markers
+    env.clear_markers();
 }
 
 static void build_layout_skeleton(int level_number, int level_type,
@@ -2617,6 +2621,8 @@ static bool build_minivaults(int level_number, int force_vault)
 
     place.x = v1x;
     place.y = v1y;
+
+    place.map.map.apply_markers(coord_def(v1x, v1y));
     
     level_vaults.push_back(place);
     vault_zones.push_back(
@@ -3003,6 +3009,8 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
 
+    place.map.map.apply_markers(coord_def(place.x, place.y));
+    
     int vx, vy;
     int  num_runes = 0;
 
@@ -6241,4 +6249,87 @@ coord_def dgn_region::random_edge_point() const
 coord_def dgn_region::random_point() const
 {
     return coord_def( pos.x + random2(size.x), pos.y + random2(size.y) );
+}
+
+////////////////////////////////////////////////////////////////////////
+// Dungeon markers
+
+map_marker::marker_reader
+map_marker::readers[NUM_MAP_MARKER_TYPES] =
+{
+    &map_feature_marker::read,
+};
+
+map_marker::map_marker(map_marker_type t, const coord_def &p)
+    : pos(p), type(t)
+{
+}
+
+map_marker::~map_marker()
+{
+}
+
+void map_marker::write(tagHeader &outf) const
+{
+    marshallShort(outf, type);
+    marshallCoord(outf, pos);
+}
+
+void map_marker::read(tagHeader &inf)
+{
+    // Don't read type! The type has to be read by someone who knows how
+    // to look up the unmarshall function.
+    unmarshallCoord(inf, pos);
+}
+
+map_marker *map_marker::read_marker(tagHeader &inf)
+{
+    const map_marker_type type =
+        static_cast<map_marker_type>(unmarshallShort(inf));
+    return readers[type]? (*readers[type])(inf, type) : NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////
+// map_feature_marker
+
+map_feature_marker::map_feature_marker(
+    const coord_def &p,
+    dungeon_feature_type _feat)
+    : map_marker(MAT_FEATURE, p), feat(_feat)
+{
+}
+
+map_feature_marker::map_feature_marker(
+    const map_feature_marker &other)
+    : map_marker(MAT_FEATURE, other.pos), feat(other.feat)
+{
+}
+
+void map_feature_marker::write(tagHeader &outf) const
+{
+    this->map_marker::write(outf);
+    marshallShort(outf, feat);
+}
+
+void map_feature_marker::read(tagHeader &inf)
+{
+    map_marker::read(inf);
+    feat = static_cast<dungeon_feature_type>(unmarshallShort(inf));
+}
+
+map_marker *map_feature_marker::read(tagHeader &inf, map_marker_type)
+{
+    map_marker *mapf = new map_feature_marker();
+    mapf->read(inf);
+    return (mapf);
+}
+
+map_marker *map_feature_marker::clone() const
+{
+    return new map_feature_marker(pos, feat);
+}
+
+std::string map_feature_marker::describe() const
+{
+    return make_stringf("feature (%s)", dungeon_feature_name(feat));
 }

@@ -230,7 +230,8 @@ void set_mouse_enabled(bool enabled)
 {
 #ifdef NCURSES_MOUSE_VERSION
     const int mask = enabled? ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION : 0;
-    mousemask(mask, NULL);
+    mmask_t oldmask = 0;
+    mousemask(mask, &oldmask);
 #endif
 }
 

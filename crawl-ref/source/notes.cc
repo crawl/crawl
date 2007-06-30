@@ -113,8 +113,7 @@ static bool is_noteworthy( const Note& note )
         return true;
     
     /* never noteworthy, hooked up for fun or future use */
-    if ( note.type == NOTE_GET_ITEM ||
-         note.type == NOTE_MP_CHANGE ||
+    if ( note.type == NOTE_MP_CHANGE ||
          note.type == NOTE_MAXHP_CHANGE ||
          note.type == NOTE_MAXMP_CHANGE )
         return false;
@@ -177,6 +176,7 @@ static bool is_noteworthy( const Note& note )
                 return false;
             break;
         case NOTE_ID_ITEM:
+        case NOTE_GET_ITEM:
             /* re-id'ing an item, e.g. second copy of book, isn't
                noteworthy */
             if ( rnote.name == note.name )
@@ -190,10 +190,10 @@ static bool is_noteworthy( const Note& note )
                 return false;
             break;
         default:
-          mpr("Buggy note passed: unknown note type");
-          // Return now, rather than give a "Buggy note passed" message
-          // for each note of the matching type in the note list.
-          return true;
+            mpr("Buggy note passed: unknown note type");
+            // Return now, rather than give a "Buggy note passed" message
+            // for each note of the matching type in the note list.
+            return true;
         }
     }
     return true;
@@ -340,7 +340,8 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
 void Note::check_milestone() const
 {
 #ifdef DGL_MILESTONES
-    if (type == NOTE_DUNGEON_LEVEL_CHANGE) {
+    if (type == NOTE_DUNGEON_LEVEL_CHANGE)
+    {
         const int br = place_branch(packed_place),
             dep = place_depth(packed_place);
 

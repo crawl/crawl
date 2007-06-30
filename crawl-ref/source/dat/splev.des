@@ -6,24 +6,12 @@
 
 #############################################################################
 # Vestibule of Hell and Geryon
-#
-# If modifying the Vestibule, ensure that:
-#
-#  * The portal to Dis is surrounded by floor squares and nothing but floor 
-#    squares.
-#  * The portal to Tartarus is surrounded only by floor, doors of any kind, and
-#    at least one rock wall.
-#  * The portal to Gehenna is surrounded by nothing but floor and at least one
-#    lava square.
-#  * The portal to Cocytus is surrounded by nothing but floor and at least one
-#    water square.
-#
-# If you don't do this, the portals will not be unbarred correctly when 
-# Geryon's horn is sounded.
 
 NAME: vestibule_of_hell
 PLACE: Hell
 ORIENT: encompass
+MARKER: D=enter_dis, G=enter_gehenna, C=enter_cocytus, T=enter_tartarus
+SUBST: D=A, G=A, C=A, T=A
 
 MONS: Geryon
 
@@ -38,7 +26,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v.....v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....v.....v.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx........v.....v........xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx..........v..A..v..........xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx..........v..D..v..........xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx............v.....v............xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx.............v.....v.............xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx..............vvv+vvv..............xxxxxxxxxxxxxxxxxxxxxxx
@@ -62,7 +50,7 @@ xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
 xxxxxxxxxx.l.l.l.l.l.................................................xxxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l...................................................xxxxxxxxxx
 xxxxxxxxxl.l.l.l.l.l..................................................xxxxxxxxxx
-xxxxxxxxx.l.l.l.A.l.l.................}1].............................=Axxxxxxxx
+xxxxxxxxx.l.l.l.G.l.l.................}1].............................=Txxxxxxxx
 xxxxxxxxxl.l.l.l.l.l.l.................)..............................xxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l.l.................................................xxxxxxxxxx
 xxxxxxxxxx.l.l.l.l.l.l...............................................xxxxxxxxxxx
@@ -86,7 +74,7 @@ xxxxxxxxxxxxxxxxxxxxx.........ww....wwww...wwwwwwwwww.....xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx.........ww....ww....wwwwwwwwwww...xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx........wwww.......wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx......wwwwwww....wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx...wwwwwwwwwwAwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx...wwwwwwwwwwCwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -99,7 +87,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
 
 #############################################################################
 # Dispater's castle - rest of level filled up with plan_4 (irregular city)

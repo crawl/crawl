@@ -48,7 +48,7 @@ syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMap
 syn keyword desSubstDec SUBST: contained
 syn keyword desShuffleDec SHUFFLE: contained
 
-syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: ITEM: KFEAT: KMONS: KITEM:
+syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: ITEM: KFEAT: KMONS: KITEM: MARKER:
 syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float no_hmirror no_vmirror no_rotate entry pan no_pool_fixup no_monster_gen generate_awake
 
 syn match desComment "^\s*#.*$"

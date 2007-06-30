@@ -78,12 +78,13 @@ public:
     enum transform_type
     {
         TT_SHUFFLE,
-        TT_SUBST
+        TT_SUBST,
+        TT_MARKER
     };
     
 public:
     virtual ~map_transformer() = 0;
-    virtual void apply_transform(map_lines &map) = 0;
+    virtual std::string apply_transform(map_lines &map) = 0;
     virtual map_transformer *clone() const = 0;
     virtual transform_type type() const = 0;
     virtual std::string describe() const = 0;
@@ -101,7 +102,7 @@ public:
     
     int value();
     
-    void apply_transform(map_lines &map);
+    std::string apply_transform(map_lines &map);
     map_transformer *clone() const;
     transform_type type() const;
     std::string describe() const;
@@ -125,7 +126,7 @@ struct shuffle_spec : public map_transformer
     {
     }
     
-    void apply_transform(map_lines &map);
+    std::string apply_transform(map_lines &map);
     map_transformer *clone() const;
     transform_type type() const;
     std::string describe() const;
@@ -133,6 +134,19 @@ struct shuffle_spec : public map_transformer
     {
         return (shuffle == other.shuffle);
     }
+};
+
+struct map_feat_marker_spec : public map_transformer
+{
+    int key;
+    dungeon_feature_type feat;
+
+    map_feat_marker_spec(int _key, dungeon_feature_type _feat)
+        : key(_key), feat(_feat) { }
+    std::string apply_transform(map_lines &map);
+    transform_type type() const;
+    std::string describe() const;
+    map_transformer *clone() const;
 };
 
 class map_lines
@@ -151,7 +165,11 @@ public:
     void remove_subst(const std::string &s);
     void clear_shuffles();
     void clear_substs();
+    void clear_markers();
 
+    std::vector<coord_def> find_glyph(int glyph) const;
+    coord_def find_first_glyph(int glyph) const;
+    
     void set_orientation(const std::string &s);
 
     int width() const;
@@ -162,7 +180,7 @@ public:
     
     bool solid_borders(map_section_type border);
 
-    void apply_transforms();
+    std::string apply_transforms();
 
     // Make all lines the same length.
     void normalise(char fillc = 'x');
@@ -174,6 +192,9 @@ public:
 
     void clear();
 
+    void add_marker(map_marker *marker);
+    std::string add_feature_marker(const std::string &desc);
+    void apply_markers(const coord_def &pos);
     const std::vector<std::string> &get_lines() const;
     std::vector<std::string> &get_lines();
     std::vector<std::string> get_shuffle_strings() const;
@@ -183,7 +204,16 @@ public:
     
 private:
     void init_from(const map_lines &map);
-    void release_transforms();
+    void clear_transforms();
+    template <typename V> void clear_vector(V &vect);
+    void vmirror_markers();
+    void hmirror_markers();
+    void rotate_markers(bool clock);
+    void vmirror_marker(map_marker *, int par);
+    void hmirror_marker(map_marker *, int par);
+    void rotate_marker(map_marker *, int par);
+    void translate_marker(void (map_lines::*xform)(map_marker *, int par),
+                          int par = 0);
     
     void resolve_shuffle(const std::string &shuffle);
     void subst(std::string &s, subst_spec &spec);
@@ -203,6 +233,7 @@ private:
     
 private:
     std::vector<map_transformer *> transforms;
+    std::vector<map_marker *> markers;
     std::vector<std::string> lines;
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;
@@ -467,7 +498,7 @@ public:
     void vmirror();
     void rotate(bool clockwise);
     void normalise();
-    void resolve();
+    std::string resolve();
     void fixup();
 
     bool is_usable_in(const level_id &lid) const;

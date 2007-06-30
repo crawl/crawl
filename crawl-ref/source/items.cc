@@ -52,6 +52,7 @@
 #include "mstuff2.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "notes.h"
 #include "overmap.h"
 #include "player.h"
 #include "randart.h"
@@ -844,6 +845,13 @@ static void milestone_check(const item_def &item)
 }
 #endif // DGL_MILESTONES
 
+static void check_note_item(const item_def &item)
+{
+    if (is_interesting_item(item))
+        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+                       origin_desc(item).c_str()));
+}
+
 void origin_set(int x, int y)
 {
     int monnum = first_corpse_monnum(x, y);
@@ -857,7 +865,7 @@ void origin_set(int x, int y)
         if (!item.orig_monnum)
             item.orig_monnum = static_cast<short>( monnum );
         item.orig_place  = pplace;
-
+        check_note_item(item);
 #ifdef DGL_MILESTONES
         milestone_check(item);
 #endif
@@ -876,6 +884,7 @@ void origin_freeze(item_def &item, int x, int y)
         if (!item.orig_monnum && x != -1 && y != -1)
             origin_set_monstercorpse(item, x, y);
         item.orig_place = get_packed_place();
+        check_note_item(item);
 #ifdef DGL_MILESTONES
         milestone_check(item);
 #endif

@@ -570,41 +570,16 @@ bool evoke_wielded( void )
                         {
                             opened_gates++;
 
-                            // [dshaligram] New approach to placing Hell
-                            // portals to handle the possibility of a mirrored
-                            // Vestibule.
-                            int surround_grid = DNGN_FLOOR;
+                            map_marker *marker =
+                                env.find_marker(coord_def(count_x, count_y),
+                                                MAT_FEATURE);
 
-                            for (int y = -1; y <= 1; ++y)
-                                for (int x = -1; x <= 1; ++x)
-                                {
-                                    if (!x && !y)
-                                        continue;
-                                    const int grid = 
-                                        grd[count_x + x][count_y + y];
-
-                                    if (grid != DNGN_FLOOR 
-                                            && grid != DNGN_SECRET_DOOR
-                                            && grid != DNGN_CLOSED_DOOR
-                                            && grid != DNGN_OPEN_DOOR)
-                                        surround_grid = grid;
-                                }
-
-                            // this may generate faulty [][] values {dlb}
-                            switch (surround_grid)
+                            if (marker)
                             {
-                            case DNGN_FLOOR:
-                                grd[count_x][count_y] = DNGN_ENTER_DIS;
-                                break;
-                            case DNGN_LAVA:
-                                grd[count_x][count_y] = DNGN_ENTER_GEHENNA;
-                                break;
-                            case DNGN_ROCK_WALL:
-                                grd[count_x][count_y] = DNGN_ENTER_TARTARUS;
-                                break;
-                            case DNGN_DEEP_WATER:
-                                grd[count_x][count_y] = DNGN_ENTER_COCYTUS;
-                                break;
+                                map_feature_marker *featm =
+                                    dynamic_cast<map_feature_marker*>(marker);
+                                grd[count_x][count_y] = featm->feat;
+                                env.remove_marker(marker);
                             }
                         }
                     }

@@ -337,7 +337,7 @@ map_transformer::~map_transformer()
 // map_lines
 
 map_lines::map_lines()
-    : transforms(), lines(), map_width(0), solid_north(false),
+    : transforms(), markers(), lines(), map_width(0), solid_north(false),
       solid_east(false), solid_south(false), solid_west(false),
       solid_checked(false)
 {
@@ -362,12 +362,14 @@ map_lines &map_lines::operator = (const map_lines &map)
 
 map_lines::~map_lines()
 {
-    release_transforms();
+    clear_transforms();
+    clear_markers();
 }
 
 void map_lines::init_from(const map_lines &map)
 {
-    release_transforms();
+    clear_transforms();
+    clear_markers();
     lines         = map.lines;
     map_width     = map.map_width;
     solid_north   = map.solid_north;
@@ -378,13 +380,60 @@ void map_lines::init_from(const map_lines &map)
 
     for (int i = 0, size = map.transforms.size(); i < size; ++i)
         transforms.push_back( map.transforms[i]->clone() );
+
+    for (int i = 0, size = map.markers.size(); i < size; ++i)
+        markers.push_back( map.markers[i]->clone() );
 }
 
-void map_lines::release_transforms()
+template <typename V>
+void map_lines::clear_vector(V &vect)
 {
-    for (int i = 0, size = transforms.size(); i < size; ++i)
-        delete transforms[i];
-    transforms.clear();
+    for (int i = 0, size = vect.size(); i < size; ++i)
+        delete vect[i];
+    vect.clear();
+}
+
+void map_lines::clear_transforms()
+{
+    clear_vector(transforms);
+}
+
+void map_lines::clear_markers()
+{
+    clear_vector(markers);
+}
+
+void map_lines::add_marker(map_marker *marker)
+{
+    markers.push_back(marker);
+}
+
+std::string map_lines::add_feature_marker(const std::string &s)
+{
+    std::string arg;
+    int key = 0, sep = 0;
+    std::string err = split_key_item(s, &key, &sep, &arg);
+    if (!err.empty())
+        return (err);
+
+    const dungeon_feature_type feat = dungeon_feature_by_name(arg);
+    if (feat == DNGN_UNSEEN)
+        return make_stringf("unknown feature: %s", arg.c_str());
+
+    transforms.push_back(new map_feat_marker_spec(key, feat));    
+    return ("");
+}
+
+void map_lines::apply_markers(const coord_def &c)
+{
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        markers[i]->pos += c;
+        env.add_marker(markers[i]);
+    }
+    // *not* clear_markers() since we've offloaded marker ownership to
+    // the crawl env.
+    markers.clear();
 }
 
 const std::vector<std::string> &map_lines::get_lines() const
@@ -640,7 +689,8 @@ bool map_lines::solid_borders(map_section_type border)
 
 void map_lines::clear()
 {
-    release_transforms();
+    clear_transforms();
+    clear_markers();
     lines.clear();
     map_width = 0;
     solid_checked = false;
@@ -715,13 +765,19 @@ void map_lines::resolve_shuffle(const std::string &shufflage)
     }
 }
 
-void map_lines::apply_transforms()
+std::string map_lines::apply_transforms()
 {
+    std::string error;
     for (int i = 0, size = transforms.size(); i < size; ++i)
-        transforms[i]->apply_transform(*this);
+    {
+        error = transforms[i]->apply_transform(*this);
+        if (!error.empty())
+            return (error);
+    }
 
     // Release the transforms so we don't try them again.
-    release_transforms();
+    clear_transforms();
+    return ("");
 }
 
 void map_lines::normalise(char fillch)
@@ -762,9 +818,51 @@ void map_lines::rotate(bool clockwise)
     }
 
     map_width = lines.size();
-    lines = newlines;
-
+    lines     = newlines;
+    rotate_markers(clockwise);
     solid_checked = false;
+}
+
+void map_lines::translate_marker(
+    void (map_lines::*xform)(map_marker *, int),
+    int par)
+{
+    for (int i = 0, size = markers.size(); i < size; ++i)
+        (this->*xform)(markers[i], par);
+}
+
+void map_lines::vmirror_marker(map_marker *marker, int)
+{
+    marker->pos.y = height() - 1 - marker->pos.y;
+}
+
+void map_lines::hmirror_marker(map_marker *marker, int)
+{
+    marker->pos.x = width() - 1 - marker->pos.x;
+}
+
+void map_lines::rotate_marker(map_marker *marker, int clockwise)
+{
+    const coord_def c = marker->pos;
+    if (clockwise)
+        marker->pos = coord_def(width() - 1 - c.y, c.x);
+    else
+        marker->pos = coord_def(c.y, height() - 1 - c.x);
+}
+
+void map_lines::vmirror_markers()
+{
+    translate_marker(&map_lines::vmirror_marker);
+}
+
+void map_lines::hmirror_markers()
+{
+    translate_marker(&map_lines::hmirror_marker);
+}
+
+void map_lines::rotate_markers(bool clock)
+{
+    translate_marker(&map_lines::rotate_marker, clock);
 }
 
 void map_lines::vmirror()
@@ -778,7 +876,7 @@ void map_lines::vmirror()
         lines[i] = lines[size - 1 - i];
         lines[size - 1 - i] = temp;
     }
-
+    vmirror_markers();
     solid_checked = false;
 }
 
@@ -795,7 +893,7 @@ void map_lines::hmirror()
             s[map_width - 1 - j] = c;
         }
     }
-
+    hmirror_markers();
     solid_checked = false;
 }
 
@@ -815,6 +913,36 @@ std::vector<std::string> map_lines::get_subst_strings() const
         if (transforms[i]->type() == map_transformer::TT_SUBST)
             substs.push_back( transforms[i]->describe() );
     return (substs);
+}
+
+std::vector<coord_def> map_lines::find_glyph(int gly) const
+{
+    std::vector<coord_def> points;
+    for (int y = height() - 1; y >= 0; --y)
+    {
+        for (int x = width() - 1; x >= 0; --x)
+        {
+            const coord_def c(x, y);
+            if ((*this)(c) == gly)
+                points.push_back(c);
+        }
+    }
+    return (points);
+}
+
+coord_def map_lines::find_first_glyph(int gly) const
+{
+    for (int y = 0, h = height(); y < h; ++y)
+    {
+        for (int x = 0, w = width(); x < w; ++x)
+        {
+            const coord_def c(x, y);
+            if ((*this)(c) == gly)
+                return (c);
+        }
+    }
+
+    return coord_def(-1, -1);
 }
 
 ///////////////////////////////////////////////
@@ -924,32 +1052,12 @@ void map_def::load()
 
 std::vector<coord_def> map_def::find_glyph(int glyph) const
 {
-    std::vector<coord_def> points;
-    for (int y = map.height() - 1; y >= 0; --y)
-    {
-        for (int x = map.width() - 1; x >= 0; --x)
-        {
-            const coord_def c(x, y);
-            if (map(c) == glyph)
-                points.push_back(c);
-        }
-    }
-    return (points);
+    return map.find_glyph(glyph);
 }
 
 coord_def map_def::find_first_glyph(int glyph) const
 {
-    for (int y = 0, height = map.height(); y < height; ++y)
-    {
-        for (int x = 0, width = map.width(); x < width; ++x)
-        {
-            const coord_def c(x, y);
-            if (map(c) == glyph)
-                return (c);
-        }
-    }
-
-    return coord_def(-1, -1);
+    return map.find_first_glyph(glyph);
 }
 
 void map_def::write_index(FILE *outf) const
@@ -1120,7 +1228,7 @@ std::string map_def::validate_map_def()
     if (map.height() == 0)
         return ("Must define map.");
 
-    return ("");
+    return (map.apply_transforms());
 }
 
 bool map_def::is_usable_in(const level_id &lid) const
@@ -1362,9 +1470,9 @@ void map_def::normalise()
     map.normalise(is_minivault()? '.' : 'x');
 }
 
-void map_def::resolve()
+std::string map_def::resolve()
 {
-    map.apply_transforms();
+    return map.apply_transforms();
 }
 
 void map_def::fixup()
@@ -1980,9 +2088,10 @@ int subst_spec::value()
     return (chosen);
 }
 
-void subst_spec::apply_transform(map_lines &map)
+std::string subst_spec::apply_transform(map_lines &map)
 {
     map.subst(*this);
+    return ("");
 }
 
 map_transformer *subst_spec::clone() const
@@ -2029,9 +2138,10 @@ bool subst_spec::operator == (const subst_spec &other) const
 //////////////////////////////////////////////////////////////////////////
 // shuffle_spec
 
-void shuffle_spec::apply_transform(map_lines &map)
+std::string shuffle_spec::apply_transform(map_lines &map)
 {
     map.resolve_shuffle(shuffle);
+    return ("");
 }
 
 map_transformer *shuffle_spec::clone() const
@@ -2047,6 +2157,38 @@ map_transformer::transform_type shuffle_spec::type() const
 std::string shuffle_spec::describe() const
 {
     return (shuffle);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// map_feat_marker_spec
+
+std::string map_feat_marker_spec::apply_transform(map_lines &map)
+{
+    std::vector<coord_def> positions = map.find_glyph(key);
+    if (positions.size() == 1)
+    {
+        map.add_marker(new map_feature_marker(positions[0], feat));
+        return ("");
+    }
+    else if (positions.empty())
+        return make_stringf("cant find key '%c' for marker", key);
+    else
+        return make_stringf("too many matches for key '%c' for marker", key);
+}
+
+map_transformer::transform_type map_feat_marker_spec::type() const
+{
+    return (TT_MARKER);
+}
+
+std::string map_feat_marker_spec::describe() const
+{
+    return map_feature_marker(coord_def(), feat).describe();
+}
+
+map_transformer *map_feat_marker_spec::clone() const
+{
+    return new map_feat_marker_spec(key, feat);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -1677,6 +1677,18 @@ long readLong(FILE *file)
         (long) (unsigned short) readShort(file);
 }
 
+void writeCoord(FILE *file, const coord_def &pos)
+{
+    writeShort(file, pos.x);
+    writeShort(file, pos.y);
+}
+
+void readCoord(FILE *file, coord_def &pos)
+{
+    pos.x = readShort(file);
+    pos.y = readShort(file);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // Locking for multiuser systems
 

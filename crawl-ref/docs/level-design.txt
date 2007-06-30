@@ -299,8 +299,8 @@ DEPTH:   For random vaults, branch entry vaults, and minivaults, this
 
          (Anywhere between levels 7-9 of the Lair, inclusive.)
 
-         You can apply multiple constraints (with multiple DEPTH: lines, if
-         necessary, or on one line, comma-separated):
+         You can apply multiple constraints in one DEPTH line,
+         comma-separated:
 
            DEPTH: 7-20, !12-14
 
@@ -533,7 +533,7 @@ KITEM:   ? = potion of healing / potion of restore abilities
 E.    Conditionalising levels
 -----------------------------
 
-Crawl translated level (.des) files into Lua code chunks and runs
+Crawl translates level (.des) files into Lua code chunks and runs
 these chunks to produce the final level that is generated. While you
 don't need to use Lua for most levels, using Lua allows you to
 conditionalise or randomise levels with greater control.

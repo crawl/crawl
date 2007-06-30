@@ -1015,7 +1015,6 @@ enum dungeon_feature_type
     DNGN_EXIT_HELL,                    //   68
     DNGN_ENTER_HELL,                   //   69
     DNGN_OPEN_DOOR,                    //   70
-    // DNGN_BRANCH_STAIRS,                //   71
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
     DNGN_TRAP_III,
@@ -1110,6 +1109,7 @@ enum dungeon_feature_type
     DNGN_DRY_FOUNTAIN_VII,
     DNGN_DRY_FOUNTAIN_VIII,
     DNGN_PERMADRY_FOUNTAIN = 210,  // added (from dungeon.cc/maps.cc) 22jan2000 {dlb}
+    NUM_REAL_FEATURES,
 
     // Real terrain must all occur before 256 to guarantee it fits
     // into the unsigned char used for the grid!
@@ -1737,6 +1737,14 @@ enum load_mode_type
     LOAD_START_GAME,
     LOAD_RESTART_GAME,
     LOAD_ENTER_LEVEL
+};
+
+// Can't change this order without breaking saves.
+enum map_marker_type
+{
+    MAT_FEATURE,              // Stock marker.
+    NUM_MAP_MARKER_TYPES,
+    MAT_ANY
 };
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be

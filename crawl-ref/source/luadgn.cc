@@ -601,6 +601,35 @@ static int dgn_item(lua_State *ls)
     return (0);
 }
 
+static int dgn_marker(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) == 1)
+        return (0);
+    if (lua_isnil(ls, 2))
+    {
+        map->map.clear_markers();
+        return (0);
+    }
+
+    if (lua_isstring(ls, 2))
+    {
+        std::string err = map->map.add_feature_marker(luaL_checkstring(ls, 2));
+        if (!err.empty())
+            luaL_error(ls, err.c_str());
+        return (0);
+    }
+    
+    const coord_def pos(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
+    dungeon_feature_type feat = DNGN_UNSEEN;
+    if (lua_isnumber(ls, 4))
+        feat = static_cast<dungeon_feature_type>( luaL_checkint(ls, 4) );
+    else
+        feat = dungeon_feature_by_name( luaL_checkstring(ls, 4) );
+    map->map.add_marker( new map_feature_marker(pos, feat) );
+    return (0);
+}
+
 static int dgn_kfeat(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -739,6 +768,82 @@ static int dgn_load_des_file(lua_State *ls)
     return (0);
 }
 
+const char *dngn_feature_names[] =
+{
+    "unseen", "rock_wall", "stone_wall", "closed_door", "metal_wall",
+    "secret_door", "green_crystal_wall", "orcish_idol", "wax_wall",
+    "permarock_wall", "", "", "", "", "", "", "", "", "", "", "",
+    "silver_statue", "granite_statue", "orange_crystal_statue",
+    "statue_reserved_1", "statue_reserved_2", "", "", "", "", "", "", "", "",
+    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    "", "", "", "", "", "", "", "", "lava", "deep_water", "", "",
+    "shallow_water", "water_stuck", "floor", "exit_hell", "enter_hell",
+    "open_door", "", "", "", "", "trap_mechanical", "trap_magical", "trap_iii",
+    "undiscovered_trap", "", "enter_shop", "enter_labyrinth",
+    "stone_stairs_down_i", "stone_stairs_down_ii", "stone_stairs_down_iii",
+    "rock_stairs_down", "stone_stairs_up_i", "stone_stairs_up_ii",
+    "stone_stairs_up_iii", "rock_stairs_up", "", "", "enter_dis",
+    "enter_gehenna", "enter_cocytus", "enter_tartarus", "enter_abyss",
+    "exit_abyss", "stone_arch", "enter_pandemonium", "exit_pandemonium",
+    "transit_pandemonium", "", "", "", "builder_special_wall",
+    "builder_special_floor", "", "", "", "enter_orcish_mines", "enter_hive",
+    "enter_lair", "enter_slime_pits", "enter_vaults", "enter_crypt",
+    "enter_hall_of_blades", "enter_zot", "enter_temple", "enter_snake_pit",
+    "enter_elven_halls", "enter_tomb", "enter_swamp", "enter_shoals",
+    "enter_reserved_2", "enter_reserved_3", "enter_reserved_4", "", "", "",
+    "return_from_orcish_mines", "return_from_hive", "return_from_lair",
+    "return_from_slime_pits", "return_from_vaults", "return_from_crypt",
+    "return_from_hall_of_blades", "return_from_zot", "return_from_temple",
+    "return_from_snake_pit", "return_from_elven_halls", "return_from_tomb",
+    "return_from_swamp", "return_from_shoals", "return_reserved_2",
+    "return_reserved_3", "return_reserved_4", "", "", "", "", "", "", "", "",
+    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    "", "", "", "", "", "", "altar_zin", "altar_shining_one",
+    "altar_kikubaaqudgha", "altar_yredelemnul", "altar_xom", "altar_vehumet",
+    "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
+    "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu", "altar_beogh", "",
+    "", "", "", "", "", "blue_fountain", "dry_fountain_i",
+    "sparkling_fountain", "dry_fountain_ii", "dry_fountain_iii",
+    "dry_fountain_iv", "dry_fountain_v", "dry_fountain_vi", "dry_fountain_vii",
+    "dry_fountain_viii", "permadry_fountain"
+};
+
+dungeon_feature_type dungeon_feature_by_name(const std::string &name)
+{
+    ASSERT(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES);
+    if (name.empty())
+        return (DNGN_UNSEEN);
+
+    for (unsigned i = 0; i < ARRAYSIZE(dngn_feature_names); ++i)
+        if (dngn_feature_names[i] == name)
+            return static_cast<dungeon_feature_type>(i);
+
+    return (DNGN_UNSEEN);
+}
+
+const char *dungeon_feature_name(dungeon_feature_type rfeat)
+{
+    const unsigned feat = rfeat;
+    
+    if (feat >= ARRAYSIZE(dngn_feature_names))
+        return (NULL);
+
+    return dngn_feature_names[feat];
+}
+
+static int dgn_feature_number(lua_State *ls)
+{
+    const std::string &name = luaL_checkstring(ls, 1);
+    PLUARET(number, dungeon_feature_by_name(name));
+}
+
+static int dgn_feature_name(lua_State *ls)
+{
+    const unsigned feat = luaL_checkint(ls, 1);
+    PLUARET(string,
+            dungeon_feature_name(static_cast<dungeon_feature_type>(feat)));
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -757,6 +862,7 @@ static const struct luaL_reg dgn_lib[] =
     { "map", dgn_map },
     { "mons", dgn_mons },
     { "item", dgn_item },
+    { "marker", dgn_marker },
     { "kfeat", dgn_kfeat },
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
@@ -768,6 +874,8 @@ static const struct luaL_reg dgn_lib[] =
     { "gly_points", dgn_gly_points },
     { "original_map", dgn_original_map },
     { "load_des_file", dgn_load_des_file },
+    { "feature_number", dgn_feature_number },
+    { "feature_name", dgn_feature_name },
     { NULL, NULL }
 };
 

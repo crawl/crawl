@@ -1081,3 +1081,66 @@ int coord_def::distance_from(const coord_def &other) const
     return (grid_distance(x, y, other.x, other.y));
 }
 
+//////////////////////////////////////////////////////////////////////////
+// crawl_environment
+
+void crawl_environment::add_marker(map_marker *marker)
+{
+    markers.insert(dgn_pos_marker(marker->pos, marker));
+}
+
+void crawl_environment::remove_marker(map_marker *marker)
+{
+    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
+        els = markers.equal_range(marker->pos);
+    for (dgn_marker_map::iterator i = els.first; i != els.second; ++i)
+    {
+        if (i->second == marker)
+        {
+            markers.erase(i);
+            break;
+        }
+    }
+    delete marker;
+}
+
+void crawl_environment::remove_markers_at(const coord_def &c)
+{
+    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
+        els = markers.equal_range(c);
+    for (dgn_marker_map::iterator i = els.first; i != els.second; )
+    {
+        dgn_marker_map::iterator todel = i++;
+        delete todel->second;
+        markers.erase(todel);
+    }
+}
+
+map_marker *crawl_environment::find_marker(const coord_def &c,
+                                           map_marker_type type) const
+{
+    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
+        els = markers.equal_range(c);
+    for (dgn_marker_map::const_iterator i = els.first; i != els.second; )
+        if (type == MAT_ANY || i->second->get_type() == type)
+            return (i->second);
+    return (NULL);
+}
+
+std::vector<map_marker*> crawl_environment::get_markers(const coord_def &c)
+    const
+{
+    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
+        els = markers.equal_range(c);
+    std::vector<map_marker*> rmarkers;
+    for (dgn_marker_map::const_iterator i = els.first; i != els.second; )
+        rmarkers.push_back(i->second);
+    return (rmarkers);
+}
+
+void crawl_environment::clear_markers()
+{
+    for (dgn_marker_map::iterator i = markers.begin(); i != markers.end(); ++i)
+        delete i->second;
+    markers.clear();
+}
