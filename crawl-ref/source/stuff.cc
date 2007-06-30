@@ -1121,7 +1121,7 @@ map_marker *crawl_environment::find_marker(const coord_def &c,
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; )
+    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
             return (i->second);
     return (NULL);
@@ -1133,7 +1133,7 @@ std::vector<map_marker*> crawl_environment::get_markers(const coord_def &c)
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
     std::vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; )
+    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
     return (rmarkers);
 }
