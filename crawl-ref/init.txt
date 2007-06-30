@@ -173,6 +173,7 @@ stab_brand = hi:blue
 # increasing_skill_progress = false
 # show_inventory_weights = true
 # show_turns = true
+# item_stack_summary_minimum = 500
 
 # Colouring for the inventory
 menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)

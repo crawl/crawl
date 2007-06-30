@@ -719,6 +719,8 @@ void game_options::reset_options()
     fire_order[1] = FIRE_DART;          // then only consider darts
     fire_order[2] = FIRE_STONE;         // and then chuck stones
 
+    item_stack_summary_minimum = 5;
+
 #ifdef WIZARD
     fsim_rounds = 40000L;
     fsim_mons   = "worm";
@@ -775,6 +777,7 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(100, LIGHTGREY));
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
+
     never_pickup.clear();
     always_pickup.clear();
     note_monsters.clear(); 
@@ -2264,6 +2267,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         dos_use_background_intensity = 
             read_bool(field, dos_use_background_intensity);
+    }
+    else if (key == "item_stack_summary_minimum")
+    {
+        item_stack_summary_minimum = atoi(field.c_str());
     }
     else if (key == "explore_stop")
     {

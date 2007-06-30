@@ -63,6 +63,7 @@
 #include "stuff.h"
 #include "stash.h"
 #include "tutorial.h"
+#include "view.h"
 
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
@@ -559,89 +560,147 @@ void request_autopickup(bool do_pickup)
     will_autopickup = do_pickup;
 }
 
+// 2 - artifact, 1 - glowing/runed, 0 - mundane
+static int item_name_specialness(const item_def& item)
+{
+    // All jewellery is worth looking at.
+    // And we can always tell from the name if it's an artefact.
+    if (item.base_type == OBJ_JEWELLERY )
+        return ( is_artefact(item) ? 2 : 1 );
+
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR &&
+        item.base_type != OBJ_MISSILES)
+        return 0;
+    if (item_type_known(item))
+    {
+        if ( is_artefact(item) )
+            return 2;
+
+        // XXX Unite with l_item_branded() in clua.cc
+        bool branded = false;
+        switch (item.base_type)
+        {
+        case OBJ_WEAPONS:
+            branded = get_weapon_brand(item) != SPWPN_NORMAL;
+            break;
+        case OBJ_ARMOUR:
+            branded = get_armour_ego_type(item) != SPARM_NORMAL;
+            break;
+        case OBJ_MISSILES:
+            branded = get_ammo_brand(item) != SPMSL_NORMAL;
+            break;
+        default:
+            break;
+        }
+        return ( branded ? 1 : 0 );
+    }
+
+    if ( item.base_type == OBJ_MISSILES )
+        return 0;               // missiles don't get name descriptors
+
+    std::string itname = item.name(DESC_PLAIN, false, false, false);
+    lowercase(itname);
+    
+    const bool item_runed = itname.find("runed ") != std::string::npos;
+    const bool heav_runed = itname.find("heavily ") != std::string::npos;
+    const bool item_glows = itname.find("glowing") != std::string::npos;
+
+    if ( item_glows || (item_runed && !heav_runed) )
+        return 1;
+
+    // You can tell artefacts, because they'll have a description which
+    // rules out anything else.
+    // XXX Fixedarts and unrandarts might upset the apple-cart, though.
+    if ( is_artefact(item) )
+        return 2;
+
+    return 0;
+}
+
 /*
  * Takes keyin as an argument because it will only display a long list of items
  * if ; is pressed.
  */
-void item_check(char keyin)
+void item_check(bool verbose)
 {
-    char item_show[50][ITEMNAME_SIZE];
-    char temp_quant[10];
-
-    int counter = 0;
-    int counter_max = 0;
 
     describe_floor();
-
-    if (igrd[you.x_pos][you.y_pos] == NON_ITEM && keyin == ';')
-    {
-        mpr("There are no items here.");
-        return;
-    }
-    
     autoinscribe_items();
-
     origin_set(you.x_pos, you.y_pos);
 
-    for ( int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
-          objl = mitm[objl].link )
+    std::ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
+
+    std::vector<const item_def*> items;
+
+    item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
+
+    if (items.size() == 0)
     {
-        if ( invisible_to_player(mitm[objl]) )
-            continue;
-
-        counter++;
-
-        if (counter > 45)
-        {
-            strcpy(item_show[counter], "Too many items.");
-            break;
-        }
-
-        if (mitm[objl].base_type == OBJ_GOLD)
-        {
-            itoa(mitm[objl].quantity, temp_quant, 10);
-            strcpy(item_show[counter], temp_quant);
-            strcat(item_show[counter], " gold piece");
-            if (mitm[objl].quantity > 1)
-                strcat(item_show[counter], "s");
-
-        }
-        else
-        {
-            strcpy(item_show[counter], mitm[objl].name(DESC_NOCAP_A).c_str());
-        }
-
+        if ( verbose )
+            strm << "There are no items here." << std::endl;
+        return;
     }
 
-    counter_max = counter;
-    counter = 0;
-
-    if (counter_max == 1)
+    if (items.size() == 1 )
     {
-        mprf("You see here %s.", item_show[counter_max]);  // remember 'an'.
-
-        counter++;
-        counter_max = 0;        // to skip next part.
+        strm << "You see here " << items[0]->name(DESC_NOCAP_A)
+             << '.' << std::endl;
+        return;
     }
 
-    if ((counter_max > 0 && counter_max < 6)
-        || (counter_max > 1 && keyin == ';'))
+    bool done_init_line = false;
+    
+    if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
-        mpr("Things that are here:");
-
-        while (counter < counter_max)
+        std::vector<unsigned short int> item_chars;
+        for ( unsigned int i = 0; i < items.size() && i < 50; ++i )
         {
-            // this is before the strcpy because item_show start at 1, not 0.
-            counter++;
-            mpr(item_show[counter]);
+            unsigned glyph_char;
+            unsigned short glyph_col;
+            get_item_glyph( items[i], &glyph_char, &glyph_col );            
+            item_chars.push_back( glyph_char * 0x100 +
+                                  (10 - item_name_specialness(*(items[i]))) );
         }
+        std::sort(item_chars.begin(), item_chars.end());
+
+        std::string out_string = "Items here: ";
+        int cur_state = -1;
+        for ( unsigned int i = 0; i < item_chars.size(); ++i )
+        {
+            const int specialness = 10 - (item_chars[i] % 0x100);
+            if ( specialness != cur_state )
+            {
+                switch ( specialness )
+                {
+                case 2: out_string += "<yellow>"; break; // artefact
+                case 1: out_string += "<white>"; break;  // glowing/runed
+                case 0: out_string += "<darkgrey>"; break; // mundane
+                }
+                cur_state = specialness;
+            }
+
+            out_string += static_cast<unsigned char>(item_chars[i] / 0x100);
+            if (i + 1 < item_chars.size() &&
+                (item_chars[i] / 0x100) != (item_chars[i+1] / 0x100))
+                out_string += ' ';
+        }
+        formatted_mpr(formatted_string::parse_string(out_string),
+                      MSGCH_FLOOR_ITEMS);
+        done_init_line = true;
     }
 
-    if (counter_max > 5 && keyin != ';')
+    if ( verbose || static_cast<int>(items.size() + 1) < crawl_view.msgsz.y )
     {
-        mpr("There are several objects here.");
+        if ( !done_init_line )
+            strm << "Things that are here:" << std::endl;
+        for ( unsigned int i = 0; i < items.size(); ++i )
+            strm << items[i]->name(DESC_NOCAP_A) << std::endl;
+    }
+    else if ( !done_init_line )
+        strm << "There are many items here." << std::endl;
+    
+    if ( items.size() > 5 )
         learned_something_new(TUT_MULTI_PICKUP);
-    }           
 }
 
 void show_items()

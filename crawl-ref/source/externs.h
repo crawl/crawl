@@ -1620,6 +1620,10 @@ public:
     unsigned    may_stab_brand;   // Highlight potential stab candidates
     unsigned    stair_item_brand; // Highlight stairs covered by items.
 
+    // What is the minimum number of items in a stack for which
+    // you show summary (one-line) information
+    int         item_stack_summary_minimum;
+
     int         explore_stop;      // Stop exploring if a previously unseen
                                    // item comes into view
 
