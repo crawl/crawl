@@ -796,6 +796,11 @@ static command_type get_running_command()
         }
         return CMD_MOVE_NOWHERE;
     }
+    else if (Options.travel_delay > 0)
+    {
+        delay(Options.travel_delay);
+    }
+        
     return direction_to_command( you.running.x, you.running.y );
 }
 

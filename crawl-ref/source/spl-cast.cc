@@ -682,7 +682,7 @@ bool spell_is_unholy( spell_type spell_id )
     return (testbits( get_spell_flags( spell_id ), SPFLAG_UNHOLY ));
 }
 
-void spellcasting_side_effects(spell_type spc2, bool idonly = false)
+void spellcasting_side_effects(spell_type spell, bool idonly = false)
 {
     int total_skill = 0;
 
@@ -697,47 +697,47 @@ void spellcasting_side_effects(spell_type spc2, bool idonly = false)
             total_skill = you.skills[SK_SPELLCASTING];
             break;
         case STAFF_FIRE:
-            if (spell_typematch(spc2, SPTYP_FIRE))
+            if (spell_typematch(spell, SPTYP_FIRE))
                 total_skill = you.skills[SK_FIRE_MAGIC];
-            else if (spell_typematch(spc2, SPTYP_ICE))
+            else if (spell_typematch(spell, SPTYP_ICE))
                 total_skill = you.skills[SK_ICE_MAGIC];
             break;
         case STAFF_COLD:
-            if (spell_typematch(spc2, SPTYP_ICE))
+            if (spell_typematch(spell, SPTYP_ICE))
                 total_skill = you.skills[SK_ICE_MAGIC];
-            else if (spell_typematch(spc2, SPTYP_FIRE))
+            else if (spell_typematch(spell, SPTYP_FIRE))
                 total_skill = you.skills[SK_FIRE_MAGIC];
             break;
         case STAFF_AIR:
-            if (spell_typematch(spc2, SPTYP_AIR))
+            if (spell_typematch(spell, SPTYP_AIR))
                 total_skill = you.skills[SK_AIR_MAGIC];
-            else if (spell_typematch(spc2, SPTYP_EARTH))
+            else if (spell_typematch(spell, SPTYP_EARTH))
                 total_skill = you.skills[SK_EARTH_MAGIC];
             break;
         case STAFF_EARTH:
-            if (spell_typematch(spc2, SPTYP_EARTH))
+            if (spell_typematch(spell, SPTYP_EARTH))
                 total_skill = you.skills[SK_EARTH_MAGIC];
-            else if (spell_typematch(spc2, SPTYP_AIR))
+            else if (spell_typematch(spell, SPTYP_AIR))
                 total_skill = you.skills[SK_AIR_MAGIC];
             break;
         case STAFF_POISON:
-            if (spell_typematch(spc2, SPTYP_POISON))
+            if (spell_typematch(spell, SPTYP_POISON))
                 total_skill = you.skills[SK_POISON_MAGIC];
             break;
         case STAFF_DEATH:
-            if (spell_typematch(spc2, SPTYP_NECROMANCY))
+            if (spell_typematch(spell, SPTYP_NECROMANCY))
                 total_skill = you.skills[SK_NECROMANCY];
             break;
         case STAFF_CONJURATION:
-            if (spell_typematch(spc2, SPTYP_CONJURATION))
+            if (spell_typematch(spell, SPTYP_CONJURATION))
                 total_skill = you.skills[SK_CONJURATIONS];
             break;
         case STAFF_ENCHANTMENT:
-            if (spell_typematch(spc2, SPTYP_ENCHANTMENT))
+            if (spell_typematch(spell, SPTYP_ENCHANTMENT))
                 total_skill = you.skills[SK_ENCHANTMENTS];
             break;
         case STAFF_SUMMONING:
-            if (spell_typematch(spc2, SPTYP_SUMMONING))
+            if (spell_typematch(spell, SPTYP_SUMMONING))
                 total_skill = you.skills[SK_SUMMONINGS];
             break;
         }
@@ -760,22 +760,22 @@ void spellcasting_side_effects(spell_type spc2, bool idonly = false)
     if (idonly)
         return;
 
-    if (!spell_is_utility_spell(spc2))
-        did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spc2) );
+    if (!spell_is_utility_spell(spell))
+        did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell) );
 
-    if (spell_is_unholy( spc2 ))
-        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spc2) );        
+    if (spell_is_unholy( spell ))
+        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );        
 
     // Linley says: Condensation Shield needs some disadvantages to keep 
     // it from being a no-brainer... this isn't much, but its a start -- bwr
-    if (spell_typematch(spc2, SPTYP_FIRE))
+    if (spell_typematch(spell, SPTYP_FIRE))
         expose_player_to_element(BEAM_FIRE, 0);
 
-    if (spell_typematch( spc2, SPTYP_NECROMANCY ))
+    if (spell_typematch( spell, SPTYP_NECROMANCY ))
     {
-        did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spc2) );
+        did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spell) );
 
-        if (spc2 == SPELL_NECROMUTATION
+        if (spell == SPELL_NECROMUTATION
             && (you.religion == GOD_ELYVILON 
                 || you.religion == GOD_SHINING_ONE 
                 || you.religion == GOD_ZIN))
@@ -817,7 +817,7 @@ static bool spell_is_uncastable(spell_type spell)
 // returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
-spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
+spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 {
     struct dist spd;
     struct bolt beam;
@@ -825,10 +825,10 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch()
 
-    if (spell_is_uncastable(spc2))
+    if (spell_is_uncastable(spell))
         return (SPRET_ABORT);
 
-    const int flags = get_spell_flags(spc2);
+    const int flags = get_spell_flags(spell);
 
     // XXX: This handles only some of the cases where spells need targeting...
     // there are others that do their own that will be missed by this
@@ -843,7 +843,7 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
              testbits( flags, SPFLAG_GRID )   ? DIR_TARGET : 
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
-        const char *prompt = get_spell_target_prompt(spc2);
+        const char *prompt = get_spell_target_prompt(spell);
         if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
         
@@ -852,8 +852,8 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
         {
-            if (spc2 == SPELL_TELEPORT_OTHER || spc2 == SPELL_HEAL_OTHER
-                    || spc2 == SPELL_POLYMORPH_OTHER)
+            if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_HEAL_OTHER
+                    || spell == SPELL_POLYMORPH_OTHER)
             {
                 mpr( "Sorry, this spell works on others only." );
             }
@@ -868,9 +868,9 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
     
     // Added this so that the passed in powc can have meaning -- bwr
     if (powc == 0)
-        powc = calc_spell_power( spc2, true );
+        powc = calc_spell_power( spell, true );
 
-    surge_power(spc2);
+    surge_power(spell);
 
     if (allow_fail)
     {
@@ -890,9 +890,9 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
                 dec_penance(GOD_SIF_MUNA, 1);
         }
 
-        if (spfl < spell_fail(spc2))
+        if (spfl < spell_fail(spell))
         {
-            spellcasting_side_effects(spc2, true);
+            spellcasting_side_effects(spell, true);
 
             mpr( "You miscast the spell." );
             flush_input_buffer( FLUSH_ON_FAILURE );
@@ -910,32 +910,32 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
             do
             {
                 sptype = 1 << (random2(SPTYP_LAST_EXPONENT+1));
-            } while (!spell_typematch(spc2, sptype));
+            } while (!spell_typematch(spell, sptype));
 
             // all spell failures give a bit of magical radiation..
             // failure is a function of power squared multiplied
             // by how badly you missed the spell.  High power
             // spells can be quite nasty: 9 * 9 * 90 / 500 = 15
             // points of contamination!
-            int nastiness = spell_mana(spc2) * spell_mana(spc2)
-                                    * (spell_fail(spc2) - spfl) + 250;
+            int nastiness = spell_mana(spell) * spell_mana(spell)
+                                    * (spell_fail(spell) - spfl) + 250;
 
             const int cont_points = div_rand_round(nastiness, 500);
 
             contaminate_player( cont_points );
 
-            miscast_effect( sptype, spell_mana(spc2),
-                            spell_fail(spc2) - spfl, 100 );
+            miscast_effect( sptype, spell_mana(spell),
+                            spell_fail(spell) - spfl, 100 );
 
             return (SPRET_FAIL);
         }
     }
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spc2, powc );
+    mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc );
 #endif
 
-    switch (spc2)
+    switch (spell)
     {
     case SPELL_IDENTIFY:
         identify(powc);
@@ -1823,7 +1823,7 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
         break;
     }                           // end switch
 
-    spellcasting_side_effects(spc2);
+    spellcasting_side_effects(spell);
 
     return (SPRET_SUCCESS);
 }                               // end you_spells()

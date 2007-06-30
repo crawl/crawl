@@ -3901,14 +3901,8 @@ void viewwindow(bool draw_it, bool do_updates)
 
     losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
 
-    for (count_x = 0; count_x < ENV_SHOW_DIAMETER; count_x++)
-    {
-        for (count_y = 0; count_y < ENV_SHOW_DIAMETER; count_y++)
-        {
-            env.show_col[count_x][count_y] = LIGHTGREY;
-            Show_Backup[count_x][count_y] = 0;
-        }
-    }
+    env.show_col.init(LIGHTGREY);
+    Show_Backup.init(0);
 
     item_grid();                // must be done before cloud and monster
     cloud_grid();
@@ -4089,7 +4083,7 @@ void viewwindow(bool draw_it, bool do_updates)
         you.flash_colour = BLACK;
 
         // avoiding unneeded draws when running
-        if (!you.running || (you.running < 0 && Options.travel_delay > -1))
+        if (!you.running || (Options.travel_delay > -1))
         {
             bufcount = 0;
             for (count_y = 0; count_y < crawl_view.viewsz.y; count_y++)
