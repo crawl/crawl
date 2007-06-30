@@ -466,7 +466,8 @@ static void fixup_branch_stairs()
 
     // bottom level of branch - replaces down stairs with up ladders:
     if ( player_branch_depth() == your_branch().depth &&
-         you.level_type == LEVEL_DUNGEON)
+         you.level_type == LEVEL_DUNGEON &&
+         you.where_are_you != BRANCH_VESTIBULE_OF_HELL )
     {
         for (int x = 1; x < GXM; x++)
             for (int y = 1; y < GYM; y++)
