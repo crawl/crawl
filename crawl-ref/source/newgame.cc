@@ -256,7 +256,7 @@ static void pick_random_species_and_class( void )
         // we only want draconians counted once in this loop...
         // we'll add the variety lower down -- bwr
         if ((sp >= SP_WHITE_DRACONIAN && sp <= SP_BASE_DRACONIAN)
-            || sp == SP_ELF)
+            || sp == SP_ELF || sp == SP_HILL_DWARF)
             continue;
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
@@ -528,7 +528,6 @@ static void racialise_starting_equipment()
                     set_equip_race( you.inv[i], ISFLAG_ELVEN );
                     break;
 
-                case SP_HILL_DWARF:
                 case SP_MOUNTAIN_DWARF:
                     set_equip_race( you.inv[i], ISFLAG_DWARVEN );
                     break;
@@ -887,7 +886,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_GNOME:
         case SP_HALFLING:
-        case SP_HILL_DWARF:
         case SP_HILL_ORC:
         case SP_KENKU:
         case SP_KOBOLD:
@@ -1336,7 +1334,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         switch (speci)
         {
         case SP_HALFLING:
-        case SP_HILL_DWARF:
         case SP_HILL_ORC:
         case SP_KENKU:
         case SP_MINOTAUR:
@@ -1381,7 +1378,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_GNOME:
         case SP_GREY_ELF:
         case SP_HALFLING:
-        case SP_HILL_DWARF:
         case SP_MINOTAUR:
         case SP_MOUNTAIN_DWARF:
         case SP_OGRE:
@@ -1424,7 +1420,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_CENTAUR:
         case SP_GNOME:
-        case SP_HILL_DWARF:
         case SP_KOBOLD:
         case SP_NAGA:
         case SP_OGRE:
@@ -1730,7 +1725,6 @@ static void species_stat_init(species_type which_species)
     case SP_DEEP_ELF:           sb =  3; ib = 10; db =  8;      break;  // 21
     case SP_SLUDGE_ELF:         sb =  6; ib =  7; db =  7;      break;  // 20
 
-    case SP_HILL_DWARF:         sb = 10; ib =  3; db =  4;      break;  // 17
     case SP_MOUNTAIN_DWARF:     sb =  9; ib =  4; db =  5;      break;  // 18
 
     case SP_TROLL:              sb = 13; ib =  2; db =  3;      break;  // 18
@@ -2878,7 +2872,7 @@ static job_type letter_to_class(int keyn)
 
 static species_type letter_to_species(int keyn)
 {
-    if ( keyn < 'a' || keyn > 'z' )
+    if ( keyn < 'a' || keyn > 'x' )
         return SP_UNKNOWN;
     const int offset = keyn - 'a';
     int rc;
@@ -2970,7 +2964,7 @@ spec_query:
         for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
         {
             if ((i > SP_RED_DRACONIAN && i <= SP_BASE_DRACONIAN)
-                || i == SP_ELF)
+                || i == SP_ELF || i == SP_HILL_DWARF)
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
@@ -4066,7 +4060,6 @@ void give_items_skills()
             you.skills[SK_SLINGS] = 2;
             break;
 
-        case SP_HILL_DWARF:
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
             you.inv[2].sub_type = MI_BOLT;

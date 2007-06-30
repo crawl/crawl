@@ -341,26 +341,26 @@ const int spec_skills[ NUM_SPECIES ][40] =
      (110 * 75) / 100,          // SK_EVOCATIONS
      },
 
-    {                           // SP_HILL_DWARF (7)
+    {                           // SP_MOUNTAIN_DWARF (8)
      70,                        // SK_FIGHTING
      80,                        // SK_SHORT_BLADES
-     80,                        // SK_LONG_SWORDS
-     90,                        // SK_UNUSED_1
-     60,                        // SK_AXES
+     90,                        // SK_LONG_SWORDS
+     100,                       // SK_UNUSED_1
+     65,                        // SK_AXES
      70,                        // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
-     130,                       // SK_STAVES
-     130,                       // SK_SLINGS
+     120,                       // SK_STAVES
+     120,                       // SK_SLINGS
      150,                       // SK_BOWS
-     120,                       // SK_CROSSBOWS
+     90,                        // SK_CROSSBOWS
      120,                       // SK_DARTS
      120,                       // SK_RANGED_COMBAT
-     70,                        // SK_ARMOUR
-     120,                       // SK_DODGING
+     60,                        // SK_ARMOUR
+     110,                       // SK_DODGING
      150,                       // SK_STEALTH
-     140,                       // SK_STABBING
+     130,                       // SK_STABBING
      70,                        // SK_SHIELDS
-     100,                       // SK_TRAPS_DOORS
+     80,                        // SK_TRAPS_DOORS
      100,                       // SK_UNARMED_COMBAT
      100,                       // undefined
      100,                       // undefined
@@ -375,56 +375,13 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_TRANSLOCATIONS
      120,                       // SK_TRANSMIGRATION
      130,                       // SK_DIVINATIONS
-     80,                        // SK_FIRE_MAGIC
-     120,                       // SK_ICE_MAGIC
-     150,                       // SK_AIR_MAGIC
-     70,                        // SK_EARTH_MAGIC
-     130,                       // SK_POISON_MAGIC
-     (100 * 75) / 100,          // SK_INVOCATIONS
-     (60 * 75) / 100,           // SK_EVOCATIONS
-     },
-
-    {                           // SP_MOUNTAIN_DWARF (8)
-     70,                        // SK_FIGHTING
-     90,                        // SK_SHORT_BLADES
-     90,                        // SK_LONG_SWORDS
-     100,                       // SK_UNUSED_1
-     70,                        // SK_AXES
-     70,                        // SK_MACES_FLAILS
-     110,                       // SK_POLEARMS
-     120,                       // SK_STAVES
-     125,                       // SK_SLINGS
-     140,                       // SK_BOWS
-     100,                       // SK_CROSSBOWS
-     120,                       // SK_DARTS
-     115,                       // SK_RANGED_COMBAT
-     60,                        // SK_ARMOUR
-     110,                       // SK_DODGING
-     140,                       // SK_STEALTH
-     130,                       // SK_STABBING
-     70,                        // SK_SHIELDS
-     100,                       // SK_TRAPS_DOORS
-     100,                       // SK_UNARMED_COMBAT
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     (140 * 130) / 100,         // SK_SPELLCASTING
-     115,                       // SK_CONJURATIONS
-     135,                       // SK_ENCHANTMENTS
-     150,                       // SK_SUMMONINGS
-     160,                       // SK_NECROMANCY
-     150,                       // SK_TRANSLOCATIONS
-     120,                       // SK_TRANSMIGRATION
-     130,                       // SK_DIVINATIONS
      70,                        // SK_FIRE_MAGIC
      130,                       // SK_ICE_MAGIC
      150,                       // SK_AIR_MAGIC
      70,                        // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
-     (70 * 75) / 100,           // SK_EVOCATIONS
+     (60 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_HALFLING (9)
@@ -661,7 +618,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_STEALTH
      80,                        // SK_STABBING
      120,                       // SK_SHIELDS
-     100,                       // SK_TRAPS_DOORS
+     70,                        // SK_TRAPS_DOORS
      110,                       // SK_UNARMED_COMBAT
      100,                       // undefined
      100,                       // undefined
@@ -1673,6 +1630,10 @@ const int spec_skills[ NUM_SPECIES ][40] =
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
      },
+
+    // SP_HILL_DWARF placeholder.
+    {
+    },
 
     // SP_ELF placeholder.
     {

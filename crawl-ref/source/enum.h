@@ -3231,7 +3231,6 @@ enum species_type
     SP_GREY_ELF,
     SP_DEEP_ELF,                       //    5
     SP_SLUDGE_ELF,
-    SP_HILL_DWARF,
     SP_MOUNTAIN_DWARF,
     SP_HALFLING,
     SP_HILL_ORC,                       //   10
@@ -3263,6 +3262,7 @@ enum species_type
     SP_KENKU,
     SP_MERFOLK,
     SP_ELF,                            // (placeholder)
+    SP_HILL_DWARF,                     // (placeholder)
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100

@@ -4910,7 +4910,6 @@ std::string ghost_description(const monsters &mons, bool concise)
     int str;
     switch (ghost.values[GVAL_SPECIES])
     {
-    case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
     case SP_TROLL:
     case SP_OGRE:

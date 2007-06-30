@@ -409,7 +409,6 @@ bool player_genus(unsigned char which_genus, unsigned char species)
     case SP_ELF:
         return (which_genus == GENPC_ELVEN);
 
-    case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
         return (which_genus == GENPC_DWARVEN);
 
@@ -797,7 +796,6 @@ int player_res_magic(void)
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
     case SP_SLUDGE_ELF:
-    case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
         rm = you.experience_level * 4;
         break;
@@ -2365,21 +2363,6 @@ void level_change(void)
                 }
                 break;
 
-            case SP_HILL_DWARF:
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 14)
-                //     hp_adjust++;
-
-                if (you.experience_level % 3)
-                    hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    mp_adjust--;
-
-                if (!(you.experience_level % 4))
-                    modify_stat(STAT_STRENGTH, 1, false);
-                break;
-
             case SP_MOUNTAIN_DWARF:
                 // lowered because of HD raise -- bwr
                 // if (you.experience_level < 14)
@@ -3373,9 +3356,6 @@ char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
         {
             switch (speci)
             {
-            case SP_HILL_DWARF:
-                strcpy( species_buff, "Hill Dwarf" );
-                break;
             case SP_MOUNTAIN_DWARF:
                 strcpy( species_buff, "Mountain Dwarf" );
                 break;
@@ -4040,10 +4020,10 @@ void set_mp(int new_amount, bool max_too)
 
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] = 
-    { "XX", "Hu", "HE", "GE", "DE", "SE", "HD", "MD", "Ha",
+    { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
       "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM", "Dr", "Dr", 
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", 
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "El" };
+      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "HD", "El" };
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
