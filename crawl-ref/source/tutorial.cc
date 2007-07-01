@@ -542,7 +542,7 @@ void tutorial_death_screen()
 
     mpr( "Condolences! Your character's premature death is a sad, but "
          "common occurence in Crawl. Rest assured that with diligence and "
-         "playing experience your characters will last longer.\n", MSGCH_TUTORIAL);
+         "playing experience your characters will last longer.", MSGCH_TUTORIAL);
     mpr( "Perhaps the following advice can improve your playing style:", MSGCH_TUTORIAL);
     more();
 
@@ -692,8 +692,7 @@ void tutorial_finished()
     print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     more();
 
-    for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
-        Options.tutorial_events[i] = 0;
+    Options.tutorial_events.init(false);
 }
 
 // occasionally remind religious characters of praying

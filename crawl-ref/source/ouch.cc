@@ -947,11 +947,11 @@ void end_game( struct scorefile_entry &se )
     if (dead)
     {
         mpr("You die...");      // insert player name here? {dlb}
-        viewwindow(1, false);   // don't do this for leaving/winning characters
-    }
+        viewwindow(true, false); // don't do for leaving/winning characters
 
-    if (Options.tutorial_left)
-        tutorial_death_screen();
+        if (Options.tutorial_left)
+            tutorial_death_screen();
+    }
 
 #ifdef DGL_WHEREIS
     whereis_record( se.death_type == KILLED_BY_QUITTING? "quit" :
