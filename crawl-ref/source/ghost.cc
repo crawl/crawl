@@ -203,7 +203,11 @@ void ghost_demon::init_random_demon()
             values[GVAL_SPELL_3]=RANDOM_ARRAY_ELEMENT(search_order_third);
 
         if (coinflip())
+        {
             values[GVAL_SPELL_4]=RANDOM_ARRAY_ELEMENT(search_order_misc);
+            if ( values[GVAL_SPELL_4] == SPELL_DIG )
+                values[GVAL_SPELL_4] = SPELL_NO_SPELL;
+        } 
 
         if (coinflip())
             values[GVAL_SPELL_5]=RANDOM_ARRAY_ELEMENT(search_order_misc);
@@ -395,12 +399,12 @@ void ghost_demon::add_spells( )
     values[ GVAL_SPELL_1 ] = search_first_list(SPELL_NO_SPELL);
     values[ GVAL_SPELL_2 ] = search_first_list(values[GVAL_SPELL_1]);
     values[ GVAL_SPELL_3 ] = search_second_list(SPELL_NO_SPELL);
-    values[ GVAL_SPELL_4 ] = search_third_list(SPELL_NO_SPELL);
+    values[ GVAL_SPELL_4 ] = search_third_list(SPELL_DIG);
 
     if (values[ GVAL_SPELL_4 ] == SPELL_NO_SPELL)
         values[ GVAL_SPELL_4 ] = search_first_list(SPELL_NO_SPELL);
 
-    values[ GVAL_SPELL_5 ] = search_first_list(values[GVAL_SPELL_4]);
+    values[ GVAL_SPELL_5 ] = search_third_list(values[GVAL_SPELL_4]);
 
     if (values[ GVAL_SPELL_5 ] == SPELL_NO_SPELL)
         values[ GVAL_SPELL_5 ] = search_first_list(values[GVAL_SPELL_4]);

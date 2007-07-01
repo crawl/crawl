@@ -3093,9 +3093,9 @@ static bool handle_spell( monsters *monster, bolt & beem )
             && !one_chance_in(4))
         {
             // Note: There should always be at least some chance we don't
-            // get here... even if the monster is on it's last HP.  That
+            // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting 
-            // Healing on themselves (ie orc priests). 
+            // Healing on themselves (e.g. orc priests). 
             if (monster->behaviour == BEH_FLEE
                 && ms_low_hitpoint_cast( monster, hspell_pass[5] ))
             {
