@@ -142,10 +142,10 @@ NAME: labyrinth_rows
 TAGS: minotaur
 SHUFFLE: def
 MONS: minotaur
-KFEAT: d = .
+KFEAT: d = floor
 KITEM: d = any good_item, any good_item, any good_item, any good_item, any good_item, any good_item, any good_item, any good_item, any good_item
-KMONS: d = minotaur
-SUBST: e = ., f = <
+KFEAT: e = floor
+KFEAT: f = <
 MAP
 ..................
 .cccccccccccccccc.

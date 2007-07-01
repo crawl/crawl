@@ -2,6 +2,108 @@
 # hells.des: vestibule entries, vestibule, all hell end levels
 ##############################################################################
 
+##############################################################################
+# Hell-themed random maps
+##############################################################################
+
+default-depth: D:12-26
+
+###################################
+# Hellmouth (Lemuel)
+# note that other than the imps, the demons here cannot fly
+NAME:   hellmouth_1
+FLAGS:  no_rotate
+MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil / hairy devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
+ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+ORIENT: float
+SUBST:  d=de, ?:?.l, ?=l.
+
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxlllxxxxxxxx
+xxxxxxlllAlllxxxxxx
+xxxlllll.d.llll?xxx
+xlllllll121lllll?.x
+x?lllllll1llll?...x
+x.??llllllll?.....x
+x...?llllll?......x
+x....?lllll.......x
+xxx...?lll?.....xxx
+xxxx...lll?....xxxx
+xxxxx.?ll?....xxxxx
+xxxxx?lll.....xxxxx
+xxxxxxlll?...xxxxxx
+xxxxxxxlll...xxxxxx
+xxxxxxxxll?.xxxxxxx
+xxxxxxxxll?.xxxxxxx
+xxxxxxxxl?@xxxxxxxx
+ENDMAP
+
+###################################
+# Hellmouth 2 (Lemuel)
+# note that other than the imps, the demons here cannot fly
+NAME:   hellmouth_2
+TAGS:   no_monster_gen
+FLAGS:  no_rotate
+MONS:   imp / quasit / shadow imp / manes / lemure
+MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
+ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / w:30 nothing
+ORIENT: float
+SUBST:  d=de, ?:?.l, ?=l.
+SUBST:  b : b:30 c v .
+MAP
+..........................
+.......bbbbbbbbbbbb.......
+....bbbb..........bbbb....
+..bbb....llllllll....bbb..
+.bb....llllllllllll....bb.
+.b....llllllllllllll....b.
+.b....llllll??llllll....b.
+.b...?lll??.....?lll?...b.
+.b...?ll?...111...ll?...b.
+@+...?l?...11211d..l?...b.
+@+...?l?...12A21|f.l?...b.
+.b...?ll...11211d.ll?...b.
+.b...?lll?..111..lll?...b.
+.b....llll?.....llll....b.
+.b....llllll??llllll....b.
+.bb....llllllllllll....bb.
+..bbb....llllllll....bbb..
+....bbbb..........bbbb....
+.......bbbbbbbbbbbb.......
+..........................
+ENDMAP
+
+###################################
+# Hellmouth 3 (Lemuel)
+NAME:   hellmouth_3
+MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / nothing
+ORIENT: float
+SUBST:  ? : . l ?:40, ?=l.
+MAP
+................??............
+...........................??.
+....??..........l?............
+...?ll?........?l?............
+..?lll?.........l.............
+...?l........??l?.............
+...........??lll?.............
+.........?lllllll?............
+.......?llllllllll??..........
+......?lll111111llll?.........
+......?llll12Ad1lll...........
+.......?lll11111ll?...........
+........?lllll1ll?............
+.........??llllll......?......
+...........?llll?.....ll?.....
+..?.........?ll?.......ll?....
+.?............................
+..................??..........
+ENDMAP
 
 #############################################################################
 # Vestibule of Hell and Geryon

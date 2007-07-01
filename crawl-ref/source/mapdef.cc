@@ -1046,14 +1046,22 @@ coord_def map_lines::find_first_glyph(int gly) const
 {
     for (int y = 0, h = height(); y < h; ++y)
     {
-        for (int x = 0, w = width(); x < w; ++x)
-        {
-            const coord_def c(x, y);
-            if ((*this)(c) == gly)
-                return (c);
-        }
+        std::string::size_type pos = lines[y].find(gly);
+        if (pos != std::string::npos)
+            return coord_def(pos, y);
     }
 
+    return coord_def(-1, -1);
+}
+
+coord_def map_lines::find_first_glyph(const std::string &glyphs) const
+{
+    for (int y = 0, h = height(); y < h; ++y)
+    {
+        std::string::size_type pos = lines[y].find_first_of(glyphs);
+        if (pos != std::string::npos)
+            return coord_def(pos, y);
+    }
     return coord_def(-1, -1);
 }
 
@@ -1170,6 +1178,11 @@ std::vector<coord_def> map_def::find_glyph(int glyph) const
 coord_def map_def::find_first_glyph(int glyph) const
 {
     return map.find_first_glyph(glyph);
+}
+
+coord_def map_def::find_first_glyph(const std::string &s) const
+{
+    return map.find_first_glyph(s);
 }
 
 void map_def::write_index(FILE *outf) const

@@ -188,6 +188,7 @@ public:
 
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
+    coord_def find_first_glyph(const std::string &glyphs) const;
     
     void set_orientation(const std::string &s);
 
@@ -499,6 +500,7 @@ public:
 
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
+    coord_def find_first_glyph(const std::string &glyphs) const;
     
     void write_index(FILE *) const;
     void write_full(FILE *);
