@@ -681,17 +681,27 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
     if (!is_controlled)
     {
-        mpr("Your surroundings suddenly seem different.");
+        int newx, newy;
 
         do
         {
-            you.x_pos = 5 + random2( GXM - 10 );
-            you.y_pos = 5 + random2( GYM - 10 );
+            newx = 5 + random2( GXM - 10 );
+            newy = 5 + random2( GYM - 10 );
         }
-        while ((grd[you.x_pos][you.y_pos] != DNGN_FLOOR
-                   && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
-               || mgrd[you.x_pos][you.y_pos] != NON_MONSTER
-               || env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD);
+        while ((grd[newx][newy] != DNGN_FLOOR
+                && grd[newx][newy] != DNGN_SHALLOW_WATER)
+               || mgrd[newx][newy] != NON_MONSTER
+               || env.cgrid[newx][newy] != EMPTY_CLOUD);
+
+        if ( newx == you.x_pos && newy == you.y_pos )
+            mpr("Your surroundings flicker for a moment.");
+        else if ( see_grid(newx, newy) )
+            mpr("Your surroundings seem slightly different.");
+        else
+            mpr("Your surroundings suddenly seem different.");
+
+        you.x_pos = newx;
+        you.y_pos = newy;
 
         // Necessary to update the view centre.
         you.moveto(you.pos());
