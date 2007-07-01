@@ -2473,7 +2473,7 @@ int monsters::shield_bonus() const
         const int shld_c = property(*shld, PARM_AC);
         return (random2(shld_c + random2(hit_dice / 2)) / 2);
     }
-    return (0);
+    return (-100);
 }
 
 int monsters::shield_block_penalty() const
