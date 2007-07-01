@@ -1,0 +1,1216 @@
+###############################################################################
+# mini.des: This is the place where minivaults should go. These are defined
+#           without any ORIENT line. Vaults with ORIENT lines are stored in
+#           either small.des or large.des. 
+#
+#           All maps dealing with the Vault branch system, including Vaults:8
+#           reside in vaults.des.
+############################################################################### 
+
+##############################################################################
+# Some notes on minivaults for designers:
+#
+# *Cannot* place 8,9 or 0 monsters in branch vaults which neither use the
+# normal mons_level function or are around level 35, or generation will crash.
+#
+# Minivaults were traditionally drawn after rotating the vault by 90 degrees 
+# anticlockwise. Under the new dungeon vault handling, the map may be freely 
+# rotated and mirrored to any position (20061105).
+#
+# Minivaults were traditionally 12x12 (hardcoded limitation in dungeon.cc). 
+# Under the new rules they can be any size, but the smaller the better. I'd 
+# recommend no larger than 35x30 or so.
+#
+# Minivaults must NOT have an ORIENT: attribute. Including an ORIENT: attribute
+# makes the map a normal vault, and mayhem can result.
+#
+# Minivaults should be surrounded by (enough) floor or shallow water. Otherwise
+# they can impede navigation on the level.
+#
+###############################################################################
+
+
+
+# Default depth for minivaults. If your minivault is suitable for one of the
+# branches below, add it via DEPTH: Lair or similar.
+default-depth: 8-27, !Orc, !Lair, !Swamp, !Shoal
+
+##############################################################################
+# Minivault balancer
+NAME: mini_dummy
+DEPTH: 1-7
+TAGS: dummy
+CHANCE: 100
+MAP
+.
+ENDMAP
+
+###################################
+# pond with fungi
+#
+NAME: fungi_pond__lemuel
+DEPTH:  8-20, Lair, Orc
+MONS: fungus, wandering mushroom
+SUBST: 1 = . 1 2:4
+SUBST: ? : w..
+SUBST: ! : ww.
+MAP
+..1...?.....
+....1???1...
+..1...??ww1.
+....1wwwwww.
+.11wwwwwwww.
+..www!!wwww.
+..ww!!www1..
+..1ww!ww11..
+1..1w!!w1...
+....!!1.....
+.1...1!.1...
+...........1
+ENDMAP
+
+#############################################
+# Elven Outpost
+#
+# 50-50 chance of spiral arms, 50-50 chance of a moat
+# No loot but the elves' gear, but at the depth this appears that may be good
+#
+NAME:    elves_outpost_lemuel
+DEPTH:   D:8-20, Orc:*
+MONS:    deep elf soldier/w:4 deep elf fighter
+MONS:    w:20 deep elf mage/deep elf conjurer/deep elf summoner
+SHUFFLE: ?:/bb, :;/ww
+SUBST:   ?=., :=., ;=.
+MAP
+.?.....???..
+?.;;;::;;;?.
+?;;::;;;;;;.
+?;;bbbbbb:;.
+.:;b1111b:;.
+.:;.1221.;:.
+.;:b1111b;:.
+.;:bbbbbb;;?
+.;;;;;;::;;?
+.?;;;::;;;.?
+..???.....?.
+ENDMAP
+
+#############################################################################
+# Centaur isle (Lemuel)
+#
+NAME: centaur_isle
+TAGS: no_monster_gen no_pool_fixup
+SUBST: ? = *$
+DEPTH: 6-12
+MONS: centaur
+MAP
+..........wwww.........
+.......wwwwwwww........
+....wwwwwwwwwwwwwww....
+.wwwwwwwwwwwwwwwwwwwww.
+wwwwwwww..wwwwwwwwwwwww
+wwwwww.11...wwwwwwwwwww
+wwwww........wwwwwwwwww
+wwwww...x=x..wwwwwwwwww
+wwww..11x.x..wwwwwwwww.
+.www...xx>x11wwwwwwwww.
+.www..xx??x.wwwwwwwww..
+.wwww.xx??x.wwwwwww....
+..wwww.xxxx.wwwwww.....
+...wwwwww..wwwww.......
+....wwwwwwwwwww........
+.......wwwwww..........
+ENDMAP
+
+#################################
+# Another Ice Statue vault
+#
+NAME:  ice2_lemuel
+DEPTH: D:12-27, Lair, Swamp, Coc
+TAGS:  no_pool_fixup no_monster_gen
+SUBST: T = TU
+SUBST: W = w:20 W .:5
+MONS:  ice statue
+MONS:  ice devil w:5/blue devil w:5/ice dragon/freezing wraith/nothing w:30
+MONS:  white imp/ice beast w:30/polar bear/nothing w:50
+MAP
+T..................T
+..WWW..........WWW..
+.WWWWW........WWWWW.
+WWWWWWwww..wwwWWWWWW
+WWW3WwwwwwwwwwwW3WWW
+WW333wwwwwwwwww333WW
+.WW3WwwwwwwwwwwW3WW.
+.WWWWwwwwwwwwwwWWWW.
+..WWWwww||||wwwWWW..
+...WWwww|12|wwwwW...
+..WWWwww||||wwwWWW..
+.WWWWwwwwwwwwwwWWWW.
+.WW3WwwwwwwwwwwW3WW.
+WW333wwwwwwwwww333WW
+WWW3WwwwwwwwwwwW3WWW
+WWWWWWwww..wwwWWWWWW
+.WWWWW........WWWWW.
+..WWW..........WWW..
+T..................T
+ENDMAP
+
+#############################################################################
+# Oklob assault
+#
+NAME:    oklob_1
+DEPTH:   16-27
+MONS:    plant, oklob plant
+SUBST:   ? = 1 2:5 '
+SHUFFLE: '"
+SUBST:   ' : w .:5
+SUBST:   " = .
+MAP
+.................
+.................
+......'''''......
+.....''???''.....
+....''?????''....
+....''?????''....
+.....''???''.....
+......'''''......
+.................
+.................
+ENDMAP
+
+################################
+# Treasure trove with Zot trap
+#
+NAME: zot_lemuel
+DEPTH: 1-27, Lair, Snake, Crypt
+KFEAT: ? = zot trap
+SUBST: *: *$
+MAP
+............
+.xxxxxxxxxx.
+.xxxxxxx**x.
+......?=**x.
+.xxxxxxx**x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+#don't you wish you knew apportation?
+NAME: baited_tele_trap
+DEPTH: !Temple
+KITEM: x = any good_item, any good_item/nothing, any good_item/nothing
+KFEAT: x = teleport trap
+MAP
+x
+ENDMAP
+
+#####################################
+# Closed beehive
+#
+# Should work without explicit floor margin (dp)
+NAME: hive_lemuel
+DEPTH: D:9-27,Hive:*,Lair:*,Swamp:*
+MONS: killer bee, yellow wasp, red wasp, spiny worm, killer bee zombie
+SUBST: ? : .w
+SUBST: 1 = 1 a:2
+SUBST: 1 : 1:15 2 3:2 4:1 5:2
+SUBST: * : * R:3
+MAP
+..????????..
+.??????????.
+???aaaaaa???
+??aaaaaaaa??
+??aa1111aa??
+??aa1**1aa??
+??aa1**1aa??
+??aa1111aa??
+??aaaaaaaa??
+???aaaaaa???
+.??????????.
+..????????..
+ENDMAP
+
+###########################
+# Stranded yaks
+#
+NAME: yak_island
+DEPTH: Swamp:*
+TAGS: no_pool_fixup
+MONS: yak/w:5 sheep/w:3 death yak
+SUBST: ; : .wW
+SUBST: . : . W:2
+MAP
+..............
+...;;wwww;;...
+..;wwwwwwww;..
+.;wwww..wwww;.
+.;www.1.1www;.
+.www.1.1.1www.
+.;www.1.1www;.
+.;wwww..wwww;.
+..;wwwwwwww;..
+...;;wwww;;...
+..............
+ENDMAP
+
+###############################################
+# My mission is to annoy. -LP
+#
+NAME: jelly_drop
+MONS: jelly
+KFEAT: a = teleport trap
+DEPTH: D:8-27, Vault:*, Slime:*, Lair:*
+MAP
+..............
+...vvvvvvvv...
+..vv......vv..
+.vv.vvvvvv.vv.
+.v1v.....vv.v.
+.vvvvvvvv.v.v.
+.vav111111vav.
+.v.v.vvvvvvvv.
+.v.vv.....v1v.
+.vv.vvvvvv.vv.
+..vv......vv..
+...vvvvvvvv...
+..............
+ENDMAP
+
+##############################################################
+# Aren't you glad you're a merfolk/a high-level kenku/wearing 
+# those boots of levitation?
+#
+NAME: water_maze_lemuel
+TAGS: no_pool_fixup
+DEPTH: 5-27
+MAP
+.................
+....wwwwwwwww....
+...wwcccccccww...
+..wwccwwwwwccww..
+.wwccwwcccwwccww.
+.wccwwccwccwwccw.
+.wcwwccwwwccwwcw.
+.wcwcc*wcwwccwcw.
+.wcwc***ccwwcwcw.
+.wcwcc*ccwwccwcw.
+.wcwwcccwwccwwcw.
+.wccwwccwccwwccw.
+.wwccwwcwcwwccww.
+..wwccwwwcwccww..
+...wwcccccwcww...
+....wwwwwwwww....
+.................
+ENDMAP
+
+NAME: water_boxes_lemuel
+TAGS: no_pool_fixup
+DEPTH: 5-27
+SHUFFLE: abcd, efgh, ijkl, mnop
+SUBST: a = =, b = x, c = x, d = x
+SUBST: e = =, f = x, g = x, h = x
+SUBST: i = =, j = x, k = x, l = x
+SUBST: m = =, n = x, o = x, p = x
+MAP
+..............
+.wwwwwwwwwwww.
+.wwwwwwwwwwww.
+.wwxaxwwxexww.
+.wwb*cwwf*gww.
+.wwxdxwwxhxww.
+.wwwwwwwwwwww.
+.wwwwwwwwwwww.
+.wwxixwwxmxww.
+.wwj*kwwn*oww.
+.wwxlxwwxpxww.
+.wwwwwwwwwwww.
+.wwwwwwwwwwww.
+..............
+ENDMAP
+
+###############################################
+# This is probably a get-off-the-level vault. -LP
+#
+NAME: aerie
+DEPTH: 12-26
+MONS: insubstantial wisp, ball lightning, vapour, air elemental
+TAGS: no_monster_gen
+SUBST: .:..w
+SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3
+MAP
+....................
+.....bbbbbbbbbb.....
+...bbb11211211bbb...
+..bb.12bbbbbb21.bb..
+.bb..bbb2323bbb..bb.
+.b..bb...bb...bb.1b.
+.b.bb..bbbbbb..bb.b.
+.b.b..bb2323bb..b1b.
+.b.b.bb23bb23bb.b.b.
+.b.b.b..bbbb..b.b1b.
+.b.b.b.bb44bb.b.b.b.
+.b2b2b3b4444b3b2b2b.
+.b.b.b.b4444b.b.b.b.
+.b.b.b.bb44bb.b.b1b.
+.b.b.b2323bb..b.b.b.
+.b.b.bbbbbb..bb.b1b.
+.b.b..bbb...bb..b.b.
+.b.bb..bb.bbb..bb1b.
+.b..bb....b...bb..b.
+.bb..bbbbbb.bbb..bb.
+..bb.12bbbb2b111bb..
+...bbb123321b.bbb...
+.....bbbbbbbb.b.....
+....................
+ENDMAP
+
+##############################################################################
+# Greed's colour
+
+NAME: david_greed
+DEPTH: 10-26, !Orc, !Lair, !Swamp, !Shoal
+ITEM: nothing / any good_item
+MONS: silver statue / orange crystal statue / ice statue
+SHUFFLE: d|
+MAP
+...........
+.xxxxxxxxx.
+.xbbbbbbbx.
+.xb1...1bx.
+.xb.....bx.
+.xb.....bx.
+.xbb.|.bbx.
+.xxb.d.bxx.
+.xxb...bxx.
+.xxb...bxx.
+.xxb.*.bxx.
+.xxb...bxx.
+.xxx@I@xxx.
+...........
+ENDMAP
+
+##############################################################################
+# Defended altar
+#
+NAME:    david_defended_altar
+DEPTH:   7-20, !Lair, !Swamp, !Shoal
+SHUFFLE: 1ID/2TC
+MONS:    orc priest, deep elf priest / w:30 nothing
+KFEAT:   D = altar of Beogh / w:2 altar of Okawaru / w:2 altar of Makhleb
+MAP
+.........
+.ccccc...
+.c1..c...
+.c1D.+.I.
+.c1..c...
+.ccccc...
+.........
+ENDMAP
+
+##############################################################################
+
+NAME: minivault_1
+MAP
+............
+..xxxx=xxx..
+.xx..x...xx.
+.x....x...x.
+.x...x....x.
+.xx.x*x.x.=.
+.=.x.x*x.xx.
+.x....x...x.
+.x...x....x.
+.xx...x..xx.
+..xxx=xxxx..
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_2
+MAP
+............
+..xxxx.xxxx.
+..xx.....xx.
+..x.......x.
+..x.......x.
+......C.....
+..x.......x.
+..x.......x.
+..xx.....xx.
+..xxxx.xxxx.
+............
+ENDMAP
+
+###################################
+#
+NAME: minitemple
+# More common than the others.
+CHANCE: 20
+MAP
+............
+.cccccccccc.
+.cccccccccc.
+.cBcBcBcBcc.
+.G.c.c.c.Bc.
+.........Bc.
+.........Bc.
+.G.c.c.c.Bc.
+.cBcBcBcBcc.
+.cccccccccc.
+.cccccccccc.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_4
+MAP
+............
+....xwxx....
+..xxxwwxwx..
+..xwwwwwwx..
+.xwwxwwxwxx.
+.xwwwwwwwwx.
+.xwwxwwwxww.
+.xxwwwwwwxx.
+..wwwwxwwx..
+..xxxwwxxw..
+....xxww....
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_5
+MAP
+............
+.x.xxxxxxxx.
+.x.x......x.
+.x.x.xxxx.x.
+.x.x.x**x.x.
+.x.x.x**x.x.
+.x.x.xx.x.x.
+.x.x....x.x.
+.x.xxxxxx.x.
+.x........x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+# Wizard's laboratory
+#
+NAME: minivault_6
+MONS: wizard, small abomination, large abomination
+MAP
+............
+.ccccccc+cc.
+.c........c.
+.c........c.
+.c..1.....c.
+.c........c.
+.cc+ccccccc.
+.c***c3232c.
+.c|**+2223c.
+.c||*c3322c.
+.cccccccccc.
+............
+ENDMAP
+
+###################################
+# Beehive minivault
+#
+NAME: minivault_7
+MONS: queen bee, killer bee, killer bee larva
+MAP
+............
+....aaaa....
+..a2a2aaaa..
+..aaRa3a2a..
+.aa2aRa2aaa.
+.a3aRa1aRa2.
+.aa3aRaRa2a.
+.aaa2a2a3aa.
+..a3aRa2aa..
+...aa2aa2a..
+....aaaa....
+............
+ENDMAP
+
+###################################
+# Lava pond
+#
+NAME: minivault_8
+MONS: molten gargoyle
+MAP
+x.x.x.x.x.x.
+.c.c.c.c.c.x
+x...l1l...c.
+.c.llllll..x
+x.lllllll1c.
+.c.llFGll..x
+x..llGFll.c.
+.c1lllllll.x
+x..llllll.c.
+.c...l1l...x
+x.c.c.c.c.c.
+.x.x.x.x.x.x
+ENDMAP
+
+###################################
+# Evil zoo
+#
+NAME: minivault_9
+DEPTH: 15-27, !Orc, !Lair, !Swamp, !Shoal
+MAP
+............
+.==========.
+.=x========.
+.==========.
+.===8888===.
+.===8998===.
+.===8998===.
+.===8888===.
+.==========.
+.==========.
+.==========.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_10
+MAP
+............
+.xxxx..xxxx.
+.x**x..x**x.
+.x**+..+**x.
+.xx+x..x+xx.
+............
+............
+.xx+x..x+xx.
+.x**+..+**x.
+.x**x..x**x.
+.xxxx..xxxx.
+............
+ENDMAP
+
+###################################
+# Multicoloured onion
+#
+NAME: minivault_11
+SHUFFLE: bcva
+MAP
+............
+.+xxxxxxxx+.
+.x........x.
+.x.+cccc+.x.
+.x.c....c.x.
+.x.c.bb.c.x.
+.x.c.bb.c.x.
+.x.c....c.x.
+.x.+cccc+.x.
+.x........x.
+.+xxxxxxxx+.
+............
+ENDMAP
+
+###################################
+# Closed-box minivault
+# 
+# Due to the new behaviour of brown stairs, this one is broken
+# (or at least working differently from how it was intended!)
+#
+NAME: minivault_12
+MAP
+............
+.xxxxxxxxxx.
+.x>9$9$9$<x.
+.x.$9$9$.$x.
+.x$.****$.x.
+.x.$*||*.$x.
+.x$.*||*$.x.
+.x.$****.$x.
+.x$9$9$9$.x.
+.x<$9$9$9>x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+# Little trap spiral
+#
+NAME: minivault_13
+SHUFFLE: AB, CD, EH/FG
+KFEAT: A = any trap
+KFEAT: C = any trap
+KFEAT: E = any trap
+KFEAT: H = any trap
+KITEM: A = gold / nothing
+KITEM: B = gold / nothing
+KITEM: C = gold / nothing
+KITEM: D = gold / nothing
+MAP
+............
+.xxxxxxxxxx.
+.=.Ax.C=.9x.
+.x.B=.Dx..x.
+.xxxxxxxx=x.
+.x.8+|0x8.x.
+.x8$x.|x..x.
+.xx=xxxx=xx.
+.x.9=EFx..x.
+.x..xGH=9.x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+# Water cross
+#
+NAME: minivault_14
+MAP
+............
+.wwwww.wwww.
+.wwwww.wwww.
+.wwwww.wwww.
+.wwwww.wwww.
+.......wwww.
+.wwww.......
+.wwww.wwwww.
+.wwww.wwwww.
+.wwww.wwwww.
+.wwww.wwwww.
+............
+ENDMAP
+
+###################################
+# Lava pond
+#
+NAME: minivault_15
+MONS: silver statue / ice statue
+MAP
+...........
+...........
+....lll....
+...vvlvv...
+..lv|*|vl..
+..ll*1*ll..
+..lv|*|vl..
+...vvlvv...
+....lll....
+...........
+...........
+ENDMAP
+
+###################################
+
+NAME: minivault_16
+CHANCE: 40
+# as this replaces the former statue only minivaults
+SHUFFLE: G111
+MONS: orange crystal statue / silver statue / ice statue
+MAP
+...........
+...........
+...........
+...........
+...........
+.....G.....
+...........
+...........
+...........
+...........
+...........
+ENDMAP
+
+###################################
+
+NAME: minivault_19
+MAP
+............
+.xx......xx.
+.xxx....xxx.
+..xxx..xxx..
+...xxxxxx...
+....xxxx....
+....xxxx....
+...xxxxxx...
+..xxx..xxx..
+.xxx....xxx.
+.xx......xx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_20
+MAP
+............
+.xxxx..xxxx.
+.x........x.
+.x..xxxx..x.
+.x.x....x.x.
+...x.x9.x...
+...x.9x.x...
+.x.x....x.x.
+.x..xxxx..x.
+.x........x.
+.xxxx..xxxx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_21
+MAP
+............
+.~xxxxxxxx~.
+.x........x.
+.x.cccccc.x.
+.x.c|..<c.x.
+.x.c.**.c.x.
+.x.c.**.c.x.
+.x.c>..|c.x.
+.x.cccccc.x.
+.x........x.
+.~xxxxxxxx~.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_22
+SUBST: $ : $ *:5
+MAP
+............
+.....xx.....
+...xxxxxx...
+..x~x..x~x..
+..xx.xx.xx..
+.xx.x$$x.xx.
+.xx.x$$x.xx.
+..xx.xx.xx..
+..x~x..x~x..
+...xxxxxx...
+.....xx.....
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_23
+MAP
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+ENDMAP
+
+###################################
+
+NAME: minivault_24
+MAP
+............
+....xxxx....
+....xxxx....
+....xxxx....
+.xxxx.x.xxx.
+.xxx.x.xxxx.
+.xxxx.x.xxx.
+.xxx.x.xxxx.
+....xxxx....
+....xxxx....
+....xxxx....
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_25
+MAP
+............
+.xx+xxxxxxx.
+.x........x.
+.x........+.
+.x........x.
+.x........x.
+.x........x.
+.x........x.
+.+........x.
+.x........x.
+.xxxxxxx+xx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_26
+MAP
+c..........c
+.c...cc...c.
+..c..cc..c..
+...c....c...
+....c..c....
+.cc..cc..cc.
+.cc..cc..cc.
+....c..c....
+...c....c...
+..c..cc..c..
+.c...cc...c.
+c..........c
+ENDMAP
+
+###################################
+
+NAME: minivault_27
+MAP
+............
+.x.xxxxxxxx.
+.x........x.
+.xxxxxxxx.x.
+.x........x.
+.x.xxxxxxxx.
+.x........x.
+.xxxxxxxx.x.
+.x........x.
+.x.xxxxxxxx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_28
+MAP
+...........
+.xxxx.xxxx.
+.x.......x.
+.x..999..x.
+.x.9...9.x.
+...9.I.9...
+.x.9...9.x.
+.x..999..x.
+.x.......x.
+.xxxx.xxxx.
+...........
+ENDMAP
+
+###################################
+# Anthill
+#
+NAME: minivault_29
+MONS: queen ant, soldier ant, giant ant, ant larva
+MAP
+.3......3...
+...x.xx.x.2.
+.xxx2xxxxx..
+.xxxx42xxx2.
+.2xx243432x3
+.xx421424xx.
+3xx423242x..
+.x2x3243xxx.
+.x2xx42422x.
+..xxxxxxxx2.
+...x2xxxx3..
+.3.......33.
+ENDMAP
+
+###################################
+# Solitary fountain
+#
+NAME: solitary_fountain
+SUBST: ?=TUV
+MAP
+.....
+.....
+..?..
+.....
+.....
+ENDMAP
+
+###################################
+# Fountainhead
+#
+NAME: fountainhead
+SUBST: ?=TUV
+MAP
+..............
+..xxxw..wxxx..
+.x...xwwx...x.
+.x.?.xwwx.?.x.
+.x...xwwx...x.
+..xxxwwwwxxx..
+....wwwwww....
+....wwwwww....
+..xxxwwwwxxx..
+.x...xwwx...x.
+.x.?.xwwx.?.x.
+.x...xwwx...x.
+..xxxw..wxxx..
+..............
+ENDMAP
+
+###################################
+# jmf: Multi-god temple thing
+#
+NAME: multi_god_temple
+SHUFFLE: abc
+SUBST: a:=, b:x, c:x
+MAP
+............
+.axxxxxxxxa.
+.x9......9x.
+.bT......Tb.
+.x..C..C..x.
+.cT......Tc.
+.xxxxxxxxxx.
+.xxx$$$$xxx.
+.xx8....8xx.
+..xx....xx..
+...xG..Gx...
+............
+ENDMAP
+
+###################################
+# jmf: Another multi-god temple thing
+#
+NAME: multi_god_temple2
+MAP
+............
+..vvvvvvvv..
+.vv......vv.
+.v..x..x..v.
+.v.Cx..xC.v.
+.v..x..x..v.
+.vT8x..x8Tv.
+.vvvx==xvvv.
+...Gx99xG...
+...+*99*+...
+...GxxxxG...
+............
+ENDMAP
+
+###################################
+# Billiards (David Ploog)
+#
+NAME: billiards
+MONS: orc wizard, deep elf conjurer 
+SHUFFLE: 1*/2d
+SUBST: * = * |:1 %:4
+SUBST: d = * |
+MAP
+...............
+.bbbbbbbbbbbbb.
+.b.1.........b.
+.b..........1b.
+.bb..........b.
+......*bbbbb.b.
+.b.bbbb*.......
+.b..........bb.
+.b1..........b.
+.b.........1.b.
+.bbbbbbbbbbbbb.
+...............
+ENDMAP
+
+##############################################################################
+# Dispersion (David)
+#
+NAME:  dispersion
+DEPTH: 13-26, !Orc, !Lair, !Swamp, !Shoal
+SUBST: Y = 89
+KITEM: 8 = % / * / w:1 |
+KITEM: 9 = % / * / w:1 |
+KFEAT: X = teleport trap
+KFEAT: Z : teleport trap / w:30 x
+SHUFFLE: xcvb
+MAP
+............
+............
+...xxxxxx...
+..x......x..
+..x.ZXXZ.x..
+..x.XYYX.x..
+..x.XYYX.x..
+..x.ZXXZ.x..
+..x......x..
+...xxxxxx...
+............
+............
+ENDMAP
+
+##############################################################################
+# Things aren't always what they seem (Lemuel)
+#
+# Intentionally moved this deeper because explore will gladly run into the
+# room, and being hit by multiple mimics is un-fun.
+#
+NAME: fake_naga_vault
+DEPTH: 15-26, !Orc, !Lair, !Swamp, !Shoal
+MONS: mimic, guardian naga
+MAP
+...........
+.xxxxxxxxx.
+.x1111111x.
+.x1111111x.
+.x1111111x.
+.x11.2.11x.
+.xxxx+xxxx.
+...........
+ENDMAP
+
+##############################################################################
+# Supply closet (Lemuel)
+#
+NAME: supply_closet
+DEPTH: 1-9
+TAGS: no_monster_gen
+ITEM: potion of water w:20 / bread ration / meat ration / arrow / bolt / spear / any potion w:5
+SUBST: ? = +=
+MAP
+......
+.x?xx.
+.xddx.
+.xddx.
+.xxxx.
+......
+ENDMAP
+
+##############################################################################
+# Columned hall (Lemuel)
+#
+NAME: columns_hall
+MAP
+.............................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.............................
+..x..x..x..x..x..x..x..x..x..
+.............................
+..x..x..x..x..x..x..x..x..x..
+.............................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.............................
+ENDMAP
+
+##############################################################################
+# Wet chambers - two mutually exclusive versions (Onia Ninara)
+#
+NAME:    onia_ninara_007_chamber_of_wet_secrets
+TAGS:    no_monster_gen no_pool_fixup
+MONS:    centaur, brown snake, electrical eel
+ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
+SUBST:   ; = .:60 w W ?
+KFEAT:   ? = spear trap / blade trap / w:20 floor
+DEPTH:   8-13
+MAP
+.........
+.ccccccc.
+.c;;2Wdc.
+.ccWccec.
+.c;w;c3c.
+.c;wWccc.
+.cWw;w;c.
+.c;ww;cc.
+.c;w;Wwc.
+.c1wW;wc.
+.c$w?wTc.
+.ccc=ccc.
+.........
+ENDMAP
+
+NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
+TAGS:    no_monster_gen no_pool_fixup
+MONS:    yaktaur captain, grey snake/yellow snake, storm dragon
+ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
+ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds
+SUBST:   ; = .:60 w W ?
+KFEAT:   ? = Zot trap / floor
+SHUFFLE: de
+DEPTH:   20-26
+MAP
+.........
+.ccccccc.
+.c;;2Wdc.
+.ccWcc|c.
+.c;w;c3c.
+.c;wWccc.
+.cWw?w;c.
+.c;ww;cc.
+.c;w;Wwc.
+.c1wW;wc.
+.c$w?wUc.
+.ccc=ccc.
+.........
+ENDMAP
+
+##############################################################################
+# Loot vs monsters (Onia Ninara)
+#
+NAME:    onia_ninara_009_dug_in_and_dangerous
+DEPTH:   8-26
+SHUFFLE: vcb
+SUBST:   ? = %:90 *:30 |
+MAP
+...........
+.vvGvvvGvv.
+.v9998999v.
+.xxxxxxxxx.
+.v???v???v.
+.vvGvvvGvv.
+.....@.....
+ENDMAP
+
+#############################
+# Pond minivault
+#
+NAME: pond
+DEPTH: D:8-27, Lair
+MONS: plant w:30/fungus
+MONS: giant frog w:30/giant brown frog/snake/rat/green rat/swamp drake w:2
+MONS: giant mosquito
+SUBST: ! : w.
+SUBST: 2 : 23
+SUBST: 2 = 2.
+SUBST: 3 = 3.
+SUBST: . = . 1:1
+KFEAT: ? = *
+KMONS: ? = plant
+TAGS: no_monster_gen
+MAP
+..wwwww...
+.wwwwwwww2
+.wwwwwwwww
+.2wwwwwwww
+..ww222ww.
+.wwww222w.
+wwww!!22ww
+www!!!?ww.
+.ww!!!www.
+.2w!!!ww2.
+....!!w...
+ENDMAP
+
+##############################
+# Secret library minivault
+#
+NAME: library
+DEPTH: 1-27
+ITEM: any book w:20/any scroll/nothing
+MAP
+......
+.x=xx.
+.xddx.
+.xddx.
+.xxxx.
+......
+ENDMAP

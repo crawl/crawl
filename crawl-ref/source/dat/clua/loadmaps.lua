@@ -7,7 +7,9 @@
 ------------------------------------------------------------------------------
 
 local des_files = {
-   "entry.des", "splev.des", "ebranch.des", "vaults.des"
+   "entry.des", "elf.des", "float.des", "hells.des", "hive.des", "lab.des", 
+   "lair.des", "large.des", "mini.des", "orc.des", "pan.des", "portal.des", 
+   "temple.des", "vaults.des", "zot.des"
 }
 
 for _, file in ipairs(des_files) do

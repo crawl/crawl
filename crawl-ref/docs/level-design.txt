@@ -18,26 +18,26 @@ the dat directory. If you are interested in adding some vaults, say, start
 with the existing ones and modify them. Currently, the following .des files
 are in use:
 
- splev.des:    * branch endings (like Elf:7, Vaults:8)
-               * premade level maps (like the Ecumenical Temples and Geryon)
-               * Pan lairs of named demons
-
- vaults.des:   * random vaults (Crawl sometimes chooses a special level 
-                 when making up a new level; these are often challenging
-                 and sometimes contain loot)
-               * minivaults
-               * Pan minivaults
-
- entry.des     * entry vaults (each game - but not tutorial games - uses one of 
-                 these premade maps for the vicinity of the entrance)
-
- ebranch.des   * branch entries (these can ornament the stairs for a branch)
-
- tricky.des:   * a few entry vaults which are harder in some regard 
-                 (use of special items, or being puzzles)
-
- asciiart.des: * a few entry vaults which contain proper ASCII art.
-                 These are a matter of taste - some find this annoying.
+ asciiart.des - a few entry vaults which contain proper ASCII art.
+                these are a matter of taste - some find this annoying.
+ elf.des      - Elf:7
+ entry.des    - entry vaults (each game - but not tutorial games - uses one of 
+                these premade maps for the vicinity of the entrance)
+ float.des    - floating vaults 
+ hells.des    - hell entrances, Geryon's vestibule, Coc:7, Tar:7, Dis:7, Geh:7
+ hive.des     - hive entrances, Hive:4
+ lab.des      - labyrinths exits and flavour vaults
+ lair.des     - lair entrances, Shoals:5, Swamp:5, Snake:5, Slime:6
+ large.des    - all regular vaults which have ORIENT:encompass/northwest etc.
+ mini.des     - minivaults (no ORIENT line at all)
+ orc.des      - orcish mine entrances, orc only vaults
+ pan.des      - vaults of the Pan demon lords, Pan minivaults
+ portal.des   - portal vaults entrances
+ temple.des   - Ecumenical Temples, and Temple entrances
+ tricky.des   - a few entry vaults which are harder in some regard 
+                (use of special items, or being puzzles)
+ vaults.des   - entrances for the Vaults, Vaults:8, Blades, Tomb:?
+ zot.des      - Zot:5
 
 
 Kinds of Vaults

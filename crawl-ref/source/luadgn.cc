@@ -297,7 +297,7 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
     {
         const char *depth = luaL_checkstring(ls, i);
         std::vector<std::string> frags = split_string(",", depth);
-        for (int j = 0, size = frags.size(); i < size; ++i)
+        for (int j = 0, size = frags.size(); j < size; ++j)
         {
             try
             {

@@ -1,0 +1,19 @@
+##############################################################################
+# portal.des: Definition of entries leading to portal vaults.
+#
+# These vaults are used when the dungeon builder tries to place a portal
+# to a branch. There's no guarantee that one of these will be used because
+# portal vaults are placed last, after the rest of the level is generated, and 
+# will not be placed if they can't fit on the level without clobbering 
+# something.
+#
+# With portal vaults (as with minivaults), smaller is better, since the dungeon
+# builder will frequently not be able to fit large vaults in anywhere (it
+# doesn't try very hard).
+#
+# Note that the rune symbol (O) is used for the portal in portal vaults. If you
+# do not put an O anywhere in the vault, there will be no portal for that 
+# branch!
+#
+##############################################################################
+

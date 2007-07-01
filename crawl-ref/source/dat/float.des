@@ -1,0 +1,517 @@
+###############################################################################
+# float.des: This is the place where floating regular vaults should go. These
+#            are defined as vaults with an ORIENT: float line. Vaults with
+#            other ORIENT arguments (encompassing, north, northwest etc.)
+#            are considered big and reside in large.des. Vaults without any
+#            ORIENT line are minivaults and behave somewhat differenty; these
+#            are stored in mini.des.
+#
+#            All maps dealing with the Vault branch system, including Vaults:8
+#            reside in vaults.des.
+############################################################################### 
+
+# Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
+# easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
+default-depth: 12-26
+
+##############################################################################
+# Dummy probability balancer vault for depths 1-11.
+#
+# Why this is necessary: there are very few vaults in the 1-11 range (entries
+# are not considered here); to avoid too much repetition of the existing vaults,
+# we use this dummy vault. 
+#
+NAME: dummy_balancer
+DEPTH: 1-11
+# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
+# by depth.
+TAGS: dummy
+ORIENT: float
+CHANCE: 100
+MAP
+x
+ENDMAP
+
+##############################################################################
+# Cavepeople
+#
+NAME: erik_1
+ORIENT: float
+TAGS: no_monster_gen
+DEPTH: 7-11
+#
+SHUFFLE: rR/sS/uU/vV/wW/yY/zZ, uU/nN
+SUBST: r=n, R=N, s=n, S=N
+SUBST: n=., N=@
+SUBST: u=x, v=x, w=x, y=x, z=x
+SUBST: U=x, V=x, W=x, Y=x, Z=x
+#
+SUBST: 1 = 1:20 ., 2=2., 3=23, 4=24
+MONS: jackal/hound, human, Edmund/Jessica/Sigmund, Michael/Ijyb/Psyche
+MONS: sheep/nothing
+#
+MAP
+xxxxxxxxxxSxxxxxxxxxxxxxxxxxxxUxxxxxxxxx
+xxxxxxxxxxxssxxxxxxxxx1xxxxxxuxxxxxxxxxx
+xxxxxxxxxxxxxssxxxxxx111xxxxxuxxxxxxxxxx
+xxxzzzxxxxxxxxxsxxxxxx1xxxxxxuxxxxxxxxxx
+Zzzxzxzxx555xxsxxxxxxx1xxxxxuxxxxxxxxxxx
+xxxxxxxzxx5xxx.xxx..x1xxxxxuxxxxxxxxxxxx
+xxxxxxxzxx5xxxx......xxxxxuuxxxxxxxxxxxx
+xxxxxxzxxxx5xx...2...cccxxxuxxxxxxxxxxxx
+xxxxxxzxxxx....2224..+$cxxuxxxxxxxxxxxxx
+xxxxxxxz.......2ll22.cccxxxuxxxxxxxxxxxx
+xxxxxxxxx......3222.xxxxxxuxxxxxxxxxxxxx
+xxxxxxxxxyxxxx2.......xxuuxxvvvvxxxxxxxx
+xxxxxxxxyxxxx.......xx..vxvvxxxxvxxxxxxx
+xxxxxxyyxxxxxrxxxxx.xxwxxvxxxxxxxvvxxxxx
+xxxyxyxxxxxxrxxrxxxx.xxwxxxxxxxxxvxxxxxx
+xyyyyxxxxxxxxrrxrrxxxxxxwxxxxxxxvxxxxxxx
+xyxxxxxxxxxxxxxrxrrxxxxxxwwxxxxxxvvxxxxx
+YxxxxxxxxxxxxxxxxxrxxxxxxxxwxxxxxxxvvxvV
+xxxxxxxxxxxxxxxxrrxxxxxxxxxxwxxxxxxxxvxx
+xxxxxxxxxxxxrrrrxxxxxxxxxxxxwxxxxxxxxxxx
+xxxxxxxxxxxRxxxxxxxxxxxxxxxxWxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Rubicon
+#
+NAME:    erik_rubicon_a
+DEPTH:   10-16
+ORIENT:  float
+FLAGS:   no_rotate
+TAGS:    no_pool_fixup
+CHANCE:  6
+ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
+ITEM:    nothing, nothing, nothing
+SHUFFLE: {[(, )gh
+SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
+MAP
+xxxxcccccccc????w.@??ww.@www???w...@???wwww.@ww??@..?ccccxxxxxx
+ccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwww??wwwwccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwccccc
+cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
+ccwcwwwwwwwwwwwwwwwxwwwwww???wwwwwwwww???wwwwwwwww.wwwwwwwccccc
+cccccc????w??.w????xw??w??...?wwww???w????w?w???w???w??cccccxxx
+xxxxcxx...''....?..xx........??w??...c''....??.....???..cxccxxx
+xxxxcx..(cc[.''..'xx...x.''.x..?xx.xcc..cxcx...xxx.'...chxxcxxx
+xxxxcx..cc{c..xx.....xx...cc..xx....xcc....''xxx..x.xxc...cxxxx
+xxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxx
+xxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxx
+xxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxx
+xxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxx
+xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+ENDMAP
+
+NAME:    erik_rubicon_b
+DEPTH:   10-16
+ORIENT:  float
+FLAGS:   no_rotate
+CHANCE:  4
+ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
+ITEM:    nothing, nothing, nothing, nothing
+SHUFFLE: {[(, fgW, )hi
+SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
+MAP
+xxxxcccccccc?gw?f.@wgf?.@w??g?fw...@gwfw???.@wwww@..?ccccxxxxxx
+ccccwwwwwww??..f????.ww???www.???ww??.wwwwwwwwwwwffgg?wwccccccc
+cwwwwwwwwwwww??wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww??wwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwccc
+cwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwww?wwwwwwwwwwwwwwwwwccccc
+cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
+ccwcwwwwwg?wwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwccccc
+ccccccwffwg??fw?ww?gx??ww?..??wwwww??w?fwgw?fwgw??fg??gcccccxxx
+xxxxcxx...'''...?..xx.....''.?ww??...c.'....??...'.?gg.xcxccxxx
+xxxxcx..(cc[.'.'.xx..'.x.'..x..?...xcc..cxcx.x..x..''..cxhxcxxx
+xxxxxcc..c{c..x.x...c.xxx.x.xx.'.'xx..cc..c.xx''.cc..xxx...xxxx
+xxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxx
+xxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxx
+xxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxx
+xxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxx
+xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Sometimes You Just Gotta Run
+# Moved deeper and minor changes.
+#
+NAME: erik_ogre
+DEPTH: 6-10
+ORIENT: float
+SHUFFLE: 1X / 1X / 2l / 3Y
+SUBST: X=x, Y:x.
+MONS: ogre, iron devil, nothing
+ITEM: potion of heal wounds / speed / berserk rage / scroll of blinking
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxxX.Xxxxxxxxxx
+xxxxxxxxxX1Xxxxxxxxxx
+xxxxxxxxxX.Xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.d.xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.d.xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxx....[....xxxxxx
+xxxxxx..x(.{x..xxxxxx
+x...x...x...x...x...x
+x....x..xx]xx..x....x
+xxxxxx...xxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################
+# Starter slime pit
+#
+# The slime creature or amoeba may seem too tough for the level where this appears,
+# but since they are normal speed with no range attacks, they can be escaped
+#
+NAME: slime_lemuel
+DEPTH: 6-16, Lair
+ORIENT: float
+MONS: w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
+MAP
+xxxxxxxxxxx
+xxxx111xxxx
+xx1111111xx
+@+1112111xx
+xx1111111xx
+xxxx111xxxx
+xxxxxxxxxxx
+ENDMAP
+
+####################################
+# shoot the duckies, win a prize!
+#(warning: some duckies may shoot back)
+#
+NAME: shooting_gallery_Lemuel
+ORIENT: float
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+ccxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxcc
+cxwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwxc
+ccwwww9www9www9www9www9www9www9www9www9wwwwcc
+cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
+ccww9www9www9www9www9www9www9www9www9www9wwcc
+cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
+cc.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.cc
+cx.........................................xc
+cc.........................................cc
+cx.........................................xc
+cc.........................................cc
+ENDMAP
+
+
+##########################################
+# a pointless little "vault" by Lemuel
+#
+NAME: strawberry_fields
+ORIENT: float
+DEPTH: 1-27
+SUBST: .= a .:200 1:2 2:1
+MONS: plant, butterfly
+ITEM: strawberry
+MAP
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+.............................................
+ENDMAP
+
+##############################################################################
+# Beware the mummy's curse (Lemuel)
+#
+NAME: MiniTomb
+ORIENT: float
+DEPTH: 10-26
+MONS: large zombie / nothing, mummy, guardian mummy, greater mummy, large zombie
+MONS: mummy / nothing
+SHUFFLE: 2F, cbv
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx3$$xxxxxxxxxxxxx
+ccxxxxxxxxccc=cccccccccxxxx
+cccxxxxxxxc.....c...1$cxxxc
+@Fcx6$.xxxc..1..c...25ccccc
+cccccc=cccc.62..c...15c$$$c
+@+111.....+.63..=..F11=4||c
+cccccc=cccc.62..c...15c$$$c
+@Fcx6$.xxxc..1..c...25ccccc
+cccxxxxxxxc.....c...1$cxxxc
+ccxxxxxxxxccc=cccccccccxxxx
+xxxxxxxxxxx3$$xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+# Insect pit (Lemuel)
+#
+NAME:   insect_pit
+FLAGS:  no_rotate
+ORIENT: float
+DEPTH:  5-12
+SUBST:  1 = 1:70 2:60 3:25
+MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20 
+MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito 
+MONS:   giant blowfly / scorpion / redback w:5
+MAP
+ccccccccccc+ccccccccccc
+c.....................c
+c.....................c
+c.....................c
+c.....vvvvvvvvvvv.....c
+c.....v111111111v.....c
+c.....v111111111v.....c
+c.....=111111111=.....c
+c.....v111111111v.....c
+c.....v111111111v.....c
+c.....vvvvvvvvvvv.....c
+c.....................c
+c.....................c
+c.....................c
+ccccccccccc+ccccccccccc
+ENDMAP
+
+#############################################################################
+# Troll bridge (Lemuel)
+#
+NAME: troll_bridge
+DEPTH: 7-15
+ORIENT: float
+TAGS: no_pool_fixup
+MONS: troll w:50 / rock troll / iron troll w:5
+MAP
+xxxxx...........................xxxxxx
+xwwwx...........................xxxxxx
+xwwwx...........................xxxxxx
+xwwwx...........................xxxxxx
+xwwwwwwwwwwwwwwwww.wwwwwwwwwww..xxxxxx
+xxwwwwwwwwwwwxxxxw.wwwwwwwwwwwwwwwwxxx
+xxwwwwwwwwwwwx11xw.wxxxxwwwwwwwwwwwwxx
+xxwwwwwwwwwwwx11=...=11xwwwwwwwwwwwwwx
+xxxwwwwwwwwwwxxxxw.wx11xwwwwwwwwwwwwwx
+xxxxxwwwwwwwwwwwww.wxxxxwwwwwwwwwwwwwx
+xxxxx...wwwwwwwwww.wwwwwwwwwwwwwwwwwwx
+xxxxx...........................xwwwwx
+xxxxx...........................xxwwwx
+xxxxx...........................xxwwwx
+xxxxx...........................xxxxxx
+ENDMAP
+
+#################################
+# An Ice Statue vault
+#
+NAME:    ice1_lemuel
+MONS:    ice statue
+TAGS:    no_pool_fixup
+ORIENT:  float
+SUBST:   * : *$
+SUBST:   * = |:5 * .
+SUBST:   T = TU
+SHUFFLE: xb/cc
+MAP
+xxxxxxxxx
+xbbbbbbbx
+xb*****bx
+xb*****bx
+xb.....bx
+xb.....bx
+xb.....bx
+xb.....bx
+xbwwwwwbx
+xbww1wwbx
+xbwwwwwbx
+xb.....bx
+xb.....bx
+xb.....bx
+xb.....bx
+xb.....bx
+xbT.@.Tbx
+ENDMAP
+
+#############################################################################
+# Oklob gauntlet
+#
+NAME:    oklob_2
+DEPTH:   18-27
+MONS:    plant, oklob plant
+ORIENT:  float
+SHUFFLE: ]})yY / defzZ
+SUBST:   '=12w, "=ww.
+SUBST:   d=|*, e=|*, f=|*, y=., Y=@, z=x, Z=x
+SHUFFLE: xxxc
+MAP
+yyyyyyYyyyyyy
+xxxx.]}).xxxx
+x'ww.....ww'x
+x'"......."'x
+x'"......."'x
+x'"......."'x
+x'"......."'x
+x'"......."'x
+x'ww.....ww'x
+xxxxxx+xxxxxx
+ENDMAP
+
+#############################################################################
+# Oklob shooting range
+
+NAME:    oklob_3
+DEPTH:   21-27
+ORIENT:  float
+SHUFFLE: ab" / AB'
+SUBST:   a=[, b=(, A=., B=., "=., ':>', '=>.
+SUBST:   x : y:1 x:5 .:30
+SUBST:   x = x:2 .
+SHUFFLE: xcv
+SUBST:   y = x
+MONS:    oklob plant / w:2 plant
+MAP
+xxxxxxxxxxxxxxx
+xxxx...1...xxxx
+xx...........xx
+xx...........xx
+x......"......x
+x......'......x
+x1...aA{Bb...1x
+x......'......x
+x......"......x
+xx...........xx
+xx...........xx
+xxxx...1...xxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+###################################
+# Hellmouth (Lemuel)
+# note that other than the imps, the demons here cannot fly
+NAME:   hellmouth_1
+FLAGS:  no_rotate
+MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil / hairy devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
+ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+ORIENT: float
+SUBST:  d=de, ?:?.l, ?=l.
+
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxlllxxxxxxxx
+xxxxxxlllAlllxxxxxx
+xxxlllll.d.llll?xxx
+xlllllll121lllll?.x
+x?lllllll1llll?...x
+x.??llllllll?.....x
+x...?llllll?......x
+x....?lllll.......x
+xxx...?lll?.....xxx
+xxxx...lll?....xxxx
+xxxxx.?ll?....xxxxx
+xxxxx?lll.....xxxxx
+xxxxxxlll?...xxxxxx
+xxxxxxxlll...xxxxxx
+xxxxxxxxll?.xxxxxxx
+xxxxxxxxll?.xxxxxxx
+xxxxxxxxl?@xxxxxxxx
+ENDMAP
+
+###################################
+# Hellmouth 2 (Lemuel)
+# note that other than the imps, the demons here cannot fly
+NAME:   hellmouth_2
+TAGS:   no_monster_gen
+FLAGS:  no_rotate
+MONS:   imp / quasit / shadow imp / manes / lemure
+MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
+ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / w:30 nothing
+ORIENT: float
+SUBST:  d=de, ?:?.l, ?=l.
+SUBST:  b : b:30 c v .
+MAP
+..........................
+.......bbbbbbbbbbbb.......
+....bbbb..........bbbb....
+..bbb....llllllll....bbb..
+.bb....llllllllllll....bb.
+.b....llllllllllllll....b.
+.b....llllll??llllll....b.
+.b...?lll??.....?lll?...b.
+.b...?ll?...111...ll?...b.
+@+...?l?...11211d..l?...b.
+@+...?l?...12A21|f.l?...b.
+.b...?ll...11211d.ll?...b.
+.b...?lll?..111..lll?...b.
+.b....llll?.....llll....b.
+.b....llllll??llllll....b.
+.bb....llllllllllll....bb.
+..bbb....llllllll....bbb..
+....bbbb..........bbbb....
+.......bbbbbbbbbbbb.......
+..........................
+ENDMAP
+
+###################################
+# Hellmouth 3 (Lemuel)
+NAME:   hellmouth_3
+MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
+ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / nothing
+ORIENT: float
+SUBST:  ? : . l ?:40, ?=l.
+MAP
+................??............
+...........................??.
+....??..........l?............
+...?ll?........?l?............
+..?lll?.........l.............
+...?l........??l?.............
+...........??lll?.............
+.........?lllllll?............
+.......?llllllllll??..........
+......?lll111111llll?.........
+......?llll12Ad1lll...........
+.......?lll11111ll?...........
+........?lllll1ll?............
+.........??llllll......?......
+...........?llll?.....ll?.....
+..?.........?ll?.......ll?....
+.?............................
+..................??..........
+ENDMAP

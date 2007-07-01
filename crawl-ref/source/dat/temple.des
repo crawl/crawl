@@ -1,0 +1,449 @@
+##############################################################################
+# temple.des: Entries for the Ecumenical Temple, and Temples themselves
+##############################################################################
+
+
+##############################################################################
+# Temple entries
+##############################################################################
+
+##############################################################################
+# hall with pillars
+#
+NAME: temple_hall_a
+TAGS: temple_entry
+CHANCE: 9
+ORIENT: float
+SUBST: ? : c:20 x v b G:5
+MAP
+ccccccccc
+c...O...c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c@..@..@c
+ENDMAP
+
+NAME: temple_hall_b
+TAGS: temple_entry
+CHANCE: 1
+ORIENT: float
+SUBST: ? : c:20 x v b G:5
+SHUFFLE: defghij
+SUBST: d==, e=c, f=c, g=c, h=c, i=c, j=c
+MAP
+ccccccccc
+c...O...c
+cdefghijc
+c...G...c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c.......c
+c.?...?.c
+c.......c
+c@..@..@c
+ENDMAP
+
+##############################################################################
+# stairs with fountains
+#
+NAME: temple_fountains
+TAGS: temple_entry
+ORIENT: float
+SUBST: ? : T:30 U
+MAP
+...?...
+.......
+.?.O.?.
+.......
+...?...
+ENDMAP
+
+##############################################################################
+# stairs with statues
+#
+NAME: temple_statues
+TAGS: temple_entry
+ORIENT: float
+MAP
+GOG
+ENDMAP
+
+##############################################################################
+# the green room
+#
+NAME: temple_green
+TAGS: temple_entry
+ORIENT: float
+SUBST: ? = @=+b
+SUBST: ! = =+@
+MAP
+bbbb!bbbb
+b.......b
+b.......b
+?...O...?
+b.......b
+b.......b
+bbbb?bbbb
+ENDMAP
+
+##############################################################################
+# where's the temple?
+#
+NAME: temple_secret_doors
+TAGS: temple_entry
+ORIENT: float
+SUBST: ? : ?:40 T:30 U, ? = T:30 U, X = c:1 =
+MAP
+cccccc@cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+ccccccXcccccc
+ccccc?.?ccccc
+@...X.O.=...@
+ccccc?.?ccccc
+ccccccXcccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc.cccccc
+cccccc@cccccc
+ENDMAP
+
+##############################################################################
+# temple in pool
+#
+NAME:    temple_pool_a
+TAGS:    temple_entry no_monster_gen no_pool_fixup
+CHANCE:  5
+FLAGS:   no_rotate
+ORIENT:  float
+SHUFFLE: XY
+SUBST:   Y=w, X=.
+MAP
+.....wwwww......
+...wwwwwwwww....
+.wwwwwwwwwwwww..
+wwwwww...wwwwww.
+wwwwww.O.YYYYYY.
+wwwwww...wwwwww.
+wwwwwwwXwwwwwww.
+.wwwwwwXwwwwww..
+...wwwwXwwww....
+.....wwXww......
+................
+ENDMAP
+
+NAME:    temple_pool_b
+TAGS:    temple_entry no_monster_gen
+CHANCE:  5000
+FLAGS:   no_rotate
+ORIENT:  float
+SHUFFLE: ABCDEFGHIJKL
+SUBST:   A=W, B=W, C=W, D=w, E=w, F=w, G=w, H=w, I=w, J=w, K=w, L=w
+MAP
+.....wwwww......
+...wABwwwDEw....
+.wwwCwwwwwFwww..
+wwwwww...wwwwww.
+wwwwww.O.wwwwww.
+wwwwww...wwwwww.
+wwwwLwwwwwGwwww.
+.wwwKJwwwIHwww..
+...wwwwwwwww....
+.....wwwww......
+................
+ENDMAP
+
+##############################################################################
+# The garden of good and evil
+#
+NAME: temple_garden
+TAGS: temple_entry no_monster_gen
+ORIENT: float
+SUBST: . = .:900 3:30 G:5 T U:5 V:5
+SUBST: ' = .:300 3:30 G:5 T U:5 V:5
+SUBST: ! = .:200 3:30 G:5 T U:5 V:5
+SUBST: ? = .:100 3:30 G:5 T U:5 V:5
+SUBST: _=3., -=l.
+MONS: angel, iron devil, plant
+MAP
+........................................xxxxxxxx
+.....................'''''...............-llxxxx
+..................'''''''''''...........-llllxxx
+...............'''''''!!!'''''''........-lll2xxx
+............''''''''!!!!!!!''''''''......-llllxx
+...........'''''''!!!!!!!!!!!'''''''.......-lllx
+..........'''''!!!!!!!!!!!!!!!!!'''''........llx
+.........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
+........'''''!!!!!!!!!???!!!!!!!!!'''''........x
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
+.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......'''!!!!!!!!!????O????!!!!!!!!!'''........
+.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......'''''!!!!!!!!!?????!!!!!!!!!'''''........
+x.......'''''!!!!!!!!!???!!!!!!!!!'''''.........
+x........'''''!!!!!!!!!?!!!!!!!!!'''''..........
+xx._......'''''!!!!!!!!!!!!!!!!!'''''...........
+xxxx3......'''''''!!!!!!!!!!!'''''''............
+xxxxx3......''''''''!!!!!!!''''''''.............
+xxxx13_........'''''''!!!'''''''................
+xxxxxx3_..........'''''''''''...................
+xxxxxxxxxx...........'''''......................
+xxxxxxxxxxxx....................................
+ENDMAP
+
+
+##############################################################################
+# Temple maps
+##############################################################################
+
+##########################################################################
+# Circular temple (David Ploog).
+
+NAME: circular_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcccc.....<.....ccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxcccc.................ccccxxxxxxxxxxxxx
+xxxxxxxxxxccc.......................cccxxxxxxxxxxx
+xxxxxxxxxcc.............B.............ccxxxxxxxxxx
+xxxxxxxxcc.......B.............B.......ccxxxxxxxxx
+xxxxxxxcc...............................ccxxxxxxxx
+xxxxxxxc.................................cxxxxxxxx
+xxxxxxcc.....B.....................B.....ccxxxxxxx
+xxxxxxc...............T...T...............cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc(...B.......T.........T.......B...{cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc...............T...T...............cxxxxxxx
+xxxxxxcc.....B.....................B.....ccxxxxxxx
+xxxxxxcc.................................cxxxxxxxx
+xxxxxxxcc...............................ccxxxxxxxx
+xxxxxxxxcc.......B.............B.......ccxxxxxxxxx
+xxxxxxxxxcc.............B.............ccxxxxxxxxxx
+xxxxxxxxxxccc.......................cccxxxxxxxxxxx
+xxxxxxxxxxxxcccc.................ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcccc.....[.....ccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Three leaves temple (David Ploog)
+
+NAME: three_leaves__temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbbbxxxxxxxxxxxxxxxbbbxxxxxxxxxxxxx
+xxxxxxxxxxxxbbb.bbxxxxxxxxxxxxxbb.bbbxxxxxxxxxxx
+xxxxxxxxxxxbb....bbxxxxxxxxxxxbb....bbxxxxxxxxxx
+xxxxxxxxxxbb......bbbxxxxxxxbbb......bbxxxxxxxxx
+xxxxxxxxxbb.....B...bbxxxxxbb...B.....bbxxxxxxxx
+xxxxxxxxbb..B........bbbxbbb........B..bbxxxxxxx
+xxxxxxxxbb.............bbb.............bbxxxxxxx
+xxxxxxxbb....B....B.....b.....B....B....bbxxxxxx
+xxxxxxxbb............{.....[............bbxxxxxx
+xxxxxxxxbbbbbbbb........b........bbbbbbbbxxxxxxx
+xxxxxxxxxxxxxxxbbbbbbbb...bbbbbbbbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxbb.(.bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb.....bbxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxbb.......bbxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxbb....B....bbxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxbb...........bbxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbb....B...B....bbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxbb.......B.......bbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbbb...........bbbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxbbbb.....bbbbxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxbbbbbbbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Twelve chambers temple (David Ploog). 
+
+NAME: twelve_chambers_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxx
+xxxxxxvvvvvvvvvvv..................................vvvvvvvvvxxxxxxx
+xxxxxxvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxxxxxxx
+xxxxxxvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...vvvxxxxxxx
+xxxxxxvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvvxxxxxxx
+xxxxxxvv.....vvvvv.......v.......v.......v.......vvvvv.....vvxxxxxx
+xxxxxxv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vxxxxxx
+xxxxxxv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vxxxxxx
+xxxxxxv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vxxxxxx
+xxxxxxvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvxxxxxx
+xxxxxxvvvv.vvvv.....................................vvvv.vvvvxxxxxx
+xxxxxxvvv..vvvv.....................................vvvv..vvvxxxxxx
+xxxxxxvvv.vvvvv......T.......(...{...[.......T......vvvvv.vvvxxxxxx
+xxxxxxvvv..vvvv.....................................vvvv..vvvxxxxxx
+xxxxxxvvvv.vvvv.....................................vvvv.vvvvxxxxxx
+xxxxxxvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvxxxxxx
+xxxxxxv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vxxxxxx
+xxxxxxv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vxxxxxx
+xxxxxxv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vxxxxxx
+xxxxxxvv.....vvvvv.......v.......v.......v.......vvvvv.....vvxxxxxx
+xxxxxxvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvvxxxxxxx
+xxxxxxvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvv...vvvvxxxxxxx
+xxxxxxvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxxxxxxx
+xxxxxxvvvvvvvvvvv.................................vvvvvvvvvvxxxxxxx
+xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################################
+# Another temple (David Ploog)
+
+NAME: triangle_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllllllllll.........llllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllll...........lllllllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllllllll......{......llllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllll...............lllllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllllll.................llllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllll......B.....B......lllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllll.....................llllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllll.......................lllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllll...B.................B...llllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllll.............B.............lllllllllllllllllxxxxxx
+xxxxxxllllllllllllllll.............................llllllllllllllllxxxxxx
+xxxxxxlllllllllllllll...............................lllllllllllllllxxxxxx
+xxxxxxllllllllllllll.................................llllllllllllllxxxxxx
+xxxxxxlllllllllllll.....B.......B.......B.......B.....lllllllllllllxxxxxx
+xxxxxxllllllllllll.....................................llllllllllllxxxxxx
+xxxxxxlllllllllll.......................................lllllllllllxxxxxx
+xxxxxxllllllllll.........................................llllllllllxxxxxx
+xxxxxxlllllllll....(.........B.............B.........[....lllllllllxxxxxx
+xxxxxxllllllll......................B.....................lllllllllxxxxxx
+xxxxxxllllllll............................................lllllllllxxxxxx
+xxxxxxlllllllll..........................................llllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################################
+# Watery temple (Darshan Shaligram)
+NAME: water_temple
+TAGS: no_pool_fixup
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xcccccccccccccccccccccccccccccccccccccccccccccccccccx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
+xcwwwwwwww.................................wwwwwwwwcx
+xcwwwww...................B...................wwwwwcx
+xcwww......B.............................B......wwwcx
+xcwww.............B...............B.............wwwcx
+xcww......................(......................wwcx
+xcww.............................................wwcx
+xcww...B..................T..................B...wwcx
+xcww.............................................wwcx
+xcww...................[.....{...................wwcx
+xcwww.............B...............B.............wwwcx
+xcwww......B.............................B......wwwcx
+xcwwwww...................B...................wwwwwcx
+xcwwwwwwww.................................wwwwwwwwcx
+xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccx
+ENDMAP

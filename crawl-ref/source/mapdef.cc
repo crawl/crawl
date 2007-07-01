@@ -1228,6 +1228,29 @@ std::string map_def::validate_map_def()
     if (map.height() == 0)
         return ("Must define map.");
 
+    switch (orient)
+    {
+    case MAP_NORTH: case MAP_SOUTH:
+        if (map.height() >= GYM * 2 / 3)
+            return make_stringf("Map too large - height %d (max %d)",
+                                map.height(), GYM * 2 / 3);
+        break;
+    case MAP_EAST: case MAP_WEST:
+        if (map.width() >= GXM * 2 / 3)
+            return make_stringf("Map too large - width %d (max %d)",
+                                map.width(), GXM * 2 / 3);
+        break;
+    case MAP_NORTHEAST: case MAP_SOUTHEAST:
+    case MAP_NORTHWEST: case MAP_SOUTHWEST:
+        if (map.width() >= GXM * 2 / 3 || map.height() > GYM * 2 / 3)
+            return make_stringf("Map too large - %dx%d (max %dx%d)",
+                                map.width(), map.height(),
+                                GXM * 2 / 3, GYM * 2 / 3);
+        break;
+    default:
+        break;
+    }
+
     return (map.apply_transforms());
 }
 

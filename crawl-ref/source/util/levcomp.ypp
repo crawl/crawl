@@ -87,6 +87,12 @@ definition      : def       {}
                 | level     {}
                 ;
 
+error_seq       : CHARACTER
+                {
+                    yyerror("Unexpected character sequence.");
+                }
+                ;
+                
 def             : defdepth  {}
                 | global_lua  {} 
                 ;
@@ -170,6 +176,7 @@ metaline        : place
                 | prelude_lua
                 | validate_lua
                 | veto_lua
+                | error_seq {}
                 ;
 
 global_lua      : MAIN global_lua_lines { }

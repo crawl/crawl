@@ -1213,27 +1213,21 @@ Due to their fey natures, all elves are good at using enchantments and
 air elemental magic and most are poor at invoking the powers of earth 
 and death (necromancy).
 
-  (Common) Elves:
-  ---------------
-  Those of the most common strain are referred to simply as elves or, 
-  when they're not listening, common elves. Common elves have good 
-  intelligence and dexterity, but suffer a bit in strength. They have 
-  slightly fewer HP and slightly more magic than humans, and advance 
-  in experience a bit more slowly.
-
   High Elves:
   -----------
   High elves are a tall and powerful elven race who advance in levels 
   very slowly, requiring half again as much experience as do humans. 
-  They share the same attributes as common elves in most respects, but 
-  their strengths and weaknesses tend to be more pronounced.
+  They have good intelligence and dexterity, but suffer in strength.
+  Compared with humans, they have fewer HP but more magic. Among all
+  elves, they are best with blades and bows.
 
   Grey Elves:
   -----------
   Grey elves also advance slowly, but not as slowly as high elves. They 
-  excel at using short and long swords and bows, but are poor at other 
-  fighting skills. They are excellent at all forms of magic except for 
-  necromancy.
+  are good at using short and long swords and bows, but are poor at 
+  other fighting skills. They are excellent at all forms of magic except
+  for necromancy. In particular, they are masters of Enchantments and
+  magics related to Air.
 
   Deep Elves:
   -----------
@@ -1243,7 +1237,7 @@ and death (necromancy).
   necromancy and earth magic), and adapted physically to their new 
   environment, becoming shorter and weaker than other elves and losing 
   all colouration. They are poor at hand-to-hand combat but excellent 
-  at fighting from a distance.
+  at fighting from a distance. They advance at the pace of grey elves.
 
   Sludge Elves:
   -------------
@@ -1254,27 +1248,28 @@ and death (necromancy).
   conjurations and divinations). On the other hand, they are 
   superlative transmuters, and are comfortable dabbling in necromantic,
   poison and elemental magic. As fighters they are often more dangerous
-  unarmed than armed. They advance in level slightly faster than their 
-  common brethren.
+  unarmed than armed. They advance in level slightly slower than humans.
 
-Dwarves:
---------
-Dwarves are short, hardy people. They love to fight, and often venture 
-forth from their subterranean cities to seek fame and fortune through 
-battle. Their armour and weapons are very well-crafted and much more 
-durable than the products of lesser artisans. Dwarves are particularly 
-dangerous when using dwarven weaponry.
+Mountain Dwarves:
+-----------------
+Dwarves are generally short, hardy people. They love to fight, and often 
+venture forth to seek fame and fortune through battle. Their armour and 
+weapons are very well-crafted and much more durable than the products of
+lesser artisans. Dwarves are particularly dangerous when using dwarven 
+weaponry.
 
-  Hill Dwarves:
-  -------------
-  Hill dwarves are extremely robust but are poor at using magic. They 
-  are excellent at hand combat, especially favouring axes or bludgeoning 
-  weapons, and are good at using armour and shields, but are poor at 
-  missile combat or at using pole-arms (which are usually too big for 
-  them to wield comfortably).
-  The only forms of magic which they can use with even a minimal degree 
-  of aptitude are earth, fire, and conjurations. They advance in levels 
-  at a similar rate to common elves.
+Mountain Dwarves, as opposed to the subterranean specimen, come from 
+cities far above the Dungeon. They are very robust and excellent at hand
+combat, especially favouring axes or bludgeoning weapons, and are good 
+at using armour and shields. They are poor at missile combat, the single
+exception being crossbows, those being rather mechanical weapons. Since
+pole-arms usually are too big for them to wield comfortably, they make
+quite bad weapons for Dwarves.
+In general, they are rather resistant to magic than capable of dealing
+with it. However, they are very capable at earth and fire magics. Thus,
+many a Mountain Dwarf started career as an elementalist in one of those 
+schools.
+They advance in levels at a similar rate to Grey and Deep elves.
 
   Mountain Dwarves:
   -----------------
@@ -1959,7 +1954,8 @@ become confusing, since there are also several modes; here is the full
 list. Some commands are particularly useful in combination with certain
 interface options; such options are mentioned in the list. For a 
 description of them, please look into crawl_options.txt. For a more 
-terse list, use '??' in.game.
+terse list of all commands, use '??' in-game. Most modes (targeting,
+level map, interlevel travel) also have help menus via '?' on their own.
 
 Saving games:
         S               Save game with query and exit.
@@ -2004,8 +2000,8 @@ Dungeon interaction:
         <               Use staircase to go higher, also enters shops. 
         >               Use staircase to go deeper, or enters branch.  
         ;               Examine occupied tile, also causes auto-pickup.
-        x               Examine surroundings mode (see below).
-        X               Examine level map (see below).
+        x               Examine surroundings mode, see below. Has ? help.
+        X               Examine level map, see below. Has help on ?.
         O               Show dungeon overview (branches, shops, etc.).
 
 Character information:
@@ -2022,13 +2018,15 @@ Character information:
         a               Show current abilites menu.
         \               Show item knowledge.
         m               Show skill screen.
-        i               Show inventory list.
+        i               Show inventory list. Inside this list, pressing 
+                        a slot key shows information on that item.
         %               Show resistances and general character overview,
                         including health, experience, gear, status,
                         mutations, abilities (the latter three more 
                         terse than with the command @, A, a). This is a
                         highly condensed conglomeration of the commands 
                         [, (, ", C, ^, @, A, a on a single screen.
+                        Pressing the key of a displayed item views it.
 
 Item interaction (inventory):
         v               View item description.
@@ -2058,7 +2056,8 @@ Item interaction (floor):
 Other game-playing commands:
         a               Use special ability.
         p               Pray.
-        Z               Cast a spell.
+        Z               Cast a spell. 
+        I               List spell. 
         !               Shout or command allies.
 
 Non-game playing commands:
@@ -2154,6 +2153,7 @@ target_oos = true (if using this, check the option target_los_first).
         direction       Move cursor.
         . or Enter      Travel to cursor (also Del).
         v               Describe feature or monster under cursor.
+                        Some branch entries have special information.
         >               Cycle downstairs.
         <               Cycle upstairs.
         _               Cycle through altars.

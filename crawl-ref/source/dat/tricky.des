@@ -13,11 +13,10 @@
 NAME: lemuel_trickyentry_001_a
 TAGS: entry
 ORIENT: float
-SHUFFLE: [{
 CHANCE: 2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx[{(xxxxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
 xxxxxxxxxxxx+xxxxxxxxxxxx
 x.......................x
@@ -47,11 +46,10 @@ ENDMAP
 NAME: lemuel_trickyentry_001_b
 TAGS: entry
 ORIENT: float
-SHUFFLE: [{
 CHANCE: 2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx[{(xxxxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
 xxxxxxxxxxxx+xxxxxxxxxxxx
 x.......................x
@@ -85,7 +83,7 @@ SHUFFLE: [{
 CHANCE: 2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx[{(xxxxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
 xxxxxxxxxxxx+xxxxxxxxxxxx
 x.......................x
@@ -119,7 +117,7 @@ SHUFFLE: [{
 CHANCE: 2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx[{(xxxxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
 xxxxxxxxxxxx+xxxxxxxxxxxx
 x.......................x
@@ -155,7 +153,7 @@ SHUFFLE: 1cv=
 CHANCE: 2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx[{(xxxxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
 xxxxxxxxxxxx+xxxxxxxxxxxx
 x.......................x

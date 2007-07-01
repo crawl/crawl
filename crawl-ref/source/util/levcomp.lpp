@@ -154,7 +154,7 @@ NSPACE [^\ \t\r\n]
 
 ^[ \t]*#.*          ;
 
-^\s*MAP             { BEGIN(MAPDEF); }
+^\s*MAP[ \t]*$      { BEGIN(MAPDEF); }
 
 ^[ \t]*:                  { BEGIN(LUA_ONELINER); return MAIN; }
 
