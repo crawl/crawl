@@ -975,7 +975,7 @@ void end_game( struct scorefile_entry &se )
         }
     }
 
-    invent( -1, dead );
+    invent( -1, true );
     clrscr();
 
     if (!dump_char( morgue_name(), !dead, true ))
