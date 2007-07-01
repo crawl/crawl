@@ -86,6 +86,10 @@ void place_followers()
 
 static bool place_lost_monster(follower &f)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Placing lost one: %s",
+         f.mons.name(DESC_PLAIN).c_str());
+#endif    
     return (f.place(false));
 }
 

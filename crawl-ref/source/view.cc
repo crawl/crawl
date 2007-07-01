@@ -308,7 +308,8 @@ static int view_emphasised_colour(int x, int y, dungeon_feature_type feat,
 {
     if (is_travelable_stair(feat) && !travel_cache.know_stair(coord_def(x, y)))
     {
-        if (you.your_level || stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+        if ((you.your_level || stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
             return (newcolour);
     }
     return (oldcolour);

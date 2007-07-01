@@ -475,6 +475,35 @@ SUBST:   ?=xc, !:bv, 1=2 1:100
          will be applied in order. Multiple substitutions can be performed
          on one line, using commas.
 
+NSUBST:  ? = 3:w / *:l
+
+         NSUBST is similar to SUBST, replacing placeholders with
+         replacements values. Unlike SUBST, however, it allows you to
+         replace different instances of the same placeholder with
+         completely different substitutions. For instance:
+
+         ? = 3:w / *:l
+
+         replaces three occurrences (randomly selected) of ? with w
+         and all others with l.
+         
+         You can use complex SUBST specifications:
+
+         ? = 3= w .:15 A / *: =+CF
+
+         This is equivalent to SUBST: ? = w .:15 A for three ? and
+         SUBST: ? : =+CF for all the others.
+
+         You use any number of NSUBST specifiers:
+
+         ? = wW / l / A / 1234
+
+         Each specifier is preceded by the number of symbols to apply
+         it to, followed by : or = (: to use one substitution for all
+         occurrences, = to randomly pick for each occurrence). If you
+         omit the initial N: or N=, then 1= is assumed, except for the
+         last spec where *= is assumed.
+
 KFEAT:   Z = C / needle trap / antique armour shop / altar of Zin
          The KFEAT: directive allows you to specify a placeholder symbol 
          that is replaced with another symbol, named feature, trap, or 

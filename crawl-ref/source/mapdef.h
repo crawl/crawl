@@ -79,6 +79,7 @@ public:
     {
         TT_SHUFFLE,
         TT_SUBST,
+        TT_NSUBST,
         TT_MARKER
     };
     
@@ -94,6 +95,7 @@ class subst_spec : public map_transformer
 {
 public:
     subst_spec(int torepl, bool fix, const glyph_replacements_t &repls);
+    subst_spec() : foo(0), fix(false), frozen_value(0), repl() { }
 
     int key() const
     {
@@ -116,6 +118,21 @@ private:
     
     glyph_replacements_t repl;
 };
+
+class nsubst_spec : public map_transformer
+{
+public:
+    nsubst_spec(int key, const std::vector<subst_spec> &specs);
+    std::string apply_transform(map_lines &map);
+    map_transformer *clone() const;
+    transform_type type() const { return TT_NSUBST; }
+    std::string describe() const;
+    
+public:
+    int key;
+    std::vector<subst_spec> specs;
+};
+
 
 struct shuffle_spec : public map_transformer
 {
@@ -159,12 +176,14 @@ public:
     map_lines &operator = (const map_lines &);
 
     void add_line(const std::string &s);
+    std::string add_nsubst(const std::string &st);
     std::string add_subst(const std::string &st);
     std::string add_shuffle(const std::string &s);
     void remove_shuffle(const std::string &s);
     void remove_subst(const std::string &s);
     void clear_shuffles();
     void clear_substs();
+    void clear_nsubsts();
     void clear_markers();
 
     std::vector<coord_def> find_glyph(int glyph) const;
@@ -218,6 +237,7 @@ private:
     void resolve_shuffle(const std::string &shuffle);
     void subst(std::string &s, subst_spec &spec);
     void subst(subst_spec &);
+    void nsubst(nsubst_spec &);
     void check_borders();
     void clear_transforms(map_transformer::transform_type);
     std::string shuffle(std::string s);
@@ -225,10 +245,16 @@ private:
     std::string check_shuffle(std::string &s);
     std::string check_block_shuffle(const std::string &s);
     std::string clean_shuffle(std::string s);
+    std::string parse_nsubst_spec(const std::string &s,
+                                  subst_spec &spec);
+    int apply_nsubst(std::vector<coord_def> &pos,
+                     int start, int nsub,
+                     subst_spec &spec);
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
 
     friend class subst_spec;
+    friend class nsubst_spec;
     friend class shuffle_spec;
     
 private:

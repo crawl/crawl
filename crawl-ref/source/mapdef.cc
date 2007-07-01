@@ -41,6 +41,19 @@ const char *map_section_name(int msect)
     return map_section_names[msect];
 }
 
+template <typename V>
+void scramble(V &v)
+{
+    V temp(v);
+    v.clear();
+    while (!temp.empty())
+    {
+        int i = random2(temp.size());
+        v.push_back(temp[i]);
+        temp.erase(temp.begin() + i);
+    }
+}
+
 // Returns true if s contains tag 'tag', and strips out tag from s.
 bool strip_tag(std::string &s, const std::string &tag)
 {
@@ -96,9 +109,10 @@ static int find_weight(std::string &s)
 }
 
 static std::string split_key_item(const std::string &s,
-                                  int *key,
+                                  std::string *key,
                                   int *separator,
-                                  std::string *arg)
+                                  std::string *arg,
+                                  int key_max_len = 1)
 {
     std::string::size_type
         norm = s.find("=", 1),
@@ -108,19 +122,18 @@ static std::string split_key_item(const std::string &s,
     if (sep == std::string::npos)
         return ("malformed declaration - must use = or :");
 
-    std::string what_to_subst = trimmed_string(s.substr(0, sep));
+    *key = trimmed_string(s.substr(0, sep));
     std::string substitute    = trimmed_string(s.substr(sep + 1));
 
-    if (what_to_subst.length() != 1)
+    if (key->empty() || (int) key->length() > key_max_len)
         return make_stringf(
             "selector '%s' must be exactly one character in '%s'",
-            what_to_subst.c_str(), s.c_str());
+            key->c_str(), s.c_str());
 
     if (substitute.empty())
         return make_stringf("no substitute defined in '%s'",
                             s.c_str());
 
-    *key = what_to_subst[0];
     *arg = substitute;
     *separator = s[sep];
     
@@ -410,8 +423,8 @@ void map_lines::add_marker(map_marker *marker)
 
 std::string map_lines::add_feature_marker(const std::string &s)
 {
-    std::string arg;
-    int key = 0, sep = 0;
+    std::string key, arg;
+    int sep = 0;
     std::string err = split_key_item(s, &key, &sep, &arg);
     if (!err.empty())
         return (err);
@@ -420,7 +433,7 @@ std::string map_lines::add_feature_marker(const std::string &s)
     if (feat == DNGN_UNSEEN)
         return make_stringf("unknown feature: %s", arg.c_str());
 
-    transforms.push_back(new map_feat_marker_spec(key, feat));    
+    transforms.push_back(new map_feat_marker_spec(key[0], feat));    
     return ("");
 }
 
@@ -521,7 +534,7 @@ std::string map_lines::add_subst(const std::string &sub)
         return ("");
     
     int sep = 0;
-    int key = 0;
+    std::string key;
     std::string substitute;
 
     std::string err = split_key_item(sub, &key, &sep, &substitute);
@@ -533,8 +546,64 @@ std::string map_lines::add_subst(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    transforms.push_back( new subst_spec( key, sep == ':', repl ) );
+    transforms.push_back( new subst_spec( key[0], sep == ':', repl ) );
 
+    return ("");
+}
+
+std::string map_lines::parse_nsubst_spec(const std::string &s,
+                                         subst_spec &spec)
+{
+    std::string key, arg;
+    int sep;
+    std::string err = split_key_item(s, &key, &sep, &arg);
+    if (!err.empty())
+        return err;
+    const int keyval = key == "*"? -1 : atoi(key.c_str());
+    if (!keyval)
+        return make_stringf("Illegal spec: %s", s.c_str());
+    
+    glyph_replacements_t repl;
+    err = parse_glyph_replacements(arg, repl);
+    if (!err.empty())
+        return (err);
+
+    spec = subst_spec(keyval, sep == ':', repl);
+    return ("");
+}
+
+std::string map_lines::add_nsubst(const std::string &s)
+{
+    std::vector<subst_spec> substs;
+
+    int sep;
+    std::string key, arg;
+
+    std::string err = split_key_item(s, &key, &sep, &arg);
+    if (!err.empty())
+        return (err);
+    
+    std::vector<std::string> segs = split_string("/", arg);
+    for (int i = 0, size = segs.size(); i < size; ++i)
+    {
+        std::string &ns = segs[i];
+        if (ns.find('=') == std::string::npos
+            && ns.find(':') == std::string::npos)
+        {
+            if (i < size - 1)
+                ns = "1=" + ns;
+            else
+                ns = "*=" + ns;
+        }
+        subst_spec spec;
+        err = parse_nsubst_spec(ns, spec);
+        if (!err.empty())
+            return (make_stringf("Bad NSUBST spec: %s (%s)",
+                                 s.c_str(), err.c_str()));
+        substs.push_back(spec);
+    }
+
+    transforms.push_back( new nsubst_spec(key[0], substs) );
     return ("");
 }
 
@@ -615,6 +684,11 @@ void map_lines::clear_transforms(map_transformer::transform_type tt)
 void map_lines::clear_shuffles()
 {
     clear_transforms(map_transformer::TT_SHUFFLE);
+}
+
+void map_lines::clear_nsubsts()
+{
+    clear_transforms(map_transformer::TT_NSUBST);
 }
 
 void map_lines::clear_substs()
@@ -707,6 +781,44 @@ void map_lines::subst(subst_spec &spec)
 {
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
         subst(lines[y], spec);
+}
+
+void map_lines::nsubst(nsubst_spec &spec)
+{
+    std::vector<coord_def> positions;
+    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
+    {
+        std::string::size_type pos = 0;
+        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+            positions.push_back(coord_def(pos++, y));
+    }
+    scramble(positions);
+
+    int pcount = 0;
+    const int psize = positions.size();
+    for (int i = 0, size = spec.specs.size(); i < size && pcount < psize; ++i)
+    {
+        const int nsubsts = spec.specs[i].key();
+        pcount += apply_nsubst(positions, pcount, nsubsts, spec.specs[i]);
+    }
+}
+
+int map_lines::apply_nsubst(std::vector<coord_def> &pos,
+                             int start, int nsub,
+                             subst_spec &spec)
+{
+    if (nsub == -1)
+        nsub = pos.size();
+    const int end = std::min(start + nsub, (int) pos.size());
+    int substituted = 0;
+    for (int i = start; i < end; ++i)
+    {
+        const int val = spec.value();
+        const coord_def &c = pos[i];
+        lines[c.y][c.x] = val;
+        ++substituted;
+    }
+    return (substituted);
 }
 
 std::string map_lines::block_shuffle(const std::string &s)
@@ -1525,16 +1637,15 @@ std::string map_def::add_key_field(
     const std::string &s,
     std::string (keyed_mapspec::*set_field)(const std::string &s, bool fixed))
 {
-    int key = 0;
     int separator = 0;
-    std::string arg;
+    std::string key, arg;
 
     std::string err = split_key_item(s, &key, &separator, &arg);
     if (!err.empty())
         return (err);
 
-    keyed_mapspec &km = keyspecs[key];
-    km.key_glyph = key;
+    keyed_mapspec &km = keyspecs[key[0]];
+    km.key_glyph = key[0];
     return ((km.*set_field)(arg, separator == ':'));
 }
 
@@ -2156,6 +2267,30 @@ bool subst_spec::operator == (const subst_spec &other) const
             return (false);
     }
     return (true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// nsubst_spec
+
+nsubst_spec::nsubst_spec(int _key, const std::vector<subst_spec> &_specs)
+    : key(_key), specs(_specs)
+{
+}
+
+std::string nsubst_spec::apply_transform(map_lines &map)
+{
+    map.nsubst(*this);
+    return ("");
+}
+
+map_transformer *nsubst_spec::clone() const
+{
+    return new nsubst_spec(key, specs);
+}
+
+std::string nsubst_spec::describe() const
+{
+    return ("");
 }
 
 //////////////////////////////////////////////////////////////////////////

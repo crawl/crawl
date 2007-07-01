@@ -41,12 +41,15 @@ syn region desPre start=/^\s*prelude\?\s*{{/ end=/}}\s*$/ contains=@desLuaGroup,
 setlocal iskeyword+=:
 setlocal iskeyword+=-
 
+syn keyword desSubstDec SUBST: contained
+syn keyword desNsubstDec NSUBST: contained
+syn keyword desShuffleDec SHUFFLE: contained
+
 syn region desSubst start=/^SUBST:\s*/ end=/$/ contains=desSubstDec,desSubstArg,desSubstSep,@desMapElements keepend
 
-syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
+syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desNsubstDec,desSubstArg,desSubstSep,@desMapElements keepend
 
-syn keyword desSubstDec SUBST: contained
-syn keyword desShuffleDec SHUFFLE: contained
+syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
 
 syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: ITEM: KFEAT: KMONS: KITEM:
 syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float no_hmirror no_vmirror no_rotate entry pan no_pool_fixup no_monster_gen generate_awake
@@ -88,6 +91,7 @@ syn region desMap start=/^\s*\<MAP\>\s*$/ end=/^\s*\<ENDMAP\>\s*$/ contains=@des
 
 hi link desDeclarator Statement
 hi link desSubstDec   Statement
+hi link desNsubstDec  Statement
 hi link desShuffleDec Statement
 hi link desMapBookend Statement
 hi link desLuaBlock   Statement

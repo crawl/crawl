@@ -456,25 +456,38 @@ static int dgn_shuffle_remove(lua_State *ls)
     return (0);
 }
 
-static int dgn_subst(lua_State *ls)
+static int dgn_map_add_transform(
+    lua_State *ls,
+    std::string (map_lines::*add)(const std::string &s),
+    void (map_lines::*erase)())
 {
     MAP(ls, 1, map);
-    if (lua_gettop(ls) == 1)
-        return dlua_stringtable(ls, map->get_subst_strings());
 
     for (int i = 2, size = lua_gettop(ls); i <= size; ++i)
     {
         if (lua_isnil(ls, i))
-            map->map.clear_substs();
+            (map->map.*erase)();
         else
         {
-            std::string err = map->map.add_subst(luaL_checkstring(ls, i));
+            std::string err = (map->map.*add)(luaL_checkstring(ls, i));
             if (!err.empty())
                 luaL_error(ls, err.c_str());
         }
     }
 
     return (0);    
+}
+
+static int dgn_subst(lua_State *ls)
+{
+    return dgn_map_add_transform(ls, &map_lines::add_subst,
+                                 &map_lines::clear_substs);
+}
+
+static int dgn_nsubst(lua_State *ls)
+{
+    return dgn_map_add_transform(ls, &map_lines::add_nsubst,
+                                 &map_lines::clear_nsubsts);
 }
 
 static int dgn_subst_remove(lua_State *ls)
@@ -858,6 +871,7 @@ static const struct luaL_reg dgn_lib[] =
     { "shuffle", dgn_shuffle },
     { "shuffle_remove", dgn_shuffle_remove },
     { "subst", dgn_subst },
+    { "nsubst", dgn_nsubst },
     { "subst_remove", dgn_subst_remove },
     { "map", dgn_map },
     { "mons", dgn_mons },

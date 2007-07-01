@@ -67,7 +67,7 @@ level_range set_range(const char *s, int start, int end)
 
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM MARKER
-%token <i>      PRELUDE MAIN VALIDATE VETO
+%token <i>      PRELUDE MAIN VALIDATE VETO NSUBST
 
 %token <i>      COMMA INTEGER CHARACTER
 
@@ -167,6 +167,7 @@ metaline        : place
                 | items
                 | marker
                 | subst
+                | nsubst
                 | shuffle
                 | tags
                 | kfeat
@@ -308,6 +309,22 @@ marker_spec     : ITEM_INFO
                 }
                 ;
 
+nsubst          : NSUBST nsubst_specifiers { }
+                ;
+
+nsubst_specifiers : nsubst_spec
+                  | nsubst_specifiers COMMA nsubst_spec
+                  ;
+
+nsubst_spec     : ITEM_INFO
+                {
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("nsubst(\"%s\")", 
+                            quote_lua_string($1).c_str()));
+                }
+                ;
+                
 subst           : SUBST subst_specifiers { }
                 ;
 
