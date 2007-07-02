@@ -1130,7 +1130,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             damMult = 20;
             break;
         case WPN_SLING:
-            baseHit = 1;
+            baseHit = 10;
             hitMult = 40;
             damMult = 20;
             // monsters get half the launcher damage bonus,

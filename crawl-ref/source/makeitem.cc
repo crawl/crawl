@@ -3073,10 +3073,11 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         if (one_chance_in(3))
             item_race = MAKE_ITEM_ORCISH;
 
-        if (one_chance_in(12) && level > 1)
+        if (!melee_only && one_chance_in(12) && level)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_BLOWGUN;
+            item.sub_type = WPN_SLING;
+            item_race = MAKE_ITEM_NO_RACE;
             break;
         }
         // deliberate fall through {dlb}
@@ -3262,6 +3263,14 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         // deliberate fall-through
     case MONS_ORC_KNIGHT:
         item_race = MAKE_ITEM_ORCISH;
+        // Occasionally get crossbows.
+        if (!melee_only && one_chance_in(9))
+        {
+            item_race = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_CROSSBOW;
+            break;
+        }
         // deliberate fall-through
     case MONS_NORBERT:
     case MONS_JOZEF:
