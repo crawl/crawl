@@ -207,6 +207,40 @@ bool Menu::process_key( int keyin )
         }
         break;
     }
+    case CONTROL('F'):
+    {
+        if ( !( flags & MF_ALLOW_FILTER ) )
+            break;
+        char linebuf[80];
+        gotoxy(1,1);
+        clear_to_end_of_line();
+        textcolor(WHITE);
+        cprintf("Select what? (regex) ");
+        textcolor(DARKGREY);
+        bool validline = !cancelable_get_line(linebuf, sizeof linebuf, 80);
+        if ( validline && linebuf[0] )
+        {
+            text_pattern tpat(linebuf);
+            for ( unsigned int i = 0; i < items.size(); ++i )
+            {
+                if ( items[i]->level == MEL_ITEM &&
+                     tpat.matches(items[i]->get_text()) )
+                {
+                    select_index(i);
+                    if ( flags & MF_SINGLESELECT )
+                    {
+                        // Return the first item found.
+                        get_selected(&sel);
+                        return false;
+                    }
+                }
+            }
+            get_selected(&sel);
+        }
+        nav = true;
+        repaint = true;
+        break;
+    }
     default:
         keyin = post_process(keyin);
         lastch = keyin;

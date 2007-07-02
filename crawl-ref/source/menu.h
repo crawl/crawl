@@ -152,6 +152,8 @@ enum MenuFlag
     MF_ALWAYS_SHOW_MORE = 0x0020,   // Always show the -more- footer
     MF_NOWRAP           = 0x0040,   // Paging past the end will not wrap back.
 
+    MF_ALLOW_FILTER     = 0x0080,   // Control-F will ask for regex and
+                                    // select the appropriate items.
     MF_EASY_EXIT        = 0x1000
 };
 

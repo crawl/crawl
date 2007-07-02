@@ -602,7 +602,8 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
         menu.set_type(mtype);
         menu.set_title(title);
         menu.load_items(items);
-        menu.set_flags(noselect ? MF_NOSELECT : MF_MULTISELECT);
+        menu.set_flags(noselect ? MF_NOSELECT :
+                       MF_MULTISELECT | MF_ALLOW_FILTER);
         menu.show();
         selected = menu.get_selitems();
     }
@@ -792,7 +793,7 @@ std::vector<SelItem> prompt_invent_items(
                 Options.drop_mode == DM_SINGLE 
                     && (!pre_select || pre_select->empty())?
                         MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
-                        MF_MULTISELECT;
+                        MF_MULTISELECT | MF_ALLOW_FILTER;
             // The "view inventory listing" mode.
             int ch = invent_select(
                         prompt,
