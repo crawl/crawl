@@ -3597,14 +3597,14 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         return (item_race);
 
     const item_def &i = mitm[thing_created];
-    if (melee_only && i.base_type != OBJ_WEAPONS)
+    if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
         destroy_item(thing_created);
         return (item_race);
     }
     
     give_monster_item(mon, thing_created, force_item);
-    if (i.base_type != OBJ_WEAPONS && give_aux_melee)
+    if (give_aux_melee && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
         give_weapon(mon, level, true, false);
 
     return (item_race);
