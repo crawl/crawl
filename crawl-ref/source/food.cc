@@ -145,9 +145,10 @@ void weapon_switch( int targ )
         wield_effects( targ, false );
 }
 
-// look for a butchering implement, prompting user if no obvious
-// options exist. Returns whether a weapon was switched.
-static bool find_butchering_implement()
+// look for a butchering implement. If fallback is true,
+// prompt the user if no obvious options exist.
+// Returns whether a weapon was switched.
+static bool find_butchering_implement( bool fallback )
 {
     // look for a butchering implement in your pack
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -165,7 +166,10 @@ static bool find_butchering_implement()
             return true;
         }
     }
-    
+
+    if ( !fallback )
+        return false;
+
     // if we didn't swap above, then we still can't cut...let's call
     // wield_weapon() in the "prompt the user" way...
     
@@ -180,7 +184,6 @@ static bool find_butchering_implement()
 
 bool butchery(void)
 {
-    bool can_butcher = false;
     bool wpn_switch = false;
     bool new_cursed = false;
     int old_weapon = you.equip[EQ_WEAPON];
@@ -193,7 +196,14 @@ bool butchery(void)
             you.species == SP_GHOUL ||
             you.mutation[MUT_CLAWS])));
 
-    can_butcher = barehand_butcher ||
+    bool gloved_butcher = (you.species == SP_TROLL ||
+                           you.species == SP_GHOUL ||
+                           you.mutation[MUT_CLAWS]) &&
+        (you.equip[EQ_GLOVES] != -1 &&
+         !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
+    int old_gloves = you.equip[EQ_GLOVES];
+
+    bool can_butcher = barehand_butcher ||
         (you.equip[EQ_WEAPON] != -1 &&
          can_cut_meat(you.inv[you.equip[EQ_WEAPON]]));
     
@@ -246,11 +256,23 @@ bool butchery(void)
         }
         if ( answer == 0 )
             continue;
+
+        bool removed_gloves = false;
         
         if ( Options.easy_butcher && !can_butcher )
         {
-            // try to find a butchering implement
-            wpn_switch = find_butchering_implement();
+            // Try to find a butchering implement.
+            // If you can butcher by taking off your gloves, don't prompt.
+            wpn_switch = find_butchering_implement(!gloved_butcher);
+            removed_gloves = gloved_butcher && !wpn_switch;
+            if ( removed_gloves )
+            {
+                // Actually take off the gloves; this creates a
+                // delay. We assume later on that gloves have a 1-turn
+                // takeoff delay!
+                takeoff_armour(old_gloves);
+                barehand_butcher = true;
+            }
             const int wpn = you.equip[EQ_WEAPON];
             if ( wpn_switch )
             {
@@ -260,11 +282,11 @@ bool butchery(void)
                     item_cursed( you.inv[wpn]);
             }
             
-            // note that barehanded butchery would not reach this
-            // stage, so if wpn == -1 the user selected '-' when
+            // note that if wpn == -1 the user selected '-' when
             // switching weapons
             
-            if (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn]))
+            if (!barehand_butcher &&
+                (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn])))
             {
                 // still can't butcher. Early out
                 if ( wpn == -1 ) {
@@ -304,7 +326,7 @@ bool butchery(void)
             {
                 // If we didn't switch weapons, we get in one turn of butchery;
                 // otherwise the work has to happen in the delay.
-                if (!wpn_switch)
+                if (!wpn_switch && !removed_gloves)
                     ++mitm[objl].plus2;
                 
                 int work_req = 4 - mitm[objl].plus2;
@@ -324,6 +346,10 @@ bool butchery(void)
         // switch weapon back
         if (!new_cursed && wpn_switch)
             start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
+
+        // put on the removed gloves
+        if ( removed_gloves )
+            start_delay( DELAY_ARMOUR_ON, 1, old_gloves );
 
         you.turn_is_over = true;    
         return true;

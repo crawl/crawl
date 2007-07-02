@@ -41,8 +41,7 @@ static int real_god_power( int religion, int idx )
 
 static bool is_noteworthy_skill_level( int level )
 {
-    unsigned i;
-    for ( i = 0; i < Options.note_skill_levels.size(); ++i )
+    for ( unsigned int i = 0; i < Options.note_skill_levels.size(); ++i )
         if ( level == Options.note_skill_levels[i] )
             return true;
     return false;
@@ -199,7 +198,7 @@ static bool is_noteworthy( const Note& note )
     return true;
 }
 
-const char* number_to_ordinal( int number )
+static const char* number_to_ordinal( int number )
 {
     const char* ordinals[5] = { "first", "second", "third", "fourth",
                                 "fifth" };
@@ -440,6 +439,6 @@ void make_user_note()
     if ( !validline || (!*buf) )
         return;
     Note unote(NOTE_USER_NOTE);
-    unote.name = std::string(buf);
+    unote.name = buf;
     take_note(unote);
 }
