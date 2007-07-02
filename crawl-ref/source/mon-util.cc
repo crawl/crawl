@@ -2738,6 +2738,8 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         return pickup_wand(item, near);
     case OBJ_SCROLLS:
         return pickup_scroll(item, near);
+    case OBJ_POTIONS:
+        return pickup(item, MSLOT_POTION, near);
     case OBJ_CORPSES:
         return eat_corpse(item, near);
     case OBJ_MISCELLANY:
