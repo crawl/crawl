@@ -113,10 +113,11 @@ void tag_followers( void )
 
             struct monsters *fmenv = &menv[mgrd[count_x][count_y]];
 
-            if ((fmenv->type == MONS_PANDEMONIUM_DEMON)
-                || (fmenv->type == MONS_PLAYER_GHOST)  // cdl
-                || (fmenv->type == -1)
-                || mons_is_stationary(fmenv))
+            if (fmenv->type == MONS_PANDEMONIUM_DEMON
+                || fmenv->type == MONS_PLAYER_GHOST  // cdl
+                || !fmenv->alive()
+                || mons_is_stationary(fmenv)
+                || fmenv->incapacitated())
             {   
                 continue;
             }
