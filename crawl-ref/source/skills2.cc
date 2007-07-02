@@ -1821,7 +1821,7 @@ static void display_skill_table(bool show_aptitudes)
             {
                 const int needed = skill_exp_needed(you.skills[x] + 2);
                 const int prev_needed = skill_exp_needed(you.skills[x] + 1);
-                const int spec_abil = species_skills(x, you.species);
+                int spec_abil = species_skills(x, you.species);
 
                 int percent_done = ((you.skill_points[x] - (prev_needed * spec_abil) / 100) * 100) / (((needed - prev_needed) * spec_abil) / 100);
 
@@ -1841,6 +1841,20 @@ static void display_skill_table(bool show_aptitudes)
                 else
                 {
                     textcolor(RED);
+
+                    // Modify Spellcasting, Evocations, Invocations for
+                    // aptitude display.
+                    if ( x == SK_SPELLCASTING )
+                    {
+                        spec_abil *= 10;
+                        spec_abil /= 13;
+                    }
+                    else if ( x == SK_INVOCATIONS || x == SK_EVOCATIONS )
+                    {
+                        spec_abil *= 4;
+                        spec_abil /= 3;
+                    }
+
                     cprintf(" %3d  ", spec_abil);
                 }
             }
