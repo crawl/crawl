@@ -2998,7 +2998,9 @@ static void give_potion(monsters *mon, int level)
     }
 }
 
-static item_make_species_type give_weapon(monsters *mon, int level)
+static item_make_species_type give_weapon(monsters *mon, int level,
+                                          bool melee_only = false,
+                                          bool give_aux_melee = true)
 {
     const int bp = get_item_slot();
     bool force_item = false;
@@ -3594,7 +3596,16 @@ static item_make_species_type give_weapon(monsters *mon, int level)
     if (thing_created == NON_ITEM)
         return (item_race);
 
+    const item_def &i = mitm[thing_created];
+    if (melee_only && i.base_type != OBJ_WEAPONS)
+    {
+        destroy_item(thing_created);
+        return (item_race);
+    }
+    
     give_monster_item(mon, thing_created, force_item);
+    if (i.base_type != OBJ_WEAPONS && give_aux_melee)
+        give_weapon(mon, level, true, false);
 
     return (item_race);
 }
