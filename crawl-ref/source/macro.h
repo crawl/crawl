@@ -25,6 +25,7 @@ enum KeymapContext {
     KC_DEFAULT,         // For no-arg getchm(), must be zero.
     KC_LEVELMAP,        // When in the 'X' level map
     KC_TARGETING,       // Only during 'x' and other targeting modes
+    KC_CONFIRM,         // When being asked y/n/q questions
 
     KC_CONTEXT_COUNT    // Must always be the last
 };

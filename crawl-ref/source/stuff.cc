@@ -599,7 +599,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         if ( !noprompt )
             mpr(str, MSGCH_PROMPT);
 
-        int tmp = getch();
+        int tmp = getchm(KC_CONFIRM);
 
         if ((tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n') 
                 && safeanswer)
@@ -632,7 +632,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
     {
         mpr(str, MSGCH_PROMPT);
 
-        int tmp = getch();
+        int tmp = getchm(KC_CONFIRM);
 
         if ( tmp == ESCAPE || tmp == 'q' || tmp == 'Q' )
             return -1;

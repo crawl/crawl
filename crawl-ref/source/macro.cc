@@ -63,6 +63,7 @@ static macromap *all_maps[] =
     &Keymaps[KC_DEFAULT],
     &Keymaps[KC_LEVELMAP],
     &Keymaps[KC_TARGETING],
+    &Keymaps[KC_CONFIRM],
     &Macros,
 };
 
@@ -661,7 +662,9 @@ void macro_add_query( void )
     KeymapContext keymc = KC_DEFAULT;
 
     mesclr();
-    mpr("(m)acro, keymap [(k) default, (x) level-map or (t)argeting], (s)ave?",
+    mpr("(m)acro, keymap "
+        "[(k) default, (x) level-map, (t)argeting, (c)onfirm], "
+        "(s)ave?",
         MSGCH_PROMPT);
     input = m_getch();
     input = tolower( input );
@@ -679,6 +682,11 @@ void macro_add_query( void )
     {
         keymap = true;
         keymc  = KC_TARGETING;
+    }
+    else if (input == 'c')
+    {
+        keymap = true;
+        keymc  = KC_CONFIRM;
     }
     else if (input == 'm')
         keymap = false;
@@ -698,10 +706,11 @@ void macro_add_query( void )
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
 
     mprf(MSGCH_PROMPT, "Input %s%s trigger key: ",
-         keymap ? (keymc == KC_DEFAULT  ? "default " :
-                   keymc == KC_LEVELMAP ? "level-map "
-                                        : "targeting ")
-                : "",
+         keymap ? (keymc == KC_DEFAULT   ? "default " :
+                   keymc == KC_LEVELMAP  ? "level-map " :
+                   keymc == KC_TARGETING ? "targeting " :
+                   keymc == KC_CONFIRM   ? "confirm " :
+                   "buggy") : "",
          (keymap ? "keymap" : "macro") );
 
     keyseq key = getch_mul();
