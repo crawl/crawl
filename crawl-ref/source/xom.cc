@@ -841,6 +841,6 @@ void xom_acts(bool niceness, int sever)
             ;
     }
     
-    if (coinflip())
+    if (you.religion == GOD_XOM && coinflip())
         you.piety = 200 - you.piety;
 }
