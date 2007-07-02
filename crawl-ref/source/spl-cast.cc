@@ -56,9 +56,9 @@
 
 #define WILD_MAGIC_NASTINESS 150
 
-static bool surge_identify_boosters(int spell)
+static bool surge_identify_boosters(spell_type spell)
 {
-    const unsigned int typeflags = spell_type(spell);
+    const unsigned int typeflags = get_spell_disciplines(spell);
     if ( (typeflags & SPTYP_FIRE) || (typeflags & SPTYP_ICE) )
     {
         // Must not be wielding an unIDed staff.
@@ -1843,7 +1843,7 @@ void exercise_spell( spell_type spell, bool spc, bool success )
     // set at 50 in stone_soup 0.1.1 (which is bad).
     const int ref_skill = 80;
 
-    unsigned int disciplines = spell_type(spell);
+    unsigned int disciplines = get_spell_disciplines(spell);
 
     //jmf: evil evil evil -- exclude HOLY bit
     disciplines &= (~SPTYP_HOLY);

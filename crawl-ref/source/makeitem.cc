@@ -3131,13 +3131,6 @@ static item_make_species_type give_weapon(monsters *mon, int level)
         break;
 
     case MONS_ORC:
-        if (one_chance_in(15) && level > 1)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type = WPN_BLOWGUN;
-            break;
-        }
-        // deliberate fall through {gdl}
     case MONS_ORC_PRIEST:
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {gdl}
