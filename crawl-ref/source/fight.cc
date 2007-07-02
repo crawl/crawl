@@ -3020,6 +3020,9 @@ void melee_attack::mons_perform_attack_rounds()
 {
     const int nrounds = atk->type == MONS_HYDRA? atk->number : 4;
     const coord_def pos = defender->pos();
+
+    // Melee combat, tell attacker to wield its melee weapon.
+    atk->wield_melee_weapon();
     
     for (attack_number = 0; attack_number < nrounds; ++attack_number)
     {

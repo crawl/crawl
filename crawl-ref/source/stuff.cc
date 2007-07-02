@@ -21,6 +21,7 @@
 #include "stuff.h"
 #include "view.h"
 
+#include <cstdarg>
 #include <sstream>
 #include <iomanip>
 
@@ -190,6 +191,28 @@ int random_range(int low, int high)
 {
     ASSERT(low <= high);
     return (low + random2(high - low + 1));
+}
+
+int random_choose(int first, ...)
+{
+    va_list args;
+    va_start(args, first);
+
+    int chosen = first, count = 1, nargs = 100;
+
+    while (nargs-- > 0)
+    {
+        const int pick = va_arg(args, int);
+        if (pick == -1)
+            break;
+        if (one_chance_in(++count))
+            chosen = pick;
+    }
+
+    ASSERT(nargs > 0);
+    
+    va_end(args);
+    return (chosen);
 }
 
 int random2( int max )

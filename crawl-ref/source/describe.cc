@@ -4872,7 +4872,7 @@ void describe_monsters(monsters& mons)
                 description << "$Monster Inventory:$";
                 has_item = true;
             }
-            description << "    " << i
+            description << "    " << i << ") "
                         << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
         }
     }

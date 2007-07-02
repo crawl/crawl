@@ -1907,7 +1907,6 @@ enum mons_class_flags
     M_EVIL              = (1<<20),        // monster vulnerable to holy spells
 
     M_UNIQUE            = (1<<21),        // monster is a unique
-
     M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
 
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
@@ -2480,17 +2479,20 @@ enum mon_holy_type // matches (char) H_foo in mon-util.h, see: monster_holiness(
     MH_PLANT                           //    plants
 };
 
+// Adding slots breaks saves. YHBW.
 enum mon_inv_type           // (int) menv[].inv[]
 {
-    MSLOT_WEAPON,
-    MSLOT_MISSILE, // although it is a second weapon for MONS_TWO_HEADED_OGRE - how to reconcile cleanly? {dlb}
+    MSLOT_WEAPON,           // Primary weapon (melee)
+    MSLOT_ALT_WEAPON,       // Alternate weapon, ranged or second melee weapon
+                            // for monsters that can use two weapons.
+    MSLOT_MISSILE,
     MSLOT_ARMOUR,
-    MSLOT_MISCELLANY, //mv: used for misc. obj. (7 Aug 2001)
-    MSLOT_POTION, // mv: now used only for potions (7 Aug 2001)
-    MSLOT_WAND, //
+    MSLOT_MISCELLANY,
+    MSLOT_POTION,
+    MSLOT_WAND,
     MSLOT_SCROLL,
-    MSLOT_GOLD, //mv: used for money :) (7 Aug 2001)
-    NUM_MONSTER_SLOTS = 8 // value must remain 8 for savefile compatibility {dlb}
+    MSLOT_GOLD,
+    NUM_MONSTER_SLOTS
 };
 
 // order of these is important:

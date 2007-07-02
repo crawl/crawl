@@ -1033,6 +1033,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int lnchClass = (weapon != NON_ITEM) ? mitm[weapon].base_type : -1;
     int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
 
+    const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
+
     item_def item = mitm[hand_used];  // copy changed for venom launchers 
     item.quantity = 1;
 
@@ -1070,13 +1072,13 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         // Darts are easy.
         if (wepClass == OBJ_MISSILES && wepType == MI_DART)
         {
-            baseHit = 5;
+            baseHit = 11;
             hitMult = 40;
             damMult = 25;
         }
         else
         {
-            baseHit = 0;
+            baseHit = 6;
             hitMult = 30;
             damMult = 25;
         }
@@ -1272,15 +1274,23 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // add everything up.
     pbolt.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;
-    pbolt.damage = dice_def( 1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus );
+    pbolt.damage =
+        dice_def( 1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus );
 
     if (launched)
     {
         pbolt.damage.size += lnchDamBonus;
         pbolt.hit += lnchHitBonus;
     }
-
     pbolt.damage.size = diceMult * pbolt.damage.size / 100;
+
+    // Skilled archers get better to-hit and damage.
+    if (skilled)
+    {
+        pbolt.hit         = pbolt.hit * 120 / 100;
+        pbolt.damage.size = pbolt.damage.size * 120 / 100;
+    }
+
     scale_dice(pbolt.damage);
 
     // decrease inventory

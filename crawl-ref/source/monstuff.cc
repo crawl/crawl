@@ -3253,6 +3253,72 @@ static bool handle_spell( monsters *monster, bolt & beem )
     return (true);
 }                               // end handle_spell()
 
+// Returns a rough estimate of damage from throwing the wielded weapon.
+int mons_thrown_weapon_damage(const item_def *weap)
+{
+    if (!weap || get_weapon_brand(*weap) != SPWPN_RETURNING)
+        return (0);
+    return std::max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
+}
+
+// Returns a rough estimate of damage from firing/throwing missile.
+int mons_missile_damage(const item_def *launch,
+                        const item_def *missile)
+{
+    if (!missile || (!launch && !is_throwable(*missile)))
+        return (0);
+
+    const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
+    const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
+    return std::max(0, launch_damage + missile_damage);
+}
+
+int mons_weapon_damage_rating(const item_def &launcher)
+{
+    return (property(launcher, PWPN_DAMAGE) + launcher.plus2);
+}
+
+// Given the monster's current weapon and alt weapon (either or both of
+// which may be NULL), works out whether using missiles or throwing the
+// main weapon (with returning brand) is better. If using missiles that
+// need a launcher, sets *launcher to the launcher.
+// 
+// If the monster has no ranged weapon attack, returns NON_ITEM.
+//
+int mons_pick_best_missile(monsters *mons, item_def **launcher,
+                           bool ignore_melee)
+{
+    *launcher = NULL;
+    item_def *melee = NULL, *launch = NULL;
+    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+    {
+        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
+        {
+            if (is_range_weapon(*item))
+                launch = item;
+            else if (!ignore_melee)
+                melee = item;
+        }
+    }
+    
+    const item_def *missiles = mons->missiles();
+    if (launch && missiles && !missiles->launched_by(*launch))
+        launch = NULL;
+
+    const int tdam = mons_thrown_weapon_damage(melee);
+    const int fdam = mons_missile_damage(launch, missiles);
+
+    if (!tdam && !fdam)
+        return (NON_ITEM);
+    else if (tdam >= fdam)
+        return (melee->index());
+    else
+    {
+        *launcher = launch;
+        return (missiles->index());
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_throw
@@ -3264,9 +3330,9 @@ static bool handle_spell( monsters *monster, bolt & beem )
 static bool handle_throw(monsters *monster, bolt & beem)
 {
     // yes, there is a logic to this ordering {dlb}:
-    if (monster->has_ench(ENCH_CONFUSION) 
-        || monster->behaviour == BEH_SLEEP
-        || monster->has_ench(ENCH_SUBMERGED))
+    if (monster->incapacitated()
+        || monster->asleep()
+        || monster->submerged())
     {
         return (false);
     }
@@ -3274,31 +3340,11 @@ static bool handle_throw(monsters *monster, bolt & beem)
     if (mons_itemuse(monster->type) < MONUSE_OPEN_DOORS)
         return (false);
 
-    int mon_item;
-    const int mon_wpn = monster->inv[MSLOT_WEAPON];
-    bool returning = false;
-
-    // weapons of returning can be thrown
-    if ( mon_wpn != NON_ITEM &&
-         get_weapon_brand(mitm[mon_wpn]) == SPWPN_RETURNING )
-    {
-        mon_item = mon_wpn;
-        returning = true;
-    }
-    else
-    {
-        mon_item = monster->inv[MSLOT_MISSILE];
-    }
-
-    if (mon_item == NON_ITEM || !is_valid_item( mitm[mon_item] ))
+    if (one_chance_in(5))
         return (false);
 
-    // don't allow offscreen throwing.. for now.
+    // don't allow offscreen throwing for now.
     if (monster->foe == MHITYOU && !mons_near(monster))
-        return (false);
-
-    // poor 2-headed ogres {dlb}
-    if (monster->type == MONS_TWO_HEADED_OGRE || monster->type == MONS_ETTIN) 
         return (false);
 
     // recent addition {GDL} - monsters won't throw if they can do melee.
@@ -3306,24 +3352,10 @@ static bool handle_throw(monsters *monster, bolt & beem)
     if (adjacent( beem.target_x, beem.target_y, monster->x, monster->y ))
         return (false);
 
-    if (one_chance_in(5))
-        return (false);
+    item_def *launcher = NULL;
+    const int mon_item = mons_pick_best_missile(monster, &launcher);
 
-    // new (GDL) - don't throw idiotic stuff.  It's a waste of time.
-    int wepClass = mitm[mon_item].base_type;
-    int wepType = mitm[mon_item].sub_type;
-
-    int weapon = monster->inv[MSLOT_WEAPON];
-
-    int lnchClass = (weapon != NON_ITEM) ? mitm[weapon].base_type : -1;
-    int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
-
-    bool thrown = false;
-    bool launched = false;
-
-    throw_type( lnchClass, lnchType, wepClass, wepType, launched, thrown );
-
-    if (!launched && !thrown && !returning)
+    if (mon_item == NON_ITEM || !is_valid_item(mitm[mon_item]))
         return (false);
 
     // ok, we'll try it.
@@ -3341,6 +3373,9 @@ static bool handle_throw(monsters *monster, bolt & beem)
     // good idea?
     if (mons_should_fire( beem ))
     {
+        if (launcher && launcher != monster->mslot_item(MSLOT_WEAPON))
+            monster->swap_weapons();
+        
         beem.name.clear();
         return (mons_throw( monster, beem, mon_item ));
     }
@@ -3798,44 +3833,6 @@ void handle_monsters(void)
     }
 }                               // end handle_monster()
 
-static bool monster_wants_weapon(const monsters *monster, const item_def &weap)
-{
-    if (is_fixed_artefact( weap ))
-        return (false);
-
-    if (is_random_artefact( weap ))
-        return (false);
-
-    // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
-    // of course, this also block knives {dlb}:
-    if ((mons_species(monster->type) == MONS_KOBOLD
-         || mons_species(monster->type) == MONS_GOBLIN)
-        && property( weap, PWPN_HIT ) <= 0)
-    {
-        return (false);
-    }
-
-    // Nobody picks up giant clubs:
-    if (weap.sub_type == WPN_GIANT_CLUB
-        || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
-    {
-        return (false);
-    }
-
-    const int brand = get_weapon_brand(weap);
-    const int holiness = monster->holiness();
-    if (brand == SPWPN_DISRUPTION && holiness == MH_UNDEAD)
-        return (false);
-
-    if (brand == SPWPN_HOLY_WRATH
-        && (holiness == MH_DEMONIC || holiness == MH_UNDEAD))
-    {
-        return (false);
-    }
-
-    return (true);
-}
-
 static bool is_item_jelly_edible(const item_def &item)
 {
     // don't eat artefacts (note that unrandarts are randarts)
@@ -3952,172 +3949,15 @@ static bool handle_pickup(monsters *monster)
     }                           // end "if jellies"
 
     // Note: Monsters only look at top of stacks.
-    item = igrd[monster->x][monster->y];
-
-    switch (mitm[item].base_type)
+    
+    for (item = igrd[monster->x][monster->y]; item != NON_ITEM; )
     {
-    case OBJ_WEAPONS:
-        if (monster->inv[MSLOT_WEAPON] != NON_ITEM)
-            return (false);
-
-        if (!monster_wants_weapon(monster, mitm[item]))
-            return (false);
-
-        monster->inv[MSLOT_WEAPON] = item;
-
-        if (get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]) == SPWPN_PROTECTION)
-        {
-            monster->ac += 3;
-        }
-
-        if (monsterNearby)
-        {
-            mprf("%s picks up %s.", str_monam(*monster, DESC_CAP_THE).c_str(),
-                 mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A).c_str());
-        }
-        break;
-
-    case OBJ_MISSILES:
-        // don't pick up if we're in combat, and there isn't much there
-        if (mitm[item].quantity < 5 || monster->behaviour != BEH_WANDER)
-            return (false);
-
-        if (monster->inv[MSLOT_MISSILE] != NON_ITEM
-            && mitm[monster->inv[MSLOT_MISSILE]].sub_type == mitm[item].sub_type
-            && mitm[monster->inv[MSLOT_MISSILE]].plus == mitm[item].plus
-            && mitm[monster->inv[MSLOT_MISSILE]].special == mitm[item].special)
-        {
-            if (monsterNearby)
-            {
-                mprf("%s picks up %s.",
-                     str_monam(*monster, DESC_CAP_THE).c_str(),
-                     mitm[item].name(DESC_NOCAP_A).c_str());
-            }
-
-            inc_mitm_item_quantity( monster->inv[MSLOT_MISSILE], 
-                                    mitm[item].quantity );
-
-            dec_mitm_item_quantity( item, mitm[item].quantity );
+        item_def &topickup = mitm[item];
+        item = topickup.link;
+        if (monster->pickup_item(topickup, monsterNearby))
             return (true);
-        }
-
-        // nobody bothers to pick up rocks if they don't already have some:
-        if (mitm[item].sub_type == MI_LARGE_ROCK)
-            return (false);
-
-        // monsters with powerful melee attacks don't bother
-        if (mons_damage(monster->type, 0) > 5)
-            return (false);
-
-        monster->inv[MSLOT_MISSILE] = item;
-
-        if (monsterNearby)
-        {
-            mprf("%s picks up %s.", str_monam(*monster, DESC_CAP_THE).c_str(),
-                 mitm[item].name(DESC_NOCAP_A).c_str());
-        }
-        break;
-
-    case OBJ_WANDS:
-        if (monster->inv[MSLOT_WAND] != NON_ITEM)
-            return (false);
-
-        monster->inv[MSLOT_WAND] = item;
-
-        if (monsterNearby)
-        {
-            mprf("%s picks up %s.", str_monam(*monster, DESC_CAP_THE).c_str(),
-                 mitm[item].name(DESC_NOCAP_A).c_str());
-        }
-        break;
-
-    case OBJ_SCROLLS:
-        if (monster->inv[MSLOT_SCROLL] != NON_ITEM)
-            return (false);
-
-        monster->inv[MSLOT_SCROLL] = item;
-
-        if (monsterNearby)
-        {
-            mprf("%s picks up %s.", str_monam(*monster, DESC_CAP_THE).c_str(),
-                 mitm[item].name(DESC_NOCAP_A).c_str());
-        }
-        break;
-
-    case OBJ_POTIONS:
-        if (monster->inv[MSLOT_POTION] != NON_ITEM)
-            return (false);
-
-        monster->inv[MSLOT_POTION] = item;
-
-        if (monsterNearby)
-        {
-            mprf("%s picks up %s.", str_monam(*monster, DESC_CAP_THE).c_str(),
-                 mitm[item].name(DESC_NOCAP_A).c_str());
-        }
-        break;
-
-    case OBJ_CORPSES:
-        if (monster->type != MONS_NECROPHAGE && monster->type != MONS_GHOUL)
-            return (false);
-
-        monster->hit_points += 1 + random2(mons_weight(mitm[item].plus))/100;
-
-        // limited growth factor here -- should 77 really be the cap? {dlb}:
-        if (monster->hit_points > 100)
-            monster->hit_points = 100;
-
-        if (monster->hit_points > monster->max_hit_points)
-            monster->max_hit_points = monster->hit_points;
-
-        if (monsterNearby)
-        {
-            mprf("%s eats %s.", str_monam(*monster, DESC_CAP_THE).c_str(),
-                 mitm[item].name(DESC_NOCAP_THE).c_str());
-        }
-
-        destroy_item( item );
-        return (true);
-
-    case OBJ_GOLD: //mv - monsters now pick up gold (19 May 2001)
-        if (monsterNearby)
-        {
-            mprf("%s picks up some gold.",
-                 str_monam(*monster, DESC_CAP_THE).c_str());
-        }
-
-        if (monster->inv[MSLOT_GOLD] != NON_ITEM)
-        {
-            // transfer gold to monster's object, destroy ground object
-            inc_mitm_item_quantity( monster->inv[MSLOT_GOLD], 
-                                    mitm[item].quantity );
-
-            destroy_item( item );
-            return (true);
-        }
-        else
-        {
-            monster->inv[MSLOT_GOLD] = item;
-        }
-        break;
-
-    default:
-        return (false);
     }
-
-    // Item has been picked-up, move to monster inventory.
-    mitm[item].x = 0; 
-    mitm[item].y = 0; 
-
-    // Monster's only take the top item of stacks, so relink the 
-    // top item, and unlink the item.
-    igrd[monster->x][monster->y] = mitm[item].link;
-    mitm[item].link = NON_ITEM;
-
-    if (monster->speed_increment > 25)
-        monster->speed_increment -= monster->speed;
-
-    return (true);
+    return (false);
 }                               // end handle_pickup()
 
 static void jelly_grows(monsters *monster)

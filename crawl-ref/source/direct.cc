@@ -1565,7 +1565,7 @@ static void describe_cell(int mx, int my)
 
         const int mon_wep = menv[i].inv[MSLOT_WEAPON];
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
-        mprf("%s. ('v' to describe)", str_monam(menv[i], DESC_CAP_A).c_str());
+        mprf("%s.", str_monam(menv[i], DESC_CAP_A).c_str());
 
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
@@ -1577,10 +1577,10 @@ static void describe_cell(int mx, int my)
             // 2-headed ogres can wield 2 weapons
             if ((menv[i].type == MONS_TWO_HEADED_OGRE
                  || menv[i].type == MONS_ETTIN)
-                && menv[i].inv[MSLOT_MISSILE] != NON_ITEM)
+                && menv[i].inv[MSLOT_ALT_WEAPON] != NON_ITEM)
             {
                 msg << " and "
-                    <<  mitm[menv[i].inv[MSLOT_MISSILE]].name(DESC_NOCAP_A);
+                    <<  mitm[menv[i].inv[MSLOT_ALT_WEAPON]].name(DESC_NOCAP_A);
             }
             msg << ".";
             mpr(msg.str().c_str());

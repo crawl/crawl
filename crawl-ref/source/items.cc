@@ -1167,22 +1167,27 @@ unsigned long ident_flags(const item_def &item)
     return (flags);
 }
 
-bool items_stack( const item_def &item1, const item_def &item2 )
+bool items_stack( const item_def &item1, const item_def &item2,
+                  bool force_merge )
 {
     // both items must be stackable
-    if (!is_stackable_item( item1 ) || !is_stackable_item( item2 ))
+    if (!force_merge
+        && (!is_stackable_item( item1 ) || !is_stackable_item( item2 )))
         return (false);
 
     // base and sub-types must always be the same to stack
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return (false);
 
+    ASSERT(force_merge || item1.base_type != OBJ_WEAPONS);
+
     if (item1.base_type == OBJ_GOLD)
         return (true);
 
     // These classes also require pluses and special
-    if (item1.base_type == OBJ_MISSILES
-         || item1.base_type == OBJ_MISCELLANY)  // only runes
+    if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
+        || item1.base_type == OBJ_MISSILES
+        || item1.base_type == OBJ_MISCELLANY)  // only runes
     {
         if (item1.plus != item2.plus
              || item1.plus2 != item2.plus2
@@ -1443,6 +1448,19 @@ void move_item_to_grid( int *const obj, int x, int y )
                 *obj = i;
                 return;
             }
+        }
+    }
+    // Non-stackable item that's been fudge-stacked (monster throwing weapons).
+    // Explode the stack when dropped.
+    else if (mitm[*obj].quantity > 1)
+    {
+        while (mitm[*obj].quantity > 1)
+        {
+            // If we can't copy the items out, we lose the surplus.
+            if (copy_item_to_grid(mitm[*obj], x, y, 1, false))
+                --mitm[*obj].quantity;
+            else
+                mitm[*obj].quantity = 1;
         }
     }
 
@@ -2919,4 +2937,16 @@ int item_def::book_number() const
 bool item_def::cursed() const
 {
     return (item_cursed(*this));
+}
+
+bool item_def::launched_by(const item_def &launcher) const
+{
+    if (base_type != OBJ_MISSILES)
+        return (false);
+    return (sub_type == fires_ammo_type(launcher));
+}
+
+int item_def::index() const
+{
+    return (this - mitm.buffer());
 }

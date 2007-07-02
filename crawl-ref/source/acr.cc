@@ -1865,10 +1865,7 @@ static void decrement_durations()
     if (you.duration[DUR_GLAMOUR] > 1)  //jmf: actually GLAMOUR_RELOAD, like
         you.duration[DUR_GLAMOUR]--;    //     the breath weapon delay
     else if (you.duration[DUR_GLAMOUR] == 1)
-    {
         you.duration[DUR_GLAMOUR] = 0;
-        //FIXME: cute message or not?
-    }
 
     if (you.duration[DUR_TELEPORT] > 1)
         you.duration[DUR_TELEPORT]--;

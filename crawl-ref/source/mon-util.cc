@@ -1606,6 +1606,11 @@ bool mons_wields_two_weapons(const monsters *m)
     return (m->type == MONS_TWO_HEADED_OGRE || m->type == MONS_ETTIN);
 }
 
+bool mons_eats_corpses(const monsters *m)
+{
+    return (m->type == MONS_NECROPHAGE || m->type == MONS_GHOUL);
+}
+
 bool mons_is_summoned(const monsters *m)
 {
     return (m->has_ench(ENCH_ABJ));
@@ -1615,7 +1620,7 @@ bool mons_is_summoned(const monsters *m)
 // caller's responsibility.
 int mons_offhand_weapon_index(const monsters *m)
 {
-    return (m->inv[1]);
+    return (m->inv[MSLOT_ALT_WEAPON]);
 }
 
 int mons_base_damage_brand(const monsters *m)
@@ -2283,6 +2288,27 @@ int monsters::damage_brand(int which_attack)
     return (!is_range_weapon(*mweap)? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
 
+item_def *monsters::missiles()
+{
+    return (inv[MSLOT_MISSILE] != NON_ITEM? &mitm[inv[MSLOT_MISSILE]] : NULL);
+}
+
+int monsters::missile_count()
+{
+    if (const item_def *missile = missiles())
+        return (missile->quantity);
+    return (0);
+}
+
+item_def *monsters::launcher()
+{
+    item_def *weap = mslot_item(MSLOT_WEAPON);
+    if (weap && is_range_weapon(*weap))
+        return (weap);
+    weap = mslot_item(MSLOT_ALT_WEAPON);
+    return (weap && is_range_weapon(*weap)? weap : NULL);
+}
+
 item_def *monsters::weapon(int which_attack)
 {
     if (which_attack > 1)
@@ -2306,20 +2332,482 @@ item_def *monsters::weapon(int which_attack)
     return (weap == NON_ITEM? NULL : &mitm[weap]);
 }
 
-static int equip_slot_to_mslot(equipment_type eq)
+
+bool monsters::can_throw_rocks() const
+{
+    return (type == MONS_STONE_GIANT || type == MONS_CYCLOPS);
+}
+
+bool monsters::can_use_missile(const item_def &item) const
+{
+    // Pretty simplistic at the moment. We allow monsters to pick up
+    // missiles without the corresponding launcher, assuming that sufficient
+    // wandering may get them to stumble upon the launcher.
+    
+    if (item.base_type == OBJ_WEAPONS)
+        return (is_throwable(item));
+
+    if (item.base_type != OBJ_MISSILES)
+        return (false);
+
+    if (item.sub_type == MI_LARGE_ROCK && !can_throw_rocks())
+        return (false);
+
+    return (true);
+}
+
+void monsters::swap_slots(mon_inv_type a, mon_inv_type b)
+{
+    const int swap = inv[a];
+    inv[a] = inv[b];
+    inv[b] = swap;
+}
+
+void monsters::equip_weapon(const item_def &item, int near)
+{
+    const int brand = get_weapon_brand(item);
+    if (brand == SPWPN_PROTECTION)
+        ac += 5;
+
+    if (brand != SPWPN_NORMAL && need_message(near))
+    {
+        switch (brand)
+        {
+        case SPWPN_FLAMING:
+            mpr("It bursts into flame!");
+            break;
+        case SPWPN_FREEZING:
+            mpr("It glows with a cold blue light!");
+            break;
+        case SPWPN_HOLY_WRATH:
+            mpr("It softly glows with a divine radiance!");
+            break;
+        case SPWPN_ELECTROCUTION:
+            mpr("You hear the crackle of electricity.");
+            break;
+        case SPWPN_VENOM:
+            mpr("It begins to drip with poison!");
+            break;
+        case SPWPN_DRAINING:
+            mpr("You sense an unholy aura.");
+            break;
+        case SPWPN_FLAME:
+            mpr("It glows red for a moment.");
+            break;
+        case SPWPN_FROST:
+            mpr("It is covered in frost.");
+            break;
+        case SPWPN_DISRUPTION:
+            mpr("You sense a holy aura.");
+            break;
+        case SPWPN_RETURNING:
+            mpr("It wiggles slightly.");
+            break;
+        }
+    }    
+}
+
+void monsters::equip(const item_def &item, int slot, int near)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        if (need_message(near))
+            mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
+                 item.name(DESC_NOCAP_A).c_str());
+        equip_weapon(item, near);
+        break;
+    case OBJ_ARMOUR:
+    {
+        ac += property( item, PARM_AC );
+
+        const int armour_plus = item.plus;
+        ASSERT(abs(armour_plus) < 20);
+        if (abs(armour_plus) < 20) 
+            ac += armour_plus;
+        ev += property( item, PARM_EVASION ) / 2;
+        
+        if (ev < 1)
+            ev = 1;   // This *shouldn't* happen.
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void monsters::unequip(const item_def &item, int slot, int near)
+{
+    // XXX: Handle armour removal when armour swapping is implemented.
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        if (get_weapon_brand(item) == SPWPN_PROTECTION)
+            ac -= 5;
+        break;
+
+    default:
+        break;
+    }
+}
+
+void monsters::lose_pickup_energy()
+{
+    if (speed_increment > 25 && speed < speed_increment)
+        speed_increment -= speed;
+}
+
+void monsters::pickup_message(const item_def &item, int near)
+{
+    if (need_message(near))
+        mprf("%s picks up %s.",
+             name(DESC_CAP_THE).c_str(),
+             item.base_type == OBJ_GOLD? "some gold"
+             : item.name(DESC_NOCAP_A).c_str());
+}
+
+bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
+{
+    if (inv[slot] != NON_ITEM)
+    {
+        if (items_stack(item, mitm[inv[slot]], force_merge))
+        {
+            pickup_message(item, near);
+            inc_mitm_item_quantity( inv[slot], item.quantity );
+            destroy_item(item.index());
+            equip(item, slot, near);
+            lose_pickup_energy();
+            return (true);
+        }
+        return (false);
+    }
+    
+    const int index = item.index();
+    unlink_item(index);
+    inv[slot] = index;
+
+    pickup_message(item, near);
+    equip(item, slot, near);
+    lose_pickup_energy();
+    return (true);
+}
+
+bool monsters::drop_item(int eslot, int near)
+{
+    if (eslot < 0 || eslot >= NUM_MONSTER_SLOTS)
+        return (false);
+
+    int index = inv[eslot];
+    if (index == NON_ITEM)
+        return (true);
+
+    // Cannot drop cursed weapon or armour.
+    if ((eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR)
+        && mitm[index].cursed())
+        return (false);
+
+    const std::string iname = mitm[index].name(DESC_NOCAP_A);
+    move_item_to_grid(&index, x, y);
+
+    if (index == inv[eslot])
+        return (false);
+
+    if (need_message(near))
+        mprf("%s drops %s.", name(DESC_CAP_THE).c_str(), iname.c_str());
+
+    inv[eslot] = NON_ITEM;
+    return (true);
+}
+
+bool monsters::pickup_launcher(item_def &launch, int near)
+{
+    const int mdam_rating = mons_weapon_damage_rating(launch);
+    const missile_type mt = fires_ammo_type(launch);
+    int eslot = -1;
+    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+    {
+        if (const item_def *elaunch = mslot_item(static_cast<mon_inv_type>(i)))
+        {
+            if (is_range_weapon(*elaunch))
+                continue;
+            
+            return (fires_ammo_type(*elaunch) == mt
+                    && mons_weapon_damage_rating(*elaunch) < mdam_rating
+                    && drop_item(i, near) && pickup(launch, i, near));
+        }
+        else
+            eslot = i;
+    }
+
+    return (eslot == -1? false : pickup(launch, eslot, near));
+}
+
+bool monsters::pickup_melee_weapon(item_def &item, int near)
+{
+    if (mons_wields_two_weapons(this))
+    {
+        // If we have either weapon slot free, pick up the weapon.
+        if (inv[MSLOT_WEAPON] == NON_ITEM)
+            return pickup(item, MSLOT_WEAPON, near);
+        else if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            return pickup(item, MSLOT_ALT_WEAPON, near);
+    }
+
+    const int mdam_rating = mons_weapon_damage_rating(item);
+    int eslot = -1;
+    bool has_melee = false;
+    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+    {
+        if (const item_def *weap = mslot_item(static_cast<mon_inv_type>(i)))
+        {
+            if (is_range_weapon(*weap))
+                continue;
+            has_melee = true;
+            if (mons_weapon_damage_rating(*weap) < mdam_rating)
+                return (drop_item(i, near) && pickup(item, i, near));
+        }
+        else
+            eslot = i;
+    }
+
+    if (eslot == MSLOT_ALT_WEAPON && inv[MSLOT_WEAPON] == NON_ITEM)
+        eslot = MSLOT_WEAPON;
+
+    return (eslot == -1 || has_melee? false : pickup(item, eslot, near));
+}
+
+// Arbitrary damage adjustment for quantity of missiles. So sue me.
+static int q_adj_damage(int damage, int qty)
+{
+    return (damage * std::min(qty, 8));
+}
+    
+bool monsters::pickup_throwable_weapon(item_def &item, int near)
+{
+    if (mslot_item(MSLOT_MISSILE) && pickup(item, MSLOT_MISSILE, near, true))
+        return (true);
+    
+    item_def *launch = NULL;
+    const int exist_missile = mons_pick_best_missile(this, &launch, true);
+    if (exist_missile == NON_ITEM
+        || (q_adj_damage(mons_missile_damage(launch, &mitm[exist_missile]),
+                          mitm[exist_missile].quantity)
+            <
+            q_adj_damage(mons_thrown_weapon_damage(&item), item.quantity)))
+    {
+        if (inv[MSLOT_MISSILE] != NON_ITEM && !drop_item(MSLOT_MISSILE, near))
+            return (false);
+        return pickup(item, MSLOT_MISSILE, near);
+    }
+    return (false);
+}
+
+bool monsters::wants_weapon(const item_def &weap) const
+{
+    if (is_fixed_artefact( weap ))
+        return (false);
+
+    // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
+    // of course, this also block knives {dlb}:
+    if ((::mons_species(type) == MONS_KOBOLD
+         || ::mons_species(type) == MONS_GOBLIN)
+        && property( weap, PWPN_HIT ) <= 0)
+    {
+        return (false);
+    }
+
+    // Nobody picks up giant clubs:
+    if (weap.sub_type == WPN_GIANT_CLUB
+        || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
+    {
+        return (false);
+    }
+
+    const int brand = get_weapon_brand(weap);
+    const int holy = holiness();
+    if (brand == SPWPN_DISRUPTION && holy == MH_UNDEAD)
+        return (false);
+
+    if (brand == SPWPN_HOLY_WRATH
+        && (holy == MH_DEMONIC || holy == MH_UNDEAD))
+    {
+        return (false);
+    }
+
+    return (true);    
+}
+
+bool monsters::pickup_weapon(item_def &item, int near, bool force)
+{
+    if (!force && !wants_weapon(item))
+        return (false);
+    
+    // Weapon pickup involves:
+    // - If we have no weapons, always pick this up.
+    // - If this is a melee weapon and we already have a melee weapon, pick
+    //   it up if it is superior to the one we're carrying (and drop the
+    //   one we have).
+    // - If it is a ranged weapon, and we already have a ranged weapon,
+    //   pick it up if it is better than the one we have.
+    // - If it is a throwable weapon, and we're carrying no missiles (or our
+    //   missiles are the same type), pick it up.
+
+    if (is_range_weapon(item))
+        return (pickup_launcher(item, near));
+    
+    if (pickup_melee_weapon(item, near))
+        return (true);
+
+    return (can_use_missile(item) && pickup_throwable_weapon(item, near));
+}
+
+bool monsters::pickup_missile(item_def &item, int near)
+{
+    // XXX: Missile pickup could get a lot smarter if we allow monsters to
+    // drop their existing missiles and pick up new stuff, but that's too
+    // much work for now.
+    
+    const item_def *miss = missiles();
+    if (miss && items_stack(*miss, item))
+        return (pickup(item, MSLOT_MISSILE, near));
+
+    if (!can_use_missile(item))
+        return (false);
+
+    return pickup(item, MSLOT_MISSILE, near);
+}
+
+bool monsters::pickup_wand(item_def &item, int near)
+{
+    return pickup(item, MSLOT_WEAPON, near);
+}
+
+bool monsters::pickup_scroll(item_def &item, int near)
+{
+    return pickup(item, MSLOT_SCROLL, near);
+}
+
+bool monsters::pickup_potion(item_def &item, int near)
+{
+    return pickup(item, MSLOT_POTION, near);
+}
+
+bool monsters::pickup_gold(item_def &item, int near)
+{
+    return pickup(item, MSLOT_GOLD, near);
+}
+
+bool monsters::eat_corpse(item_def &carrion, int near)
+{
+    if (!mons_eats_corpses(this))
+        return (false);
+
+    hit_points += 1 + random2(mons_weight(carrion.plus)) / 100;
+
+    // limited growth factor here -- should 77 really be the cap? {dlb}:
+    if (hit_points > 100)
+        hit_points = 100;
+
+    if (hit_points > max_hit_points)
+        max_hit_points = hit_points;
+
+    if (need_message(near))
+        mprf("%s eats %s.", name(DESC_CAP_THE).c_str(),
+             carrion.name(DESC_NOCAP_THE).c_str());
+
+    destroy_item( carrion.index() );
+    return (true);
+}
+
+bool monsters::pickup_item(item_def &item, int near, bool force)
+{
+    // Never pick up stuff when we're in battle.
+    if (behaviour != BEH_WANDER && !force)
+        return (false);
+    
+    // Jellies are not handled here.
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        return pickup_weapon(item, near, force);
+    case OBJ_ARMOUR:
+        return pickup(item, MSLOT_ARMOUR, near);
+    case OBJ_MISSILES:
+        return pickup_missile(item, near);
+    case OBJ_WANDS:
+        return pickup_wand(item, near);
+    case OBJ_SCROLLS:
+        return pickup_scroll(item, near);
+    case OBJ_CORPSES:
+        return eat_corpse(item, near);
+    case OBJ_MISCELLANY:
+        return pickup(item, MSLOT_MISCELLANY, near);
+    case OBJ_GOLD:
+        return pickup_gold(item, near);
+    default:
+        return (false);
+    }
+}
+
+bool monsters::need_message(int &near) const
+{
+    return near != -1? near : (near = visible());
+}
+
+void monsters::swap_weapons(int near)
+{
+    const item_def *weap = mslot_item(MSLOT_WEAPON);
+    const item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
+    
+    if (weap)
+        unequip(*weap, MSLOT_WEAPON, !alt && need_message(near));
+
+    swap_slots(MSLOT_WEAPON, MSLOT_ALT_WEAPON);
+
+    if (need_message(near))
+    {
+        if (!alt && weap)
+            mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
+                 weap->name(DESC_NOCAP_A).c_str());
+    }
+
+    if (alt)
+        equip(*alt, MSLOT_WEAPON, near);
+
+    // Monsters can swap weapons really fast. :-)
+    if ((weap || alt) && speed_increment >= 2)
+        speed_increment -= 2;
+}
+
+void monsters::wield_melee_weapon(int near)
+{
+    const item_def *weap = mslot_item(MSLOT_WEAPON);
+    if (!weap || (!weap->cursed() && is_range_weapon(*weap)))
+    {
+        const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
+        if (alt && (!weap || !is_range_weapon(*alt)))
+            swap_weapons(near);
+    }
+}
+
+static mon_inv_type equip_slot_to_mslot(equipment_type eq)
 {
     switch (eq)
     {
     case EQ_WEAPON: return MSLOT_WEAPON;
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
-    default: return (-1);
+    default: return (NUM_MONSTER_SLOTS);
     }
 }
 
 item_def *monsters::slot_item(equipment_type eq)
 {
-    int mslot = equip_slot_to_mslot(eq);
-    int mindex = mslot == -1? NON_ITEM : inv[mslot];
+    return mslot_item(equip_slot_to_mslot(eq));
+}
+
+item_def *monsters::mslot_item(mon_inv_type mslot)
+{
+    const int mindex = mslot == NUM_MONSTER_SLOTS? NON_ITEM : inv[mslot];
     return (mindex == NON_ITEM? NULL: &mitm[mindex]);
 }
 

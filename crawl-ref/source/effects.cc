@@ -87,7 +87,7 @@ int torment_monsters(int x, int y, int pow, int caster)
                     aux = "Symbol of Torment";
                     break;
                 case TORMENT_SPWLD:
-                    // FIXME: If we ever make any other weapon / randart
+                    // XXX: If we ever make any other weapon / randart
                     // eligible to torment, this will be incorrect.
                     aux = "Sceptre of Torment";
                     break;

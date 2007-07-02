@@ -1455,8 +1455,9 @@ int items( int allow_uniques,       // not just true-false,
 
                         if (one_chance_in(4))
                         {
-                            set_weapon_special(p, (coinflip() ? SPWPN_FLAMING
-                                                               : SPWPN_FREEZING));
+                            set_weapon_special(p,
+                                               (coinflip() ? SPWPN_FLAMING
+                                                           : SPWPN_FREEZING));
                         }
 
                         if (one_chance_in(8))
@@ -2896,7 +2897,10 @@ static bool weapon_is_visibly_special(const item_def &item)
         && get_equip_race(item) == 0;
 }
 
-static void give_monster_item(monsters *mon, int thing, bool force_item = false)
+static void give_monster_item(
+    monsters *mon, int thing,
+    bool force_item = false,
+    bool (monsters::*pickupfn)(item_def&, int) = NULL)
 {
     item_def &mthing = mitm[thing];
 
@@ -2905,62 +2909,10 @@ static void give_monster_item(monsters *mon, int thing, bool force_item = false)
     mthing.link = NON_ITEM;
     unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
-    switch (mthing.base_type)
-    {
-    case OBJ_WEAPONS:
-    {
-        const int slot = mon->inv[MSLOT_WEAPON] == NON_ITEM? 0 : 1;
-        mon->inv[slot] = thing;
-        break;
-    }
-    case OBJ_MISSILES:
-        mon->inv[MSLOT_MISSILE] = thing;
-        break;
-    case OBJ_SCROLLS:
-        mon->inv[MSLOT_SCROLL] = thing;
-        break;
-    case OBJ_GOLD:
-        mon->inv[MSLOT_GOLD] = thing;
-        break;
-    case OBJ_POTIONS:
-        mon->inv[MSLOT_POTION] = thing;
-        break;
-    case OBJ_MISCELLANY:
-        mon->inv[MSLOT_MISCELLANY] = thing;
-        break;
-    case OBJ_WANDS:
-        mon->inv[MSLOT_WAND] = thing;
-        break;
-    case OBJ_ARMOUR:
-    {
-        mon->inv[MSLOT_ARMOUR] = thing;
-        
-        mon->ac += property( mthing, PARM_AC );
-
-        const int armour_plus = mthing.plus;
-        
-        ASSERT(abs(armour_plus) < 20);
-        
-        if (abs(armour_plus) < 20) 
-            mon->ac += armour_plus;
-        
-        mon->ev += property( mthing, PARM_EVASION ) / 2;
-        
-        if (mon->ev < 1)
-            mon->ev = 1;   // This *shouldn't* happen.
-        
-        break;
-    }
-    default:
-        break;
-    }
-
     const mon_holy_type mholy = mons_holiness(mon);
     
-    if (get_weapon_brand( mthing ) == SPWPN_PROTECTION )
-        mon->ac += 5;
-    else if (get_weapon_brand(mthing) == SPWPN_DISRUPTION
-             && mholy == MH_UNDEAD)
+    if (get_weapon_brand(mthing) == SPWPN_DISRUPTION
+        && mholy == MH_UNDEAD)
     {
         set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
     }
@@ -2970,6 +2922,19 @@ static void give_monster_item(monsters *mon, int thing, bool force_item = false)
         set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
     }
 
+    const int speed_inc = mon->speed_increment;
+    if (!(pickupfn? (mon->*pickupfn)(mthing, false)
+          : mon->pickup_item(mthing, false, true)))
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_WARN, "Destroying %s because %s doesn't want it!",
+             mthing.name(DESC_PLAIN).c_str(), mon->name(DESC_PLAIN).c_str());
+#endif
+        destroy_item(thing);
+        return ;
+    }
+    mon->speed_increment = speed_inc;
+    
     if (!force_item || mthing.colour == BLACK) 
         item_colour( mthing );
 }
@@ -3646,11 +3611,10 @@ static void give_ammo(monsters *mon, int level,
 {
     // mv: gives ammunition
     // note that item_race is not reset for this section
-    if (mon->inv[MSLOT_WEAPON] != NON_ITEM
-        && is_range_weapon( mitm[mon->inv[MSLOT_WEAPON]] ))
+    if (const item_def *launcher = mon->launcher())
     {
         const object_class_type xitc = OBJ_MISSILES;
-        const int xitt = fires_ammo_type(mitm[mon->inv[MSLOT_WEAPON]]);
+        const int xitt = fires_ammo_type(*launcher);
 
         const int thing_created =
             items( 0, xitc, xitt, true, level, item_race );
@@ -3665,11 +3629,49 @@ static void give_ammo(monsters *mon, int level,
                             SPMSL_CURARE
                           : SPMSL_POISONED);
 
-        mitm[thing_created].x = 0;
-        mitm[thing_created].y = 0;
         mitm[thing_created].flags = 0;
         give_monster_item(mon, thing_created);
     }                           // end if needs ammo
+    else
+    {
+        // Give some monsters throwing weapons.
+        int weap_type = WPN_UNKNOWN;
+        int qty = 0;
+        switch (mon->type)
+        {
+        case MONS_ORC_WARRIOR:
+            if (one_chance_in(
+                    you.where_are_you == BRANCH_ORCISH_MINES? 9 : 20))
+            {
+                weap_type =
+                    random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
+                qty = random_range(4, 8);
+            }
+            break;
+
+        case MONS_ORC:
+            if (one_chance_in(20))
+            {
+                weap_type =
+                    random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
+                qty = random_range(2, 5);                
+            }
+            break;
+        }
+
+        if (weap_type == WPN_UNKNOWN)
+            return ;
+        
+        const int thing_created =
+            items( 0, OBJ_WEAPONS, weap_type, true, level, item_race );
+        if (thing_created != NON_ITEM)
+        {
+            mitm[thing_created].quantity = qty;
+            mitm[thing_created].flags    = 0;
+            give_monster_item(mon, thing_created, false,
+                              &monsters::pickup_throwable_weapon);
+        }
+    }
 }
 
 void give_armour(monsters *mon, int level)

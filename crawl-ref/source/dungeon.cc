@@ -1507,12 +1507,14 @@ static void place_traps(int level_number)
         if (env.trap[i].type != TRAP_UNASSIGNED)
             continue;
 
+        int tries = 200;
         do
         {
-            env.trap[i].x = 10 + random2(GXM - 20);
-            env.trap[i].y = 10 + random2(GYM - 20);
+            env.trap[i].x = random2(GXM);
+            env.trap[i].y = random2(GYM);
         }
-        while (grd[env.trap[i].x][env.trap[i].y] != DNGN_FLOOR);
+        while (grd[env.trap[i].x][env.trap[i].y] != DNGN_FLOOR
+               && --tries > 0);
 
         trap_type &trap_type = env.trap[i].type;
         trap_type = random_trap_for_level(level_number);
@@ -5895,9 +5897,6 @@ bool place_specific_trap(int spec_x, int spec_y,
             grd[spec_x][spec_y] = DNGN_UNDISCOVERED_TRAP;
             return true;
         }
-
-        if (tcount >= MAX_TRAPS - 1)
-            return false;
     }
 
     return false;

@@ -521,6 +521,12 @@ public:
     bool cursed() const;
     int  book_number() const;
 
+    // Returns index in mitm array. Results are undefined if this item is
+    // not in the array!
+    int  index() const;
+    
+    bool launched_by(const item_def &launcher) const;
+
     void clear()
     {
         *this = item_def();
@@ -980,7 +986,7 @@ public:
     unsigned char y;
     unsigned char target_x;
     unsigned char target_y;
-    FixedVector<int, 8> inv;
+    FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
     mon_attitude_type attitude;
     beh_type behaviour;
@@ -1052,8 +1058,32 @@ public:
     int       damage_brand(int attk = -1);
 
     item_def *slot_item(equipment_type eq);
+    item_def *mslot_item(mon_inv_type sl);
     item_def *weapon(int which_attack = -1);
+    item_def *launcher();
+    item_def *missiles();
+    int       missile_count();
     item_def *shield();
+    void      wield_melee_weapon(int near = -1);
+    void      swap_weapons(int near = -1);
+
+    bool      pickup_item(item_def &item, int near = -1, bool force = false);
+    void      pickup_message(const item_def &item, int near);
+    bool      pickup_wand(item_def &item, int near);
+    bool      pickup_scroll(item_def &item, int near);
+    bool      pickup_potion(item_def &item, int near);
+    bool      pickup_gold(item_def &item, int near);
+    bool      pickup_launcher(item_def &launcher, int near);
+    bool      pickup_melee_weapon(item_def &item, int near);
+    bool      pickup_throwable_weapon(item_def &item, int near);
+    bool      pickup_weapon(item_def &item, int near, bool force);
+    bool      pickup_missile(item_def &item, int near);
+    bool      eat_corpse(item_def &carrion, int near);
+    void      equip(const item_def &item, int slot, int near = -1);
+    void      unequip(const item_def &item, int slot, int near = -1);
+
+    bool      can_use_missile(const item_def &item) const;
+    
     std::string name(description_level_type type) const;
     std::string name(description_level_type type, bool force_visible) const;
     std::string pronoun(pronoun_type pro) const;
@@ -1123,6 +1153,16 @@ public:
 
 private:
     void init_with(const monsters &mons);
+    void swap_slots(mon_inv_type a, mon_inv_type b);
+    bool need_message(int &near) const;
+
+    bool pickup(item_def &item, int slot, int near, bool force_merge = false);
+    void equip_weapon(const item_def &item, int near);
+   
+    bool drop_item(int eslot, int near);
+    bool wants_weapon(const item_def &item) const;
+    bool can_throw_rocks() const;
+    void lose_pickup_energy();
 };
 
 struct cloud_struct

@@ -3340,7 +3340,7 @@ static int affect_player( bolt &beam )
             you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
     }
 
-    // simple cases for scroll burns FIXME
+    // simple cases for scroll burns
     if (beam.flavour == BEAM_LAVA || beam.name == "hellfire")
         expose_player_to_element(BEAM_LAVA, burn_power);
 
