@@ -455,24 +455,24 @@ static void do_god_gift()
                 if ( random2(200) <= you.piety )
                 {
                     // make a pure deck
-                    misc_item_type pure_decks[] = {
+                    const misc_item_type pure_decks[] = {
                         MISC_DECK_OF_ESCAPE,
                         MISC_DECK_OF_DESTRUCTION,
                         MISC_DECK_OF_DUNGEONS,
                         MISC_DECK_OF_SUMMONING,
                         MISC_DECK_OF_WONDERS
                     };
-                    gift_type = pure_decks[random2(ARRAYSIZE(pure_decks))];
+                    gift_type = RANDOM_ELEMENT(pure_decks);
                 }
                 else
                 {
                     // make a mixed deck
-                    misc_item_type mixed_decks[] = {
+                    const misc_item_type mixed_decks[] = {
                         MISC_DECK_OF_WAR,
                         MISC_DECK_OF_CHANGES,
                         MISC_DECK_OF_DEFENSE
                     };
-                    gift_type = mixed_decks[random2(ARRAYSIZE(mixed_decks))];
+                    gift_type = RANDOM_ELEMENT(mixed_decks);
                 }
 
                 int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 

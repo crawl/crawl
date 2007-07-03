@@ -1911,7 +1911,7 @@ bool i_feel_safe(bool announce)
                 const unsigned char targ_monst = mgrd[x][y];
                 if ( targ_monst != NON_MONSTER )
                 {
-                    struct monsters *mon = &menv[targ_monst];
+                    const monsters *mon = &menv[targ_monst];
                     if ( !mons_friendly(mon) &&
                          player_monster_visible(mon) &&
                          !mons_is_submerged(mon) &&

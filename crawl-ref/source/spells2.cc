@@ -1320,7 +1320,7 @@ void summon_animals(int pow)
     {
         // pick a random monster and subtract its cost
         if ( varied || num_so_far == 0 )
-            mon_chosen = animals[random2(ARRAYSIZE(animals))];
+            mon_chosen = RANDOM_ELEMENT(animals);
 
         const int power_cost = mons_power(mon_chosen) * 3;
 

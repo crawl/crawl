@@ -816,7 +816,7 @@ static void potion_card(int power, deck_rarity_type rarity)
         POT_POISON, POT_CONFUSION, POT_DEGENERATION
     };
 
-    potion_type pot = pot_effects[random2(ARRAYSIZE(pot_effects))];
+    potion_type pot = RANDOM_ELEMENT(pot_effects);
 
     if ( power_level >= 1 && coinflip() )
         pot = (coinflip() ? POT_CURE_MUTATION : POT_MUTATION);

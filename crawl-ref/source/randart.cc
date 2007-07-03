@@ -1382,7 +1382,7 @@ std::string randart_name( const item_def &item )
     if (coinflip())
     {
         result += item_base_name(item);
-        result += rand_wpn_names[random2(ARRAYSIZE(rand_wpn_names))];
+        result += RANDOM_ELEMENT(rand_wpn_names);
     }
     else
     {
@@ -1457,7 +1457,7 @@ std::string randart_armour_name( const item_def &item )
     if (coinflip())
     {
         result += item_base_name(item);
-        result += rand_armour_names[random2(ARRAYSIZE(rand_armour_names))];
+        result += RANDOM_ELEMENT(rand_armour_names);
     }
     else
     {
@@ -1538,7 +1538,7 @@ std::string randart_jewellery_name( const item_def &item )
     if (one_chance_in(5))
     {
         result += (jewellery_is_amulet(item) ? "amulet" : "ring");
-        result += rand_armour_names[random2(ARRAYSIZE(rand_armour_names))];
+        result += RANDOM_ELEMENT(rand_armour_names);
     }
     else
     {

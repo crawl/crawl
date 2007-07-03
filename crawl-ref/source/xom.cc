@@ -169,18 +169,6 @@ static void xom_make_item(object_class_type base,
     origin_acquired(mitm[thing_created], GOD_XOM);
 }
 
-static void xom_suggest(const char **messages, int nmsgs)
-{
-    if (nmsgs && messages)
-    {
-        const char *sel = messages[random2(nmsgs)];
-        if (sel)
-            god_speaks(GOD_XOM, sel);
-    }
-}
-
-#define XOM_SAY(x) xom_suggest(x, ARRAYSIZE(x))
-
 static object_class_type get_unrelated_wield_class(object_class_type ref)
 {
     object_class_type objtype = OBJ_WEAPONS;
@@ -217,9 +205,9 @@ static bool xom_annoyance_gift(int power)
         // Xom has a sense of humour.
         if (coinflip() && weapon && weapon->cursed())
         {
-            // If you are wielding a cursed item on then Xom will give
+            // If you are wielding a cursed item then Xom will give
             // you an item of that same type. Ha ha!
-            XOM_SAY(xom_try_this);
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
             if (coinflip())
                 // For added humour, give the same sub-type.
                 xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
@@ -235,7 +223,7 @@ static bool xom_annoyance_gift(int power)
             // a ring. Ha ha!
             // 
             // A random ring.  (Not necessarily a good one.)
-            XOM_SAY(xom_try_this);
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
         };
@@ -245,7 +233,7 @@ static bool xom_annoyance_gift(int power)
         {
             // If you are wearing a cursed amulet then Xom will give
             // you an amulet. Ha ha!
-            XOM_SAY(xom_try_this);
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
             xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
             return (true);
         };
@@ -257,7 +245,7 @@ static bool xom_annoyance_gift(int power)
         {
             // If you are wearing a cursed ring then Xom will give you
             // a ring. Ha ha!
-            XOM_SAY(xom_try_this_ring);
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this_ring));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
         }
@@ -266,7 +254,7 @@ static bool xom_annoyance_gift(int power)
         {
             // Xom will give you a wielded item of a type different
             // than what you are currently wielding.
-            XOM_SAY(xom_try_this_other_thing);
+            god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this_other_thing));
 
             const object_class_type objtype =
                 get_unrelated_wield_class(weapon->base_type);
@@ -291,7 +279,7 @@ bool xom_gives_item(int power)
     {
         // If you are wearing a cursed cloak then Xom will give you a
         // cloak or body armour . Ha ha!
-        XOM_SAY(xom_try_these_duds);
+        god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_these_duds));
         xom_make_item(OBJ_ARMOUR,
                       random2(10)?
                           get_random_body_armour_type(you.your_level * 2)
@@ -300,7 +288,7 @@ bool xom_gives_item(int power)
         return (true);
     }
 
-    XOM_SAY(xom_generic_beneficence);
+    god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_generic_beneficence));
 
     // There are two kinds of Xom gifts: acquirement and random
     // object. The result from acquirement is very good (usually as
@@ -379,6 +367,23 @@ monsters *get_random_nearby_monster()
     return (monster);
 }
 
+static int xom_random_demon(int sever)
+{
+    int demontype;
+
+    do
+    {
+        // XXX Change the 20 if we add/remove demons!
+        // XXX Maybe we should use summon_any_demon() instead?
+        demontype = MONS_WHITE_IMP +
+            std::min(random2(random2(random2(sever))), 20);
+
+        // Don't make Green Deaths for non-poison-resistant characters.
+    } while ( demontype == MONS_GREEN_DEATH && !player_res_poison());
+
+    return demontype;
+}
+
 static bool xom_is_good(int sever)
 {
     // niceness = false - bad, true - nice
@@ -447,26 +452,11 @@ static bool xom_is_good(int sever)
                    (temp_rand == 1) ? "Xom grants you some temporary aid."
                    : "Xom momentarily opens a gate.");
                 
-        int i;
-        int r = random2(random2(random2(sever+1)+1)+1)+2;
-        int numdemons = MIN(r, 24);
-        for (i=0; i < numdemons; i++)
+        int numdemons = std::min(random2(random2(random2(sever+1)+1)+1)+2, 24);
+        for (int i = 0; i < numdemons; i++)
         {
-            r = random2(random2(random2(sever)));
-            int demonnum = MONS_WHITE_IMP + MIN(r, 20);
-            if (!player_res_poison())
-            {
-                while (demonnum == MONS_GREEN_DEATH)
-                {
-                    r = random2(random2(random2(sever)));
-                    demonnum = MONS_WHITE_IMP + MIN(r, 20);
-                }
-            }
-            ASSERT (demonnum >= MONS_WHITE_IMP);
-            ASSERT (demonnum <= MONS_WHITE_IMP+20);
-            create_monster(demonnum, 3, 
-                           BEH_GOD_GIFT, you.x_pos, you.y_pos, 
-                           you.pet_target, 250 );
+            create_monster(xom_random_demon(sever), 3, BEH_GOD_GIFT,
+                           you.x_pos, you.y_pos, you.pet_target, 250 );
         }
                 
         done = true;
@@ -478,21 +468,8 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 5)
     {
-        int r = random2(random2(random2(sever)));
-        int demonnum = MONS_WHITE_IMP + MIN(r, 20);
-        ASSERT (demonnum >= MONS_WHITE_IMP);
-        ASSERT (demonnum <= MONS_WHITE_IMP+20);
-        if (!player_res_poison())
-        {
-            while (demonnum == MONS_GREEN_DEATH)
-            {
-                r = random2(random2(random2(sever)));
-                demonnum = MONS_WHITE_IMP + MIN(r, 20);
-            }
-        }
-        if (create_monster( demonnum, 6, 
-                            BEH_GOD_GIFT, you.x_pos, you.y_pos,
-                            you.pet_target, 250 ) != -1)
+        if (create_monster(xom_random_demon(sever), 6, BEH_GOD_GIFT,
+                           you.x_pos, you.y_pos, you.pet_target, 250) != -1)
         {
             temp_rand = random2(3);
                     
@@ -557,17 +534,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 9)
     {
-        int r = random2(random2(random2(sever)));
-        int demonnum = MONS_WHITE_IMP + MIN(r, 20);
-        if (!player_res_poison())
-        {
-            while (demonnum == MONS_GREEN_DEATH)
-            {
-                r = random2(random2(random2(sever)));
-                demonnum = MONS_WHITE_IMP + MIN(r, 20);
-            }
-        }
-        if (create_monster( demonnum, 0, BEH_GOD_GIFT,
+        if (create_monster( xom_random_demon(sever), 0, BEH_GOD_GIFT,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {
             temp_rand = random2(3);
@@ -580,15 +547,9 @@ static bool xom_is_good(int sever)
     }
     else if ((random2(sever) <= 10) && player_in_a_dangerous_place())
     {
-        bool lightningprot = false;
-        if (you.hp <= random2(201)
-            && !you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-        { 
+        if (you.hp <= random2(201))
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-            lightningprot = true;
-        }
-        else
-            lightningprot = false;
+
         mpr("The area is suffused with divine lightning!");
                 
         beam.beam_source = NON_MONSTER;
@@ -606,7 +567,7 @@ static bool xom_is_good(int sever)
         beam.is_explosion = true;
         explosion(beam);
                 
-        if (lightningprot)
+        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
         {
             mpr("Your divine protection wanes.");
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
@@ -771,14 +732,12 @@ static bool xom_is_bad(int sever)
                 dancing_weapon(100, true);      // nasty, but fun
             else
             {
-                int r = random2(random2(random2(sever+1)+1)+1)+1;
-                int numdemons = MIN(r, 24);
+                const int numdemons =
+                    std::min(random2(random2(random2(sever+1)+1)+1)+1, 24);
                 for (int i = 0; i < numdemons; i++)
                 {
-                    create_monster(MONS_WHITE_IMP +
-                                   random2(random2(random2(MIN(sever, 22)))),
-                                   4,
-                                   BEH_HOSTILE, you.x_pos, you.y_pos,
+                    create_monster(MONS_WHITE_IMP + random2(random2(random2(std::min(sever,22)))),
+                                   4, BEH_HOSTILE, you.x_pos, you.y_pos,
                                    MHITNOT, 250);
                 }
             }
@@ -800,7 +759,7 @@ static bool xom_is_bad(int sever)
                 
             done = true;
         }
-        else if ((random2(sever) == 0) && (you.level_type != LEVEL_ABYSS))
+        else if (one_chance_in(sever) && (you.level_type != LEVEL_ABYSS))
         {
             temp_rand = random2(3);
                 

@@ -1761,9 +1761,7 @@ bool melee_attack::chop_hydra_head( int dam,
         if (dam_type == DVORP_CLAWING)
         {
             static const char *claw_verbs[] = { "rip", "tear", "claw" };
-            verb =
-                claw_verbs[
-                    random2( sizeof(claw_verbs) / sizeof(*claw_verbs) ) ];
+            verb = RANDOM_ELEMENT(claw_verbs);
         }
         else
         {
@@ -1771,9 +1769,7 @@ bool melee_attack::chop_hydra_head( int dam,
             {
                 "slice", "lop", "chop", "hack"
             };
-            verb =
-                slice_verbs[
-                    random2( sizeof(slice_verbs) / sizeof(*slice_verbs) ) ];
+            verb = RANDOM_ELEMENT(slice_verbs);
         }
 
         if (def->number < 1)
