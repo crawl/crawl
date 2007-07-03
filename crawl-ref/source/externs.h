@@ -661,6 +661,7 @@ public:
   char hunger_state;
 
   bool wield_change;          // redraw weapon
+  bool received_weapon_warning;
 
   unsigned long redraw_status_flags;
 
@@ -698,7 +699,7 @@ public:
   burden_state_type burden_state;
   FixedVector<spell_type, 25> spells;
   char spell_no;
-  game_direction_type char_direction;          //
+  game_direction_type char_direction;
 
   unsigned char pet_target;
 
@@ -1270,7 +1271,6 @@ struct game_state
     bool need_save;         // Set to true when game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
-    bool shopping;          // Set if id has been munged for shopping.
 
     int seen_hups;          // Set to true if SIGHUP received.
 
@@ -1283,7 +1283,7 @@ struct game_state
 
     game_state() : mouse_enabled(false), waiting_for_command(false),
                    terminal_resized(false), io_inited(false), need_save(false),
-                   saving_game(false), updating_scores(false), shopping(false),
+                   saving_game(false), updating_scores(false),
                    seen_hups(0), unicode_ok(false), glyph2strfn(NULL),
                    multibyte_strlen(NULL), terminal_resize_handler(NULL),
                    terminal_resize_check(NULL)

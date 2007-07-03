@@ -3194,12 +3194,14 @@ int melee_attack::mons_to_hit()
 
 static void wielded_weapon_check(const item_def *weapon)
 {
-    if (weapon &&
-        (weapon->base_type != OBJ_WEAPONS
-         || is_range_weapon(*weapon)))
+    if (you.received_weapon_warning == false &&
+        weapon &&
+        (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon)))
     {
-         mpr("You might want to wield a more suitable implement when attacking monsters.", MSGCH_WARN);
-         learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
+        mpr("You might want to wield a more suitable implement when "
+            "attacking monsters.", MSGCH_WARN);
+        learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
+        you.received_weapon_warning = true;
     }
 }
 

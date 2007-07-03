@@ -204,6 +204,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
                    && you.inv[item_slot].base_type != OBJ_MISSILES
                    && you.inv[item_slot].base_type != OBJ_STAVES;
 
+    // Reset the warning counter.
+    you.received_weapon_warning = false;
+
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
     if (!auto_wield || !is_valid_item(you.inv[item_slot]) || force_unwield)

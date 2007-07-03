@@ -932,8 +932,8 @@ enum dragon_class_type
 
 enum game_direction_type
 {
-    DIR_DESCENDING = 0, //    0 - change and lose savefile compatibility (!!!)
-    DIR_ASCENDING = 1   //    1 - change and lose savefile compatibility (!!!)
+    DIR_DESCENDING = 0,
+    DIR_ASCENDING = 1
 };
 
 // NOTE: The order of these is very important to their usage!

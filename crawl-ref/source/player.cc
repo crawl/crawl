@@ -4503,6 +4503,9 @@ void player::init()
     hunger = 6000;
     hunger_state = HS_SATIATED;
 
+    wield_change = false;
+    received_weapon_warning = false;
+
     gold = 0;
     // speed = 10;             // 0.75;  // unused
 
