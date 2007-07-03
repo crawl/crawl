@@ -185,7 +185,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { "",
       "smite your foes",
       "gain orcish followers",
-      "", "" }
+      "", "walk on water" }
 };
 
 const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -270,7 +270,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { "",
       "smite your foes",
       "gain orcish followers",
-      "", "" }
+      "", "walk on water" }
 };
 
 
@@ -1455,8 +1455,20 @@ void lose_piety(int pgn)
                     }
                 }
                 if (you.religion == GOD_BEOGH)
+                    
                 {
-                    // every piety level change also affects AC from orcish gear
+                    // You might have lost water walking at a bad time...
+                    if ( old_piety >= piety_breakpoint(4) &&
+                         you.piety < piety_breakpoint(4) &&
+                         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER &&
+                         !player_is_levitating() )
+                    {
+                        fall_into_a_pool( you.x_pos, you.y_pos, true,
+                                          DNGN_DEEP_WATER );
+                    }
+                        
+                    // every piety level change also affects AC from
+                    // orcish gear
                     you.redraw_armour_class = 1;
                 }
             }
@@ -2280,6 +2292,13 @@ void excommunication(void)
     case GOD_BEOGH:
         simple_god_message( " does not appreciate desertion!", old_god );
         followers_abandon_you(); // check if friendly orcs around -> hostile
+
+        // You might have lost water walking at a bad time...
+        if ( grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER &&
+             !player_is_levitating() )
+        {
+            fall_into_a_pool( you.x_pos, you.y_pos, true, DNGN_DEEP_WATER );
+        }
 
         // Penance has to come before retribution to prevent "mollify"
         inc_penance( old_god, 50 );

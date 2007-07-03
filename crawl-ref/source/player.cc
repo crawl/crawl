@@ -245,7 +245,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                     merfolk_start_swimming();
                 }
             }
-            else 
+            else if ( !player_can_swim() )
             {
                 ASSERT( new_grid != DNGN_DEEP_WATER );
 
@@ -2888,7 +2888,7 @@ int check_stealth(void)
         // Merfolk can sneak up on monsters underwater -- bwr
         if (you.species == SP_MERFOLK)
             stealth += 50;
-        else
+        else if ( !player_can_swim() )
             stealth /= 2;       // splashy-splashy
     }
     else
@@ -4636,7 +4636,8 @@ bool player::in_water() const
 
 bool player::can_swim() const
 {
-    return (species == SP_MERFOLK);
+    return (species == SP_MERFOLK ||
+            (you.religion == GOD_BEOGH && you.piety >= piety_breakpoint(4)));
 }
 
 bool player::swimming() const
