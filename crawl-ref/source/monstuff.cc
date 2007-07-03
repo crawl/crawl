@@ -1998,8 +1998,12 @@ static void handle_nearby_ability(monsters *monster)
         return;
     }
 
-    if (mons_class_flag(monster->type, M_SPEAKS) && one_chance_in(21)
-        && monster->behaviour != BEH_WANDER)
+    // Friendlies are mute: otherwise (a) their dialogue is inappropriate,
+    // (b) they cause too many interrupts.
+    if (mons_class_flag(monster->type, M_SPEAKS)
+        && monster->behaviour != BEH_WANDER
+        && !mons_friendly(monster)
+        && one_chance_in(21))
     {
         mons_speaks(monster);
     }
