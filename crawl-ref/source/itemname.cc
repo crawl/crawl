@@ -222,14 +222,15 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
+    const bool tried = !ident && is_tried_type(this->base_type,this->sub_type);
     if ( with_inscription && !(this->inscription.empty()) )
     {
         buff << " {";        
-        if ( is_tried_type(this->base_type, this->sub_type) )
+        if ( tried )
             buff << "tried, ";
         buff << this->inscription << "}";
     }
-    else if ( is_tried_type(this->base_type, this->sub_type) )
+    else if ( tried )
         buff << " {tried}";
 
     return buff.str();
