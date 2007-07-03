@@ -1897,7 +1897,7 @@ void divine_retribution( god_type god )
             {
                 snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
                          "of %s... this time.", god_name(GOD_BEOGH));
-                    god_speaks(you.religion, info);
+                god_speaks(you.religion, info);
             }
             else
             {

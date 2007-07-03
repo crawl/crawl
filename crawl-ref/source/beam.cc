@@ -4464,7 +4464,7 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                chose_ray(false)
 { }
 
-int bolt::killer() const
+killer_type bolt::killer() const
 {
     if (flavour == BEAM_BANISH)
         return (KILL_RESET);

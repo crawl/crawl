@@ -460,7 +460,7 @@ public:
     void set_target(const dist &);
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
-    int  killer() const;
+    killer_type  killer() const;
 
     coord_def target() const
     {
@@ -942,7 +942,7 @@ struct mon_enchant
     {
     }
 
-    int killer() const;
+    killer_type killer() const;
     int kill_agent() const;
     
     operator std::string () const;

@@ -341,12 +341,13 @@ static void tutorial_inspect_kill()
 }
 
 #ifdef DGL_MILESTONES
-static std::string milestone_kill_verb(int killer)
+static std::string milestone_kill_verb(killer_type killer)
 {
     return (killer == KILL_RESET? "banished " : "killed ");
 }
 
-static void check_kill_milestone(const monsters *mons, int killer, int i)
+static void check_kill_milestone(const monsters *mons,
+                                 killer_type killer, int i)
 {
     if (mons->type == MONS_PLAYER_GHOST)
     {
@@ -365,7 +366,7 @@ static void check_kill_milestone(const monsters *mons, int killer, int i)
 }
 #endif // DGL_MILESTONES
 
-void monster_die(monsters *monster, char killer, int i, bool silent)
+void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 {
     if (monster->type == -1)
         return;
@@ -388,7 +389,8 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
              monster->type == MONS_PLAYER_GHOST ||
              monster->type == MONS_PANDEMONIUM_DEMON )
         {
-            take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
+            take_note(Note(NOTE_KILL_MONSTER,
+                           monster->type, mons_friendly(monster),
                            str_monam(*monster, DESC_NOCAP_A, true).c_str()));
         }
     }
@@ -4145,7 +4147,7 @@ static void do_move_monster(monsters *monster, int xi, int yi)
         mons_check_pool(monster);
 }
 
-void mons_check_pool(monsters *mons, int killer)
+void mons_check_pool(monsters *mons, killer_type killer)
 {
     // Levitating/flying monsters don't make contact with the terrain.
     const int lev = mons->levitates();

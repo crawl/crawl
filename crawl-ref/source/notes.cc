@@ -286,7 +286,10 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << "Noticed " << name;
             break;
         case NOTE_KILL_MONSTER:
-            result << "Defeated " << name;
+            if ( second )
+                result << name << " (ally) was defeated";
+            else
+                result << "Defeated " << name;
             break;
         case NOTE_POLY_MONSTER:
             result << name << " changed form";

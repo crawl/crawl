@@ -47,9 +47,10 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
    * called from: bang - beam - effects - fight - misc - monstuff - mstuff2 -
    *              spells1 - spells2 - spells3 - spells4
    * *********************************************************************** */
-void monster_die(monsters *monster, char killer, int i, bool silent = false);
+void monster_die(monsters *monster, killer_type killer,
+                 int i, bool silent = false);
 
-void mons_check_pool(monsters *monster, int killer = KILL_MISC);
+void mons_check_pool(monsters *monster, killer_type killer = KILL_MISC);
 
 // last updated: 17dec2000 {gdl}
 /* ***********************************************************************

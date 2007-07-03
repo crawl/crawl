@@ -4240,7 +4240,7 @@ mon_enchant mon_enchant::operator + (const mon_enchant &other) const
     return (tmp);
 }
 
-int mon_enchant::killer() const
+killer_type mon_enchant::killer() const
 {
     return (who == KC_YOU?       KILL_YOU :
             who == KC_FRIENDLY?  KILL_MON :
