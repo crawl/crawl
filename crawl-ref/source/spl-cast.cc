@@ -3502,6 +3502,9 @@ const char* failure_rate_to_string( int fail )
 
 const char* spell_hunger_string( spell_type spell )
 {
+    if ( you.is_undead == US_UNDEAD )
+        return "N/A";
+
     const int hunger = spell_hunger(spell);
     if ( hunger == 0 )
         return "None";
