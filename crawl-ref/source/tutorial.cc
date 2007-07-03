@@ -1279,8 +1279,6 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "look at your abilities or to use one of them.";
           break;
       case TUT_WIELD_WEAPON:
-          text << "You might want to <w>w<magenta>ield a more suitable implement "
-                  "when attacking monsters.";
           if (Options.tutorial_type == TUT_RANGER_CHAR
                   && you.inv[ you.equip[EQ_WEAPON] ].sub_type == WPN_BOW)
           {

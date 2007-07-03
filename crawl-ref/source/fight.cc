@@ -3192,13 +3192,14 @@ int melee_attack::mons_to_hit()
 
 ///////////////////////////////////////////////////////////////////////////
 
-static void tutorial_weapon_check(const item_def *weapon)
+static void wielded_weapon_check(const item_def *weapon)
 {
     if (weapon &&
         (weapon->base_type != OBJ_WEAPONS
          || is_range_weapon(*weapon)))
     {
-        learned_something_new(TUT_WIELD_WEAPON);
+         mpr("You might want to wield a more suitable implement when attacking monsters.", MSGCH_WARN);
+         learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
     }
 }
 
@@ -3212,8 +3213,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     // We're trying to hit a monster, break out of travel/explore now.
     interrupt_activity(AI_HIT_MONSTER, defender);
 
-    // For tutorials, check if the player is fighting with something unsuitable
-    tutorial_weapon_check(attk.weapon);
+    // check if the player is fighting with something unsuitable
+    wielded_weapon_check(attk.weapon);
 
     return attk.attack();
 }
