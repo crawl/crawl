@@ -3353,10 +3353,19 @@ static bool handle_throw(monsters *monster, bolt & beem)
         return (false);
 
     item_def *launcher = NULL;
+    const item_def *weapon = NULL;
     const int mon_item = mons_pick_best_missile(monster, &launcher);
 
     if (mon_item == NON_ITEM || !is_valid_item(mitm[mon_item]))
         return (false);
+
+    // If the attack needs a launcher that we can't wield, bail out.
+    if (launcher)
+    {
+        weapon = monster->mslot_item(MSLOT_WEAPON);
+        if (weapon && weapon != launcher && weapon->cursed())
+            return (false);
+    }
 
     // ok, we'll try it.
     setup_generic_throw( monster, beem );
@@ -3373,7 +3382,7 @@ static bool handle_throw(monsters *monster, bolt & beem)
     // good idea?
     if (mons_should_fire( beem ))
     {
-        if (launcher && launcher != monster->mslot_item(MSLOT_WEAPON))
+        if (launcher && launcher != weapon)
             monster->swap_weapons();
         
         beem.name.clear();
@@ -3956,6 +3965,8 @@ static bool handle_pickup(monsters *monster)
         item = topickup.link;
         if (monster->pickup_item(topickup, monsterNearby))
             return (true);
+        if (coinflip())
+            break;
     }
     return (false);
 }                               // end handle_pickup()
