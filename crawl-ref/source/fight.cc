@@ -3195,7 +3195,7 @@ int melee_attack::mons_to_hit()
 static void wielded_weapon_check(const item_def *weapon)
 {
     if (you.received_weapon_warning == false &&
-        weapon &&
+        weapon && weapon->base_type != OBJ_STAVES &&
         (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon)))
     {
         mpr("You might want to wield a more suitable implement when "
