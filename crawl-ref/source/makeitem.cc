@@ -3667,7 +3667,10 @@ static void give_ammo(monsters *mon, int level,
     if (const item_def *launcher = mon->launcher())
     {
         const object_class_type xitc = OBJ_MISSILES;
-        const int xitt = fires_ammo_type(*launcher);
+        int xitt = fires_ammo_type(*launcher);
+
+        if (xitt == MI_STONE && one_chance_in(15))
+            xitt = MI_SLING_BULLET;
 
         const int thing_created =
             items( 0, xitc, xitt, true, level, item_race );
