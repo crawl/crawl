@@ -2739,7 +2739,7 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
             {
                 if (attacker_visible)
                     mprf("%s %s was poisonous!",
-                         attacker->name(DESC_CAP_YOUR).c_str(),
+                         apostrophise(attacker->name(DESC_CAP_THE)).c_str(),
                          mons_attack_verb(attk).c_str());
             }
             else
