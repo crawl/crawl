@@ -16,6 +16,8 @@
 
 #include "enum.h"
 
+class formatted_string;
+
 char list_spells( void );
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
@@ -54,7 +56,11 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                      int force_effect, const char *cause = NULL );
 
 const char* failure_rate_to_string( int fail );
-const char* spell_power_string( spell_type spell );
+
+int spell_power_colour(spell_type spell);
+int spell_power_bars(spell_type spell);
+formatted_string spell_power_string(spell_type spell);
+
 const char* spell_hunger_string( spell_type spell );
 
 #endif

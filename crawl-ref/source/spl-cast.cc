@@ -28,6 +28,7 @@
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
+#include "format.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -170,7 +171,7 @@ static std::string spell_extra_description(spell_type spell)
     desc << std::setw(30) << spell_title(spell);
 
     // spell power, hunger level, level
-    desc << std::setw(30) << spell_power_string(spell)
+    desc << std::setw(30) << spell_power_string(spell).tostring()
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
@@ -3510,24 +3511,46 @@ const char* spell_hunger_string( spell_type spell )
         return "Extreme";
 }
 
-const char* spell_power_string( spell_type spell )
+formatted_string spell_power_string(spell_type spell)
+{
+    formatted_string result;
+    result.textcolor(spell_power_colour(spell));
+    const int numbars = spell_power_bars(spell);
+    if ( numbars < 0 )
+        result.cprintf("N/A");
+    else
+        result.cprintf(std::string(numbars, '#'));
+    return result;
+}
+
+int spell_power_colour(spell_type spell)
 {
     const int powercap = spell_power_cap(spell);
     if ( powercap == 0 )
-        return "N/A";
+        return DARKGREY;
     const int power = calc_spell_power(spell, true);
     if ( power >= powercap )
-        return "Maximum";
-    return
-        (power > 100) ? "Enormous"   :
-        (power >  90) ? "Huge"       :
-        (power >  80) ? "Massive"    :
-        (power >  70) ? "Major"      :
-        (power >  60) ? "Impressive" :
-        (power >  50) ? "Reasonable" :
-        (power >  40) ? "Moderate"   :
-        (power >  30) ? "Adequate"   :
-        (power >  20) ? "Mediocre"   :
-        (power >  10) ? "Minor"
-        : "Negligible";
+        return WHITE;
+    if ( power * 3 < powercap )
+        return RED;
+    if ( power * 3 < powercap * 2 )
+        return YELLOW;
+    return GREEN;
+}
+
+int spell_power_bars( spell_type spell )
+{
+    const int powercap = spell_power_cap(spell);
+    if ( powercap == 0 )
+        return -1;
+    const int power = std::min(calc_spell_power(spell, true), powercap);
+
+    const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
+    int result = 0;
+    for ( unsigned int i = 0; i < ARRAYSIZE(breakpoints); ++i )
+    {
+        if ( power > breakpoints[i] )
+            ++result;
+    }
+    return result + 1;
 }
