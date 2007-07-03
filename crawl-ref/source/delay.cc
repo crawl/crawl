@@ -971,6 +971,8 @@ inline static void monster_warning(activity_interrupt_type ai,
     if ( ai == AI_SEE_MONSTER && is_run_delay(atype) )
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
+        if (!mon->visible())
+            return;
 #ifndef DEBUG_DIAGNOSTICS
         if (at.context != "uncharm")
             mprf(MSGCH_WARN, "%s comes into view.",
