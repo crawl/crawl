@@ -1134,7 +1134,7 @@ static int try_finding_throwing_weapon( int sub_type )
 }
 
 // Return index of first missile of sub_type or ENDOFPACK
-static int try_finding_missile( int sub_type )
+static int try_finding_missile( int sub_type, const item_def *launcher = NULL )
 {
     int i;
 
@@ -1144,15 +1144,20 @@ static int try_finding_missile( int sub_type )
         if (!is_valid_item( you.inv[i] ))
             continue;
 
+        const item_def &item = you.inv[i];
         // In theory, we should do two passes, first trying
         // to find a non-warning-inscribed item, then looping
         // through the warning-inscribed ones. Seems unlikely
         // to matter much.
 
+        if (launcher && item.launched_by(*launcher))
+            break;
+        
         // consider melee weapons that can also be thrown
-        if (you.inv[i].base_type == OBJ_MISSILES &&
-            you.inv[i].sub_type == sub_type &&
-            check_warning_inscriptions(you.inv[i], OPER_FIRE))
+        if (item.base_type == OBJ_MISSILES
+            && (item.sub_type == sub_type
+                || (sub_type == MI_STONE && item.sub_type == MI_SLING_BULLET))
+            && check_warning_inscriptions(you.inv[i], OPER_FIRE))
         {
             break;
         }
@@ -1180,8 +1185,7 @@ int get_fire_item_index( void )
                 && you.inv[ weapon ].base_type == OBJ_WEAPONS
                 && is_range_weapon( you.inv[ weapon ] ))
             {
-                int type_wanted = fires_ammo_type( you.inv[ weapon ] );
-                item = try_finding_missile( type_wanted );
+                item = try_finding_missile( MI_NONE, &you.inv[weapon] );
             }
             break;
 
@@ -1191,6 +1195,10 @@ int get_fire_item_index( void )
 
         case FIRE_STONE:
             item = try_finding_missile( MI_STONE );
+            break;
+
+        case FIRE_JAVELIN:
+            item = try_finding_missile( MI_JAVELIN );
             break;
 
         case FIRE_DAGGER:
@@ -1352,6 +1360,33 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
     return true;
 }
 
+static int stat_adjust(int value, int stat, int statbase,
+                       const int maxmult = 160, const int minmult = 40)
+{
+    int multiplier = (statbase + (stat - statbase) / 2) * 100 / statbase;
+    if (multiplier > maxmult)
+        multiplier = maxmult;
+    else if (multiplier < minmult)
+        multiplier = minmult;
+
+    if (multiplier > 100)
+        value = value * (100 + random2avg(multiplier - 100, 2)) / 100;
+    else if (multiplier < 100)
+        value = value * (100 - random2avg(100 - multiplier, 2)) / 100;
+
+    return (value);
+}
+
+static int str_adjust_thrown_damage(int dam)
+{
+    return stat_adjust(dam, you.strength, 15, 160, 90);
+}
+
+static int dex_adjust_thrown_tohit(int hit)
+{
+    return stat_adjust(hit, you.dex, 13, 160, 90);
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
@@ -1372,8 +1407,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
     int effSkill = 0;           // effective launcher skill
     int dice_mult = 100;
-    bool launched = false;      // item is launched
-    bool thrown = false;        // item is sensible thrown item
     bool returning = false;     // item will return to pack
     int slayDam = 0;
 
@@ -1436,7 +1469,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     case OBJ_BOOKS:      pbolt.type = SYM_OBJECT;  break;
         // this does not seem right, but value was 11 {dlb}
         // notice how the .type does not match the class -- hmmm... {dlb}
-    case OBJ_STAVES:      pbolt.type = SYM_CHUNK;  break;
+    case OBJ_STAVES:      pbolt.type = SYM_STICK;  break;
     default: break;
     }
 
@@ -1484,10 +1517,10 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     }
 
     // figure out if we're thrown or launched
-    throw_type(lnchClass, lnchType, wepClass, wepType, launched, thrown);
-
+    const launch_retval projected = is_launched(&you, you.weapon(), item);
+    
     // extract launcher bonuses due to magic
-    if (launched)
+    if (projected == LRET_LAUNCHED)
     {
         lnchHitBonus = you.inv[you.equip[EQ_WEAPON]].plus;
         lnchDamBonus = you.inv[you.equip[EQ_WEAPON]].plus2;
@@ -1498,7 +1531,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     ammoDamBonus = item.plus2;
 
     // CALCULATIONS FOR LAUNCHED WEAPONS
-    if (launched)
+    if (projected == LRET_LAUNCHED)
     {
         const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];        
         const int bow_brand = get_weapon_brand( launcher );
@@ -1612,7 +1645,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
             // Slings are really easy to learn because they're not
             // really all that good, and its harder to get ammo anyways.
             exercise(SK_SLINGS, 1 + random2avg(3, 2));
-            baseHit += 0;
+
+            // Sling bullets are designed for slinging and easier to aim.
+            if (wepType == MI_SLING_BULLET)
+                baseHit += 4;
+            
             exHitBonus += (effSkill * 3) / 2;
 
             // strength is good if you're using a nice sling.
@@ -1792,14 +1829,13 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
             more();
             you.wield_change = true;
         }
-
     }
 
     // CALCULATIONS FOR THROWN WEAPONS
-    if (thrown)
+    if (projected == LRET_THROWN)
     {
         returning = (get_weapon_brand(item) == SPWPN_RETURNING &&
-                     !one_chance_in(you.skills[SK_RANGED_COMBAT]+1));
+                     !one_chance_in(1 + skill_bump(SK_RANGED_COMBAT)));
         baseHit = 0;
 
         // since darts/rocks are missiles, they only use inv_plus
@@ -1808,7 +1844,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
 
         // all weapons that use 'throwing' go here..
         if (wepClass == OBJ_WEAPONS
-            || (wepClass == OBJ_MISSILES && wepType == MI_STONE))
+            || (wepClass == OBJ_MISSILES
+                && (wepType == MI_STONE || wepType == MI_SLING_BULLET)))
         {
             // elves with elven weapons
             if (get_equip_race(item) == ISFLAG_ELVEN 
@@ -1848,26 +1885,51 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
             exDamBonus = (exDamBonus * (3 * baseDam + ammoDamBonus)) / 30;
         }
 
-        if (wepClass == OBJ_MISSILES && wepType == MI_DART)
+        if (wepClass == OBJ_MISSILES)
         {
-            // give an appropriate 'tohit' & damage
-            baseHit = 2;
-            baseDam = property( item, PWPN_DAMAGE );
+            switch (wepType)
+            {
+            case MI_DART:
+                // give an appropriate 'tohit' & damage
+                baseHit = 2;
+                baseDam = property( item, PWPN_DAMAGE );
 
-            exHitBonus = you.skills[SK_DARTS] * 2;
-            exHitBonus += (you.skills[SK_RANGED_COMBAT] * 2) / 3;
-            exDamBonus = you.skills[SK_DARTS] / 3;
-            exDamBonus += you.skills[SK_RANGED_COMBAT] / 5;
+                exHitBonus = you.skills[SK_DARTS] * 2;
+                exHitBonus += (you.skills[SK_RANGED_COMBAT] * 2) / 3;
+                exDamBonus = you.skills[SK_DARTS] / 3;
+                exDamBonus += you.skills[SK_RANGED_COMBAT] / 5;
 
-            // exercise skills
-            exercise(SK_DARTS, 1 + random2avg(3, 2));
+                // exercise skills
+                exercise(SK_DARTS, 1 + random2avg(3, 2));
+                break;
+            case MI_JAVELIN:
+                // Javelins use polearm and throwing skills.
+                baseHit = -1;
+                baseDam = property( item, PWPN_DAMAGE );
+                exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 3
+                               + skill_bump(SK_POLEARMS));
+                exDamBonus += you.skills[SK_RANGED_COMBAT] / 5;
+                exDamBonus += you.skills[SK_POLEARMS] * 2 / 5;
+
+                // Adjust for strength and dex.
+                exDamBonus = str_adjust_thrown_damage(exDamBonus);
+                exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
+
+                // High dex helps damage a bit, too (aim for weak spots).
+                exDamBonus = stat_adjust(exDamBonus, you.dex, 20, 150, 100);
+
+                // exercise skills
+                exercise(SK_POLEARMS, 1 + random2avg(4, 2));
+                break;
+            }
         }
 
         // [dshaligram] The defined base damage applies only when used
         // for launchers. Hand-thrown stones and darts do only half
         // base damage. Yet another evil 4.0ism.
         if (wepClass == OBJ_MISSILES
-                && (wepType == MI_DART || wepType == MI_STONE))
+                && (wepType == MI_DART || wepType == MI_STONE
+                    || wepType == MI_SLING_BULLET))
             baseDam = div_rand_round(baseDam, 2);
         
         // exercise skill
@@ -1886,7 +1948,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     }
 
     // range, dexterity bonus, possible skill increase for silly throwing
-    if (thrown || launched)
+    if (projected)
     {
         if (wepType == MI_LARGE_ROCK)
         {
@@ -1904,7 +1966,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
             exHitBonus += you.dex / 2;
 
             // slaying bonuses
-            if (!(launched && wepType == MI_NEEDLE))
+            if (projected != LRET_LAUNCHED || wepType != MI_NEEDLE)
             {
                 slayDam = slaying_bonus(PWPN_DAMAGE);
                 slayDam = slayDam < 0? -random2(1 - slayDam)
@@ -1961,7 +2023,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     pbolt.damage.size += slayDam;
 
     // only add bonuses if we're throwing something sensible
-    if (thrown || launched || wepClass == OBJ_WEAPONS)
+    if (projected || wepClass == OBJ_WEAPONS)
     {
         pbolt.hit += ammoHitBonus + lnchHitBonus;
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
@@ -1981,7 +2043,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
 #endif
 
     // create message
-    mprf( "You %s %s.", launched ? "shoot" : "throw",
+    mprf( "You %s %s.", projected == LRET_LAUNCHED ? "shoot" : "throw",
           item.name(DESC_NOCAP_A).c_str() );
 
     // ensure we're firing a 'missile'-type beam
@@ -2014,7 +2076,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
         dec_inv_item_quantity( throw_2, 1 );
 
     // throwing and blowguns are silent
-    if (launched && lnchType != WPN_BLOWGUN)
+    if (projected == LRET_LAUNCHED && lnchType != WPN_BLOWGUN)
         noisy( 6, you.x_pos, you.y_pos );
 
     // but any monster nearby can see that something has been thrown:

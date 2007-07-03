@@ -1539,6 +1539,43 @@ static void describe_mons_enchantment(const monsters &mons,
         mpr(msg.c_str());
 }
 
+static void describe_monster_weapon(monsters *mons)
+{
+    std::string name1, name2;
+    const item_def *weap = mons->mslot_item(MSLOT_WEAPON),
+        *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
+    
+    if (weap)
+        name1 = weap->name(DESC_NOCAP_A);
+    if (alt && (!weap || mons_wields_two_weapons(mons)))
+        name2 = alt->name(DESC_NOCAP_A);
+
+    if (name1.empty() && !name2.empty())
+        name1.swap(name2);
+    
+    if (name1 == name2 && weap)
+    {
+        item_def dup = *weap;
+        ++dup.quantity;
+        name1 = dup.name(DESC_NOCAP_A, false, false, true, true);
+        name2.clear();
+    }
+
+    if (name1.empty())
+        return;
+    
+    std::ostringstream msg;
+    msg << mons_pronoun( mons->type, PRONOUN_CAP )
+        << " is wielding " << name1;
+
+    if (!name2.empty())
+        msg << " and " << name2;
+    
+    msg << ".";
+    
+    mpr(msg.str().c_str());
+}
+
 static void describe_cell(int mx, int my)
 {
     bool mimic_item = false;
@@ -1563,28 +1600,11 @@ static void describe_cell(int mx, int my)
             goto look_clouds;
 #endif
 
-        const int mon_wep = menv[i].inv[MSLOT_WEAPON];
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
         mprf("%s.", str_monam(menv[i], DESC_CAP_A).c_str());
 
-        if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
-        {
-            std::ostringstream msg;
-            msg << mons_pronoun( menv[i].type, PRONOUN_CAP )
-                << " is wielding "
-                << mitm[mon_wep].name(DESC_NOCAP_A);
-
-            // 2-headed ogres can wield 2 weapons
-            if ((menv[i].type == MONS_TWO_HEADED_OGRE
-                 || menv[i].type == MONS_ETTIN)
-                && menv[i].inv[MSLOT_ALT_WEAPON] != NON_ITEM)
-            {
-                msg << " and "
-                    <<  mitm[menv[i].inv[MSLOT_ALT_WEAPON]].name(DESC_NOCAP_A);
-            }
-            msg << ".";
-            mpr(msg.str().c_str());
-        }
+        if (menv[i].type != MONS_DANCING_WEAPON)
+            describe_monster_weapon(&menv[i]);
 
         if (mon_arm != NON_ITEM)
             mprf("%s is wearing %s.",

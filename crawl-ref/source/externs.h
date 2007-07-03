@@ -516,7 +516,8 @@ public:
 
     std::string name(description_level_type descrip,
                      bool terse = false, bool ident = false,
-                     bool with_inscription = true ) const;
+                     bool with_inscription = true,
+                     bool quantity_in_words = false) const;
     bool has_spells() const;
     bool cursed() const;
     int  book_number() const;
@@ -1063,8 +1064,9 @@ public:
     item_def *weapon(int which_attack = -1);
     item_def *launcher();
     item_def *missiles();
-    int       missile_count();
     item_def *shield();
+
+    int       missile_count();
     void      wield_melee_weapon(int near = -1);
     void      swap_weapons(int near = -1);
 

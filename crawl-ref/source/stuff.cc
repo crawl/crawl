@@ -215,6 +215,31 @@ int random_choose(int first, ...)
     return (chosen);
 }
 
+int random_choose_weighted(int weight, int first, ...)
+{
+    va_list args;
+    va_start(args, first);
+
+    int chosen = first, cweight = weight, nargs = 100;
+
+    while (nargs-- > 0)
+    {
+        const int nweight = va_arg(args, int);
+        if (!nweight)
+            break;
+
+        const int choice = va_arg(args, int);
+        if (random2(cweight += nweight) < nweight)
+            chosen = choice;
+    }
+
+    ASSERT(nargs > 0);
+    
+    va_end(args);
+    return (chosen);
+}
+
+
 int random2( int max )
 {
     if (max <= 1)

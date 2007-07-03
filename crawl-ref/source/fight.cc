@@ -3034,6 +3034,9 @@ void melee_attack::mons_perform_attack_rounds()
         if (attk.type == AT_NONE)
             break;
 
+        if (attk.type == AT_SHOOT)
+            continue;
+
         damage_done = 0;
         mons_set_weapon(attk);
         to_hit = mons_to_hit();

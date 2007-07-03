@@ -183,6 +183,72 @@ std::string pluralise(const std::string &name,
     return name + "s";
 }
 
+static std::string pow_in_words(int pow)
+{
+    switch (pow)
+    {
+    case 0:
+        return "";
+    case 3:
+        return " thousand";
+    case 6:
+        return " million";
+    case 9:
+        return " billion";
+    case 12:
+    default:
+        return " trillion";
+    }
+}
+
+static std::string tens_in_words(unsigned num)
+{
+    static const char *numbers[] = {
+        "", "one", "two", "three", "four", "five", "six", "seven",
+        "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen",
+        "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+    };
+    static const char *tens[] = {
+        "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
+        "eighty", "ninety"
+    };
+
+    if (num < 20)
+        return numbers[num];
+
+    int ten = num / 10, digit = num % 10;
+    return std::string(tens[ten]) 
+        + (digit? std::string("-") + numbers[digit] : "");
+}
+
+static std::string join_strings(const std::string &a, const std::string &b)
+{
+    return !a.empty() && !b.empty()? a + " " + b :
+        a.empty()? b : a;
+}
+
+static std::string hundreds_in_words(unsigned num)
+{
+    unsigned dreds = num / 100, tens = num % 100;
+    std::string sdreds = dreds? tens_in_words(dreds) + " hundred" : "";
+    std::string stens  = tens? tens_in_words(tens) : "";
+    return join_strings(sdreds, stens);
+}
+
+std::string number_in_words(unsigned num, int pow)
+{
+    if (pow == 12)
+        return number_in_words(num, 0) + pow_in_words(pow);
+
+    unsigned thousands = num % 1000, rest = num / 1000;
+    if (!rest and !thousands)
+        return ("zero");
+
+    return join_strings((rest? number_in_words(rest, pow + 3) : ""),
+                (thousands? hundreds_in_words(thousands) + pow_in_words(pow)
+                : ""));
+}
+
 std::string replace_all(std::string s,
                         const std::string &find,
                         const std::string &repl)

@@ -1731,6 +1731,11 @@ int mons_hallelf_level(int mcls)
         mlev += 7;
         break;
 
+    case MONS_DEEP_ELF_BLADEMASTER:
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+        mlev += 10;
+        break;
+
     default:
         mlev += 99;
         break;
@@ -1790,6 +1795,10 @@ int mons_hallelf_rare(int mcls)
     case MONS_ORC_PRIEST:
     case MONS_ORC_HIGH_PRIEST:
         return 5;
+
+    case MONS_DEEP_ELF_BLADEMASTER:
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+        return 1;
 
     default:
         return 0;

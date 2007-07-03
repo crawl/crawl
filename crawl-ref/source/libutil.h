@@ -26,6 +26,8 @@ bool ends_with(const std::string &s, const std::string &suffix);
 std::string pluralise(const std::string &name, 
                       const char *no_of[] = NULL);
 
+std::string number_in_words(unsigned number, int pow = 0);
+
 bool shell_safe(const char *file);
 
 /**

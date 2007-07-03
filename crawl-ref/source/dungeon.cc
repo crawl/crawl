@@ -246,7 +246,7 @@ static void place_altars()
 void builder(int level_number, int level_type)
 {
     // N tries to build the level, after which we bail with a capital B.
-    int tries = 10;
+    int tries = 20;
     while (tries-- > 0)
     {
         dgn_level_vetoed = false;
@@ -256,6 +256,7 @@ void builder(int level_number, int level_type)
             return;
     }
 
+    // Failed to build level, bail out.
     save_game(true,
               make_stringf("Unable to generate level for '%s'!",
                            level_id::current().describe().c_str()).c_str());

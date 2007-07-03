@@ -3340,17 +3340,22 @@ static bool handle_throw(monsters *monster, bolt & beem)
     if (mons_itemuse(monster->type) < MONUSE_OPEN_DOORS)
         return (false);
 
-    if (one_chance_in(5))
+    const bool archer = mons_class_flag(monster->type, M_ARCHER);
+    // Highly-specialised archers are more likely to shoot than talk.
+    if (one_chance_in(archer? 9 : 5))
         return (false);
 
     // don't allow offscreen throwing for now.
     if (monster->foe == MHITYOU && !mons_near(monster))
         return (false);
 
-    // recent addition {GDL} - monsters won't throw if they can do melee.
-    // wastes valuable ammo, and most monsters are better at melee anyway.
-    if (adjacent( beem.target_x, beem.target_y, monster->x, monster->y ))
+    // Monsters won't shoot in melee range, largely for balance reasons.
+    // Specialist archers are an exception to this rule.
+    if (!archer
+        && adjacent( beem.target_x, beem.target_y, monster->x, monster->y ))
+    {
         return (false);
+    }
 
     item_def *launcher = NULL;
     const item_def *weapon = NULL;

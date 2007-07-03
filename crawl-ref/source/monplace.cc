@@ -575,12 +575,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     else if (mons_itemuse(mon_type) >= MONUSE_STARTING_EQUIPMENT)
     {
         give_item( id, power );
-
         // Give these monsters a second weapon -- bwr
-        if (mon_type == MONS_TWO_HEADED_OGRE || mon_type == MONS_ETTIN)
-        {
+        if (mons_wields_two_weapons(static_cast<monster_type>(mon_type)))
             give_item( id, power );
-        }
     }
 
     // give manticores 8 to 16 spike volleys.

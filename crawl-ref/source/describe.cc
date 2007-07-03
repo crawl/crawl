@@ -88,7 +88,7 @@ static void print_description( const std::string &d )
     std::string::size_type nextLine = std::string::npos;
     unsigned int  currentPos = 0;
 
-    const unsigned int lineWidth = 70;
+    const unsigned int lineWidth = get_number_of_cols() - 1;
 
     textcolor(LIGHTGREY);
 
@@ -1161,7 +1161,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             case SPWPN_VAMPIRICISM:
                 description += "It inflicts no extra harm, "
                     "but heals its wielder somewhat when "
-                    "he or she strikes a living foe. ";
+                    "it strikes a living foe. ";
                 break;
             case SPWPN_DISRUPTION:
                 description += "It is a weapon blessed by Zin, "
@@ -1345,13 +1345,14 @@ static std::string describe_ammo( const item_def &item )
     switch (item.sub_type)
     {
     case MI_STONE:
-        description += "A stone. It can be thrown by hand or fired with a sling. ";
+        description += "A stone. It can be thrown by hand "
+            "or fired with a sling. ";
         break;
     case MI_ARROW:
         description += "An arrow, to be shot with a bow. ";
         break;
     case MI_NEEDLE:
-        description += "A needle. It can be thrown by hand or fired with a blowgun. ";
+        description += "A needle. It can be fired with a blowgun. ";
         break;
     case MI_BOLT:
         description += "A crossbow bolt. ";
@@ -1362,10 +1363,19 @@ static std::string describe_ammo( const item_def &item )
     case MI_LARGE_ROCK:
         description += "A rock, used by giants as a missile. ";
         break;
+    case MI_SLING_BULLET:
+        description += "A small heavy projectile made of lead. "
+            "It can be fired with a sling, or thrown by hand.";
+        break;
+    case MI_JAVELIN:
+        description += "A long, light polearm that can be thrown by hand. ";
+        if (!is_throwable(item, you.body_size()))
+            description += "Unfortunately, it is too long and awkward "
+                           "for you to use.";
+        break;
     case MI_NONE:   // was eggplant
         description += "A purple vegetable. "
-            "The presence of this object in the game "
-            "indicates a bug (or some kind of cheating on your part). ";
+            "The presence of this object in the game indicates a bug. ";
         break;
     default:
         DEBUGSTR("Unknown ammo type");
@@ -4729,60 +4739,6 @@ void describe_monsters(monsters& mons)
             description << "It has come for your soul!";
         break;
 
-    case MONS_DEEP_ELF_SOLDIER:
-        description << "This one is just a common soldier.";
-        break;
-        
-    case MONS_DEEP_ELF_FIGHTER:
-        description << "This soldier has learned some magic.";
-        break;
-        
-    case MONS_DEEP_ELF_KNIGHT:
-        description << "This one bears the scars of battles past.";
-        break;
-        
-    case MONS_DEEP_ELF_MAGE:
-        description << "Mana crackles between this one's long fingers.";
-        break;
-        
-    case MONS_DEEP_ELF_SUMMONER:
-        description << "This one is a mage specialized in the ancient "
-            "art of summoning servants of destruction.";
-        break;
-        
-    case MONS_DEEP_ELF_CONJURER:
-        description << "This one is a mage specialized in the ancient "
-            "art of hurling energies of destruction.";
-        break;
-        
-    case MONS_DEEP_ELF_PRIEST:
-        description << "This one is a servant of the deep elves' god.";
-        break;
-        
-    case MONS_DEEP_ELF_HIGH_PRIEST:
-        description <<
-            "This one is an exalted servant of the deep elves' god.";
-        break;
-        
-    case MONS_DEEP_ELF_DEMONOLOGIST:
-        description <<
-            "This mage specialized in demonology, and is marked heavily "
-            "from long years in contact with unnatural demonic forces.";
-        break;
-        
-    case MONS_DEEP_ELF_ANNIHILATOR:
-        description << "This one likes destructive magics more than most, "
-            "and is better at them.";
-        break;
-        
-    case MONS_DEEP_ELF_SORCERER:
-        description << "This mighty spellcaster draws power from Hell.";
-        break;
-        
-    case MONS_DEEP_ELF_DEATH_MAGE:
-        description << "A strong negative aura surrounds this one.";
-        break;
-        
     case MONS_ELF:
         // These are only possible from polymorphing or shapeshifting.
         description << "This one is remarkably plain looking.";

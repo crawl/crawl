@@ -716,8 +716,9 @@ void game_options::reset_options()
         fire_order[i] = FIRE_NONE;
     
     fire_order[0] = FIRE_LAUNCHER;      // fire first from bow...
-    fire_order[1] = FIRE_DART;          // then only consider darts
-    fire_order[2] = FIRE_STONE;         // and then chuck stones
+    fire_order[1] = FIRE_JAVELIN;
+    fire_order[2] = FIRE_DART;          // then only consider darts
+    fire_order[3] = FIRE_STONE;         // and then chuck stones
 
     item_stack_summary_minimum = 5;
 

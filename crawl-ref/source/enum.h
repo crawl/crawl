@@ -1310,6 +1310,7 @@ enum fire_type
     FIRE_DART,
     FIRE_STONE,
     FIRE_DAGGER,
+    FIRE_JAVELIN,
     FIRE_SPEAR,
     FIRE_HAND_AXE,
     FIRE_CLUB,
@@ -1873,7 +1874,9 @@ enum missile_type
     MI_BOLT,
     MI_DART,
     MI_NEEDLE,
-    MI_LARGE_ROCK, //jmf: it'd be nice to move MI_LARGE_ROCK to DEBRIS_ROCK
+    MI_LARGE_ROCK,
+    MI_SLING_BULLET,
+    MI_JAVELIN,
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
@@ -1908,6 +1911,8 @@ enum mons_class_flags
 
     M_UNIQUE            = (1<<21),        // monster is a unique
     M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
+
+    M_ARCHER            = (1<<23),        // gets various archery boosts
 
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
 
@@ -2260,6 +2265,9 @@ enum monster_type                      // (int) menv[].type
     MONS_MURRAY,
     MONS_TIAMAT,
 
+    MONS_DEEP_ELF_BLADEMASTER,
+    MONS_DEEP_ELF_MASTER_ARCHER,
+
     // The Lords of Hell:
     MONS_GERYON = 340,                 //  340
     MONS_DISPATER,
@@ -2372,7 +2380,9 @@ enum mon_attack_type
     AT_ENGULF,
     AT_CLAW,
     AT_TAIL_SLAP,
-    AT_BUTT
+    AT_BUTT,
+    
+    AT_SHOOT        // attack representing missile damage for M_ARCHER
 };
 
 enum mon_attack_flavour

@@ -13,6 +13,7 @@ ORIENT:  northwest
 FLAGS:   no_rotate
 MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
 MONS:    deep elf sorcerer, deep elf death mage
+MONS:    deep elf blademaster, deep elf master archer
 SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
 SHUFFLE: 23, 45
 KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator 
@@ -37,7 +38,7 @@ xxxxxxxxxxxxxxxxcc*$*|*|*|*|||||c$$ccxxx
 xxxxxxxxxxxxxxxcc*$|*$***$$|||||c|$$ccxx
 xxxxxxxxxxxxxxcc*$*|**ccccccccccc$$$$ccx
 xxxxxxxxxxxxxxc*|*$*$ccc..2..2..c+$|$$cx
-xxxxxxxxxxxxxxc$*$*ccc...........c$$$$cx
+xxxxxxxxxxxxxxc$*$*ccc7........7.c$$$$cx
 xxxxxxxxxxxxxxc||**cc...5.5...4.4cc$|$cx
 xxxxxxxxxxxxxxc*$$cc..3.....3..ccccccccx
 xxxxxxxxxxxxxxc$+ccc.....2....cc.....5cx
@@ -51,7 +52,7 @@ xxxxxxxxxxxxxxc.......2..2....3.......cx
 xxxxxxxxxxxxxxc..2................2..5cx
 xxxxxxxxxxxxxxc......v.........v..2...cx
 xxxxxxxxxxxxxxc..2..vv..1...1..vv.....cx
-xxxxxxxxxxxxxxc2...vvv....1....vvv.4.4cx
+xxxxxxxxxxxxxxc2..6vvv....1....vvv64.4cx
 xxxxxxxxxxxxxxc..vvvv...........vvvv..cx
 xxxxxxxxxxxxxxc.vvv.....cc.cc.....vvv.cx
 xxxxxxxxxxxxxxc.v.3...cccc.cccc.3...v.cx
@@ -74,7 +75,7 @@ ORIENT:  float
 CHANCE:  5
 MONS:    deep elf high priest, deep elf demonologist
 MONS:    deep elf annihilator, deep elf sorcerer
-MONS:    deep elf death mage
+MONS:    deep elf death mage, deep elf blademaster
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
 KMONS:   $ = weight:115 nothing / deep elf annihilator 
@@ -82,6 +83,10 @@ KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
 SUBST:   | = | *:2 
 SUBST:   * = * |:3
+KMONS:   A = deep elf master archer
+KFEAT:   A = |
+KMONS:   B = deep elf blademaster
+KFEAT:   B = |
 MAP
 cccccccccccccccccccccccccc
 c2ccccccc........ccccccccc
@@ -96,12 +101,12 @@ c2ccc.c.3.ww..ww.4.ccc...c
 c.ccc..3..ww..ww..5......c
 c$$$ccc...ww..ww...ccccc.c
 c$$$ccc.1.ww..ww.5.ccccc.c
-c$$$cccccccc2.ccccccc122.c
+c$$$cccccccc2.cccccc1262.c
 ccc+cccccccc..cccccccccc.c
-c|*|*|**|*cc..cc$|$*$|$|.c
+cB*|*|**|*cc..cc$|$*$|$|.c
 c**|*|||||cc..cc|$|$*$*$.c
 c*|*|||**|cc..cc$*$*$*$|.c
-c|**|*|||*cc..cc|$|$|$|$2c
+c|**|*|||Acc..ccA$|$|$|$2c
 ccccccccccccWWcccccccccccc
 ccccccccccccWWcccccccccccc
 ccccccccccccWWcccccccccccc
@@ -118,7 +123,8 @@ ORIENT:  float
 CHANCE:  5
 MONS:    deep elf high priest, deep elf demonologist
 MONS:    deep elf annihilator, deep elf sorcerer
-MONS:    deep elf death mage
+MONS:    deep elf death mage, deep elf master archer
+MONS:    deep elf blademaster
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
 SUBST:   l=lw 
@@ -132,11 +138,13 @@ KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
 SUBST:   | = | *:2 
 SUBST:   * = * |:3
+KITEM:   6 = |
+KITEM:   7 = |
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc
 c.cccc2...5...5...2cccccc
-c.cc.................cccc
+c.cc.................cc7c
 c.c....3....45...3....c3c
 c.+.........U.........+.c
 c.c......2.2.2.2......c.c
@@ -148,10 +156,10 @@ c$$$ccc...ww.ww...ccccc.c
 c$$$ccc.1.ww.ww.5.ccccc.c
 c$$$cccccccc.ccccccc122.c
 ccc+cccccccc2cccccccccc.c
-c|*|*|**|*cc.cc$|$*$|$|.c
+c7*|*|**|*cc.cc$|$*$|$|.c
 c**|*|||||cc.cc|$|$*$*$.c
 c||*||***|cc.cc$*$*$*$|.c
-c|**|*|||*cc.cc|$|$|$|$2c
+c|**|*||6*cc.cc6$|$|$|$2c
 cccccccccccclcccccccccccc
 ccccccccccclllccccccccccc
 cccccccccc..c..cccccccccc

@@ -45,6 +45,7 @@
 #include "fight.h"
 #include "files.h"
 #include "invent.h"
+#include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "item_use.h"
@@ -1615,8 +1616,7 @@ static bool debug_fight_simulate(FILE *out, int wskill, int mi, int miss_slot)
     int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1? &you.inv[weapon] : NULL;
 
-    if (iweap && iweap->base_type == OBJ_WEAPONS 
-            && is_range_weapon(*iweap))
+    if (iweap && iweap->base_type == OBJ_WEAPONS && is_range_weapon(*iweap))
         return fsim_ranged_combat(out, wskill, mi, iweap, miss_slot);
     else
         return fsim_melee_combat(out, wskill, mi, iweap);
@@ -1644,19 +1644,24 @@ static std::string fsim_wskill()
 static std::string fsim_weapon(int missile_slot)
 {
     std::string item_buf;
-    if (you.equip[EQ_WEAPON] != -1)
+    if (you.equip[EQ_WEAPON] != -1 || missile_slot != -1)
     {
-        const item_def &weapon = you.inv[ you.equip[EQ_WEAPON] ];
-        item_buf = weapon.name(DESC_PLAIN, true);
-
-        if (is_range_weapon(weapon))
+        if (you.equip[EQ_WEAPON] != -1)
         {
-            const int missile = 
-                missile_slot == -1? get_fire_item_index() :
-                                    missile_slot;
-            if (missile < ENDOFPACK)
-                return item_buf+" with "+you.inv[missile].name(DESC_PLAIN);
+            const item_def &weapon = you.inv[ you.equip[EQ_WEAPON] ];
+            item_buf = weapon.name(DESC_PLAIN, true);
+            if (is_range_weapon(weapon))
+            {
+                const int missile = 
+                    missile_slot == -1? get_fire_item_index() :
+                    missile_slot;
+                if (missile < ENDOFPACK)
+                    return item_buf + " with "
+                        + you.inv[missile].name(DESC_PLAIN);
+            }
         }
+        else
+            return you.inv[missile_slot].name(DESC_PLAIN);
     }
     else
     {
@@ -1880,21 +1885,30 @@ int fsim_kit_equip(const std::string &kit)
         trim_string(missile);
     }
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    if (!weapon.empty())
     {
-        if (!is_valid_item(you.inv[i]))
-            continue;
-
-        if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
+        for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (i != you.equip[EQ_WEAPON])
+            if (!is_valid_item(you.inv[i]))
+                continue;
+
+            if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
             {
-                wield_weapon(true, i, false);
                 if (i != you.equip[EQ_WEAPON])
-                    return -100;
+                {
+                    wield_weapon(true, i, false);
+                    if (i != you.equip[EQ_WEAPON])
+                        return -100;
+                }
+                break;
             }
-            break;
         }
+    }
+    else if (you.equip[EQ_WEAPON] != -1)
+    {
+        unwield_item(you.equip[EQ_WEAPON], false);
+        if (you.equip[EQ_WEAPON] != -1)
+            return (-100);
     }
 
     if (!missile.empty())
@@ -1904,7 +1918,7 @@ int fsim_kit_equip(const std::string &kit)
             if (!is_valid_item(you.inv[i]))
                 continue;
             
-            if (you.inv[i].name(DESC_PLAIN).find(missile)!=std::string::npos)
+            if (you.inv[i].name(DESC_PLAIN).find(missile) != std::string::npos)
             {
                 missile_slot = i;
                 break;

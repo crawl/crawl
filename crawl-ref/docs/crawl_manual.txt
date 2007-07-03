@@ -259,18 +259,18 @@ are resting, you are assumed to be observing your surroundings, so you
 have a chance of detecting any traps or secret doors adjacent to you.
 Resting stops if a monster appears.
 
-Examining:
-----------
+Examining your surroundings:
+----------------------------
 The section of the viewing window which is coloured (with the '@'
 representing you at the centre) is what you can see around you. The
-dark grey around it is the parts of the level which you have visited, 
+dark grey around it is the parts of the level which you have visited,
 but cannot currently see. The 'x' command lets you move the cursor
-around to get a description of the various dungeon features, and typing 
-'v' when the cursor is over a monster brings up a short description of 
-that monster. You can get a map of the whole level (which shows where 
-you've already been) by typing the 'X' key. On this map, stairs and 
-known traps are specially colour-coded airs and known traps, even if 
-something is on top of them.
+around to get a description of the various dungeon features, and
+typing 'v' when the cursor is over a monster or feature brings up a
+short description of that monster. You can get a map of the whole
+level (which shows where you've already been) by typing the 'X' key.
+On this map, stairs and known traps are specially colour-coded, even
+if there's something on top of them.
 
 Staircases and Portals:
 -----------------------
@@ -312,30 +312,47 @@ can be disarmed with the control-direction commands.
 
 Shops:
 ------
-When you are in a shop, you are given a list of the shopkeeper's stock
-from which to choose goods. Unfortunately the shopkeepers all have an 
-enterprise bargaining agreement with the dungeon teamsters union which 
-prevents them using non-union labour to obtain stock, so you can't sell
-anything in a shop (but what shopkeeper would really buy goods from a 
-disreputable adventurer like you, anyway?) In shops you have access to 
-your inventory and to your list of already discovered items. You can 
-purchase items by pressing the letter of each item in the shop menu; by 
-pressing 'v' and then the letter, you can get information about the item
-you are considering purchasing.
+When you visit a shop, you are shown what the shopkeeper has in stock
+and can choose what to buy. Unfortunately the shopkeepers all have an
+exclusive deal with the Guild of Dungeon Procurers which prevents them
+using non-guild labour to obtain stock, so you can't sell anything in
+a shop (but what shopkeeper would buy stolen goods from a disreputable
+adventurer, anyway?)
+
+You can check your inventory and the items you've identified while
+you're shopping, which may help to decide if you really need that
+expensive item.
+
+To purchase an item, press the letter of the item in the shop menu;
+you can examine stuff before you buy it by pressing 'v' and then the
+letter of the item.
+
+If you've lost track of the shops in the dungeon, you can get a list
+of all the shops you've found in the dungeon overview (use 'O').
+
+You can also use the stash search: hitting 'Ctrl-F' and searching for
+"shop" will list all stores. The stash-search menu allows you travel
+quickly to a particular shop; if you just want to know what's in the
+shop, you can examine the shop's inventory from the search menu
+without having to travel all the way to the shop.
+
+Some shops are antique stores that sell items of unknown provenance,
+usually at a good discount. The dungeon overview screen displays these
+with yellow glyphs.
 
 Automated Travel and Exploration:
 ---------------------------------
-Crawl has an extensive automated travel system: pressing Ctrl-G lets you
-chose any dungeon level; the game will then take the shortest path to 
-reach this destination. You can also use autotravel on the level map 
-('X'): move the cursor to the place where you want to go and hit Enter. 
-There are several shortcuts when choosing destinations: try '<' and '>'
-to quickly reach the staircases.
+Crawl has an extensive automated travel system: pressing Ctrl-G lets
+you choose any dungeon level; the game will then take the shortest
+path to reach this destination. You can also use autotravel on the
+level map ('X'): move the cursor to the place where you want to go and
+hit Enter. There are several shortcuts when choosing destinations: try
+'<' and '>' to quickly reach the staircases.
 
-When your autotravel gets interrupted, Crawl will remember the previous 
-destination. Hitting Ctrl-G again and following with Enter puts the 
-cursor on that square. See Appendix 4 for all commands and shortcuts in
-level-map mode.
+When your autotravel gets interrupted, Crawl will remember the
+previous destination. Hitting Ctrl-G again and following with Enter
+puts the cursor on that square. See Appendix 4 for all commands and
+shortcuts in level-map mode.
 
 Another use of autotravel is exploration: Ctrl-O makes your character
 move to the nearest unexplored area. This can be dangerous - do not use
@@ -363,10 +380,11 @@ Furthermore, you can search skills like 'long blades' (this will find
 all weapons training the long blades skill) or general terms like 
 'shop', 'altar', 'portal', 'artefact'.
 
-The above assumes that use of the default option 'stash_tracking = all'.
-If for some reasons (e.g. to speed up performance) the value has been 
-changed, you can press Ctrl-S to tell Crawl that a given square is 
-considered a stash. Ctrl-E will manually erase stashes. 
+The above assumes that use of the default option 'stash_tracking =
+all'. If for some reasons (e.g. to speed up performance) you've
+changed the value of the stash_tracking option, you can press Ctrl-S
+to tell Crawl that a given square is considered a stash. Ctrl-E will
+manually erase stashes.
 
 The Goal:
 ---------
@@ -919,7 +937,9 @@ The 'p' command lets you pray to your God. Anything you do while
 praying, you do in your God's name - this is how you dedicate your kills
 or corpse-sacrifices ('D' command) to your God, for example. Note that 
 not all gods like this. Praying also gives you a sense of what your God 
-thinks of you, and can be used to sacrifice things at altars.
+thinks of you, and can be used to sacrifice things at altars. Not all
+gods need to be addressed by constant prayers - it's the cast mostly for
+gods who delight in kills or corpses.
 
 To use any powers which your God deems you fit for, access the abilities
 menu with the 'a' command; God-given abilities are listed as 
@@ -931,6 +951,8 @@ all over the dungeon, and your character has heard rumours of a special
 temple somewhere near the surface. At an altar, you can read a 
 description of that god's general attitude by pressing 'p'. You will be
 asked afterwards if you really want to attend this circle.
+
+Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your class from 
 healer, priest, paladin, berserker, or chaos knight.
@@ -1126,11 +1148,15 @@ It also serves to clearly differentiate the many species, thus providing
 replayability, in particular since the class/race combinations are by no
 means homogeneous in difficulty. Note that a rough idea about aptitudes 
 is definitely enough to win, yet players can optimise here, as well. It 
-can be said that race differentiation is still not finished - what sets 
-the High and Grey Elves really apart? A weak spot of the current skill 
-system is 'victory dancing', where characters spend the experience 
-accumulated in a big battle with stupid actions (like casting Magic Dart
-at the wall) in order to increase specific skills.
+can be said that race differentiation is still not finished - we try to
+make differentiation better by going beyond aptitudes alone. A weak spot
+of the current skill system is 'victory dancing', where characters spend
+the experience accumulated in a big battle with stupid actions (like 
+casting Magic Dart at the wall) in order to increase specific skills. 
+While this surely seems dubious, it also allows players to adapt their
+characters anytime during play - e.g. to make a transition from a pure
+melee fighter to a hybrid using enchantments. For this reason, changing
+the experience system is no easy task.
 
 A very important point in Crawl is steering away from nobrainers.
 Speaking about games in general, wherever there's a no-brainer, that 
@@ -1147,8 +1173,8 @@ items in general. Likewise, there are no sure-fire means of life saving
 standings for some deities).
 
 Concerning replayability again, Crawl's dungeon layout was also
-constructed with this in mind: even veteran players will find the Hells
-exciting (which themselves are construed such that life endangering 
+constructed with this in mind: even veteran players will find the Tomb or
+the Hells exciting (which are construed such that life endangering 
 situations can always pop up - this tries to avoid the walking tank 
 phenomenon). Another strong point is the religous system, because Crawl
 allows you to choose gods in the game, regardless of class or race (and
@@ -1156,7 +1182,7 @@ even to switch to other gods).
 Likewise, there are many fundamentally different playing styles to
 discover (melee oriented fighter, stabber, etc.). There have been even
 deliberate design choices that allow meta-styles: For example, Mummies
-do not need to eat and so are principally suited for a infinite play. 
+do not need to eat and so are principally suited for an infinite play. 
 On the precise opposite end, players who prefer to be rewarded for 
 accepting a more severe "food clock" can play Demigods with their 
 near-godly stats, or centaurs, with amazing missile skills and the speed
@@ -1172,7 +1198,9 @@ monsters turns up, like a dragon on the second dungeon level. These are
 not bugs! They serve as motivation, first of all: in many cases, such a
 situation can be survived somehow and the mental bond to the character 
 will then surely grow. OOD monsters also help to keep more experienced 
-players on their toes. The same can be said of uniques.
+players on their toes. The same can be said of uniques. Also, frequent
+and early trips to the Abyss are not deficits: there's more than one way
+out and possibly doing so should be exciting for all characters.
 
 Finally, the interface of Crawl is designed to be understood at a glance
 and to support gameplay as far as possible. In particular, it should 
@@ -1270,14 +1298,6 @@ with it. However, they are very capable at earth and fire magics. Thus,
 many a Mountain Dwarf started career as an elementalist in one of those 
 schools.
 They advance in levels at a similar rate to Grey and Deep elves.
-
-  Mountain Dwarves:
-  -----------------
-  Mountain dwarves come from the larger, more civilised communities of 
-  the mountains. They advance slightly more quickly than hill dwarves 
-  and are almost as robust while having similar aptitudes, but are 
-  slightly worse at fighting while being slightly better at more 
-  civilised pursuits.
 
 Halflings:
 ----------
@@ -1674,10 +1694,11 @@ with a sword, a shield, a robe, and a healing potion.
 Priests:
 --------
 Priests serve either Zin, the ancient and revered God of Law, or the
-rather less pleasant Death-God Yredelemnul. Although priests enter the
-dungeon with a mace (as well as a priestly robe and a few healing 
-potions), this is purely the result of an archaic tradition the reason
-for which has been lost in the mists of time; Priests are not in any way
+rather less pleasant Death-God Yredelemnul. Hill Orcs may choose to
+follow the Orc god Beogh instead. Although priests enter the dungeon 
+with a mace (as well as a priestly robe and a few healing  potions), 
+this is purely the result of an archaic tradition the reason for which 
+has been lost in the mists of time; Priests are not in any way 
 restricted in their choice of weapon skills.
 
 Healers:
@@ -1829,9 +1850,9 @@ with heavy armour or shields or very big weapons.
 
 Ranged combat skills:
 ---------------------
-Ranged Combat is the basic skill used when throwing or shooting things, 
-and there are a number of individual weapon skills for missile weapons 
-as well:
+Ranged Combat is the basic skill used when throwing or shooting things.
+It affects in particular how effectively poisoned missiles are. There 
+are a number of individual weapon skills for missile weapons as well:
 
      o  Darts
      o  Bows
@@ -1938,6 +1959,7 @@ damage as well as in terms of precision. Furthermore, with high
 Evocations, you can easily deduce the number of charges in a wand 
 through usage. Similarly, all other items that have certain powers 
 (like crystal balls) work better for characters trained in this skill.
+Like Invocations, Evocations easier to learn than other skills.
 
 If your character does not have a particular skill, s/he can gain it by
 practising the activities mentioned above. 
@@ -1971,7 +1993,7 @@ Movement:
         Ctrl-G          Interlevel travel (to arbitrary dungeon levels 
                         or waypoints). Remembers old destinations if 
                         interrupted. This command has its own set of
-                        shortcuts; use ? to get help on them.
+                        shortcuts; use ? for help on them or see below.
         Ctrl-O          Auto-explore. Setting the option explore_greedy 
                         to true makes Ctrl-O also run to interesting 
                         items (those that get picked up automatically) 
@@ -2048,9 +2070,14 @@ Item interaction (inventory):
 
 Item interaction (floor):
         d               Drop an item.
+                        Within the drop list, you can select slots based
+                        on a regular expression by pressing Ctrl-F, 
+                        followed by the regex.
         #d              Drop exact number of items, where # is any number.
         g or ,          Pick up items; press twice for pick up menu.
-                        Use a prefix to pick up smaller quantities.
+                        Use a prefix to pick up smaller quantities. 
+                        As with dropping, Ctrl-F allows to pick up items
+                        matching a regular expression.
         D               Dissect a corpse. 
 
 Other game-playing commands:
@@ -2132,11 +2159,12 @@ using Ctrl-G. Check the option show_waypoints. The commands are
         W               Cycle through waypoints.
 
 Travel exclusions mark certain spots of the map as no-go areas for 
-autotravel and explore (the radius is set by the option 
-travel_exclude_radius2).
+autotravel and explore.
         Ctrl-X          Set travel exclusion.
         Ctrl-E          Erase all travel exclusions at once.
         X               Cycle through travel exclusions.
+        x               If on an exclusion centre, changes the radius of 
+                        the exclusion disc: 8, 4, 1 squares.
 
 Examining surroundings ('x')
 ----------------------------
@@ -2189,6 +2217,16 @@ work, with the exception of Space (which fires).
                         Note that target_unshifted_dirs is mutually
                         exclusive with default_target.
 
+Interlevel travel menu ('Ctrl-G')
+---------------------------------
+Interlevel travel allows you to specify a destination far away from your
+current place. Crawl will chose the shortest path to move there. Should
+you get interrupted, the old destination is saved and can be reused. 
+Other shortcuts are:
+        <               Travels to the nearest upstairs.
+        >               Travels to the  nearest downstairs.
+
+                        
 Shortcuts in lists (like multidrop):
 ------------------------------------
 When dropping (with the drop_mode=multi option), the drop menu accepts 

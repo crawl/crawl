@@ -969,41 +969,6 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
     pbolt.is_beam = false;
 }
 
-// decide if something is launched or thrown
-// pass -1 for launcher class & 0 for type if no weapon is wielded
-
-void throw_type( int lnchClass, int lnchType, int wepClass, int wepType,
-                 bool &launched, bool &thrown )
-{
-    if (wepClass == OBJ_MISSILES
-        && lnchClass == OBJ_WEAPONS
-        && is_range_weapon_type(static_cast<weapon_type>(lnchType))
-        && wepType == fires_ammo_type(static_cast<weapon_type>(lnchType)))
-    {
-        launched = true;
-    }
-
-    if (wepClass == OBJ_WEAPONS)
-    {
-        if (wepType == WPN_DAGGER || wepType == WPN_HAND_AXE || wepType == WPN_SPEAR)
-        {
-            thrown = true;
-        }
-    }
-
-    if (wepClass == OBJ_MISSILES)
-    {
-        if (wepType == MI_DART || wepType == MI_STONE || wepType == MI_LARGE_ROCK)
-        {
-            thrown = true;
-        }
-    }
-
-    // launched overrides thrown
-    if (launched == true)
-        thrown = false;
-}
-
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 {
     // XXX: ugly hack, but avoids adding dynamic allocation to this code
@@ -1021,16 +986,11 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int damMult = 0;
     int diceMult = 100;
 
-    bool launched = false;      // item is launched
-    bool thrown = false;        // item is sensible thrown item
-
     // some initial convenience & initializations
     int wepClass = mitm[hand_used].base_type;
     int wepType  = mitm[hand_used].sub_type;
 
     int weapon = monster->inv[MSLOT_WEAPON];
-
-    int lnchClass = (weapon != NON_ITEM) ? mitm[weapon].base_type : -1;
     int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
@@ -1047,16 +1007,12 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     pbolt.thrower = KILL_MON_MISSILE;
     pbolt.aux_source.clear();
 
-    // figure out if we're thrown or launched
-    throw_type( lnchClass, lnchType, wepClass, wepType, launched, thrown );
-    if (returning)
-    {
-        launched = false;
-        thrown = true;
-    }
+    const launch_retval projected =
+        is_launched(monster, monster->mslot_item(MSLOT_WEAPON),
+                    mitm[hand_used]);
 
     // extract launcher bonuses due to magic
-    if (launched)
+    if (projected == LRET_LAUNCHED)
     {
         lnchHitBonus = mitm[ weapon ].plus;
         lnchDamBonus = mitm[ weapon ].plus2;
@@ -1067,7 +1023,15 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     ammoHitBonus = item.plus;
     ammoDamBonus = item.plus2;
 
-    if (thrown)
+    // Archers get a boost from their melee attack.
+    if (mons_class_flag(monster->type, M_ARCHER))
+    {
+        const mon_attack_def attk = mons_attack_spec(monster, 0);
+        if (attk.type == AT_SHOOT)
+            ammoDamBonus += random2avg(attk.damage, 2);
+    }
+
+    if (projected == LRET_THROWN)
     {
         // Darts are easy.
         if (wepClass == OBJ_MISSILES && wepType == MI_DART)
@@ -1090,9 +1054,14 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             // ammo damage needs adjusting here - OBJ_MISSILES
             // don't get separate tohit/damage bonuses!
             ammoDamBonus = ammoHitBonus;
+            
             // [dshaligram] Thrown stones/darts do only half the damage of
             // launched stones/darts. This matches 4.0 behaviour.
-            baseDam      = div_rand_round(baseDam, 2);
+            if (wepType == MI_DART || wepType == MI_STONE
+                || wepType == MI_SLING_BULLET)
+            {
+                baseDam      = div_rand_round(baseDam, 2);
+            }
         }
 
         // give monster "skill" bonuses based on HD
@@ -1100,7 +1069,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         exDamBonus = (damMult * monster->hit_dice) / 10 + 1;
     }
 
-    if (launched)
+    if (projected == LRET_LAUNCHED)
     {
         switch (lnchType)
         {
@@ -1236,7 +1205,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
     std::string msg = str_monam(*monster, DESC_CAP_THE);
-    msg += ((launched) ? " shoots " : " throws ");
+    msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!pbolt.name.empty())
     {
@@ -1257,7 +1226,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // [dshaligram] When changing bolt names here, you must edit 
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
-    if (launched) 
+    if (projected == LRET_LAUNCHED) 
     {
         snprintf( throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
                   (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(), 
@@ -1277,7 +1246,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     pbolt.damage =
         dice_def( 1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus );
 
-    if (launched)
+    if (projected == LRET_LAUNCHED)
     {
         pbolt.damage.size += lnchDamBonus;
         pbolt.hit += lnchHitBonus;

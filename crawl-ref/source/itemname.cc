@@ -85,7 +85,8 @@ std::string quant_name( const item_def &item, int quant,
 // item buffer will be used.
 std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
-                           bool with_inscription) const
+                           bool with_inscription,
+                           bool quantity_words) const
 {
     std::ostringstream buff;
 
@@ -156,7 +157,12 @@ std::string item_def::name(description_level_type descrip,
         }
 
         if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME)
-            buff << this->quantity << " ";
+        {
+            if (quantity_words)
+                buff << number_in_words(this->quantity) << " ";
+            else
+                buff << this->quantity << " ";
+        }
     }
     else
     {
@@ -1049,18 +1055,8 @@ std::string item_def::name_aux( description_level_type desc,
             buff << ' ';
         }
 
-        buff << racial_description_string(*this, terse);
-
-        switch (item_typ)
-        {
-        case MI_STONE:      buff << "stone"; break;
-        case MI_ARROW:      buff << "arrow"; break;
-        case MI_BOLT:       buff << "bolt"; break;
-        case MI_DART:       buff << "dart"; break;
-        case MI_NEEDLE:     buff << "needle"; break;
-        case MI_LARGE_ROCK: buff << "large rock" ; break;
-        default:            buff << "hysterical raisin"; break;
-        }
+        buff << racial_description_string(*this, terse)
+             << ammo_name(static_cast<missile_type>(item_typ));
 
         if (know_type && !basename)
         {

@@ -221,6 +221,7 @@ bool mons_is_demon( int mc );
 bool mons_is_humanoid( int mc );
 
 bool mons_wields_two_weapons(const monsters *m);
+bool mons_wields_two_weapons(monster_type m);
 bool mons_is_summoned(const monsters *m);
 
 // last updated 12may2000 {dlb}

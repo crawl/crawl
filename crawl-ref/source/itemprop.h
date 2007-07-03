@@ -120,8 +120,11 @@ bool          is_range_weapon_type( weapon_type wtype );
 missile_type  fires_ammo_type( const item_def &item );
 missile_type fires_ammo_type( weapon_type wtype );
 const char *  ammo_name( const item_def &bow );
-bool          is_throwable( const item_def &wpn ); 
-launch_retval is_launched( int being_id, const item_def &ammo, bool msg = false );
+const char *  ammo_name( missile_type mtyp );
+bool          is_throwable( const item_def &wpn,
+                            size_type bodysize = SIZE_MEDIUM ); 
+launch_retval is_launched(actor *actor, const item_def *launcher,
+                         const item_def &missile);
 
 // staff/rod functions:
 bool item_is_rod( const item_def &item );

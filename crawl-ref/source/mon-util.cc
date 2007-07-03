@@ -1601,9 +1601,15 @@ bool mons_aligned(int m1, int m2)
     return (fr1 == fr2);
 }
 
+bool mons_wields_two_weapons(monster_type m)
+{
+    return (m == MONS_TWO_HEADED_OGRE || m == MONS_ETTIN
+            || m == MONS_DEEP_ELF_BLADEMASTER);
+}
+
 bool mons_wields_two_weapons(const monsters *m)
 {
-    return (m->type == MONS_TWO_HEADED_OGRE || m->type == MONS_ETTIN);
+    return (mons_wields_two_weapons(static_cast<monster_type>(m->type)));
 }
 
 bool mons_eats_corpses(const monsters *m)
@@ -1982,28 +1988,22 @@ bool mons_has_ranged_spell( const monsters *mon )
 
 bool mons_has_ranged_attack( const monsters *mon )
 {
-    const int weapon = mon->inv[MSLOT_WEAPON];
-    const int ammo = mon->inv[MSLOT_MISSILE];
+    // Ugh.
+    monsters *mnc = const_cast<monsters*>(mon);
+    const item_def *weapon  = mnc->launcher();
+    const item_def *primary = mnc->mslot_item(MSLOT_WEAPON);
+    const item_def *missile = mnc->missiles();
 
-    if ( weapon != NON_ITEM &&
-         get_weapon_brand(mitm[weapon]) == SPWPN_RETURNING )
-        return true;
-
-    const int lnchClass = (weapon != NON_ITEM) ? mitm[weapon].base_type : -1;
-    const int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
-
-    const int ammoClass = (ammo != NON_ITEM) ? mitm[ammo].base_type : -1;
-    const int ammoType  = (ammo != NON_ITEM) ? mitm[ammo].sub_type  :  0;
-
-    bool launched = false;
-    bool thrown = false;
-
-    throw_type( lnchClass, lnchType, ammoClass, ammoType, launched, thrown );
-
-    if (launched || thrown)
+    if (!missile && weapon != primary
+        && get_weapon_brand(*primary) == SPWPN_RETURNING)
+    {
         return (true);
+    }
 
-    return (false);
+    if (!missile)
+        return (false);
+    
+    return is_launched(mnc, weapon, *missile);
 }
 
 

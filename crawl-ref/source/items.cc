@@ -2943,7 +2943,8 @@ bool item_def::launched_by(const item_def &launcher) const
 {
     if (base_type != OBJ_MISSILES)
         return (false);
-    return (sub_type == fires_ammo_type(launcher));
+    const missile_type mt = fires_ammo_type(launcher);
+    return (sub_type == mt || (mt == MI_STONE && mt == MI_SLING_BULLET));
 }
 
 int item_def::index() const

@@ -343,12 +343,14 @@ struct missile_def
 static int Missile_index[NUM_MISSILES];
 static missile_def Missile_prop[NUM_MISSILES] = 
 {
-    { MI_NEEDLE,        "needle",       0,    1, false },
-    { MI_STONE,         "stone",        4,    2, true  },
-    { MI_DART,          "dart",         5,    3, true  },
-    { MI_ARROW,         "arrow",        6,    5, false },
-    { MI_BOLT,          "bolt",         8,    5, false },
-    { MI_LARGE_ROCK,    "large rock",  20, 1000, true  },
+    { MI_NEEDLE,        "needle",        0,    1, false },
+    { MI_STONE,         "stone",         4,    2, true  },
+    { MI_DART,          "dart",          5,    3, true  },
+    { MI_ARROW,         "arrow",         7,    5, false },
+    { MI_BOLT,          "bolt",          9,    5, false },
+    { MI_LARGE_ROCK,    "large rock",   20, 1000, true  },
+    { MI_SLING_BULLET,  "sling bullet",  6,    4, true },
+    { MI_JAVELIN,       "javelin",      11,   40, true },
 };
 
 struct food_def 
@@ -1694,6 +1696,21 @@ bool is_range_weapon( const item_def &item )
     return (fires_ammo_type( item ) != MI_NONE);
 }
 
+// decide if something is launched or thrown
+launch_retval is_launched(actor *actor, const item_def *launcher,
+                         const item_def &missile)
+{
+    if (missile.base_type == OBJ_MISSILES
+        && launcher
+        && missile.launched_by(*launcher))
+    {
+        return (LRET_LAUNCHED);
+    }
+
+    return (is_throwable(missile, actor->body_size())?
+            LRET_THROWN : LRET_FUMBLED);
+}
+
 bool is_range_weapon_type( weapon_type wtype )
 {
     item_def wpn;
@@ -1704,78 +1721,32 @@ bool is_range_weapon_type( weapon_type wtype )
     return (is_range_weapon( wpn ));
 }
 
+const char *ammo_name(missile_type ammo)
+{
+    return (ammo < 0 || ammo >= NUM_MISSILES? "eggplant"
+            : Missile_prop[ Missile_index[ammo] ].name);
+}
+
 const char * ammo_name( const item_def &bow )
 {
     ASSERT( is_range_weapon( bow ) );
-
-    const int ammo = fires_ammo_type( bow );
-
-    return (Missile_prop[ Missile_index[ammo] ].name);
+    return ammo_name(fires_ammo_type( bow ));
 } 
 
 // returns true if item can be reasonably thrown without a launcher
-bool is_throwable( const item_def &wpn )
+bool is_throwable( const item_def &wpn, size_type bodysize  )
 {
     if (wpn.base_type == OBJ_WEAPONS)
         return (Weapon_prop[ Weapon_index[wpn.sub_type] ].throwable);
     else if (wpn.base_type == OBJ_MISSILES)
+    {
+        if (bodysize < SIZE_MEDIUM && wpn.sub_type == MI_JAVELIN)
+            return (false);
         return (Missile_prop[ Missile_index[wpn.sub_type] ].throwable);
+    }
 
     return (false);
 }
-
-// FIXME
-#if 0
-// decide if "being" is launching or throwing "ammo"
-launch_retval is_launched( int being_id, const item_def &ammo, bool msg )
-{
-    ASSERT( being_id != MHITNOT );
-
-    launch_retval  ret = LRET_FUMBLED;
-
-    const item_def * lnch = 0;
-    int              fit = 0;
-
-    if (being_id == MHITYOU)
-    {
-        const int wpn = get_inv_wielded();
-        lnch = (wpn == -1) ? 0 : &you.inv[wpn];
-        fit = fit_item_throwable_size( ammo, player_size() );
-    }
-    else // monster case
-    {
-        const int wpn = menv[being_id].inv[MSLOT_WEAPON]; 
-        lnch = (wpn == NON_ITEM) ? 0 : &mitm[wpn];
-        fit = fit_item_throwable_size( ammo, mons_size( menv[being_id].type ) );
-    }
-
-    if (lnch 
-        && lnch->base_type == OBJ_WEAPONS
-        && is_range_weapon( *lnch )
-        && ammo.base_type == OBJ_MISSILES
-        && ammo.sub_type == fires_ammo_type( *lnch ))
-    {
-        ret = LRET_LAUNCHED;
-    }
-    else if (is_throwable( ammo ))
-    {
-        if (fit == 0)
-            ret = LRET_THROWN;
-        else 
-        {
-            ret = LRET_FUMBLED;
-
-            if (being_id == MHITYOU && msg)
-            {
-                mpr( MSGCH_WARN, "It's difficult to throw such a%s object.",
-                     (fit > 0) ? " large" : (fit < 0) ? " small" : "n awkward" );
-            }
-        }
-    }
-
-    return (ret);
-}
-#endif
 
 //
 // Staff/rod functions:

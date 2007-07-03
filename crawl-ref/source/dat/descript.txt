@@ -1,6 +1,8 @@
 %%%%
 program bug
-Program bug
+
+A ravenous and incredibly buggy monster. Please report its existence
+to the DevTeam.
 %%%%
 giant ant
 A black ant with poisonous pincers, about the size of a large dog.
@@ -763,51 +765,75 @@ A very large and strong looking orc.
 %%%%
 deep elf soldier
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave - a common
+soldier of the deep elves.
 %%%%
 deep elf fighter
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave - a deep elf
+fighter, equipped with weapon and magic.
 %%%%
 deep elf knight
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave - a
+battle-hardened deep elf reaver.
 %%%%
 deep elf mage
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave; this is a
+deep elf wizard of subtle magic.
 %%%%
 deep elf summoner
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave. This one is
+skilled in the darker aspects of summoning.
 %%%%
 deep elf conjurer
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave; this is an
+elf well-versed in destructive magic.
 %%%%
 deep elf priest
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave; this elf is
+a servant of the deep elves' dark god.
 %%%%
 deep elf high priest
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave; this elf is
+an exalted servant of the deep elves' dark god.
 %%%%
 deep elf demonologist
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave. A master of
+demonology, this deep elf is marked heavily by long years of contact
+with unnatural demonic forces.
 %%%%
 deep elf annihilator
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave. This deep
+elf exults in conjured mayhem and destruction.
 %%%%
 deep elf sorcerer
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave. This mighty
+spellcaster draws power from the very Hells.
 %%%%
 deep elf death mage
 
-One of the race of elves which inhabits this dreary cave. 
+One of the race of elves which inhabits this dreary cave. This one is
+surrounded by a shimmering aura of negative energy.
+%%%%
+deep elf blademaster
+
+Once in a very great while, there is a deep elf that scorns magic and
+devotes herself to the study of the sword. This is such a champion of
+the deep elves, wielding two blades with lethal grace.
+%%%%
+deep elf master archer
+
+This legendary deep elf archer has devoted her whole life to the
+pursuit of archery, dismissing magic as a frivolous distraction.
 %%%%
 brown ooze
 

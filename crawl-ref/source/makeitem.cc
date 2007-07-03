@@ -171,6 +171,7 @@ static int newwave_missile_colour(const item_def &item)
     switch (item.sub_type)
     {
     case MI_STONE:
+    case MI_SLING_BULLET:
     case MI_LARGE_ROCK:
         item_colour = BROWN;
         break;
@@ -185,6 +186,9 @@ static int newwave_missile_colour(const item_def &item)
         break;
     case MI_DART:
         item_colour = CYAN;
+        break;
+    case MI_JAVELIN:
+        item_colour = RED;
         break;
     default:
         // huh?
@@ -205,6 +209,9 @@ static int classic_missile_colour(const item_def &item)
     case MI_LARGE_ROCK:
     case MI_ARROW:
         item_colour = BROWN;
+        break;
+    case MI_SLING_BULLET:
+        item_colour = BLUE;
         break;
     case MI_NEEDLE:
         item_colour = WHITE;
@@ -1699,15 +1706,17 @@ int items( int allow_uniques,       // not just true-false,
         mitm[p].plus = 0;
         mitm[p].special = SPMSL_NORMAL;
 
-        temp_rand = random2(20);
-        mitm[p].sub_type = (temp_rand < 6)  ? MI_STONE :         // 30 %
-                           (temp_rand < 10) ? MI_DART :          // 20 %
-                           (temp_rand < 14) ? MI_ARROW :         // 20 %
-                           (temp_rand < 18) ? MI_BOLT            // 20 %
-                                            : MI_NEEDLE;         // 10 %
-
         if (force_type != OBJ_RANDOM)
             mitm[p].sub_type = force_type;
+        else
+            mitm[p].sub_type =
+                random_choose_weighted(30, MI_STONE,
+                                       20, MI_DART,
+                                       20, MI_ARROW,
+                                       10, MI_NEEDLE,
+                                       5,  MI_SLING_BULLET,
+                                       2,  MI_JAVELIN,
+                                       0);
 
         // no fancy rocks -- break out before we get to racial/special stuff
         if (mitm[p].sub_type == MI_LARGE_ROCK)
@@ -1803,8 +1812,11 @@ int items( int allow_uniques,       // not just true-false,
             set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED );
 
         // reduced quantity if special
-        if (get_ammo_brand( mitm[p] ) == SPMSL_CURARE)
-            quant = 1 + random2(9) + random2(9);
+        if (mitm[p].sub_type == MI_JAVELIN
+            || get_ammo_brand( mitm[p] ) == SPMSL_CURARE)
+        {
+            quant = random_range(2, 8);
+        }
         else if (get_ammo_brand( mitm[p] ) != SPMSL_NORMAL )
             quant = 1 + random2(9) + random2(12) + random2(12);
         else
@@ -2927,7 +2939,7 @@ static void give_monster_item(
           : mon->pickup_item(mthing, false, true)))
     {
 #ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_WARN, "Destroying %s because %s doesn't want it!",
+        mprf(MSGCH_DIAGNOSTICS, "Destroying %s because %s doesn't want it!",
              mthing.name(DESC_PLAIN).c_str(), mon->name(DESC_PLAIN).c_str());
 #endif
         destroy_item(thing);
@@ -3182,6 +3194,33 @@ static item_make_species_type give_weapon(monsters *mon, int level,
                              (temp_rand > 18) ? WPN_BOW :           // 13%
                              (temp_rand >  5) ? WPN_HAND_CROSSBOW   // 13%
                                               : WPN_LONGBOW);       //  6%
+        break;
+    }
+
+    case MONS_DEEP_ELF_BLADEMASTER:
+    {
+        item_race = MAKE_ITEM_ELVEN;
+        item.base_type = OBJ_WEAPONS;
+
+        // If the blademaster already has a weapon, give him the exact same
+        // sub_type to match.
+
+        const item_def *weap = mon->mslot_item(MSLOT_WEAPON);
+        if (weap && weap->base_type == OBJ_WEAPONS)
+            item.sub_type = weap->sub_type;
+        else
+            item.sub_type = random_choose_weighted(40, WPN_SABRE,
+                                                   10, WPN_SHORT_SWORD,
+                                                   2,  WPN_QUICK_BLADE,
+                                                   0);
+        break;
+    }
+
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+    {
+        item_race = MAKE_ITEM_ELVEN;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_LONGBOW;
         break;
     }
 
@@ -3613,6 +3652,7 @@ static item_make_species_type give_weapon(monsters *mon, int level,
     }
     
     give_monster_item(mon, thing_created, force_item);
+    
     if (give_aux_melee && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
         give_weapon(mon, level, true, false);
 
@@ -3643,12 +3683,18 @@ static void give_ammo(monsters *mon, int level,
                           : SPMSL_POISONED);
 
         mitm[thing_created].flags = 0;
+
+        // Master archers get double ammo - archery is their only attack.
+        if (mon->type == MONS_DEEP_ELF_MASTER_ARCHER)
+            mitm[thing_created].quantity *= 2;
+        
         give_monster_item(mon, thing_created);
     }                           // end if needs ammo
     else
     {
         // Give some monsters throwing weapons.
-        int weap_type = WPN_UNKNOWN;
+        int weap_type = -1;
+        object_class_type weap_class = OBJ_WEAPONS;
         int qty = 0;
         switch (mon->type)
         {
@@ -3659,6 +3705,7 @@ static void give_ammo(monsters *mon, int level,
                 weap_type =
                     random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
                 qty = random_range(4, 8);
+                item_race = MAKE_ITEM_ORCISH;
             }
             break;
 
@@ -3668,15 +3715,23 @@ static void give_ammo(monsters *mon, int level,
                 weap_type =
                     random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
                 qty = random_range(2, 5);                
+                item_race = MAKE_ITEM_ORCISH;
             }
+            break;
+
+        case MONS_URUG:
+            weap_type  = MI_JAVELIN;
+            weap_class = OBJ_MISSILES;
+            item_race = MAKE_ITEM_ORCISH;
+            qty = random_range(4, 7);
             break;
         }
 
-        if (weap_type == WPN_UNKNOWN)
+        if (weap_type == -1)
             return ;
         
         const int thing_created =
-            items( 0, OBJ_WEAPONS, weap_type, true, level, item_race );
+            items( 0, weap_class, weap_type, true, level, item_race );
         if (thing_created != NON_ITEM)
         {
             mitm[thing_created].quantity = qty;
@@ -3701,6 +3756,13 @@ void give_armour(monsters *mon, int level)
 
     switch (mon->type)
     {
+    case MONS_DEEP_ELF_BLADEMASTER:
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+        item_race = MAKE_ITEM_ELVEN;
+        mitm[bp].base_type = OBJ_ARMOUR;        
+        mitm[bp].sub_type = ARM_LEATHER_ARMOUR;
+        break;
+
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:

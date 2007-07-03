@@ -145,9 +145,6 @@ char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 int stealth;                    // externed in view.cc
 char use_colour = 1;
 
-// set to true once a new game starts or an old game loads
-bool game_has_started = false;
-
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
 const struct coord_def Compass[8] = 
 { 
@@ -3021,7 +3018,7 @@ static bool initialise(void)
     // Load macros
     macro_init();
 
-    game_has_started = true;
+    crawl_state.need_save = true;
 
     calc_hp();
     calc_mp();
@@ -3086,8 +3083,6 @@ static bool initialise(void)
     viewwindow(1, false);   // This just puts the view up for the first turn.
 
     activate_notes(true);
-
-    crawl_state.need_save = true;
 
     return (newc);
 }
