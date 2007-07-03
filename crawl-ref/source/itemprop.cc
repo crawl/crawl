@@ -350,7 +350,7 @@ static missile_def Missile_prop[NUM_MISSILES] =
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20, 1000, true  },
     { MI_SLING_BULLET,  "sling bullet",  6,    4, true },
-    { MI_JAVELIN,       "javelin",      11,   40, true },
+    { MI_JAVELIN,       "javelin",      10,   40, true },
 };
 
 struct food_def 
@@ -1470,8 +1470,15 @@ skill_type range_skill( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS && is_range_weapon( item ))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
-    else if (item.base_type == OBJ_MISSILES && item.sub_type == MI_DART)
-        return (SK_DARTS);
+    else if (item.base_type == OBJ_MISSILES)
+    {
+        switch (item.sub_type)
+        {
+        case MI_DART:    return (SK_DARTS);
+        case MI_JAVELIN: return (SK_POLEARMS);
+        default:         break;
+        }
+    }
 
     return (SK_RANGED_COMBAT);
 }

@@ -1527,7 +1527,9 @@ static bool fsim_ranged_combat(FILE *out, int wskill, int mi,
         // throw_it() will decrease quantity by 1
         inc_inv_item_quantity(thrown, 1);
 
-        if (throw_it(beam, thrown, true))
+        beam.target_x = mon.x;
+        beam.target_y = mon.y;
+        if (throw_it(beam, thrown, true, DEBUG_COOKIE))
             hits++;
 
         you.hunger = hunger;
@@ -1631,9 +1633,12 @@ static const item_def *fsim_weap_item()
     return &you.inv[weap];
 }
 
-static std::string fsim_wskill()
+static std::string fsim_wskill(int missile_slot)
 {
     const item_def *iweap = fsim_weap_item();
+    if (!iweap && missile_slot != -1)
+        return skill_name(range_skill(you.inv[missile_slot]));
+    
     return iweap && iweap->base_type == OBJ_WEAPONS 
              && is_range_weapon(*iweap)?
                         skill_name( range_skill(*iweap) ) :
@@ -1715,7 +1720,7 @@ static void fsim_title(FILE *o, int mon, int ms)
     fsim_mon_stats(o, menv[mon]);
     fprintf(o, "\n");
     fprintf(o, "Weapon    : %s\n", fsim_weapon(ms).c_str());
-    fprintf(o, "Skill     : %s\n", fsim_wskill().c_str());
+    fprintf(o, "Skill     : %s\n", fsim_wskill(ms).c_str());
     fprintf(o, "\n");
     fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
@@ -1907,8 +1912,7 @@ int fsim_kit_equip(const std::string &kit)
     else if (you.equip[EQ_WEAPON] != -1)
     {
         unwield_item(you.equip[EQ_WEAPON], false);
-        if (you.equip[EQ_WEAPON] != -1)
-            return (-100);
+        you.equip[EQ_WEAPON] = -1;
     }
 
     if (!missile.empty())

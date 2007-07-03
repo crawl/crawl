@@ -1394,7 +1394,7 @@ static int dex_adjust_thrown_tohit(int hit)
 //
 // Return value is only relevant if dummy_target is non-NULL, and returns
 // true if dummy_target is hit.
-bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
+bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
 {
     struct dist thr;
     char shoot_skill = 0;
@@ -2030,7 +2030,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     }
 
     // Add in bonus (only from Portaled Projectile for now)
-    pbolt.hit += acc_bonus;
+    if (acc_bonus != DEBUG_COOKIE)
+        pbolt.hit += acc_bonus;
 
     scale_dice( pbolt.damage );
 
@@ -2060,7 +2061,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
     {
         // Violating encapsulation somewhat...oh well.
         hit = (affect( pbolt, pbolt.target_x, pbolt.target_y ) != 0);
-        beam_drop_object( pbolt, &item, pbolt.target_x, pbolt.target_y );
+        if (acc_bonus != DEBUG_COOKIE)
+            beam_drop_object( pbolt, &item, pbolt.target_x, pbolt.target_y );
     }
     else
     {

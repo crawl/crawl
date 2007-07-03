@@ -135,6 +135,9 @@
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 
+// Yes, I know we have 32-bit ints now.
+#define DEBUG_COOKIE            32767
+
 #define MIN_HIT_MISS_PERCENTAGE  5
 
 // grids that monsters can see
