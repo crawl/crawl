@@ -29,6 +29,7 @@
 #include "fight.h"
 #include "food.h"
 #include "format.h"
+#include "initfile.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -171,7 +172,10 @@ static std::string spell_extra_description(spell_type spell)
     desc << std::setw(30) << spell_title(spell);
 
     // spell power, hunger level, level
-    desc << std::setw(30) << spell_power_string(spell).tostring()
+    const char* colstr = colour_to_str(spell_power_colour(spell));
+    desc << '<' << colstr << '>'
+         << std::setw(30) << spell_power_string(spell)
+         << "</" << colstr << '>'
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
@@ -181,7 +185,7 @@ static std::string spell_extra_description(spell_type spell)
 char list_spells()
 {
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-        MF_ALWAYS_SHOW_MORE);
+        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " Your Spells                      Type            "
@@ -3511,16 +3515,13 @@ const char* spell_hunger_string( spell_type spell )
         return "Extreme";
 }
 
-formatted_string spell_power_string(spell_type spell)
+std::string spell_power_string(spell_type spell)
 {
-    formatted_string result;
-    result.textcolor(spell_power_colour(spell));
     const int numbars = spell_power_bars(spell);
     if ( numbars < 0 )
-        result.cprintf("N/A");
+        return "N/A";
     else
-        result.cprintf(std::string(numbars, '#'));
-    return result;
+        return std::string(numbars, '#');
 }
 
 int spell_power_colour(spell_type spell)

@@ -315,6 +315,11 @@ void formatted_string::fs_op::display() const
     }
 }
 
+void formatted_string::swap(formatted_string& other)
+{
+    ops.swap(other.ops);
+}
+
 int count_linebreaks(const formatted_string& fs)
 {
     std::string::size_type where = 0;

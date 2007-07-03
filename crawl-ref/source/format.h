@@ -35,6 +35,8 @@ public:
 
     void clear();
 
+    void swap(formatted_string& other);
+
     std::string::size_type length() const;
 
     const formatted_string &operator += (const formatted_string &other);

@@ -16,8 +16,6 @@
 
 #include "enum.h"
 
-class formatted_string;
-
 char list_spells( void );
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
@@ -59,7 +57,7 @@ const char* failure_rate_to_string( int fail );
 
 int spell_power_colour(spell_type spell);
 int spell_power_bars(spell_type spell);
-formatted_string spell_power_string(spell_type spell);
+std::string spell_power_string(spell_type spell);
 
 const char* spell_hunger_string( spell_type spell );
 

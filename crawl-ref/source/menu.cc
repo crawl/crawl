@@ -572,7 +572,10 @@ void Menu::draw_index_item(int index, const MenuEntry *me) const
 void Menu::draw_stock_item(int index, const MenuEntry *me) const
 {
     textattr( item_colour(index, items[index]) );
-    cprintf( "%s", items[index]->get_text().c_str() );
+    if ( flags & MF_ALLOW_FORMATTING )
+        formatted_string::parse_string(items[index]->get_text()).display();
+    else
+        cprintf( "%s", items[index]->get_text().c_str() );
 }
 
 bool Menu::page_down()
