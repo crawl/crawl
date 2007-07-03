@@ -485,6 +485,10 @@ static void handle_wizard_command( void )
             mitm[ islot ].quantity = 1;
             set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
 
+            msg::streams(MSGCH_DIAGNOSTICS) << "Made "
+                                            << mitm[islot].name(DESC_NOCAP_A)
+                                            << std::endl;
+
             move_item_to_grid( &islot, you.x_pos, you.y_pos );
         }
 

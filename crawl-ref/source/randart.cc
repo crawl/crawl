@@ -758,7 +758,7 @@ struct unrandart_entry
 #pragma pack(pop)
 #endif
 
-static struct unrandart_entry unranddata[] = {
+static unrandart_entry unranddata[] = {
 #include "unrand.h"
 };
 
@@ -1572,7 +1572,8 @@ static struct unrandart_entry *seekunrandart( const item_def &item )
         if (unranddata[x].ura_cl == item.base_type 
             && unranddata[x].ura_ty == item.sub_type
             && unranddata[x].ura_pl == item.plus 
-            && unranddata[x].ura_pl2 == item.plus2)
+            && unranddata[x].ura_pl2 == item.plus2
+            && unranddata[x].ura_col == item.colour)
         {
             return (&unranddata[x]);
         }
