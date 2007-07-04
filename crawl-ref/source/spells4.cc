@@ -1791,7 +1791,8 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
             break;
         case 2:
             msg += " rubs its eye";
-            if (menv[mon].type != MONS_CYCLOPS)
+            if (menv[mon].type != MONS_CYCLOPS &&
+                menv[mon].type != MONS_POLYPHEMUS)
                 msg += "s";
             msg += ".";
             break;

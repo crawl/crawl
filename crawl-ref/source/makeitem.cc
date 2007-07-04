@@ -3336,6 +3336,8 @@ static item_make_species_type give_weapon(monsters *mon, int level,
             item.plus += 1 + random2(3);
         break;
     }
+
+    case MONS_POLYPHEMUS:
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
         item_race = MAKE_ITEM_NO_RACE;

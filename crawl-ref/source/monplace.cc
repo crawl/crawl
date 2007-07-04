@@ -866,6 +866,11 @@ static band_type choose_band( int mon_type, int power, int &band_size )
             band_size = 2 + random2(3);
         }
         break;
+    case MONS_POLYPHEMUS:
+        band = BAND_DEATH_YAKS;
+        band_size = 3 + random2(3);
+        break;
+
     // Journey -- Added Draconian Packs  
     case MONS_WHITE_DRACONIAN:
     case MONS_RED_DRACONIAN:

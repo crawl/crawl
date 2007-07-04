@@ -1319,3 +1319,8 @@ Tiamat
 
 A powerful dragon with mighty wings.  Her scales seem to shimmer and change colour as you watch.
 %%%%
+Polyphemus
+
+...as soon as he had got through with all his work, he clutched up two more of my men, and began eating them for his morning's meal. Presently, with the utmost ease, he rolled the stone away from the door and drove out his sheep, but he at once put it back again--as easily as though he were merely clapping the lid on to a quiver full of arrows.
+	-Homer, _The Odyssey_, Book IX
+%%%%

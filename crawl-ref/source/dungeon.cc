@@ -1886,7 +1886,11 @@ static int pick_unique(int lev)
 
     if (player_in_branch(BRANCH_HALL_OF_ZOT) && one_chance_in(3))
         which_unique = MONS_TIAMAT;
-    
+
+    if (player_in_branch(BRANCH_SHOALS) && player_branch_depth() > 1 &&
+        coinflip())
+        which_unique = MONS_POLYPHEMUS;
+        
     return (which_unique);
 }
 
@@ -1930,6 +1934,10 @@ static int place_uniques(int level_number, char level_type)
                            BEH_SLEEP, MHITNOT, false, 1, 1, true,
                            PROX_ANYWHERE, 250, 0, no_monster_zones ))
         {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Placed %s",
+                 menv[not_used].name(DESC_NOCAP_A).c_str());
+#endif
             ++num_placed;
         }
     }

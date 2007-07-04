@@ -2335,7 +2335,8 @@ item_def *monsters::weapon(int which_attack)
 
 bool monsters::can_throw_rocks() const
 {
-    return (type == MONS_STONE_GIANT || type == MONS_CYCLOPS);
+    return (type == MONS_STONE_GIANT || type == MONS_CYCLOPS ||
+            type == MONS_POLYPHEMUS);
 }
 
 bool monsters::can_use_missile(const item_def &item) const
