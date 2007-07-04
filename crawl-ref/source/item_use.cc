@@ -747,15 +747,12 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    for (int loopy = EQ_CLOAK; loopy <= EQ_BODY_ARMOUR; loopy++)
+    if ( wearing_slot(item) )
     {
-        if (item == you.equip[loopy])
-        {
-            if (!quiet)
-               mpr("You are already wearing that!");
+        if (!quiet)
+            mpr("You are already wearing that!");
 
-            return (false);
-        }
+        return (false);
     }
 
     // if you're wielding something,
@@ -1106,13 +1103,10 @@ void throw_anything(void)
     }
     else
     {
-        for (int loopy = EQ_CLOAK; loopy <= EQ_AMULET; loopy++)
+        if ( wearing_slot(throw_slot) )
         {
-            if (throw_slot == you.equip[loopy])
-            {
-                mpr("You are wearing that object!");
-                return;
-            }
+            mpr("You are wearing that object!");
+            return;
         }
     }
 
@@ -3729,4 +3723,12 @@ void use_randart(const item_def &item)
         // there is a dangerous monster nearby...
         xom_is_stimulated(256);
     }
+}
+
+bool wearing_slot(int inv_slot)
+{
+    for (int i = EQ_CLOAK; i <= EQ_AMULET; ++i)
+        if ( inv_slot == you.equip[i] )
+            return true;
+    return false;
 }

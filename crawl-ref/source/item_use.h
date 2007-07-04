@@ -149,4 +149,6 @@ void warn_shield_penalties();
 
 int item_special_wield_effect(const item_def &item);
 
+bool wearing_slot(int inv_slot);
+
 #endif

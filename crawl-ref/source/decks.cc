@@ -19,7 +19,9 @@
 #include "beam.h"
 #include "effects.h"
 #include "food.h"
+#include "invent.h"
 #include "it_use2.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"
@@ -314,7 +316,9 @@ bool deck_triple_draw()
         return false;
     }
 
-    item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+    const int slot = you.equip[EQ_WEAPON];
+    item_def& item(you.inv[slot]);
+
     if ( item.plus2 != 0 )
     {
         mpr("You can't triple draw from a marked deck.");
@@ -349,6 +353,8 @@ bool deck_triple_draw()
         else
             canned_msg(MSG_HUH);
     }
+
+    // Note that card_effect() might cause you to unwield the deck.
     card_effect(draws[selected], deck_rarity(item));
 
     // remove the cards from the deck
@@ -356,8 +362,10 @@ bool deck_triple_draw()
     if (item.plus <= 0)
     {
         mpr("The deck of cards disappears in a puff of smoke.");
-        unwield_item(you.equip[EQ_WEAPON]);
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+        if ( slot == you.equip[EQ_WEAPON] )
+            unwield_item(slot);
+
+        dec_inv_item_quantity( slot, 1 );
     }
     you.wield_change = true;
     return true;
@@ -561,6 +569,12 @@ static void velocity_card(int power, deck_rarity_type rarity)
 
 static void damnation_card(int power, deck_rarity_type rarity)
 {
+    if ( you.level_type != LEVEL_DUNGEON )
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return;
+    }
+
     // pick a random monster nearby to banish (or yourself)
     const int mon_to_banish = choose_random_nearby_monster(1);
 
@@ -770,13 +784,14 @@ static void helm_card(int power, deck_rarity_type rarity)
     }
 }
 
-// Do one of: vorpalise, sure blade, dancing weapon
-// XXX XXX FIXME Hard to do now, because you have to
-// wield the deck in order to evoke it!
 static void blade_card(int power, deck_rarity_type rarity)
 {
-    // not yet implemented
-    return;
+    // Pause before jumping to the list.
+    if (Options.auto_list)
+        more();
+
+    wield_weapon(false);
+
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )
     {
