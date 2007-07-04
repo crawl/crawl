@@ -5230,7 +5230,7 @@ bool player::backlit() const
 void player::mutate()
 {
     if (one_chance_in(5))
-        ::mutate(100);
+        ::mutate(RANDOM_MUTATION);
     else
         give_bad_mutation();
 }

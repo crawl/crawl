@@ -1318,23 +1318,24 @@ bool debug_add_mutation(void)
     if (specs[0] == '\0')
         return (false);
 
-    int mutation = -1;
+    mutation_type mutation = NUM_MUTATIONS;
 
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         char mut_name[80];
-        strncpy( mut_name, mutation_name( i, 1 ), sizeof( mut_name ) );
+        const mutation_type m = static_cast<mutation_type>(i);
+        strncpy( mut_name, mutation_name( m, 1 ), sizeof( mut_name ) );
 
         char *ptr = strstr( strlwr(mut_name), strlwr(specs) );
         if (ptr != NULL)
         {
             // we take the first mutation that matches
-            mutation = i;
+            mutation = m;
             break;
         }
     }
 
-    if (mutation == -1)
+    if (mutation == NUM_MUTATIONS)
         mpr("I can't warp you that way!");
     else
     {

@@ -302,11 +302,13 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         case NOTE_GET_MUTATION:
             result << "Gained mutation: "
-                   << mutation_name(first, second == 0 ? 1 : second);
+                   << mutation_name(static_cast<mutation_type>(first),
+                                    second == 0 ? 1 : second);
             break;
         case NOTE_LOSE_MUTATION:
             result << "Lost mutation: "
-                   << mutation_name(first, second == 3 ? 3 : second+1);
+                   << mutation_name(static_cast<mutation_type>(first),
+                                    second == 3 ? 3 : second+1);
             break;
         case NOTE_USER_NOTE:
             result << name;

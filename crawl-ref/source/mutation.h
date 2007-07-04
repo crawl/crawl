@@ -22,7 +22,7 @@
  * called from: acr - decks - effects - fight - food - it_use2 - items -
  *              mutation - religion - spell - spells
  * *********************************************************************** */
-bool mutate(int which_mutation, bool failMsg = true,
+bool mutate(mutation_type which_mutation, bool failMsg = true,
             bool force_mutation = false, bool demonspawn = false);
 
 
@@ -39,7 +39,7 @@ formatted_string describe_mutations();
 /* ***********************************************************************
  * called from: decks - it_use2 - mutation - spells
  * *********************************************************************** */
-bool delete_mutation(int which_mutation);
+bool delete_mutation(mutation_type which_mutation);
 
 
 // last updated 12may2000 {dlb}
@@ -47,7 +47,7 @@ bool delete_mutation(int which_mutation);
  * called from: chardump
  * *********************************************************************** */
 // default of level == -1, means to use the player's current level
-const char *mutation_name( int which_mutat, int level = -1 );
+const char *mutation_name( mutation_type which_mutat, int level = -1 );
 
 
 // last updated 12may2000 {dlb}
@@ -68,6 +68,6 @@ bool give_bad_mutation( bool forceMutation = false, bool failMsg = true );
  * *********************************************************************** */
 void demonspawn(void);
 
-bool perma_mutate(int which_mut, char how_much);
+bool perma_mutate(mutation_type which_mut, int how_much);
 
 #endif

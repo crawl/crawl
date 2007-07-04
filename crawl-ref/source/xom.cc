@@ -525,7 +525,7 @@ static bool xom_is_good(int sever)
         int j = random2(4);
         while (i < j)
         {
-            if (mutate(100, failMsg, true))
+            if (mutate(RANDOM_MUTATION, failMsg, true))
                 done = true;
             else
                 failMsg = false;
@@ -665,7 +665,7 @@ static bool xom_is_bad(int sever)
             bool failMsg = true;
             for (int i = 0; i < random2(4)+1; i++)
             {
-                if (mutate(101, failMsg, true))
+                if (mutate(RANDOM_XOM_MUTATION, failMsg, true))
                     done = true;
                 else
                     failMsg = false;

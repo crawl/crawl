@@ -769,7 +769,7 @@ static void eat_chunk( int chunk_effect )
         {
         case CE_MUTAGEN_RANDOM:
             mpr("This meat tastes really weird.");
-            mutate(100);
+            mutate(RANDOM_MUTATION);
             xom_is_stimulated(100);
             break;
 

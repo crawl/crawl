@@ -1132,7 +1132,7 @@ formatted_string describe_mutations()
                 result += colourname;
                 result += '>';
             }
-            result += mutation_name(i);
+            result += mutation_name(static_cast<mutation_type>(i));
             if ( you.demon_pow[i] )
             {
                 result += "</";
@@ -1159,7 +1159,7 @@ void display_mutations()
         getch();
 }
 
-static int calc_mutation_amusement_value(int which_mutation)
+static int calc_mutation_amusement_value(mutation_type which_mutation)
 {
     int amusement = 16 * (11 - mutation_rarity[which_mutation]);
 
@@ -1214,10 +1214,26 @@ static int calc_mutation_amusement_value(int which_mutation)
     return (amusement);
 }
 
-bool mutate(int which_mutation, bool failMsg, bool force_mutation,
+static bool accept_mutation( mutation_type mutat )
+{
+    int limit = 3;
+    if ( mutat == MUT_STRONG || mutat == MUT_CLEVER ||
+         mutat == MUT_AGILE || mutat == MUT_WEAK ||
+         mutat == MUT_DOPEY || mutat == MUT_CLUMSY )
+        limit = 14;
+    
+    if ( you.mutation[mutat] >= limit )
+        return false;
+    
+    const int rarity = mutation_rarity[mutat] + you.demon_pow[mutat];
+    // low rarity means unlikely to choose it
+    return (rarity > random2(10));
+}
+
+bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             bool demonspawn)
 {
-    int mutat = which_mutation;
+    mutation_type mutat = which_mutation;
 
     if (demonspawn)
         force_mutation = true;
@@ -1267,36 +1283,30 @@ bool mutate(int which_mutation, bool failMsg, bool force_mutation,
         return (false);
     }
 
-    if (which_mutation == 100 && random2(15) < how_mutated())
+    if (which_mutation == RANDOM_MUTATION)
     {
-        if (!force_mutation && !one_chance_in(3))
-            return (false);
-        else
-            return (delete_mutation(100));
-    }
-
-    if (which_mutation == 100)
-    {
-        do
+        if ( random2(15) < how_mutated() )
         {
-            mutat = random2(NUM_MUTATIONS);
-
-            if (one_chance_in(1000))
-                return false;
+            if (!force_mutation && !one_chance_in(3))
+                return (false);
+            else
+                return (delete_mutation(RANDOM_MUTATION));
         }
-        while ((you.mutation[mutat] >= 3
-                && (mutat != MUT_STRONG && mutat != MUT_CLEVER
-                    && mutat != MUT_AGILE) && (mutat != MUT_WEAK
-                                               && mutat != MUT_DOPEY
-                                               && mutat != MUT_CLUMSY))
-               || you.mutation[mutat] > 13
-               || random2(10) >= mutation_rarity[mutat] + you.demon_pow[mutat]);
+        else
+        {
+            do
+            {
+                mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
+                if (one_chance_in(1000))
+                    return false;
+            } while ( !accept_mutation(mutat) );
+        }
     }
-    else if (which_mutation == 101)
+    else if (which_mutation == RANDOM_XOM_MUTATION)
     {
         do
         {
-            mutat = random2(NUM_MUTATIONS);
+            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
 
             if (one_chance_in(1000))
                 return false;
@@ -1315,19 +1325,12 @@ bool mutate(int which_mutation, bool failMsg, bool force_mutation,
                 }
             }
         }
-        while ((you.mutation[mutat] >= 3
-                && (mutat != MUT_STRONG && mutat != MUT_CLEVER
-                    && mutat != MUT_AGILE) && (mutat != MUT_WEAK
-                                               && mutat != MUT_DOPEY
-                                               && mutat != MUT_CLUMSY))
-               || you.mutation[mutat] > 13
-               || random2(10) >= mutation_rarity[mutat] + you.demon_pow[mutat]);
+        while ( !accept_mutation(mutat) );
     }
-    else if (you.mutation[mutat] >= 3
-             && (mutat != MUT_STRONG && mutat != MUT_CLEVER
-                 && mutat != MUT_AGILE)
-             && (mutat != MUT_WEAK && mutat != MUT_DOPEY
-                 && mutat != MUT_CLUMSY))
+    else if (you.mutation[mutat] >= 3 &&
+             mutat != MUT_STRONG && mutat != MUT_CLEVER &&
+             mutat != MUT_AGILE && mutat != MUT_WEAK &&
+             mutat != MUT_DOPEY && mutat != MUT_CLUMSY)
     {
         return false;
     }
@@ -1721,9 +1724,9 @@ int how_mutated(void)
     return (j);
 }                               // end how_mutated()
 
-bool delete_mutation(int which_mutation)
+bool delete_mutation(mutation_type which_mutation)
 {
-    int mutat = which_mutation;
+    mutation_type mutat = which_mutation;
     int i;
 
     if (you.mutation[MUT_MUTATION_RESISTANCE] > 1
@@ -1733,11 +1736,11 @@ bool delete_mutation(int which_mutation)
         return false;
     }
 
-    if (which_mutation == 100)
+    if (which_mutation == RANDOM_MUTATION)
     {
         do
         {
-            mutat = random2(NUM_MUTATIONS);
+            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
             if (one_chance_in(1000))
                 return false;
         }
@@ -1930,7 +1933,7 @@ char body_covered(void)
     return covered;
 }
 
-const char *mutation_name(int which_mutat, int level )
+const char *mutation_name(mutation_type which_mutat, int level)
 {
     static char mut_string[INFO_SIZE];
 
@@ -1959,7 +1962,7 @@ const char *mutation_name(int which_mutat, int level )
 /* Use an attribute counter for how many demonic mutations a dspawn has */
 void demonspawn(void)
 {
-    int whichm = -1;
+    mutation_type whichm = NUM_MUTATIONS;
     char howm = 1;
     int counter = 0;
 
@@ -2083,10 +2086,11 @@ void demonspawn(void)
         }
 
         // check here so we can see if we need to extend our options:
-        if (whichm != -1 && you.mutation[whichm] != 0)
-            whichm = -1;
+        if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
+            whichm = NUM_MUTATIONS;
 
-        if (you.experience_level < 10 || (counter > 0 && whichm == -1))
+        if (you.experience_level < 10 ||
+            (counter > 0 && whichm == NUM_MUTATIONS))
         {
             if ((!you.mutation[MUT_THROW_FROST]         // only one of these
                     && !you.mutation[MUT_THROW_FLAMES]
@@ -2204,7 +2208,8 @@ void demonspawn(void)
 
                 if (one_chance_in(12))
                 {
-                    whichm = MUT_RED_SCALES + random2(16);
+                    whichm = static_cast<mutation_type>(MUT_RED_SCALES +
+                                                        random2(16));
 
                     switch (whichm)
                     {
@@ -2252,14 +2257,14 @@ void demonspawn(void)
             }
         }
 
-        if (whichm != -1 && you.mutation[whichm] != 0)
-            whichm = -1;
+        if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
+            whichm = NUM_MUTATIONS;
 
         counter++;
     }
-    while (whichm == -1 && counter < 5000);
+    while (whichm == NUM_MUTATIONS && counter < 5000);
 
-    if (whichm == -1 || !perma_mutate( whichm, howm ))
+    if (whichm == NUM_MUTATIONS || !perma_mutate( whichm, howm ))
     {
         /* unlikely but remotely possible */
         /* I know this is a cop-out */
@@ -2270,7 +2275,7 @@ void demonspawn(void)
     }
 }                               // end demonspawn()
 
-bool perma_mutate(int which_mut, char how_much)
+bool perma_mutate(mutation_type which_mut, int how_much)
 {
     char levels = 0;
 
@@ -2290,10 +2295,9 @@ bool perma_mutate(int which_mut, char how_much)
 
 bool give_bad_mutation(bool forceMutation, bool failMsg)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-    int which_bad_one = 0;
+    mutation_type which_bad_one;
 
-    temp_rand = random2(12);
+    const int temp_rand = random2(12);
 
     which_bad_one = ((temp_rand >= 11) ? MUT_CARNIVOROUS :
                      (temp_rand == 10) ? MUT_HERBIVOROUS :
@@ -2314,7 +2318,7 @@ bool give_bad_mutation(bool forceMutation, bool failMsg)
 //jmf: might be useful somewhere (eg Xom or transmigration effect)
 bool give_cosmetic_mutation()
 {
-    int mutation = -1;
+    mutation_type mutation = NUM_MUTATIONS;
     int how_much = 0;
     int counter = 0;
 

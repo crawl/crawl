@@ -2366,7 +2366,7 @@ void handle_time( long time_delta )
 
             // we want to warp the player, not do good stuff!
             if (one_chance_in(5))
-                mutate(100);
+                mutate(RANDOM_MUTATION);
             else
                 give_bad_mutation(coinflip());
 

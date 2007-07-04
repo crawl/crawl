@@ -265,7 +265,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         for (i = 0; i < 7; i++)
         {
             if (random2(10) > i)
-                delete_mutation(100);
+                delete_mutation(RANDOM_MUTATION);
         }
         break;
 
@@ -273,7 +273,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         mpr("You feel extremely strange.");
         for (i = 0; i < 3; i++)
         {
-            mutate(100, false);
+            mutate(RANDOM_MUTATION, false);
         }
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4));

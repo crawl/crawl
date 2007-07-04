@@ -1548,7 +1548,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
         set_hp( 1 + random2(you.hp), false );
 
-        if (!mutate(100, false))
+        if (!mutate(RANDOM_MUTATION, false))
             mpr("Odd... you don't feel any different.");
         break;
 
@@ -2857,7 +2857,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
             case 1:
                 mpr("You feel very strange.");
-                delete_mutation(100);
+                delete_mutation(RANDOM_MUTATION);
                 ouch(5 + random2avg(23, 2), 0, KILLED_BY_WILD_MAGIC, cause);
                 break;
 

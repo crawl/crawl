@@ -2704,7 +2704,10 @@ enum mutation_type
     MUT_RED2_SCALES,
     MUT_IRIDESCENT_SCALES,
     MUT_PATTERNED_SCALES,              //   85
-    NUM_MUTATIONS
+    NUM_MUTATIONS,
+
+    RANDOM_MUTATION = 100,
+    RANDOM_XOM_MUTATION = 101
 };
 
 enum object_class_type                 // (unsigned char) mitm[].base_type
