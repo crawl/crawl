@@ -1476,8 +1476,529 @@ void lose_piety(int pgn)
     }
 }
 
-static void lugonu_retribution(god_type god)
+static bool tso_retribution()
 {
+    const god_type god = GOD_SHINING_ONE;
+    // daeva/smiting theme
+
+    // Doesn't care unless you've gone over to evil/destructive gods
+    if ( !is_evil_god(you.religion) )
+        return false;
+
+    if (coinflip())
+    {
+        bool success = false;
+        int how_many = 1 + random2(you.experience_level / 5) + random2(3);
+        
+        for (int i = 0; i < how_many; i++)
+            if (create_monster( MONS_DAEVA, 0, BEH_HOSTILE,
+                                you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                success = true;
+
+        simple_god_message( success ?
+                            " sends the divine host to punish you "
+                            "for your evil ways!" :
+                            "'s divine host fails to appear.",
+                            god );
+    }
+    else
+    {
+        if (!player_under_penance() && you.piety > random2(400))
+        {
+            god_speaks(you.religion,
+                       "Mortal, I have averted the wrath of "
+                       "the Shining One... this time.");
+        }
+        else
+        {
+            int divine_hurt = 10 + random2(10);            
+            for (int i = 0; i < 5; i++)
+                divine_hurt += random2( you.experience_level );
+
+            simple_god_message( " smites you!", god );
+            ouch( divine_hurt, 0, KILLED_BY_TSO_SMITING );
+            dec_penance( god, 1 );
+        }
+    }
+
+    return false;
+}
+
+static bool zin_retribution()
+{
+    const god_type god = GOD_ZIN;
+
+    // angels/creeping doom theme:
+    // Doesn't care unless you've gone over to evil
+    if (!is_evil_god(you.religion))
+        return false;
+
+    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    {
+        bool success = false;
+        const int how_many = 1 + (you.experience_level / 10) + random2(3);
+
+        for (int i = 0; i < how_many; i++)
+            if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
+                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                success = true;
+
+        simple_god_message( success ?
+                            " sends the divine host to punish you "
+                            "for your evil ways!" :
+                            "'s divine host fails to appear.",
+                            god);
+    }
+    else
+    {
+        // god_gift == false gives unfriendly
+        summon_swarm( you.experience_level * 20, true, false );
+        simple_god_message(" sends a plague down upon you!", god);
+    }
+
+    return false;
+}
+
+static bool makhleb_retribution()
+{
+    const god_type god = GOD_MAKHLEB;
+
+     // demonic servant theme
+    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    {
+        const bool success = create_monster(MONS_EXECUTIONER + random2(5), 0,
+                                            BEH_HOSTILE, you.x_pos, you.y_pos,
+                                            MHITYOU, 250) != -1;
+        simple_god_message(success ?
+                           " sends a greater servant after you!" :
+                           "'s greater servant is unavoidably detained.",
+                           god);
+    }
+    else
+    {
+        bool success = false;
+        int how_many = 1 + (you.experience_level / 7);
+
+        for (int i = 0; i < how_many; i++)
+            if (create_monster(MONS_NEQOXEC + random2(5), 0, BEH_HOSTILE,
+                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                success = true;
+
+        simple_god_message(success ?
+                           " sends minions to punish you." :
+                           "'s minions fail to arrive.",
+                           god);
+    }
+
+    return true;
+}
+
+static bool kikubaaqudgha_retribution()
+{
+    const god_type god = GOD_KIKUBAAQUDGHA;
+
+    // death/necromancy theme
+    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    {
+        bool success = false;
+        int how_many = 1 + (you.experience_level / 5) + random2(3);
+
+        for (int i = 0; i < how_many; i++)
+            if (create_monster(MONS_REAPER, 0, BEH_HOSTILE, you.x_pos,
+                               you.y_pos, MHITYOU, 250) != -1)
+                success = true;
+
+        if (success)
+            simple_god_message(" unleashes Death upon you!", god);
+        else
+            god_speaks(god, "Death has been delayed...for now.");
+    }
+    else
+    {
+        god_speaks(god, (coinflip()) ? "You hear Kikubaaqudgha cackling."
+                   : "Kikubaaqudgha's malice focuses upon you.");
+
+        miscast_effect(SPTYP_NECROMANCY, 5 + you.experience_level,
+                       random2avg(88, 3), 100, "the malice of Kikubaaqudgha");
+    }
+
+    return true;
+}
+
+static bool yredelemnul_retribution()
+{
+    const god_type god = GOD_YREDELEMNUL;
+
+    // undead theme
+    if (random2(you.experience_level) > 4)
+    {
+        bool success = false;
+        int how_many = 1 + random2(1 + (you.experience_level / 5));
+
+        for (int i = 0; i < how_many; i++)
+        {
+            const int temp_rand = random2(100);
+
+            const monster_type punisher =
+                ((temp_rand > 66) ? MONS_WRAITH :            // 33%
+                 (temp_rand > 52) ? MONS_WIGHT :             // 12%
+                 (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
+                 (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
+                 (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
+                 (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
+                 (temp_rand > 10) ? MONS_GHOUL :             //  6%
+                 (temp_rand >  4) ? MONS_MUMMY               //  6%
+                 : MONS_FLAYED_GHOST);      //  5%
+
+            if (create_monster( punisher, 0, BEH_HOSTILE, 
+                                you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
+                success = true;
+
+        }
+
+        simple_god_message(success ?
+                           " sends a servant to punish you." :
+                           "'s servant fails to arrive.",
+                           god);
+    }
+    else
+    {
+        simple_god_message("'s anger turns toward you for a moment.", god);
+        miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
+                        random2avg(88, 3), 100, "the anger of Yredelemnul" );
+    }
+    
+    return true;
+}
+
+static bool trog_retribution()
+{
+    const god_type god = GOD_TROG;
+
+    // physical/berserk theme
+    if ( coinflip() )
+    {
+        // Would be better if berserking monsters were available,
+        // we just send some big bruisers for now.
+        bool success = false;
+        int points = 3 + you.experience_level * 3;
+
+        while (points > 0)
+        {
+            monster_type punisher = MONS_PROGRAM_BUG;
+
+            if (points > 20 && coinflip())
+            {
+                // quick reduction for large values
+                punisher = MONS_DEEP_TROLL;
+                points -= 15;
+                continue;
+            }
+            else
+            {
+                const monster_type punishers[10] = {
+                    MONS_IRON_TROLL, MONS_ROCK_TROLL, MONS_TROLL,
+                    MONS_MINOTAUR, MONS_MINOTAUR, MONS_TWO_HEADED_OGRE, 
+                    MONS_TWO_HEADED_OGRE, MONS_OGRE, MONS_OGRE, MONS_OGRE
+                };
+                const int costs[10] = { 10, 10, 6, 3, 3, 4, 4, 3, 3, 3 };
+                const int idx = random2(10);
+                
+                punisher = punishers[idx];
+                points -= costs[idx];
+            }
+
+            if (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
+                               you.y_pos, MHITYOU, 250) != -1)
+                success = true;
+        }
+        
+        simple_god_message(success ?
+                           " sends monsters to punish you." :
+                           " has no time to punish you...now.",
+                           god);
+    }
+    else if ( !one_chance_in(3) )
+    {
+        simple_god_message("'s voice booms out, \"Feel my wrath!\"", god );
+
+        // A collection of physical effects that might be better
+        // suited to Trog than wild fire magic... messages could
+        // be better here... something more along the lines of apathy
+        // or loss of rage to go with the anti-berzerk effect-- bwr
+        switch (random2(6))
+        {
+        case 0:
+            potion_effect( POT_DECAY, 100 );
+            break;
+
+        case 1:
+        case 2:
+            lose_stat(STAT_STRENGTH, 1 + random2(you.strength / 5), true);
+            break;
+
+        case 3:
+            if (!you.duration[DUR_PARALYSIS])
+            {
+                dec_penance(god, 3);
+                mpr( "You suddenly pass out!", MSGCH_WARN );
+                you.duration[DUR_PARALYSIS] = 2 + random2(6);
+            }
+            break;
+
+        case 4:
+        case 5:
+            if (you.duration[DUR_SLOW] < 90)
+            {
+                dec_penance(god, 1);
+                mpr( "You suddenly feel exhausted!", MSGCH_WARN );
+                you.duration[DUR_EXHAUSTED] = 100;
+                slow_player( 100 );
+            }
+            break;
+        }
+    }
+    else
+    {
+        //jmf: returned Trog's old Fire damage
+        // -- actually, this function partially exists to remove that,
+        //    we'll leave this effect in, but we'll remove the wild
+        //    fire magic. -- bwr
+        dec_penance(god, 2);
+        mpr( "You feel Trog's fiery rage upon you!", MSGCH_WARN );
+        miscast_effect( SPTYP_FIRE, 8 + you.experience_level, 
+                        random2avg(98, 3), 100, "the fiery rage of Trog" );
+    }
+
+    return true;
+}
+
+static bool beogh_retribution()
+{
+    const god_type god = GOD_BEOGH;
+
+    // orcish theme
+    switch (random2(8))
+    {
+    case 0: // smiting (25%)
+    case 1:
+    {
+        int divine_hurt = 10 + random2(10);
+            
+        for (int i = 0; i < 5; i++)
+            divine_hurt += random2( you.experience_level );
+            
+        if (!player_under_penance() && you.piety > random2(400))
+        {
+            snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
+                     "of %s... this time.", god_name(god));
+            god_speaks(you.religion, info);
+        }
+        else
+        {
+            simple_god_message( " smites you!", god );
+            ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
+            dec_penance( god, 1 );
+        }
+        break;
+    }
+
+    // taken from makeitem.cc and spells3.cc:
+    case 2: // send out one or two dancing weapons of orc slaying (12.5%)
+    {
+        int num_created = 0;
+        int num_to_create = random2(2) + 1;
+        for (int i = 0; i < num_to_create; i++)
+        {
+            bool created = false;
+
+            // first create item
+            const int it = get_item_slot();
+            if (it != NON_ITEM)
+            {
+                item_def &item = mitm[it];
+                    
+                item.quantity = 1;
+                item.base_type = OBJ_WEAPONS;
+                // any melee weapon
+                item.sub_type = WPN_CLUB + random2(13); 
+                    
+                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
+                // just how good should this weapon be?
+                item.plus = random2(3);
+                item.plus2 = random2(3);
+                      
+                if (coinflip())
+                    item.flags |= ISFLAG_CURSED;
+
+                set_ident_type( item.base_type, item.sub_type,
+                                ID_KNOWN_TYPE );
+                    
+                // for debugging + makes things more interesting
+                // (doesn't seem to have any effect, though)
+                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+                set_ident_flags( item, ISFLAG_IDENT_MASK );
+
+                // now create monster
+                int mons =
+                    create_monster( MONS_DANCING_WEAPON, 0,
+                                    BEH_HOSTILE, you.x_pos, you.y_pos,
+                                    MHITYOU, 250 );
+                                       
+                // hand item information over to monster
+                if (mons != -1 && mons != NON_MONSTER)
+                {
+                    mitm[it] = item;
+                    mitm[it].quantity = 1;
+                    mitm[it].x = 0;
+                    mitm[it].y = 0;
+                    mitm[it].link = NON_ITEM;
+                    menv[mons].inv[MSLOT_WEAPON] = it;
+                    created = true;
+                    num_created++;
+
+                    // 50% chance of weapon disappearing on "death"
+                    if (coinflip())
+                        menv[mons].flags |= MF_HARD_RESET;
+                }
+            }
+            if (!created) // didn't work out! delete item
+            {
+                mitm[it].base_type = OBJ_UNASSIGNED;
+                mitm[it].quantity = 0;
+            }
+        }
+        if (num_created)
+        {
+            snprintf(info, INFO_SIZE, " throws %s of orc slaying at you.",
+                     num_created > 1 ? "implements" : "an implement");
+            simple_god_message(info, god);
+            break;
+        } // else fall through
+    }
+    case 4: // 25%, relatively harmless
+    case 5: // in effect, only for penance
+        if (followers_abandon_you()) 
+            break;
+        // else fall through
+    default: // send orcs after you (3/8 to 5/8)
+    {
+        int points = you.experience_level + 3
+            + random2(you.experience_level * 3);
+
+        monster_type punisher;
+        // "natural" bands
+        if (points >= 30) // min: lvl 7, always: lvl 27 
+            punisher = MONS_ORC_WARLORD;
+        else if (points >= 24) // min: lvl 6, always: lvl 21
+            punisher = MONS_ORC_HIGH_PRIEST;
+        else if (points >= 18) // min: lvl 4, always: lvl 15 
+            punisher = MONS_ORC_KNIGHT;
+        else if (points > 10) // min: lvl 3, always: lvl 8 
+            punisher = MONS_ORC_WARRIOR;
+        else
+            punisher = MONS_ORC;
+
+        bool success = (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
+                                       you.y_pos, MHITYOU, 250, true) != -1);
+
+        simple_god_message(success ?
+                           " sends forth an army of orcs." :
+                           " is still gathering forces against you.",
+                           god);
+    }
+    }
+    
+    return true;
+}
+
+static bool okawaru_retribution()
+{
+    const god_type god = GOD_OKAWARU;
+
+    // warrior theme
+    bool success = false;
+    const int how_many = 1 + (you.experience_level / 5);
+
+    for (int i = 0; i < how_many; i++)
+    {
+        const int temp_rand = random2(100);
+
+        monster_type punisher = ((temp_rand > 84) ? MONS_ORC_WARRIOR :
+                                 (temp_rand > 69) ? MONS_ORC_KNIGHT :
+                                 (temp_rand > 59) ? MONS_NAGA_WARRIOR :
+                                 (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :
+                                 (temp_rand > 39) ? MONS_STONE_GIANT :
+                                 (temp_rand > 29) ? MONS_FIRE_GIANT :
+                                 (temp_rand > 19) ? MONS_FROST_GIANT :
+                                 (temp_rand >  9) ? MONS_CYCLOPS :
+                                 (temp_rand >  4) ? MONS_HILL_GIANT 
+                                 : MONS_TITAN);
+
+        if (create_monster(punisher, 0, BEH_HOSTILE,
+                           you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+            success = true;
+    }
+
+    simple_god_message(success ?
+                       " sends forces against you!" :
+                       "'s forces are busy with other wars.",
+                       god);
+
+    return true;
+}
+
+static bool sif_muna_retribution()
+{
+    const god_type god = GOD_SIF_MUNA;
+
+    simple_god_message("'s wrath finds you.", god);
+    dec_penance(god, 1);
+
+    // magic and intelligence theme
+    switch (random2(10))
+    {
+    case 0:
+    case 1:
+        lose_stat(STAT_INTELLIGENCE, 1 + random2( you.intel / 5 ), true);
+        break;
+
+    case 2:
+    case 3:
+    case 4:
+        confuse_player( 3 + random2(10), false );
+        break;
+
+    case 5:
+    case 6:
+        miscast_effect(SPTYP_DIVINATION, 9, 90, 100, "the will of Sif Muna");
+        break;
+
+    case 7:
+    case 8:
+        if (you.magic_points)
+        {
+            dec_mp( 100 );  // this should zero it.
+            mpr( "You suddenly feel drained of magical energy!", MSGCH_WARN );
+        }
+        break;
+
+    case 9:
+        // This will set all the extendable duration spells to 
+        // a duration of one round, thus potentially exposing 
+        // the player to real danger.
+        antimagic();
+        mpr( "You sense a dampening of magic.", MSGCH_WARN );
+        break;
+    }
+
+    return true;
+}
+
+static bool lugonu_retribution()
+{
+    const god_type god = GOD_LUGONU;
+
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
@@ -1531,606 +2052,73 @@ static void lugonu_retribution(god_type god)
         else
             simple_god_message("'s minions fail to arrive.", god);
     }
+    
+    return false;
+}
+
+static bool vehumet_retribution()
+{
+    const god_type god = GOD_VEHUMET;
+
+    // conjuration and summoning theme
+    simple_god_message("'s vengeance finds you.", god);
+    miscast_effect( coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
+                    8 + you.experience_level, random2avg(98, 3), 100,
+                    "the wrath of Vehumet" );
+    return true;
+}
+
+static bool nemelex_retribution()
+{
+    const god_type god = GOD_NEMELEX_XOBEH;
+    // like Xom, this might actually help the player -- bwr
+    simple_god_message(" makes you draw from the Deck of Punishment.", god);
+    draw_from_deck_of_punishment();
+    return true;
 }
 
 void divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
-    int loopy = 0;              // general purpose loop variable {dlb}
-    int temp_rand = 0;          // probability determination {dlb}
-    int punisher = MONS_PROGRAM_BUG;
-    bool success = false;
-    int how_many = 0;
-    int divine_hurt = 0;
-
     // Good gods don't use divine retribution on their followers, they
     // will consider it for those who have gone astray however.
-    if (god == you.religion)
-    {
-        if (god == GOD_SHINING_ONE || god == GOD_ZIN || god == GOD_ELYVILON)
-            return;
-    }
+    if (god == you.religion && is_good_god(god) )
+        return;
 
-    // Just the thought of retribution (getting this far) mollifies the
-    // god by a point... the punishment might reduce penance further.
+    // Just the thought of retribution (getting this far) mollifies
+    // the god by at least a point... the punishment might reduce
+    // penance further.
     dec_penance( god, 1 + random2(3) );
 
+    bool do_more = true;
+    
     switch (god)
     {
-    case GOD_XOM:
-        // One in ten chance that Xom might do something good...
-        xom_acts(one_chance_in(10), abs(you.piety - 100));
-        break;
 
-    case GOD_SHINING_ONE:
-        // daeva/smiting theme
-        // Doesn't care unless you've gone over to evil/destructive gods
-        if (is_evil_god(you.religion))
-        {
-            if (coinflip())
-            {
-                success = false;
-                how_many = 1 + random2(you.experience_level / 5) + random2(3);
-
-                for (loopy = 0; loopy < how_many; loopy++)
-                {
-                    if (create_monster( MONS_DAEVA, 0, BEH_HOSTILE,
-                                    you.x_pos, you.y_pos, MHITYOU, 250) != -1)
-                    {
-                        success = true;
-                    }
-                }
-
-                if (success)
-                {
-                    simple_god_message( " sends the divine host to punish you for your evil ways!", god );
-                }
-                else
-                {
-                    simple_god_message("'s divine host fails to appear.", god);
-                }
-            }
-            else
-            {
-                divine_hurt = 10 + random2(10);
-
-                for (loopy = 0; loopy < 5; loopy++)
-                    divine_hurt += random2( you.experience_level );
-
-                if (!player_under_penance() && you.piety > random2(400))
-                {
-                    god_speaks(you.religion,
-                               "Mortal, I have averted the wrath of "
-                               "the Shining One... this time.");
-                }
-                else
-                {
-                    simple_god_message( " smites you!", god );
-                    ouch( divine_hurt, 0, KILLED_BY_TSO_SMITING );
-                    dec_penance( GOD_SHINING_ONE, 1 );
-                }
-            }
-            break;
-        }
-        return;
-
-    case GOD_ZIN:
-        // angels/creeping doom theme:
-        // Doesn't care unless you've gone over to evil
-        if (is_evil_god(you.religion))
-        {
-            if (random2(you.experience_level) > 7 && !one_chance_in(5))
-            {
-                success = false;
-                how_many = 1 + (you.experience_level / 10) + random2(3);
-
-                for (loopy = 0; loopy < how_many; loopy++)
-                {
-                    if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
-                                    you.x_pos, you.y_pos, MHITYOU, 250) != -1)
-                    {
-                        success = true;
-                    }
-                }
-
-                if (success)
-                {
-                    simple_god_message(" sends the divine host to punish you for your evil ways!", god);
-                }
-                else
-                {
-                    simple_god_message("'s divine host fails to appear.", god);
-                }
-            }
-            else
-            {
-                // god_gift == false gives unfriendly
-                summon_swarm( you.experience_level * 20, true, false );
-                simple_god_message(" sends a plague down upon you!", god);
-            }
-            break;
-        }
-        return;
-
-    case GOD_MAKHLEB:
-        // demonic servant theme
-        if (random2(you.experience_level) > 7 && !one_chance_in(5))
-        {
-            if (create_monster(MONS_EXECUTIONER + random2(5), 0,
-                               BEH_HOSTILE, you.x_pos, you.y_pos,
-                               MHITYOU, 250) != -1)
-            {
-                simple_god_message(" sends a greater servant after you!",
-                                   god);
-            }
-            else
-            {
-                simple_god_message("'s greater servant is unavoidably detained.", god);
-            }
-        }
-        else
-        {
-            success = false;
-            how_many = 1 + (you.experience_level / 7);
-
-            for (loopy = 0; loopy < how_many; loopy++)
-            {
-                if (create_monster(MONS_NEQOXEC + random2(5), 0, BEH_HOSTILE,
-                                    you.x_pos, you.y_pos, MHITYOU, 250) != -1)
-                {
-                    success = true;
-                }
-            }
-
-            if (success)
-                simple_god_message(" sends minions to punish you.", god);
-            else
-                simple_god_message("'s minions fail to arrive.", god);
-        }
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-        // death/necromancy theme
-        if (random2(you.experience_level) > 7 && !one_chance_in(5))
-        {
-            success = false;
-            how_many = 1 + (you.experience_level / 5) + random2(3);
-
-            for (loopy = 0; loopy < how_many; loopy++)
-            {
-                if (create_monster(MONS_REAPER, 0, BEH_HOSTILE, you.x_pos,
-                                   you.y_pos, MHITYOU, 250) != -1)
-                {
-                    success = true;
-                }
-            }
-
-            if (success)
-                simple_god_message(" unleashes Death upon you!", god);
-            else
-                god_speaks(god, "Death has been delayed...for now.");
-        }
-        else
-        {
-            god_speaks(god, (coinflip()) ? "You hear Kikubaaqudgha cackling."
-                                         : "Kikubaaqudgha's malice focuses upon you.");
-
-            miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
-                            random2avg(88, 3), 100, "the malice of Kikubaaqudgha" );
-        }
-        break;
-
-    case GOD_YREDELEMNUL:
-        // undead theme
-        if (random2(you.experience_level) > 4)
-        {
-            success = false;
-            how_many = 1 + random2(1 + (you.experience_level / 5));
-
-            for (loopy = 0; loopy < how_many; loopy++)
-            {
-                temp_rand = random2(100);
-
-                punisher = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
-                            (temp_rand > 52) ? MONS_WIGHT :             // 12%
-                            (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
-                            (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
-                            (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
-                            (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
-                            (temp_rand > 10) ? MONS_GHOUL :             //  6%
-                            (temp_rand >  4) ? MONS_MUMMY               //  6%
-                                             : MONS_FLAYED_GHOST);      //  5%
-
-                if (create_monster( punisher, 0, BEH_HOSTILE, 
-                                    you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
-                {
-                    success = true;
-                }
-            }
-
-            if (success)
-                simple_god_message(" sends a servant to punish you.", god);
-            else
-                simple_god_message("'s servant fails to arrive.", god);
-        }
-        else
-        {
-            simple_god_message("'s anger turns toward you for a moment.",
-                               god);
-
-            miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
-                            random2avg(88, 3), 100, "the anger of Yredelemnul" );
-        }
-        break;
-
-    case GOD_TROG:
-        // physical/berserk theme
-        switch (random2(6))
-        {
-        case 0:
-        case 1:
-        case 2:
-            {
-                // Would be better if berserking monsters were available,
-                // we just send some big bruisers for now.
-                success = false;
-
-                int points = 3 + you.experience_level * 3;
-
-                while (points > 0)
-                {
-                    if (points > 20 && coinflip())
-                    {
-                        // quick reduction for large values
-                        punisher = MONS_DEEP_TROLL;
-                        points -= 15;
-                        break;
-                    }
-                    else
-                    {
-                        switch (random2(10))
-                        {
-                        case 0:
-                            punisher = MONS_IRON_TROLL;
-                            points -= 10;
-                            break;
-
-                        case 1:
-                            punisher = MONS_ROCK_TROLL;
-                            points -= 10;
-                            break;
-
-                        case 2:
-                            punisher = MONS_TROLL;
-                            points -= 6;
-                            break;
-
-                        case 3:
-                        case 4:
-                            punisher = MONS_MINOTAUR;
-                            points -= 3;
-                            break;
-
-                        case 5:
-                        case 6:
-                            punisher = MONS_TWO_HEADED_OGRE;
-                            points -= 4;
-                            break;
-
-                        case 7:
-                        case 8:
-                        case 9:
-                        default:
-                            punisher = MONS_OGRE;
-                            points -= 3;
-                        }
-                    }
-
-                    if (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
-                                       you.y_pos, MHITYOU, 250) != -1)
-                    {
-                        success = true;
-                    }
-                }
-
-                if (success)
-                    simple_god_message(" sends monsters to punish you.", god);
-                else
-                    simple_god_message(" has no time to punish you...now.", god);
-            }
-            break;
-
-        case 3:
-        case 4:
-            simple_god_message("'s voice booms out, \"Feel my wrath!\"", god );
-
-            // A collection of physical effects that might be better
-            // suited to Trog than wild fire magic... messages could
-            // be better here... something more along the lines of apathy
-            // or loss of rage to go with the anti-berzerk effect-- bwr
-            switch (random2(6))
-            {
-            case 0:
-                potion_effect( POT_DECAY, 100 );
-                break;
-
-            case 1:
-            case 2:
-                lose_stat(STAT_STRENGTH, 1 + random2(you.strength / 5), true);
-                break;
-
-            case 3:
-                if (!you.duration[DUR_PARALYSIS])
-                {
-                    dec_penance(GOD_TROG, 3);
-                    mpr( "You suddenly pass out!", MSGCH_WARN );
-                    you.duration[DUR_PARALYSIS] = 2 + random2(6);
-                }
-                break;
-
-            case 4:
-            case 5:
-                if (you.duration[DUR_SLOW] < 90)
-                {
-                    dec_penance( GOD_TROG, 1 );
-                    mpr( "You suddenly feel exhausted!", MSGCH_WARN );
-                    you.duration[DUR_EXHAUSTED] = 100;
-                    slow_player( 100 );
-                }
-                break;
-            };
-            break;
-        //jmf: returned Trog's old Fire damage
-        // -- actually, this function partially exists to remove that,
-        //    we'll leave this effect in, but we'll remove the wild
-        //    fire magic. -- bwr
-        case 5:
-            dec_penance(GOD_TROG, 2);
-            mpr( "You feel Trog's fiery rage upon you!", MSGCH_WARN );
-            miscast_effect( SPTYP_FIRE, 8 + you.experience_level, 
-                            random2avg(98, 3), 100, "the fiery rage of Trog" );
-            break;
-        }
-        break;
-
-    case GOD_BEOGH:
-        // orcish theme
-        switch (random2(8))
-        {
-        case 0: // smiting (25%)
-        case 1:
-            divine_hurt = 10 + random2(10);
-            
-            for (loopy = 0; loopy < 5; loopy++)
-                divine_hurt += random2( you.experience_level );
-            
-            if (!player_under_penance() && you.piety > random2(400))
-            {
-                snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                         "of %s... this time.", god_name(GOD_BEOGH));
-                god_speaks(you.religion, info);
-            }
-            else
-            {
-                simple_god_message( " smites you!", god );
-                ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
-                dec_penance( GOD_BEOGH, 1 );
-            }
-            break;
-// taken from makeitem.cc and spells3.cc:
-        case 2: // send out one or two dancing weapons of orc slaying (12.5%)
-        {
-            // check num of (hostile) orcs around
-            int num_wpn = 0;
-            for (int i=0 ;i <= random2(2); i++)
-            {
-                bool created = false;
-                
-                // first create item
-                int it = get_item_slot();
-                if (it != NON_ITEM)
-                {
-                    item_def &item = mitm[it];
-                    
-                    item.quantity = 1;
-                    item.base_type = OBJ_WEAPONS;
-                    // any melee weapon
-                    item.sub_type = WPN_CLUB + random2(13); 
-                    
-                    set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
-                    // just how good should this weapon be?
-                    item.plus = random2(3);
-                    item.plus2 = random2(3);
-                      
-                    if (coinflip())
-                        item.flags |= ISFLAG_CURSED;
-
-                    set_ident_type( item.base_type, item.sub_type,
-                                    ID_KNOWN_TYPE );
-                    
-                    // for debugging + makes things more interesting
-                    // (doesn't seem to have any effect, though)
-                    set_ident_flags( item, ISFLAG_KNOW_PLUSES );
-                    set_ident_flags( item, ISFLAG_IDENT_MASK );
-
-                    // now create monster
-                    int mons =
-                        create_monster( MONS_DANCING_WEAPON, 0,
-                                        BEH_HOSTILE, you.x_pos, you.y_pos,
-                                        MHITYOU, 250 );
-                                       
-                    // hand item information over to monster
-                    if (mons != -1 && mons != NON_MONSTER)
-                    {
-                        mitm[it] = item;
-                        mitm[it].quantity = 1;
-                        mitm[it].x = 0;
-                        mitm[it].y = 0;
-                        mitm[it].link = NON_ITEM;
-                        menv[mons].inv[MSLOT_WEAPON] = it;
-                        created = true;
-                        num_wpn++;
-
-                        // 50% chance of weapon disappearing on "death"
-                        if (coinflip())
-                            menv[mons].flags |= MF_HARD_RESET;
-                    }
-                }
-                if (!created) // didn't work out! delete item
-                {
-                    mitm[it].base_type = OBJ_UNASSIGNED;
-                    mitm[it].quantity = 0;
-                }
-            }
-            if (num_wpn > 0)
-            {
-                snprintf(info, INFO_SIZE, " throws %s of orc slaying at you.",
-                         num_wpn > 1 ? "implements" : "an implement");
-                simple_god_message(info, god);
-                break;
-            } // else fall through
-        }
-        case 4: // 25%, relatively harmless
-        case 5: // in effect, only for penance
-            if (followers_abandon_you()) 
-               break;
-            // else fall through
-        default: // send orcs after you (3/8 to 5/8)
-        {
-
-            int points = you.experience_level + 3
-                + random2(you.experience_level * 3);
-
-            // "natural" bands
-            if (points >= 30) // min: lvl 7, always: lvl 27 
-                punisher = MONS_ORC_WARLORD;
-            else if (points >= 24) // min: lvl 6, always: lvl 21
-                punisher = MONS_ORC_HIGH_PRIEST;
-            else if (points >= 18) // min: lvl 4, always: lvl 15 
-                punisher = MONS_ORC_KNIGHT;
-            else if (points > 10) // min: lvl 3, always: lvl 8 
-                punisher = MONS_ORC_WARRIOR;
-            else
-                punisher = MONS_ORC;
-
-            int mons = create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
-                                      you.y_pos, MHITYOU, 250, true);
-                                        
-            if (mons != -1 && mons != NON_MONSTER)
-                simple_god_message(" sends forth an army of orcs.", god);
-            else
-                simple_god_message(" is still gathering forces against you.",
-                                   god);
-            break;
-        }
-        }
-        break;
-
-    case GOD_OKAWARU:
-        {
-            // warrior theme:
-            success = false;
-            how_many = 1 + (you.experience_level / 5);
-
-            for (loopy = 0; loopy < how_many; loopy++)
-            {
-                temp_rand = random2(100);
-
-                punisher = ((temp_rand > 84) ? MONS_ORC_WARRIOR :
-                            (temp_rand > 69) ? MONS_ORC_KNIGHT :
-                            (temp_rand > 59) ? MONS_NAGA_WARRIOR :
-                            (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :
-                            (temp_rand > 39) ? MONS_STONE_GIANT :
-                            (temp_rand > 29) ? MONS_FIRE_GIANT :
-                            (temp_rand > 19) ? MONS_FROST_GIANT :
-                            (temp_rand >  9) ? MONS_CYCLOPS :
-                            (temp_rand >  4) ? MONS_HILL_GIANT 
-                                             : MONS_TITAN);
-
-                if (create_monster(punisher, 0, BEH_HOSTILE,
-                                   you.x_pos, you.y_pos, MHITYOU, 250) != -1)
-                {
-                    success = true;
-                }
-            }
-
-            if (success)
-                simple_god_message(" sends forces against you!", god);
-            else
-                simple_god_message("'s forces are busy with other wars.", god);
-        }
-        break;
-
-    case GOD_VEHUMET:
-        // conjuration and summoning theme
-        simple_god_message("'s vengeance finds you.", god);
-        miscast_effect( coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
-                        8 + you.experience_level, random2avg(98, 3), 100,
-                        "the wrath of Vehumet" );
-        break;
-
-    case GOD_NEMELEX_XOBEH:
-        // like Xom, this might actually help the player -- bwr
-        simple_god_message(" makes you draw from the Deck of Punishment.",
-                           god);
-        draw_from_deck_of_punishment();
-        break;
-
-    case GOD_SIF_MUNA:
-        simple_god_message("'s wrath finds you.", god);
-        dec_penance(GOD_SIF_MUNA, 1);
-
-        // magic and intelligence theme:
-        switch (random2(10))
-        {
-        case 0:
-        case 1:
-            lose_stat(STAT_INTELLIGENCE, 1 + random2( you.intel / 5 ), true);
-            break;
-
-        case 2:
-        case 3:
-        case 4:
-            confuse_player( 3 + random2(10), false );
-            break;
-
-        case 5:
-        case 6:
-            miscast_effect(SPTYP_DIVINATION, 9, 90, 100, "the will of Sif Muna");
-            break;
-
-        case 7:
-        case 8:
-            if (you.magic_points)
-            {
-                dec_mp( 100 );  // this should zero it.
-                mpr( "You suddenly feel drained of magical energy!",
-                     MSGCH_WARN );
-            }
-            break;
-
-        case 9:
-            // This will set all the extendable duration spells to 
-            // a duration of one round, thus potentially exposing 
-            // the player to real danger.
-            antimagic();
-            mpr( "You sense a dampening of magic.", MSGCH_WARN );
-            break;
-        }
-        break;
-
-    case GOD_LUGONU:
-        lugonu_retribution(god);
-        break;
+    // One in ten chance that Xom might do something good...
+    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
+    case GOD_SHINING_ONE:   do_more = tso_retribution(); break;
+    case GOD_ZIN:           do_more = zin_retribution(); break;
+    case GOD_MAKHLEB:       do_more = makhleb_retribution(); break;        
+    case GOD_KIKUBAAQUDGHA: do_more = kikubaaqudgha_retribution(); break;
+    case GOD_YREDELEMNUL:   do_more = yredelemnul_retribution(); break;
+    case GOD_TROG:          do_more = trog_retribution(); break;
+    case GOD_BEOGH:         do_more = beogh_retribution(); break;
+    case GOD_OKAWARU:       do_more = okawaru_retribution(); break;
+    case GOD_LUGONU:        do_more = lugonu_retribution(); break;
+    case GOD_VEHUMET:       do_more = vehumet_retribution(); break;
+    case GOD_NEMELEX_XOBEH: do_more = nemelex_retribution(); break;
+    case GOD_SIF_MUNA:      do_more = sif_muna_retribution(); break;
 
     case GOD_ELYVILON:  // Elyvilon doesn't seek revenge
     default:
-        return;
+        do_more = false;
+        break;
     }
 
     // Sometimes divine experiences are overwhelming...
-    if (one_chance_in(5) && you.experience_level < random2(37))
+    if (do_more && one_chance_in(5) && you.experience_level < random2(37))
     {
         if (coinflip())
         {
@@ -2148,10 +2136,7 @@ void divine_retribution( god_type god )
             }
         }
     }
-
-
-    return;
-}                               // end divine_retribution()
+}
 
 // upon excommunication, (now ex) Beogh adepts lose their orcish followers
 int followers_abandon_you()
@@ -2551,7 +2536,7 @@ void god_pitch(god_type which_god)
     if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
     {
         simple_god_message(" is most displeased with you!", which_god);
-        lugonu_retribution(which_god);
+        lugonu_retribution();
         return;
     }
 

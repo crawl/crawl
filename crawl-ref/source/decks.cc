@@ -1034,6 +1034,8 @@ static void summon_dancing_weapon(int power, deck_rarity_type rarity)
                     you.x_pos, you.y_pos,
                     friendly ? you.pet_target : MHITYOU,
                     250 );
+    // Intentionally not setting hard_reset here. Maybe this should
+    // depend on power_level?
 }
 
 static int card_power(deck_rarity_type rarity)

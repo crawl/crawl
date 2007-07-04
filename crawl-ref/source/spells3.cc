@@ -477,7 +477,7 @@ failed_spell:
     if ( wpn != -1 )
         mpr("Your weapon vibrates crazily for a second.");
     else
-        msg::stream <<"Your " << your_hand(true) << " twitch" << std::endl;
+        msg::stream <<"Your " << your_hand(true) << " twitch." << std::endl;
 }                               // end dancing_weapon()
 
 static bool monster_on_level(int monster)
