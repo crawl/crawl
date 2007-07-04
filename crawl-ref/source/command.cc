@@ -46,7 +46,6 @@ static void list_wizard_commands();
 #ifdef OBSOLETE_COMMAND_HELP
 static const char *command_string( int i );
 #endif
-static const char *wizard_string( int i );
 
 void quit_game(void)
 {
@@ -1072,7 +1071,7 @@ void list_tutorial_help()
             "<w>Z</w> to cast spells (<w>Z?</w> lists spells).\n",
 
     cols.add_formatted(
-            0, text.str().c_str(),
+            0, text.str(),
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1104,88 +1103,61 @@ void list_tutorial_help()
  
 static void list_wizard_commands()
 {
-    const char *line;
-    int j = 0;
-
-    clrscr();
-
-    // BCR - Set to screen length - 1 to display the "more" string
-    int moreLength = (get_number_of_lines() - 1) * 2;
-
-    for (int i = 0; i < 500; i++)
-    {
-        line = wizard_string( i );
-
-        if (strlen( line ) != 0)
-        {
-            // BCR - If we've reached the end of the screen, clear
-            if (j == moreLength)
-            {
-                gotoxy(2, j / 2 + 1);
-                cprintf("More...");
-                getch();
-                clrscr();
-                j = 0;
-            }
-
-            gotoxy( ((j % 2) ? 40 : 2), ((j / 2) + 1) );
-            cprintf( "%s", line );
-
-            j++;
-        }
-    }
-
-    getch();
-
-    return;
-}                               // end list_commands()
-
-static const char *wizard_string( int i )
-{
-    UNUSED( i );
-
 #ifdef WIZARD
-    return((i ==  10) ? "a    : acquirement"                  :
-           (i ==  13) ? "A    : set all skills to level"      :
-           (i ==  15) ? "b    : controlled blink"             :
-           (i ==  20) ? "B    : banish yourself to the Abyss" :
-           (i ==  25) ? "c    : card effect"                  :
-           (i ==  30) ? "g    : add a skill"                  :
-           (i ==  35) ? "G    : remove all monsters"          :
-           (i ==  40) ? "h/H  : heal yourself (super-Heal)"   :
-           (i ==  50) ? "i/I  : identify/unidentify inventory":
-           (i ==  70) ? "l    : make entrance to labyrinth"   :
-           (i ==  80) ? "m/M  : create monster by number/name":
-           (i ==  90) ? "o/%  : create an object"             :
-           (i == 100) ? "p    : make entrance to pandemonium" :
-           (i == 110) ? "x    : gain an experience level"     :
-           (i == 115) ? "r    : change character's species"   :
-           (i == 120) ? "s    : gain 20000 skill points"      :
-           (i == 130) ? "S    : set skill to level"           :
-           (i == 140) ? "t    : tweak object properties"      :
-           (i == 145) ? "T    : make a trap"                  :
-           (i == 150) ? "X    : Receive a gift from Xom"      :
-           (i == 160) ? "z/Z  : cast any spell by number/name":
-           (i == 200) ? "$    : get 1000 gold"                :
-           (i == 210) ? "</>  : create up/down staircase"     :
-           (i == 220) ? "u/d  : shift up/down one level"      :
-           (i == 230) ? "~/\"  : goto a level"                :
-           (i == 240) ? "(    : create a feature"             :
-           (i == 250) ? "]    : get a mutation"               :
-           (i == 260) ? "[    : get a demonspawn mutation"    :
-           (i == 270) ? ":    : find branch"                  :
-           (i == 280) ? "{    : magic mapping"                :
-           (i == 290) ? "^    : gain piety"                   :
-           (i == 300) ? "_    : gain religion"                :
-           (i == 310) ? "\'    : list items"                  :
-           (i == 320) ? "?    : list wizard commands"         :
-           (i == 330) ? "|    : acquire all unrand artefacts" :
-           (i == 340) ? "+    : turn item into random artefact" :
-           (i == 350) ? "=    : sum skill points"             :
-           (i == 360) ? "@    : set stats"
-                      : "");
+    // 2 columns
+    column_composer cols(2, 43);
+    // Page size is number of lines - one line for --more-- prompt.
+    cols.set_pagesize(get_number_of_lines());
 
-#else
-    return ("");
+    cols.add_formatted(0,
+                       "a      : acquirement\n"
+                       "A      : set all skills to level\n"
+                       "b      : controlled blink\n"
+                       "B      : banish yourself to the Abyss\n"
+                       "c      : card effect\n"
+                       "g      : add a skill\n"
+                       "G      : banish all monsters\n"
+                       "Ctrl-G : save ghost (bones file)\n"
+                       "f      : player combat damage stats\n"
+                       "F      : combat stats with fsim_kit\n"
+                       "Ctrl-F : combat stats (monster vs PC)\n"
+                       "h/H    : heal yourself (super-Heal)\n"
+                       "i/I    : identify/unidentify inventory\n"
+                       "l      : make entrance to labyrinth\n"
+                       "m/M    : create monster by number/name\n"
+                       "o/%    : create an object\n"
+                       "p      : make entrance to pandemonium\n"
+                       "x      : gain an experience level\n"
+                       "r      : change character's species\n"
+                       "s      : gain 20000 skill points\n"
+                       "S      : set skill to level\n"
+                       "t      : tweak object properties\n",
+                       true, true);
+
+    cols.add_formatted(1, 
+                       "T      : make a trap\n"
+                       "v      : show gold value of an item\n"
+                       "X      : make Xom do something now\n"
+                       "z/Z    : cast spell by number/name\n"
+                       "$      : get 1000 gold\n"
+                       "</>    : create up/down staircase\n"
+                       "u/d    : shift up/down one level\n"
+                       "~/\"    : go to a specific level\n"
+                       "(/)    : make feature by number/name\n"
+                       "]      : get a mutation\n"
+                       "[      : get a demonspawn mutation\n"
+                       ":      : find branches in the dungeon\n"
+                       "{      : magic mapping\n"
+                       "^      : gain piety\n"
+                       "_      : gain religion\n"
+                       "'      : list items\n"
+                       "?      : list wizard commands\n"
+                       "|      : make unrand/fixed artefacts\n"
+                       "+      : make randart from item\n"
+                       "=      : sum skill points\n"
+                       "@      : set Str Int Dex\n"
+                       "\\      : make a shop\n",
+                       true, true);
+    show_keyhelp_menu(cols.formatted_lines(), false, true);
 #endif
-}                               // end wizard_string()
+}

@@ -381,7 +381,7 @@ static void handle_wizard_command( void )
         redraw_screen();
     }
 
-    mpr( "Enter Wizard Command: ", MSGCH_PROMPT );
+    mpr( "Enter Wizard Command (? - help): ", MSGCH_PROMPT );
     wiz_command = getch();
 
     switch (wiz_command)
