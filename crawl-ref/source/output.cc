@@ -1670,6 +1670,14 @@ std::string status_mut_abilities()
         have_any = true;
     }
 
+    if ( beogh_water_walk() )
+    {
+        if (have_any)
+            text += ", ";
+        text += "water walking";
+        have_any = true;
+    }
+
     for (unsigned i = 0; i < NUM_MUTATIONS; i++)
     {
         if (!you.mutation[i])

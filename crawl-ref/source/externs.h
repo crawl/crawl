@@ -728,7 +728,7 @@ public:
   int  exp_available;
 
   FixedArray<unsigned char, 5, 50> item_description;
-  FixedVector<unsigned char, 50> unique_items;
+  FixedVector<unique_item_status_type, 50> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;
 
   KillMaster kills;

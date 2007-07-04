@@ -1418,9 +1418,24 @@ void gain_piety(int pgn)
         do_god_gift();
 }
 
+bool beogh_water_walk()
+{
+    return
+        you.religion == GOD_BEOGH &&
+        !player_under_penance() &&
+        you.piety >= piety_breakpoint(4);
+}
+
+static bool need_water_walking()
+{
+    return
+        !player_is_levitating() && you.species != SP_MERFOLK &&
+        grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
+}
+
 void lose_piety(int pgn)
 {
-    int old_piety = you.piety;
+    const int old_piety = you.piety;
 
     if (you.piety - pgn < 0)
         you.piety = 0;
@@ -1454,19 +1469,15 @@ void lose_piety(int pgn)
                         god_speaks(you.religion, info);
                     }
                 }
-                if (you.religion == GOD_BEOGH)
-                    
+
+                if ( need_water_walking() && !beogh_water_walk() )
                 {
-                    // You might have lost water walking at a bad time...
-                    if ( old_piety >= piety_breakpoint(4) &&
-                         you.piety < piety_breakpoint(4) &&
-                         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER &&
-                         !player_is_levitating() )
-                    {
-                        fall_into_a_pool( you.x_pos, you.y_pos, true,
-                                          DNGN_DEEP_WATER );
-                    }
-                        
+                    fall_into_a_pool( you.x_pos, you.y_pos, true,
+                                      grd[you.x_pos][you.y_pos] );
+                }
+
+                if ( you.religion == GOD_BEOGH )
+                {
                     // every piety level change also affects AC from
                     // orcish gear
                     you.redraw_armour_class = 1;
@@ -2279,11 +2290,9 @@ void excommunication(void)
         followers_abandon_you(); // check if friendly orcs around -> hostile
 
         // You might have lost water walking at a bad time...
-        if ( grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER &&
-             !player_is_levitating() )
-        {
-            fall_into_a_pool( you.x_pos, you.y_pos, true, DNGN_DEEP_WATER );
-        }
+        if ( need_water_walking() )
+            fall_into_a_pool( you.x_pos, you.y_pos, true,
+                              grd[you.x_pos][you.y_pos] );
 
         // Penance has to come before retribution to prevent "mollify"
         inc_penance( old_god, 50 );

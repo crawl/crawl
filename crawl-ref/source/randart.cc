@@ -806,7 +806,7 @@ bool is_fixed_artefact( const item_def &item )
     return (false);
 }
 
-int get_unique_item_status( int base_type, int art )
+unique_item_status_type get_unique_item_status( int base_type, int art )
 {
     // Note: for weapons "art" is in item.special,
     //       for orbs it's the sub_type.
@@ -827,7 +827,8 @@ int get_unique_item_status( int base_type, int art )
     return (UNIQ_NOT_EXISTS);
 }
 
-void set_unique_item_status( int base_type, int art, int status )
+void set_unique_item_status( int base_type, int art,
+                             unique_item_status_type status )
 {
     // Note: for weapons "art" is in item.special,
     //       for orbs it's the sub_type.

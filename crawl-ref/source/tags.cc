@@ -1214,7 +1214,8 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     // how many unique items?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.unique_items[j] = unmarshallByte(th);
+        you.unique_items[j] =
+            static_cast<unique_item_status_type>(unmarshallByte(th));
 
     // how many books?
     count_c = unmarshallByte(th);

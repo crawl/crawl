@@ -28,8 +28,9 @@ bool is_random_artefact( const item_def &item );
 bool is_unrandom_artefact( const item_def &item );
 bool is_fixed_artefact( const item_def &item );
 
-int  get_unique_item_status( int base_type, int type );
-void set_unique_item_status( int base_type, int type, int status );
+unique_item_status_type get_unique_item_status( int base_type, int type );
+void set_unique_item_status( int base_type, int type,
+                             unique_item_status_type status );
 
 /* ***********************************************************************
  * called from: itemname

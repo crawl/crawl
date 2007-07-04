@@ -893,11 +893,11 @@ formatted_string describe_mutations()
     const char *mut_title = "Innate Abilities, Weirdness & Mutations";
 
     // center title
-    int i;
-    i = 39 - strlen(mut_title) / 2;
-    if (i<0) i=0;
+    int offset = 39 - strlen(mut_title) / 2;
+    if ( offset < 0 ) offset = 0;
 
-    result += std::string(i, ' ');
+    result += std::string(offset, ' ');
+
     result += "<white>";
     result += mut_title;
     result += "</white>" EOL EOL;
@@ -1085,9 +1085,15 @@ formatted_string describe_mutations()
     
     result += "</lightblue>";
 
+    if ( beogh_water_walk() )
+    {
+        result += "<green>You can walk on water.</green>" EOL;
+        have_any = true;
+    }
+
     textcolor(LIGHTGREY);
 
-    for (i = 0; i < NUM_MUTATIONS; i++)
+    for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         if (you.mutation[i] != 0)
         {

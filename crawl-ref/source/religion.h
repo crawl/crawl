@@ -44,6 +44,8 @@ void xom_is_stimulated(int maxinterestingness);
 void xom_acts(bool niceness, int sever);
 const char *describe_xom_favour();
 
+bool beogh_water_walk();
+
 inline void xom_acts(int sever)
 {
     xom_acts(xom_is_nice(), sever);
