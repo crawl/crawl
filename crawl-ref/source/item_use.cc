@@ -887,6 +887,14 @@ bool do_wear_armour( int item, bool quiet )
     if (slot == EQ_BODY_ARMOUR
         && you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
     {
+        if ( you.equip[EQ_BODY_ARMOUR] &&
+             item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]) )
+        {
+            if ( !quiet )
+                mprf("%s is stuck to your body!",
+                     you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR).c_str());
+            return (false);
+        }
         if (!item_cursed( you.inv[you.equip[EQ_CLOAK]] ))
         {
             cloak = you.equip[ EQ_CLOAK ];
