@@ -2078,6 +2078,10 @@ item_spec item_list::parse_single_spec(std::string s)
         }
     }
 
+    const int qty = strip_number_tag(s, "q:");
+    if (qty != TAG_UNFOUND)
+        result.qty = qty;
+
     if (strip_tag(s, "good_item"))
         result.level = MAKE_GOOD_ITEM;
     else

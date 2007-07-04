@@ -394,11 +394,15 @@ ITEM:    (list of items, separated by comma)
          can abbreviate "weight:30" by "w:30". The chance to pick a 
          possibility is
          [possibility's weight: / sum of all weight:s in that array position]
+         
          For example, the following line makes letter 'd' into a bread ration
          with 50% chance, or apple or orange with 25% chance each:
+         
            ITEM: bread ration / w:5 apple / w:5 orange
 
-         Modifiers: 
+         Modifiers:
+         * "q:N" sets the item quantity to N (if N > 0). Does nothing
+           if the item is not stackable.
          * "good_item" makes the builder try to make the item a good one.
          * "any" by itself gives random choice; you can combine "any" with 
            "good_item."
@@ -408,10 +412,9 @@ ITEM:    (list of items, separated by comma)
            misc, carrion. All of these are usable in map definitions,
            apart from "orb" and "carrion".
 
-         Limitations: You can't affect stack quantity for stackable items, 
-         nor can you affect curse status nor item race, nor can you give 
-         specific egos, nor can give fixedarts. You also can't lay down 
-         corpses, skeletons, or chunks.
+         Limitations: You can't specify curse status nor item race,
+         nor can you give specific egos, nor can give fixedarts. You
+         also can't lay down corpses, skeletons, or chunks.
  
 MONS:    (list of monsters)
          These are used to help place specific monsters at specific places 

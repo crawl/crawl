@@ -3194,6 +3194,9 @@ static void dngn_place_item_explicit(const item_spec &spec,
     {
         mitm[item_made].x = x;
         mitm[item_made].y = y;
+
+        if (is_stackable_item(mitm[item_made]) && spec.qty > 0)
+            mitm[item_made].quantity = spec.qty;
     }
 }
 

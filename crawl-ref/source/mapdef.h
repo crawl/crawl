@@ -350,9 +350,10 @@ struct item_spec
     int allow_uniques;
     int level;
     int race;
+    int qty;
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
-        allow_uniques(1), level(-1), race(MAKE_ITEM_RANDOM_RACE)
+        allow_uniques(1), level(-1), race(MAKE_ITEM_RANDOM_RACE), qty(0)
     {
     }
 };
