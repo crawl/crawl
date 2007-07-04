@@ -134,12 +134,7 @@ void print_stats(void)
         if (max_max_hp != you.hp_max)
             cprintf( " (%d)", max_max_hp );
 
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf("        ");
-#endif
-
         you.redraw_hit_points = 0;
     }
 
@@ -166,12 +161,7 @@ void print_stats(void)
         textcolor(LIGHTGREY);
         cprintf("/%d", you.max_magic_points );
 
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf("        ");
-#endif
-
         you.redraw_magic_points = 0;
     }
 
@@ -322,23 +312,14 @@ void print_stats(void)
                  you.experience_level, you.experience, you.exp_available );
 #endif
 
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf("   ");
-#endif
         you.redraw_experience = 0;
     }
 
     if (you.wield_change)
     {
         gotoxy(xcol, 13);
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf("                                       ");
-#endif
-
         gotoxy(xcol, 13);
 
         if (you.equip[EQ_WEAPON] != -1)
@@ -384,13 +365,8 @@ void print_stats(void)
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
     {
         gotoxy(xcol, 14);
-
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf( "                                       " );
         gotoxy(xcol, 14);
-#endif
 
         switch (you.burden_state)
         {
@@ -445,14 +421,8 @@ void print_stats(void)
     if (you.redraw_status_flags & REDRAW_LINE_2_MASK)
     {
         gotoxy(xcol, 15);
-
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf( "                                       " );
         gotoxy(xcol, 15);
-#endif
-
         // Max length of this line = 8 * 5 - 1 = 39
 
         if (you.duration[DUR_PRAYER])
@@ -543,13 +513,8 @@ void print_stats(void)
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
     {
         gotoxy(xcol, 16);
-
-#ifdef UNIX
         clear_to_end_of_line();
-#else
-        cprintf( "                                       " );
         gotoxy(xcol, 16);
-#endif
         // Max length of this line = 7 * 5 + 3 - 1 = 37
 
         // Note the usage of bad_ench_colour() correspond to levels that
