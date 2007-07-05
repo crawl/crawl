@@ -39,89 +39,79 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     BRANCHDEF = 258,
-     BRANCH = 259,
-     DESC = 260,
-     DEFAULT = 261,
-     DEFAULT_DEPTH = 262,
-     SHUFFLE = 263,
-     SUBST = 264,
-     TAGS = 265,
-     KFEAT = 266,
-     KITEM = 267,
-     KMONS = 268,
-     NAME = 269,
-     DEPTH = 270,
-     ORIENT = 271,
-     PLACE = 272,
-     CHANCE = 273,
-     MONS = 274,
-     ITEM = 275,
-     PRELUDE = 276,
-     MAIN = 277,
-     CHARACTER = 278,
-     DASH = 279,
-     COMMA = 280,
-     QUOTE = 281,
-     OPAREN = 282,
-     CPAREN = 283,
-     INTEGER = 284,
-     STRING = 285,
-     MAP_LINE = 286,
-     MONSTER_NAME = 287,
-     ITEM_INFO = 288,
-     IDENTIFIER = 289,
-     LUA_LINE = 290
+     DEFAULT_DEPTH = 258,
+     SHUFFLE = 259,
+     SUBST = 260,
+     TAGS = 261,
+     KFEAT = 262,
+     KITEM = 263,
+     KMONS = 264,
+     NAME = 265,
+     DEPTH = 266,
+     ORIENT = 267,
+     PLACE = 268,
+     CHANCE = 269,
+     MONS = 270,
+     ITEM = 271,
+     MARKER = 272,
+     PRELUDE = 273,
+     MAIN = 274,
+     VALIDATE = 275,
+     VETO = 276,
+     NSUBST = 277,
+     COMMA = 278,
+     INTEGER = 279,
+     CHARACTER = 280,
+     STRING = 281,
+     MAP_LINE = 282,
+     MONSTER_NAME = 283,
+     ITEM_INFO = 284,
+     LUA_LINE = 285
    };
 #endif
 /* Tokens.  */
-#define BRANCHDEF 258
-#define BRANCH 259
-#define DESC 260
-#define DEFAULT 261
-#define DEFAULT_DEPTH 262
-#define SHUFFLE 263
-#define SUBST 264
-#define TAGS 265
-#define KFEAT 266
-#define KITEM 267
-#define KMONS 268
-#define NAME 269
-#define DEPTH 270
-#define ORIENT 271
-#define PLACE 272
-#define CHANCE 273
-#define MONS 274
-#define ITEM 275
-#define PRELUDE 276
-#define MAIN 277
-#define CHARACTER 278
-#define DASH 279
-#define COMMA 280
-#define QUOTE 281
-#define OPAREN 282
-#define CPAREN 283
-#define INTEGER 284
-#define STRING 285
-#define MAP_LINE 286
-#define MONSTER_NAME 287
-#define ITEM_INFO 288
-#define IDENTIFIER 289
-#define LUA_LINE 290
+#define DEFAULT_DEPTH 258
+#define SHUFFLE 259
+#define SUBST 260
+#define TAGS 261
+#define KFEAT 262
+#define KITEM 263
+#define KMONS 264
+#define NAME 265
+#define DEPTH 266
+#define ORIENT 267
+#define PLACE 268
+#define CHANCE 269
+#define MONS 270
+#define ITEM 271
+#define MARKER 272
+#define PRELUDE 273
+#define MAIN 274
+#define VALIDATE 275
+#define VETO 276
+#define NSUBST 277
+#define COMMA 278
+#define INTEGER 279
+#define CHARACTER 280
+#define STRING 281
+#define MAP_LINE 282
+#define MONSTER_NAME 283
+#define ITEM_INFO 284
+#define LUA_LINE 285
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 56 "levcomp.ypp"
+#line 59 "levcomp.ypp"
 {
     int i;
     const char *text;
     raw_range range;
 }
 /* Line 1529 of yacc.c.  */
-#line 125 "levcomp.tab.h"
+#line 115 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
