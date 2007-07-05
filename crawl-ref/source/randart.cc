@@ -32,7 +32,7 @@
    in dungeon.cc and consists of giving it a few random things - plus & plus2
    mainly.
 */
-const char *rand_wpn_names[] = {
+static const char *rand_wpn_names[] = {
     " of Blood",
     " of Death",
     " of Bloody Death",
@@ -483,10 +483,20 @@ const char *rand_wpn_names[] = {
     " of Righteous Fury",
     " of the Warrior",
     " of the Doomed Warrior",
-    " of the Warrior-Mage"
+    " of the Warrior-Mage",
+
+    // from the crawl.akrasiac.org patch
+    " of the Alphagorgon",
+    " \"Cookie Cutter\"",
+
+    " of the Nine Deaths",
+    " of Megalomania",
+    " of Egomania",
+    " of Pyrrhic Victory",
+    " of Irrepressible Laughter",
 };
 
-const char *rand_armour_names[] = {
+static const char *rand_armour_names[] = {
 /* 0: */
     " of Shielding",
     " of Grace",
@@ -708,7 +718,41 @@ const char *rand_armour_names[] = {
     " \"Forget-Me-Not\"",
     " of Lilacs",
     " of Daffodils",
-    " of the Rose"
+    " of the Rose",
+
+    // from the crawl.akrasiac.org patch.
+    " of the Hot Ocelot",
+    " of Eight Boll Weevils",
+
+    " of Internal Strife",
+    " of Paranoia",
+    " of Claustrophobia",
+    " of Agoraphobia",
+    " of Dyspraxia",
+    " of Mental Paralysis"
+};
+
+static const char *randart_weapon_appearance[] = {
+    "brightly glowing ", "runed ", "smoking ", "bloodstained ", "twisted ",
+    "shimmering ", "warped ", "crystal ", "jewelled ", "transparent ",
+    "encrusted ", "pitted ", "slimy ", "polished ", "fine ", "crude ",
+    "ancient ", "ichor-stained ", "faintly glowing ", "steaming ", "shiny "
+};
+
+static const char *randart_armour_appearance[] = {
+    "brightly glowing ", "runed ", "smoking ", "bloodstained ", "twisted ",
+    "shimmering ", "warped ", "heavily runed ", "jeweled ",
+    "transparent ", "encrusted ", "pitted ", "slimy ", "polished ", "fine ",
+    "crude ", "ancient ", "ichor-stained ", "faintly glowing ",
+    "steaming ", "shiny ", "distressingly furry "
+};
+
+static const char *randart_jewellery_appearance[] = {
+    "brightly glowing", "runed", "smoking", "ruby", "twisted",
+    "shimmering", "warped", "crystal", "diamond", "transparent",
+    "encrusted", "pitted", "slimy", "polished", "fine", "crude",
+    "ancient", "emerald", "faintly glowing", "steaming", "shiny",
+    "scintillating", "sparkling", "flickering", "glittering"
 };
 
 // Remember: disallow unrandart creation in abyss/pan
@@ -718,21 +762,6 @@ const char *rand_armour_names[] = {
    (see mon-util.h & mon-util.cc) and modified (LRH). They're in randart.cc and
    not randart.h because they're only used in this code module.
 */
-
-#if defined(__IBMCPP__)
-#define PACKED
-#else
-#ifndef PACKED
-#define PACKED __attribute__ ((packed))
-#endif
-#endif
-
-//int unranddatasize;
-
-#ifdef __IBMCPP__
-#pragma pack(push)
-#pragma pack(1)
-#endif
 
 struct unrandart_entry
 {
@@ -753,10 +782,6 @@ struct unrandart_entry
     // special description added to 'v' command output (max 31 chars)
     const char *spec_descrip3;
 };
-
-#ifdef __IBMCPP__
-#pragma pack(pop)
-#endif
 
 static unrandart_entry unranddata[] = {
 #include "unrand.h"
@@ -873,7 +898,8 @@ void randart_wpn_properties( const item_def &item,
     }
 
     const long seed = calc_seed( item );
-    push_rng_state();
+
+    rng_save_excursion exc;
     seed_rng( seed );
 
     if (aclass == OBJ_ARMOUR)
@@ -1318,9 +1344,6 @@ void randart_wpn_properties( const item_def &item,
 
     if ((power_level < 2 && one_chance_in(5)) || one_chance_in(30))
         proprt[RAP_CURSED] = 1;
-
-    pop_rng_state();
-
 }
 
 int randart_wpn_property( const item_def &item, int prop )
@@ -1343,40 +1366,16 @@ std::string randart_name( const item_def &item )
     }
 
     const long seed = calc_seed( item );
-    push_rng_state();
+
+    rng_save_excursion rng_state;
     seed_rng( seed );
     
     std::string result;
     
     if (!item_type_known(item))
     {
-        switch (random2(21))
-        {
-        case  0: result += "brightly glowing "; break;
-        case  1: result += "runed "; break;
-        case  2: result += "smoking "; break;
-        case  3: result += "bloodstained "; break;
-        case  4: result += "twisted "; break;
-        case  5: result += "shimmering "; break;
-        case  6: result += "warped "; break;
-        case  7: result += "crystal "; break;
-        case  8: result += "jewelled "; break;
-        case  9: result += "transparent "; break;
-        case 10: result += "encrusted "; break;
-        case 11: result += "pitted "; break;
-        case 12: result += "slimy "; break;
-        case 13: result += "polished "; break;
-        case 14: result += "fine "; break;
-        case 15: result += "crude "; break;
-        case 16: result += "ancient "; break;
-        case 17: result += "ichor-stained "; break;
-        case 18: result += "faintly glowing "; break;
-        case 19: result += "steaming "; break;
-        case 20: result += "shiny "; break;
-        }
-        
+        result += RANDOM_ELEMENT(randart_weapon_appearance);
         result += item_base_name(item);
-        pop_rng_state();
         return result;
     }
 
@@ -1403,8 +1402,6 @@ std::string randart_name( const item_def &item )
         }
     }
 
-    pop_rng_state();
-
     return result;
 }
 
@@ -1419,39 +1416,16 @@ std::string randart_armour_name( const item_def &item )
     }
 
     const long seed = calc_seed( item );
-    push_rng_state();
+
+    rng_save_excursion exc;
     seed_rng( seed );
 
     std::string result;
 
     if (!item_type_known(item))
     {
-        switch (random2(21))
-        {
-        case  0: result += "brightly glowing "; break;
-        case  1: result += "runed "; break;
-        case  2: result += "smoking "; break;
-        case  3: result += "bloodstained "; break;
-        case  4: result += "twisted "; break;
-        case  5: result += "shimmering "; break;
-        case  6: result += "warped "; break;
-        case  7: result += "heavily runed "; break;
-        case  8: result += "jeweled "; break;
-        case  9: result += "transparent "; break;
-        case 10: result += "encrusted "; break;
-        case 11: result += "pitted "; break;
-        case 12: result += "slimy "; break;
-        case 13: result += "polished "; break;
-        case 14: result += "fine "; break;
-        case 15: result += "crude "; break;
-        case 16: result += "ancient "; break;
-        case 17: result += "ichor-stained "; break;
-        case 18: result += "faintly glowing "; break;
-        case 19: result += "steaming "; break;
-        case 20: result += "shiny "; break;
-        }
+        result += RANDOM_ELEMENT(randart_armour_appearance);
         result += item_base_name(item);
-        pop_rng_state();
         return result;
     }
     
@@ -1477,8 +1451,6 @@ std::string randart_armour_name( const item_def &item )
         }
     }
 
-    pop_rng_state();
-
     return result;
 }
 
@@ -1496,42 +1468,17 @@ std::string randart_jewellery_name( const item_def &item )
     }
 
     const long seed = calc_seed( item );
-    push_rng_state();
+
+    rng_save_excursion exc;
     seed_rng( seed );
 
     std::string result;
 
     if (!item_type_known(item))
     {
-        switch (random2(21))
-        {
-        case 0:  result += "brightly glowing"; break;
-        case 1:  result += "runed"; break;
-        case 2:  result += "smoking"; break;
-        case 3:  result += "ruby"; break;
-        case 4:  result += "twisted"; break;
-        case 5:  result += "shimmering"; break;
-        case 6:  result += "warped"; break;
-        case 7:  result += "crystal"; break;
-        case 8:  result += "diamond"; break;
-        case 9:  result += "transparent"; break;
-        case 10: result += "encrusted"; break;
-        case 11: result += "pitted"; break;
-        case 12: result += "slimy"; break;
-        case 13: result += "polished"; break;
-        case 14: result += "fine"; break;
-        case 15: result += "crude"; break;
-        case 16: result += "ancient"; break;
-        case 17: result += "emerald"; break;
-        case 18: result += "faintly glowing"; break;
-        case 19: result += "steaming"; break;
-        case 20: result += "shiny"; break;
-        }
-
+        result += RANDOM_ELEMENT(randart_jewellery_appearance);
         result += " ";
         result += (jewellery_is_amulet(item) ? "amulet" : "ring");
-
-        pop_rng_state();
 
         return result;
     }
@@ -1558,8 +1505,6 @@ std::string randart_jewellery_name( const item_def &item )
             result += "\"";
         }
     }
-
-    pop_rng_state();
 
     return result;
 }

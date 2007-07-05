@@ -380,7 +380,7 @@ static std::string describe_demon(const monsters &mons)
 
     globby *= ghost.name.length();
 
-    push_rng_state();
+    rng_save_excursion exc;
     seed_rng( globby );
 
     std::string description = "A powerful demon, ";
@@ -703,8 +703,6 @@ static std::string describe_demon(const monsters &mons)
     default:
         break;
     }
-
-    pop_rng_state();
     return description;
 }                               // end describe_demon()
 

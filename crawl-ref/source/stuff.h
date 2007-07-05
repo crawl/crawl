@@ -121,5 +121,12 @@ template <typename Z> inline Z sgn(Z x)
 bool is_trap_square(int x, int y);
 void zap_los_monsters();
 
+class rng_save_excursion
+{
+public:
+    rng_save_excursion()  { push_rng_state(); }
+    ~rng_save_excursion() { pop_rng_state(); }
+};
+
 #endif
 
