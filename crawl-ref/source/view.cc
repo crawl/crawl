@@ -3916,6 +3916,7 @@ void viewwindow(bool draw_it, bool do_updates)
         const bool map = player_in_mappable_area();
         int bufcount = 0;
 
+        bool in_los = false;
         int flash_colour = you.flash_colour;
         if (flash_colour == BLACK)
             flash_colour = viewmap_flash_colour();
@@ -3930,6 +3931,9 @@ void viewwindow(bool draw_it, bool do_updates)
                 const coord_def gc(view2grid(coord_def(count_x, count_y)));
                 const coord_def ep = view2show(grid2view(gc));
 
+                if (flash_colour)
+                    in_los = see_grid(gc.x, gc.y);
+                
                 if (Options.tutorial_left && in_bounds(gc)
                     && crawl_view.in_grid_los(gc))
                 {
@@ -4069,11 +4073,8 @@ void viewwindow(bool draw_it, bool do_updates)
                 }
                 
                 // alter colour if flashing the characters vision
-                if (flash_colour != BLACK 
-                    && buffy[bufcount + 1] != DARKGREY)
-                {
-                    buffy[bufcount + 1] = flash_colour;
-                }
+                if (flash_colour && buffy[bufcount])
+                    buffy[bufcount + 1] = in_los? flash_colour : DARKGREY;
 
                 bufcount += 2;
             }
