@@ -3730,7 +3730,7 @@ void give_items_skills()
         {
             you.inv[1].quantity = 1;
             you.inv[1].base_type = OBJ_ARMOUR;
-            you.inv[1].sub_type = ARM_RING_MAIL;
+            you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
 
@@ -3741,6 +3741,12 @@ void give_items_skills()
             you.inv[2].special = 0;
         }
 
+        you.inv[3].quantity  = 1;
+        you.inv[3].base_type = OBJ_MISSILES;
+        you.inv[3].sub_type  = MI_JAVELIN;
+        you.inv[3].plus      = 0;
+        you.inv[3].special   = 0;
+
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
         you.equip[EQ_SHIELD] = 2;
@@ -3748,11 +3754,7 @@ void give_items_skills()
         you.skills[SK_FIGHTING] = 3;
         weap_skill = 3;
 
-        if (player_genus(GENPC_DRACONIAN))
-            you.skills[SK_DODGING] = 2;
-        else
-            you.skills[SK_ARMOUR] = 2;
-
+        you.skills[SK_DODGING] = 2;
         you.skills[SK_SHIELDS] = 1;
         you.skills[SK_UNARMED_COMBAT] = 2;
         break;
