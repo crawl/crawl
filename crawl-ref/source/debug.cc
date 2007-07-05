@@ -448,7 +448,7 @@ static void wizard_go_to_level(const level_pos &pos)
 void wizard_interlevel_travel()
 {
     const level_pos pos =
-        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES);
+        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES).p;
     
     if (pos.id.depth < 1 || pos.id.depth > branches[pos.id.branch].depth)
     {

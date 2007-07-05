@@ -60,7 +60,10 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,
 void start_explore(bool grab_items = false);
 
 struct level_pos;
-void start_translevel_travel(const level_pos &pos);
+struct level_id;
+struct travel_target;
+
+void start_translevel_travel(const travel_target &pos);
 
 void start_translevel_travel(bool prompt_for_destination = true);
 
@@ -74,8 +77,6 @@ void prevent_travel_to(const std::string &dungeon_feature_name);
 
 // Sort dungeon features as appropriate.
 void arrange_features(std::vector<coord_def> &features);
-
-struct level_id;
 int level_distance(level_id first, level_id second);
 
 bool can_travel_to(const level_id &lid);
@@ -95,7 +96,7 @@ enum translevel_prompt_flags
                                                 | TPF_REMEMBER_TARGET
 };
 
-level_pos prompt_translevel_target(int prompt_flags = TPF_DEFAULT_OPTIONS);
+travel_target prompt_translevel_target(int prompt_flags = TPF_DEFAULT_OPTIONS);
 
 // Magic numbers for point_distance:
 
@@ -263,6 +264,26 @@ struct level_pos
     void load(FILE *);
 };
 
+struct travel_target
+{
+    level_pos p;
+    bool      entrance_only;
+
+    travel_target(const level_pos &_pos, bool entry = false)
+        : p(_pos), entrance_only(entry)
+    {
+    }
+    travel_target()
+        : p(), entrance_only(false)
+    {
+    }
+    void clear()
+    {
+        p.reset();
+        entrance_only = false;
+    }
+};
+
 // Tracks items discovered by explore in this turn.
 class LevelStashes;
 class explore_discoveries
@@ -410,14 +431,6 @@ class TravelCache
 {
 public:
     void reset_distances();
-
-    // Get the LevelInfo for the specified level (defaults to the current
-    // level).
-    LevelInfo& get_level_info(branch_type branch = BRANCH_MAIN_DUNGEON,
-                              int depth = -1)
-    {
-        return get_level_info( level_id(branch, depth) );
-    }
 
     LevelInfo& get_level_info(const level_id &lev)
     {

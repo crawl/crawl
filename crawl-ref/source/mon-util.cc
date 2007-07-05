@@ -2723,7 +2723,7 @@ bool monsters::eat_corpse(item_def &carrion, int near)
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Never pick up stuff when we're in battle.
-    if (behaviour != BEH_WANDER && !force)
+    if (!force && behaviour != BEH_WANDER)
         return (false);
     
     // Jellies are not handled here.

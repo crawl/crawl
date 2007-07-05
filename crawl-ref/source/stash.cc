@@ -1557,7 +1557,7 @@ void StashTracker::display_search_results(
             if (dotravel && can_travel_to(res->pos.id))
             {
                 redraw_screen();
-                const level_pos lp = res->pos;
+                const travel_target lp = res->pos;
                 start_translevel_travel(lp);
                 return ;
             }
