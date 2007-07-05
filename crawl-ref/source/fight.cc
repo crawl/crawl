@@ -1722,11 +1722,16 @@ bool melee_attack::apply_damage_brand()
         
         emit_nodmg_hit_message();
         
-        // declaring these just to pass to the enchant function
-        bolt beam_temp;
-        beam_temp.flavour = BEAM_CONFUSION;
-        
-        mons_ench_f2( def, beam_temp );
+        // FIXME Currently Confusing Touch is the *only* way to get
+        // here. Generalise.
+        const int pow = calc_spell_power(SPELL_CONFUSING_TOUCH, true, false);
+        if (!check_mons_resist_magic(def, pow))
+        {
+            // declaring these just to pass to the enchant function
+            bolt beam_temp;
+            beam_temp.flavour = BEAM_CONFUSION;        
+            mons_ench_f2( def, beam_temp );            
+        }
         
         you.duration[DUR_CONFUSING_TOUCH] -= random2(20);
         
