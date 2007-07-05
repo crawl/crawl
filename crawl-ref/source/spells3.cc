@@ -900,6 +900,7 @@ bool project_noise(void)
    Type recalled:
    0 = anything
    1 = undead only (Kiku religion ability)
+   2 = orcs only (Beogh religion ability)
  */
 bool recall(char type_recalled)
 {
@@ -950,6 +951,11 @@ bool recall(char type_recalled)
                     continue;
                 }
             }
+        }
+        else if (type_recalled == 2) // Beogh
+        {
+            if (mons_species(monster->type) != MONS_ORC)
+                continue;
         }
 
         if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty))

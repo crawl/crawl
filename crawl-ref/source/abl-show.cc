@@ -140,7 +140,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_LUGONU_ABYSS_ENTER },
     // Beogh
     { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
       ABIL_NON_ABILITY }
 };
 
@@ -281,6 +281,7 @@ static const ability_def Ability_List[] =
 
     // Beogh
     { ABIL_BEOGH_SMITING, "Smiting", 3, 0, 50, 2, ABFLAG_NONE },
+    { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers", 2, 0, 50, 0, ABFLAG_NONE },
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
@@ -604,6 +605,7 @@ static talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_REPEL_UNDEAD:
     case ABIL_TSO_REPEL_UNDEAD:
     case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
+    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_OKAWARU_MIGHT:
     case ABIL_ELYVILON_LESSER_HEALING:
         invoc = true;
@@ -1582,6 +1584,11 @@ static bool do_ability(const ability_def& abil)
                          false ) == SPRET_ABORT)
             return (false);
         exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
+        break;
+
+    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+        recall(2);
+        exercise(SK_INVOCATIONS, 1);
         break;
 
     //jmf: intended as invocations from evil god(s):

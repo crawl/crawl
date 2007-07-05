@@ -2105,7 +2105,7 @@ static void travel_depth_munge(int munge_method,
 
 static travel_target prompt_travel_depth(const level_id &id)
 {
-    travel_target target(level_pos(id), false);
+    travel_target target = travel_target(level_pos(id), false);
     
     // Handle one-level branches by not prompting.
     if (single_level_branch(target.p.id.branch))
