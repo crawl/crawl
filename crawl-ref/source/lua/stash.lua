@@ -12,7 +12,7 @@ function ch_stash_search_annotate_item(it)
     local annot = ""
 
     if item.artifact(it) then
-        annot = annot .. "{artifact} "
+        annot = annot .. "{artefact} "
     elseif item.branded(it) then
         annot = annot .. "{ego} "
     elseif item.class(it, true) == "book" then
