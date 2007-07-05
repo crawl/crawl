@@ -49,6 +49,9 @@ static char retlet(int sed);
 
 static bool is_tried_type( object_class_type basetype, int subtype )
 {
+    if ( subtype >= 50 )
+        return false;
+
     switch ( basetype )
     {
     case OBJ_SCROLLS:
