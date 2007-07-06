@@ -1168,7 +1168,8 @@ private:
     void lose_pickup_energy();
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
-                              int &nvalid) const;    
+                              int &nvalid) const;
+    bool has_spell_of_type(unsigned) const;    
 };
 
 struct cloud_struct

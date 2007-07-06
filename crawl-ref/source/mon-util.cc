@@ -2339,11 +2339,29 @@ bool monsters::can_throw_rocks() const
             type == MONS_POLYPHEMUS);
 }
 
+bool monsters::has_spell_of_type(unsigned disciplines) const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+        if (spells[i] == SPELL_NO_SPELL)
+            continue;
+
+        if (spell_typematch(spells[i], disciplines))
+            return (true);
+    }
+    return (false);
+}
+
 bool monsters::can_use_missile(const item_def &item) const
 {
     // Pretty simplistic at the moment. We allow monsters to pick up
     // missiles without the corresponding launcher, assuming that sufficient
     // wandering may get them to stumble upon the launcher.
+
+    // Prevent monsters that have conjurations / summonings from
+    // grabbing missiles.
+    if (has_spell_of_type(SPTYP_CONJURATION | SPTYP_SUMMONING))
+        return (false);
     
     if (item.base_type == OBJ_WEAPONS)
         return (is_throwable(item));
