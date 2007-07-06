@@ -2843,6 +2843,19 @@ static bool is_emergency_spell(const monster_spells &msp, int spell)
     return (msp[5] == spell);
 }
 
+static const char *orb_of_fire_glow()
+{
+    static const char *orb_glows[] =
+    {
+        " glows yellow.",
+        " glows bright magenta.",
+        " glows deep purple.",       // Smoke on the Water
+        " glows red.",
+        " emits a lurid red light.",
+    };
+    return RANDOM_ELEMENT(orb_glows);
+}
+
 static bool mons_announce_cast(monsters *monster, bool nearby,
                                spell_type spell_cast,
                                spell_type draco_breath)
@@ -2985,6 +2998,11 @@ static bool mons_announce_cast(monsters *monster, bool nearby,
             case MONS_NAGA:
             case MONS_NAGA_WARRIOR:
                 simple_monster_message(monster, " spits poison.",
+                                       MSGCH_MONSTER_SPELL);
+                break;
+
+            case MONS_ORB_OF_FIRE:
+                simple_monster_message(monster, orb_of_fire_glow(),
                                        MSGCH_MONSTER_SPELL);
                 break;
             }

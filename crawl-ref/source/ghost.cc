@@ -143,7 +143,7 @@ void ghost_demon::init_random_demon()
     // demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
-    values[ GVAL_RES_ELEC ] = (!one_chance_in(3) ? 1 : 0);
+    values[ GVAL_RES_ELEC ] = !one_chance_in(3);
 
     // HTH damage:
     values[ GVAL_DAMAGE ] = 20 + roll_dice( 2, 20 );
@@ -167,7 +167,7 @@ void ghost_demon::init_random_demon()
     // is demon a spellcaster?
     // upped from one_chance_in(3)... spellcasters are more interesting
     // and I expect named demons to typically have a trick or two -- bwr
-    values[GVAL_DEMONLORD_SPELLCASTER] = (one_chance_in(10) ? 0 : 1);
+    values[GVAL_DEMONLORD_SPELLCASTER] = !one_chance_in(10);
 
     // does demon fly? (0 = no, 1 = fly, 2 = levitate)
     values[GVAL_DEMONLORD_FLY] = (one_chance_in(3) ? 0 : 
