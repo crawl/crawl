@@ -149,7 +149,7 @@ typedef unwind_var<bool> unwind_bool;
 class base_pattern
 {
 public:
-    virtual ~base_pattern() { };
+    virtual ~base_pattern() { }
 
     virtual bool valid() const = 0;
     virtual bool matches(const std::string &s) const = 0;
