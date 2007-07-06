@@ -1050,7 +1050,6 @@ bool did_god_conduct( conduct_type thing_done, int level )
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
         case GOD_VEHUMET:
-        case GOD_MAKHLEB:
         case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
@@ -1087,7 +1086,8 @@ bool did_god_conduct( conduct_type thing_done, int level )
     case DID_DEDICATED_KILL_PRIEST:
         if (you.religion == GOD_BEOGH)
         {
-            simple_god_message(" appreciates your killing of a heretic priest.");
+            simple_god_message(" appreciates your killing of a "
+                               "heretic priest.");
             ret = true;
             if (random2(level + 10) > 5)
                 piety_change = 1;
