@@ -1908,10 +1908,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
                 // Javelins use polearm and throwing skills.
                 baseHit = -1;
                 baseDam = property( item, PWPN_DAMAGE );
-                exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 3
-                               + skill_bump(SK_POLEARMS));
-                exDamBonus += you.skills[SK_RANGED_COMBAT] / 5;
-                exDamBonus += you.skills[SK_POLEARMS] * 2 / 5;
+                exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 7 / 2);
+                exDamBonus += you.skills[SK_RANGED_COMBAT] * 3 / 5;
 
                 // Adjust for strength and dex.
                 exDamBonus = str_adjust_thrown_damage(exDamBonus);
@@ -1920,8 +1918,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
                 // High dex helps damage a bit, too (aim for weak spots).
                 exDamBonus = stat_adjust(exDamBonus, you.dex, 20, 150, 100);
 
-                // exercise skills
-                exercise(SK_POLEARMS, 1 + random2avg(4, 2));
+                // Javelins train throwing quickly.
+                exercise(SK_RANGED_COMBAT, 1 + coinflip());
                 break;
             }
         }
