@@ -281,9 +281,9 @@ static int apply_vault_definition(
 // Map lookups
 
 // Returns a map for which PLACE: matches the given place.
-int random_map_for_place(const std::string &place, bool want_minivault)
+int random_map_for_place(const level_id &place, bool want_minivault)
 {
-    if (place.empty())
+    if (!place.is_valid())
         return (-1);
 
     int mapindex = -1;
@@ -293,7 +293,7 @@ int random_map_for_place(const std::string &place, bool want_minivault)
     {
         // We also accept tagged levels here.
         if (vdefs[i].place == place
-                && vdefs[i].is_minivault() == want_minivault)
+            && vdefs[i].is_minivault() == want_minivault)
         {
             rollsize += vdefs[i].chance;
 
@@ -305,13 +305,13 @@ int random_map_for_place(const std::string &place, bool want_minivault)
 #ifdef DEBUG_DIAGNOSTICS
     if (mapindex != -1)
         mprf(MSGCH_DIAGNOSTICS, "Found map %s for %s", 
-                vdefs[mapindex].name.c_str(), place.c_str());
+             vdefs[mapindex].name.c_str(), place.describe().c_str());
 #endif
 
     return (mapindex);
 }
 
-int random_map_for_depth(const level_id &place, bool want_minivault)
+int random_map_in_depth(const level_id &place, bool want_minivault)
 {
     int mapindex = -1;
     int rollsize = 0;

@@ -209,13 +209,6 @@ static std::vector<vault_placement> level_vaults;
 static int minivault_chance = 3;
 static bool dgn_level_vetoed = false;
 
-static std::string level_name(int subdepth)
-{
-    return place_name(
-                get_packed_place(
-                    you.where_are_you, subdepth, you.level_type ) );
-}
-
 static void place_altars()
 {
     // No altars before level 5.
@@ -1099,26 +1092,15 @@ static bool place_portal_vault(int stair, const std::string &tag, int dlevel)
     return build_secondary_vault(dlevel, vault, stair);
 }
 
-static int random_map_for_dlevel(int level_number, bool wantmini = false)
+static int dgn_random_map_for_place(bool wantmini)
 {
-    int subdepth = subdungeon_depth(you.where_are_you, level_number);
-    const std::string name = level_name(subdepth);
-    std::string altname;
-
-    // This dodge allows designers to specify PLACE: as Elf:$ or Slime:$ or
-    // whatever:$ to say "last level in branch 'whatever'".
-    if (subdepth == your_branch().depth)
-        altname = level_name(0);
-
-    int vault = random_map_for_place(name, wantmini);
-    
-    if (vault == -1)
-        vault = random_map_for_place(altname, wantmini);
+    const level_id lid = level_id::current();
+    int vault = random_map_for_place(lid, wantmini);
     
     // disallow entry vaults for tutorial (complicates things)
     if (vault == -1
-        && you.where_are_you == BRANCH_MAIN_DUNGEON
-        && level_number == 0 && !Options.tutorial_left)
+        && lid.branch == BRANCH_MAIN_DUNGEON
+        && lid.depth == 1 && !Options.tutorial_left)
     {
         vault = random_map_for_tag("entry", wantmini);
     }
@@ -1131,7 +1113,7 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
 // otherwise.
 static builder_rc_type builder_by_branch(int level_number)
 {
-    const int vault = random_map_for_dlevel(level_number);
+    const int vault = dgn_random_map_for_place(false);
 
     if (vault != -1)
     {
@@ -1165,7 +1147,7 @@ static void place_special_minivaults(int level_number, int level_type)
     std::set<int> used;
     if (minivault_chance && one_chance_in(minivault_chance))
     {
-        const int vault = random_map_for_depth(level_id::current(), true);
+        const int vault = random_map_in_depth(level_id::current(), true);
         if (vault != -1)
         {
             build_minivaults(level_number, vault);
@@ -1181,7 +1163,7 @@ static void place_special_minivaults(int level_number, int level_type)
         int num_to_place = random2(3) + 4;
         for ( int i = 0; i < num_to_place && tries > 0; ++i, --tries )
         {
-            const int vault = random_map_for_dlevel(level_number, true);
+            const int vault = dgn_random_map_for_place(true);
 
             if (vault == -1)
             {
@@ -1206,7 +1188,7 @@ static void place_special_minivaults(int level_number, int level_type)
     int chance = level_number == 0? 50 : 100;
     while (chance && random2(100) < chance)
     {
-        const int vault = random_map_for_dlevel(level_number, true);
+        const int vault = dgn_random_map_for_place(true);
         if (vault == -1)
             break;
 
@@ -1235,13 +1217,13 @@ static builder_rc_type builder_normal(int level_number, char level_type,
     bool skipped = false;
     bool done_city = false;
 
-    int vault = random_map_for_dlevel(level_number); 
+    int vault = dgn_random_map_for_place(false); 
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
     if (vault == -1
             && player_in_branch( BRANCH_MAIN_DUNGEON ) 
             && one_chance_in(9))
-        vault = random_map_for_depth(level_id::current());
+        vault = random_map_in_depth(level_id::current());
 
     if (vault != -1)
     {

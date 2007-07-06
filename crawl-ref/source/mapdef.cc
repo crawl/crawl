@@ -1181,7 +1181,7 @@ void map_def::write_index(FILE *outf) const
     writeLong(outf, chance);
     writeLong(outf, cache_offset);
     writeString(outf, tags);
-    writeString(outf, place);
+    place.save(outf);
     write_depth_ranges(outf);
     prelude.write(outf);
 }
@@ -1193,7 +1193,7 @@ void map_def::read_index(FILE *inf)
     chance       = readLong(inf);
     cache_offset = readLong(inf);
     tags         = readString(inf);
-    place        = readString(inf);
+    place.load(inf);
     read_depth_ranges(inf);
     prelude.read(inf);
     index_only   = true;
@@ -2112,6 +2112,12 @@ item_spec item_list::parse_single_spec(std::string s)
     else if (s == "|")
     {
         result.level = ISPEC_SUPERB;
+        return (result);
+    }
+    else if (s == "$" || s == "gold")
+    {
+        result.base_type = OBJ_GOLD;
+        result.sub_type = OBJ_RANDOM;
         return (result);
     }
 

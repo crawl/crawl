@@ -2530,7 +2530,7 @@ static bool find_transtravel_square(const level_pos &target, bool verbose)
     
     level_id closest_level;
     int best_level_distance = -1;
-    travel_cache.reset_distances();
+    travel_cache.clear_distances();
 
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
 
@@ -2710,6 +2710,38 @@ unsigned short level_id::packed_place() const
 std::string level_id::describe( bool long_name, bool with_number ) const
 {
     return place_name( this->packed_place(), long_name, with_number );
+}
+
+level_id level_id::parse_level_id(const std::string &s) throw (std::string)
+{
+    std::string::size_type cpos = s.find(':');
+    std::string branch =
+        cpos != std::string::npos? s.substr(0, cpos) : s;
+    std::string depth =
+        cpos != std::string::npos? s.substr(cpos + 1) : "";
+
+    if (branch == "Abyss")
+        return (level_id(LEVEL_ABYSS));
+    else if (branch == "Pan")
+        return (level_id(LEVEL_PANDEMONIUM));
+    else if (branch == "Lab")
+        return (level_id(LEVEL_LABYRINTH));
+
+    const branch_type br = str_to_branch(branch);
+    if (br == NUM_BRANCHES)
+        throw make_stringf("Invalid branch \"%s\" in spec \"%s\"",
+                           branch.c_str(), s.c_str());
+
+    const int dep =
+        depth.empty()? 1 :
+        depth == "$" ? branches[br].depth :
+                       atoi(depth.c_str());
+    
+    if (dep < 0 || dep > branches[br].depth)
+        throw make_stringf("Invalid depth for %s in spec \"%s\"",
+                           branch.c_str(), s.c_str());
+
+    return level_id(br, dep);
 }
 
 void level_id::save(FILE *file) const
@@ -2993,11 +3025,11 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
     }
 }
 
-void LevelInfo::reset_distances()
+void LevelInfo::clear_distances()
 {
     for (int i = 0, count = stairs.size(); i < count; ++i)
     {
-        stairs[i].reset_distance();
+        stairs[i].clear_distance();
     }
 }
 
@@ -3181,14 +3213,14 @@ void TravelCache::delete_waypoint()
             key -= '0';
             if (waypoints[key].is_valid())
             {
-                waypoints[key].reset();
+                waypoints[key].clear();
                 continue;
             }
         }
         else if (key == '*')
         {
             for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-                waypoints[i].reset();
+                waypoints[i].clear();
             break;
         }
 
@@ -3257,11 +3289,11 @@ int TravelCache::get_waypoint_count() const
     return count;
 }
 
-void TravelCache::reset_distances()
+void TravelCache::clear_distances()
 {
     std::map<level_id, LevelInfo>::iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
-        i->second.reset_distances();
+        i->second.clear_distances();
 }
 
 bool TravelCache::is_known_branch(unsigned char branch) const

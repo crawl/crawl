@@ -171,10 +171,12 @@ public:
     {
     }
 
+    static level_id parse_level_id(const std::string &s) throw (std::string);
+
     unsigned short packed_place() const;
     std::string describe(bool long_name = false, bool with_number = true) const;
 
-    void reset()
+    void clear()
     {
         branch = BRANCH_MAIN_DUNGEON;
         depth  = -1;
@@ -254,9 +256,9 @@ struct level_pos
         return id.depth > -1 && pos.x != -1 && pos.y != -1;
     }
 
-    void reset()
+    void clear()
     {
-        id.reset();
+        id.clear();
         pos = coord_def(-1, -1);
     }
 
@@ -279,7 +281,7 @@ struct travel_target
     }
     void clear()
     {
-        p.reset();
+        p.clear();
         entrance_only = false;
     }
 };
@@ -349,7 +351,7 @@ struct stair_info
     {
     }
 
-    void reset_distance()
+    void clear_distance()
     {
         distance = -1;
     }
@@ -394,7 +396,7 @@ struct LevelInfo
     bool know_stair(const coord_def &pos) const;
     int get_stair_index(const coord_def &pos) const;
 
-    void reset_distances();
+    void clear_distances();
     void set_level_excludes();
 
     const std::vector<travel_exclude> &get_excludes() const
@@ -444,7 +446,7 @@ const int TRAVEL_WAYPOINT_COUNT = 10;
 class TravelCache
 {
 public:
-    void reset_distances();
+    void clear_distances();
 
     LevelInfo& get_level_info(const level_id &lev)
     {

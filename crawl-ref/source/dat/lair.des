@@ -224,7 +224,7 @@ ENDMAP
 # Shoals: ranged attackers
 #
 NAME:  Shoals_1
-PLACE: Shoals:5
+PLACE: Shoal:5
 MONS:  cyclops, yaktaur, yaktaur captain
 MAP
 wwwwwwwwcccccccccccccwwwwwww
@@ -262,7 +262,7 @@ ENDMAP
 # Shoals: fish
 #
 NAME:  Shoals_2
-PLACE: Shoals:5
+PLACE: Shoal:5
 MONS:  cyclops,stone giant
 SUBST: 1 = 1.
 SUBST: W = W:2 w
@@ -299,7 +299,7 @@ ENDMAP
 # Shoals: statue on rune
 #
 NAME: Shoals_3
-PLACE: Shoals:5
+PLACE: Shoal:5
 KMONS: x:ice statue/orange crystal statue/silver statue
 KFEAT: x:O
 MAP
@@ -312,7 +312,7 @@ ENDMAP
 # You may need controlled flight or apportation to get the liquid rune
 #
 NAME:  Shoals_4
-PLACE: Shoals:5
+PLACE: Shoal:5
 KFEAT: O = w
 ### KITEM: O = liquid rune of Zot
 MAP

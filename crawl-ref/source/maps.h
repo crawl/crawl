@@ -40,8 +40,8 @@ int vault_main(map_type vgrid,
                std::vector<vault_placement> *avoid_vaults = NULL);
 
 const map_def *map_by_index(int index);
-int random_map_for_place(const std::string &place, bool mini = false);
-int random_map_for_depth(const level_id &lid, bool want_minivault = false);
+int random_map_for_place(const level_id &place, bool mini = false);
+int random_map_in_depth(const level_id &lid, bool want_minivault = false);
 int random_map_for_tag(const std::string &tag, bool want_minivault,
                        bool check_depth = false);
 void add_parsed_map(const map_def &md);
@@ -60,6 +60,6 @@ extern depth_ranges lc_default_depths;
 extern dlua_chunk lc_global_prelude;
 extern bool lc_run_global_prelude;
 
-const int MAP_CACHE_VERSION = 1003;
+const int MAP_CACHE_VERSION = 1004;
 
 #endif

@@ -16,6 +16,7 @@
 #include "luadgn.h"
 #include "enum.h"
 #include "externs.h"
+#include "travel.h"
 
 struct raw_range
 {
@@ -470,7 +471,7 @@ class map_def
 public:
     std::string     name;
     std::string     tags;
-    std::string     place;
+    level_id        place;
 
     depth_ranges     depths;
     map_section_type orient;

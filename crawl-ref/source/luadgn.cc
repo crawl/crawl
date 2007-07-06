@@ -353,9 +353,18 @@ static int dgn_place(lua_State *ls)
         if (lua_isnil(ls, 2))
             map->place.clear();
         else
-            map->place = luaL_checkstring(ls, 2);
+        {
+            try
+            {
+                map->place = level_id::parse_level_id(luaL_checkstring(ls, 2));
+            }
+            catch (const std::string &err)
+            {
+                luaL_error(ls, err.c_str());
+            }
+        }
     }
-    PLUARET(string, map->place.c_str());
+    PLUARET(string, map->place.describe().c_str());
 }
 
 static int dgn_tags(lua_State *ls)
