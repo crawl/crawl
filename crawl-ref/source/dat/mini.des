@@ -1214,3 +1214,37 @@ MAP
 .xxxx.
 ......
 ENDMAP
+
+##############################
+# Shoal hut with rune inside
+#
+# Shoal:$ is hand-hacked to force lots of minivaults.
+NAME: shoalhut_rune
+PLACE: Shoal:5
+TAGS: water_ok
+MONS: cyclops
+CHANCE: 1000
+MAP
+.x+x.
+xx1xx
+=1O1x
+xx1xx
+.xxx.
+ENDMAP
+
+##############################
+# Shoal hut with no rune inside
+#
+# Shoal:$ is hand-hacked to force lots of minivaults.
+NAME: shoalhut_norune
+PLACE: Shoal:5
+TAGS: water_ok allow_dup
+MONS: cyclops
+CHANCE: 1000
+MAP
+.x+x.
+xx.xx
+=.*1x
+xx1xx
+.xxx.
+ENDMAP

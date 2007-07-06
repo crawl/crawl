@@ -2044,3 +2044,232 @@ Portaled Projectile
 
 This spell teleports a missile directly to its target, greatly increasing its accuracy (but not damage.)
 %%%%
+A stone wall
+
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls.
+%%%%
+A wall of the weird stuff which makes up Pandemonium
+
+%%%%
+A rock wall
+
+The typical dungeon barrier. Though it is impenetrable at first sight, there are several ways to get through or around it.
+%%%%
+An unnaturally hard rock wall
+
+%%%%
+A metal wall
+
+An impenetrable barrier. As every dungeon electrician knows, it grounds all forms of electricity.
+%%%%
+A wall of green crystal
+
+For some reason, some dungeon walls, like this one, have been made of this polished crystal, imbued with arcane magics. They prevent its destruction, and make it reflect heat and cold.
+%%%%
+An orcish idol
+
+An idol of Beogh
+
+%%%%
+A wall of solid wax
+
+These walls are built by bees. Occasionally a dungeon architect will manipulate bees into building wax walls for esthetic reasons. (Theirs, not the bees'.) They are susceptible to heat and can easily melt.
+%%%%
+A granite statue
+
+%%%%
+Some lava
+
+Lava, like the smoke that billows from it, sure looks pretty from above! But walking on lava will burn everything but lava creatures to a crisp. If the lava creatures themselves haven't already done that job at range, that is.
+%%%%
+Some deep water
+
+%%%%
+Some shallow water
+
+This waist-deep, misty water makes movement and combat cumbersome for landlubbers -- sometimes dangerous, but never directly fatal.
+%%%%
+Floor
+
+%%%%
+An open door
+
+A plain door. You can close it by standing next to it and pressing 'c'.
+%%%%
+A closed door
+
+A plain door. To open it, try simply walking into it, or press 'o'.
+%%%%
+A rock staircase leading down
+
+%%%%
+A stone staircase leading down
+
+%%%%
+A rock staircase leading up
+
+%%%%
+A stone staircase leading up
+
+%%%%
+A gateway to Hell
+
+%%%%
+A mechanical trap
+
+%%%%
+A magical trap
+
+%%%%
+A trap
+
+%%%%
+A shop
+
+%%%%
+A labyrinth entrance
+
+%%%%
+A gateway to the Iron City of Dis
+
+%%%%
+A gateway to Gehenna
+
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+%%%%
+A one-way gate to the infinite horrors of the Abyss
+
+%%%%
+A gateway leading out of the Abyss
+
+%%%%
+An empty arch of ancient stone
+
+%%%%
+A gate leading to the halls of Pandemonium
+
+%%%%
+A gate leading out of Pandemonium
+
+%%%%
+A gate leading to another region of Pandemonium
+
+%%%%
+A staircase to the Orcish Mines
+
+%%%%
+A staircase to the Hive
+
+%%%%
+A staircase to the Lair
+
+%%%%
+A staircase to the Slime Pits
+
+%%%%
+A staircase to the Vaults
+
+%%%%
+A staircase to the Crypt
+
+%%%%
+A staircase to the Hall of Blades
+
+%%%%
+A gate to the Realm of Zot
+
+%%%%
+A staircase to the Ecumenical Temple
+
+%%%%
+A staircase to the Snake Pit
+
+%%%%
+A staircase to the Elven Halls
+
+%%%%
+A staircase to the Tomb
+
+%%%%
+A staircase to the Swamp
+
+%%%%
+A staircase to the Shoals
+
+%%%%
+A staircase back to the Dungeon
+
+%%%%
+A staircase back to the Lair
+
+%%%%
+A staircase back to the Vaults
+
+%%%%
+A staircase back to the Mines
+
+%%%%
+A staircase back to the Crypt
+
+%%%%
+A gate leading back out of this place
+
+%%%%
+A glowing white marble altar of Zin
+
+%%%%
+A glowing golden altar of the Shining One
+
+%%%%
+An ancient bone altar of Kikubaaqudgha
+
+%%%%
+A basalt altar of Yredelemnul
+
+%%%%
+A shimmering altar of Xom
+
+%%%%
+A shining altar of Vehumet
+
+%%%%
+An iron altar of Okawaru
+
+%%%%
+A burning altar of Makhleb
+
+%%%%
+A deep blue altar of Sif Muna
+
+%%%%
+A bloodstained altar of Trog
+
+%%%%
+A sparkling altar of Nemelex Xobeh
+
+%%%%
+A silver altar of Elyvilon
+
+%%%%
+A corrupted altar of Lugonu
+
+%%%%
+A roughly hewn altar of Beogh
+
+%%%%
+A fountain of clear blue water
+
+'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
+%%%%
+A fountain of sparkling water
+
+'q'uaff to drink from this magic fountain. Expect magical effects, as long as it's still magic.
+%%%%
+A dry fountain
+
+%%%%

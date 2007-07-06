@@ -507,7 +507,8 @@ static void build_dungeon_level(int level_number, int level_type)
     
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    place_special_minivaults(level_number, level_type);
+    if (!player_in_branch(BRANCH_SHOALS))
+        place_special_minivaults(level_number, level_type);
 
     // hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level())
@@ -522,7 +523,10 @@ static void build_dungeon_level(int level_number, int level_type)
     if (player_in_branch( BRANCH_SWAMP ))
         prepare_swamp();
     else if (player_in_branch(BRANCH_SHOALS))
+    {
         prepare_shoals();
+        place_special_minivaults(level_number, level_type);
+    }
 
     place_branch_entrances( level_number, level_type );
 
@@ -845,33 +849,8 @@ static void prepare_shoals()
         grd[centres[0].x][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
         grd[centres[0].x+1][centres[0].y] = DNGN_STONE_STAIRS_UP_II;
         grd[centres[0].x+2][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
-        
-        // turn all island centres into floor
-        for ( int i = 1; i < num_islands; ++i )
-            grd[centres[i].x][centres[i].y] = DNGN_FLOOR;
 
-        // Put a rune in the centre of another island
-        {
-            int item_made = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
-                                   0, RUNE_SHOALS );
-            if (item_made != NON_ITEM && item_made != -1)
-            {
-                mitm[item_made].x = centres[1].x;
-                mitm[item_made].y = centres[1].y;
-            }
-        }
-
-        // Put good items in the other islands
-        for ( int i = 2; i < num_islands; ++i )
-        {
-            int item_made = items( 1, OBJ_RANDOM, OBJ_RANDOM, true,
-                                   MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE );
-            if (item_made != NON_ITEM && item_made != -1)
-            {
-                mitm[item_made].x = centres[i].x;
-                mitm[item_made].y = centres[i].y;
-            }
-        }
+        // Minivault creation will place the rune (96.4% of the time)
     }
     else
     {
@@ -1194,6 +1173,36 @@ static void place_special_minivaults(int level_number, int level_type)
         }
     }
     
+    // FIXME hand-hackery for placing minivaults at the bottom of the Shoals.
+    if ( (level_id::current().branch == BRANCH_SHOALS) &&
+         (level_id::current().depth = branches[BRANCH_SHOALS].depth) )
+    {
+        int tries = 40;
+        int num_to_place = random2(3) + 4;
+        for ( int i = 0; i < num_to_place && tries > 0; ++i, --tries )
+        {
+            const int vault = random_map_for_dlevel(level_number, true);
+
+            if (vault == -1)
+            {
+                --i;
+                continue;
+            }
+            
+            // If we've already used this minivault and it doesn't
+            // want duplicates, do another iteration.
+            if (used.find(vault) != used.end()
+                && !map_by_index(vault)->has_tag("allow_dup"))
+            {
+                --i;
+                continue;
+            }
+
+            build_minivaults(level_number, vault);
+            used.insert(vault);
+        }
+    }
+
     int chance = level_number == 0? 50 : 100;
     while (chance && random2(100) < chance)
     {
@@ -2546,6 +2555,7 @@ static bool safe_minivault_place(int v1x, int v1y,
     dgn_region reg(v1x, v1y, place.width, place.height);
     if (reg.overlaps_any(vault_zones))
         return (false);
+    const bool water_ok = place.map.has_tag("water_ok");
     for (int vx = v1x; vx < v1x + place.width; vx++)
     {
         for (int vy = v1y; vy < v1y + place.height; vy++)
@@ -2553,7 +2563,10 @@ static bool safe_minivault_place(int v1x, int v1y,
             if ((grd[vx][vy] != DNGN_FLOOR
                  && grd[vx][vy] != DNGN_ROCK_WALL
                  && grd[vx][vy] != DNGN_CLOSED_DOOR
-                 && grd[vx][vy] != DNGN_SECRET_DOOR)
+                 && grd[vx][vy] != DNGN_SECRET_DOOR
+                 && (!water_ok ||
+                     (grd[vx][vy] != DNGN_DEEP_WATER
+                      && grd[vx][vy] != DNGN_SHALLOW_WATER)))
                 || igrd[vx][vy] != NON_ITEM
                 || mgrd[vx][vy] != NON_MONSTER)
             {
@@ -2568,6 +2581,7 @@ static bool connected_minivault_place(int v1x, int v1y,
                                       const vault_placement &place)
 {
     /* must not be completely isolated: */
+    const bool water_ok = place.map.has_tag("water_ok");
     for (int vx = v1x; vx < v1x + place.width; vx++)
     {
         //  if (vx != v1x && vx != v1x + 12) continue;
@@ -2575,7 +2589,10 @@ static bool connected_minivault_place(int v1x, int v1y,
         {
             if (grd[vx][vy] == DNGN_FLOOR
                 || grd[vx][vy] == DNGN_CLOSED_DOOR
-                || grd[vx][vy] == DNGN_SECRET_DOOR)
+                || grd[vx][vy] == DNGN_SECRET_DOOR
+                || (water_ok
+                    && (grd[vx][vy] == DNGN_SHALLOW_WATER ||
+                        grd[vx][vy] == DNGN_DEEP_WATER)))
                 return (true);
         }
     }

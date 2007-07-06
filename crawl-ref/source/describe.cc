@@ -3285,31 +3285,6 @@ static std::string get_feature_description_wide(int feat)
 {
     switch ( feat )
     {
-    case DNGN_ROCK_WALL:
-    case DNGN_SECRET_DOOR:      // to prevent detection with 'x'
-        return "The typical dungeon barrier. Though it is impenetrable at "
-            "first sight, there are several ways to get through "
-            "or around it.";
-    case DNGN_STONE_WALL:
-        return "A harder obstacle than rock walls. Only the mightiest "
-            "magic can shatter stone walls.";
-    case DNGN_GREEN_CRYSTAL_WALL:
-        return "For some reason, some dungeon walls, like this one, "
-            "have been made of this polished crystal, imbued with arcane "
-            "magics. They prevent its destruction, and make it reflect heat "
-            "and cold.";
-    case DNGN_METAL_WALL:
-        return "An impenetrable barrier. As every dungeon electrician "
-            "knows, it grounds all forms of electricity.";
-    case DNGN_WAX_WALL:
-        return "These walls are built by bees. Occasionally a dungeon "
-            "architect will manipulate bees into building wax walls for "
-            "esthetic reasons. (Theirs, not the bees'.) They are susceptible "
-            "to heat and can easily melt.";
-    case DNGN_SHALLOW_WATER:
-        return "This waist-deep, misty water makes movement and combat "
-            "cumbersome for landlubbers -- sometimes dangerous, but never "
-            "directly fatal.";
     case DNGN_DEEP_WATER:
         if (you.species != SP_MERFOLK)
             return "This deep, misty water will drown any who set foot in it, "
@@ -3318,18 +3293,6 @@ static std::string get_feature_description_wide(int feat)
                 "thinking twice. Except when they're really confused...";
         else
             return "This is the deep, misty water which you call home.";
-    case DNGN_LAVA:
-        return "Lava, like the smoke that billows from it, sure looks "
-            "pretty from above! But walking on lava will burn everything "
-            "but lava creatures to a crisp. If the lava creatures themselves "
-            "haven't already done that job at range, that is.";
-    case DNGN_SPARKLING_FOUNTAIN:
-        return "'q'uaff to drink from this magic fountain. Expect magical "
-            "effects, as long as it's still magic.";
-    case DNGN_BLUE_FOUNTAIN:
-        return "'q'uaff to drink from this fountain. But it's far more "
-            "pretty than useful, unless you're trying to fetch the Orb "
-            "without eating, I guess.";
     case DNGN_FLOOR:
         switch (random2(6))
         {
@@ -3350,12 +3313,6 @@ static std::string get_feature_description_wide(int feat)
                 "but then, the dungeon is no playground for the "
                 "superstitious.";
         }
-    case DNGN_OPEN_DOOR:
-        return "A plain door. "
-            "You can close it by standing next to it and pressing 'c'.";
-    case DNGN_CLOSED_DOOR:
-        return "A plain door. "
-            "To open it, try simply walking into it, or press 'o'.";
     case DNGN_ENTER_SHOP:
         return "A shop! Here, of all places! Some souls question the "
             "wisdom of the dungeon's shopkeepers, who import wares to "
@@ -3371,6 +3328,11 @@ void describe_feature_wide(int x, int y)
 {
     std::string desc = feature_description(x, y);
     desc += "$$";
+
+    // Get rid of trailing .$$ before lookup
+    desc += getLongDescription(desc.substr(0, desc.length() - 3));
+
+    // For things which require logic
     desc += get_feature_description_wide(grd[x][y]);
 
     clrscr();
@@ -3383,7 +3345,7 @@ static void show_item_description(const item_def &item)
 {
     clrscr();
 
-    std::string description = get_item_description( item, 1 );
+    const std::string description = get_item_description( item, 1 );
     print_description(description);
 
     if (item.has_spells())
