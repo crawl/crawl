@@ -19,11 +19,16 @@
 #include <string>
 #include <vector>
 
+extern const char *standard_plural_qualifiers[];
+
 std::string lowercase_string(std::string s);
 std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
 bool ends_with(const std::string &s, const std::string &suffix);
-std::string pluralise(const std::string &name, 
+
+std::string article_a(const std::string &name, bool lowercase = true);
+std::string pluralise(const std::string &name,
+                      const char *stock_plural_quals[] = standard_plural_qualifiers,
                       const char *no_of[] = NULL);
 
 std::string number_in_words(unsigned number, int pow = 0);

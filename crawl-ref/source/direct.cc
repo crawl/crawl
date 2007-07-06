@@ -1336,7 +1336,7 @@ std::string feature_description(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_DOWN_III:
         return ("A stone staircase leading down.");
     case DNGN_ROCK_STAIRS_UP:
-        return ("A rock staircase leading upwards.");
+        return ("A rock staircase leading up.");
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:

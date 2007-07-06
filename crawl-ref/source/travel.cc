@@ -628,7 +628,7 @@ bool is_branch_stair(int gridx, int gridy)
     return (next.branch != curr.branch);
 }
 
-bool is_stair(unsigned gridc)
+bool is_stair(dungeon_feature_type gridc)
 {
     return (is_travelable_stair(gridc)
                                 || gridc == DNGN_ENTER_ABYSS
@@ -641,7 +641,7 @@ bool is_stair(unsigned gridc)
 /*
  * Returns true if the given dungeon feature can be considered a stair.
  */
-bool is_travelable_stair(unsigned gridc)
+bool is_travelable_stair(dungeon_feature_type gridc)
 {
     switch (gridc)
     {
@@ -2254,7 +2254,7 @@ void start_translevel_travel(bool prompt_for_destination)
     }
 }
 
-command_type stair_direction(int stair)
+command_type stair_direction(dungeon_feature_type stair)
 {
     return ((stair < DNGN_STONE_STAIRS_UP_I
                 || stair > DNGN_ROCK_STAIRS_UP)
@@ -2975,7 +2975,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
     {
         for (int x = 0; x < GXM; ++x)
         {
-            int grid = grd[x][y];
+            dungeon_feature_type grid = grd[x][y];
             int envc = env.map[x][y].object;
 
             if ((x == you.x_pos && y == you.y_pos)
@@ -3547,7 +3547,8 @@ void runrest::check_mp()
 // explore_discoveries
 
 explore_discoveries::explore_discoveries()
-    : es_flags(0), current_level(NULL), items(), stairs(), shops(), altars()
+    : es_flags(0), current_level(NULL), items(), stairs(),
+      portals(), shops(), altars()
 {
 }
 
@@ -3556,10 +3557,25 @@ std::string explore_discoveries::cleaned_feature_description(
 {
     std::string s = lowercase_first(feature_description(grid));
     if (s.length() && s[s.length() - 1] == '.')
-    {
         s.erase(s.length() - 1);
-    }
+    if (s.find("a ") != std::string::npos)
+        s = s.substr(2);
+    else if (s.find("an ") != std::string::npos)
+        s = s.substr(3);
     return (s);
+}
+
+bool explore_discoveries::merge_feature(
+    std::vector< explore_discoveries::named_thing<int> > &v,
+    const explore_discoveries::named_thing<int> &feat) const
+{
+    for (int i = 0, size = v.size(); i < size; ++i)
+        if (feat == v[i])
+        {
+            ++v[i].thing;
+            return (true);
+        }
+    return (false);
 }
 
 void explore_discoveries::found_feature(const coord_def &pos,
@@ -3572,20 +3588,32 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (is_stair(grid) && ES_stair)
     {
-        stairs.push_back(
-            named_thing<int>(
-                cleaned_feature_description(grid), grid ) );
+        const named_thing<int> stair(cleaned_feature_description(grid), 1);
+        add_stair(stair);
         es_flags |= ES_STAIR;
     }
     else if (is_altar(grid)
              && ES_altar
              && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
-        altars.push_back(
-            named_thing<int>(
-                cleaned_feature_description(grid), grid ) );
-        es_flags |= ES_ALTAR;        
+        const named_thing<int> altar(cleaned_feature_description(grid), 1);
+        if (!merge_feature(altars, altar))
+            altars.push_back(altar);
+        es_flags |= ES_ALTAR;
     }
+}
+
+void explore_discoveries::add_stair(
+    const explore_discoveries::named_thing<int> &stair)
+{
+    if (merge_feature(stairs, stair) || merge_feature(portals, stair))
+        return;
+
+    // Hackadelic
+    if (stair.name.find("stair") != std::string::npos)
+        stairs.push_back(stair);
+    else
+        portals.push_back(stair);
 }
 
 void explore_discoveries::add_item(const item_def &i)
@@ -3659,6 +3687,28 @@ template <class C> void explore_discoveries::say_any(
         mprf("%s", message.c_str());
 }
 
+std::vector<std::string> explore_discoveries::apply_quantities(
+    const std::vector< named_thing<int> > &v) const
+{
+    static const char *feature_plural_qualifiers[] =
+    {
+        " leading ", " back to ", " to ", " of "
+    };
+    
+    std::vector<std::string> things;
+    for (int i = 0, size = v.size(); i < size; ++i)
+    {
+        const named_thing<int> &nt = v[i];
+        if (nt.thing == 1)
+            things.push_back(article_a(nt.name));
+        else
+            things.push_back(number_in_words(nt.thing)
+                             + " "
+                             + pluralise(nt.name, feature_plural_qualifiers));
+    }
+    return (things);
+}
+
 bool explore_discoveries::prompt_stop() const
 {
     if (!es_flags)
@@ -3666,8 +3716,9 @@ bool explore_discoveries::prompt_stop() const
 
     say_any(items, "Found %s items.");
     say_any(shops, "Found %s shops.");
-    say_any(altars, "Found %s altars.");
-    say_any(stairs, "Found %s stairs.");
+    say_any(apply_quantities(altars), "Found %s altars.");
+    say_any(apply_quantities(portals), "Found %s gates.");
+    say_any(apply_quantities(stairs), "Found %s stairs.");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
             || prompt_stop_explore(es_flags));

@@ -1004,7 +1004,7 @@ void item_grid()
                         const item_def &eitem = mitm[igrd[count_x][count_y]];
                         unsigned short &ecol = env.show_col[ix][iy];
 
-                        const int grid = grd[count_x][count_y];
+                        const dungeon_feature_type grid = grd[count_x][count_y];
                         if (Options.stair_item_brand && is_stair(grid))
                             ecol |= COLFLAG_STAIR_ITEM;
                         else

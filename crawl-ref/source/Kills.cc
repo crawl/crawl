@@ -352,22 +352,6 @@ static const char *modifier_suffixes[] =
     "zombie", "skeleton", "simulacrum", NULL,
 };
 
-// Naively prefix A/an to a monster name. At the moment, we don't have monster
-// names that demand more sophistication (maybe ynoxinul - don't know how 
-// that's pronounced).
-static std::string article_a(const std::string &name)
-{
-    if (!name.length()) return name;
-    switch (name[0])
-    {
-        case 'a': case 'e': case 'i': case 'o': case 'u':
-        case 'A': case 'E': case 'I': case 'O': case 'U':
-            return "An " + name;
-        default:
-            return "A " + name;
-    }
-}
-
 // For a non-unique monster, prefixes a suitable article if we have only one
 // kill, else prefixes a kill count and pluralises the monster name.
 static std::string n_names(const std::string &name, int n)
@@ -376,10 +360,10 @@ static std::string n_names(const std::string &name, int n)
     {
         char buf[20];
         snprintf(buf, sizeof buf, "%d ", n);
-        return buf + pluralise(name, modifier_suffixes);
+        return buf + pluralise(name, standard_plural_qualifiers, modifier_suffixes);
     }
     else
-        return article_a(name);
+        return article_a(name, false);
 }
 
 // Returns a string describing the number of times a unique has been killed.

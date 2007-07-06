@@ -2541,7 +2541,7 @@ static void beehive(spec_room &sr)
 }                               // end beehive()
 
 static bool safe_minivault_place(int v1x, int v1y,
-                                  const vault_placement &place)
+                                 const vault_placement &place)
 {
     dgn_region reg(v1x, v1y, place.width, place.height);
     if (reg.overlaps_any(vault_zones))

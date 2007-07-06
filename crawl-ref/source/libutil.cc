@@ -129,23 +129,46 @@ int ends_with(const std::string &s, const char *suffixes[])
     return (0);
 }
 
+// Naively prefix A/an to a noun.
+std::string article_a(const std::string &name, bool lowercase)
+{
+    if (!name.length()) return name;
+    const char *a  = lowercase? "a " : "A ";
+    const char *an = lowercase? "an " : "An ";
+    switch (name[0])
+    {
+        case 'a': case 'e': case 'i': case 'o': case 'u':
+        case 'A': case 'E': case 'I': case 'O': case 'U':
+            return an + name;
+        default:
+            return a + name;
+    }
+}
+
+const char *standard_plural_qualifiers[] =
+{
+    " of ", " labeled "
+};
+
 // Pluralises a monster or item name. This'll need to be updated for
 // correctness whenever new monsters/items are added.
-std::string pluralise(const std::string &name, 
-                      const char *no_of[])
+std::string pluralise(const std::string &name,
+                      const char *qualifiers[],
+                      const char *no_qualifier[])
 {
     std::string::size_type pos;
 
-    // Pluralise first word of names like 'eye of draining' or
-    // 'scrolls labeled FOOBAR', but only if the whole name is not
-    // suffixed by a supplied modifier, such as 'zombie' or 'skeleton'
-    if ( (pos = name.find(" of ")) != std::string::npos 
-            && !ends_with(name, no_of) )
-        return pluralise(name.substr(0, pos)) + name.substr(pos);
-    else if ( (pos = name.find(" labeled ")) != std::string::npos
-              && !ends_with(name, no_of) )
-        return pluralise(name.substr(0, pos)) + name.substr(pos);
-    else if (ends_with(name, "us"))
+    if (qualifiers)
+    {
+        for (int i = 0; qualifiers[i]; ++i)
+            if ((pos = name.find(qualifiers[i])) != std::string::npos 
+                && !ends_with(name, no_qualifier))
+            {
+                return pluralise(name.substr(0, pos)) + name.substr(pos);
+            }
+    }
+    
+    if (ends_with(name, "us"))
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
     else if (ends_with(name, "larva") || ends_with(name, "amoeba"))
