@@ -266,6 +266,18 @@ bool flood_find<fgrd, bound_check>::path_flood(
     }
 
     const dungeon_feature_type grid = fgrid(dc);
+
+    if (grid == NUM_FEATURES)
+    {
+        if (want_exit)
+        {
+            greedy_dist = 100;
+            greedy_place = coord_def(-1, -1);
+            return (true);
+        }
+        return (false);
+    }
+    
     if (needed_features[ grid ])
     {
         unexplored_place = dc;

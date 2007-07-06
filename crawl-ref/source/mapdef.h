@@ -204,7 +204,7 @@ public:
     std::string apply_transforms();
 
     // Make all lines the same length.
-    void normalise(char fillc = 'x');
+    void normalise(char fillc = ' ');
 
     // Rotate 90 degrees either clockwise or anticlockwise
     void rotate(bool clockwise);

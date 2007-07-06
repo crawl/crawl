@@ -120,6 +120,8 @@ static bool resolve_map(map_def &map, const map_def &original)
         mprf(MSGCH_WARN, "Lua error: %s", err.c_str());
         return (false);
     }
+
+    map.fixup();
     err = map.resolve();
     if (!err.empty())
     {
@@ -145,12 +147,17 @@ static bool resolve_map(map_def &map, const map_def &original)
     return (true);
 }
 
-static bool is_grid_clobbered(int sx, int sy, int width, int height)
+static bool is_grid_clobbered(const map_def &map,
+                              int sx, int sy, int width, int height)
 {
+    const std::vector<std::string> &lines = map.map.get_lines();
     for (int y = sy; y < sy + height; ++y)
     {
         for (int x = sx; x < sx + width; ++x)
         {
+            if (lines[y - sy][x - sx] == ' ')
+                continue;
+            
             const dungeon_feature_type grid = grd[x][y];
 
             if (!grid_is_opaque(grid)
@@ -171,8 +178,9 @@ static bool is_grid_clobbered(int sx, int sy, int width, int height)
 
 // Determines if the region specified by (x, y, x + width - 1, y + height - 1)
 // is a bad place to build a vault.
-static bool bad_map_place(int x, int y, int width, int height,
-                         std::vector<vault_placement> *avoid)
+static bool bad_map_place(const map_def &map,
+                          int x, int y, int width, int height,
+                          std::vector<vault_placement> *avoid)
 {
     if (!avoid)
         return (false);
@@ -188,7 +196,7 @@ static bool bad_map_place(int x, int y, int width, int height,
             return (true);
     }
 
-    return (is_grid_clobbered(x, y, width, height));
+    return (is_grid_clobbered(map, x, y, width, height));
 }
 
 static bool apply_vault_grid(map_def &def, map_type map, 
@@ -232,7 +240,7 @@ static bool apply_vault_grid(map_def &def, map_type map,
         starty = where.y;
     }
 
-    if (bad_map_place(startx, starty, width, height, avoid))
+    if (bad_map_place(def, startx, starty, width, height, avoid))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",

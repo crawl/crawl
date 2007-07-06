@@ -1601,7 +1601,7 @@ void map_def::normalise()
 {
     // Minivaults are padded out with floor tiles, normal maps are
     // padded out with rock walls.
-    map.normalise(is_minivault()? '.' : 'x');
+    map.normalise(' ');
 }
 
 std::string map_def::resolve()

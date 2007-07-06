@@ -81,10 +81,10 @@ NSPACE [^\ \t\r\n]
 
 %%
 
-<MAPDEF>^\s*ENDMAP  { BEGIN(INITIAL); }
+<MAPDEF>^\s*ENDMAP[ ]*  { BEGIN(INITIAL); }
 
-<MAPDEF>^[^ \r\n\t]+ {
-                        settext();
+<MAPDEF>^[^\r\n\t]+ {
+                        settext(true);
                         return MAP_LINE;
                     }
 

@@ -1225,11 +1225,11 @@ TAGS: water_ok
 MONS: cyclops
 CHANCE: 1000
 MAP
-.x+x.
+ x+x 
 xx1xx
 =1O1x
 xx1xx
-.xxx.
+ xxx 
 ENDMAP
 
 ##############################
@@ -1242,9 +1242,9 @@ TAGS: water_ok allow_dup
 MONS: cyclops
 CHANCE: 1000
 MAP
-.x+x.
+ x+x 
 xx.xx
 =.*1x
 xx1xx
-.xxx.
+ xxx 
 ENDMAP

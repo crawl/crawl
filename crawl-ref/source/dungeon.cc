@@ -2538,10 +2538,14 @@ static bool safe_minivault_place(int v1x, int v1y,
     if (reg.overlaps_any(vault_zones))
         return (false);
     const bool water_ok = place.map.has_tag("water_ok");
+    const std::vector<std::string> &lines = place.map.map.get_lines();
     for (int vx = v1x; vx < v1x + place.width; vx++)
     {
         for (int vy = v1y; vy < v1y + place.height; vy++)
         {
+            if (lines[vy - v1y][vx - v1x] == ' ')
+                continue;
+            
             if ((grd[vx][vy] != DNGN_FLOOR
                  && grd[vx][vy] != DNGN_ROCK_WALL
                  && grd[vx][vy] != DNGN_CLOSED_DOOR
@@ -2564,11 +2568,14 @@ static bool connected_minivault_place(int v1x, int v1y,
 {
     /* must not be completely isolated: */
     const bool water_ok = place.map.has_tag("water_ok");
+    const std::vector<std::string> &lines = place.map.map.get_lines();
     for (int vx = v1x; vx < v1x + place.width; vx++)
     {
-        //  if (vx != v1x && vx != v1x + 12) continue;
         for (int vy = v1y; vy < v1y + place.height; vy++)
         {
+            if (lines[vy - v1y][vx - v1x] == ' ')
+                continue;
+            
             if (grd[vx][vy] == DNGN_FLOOR
                 || grd[vx][vy] == DNGN_CLOSED_DOOR
                 || grd[vx][vy] == DNGN_SECRET_DOOR
@@ -2639,18 +2646,6 @@ static bool build_minivaults(int level_number, int force_vault)
     vault_zones.push_back(
         dgn_region(place.x, place.y, place.width, place.height));
     
-    for (vx = v1x; vx < v1x + place.width; vx++)
-    {
-        for (vy = v1y; vy < v1y + place.height; vy++)
-        {
-            // [dshaligram] vault_main always populates vgrid[y][x] instead of
-            // vgrid[x][y] now.
-            grd[vx][vy] =
-                static_cast<dungeon_feature_type>(
-                    vgrid[vy - v1y][vx - v1x] );
-        }
-    }
-
     // these two are throwaways:
     std::vector<coord_def> dummy;
     int num_runes = 0;
@@ -2660,10 +2655,13 @@ static bool build_minivaults(int level_number, int force_vault)
     {
         for (vy = v1y; vy < v1y + place.height; vy++)
         {
+            const int feat = vgrid[vy - v1y][vx - v1x];
+            if (feat == ' ')
+                continue;
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
                                       acq_item_class,
-                                      grd[vx][vy], dummy, 
+                                      feat, dummy, 
                                       num_runes );
         }
     }
@@ -3028,13 +3026,12 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     dgn_region this_vault(place.x, place.y, place.width, place.height);
     // note: assumes *no* previous item (I think) or monster (definitely)
     // placement
-    for (vx = 0; vx < GXM; vx++)
+    for (vx = place.x; vx < place.x + place.width; vx++)
     {
-        for (vy = 0; vy < GYM; vy++)
+        for (vy = place.y; vy < place.y + place.height; vy++)
         {
-            if (!this_vault.contains( coord_def(vx, vy) ))
+            if (vgrid[vy][vx] == ' ')
                 continue;
-            
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
                                       acq_item_class,
@@ -3309,6 +3306,9 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
 {
     if (rawfeat == -1)
         rawfeat = map->glyph_at(c);
+
+    if (rawfeat == ' ')
+        return (NUM_FEATURES);
     
     keyed_mapspec *mapsp = map? map->mapspec_for_key(rawfeat) : NULL;
     if (mapsp)
