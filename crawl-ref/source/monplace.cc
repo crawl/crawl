@@ -762,6 +762,11 @@ static band_type choose_band( int mon_type, int power, int &band_size )
         }
         break;
 
+    case MONS_PANDEMONIUM_DEMON:
+        band = BAND_PANDEMONIUM_DEMON;
+        band_size = random_range(4, 8);
+        break;
+
     case MONS_HELLWING:
         if (coinflip())
         {
@@ -1013,7 +1018,28 @@ static int band_member(band_type band, int power)
         break;
 
     case BAND_EXECUTIONER:
-        mon_type = (coinflip() ? MONS_ABOMINATION_SMALL : MONS_ABOMINATION_LARGE);
+        mon_type = (coinflip() ? MONS_ABOMINATION_SMALL
+                               : MONS_ABOMINATION_LARGE);
+        break;
+
+    case BAND_PANDEMONIUM_DEMON:
+        if (one_chance_in(7))
+            mon_type = random_choose_weighted(50, MONS_LICH,
+                                              10, MONS_ANCIENT_LICH,
+                                              0);
+        else if (one_chance_in(6))
+            mon_type = random_choose_weighted(50, MONS_ABOMINATION_SMALL,
+                                              40, MONS_ABOMINATION_LARGE,
+                                              10, MONS_TENTACLED_MONSTROSITY,
+                                              0);
+        else
+            mon_type =
+                summon_any_demon(
+                    static_cast<demon_class_type>(
+                        random_choose_weighted(50, DEMON_COMMON,
+                                               20, DEMON_GREATER,
+                                               10, DEMON_RANDOM,
+                                               0)));
         break;
 
     case BAND_HELLWING:
@@ -1204,13 +1230,29 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 
 // PUBLIC FUNCTION -- mons_place().
 
+static int pick_zot_exit_defender()
+{
+    if (one_chance_in(9))
+        return (MONS_PANDEMONIUM_DEMON);
+    
+    const int temp_rand = random2(276);
+    const int mon_type =
+        ((temp_rand > 184) ? MONS_WHITE_IMP + random2(15) :  // 33.33%
+         (temp_rand > 104) ? MONS_HELLION + random2(10) :    // 28.99%
+         (temp_rand > 78)  ? MONS_HELL_HOUND :               //  9.06%
+         (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :        //  8.70%
+         (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :        //  7.61%
+         (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
+                           : MONS_PIT_FIEND);                //  5.07%
+
+    return (mon_type);
+}
+
 int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
                 int px, int py, int level_type, proximity_type proximity,
                 int extra, int dur, bool permit_bands )
 {
     int mon_count = 0;
-    int temp_rand;          // probability determination {dlb}
-
     for (int il = 0; il < MAX_MONSTERS; il++)
     {
         if (menv[il].type != -1)
@@ -1234,15 +1276,8 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
     if (you.char_direction == DIR_ASCENDING && mon_type == RANDOM_MONSTER
         && you.level_type == LEVEL_DUNGEON)
     {
-        temp_rand = random2(276);
-
-        mon_type = ((temp_rand > 184) ? MONS_WHITE_IMP + random2(15) :  // 33.33%
-                 (temp_rand > 104) ? MONS_HELLION + random2(10) :    // 28.99%
-                 (temp_rand > 78)  ? MONS_HELL_HOUND :               //  9.06%
-                 (temp_rand > 54)  ? MONS_ABOMINATION_LARGE :        //  8.70%
-                 (temp_rand > 33)  ? MONS_ABOMINATION_SMALL :        //  7.61%
-                 (temp_rand > 13)  ? MONS_RED_DEVIL                  //  7.25%
-                                   : MONS_PIT_FIEND);                //  5.07%
+        mon_type = pick_zot_exit_defender();
+        permit_bands = true;
     }
 
     if (permit_bands 

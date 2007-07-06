@@ -297,6 +297,7 @@ enum band_type
     BAND_BLINK_FROGS,
     BAND_SKELETAL_WARRIORS,     // 44
     BAND_DRACONIAN,             // 45
+    BAND_PANDEMONIUM_DEMON,
     NUM_BANDS                   // always last
 };
 
