@@ -3192,36 +3192,60 @@ void monsters::ghost_init()
     find_place_to_live();
 }
 
-bool monsters::find_home_in(coord_def s, coord_def e)
+bool monsters::check_set_valid_home(const coord_def &place,
+                                    coord_def &chosen,
+                                    int &nvalid) const
 {
-    for (int iy = s.y; iy <= e.y; ++iy)
+    if (!in_bounds(place))
+        return (false);
+
+    if (place == you.pos())
+        return (false);
+
+    if (mgrd(place) != NON_MONSTER || grd(place) < DNGN_FLOOR)
+        return (false);
+
+    if (one_chance_in(++nvalid))
+        chosen = place;
+
+    return (true);
+}
+
+bool monsters::find_home_around(const coord_def &c, int radius)
+{
+    coord_def place(-1, -1);
+    int nvalid = 0;
+    for (int yi = -radius; yi <= radius; ++yi)
     {
-        for (int ix = s.x; ix <= e.x; ++ix)
-        {
-            if (!in_bounds(ix, iy))
-                continue;
-
-            if (ix == you.x_pos && iy == you.y_pos)
-                continue;
-
-            if (mgrd[ix][iy] != NON_MONSTER || grd[ix][iy] < DNGN_FLOOR)
-                continue;
-
-            x = ix;
-            y = iy;
-            return (true);
-        }
+        const coord_def c1(c.x - radius, c.y + yi);
+        const coord_def c2(c.x + radius, c.y + yi);
+        check_set_valid_home(c1, place, nvalid);
+        check_set_valid_home(c2, place, nvalid);
     }
 
+    for (int xi = -radius + 1; xi < radius; ++xi)
+    {
+        const coord_def c1(c.x + xi, c.y - radius);
+        const coord_def c2(c.x + xi, c.y + radius);
+        check_set_valid_home(c1, place, nvalid);
+        check_set_valid_home(c2, place, nvalid);
+    }
+
+    if (nvalid)
+    {
+        x = place.x;
+        y = place.y;
+        return (true);
+    }
     return (false);
 }
 
 bool monsters::find_place_near_player()
 {
-    return (find_home_in( you.pos() - coord_def(1, 1),
-                          you.pos() + coord_def(1, 1) )
-            || find_home_in( you.pos() - coord_def(6, 6),
-                             you.pos() + coord_def(6, 6) ));
+    for (int radius = 1; radius < 7; ++radius)
+        if (find_home_around(you.pos(), radius))
+            return (true);
+    return (false);
 }
 
 bool monsters::find_home_anywhere()

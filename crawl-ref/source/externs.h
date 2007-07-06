@@ -1034,7 +1034,7 @@ public:
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_place_near_player();
-    bool find_home_in(coord_def s, coord_def e);
+    bool find_home_around(const coord_def &c, int radius);
     bool find_home_anywhere();
         
     void set_ghost(const ghost_demon &ghost);
@@ -1166,6 +1166,9 @@ private:
     bool wants_weapon(const item_def &item) const;
     bool can_throw_rocks() const;
     void lose_pickup_energy();
+    bool check_set_valid_home(const coord_def &place,
+                              coord_def &chosen,
+                              int &nvalid) const;    
 };
 
 struct cloud_struct

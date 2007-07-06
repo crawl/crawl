@@ -154,10 +154,8 @@ bool follower::place(bool near_player)
 #endif
             m.target_x = m.target_y = 0;
 
-            if (m.flags & MF_TAKING_STAIRS)
-                m.flags &= ~MF_TAKING_STAIRS;
-            else
-                m.flags |= MF_JUST_SUMMONED;
+            m.flags &= ~MF_TAKING_STAIRS;
+            m.flags |= MF_JUST_SUMMONED;
             
             restore_mons_items(m);
             return (true);
