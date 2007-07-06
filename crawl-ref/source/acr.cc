@@ -682,6 +682,19 @@ static void handle_wizard_command( void )
                 static_cast<dungeon_feature_type>( atoi(specs) );
         break;
 
+    case ')':
+        mpr("Create which feature (by name)? ", MSGCH_PROMPT);
+        get_input_line(specs, sizeof specs);
+        if (*specs)
+        {
+            const dungeon_feature_type feat = dungeon_feature_by_name(specs);
+            if (feat == DNGN_UNSEEN)
+                canned_msg(MSG_OK);
+            else
+                grd(you.pos()) = feat;
+        }
+        break;
+
     case ']':
         if (!debug_add_mutation())
             mpr( "Failure to give mutation." );

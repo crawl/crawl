@@ -3627,17 +3627,34 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
     es_flags |= ES_ITEM;
 }
 
+// Expensive O(n2) duplicate search, but we can live with that.
+template <class citer> bool explore_discoveries::has_duplicates(
+    citer begin, citer end) const
+{
+    for (citer s = begin; s != end; ++s)
+        for (citer z = s + 1; z != end; ++z)
+            if (*s == *z)
+                return (true);
+    return (false);
+}
+
 template <class C> void explore_discoveries::say_any(
     const C &coll, const char *stub) const
 {
     if (coll.empty())
         return;
+
+    if (has_duplicates(coll.begin(), coll.end()))
+    {
+        mprf(stub, number_in_words(coll.size()).c_str());
+        return;
+    }
     
     const std::string message = "Found " +
         comma_separated_line(coll.begin(), coll.end()) + ".";
     
     if ((int) message.length() >= get_number_of_cols())
-        mprf(stub, coll.size());
+        mprf(stub, number_in_words(coll.size()).c_str());
     else
         mprf("%s", message.c_str());
 }
@@ -3647,10 +3664,10 @@ bool explore_discoveries::prompt_stop() const
     if (!es_flags)
         return (false);
 
-    say_any(items, "Found %u items.");
-    say_any(shops, "Found %u shops.");
-    say_any(altars, "Found %u altars.");
-    say_any(stairs, "Found %u stairs.");
+    say_any(items, "Found %s items.");
+    say_any(shops, "Found %s shops.");
+    say_any(altars, "Found %s altars.");
+    say_any(stairs, "Found %s stairs.");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
             || prompt_stop_explore(es_flags));

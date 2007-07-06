@@ -1,7 +1,15 @@
+/*
+ *  File:       mapdef.cc
+ *  Summary:    Support code for Crawl des files.
+ *
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-30T15:49:18.688054Z $
+ */
+
 #include <iostream>
 #include <cstdarg>
 #include <cstdio>
 #include <cctype>
+#include <algorithm>
 
 #include "AppHdr.h"
 #include "branch.h"
@@ -39,19 +47,6 @@ const char *map_section_name(int msect)
         return "";
 
     return map_section_names[msect];
-}
-
-template <typename V>
-void scramble(V &v)
-{
-    V temp(v);
-    v.clear();
-    while (!temp.empty())
-    {
-        int i = random2(temp.size());
-        v.push_back(temp[i]);
-        temp.erase(temp.begin() + i);
-    }
 }
 
 // Returns true if s contains tag 'tag', and strips out tag from s.
@@ -792,7 +787,7 @@ void map_lines::nsubst(nsubst_spec &spec)
         while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
             positions.push_back(coord_def(pos++, y));
     }
-    scramble(positions);
+    std::random_shuffle(positions.begin(), positions.end(), random2);
 
     int pcount = 0;
     const int psize = positions.size();
@@ -824,17 +819,8 @@ int map_lines::apply_nsubst(std::vector<coord_def> &pos,
 std::string map_lines::block_shuffle(const std::string &s)
 {
     std::vector<std::string> segs = split_string("/", s);
-
-    std::vector<std::string> shuffled;
-    for (int i = 0, size = segs.size(); i < size; ++i)
-    {
-        const int sel = random2(segs.size());
-        
-        shuffled.push_back( segs[ sel ] );
-        segs.erase( segs.begin() + sel );
-    }
-
-    return comma_separated_line(shuffled.begin(), shuffled.end(), "/", "/");
+    std::random_shuffle(segs.begin(), segs.end(), random2);
+    return comma_separated_line(segs.begin(), segs.end(), "/", "/");
 }
 
 std::string map_lines::shuffle(std::string s)

@@ -299,6 +299,8 @@ public:
 
 private:
     template <class C> void say_any(const C &coll, const char *stub) const;
+    template <class citer> bool has_duplicates(citer, citer) const;
+    
     std::string cleaned_feature_description(dungeon_feature_type feature) const;
     void add_item(const item_def &item);
     
@@ -309,6 +311,11 @@ private:
 
         named_thing(const std::string &n, Z t) : name(n), thing(t) { }
         operator std::string () const { return name; }
+
+        bool operator == (const named_thing<Z> &other) const
+        {
+            return (name == other.name);
+        }
     };
 
     int es_flags;
