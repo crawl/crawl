@@ -2214,7 +2214,7 @@ int melee_attack::player_to_hit(bool random_factor)
 void melee_attack::player_stab_check()
 {
     bool roll_needed = true;
-    int  roll = 130;
+    int  roll = 155;
     // This ordering is important!
 
     // not paying attention (but not batty)
@@ -2243,7 +2243,7 @@ void melee_attack::player_stab_check()
     {
         stab_attempt = true;
         if (!mons_sense_invis(def))
-            roll -= 30;
+            roll -= 15;
         stab_bonus = 2;
     }
 
@@ -2263,7 +2263,8 @@ void melee_attack::player_stab_check()
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 
-    if (stab_attempt && you.religion == GOD_SHINING_ONE && !you.duration[DUR_BERSERKER])
+    if (stab_attempt && you.religion == GOD_SHINING_ONE
+        && !you.duration[DUR_BERSERKER])
     {
         if (!yesno("Really attack this helpless creature?", false, 'n'))
         {
