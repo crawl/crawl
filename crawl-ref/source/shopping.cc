@@ -259,7 +259,20 @@ static void in_a_shop( char shoppy )
             goto purchase;
         }
 
-        describe_item( mitm[shop_items[ft]] );
+        // A hack to make the description more useful.
+        // In theory, the user could kill the process at this
+        // point and end up with valid ID for the item.
+        // That's not very useful, though, because it doesn't set
+        // type-ID and once you can access the item (by buying it)
+        // you have its full ID anyway. Worst case, it won't get
+        // noted when you buy it.
+        item_def& item = mitm[shop_items[ft]];
+        const unsigned long old_flags = item.flags;
+        if ( id_stock )
+            item.flags |= ISFLAG_IDENT_MASK;
+        describe_item(item);
+        if ( id_stock )
+            item.flags = old_flags;
 
         goto print_stock;
     }

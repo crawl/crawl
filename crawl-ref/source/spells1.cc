@@ -39,6 +39,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
+#include "randart.h"
 #include "skills2.h"
 #include "spells3.h"
 #include "spells4.h"
@@ -374,7 +375,10 @@ void identify(int power)
             canned_msg( MSG_OK );
             return;
         }
-        if ( fully_identified(you.inv[item_slot]) )
+
+        item_def& item(you.inv[item_slot]);
+
+        if ( fully_identified(item) )
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             if ( Options.auto_list )
@@ -382,13 +386,13 @@ void identify(int power)
             continue;
         }
 
-        set_ident_type( you.inv[item_slot].base_type, 
-                        you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
+        if ( !is_artefact(item) )
+            set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
 
-        set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
+        set_ident_flags( item, ISFLAG_IDENT_MASK );
         
         // output identified item
-        mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 

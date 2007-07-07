@@ -798,7 +798,8 @@ bool acquirement(object_class_type force_class, int agent)
                     if (one_chance_in(3))
                         type_wanted = AMU_RAGE + random2(10);
 
-                    if (get_ident_type(OBJ_JEWELLERY, type_wanted) == ID_UNKNOWN_TYPE)
+                    if (get_ident_type(OBJ_JEWELLERY, type_wanted) ==
+                        ID_UNKNOWN_TYPE)
                     {
                         break;
                     }

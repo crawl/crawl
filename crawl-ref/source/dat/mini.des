@@ -1220,8 +1220,8 @@ ENDMAP
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME: shoalhut_rune
-PLACE: Shoal:5
-TAGS: water_ok
+PLACE: Shoal:$
+TAGS: water_ok has_rune
 MONS: cyclops
 CHANCE: 1000
 MAP
@@ -1237,7 +1237,7 @@ ENDMAP
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME: shoalhut_norune
-PLACE: Shoal:5
+PLACE: Shoal:$
 TAGS: water_ok allow_dup
 MONS: cyclops
 CHANCE: 1000

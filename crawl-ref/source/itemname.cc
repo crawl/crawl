@@ -47,24 +47,6 @@ static bool is_random_name_vowel( char let );
 static char retvow(int sed);
 static char retlet(int sed);
 
-static bool is_tried_type( object_class_type basetype, int subtype )
-{
-    if ( subtype >= 50 )
-        return false;
-
-    switch ( basetype )
-    {
-    case OBJ_SCROLLS:
-        return type_ids[IDTYPE_SCROLLS][subtype] == ID_TRIED_TYPE;
-    case OBJ_POTIONS:
-        return type_ids[IDTYPE_POTIONS][subtype] == ID_TRIED_TYPE;
-    case OBJ_WANDS:
-        return type_ids[IDTYPE_WANDS][subtype] == ID_TRIED_TYPE;
-    default:
-        return false;
-    }
-}
-
 bool is_vowel( const char chr )
 {
     const char low = tolower( chr );
@@ -231,10 +213,10 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    const bool tried = !ident && is_tried_type(this->base_type,this->sub_type);
+    const bool tried = !ident && item_type_tried(*this);
     if ( with_inscription && !(this->inscription.empty()) )
     {
-        buff << " {";        
+        buff << " {";
         if ( tried )
             buff << "tried, ";
         buff << this->inscription << "}";
@@ -1505,14 +1487,36 @@ static item_type_id_type objtype_to_idtype(object_class_type base_type)
     }
 }
 
-bool item_type_known( const item_def &item )
+bool item_type_known( const item_def& item )
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
         return (true);
 
+    // Artefacts have different descriptions from other items,
+    // so we can't use general item knowledge for them.
+    if ( is_artefact(item) )
+        return false;
+
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if ( idt != NUM_IDTYPE && item.sub_type < 50  )
         return ( type_ids[idt][item.sub_type] == ID_KNOWN_TYPE );
+    else
+        return false;
+}
+
+bool item_type_tried( const item_def& item )
+{
+    if ( item_type_known(item) )
+        return false;
+
+    // Well, if we ever put in scroll or potion artefacts, this
+    // might be necessary...
+    if ( is_artefact(item) )
+        return false;
+
+    const item_type_id_type idt = objtype_to_idtype(item.base_type);
+    if (idt != NUM_IDTYPE && item.sub_type < 50)
+        return ( type_ids[idt][item.sub_type] == ID_TRIED_TYPE );
     else
         return false;
 }

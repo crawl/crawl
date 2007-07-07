@@ -1817,7 +1817,7 @@ static std::string describe_stick( const item_def &item )
 
     description.reserve(64);
 
-    if (get_ident_type( OBJ_WANDS, item.sub_type ) != ID_KNOWN_TYPE)
+    if ( !item_type_known(item) )
         description += "A stick. Maybe it's magical. ";
     else
     {
@@ -2150,7 +2150,7 @@ static std::string describe_food( const item_def &item )
 //---------------------------------------------------------------
 static const char* describe_potion( const item_def &item )
 {
-    if (get_ident_type( OBJ_POTIONS, item.sub_type ) != ID_KNOWN_TYPE)
+    if ( !item_type_known(item) )
         return "A small bottle of liquid.$";
 
     switch (static_cast<potion_type>(item.sub_type))
@@ -2233,7 +2233,7 @@ static std::string describe_scroll( const item_def &item )
 
     description.reserve(64);
 
-    if (get_ident_type( OBJ_SCROLLS, item.sub_type ) != ID_KNOWN_TYPE)
+    if ( !item_type_known(item) )
         description += "A scroll of paper covered in magical writing.";
     else
     {
@@ -2401,10 +2401,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
         description += unrandart_descrip(1, item);
         description += "$";
     }
-    else if ((!is_random_artefact( item ) 
-            && get_ident_type( OBJ_JEWELLERY, item.sub_type ) != ID_KNOWN_TYPE)
-        || (is_random_artefact( item ) 
-            && !item_type_known(item)))
+    else if ( !item_type_known(item) )
     {
         description += "A piece of jewellery.";
     }
@@ -3124,7 +3121,7 @@ bool is_dumpable_artefact( const item_def &item, bool verbose)
 {
     bool ret = false;
 
-    if (is_random_artefact( item ) || is_fixed_artefact( item ))
+    if (is_artefact( item ) )
     {
         ret = item_ident( item, ISFLAG_KNOW_PROPERTIES );
     }
@@ -3135,8 +3132,7 @@ bool is_dumpable_artefact( const item_def &item, bool verbose)
         ret = (spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION);
     }
     else if (item.base_type == OBJ_JEWELLERY 
-        && (verbose 
-            && get_ident_type(OBJ_JEWELLERY, item.sub_type) == ID_KNOWN_TYPE))
+        && (verbose && item_type_known(item)))
     {
         ret = true;
     }

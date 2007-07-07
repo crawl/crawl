@@ -2615,7 +2615,8 @@ void zap_wand(void)
         return;
     }
 
-    if (you.inv[item_slot].base_type != OBJ_WANDS)
+    item_def& wand = you.inv[item_slot];
+    if (wand.base_type != OBJ_WANDS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
@@ -2625,22 +2626,22 @@ void zap_wand(void)
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
-    if ( you.inv[item_slot].plus < 1 )
+    if ( wand.plus < 1 )
     {
         // it's an empty wand, inscribe it that way
         canned_msg(MSG_NOTHING_HAPPENS);
-        you.inv[item_slot].plus2 = ZAPCOUNT_EMPTY;
+        wand.plus2 = ZAPCOUNT_EMPTY;
         you.turn_is_over = true;
         return;
     }
 
-    const bool alreadyknown = item_type_known(you.inv[item_slot]);
+    const bool alreadyknown = item_type_known(wand);
     const bool dangerous = player_in_a_dangerous_place();
     if (alreadyknown)
     {
-        if (you.inv[item_slot].sub_type == WAND_HASTING
-            || you.inv[item_slot].sub_type == WAND_HEALING
-            || you.inv[item_slot].sub_type == WAND_INVISIBILITY)
+        if (wand.sub_type == WAND_HASTING
+            || wand.sub_type == WAND_HEALING
+            || wand.sub_type == WAND_INVISIBILITY)
         {
             targ_mode = TARG_FRIEND;
         }
@@ -2669,7 +2670,7 @@ void zap_wand(void)
     // blargh! blech! this is just begging to be a problem ...
     // not to mention work-around after work-around as wands are
     // added, removed, or altered {dlb}:
-    char type_zapped = you.inv[item_slot].sub_type;
+    char type_zapped = wand.sub_type;
 
     if (type_zapped == WAND_ENSLAVEMENT)
         type_zapped = ZAP_ENSLAVEMENT;
@@ -2702,48 +2703,36 @@ void zap_wand(void)
     zapping( static_cast<zap_type>(type_zapped),
              30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
-    if (beam.obvious_effect == 1 || you.inv[item_slot].sub_type == WAND_FIREBALL)
+    if ((beam.obvious_effect || wand.sub_type == WAND_FIREBALL) &&
+        !alreadyknown)
     {
-        if (get_ident_type( you.inv[item_slot].base_type, 
-                            you.inv[item_slot].sub_type ) != ID_KNOWN_TYPE)
-        {
-            set_ident_type( you.inv[item_slot].base_type, 
-                            you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
-
-            mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
-
-            // update if wielding
-            if (you.equip[EQ_WEAPON] == item_slot)
-                you.wield_change = true;
-        }
+        set_ident_type( wand.base_type, wand.sub_type, ID_KNOWN_TYPE );
+        mpr(wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
     else
     {
-        set_ident_type( you.inv[item_slot].base_type, 
-                        you.inv[item_slot].sub_type, ID_TRIED_TYPE );
+        set_ident_type( wand.base_type, wand.sub_type, ID_TRIED_TYPE );
     }
 
     // take off a charge
-    you.inv[item_slot].plus--;
+    wand.plus--;
 
     // increment zap count
-    if ( you.inv[item_slot].plus2 >= 0 )
-        you.inv[item_slot].plus2++;
+    if ( wand.plus2 >= 0 )
+        wand.plus2++;
 
-    if (get_ident_type( you.inv[item_slot].base_type, 
-                        you.inv[item_slot].sub_type ) == ID_KNOWN_TYPE  
-        && (item_ident( you.inv[item_slot], ISFLAG_KNOW_PLUSES )
+    if (item_type_known(wand)
+        && (item_ident( wand, ISFLAG_KNOW_PLUSES )
             || you.skills[SK_EVOCATIONS] > 5 + random2(15)))
     {
-        if (!item_ident( you.inv[item_slot], ISFLAG_KNOW_PLUSES ))
+        if (!item_ident( wand, ISFLAG_KNOW_PLUSES ))
         {
             mpr("Your skill with magical items lets you calculate the power of this device...");
         }
 
         mprf("This wand has %d charge%s left.",
-             you.inv[item_slot].plus, 
-             (you.inv[item_slot].plus == 1) ? "" : "s" );
-        set_ident_flags( you.inv[item_slot], ISFLAG_KNOW_PLUSES );
+             wand.plus, (wand.plus == 1) ? "" : "s" );
+        set_ident_flags( wand, ISFLAG_KNOW_PLUSES );
     }
 
     exercise( SK_EVOCATIONS, 1 );
@@ -3322,15 +3311,16 @@ void read_scroll(void)
         return;
     }
 
-    if (you.inv[item_slot].base_type != OBJ_BOOKS
-        && you.inv[item_slot].base_type != OBJ_SCROLLS)
+    item_def& scroll = you.inv[item_slot];
+
+    if (scroll.base_type != OBJ_BOOKS && scroll.base_type != OBJ_SCROLLS)
     {
         mpr("You can't read that!");
         return;
     }
 
     // here we try to read a book {dlb}:
-    if (you.inv[item_slot].base_type == OBJ_BOOKS)
+    if (scroll.base_type == OBJ_BOOKS)
     {
         handle_read_book( item_slot );
         return;
@@ -3356,16 +3346,16 @@ void read_scroll(void)
     }
 
     // decrement and handle inventory if any scroll other than paper {dlb}:
-    const int scroll_type = you.inv[item_slot].sub_type;
-    if (scroll_type != SCR_PAPER)
+    const int scroll_type = scroll.sub_type;
+    if (scroll_type != SCR_PAPER &&
+        (scroll_type != SCR_IMMOLATION || you.duration[DUR_CONF]))
     {
         mpr("As you read the scroll, it crumbles to dust.");
         // Actual removal of scroll done afterwards. -- bwr
     }
 
-    bool alreadyknown = get_ident_type( OBJ_SCROLLS, you.inv[item_slot].sub_type ) == ID_KNOWN_TYPE;
-
-    bool dangerous = player_in_a_dangerous_place();
+    const bool alreadyknown = item_type_known(scroll);
+    const bool dangerous = player_in_a_dangerous_place();
 
     // scrolls of paper are also exempted from this handling {dlb}:
     if (scroll_type != SCR_PAPER)
@@ -3463,10 +3453,8 @@ void read_scroll(void)
         torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
 
         // is only naughty if you know you're doing it
-        if (get_ident_type( OBJ_SCROLLS, SCR_TORMENT ) == ID_KNOWN_TYPE)
-        {
+        if (!item_type_known(scroll))
             did_god_conduct(DID_UNHOLY, 10);
-        }
         break;
 
     case SCR_IMMOLATION:
@@ -3492,7 +3480,7 @@ void read_scroll(void)
         break;
 
     case SCR_IDENTIFY:
-        if ( get_ident_type( OBJ_SCROLLS, scroll_type ) != ID_KNOWN_TYPE )
+        if ( !item_type_known(scroll) )
         {
             mpr("This is a scroll of identify!");
             more();
