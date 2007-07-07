@@ -15,15 +15,15 @@ ORIENT: float
 SUBST: !:cvxGT
 FLAGS: no_rotate
 MAP
-xxxxxx.@.xxxxxx
-xxxxxx.!.xxxxxx
-xxxxxx...xxxxxx
-xxxxxx.!.xxxxxx
-xxxxxx...xxxxxx
-xxxxxx.!.xxxxxx
-xxxxxx...xxxxxx
-xxxxxx.!.xxxxxx
-xxxxxx...xxxxxx
+     x.@.x
+     x.!.x
+     x...x
+     x.!.x
+     x...x
+     x.!.x
+     x...x
+     x.!.x
+     x...x
 xxxxxx...xxxxxx
 x.............x
 x.............x
@@ -42,11 +42,11 @@ ORIENT: float
 SHUFFLE: {[, abc
 SUBST: a:+=, b=x, c=x
 MAP
-......x@x......
-....xax.xcx....
-...xx.....xx...
-..xb.......bx..
-.xx.........xx.
+      x@x
+    xax.xcx
+   xx.....xx
+  xb.......bx
+ xx.........xx
 xc...........ax
 x.............x
 x......{......x
@@ -54,12 +54,12 @@ x.....[.(.....x
 x......<......x
 x.............x
 xx...........xx
-.xc.........bx.
-..xx.......xx..
-...xa.....xc...
-....xx...xx....
-.....bx.xa.....
-......x@x......
+ xc.........bx
+  xx.......xx
+   xa.....xc
+    xx...xx
+     bx.xa
+      x@x
 ENDMAP
 
 ##############################################################################
@@ -70,24 +70,23 @@ TAGS: entry
 ORIENT: float
 SHUFFLE: {[
 MAP
-xxxxxxxxx
-xxxxxxx{x
-xxxxxxx.x
-xxxxxxx.x
-xxxxxxx.x
+      xxx
+      x{x
+      x.x
+      x.x
+      x.x
 xxxxxxx.xxxxxxx
 x[...........(x
 xxxxxxx.xxxxxxx
-xxxxxxx.x
-xxxxxxx.x
-xxxxxxx.x
-xxxxxxx.xx
-xxxxxxG.Gx
-xxxxxxx.xx
-xxxxxxx.x
-xxxxxxx@x
+      x.x
+      x.x
+      x.x
+     xx.xx
+     xG.Gx
+     xx.xx
+      x.x
+      x@x
 ENDMAP
-# padded to the right with 'x', unfortunately
 
 ##############################################################################
 # lemuel_entry_004
@@ -182,24 +181,24 @@ ORIENT: float
 SUBST: ? = x.
 SHUFFLE: {[(
 MAP  
-xxxxxxxxxxxxxxxxxxx  
-x{xxxxxxxxxxxxxxxxx  
-x..xxxxxxxxxxxx[x?x  
-xx.?xxxxx(xxxx?...x  
-x?..xxxx..xxxx???.x  
+xxx
+x{xx          xxxxx  
+x..xx   xxx  xx[x?x  
+xx.?xxxxx(x  x?...x  
+x?..xxxx..x xx???.x  
 x..?x?..?xxxx?x??.x  
 x.?xx..xxxxx?.....x  
 x.?xx.?xxxx?x.x???x  
 xx..?.xxxx??..xxxxx  
-xxx...?x??x..xxxxxx  
-xxxxx.xx....xxxxxxx  
-xxxxx..x.??xxxxxxxx  
-xxxxxx.?.xxxxxxxxxx  
-xxxxxx..??xxxxxxxxx  
-xxxxxx?x.xxxxxxxxxx  
-xxxxxxx?.?xxxxxxxxx  
-xxxxxxxx..?xxxxxxxx  
-xxxxxxxxxx@xxxxxxxx  
+ xx...?x??x..xx
+  xxx.xx....xx
+    x..x.??xx
+    xx.?.xxx
+     x..??x
+     x?x.xx
+     xx?.?xx
+      xx..?x
+       xxx@x
 ENDMAP
 
 ##############################################################################
@@ -214,18 +213,18 @@ xxxxxxxxxxxxxxx
 x{.....(.....[x
 x.............x
 xx...ccccc...xx
-xx...ccccc...xx
-xxx...ccc...xxx
-xxx...ccc...xxx
-xxxx...c...xxxx
-xxxx...c...xxxx
-xxxxx.....xxxxx
-xxxxx.....xxxxx
-xxxxxx...xxxxxx
-xxxxxx...xxxxxx
-xxxxxx...xxxxxx
-xxxxxx+++xxxxxx
-xxxxxx.@.xxxxxx
+ x...ccccc...x
+ xx...ccc...xx
+  x...ccc...x
+  xx...c...xx
+   x...c...x
+   xx.....xx
+    x.....x
+    xx...xx
+     x...x
+     x...x
+     x+++x
+     x.@.x
 ENDMAP
 
 ##############################################################################

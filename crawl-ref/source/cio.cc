@@ -386,6 +386,21 @@ bool line_reader::is_wordchar(int c)
     return isalnum(c) || c == '_' || c == '-';
 }
 
+void line_reader::kill_to_begin()
+{
+    if (!pos || cur == buffer)
+        return;
+
+    buffer[length] = 0;
+    cursorto(0);
+    wrapcprintf(wrapcol, "%s%*s", cur, cur - buffer, "");
+    memmove(buffer, cur, length - pos);
+    length -= pos;
+    pos = 0;
+    cur = buffer;
+    cursorto(pos);
+}
+
 void line_reader::killword()
 {
     if (!pos || cur == buffer)
@@ -481,6 +496,10 @@ int line_reader::process_key(int ch)
 
     case CONTROL('W'):
         killword();
+        break;
+
+    case CONTROL('U'):
+        kill_to_begin();
         break;
 
     case CK_LEFT:

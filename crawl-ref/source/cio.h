@@ -206,6 +206,7 @@ protected:
     int process_key(int ch);
     void backspace();
     void killword();
+    void kill_to_begin();
 
     bool is_wordchar(int c);
 

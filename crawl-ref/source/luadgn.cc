@@ -227,7 +227,8 @@ bool dlua_chunk::rewrite_chunk_errors(std::string &s) const
     return (true);
 }
 
-std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line) const
+std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line,
+                                             bool skip_body) const
 {
     std::string s = line;
     const std::string contextm = "[string \"" + context + "\"]:";
@@ -235,10 +236,10 @@ std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line) const
     if (ps == std::string::npos)
         return (s);
 
+    const std::string::size_type lns = ps + contextm.length();
     std::string::size_type pe = s.find(':', ps + contextm.length());
     if (pe != std::string::npos)
     {
-        const std::string::size_type lns = ps + contextm.length();
         const std::string line_num = s.substr(lns, pe - lns);
         const int lnum = atoi(line_num.c_str());
         s = s.substr(0, lns) + make_stringf("%d", lnum + first - 1)
@@ -246,19 +247,13 @@ std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line) const
     }
 
     return s.substr(0, ps) + (file.empty()? context : file) + ":"
-        + s.substr(ps + contextm.length());
+        + (skip_body? s.substr(lns, pe - lns)
+                    : s.substr(lns));
 }
 
 std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
 {
-    std::string s = rewrite_chunk_prefix(sorig);
-    const std::string::size_type cpos = s.find(':');
-    if (cpos == std::string::npos)
-        return (s);
-    const std::string::size_type cnpos = s.find(':', cpos + 1);
-    if (cnpos == std::string::npos)
-        return (s);
-    return s.substr(0, cnpos);
+    return rewrite_chunk_prefix(sorig, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////

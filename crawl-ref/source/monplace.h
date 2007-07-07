@@ -81,8 +81,7 @@ int summon_any_demon( demon_class_type demon_class );
 bool place_monster( int &id, int mon_type, int power, beh_type behaviour,
                     int target, bool summoned, int px, int py, bool allow_bands,
                     proximity_type proximity = PROX_ANYWHERE, int extra = 250,
-                    int dur = 0,
-                    const dgn_region_list &proscribed = dgn_region_list() );
+                    int dur = 0, unsigned mmask = 0 );
 
 monster_type rand_dragon( dragon_class_type type );
 

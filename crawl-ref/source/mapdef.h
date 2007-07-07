@@ -176,6 +176,8 @@ public:
 
     map_lines &operator = (const map_lines &);
 
+    bool in_map(const coord_def &pos) const;
+    
     void add_line(const std::string &s);
     std::string add_nsubst(const std::string &st);
     std::string add_subst(const std::string &st);
@@ -500,6 +502,8 @@ public:
 
     void load();
 
+    bool in_map(const coord_def &p) const;
+    
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;

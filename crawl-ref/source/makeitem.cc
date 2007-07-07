@@ -855,7 +855,7 @@ int items( int allow_uniques,       // not just true-false,
            int item_level,          // level of the item, can differ from global
            int item_race,           // weapon / armour racial categories
                                     // item_race also gives type of rune!
-           const dgn_region_list &forbidden) 
+           unsigned mapmask) 
 {
     const bool make_good_item = (item_level == MAKE_GOOD_ITEM);
     
@@ -2864,7 +2864,7 @@ int items( int allow_uniques,       // not just true-false,
             y_pos = random2(GYM);
         }
         while (grd[x_pos][y_pos] != DNGN_FLOOR
-               || !unforbidden(coord_def(x_pos, y_pos), forbidden));
+               || !unforbidden(coord_def(x_pos, y_pos), mapmask));
 
         move_item_to_grid( &p, x_pos, y_pos );
     }

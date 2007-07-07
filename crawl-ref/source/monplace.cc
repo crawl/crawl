@@ -144,7 +144,7 @@ static bool need_moderate_ood(int lev_mons)
 bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                    int target, bool summoned, int px, int py, bool allow_bands,
                    proximity_type proximity, int extra, int dur,
-                   const dgn_region_list &forbidden)
+                   unsigned mmask)
 {
     int band_size = 0;
     int band_monsters[BIG_BAND];        // band monster types
@@ -315,7 +315,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 continue;
 
             // Is the grid verboten?
-            if (!unforbidden( coord_def(px, py), forbidden ))
+            if (!unforbidden( coord_def(px, py), mmask ))
                 continue;
 
             // don't generate monsters on top of teleport traps

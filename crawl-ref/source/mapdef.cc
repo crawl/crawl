@@ -361,6 +361,11 @@ int map_lines::operator () (const coord_def &c) const
     return lines[c.y][c.x];
 }
 
+bool map_lines::in_map(const coord_def &c) const
+{
+    return (lines[c.y][c.x] != ' ');
+}
+
 map_lines &map_lines::operator = (const map_lines &map)
 {
     if (this != &map)
@@ -1102,6 +1107,11 @@ void map_def::reinit()
     // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+}
+
+bool map_def::in_map(const coord_def &c) const
+{
+    return map.in_map(c);
 }
 
 int map_def::glyph_at(const coord_def &c) const

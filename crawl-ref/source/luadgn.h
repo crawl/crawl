@@ -34,7 +34,8 @@ private:
     
 private:
     int check_op(CLua &, int);
-    std::string rewrite_chunk_prefix(const std::string &line) const;
+    std::string rewrite_chunk_prefix(const std::string &line,
+                                     bool skip_body = false) const;
     std::string get_chunk_prefix(const std::string &s) const;
 
 public:

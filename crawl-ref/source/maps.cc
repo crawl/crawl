@@ -192,7 +192,7 @@ static bool bad_map_place(const map_def &map,
         const vault_placement &vp = (*avoid)[i];
         const dgn_region vault(vp.x, vp.y, vp.width, vp.height);
 
-        if (thisvault.overlaps(vault))
+        if (thisvault.overlaps(vault) && thisvault.overlaps(dgn_map_mask))
             return (true);
     }
 

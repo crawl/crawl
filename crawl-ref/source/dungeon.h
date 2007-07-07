@@ -15,6 +15,7 @@
 #define DUNGEON_H
 
 #include "FixVec.h"
+#include "FixAry.h"
 #include "externs.h"
 #include "misc.h"
 #include "travel.h"
@@ -29,6 +30,21 @@ const int MAKE_GOOD_ITEM = 351;
 // map_type[y][x] for large-scale vaults. Keep an eye out for the associated
 // brain-damage. [dshaligram]
 typedef char map_type[MAP_SIDE + 1][MAP_SIDE + 1];
+typedef FixedArray<unsigned short, GXM, GYM> map_mask;
+
+extern map_mask dgn_map_mask;
+
+// Map mask constants.
+
+enum map_mask_type
+{
+    MMT_NONE       = 0x0,
+    MMT_VAULT      = 0x01,    // This is a square in a vault.
+    MMT_NO_ITEM    = 0x02,    // Random items should not be placed here.
+    MMT_NO_MONS    = 0x04,    // Random monsters should not be placed here.
+    MMT_NO_POOL    = 0x08,    // Pool fixup should not be applied here.
+    MMT_NO_DOOR    = 0x10     // No secret-doorisation.
+};
 
 class dgn_region;
 typedef std::vector<dgn_region> dgn_region_list;
@@ -89,6 +105,9 @@ struct dgn_region
     
     bool overlaps(const dgn_region &other) const;
     bool overlaps_any(const dgn_region_list &others) const;
+    bool overlaps(const dgn_region_list &others,
+                  const map_mask &dgn_map_mask) const;
+    bool overlaps(const map_mask &dgn_map_mask) const;
 };
 
 void builder(int level_number, int level_type);
@@ -97,7 +116,7 @@ bool is_wall(int feature);
 bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
 void place_spec_shop(int level_number, int shop_x, int shop_y,
                      int force_s_type, bool representative = false);
-bool unforbidden(const coord_def &c, const dgn_region_list &forbidden);
+bool unforbidden(const coord_def &c, unsigned mask);
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers
@@ -152,7 +171,7 @@ public:
 
     void add_feat(int feat);
     void add_point(const coord_def &pos);
-    coord_def find_first_from(const coord_def &c, const dgn_region_list &vlts);
+    coord_def find_first_from(const coord_def &c, const map_mask &vlts);
     bool points_connected_from(const coord_def &start);
     bool any_point_connected_from(const coord_def &start);
     bool has_exit_from(const coord_def &start);
@@ -166,7 +185,7 @@ protected:
     bool needed_features[NUM_FEATURES];
     std::vector<coord_def> needed_points;
     bool left_vault;
-    dgn_region_list vaults;
+    const map_mask *vaults;
 
     const fgrd &fgrid;
     const bound_check &bcheck;
@@ -175,7 +194,7 @@ protected:
 template <typename fgrd, typename bound_check>
 flood_find<fgrd, bound_check>::flood_find(const fgrd &f, const bound_check &bc)
     : travel_pathfind(), point_hunt(false), want_exit(false),
-      needed_features(), needed_points(), left_vault(true), vaults(),
+      needed_features(), needed_points(), left_vault(true), vaults(NULL),
       fgrid(f), bcheck(bc)
 {
     memset(needed_features, false, sizeof needed_features);
@@ -192,10 +211,10 @@ template <typename fgrd, typename bound_check>
 coord_def
 flood_find<fgrd, bound_check>::find_first_from(
     const coord_def &c,
-    const dgn_region_list &vlts)
+    const map_mask &vlts)
 {
     set_floodseed(c);
-    vaults = vlts;
+    vaults = &vlts;
     return pathfind(RMODE_EXPLORE);
 }
 
@@ -292,7 +311,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
         return (false);
     }
 
-    if (!left_vault && unforbidden(dc, vaults))
+    if (!left_vault && vaults && !(*vaults)(dc))
         left_vault = true;
 
     good_square(dc);
