@@ -4019,3 +4019,29 @@ xxxx=x=x=x=x=x=x=xxxx
 xxxx?x?x?x?x?x?x?xxxx
 xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################
+# Miscellaneous entries
+##############################################################
+
+##############################################################
+# Rooms in the neighbourhood.
+
+NAME: misc_entry_001
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+ xxxxx             xxxxx
+xx...xx           xx...xx
+x.....x           x.....x
+x..(..+     V     +..[..x
+x.....x           x.....x
+xx...xx   xx+xx   xx...xx
+ xxxxx   xx...xx   xxxxx
+         x.....x
+         x..{..x
+         x.....x
+         xx...xx
+          xxxxx
+ENDMAP

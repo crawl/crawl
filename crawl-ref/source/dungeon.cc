@@ -2789,6 +2789,22 @@ static coord_def dig_away_dir(const vault_placement &place,
     bool y_edge =
         pos.y == place.y || pos.y == place.y + place.height - 1;
 
+    // Handle exits in non-rectangular areas.
+    if (!x_edge && !y_edge)
+    {
+        const coord_def rel = pos - coord_def(place.x, place.y);
+        for (int yi = -1; yi <= 1; ++yi)
+            for (int xi = -1; xi <= 1; ++xi)
+            {
+                if (!xi == !yi)
+                    continue;
+
+                const coord_def mv(rel.x + xi, rel.y + yi);
+                if (!place.map.in_map(mv))
+                    return (mv - rel);
+            }
+    }
+
     if (x_edge && y_edge)
     {
         if (coinflip())
@@ -2887,7 +2903,7 @@ static bool map_grid_is_on_edge(const vault_placement &place,
 {
     for (int xi = c.x - 1; xi <= c.x + 1; ++xi)
         for (int yi = c.y - 1; yi <= c.y + 1; ++yi)
-            if (!place.map.in_map(coord_def(xi, yi)))
+            if (!place.map.in_map(coord_def(xi - place.x, yi - place.y)))
                 return (true);
     return (false);
 }
@@ -2929,8 +2945,11 @@ static void pick_float_exits(vault_placement &place,
 
     if (possible_exits.empty())
         return;
-    
-    int nexits = possible_exits.size() / 10 + 1;
+
+    const int npoints = possible_exits.size();
+    int nexits = npoints < 6? npoints : npoints / 8 + 1;
+    if (nexits > 10)
+        nexits = 10;
     while (nexits-- > 0)
     {
         int which_exit = random2( possible_exits.size() );
@@ -3658,8 +3677,9 @@ static bool join_the_dots(
 
         if (early_exit && at != from && grd(at) == DNGN_FLOOR)
             return (true);
-        
-        grd(at) = DNGN_FLOOR;
+
+        if (unforbidden(at, MMT_VAULT))
+            grd(at) = DNGN_FLOOR;
 
         if (join_count > 10000) // just insurance
             return (false);
