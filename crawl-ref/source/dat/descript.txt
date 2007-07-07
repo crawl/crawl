@@ -305,7 +305,10 @@ beast
 A weird and hideous cross between beast and human.
 %%%%
 iron devil
-A hideous humanoid figure with metal skin.
+
+A hideous humanoid figure with metal skin. While it lacks magical
+attacks and is slow of foot, it makes up for these failings with brute
+strength.
 %%%%
 glowing shapeshifter
 A shapeshifter which has lost control over its transformations, and is constantly changing form.
@@ -338,7 +341,9 @@ large skeleton
 A skeleton compelled to unlife by the exercise of necromancy.
 %%%%
 hell knight
-A heavily armoured warrior, in league with the powers of Hell.
+
+A heavily armoured warrior, in league with the powers of Hell, usually
+accompanied by other unsavoury beings of his ilk.
 %%%%
 necromancer
 A wizard specializing in the practice of death magic.
@@ -350,7 +355,7 @@ orc priest
 A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It continually mumbles strange prayers. You should hope that they remain unheard.
 %%%%
 orc high priest
-An exalted servant of the orc god.
+An exalted servant of the orc god Beogh, mumbling fearsome prayers.
 %%%%
 human
 A remarkably nondescript person.  How odd!
@@ -596,7 +601,8 @@ midge
 A small flying demon.
 %%%%
 neqoxec
-A weirdly shaped demon.
+A weirdly shaped demon, pulsing and shifting with mutagenic energies,
+its belly distended with the devoured brains of its victims.
 %%%%
 orange demon
 A bright orange demon with a venomous stinger.
@@ -1225,19 +1231,30 @@ A large lizard with brightly coloured stripes and splotches.
 %%%%
 komodo dragon
 
-An enormous monitor lizard.  It's more than capable of preying on large animals.  Bits of fetid and rotting flesh from its last few meals are stuck in its teeth.
+An enormous monitor lizard. It's more than capable of preying on large
+animals. Bits of fetid and rotting flesh from its last few meals are
+stuck in its teeth.
 %%%%
 orange crystal statue
 
-An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze.
+An intricately carved statue of glittering orange crystal. Its eyes
+fix on yours with a piercing gaze.
+
+It looks brittle.
 %%%%
 silver statue
 
-A beautiful statue of silver. Its eyes glow with an otherworldly radiance.
+A beautiful statue of silvery hue. Its eyes glow with an otherworldly
+radiance.
+
+It looks brittle.
 %%%%
 ice statue
 
-An imposing statue carved in glistening ice. Freezing vapours swirl about it.
+An imposing statue carved in glistening crystalline ice. Freezing
+vapours swirl about it.
+
+It looks brittle.
 %%%%
 Murray
 
@@ -1678,7 +1695,7 @@ This spell covers the caster with chunky scales of stone, the durability of whic
 %%%%
 Shock
 
-This spell throws a bolt of electricity. 
+This spell throws a bouncing bolt of electricity.
 %%%%
 Swiftness
 

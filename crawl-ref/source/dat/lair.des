@@ -215,7 +215,7 @@ ENDMAP
 
 
 ##############################################################################
-# Branch ends: Shoals, Slime Pit, Snake Pit, Swamp
+# Branch ends: Shoal, Slime Pit, Snake Pit, Swamp
 # Note that the Shoals usually have a randomised end map; predrawn maps 
 # (which need not be encompassing) are sometimes used, though.
 ##############################################################################
@@ -223,7 +223,7 @@ ENDMAP
 ##############################################################################
 # Shoals: ranged attackers
 #
-NAME:  Shoals_1
+NAME:  Shoal_1
 PLACE: Shoal:5
 MONS:  cyclops, yaktaur, yaktaur captain
 MAP
@@ -261,7 +261,7 @@ ENDMAP
 ##############################################################################
 # Shoals: fish
 #
-NAME:  Shoals_2
+NAME:  Shoal_2
 PLACE: Shoal:5
 MONS:  cyclops,stone giant
 SUBST: 1 = 1.
@@ -298,7 +298,7 @@ ENDMAP
 ##############################################################################
 # Shoals: statue on rune
 #
-NAME: Shoals_3
+NAME: Shoal_3
 PLACE: Shoal:5
 KMONS: x:ice statue/orange crystal statue/silver statue
 KFEAT: x:O
@@ -311,7 +311,7 @@ ENDMAP
 #
 # You may need controlled flight or apportation to get the liquid rune
 #
-NAME:  Shoals_4
+NAME:  Shoal_4
 PLACE: Shoal:5
 KFEAT: O = w
 ### KITEM: O = liquid rune of Zot
@@ -329,6 +329,40 @@ wwwwwwwww
 .wwwwwwww.
 ..wwwwwww..
 ....wwwww....
+ENDMAP
+
+##############################
+# Shoal hut with rune inside
+#
+# Shoal:$ is hand-hacked to force lots of minivaults.
+NAME: shoalhut_rune
+PLACE: Shoal:$
+TAGS: water_ok has_rune
+MONS: cyclops
+CHANCE: 1000
+MAP
+ x+x 
+xx1xx
+=1O1x
+xx1xx
+ xxx 
+ENDMAP
+
+##############################
+# Shoal hut with no rune inside
+#
+# Shoal:$ is hand-hacked to force lots of minivaults.
+NAME: shoalhut_norune
+PLACE: Shoal:$
+TAGS: water_ok allow_dup
+MONS: cyclops
+CHANCE: 1000
+MAP
+ x+x 
+xx.xx
+=.*1x
+xx1xx
+ xxx 
 ENDMAP
 
 ##############################################################################

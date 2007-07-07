@@ -129,34 +129,29 @@ ENDMAP
 #
 # Lemuel
 #
-NAME: Giant_Chief
-DEPTH: D:11-22, Orc:2-4
-ORIENT: north
-MONS: stone giant, frost giant, fire giant
-MONS: hill giant, cyclops
-MONS: w:50 ogre/w:5 ogre-mage/two-headed ogre
-MONS: wolf/warg
-SUBST: a : x.
-SUBST: b : x.
-SUBST: g : x.
-SUBST: d : x.
-SUBST: ? = x.
-SUBST: ; = .'
-SUBST: e : x.
-SUBST: f : x.
+NAME:    Giant_Chief
+DEPTH:   D:11-22, Orc:2-4
+ORIENT:  north
+MONS:    stone giant, frost giant, fire giant
+MONS:    hill giant, cyclops
+MONS:    w:50 ogre / w:5 ogre-mage / two-headed ogre
+MONS:    wolf / warg
+SHUFFLE: ae / bB / gG / dD
+SUBST:   ; = .' 
 SHUFFLE: 'F1/ww2
 SHUFFLE: w2/l3
-SUBST: C = ?5
-SUBST: 0 = 4 7 8:20 .:20
-SUBST: T = .:50 ~
-SUBST: | : |:30 Z
-SUBST: ! = =?
-KFEAT: Z = floor
-KMONS: Z = hill giant zombie/stone giant zombie/cyclops zombie/titan zombie
-KFEAT: ( = . w:25/~
-KITEM: ( = any weapon good_item
-KMONS: 8 = plant
-KFEAT: 8 = floor
+SUBST:   C = ?5
+SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x. 
+SUBST:   0 = 4 7 8:20 .:20
+SUBST:   T = .:50 ~
+SUBST:   | : |:30 Z
+SUBST:   ! = =+x
+KFEAT:   Z = floor
+KMONS:   Z = hill giant zombie/stone giant zombie/cyclops zombie/titan zombie
+KFEAT:   ( = . w:25 / ~
+KITEM:   ( = any weapon good_item
+KMONS:   8 = plant
+KFEAT:   8 = floor
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -168,19 +163,19 @@ xxxxxxxxx???xxxxxx?***??xxxxxxxxxxxxx.........7...c...444..cccc..........cxxxxxx
 xxxxxxx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+TT+.........5cxxxxxx
 xxxxxx?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cxxxxxx
 xxxxxx.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cxxxxxx
-xxxxxx....<....?!?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cxxxxxx
-xxxxxx?........?xxxxfxxxxxxxx<=$$$TT+.......+TTTTTTTTTTTc(((((c.......***cxxxxxx
-xxxxxxx........?xxfffxxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cxxxxxx
-xxxxxxxxx?...?xxxxfxxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx=xxxxxxxxx
-xxxxxxxxxxx!xxxxxxfxxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxxxxxxx
-xxxxxxxx....xxxxxffxaaaaabbb0;''''''c.......c'''''';0ggggdddddd????xxx||xxxxxxxx
+xxxxxx....<.....=?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cxxxxxx
+xxxxxx?........?xxxx.xxxxxxxx<=$$$TT+.......+TTTTTTTTTTTc(((((c.......***cxxxxxx
+xxxxxxx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cxxxxxx
+xxxxxxxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx=xxxxxxxxx
+xxxxxxxxxxx!xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxxxxxxx
+xxxxxxxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0ggggdddddd????xxx||xxxxxxxx
 xxxxxx...xxxxx???0?aaaaabbbb..;'''''ccc+++ccc''''';...ggggggdddddd???xxxxxxxxxxx
-xxxxxx.xxxx???......aaaabbbbb...;''F,''''''',F'';........ggggggdddd.???xxxxxxxxx
+xxxxxxx.xxx???......aaaabbbbb...;''F,''''''',F'';........ggggggdddd.???xxxxxxxxx
 xxxxxx?!??.....0...aaaa..bbb........;''''''';.........ggggggg.ddd..0...?xxxxxxxx
-xxxxxxx.[........aaaaa....bbbbb.........4...ggggggggggggggg...dddd......??xxxxxx
+xxxxxxx..........aaaaa....bbbbb.........4...ggggggggggggggg...dddd......??xxxxxx
 xxxxxxx?...aaaaaaaaaa.......bbbbbbbbb..0..ggggggggggggggg...0....dd......?xxxxxx
 xxxxxxxaaaaaaaaaaaa.....0.....bbbbbbbbbggggggggggggggg...........dd......?xxxxxx
-xxxxxxxaaaaaaaa.....@..........bbbbb.....gggggggg........@.......d........xxxxxx
+xxxxxxxaaaaaaaa[....@..........bbbbb..@..gggggggg........@.......d.....@..xxxxxx
 ENDMAP
 
 
@@ -613,7 +608,7 @@ xxxxxxxxxx...xx*$....xx..xx....*$xx...xx
 xxxxxxxxxxx...xxxxxxxxx..xxxxxxxxx...xxx
 xxxxxxxxxxxx...xxxxxxxx..xxxxxxxx...xxxx
 xxxxxxxxxxxxx..^................^..xxxxx
-xxxxxxxxxxxxxxxxxxxxxxx^^xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx~~xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 ENDMAP
@@ -645,7 +640,7 @@ xxxxxxxxx....wwvvvv....vv....vvvvww....x
 xxxxxxxxx...wwwv......vvvv......vwww...x
 xxxxxxxxx...wwwv....vv8vv8vv....vwww...x
 xxxxxxxxx..wwwwv...vvvv||vvvv...vwwww..x
-xxxxxxxxx^^wwwwv...vvvv||vvvv...vwwww^^x
+xxxxxxxxx~~wwwwv...vvvv||vvvv...vwwww~~x
 xxxxxxxxx..wwwwv....vv8vv8vv....vwwww..x
 xxxxxxxxx...wwwv......vvvv......vwww...x
 xxxxxxxxx...wwwvvvv....vv....vvvvwww...x
@@ -656,7 +651,7 @@ xxxxxxxxxx.....wwwwwv......vwwwww.....xx
 xxxxxxxxxxx.....wwwwvvvvvvvvwwww.....xxx
 xxxxxxxxxxx.......wwwwwwwwwwww.......xxx
 xxxxxxxxxxxx.........wwwwww.........xxxx
-xxxxxxxxxxxxx.........^..^.........xxxxx
+xxxxxxxxxxxxx.........~..~.........xxxxx
 xxxxxxxxxxxxxxx.......x++x.......xxxxxxx
 xxxxxxxxxxxxxxxxxx...xx..xx...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxx

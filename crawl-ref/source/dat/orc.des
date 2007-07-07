@@ -93,7 +93,13 @@ ENDMAP
 NAME: orc_david_3
 TAGS: orc_entry
 ORIENT: float
-MONS: weight:30 orc / orc warrior / weight:1 orc knight
+#
+: if you.absdepth() >= 10 then
+MONS: weight:20 orc / orc warrior / weight:2 orc knight
+: else
+MONS: weight:30 orc / orc warrior
+: end
+#
 KFEAT: X = armour shop / .
 KFEAT: Y = weapon shop / .
 SUBST: ? = 1 $
@@ -147,8 +153,13 @@ SHUFFLE: EFGH
 SUBST:   E=3
 SUBST:   F=1, G=1, H=1
 MONS:    orc priest / nothing
+: if you.absdepth() >= 10 then
 MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
+: else
+MONS:    orc w:30 / w:10 orc warrior
+: end
 MONS:    orc priest
+MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
 SUBST:   x : cxv
 SHUFFLE: () / XY
 SUBST:   X=., Y=. 
@@ -158,7 +169,7 @@ x.....)O(.....x
 x......F......x
 x2..T.ECG.T..2x
 x2222..H..2222x
-x22222.I.22222x
+x42222.I.22224x
 xxI+IxxxxxI+Ixx
 ...@.......@...
 ENDMAP

@@ -1106,66 +1106,87 @@ ENDMAP
 # Wet chambers - two mutually exclusive versions (Onia Ninara)
 #
 NAME:    onia_ninara_007_chamber_of_wet_secrets
+DEPTH:   8-13
 TAGS:    no_monster_gen no_pool_fixup
 MONS:    centaur, brown snake, electrical eel
 ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
-SUBST:   ; = .:60 w W ?
-KFEAT:   ? = spear trap / blade trap / w:20 floor
-DEPTH:   8-13
+SHUFFLE: !;
+SUBST:   " = .:80 W:30
+SUBST:   ; = .:80 W:30
+SUBST:   ! = w:20 W ? c
+KFEAT:   3 = deep water
+KFEAT:   2 = shallow water / .
+KFEAT:   1 = shallow water / . w:30
+KFEAT:   d = shallow water / .
+KFEAT:   e = shallow water / .
+KFEAT:   ? = spear trap / blade trap
 MAP
 .........
 .ccccccc.
-.c;;2Wdc.
+.c?;2Wdc.
 .ccWccec.
-.c;w;c3c.
-.c;wWccc.
-.cWw;w;c.
-.c;ww;cc.
-.c;w;Wwc.
-.c1wW;wc.
-.c$w?wTc.
-.ccc=ccc.
+.c.w"c3c.
+.c"w"ccc.
+.c.w!;!c.
+.c"w!!;c.
+.c.w!;!c.
+.c1w?T!c.
+.c$w;!!c.
+.cccc=cc.
 .........
 ENDMAP
 
 NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
-TAGS:    no_monster_gen no_pool_fixup
-MONS:    yaktaur captain, grey snake/yellow snake, storm dragon
-ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
-ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds
-SUBST:   ; = .:60 w W ?
-KFEAT:   ? = Zot trap / floor
-SHUFFLE: de
 DEPTH:   20-26
+TAGS:    no_monster_gen no_pool_fixup
+MONS:    yaktaur captain, grey snake, storm dragon
+ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
+ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wound
+SHUFFLE: de, !;
+KFEAT:   3 = deep water / .
+KFEAT:   | = shallow water / .
+KFEAT:   d = shallow water / .
+KFEAT:   e = shallow water / .
+KFEAT:   2 = shallow water 
+SUBST:   ; = .:80 W:30
+SUBST:   " = .:80 W:30
+SUBST:   ! = w:20 W ? c
+KFEAT:   ? = zot trap
 MAP
 .........
 .ccccccc.
-.c;;2Wdc.
+.c?.2Wdc.
 .ccWcc|c.
-.c;w;c3c.
-.c;wWccc.
-.cWw?w;c.
-.c;ww;cc.
-.c;w;Wwc.
-.c1wW;wc.
-.c$w?wUc.
-.ccc=ccc.
+.c"w"c3c.
+.c"w"ccc.
+.c"w!;!c.
+.c"w!?;c.
+.c"w!!;c.
+.c1w;U!c.
+.c$w!!;c.
+.cccc=cc.
 .........
 ENDMAP
+
+
 
 ##############################################################################
 # Loot vs monsters (Onia Ninara)
 #
 NAME:    onia_ninara_009_dug_in_and_dangerous
-DEPTH:   8-26
-SHUFFLE: vcb
-SUBST:   ? = %:90 *:30 |
+DEPTH:   8-26, !Swamp
+SHUFFLE: vcb, AB?/CD!
+SUBST:   A=9, B=8, C=1, D=9
+SUBST:   ? = %:10 *:50 |:60
+SUBST:   ! = %:90 *:30 |:10
+ITEM:    wand of digging/wand of disintegration/ring of teleportation/stone of earth elementals
+# if brown stairs work again, d could be replaced by brown <> occasionally
 MAP
 ...........
 .vvGvvvGvv.
-.v9998999v.
+.vAAABAAAv.
 .xxxxxxxxx.
-.v???v???v.
+.v???d???v.
 .vvGvvvGvv.
 .....@.....
 ENDMAP
@@ -1201,6 +1222,30 @@ www!!!?ww.
 ENDMAP
 
 ##############################
+# Cookie
+#
+NAME: onia_ninara_cookie
+SHUFFLE: ABCDEF
+SUBST: A : !, B : !, C : !, D : !, E : !, F : =, G : ~ l:50 w:50 I
+SUBST: ! : xvcba
+SUBST: H = 0 . ~ , J = 1 0:100 $:20
+ITEM: any jewelry
+MONS: giant eyeball
+MAP
+...........
+..!H!H!H!..
+.!!B!A!F!!.
+.HCJJJ!JEH.
+.!!J!G!J!!.
+.HDJ!d!JDH.
+.!!J!J!J!!.
+.HEJ!JJJCH.
+.!!F!A!B!!.
+..!H!H!H!..
+...........
+ENDMAP
+
+##############################
 # Secret library minivault
 #
 NAME: library
@@ -1213,38 +1258,4 @@ MAP
 .xddx.
 .xxxx.
 ......
-ENDMAP
-
-##############################
-# Shoal hut with rune inside
-#
-# Shoal:$ is hand-hacked to force lots of minivaults.
-NAME: shoalhut_rune
-PLACE: Shoal:$
-TAGS: water_ok has_rune
-MONS: cyclops
-CHANCE: 1000
-MAP
- x+x 
-xx1xx
-=1O1x
-xx1xx
- xxx 
-ENDMAP
-
-##############################
-# Shoal hut with no rune inside
-#
-# Shoal:$ is hand-hacked to force lots of minivaults.
-NAME: shoalhut_norune
-PLACE: Shoal:$
-TAGS: water_ok allow_dup
-MONS: cyclops
-CHANCE: 1000
-MAP
- x+x 
-xx.xx
-=.*1x
-xx1xx
- xxx 
 ENDMAP

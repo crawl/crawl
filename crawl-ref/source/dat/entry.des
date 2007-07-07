@@ -3946,8 +3946,9 @@ ENDMAP
 
 ##############################################################
 # Mini maze
-NAME:    onia_ninara_004_mini_maze
+NAME:    onia_ninara_004_a_mini_maze
 TAGS:    entry
+CHANCE:  5
 ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / potion of water
 SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
@@ -3964,6 +3965,30 @@ x.X...x.......X.x
 xEx.x.x.xxxxx.xFx
 x...x.c...1dx...x
 xxxxxCxxxxxxxx.xx
+x...............x
+x.xxxxxX.Xxxxxx.x
+x.....[x(x{.....x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    onia_ninara_004_b_mini_maze
+TAGS:    entry
+CHANCE:  5
+ORIENT:  float
+ITEM:    apple / sausage / nothing / stone / potion of water / w:30 nothing
+SHUFFLE: ({[ , AB
+SUBST:   A : x , B = = +:20 .:30, X = x=
+MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm 
+MAP
+xxxxxxxxx@xxxxxxx
+x.......A.B.....x
+x.xxxxxBxxxAxxx.x
+x.xd1.......=dx.x
+x.xxxxxxxxxxx1x.x
+x.x...B.......x.x
+x.x.x.x.xxxxxAx.x
+x...x.x...1dx...x
+xxxxx.xxxxxxxx.xx
 x...............x
 x.xxxxxX.Xxxxxx.x
 x.....[x(x{.....x
@@ -4018,6 +4043,190 @@ xxxx.x.x.x.x.x.x.xxxx
 xxxx=x=x=x=x=x=x=xxxx
 xxxx?x?x?x?x?x?x?xxxx
 xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################
+# Handbag
+#
+NAME: onia_ninara_010_handbag
+TAGS: entry
+ORIENT: float
+MONS: w:30 rat / goblin / kobold 
+MONS: w:50 giant bat / w:30 small snake / snake / jackal / w:20 giant cockroach
+SUBST: ! = $ %:30
+SUBST: ? = .:20 ~
+SHUFFLE: ({[<
+MAP
+................
+.xx..xx1x{x..xx.
+.....xxxxxx.....
+.xx1xx2?2?xx1xx.
+.(xx=2?!!2?=xx<.
+.xx1xx2?2?xx1xx.
+.....xxxxxx.....
+.xx..x[x1xx..xx.
+.......@........
+ENDMAP
+
+
+##############################################################################
+# Eino's entry vaults
+##############################################################################
+
+##############################################################
+# It's all downhill from here
+# A few cavern-like entry vaults, nothing fancy..
+#
+NAME:     entry_eino_001_a
+TAGS:     entry no_monster_gen
+ORIENT:   northwest
+FLAGS:    no_rotate
+SUBST:    V = V T:2
+SUBST:    ' : x.
+CHANCE:   5
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx{xxxxxxxxxxx
+xxxxxxxxxx..xxxxxxxxxx
+xxxxxxxxxx(.[xxxxxxxxx
+xxxxxxxxx....'''xxxxxx
+xxxxxxxxx.....'''xxxxx
+xxxxxxxx......''''xxxx
+xxxxxxxx......'''xxxxx
+xxxxxxxx.......'xxxxxx
+xxxxxxx........xxxxxxx
+xxxxxxx.........xxxxx.
+xxxxxxx..............@
+xxxxxxx.........xxxxxx
+xxxxxxx.......V..xxxxx
+xxxxxx...........xxxxx
+xxxxxx.......V.V..xxxx
+xxxxxx.............xxx
+xxxxxxx.....V.V.V...xx
+xxxxxxx..............x
+xxxxxxxx@.@xxxxxxx@.xx
+ENDMAP
+
+NAME:     entry_eino_001_b
+TAGS:     entry no_monster_gen
+ORIENT:   northwest
+FLAGS:    no_rotate
+CHANCE:   5
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx{xxxxxxxx
+xxxxxxxxxxxx..xxxxxxx
+xxxxxxxxxxxx...xxxwxx
+xxxxxxxxxxx....xwwwxx
+xxxxxxxxxxx..wwwwwwxx
+xxxxxxxwwwwwwWwwwxxxx
+xxxxxxwwwwwwww..xxxxx
+xxxxxxwwxx.......xxxx
+xxxxxxxxx........xxxx
+xxxxxxxxx.........xxx
+xxxxxxxxx..........xx
+xxxxxxxxx..........xx
+xxxxxxxxx...........@
+xxxxxxxxxxx.......xxx
+xxxxxxxxxxxxx.@.xxxxx
+ENDMAP
+
+##############################################################
+# It just gets worse - caverns 2
+#
+NAME:     entry_eino_002_a
+TAGS:     entry no_monster_gen
+ORIENT:   northwest
+FLAGS:    no_rotate
+SHUFFLE:  ABC
+SUBST:    A==, B=x, C=x
+SUBST:    % = % .:5
+CHANCE:   2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx{.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx........xxxxxxx.%.%.%.%.%.xxxxx
+xxxxxxxxxxx..........(..xAxxxxBxxxx.xxxxx
+xxxxxxxxxxxxx.................xxxxxBxxxxx
+xxxxxxxxxxxxxxxx......................xxb
+xxxxxxxxxxxxxxxxxxx.............[.......@
+xxxxxxxxxxxxxxxxxxxxxxx.............xxxxb
+xxxxxxxxxxxxxxxxxxxxxxxxxb.@.bxxxxxxxxxxx
+ENDMAP
+
+NAME:     entry_eino_002_b
+TAGS:     entry
+ORIENT:   northeast
+FLAGS:    no_rotate
+SHUFFLE:  bvc
+SUBST:    ' : x.
+CHANCE:   4
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxx{xxxxxxxxx
+xxxxxxxx...xxxxxxxx
+xxxxxx.....xxxxxxxx
+xxxxx.....''xxxxxxx
+xxx.......''xxxxxxx
+xx.........'xxxxxxx
+.......(I...'xxxxxx
+@.....vbc..''xxxxxx
+x....cbv...''xxxxxx
+x....I[....''xxxxxx
+...........'xxxxxxx
+@.........''xxxxxxx
+x........''xxxxxxxx
+xx.....xxxxxxxxxxxx
+xxx.@.xxxxxxxxxxxxx
+ENDMAP
+
+NAME:     entry_eino_002_c
+TAGS:     entry no_monster_gen
+ORIENT:   northeast
+FLAGS:    no_rotate
+SUBST:    ' : x. , " : x. , ? = x.
+CHANCE:   4
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?{xxxxxxxxx
+xxxxxxxxxx""xxxxxxxxxxxxxxx?...?xxxxxxxxx
+xxxxxxxxx""""xxxxxxxxxxx?.......?xxxxxxxx
+xxxxxxx""""""""xxxx?............?xxxxxxxx
+xxxxxx""""""....??.............'xxxxxxxxx
+xxxxx""".....................''xxxxxxxxxx
+xF.(x....................'''''xxxxxxxxxxx
+@.......?..........??.''''''xxxxxxxxxxxxx
+xF.%x..xxx?....[..xxxxx''''xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxF.Fxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################
