@@ -1530,6 +1530,8 @@ int player_AC(void)
                     racial_bonus *= 3;
                 else if (you.piety >= 30)
                     racial_bonus *= 2;
+                else
+                    racial_bonus += 1;
             }
         }
 

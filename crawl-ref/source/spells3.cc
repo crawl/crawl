@@ -956,6 +956,10 @@ bool recall(char type_recalled)
         {
             if (mons_species(monster->type) != MONS_ORC)
                 continue;
+                
+            // does not include charmed orcs
+            if (monster->attitude != ATT_FRIENDLY)
+                continue;
         }
 
         if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty))

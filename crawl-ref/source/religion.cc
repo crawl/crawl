@@ -182,10 +182,11 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "gate yourself to the Abyss" },
     // Beogh
-    { "",
+    { "Beogh supports the use of orcish gear.",
       "smite your foes",
       "gain orcish followers",
-      "recall your orcish followers", "walk on water" }
+      "recall your orcish followers",
+      "walk on water" }
 };
 
 const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -267,10 +268,11 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "gate yourself to the Abyss" },
     // Beogh
-    { "",
+    { "Beogh no longer supports the use of orcish gear.",
       "smite your foes",
       "gain orcish followers",
-      "recall your orcish followers", "walk on water" }
+      "recall your orcish followers",
+      "walk on water" }
 };
 
 
@@ -321,6 +323,12 @@ void dec_penance(god_type god, int val)
             simple_god_message(" seems mollified.", god);
             take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
+
+            // bonuses now once more effective
+            if ( god == GOD_BEOGH && you.religion == GOD_BEOGH)
+            {
+                 you.redraw_armour_class = 1;
+            }
         }
         else
             you.penance[god] -= val;
@@ -334,6 +342,12 @@ void dec_penance(int val)
 
 void inc_penance(int god, int val)
 {
+    // orcish bonuses don't apply under penance
+    if ( god == GOD_BEOGH && you.penance[god] == 0)
+    {
+         you.redraw_armour_class = 1;
+    }
+    
     if (you.penance[god] + val > 200)
         you.penance[god] = 200;
     else

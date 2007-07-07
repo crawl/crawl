@@ -4150,13 +4150,6 @@ void describe_god( god_type which_god, bool give_title )
                         EOL, god_name(which_god));
         }
 
-        if (which_god == GOD_BEOGH && you.piety >= 30)
-        {
-            have_any = true;
-            cprintf( "%s supports the use of orcish gear." EOL, 
-                     god_name(which_god));
-        }
-
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
         {
