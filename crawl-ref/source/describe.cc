@@ -3562,6 +3562,22 @@ void describe_monsters(monsters& mons)
 
     switch (mons.type)
     {
+    case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
+        description << getLongDescription("zombie");
+        break;
+        
+    case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
+        description << getLongDescription("skeleton");
+        break;
+
+    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
+        description << getLongDescription("simulacrum");
+        break;
+
+    case MONS_SPECTRAL_THING:
+        description << getLongDescription("spectral thing");
+        break;
+
     case MONS_ROTTING_DEVIL:
         if (you.species == SP_GHOUL)
             description << "It smells great!";
