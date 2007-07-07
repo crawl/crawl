@@ -1269,7 +1269,7 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
         if (damage)
         {
             mprf( "%s is struck by lightning.",
-                  str_monam( menv[mon], DESC_CAP_THE).c_str());
+                  menv[mon].name(DESC_CAP_THE).c_str());
             player_hurt_monster( mon, damage );
         }
     }
@@ -1373,13 +1373,13 @@ static int distortion_monsters(int x, int y, int pow, int message)
     else if (coinflip())
     {
         mprf("Space bends around %s.",
-             str_monam(*defender, DESC_NOCAP_THE).c_str());
+             defender->name(DESC_NOCAP_THE).c_str());
         specdam += 1 + random2avg( 7, 2 ) + random2(pow) / 40;
     }
     else if (coinflip())
     {
         mprf("Space warps horribly around %s!",
-             str_monam(*defender, DESC_NOCAP_THE ).c_str());
+             defender->name(DESC_NOCAP_THE).c_str());
         specdam += 3 + random2avg( 12, 2 ) + random2(pow) / 25;
     }
     else if (one_chance_in(3))
@@ -1779,7 +1779,7 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
     // why no, there's no message as to which effect happened >:^)
     if (!one_chance_in(4))
     {
-        std::string msg = str_monam(menv[mon], DESC_CAP_THE);
+        std::string msg = menv[mon].name(DESC_CAP_THE);
 
         switch (random2(4))
         {
@@ -2300,7 +2300,7 @@ static int snake_charm_monsters(int x, int y, int pow, int message)
     if (check_mons_resist_magic(&menv[mon], pow))       return 0;
 
     menv[mon].attitude = ATT_FRIENDLY;
-    mprf("%s sways back and forth.",str_monam(menv[mon],DESC_CAP_THE).c_str());
+    mprf("%s sways back and forth.", menv[mon].name(DESC_CAP_THE).c_str());
 
     return 1;
 }
@@ -2358,7 +2358,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         char explode_msg[80];
 
         snprintf( explode_msg, sizeof( explode_msg ), "%s explodes!",
-                  str_monam( menv[mon], DESC_CAP_THE ).c_str() );
+                  menv[mon].name(DESC_CAP_THE).c_str() );
 
         switch (menv[mon].type)
         {
@@ -2921,7 +2921,7 @@ int cast_apportation(int pow)
             mpr( "There are no items there." );
         else if (mons_is_mimic( menv[ mon ].type ))
         {
-            mprf("%s twitches.", str_monam(menv[mon], DESC_CAP_THE).c_str());
+            mprf("%s twitches.", menv[mon].name(DESC_CAP_THE).c_str());
         }
         else 
             mpr( "This spell does not work on creatures." );

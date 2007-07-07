@@ -807,7 +807,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                     auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
             }
 
-            death_source_name = str_monam(*monster, DESC_NOCAP_A, true);
+            death_source_name = monster->name(DESC_NOCAP_A, true);
         }
     }
     else

@@ -927,7 +927,7 @@ void stethoscope(int mwh)
 
     // print type of monster
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
-         str_monam(menv[i], DESC_CAP_THE, true).c_str(),
+         menv[i].name(DESC_CAP_THE, true).c_str(),
          i, menv[i].type, menv[i].x, menv[i].y,
          ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
           (menv[i].attitude == ATT_HOSTILE)  ? "hostile" :
@@ -963,7 +963,7 @@ void stethoscope(int mwh)
          ((menv[i].foe == MHITYOU)            ? "you" :
           (menv[i].foe == MHITNOT)            ? "none" :
           (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
-          : str_monam(menv[menv[i].foe], DESC_PLAIN, true).c_str()),
+          : menv[menv[i].foe].name(DESC_PLAIN, true).c_str()),
          menv[i].foe, 
          menv[i].foe_memory,          
          menv[i].target_x, menv[i].target_y );
@@ -1097,7 +1097,7 @@ void debug_item_scan( void )
                     if (menv[j].inv[k] == i)
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)", 
-                             j, str_monam( menv[j], DESC_CAP_A ).c_str(),
+                             j, menv[j].name(DESC_CAP_A, true).c_str(),
                              menv[j].x, menv[j].y );
                     }
                 }
@@ -1159,7 +1159,7 @@ void debug_item_scan( void )
         if (monster.type == -1)
             continue;
 
-        if (str_monam(monster, DESC_PLAIN, true).find("questionable") !=
+        if (monster.name(DESC_PLAIN, true).find("questionable") !=
             std::string::npos)
         {
             mprf( MSGCH_WARN, "Program bug detected!" );
@@ -1697,7 +1697,7 @@ static std::string fsim_time_string()
 
 static void fsim_mon_stats(FILE *o, const monsters &mon)
 {
-    fprintf(o, "Monster   : %s\n", str_monam(mon, DESC_PLAIN, true).c_str());
+    fprintf(o, "Monster   : %s\n", mon.name(DESC_PLAIN, true).c_str());
     fprintf(o, "HD        : %d\n", mon.hit_dice);
     fprintf(o, "AC        : %d\n", mon.ac);
     fprintf(o, "EV        : %d\n", mon.ev);
@@ -1709,7 +1709,7 @@ static void fsim_title(FILE *o, int mon, int ms)
     fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
             species_name(you.species, you.experience_level),
             you.class_name,
-            str_monam(menv[mon], DESC_PLAIN, true).c_str(),
+            menv[mon].name(DESC_PLAIN, true).c_str(),
             Options.fsim_rounds,
             fsim_time_string().c_str());
     fprintf(o, "Experience: %d\n", you.experience_level);

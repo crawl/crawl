@@ -121,10 +121,6 @@ struct monsterentry
  * *********************************************************************** */
 void init_monsters( FixedVector<unsigned short, 1000>& colour );
 
-// this is the old monam(), ptr_monam()
-std::string str_monam(const monsters& mon, description_level_type desc,
-                      bool force_seen = false);
-
 // this is the old moname()
 std::string mons_type_name(int type, description_level_type desc );
                   

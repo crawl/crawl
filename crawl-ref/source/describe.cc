@@ -3537,7 +3537,7 @@ void describe_monsters(monsters& mons)
 {
     std::ostringstream description;
 
-    description << str_monam( mons, DESC_CAP_A ) << "$$";
+    description << mons.name(DESC_CAP_A) << "$$";
     
     // Note: Nearly all of the "long" descriptions have moved to 
     // mon-data.h, in an effort to give them some locality with the
@@ -3554,7 +3554,7 @@ void describe_monsters(monsters& mons)
     // than what we have today.
     //
     // -peterb 4/14/07
-    description << getLongDescription(str_monam(mons, DESC_PLAIN));
+    description << getLongDescription(mons.name(DESC_PLAIN));
 
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))
@@ -3574,15 +3574,6 @@ void describe_monsters(monsters& mons)
             description << "It smells horrible.";
         break;
 
-    case MONS_GREATER_MUMMY:
-        description << "The embalmed and undead corpse of an ancient ruler.";
-        break;
-
-    case MONS_MUMMY_PRIEST:
-        description << "The embalmed and undead corpse of an ancient "
-            "servant of darkness.";
-        break;
-
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
@@ -3591,17 +3582,21 @@ void describe_monsters(monsters& mons)
         switch (mons.type)
         {
         case MONS_GUARDIAN_NAGA:
-            description << "These nagas are "
-                "often used as guardians by powerful creatures.";
+            description << getLongDescription("naga")
+                        << "$These nagas are often used as guardians "
+                "by powerful creatures.$";
             break;
         case MONS_GREATER_NAGA:
-            description << "It looks strong and aggressive.";
+            description << getLongDescription("naga")
+                        << "$It looks strong and aggressive.$";
             break;
         case MONS_NAGA_MAGE:
-            description << "An eldritch nimbus trails its motions.";
+            description << getLongDescription("naga")
+                        << "$An eldritch nimbus trails its motions.$";
             break;
         case MONS_NAGA_WARRIOR:
-            description << "It bears scars of many past battles.";
+            description << getLongDescription("naga")
+                        << "$It bears scars of many past battles.$";
             break;
         }
         if (you.species == SP_NAGA)
@@ -3658,12 +3653,6 @@ void describe_monsters(monsters& mons)
     case MONS_URUG:
         if (player_can_smell())
             description << "He smells terrible.";
-        break;
-
-    case MONS_SHUGGOTH:
-        description << "A vile creature with an elongated head, spiked tail "
-            "and wicked six-fingered claws. Its awesome strength is matched "
-            "by its umbrage at being transported to this backwater dimension.";
         break;
 
     case MONS_PROGRAM_BUG:

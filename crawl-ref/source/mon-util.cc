@@ -1362,8 +1362,8 @@ void define_monster(int index)
     mons.enchantments.clear();
 }                               // end define_monster()
 
-std::string str_monam(const monsters& mon, description_level_type desc,
-                      bool force_seen)
+static std::string str_monam(const monsters& mon, description_level_type desc,
+                             bool force_seen)
 {
     // Handle non-visible case first
     if ( !force_seen && !player_monster_visible(&mon) )
@@ -1375,7 +1375,6 @@ std::string str_monam(const monsters& mon, description_level_type desc,
         case DESC_NOCAP_THE: case DESC_NOCAP_A: case DESC_PLAIN:
             return "it";
         default:
-            mpr("XXX OOPS!", MSGCH_DIAGNOSTICS);
             return "it (buggy)";
         }
     }
@@ -2839,23 +2838,19 @@ item_def *monsters::shield()
 
 std::string monsters::name(description_level_type desc) const
 {
+    return this->name(desc, false);
+}
+
+std::string monsters::name(description_level_type desc, bool force_vis) const
+{
     const bool possessive =
         (desc == DESC_NOCAP_YOUR || desc == DESC_NOCAP_ITS);
 
     if (possessive)
         desc = DESC_NOCAP_THE;
-    std::string mname = str_monam(*this, desc);
+
+    std::string mname = str_monam(*this, desc, force_vis);
     return (possessive? apostrophise(mname) : mname);
-}
-
-std::string monsters::name(description_level_type desc, bool force_vis) const
-{
-    if (!force_vis || !has_ench(ENCH_INVIS))
-        return (name(desc));
-
-    monsters m = *this;
-    m.del_ench(ENCH_INVIS, true);
-    return (m.name(desc));
 }
 
 std::string monsters::pronoun(pronoun_type pro) const

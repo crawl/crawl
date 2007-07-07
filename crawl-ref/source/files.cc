@@ -929,7 +929,7 @@ static void grab_followers()
 
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "%s is following.",
-                 str_monam(*fmenv, DESC_CAP_THE).c_str());
+                 fmenv->name(DESC_CAP_THE, true).c_str());
 #endif
 
             fmenv->set_transit(level_id::current());

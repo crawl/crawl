@@ -836,7 +836,7 @@ void cast_toxic_radiance(void)
             {
                 // message player re:"miss" where appropriate {dlb}
                 mprf("The light passes through %s.",
-                     str_monam( *monster, DESC_NOCAP_THE ).c_str());
+                     monster->name(DESC_NOCAP_THE).c_str());
             }
         }
     }
@@ -886,7 +886,7 @@ void cast_refrigeration(int pow)
         if (mons_near(monster))
         {
             mprf("You freeze %s.",
-                 str_monam(*monster, DESC_NOCAP_THE).c_str());
+                 monster->name(DESC_NOCAP_THE).c_str());
 
             hurted = roll_dice( dam_dice );
             hurted = mons_adjust_flavoured( monster, beam, hurted );
@@ -944,7 +944,7 @@ void drain_life(int pow)
         if (mons_near(monster))
         {
             mprf("You draw life from %s.",
-                 str_monam(*monster, DESC_NOCAP_THE).c_str());
+                 monster->name(DESC_NOCAP_THE).c_str());
 
             hurted = 3 + random2(7) + random2(pow);
 
@@ -1020,7 +1020,7 @@ int vampiric_drain(int pow, const dist &vmove)
     hurt_monster(monster, inflicted);
 
     mprf("You feel life coursing from %s into your body!",
-         str_monam( *monster, DESC_NOCAP_THE ).c_str());
+         monster->name(DESC_NOCAP_THE).c_str());
 
     print_wounds(monster);
 
@@ -1077,11 +1077,11 @@ char burn_freeze(int pow, char flavour)
          (flavour == BEAM_MISSILE)     ? "crush" :
          (flavour == BEAM_ELECTRICITY) ? "zap"
                                        : "______",
-         str_monam( *monster, DESC_NOCAP_THE ).c_str());
+         monster->name(DESC_NOCAP_THE).c_str());
 
     int hurted = roll_dice( 1, 3 + pow / 3 ); 
 
-    struct bolt beam;
+    bolt beam;
 
     beam.flavour = flavour;
 

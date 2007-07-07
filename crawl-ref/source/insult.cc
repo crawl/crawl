@@ -41,7 +41,7 @@ void init_cap(char * str)
 void imp_taunt( const monsters *mons )
 {
     char buff[80];
-    const std::string mon_name = str_monam( *mons, DESC_CAP_THE );
+    const std::string mon_name = mons->name(DESC_CAP_THE);
 
     snprintf( buff, sizeof(buff), 
               "%s, thou %s!", 
@@ -82,7 +82,7 @@ void demon_taunt( const monsters *mons )
     };
   
     char buff[80];
-    const std::string mon_name = str_monam( *mons, DESC_CAP_THE );
+    const std::string mon_name = mons->name(DESC_CAP_THE);
     const char *voice = sound_list[ mons_shouts(mons->type) ];
 
     if (coinflip())

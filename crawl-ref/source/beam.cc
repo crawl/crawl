@@ -1993,7 +1993,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
     case BEAM_INVISIBILITY:               /* 5 = invisibility */
         // Store the monster name before it becomes an "it" -- bwr
     {
-        const std::string monster_name = str_monam(*monster, DESC_CAP_THE);
+        const std::string monster_name = monster->name(DESC_CAP_THE);
         
         if (!monster->has_ench(ENCH_INVIS)
             && monster->add_ench(ENCH_INVIS))
@@ -2977,7 +2977,7 @@ static std::string beam_zapper(const bolt &beam)
     else if (bsrc == MHITNOT)
         return ("");
     else
-        return str_monam( menv[bsrc], DESC_PLAIN );
+        return menv[bsrc].name(DESC_PLAIN);
 }
 
 // return amount of extra range used up by affectation of the player
@@ -3579,7 +3579,7 @@ static int affect_monster(bolt &beam, monsters *mon)
     {
         mprf(MSGCH_DIAGNOSTICS,
              "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d", 
-             str_monam(*mon, DESC_PLAIN).c_str(),hurt, raw_damage, hurt_final);
+             mon->name(DESC_PLAIN).c_str(), hurt, raw_damage, hurt_final);
     }
 #endif
 
@@ -3664,7 +3664,7 @@ static int affect_monster(bolt &beam, monsters *mon)
              beam.name.c_str(),
              engulfs? "engulfs" : "hits",
              player_monster_visible(&menv[tid])? 
-             str_monam(*mon, DESC_NOCAP_THE).c_str()
+             mon->name(DESC_NOCAP_THE).c_str()
              : "something");
     }
     else

@@ -181,7 +181,7 @@ void mons_trap(struct monsters *monster)
                 if (player_monster_visible( monster ))
                 {
                     msg += " and slices into ";
-                    msg += str_monam( *monster, DESC_NOCAP_THE );
+                    msg += monster->name(DESC_NOCAP_THE);
                 }
                 msg += "!";
                 mpr(msg.c_str());
@@ -291,7 +291,7 @@ void mons_trap(struct monsters *monster)
             mprf("A%s %s %s%s!",
                       beem.name.c_str(), 
                       (damage_taken >= 0) ? "hits" : "misses",
-                      str_monam( *monster, DESC_NOCAP_THE ).c_str(),
+                      monster->name(DESC_NOCAP_THE).c_str(),
                       (damage_taken == 0) ? ", but does no damage" : "");
         }
 
@@ -1204,7 +1204,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    std::string msg = str_monam(*monster, DESC_CAP_THE);
+    std::string msg = monster->name(DESC_CAP_THE);
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!pbolt.name.empty())
@@ -1230,13 +1230,13 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     {
         snprintf( throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
                   (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(), 
-                  str_monam( *monster, DESC_NOCAP_A ).c_str() );
+                  monster->name(DESC_NOCAP_A).c_str() );
     }
     else
     {
         snprintf( throw_buff, sizeof(throw_buff), "Hit by a%s %s thrown by %s",
                   (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(), 
-                  str_monam( *monster, DESC_NOCAP_A ).c_str() );
+                  monster->name(DESC_NOCAP_A).c_str() );
     }
 
     pbolt.aux_source = throw_buff;

@@ -158,25 +158,6 @@ A wizard who didn't want to die, a Lich is a skeletal, desiccated corpse kept al
 mummy
 An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse. It radiates a malign aura to those who intrude on its domain.
 %%%%
-guardian naga
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-"The insensible son of Pandu sank down till he reached the Naga kingdom.
-Nagas, furnished with fangs containing virulent venom, bit him by
-thousands. The vegetable poison, mingled in the blood of the son of the
-Wind god, was neutralised by the snake-poison. The serpents had bitten
-all over his frame, except his chest, the skin of which was so tough that
-their fangs could not penetrate it.
-
-"On regaining consciousness, the son of Kunti burst his bands and began
-to press the snakes down under the ground. A remnant fled for life, and
-going to their king Vasuki, represented, 'O king of snakes, a man drowned
-under the water, bound in chords of shrubs; probably he had drunk poison.
-For when he fell amongst us, he was insensible. But when we began to bite
-him, he regained his senses, and bursting his fetters, commenced laying
-at us. May it please Your Majesty to enquire who is.'"
-	-_The Mahabharata, Sambhava Parva, Section CXXVIII
-%%%%
 ogre
 A larger, uglier and fatter relative of orcs and goblins.
 %%%%
@@ -685,6 +666,10 @@ spatial vortex
 
 A crazily shifting twist in the fabric of reality.
 %%%%
+shuggoth
+
+A vile creature with an elongated head, spiked tail and wicked six-fingered claws. Its awesome strength is matched by its umbrage at being transported to this backwater dimension.
+%%%%
 Pit Fiend
 
 A huge winged fiend with incredibly tough skin.
@@ -719,45 +704,6 @@ A violent and wrathful demon, Cerebov appears as a giant human covered in shinin
 Gloorx Vloq
 
 A shadowy figure clothed in profound darkness.
-%%%%
-naga mage
-
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
-
-"The insensible son of Pandu sank down till he reached the Naga kingdom.
-Nagas, furnished with fangs containing virulent venom, bit him by
-thousands. The vegetable poison, mingled in the blood of the son of the
-Wind god, was neutralised by the snake-poison. The serpents had bitten
-all over his frame, except his chest, the skin of which was so tough that
-their fangs could not penetrate it.
-
-"On regaining consciousness, the son of Kunti burst his bands and began
-to press the snakes down under the ground. A remnant fled for life, and
-going to their king Vasuki, represented, 'O king of snakes, a man drowned
-under the water, bound in chords of shrubs; probably he had drunk poison.
-For when he fell amongst us, he was insensible. But when we began to bite
-him, he regained his senses, and bursting his fetters, commenced laying
-at us. May it please Your Majesty to enquire who is.'"
-	-_The Mahabharata, Sambhava Parva, Section CXXVIII
-%%%%
-naga warrior
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
-
-"The insensible son of Pandu sank down till he reached the Naga kingdom.
-Nagas, furnished with fangs containing virulent venom, bit him by
-thousands. The vegetable poison, mingled in the blood of the son of the
-Wind god, was neutralised by the snake-poison. The serpents had bitten
-all over his frame, except his chest, the skin of which was so tough that
-their fangs could not penetrate it.
-
-"On regaining consciousness, the son of Kunti burst his bands and began
-to press the snakes down under the ground. A remnant fled for life, and
-going to their king Vasuki, represented, 'O king of snakes, a man drowned
-under the water, bound in chords of shrubs; probably he had drunk poison.
-For when he fell amongst us, he was insensible. But when we began to bite
-him, he regained his senses, and bursting his fetters, commenced laying
-at us. May it please Your Majesty to enquire who is.'"
-	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 orc warlord
 
@@ -1037,26 +983,6 @@ spectral thing
 
 A hideous glowing apparition.
 %%%%
-greater naga
-
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
-
-"The insensible son of Pandu sank down till he reached the Naga kingdom.
-Nagas, furnished with fangs containing virulent venom, bit him by
-thousands. The vegetable poison, mingled in the blood of the son of the
-Wind god, was neutralised by the snake-poison. The serpents had bitten
-all over his frame, except his chest, the skin of which was so tough that
-their fangs could not penetrate it.
-
-"On regaining consciousness, the son of Kunti burst his bands and began
-to press the snakes down under the ground. A remnant fled for life, and
-going to their king Vasuki, represented, 'O king of snakes, a man drowned
-under the water, bound in chords of shrubs; probably he had drunk poison.
-For when he fell amongst us, he was insensible. But when we began to bite
-him, he regained his senses, and bursting his fetters, commenced laying
-at us. May it please Your Majesty to enquire who is.'"
-	-_The Mahabharata, Sambhava Parva, Section CXXVIII
-%%%%
 skeletal dragon
 
 A huge undead abomination, pieced together from the broken bones of many dragons.
@@ -1078,10 +1004,12 @@ guardian mummy
 An ancient warrior, embalmed and cursed to walk in undeath for eternity.
 %%%%
 greater mummy
-A greater mummy.
+
+The embalmed and undead corpse of an ancient ruler.
 %%%%
 mummy priest
-A mummy priest.
+
+The embalmed and undead corpse of an ancient servant of darkness.
 %%%%
 centaur warrior
 

@@ -401,7 +401,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         std::string msg;
 
         if (player_monster_visible( &menv[id] ))
-            msg = str_monam( menv[id], DESC_CAP_A );
+            msg = menv[id].name(DESC_CAP_A);
         else if (shoved)
             msg = "Something";
 

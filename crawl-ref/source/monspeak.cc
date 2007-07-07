@@ -156,7 +156,7 @@ bool mons_speaks(const monsters *monster)
     // danger warning... everything else just goes into the talk channel -- bwr
     msg_channel_type msg_type = MSGCH_TALK;
 
-    const std::string m_name = str_monam(*monster, DESC_CAP_THE);
+    const std::string m_name = monster->name(DESC_CAP_THE);
     strcpy(info, m_name.c_str());
 
     if (monster->has_ench(ENCH_INVIS))

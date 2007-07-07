@@ -391,7 +391,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
             take_note(Note(NOTE_KILL_MONSTER,
                            monster->type, mons_friendly(monster),
-                           str_monam(*monster, DESC_NOCAP_A, true).c_str()));
+                           monster->name(DESC_NOCAP_A, true).c_str()));
         }
     }
 
@@ -516,7 +516,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             {
                 mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                      wounded_damaged(monster->type) ? "destroy" : "kill",
-                     str_monam(*monster, DESC_NOCAP_THE).c_str());
+                     monster->name(DESC_NOCAP_THE).c_str());
             }
 
             if (!created_friendly)
@@ -1074,7 +1074,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
             && MONST_INTERESTING(monster))
     {
         take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
-                       str_monam(*monster, DESC_NOCAP_A, true).c_str()));
+                       monster->name(DESC_NOCAP_A, true).c_str()));
     }
 
     // messaging: {dlb}
@@ -1868,7 +1868,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
     {
         char buff[INFO_SIZE];
         snprintf( buff, sizeof(buff), "%s%s", 
-                  str_monam(*monster, descrip).c_str(), event );
+                  monster->name(descrip).c_str(), event );
 
         mpr( buff, channel, param );
         return (true);
@@ -4079,7 +4079,7 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, 
                  "Alerting monster %s at (%d,%d)",
-                 str_monam(*m2, DESC_PLAIN).c_str(), m2->x, m2->y);
+                 m2->name(DESC_PLAIN).c_str(), m2->x, m2->y);
 #endif
             behaviour_event( m2, ME_ALERT, MHITNOT );
         }
@@ -4182,7 +4182,7 @@ void mons_check_pool(monsters *mons, killer_type killer)
         // see if something has fallen into the lava
         if (message)
             mprf("%s falls into the %s!",
-                 str_monam(*mons, DESC_CAP_THE).c_str(),
+                 mons->name(DESC_CAP_THE).c_str(),
                  (grid == DNGN_LAVA ? "lava" : "water"));
 
         if (grid == DNGN_LAVA && mons_res_fire(mons) > 0)
@@ -4690,7 +4690,7 @@ forget_it:
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS,
                  "%s is skipping movement in order to follow.",
-                 str_monam( *monster, DESC_CAP_THE ).c_str() );
+                 monster->name(DESC_CAP_THE).c_str() );
 #endif
             mmov_x = 0;
             mmov_y = 0;
@@ -5041,7 +5041,7 @@ bool message_current_target()
         {
             mprf( MSGCH_PROMPT, "Current target: %s "
                   "(use p/t/f to fire at it again.)",
-                  str_monam(*montarget, DESC_PLAIN).c_str() );
+                  montarget->name(DESC_PLAIN).c_str() );
             return (true);
         }
 
@@ -5167,7 +5167,7 @@ void seen_monster(monsters *monster)
     {
         take_note(
             Note(NOTE_SEEN_MONSTER, monster->type, 0,
-                 str_monam(*monster, DESC_NOCAP_A).c_str()));
+                 monster->name(DESC_NOCAP_A).c_str()));
     }
 }
 

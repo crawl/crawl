@@ -976,10 +976,10 @@ inline static void monster_warning(activity_interrupt_type ai,
 #ifndef DEBUG_DIAGNOSTICS
         if (at.context != "uncharm")
             mprf(MSGCH_WARN, "%s comes into view.",
-                 str_monam(*mon, DESC_CAP_A).c_str());
+                 mon->name(DESC_CAP_A).c_str());
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
-        fs.cprintf("%s (", str_monam(*mon, DESC_PLAIN, true).c_str());
+        fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
         fs.add_glyph( mon );
         fs.cprintf(") in view: (%d,%d), see_grid: %s",
              mon->x, mon->y,

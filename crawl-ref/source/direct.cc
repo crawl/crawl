@@ -1601,7 +1601,7 @@ static void describe_cell(int mx, int my)
 #endif
 
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
-        mprf("%s.", str_monam(menv[i], DESC_CAP_A).c_str());
+        mprf("%s.", menv[i].name(DESC_CAP_A).c_str());
 
         if (menv[i].type != MONS_DANCING_WEAPON)
             describe_monster_weapon(&menv[i]);

@@ -1939,7 +1939,7 @@ bool i_feel_safe(bool announce)
         {
             const monsters &m = *mons[0];
             mprf(MSGCH_WARN, "Not with %s in view!",
-                 str_monam(m, DESC_NOCAP_A).c_str());
+                 m.name(DESC_NOCAP_A).c_str());
         }
         else if (mons.size() > 1)
         {
