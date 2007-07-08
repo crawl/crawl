@@ -576,6 +576,7 @@ public:
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;
     bool has_tag_prefix(const std::string &tag) const;
+    bool has_tag_suffix(const std::string &suffix) const;
 
     std::vector<std::string> get_shuffle_strings() const;
     std::vector<std::string> get_subst_strings() const;

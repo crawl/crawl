@@ -312,12 +312,14 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].is_minivault() == want_minivault
+            && !vdefs[i].place.is_valid()
             && vdefs[i].is_usable_in(place)
-            // Tagged levels cannot be selected by depth. This is
+            // Some tagged levels cannot be selected by depth. This is
             // the only thing preventing Pandemonium demon vaults from
             // showing up in the main dungeon.
-            && !vdefs[i].has_tag("entry")
-            && !vdefs[i].has_tag("pan"))
+            && !vdefs[i].has_tag_suffix("entry")
+            && !vdefs[i].has_tag("pan")
+            && !vdefs[i].has_tag("unrand"))
         {
             rollsize += vdefs[i].chance;
 

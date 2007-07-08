@@ -1645,6 +1645,12 @@ bool map_def::has_tag_prefix(const std::string &prefix) const
         && tags.find(" " + prefix) != std::string::npos;
 }
 
+bool map_def::has_tag_suffix(const std::string &suffix) const
+{
+    return !tags.empty() && !suffix.empty()
+        && tags.find(suffix + " ") != std::string::npos;
+}
+
 keyed_mapspec *map_def::mapspec_for_key(int key)
 {
     keyed_specs::iterator i = keyspecs.find(key);
