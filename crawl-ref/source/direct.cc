@@ -116,7 +116,9 @@ static command_type read_direction_key(bool just_looking = false)
     case 'v': return CMD_TARGET_DESCRIBE;
     case '?': return CMD_TARGET_HELP;
     case ' ': return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
+#ifdef WIZARD
     case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
+#endif
     case ':': return CMD_TARGET_HIDE_BEAM;
     case '\r': return CMD_TARGET_SELECT;
     case '.': return CMD_TARGET_SELECT;
@@ -475,11 +477,13 @@ void direction(dist& moves, targeting_type restricts,
             }
             break;
 
+#ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
             show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
                                  true, ray, (show_beam ? 1 : 0));
             need_beam_redraw = true;
             break;
+#endif
             
         case CMD_TARGET_HIDE_BEAM:
             if (show_beam)
