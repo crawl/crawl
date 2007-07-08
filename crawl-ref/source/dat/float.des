@@ -265,19 +265,19 @@ MONS: large zombie / nothing, mummy, guardian mummy, greater mummy, large zombie
 MONS: mummy / nothing
 SHUFFLE: 2F, cbv
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx3$$xxxxxxxxxxxxx
-ccxxxxxxxxccc=cccccccccxxxx
-cccxxxxxxxc.....c...1$cxxxc
-@Fcx6$.xxxc..1..c...25ccccc
+          xxxxx
+          x3$$x
+cc        ccc=ccccccccc
+cccxxxxx  c.....c...1$c   c
+@Fcx6$.x  c..1..c...25ccccc
 cccccc=cccc.62..c...15c$$$c
 @+111.....+.63..=..F11=4||c
 cccccc=cccc.62..c...15c$$$c
-@Fcx6$.xxxc..1..c...25ccccc
-cccxxxxxxxc.....c...1$cxxxc
-ccxxxxxxxxccc=cccccccccxxxx
-xxxxxxxxxxx3$$xxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+@Fcx6$.x  c..1..c...25ccccc
+cccxxxxx  c.....c...1$c   c
+cc        ccc=ccccccccc
+          x3$$x
+          xxxxx
 ENDMAP
 
 #############################################################################

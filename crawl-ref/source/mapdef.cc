@@ -1221,7 +1221,11 @@ void map_def::read_depth_ranges(FILE *inf)
     depths.clear();
     const int nranges = readShort(inf);
     for (int i = 0; i < nranges; ++i)
-        depths[i].read(inf);
+    {
+        level_range lr;
+        lr.read(inf);
+        depths.push_back(lr);
+    }
 }
 
 void map_def::set_file(const std::string &s)

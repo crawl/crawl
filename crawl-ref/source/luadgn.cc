@@ -259,14 +259,12 @@ std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).
 
-static depth_ranges dgn_default_depths;
-
 #define MAP(ls, n, var)                             \
     map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
 
 void dgn_reset_default_depth()
 {
-    dgn_default_depths.clear();
+    lc_default_depths.clear();
 }
 
 std::string dgn_set_default_depth(const std::string &s)
@@ -276,7 +274,7 @@ std::string dgn_set_default_depth(const std::string &s)
     {
         try
         {
-            dgn_default_depths.push_back( level_range::parse(frags[i]) );
+            lc_default_depths.push_back( level_range::parse(frags[i]) );
         }
         catch (const std::string &error)
         {
@@ -296,7 +294,7 @@ static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)
         {
             try
             {
-                dgn_default_depths.push_back( level_range::parse(frags[j]) );
+                drs.push_back( level_range::parse(frags[j]) );
             }
             catch (const std::string &error)
             {
@@ -331,7 +329,7 @@ static int dgn_depth_proc(lua_State *ls, depth_ranges &dr, int s)
 
 static int dgn_default_depth(lua_State *ls)
 {
-    return dgn_depth_proc(ls, dgn_default_depths, 1);
+    return dgn_depth_proc(ls, lc_default_depths, 1);
 }
 
 static int dgn_depth(lua_State *ls)

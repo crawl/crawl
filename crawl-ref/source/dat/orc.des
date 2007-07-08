@@ -307,16 +307,16 @@ SUBST: ! : .$
 MAP
 x??@....@....@??x
 xx??.........??xx
-xxx??1111111??xxx
-xxxx??11111??xxxx
-xxxxx??111??xxxxx
-xxxxxx??1??xxxxxx
-xxxxxxx?2?xxxxxxx
-xxxxxxxv=vxxxxxxx
-xxxxxxx!!!xxxxxxx
-xxxxxxx!O!xxxxxxx
-xxxxxxx!!!xxxxxxx
-xxxxxxxxxxxxxxxxx
+ xx??1111111??xx
+  xx??11111??xx
+   xx??111??xx
+    xx??1??xx
+     xx?2?xx
+      xv=vx
+      x!!!x
+      x!O!x
+      x!!!x
+      xxxxx
 ENDMAP
 
 #########################
@@ -418,7 +418,7 @@ default-depth: Orc:*
 #
 NAME: mines_dummy
 TAGS: dummy
-CHANCE: 100
+CHANCE: 60
 MAP
 x
 ENDMAP
