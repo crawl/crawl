@@ -2123,11 +2123,12 @@ void debug_card()
 
 // Map statistics generation.
 
-std::map<std::string, int> mapgen_try_count;
-std::map<std::string, int> mapgen_use_count;
-std::map<level_id, int> mapgen_level_maps;
-std::map<std::string, std::string> mapgen_errors;
-std::string mapgen_last_error;
+static std::map<std::string, int> mapgen_try_count;
+static std::map<std::string, int> mapgen_use_count;
+static std::map<level_id, int> mapgen_level_mapcounts;
+static std::map< level_id, std::set<std::string> > mapgen_level_mapsused;
+static std::map<std::string, std::string> mapgen_errors;
+static std::string mapgen_last_error;
 
 static int mg_levels_tried = 0, mg_levels_failed = 0;
 static void mg_build_levels(int niters)
@@ -2171,12 +2172,13 @@ static void mg_build_levels(int niters)
 void mapgen_report_map_try(const map_def &map)
 {
     mapgen_try_count[map.name]++;
-    mapgen_level_maps[level_id::current()]++;
 }
 
 void mapgen_report_map_use(const map_def &map)
 {
     mapgen_use_count[map.name]++;
+    mapgen_level_mapcounts[level_id::current()]++;
+    mapgen_level_mapsused[level_id::current()].insert(map.name);
 }
 
 void mapgen_report_error(const map_def &map, const std::string &err)
@@ -2210,10 +2212,11 @@ static void write_mapgen_stats()
             continue;
 
         const branch_type br = static_cast<branch_type>(i);
-        for (int dep = 1; dep <= branches[i].depth; ++i)
+        for (int dep = 1; dep <= branches[i].depth; ++dep)
         {
             const level_id lid(br, dep);
-            if (mapgen_level_maps.find(lid) == mapgen_level_maps.end())
+            if (mapgen_level_mapcounts.find(lid)
+                    == mapgen_level_mapcounts.end())
                 mapless.push_back(lid);
         }
     }
@@ -2222,7 +2225,35 @@ static void write_mapgen_stats()
     {
         fprintf(outf, "\n\nLevels with no maps:\n");
         for (int i = 0, size = mapless.size(); i < size; ++i)
-            fprintf(outf, "%d) %s\n", i + 1, mapless[i].describe().c_str());
+            fprintf(outf, "%3d) %s\n", i + 1, mapless[i].describe().c_str());
+    }
+
+    fprintf(outf, "\n\nMaps by level:\n\n");
+    for (std::map<level_id, std::set<std::string> >::const_iterator i =
+             mapgen_level_mapsused.begin(); i != mapgen_level_mapsused.end();
+         ++i)
+    {
+        std::string line =
+            make_stringf("%-10s: ", i->first.describe().c_str());
+        const std::set<std::string> &maps = i->second;
+        bool unfinished = false;
+        for (std::set<std::string>::const_iterator j = maps.begin();
+             j != maps.end(); ++j)
+        {
+            if (j != maps.begin())
+                line += ", ";
+            line += *j;
+            if (line.length() > 79)
+            {
+                unfinished = true;
+                break;
+            }
+        }
+
+        const unsigned margin = unfinished? 74 : 79;
+        if (line.length() > margin)
+            line = line.substr(0, margin);
+        fprintf(outf, "%s%s\n", line.c_str(), unfinished? ", ..." : "");
     }
 
     fprintf(outf, "\n\nMaps used:\n\n");

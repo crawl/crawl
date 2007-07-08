@@ -80,14 +80,7 @@ int vault_main(
     // Return value of zero forces dungeon.cc to regenerate the level, except
     // for branch entry vaults where dungeon.cc just rejects the vault and
     // places a vanilla entry.
-    const int result = write_vault( vdefs[which_vault], vgrid, place, avoid );
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (crawl_state.map_stat_gen && result > 0)
-        mapgen_report_map_use(vdefs[which_vault]);
-#endif
-    
-    return (result);
+    return (write_vault( vdefs[which_vault], vgrid, place, avoid ));
 }
 
 static int write_vault(map_def &mdef, map_type map, 

@@ -2665,6 +2665,11 @@ static bool build_minivaults(int level_number, int force_vault)
     vault_zones.push_back(
         dgn_region(place.x, place.y, place.width, place.height));
 
+#ifdef DEBUG_DIAGNOSTICS
+    if (crawl_state.map_stat_gen)
+        mapgen_report_map_use(place.map);
+#endif
+
     apply_place_masks(place);
     
     // these two are throwaways:
@@ -3086,6 +3091,11 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     level_vaults.push_back(place);
     vault_zones.push_back(
         dgn_region(place.x, place.y, place.width, place.height));
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (crawl_state.map_stat_gen)
+        mapgen_report_map_use(place.map);
+#endif    
 
     // If the map takes the whole screen or we were only requested to
     // build, our work is done.
