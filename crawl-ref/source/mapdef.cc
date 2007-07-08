@@ -1093,6 +1093,7 @@ void map_def::init()
     main.clear();
     validate.clear();
     veto.clear();
+    place_loaded_from.clear();
     reinit();
 }
 
@@ -1187,6 +1188,8 @@ void map_def::write_index(FILE *outf) const
         end(1, false, "Map %s: can't write index - cache offset not set!",
             name.c_str());
     writeString(outf, name);
+    writeString(outf, place_loaded_from.filename);
+    writeLong(outf, place_loaded_from.lineno);
     writeShort(outf, orient);
     writeLong(outf, chance);
     writeLong(outf, cache_offset);
@@ -1199,6 +1202,8 @@ void map_def::write_index(FILE *outf) const
 void map_def::read_index(FILE *inf)
 {
     name         = readString(inf);
+    place_loaded_from.filename = readString(inf);
+    place_loaded_from.lineno   = readLong(inf);
     orient       = static_cast<map_section_type>( readShort(inf) );
     chance       = readLong(inf);
     cache_offset = readLong(inf);

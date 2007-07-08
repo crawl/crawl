@@ -384,6 +384,7 @@ map_def     lc_map;
 level_range lc_range;
 depth_ranges lc_default_depths;
 bool lc_run_global_prelude = true;
+map_load_info_t lc_loaded_maps;
 
 std::set<std::string> map_files_read;
 
@@ -468,8 +469,11 @@ static bool load_map_index(const std::string &base)
     vdefs.resize( nexist + nmaps, map_def() );
     for (int i = 0; i < nmaps; ++i)
     {
-        vdefs[nexist + i].read_index(inf);
-        vdefs[nexist + i].set_file(base);
+        map_def &vdef(vdefs[nexist + i]);
+        vdef.read_index(inf);
+        vdef.set_file(base);
+        lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
+        vdef.place_loaded_from.clear();
     }
     fclose(inf);
 
@@ -597,6 +601,7 @@ void read_maps()
 
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
+    lc_loaded_maps.clear();
 }
 
 void add_parsed_map( const map_def &md )

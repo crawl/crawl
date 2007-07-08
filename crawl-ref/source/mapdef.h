@@ -468,6 +468,23 @@ struct dlua_set_map
 class map_def;
 dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat);
 
+struct map_file_place
+{
+    std::string filename;
+    int lineno;
+
+    map_file_place(const std::string &s = "", int line = 0)
+        : filename(s), lineno(line)
+    {
+    }
+
+    void clear()
+    {
+        filename.clear();
+        lineno = 0;
+    }
+};
+
 class map_def
 {
 public:
@@ -486,6 +503,8 @@ public:
     keyed_specs     keyspecs;
 
     dlua_chunk      prelude, main, validate, veto;
+
+    map_file_place  place_loaded_from;
 
     map_def         *original;
 

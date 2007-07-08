@@ -15,21 +15,6 @@ int yylex();
 
 extern int yylineno;
 
-struct map_file_place
-{
-    std::string filename;
-    int lineno;
-
-    map_file_place(const std::string &s = "", int line = 0)
-        : filename(s), lineno(line)
-    {
-    }
-};
-
-typedef std::map<std::string, map_file_place> map_load_info_t;
-
-static map_load_info_t loaded_maps;
-
 void yyerror(const char *e)
 {
     if (strstr(e, lc_desfile.c_str()) == e)
@@ -143,9 +128,9 @@ name            : NAME STRING
                     lc_map.name = $2;
 
                     map_load_info_t::const_iterator i = 
-                        loaded_maps.find($2);
+                        lc_loaded_maps.find($2);
 
-                    if (i != loaded_maps.end())
+                    if (i != lc_loaded_maps.end())
                     {
                         yyerror(
                             make_stringf(
@@ -155,7 +140,9 @@ name            : NAME STRING
                                 i->second.lineno).c_str() );
                     }
 
-                    loaded_maps[$2] = map_file_place(lc_desfile, yylineno);
+                    lc_map.place_loaded_from =
+                        map_file_place(lc_desfile, yylineno);
+                    lc_loaded_maps[$2] = lc_map.place_loaded_from;
                 }
                 ;
 
