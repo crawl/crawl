@@ -2262,7 +2262,7 @@ static void write_mapgen_stats()
              mapgen_try_count.begin(); i != mapgen_try_count.end(); ++i)
         usedmaps.insert(std::pair<int, std::string>(i->second, i->first));
 
-    for (std::multimap<int, std::string>::const_reverse_iterator i =
+    for (std::multimap<int, std::string>::reverse_iterator i =
              usedmaps.rbegin(); i != usedmaps.rend(); ++i)
     {
         const int tries = i->first;
