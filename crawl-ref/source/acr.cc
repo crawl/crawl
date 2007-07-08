@@ -1638,7 +1638,8 @@ static void decrement_durations()
         you.duration[DUR_REPEL_MISSILES]--;
         if (you.duration[DUR_REPEL_MISSILES] == 6)
         {
-            mpr("Your repel missiles spell is about to expire...", MSGCH_DURATION);
+            mpr("Your repel missiles spell is about to expire...",
+                MSGCH_DURATION);
             if (coinflip())
                 you.duration[DUR_REPEL_MISSILES]--;
         }
@@ -1654,7 +1655,8 @@ static void decrement_durations()
         you.duration[DUR_DEFLECT_MISSILES]--;
         if (you.duration[DUR_DEFLECT_MISSILES] == 6)
         {
-            mpr("Your deflect missiles spell is about to expire...", MSGCH_DURATION);
+            mpr("Your deflect missiles spell is about to expire...",
+                MSGCH_DURATION);
             if (coinflip())
                 you.duration[DUR_DEFLECT_MISSILES]--;
         }
@@ -1726,8 +1728,6 @@ static void decrement_durations()
             break;
         case SPWPN_DISTORTION:
             msg += " seems straighter.";
-            // [dshaligram] Makes the brand unusable
-            // miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
             break;
         case SPWPN_PAIN:
             msg += " seems less painful.";
@@ -3016,15 +3016,18 @@ static bool initialise(void)
     // system initialisation stuff:
     textbackground(0);
 
-#ifdef DOS
-    directvideo = 1;
-#endif
-
     clrscr();
 
+#ifdef DEBUG_DIAGNOSTICS
+    if (crawl_state.map_stat_gen)
+    {
+        generate_map_stats();
+        end(0, false);
+    }
+#endif
+    
     // sets up a new game:
     const bool newc = new_game();
-
     if (!newc)
         restore_game();
     

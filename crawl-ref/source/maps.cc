@@ -63,6 +63,8 @@ int vault_main(
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s", 
                             vdefs[which_vault].name.c_str());
+    if (crawl_state.map_stat_gen)
+        mapgen_report_map_try(vdefs[which_vault]);
 #endif
 
     // first, fill in entirely with walls and null-terminate {dlb}:
@@ -78,7 +80,14 @@ int vault_main(
     // Return value of zero forces dungeon.cc to regenerate the level, except
     // for branch entry vaults where dungeon.cc just rejects the vault and
     // places a vanilla entry.
-    return write_vault( vdefs[which_vault], vgrid, place, avoid );
+    const int result = write_vault( vdefs[which_vault], vgrid, place, avoid );
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (crawl_state.map_stat_gen && result > 0)
+        mapgen_report_map_use(vdefs[which_vault]);
+#endif
+    
+    return (result);
 }
 
 static int write_vault(map_def &mdef, map_type map, 
@@ -117,6 +126,10 @@ static bool resolve_map(map_def &map, const map_def &original)
     std::string err = map.run_lua(true);
     if (!err.empty())
     {
+#ifdef DEBUG_DIAGNOSTICS
+        if (crawl_state.map_stat_gen)
+            mapgen_report_error(map, err);
+#endif
         mprf(MSGCH_WARN, "Lua error: %s", err.c_str());
         return (false);
     }

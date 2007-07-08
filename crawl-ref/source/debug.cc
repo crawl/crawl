@@ -51,6 +51,8 @@
 #include "item_use.h"
 #include "items.h"
 #include "makeitem.h"
+#include "mapdef.h"
+#include "maps.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -2116,3 +2118,140 @@ void debug_card()
 }
 
 #endif
+
+#ifdef DEBUG_DIAGNOSTICS
+
+// Map statistics generation.
+
+std::map<std::string, int> mapgen_try_count;
+std::map<std::string, int> mapgen_use_count;
+std::map<level_id, int> mapgen_level_maps;
+std::map<std::string, std::string> mapgen_errors;
+std::string mapgen_last_error;
+
+static int mg_levels_tried = 0, mg_levels_failed = 0;
+static void mg_build_levels(int niters)
+{
+    mesclr();
+    mprf("Generating dungeon map stats");
+    
+    for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
+    {
+        if (branches[br].depth == -1)
+            continue;
+        
+        const branch_type branch = static_cast<branch_type>(br);
+        for (int depth = 1; depth <= branches[br].depth; ++depth)
+        {
+            you.your_level = absdungeon_depth(branch, depth);
+            you.where_are_you = branch;
+            you.level_type = LEVEL_DUNGEON;
+
+            mesclr();
+            mprf("On %s (%d); %d levels, %d failed, %d errors%s, %d maps",
+                 level_id::current().describe().c_str(), niters,
+                 mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+                 mapgen_last_error.empty()? ""
+                 : (" (" + mapgen_last_error + ")").c_str(),
+                 mapgen_use_count.size());
+
+            no_messages mx;
+            for (int i = 0; i < niters; ++i)
+            {
+                if (kbhit() && getch() == ESCAPE)
+                    return;
+                ++mg_levels_tried;
+                if (!builder(you.your_level, you.level_type))
+                    ++mg_levels_failed;
+            }
+        }
+    }
+}
+
+void mapgen_report_map_try(const map_def &map)
+{
+    mapgen_try_count[map.name]++;
+    mapgen_level_maps[level_id::current()]++;
+}
+
+void mapgen_report_map_use(const map_def &map)
+{
+    mapgen_use_count[map.name]++;
+}
+
+void mapgen_report_error(const map_def &map, const std::string &err)
+{
+    mapgen_last_error = err;
+}
+
+static void write_mapgen_stats()
+{
+    FILE *outf = fopen("mapgen.log", "w");
+    fprintf(outf, "Map Generation Stats\n\n");
+    fprintf(outf, "Levels attempted: %d, built: %d, failed: %d\n",
+            mg_levels_tried, mg_levels_tried - mg_levels_failed,
+            mg_levels_failed);
+
+    if (!mapgen_errors.empty())
+    {
+        fprintf(outf, "\n\nMap errors:\n");
+        for (std::map<std::string, std::string>::const_iterator i =
+                 mapgen_errors.begin(); i != mapgen_errors.end(); ++i)
+        {
+            fprintf(outf, "%s: %s\n",
+                    i->first.c_str(), i->second.c_str());
+        }
+    }
+
+    std::vector<level_id> mapless;
+    for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
+    {
+        if (branches[i].depth == -1)
+            continue;
+
+        const branch_type br = static_cast<branch_type>(i);
+        for (int dep = 1; dep <= branches[i].depth; ++i)
+        {
+            const level_id lid(br, dep);
+            if (mapgen_level_maps.find(lid) == mapgen_level_maps.end())
+                mapless.push_back(lid);
+        }
+    }
+
+    if (!mapless.empty())
+    {
+        fprintf(outf, "\n\nLevels with no maps:\n");
+        for (int i = 0, size = mapless.size(); i < size; ++i)
+            fprintf(outf, "%d) %s\n", i + 1, mapless[i].describe().c_str());
+    }
+
+    fprintf(outf, "\n\nMaps used:\n\n");
+    std::multimap<int, std::string> usedmaps;
+    for (std::map<std::string, int>::const_iterator i =
+             mapgen_try_count.begin(); i != mapgen_try_count.end(); ++i)
+        usedmaps.insert(std::pair<int, std::string>(i->second, i->first));
+
+    for (std::multimap<int, std::string>::const_reverse_iterator i =
+             usedmaps.rbegin(); i != usedmaps.rend(); ++i)
+    {
+        const int tries = i->first;
+        std::map<std::string, int>::const_iterator iuse =
+            mapgen_use_count.find(i->second);
+        const int uses = iuse == mapgen_use_count.end()? 0 : iuse->second;
+        if (tries == uses)
+            fprintf(outf, "%4d       : %s\n", tries, i->second.c_str());
+        else
+            fprintf(outf, "%4d (%4d): %s\n", uses, tries, i->second.c_str());
+    }
+    fclose(outf);
+}
+
+void generate_map_stats()
+{
+    // We have to run map preludes ourselves.
+    run_map_preludes();
+    mg_build_levels(SysEnv.map_gen_iters);
+    write_mapgen_stats();
+}
+
+#endif // DEBUG_DIAGNOSTICS

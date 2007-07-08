@@ -110,7 +110,7 @@ struct dgn_region
     bool overlaps(const map_mask &dgn_map_mask) const;
 };
 
-void builder(int level_number, int level_type);
+bool builder(int level_number, int level_type);
 void define_zombie(int mid, int ztype, int cs, int power);
 bool is_wall(int feature);
 bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);

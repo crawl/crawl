@@ -92,6 +92,7 @@ A small twisted demon with a long, sharply pointed tail.
 %%%%
 rat
 Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
+
 How now? a rat? Dead, for a ducat, dead!
      -William Shakespeare, Hamlet, Act III, 4
 %%%%

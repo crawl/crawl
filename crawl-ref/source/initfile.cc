@@ -586,7 +586,7 @@ void game_options::reset_options()
     prev_weapon = WPN_UNKNOWN;
     prev_book = SBT_NO_SELECTION;
     prev_randpick = false;
-    remember_name = false;
+    remember_name = true;
 
 #ifdef USE_ASCII_CHARACTERS
     char_set               = CSET_ASCII;
@@ -2548,6 +2548,7 @@ enum commandline_option_type {
     CLO_SCOREFILE,
     CLO_MORGUE,
     CLO_MACRO,
+    CLO_MAPSTAT,
 
     CLO_NOPS
 };
@@ -2555,7 +2556,7 @@ enum commandline_option_type {
 static const char *cmd_ops[] = { "scores", "name", "race", "class",
                                  "pizza", "plain", "dir", "rc", "tscores",
                                  "vscores", "scorefile", "morgue",
-                                 "macro" };
+                                 "macro", "mapstat" };
 
 const int num_cmd_ops = CLO_NOPS;
 bool arg_seen[num_cmd_ops];
@@ -2671,6 +2672,20 @@ bool parse_args( int argc, char **argv, bool rc_only )
             }
             break;
 
+        case CLO_MAPSTAT:
+            crawl_state.map_stat_gen = true;
+            if (next_is_param)
+            {
+                SysEnv.map_gen_iters = atoi(next_arg);
+                if (SysEnv.map_gen_iters < 1)
+                    SysEnv.map_gen_iters = 1;
+                else if (SysEnv.map_gen_iters > 10000)
+                    SysEnv.map_gen_iters = 10000;
+            }
+            else
+                SysEnv.map_gen_iters = 100;
+            break;
+            
         case CLO_MACRO:
             if (!next_is_param)
                 return (false);
@@ -2707,9 +2722,6 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_CLASS:
             if (!next_is_param)
                 return (false);
-
-            // if (strlen(next_arg) != 1)
-            //    return (false);
 
             if (!rc_only)
             {

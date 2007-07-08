@@ -152,4 +152,12 @@ void debug_set_stats( void );
 
 void debug_card();
 
+#ifdef DEBUG_DIAGNOSTICS
+void generate_map_stats();
+class map_def;
+void mapgen_report_map_try(const map_def &map);
+void mapgen_report_map_use(const map_def &map);
+void mapgen_report_error(const map_def &map, const std::string &err);
+#endif
+
 #endif

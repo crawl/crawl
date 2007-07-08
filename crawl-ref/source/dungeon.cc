@@ -233,7 +233,7 @@ static void place_altars()
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-void builder(int level_number, int level_type)
+bool builder(int level_number, int level_type)
 {
     // N tries to build the level, after which we bail with a capital B.
     int tries = 20;
@@ -243,13 +243,17 @@ void builder(int level_number, int level_type)
         build_dungeon_level(level_number, level_type);
 
         if (!dgn_level_vetoed && valid_dungeon_level(level_number, level_type))
-            return;
+            return (true);
     }
 
-    // Failed to build level, bail out.
-    save_game(true,
-              make_stringf("Unable to generate level for '%s'!",
-                           level_id::current().describe().c_str()).c_str());
+    if (!crawl_state.map_stat_gen)
+    {
+        // Failed to build level, bail out.
+        save_game(true,
+                  make_stringf("Unable to generate level for '%s'!",
+                               level_id::current().describe().c_str()).c_str());
+    }
+    return (false);
 }
 
 static void mask_vault(const vault_placement &place, unsigned mask)

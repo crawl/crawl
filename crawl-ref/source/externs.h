@@ -1278,8 +1278,10 @@ struct game_state
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
 
-    int seen_hups;          // Set to true if SIGHUP received.
+    int  seen_hups;         // Set to true if SIGHUP received.
 
+    bool map_stat_gen;      // Set if we're generating stats on maps.
+    
     bool unicode_ok;        // Is unicode support available?
 
     std::string (*glyph2strfn)(unsigned glyph);
@@ -1290,9 +1292,9 @@ struct game_state
     game_state() : mouse_enabled(false), waiting_for_command(false),
                    terminal_resized(false), io_inited(false), need_save(false),
                    saving_game(false), updating_scores(false),
-                   seen_hups(0), unicode_ok(false), glyph2strfn(NULL),
-                   multibyte_strlen(NULL), terminal_resize_handler(NULL),
-                   terminal_resize_check(NULL)
+                   seen_hups(0), map_stat_gen(false), unicode_ok(false),
+                   glyph2strfn(NULL), multibyte_strlen(NULL),
+                   terminal_resize_handler(NULL), terminal_resize_check(NULL)
     {
     }
 
@@ -1351,6 +1353,8 @@ struct system_environment
 
     std::string scorefile;
     std::vector<std::string> cmd_args;
+
+    int map_gen_iters;
 };
 
 extern system_environment SysEnv;
