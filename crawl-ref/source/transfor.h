@@ -17,6 +17,7 @@
 #include "FixVec.h"
 #include "enum.h"
 
+bool transform_can_butcher_barehanded(transformation_type tt);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

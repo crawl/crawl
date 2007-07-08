@@ -53,7 +53,7 @@ static void finish_delay(const delay_queue_item &delay);
 // other delays can be spawned while this delay is running. If is_parent_delay
 // returns true, new delays will be pushed immediately to the front of the
 // delay in question, rather than at the end of the queue.
-static bool is_parent_delay(int delay)
+static bool is_parent_delay(delay_type delay)
 {
     // Interlevel travel can do upstairs/downstairs delays.
     // Lua macros can in theory perform any of the other delays,
@@ -99,7 +99,7 @@ static void clear_pending_delays()
     }
 }
 
-void start_delay( int type, int turns, int parm1, int parm2 )
+void start_delay( delay_type type, int turns, int parm1, int parm2 )
 /***********************************************************/
 {
     delay_queue_item delay;
@@ -253,13 +253,19 @@ void stop_delay( void )
         update_turn_count();
 }
 
+void stop_butcher_delay()
+{
+    if (current_delay_action() == DELAY_BUTCHER)
+        stop_delay();
+}
+
 bool you_are_delayed( void )
 /**************************/
 {
     return (!you.delay_queue.empty());
 }
 
-int current_delay_action( void )
+delay_type current_delay_action( void )
 /******************************/
 {
     return (you_are_delayed() ? you.delay_queue.front().type 
@@ -827,6 +833,8 @@ static void handle_run_delays(const delay_queue_item &delay)
         break;
     case DELAY_TRAVEL:
         cmd = travel();
+        break;
+    default:
         break;
     }
 

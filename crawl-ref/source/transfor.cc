@@ -20,6 +20,7 @@
 
 #include "externs.h"
 
+#include "delay.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
@@ -367,6 +368,11 @@ bool transform(int pow, transformation_type which_trans)
     return (false);
 }                               // end transform()
 
+bool transform_can_butcher_barehanded(transformation_type tt)
+{
+    return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON);
+}
+
 void untransform(void)
 {
     FixedVector < char, 8 > rem_stuff;
@@ -382,7 +388,9 @@ void untransform(void)
     you.colour = LIGHTGREY;
 
     // must be unset first or else infinite loops might result -- bwr
-    const int old_form = you.attribute[ ATTR_TRANSFORMATION ];
+    const transformation_type old_form =
+        static_cast<transformation_type>(you.attribute[ ATTR_TRANSFORMATION ]);
+    
     you.attribute[ ATTR_TRANSFORMATION ] = TRAN_NONE;
     you.duration[ DUR_TRANSFORMATION ] = 0;
 
@@ -456,8 +464,14 @@ void untransform(void)
         modify_stat(STAT_STRENGTH, -13, true);
         hp_downscale = 17;
         break;
+
+    default:
+        break;
     }
 
+    if (transform_can_butcher_barehanded(old_form))
+        stop_butcher_delay();
+    
     // If nagas wear boots while transformed, they fall off again afterwards:
     // I don't believe this is currently possible, and if it is we
     // probably need something better to cover all possibilities.  -bwr

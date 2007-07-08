@@ -478,10 +478,10 @@ struct run_check_dir
 
 struct delay_queue_item
 {
-    int  type;
-    int  duration;
-    int  parm1;
-    int  parm2;
+    delay_type  type;
+    int         duration;
+    int         parm1;
+    int         parm2;
 };
 
 

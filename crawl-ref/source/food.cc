@@ -44,6 +44,7 @@
 #include "skills2.h"
 #include "spells2.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "tutorial.h"
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
@@ -188,13 +189,16 @@ bool butchery(void)
     bool new_cursed = false;
     int old_weapon = you.equip[EQ_WEAPON];
 
-    bool barehand_butcher = (you.equip[ EQ_GLOVES ] == -1)
-      && (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS ||
-          you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
-          (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE &&
-           (you.species == SP_TROLL ||
-            you.species == SP_GHOUL ||
-            you.mutation[MUT_CLAWS])));
+    const transformation_type transform =
+        static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
+    
+    bool barehand_butcher =
+        (you.equip[ EQ_GLOVES ] == -1
+         && (transform_can_butcher_barehanded(transform)
+             || (transform == TRAN_NONE
+                 && (you.species == SP_TROLL
+                     || you.species == SP_GHOUL
+                     || you.mutation[MUT_CLAWS]))));
 
     bool gloved_butcher = (you.species == SP_TROLL ||
                            you.species == SP_GHOUL ||

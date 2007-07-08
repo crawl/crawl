@@ -14,14 +14,15 @@
 
 #include "enum.h"
 
-void start_delay( int type, int turns, int parm1 = 0, int parm2 = 0 );
-void stop_delay( void ); 
+void start_delay( delay_type type, int turns, int parm1 = 0, int parm2 = 0 );
+void stop_delay( void );
 bool you_are_delayed( void ); 
-int  current_delay_action( void ); 
+delay_type current_delay_action( void ); 
 void handle_delay( void );
 
 bool is_run_delay(int delay);
 bool is_being_butchered(const item_def &item);
+void stop_butcher_delay();
 
 const char *activity_interrupt_name(activity_interrupt_type ai);
 activity_interrupt_type get_activity_interrupt(const std::string &);
