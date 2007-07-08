@@ -1729,8 +1729,9 @@ bool melee_attack::apply_damage_brand()
         {
             // declaring these just to pass to the enchant function
             bolt beam_temp;
+            beam_temp.thrower = KILL_YOU;
             beam_temp.flavour = BEAM_CONFUSION;        
-            mons_ench_f2( def, beam_temp );            
+            mons_ench_f2( def, beam_temp );
         }
         
         you.duration[DUR_CONFUSING_TOUCH] -= random2(20);

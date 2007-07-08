@@ -366,13 +366,44 @@ static void check_kill_milestone(const monsters *mons,
 }
 #endif // DGL_MILESTONES
 
+static void give_adjusted_experience(monsters *monster, killer_type killer,
+                                     bool pet_kill)
+{
+    if (YOU_KILL(killer))
+        gain_exp( exper_value( monster ) );
+    else if (pet_kill)
+        gain_exp( exper_value( monster ) / 2 + 1 );
+}
+
+static bool is_pet_kill(killer_type killer, int i)
+{
+    if (!MON_KILL(killer))
+        return (false);
+
+    if (i == ANON_FRIENDLY_MONSTER)
+        return (true);
+
+    if (i < 0 || i >= MAX_MONSTERS)
+        return (false);
+
+    const monsters *m = &menv[i];
+    if (mons_friendly(m))
+        return (true);
+
+    // Check if the monster was confused by you or a friendly, which
+    // makes casualties to this monster collateral kills.
+    const mon_enchant me = m->get_ench(ENCH_CONFUSION);
+    return (me.ench == ENCH_CONFUSION
+            && (me.who == KC_YOU || me.who == KC_FRIENDLY));
+}
+
 void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 {
     if (monster->type == -1)
         return;
     
-    int monster_killed = monster_index(monster);
-    bool death_message =
+    const int monster_killed = monster_index(monster);
+    const bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
@@ -380,6 +411,15 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 #ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
 #endif
+
+    // Award experience for suicide if the suicide was caused by the
+    // player.
+    if (MON_KILL(killer) && monster_killed == i)
+    {
+        const mon_enchant me = monster->get_ench(ENCH_CONFUSION);
+        if (me.ench == ENCH_CONFUSION && me.who == KC_YOU)
+            killer = KILL_YOU_CONF;
+    }
 
     // Take note!
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
@@ -394,7 +434,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                            monster->name(DESC_NOCAP_A, true).c_str()));
         }
     }
-
     
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
@@ -426,11 +465,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (you.prev_targ == monster_killed)
         you.prev_targ = MHITNOT;
 
-    const bool pet_kill =
-        (MON_KILL(killer)
-         && (i == ANON_FRIENDLY_MONSTER ||
-             ((i >= 0 && i < 200) 
-              && mons_friendly(&menv[i]))));
+    const bool pet_kill = is_pet_kill(killer, i);
 
     if (monster->type == MONS_GIANT_SPORE
         || monster->type == MONS_BALL_LIGHTNING)
@@ -446,12 +481,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
-        {
-            if (YOU_KILL(killer))
-                gain_exp( exper_value( monster ) );
-            else if (pet_kill)
-                gain_exp( exper_value( monster ) / 2 + 1 );
-        }
+            give_adjusted_experience(monster, killer, pet_kill);
 
         if (monster->type == MONS_FIRE_VORTEX)
             place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
@@ -462,17 +492,12 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     {
         if (!silent)
             simple_monster_message(
-                monster, " vaporizes!", MSGCH_MONSTER_DAMAGE,
+                monster, " vapourises!", MSGCH_MONSTER_DAMAGE,
                 MDAM_DEAD );
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
-        {
-            if (YOU_KILL(killer))
-                gain_exp( exper_value( monster ) );
-            else if (pet_kill)
-                gain_exp( exper_value( monster ) / 2 + 1 );
-        }
-
+            give_adjusted_experience(monster, killer, pet_kill);
+        
         place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
                     monster->kill_alignment());
     }
@@ -495,12 +520,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
-        {
-            if (YOU_KILL(killer))
-                gain_exp( exper_value( monster ) );
-            else if (pet_kill)
-                gain_exp( exper_value( monster ) / 2 + 1 );
-        }
+            give_adjusted_experience(monster, killer, pet_kill);
     }
     else
     {
@@ -508,6 +528,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         {
         case KILL_YOU:          /* You kill in combat. */
         case KILL_YOU_MISSILE:  /* You kill by missile or beam. */
+        case KILL_YOU_CONF:     /* You kill by confusion */
         {
             bool created_friendly = 
                         testbits(monster->flags, MF_CREATED_FRIENDLY);
@@ -732,6 +753,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // fall-through
 
         case KILL_DISMISSED:
+        default:
             monster->destroy_inventory();
             break;
         }
@@ -739,7 +761,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
     if (monster->type == MONS_MUMMY)
     {
-        if (YOU_KILL(killer))
+        if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
         {
             if (curse_an_item(true))
                 mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
@@ -749,7 +771,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
              || monster->type == MONS_GREATER_MUMMY
              || monster->type == MONS_MUMMY_PRIEST)
     {
-        if (YOU_KILL(killer))
+        if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
         {
             mpr("You feel extremely nervous for a moment...",
                 MSGCH_MONSTER_SPELL);
@@ -821,10 +843,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     }
 
     if (!hard_reset)
-        monster_drop_ething(monster, 
-                            killer == KILL_YOU_MISSILE 
-                            || killer == KILL_YOU
-                            || pet_kill);
+        monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
     monster_cleanup(monster);
 }                                                   // end monster_die
 
@@ -4165,7 +4184,7 @@ static void do_move_monster(monsters *monster, int xi, int yi)
         mons_check_pool(monster);
 }
 
-void mons_check_pool(monsters *mons, killer_type killer)
+void mons_check_pool(monsters *mons, killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
     const int lev = mons->levitates();
@@ -4207,8 +4226,14 @@ void mons_check_pool(monsters *mons, killer_type killer)
                         mons, " drowns.",
                         MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             }
-            
-            monster_die(mons, killer, 0, true);
+
+            if (killer == KILL_NONE)
+            {
+                // Self-kill.
+                killer  = KILL_MON;
+                killnum = monster_index(mons);
+            }
+            monster_die(mons, killer, killnum, true);
         }
     }
 }

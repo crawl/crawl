@@ -1713,7 +1713,7 @@ static int intoxicate_monsters(int x, int y, int pow, int garbage)
     if (mons_res_poison(&menv[mon]) > 0)
         return 0;
 
-    menv[mon].add_ench(ENCH_CONFUSION);
+    menv[mon].add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
     return 1;
 }                               // end intoxicate_monsters()
 
@@ -1779,7 +1779,7 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
         break;
     case 1:
     case 4:
-        menv[mon].add_ench(ENCH_CONFUSION);
+        menv[mon].add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU));
         break;
     case 2:
     case 5:

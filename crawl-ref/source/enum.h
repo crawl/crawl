@@ -1707,16 +1707,19 @@ enum kill_category
 
 enum killer_type                       // monster_die(), thing_thrown
 {
-    KILL_YOU = 1,                      //    1
+    KILL_NONE = 0,
+    KILL_YOU,                          //    1
     KILL_MON,
     KILL_YOU_MISSILE,
     KILL_MON_MISSILE,
+    KILL_YOU_CONF,
     KILL_MISC,                         //    5
     KILL_RESET,                        // abjuration, etc.
     KILL_DISMISSED                     // only on new game startup
 };
 
-#define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE)
+#define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
+                     || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 
 enum launch_retval

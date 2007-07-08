@@ -136,8 +136,8 @@ static kill_category whose_kill(const bolt &beam)
     {
         if (beam.beam_source >= 0 && beam.beam_source < MAX_MONSTERS)
         {
-            const monsters &mons = menv[beam.beam_source];
-            if (mons.attitude == ATT_FRIENDLY)
+            const monsters *mons = &menv[beam.beam_source];
+            if (mons_friendly(mons))
                 return (KC_FRIENDLY);
         }
     }
@@ -1851,6 +1851,8 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin )
     if (pow > 200)
         pow = 200;
 
+    const kill_category kc = origin == MHITYOU? KC_YOU : KC_OTHER;
+
     for (i = 0; i < MAX_MONSTERS; i++)
     {
         monster = &menv[i];
@@ -1864,7 +1866,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin )
         if (monster_resists_mass_enchantment(monster, wh_enchant, pow))
             continue;        
 
-        if (monster->add_ench(wh_enchant))
+        if (monster->add_ench(mon_enchant(wh_enchant, 0, kc)))
         {
             if (player_monster_visible( monster ))
             {
@@ -1927,7 +1929,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         // not hasted, slow it
         if (!monster->has_ench(ENCH_SLOW)
             && !mons_is_stationary(monster)
-            && monster->add_ench(ENCH_SLOW))
+            && monster->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill(pbolt))))
         {
             if (!mons_is_paralysed(monster)
                 && simple_monster_message(monster, " seems to slow down."))
@@ -1981,7 +1983,8 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
 
     case BEAM_CONFUSION:                   /* 4 = confusion */
-        if (monster->add_ench(ENCH_CONFUSION))
+        if (monster->add_ench(
+                mon_enchant(ENCH_CONFUSION, 0, whose_kill(pbolt))))
         {
             // put in an exception for fungi, plants and other things you won't
             // notice becoming confused.
@@ -2048,7 +2051,7 @@ static void beam_paralyses_monster(bolt &pbolt, monsters *monster)
         if (simple_monster_message(monster, " suddenly stops moving!"))
             pbolt.obvious_effect = true;
 
-        mons_check_pool(monster, pbolt.killer());
+        mons_check_pool(monster, pbolt.killer(), pbolt.beam_source);
     }
 }
 
