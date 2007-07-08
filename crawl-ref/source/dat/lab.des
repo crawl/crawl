@@ -171,6 +171,7 @@ KFEAT: f = axe trap / dart trap / needle trap / blade trap
 KFEAT: D = teleport trap
 KFEAT: E = teleport trap
 KFEAT: F = floor
+CHANCE: 1
 MAP
 ............
 .ccccccccccc.
@@ -200,6 +201,7 @@ SUBST: G=., H=., I=., J=., K=., L=., N=.
 SUBST: x=<, y=., z=.
 KITEM: X = any good_item, any good_item, any good_item, any good_item, any good_item, any good_item, any good_item, any good_item, any good_item
 SUBST: Y=*, Z=*
+CHANCE: 2
 MAP
 ............
 .vvvvvvvvvvv.
@@ -282,7 +284,7 @@ MAP
 ENDMAP
 
 ############################################################################
-# Teaser: unaccessable loot
+# Teaser: inaccessible loot
 NAME: labyrinth_statues
 TAGS: lab
 MAP
@@ -292,21 +294,6 @@ MAP
 .G||G.
 .GGGG.
 ......
-ENDMAP
-
-############################################################################
-# The other minotaur's lava lair
-NAME: labyrinth_lava_lair
-TAGS: lab
-MONS: minotaur
-MAP
-.......
-.lllll.
-.l***l.
-.l*1*l.
-.l***l.
-.lllll.
-.......
 ENDMAP
 
 ############################################################################
@@ -330,14 +317,13 @@ ENDMAP
 # Teaser: fake exit
 NAME: labyrinth_fake_exit
 TAGS: lab
-MONS: minotaur
-KFEAT: X =  gate * Abyss
+KFEAT: X = gate * Abyss
 MAP
 ........
 .vvvvvv.
 .v...Xv.
 .v.vvvv
-.v.1..v.
+.v....v.
 .vvvv+v.
 ........
 ENDMAP
