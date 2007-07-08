@@ -3305,9 +3305,12 @@ static item_make_species_type give_weapon(monsters *mon, int level,
             break;
         }
         // deliberate fall-through
+    case MONS_URUG:
+        item_race = MAKE_ITEM_ORCISH;
+        // fall through
+        
     case MONS_NORBERT:
     case MONS_JOZEF:
-    case MONS_URUG:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_DRACONIAN_KNIGHT:
@@ -3681,8 +3684,6 @@ static void give_ammo(monsters *mon, int level,
                             SPMSL_CURARE
                           : SPMSL_POISONED);
 
-        mitm[thing_created].flags = 0;
-
         // Master archers get double ammo - archery is their only attack.
         if (mon->type == MONS_DEEP_ELF_MASTER_ARCHER)
             mitm[thing_created].quantity *= 2;
@@ -3721,7 +3722,7 @@ static void give_ammo(monsters *mon, int level,
         case MONS_URUG:
             weap_type  = MI_JAVELIN;
             weap_class = OBJ_MISSILES;
-            item_race = MAKE_ITEM_ORCISH;
+            item_race  = MAKE_ITEM_ORCISH;
             qty = random_range(4, 7);
             break;
         }
@@ -3734,7 +3735,6 @@ static void give_ammo(monsters *mon, int level,
         if (thing_created != NON_ITEM)
         {
             mitm[thing_created].quantity = qty;
-            mitm[thing_created].flags    = 0;
             give_monster_item(mon, thing_created, false,
                               &monsters::pickup_throwable_weapon);
         }
