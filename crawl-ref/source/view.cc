@@ -610,9 +610,209 @@ static bool mons_was_seen_this_turn(const monsters *mons)
             monsters_seen_this_turn.end());
 }
 
+static void beogh_follower_convert(monsters *monster)
+{
+    // for followers of Beogh, decide whether orcs will join you
+    if (mons_species(monster->type) == MONS_ORC
+        && you.religion == GOD_BEOGH
+        && !(monster->flags & MF_CONVERT_ATTEMPT)
+        // && !mons_is_unique(monster->type) // does not work on Blork
+        && monster->foe == MHITYOU
+        && mons_player_visible(monster) && !mons_is_sleeping(monster)
+        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+    {
+        monster->flags |= MF_CONVERT_ATTEMPT;
+
+        const int hd = monster->hit_dice;
+
+        if (you.piety >= 75 && !you.penance[GOD_BEOGH] &&
+            random2(you.piety/9) > random2(hd) + hd + random2(5))
+        {
+            int wpn = you.equip[EQ_WEAPON];
+            if (wpn != -1
+                && you.inv[wpn].base_type == OBJ_WEAPONS
+                && get_weapon_brand( you.inv[wpn] ) == SPWPN_ORC_SLAYING
+                && coinflip()) // 50% chance of conversion failing
+            {
+                msg::stream << monster->name(DESC_CAP_THE)
+                            << " flinches from your weapon."
+                            << std::endl;
+                return;
+            }
+                       
+            if (player_monster_visible(monster)) // show reaction
+            {
+                std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+                chan << monster->name(DESC_CAP_THE);
+                       
+                // FIXME what about female monsters?
+                switch (random2(3))
+                {
+                case 0:
+                    chan << " stares at you in amazement and kneels.";
+                    break;
+                case 1:
+                    chan << " relaxes his fighting stance and smiles at you.";
+                    break;
+                case 2:
+                    chan << " falls on his knees before you.";
+                    break;
+                }
+                chan << std::endl;
+
+                if (!one_chance_in(3))
+                {
+                    std::ostream& tchan = msg::streams(MSGCH_TALK);
+                    tchan << "He ";
+                    switch (random2(4))
+                    {
+                    case 0:
+                        tchan << "shouts, \"I'll follow thee gladly!\"";
+                        break;
+                    case 1:
+                        tchan << "shouts, \"Surely Beogh must have "
+                            "sent you!\"";
+                        break;
+                    case 2:
+                        tchan << "asks, \"Are you our saviour?\"";
+                        break;
+                    case 3:
+                        tchan << "says, \"I'm so glad you are here now.\"";
+                        break;
+                    }
+                    tchan << std::endl;
+                }
+            }
+
+            monster->attitude = ATT_FRIENDLY;
+            monster->behaviour = BEH_GOD_GIFT; // alternative to BEH_FRIENDLY
+            // not really "created" friendly, but should it become
+            // hostile later on, it won't count as a good kill
+            monster->flags |= MF_CREATED_FRIENDLY;
+            monster->flags |= MF_GOD_GIFT;
+                   
+            // to avoid immobile "followers"
+            behaviour_event(monster, ME_ALERT, MHITYOU);
+        }
+    }
+    else if (mons_species(monster->type) == MONS_ORC
+             && you.species == SP_HILL_ORC
+             && !(you.religion == GOD_BEOGH)
+//                     && monster->foe == MHITYOU
+             && monster->attitude == ATT_FRIENDLY
+             && (monster->flags & MF_CONVERT_ATTEMPT)
+             && (monster->flags & MF_GOD_GIFT)
+             && mons_player_visible(monster) && !mons_is_sleeping(monster)
+             && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+    {      // reconversion if no longer Beogh
+                
+        monster->attitude = ATT_HOSTILE;
+        monster->behaviour = BEH_HOSTILE;
+        // CREATED_FRIENDLY stays -> no piety bonus on killing these
+                
+        // give message only sometimes
+        if (player_monster_visible(monster) && random2(4)) 
+        {
+            msg::streams(MSGCH_MONSTER_ENCHANT)
+                << monster->name(DESC_CAP_THE)
+                << " deserts you."
+                << std::endl;
+        }
+    }
+}
+
+static void handle_monster_shouts(monsters* monster)
+{
+    if (you.turn_is_over
+        && mons_shouts(monster->type) != S_SILENT
+        && random2(30) >= you.skills[SK_STEALTH])
+    {
+        int noise_level = 8; 
+
+        if (!mons_friendly(monster)
+            && (!silenced(you.x_pos, you.y_pos) 
+                && !silenced(monster->x, monster->y)))
+        {
+            if (mons_is_demon( monster->type ) && coinflip())
+            {
+                if (monster->type == MONS_IMP
+                    || monster->type == MONS_WHITE_IMP
+                    || monster->type == MONS_SHADOW_IMP)
+                {
+                    imp_taunt( monster );
+                }
+                else
+                {
+                    demon_taunt( monster );
+                }
+            }
+            else
+            {
+                std::string msg = "You hear ";
+                switch (mons_shouts(monster->type))
+                {
+                case S_SILENT:
+                case NUM_SHOUTS:
+                case S_RANDOM:
+                    msg += "buggy behaviour!";
+                    break;
+                case S_SHOUT:
+                    msg += "a shout!";
+                    break;
+                case S_BARK:
+                    msg += "a bark!";
+                    break;
+                case S_SHOUT2:
+                    msg += "two shouts!";
+                    noise_level = 12;
+                    break;
+                case S_ROAR:
+                    msg += "a roar!";
+                    noise_level = 12;
+                    break;
+                case S_SCREAM:
+                    msg += "a hideous shriek!";
+                    break;
+                case S_BELLOW:
+                    msg += "a bellow!";
+                    break;
+                case S_SCREECH:
+                    msg += "a screech!";
+                    break;
+                case S_BUZZ:
+                    msg += "an angry buzzing noise.";
+                    break;
+                case S_MOAN:
+                    msg += "a chilling moan.";
+                    break;
+                case S_WHINE:
+                    msg += "an irritating high-pitched whine.";
+                    break;
+                case S_CROAK:
+                    if (coinflip())
+                        msg += "a loud, deep croak!";
+                    else
+                        msg += "a croak.";
+                    break;
+                case S_GROWL:
+                    msg += "an angry growl!";
+                    break;
+                case S_HISS:
+                    msg += "an angry hiss!";
+                    noise_level = 4;  // not very loud -- bwr
+                    break;
+                }
+                msg::streams(MSGCH_SOUND) << msg << std::endl;
+            }
+        }
+
+        noisy( noise_level, monster->x, monster->y );
+    }
+}
+
 void monster_grid(bool do_updates)
 {
-    struct monsters *monster = 0;       // NULL {dlb}
+    monsters *monster = NULL;
 
     for (int s = 0; s < MAX_MONSTERS; s++)
     {
@@ -623,95 +823,10 @@ void monster_grid(bool do_updates)
             if (do_updates 
                 && (monster->behaviour == BEH_SLEEP
                      || monster->behaviour == BEH_WANDER) 
-                && check_awaken(s))
+                && check_awaken(monster))
             {
                 behaviour_event( monster, ME_ALERT, MHITYOU );
-
-                if (you.turn_is_over
-                    && mons_shouts(monster->type) > 0
-                    && random2(30) >= you.skills[SK_STEALTH])
-                {
-                    int noise_level = 8; 
-
-                    if (!mons_friendly(monster)
-                        && (!silenced(you.x_pos, you.y_pos) 
-                            && !silenced(monster->x, monster->y)))
-                    {
-                        if (mons_is_demon( monster->type ) && coinflip())
-                        {
-                            if (monster->type == MONS_IMP
-                                || monster->type == MONS_WHITE_IMP
-                                || monster->type == MONS_SHADOW_IMP)
-                            {
-                                imp_taunt( monster );
-                            }
-                            else
-                            {
-                                demon_taunt( monster );
-                            }
-                        }
-                        else
-                        {
-                            std::string msg = "You hear ";
-                            switch (mons_shouts(monster->type))
-                            {
-                            case S_SILENT:
-                            default:
-                                msg += "buggy behaviour!";
-                                break;
-                            case S_SHOUT:
-                                msg += "a shout!";
-                                break;
-                            case S_BARK:
-                                msg += "a bark!";
-                                break;
-                            case S_SHOUT2:
-                                msg += "two shouts!";
-                                noise_level = 12;
-                                break;
-                            case S_ROAR:
-                                msg += "a roar!";
-                                noise_level = 12;
-                                break;
-                            case S_SCREAM:
-                                msg += "a hideous shriek!";
-                                break;
-                            case S_BELLOW:
-                                msg += "a bellow!";
-                                break;
-                            case S_SCREECH:
-                                msg += "a screech!";
-                                break;
-                            case S_BUZZ:
-                                msg += "an angry buzzing noise.";
-                                break;
-                            case S_MOAN:
-                                msg += "a chilling moan.";
-                                break;
-                            case S_WHINE:
-                                msg += "an irritating high-pitched whine.";
-                                break;
-                            case S_CROAK:
-                                if (coinflip())
-                                    msg += "a loud, deep croak!";
-                                else
-                                    msg += "a croak.";
-                                break;
-                            case S_GROWL:
-                                msg += "an angry growl!";
-                                break;
-                            case S_HISS:
-                                msg += "an angry hiss!";
-                                noise_level = 4;  // not very loud -- bwr
-                                break;
-                            }
-
-                            mpr(msg.c_str(), MSGCH_SOUND);
-                        }
-                    }
-
-                    noisy( noise_level, monster->x, monster->y );
-                }
+                handle_monster_shouts(monster);
             }
 
             const int ex = monster->x - you.x_pos + 9;
@@ -747,108 +862,10 @@ void monster_grid(bool do_updates)
             env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
             env.show_col[ex][ey] = get_mons_colour( monster );
 
-            // for followers of Beogh, decide whether orcs will join you
-            if (mons_species(monster->type) == MONS_ORC
-                && you.religion == GOD_BEOGH
-                && !(monster->flags & MF_CONVERT_ATTEMPT)
-               // && !mons_is_unique(monster->type) // does not work on Blork
-                && monster->foe == MHITYOU
-                && mons_player_visible(monster) && !mons_is_sleeping(monster)
-                && !mons_is_confused(monster) && !mons_is_paralysed(monster))
-            {
-                monster->flags |= MF_CONVERT_ATTEMPT;
-
-               int hd = monster->hit_dice;
-
-               if (you.piety >= 75 && !you.penance[GOD_BEOGH] &&
-                   random2(you.piety/9) > random2(hd) + hd + random2(5))
-               {
-                   int wpn = you.equip[EQ_WEAPON];
-                   if (wpn != -1
-                       && you.inv[wpn].base_type == OBJ_WEAPONS
-                       && get_weapon_brand( you.inv[wpn] ) == SPWPN_ORC_SLAYING
-                       && coinflip()) // 50% chance of conversion failing
-                   {
-                       snprintf(info, INFO_SIZE, "%s flinches from your weapon.",
-                                monster->name(DESC_CAP_THE).c_str());
-                       mpr(info);
-                       continue;
-                   }
-                       
-                   if (player_monster_visible(monster)) // show reaction
-                   {
-                       std::string reaction;
-                       
-                       switch (random2(3))
-                       {
-                          case 1: reaction = " stares at you in amazement and kneels.";
-                                  break;
-                          case 2: reaction = " relaxes his fighting stance and smiles at you.";
-                                  break;
-                         default: reaction = " falls on his knees before you.";
-                       }
-
-                       snprintf(info, INFO_SIZE, "%s%s",
-                          monster->name(DESC_CAP_THE).c_str(),reaction.c_str());
-                       mpr(info, MSGCH_MONSTER_ENCHANT);
-
-                       if (random2(3))
-                       {
-                          switch (random2(4))
-                          {
-                             case 0: reaction = "shouts, \"I'll follow thee gladly!\"";
-                                     break;
-                             case 1: reaction = "shouts, \"Surely Beogh must have sent you!\"";
-                                     break;
-                             case 2: reaction = "asks, \"Are you our saviour?\"";
-                                     break;
-                            default: reaction = "says, \"I'm so glad you are here now.\"";
-                          }
-
-                          snprintf(info, INFO_SIZE, "He %s", reaction.c_str());
-                          mpr(info, MSGCH_TALK);
-                       }
-
-                   }
-
-                   monster->attitude = ATT_FRIENDLY;
-                   monster->behaviour = BEH_GOD_GIFT; // alternative to BEH_FRIENDLY
-                   // not really "created" friendly, but should it become
-                   // hostile later on, it won't count as a good kill
-                   monster->flags |= MF_CREATED_FRIENDLY;
-                   monster->flags |= MF_GOD_GIFT;
-                   
-                   // to avoid immobile "followers"
-                   behaviour_event(monster, ME_ALERT, MHITYOU);
-               }
-            }
-            else if (mons_species(monster->type) == MONS_ORC
-                     && you.species == SP_HILL_ORC
-                     && !(you.religion == GOD_BEOGH)
-//                     && monster->foe == MHITYOU
-                     && monster->attitude == ATT_FRIENDLY
-                     && (monster->flags & MF_CONVERT_ATTEMPT)
-                     && (monster->flags & MF_GOD_GIFT)
-                     && mons_player_visible(monster) && !mons_is_sleeping(monster)
-                     && !mons_is_confused(monster) && !mons_is_paralysed(monster))
-            {      // reconversion if no longer Beogh
-                
-                monster->attitude = ATT_HOSTILE;
-                monster->behaviour = BEH_HOSTILE;
-                // CREATED_FRIENDLY stays -> no piety bonus on killing these
-                
-                // give message only sometimes
-                if (player_monster_visible(monster) && random2(4)) 
-                {
-                    snprintf(info, INFO_SIZE, "%s deserts you.",
-                             monster->name(DESC_CAP_THE).c_str());
-                    mpr(info, MSGCH_MONSTER_ENCHANT);
-                }
-            } // end of Beogh routine
-
-        }                       // end "if (monster->type != -1 && mons_ner)"
-    }                           // end "for s"
-}                               // end monster_grid()
+            beogh_follower_convert(monster);
+        }
+    }
+}
 
 void fire_monster_alerts()
 {
@@ -876,11 +893,10 @@ void fire_monster_alerts()
     monsters_seen_this_turn.clear();
 }
 
-bool check_awaken(int mons_aw)
+bool check_awaken(monsters* monster)
 {
     int mons_perc = 0;
-    struct monsters *monster = &menv[mons_aw];
-    const int mon_holy = mons_holiness(monster);
+    const mon_holy_type mon_holy = mons_holiness(monster);
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.

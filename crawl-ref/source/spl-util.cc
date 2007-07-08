@@ -674,8 +674,10 @@ void apply_area_cloud( int (*func) (int, int, int, cloud_type, kill_category),
     }
 }                               // end apply_area_cloud()
 
-char spell_direction( struct dist &spelld, struct bolt &pbolt, 
-                      targeting_type restrict, int mode,
+// Select a spell direction and fill dist and pbolt appropriately.
+// Return false if the user canceled, true otherwise.
+bool spell_direction( dist &spelld, bolt &pbolt, 
+                      targeting_type restrict, targ_mode_type mode,
                       const char *prompt )
 {
     if (restrict != DIR_DIR)
@@ -687,14 +689,14 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
     {
         // check for user cancel
         canned_msg(MSG_OK);
-        return -1;
+        return false;
     }
 
     pbolt.set_target(spelld);
     pbolt.source_x = you.x_pos;
     pbolt.source_y = you.y_pos;
 
-    return 1;
+    return true;
 }                               // end spell_direction()
 
 const char* spelltype_short_name( int which_spelltype )

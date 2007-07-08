@@ -95,9 +95,9 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int),
 int apply_area_within_radius(int (*func) (int, int, int, int),
                               int x, int y, int pow, int radius, int ctype);
 
-char spell_direction( struct dist &spelld, struct bolt &pbolt,
+bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
-                      int mode = TARG_ENEMY,
+                      targ_mode_type mode = TARG_ENEMY,
                       const char *prompt = NULL );
 
 void apply_area_cloud(int (*func) (int, int, int, cloud_type, kill_category),

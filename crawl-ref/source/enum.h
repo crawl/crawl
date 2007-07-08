@@ -2492,6 +2492,15 @@ enum mon_holy_type // matches (char) H_foo in mon-util.h, see: monster_holiness(
     MH_PLANT                           //    plants
 };
 
+enum mon_intel_type             // Must be in increasing intelligence order
+{
+    I_PLANT = 0,
+    I_INSECT,
+    I_ANIMAL,
+    I_NORMAL,
+    I_HIGH
+};
+
 // Adding slots breaks saves. YHBW.
 enum mon_inv_type           // (int) menv[].inv[]
 {
@@ -3037,7 +3046,7 @@ enum shout_type
     S_SILENT,               // silent
     S_SHOUT,                // shout                                           
     S_BARK,                 // bark
-    S_SHOUT2,               // shout twice
+    S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
     S_SCREAM,               // scream
     S_BELLOW,               // bellow (?)

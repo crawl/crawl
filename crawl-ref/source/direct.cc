@@ -308,7 +308,7 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 //
 //---------------------------------------------------------------
 void direction(dist& moves, targeting_type restricts,
-               int mode, bool just_looking, const char *prompt)
+               targ_mode_type mode, bool just_looking, const char *prompt)
 {
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
@@ -524,7 +524,7 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_CYCLE_TARGET_MODE:
-            mode = (mode + 1) % TARG_NUM_MODES;
+            mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
             mprf( "Targeting mode is now: %s",
                   (mode == TARG_ANY)   ? "any" :
                   (mode == TARG_ENEMY) ? "enemies" :
@@ -657,6 +657,7 @@ void direction(dist& moves, targeting_type restricts,
             // A bunch of confirmation tests; if we survive them all,
             // then break out.
 
+            // Confirm self-targeting on TARG_ENEMY.
             // Conceivably we might want to confirm on TARG_ANY too.
             if ( moves.isTarget &&
                  moves.tx == you.x_pos && moves.ty == you.y_pos &&
@@ -672,7 +673,7 @@ void direction(dist& moves, targeting_type restricts,
             }
             // Ask for confirmation if we're quitting for some odd reason
             else if ( moves.isValid || moves.isCancel ||
-                 yesno("Are you sure you want to fizzle?") )
+                      yesno("Are you sure you want to fizzle?") )
             {
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later)

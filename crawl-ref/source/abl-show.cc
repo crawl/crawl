@@ -890,7 +890,7 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_DELAYED_FIREBALL:
     {
-        if (spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) == -1)
+        if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
             return (false);
         
         // Note: power level of ball calculated at release -- bwr
@@ -922,7 +922,7 @@ static bool do_ability(const ability_def& abil)
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
         }
-        else if (spell_direction(abild, beam) == -1)
+        else if ( !spell_direction(abild, beam) )
         {
             return (false);
         }
@@ -982,7 +982,7 @@ static bool do_ability(const ability_def& abil)
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
         }
-        else if (spell_direction( abild, beam ) == -1)
+        else if ( !spell_direction( abild, beam ) )
         {
             return (false);
         }
@@ -1133,7 +1133,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_CONTROL_DEMON:
-        if (spell_direction(abild, beam) == -1)
+        if ( !spell_direction(abild, beam) )
         {
             return (false);
         }
@@ -1158,7 +1158,7 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_THROW_FLAME:
     case ABIL_THROW_FROST:
-        if (spell_direction(abild, beam) == -1)
+        if ( !spell_direction(abild, beam) )
         {
             return (false);
         }
@@ -1169,7 +1169,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_BOLT_OF_DRAINING:
-        if (spell_direction(abild, beam) == -1)
+        if ( !spell_direction(abild, beam) )
         {
             return (false);
         }
@@ -1260,7 +1260,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_ANNIHILATE_UNDEAD:
-        if (spell_direction(spd, beam) == -1)
+        if ( !spell_direction(spd, beam) )
         {
             return (false);
         }
@@ -1270,7 +1270,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-        if (spell_direction(spd, beam) == -1)
+        if ( !spell_direction(spd, beam) )
         {
             return (false);
         }
@@ -1290,7 +1290,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_ENSLAVE_UNDEAD:
-        if (spell_direction(spd, beam) == -1)
+        if ( !spell_direction(spd, beam) )
         {
             return (false);
         }
@@ -1363,7 +1363,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        if (spell_direction(spd, beam) == -1)
+        if ( !spell_direction(spd, beam) )
         {
             return (false);
         }
@@ -1392,7 +1392,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-        if (spell_direction(spd, beam) == -1)
+        if ( !spell_direction(spd, beam) )
         {
             return (false);
         }

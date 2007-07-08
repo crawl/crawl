@@ -19,41 +19,6 @@
 
 // ($pellbinder) (c) D.G.S.E. 1998
 
-// zombie size
-#define Z_NOZOMBIE 0            // no zombie (and no skeleton)
-#define Z_SMALL 1
-#define Z_BIG 2
-// Note - this should be set to 0 for classed monsters, eg orc wizard
-
-// shout
-#define S_RANDOM -1
-#define S_SILENT 0
-#define S_SHOUT 1               //1=shout
-#define S_BARK 2                //2=bark
-#define S_SHOUT2 3              //3=shout twice
-#define S_ROAR 4                //4=roar
-#define S_SCREAM 5              //5=scream
-#define S_BELLOW 6              //6=bellow (?)
-#define S_SCREECH 7             //7=screech
-#define S_BUZZ 8                //8=buzz
-#define S_MOAN 9                //9=moan
-#define S_WHINE 10              //10=irritating whine (mosquito)
-#define S_CROAK 11              //11=frog croak
-#define S_GROWL 12              //jmf: for bears
-#define S_HISS 13               //bwr: for snakes and lizards
-
-// ai
-// So far this only affects a) chance to see stealthy player and b) chance to
-//  walk through damaging clouds (LRH)
-//jmf: now has relevence to mind-affecting spells, maybe soon behaviour
-#define I_PLANT 0
-#define I_INSECT 1
-#define I_ANIMAL 2
-#define I_NORMAL 3
-#define I_HIGH 4
-#define I_ANIMAL_LIKE 5
-#define I_REPTILE 6
-
 struct monsterentry
 {
     short mc;            // monster number
@@ -74,7 +39,7 @@ struct monsterentry
     monster_type genus,         // "team" the monster plays for
                  species;       // corpse type of the monster
 
-    mon_holy_type holiness;       // -1=holy,0=normal,1=undead,2=very very evil
+    mon_holy_type holiness;
 
     short resist_magic;  // (positive is ??)
     // max damage in a turn is total of these four?
@@ -95,21 +60,14 @@ struct monsterentry
 
     char speed, speed_inc;        // duh!
 
-    short sec;           // not used (250) most o/t time
-
-    // eating the corpse: 1=clean,2=might be contaminated,3=poison,4=very bad
+    mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;
-    // 0=no zombie, 1=small zombie (z) 107, 2=_BIG_ zombie (Z) 108
-    char zombie_size;
-  // 0-12: see above, -1=random one of (0-7)
-    char shouts;
-  // AI things?
-    char intel;          // 0=none, 1=worst...4=best
-
-    char gmon_use;
-
+    zombie_size_type zombie_size;
+    shout_type shouts;
+    mon_intel_type intel;
+    mon_itemuse_type gmon_use;
     size_type size;
-};    // mondata[] - again, no idea why this was externed {dlb}
+};
 
 
 // wow. this struct is only about 48 bytes, (excluding the name)
@@ -136,7 +94,7 @@ int mons_flies( const monsters *mon );
 /* ***********************************************************************
  * called from: dungeon - monstuff
  * *********************************************************************** */
-char mons_itemuse(int mc);
+mon_itemuse_type mons_itemuse(int mc);
 
 
 // last updated 12may2000 {dlb}
@@ -153,7 +111,7 @@ bool mons_player_visible( struct monsters *mon );
 /* ***********************************************************************
  * called from: view
  * *********************************************************************** */
-int mons_shouts(int mclass);
+shout_type mons_shouts(int mclass);
 
 bool mons_is_unique(int mclass);
 
@@ -224,15 +182,7 @@ bool mons_is_summoned(const monsters *m);
 /* ***********************************************************************
  * called from: monstuff - spells4 - view
  * *********************************************************************** */
-int mons_intel(int mclass);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: spells4
- * *********************************************************************** */
-int mons_intel_type(int mclass); //jmf: added 20mar2000
-
+mon_intel_type mons_intel(int mclass);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -323,22 +273,13 @@ unsigned char mons_char(int mc);
 int mons_class_colour(int mc);
 int mons_colour(const monsters *m);
 
-void mons_load_spells( monsters *mon, int book );
+void mons_load_spells( monsters *mon, mon_spellbook_type book );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon - fight
  * *********************************************************************** */
 void define_monster(int mid);
-
-
-#ifdef DEBUG_DIAGNOSTICS
-// last updated 25sep2001 {dlb}
-/* ***********************************************************************
- * called from: describe
- * *********************************************************************** */
-extern const char *mons_spell_name(spell_type);
-#endif
 
 // last updated 4jan2001 (gdl)
 /* ***********************************************************************

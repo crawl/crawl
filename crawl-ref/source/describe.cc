@@ -3699,7 +3699,7 @@ void describe_monsters(monsters& mons)
                 }
 
                 description << "    " << i << ": "
-                            << mons_spell_name(hspell_pass[i])
+                            << spell_title(hspell_pass[i])
                             << " (" << static_cast<int>(hspell_pass[i])
                             << ")$";
             }

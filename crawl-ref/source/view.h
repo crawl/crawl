@@ -106,7 +106,7 @@ void setLOSRadius(int newLR);
 /* ***********************************************************************
  * called from: view monstuff
  * *********************************************************************** */
-bool check_awaken(int mons_aw);
+bool check_awaken(monsters* monster);
 
 void clear_map(bool clear_items = true, bool clear_mons = true);
 

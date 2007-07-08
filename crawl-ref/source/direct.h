@@ -23,8 +23,8 @@
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
 
-void direction( struct dist &moves, targeting_type restricts = DIR_NONE,
-                int mode = TARG_ANY, bool just_looking = false,
+void direction( dist &moves, targeting_type restricts = DIR_NONE,
+                targ_mode_type mode = TARG_ANY, bool just_looking = false,
                 const char *prompt = NULL );
 
 bool in_los_bounds(int x, int y);

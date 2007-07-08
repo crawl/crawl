@@ -664,7 +664,7 @@ static void damaging_card( card_type card, int power, deck_rarity_type rarity )
 
     // For now, just throw a bolt in that direction.
     // Make this more interesting later! XXX
-    if ( spell_direction( target, beam ) != -1 )
+    if ( spell_direction( target, beam ) )
         zapping(ztype, random2(power/4), beam);
 }
 
@@ -678,7 +678,7 @@ static void elixir_card(int power, deck_rarity_type rarity)
     if ( power_level == 0 )
     {
         if ( coinflip() )
-            potion_effect( POT_HEAL_WOUNDS, 40 ); // doesn't matter
+            potion_effect( POT_HEAL_WOUNDS, 40 ); // power doesn't matter
         else
             cast_regen( random2(power / 4) );
     }

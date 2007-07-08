@@ -1042,7 +1042,7 @@ public:
     void pandemon_init();
     void destroy_inventory();
     void reset();
-    void load_spells(int spellbook);
+    void load_spells(mon_spellbook_type spellbook);
 
     actor *get_foe() const;
     

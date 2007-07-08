@@ -1682,7 +1682,7 @@ static void handle_behaviour(monsters *mon)
                     {
                         if (mon->foe == MHITYOU)
                         {
-                            if (check_awaken(monster_index(mon)))
+                            if (check_awaken(mon))
                             {
                                 mon->target_x = you.x_pos;
                                 mon->target_y = you.y_pos;
@@ -1717,19 +1717,19 @@ static void handle_behaviour(monsters *mon)
                 int memory;
                 switch(mons_intel(monster_index(mon)))
                 {
-                    case I_HIGH:
-                        memory = 100 + random2(200);
-                        break;
-                    case I_NORMAL:
-                        memory = 50 + random2(100);
-                        break;
-                    case I_ANIMAL:
-                    default:
-                        memory = 25 + random2(75);
-                        break;
-                    case I_INSECT:
-                        memory = 10 + random2(50);
-                        break;
+                case I_HIGH:
+                    memory = 100 + random2(200);
+                    break;
+                case I_NORMAL:
+                    memory = 50 + random2(100);
+                    break;
+                case I_ANIMAL:
+                case I_PLANT:
+                    memory = 25 + random2(75);
+                    break;
+                case I_INSECT:
+                    memory = 10 + random2(50);
+                    break;
                 }
 
                 mon->foe_memory = memory;

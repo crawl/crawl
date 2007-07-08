@@ -878,25 +878,42 @@ void cast_mass_sleep(int pow)
     apply_area_visible(sleep_monsters, pow);
 }                               // end cast_mass_sleep()
 
+// This is a hack until we set an is_beast flag in the monster data
+// (which we might never do, this is sort of minor.)
+// It's a list of monster types which can be affected by beast taming.
+static bool is_domesticated_animal(int type)
+{
+    const monster_type types[] = {
+        MONS_GIANT_BAT, MONS_HOUND, MONS_JACKAL, MONS_RAT,
+        MONS_YAK, MONS_WYVERN, MONS_HIPPOGRIFF, MONS_GRIFFON,
+        MONS_DEATH_YAK, MONS_WAR_DOG, MONS_GREY_RAT,
+        MONS_GREEN_RAT, MONS_ORANGE_RAT, MONS_SHEEP,
+        MONS_HOG, MONS_GIANT_FROG, MONS_GIANT_BROWN_FROG,
+        MONS_SPINY_FROG, MONS_BLINK_FROG, MONS_WOLF, MONS_WARG,
+        MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR
+    };
+    for ( unsigned int i = 0; i < ARRAYSIZE(types); ++i )
+        if ( types[i] == type )
+            return true;
+    return false;
+}
+
 static int tame_beast_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
-    int which_mons = mgrd[x][y];
+    const int which_mons = mgrd[x][y];
 
-    if (which_mons == NON_MONSTER)                             return 0;
+    if (which_mons == NON_MONSTER)
+        return 0;
 
-    struct monsters *monster = &menv[which_mons];
+    monsters *monster = &menv[which_mons];
 
-    if (mons_holiness(monster) != MH_NATURAL)            return 0;
-    if (mons_intel_type(monster->type) != I_ANIMAL)            return 0;
-    if (mons_friendly(monster))                                return 0;
+    if (!is_domesticated_animal(monster->type) || mons_friendly(monster))
+        return 0;
 
-    // 50% bonus for dogs, add cats if they get implemented
-    if (monster->type == MONS_HOUND || monster->type == MONS_WAR_DOG
-                 || monster->type == MONS_BLACK_BEAR)
-    {
+    // 50% bonus for dogs
+    if (monster->type == MONS_HOUND || monster->type == MONS_WAR_DOG )
         pow += (pow / 2);
-    }
 
     if (you.species == SP_HILL_ORC && monster->type == MONS_WARG)
         pow += (pow / 2);
@@ -904,15 +921,12 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
     if (check_mons_resist_magic(monster, pow))
         return 0;
 
-    // I'd like to make the monsters affected permanently, but that's
-    // pretty powerful. Maybe a small (pow/10) chance of being permanently
-    // tamed, large chance of just being enslaved.
     simple_monster_message(monster, " is tamed!");
 
     if (random2(100) < random2(pow / 10))
-        monster->attitude = ATT_FRIENDLY;       // permanent, right?
+        monster->attitude = ATT_FRIENDLY;       // permanent
     else
-        monster->add_ench(ENCH_CHARM);
+        monster->add_ench(ENCH_CHARM);          // temporary
 
     return 1;
 }                               // end tame_beast_monsters()
@@ -2678,7 +2692,7 @@ void cast_twist(int pow)
 
     // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
-    if (spell_direction(targ, tmp, DIR_TARGET) == -1)
+    if ( !spell_direction(targ, tmp, DIR_TARGET) )
         return;
 
     const int mons = mgrd[ targ.tx ][ targ.ty ];
@@ -2753,7 +2767,7 @@ void cast_far_strike(int pow)
 
     // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
-    if (spell_direction(targ, tmp, DIR_TARGET) == -1)
+    if ( !spell_direction(targ, tmp, DIR_TARGET) )
         return;
 
     // Get the target monster...

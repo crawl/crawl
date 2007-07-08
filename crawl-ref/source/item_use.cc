@@ -2582,13 +2582,13 @@ bool remove_ring(int slot, bool announce)
 
 void zap_wand(void)
 {
-    struct bolt beam;
-    struct dist zap_wand;
+    bolt beam;
+    dist zap_wand;
     int item_slot;
 
     // Unless the character knows the type of the wand, the targeting
     // system will default to enemies. -- [ds]
-    int targ_mode = TARG_ENEMY;
+    targ_mode_type targ_mode = TARG_ENEMY;
 
     beam.obvious_effect = false;
 

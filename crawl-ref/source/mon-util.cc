@@ -66,11 +66,11 @@ enum habitat_type
 static bool initialized_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
-static struct monsterentry mondata[] = {
+static monsterentry mondata[] = {
 #include "mon-data.h"
 };
 
-#define MONDATASIZE (sizeof(mondata)/sizeof(monsterentry))
+#define MONDATASIZE ARRAYSIZE(mondata)
 
 static int mspell_list[][7] = {
 #include "mon-spll.h"
@@ -203,7 +203,6 @@ void init_monsters(FixedVector < unsigned short, 1000 > &colour)
         if (mon_entry[x] == -1)
             mon_entry[x] = mon_entry[MONS_PROGRAM_BUG];
     }
-    //return (monsterentry *) 0; // return value should not matter here {dlb}
 }                               // end mons_init()
 
 unsigned long get_mons_class_resists(int mc)
@@ -448,12 +447,12 @@ monster_type draco_subspecies( const monsters *mon )
     return (ret);
 }
 
-int mons_shouts(int mc)
+shout_type mons_shouts(int mc)
 {
-    int u = smc->shouts;
+    shout_type u = smc->shouts;
 
-    if (u == -1)
-        u = random2(12);
+    if (u == S_RANDOM)
+        u = static_cast<shout_type>(random2(NUM_SHOUTS));
 
     return (u);
 }                               // end mons_shouts()
@@ -517,7 +516,7 @@ unsigned char mons_char(int mc)
     return static_cast<unsigned char>(smc->showchar);
 }                               // end mons_char()
 
-char mons_itemuse(int mc)
+mon_itemuse_type mons_itemuse(int mc)
 {
     return (smc->gmon_use);
 }                               // end mons_itemuse()
@@ -1160,19 +1159,10 @@ int exper_value( const struct monsters *monster )
     return (x_val);
 }                               // end exper_value()
 
-void mons_load_spells( monsters *mon, int book )
+void mons_load_spells( monsters *mon, mon_spellbook_type book )
 {
     mon->load_spells(book);
 }
-
-#ifdef DEBUG_DIAGNOSTICS
-
-const char *mons_spell_name( spell_type spell )
-{
-    return (spell_title(spell));
-}
-
-#endif
 
 // generate a shiny new and unscarred monster
 void define_monster(int index)
@@ -1185,7 +1175,7 @@ void define_monster(int index)
     int monnumber = mons.number;
     const monsterentry *m = seekmonster(mcls);
     int col = mons_class_colour(mons.type);
-    int spells = MST_NO_SPELLS;
+    mon_spellbook_type spells = MST_NO_SPELLS;
 
     hd = m->hpdice[0];
 
@@ -1239,12 +1229,12 @@ void define_monster(int index)
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_ORC_WIZARD:
-        spells = MST_ORC_WIZARD_I + random2(3);
+        spells = static_cast<mon_spellbook_type>(MST_ORC_WIZARD_I+random2(3));
         break;
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:
-        spells = MST_LICH_I + random2(4);
+        spells = static_cast<mon_spellbook_type>(MST_LICH_I + random2(4));
         break;
 
     case MONS_HELL_KNIGHT:
@@ -1259,7 +1249,7 @@ void define_monster(int index)
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
     case MONS_DEEP_ELF_MAGE:
-        spells = MST_WIZARD_I + random2(5);
+        spells = static_cast<mon_spellbook_type>(MST_WIZARD_I + random2(5));
         break;
 
     case MONS_DEEP_ELF_CONJURER:
@@ -1540,32 +1530,10 @@ int mons_speed(int mc)
 }                               // end mons_speed()
 
 
-int mons_intel(int mc)          //jmf: "fixed" to work with new I_ types
-{
-    switch (smc->intel)
-    {
-    case I_PLANT:
-        return (I_PLANT);
-    case I_INSECT:
-    case I_REPTILE:
-        return (I_INSECT);
-    case I_ANIMAL:
-    case I_ANIMAL_LIKE:
-        return (I_ANIMAL);
-    case I_NORMAL:
-        return (I_NORMAL);
-    case I_HIGH:
-        return (I_HIGH);
-    default:
-        return (I_NORMAL);
-    }
-}                               // ens mons_intel()
-
-
-int mons_intel_type(int mc)     //jmf: new, used by my spells
+mon_intel_type mons_intel(int mc)
 {
     return (smc->intel);
-}                               // end mons_intel_type()
+}
 
 int mons_power(int mc)
 {
@@ -3344,7 +3312,7 @@ void monsters::set_transit(const level_id &dest)
     add_monster_to_transit(dest, *this);
 }
 
-void monsters::load_spells(int book)
+void monsters::load_spells(mon_spellbook_type book)
 {
     spells.init(SPELL_NO_SPELL);
     if (book == MST_NO_SPELLS || (book == MST_GHOST && !ghost.get()))
@@ -3352,7 +3320,7 @@ void monsters::load_spells(int book)
 
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d", 
-          name(DESC_PLAIN).c_str(), book );
+          name(DESC_PLAIN).c_str(), static_cast<int>(book) );
 #endif
 
     if (book == MST_GHOST)

@@ -841,7 +841,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     // Hopefully, those will eventually be fixed. -- bwr
     if (flags & SPFLAG_TARGETING_MASK)
     {
-        int targ = (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
+        targ_mode_type targ =
+            (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
         targeting_type dir  =
             (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET : 
@@ -852,7 +853,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
         
-        if (spell_direction( spd, beam, dir, targ, prompt ) == -1)
+        if ( !spell_direction( spd, beam, dir, targ, prompt ) )
             return (SPRET_ABORT);
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)

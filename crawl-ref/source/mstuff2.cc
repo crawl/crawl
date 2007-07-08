@@ -40,6 +40,7 @@
 #include "spells2.h"
 #include "spells4.h"
 #include "spl-cast.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -406,7 +407,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
-         monster_index(monster), mons_spell_name( spell_cast ), spell_cast);
+         monster_index(monster), spell_title(spell_cast), spell_cast);
 #endif
 
     if (spell_cast == SPELL_HELLFIRE_BURST || spell_cast == SPELL_BRAIN_FEED
