@@ -155,8 +155,10 @@ SUBST:   F=1, G=1, H=1
 MONS:    orc priest / nothing
 : if you.absdepth() >= 10 then
 MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
+: elseif you.absdepth() >= 8 then
+MONS:    orc w:40 / orc warrior
 : else
-MONS:    orc w:30 / w:10 orc warrior
+MONS:    orc w:80 / orc warrior
 : end
 MONS:    orc priest
 MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
@@ -165,7 +167,7 @@ SHUFFLE: () / XY
 SUBST:   X=., Y=. 
 MAP
 xxxxxxxxxxxxxxx
-x.....)O(.....x
+x......O......x
 x......F......x
 x2..T.ECG.T..2x
 x2222..H..2222x
