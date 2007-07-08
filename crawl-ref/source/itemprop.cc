@@ -462,12 +462,13 @@ void set_ident_flags( item_def &item, unsigned long flags )
 {
     const bool known_before = fully_identified(item);
     item.flags |= flags;
-    if ( notes_are_active() &&
-         !known_before && fully_identified(item) && is_interesting_item(item))
+    if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID) &&
+        !known_before && fully_identified(item) && is_interesting_item(item))
     {
         /* make a note of it */
         take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
+        item.flags |= ISFLAG_NOTED_ID;
     }
 }
 

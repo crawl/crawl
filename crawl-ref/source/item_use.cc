@@ -3643,6 +3643,9 @@ void read_scroll(void)
     // scrolls of immolation were already destroyed earlier
     if (scroll_type != SCR_PAPER && scroll_type != SCR_IMMOLATION)
     {
+        if ( id_the_scroll )
+            set_ident_flags( scroll, ISFLAG_KNOW_TYPE ); // for notes
+
         dec_inv_item_quantity( item_slot, 1 );
     }
 

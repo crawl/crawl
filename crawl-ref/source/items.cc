@@ -845,11 +845,14 @@ static void milestone_check(const item_def &item)
 }
 #endif // DGL_MILESTONES
 
-static void check_note_item(const item_def &item)
+static void check_note_item(item_def &item)
 {
-    if (is_interesting_item(item))
+    if (!(item.flags & ISFLAG_NOTED_GET) && is_interesting_item(item))
+    {
         take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
+        item.flags |= ISFLAG_NOTED_GET;
+    }
 }
 
 void origin_set(int x, int y)
@@ -865,7 +868,6 @@ void origin_set(int x, int y)
         if (!item.orig_monnum)
             item.orig_monnum = static_cast<short>( monnum );
         item.orig_place  = pplace;
-        check_note_item(item);
 #ifdef DGL_MILESTONES
         milestone_check(item);
 #endif
@@ -1291,13 +1293,7 @@ int find_free_slot(const item_def &i)
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
-    int imass = 0;
-    int unit_mass = 0;
     int retval = quant_got;
-    char brek = 0;
-    bool partialPickup = false;
-
-    int m = 0;
 
     // Gold has no mass, so we handle it first.
     if (mitm[obj].base_type == OBJ_GOLD)
@@ -1316,15 +1312,13 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         return (retval);
     }
 
-    unit_mass = item_mass( mitm[obj] );
+    const int unit_mass = item_mass( mitm[obj] );
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
     
-    imass = unit_mass * quant_got;
-    
-    brek = 0;
+    const int imass = unit_mass * quant_got;
 
-    // multiply both constants * 10
+    bool partial_pickup = false;
 
     if (you.burden + imass > carrying_capacity())
     {
@@ -1336,19 +1330,21 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
         // only pickup 'part' items
         quant_got = part;
-        partialPickup = true;
+        partial_pickup = true;
 
         retval = part;
     }
 
     if (is_stackable_item( mitm[obj] ))
     {
-        for (m = 0; m < ENDOFPACK; m++)
+        for (int m = 0; m < ENDOFPACK; m++)
         {
             if (items_stack( you.inv[m], mitm[obj] ))
             {
-                if (!quiet && partialPickup)
+                if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
+
+                check_note_item(mitm[obj]);
 
                 inc_inv_item_quantity( m, quant_got );
                 dec_mitm_item_quantity( obj, quant_got );
@@ -1361,14 +1357,14 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
                 return (retval);
             }
-        }                           // end of for m loop.
+        }
     }
 
     // can't combine, check for slot space
     if (inv_count() >= ENDOFPACK)
         return (-1);
 
-    if (!quiet && partialPickup)
+    if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
 
     int freeslot = find_free_slot(mitm[obj]);

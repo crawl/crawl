@@ -1520,7 +1520,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_ELVEN             = 0x04000000,  // light and accurate items
     ISFLAG_RACIAL_MASK       = 0x07000000,  // mask of racial equipment types
 
-    ISFLAG_DEBUG_MARK        = 0x80000000   // used for testing item structure
+    ISFLAG_NOTED_ID          = 0x08000000,
+    ISFLAG_NOTED_GET         = 0x10000000
 };
 
 enum item_description_type

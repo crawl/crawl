@@ -1024,9 +1024,8 @@ void debug_item_scan( void )
     int   i;
     char  name[256];
 
-    // unset marks
-    for (i = 0; i < MAX_ITEMS; i++)
-        mitm[i].flags &= (~ISFLAG_DEBUG_MARK);
+    FixedVector<bool, MAX_ITEMS> visited;
+    visited.init(false);
 
     // First we're going to check all the stacks on the level:
     for (int x = 0; x < GXM; x++)
@@ -1059,14 +1058,13 @@ void debug_item_scan( void )
 
                 // If we run into a premarked item we're in real trouble,
                 // this will also keep this from being an infinite loop.
-                if (mitm[obj].flags & ISFLAG_DEBUG_MARK)
+                if (visited[obj])
                 {
                     mprf(MSGCH_WARN,
                          "Potential INFINITE STACK at (%d, %d)", x, y);
                     break;
                 }
-
-                mitm[obj].flags |= ISFLAG_DEBUG_MARK;
+                visited[obj] = true;
             }
         }
     }
@@ -1080,8 +1078,7 @@ void debug_item_scan( void )
         strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
 
         // Don't check (-1,-1) player items or (0,0) monster items
-        if ((mitm[i].x > 0 || mitm[i].y > 0) 
-            && !(mitm[i].flags & ISFLAG_DEBUG_MARK))
+        if ((mitm[i].x > 0 || mitm[i].y > 0) && !visited[i])
         {
             mpr( "Unlinked item:", MSGCH_WARN );
             dump_item( name, i, mitm[i] );
@@ -1146,10 +1143,6 @@ void debug_item_scan( void )
             dump_item( name, i, mitm[i] );
         }
     }
-
-    // Don't want debugging marks interfering with anything else.
-    for (i = 0; i < MAX_ITEMS; i++)
-        mitm[i].flags &= (~ISFLAG_DEBUG_MARK);
 
     // Quickly scan monsters for "program bug"s.
     for (i = 0; i < MAX_MONSTERS; i++)

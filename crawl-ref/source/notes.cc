@@ -102,6 +102,8 @@ static bool is_noteworthy( const Note& note )
          note.type == NOTE_GOD_GIFT ||
          note.type == NOTE_GET_MUTATION ||
          note.type == NOTE_LOSE_MUTATION ||
+         note.type == NOTE_GET_ITEM ||
+         note.type == NOTE_ID_ITEM ||
          note.type == NOTE_SEEN_MONSTER ||
          note.type == NOTE_KILL_MONSTER ||
          note.type == NOTE_POLY_MONSTER ||
@@ -172,13 +174,6 @@ static bool is_noteworthy( const Note& note )
             break;
         case NOTE_GOD_POWER:
             if ( rnote.first == note.first && rnote.second == note.second )
-                return false;
-            break;
-        case NOTE_ID_ITEM:
-        case NOTE_GET_ITEM:
-            /* re-id'ing an item, e.g. second copy of book, isn't
-               noteworthy */
-            if ( rnote.name == note.name )
                 return false;
             break;
         case NOTE_HP_CHANGE:
