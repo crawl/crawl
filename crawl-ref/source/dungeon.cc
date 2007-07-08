@@ -2549,11 +2549,6 @@ static void beehive(spec_room &sr)
 static bool safe_minivault_place(int v1x, int v1y,
                                  const vault_placement &place)
 {
-    dgn_region reg(v1x, v1y, place.width, place.height);
-
-    if (reg.overlaps(vault_zones, dgn_map_mask))
-        return (false);
-    
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
     for (int vx = v1x; vx < v1x + place.width; vx++)
@@ -2562,6 +2557,9 @@ static bool safe_minivault_place(int v1x, int v1y,
         {
             if (lines[vy - v1y][vx - v1x] == ' ')
                 continue;
+
+            if (dgn_map_mask[vx][vy])
+                return (false);
             
             if ((grd[vx][vy] != DNGN_FLOOR
                  && grd[vx][vy] != DNGN_ROCK_WALL

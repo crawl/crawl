@@ -147,9 +147,15 @@ static bool resolve_map(map_def &map, const map_def &original)
     return (true);
 }
 
-static bool is_grid_clobbered(const map_def &map,
-                              int sx, int sy, int width, int height)
+// Determines if the region specified by (x, y, x + width - 1, y + height - 1)
+// is a bad place to build a vault.
+static bool bad_map_place(const map_def &map,
+                          int sx, int sy, int width, int height,
+                          std::vector<vault_placement> *avoid)
 {
+    if (!avoid)
+        return (false);
+    
     const std::vector<std::string> &lines = map.map.get_lines();
     for (int y = sy; y < sy + height; ++y)
     {
@@ -157,6 +163,9 @@ static bool is_grid_clobbered(const map_def &map,
         {
             if (lines[y - sy][x - sx] == ' ')
                 continue;
+
+            if (dgn_map_mask[x][y])
+                return (true);
             
             const dungeon_feature_type grid = grd[x][y];
 
@@ -174,29 +183,6 @@ static bool is_grid_clobbered(const map_def &map,
     }
 
     return (false);
-}
-
-// Determines if the region specified by (x, y, x + width - 1, y + height - 1)
-// is a bad place to build a vault.
-static bool bad_map_place(const map_def &map,
-                          int x, int y, int width, int height,
-                          std::vector<vault_placement> *avoid)
-{
-    if (!avoid)
-        return (false);
-    
-    const dgn_region thisvault(x, y, width, height);
-
-    for (int i = 0, size = avoid->size(); i < size; ++i)
-    {
-        const vault_placement &vp = (*avoid)[i];
-        const dgn_region vault(vp.x, vp.y, vp.width, vp.height);
-
-        if (thisvault.overlaps(vault) && thisvault.overlaps(dgn_map_mask))
-            return (true);
-    }
-
-    return (is_grid_clobbered(map, x, y, width, height));
 }
 
 static bool apply_vault_grid(map_def &def, map_type map, 

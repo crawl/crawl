@@ -297,6 +297,21 @@ MAP
 ENDMAP
 
 ############################################################################
+# The other minotaur's lava lair
+NAME: labyrinth_lava_lair
+TAGS: lab
+MONS: minotaur zombie
+MAP
+.......
+.lllll.
+.l***l.
+.l*1*l.
+.l***l.
+.lllll.
+.......
+ENDMAP
+
+############################################################################
 # Baited teleport trap - this is evil!
 NAME: labyrinth_baited_teleportation_trap
 TAGS: lab
