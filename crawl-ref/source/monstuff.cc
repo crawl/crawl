@@ -1714,8 +1714,8 @@ static void handle_behaviour(monsters *mon)
 
                 // hack: smarter monsters will
                 // tend to pursue the player longer.
-                int memory;
-                switch(mons_intel(monster_index(mon)))
+                int memory = 0;
+                switch (mons_intel(monster_index(mon)))
                 {
                 case I_HIGH:
                     memory = 100 + random2(200);
