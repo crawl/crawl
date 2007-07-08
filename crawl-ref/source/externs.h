@@ -1080,7 +1080,7 @@ public:
     bool      pickup_melee_weapon(item_def &item, int near);
     bool      pickup_throwable_weapon(item_def &item, int near);
     bool      pickup_weapon(item_def &item, int near, bool force);
-    bool      pickup_missile(item_def &item, int near);
+    bool      pickup_missile(item_def &item, int near, bool force);
     bool      eat_corpse(item_def &carrion, int near);
     void      equip(const item_def &item, int slot, int near = -1);
     void      unequip(const item_def &item, int slot, int near = -1);

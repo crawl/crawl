@@ -2647,7 +2647,7 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
     return (can_use_missile(item) && pickup_throwable_weapon(item, near));
 }
 
-bool monsters::pickup_missile(item_def &item, int near)
+bool monsters::pickup_missile(item_def &item, int near, bool force)
 {
     // XXX: Missile pickup could get a lot smarter if we allow monsters to
     // drop their existing missiles and pick up new stuff, but that's too
@@ -2657,7 +2657,7 @@ bool monsters::pickup_missile(item_def &item, int near)
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
 
-    if (!can_use_missile(item))
+    if (!force && !can_use_missile(item))
         return (false);
 
     return pickup(item, MSLOT_MISSILE, near);
@@ -2720,7 +2720,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     case OBJ_ARMOUR:
         return pickup(item, MSLOT_ARMOUR, near);
     case OBJ_MISSILES:
-        return pickup_missile(item, near);
+        return pickup_missile(item, near, force);
     case OBJ_WANDS:
         return pickup_wand(item, near);
     case OBJ_SCROLLS:
