@@ -1684,12 +1684,6 @@ int items( int allow_uniques,       // not just true-false,
                 || brand == SPWPN_ORC_SLAYING
                 || (brand != SPWPN_NORMAL && coinflip()))
             {
-                // this makes no sense {dlb}
-                // Probably a remnant of the old code which used
-                // to decrement this when the electric attack happened -- bwr
-                // if (brand == SPWPN_ELECTROCUTION)
-                //     mitm[p].plus = 0;
-
                 set_item_ego_type( mitm[p], OBJ_WEAPONS, SPWPN_NORMAL );
             }
         }

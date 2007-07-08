@@ -924,7 +924,7 @@ static void dowsing_card(int power, deck_rarity_type rarity)
 
 static void trowel_card(int power, deck_rarity_type rarity)
 {
-    // not yet implemented
+    // XXX not yet implemented
     return;
 }
 

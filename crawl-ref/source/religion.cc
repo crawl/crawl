@@ -280,7 +280,7 @@ void altar_prayer(void);
 void dec_penance(int god, int val);
 void inc_penance(int god, int val);
 void inc_penance(int val);
-int followers_abandon_you(void); // Beogh
+static bool followers_abandon_you(void); // Beogh
 
 static bool is_evil_god(god_type god)
 {
@@ -1827,69 +1827,50 @@ static bool beogh_retribution()
         break;
     }
 
-    // taken from makeitem.cc and spells3.cc:
     case 2: // send out one or two dancing weapons of orc slaying (12.5%)
     {
         int num_created = 0;
-        int num_to_create = random2(2) + 1;
+        int num_to_create = (coinflip() ? 1 : 2);
         for (int i = 0; i < num_to_create; i++)
         {
-            bool created = false;
-
             // first create item
-            const int it = get_item_slot();
-            if (it != NON_ITEM)
-            {
-                item_def &item = mitm[it];
-                    
-                item.quantity = 1;
-                item.base_type = OBJ_WEAPONS;
-                // any melee weapon
-                item.sub_type = WPN_CLUB + random2(13); 
-                    
-                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
-                // just how good should this weapon be?
-                item.plus = random2(3);
-                item.plus2 = random2(3);
+            int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
+                             true, you.experience_level, MAKE_ITEM_NO_RACE);
+
+            if ( slot == -1 )
+                continue;
+
+            item_def& item = mitm[slot];           
+            set_item_ego_type( item, OBJ_WEAPONS, SPWPN_ORC_SLAYING );
+
+            // manually override plusses
+            item.plus = random2(3);
+            item.plus2 = random2(3);
                       
-                if (coinflip())
-                    item.flags |= ISFLAG_CURSED;
+            if (coinflip())
+                item.flags |= ISFLAG_CURSED;
 
-                set_ident_type( item.base_type, item.sub_type,
-                                ID_KNOWN_TYPE );
-                    
-                // for debugging + makes things more interesting
-                // (doesn't seem to have any effect, though)
-                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
-                set_ident_flags( item, ISFLAG_IDENT_MASK );
+            // let the player see that he's being attacked by
+            // orc slayers
+            set_ident_flags( item, ISFLAG_KNOW_TYPE );
 
-                // now create monster
-                int mons =
-                    create_monster( MONS_DANCING_WEAPON, 0,
-                                    BEH_HOSTILE, you.x_pos, you.y_pos,
-                                    MHITYOU, 250 );
+            // now create monster
+            int mons = create_monster( MONS_DANCING_WEAPON, 0, BEH_HOSTILE,
+                                       you.x_pos, you.y_pos, MHITYOU, 250 );
                                        
-                // hand item information over to monster
-                if (mons != -1 && mons != NON_MONSTER)
-                {
-                    mitm[it] = item;
-                    mitm[it].quantity = 1;
-                    mitm[it].x = 0;
-                    mitm[it].y = 0;
-                    mitm[it].link = NON_ITEM;
-                    menv[mons].inv[MSLOT_WEAPON] = it;
-                    created = true;
-                    num_created++;
-
-                    // 50% chance of weapon disappearing on "death"
-                    if (coinflip())
-                        menv[mons].flags |= MF_HARD_RESET;
-                }
-            }
-            if (!created) // didn't work out! delete item
+            // hand item information over to monster
+            if (mons != -1)
             {
-                mitm[it].base_type = OBJ_UNASSIGNED;
-                mitm[it].quantity = 0;
+                menv[mons].inv[MSLOT_WEAPON] = slot;
+                num_created++;
+
+                // 50% chance of weapon disappearing on "death"
+                if (coinflip())
+                    menv[mons].flags |= MF_HARD_RESET;
+            }
+            else // didn't work out! delete item
+            {
+                mitm[slot].clear();
             }
         }
         if (num_created)
@@ -2163,80 +2144,80 @@ void divine_retribution( god_type god )
 }
 
 // upon excommunication, (now ex) Beogh adepts lose their orcish followers
-int followers_abandon_you()
+bool followers_abandon_you()
 {
-     int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-     int yend = you.y_pos + 9, xend = you.x_pos + 9;
-     if ( xstart < 0 ) xstart = 0;
-     if ( ystart < 0 ) ystart = 0;
-     if ( xend >= GXM ) xend = GXM;
-     if ( ystart >= GYM ) yend = GYM;
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = GXM;
+    if ( ystart >= GYM ) yend = GYM;
      
-     bool reconvert = false;
-     int num_reconvert = 0;
-     int num_followers = 0;
+    bool reconvert = false;
+    int num_reconvert = 0;
+    int num_followers = 0;
 
-     std::vector<const monsters *> mons;
-     // monster check
-     for ( int y = ystart; y < yend; ++y )
-     {
-         for ( int x = xstart; x < xend; ++x )
-         {
-
-             const unsigned char targ_monst = mgrd[x][y];
-             if ( targ_monst != NON_MONSTER )
-             {
-                 struct monsters *monster = &menv[targ_monst];
-                 if ( mons_species(monster->type) == MONS_ORC
-                      && monster->attitude == ATT_FRIENDLY
-                      && (monster->flags & MF_CONVERT_ATTEMPT))
-                 {
-
-                     num_followers++;
+    std::vector<const monsters *> mons;
+    // monster check
+    for ( int y = ystart; y < yend; ++y )
+    {
+        for ( int x = xstart; x < xend; ++x )
+        {
+            const unsigned char targ_monst = mgrd[x][y];
+            if ( targ_monst != NON_MONSTER )
+            {
+                monsters *monster = &menv[targ_monst];
+                if ( mons_species(monster->type) == MONS_ORC
+                     && monster->attitude == ATT_FRIENDLY
+                     && (monster->flags & MF_CONVERT_ATTEMPT))
+                {
+                    num_followers++;
                      
-                     if (mons_player_visible(monster)
-                         && !mons_is_confused(monster)
-                         && !mons_is_paralysed(monster))
-                     {
+                    if (mons_player_visible(monster)
+                        && !mons_is_confused(monster)
+                        && !mons_is_paralysed(monster))
+                    {
                         monster->attitude = ATT_HOSTILE;
                         monster->behaviour = BEH_HOSTILE;
                         // for now CREATED_FRIENDLY stays
 
                         if (player_monster_visible(monster))
                         {
-                           num_reconvert++; // only visible ones
+                            num_reconvert++; // only visible ones
                         }
                         reconvert = true;
-                     }
-                 }
-             }
-         }
-     }
-     if (reconvert) // maybe all of them invisible
-     {
-        snprintf(info, INFO_SIZE, "%s booms out: \"Who do you think you are?\"",
-                   god_name(GOD_BEOGH));
-        god_speaks(GOD_BEOGH, info);
+                    }
+                }
+            }
+        }
+    }
+
+    if (reconvert) // maybe all of them invisible
+    {
+        std::string mesg = god_name(GOD_BEOGH);
+        mesg += " booms out: \"Who do you think you are?\"";
+        god_speaks(GOD_BEOGH, mesg.c_str());
 
         if (num_reconvert > 0)
         {
-           std::string how_many;
-           if (num_reconvert == 1 and num_followers > 1)
-              how_many = "One of your";
-           else if (num_reconvert == num_followers)
-              how_many = "Your";
-           else
-              how_many = "Some of your";
-              
-           snprintf(info, INFO_SIZE, "%s follower%s decide%s to abandon you.",
-                how_many.c_str(),
-                (num_reconvert > 1) ? "s" : "",
-                (num_reconvert > 1) ? "" : "s");
-           mpr(info, MSGCH_MONSTER_ENCHANT);
-           return 1;
+            std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+            if (num_reconvert == 1 && num_followers > 1)
+                chan << "One of your followers decides to abandon you.";
+            else
+            {
+                if (num_reconvert == num_followers)
+                    chan << "Your";
+                else
+                    chan << "Some of your";
+                chan << " followers decide to abandon you.";
+            }
+
+            chan << std::endl;
+            
+            return true;
         }
-     }
-     return 0;
+    }
+    return false;
 }
 
 void excommunication(void)
