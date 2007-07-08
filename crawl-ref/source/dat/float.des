@@ -181,7 +181,7 @@ ENDMAP
 # but since they are normal speed with no range attacks, they can be escaped
 #
 NAME: slime_lemuel
-DEPTH: 6-16, Lair
+DEPTH: 11-16, Lair
 ORIENT: float
 MONS: w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
 MAP
