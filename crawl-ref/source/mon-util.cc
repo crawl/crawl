@@ -2666,7 +2666,7 @@ bool monsters::pickup_missile(item_def &item, int near)
 bool monsters::pickup_wand(item_def &item, int near)
 {
     // Only low-HD monsters bother with wands.
-    return hit_dice < 14 && pickup(item, MSLOT_WEAPON, near);
+    return hit_dice < 14 && pickup(item, MSLOT_WAND, near);
 }
 
 bool monsters::pickup_scroll(item_def &item, int near)
