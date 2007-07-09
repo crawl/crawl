@@ -714,6 +714,7 @@ public:
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<unsigned char, NUM_ATTRIBUTES> attribute;
+  FixedVector<long, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;
 

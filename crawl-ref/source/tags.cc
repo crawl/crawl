@@ -793,6 +793,11 @@ static void tag_construct_you(struct tagHeader &th)
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallByte(th,you.attribute[j]);
 
+    // sacrifice values
+    marshallByte(th, NUM_OBJECT_CLASSES);
+    for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
+        marshallLong(th, you.sacrifice_value[j]);
+
     // how many mutations/demon powers?
     marshallShort(th, NUM_MUTATIONS);
     for (j = 0; j < NUM_MUTATIONS; ++j)
@@ -1095,6 +1100,10 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallByte(th);
+
+    count_c = unmarshallByte(th);
+    for (j = 0; j < count_c; ++j)
+        you.sacrifice_value[j] = unmarshallLong(th);
 
     // how many mutations/demon powers?
     count_s = unmarshallShort(th);

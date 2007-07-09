@@ -476,7 +476,17 @@ static void do_god_gift()
                         MISC_DECK_OF_SUMMONING,
                         MISC_DECK_OF_WONDERS
                     };
-                    gift_type = RANDOM_ELEMENT(pure_decks);
+                    int weights[5];
+                    weights[0] = you.sacrifice_value[OBJ_SCROLLS] +
+                        you.sacrifice_value[OBJ_ARMOUR] + 1;
+                    weights[1] = you.sacrifice_value[OBJ_WEAPONS] +
+                        you.sacrifice_value[OBJ_STAVES] +
+                        you.sacrifice_value[OBJ_MISSILES] + 1;
+                    weights[2] = you.sacrifice_value[OBJ_MISCELLANY];
+                    weights[3] = you.sacrifice_value[OBJ_CORPSES] * 100;
+                    weights[4] = you.sacrifice_value[OBJ_POTIONS];
+                    gift_type = pure_decks[choose_random_weighted(weights,
+                                                                  weights+5)];
                 }
                 else
                 {
@@ -2445,21 +2455,42 @@ void offer_items()
 
         const int value = item_value( mitm[i], true );
 
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
+#endif
+
         switch (you.religion)
         {
+        case GOD_NEMELEX_XOBEH:
+            you.sacrifice_value[mitm[i].base_type] += value;
+            if ( you.attribute[ATTR_CARD_COUNTDOWN] &&
+                 random2(800) < value )
+            {
+                you.attribute[ATTR_CARD_COUNTDOWN]--;
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                     you.attribute[ATTR_CARD_COUNTDOWN]);
+#endif
+            }
+
+            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+                 sacrifice_message(you.religion, mitm[i]).c_str());
+            if ((mitm[i].base_type == OBJ_CORPSES && coinflip())
+                // Nemelex piety gain is fairly fast.
+                || random2(value) >= random2(60))
+            {
+                gain_piety(1);
+            }
+            destroy_item(i);
+            break;
+
         case GOD_ZIN:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
-        case GOD_NEMELEX_XOBEH:
             mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
                  sacrifice_message(you.religion, mitm[i]).c_str());
-
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
-#endif
             if (mitm[i].base_type == OBJ_CORPSES 
                 || random2(value) >= 50
-                || (you.religion == GOD_NEMELEX_XOBEH && one_chance_in(50))
                 || player_under_penance())
             {
                 gain_piety(1);

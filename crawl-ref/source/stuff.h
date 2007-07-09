@@ -128,5 +128,20 @@ public:
     ~rng_save_excursion() { pop_rng_state(); }
 };
 
-#endif
+template<typename Iterator>
+int choose_random_weighted(Iterator beg, const Iterator end)
+{
+    int totalweight = 0;
+    int count = 0, result = 0;
+    while ( beg != end )
+    {
+        totalweight += *beg;
+        if ( random2(totalweight) < *beg )
+            result = count;
+        ++count;
+        ++beg;
+    }
+    return result;
+}
 
+#endif
