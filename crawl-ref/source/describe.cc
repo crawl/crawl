@@ -3279,45 +3279,7 @@ std::string get_item_description( const item_def &item, bool verbose,
 
 static std::string get_feature_description_wide(int feat)
 {
-    switch ( feat )
-    {
-    case DNGN_DEEP_WATER:
-        if (you.species != SP_MERFOLK)
-            return "This deep, misty water will drown any who set foot in it, "
-                "unless they feel at home in water. Nothing in the dungeon "
-                "-- not even you! -- is dumb enough to go there without "
-                "thinking twice. Except when they're really confused...";
-        else
-            return "This is the deep, misty water which you call home.";
-    case DNGN_FLOOR:
-        switch (random2(6))
-        {
-        default:
-        case 0:
-        case 1:
-        case 2:
-            return "A plain floor space, for walking on.";
-        case 3:
-            return "Just a floor. Walk on it. Fly over it. I don't care.";
-        case 4:
-            return "A plain floor space, for walking on. "
-                "It could contain a nasty trap, but "
-                "who would be paranoid enough to believe that?";
-        case 5:
-            return "A plain floor space, for walking on. "
-                "Perhaps an invisible creature is lurking there, "
-                "but then, the dungeon is no playground for the "
-                "superstitious.";
-        }
-    case DNGN_ENTER_SHOP:
-        return "A shop! Here, of all places! Some souls question the "
-            "wisdom of the dungeon's shopkeepers, who import wares to "
-            "hawk among a populace nearly as penniless as it is merciless. "
-            "But then, you're here and itching to spend, so... "
-            "what's the problem?";
-    default:
-        return std::string();
-    }
+    return std::string();
 }
 
 void describe_feature_wide(int x, int y)
@@ -3326,7 +3288,9 @@ void describe_feature_wide(int x, int y)
     desc += "$$";
 
     // Get rid of trailing .$$ before lookup
-    desc += getLongDescription(desc.substr(0, desc.length() - 3));
+    desc +=
+        getLongDescription(grd[x][y] == DNGN_ENTER_SHOP? "A shop"
+                           : desc.substr(0, desc.length() - 3));
 
     // For things which require logic
     desc += get_feature_description_wide(grd[x][y]);

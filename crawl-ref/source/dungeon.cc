@@ -338,6 +338,7 @@ static void reset_level()
     dgn_map_mask.init(0);
     level_vaults.clear();
     vault_zones.clear();
+    vault_chance     = 9;
     minivault_chance = 3;
     
     // blank level with DNGN_ROCK_WALL
@@ -1554,7 +1555,9 @@ static void place_specific_stair(dungeon_feature_type stair,
 
 static void place_extra_vaults()
 {
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON) && one_chance_in(vault_chance))
+    if (!player_in_branch(BRANCH_MAIN_DUNGEON)
+        && vault_chance
+        && one_chance_in(vault_chance))
     {
         const int vault = random_map_in_depth(level_id::current());
         if (vault != -1 && build_secondary_vault(you.your_level, vault, -1))
