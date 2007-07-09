@@ -2434,7 +2434,7 @@ void offer_items()
 {
     if (you.religion == GOD_NO_GOD)
         return;
-      
+
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {

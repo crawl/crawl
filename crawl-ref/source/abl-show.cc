@@ -687,6 +687,21 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
+    case ABIL_NEMELEX_STACK_DECK:
+        invoc = true;
+        failure = 80 - (you.piety / 25) - (4 * you.skills[SK_EVOCATIONS]);
+        break;
+        
+    case ABIL_NEMELEX_PEEK:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        break;
+
+    case ABIL_NEMELEX_TRIPLE_DRAW:
+        invoc = true;
+        failure = 60 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        break;
+
         //jmf: following for to-be-created gods
     case ABIL_CHARM_SNAKE:
         invoc = true;
@@ -732,7 +747,6 @@ static talent get_talent(ability_type ability, bool check_confused)
     result.is_invocation = invoc;
 
     return result;
-
 }
 
 std::vector<const char*> get_ability_names()
@@ -1567,16 +1581,19 @@ static bool do_ability(const ability_def& abil)
     case ABIL_NEMELEX_TRIPLE_DRAW:
         if ( !deck_triple_draw() )
             return false;
+        exercise(SK_EVOCATIONS, 3 + random2(3));
         break;
 
     case ABIL_NEMELEX_PEEK:
         if ( !deck_peek() )
             return false;
+        exercise(SK_EVOCATIONS, 2 + random2(2));
         break;
 
     case ABIL_NEMELEX_STACK_DECK:
         if ( !deck_stack() )
             return false;
+        exercise(SK_EVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_BEOGH_SMITING:

@@ -1108,7 +1108,7 @@ static int card_power(deck_rarity_type rarity)
     else if ( you.religion == GOD_NEMELEX_XOBEH && you.duration[DUR_PRAYER] )
     {
         result = you.piety;
-        result *= (you.skills[SK_INVOCATIONS] + 25);
+        result *= (you.skills[SK_EVOCATIONS] + 25);
         result /= 27;
     }
 
