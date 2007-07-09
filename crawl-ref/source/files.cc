@@ -1639,7 +1639,8 @@ void writeString(FILE* file, const std::string &s, int cap)
     if (length > cap)
         length = cap;
     writeShort(file, length);
-    write2(file, s.c_str(), length);
+    if (length)
+        write2(file, s.c_str(), length);
 }
 
 std::string readString(FILE *file, int cap)

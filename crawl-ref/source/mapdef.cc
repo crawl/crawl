@@ -1159,7 +1159,7 @@ void map_def::load()
         return;
     
     const std::string loadfile = get_descache_path(file, ".dsc");
-    FILE *inf = fopen(loadfile.c_str(), "r");
+    FILE *inf = fopen(loadfile.c_str(), "rb");
     fseek(inf, cache_offset, SEEK_SET);
     read_full(inf);
     fclose(inf);
