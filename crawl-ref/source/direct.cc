@@ -1629,7 +1629,7 @@ static void describe_cell(int mx, int my)
         {
             if (menv[i].behaviour == BEH_SLEEP)
             {
-                mprf("%s doesn't appear to have noticed you.",
+                mprf("%s appears to be resting.",
                      mons_pronoun(menv[i].type, PRONOUN_CAP));
             }
             // Applies to both friendlies and hostiles
@@ -1644,7 +1644,7 @@ static void describe_cell(int mx, int my)
                 // special case: batty monsters get set to BEH_WANDER as
                 // part of their special behaviour.
                 if (!testbits(menv[i].flags, MF_BATTY))
-                    mprf("%s doesn't appear to be interested in you.",
+                    mprf("%s doesn't appear to have noticed you.",
                          mons_pronoun(menv[i].type, PRONOUN_CAP));
             }
         }
