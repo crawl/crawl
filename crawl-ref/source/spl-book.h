@@ -28,11 +28,12 @@ int book_rarity(unsigned char which_book);
 bool is_valid_spell_in_book( int splbook, int spell );
 
 
+void mark_had_book(int booktype);
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: it_use3 - item_use - spl-book
  * *********************************************************************** */
-unsigned char read_book( item_def &item, read_book_action_type action );
+int read_book( item_def &item, read_book_action_type action );
 
 
 // updated 24may2000 {dlb}

@@ -86,6 +86,7 @@
 #include "randart.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "tutorial.h"
@@ -479,31 +480,8 @@ static void give_starting_food()
 static void mark_starting_books()
 {
     for (int i = 0; i < ENDOFPACK; i++)
-    {
         if (is_valid_item(you.inv[i]) && you.inv[i].base_type == OBJ_BOOKS)
-        {
-            const int subtype = you.inv[i].sub_type;
-
-            you.had_book[subtype] = true;
-
-            // one for all, all for one
-            if (subtype == BOOK_MINOR_MAGIC_I ||
-                subtype == BOOK_MINOR_MAGIC_II ||
-                subtype == BOOK_MINOR_MAGIC_III)
-            {
-                you.had_book[BOOK_MINOR_MAGIC_I] = true;
-                you.had_book[BOOK_MINOR_MAGIC_II] = true;
-                you.had_book[BOOK_MINOR_MAGIC_III] = true;
-            }
-
-            if (subtype == BOOK_CONJURATIONS_I ||
-                subtype == BOOK_CONJURATIONS_II)
-            {
-                you.had_book[BOOK_CONJURATIONS_I] = true;
-                you.had_book[BOOK_CONJURATIONS_II] = true;
-            }
-        }
-    }
+            mark_had_book(you.inv[i].sub_type);
 }
 
 static void racialise_starting_equipment()

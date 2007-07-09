@@ -1102,37 +1102,29 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 bool acquirement(object_class_type class_wanted, int agent)
 {
     int thing_created = 0;
-
-    // Remember lava!
-    int type_wanted = OBJ_RANDOM;
     int unique = 1;
 
     while (class_wanted == OBJ_RANDOM)
     {
         mesclr();
         mpr("This is a scroll of acquirement!");
-        mpr( "[a|A] Weapon  [b|B] Armour  [c|C] Jewellery      [d|D] Book" );
-        mpr( "[e|E] Staff   [f|F] Food    [g|G] Miscellaneous  [h|H] Gold" );
+        mpr( "[a] Weapon  [b] Armour  [c] Jewellery      [d] Book" );
+        mpr( "[e] Staff   [f] Food    [g] Miscellaneous  [h] Gold" );
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower( get_ch() );
-
-        if (keyin == 'a')
-            class_wanted = OBJ_WEAPONS;
-        else if (keyin == 'b')
-            class_wanted = OBJ_ARMOUR;
-        else if (keyin == 'c')
-            class_wanted = OBJ_JEWELLERY;
-        else if (keyin == 'd')
-            class_wanted = OBJ_BOOKS;
-        else if (keyin == 'e')
-            class_wanted = OBJ_STAVES;
-        else if (keyin == 'f')
-            class_wanted = OBJ_FOOD;
-        else if (keyin == 'g')
-            class_wanted = OBJ_MISCELLANY;
-        else if (keyin == 'h')
-            class_wanted = OBJ_GOLD;
+        switch ( keyin )
+        {
+        case 'a': class_wanted = OBJ_WEAPONS;    break;
+        case 'b': class_wanted = OBJ_ARMOUR;     break;
+        case 'c': class_wanted = OBJ_JEWELLERY;  break;
+        case 'd': class_wanted = OBJ_BOOKS;      break;
+        case 'e': class_wanted = OBJ_STAVES;     break;
+        case 'f': class_wanted = OBJ_FOOD;       break;
+        case 'g': class_wanted = OBJ_MISCELLANY; break;
+        case 'h': class_wanted = OBJ_GOLD;       break;
+        default: break;
+        }
     }
 
     if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
@@ -1143,11 +1135,10 @@ bool acquirement(object_class_type class_wanted, int agent)
     }
     else
     {
-        randart_properties_t  proprt;
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
             unique = 1;
-            type_wanted = find_acquirement_subtype(class_wanted, unique);
+            int type_wanted = find_acquirement_subtype(class_wanted, unique);
 
             // BCR - unique is now used for food quantity.
             thing_created = items( unique, class_wanted, type_wanted, true, 
@@ -1170,6 +1161,7 @@ bool acquirement(object_class_type class_wanted, int agent)
             if ((agent == GOD_TROG || agent == GOD_OKAWARU)
                 && is_random_artefact(doodad))
             {
+                randart_properties_t  proprt;
                 randart_wpn_properties( doodad, proprt );
 
                 // check vs stats. positive stats will automatically fall
@@ -1205,24 +1197,7 @@ bool acquirement(object_class_type class_wanted, int agent)
 
         if (thing.base_type == OBJ_BOOKS)
         {
-            if (thing.sub_type == BOOK_MINOR_MAGIC_I
-                || thing.sub_type == BOOK_MINOR_MAGIC_II
-                || thing.sub_type == BOOK_MINOR_MAGIC_III)
-            {
-                you.had_book[ BOOK_MINOR_MAGIC_I ] = true;
-                you.had_book[ BOOK_MINOR_MAGIC_II ] = true;
-                you.had_book[ BOOK_MINOR_MAGIC_III ] = true;
-            }
-            else if (thing.sub_type == BOOK_CONJURATIONS_I
-                || thing.sub_type == BOOK_CONJURATIONS_II)
-            {
-                you.had_book[ BOOK_CONJURATIONS_I ] = true;
-                you.had_book[ BOOK_CONJURATIONS_II ] = true;
-            }
-            else
-            {
-                you.had_book[ thing.sub_type ] = true;
-            }
+            mark_had_book(thing.sub_type);
         }
         else if (thing.base_type == OBJ_JEWELLERY)
         {

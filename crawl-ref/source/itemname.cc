@@ -213,7 +213,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    const bool tried = !ident && item_type_tried(*this);
+    const bool tried = (!ident && item_type_tried(*this));
     if ( with_inscription && !(this->inscription.empty()) )
     {
         buff << " {";

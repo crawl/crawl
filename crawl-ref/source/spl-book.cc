@@ -1010,10 +1010,29 @@ static bool player_can_read_spellbook( const item_def &book )
     return (true);
 }
 
-unsigned char read_book( item_def &book, read_book_action_type action )
-{
-    unsigned char key2 = 0;
 
+void mark_had_book(int booktype)
+{
+    you.had_book[booktype] = true;
+
+    if ( booktype == BOOK_MINOR_MAGIC_I
+         || booktype == BOOK_MINOR_MAGIC_II
+         || booktype == BOOK_MINOR_MAGIC_III)
+    {
+        you.had_book[BOOK_MINOR_MAGIC_I] = true;
+        you.had_book[BOOK_MINOR_MAGIC_II] = true;
+        you.had_book[BOOK_MINOR_MAGIC_III] = true;
+    }
+    else if (booktype == BOOK_CONJURATIONS_I
+             || booktype == BOOK_CONJURATIONS_II)
+    {
+        you.had_book[BOOK_CONJURATIONS_I] = true;
+        you.had_book[BOOK_CONJURATIONS_II] = true;
+    }
+}
+
+int read_book( item_def &book, read_book_action_type action )
+{
     if (book.base_type == OBJ_BOOKS && !player_can_read_spellbook( book ))
     {
         mpr( "This book is beyond your current level of understanding." );
@@ -1022,27 +1041,10 @@ unsigned char read_book( item_def &book, read_book_action_type action )
     }
 
     // remember that this function is called from staff spells as well:
-    key2 = spellbook_contents( book, action );
+    const int keyin = spellbook_contents( book, action );
 
     if (book.base_type == OBJ_BOOKS)
-    {
-        you.had_book[ book.sub_type ] = true;
-
-        if ( book.sub_type == BOOK_MINOR_MAGIC_I
-            || book.sub_type == BOOK_MINOR_MAGIC_II
-            || book.sub_type == BOOK_MINOR_MAGIC_III)
-        {
-            you.had_book[BOOK_MINOR_MAGIC_I] = true;
-            you.had_book[BOOK_MINOR_MAGIC_II] = true;
-            you.had_book[BOOK_MINOR_MAGIC_III] = true;
-        }
-        else if (book.sub_type == BOOK_CONJURATIONS_I
-             || book.sub_type == BOOK_CONJURATIONS_II)
-        {
-            you.had_book[BOOK_CONJURATIONS_I] = true;
-            you.had_book[BOOK_CONJURATIONS_II] = true;
-        }
-    }
+        mark_had_book(book.sub_type);
 
     redraw_screen();
 
@@ -1051,7 +1053,7 @@ unsigned char read_book( item_def &book, read_book_action_type action )
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
-    return (key2);
+    return (keyin);
 }                               // end read_book()
 
 // recoded to answer whether an UNDEAD_STATE is
