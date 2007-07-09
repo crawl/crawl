@@ -865,13 +865,12 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     end_game(se);
 }
 
-static std::string morgue_name()
+static std::string morgue_name(time_t when_crawl_got_even)
 {
 #ifdef SHORT_FILE_NAMES
     return "morgue";
 #else  // !SHORT_FILE_NAMES
     std::string name = "morgue-" + std::string(you.your_name);
-    time_t when_crawl_got_even = time(NULL);
 
     if (tm *loc = localtime(&when_crawl_got_even))
     {
@@ -978,7 +977,7 @@ void end_game( struct scorefile_entry &se )
     invent( -1, true );
     clrscr();
 
-    if (!dump_char( morgue_name(), !dead, true ))
+    if (!dump_char( morgue_name(se.death_time), !dead, true ))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
