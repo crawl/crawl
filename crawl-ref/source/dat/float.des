@@ -10,8 +10,10 @@
 #            reside in vaults.des.
 ############################################################################### 
 
-# Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
-# easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
+# Set the default depth for vaults. By default vaults are placed only
+# in the main dungeon; if you want to place them elsewhere, use an
+# appropriate DEPTH: in your vault definition.
+
 default-depth: D:12-26
 
 ##############################################################################
