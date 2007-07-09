@@ -981,9 +981,6 @@ void cast_fly(int power)
     else
         you.duration[DUR_CONTROLLED_FLIGHT] += dur_change;
 
-    // duration[DUR_CONTROLLED_FLIGHT] makes the game think player 
-    // wears an amulet of controlled flight
-
     burden_change();
 }
 

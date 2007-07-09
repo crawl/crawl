@@ -539,6 +539,7 @@ void merfolk_start_swimming(void)
     }
 
     remove_equipment(removed);
+    you.redraw_evasion = true;
 }
 
 void up_stairs(void)

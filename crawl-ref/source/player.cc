@@ -267,6 +267,11 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 }
             }
         }
+        else if (!grid_is_water(new_grid) && grid_is_water(old_grid)
+                 && you.species == SP_MERFOLK)
+        {
+            you.redraw_evasion = true;
+        }
     }
 
     // move the player to location
@@ -1891,6 +1896,30 @@ int player_evasion()
         break;
     }
 
+    switch (you.species)
+    {
+    case SP_MERFOLK:
+        // Merfolk get an evasion bonus in water.
+        if (you.swimming())
+        {
+            const int ev_bonus = std::min(9, std::max(2, ev / 4));
+            ev += ev_bonus;
+        }
+        break;
+
+    case SP_KENKU:
+        // Flying kenku get an evasion bonus.
+        if (you.levitates() == 1)
+        {
+            const int ev_bonus = std::min(9, std::max(1, ev / 5));
+            ev += ev_bonus;
+        }
+        break;
+
+    default:
+        break;
+    }
+
     return (ev);
 }
 
@@ -2149,6 +2178,7 @@ int burden_change(void)
 
     you.burden_state = BS_UNENCUMBERED;
     set_redraw_status( REDRAW_BURDEN );
+    you.redraw_evasion = true;
 
     // changed the burdened levels to match the change to max_carried
     if (you.burden < carrying_capacity(BS_UNENCUMBERED))
@@ -5083,7 +5113,7 @@ int player::res_negative_energy() const
 
 int player::levitates() const
 {
-    if ( !player_is_levitating() )
+    if ( !is_levitating() )
         return 0;
     else
         return (you.duration[DUR_CONTROLLED_FLIGHT] ? 1 : 2);
