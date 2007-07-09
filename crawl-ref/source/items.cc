@@ -1385,6 +1385,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     autoinscribe_item( item );
 
     origin_freeze(item, you.x_pos, you.y_pos);
+    check_note_item(item);
 
     item.quantity = quant_got;
     dec_mitm_item_quantity( obj, quant_got );

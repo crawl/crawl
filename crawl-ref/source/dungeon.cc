@@ -119,7 +119,7 @@ static void place_branch_entrances(int dlevel, char level_type);
 static void place_special_minivaults(int level_number, int level_type);
 static void place_traps( int level_number );
 static void prepare_swamp();
-static void prepare_shoals();
+static void prepare_shoals( int level_number );
 static void prepare_water( int level_number );
 static void check_doors();
 static void hide_doors();
@@ -183,12 +183,15 @@ static void jelly_pit(int level_number, spec_room &sr);
 static bool build_secondary_vault(int level_number, int vault, int rune_subst = -1);
 static bool build_vaults(int level_number, int vault_number, int rune_subst = -1,
                          bool build_only = false);
-static bool build_minivaults(int level_number, int force_vault);
+static bool build_minivaults(int level_number, int force_vault,
+                             coord_def where = coord_def() );
 static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
                        FixedVector < object_class_type, 7 > &acq_item_class, 
                        int vgrid, std::vector<coord_def> &targets,
                        int &num_runes, int rune_subst = -1, bool foll = false);
+
+static int dgn_random_map_for_place(bool wantmini);
 
 // ALTAR FUNCTIONS
 static dungeon_feature_type pick_an_altar();
@@ -535,10 +538,7 @@ static void build_dungeon_level(int level_number, int level_type)
     if (player_in_branch( BRANCH_SWAMP ))
         prepare_swamp();
     else if (player_in_branch(BRANCH_SHOALS))
-    {
-        prepare_shoals();
-        place_special_minivaults(level_number, level_type);
-    }
+        prepare_shoals( level_number );
 
     place_branch_entrances( level_number, level_type );
 
@@ -766,7 +766,7 @@ static void place_base_islands(int margin, int num_islands, int estradius,
     }
 }
 
-static void prepare_shoals()
+static void prepare_shoals(int level_number)
 {
     // dpeg's algorithm.
     // We could have just used spotty_level() and changed rock to
@@ -860,9 +860,28 @@ static void prepare_shoals()
         // Put all the stairs on one island
         grd[centres[0].x][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
         grd[centres[0].x+1][centres[0].y] = DNGN_STONE_STAIRS_UP_II;
-        grd[centres[0].x+2][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
+        grd[centres[0].x-1][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
+        
+        // Place the rune
+        int vaultidx;
+        do {
+            vaultidx = dgn_random_map_for_place(true);
+        } while ( vaultidx == -1 ||
+                  !map_by_index(vaultidx)->has_tag("has_rune") );
 
-        // Minivault creation will place the rune (96.4% of the time)
+        build_minivaults( level_number, vaultidx,
+                          centres[1] - coord_def(3,3) );
+
+        for ( int i = 2; i < num_islands; ++i )
+        {
+            // Place (non-rune) minivaults on the other islands
+            do {
+                vaultidx = dgn_random_map_for_place(true);
+            } while ( vaultidx == -1 ||
+                      map_by_index(vaultidx)->has_tag("has_rune") );
+            build_minivaults( level_number, vaultidx,
+                              centres[i] - coord_def(3,3) );
+        }
     }
     else
     {
@@ -1174,36 +1193,6 @@ static void place_special_minivaults(int level_number, int level_type)
         }
     }
     
-    // FIXME hand-hackery for placing minivaults at the bottom of the Shoals.
-    if ( (level_id::current().branch == BRANCH_SHOALS) &&
-         (level_id::current().depth = branches[BRANCH_SHOALS].depth) )
-    {
-        int tries = 40;
-        int num_to_place = random2(3) + 4;
-        for ( int i = 0; i < num_to_place && tries > 0; ++i, --tries )
-        {
-            const int vault = dgn_random_map_for_place(true);
-
-            if (vault == -1)
-            {
-                --i;
-                continue;
-            }
-            
-            // If we've already used this minivault and it doesn't
-            // want duplicates, do another iteration.
-            if (used.find(vault) != used.end()
-                && !map_by_index(vault)->has_tag("allow_dup"))
-            {
-                --i;
-                continue;
-            }
-
-            build_minivaults(level_number, vault);
-            used.insert(vault);
-        }
-    }
-
     int chance = level_number == 0? 50 : 100;
     while (chance && random2(100) < chance)
     {
@@ -2629,7 +2618,8 @@ static bool find_minivault_place(const vault_placement &place,
     return (false);
 }
 
-static bool build_minivaults(int level_number, int force_vault)
+static bool build_minivaults(int level_number, int force_vault,
+                             coord_def where)
 {
     // for some weird reason can't put a vault on level 1, because monster equip
     // isn't generated.
@@ -2650,10 +2640,14 @@ static bool build_minivaults(int level_number, int force_vault)
     vault_placement place;
     vault_main(vgrid, place, force_vault);
 
-    int vx, vy;
     int v1x, v1y;
 
-    if (!find_minivault_place(place, v1x, v1y))
+    if ( where.x > 0 && where.y > 0 )
+    {
+        v1x = where.x;
+        v1y = where.y;
+    }
+    else if (!find_minivault_place(place, v1x, v1y))
         return (false);
 
     place.x = v1x;
@@ -2677,9 +2671,9 @@ static bool build_minivaults(int level_number, int force_vault)
     int num_runes = 0;
 
     // paint the minivault onto the grid
-    for (vx = v1x; vx < v1x + place.width; vx++)
+    for (int vx = v1x; vx < v1x + place.width; vx++)
     {
-        for (vy = v1y; vy < v1y + place.height; vy++)
+        for (int vy = v1y; vy < v1y + place.height; vy++)
         {
             const int feat = vgrid[vy - v1y][vx - v1x];
             if (feat == ' ')
