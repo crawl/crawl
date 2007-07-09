@@ -578,6 +578,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
         // Give these monsters a second weapon -- bwr
         if (mons_wields_two_weapons(static_cast<monster_type>(mon_type)))
             give_item( id, power );
+
+        unwind_var<int> save_speedinc(menv[id].speed_increment);
+        menv[id].wield_melee_weapon(false);
     }
 
     // give manticores 8 to 16 spike volleys.

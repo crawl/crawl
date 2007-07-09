@@ -135,6 +135,7 @@ public:
     {
         val = newval;
     }
+    unwind_var(T &val_) : val(val_), oldval(val_) { }
     ~unwind_var()
     {
         val = oldval;

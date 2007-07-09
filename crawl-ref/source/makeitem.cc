@@ -2928,7 +2928,7 @@ static void give_monster_item(
         set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
     }
 
-    const int speed_inc = mon->speed_increment;
+    unwind_var<int> save_speedinc(mon->speed_increment);
     if (!(pickupfn? (mon->*pickupfn)(mthing, false)
           : mon->pickup_item(mthing, false, true)))
     {
@@ -2939,7 +2939,6 @@ static void give_monster_item(
         destroy_item(thing);
         return ;
     }
-    mon->speed_increment = speed_inc;
     
     if (!force_item || mthing.colour == BLACK) 
         item_colour( mthing );
