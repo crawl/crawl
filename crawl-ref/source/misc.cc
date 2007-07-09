@@ -2264,3 +2264,26 @@ void run_environment_effects()
         }
     }
 }
+
+coord_def pick_adjacent_free_square(int x, int y)
+{
+    int num_ok = 0;
+    coord_def result(-1, -1);
+    for ( int ux = x-1; ux <= x+1; ++ux )
+    {
+        for ( int uy = y-1; uy <= y+1; ++uy )
+        {
+            if ( ux == x && uy == y )
+                continue;
+
+            if ( ux >= 0 && ux < GXM && uy >= 0 && uy < GYM &&
+                 grd[ux][uy] == DNGN_FLOOR && mgrd[ux][uy] == NON_MONSTER )
+            {
+                ++num_ok;
+                if ( one_chance_in(num_ok) )
+                    result.set(ux, uy);
+            }
+        }
+    }
+    return result;
+}

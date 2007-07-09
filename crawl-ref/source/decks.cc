@@ -924,7 +924,66 @@ static void dowsing_card(int power, deck_rarity_type rarity)
 
 static void trowel_card(int power, deck_rarity_type rarity)
 {
-    // XXX not yet implemented
+    const int power_level = get_power_level(power, rarity);
+    bool done_stuff = false;
+    if ( power_level >= 2 )
+    {
+        // XXX FIXME Vaults not implemented
+        // generate a vault
+    }
+    else if ( power_level == 1 )
+    {
+        if (coinflip())
+        {
+            // Create a random bad statue
+            // This could be really bad, because it's placed adjacent
+            // to you...
+            const monster_type statues[] = {
+                MONS_ORANGE_STATUE, MONS_SILVER_STATUE, MONS_ICE_STATUE
+            };
+            const monster_type mons = RANDOM_ELEMENT(statues);
+            if ( create_monster(mons, 0, BEH_HOSTILE, you.x_pos, you.y_pos,
+                                MHITYOU, 250) != -1 )
+            {
+                mpr("A menacing statue appears!");
+                done_stuff = true;
+            }
+        }
+        else
+        {
+            coord_def pos = pick_adjacent_free_square(you.x_pos, you.y_pos);
+            if ( pos.x >= 0 && pos.y >= 0 )
+            {
+                const dungeon_feature_type statfeat[] = {
+                    DNGN_GRANITE_STATUE, DNGN_ORCISH_IDOL
+                };
+                // We leave the items on the square
+                grd[pos.x][pos.y] = RANDOM_ELEMENT(statfeat);
+                mpr("A statue takes form beside you.");
+                done_stuff = true;
+            }
+        }
+    }
+    else
+    {
+        // generate an altar
+        if ( grd[you.x_pos][you.y_pos] == DNGN_FLOOR )
+        {
+            // might get GOD_NO_GOD and no altar
+            grd[you.x_pos][you.y_pos] =
+                altar_for_god(static_cast<god_type>(random2(NUM_GODS)));
+
+            if ( grd[you.x_pos][you.y_pos] != DNGN_FLOOR )
+            {
+                done_stuff = true;
+                mpr("An altar grows from the floor before you!");
+            }
+        }
+    }
+
+    if ( !done_stuff )
+        mprf("Nothing appears to happen.", power_level);
+
     return;
 }
 
@@ -1095,7 +1154,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_EXPERIENCE:       potion_effect(POT_EXPERIENCE, power/4); break;
     case CARD_HELIX:            helix_card(power, rarity); break;
     case CARD_DOWSING:          dowsing_card(power, rarity); break;
-    case CARD_TROWEL:           trowel_card(power, rarity); break;
     case CARD_MINEFIELD:        minefield_card(power, rarity); break;
     case CARD_GENIE:            genie_card(power, rarity); break;
     case CARD_CURSE:            curse_card(power, rarity); break;
@@ -1108,11 +1166,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_SUMMON_ANY:       summon_any_monster(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_SUMMON_WEAPON:    summon_dancing_weapon(power, rarity); break;
-        
-    case CARD_SPADE:
-        // XXX not yet implemented
-        mpr("Sorry, this card is not yet available.");
-        break;
+    case CARD_TROWEL:           trowel_card(power, rarity); break;
+    case CARD_SPADE: your_spells(SPELL_DIG, random2(power/4), false); break;
         
     case CARD_VITRIOL: case CARD_FLAME: case CARD_FROST: case CARD_HAMMER:
         damaging_card(which_card, power, rarity);

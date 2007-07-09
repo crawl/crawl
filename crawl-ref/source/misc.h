@@ -206,4 +206,6 @@ bool do_autopray();
 
 bool player_in_a_dangerous_place();
 
+coord_def pick_adjacent_free_square(int x, int y);
+
 #endif
