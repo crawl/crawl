@@ -428,6 +428,7 @@ ENDMAP
 ###################################
 # mage tower -- either orc with assistants, or ogre with guards
 NAME: mines4_lemuel
+TAGS: mini_float no_rotate
 SUBST: ? = +=
 SUBST: d = $d
 SUBST: I = IG
@@ -435,17 +436,15 @@ SHUFFLE: 112/334
 MONS: orc sorcerer, orc/orc wizard, ogre-mage, ogre/nothing
 ITEM: any book
 MAP
-...............
-...xxxx?xxxx...
-..xx2.....2xx..
-.xx.2xxxxx2.xx.
-.x..xxd1dxx..x.
-.x.Ix$$G$$xI.x.
-.x..xx222xx..x.
-.xx.2xx?xx2.xx.
-..xx..2.2..xx..
-...xxxxxxxxx...
-...............
+  xxxx?xxxx
+ xx2.....2xx
+xx.2xxxxx2.xx
+x..xxd1dxx..x
+x.Ix$$G$$xI.x
+x..xx222xx..x
+xx.2xx?xx2.xx
+ xx..2.2..xx
+  xxxxxxxxx
 ENDMAP
 
 ###################################

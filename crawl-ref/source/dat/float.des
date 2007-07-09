@@ -12,7 +12,7 @@
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
-default-depth: 12-26
+default-depth: D:12-26
 
 ##############################################################################
 # Dummy probability balancer vault for depths 1-11.

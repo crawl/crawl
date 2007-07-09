@@ -161,6 +161,10 @@ static int box_room_doors( int bx1, int bx2, int by1, int by2, int new_doors);
 static void city_level(int level_number);
 static void diamond_rooms(int level_number);
 
+static void pick_float_exits(vault_placement &place,
+                             std::vector<coord_def> &targets);
+static void connect_vault(const vault_placement &vp);
+
 // ITEM & SHOP FUNCTIONS
 static void place_shops(int level_number);
 static object_class_type item_in_shop(unsigned char shop_type);
@@ -2687,9 +2691,10 @@ static bool build_minivaults(int level_number, int force_vault,
     apply_place_masks(place);
     
     // these two are throwaways:
-    std::vector<coord_def> dummy;
     int num_runes = 0;
 
+    std::vector<coord_def> &target_connections = place.exits;
+    
     // paint the minivault onto the grid
     for (int vx = v1x; vx < v1x + place.width; vx++)
     {
@@ -2701,10 +2706,16 @@ static bool build_minivaults(int level_number, int force_vault,
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
                                       acq_item_class,
-                                      feat, dummy, 
+                                      feat, target_connections, 
                                       num_runes );
         }
     }
+
+    if (target_connections.empty() && place.map.has_tag("mini_float"))
+        pick_float_exits(place, target_connections);
+        
+    if (!target_connections.empty())
+        connect_vault(place);
 
     return (true);
 }                               // end build_minivaults()

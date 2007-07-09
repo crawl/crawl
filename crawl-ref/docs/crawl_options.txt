@@ -544,17 +544,17 @@ symmetric_scroll = true
         This option is not relevant if view_lock or center_on_scroll
         are set.
 
-scroll_margin_x = 4
+scroll_margin_x = 2
         How far from the left or right edges scrolling starts. By
-        default, if the PC's circle of line-of-sight is closer than 4
-        squares from the edge, the viewport scrolls. If set at zero,
-        the viewport scrolls only when the LOS circle reaches the
-        viewport edge.
+        default, if the PC's circle of line-of-sight is closer than
+        two squares from the edge, the viewport scrolls. If set at
+        zero, the viewport scrolls only when the LOS circle reaches
+        the viewport edge.
 
-scroll_margin_y = 4
+scroll_margin_y = 2
         How far from the top or bottom edges scrolling starts.
 
-scroll_margin = 4
+scroll_margin = 2
         An aliased option that sets both scroll_margin_x and 
         scroll_margin_y.
 

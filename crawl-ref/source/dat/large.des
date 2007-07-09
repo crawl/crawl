@@ -6,7 +6,7 @@
 # vaults.des.
 ###############################################################################
 
-default-depth: 12-26
+default-depth: D:12-26
 # be careful to adapt these numbers for new vaults (using DEPTH) 
 
 ##############################################################################

@@ -33,7 +33,7 @@
 
 # Default depth for minivaults. If your minivault is suitable for one of the
 # branches below, add it via DEPTH: Lair or similar.
-default-depth: 8-27, !Orc, !Lair, !Swamp, !Shoal
+default-depth: D:8-27
 
 ##############################################################################
 # Minivault balancer

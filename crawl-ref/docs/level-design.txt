@@ -79,9 +79,9 @@ attributes.
 
 * Random minivaults:
 
-Random minivaults are small maps that are placed onto a level that the dungeon
-builder has already constructed fully otherwise (the level may include other
-vaults).
+Random minivaults are small maps that are placed onto a level that the
+dungeon builder has already constructed fully otherwise (the level may
+include other vaults).
 
 Minivaults are distinguished from normal vaults solely by the absence
 of an ORIENT: declaration. Any map without a specified ORIENT: is a
@@ -342,7 +342,9 @@ PLACE:   Used to specify certain special levels. Existing special levels are:
 
          PLACE can be used with random vaults and minivaults for testing them.
          
-TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry
+TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry,
+         mini_float
+         
          Tags go an a TAGS: line and are space-separated. Valid tags are:
          * "dummy": this tag indicates that the vault is a stub; if the dungeon
                     builder picks a dummy vault, it pretends no vault was
@@ -365,6 +367,10 @@ TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry
            ebranch.des. If a branch has very few entries, a dummy entry is
            advisable to make sure the player doesn't get bored of the same
            few entries recycled ad nauseam.
+         * "mini_float": applicable only to minivaults, requests that
+           the dungeon builder pick random exits from the minivault and
+           connect it to the rest of the level, similar to the exit
+           behaviour for floating vaults.
          * "mnoleg" or the name of some other pandemonium lord. This makes
            the map eligible for said pan lord's lair.
 
@@ -481,7 +487,7 @@ SUBST:   ?=xc, !:bv, 1=2 1:100
 NSUBST:  ? = 3:w / *:l
 
          NSUBST is similar to SUBST, replacing placeholders with
-         replacements values. Unlike SUBST, however, it allows you to
+         replacement values. Unlike SUBST, however, it allows you to
          replace different instances of the same placeholder with
          completely different substitutions. For instance:
 
@@ -779,25 +785,22 @@ G.    Hints for level makers
   rooms with no exit (use at least > or < to make it possible for players
   to get away).
 
-  Minivaults should generally be completely surrounded by one-space of
-  floor for accessibility. Minivaults are not handled like regular
-  vaults in terms of entry-points: the entry-point glyph @ is ignored
-  for minivaults. In general, at least one square of a minivault will
-  be reachable from the rest of the level, but there is no way to
-  predict which one. If your minivault is intended to be accessible,
-  surround it with floor.
-
+  Minivaults can use explicit @ exits, or be completely surrounded by
+  one space of floor for accessibility. Alternatively, you can request
+  that the dungeon builder pick appropriate exits as it does for
+  floating vaults by using the "mini_float" tag.
+  
   The entry point '@' must be present for all vaults (except
-  full-screen vaults and minivaults where it must not, and floating
-  vaults where it is optional). All @ will be connected to floor space
-  in the rest of the map (multiple @ close together may merge into the
-  same exit corridor). Make sure that no part of your entry level can
-  be cut off! If no @ is present in a floating vault (and there are no
-  doors on the edge of the map, see below), the level builder will put
-  one or more on a random floor space '.' at the circumference. Note
-  that it is not possible to predict which floor spaces the level
-  builder will choose to connect; if you need predictability, use
-  explicit @ exits on the edge.
+  full-screen vaults where it must not, and floating vaults and
+  minivaults where it is optional). All @ will be connected to floor
+  space in the rest of the map (multiple @ close together may merge
+  into the same exit corridor). Make sure that no part of your entry
+  level can be cut off! If no @ is present in a floating vault (and
+  there are no doors on the edge of the map, see below), the level
+  builder will use one or more random floor spaces '.' or doors at the
+  circumference as exits. Note that it is not possible to predict
+  which spaces the level builder will choose to connect; if you need
+  predictability, use explicit @ exits on the edge.
 
   The level-builder will also implicitly treat doors and secret doors
   on the edge of a map as explicit exits (the same as using @) and
