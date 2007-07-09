@@ -469,62 +469,25 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     return;
 }                               // end random_uselessness()
 
-bool acquirement(object_class_type force_class, int agent)
+static int find_acquirement_subtype(object_class_type class_wanted,
+                                    int &unique)
 {
-    int thing_created = 0;
+    ASSERT(class_wanted != OBJ_RANDOM);
+    
+    int type_wanted = OBJ_RANDOM;
     int iteration = 0;
-
-    // Remember lava!
-    object_class_type class_wanted = OBJ_RANDOM;
-    unsigned char type_wanted = OBJ_RANDOM;
-
-    unsigned char unique = 1;
 
     const int max_has_value = 100;
     FixedVector< int, max_has_value > already_has;
 
-    char best_spell = 99;
-    char best_any = 99;
-    unsigned char keyin;
+    skill_type best_spell = SK_NONE;
+    skill_type best_any   = SK_NONE;
 
     already_has.init(0);
 
     int spell_skills = 0;
     for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
         spell_skills += you.skills[i];
-
-    if (force_class == OBJ_RANDOM)
-    {
-        mpr("This is a scroll of acquirement!");
-
-      query:
-        mpr( "[a|A] Weapon  [b|B] Armour  [c|C] Jewellery      [d|D] Book" );
-        mpr( "[e|E] Staff   [f|F] Food    [g|G] Miscellaneous  [h|H] Gold" );
-
-        //mpr("[r|R] - Just give me something good.");
-        mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
-
-        keyin = tolower( get_ch() );
-
-        if (keyin == 'a')
-            class_wanted = OBJ_WEAPONS;
-        else if (keyin == 'b')
-            class_wanted = OBJ_ARMOUR;
-        else if (keyin == 'c')
-            class_wanted = OBJ_JEWELLERY;
-        else if (keyin == 'd')
-            class_wanted = OBJ_BOOKS;
-        else if (keyin == 'e')
-            class_wanted = OBJ_STAVES;
-        else if (keyin == 'f')
-            class_wanted = OBJ_FOOD;
-        else if (keyin == 'g')
-            class_wanted = OBJ_MISCELLANY;
-        else if (keyin == 'h')
-            class_wanted = OBJ_GOLD;
-    }
-    else
-        class_wanted = force_class;
 
     for (int acqc = 0; acqc < ENDOFPACK; acqc++)
     {
@@ -1124,15 +1087,52 @@ bool acquirement(object_class_type force_class, int agent)
                     || type_wanted == MISC_CRYSTAL_BALL_OF_FIXATION
                     || type_wanted == MISC_EMPTY_EBONY_CASKET);
                 break;
-
             default:
-                mesclr();
-                goto query;
+                break;
             }
 
             ASSERT( type_wanted < max_has_value );
         }
         while (already_has[type_wanted] && !one_chance_in(200));
+    }
+
+    return (type_wanted);
+}
+
+bool acquirement(object_class_type class_wanted, int agent)
+{
+    int thing_created = 0;
+
+    // Remember lava!
+    int type_wanted = OBJ_RANDOM;
+    int unique = 1;
+
+    while (class_wanted == OBJ_RANDOM)
+    {
+        mesclr();
+        mpr("This is a scroll of acquirement!");
+        mpr( "[a|A] Weapon  [b|B] Armour  [c|C] Jewellery      [d|D] Book" );
+        mpr( "[e|E] Staff   [f|F] Food    [g|G] Miscellaneous  [h|H] Gold" );
+        mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
+
+        const int keyin = tolower( get_ch() );
+
+        if (keyin == 'a')
+            class_wanted = OBJ_WEAPONS;
+        else if (keyin == 'b')
+            class_wanted = OBJ_ARMOUR;
+        else if (keyin == 'c')
+            class_wanted = OBJ_JEWELLERY;
+        else if (keyin == 'd')
+            class_wanted = OBJ_BOOKS;
+        else if (keyin == 'e')
+            class_wanted = OBJ_STAVES;
+        else if (keyin == 'f')
+            class_wanted = OBJ_FOOD;
+        else if (keyin == 'g')
+            class_wanted = OBJ_MISCELLANY;
+        else if (keyin == 'h')
+            class_wanted = OBJ_GOLD;
     }
 
     if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
@@ -1144,8 +1144,11 @@ bool acquirement(object_class_type force_class, int agent)
     else
     {
         randart_properties_t  proprt;
-        for (int item_tries = 0; item_tries < 200; item_tries++)
+        for (int item_tries = 0; item_tries < 40; item_tries++)
         {
+            unique = 1;
+            type_wanted = find_acquirement_subtype(class_wanted, unique);
+
             // BCR - unique is now used for food quantity.
             thing_created = items( unique, class_wanted, type_wanted, true, 
                                    MAKE_GOOD_ITEM, 250 );

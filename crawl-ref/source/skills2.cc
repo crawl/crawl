@@ -2039,7 +2039,7 @@ const char *player_title( void )
     return (skill_title( best, you.skills[ best ] ));
 }                               // end player_title()
 
-int best_skill( int min_skill, int max_skill, int excl_skill )
+skill_type best_skill( int min_skill, int max_skill, int excl_skill )
 {
     int ret = SK_FIGHTING;
     unsigned int best_skill_level = 0;
@@ -2069,7 +2069,7 @@ int best_skill( int min_skill, int max_skill, int excl_skill )
         }
     }
 
-    return (ret);
+    return static_cast<skill_type>(ret);
 }                               // end best_skill()
 
 // Calculate the skill_order array from scratch.

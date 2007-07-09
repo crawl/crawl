@@ -46,7 +46,7 @@ const char *player_title( void );
  * called from: acr - chardump - effects - files - player - skills -
  *              skills2 - stuff
  * *********************************************************************** */
-int best_skill(int min_skill, int max_skill, int excl_skill = -1);
+skill_type best_skill(int min_skill, int max_skill, int excl_skill = -1);
 
 void init_skill_order( void );
 
