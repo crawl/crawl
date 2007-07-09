@@ -32,17 +32,21 @@
 void drop_everything(void);
 void extra_hp(int amount_extra);
 
-bool remove_equipment(FixedVector < char, 8 > &remove_stuff)
+bool remove_equipment(std::set<equipment_type> removed)
 {
     // if we're removing body armour, the cloak will come off as well -- bwr
-    if (remove_stuff[EQ_BODY_ARMOUR] == 1 && you.equip[EQ_BODY_ARMOUR] != -1)
-        remove_stuff[EQ_CLOAK] = 1;
+    if ( removed.find(EQ_BODY_ARMOUR) != removed.end() &&
+         you.equip[EQ_BODY_ARMOUR] != -1 )
+        removed.insert(EQ_CLOAK);
 
     // if we're removing gloves, the weapon will come off as well -- bwr
-    if (remove_stuff[EQ_GLOVES] == 1 && you.equip[EQ_GLOVES] != -1)
-        remove_stuff[EQ_WEAPON] = 1;
+    // but this makes Statue Form odd -- haranp
+    if ( removed.find(EQ_GLOVES) != removed.end() &&
+         you.equip[EQ_GLOVES] != -1 )
+        removed.insert(EQ_WEAPON);
 
-    if (remove_stuff[EQ_WEAPON] == 1 && you.equip[EQ_WEAPON] != -1)
+    if ( removed.find(EQ_WEAPON) != removed.end() &&
+         you.equip[EQ_WEAPON] != -1)
     {
         unwield_item(you.equip[EQ_WEAPON]);
         you.equip[EQ_WEAPON] = -1;
@@ -50,31 +54,43 @@ bool remove_equipment(FixedVector < char, 8 > &remove_stuff)
         you.wield_change = true;
     }
 
-    for (int i = EQ_CLOAK; i < EQ_LEFT_RING; i++)
+    // Remove items in order (std::set is a sorted container)
+    std::set<equipment_type>::const_iterator iter;
+    for ( iter = removed.begin(); iter != removed.end(); ++iter )
     {
-        if (remove_stuff[i] == 0 || you.equip[i] == -1)
+        const equipment_type e = *iter;
+        if ( e == EQ_WEAPON || you.equip[e] == -1 )
             continue;
 
         mprf("%s falls away.",
-             you.inv[you.equip[i]].name(DESC_CAP_YOUR).c_str());
+             you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
 
-        unwear_armour( you.equip[i] );
-        you.equip[i] = -1;
+        unwear_armour( you.equip[e] );
+        you.equip[e] = -1;
     }
 
     return true;
 }                               // end remove_equipment()
 
+bool remove_one_equip(equipment_type eq)
+{
+    std::set<equipment_type> r;
+    r.insert(eq);
+    return remove_equipment(r);
+}
+
 // Returns true if any piece of equipment that has to be removed is cursed.
 // Useful for keeping low level transformations from being too useful.
-static bool check_for_cursed_equipment( FixedVector < char, 8 > &remove_stuff )
+static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
 {
-    for (int i = EQ_WEAPON; i < EQ_LEFT_RING; i++)
+    std::set<equipment_type>::const_iterator iter;
+    for (iter = remove.begin(); iter != remove.end(); ++iter )
     {
-        if (remove_stuff[i] == 0 || you.equip[i] == -1)
+        equipment_type e = *iter;
+        if ( you.equip[e] == -1 )
             continue;
 
-        if (item_cursed( you.inv[ you.equip[i] ] ))
+        if (item_cursed( you.inv[ you.equip[e] ] ))
         {
             mpr( "Your cursed equipment won't allow you to complete the "
                  "transformation." );
@@ -158,13 +174,17 @@ bool transform(int pow, transformation_type which_trans)
     //jmf: silently discard this enchantment
     you.duration[DUR_STONESKIN] = 0;
 
-    FixedVector < char, 8 > rem_stuff;
+    // We drop everything except jewellery by default
+    equipment_type default_rem[] = {
+        EQ_WEAPON, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS,
+        EQ_SHIELD, EQ_BODY_ARMOUR
+    };
 
-    for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
-        rem_stuff[i] = 1;
+    std::set<equipment_type> rem_stuff(default_rem,
+                                       default_rem + ARRAYSIZE(default_rem));
 
-    you.redraw_evasion = 1;
-    you.redraw_armour_class = 1;
+    you.redraw_evasion = true;
+    you.redraw_armour_class = true;
     you.wield_change = true;
 
     /* Remember, it can still fail in the switch below... */
@@ -175,7 +195,7 @@ bool transform(int pow, transformation_type which_trans)
             return (false);
 
         mpr("You turn into a venomous arachnid creature.");
-        remove_equipment( rem_stuff );
+        remove_equipment(rem_stuff);
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_SPIDER;
         you.duration[DUR_TRANSFORMATION] = 10 + random2(pow) + random2(pow);
@@ -192,7 +212,7 @@ bool transform(int pow, transformation_type which_trans)
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 
         mpr( "You turn into a creature of crystalline ice." );
 
-        rem_stuff[ EQ_CLOAK ] = 0;       
+        rem_stuff.erase(EQ_CLOAK);
 
         remove_equipment( rem_stuff );
 
@@ -212,10 +232,10 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_BLADE_HANDS:
-        rem_stuff[EQ_CLOAK] = 0;
-        rem_stuff[EQ_HELMET] = 0;
-        rem_stuff[EQ_BOOTS] = 0;
-        rem_stuff[EQ_BODY_ARMOUR] = 0;
+        rem_stuff.erase(EQ_CLOAK);
+        rem_stuff.erase(EQ_HELMET);
+        rem_stuff.erase(EQ_BOOTS);
+        rem_stuff.erase(EQ_BODY_ARMOUR);
 
         if (check_for_cursed_equipment( rem_stuff ))
             return (false);
@@ -238,10 +258,11 @@ bool transform(int pow, transformation_type which_trans)
         else
             mpr( "You turn into a living statue of rough stone." );
 
-        rem_stuff[ EQ_WEAPON ] = 0;       /* can still hold a weapon */
-        rem_stuff[ EQ_CLOAK ] = 0;       
-        rem_stuff[ EQ_HELMET ] = 0;       
-        rem_stuff[ EQ_BOOTS ] = 0;       
+        rem_stuff.erase(EQ_WEAPON); // can still hold a weapon
+        rem_stuff.erase(EQ_CLOAK);
+        rem_stuff.erase(EQ_HELMET);
+        rem_stuff.erase(EQ_BOOTS);
+
         // too stiff to make use of shields, gloves, or armour -- bwr
 
         remove_equipment( rem_stuff );
@@ -265,7 +286,8 @@ bool transform(int pow, transformation_type which_trans)
 
     case TRAN_DRAGON:  // also AC +10, ev -3, cold -1, fire +2, pois +1, flight
         if (you.species == SP_MERFOLK && player_is_swimming())
-            mpr("You fly out of the water as you turn into a fearsome dragon!");
+            mpr("You fly out of the water as you turn into "
+                "a fearsome dragon!");
         else
             mpr("You turn into a fearsome dragon!");
 
@@ -375,13 +397,8 @@ bool transform_can_butcher_barehanded(transformation_type tt)
 
 void untransform(void)
 {
-    FixedVector < char, 8 > rem_stuff;
-
-    for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
-        rem_stuff[i] = 0;
-
-    you.redraw_evasion = 1;
-    you.redraw_armour_class = 1;
+    you.redraw_evasion = true;
+    you.redraw_armour_class = true;
     you.wield_change = true;
 
     you.symbol = '@';
@@ -475,13 +492,11 @@ void untransform(void)
     // If nagas wear boots while transformed, they fall off again afterwards:
     // I don't believe this is currently possible, and if it is we
     // probably need something better to cover all possibilities.  -bwr
-    if ((you.species == SP_NAGA || you.species == SP_CENTAUR)
-            && you.equip[ EQ_BOOTS ] != -1
-            && you.inv[ you.equip[EQ_BOOTS] ].sub_type != ARM_NAGA_BARDING)
-    {
-        rem_stuff[EQ_BOOTS] = 1;
-        remove_equipment(rem_stuff);
-    }
+
+    // Removed barding check, no transformed creatures can wear barding
+    // anyway.
+    if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+        remove_one_equip(EQ_BOOTS);
 
     calc_hp();
     if (hp_downscale != 10)

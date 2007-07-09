@@ -1546,18 +1546,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     case MUT_HOOVES:            //jmf: like horns
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
-        if (you.equip[EQ_BOOTS] != -1)
-        {
-            FixedVector < char, 8 > removed;
-
-            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
-            {
-                removed[i] = 0;
-            }
-
-            removed[EQ_BOOTS] = 1;
-            remove_equipment(removed);
-        }
+        remove_one_equip(EQ_BOOTS);
         break;
 
     case MUT_CLAWS:
@@ -1567,18 +1556,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
              MSGCH_MUTATION);
 
         // gloves aren't prevented until level three
-        if (you.mutation[ mutat ] >= 3 && you.equip[ EQ_GLOVES ] != -1)
-        {
-            FixedVector < char, 8 > removed;
-
-            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
-            {
-                removed[i] = 0;
-            }
-
-            removed[ EQ_GLOVES ] = 1;
-            remove_equipment( removed );
-        }
+        if (you.mutation[ mutat ] >= 3)
+            remove_one_equip(EQ_GLOVES);
         break;
 
     case MUT_HORNS:             // horns force your helmet off
@@ -1592,15 +1571,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
                 break;          // horns don't push caps/wizard hats off
             }
 
-            FixedVector < char, 8 > removed;
-
-            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
-            {
-                removed[i] = 0;
-            }
-
-            removed[EQ_HELMET] = 1;
-            remove_equipment(removed);
+            remove_one_equip(EQ_HELMET);
         }
         break;
 

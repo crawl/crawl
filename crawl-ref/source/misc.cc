@@ -513,30 +513,17 @@ void curare_hits_player(int agent, int degree)
 
 void merfolk_start_swimming(void)
 {
-    FixedVector < char, 8 > removed;
-
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
         untransform();
 
-    for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
-    {
-        removed[i] = 0;
-    }
-
-    if (you.equip[EQ_BOOTS] != -1)
-        removed[EQ_BOOTS] = 1;
+    std::set<equipment_type> removed;
+    removed.insert(EQ_BOOTS);
 
     // Perhaps a bit to easy for the player, but we allow merfolk
     // to slide out of heavy body armour freely when entering water,
     // rather than handling emcumbered swimming. -- bwr
     if (!player_light_armour())
-    {
-        // Can't slide out of just the body armour, cloak comes off -- bwr
-        if (you.equip[EQ_CLOAK])
-            removed[EQ_CLOAK] = 1;
-
-        removed[EQ_BODY_ARMOUR] = 1;
-    }
+        removed.insert(EQ_BODY_ARMOUR);
 
     remove_equipment(removed);
     you.redraw_evasion = true;

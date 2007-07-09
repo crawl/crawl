@@ -14,6 +14,8 @@
 #ifndef TRANSFOR_H
 #define TRANSFOR_H
 
+#include <set>
+
 #include "FixVec.h"
 #include "enum.h"
 
@@ -44,7 +46,8 @@ bool transform(int pow, transformation_type which_trans);
 /* ***********************************************************************
  * called from: mutation - transfor
  * *********************************************************************** */
-bool remove_equipment( FixedVector<char, 8>& remove_stuff );
+bool remove_equipment( std::set<equipment_type> remove_stuff );
+bool remove_one_equip(equipment_type eq);
 
 bool transform_changed_physiology( bool phys_scales = false );
 

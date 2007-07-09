@@ -1469,7 +1469,7 @@ on the part of the player.
   Grey Draconians have no particular weaknesses or strengths when it 
       comes to learning, and they get no breath weapon. Their scales, 
       however, become particularly hard over time, they gain more HP 
-      than other draconians, nd they grow a spiked tail, making them
+      than other draconians, and they grow a spiked tail, making them
       particularly fit for battle.
 
   Black Draconians command lightning bolts and are naturally insulated.

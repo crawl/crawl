@@ -726,7 +726,7 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    const int base_type = you.inv[item].base_type;
+    const object_class_type base_type = you.inv[item].base_type;
     if (base_type != OBJ_ARMOUR)
     {
         if (!quiet)
@@ -884,8 +884,8 @@ bool do_wear_armour( int item, bool quiet )
     if (slot == EQ_BODY_ARMOUR
         && you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
     {
-        if ( you.equip[EQ_BODY_ARMOUR] &&
-             item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]) )
+        if (you.equip[EQ_BODY_ARMOUR] != -1 &&
+            item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]) )
         {
             if ( !quiet )
                 mprf("%s is stuck to your body!",
