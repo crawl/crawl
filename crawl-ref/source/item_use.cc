@@ -76,25 +76,28 @@ static bool enchant_armour( void );
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
-bool can_wield(const item_def *weapon, bool say_reason)
+bool can_wield(const item_def *weapon, bool say_reason,
+               bool ignore_temporary_disability)
 {
 #define SAY(x) if (say_reason) { x; } else 
 
-    if (you.duration[DUR_BERSERKER])
+    if (!ignore_temporary_disability && you.duration[DUR_BERSERKER])
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
         return false;
     }
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE 
-            && !can_equip( EQ_WEAPON ))
+    if (!ignore_temporary_disability
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE 
+        && !can_equip( EQ_WEAPON ))
     {
         SAY(mpr("You can't wield anything in your present form."));
         return false;
     }
 
-    if (you.equip[EQ_WEAPON] != -1
-            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-            && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
+    if (!ignore_temporary_disability
+        && you.equip[EQ_WEAPON] != -1
+        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
+        && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
         return false;
@@ -113,7 +116,7 @@ bool can_wield(const item_def *weapon, bool say_reason)
         }
     }
 
-    if (is_shield_incompatible(*weapon))
+    if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
     {
         SAY(mpr("You can't wield that with a shield."));
         return (false);

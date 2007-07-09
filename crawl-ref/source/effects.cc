@@ -22,6 +22,7 @@
 #include "beam.h"
 #include "direct.h"
 #include "hiscores.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1143,7 +1144,7 @@ bool acquirement(object_class_type force_class, int agent)
     else
     {
         randart_properties_t  proprt;
-        for (int item_tries = 0; item_tries < 50; item_tries++)
+        for (int item_tries = 0; item_tries < 200; item_tries++)
         {
             // BCR - unique is now used for food quantity.
             thing_created = items( unique, class_wanted, type_wanted, true, 
@@ -1152,12 +1153,21 @@ bool acquirement(object_class_type force_class, int agent)
             if (thing_created == NON_ITEM)
                 continue;
 
+            const item_def &doodad(mitm[thing_created]);
+            if (doodad.base_type == OBJ_WEAPONS
+                && !can_wield(&doodad, false, true))
+            {
+                destroy_item(thing_created);
+                thing_created = NON_ITEM;
+                continue;
+            }
+                        
             // MT - Check: god-gifted weapons and armor shouldn't kill you.
             // Except Xom.
             if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-                && is_random_artefact(mitm[thing_created]))
+                && is_random_artefact(doodad))
             {
-                randart_wpn_properties( mitm[thing_created], proprt );
+                randart_wpn_properties( doodad, proprt );
 
                 // check vs stats. positive stats will automatically fall
                 // through.  As will negative stats that won't kill you.
@@ -1176,7 +1186,7 @@ bool acquirement(object_class_type force_class, int agent)
 
         if (thing_created == NON_ITEM)
         {
-            mpr("The demon of the infinite void smiles at you.");
+            mpr("The demon of the infinite void smiles upon you.");
             return (false);
         }
 
