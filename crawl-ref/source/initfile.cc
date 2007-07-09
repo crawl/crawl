@@ -2681,6 +2681,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
                     SysEnv.map_gen_iters = 1;
                 else if (SysEnv.map_gen_iters > 10000)
                     SysEnv.map_gen_iters = 10000;
+                nextUsed = true;
             }
             else
                 SysEnv.map_gen_iters = 100;

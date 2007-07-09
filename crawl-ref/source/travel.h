@@ -166,6 +166,10 @@ public:
             branch = NUM_BRANCHES;
         }
     }
+    level_id(const level_id &ot)
+        : branch(ot.branch), depth(ot.depth), level_type(ot.level_type)
+    {
+    }
     level_id(level_area_type ltype)
         : branch(BRANCH_MAIN_DUNGEON), depth(-1), level_type(ltype)
     {
@@ -191,10 +195,9 @@ public:
 
     bool operator == ( const level_id &id ) const
     {
-        return (level_type == LEVEL_DUNGEON?
-                branch == id.branch && depth == id.depth
-                && level_type == id.level_type
-                : level_type == id.level_type);
+        return (level_type == id.level_type
+                && (level_type != LEVEL_DUNGEON
+                    || (branch == id.branch && depth == id.depth)));
     }
 
     bool operator != ( const level_id &id ) const
@@ -206,6 +209,9 @@ public:
     {
         if (level_type != id.level_type)
             return (level_type < id.level_type);
+
+        if (level_type != LEVEL_DUNGEON)
+            return (false);
         
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }

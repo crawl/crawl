@@ -40,6 +40,7 @@ int vault_main(map_type vgrid,
                std::vector<vault_placement> *avoid_vaults = NULL);
 
 const map_def *map_by_index(int index);
+int map_count();
 int random_map_for_place(const level_id &place, bool mini = false);
 int random_map_in_depth(const level_id &lid, bool want_minivault = false);
 int random_map_for_tag(const std::string &tag, bool want_minivault,

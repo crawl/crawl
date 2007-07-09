@@ -2131,11 +2131,34 @@ static std::map<std::string, std::string> mapgen_errors;
 static std::string mapgen_last_error;
 
 static int mg_levels_tried = 0, mg_levels_failed = 0;
+
+static bool mg_do_build_level(int niters)
+{
+    mesclr();
+    mprf("On %s (%d); %d levels, %d failed, %d errors%s, %d maps",
+         level_id::current().describe().c_str(), niters,
+         mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+         mapgen_last_error.empty()? ""
+         : (" (" + mapgen_last_error + ")").c_str(),
+         mapgen_use_count.size());
+
+    no_messages mx;
+    for (int i = 0; i < niters; ++i)
+    {
+        if (kbhit() && getch() == ESCAPE)
+            return (false);
+        ++mg_levels_tried;
+        if (!builder(you.your_level, you.level_type))
+            ++mg_levels_failed;
+    }
+    return (true);
+}
+
 static void mg_build_levels(int niters)
 {
     mesclr();
     mprf("Generating dungeon map stats");
-    
+
     for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
     {
         if (branches[br].depth == -1)
@@ -2148,25 +2171,19 @@ static void mg_build_levels(int niters)
             you.where_are_you = branch;
             you.level_type = LEVEL_DUNGEON;
 
-            mesclr();
-            mprf("On %s (%d); %d levels, %d failed, %d errors%s, %d maps",
-                 level_id::current().describe().c_str(), niters,
-                 mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
-                 mapgen_last_error.empty()? ""
-                 : (" (" + mapgen_last_error + ")").c_str(),
-                 mapgen_use_count.size());
-
-            no_messages mx;
-            for (int i = 0; i < niters; ++i)
-            {
-                if (kbhit() && getch() == ESCAPE)
-                    return;
-                ++mg_levels_tried;
-                if (!builder(you.your_level, you.level_type))
-                    ++mg_levels_failed;
-            }
+            if (!mg_do_build_level(niters))
+                return;
         }
     }
+
+    you.level_type = LEVEL_ABYSS;
+    if (!mg_do_build_level(niters))
+        return;
+    you.level_type = LEVEL_LABYRINTH;
+    if (!mg_do_build_level(niters))
+        return;
+    you.level_type = LEVEL_PANDEMONIUM;
+    mg_do_build_level(niters);
 }
 
 void mapgen_report_map_try(const map_def &map)
@@ -2184,6 +2201,12 @@ void mapgen_report_map_use(const map_def &map)
 void mapgen_report_error(const map_def &map, const std::string &err)
 {
     mapgen_last_error = err;
+}
+
+static void check_mapless(const level_id &lid, std::vector<level_id> &mapless)
+{
+    if (mapgen_level_mapsused.find(lid) == mapgen_level_mapsused.end())
+        mapless.push_back(lid);
 }
 
 static void write_mapgen_stats()
@@ -2215,17 +2238,37 @@ static void write_mapgen_stats()
         for (int dep = 1; dep <= branches[i].depth; ++dep)
         {
             const level_id lid(br, dep);
-            if (mapgen_level_mapcounts.find(lid)
-                    == mapgen_level_mapcounts.end())
-                mapless.push_back(lid);
+            check_mapless(lid, mapless);
         }
     }
+
+    check_mapless(level_id(LEVEL_ABYSS), mapless);
+    check_mapless(level_id(LEVEL_PANDEMONIUM), mapless);
+    check_mapless(level_id(LEVEL_LABYRINTH), mapless);
 
     if (!mapless.empty())
     {
         fprintf(outf, "\n\nLevels with no maps:\n");
         for (int i = 0, size = mapless.size(); i < size; ++i)
             fprintf(outf, "%3d) %s\n", i + 1, mapless[i].describe().c_str());
+    }
+
+    std::vector<std::string> unused_maps;
+    for (int i = 0, size = map_count(); i < size; ++i)
+    {
+        const map_def *map = map_by_index(i);
+        if (mapgen_try_count.find(map->name) == mapgen_try_count.end()
+            && !map->has_tag("dummy"))
+        {
+            unused_maps.push_back(map->name);
+        }
+    }
+
+    if (!unused_maps.empty())
+    {
+        fprintf(outf, "\n\nUnused maps:\n\n");
+        for (int i = 0, size = unused_maps.size(); i < size; ++i)
+            fprintf(outf, "%3d) %s\n", i + 1, unused_maps[i].c_str());
     }
 
     fprintf(outf, "\n\nMaps by level:\n\n");

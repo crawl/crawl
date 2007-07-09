@@ -379,6 +379,11 @@ const map_def *map_by_index(int index)
     return &vdefs[index];
 }
 
+int map_count()
+{
+    return (vdefs.size());
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Reading maps from .des files.
 

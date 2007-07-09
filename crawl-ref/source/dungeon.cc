@@ -116,6 +116,7 @@ static void place_specific_stair(dungeon_feature_type stair,
                                  const std::string &tag = "",
                                  int dl = 0);
 static void place_branch_entrances(int dlevel, char level_type);
+static void place_extra_vaults();
 static void place_special_minivaults(int level_number, int level_type);
 static void place_traps( int level_number );
 static void prepare_swamp();
@@ -205,6 +206,7 @@ typedef std::list<coord_def> coord_list;
 // Places where monsters should not be randomly generated.
 map_mask dgn_map_mask;
 static dgn_region_list vault_zones;
+static int vault_chance = 9;
 static std::vector<vault_placement> level_vaults;
 static int minivault_chance = 3;
 static bool dgn_level_vetoed = false;
@@ -284,6 +286,8 @@ static bool ensure_vault_placed(bool vault_success)
 {
     if (!vault_success)
         dgn_level_vetoed = true;
+    else
+        vault_chance = 0;
     return (vault_success);
 }
 
@@ -541,6 +545,7 @@ static void build_dungeon_level(int level_number, int level_type)
         prepare_shoals( level_number );
 
     place_branch_entrances( level_number, level_type );
+    place_extra_vaults();
 
     if (dgn_level_vetoed)
         return;
@@ -1229,9 +1234,11 @@ static builder_rc_type builder_normal(int level_number, char level_type,
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
     if (vault == -1
-            && player_in_branch( BRANCH_MAIN_DUNGEON ) 
-            && one_chance_in(9))
+        && player_in_branch(BRANCH_MAIN_DUNGEON)
+        && one_chance_in(vault_chance))
+    {
         vault = random_map_in_depth(level_id::current());
+    }
 
     if (vault != -1)
     {
@@ -1543,6 +1550,16 @@ static void place_specific_stair(dungeon_feature_type stair,
 {
     if (tag.empty() || !place_portal_vault(stair, tag, dlevel))
         place_specific_feature(stair);
+}
+
+static void place_extra_vaults()
+{
+    if (!player_in_branch(BRANCH_MAIN_DUNGEON) && one_chance_in(vault_chance))
+    {
+        const int vault = random_map_in_depth(level_id::current());
+        if (vault != -1 && build_secondary_vault(you.your_level, vault, -1))
+            vault_chance = 0;
+    }
 }
 
 static void place_branch_entrances(int dlevel, char level_type)
