@@ -1374,6 +1374,7 @@ std::string map_def::validate_map_def()
         break;
     case MAP_NORTHEAST: case MAP_SOUTHEAST:
     case MAP_NORTHWEST: case MAP_SOUTHWEST:
+    case MAP_FLOAT:
         if (map.width() >= GXM * 2 / 3 || map.height() > GYM * 2 / 3)
             return make_stringf("Map too large - %dx%d (max %dx%d)",
                                 map.width(), map.height(),

@@ -79,7 +79,7 @@ ENDMAP
 #
 NAME:    erik_rubicon_a
 DEPTH:   10-16
-ORIENT:  float
+ORIENT:  south
 FLAGS:   no_rotate
 TAGS:    no_pool_fixup
 CHANCE:  6
@@ -88,29 +88,34 @@ ITEM:    nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
-xxxxcccccccc????w.@??ww.@www???w...@???wwww.@ww??@..?ccccxxxxxx
-ccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwww??wwwwccccccc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-ccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwccc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwccccc
-cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
-ccwcwwwwwwwwwwwwwwwxwwwwww???wwwwwwwww???wwwwwwwww.wwwwwwwccccc
-cccccc????w??.w????xw??w??...?wwww???w????w?w???w???w??cccccxxx
-xxxxcxx...''....?..xx........??w??...c''....??.....???..cxccxxx
-xxxxcx..(cc[.''..'xx...x.''.x..?xx.xcc..cxcx...xxx.'...chxxcxxx
-xxxxcx..cc{c..xx.....xx...cc..xx....xcc....''xxx..x.xxc...cxxxx
-xxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxx
-xxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxx
-xxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxx
-xxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxx
-xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+xxxxxxxxxcccccccc????w.@??ww.@www???w...@???wwww.@ww??@..?ccccxxxxxxxxxxx
+xxxxxccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwww??wwwwcccccccxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwcccxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwcccccxxxxx
+xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwcwwwwwwwwwwwwwwwxwwwwww???wwwwwwwww???wwwwwwwww.wwwwwwwcccccxxxxx
+xxxxxcccccc????w??.w????xw??w??...?wwww???w????w?w???w???w??cccccxxxxxxxx
+xxxxxxxxxcxx...''....?..xx........??w??...c''....??.....???..cxccxxxxxxxx
+xxxxxxxxxcx..(cc[.''..'xx...x.''.x..?xx.xcc..cxcx...xxx.'...chxxcxxxxxxxx
+xxxxxxxxxcx..cc{c..xx.....xx...cc..xx....xcc....''xxx..x.xxc...cxxxxxxxxx
+xxxxxxxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxxxxxxx
+xxxxxxxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxxxxxxx
+xxxxxxxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxxxxxxx
+xxxxxxxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    erik_rubicon_b
 DEPTH:   10-16
-ORIENT:  float
+ORIENT:  south
 FLAGS:   no_rotate
 CHANCE:  4
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
@@ -118,24 +123,29 @@ ITEM:    nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP
-xxxxcccccccc?gw?f.@wgf?.@w??g?fw...@gwfw???.@wwww@..?ccccxxxxxx
-ccccwwwwwww??..f????.ww???www.???ww??.wwwwwwwwwwwffgg?wwccccccc
-cwwwwwwwwwwww??wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww??wwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
-ccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwccc
-cwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwc
-cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwww?wwwwwwwwwwwwwwwwwccccc
-cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
-ccwcwwwwwg?wwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwccccc
-ccccccwffwg??fw?ww?gx??ww?..??wwwww??w?fwgw?fwgw??fg??gcccccxxx
-xxxxcxx...'''...?..xx.....''.?ww??...c.'....??...'.?gg.xcxccxxx
-xxxxcx..(cc[.'.'.xx..'.x.'..x..?...xcc..cxcx.x..x..''..cxhxcxxx
-xxxxxcc..c{c..x.x...c.xxx.x.xx.'.'xx..cc..c.xx''.cc..xxx...xxxx
-xxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxx
-xxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxx
-xxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxx
-xxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxx
-xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+xxxxxxxxxcccccccc?gw?f.@wgf?.@w??g?fw...@gwfw???.@wwww@..?ccccxxxxxxxxxxx
+xxxxxccccwwwwwww??..f????.ww???www.???ww??.wwwwwwwwwwwffgg?wwcccccccxxxxx
+xxxxxcwwwwwwwwwwww??wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww??wwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwcccxxxxx
+xxxxxcwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwww?wwwwwwwwwwwwwwwwwcccccxxxxx
+xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwcwwwwwg?wwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwcccccxxxxx
+xxxxxccccccwffwg??fw?ww?gx??ww?..??wwwww??w?fwgw?fwgw??fg??gcccccxxxxxxxx
+xxxxxxxxxcxx...'''...?..xx.....''.?ww??...c.'....??...'.?gg.xcxccxxxxxxxx
+xxxxxxxxxcx..(cc[.'.'.xx..'.x.'..x..?...xcc..cxcx.x..x..''..cxhxcxxxxxxxx
+xxxxxxxxxxcc..c{c..x.x...c.xxx.x.xx.'.'xx..cc..c.xx''.cc..xxx...xxxxxxxxx
+xxxxxxxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxxxxxxx
+xxxxxxxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxxxxxxx
+xxxxxxxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxxxxxxx
+xxxxxxxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
