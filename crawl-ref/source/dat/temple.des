@@ -154,7 +154,6 @@ ENDMAP
 
 NAME:    temple_pool_b
 TAGS:    temple_entry no_monster_gen
-CHANCE:  5000
 FLAGS:   no_rotate
 ORIENT:  float
 SHUFFLE: ABCDEFGHIJKL
