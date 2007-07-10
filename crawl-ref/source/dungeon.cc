@@ -133,11 +133,12 @@ static void place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
                        unsigned char pool_y1, unsigned char pool_x2,
                        unsigned char pool_y2);
 static void many_pools(dungeon_feature_type pool_type);
-static bool join_the_dots(
-    const coord_def &from,
-    const coord_def &to,
-    unsigned mmask,
-    bool early_exit = false);
+static bool join_the_dots(const coord_def &from, const coord_def &to,
+                          unsigned mmask, bool early_exit = false);
+static bool join_the_dots_rigorous(const coord_def &from,
+                                   const coord_def &to,
+                                   unsigned mapmask,
+                                   bool early_exit = false);
 
 static void build_river(dungeon_feature_type river_type); //mv
 static void build_lake(dungeon_feature_type lake_type); //mv
@@ -2789,7 +2790,7 @@ static void build_rooms(const dgn_region_list &excluded,
 
         if (which_room > 0)
         {
-            join_the_dots(
+            join_the_dots_rigorous(
                 myroom.random_edge_point(),
                 rom[which_room - 1].random_edge_point(),
                 MMT_VAULT );
@@ -3696,6 +3697,104 @@ bool unforbidden(const coord_def &c, unsigned mask)
     return (!mask || !(dgn_map_mask(c) & mask));
 }
 
+struct coord_comparator
+{
+    coord_def target;
+    coord_comparator(const coord_def &t) : target(t) { }
+
+    static int dist(const coord_def &a, const coord_def &b)
+    {
+        const coord_def del = a - b;
+        return std::abs(del.x) * GYM + std::abs(del.y);
+    }
+    
+    bool operator () (const coord_def &a, const coord_def &b) const
+    {
+        return dist(a, target) < dist(b, target);
+    }
+};
+
+typedef std::set<coord_def, coord_comparator> coord_set;
+
+static void jtd_init_surrounds(coord_set &coords,
+                              unsigned mapmask,
+                              const coord_def &c)
+{
+    for (int yi = -1; yi <= 1; ++yi)
+    {
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if (!xi == !yi)
+                continue;
+            const coord_def cx(c.x + xi, c.y + yi);
+            if (!in_bounds(cx) || travel_point_distance[cx.x][cx.y]
+                || !unforbidden(cx, mapmask))
+            {
+                continue;
+            }
+            coords.insert(cx);
+
+            travel_point_distance[cx.x][cx.y] = (-xi + 2) * 4 + (-yi + 2);
+        }
+    }
+}
+
+static bool join_the_dots_pathfind(coord_set &coords,
+                                   const coord_def &from,
+                                   const coord_def &to,
+                                   unsigned mapmask,
+                                   bool early_exit)
+{
+    coord_def curr = from;
+    while (true)
+    {
+        int &tpd = travel_point_distance[curr.x][curr.y];
+        tpd = !tpd? -1000 : -tpd;
+        
+        if (curr == to)
+            break;
+        
+        jtd_init_surrounds(coords, mapmask, curr);
+
+        if (coords.empty())
+            break;
+        
+        curr = *coords.begin();
+        coords.erase(coords.begin());
+    }
+
+    if (curr != to)
+        return (false);
+
+    while (curr != from)
+    {
+        if (unforbidden(curr, mapmask))
+            grd(curr) = DNGN_FLOOR;
+        const int dist = travel_point_distance[curr.x][curr.y];
+        ASSERT(dist < 0 && dist != -1000);
+        curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
+    }
+    if (unforbidden(curr, mapmask))
+        grd(curr) = DNGN_FLOOR;
+    
+    return (true);
+}
+
+static bool join_the_dots_rigorous(const coord_def &from,
+                                   const coord_def &to,
+                                   unsigned mapmask,
+                                   bool early_exit)
+{
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+
+    const coord_comparator comp(to);
+    coord_set coords(comp);
+    const bool found =
+        join_the_dots_pathfind(coords, from, to, mapmask, early_exit);
+
+    return (found);
+}
+
 static bool join_the_dots(
     const coord_def &from,
     const coord_def &to,
@@ -3755,7 +3854,7 @@ static bool join_the_dots(
     }
     while (at != to && in_bounds(at));
 
-    if (in_bounds(at))
+    if (in_bounds(at) && unforbidden(at, mapmask))
         grd(at) = DNGN_FLOOR;
 
     return (at == to);
