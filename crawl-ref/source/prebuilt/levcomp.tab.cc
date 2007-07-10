@@ -148,21 +148,6 @@ int yylex();
 
 extern int yylineno;
 
-struct map_file_place
-{
-    std::string filename;
-    int lineno;
-
-    map_file_place(const std::string &s = "", int line = 0)
-        : filename(s), lineno(line)
-    {
-    }
-};
-
-typedef std::map<std::string, map_file_place> map_load_info_t;
-
-static map_load_info_t loaded_maps;
-
 void yyerror(const char *e)
 {
     if (strstr(e, lc_desfile.c_str()) == e)
@@ -208,14 +193,14 @@ level_range set_range(const char *s, int start, int end)
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 59 "levcomp.ypp"
+#line 44 "levcomp.ypp"
 {
     int i;
     const char *text;
     raw_range range;
 }
 /* Line 193 of yacc.c.  */
-#line 219 "levcomp.tab.c"
+#line 204 "levcomp.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -228,7 +213,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 232 "levcomp.tab.c"
+#line 217 "levcomp.tab.c"
 
 #ifdef short
 # undef short
@@ -545,17 +530,17 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    79,    79,    82,    83,    86,    87,    90,    96,    97,
-     100,   110,   132,   133,   136,   137,   140,   162,   163,   164,
-     165,   166,   167,   168,   169,   170,   171,   172,   173,   174,
-     175,   176,   177,   178,   179,   180,   183,   185,   186,   189,
-     194,   196,   197,   200,   205,   207,   208,   211,   216,   218,
-     219,   222,   227,   229,   230,   233,   238,   239,   247,   248,
-     256,   257,   265,   268,   269,   272,   280,   283,   284,   287,
-     296,   299,   300,   303,   312,   315,   316,   319,   328,   331,
-     332,   335,   344,   345,   348,   349,   352,   360,   361,   364,
-     365,   368,   377,   386,   387,   396,   404,   405,   414,   417,
-     418,   421
+       0,    64,    64,    67,    68,    71,    72,    75,    81,    82,
+      85,    95,   117,   118,   121,   122,   125,   149,   150,   151,
+     152,   153,   154,   155,   156,   157,   158,   159,   160,   161,
+     162,   163,   164,   165,   166,   167,   170,   172,   173,   176,
+     181,   183,   184,   187,   192,   194,   195,   198,   203,   205,
+     206,   209,   214,   216,   217,   220,   225,   226,   234,   235,
+     243,   244,   252,   255,   256,   259,   267,   270,   271,   274,
+     283,   286,   287,   290,   299,   302,   303,   306,   315,   318,
+     319,   322,   331,   332,   335,   336,   339,   347,   348,   351,
+     352,   355,   364,   373,   374,   383,   391,   392,   401,   404,
+     405,   408
 };
 #endif
 
@@ -1545,49 +1530,49 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 79 "levcomp.ypp"
+#line 64 "levcomp.ypp"
     { }
     break;
 
   case 3:
-#line 82 "levcomp.ypp"
+#line 67 "levcomp.ypp"
     {}
     break;
 
   case 4:
-#line 83 "levcomp.ypp"
+#line 68 "levcomp.ypp"
     {}
     break;
 
   case 5:
-#line 86 "levcomp.ypp"
+#line 71 "levcomp.ypp"
     {}
     break;
 
   case 6:
-#line 87 "levcomp.ypp"
+#line 72 "levcomp.ypp"
     {}
     break;
 
   case 7:
-#line 91 "levcomp.ypp"
+#line 76 "levcomp.ypp"
     {
                     yyerror("Unexpected character sequence.");
                 }
     break;
 
   case 8:
-#line 96 "levcomp.ypp"
+#line 81 "levcomp.ypp"
     {}
     break;
 
   case 9:
-#line 97 "levcomp.ypp"
+#line 82 "levcomp.ypp"
     {}
     break;
 
   case 10:
-#line 101 "levcomp.ypp"
+#line 86 "levcomp.ypp"
     {
                     dgn_reset_default_depth();
                     std::string err = dgn_set_default_depth((yyvsp[(2) - (2)].text));
@@ -1598,7 +1583,7 @@ yyreduce:
     break;
 
   case 11:
-#line 111 "levcomp.ypp"
+#line 96 "levcomp.ypp"
     {
                     lc_map.set_file(lc_desfile);
                     
@@ -1621,35 +1606,35 @@ yyreduce:
     break;
 
   case 12:
-#line 132 "levcomp.ypp"
+#line 117 "levcomp.ypp"
     { }
     break;
 
   case 13:
-#line 133 "levcomp.ypp"
+#line 118 "levcomp.ypp"
     { }
     break;
 
   case 14:
-#line 136 "levcomp.ypp"
+#line 121 "levcomp.ypp"
     { }
     break;
 
   case 15:
-#line 137 "levcomp.ypp"
+#line 122 "levcomp.ypp"
     { }
     break;
 
   case 16:
-#line 141 "levcomp.ypp"
+#line 126 "levcomp.ypp"
     {
                     lc_map.init();
                     lc_map.name = (yyvsp[(2) - (2)].text);
 
                     map_load_info_t::const_iterator i = 
-                        loaded_maps.find((yyvsp[(2) - (2)].text));
+                        lc_loaded_maps.find((yyvsp[(2) - (2)].text));
 
-                    if (i != loaded_maps.end())
+                    if (i != lc_loaded_maps.end())
                     {
                         yyerror(
                             make_stringf(
@@ -1659,132 +1644,134 @@ yyreduce:
                                 i->second.lineno).c_str() );
                     }
 
-                    loaded_maps[(yyvsp[(2) - (2)].text)] = map_file_place(lc_desfile, yylineno);
+                    lc_map.place_loaded_from =
+                        map_file_place(lc_desfile, yylineno);
+                    lc_loaded_maps[(yyvsp[(2) - (2)].text)] = lc_map.place_loaded_from;
                 }
     break;
 
   case 35:
-#line 180 "levcomp.ypp"
+#line 167 "levcomp.ypp"
     {}
     break;
 
   case 36:
-#line 183 "levcomp.ypp"
+#line 170 "levcomp.ypp"
     { }
     break;
 
   case 37:
-#line 185 "levcomp.ypp"
+#line 172 "levcomp.ypp"
     { }
     break;
 
   case 38:
-#line 186 "levcomp.ypp"
+#line 173 "levcomp.ypp"
     { }
     break;
 
   case 39:
-#line 190 "levcomp.ypp"
+#line 177 "levcomp.ypp"
     {
                     lc_global_prelude.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 40:
-#line 194 "levcomp.ypp"
+#line 181 "levcomp.ypp"
     { }
     break;
 
   case 41:
-#line 196 "levcomp.ypp"
+#line 183 "levcomp.ypp"
     { }
     break;
 
   case 42:
-#line 197 "levcomp.ypp"
+#line 184 "levcomp.ypp"
     { }
     break;
 
   case 43:
-#line 201 "levcomp.ypp"
+#line 188 "levcomp.ypp"
     {
                     lc_map.main.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 44:
-#line 205 "levcomp.ypp"
+#line 192 "levcomp.ypp"
     { }
     break;
 
   case 45:
-#line 207 "levcomp.ypp"
+#line 194 "levcomp.ypp"
     { }
     break;
 
   case 46:
-#line 208 "levcomp.ypp"
+#line 195 "levcomp.ypp"
     { }
     break;
 
   case 47:
-#line 212 "levcomp.ypp"
+#line 199 "levcomp.ypp"
     {
                     lc_map.validate.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 48:
-#line 216 "levcomp.ypp"
+#line 203 "levcomp.ypp"
     { }
     break;
 
   case 49:
-#line 218 "levcomp.ypp"
+#line 205 "levcomp.ypp"
     { }
     break;
 
   case 50:
-#line 219 "levcomp.ypp"
+#line 206 "levcomp.ypp"
     { }
     break;
 
   case 51:
-#line 223 "levcomp.ypp"
+#line 210 "levcomp.ypp"
     {
                     lc_map.veto.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 52:
-#line 227 "levcomp.ypp"
+#line 214 "levcomp.ypp"
     { }
     break;
 
   case 53:
-#line 229 "levcomp.ypp"
+#line 216 "levcomp.ypp"
     { }
     break;
 
   case 54:
-#line 230 "levcomp.ypp"
+#line 217 "levcomp.ypp"
     { }
     break;
 
   case 55:
-#line 234 "levcomp.ypp"
+#line 221 "levcomp.ypp"
     {
                     lc_map.prelude.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 56:
-#line 238 "levcomp.ypp"
+#line 225 "levcomp.ypp"
     { }
     break;
 
   case 57:
-#line 240 "levcomp.ypp"
+#line 227 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1794,12 +1781,12 @@ yyreduce:
     break;
 
   case 58:
-#line 247 "levcomp.ypp"
+#line 234 "levcomp.ypp"
     { }
     break;
 
   case 59:
-#line 249 "levcomp.ypp"
+#line 236 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1809,12 +1796,12 @@ yyreduce:
     break;
 
   case 60:
-#line 256 "levcomp.ypp"
+#line 243 "levcomp.ypp"
     { }
     break;
 
   case 61:
-#line 258 "levcomp.ypp"
+#line 245 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1824,12 +1811,12 @@ yyreduce:
     break;
 
   case 62:
-#line 265 "levcomp.ypp"
+#line 252 "levcomp.ypp"
     {}
     break;
 
   case 65:
-#line 273 "levcomp.ypp"
+#line 260 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1839,12 +1826,12 @@ yyreduce:
     break;
 
   case 66:
-#line 280 "levcomp.ypp"
+#line 267 "levcomp.ypp"
     {}
     break;
 
   case 69:
-#line 288 "levcomp.ypp"
+#line 275 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1854,22 +1841,22 @@ yyreduce:
     break;
 
   case 70:
-#line 296 "levcomp.ypp"
+#line 283 "levcomp.ypp"
     { }
     break;
 
   case 71:
-#line 299 "levcomp.ypp"
+#line 286 "levcomp.ypp"
     { }
     break;
 
   case 72:
-#line 300 "levcomp.ypp"
+#line 287 "levcomp.ypp"
     { }
     break;
 
   case 73:
-#line 304 "levcomp.ypp"
+#line 291 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno,
@@ -1879,12 +1866,12 @@ yyreduce:
     break;
 
   case 74:
-#line 312 "levcomp.ypp"
+#line 299 "levcomp.ypp"
     { }
     break;
 
   case 77:
-#line 320 "levcomp.ypp"
+#line 307 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1894,12 +1881,12 @@ yyreduce:
     break;
 
   case 78:
-#line 328 "levcomp.ypp"
+#line 315 "levcomp.ypp"
     { }
     break;
 
   case 81:
-#line 336 "levcomp.ypp"
+#line 323 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1909,17 +1896,17 @@ yyreduce:
     break;
 
   case 82:
-#line 344 "levcomp.ypp"
+#line 331 "levcomp.ypp"
     {}
     break;
 
   case 83:
-#line 345 "levcomp.ypp"
+#line 332 "levcomp.ypp"
     {}
     break;
 
   case 86:
-#line 353 "levcomp.ypp"
+#line 340 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1929,17 +1916,17 @@ yyreduce:
     break;
 
   case 87:
-#line 360 "levcomp.ypp"
+#line 347 "levcomp.ypp"
     {}
     break;
 
   case 88:
-#line 361 "levcomp.ypp"
+#line 348 "levcomp.ypp"
     {}
     break;
 
   case 91:
-#line 369 "levcomp.ypp"
+#line 356 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1949,7 +1936,7 @@ yyreduce:
     break;
 
   case 92:
-#line 378 "levcomp.ypp"
+#line 365 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1959,12 +1946,12 @@ yyreduce:
     break;
 
   case 93:
-#line 386 "levcomp.ypp"
+#line 373 "levcomp.ypp"
     {}
     break;
 
   case 94:
-#line 388 "levcomp.ypp"
+#line 375 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1974,7 +1961,7 @@ yyreduce:
     break;
 
   case 95:
-#line 397 "levcomp.ypp"
+#line 384 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1983,12 +1970,12 @@ yyreduce:
     break;
 
   case 96:
-#line 404 "levcomp.ypp"
+#line 391 "levcomp.ypp"
     {}
     break;
 
   case 97:
-#line 406 "levcomp.ypp"
+#line 393 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -1998,7 +1985,7 @@ yyreduce:
     break;
 
   case 101:
-#line 422 "levcomp.ypp"
+#line 409 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno, 
@@ -2009,7 +1996,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2013 "levcomp.tab.c"
+#line 2000 "levcomp.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2223,6 +2210,6 @@ yyreturn:
 }
 
 
-#line 430 "levcomp.ypp"
+#line 417 "levcomp.ypp"
 
 
