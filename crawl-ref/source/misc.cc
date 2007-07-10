@@ -2287,3 +2287,21 @@ coord_def pick_adjacent_free_square(int x, int y)
     }
     return result;
 }
+
+// Converts a movement speed to a duration. i.e., answers the
+// question: if the monster is so fast, how much time has it spent in
+// its last movement?
+// 
+// If speed is 10 (normal),    one movement is a duration of 10.
+// If speed is 1  (very slow), each movement is a duration of 100.
+// If speed is 15 (50% faster than normal), each movement is a duration of
+// 6.6667.
+int speed_to_duration(int speed)
+{
+    if (speed < 1)
+        speed = 10;
+    else if (speed > 100)
+        speed = 100;
+    
+    return div_rand_round(100, speed);
+}

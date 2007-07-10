@@ -1147,7 +1147,7 @@ int summon_elemental(int pow, int restricted_type,
     int targ_x;
     int targ_y;
 
-    int numsc = cap_int(2 + (random2(pow) / 5), 6);
+    int numsc = std::min(2 + (random2(pow) / 5), 6);
 
     for (;;) 
     {
@@ -1371,7 +1371,7 @@ void summon_scorpions(int pow)
 
 void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
-    int numsc = cap_int(2 + (random2(pow) / 4), 6);
+    int numsc = std::min(2 + (random2(pow) / 4), 6);
     beh_type beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
 
     switch (ibc)

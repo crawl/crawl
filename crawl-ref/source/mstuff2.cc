@@ -380,7 +380,7 @@ static void do_high_level_summon(monsters *monster, bool monsterNearby,
     if (mons_abjured(monster, monsterNearby))
         return;
 
-    const int duration  = cap_int(2 + monster->hit_dice / 5, 6);
+    const int duration  = std::min(2 + monster->hit_dice / 5, 6);
     for (int i = 0; i < nsummons; ++i)
     {
         const monster_type which_mons = mpicker();
@@ -502,7 +502,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
 
-        duration  = cap_int(2 + monster->hit_dice / 10, 6);
+        duration  = std::min(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_COMMON), duration,
@@ -519,7 +519,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_CALL_IMP: // class 5 demons
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = cap_int(2 + monster->hit_dice / 5, 6);
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_LESSER), duration,
@@ -531,7 +531,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_SUMMON_UFETUBUS:
         sumcount2 = 2 + random2(2) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = cap_int(2 + monster->hit_dice / 5, 6);
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -556,7 +556,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
 
-        duration  = cap_int(2 + monster->hit_dice / 5, 6);
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
             create_monster(MONS_WANDERING_MUSHROOM, duration, 
                     SAME_ATTITUDE(monster),
@@ -596,7 +596,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         sumcount2 = 1 + random2( monster->hit_dice / 10 + 1 );
 
-        duration  = cap_int(2 + monster->hit_dice / 10, 6);
+        duration  = std::min(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_GREATER), duration,
@@ -612,7 +612,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = cap_int(2 + monster->hit_dice / 10, 6);
+        duration  = std::min(2 + monster->hit_dice / 10, 6);
 
         {
             std::vector<int> monsters;

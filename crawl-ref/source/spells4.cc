@@ -667,7 +667,7 @@ void cast_sticks_to_snakes(int pow)
     int mon;
     int how_many = 0;
     int max = 1 + random2( 1 + you.skills[SK_TRANSMIGRATION] ) / 4;
-    int dur = cap_int(3 + random2(pow) / 20, 5);
+    int dur = std::min(3 + random2(pow) / 20, 5);
     const int weapon = you.equip[EQ_WEAPON];
 
     if (weapon == -1)

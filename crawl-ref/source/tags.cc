@@ -1426,6 +1426,8 @@ static void marshall_mon_enchant(tagHeader &th, const mon_enchant &me)
     marshallShort(th, me.ench);
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
+    marshallShort(th, me.duration);
+    marshallShort(th, me.maxduration);
 }
 
 static mon_enchant unmarshall_mon_enchant(tagHeader &th)
@@ -1434,6 +1436,8 @@ static mon_enchant unmarshall_mon_enchant(tagHeader &th)
     me.ench   = static_cast<enchant_type>( unmarshallShort(th) );
     me.degree = unmarshallShort(th);
     me.who    = static_cast<kill_category>( unmarshallShort(th) );
+    me.duration = unmarshallShort(th);
+    me.maxduration = unmarshallShort(th);
     return (me);
 }
 
@@ -1455,7 +1459,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     for (mon_enchant_list::const_iterator i = m.enchantments.begin();
          i != m.enchantments.end(); ++i)
     {
-        marshall_mon_enchant(th, *i);
+        marshall_mon_enchant(th, i->second);
     }
 
     marshallShort(th, m.type);
@@ -1612,7 +1616,10 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);
     for (int i = 0; i < nenchs; ++i)
-        m.enchantments.insert( unmarshall_mon_enchant(th) );
+    {
+        mon_enchant me = unmarshall_mon_enchant(th);
+        m.enchantments[me.ench] = me;
+    }
 
     m.type = unmarshallShort(th);
     m.hit_points = unmarshallShort(th);

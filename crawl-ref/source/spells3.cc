@@ -413,7 +413,7 @@ void simulacrum(int power)
 
 void dancing_weapon(int pow, bool force_hostile)
 {
-    int numsc = cap_int(2 + (random2(pow) / 5), 6);
+    int numsc = std::min(2 + (random2(pow) / 5), 6);
 
     int i;
     int summs = 0;

@@ -931,17 +931,18 @@ struct mon_attack_def
 class ghost_demon;
 class level_id;
 
-struct mon_enchant
+class mon_enchant
 {
+public:
     enchant_type  ench;
     int           degree;
+    int           duration, maxduration;
     kill_category who;      // Who set this enchantment?
 
+public:
     mon_enchant(enchant_type e = ENCH_NONE, int deg = 0,
-                kill_category whose = KC_OTHER)
-        : ench(e), degree(deg), who(whose)
-    {
-    }
+                kill_category whose = KC_OTHER,
+                int dur = 0);
 
     killer_type killer() const;
     int kill_agent() const;
@@ -950,6 +951,8 @@ struct mon_enchant
     const char *kill_category_desc(kill_category) const;
     void merge_killer(kill_category who);
     void cap_degree();
+
+    void set_duration(const monsters *mons, const mon_enchant *exist);
 
     bool operator < (const mon_enchant &other) const
     {
@@ -964,9 +967,14 @@ struct mon_enchant
 
     mon_enchant &operator += (const mon_enchant &other);
     mon_enchant operator + (const mon_enchant &other) const;
+
+private:
+    int modded_speed(const monsters *mons, int hdplus) const;
+    int apply_fuzz(int dur, int lo, int hi) const;
+    int calc_duration(const monsters *mons, const mon_enchant *added) const;    
 };
 
-typedef std::set<mon_enchant> mon_enchant_list;
+typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
 class monsters : public actor
 {
@@ -1020,14 +1028,15 @@ public:
     bool add_ench(const mon_enchant &);
     void update_ench(const mon_enchant &);
     bool del_ench(enchant_type ench, bool quiet = false);
+    bool lose_ench_duration(const mon_enchant &e, int levels);
+    bool lose_ench_levels(const mon_enchant &e, int lev);
 
     void scale_hp(int num, int den);
 
-    void lose_ench_levels(const mon_enchant &e, int levels);
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
-    void apply_enchantments(int speed);
-    void apply_enchantment(mon_enchant me, int speed);
+    void apply_enchantments();
+    void apply_enchantment(const mon_enchant &me);
 
     void timeout_enchantments(int levels);
     
@@ -1153,6 +1162,8 @@ public:
     void fix_speed();
     void check_speed();
 
+    std::string describe_enchantments() const;
+
     static int base_speed(int mcls);
 
 private:
@@ -1163,6 +1174,8 @@ private:
     bool pickup(item_def &item, int slot, int near, bool force_merge = false);
     void equip_weapon(const item_def &item, int near);
    
+    bool decay_enchantment(const mon_enchant &me, bool decay_degree = false);
+    
     bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;
     bool can_throw_rocks() const;

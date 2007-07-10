@@ -979,9 +979,7 @@ void stethoscope(int mwh)
          mons_res_negative_energy( &menv[i] ) );
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
-         comma_separated_line(menv[i].enchantments.begin(),
-                              menv[i].enchantments.end(),
-                              ", ").c_str());
+         menv[i].describe_enchantments().c_str());
 
     if (menv[i].type == MONS_PLAYER_GHOST 
         || menv[i].type == MONS_PANDEMONIUM_DEMON)

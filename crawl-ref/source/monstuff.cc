@@ -1926,8 +1926,7 @@ static bool handle_enchantment(monsters *monster)
     // 3 times as many calls to this function (ie 8 rounds * 3 calls).
     //
     // -- bwr
-    const int speed = (monster->speed == 0) ? you.time_taken : monster->speed;
-    monster->apply_enchantments(speed);
+    monster->apply_enchantments();
     return (!monster->alive());
 }                               // end handle_enchantment()
 

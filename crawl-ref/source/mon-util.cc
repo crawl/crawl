@@ -22,10 +22,11 @@
 #include "mon-util.h"
 #include "monstuff.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#include <sstream>
 
 #include "externs.h"
 
@@ -2892,9 +2893,9 @@ void monsters::go_berserk(bool /* intentional */)
     del_ench(ENCH_HASTE);
     del_ench(ENCH_FATIGUE);
 
-    const int duration = 20 + random2avg(20, 2);
-    add_ench(mon_enchant(ENCH_BERSERK, duration));
-    add_ench(mon_enchant(ENCH_HASTE, duration));
+    const int duration = 16 + random2avg(13, 2);
+    add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
     simple_monster_message( this, " goes berserk!" );
 }
 
@@ -3106,7 +3107,7 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
     }
 
     if (rotlevel > 0)
-        add_ench( mon_enchant(ENCH_ROT, cap_int(rotlevel, 4),
+        add_ench( mon_enchant(ENCH_ROT, std::min(rotlevel, 4),
                               agent->kill_alignment()) );
 }
 
@@ -3381,7 +3382,7 @@ mon_enchant monsters::get_ench(enchant_type ench1,
         mon_enchant_list::const_iterator i =
             enchantments.find(static_cast<enchant_type>(e));
         if (i != enchantments.end())
-            return (*i);
+            return (i->second);
     }
 
     return mon_enchant();
@@ -3391,12 +3392,9 @@ void monsters::update_ench(const mon_enchant &ench)
 {
     if (ench.ench != ENCH_NONE)
     {
-        mon_enchant_list::iterator i = enchantments.find(ench);
+        mon_enchant_list::iterator i = enchantments.find(ench.ench);
         if (i != enchantments.end())
-        {
-            enchantments.erase(i);
-            enchantments.insert(ench);
-        }
+            i->second = ench;
     }
 }
 
@@ -3406,19 +3404,24 @@ bool monsters::add_ench(const mon_enchant &ench)
     if (ench.ench == ENCH_NONE)
         return (false);
 
-    mon_enchant_list::iterator i = enchantments.find(ench);
+    mon_enchant_list::iterator i = enchantments.find(ench.ench);
     bool new_enchantment = false;
+    mon_enchant *added = NULL;
     if (i == enchantments.end())
     {
         new_enchantment = true;
-        enchantments.insert(ench);
+        added = &(enchantments[ench.ench] = ench);
     }
     else
     {
-        mon_enchant new_ench = *i + ench;
-        enchantments.erase(i);
-        enchantments.insert(new_ench);
+        i->second += ench;
+        added = &i->second;
     }
+
+    // If the duration is not set, we must calculate it (depending on the
+    // enchantment).
+    if (!ench.duration)
+        added->set_duration(this, new_enchantment? NULL : &ench);
 
     if (new_enchantment)
         add_enchantment_effect(ench);
@@ -3461,10 +3464,9 @@ bool monsters::del_ench(enchant_type ench, bool quiet)
     if (i == enchantments.end())
         return (false);
 
-    mon_enchant me = *i;
-    enchantments.erase(i);
-
-    remove_enchantment_effect(me, quiet);
+    const enchant_type et = i->first;
+    remove_enchantment_effect(i->second, quiet);
+    enchantments.erase(et);
     return (true);
 }
 
@@ -3573,18 +3575,42 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
 }
 
-void monsters::lose_ench_levels(const mon_enchant &e, int levels)
+bool monsters::lose_ench_levels(const mon_enchant &e, int lev)
 {
-    if (!levels)
-        return;
+    if (!lev)
+        return (false);
 
-    mon_enchant me(e);
-    me.degree -= levels;
-
-    if (me.degree < 1)
+    if (e.degree <= lev)
+    {
         del_ench(e.ench);
+        return (true);
+    }
     else
-        update_ench(me);
+    {
+        mon_enchant newe(e);
+        newe.degree -= lev;
+        update_ench(newe);
+        return (false);
+    }
+}
+
+bool monsters::lose_ench_duration(const mon_enchant &e, int dur)
+{
+    if (!dur)
+        return (false);
+
+    if (e.duration <= dur)
+    {
+        del_ench(e.ench);
+        return (true);
+    }
+    else
+    {
+        mon_enchant newe(e);
+        newe.duration -= dur;
+        update_ench(newe);
+        return (false);
+    }
 }
 
 //---------------------------------------------------------------
@@ -3622,33 +3648,33 @@ void monsters::timeout_enchantments(int levels)
     for (mon_enchant_list::const_iterator i = ec.begin();
          i != ec.end(); ++i)
     {
-        switch (i->ench)
+        switch (i->first)
         {
         case ENCH_POISON: case ENCH_ROT: case ENCH_BACKLIGHT:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
         case ENCH_SICK: case ENCH_SLEEPY:
-            lose_ench_levels(*i, levels);
+            lose_ench_levels(i->second, levels);
             break;
 
         case ENCH_BERSERK:
-            del_ench(i->ench);
+            del_ench(i->first);
             del_ench(ENCH_HASTE);
             break;
 
         case ENCH_FATIGUE:
-            del_ench(i->ench);
+            del_ench(i->first);
             del_ench(ENCH_SLOW);
             break;
 
         case ENCH_TP:
-            del_ench(i->ench);
+            del_ench(i->first);
             teleport(true);
             break;
 
         case ENCH_CONFUSION:
-            del_ench(i->ench);
+            del_ench(i->first);
             blink();
             break;
 
@@ -3661,31 +3687,81 @@ void monsters::timeout_enchantments(int levels)
     }
 }
 
+std::string monsters::describe_enchantments() const
+{
+    std::ostringstream oss;
+    for (mon_enchant_list::const_iterator i = enchantments.begin();
+         i != enchantments.end(); ++i)
+    {
+        if (i != enchantments.begin())
+            oss << ", ";
+        oss << std::string(i->second);
+    }
+    return (oss.str());
+}
+
 // used to adjust time durations in handle_enchantment() for monster speed
 static inline int mod_speed( int val, int speed )
 {
-    return (speed ? (val * 10) / speed : val);
+    if (!speed)
+        speed = you.time_taken;
+    const int modded = (speed ? (val * 10) / speed : val);
+    return (modded? modded : 1);
 }
 
-void monsters::apply_enchantment(mon_enchant me, int spd)
+bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 {
+    const int spd = speed == 0? you.time_taken : speed;
+    const int actdur = speed_to_duration(spd);
+    if (lose_ench_duration(me, actdur))
+        return (true);
+
+    if (!decay_degree)
+        return (false);
+    
+    // Decay degree so that higher degrees decay faster than lower
+    // degrees, and a degree of 1 does not decay (it expires when the
+    // duration runs out).
+    const int level = std::max(me.degree, 1);
+    if (level <= 1)
+        return (false);
+
+    const int decay_factor = level * (level + 1) / 2;
+    if (me.duration < me.maxduration * (decay_factor - 1) / decay_factor)
+    {
+        mon_enchant newme = me;
+        --newme.degree;
+        newme.maxduration = newme.duration;
+
+        if (newme.degree <= 0)
+        {
+            del_ench(me.ench);
+            return (true);
+        }
+        else
+            update_ench(newme);
+    }
+    return (false);
+}
+
+void monsters::apply_enchantment(const mon_enchant &me)
+{
+    const int spd = speed == 0? you.time_taken : speed;
     switch (me.ench)
     {
     case ENCH_BERSERK:
-        lose_ench_levels(me, 1);
-        if (me.degree <= 1)
+        if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer berserk.");
             del_ench(ENCH_HASTE);
-            const int duration = random_range(7, 13);
-            add_ench(mon_enchant(ENCH_FATIGUE, duration));
-            add_ench(mon_enchant(ENCH_SLOW, duration));
+            const int duration = random_range(70, 130);
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
         }
         break;
 
     case ENCH_FATIGUE:
-        lose_ench_levels(me, 1);
-        if (me.degree <= 1)
+        if (decay_enchantment(me))
         {
             simple_monster_message(this, " looks more energetic.");
             del_ench(ENCH_SLOW);
@@ -3693,54 +3769,26 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
         break;
 
     case ENCH_SLOW:
-        if (me.degree > 0)
-            lose_ench_levels(me, 1);
-        else if (random2(250) <= mod_speed( hit_dice + 10, spd ))
-            del_ench(me.ench);
-        break;
-
     case ENCH_HASTE:
-        if (me.degree > 0)
-            lose_ench_levels(me, 1);
-        else if (random2(1000) < mod_speed( 25, spd ))
-            del_ench(ENCH_HASTE);
-        break;
-
     case ENCH_FEAR:
-        if (random2(150) <= mod_speed( hit_dice + 5, spd ))
-            del_ench(ENCH_FEAR);
-        break;
-
     case ENCH_PARALYSIS:
-        if (random2(120) < mod_speed( hit_dice + 5, spd ))
-            del_ench(ENCH_PARALYSIS);
+    case ENCH_SICK:
+    case ENCH_BACKLIGHT:
+    case ENCH_ABJ:
+    case ENCH_CHARM:
+    case ENCH_SLEEP_WARY:
+        decay_enchantment(me);
         break;
 
     case ENCH_CONFUSION:
-        if (random2(120) < mod_speed( hit_dice + 5, spd ))
-        {
-            // don't delete perma-confusion
-            if (!mons_class_flag(type, M_CONFUSED))
-                del_ench(ENCH_CONFUSION);
-        }
+        if (!mons_class_flag(type, M_CONFUSED))
+            decay_enchantment(me);
         break;
 
     case ENCH_INVIS:
-        if (random2(1000) < mod_speed( 25, spd ))
-        {
-            // don't delete perma-invis
-            if (!mons_class_flag( type, M_INVIS ))
-                del_ench(ENCH_INVIS);
-        }
+        if (!mons_class_flag( type, M_INVIS ))
+            decay_enchantment(me);
         break;
-
-    case ENCH_SICK:
-    {
-        const int lost = !spd? 1 : div_rand_round(10, spd);
-        if (lost > 0)
-            lose_ench_levels(me, lost);
-        break;
-    }
 
     case ENCH_SUBMERGED:
     {
@@ -3820,12 +3868,11 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
             }
         }
 
-        // chance to get over poison (1 in 8, modified for speed)
-        if (random2(1000) < mod_speed( 125, spd ))
-            lose_ench_levels(me, 1);
+        decay_enchantment(me, true);
         break;
     }
     case ENCH_ROT:
+    {
         if (hit_points > 1 
                  && random2(1000) < mod_speed( 333, spd ))
         {
@@ -3834,17 +3881,11 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
                 --max_hit_points;
         }
 
-        if (random2(1000) < mod_speed( me.degree == 1? 250 : 333, spd ))
-            lose_ench_levels(me, 1);
-        
+        decay_enchantment(me, true);
         break;
+    }
 
-    case ENCH_BACKLIGHT:
-        if (random2(1000) < mod_speed( me.degree == 1? 100 : 200, spd ))
-            lose_ench_levels(me, 1);
-        break;
-
-        // assumption: mons_res_fire has already been checked
+    // assumption: mons_res_fire has already been checked
     case ENCH_STICKY_FLAME:
     {
         int dam = roll_dice( 2, 4 ) - 1;
@@ -3874,34 +3915,14 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
             }
         }
 
-        // chance to get over sticky flame (1 in 5, modified for speed)
-        if (random2(1000) < mod_speed( 200, spd ))
-            lose_ench_levels(me, 1);
+        decay_enchantment(me, true);
         break;
     }
 
     case ENCH_SHORT_LIVED:
         // This should only be used for ball lightning -- bwr
-        if (random2(1000) < mod_speed( 200, spd ))
+        if (decay_enchantment(me))
             hit_points = -1;
-        break;
-
-        // 19 is taken by summoning:
-        // If these are changed, must also change abjuration
-    case ENCH_ABJ:
-    {
-        const int mspd =
-            me.degree == 6? 10 :
-            me.degree == 5? 20 : 100;
-        
-        if (random2(1000) < mod_speed( mspd, spd ))
-            lose_ench_levels(me, 1);
-        break;
-    }
-
-    case ENCH_CHARM:
-        if (random2(500) <= mod_speed( hit_dice + 10, spd ))
-            del_ench(ENCH_CHARM);
         break;
 
     case ENCH_GLOWING_SHAPESHIFTER:     // this ench never runs out
@@ -3922,44 +3943,8 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
         break;
 
     case ENCH_TP:
-        if (me.degree <= 1)
-        {
-            del_ench(ENCH_TP);
+        if (decay_enchantment(me, true))
             monster_teleport( this, true );
-        }
-        else
-        {
-            int tmp = mod_speed( 1000, spd );
-
-            if (tmp < 1000 && random2(1000) < tmp)
-                lose_ench_levels(me, 1);
-            else if (me.degree - tmp / 1000 >= 1)
-            {
-                lose_ench_levels(me, tmp / 1000);
-                tmp %= 1000;
-
-                if (random2(1000) < tmp)
-                {
-                    if (me.degree > 1)
-                        lose_ench_levels(me, 1);
-                    else
-                    {
-                        del_ench( ENCH_TP );
-                        monster_teleport( this, true );
-                    }
-                }
-            }
-            else
-            {
-                del_ench( ENCH_TP );
-                monster_teleport( this, true );
-            }
-        }
-        break;
-
-    case ENCH_SLEEP_WARY:
-        if (random2(1000) < mod_speed( 50, spd ))
-            del_ench(ENCH_SLEEP_WARY);
         break;
 
     case ENCH_SLEEPY:
@@ -3971,16 +3956,15 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
     }
 }
 
-void monsters::apply_enchantments(int spd)
+void monsters::apply_enchantments()
 {
     if (enchantments.empty())
         return;
     
     const mon_enchant_list ec = enchantments;
-    for (mon_enchant_list::const_iterator i = ec.begin();
-         i != ec.end(); ++i)
+    for (mon_enchant_list::const_iterator i = ec.begin(); i != ec.end(); ++i)
     {
-        apply_enchantment(*i, spd);
+        apply_enchantment(i->second);
         if (!alive())
             break;
     }
@@ -4016,7 +4000,7 @@ bool monsters::sicken(int amount)
         mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_SICK, amount));
+    add_ench(mon_enchant(ENCH_SICK, 0, KC_OTHER, amount * 10));
 
     return (true);
 }
@@ -4071,8 +4055,7 @@ void monsters::check_speed()
              "Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
              name(DESC_PLAIN).c_str(),
              speed, speed_increment, hit_dice,
-             comma_separated_line(enchantments.begin(),
-                                  enchantments.end()).c_str());
+             describe_enchantments().c_str());
 #endif
         
         fix_speed();
@@ -4200,18 +4183,25 @@ const char *mons_enchantment_name(enchant_type ench)
     return (enchant_names[ench]);
 }
 
+mon_enchant::mon_enchant(enchant_type e, int deg, kill_category whose,
+                         int dur)
+    : ench(e), degree(deg), duration(dur), maxduration(0), who(whose)
+{
+}
+
 mon_enchant::operator std::string () const
 {
-    return make_stringf("%s (%d%s)",
+    return make_stringf("%s (%d:%d%s)",
                         mons_enchantment_name(ench),
                         degree,
+                        duration,
                         kill_category_desc(who));
 }
 
 const char *mon_enchant::kill_category_desc(kill_category k) const
 {
-    return (k == KC_YOU?      "you" :
-            k == KC_FRIENDLY? "pet" : "");
+    return (k == KC_YOU?      " you" :
+            k == KC_FRIENDLY? " pet" : "");
 }
 
 void mon_enchant::merge_killer(kill_category k)
@@ -4236,8 +4226,9 @@ mon_enchant &mon_enchant::operator += (const mon_enchant &other)
 {
     if (ench == other.ench)
     {
-        degree += other.degree;
+        degree   += other.degree;
         cap_degree();
+        duration += other.duration;
         merge_killer(other.who);
     }
     return (*this);
@@ -4260,4 +4251,122 @@ killer_type mon_enchant::killer() const
 int mon_enchant::kill_agent() const
 {
     return (who == KC_FRIENDLY? ANON_FRIENDLY_MONSTER : 0);
+}
+
+int mon_enchant::modded_speed(const monsters *mons, int hdplus) const
+{
+    return (mod_speed(mons->hit_dice + hdplus, mons->speed));
+}
+
+int mon_enchant::apply_fuzz(int dur, int lowfuzz, int highfuzz) const
+{
+    const int lfuzz = lowfuzz * dur / 100,
+        hfuzz = highfuzz * dur / 100;
+    return dur + random2avg(lfuzz + hfuzz + 1, 2) - lfuzz;
+}
+
+int mon_enchant::calc_duration(const monsters *mons,
+                               const mon_enchant *added) const
+{
+    int cturn = 0;
+    
+    const int newdegree = added? added->degree : degree;
+    const int deg = newdegree? newdegree : 1;
+
+    // Beneficial enchantments (like Haste) should not be throttled by
+    // monster HD!
+    switch (ench)
+    {
+    case ENCH_HASTE:
+        cturn = 1000 / mod_speed(25, mons->speed);
+        break;
+    case ENCH_INVIS:
+        cturn = 1000 / mod_speed(25, mons->speed);
+        break;
+    case ENCH_SLOW:
+        cturn = 250 / (1 + modded_speed(mons, 10));
+        break;
+    case ENCH_FEAR:
+        cturn = 150 / (1 + modded_speed(mons, 5));
+        break;
+    case ENCH_PARALYSIS:
+    case ENCH_CONFUSION:
+        cturn = 120 / modded_speed(mons, 5);
+        break;
+    case ENCH_POISON:
+        cturn = 1000 * deg / mod_speed(125, mons->speed);
+        break;
+    case ENCH_STICKY_FLAME:
+        cturn = 1000 * deg / mod_speed(200, mons->speed);
+        break;
+    case ENCH_ROT:
+        if (deg > 1)
+            cturn = 1000 * (deg - 1) / mod_speed(333, mons->speed);
+        cturn += 1000 / mod_speed(250, mons->speed);
+        break;
+    case ENCH_BACKLIGHT:
+        if (deg > 1)
+            cturn = 1000 * (deg - 1) / mod_speed(200, mons->speed);
+        cturn += 1000 / mod_speed(100, mons->speed);
+        break;
+    case ENCH_SHORT_LIVED:
+        cturn = 1000 / mod_speed(200, mons->speed);
+        break;
+    case ENCH_ABJ:
+        if (deg >= 6)
+            cturn = 1000 / mod_speed(10, mons->speed);
+        if (deg >= 5)
+            cturn += 1000 / mod_speed(20, mons->speed);
+        cturn += 1000 * std::min(4, deg) / mod_speed(100, mons->speed);
+        break;
+    case ENCH_CHARM:
+        cturn = 500 / modded_speed(mons, 10);
+        break;
+    case ENCH_TP:
+        cturn = 1000 * deg / mod_speed(1000, mons->speed);
+        break;
+    case ENCH_SLEEP_WARY:
+        cturn = 1000 / mod_speed(50, mons->speed);
+        break;
+    default:
+        break;
+    }
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Ench for %s: raw turn duration for %s (%d) == %d",
+         mons->name(DESC_PLAIN).c_str(), std::string(*this).c_str(),
+         deg, cturn);
+#endif
+    
+    if (cturn < 2)
+        cturn = 2;
+
+    int raw_duration = (cturn * speed_to_duration(mons->speed));
+    raw_duration = apply_fuzz(raw_duration, 60, 40);
+    if (raw_duration < 15)
+        raw_duration = 15;
+
+    return (raw_duration);
+}
+
+// Calculate the effective duration (in terms of normal player time - 10
+// duration units being one normal player action) of this enchantment.
+void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
+{
+    if (duration && !added)
+        return;
+
+    if (added && added->duration)
+        duration += added->duration;
+    else
+        duration += calc_duration(mons, added);
+        
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Ench on %s: ench energy for %s: %d",
+         mons->name(DESC_PLAIN).c_str(), std::string(*this).c_str(),
+         duration);
+#endif
+
+    if (duration > maxduration)
+        maxduration = duration;
 }

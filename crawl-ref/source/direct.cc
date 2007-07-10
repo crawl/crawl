@@ -1659,7 +1659,7 @@ static void describe_cell(int mx, int my)
         for (mon_enchant_list::const_iterator e = menv[i].enchantments.begin();
              e != menv[i].enchantments.end(); ++e)
         {
-            describe_mons_enchantment(menv[i], *e, paralysed);
+            describe_mons_enchantment(menv[i], e->second, paralysed);
         }
 #if DEBUG_DIAGNOSTICS
         stethoscope(i);

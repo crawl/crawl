@@ -108,11 +108,6 @@ inline bool testbits(unsigned long flags, unsigned long test)
     return ((flags & test) == test);
 }
 
-inline int cap_int(int val, int cap)
-{
-    return (val > cap? cap : val);
-}
-
 template <typename Z> inline Z sgn(Z x)
 {
     return (x < 0? -1 : (x > 0? 1 : 0));
