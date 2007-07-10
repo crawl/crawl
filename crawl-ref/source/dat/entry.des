@@ -639,22 +639,22 @@ ORIENT: float
 FLAGS: no_rotate
 SHUFFLE: {[
 MAP
-ccccccccccccccccccccccc
-cccc.ccccccccccccc.cccc
-ccc....ccccccccc....ccc
+   ccc           ccc
+  cc.ccc       ccc.cc
+ cc....ccc   ccc....cc
 cc..T....ccccc....T..cc
 c.....T....c....T.....c
 c..T....T.....T....T..c
 c.........{.(.........c
 ccccccc.........ccccccc
-cccccccccc.[.cccccccccc
-cccccccccc...cccccccccc
-ccccccccc..T..ccccccccc
-cccccccc.......cccccccc
-ccccccc..T...T..ccccccc
-cccccc.....T.....cccccc
-cccccccc.......cccccccc
-ccccccccccc@ccccccccccc
+      cccc.[.cccc
+        cc...cc
+       cc..T..cc
+      cc.......cc
+     cc..T...T..cc
+     c.....T.....c
+     ccc.......ccc
+       cccc@cccc
 ENDMAP
 
 ##############################################################################
@@ -4148,8 +4148,7 @@ NAME:     entry_eino_002_a
 TAGS:     entry no_monster_gen
 ORIENT:   northwest
 FLAGS:    no_rotate
-SHUFFLE:  ABC
-SUBST:    A==, B=x, C=x
+NSUBST:   A = 1:= / x
 SUBST:    % = % .:5
 CHANCE:   2
 MAP
@@ -4164,8 +4163,8 @@ xxxxxxx{.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx........xxxxxxx.%.%.%.%.%.xxxxx
-xxxxxxxxxxx..........(..xAxxxxBxxxx.xxxxx
-xxxxxxxxxxxxx.................xxxxxBxxxxx
+xxxxxxxxxxx..........(..xAxxxxAxxxx.xxxxx
+xxxxxxxxxxxxx.................xxxxxAxxxxx
 xxxxxxxxxxxxxxxx......................xxb
 xxxxxxxxxxxxxxxxxxx.............[.......@
 xxxxxxxxxxxxxxxxxxxxxxx.............xxxxb
