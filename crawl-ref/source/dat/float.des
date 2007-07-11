@@ -12,7 +12,7 @@
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
-default-depth: 12-26
+default-depth: D:12-26
 
 ##############################################################################
 # Dummy probability balancer vault for depths 1-11.
@@ -22,7 +22,7 @@ default-depth: 12-26
 # we use this dummy vault.
 #
 NAME: dummy_balancer
-DEPTH: 1-11
+DEPTH: D:1-11
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
@@ -38,7 +38,7 @@ ENDMAP
 NAME: erik_1
 ORIENT: float
 TAGS: no_monster_gen
-DEPTH: 7-11
+DEPTH: D:7-11, Lair
 #
 SHUFFLE: rR/sS/uU/vV/wW/yY/zZ, uU/nN
 SUBST: r=n, R=N, s=n, S=N
@@ -79,7 +79,7 @@ ENDMAP
 # Moved deeper and minor changes.
 #
 NAME: erik_ogre
-DEPTH: 6-10
+DEPTH: D:6-10
 ORIENT: float
 SHUFFLE: 1X / 1X / 2l / 3Y
 SUBST: X=x, Y:x.
@@ -117,7 +117,7 @@ ENDMAP
 # but since they are normal speed with no range attacks, they can be escaped
 #
 NAME: slime_lemuel
-DEPTH: 6-16, Lair
+DEPTH: D:6-16, Lair
 ORIENT: float
 MONS: w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
 MAP
@@ -165,7 +165,7 @@ ENDMAP
 #
 NAME: MiniTomb
 ORIENT: float
-DEPTH: 20-26
+DEPTH: D:15-26
 MONS: large zombie / nothing, mummy, guardian mummy, greater mummy, large zombie
 MONS: mummy / nothing
 SHUFFLE: 2F, cbv
@@ -191,7 +191,7 @@ ENDMAP
 NAME:   insect_pit
 FLAGS:  no_rotate
 ORIENT: float
-DEPTH:  5-12
+DEPTH:  D:5-12, Elf
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito
@@ -216,7 +216,7 @@ ENDMAP
 # possibility to script the trolls guard the bridge would be great here -evk
 #
 NAME: troll_bridge
-DEPTH: 7-15
+DEPTH: D:7-15
 ORIENT: float
 TAGS: no_pool_fixup
 MONS: troll w:50 / rock troll / iron troll w:5
@@ -273,7 +273,7 @@ ENDMAP
 # Oklob gauntlet
 #
 NAME:    oklob_2
-DEPTH:   18-27
+DEPTH:   D:18-27, Lair, Elf
 MONS:    plant, oklob plant
 ORIENT:  float
 SHUFFLE: ]})yY / defzZ
@@ -297,7 +297,7 @@ ENDMAP
 # Oklob shooting range
 #
 NAME:    oklob_3
-DEPTH:   21-27
+DEPTH:   D:21-27, Lair, Elf
 ORIENT:  float
 SHUFFLE: ab" / AB'
 SUBST:   a=[, b=(, A=., B=., "=., ':>', '=>.
@@ -342,7 +342,7 @@ KMONS: E = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito 
 KMONS: F = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
 KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
 KITEM: H = any good_item / any potion / w:20 nothing / gold
-DEPTH: 16-20, Lair: 3-10, Swamp, Snake, Slime
+DEPTH: D:16-20, Lair:3-10, Swamp, Snake, Slime
 MAP
 xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
 xxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxx

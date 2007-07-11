@@ -38,7 +38,7 @@ default-depth: D:8-27
 ##############################################################################
 # Minivault balancer
 NAME: mini_dummy
-DEPTH: 1-7
+DEPTH: D:1-7
 TAGS: dummy
 CHANCE: 100
 MAP
@@ -49,7 +49,7 @@ ENDMAP
 # pond with fungi
 #
 NAME: fungi_pond__lemuel
-DEPTH:  8-20, Lair, Orc
+DEPTH:  D:8-20, Lair, Orc
 MONS: fungus, wandering mushroom
 SUBST: 1 = . 1 2:4
 SUBST: ? : w..
@@ -101,7 +101,7 @@ ENDMAP
 NAME: centaur_isle
 TAGS: no_monster_gen no_pool_fixup
 SUBST: ? = *$
-DEPTH: 6-12
+DEPTH: D:6-12
 MONS: centaur
 MAP
 ..........wwww.........
@@ -159,7 +159,7 @@ ENDMAP
 # Oklob assault
 #
 NAME:    oklob_1
-DEPTH:   16-27
+DEPTH:   D:16-27, Lair:4-
 MONS:    plant, oklob plant
 SUBST:   ? = 1 2:5 '
 SHUFFLE: '"
@@ -182,9 +182,10 @@ ENDMAP
 # Treasure trove with Zot trap
 #
 NAME: zot_lemuel
-DEPTH: 1-27, Lair, Snake, Crypt
+DEPTH: 10-27
 KFEAT: ? = zot trap
 SUBST: *: *$
+CHANCE: 3
 MAP
 ............
 .xxxxxxxxxx.
@@ -285,23 +286,21 @@ NAME: water_maze_lemuel
 TAGS: no_pool_fixup
 DEPTH: 5-27
 MAP
-.................
-....wwwwwwwww....
-...wwcccccccww...
-..wwccwwwwwccww..
-.wwccwwcccwwccww.
-.wccwwccwccwwccw.
-.wcwwccwwwccwwcw.
-.wcwcc*wcwwccwcw.
-.wcwc***ccwwcwcw.
-.wcwcc*ccwwccwcw.
-.wcwwcccwwccwwcw.
-.wccwwccwccwwccw.
-.wwccwwcwcwwccww.
-..wwccwwwcwccww..
-...wwcccccwcww...
-....wwwwwwwww....
-.................
+   wwwwwwwww
+  wwcccccccww
+ wwccwwwwwccww
+wwccwwcccwwccww
+wccwwccwccwwccw
+wcwwccwwwccwwcw
+wcwcc*wcwwccwcw
+wcwc***ccwwcwcw
+wcwcc*ccwwccwcw
+wcwwcccwwccwwcw
+wccwwccwccwwccw
+wwccwwcwcwwccww
+ wwccwwwcwccww
+  wwcccccwcww
+   wwwwwwwww
 ENDMAP
 
 NAME: water_boxes_lemuel
@@ -313,20 +312,18 @@ SUBST: e = =, f = x, g = x, h = x
 SUBST: i = =, j = x, k = x, l = x
 SUBST: m = =, n = x, o = x, p = x
 MAP
-..............
-.wwwwwwwwwwww.
-.wwwwwwwwwwww.
-.wwxaxwwxexww.
-.wwb*cwwf*gww.
-.wwxdxwwxhxww.
-.wwwwwwwwwwww.
-.wwwwwwwwwwww.
-.wwxixwwxmxww.
-.wwj*kwwn*oww.
-.wwxlxwwxpxww.
-.wwwwwwwwwwww.
-.wwwwwwwwwwww.
-..............
+  wwwwwwww
+ wwwwwwwwww
+wwxaxwwxexww
+wwb*cwwf*gww
+wwxdxwwxhxww
+wwwwwwwwwwww
+wwwwwwwwwwww
+wwxixwwxmxww
+wwj*kwwn*oww
+wwxlxwwxpxww
+ wwwwwwwwww
+  wwwwwwww
 ENDMAP
 
 ###############################################
@@ -339,30 +336,28 @@ TAGS: no_monster_gen
 SUBST: .:..w
 SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3
 MAP
-....................
-.....bbbbbbbbbb.....
-...bbb11211211bbb...
-..bb.12bbbbbb21.bb..
-.bb..bbb2323bbb..bb.
-.b..bb...bb...bb.1b.
-.b.bb..bbbbbb..bb.b.
-.b.b..bb2323bb..b1b.
-.b.b.bb23bb23bb.b.b.
-.b.b.b..bbbb..b.b1b.
-.b.b.b.bb44bb.b.b.b.
-.b2b2b3b4444b3b2b2b.
-.b.b.b.b4444b.b.b.b.
-.b.b.b.bb44bb.b.b1b.
-.b.b.b2323bb..b.b.b.
-.b.b.bbbbbb..bb.b1b.
-.b.b..bbb...bb..b.b.
-.b.bb..bb.bbb..bb1b.
-.b..bb....b...bb..b.
-.bb..bbbbbb.bbb..bb.
-..bb.12bbbb2b111bb..
-...bbb123321b.bbb...
-.....bbbbbbbb.b.....
-....................
+    bbbbbbbbbb
+  bbb11211211bbb
+ bb.12bbbbbb21.bb
+bb..bbb2323bbb..bb
+b..bb...bb...bb.1b
+b.bb..bbbbbb..bb.b
+b.b..bb2323bb..b1b
+b.b.bb23bb23bb.b.b
+b.b.b..bbbb..b.b1b
+b.b.b.bb44bb.b.b.b
+b2b2b3b4444b3b2b2b
+b.b.b.b4444b.b.b.b
+b.b.b.bb44bb.b.b1b
+b.b.b2323bb..b.b.b
+b.b.bbbbbb..bb.b1b
+b.b..bbb...bb..b.b
+b.bb..bb.bbb..bb1b
+b..bb....b...bb..b
+bb..bbbbbb.bbb..bb
+ bb.12bbbb2b111bb
+  bbb123321b.bbb
+    bbbbbbbb@b
 ENDMAP
 
 ##############################################################################
@@ -374,20 +369,18 @@ ITEM: nothing / any good_item
 MONS: silver statue / orange crystal statue / ice statue
 SHUFFLE: d|
 MAP
-...........
-.xxxxxxxxx.
-.xbbbbbbbx.
-.xb1...1bx.
-.xb.....bx.
-.xb.....bx.
-.xbb.|.bbx.
-.xxb.d.bxx.
-.xxb...bxx.
-.xxb...bxx.
-.xxb.*.bxx.
-.xxb...bxx.
-.xxx@I@xxx.
-...........
+xxxxxxxxx
+xbbbbbbbx
+xb1...1bx
+xb.....bx
+xb.....bx
+xbb.|.bbx
+xxb.d.bxx
+xxb...bxx
+xxb...bxx
+xxb.*.bxx
+xxb...bxx
+xxx@I@xxx
 ENDMAP
 
 ##############################################################################
@@ -399,13 +392,11 @@ SHUFFLE: 1ID/2TC
 MONS:    orc priest, deep elf priest / w:30 nothing
 KFEAT:   D = altar of Beogh / w:2 altar of Okawaru / w:2 altar of Makhleb
 MAP
-.........
-.ccccc...
-.c1..c...
-.c1D.+.I.
-.c1..c...
-.ccccc...
-.........
+ccccc...
+c1..c...
+c1D.+.I@
+c1..c...
+ccccc...
 ENDMAP
 
 ##############################################################################
@@ -449,18 +440,16 @@ NAME: minitemple
 # More common than the others.
 CHANCE: 20
 MAP
-............
-.cccccccccc.
-.cccccccccc.
-.cBcBcBcBcc.
-.G.c.c.c.Bc.
-.........Bc.
-.........Bc.
-.G.c.c.c.Bc.
-.cBcBcBcBcc.
-.cccccccccc.
-.cccccccccc.
-............
+cccccccccc
+cccccccccc
+cBcBcBcBcc
+G.c.c.c.Bc
+@.......Bc
+@.......Bc
+G.c.c.c.Bc
+cBcBcBcBcc
+cccccccccc
+cccccccccc
 ENDMAP
 
 ###################################
@@ -1091,22 +1080,20 @@ ENDMAP
 #
 NAME: columns_hall
 MAP
-.............................
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-.............................
+@...........................@
 ..x..x..x..x..x..x..x..x..x..
-.............................
+@...........................@
 ..x..x..x..x..x..x..x..x..x..
-.............................
+@...........................@
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-.............................
 ENDMAP
 
 ##############################################################################
 # Wet chambers - two mutually exclusive versions (Onia Ninara)
 #
 NAME:    onia_ninara_007_chamber_of_wet_secrets
-DEPTH:   8-13
+DEPTH:   D:8-13
 TAGS:    no_monster_gen no_pool_fixup
 MONS:    centaur, brown snake, electrical eel
 ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
@@ -1137,7 +1124,7 @@ MAP
 ENDMAP
 
 NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
-DEPTH:   20-26
+DEPTH:   D:20-26
 TAGS:    no_monster_gen no_pool_fixup
 MONS:    yaktaur captain, grey snake, storm dragon
 ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
@@ -1250,14 +1237,13 @@ ENDMAP
 #
 NAME: library
 DEPTH: 1-27
+TAGS: mini_float
 ITEM: any book w:20/any scroll/nothing
 MAP
-......
-.x=xx.
-.xddx.
-.xddx.
-.xxxx.
-......
+x=xx
+xddx
+xddx
+xxxx
 ENDMAP
 
 #############################################################################
@@ -1265,6 +1251,7 @@ ENDMAP
 # put the rest of the doghouses in float.des, combined CHANCE of all of them is 10
 
 NAME:    doghouse_v1
+TAGS:    mini_float
 DEPTH:   4-8
 SHUFFLE: 1?T
 SUBST:   T : T V:2
@@ -1272,15 +1259,13 @@ SUBST:   ? : 1:2 .
 MONS:    hound / w:1 nothing / w:2 jackal
 CHANCE:  2
 MAP
-.........
-.xxx+xxx.
-.xxx+xxx.
-.xx...xx.
-.xx?..xx.
-.xx1.Txx.
-.xxxxxxx.
-.xxxxxxx.
-.........
+xxx+xxx
+xxx+xxx
+xx...xx
+xx?..xx
+xx1.Txx
+xxxxxxx
+xxxxxxx
 ENDMAP
 
 #############################################################################
@@ -1352,7 +1337,7 @@ ENDMAP
 # Small room with statues (Eino)
 
 NAME:    small_statue_room
-DEPTH:   2-26
+DEPTH:   D:2-26
 FLAGS:   no_hmirror no_vmirror
 MAP
 xxx.xxx

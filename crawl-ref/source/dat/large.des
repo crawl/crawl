@@ -14,7 +14,7 @@ default-depth: D:12-26
 #
 NAME: RatsNest
 ORIENT: northeast
-DEPTH: 5-9
+DEPTH: D:5-9, Lair
 SHUFFLE: 23, 34
 MONS: rat / nothing, grey rat / nothing
 MONS: green rat / nothing, orange rat / w:40 rat
@@ -52,7 +52,7 @@ ENDMAP
 #hidden cave vault, possibly with statue
 NAME: statuecave_lemuel
 ORIENT: northeast
-DEPTH: 7-27, Lair, Crypt
+DEPTH: D:7-27, Lair, Crypt
 MONS: ice statue/orange crystal statue
 SHUFFLE: 1|/!*
 SUBST: *:*$, ?:x., !:., ?=w.
@@ -86,7 +86,7 @@ ENDMAP
 #
 NAME: dragon1_lemuel
 ORIENT: northeast
-DEPTH: 9-20, Lair
+DEPTH: D:9-20, Lair
 MONS: dragon, ice dragon
 SUBST: ! : ?x
 SHUFFLE: 1?/2W
@@ -192,7 +192,7 @@ ENDMAP
 #
 NAME:    River_Lethe
 ORIENT:  encompass
-DEPTH:   16-27
+DEPTH:   D:16-27
 SUBST:   + = +=
 SUBST:   . = .:100 !:1 6:4
 SUBST:   ; = .:200 !:1 1:3
@@ -796,7 +796,7 @@ ENDMAP
 NAME: mludivico_vault
 ORIENT: southwest
 # The hell hounds can be deadly at lower levels.
-DEPTH: 18-27
+DEPTH: D:18-27
 MONS: hell hound, necromancer, wizard, orange demon, rotting devil
 MONS: hell knight, great orb of eyes
 MAP
@@ -840,7 +840,7 @@ ENDMAP
 #
 NAME: farm_and_country
 ORIENT: encompass
-DEPTH: 16-27
+DEPTH: D:16-27
 MONS: death yak, plant, griffon, killer bee, ogre, oklob plant
 MONS: wandering mushroom
 MAP
@@ -1044,7 +1044,7 @@ ENDMAP
 # Rubicon
 #
 NAME:    erik_rubicon_a
-DEPTH:   10-16
+DEPTH:   D:10-16
 ORIENT:  south
 FLAGS:   no_rotate
 TAGS:    no_pool_fixup
@@ -1080,7 +1080,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    erik_rubicon_b
-DEPTH:   10-16
+DEPTH:   D:10-16
 ORIENT:  south
 FLAGS:   no_rotate
 CHANCE:  4
