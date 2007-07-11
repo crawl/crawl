@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <set>
+#include <sstream>
 
 #include "AppHdr.h"
 #include "abyss.h"
@@ -93,6 +94,7 @@ struct dist_feat
 
 // DUNGEON BUILDERS
 static void build_dungeon_level(int level_number, int level_type);
+static void reset_level();
 static bool valid_dungeon_level(int level_number, int level_type);
 
 static bool find_in_area(int sx, int sy, int ex, int ey,
@@ -178,6 +180,7 @@ static void chequerboard(spec_room &sr, dungeon_feature_type target,
                          dungeon_feature_type floor2);
 static void roguey_level(int level_number, spec_room &sr);
 static void morgue(spec_room &sr);
+static void dgn_fill_zone(const coord_def &c, int zone);    
 
 // SPECIAL ROOM BUILDERS
 static void special_room(int level_number, spec_room &sr);
@@ -208,13 +211,16 @@ typedef std::list<coord_def> coord_list;
 //////////////////////////////////////////////////////////////////////////
 // Static data
 
-// Places where monsters should not be randomly generated.
+// A mask of vaults and vault-specific flags.
 map_mask dgn_map_mask;
 static dgn_region_list vault_zones;
 static int vault_chance = 9;
 static std::vector<vault_placement> level_vaults;
 static int minivault_chance = 3;
 static bool dgn_level_vetoed = false;
+static bool use_random_maps = true;
+static bool dgn_check_connectivity = false;
+static int  dgn_zones = 0;
 
 static void place_altars()
 {
@@ -249,8 +255,25 @@ bool builder(int level_number, int level_type)
     int tries = 20;
     while (tries-- > 0)
     {
+#ifdef DEBUG_DIAGNOSTICS
+        mapgen_report_map_build_start();
+#endif
+        
         dgn_level_vetoed = false;
+        
+        reset_level();
+
+        // If we're getting low on available retries, disable random vaults
+        // and minivaults (special levels will still be placed).
+        if (tries < 5)
+            use_random_maps = false;
+        
         build_dungeon_level(level_number, level_type);
+
+#ifdef DEBUG_DIAGNOSTICS
+        if (dgn_level_vetoed)
+            mapgen_report_map_veto();
+#endif
 
         if (!dgn_level_vetoed && valid_dungeon_level(level_number, level_type))
             return (true);
@@ -264,6 +287,89 @@ bool builder(int level_number, int level_type)
                                level_id::current().describe().c_str()).c_str());
     }
     return (false);
+}
+
+static inline bool dgn_grid_is_isolating(const dungeon_feature_type grid)
+{
+    // Rock wall check is superfluous, but is the most common case.
+    return (grid == DNGN_ROCK_WALL
+            || (grid_is_solid(grid) && grid != DNGN_CLOSED_DOOR
+                && grid != DNGN_SECRET_DOOR));
+}
+
+// Counts the number of mutually unreachable areas in the map,
+// excluding isolated zones within vaults (we assume the vault author
+// knows what she's doing). This is an easy way to check whether a map
+// has isolated parts of the level that were not formerly isolated.
+//
+// All squares within vaults are treated as non-reachable, to simplify
+// life, because vaults may change the level layout and isolate
+// different areas without changing the number of isolated areas.
+// Here's a before and after example of such a vault that would cause
+// problems if we considered floor in the vault as non-isolating (the
+// vault is represented as V for walls and o for floor squares in the
+// vault).
+//
+// Before:
+// 
+//   xxxxx    xxxxx
+//   x<..x    x.2.x
+//   x.1.x    xxxxx  3 isolated zones
+//   x>..x    x.3.x
+//   xxxxx    xxxxx
+//   
+// After:
+// 
+//   xxxxx    xxxxx
+//   x<1.x    x.2.x
+//   VVVVVVVVVVoooV  3 isolated zones, but the isolated zones are different.
+//   x>3.x    x...x
+//   xxxxx    xxxxx
+//
+static int dgn_count_disconnected_zones()
+{
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    int nzones = 0;
+    for (int y = 0; y < GYM; ++y)
+    {
+        for (int x = 0; x < GXM; ++x)
+        {
+            if (travel_point_distance[x][y] || dgn_map_mask[x][y])
+                continue;
+
+            if (dgn_grid_is_isolating(grd[x][y]))
+                continue;
+
+            dgn_fill_zone(coord_def(x, y), ++nzones);
+        }
+    }
+
+    return (nzones);
+}
+
+static void dgn_fill_zone(const coord_def &c, int zone)
+{
+    // No bounds checks, assuming the level has at least one layer of
+    // rock border.
+    travel_point_distance[c.x][c.y] = zone;
+    for (int yi = -1; yi <= 1; ++yi)
+    {
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if (!xi && !yi)
+                continue;
+
+            const coord_def cp(c.x + xi, c.y + yi);
+            if (travel_point_distance[cp.x][cp.y]
+                || dgn_map_mask(cp)
+                || dgn_grid_is_isolating(grd(cp)))
+            {
+                continue;
+            }
+
+            dgn_fill_zone(cp, zone);
+        }
+    }
 }
 
 static void mask_vault(const vault_placement &place, unsigned mask)
@@ -345,6 +451,8 @@ static void reset_level()
     vault_zones.clear();
     vault_chance     = 9;
     minivault_chance = 3;
+    use_random_maps  = true;
+    dgn_check_connectivity = false;
     
     // blank level with DNGN_ROCK_WALL
     make_box(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, DNGN_ROCK_WALL);
@@ -520,21 +628,43 @@ static void fixup_branch_stairs()
     }
 }
 
+static void dgn_verify_connectivity(unsigned nvaults)
+{
+    // After placing vaults, make sure parts of the level have not been
+    // disconnected.
+    if (!dgn_level_vetoed && dgn_zones && nvaults != level_vaults.size())
+    {
+        const int newzones = dgn_count_disconnected_zones();
+        if (newzones > dgn_zones)
+        {
+            dgn_level_vetoed = true;
+#ifdef DEBUG_DIAGNOSTICS
+            std::ostringstream vlist;
+            for (unsigned i = nvaults; i < level_vaults.size(); ++i)
+            {
+                if (i > nvaults)
+                    vlist << ", ";
+                vlist << level_vaults[i].map.name;
+            }
+            mprf(MSGCH_DIAGNOSTICS,
+                 "VETO: %s broken by [%s] (had %d zones, "
+                 "now have %d zones.",
+                 level_id::current().describe().c_str(),
+                 vlist.str().c_str(), dgn_zones, newzones);
+#endif
+        }
+    }    
+}
+
 static void build_dungeon_level(int level_number, int level_type)
 {
     spec_room sr;
 
-    reset_level();
     build_layout_skeleton(level_number, level_type, sr);
 
     if (you.level_type == LEVEL_LABYRINTH || dgn_level_vetoed)
         return;
     
-    // Try to place minivaults that really badly want to be placed. Still
-    // no guarantees, seeing this is a minivault.
-    if (!player_in_branch(BRANCH_SHOALS))
-        place_special_minivaults(level_number, level_type);
-
     // hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level())
     if (sr.created && !sr.hooked_up)
@@ -550,9 +680,6 @@ static void build_dungeon_level(int level_number, int level_type)
     else if (player_in_branch(BRANCH_SHOALS))
         prepare_shoals( level_number );
 
-    place_branch_entrances( level_number, level_type );
-    place_extra_vaults();
-
     if (dgn_level_vetoed)
         return;
     
@@ -561,13 +688,29 @@ static void build_dungeon_level(int level_number, int level_type)
     if (!player_in_branch( BRANCH_DIS ) && !player_in_branch( BRANCH_VAULTS ))
         hide_doors();
 
-    if (!player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
-        place_traps(level_number);
-
     // change pre-rock (105) to rock, and pre-floor (106) to floor
     replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_WALL, DNGN_ROCK_WALL );
     replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_FLOOR, DNGN_FLOOR );
 
+    const unsigned nvaults = level_vaults.size();
+
+    // Any further vaults must make sure not to disrupt level layout.
+    dgn_check_connectivity = true;
+    
+    // Try to place minivaults that really badly want to be placed. Still
+    // no guarantees, seeing this is a minivault.
+    if (!player_in_branch(BRANCH_SHOALS))
+        place_special_minivaults(level_number, level_type);
+    place_branch_entrances( level_number, level_type );
+    place_extra_vaults();
+    dgn_verify_connectivity(nvaults);
+    
+    if (dgn_level_vetoed)
+        return;
+    
+    if (!player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
+        place_traps(level_number);
+    
     // place items
     builder_items(level_number, level_type, num_items_wanted(level_number));
 
@@ -1194,7 +1337,7 @@ static void place_special_minivaults(int level_number, int level_type)
         return;
 
     std::set<int> used;
-    if (minivault_chance && one_chance_in(minivault_chance))
+    if (use_random_maps && minivault_chance && one_chance_in(minivault_chance))
     {
         const int vault = random_map_in_depth(level_id::current(), true);
         if (vault != -1)
@@ -1241,6 +1384,7 @@ static builder_rc_type builder_normal(int level_number, char level_type,
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
     if (vault == -1
         && player_in_branch(BRANCH_MAIN_DUNGEON)
+        && use_random_maps
         && one_chance_in(vault_chance))
     {
         vault = random_map_in_depth(level_id::current());
@@ -1561,6 +1705,7 @@ static void place_specific_stair(dungeon_feature_type stair,
 static void place_extra_vaults()
 {
     if (!player_in_branch(BRANCH_MAIN_DUNGEON)
+        && use_random_maps
         && vault_chance
         && one_chance_in(vault_chance))
     {
@@ -2661,6 +2806,9 @@ static bool build_minivaults(int level_number, int force_vault,
     acq_item_class[5] = OBJ_STAVES;
     acq_item_class[6] = OBJ_MISCELLANY;
 
+    if (dgn_check_connectivity && !dgn_zones)
+        dgn_zones = dgn_count_disconnected_zones();
+    
     map_type vgrid;
     vault_placement place;
     vault_main(vgrid, place, force_vault);
@@ -3074,6 +3222,9 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     acq_item_class[5] = OBJ_STAVES;
     acq_item_class[6] = OBJ_MISCELLANY;
 
+    if (dgn_check_connectivity && !dgn_zones)
+        dgn_zones = dgn_count_disconnected_zones();
+    
     map_type vgrid;
     vault_placement place;
     std::vector<coord_def> &target_connections = place.exits;

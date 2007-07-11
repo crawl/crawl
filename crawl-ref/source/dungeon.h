@@ -311,7 +311,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
         return (false);
     }
 
-    if (!left_vault && vaults && !(*vaults)(dc))
+    if (!left_vault && vaults && !(*vaults)[dc.x][dc.y])
         left_vault = true;
 
     good_square(dc);

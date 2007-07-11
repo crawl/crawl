@@ -2124,21 +2124,38 @@ void debug_card()
 static std::map<std::string, int> mapgen_try_count;
 static std::map<std::string, int> mapgen_use_count;
 static std::map<level_id, int> mapgen_level_mapcounts;
+static std::map< level_id, std::pair<int,int> > mapgen_map_builds;
 static std::map< level_id, std::set<std::string> > mapgen_level_mapsused;
 static std::map<std::string, std::string> mapgen_errors;
 static std::string mapgen_last_error;
 
 static int mg_levels_tried = 0, mg_levels_failed = 0;
+static int mg_build_attempts = 0, mg_vetoes = 0;
+
+void mapgen_report_map_build_start()
+{
+    mg_build_attempts++;
+    mapgen_map_builds[level_id::current()].first++;
+}
+
+void mapgen_report_map_veto()
+{
+    mg_vetoes++;
+    mapgen_map_builds[level_id::current()].second++;    
+}
 
 static bool mg_do_build_level(int niters)
 {
     mesclr();
-    mprf("On %s (%d); %d levels, %d failed, %d errors%s, %d maps",
+    mprf("On %s (%d); %d g, %d fail, %d err%s, %d uniq, "
+         "%d try, %d (%.2lf%%) vetos",
          level_id::current().describe().c_str(), niters,
          mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
          mapgen_last_error.empty()? ""
          : (" (" + mapgen_last_error + ")").c_str(),
-         mapgen_use_count.size());
+         mapgen_use_count.size(),
+         mg_build_attempts, mg_vetoes,
+         mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 
     no_messages mx;
     for (int i = 0; i < niters; ++i)
@@ -2262,6 +2279,33 @@ static void write_mapgen_stats()
         }
     }
 
+    if (mg_vetoes)
+    {
+        fprintf(outf, "\n\nMost vetoed levels:\n");
+        std::multimap<int, level_id> sortedvetos;
+        for (std::map< level_id, std::pair<int, int> >::const_iterator
+                 i = mapgen_map_builds.begin(); i != mapgen_map_builds.end();
+             ++i)
+        {
+            if (!i->second.second)
+                continue;
+
+            sortedvetos.insert(
+                std::pair<int, level_id>( i->second.second, i->first ));
+        }
+
+        int count = 0;
+        for (std::multimap<int, level_id>::reverse_iterator
+                 i = sortedvetos.rbegin(); i != sortedvetos.rend(); ++i)
+        {
+            const int vetoes = i->first;
+            const int tries  = mapgen_map_builds[i->second].first;
+            fprintf(outf, "%3d) %s (%d of %d vetoed, %.2f%%)\n",
+                    ++count, i->second.describe().c_str(),
+                    vetoes, tries, vetoes * 100.0 / tries);
+        }
+    }
+    
     if (!unused_maps.empty())
     {
         fprintf(outf, "\n\nUnused maps:\n\n");
