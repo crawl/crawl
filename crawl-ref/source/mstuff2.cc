@@ -1939,21 +1939,15 @@ static int monster_abjure_square(const coord_def &pos,
     power = std::max(20, fuzz_value(power, 40, 25));
 
     if (test_only)
-        return (power > abj.duration? 5 : 1);
+        return (power > 40 || power >= abj.duration);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
          abj.duration, power, abj.duration - power);
 #endif
-    
-    if ((abj.duration -= power) <= 0)
-    {
-        monster_die(target, KILL_RESET, 0);
-        return (5);
-    }
 
-    simple_monster_message(target, " shudders.");
-    target->update_ench(abj);
+    if (!target->lose_ench_duration(abj, power))
+        simple_monster_message(target, " shudders.");
     return (1);
 }
 
@@ -1998,11 +1992,23 @@ static int monster_abjuration(const monsters *caster, bool test)
     // Abjure radius.
     for (int rad = 1; rad < 5 && pow >= 30; ++rad)
     {
-        maffected +=
+        int number_hit =
             apply_radius_around_square(
                 caster->pos(), rad, monster_abjure_square,
                 pow, test, friendly);
-        pow = pow * 2 / 5;
+
+        maffected += number_hit;
+
+        // Each affected monster drops power.
+        // 
+        // We could further tune this by the actual amount of abjuration
+        // damage done to each summon, but the player will probably never
+        // notice. :-)
+        //
+        while (number_hit-- > 0)
+            pow = pow * 90 / 100;
+        
+        pow /= 2;
     }
     return (maffected);
 }

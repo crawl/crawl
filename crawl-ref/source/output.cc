@@ -664,11 +664,11 @@ static const char* determine_color_string( int level ) {
     }
 }
 
-std::vector<formatted_string> get_full_detail(bool calc_unid)
+std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
 {
     char buf[1000];
     // 3 columns, splits at columns 32, 52
-    column_composer cols(3, 32, 52);
+    column_composer cols(3, 33, 52);
     char god_colour_tag[20];
     god_colour_tag[0] = 0;
     std::string godpowers(god_name(you.religion));
@@ -690,14 +690,19 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
                 std::string(prank, '*');
         }
     }
+
+    const std::string score =
+        (sc > -1? make_stringf(" (%ld points)", sc) : "");
+    
     snprintf(buf, sizeof buf,
-             "<yellow>%s the %s</yellow>\n\n"
+             "<yellow>%s the %s</yellow>%s\n\n"
              "Race       : %s\n"
              "Class      : %s\n"
              "Worship    : %s%s\n"
              "Level      : %7d\n"
              "Exp        : %7lu\n",
              you.your_name, player_title(),
+             score.c_str(),
              species_name(you.species,you.experience_level),
              you.class_name,
              god_colour_tag, godpowers.c_str(),

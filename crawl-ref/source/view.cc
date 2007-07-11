@@ -948,8 +948,10 @@ bool check_awaken(monsters* monster)
         }
     }
 
-    if (you.backlit())
-        mons_perc += 15;
+    // If you've been tagged with Corona or are Glowing, the glow
+    // makes you extremely unstealthy.
+    if (you.backlit() && mons_player_visible(monster))
+        mons_perc += 50;
 
     if (mons_perc < 0)
         mons_perc = 0;

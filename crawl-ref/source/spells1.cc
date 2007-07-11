@@ -668,7 +668,7 @@ void abjuration(int pow)
     mpr("Send 'em back where they came from!");
 
     // Scale power into something comparable to summon lifetime.
-    const int abjdur = pow * 10;
+    const int abjdur = pow * 12;
 
     for (int ab = 0; ab < MAX_MONSTERS; ab++)
     {

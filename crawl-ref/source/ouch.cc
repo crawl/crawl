@@ -977,7 +977,7 @@ void end_game( struct scorefile_entry &se )
     invent( -1, true );
     clrscr();
 
-    if (!dump_char( morgue_name(se.death_time), !dead, true ))
+    if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)

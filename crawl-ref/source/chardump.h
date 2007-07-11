@@ -17,9 +17,11 @@
 
 #include <string>
 
-bool dump_char(const std::string &fname, 
-               bool show_prices, 
-               bool full_id = false);
+struct scorefile_entry;
+bool dump_char(const std::string &fname,
+               bool show_prices,
+               bool full_id = false,
+               const scorefile_entry *se = NULL);
 void resists_screen();
 void display_notes();
 std::string munge_description(const std::string &inStr);

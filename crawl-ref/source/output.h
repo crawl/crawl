@@ -24,7 +24,7 @@ void update_turn_count();
 
 void print_stats(void);
 
-std::vector<formatted_string> get_full_detail(bool calc_unid);
+std::vector<formatted_string> get_full_detail(bool calc_unid, long score = -1);
 
 const char *equip_slot_to_name(int equip);
 

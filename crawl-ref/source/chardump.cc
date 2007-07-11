@@ -59,39 +59,53 @@
 #include "version.h"
 #include "view.h"
 
-static bool dump_show_prices = false;
-static bool dump_full_id     = false;
+struct dump_params;
 
-static void sdump_header(const std::string &section, std::string &text);
-static void sdump_stats(const std::string &section, std::string &text);
-static void sdump_location(const std::string &section, std::string &text);
-static void sdump_religion(const std::string &section, std::string &text);
-static void sdump_burden(const std::string &section, std::string &text);
-static void sdump_hunger(const std::string &section, std::string &text);
-static void sdump_transform(const std::string &section, std::string &text);
-static void sdump_misc(const std::string &section, std::string &text);
-static void sdump_notes(const std::string &section, std::string &text);
-static void sdump_inventory(const std::string &section, std::string &text);
-static void sdump_skills(const std::string &section, std::string &text);
-static void sdump_spells(const std::string &section, std::string &text);
-static void sdump_mutations(const std::string &section, std::string &text);
-static void sdump_messages(const std::string &section, std::string &text);
-static void sdump_screenshot(const std::string &section, std::string &text);
-static void sdump_kills(const std::string &section, std::string &text);
-static void sdump_newline(const std::string &section, std::string &text);
-static void sdump_overview(const std::string &section, std::string &text);
-static void sdump_separator(const std::string &section, std::string &text);
+static void sdump_header(dump_params &);
+static void sdump_stats(dump_params &);
+static void sdump_location(dump_params &);
+static void sdump_religion(dump_params &);
+static void sdump_burden(dump_params &);
+static void sdump_hunger(dump_params &);
+static void sdump_transform(dump_params &);
+static void sdump_misc(dump_params &);
+static void sdump_notes(dump_params &);
+static void sdump_inventory(dump_params &);
+static void sdump_skills(dump_params &);
+static void sdump_spells(dump_params &);
+static void sdump_mutations(dump_params &);
+static void sdump_messages(dump_params &);
+static void sdump_screenshot(dump_params &);
+static void sdump_kills(dump_params &);
+static void sdump_newline(dump_params &);
+static void sdump_overview(dump_params &);
+static void sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
-static void sdump_lua(const std::string &section, std::string &text);
+static void sdump_lua(dump_params &);
 #endif
-static bool write_dump(const std::string &fname, const std::string &text, 
-                       bool full_id);
-static void dump_stats2( std::string & text, bool calc_unid);
+static bool write_dump(const std::string &fname, dump_params &);
 
 struct dump_section_handler
 {
     const char *name;
-    void (*handler)(const std::string &section, std::string &text);
+    void (*handler)(dump_params &);
+};
+
+struct dump_params
+{
+    std::string &text;
+    std::string section;
+    bool show_prices;
+    bool full_id;
+    const scorefile_entry *se;
+
+    dump_params(std::string &_text, const std::string &sec = "",
+                bool prices = false, bool id = false,
+                const scorefile_entry *s = NULL)
+        : text(_text), section(sec), show_prices(prices), full_id(id),
+          se(s)
+    {
+    }
 };
 
 static dump_section_handler dump_handlers[] = {
@@ -124,69 +138,78 @@ static dump_section_handler dump_handlers[] = {
 #endif
 };
 
-static void dump_section(const std::string &section, std::string &text)
+static void dump_section(dump_params &par)
 {
     for (int i = 0; ; ++i)
     {
-        if (!dump_handlers[i].name || section == dump_handlers[i].name)
+        if (!dump_handlers[i].name || par.section == dump_handlers[i].name)
         {
             if (dump_handlers[i].handler)
-                (*dump_handlers[i].handler)(section, text);
+                (*dump_handlers[i].handler)(par);
             break;
         }
     }
 }
 
-bool dump_char(const std::string &fname, bool show_prices, bool full_id)
+bool dump_char(const std::string &fname, bool show_prices, bool full_id,
+               const scorefile_entry *se)
 {
     // start with enough room for 100 80 character lines
     std::string text;
     text.reserve(100 * 80);
 
-    dump_show_prices = show_prices;
-    dump_full_id     = full_id;
-
+    dump_params par(text, "", show_prices, full_id, se);
+    
     for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
     {
-        const std::string &section = Options.dump_order[i];
-        dump_section(section, text);
+        par.section = Options.dump_order[i];
+        dump_section(par);
     }
 
-    return write_dump(fname, text, full_id);
+    return write_dump(fname, par);
 }
 
-static void sdump_header(const std::string &, std::string &text)
+static void sdump_header(dump_params &par)
 {
-    text += " " CRAWL " version " VERSION " character file.\n\n";
+    par.text += " " CRAWL " version " VERSION " character file.\n\n";
 }
 
-static void sdump_stats(const std::string &, std::string &text)
+static void sdump_stats(dump_params &par)
 {
-    dump_stats2(text, dump_full_id);
+    std::vector<formatted_string> vfs =
+        get_full_detail(par.full_id, par.se? par.se->points : -1);
+
+    for (unsigned int i = 0; i < vfs.size(); i++)
+    {
+        par.text += vfs[i];
+        par.text += '\n';
+    }
+    par.text += "\n\n";
 }
 
-static void sdump_burden(const std::string &, std::string &text)
+static void sdump_burden(dump_params &par)
 {
     switch (you.burden_state)
     {
     case BS_OVERLOADED:
-        text += "You are overloaded with stuff.\n";
+        par.text += "You are overloaded with stuff.\n";
         break;
     case BS_ENCUMBERED:
-        text += "You are encumbered.\n";
+        par.text += "You are encumbered.\n";
         break;
     default:
         break;
     }
 }
 
-static void sdump_hunger(const std::string &, std::string &text)
+static void sdump_hunger(dump_params &par)
 {
-    text += std::string("You are ") + hunger_level() + ".\n\n";
+    par.text += std::string("You are ") + hunger_level() + ".\n\n";
 }
 
-static void sdump_transform(const std::string &, std::string &text)
+static void sdump_transform(dump_params &par)
 {
+    std::string &text(par.text);
     if (you.attribute[ATTR_TRANSFORMATION])
     {
         switch (you.attribute[ATTR_TRANSFORMATION])
@@ -221,33 +244,38 @@ static void sdump_transform(const std::string &, std::string &text)
     }
 }
 
-static void sdump_misc(const std::string &s, std::string &text)
+static void sdump_misc(dump_params &par)
 {
-    sdump_location(s, text);
-    sdump_religion(s, text);
-    sdump_burden(s, text);
-    sdump_hunger(s, text);
-    sdump_transform(s, text);
+    sdump_location(par);
+    sdump_religion(par);
+    sdump_burden(par);
+    sdump_hunger(par);
+    sdump_transform(par);
 }
 
-static void sdump_newline(const std::string &s, std::string &text)
+static void sdump_newline(dump_params &par)
 {
-    text += "\n";
+    par.text += "\n";
 }
 
-static void sdump_separator(const std::string &s, std::string &text)
+static void sdump_separator(dump_params &par)
 {
-    text += std::string(79, '-') + "\n";
+    par.text += std::string(79, '-') + "\n";
 }
 
 #ifdef CLUA_BINDINGS
 // Assume this is an arbitrary Lua function name, call the function and
 // dump whatever it returns.
-static void sdump_lua(const std::string &s, std::string &text)
+static void sdump_lua(dump_params &par)
 {
     std::string luatext;
-    clua.callfn(s.c_str(), ">s", &luatext);
-    text += luatext;
+    if (!clua.callfn(par.section.c_str(), ">s", &luatext)
+        && !clua.error.empty())
+    {
+        par.text += "Lua dump error: " + clua.error + "\n";
+    }
+    else
+        par.text += luatext;
 }
 #endif
 
@@ -334,173 +362,25 @@ std::string munge_description(const std::string & inStr)
     return (outStr);
 }                               // end munge_description()
 
-static void sdump_messages(const std::string &, std::string &text)
+static void sdump_messages(dump_params &par)
 {
     // A little message history:
     if (Options.dump_message_count > 0)
     {
-        text += "Message History\n\n";
-        text += get_last_messages(Options.dump_message_count);
+        par.text += "Message History\n\n";
+        par.text += get_last_messages(Options.dump_message_count);
     }
 }
 
-static void sdump_screenshot(const std::string &, std::string &text)
+static void sdump_screenshot(dump_params &par)
 {
-    text += screenshot();
-    text += "\n\n";
+    par.text += screenshot();
+    par.text += "\n\n";
 }
 
-#if 0
-static void dump_stats( std::string & text )
+static void sdump_notes(dump_params &par)
 {
-    char st_prn[20];
-
-    text += you.your_name;
-    text += " the ";
-
-    text += player_title();
-    text += " (";
-    text += species_name(you.species, you.experience_level);
-    text += ")";
-    text += "\n";
-
-    text += "(Level ";
-    itoa(you.experience_level, st_prn, 10);
-    text += st_prn;
-    text += " ";
-    text += you.class_name;
-    text += ")";
-    text += "\n\n";
-
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        text += "Play time: ";
-        text += make_time_string(curr);
-
-        text += "       Number of turns: ";
-        itoa( you.num_turns, st_prn, 10 );
-        text += st_prn;
-        text += "\n\n";
-    }
-
-    text += "Experience : ";
-    itoa(you.experience_level, st_prn, 10);
-    text += st_prn;
-    text += "/";
-    itoa(you.experience, st_prn, 10);
-    text += st_prn;
-    text += "\n\n";
-
-    text += "Strength ";
-    itoa(you.strength, st_prn, 10);
-    text += st_prn;
-    if (you.strength < you.max_strength)
-    {
-        text += "/";
-        itoa(you.max_strength, st_prn, 10);
-        text += st_prn;
-    }
-
-    text += "     Dexterity ";
-    itoa(you.dex, st_prn, 10);
-    text += st_prn;
-    if (you.dex < you.max_dex)
-    {
-        text += "/";
-        itoa(you.max_dex, st_prn, 10);
-        text += st_prn;
-    }
-
-    text += "     Intelligence ";
-    itoa(you.intel, st_prn, 10);
-    text += st_prn;
-    if (you.intel < you.max_intel)
-    {
-        text += "/";
-        itoa(you.max_intel, st_prn, 10);
-        text += st_prn;
-    }
-    text += "\n";
-
-    text += "Hit Points : ";
-    itoa(you.hp, st_prn, 10);
-    text += st_prn;
-
-    int max_max_hp = you.hp_max + player_rotted();
-
-    if (you.hp < you.hp_max || max_max_hp != you.hp_max)
-    {
-        text += "/";
-        itoa(you.hp_max, st_prn, 10);
-        text += st_prn;
-
-        if (max_max_hp != you.hp_max)
-        {
-            text += " (";
-            itoa(max_max_hp, st_prn, 10);
-            text += st_prn;
-            text += ")";
-        }
-
-        if (you.hp < 1)
-        {
-            text += " ";
-            text += ((!you.duration[DUR_DEATHS_DOOR]) ? "(dead)" : "(almost dead)");
-        }
-    }
-
-    text += "          Magic Points : ";
-    itoa(you.magic_points, st_prn, 10);
-    text += st_prn;
-    if (you.magic_points < you.max_magic_points)
-    {
-        text += "/";
-        itoa(you.max_magic_points, st_prn, 10);
-        text += st_prn;
-    }
-    text += "\n";
-
-    text += "AC : ";
-    itoa(player_AC(), st_prn, 10);
-    text += st_prn;
-
-    text += "          Evasion : ";
-    itoa(player_evasion(), st_prn, 10);
-    text += st_prn;
-
-    text += "          Shield : ";
-    itoa(player_shield_class(), st_prn, 10);
-    text += st_prn;
-    text += "\n";
-
-    text += "GP : ";
-    itoa( you.gold, st_prn, 10 );
-    text += st_prn;
-    text += "\n";
-    text += "\n";
-}                               // end dump_stats()
-#endif
-
- //---------------------------------------------------------------
- //
- // dump_stats2
- //
- //---------------------------------------------------------------
-static void dump_stats2( std::string & text, bool calc_unid)
-{
-    std::vector<formatted_string> vfs = get_full_detail(calc_unid);
-
-    for (unsigned int i = 0; i < vfs.size(); i++)
-    {
-        text += vfs[i];
-        text += '\n';
-    }
-    text += "\n\n";
-}
-
-static void sdump_notes(const std::string &, std::string& text)
-{
+    std::string &text(par.text);
     if ( note_list.size() == 0 || Options.use_notes == false )
         return;
 
@@ -518,21 +398,22 @@ static void sdump_notes(const std::string &, std::string& text)
  // dump_location
  //
  //---------------------------------------------------------------
-static void sdump_location(const std::string &, std::string & text)
+static void sdump_location(dump_params &par)
 {
     if (you.your_level == -1 
             && you.where_are_you == BRANCH_MAIN_DUNGEON
             && you.level_type == LEVEL_DUNGEON)
-        text += "You escaped";
+        par.text += "You escaped";
     else
-        text += "You are " + prep_branch_level_name();
+        par.text += "You are " + prep_branch_level_name();
 
-    text += ".";
-    text += "\n";
+    par.text += ".";
+    par.text += "\n";
 }                               // end dump_location()
 
-static void sdump_religion(const std::string &, std::string & text)
+static void sdump_religion(dump_params &par)
 {
+    std::string &text(par.text);
     if (you.religion != GOD_NO_GOD)
     {
         text += "You worship ";
@@ -611,10 +492,11 @@ static bool dump_item_origin(const item_def &item, int value)
  // dump_inventory
  //
  //---------------------------------------------------------------
-static void sdump_inventory(const std::string &, std::string & text)
+static void sdump_inventory(dump_params &par)
 {
     int i, j;
 
+    std::string &text(par.text);
     std::string text2;
 
     int inv_class2[OBJ_GOLD];
@@ -681,7 +563,7 @@ static void sdump_inventory(const std::string &, std::string & text)
                         inv_count--;
 
                         int ival = -1;
-                        if (dump_show_prices)
+                        if (par.show_prices)
                         {
                             text += " (";
 
@@ -723,8 +605,9 @@ static void sdump_inventory(const std::string &, std::string & text)
 // dump_skills
 //
 //---------------------------------------------------------------
-static void sdump_skills(const std::string &, std::string & text)
+static void sdump_skills(dump_params &par)
 {
+    std::string &text(par.text);
     char tmp_quant[20];
 
     text += " You have ";
@@ -780,8 +663,9 @@ static std::string spell_type_shortname(int spell_class, bool slash)
 // dump_spells
 //
 //---------------------------------------------------------------
-static void sdump_spells(const std::string &, std::string & text)
+static void sdump_spells(dump_params &par)
 {
+    std::string &text(par.text);
     char tmp_quant[20];
 
 // This array helps output the spell types in the traditional order.
@@ -888,22 +772,23 @@ static void sdump_spells(const std::string &, std::string & text)
 }                               // end dump_spells()
 
 
-static void sdump_kills(const std::string &, std::string & text)
+static void sdump_kills(dump_params &par)
 {
-    text += you.kills.kill_info();
+    par.text += you.kills.kill_info();
 }
 
-static void sdump_overview(const std::string&, std::string& text)
+static void sdump_overview(dump_params &par)
 {
     std::string overview =
         formatted_string::parse_string(overview_description_string());
     trim_string(overview);
-    text += overview;
-    text += "\n\n";
+    par.text += overview;
+    par.text += "\n\n";
 }
 
-static void sdump_mutations(const std::string &, std::string & text)
+static void sdump_mutations(dump_params &par)
 {
+    std::string &text(par.text);
     // Can't use how_mutated() here, as it doesn't count demonic powers
     int xz = 0;
 
@@ -946,9 +831,8 @@ static std::string morgue_directory()
 }
 
 static bool write_dump(
-        const std::string &fname, 
-        const std::string &text, 
-        bool full_id)
+        const std::string &fname,
+        dump_params &par)
 {
     bool succeeded = false;
 
@@ -959,7 +843,7 @@ static bool write_dump(
     std::string stash_file_name;
     stash_file_name = file_name;
     stash_file_name += ".lst";
-    stashes.dump(stash_file_name.c_str(), full_id);
+    stashes.dump(stash_file_name.c_str(), par.full_id);
 
     file_name += ".txt";
     FILE *handle = fopen(file_name.c_str(), "w");
@@ -970,7 +854,7 @@ static bool write_dump(
 
     if (handle != NULL)
     {
-        fputs(text.c_str(), handle);
+        fputs(par.text.c_str(), handle);
         fclose(handle);
         succeeded = true;
     }
