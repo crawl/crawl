@@ -399,6 +399,7 @@ struct LevelInfo
 
     stair_info *get_stair(int x, int y);
     stair_info *get_stair(const coord_def &pos);
+    bool empty() const;
     bool know_stair(const coord_def &pos) const;
     int get_stair_index(const coord_def &pos) const;
 

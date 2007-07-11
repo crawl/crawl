@@ -2018,7 +2018,8 @@ static level_id find_deepest_explored(level_id curr)
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
         const level_id lid(curr.branch, i);
-        if (travel_cache.find_level_info(lid))
+        const LevelInfo *linf = travel_cache.find_level_info(lid);
+        if (linf && !linf->empty())
             return (lid);
     }
     return (curr);
@@ -2175,8 +2176,11 @@ travel_target prompt_translevel_target(int prompt_flags)
     // User's chosen a branch, so now we ask for a level.
     target = prompt_travel_depth(target.p.id);
 
-    if (target.p.id.depth < 1 || target.p.id.depth >= MAX_LEVELS)
+    if (target.p.id.depth < 1 ||
+        target.p.id.depth > branches[target.p.id.branch].depth)
+    {
         target.p.id.depth = -1;
+    }
 
     if (target.p.id.depth > -1 && remember_targ)
         trans_travel_dest = get_trans_travel_dest(target);
@@ -2789,6 +2793,11 @@ void stair_info::load(FILE *file)
 void LevelInfo::set_level_excludes()
 {
     curr_excludes = excludes;
+}
+
+bool LevelInfo::empty() const
+{
+    return (stairs.empty() && excludes.empty());
 }
 
 void LevelInfo::update()
