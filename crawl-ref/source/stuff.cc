@@ -1033,6 +1033,13 @@ int letter_to_index(int the_letter)
     return the_letter;
 }                               // end letter_to_index()
 
+int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
+{
+    const int lfuzz = lowfuzz * val / 100,
+        hfuzz = highfuzz * val / 100;
+    return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
+}
+
 // returns 0 if the point is not near stairs
 // returns 1 if the point is near unoccupied stairs
 // returns 2 if the point is near player-occupied stairs

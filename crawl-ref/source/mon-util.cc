@@ -4258,13 +4258,6 @@ int mon_enchant::modded_speed(const monsters *mons, int hdplus) const
     return (mod_speed(mons->hit_dice + hdplus, mons->speed));
 }
 
-int mon_enchant::apply_fuzz(int dur, int lowfuzz, int highfuzz) const
-{
-    const int lfuzz = lowfuzz * dur / 100,
-        hfuzz = highfuzz * dur / 100;
-    return dur + random2avg(lfuzz + hfuzz + 1, 2) - lfuzz;
-}
-
 int mon_enchant::calc_duration(const monsters *mons,
                                const mon_enchant *added) const
 {
@@ -4331,18 +4324,12 @@ int mon_enchant::calc_duration(const monsters *mons,
     default:
         break;
     }
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Ench for %s: raw turn duration for %s (%d) == %d",
-         mons->name(DESC_PLAIN).c_str(), std::string(*this).c_str(),
-         deg, cturn);
-#endif
     
     if (cturn < 2)
         cturn = 2;
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
-    raw_duration = apply_fuzz(raw_duration, 60, 40);
+    raw_duration = fuzz_value(raw_duration, 60, 40);
     if (raw_duration < 15)
         raw_duration = 15;
 
@@ -4360,12 +4347,6 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
         duration += added->duration;
     else
         duration += calc_duration(mons, added);
-        
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Ench on %s: ench energy for %s: %d",
-         mons->name(DESC_PLAIN).c_str(), std::string(*this).c_str(),
-         duration);
-#endif
 
     if (duration > maxduration)
         maxduration = duration;

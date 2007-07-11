@@ -52,6 +52,8 @@ int stat_div( int stat_level, int value, int div = 20, int shift = 3 );
 int skill_bump( int skill );
 unsigned char get_ch();
 
+int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
+
 void cio_init();
 void cio_cleanup();
 void end(int exit_code, bool print_err = false,

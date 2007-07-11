@@ -970,7 +970,6 @@ public:
 
 private:
     int modded_speed(const monsters *mons, int hdplus) const;
-    int apply_fuzz(int dur, int lo, int hi) const;
     int calc_duration(const monsters *mons, const mon_enchant *added) const;    
 };
 

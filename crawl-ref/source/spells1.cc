@@ -667,6 +667,9 @@ void abjuration(int pow)
 
     mpr("Send 'em back where they came from!");
 
+    // Scale power into something comparable to summon lifetime.
+    const int abjdur = pow * 10;
+
     for (int ab = 0; ab < MAX_MONSTERS; ab++)
     {
         monster = &menv[ab];
@@ -679,10 +682,15 @@ void abjuration(int pow)
 
         mon_enchant abj = monster->get_ench(ENCH_ABJ);
         if (abj.ench != ENCH_NONE)
-            monster->lose_ench_levels(abj, 1 + (random2(pow) / 8));
-        
-        if (monster->has_ench(ENCH_ABJ))
-            simple_monster_message(monster, " shudders.");
+        {
+            const int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "%s abj: dur: %d, abj: %d",
+                 monster->name(DESC_PLAIN).c_str(), abj.duration, sockage);
+#endif
+            if (!monster->lose_ench_duration(abj, sockage))
+                simple_monster_message(monster, " shudders.");
+        }
     }
 }                               // end abjuration()
 

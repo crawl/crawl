@@ -44,7 +44,7 @@
 #include "stuff.h"
 #include "view.h"
 
-static int monster_abjuration(bool friendly, int pow, bool test);
+static int monster_abjuration(const monsters *mons, bool test);
 
 // XXX: must fix species abils to not use duration 15
 // -- ummm ... who wrote this? {dlb}
@@ -332,11 +332,10 @@ void mons_trap(struct monsters *monster)
 
 static bool mons_abjured(monsters *monster, bool nearby)
 {
-    const bool friendly = mons_friendly(monster);
-    if (nearby && monster_abjuration(friendly, 1, true) > 0
+    if (nearby && monster_abjuration(monster, true) > 0
         && coinflip())
     {
-        monster_abjuration( friendly, monster->hit_dice * 10, false );
+        monster_abjuration(monster, false);
         return (true);
     }
 
@@ -1921,56 +1920,92 @@ bolt mons_spells( int spell_cast, int power )
     return (beam);
 }                               // end mons_spells()
 
-static int monster_abjuration(bool friendly, int pow, bool test)
+static int monster_abjure_square(const coord_def &pos,
+                                 int power, int test_only,
+                                 int friendly)
 {
-    int result = 0;
-    monsters *monster = NULL;
+    const int mindex = mgrd(pos);
+    if (mindex == NON_MONSTER)
+        return (0);
+    
+    monsters *target = &menv[mindex];
+    if (!target->alive() || friendly == mons_friendly(target))
+        return (0);
+
+    mon_enchant abj = target->get_ench(ENCH_ABJ);
+    if (abj.ench == ENCH_NONE)
+        return (0);
+
+    power = std::max(20, fuzz_value(power, 40, 25));
+
+    if (test_only)
+        return (power > abj.duration? 5 : 1);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
+         abj.duration, power, abj.duration - power);
+#endif
+    
+    if ((abj.duration -= power) <= 0)
+    {
+        monster_die(target, KILL_RESET, 0);
+        return (5);
+    }
+
+    simple_monster_message(target, " shudders.");
+    target->update_ench(abj);
+    return (1);
+}
+
+static int apply_radius_around_square(
+    const coord_def &c, int radius,
+    int (*fn)(const coord_def &, int, int, int),
+    int pow, int par1, int par2)
+{
+    int res = 0;
+    for (int yi = -radius; yi <= radius; ++yi)
+    {
+        const coord_def c1(c.x - radius, c.y + yi);
+        const coord_def c2(c.x + radius, c.y + yi);
+        if (in_bounds(c1))
+            res += fn(c1, pow, par1, par2);
+        if (in_bounds(c2))
+            res += fn(c2, pow, par1, par2);
+    }
+
+    for (int xi = -radius + 1; xi < radius; ++xi)
+    {
+        const coord_def c1(c.x + xi, c.y - radius);
+        const coord_def c2(c.x + xi, c.y + radius);
+        if (in_bounds(c1))
+            res += fn(c1, pow, par1, par2);
+        if (in_bounds(c2))
+            res += fn(c2, pow, par1, par2);
+    }
+    return (res);
+}
+
+static int monster_abjuration(const monsters *caster, bool test)
+{
+    const bool friendly = mons_friendly(caster);
+    int maffected = 0;
 
     if (!test)
         mpr("Send 'em back where they came from!");
 
-    if (pow > 60)
-        pow = 60;
+    int pow = std::min(caster->hit_dice * 90, 2500);
 
-    int abjure_str = 1 + (random2(pow / 3));
-    if (abjure_str > 6)
-        abjure_str = 6;
-    
-    for (int ab = 0; ab < MAX_MONSTERS && abjure_str; ab++)
+    // Abjure radius.
+    for (int rad = 1; rad < 5 && pow >= 30; ++rad)
     {
-        monster = &menv[ab];
-
-        if (!monster->alive() || !mons_near(monster))
-            continue;
-
-        if (friendly == mons_friendly(monster))
-            continue;
-
-        mon_enchant abjLevel = monster->get_ench(ENCH_ABJ);
-        if (abjLevel.ench == ENCH_NONE)
-            continue;
-
-        result++;
-
-        if (test)
-            continue;
-
-        abjLevel.degree -= abjure_str;
-
-        if (abjLevel.degree <= 0)
-            monster_die(monster, KILL_RESET, 0);
-        else
-        {
-            simple_monster_message(monster, " shudders.");
-            monster->update_ench(abjLevel);
-        }
-
-        if (!(abjure_str = div_rand_round(abjure_str, 2)))
-            break;
+        maffected +=
+            apply_radius_around_square(
+                caster->pos(), rad, monster_abjure_square,
+                pow, test, friendly);
+        pow = pow * 2 / 5;
     }
-
-    return result;
-}                               // end monster_abjuration()
+    return (maffected);
+}
 
 bool silver_statue_effects(monsters *mons)
 {
