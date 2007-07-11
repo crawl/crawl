@@ -2461,16 +2461,18 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
     int top = 1 + Options.level_map_title;
     if ( Options.level_map_title )
     {
+        const formatted_string help =
+            formatted_string::parse_string("(Press <w>?</w> for help)");
+        const int helplen = std::string(help).length();
+
         gotoxy(1, 1);
         textcolor(WHITE);
         cprintf("%-*s",
-                get_number_of_cols() - 1,
+                get_number_of_cols() - helplen,
                 ("Level " + level_description_string()).c_str());
 
-        const formatted_string help =
-            formatted_string::parse_string("(Press <w>?</w> for help)");
         textcolor(LIGHTGREY);
-        gotoxy(get_number_of_cols() - std::string(help).length() + 1, 1);
+        gotoxy(get_number_of_cols() - helplen + 1, 1);
         help.display();
     }
 
