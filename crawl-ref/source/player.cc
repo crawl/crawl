@@ -4516,8 +4516,10 @@ void player::init()
 
     base_hp = 5000;
     base_hp2 = 5000;
+    hp_max = 0;
     base_magic_points = 5000;
     base_magic_points2 = 5000;
+    max_magic_points = 0;
 
     magic_points_regeneration = 0;
     strength = 0;

@@ -1893,7 +1893,7 @@ static bool beogh_retribution()
     }
     case 4: // 25%, relatively harmless
     case 5: // in effect, only for penance
-        if (followers_abandon_you()) 
+        if (you.religion == GOD_BEOGH && followers_abandon_you())
             break;
         // else fall through
     default: // send orcs after you (3/8 to 5/8)
@@ -2187,6 +2187,16 @@ bool followers_abandon_you()
                         && !mons_is_confused(monster)
                         && !mons_is_paralysed(monster))
                     {
+                        const int hd = monster->hit_dice;
+
+                        // during penance followers get a saving throw
+                        if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
+                            random2(you.skills[SK_INVOCATIONS]-6)
+                              > random2(hd) + hd + random2(5))
+                        {
+                           continue;
+                        }
+
                         monster->attitude = ATT_HOSTILE;
                         monster->behaviour = BEH_HOSTILE;
                         // for now CREATED_FRIENDLY stays

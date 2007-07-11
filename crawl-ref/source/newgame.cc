@@ -99,7 +99,7 @@ extern std::string init_file_location;
 
 static bool class_allowed(species_type speci, job_type char_class);
 static bool validate_player_name(bool verbose);
-static void choose_weapon(void);
+static bool choose_weapon(void);
 static void enter_player_name(bool blankOK);
 static void give_basic_knowledge(job_type which_job);
 static void give_basic_spells(job_type which_job);
@@ -119,7 +119,7 @@ static void give_random_potion( int slot );
 static void give_random_secondary_armour( int slot );
 static bool give_wanderer_weapon( int slot, int wpn_skill );
 static void create_wanderer(void);
-static void give_items_skills(void);
+static bool give_items_skills(void);
 static species_type letter_to_species(int keyn);
 static job_type letter_to_class(int keyn);
 
@@ -712,6 +712,7 @@ bool new_game(void)
         }
     }
 
+game_start:
     reset_newgame_options();
     if (Options.random_pick)
     {
@@ -777,7 +778,31 @@ bool new_game(void)
                             you.species == SP_DEMONSPAWN) ? 15 : 8);
 
     // this function depends on stats being finalized
-    give_items_skills();
+    // returns false if Backspace on god/weapon/... selection
+    if (!give_items_skills())
+    {
+        // now choose again, name stays same
+        char *name = new char();
+        strcpy(name, you.your_name);
+        
+        Options.prev_randpick = false;
+        Options.prev_race   = ng_race;
+        Options.prev_cls    = ng_cls;
+        Options.prev_weapon = ng_weapon;
+        // ck, dk, pr and book are asked last
+        // --> don't need to be changed
+
+        // reset stats
+        init_player();
+
+        Options.reset_startup_options();
+        
+        strncpy(you.your_name, name, kNameLen);
+        you.your_name[kNameLen - 1] = 0;
+
+        // choose new character
+        goto game_start;
+    }
 
     give_species_bonus_hp();
     give_species_bonus_mp();
@@ -1452,7 +1477,7 @@ static bool class_allowed( species_type speci, job_type char_class )
 }                               // end class_allowed()
 
 
-static void choose_book( item_def& book, int firstbook, int numbooks )
+static bool choose_book( item_def& book, int firstbook, int numbooks )
 {
     int keyin = 0;
     clrscr();
@@ -1467,7 +1492,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
     {
         book.sub_type = firstbook + Options.book - 1;
         ng_book = Options.book;
-        return;
+        return true;
     }
 
     if ( Options.prev_book > numbooks && Options.prev_book != SBT_RANDOM )
@@ -1486,7 +1511,9 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
         }
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random" );
+        cprintf(EOL "* - Random choice; "
+                    "Bksp - Back to species and class selection; "
+                    "X - Quit" EOL);
         if ( Options.prev_book != SBT_NO_SELECTION )
         {
             cprintf("; Enter - %s",
@@ -1505,6 +1532,14 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
             textcolor( LIGHTGREY );
 
             keyin = get_ch();
+ 
+            if (keyin == CK_BKSP || keyin == ' ')
+                return false;
+            if (keyin == 'X')
+            {
+                cprintf(EOL "Goodbye!");
+                end(0);
+            }
         } while (keyin != '*' && 
                  ((keyin != '\r' && keyin != '\n') ||
                   Options.prev_book == SBT_NO_SELECTION ) &&
@@ -1528,13 +1563,14 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
         keyin = random2(numbooks) + 'a';
 
     book.sub_type = firstbook + keyin - 'a';
+    return true;
 }
     
 
 static const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
     WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
 
-static void choose_weapon( void )
+static bool choose_weapon( void )
 {
     unsigned char keyin = 0;
     int num_choices = 4;
@@ -1547,7 +1583,7 @@ static void choose_weapon( void )
         you.inv[0].sub_type = ((temp_rand == 0) ? WPN_SHORT_SWORD :
                            (temp_rand == 1) ? WPN_MACE :
                            (temp_rand == 2) ? WPN_HAND_AXE : WPN_SPEAR);
-        return;
+        return true;
     }
 
     if (you.char_class == JOB_GLADIATOR || you.species == SP_MERFOLK)
@@ -1558,7 +1594,7 @@ static void choose_weapon( void )
     {
         you.inv[0].sub_type = Options.weapon;
         ng_weapon = Options.weapon;
-        return;
+        return true;
     }
 
     if (!Options.random_pick && Options.weapon != WPN_RANDOM)
@@ -1584,7 +1620,10 @@ static void choose_weapon( void )
             Options.prev_weapon = WPN_UNKNOWN;
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random" );
+        cprintf(EOL "* - Random choice; "
+                    "Bksp - Back to species and class selection; "
+                    "X - Quit" EOL);
+                    
         if (Options.prev_weapon != WPN_UNKNOWN)
         {
             cprintf("; Enter - %s",
@@ -1600,6 +1639,15 @@ static void choose_weapon( void )
             textcolor( LIGHTGREY );
 
             keyin = get_ch();
+
+            if (keyin == CK_BKSP || keyin == ' ')
+                return false;
+
+            if (keyin == 'X')
+            {
+                cprintf(EOL "Goodbye!");
+                end(0);
+            }
         }
         while (keyin != '*' && 
                 ((keyin != '\r' && keyin != '\n') 
@@ -1644,6 +1692,8 @@ static void choose_weapon( void )
                 Options.weapon == WPN_RANDOM || 
                 keyin == '*')
         ? WPN_RANDOM : you.inv[0].sub_type;
+        
+    return true;
 }
 
 static void init_player(void)
@@ -3304,7 +3354,7 @@ job_query:
 }
 
 
-void give_items_skills()
+bool give_items_skills()
 {
     char keyn;
     int weap_skill = 0;
@@ -3397,7 +3447,8 @@ void give_items_skills()
             you.inv[2].plus = 0;
             you.inv[2].special = 0;
 
-            choose_weapon();
+            if (!choose_weapon())
+                return false;
         }
 
         if (you.species != SP_TROLL)
@@ -3493,7 +3544,8 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 1;
 
         // extra items being tested:
-        choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 );
+        if (!choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
+           return false;
 
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
@@ -3575,7 +3627,9 @@ void give_items_skills()
                 cprintf("c - Beogh (priest of Orcs)" EOL);
                 
             textcolor( BROWN );
-            cprintf(EOL "* - random choice" EOL);
+            cprintf(EOL "* - Random choice; "
+                        "Bksp - Back to species and class selection; "
+                        "X - Quit" EOL);
 
             if (Options.prev_pr == GOD_BEOGH && you.species != SP_HILL_ORC)
                Options.prev_pr = GOD_NO_GOD;
@@ -3605,6 +3659,13 @@ void give_items_skills()
             
             switch (keyn)
             {
+            case CK_BKSP:
+            case ' ':
+                return false;
+            case 'X':
+                cprintf(EOL "Goodbye!");
+                end(0);
+                break;
             case '*':
                 you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
                 if (you.species == SP_HILL_ORC && coinflip())
@@ -3684,7 +3745,8 @@ void give_items_skills()
         you.inv[0].quantity = 1;
         you.inv[0].base_type = OBJ_WEAPONS;
         you.inv[0].sub_type = WPN_SHORT_SWORD;
-        choose_weapon();
+        if (!choose_weapon())
+            return false;
 
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
@@ -4111,7 +4173,10 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 1;
 
         if ( you.char_class == JOB_CONJURER )
-            choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 );
+        {
+            if (!choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
+                return false;
+        }
         else
         {
             you.inv[2].base_type = OBJ_BOOKS;
@@ -4400,7 +4465,8 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        choose_weapon();
+        if (!choose_weapon())
+            return false;
         weap_skill = 2;
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
@@ -4433,7 +4499,8 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        choose_weapon();
+        if (!choose_weapon())
+            return false;
         weap_skill = 2;
 
         you.inv[1].quantity = 1;
@@ -4478,7 +4545,9 @@ void give_items_skills()
             cprintf("b - the god Yredelemnul" EOL);
 
             textcolor( BROWN );
-            cprintf(EOL "* - random choice" EOL);
+            cprintf(EOL "* - Random choice; "
+                        "Bksp - Back to species and class selection; "
+                        "X - Quit" EOL);
 
             if (Options.prev_dk != DK_NO_SELECTION)
             {
@@ -4502,6 +4571,13 @@ void give_items_skills()
             
             switch (keyn)
             {
+            case CK_BKSP:
+            case ' ':      
+                return false;
+            case 'X':
+                cprintf(EOL "Goodbye!");
+                end(0);
+                break;
             case '*':
                 choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
                 break;
@@ -4558,7 +4634,8 @@ void give_items_skills()
         if (one_chance_in(5))
             set_equip_desc( you.inv[0], ISFLAG_GLOWING );
 
-        choose_weapon();
+        if (!choose_weapon())
+            return false;
         weap_skill = 2;
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
@@ -4598,7 +4675,9 @@ void give_items_skills()
             cprintf("b - Makhleb the Destroyer" EOL);
 
             textcolor( BROWN );
-            cprintf(EOL "* - random choice" EOL);
+            cprintf(EOL "* - Random choice; "
+                        "Bksp - Back to species and class selection; "
+                        "X - Quit" EOL);
 
             if (Options.prev_ck != GOD_NO_GOD)
             {
@@ -4624,6 +4703,13 @@ void give_items_skills()
 
             switch (keyn)
             {
+            case CK_BKSP:
+            case ' ':
+                return false;
+            case 'X':
+                cprintf(EOL "Goodbye!");
+                end(0);
+                break;
             case '*':
                 you.religion = coinflip()? GOD_XOM : GOD_MAKHLEB;
                 break;
@@ -4704,7 +4790,8 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        choose_weapon();
+        if (!choose_weapon())
+            return false;
         weap_skill = 3;
 
         you.inv[1].quantity = 1;
@@ -4809,4 +4896,5 @@ void give_items_skills()
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
     }
+    return true;
 }
