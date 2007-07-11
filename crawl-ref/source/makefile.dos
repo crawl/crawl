@@ -45,7 +45,6 @@ YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 OBJECTS += libdos.o
 
 LDFLAGS =
-# LIB = -lcurso -lpano
 
 UTIL = util/
 

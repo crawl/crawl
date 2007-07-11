@@ -43,12 +43,6 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
-// Uncomment to enable the Crawl Lua bindings. You can also set this
-// in your makefile by adding -DCLUA_BINDINGS to the CFLAGS line (this
-// is preferred to editing AppHdr.h directly).
-//
-// #define CLUA_BINDINGS
-
 // The maximum memory that the user-script Lua interpreter can
 // allocate, in kilobytes. This limit is enforced to prevent
 // badly-written or malicious user scripts from consuming too much
@@ -292,6 +286,18 @@
     #endif
 #endif
 
+// =========================================================================
+//  Lua user scripts (NOTE: this may also be enabled in your makefile!)
+// =========================================================================
+// 
+// Enables Crawl's Lua bindings for user scripts. See the section on
+// Lua in INSTALL for more information. NOTE: CLUA_BINDINGS is enabled
+// by default in all standard makefiles. Commenting it out here may
+// not be sufficient to disable user-Lua - you must also check your
+// makefile and remove -DCLUA_BINDINGS. You can use V in-game to check
+// whether user-scripts are enabled.
+//
+// #define CLUA_BINDINGS
 
 // =========================================================================
 //  Game Play Defines

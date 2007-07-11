@@ -31,7 +31,7 @@ Crawl can be built with some optional features:
 
 * Sounds
 * Regular expressions
-* Lua support
+* User Lua scripts
 * Unicode characters for the map (Unix only).
 
 Crawl Stone Soup also uses a level compiler to compile special level
@@ -46,9 +46,19 @@ Regular expressions require libpcre on non-Unix operating systems. On
 Unixes, the standard POSIX regular expression support is adequate for
 Crawl's needs.
 
-Lua support requires liblua, which you can build by downloading the
-sources from www.lua.org. On most Unixes, you can also use the native
-package management system to easily install lua.
+Stone Soup 0.3 includes Lua 5.1.2 in its source tree. Crawl uses Lua
+for dungeon generation. In addition, Crawl has a (rudimentary) Lua
+interface for users to run scripts which can do things such as
+conditionalise parts of the .crawlrc/init.txt. Such user Lua scripts
+are enabled by default on DOS and Windows, but can be turned off by
+editing your makefile and removing -DCLUA_BINDINGS from the compiler
+flags.
+
+User scripts are not enabled by default on Unix since the stock
+makefile installs Crawl setgid, and the Lua scripting interface has
+not been audited for setgid security. See the full section on Lua for
+more details. For non-privileged installs, you can enable Lua user
+scripts as described in the build instructions.
 
 Unicode support needs libncursesw and its header files; these are
 usually available in your operating system's package-management
@@ -122,11 +132,11 @@ Building:
   level layout (.des) and help files will be copied to the data
   directory.
 
-* If you have Lua, you can edit AppHdr.h and uncomment
+* If you'd like users to be able to script Crawl with Lua, you can
+  edit AppHdr.h, uncomment
         // #define CLUA_BINDINGS
-  then add -llua to your LIB = line in makefile.unix, and rebuild to
-  compile with Lua support. See the section on Lua (below) for more
-  information.
+  clean, and rebuild to compile with user Lua support. See the section
+  on Lua (below) for more information.
 
 
 Building on Mac OS X
@@ -161,19 +171,21 @@ Mac build instructions below.
 * You can also use makefile.osx, which will run xcodebuild from the
   command line.
 
-* If you have Lua installed, you can add your lua headers and liblua
-  library to the 'Crawl' target in the Xcode project, uncomment the
-  '#define CLUA_BINDINGS' line in AppHdr.h, and rebuild to compile
-  with Lua support.
+* If you'd like users to be able to script Crawl with Lua, you can
+  edit AppHdr.h, uncomment
+        // #define CLUA_BINDINGS
+  and rebuild to compile with Lua support. See the section on Lua
+  for more information.
 
 
 Building on Windows (MinGW)
 ---------------------------
 
 NOTE: You cannot build Windows binaries on Windows 9x/ME using the
-MinGW makefile supplied. If you're on 9x/ME, you can choose to use the
-Cygwin build instructions, or build a binary on a Windows NT/2k/XP
-system (the binary will run on 9x), or build a DOS binary.
+MinGW makefile supplied (which needs the cmd.exe shell of the Windows
+NT family). If you're on 9x/ME, you can use the Cygwin build
+instructions, or build a binary on a Windows NT/2k/XP system (the
+binary will run on 9x), or build a DOS binary.
 
 * Install MinGW from http://www.mingw.org. The MinGW 5.0.2 installer
   is best so you don't have to fiddle with individual packages (you
@@ -189,19 +201,17 @@ system (the binary will run on 9x), or build a DOS binary.
 * Build Crawl by running
         mingw32-make MAKEFILE=makefile.mgw
 
-* If you have Lua and/or libpcre, you can edit AppHdr.h and uncomment 
-  these lines:
-        // #define CLUA_BINDINGS
-  and
+* If you want regular expression support, you can edit AppHdr.h and
+  uncomment this line:
         // #define REGEX_PCRE
   Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h
   - find the one in the Windows-specific section.
 
 * If you have flex and bison, edit makefile.mgw and set DOYACC := y.
 
-* Add -llua and -lpcre to the LIB line in makefile.mgw as:
-        LIB = -lwinmm -static -llua -lpcre
-  and build Crawl to include Lua and regex support.
+* If you enabled REGEX_PCRE, add -lpcre to the LIB line in makefile.mgw as:
+   LIB = -lpcre -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+  and build Crawl to include regex support.
 
 * When you're done, you should have crawl.exe under a "rel"
   subdirectory.
@@ -211,10 +221,10 @@ Building on Windows (cygwin)
 ----------------------------
 
 * Get Cygwin from http://www.cygwin.com/. When installing, ensure that
-  the following packages are selected: gcc, g++, make, flex, bison. If
-  you'd like to build from svn, install the svn client. You may also
-  want to install diff and patch if you'd like to apply third party
-  patches, or create your own.
+  the following packages are selected: gcc, g++, make, flex, bison,
+  libncurses-devel. If you'd like to build from svn, install the svn
+  client. You may also want to install diff and patch if you'd like to
+  apply third party patches, or create your own.
 
 * Once Cygwin is installed, open a Cygwin bash shell (use the Start
   menu, do not double-click bash.exe in Explorer). cd to the Crawl
@@ -242,12 +252,12 @@ Building for DOS (djgpp)
 * Build Crawl by running
         make MAKEFILE=makefile.dos
 
-* If you have Lua and/or PCRE, edit makefile.dos and change this line:
-        CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
+* If you want PCRE, edit makefile.dos and change this line:
+        CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
   to
-        CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS -DREGEX_PCRE
-  Add -llua and -lpcre to the LIB line in makefile.dos, like so:
-        LIB = -llua -lpcre
+        CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS) -DREGEX_PCRE
+  And add -lpcre to the LIB line in makefile.dos, like so:
+        LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
   then build Crawl.
 
 * When the build is done, crawl.exe should be in the source directory.
@@ -285,56 +295,16 @@ Optional Libraries (Lua and PCRE)
 Lua
 ---
 
-NOTE: When linking in Lua, the makefile LIB line usually looks like
-this:
+Security on multiuser systems (Unix):
 
-LIB = -llua
+Enabling Lua user scripts is unsuitable for Crawl installed setuid or
+setgid - we have not audited the user scripting interface for
+security. If you're not planning to install Crawl setuid/setgid (not
+running set[ug]id is a good idea in general), you can enable the Lua
+user-script bindings safely.
 
-If you're using Lua older than 5.1, though, the Lua library comprises
-of *two* libraries: liblua and liblualib (yes, confusing), so you need
-
-LIB = -llua -llualib
-
-This also depends on how you install Lua - some package management
-systems build just the plain old liblua.so even for pre 5.1 Lua. If in
-doubt, try both "-llua -llualib" and "-llua".
-
-On many Linuxes (Debian, for instance), the package management system
-installs Lua libraries including the version number, so the linker
-option becomes something like:
-
-LIB = -llua50
-
-
-Lua include path:
-
-On Unix, Lua headers may be installed in /usr/include (unlikely), or
-in a subdirectory of /usr/include (such as /usr/include/lua50/). If
-the headers are in a subdirectory, you need to add this directory to
-the include path in your makefile.unix:
-
-INCLUDES = -I/usr/include/ncurses -I/usr/include/lua50
-
-On other platforms, the Lua headers should usually be installed in
-your compiler's include directory, or a subdirectory. If it's in a
-subdirectory, you'll need to add the full directory path to your
-includes line.
-
-
-Getting Lua:
-
-On Unixes your package management system is the best way to get Lua.
-Make sure to install the development headers and not just the naked
-library.
-
-On Windows, Lua binaries are available on luaforge.net. You should
-find links to get binaries from www.lua.org.
-
-On DOS, you get the joy of compiling Lua yourself. It's not hard, and
-you can use the existing Windows support in the Lua makefiles with
-some minor modifications, but you may be better served using the
-official Crawl Stone Soup binaries if you want Lua with your Crawl and
-don't want to compile Lua.
+As of 0.3, the Lua source is included with Crawl. The only step needed
+to enable user-scripts is to uncomment CLUA_BINDINGS in AppHdr.h.
 
 
 PCRE
