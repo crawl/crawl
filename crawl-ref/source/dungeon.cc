@@ -190,8 +190,9 @@ static void jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
 static bool build_secondary_vault(int level_number, int vault, int rune_subst = -1);
-static bool build_vaults(int level_number, int vault_number, int rune_subst = -1,
-                         bool build_only = false);
+static bool build_vaults(int level_number, int vault_number,
+                         int rune_subst = -1, bool build_only = false,
+                         bool check_vault_place = false);
 static bool build_minivaults(int level_number, int force_vault,
                              coord_def where = coord_def() );
 static int vault_grid( vault_placement &,
@@ -1383,11 +1384,21 @@ static builder_rc_type builder_normal(int level_number, char level_type,
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
     if (vault == -1
-        && player_in_branch(BRANCH_MAIN_DUNGEON)
         && use_random_maps
         && one_chance_in(vault_chance))
     {
         vault = random_map_in_depth(level_id::current());
+
+        // We'll accept any kind of primary vault in the main dungeon,
+        // but only ORIENT: encompass primary vaults in other
+        // branches. Other kinds of vaults can still be placed in
+        // other branches as secondary vaults.
+        // 
+        if (vault != -1 && !player_in_branch(BRANCH_MAIN_DUNGEON)
+            && map_by_index(vault)->orient != MAP_ENCOMPASS)
+        {
+            vault = -1;
+        }
     }
 
     if (vault != -1)
@@ -1709,7 +1720,12 @@ static void place_extra_vaults()
         && vault_chance
         && one_chance_in(vault_chance))
     {
-        const int vault = random_map_in_depth(level_id::current());
+        int vault = random_map_in_depth(level_id::current());
+
+        // ORIENT: encompass maps are unsuitable as secondary vaults.
+        if (vault != -1 && map_by_index(vault)->orient == MAP_ENCOMPASS)
+            vault = -1;
+        
         if (vault != -1 && build_secondary_vault(you.your_level, vault, -1))
             vault_chance = 0;
     }
@@ -3194,7 +3210,7 @@ static void connect_vault(const vault_placement &vp)
  */
 static bool build_secondary_vault(int level_number, int vault, int rune_subst)
 {
-    if (build_vaults(level_number, vault, rune_subst, true))
+    if (build_vaults(level_number, vault, rune_subst, true, true))
     {
         const vault_placement &vp = level_vaults[ level_vaults.size() - 1 ];
         connect_vault(vp);
@@ -3205,7 +3221,7 @@ static bool build_secondary_vault(int level_number, int vault, int rune_subst)
 }
 
 static bool build_vaults(int level_number, int force_vault, int rune_subst,
-                         bool build_only)
+                         bool build_only, bool check_collisions)
 {
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
@@ -3229,7 +3245,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     vault_placement place;
     std::vector<coord_def> &target_connections = place.exits;
 
-    const int gluggy = vault_main(vgrid, place, force_vault, &level_vaults);
+    const int gluggy = vault_main(vgrid, place, force_vault, check_collisions);
 
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
@@ -3275,7 +3291,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
 #endif    
 
     // If the map takes the whole screen or we were only requested to
-    // build, our work is done.
+    // build the vault, our work is done.
     if (gluggy == MAP_ENCOMPASS || build_only)
         return (true);
 

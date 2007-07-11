@@ -30,12 +30,12 @@
 
 static int write_vault(map_def &mdef, map_type mt, 
                        vault_placement &,
-                       std::vector<vault_placement> *);
+                       bool check_place);
 static int apply_vault_definition(
                         map_def &def,
                         map_type map,
                         vault_placement &,
-                        std::vector<vault_placement> *);
+                        bool check_place);
 
 static bool resolve_map(map_def &def, const map_def &original);
 
@@ -58,7 +58,7 @@ int vault_main(
         map_type vgrid, 
         vault_placement &place,
         int which_vault,
-        std::vector<vault_placement> *avoid)
+        bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s", 
@@ -80,12 +80,12 @@ int vault_main(
     // Return value of zero forces dungeon.cc to regenerate the level, except
     // for branch entry vaults where dungeon.cc just rejects the vault and
     // places a vanilla entry.
-    return (write_vault( vdefs[which_vault], vgrid, place, avoid ));
+    return (write_vault( vdefs[which_vault], vgrid, place, check_place ));
 }
 
 static int write_vault(map_def &mdef, map_type map, 
                        vault_placement &place,
-                       std::vector<vault_placement> *avoid)
+                       bool check_place)
 {
     mdef.load();
     
@@ -104,7 +104,7 @@ static int write_vault(map_def &mdef, map_type map,
             continue;
 
         place.orient = apply_vault_definition(place.map, map,
-                                              place, avoid);
+                                              place, check_place);
 
         if (place.orient != MAP_NONE)
             break;
@@ -157,9 +157,9 @@ static bool resolve_map(map_def &map, const map_def &original)
 // is a bad place to build a vault.
 static bool bad_map_place(const map_def &map,
                           int sx, int sy, int width, int height,
-                          std::vector<vault_placement> *avoid)
+                          bool check_place)
 {
-    if (!avoid)
+    if (!check_place)
         return (false);
     
     const std::vector<std::string> &lines = map.map.get_lines();
@@ -171,6 +171,9 @@ static bool bad_map_place(const map_def &map,
                 continue;
 
             if (dgn_map_mask[x][y])
+                return (true);
+
+            if (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER)
                 return (true);
             
             const dungeon_feature_type grid = grd[x][y];
@@ -193,7 +196,7 @@ static bool bad_map_place(const map_def &map,
 
 static bool apply_vault_grid(map_def &def, map_type map, 
                              vault_placement &place,
-                             std::vector<vault_placement> *avoid)
+                             bool check_place)
 {
     const map_lines &ml = def.map;
     const int orient = def.orient;
@@ -232,7 +235,7 @@ static bool apply_vault_grid(map_def &def, map_type map,
         starty = where.y;
     }
 
-    if (bad_map_place(def, startx, starty, width, height, avoid))
+    if (bad_map_place(def, startx, starty, width, height, check_place))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
@@ -265,9 +268,9 @@ static int apply_vault_definition(
         map_def &def,
         map_type map,
         vault_placement &place,
-        std::vector<vault_placement> *avoid)
+        bool check_place)
 {
-    if (!apply_vault_grid(def, map, place, avoid))
+    if (!apply_vault_grid(def, map, place, check_place))
         return (MAP_NONE);
 
     int orient = def.orient;

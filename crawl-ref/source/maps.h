@@ -37,7 +37,7 @@ struct vault_placement
 int vault_main(map_type vgrid, 
                vault_placement &vp,
                int vault_force,
-               std::vector<vault_placement> *avoid_vaults = NULL);
+               bool check_place = false);
 
 const map_def *map_by_index(int index);
 int map_count();
