@@ -1,13 +1,13 @@
 ###############################################################################
 # large.des: All large regular vaults go here (these are defined by having an
 #            ORIENT line with argument encompassing, north, northwest etc.
-#            
+#
 # Note that all maps for the Vault branch system (including Vault:8) reside in
 # vaults.des.
 ###############################################################################
 
 default-depth: D:12-26
-# be careful to adapt these numbers for new vaults (using DEPTH) 
+# be careful to adapt these numbers for new vaults (using DEPTH)
 
 ##############################################################################
 # Rats! (Lemuel), slightly easier now
@@ -1038,4 +1038,78 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Rubicon
+#
+NAME:    erik_rubicon_a
+DEPTH:   10-16
+ORIENT:  south
+FLAGS:   no_rotate
+TAGS:    no_pool_fixup
+CHANCE:  6
+ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
+ITEM:    nothing, nothing, nothing
+SHUFFLE: {[(, )gh
+SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
+MAP
+xxxxxxxxxcccccccc????w.@??ww.@www???w...@???wwww.@ww??@..?ccccxxxxxxxxxxx
+xxxxxccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwww??wwwwcccccccxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwcccxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwcccccxxxxx
+xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwcwwwwwwwwwwwwwwwxwwwwww???wwwwwwwww???wwwwwwwww.wwwwwwwcccccxxxxx
+xxxxxcccccc????w??.w????xw??w??...?wwww???w????w?w???w???w??cccccxxxxxxxx
+xxxxxxxxxcxx...''....?..xx........??w??...c''....??.....???..cxccxxxxxxxx
+xxxxxxxxxcx..(cc[.''..'xx...x.''.x..?xx.xcc..cxcx...xxx.'...chxxcxxxxxxxx
+xxxxxxxxxcx..cc{c..xx.....xx...cc..xx....xcc....''xxx..x.xxc...cxxxxxxxxx
+xxxxxxxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxxxxxxx
+xxxxxxxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxxxxxxx
+xxxxxxxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxxxxxxx
+xxxxxxxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    erik_rubicon_b
+DEPTH:   10-16
+ORIENT:  south
+FLAGS:   no_rotate
+CHANCE:  4
+ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
+ITEM:    nothing, nothing, nothing, nothing
+SHUFFLE: {[(, fgW, )hi
+SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
+MAP
+xxxxxxxxxcccccccc?gw?f.@wgf?.@w??g?fw...@gwfw???.@wwww@..?ccccxxxxxxxxxxx
+xxxxxccccwwwwwww??..f????.ww???www.???ww??.wwwwwwwwwwwffgg?wwcccccccxxxxx
+xxxxxcwwwwwwwwwwww??wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww??wwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwcccxxxxx
+xxxxxcwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwww?wwwwwwwwwwwwwwwwwcccccxxxxx
+xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwcwwwwwg?wwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwcccccxxxxx
+xxxxxccccccwffwg??fw?ww?gx??ww?..??wwwww??w?fwgw?fwgw??fg??gcccccxxxxxxxx
+xxxxxxxxxcxx...'''...?..xx.....''.?ww??...c.'....??...'.?gg.xcxccxxxxxxxx
+xxxxxxxxxcx..(cc[.'.'.xx..'.x.'..x..?...xcc..cxcx.x..x..''..cxhxcxxxxxxxx
+xxxxxxxxxxcc..c{c..x.x...c.xxx.x.xx.'.'xx..cc..c.xx''.cc..xxx...xxxxxxxxx
+xxxxxxxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxxxxxxx
+xxxxxxxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxxxxxxx
+xxxxxxxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxxxxxxx
+xxxxxxxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

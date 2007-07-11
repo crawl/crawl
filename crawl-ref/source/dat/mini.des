@@ -1,11 +1,11 @@
 ###############################################################################
 # mini.des: This is the place where minivaults should go. These are defined
 #           without any ORIENT line. Vaults with ORIENT lines are stored in
-#           either small.des or large.des. 
+#           either small.des or large.des.
 #
 #           All maps dealing with the Vault branch system, including Vaults:8
 #           reside in vaults.des.
-############################################################################### 
+###############################################################################
 
 ##############################################################################
 # Some notes on minivaults for designers:
@@ -13,12 +13,12 @@
 # *Cannot* place 8,9 or 0 monsters in branch vaults which neither use the
 # normal mons_level function or are around level 35, or generation will crash.
 #
-# Minivaults were traditionally drawn after rotating the vault by 90 degrees 
-# anticlockwise. Under the new dungeon vault handling, the map may be freely 
+# Minivaults were traditionally drawn after rotating the vault by 90 degrees
+# anticlockwise. Under the new dungeon vault handling, the map may be freely
 # rotated and mirrored to any position (20061105).
 #
-# Minivaults were traditionally 12x12 (hardcoded limitation in dungeon.cc). 
-# Under the new rules they can be any size, but the smaller the better. I'd 
+# Minivaults were traditionally 12x12 (hardcoded limitation in dungeon.cc).
+# Under the new rules they can be any size, but the smaller the better. I'd
 # recommend no larger than 35x30 or so.
 #
 # Minivaults must NOT have an ORIENT: attribute. Including an ORIENT: attribute
@@ -217,8 +217,8 @@ SUBST: 1 = 1 a:2
 SUBST: 1 : 1:15 2 3:2 4:1 5:2
 SUBST: * : * R:3
 MAP
-..????????..
-.??????????.
+  ????????
+ ??????????
 ???aaaaaa???
 ??aaaaaaaa??
 ??aa1111aa??
@@ -227,8 +227,8 @@ MAP
 ??aa1111aa??
 ??aaaaaaaa??
 ???aaaaaa???
-.??????????.
-..????????..
+ ??????????
+  ????????
 ENDMAP
 
 ###########################
@@ -278,7 +278,7 @@ MAP
 ENDMAP
 
 ##############################################################
-# Aren't you glad you're a merfolk/a high-level kenku/wearing 
+# Aren't you glad you're a merfolk/a high-level kenku/wearing
 # those boots of levitation?
 #
 NAME: water_maze_lemuel
@@ -619,7 +619,7 @@ ENDMAP
 
 ###################################
 # Closed-box minivault
-# 
+#
 # Due to the new behaviour of brown stairs, this one is broken
 # (or at least working differently from how it was intended!)
 #
@@ -1004,7 +1004,7 @@ ENDMAP
 # Billiards (David Ploog)
 #
 NAME: billiards
-MONS: orc wizard, deep elf conjurer 
+MONS: orc wizard, deep elf conjurer
 SHUFFLE: 1*/2d
 SUBST: * = * |:1 %:4
 SUBST: d = * |
@@ -1258,4 +1258,106 @@ MAP
 .xddx.
 .xxxx.
 ......
+ENDMAP
+
+#############################################################################
+# Doghouse (Eino)
+# put the rest of the doghouses in float.des, combined CHANCE of all of them is 10
+
+NAME:    doghouse_v1
+DEPTH:   4-8
+SHUFFLE: 1?T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  2
+MAP
+.........
+.xxx+xxx.
+.xxx+xxx.
+.xx...xx.
+.xx?..xx.
+.xx1.Txx.
+.xxxxxxx.
+.xxxxxxx.
+.........
+ENDMAP
+
+#############################################################################
+# Circle pieces altar (Eino)
+# put the third version in float.des, hence combined CHANCE < 10
+
+NAME: circle_pieces_altar_v1
+DEPTH: 3-26
+SUBST: ' : x.
+CHANCE: 4
+MAP
+........'''''''''''''.....
+...b......'''''''.........
+...bbb......''............
+'...bbb................bb.
+'....bbbb............bbb..
+''.....bbbbb.....bbbbb...'
+'........bbbbbbbbbb.....''
+...........bbbbb.........'
+'....bb..................'
+''....bb...........bbbb..'
+'''....bbb.......bbbbb...'
+'''.....bbb.....bbbb....''
+''''.....bb.....bbb....'''
+''''.....bb..C..bb....''''
+'''.....bbb.....bb...'''''
+'''....bbbb.....bbb...''''
+''...bbbbb.......bbb...'''
+'...bbbb...........bb...''
+..........bbbb......bb..''
+......bbbbbbbbbbb.......''
+....bbbbb......bbbb....'''
+...bbbb...........bb..''''
+.bbb.....'''''.......'''''
+.......'''''''''......''''
+ENDMAP
+
+NAME: circle_pieces_altar_v2
+DEPTH: 3-26
+CHANCE: 3
+MAP
+  .....
+ ..b.....             ...
+ ..bbb.....       ........
+  ..bbb......    ......bb.
+   ..bbbb............bbb..
+    ...bbbbb.....bbbbb...
+   ......bbbbbbbbbb.....
+  .........bbbbb.........
+  ...bb..................
+   ...bb...........bbbb..
+    ...bbb.......bbbbb...
+    ....bbb.....bbbb....
+    .....bb.....bbb....
+   ......bb..C..bb....
+  ......bbb.....bb...
+ ......bbbb.....bbb...
+.....bbbbb.......bbb...
+....bbbb...........bb...
+ .........bbbb......bb..
+  ....bbbbbbbbbbb.......
+ ...bbbbb......bbbb....
+...bbbb....  .....bb..
+.bbb......     ......
+......
+ENDMAP
+
+#############################################################################
+# Small room with statues (Eino)
+
+NAME:    small_statue_room
+DEPTH:   2-26
+FLAGS:   no_hmirror no_vmirror
+MAP
+xxx.xxx
+xG...Gx
+.......
+xG...Gx
+xxx.xxx
 ENDMAP

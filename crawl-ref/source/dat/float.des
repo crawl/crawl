@@ -8,20 +8,18 @@
 #
 #            All maps dealing with the Vault branch system, including Vaults:8
 #            reside in vaults.des.
-############################################################################### 
+###############################################################################
 
-# Set the default depth for vaults. By default vaults are placed only
-# in the main dungeon; if you want to place them elsewhere, use an
-# appropriate DEPTH: in your vault definition.
-
-default-depth: D:12-26
+# Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
+# easy or tough vaults. Also, exlucde unthemely branches with !Lair etc.
+default-depth: 12-26
 
 ##############################################################################
 # Dummy probability balancer vault for depths 1-11.
 #
 # Why this is necessary: there are very few vaults in the 1-11 range (entries
 # are not considered here); to avoid too much repetition of the existing vaults,
-# we use this dummy vault. 
+# we use this dummy vault.
 #
 NAME: dummy_balancer
 DEPTH: 1-11
@@ -51,104 +49,30 @@ SUBST: U=x, V=x, W=x, Y=x, Z=x
 SUBST: 1 = 1:20 ., 2=2., 3=23, 4=24
 MONS: jackal/hound, human, Edmund/Jessica/Sigmund, Michael/Ijyb/Psyche
 MONS: sheep/nothing
-#
 MAP
-xxxxxxxxxxSxxxxxxxxxxxxxxxxxxxUxxxxxxxxx
-xxxxxxxxxxxssxxxxxxxxx1xxxxxxuxxxxxxxxxx
-xxxxxxxxxxxxxssxxxxxx111xxxxxuxxxxxxxxxx
-xxxzzzxxxxxxxxxsxxxxxx1xxxxxxuxxxxxxxxxx
-Zzzxzxzxx555xxsxxxxxxx1xxxxxuxxxxxxxxxxx
-xxxxxxxzxx5xxx.xxx..x1xxxxxuxxxxxxxxxxxx
-xxxxxxxzxx5xxxx......xxxxxuuxxxxxxxxxxxx
-xxxxxxzxxxx5xx...2...cccxxxuxxxxxxxxxxxx
-xxxxxxzxxxx....2224..+$cxxuxxxxxxxxxxxxx
-xxxxxxxz.......2ll22.cccxxxuxxxxxxxxxxxx
-xxxxxxxxx......3222.xxxxxxuxxxxxxxxxxxxx
-xxxxxxxxxyxxxx2.......xxuuxxvvvvxxxxxxxx
-xxxxxxxxyxxxx.......xx..vxvvxxxxvxxxxxxx
-xxxxxxyyxxxxxrxxxxx.xxwxxvxxxxxxxvvxxxxx
-xxxyxyxxxxxxrxxrxxxx.xxwxxxxxxxxxvxxxxxx
-xyyyyxxxxxxxxrrxrrxxxxxxwxxxxxxxvxxxxxxx
-xyxxxxxxxxxxxxxrxrrxxxxxxwwxxxxxxvvxxxxx
-YxxxxxxxxxxxxxxxxxrxxxxxxxxwxxxxxxxvvxvV
-xxxxxxxxxxxxxxxxrrxxxxxxxxxxwxxxxxxxxvxx
-xxxxxxxxxxxxrrrrxxxxxxxxxxxxwxxxxxxxxxxx
-xxxxxxxxxxxRxxxxxxxxxxxxxxxxWxxxxxxxxxxx
+         xSxxxxx    xxxxxxxxxxUx
+         xxssxxx    xx1xxxxxxuxx
+xxxxxxxxxxxxxssx    x111xxxxxuxx
+xxxzzzxxxxxxxxxsxxxxxx1xxxxxxuxx
+Zzzxzxzxx555xxsxxxxxxx1xxxxxuxxx
+xxxxxxxzxx5xxx.xxx..x1xxxxxuxxxx
+   xxxxzxx5xxxx......xxxxxuuxxxx
+   xxxzxxxx5xx...2...cccxxxux
+   xxxzxxxx....2224..+$cxxuxx
+   xxxxz.......2ll22.cccxxxux
+   xxxxxx......3222.xxxxxxuxxxxxxxxx
+   xxxxxxyxxxx2.......xxuuxxvvvvxxxx
+   xxxxxyxxxx.......xx..vxvvxxxxvxxx
+xxxxxxyyxxxxxrxxxxx.xxwxxvxxxxxxxvvx
+xxxyxyxxxxxxrxxrxxxx.xxwxxxxxxxxxvxx
+xyyyyxxxxxxxxrrxrrxxxxxxwxxxxxxxvxxx
+xyxxxx     xxxxrxrrxxxxxxwwxxxxxxvvxxxxx
+Yxxxxx     xxxxxxxrxxxxxxxxwxxxxxxxvvxvV
+xxxxxx   xxxxxxxrrx       xxwxxxxxxxxvxx
+         xxxrrrrxxx       xxwxxxxxxxxxxx
+         xxRxxxxxxx       xxWxx
 ENDMAP
 
-##############################################################################
-# Rubicon
-#
-NAME:    erik_rubicon_a
-DEPTH:   10-16
-ORIENT:  south
-FLAGS:   no_rotate
-TAGS:    no_pool_fixup
-CHANCE:  6
-ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
-ITEM:    nothing, nothing, nothing
-SHUFFLE: {[(, )gh
-SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
-MAP
-xxxxxxxxxcccccccc????w.@??ww.@www???w...@???wwww.@ww??@..?ccccxxxxxxxxxxx
-xxxxxccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwww??wwwwcccccccxxxxx
-xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwcccxxxxx
-xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwcccccxxxxx
-xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxccwcwwwwwwwwwwwwwwwxwwwwww???wwwwwwwww???wwwwwwwww.wwwwwwwcccccxxxxx
-xxxxxcccccc????w??.w????xw??w??...?wwww???w????w?w???w???w??cccccxxxxxxxx
-xxxxxxxxxcxx...''....?..xx........??w??...c''....??.....???..cxccxxxxxxxx
-xxxxxxxxxcx..(cc[.''..'xx...x.''.x..?xx.xcc..cxcx...xxx.'...chxxcxxxxxxxx
-xxxxxxxxxcx..cc{c..xx.....xx...cc..xx....xcc....''xxx..x.xxc...cxxxxxxxxx
-xxxxxxxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxxxxxxx
-xxxxxxxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxxxxxxx
-xxxxxxxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxxxxxxx
-xxxxxxxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxxxxxxx
-xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:    erik_rubicon_b
-DEPTH:   10-16
-ORIENT:  south
-FLAGS:   no_rotate
-CHANCE:  4
-ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
-ITEM:    nothing, nothing, nothing, nothing
-SHUFFLE: {[(, fgW, )hi
-SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
-MAP
-xxxxxxxxxcccccccc?gw?f.@wgf?.@w??g?fw...@gwfw???.@wwww@..?ccccxxxxxxxxxxx
-xxxxxccccwwwwwww??..f????.ww???www.???ww??.wwwwwwwwwwwffgg?wwcccccccxxxxx
-xxxxxcwwwwwwwwwwww??wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww??wwwwwwwwwcxxxxx
-xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwcccxxxxx
-xxxxxcwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwww?wwwwwwwwwwwwwwwwwcccccxxxxx
-xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
-xxxxxccwcwwwwwg?wwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwcccccxxxxx
-xxxxxccccccwffwg??fw?ww?gx??ww?..??wwwww??w?fwgw?fwgw??fg??gcccccxxxxxxxx
-xxxxxxxxxcxx...'''...?..xx.....''.?ww??...c.'....??...'.?gg.xcxccxxxxxxxx
-xxxxxxxxxcx..(cc[.'.'.xx..'.x.'..x..?...xcc..cxcx.x..x..''..cxhxcxxxxxxxx
-xxxxxxxxxxcc..c{c..x.x...c.xxx.x.xx.'.'xx..cc..c.xx''.cc..xxx...xxxxxxxxx
-xxxxxxxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxxxxxxx
-xxxxxxxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxxxxxxx
-xxxxxxxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxxxxxxx
-xxxxxxxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxxxxxxx
-xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
 
 ##############################################################################
 # Sometimes You Just Gotta Run
@@ -162,28 +86,28 @@ SUBST: X=x, Y:x.
 MONS: ogre, iron devil, nothing
 ITEM: potion of heal wounds / speed / berserk rage / scroll of blinking
 MAP
-xxxxxxxxxx@xxxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxxX.Xxxxxxxxxx
-xxxxxxxxxX1Xxxxxxxxxx
-xxxxxxxxxX.Xxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx.d.xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx.d.xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxx....[....xxxxxx
+        xx@xx
+        x...x
+        xX.Xx
+        xX1Xx
+        xX.Xx
+        xx.xx
+        xx.xx
+        xx.xx
+        x...x
+        x...x
+        x...x
+        x.d.x
+        x...x
+        x.d.x
+        x...x
+     xxxx...xxxx
+     x....[....x
 xxxxxx..x(.{x..xxxxxx
 x...x...x...x...x...x
 x....x..xx]xx..x....x
 xxxxxx...xxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxx
+     xxxxx xxxxx
 ENDMAP
 
 ################################
@@ -193,17 +117,17 @@ ENDMAP
 # but since they are normal speed with no range attacks, they can be escaped
 #
 NAME: slime_lemuel
-DEPTH: 9-16, Lair
+DEPTH: 6-16, Lair
 ORIENT: float
 MONS: w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
 MAP
-xxxxxxxxxxx
-xxxx111xxxx
-xx1111111xx
-@+1112111xx
-xx1111111xx
-xxxx111xxxx
-xxxxxxxxxxx
+xxxxxxxxxx
+xxxx111xxx
+xx1111111x
+@+1112111x
+xx1111111x
+xxxx111xxx
+xxxxxxxxxx
 ENDMAP
 
 ####################################
@@ -212,59 +136,28 @@ ENDMAP
 #
 NAME: shooting_gallery_Lemuel
 ORIENT: float
+TAGS: no_pool_fixup no_monster_gen
+ITEM: potion of levitation q:2
+: if you.absdepth() <= 16 then
+MONS: orc wizard / centaur / jackal / killer bee larva / giant lizard / kobold / giant mite / grey rat / green rat / orange rat
+MONS: deep elf priest / orc high priest / cyclops / orc priest / jelly / ogre / troll / yak / orc warrior / sheep / hog
+: elseif you.absdepth() >= 17 then
+MONS: deep elf priest / orc high priest / cyclops / yaktaur / slime creature / yak / wyvern / big kobold / toenail golem
+MONS: yaktaur captain / manticore / deep elf high priest / orc sorcerer / ogre-mage / ugly thing / unseen horror / wandering mushroom
+: end
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxcc
 cxwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwxc
-ccwwww9www9www9www9www9www9www9www9www9wwwwcc
+ccwwww2www2www2www2www2www2www2www2www2wwwwcc
 cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
-ccww9www9www9www9www9www9www9www9www9www9wwcc
+ccww1www1www1www1www1www1www1www1www1www1wwcc
 cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
 cc.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.cc
 cx.........................................xc
-cc.........................................cc
+cc....................d....................cc
 cx.........................................xc
 cc.........................................cc
-ENDMAP
-
-
-##########################################
-# a pointless little "vault" by Lemuel
-#
-NAME: strawberry_fields
-ORIENT: float
-DEPTH: 1-27
-SUBST: .= a .:200 1:2 2:1
-MONS: plant, butterfly
-ITEM: strawberry
-MAP
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
-.............................................
 ENDMAP
 
 ##############################################################################
@@ -272,24 +165,24 @@ ENDMAP
 #
 NAME: MiniTomb
 ORIENT: float
-DEPTH: 10-26
+DEPTH: 20-26
 MONS: large zombie / nothing, mummy, guardian mummy, greater mummy, large zombie
 MONS: mummy / nothing
 SHUFFLE: 2F, cbv
 MAP
-          xxxxx
-          x3$$x
-cc        ccc=ccccccccc
-cccxxxxx  c.....c...1$c   c
-@Fcx6$.x  c..1..c...25ccccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx3$$xxxxxxxxxxxxx
+ccxxxxxxxxccc=cccccccccxxxx
+cccxxxxxxxc.....c...1$cxxxc
+@Fcx6$.xxxc..1..c...25ccccc
 cccccc=cccc.62..c...15c$$$c
 @+111.....+.63..=..F11=4||c
 cccccc=cccc.62..c...15c$$$c
-@Fcx6$.x  c..1..c...25ccccc
-cccxxxxx  c.....c...1$c   c
-cc        ccc=ccccccccc
-          x3$$x
-          xxxxx
+@Fcx6$.xxxc..1..c...25ccccc
+cccxxxxxxxc.....c...1$cxxxc
+ccxxxxxxxxccc=cccccccccxxxx
+xxxxxxxxxxx3$$xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 #############################################################################
@@ -300,29 +193,27 @@ FLAGS:  no_rotate
 ORIENT: float
 DEPTH:  5-12
 SUBST:  1 = 1:70 2:60 3:25
-MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20 
-MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito 
+MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20
+MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito
 MONS:   giant blowfly / scorpion / redback w:5
 MAP
-ccccccccccc+ccccccccccc
-c.....................c
-c.....................c
-c.....................c
-c.....vvvvvvvvvvv.....c
-c.....v111111111v.....c
-c.....v111111111v.....c
-c.....=111111111=.....c
-c.....v111111111v.....c
-c.....v111111111v.....c
-c.....vvvvvvvvvvv.....c
-c.....................c
-c.....................c
-c.....................c
-ccccccccccc+ccccccccccc
+cccccccc+cccccccc
+c...............c
+c...............c
+c....vvvvvvv....c
+c....v11111v....c
+c....=11111=....c
+c....v11111v....c
+c....vvvvvvv....c
+c...............c
+c...............c
+cccccccc+cccccccc
 ENDMAP
 
 #############################################################################
 # Troll bridge (Lemuel)
+#
+# possibility to script the trolls guard the bridge would be great here -evk
 #
 NAME: troll_bridge
 DEPTH: 7-15
@@ -434,6 +325,8 @@ ENDMAP
 #############################################################################
 # Swampy vault
 #
+# island version for shoal in lair.des -evk
+#
 NAME: onia_ninara_012_swampy_vault
 TAGS: no_pool_fixup no_monster_gen
 ORIENT: float
@@ -449,7 +342,7 @@ KMONS: E = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito 
 KMONS: F = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
 KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
 KITEM: H = any good_item / any potion / w:20 nothing / gold
-DEPTH: Lair
+DEPTH: 16-20, Lair: 3-10, Swamp, Snake, Slime
 MAP
 xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
 xxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxx
@@ -471,3 +364,166 @@ xxxxxxxxGFDEGGxxxxxxxxxGxxxxxxxxx
 xxxxxxxxxxAxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+###########################
+# Another low-level vault - LP
+
+NAME: reptile_caves
+DEPTH: D:8-12, Lair:*
+MONS: giant gecko/giant newt, giant lizard, giant iguana, firedrake/swamp drake
+MONS: snake, brown snake, yellow snake
+SUBST: 4 = 34
+SUBST: 3 = 3:20 2
+SUBST: 2 = 2:20 1
+SUBST: 1 = 1.
+SHUFFLE: ab/cd
+SUBST: a = w, b = x, c = x, d = .
+SHUFFLE: 123/567
+SUBST: w:wW.
+SUBST: X=x.
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxXw**wXxxxxxxxxxxxxxxX**XXx
+xXwwwwwXxxxxxxX33xxxxxX423Xx
+xXwww232XxxxxX121xxxxX.13Xxx
+xXXwww2XxxxxxX.1xxxXXw222Xxx
+xxXXwwwwaaXxxxXwxxaaaw1121Xx
+xxxXwww1XaaaaawwaaaxXww211Xx
+xxxxXw23xxxxxawwwxxxXww11XXx
+xxxxXX1XxxxxxxxwwwxxxxX.Xxxx
+xxxxxxX.XxxxXwwwwwxxx...Xxxx
+xxxxxxx..Xxxx2xwwxxX..XXxxxx
+xxxxxxxX.12111xw3X211bxxxxxx
+xxxxxxxxxxXXXxxw2xxxxbbxxxxx
+xxxxxxxxxxxxxxxw1Xxxxxbbxxxx
+xxxxxxxxxxxxxXww1Xxxxxxbxxxx
+xxxxxxxxxxxXwwww111@...Xxxxx
+ENDMAP
+
+#############################################################################
+# Small statue alley (Eino)
+
+NAME:    small_statue_alley_a
+DEPTH:   D:10-20
+CHANCE:  7
+ORIENT:  float
+MAP
+xxxcccccx
+...G...G@
+.G.F.G.G.
+.G.G.F.G.
+@G...G...
+xcccccxxx
+ENDMAP
+
+NAME:    small_statue_alley_b
+DEPTH:   D:3-10
+CHANCE:  2
+ORIENT:  float
+MAP
+xxxcccccx
+...G...G@
+.G.G.G.G.
+.G.G.G.G.
+@G...G...
+xcccccxxx
+ENDMAP
+
+NAME:    small_statue_alley_c
+DEPTH:   D:6-12
+CHANCE:  1
+ORIENT:  float
+MAP
+xxxcccccx
+...I...I@
+.I.I.I.I.
+.I.I.I.I.
+@I...I...
+xcccccxxx
+ENDMAP
+
+#############################################################################
+# Circle pieces altar (Eino)
+# two versions are in float.des, combined CHANCE is 10
+
+NAME: circle_pieces_altar_v3
+DEPTH: 3-26
+CHANCE: 3
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxx
+.bbbbbbbbbbbbbbbbx
+...bbbbbbbbbbbbbbx
+@....bbbbbbbbbb...
+.......bbbbb.....@
+xbb...............
+xbbb...........bbx
+xbbbbb.......bbbbx
+xbbbbbb.....bbbbbx
+xbbbbbb.....bbbbbx
+xbbbbbb..C..bbbbbx
+xbbbbbb.....bbbbbx
+xbbbbbb.....bbbbbx
+xbbbbb.......bbbbx
+xbbb...........bbx
+@.....bbbb......bx
+..bbbbbbbbbbb.....
+xbbbbbbbbbbbbbb..@
+xxxxxxxxxxxxxxxx..
+ENDMAP
+
+#############################################################################
+# Doghouse (Eino)
+# one of the doghouses is in mini.des, combined CHANCE of all of them is 10
+
+NAME:    doghouse_v2
+DEPTH:   5-8
+SHUFFLE: ?1T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  3
+ORIENT:  float
+MAP
+xx+xx
+xx+xx
+x...x
+x?1Tx
+x...x
+xx+xx
+xx+xx
+ENDMAP
+
+NAME:    doghouse_v3
+DEPTH:   5-8
+SHUFFLE: ?1T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  3
+ORIENT:  float
+MAP
+xxx+xx
+xxx+xx
+xx...x
+++..?x
+xx.T1x
+xxxxxx
+ENDMAP
+
+NAME:    doghouse_v4
+DEPTH:   6-8
+SHUFFLE: ?1T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  2
+ORIENT:  float
+MAP
+xxx+xxx
+xxx+xxx
+xx...xx
+++.T.++
+xx?1?xx
+xxxxxxx
+ENDMAP

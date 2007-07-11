@@ -2,7 +2,7 @@
 # lair.des: All maps relating to the Lair system, including entries and end
 #           branch endings for Shoals, Snake Pit, Slime Pit and Swamp.
 ##############################################################################
- 
+
 ##############################################################################
 # Lair entries
 ##############################################################################
@@ -122,7 +122,7 @@ ENDMAP
 
 ##############################################################################
 # A boring Lair entry vault.
-# 
+#
 NAME: erik_lair_2
 TAGS: lair_entry
 MONS: generate_awake boring beetle / nothing / rat, generate_awake boring beetle
@@ -213,6 +213,157 @@ xx.........xx
 xxxx..@..xxxx
 ENDMAP
 
+##############################################################################
+# Lair-specific non-entry/ending vaults
+##############################################################################
+
+##########################################
+# a pointless little "vault" by Lemuel
+#
+# edited and varied by Eino. Placing into Lair only because of the floor colour.
+# would be nice to have in the main dungeon, if it once becomes possible to change
+# the floor colour (to green/brown)
+
+NAME: strawberry_fields_big
+ORIENT: float
+DEPTH: Lair
+SUBST: .= d .:150 1:8 2:4 W:2
+MONS: plant, butterfly
+ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+CHANCE: 2
+MAP
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+ENDMAP
+
+NAME: strawberry_fields_big_rounded
+ORIENT: float
+DEPTH: Lair
+SUBST: .= d .:140 1:8 2:4 W:2
+MONS: plant, butterfly
+ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+CHANCE: 2
+MAP
+       .......
+     ...........
+   ...............
+ ..................
+ ..................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+ ...................
+ ...................
+   ...............
+     ...........
+       .......
+ENDMAP
+
+NAME: strawberry_fields_round
+ORIENT: float
+DEPTH: Lair
+SUBST: .= d .:50 1:8 2:4 W:2
+MONS: plant, butterfly
+ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+CHANCE: 3
+PLACE: Lair:3
+MAP
+   ....
+ ........
+..........
+..........
+..........
+..........
+ ........
+   ....
+ENDMAP
+
+NAME: strawberry_fields_patches_spacepadded
+ORIENT: float
+DEPTH: Lair
+SUBST: .= d .:50 1:8 2:4 W:2
+MONS: plant, butterfly
+ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+CHANCE: 3
+MAP
+   ..
+ ......
+........
+........      ..
+ ......     ......
+   ..      ........
+           ........
+     ..     ......
+   ......     ..
+  ........
+  ........
+   ......
+     ..
+ENDMAP
+
+#############################################################################
+# Swampy vault, island version
+#
+# common version in float.des -evk
+# doesn't work yet?
+
+#NAME: onia_ninara_012_swampy_vault_shoal
+#TAGS: no_pool_fixup no_monster_gen
+#ORIENT: float
+#SHUFFLE: AB@
+#SUBST: A : x, B : x
+#SUBST: D = .:30 W
+#KFEAT: E = w:20 . / x / w:50 W / w:30 w / ~
+#KFEAT: F = w:150 w / w:70 W / ~ / . / x
+#FEAT: G = x / . / w / W
+#KFEAT: H = . / W
+#KMONS: D = Plant / w:200 nothing
+#KMONS: E = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:1 electrical eel / w:1000 nothing
+#KMONS: F = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
+#KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
+#KITEM: H = any good_item / any potion / w:20 nothing / gold
+#DEPTH: Shoal
+#MAP
+# wwwwwwwwwwwwwwwwwww.wwwwwwwwwwwwwwwww
+#wwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwww
+#wwwwwwxxxxxxxxxxxxxx@xxxxxxxxxxxxwwwwww
+#wwwwxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxwwww
+#wwwxxxxGHHFFGGGGFFFEEDEEGGFFFxxGGxxxwww
+#wwwxxFFFHHFFFFFGFFFFEEDEEFFFFFFFFGxxwww
+#wwwxGGFFFFDDEEFFFFFEEDEEFFFFFFFFFFGxwww
+#wwwxxGFFFFEEDDEEFFEEDEEFFFEEEFFFFGxxwww
+#wwwxGFFFFFFFEEDEEEDDEEEEEEEDDEEEFFGxwww
+#wwwxGGFFFFFFFEEDEDEEEEEEEDDEEDDDEEDBwww
+#wwwxxGFFFFFFFFEEDEDDEDDDDEEEEEEEDDxxwww
+#wwwxxxGFFFFFFEEDEEEEDEEEEEFFFFFFFFxxwww
+#wwwxxxxFFFFFEEDEEFFFFDDFFFFFFFFFGGGxwww
+#wwwxxxGFFFFEEDEEFFFFFFEDEFFFFFFFxxxxwww
+#wwwxGGFFFFFFDEEFFFFFFFFEDFFFFFFGGxxwwww
+#wwwxGFFFFFFEEDEEFFFFFFFFEDEFFFGxxxwwwww
+#wwwxxGxxxGFEEDEEFFFFGGGFFHHHGxxxxwwwwww
+#wwwwxxxxxxGFEEDEEGGxxxxxGFHGxxxxxwwwwww
+#wwwwwwxxxxxGFDEGGxxxxwxxxxxGxxxxxwwwwww
+#wwwwwwwwxxxxxAxxxxxxwwwxxxxxxxwwwwwwwww
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+# wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+#ENDMAP
 
 ##############################################################################
 # Branch ends: Shoal, Slime Pit, Snake Pit, Swamp
