@@ -328,4 +328,8 @@ void describe_stash(int x, int y);
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);
 
+#define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
+#define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
+#define STASH_LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
+
 #endif

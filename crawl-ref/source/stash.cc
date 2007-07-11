@@ -40,10 +40,6 @@
 #define ST_MAJOR_VER ((unsigned char) 4)
 #define ST_MINOR_VER ((unsigned char) 7)
 
-#define LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
-#define LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
-#define LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
-
 void stash_init_new_level()
 {
     // If there's an existing stash level for Pan, blow it away.
@@ -57,11 +53,11 @@ std::string userdef_annotate_item(const char *s, const item_def *item,
     if (exclusive)
         lua_set_exclusive_item(item);
     std::string ann;
-    clua.callfn(s, "u>s", item, &ann);
+    if (!clua.callfn(s, "u>s", item, &ann))
+        mprf(MSGCH_WARN, "Lua error: %s", clua.error.c_str());
     if (exclusive)
         lua_set_exclusive_item(NULL);
     return (ann);
-    
 #else
     return ("");
 #endif
@@ -72,11 +68,11 @@ std::string stash_annotate_item(const char *s,
                                 bool exclusive = false)
 {
     std::string text = userdef_annotate_item(s, item, exclusive);
-    if ( (item->base_type == OBJ_BOOKS &&
-            item_type_known(*item) &&
-            item->sub_type != BOOK_MANUAL &&
-            item->sub_type != BOOK_DESTRUCTION)
-         || count_staff_spells(*item, true) > 1 )
+    if ((item->base_type == OBJ_BOOKS
+         && item_type_known(*item)
+         && item->sub_type != BOOK_MANUAL
+         && item->sub_type != BOOK_DESTRUCTION)
+        || count_staff_spells(*item, true) > 1)
     {
         formatted_string fs;
         item_def dup = *item;
@@ -510,7 +506,7 @@ bool Stash::matches_search(const std::string &prefix,
         const item_def &item = items[i];
         std::string s = stash_item_name(item);
         std::string ann = stash_annotate_item(
-                    LUA_SEARCH_ANNOTATE, &item);
+                    STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + s))
         {
             if (!res.count++)
@@ -578,7 +574,7 @@ void Stash::write(std::ostream &os,
         strncpy(buf, s.c_str(), sizeof buf);
 
         std::string ann = userdef_annotate_item(
-                LUA_DUMP_ANNOTATE, &item);
+                STASH_LUA_DUMP_ANNOTATE, &item);
 
         if (!ann.empty())
         {
@@ -823,7 +819,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
     {
         std::string sname = shop_item_name(items[i]);
         std::string ann = stash_annotate_item(
-                    LUA_SEARCH_ANNOTATE, &items[i].item, true);
+                    STASH_LUA_SEARCH_ANNOTATE, &items[i].item, true);
         
         bool thismatch = false;
         if (search.matches(prefix + " " + ann + sname))

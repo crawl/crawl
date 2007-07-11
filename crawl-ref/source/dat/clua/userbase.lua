@@ -66,3 +66,8 @@ function c_interrupt_activity(aname, iname, cause, extra)
 
     return chk_interrupt_activity[aname](iname, cause, extra)
 end
+
+function opt_boolean(optname)
+  local optval = options[optname]
+  return optval == "true" or optval == "yes"
+end

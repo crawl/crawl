@@ -1412,6 +1412,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
     if (key != "name" && key != "crawl_dir" 
         && key != "race" && key != "class" && key != "ban_pickup"
+        && key != "autopickup_exceptions"
         && key != "stop_travel" && key != "sound" 
         && key != "travel_stop_message"
         && key != "drop_filter" && key != "lua_file"

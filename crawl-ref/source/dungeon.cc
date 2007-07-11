@@ -119,7 +119,7 @@ static void place_specific_stair(dungeon_feature_type stair,
                                  int dl = 0);
 static void place_branch_entrances(int dlevel, char level_type);
 static void place_extra_vaults();
-static void place_special_minivaults(int level_number, int level_type);
+static void place_minivaults(int level_number, int level_type);
 static void place_traps( int level_number );
 static void prepare_swamp();
 static void prepare_shoals( int level_number );
@@ -700,7 +700,7 @@ static void build_dungeon_level(int level_number, int level_type)
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
     if (!player_in_branch(BRANCH_SHOALS))
-        place_special_minivaults(level_number, level_type);
+        place_minivaults(level_number, level_type);
     place_branch_entrances( level_number, level_type );
     place_extra_vaults();
     dgn_verify_connectivity(nvaults);
@@ -1330,7 +1330,7 @@ static builder_rc_type builder_by_branch(int level_number)
     return BUILD_CONTINUE;
 }
 
-static void place_special_minivaults(int level_number, int level_type)
+static void place_minivaults(int level_number, int level_type)
 {
     // Dungeon-style branches only, thankyouverymuch.
     if (level_type != LEVEL_DUNGEON)

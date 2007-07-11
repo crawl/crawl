@@ -2615,9 +2615,16 @@ static void autoinscribe_item( item_def& item )
     }
 }
 
-static bool is_denied_autopickup(const item_def &item)
+static inline std::string autopickup_item_name(const item_def &item)
 {
-    const std::string iname = item.name(DESC_PLAIN);
+    return userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item, true)
+        + item.name(DESC_PLAIN);    
+}
+
+static bool is_denied_autopickup(const item_def &item, std::string &iname)
+{
+    if (iname.empty())
+        iname = autopickup_item_name(item);
     for (unsigned i = 0, size = Options.never_pickup.size(); i < size; ++i)
     {
         if (Options.never_pickup[i].matches(iname))
@@ -2626,9 +2633,10 @@ static bool is_denied_autopickup(const item_def &item)
     return false;
 }
 
-static bool is_forced_autopickup(const item_def &item)
+static bool is_forced_autopickup(const item_def &item, std::string &iname)
 {
-    const std::string iname = item.name(DESC_PLAIN);
+    if (iname.empty())
+        iname = autopickup_item_name(item);
     for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
     {
         if (Options.always_pickup[i].matches(iname))
@@ -2658,14 +2666,15 @@ bool item_needs_autopickup(const item_def &item)
     if ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
         return (true);
 
+    std::string itemname;
     return (((Options.autopickups & (1L << item.base_type))
-                 || is_forced_autopickup(item)
+             || is_forced_autopickup(item, itemname)
 #ifdef CLUA_BINDINGS
-                 || clua.callbooleanfn(false, "ch_autopickup", "u", &item)
+             || clua.callbooleanfn(false, "ch_autopickup", "u", &item)
 #endif
-                    )
-                && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
-                && !is_denied_autopickup(item));
+                )
+            && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
+            && !is_denied_autopickup(item, itemname));
 }
               
 bool can_autopickup()

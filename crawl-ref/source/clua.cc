@@ -2043,7 +2043,7 @@ static int option_set(lua_State *ls)
     return (0);
 }
 
-#define OPT_METATABLE "options.optaccess"
+#define OPT_METATABLE "clua_metatable_optaccess"
 void luaopen_options(lua_State *ls)
 {
     int top = lua_gettop(ls);
@@ -2067,8 +2067,7 @@ void luaopen_options(lua_State *ls)
 
     luaL_getmetatable(ls, OPT_METATABLE);
     lua_setmetatable(ls, -2);
-
-    clua.setglobal("options");
+    lua_setglobal(ls, "options");
 }
 
 /////////////////////////////////////////////////////////////////////
