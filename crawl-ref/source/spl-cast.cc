@@ -2955,7 +2955,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
 
             case 1:
-                mpr("You are caught a fiery explosion!");
+                mpr("You are caught in a fiery explosion!");
 
                 beam.type = SYM_BURST;
                 beam.damage = dice_def( 3, 14 );
