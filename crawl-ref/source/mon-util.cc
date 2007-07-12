@@ -50,6 +50,12 @@
 //jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
+struct mon_spellbook
+{
+    mon_spellbook_type type;
+    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
+};
+
 // really important extern -- screen redraws suck w/o it {dlb}
 FixedVector < unsigned short, 1000 > mcolour;
 
@@ -73,7 +79,7 @@ static monsterentry mondata[] = {
 
 #define MONDATASIZE ARRAYSIZE(mondata)
 
-static int mspell_list[][7] = {
+static mon_spellbook mspell_list[] = {
 #include "mon-spll.h"
 };
 
@@ -3337,18 +3343,14 @@ void monsters::load_spells(mon_spellbook_type book)
     }
     else 
     {
-        int i = 0;
-        // this needs to be rewritten a la the monsterseek rewrite {dlb}:
-        for (; i < NUM_MSTYPES; i++)
+        for (unsigned int i = 0; i < ARRAYSIZE(mspell_list); ++i)
         {
-            if (mspell_list[i][0] == book)
+            if (mspell_list[i].type == book)
+            {
+                for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+                    spells[j] = mspell_list[i].spells[j];
                 break;
-        }
-
-        if (i < NUM_MSTYPES)
-        {
-            for (int z = 0; z < NUM_MONSTER_SPELL_SLOTS; z++)
-                spells[z] = static_cast<spell_type>( mspell_list[i][z + 1] );
+            }
         }
     }
 }
