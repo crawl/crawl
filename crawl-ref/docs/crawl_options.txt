@@ -920,13 +920,22 @@ item_stack_summary_minimum = 5
 fire_items_start = a
         Sets the first inventory item to consider. Default is a, many use c.
 
-fire_order = launcher, dart, stone, dagger, spear, handaxe, club
+fire_order = launcher, dart / stone / dagger, spear, handaxe, club
         The list should be on one line of items, with commas between items.
+        Items that appear first get higher priority.
+
+        Items in any position may be slash-separated to indicate that these
+        are of equal priority. In the example, darts, stones and daggers are
+        at the same priority, so the first item in your inventory that is
+        one of these will be picked for firing.
+        
         'launcher' refers to firing the appropriate missile for the wielded 
         weapon (ie crossbow, bow, sling, blowgun). You'll almost certainly 
         want it first, as it'll be ignored when you're not wielding a ranged 
-        weapon. The default is 
-          fire_order = launcher, dart
+        weapon. The default is
+        
+          fire_order = launcher, javelin / dart / stone
+          
         To quickly experiment with a weapon-throwing character - e.g. to 
         make your Berserker actually use those three spears he carries around,
         try a line similar to:

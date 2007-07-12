@@ -255,35 +255,14 @@ static fire_type str_to_fire_types( const std::string &str )
         return (FIRE_DAGGER);
     else if (str == "spear")
         return (FIRE_SPEAR);
-    else if (str == "hand axe" || str == "handaxe")
+    else if (str == "hand axe" || str == "handaxe" || str == "axe")
         return (FIRE_HAND_AXE);
     else if (str == "club")
         return (FIRE_CLUB);
+    else if (str == "javelin")
+        return (FIRE_JAVELIN);
 
     return (FIRE_NONE);
-}
-
-static void str_to_fire_order( const std::string &str, 
-                               FixedVector< fire_type, NUM_FIRE_TYPES > &list )
-{
-    int i;
-    size_t pos = 0;
-    std::string item = "";
-
-    for (i = 0; i < NUM_FIRE_TYPES; i++)
-    {
-        // get next item from comma delimited list
-        const size_t end = str.find( ',', pos );
-        item = str.substr( pos, end - pos );
-        trim_string( item );
-
-        list[i] = str_to_fire_types( item );
-
-        if (end == std::string::npos)
-            break;
-        else
-            pos = end + 1;
-    }
 }
 
 static char str_to_race( const std::string &str )
@@ -712,13 +691,7 @@ void game_options::reset_options()
     fire_items_start       = 0;           // start at slot 'a'
 
     // Clear fire_order and set up the defaults.
-    for (int i = 0; i < NUM_FIRE_TYPES; i++)
-        fire_order[i] = FIRE_NONE;
-    
-    fire_order[0] = FIRE_LAUNCHER;      // fire first from bow...
-    fire_order[1] = FIRE_JAVELIN;
-    fire_order[2] = FIRE_DART;          // then only consider darts
-    fire_order[3] = FIRE_STONE;         // and then chuck stones
+    set_fire_order("launcher, javelin / dart / stone");
 
     item_stack_summary_minimum = 5;
 
@@ -836,6 +809,25 @@ static unsigned read_symbol(std::string s)
 
     char *tail;
     return (strtoul(s.c_str(), &tail, base));
+}
+
+void game_options::set_fire_order(const std::string &s)
+{
+    fire_order.clear();
+    std::vector<std::string> slots = split_string(",", s);
+    for (int i = 0, size = slots.size(); i < size; ++i)
+        add_fire_order_slot(slots[i]);
+}
+
+void game_options::add_fire_order_slot(const std::string &s)
+{
+    unsigned flags = 0;
+    std::vector<std::string> alts = split_string("/", s);
+    for (int i = 0, size = alts.size(); i < size; ++i)
+        flags |= str_to_fire_types(alts[i]);
+
+    if (flags)
+        fire_order.push_back(flags);
 }
 
 void game_options::add_feature_override(const std::string &text)
@@ -1766,7 +1758,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fire_order")
     {
-        str_to_fire_order( field, fire_order );
+        set_fire_order(field);
     }
     else if (key == "random_pick")
     {

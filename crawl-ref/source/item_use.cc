@@ -1116,59 +1116,66 @@ void throw_anything(void)
     throw_it(beam, throw_slot);
 }                               // end throw_anything()
 
-// Return index of first valid balanced throwing weapon or ENDOFPACK
-static int try_finding_throwing_weapon( int sub_type )
+static bool fire_item_matches(const item_def &item, unsigned fire_type)
 {
-    int i;
-
-    for (i = Options.fire_items_start; i < ENDOFPACK; i++)
+    if (!is_valid_item(item))
+        return (false);
+    
+    if (item.base_type == OBJ_MISSILES)
     {
-        // skip invalid objects, wielded object
-        if (!is_valid_item( you.inv[i] ) || you.equip[EQ_WEAPON] == i)
-            continue;
+        if ((fire_type & FIRE_DART) && item.sub_type == MI_DART)
+            return (true);
+        if ((fire_type & FIRE_STONE)
+            && (item.sub_type == MI_STONE || item.sub_type == MI_SLING_BULLET))
+            return (true);
+        if ((fire_type & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
+            return (true);
+        if ((fire_type & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
+            return (true);
 
-        // consider melee weapons that can also be thrown
-        if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == sub_type)
+        if (fire_type & FIRE_LAUNCHER)
         {
-            break;
+            const item_def *weapon = you.weapon();
+            if (weapon && item.launched_by(*weapon))
+                return (true);
         }
     }
-
-    return (i);
+    else if (item.base_type == OBJ_WEAPONS
+             && is_throwable(item, you.body_size()))
+    {
+        if ((fire_type & FIRE_DAGGER) && item.sub_type == WPN_DAGGER)
+            return (true);
+        if ((fire_type & FIRE_SPEAR) && item.sub_type == WPN_SPEAR)
+            return (true);
+        if ((fire_type & FIRE_HAND_AXE) && item.sub_type == WPN_HAND_AXE)
+            return (true);
+        if ((fire_type & FIRE_CLUB) && item.sub_type == WPN_CLUB)
+            return (true);
+    }
+    return (false);
 }
 
-// Return index of first missile of sub_type or ENDOFPACK
-static int try_finding_missile( int sub_type, const item_def *launcher = NULL )
+static int find_fire_item_matching(unsigned fire_type_flags, int start = 0)
 {
-    int i;
-
-    for (i = Options.fire_items_start; i < ENDOFPACK; i++)
+    for (int i = start; i < ENDOFPACK; ++i)
     {
-        // skip invalid objects
-        if (!is_valid_item( you.inv[i] ))
+        if (i < Options.fire_items_start)
             continue;
-
-        const item_def &item = you.inv[i];
-        // In theory, we should do two passes, first trying
-        // to find a non-warning-inscribed item, then looping
-        // through the warning-inscribed ones. Seems unlikely
-        // to matter much.
-
-        if (launcher && item.launched_by(*launcher))
-            break;
-        
-        // consider melee weapons that can also be thrown
-        if (item.base_type == OBJ_MISSILES
-            && (item.sub_type == sub_type
-                || (sub_type == MI_STONE && item.sub_type == MI_SLING_BULLET))
+        if (fire_item_matches(you.inv[i], fire_type_flags)
             && check_warning_inscriptions(you.inv[i], OPER_FIRE))
-        {
-            break;
-        }
+            return (i);
     }
 
-    return (i);
+    for (int i = 0; i < start; ++i)
+    {
+        if (i < Options.fire_items_start)
+            continue;
+        if (fire_item_matches(you.inv[i], fire_type_flags)
+            && check_warning_inscriptions(you.inv[i], OPER_FIRE))
+            return (i);
+    }
+        
+    return (ENDOFPACK);
 }
 
 // Note: This is a simple implementation, not an efficient one. -- bwr
@@ -1177,58 +1184,11 @@ static int try_finding_missile( int sub_type, const item_def *launcher = NULL )
 int get_fire_item_index( void )
 {
     int item = ENDOFPACK;
-    const int weapon = you.equip[ EQ_WEAPON ];
 
-    for (int i = 0; i < NUM_FIRE_TYPES; i++)
+    for (unsigned i = 0; i < Options.fire_order.size(); i++)
     {
-        // look for next type on list... if found item is set != ENDOFPACK
-        switch (Options.fire_order[i])
-        {
-        case FIRE_LAUNCHER:
-            // check if we have ammo for a wielded launcher:
-            if (weapon != -1 
-                && you.inv[ weapon ].base_type == OBJ_WEAPONS
-                && is_range_weapon( you.inv[ weapon ] ))
-            {
-                item = try_finding_missile( MI_NONE, &you.inv[weapon] );
-            }
-            break;
-
-        case FIRE_DART:
-            item = try_finding_missile( MI_DART );
-            break;
-
-        case FIRE_STONE:
-            item = try_finding_missile( MI_STONE );
-            break;
-
-        case FIRE_JAVELIN:
-            item = try_finding_missile( MI_JAVELIN );
-            break;
-
-        case FIRE_DAGGER:
-            item = try_finding_throwing_weapon( WPN_DAGGER );
-            break;
-
-        case FIRE_SPEAR:
-            item = try_finding_throwing_weapon( WPN_SPEAR );
-            break;
-
-        case FIRE_HAND_AXE:
-            item = try_finding_throwing_weapon( WPN_HAND_AXE );
-            break;
-
-        case FIRE_CLUB:
-            item = try_finding_throwing_weapon( WPN_CLUB );
-            break;
-
-        case FIRE_NONE:
-        default:
-            break;
-        }
-
-        // if successful break
-        if (item != ENDOFPACK)
+        const unsigned fire_flags = Options.fire_order[i];
+        if ((item = find_fire_item_matching(fire_flags)) != ENDOFPACK)
             break;
     }
 

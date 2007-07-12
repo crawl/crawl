@@ -1307,17 +1307,16 @@ enum equipment_type
 
 enum fire_type
 {
-    FIRE_NONE,
-    FIRE_LAUNCHER,
-    FIRE_DART,
-    FIRE_STONE,
-    FIRE_DAGGER,
-    FIRE_JAVELIN,
-    FIRE_SPEAR,
-    FIRE_HAND_AXE,
-    FIRE_CLUB,
-    FIRE_ROCK,
-    NUM_FIRE_TYPES
+    FIRE_NONE     = 0x0000,
+    FIRE_LAUNCHER = 0x0001,
+    FIRE_DART     = 0x0002,
+    FIRE_STONE    = 0x0004,
+    FIRE_DAGGER   = 0x0008,
+    FIRE_JAVELIN  = 0x0010,
+    FIRE_SPEAR    = 0x0020,
+    FIRE_HAND_AXE = 0x0040,
+    FIRE_CLUB     = 0x0080,
+    FIRE_ROCK     = 0x0100
 };
 
 enum flush_reason_type

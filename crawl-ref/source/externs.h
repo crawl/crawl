@@ -1633,8 +1633,8 @@ public:
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
 
-    int         fire_items_start; // index of first item for fire command
-    FixedVector<fire_type, NUM_FIRE_TYPES> fire_order; // order for 'f' command
+    int         fire_items_start;     // index of first item for fire command
+    std::vector<unsigned> fire_order; // missile search order for 'f' command
 
     bool        auto_list;      // automatically jump to appropriate item lists
 
@@ -1844,6 +1844,8 @@ private:
                                 const std::string &interrupt_names,
                                 bool append_interrupts,
                                 bool remove_interrupts);
+    void set_fire_order(const std::string &full);
+    void add_fire_order_slot(const std::string &s);
     void set_menu_sort(std::string field);
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
