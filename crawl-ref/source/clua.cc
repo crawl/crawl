@@ -1841,6 +1841,10 @@ static int crawl_split(lua_State *ls)
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
 LUARET1(crawl_random2, number, random2( luaL_checkint(ls, 1) ))
+LUARET1(crawl_one_chance_in, boolean, one_chance_in( luaL_checkint(ls, 1) ))
+LUARET1(crawl_random2avg, number,
+        random2avg( luaL_checkint(ls, 1), luaL_checkint(ls, 2) ))
+LUARET1(crawl_coinflip, boolean, coinflip())
 
 static int crawl_err_trace(lua_State *ls)
 {
@@ -1880,6 +1884,9 @@ static const struct luaL_reg crawl_lib[] =
     { "mpr",            crawl_mpr },
     { "mesclr",         crawl_mesclr },
     { "random2",        crawl_random2 },
+    { "one_chance_in",  crawl_one_chance_in },
+    { "random2avg"   ,  crawl_random2avg },
+    { "coinflip",       crawl_coinflip },
     { "redraw_screen",  crawl_redraw_screen },
     { "input_line",     crawl_input_line },
     { "c_input_line",   crawl_c_input_line},

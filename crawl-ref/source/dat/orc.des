@@ -95,7 +95,7 @@ TAGS: orc_entry
 ORIENT: float
 #
 : if you.absdepth() >= 10 then
-MONS: weight:20 orc / orc warrior / weight:2 orc knight
+MONS: weight:20 orc / orc warrior / weight:1 orc knight
 : else
 MONS: weight:30 orc / orc warrior
 : end
@@ -161,7 +161,11 @@ MONS:    orc w:40 / orc warrior
 MONS:    orc w:80 / orc warrior
 : end
 MONS:    orc priest
+: if you.absdepth() >= 10 then
 MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
+: else
+MONS:    orc w:32 / w:7 orc warrior
+: end
 SUBST:   x : cxv
 SHUFFLE: () / XY
 SUBST:   X=., Y=. 
@@ -207,7 +211,13 @@ ENDMAP
 NAME: erik_orc_2
 TAGS: orc_entry no_pool_fixup
 MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
-MONS: weight:100 orc knight / orc warrior
+: if you.absdepth() >= 10 and crawl.one_chance_in(10) then
+MONS: orc knight
+SUBST: G = .
+: else
+MONS: orc warrior
+SUBST: G = 4
+: end
 ORIENT: float
 FLAGS: no_rotate
 SUBST: c = c:1000 x
@@ -218,7 +228,7 @@ MAP
 .ww2ccccccccccccccccccccccww.
 .ww.c.......3.3.3......w2cww.
 .wwxx........3.3.......cccww.
-.122........3.I.3......4Ocww.
+.122........3.I.3.....G4Ocww.
 .wwxx........3.3.......cccww.
 .ww.c.......3.3.3......w2cww.
 .ww2ccccccccccccccccccccccww.
@@ -356,9 +366,10 @@ ENDMAP
 NAME: zombieorc1_lemuel
 TAGS: orc_entry
 ORIENT: float
+DEPTH: 11
 MONS: orc zombie/orc skeleton w:2/goblin zombie w:2/hobgoblin zombie w:2/goblin skeleton w:1/hobgoblin skeleton w:1
 MONS: ogre zombie/troll zombie w:3/hill giant zombie w:1
-MONS: hungry ghost/phantom/wraith, orc sorcerer/orc priest/nothing
+MONS: hungry ghost/phantom/w:1 wraith, w:1 orc sorcerer/orc priest/nothing
 SUBST:  ? = x . $:1
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
