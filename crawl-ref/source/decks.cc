@@ -586,6 +586,12 @@ static void damnation_card(int power, deck_rarity_type rarity)
 
 static void warpwright_card(int power, deck_rarity_type rarity)
 {
+    if ( you.level_type == LEVEL_ABYSS )
+    {
+        mpr("The power of the Abyss blocks your magic.");
+        return;
+    }
+
     int count = 0;
     int fx = -1, fy = -1;
     for ( int dx = -1; dx <= 1; ++dx )
@@ -624,7 +630,7 @@ static void warpwright_card(int power, deck_rarity_type rarity)
 
 static void minefield_card(int power, deck_rarity_type rarity)
 {
-    const int power_level = get_power_level(power, rarity);   
+    const int power_level = get_power_level(power, rarity);
     const int radius = power_level * 2 + 2;
     for ( int dx = -radius; dx <= radius; ++dx )
     {
@@ -642,7 +648,10 @@ static void minefield_card(int power, deck_rarity_type rarity)
             if ( grd[rx][ry] == DNGN_FLOOR && trap_at_xy(rx,ry) == -1 &&
                  one_chance_in(4 - power_level) )
             {
-                place_specific_trap(rx, ry, TRAP_RANDOM);
+                if ( you.level_type == LEVEL_ABYSS )
+                    grd[rx][ry] = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
+                else
+                    place_specific_trap(rx, ry, TRAP_RANDOM);
             }
         }
     }
