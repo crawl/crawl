@@ -1502,13 +1502,14 @@ int player_AC(void)
             continue;
         }
 
-        int racial_bonus = 0;  // additional levels of armour skill
+        // additional *half*-levels of armour skill.
+        int racial_bonus = 0;
         const unsigned long armour_race = get_equip_race( you.inv[ item ] );
         const int ac_value = property( you.inv[ item ], PARM_AC );
 
         // Dwarven armour is universally good -- bwr
         if (armour_race == ISFLAG_DWARVEN)
-            racial_bonus += 2;
+            racial_bonus += 4;
 
         if (racial_type && armour_race == racial_type)
         {
@@ -1518,29 +1519,29 @@ int player_AC(void)
             // gets with dwarven armour. -- bwr
 
             if (racial_type == ISFLAG_ELVEN)
-                racial_bonus++;
-            else
                 racial_bonus += 2;
+            else
+                racial_bonus += 4;
 
             // an additional bonus for Beogh worshippers
             if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH])
             {
                 if (you.piety >= 185)
-                    racial_bonus += racial_bonus * 3;
+                    racial_bonus += racial_bonus * 9 / 4;
                 else if (you.piety >= 160)
-                    racial_bonus += racial_bonus * 5 / 2;
-                else if (you.piety >= 120)
                     racial_bonus += racial_bonus * 2;
+                else if (you.piety >= 120)
+                    racial_bonus += racial_bonus * 7 / 4;
                 else if (you.piety >= 80)
-                    racial_bonus += racial_bonus * 3 / 2;
+                    racial_bonus += racial_bonus * 5 / 4;
                 else if (you.piety >= 40)
-                    racial_bonus += racial_bonus;
+                    racial_bonus += racial_bonus * 3 / 4;
                 else
-                    racial_bonus += racial_bonus / 2;
+                    racial_bonus += racial_bonus / 4;
             }
         }
 
-        AC += ac_value * (15 + you.skills[SK_ARMOUR] + racial_bonus) / 15;
+        AC += ac_value * (30 + 2 * you.skills[SK_ARMOUR] + racial_bonus) / 30;
 
         /* The deformed don't fit into body armour very well
            (this includes nagas and centaurs) */

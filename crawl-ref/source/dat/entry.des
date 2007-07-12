@@ -1305,7 +1305,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME: david_entry_017_b
-TAGS: entry no_monster_gen
+TAGS: entry no_monster_gen no_rotate
 ORIENT: float
 CHANCE: 8
 SHUFFLE: cv
