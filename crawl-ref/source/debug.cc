@@ -461,6 +461,31 @@ void wizard_interlevel_travel()
     wizard_go_to_level(pos);
 }
 
+void debug_list_monsters()
+{
+    std::string mons = "Monsters: ";
+    int nfound = 0;
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        const monsters *m = &menv[i];
+        if (!m->alive())
+            continue;
+
+        const std::string mname = m->name(DESC_PLAIN, true);
+        std::string news = (nfound++? ", " : "") + mname;
+        if (news.length() + mons.length() >= (unsigned) get_number_of_cols() - 1)
+        {
+            mpr(mons.c_str());
+            mons.clear();
+            news = mname;
+        }
+        mons += news;
+    }
+    if (!mons.empty())
+        mpr(mons.c_str());
+    mprf("%d monsters", nfound);
+}
+
 #endif
 
 #ifdef WIZARD

@@ -1425,15 +1425,16 @@ void gain_piety(int pgn)
                     snprintf(info, INFO_SIZE, "You can now %s.", pmsg);
                     god_speaks(you.religion, info);
                 }
-            learned_something_new(TUT_NEW_ABILITY);
-        }
-            if (you.religion == GOD_BEOGH)
-            {
-                // every piety level change also affects AC from orcish gear
-                you.redraw_armour_class = 1;
+                learned_something_new(TUT_NEW_ABILITY);
             }
         }
     }
+
+    if (you.religion == GOD_BEOGH)
+    {
+        // every piety level change also affects AC from orcish gear
+        you.redraw_armour_class = 1;
+    }    
 
     if ( you.piety > 160 && old_piety <= 160 &&
          (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN ||

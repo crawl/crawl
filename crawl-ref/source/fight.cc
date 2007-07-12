@@ -999,9 +999,12 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
             && you.species == SP_HILL_ORC)
         {
-            if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH])
+            if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH]
+                && (you.piety > 80 || coinflip()))
+            {
                 damage++;
-              
+            }
+            
             if (coinflip())
                 damage++;
         }

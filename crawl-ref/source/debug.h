@@ -149,6 +149,7 @@ void debug_fight_statistics( bool use_init_defaults, bool defence = false );
 void debug_make_trap( void );
 void debug_make_shop( void );
 void debug_set_stats( void );
+void debug_list_monsters();
 
 void debug_card();
 

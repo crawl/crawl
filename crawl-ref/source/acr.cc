@@ -559,9 +559,12 @@ static void handle_wizard_command( void )
         blink();            // wizards can always blink
         break;
 
-    case '\"':
     case '~':
         wizard_interlevel_travel();
+        break;
+
+    case '"':
+        debug_list_monsters();
         break;
 
     case 'd':

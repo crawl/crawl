@@ -135,10 +135,20 @@ static bool need_super_ood(int lev_mons)
             && one_chance_in(5000));
 }
 
+/*
 static bool need_moderate_ood(int lev_mons)
 {
-    return (env.turns_on_level > 700 - lev_mons * 117
-            && one_chance_in(50));
+    return (env.turns_on_level > 700 - lev_mons * 117? one_chance_in(40) :
+            one_chance_in(50));
+}
+*/
+
+static int fuzz_mons_level(int level)
+{
+    int fuzz = random2avg(11, 5);
+    if (fuzz > 5)
+        level += fuzz - 5;
+    return (level);
 }
 
 bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
@@ -177,13 +187,16 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         if (player_in_branch( BRANCH_MAIN_DUNGEON )
             && lev_mons < 28)
         {
+            lev_mons = fuzz_mons_level(lev_mons);
+
             // potentially nasty surprise, but very rare
             if (need_super_ood(lev_mons))
                 lev_mons += random2(12);
 
             // slightly out of depth monsters are more common:
-            if (need_moderate_ood(lev_mons))
-                lev_mons += random2(5);
+            // [ds] Replaced with a fuzz above for a more varied mix.
+            //if (need_moderate_ood(lev_mons))
+            //    lev_mons += random2(5);
 
             if (lev_mons > 27)
                 lev_mons = 27;
