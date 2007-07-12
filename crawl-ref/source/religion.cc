@@ -477,6 +477,9 @@ static void do_god_gift()
                         MISC_DECK_OF_WONDERS
                     };
                     int weights[5];
+                    // FIXME do something with OBJ_FOOD,
+                    // OBJ_WANDS, OBJ_JEWELLERY, OBJ_BOOKS
+                    // (and maybe OBJ_ORBS...)
                     weights[0] = you.sacrifice_value[OBJ_SCROLLS] +
                         you.sacrifice_value[OBJ_ARMOUR] + 1;
                     weights[1] = you.sacrifice_value[OBJ_WEAPONS] +

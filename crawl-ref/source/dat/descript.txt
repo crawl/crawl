@@ -1854,7 +1854,7 @@ Sleep
 
 This spell tries to lower its target's metabolic rate, inducing hypothermic hibernation. It may have side effects on cold-blooded creatures. 
 %%%%
-Mass Sleep
+Metabolic Englaciation
 
 This spell tries to lower the metabolic rate of every creature within the caster's view enough to induce hypothermic hibernation. It may have side effects on cold-blooded creatures. 
 %%%%
