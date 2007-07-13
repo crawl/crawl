@@ -717,7 +717,7 @@ static void handle_wizard_command( void )
         break;
 
     case '{':
-        magic_mapping(1000, 100);
+        magic_mapping(1000, 100, true);
         break;
 
     case '@':

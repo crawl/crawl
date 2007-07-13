@@ -955,10 +955,11 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_MAPPING:    // randarts
-        mpr("You sense your surroundings.");
-
-        magic_mapping(  3 + roll_dice( 2, you.skills[SK_EVOCATIONS] ),
-                       40 + roll_dice( 2, you.skills[SK_EVOCATIONS] ) );
+        if ( magic_mapping(  3 + roll_dice( 2, you.skills[SK_EVOCATIONS]),
+                             40 + roll_dice( 2, you.skills[SK_EVOCATIONS])))
+            mpr("You sense your surroundings.");
+        else
+            mpr("You feel momentarily disoriented.");
 
         exercise( SK_EVOCATIONS, 1 ); 
         break;

@@ -697,18 +697,18 @@ static bool ball_of_seeing(void)
     {
         confuse_player( 10 + random2(10), false );
     }
-    else if (use < 15
-             || (you.level_type == LEVEL_LABYRINTH &&
-                 you.species != SP_MINOTAUR)
-             || you.level_type == LEVEL_ABYSS || coinflip())
+    else if (use < 15 || coinflip())
     {
         mpr("You see nothing.");
     }
-    else
+    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS])))
     {
         mpr("You see a map of your surroundings!");
-        magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS] ) );
         ret = true;
+    }
+    else
+    {
+        mpr("You see nothing.");
     }
 
     return (ret);

@@ -3399,17 +3399,12 @@ void read_scroll(void)
         break;
 
     case SCR_MAGIC_MAPPING:
-        if ( (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)
-             || you.level_type == LEVEL_ABYSS)
-        {
-            mpr("You feel momentarily disoriented.");
-            id_the_scroll = false;
-        }
-        else
-        {
+        id_the_scroll = magic_mapping(50, 90 + random2(11));
+
+        if ( id_the_scroll )
             mpr("You feel aware of your surroundings.");
-            magic_mapping(50, 90 + random2(11));
-        }
+        else
+            mpr("You feel momentarily disoriented.");
         break;
 
     case SCR_TORMENT:

@@ -1187,7 +1187,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
         break;
 
     case CARD_MAP:
-        magic_mapping( random2(power/10) + 15, random2(power) );
+        if (!magic_mapping( random2(power/10) + 15, random2(power) ))
+            mpr("The map is blank.");
         break;
 
     case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;

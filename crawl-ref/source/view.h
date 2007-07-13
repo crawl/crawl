@@ -61,11 +61,7 @@ void losight(FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>& sh,
              int x_p, int y_p);
 
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - acr - it_use3 - item_use - spell
- * *********************************************************************** */
-void magic_mapping(int map_radius, int proportion);
+bool magic_mapping(int map_radius, int proportion, bool force = false);
 
 
 // last updated 12may2000 {dlb}

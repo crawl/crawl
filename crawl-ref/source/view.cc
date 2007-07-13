@@ -2976,8 +2976,16 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 }                               // end show_map()
 
 
-void magic_mapping(int map_radius, int proportion)
+// Returns true if succeeded
+bool magic_mapping(int map_radius, int proportion, bool force)
 {
+    if (!force &&
+        ((you.level_type == LEVEL_ABYSS) ||
+         (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)))
+    {
+        return false;
+    }
+
     int i, j, k, l, empty_count;
 
     if (map_radius > 50 && map_radius != 1000)
@@ -3060,6 +3068,7 @@ void magic_mapping(int map_radius, int proportion)
             }
         }
     }
+    return true;
 }                               // end magic_mapping()
 
 // realize that this is simply a repackaged version of

@@ -1242,16 +1242,17 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_MAGIC_MAPPING:
-        if ( (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)
-             || you.level_type == LEVEL_ABYSS)
-            mpr("You feel momentarily disoriented.");
-        else if (you.level_type == LEVEL_PANDEMONIUM)
+        if (you.level_type == LEVEL_PANDEMONIUM)
+        {
             mpr("Your Earth magic cannot map Pandemonium.");
+        }
         else
         {
-            mpr( "You feel aware of your surroundings." );
             powc = stepdown_value( powc, 10, 10, 40, 45 );
-            magic_mapping( 5 + powc, 50 + random2avg( powc * 2, 2 ) );
+            if ( magic_mapping( 5 + powc, 50 + random2avg( powc * 2, 2 ) ) )
+                mpr( "You feel aware of your surroundings." );
+            else
+                mpr("You feel momentarily disoriented.");
         }
         break;
 
