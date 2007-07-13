@@ -1063,7 +1063,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }                       // end of moving followers
 
     // Load monsters in transit.
-    place_transiting_monsters();
+    if (load_mode == LOAD_ENTER_LEVEL)
+        place_transiting_monsters();
 
     redraw_all();
 
