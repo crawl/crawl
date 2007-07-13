@@ -3016,7 +3016,6 @@ static item_make_species_type give_weapon(monsters *mon, int level,
     item_def &item = mitm[bp];
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
 
-    // this flags things to "goto give_armour" below ... {dlb}
     item.base_type = OBJ_UNASSIGNED;
 
     if (mon->type == MONS_DANCING_WEAPON

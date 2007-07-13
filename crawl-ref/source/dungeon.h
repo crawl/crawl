@@ -24,7 +24,7 @@
 const int MAKE_GOOD_ITEM = 351;
 
 // Should be the larger of GXM/GYM
-#define MAP_SIDE  GXM
+#define MAP_SIDE ( (GXM) > (GYM) ? (GXM) : (GYM) )
 
 // This may sometimes be used as map_type[x][y] (for minivaults) and as
 // map_type[y][x] for large-scale vaults. Keep an eye out for the associated

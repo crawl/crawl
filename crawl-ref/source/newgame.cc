@@ -782,8 +782,7 @@ game_start:
     if (!give_items_skills())
     {
         // now choose again, name stays same
-        char *name = new char();
-        strcpy(name, you.your_name);
+        const std::string old_name = you.your_name;
         
         Options.prev_randpick = false;
         Options.prev_race   = ng_race;
@@ -797,7 +796,8 @@ game_start:
 
         Options.reset_startup_options();
         
-        strncpy(you.your_name, name, kNameLen);
+        // Restore old name        
+        strncpy(you.your_name, old_name.c_str(), kNameLen);
         you.your_name[kNameLen - 1] = 0;
 
         // choose new character

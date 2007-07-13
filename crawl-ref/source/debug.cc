@@ -1409,13 +1409,14 @@ void debug_get_religion(void)
 
     for (int i = 1; i < NUM_GODS; i++)
     {
+        const god_type gi = static_cast<god_type>(i);
         char name[80];
-        strncpy( name, god_name(static_cast<god_type>(i)), sizeof( name ) );
+        strncpy(name, god_name(gi), sizeof(name));
 
         char *ptr = strstr( strlwr(name), strlwr(specs) );
         if (ptr != NULL)
         {
-            god = static_cast<god_type>(i);
+            god = gi;
             break;
         }
     }

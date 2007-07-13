@@ -16,7 +16,7 @@
 
 #include "enum.h"
 
-char list_spells( void );
+int list_spells();
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false );

@@ -252,7 +252,7 @@ bool butchery(void)
         // offer the possibility of butchering
         snprintf(info, INFO_SIZE, "Butcher %s?",
                  mitm[objl].name(DESC_NOCAP_A).c_str());
-        int answer = yesnoquit( info, true, 'n', false );
+        const int answer = yesnoquit( info, true, 'n', false );
         if ( answer == -1 )
         {
             canceled_butcher = true;

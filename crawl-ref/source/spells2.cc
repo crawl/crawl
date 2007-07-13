@@ -273,14 +273,12 @@ int corpse_rot(int power)
                         place_cloud(CLOUD_MIASMA, adx, ady,
                                     4 + random2avg(16, 3), KC_YOU);
 
-                        goto out_of_raise;
+                        // Don't look for more corpses here
+                        break;
                     }
                     hrg = mitm[objl].link;
                     objl = hrg;
                 }
-
-              out_of_raise:
-                objl = 1;
             }
         }
     }

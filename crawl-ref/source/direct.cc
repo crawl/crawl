@@ -1627,7 +1627,7 @@ static void describe_cell(int mx, int my)
 
     if (targ_item != NON_ITEM)
     {
-        // If a mimic is on this square, we pretend its the first item -- bwr
+        // If a mimic is on this square, we pretend it's the first item -- bwr
         if (mimic_item)
             mpr("There is something else lying underneath.",MSGCH_FLOOR_ITEMS);
         else

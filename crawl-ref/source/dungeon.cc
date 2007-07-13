@@ -990,7 +990,7 @@ static void prepare_shoals(int level_number)
     replace_in_grid(margin, margin, GXM-margin, GYM-margin,
                     DNGN_SHALLOW_WATER, DNGN_WATER_STUCK);
 
-    for ( int i = 0; i < 6; ++i )
+    for ( int iteration = 0; iteration < 6; ++iteration )
     {
         for ( int x = margin; x < GXM - margin; ++x )
         {
@@ -2676,7 +2676,6 @@ static void special_room(int level_number, spec_room &sr)
 // fills a special room with bees
 static void beehive(spec_room &sr)
 {
-    int i;
     int x,y;
 
     for (x = sr.x1; x <= sr.x2; x++)
@@ -2686,9 +2685,9 @@ static void beehive(spec_room &sr)
             if (coinflip())
                 continue;
 
-            i = get_item_slot();
+            const int i = get_item_slot();
             if (i == NON_ITEM)
-                goto finished_food;
+                continue;
 
             mitm[i].quantity = 1;
             mitm[i].base_type = OBJ_FOOD;
@@ -2702,10 +2701,8 @@ static void beehive(spec_room &sr)
     }
 
 
-  finished_food:
-
-    int queenx = sr.x1 + random2(sr.x2 - sr.x1);
-    int queeny = sr.y1 + random2(sr.y2 - sr.y1);
+    const int queenx = sr.x1 + random2(sr.x2 - sr.x1);
+    const int queeny = sr.y1 + random2(sr.y2 - sr.y1);
 
     for (x = sr.x1; x <= sr.x2; x++)
     {

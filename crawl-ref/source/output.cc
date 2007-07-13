@@ -1013,12 +1013,11 @@ void print_overview_screen()
     }
 
     text = "<yellow>";
-    snprintf(info, INFO_SIZE, "%s%s%s", you.your_name, title, race_class);
-    text += info;
-    int k = get_number_of_cols() - linelength -1;
-    text += std::string(k, ' ');
-    snprintf(info, INFO_SIZE, "%s", time_turns);
-    text += info;
+    text += you.your_name;
+    text += title;
+    text += race_class;
+    text += std::string(get_number_of_cols() - linelength - 1, ' ');
+    text += time_turns;
     text += "</yellow>\n";
     
     cmd_help.add_text(text);

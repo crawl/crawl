@@ -415,9 +415,9 @@ void dancing_weapon(int pow, bool force_hostile)
 {
     int numsc = std::min(2 + (random2(pow) / 5), 6);
 
-    int i;
     int summs = 0;
     beh_type behavi = BEH_FRIENDLY;
+    bool failed = false;
 
     const int wpn = you.equip[EQ_WEAPON];
 
@@ -427,27 +427,36 @@ void dancing_weapon(int pow, bool force_hostile)
         || is_range_weapon( you.inv[wpn] )
         || is_fixed_artefact( you.inv[wpn] ))
     {
-        goto failed_spell;
+        failed = true;
     }
 
     // See if we can get an mitm for the dancing weapon:
-    i = get_item_slot();
+    int i = get_item_slot();
     if (i == NON_ITEM)
-        goto failed_spell;
+        failed = true;
 
-    // cursed weapons become hostile
-    if (item_cursed( you.inv[wpn] ) || force_hostile)
-        behavi = BEH_HOSTILE; 
-
-    summs = create_monster( MONS_DANCING_WEAPON, numsc, behavi, 
-                            you.x_pos, you.y_pos, you.pet_target, 1 );
-
-    if (summs < 0)
+    if ( !failed )
     {
-        // must delete the item before failing!
-        mitm[i].base_type = OBJ_UNASSIGNED;
-        mitm[i].quantity = 0;
-        goto failed_spell;
+
+        // cursed weapons become hostile
+        if (item_cursed( you.inv[wpn] ) || force_hostile)
+            behavi = BEH_HOSTILE; 
+        
+        summs = create_monster( MONS_DANCING_WEAPON, numsc, behavi, 
+                                you.x_pos, you.y_pos, you.pet_target, 1 );
+        if ( summs == -1 )
+            failed = true;            
+    }
+
+    if ( failed )
+    {
+        destroy_item(i);
+        if ( wpn != -1 )
+            mpr("Your weapon vibrates crazily for a second.");
+        else
+            msg::stream << "Your " << your_hand(true) << " twitch."
+                        << std::endl;
+        return;
     }
 
     // We are successful:
@@ -470,14 +479,6 @@ void dancing_weapon(int pow, bool force_hostile)
 
     menv[summs].inv[MSLOT_WEAPON] = i;
     menv[summs].colour = mitm[i].colour;
-
-    return;
-
-failed_spell:
-    if ( wpn != -1 )
-        mpr("Your weapon vibrates crazily for a second.");
-    else
-        msg::stream <<"Your " << your_hand(true) << " twitch." << std::endl;
 }                               // end dancing_weapon()
 
 static bool monster_on_level(int monster)

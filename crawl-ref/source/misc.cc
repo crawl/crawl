@@ -73,7 +73,7 @@
 bool scramble(void);
 static bool trap_item(object_class_type base_type, char sub_type,
                       char beam_x, char beam_y);
-static void dart_trap(bool trap_known, int trapped, struct bolt &pbolt, bool poison);
+static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison);
 
 // void place_chunks(int mcls, unsigned char rot_status, unsigned char chx,
 //                   unsigned char chy, unsigned char ch_col)
@@ -1196,15 +1196,12 @@ void new_level(void)
 #endif
 }
 
-static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt, 
-                       bool poison )
+static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
 {
     int damage_taken = 0;
     int trap_hit, your_dodge;
 
-    std::string msg;
-
-    if (random2(10) < 2 || (trap_known && !one_chance_in(4)))
+    if (one_chance_in(5) || (trap_known && !one_chance_in(4)))
     {
         mprf( "You avoid triggering a%s trap.", pbolt.name.c_str() );
         return;
@@ -1213,9 +1210,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     if (you.equip[EQ_SHIELD] != -1 && one_chance_in(3))
         exercise( SK_SHIELDS, 1 );
 
-    msg = "A";
-    msg += pbolt.name;
-    msg += " shoots out and ";
+    std::string msg = "A" + pbolt.name + " shoots out and ";
 
     if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks ) 
                                                 < player_shield_class())
@@ -1223,42 +1218,42 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
         you.shield_blocks++;
         msg += "hits your shield.";
         mpr(msg.c_str());
-        goto out_of_trap;
-    }
-
-    // note that this uses full ( not random2limit(foo,40) ) player_evasion.
-    trap_hit = (20 + (you.your_level * 2)) * random2(200) / 100;
-
-    your_dodge = player_evasion() + random2(you.dex) / 3
-                            - 2 + (you.duration[DUR_REPEL_MISSILES] * 10);
-
-    if (trap_hit >= your_dodge && you.duration[DUR_DEFLECT_MISSILES] == 0)
-    {
-        msg += "hits you!";
-        mpr(msg.c_str());
-
-        if (poison && random2(100) < 50 - (3 * player_AC()) / 2
-                && !player_res_poison())
-        {
-            poison_player( 1 + random2(3) );
-        }
-
-        damage_taken = roll_dice( pbolt.damage );
-        damage_taken -= random2( player_AC() + 1 );
-
-        if (damage_taken > 0)
-            ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.name.c_str() );
     }
     else
     {
-        msg += "misses you.";
-        mpr(msg.c_str());
+        // note that this uses full ( not random2limit(foo,40) )
+        // player_evasion.
+        trap_hit = (20 + (you.your_level * 2)) * random2(200) / 100;
+
+        your_dodge = player_evasion() + random2(you.dex) / 3
+            - 2 + (you.duration[DUR_REPEL_MISSILES] * 10);
+        
+        if (trap_hit >= your_dodge && you.duration[DUR_DEFLECT_MISSILES] == 0)
+        {
+            msg += "hits you!";
+            mpr(msg.c_str());
+            
+            if (poison && random2(100) < 50 - (3 * player_AC()) / 2
+                && !player_res_poison())
+            {
+                poison_player( 1 + random2(3) );
+            }
+            
+            damage_taken = roll_dice( pbolt.damage );
+            damage_taken -= random2( player_AC() + 1 );
+            
+            if (damage_taken > 0)
+                ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.name.c_str() );
+        }
+        else
+        {
+            msg += "misses you.";
+            mpr(msg.c_str());
+        }
+
+        if (player_light_armour(true) && coinflip())
+            exercise( SK_DODGING, 1 );
     }
-
-    if (player_light_armour(true) && coinflip())
-        exercise( SK_DODGING, 1 );
-
-  out_of_trap:
 
     pbolt.target_x = you.x_pos;
     pbolt.target_y = you.y_pos;

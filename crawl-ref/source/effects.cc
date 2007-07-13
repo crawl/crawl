@@ -512,13 +512,13 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         {
             // Meat is better than bread (except for herbivores), and
             // by choosing it as the default we don't have to worry
-            // about special cases for carnivorous races (ie kobold)
+            // about special cases for carnivorous races (e.g. kobolds)
             type_wanted = FOOD_MEAT_RATION;
 
             if (you.mutation[MUT_HERBIVOROUS])
                 type_wanted = FOOD_BREAD_RATION; 
 
-            // If we have some regular rations, then we're probably be more
+            // If we have some regular rations, then we're probably more
             // interested in faster foods (especially royal jelly)... 
             // otherwise the regular rations should be a good enough offer.
             if (already_has[FOOD_MEAT_RATION] 

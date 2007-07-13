@@ -186,7 +186,7 @@ static std::string spell_extra_description(spell_type spell)
     return desc.str();
 }
 
-char list_spells()
+int list_spells()
 {
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
         MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);

@@ -167,124 +167,71 @@ static void adjust_item(void)
     swap_inv_slots(from_slot, to_slot, true);
 }                               // end adjust_item()
 
-static void adjust_spells_cleanup(bool needs_redraw)
-{
-    if (needs_redraw)
-        redraw_screen();
-}
-
 static void adjust_spells(void)
 {
-    unsigned char index_1, index_2;
-    unsigned char nthing = 0;
-
-    bool needs_redraw = false;
-
     if (!you.spell_no)
     {
         mpr("You don't know any spells.");
         return;
     }
 
-  query:
+    // Select starting slot
     mpr("Adjust which spell?", MSGCH_PROMPT);
 
-    unsigned char keyin = get_ch();
-
-    if (keyin == '?' || keyin == '*')
+    int keyin = 0;
+    if ( Options.auto_list )
+        keyin = list_spells();
+    else
     {
-        if (keyin == '*' || keyin == '?')
-        {
-            nthing = list_spells();
-            needs_redraw = true;
-        }
-
-        if (isalpha( nthing ) || nthing == ESCAPE)
-            keyin = nthing;
-        else
-        {
-            mesclr( true );
-            goto query;
-        }
+        keyin = get_ch();
+        if (keyin == '?' || keyin == '*')
+            keyin = list_spells();
     }
-
-    if (keyin == ESCAPE)
+    
+    if ( !isalpha(keyin) )
     {
-        adjust_spells_cleanup(needs_redraw);
         canned_msg( MSG_OK );
         return;
     }
 
-    int input_1 = keyin;
-
-    if (!isalpha( input_1 ))
-    {
-        adjust_spells_cleanup(needs_redraw);
-        mpr("You don't know that spell.");
-        return;
-    }
-
-    index_1 = letter_to_index( input_1 );
-    spell_type spell = get_spell_by_letter( input_1 ); 
+    const int input_1 = keyin;
+    const int index_1 = letter_to_index( input_1 );
+    spell_type spell = get_spell_by_letter( input_1 );
 
     if (spell == SPELL_NO_SPELL)
     {
-        adjust_spells_cleanup(needs_redraw);
         mpr("You don't know that spell.");
         return;
     }
 
     // print out targeted spell:
-    mprf( "%c - %s", input_1, spell_title( spell ) );
+    mprf( "%c - %s", keyin, spell_title( spell ) );
 
-    mpr( "Adjust to which letter?", MSGCH_PROMPT );
-
-    keyin = get_ch();
-
-    if (keyin == '?' || keyin == '*')
+    // Select target slot
+    keyin = 0;
+    while ( !isalpha(keyin) )
     {
-        if (keyin == '*' || keyin == '?')
+        mpr( "Adjust to which letter?", MSGCH_PROMPT );
+        keyin = get_ch();
+        if (keyin == ESCAPE)
         {
-            nthing = list_spells();
-            needs_redraw = true;
+            canned_msg( MSG_OK );
+            return;
         }
-
-        if (isalpha( nthing ) || nthing == ESCAPE)
-            keyin = nthing;
-        else
-        {
-            mesclr( true );
-            goto query;
-        }
+        if (keyin == '?' || keyin == '*')
+            keyin = list_spells();
     }
 
-    if (keyin == ESCAPE)
-    {
-        adjust_spells_cleanup(needs_redraw);
-        canned_msg( MSG_OK );
-        return;
-    }
-
-    int input_2 = keyin;
-
-    if (!isalpha( input_2 ))
-    {
-        adjust_spells_cleanup(needs_redraw);
-        mpr("What?");
-        return;
-    }
-
-    adjust_spells_cleanup(needs_redraw);
-
-    index_2 = letter_to_index( input_2 );
+    const int input_2 = keyin;
+    const int index_2 = letter_to_index( keyin );
 
     // swap references in the letter table:
-    int tmp = you.spell_letter_table[index_2];
+    const int tmp = you.spell_letter_table[index_2];
     you.spell_letter_table[index_2] = you.spell_letter_table[index_1];
     you.spell_letter_table[index_1] = tmp;
 
-    // print out spell in new slot (now at input_2)
-    mprf("%c - %s", input_2, spell_title( get_spell_by_letter(input_2) ) );
+    // print out spell in new slot
+    mprf("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
 
     // print out other spell if one was involved (now at input_1)
     spell = get_spell_by_letter( input_1 );
