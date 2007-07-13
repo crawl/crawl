@@ -875,6 +875,8 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallString(th, you.inv[i].inscription.c_str(), 80);
     }
 
+    marshallByte(th, you.quiver);
+
     // item descrip for each type & subtype
     // how many types?
     marshallByte(th, 5);
@@ -1178,6 +1180,8 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
         you.inv[i].link = i;
         you.inv[i].slot = index_to_letter(i);
     }
+
+    you.quiver = unmarshallByte(th);
 
     // item descrip for each type & subtype
     // how many types?

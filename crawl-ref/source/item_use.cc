@@ -36,6 +36,7 @@
 
 #include "beam.h"
 #include "cio.h"
+#include "command.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
@@ -1155,45 +1156,186 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     return (false);
 }
 
-static int find_fire_item_matching(unsigned fire_type_flags, int start = 0)
+static bool fire_item_okay(const item_def &item, unsigned flags)
 {
-    for (int i = start; i < ENDOFPACK; ++i)
+    return (fire_item_matches(item, flags)
+            && check_warning_inscriptions(item, OPER_FIRE));
+}
+
+static int find_fire_item_matching(unsigned fire_type, int start,
+                                   bool forward, bool check_quiver)
+{
+    if (check_quiver)
     {
-        if (i < Options.fire_items_start)
-            continue;
-        if (fire_item_matches(you.inv[i], fire_type_flags)
-            && check_warning_inscriptions(you.inv[i], OPER_FIRE))
-            return (i);
+        const int q = you.quiver;
+        if (q >= 0 && q < ENDOFPACK && fire_item_okay(you.inv[q], fire_type))
+            return (q);
     }
 
-    for (int i = 0; i < start; ++i)
+    const int dir = forward? 1 : -1;
+    int end = forward? ENDOFPACK : -1;
+
+    for (int i = start; i != end; )
     {
-        if (i < Options.fire_items_start)
-            continue;
-        if (fire_item_matches(you.inv[i], fire_type_flags)
-            && check_warning_inscriptions(you.inv[i], OPER_FIRE))
+        if (i >= Options.fire_items_start
+            && fire_item_okay(you.inv[i], fire_type))
+        {
             return (i);
+        }
+
+        i += dir;
+        if (i == -1)
+        {
+            i   += ENDOFPACK;
+            end = start;
+        }
+        else if (i == ENDOFPACK)
+        {
+            i   = 0;
+            end = start;
+        }
     }
-        
     return (ENDOFPACK);
 }
 
 // Note: This is a simple implementation, not an efficient one. -- bwr
 //
 // Returns item index or ENDOFPACK if no item found for auto-firing
-int get_fire_item_index( void )
+int get_fire_item_index(int start_from, bool forward, bool check_quiver)
 {
     int item = ENDOFPACK;
 
     for (unsigned i = 0; i < Options.fire_order.size(); i++)
     {
         const unsigned fire_flags = Options.fire_order[i];
-        if ((item = find_fire_item_matching(fire_flags)) != ENDOFPACK)
+        if ((item =
+             find_fire_item_matching(fire_flags,
+                                     start_from,
+                                     forward,
+                                     check_quiver)) != ENDOFPACK)
             break;
     }
 
     // either item was found or is still ENDOFPACK for no item
     return (item);
+}
+
+static void announce_ammo(int item)
+{
+    mesclr();
+    mprf("Firing%s: %s",
+         get_fire_item_index((item + 1) % ENDOFPACK, true, false) != item?
+         " (^N/^P - change)" : "",         
+         you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+}
+
+class fire_target_behaviour : public targeting_behaviour
+{
+public:
+    fire_target_behaviour(int it) : item(it), need_prompt(false) { }
+    command_type get_command(int key = -1);
+    bool should_redraw();
+    void announce_new_ammo(bool redraw = true);
+
+public:
+    int item;
+    bool need_prompt;
+
+private:
+    void find_next_ammo();
+    void find_prev_ammo();
+};
+
+bool fire_target_behaviour::should_redraw()
+{
+    if (need_prompt)
+    {
+        need_prompt = false;
+        return (true);
+    }
+    return (false);
+}
+
+command_type fire_target_behaviour::get_command(int key)
+{
+    if (key == -1)
+        key = get_key();
+
+    switch (key)
+    {
+    case CONTROL('N'):
+        find_next_ammo();
+        break;
+    case CONTROL('P'):
+        find_prev_ammo();
+        break;
+    case '?':
+        show_targeting_help();
+        redraw_screen();
+        announce_new_ammo(item);
+        need_prompt = true;
+        return (CMD_NO_CMD);
+    }
+    
+    return targeting_behaviour::get_command(key);
+}
+
+void fire_target_behaviour::announce_new_ammo(bool redraw)
+{
+    announce_ammo(item);
+    need_prompt = redraw;
+}
+
+void fire_target_behaviour::find_next_ammo()
+{
+    const int start = item == ENDOFPACK - 1? 0 : item + 1;
+    const int next = get_fire_item_index(start, true, false);
+
+    // We should never get back ENDOFPACK.
+    if (next != item)
+    {
+        item = next;
+        announce_new_ammo();
+    }
+}
+
+void fire_target_behaviour::find_prev_ammo()
+{
+    const int start = item == 0? ENDOFPACK - 1 : item - 1;
+    const int next = get_fire_item_index(start, false, false);
+
+    // We should never get back ENDOFPACK.
+    if (next != item)
+    {
+        item = next;
+        announce_new_ammo();
+    }
+}
+
+static bool choose_fire_target(dist &target, int &item)
+{
+    announce_ammo(item);
+    message_current_target();
+
+    fire_target_behaviour beh(item);
+    direction( target, DIR_NONE, TARG_ENEMY, false, NULL, &beh );
+    
+    if (!target.isValid)
+    {
+        if (target.isCancel)
+            canned_msg(MSG_OK);
+        return (false);
+    }
+
+    // Okay, valid target; if the user chose different ammo, quiver it.
+    if (beh.item != item)
+    {
+        item = beh.item;
+        if (you.inv[beh.item].quantity > 1)
+            you.quiver = beh.item;
+    }
+
+    return (true);
 }
 
 void shoot_thing(void)
@@ -1207,7 +1349,7 @@ void shoot_thing(void)
         return;
     }
 
-    const int item = get_fire_item_index();
+    int item = get_fire_item_index();
 
     if (item == ENDOFPACK)
     {
@@ -1216,9 +1358,9 @@ void shoot_thing(void)
         return;
     }
 
-    mprf("Firing: %s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
-
-    throw_it( beam, item );
+    dist target;
+    if (choose_fire_target(target, item))
+        throw_it( beam, item, false, 0, &target );
 }                               // end shoot_thing()
 
 // Returns delay multiplier numerator (denominator should be 100) for the
@@ -1359,9 +1501,10 @@ static int dex_adjust_thrown_tohit(int hit)
 //
 // Return value is only relevant if dummy_target is non-NULL, and returns
 // true if dummy_target is hit.
-bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
+bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
+              dist *target)
 {
-    struct dist thr;
+    dist thr;
     char shoot_skill = 0;
 
     char lnchClass, lnchType;   // launcher class and type
@@ -1377,15 +1520,20 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus)
 
     if (!teleport)
     {
-        message_current_target();
-        direction( thr, DIR_NONE, TARG_ENEMY );
-
-        if (!thr.isValid)
+        if (target)
+            thr = *target;
+        else
         {
-            if (thr.isCancel)
-                canned_msg(MSG_OK);
+            message_current_target();
+            direction( thr, DIR_NONE, TARG_ENEMY );
+
+            if (!thr.isValid)
+            {
+                if (thr.isCancel)
+                    canned_msg(MSG_OK);
             
-            return (false);
+                return (false);
+            }
         }
     }
 

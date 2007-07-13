@@ -98,71 +98,7 @@ static int targeting_cmd_to_compass( command_type command );
 static void describe_oos_square(int x, int y);
 static void extend_move_to_edge(dist &moves);
 
-static command_type read_direction_key(bool just_looking = false)
-{
-    flush_input_buffer( FLUSH_BEFORE_COMMAND );
-    
-    const int key =
-        unmangle_direction_keys(
-            getchm(KC_TARGETING), KC_TARGETING, false, false);
-
-    switch ( key )
-    {
-    case ESCAPE: case 'x': return CMD_TARGET_CANCEL;
-        
-#ifdef WIZARD
-    case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
-#endif
-    case 'v': return CMD_TARGET_DESCRIBE;
-    case '?': return CMD_TARGET_HELP;
-    case ' ': return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
-#ifdef WIZARD
-    case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
-#endif
-    case ':': return CMD_TARGET_HIDE_BEAM;
-    case '\r': return CMD_TARGET_SELECT;
-    case '.': return CMD_TARGET_SELECT;
-    case '5': return CMD_TARGET_SELECT;
-    case '!': return CMD_TARGET_SELECT_ENDPOINT;
-
-    case '\\': case '\t': return CMD_TARGET_FIND_PORTAL;
-    case '^': return CMD_TARGET_FIND_TRAP;
-    case '_': return CMD_TARGET_FIND_ALTAR;
-    case '<': return CMD_TARGET_FIND_UPSTAIR;
-    case '>': return CMD_TARGET_FIND_DOWNSTAIR;
-
-    case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
-    case 'p': return CMD_TARGET_PREV_TARGET;
-    case 'f': case 't': return CMD_TARGET_MAYBE_PREV_TARGET;
-        
-    case '-': return CMD_TARGET_CYCLE_BACK;
-    case '+': case '=':  return CMD_TARGET_CYCLE_FORWARD;
-    case ';': case '/':  return CMD_TARGET_OBJ_CYCLE_BACK;
-    case '*': case '\'': return CMD_TARGET_OBJ_CYCLE_FORWARD;
-
-    case 'b': return CMD_TARGET_DOWN_LEFT;
-    case 'h': return CMD_TARGET_LEFT;
-    case 'j': return CMD_TARGET_DOWN;
-    case 'k': return CMD_TARGET_UP;
-    case 'l': return CMD_TARGET_RIGHT;
-    case 'n': return CMD_TARGET_DOWN_RIGHT;
-    case 'u': return CMD_TARGET_UP_RIGHT;
-    case 'y': return CMD_TARGET_UP_LEFT;
-
-    case 'B': return CMD_TARGET_DIR_DOWN_LEFT;
-    case 'H': return CMD_TARGET_DIR_LEFT;
-    case 'J': return CMD_TARGET_DIR_DOWN;
-    case 'K': return CMD_TARGET_DIR_UP;
-    case 'L': return CMD_TARGET_DIR_RIGHT;
-    case 'N': return CMD_TARGET_DIR_DOWN_RIGHT;
-    case 'U': return CMD_TARGET_DIR_UP_RIGHT;
-    case 'Y': return CMD_TARGET_DIR_UP_LEFT;
-
-    default: return CMD_NO_CMD;
-    }
-}
-
-void direction_choose_compass( struct dist& moves )
+void direction_choose_compass( dist& moves, targeting_behaviour *beh)
 {
     moves.isValid       = true;
     moves.isTarget      = false;
@@ -170,8 +106,10 @@ void direction_choose_compass( struct dist& moves )
     moves.isCancel      = false;
     moves.dx = moves.dy = 0;
 
+    beh->compass        = true;
+
     do {
-        const command_type key_command = read_direction_key();
+        const command_type key_command = beh->get_command();
 
         if (key_command == CMD_TARGET_SELECT)
         {
@@ -310,14 +248,21 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 //
 //---------------------------------------------------------------
 void direction(dist& moves, targeting_type restricts,
-               targ_mode_type mode, bool just_looking, const char *prompt)
+               targ_mode_type mode, bool just_looking,
+               const char *prompt, targeting_behaviour *beh)
 {
+    static targeting_behaviour stock_behaviour;
+    if (!beh)
+        beh = &stock_behaviour;
+
+    beh->just_looking = just_looking;
+    
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
 
     if ( restricts == DIR_DIR )
     {
-        direction_choose_compass( moves );
+        direction_choose_compass( moves, beh );
         return;
     }
 
@@ -360,7 +305,7 @@ void direction(dist& moves, targeting_type restricts,
     {
         // Prompts might get scrolled off if you have too few lines available.
         // We'll live with that.
-        if ( !just_looking && show_prompt )
+        if ( !just_looking && (show_prompt || beh->should_redraw()) )
         {
             mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
                  target_mode_help_text(restricts));
@@ -388,7 +333,7 @@ void direction(dist& moves, targeting_type restricts,
                 key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
         }
         else
-            key_command = read_direction_key(just_looking);
+            key_command = beh->get_command();
 
         if (target_unshifted && moves.tx == you.x_pos && moves.ty == you.y_pos
             && restricts != DIR_TARGET)
@@ -1711,4 +1656,89 @@ static void describe_cell(int mx, int my)
 #else
     mpr(feature_desc.c_str());
 #endif
+}
+
+///////////////////////////////////////////////////////////////////////////
+// targeting_behaviour
+
+targeting_behaviour::targeting_behaviour(bool look_around)
+    : just_looking(look_around), compass(false)
+{
+}
+
+targeting_behaviour::~targeting_behaviour()
+{
+}
+
+int targeting_behaviour::get_key()
+{
+    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+    return unmangle_direction_keys(
+        getchm(KC_TARGETING), KC_TARGETING, false, false);
+}
+
+command_type targeting_behaviour::get_command(int key)
+{
+    if (key == -1)
+        key = get_key();
+
+    switch ( key )
+    {
+    case ESCAPE: case 'x': return CMD_TARGET_CANCEL;
+        
+#ifdef WIZARD
+    case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
+#endif
+    case 'v': return CMD_TARGET_DESCRIBE;
+    case '?': return CMD_TARGET_HELP;
+    case ' ': return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
+#ifdef WIZARD
+    case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
+#endif
+    case ':': return CMD_TARGET_HIDE_BEAM;
+    case '\r': return CMD_TARGET_SELECT;
+    case '.': return CMD_TARGET_SELECT;
+    case '5': return CMD_TARGET_SELECT;
+    case '!': return CMD_TARGET_SELECT_ENDPOINT;
+
+    case '\\': case '\t': return CMD_TARGET_FIND_PORTAL;
+    case '^': return CMD_TARGET_FIND_TRAP;
+    case '_': return CMD_TARGET_FIND_ALTAR;
+    case '<': return CMD_TARGET_FIND_UPSTAIR;
+    case '>': return CMD_TARGET_FIND_DOWNSTAIR;
+
+    case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
+    case 'p': return CMD_TARGET_PREV_TARGET;
+    case 'f': case 't': return CMD_TARGET_MAYBE_PREV_TARGET;
+        
+    case '-': return CMD_TARGET_CYCLE_BACK;
+    case '+': case '=':  return CMD_TARGET_CYCLE_FORWARD;
+    case ';': case '/':  return CMD_TARGET_OBJ_CYCLE_BACK;
+    case '*': case '\'': return CMD_TARGET_OBJ_CYCLE_FORWARD;
+
+    case 'b': return CMD_TARGET_DOWN_LEFT;
+    case 'h': return CMD_TARGET_LEFT;
+    case 'j': return CMD_TARGET_DOWN;
+    case 'k': return CMD_TARGET_UP;
+    case 'l': return CMD_TARGET_RIGHT;
+    case 'n': return CMD_TARGET_DOWN_RIGHT;
+    case 'u': return CMD_TARGET_UP_RIGHT;
+    case 'y': return CMD_TARGET_UP_LEFT;
+
+    case 'B': return CMD_TARGET_DIR_DOWN_LEFT;
+    case 'H': return CMD_TARGET_DIR_LEFT;
+    case 'J': return CMD_TARGET_DIR_DOWN;
+    case 'K': return CMD_TARGET_DIR_UP;
+    case 'L': return CMD_TARGET_DIR_RIGHT;
+    case 'N': return CMD_TARGET_DIR_DOWN_RIGHT;
+    case 'U': return CMD_TARGET_DIR_UP_RIGHT;
+    case 'Y': return CMD_TARGET_DIR_UP_LEFT;
+
+    default: return CMD_NO_CMD;
+    }    
+}
+
+bool targeting_behaviour::should_redraw()
+{
+    return (false);
 }

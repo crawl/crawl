@@ -23,9 +23,26 @@
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
 
+// An object that modifies the behaviour of the direction prompt.
+class targeting_behaviour
+{
+public:
+    targeting_behaviour(bool just_looking = false);
+    virtual ~targeting_behaviour();
+    
+    // Returns a keystroke for the prompt.
+    virtual int get_key();
+    virtual command_type get_command(int key = -1);
+    virtual bool should_redraw();
+
+public:
+    bool just_looking;
+    bool compass;
+};
+
 void direction( dist &moves, targeting_type restricts = DIR_NONE,
                 targ_mode_type mode = TARG_ANY, bool just_looking = false,
-                const char *prompt = NULL );
+                const char *prompt = NULL, targeting_behaviour *mod = NULL );
 
 bool in_los_bounds(int x, int y);
 bool in_viewport_bounds(int x, int y);

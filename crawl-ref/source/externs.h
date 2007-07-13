@@ -695,6 +695,7 @@ public:
   char shield_blocks;         // number of shield blocks since last action
 
   FixedVector< item_def, ENDOFPACK > inv;
+  int quiver;                 // default item for (f)ire.
 
   int burden;
   burden_state_type burden_state;

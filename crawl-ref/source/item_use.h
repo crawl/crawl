@@ -76,7 +76,8 @@ bool remove_ring(int slot = -1, bool announce = false);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-int get_fire_item_index(void);
+int get_fire_item_index(int start_from = 0, bool forward = true,
+                        bool check_quiver = true);
 void shoot_thing(void);
 
 
@@ -138,7 +139,8 @@ bool puton_item(int slot, bool prompt_finger = true);
 
 bool enchant_weapon( int which_stat, bool quiet = false );
 
-bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0);
+bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0,
+              dist *target = NULL);
 
 void inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher, 

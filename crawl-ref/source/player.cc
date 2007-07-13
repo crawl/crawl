@@ -4617,6 +4617,8 @@ void player::init()
         inv[i].link = i;
     }
 
+    quiver = -1;
+
     duration.init(0);
 
     exp_available = 25;

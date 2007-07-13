@@ -538,7 +538,7 @@ static const char *level_map_help =
     "<w>Ctrl-W</w> : set Waypoint\n"
     "<w>Ctrl-C</w> : Clear level and main maps\n";
 
-static const char *targeting_help =
+static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
@@ -562,6 +562,12 @@ static const char *targeting_help =
     "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir</w> : shoot straight-line beam\n";
+
+static const char *targeting_help_2 =
+    "<h>Firing or throwing a missile:\n"
+    "<w>Ctrl-P</w> : cycle to previous missile.\n"
+    "<w>Ctrl-N</w> : cycle to next missile.\n";
+    
 
 static const char *interlevel_travel_branch_help =
     "<h>Interlevel Travel (choose a branch):\n"
@@ -796,7 +802,13 @@ void show_levelmap_help()
 
 void show_targeting_help()
 {
-    show_specific_help( targeting_help );
+    column_composer cols(2, 41);
+    // Page size is number of lines - one line for --more-- prompt.
+    cols.set_pagesize(get_number_of_lines() - 1);
+
+    cols.add_formatted(0, targeting_help_1, true, true);
+    cols.add_formatted(1, targeting_help_2, true, true);
+    show_keyhelp_menu(cols.formatted_lines(), false, true);
 }
 
 void show_interlevel_travel_branch_help()
