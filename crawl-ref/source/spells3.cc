@@ -492,6 +492,20 @@ static bool monster_on_level(int monster)
     return false;
 }                               // end monster_on_level()
 
+// XXX: Relies on RUNE_xxx == BRANCH_xxx. See rune_type in enum.h.
+static bool player_has_rune(branch_type branch)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+        if (is_valid_item( you.inv[i] )
+            && you.inv[i].base_type == OBJ_MISCELLANY
+            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT
+            && you.inv[i].plus == branch)
+        {
+            return (true);
+        }
+    return (false);
+}
+
 //
 // This function returns true if the player can use controlled
 // teleport here.
@@ -507,23 +521,17 @@ bool allow_control_teleport( bool silent )
         switch (you.where_are_you)
         {
         case BRANCH_TOMB:
-            // The tomb is a laid out maze, it'd be a shame if the player
-            // just teleports through any of it... so we only allow 
-            // teleport once they have the rune.
-            ret = false;
-            for (int i = 0; i < ENDOFPACK; i++)
-            {
-                if (is_valid_item( you.inv[i] )
-                    && you.inv[i].base_type == OBJ_MISCELLANY
-                    && you.inv[i].sub_type == MISC_RUNE_OF_ZOT
-                    && you.inv[i].plus == BRANCH_TOMB)
-                {
-                    ret = true;
-                    break;
-                }
-            }
+            ret = player_has_rune(you.where_are_you);
             break;
 
+        case BRANCH_COCYTUS:
+        case BRANCH_DIS:
+        case BRANCH_TARTARUS:
+        case BRANCH_GEHENNA:
+            if (player_branch_depth() == branches[you.where_are_you].depth)
+                ret = player_has_rune(you.where_are_you);
+            break;
+            
         case BRANCH_SLIME_PITS:
             // Cannot teleport into the slime pit vaults until
             // royal jelly is gone.
