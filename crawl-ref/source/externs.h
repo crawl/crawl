@@ -192,7 +192,7 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_negative_energy() const = 0;
 
-    virtual int levitates() const = 0;
+    virtual flight_type flies() const = 0;
     
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
@@ -810,6 +810,9 @@ public:
     bool can_see_invisible() const;
     bool is_icy() const;
 
+    bool light_flight() const;
+    bool travelling_light() const;
+
     kill_category kill_alignment() const;
 
     bool has_spell(int spell) const;
@@ -818,6 +821,7 @@ public:
     std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq);
+    const item_def *slot_item(equipment_type eq) const;
 
     // actor
     int id() const;
@@ -880,7 +884,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    int levitates() const;
+    flight_type flies() const;
 
     bool paralysed() const;
     bool confused() const;
@@ -1124,7 +1128,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    int levitates() const;
+    flight_type flies() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool is_icy() const;

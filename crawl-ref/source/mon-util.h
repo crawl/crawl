@@ -86,8 +86,8 @@ std::string mons_type_name(int type, description_level_type desc );
 /* ***********************************************************************
  * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
  * *********************************************************************** */
-int mons_class_flies( int mc );
-int mons_flies( const monsters *mon );
+flight_type mons_class_flies( int mc );
+flight_type mons_flies( const monsters *mon );
 
 
 // last updated XXmay2000 {dlb}

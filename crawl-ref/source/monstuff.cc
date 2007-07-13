@@ -4186,8 +4186,8 @@ static void do_move_monster(monsters *monster, int xi, int yi)
 void mons_check_pool(monsters *mons, killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
-    const int lev = mons->levitates();
-    if (lev == 2 || (lev && !mons->paralysed()))
+    const flight_type lev = mons->flies();
+    if (lev == FL_LEVITATE || (lev == FL_FLY && !mons->paralysed()))
         return;
     
     int grid = grd(mons->pos());

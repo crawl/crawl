@@ -974,10 +974,7 @@ void cast_fly(int power)
 {
     int dur_change = 25 + random2(power) + random2(power);
 
-    if (!player_is_levitating())
-        mpr("You fly up into the air.");
-    else
-        mpr("You feel more buoyant.");
+    const bool was_levitating = player_is_levitating();
 
     if (you.duration[DUR_LEVITATION] + dur_change > 100)
         you.duration[DUR_LEVITATION] = 100;
@@ -990,6 +987,16 @@ void cast_fly(int power)
         you.duration[DUR_CONTROLLED_FLIGHT] += dur_change;
 
     burden_change();
+
+    if (!was_levitating)
+    {
+        if (you.light_flight())
+            mpr("You swoop lightly up into the air.");
+        else
+            mpr("You fly up into the air.");
+    }
+    else
+        mpr("You feel more buoyant.");
 }
 
 void cast_insulation(int power)

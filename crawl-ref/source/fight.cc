@@ -545,6 +545,7 @@ bool melee_attack::player_aux_unarmed()
     damage_brand  = SPWPN_NORMAL;
     int uattack = UNAT_NO_ATTACK;
     bool simple_miss_message = false;
+    std::string miss_verb;
 
     if (can_do_unarmed)
     {
@@ -575,9 +576,11 @@ bool melee_attack::player_aux_unarmed()
         switch (scount)
         {
         case 0:
+        {
             if (uattack != UNAT_KICK)        //jmf: hooves mutation
             {
-                if ((you.species != SP_CENTAUR && !you.mutation[MUT_HOOVES])
+                if ((you.species != SP_CENTAUR && you.species != SP_KENKU
+                     && !you.mutation[MUT_HOOVES])
                     || coinflip())
                 {
                     continue;
@@ -592,10 +595,23 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
-            unarmed_attack = "kick";
+            // Kenku have large taloned feet that do good damage.
+            const bool clawed_kick =
+                you.species == SP_KENKU && !you.mutation[MUT_HOOVES];
+
+            if (clawed_kick)
+            {
+                unarmed_attack = "claw";
+                miss_verb      = "kick";
+            }
+            else
+                unarmed_attack = "kick";
+            
             aux_damage = ((you.mutation[MUT_HOOVES]
-                           || you.species == SP_CENTAUR) ? 10 : 5);
+                           || you.species == SP_CENTAUR
+                           || clawed_kick) ? 10 : 5);
             break;
+        }
 
         case 1:
             if (uattack != UNAT_HEADBUTT)
@@ -744,7 +760,8 @@ bool melee_attack::player_aux_unarmed()
                      defender->name(DESC_NOCAP_THE).c_str());
             else
                 mprf("Your %s misses %s.",
-                     unarmed_attack.c_str(),
+                     miss_verb.empty()? unarmed_attack.c_str()
+                     : miss_verb.c_str(),
                      defender->name(DESC_NOCAP_THE).c_str());
         }
     }
@@ -1583,7 +1600,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        if (defender->levitates())
+        if (defender->flies())
             break;
         else if (defender->res_elec() > 0)
             break;
@@ -2881,7 +2898,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 defender->res_elec(),
                 atk->hit_dice + random2( atk->hit_dice / 2 ));
 
-        if (defender->levitates())
+        if (defender->flies())
             special_damage = special_damage * 2 / 3;
 
         if (needs_message && special_damage)

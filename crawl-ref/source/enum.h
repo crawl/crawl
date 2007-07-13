@@ -1728,6 +1728,13 @@ enum launch_retval
     LRET_THROWN
 };
 
+enum flight_type
+{
+    FL_NONE = 0,
+    FL_FLY,
+    FL_LEVITATE
+};
+
 enum level_area_type                   // you.level_type
 {
     LEVEL_DUNGEON,                     //    0

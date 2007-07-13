@@ -469,7 +469,8 @@ void print_stats(void)
 
             if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
             {
-                dur_colour( MAGENTA, (you.duration[DUR_LEVITATION] <= 10 && !perm) );
+                dur_colour( you.light_flight()? BLUE : MAGENTA,
+                            (you.duration[DUR_LEVITATION] <= 10 && !perm) );
                 cprintf( "Fly " );
             }
             else

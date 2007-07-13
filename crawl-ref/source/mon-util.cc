@@ -961,29 +961,31 @@ int mons_skeleton(int mc)
     return (1);
 }                               // end mons_skeleton()
 
-int mons_class_flies(int mc)
+flight_type mons_class_flies(int mc)
 {
     int f = smc->bitfields;
 
     if (f & M_FLIES)
-        return (1);
+        return (FL_FLY);
 
     if (f & M_LEVITATE)
-        return (2);
+        return (FL_LEVITATE);
 
-    return (0);
+    return (FL_NONE);
 }
 
-int mons_flies( const monsters *mon )
+flight_type mons_flies( const monsters *mon )
 {
     if (mon->type == MONS_PANDEMONIUM_DEMON
         && mon->ghost->values[ GVAL_DEMONLORD_FLY ])
     {
-        return (1);
+        return (FL_FLY);
     }
     
-    int ret = mons_class_flies( mon->type );
-    return (ret ? ret : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? 2 : 0);
+    const flight_type ret = mons_class_flies( mon->type );
+    return (ret ? ret
+            : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
+            : FL_NONE);
 }                               // end mons_flies()
 
 
@@ -3020,7 +3022,7 @@ int monsters::res_negative_energy() const
     return (mons_res_negative_energy(this));
 }
 
-int monsters::levitates() const
+flight_type monsters::flies() const
 {
     return (mons_flies(this));
 }

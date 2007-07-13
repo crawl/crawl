@@ -1407,10 +1407,14 @@ int player_movement_speed(void)
         if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS ))
             mv += 2;
 
-        // Swiftness is an Air spell, it doesn't work in water...
-        // but levitating players will move faster. -- bwr
+        // in the air, can fly fast (should be lightly burdened).
+        if (you.light_flight())
+            mv--;
+
+        // Swiftness is an Air spell, it doesn't work in water, but
+        // flying players will move faster.
         if (you.duration[DUR_SWIFTNESS] > 0 && !player_in_water())
-            mv -= (player_is_levitating() ? 4 : 2);
+            mv -= (you.flies() == FL_FLY ? 4 : 2);
 
         /* Mutations: -2, -3, -4, unless innate and shapechanged */
         if (you.mutation[MUT_FAST] > 0 &&
@@ -1910,7 +1914,7 @@ int player_evasion()
 
     case SP_KENKU:
         // Flying kenku get an evasion bonus.
-        if (you.levitates() == 1)
+        if (you.flies() == FL_FLY)
         {
             const int ev_bonus = std::min(9, std::max(1, ev / 5));
             ev += ev_bonus;
@@ -2152,14 +2156,15 @@ int carrying_capacity( burden_state_type bs )
 
 int burden_change(void)
 {
-    char old_burdenstate = you.burden_state;
+    const burden_state_type old_burdenstate = you.burden_state;
+    const bool was_flying_light = you.light_flight();
 
     you.burden = 0;
 
     if (you.duration[DUR_STONEMAIL])
         you.burden += 800;
 
-    for (unsigned char bu = 0; bu < ENDOFPACK; bu++)
+    for (int bu = 0; bu < ENDOFPACK; bu++)
     {
         if (you.inv[bu].quantity < 1)
             continue;
@@ -2211,6 +2216,14 @@ int burden_change(void)
     // wearing off).
     if (you.burden_state > old_burdenstate)
         interrupt_activity( AI_BURDEN_CHANGE );
+
+    const bool is_flying_light = you.light_flight();
+
+    if (is_flying_light != was_flying_light)
+    {
+        mpr(is_flying_light? "You feel quicker in the air."
+            : "You feel heavier in the air.");
+    }
 
     return you.burden;
 }                               // end burden_change()
@@ -4840,6 +4853,11 @@ item_def *player::slot_item(equipment_type eq)
     return (item == -1? NULL : &inv[item]);
 }
 
+const item_def *player::slot_item(equipment_type eq) const
+{
+    return const_cast<player*>(this)->slot_item(eq);
+}
+
 // Returns the item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */)
 {
@@ -5117,12 +5135,25 @@ int player::res_negative_energy() const
     return (player_prot_life());
 }
 
-int player::levitates() const
+flight_type player::flies() const
 {
     if ( !is_levitating() )
-        return 0;
+        return (FL_NONE);
     else
-        return (you.duration[DUR_CONTROLLED_FLIGHT] ? 1 : 2);
+        return (you.duration[DUR_CONTROLLED_FLIGHT] ? FL_FLY : FL_LEVITATE);
+}
+
+bool player::light_flight() const
+{
+    return (flies() == FL_FLY && travelling_light());
+}
+
+bool player::travelling_light() const
+{
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (armour && !is_light_armour(*armour))
+        return (false);
+    return (you.burden < carrying_capacity(BS_UNENCUMBERED) * 60 / 100);
 }
 
 int player::mons_species() const
