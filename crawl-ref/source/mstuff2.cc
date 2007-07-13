@@ -2017,7 +2017,8 @@ bool silver_statue_effects(monsters *mons)
 {
     if ((mons_player_visible(mons) || one_chance_in(3)) && !one_chance_in(3))
     {
-        const std::string msg = "'s eyes glow " + weird_colours(random2(256));
+        const std::string msg =
+            "'s eyes glow " + weird_colours(random2(256)) + '.';
         simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
 
         create_monster( summon_any_demon((coinflip() ? DEMON_COMMON
