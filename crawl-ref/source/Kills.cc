@@ -136,6 +136,7 @@ std::string KillMaster::kill_info() const
     }
 
 #ifdef CLUA_BINDINGS
+    unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     // Call the kill dump Lua function with null a, to tell it we're done.
     if (!clua.callfn("c_kill_list", "ss", NULL, grandt.c_str()))
 #endif
@@ -173,7 +174,8 @@ void KillMaster::add_kill_info(std::string &killtext,
         lua_pushnil(clua);
 
     lua_pushboolean(clua, separator);
-    
+
+    unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);    
     if (!clua.callfn("c_kill_list", 3, 0))
 #endif
     {

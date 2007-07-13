@@ -426,9 +426,15 @@ void level_travel( int delta )
 static void wizard_go_to_level(const level_pos &pos)
 {
     const int abs_depth = absdungeon_depth(pos.id.branch, pos.id.depth);
-    const dungeon_feature_type stair_taken =
+    dungeon_feature_type stair_taken =
         abs_depth > you.your_level? DNGN_STONE_STAIRS_DOWN_I
                                   : DNGN_STONE_STAIRS_UP_I;
+
+    if (abs_depth > you.your_level && pos.id.depth == 1
+        && pos.id.branch != BRANCH_MAIN_DUNGEON)
+    {
+        stair_taken = branches[pos.id.branch].entry_stairs;
+    }
 
     const int old_level = you.your_level;
     const branch_type old_where = you.where_are_you;
