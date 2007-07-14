@@ -392,6 +392,7 @@ void evoke_deck( item_def& deck )
 {
     int brownie_points = 0;
     mpr("You draw a card...");
+    bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
     if ( deck.plus2 == 0 )
     {
         card_effect( choose_one_card(deck, true), deck_rarity(deck) );
@@ -406,6 +407,9 @@ void evoke_deck( item_def& deck )
     }
     else
     {
+        // You can't ID off a marked card
+        allow_id = false;
+
         // draw the marked card
         card_effect(static_cast<card_type>(deck.plus2 - 1),
                     deck_rarity(deck));
@@ -433,6 +437,13 @@ void evoke_deck( item_def& deck )
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
         brownie_points++;
+    }
+    else if (allow_id && (you.skills[SK_EVOCATIONS] > 5 + random2(35)))
+    {
+        mpr("Your skill with magical items lets you identify the deck.");
+        set_ident_flags( deck, ISFLAG_KNOW_TYPE );
+        msg::streams(MSGCH_EQUIPMENT) << deck.name(DESC_INVENTORY)
+                                      << std::endl;
     }
 
     did_god_conduct(DID_CARDS, brownie_points);
