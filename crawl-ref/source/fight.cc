@@ -1741,11 +1741,12 @@ bool melee_attack::apply_damage_brand()
             break;
         
         emit_nodmg_hit_message();
-        
+
         // FIXME Currently Confusing Touch is the *only* way to get
         // here. Generalise.
-        const int pow = calc_spell_power(SPELL_CONFUSING_TOUCH, true, false);
-        if (!check_mons_resist_magic(def, pow))
+        const int hdcheck =
+            (defender->holiness() == MH_NATURAL? random2(30) : random2(22));
+        if (hdcheck >= def->hit_dice)
         {
             // declaring these just to pass to the enchant function
             bolt beam_temp;
@@ -1753,8 +1754,7 @@ bool melee_attack::apply_damage_brand()
             beam_temp.flavour = BEAM_CONFUSION;        
             mons_ench_f2( def, beam_temp );
         }
-        
-        you.duration[DUR_CONFUSING_TOUCH] -= random2(20);
+        you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5);
         
         if (you.duration[DUR_CONFUSING_TOUCH] < 1)
             you.duration[DUR_CONFUSING_TOUCH] = 1;

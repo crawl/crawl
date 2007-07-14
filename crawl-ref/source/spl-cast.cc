@@ -467,7 +467,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
     unsigned int disciplines = get_spell_disciplines( spell );
 
     //jmf: evil evil evil -- exclude HOLY bit
-    disciplines &= (~SPTYP_HOLY);       
+    disciplines &= (~SPTYP_HOLY);
 
     int skillcount = count_bits( disciplines );
     if (skillcount)
