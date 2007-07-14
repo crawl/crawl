@@ -492,7 +492,10 @@ static void finish_delay(const delay_queue_item &delay)
         break;
     }
     case DELAY_EAT:
-        mpr( "You finish eating." );
+        if (you.species == SP_VAMPIRE)
+           mpr( "You finish drinking." );
+        else 
+           mpr( "You finish eating." );
         // For chunks, warn the player if they're not getting much
         // nutrition.
         if (delay.parm1)
@@ -560,9 +563,13 @@ static void finish_delay(const delay_queue_item &delay)
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
             mprf("You finish %s the corpse into pieces.",
-                 (you.species==SP_TROLL || you.species == SP_GHOUL) ? "ripping"
+                 (you.species==SP_TROLL || you.species == SP_GHOUL
+                  || you.mutation[MUT_FANGS] == 3) ? "ripping"
                  : "chopping");
 
+            if (you.species == SP_VAMPIRE)
+                 mpr("What a waste.");
+                 
             turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 
             if (you.duration[DUR_BERSERKER] && you.berserk_penalty != NO_BERSERK_PENALTY)

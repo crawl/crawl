@@ -670,6 +670,8 @@ static const char *transform_name()
     {
     case TRAN_SPIDER:
         return "spider";
+    case TRAN_BAT:
+        return "bat";
     case TRAN_BLADE_HANDS:
         return "blade";
     case TRAN_STATUE:

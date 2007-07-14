@@ -1128,6 +1128,7 @@ unsigned int item_value( item_def item, bool ident )
             case POT_SPEED:
                 valued += 25;
                 break;
+            case POT_BLOOD:
             case POT_HEALING:
             case POT_LEVITATION:
                 valued += 20;

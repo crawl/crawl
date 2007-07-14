@@ -1318,8 +1318,15 @@ std::string status_mut_abilities()
     if (you.duration[DUR_PRAYER])
         text += "praying, ";
 
-    if (you.duration[DUR_REGENERATION])
+    if (you.duration[DUR_REGENERATION]
+        && (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY)
+        || you.species == SP_VAMPIRE && you.hunger_state == HS_FULL)
+    {
+        if (you.disease)
+            text += "recuperating, ";
+        else
         text += "regenerating, ";
+    }
 
 // not used as resistance part already says so
 //    if (you.duration[DUR_INSULATION])
@@ -1456,12 +1463,21 @@ std::string status_mut_abilities()
 
     text += info;
 
+    if (you.disease 
+        || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
+    {
+        text += "non-regenerating";
+    }
+
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
       case TRAN_SPIDER:
           text += "\nYou are in spider-form.";
           break;
-      case TRAN_BLADE_HANDS:
+     case TRAN_BAT:
+          text += "\nYou are in bat-form.";
+          break;
+     case TRAN_BLADE_HANDS:
           text += "\nYou have blades for hands.";
           break;
       case TRAN_STATUE:
@@ -1660,6 +1676,10 @@ std::string status_mut_abilities()
           have_any = true;
           break;
 
+      case SP_VAMPIRE:
+          text += "sharp teeth 3";
+          have_any = true;
+          break;
       default:
           break;
     }                           //end switch - innate abilities
@@ -2044,6 +2064,15 @@ std::string status_mut_abilities()
                 if (have_any)
                     text += ", ";
                 text += "hooves";
+                have_any = true;
+                break;
+            case MUT_FANGS:
+                if (you.species == SP_VAMPIRE)
+                   break;
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "sharp teeth %d", level);
+                text += info;
                 have_any = true;
                 break;
             case MUT_BREATHE_POISON:

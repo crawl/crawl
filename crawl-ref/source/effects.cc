@@ -508,6 +508,13 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             type_wanted = one_chance_in(10) ? FOOD_ROYAL_JELLY
                                             : FOOD_CHUNK;
         }
+        else if (you.species == SP_VAMPIRE)
+        {
+            // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
+            // but it's easier to just give them a potion of blood
+            class_wanted = OBJ_POTIONS;
+            type_wanted = POT_BLOOD;
+        }
         else 
         {
             // Meat is better than bread (except for herbivores), and

@@ -114,6 +114,7 @@ size_type player::transform_size(int psize) const
     switch (transform)
     {
     case TRAN_SPIDER:
+    case TRAN_BAT:
         return SIZE_TINY;
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
@@ -165,7 +166,7 @@ bool transform(int pow, transformation_type which_trans)
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
         untransform();
 
-    if (you.is_undead)
+    if (you.is_undead && (you.species != SP_VAMPIRE || which_trans != TRAN_BAT))
     {
         mpr("Your unliving flesh cannot be transformed in this way.");
         return (false);
@@ -209,6 +210,30 @@ bool transform(int pow, transformation_type which_trans)
         you.colour = BROWN;
         return (true);
 
+    case TRAN_BAT:
+        // high ev, low ac, high speed
+        if (check_for_cursed_equipment( rem_stuff ))
+            return false;
+    
+        mprf("You turn into a %sbat.",
+             you.species == SP_VAMPIRE ? "vampire " : "");
+
+        remove_equipment( rem_stuff );
+        // drop_everything();
+
+        you.attribute[ATTR_TRANSFORMATION] = TRAN_BAT;
+        you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
+
+        if (you.duration[DUR_TRANSFORMATION] > 100)
+            you.duration[DUR_TRANSFORMATION] = 100;
+
+       modify_stat( STAT_DEXTERITY, 5, true );
+       modify_stat( STAT_STRENGTH, -5, true );
+   
+       you.symbol = 'b';
+       you.colour = (you.species == SP_VAMPIRE) ? BLACK : DARKGREY;
+       return (true);
+        
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 
         mpr( "You turn into a creature of crystalline ice." );
 
@@ -418,6 +443,12 @@ void untransform(void)
     case TRAN_SPIDER:
         mpr("Your transformation has ended.", MSGCH_DURATION);
         modify_stat( STAT_DEXTERITY, -5, true );
+        break;
+
+    case TRAN_BAT:
+        mpr("Your transformation has ended.", MSGCH_DURATION);
+        modify_stat( STAT_DEXTERITY, -5, true );
+        modify_stat( STAT_STRENGTH, 5, true );
         break;
 
     case TRAN_BLADE_HANDS:

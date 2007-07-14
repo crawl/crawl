@@ -123,6 +123,7 @@ enum ability_type
     ABIL_TRAN_SERPENT_OF_HELL,
     ABIL_ROTTING,
     ABIL_TORMENT_II,
+    ABIL_TRAN_BAT,
     ABIL_RENOUNCE_RELIGION = 250       //  250
 };
 
@@ -799,6 +800,7 @@ enum conduct_type
     DID_SPELL_NONUTILITY,               // unused
     DID_CARDS,
     DID_STIMULANTS,                     // unused
+    DID_DRINK_BLOOD,
     DID_EAT_MEAT,                       // unused
     DID_CREATED_LIFE,                   // unused
 
@@ -2705,6 +2707,7 @@ enum mutation_type
     MUT_SMITE,                         //   57
     MUT_CLAWS,                         //jmf: added
     MUT_HOOVES,                        //jmf: etc.
+    MUT_FANGS,
     MUT_BREATHE_POISON,                //   60
     MUT_STINGER,
     MUT_BIG_WINGS,
@@ -2875,6 +2878,7 @@ enum potion_type
     POT_BERSERK_RAGE,
     POT_CURE_MUTATION,
     POT_MUTATION,
+    POT_BLOOD,
     NUM_POTIONS
 };
 
@@ -3309,6 +3313,7 @@ enum species_type
     SP_MERFOLK,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
+    SP_VAMPIRE,
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100
@@ -3713,6 +3718,7 @@ enum transformation_type
     TRAN_LICH,
     TRAN_SERPENT_OF_HELL,
     TRAN_AIR,
+    TRAN_BAT,
     NUM_TRANSFORMATIONS                // must remain last member {dlb}
 };
 
@@ -3803,7 +3809,8 @@ enum unarmed_attack_type
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_TAILSLAP,
-    UNAT_PUNCH
+    UNAT_PUNCH,
+    UNAT_BITE
 };
 
 enum undead_state_type                // you.is_undead

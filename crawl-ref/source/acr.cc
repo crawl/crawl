@@ -1228,12 +1228,24 @@ void process_command( command_type cmd )
         break;
 
     case CMD_THROW:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            mpr("You can't throw anything in your present form!");
+            flush_input_buffer( FLUSH_ON_FAILURE );
+            break;
+        }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
         throw_anything();
         break;
 
     case CMD_FIRE:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            mpr("You can't fire anything in your present form!");
+            flush_input_buffer( FLUSH_ON_FAILURE );
+            break;
+        }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
         shoot_thing();
@@ -1253,10 +1265,22 @@ void process_command( command_type cmd )
     break;
 
     case CMD_REMOVE_JEWELLERY:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            mpr("You can't do that in your present form!");
+            flush_input_buffer( FLUSH_ON_FAILURE );
+            break;
+        }
         remove_ring();
         break;
 
     case CMD_WEAR_JEWELLERY:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            mpr("You can't do that in your present form!");
+            flush_input_buffer( FLUSH_ON_FAILURE );
+            break;
+        }
         puton_ring(-1, false);
         break;
 
@@ -1333,7 +1357,14 @@ void process_command( command_type cmd )
             flush_input_buffer( FLUSH_ON_FAILURE );
             break;
         }
-
+/*
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            mpr("You can't cast spells in your present form!");
+            flush_input_buffer( FLUSH_ON_FAILURE );
+            break;
+        }
+*/
         if (Options.tutorial_left)
             Options.tut_spell_counter++;
         if (!cast_a_spell())
@@ -1755,6 +1786,13 @@ static void decrement_durations()
     if (you.duration[DUR_TRANSFORMATION] > 1)
     {
         you.duration[DUR_TRANSFORMATION]--;
+
+        if (you.species == SP_VAMPIRE
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+            && you.duration[DUR_TRANSFORMATION] > 2)
+        {
+            you.duration[DUR_TRANSFORMATION] = 5;
+        }
 
         if (you.duration[DUR_TRANSFORMATION] == 10)
         {

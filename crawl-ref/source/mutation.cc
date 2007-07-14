@@ -246,6 +246,10 @@ const char *mutation_descrip[][3] = {
 
     {"You have hooves in place of feet.", "", ""},
     // 60 - leave some space for more demonic powers...
+    
+    {"You have very sharp teeth.", "You have extremely sharp teeth.",
+     "You have razor-sharp teeth."},
+     
     {"You can exhale a cloud of poison.", "", ""},
 
     {"Your tail ends in a poisonous barb.",
@@ -490,7 +494,11 @@ const char *gain_mutation[][3] = {
      "Your hands twist into claws."},
 
     {"Your feet shrivel into cloven hooves.", "", ""},
-    // 60
+   // 60
+
+    {"Your teeth lengthen and sharpen.",
+     "Your teeth lengthen and sharpen some more.",
+     "Your teeth are very long and razor-sharp."},
 
     {"You taste something nasty.", "You taste something very nasty.",
      "You taste something extremely nasty."},
@@ -712,6 +720,8 @@ const char *lose_mutation[][3] = {
 
     {"Your hooves expand and flesh out into feet!", "", ""},
     // 60
+    {"Your teeth shrink and become duller.", "", ""},
+    
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -852,6 +862,7 @@ const char mutation_rarity[] = {
     2,                          //jmf: claws
     1,                          //jmf: hooves
 // 60
+    1,
     0,
     0,
     0,
@@ -1070,6 +1081,16 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_VAMPIRE:
+        result += "You are";
+        result += (you.experience_level > 25 && you.hunger_state == HS_FULL) ?
+                 " very strongly" :
+                  (you.experience_level > 12 && you.hunger_state != HS_HUNGRY) ?
+                 " strongly" : "";
+        result += " in touch with the powers of death." EOL;
+        have_any = true;
+        break;
+        
     default:
         break;
     }                           //end switch - innate abilities
@@ -1199,6 +1220,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_FRAIL:
     case MUT_CLAWS:
     case MUT_HOOVES:
+    case MUT_FANGS:
     case MUT_BREATHE_POISON:
     case MUT_STINGER:
     case MUT_BIG_WINGS:
@@ -1402,6 +1424,15 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return false;
     }
 
+    if (mutat == MUT_HERBIVOROUS && you.species == SP_VAMPIRE)
+        return false;
+
+    if (mutat == MUT_FANGS
+        && (you.species == SP_VAMPIRE || you.species == SP_KENKU))
+    {
+        return false;
+    }
+
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
         return false;
 
@@ -1549,6 +1580,10 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         remove_one_equip(EQ_BOOTS);
         break;
 
+    case MUT_FANGS:
+         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+         break;
+         
     case MUT_CLAWS:
 
         mpr((you.species == SP_TROLL ? troll_claw_messages
@@ -2330,6 +2365,12 @@ bool give_cosmetic_mutation()
             how_much = 1;
         }
 
+        if (you.species != SP_VAMPIRE && one_chance_in(5))
+        {
+            mutation = MUT_FANGS;
+            how_much = 1 + random2(3);
+        }
+    
         if (player_genus(GENPC_DRACONIAN) && one_chance_in(5))
         {
             mutation = MUT_BIG_WINGS;

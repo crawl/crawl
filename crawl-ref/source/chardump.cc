@@ -217,6 +217,9 @@ static void sdump_transform(dump_params &par)
         case TRAN_SPIDER:
             text += "You are in spider-form.";
             break;
+        case TRAN_BAT:
+            text += "You are in bat-form.";
+            break;
         case TRAN_BLADE_HANDS:
             text += "Your hands are blades.";
             break;

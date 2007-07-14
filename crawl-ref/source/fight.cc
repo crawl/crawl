@@ -165,7 +165,7 @@ static int maybe_random2( int x, bool random_factor )
 
 // Returns the to-hit for your extra unarmed.attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
-static int calc_your_to_hit_unarmed()
+static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK, bool vampiric = false)
 {
     int your_to_hit;
 
@@ -175,7 +175,19 @@ static int calc_your_to_hit_unarmed()
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
     
-    if (you.hunger_state == HS_STARVING)
+    // vampires know how to bite and aim better when hungry
+    if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
+    {
+        your_to_hit += 1;
+        if (vampiric)
+        {
+            if (you.hunger_state == HS_HUNGRY)
+                your_to_hit += 1;
+            else if (you.hunger_state == HS_STARVING)
+                your_to_hit += 2;
+        }
+    }
+    else if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         your_to_hit -= 3;
     
     your_to_hit += slaying_bonus(PWPN_HIT);
@@ -554,6 +566,10 @@ bool melee_attack::player_aux_unarmed()
         else
             uattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
+        if (you.mutation[MUT_FANGS]
+               || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            uattack = UNAT_BITE;
+            
         if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
              || player_genus(GENPC_DRACONIAN)
              || (you.species == SP_MERFOLK && player_is_swimming())
@@ -565,13 +581,17 @@ bool melee_attack::player_aux_unarmed()
 
         if (coinflip())
             uattack = UNAT_PUNCH;
+            
+        if (you.species == SP_VAMPIRE && coinflip())
+            uattack = UNAT_BITE;
     }
 
-    for (int scount = 0; scount < 4; scount++)
+    for (int scount = 0; scount < 5; scount++)
     {
         unarmed_attack.clear();
         damage_brand = SPWPN_NORMAL;
         aux_damage = 0;
+        bool vampiric = false;
 
         switch (scount)
         {
@@ -590,7 +610,8 @@ bool melee_attack::player_aux_unarmed()
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             {
                 continue;
             }
@@ -626,7 +647,8 @@ bool melee_attack::player_aux_unarmed()
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             {
                 continue;
             }
@@ -668,7 +690,8 @@ bool melee_attack::player_aux_unarmed()
             }
 
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST)
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             {
                 continue;
             }
@@ -699,7 +722,8 @@ bool melee_attack::player_aux_unarmed()
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
             {
                 continue;
             }
@@ -733,6 +757,34 @@ bool melee_attack::player_aux_unarmed()
 
             break;
 
+        case 4:
+            if (uattack != UNAT_BITE)
+            {
+                continue;
+            }
+            if (!you.mutation[MUT_FANGS] || !one_chance_in(5))
+            {
+                continue;
+            }
+
+            unarmed_attack = "bite";
+//            simple_miss_message = true;
+
+            aux_damage += you.mutation[MUT_FANGS] * 2;
+
+            // prob: 1/4 when non-hungry, 1/2 when hungry, 100% when starving
+            if (you.species == SP_VAMPIRE)
+            {
+                if (you.hunger_state > HS_HUNGRY && coinflip())
+                   break;
+                if (you.hunger_state > HS_STARVING && coinflip())
+                   break;
+
+                damage_brand = SPWPN_VAMPIRICISM;
+                vampiric = true;
+            }
+            break;
+
             /* To add more, add to while part of loop below as well */
         default:
             continue;
@@ -740,7 +792,7 @@ bool melee_attack::player_aux_unarmed()
         }
 
         // unified to-hit calculation
-        to_hit = random2( calc_your_to_hit_unarmed() );
+        to_hit = random2( calc_your_to_hit_unarmed(uattack, vampiric) );
             
         make_hungry(2, true);
 
@@ -1178,6 +1230,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         switch (you.attribute[ATTR_TRANSFORMATION])
         {
         case TRAN_SPIDER:
+        case TRAN_BAT:
             if (damage < HIT_STRONG)
                 attack_verb = "bite";
             else
@@ -1334,7 +1387,29 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         did_god_conduct(DID_UNHOLY, 1);
     }
     
-    if (mondied && damage_brand == SPWPN_VAMPIRICISM)
+    if (you.species == SP_VAMPIRE && damage_brand == SPWPN_VAMPIRICISM)
+    {
+        if (mons_holiness(def) == MH_NATURAL
+            && damage_done > 0 && you.hp < you.hp_max
+            && !one_chance_in(5))
+        {
+            mpr("You feel better.");
+
+            int heal = 1 + random2(damage_done);
+            if (heal > you.experience_level)
+                heal = you.experience_level;
+                
+            heal +=  1 + random2(damage_done);
+            inc_hp(heal, false);
+
+            if (you.hunger_state < HS_ENGORGED)
+            {
+                lessen_hunger(45 + random2avg(59, 2), true);
+            }
+		        did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
+        }
+    }
+    else if (mondied && damage_brand == SPWPN_VAMPIRICISM)
     {
         if (mons_holiness(def) == MH_NATURAL
             && damage_done > 0 && you.hp < you.hp_max
@@ -1343,7 +1418,9 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
             mpr("You feel better.");
             
             // more than if not killed
-            inc_hp(1 + random2(damage_done), false);
+            int heal = 1 + random2(damage_done);
+                
+            inc_hp(heal, false);
             
             if (you.hunger_state != HS_ENGORGED)
                 lessen_hunger(30 + random2avg(59, 2), true);
@@ -2194,6 +2271,9 @@ int melee_attack::player_to_hit(bool random_factor)
         case TRAN_SPIDER:
             your_to_hit += maybe_random2(10, random_factor);
             break;
+        case TRAN_BAT:
+            your_to_hit += maybe_random2(12, random_factor);
+            break;
         case TRAN_ICE_BEAST:
             your_to_hit += maybe_random2(10, random_factor);
             break;
@@ -2379,7 +2459,10 @@ int melee_attack::player_unarmed_speed()
     if (you.burden_state == BS_UNENCUMBERED
         && one_chance_in(heavy_armour_penalty + 1))
     {
-        unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+            unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 3;
+        else  
+            unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
             
         /* this shouldn't happen anyway...sanity */
         if (unarmed_delay < min_delay)
@@ -2427,6 +2510,9 @@ int melee_attack::player_calc_base_unarmed_damage()
         case TRAN_SPIDER:
             damage = 5;
             break;
+        case TRAN_BAT:
+            damage = (you.species == SP_VAMPIRE ? 2 : 1);
+            break;
         case TRAN_ICE_BEAST:
             damage = 12;
             break;
@@ -2459,7 +2545,10 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage += (you.mutation[ MUT_CLAWS ] * 2);
     }
 
-    damage += you.skills[SK_UNARMED_COMBAT];
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        damage += you.skills[SK_UNARMED_COMBAT]/3;
+    else
+        damage += you.skills[SK_UNARMED_COMBAT];
 
     return (damage);
 }

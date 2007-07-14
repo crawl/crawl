@@ -693,6 +693,22 @@ int player_regen(void)
         rr /= 2;
     }
 
+    // healing depending on satiation
+    if (you.species == SP_VAMPIRE)
+    {
+        if (you.hunger_state == HS_FULL)
+            return (rr + 20);
+        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                 || you.hunger_state > HS_HUNGRY)
+        {
+            return rr;
+        }
+        else if (you.hunger_state == HS_HUNGRY)
+            return (rr / 2);
+        else if (you.hunger_state == HS_STARVING)
+            return 0; // no regeneration for starving vampires
+    }
+
     if (rr < 1)
         rr = 1;
 
@@ -703,6 +719,9 @@ int player_hunger_rate(void)
 {
     int hunger = 3;
 
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        return 1;
+        
     // jmf: hunger isn't fair while you can't eat
     // Actually, it is since you can detransform any time you like -- bwr
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
@@ -738,9 +757,17 @@ int player_hunger_rate(void)
     hunger -= 2 * player_equip( EQ_RINGS, RING_SUSTENANCE );
 
     // weapon ego types
-    hunger += 6 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ); 
-    hunger += 9 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRES_TOOTH ); 
-
+    if (you.species != SP_VAMPIRE)
+    {
+        hunger += 6 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ); 
+        hunger += 9 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRES_TOOTH ); 
+    }
+    else
+    {
+        hunger += 1 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM );
+        hunger += 2 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRES_TOOTH );
+    }
+  
     // troll leather armour 
     hunger += player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR );
 
@@ -802,6 +829,7 @@ int player_res_magic(void)
     case SP_GREY_ELF:
     case SP_SLUDGE_ELF:
     case SP_MOUNTAIN_DWARF:
+    case SP_VAMPIRE:
         rm = you.experience_level * 4;
         break;
     case SP_NAGA:
@@ -1167,6 +1195,16 @@ int player_spec_death()
         if (you.experience_level >= 26)
             sd++;
     }
+    else if (you.species == SP_VAMPIRE)
+    {
+ 	      // Vampires get bonus only when not hungry
+        if (you.experience_level >= 13 && you.hunger_state > HS_HUNGRY)
+        {
+            sd++;
+            if (you.experience_level >= 26)
+                sd++;
+        }
+    }
 
     // transformations:
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
@@ -1319,7 +1357,11 @@ int player_prot_life(bool calc_unid)
     // armour: (checks body armour only)
     pl += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY );
 
-    if (you.is_undead)
+    if (you.species == SP_VAMPIRE && you.hunger_state > HS_HUNGRY)
+    {
+        pl += 2;
+    }
+    else if (you.is_undead && you.species != SP_VAMPIRE)
         pl += 3;
 
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -1399,6 +1441,8 @@ int player_movement_speed(void)
         /* transformations */
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
             mv = 8;
+        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+            mv = 5; // but allowed minimum is six
 
         /* armour */
         if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
@@ -2008,6 +2052,10 @@ int old_player_evasion(void)
         ev += 3;
         break;
 
+    case TRAN_BAT:
+        ev += 20 + (you.experience_level - 10);
+        break;
+        
     case TRAN_AIR:
         ev += 20;
         break;
@@ -2101,6 +2149,10 @@ int player_see_invis(bool calc_unid)
     /* armour: (checks head armour only) */
     si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
 
+    /* Vampires can see invisible if not weakened by hunger */
+    if (you.species == SP_VAMPIRE && you.hunger_state > HS_HUNGRY)
+        si++;
+        
     if (you.mutation[MUT_ACUTE_VISION] > 0)
         si += you.mutation[MUT_ACUTE_VISION];
 
@@ -2477,6 +2529,18 @@ void level_change(void)
                 }
                 break;
 
+            case SP_VAMPIRE:
+                if (you.experience_level == 3)
+                {
+                    mpr( "You can now transform into a bat",
+                          MSGCH_INTRINSIC_GAIN );
+                }
+                else if (you.experience_level == 13 || you.experience_level == 26)
+                {
+                    mpr( "You feel more in touch with the powers of death.",
+                         MSGCH_INTRINSIC_GAIN );
+                }
+                break;
             case SP_NAGA:
                 // lower because of HD raise -- bwr
                 // if (you.experience_level < 14)
@@ -2870,7 +2934,7 @@ int check_stealth(void)
             stealth += (you.skills[SK_STEALTH] * 12);
         else
         {
-            switch (you.species)
+            switch (you.species) // why not use body_size here?
             {
             case SP_TROLL:
             case SP_OGRE:
@@ -2886,6 +2950,14 @@ int check_stealth(void)
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_NAGA:       // not small but very good at stealth
+            case SP_VAMPIRE:
+                if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                    || you.hunger_state <= HS_HUNGRY)
+                {
+                    // Hungry vampires are more stealthy
+                    stealth += (you.skills[SK_STEALTH] * 19);
+                    break;
+                }
                 stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             default:
@@ -3003,6 +3075,9 @@ void display_char_status()
     case TRAN_SPIDER:
         mpr( "You are in spider-form." );
         break;
+    case TRAN_BAT:
+        mpr( "You are in bat-form." );
+        break;
     case TRAN_BLADE_HANDS:
         mpr( "You have blades for hands." );
         break;
@@ -3052,8 +3127,14 @@ void display_char_status()
     if (you.duration[DUR_PRAYER])
         mpr( "You are praying." );
 
-    if (you.duration[DUR_REGENERATION])
+    if (you.duration[DUR_REGENERATION] &&
+        (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY))
+    {
+        if (you.disease)
+            mpr("You are recuperating from your illness.");
+        else
         mpr( "You are regenerating." );
+    }
 
     if (you.duration[DUR_SWIFTNESS])
         mpr( "You can move swiftly." );
@@ -3145,6 +3226,9 @@ void display_char_status()
               " faster than usual." : ".") );
     }
 
+    if (you.disease || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
+        mpr("You do not regenerate.");
+        
     // prints a contamination message
     contaminate_player( 0, true );
 
@@ -3473,6 +3557,9 @@ char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
         case SP_MERFOLK:
             strcpy( species_buff, (adj) ? "Merfolkian" : "Merfolk" );
             break;
+        case SP_VAMPIRE:
+            strcpy( species_buff, "Vampire" );
+            break;
         default:
             strcpy( species_buff, (adj) ? "Yakish" : "Yak" );
             break;
@@ -3510,7 +3597,8 @@ bool wearing_amulet(char amulet, bool calc_unid)
     if (amulet == AMU_CONTROLLED_FLIGHT
         && (you.duration[DUR_CONTROLLED_FLIGHT]
             || player_genus(GENPC_DRACONIAN)
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON))
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT))
     {
         return true;
     }
@@ -3580,6 +3668,7 @@ int species_exp_mod(char species)
             return 14;
         case SP_HIGH_ELF:
         case SP_MUMMY:
+        case SP_VAMPIRE:
         case SP_TROLL:
         case SP_OGRE_MAGE:
             return 15;
@@ -4069,7 +4158,7 @@ static const char * Species_Abbrev_List[ NUM_SPECIES ] =
     { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
       "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM", "Dr", "Dr", 
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", 
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "HD", "El" };
+      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "HD", "El" };
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
@@ -4789,6 +4878,7 @@ coord_def player::pos() const
 bool player::is_levitating() const
 {
     return (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
+            attribute[ATTR_TRANSFORMATION] == TRAN_BAT ||
             duration[DUR_LEVITATION]);
 }
 
@@ -4950,6 +5040,11 @@ int player::damage_brand(int)
             ret = SPWPN_DRAINING;
             break;
 
+        case TRAN_BAT:
+            if (you.species == SP_VAMPIRE)
+            {
+                ret = SPWPN_VAMPIRICISM;
+            } // else fall through
         default:
             break;
         }

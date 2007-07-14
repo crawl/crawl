@@ -53,6 +53,8 @@ static void  eating(unsigned char item_class, int item_type);
 static void  ghoul_eat_flesh( int chunk_effect );
 static void  describe_food_change(int hunger_increment);
 static bool  food_change(bool suppress_message);
+bool vampire_consume_corpse(int mons_type, int mass,
+                            int chunk_type, bool rotten);
 
 /*
  **************************************************
@@ -191,7 +193,10 @@ bool butchery(void)
 
     const transformation_type transform =
         static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
-    
+ 
+    // Xom probably likes this, occasionally
+    bool teeth_butcher = (you.mutation[MUT_FANGS] == 3);
+   
     bool barehand_butcher =
         (you.equip[ EQ_GLOVES ] == -1
          && (transform_can_butcher_barehanded(transform)
@@ -207,7 +212,7 @@ bool butchery(void)
          !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
     int old_gloves = you.equip[EQ_GLOVES];
 
-    bool can_butcher = barehand_butcher ||
+    bool can_butcher = teeth_butcher || barehand_butcher ||
         (you.equip[EQ_WEAPON] != -1 &&
          can_cut_meat(you.inv[you.equip[EQ_WEAPON]]));
     
@@ -315,7 +320,7 @@ bool butchery(void)
         if ( can_butcher )
         {
             // we actually butcher now
-            if ( barehand_butcher )
+            if ( teeth_butcher || barehand_butcher )
                 mpr("You start tearing the corpse apart.");
             else
                 mpr("You start hacking away.");
@@ -431,7 +436,7 @@ bool prompt_eat_from_inventory(void)
             prompt_invent_item(
                     "Eat which item?",
                     MT_INVLIST,
-                    OBJ_FOOD,
+                    you.species == SP_VAMPIRE ? OBJ_CORPSES : OBJ_FOOD,
                     true, true, true, 0, NULL,
                     OPER_EAT );
     if (which_inventory_slot == PROMPT_ABORT)
@@ -442,12 +447,21 @@ bool prompt_eat_from_inventory(void)
 
     // this conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
-    if (you.inv[which_inventory_slot].base_type != OBJ_FOOD)
+    if (you.species != SP_VAMPIRE &&
+        you.inv[which_inventory_slot].base_type != OBJ_FOOD)
     {
         mpr("You can't eat that!");
         return (false);
     }
 
+    if (you.species == SP_VAMPIRE &&
+       (you.inv[which_inventory_slot].base_type != OBJ_CORPSES
+         || you.inv[which_inventory_slot].sub_type != CORPSE_BODY))
+    {
+        mpr("You crave blood!");
+        return (false);
+    }
+       
     if (!can_ingest( you.inv[which_inventory_slot].base_type,
                         you.inv[which_inventory_slot].sub_type, false ))
     {
@@ -514,6 +528,12 @@ static bool food_change(bool suppress_message)
     // take care of ghouls - they can never be 'full'
     if (you.species == SP_GHOUL && you.hunger > 6999) 
         you.hunger = 6999;
+
+    // vampires can never be engorged or starve to death
+    if (you.species == SP_VAMPIRE && you.hunger <= 700)
+        you.hunger = 701;
+    if (you.species == SP_VAMPIRE && you.hunger > 10999)
+        you.hunger = 10999;
 
     // get new hunger state
     if (you.hunger <= 1000)
@@ -586,7 +606,29 @@ static void describe_food_change(int food_increment)
 
 void eat_from_inventory(int which_inventory_slot)
 {
-    if (you.inv[which_inventory_slot].sub_type == FOOD_CHUNK)
+    if (you.inv[which_inventory_slot].base_type == OBJ_CORPSES
+        && you.inv[which_inventory_slot].sub_type == CORPSE_BODY)
+    {
+        const int mons_type = you.inv[ which_inventory_slot ].plus;
+        const int chunk_type = mons_corpse_effect( mons_type );
+        const bool rotten = (you.inv[which_inventory_slot].special < 100);
+        const int mass = item_mass( you.inv[which_inventory_slot] );
+
+        if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
+            return;
+
+        if (!mons_skeleton( mons_type )) {
+            dec_inv_item_quantity( which_inventory_slot, 1 );
+        }
+        else {
+            you.inv[which_inventory_slot].sub_type = CORPSE_SKELETON;
+            you.inv[which_inventory_slot].special = 90;
+            you.inv[which_inventory_slot].colour = LIGHTGREY;
+        }
+        // dec_inv_item_quantity( which_inventory_slot, 1 );
+        return;
+    }
+    else if (you.inv[which_inventory_slot].sub_type == FOOD_CHUNK)
     {
         // this is a bit easier to read... most compilers should
         // handle this the same -- bwr
@@ -607,7 +649,31 @@ void eat_from_inventory(int which_inventory_slot)
 
 void eat_floor_item(int item_link)
 {
-    if (mitm[item_link].sub_type == FOOD_CHUNK)
+    if (mitm[item_link].base_type == OBJ_CORPSES
+        && mitm[item_link].sub_type == CORPSE_BODY)
+    {
+        const int mons_type = mitm[item_link].plus;
+        const int chunk_type = mons_corpse_effect( mons_type );
+        const bool rotten = (mitm[item_link].special < 100);
+        const int mass = item_mass( mitm[item_link] );
+
+        if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
+            return;
+
+        if (!mons_skeleton( mons_type )) {
+            dec_mitm_item_quantity( item_link, 1 );
+        }
+        else {
+            mitm[item_link].sub_type = CORPSE_SKELETON;
+            mitm[item_link].special = 90;
+            mitm[item_link].colour = LIGHTGREY;
+        }
+        // dec_mitm_item_quantity( item_link, 1 );
+
+        you.turn_is_over = 1;
+        return;
+    }
+    else if (mitm[item_link].sub_type == FOOD_CHUNK)
     {
         const int chunk_type = mons_corpse_effect( mitm[item_link].plus );
         const bool rotten = (mitm[item_link].special < 100);
@@ -634,11 +700,16 @@ bool eat_from_floor(void)
     {
         item_def& item = mitm[o];
 
-        if (item.base_type != OBJ_FOOD)
+        if (you.species != SP_VAMPIRE && item.base_type != OBJ_FOOD)
+            continue;
+
+        if (you.species == SP_VAMPIRE &&
+            (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY))
             continue;
 
         mprf( MSGCH_PROMPT,
-              "Eat %s%s?", (item.quantity > 1) ? "one of " : "", 
+              "%s %s%s?", you.species == SP_VAMPIRE ? "Drink blood from" : "Eat",
+              (item.quantity > 1) ? "one of " : "",
               item.name(DESC_NOCAP_A).c_str() );
 
         // If we're prompting now, we don't need a -more- when
@@ -1141,6 +1212,18 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         return (false);
     }
 
+    if (you.species == SP_VAMPIRE)
+    {
+        if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY)
+        {
+            return (true);
+        }
+        else
+        {
+            mpr("Blech - you need blood!");
+        }
+        return (false);
+    }
 
     bool ur_carnivorous = (you.mutation[MUT_CARNIVOROUS] == 3);
 
@@ -1352,3 +1435,65 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 
     return (this_chunk_effect);
 }                               // end determine_chunk_effect()
+
+bool vampire_consume_corpse(int mons_type, int mass,
+                            int chunk_type, bool rotten) {
+    int food_value = 0;
+
+    if (chunk_type == CE_HCL) {
+        mpr( "There is no blood in this body!" );
+        return false;
+    }
+    else if (!rotten) {
+        inc_hp(1, false);
+
+        switch (mons_type) {
+        case MONS_HUMAN:
+            food_value = mass + random2avg(you.experience_level * 10, 2);
+            mpr( "This warm blood tastes really delicious!" );
+            inc_hp(1 + random2(1 + you.experience_level), false);
+            break;
+
+        case MONS_ELF:
+            food_value = mass + random2avg(you.experience_level * 10, 2);
+            mpr( "This warm blood tastes magically delicious!" );
+            inc_mp(1 + random2(3), false);
+            break;
+
+        default:
+            food_value = mass;
+            mpr( "This warm blood tastes delicious!" );
+            break;
+        }
+        did_god_conduct(DID_DRINK_BLOOD, 8);
+    }
+    else if (wearing_amulet(AMU_THE_GOURMAND)){
+        food_value = mass/3 + random2(you.experience_level * 5);
+        mpr("Slurps.");
+        did_god_conduct(DID_DRINK_BLOOD, 8);
+    }
+    else {
+        mpr("It's not fresh enough.");
+        return false;
+    }
+
+    lessen_hunger( food_value, true );
+    describe_food_change(food_value);
+
+    if (player_rotted() && !rotten && one_chance_in(4))
+    {
+        mpr("You feel more resilient.");
+        unrot_hp(1);
+    }
+
+    if (you.strength < you.max_strength && one_chance_in(3))
+    {
+        mpr("You feel your strength returning.");
+        you.strength++;
+        you.redraw_strength = 1;
+    }
+
+//    start_delay( DELAY_EAT, 3 );
+    start_delay( DELAY_EAT, 1 + mass/300 );
+    return true;
+} // end vampire_consume_corpse()

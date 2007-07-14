@@ -953,6 +953,21 @@ bool did_god_conduct( conduct_type thing_done, int level )
 
     switch (thing_done)
     {
+    case DID_DRINK_BLOOD:
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_ELYVILON:
+            // no penance as this can happen accidentally
+            piety_change = -2*level;
+            ret = true;
+            break;
+        default:
+            break;
+        }
+        break;
+
     case DID_NECROMANCY:
     case DID_UNHOLY:
     case DID_ATTACK_HOLY:

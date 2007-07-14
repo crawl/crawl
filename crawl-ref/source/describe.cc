@@ -2215,6 +2215,9 @@ static const char* describe_potion( const item_def &item )
             "which may be afflicting you.$";
     case POT_MUTATION:
         return "A potion which does very strange things to you.$";
+    case POT_BLOOD:
+        return "A potion containing the essence of life. Vital for all living "
+               "creatures, as well as some undead ones.$";
     case NUM_POTIONS:
         return "A buggy potion.";
     }

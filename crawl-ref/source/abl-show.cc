@@ -168,6 +168,7 @@ static const ability_def Ability_List[] =
     { ABIL_BREATHE_POWER, "Breathe Power", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
+    { ABIL_TRAN_BAT, "Bat Form", 2, 0, 25, 0, ABFLAG_NONE },
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_BREATH },
 
@@ -506,6 +507,12 @@ static talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_FLY_II:           // this is for draconians {dlb}
         failure = 45 - (you.experience_level + you.strength);
+        break;
+
+    case ABIL_TRAN_BAT:
+        invoc = true;
+        failure = 45 - (you.experience_level + you.skills[SK_INVOCATIONS]);
+//        perfect = true;
         break;
         // end species abilties (some mutagenic)
 
@@ -1655,6 +1662,10 @@ static bool do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
+    case ABIL_TRAN_BAT:
+        transform(100, TRAN_BAT);
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?")
             && yesno( "Are you sure you won't change your mind later?" ))
@@ -1844,6 +1855,11 @@ std::vector<talent> your_talents( bool check_confused )
         }
     }
 
+    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+    {
+        add_talent(talents, ABIL_TRAN_BAT, check_confused );
+    }
+    
     //jmf: alternately put check elsewhere
     if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
         (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))

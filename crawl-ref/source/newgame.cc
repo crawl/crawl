@@ -390,6 +390,7 @@ static void initialise_item_descriptions()
         PDESCQ(PDQ_GLUGGY, PDC_WHITE);
 
     you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
+    you.item_description[IDESC_POTIONS][POT_BLOOD] = PDESCS(PDC_RED);
 
     for (int i = 0; i < NUM_IDESC; i++)
     {
@@ -452,8 +453,8 @@ static void initialise_item_descriptions()
 
 static void give_starting_food()
 {
-    // the undead start with no food
-    if (you.is_undead != US_ALIVE)
+    // these undead start with no food
+    if (you.species == SP_MUMMY || you.species == SP_GHOUL)
         return;
 
     item_def item;
@@ -461,6 +462,11 @@ static void give_starting_food()
     {
         item.base_type = OBJ_POTIONS;
         item.sub_type = POT_PORRIDGE;
+    }
+    else if (you.species == SP_VAMPIRE)
+    {
+        item.base_type = OBJ_POTIONS;
+        item.sub_type = POT_BLOOD;
     }
     else
     {
@@ -634,6 +640,7 @@ static void give_species_bonus_hp()
 
         case SP_GREY_ELF:
         case SP_HIGH_ELF:
+        case SP_VAMPIRE:
             dec_max_hp(1);
             break;
 
@@ -657,6 +664,7 @@ static void give_species_bonus_mp()
     // adjust max_magic_points by species {dlb}
     switch (you.species)
     {
+    case SP_VAMPIRE:
     case SP_SPRIGGAN:
     case SP_DEMIGOD:
     case SP_GREY_ELF:
@@ -764,7 +772,9 @@ game_start:
     species_stat_init( you.species );     // must be down here {dlb}
 
     you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
-                     (you.species == SP_GHOUL) ? US_HUNGRY_DEAD : US_ALIVE);
+                     (you.species == SP_GHOUL || you.species == SP_VAMPIRE) ?
+                                                 US_HUNGRY_DEAD :
+                                                 US_ALIVE);
 
     // before we get into the inventory init, set light radius based
     // on species vision. currently, all species see out to 8 squares.
@@ -864,7 +874,7 @@ game_start:
 
 static bool species_is_undead( unsigned char speci )
 {
-    return (speci == SP_MUMMY || speci == SP_GHOUL);
+    return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
 }
 
 static bool class_allowed( species_type speci, job_type char_class )
@@ -1171,6 +1181,8 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_SUMMONER:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
+        if (speci == SP_VAMPIRE)
+            return true;
         if (species_is_undead( speci ))
             return false;
 
@@ -1774,6 +1786,7 @@ static void species_stat_init(species_type which_species)
 
     case SP_MUMMY:              sb =  7; ib =  3; db =  3;      break;  // 13
     case SP_GHOUL:              sb =  9; ib =  1; db =  2;      break;  // 13
+    case SP_VAMPIRE:            sb =  5; ib =  6; db =  5;      break;  // 16
 
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
@@ -1903,6 +1916,11 @@ static void give_basic_mutations(species_type speci)
     case SP_KOBOLD:
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
+    case SP_VAMPIRE:
+        you.mutation[MUT_FANGS] = 3;
+        you.mutation[MUT_SLOW_METABOLISM] = 1;
+//        you.mutation[MUT_POISON_RESISTANCE] = 1;
+        break;
     default:
         break;
     }
@@ -1914,6 +1932,9 @@ static void give_basic_mutations(species_type speci)
 
 static void give_basic_knowledge(job_type which_job)
 {
+    if (you.species == SP_VAMPIRE)
+        set_ident_type( OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE );
+        
     switch (which_job)
     {
     case JOB_PRIEST:
@@ -2900,7 +2921,7 @@ static job_type letter_to_class(int keyn)
 
 static species_type letter_to_species(int keyn)
 {
-    if ( keyn < 'a' || keyn > 'x' )
+    if ( keyn < 'a' || keyn > 'y' )
         return SP_UNKNOWN;
     const int offset = keyn - 'a';
     int rc;
@@ -3402,13 +3423,15 @@ bool give_items_skills()
                 you.inv[2].special = 0;
             }
         }
-        else if (you.species == SP_GHOUL || you.species == SP_MUMMY)
+        else if (you.is_undead)
         {
             you.inv[1].quantity = 1;
             you.inv[1].base_type = OBJ_ARMOUR;
             you.inv[1].sub_type = ARM_ROBE;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
+            if (you.species == SP_VAMPIRE && coinflip())
+                you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
 
             if (you.species == SP_MUMMY)
             {
@@ -3457,7 +3480,8 @@ bool give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 1;
 
         if (you.species != SP_KOBOLD && you.species != SP_OGRE
-            && you.species != SP_TROLL && you.species != SP_GHOUL)
+            && you.species != SP_TROLL && you.species != SP_GHOUL
+            && you.species != SP_VAMPIRE)
         {
             you.equip[EQ_SHIELD] = 2;
         }
@@ -4884,6 +4908,12 @@ bool give_items_skills()
 
     default:
         break;
+    }
+
+    // Vampires always start with unarmed combat skill.
+    if (you.species == SP_VAMPIRE && you.skills[SK_UNARMED_COMBAT] < 2)
+    {
+        you.skills[SK_UNARMED_COMBAT] = 2;
     }
 
     if (weap_skill)

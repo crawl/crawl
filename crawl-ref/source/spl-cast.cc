@@ -437,6 +437,7 @@ int spell_fail(spell_type spell)
             break;
 
         case TRAN_SPIDER:
+        case TRAN_BAT:
             chance2 += 10;
             break;
         }
