@@ -1183,7 +1183,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
         break;
 
     case CARD_BARGAIN:
-        you.duration[DUR_BARGAIN] += random2(power) + random2(power);
+        you.duration[DUR_BARGAIN] += random2(power) + random2(power) + 2;
         break;
 
     case CARD_MAP:

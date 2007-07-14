@@ -2015,6 +2015,7 @@ static void decrement_durations()
     else if ( you.duration[DUR_BARGAIN] == 1 )
     {
         mpr("You feel less charismatic.", MSGCH_DURATION);
+        you.duration[DUR_BARGAIN] = 0;
     }
 
     if (you.duration[DUR_CONF] > 0)
