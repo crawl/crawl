@@ -571,7 +571,7 @@ static void describe_food_change(int food_increment)
     else if (magnitude <= 350)
         msg = "You feel somewhat ";
     else if (magnitude <= 800)
-        msg = "You feel a quite a bit ";
+        msg = "You feel quite a bit ";
     else
         msg = "You feel a lot ";
 
