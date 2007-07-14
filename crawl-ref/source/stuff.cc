@@ -432,15 +432,15 @@ void redraw_screen(void)
 {
     draw_border();
 
-    you.redraw_hit_points = 1;
-    you.redraw_magic_points = 1;
-    you.redraw_strength = 1;
-    you.redraw_intelligence = 1;
-    you.redraw_dexterity = 1;
-    you.redraw_armour_class = 1;
-    you.redraw_evasion = 1;
-    you.redraw_gold = 1;
-    you.redraw_experience = 1;
+    you.redraw_hit_points = true;
+    you.redraw_magic_points = true;
+    you.redraw_strength = true;
+    you.redraw_intelligence = true;
+    you.redraw_dexterity = true;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+    you.redraw_gold = true;
+    you.redraw_experience = true;
     you.wield_change = true;
 
     set_redraw_status(

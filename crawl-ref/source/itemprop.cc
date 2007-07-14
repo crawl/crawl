@@ -460,15 +460,16 @@ bool item_ident( const item_def &item, unsigned long flags )
 
 void set_ident_flags( item_def &item, unsigned long flags )
 {
-    const bool known_before = fully_identified(item);
     item.flags |= flags;
     if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID) &&
-        !known_before && fully_identified(item) && is_interesting_item(item))
+        fully_identified(item) && is_interesting_item(item))
     {
-        /* make a note of it */
+        // make a note of it
         take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
-        item.flags |= ISFLAG_NOTED_ID;
+        // sometimes (e.g. shops) you can ID an item before you get it;
+        // don't note twice in those cases
+        item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
 }
 
@@ -517,8 +518,7 @@ unsigned long full_ident_mask( const item_def& item )
     if (item_type_known(item))
         flagset &= (~ISFLAG_KNOW_TYPE);
 
-    if ( is_random_artefact(item) ||
-         is_fixed_artefact(item) )
+    if ( is_artefact(item) )
     {
         flagset |= ISFLAG_KNOW_PROPERTIES;
     }

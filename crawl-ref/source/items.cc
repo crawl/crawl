@@ -852,6 +852,11 @@ static void check_note_item(item_def &item)
         take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
         item.flags |= ISFLAG_NOTED_GET;
+
+        // If it's already fully identified when picked up, don't take
+        // further notes.
+        if ( fully_identified(item) )
+            item.flags |= ISFLAG_NOTED_ID;
     }
 }
 

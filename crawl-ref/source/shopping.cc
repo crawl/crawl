@@ -40,9 +40,9 @@
 #include "stuff.h"
 #include "view.h"
 
-static void in_a_shop(char shoppy);
-static char more3();
-static void purchase( int shop, int item_got, int cost);
+static void in_a_shop(int shopidx);
+static void more3();
+static void purchase( int shop, int item_got, int cost, bool id);
 static void shop_print(const char *shoppy, int sh_line);
 
 static std::string hyphenated_suffix(char prev, char last)
@@ -87,7 +87,7 @@ static void list_shop_keys(const std::string &purchasable)
     gotoxy(1, numlines - 1);
 
     std::string pkeys = purchase_keys(purchasable);
-    if (pkeys.length())
+    if (!pkeys.empty())
         pkeys = "[" + pkeys + "] Buy Item";
 
     snprintf(buf, sizeof buf,
@@ -106,239 +106,191 @@ static void list_shop_keys(const std::string &purchasable)
     fs.display();
 }
 
-static void in_a_shop( char shoppy )
+static std::vector<int> shop_stock(int shopidx)
 {
-    shop_struct& the_shop = env.shop[shoppy];
-
-    cursor_control coff(false);
-
-    FixedVector < int, 20 > shop_items;
-
-    char st_pass[ ITEMNAME_SIZE ] = "";
-    unsigned char ft;
-    std::string purchasable;
-
-    clrscr();
-    int itty = 0;
-    int gp_value; // Should eliminate gotos instead of initializing here
-
-    ShopInfo &si = stashes.get_shop(the_shop.x, the_shop.y);
-
-    {
-        std::string welcome_message = "Welcome to ";
-        welcome_message += shop_name(the_shop.x, the_shop.y);
-        welcome_message += "!";
-        shop_print(welcome_message.c_str(), 20);
-    }
-
-    more3();
+    std::vector<int> result;
     
-    activate_notes(false);      /* should do a better job here */
+    int itty = igrd[0][5 + shopidx];
 
-    const bool id_stock = shoptype_identifies_stock(the_shop.type);
-
-  print_stock:
-    clrscr();
-    itty = igrd[0][5 + shoppy];
-
-    si.reset();
-
-    if (itty == NON_ITEM)
+    while ( itty != NON_ITEM )
     {
-        shop_print("I'm sorry, my shop is empty now.", 20);
-        more3();
-        goto goodbye;
-    }
-
-    for (int i = 1; i < 20; i++)
-    {
-        shop_items[i - 1] = itty;
-
-        if (itty == NON_ITEM)
-        {
-            shop_items[i - 1] = NON_ITEM;
-            continue;
-        }
-
+        result.push_back( itty );
         itty = mitm[itty].link;
     }
+    return result;
+}
 
-    itty = igrd[0][5 + shoppy];
-
-    purchasable.clear();
-    for (int i = 1; i < 18; i++)
+static int shop_item_value(const item_def& item, int greed, bool id)
+{
+    int result = (greed * item_value(item, id) / 10);
+    if ( you.duration[DUR_BARGAIN] ) // 20% discount
     {
-        const char c = i + 96;
+        result *= 8;
+        result /= 10;
+    }
+    
+    if (result < 1)
+        result = 1;
 
-        gotoxy(1, i);
+    return result;
+}
 
-        gp_value = the_shop.greed * item_value(mitm[itty], id_stock);
-        gp_value /= 10;
-
-        if ( you.duration[DUR_BARGAIN] ) // 20% discount
-        {
-            gp_value *= 8;
-            gp_value /= 10;
-        }
-
-        if (gp_value <= 1)
-            gp_value = 1;
-
+static std::string shop_print_stock( const std::vector<int>& stock,
+                                     const shop_struct& shop )
+{
+    ShopInfo &si = stashes.get_shop(shop.x, shop.y);
+    const bool id = shoptype_identifies_stock(shop.type);
+    std::string purchasable;
+    for (unsigned int i = 0; i < stock.size(); ++i)
+    {
+        const int gp_value = shop_item_value(mitm[stock[i]], shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
-        textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
 
+        gotoxy(1, i+1);
+        const char c = i + 'a';
         if (can_afford)
             purchasable += c;
 
+        textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
         cprintf("%c - ", c);
 
-        textcolor((i % 2) ? WHITE : LIGHTGREY);
-
-        cprintf("%s", mitm[itty].name(DESC_NOCAP_A, false, id_stock).c_str());
-
-        si.add_item(mitm[itty], gp_value);
-
-        gotoxy(60, i);
-        cprintf("%5d gold", gp_value);
-        if (mitm[itty].link == NON_ITEM)
-            break;
-
-        itty = mitm[itty].link;
+        textcolor((i % 2) ? LIGHTGREY : WHITE);
+        cprintf("%-56s%5d gold",
+                mitm[stock[i]].name(DESC_NOCAP_A, false, id).c_str(),
+                gp_value);
+        si.add_item(mitm[stock[i]], gp_value);
     }
-
     textcolor(LIGHTGREY);
+    return purchasable;
+}
 
-    list_shop_keys(purchasable);
+static void in_a_shop( int shopidx )
+{
+    const shop_struct& shop = env.shop[shopidx];
 
-  purchase:
-    snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
-             (you.gold == 1) ? "" : "s" );
+    cursor_control coff(false);
 
-    textcolor(YELLOW);
-    shop_print(info, 19);
+    const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
+    shop_print(hello.c_str(), 20);
 
-    textcolor(CYAN);
-
-    snprintf(st_pass, sizeof st_pass, 
-            "What would you like to %s?",
-                purchasable.length()? "purchase" : "do");
-    shop_print(st_pass, 20);
-    textcolor(LIGHTGREY);
-
-    ft = get_ch();
-
-    if (ft == 'x' || ft == ESCAPE)
-        goto goodbye;
-
-    if (ft == '\\')
+    more3();    
+    
+    const bool id_stock = shoptype_identifies_stock(shop.type);
+ 
+    while ( true )
     {
-        check_item_knowledge();
-        goto print_stock;
-    }
+        stashes.get_shop(shop.x, shop.y).reset();
+        
+        std::vector<int> stock = shop_stock(shopidx);
 
-    if (ft == 'v')
-    {
-        textcolor(CYAN);
-        shop_print("Examine which item?", 20);
-        textcolor(LIGHTGREY);
-        ft = get_ch();
-
-        // wonder whether this should be recoded to permit uppercase, too? {dlb}
-        if (ft < 'a' || ft > 'z')
-            goto huh;
-
-        ft -= 'a';              // see above comment {dlb}
-
-        if (ft > 18)
-            goto huh;
-
-        if (shop_items[ft] == NON_ITEM)
+        clrscr();
+        if ( stock.empty() )
         {
-            shop_print("I'm sorry, you seem to be confused.", 20);
+            shop_print("I'm sorry, my shop is empty now.", 20);
             more3();
-            goto purchase;
+            return;
         }
+            
+        const std::string purchasable = shop_print_stock(stock, shop);
+        list_shop_keys(purchasable);
+            
+        snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
+                  (you.gold == 1) ? "" : "s" );
+        textcolor(YELLOW);
+        shop_print(info, 19);
 
-        // A hack to make the description more useful.
-        // In theory, the user could kill the process at this
-        // point and end up with valid ID for the item.
-        // That's not very useful, though, because it doesn't set
-        // type-ID and once you can access the item (by buying it)
-        // you have its full ID anyway. Worst case, it won't get
-        // noted when you buy it.
-        item_def& item = mitm[shop_items[ft]];
-        const unsigned long old_flags = item.flags;
-        if ( id_stock )
-            item.flags |= ISFLAG_IDENT_MASK;
-        describe_item(item);
-        if ( id_stock )
-            item.flags = old_flags;
+        snprintf( info, INFO_SIZE, "What would you like to %s?",
+                  purchasable.length()? "purchase" : "do");
+        textcolor(CYAN);
+        shop_print(info, 20);
+            
+        textcolor(LIGHTGREY);
 
-        goto print_stock;
-    }
-
-    if (ft == '?' || ft == '*')
-    {
-        invent(-1, false);
-        goto print_stock;
-    }
-
-    if (ft < 'a' || ft > 'z')   // see earlier comments re: uppercase {dlb}
-    {
-      huh:
-        shop_print("Huh?", 20);
-        more3();
-        goto purchase;
-    }
-
-    ft -= 'a';                  // see earlier comments re: uppercase {dlb}
-
-    if (ft > 18)
-        goto huh;
-
-    if (shop_items[ft] == NON_ITEM)
-    {
-        shop_print("I'm sorry, you seem to be confused.", 20);
-        more3();
-        goto purchase;
-    }
-
-    gp_value = the_shop.greed*item_value(mitm[shop_items[ft]],id_stock)/10;
-    if ( you.duration[DUR_BARGAIN] ) // 20% discount
-    {
-        gp_value *= 8;
-        gp_value /= 10;
-    }
-
-    if (gp_value > you.gold)
-    {
-        shop_print("I'm sorry, you don't seem to have enough money.", 20);
-        more3();
-        goto purchase;
-    }
-    snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? [y/n]",
-             mitm[shop_items[ft]].name(DESC_NOCAP_A).c_str(), gp_value);
-    shop_print(info, 20);
-    if ( yesno(NULL, true, 'n', false, false, true) )
-    {
-        if ( id_stock )
+        int ft = get_ch();
+        
+        if ( ft == '\\' )
+            check_item_knowledge();
+        else if (ft == 'x' || ft == ESCAPE)
+            break;
+        else if (ft == 'v')
         {
-            // Identify the item and its type.
-            item_def& pitem = mitm[shop_items[ft]];
-            set_ident_type(pitem.base_type, pitem.sub_type, ID_KNOWN_TYPE);
-            set_ident_flags(pitem, ISFLAG_IDENT_MASK);
+            textcolor(CYAN);
+            shop_print("Examine which item?", 20);
+            textcolor(LIGHTGREY);
+
+            bool is_ok = true;
+
+            ft = get_ch();
+            if ( !isalpha(ft) )
+            {
+                is_ok = false;
+            }
+            else
+            {
+                ft = tolower(ft) - 'a';
+                if ( ft >= static_cast<int>(stock.size()) )
+                    is_ok = false;
+            }
+
+            if ( !is_ok )
+            {
+                shop_print("Huh?", 20);
+                more3();
+                continue;
+            }
+
+            // A hack to make the description more useful.
+            // In theory, the user could kill the process at this
+            // point and end up with valid ID for the item.
+            // That's not very useful, though, because it doesn't set
+            // type-ID and once you can access the item (by buying it)
+            // you have its full ID anyway. Worst case, it won't get
+            // noted when you buy it.
+            item_def& item = mitm[stock[ft]];
+            const unsigned long old_flags = item.flags;
+            if ( id_stock )
+                item.flags |= ISFLAG_IDENT_MASK;
+            describe_item(item);
+            if ( id_stock )
+                item.flags = old_flags;
         }
-        // purchase() will take the note if necessary.
-        purchase( shoppy, shop_items[ft], gp_value );
+        else if (ft == '?' || ft == '*')
+            invent(-1, false);
+        else if ( !isalpha(ft) )
+        {
+            shop_print("Huh?", 20);
+            more3();
+        }
+        else
+        {
+            ft = tolower(ft) - 'a';
+            if (ft >= static_cast<int>(stock.size()) )
+            {
+                shop_print("No such item.", 20);
+                more3();
+                continue;
+            }
+
+            item_def& item = mitm[stock[ft]];
+            
+            const int gp_value = shop_item_value(item, shop.greed, id_stock);
+            if (gp_value > you.gold)
+            {
+                shop_print("I'm sorry, you don't seem to have enough money.",
+                           20);
+                more3();
+            }
+            else
+            {
+                snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? [y/n]",
+                         item.name(DESC_NOCAP_A).c_str(), gp_value);
+                shop_print(info, 20);
+
+                if ( yesno(NULL, true, 'n', false, false, true) )
+                    purchase( shopidx, stock[ft], gp_value, id_stock );
+            }
+        }
     }
-
-    goto print_stock;
-
-  goodbye:
-    shop_print("Goodbye!", 20);
-    more3();
-
-    activate_notes(true);
 }
 
 bool shoptype_identifies_stock(int shoptype)
@@ -359,20 +311,15 @@ static void shop_print( const char *shoppy, int sh_lines )
         cprintf(" ");
 }
 
-static char more3()
+static void more3()
 {
-    char keyin = 0;
-
     gotoxy(70, 20);
     cprintf("-more-");
-    keyin = getch();
-    if (keyin == 0)
-        getch();
-    //clear_line();
-    return keyin;
+    get_ch();
+    return;
 }
 
-static void purchase( int shop, int item_got, int cost )
+static void purchase( int shop, int item_got, int cost, bool id )
 {
     you.gold -= cost;
 
@@ -380,15 +327,12 @@ static void purchase( int shop, int item_got, int cost )
 
     origin_purchased(item);
 
-    if ( fully_identified(item) && is_interesting_item(item) )
+    if ( id )
     {
-        activate_notes(true);
-
-        take_note(Note(NOTE_ID_ITEM, 0, 0,
-                       item.name(DESC_NOCAP_A).c_str(),
-                       origin_desc(item).c_str()));
-
-        activate_notes(false);
+        // Identify the item and its type.
+        // This also takes the ID note if necessary.
+        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     const int quant = item.quantity;
@@ -1526,10 +1470,8 @@ void shop()
     int i;
 
     for (i = 0; i < MAX_SHOPS; i++)
-    {
         if (env.shop[i].x == you.x_pos && env.shop[i].y == you.y_pos)
             break;
-    }
 
     if (i == MAX_SHOPS)
     {
@@ -1538,10 +1480,7 @@ void shop()
     }
 
     in_a_shop(i);
-    
-    you.redraw_gold = 1;
     burden_change();
-
     redraw_screen();
 }                               // end shop()
 
