@@ -444,6 +444,7 @@ void evoke_deck( item_def& deck )
         set_ident_flags( deck, ISFLAG_KNOW_TYPE );
         msg::streams(MSGCH_EQUIPMENT) << deck.name(DESC_INVENTORY)
                                       << std::endl;
+        you.wield_change = true;
     }
 
     did_god_conduct(DID_CARDS, brownie_points);
@@ -815,8 +816,6 @@ static void helm_card(int power, deck_rarity_type rarity)
                 msg::stream << "You feel resistant to " << resist_names[i]
                             << '.' << std::endl;
                 --num_resists;
-                if ( num_resists == 0 )
-                    break;
             }
         }
     }
