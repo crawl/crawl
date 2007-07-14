@@ -57,7 +57,7 @@ static card_type a_deck_of_emergency[] = {
 DEFVEC(deck_of_emergency);
 
 static card_type a_deck_of_destruction[] = {
-    CARD_VITRIOL, CARD_FLAME, CARD_FROST, CARD_HAMMER
+    CARD_VITRIOL, CARD_FLAME, CARD_FROST, CARD_VENOM, CARD_HAMMER
 };
 
 DEFVEC(deck_of_destruction);
@@ -153,6 +153,7 @@ const char* card_name(card_type card)
     case CARD_VITRIOL: return "Vitriol";
     case CARD_FLAME: return "Flame";
     case CARD_FROST: return "Frost";
+    case CARD_VENOM: return "Venom";
     case CARD_HAMMER: return "the Hammer";
     case CARD_SPADE: return "the Spade";
     case CARD_BARGAIN: return "the Bargain";
@@ -657,22 +658,46 @@ static void minefield_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void damaging_card( card_type card, int power, deck_rarity_type rarity )
+static void damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
+    const int power_level = get_power_level(power, rarity);
+
     dist target;
     bolt beam;
-    zap_type ztype;
+    zap_type ztype = ZAP_DEBUGGING_RAY;
+    const zap_type firezaps[3] = { ZAP_FLAME, ZAP_STICKY_FLAME, ZAP_FIRE };
+    const zap_type frostzaps[3] = { ZAP_FROST, ZAP_ICE_BOLT, ZAP_COLD };
+    const zap_type hammerzaps[3] = { ZAP_STRIKING, ZAP_STONE_ARROW,
+                                     ZAP_CRYSTAL_SPEAR };
+    const zap_type venomzaps[3] = { ZAP_STING, ZAP_VENOM_BOLT,
+                                    ZAP_POISON_ARROW };
+
     switch ( card )
     {
-    case CARD_VITRIOL: ztype = ZAP_BREATHE_ACID;  break;
-    case CARD_FLAME:   ztype = ZAP_BREATHE_FIRE;  break;
-    case CARD_FROST:   ztype = ZAP_BREATHE_FROST;  break;
-    case CARD_HAMMER:  ztype = ZAP_BREATHE_POWER; break;
-    default:           ztype = ZAP_DEBUGGING_RAY; break;
+    case CARD_VITRIOL:
+        ztype = (one_chance_in(3) ? ZAP_DEGENERATION : ZAP_BREATHE_ACID);
+        break;
+
+    case CARD_FLAME:
+        ztype = (coinflip() ? ZAP_FIREBALL : firezaps[power_level]);
+        break;
+
+    case CARD_FROST:
+        ztype = frostzaps[power_level];
+        break;
+
+    case CARD_HAMMER:
+        ztype = hammerzaps[power_level];
+        break;
+
+    case CARD_VENOM:
+        ztype = venomzaps[power_level];
+        break;
+
+    default:
+        break;
     }
 
-    // For now, just throw a bolt in that direction.
-    // Make this more interesting later! XXX
     if ( spell_direction( target, beam ) )
         zapping(ztype, random2(power/4), beam);
 }
@@ -1208,6 +1233,13 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_TROWEL:           trowel_card(power, rarity); break;
     case CARD_SPADE: your_spells(SPELL_DIG, random2(power/4), false); break;
         
+    case CARD_VENOM:
+        if ( coinflip() )
+            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE,random2(power/4), false);
+        else
+            damaging_card(which_card, power, rarity);
+        break;
+
     case CARD_VITRIOL: case CARD_FLAME: case CARD_FROST: case CARD_HAMMER:
         damaging_card(which_card, power, rarity);
         break;

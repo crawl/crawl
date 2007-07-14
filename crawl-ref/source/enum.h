@@ -493,6 +493,7 @@ enum card_type
     CARD_VITRIOL,               // acid damage
     CARD_FLAME,                 // fire damage
     CARD_FROST,                 // cold damage
+    CARD_VENOM,                 // poison damage
     CARD_HAMMER,                // pure damage
     
     CARD_ELIXIR,                // healing
