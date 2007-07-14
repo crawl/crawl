@@ -1306,9 +1306,8 @@ int count_staff_spells(const item_def &item, bool need_id)
     if (need_id && !item_type_known(item))
         return (0);
 
-    const int stype = item.sub_type;
     const int type = item.book_number();
-    if (stype < STAFF_SMITING || stype >= STAFF_AIR || type == -1)
+    if ( !item_is_rod(item) || type == -1)
         return (0);
 
     int nspel = 0;
@@ -1338,13 +1337,7 @@ int rod_shield_leakage()
 
 int staff_spell( int staff )
 {
-    int spell;
-    spell_type specspell;
-    int mana, diff, food, energy;
     item_def& istaff(you.inv[staff]);
-    // converting sub_type into book index type
-    const int type = istaff.book_number();
-
     // Spell staves are mostly for the benefit of non-spellcasters, so we're 
     // not going to involve INT or Spellcasting skills for power. -- bwr
     int powc = (5 + you.skills[SK_EVOCATIONS] 
@@ -1352,8 +1345,7 @@ int staff_spell( int staff )
                 * 100
                 / rod_shield_leakage(); 
 
-    const int staff_type = istaff.sub_type;
-    if (staff_type < STAFF_SMITING || staff_type >= STAFF_AIR)
+    if (!item_is_rod(istaff))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (-1);
@@ -1367,95 +1359,99 @@ int staff_spell( int staff )
 
     const int num_spells = count_staff_spells(istaff, false);
 
+    int keyin = 0;
     if (num_spells == 0)
     {
         canned_msg(MSG_NOTHING_HAPPENS);  // shouldn't happen
         return (0);
     }
     else if (num_spells == 1)
-        spell = 'a';  // automatically selected if its the only option
+    {
+        keyin = 'a';  // automatically selected if it's the only option
+    }
     else
     {
         mprf(MSGCH_PROMPT,
              "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
              'a' + num_spells - 1 );
 
-        spell = get_ch();
+        // Note that auto_list is ignored here.
+        keyin = get_ch();
         
-        if (spell == '?' || spell == '*')
+        if (keyin == '?' || keyin == '*')
         {
-            spell = read_book( you.inv[staff], RBOOK_USE_STAFF );
+            keyin = read_book( you.inv[staff], RBOOK_USE_STAFF );
             // [ds] read_book sets turn_is_over.
             you.turn_is_over = false;
         }
     }
 
-    if ( !isalpha(spell) )
-        goto whattt;
+    if ( !isalpha(keyin) )
+    {
+        canned_msg(MSG_HUH);
+        return -1;
+    }
 
-    spell = letter_to_index( spell );
+    const int idx = letter_to_index( keyin );
 
-    if (spell >= SPELLBOOK_SIZE)
-        goto whattt;
+    // converting sub_type into book index type
+    const int type = istaff.book_number();
 
-    if (!is_valid_spell_in_book( staff, spell ))
-        goto whattt;
+    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(type, idx))
+    {
+        canned_msg(MSG_HUH);
+        return -1;
+    }
 
-    specspell = which_spell_in_book( type, spell );
+    const spell_type spell = which_spell_in_book( type, idx );
+    const int mana = spell_mana( spell ) * ROD_CHARGE_MULT;
+    const int diff = spell_difficulty( spell );
 
-    if (specspell == SPELL_NO_SPELL)
-        goto whattt;
+    int food = spell_hunger(spell);
 
-    mana = spell_mana( specspell ) * ROD_CHARGE_MULT;
-    diff = spell_difficulty( specspell );
-    food = spell_hunger( specspell );
-
-    if (food && (you.is_undead != US_UNDEAD
-            && (you.hunger_state < HS_HUNGRY || you.hunger <= food)))
+    // For now player_energy() is always 0, because you've got to
+    // be wielding the rod...
+    if (you.is_undead == US_UNDEAD || player_energy() > 0)
+    {
+        food = 0;
+    }
+    else
+    {
+        food -= 10 * you.skills[SK_EVOCATIONS];
+        if (food < diff * 5)
+            food = diff * 5;
+    }
+        
+    if (food && (you.hunger_state < HS_HUNGRY || you.hunger <= food))
     {
         mpr("You don't have the energy to cast that spell.");
         return (-1);
     }
-
-    if (istaff.plus < mana || you.experience_level < diff)
+    
+    if (istaff.plus < mana)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-                "Mana needed: %d, Staff plus: %d, Difficulty: %d, XP: %d",
-                mana, istaff.plus, diff, you.experience_level);
-#endif
-        if (you.experience_level < diff)
-            mprf("You need to be at least level %d to use that.", diff);
-        else
-            mpr("The rod doesn't have enough magic points.");
-
+        mpr("The rod doesn't have enough magic points.");
         // Don't lose a turn for trying to evoke without enough MP - that's
         // needlessly cruel for an honest error.
         return (-1);
     }
 
-    if (your_spells(specspell, powc, false) == SPRET_ABORT)
+    if (you.experience_level < diff)
+    {
+        mprf("You need to be at least level %d to use that.", diff);
+        return (-1);
+    }
+
+    // All checks passed, we can cast the spell
+    if (your_spells(spell, powc, false) == SPRET_ABORT)
         return (-1);
 
+    make_hungry( food, true );
+
     istaff.plus -= mana;
-
-    energy = player_energy();
-    if (energy <= 0 && you.is_undead != US_UNDEAD)
-    {
-        food -= 10 * you.skills[SK_EVOCATIONS];
-        if (food < diff * 5)
-            food = diff * 5;
-
-        make_hungry( food, true );
-    }
 
     you.wield_change = true;
     you.turn_is_over = true;
 
-    return (roll_dice( 1, 1 + spell_difficulty(specspell) / 2 ));
-
-  whattt:
-    mpr("What?");
-
-    return (-1);
-}                               // end staff_spell()
+    return (roll_dice( 1, 1 + spell_difficulty(spell) / 2 ));
+}
