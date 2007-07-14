@@ -2208,7 +2208,7 @@ int calc_mp(void)
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
-    you.redraw_magic_points = 1;
+    you.redraw_magic_points = true;
 
     return (you.max_magic_points);
 }                               // end calc_mp()

@@ -885,9 +885,39 @@ static void focus_card(int power, deck_rarity_type rarity)
 
 static void shuffle_card(int power, deck_rarity_type rarity)
 {
-    // not yet implemented
-    // should shuffle *base* stat levels
-    return;
+    stat_type stats[3] = {STAT_STRENGTH, STAT_DEXTERITY, STAT_INTELLIGENCE};
+    int old_base[3] = { you.strength, you.dex, you.intel};
+    int old_max[3]  = {you.max_strength, you.max_dex, you.max_intel};
+    int modifiers[3];
+
+    int perm[3] = { 0, 1, 2 };
+
+    for ( int i = 0; i < 3; ++i )
+        modifiers[i] = stat_modifier(stats[i]);
+
+    std::random_shuffle( perm, perm + 3 );
+    
+    int new_base[3];
+    int new_max[3];
+    for ( int i = 0; i < 3; ++i )
+    {
+        new_base[perm[i]] = old_base[i] - modifiers[i] + modifiers[perm[i]];
+        new_max[perm[i]] = old_max[i] - modifiers[i] + modifiers[perm[i]];
+    }
+    
+    // Sometimes you just long for Python.
+    you.strength = new_base[0];
+    you.dex = new_base[1];
+    you.intel = new_base[2];
+
+    you.max_strength = new_max[0];
+    you.max_dex = new_max[1];
+    you.max_intel = new_max[2];
+
+    you.redraw_strength = true;
+    you.redraw_intelligence = true;
+    you.redraw_dexterity = true;
+    you.redraw_evasion = true;
 }
 
 static void helix_card(int power, deck_rarity_type rarity)

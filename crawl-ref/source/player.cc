@@ -475,7 +475,7 @@ int get_player_wielded_weapon()
 
 // Looks in equipment "slot" to see if there is an equiped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
-int player_equip( int slot, int sub_type, bool calc_unid )
+int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 {
     int ret = 0;
 
@@ -4481,6 +4481,119 @@ void rot_player( int amount )
         you.rotting += amount;
     }
 }
+
+
+int count_worn_ego( special_armour_type ego )
+{
+    int result = 0;
+    for ( int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot )
+        if (you.equip[slot] != -1 &&
+            get_armour_ego_type(you.inv[you.equip[slot]]) == ego)
+            result++;
+    return result;
+}
+
+static int strength_modifier()
+{
+    int result = 0;
+    if ( you.duration[DUR_MIGHT] )
+        result += 5;
+
+    // ego items of strength
+    result += 3 * count_worn_ego(SPARM_STRENGTH);
+
+    // rings of strength
+    result += player_equip( EQ_RINGS_PLUS, RING_STRENGTH );
+
+    // randarts of strength
+    result += scan_randarts(RAP_STRENGTH);
+
+    // mutations
+    result += you.mutation[MUT_STRONG] - you.mutation[MUT_WEAK];
+    result += you.mutation[MUT_STRONG_STIFF]-you.mutation[MUT_FLEXIBLE_WEAK];
+    
+    // transformations
+    switch ( you.attribute[ATTR_TRANSFORMATION] )
+    {
+    case TRAN_STATUE:          result +=  2; break;
+    case TRAN_DRAGON:          result += 10; break;
+    case TRAN_LICH:            result +=  3; break;
+    case TRAN_SERPENT_OF_HELL: result += 13; break;
+    default:                                 break;
+    }
+    return result;
+}
+
+static int dex_modifier()
+{
+    int result = 0;
+
+    // ego items of dexterity
+    result += 3 * count_worn_ego(SPARM_DEXTERITY);
+
+    // rings of dexterity
+    result += player_equip( EQ_RINGS_PLUS, RING_DEXTERITY );
+
+    // randarts of dexterity
+    result += scan_randarts(RAP_DEXTERITY);
+
+    // mutations
+    result += you.mutation[MUT_AGILE] - you.mutation[MUT_CLUMSY];
+    result += you.mutation[MUT_FLEXIBLE_WEAK]-you.mutation[MUT_STRONG_STIFF];
+    result -= you.mutation[MUT_BLACK_SCALES];
+    result -= you.mutation[MUT_BONEY_PLATES];
+    const int grey2_modifier[]    = { 0, -1, -1, -2 };
+    const int metallic_modifier[] = { 0, -2, -3, -4 };
+    const int yellow_modifier[]   = { 0,  0, -1, -2 };
+    const int red2_modifier[]     = { 0,  0, -1, -2 };
+    
+    result -= grey2_modifier[you.mutation[MUT_GREY2_SCALES]];
+    result -= metallic_modifier[you.mutation[MUT_METALLIC_SCALES]];
+    result -= yellow_modifier[you.mutation[MUT_YELLOW_SCALES]];
+    result -= red2_modifier[you.mutation[MUT_RED2_SCALES]];
+    
+    // transformations
+    switch ( you.attribute[ATTR_TRANSFORMATION] )
+    {
+    case TRAN_SPIDER: result +=  5; break;
+    case TRAN_STATUE: result -=  2; break;
+    case TRAN_AIR:    result +=  8; break;
+    default:                        break;
+    }
+    return result;
+}
+
+static int int_modifier()
+{
+    int result = 0;
+
+    // ego items of intelligence
+    result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+
+    // rings of intelligence
+    result += player_equip( EQ_RINGS_PLUS, RING_INTELLIGENCE );
+
+    // randarts of intelligence
+    result += scan_randarts(RAP_INTELLIGENCE);
+
+    // mutations
+    result += you.mutation[MUT_CLEVER] - you.mutation[MUT_DOPEY];
+    return result;
+}
+
+int stat_modifier( stat_type stat )
+{
+    switch ( stat )
+    {
+    case STAT_STRENGTH:     return strength_modifier();
+    case STAT_DEXTERITY:    return dex_modifier();
+    case STAT_INTELLIGENCE: return int_modifier();
+    default:
+        mprf(MSGCH_DANGER, "Bad stat: %d", stat);
+        return 0;
+    }
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 // actor
