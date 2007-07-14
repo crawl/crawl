@@ -1570,7 +1570,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         env.shop[i].x = unmarshallByte(th);
         env.shop[i].y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
-        env.shop[i].type = unmarshallByte(th);
+        env.shop[i].type = static_cast<shop_type>(unmarshallByte(th));
         env.shop[i].level = unmarshallByte(th);
     }
 

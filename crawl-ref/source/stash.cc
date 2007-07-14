@@ -698,7 +698,7 @@ std::string ShopInfo::shop_item_name(const shop_item &si) const
 
     const unsigned long oldflags = si.item.flags;
 
-    if ( shoptype_identifies_stock(this->shoptype) )
+    if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
            
     const std::string itemname = Stash::stash_item_name(si.item);
@@ -717,7 +717,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
   
     const unsigned long oldflags = si.item.flags;
 
-    if (shoptype_identifies_stock(this->shoptype))
+    if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
     if (is_dumpable_artefact(si.item, false))
@@ -741,7 +741,7 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
 {
     const unsigned long oldflags = si.item.flags;
 
-    if (shoptype_identifies_stock(this->shoptype))
+    if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
     
     describe_item( si.item );

@@ -4301,8 +4301,9 @@ void place_spec_shop( int level_number,
 
     env.shop[i].level = level_number * 2;
 
-    env.shop[i].type = (force_s_type != SHOP_RANDOM) ? force_s_type 
-                                                     : random2(NUM_SHOPS);
+    env.shop[i].type = static_cast<shop_type>(
+        (force_s_type != SHOP_RANDOM) ? force_s_type 
+                                      : random2(NUM_SHOPS));
 
     if (env.shop[i].type == SHOP_FOOD)
     {

@@ -1204,7 +1204,7 @@ struct shop_struct
     unsigned char       x;
     unsigned char       y;
     unsigned char       greed;
-    unsigned char       type;
+    shop_type           type;
     unsigned char       level;
 
     FixedVector<unsigned char, 3> keeper_name;

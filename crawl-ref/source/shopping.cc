@@ -293,22 +293,19 @@ static void in_a_shop( int shopidx )
     }
 }
 
-bool shoptype_identifies_stock(int shoptype)
+bool shoptype_identifies_stock(shop_type type)
 {
     return
-        shoptype != SHOP_WEAPON_ANTIQUE &&
-        shoptype != SHOP_ARMOUR_ANTIQUE &&
-        shoptype != SHOP_GENERAL_ANTIQUE;
+        type != SHOP_WEAPON_ANTIQUE &&
+        type != SHOP_ARMOUR_ANTIQUE &&
+        type != SHOP_GENERAL_ANTIQUE;
 }
 
 static void shop_print( const char *shoppy, int sh_lines )
 {
     gotoxy(1, sh_lines);
-
     cprintf("%s", shoppy);
-
-    for (int i = strlen(shoppy); i < 80; i++)
-        cprintf(" ");
+    clear_to_end_of_line();
 }
 
 static void more3()
