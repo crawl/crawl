@@ -5473,7 +5473,8 @@ static void box_room(int bx1, int bx2, int by1, int by2,
     replace_area(bx1,by1+1,bx1,by2-1,DNGN_FLOOR,wall_type);
     replace_area(bx2,by1+1,bx2,by2-1,DNGN_FLOOR,wall_type);
 
-    // sometimes we have to place doors, or else we shut in other buildings' doors
+    // sometimes we have to place doors, or else we shut in other
+    // buildings' doors
     doors_placed = box_room_doors(bx1, bx2, by1, by2, 0);
 
     temp_rand = random2(100);
@@ -5481,7 +5482,7 @@ static void box_room(int bx1, int bx2, int by1, int by2,
                 ((temp_rand > 22) ? 1 : 3);
 
     // small rooms don't have as many doors
-    if ((bx2-bx1)*(by2-by1) < 36)
+    if ((bx2-bx1)*(by2-by1) < 36 && new_doors > 1)
         new_doors--;
 
     new_doors -= doors_placed;
@@ -5545,7 +5546,8 @@ static void city_level(int level_number)
 
                     // treasure area.. neat.
                     if (one_chance_in(3))
-                        treasure_area(level_number, x1 + 3, x2 - 3, y1 + 3, y2 - 3);
+                        treasure_area(level_number, x1 + 3, x2 - 3,
+                                      y1 + 3, y2 - 3);
                 }
             }
         }
