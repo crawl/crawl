@@ -1453,8 +1453,10 @@ void move_item_to_grid( int *const obj, int x, int y )
         }
     }
     // Non-stackable item that's been fudge-stacked (monster throwing weapons).
-    // Explode the stack when dropped.
-    else if (mitm[*obj].quantity > 1)
+    // Explode the stack when dropped. We have to special case chunks, ew.
+    else if (mitm[*obj].quantity > 1
+             && (mitm[*obj].base_type != OBJ_FOOD
+                 || mitm[*obj].sub_type != FOOD_CHUNK))
     {
         while (mitm[*obj].quantity > 1)
         {
