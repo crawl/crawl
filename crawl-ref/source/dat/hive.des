@@ -183,7 +183,6 @@ KMONS:     R = killer bee / killer bee larva w:2
 KFEAT:     R = R
 KMONS:     M = plant
 KMONS:     N = plant
-CHANCE:    50000
 KFEAT:     M = *
 KFEAT:     N = | / * w:20
 KMONS:     Z = plant / nothing
