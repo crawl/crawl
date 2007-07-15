@@ -3501,7 +3501,7 @@ void read_scroll(void)
         break;
 
     case SCR_BLINKING:
-        blink();
+        blink(1000, false);
         break;
 
     case SCR_TELEPORTATION:

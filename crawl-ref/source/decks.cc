@@ -502,7 +502,7 @@ static void warp_card(int power, deck_rarity_type rarity)
 {
     const int control_level = get_power_level(power, rarity);
     if ( control_level >= 2 )
-        blink();
+        blink(1000, false);
     else if ( control_level == 1 )
         cast_semi_controlled_blink(power / 4);
     else

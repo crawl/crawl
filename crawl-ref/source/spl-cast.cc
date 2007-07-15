@@ -1089,7 +1089,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_CONTROLLED_BLINK:
-        if (blink() == -1)
+        if (blink(powc, true) == -1)
             return (SPRET_ABORT);
         break;
 

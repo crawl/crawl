@@ -47,20 +47,33 @@
 #include "stuff.h"
 #include "view.h"
 
-int blink(void)
+static bool abyss_blocks_teleport(bool cblink)
 {
-    struct dist beam;
+    // Lugonu worshippers get their perks.
+    if (you.religion == GOD_LUGONU)
+        return (false);
+
+    // Controlled Blink (the spell) works quite reliably in the Abyss.
+    return (cblink? one_chance_in(3) : !one_chance_in(3));
+}
+
+int blink(int pow, bool high_level_controlled_blink)
+{
+    dist beam;
 
     // yes, there is a logic to this ordering {dlb}:
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
         mpr("You feel a weird sense of stasis.");
-    else if (you.level_type == LEVEL_ABYSS && !one_chance_in(3))
+    else if (you.level_type == LEVEL_ABYSS
+             && abyss_blocks_teleport(high_level_controlled_blink))
         mpr("The power of the Abyss keeps you in your place!");
     else if (you.duration[DUR_CONF])
         random_blink(false);
     else if (!allow_control_teleport(true))
     {
         mpr("A powerful magic interferes with your control of the blink.");
+        if (high_level_controlled_blink)
+            return (cast_semi_controlled_blink(pow));
         random_blink(false);
     }
     else

@@ -556,7 +556,7 @@ static void handle_wizard_command( void )
         break;
 
     case 'b':
-        blink();            // wizards can always blink
+        blink(1000, true);        // wizards can always blink
         break;
 
     case '~':
