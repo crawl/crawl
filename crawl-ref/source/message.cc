@@ -651,7 +651,7 @@ void mesclr( bool force )
 
 void more(void)
 {
-    if (Options.show_more_prompt)
+    if (Options.show_more_prompt && !suppress_messages)
     {
         char keypress = 0;
 

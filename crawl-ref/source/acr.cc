@@ -400,6 +400,10 @@ static void handle_wizard_command( void )
         level_change();
         break;
 
+    case CONTROL('X'):
+        debug_set_xl();
+        break;
+
     case 's':
         you.exp_available = 20000;
         you.redraw_experience = 1;

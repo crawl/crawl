@@ -1084,22 +1084,23 @@ static void list_wizard_commands()
                        "m/M    : create monster by number/name\n"
                        "o/%    : create an object\n"
                        "p      : make entrance to pandemonium\n"
-                       "x      : gain an experience level\n"
                        "r      : change character's species\n"
                        "s      : gain 20000 skill points\n"
                        "S      : set skill to level\n"
-                       "t      : tweak object properties\n",
+                       "t      : tweak object properties\n"
+                       "T      : make a trap\n"
+                       "v      : show gold value of an item\n",
                        true, true);
 
     cols.add_formatted(1, 
-                       "T      : make a trap\n"
-                       "v      : show gold value of an item\n"
+                       "x      : gain an experience level\n"
+                       "Ctrl-X : change experience level\n"
                        "X      : make Xom do something now\n"
                        "z/Z    : cast spell by number/name\n"
                        "$      : get 1000 gold\n"
                        "</>    : create up/down staircase\n"
                        "u/d    : shift up/down one level\n"
-                       "~/\"    : go to a specific level\n"
+                       "~      : go to a specific level\n"
                        "(/)    : make feature by number/name\n"
                        "]      : get a mutation\n"
                        "[      : get a demonspawn mutation\n"
@@ -1108,6 +1109,7 @@ static void list_wizard_commands()
                        "^      : gain piety\n"
                        "_      : gain religion\n"
                        "'      : list items\n"
+                       "\"      : list monsters\n"
                        "?      : list wizard commands\n"
                        "|      : make unrand/fixed artefacts\n"
                        "+      : make randart from item\n"

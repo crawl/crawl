@@ -287,7 +287,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg);
 /* ***********************************************************************
  * called from: decks - it_use2 - player
  * *********************************************************************** */
-void level_change(void);
+void level_change(bool skip_ability_increase = false);
 
 
 /* ***********************************************************************

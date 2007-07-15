@@ -2342,7 +2342,7 @@ void gain_exp( unsigned int exp_gained )
         tutorial_finished();
 }                               // end gain_exp()
 
-void level_change(void)
+void level_change(bool skip_ability_increase)
 {
     int hp_adjust = 0;
     int mp_adjust = 0;
@@ -2384,7 +2384,7 @@ void level_change(void)
             inc_hp( brek, true );
             inc_mp( 1, true );
 
-            if (!(you.experience_level % 3))
+            if (!(you.experience_level % 3) && !skip_ability_increase)
                 ability_increase();
 
             switch (you.species)

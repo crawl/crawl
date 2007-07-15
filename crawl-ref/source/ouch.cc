@@ -581,7 +581,7 @@ void expose_player_to_element( beam_type flavour, int strength )
         expose_invent_to_element( flavour, strength );
 }
 
-void lose_level(void)
+void lose_level()
 {
     // because you.experience is unsigned long, if it's going to be -ve
     // must die straightaway.

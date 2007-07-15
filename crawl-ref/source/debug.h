@@ -152,6 +152,7 @@ void debug_set_stats( void );
 void debug_list_monsters();
 
 void debug_card();
+void debug_set_xl();
 
 #ifdef DEBUG_DIAGNOSTICS
 void generate_map_stats();
