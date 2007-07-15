@@ -242,8 +242,9 @@ std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line,
     {
         const std::string line_num = s.substr(lns, pe - lns);
         const int lnum = atoi(line_num.c_str());
-        s = s.substr(0, lns) + make_stringf("%d", lnum + first - 1)
-            + s.substr(pe);
+        const std::string newlnum = make_stringf("%d", lnum + first - 1);
+        s = s.substr(0, lns) + newlnum + s.substr(pe);
+        pe = lns + newlnum.length();
     }
 
     return s.substr(0, ps) + (file.empty()? context : file) + ":"

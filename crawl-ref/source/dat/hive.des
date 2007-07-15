@@ -170,6 +170,88 @@ MAP
 ..................
 ENDMAP
 
+#############################################################################
+# Another hive entry (Eino)
+# This one appeared to me in a dream.
+#
+NAME:      eino_hive_1
+TAGS:      hive_entry no_monster_gen
+ORIENT:    float
+# i'm not sure water creatures would fit this one.. change if you strongly think otherwise
+MONS:      killer bee / killer bee larva w:2, queen bee / killer bee w:2, oklob plant / plant w:1, plant / nothing
+KMONS:     R = killer bee / killer bee larva w:2
+KFEAT:     R = R
+KMONS:     M = plant
+KMONS:     N = plant
+CHANCE:    50000
+KFEAT:     M = *
+KFEAT:     N = | / * w:20
+KMONS:     Z = plant / nothing
+: if crawl.coinflip() then
+SUBST:     W : .
+SUBST:     w : .
+KFEAT:     Z = W
+: else
+KFEAT:     Z = .
+: end
+SUBST:     q=w
+MAP
+   x   x
+ xxx...xxx
+xx4.a1a.4xx
+x4.aRaRa.4x
+x441aOa244x
+x4.aRaRa.4x
+xx4.a1a.4xx
+ x4.....4x
+ xxZ4.44xx
+  xZWW.4x
+  xxZWZxx
+   xxWxx
+    xWx
+xxxxxWxxxxx
+@....W....@
+xxxxxWxxxxx
+    xWx
+   xxWxx
+  xx4W4xx
+  x4.WW4x
+ xx4.WWZxx
+ xM4WWww4x
+xxN3wwwwwxx
+xM4wwwwwqqx
+x4.wwwwqqqx
+x4..wwqqqqx
+xx...44qqxx
+ xxx..4xxx
+   x   x
+ENDMAP
+
+##########################################
+# Bees in trees by the pond
+
+NAME:      eino_hive_2
+TAGS:      hive_entry
+ORIENT:    float
+KFEAT:     N = w / w:5 .
+KFEAT:     Z = w
+KMONS:     Z = plant / w:3 nothing
+KFEAT:     V = w
+KMONS:     V = killer bee w:20 / nothing w:6 / giant blowfly w:1
+MONS:      plant / nothing w:3
+MONS:      killer bee w:20 / nothing w:6 / giant blowfly w:1
+MAP
+     ....  ...NNNZNN.
+  ....11.....NZZwwZZNN.
+ . 11.2111.1NZwwVwwwwwN
+.1.1.11.22ZZw.wwwwVwwwZN
+..1212211ZZOZwwwwwwwVZZ.
+.1..111.21wV1.ZwVwwwZNN
+ ..1.2211.1Zw1.ZwwZNN.
+  ...11.1...  11.NN..
+     ....
+ENDMAP
+
 
 ##############################################################################
 # Hive branch end maps

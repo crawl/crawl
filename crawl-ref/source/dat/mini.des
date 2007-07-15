@@ -1247,30 +1247,46 @@ xxxx
 ENDMAP
 
 #############################################################################
-# Doghouse (Eino)
-# put the rest of the doghouses in float.des, combined CHANCE of all of them is 10
+# Small statue alley (Eino)
 
-NAME:    doghouse_v1
-TAGS:    mini_float
-DEPTH:   4-8
-SHUFFLE: 1?T
-SUBST:   T : T V:2
-SUBST:   ? : 1:2 .
-MONS:    hound / w:1 nothing / w:2 jackal
+NAME:    small_statue_alley_a
+DEPTH:   D:10-20
+CHANCE:  7
+MAP
+xxxcccccx
+...G...G@
+.G.F.G.G.
+.G.G.F.G.
+@G...G...
+xcccccxxx
+ENDMAP
+
+NAME:    small_statue_alley_b
+DEPTH:   D:3-10
 CHANCE:  2
 MAP
-xxx+xxx
-xxx+xxx
-xx...xx
-xx?..xx
-xx1.Txx
-xxxxxxx
-xxxxxxx
+xxxcccccx
+...G...G@
+.G.G.G.G.
+.G.G.G.G.
+@G...G...
+xcccccxxx
+ENDMAP
+
+NAME:    small_statue_alley_c
+DEPTH:   D:6-12
+CHANCE:  1
+MAP
+xxxcccccx
+...I...I@
+.I.I.I.I.
+.I.I.I.I.
+@I...I...
+xcccccxxx
 ENDMAP
 
 #############################################################################
 # Circle pieces altar (Eino)
-# put the third version in float.des, hence combined CHANCE < 10
 
 NAME: circle_pieces_altar_v1
 DEPTH: 3-26
@@ -1333,16 +1349,172 @@ MAP
 ......
 ENDMAP
 
+NAME: circle_pieces_altar_v3
+DEPTH: 3-26
+CHANCE: 3
+MAP
+xxxxxxxxxxxxxxxxxx
+.bbbbbbbbbbbbbbbbx
+...bbbbbbbbbbbbbbx
+@....bbbbbbbbbb...
+.......bbbbb.....@
+xbb...............
+xbbb...........bbx
+xbbbbb.......bbbbx
+xbbbbbb.....bbbbbx
+xbbbbbb.....bbbbbx
+xbbbbbb..C..bbbbbx
+xbbbbbb.....bbbbbx
+xbbbbbb.....bbbbbx
+xbbbbb.......bbbbx
+xbbb...........bbx
+@.....bbbb......bx
+..bbbbbbbbbbb.....
+xbbbbbbbbbbbbbb..@
+xxxxxxxxxxxxxxxx..
+ENDMAP
+
+#############################################################################
+# Doghouse (Eino)
+
+NAME:    doghouse_v1
+DEPTH:   4-8
+SHUFFLE: 1?T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  2
+MAP
+.........
+.xxx+xxx.
+.xxx+xxx.
+.xx...xx.
+.xx?..xx.
+.xx1.Txx.
+.xxxxxxx.
+.xxxxxxx.
+.........
+ENDMAP
+
+NAME:    doghouse_v2
+TAGS:    mini_float
+DEPTH:   4-8
+SHUFFLE: ?1T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  3
+MAP
+xx+xx
+xx+xx
+x...x
+x?1Tx
+x...x
+xx+xx
+xx+xx
+ENDMAP
+
+NAME:    doghouse_v3
+TAGS:    mini_float
+DEPTH:   4-8
+SHUFFLE: ?1T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  3
+MAP
+xxx+xx
+xxx+xx
+xx...x
+++..?x
+xx.T1x
+xxxxxx
+ENDMAP
+
+NAME:    doghouse_v4
+
+TAGS:    mini_float
+DEPTH:   4-8
+SHUFFLE: ?1T
+SUBST:   T : T V:2
+SUBST:   ? : 1:2 .
+MONS:    hound / w:1 nothing / w:2 jackal
+CHANCE:  2
+MAP
+xxx+xxx
+xxx+xxx
+xx...xx
+++.T.++
+xx?1?xx
+xxxxxxx
+ENDMAP
+
 #############################################################################
 # Small room with statues (Eino)
 
 NAME:    small_statue_room
 DEPTH:   D:2-26
 FLAGS:   no_hmirror no_vmirror
+TAGS:    mini_float
 MAP
 xxx.xxx
 xG...Gx
 .......
 xG...Gx
 xxx.xxx
+ENDMAP
+
+#############################################################################
+# Small chambers for nice items (Eino)
+# not necessarily versions of the same vault
+
+NAME:   small_chamber_a
+TAGS:   mini_float
+DEPTH:  4-27
+MAP
+ xxxxxxx
+xx.....xx
+x...*...x
+x.......x
+xx.....xx
+ x.....x
+ENDMAP
+
+NAME:   small_chamber_b
+TAGS:   mini_float
+DEPTH:  8-27, Elf, Snake, Vault, Crypt
+MAP
+xxxxxxxxx
+xxG...Gxx
+x...|...x
+x...9...x
+xx.....xx
+xxT...Txx
+xx.....xx
+xxT...Txx
+ENDMAP
+
+NAME:   tiny_chamber_a
+TAGS:   mini_float
+DEPTH:  2-27, Elf, Snake, Vault, Crypt
+MAP
+xxxxx
+x...x
+x.*.=
+x...x
+xxxxx
+ENDMAP
+
+NAME:   dig_this
+TAGS:   mini_float
+DEPTH:  8-27, Elf, Snake, Vault, Crypt
+NSUBST: Z = 1:| / 1:* / *:Z
+KFEAT:  Z = teleport trap
+MAP
+xxxxxxxxxxxxxxx
+xvvvvvvvvvvvvvx
+x.vxvZxZxZvvvvx
+=.xvxxZxZxvvvvx
+xvvvvvvvvvvvvvx
+xxxxxxxxxxxxxxx
 ENDMAP
