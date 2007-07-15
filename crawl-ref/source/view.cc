@@ -599,6 +599,10 @@ static int get_mons_colour(const monsters *mons)
         col |= COLFLAG_ITEM_HEAP;
     }
 
+    // Backlit monsters are fuzzy and override brands.
+    if (mons->has_ench(ENCH_INVIS) && mons->has_ench(ENCH_BACKLIGHT))
+        col = DARKGREY;
+
     return (col);
 }
 

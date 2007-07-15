@@ -1358,10 +1358,6 @@ std::string status_mut_abilities()
     if (you.duration[DUR_SILENCE])  
         text += "radiating silence, ";
 
-// resistance part already says so
-//    if (you.duration[DUR_SEE_INVISIBLE])
-//        text += "see invisible, ";
-
     if (you.duration[DUR_INVIS])
         text += "invisible, ";
 

@@ -262,7 +262,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
                     mpr("Moving in this stuff is going to be slow.");
 
-                    if (you.duration[DUR_INVIS])
+                    if (you.invisible())
                         mpr( "... and don't expect to remain undetected." );
                 }
             }
@@ -2178,7 +2178,7 @@ int player_see_invis(bool calc_unid)
 bool player_monster_visible( const monsters *mon )
 {
     if (mon->has_ench(ENCH_SUBMERGED)
-        || (mon->has_ench(ENCH_INVIS) && !player_see_invis()))
+        || (mon->invisible() && !player_see_invis()))
     {
         return (false);
     }
@@ -5498,7 +5498,7 @@ bool player::can_see_invisible() const
 
 bool player::invisible() const
 {
-    return (duration[DUR_INVIS]);
+    return (duration[DUR_INVIS] && !backlit());
 }
 
 bool player::backlit() const

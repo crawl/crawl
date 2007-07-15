@@ -822,6 +822,9 @@ void cast_toxic_radiance(void)
 
         if (monster->type != -1 && mons_near(monster))
         {
+            // Monsters affected by corona are still invisible in that
+            // radiation passes through them without affecting them. Therefore,
+            // this check should not be !monster->invisible().
             if (!monster->has_ench(ENCH_INVIS))
             {
                 poison_monster(monster, KC_YOU);

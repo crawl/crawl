@@ -159,7 +159,7 @@ bool mons_speaks(const monsters *monster)
     const std::string m_name = monster->name(DESC_CAP_THE);
     strcpy(info, m_name.c_str());
 
-    if (monster->has_ench(ENCH_INVIS))
+    if (monster->invisible())
         return false;
     // invisible monster tries to remain unnoticed
 

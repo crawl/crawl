@@ -2001,14 +2001,17 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         if (!monster->has_ench(ENCH_INVIS)
             && monster->add_ench(ENCH_INVIS))
         {
+            // A casting of invisibility erases backlight.
+            monster->del_ench(ENCH_BACKLIGHT);
+            
             // Can't use simple_monster_message here, since it checks
             // for visibility of the monster (and its now invisible) -- bwr
             if (mons_near( monster ))
             {
                 mprf("%s flickers %s",
                      monster_name.c_str(),
-                     player_see_invis() ? "for a moment." 
-                                        : "and vanishes!" );
+                     player_monster_visible(monster) ? "for a moment." 
+                                                     : "and vanishes!" );
             }
 
             pbolt.obvious_effect = true;
@@ -2421,8 +2424,8 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 // for monsters without see invis firing tracers at the player.
 static bool found_player(const bolt &beam, int x, int y)
 {
-    const bool needs_fuzz = beam.is_tracer && !beam.can_see_invis 
-                            && you.duration[DUR_INVIS];
+    const bool needs_fuzz =
+        beam.is_tracer && !beam.can_see_invis && you.invisible();
     const int dist = needs_fuzz? 2 : 0;
 
     return (grid_distance(x, y, you.x_pos, you.y_pos) <= dist);
@@ -2994,7 +2997,7 @@ static int affect_player( bolt &beam )
     if (beam.is_tracer)
     {
         // check can see player 
-        if (beam.can_see_invis || !you.duration[DUR_INVIS]
+        if (beam.can_see_invis || !you.invisible()
                 || fuzz_invis_tracer(beam))
         {
             if (beam.is_friendly)
@@ -3018,7 +3021,7 @@ static int affect_player( bolt &beam )
     int beamHit = beam.hit;
 
     // Monsters shooting at an invisible player are very inaccurate.
-    if (you.duration[DUR_INVIS] && !beam.can_see_invis)
+    if (you.invisible() && !beam.can_see_invis)
         beamHit /= 2;
 
     if (beam.name[0] != '0') 
@@ -3130,6 +3133,13 @@ static int affect_player( bolt &beam )
                 if (you.duration[DUR_BACKLIGHT] > 250)
                     you.duration[DUR_BACKLIGHT] = 250;
 
+                beam.obvious_effect = true;
+            }
+            else
+            {
+                mpr("You feel strangely conspicuous.");
+                if ((you.duration[DUR_BACKLIGHT] += random_range(3, 5)) > 250)
+                    you.duration[DUR_BACKLIGHT] = 250;
                 beam.obvious_effect = true;
             }
             break;
@@ -3424,7 +3434,7 @@ static int affect_monster(bolt &beam, monsters *mon)
     if (beam.is_tracer)
     {
         // check can see other monster
-        if (!beam.can_see_invis && menv[tid].has_ench(ENCH_INVIS))
+        if (!beam.can_see_invis && menv[tid].invisible())
         {
             // can't see this monster, ignore it
             return 0;

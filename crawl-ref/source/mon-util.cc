@@ -492,7 +492,7 @@ bool mons_see_invis(const monsters *mon)
 bool mons_monster_visible( struct monsters *mon, struct monsters *targ )
 {
     if (targ->has_ench(ENCH_SUBMERGED)
-        || (targ->has_ench(ENCH_INVIS) && !mons_see_invis(mon)))
+        || (targ->invisible() && !mons_see_invis(mon)))
     {
         return (false);
     }
@@ -504,7 +504,7 @@ bool mons_monster_visible( struct monsters *mon, struct monsters *targ )
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_player_visible( struct monsters *mon )
 {
-    if (you.duration[DUR_INVIS])
+    if (you.invisible())
     {
         if (player_in_water())
             return (true);
@@ -3468,9 +3468,10 @@ bool monsters::del_ench(enchant_type ench, bool quiet)
     if (i == enchantments.end())
         return (false);
 
+    const mon_enchant me = i->second;
     const enchant_type et = i->first;
-    remove_enchantment_effect(i->second, quiet);
     enchantments.erase(et);
+    remove_enchantment_effect(me, quiet);
     return (true);
 }
 
@@ -3527,7 +3528,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     && !has_ench( ENCH_SUBMERGED ))
         {
             if (!quiet)
-                mprf("%s appears!", name(DESC_CAP_A).c_str() );
+                mprf("%s appears!", name(DESC_CAP_A, true).c_str() );
             
             seen_monster(this);
         }
@@ -3550,7 +3551,13 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BACKLIGHT:
         if (!quiet)
-            simple_monster_message(this, " stops glowing.");
+        {
+            if (player_monster_visible(this))
+                simple_monster_message(this, " stops glowing.");
+            else if (has_ench(ENCH_INVIS) && mons_near(this))
+                mprf("%s stops glowing and disappears.",
+                     name(DESC_CAP_THE, true).c_str());
+        }
         break;
 
     case ENCH_STICKY_FLAME:
@@ -4149,7 +4156,7 @@ bool monsters::can_see_invisible() const
 
 bool monsters::invisible() const
 {
-    return (has_ench(ENCH_INVIS));
+    return (has_ench(ENCH_INVIS) && !backlit());
 }
 
 void monsters::mutate()

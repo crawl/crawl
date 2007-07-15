@@ -2175,7 +2175,7 @@ int melee_attack::player_to_hit(bool random_factor)
 
     const bool see_invis = player_see_invis();
     // if you can't see yourself, you're a little less acurate.
-    if (you.duration[DUR_INVIS] && !see_invis)
+    if (you.invisible() && !see_invis)
         your_to_hit -= 5;
 
     // fighting contribution

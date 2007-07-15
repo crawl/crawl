@@ -215,6 +215,9 @@ bool potion_effect( potion_type pot_eff, int pow )
         mpr( (!you.duration[DUR_INVIS]) ? "You fade into invisibility!"
              : "You fade further into invisibility." );
 
+        // Invisibility cancels backlight.
+        you.duration[DUR_BACKLIGHT] = 0;
+
         // now multiple invisiblity casts aren't as good -- bwr
         if (!you.duration[DUR_INVIS])
             you.duration[DUR_INVIS] = 15 + random2(pow);

@@ -1178,7 +1178,7 @@ private:
     bool pickup(item_def &item, int slot, int near, bool force_merge = false);
     void equip_weapon(const item_def &item, int near);
    
-    bool decay_enchantment(const mon_enchant &me, bool decay_degree = false);
+    bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
     
     bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;

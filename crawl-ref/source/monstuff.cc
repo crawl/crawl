@@ -1098,8 +1098,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     // messaging: {dlb}
     bool invis = (mons_class_flag( targetc, M_INVIS ) 
-                  || monster->has_ench(ENCH_INVIS)) &&
-        (!player_see_invis());
+                  || monster->invisible()) && !player_see_invis();
 
     if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
         str_polymon = " changes into ";
@@ -1557,7 +1556,7 @@ static void handle_behaviour(monsters *mon)
 
     // change proxPlayer depending on invisibility and standing
     // in shallow water
-    if (proxPlayer && you.duration[DUR_INVIS])
+    if (proxPlayer && you.invisible())
     {
         if (!mons_player_visible( mon ))
             proxPlayer = false;

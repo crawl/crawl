@@ -1840,11 +1840,6 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
 
     switch (menv[mon].type)
     {
-    //case MONS_INSUBSTANTIAL_WISP: //jmf: I'm not sure if these glow or not
-    //case MONS_VAPOUR:
-    case MONS_UNSEEN_HORROR:    // consider making this visible? probably not.
-        return (false);
-
     case MONS_FIRE_VORTEX:
     case MONS_ANGEL:
     case MONS_FIEND:
@@ -1871,7 +1866,21 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
     }
 
     mon_enchant bklt = menv[mon].get_ench(ENCH_BACKLIGHT);
-    int lvl = bklt.degree;
+    const int lvl = bklt.degree;
+
+    // this enchantment overrides invisibility (neat)
+    if (menv[mon].has_ench(ENCH_INVIS))
+    {
+        if (!menv[mon].has_ench(ENCH_BACKLIGHT))
+        {
+            menv[mon].add_ench(
+                mon_enchant(ENCH_BACKLIGHT, 1, KC_OTHER, random_range(30, 50)));
+            simple_monster_message( &menv[mon], " is limned in light." );
+        }
+        return (true);
+    }
+    
+    menv[mon].add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
 
     if (lvl == 0)
         simple_monster_message( &menv[mon], " is outlined in light." );
@@ -1879,10 +1888,6 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
         simple_monster_message( &menv[mon], " glows brighter for a moment." );
     else 
         simple_monster_message( &menv[mon], " glows brighter." );
-
-    // this enchantment wipes out invisibility (neat)
-    menv[mon].del_ench(ENCH_INVIS);
-    menv[mon].add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
 
     return (true);
 }                               // end backlight_monsters()
