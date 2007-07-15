@@ -3311,9 +3311,9 @@ enum species_type
     SP_GHOUL,                          //   35
     SP_KENKU,
     SP_MERFOLK,
+    SP_VAMPIRE,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
-    SP_VAMPIRE,
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100

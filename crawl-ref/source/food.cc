@@ -1220,7 +1220,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         }
         else
         {
-            mpr("Blech - you need blood!");
+            if (!suppress_msg)
+               mpr("Blech - you need blood!");
         }
         return (false);
     }
