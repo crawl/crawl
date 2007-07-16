@@ -2148,6 +2148,46 @@ void debug_card()
     }
 }
 
+static void debug_uptick_xl(int newxl)
+{
+    while (newxl > you.experience_level)
+    {
+        you.experience = 1 + exp_needed( 2 + you.experience_level );
+        level_change(true);
+    }
+}
+
+static void debug_downtick_xl(int newxl)
+{
+    you.hp = you.hp_max;
+    while (newxl < you.experience_level)
+        lose_level();
+}
+
+void debug_set_xl()
+{
+    mprf(MSGCH_PROMPT, "Enter new experience level: ");
+    char buf[30];
+    if (cancelable_get_line(buf, sizeof buf))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    const int newxl = atoi(buf);
+    if (newxl < 1 || newxl > 27 || newxl == you.experience_level)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    no_messages mx;
+    if (newxl < you.experience_level)
+        debug_downtick_xl(newxl);
+    else
+        debug_uptick_xl(newxl);
+}
+
 #endif
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2401,46 +2441,6 @@ void generate_map_stats()
     run_map_preludes();
     mg_build_levels(SysEnv.map_gen_iters);
     write_mapgen_stats();
-}
-
-static void debug_uptick_xl(int newxl)
-{
-    while (newxl > you.experience_level)
-    {
-        you.experience = 1 + exp_needed( 2 + you.experience_level );
-        level_change(true);
-    }
-}
-
-static void debug_downtick_xl(int newxl)
-{
-    you.hp = you.hp_max;
-    while (newxl < you.experience_level)
-        lose_level();
-}
-
-void debug_set_xl()
-{
-    mprf(MSGCH_PROMPT, "Enter new experience level: ");
-    char buf[30];
-    if (cancelable_get_line(buf, sizeof buf))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    const int newxl = atoi(buf);
-    if (newxl < 1 || newxl > 27 || newxl == you.experience_level)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    no_messages mx;
-    if (newxl < you.experience_level)
-        debug_downtick_xl(newxl);
-    else
-        debug_uptick_xl(newxl);
 }
 
 #endif // DEBUG_DIAGNOSTICS
