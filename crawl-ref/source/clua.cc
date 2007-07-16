@@ -1160,7 +1160,9 @@ static int l_item_subtype(lua_State *ls)
             }
             else if (item->base_type == OBJ_POTIONS)
             {
-                if (item->sub_type == POT_BERSERK_RAGE)
+                if (item->sub_type == POT_BLOOD)
+                   s = "blood";
+                else if (item->sub_type == POT_BERSERK_RAGE)
                    s = "berserk";
                 else if (item->sub_type == POT_WATER)
                    s = "water";
@@ -1227,6 +1229,7 @@ static int l_item_potion_type(lua_State *ls)
 
             // need more refined handling:
             case POT_BERSERK_RAGE:
+            case POT_BLOOD:
             case POT_WATER:
             case POT_PORRIDGE:
             default:

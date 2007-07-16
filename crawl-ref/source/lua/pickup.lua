@@ -21,7 +21,7 @@ function make_hash(ls)
 end
 
 function you_undead()
-    return you.race() == "Mummy" or you.race() == "Ghoul"
+    return you.race() == "Mummy" or you.race() == "Ghoul" or you.race() == "Vampire"
 end
 
 -- not identified
@@ -76,8 +76,9 @@ function ch_autopickup(it)
               end
            end
 
-           -- special cases for water and porridge
-           if item.subtype(it) == "water" or item.subtype(it) == "porridge" then
+           -- special cases for blood, water, and porridge
+           if item.subtype(it) == "blood" or item.subtype(it) == "water" 
+                or item.subtype(it) == "porridge" then
               return food.can_eat(it, false)
            end
         end
@@ -86,7 +87,7 @@ function ch_autopickup(it)
         return true
     end
 
-    if item.class(it) == "Comestibles" then
+    if item.class(it) == "Carrion" or item.class(it) == "Comestibles" then
        return food.can_eat(it, false)
     end
 
@@ -107,3 +108,4 @@ function ch_autopickup(it)
     -- we only get here if class autopickup ON
     return true
 end
+
