@@ -2675,11 +2675,10 @@ bool item_needs_autopickup(const item_def &item)
 
     std::string itemname;
     return (((Options.autopickups & (1L << item.base_type))
-             || is_forced_autopickup(item, itemname)
 #ifdef CLUA_BINDINGS
-             || clua.callbooleanfn(false, "ch_autopickup", "u", &item)
+             && clua.callbooleanfn(false, "ch_autopickup", "u", &item)
 #endif
-                )
+             || is_forced_autopickup(item, itemname))
             && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
             && !is_denied_autopickup(item, itemname));
 }

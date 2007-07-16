@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- trapwalk.lua:
--- (Thanks to JPEG <erinacea@hotmail.de> for this script.)
+-- (Thanks to JPEG for this script.)
 --
 -- Allows travel to cross traps provided you have sufficient HP to survive the
 -- trap.

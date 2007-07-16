@@ -1158,6 +1158,15 @@ static int l_item_subtype(lua_State *ls)
                 else
                     s = ring_types[item->sub_type];
             }
+            else if (item->base_type == OBJ_POTIONS)
+            {
+                if (item->sub_type == POT_BERSERK_RAGE)
+                   s = "berserk";
+                else if (item->sub_type == POT_WATER)
+                   s = "water";
+                else if (item->sub_type == POT_PORRIDGE)
+                   s = "porridge";
+            }
             
             if (s)
                 lua_pushstring(ls, s);
@@ -1172,6 +1181,61 @@ static int l_item_subtype(lua_State *ls)
     lua_pushnil(ls);
     lua_pushnil(ls);
     return (2);
+}
+
+static int l_item_potion_type(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+    int val = 99;
+    
+    if (item && item->base_type == OBJ_POTIONS)
+    {
+       if (!item_type_known(*item))
+          val = 0;
+       else
+       {
+          switch(item->sub_type)
+          {
+            // good potions:
+            case POT_HEALING:
+            case POT_HEAL_WOUNDS:
+            case POT_SPEED:
+            case POT_MIGHT:
+            case POT_GAIN_STRENGTH:
+            case POT_GAIN_DEXTERITY:
+            case POT_GAIN_INTELLIGENCE:
+            case POT_LEVITATION:
+            case POT_INVISIBILITY:
+            case POT_EXPERIENCE:
+            case POT_MAGIC:
+            case POT_RESTORE_ABILITIES:
+            case POT_CURE_MUTATION:
+                 val = 1;
+                 break;
+
+            // bad potions:
+            case POT_POISON:
+            case POT_STRONG_POISON:
+            case POT_SLOWING:
+            case POT_PARALYSIS:
+            case POT_CONFUSION:
+            case POT_DEGENERATION:
+            case POT_DECAY:
+            case POT_MUTATION:
+                 val = 2;
+                 break;
+
+            // need more refined handling:
+            case POT_BERSERK_RAGE:
+            case POT_WATER:
+            case POT_PORRIDGE:
+            default:
+                 val = 3;
+          }
+       }
+    }
+    lua_pushnumber(ls, val);
+    return (1);
 }
 
 static int l_item_cursed(lua_State *ls)
@@ -1367,6 +1431,7 @@ static const struct luaL_reg item_lib[] =
     { "branded",           l_item_branded },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
+    { "potion_type",       l_item_potion_type },
     { "cursed",            l_item_cursed },
     { "worn",              l_item_worn },
     { "name",              l_item_name },
