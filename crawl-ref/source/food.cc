@@ -1214,7 +1214,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 
     if (you.species == SP_VAMPIRE)
     {
-        if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY)
+        if (what_isit == OBJ_CORPSES && kindof_thing == CORPSE_BODY
+            || what_isit == OBJ_POTIONS && kindof_thing == POT_BLOOD)
         {
             return (true);
         }
@@ -1242,6 +1243,13 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     switch (what_isit)
     {
     case OBJ_FOOD:
+        if (you.species == SP_VAMPIRE)
+        {
+            if (!suppress_msg)
+                mpr("Blech - you need blood!");
+             return false;
+        }
+             
         switch (kindof_thing)
         {
         case FOOD_BREAD_RATION:
@@ -1292,11 +1300,61 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         }
         break;
 
+    case OBJ_CORPSES:
+        if (you.species == SP_VAMPIRE)
+        {
+            if (kindof_thing == CORPSE_BODY)
+                return true;
+            else
+            {
+                if (!suppress_msg)
+                    mpr("Blech - you need blood!");
+                return false;
+            }
+        }
+        return false;
+
+    case OBJ_POTIONS: // called by lua
+        if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
+            return true;
+        switch (kindof_thing)
+        {
+            case POT_BLOOD:
+                if (ur_herbivorous)
+                {
+                    if (!suppress_msg)
+                        mpr("Urks, you're a herbivore!");
+                    return false;
+                }
+                return true;
+            case POT_WATER:
+                if (you.species == SP_VAMPIRE)
+                {
+                    if (!suppress_msg)
+                        mpr("Blech - you need blood!");
+                    return false;
+                }
+                return true;
+             case POT_PORRIDGE:
+                if (you.species == SP_VAMPIRE)
+                {
+                    if (!suppress_msg)
+                        mpr("Blech - you need blood!");
+                    return false;
+                }
+                else if (ur_carnivorous)
+                {
+                    if (!suppress_msg)
+                        mpr("Sorry, you're a carnivore.");
+                    return false;
+                }
+             default:
+                return true;
+        }
+
     // other object types are set to return false for now until
     // someone wants to recode the eating code to permit consumption
-    // of things other than just food -- corpses first, then more
-    // exotic stuff later would be good to explore - 13mar2000 {dlb}
-    case OBJ_CORPSES:
+    // of things other than just food
     default:
         return (false);
     }

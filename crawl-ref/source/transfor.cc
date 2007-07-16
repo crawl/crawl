@@ -231,7 +231,7 @@ bool transform(int pow, transformation_type which_trans)
        modify_stat( STAT_STRENGTH, -5, true );
    
        you.symbol = 'b';
-       you.colour = (you.species == SP_VAMPIRE) ? BLACK : DARKGREY;
+       you.colour = DARKGREY;
        return (true);
         
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 

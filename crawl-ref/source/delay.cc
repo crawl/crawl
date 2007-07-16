@@ -567,9 +567,13 @@ static void finish_delay(const delay_queue_item &delay)
                   || you.mutation[MUT_FANGS] == 3) ? "ripping"
                  : "chopping");
 
-            if (you.species == SP_VAMPIRE)
+            if (you.species == SP_VAMPIRE && (!you.duration[DUR_PRAYER]
+                || you.religion != GOD_MAKHLEB && you.religion != GOD_TROG
+                && you.religion != GOD_OKAWARU && you.religion != GOD_BEOGH
+                && you.religion != GOD_LUGONU))
+            {
                  mpr("What a waste.");
-                 
+            }                
             turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 
             if (you.duration[DUR_BERSERKER] && you.berserk_penalty != NO_BERSERK_PENALTY)

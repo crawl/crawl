@@ -230,9 +230,8 @@ bool potion_effect( potion_type pot_eff, int pow )
         you.duration[DUR_BACKLIGHT] = 0;
         break;
 
-    // carnivore check here? {dlb}
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
-        if (you.species == SP_VAMPIRE)
+        if (you.species == SP_VAMPIRE || you.mutation[MUT_CARNIVOROUS] == 3)
         {
             mpr("Blech - that potion was really gluggy!");
             break;
