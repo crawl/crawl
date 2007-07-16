@@ -1065,6 +1065,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         switch (speci)
         {
             // bows --
+        case SP_MINOTAUR:
+        case SP_NAGA:
         case SP_CENTAUR:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
@@ -1072,15 +1074,13 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_HIGH_ELF:
         case SP_HUMAN:
         case SP_KENKU:
-        case SP_MINOTAUR:
-        case SP_NAGA:
         case SP_SLUDGE_ELF:
             // xbows --
         case SP_HILL_ORC:
             // slings --
         case SP_GNOME:
         case SP_HALFLING:
-            // spear
+            // javelins
         case SP_MERFOLK:
             return true;
         default:
@@ -4065,20 +4065,30 @@ bool give_items_skills()
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
 
-        you.inv[4].quantity = 1;
-        you.inv[4].base_type = OBJ_ARMOUR;
-        you.inv[4].sub_type = ARM_LEATHER_ARMOUR;
-        you.inv[4].plus = 0;
-        you.inv[4].special = 0;
+        you.inv[2].quantity = 1;
+        you.inv[2].base_type = OBJ_ARMOUR;
+        you.inv[2].sub_type = ARM_LEATHER_ARMOUR;
+        you.inv[2].plus = 0;
+        you.inv[2].special = 0;
 
-        if (you.species != SP_MERFOLK)
+        if (you.species == SP_MERFOLK)
+        // Merfolk are spear hunters -- clobber bow, give six javelins
         {
-            you.inv[2].quantity = 15 + random2avg(21, 5);
-            you.inv[2].base_type = OBJ_MISSILES;
-            you.inv[2].sub_type = MI_ARROW;
-            you.inv[2].plus = 0;
-            you.inv[2].plus2 = 0;
-            you.inv[2].special = 0;
+            you.inv[1].quantity = 6;
+            you.inv[1].base_type = OBJ_MISSILES;
+            you.inv[1].sub_type = MI_JAVELIN;
+            you.inv[1].plus = 0;
+            you.inv[1].plus2 = 0;
+            you.inv[1].special = 0;
+        }
+        else
+        {
+            you.inv[3].quantity = 15 + random2avg(21, 5);
+            you.inv[3].base_type = OBJ_MISSILES;
+            you.inv[3].sub_type = MI_ARROW;
+            you.inv[3].plus = 0;
+            you.inv[3].plus2 = 0;
+            you.inv[3].special = 0;
 
             you.inv[1].quantity = 1;
             you.inv[1].base_type = OBJ_WEAPONS;
@@ -4087,25 +4097,12 @@ bool give_items_skills()
             you.inv[1].plus2 = 0;
             you.inv[1].special = 0;
         }
-        else
-        {
-            // Merfolk are spear hunters -- clobber bow, give three spears
-            for (unsigned char i = 1; i <= 3; i++)
-            {
-                you.inv[i].quantity = 1;
-                you.inv[i].base_type = OBJ_WEAPONS;
-                you.inv[i].sub_type = WPN_SPEAR;
-                you.inv[i].plus = 0;
-                you.inv[i].plus2 = 0;
-                you.inv[i].special = 0;
-            }
-        }
 
         if (player_genus(GENPC_DRACONIAN))
-            you.inv[4].sub_type = ARM_ROBE;
+            you.inv[2].sub_type = ARM_ROBE;
 
         you.equip[EQ_WEAPON] = 0;
-        you.equip[EQ_BODY_ARMOUR] = 4;
+        you.equip[EQ_BODY_ARMOUR] = 2;
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_RANGED_COMBAT] = 3;
@@ -4117,8 +4114,8 @@ bool give_items_skills()
         {
         case SP_HALFLING:
         case SP_GNOME:
-            you.inv[2].quantity += random2avg(15, 2);
-            you.inv[2].sub_type = MI_STONE;
+            you.inv[3].quantity += random2avg(15, 2);
+            you.inv[3].sub_type = MI_SLING_BULLET;
             you.inv[1].sub_type = WPN_SLING;
 
             you.skills[SK_DODGING] = 2;
@@ -4128,7 +4125,7 @@ bool give_items_skills()
 
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
-            you.inv[2].sub_type = MI_BOLT;
+            you.inv[3].sub_type = MI_BOLT;
             you.inv[1].sub_type = WPN_CROSSBOW;
 
             if (you.species == SP_HILL_ORC)
@@ -4149,7 +4146,6 @@ bool give_items_skills()
 
         case SP_MERFOLK:
             you.inv[0].sub_type = WPN_TRIDENT;
-
             you.skills[SK_POLEARMS] = 2;
             you.skills[SK_DODGING] = 2;
             you.skills[SK_RANGED_COMBAT] += 1;
@@ -4162,6 +4158,7 @@ bool give_items_skills()
             you.skills[SK_BOWS] = 2;
             break;
         }
+
         break;
 
     case JOB_CONJURER:
