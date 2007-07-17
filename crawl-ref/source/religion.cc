@@ -1360,9 +1360,10 @@ bool did_god_conduct( conduct_type thing_done, int level )
           "Servant Kill Demon", "Servant Kill Natural Evil", 
           "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
-          "Cards", "Stimulants", "Eat Meat", "Create Life" 
+          "Cards", "Stimulants", "Drink Blood", "Eat Meat", "Create Life" 
         };
 
+        ASSERT(ARRAYSIZE(conducts) == NUM_CONDUCTS);
         mprf( MSGCH_DIAGNOSTICS, 
              "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
              conducts[thing_done], 

@@ -600,8 +600,11 @@ static int get_mons_colour(const monsters *mons)
     }
 
     // Backlit monsters are fuzzy and override brands.
-    if (mons->has_ench(ENCH_INVIS) && mons->has_ench(ENCH_BACKLIGHT))
+    if (!player_see_invis() && mons->has_ench(ENCH_INVIS)
+        && mons->has_ench(ENCH_BACKLIGHT))
+    {
         col = DARKGREY;
+    }
 
     return (col);
 }
@@ -650,17 +653,16 @@ static void beogh_follower_convert(monsters *monster)
                 std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
                 chan << monster->name(DESC_CAP_THE);
                        
-                // FIXME what about female monsters?
                 switch (random2(3))
                 {
                 case 0:
                     chan << " stares at you in amazement and kneels.";
                     break;
                 case 1:
-                    chan << " relaxes his fighting stance and smiles at you.";
+                    chan << " relaxes its fighting stance and smiles at you.";
                     break;
                 case 2:
-                    chan << " falls on his knees before you.";
+                    chan << " falls on its knees before you.";
                     break;
                 }
                 chan << std::endl;
