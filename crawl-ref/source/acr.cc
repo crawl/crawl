@@ -1594,6 +1594,36 @@ static void prep_input()
     print_stats();
 }
 
+// Decrement a single duration. Print the message if the duration runs out.
+static bool decrement_a_duration(duration_type dur, const char* endmsg = NULL,
+                                 int midpoint = -1, int midloss = 0,
+                                 const char* midmsg = NULL,
+                                 msg_channel_type chan = MSGCH_DURATION )
+{
+    bool rc = false;
+
+    if (you.duration[dur] > 1)
+    {
+        you.duration[dur]--;
+        if (you.duration[dur] == midpoint)
+        {
+            if ( midmsg )
+                mpr(midmsg, chan);
+            you.duration[dur] -= midloss;
+        }
+    }
+    else if (you.duration[dur] == 1)
+    {
+        if ( endmsg )
+            mpr(endmsg, chan);
+
+        rc = true;
+        you.duration[dur] = 0;
+    }
+
+    return rc;
+}
+
 static void decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
@@ -1603,21 +1633,6 @@ static void decrement_durations()
     }
     else
         you.duration[DUR_GOURMAND] = 0;
-
-    if (you.duration[DUR_REPEL_UNDEAD] > 1)
-        you.duration[DUR_REPEL_UNDEAD]--;
-
-    if (you.duration[DUR_REPEL_UNDEAD] == 4)
-    {
-        mpr( "Your holy aura is starting to fade.", MSGCH_DURATION );
-        you.duration[DUR_REPEL_UNDEAD] -= random2(3);
-    }
-
-    if (you.duration[DUR_REPEL_UNDEAD] == 1)
-    {
-        mpr( "Your holy aura fades away.", MSGCH_DURATION );
-        you.duration[DUR_REPEL_UNDEAD] = 0;
-    }
 
     // paradox: it both lasts longer & does more damage overall if you're
     //          moving slower.
@@ -1659,68 +1674,23 @@ static void decrement_durations()
         }
     }
 
-    if (you.duration[DUR_ICY_ARMOUR] > 1)
-    {
-        you.duration[DUR_ICY_ARMOUR]--;
-        //scrolls_burn(4, OBJ_POTIONS);
-    }
-    else if (you.duration[DUR_ICY_ARMOUR] == 1)
-    {
-        mpr("Your icy armour evaporates.", MSGCH_DURATION);
-        you.redraw_armour_class = 1;     // is this needed? 2apr2000 {dlb}
-        you.duration[DUR_ICY_ARMOUR] = 0;
-    }
+    if (decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
+        you.redraw_armour_class = true;
 
-    if (you.duration[DUR_REPEL_MISSILES] > 1)
-    {
-        you.duration[DUR_REPEL_MISSILES]--;
-        if (you.duration[DUR_REPEL_MISSILES] == 6)
-        {
-            mpr("Your repel missiles spell is about to expire...",
-                MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_REPEL_MISSILES]--;
-        }
-    }
-    else if (you.duration[DUR_REPEL_MISSILES] == 1)
-    {
-        mpr("You feel less protected from missiles.", MSGCH_DURATION);
-        you.duration[DUR_REPEL_MISSILES] = 0;
-    }
+    decrement_a_duration(DUR_REPEL_MISSILES,
+                         "You feel less protected from missiles.",
+                         6, coinflip(),
+                         "Your repel missiles spell is about to expire...");
 
-    if (you.duration[DUR_DEFLECT_MISSILES] > 1)
-    {
-        you.duration[DUR_DEFLECT_MISSILES]--;
-        if (you.duration[DUR_DEFLECT_MISSILES] == 6)
-        {
-            mpr("Your deflect missiles spell is about to expire...",
-                MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_DEFLECT_MISSILES]--;
-        }
-    }
-    else if (you.duration[DUR_DEFLECT_MISSILES] == 1)
-    {
-        mpr("You feel less protected from missiles.", MSGCH_DURATION);
-        you.duration[DUR_DEFLECT_MISSILES] = 0;
-    }
+    decrement_a_duration(DUR_DEFLECT_MISSILES,
+                         "You feel less protected from missiles.",
+                         6, coinflip(),
+                         "Your deflect missiles spell is about to expire...");
 
-    if (you.duration[DUR_REGENERATION] > 1)
-    {
-        you.duration[DUR_REGENERATION]--;
-
-        if (you.duration[DUR_REGENERATION] == 6)
-        {
-            mpr("Your skin is crawling a little less now.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_REGENERATION]--;
-        }
-    }
-    else if (you.duration[DUR_REGENERATION] == 1)
-    {
-        mpr("Your skin stops crawling.", MSGCH_DURATION);
-        you.duration[DUR_REGENERATION] = 0;
-    }
+    decrement_a_duration(DUR_REGENERATION,
+                         "Your skin stops crawling.",
+                         6, coinflip(),
+                         "Your skin is crawling a little less now.");
 
     if (you.duration[DUR_PRAYER] > 1)
         you.duration[DUR_PRAYER]--;
@@ -1779,14 +1749,6 @@ static void decrement_durations()
         you.wield_change = true;
     }
 
-    if (you.duration[DUR_BREATH_WEAPON] > 1)
-        you.duration[DUR_BREATH_WEAPON]--;
-    else if (you.duration[DUR_BREATH_WEAPON] == 1)
-    {
-        mpr("You have got your breath back.", MSGCH_RECOVERY);
-        you.duration[DUR_BREATH_WEAPON] = 0;
-    }
-
     if (you.duration[DUR_TRANSFORMATION] > 1)
     {
         you.duration[DUR_TRANSFORMATION]--;
@@ -1810,294 +1772,108 @@ static void decrement_durations()
         you.duration[DUR_BREATH_WEAPON] = 0;
     }
 
-    if (you.duration[DUR_SWIFTNESS] > 1)
-    {
-        you.duration[DUR_SWIFTNESS]--;
-        if (you.duration[DUR_SWIFTNESS] == 6)
-        {
-            mpr("You start to feel a little slower.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_SWIFTNESS]--;
-        }
-    }
-    else if (you.duration[DUR_SWIFTNESS] == 1)
-    {
-        mpr("You feel sluggish.", MSGCH_DURATION);
-        you.duration[DUR_SWIFTNESS] = 0;
-    }
+    decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
+                         -1, 0, NULL, MSGCH_RECOVERY);
 
-    if (you.duration[DUR_INSULATION] > 1)
-    {
-        you.duration[DUR_INSULATION]--;
-        if (you.duration[DUR_INSULATION] == 6)
-        {
-            mpr("You start to feel a little less insulated.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_INSULATION]--;
-        }
-    }
-    else if (you.duration[DUR_INSULATION] == 1)
-    {
-        mpr("You feel conductive.", MSGCH_DURATION);
-        you.duration[DUR_INSULATION] = 0;
-    }
+    decrement_a_duration(DUR_REPEL_UNDEAD,
+                         "Your holy aura fades away.",
+                         4, random2(3),
+                         "Your holy aura is starting to fade.");
+    decrement_a_duration(DUR_SWIFTNESS,
+                         "You feel sluggish.",
+                         6, coinflip(),
+                         "You start to feel a little slower.");
+    decrement_a_duration(DUR_INSULATION,
+                         "You feel conductive.",
+                         6, coinflip(),
+                         "You start to feel a little less insulated.");
 
-    if (you.duration[DUR_STONEMAIL] > 1)
+    if ( decrement_a_duration(DUR_STONEMAIL,
+                              "Your scaly stone armour disappears.",
+                              6, coinflip(),
+                              "Your scaly stone armour is starting "
+                              "to flake away.") )
     {
-        you.duration[DUR_STONEMAIL]--;
-        if (you.duration[DUR_STONEMAIL] == 6)
-        {
-            mpr("Your scaly stone armour is starting to flake away.", MSGCH_DURATION);
-            you.redraw_armour_class = 1;
-            if (coinflip())
-                you.duration[DUR_STONEMAIL]--;
-        }
-    }
-    else if (you.duration[DUR_STONEMAIL] == 1)
-    {
-        mpr("Your scaly stone armour disappears.", MSGCH_DURATION);
-        you.duration[DUR_STONEMAIL] = 0;
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
         burden_change();
     }
 
-    if (you.duration[DUR_FORESCRY] > 1) //jmf: added
-        you.duration[DUR_FORESCRY]--;
-    else if (you.duration[DUR_FORESCRY] == 1)
+    if ( decrement_a_duration(DUR_FORESCRY,
+                              "You feel firmly rooted in the present.") )
+        you.redraw_evasion = true;
+
+    if ( decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis() )
+        mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
+
+    decrement_a_duration(DUR_SEE_INVISIBLE); // jmf: cute message
+                                             // handled elsewhere
+
+    if ( decrement_a_duration(DUR_CONDENSATION_SHIELD,
+                              "Your icy shield evaporates.") )
+        you.redraw_armour_class = true;
+
+    if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && player_res_cold() < 0)
     {
-        mpr("You feel firmly rooted in the present.", MSGCH_DURATION);
-        you.duration[DUR_FORESCRY] = 0;
-        you.redraw_evasion = 1; 
+        mpr( "You feel very cold." );
+        ouch( 2 + random2avg(13, 2), 0, KILLED_BY_FREEZING );
     }
 
-    if (you.duration[DUR_SEE_INVISIBLE] > 1)    //jmf: added
-        you.duration[DUR_SEE_INVISIBLE]--;
-    else if (you.duration[DUR_SEE_INVISIBLE] == 1)
-    {
-        you.duration[DUR_SEE_INVISIBLE] = 0;
+    if ( decrement_a_duration(DUR_MAGIC_SHIELD,
+                              "Your magical shield disappears.") )
+        you.redraw_armour_class = true;
 
-        if (!player_see_invis())
-            mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
-    }
+    if ( decrement_a_duration(DUR_STONESKIN, "Your skin feels tender.") )
+        you.redraw_armour_class = true;
 
-    if (you.duration[DUR_SILENCE] > 0)  //jmf: cute message handled elsewhere
-        you.duration[DUR_SILENCE]--;
+    decrement_a_duration(DUR_GLAMOUR);
 
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 1)
-    {
-        you.duration[DUR_CONDENSATION_SHIELD]--;
-
-        // [dshaligram] Makes this spell useless
-        // scrolls_burn( 1, OBJ_POTIONS );
-        
-        if (player_res_cold() < 0)
-        {
-            mpr( "You feel very cold." );
-            ouch( 2 + random2avg(13, 2), 0, KILLED_BY_FREEZING );
-        }
-    }
-    else if (you.duration[DUR_CONDENSATION_SHIELD] == 1)
-    {
-        you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        mpr("Your icy shield evaporates.", MSGCH_DURATION);
-        you.redraw_armour_class = 1;
-    }
-
-    if (you.duration[DUR_MAGIC_SHIELD] > 1)
-        you.duration[DUR_MAGIC_SHIELD]--;
-    else if (you.duration[DUR_MAGIC_SHIELD] == 1)
-    {
-        you.duration[DUR_MAGIC_SHIELD] = 0;
-        mpr("Your magical shield disappears.", MSGCH_DURATION);
-        you.redraw_armour_class = 1;
-    }
-
-    if (you.duration[DUR_STONESKIN] > 1)
-        you.duration[DUR_STONESKIN]--;
-    else if (you.duration[DUR_STONESKIN] == 1)
-    {
-        mpr("Your skin feels tender.", MSGCH_DURATION);
-        you.redraw_armour_class = 1;
-        you.duration[DUR_STONESKIN] = 0;
-    }
-
-    if (you.duration[DUR_GLAMOUR] > 1)  //jmf: actually GLAMOUR_RELOAD, like
-        you.duration[DUR_GLAMOUR]--;    //     the breath weapon delay
-    else if (you.duration[DUR_GLAMOUR] == 1)
-        you.duration[DUR_GLAMOUR] = 0;
-
-    if (you.duration[DUR_TELEPORT] > 1)
-        you.duration[DUR_TELEPORT]--;
-    else if (you.duration[DUR_TELEPORT] == 1)
+    if ( decrement_a_duration(DUR_TELEPORT) )
     {
         // only to a new area of the abyss sometimes (for abyss teleports)
         you_teleport_now( true, one_chance_in(5) );
         untag_followers();
-        you.duration[DUR_TELEPORT] = 0;
     }
 
-    if (you.duration[DUR_STEALTH] > 1)
-        you.duration[DUR_STEALTH]--;
-    else if (you.duration[DUR_STEALTH] == 1)
-    {
-        mpr("You feel less stealthy.", MSGCH_DURATION);
-        you.duration[DUR_STEALTH] = 0;
-    }
+    decrement_a_duration(DUR_CONTROL_TELEPORT,
+                         "You feel uncertain.",
+                         6, coinflip(),
+                         "You start to feel a little uncertain.");
 
-    if (you.duration[DUR_CONTROL_TELEPORT] > 1)
-    {
-        you.duration[DUR_CONTROL_TELEPORT]--;
+    decrement_a_duration(DUR_DEATH_CHANNEL,
+                         "Your unholy channel expires.",
+                         6, coinflip(),
+                         "Your unholy channel is weakening.");
 
-        if (you.duration[DUR_CONTROL_TELEPORT] == 6)
-        {
-            mpr("You start to feel a little uncertain.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_CONTROL_TELEPORT]--;
-        }
-    }
-    else if (you.duration[DUR_CONTROL_TELEPORT] == 1)
-    {
-        mpr("You feel uncertain.", MSGCH_DURATION);
-        you.duration[DUR_CONTROL_TELEPORT] = 0;
-    }
+    decrement_a_duration(DUR_STEALTH, "You feel less stealthy.");
+    decrement_a_duration(DUR_RESIST_FIRE, "Your fire resistance expires.");
+    decrement_a_duration(DUR_RESIST_COLD, "Your cold resistance expires.");
+    decrement_a_duration(DUR_RESIST_POISON, "Your poison resistance expires.");
+    decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
+    
+    decrement_a_duration(DUR_INVIS, "You flicker for a moment.",
+                         6, coinflip(),
+                         "You flicker back into view.");
 
-    if (you.duration[DUR_RESIST_FIRE] > 1)
-    {
-        you.duration[DUR_RESIST_FIRE]--;
-        if (you.duration[DUR_RESIST_FIRE] == 6)
-        {
-            mpr("Your fire resistance is about to expire.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_RESIST_FIRE]--;
-        }
-    }
-    else if (you.duration[DUR_RESIST_FIRE] == 1)
-    {
-        mpr("Your fire resistance expires.", MSGCH_DURATION);
-        you.duration[DUR_RESIST_FIRE] = 0;
-    }
+    decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
+    decrement_a_duration(DUR_CONF, "You feel less confused.");
+    decrement_a_duration(DUR_PARALYSIS, "You can move again.");
+    decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
 
-    if (you.duration[DUR_RESIST_COLD] > 1)
-    {
-        you.duration[DUR_RESIST_COLD]--;
-        if (you.duration[DUR_RESIST_COLD] == 6)
-        {
-            mpr("Your cold resistance is about to expire.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_RESIST_COLD]--;
-        }
-    }
-    else if (you.duration[DUR_RESIST_COLD] == 1)
-    {
-        mpr("Your cold resistance expires.", MSGCH_DURATION);
-        you.duration[DUR_RESIST_COLD] = 0;
-    }
+    decrement_a_duration( DUR_CONFUSING_TOUCH,
+                          ((std::string("Your ") + your_hand(true)) +
+                          " stop glowing.").c_str() );
 
-    if (you.duration[DUR_RESIST_POISON] > 1)
-    {
-        you.duration[DUR_RESIST_POISON]--;
-        if (you.duration[DUR_RESIST_POISON] == 6)
-        {
-            mpr("Your poison resistance is about to expire.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_RESIST_POISON]--;
-        }
-    }
-    else if (you.duration[DUR_RESIST_POISON] == 1)
-    {
-        mpr("Your poison resistance expires.", MSGCH_DURATION);
-        you.duration[DUR_RESIST_POISON] = 0;
-    }
-
-    if (you.duration[DUR_SLAYING] > 1)
-    {
-        you.duration[DUR_SLAYING]--;
-    }
-    else if (you.duration[DUR_SLAYING] == 1)
-    {
-        mpr("You feel less lethal.", MSGCH_DURATION);
-        you.duration[DUR_SLAYING] = 0;
-    }
-
-    if (you.duration[DUR_DEATH_CHANNEL] > 1)
-    {
-        you.duration[DUR_DEATH_CHANNEL]--;
-        if (you.duration[DUR_DEATH_CHANNEL] == 6)
-        {
-            mpr("Your unholy channel is weakening.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_DEATH_CHANNEL]--;
-        }
-    }
-    else if (you.duration[DUR_DEATH_CHANNEL] == 1)
-    {
-        mpr("Your unholy channel expires.", MSGCH_DURATION);    // Death channel wore off
-        you.duration[DUR_DEATH_CHANNEL] = 0;
-    }
-
-    if (you.duration[DUR_INVIS] > 1)
-    {
-        you.duration[DUR_INVIS]--;
-
-        if (you.duration[DUR_INVIS] == 6)
-        {
-            mpr("You flicker for a moment.", MSGCH_DURATION);
-            if (coinflip())
-                you.duration[DUR_INVIS]--;
-        }
-    }
-    else if (you.duration[DUR_INVIS] == 1)
-    {
-        mpr("You flicker back into view.", MSGCH_DURATION);
-        you.duration[DUR_INVIS] = 0;
-    }
-
-    if ( you.duration[DUR_BARGAIN] > 1 )
-        you.duration[DUR_BARGAIN]--;
-    else if ( you.duration[DUR_BARGAIN] == 1 )
-    {
-        mpr("You feel less charismatic.", MSGCH_DURATION);
-        you.duration[DUR_BARGAIN] = 0;
-    }
-
-    if (you.duration[DUR_CONF] > 0)
-        reduce_confuse_player(1);
-
-    if (you.duration[DUR_PARALYSIS] > 1)
-        you.duration[DUR_PARALYSIS]--;
-    else if (you.duration[DUR_PARALYSIS] == 1)
-    {
-        mpr("You can move again.", MSGCH_DURATION);
-        you.duration[DUR_PARALYSIS] = 0;
-    }
-
-    if (you.duration[DUR_EXHAUSTED] > 1)
-        you.duration[DUR_EXHAUSTED]--;
-    else if (you.duration[DUR_EXHAUSTED] == 1)
-    {
-        mpr("You feel less fatigued.", MSGCH_DURATION);
-        you.duration[DUR_EXHAUSTED] = 0;
-    }
+    decrement_a_duration( DUR_SURE_BLADE,
+                          "The bond with your blade fades away." );
 
     dec_slow_player();
     dec_haste_player();
 
-    if (you.duration[DUR_MIGHT] > 1)
-        you.duration[DUR_MIGHT]--;
-    else if (you.duration[DUR_MIGHT] == 1)
-    {
-        mpr("You feel a little less mighty now.", MSGCH_DURATION);
-        you.duration[DUR_MIGHT] = 0;
+    if (decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
         modify_stat(STAT_STRENGTH, -5, true);
-    }
 
-    if (you.duration[DUR_BERSERKER] > 1)
-        you.duration[DUR_BERSERKER]--;
-    else if (you.duration[DUR_BERSERKER] == 1)
+    if (decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
-        mpr( "You are no longer berserk.", MSGCH_DURATION );
-        you.duration[DUR_BERSERKER] = 0;
-
         //jmf: guilty for berserking /after/ berserk
         did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
 
@@ -2115,54 +1891,26 @@ static void decrement_durations()
         //       this should make it a bit more interesting for
         //       Crusaders again.
         //     - similarly for the amulet
-        int chances[4];
-        chances[0] = 10;
-        chances[1] = you.mutation[MUT_BERSERK] * 25;
-        chances[2] = (wearing_amulet( AMU_RAGE ) ? 10 : 0);
-        chances[3] = (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
-        const char* reasons[4] =
+        if (you.berserk_penalty != NO_BERSERK_PENALTY)
         {
-            "You struggle, and manage to stay standing.",
-            "Your mutated body refuses to collapse.",
-            "You feel your neck pulse as blood rushes through your body.",
-            "Your mind masters your body."
-        };
-        const int chance = chances[0] + chances[1] + chances[2] + chances[3];
+            const int chance =
+                10 +
+                you.mutation[MUT_BERSERK] * 25 +
+                (wearing_amulet( AMU_RAGE ) ? 10 : 0) +
+                (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
 
-        if (you.berserk_penalty == NO_BERSERK_PENALTY)
-            mpr("The very source of your rage keeps you on your feet.");
-        // Note the beauty of Trog!  They get an extra save that's at
-        // the very least 20% and goes up to 100%.
-        else if ( you.religion == GOD_TROG && you.piety > random2(150) &&
-                  !player_under_penance() )
-            mpr("Trog's vigour flows through your veins.");
-        else if ( !one_chance_in(chance) )
-        {
-            // Survived the probabilistic check.
-            // Figure out why.
-
-            int cause = random2(chance); // philosophically speaking...
-            int i;
-            for ( i = 0; i < 4; ++i )
+            // Note the beauty of Trog!  They get an extra save that's at
+            // the very least 20% and goes up to 100%.
+            if ( you.religion == GOD_TROG && you.piety > random2(150) &&
+                 !player_under_penance() )
+                mpr("Trog's vigour flows through your veins.");
+            else if ( one_chance_in(chance) )
             {
-                if ( cause < chances[i] )
-                {
-                    // only print a reason if it actually exists
-                    if ( reasons[i][0] != 0 )
-                        mpr(reasons[i]);
-                    break;
-                }
-                else
-                    cause -= chances[i];
+                mpr("You pass out from exhaustion.", MSGCH_WARN);
+                you.duration[DUR_PARALYSIS] += roll_dice( 1, 4 );
             }
-            if (i == 4)
-                mpr("Oops. Couldn't find a reason. Well, lucky you.");
         }
-        else
-        {
-            mpr("You pass out from exhaustion.", MSGCH_WARN);
-            you.duration[DUR_PARALYSIS] += roll_dice( 1, 4 );
-        }
+
         if ( you.duration[DUR_PARALYSIS] == 0 )
             mpr("You are exhausted.", MSGCH_WARN);
 
@@ -2171,10 +1919,16 @@ static void decrement_durations()
 
         int dur = 12 + roll_dice( 2, 12 );
         you.duration[DUR_EXHAUSTED] += dur;
-        // for tutorial
-        unsigned tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
-        Options.tutorial_events[TUT_YOU_ENCHANTED] = 0;
-        slow_player( dur );
+
+        // Don't trigger too many tutorial messages
+        const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
+        Options.tutorial_events[TUT_YOU_ENCHANTED] = false;
+        
+        {
+            // Don't give duplicate 'You feel yourself slow down' messages.
+            no_messages nm;
+            slow_player( dur );
+        }
 
         make_hungry(700, true);
 
@@ -2190,23 +1944,6 @@ static void decrement_durations()
     if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
         mpr("You are no longer glowing.", MSGCH_DURATION);
     
-    if (you.duration[DUR_CONFUSING_TOUCH] > 1)
-        you.duration[DUR_CONFUSING_TOUCH]--;
-    else if (you.duration[DUR_CONFUSING_TOUCH] == 1)
-    {
-        msg::streams(MSGCH_DURATION) << "Your " << your_hand(true)
-                                     << " stop glowing." << std::endl;
-        you.duration[DUR_CONFUSING_TOUCH] = 0;
-    }
-
-    if (you.duration[DUR_SURE_BLADE] > 1)
-        you.duration[DUR_SURE_BLADE]--;
-    else if (you.duration[DUR_SURE_BLADE] == 1)
-    {
-        mpr("The bond with your blade fades away.", MSGCH_DURATION);
-        you.duration[DUR_SURE_BLADE] = 0;
-    }
-
     if (you.duration[DUR_LEVITATION] > 1)
     {
         if (you.species != SP_KENKU || you.experience_level < 15)
