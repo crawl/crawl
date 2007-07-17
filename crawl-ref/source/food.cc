@@ -617,10 +617,12 @@ void eat_from_inventory(int which_inventory_slot)
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
 
-        if (!mons_skeleton( mons_type )) {
+        if (!mons_skeleton( mons_type ))
+        {
             dec_inv_item_quantity( which_inventory_slot, 1 );
         }
-        else {
+        else
+        {
             you.inv[which_inventory_slot].sub_type = CORPSE_SKELETON;
             you.inv[which_inventory_slot].special = 90;
             you.inv[which_inventory_slot].colour = LIGHTGREY;
@@ -660,10 +662,12 @@ void eat_floor_item(int item_link)
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
 
-        if (!mons_skeleton( mons_type )) {
+        if (!mons_skeleton( mons_type ))
+        {
             dec_mitm_item_quantity( item_link, 1 );
         }
-        else {
+        else
+        {
             mitm[item_link].sub_type = CORPSE_SKELETON;
             mitm[item_link].special = 90;
             mitm[item_link].colour = LIGHTGREY;
@@ -1386,7 +1390,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     case CE_POISONOUS:
         if (you.species == SP_GHOUL
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                || poison_resistance_level > 0)
+                || poison_resistance_level > 0 && you.species != SP_VAMPIRE)
         {
             this_chunk_effect = CE_CLEAN;
         }
@@ -1496,17 +1500,21 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 }                               // end determine_chunk_effect()
 
 bool vampire_consume_corpse(int mons_type, int mass,
-                            int chunk_type, bool rotten) {
+                            int chunk_type, bool rotten)
+{
     int food_value = 0;
 
-    if (chunk_type == CE_HCL) {
+    if (chunk_type == CE_HCL)
+    {
         mpr( "There is no blood in this body!" );
         return false;
     }
-    else if (!rotten) {
+    else if (!rotten)
+    {
         inc_hp(1, false);
 
-        switch (mons_type) {
+        switch (mons_type)
+        {
         case MONS_HUMAN:
             food_value = mass + random2avg(you.experience_level * 10, 2);
             mpr( "This warm blood tastes really delicious!" );
@@ -1520,18 +1528,38 @@ bool vampire_consume_corpse(int mons_type, int mass,
             break;
 
         default:
+               switch (chunk_type)
+               {
+                  case CE_CLEAN:
             food_value = mass;
             mpr( "This warm blood tastes delicious!" );
             break;
+                  case CE_CONTAMINATED:
+                      food_value = mass / (random2(3) + 1);
+                      mpr( "Somehow that blood was not very filling!" );
+                      break;
+                  case CE_POISONOUS:
+                      food_value = random2(mass) - mass/2;
+                      mpr( "Blech - that blood tastes nasty!" );
+                      break;
+                  case CE_MUTAGEN_RANDOM:
+                      food_value = random2(mass);
+                      mpr( "That blood tastes really weird!" );
+                      mutate(RANDOM_MUTATION);
+                      xom_is_stimulated(100);
+                      break;
+               }
         }
         did_god_conduct(DID_DRINK_BLOOD, 8);
     }
-    else if (wearing_amulet(AMU_THE_GOURMAND)){
+    else if (wearing_amulet(AMU_THE_GOURMAND))
+    {
         food_value = mass/3 + random2(you.experience_level * 5);
         mpr("Slurps.");
         did_god_conduct(DID_DRINK_BLOOD, 8);
     }
-    else {
+    else
+    {
         mpr("It's not fresh enough.");
         return false;
     }

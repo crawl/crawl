@@ -582,7 +582,7 @@ bool melee_attack::player_aux_unarmed()
         if (coinflip())
             uattack = UNAT_PUNCH;
             
-        if (you.species == SP_VAMPIRE && coinflip())
+        if (you.species == SP_VAMPIRE && !one_chance_in(3))
             uattack = UNAT_BITE;
     }
 
@@ -762,7 +762,7 @@ bool melee_attack::player_aux_unarmed()
             {
                 continue;
             }
-            if (!you.mutation[MUT_FANGS] || !one_chance_in(5))
+            if (!you.mutation[MUT_FANGS] || one_chance_in(5))
             {
                 continue;
             }
@@ -1390,24 +1390,45 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     if (you.species == SP_VAMPIRE && damage_brand == SPWPN_VAMPIRICISM)
     {
         if (mons_holiness(def) == MH_NATURAL
-            && damage_done > 0 && you.hp < you.hp_max
-            && !one_chance_in(5))
+            && damage_done > 0 && !one_chance_in(5))
         {
-            mpr("You feel better.");
+            const int chunk_type = mons_corpse_effect( def->type );
 
+            // don't drink poisonous or mutagenic blood
+            if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
+            {
+                mprf( "You draw %s's blood!",
+                      def->name(DESC_NOCAP_THE, true).c_str() );
+                      
+                if (you.hp < you.hp_max)
+                {
             int heal = 1 + random2(damage_done);
             if (heal > you.experience_level)
                 heal = you.experience_level;
                 
+                    if (chunk_type == CE_CLEAN)
             heal +=  1 + random2(damage_done);
-            inc_hp(heal, false);
 
-            if (you.hunger_state < HS_ENGORGED)
+            inc_hp(heal, false);
+                    mpr("You feel better.");
+                }
+
+                if (you.hunger_state < HS_ENGORGED) // always the case
             {
-                lessen_hunger(45 + random2avg(59, 2), true);
+                    int food_value = 0;
+                    if (chunk_type == CE_CLEAN)
+                        food_value = 45 + random2avg(59, 2);
+                    else if (chunk_type == CE_CONTAMINATED)
+                        food_value = 22 + random2avg(29, 2);
+                        
+                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+                        food_value -= 5 + random2(16);
+                        
+                    lessen_hunger(food_value, true);
             }
 		        did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
         }
+    }
     }
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM)
     {

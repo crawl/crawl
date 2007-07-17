@@ -5043,7 +5043,7 @@ int player::damage_brand(int)
             break;
 
         case TRAN_BAT:
-            if (you.species == SP_VAMPIRE)
+            if (you.species == SP_VAMPIRE && one_chance_in(3))
             {
                 ret = SPWPN_VAMPIRICISM;
             } // else fall through

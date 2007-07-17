@@ -81,7 +81,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_HEAL_WOUNDS:
-        if (you.species == SP_VAMPIRE /*&& you.hunger_state */)
+        if (you.species == SP_VAMPIRE)
         {
             inc_hp((10 + random2avg(28, 3)) / 2, false);
             mpr("You feel better.");
