@@ -384,7 +384,7 @@ std::string melee_attack::anon_name(description_level_type desc)
     {
     case DESC_CAP_THE:
     case DESC_CAP_A:
-        return ("It");
+        return ("Something");
     case DESC_CAP_YOUR:
         return ("Its");
     case DESC_NOCAP_YOUR:
@@ -394,7 +394,7 @@ std::string melee_attack::anon_name(description_level_type desc)
     case DESC_NOCAP_A:
     case DESC_PLAIN:
     default:
-        return ("it");
+        return ("something");
     }
 }
 
