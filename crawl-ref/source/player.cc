@@ -2532,7 +2532,7 @@ void level_change(bool skip_ability_increase)
             case SP_VAMPIRE:
                 if (you.experience_level == 3)
                 {
-                    mpr( "You can now transform into a bat",
+                    mpr( "You can now transform into a bat.",
                           MSGCH_INTRINSIC_GAIN );
                 }
                 else if (you.experience_level == 13 || you.experience_level == 26)
