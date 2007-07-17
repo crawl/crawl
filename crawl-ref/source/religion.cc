@@ -2470,31 +2470,76 @@ void altar_prayer(void)
     offer_items();
 }                               // end altar_prayer()
 
+static bool god_likes_items(god_type god)
+{
+    switch (god)
+    {
+    case GOD_ZIN:      case GOD_KIKUBAAQUDGHA: case GOD_OKAWARU:
+    case GOD_MAKHLEB:  case GOD_SIF_MUNA:      case GOD_TROG:
+    case GOD_NEMELEX_XOBEH:                    case GOD_ELYVILON:
+        return true;
+        
+    case GOD_SHINING_ONE: case GOD_YREDELEMNUL: case GOD_XOM:
+    case GOD_VEHUMET:     case GOD_LUGONU:      case GOD_BEOGH:
+        return false;
+
+    case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
+        mprf("Bad god, no biscuit! %d", static_cast<int>(god) );
+        return false;
+    }
+    return false;
+}
+
+static bool god_likes_item(god_type god, const item_def& item)
+{
+    if ( !god_likes_items(god) )
+        return false;
+
+    switch (god)
+    {
+    case GOD_ELYVILON:
+        return
+            item.base_type == OBJ_WEAPONS ||
+            item.base_type == OBJ_MISSILES;
+
+    case GOD_KIKUBAAQUDGHA: case GOD_TROG:
+        return item.base_type == OBJ_CORPSES;
+
+    default:
+        return true;
+    }
+}
+
 void offer_items()
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
         return;
 
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
-        if (one_chance_in(1000))
-            break;
-
         const int next = mitm[i].link;  // in case we can't get it later.
-
         const int value = item_value( mitm[i], true );
+
+        if (!god_likes_item(you.religion, mitm[i]))
+        {
+            i = next;
+            continue;
+        }
+
+        msg::streams(MSGCH_GOD) << mitm[i].name(DESC_CAP_THE)
+                                << sacrifice_message(you.religion, mitm[i])
+                                << std::endl;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
 #endif
-
+        
         switch (you.religion)
         {
         case GOD_NEMELEX_XOBEH:
             you.sacrifice_value[mitm[i].base_type] += value;
-            if ( you.attribute[ATTR_CARD_COUNTDOWN] &&
-                 random2(800) < value )
+            if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
             {
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
 #ifdef DEBUG_DIAGNOSTICS
@@ -2502,79 +2547,49 @@ void offer_items()
                      you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
             }
-
-            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice_message(you.religion, mitm[i]).c_str());
             if ((mitm[i].base_type == OBJ_CORPSES && coinflip())
                 // Nemelex piety gain is fairly fast.
                 || random2(value) >= random2(60))
             {
                 gain_piety(1);
             }
-            destroy_item(i);
             break;
 
         case GOD_ZIN:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
-            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice_message(you.religion, mitm[i]).c_str());
             if (mitm[i].base_type == OBJ_CORPSES 
                 || random2(value) >= 50
                 || player_under_penance())
             {
                 gain_piety(1);
             }
-
-            destroy_item(i);
             break;
 
         case GOD_SIF_MUNA:
-            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice_message(you.religion, mitm[i]).c_str());
-
             if (value >= 150)
                 gain_piety(1 + random2(3));
-
-            destroy_item(i);
             break;
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_TROG:
-            if (mitm[i].base_type != OBJ_CORPSES)
-                break;
-
-            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice_message(you.religion, mitm[i]).c_str());
-
             gain_piety(1);
-            destroy_item(i);
             break;
 
         case GOD_ELYVILON:
-            if (mitm[i].base_type != OBJ_WEAPONS
-                && mitm[i].base_type != OBJ_MISSILES)
-            {
-                break;
-            }
-
-            mprf(MSGCH_GOD, "%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
-                 sacrifice_message(you.religion, mitm[i]).c_str());
-
             if (random2(value) >= random2(50) 
                 || (mitm[i].base_type == OBJ_WEAPONS 
                     && (you.piety < 30 || player_under_penance())))
             {
                 gain_piety(1);
             }
-
-            destroy_item(i);
             break;
 
         default:
             break;
         }
 
+        destroy_item(i);
         i = next;
     }
 }
@@ -2587,10 +2602,10 @@ void god_pitch(god_type which_god)
     // Note: using worship we could make some gods not allow followers to
     // return, or not allow worshippers from other religions.  -- bwr
 
-    if ((you.is_undead || you.species == SP_DEMONSPAWN)
-        && (which_god == GOD_ZIN || which_god == GOD_SHINING_ONE
-            || which_god == GOD_ELYVILON) ||
-          which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
+    // Gods can be racist...
+    const bool you_evil = you.is_undead || you.species == SP_DEMONSPAWN;
+    if ( (you_evil && is_good_god(which_god)) ||
+         (you.species != SP_HILL_ORC && which_god == GOD_BEOGH) )
     {
         simple_god_message(" does not accept worship from those such as you!",
                            which_god);
@@ -2609,23 +2624,21 @@ void god_pitch(god_type which_god)
     snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?", 
               (you.worshipped[which_god]) ? "re" : "" );
 
-    if (!yesno( info ))
+    if (!yesno( info ) || !yesno("Are you sure?"))
     {
         redraw_screen();
         return;
     }
 
-    if (!yesno("Are you sure?"))
-    {
-        redraw_screen();
-        return;
-    }
+    // OK, so join the new religion.
 
     redraw_screen();
+
+    // Leave your prior religion first.
     if (you.religion != GOD_NO_GOD)
         excommunication();
 
-    //jmf: moved up so god_speaks gives right colour
+    // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
 
     if (you.religion == GOD_XOM)
@@ -2665,11 +2678,12 @@ void god_pitch(god_type which_god)
         if (you.penance[GOD_SHINING_ONE] > 0)
         {
             inc_penance(GOD_SHINING_ONE, 30);
-            god_speaks(GOD_SHINING_ONE, "\"You will pay for your evil ways, mortal!\"");
+            god_speaks(GOD_SHINING_ONE,
+                       "\"You will pay for your evil ways, mortal!\"");
         }
     }
 
-    if ( you.religion == GOD_LUGONU )
+    if ( you.religion == GOD_LUGONU && !you.worshipped[GOD_LUGONU] )
         gain_piety(20);         // allow instant access to first power
 
     redraw_skill( you.your_name, player_title() );

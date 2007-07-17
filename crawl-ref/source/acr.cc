@@ -143,7 +143,6 @@ std::string init_file_location; // externed in newgame.cc
 char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
 int stealth;                    // externed in view.cc
-char use_colour = 1;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
 const struct coord_def Compass[8] = 
@@ -2838,13 +2837,13 @@ static bool initialise(void)
     burden_change();
     make_hungry(0,true);
 
-    you.redraw_strength = 1;
-    you.redraw_intelligence = 1;
-    you.redraw_dexterity = 1;
-    you.redraw_armour_class = 1;
-    you.redraw_evasion = 1;
-    you.redraw_experience = 1;
-    you.redraw_gold = 1;
+    you.redraw_strength = true;
+    you.redraw_intelligence = true;
+    you.redraw_dexterity = true;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+    you.redraw_experience = true;
+    you.redraw_gold = true;
     you.wield_change = true;
 
     you.start_time = time( NULL );      // start timer on session

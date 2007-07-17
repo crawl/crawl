@@ -709,12 +709,11 @@ bool new_game(void)
     {
         if (check_saved_game())
         {
-            textcolor( BROWN );
-            cprintf( EOL "Welcome back, " );
-            textcolor( YELLOW );
-            cprintf( "%s!", you.your_name );
-            textcolor( LIGHTGREY );
-
+            // Seems sort of pointless to print this, since the
+            // game start will kill overwrite it immediately...
+            formatted_string::parse_string(
+                "EOL<brown>Welcome back, <yellow>" +
+                std::string(you.your_name) + "!<lightgrey>").display();
             save_player_name();
             return (false);
         }
@@ -2025,64 +2024,31 @@ static void give_basic_spells(job_type which_job)
     return;
 }                               // end give_basic_spells()
 
-
-/* ************************************************************************
-
-// MAKE INTO FUNCTION!!! {dlb}
-// randomly boost stats a number of times based on species {dlb}
-    unsigned char points_left = ( you.species == SP_DEMIGOD || you.species == SP_DEMONSPAWN ) ? 15 : 8;
-
-    do
-    {
-        switch ( random2(NUM_STATS) )
-        {
-          case STAT_STRENGTH:
-            if ( you.strength > 17 && coinflip() )
-              continue;
-            you.strength++;
-            break;
-          case STAT_DEXTERITY:
-            if ( you.dex > 17 && coinflip() )
-              continue;
-            you.dex++;
-            break;
-          case STAT_INTELLIGENCE:
-            if ( you.intel > 17 && coinflip() )
-              continue;
-            you.intel++;
-            break;
-        }
-        points_left--;
-    }
-    while (points_left > 0);
-
-************************************************************************ */
-
-
 // eventually, this should be something more grand {dlb}
 static void openingScreen(void)
 {
-    textcolor( YELLOW );
-    cprintf("Hello, welcome to " CRAWL " " VERSION "!");
-    textcolor( BROWN );
-    cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell, 2002-2007 Crawl DevTeam");
-    cprintf(EOL 
+    std::string msg =
+        "<yellow>Hello, welcome to " CRAWL " " VERSION "!</yellow>" EOL
+        "<brown>(c) Copyright 1997-2002 Linley Henzell, "
+        "2002-2007 Crawl DevTeam" EOL
         "Please consult crawl_manual.txt for instructions and legal details."
-        EOL);
+        "</brown>" EOL;
 
-    bool init_found = init_file_location.find("not found") == std::string::npos;
+    const bool init_found =
+        (init_file_location.find("not found") == std::string::npos);
+    
     if (!init_found)
-        textcolor( LIGHTRED );
+        msg += "<lightred>Init file ";
     else
-        textcolor( LIGHTGREY );
+        msg += "<lightgrey>Init file read: ";
 
-    cprintf("Init file %s%s" EOL,
-            init_found? "read: " : "",
-            init_file_location.c_str());
+    msg += init_file_location;
+    msg += EOL;
+    
+    formatted_string::parse_string(msg).display();
     textcolor( LIGHTGREY );
-
     return;
-}                               // end openingScreen()
+}
 
 static void show_name_prompt(int where, bool blankOK, 
         const std::vector<player> &existing_chars,
@@ -2235,14 +2201,10 @@ static void enter_player_name(bool blankOK)
         if (existing_chars.size() == 0) 
         {
              gotoxy(1,12);
-             cprintf("  If you've never been here before, "
-                     "you might want to try out" EOL);
-             cprintf("  the Dungeon Crawl tutorial. To do this, press ");
-             textcolor(WHITE);
-             cprintf("T");
-             textcolor(LIGHTGREY);
-             cprintf(" on the next" EOL);
-             cprintf("  screen.");
+             formatted_string::parse_string(
+                 "  If you've never been here before, you might want to try "
+                 "out" EOL "  the Dungeon Crawl tutorial. To do this, press "
+                 "<white>T</white> on the next" EOL "  screen.").display();
         }    
 
         MenuEntry *title = new MenuEntry("Or choose an existing character:");
@@ -2251,7 +2213,7 @@ static void enter_player_name(bool blankOK)
         for (int i = 0, size = existing_chars.size(); i < size; ++i)
         {
             std::string desc = " " + existing_chars[i].short_desc();
-            if ((int) desc.length() >= get_number_of_cols())
+            if (static_cast<int>(desc.length()) >= get_number_of_cols())
                 desc = desc.substr(0, get_number_of_cols() - 1);
 
             MenuEntry *me = new MenuEntry(desc);
@@ -2502,7 +2464,7 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
     return (ret);
 }
 
-static void make_rod(item_def &item, int rod_type)
+static void make_rod(item_def &item, stave_type rod_type)
 {
     item.base_type = OBJ_STAVES;
     item.sub_type = rod_type;
@@ -4910,12 +4872,10 @@ bool give_items_skills()
 
     // Vampires always start with unarmed combat skill.
     if (you.species == SP_VAMPIRE && you.skills[SK_UNARMED_COMBAT] < 2)
-    {
         you.skills[SK_UNARMED_COMBAT] = 2;
-    }
 
     if (weap_skill)
-        you.skills[weapon_skill(OBJ_WEAPONS, you.inv[0].sub_type)] = weap_skill;
+        you.skills[weapon_skill(OBJ_WEAPONS, you.inv[0].sub_type)]=weap_skill;
 
     init_skill_order();
 
