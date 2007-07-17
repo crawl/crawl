@@ -1389,7 +1389,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     
     if (you.species == SP_VAMPIRE && damage_brand == SPWPN_VAMPIRICISM)
     {
-        if (mons_holiness(def) == MH_NATURAL
+        if (defender->holiness() == MH_NATURAL
             && damage_done > 0 && !one_chance_in(5))
         {
             const int chunk_type = mons_corpse_effect( def->type );
@@ -1402,19 +1402,19 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
                       
                 if (you.hp < you.hp_max)
                 {
-            int heal = 1 + random2(damage_done);
-            if (heal > you.experience_level)
-                heal = you.experience_level;
+                    int heal = 1 + random2(damage_done);
+                    if (heal > you.experience_level)
+                        heal = you.experience_level;
                 
                     if (chunk_type == CE_CLEAN)
-            heal +=  1 + random2(damage_done);
+                        heal +=  1 + random2(damage_done);
 
-            inc_hp(heal, false);
+                    inc_hp(heal, false);
                     mpr("You feel better.");
                 }
 
                 if (you.hunger_state < HS_ENGORGED) // always the case
-            {
+                {
                     int food_value = 0;
                     if (chunk_type == CE_CLEAN)
                         food_value = 45 + random2avg(59, 2);
@@ -1425,10 +1425,10 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
                         food_value -= 5 + random2(16);
                         
                     lessen_hunger(food_value, true);
-            }
+                }
 		        did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
+            }
         }
-    }
     }
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM)
     {

@@ -4800,10 +4800,9 @@ bool give_items_skills()
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
-        you.skills[SK_SHIELDS] = 1;
         you.skills[SK_RANGED_COMBAT] = 2;
         you.skills[SK_STAVES] = 3;
-        you.skills[SK_INVOCATIONS] = 2;
+        you.skills[SK_INVOCATIONS] = 3;
         break;
 
     case JOB_REAVER:
