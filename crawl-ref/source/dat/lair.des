@@ -8,8 +8,8 @@
 ##############################################################################
 # Dummy Lair entry
 NAME:   lair_0_dummy
-TAGS:   orc_lair
-CHANCE: 60
+TAGS:   lair_entry dummy
+CHANCE: 30
 ORIENT: float
 MAP
 O
