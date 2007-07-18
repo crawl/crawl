@@ -190,7 +190,7 @@ static const char *trap_name(int x, int y)
 /*
  * Returns true if the character can cross this dungeon feature.
  */
-bool is_traversable(int grid)
+bool is_traversable(dungeon_feature_type grid)
 {
     return traversable_terrain[grid] == TRAVERSABLE;
 }
@@ -380,7 +380,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
     if (!ignore_terrain_knowledge && !is_terrain_known(x, y))
         return (false);
 
-    const int grid = grd[x][y];
+    const dungeon_feature_type grid = grd[x][y];
 
     // Special-case secret doors so that we don't run into awkwardness when
     // a monster opens a secret door without the hero seeing it, but the travel
@@ -468,22 +468,31 @@ static void set_pass_feature(unsigned char grid, signed char pass)
  * Sets traversable terrain based on the character's role and whether or not he
  * has permanent levitation
  */
-static void init_terrain_check()
+void init_travel_terrain_check(bool check_race_equip)
 {
-    // Swimmers get deep water.
-    signed char water = player_can_swim()? TRAVERSABLE : IMPASSABLE;
+    if (check_race_equip)
+    {
+        // Swimmers get deep water.
+        signed char water = player_can_swim()? TRAVERSABLE : IMPASSABLE;
     
-    // If the player has overridden deep water already, we'll respect that.
-    set_pass_feature(DNGN_DEEP_WATER, water);
+        // If the player has overridden deep water already, we'll respect that.
+        set_pass_feature(DNGN_DEEP_WATER, water);
 
-    // Permanently levitating players can cross most hostile terrain.
-    signed char trav = player_is_permalevitating()? 
-                    TRAVERSABLE : IMPASSABLE;
+        // Permanently levitating players can cross most hostile terrain.
+        signed char trav = player_is_permalevitating()? 
+            TRAVERSABLE : IMPASSABLE;
 
-    if (water != TRAVERSABLE)
-        set_pass_feature(DNGN_DEEP_WATER, trav);
-    set_pass_feature(DNGN_LAVA, trav);
-    set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
+        if (water != TRAVERSABLE)
+            set_pass_feature(DNGN_DEEP_WATER, trav);
+        set_pass_feature(DNGN_LAVA, trav);
+        set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
+    }
+    else
+    {
+        set_pass_feature(DNGN_DEEP_WATER, IMPASSABLE);
+        set_pass_feature(DNGN_LAVA, IMPASSABLE);
+        set_pass_feature(DNGN_TRAP_MECHANICAL, IMPASSABLE);
+    }
 }
 
 void travel_init_new_level()
@@ -1256,7 +1265,7 @@ const coord_def travel_pathfind::pathfind(run_mode_type rmode)
 
     // Check whether species or levitation permits travel through terrain such
     // as deep water.
-    init_terrain_check();
+    init_travel_terrain_check();
 
     need_for_greed =
         (rmode == RMODE_EXPLORE_GREEDY && can_autopickup());

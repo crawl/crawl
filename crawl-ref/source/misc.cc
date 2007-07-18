@@ -159,6 +159,22 @@ bool grid_is_wall( dungeon_feature_type grid )
             || grid == DNGN_PERMAROCK_WALL);
 }
 
+bool grid_is_stone_stair(dungeon_feature_type grid)
+{
+    switch (grid)
+    {
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 bool grid_is_opaque( dungeon_feature_type grid )
 {
     return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);

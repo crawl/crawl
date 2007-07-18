@@ -619,142 +619,6 @@ bool travel_load_map( branch_type branch, int absdepth )
     return true;
 }
 
-static coord_def find_nearby_stair(int stair_to_find, bool find_closest)
-{
-    // scan around the player's position first
-    int basex = you.x_pos;
-    int basey = you.y_pos;
-
-    // check for illegal starting point
-    if ( !in_bounds(basex, basey) )
-    {
-        basex = 0;
-        basey = 0;
-    }
-
-    coord_def result;
-
-    int found = 0;
-    int best_dist = 1 + GXM*GXM + GYM*GYM;
-
-    // XXX These passes should be rewritten to use an iterator of STL
-    // algorithm of some kind.
-
-    // First pass: look for an exact match
-    for (int xcode = 0; xcode < GXM; ++xcode )
-    {
-        const int xsign = ((xcode % 2) ? 1 : -1);
-        const int xdiff = xsign * (xcode + 1)/2;
-        const int xpos  = (basex + xdiff + GXM) % GXM;
-
-        for (int ycode = 0; ycode < GYM; ++ycode)
-        {
-            const int ysign = ((ycode % 2) ? 1 : -1);
-            const int ydiff = ysign * (ycode + 1)/2;
-            const int ypos  = (basey + ydiff + GYM) % GYM;
-
-            // note that due to the wrapping above, we can't just use
-            // xdiff*xdiff + ydiff*ydiff
-            const int dist = (xpos-basex)*(xpos-basex) +
-                (ypos-basey)*(ypos-basey);
-
-            if (grd[xpos][ypos] == stair_to_find)
-            {
-                found++;
-                if (find_closest)
-                {
-                    if (dist < best_dist)
-                    {
-                        best_dist = dist;
-                        result.x = xpos;
-                        result.y = ypos;
-                    }
-                }
-                else if (one_chance_in( found ))
-                {
-                    result.x = xpos;
-                    result.y = ypos;
-                }
-            }
-        }
-    }
-
-    if ( found )
-        return result;
-
-    best_dist = 1 + GXM*GXM + GYM*GYM;
-
-    // Second pass: find a staircase in the proper direction
-    for (int xcode = 0; xcode < GXM; ++xcode )
-    {
-        const int xsign = ((xcode % 2) ? 1 : -1);
-        const int xdiff = xsign * (xcode + 1)/2;
-        const int xpos  = (basex + xdiff + GXM) % GXM;
-
-        for (int ycode = 0; ycode < GYM; ++ycode)
-        {
-            const int ysign = ((ycode % 2) ? 1 : -1);
-            const int ydiff = ysign * (ycode + 1)/2;
-            const int ypos  = (basey + ydiff + GYM) % GYM;
-
-            bool good_stair;
-            const int looking_at = grd[xpos][ypos];
-
-            if (stair_to_find <= DNGN_ROCK_STAIRS_DOWN )
-                good_stair =
-                    (looking_at >= DNGN_STONE_STAIRS_DOWN_I) &&
-                    (looking_at <= DNGN_ROCK_STAIRS_DOWN);
-            else
-                good_stair =
-                    (looking_at >= DNGN_STONE_STAIRS_UP_I) &&
-                    (looking_at <= DNGN_ROCK_STAIRS_UP);
-
-            const int dist = (xpos-basex)*(xpos-basex) +
-                (ypos-basey)*(ypos-basey);
-
-            if ( good_stair )
-            {
-                found++;
-                if (find_closest && dist < best_dist)
-                {
-                    best_dist = dist;
-                    result.x = xpos;
-                    result.y = ypos;
-                }
-                else if (one_chance_in( found ))
-                {
-                    result.x = xpos;
-                    result.y = ypos;
-                }
-            }
-        }
-    }
-
-    if ( found )
-        return result;
-
-    // Third pass: look for any clear terrain (shouldn't happen).
-    // We abandon the idea of looking nearby now.
-    for (int xpos = 0; xpos < GXM; xpos++)
-    {
-        for (int ypos = 0; ypos < GYM; ypos++)
-        {
-            if (grd[xpos][ypos] >= DNGN_FLOOR)
-            {
-                found++;
-                if (one_chance_in( found ))
-                {
-                    result.x = xpos;
-                    result.y = ypos;
-                }
-            }
-        }
-    }
-
-    ASSERT( found );
-    return result;
-}
-
 static void sanity_test_monster_inventory()
 {
     // Sanity forcing of monster inventory items (required?)
@@ -771,30 +635,6 @@ static void sanity_test_monster_inventory()
             // items carried by monsters shouldn't be linked
             if (mitm[menv[i].inv[j]].link != NON_ITEM)
                 mitm[menv[i].inv[j]].link = NON_ITEM;
-        }
-    }
-}
-
-static void fixup_pandemonium_stairs()
-{
-    for (int i = 0; i < GXM; i++)
-    {
-        for (int j = 0; j < GYM; j++)
-        {
-            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
-                && grd[i][j] <= DNGN_ROCK_STAIRS_UP)
-            {
-                if (one_chance_in( you.mutation[MUT_PANDEMONIUM] ? 5 : 50 ))
-                    grd[i][j] = DNGN_EXIT_PANDEMONIUM;
-                else
-                    grd[i][j] = DNGN_FLOOR;
-            }
-            
-            if (grd[i][j] >= DNGN_ENTER_LABYRINTH
-                && grd[i][j] <= DNGN_ROCK_STAIRS_DOWN)
-            {
-                grd[i][j] = DNGN_TRANSIT_PANDEMONIUM;
-            }
         }
     }
 }
@@ -843,14 +683,16 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
     else if (stair_taken >= DNGN_RETURN_FROM_ORCISH_MINES 
              && stair_taken < 150) // 20 slots reserved
     {
-            // find entry point to subdungeon when leaving
-        stair_taken += (DNGN_ENTER_ORCISH_MINES - DNGN_RETURN_FROM_ORCISH_MINES);
+        // find entry point to subdungeon when leaving
+        stair_taken += (DNGN_ENTER_ORCISH_MINES
+                        - DNGN_RETURN_FROM_ORCISH_MINES);
     }
     else if (stair_taken >= DNGN_ENTER_ORCISH_MINES
              && stair_taken < DNGN_RETURN_FROM_ORCISH_MINES)
     {
         // find exit staircase from subdungeon when entering 
-        stair_taken += (DNGN_RETURN_FROM_ORCISH_MINES - DNGN_ENTER_ORCISH_MINES);
+        stair_taken += (DNGN_RETURN_FROM_ORCISH_MINES
+                        - DNGN_ENTER_ORCISH_MINES);
     }
     else if (stair_taken >= DNGN_ENTER_DIS 
              && stair_taken <= DNGN_TRANSIT_PANDEMONIUM)
@@ -865,7 +707,8 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
         find_first = false;
     }
     
-    const coord_def where_to_go = find_nearby_stair(stair_taken, find_first);
+    const coord_def where_to_go =
+        dgn_find_nearby_stair(stair_taken, find_first);
     you.moveto(where_to_go);
 }
 
@@ -1069,10 +912,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     redraw_all();
 
     sanity_test_monster_inventory();
-
-    // Translate stairs for pandemonium levels:
-    if (you.level_type == LEVEL_PANDEMONIUM)
-        fixup_pandemonium_stairs();
 
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)

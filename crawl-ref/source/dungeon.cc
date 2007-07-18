@@ -180,7 +180,6 @@ static void chequerboard(spec_room &sr, dungeon_feature_type target,
                          dungeon_feature_type floor2);
 static void roguey_level(int level_number, spec_room &sr);
 static void morgue(spec_room &sr);
-static void dgn_fill_zone(const coord_def &c, int zone);    
 
 // SPECIAL ROOM BUILDERS
 static void special_room(int level_number, spec_room &sr);
@@ -290,12 +289,43 @@ bool builder(int level_number, int level_type)
     return (false);
 }
 
-static inline bool dgn_grid_is_isolating(const dungeon_feature_type grid)
+static inline bool dgn_grid_is_passable(dungeon_feature_type grid)
 {
     // Rock wall check is superfluous, but is the most common case.
-    return (grid == DNGN_ROCK_WALL
-            || (grid_is_solid(grid) && grid != DNGN_CLOSED_DOOR
-                && grid != DNGN_SECRET_DOOR));
+    return !(grid == DNGN_ROCK_WALL
+             || (grid_is_solid(grid) && grid != DNGN_CLOSED_DOOR
+                 && grid != DNGN_SECRET_DOOR));
+}
+
+static inline void dgn_point_record_stub(const coord_def &) { }
+
+template <class point_record>
+static void dgn_fill_zone(
+    const coord_def &c, int zone, point_record &prec,
+    bool (*passable)(dungeon_feature_type) = dgn_grid_is_passable)
+{
+    // No bounds checks, assuming the level has at least one layer of
+    // rock border.
+    travel_point_distance[c.x][c.y] = zone;
+    for (int yi = -1; yi <= 1; ++yi)
+    {
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if (!xi && !yi)
+                continue;
+
+            const coord_def cp(c.x + xi, c.y + yi);
+            if (travel_point_distance[cp.x][cp.y]
+                || dgn_map_mask(cp)
+                || !passable(grd(cp)))
+            {
+                continue;
+            }
+
+            prec(cp);
+            dgn_fill_zone(cp, zone, prec);
+        }
+    }
 }
 
 // Counts the number of mutually unreachable areas in the map,
@@ -338,37 +368,36 @@ static int dgn_count_disconnected_zones()
             if (travel_point_distance[x][y] || dgn_map_mask[x][y])
                 continue;
 
-            if (dgn_grid_is_isolating(grd[x][y]))
+            if (!dgn_grid_is_passable(grd[x][y]))
                 continue;
 
-            dgn_fill_zone(coord_def(x, y), ++nzones);
+            dgn_fill_zone(coord_def(x, y), ++nzones, dgn_point_record_stub);
         }
     }
 
     return (nzones);
 }
 
-static void dgn_fill_zone(const coord_def &c, int zone)
+static void fixup_pandemonium_stairs()
 {
-    // No bounds checks, assuming the level has at least one layer of
-    // rock border.
-    travel_point_distance[c.x][c.y] = zone;
-    for (int yi = -1; yi <= 1; ++yi)
+    for (int i = 0; i < GXM; i++)
     {
-        for (int xi = -1; xi <= 1; ++xi)
+        for (int j = 0; j < GYM; j++)
         {
-            if (!xi && !yi)
-                continue;
-
-            const coord_def cp(c.x + xi, c.y + yi);
-            if (travel_point_distance[cp.x][cp.y]
-                || dgn_map_mask(cp)
-                || dgn_grid_is_isolating(grd(cp)))
+            if (grd[i][j] >= DNGN_STONE_STAIRS_UP_I
+                && grd[i][j] <= DNGN_ROCK_STAIRS_UP)
             {
-                continue;
+                if (one_chance_in( you.mutation[MUT_PANDEMONIUM] ? 5 : 50 ))
+                    grd[i][j] = DNGN_EXIT_PANDEMONIUM;
+                else
+                    grd[i][j] = DNGN_FLOOR;
             }
-
-            dgn_fill_zone(cp, zone);
+            
+            if (grd[i][j] >= DNGN_ENTER_LABYRINTH
+                && grd[i][j] <= DNGN_ROCK_STAIRS_DOWN)
+            {
+                grd[i][j] = DNGN_TRANSIT_PANDEMONIUM;
+            }
         }
     }
 }
@@ -733,6 +762,10 @@ static void build_dungeon_level(int level_number, int level_type)
         !player_in_branch(BRANCH_SWAMP) &&
         !player_in_branch(BRANCH_SHOALS))
         prepare_water( level_number );
+
+    // Translate stairs for pandemonium levels:
+    if (level_type == LEVEL_PANDEMONIUM)
+        fixup_pandemonium_stairs();
 }                               // end builder()
 
 static void check_doors()
@@ -6362,6 +6395,190 @@ static void build_lake(dungeon_feature_type lake_type) //mv
     }
 }                               // end lake()
 
+struct nearest_point
+{
+    coord_def target;
+    coord_def nearest;
+    int       distance;
+
+    nearest_point(const coord_def &t) : target(t), nearest(), distance(-1)
+    {
+    }
+    void operator () (const coord_def &c)
+    {
+        if (grd(c) == DNGN_FLOOR)
+        {
+            const int ndist = (c - target).abs();
+            if (distance == -1 || ndist < distance)
+            {
+                distance = ndist;
+                nearest  = c;
+            }
+        }
+    }
+};
+
+// Fill travel_point_distance out from all stone stairs on the level.
+static coord_def dgn_find_closest_to_stone_stairs()
+{
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    init_travel_terrain_check(false);
+    nearest_point np(you.pos());
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+            if (!travel_point_distance[x][y] && grid_is_stone_stair(grd[x][y]))
+                dgn_fill_zone(coord_def(x, y), 1, np, is_traversable);
+    return (np.nearest);
+}
+
+coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
+{
+    if (stair_to_find == DNGN_ROCK_STAIRS_UP
+        || stair_to_find == DNGN_ROCK_STAIRS_DOWN)
+    {
+        const coord_def pos(dgn_find_closest_to_stone_stairs());
+        if (in_bounds(pos))
+            return (pos);
+    }
+    
+    // scan around the player's position first
+    int basex = you.x_pos;
+    int basey = you.y_pos;
+
+    // check for illegal starting point
+    if ( !in_bounds(basex, basey) )
+    {
+        basex = 0;
+        basey = 0;
+    }
+
+    coord_def result;
+
+    int found = 0;
+    int best_dist = 1 + GXM*GXM + GYM*GYM;
+
+    // XXX These passes should be rewritten to use an iterator of STL
+    // algorithm of some kind.
+
+    // First pass: look for an exact match
+    for (int xcode = 0; xcode < GXM; ++xcode )
+    {
+        const int xsign = ((xcode % 2) ? 1 : -1);
+        const int xdiff = xsign * (xcode + 1)/2;
+        const int xpos  = (basex + xdiff + GXM) % GXM;
+
+        for (int ycode = 0; ycode < GYM; ++ycode)
+        {
+            const int ysign = ((ycode % 2) ? 1 : -1);
+            const int ydiff = ysign * (ycode + 1)/2;
+            const int ypos  = (basey + ydiff + GYM) % GYM;
+
+            // note that due to the wrapping above, we can't just use
+            // xdiff*xdiff + ydiff*ydiff
+            const int dist = (xpos-basex)*(xpos-basex) +
+                (ypos-basey)*(ypos-basey);
+
+            if (grd[xpos][ypos] == stair_to_find)
+            {
+                found++;
+                if (find_closest)
+                {
+                    if (dist < best_dist)
+                    {
+                        best_dist = dist;
+                        result.x = xpos;
+                        result.y = ypos;
+                    }
+                }
+                else if (one_chance_in( found ))
+                {
+                    result.x = xpos;
+                    result.y = ypos;
+                }
+            }
+        }
+    }
+
+    if ( found )
+        return result;
+
+    best_dist = 1 + GXM*GXM + GYM*GYM;
+
+    // Second pass: find a staircase in the proper direction
+    for (int xcode = 0; xcode < GXM; ++xcode )
+    {
+        const int xsign = ((xcode % 2) ? 1 : -1);
+        const int xdiff = xsign * (xcode + 1)/2;
+        const int xpos  = (basex + xdiff + GXM) % GXM;
+
+        for (int ycode = 0; ycode < GYM; ++ycode)
+        {
+            const int ysign = ((ycode % 2) ? 1 : -1);
+            const int ydiff = ysign * (ycode + 1)/2;
+            const int ypos  = (basey + ydiff + GYM) % GYM;
+
+            bool good_stair;
+            const int looking_at = grd[xpos][ypos];
+
+            if (stair_to_find <= DNGN_ROCK_STAIRS_DOWN )
+                good_stair =
+                    (looking_at >= DNGN_STONE_STAIRS_DOWN_I) &&
+                    (looking_at <= DNGN_ROCK_STAIRS_DOWN);
+            else
+                good_stair =
+                    (looking_at >= DNGN_STONE_STAIRS_UP_I) &&
+                    (looking_at <= DNGN_ROCK_STAIRS_UP);
+
+            const int dist = (xpos-basex)*(xpos-basex) +
+                (ypos-basey)*(ypos-basey);
+
+            if ( good_stair )
+            {
+                found++;
+                if (find_closest && dist < best_dist)
+                {
+                    best_dist = dist;
+                    result.x = xpos;
+                    result.y = ypos;
+                }
+                else if (one_chance_in( found ))
+                {
+                    result.x = xpos;
+                    result.y = ypos;
+                }
+            }
+        }
+    }
+
+    if ( found )
+        return result;
+
+    // Third pass: look for any clear terrain and abandon the idea of
+    // looking nearby now. This is used when taking transit Pandemonium gates,
+    // or landing in Labyrinths. Never land the PC inside a Pan or Lab vault.
+    // We can't check vaults for other levels because vault information is
+    // not saved, and the player can re-enter other levels.
+    for (int xpos = 0; xpos < GXM; xpos++)
+    {
+        for (int ypos = 0; ypos < GYM; ypos++)
+        {
+            if (grd[xpos][ypos] >= DNGN_FLOOR
+                && (you.level_type == LEVEL_DUNGEON
+                    || unforbidden(coord_def(xpos, ypos), MMT_VAULT)))
+            {
+                found++;
+                if (one_chance_in( found ))
+                {
+                    result.x = xpos;
+                    result.y = ypos;
+                }
+            }
+        }
+    }
+
+    ASSERT( found );
+    return result;
+}
 
 ////////////////////////////////////////////////////////////////////
 // dgn_region

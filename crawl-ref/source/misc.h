@@ -137,6 +137,7 @@ trap_type trap_type_at_xy(int x, int y);
 bool grid_is_wall(dungeon_feature_type grid);
 bool grid_is_opaque(dungeon_feature_type grid);
 bool grid_is_solid(dungeon_feature_type grid);
+bool grid_is_stone_stair(dungeon_feature_type grid);
 bool grid_is_solid(int x, int y);
 bool grid_is_solid(const coord_def &c);
 bool grid_is_trap(dungeon_feature_type grid);

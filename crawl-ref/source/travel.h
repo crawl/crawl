@@ -23,6 +23,7 @@
  * called from: initfile (what's a better place to initialise stuff?)
  * *********************************************************************** */
 void initialise_travel();
+void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
 void travel_init_new_level();
 void cycle_exclude_radius(const coord_def &p);
@@ -38,7 +39,7 @@ command_type stair_direction(dungeon_feature_type stair_feat);
 command_type direction_to_command( char x, char y );
 bool is_resting( void );
 bool can_travel_interlevel();
-bool is_traversable(int grid);
+bool is_traversable(dungeon_feature_type grid);
 
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);
