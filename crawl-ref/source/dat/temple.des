@@ -446,3 +446,61 @@ xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
 xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccx
 ENDMAP
+
+
+##########################################################################
+# Five rooms temple (David Ploog).
+
+NAME:    five_temple
+PLACE:   Temple
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: ABC/DEF/GHI/JKL/MNO
+SHUFFLE: ABC, DEF, GHI, JKL, MNO
+SUBST:   A=[, B=(, C={
+KFEAT:   D = altar of Trog
+KFEAT:   E = altar of Makhleb
+KFEAT:   F = altar of Okawaru
+KFEAT:   G = altar of The Shining One
+KFEAT:   H = altar of Zin
+KFEAT:   I = altar of Elyvilon
+KFEAT:   J = altar of Sif Muna
+KFEAT:   K = altar of Vehumet
+KFEAT:   L = altar of Kikubaaqudgha
+KFEAT:   M = altar of Yredelemnul
+KFEAT:   N = altar of Xom
+KFEAT:   O = altar of Nemelex Xobeh
+SUBST:   X : GUT
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
+xxxxxxxxxx........xxxxx+xxxxx........xxxxxxxxxx
+xxxxxxx.....xxxxxxxxx.....xxxxxxxxx.....xxxxxxx
+xxxxxx...xxxxxxxxxx.........xxxxxxxxxx...xxxxxx
+xxxxx..xxxxxxxxxxx..A.....C..xxxxxxxxxxx..xxxxx
+xxxx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xxxx
+xxx..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..xxx
+xxx..xxx.....xxxxxx....B....xxxxxx.....xxx..xxx
+xx..+x..O......xxxxxx.....xxxxxx......F..x+..xx
+xx..x...........xxxxxxxxxxxxxxx...........x..xx
+x..xx.....X..N..xxxxxxxxxxxxxxx..D..X.....xx..x
+x..xx...........xxxxxxxxxxxxxxx...........xx..x
+x..xxx..M......xxxxxxxxxxxxxxxxx......E..xxx..x
+x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
+xx..xxxxxxx......K..xxxxxxx..G......xxxxxxx..xx
+xx..xxxxxx.L.........xxxxx.........H.xxxxxx..xx
+xxx..xxxxx.....X.....xxxxx.....X.....xxxxx..xxx
+xxx..xxxxx...........xxxxx...........xxxxx..xxx
+xxxx..xxxxx......J..xxxxxxx..I......xxxxx..xxxx
+xxxxx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xxxxx
+xxxxxx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xxxxxx
+xxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxx
+xxxxxxxxxx........xxxxxxxxxxx........xxxxxxxxxx
+xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
