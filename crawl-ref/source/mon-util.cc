@@ -312,6 +312,14 @@ bool mons_is_stationary(const monsters *mons)
     return (mons_class_is_stationary(mons->type));
 }
 
+bool mons_behaviour_perceptible(const monsters *mons)
+{
+    return (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
+            && !mons_is_mimic(mons->type)
+            && !mons_is_statue(mons->type)    
+            && mons->type != MONS_OKLOB_PLANT);
+}
+
 bool mons_is_icy(const monsters *mons)
 {
     return (mons_is_icy(mons->type));
@@ -1667,18 +1675,14 @@ bool mons_is_known_mimic(const monsters *m)
 
 bool mons_looks_stabbable(const monsters *m)
 {
-    return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
-                && !mons_is_mimic(m->type)
-                && !mons_is_statue(m->type)
-                && !mons_friendly(m)
-                && mons_is_sleeping(m));
+    return (mons_behaviour_perceptible(m)
+            && !mons_friendly(m)
+            && mons_is_sleeping(m));
 }
 
 bool mons_looks_distracted(const monsters *m)
 {
-    return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
-                && !mons_is_mimic(m->type)
-                && !mons_is_statue(m->type)
+    return (mons_behaviour_perceptible(m)
                 && !mons_friendly(m)
                 && ((m->foe != MHITYOU && !mons_is_batty(m))
                     || mons_is_confused(m)

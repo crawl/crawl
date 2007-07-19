@@ -786,6 +786,9 @@ public:
   FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
   FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
 
+  std::set<std::string> uniq_map_tags;
+  std::set<std::string> uniq_map_names;
+
 public:
     player();
     void init();

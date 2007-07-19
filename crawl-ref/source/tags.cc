@@ -129,9 +129,9 @@ static void unmarshall_monster(tagHeader &th, monsters &m);
 static void marshall_item(tagHeader &th, const item_def &item);
 static void unmarshall_item(tagHeader &th, item_def &item);
 
-template<typename T, typename T_iter>
+template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
-                              void (*T_marshall)(struct tagHeader&, const T&));
+                              T_marshal marshal);
 template<typename T>
 static void unmarshall_vector(struct tagHeader& th, std::vector<T>& vec,
                               T (*T_unmarshall)(struct tagHeader&));
@@ -236,9 +236,9 @@ void marshallMap(struct tagHeader &th, const std::map<key,value>& data,
     }
 }
 
-template<typename T, typename T_iter>
+template<typename T_iter, typename T_marshall_t>
 static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
-                              void (*T_marshall)(struct tagHeader&, const T&))
+                              T_marshall_t T_marshall)
 {
     marshallLong(th, std::distance(beg, end));
     while ( beg != end )
@@ -256,6 +256,16 @@ static void unmarshall_vector(struct tagHeader& th, std::vector<T>& vec,
     const long num_to_read = unmarshallLong(th);
     for ( long i = 0; i < num_to_read; ++i )
         vec.push_back( T_unmarshall(th) );
+}
+
+template <typename T_container, typename T_inserter, typename T_unmarshall>
+static void unmarshall_container(tagHeader &th, T_container &container,
+                                 T_inserter inserter, T_unmarshall unmarshal)
+{
+    container.clear();
+    const long num_to_read = unmarshallLong(th);
+    for (long i = 0; i < num_to_read; ++i)
+        (container.*inserter)(unmarshal(th));
 }
 
 void marshall_level_id( tagHeader& th, const level_id& id )
@@ -348,22 +358,22 @@ float unmarshallFloat(struct tagHeader &th)
 }
 
 // string -- marshall length & string data
-void marshallString(struct tagHeader &th, const char *data, int maxSize)
+void marshallString(struct tagHeader &th, const std::string &data, int maxSize)
 {
-    // allow for very long strings.
-    short len = strlen(data);
+    // allow for very long strings (well, up to 32K).
+    int len = data.length();
     if (maxSize > 0 && len > maxSize)
         len = maxSize;
     marshallShort(th, len);
 
     // put in the actual string -- we'll null terminate on
     // unmarshall.
-    memcpy(&tagBuffer[th.offset], data, len);
+    memcpy(&tagBuffer[th.offset], data.c_str(), len);
     th.offset += len;
 }
 
 // string -- unmarshall length & string data
-void unmarshallString(struct tagHeader &th, char *data, int maxSize)
+void unmarshallCString(struct tagHeader &th, char *data, int maxSize)
 {
     // get length
     short len = unmarshallShort(th);
@@ -387,7 +397,7 @@ std::string unmarshallString(tagHeader &th, int maxSize)
     if (!buffer)
         return ("");    
     *buffer = 0;
-    unmarshallString(th, buffer, maxSize);
+    unmarshallCString(th, buffer, maxSize);
     const std::string res = buffer;
     delete [] buffer;
 
@@ -942,6 +952,11 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
                 marshall_level_pos, marshall_as_long<god_type>);
     marshallMap(th, portals_present,
                 marshall_level_pos, marshall_as_long<portal_type>);
+
+    marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
+                      marshallString);
+    marshall_iterator(th, you.uniq_map_names.begin(), you.uniq_map_names.end(),
+                      marshallString);
 }
 
 static void marshall_follower(tagHeader &th, const follower &f)
@@ -998,7 +1013,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     char count_c;
     short count_s;
 
-    unmarshallString(th, you.your_name, 30);
+    unmarshallCString(th, you.your_name, 30);
 
     you.religion = static_cast<god_type>(unmarshallByte(th));
     you.piety = unmarshallByte(th);
@@ -1056,7 +1071,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     const int y = unmarshallShort(th);
     you.moveto(x, y);
 
-    unmarshallString(th, you.class_name, 30);
+    unmarshallCString(th, you.class_name, 30);
 
     you.burden = unmarshallShort(th);
 
@@ -1139,7 +1154,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.wizard = (bool) unmarshallByte(th);
 
     // time of character creation
-    unmarshallString( th, buff, 20 );
+    unmarshallCString( th, buff, 20 );
     you.birth_time = parse_date_string( buff );
 
     you.real_time = unmarshallLong(th);
@@ -1284,6 +1299,17 @@ static void tag_read_you_dungeon(struct tagHeader &th)
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
     unmarshallMap(th, portals_present,
                   unmarshall_level_pos, unmarshall_long_as<portal_type>);
+
+    typedef std::set<std::string> string_set;
+    typedef std::pair<string_set::iterator, bool> ssipair;
+    unmarshall_container(th, you.uniq_map_tags,
+                         (ssipair (string_set::*)(const std::string &))
+                         &string_set::insert,
+                         unmarshallString);
+    unmarshall_container(th, you.uniq_map_names,
+                         (ssipair (string_set::*)(const std::string &))
+                         &string_set::insert,
+                         unmarshallString);
 }
 
 static void tag_read_lost_monsters(tagHeader &th, int minorVersion)

@@ -39,7 +39,8 @@ void marshallShort(struct tagHeader &th, short data);
 void marshallLong(struct tagHeader &th, long data);
 void marshallFloat(struct tagHeader &th, float data);
 void marshallBoolean(struct tagHeader &th, bool data);
-void marshallString(struct tagHeader &th, const char *data, int maxSize = 0);
+void marshallString(struct tagHeader &th, const std::string &data,
+                    int maxSize = 0);
 void marshallCoord(tagHeader &th, const coord_def &c);
 
 // last updated 22jan2001 {gdl}
@@ -51,8 +52,8 @@ short unmarshallShort(struct tagHeader &th);
 long unmarshallLong(struct tagHeader &th);
 float unmarshallFloat(struct tagHeader &th);
 bool unmarshallBoolean(struct tagHeader &th);
-void unmarshallString(struct tagHeader &th, char *data, int maxSize);
-std::string unmarshallString(tagHeader &th, int maxSize);
+void unmarshallCString(struct tagHeader &th, char *data, int maxSize);
+std::string unmarshallString(tagHeader &th, int maxSize = 1000);
 void unmarshallCoord(tagHeader &th, coord_def &c);
 
 std::string make_date_string( time_t in_date );

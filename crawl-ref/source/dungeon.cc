@@ -205,6 +205,7 @@ static int dgn_random_map_for_place(bool wantmini);
 // ALTAR FUNCTIONS
 static dungeon_feature_type pick_an_altar();
 static void place_altar();
+static void place_altars();
 
 typedef std::list<coord_def> coord_list;
 
@@ -222,35 +223,14 @@ static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
-static void place_altars()
-{
-    // No altars before level 5.
-    if (you.your_level < 4)
-        return;
-
-    if ( you.level_type == LEVEL_DUNGEON )
-    {
-        int prob = your_branch().altar_chance;
-        while (prob)
-        {
-            if (random2(100) >= prob)
-                break;
-
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placing an altar");
-#endif
-            place_altar();
-            // Reduce the chance and try to place another.
-            prob /= 5;
-        }
-    }
-}
-
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
 bool builder(int level_number, int level_type)
 {
+    const std::set<std::string> uniq_tags = you.uniq_map_tags;
+    const std::set<std::string> uniq_names = you.uniq_map_names;
+    
     // N tries to build the level, after which we bail with a capital B.
     int tries = 20;
     while (tries-- > 0)
@@ -277,6 +257,9 @@ bool builder(int level_number, int level_type)
 
         if (!dgn_level_vetoed && valid_dungeon_level(level_number, level_type))
             return (true);
+
+        you.uniq_map_tags  = uniq_tags;
+        you.uniq_map_names = uniq_names;
     }
 
     if (!crawl_state.map_stat_gen)
@@ -287,6 +270,20 @@ bool builder(int level_number, int level_type)
                                level_id::current().describe().c_str()).c_str());
     }
     return (false);
+}
+
+static void dgn_register_vault(const map_def &map)
+{
+    if (map.has_tag("uniq"))
+        you.uniq_map_names.insert(map.name);
+
+    std::vector<std::string> tags = split_string(" ", map.tags);
+    for (int t = 0, ntags = tags.size(); t < ntags; ++t)
+    {
+        const std::string &tag = tags[t];
+        if (tag.find("uniq_") == 0)
+            you.uniq_map_tags.insert(tag);
+    }
 }
 
 static inline bool dgn_grid_is_passable(dungeon_feature_type grid)
@@ -410,8 +407,10 @@ static void mask_vault(const vault_placement &place, unsigned mask)
                 dgn_map_mask[x][y] |= mask;
 }
 
-static void apply_place_masks(const vault_placement &place)
+static void register_place(const vault_placement &place)
 {
+    dgn_register_vault(place.map);
+    
     mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
     if (place.map.has_tag("no_monster_gen"))
         mask_vault(place, MMT_NO_MONS);
@@ -621,11 +620,18 @@ static void fixup_branch_stairs()
          player_branch_depth() == 1 &&
          you.level_type == LEVEL_DUNGEON )
     {
+        const dungeon_feature_type exit = your_branch().exit_stairs;
         for (int x = 1; x < GXM; x++)
             for (int y = 1; y < GYM; y++)
                 if (grd[x][y] >= DNGN_STONE_STAIRS_UP_I
                     && grd[x][y] <= DNGN_ROCK_STAIRS_UP)
-                    grd[x][y] = your_branch().exit_stairs;
+                {
+                    if (grd[x][y] == DNGN_STONE_STAIRS_UP_I)
+                        env.add_marker(
+                            new map_feature_marker(coord_def(x,y),
+                                                   grd[x][y]));
+                    grd[x][y] = exit;
+                }
     }
 
     // bottom level of branch - replaces down stairs with up ladders:
@@ -2883,7 +2889,7 @@ static bool build_minivaults(int level_number, int force_vault,
         mapgen_report_map_use(place.map);
 #endif
 
-    apply_place_masks(place);
+    register_place(place);
     
     // these two are throwaways:
     int num_runes = 0;
@@ -3304,7 +3310,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
         }
     }
 
-    apply_place_masks(place);
+    register_place(place);
 
     if (gluggy == MAP_FLOAT && target_connections.empty())
         pick_float_exits(place, target_connections);
@@ -4227,6 +4233,30 @@ static dungeon_feature_type pick_an_altar()
 
     return (altar_type);
 }                               // end pick_an_altar()
+
+static void place_altars()
+{
+    // No altars before level 5.
+    if (you.your_level < 4)
+        return;
+
+    if ( you.level_type == LEVEL_DUNGEON )
+    {
+        int prob = your_branch().altar_chance;
+        while (prob)
+        {
+            if (random2(100) >= prob)
+                break;
+
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Placing an altar");
+#endif
+            place_altar();
+            // Reduce the chance and try to place another.
+            prob /= 5;
+        }
+    }
+}
 
 static void place_altar()
 {
@@ -6433,6 +6463,11 @@ static coord_def dgn_find_closest_to_stone_stairs()
 
 coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Placing PC on %s",
+         dungeon_feature_name(
+             static_cast<dungeon_feature_type>(stair_to_find)));
+#endif    
     if (stair_to_find == DNGN_ROCK_STAIRS_UP
         || stair_to_find == DNGN_ROCK_STAIRS_DOWN)
     {
@@ -6444,6 +6479,8 @@ coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
     // scan around the player's position first
     int basex = you.x_pos;
     int basey = you.y_pos;
+
+    const bool branch_exit = stair_to_find == your_branch().exit_stairs;
 
     // check for illegal starting point
     if ( !in_bounds(basex, basey) )
@@ -6478,7 +6515,10 @@ coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
             const int dist = (xpos-basex)*(xpos-basex) +
                 (ypos-basey)*(ypos-basey);
 
-            if (grd[xpos][ypos] == stair_to_find)
+            if (grd[xpos][ypos] == stair_to_find
+                && (!branch_exit
+                    || env.find_marker(coord_def(xpos, ypos),
+                                       MAT_FEATURE)))
             {
                 found++;
                 if (find_closest)

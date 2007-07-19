@@ -3,6 +3,92 @@
 #          Elven Halls.
 ##############################################################################
 
+##############################################################################
+# Elf:1 arrival vaults
+#
+# The concept:
+# There are no entry vaults for the Elven Halls. Instead, there is a "border
+# check" vault on the other side, in the Elf:1 level. Note that elves and orcs
+# are not necessarily at war or have big enmities against each other. It's
+# just a border check.
+#
+# The intention:
+# I (Eino here, hi!) lost a lot of characters trying to do the Halls right
+# after the Mines until I realized the Halls are significantly harder. A
+# welcoming party on the other side will hopefully warn the player about this.
+#
+# Honor this intention. Lots of space between the monsters and the stairs, so
+# the players have many turns to realize their mistake. Note that designing
+# can be a challenge with the eight space LOS. What might make the player
+# realize it's better to flee: facing a nasty summon, taking a few hits from
+# conjurations.. they might engage melee opponents, at which point it's quite
+# difficult to flee. Please keep that in mind. Note also, that a corridor is
+# usually easier for the player than an open space.
+#
+# This is an instance where an entry (arrival) vault really does benefit from
+# having monsters, even a nasty bunch. However, don't go overboard trying to
+# make it really hard. And try to make it seem like a plausible border guard.
+#
+##############################################################################
+
+##############################################################################
+# Dummy Elf arrival vault
+
+NAME:   elf_arrival_dummy
+TAGS:   dummy
+PLACE:  Elf:1
+CHANCE: 50
+ORIENT: float
+MAP
+{
+ENDMAP
+
+##############################################################################
+# Elf arrival vault: corridor one (with the hidden toll cashbox)
+
+NAME:    elf_arrival_001
+PLACE:   Elf:1
+ORIENT:  float
+SHUFFLE: asd/v$=
+SHUFFLE: fgh/v$=
+SUBST:   a = v, s = v, d = v, f = v, g = v, h = v
+MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf priest / deep elf fighter
+MONS:    deep elf summoner / deep elf knight w:2
+MAP
+                  aaa
+                  asa
+vvvvvvvvvvvvvvvvvvvvdv
+v...vvvvv..12..3.....@
+v.{........v12..v.4..v
+v...vvvvv..12..3.....@
+vvvvvvvvvvvvvvvvvvvvhv
+                  fgf
+                  fff
+ENDMAP
+
+##############################################################################
+# Elf arrival vault: open area
+
+NAME:    elf_arrival_002
+PLACE:   Elf:1
+ORIENT:  float
+FLAGS:   no_rotate
+MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf priest / deep elf fighter
+MONS:    deep elf summoner / deep elf knight w:2
+MAP
+xxxxx@xxx@xxx@xxxxx
+xxxx...........xxxx
+xx....G.3.3.G....xx
+x...1.........1...x
+x.G...2..4..2...G.x
+x.................x
+x.......G.G.......x
+x.................x
+x.....G.....G.....x
+xx.1.....{.....1.xx
+xxxx...........xxxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ############################################################################
 # elf_hall

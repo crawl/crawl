@@ -283,6 +283,22 @@ static int apply_vault_definition(
 ///////////////////////////////////////////////////////////////////////////
 // Map lookups
 
+template <typename I>
+static bool map_has_no_tags(const map_def &map, I begin, I end)
+{
+    for ( ; begin != end; ++begin)
+        if (map.has_tag(*begin))
+            return (false);
+    return (true);
+}
+
+static bool vault_unforbidden(const map_def &map)
+{
+    return (you.uniq_map_names.find(map.name) == you.uniq_map_names.end()
+            && map_has_no_tags(map, you.uniq_map_tags.begin(),
+                               you.uniq_map_tags.end()));
+}
+
 // Returns a map for which PLACE: matches the given place.
 int random_map_for_place(const level_id &place, bool want_minivault)
 {
@@ -296,7 +312,8 @@ int random_map_for_place(const level_id &place, bool want_minivault)
     {
         // We also accept tagged levels here.
         if (vdefs[i].place == place
-            && vdefs[i].is_minivault() == want_minivault)
+            && vdefs[i].is_minivault() == want_minivault
+            && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
 
@@ -305,6 +322,9 @@ int random_map_for_place(const level_id &place, bool want_minivault)
         }
     }
 
+    if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
+        mapindex = -1;
+    
 #ifdef DEBUG_DIAGNOSTICS
     if (mapindex != -1)
         mprf(MSGCH_DIAGNOSTICS, "Found map %s for %s", 
@@ -328,7 +348,8 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
             // showing up in the main dungeon.
             && !vdefs[i].has_tag_suffix("entry")
             && !vdefs[i].has_tag("pan")
-            && !vdefs[i].has_tag("unrand"))
+            && !vdefs[i].has_tag("unrand")
+            && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
 
@@ -353,7 +374,8 @@ int random_map_for_tag(const std::string &tag,
     {
         if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault
             && (!check_depth || !vdefs[i].has_depth()
-                || vdefs[i].is_usable_in(level_id::current())))
+                || vdefs[i].is_usable_in(level_id::current()))
+            && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
 

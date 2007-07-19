@@ -1569,8 +1569,7 @@ static void describe_cell(int mx, int my)
 
         if (mons_is_mimic( menv[i].type ))
             mimic_item = true;
-        else if (!mons_class_flag(menv[i].type, M_NO_EXP_GAIN)
-                 && !mons_is_statue(menv[i].type))
+        else if (mons_behaviour_perceptible(&menv[i]))
         {
             if (menv[i].behaviour == BEH_SLEEP)
             {

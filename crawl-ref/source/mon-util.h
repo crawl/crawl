@@ -326,6 +326,7 @@ bool mons_aligned(int m1, int m2);
  * *********************************************************************** */
 bool mons_friendly(const monsters *m);
 
+bool mons_behaviour_perceptible(const monsters *mons);
 bool mons_is_confused(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
 bool mons_is_sleeping(const monsters *m);
