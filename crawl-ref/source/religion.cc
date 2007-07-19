@@ -2484,7 +2484,7 @@ static bool god_likes_items(god_type god)
         return false;
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
-        mprf("Bad god, no biscuit! %d", static_cast<int>(god) );
+        mprf(MSGCH_DANGER, "Bad god, no biscuit! %d", static_cast<int>(god) );
         return false;
     }
     return false;
@@ -2691,9 +2691,9 @@ void god_pitch(god_type which_god)
 
 bool god_likes_butchery(god_type god)
 {
-    return (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
-            you.religion == GOD_TROG || you.religion == GOD_BEOGH ||
-            you.religion == GOD_LUGONU);
+    return (god == GOD_OKAWARU || god == GOD_MAKHLEB ||
+            god == GOD_TROG || god == GOD_BEOGH ||
+            god == GOD_LUGONU);
 }
 
 bool god_hates_butchery(god_type god)

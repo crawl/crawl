@@ -563,20 +563,20 @@ static void finish_delay(const delay_queue_item &delay)
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
             mprf("You finish %s the corpse into pieces.",
-                 (you.species==SP_TROLL || you.species == SP_GHOUL
+                 (you.species == SP_TROLL || you.species == SP_GHOUL
                   || you.mutation[MUT_FANGS] == 3) ? "ripping"
                  : "chopping");
 
-            if (you.species == SP_VAMPIRE && (!you.duration[DUR_PRAYER]
-                || you.religion != GOD_MAKHLEB && you.religion != GOD_TROG
-                && you.religion != GOD_OKAWARU && you.religion != GOD_BEOGH
-                && you.religion != GOD_LUGONU))
+            if (you.species == SP_VAMPIRE &&
+                (!god_likes_butchery(you.religion) ||
+                 !you.duration[DUR_PRAYER]))
             {
                  mpr("What a waste.");
             }                
             turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 
-            if (you.duration[DUR_BERSERKER] && you.berserk_penalty != NO_BERSERK_PENALTY)
+            if (you.duration[DUR_BERSERKER] &&
+                you.berserk_penalty != NO_BERSERK_PENALTY)
             {
                 mpr("You enjoyed that.");
                 you.berserk_penalty = 0;
