@@ -601,9 +601,9 @@ void up_stairs(void)
     int old_level  = you.your_level;
 
     // Interlevel travel data:
-    bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
-                    && you.level_type != LEVEL_ABYSS 
-                && you.level_type != LEVEL_PANDEMONIUM;
+    const bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
+        && you.level_type != LEVEL_ABYSS 
+        && you.level_type != LEVEL_PANDEMONIUM;
 
     level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);

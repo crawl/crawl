@@ -344,27 +344,37 @@ private:
 
 struct stair_info
 {
+public:
+    enum stair_type
+    {
+        PHYSICAL,
+        PLACEHOLDER
+    };
+    
+public:
     coord_def position;     // Position of stair
-    int       grid;         // Grid feature of the stair.
+    dungeon_feature_type grid; // Grid feature of the stair.
     level_pos destination;  // The level and the position on the level this
                             // stair leads to. This may be a guess.
     int       distance;     // The distance traveled to reach this stair.
     bool      guessed_pos;  // true if we're not sure that 'destination' is
                             // correct.
+    stair_type type;
 
     stair_info()
         : position(-1, -1), grid(DNGN_FLOOR), destination(),
-          distance(-1), guessed_pos(true)
+          distance(-1), guessed_pos(true), type(PHYSICAL)
     {
     }
 
-    void clear_distance()
-    {
-        distance = -1;
-    }
+    void clear_distance() { distance = -1; }
 
     void save(FILE *) const;
     void load(FILE *);
+
+    std::string describe() const;
+
+    bool can_travel() const { return (type == PHYSICAL); }
 };
 
 struct travel_exclude
@@ -447,6 +457,10 @@ private:
     level_id id;
 
     friend class TravelCache;
+
+private:
+    void create_placeholder_stair(const coord_def &, const level_pos &);
+    void resize_stair_distances();
 };
 
 const int TRAVEL_WAYPOINT_COUNT = 10;

@@ -1526,6 +1526,21 @@ static void describe_monster_weapon(monsters *mons)
     mpr(msg.str().c_str());
 }
 
+#ifdef DEBUG_DIAGNOSTICS
+static std::string stair_destination_description(const coord_def &pos)
+{
+    if (LevelInfo *linf = travel_cache.find_level_info(level_id::current()))
+    {
+        const stair_info *si = linf->get_stair(pos);
+        if (si)
+            return (" " + si->describe());
+        else if (is_stair(grd(pos)))
+            return (" (unknown stair)");
+    }
+    return ("");
+}
+#endif
+
 static void describe_cell(int mx, int my)
 {
     bool mimic_item = false;
@@ -1648,10 +1663,13 @@ static void describe_cell(int mx, int my)
     std::string marker;
     if (map_marker *mark = env.find_marker(coord_def(mx, my), MAT_ANY))
         marker = " (" + mark->describe() + ")";
-    mprf("(%d,%d): %s - %s%s", mx, my,
+    const std::string traveldest =
+        stair_destination_description(coord_def(mx, my));
+    mprf("(%d,%d): %s - %s%s%s", mx, my,
          stringize_glyph(get_screen_glyph(mx, my)).c_str(),
          feature_desc.c_str(),
-         marker.c_str());
+         marker.c_str(),
+         traveldest.c_str());
 #else
     mpr(feature_desc.c_str());
 #endif

@@ -294,12 +294,17 @@ static inline bool dgn_grid_is_passable(dungeon_feature_type grid)
                  && grid != DNGN_SECRET_DOOR));
 }
 
+static inline bool dgn_square_is_passable(const coord_def &c)
+{
+    return (dgn_map_mask(c) && dgn_grid_is_passable(grd(c)));
+}
+
 static inline void dgn_point_record_stub(const coord_def &) { }
 
 template <class point_record>
 static void dgn_fill_zone(
     const coord_def &c, int zone, point_record &prec,
-    bool (*passable)(dungeon_feature_type) = dgn_grid_is_passable)
+    bool (*passable)(const coord_def &) = dgn_square_is_passable)
 {
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
@@ -312,12 +317,8 @@ static void dgn_fill_zone(
                 continue;
 
             const coord_def cp(c.x + xi, c.y + yi);
-            if (travel_point_distance[cp.x][cp.y]
-                || dgn_map_mask(cp)
-                || !passable(grd(cp)))
-            {
+            if (travel_point_distance[cp.x][cp.y] || !passable(cp))
                 continue;
-            }
 
             prec(cp);
             dgn_fill_zone(cp, zone, prec);
@@ -6448,6 +6449,13 @@ struct nearest_point
     }
 };
 
+inline static bool dgn_square_travel_ok(const coord_def &c)
+{
+    const dungeon_feature_type feat = grd(c);
+    return (is_traversable(feat) || grid_is_trap(feat)
+            || feat == DNGN_SECRET_DOOR);
+}
+
 // Fill travel_point_distance out from all stone stairs on the level.
 static coord_def dgn_find_closest_to_stone_stairs()
 {
@@ -6457,17 +6465,12 @@ static coord_def dgn_find_closest_to_stone_stairs()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
             if (!travel_point_distance[x][y] && grid_is_stone_stair(grd[x][y]))
-                dgn_fill_zone(coord_def(x, y), 1, np, is_traversable);
+                dgn_fill_zone(coord_def(x, y), 1, np, dgn_square_travel_ok);
     return (np.nearest);
 }
 
 coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Placing PC on %s",
-         dungeon_feature_name(
-             static_cast<dungeon_feature_type>(stair_to_find)));
-#endif    
     if (stair_to_find == DNGN_ROCK_STAIRS_UP
         || stair_to_find == DNGN_ROCK_STAIRS_DOWN)
     {

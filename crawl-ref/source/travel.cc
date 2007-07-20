@@ -44,7 +44,7 @@
 #endif
 
 #define TC_MAJOR_VERSION ((unsigned char) 4)
-#define TC_MINOR_VERSION ((unsigned char) 7)
+#define TC_MINOR_VERSION ((unsigned char) 9)
 
 enum IntertravelDestination
 {
@@ -2393,6 +2393,11 @@ static int find_transtravel_stair(  const level_id &cur,
     for (int i = 0, count = stairs.size(); i < count; ++i)
     {
         stair_info &si = stairs[i];
+
+        // Skip placeholders, since there are no real stairs there.
+        if (!si.can_travel())
+            continue;
+        
         int deltadist = li.distance_between(this_stair, &si);
         if (!this_stair)
         {
@@ -2461,9 +2466,7 @@ static int find_transtravel_stair(  const level_id &cur,
             // We need to get the stairs at the new location and set the 
             // distance on them as well.
             LevelInfo &lo = travel_cache.get_level_info(dest.id);
-            stair_info *so = lo.get_stair(dest.pos);
-
-            if (so)
+            if (stair_info *so = lo.get_stair(dest.pos))
             {
                 if (so->distance == -1 || so->distance > dist2stair)
                     so->distance = dist2stair;
@@ -2472,7 +2475,8 @@ static int find_transtravel_stair(  const level_id &cur,
             }
 
             // Okay, take these stairs and keep going.
-            int newdist = find_transtravel_stair(dest.id, target,
+            const int newdist =
+                find_transtravel_stair(dest.id, target,
                     dist2stair, dest.pos, closest_level,
                     best_level_distance, best_stair,
                     target_has_excludes);
@@ -2789,14 +2793,36 @@ void stair_info::save(FILE *file) const
     writeShort(file, grid);
     destination.save(file);
     writeByte(file, guessed_pos? 1 : 0);
+    writeByte(file, type);
 }
 
 void stair_info::load(FILE *file)
 {
     readCoord(file, position);
-    grid = readShort(file);
+    grid = static_cast<dungeon_feature_type>(readShort(file));
     destination.load(file);
     guessed_pos = readByte(file) != 0;
+    type = static_cast<stair_type>(readByte(file));
+}
+
+std::string stair_info::describe() const
+{
+    if (destination.is_valid())
+    {
+        const level_pos &lp(destination);
+        return
+            make_stringf(
+                " (-> %s@(%d,%d)%s%s)", lp.id.describe().c_str(),
+                lp.pos.x, lp.pos.y,
+                guessed_pos? " guess" : "",
+                type == PLACEHOLDER? " placeholder" : "");
+    }
+    else if (destination.id.is_valid())
+    {
+        return make_stringf(
+            " (->%s (?))", destination.id.describe().c_str());
+    }
+    return (" (?)");
 }
 
 void LevelInfo::set_level_excludes()
@@ -2882,6 +2908,34 @@ void LevelInfo::update_stair(int x, int y, const level_pos &p, bool guess)
         if (si->destination.id.branch != id.branch)
             sync_branch_stairs(si);
     }
+    else if (!si && guess)
+    {
+        create_placeholder_stair(coord_def(x, y), p);
+    }
+}
+
+void LevelInfo::create_placeholder_stair(const coord_def &stair,
+                                         const level_pos &dest)
+{
+    // If there are any existing placeholders with the same 'dest', zap them.
+    for (int i = 0, size = stairs.size(); i < size; ++i)
+    {
+        if (stairs[i].type == stair_info::PLACEHOLDER
+            && stairs[i].destination == dest)
+        {
+            stairs.erase( stairs.begin() + i );
+            break;
+        }
+    }
+
+    stair_info placeholder;
+    placeholder.position = stair;
+    placeholder.grid     = DNGN_FLOOR;
+    placeholder.destination = dest;
+    placeholder.type     = stair_info::PLACEHOLDER;
+    stairs.push_back(placeholder);
+
+    resize_stair_distances();
 }
 
 // If a stair leading out of or into a branch has a known destination, all
@@ -2940,7 +2994,7 @@ stair_info *LevelInfo::get_stair(const coord_def &pos)
 
 int LevelInfo::get_stair_index(const coord_def &pos) const
 {
-    for (int i = stairs.size() - 1; i >= 0; --i)
+    for (int i = static_cast<int>(stairs.size()) - 1; i >= 0; --i)
     {
         if (stairs[i].position == pos)
             return i;
@@ -2955,6 +3009,9 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
     // First we kill any stairs in 'stairs' that aren't there in 's'.
     for (int i = ((int) stairs.size()) - 1; i >= 0; --i)
     {
+        if (stairs[i].type != stair_info::PHYSICAL)
+            continue;
+        
         bool found = false;
         for (int j = s.size() - 1; j >= 0; --j)
         {
@@ -2973,17 +3030,17 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
     // in 'stairs'.
     for (int i = 0, sz = s.size(); i < sz; ++i)
     {
-        bool found = false;
+        int found = -1;
         for (int j = stairs.size() - 1; j >= 0; --j)
         {
             if (s[i] == stairs[j].position)
             {
-                found = true;
+                found = j;
                 break;
             }
         }
 
-        if (!found)
+        if (found == -1)
         {
             stair_info si;
             si.position = s[i];
@@ -2999,11 +3056,20 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
             // in whenever the player takes these stairs.
             stairs.push_back(si);
         }
+        else
+        {
+            stairs[found].type = stair_info::PHYSICAL;
+        }
     }
 
+    resize_stair_distances();
+}
+
+void LevelInfo::resize_stair_distances()
+{
     const int nstairs = stairs.size();
     stair_distances.reserve( nstairs * nstairs );
-    stair_distances.resize( nstairs * nstairs, 0 );
+    stair_distances.resize( nstairs * nstairs, 0 );    
 }
 
 int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2) 
@@ -3028,11 +3094,10 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
             dungeon_feature_type grid = grd[x][y];
             int envc = env.map[x][y].object;
 
-            if ((x == you.x_pos && y == you.y_pos)
-                    || (envc 
-                        && is_travelable_stair(grid) 
-                        && (is_terrain_seen(x, y)
-                            || !is_branch_stair(x, y))))
+            if (((x == you.x_pos && y == you.y_pos)
+                 || envc)
+                && is_travelable_stair(grid) 
+                && (is_terrain_seen(x, y) || !is_branch_stair(x, y)))
             {
                 // Convert to grid coords, because that's what we use
                 // everywhere else.
