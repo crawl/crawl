@@ -32,6 +32,7 @@
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "mapmark.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -571,7 +572,7 @@ bool evoke_wielded( void )
                             opened_gates++;
 
                             map_marker *marker =
-                                env.find_marker(coord_def(count_x, count_y),
+                                env_find_marker(coord_def(count_x, count_y),
                                                 MAT_FEATURE);
 
                             if (marker)
@@ -579,7 +580,7 @@ bool evoke_wielded( void )
                                 map_feature_marker *featm =
                                     dynamic_cast<map_feature_marker*>(marker);
                                 grd[count_x][count_y] = featm->feat;
-                                env.remove_marker(marker);
+                                env_remove_marker(marker);
                             }
                         }
                     }

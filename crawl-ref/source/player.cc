@@ -4769,7 +4769,7 @@ void player::init()
     your_level = 0;
     level_type = LEVEL_DUNGEON;
     where_are_you = BRANCH_MAIN_DUNGEON;
-    char_direction = DIR_DESCENDING;
+    char_direction = GDT_DESCENDING;
 
     prev_targ = MHITNOT;
     pet_target = MHITNOT;

@@ -3158,7 +3158,7 @@ void monsters::pandemon_init()
     ev = ghost->values[ GVAL_EV ];
     speed = (one_chance_in(3) ? 10 : 6 + roll_dice(2, 9));
     speed_increment = 70;
-    if (you.char_direction == DIR_ASCENDING && you.level_type == LEVEL_DUNGEON)
+    if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
         colour = LIGHTRED;
     else
         colour = random_colour();        // demon's colour

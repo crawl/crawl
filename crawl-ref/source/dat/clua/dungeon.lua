@@ -32,6 +32,7 @@ function dgn_map_meta_wrap(map, tab)
                     return crawl.err_trace(val, map, ...)
                  end
    end
+   meta['_G'] = meta
    meta.wrapped_instance = map
    return meta
 end

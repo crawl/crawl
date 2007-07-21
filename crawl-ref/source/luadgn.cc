@@ -10,6 +10,7 @@
 #include "files.h"
 #include "luadgn.h"
 #include "mapdef.h"
+#include "mapmark.h"
 #include "maps.h"
 #include "stuff.h"
 #include "dungeon.h"
@@ -633,16 +634,7 @@ static int dgn_marker(lua_State *ls)
         std::string err = map->map.add_feature_marker(luaL_checkstring(ls, 2));
         if (!err.empty())
             luaL_error(ls, err.c_str());
-        return (0);
     }
-    
-    const coord_def pos(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
-    dungeon_feature_type feat = DNGN_UNSEEN;
-    if (lua_isnumber(ls, 4))
-        feat = static_cast<dungeon_feature_type>( luaL_checkint(ls, 4) );
-    else
-        feat = dungeon_feature_by_name( luaL_checkstring(ls, 4) );
-    map->map.add_marker( new map_feature_marker(pos, feat) );
     return (0);
 }
 

@@ -238,8 +238,7 @@ const char *run_mode_name(int runmode)
 
 unsigned char is_waypoint(int x, int y)
 {
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
-            || you.level_type == LEVEL_PANDEMONIUM)
+    if (!can_travel_interlevel())
         return 0;
     return curr_waypoints[x][y];
 }
@@ -570,6 +569,8 @@ void initialise_travel()
     traversable_terrain[DNGN_RETURN_FROM_TOMB] =
     traversable_terrain[DNGN_RETURN_FROM_SWAMP] =
     traversable_terrain[DNGN_RETURN_FROM_SHOALS] =
+    traversable_terrain[DNGN_ENTER_BAZAAR] =
+    traversable_terrain[DNGN_EXIT_BAZAAR] =
     traversable_terrain[DNGN_ALTAR_ZIN] =
     traversable_terrain[DNGN_ALTAR_SHINING_ONE] =
     traversable_terrain[DNGN_ALTAR_KIKUBAAQUDGHA] =
@@ -2267,18 +2268,9 @@ void start_translevel_travel(bool prompt_for_destination)
     }
 }
 
-command_type stair_direction(dungeon_feature_type stair)
-{
-    return ((stair < DNGN_STONE_STAIRS_UP_I
-                || stair > DNGN_ROCK_STAIRS_UP)
-                && (stair < DNGN_RETURN_FROM_ORCISH_MINES 
-                || stair > DNGN_RETURN_RESERVED_4))
-        ? CMD_GO_DOWNSTAIRS : CMD_GO_UPSTAIRS;
-}
-
 command_type trans_negotiate_stairs()
 {
-    return stair_direction(grd[you.x_pos][you.y_pos]);
+    return grid_stair_direction(grd[you.x_pos][you.y_pos]);
 }
 
 static int target_distance_from(const coord_def &pos)
@@ -2743,6 +2735,8 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
         return (level_id(LEVEL_PANDEMONIUM));
     else if (branch == "Lab")
         return (level_id(LEVEL_LABYRINTH));
+    else if (branch == "Bzr")
+        return (level_id(LEVEL_BAZAAR));
 
     const branch_type br = str_to_branch(branch);
     if (br == NUM_BRANCHES)
@@ -3317,8 +3311,7 @@ void TravelCache::delete_waypoint()
 
 void TravelCache::add_waypoint(int x, int y)
 {
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
-            || you.level_type == LEVEL_PANDEMONIUM)
+    if (!can_travel_interlevel())
     {
         mpr("Sorry, you can't set a waypoint here.");
         return;
@@ -3475,15 +3468,13 @@ void TravelCache::fixup_levels()
 
 bool can_travel_to(const level_id &id)
 {
-    return ((id.level_type == LEVEL_DUNGEON
-             && can_travel_interlevel())
-            || (id.level_type == LEVEL_PANDEMONIUM
-                && you.level_type == LEVEL_PANDEMONIUM));
+    return ((id.level_type == LEVEL_DUNGEON && can_travel_interlevel())
+            || (id.level_type == you.level_type && player_in_mappable_area()));
 }
 
 bool can_travel_interlevel()
 {
-    return (player_in_mappable_area() && you.level_type != LEVEL_PANDEMONIUM);
+    return (you.level_type == LEVEL_DUNGEON);
 }
 
 /////////////////////////////////////////////////////////////////////////////

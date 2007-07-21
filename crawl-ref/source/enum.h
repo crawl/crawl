@@ -937,8 +937,9 @@ enum dragon_class_type
 
 enum game_direction_type
 {
-    DIR_DESCENDING = 0,
-    DIR_ASCENDING = 1
+    GDT_NONE,
+    GDT_DESCENDING,
+    GDT_ASCENDING
 };
 
 // NOTE: The order of these is very important to their usage!
@@ -992,6 +993,17 @@ enum drop_mode_type
 // lowest grid value which can be seen through
 #define MINSEE          11
 
+// When adding:
+// 
+// * New stairs/portals: update grid_stair_direction.
+// * Any: edit view.cc and add a glyph and colour for the feature.
+// * Any: edit direct.cc and add a description for the feature.
+// * Any: edit dat/descript.txt and add a long description if appropriate.
+// * Any: check the grid_* functions in misc.cc and make sure
+//   they return sane values for your new feature.
+//
+// Also take note of MINMOVE and MINSEE above.
+//
 enum dungeon_feature_type
 {
     DNGN_UNSEEN,                       //    0
@@ -1086,7 +1098,11 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_SHOALS,
     DNGN_RETURN_RESERVED_2,
     DNGN_RETURN_RESERVED_3,
-    DNGN_RETURN_RESERVED_4,             // 146 
+    DNGN_RETURN_RESERVED_4,             // 146
+
+    // Portals to various places unknown.
+    DNGN_ENTER_BAZAAR = 160,
+    DNGN_EXIT_BAZAAR,
 
     DNGN_ALTAR_ZIN = 180,              //  180
     DNGN_ALTAR_SHINING_ONE,
@@ -1114,6 +1130,7 @@ enum dungeon_feature_type
     DNGN_DRY_FOUNTAIN_VII,
     DNGN_DRY_FOUNTAIN_VIII,
     DNGN_PERMADRY_FOUNTAIN = 210,  // added (from dungeon.cc/maps.cc) 22jan2000 {dlb}
+
     NUM_REAL_FEATURES,
 
     // Real terrain must all occur before 256 to guarantee it fits
@@ -1238,6 +1255,7 @@ enum element_type
     EC_ROCK,            // colour of the area's rock
     EC_STONE,           // colour of the area's stone
     EC_MIST,            // colour of mist
+    EC_SHIMMER_BLUE,    // shimmering colours of blue.
     EC_RANDOM           // any colour (except BLACK)
 };
 
@@ -1744,6 +1762,7 @@ enum level_area_type                   // you.level_type
     LEVEL_LABYRINTH,
     LEVEL_ABYSS,
     LEVEL_PANDEMONIUM,
+    LEVEL_BAZAAR,
 
     NUM_LEVEL_AREA_TYPES
 };
@@ -1753,14 +1772,6 @@ enum load_mode_type
     LOAD_START_GAME,
     LOAD_RESTART_GAME,
     LOAD_ENTER_LEVEL
-};
-
-// Can't change this order without breaking saves.
-enum map_marker_type
-{
-    MAT_FEATURE,              // Stock marker.
-    NUM_MAP_MARKER_TYPES,
-    MAT_ANY
 };
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be

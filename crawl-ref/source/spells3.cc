@@ -557,7 +557,7 @@ bool allow_control_teleport( bool silent )
         case BRANCH_HALL_OF_ZOT:
             // Cannot control teleport until the Orb is picked up
             if (player_branch_depth() == branches[BRANCH_HALL_OF_ZOT].depth
-                && you.char_direction != DIR_ASCENDING)
+                && you.char_direction != GDT_ASCENDING)
             {
                 ret = false;
             }

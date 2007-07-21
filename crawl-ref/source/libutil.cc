@@ -129,6 +129,72 @@ int ends_with(const std::string &s, const char *suffixes[])
     return (0);
 }
 
+// Returns true if s contains tag 'tag', and strips out tag from s.
+bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
+{
+    if (s == tag)
+    {
+        s.clear();
+        return (true);
+    }
+
+    std::string::size_type pos;
+
+    if (skip_padding)
+    {
+        if ((pos = s.find(tag)) != std::string::npos)
+        {
+            s.erase(pos, tag.length());
+            trim_string(s);
+            return (true);
+        }
+        return (false);
+    }
+    
+    if ((pos = s.find(" " + tag + " ")) != std::string::npos)
+    {
+        // Leave one space intact.
+        s.erase(pos, tag.length() + 1);
+        trim_string(s);
+        return (true);
+    }
+
+    if ((pos = s.find(tag + " ")) != std::string::npos
+        || (pos = s.find(" " + tag)) != std::string::npos)
+    {
+        s.erase(pos, tag.length() + 1);
+        trim_string(s);
+        return (true);
+    }
+
+    return (false);
+}
+
+std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
+{
+    const std::string::size_type pos = s.find(tagprefix);
+    if (pos == std::string::npos)
+        return ("");
+
+    std::string::size_type ns = s.find(" ", pos);
+    if (ns == std::string::npos)
+        ns = s.length();
+    
+    const std::string argument =
+        s.substr(pos + tagprefix.length(), ns - pos - tagprefix.length());
+
+    s.erase(pos, ns - pos + 1);
+    trim_string(s);
+
+    return (argument);
+}
+
+int strip_number_tag(std::string &s, const std::string &tagprefix)
+{
+    const std::string num = strip_tag_prefix(s, tagprefix);
+    return (num.empty()? TAG_UNFOUND : atoi(num.c_str()));
+}
+
 // Naively prefix A/an to a noun.
 std::string article_a(const std::string &name, bool lowercase)
 {

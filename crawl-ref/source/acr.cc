@@ -101,6 +101,7 @@
 #include "luadgn.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
@@ -235,6 +236,10 @@ int main( int argc, char *argv[] )
                     << species_name( you.species,you.experience_level )
                     << " " << you.class_name << "."
                     << std::endl;
+
+        // Activate markers only after the welcome message, so the
+        // player can see any resulting messages.
+        env_activate_markers();
 
         // Starting messages can go here as this should only happen
         // at the start of a new game -- bwr
@@ -983,7 +988,7 @@ static bool toggle_flag( bool* flag, const char* flagname )
 static void go_downstairs();
 static void go_upstairs()
 {
-    const int ygrd = grd(you.pos());
+    const dungeon_feature_type ygrd = grd(you.pos());
 
     // Allow both < and > to work for Abyss exits.
     if (ygrd == DNGN_EXIT_ABYSS)
@@ -1000,10 +1005,7 @@ static void go_upstairs()
             shop();
         return;
     }
-    else if ((ygrd < DNGN_STONE_STAIRS_UP_I
-              || ygrd > DNGN_ROCK_STAIRS_UP)
-             && (ygrd < DNGN_RETURN_FROM_ORCISH_MINES 
-                 || ygrd >= 150))
+    else if (grid_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
         mpr( "You can't go up here!" );
         return;
@@ -1016,14 +1018,7 @@ static void go_upstairs()
 
 static void go_downstairs()
 {
-    if ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_LABYRINTH
-         || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_DOWN)
-        && grd[you.x_pos][you.y_pos] != DNGN_ENTER_HELL
-        && ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_DIS
-             || grd[you.x_pos][you.y_pos] > DNGN_TRANSIT_PANDEMONIUM)
-            && grd[you.x_pos][you.y_pos] != DNGN_STONE_ARCH)
-        && !(grd[you.x_pos][you.y_pos] >= DNGN_ENTER_ORCISH_MINES
-             && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES))
+    if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS)
     {
         mpr( "You can't go down here!" );
         return;
@@ -2247,13 +2242,13 @@ static void world_reacts()
     // place normal dungeon monsters,  but not in player LOS
     if (you.level_type == LEVEL_DUNGEON
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-        && one_chance_in((you.char_direction == DIR_DESCENDING) ? 240 : 8))
+        && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
     {
         proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS 
                                                  : PROX_AWAY_FROM_PLAYER);
 
         // The rules change once the player has picked up the Orb...
-        if (you.char_direction == DIR_ASCENDING)
+        if (you.char_direction == GDT_ASCENDING)
             prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
@@ -2276,7 +2271,7 @@ static void world_reacts()
         viewwindow(true, false);
     }
 
-    // No monsters in the Labyrinth, or the Ecumenical Temple
+    // No monsters in the Labyrinth, or the Ecumenical Temple, or in Bazaars.
     return;
 }
 
@@ -2866,7 +2861,7 @@ static bool initialise(void)
     }
 
 #ifdef CLUA_BINDINGS
-    clua.runhook("chk_startgame", "%b", newc);
+    clua.runhook("chk_startgame", "b", newc);
     std::string yname = you.your_name;
     read_init_file(true);
     strncpy(you.your_name, yname.c_str(), kNameLen);

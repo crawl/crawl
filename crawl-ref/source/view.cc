@@ -308,7 +308,7 @@ static int view_emphasised_colour(int x, int y, dungeon_feature_type feat,
 {
     if (is_travelable_stair(feat) && !travel_cache.know_stair(coord_def(x, y)))
     {
-        if ((you.your_level || stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+        if ((you.your_level || grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
             return (newcolour);
     }
@@ -2228,6 +2228,8 @@ bool is_feature(int feature, int x, int y)
         {
         case DNGN_ENTER_HELL:
         case DNGN_ENTER_LABYRINTH:
+        case DNGN_ENTER_BAZAAR:
+        case DNGN_EXIT_BAZAAR:
         case DNGN_ENTER_SHOP:
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
@@ -3387,6 +3389,15 @@ void init_feature_table( void )
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
             break;
+
+        case DNGN_ENTER_BAZAAR:
+        case DNGN_EXIT_BAZAAR:
+            Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
+            Feature[i].colour = EC_SHIMMER_BLUE;
+            Feature[i].notable = true;
+            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].seen_colour = EC_SHIMMER_BLUE;
+            break;            
 
         case DNGN_ROCK_STAIRS_DOWN:
             Feature[i].symbol = Options.char_table[ DCHAR_STAIRS_DOWN ];

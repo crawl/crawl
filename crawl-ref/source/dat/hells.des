@@ -111,7 +111,8 @@ ENDMAP
 NAME: vestibule_of_hell
 PLACE: Hell
 ORIENT: encompass
-MARKER: D=enter_dis, G=enter_gehenna, C=enter_cocytus, T=enter_tartarus
+MARKER: D=feat:enter_dis, G=feat:enter_gehenna, C=feat:enter_cocytus
+MARKER: T=feat:enter_tartarus
 SUBST: D=A, G=A, C=A, T=A
 
 MONS: Geryon

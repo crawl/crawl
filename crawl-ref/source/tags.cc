@@ -77,6 +77,7 @@
 #include "files.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "mapmark.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mtransit.h"
@@ -1360,8 +1361,8 @@ static void tag_construct_level(struct tagHeader &th)
     }
 
     // how many shops?
-    marshallByte(th, 5);
-    for (int i = 0; i < 5; i++)
+    marshallByte(th, MAX_SHOPS);
+    for (int i = 0; i < MAX_SHOPS; i++)
     {
         marshallByte(th, env.shop[i].keeper_name[0]);
         marshallByte(th, env.shop[i].keeper_name[1]);
@@ -1588,6 +1589,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
 
     // how many shops?
     const int num_shops = unmarshallByte(th);
+    ASSERT(num_shops <= MAX_SHOPS);
     for (int i = 0; i < num_shops; i++)
     {
         env.shop[i].keeper_name[0] = unmarshallByte(th);
@@ -1600,12 +1602,12 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         env.shop[i].level = unmarshallByte(th);
     }
 
-    env.clear_markers();
+    env_clear_markers();
     const int nmarkers = unmarshallShort(th);
     for (int i = 0; i < nmarkers; ++i)
     {
         if (map_marker *mark = map_marker::read_marker(th))
-            env.add_marker(mark);
+            env_add_marker(mark);
     }
 }
 

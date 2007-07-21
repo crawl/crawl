@@ -2383,7 +2383,7 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     if ( grid_destroys_items(grd[x][y]) )
     {
         // Too much message spam otherwise
-        if ( YOU_KILL(beam.thrower) )
+        if ( YOU_KILL(beam.thrower) && player_can_hear(x, y) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
         return;
     }

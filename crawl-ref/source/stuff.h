@@ -34,6 +34,7 @@ int div_rand_round( int num, int den );
 bool one_chance_in(int a_million);
 int random2(int randmax);
 int random_range(int low, int high);
+int random_range(int low, int high, int nrolls);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
 unsigned long random_int();
@@ -90,9 +91,14 @@ int grid_distance( int x, int y, int x2, int y2 );
 int distance( int x, int y, int x2, int y2);
 bool adjacent( int x, int y, int x2, int y2 );
 
-bool silenced(char x, char y);
+bool silenced(int x, int y);
+inline bool silenced(const coord_def &p) { return silenced(p.x, p.y); }
 
-bool player_can_hear(char x, char y);
+bool player_can_hear(int x, int y);
+inline bool player_can_hear(const coord_def &p)
+{
+    return player_can_hear(p.x, p.y);
+}
 
 unsigned char random_colour();
 unsigned char random_uncommon_colour();

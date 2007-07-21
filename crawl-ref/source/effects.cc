@@ -1137,8 +1137,9 @@ bool acquirement(object_class_type class_wanted, int agent)
     if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
         // how sad (and stupid)
-        mprf(MSGCH_SOUND, 
-             grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
+        if (!silenced(you.pos()))
+            mprf(MSGCH_SOUND, 
+                 grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
     }
     else
     {

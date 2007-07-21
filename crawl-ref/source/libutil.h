@@ -26,6 +26,12 @@ std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
 bool ends_with(const std::string &s, const std::string &suffix);
 
+// String "tags"
+#define TAG_UNFOUND -20404
+bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
+int strip_number_tag(std::string &s, const std::string &tagprefix);
+std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
+
 std::string article_a(const std::string &name, bool lowercase = true);
 std::string pluralise(const std::string &name,
                       const char *stock_plural_quals[] = standard_plural_qualifiers,

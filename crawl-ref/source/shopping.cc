@@ -1500,6 +1500,14 @@ const shop_struct *get_shop(int sx, int sy)
     return (NULL);
 }
 
+std::string shop_name(int sx, int sy, bool add_stop)
+{
+    std::string name(shop_name(sx, sy));
+    if (add_stop)
+        name += ".";
+    return (name);
+}
+
 std::string shop_name(int sx, int sy)
 {
     const shop_struct *cshop = get_shop(sx, sy);

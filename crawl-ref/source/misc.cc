@@ -41,6 +41,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -51,9 +52,11 @@
 #include "lev-pand.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "monplace.h"
 #include "mon-util.h"
 #include "monstuff.h"
+#include "mstuff2.h"
 #include "notes.h"
 #include "ouch.h"
 #include "overmap.h"
@@ -175,6 +178,104 @@ bool grid_is_stone_stair(dungeon_feature_type grid)
     }
 }
 
+bool grid_is_rock_stair(dungeon_feature_type grid)
+{
+    switch (grid)
+    {
+    case DNGN_ROCK_STAIRS_UP:
+    case DNGN_ROCK_STAIRS_DOWN:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+bool grid_sealable_portal(dungeon_feature_type grid)
+{
+    switch (grid)
+    {
+    case DNGN_ENTER_HELL:
+    case DNGN_ENTER_ABYSS:
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_ENTER_BAZAAR:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+
+command_type grid_stair_direction(dungeon_feature_type grid)
+{
+    switch (grid)
+    {
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_ROCK_STAIRS_UP:
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_HIVE:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_SLIME_PITS:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_RESERVED_2:
+    case DNGN_RETURN_RESERVED_3:
+    case DNGN_RETURN_RESERVED_4:
+    case DNGN_ENTER_SHOP:
+    case DNGN_EXIT_HELL:
+    case DNGN_EXIT_BAZAAR:
+        return (CMD_GO_UPSTAIRS);
+        
+    case DNGN_ENTER_BAZAAR:
+    case DNGN_ENTER_HELL:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_ROCK_STAIRS_DOWN:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS:
+    case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_ABYSS:
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_ENTER_ORCISH_MINES:
+    case DNGN_ENTER_HIVE:
+    case DNGN_ENTER_LAIR:
+    case DNGN_ENTER_SLIME_PITS:
+    case DNGN_ENTER_VAULTS:
+    case DNGN_ENTER_CRYPT:
+    case DNGN_ENTER_HALL_OF_BLADES:
+    case DNGN_ENTER_ZOT:
+    case DNGN_ENTER_TEMPLE:
+    case DNGN_ENTER_SNAKE_PIT:
+    case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_ENTER_TOMB:
+    case DNGN_ENTER_SWAMP:
+    case DNGN_ENTER_SHOALS:
+    case DNGN_ENTER_RESERVED_2:
+    case DNGN_ENTER_RESERVED_3:
+    case DNGN_ENTER_RESERVED_4:
+        return (CMD_GO_DOWNSTAIRS);
+        
+    default:
+        return (CMD_NO_CMD);
+    }
+}
+
 bool grid_is_opaque( dungeon_feature_type grid )
 {
     return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);
@@ -273,7 +374,18 @@ const char *grid_item_destruction_message( dungeon_feature_type grid )
 {
     return grid == DNGN_DEEP_WATER? "You hear a splash."
          : grid == DNGN_LAVA      ? "You hear a sizzling splash."
-         :                          "You hear an empty echo.";
+         :                          "You hear a crunching noise.";
+}
+
+// Returns true if exits from this type of level involve going upstairs.
+bool level_type_exits_up(level_area_type type)
+{
+    return (type == LEVEL_LABYRINTH || type == LEVEL_BAZAAR);
+}
+
+bool level_type_exits_down(level_area_type type)
+{
+    return (type == LEVEL_PANDEMONIUM || type == LEVEL_ABYSS);
 }
 
 void search_around( bool only_adjacent )
@@ -338,6 +450,106 @@ void search_around( bool only_adjacent )
 
     return;
 }                               // end search_around()
+
+static bool dgn_shift_item_around(const coord_def &pos, item_def &item)
+{
+    std::list<coord_def> points;
+    for (int yi = -1; yi <= 1; ++yi)
+    {
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if (!xi && !yi)
+                continue;
+
+            const coord_def np(pos.x + xi, pos.y + yi);
+            if (!in_bounds(np) || travel_point_distance[np.x][np.y])
+                continue;
+
+            travel_point_distance[np.x][np.y] = 1;
+
+            const dungeon_feature_type feat = grd(np);
+            if (!grid_is_solid(feat) && !grid_destroys_items(feat))
+            {
+                int index = item.index();
+                move_item_to_grid(&index, np.x, np.y);
+                return (true);
+            }
+
+            points.push_back(np);
+        }
+    }
+
+    for (std::list<coord_def>::iterator i = points.begin(); i != points.end();
+         ++i)
+    {
+        if (dgn_shift_item_around(*i, item))
+            return (true);
+    }
+    return (false);
+}
+
+// Moves an item on the floor to the nearest adjacent floor-space.
+static bool dgn_shift_item(const coord_def &pos, item_def &item)
+{
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    travel_point_distance[pos.x][pos.y] = 0;
+    return (dgn_shift_item_around(pos, item));
+}
+
+static void dgn_check_terrain_items(const coord_def &pos)
+{
+    const dungeon_feature_type grid = grd(pos);
+    if (grid_is_solid(grid) || grid_destroys_items(grid))
+    {
+        int item = igrd(pos);
+        bool did_destroy = false;
+        while (item != NON_ITEM)
+        {
+            const int curr = item;
+            item = mitm[item].link;
+
+            // Game-critical item.
+            if (true || item_is_critical(mitm[curr]))
+                dgn_shift_item(pos, mitm[curr]);
+            else
+            {
+                destroy_item(curr);
+                did_destroy = true;
+            }
+        }
+        if (did_destroy && player_can_hear(pos))
+            mprf(MSGCH_SOUND, grid_item_destruction_message(grid));
+    }
+}
+
+static void dgn_check_terrain_monsters(const coord_def &pos)
+{
+    const int mindex = mgrd(pos);
+    if (mindex != NON_MONSTER)
+    {
+        monsters *mons = &menv[mindex];
+        if (grid_is_solid(grd(pos)))
+            monster_teleport(mons, true, false);
+        else
+            mons_check_pool(mons, KILL_MISC, -1);
+    }
+}
+
+void dungeon_terrain_changed(const coord_def &pos)
+{
+    dgn_check_terrain_items(pos);
+    if (pos == you.pos())
+    {
+        if (!grid_is_solid(grd(pos)))
+        {
+            if (!you.flies())
+                move_player_to_grid(pos.x, pos.y, false, true, false);
+        }
+        else
+            you_teleport_now(true, false);
+    }
+    dgn_check_terrain_monsters(pos);
+}
 
 void in_a_cloud()
 {
@@ -558,9 +770,7 @@ void up_stairs(void)
     }
 
     // probably still need this check here (teleportation) -- bwr
-    if ((stair_find < DNGN_STONE_STAIRS_UP_I
-            || stair_find > DNGN_ROCK_STAIRS_UP)
-        && (stair_find < DNGN_RETURN_FROM_ORCISH_MINES || stair_find >= 150))
+    if (grid_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
     {
         mpr("You can't go up here.");
         return;
@@ -601,9 +811,7 @@ void up_stairs(void)
     int old_level  = you.your_level;
 
     // Interlevel travel data:
-    const bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
-        && you.level_type != LEVEL_ABYSS 
-        && you.level_type != LEVEL_PANDEMONIUM;
+    const bool collect_travel_data = can_travel_interlevel();
 
     level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
@@ -614,7 +822,7 @@ void up_stairs(void)
     // Make sure we return to our main dungeon level... labyrinth entrances
     // in the abyss or pandemonium a bit trouble (well the labyrinth does
     // provide a way out of those places, its really not that bad I suppose)
-    if (you.level_type == LEVEL_LABYRINTH)
+    if (level_type_exits_up(you.level_type))
         you.level_type = LEVEL_DUNGEON;
 
     you.your_level--;
@@ -701,9 +909,7 @@ void up_stairs(void)
         // down stairs we're currently on.
         level_id  new_level_id    = level_id::current();
 
-        if (you.level_type != LEVEL_PANDEMONIUM &&
-                you.level_type != LEVEL_ABYSS &&
-                you.level_type != LEVEL_LABYRINTH)
+        if (can_travel_interlevel())
         {
             LevelInfo &new_level_info = 
                         travel_cache.get_level_info(new_level_id);
@@ -756,12 +962,11 @@ void up_stairs(void)
 void down_stairs( int old_level, dungeon_feature_type force_stair )
 {
     int i;
-    char old_level_type = you.level_type;
+    const level_area_type old_level_type = you.level_type;
     const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
     const dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
-    bool leave_abyss_pan = false;
     branch_type old_where = you.where_are_you;
 
 #ifdef SHUT_LABYRINTH
@@ -774,14 +979,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 #endif
 
     // probably still need this check here (teleportation) -- bwr
-    if ((stair_find < DNGN_ENTER_LABYRINTH
-            || stair_find > DNGN_ROCK_STAIRS_DOWN)
-        && stair_find != DNGN_ENTER_HELL
-        && ((stair_find < DNGN_ENTER_DIS
-                || stair_find > DNGN_TRANSIT_PANDEMONIUM)
-            && stair_find != DNGN_STONE_ARCH)
-        && !(stair_find >= DNGN_ENTER_ORCISH_MINES
-            && stair_find < DNGN_RETURN_FROM_ORCISH_MINES))
+    if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS)
     {
         mpr( "You can't go down here!" );
         return;
@@ -824,7 +1022,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     // downstairs from a labyrinth implies that you've been banished (or been
     // sent to Pandemonium somehow). Decrementing your_level here is needed
     // to fix this buggy sequence: D:n -> Labyrinth -> Abyss -> D:(n+1).
-    if (you.level_type == LEVEL_LABYRINTH)
+    if (level_type_exits_up(you.level_type))
         you.your_level--;
 
     if (stair_find == DNGN_ENTER_ZOT)
@@ -858,9 +1056,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     }
 
     // Interlevel travel data:
-    bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
-                    && you.level_type != LEVEL_ABYSS
-                && you.level_type != LEVEL_PANDEMONIUM;
+    bool collect_travel_data = can_travel_interlevel();
 
     level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
@@ -914,12 +1110,20 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         }
     }
 
-    if (stair_find == DNGN_ENTER_LABYRINTH)
+    if (stair_find == DNGN_ENTER_LABYRINTH || stair_find == DNGN_ENTER_BAZAAR)
     {
         // no longer a feature
-        unnotice_labyrinth_portal();
-        you.level_type = LEVEL_LABYRINTH;
+        if (stair_find == DNGN_ENTER_LABYRINTH)
+            unnotice_labyrinth_portal();
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
+        // remove any markers that were going to expire this labyrinth.
+        if (map_marker *marker = env_find_marker(you.pos(), MAT_TIMED_FEATURE))
+            dynamic_cast<map_timed_feature_marker*>(marker)->timeout(false);
+    }
+
+    if (stair_find == DNGN_ENTER_LABYRINTH)
+    {
+        you.level_type = LEVEL_LABYRINTH;
     }
     else if (stair_find == DNGN_ENTER_ABYSS)
     {
@@ -929,12 +1133,14 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     {
         you.level_type = LEVEL_PANDEMONIUM;
     }
+    else if (stair_find == DNGN_ENTER_BAZAAR)
+    {
+        you.level_type = LEVEL_BAZAAR;
+    }
 
     // When going downstairs into a special level, delete any previous
     // instances of it
-    if (you.level_type == LEVEL_LABYRINTH ||
-        you.level_type == LEVEL_ABYSS ||
-        you.level_type == LEVEL_PANDEMONIUM)
+    if (you.level_type != LEVEL_DUNGEON)
     {
         std::string lname = make_filename(you.your_name, you.your_level,
                                           you.where_are_you,
@@ -947,7 +1153,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
     {
-        leave_abyss_pan = true;
         mpr("You pass through the gate.");
         more();
     }
@@ -999,6 +1204,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         }
         break;
 
+    case LEVEL_BAZAAR:
+        mpr("You enter an inter-dimensional bazaar!");
+        break;
+
     default:
         mpr("You climb downwards.");
         break;
@@ -1014,17 +1223,16 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     unsigned char pc = 0;
     unsigned char pt = random2avg(28, 3);
 
+    if (level_type_exits_up(you.level_type))
+        you.your_level++;
+    else if (level_type_exits_down(you.level_type)
+             && !level_type_exits_down(old_level_type))
+        you.your_level--;
+    
     switch (you.level_type)
     {
-    case LEVEL_LABYRINTH:
-        you.your_level++;
-        break;
-
     case LEVEL_ABYSS:
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
-
-        if (old_level_type != LEVEL_PANDEMONIUM)
-            you.your_level--;   // Linley-suggested addition 17jan2000 {dlb}
 
         init_pandemonium();     /* colours only */
 
@@ -1044,10 +1252,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         }
         else
         {
-            // Linley-suggested addition 17jan2000 {dlb}
-            if (old_level_type != LEVEL_ABYSS)
-                you.your_level--;
-
             init_pandemonium();
 
             for (pc = 0; pc < pt; pc++)
@@ -1084,9 +1288,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         // upstairs we're currently on.
         level_id  new_level_id    = level_id::current();
 
-        if (you.level_type != LEVEL_PANDEMONIUM &&
-                you.level_type != LEVEL_ABYSS &&
-                you.level_type != LEVEL_LABYRINTH)
+        if (can_travel_interlevel())
         {
             LevelInfo &new_level_info = 
                             travel_cache.get_level_info(new_level_id);
@@ -1142,6 +1344,9 @@ std::string level_description_string()
 
     if (you.level_type == LEVEL_LABYRINTH)
         return "- a Labyrinth";
+
+    if (you.level_type == LEVEL_BAZAAR)
+        return "- a Bazaar";
 
     // level_type == LEVEL_DUNGEON
     char buf[200];
@@ -1974,8 +2179,7 @@ unsigned short get_packed_place( branch_type branch, int subdepth,
 {
     unsigned short place = (unsigned short)
         ( (static_cast<int>(branch) << 8) | (subdepth & 0xFF) );
-    if (level_type == LEVEL_ABYSS || level_type == LEVEL_PANDEMONIUM
-            || level_type == LEVEL_LABYRINTH)
+    if (level_type != LEVEL_DUNGEON)
         place = (unsigned short) ( (static_cast<int>(level_type) << 8) | 0xFF );
     return place;
 }
@@ -2012,6 +2216,8 @@ std::string place_name( unsigned short place, bool long_name,
             return ( long_name ? "Pandemonium" : "Pan" );
         case LEVEL_LABYRINTH:
             return ( long_name ? "a Labyrinth" : "Lab" );
+        case LEVEL_BAZAAR:
+            return ( long_name ? "a Bazaar" : "Bzr" );
         default:
             return ( long_name ? "Buggy Badlands" : "Bug" );
         }
@@ -2248,6 +2454,8 @@ void run_environment_effects()
     if (!you.time_taken)
         return;
 
+    dungeon_events.fire_event(DET_TURN_ELAPSED);
+
     // Each square in sfx_seeds has this chance of doing something special
     // per turn.
     const int sfx_chance = Base_Sfx_Chance * you.time_taken / 10;
@@ -2255,7 +2463,7 @@ void run_environment_effects()
 
     // If there are a large number of seeds, speed things up by fudging the
     // numbers.
-    if (nseeds > 100)
+    if (nseeds > 50)
     {
         int nsels = div_rand_round( sfx_seeds.size() * sfx_chance, 100 );
         if (one_chance_in(5))
@@ -2316,3 +2524,4 @@ int speed_to_duration(int speed)
     
     return div_rand_round(100, speed);
 }
+

@@ -16,6 +16,9 @@
 
 void init_properties(void);
 
+// Returns true if this item should be preserved as far as possible.
+bool item_is_critical(const item_def &item);
+
 // cursed:
 bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );

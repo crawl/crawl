@@ -27,6 +27,7 @@ void shop();
 const shop_struct *get_shop(int sx, int sy);
 
 std::string shop_name(int sx, int sy);
+std::string shop_name(int sx, int sy, bool add_stop);
 
 bool shoptype_identifies_stock(shop_type type);
 

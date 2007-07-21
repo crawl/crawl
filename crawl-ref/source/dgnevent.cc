@@ -1,0 +1,133 @@
+/*
+ *  File:       dgnevent.cc
+ *  Summary:    General dungeon events.
+ *  
+ *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-07-20T11:40:25.964128Z $
+ *  
+ */
+
+#include "AppHdr.h"
+#include "dgnevent.h"
+#include "stuff.h"
+
+dgn_event_dispatcher dungeon_events;
+
+void dgn_event_dispatcher::clear()
+{
+    global_event_mask = 0;
+    listeners.clear();
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+            grid_triggers[x][y].reset(NULL);
+}
+
+void dgn_event_dispatcher::fire_position_event(
+    dgn_event_type event, const coord_def &pos)
+{
+    dgn_square_alarm *alarm = grid_triggers[pos.x][pos.y].get();    
+    if (alarm && (alarm->eventmask & event))
+    {
+        dgn_square_alarm alcopy = *alarm;
+        const dgn_event et(event, pos);
+        for (std::list<dgn_event_listener*>::iterator
+                 i = alcopy.listeners.begin();
+             i != alcopy.listeners.end(); ++i)
+        {
+            (*i)->notify_dgn_event(et);
+        }
+    }
+}
+
+void dgn_event_dispatcher::fire_event(const dgn_event &e)
+{
+    if (global_event_mask & e.type)
+    {
+        std::list<dgn_listener_def> lcopy = listeners;
+        for (std::list<dgn_listener_def>::iterator i = lcopy.begin();
+             i != lcopy.end(); ++i)
+        {
+            if (i->eventmask & e.type)
+                i->listener->notify_dgn_event(e);
+        }
+    }    
+}
+
+void dgn_event_dispatcher::fire_event(dgn_event_type et)
+{
+    fire_event(dgn_event(et));
+}
+
+void dgn_event_dispatcher::register_listener(unsigned mask,
+                                             dgn_event_listener *listener,
+                                             const coord_def &pos)
+{
+    if (in_bounds(pos))
+        register_listener_at(mask, pos, listener);
+    else
+    {
+        global_event_mask |= mask;
+        for (std::list<dgn_listener_def>::iterator i = listeners.begin();
+             i != listeners.end(); ++i)
+        {
+            if (i->listener == listener)
+            {
+                i->eventmask |= mask;
+                return;
+            }
+        }
+        listeners.push_back(dgn_listener_def(mask, listener));
+    }
+}
+
+void dgn_event_dispatcher::register_listener_at(unsigned mask,
+                                                const coord_def &c,
+                                                dgn_event_listener *listener)
+{
+    if (!grid_triggers[c.x][c.y].get())
+        grid_triggers[c.x][c.y].reset(new dgn_square_alarm);
+
+    dgn_square_alarm *alarm = grid_triggers[c.x][c.y].get();
+    alarm->eventmask |= mask;
+    if (std::find(alarm->listeners.begin(), alarm->listeners.end(),
+                  listener) == alarm->listeners.end())
+        alarm->listeners.push_back(listener);
+}
+
+void dgn_event_dispatcher::remove_listener(dgn_event_listener *listener,
+                                           const coord_def &pos)
+{
+    if (in_bounds(pos))
+        remove_listener_at(pos, listener);
+    else
+    {
+        for (std::list<dgn_listener_def>::iterator i = listeners.begin();
+             i != listeners.end(); ++i)
+        {
+            if (i->listener == listener)
+            {
+                listeners.erase(i);
+                return;
+            }
+        }
+    }
+}
+
+void dgn_event_dispatcher::remove_listener_at(const coord_def &pos,
+                                              dgn_event_listener *listener)
+{
+    if (dgn_square_alarm *alarm = grid_triggers[pos.x][pos.y].get())
+    {
+        std::list<dgn_event_listener*>::iterator i =
+            std::find(alarm->listeners.begin(), alarm->listeners.end(),
+                      listener);
+        if (i != alarm->listeners.end())
+            alarm->listeners.erase(i);
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// dgn_event_listener
+
+dgn_event_listener::~dgn_event_listener()
+{
+}

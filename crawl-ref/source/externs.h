@@ -1273,14 +1273,6 @@ public:
 
     // Number of turns the player has spent on this level.
     int turns_on_level;
-
-public:
-    void add_marker(map_marker *);
-    void remove_marker(map_marker *);
-    void remove_markers_at(const coord_def &c);
-    map_marker *find_marker(const coord_def &c, map_marker_type) const;
-    std::vector<map_marker*> get_markers(const coord_def &c) const;
-    void clear_markers();
 };
 
 extern struct crawl_environment env;

@@ -121,7 +121,10 @@
 #define MAX_TRAPS 100
 
 // max shops per level
-#define MAX_SHOPS 5
+#define MAX_SHOPS         15
+
+// max shops randomly generated in a level.
+#define MAX_RANDOM_SHOPS  5
 
 // lowest grid value which can be passed by walking etc.
 #define MINMOVE 31

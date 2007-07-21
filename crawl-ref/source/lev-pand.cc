@@ -164,5 +164,5 @@ void pandemonium_mons(void)
         while (!mons_pan(pan_mons));
     }
     mons_place(pan_mons, BEH_HOSTILE, MHITNOT, false, 50,50,
-        LEVEL_PANDEMONIUM);
+               LEVEL_PANDEMONIUM);
 }                               // end pandemonium_mons()

@@ -138,9 +138,12 @@ bool grid_is_wall(dungeon_feature_type grid);
 bool grid_is_opaque(dungeon_feature_type grid);
 bool grid_is_solid(dungeon_feature_type grid);
 bool grid_is_stone_stair(dungeon_feature_type grid);
+bool grid_is_rock_stair(dungeon_feature_type grid);
 bool grid_is_solid(int x, int y);
 bool grid_is_solid(const coord_def &c);
 bool grid_is_trap(dungeon_feature_type grid);
+command_type grid_stair_direction(dungeon_feature_type grid);
+bool grid_sealable_portal(dungeon_feature_type grid);
 
 bool grid_is_water(dungeon_feature_type grid);
 bool grid_is_watery(dungeon_feature_type grid);
@@ -149,6 +152,9 @@ dungeon_feature_type altar_for_god( god_type god );
 bool grid_is_branch_stairs( dungeon_feature_type grid );
 int grid_secret_door_appearance( int gx, int gy );
 bool grid_destroys_items( dungeon_feature_type grid );
+
+bool level_type_exits_up(level_area_type type);
+bool level_type_exits_down(level_area_type type);
 
 std::string cloud_name(cloud_type type);
 bool is_damaging_cloud(cloud_type type);
@@ -163,6 +169,9 @@ void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
 void run_environment_effects();
+
+// Terrain changed under 'pos', perform necessary effects.
+void dungeon_terrain_changed(const coord_def &pos);
 
 //////////////////////////////////////////////////////////////////////
 // Places and names

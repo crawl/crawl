@@ -15,6 +15,7 @@ debug.o \
 delay.o \
 decks.o \
 describe.o \
+dgnevent.o \
 direct.o \
 dungeon.o \
 effects.o \
@@ -39,6 +40,7 @@ luadgn.o \
 macro.o \
 makeitem.o \
 mapdef.o \
+mapmark.o \
 maps.o \
 menu.o \
 message.o \

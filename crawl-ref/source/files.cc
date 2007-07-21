@@ -65,6 +65,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "monstuff.h"
@@ -552,6 +553,8 @@ static std::string get_level_suffix(int level, branch_type where,
         return ("abs");
     case LEVEL_PANDEMONIUM:
         return ("pan");
+    case LEVEL_BAZAAR:
+        return ("bzr");
     }
 }
 
@@ -700,6 +703,14 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
         // when entering a hell or pandemonium
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
+    else if (stair_taken == DNGN_ENTER_BAZAAR)
+    {
+        stair_taken = DNGN_STONE_ARCH;
+    }
+    else if (stair_taken == DNGN_EXIT_BAZAAR)
+    {
+        stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+    }
     else // Note: stair_taken can equal things like DNGN_FLOOR
     {
         // just find a nice empty square
@@ -718,14 +729,13 @@ static void close_level_gates()
     {
         for ( int j = 0; j < GYM; ++j )
         {
-            if (you.char_direction == DIR_ASCENDING
+            if (you.char_direction == GDT_ASCENDING
                 && you.level_type != LEVEL_PANDEMONIUM)
             {
-                if (grd[i][j] == DNGN_ENTER_HELL
-                    || grd[i][j] == DNGN_ENTER_ABYSS
-                    || grd[i][j] == DNGN_ENTER_PANDEMONIUM)
+                if (grid_sealable_portal(grd[i][j]))
                 {
                     grd[i][j] = DNGN_STONE_ARCH;
+                    env_remove_markers_at(coord_def(i,j), MAT_ANY);
                 }
             }
         }
@@ -742,6 +752,11 @@ static void clear_clouds()
     for (int clouty = 0; clouty < MAX_CLOUDS; ++clouty)
         delete_cloud( clouty );
     env.cgrid.init(EMPTY_CLOUD);
+}
+
+static bool level_type_allows_followers(level_area_type type)
+{
+    return (type == LEVEL_DUNGEON || type == LEVEL_PANDEMONIUM);
 }
 
 static void grab_followers()
@@ -815,6 +830,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_RESTART_GAME)
         clear_clouds();
 
+    // Lose all listeners.
+    dungeon_events.clear();
+
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL && old_level != -1)
     {
@@ -873,7 +891,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     // closes all the gates if you're on the way out
-    if (you.char_direction == DIR_ASCENDING &&
+    if (you.char_direction == GDT_ASCENDING &&
         you.level_type != LEVEL_PANDEMONIUM)
         close_level_gates();
 
@@ -898,8 +916,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true, true);
 
     // actually "move" the followers if applicable
-    if ((you.level_type == LEVEL_DUNGEON
-         || you.level_type == LEVEL_PANDEMONIUM)
+    if (level_type_allows_followers(you.level_type)
         && load_mode == LOAD_ENTER_LEVEL)
     {
         place_followers();
@@ -916,6 +933,12 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
+        // Activate markers that want activating, but only when
+        // entering a new level in an existing game. If we're starting
+        // a new game, or reloading an existing game,
+        // env_activate_markers() is done in acr.cc.
+        env_activate_markers();
+
         // update corpses and fountains
         if (env.elapsed_time != 0.0)
             update_level( you.elapsed_time - env.elapsed_time );

@@ -44,6 +44,7 @@ void stash_init_new_level()
 {
     // If there's an existing stash level for Pan, blow it away.
     stashes.remove_level( level_id(LEVEL_PANDEMONIUM) );
+    stashes.remove_level( level_id(LEVEL_BAZAAR) );
 }
 
 std::string userdef_annotate_item(const char *s, const item_def *item,

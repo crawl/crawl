@@ -1861,7 +1861,7 @@ int items( int allow_uniques,       // not just true-false,
             && coinflip())
         {
             if ((you.level_type != LEVEL_ABYSS
-                    && you.level_type != LEVEL_PANDEMONIUM)
+                 && you.level_type != LEVEL_PANDEMONIUM)
                 && one_chance_in(50))
             {
                 icky = find_okay_unrandart(OBJ_ARMOUR);

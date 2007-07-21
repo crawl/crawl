@@ -193,6 +193,15 @@ int random_range(int low, int high)
     return (low + random2(high - low + 1));
 }
 
+int random_range(int low, int high, int nrolls)
+{
+    ASSERT(nrolls > 0);
+    int sum = 0;
+    for (int i = 0; i < nrolls; ++i)
+        sum += random_range(low, high);
+    return (sum / nrolls);
+}
+
 int random_choose(int first, ...)
 {
     va_list args;
@@ -732,7 +741,7 @@ bool adjacent( int x, int y, int x2, int y2 )
     return (abs(x - x2) <= 1 && abs(y - y2) <= 1);
 }
 
-bool silenced(char x, char y)
+bool silenced(int x, int y)
 {
     if (you.duration[DUR_SILENCE] > 0
         && distance(x, y, you.x_pos, you.y_pos) <= 36)  // (6 * 6)
@@ -751,7 +760,7 @@ bool silenced(char x, char y)
     }
 }                               // end silenced()
 
-bool player_can_hear(char x, char y)
+bool player_can_hear(int x, int y)
 {
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
 }                               // end player_can_hear()
@@ -1001,6 +1010,10 @@ int element_colour( int element, bool no_random )
         ret = tmp_rand < 100? CYAN : BLUE;
         break;
 
+    case EC_SHIMMER_BLUE:
+        ret = random_choose_weighted(80, BLUE, 20, LIGHTBLUE, 5, CYAN, 0);
+        break;
+
     case EC_RANDOM:
         ret = 1 + random2(15);              // always random
         break;
@@ -1135,68 +1148,4 @@ void zap_los_monsters()
 int coord_def::distance_from(const coord_def &other) const
 {
     return (grid_distance(x, y, other.x, other.y));
-}
-
-//////////////////////////////////////////////////////////////////////////
-// crawl_environment
-
-void crawl_environment::add_marker(map_marker *marker)
-{
-    markers.insert(dgn_pos_marker(marker->pos, marker));
-}
-
-void crawl_environment::remove_marker(map_marker *marker)
-{
-    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(marker->pos);
-    for (dgn_marker_map::iterator i = els.first; i != els.second; ++i)
-    {
-        if (i->second == marker)
-        {
-            markers.erase(i);
-            break;
-        }
-    }
-    delete marker;
-}
-
-void crawl_environment::remove_markers_at(const coord_def &c)
-{
-    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(c);
-    for (dgn_marker_map::iterator i = els.first; i != els.second; )
-    {
-        dgn_marker_map::iterator todel = i++;
-        delete todel->second;
-        markers.erase(todel);
-    }
-}
-
-map_marker *crawl_environment::find_marker(const coord_def &c,
-                                           map_marker_type type) const
-{
-    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
-        if (type == MAT_ANY || i->second->get_type() == type)
-            return (i->second);
-    return (NULL);
-}
-
-std::vector<map_marker*> crawl_environment::get_markers(const coord_def &c)
-    const
-{
-    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
-    std::vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
-        rmarkers.push_back(i->second);
-    return (rmarkers);
-}
-
-void crawl_environment::clear_markers()
-{
-    for (dgn_marker_map::iterator i = markers.begin(); i != markers.end(); ++i)
-        delete i->second;
-    markers.clear();
 }

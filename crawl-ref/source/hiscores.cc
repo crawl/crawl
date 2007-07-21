@@ -573,10 +573,10 @@ static const char *short_branch_name(int branch)
 
 static const char *level_type_names[] =
 {
-    "D", "Lab", "Abyss", "Pan"
+    "D", "Lab", "Abyss", "Pan", "Bzr"
 };
 
-static const char *level_area_type_name(int level_type)
+const char *level_area_type_name(int level_type)
 {
     if (level_type >= 0 && level_type < NUM_LEVEL_AREA_TYPES)
         return level_type_names[level_type];

@@ -1,0 +1,67 @@
+###############################################################################
+# bazaar.des - Bazaar entry vaults and bazaar layouts.
+###############################################################################
+
+###############################################################################
+# Bazaar entries
+
+# Utility functions
+
+lua {{
+    function check_expire_marker(e)
+        if not crawl.one_chance_in(3) then
+            e.marker("O = timer: 1000")
+        end
+    end
+}}
+
+default-depth: D:10-27
+
+###############################################################################
+# Dummy entry
+
+NAME: bzr_entry_dummy
+TAGS: bzr_entry transparent
+ORIENT: float
+: check_expire_marker(_G)
+MAP
+O
+ENDMAP
+
+###############################################################################
+# A simple water entry.
+NAME: bzr_entry_001
+TAGS: bzr_entry no_pool_fixup
+ORIENT: float
+SHUFFLE: wwl
+: check_expire_marker(_G)
+MAP
+ www
+w.w.w
+wwOww
+w.w.w
+ www
+ENDMAP
+
+###############################################################################
+# Bazaar layouts.
+#
+# "encompass" levels are recommended, and can be as small or large as you like.
+# No monsters are pre-placed in bazaars, and monsters do not spawn in bazaars,
+# but you can place monsters in your maps if you know what you're doing.
+
+NAME: bazaar_001
+TAGS: bazaar
+ORIENT: encompass
+KFEAT: A = any shop
+MAP
+xxxxxxxxx
+xxxx>xxxx
+xxx...xxx
+xx..A..xx
+x<.A.A.>x
+xx..A..xx
+xxx...xxx
+xxxx>xxxx
+xxxxxxxxx
+ENDMAP

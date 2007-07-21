@@ -38,6 +38,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "mapmark.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
@@ -1190,13 +1191,9 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.x_pos, you.y_pos);
+    feat = feature_description(you.x_pos, you.y_pos, DESC_NOCAP_A, false);
     if (feat.empty())
         return;
-    if (grid != DNGN_ENTER_SHOP)
-        feat[0] = tolower(feat[0]);
-    if (ends_with(feat, "."))
-        feat = feat.substr(0, feat.length() - 1);
 
     mpr((prefix + feat + suffix).c_str());
     if (grid == DNGN_ENTER_LABYRINTH)
@@ -1204,218 +1201,258 @@ void describe_floor()
 }
 
 std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap)
+                                trap_type trap,
+                                bool temporary,
+                                description_level_type dtype,
+                                bool add_stop)
+{
+    std::string desc =
+        raw_feature_description(grid, trap, temporary);
+    if (add_stop)
+        desc += ".";
+    if (dtype == DESC_PLAIN || (!grid_is_trap(grid) && isupper(desc[0])))
+        return (desc);
+
+    switch (dtype)
+    {
+    case DESC_CAP_THE:
+        return "The " + desc;
+    case DESC_NOCAP_THE:
+        return "the " + desc;
+    case DESC_CAP_A:
+        return article_a(desc, false);
+    case DESC_NOCAP_A:
+        return article_a(desc, true);
+    default:
+        return (desc);
+    }
+}
+
+std::string raw_feature_description(dungeon_feature_type grid,
+                                    trap_type trap,
+                                    bool temporary)
 {
     if (grid_is_trap(grid) && trap != NUM_TRAPS)
     {
         switch (trap)
         {
         case TRAP_DART:
-            return ("A dart trap.");
+            return ("dart trap");
         case TRAP_ARROW:
-            return ("An arrow trap.");
+            return ("arrow trap");
         case TRAP_SPEAR:
-            return ("A spear trap.");
+            return ("spear trap");
         case TRAP_AXE:
-            return ("An axe trap.");
+            return ("axe trap");
         case TRAP_TELEPORT:
-            return ("A teleportation trap.");
+            return ("teleportation trap");
         case TRAP_AMNESIA:
-            return ("An amnesia trap.");
+            return ("amnesia trap");
         case TRAP_BLADE:
-            return ("A blade trap.");
+            return ("blade trap");
         case TRAP_BOLT:
-            return ("A bolt trap.");
+            return ("bolt trap");
         case TRAP_ZOT:
-            return ("A Zot trap.");
+            return ("Zot trap");
         case TRAP_NEEDLE:
-            return ("A needle trap.");
+            return ("needle trap");
         default:
             error_message_to_player();
-            return ("An undefined trap.");
+            return ("undefined trap");
         }
     }
     
     switch (grid)
     {
     case DNGN_STONE_WALL:
-        return ("A stone wall.");
+        return ("stone wall");
     case DNGN_ROCK_WALL:
     case DNGN_SECRET_DOOR:
         if (you.level_type == LEVEL_PANDEMONIUM)
-            return ("A wall of the weird stuff which makes up Pandemonium.");
+            return ("wall of the weird stuff which makes up Pandemonium");
         else
-            return ("A rock wall.");
+            return ("rock wall");
     case DNGN_PERMAROCK_WALL:
-        return ("An unnaturally hard rock wall.");    
+        return ("unnaturally hard rock wall");    
     case DNGN_CLOSED_DOOR:
-        return ("A closed door.");
+        return ("closed door");
     case DNGN_METAL_WALL:
-        return ("A metal wall.");
+        return ("metal wall");
     case DNGN_GREEN_CRYSTAL_WALL:
-        return ("A wall of green crystal.");
+        return ("wall of green crystal");
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
         {
-           return ("An idol of Beogh.");
+           return ("idol of Beogh");
         }
-        return ("An orcish idol.");
+        return ("orcish idol");
     case DNGN_WAX_WALL:
-        return ("A wall of solid wax.");
+        return ("wall of solid wax");
     case DNGN_SILVER_STATUE:
-        return ("A silver statue.");
+        return ("silver statue");
     case DNGN_GRANITE_STATUE:
-        return ("A granite statue.");
+        return ("granite statue");
     case DNGN_ORANGE_CRYSTAL_STATUE:
-        return ("An orange crystal statue.");
+        return ("orange crystal statue");
     case DNGN_LAVA:
-        return ("Some lava.");
+        return ("Some lava");
     case DNGN_DEEP_WATER:
-        return ("Some deep water.");
+        return ("Some deep water");
     case DNGN_SHALLOW_WATER:
-        return ("Some shallow water.");
+        return ("Some shallow water");
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
-        return ("Floor.");
+        return ("Floor");
     case DNGN_OPEN_DOOR:
-        return ("An open door.");
+        return ("open door");
     case DNGN_ROCK_STAIRS_DOWN:
-        return ("A rock staircase leading down.");
+        return ("rock staircase leading down");
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-        return ("A stone staircase leading down.");
+        return ("stone staircase leading down");
     case DNGN_ROCK_STAIRS_UP:
-        return ("A rock staircase leading up.");
+        return ("rock staircase leading up");
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        return ("A stone staircase leading up.");
+        return ("stone staircase leading up");
     case DNGN_ENTER_HELL:
-        return ("A gateway to Hell.");
+        return ("gateway to Hell");
     case DNGN_TRAP_MECHANICAL:
-        return ("A mechanical trap.");
+        return ("mechanical trap");
     case DNGN_TRAP_MAGICAL:
-        return ("A magical trap.");
+        return ("magical trap");
     case DNGN_TRAP_III:
-        return ("A trap.");
+        return ("trap");
     case DNGN_ENTER_SHOP:
-        return ("A shop.");
+        return ("shop");
     case DNGN_ENTER_LABYRINTH:
-        return ("A labyrinth entrance.");
+        if (temporary)
+            return ("slowly fading labyrinth entrance");
+        else
+            return ("labyrinth entrance");
+    case DNGN_ENTER_BAZAAR:
+        if (temporary)
+            return ("gently fading gateway to a fabulous bazaar");
+        else
+            return ("gateway to a fabulous bazaar");
+    case DNGN_EXIT_BAZAAR:
+        return ("exit from the bazaar");
     case DNGN_ENTER_DIS:
-        return ("A gateway to the Iron City of Dis.");
+        return ("gateway to the Iron City of Dis");
     case DNGN_ENTER_GEHENNA:
-        return ("A gateway to Gehenna.");
+        return ("gateway to Gehenna");
     case DNGN_ENTER_COCYTUS:
-        return ("A gateway to the freezing wastes of Cocytus.");
+        return ("gateway to the freezing wastes of Cocytus");
     case DNGN_ENTER_TARTARUS:
-        return ("A gateway to the decaying netherworld of Tartarus.");
+        return ("gateway to the decaying netherworld of Tartarus");
     case DNGN_ENTER_ABYSS:
-        return ("A one-way gate to the infinite horrors of the Abyss.");
+        return ("one-way gate to the infinite horrors of the Abyss");
     case DNGN_EXIT_ABYSS:
-        return ("A gateway leading out of the Abyss.");
+        return ("gateway leading out of the Abyss");
     case DNGN_STONE_ARCH:
-        return ("An empty arch of ancient stone.");
+        return ("empty arch of ancient stone");
     case DNGN_ENTER_PANDEMONIUM:
-        return ("A gate leading to the halls of Pandemonium.");
+        return ("gate leading to the halls of Pandemonium");
     case DNGN_EXIT_PANDEMONIUM:
-        return ("A gate leading out of Pandemonium.");
+        return ("gate leading out of Pandemonium");
     case DNGN_TRANSIT_PANDEMONIUM:
-        return ("A gate leading to another region of Pandemonium.");
+        return ("gate leading to another region of Pandemonium");
     case DNGN_ENTER_ORCISH_MINES:
-        return ("A staircase to the Orcish Mines.");
+        return ("staircase to the Orcish Mines");
     case DNGN_ENTER_HIVE:
-        return ("A staircase to the Hive.");
+        return ("staircase to the Hive");
     case DNGN_ENTER_LAIR:
-        return ("A staircase to the Lair.");
+        return ("staircase to the Lair");
     case DNGN_ENTER_SLIME_PITS:
-        return ("A staircase to the Slime Pits.");
+        return ("staircase to the Slime Pits");
     case DNGN_ENTER_VAULTS:
-        return ("A staircase to the Vaults.");
+        return ("staircase to the Vaults");
     case DNGN_ENTER_CRYPT:
-        return ("A staircase to the Crypt.");
+        return ("staircase to the Crypt");
     case DNGN_ENTER_HALL_OF_BLADES:
-        return ("A staircase to the Hall of Blades.");
+        return ("staircase to the Hall of Blades");
     case DNGN_ENTER_ZOT:
-        return ("A gate to the Realm of Zot.");
+        return ("gate to the Realm of Zot");
     case DNGN_ENTER_TEMPLE:
-        return ("A staircase to the Ecumenical Temple.");
+        return ("staircase to the Ecumenical Temple");
     case DNGN_ENTER_SNAKE_PIT:
-        return ("A staircase to the Snake Pit.");
+        return ("staircase to the Snake Pit");
     case DNGN_ENTER_ELVEN_HALLS:
-        return ("A staircase to the Elven Halls.");
+        return ("staircase to the Elven Halls");
     case DNGN_ENTER_TOMB:
-        return ("A staircase to the Tomb.");
+        return ("staircase to the Tomb");
     case DNGN_ENTER_SWAMP:
-        return ("A staircase to the Swamp.");
+        return ("staircase to the Swamp");
     case DNGN_ENTER_SHOALS:
-        return ("A staircase to the Shoals.");
+        return ("staircase to the Shoals");
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
-        return ("A staircase back to the Dungeon.");
+        return ("staircase back to the Dungeon");
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
-        return ("A staircase back to the Lair.");
+        return ("staircase back to the Lair");
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
-        return ("A staircase back to the Vaults.");
+        return ("staircase back to the Vaults");
     case DNGN_RETURN_FROM_ELVEN_HALLS:
-        return ("A staircase back to the Mines.");
+        return ("staircase back to the Mines");
     case DNGN_RETURN_FROM_TOMB:
-        return ("A staircase back to the Crypt.");
+        return ("staircase back to the Crypt");
     case DNGN_RETURN_FROM_ZOT:
-        return ("A gate leading back out of this place.");
+        return ("gate leading back out of this place");
     case DNGN_ALTAR_ZIN:
-        return ("A glowing white marble altar of Zin.");
+        return ("glowing white marble altar of Zin");
     case DNGN_ALTAR_SHINING_ONE:
-        return ("A glowing golden altar of the Shining One.");
+        return ("glowing golden altar of the Shining One");
     case DNGN_ALTAR_KIKUBAAQUDGHA:
-        return ("An ancient bone altar of Kikubaaqudgha.");
+        return ("ancient bone altar of Kikubaaqudgha");
     case DNGN_ALTAR_YREDELEMNUL:
-        return ("A basalt altar of Yredelemnul.");
+        return ("basalt altar of Yredelemnul");
     case DNGN_ALTAR_XOM:
-        return ("A shimmering altar of Xom.");
+        return ("shimmering altar of Xom");
     case DNGN_ALTAR_VEHUMET:
-        return ("A shining altar of Vehumet.");
+        return ("shining altar of Vehumet");
     case DNGN_ALTAR_OKAWARU:
-        return ("An iron altar of Okawaru.");
+        return ("iron altar of Okawaru");
     case DNGN_ALTAR_MAKHLEB:
-        return ("A burning altar of Makhleb.");
+        return ("burning altar of Makhleb");
     case DNGN_ALTAR_SIF_MUNA:
-        return ("A deep blue altar of Sif Muna.");
+        return ("deep blue altar of Sif Muna");
     case DNGN_ALTAR_TROG:
-        return ("A bloodstained altar of Trog.");
+        return ("bloodstained altar of Trog");
     case DNGN_ALTAR_NEMELEX_XOBEH:
-        return ("A sparkling altar of Nemelex Xobeh.");
+        return ("sparkling altar of Nemelex Xobeh");
     case DNGN_ALTAR_ELYVILON:
-        return ("A silver altar of Elyvilon.");
+        return ("silver altar of Elyvilon");
     case DNGN_ALTAR_LUGONU:
-        return ("A corrupted altar of Lugonu.");
+        return ("corrupted altar of Lugonu");
     case DNGN_ALTAR_BEOGH:
-        return ("A roughly hewn altar of Beogh.");
+        return ("roughly hewn altar of Beogh");
     case DNGN_BLUE_FOUNTAIN:
-        return ("A fountain of clear blue water.");
+        return ("fountain of clear blue water");
     case DNGN_SPARKLING_FOUNTAIN:
-        return ("A fountain of sparkling water.");
+        return ("fountain of sparkling water");
     case DNGN_DRY_FOUNTAIN_I:
     case DNGN_DRY_FOUNTAIN_II:
     case DNGN_DRY_FOUNTAIN_IV:
     case DNGN_DRY_FOUNTAIN_VI:
     case DNGN_DRY_FOUNTAIN_VIII:
     case DNGN_PERMADRY_FOUNTAIN:
-        return ("A dry fountain.");
+        return ("dry fountain");
     default:
         return ("");
     }
 }
 
-std::string feature_description(int mx, int my)
+std::string feature_description(int mx, int my, description_level_type dtype,
+                                bool add_stop)
 {
     const dungeon_feature_type grid = grd[mx][my];
     switch (grid)
@@ -1423,11 +1460,15 @@ std::string feature_description(int mx, int my)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_III:
-        return feature_description(grid, trap_type_at_xy(mx, my));
+        return (feature_description(grid, trap_type_at_xy(mx, my), false,
+                                    dtype, add_stop));
     case DNGN_ENTER_SHOP:
-        return (shop_name(mx, my));
+        return (shop_name(mx, my, add_stop));
     default:
-        return (feature_description(grid));
+        return (feature_description(
+                    grid, NUM_TRAPS,
+                    env_find_marker(coord_def(mx, my), MAT_TIMED_FEATURE),
+                    dtype, add_stop));
     }
 }
 
@@ -1661,7 +1702,7 @@ static void describe_cell(int mx, int my)
     std::string feature_desc = feature_description(mx, my);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
-    if (map_marker *mark = env.find_marker(coord_def(mx, my), MAT_ANY))
+    if (map_marker *mark = env_find_marker(coord_def(mx, my), MAT_ANY))
         marker = " (" + mark->describe() + ")";
     const std::string traveldest =
         stair_destination_description(coord_def(mx, my));

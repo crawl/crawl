@@ -38,6 +38,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "direct.h"
+#include "dgnevent.h"
 #include "effects.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -1407,11 +1408,11 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     }
     
     if (item.base_type == OBJ_ORBS
-        && you.char_direction == DIR_DESCENDING)
+        && you.char_direction == GDT_DESCENDING)
     {
         if (!quiet)
             mpr("Now all you have to do is get back out of the dungeon!");
-        you.char_direction = DIR_ASCENDING;
+        you.char_direction = GDT_ASCENDING;
     }
 
     you.turn_is_over = true;
@@ -1651,7 +1652,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
     
-    if ( grid_destroys_items(my_grid) )
+    if ( grid_destroys_items(my_grid) && !silenced(you.pos()) )
         mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
    
     dec_inv_item_quantity( item_dropped, quant_drop );
@@ -1948,6 +1949,9 @@ void update_level( double elapsedTime )
 #endif
 
     update_corpses( elapsedTime );
+
+    dungeon_events.fire_event(
+        dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));
 
     for (m = 0; m < MAX_MONSTERS; m++)
     {

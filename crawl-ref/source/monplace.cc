@@ -1289,7 +1289,7 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
 
     // this gives a slight challenge to the player as they ascend the
     // dungeon with the Orb
-    if (you.char_direction == DIR_ASCENDING && mon_type == RANDOM_MONSTER
+    if (you.char_direction == GDT_ASCENDING && mon_type == RANDOM_MONSTER
         && you.level_type == LEVEL_DUNGEON)
     {
         mon_type = pick_zot_exit_defender();

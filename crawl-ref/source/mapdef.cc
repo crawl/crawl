@@ -20,6 +20,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapdef.h"
+#include "mapmark.h"
 #include "maps.h"
 #include "misc.h"
 #include "monplace.h"
@@ -47,52 +48,6 @@ const char *map_section_name(int msect)
         return "";
 
     return map_section_names[msect];
-}
-
-// Returns true if s contains tag 'tag', and strips out tag from s.
-bool strip_tag(std::string &s, const std::string &tag)
-{
-    if (s == tag)
-    {
-        s.clear();
-        return (true);
-    }
-
-    std::string::size_type pos;
-    if ((pos = s.find(" " + tag + " ")) != std::string::npos)
-    {
-        // Leave one space intact.
-        s.erase(pos, tag.length() + 1);
-        return (true);
-    }
-
-    if ((pos = s.find(tag + " ")) != std::string::npos
-        || (pos = s.find(" " + tag)) != std::string::npos)
-    {
-        s.erase(pos, tag.length() + 1);
-        return (true);
-    }
-
-    return (false);
-}
-
-#define TAG_UNFOUND -20404
-int strip_number_tag(std::string &s, const std::string &tagprefix)
-{
-    std::string::size_type pos = s.find(tagprefix);
-    if (pos == std::string::npos)
-        return (TAG_UNFOUND);
-
-    std::string::size_type ns = s.find(" ", pos);
-    if (ns == std::string::npos)
-        ns = s.length();
-
-    std::string argument =
-        s.substr(pos + tagprefix.length(), ns - pos - tagprefix.length());
-
-    s.erase(pos, ns - pos + 1);
-
-    return atoi(argument.c_str());
 }
 
 static int find_weight(std::string &s)
@@ -383,6 +338,7 @@ map_lines::~map_lines()
 
 void map_lines::init_from(const map_lines &map)
 {
+    // Transforms and markers have to be regenerated, they will not be copied.
     clear_transforms();
     clear_markers();
     lines         = map.lines;
@@ -392,12 +348,6 @@ void map_lines::init_from(const map_lines &map)
     solid_south   = map.solid_south;
     solid_west    = map.solid_west;
     solid_checked = map.solid_checked;
-
-    for (int i = 0, size = map.transforms.size(); i < size; ++i)
-        transforms.push_back( map.transforms[i]->clone() );
-
-    for (int i = 0, size = map.markers.size(); i < size; ++i)
-        markers.push_back( map.markers[i]->clone() );
 }
 
 template <typename V>
@@ -431,11 +381,7 @@ std::string map_lines::add_feature_marker(const std::string &s)
     if (!err.empty())
         return (err);
 
-    const dungeon_feature_type feat = dungeon_feature_by_name(arg);
-    if (feat == DNGN_UNSEEN)
-        return make_stringf("unknown feature: %s", arg.c_str());
-
-    transforms.push_back(new map_feat_marker_spec(key[0], feat));    
+    transforms.push_back(new map_marker_spec(key[0], arg));
     return ("");
 }
 
@@ -444,7 +390,7 @@ void map_lines::apply_markers(const coord_def &c)
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         markers[i]->pos += c;
-        env.add_marker(markers[i]);
+        env_add_marker(markers[i]);
     }
     // *not* clear_markers() since we've offloaded marker ownership to
     // the crawl env.
@@ -2355,15 +2301,27 @@ std::string shuffle_spec::describe() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-// map_feat_marker_spec
+// map_marker_spec
 
-std::string map_feat_marker_spec::apply_transform(map_lines &map)
+std::string map_marker_spec::apply_transform(map_lines &map)
 {
     std::vector<coord_def> positions = map.find_glyph(key);
     if (positions.size() == 1)
     {
-        map.add_marker(new map_feature_marker(positions[0], feat));
-        return ("");
+        try
+        {
+            map_marker *mark = map_marker::parse_marker(marker);
+            if (!mark)
+                return make_stringf("Unable to parse marker from %s",
+                                    marker.c_str());
+            mark->pos = positions[0];
+            map.add_marker(mark);
+            return ("");
+        }
+        catch (const std::string &err)
+        {
+            return (err);
+        }
     }
     else if (positions.empty())
         return make_stringf("cant find key '%c' for marker", key);
@@ -2371,19 +2329,19 @@ std::string map_feat_marker_spec::apply_transform(map_lines &map)
         return make_stringf("too many matches for key '%c' for marker", key);
 }
 
-map_transformer::transform_type map_feat_marker_spec::type() const
+map_transformer::transform_type map_marker_spec::type() const
 {
     return (TT_MARKER);
 }
 
-std::string map_feat_marker_spec::describe() const
+std::string map_marker_spec::describe() const
 {
-    return map_feature_marker(coord_def(), feat).describe();
+    return ("unimplemented");
 }
 
-map_transformer *map_feat_marker_spec::clone() const
+map_transformer *map_marker_spec::clone() const
 {
-    return new map_feat_marker_spec(key, feat);
+    return new map_marker_spec(key, marker);
 }
 
 //////////////////////////////////////////////////////////////////////////

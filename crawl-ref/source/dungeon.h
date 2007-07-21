@@ -43,7 +43,8 @@ enum map_mask_type
     MMT_NO_ITEM    = 0x02,    // Random items should not be placed here.
     MMT_NO_MONS    = 0x04,    // Random monsters should not be placed here.
     MMT_NO_POOL    = 0x08,    // Pool fixup should not be applied here.
-    MMT_NO_DOOR    = 0x10     // No secret-doorisation.
+    MMT_NO_DOOR    = 0x10,    // No secret-doorisation.
+    MMT_OPAQUE     = 0x20     // Vault may impede connectivity.
 };
 
 class dgn_region;
@@ -118,50 +119,6 @@ void place_spec_shop(int level_number, int shop_x, int shop_y,
                      int force_s_type, bool representative = false);
 bool unforbidden(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest);
-
-//////////////////////////////////////////////////////////////////////////
-// Map markers
-
-class map_marker
-{
-public:
-    map_marker(map_marker_type type, const coord_def &pos);
-    virtual ~map_marker();
-
-    map_marker_type get_type() const { return type; }
-
-    virtual void write(tagHeader &) const;
-    virtual void read(tagHeader &);
-    virtual map_marker *clone() const = 0;
-    virtual std::string describe() const = 0;
-    
-    static map_marker *read_marker(tagHeader&);
-
-public:
-    coord_def pos;
-
-protected:
-    map_marker_type type;
-
-    typedef map_marker *(*marker_reader)(tagHeader &, map_marker_type);
-    static marker_reader readers[NUM_MAP_MARKER_TYPES];
-};
-
-class map_feature_marker : public map_marker
-{
-public:
-    map_feature_marker(const coord_def &pos = coord_def(0, 0),
-                       dungeon_feature_type feat = DNGN_UNSEEN);
-    map_feature_marker(const map_feature_marker &other);
-    void write(tagHeader &) const;
-    void read(tagHeader &);
-    map_marker *clone() const;
-    std::string describe() const;
-    static map_marker *read(tagHeader &, map_marker_type);
-    
-public:
-    dungeon_feature_type feat;
-};
 
 //////////////////////////////////////////////////////////////////////////
 template <typename fgrd, typename bound_check>

@@ -150,6 +150,7 @@ void clear_cset_overrides();
 void add_cset_override(char_set_type set, const std::string &overrides);
 
 bool see_grid( int grx, int gry );
+inline bool see_grid(const coord_def &p) { return see_grid(p.x, p.y); }
 
 std::string screenshot(bool fullscreen = false);
 

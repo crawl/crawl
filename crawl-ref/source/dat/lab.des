@@ -4,6 +4,17 @@
 #                                flavour vaults (tagged by 'lab').
 ###############################################################################
 
+#############################################################################
+# Labyrinth entry vaults
+
+NAME: lab_entry_generic
+TAGS: lab_entry transparent
+DEPTH: 12-26
+ORIENT: float
+MARKER: O = timer:400-600
+MAP
+O
+ENDMAP
 
 #############################################################################
 # Labyrinth exit minivaults

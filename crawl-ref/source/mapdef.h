@@ -154,13 +154,13 @@ struct shuffle_spec : public map_transformer
     }
 };
 
-struct map_feat_marker_spec : public map_transformer
+struct map_marker_spec : public map_transformer
 {
     int key;
-    dungeon_feature_type feat;
+    std::string marker;
 
-    map_feat_marker_spec(int _key, dungeon_feature_type _feat)
-        : key(_key), feat(_feat) { }
+    map_marker_spec(int _key, const std::string &mark)
+        : key(_key), marker(mark) { }
     std::string apply_transform(map_lines &map);
     transform_type type() const;
     std::string describe() const;
