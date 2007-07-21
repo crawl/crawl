@@ -461,6 +461,9 @@ bool item_ident( const item_def &item, unsigned long flags )
 // The Orb of Zot and unique runes are considered critical.
 bool item_is_critical(const item_def &item)
 {
+    if (!is_valid_item(item))
+        return (false);
+    
     if (item.base_type == OBJ_ORBS)
         return (true);
 

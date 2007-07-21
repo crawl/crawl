@@ -509,7 +509,7 @@ static void dgn_check_terrain_items(const coord_def &pos)
             item = mitm[item].link;
 
             // Game-critical item.
-            if (true || item_is_critical(mitm[curr]))
+            if (item_is_critical(mitm[curr]))
                 dgn_shift_item(pos, mitm[curr]);
             else
             {
