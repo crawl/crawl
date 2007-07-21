@@ -512,9 +512,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TRAN_BAT:
-        invoc = true;
-        failure = 45 - (you.experience_level + you.skills[SK_INVOCATIONS]);
-//        perfect = true;
+        failure = 45 - (2 * you.experience_level);
         break;
         // end species abilties (some mutagenic)
 
