@@ -165,8 +165,8 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Nemelex
     { "peek at the first card of a deck",
+      "draw cards from decks in your inventory",
       "draw cards with careful consideration",
-      "",
       "",
       "stack decks" },
     // Elyvilon
@@ -251,8 +251,8 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Nemelex
     { "peek at the first card of a deck",
+      "draw cards from decks in your inventory",
       "draw cards with careful consideration",
-      "",
       "",
       "stack decks" },
     // Elyvilon

@@ -228,6 +228,31 @@ static bool wielding_deck()
     return is_deck(you.inv[you.equip[EQ_WEAPON]]);
 }
 
+// Select a deck from inventory and draw a card from it.
+bool choose_deck_and_draw()
+{
+    int slot = prompt_invent_item( "Draw from which deck?",
+                                   MT_INVLIST, OBJ_MISCELLANY,
+                                   true, true, true, 0, NULL,
+                                   OPER_EVOKE );
+    if ( slot == PROMPT_ABORT )
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& deck(you.inv[slot]);
+    if ( !is_deck(deck) )
+    {
+        mpr("That isn't a deck!");
+        return false;
+    }
+    evoke_deck(deck);
+    return true;
+}
+
+// Peek at a deck (show what the next card will be.)
+// Return false if the operation was failed/aborted along the way.
 bool deck_peek()
 {
     if ( !wielding_deck() )
@@ -241,15 +266,29 @@ bool deck_peek()
         mpr("You already know what the next card will be.");
         return false;
     }
-    
+
     const card_type chosen = choose_one_card(item, false);
 
     msg::stream << "You see " << card_name(chosen) << '.' << std::endl;
     item.plus2 = chosen + 1;
     you.wield_change = true;
+
+    // You lose 1d2 cards when peeking.
+    if ( item.plus > 1 )
+    {
+        mpr("Some cards drop out of the deck.");
+        if ( item.plus > 2 && coinflip() )
+            item.plus -= 2;
+        else
+            item.plus -= 1;
+    }
+
     return true;
 }
 
+// Stack a deck: look at the next five cards, put them back in any
+// order, discard the rest of the deck.
+// Return false if the operation was failed/aborted along the way.
 bool deck_stack()
 {
     if ( !wielding_deck() )
@@ -285,7 +324,7 @@ bool deck_stack()
         }
 
         int selected = -1;
-        while ( 1 )
+        while ( true )
         {
             const int keyin = tolower(get_ch());
             if (keyin >= 'a' && keyin < 'a' + static_cast<int>(draws.size()))
@@ -309,6 +348,7 @@ bool deck_stack()
     return true;
 }
 
+// Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
     if ( !wielding_deck() )
@@ -372,6 +412,7 @@ bool deck_triple_draw()
     return true;
 }
 
+// This is Nemelex retribution.
 void draw_from_deck_of_punishment()
 {
     item_def deck;
@@ -393,6 +434,8 @@ void evoke_deck( item_def& deck )
     int brownie_points = 0;
     mpr("You draw a card...");
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
+
+    // If the deck wasn't marked, draw a fair card.
     if ( deck.plus2 == 0 )
     {
         card_effect( choose_one_card(deck, true), deck_rarity(deck) );
@@ -432,7 +475,7 @@ void evoke_deck( item_def& deck )
     if ( deck.plus == 0 )
     {
         mpr("The deck of cards disappears in a puff of smoke.");       
-        unwield_item(you.equip[EQ_WEAPON]);            
+        unwield_item(you.equip[EQ_WEAPON]);
         dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
