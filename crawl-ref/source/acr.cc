@@ -1743,29 +1743,21 @@ static void decrement_durations()
         you.wield_change = true;
     }
 
-    if (you.duration[DUR_TRANSFORMATION] > 1)
+    // Vampire bat transformations are permanent (until ended.)
+    if ( you.species != SP_VAMPIRE ||
+         you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT ||
+         you.duration[DUR_TRANSFORMATION] < 100 )
     {
-        you.duration[DUR_TRANSFORMATION]--;
-
-        if (you.species == SP_VAMPIRE
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-            && you.duration[DUR_TRANSFORMATION] > 2)
+        if ( decrement_a_duration(DUR_TRANSFORMATION,
+                                  NULL, 10, random2(3),
+                                  "Your transformation is almost over.") )
         {
-            you.duration[DUR_TRANSFORMATION] = 5;
-        }
-
-        if (you.duration[DUR_TRANSFORMATION] == 10)
-        {
-            mpr("Your transformation is almost over.", MSGCH_DURATION);
-            you.duration[DUR_TRANSFORMATION] -= random2(3);
+            untransform();
+            you.duration[DUR_BREATH_WEAPON] = 0;
         }
     }
-    else if (you.duration[DUR_TRANSFORMATION] == 1)
-    {
-        untransform();
-        you.duration[DUR_BREATH_WEAPON] = 0;
-    }
 
+    // must come after transformation duration
     decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
                          -1, 0, NULL, MSGCH_RECOVERY);
 

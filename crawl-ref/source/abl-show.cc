@@ -1867,7 +1867,8 @@ std::vector<talent> your_talents( bool check_confused )
         }
     }
 
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+    if (you.species == SP_VAMPIRE && you.experience_level >= 3 &&
+        you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
         add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
