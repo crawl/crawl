@@ -2945,19 +2945,21 @@ int check_stealth(void)
             case SP_MINOTAUR:
                 stealth += (you.skills[SK_STEALTH] * 12);
                 break;
+            case SP_VAMPIRE:
+                if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+                    || you.hunger_state <= HS_HUNGRY)
+                {
+                    // Hungry/batty vampires are more stealthy
+                    stealth += (you.skills[SK_STEALTH] * 19);
+                }
+                else
+                    stealth += (you.skills[SK_STEALTH * 18]);
+                break;
             case SP_GNOME:
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_NAGA:       // not small but very good at stealth
-            case SP_VAMPIRE:
-                if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
-                    || you.hunger_state <= HS_HUNGRY)
-                {
-                    // Hungry vampires are more stealthy
-                    stealth += (you.skills[SK_STEALTH] * 19);
-                    break;
-                }
                 stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             default:
