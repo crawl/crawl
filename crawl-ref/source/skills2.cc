@@ -1158,7 +1158,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      (90 * 75) / 100,           // SK_EVOCATIONS
      },
 
-    {                           // SP_UNK0_DRACONAIN (27)
+    {                           // SP_UNK0_DRACONIAN (27)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_SWORDS

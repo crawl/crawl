@@ -553,6 +553,13 @@ static void reassess_starting_skills()
             else
                 break;
         }
+
+        // Spellcasters should always have Spellcasting skill.
+        if ( i == SK_SPELLCASTING && you.skills[i] == 0 )
+        {
+            you.skill_points[i] = (skill_exp_needed(2) * sp_diff) / 100;
+            you.skills[i] = 1;
+        }
     }
 }
 
