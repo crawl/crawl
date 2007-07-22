@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <memory>
 
 #include "AppHdr.h"
 #include "externs.h"
@@ -64,7 +65,7 @@
 #endif
 
 // enough memory allocated to snarf in the scorefile entries
-static scorefile_entry hs_list[SCORE_FILE_ENTRIES];
+static std::auto_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
 // hackish: scorefile position of newest entry.  Will be highlit during
 // highscore printing (always -1 when run from command line).
@@ -98,20 +99,26 @@ void hiscores_new_entry( const scorefile_entry &ne )
     int i, total_entries;
     bool inserted = false;
 
-    // open highscore file (reading) -- note that NULL is not fatal!
-    scores = hs_open("r", score_file_name());
+    // open highscore file (reading) -- NULL is fatal!
+    // 
+    // Opening as a+ instead of r+ to force an exclusive lock (see
+    // hs_open) and to create the file if it's not there already.
+    scores = hs_open("a+", score_file_name());
+    if (scores == NULL)
+        end(1, true, "failed to open score file for writing");
 
-    for (i = 0; i < SCORE_FILE_ENTRIES; ++i)
-        hs_list[i].reset();
-
+    // we're at the end of the file, seek back to beginning.
+    fseek(scores, 0, SEEK_SET);
+    
     // read highscore file, inserting new entry at appropriate point,
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
     {
-        if (hs_read(scores, hs_list[i]) == false)
+        hs_list[i].reset(new scorefile_entry);
+        if (hs_read(scores, *hs_list[i]) == false)
             break;
 
         // compare points..
-        if (ne.points >= hs_list[i].points && inserted == false)
+        if (!inserted && ne.points >= hs_list[i]->points)
         {
             newest_entry = i;           // for later printing
             inserted = true;
@@ -120,11 +127,11 @@ void hiscores_new_entry( const scorefile_entry &ne )
             if (i+1 < SCORE_FILE_ENTRIES)
             {
                 hs_list[i + 1] = hs_list[i];
-                hs_list[i] = ne;
+                hs_list[i].reset(new scorefile_entry(ne));
                 i++;
             } else {
                 // copy new entry to current position
-                hs_list[i] = ne;
+                *hs_list[i] = ne;
             }
         }
     }
@@ -135,31 +142,37 @@ void hiscores_new_entry( const scorefile_entry &ne )
         newest_entry = i;
         inserted = true;
         // copy new entry
-        hs_list[i] = ne;
+        hs_list[i].reset(new scorefile_entry(ne));
         i++;
+    }
+
+    // If we've still not inserted it, it's not a highscore.
+    if (!inserted)
+    {
+        hs_close(scores, "a+", score_file_name());
+        return;
     }
 
     total_entries = i;
 
-    // close so we can re-open for writing
-    hs_close(scores,"r", score_file_name());
-
-    // open highscore file (writing) -- NULL *is* fatal here.
-    scores = hs_open("w", score_file_name());
-    if (scores == NULL)
-    {
-        perror("Entry not added - failure opening score file for writing.");
-        return;
-    }
+    // The old code closed and reopened the score file, leading to a
+    // race condition where one Crawl process could overwrite the
+    // other's highscore. Now we truncate and rewrite the file without
+    // closing it.
+    if (ftruncate(fileno(scores), 0))
+        end(1, true, "unable to truncate scorefile");
+    
+    rewind(scores);
 
     // write scorefile entries.
     for (i = 0; i < total_entries; i++)
     {
-        hs_write(scores, hs_list[i]);
+        hs_write(scores, *hs_list[i]);
+        hs_list[i].reset(NULL);
     }
 
     // close scorefile.
-    hs_close(scores, "w", score_file_name());
+    hs_close(scores, "a+", score_file_name());
 }
 
 void logfile_new_entry( const scorefile_entry &ne )
@@ -261,7 +274,8 @@ void hiscores_print_list( int display_count, int format )
     // read highscore file
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
     {
-        if (hs_read( scores, hs_list[i] ) == false)
+        hs_list[i].reset(new scorefile_entry);
+        if (hs_read( scores, *hs_list[i] ) == false)
             break;
     }
     total_entries = i;
@@ -287,7 +301,7 @@ void hiscores_print_list( int display_count, int format )
         if (i == newest_entry)
             textcolor(YELLOW);
 
-        hiscores_print_entry(hs_list[i], i, format, cprintf);
+        hiscores_print_entry(*hs_list[i], i, format, cprintf);
 
         if (i == newest_entry)
             textcolor(LIGHTGREY);

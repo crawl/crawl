@@ -217,6 +217,9 @@
     //
     #define DGL_CLEAR_SCREEN "\033[2J"
 
+    // Increase the size of the topscores file for public servers.
+    #define SCORE_FILE_ENTRIES 1000
+
     // If defined, the hiscores code dumps preformatted verbose and terse
     // death message strings in the logfile for the convenience of logfile
     // parsers.
@@ -316,8 +319,10 @@
 // Traditional setting of this is one rune, but three is pretty standard now.
 #define NUMBER_OF_RUNES_NEEDED    3
 
-// Number of top scores to keep.
+// Number of top scores to keep. See above for the dgamelaunch setting.
+#ifndef SCORE_FILE_ENTRIES
 #define SCORE_FILE_ENTRIES      100
+#endif
 
 // Option to allow scoring of wizard characters.  Note that even if 
 // you define this option, wizard characters are still tagged as such 
