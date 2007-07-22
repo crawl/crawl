@@ -2683,7 +2683,8 @@ void god_pitch(god_type which_god)
         }
     }
 
-    if ( you.religion == GOD_LUGONU && !you.worshipped[GOD_LUGONU] )
+    // note that you.worshipped[] has already been incremented
+    if ( you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1 )
         gain_piety(20);         // allow instant access to first power
 
     redraw_skill( you.your_name, player_title() );
