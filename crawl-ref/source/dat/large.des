@@ -11,13 +11,15 @@ default-depth: D:12-26
 
 ##############################################################################
 # Rats! (Lemuel), slightly easier now
+# There another, harder version for the Lair.
 #
-NAME: RatsNest
-ORIENT: northeast
-DEPTH: D:5-9, Lair
+NAME:    RatsNest_Dungeon
+ORIENT:  northeast
+TAGS:    uniq_rats_nest
+DEPTH:   D:5-9
 SHUFFLE: 23, 34
-MONS: rat / nothing, grey rat / nothing
-MONS: green rat / nothing, orange rat / w:40 rat
+MONS:    rat / nothing, grey rat / nothing
+MONS:    green rat / nothing, orange rat / w:40 rat
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -50,12 +52,15 @@ ENDMAP
 
 ####################################
 #hidden cave vault, possibly with statue
-NAME: statuecave_lemuel
-ORIENT: northeast
-DEPTH: D:7-27, Lair, Crypt
-MONS: ice statue/orange crystal statue
+#
+NAME:    statuecave_lemuel
+ORIENT:  northeast
+DEPTH:   D:7-27, Lair, Crypt
+TAGS:    uniq
+MONS:    ice statue/orange crystal statue
 SHUFFLE: 1|/!*
-SUBST: *:*$, ?:x., !:., ?=w.
+SUBST:   *:*$, ?:x., !:., '=w.
+ITEM:    ring of teleportation / ring of levitation 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -68,32 +73,33 @@ xxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxx
 xxxxxxxxxxxxxwwwwwwxxxwwwwwxxxxxxxxxx
 xxxxxxxxxxxxwwwwwwxxxxxxwww.1xxxxxxxx
-xxxxxxxxxxxwwwwxxxxxxxxxxwww??xxxxxxx
-xxxxxxxxxwwwwwxxxxxxxxxxxwwww??xxxxxx
+xxxxxxxxxxxwwwwxxxxxxxxxxwwW??xxxxxxx
+xxxxxxxxxwwwwwxxxxxxxxxxxwwwW??xxxxxx
 xxxxxxxxwwwwxxxxxxxxxxxxxxww|||xxxxxx
-xxxxxxxxwwwxxxxxxxxxxxxxxxxw|||xxxxxx
+xxxxxxxxwwwxxxxxxxxxxxxxxxxw||dxxxxxx
 xxxxxxxwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxx
-wwwwwwwwwww??..................xxxxxx
-.?wwwwwww??....................xxxxxx
-..??wwww?......................xxxxxx
-.....?w........................xxxxxx
+wwwwwwwwwww''..................xxxxxx
+.'wwwwwww''....................xxxxxx
+..''wwww'......................xxxxxx
+.....'w........................xxxxxx
 ENDMAP
 
 #####################################
 # Dragon's cave
 #
-NAME: dragon1_lemuel
-ORIENT: northeast
-DEPTH: D:9-20, Lair
-MONS: dragon, ice dragon
-SUBST: ! : ?x
+NAME:    dragon1_lemuel
+ORIENT:  northeast
+DEPTH:   D:9-20, Lair
+TAGS:    uniq
+MONS:    dragon, ice dragon
+ITEM:    potion of levitation / scroll of teleportation
+SUBST:   ! : ?x
 SHUFFLE: 1?/2W
-SUBST: 2=2:20 1
-SUBST: ? : wl
-SUBST: * : $*|
-SUBST: W : w
+SUBST:   2=2:20 1
+SUBST:   ? : wl
+SUBST:   * : $*|
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -102,8 +108,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx!!!xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx..????.....xxxxxxxxx
-xxxxxxxxxxxxxxx....???...1.**xxxxxxxx
+xxxxxxxxxxxxxxxxx..????....dxxxxxxxxx
+xxxxxxxxxxxxxxx....???...1d**xxxxxxxx
 xxxxxxxxxxxxxx......???..$$**xxxxxxxx
 xxxxxxxxxxxx.........????$$!!xxxxxxxx
 xxxxxxxx.............??????!!!xxxxxxx
@@ -132,6 +138,7 @@ ENDMAP
 NAME:    Giant_Chief
 DEPTH:   D:11-22, Orc:2-4
 ORIENT:  north
+TAGS:    uniq
 MONS:    stone giant, frost giant, fire giant
 MONS:    hill giant, cyclops
 MONS:    w:50 ogre / w:5 ogre-mage / two-headed ogre
@@ -192,7 +199,8 @@ ENDMAP
 #
 NAME:    River_Lethe
 ORIENT:  encompass
-DEPTH:   D:16-27
+DEPTH:   D:16-26
+TAGS:    uniq
 SUBST:   + = +=
 SUBST:   . = .:100 !:1 6:4
 SUBST:   ; = .:200 !:1 1:3
@@ -208,6 +216,7 @@ MONS:    human simulacrum w:60/elf simulacrum/ogre simulacrum/centaur simulacrum
 MONS:    eye of draining/brain worm/death drake w:5/shadow/shadow dragon w:1
 KITEM:   A = potion of experience / any good_item
 KMONS:   A = Maud
+KFEAT:   A = rock staircase leading down
 KFEAT:   B = |
 KMONS:   B = neqoxec
 KFEAT:   C = b
@@ -295,6 +304,8 @@ ENDMAP
 
 NAME:    vault_1
 ORIENT:  north
+DEPTH:   D:16-26
+TAGS:    uniq
 MONS:    shapeshifter, shapeshifter, glowing shapeshifter
 MONS:    silver statue, nothing
 SUBST:   E=E.
@@ -350,12 +361,14 @@ ENDMAP
 ##############################################################################
 # A cell vault
 #
-NAME: cell_vault
-ORIENT: northwest
+NAME:    cell_vault
+ORIENT:  northwest
+DEPTH:   D:16-26
+TAGS:    uniq
 SHUFFLE: 890
-KITEM: 8 = | / nothing w:50
-KITEM: 9 = * / nothing w:50
-KITEM: 0 = % / nothing w:50
+KITEM:   8 = | / nothing w:50
+KITEM:   9 = * / nothing w:50
+KITEM:   0 = % / nothing w:50
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -398,7 +411,9 @@ ENDMAP
 ##############################################################################
 # A little maze vault
 #
-NAME: little_maze_vault
+NAME:   little_maze_vault
+TAGS:   uniq
+DEPTH:  D:16-26
 ORIENT: northeast
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -442,9 +457,11 @@ ENDMAP
 ##############################################################################
 # thingy vault.
 #
-NAME: thingy_vault
+NAME:   thingy_vault
+TAGS:   uniq
+DEPTH:  D:12-26
 ORIENT: southwest
-FLAGS: no_rotate
+FLAGS:  no_rotate
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx^xxxxxxxxxxxxxx
@@ -485,9 +502,11 @@ ENDMAP
 ##############################################################################
 # hourglass vault.
 #
-NAME: hourglass_vault
+NAME:   hourglass_vault
 ORIENT: southeast
-FLAGS: no_rotate
+DEPTH:  D:12-26
+TAGS:   uniq
+FLAGS:  no_rotate
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx.................xxxxxxxxxxxxxxxxx
@@ -528,8 +547,10 @@ ENDMAP
 ##########################################################################
 # A more Angbandy vault
 #
-NAME: Angbandy_vault
+NAME:   Angbandy_vault
 ORIENT: northeast
+DEPTH:  D:16-26
+TAGS:   uniq
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -572,7 +593,9 @@ ENDMAP
 ############################################################################
 # four-leaf vault
 #
-NAME: four-leaf_vault
+NAME:   four-leaf_vault
+TAGS:   uniq
+DEPTH:  D:12-26
 ORIENT: northwest
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -616,7 +639,9 @@ ENDMAP
 ############################################################################
 # Cross-vault
 #
-NAME: cross_vault
+NAME:   cross_vault
+TAGS:   uniq
+DEPTH:  D:12-26
 ORIENT: northwest
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -661,6 +686,8 @@ ENDMAP
 # Another thingy vault
 #
 NAME:   thingy_vault_2
+TAGS:   uniq
+DEPTH:  D:14-26
 ORIENT: southeast
 SUBST:  ' = ^ .:50
 MONS:   orange crystal statue
@@ -704,7 +731,9 @@ ENDMAP
 ############################################################################
 # Impenetrable vault
 #
-NAME: impenetrable_vault
+NAME:   impenetrable_vault
+DEPTH:  D:16-26
+TAGS:   uniq
 ORIENT: southeast
 MAP
 ..............@................xxxxxxxxx
@@ -746,12 +775,13 @@ ENDMAP
 #########################################################################
 # Orc temple
 #
-NAME: orc_temple
+NAME:   orc_temple
 ORIENT: southwest
-FLAGS: no_rotate
-MONS: orc warlord, orc priest, orc high priest, orc warrior, orc wizard
-MONS: orc knight, orc sorcerer
-KFEAT: C = altar of Beogh
+FLAGS:  no_rotate
+DEPTH:  D:14-26, Orc
+MONS:   orc warlord, orc priest, orc high priest, orc warrior, orc wizard
+MONS:   orc knight, orc sorcerer
+KFEAT:  C = altar of Beogh
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
@@ -793,12 +823,12 @@ ENDMAP
 #############################################################################
 # Matthew Ludivico
 #
-NAME: mludivico_vault
+NAME:   mludivico_vault
 ORIENT: southwest
-# The hell hounds can be deadly at lower levels.
-DEPTH: D:18-27
-MONS: hell hound, necromancer, wizard, orange demon, rotting devil
-MONS: hell knight, great orb of eyes
+DEPTH:  D:18-27
+TAGS:   uniq
+MONS:   hell hound, necromancer, wizard, orange demon, rotting devil
+MONS:   hell knight, great orb of eyes
 MAP
 xxxxxxx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -835,95 +865,15 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
-###########################################################################
-# Farm and country (Matthew Ludivico)
-#
-NAME: farm_and_country
-ORIENT: encompass
-DEPTH: D:16-27
-MONS: death yak, plant, griffon, killer bee, ogre, oklob plant
-MONS: wandering mushroom
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx..........................................xxxxxxxx}.xxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx............xxxxxx....xxx.......xx...........xxxx..]xxxxxxxxx
-xxxxxxxxxxxxxxx***x...........xxx..xxx............xxxx...........xx..xxxxxxxxxxx
-xxxxxxxxxxxxxxx|*$=...xx.xxxxxxx....xxxxxxxxxx......xx................xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx....xxxxxxxx......3..xxx.................x..........xxxxxxxxx
-xxxxxxxxxxxxxxxxxx......x........x......xx.........w...................xxxxxxxxx
-xxxxxxxxxxx)......xx...xxx.....xxx......x........www3....3.............xxxxxxxxx
-xxxxxxxxxxxx=xxxxxxxxxxx...xxxxxxxxx..xxx.....wwwww....%%%.............xxxxxxxxx
-xxxxxxxxxx......xxx.......xx.xxxx.x...xxxxxxxwwwwwww..5%%%..........xx.xxxxxxxxx
-xxxxxxxxx.........x..xxxxxxxx.....x........3wwwwwwwww..%%%........xxx..xxxxxxxxx
-xxxxxxxxx....5...xx..x.xxxxx.....xxx........wwwwwwwww..%%%..........xx.xxxxxxxxx
-xxxxxxxxxxx.....xxx..xx..xx........xxxxxxxxxwwwwwwwww..............xxx.xxxxxxxxx
-xxxxxxxxxx........x..x...............xx..xxxxwwwwwwwwwwwwww............xxxxxxxxx
-xxxxxxxxx.............................x.....xxwwwwww3wwwwww............xxxxxxxxx
-xxxxxxxxxxx...x...........5.....7...............ww.......ww.....44....xxxxxxxxxx
-xxxxxxxxxwxx..xx.....622...2.26...6.2...22.6...62..2..226ww.....44xx...xxxxxxxxx
-xxxxxxxxxwwxxxx......2....2.22....2..2...2.2.......22...2ww....xxxx..xxxxxxxxxxx
-xxxxxxxxxwwwwxxx......2...2.2.2...2.22..2.22...22.2.2..22ww.....xxx....xxxxxxxxx
-xxxxxxxxxwwwwwx....4..2...2...........22...277..2..2.2.22ww...........xxxxxxxxxx
-xxxxxxxxxwwwwwxx....42..2....22.4..2..2...2.4..2.22..22.2ww............xxxxxxxxx
-xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwwwwwww..2.........xxxxxxxxx
-xxxxxxxxxwwwwwxx.....62....2.26...62.2.2..26...6...22..26..............xxxxxxxxx
-xxxxxxxxxwwwww.........................................................xxxxxxxxx
-xxxxxxxxxwwwwwxx....222.2.22..2.7.......7..............................xxxxxxxxx
-xxxxxxxxxwwwww...........ccccccc+ccccccc...ccc......cc+ccc...xxxxx.....xxxxxxxxx
-xxxxxxxxxwwwwwxx.........c$$*.c$$5$+.5.c...+5c......c%%%%c......xxx3...xxxxxxxxx
-xxxxxxxxxwwwwwx....2.....c$.c+cccccc.%.c...ccc......c%%%%c....xxxxx....xxxxxxxxx
-xxxxxxxxxwwwwwx..........c..c..........c............cccccc......xxx....xxxxxxxxx
-xxxxxxxxxwwxxxxxxx.......ccccc+ccccccccc.........................xx....xxxxxxxxx
-xxxxxxxxxwxx.....xxxx........c...c.................2...................xxxxxxxxx
-xxxxxxxxxxx.........xxxx...........2....xxxx...........................xxxxxxxxx
-xxxxxxxxx..............xxxx..........xxxx..x...........................xxxxxxxxx
-xxxxxxxxx.................xxxxx++xxxxx.....xx............xx...x........xxxxxxxxx
-xxxxxxxxx.....................c..c..........xxxxx..........xxxxx.......xxxxxxxxx
-xxxxxxxxx.......cccc..........c..c...cccc......xxx...........x.........xxxxxxxxx
-xxxxxxxxx.......c..c..........c++c...c..c........xxx.........x.........xxxxxxxxx
-xxxxxxxxx.......c..c..........c..c...c..c..........xxx.................xxxxxxxxx
-xxxxxxxxx....cccc++cccccccccccc++ccccc..ccccccc......xxx...............xxxxxxxxx
-xxxxxxxxx....c..........1.....................c........xxx.............xxxxxxxxx
-xxxxxxxxx.cccc.....w....w....%1.....w.....%...c..........xxx...........xxxxxxxxx
-xxxxxxxxx.c1.+....www..www..%%%....www...%%%1.c...........xxxxxxxxx....xxxxxxxxx
-xxxxxxxxx.cccc.....w....w....%......w.....%...c..................xxx...xxxxxxxxx
-xxxxxxxxx....c.......5........................c....................xxxxxxxxxxxxx
-xxxxxxxxx....ccc....%%%%%....cccccccccccccccccc........................xxxxxxxxx
-xxxxxxxxx......cc...........cc.........................................xxxxxxxxx
-xxxxxxxxx.......cccccc+cccccc..........................................xxxxxxxxx
-xxxxxxxxx........cc.......cc...........................................xxxxxxxxx
-xxxxxxxxx.........cc.....cc.....................cccccccccccccccccccccccxxxxxxxxx
-xxxxxxxxx..........ccc+ccc......................c......vvv.............xxxxxxxxx
-xxxxxxxxx..........ccc.c........................c......v5+...vvvvv.....xxxxxxxxx
-xxxxxxxxx..........ccc.c........................c......vvv...v.5.v.....xxxxxxxxx
-xxxxxxxxxccccccccccccc.ccc......................c............v..5v.....xxxxxxxxx
-xxxxxxxxx..........c.....cccccccccccccccccccccccccccc..........vv+vv...xxxxxxxxx
-xxxxxxxxx..........c............................+................5111..xxxxxxxxx
-xxxxxxxxx..........c.{([.c......................+................5.....xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-
 #############################################################################
 # Fort Yaktaur (Matthew Ludivico)
 #
-NAME: fort_yaktaur
+NAME:   fort_yaktaur
 ORIENT: southeast
-MONS: yaktaur, death yak, minotaur, random
-MONS: yak, gnoll, random
+DEPTH:  D:14-26
+TAGS:   uniq
+MONS:   yaktaur, death yak, minotaur, random
+MONS:   yak, gnoll, random
 MAP
 .........@....wwwwwwwwwwwwwwwwwxxxxxxxxx
 .ccccc.......ww....wwww....wwwwxxxxxxxxx
@@ -968,7 +918,7 @@ ENDMAP
 NAME:    box_level_dp
 DEPTH:   D:20-26
 ORIENT:  encompass
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup uniq
 SHUFFLE: ABCD, EFGH, IJKL, MNOP, RS, zZ
 SUBST:   A==, B=b, C=b, D=b, E==, F=b, G=b, H=b
 SUBST:   I==, J=b, K=b, L=b, M==, N=b, O=b, P=b
@@ -1076,7 +1026,7 @@ ENDMAP
 NAME:    cascading_oklobs
 ORIENT:  east
 FLAGS:   no_rotate
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen uniq
 DEPTH:   D:16-27
 MONS:    oklob plant
 MONS:    plant / oklob plant w:1
@@ -1186,7 +1136,7 @@ NAME:    erik_rubicon_a
 DEPTH:   D:10-16
 ORIENT:  south
 FLAGS:   no_rotate
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup uniq
 CHANCE:  6
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
 ITEM:    nothing, nothing, nothing
@@ -1221,6 +1171,7 @@ ENDMAP
 NAME:    erik_rubicon_b
 DEPTH:   D:10-16
 ORIENT:  south
+TAGS:    uniq
 FLAGS:   no_rotate
 CHANCE:  4
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation

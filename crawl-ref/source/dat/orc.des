@@ -225,13 +225,13 @@ MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
-.ww2ccccccccccccccccccccccww.
+.ww2=cccccccccccccccccccccww.
 .ww.c.......3.3.3......w2cww.
 .wwxx........3.3.......cccww.
 .122........3.I.3.....G4Ocww.
 .wwxx........3.3.......cccww.
 .ww.c.......3.3.3......w2cww.
-.ww2ccccccccccccccccccccccww.
+.ww2=cccccccccccccccccccccww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .............................
@@ -278,11 +278,11 @@ TAGS: orc_entry
 MONS: human/goblin/hobgoblin/weight:2 orc, orc priest, orc
 MONS: orc priest/orc wizard/weight:2 goblin/nothing, orc warrior/warg
 ORIENT: float
-SUBST: ? : c:20 .
-SUBST: Z : c:20 .
-SUBST: X : c:20 .
-SUBST: v : c:20 .
-SUBST: b : c:20 .
+SUBST: ? : c:60 .
+SUBST: Z : c:60 .
+SUBST: X : c:60 .
+SUBST: v : c:60 .
+SUBST: b : c:60 .
 KITEM: 2 = knife
 #
 MAP
@@ -515,7 +515,7 @@ SUBST: ? = x.
 MAP
 ..........
 ..?x=x?...
-.?xx-xx?..
+.?xx.xx?..
 ?xx$$$xx?.
 ?xx$$$xx?.
 .?xxxxx?..

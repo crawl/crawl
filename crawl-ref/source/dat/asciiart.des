@@ -461,8 +461,6 @@ TAGS: entry
 ORIENT: float
 FLAGS: no_rotate
 SHUFFLE: {[(
-# I am worried about getting ported into the 2x2 closet   
-# IF we replace G with c, we could place a secret door
 MAP
 xxxxxxxxxxxvvvvvvvvvvvvxxxxxxxxxx
 xxxxxxvvvvv...........vvvxxxxxxxx
@@ -524,3 +522,153 @@ b...(bxxx........................
 b...{bxxx...............xxxx.....
 bb.bbbxxxxxxxxxxxxxx.xxxxxxx.....
 ENDMAP
+
+##############################################################################
+# 27 #1
+
+NAME: erik_entry_006
+TAGS: entry
+ORIENT: float
+ITEM: stone
+SHUFFLE: ab
+MAP
+bbbbbbbbbbbbbbbbbbbb
+b{[................b
+b(.................b
+b..a...............b
+b..................b
+b....aa............b
+b....a.............b
+b......aaa.........b
+b......aaa.........b
+b......aaa.........b
+b..................b
+b..........aaa.aaa.b
+b..........aaa.aaa.b
+b..........aaa.aaa.b
+b..................b
+b..........aaa.....b
+b..........aaa.....b
+b..........aaa...d.b
+b...................
+bbbbbbbbbbbbbbbbbb.@
+ENDMAP
+
+##############################################################################
+# 27 #2
+
+NAME: erik_entry_007
+TAGS: entry
+ORIENT: float
+ITEM: stone
+SHUFFLE: bx
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbb
+b.........................b
+b.........................b
+b.........................b
+b...>...[{(...ccccccccc...b
+b.........................b
+b.........................b
+b.........................b
+bbbbbbbbbbbbbbbbb...bbbbbbb
+b...................b
+b...................b
+b...................b
+b...c.ccc.ccc.ccc...b
+b...c.c.c.c.c.c.c...b
+b...ccc.ccc.ccc.c...b
+b...................b
+b....d..............b
+b...................b
+bbbb.@.bbbbbbbbbbbbbb
+ENDMAP
+
+##############################################################################
+# 27 #3
+
+NAME: erik_entry_008
+TAGS: entry no_monster_gen
+# no pillars for dancing, so no_monster_gen
+ORIENT: float
+ITEM: stone
+MAP
+      cccccccccccccccccccccc
+      cbbbbb.c...c.........c
+      cb[{(+.+...+.........c
+      cbbbbb.c...c.........c
+cccccccccccccccccccccc+ccccc
+c..........................c
+c.d........................c
+c..........................c
+c.@.cccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Ramanujan
+
+NAME: erik_entry_009
+TAGS: entry
+ORIENT: float
+SUBST: c : cxxx
+MAP
+ccccccccccccccccccccccccccccccccc
+c([x............................c
+c{.x............................c
+cxx+............................c
+c......x.xxxxxxx.xx.xxxxxxxxx...c
+c...............................c
+c...............................c
+c...x.xxxxxxxxxxxx..............c
+c...............................c
+c...............................c
+c...xxxxxxxxx.xxxxxxxxxx........c
+c...............................c
+c...............................c
+c................................
+ccccccccccccccccccccccccccccccc.@
+ENDMAP
+
+##############################################################################
+# Kangaroo Pocket Calculator
+
+NAME: erik_entry_010
+TAGS: entry no_monster_gen
+ORIENT: float
+SHUFFLE: bc
+MAP
+bbbccccccccccccccccccccccccccccccccccccccccccccc
+b[b........................................+..+.
+b{+........................................+..+@
+b(b........................................+..+.
+bbbccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Kaf Zayin
+
+# with my luck, this will be something horribly offensive
+NAME: erik_entry_011
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+SHUFFLE: cx
+MAP
+cccccccccccccccc@@cccccccccccccccccc
+c..................................c
+c...x...............xx.............c
+c..xxxxxx..........xxxxxxxx........c
+c.xxxxxxxx.........xxxxxxxxxxx.....c
+c..xxxxxxxx.........xxxxxxxxxxxx...c
+c.....xxxx..............xxxxxxxxx..c
+@......xx........[<..........xxxxx.@
+@......xxx.......({............xxx.@
+c.......xxx.....................xx.c
+c.......xxx.....................xx.c
+c........xxx...........xxxxxxxxxxx.c
+c........xxx..........xxxxxxxxxxx..c
+c.........xx.........xxxxxxxxxxx...c
+c..................................c
+cccccccccccccccc@@cccccccccccccccccc
+ENDMAP
+

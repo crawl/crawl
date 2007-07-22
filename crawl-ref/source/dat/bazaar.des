@@ -44,16 +44,54 @@ w.w.w
 ENDMAP
 
 ###############################################################################
+# Some coins to shop with.
+NAME: bzr_entry_002
+TAGS: bzr_entry 
+ORIENT: float
+SUBST: $=$.
+: check_expire_marker(_G)
+MAP
+xx.xx
+x$$$x
+.$O$.
+x$$$x
+xx.xx
+ENDMAP
+
+###############################################################################
+# Many customers
+NAME:    bzr_entry_003
+TAGS:    bzr_entry 
+ORIENT:  float
+MONS:    human, orc, goblin, kobold
+SUBST:   . = .:210 1
+SHUFFLE: 1234
+: check_expire_marker(_G)
+MAP
+ .....
+.......
+...O...
+.......
+ .....
+ENDMAP
+
+###############################################################################
 # Bazaar layouts.
 #
 # "encompass" levels are recommended, and can be as small or large as you like.
 # No monsters are pre-placed in bazaars, and monsters do not spawn in bazaars,
 # but you can place monsters in your maps if you know what you're doing.
+#
+# Every encompass bazaar level must have at least one downstair, which will be
+# replaced with an exit from the bazaar. It's a good idea to also provide an
+# upstair, which will be converted into a stone arch (and on which the player
+# will be placed when entering the bazaar).
 
-NAME: bazaar_001
-TAGS: bazaar
+NAME:   bazaar_general_marketplace
+TAGS:   bazaar
 ORIENT: encompass
-KFEAT: A = any shop
+KFEAT:  A = any shop
+CHANCE: 30
 MAP
 xxxxxxxxx
 xxxx>xxxx
@@ -64,4 +102,62 @@ xx..A..xx
 xxx...xxx
 xxxx>xxxx
 xxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_outfitter
+TAGS:    bazaar
+ORIENT:  encompass
+KFEAT:   A = any shop
+SHUFFLE: ABC, de, xcv
+KFEAT:   A = weapon shop / armour shop
+KFEAT:   B = antique weapon shop / weapon shop
+KFEAT:   C = antique armour shop / armour shop
+ITEM:    any weapon / w:2 good_item any weapon
+ITEM:    any armour / w:2 good_item any armour
+MAP
+xxxxxxxxx
+xxxx>xxxx
+xx.....xx
+x.......x
+x.AdBeC.x
+x.......x
+xx.....xx
+xxxx<xxxx     
+xxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_mystics
+TAGS:    bazaar 
+ORIENT:  encompass
+SHUFFLE: AB, def, xw/vl
+KFEAT:   A = scroll shop / book shop / book shop
+KFEAT:   B = jewellery shop
+ITEM:    any jewelry / good_item any jewelry
+ITEM:    any book / good_item any book, any staff 
+SUBST:   w:w.l, x:b, c:., v=bl, d=.d, e=.e, f=.f
+MAP
+xxxxxxxxxxxxx
+xxxxxxxwwwxxx
+xxxwwx....Axx
+x<...+.def.>x
+xxxwwx....Bxx
+xxxxxxxwwwxxx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_wands
+TAGS:    bazaar 
+ORIENT:  encompass
+KFEAT:   A = wand shop
+ITEM:    any wand
+MAP
+xxxxxxxxxxx
+xx...>...xx
+x..A...A..x
+x.........x
+xllll.llllx
+x....>....x
+x..d...d..x
+xx...<...xx
+xxxxxxxxxxx
 ENDMAP

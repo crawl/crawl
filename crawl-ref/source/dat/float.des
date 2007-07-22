@@ -37,7 +37,7 @@ ENDMAP
 #
 NAME: erik_1
 ORIENT: float
-TAGS: no_monster_gen
+TAGS: no_monster_gen uniq
 DEPTH: D:7-11, Lair
 #
 SHUFFLE: rR/sS/uU/vV/wW/yY/zZ, uU/nN
@@ -78,13 +78,14 @@ ENDMAP
 # Sometimes You Just Gotta Run
 # Moved deeper and minor changes.
 #
-NAME: erik_ogre
-DEPTH: D:6-10
-ORIENT: float
+NAME:    erik_ogre
+DEPTH:   D:6-10
+TAGS:    uniq
+ORIENT:  float
 SHUFFLE: 1X / 1X / 2l / 3Y
-SUBST: X=x, Y:x.
-MONS: ogre, iron devil, nothing
-ITEM: potion of heal wounds / speed / berserk rage / scroll of blinking
+SUBST:   X=x, Y:x.
+MONS:    ogre, iron devil, nothing
+ITEM:    potion of heal wounds / speed / berserk rage / scroll of blinking
 MAP
         xx@xx
         x...x
@@ -116,10 +117,10 @@ ENDMAP
 # The slime creature or amoeba may seem too tough for the level where this appears,
 # but since they are normal speed with no range attacks, they can be escaped
 #
-NAME: slime_lemuel
-DEPTH: D:6-16, Lair
+NAME:   slime_lemuel
+DEPTH:  D:6-16, Lair
 ORIENT: float
-MONS: w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
+MONS:   w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
 MAP
 xxxxxxxxxx
 xxxx111xxx
@@ -136,15 +137,17 @@ ENDMAP
 #
 NAME: shooting_gallery_Lemuel
 ORIENT: float
-TAGS: no_pool_fixup no_monster_gen
+TAGS: no_pool_fixup no_monster_gen uniq
 ITEM: potion of levitation q:2
 : if you.absdepth() <= 16 then
-MONS: orc wizard / centaur / jackal / killer bee larva / giant lizard / kobold / giant mite / grey rat / green rat / orange rat
-MONS: deep elf priest / orc high priest / cyclops / orc priest / jelly / ogre / troll / yak / orc warrior / sheep / hog
+MONS: orc wizard/centaur/jackal/killer bee larva/giant lizard/kobold/giant mite/grey rat/green rat/orange rat
+MONS: deep elf priest/orc high priest/cyclops/orc priest/jelly/ogre/troll/yak/orc warrior/sheep/hog
 : elseif you.absdepth() >= 17 then
-MONS: deep elf priest / orc high priest / cyclops / yaktaur / slime creature / yak / wyvern / big kobold / toenail golem
-MONS: yaktaur captain / manticore / deep elf high priest / orc sorcerer / ogre-mage / ugly thing / unseen horror / wandering mushroom
+MONS: deep elf priest/orc high priest/cyclops/yaktaur/slime creature/yak/wyvern/big kobold/toenail golem
+MONS: yaktaur captain/manticore/deep elf high priest/orc sorcerer/ogre-mage/ugly thing/unseen horror
 : end
+KFEAT: $ = >
+KFEAT: * = <
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxcc
@@ -155,19 +158,20 @@ ccww1www1www1www1www1www1www1www1www1www1wwcc
 cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
 cc.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.cc
 cx.........................................xc
-cc....................d....................cc
-cx.........................................xc
+cc.........................................cc
+cx.........d..........d..........d.........xc
 cc.........................................cc
 ENDMAP
 
 ##############################################################################
 # Beware the mummy's curse (Lemuel)
 #
-NAME: MiniTomb
-ORIENT: float
-DEPTH: D:15-26
-MONS: large zombie / nothing, mummy, guardian mummy, greater mummy, large zombie
-MONS: mummy / nothing
+NAME:    MiniTomb
+ORIENT:  float
+DEPTH:   D:15-26
+TAGS:    uniq
+MONS:    large zombie/nothing, mummy, guardian mummy, greater mummy, large zombie
+MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -191,7 +195,7 @@ ENDMAP
 NAME:   insect_pit
 FLAGS:  no_rotate
 ORIENT: float
-DEPTH:  D:5-12, Elf
+DEPTH:  D:5-12, Elf, Vault
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   giant beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30 / giant mosquito
@@ -215,11 +219,11 @@ ENDMAP
 #
 # possibility to script the trolls guard the bridge would be great here -evk
 #
-NAME: troll_bridge
-DEPTH: D:7-15
+NAME:   troll_bridge
+DEPTH:  D:7-15
 ORIENT: float
-TAGS: no_pool_fixup
-MONS: troll w:50 / rock troll / iron troll w:5
+TAGS:   no_pool_fixup uniq
+MONS:   troll w:50 / rock troll / iron troll w:5
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx
@@ -248,26 +252,71 @@ ORIENT:  float
 SUBST:   * : *$
 SUBST:   * = |:5 * .
 SUBST:   T = TU
-SHUFFLE: xb/cc
+SHUFFLE: xb/cc, ABC
+: if crawl.coinflip() then
+KFEAT:   X = rock staircase leading up / rock staircase leading down
+KITEM:   X = any good_item
+: else
+SUBST:   X=*, B=., C=.
+KFEAT:   A = teleport trap
+: end
 MAP
-xxxxxxxxx
-xbbbbbbbx
-xb*****bx
-xb*****bx
-xb.....bx
-xb.....bx
-xb.....bx
-xb.....bx
-xbwwwwwbx
-xbww1wwbx
-xbwwwwwbx
-xb.....bx
-xb.....bx
-xb.....bx
-xb.....bx
-xb.....bx
-xbT.@.Tbx
+xxxxxxxxxxxxxxxxx
+xbbbbbbbbbbbbbbbb
+xb**....www.....T
+xb**..A.www......
+xbX*..B.w1w.....@
+xb**..C.www......
+xb**....www.....T
+xbbbbbbbbbbbbbbbb
+xxxxxxxxxxxxxxxxx
 ENDMAP
+
+##################################
+# Vampire Tower by Lemuel Pitkin
+#
+NAME:    vampire
+ORIENT:  float
+TAGS:    uniq
+DEPTH:   D:12-27, Vault, Crypt
+MONS:    rat/grey rat/w:6 green rat/w:3 orange rat/w:20 giant bat
+MONS:    flying skull, human zombie
+MONS:    vampire, vampire mage, vampire knight
+KITEM:   > = any good_item
+KFEAT:   ; = altar of Yredelemnul/altar of Kikubaaqudgha
+SHUFFLE: defg
+SHUFFLE: *s/!?
+SUBST:   d = =, e = x, f = x, g = x
+SUBST:   s = =, ! = x, ? = x
+SUBST:   1 = 1 .:20
+SUBST:   1 : 1:30 2
+SUBST:   + = +=
+SUBST:   w:w.
+MAP
+F..wwwwwwwwwwwwwwwww..F
+..wwwwwwwwwwwwwwwwwww..
+.www111xxxx+xxxx111www.
+www111xxx22322xxx111www
+ww111xx.+23432+.xx111ww
+ww11dx..ccccccc..xe11ww
+ww1xx..ccc|>|ccc..xx1ww
+wwxx..ccccc6ccccc..xxww
+wwx..ccc33+4+33ccc..xww
+wwx.ccccccc+ccccccc.xww
+wwx.c***x.....x???c4xww
+wwx.c***s..5..!???c.xww
+wwx4cc**x4.;.4x??cc.xww
+wwx..ccxx.....xxcc..xww
+wwxx..ccx..4..xcc..xxww
+ww1xx..cc.....cc..xx1ww
+ww11fx..ccc.ccc..xg11ww
+ww111xx..cc+cc..xx111ww
+www111xx..333..xx111www
+.www111xxxxxxxxx111www.
+..wwwwwwwwwwwwwwwwwww..
+F..wwwwwwwwwwwwwwwww..F
+ENDMAP
+
 
 #############################################################################
 # Oklob gauntlet
@@ -328,7 +377,7 @@ ENDMAP
 # island version for shoal in lair.des -evk
 #
 NAME: onia_ninara_012_swampy_vault
-TAGS: no_pool_fixup no_monster_gen
+TAGS: no_pool_fixup no_monster_gen uniq_swamp_vault
 ORIENT: float
 SHUFFLE: AB@
 SUBST: A : x, B : x

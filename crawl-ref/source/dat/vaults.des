@@ -143,7 +143,7 @@ NAME: erik_vaults_1
 TAGS: vault_entry
 MONS: dancing weapon
 ORIENT: float
-SHUFFLE: vc 
+SHUFFLE: vcxxx 
 MAP
 .............
 .............
@@ -163,7 +163,7 @@ NAME: erik_vaults_2
 TAGS: vault_entry
 MONS: vault guard
 ORIENT: float
-SHUFFLE: vx
+SHUFFLE: vxxx, bcc
 MAP
 vvvvvv.vvvvvv
 vvvvvv.vvvvvv

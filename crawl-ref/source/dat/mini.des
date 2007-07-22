@@ -76,6 +76,7 @@ ENDMAP
 # No loot but the elves' gear, but at the depth this appears that may be good
 #
 NAME:    elves_outpost_lemuel
+TAGS:    uniq
 DEPTH:   D:8-20, Orc:*
 MONS:    deep elf soldier/w:4 deep elf fighter
 MONS:    w:20 deep elf mage/deep elf conjurer/deep elf summoner
@@ -87,7 +88,7 @@ MAP
 ?;;::;;;;;;.
 ?;;bbbbbb:;.
 .:;b1111b:;.
-.:;.1221.;:.
+.:;.1221>;:.
 .;:b1111b;:.
 .;:bbbbbb;;?
 .;;;;;;::;;?
@@ -99,7 +100,7 @@ ENDMAP
 # Centaur isle (Lemuel)
 #
 NAME: centaur_isle
-TAGS: no_monster_gen no_pool_fixup
+TAGS: no_monster_gen no_pool_fixup uniq
 SUBST: ? = *$
 DEPTH: D:6-12
 MONS: centaur
@@ -127,19 +128,22 @@ ENDMAP
 #
 NAME:  ice2_lemuel
 DEPTH: D:12-27, Lair, Swamp, Coc
-TAGS:  no_pool_fixup no_monster_gen
+TAGS:  no_pool_fixup no_monster_gen uniq
 SUBST: T = TU
 SUBST: W = w:20 W .:5
 MONS:  ice statue
 MONS:  ice devil w:5/blue devil w:5/ice dragon/freezing wraith/nothing w:30
 MONS:  white imp/ice beast w:30/polar bear/nothing w:50
+MONS:  white imp/ice beast w:30/polar bear/nothing w:50
+KFEAT: 2 = rock staircase leading down
+KFEAT: 4 = rock staircase leading down
 MAP
 T..................T
 ..WWW..........WWW..
 .WWWWW........WWWWW.
 WWWWWWwww..wwwWWWWWW
 WWW3WwwwwwwwwwwW3WWW
-WW333wwwwwwwwww333WW
+WW343wwwwwwwwww343WW
 .WW3WwwwwwwwwwwW3WW.
 .WWWWwwwwwwwwwwWWWW.
 ..WWWwww||||wwwWWW..
@@ -147,7 +151,7 @@ WW333wwwwwwwwww333WW
 ..WWWwww||||wwwWWW..
 .WWWWwwwwwwwwwwWWWW.
 .WW3WwwwwwwwwwwW3WW.
-WW333wwwwwwwwww333WW
+WW343wwwwwwwwww343WW
 WWW3WwwwwwwwwwwW3WWW
 WWWWWWwww..wwwWWWWWW
 .WWWWW........WWWWW.
@@ -210,9 +214,10 @@ ENDMAP
 # Closed beehive
 #
 # Should work without explicit floor margin (dp)
-NAME: hive_lemuel
+NAME:  hive_lemuel
 DEPTH: D:9-27,Hive:*,Lair:*,Swamp:*
-MONS: killer bee, yellow wasp, red wasp, spiny worm, killer bee zombie
+TAGS:  uniq
+MONS:  killer bee, yellow wasp, red wasp, spiny worm, killer bee zombie
 SUBST: ? : .w
 SUBST: 1 = 1 a:2
 SUBST: 1 : 1:15 2 3:2 4:1 5:2
@@ -247,7 +252,7 @@ MAP
 ..;wwwwwwww;..
 .;wwww..wwww;.
 .;www.1.1www;.
-.www.1.1.1www.
+.www.1>1.1www.
 .;www.1.1www;.
 .;wwww..wwww;.
 ..;wwwwwwww;..
@@ -259,6 +264,7 @@ ENDMAP
 # My mission is to annoy. -LP
 #
 NAME: jelly_drop
+TAGS: uniq
 MONS: jelly
 KFEAT: a = teleport trap
 DEPTH: D:8-27, Vault:*, Slime:*, Lair:*
@@ -283,7 +289,8 @@ ENDMAP
 # those boots of levitation?
 #
 NAME: water_maze_lemuel
-TAGS: no_pool_fixup
+TAGS: no_pool_fixup uniq_water_maze_lemuel
+ITEM: ring of levitation / ring of teleportation
 DEPTH: 5-27
 MAP
    wwwwwwwww
@@ -293,7 +300,7 @@ wwccwwcccwwccww
 wccwwccwccwwccw
 wcwwccwwwccwwcw
 wcwcc*wcwwccwcw
-wcwc***ccwwcwcw
+wcwc*d*ccwwcwcw
 wcwcc*ccwwccwcw
 wcwwcccwwccwwcw
 wccwwccwccwwccw
@@ -304,9 +311,10 @@ wwccwwcwcwwccww
 ENDMAP
 
 NAME: water_boxes_lemuel
-TAGS: no_pool_fixup
+TAGS: no_pool_fixup uniq_water_maze_lemuel
 DEPTH: 5-27
 SHUFFLE: abcd, efgh, ijkl, mnop
+KMONS: * = fungus
 SUBST: a = =, b = x, c = x, d = x
 SUBST: e = =, f = x, g = x, h = x
 SUBST: i = =, j = x, k = x, l = x
@@ -332,7 +340,7 @@ ENDMAP
 NAME: aerie
 DEPTH: 12-26
 MONS: insubstantial wisp, ball lightning, vapour, air elemental
-TAGS: no_monster_gen
+TAGS: no_monster_gen uniq
 SUBST: .:..w
 SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3
 MAP
@@ -420,18 +428,19 @@ ENDMAP
 ###################################
 
 NAME: minivault_2
+SHUFFLE: cvxx
 MAP
-............
-..xxxx.xxxx.
-..xx.....xx.
-..x.......x.
-..x.......x.
-......C.....
-..x.......x.
-..x.......x.
-..xx.....xx.
-..xxxx.xxxx.
-............
+...........
+.xxxx.xxxx.
+.xx.....xx.
+.x.......x.
+.x.......x.
+.....C.....
+.x.......x.
+.x.......x.
+.xx.....xx.
+.xxxx.xxxx.
+...........
 ENDMAP
 
 ###################################
@@ -552,7 +561,7 @@ ENDMAP
 # Evil zoo
 #
 NAME: minivault_9
-DEPTH: 15-27, !Orc, !Lair, !Swamp, !Shoal
+DEPTH: 15-27
 MAP
 ............
 .==========.
@@ -608,9 +617,6 @@ ENDMAP
 
 ###################################
 # Closed-box minivault
-#
-# Due to the new behaviour of brown stairs, this one is broken
-# (or at least working differently from how it was intended!)
 #
 NAME: minivault_12
 MAP
@@ -680,18 +686,17 @@ ENDMAP
 #
 NAME: minivault_15
 MONS: silver statue / ice statue
+KFEAT: 1 = <
 MAP
-...........
-...........
-....lll....
-...vvlvv...
-..lv|*|vl..
-..ll*1*ll..
-..lv|*|vl..
-...vvlvv...
-....lll....
-...........
-...........
+.........
+...lll...
+..vvlvv..
+.lv|*|vl.
+.ll*1*ll.
+.lv|*|vl.
+..vvlvv..
+...lll...
+.........
 ENDMAP
 
 ###################################
@@ -1162,12 +1167,11 @@ ENDMAP
 #
 NAME:    onia_ninara_009_dug_in_and_dangerous
 DEPTH:   8-26, !Swamp
-SHUFFLE: vcb, AB?/CD!
+SHUFFLE: vcb, AB?/CD!, d<>
 SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 ITEM:    wand of digging/wand of disintegration/ring of teleportation/stone of earth elementals
-# if brown stairs work again, d could be replaced by brown <> occasionally
 MAP
 ...........
 .vvGvvvGvv.
@@ -1274,7 +1278,7 @@ xcccccxxx
 ENDMAP
 
 NAME:    small_statue_alley_c
-DEPTH:   D:6-12
+DEPTH:   D:6-12, Orc
 CHANCE:  1
 MAP
 xxxcccccx
