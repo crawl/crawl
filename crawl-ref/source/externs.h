@@ -1535,6 +1535,17 @@ private:
     void set_comparators(std::string &s);
 };
 
+struct mon_display
+{
+    monster_type type;
+    unsigned     glyph;
+    unsigned     colour;
+
+    mon_display(monster_type m = MONS_PROGRAM_BUG,
+                unsigned gly = 0,
+                unsigned col = 0) : type(m), glyph(gly), colour(col) { }
+};
+
 class InitLineInput;
 struct game_options 
 {
@@ -1549,6 +1560,7 @@ public:
 public:
     // View options
     std::vector<feature_override> feature_overrides;
+    std::vector<mon_display>      mon_glyph_overrides;
     unsigned cset_override[NUM_CSET][NUM_DCHAR_TYPES];
 
     std::string save_dir;       // Directory where saves and bones go.
@@ -1851,6 +1863,13 @@ private:
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;
     void validate_options();
+
+    void add_all(const std::string &s, const std::string &separator,
+                 void (game_options::*add)(const std::string &));
+    void add_mon_glyph_override(monster_type mtype, mon_display &mdisp);    
+    void add_mon_glyph_overrides(const std::string &mons, mon_display &mdisp);
+    void add_mon_glyph_override(const std::string &);
+    mon_display parse_mon_glyph(const std::string &s) const;
 
     static const std::string interrupt_prefix;
 };

@@ -78,7 +78,7 @@ The contents of this text are:
 6-a     All OS.
                 macro_meta_entry, mouse_input, wiz_mode, colours,
                 char_set, cset_ascii, cset_ibm, cset_dec, feature,
-                classic_item_colours
+                mon_glyph, classic_item_colours
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix
@@ -1284,6 +1284,45 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
             feature = metal wall {35}
             feature = metal wall {x23}
         all do the same thing.
+
+mon_glyph = <monster name or symbol> : <colour> <glyph>
+        The mon_glyph option allows you to customise the symbol and
+        colour used to display a monster.
+
+        You can customise symbols based on monster names or their existing
+        symbols. For instance, if you want to put elves on E and efreeti
+        on e, you can do this:
+
+        mon_glyph = e : E
+        mon_glyph = E : e
+
+        If you want to change the symbol for a monster that uses a
+        space as a symbol, specify an underscore on the left:
+
+        mon_glyph = _ : #
+
+        (That changes shades to use #.)
+
+        You can specify a different symbol, or a colour, or both, in
+        any order. Here are more examples:
+
+        mon_glyph = deep elf annihilator : E lightmagenta
+        mon_glyph = Xtahua : lightmagenta D
+        mon_glyph = large zombie : darkgrey
+        mon_glyph = small simulacrum : x
+
+        (The left hand side of the : is case-sensitive.)
+        
+        You can specify symbols using their code points using the
+        syntax as shown in feature. If you're using char_set=unicode,
+        you can use unicode code points:
+        
+        mon_glyph = draconian scorcher : x6e9
+
+        A single _ is treated as a space; if you want a real underscore,
+        put a \ in front of it like this:
+
+        mon_glyph = player ghost : \_
 
 classic_item_colours = false
         Crawl uses 4.0 b26/0.1.x-like item colours if classic_item_colours is

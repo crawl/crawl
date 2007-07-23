@@ -69,15 +69,14 @@ struct monsterentry
     size_type size;
 };
 
-
-// wow. this struct is only about 48 bytes, (excluding the name)
-
+monsterentry *get_monster_data(int p_monsterid);
 
 // last updated 10jun2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
 void init_monsters( FixedVector<unsigned short, 1000>& colour );
+void init_monster_symbols();
 
 // this is the old moname()
 std::string mons_type_name(int type, description_level_type desc );
@@ -263,7 +262,7 @@ int mons_power(int mclass);
 /* ***********************************************************************
  * called from: spells2 - view
  * *********************************************************************** */
-unsigned char mons_char(int mc);
+unsigned mons_char(int mc);
 
 
 // last updated 10jun2000 {dlb}

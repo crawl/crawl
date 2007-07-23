@@ -20,7 +20,8 @@
 #include "enum.h"
 
 god_type str_to_god(std::string god);
-int str_to_colour( const std::string &str, int default_colour = -1 );
+int str_to_colour( const std::string &str, int default_colour = -1,
+                   bool accept_number = true );
 const char* colour_to_str( unsigned char colour );
 
 // last updated 12may2000 {dlb}

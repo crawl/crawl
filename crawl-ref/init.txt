@@ -256,7 +256,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # classic_item_colours = true
 #
 # See crawl_options.txt for the options
-# char_set, cset_ascii, cset_ibm, cset_dec, cset_any, feature
+# char_set, cset_ascii, cset_ibm, cset_dec, cset_any, feature, mon_glyph
 
 
 ##### 6-b	DOS and Windows #######################

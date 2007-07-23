@@ -208,7 +208,10 @@ int main( int argc, char *argv[] )
         exit(1);
     }
 
-    // Read the init file
+    // Init monsters up front - needed to handle the mon_glyph option right.
+    init_monsters(mcolour);
+    
+    // Read the init file.
     init_file_location = read_init_file();
 
     // now parse the args again, looking for everything else.
@@ -536,7 +539,6 @@ static void handle_wizard_command( void )
                 continue;
 
             monster_die(monster, KILL_RESET, 0);
-
         }
         break;
 
@@ -2751,9 +2753,8 @@ static bool initialise(void)
     get_typeid_array().init(ID_UNKNOWN_TYPE);
     init_char_table(Options.char_set);
     init_feature_table();
-
+    init_monster_symbols();
     init_properties();
-    init_monsters(mcolour);     // this needs to be way up top {dlb}
     init_spell_descs();        // this needs to be way up top {dlb}
 
     msg::initialise_mpr_streams();
@@ -2816,7 +2817,7 @@ static bool initialise(void)
     calc_mp();
 
     run_map_preludes();
-    
+
     load( you.entering_level? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
           you.entering_level? LOAD_ENTER_LEVEL :
           newc              ? LOAD_START_GAME : LOAD_RESTART_GAME,
@@ -2869,6 +2870,7 @@ static bool initialise(void)
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
     init_feature_table();
+    init_monster_symbols();
 #endif
 
     set_cursor_enabled(false);

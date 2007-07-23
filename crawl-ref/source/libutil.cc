@@ -414,14 +414,14 @@ static void add_segment(std::vector<std::string> &segs,
 }
 
 std::vector<std::string> split_string(
-        const char *sep, 
-        std::string s,
-        bool trim_segments,
-        bool accept_empty_segments,
-        int nsplits)
+    const std::string &sep, 
+    std::string s,
+    bool trim_segments,
+    bool accept_empty_segments,
+    int nsplits)
 {
     std::vector<std::string> segments;
-    int separator_length = strlen(sep);
+    int separator_length = sep.length();
 
     std::string::size_type pos;
     while (nsplits && (pos = s.find(sep)) != std::string::npos)

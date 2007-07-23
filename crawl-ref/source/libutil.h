@@ -86,11 +86,11 @@ std::string trimmed_string( std::string s );
 // remainder of the string as the last segment; negative values of nsplits
 // split on all occurrences of the separator.
 std::vector<std::string> split_string(
-        const char *sep, 
-        std::string s, 
-        bool trim = true, 
-        bool accept_empties = false,
-        int nsplits = -1);
+    const std::string &sep, 
+    std::string s, 
+    bool trim = true, 
+    bool accept_empties = false,
+    int nsplits = -1);
 
 inline std::string lowercase_first(std::string s)
 {

@@ -56,6 +56,8 @@ struct mon_spellbook
     spell_type spells[NUM_MONSTER_SPELL_SLOTS];
 };
 
+mon_display monster_symbols[NUM_MONSTERS];
+
 // really important extern -- screen redraws suck w/o it {dlb}
 FixedVector < unsigned short, 1000 > mcolour;
 
@@ -84,10 +86,9 @@ static mon_spellbook mspell_list[] = {
 };
 
 static int mons_exp_mod(int mclass);
-static monsterentry *seekmonster(int p_monsterid);
 
 // macro that saves some typing, nothing more
-#define smc seekmonster(mc)
+#define smc get_monster_data(mc)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
@@ -206,11 +207,38 @@ void init_monsters(FixedVector < unsigned short, 1000 > &colour)
 
     // finally, monsters yet with dummy entries point to TTTSNB(tm) {dlb}:
     for (x = 0; x < NUM_MONSTERS; x++)
-    {
         if (mon_entry[x] == -1)
             mon_entry[x] = mon_entry[MONS_PROGRAM_BUG];
-    }
+
+    init_monster_symbols();
 }                               // end mons_init()
+
+void init_monster_symbols()
+{
+    for (int i = 0; i < NUM_MONSTERS; ++i)
+    {
+        mon_display &md = monster_symbols[i];
+        const monsterentry *me = get_monster_data(i);
+        if (me)
+        {
+            md.glyph = me->showchar;
+            md.colour = me->colour;
+        }
+    }
+
+    for (int i = 0, size = Options.mon_glyph_overrides.size();
+         i < size; ++i)
+    {
+        const mon_display &md = Options.mon_glyph_overrides[i];
+        if (md.type == MONS_PROGRAM_BUG)
+            continue;
+
+        if (md.glyph)
+            monster_symbols[md.type].glyph = md.glyph;
+        if (md.colour)
+            monster_symbols[md.type].colour = md.colour;
+    }
+}
 
 unsigned long get_mons_class_resists(int mc)
 {
@@ -422,7 +450,7 @@ corpse_effect_type mons_corpse_effect(int mc)
 
 monster_type mons_species( int mc )
 {
-    const monsterentry *me = seekmonster(mc);
+    const monsterentry *me = get_monster_data(mc);
     return (me? me->species : MONS_PROGRAM_BUG);
 }                               // end mons_species()
 
@@ -486,7 +514,7 @@ bool mons_see_invis(const monsters *mon)
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (mon->ghost->values[ GVAL_SEE_INVIS ]);
-    else if (((seekmonster(mon->type))->bitfields & M_SEE_INVIS) != 0)
+    else if (((get_monster_data(mon->type))->bitfields & M_SEE_INVIS) != 0)
         return (true);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
         return (true);
@@ -526,25 +554,20 @@ bool mons_player_visible( struct monsters *mon )
     return (true);
 }
 
-unsigned char mons_char(int mc)
+unsigned mons_char(int mc)
 {
-    return static_cast<unsigned char>(smc->showchar);
-}                               // end mons_char()
+    return monster_symbols[mc].glyph;
+}
+
+int mons_class_colour(int mc)
+{
+    return monster_symbols[mc].colour;
+}
 
 mon_itemuse_type mons_itemuse(int mc)
 {
     return (smc->gmon_use);
 }                               // end mons_itemuse()
-
-int mons_class_colour(int mc)
-{
-    const monsterentry *m = smc;
-    if (!m)
-        return (BLACK);
-
-    const int class_colour = m->colour;
-    return (class_colour);
-}                               // end mons_colour()
 
 int mons_colour(const monsters *monster)
 {
@@ -658,7 +681,7 @@ int mons_damage(int mc, int rt)
 
 bool mons_immune_magic(const monsters *mon)
 {
-    return seekmonster(mon->type)->resist_magic == MAG_IMMUNE;
+    return get_monster_data(mon->type)->resist_magic == MAG_IMMUNE;
 }
 
 int mons_resist_magic( const monsters *mon )
@@ -666,7 +689,7 @@ int mons_resist_magic( const monsters *mon )
     if ( mons_immune_magic(mon) )
         return MAG_IMMUNE;
 
-    int u = (seekmonster(mon->type))->resist_magic;
+    int u = (get_monster_data(mon->type))->resist_magic;
 
     // negative values get multiplied with mhd
     if (u < 0)
@@ -1015,7 +1038,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 // of monster, not a pacticular monsters current hit dice. -- bwr
 int mons_type_hit_dice( int type )
 {
-    struct monsterentry *mon_class = seekmonster( type );
+    struct monsterentry *mon_class = get_monster_data( type );
 
     if (mon_class)
         return (mon_class->hpdice[0]);
@@ -1190,7 +1213,7 @@ void define_monster(int index)
     int mcls = mons.type;
     int hd, hp, hp_max, ac, ev, speed;
     int monnumber = mons.number;
-    const monsterentry *m = seekmonster(mcls);
+    const monsterentry *m = get_monster_data(mcls);
     int col = mons_class_colour(mons.type);
     mon_spellbook_type spells = MST_NO_SPELLS;
 
@@ -1363,6 +1386,7 @@ void define_monster(int index)
     mons.number = monnumber;
     mons.flags = 0L;
     mons.colour = col;
+    
     mons_load_spells( &mons, spells );
 
     // reset monster enchantments
@@ -1468,7 +1492,7 @@ static std::string str_monam(const monsters& mon, description_level_type desc,
     }
 
     // Add the base name.
-    result += seekmonster(nametype)->name;
+    result += get_monster_data(nametype)->name;
 
     // Add suffixes.
     switch (mon.type)
@@ -1509,7 +1533,7 @@ std::string mons_type_name(int type, description_level_type desc )
         }
     }
 
-    result += seekmonster(type)->name;
+    result += get_monster_data(type)->name;
 
     // Vowel fix: Change 'a orc' to 'an orc'
     if ( result.length() >= 3 &&
@@ -1525,7 +1549,7 @@ std::string mons_type_name(int type, description_level_type desc )
 /* ********************* END PUBLIC FUNCTIONS ********************* */
 
 // see mons_init for initialization of mon_entry array.
-static monsterentry *seekmonster(int p_monsterid)
+monsterentry *get_monster_data(int p_monsterid)
 {
     const int me = p_monsterid != -1? mon_entry[p_monsterid] : -1;
 
@@ -1533,7 +1557,7 @@ static monsterentry *seekmonster(int p_monsterid)
         return (&mondata[me]);
     else
         return (NULL);
-}                               // end seekmonster()
+}                               // end get_monster_data()
 
 static int mons_exp_mod(int mc)
 {
@@ -2077,7 +2101,7 @@ static bool mons_can_smite(const monsters *monster)
  */
 bool monster_shover(const monsters *m)
 {
-    const monsterentry *me = seekmonster(m->type);
+    const monsterentry *me = get_monster_data(m->type);
     if (!me)
         return (false);
 
@@ -2107,8 +2131,8 @@ bool monster_shover(const monsters *m)
 // below.
 bool monster_senior(const monsters *m1, const monsters *m2)
 {
-    const monsterentry *me1 = seekmonster(m1->type),
-                       *me2 = seekmonster(m2->type);
+    const monsterentry *me1 = get_monster_data(m1->type),
+                       *me2 = get_monster_data(m2->type);
     
     if (!me1 || !me2)
         return (false);
@@ -2241,7 +2265,7 @@ bool monsters::can_drown() const
 
 size_type monsters::body_size(int /* psize */, bool /* base */) const
 {
-    const monsterentry *e = seekmonster(type);
+    const monsterentry *e = get_monster_data(type);
     return (e? e->size : SIZE_MEDIUM);
 }
 
@@ -4022,7 +4046,7 @@ bool monsters::sicken(int amount)
 
 int monsters::base_speed(int mcls)
 {
-    const monsterentry *m = seekmonster(mcls);
+    const monsterentry *m = get_monster_data(mcls);
     if (!m)
         return (10);
 

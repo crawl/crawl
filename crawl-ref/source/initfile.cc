@@ -30,6 +30,7 @@
 #include "defines.h"
 #include "invent.h"
 #include "libutil.h"
+#include "mon-util.h"
 #include "player.h"
 #include "religion.h"
 #include "stash.h"
@@ -85,7 +86,8 @@ const char* colour_to_str(unsigned char colour)
 }
 
 // returns -1 if unmatched else returns 0-15
-int str_to_colour( const std::string &str, int default_colour )
+int str_to_colour( const std::string &str, int default_colour,
+                   bool accept_number )
 {
     int ret;
 
@@ -128,7 +130,7 @@ int str_to_colour( const std::string &str, int default_colour )
         }
     }
 
-    if (ret == 16)
+    if (ret == 16 && accept_number)
     {
         // Check if we have a direct colour index
         const char *s = str.c_str();
@@ -769,6 +771,7 @@ void game_options::reset_options()
 
     clear_cset_overrides();
     clear_feature_overrides();
+    mon_glyph_overrides.clear();
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -794,11 +797,11 @@ static unsigned read_symbol(std::string s)
     if (s.empty())
         return (0);
 
-    if (s.length() == 1)
-        return s[0];
-
     if (s.length() > 1 && s[0] == '\\')
         s = s.substr(1);
+
+    if (s.length() == 1)
+        return s[0];
 
     int base = 10;
     if (s.length() > 1 && s[0] == 'x')
@@ -828,6 +831,59 @@ void game_options::add_fire_order_slot(const std::string &s)
 
     if (flags)
         fire_order.push_back(flags);
+}
+
+void game_options::add_mon_glyph_override(monster_type mtype,
+                                          mon_display &mdisp)
+{
+    mdisp.type = mtype;
+    mon_glyph_overrides.push_back(mdisp);
+}
+
+void game_options::add_mon_glyph_overrides(const std::string &mons,
+                                           mon_display &mdisp)
+{
+    // If one character, this is a monster letter.
+    int letter = -1;
+    if (mons.length() == 1)
+        letter = mons[0] == '_' ? ' ' : mons[0];
+    
+    for (int i = 0; i < NUM_MONSTERS; ++i)
+    {
+        const monsterentry *me = get_monster_data(i);
+        if (!me || me->mc == MONS_PROGRAM_BUG)
+            continue;
+        
+        if (me->showchar == letter || me->name == mons)
+            add_mon_glyph_override(static_cast<monster_type>(i), mdisp);
+    }
+}
+
+mon_display game_options::parse_mon_glyph(const std::string &s) const
+{
+    mon_display md;
+    std::vector<std::string> phrases = split_string(" ", s);
+    for (int i = 0, size = phrases.size(); i < size; ++i)
+    {
+        const std::string &p = phrases[i];
+        const int col = str_to_colour(p, -1, false);
+        if (col != -1 && colour)
+            md.colour = col;
+        else
+            md.glyph = p == "_"? ' ' : read_symbol(p);
+    }
+    return (md);
+}
+
+void game_options::add_mon_glyph_override(const std::string &text)
+{
+    std::vector<std::string> override = split_string(":", text);
+    if (override.size() != 2u)
+        return;
+
+    mon_display mdisp = parse_mon_glyph(override[1]);
+    if (mdisp.glyph || mdisp.colour)
+        add_mon_glyph_overrides(override[0], mdisp);
 }
 
 void game_options::add_feature_override(const std::string &text)
@@ -1336,6 +1392,14 @@ void game_options::set_menu_sort(std::string field)
     sort_menus.push_back(cond);
 }
 
+void game_options::add_all(const std::string &s, const std::string &separator,
+                           void (game_options::*add)(const std::string &))
+{
+    const std::vector<std::string> defs = split_string(separator, s);
+    for (int i = 0, size = defs.size(); i < size; ++i)
+        (this->*add)( defs[i] );
+}
+
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
     std::string key = "";
@@ -1412,6 +1476,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
         && key != "feature" && key != "fire_items_start"
+        && key != "mon_glyph"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries")
@@ -1657,10 +1722,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "feature" || key == "dungeon")
     {
-        std::vector<std::string> defs = split_string(";", field);
-        
-        for (int i = 0, size = defs.size(); i < size; ++i)
-            add_feature_override( defs[i] );
+        add_all(field, ";", &game_options::add_feature_override);
+    }
+    else if (key == "mon_glyph")
+    {
+        add_all(field, ",", &game_options::add_mon_glyph_override);
     }
     else if (key == "friend_brand")
     {

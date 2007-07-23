@@ -421,7 +421,7 @@
 
 // small zombie
 {
-    MONS_ZOMBIE_SMALL, 'z', BROWN, "",
+    MONS_ZOMBIE_SMALL, 'z', BROWN, "small zombie",
     M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     0, 6, MONS_ZOMBIE_SMALL, MONS_ZOMBIE_SMALL, MH_UNDEAD, -1,
@@ -737,7 +737,7 @@
 
 // big zombie
 {
-    MONS_ZOMBIE_LARGE, 'Z', BROWN, "",
+    MONS_ZOMBIE_LARGE, 'Z', BROWN, "large zombie",
     M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     0, 6, MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE, MH_UNDEAD, -1,
@@ -1320,7 +1320,7 @@
 
 // small skeleton
 {
-    MONS_SKELETON_SMALL, 'z', LIGHTGREY, "",
+    MONS_SKELETON_SMALL, 'z', LIGHTGREY, "small skeleton",
     M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     0, 10, MONS_SKELETON_SMALL, MONS_SKELETON_SMALL, MH_UNDEAD, -1,
@@ -1333,7 +1333,7 @@
 
 // large skeleton
 {
-    MONS_SKELETON_LARGE, 'Z', LIGHTGREY, "",
+    MONS_SKELETON_LARGE, 'Z', LIGHTGREY, "large skeleton",
     M_EVIL,
     MR_RES_POISON | MR_RES_COLD,
     0, 10, MONS_SKELETON_SMALL, MONS_SKELETON_LARGE, MH_UNDEAD, -1,
@@ -3504,7 +3504,7 @@
 
 /* spectral thing - similar to zombies/skeletons */
 {
-    MONS_SPECTRAL_THING, 'W', GREEN, "",
+    MONS_SPECTRAL_THING, 'W', GREEN, "spectral thing",
     M_LEVITATE | M_SEE_INVIS,
     MR_RES_POISON | MR_RES_COLD,
     0, 11, MONS_WRAITH, MONS_SPECTRAL_THING, MH_UNDEAD, MAG_IMMUNE,
@@ -4074,7 +4074,7 @@
 
 /* player ghost - only one per level. stats are stored in ghost struct */
 {
-    MONS_PLAYER_GHOST, 'p', DARKGREY, "",
+    MONS_PLAYER_GHOST, 'p', DARKGREY, "player ghost",
     M_FIGHTER | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_FLIES | M_UNIQUE,
     MR_RES_POISON,
     0, 15, MONS_PHANTOM, MONS_PLAYER_GHOST, MH_UNDEAD, -5,
@@ -4087,7 +4087,7 @@
 
 /* random demon in pan - only one per level. stats are stored in ghost struct */
 {
-    MONS_PANDEMONIUM_DEMON, '&', BLACK, "&",
+    MONS_PANDEMONIUM_DEMON, '&', BLACK, "pandemonium lord",
     M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_EVIL,
     MR_RES_POISON,
     0, 14, MONS_PANDEMONIUM_DEMON, MONS_PANDEMONIUM_DEMON, MH_DEMONIC, -5,
@@ -4296,7 +4296,7 @@
 
 // small simulacrum
 {
-    MONS_SIMULACRUM_SMALL, 'z', WHITE, "",
+    MONS_SIMULACRUM_SMALL, 'z', WHITE, "small simulacrum",
     M_EVIL,
     MR_RES_POISON | MR_VUL_FIRE | MR_RES_COLD,
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_SMALL, MH_UNDEAD, -1,
@@ -4309,7 +4309,7 @@
 
 // large simulacrum
 {
-    MONS_SIMULACRUM_LARGE, 'Z', WHITE, "",
+    MONS_SIMULACRUM_LARGE, 'Z', WHITE, "large simulacrum",
     M_EVIL,
     MR_RES_POISON | MR_VUL_FIRE | MR_RES_COLD,
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE, MH_UNDEAD, -1,
