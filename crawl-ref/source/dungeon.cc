@@ -678,17 +678,22 @@ static void dgn_verify_connectivity(unsigned nvaults)
     if (!dgn_level_vetoed && dgn_zones && nvaults != level_vaults.size())
     {
         const int newzones = dgn_count_disconnected_zones();
+
+#ifdef DEBUG_DIAGNOSTICS
+        std::ostringstream vlist;
+        for (unsigned i = nvaults; i < level_vaults.size(); ++i)
+        {
+            if (i > nvaults)
+                vlist << ", ";
+            vlist << level_vaults[i].map.name;
+        }
+        mprf(MSGCH_DIAGNOSTICS, "Dungeon has %d zones after placing %s.",
+             newzones, vlist.str().c_str());
+#endif
         if (newzones > dgn_zones)
         {
             dgn_level_vetoed = true;
 #ifdef DEBUG_DIAGNOSTICS
-            std::ostringstream vlist;
-            for (unsigned i = nvaults; i < level_vaults.size(); ++i)
-            {
-                if (i > nvaults)
-                    vlist << ", ";
-                vlist << level_vaults[i].map.name;
-            }
             mprf(MSGCH_DIAGNOSTICS,
                  "VETO: %s broken by [%s] (had %d zones, "
                  "now have %d zones.",

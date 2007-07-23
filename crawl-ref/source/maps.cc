@@ -349,6 +349,7 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
             && !vdefs[i].has_tag_suffix("entry")
             && !vdefs[i].has_tag("pan")
             && !vdefs[i].has_tag("unrand")
+            && !vdefs[i].has_tag("bazaar")
             && vault_unforbidden(vdefs[i]))
         {
             rollsize += vdefs[i].chance;
