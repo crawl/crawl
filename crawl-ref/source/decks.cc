@@ -474,9 +474,8 @@ void evoke_deck( item_def& deck )
     
     if ( deck.plus == 0 )
     {
-        mpr("The deck of cards disappears in a puff of smoke.");       
-        unwield_item(you.equip[EQ_WEAPON]);
-        dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+        mpr("The deck of cards disappears in a puff of smoke.");
+        dec_inv_item_quantity( deck.link, 1 );
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
         brownie_points++;
