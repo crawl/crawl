@@ -216,7 +216,7 @@ MONS:    human simulacrum w:60/elf simulacrum/ogre simulacrum/centaur simulacrum
 MONS:    eye of draining/brain worm/death drake w:5/shadow/shadow dragon w:1
 KITEM:   A = potion of experience / any good_item
 KMONS:   A = Maud
-KFEAT:   A = rock staircase leading down
+KFEAT:   A = >
 KFEAT:   B = |
 KMONS:   B = neqoxec
 KFEAT:   C = b

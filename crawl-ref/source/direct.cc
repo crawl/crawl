@@ -1306,13 +1306,13 @@ std::string raw_feature_description(dungeon_feature_type grid,
     case DNGN_OPEN_DOOR:
         return ("open door");
     case DNGN_ROCK_STAIRS_DOWN:
-        return ("rock staircase leading down");
+        return ("escape hatch in the floor");
+    case DNGN_ROCK_STAIRS_UP:
+        return ("escape hatch in the ceiling");
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
         return ("stone staircase leading down");
-    case DNGN_ROCK_STAIRS_UP:
-        return ("rock staircase leading up");
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:

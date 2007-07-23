@@ -757,6 +757,25 @@ void merfolk_start_swimming(void)
     you.redraw_evasion = true;
 }
 
+static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
+{
+    if (grid_is_rock_stair(stair))
+        mpr("The hatch slams shut behind you.");
+}
+
+static void climb_message(dungeon_feature_type stair, bool going_up)
+{
+    if (grid_is_rock_stair(stair))
+    {
+        if (going_up)
+            mpr("A mysterious force pulls you upwards.");
+        else
+            mpr("You slide downwards.");
+    }
+    else
+        mpr(going_up? "You climb upwards." : "You climb downwards.");
+}
+
 void up_stairs(void)
 {
     dungeon_feature_type stair_find = grd[you.x_pos][you.y_pos];
@@ -808,6 +827,9 @@ void up_stairs(void)
         return;
     }
 
+    // Checks are done, the character is committed to moving between levels.
+    exit_stair_message(stair_find, true);
+    
     int old_level  = you.your_level;
 
     // Interlevel travel data:
@@ -845,7 +867,6 @@ void up_stairs(void)
         ouch(INSTANT_DEATH, 0, KILLED_BY_LEAVING);
     }
 
-    mpr("Entering...");
     you.prev_targ = MHITNOT;
     you.pet_target = MHITNOT;
 
@@ -885,7 +906,7 @@ void up_stairs(void)
             mpr("You float upwards... And bob straight up to the ceiling!");
     }
     else
-        mpr("You climb upwards.");
+        climb_message(stair_find, true);
 
     load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
 
@@ -1006,6 +1027,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         return;
     }
 
+    // All checks are done, the player is on the move now.
+    exit_stair_message(stair_find, false);
+    
 #ifdef DGL_MILESTONES
     if (!force_stair)
     {
@@ -1075,8 +1099,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         you.level_type = LEVEL_DUNGEON;
     }
 
-    if (!force_stair)
-        mpr("Entering...");
     you.prev_targ = MHITNOT;
     you.pet_target = MHITNOT;
 
@@ -1209,7 +1231,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         break;
 
     default:
-        mpr("You climb downwards.");
+        climb_message(stair_find, false);
         break;
     }
 

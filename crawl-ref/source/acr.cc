@@ -689,8 +689,11 @@ static void handle_wizard_command( void )
         get_input_line( specs, sizeof( specs ) );
 
         if (specs[0] != '\0')
-            grd[you.x_pos][you.y_pos] =
-                static_cast<dungeon_feature_type>( atoi(specs) );
+        {
+            if (const int feat = atoi(specs))
+                grd[you.x_pos][you.y_pos] =
+                    static_cast<dungeon_feature_type>( feat );
+        }
         break;
 
     case ')':
@@ -702,7 +705,11 @@ static void handle_wizard_command( void )
             if (feat == DNGN_UNSEEN)
                 canned_msg(MSG_OK);
             else
+            {
+                mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
+                     you.x_pos, you.y_pos, specs, feat);
                 grd(you.pos()) = feat;
+            }
         }
         break;
 

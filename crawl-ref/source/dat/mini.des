@@ -135,8 +135,8 @@ MONS:  ice statue
 MONS:  ice devil w:5/blue devil w:5/ice dragon/freezing wraith/nothing w:30
 MONS:  white imp/ice beast w:30/polar bear/nothing w:50
 MONS:  white imp/ice beast w:30/polar bear/nothing w:50
-KFEAT: 2 = rock staircase leading down
-KFEAT: 4 = rock staircase leading down
+KFEAT: 2 = >
+KFEAT: 4 = >
 MAP
 T..................T
 ..WWW..........WWW..

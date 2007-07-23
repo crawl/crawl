@@ -2038,19 +2038,23 @@ Floor
 %%%%
 An open door
 
-A plain door. You can close it by standing next to it and pressing 'c'.
+A wooden door. You can close it by standing next to it and pressing 'c'.
 %%%%
 A closed door
 
-A plain door. To open it, try simply walking into it, or press 'o'.
+A wooden door. To open it, try simply walking into it, or press 'o'.
 %%%%
-A rock staircase leading down
+An escape hatch in the floor
 
+A spring-loaded one-way escape hatch set in the dungeon floor,
+allowing the adventurer beset by adversaries to exchange the perils of
+this level for the perils of the next.
+%%%%
+An escape hatch in the ceiling
+
+A spring-loaded one-way escape hatch set in the ceiling.
 %%%%
 A stone staircase leading down
-
-%%%%
-A rock staircase leading up
 
 %%%%
 A stone staircase leading up

@@ -254,7 +254,7 @@ SUBST:   * = |:5 * .
 SUBST:   T = TU
 SHUFFLE: xb/cc, ABC
 : if crawl.coinflip() then
-KFEAT:   X = rock staircase leading up / rock staircase leading down
+KFEAT:   X = < / >
 KITEM:   X = any good_item
 : else
 SUBST:   X=*, B=., C=.
