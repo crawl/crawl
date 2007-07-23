@@ -25,6 +25,7 @@
 
 #include "abl-show.h"
 #include "chardump.h"
+#include "cio.h"
 #include "files.h"
 #include "invent.h"
 #include "itemname.h"
@@ -49,9 +50,14 @@ static const char *command_string( int i );
 
 void quit_game(void)
 {
-    if (yesno("Really quit?", false, 'n'))
+    char buf[10];
+    mpr("Are you sure you want to quit (enter \"yes\" to confirm)? ",
+        MSGCH_PROMPT);
+    if (!cancelable_get_line(buf, sizeof buf) && !strcasecmp(buf, "yes"))
         ouch(INSTANT_DEATH, 0, KILLED_BY_QUITTING);
-}                               // end quit_game()
+    else
+        canned_msg(MSG_OK);
+}
 
 static const char *features[] = {
     "Stash-tracking",

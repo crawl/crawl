@@ -335,7 +335,7 @@ int line_reader::read_line(bool clear_previous)
 
     for ( ; ; )
     {
-        int ch = c_getch();
+        int ch = getchm(c_getch);
 
         if (keyfn)
         {
