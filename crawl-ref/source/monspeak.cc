@@ -503,71 +503,119 @@ bool mons_speaks(const monsters *monster)
         }
 
         // friendly imps are too common so they speak very very rarely
-        if ((monster->type == MONS_IMP) && (random2(10)))
-            return (false);
-
-        switch (random2(18))
+        if (monster->type == MONS_IMP)
         {
-        case 0:
-            strcat(info, " yells, \"Run! I'll cover you!\"");
-            break;
-        case 1:
-            strcat(info, " shouts, \"Die, monster!\"");
-            break;
-        case 2:
-            strcat(info, " says, \"It's nice to have friends.\"");
-            break;
+            if (!one_chance_in(10))
+                return (false);
 
-        case 3:
-            strcat(info, " looks at you.");
-            break;
-        case 4:
-            strcat(info, " smiles at you.");
-            break;
-        case 5:
-            strcat(info, " says, \"");
-            strcat(info, you.your_name);
-            strcat(info, ", you are my only friend.\"");
-            break;
-        case 6:
-            strcat(info, " says, \"");
-            strcat(info, you.your_name);
-            strcat(info, ", I like you.\"");
-            break;
+            switch (random2(12))
+            {
+            case 0:
+                strcat(info, " says, \"Just to tell me who NOT to kill.\"");
+                break;
+            case 1:
+                strcat(info, " says, \"OK Boss!\"");
+                break;
+            case 2:
+                strcat(info, " grins impishly at you.");
+                break;
+            case 3:
+                strcat(info, " picks up some beetles from the floor "
+                       "and offers them to you.");
+                break;
+            case 4:
+                strcat(info, " blows smoke rings.");
+                break;
+            case 5:
+                strcat(info, " shouts, \"Over here! I found it!\"");
+                break;
+            case 6:
+                strcat(info, " says, \"The Orb is all yours.\"");
+                break;
+            case 7:
+                strcat(info, " says, \"Isn't this more fun with friends?\"");
+                break;
+            case 8:
+                strcat(info, " says, \"Uh-oh! Wait. OK.\"");
+                break;
+            case 9:
+                strcat(info, " shouts, \"Stay back! It could be a trick.\"");
+                break;
+            case 10:
+                strcat(info, " says, \"You're so much nicer than "
+                       "my last boss.\"");
+                break;
+            case 11:
+                strcat(info, " jumps up and down with excitement.\"");
+                break;
+            }
+        }
+            
+        else
+        {
+            switch (random2(18))
+            {
+            case 0:
+                strcat(info, " yells, \"Run! I'll cover you!\"");
+                break;
+            case 1:
+                strcat(info, " shouts, \"Die, monster!\"");
+                break;
+            case 2:
+                strcat(info, " says, \"It's nice to have friends.\"");
+                break;
 
-        case 7:
-            strcat(info, " waves at you.");
-            break;
-        case 8:
-            strcat(info, " says, \"Be careful!\"");
-            break;
-        case 9:
-            strcat(info, " says, \"Don't worry. I'm here with you.\"");
-            break;
-        case 10:
-            strcat(info, " smiles happily.");
-            break;
-        case 11:
-            strcat(info, " shouts, \"No mercy! Kill them all!");
-            break;
-        case 12:
-            strcat(info, " winks at you.");
-            break;
-        case 13:
-            strcat(info, " says, \"Me and you. It sounds cool.\"");
-            break;
-        case 14:
-            strcat(info, " says, \"I'll never leave you.\"");
-            break;
-        case 15:
-            strcat(info, " says, \"I would die for you.\"");
-            break;
-        case 16:
-            strcat(info, " shouts, \"Beware of monsters!\"");
-            break;
-        case 17:
-            strcat(info, " looks friendly.");
-            break;
+            case 3:
+                strcat(info, " looks at you.");
+                break;
+            case 4:
+                strcat(info, " smiles at you.");
+                break;
+            case 5:
+                strcat(info, " says, \"");
+                strcat(info, you.your_name);
+                strcat(info, ", you are my only friend.\"");
+                break;
+            case 6:
+                strcat(info, " says, \"");
+                strcat(info, you.your_name);
+                strcat(info, ", I like you.\"");
+                break;
+
+            case 7:
+                strcat(info, " waves at you.");
+                break;
+            case 8:
+                strcat(info, " says, \"Be careful!\"");
+                break;
+            case 9:
+                strcat(info, " says, \"Don't worry. I'm here with you.\"");
+                break;
+            case 10:
+                strcat(info, " smiles happily.");
+                break;
+            case 11:
+                strcat(info, " shouts, \"No mercy! Kill them all!");
+                break;
+            case 12:
+                strcat(info, " winks at you.");
+                break;
+            case 13:
+                strcat(info, " says, \"Me and you. It sounds cool.\"");
+                break;
+            case 14:
+                strcat(info, " says, \"I'll never leave you.\"");
+                break;
+            case 15:
+                strcat(info, " says, \"I would die for you.\"");
+                break;
+            case 16:
+                strcat(info, " shouts, \"Beware of monsters!\"");
+                break;
+            case 17:
+                strcat(info, " looks friendly.");
+                break;
+            }
         }
     }
     else
@@ -588,7 +636,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 3:
                 snprintf( info, INFO_SIZE, "%s shouts, \"%s!!!\"",
-                  m_name.c_str(), coinflip() ? "ATTACK" : "DIE");
+                          m_name.c_str(), coinflip() ? "ATTACK" : "DIE");
                 break;
             case 4:
                 strcat(info, " says, \"How do you enjoy it?\"");
@@ -610,14 +658,14 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 10:
                 snprintf( info, INFO_SIZE, "%s says, \"Don't try to defend, it's %s.\"",
-                        m_name.c_str(), coinflip() ? "pointless" : "senseless");
+                          m_name.c_str(), coinflip() ? "pointless" : "senseless");
                 break;
             case 11:
                 strcat(info, " bares his teeth.");
                 break;
             case 12:
                 snprintf( info, INFO_SIZE, "%s says, \"I'll show you few %s.\"",
-                        m_name.c_str(), coinflip() ? "tricks" : "ploys.");
+                          m_name.c_str(), coinflip() ? "tricks" : "ploys.");
                 break;
             case 13:
                 strcat(info, " screams, \"I want your blood.\"");
@@ -740,7 +788,7 @@ bool mons_speaks(const monsters *monster)
 
         case MONS_ORC_HIGH_PRIEST:  // priest, servants of dark ancient god
         case MONS_DEEP_ELF_HIGH_PRIEST:
-            switch (random2(9))
+            switch (random2(12))
             {
             case 0:
             case 1:
@@ -772,6 +820,18 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 8:
                 strcat(info, " shouts, \"You must be punished.\"");
+                break;
+            case 9:
+                strcat(info, " intones a terrible prayer.");
+                msg_type = MSGCH_MONSTER_SPELL;
+                break;
+            case 10:
+                strcat(info, " says, \" Right in the middle of my "
+                       "sermon, too.\"");
+                break;
+            case 11:
+                strcat(info, " says, \"The wages of sin are death, "
+                       "you know.\"");
                 break;
             }
             break;          // end priests
@@ -1134,7 +1194,7 @@ bool mons_speaks(const monsters *monster)
             return (true);
 
         case MONS_PLAYER_GHOST:     // ghost of unsuccesful player
-            switch (random2(24))
+            switch (random2(29))
             {
             case 0:
                 strcat(info, " laughs crazily.");
@@ -1149,13 +1209,36 @@ bool mons_speaks(const monsters *monster)
                 break;
 
             case 3: // mv: ghosts are usually wailing, aren't ?
+                strcat(info, " says, \"I have seen your future. "
+                       "And it's all used up.\"");
+                break;
             case 4:
+                strcat(info, " makes a sound of rattling chains.");
+                break;
+
             case 5:
+                strcat(info, " says, \"They lied to you. "
+                       "The Dungeon just goes down and down forever.\"");
+                break;
             case 6:
+                strcat(info, " says, \"Do you think the gods "
+                       "will protect you?\"");
+                break;
             case 7:
+                strcat(info, " says, \"I was like you once.\"");
+                break;
             case 8:
+                strcat(info, " says, \"Very impressive. But it won't help. "
+                       "Nothing will.\"");
+                break;
             case 9:
+                strcat(info, " whispers, \"They're coming for you...\"");
+                break;
             case 10:
+                strcat(info, " says, \"What have you got "
+                       "that I didn't have?\"");
+                break;
+
             case 11:
                 strcat(info, " wails.");
                 break;
@@ -1203,6 +1286,22 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 23:
                 strcat(info, " wails, \"Death is your only future.\"");
+                break;
+            case 24:
+                strcat(info, " says, \"The more you struggle now, "
+                       "the more you'll suffer later.\"");
+                break;
+            case 25:
+                strcat(info, " whispers, \"Trust me. Just give in.\"");
+                break;
+            case 26:
+                strcat(info, " says very slowly, \"There's no hope.\"");
+                break;
+            case 27:
+                strcat(info, " lets out a mournful wail.");
+                break;
+            case 28:
+                strcat(info, " keens inconsolably.");
                 break;
             }
             break;          // end players ghost
