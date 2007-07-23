@@ -2963,57 +2963,48 @@ void drink(void)
     lessen_hunger(40, true);
 }                               // end drink()
 
-bool drink_fountain(void)
+bool drink_fountain()
 {
-    bool gone_dry = false;
-    int temp_rand;              // for probability determinations {dlb}
-    potion_type fountain_effect = POT_WATER;    // for fountain effects {dlb}
+    const dungeon_feature_type feat = grd[you.x_pos][you.y_pos];
 
-    switch (grd[you.x_pos][you.y_pos])
+    if ( feat != DNGN_BLUE_FOUNTAIN && feat != DNGN_SPARKLING_FOUNTAIN )
+        return false;
+
+    potion_type fountain_effect = POT_WATER;
+    if ( feat == DNGN_BLUE_FOUNTAIN )
     {
-    case DNGN_BLUE_FOUNTAIN:
         if (!yesno("Drink from the fountain?"))
             return false;
-
-        mpr("You drink the pure, clear water.");
-        break;
-
-    case DNGN_SPARKLING_FOUNTAIN:
+        else
+            mpr("You drink the pure, clear water.");
+    }
+    else                        // sparkling fountain
+    {
         if (!yesno("Drink from the sparkling fountain?"))
             return false;
-
         mpr("You drink the sparkling water.");
-        break;
 
-    default:
-        break;
-    }
+        const potion_type effects[] =
+            { POT_WATER, POT_DECAY,
+              POT_MUTATION, POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED, POT_MIGHT,
+              POT_DEGENERATION,
+              POT_LEVITATION, POT_POISON, POT_SLOWING,
+              POT_PARALYSIS, POT_CONFUSION, POT_INVISIBILITY,
+              POT_MAGIC, POT_RESTORE_ABILITIES, POT_RESISTANCE,
+              POT_STRONG_POISON, POT_BERSERK_RAGE,
+              POT_GAIN_STRENGTH, POT_GAIN_INTELLIGENCE, POT_GAIN_DEXTERITY };
 
-    if (grd[you.x_pos][you.y_pos] == DNGN_SPARKLING_FOUNTAIN)
-    {
-        temp_rand = random2(4500);
+        const int weights[] = { 467, 48,
+                                40, 40, 40, 40, 40,
+                                32,
+                                27, 27, 27,
+                                27, 27, 27,
+                                20, 20, 20,
+                                20, 20,
+                                4, 4, 4 };
 
-        fountain_effect = ((temp_rand > 2399) ? POT_WATER :     // 46.7%
-                           (temp_rand > 2183) ? POT_DECAY :     //  4.8%
-                           (temp_rand > 2003) ? POT_MUTATION :  //  4.0%
-                           (temp_rand > 1823) ? POT_HEALING :   //  4.0%
-                           (temp_rand > 1643) ? POT_HEAL_WOUNDS :// 4.0%
-                           (temp_rand > 1463) ? POT_SPEED :     //  4.0%
-                           (temp_rand > 1283) ? POT_MIGHT :     //  4.0%
-                           (temp_rand > 1139) ? POT_DEGENERATION ://3.2%
-                           (temp_rand > 1019) ? POT_LEVITATION ://  2.7%
-                           (temp_rand > 899) ? POT_POISON :     //  2.7%
-                           (temp_rand > 779) ? POT_SLOWING :    //  2.7%
-                           (temp_rand > 659) ? POT_PARALYSIS :  //  2.7%
-                           (temp_rand > 539) ? POT_CONFUSION :  //  2.7%
-                           (temp_rand > 419) ? POT_INVISIBILITY :// 2.7%
-                           (temp_rand > 329) ? POT_MAGIC :      //  2.0%
-                           (temp_rand > 239) ? POT_RESTORE_ABILITIES ://  2.0%
-                           (temp_rand > 149) ? POT_STRONG_POISON ://2.0%
-                           (temp_rand > 59) ? POT_BERSERK_RAGE :  //2.0%
-                           (temp_rand > 39) ? POT_GAIN_STRENGTH : //0.4%
-                           (temp_rand > 19) ? POT_GAIN_DEXTERITY  //0.4%
-                                            : POT_GAIN_INTELLIGENCE);//0.4%
+        ASSERT( ARRAYSIZE(weights) == ARRAYSIZE(effects) );
+        fountain_effect = effects[weighted_random(weights,ARRAYSIZE(weights))];
     }
 
     if (fountain_effect != POT_WATER)
@@ -3021,39 +3012,26 @@ bool drink_fountain(void)
 
     potion_effect(fountain_effect, 100);
 
-    switch (grd[you.x_pos][you.y_pos])
+    bool gone_dry = false;
+    if ( feat == DNGN_BLUE_FOUNTAIN )
     {
-    case DNGN_BLUE_FOUNTAIN:
-        if (one_chance_in(20))
+        if ( one_chance_in(20) )
             gone_dry = true;
-        break;
-
-    case DNGN_SPARKLING_FOUNTAIN:
+    }
+    else                        // sparkling fountain
+    {
         if (one_chance_in(10))
-        {
             gone_dry = true;
-            break;
-        }
-        else
-        {
-            temp_rand = random2(50);
-
-            // you won't know it (yet)
-            if (temp_rand > 40) // 18% probability
-                grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
-        }
-        break;
-
-    default:
-        break;
+        else if ( random2(50) > 40 ) // no message!
+            grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
     }
 
     if (gone_dry)
     {
         mpr("The fountain dries up!");
-        if (grd[you.x_pos][you.y_pos] == DNGN_BLUE_FOUNTAIN)
+        if (feat == DNGN_BLUE_FOUNTAIN)
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_I;
-        else if (grd[you.x_pos][you.y_pos] == DNGN_SPARKLING_FOUNTAIN)
+        else
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_II;
     }
 

@@ -481,6 +481,7 @@ static const char* potion_type_name(int potiontype)
     case POT_CURE_MUTATION:     return "cure mutation";
     case POT_MUTATION:          return "mutation";
     case POT_BLOOD:             return "blood";
+    case POT_RESISTANCE:        return "resistance";
     default:                    return "bugginess";
     }
 }

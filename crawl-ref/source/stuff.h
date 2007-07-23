@@ -37,6 +37,7 @@ int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
+int weighted_random(const int weights[], unsigned int numweights);
 unsigned long random_int();
 int random2avg( int max, int rolls );
 int bestroll(int max, int rolls);

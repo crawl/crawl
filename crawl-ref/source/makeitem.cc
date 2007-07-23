@@ -2416,6 +2416,9 @@ int items( int allow_uniques,       // not just true-false,
                 if (one_chance_in(6))                           
                     mitm[p].sub_type = POT_LEVITATION;          //  3.401%
 
+                if (one_chance_in(8))
+                    mitm[p].sub_type = POT_RESISTANCE;
+
                 if (one_chance_in(30))                         
                     mitm[p].sub_type = POT_PORRIDGE;            //  0.704%
 

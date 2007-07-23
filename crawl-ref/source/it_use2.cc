@@ -46,52 +46,48 @@ bool potion_effect( potion_type pot_eff, int pow )
     bool effect = true;  // current behaviour is all potions id on quaffing
 
     int new_value = 0;
-    unsigned char i;
 
     if (pow > 150)
         pow = 150;
 
+    const int factor = (you.species == SP_VAMPIRE ? 2 : 1);
+
     switch (pot_eff)
     {
     case POT_HEALING:
+
+        inc_hp( (5 + random2(7)) / factor, false);
+        mpr("You feel better.");
+
         if (you.species == SP_VAMPIRE)
         {
-           inc_hp((5 + random2(7)) / 2, false);
            if (!one_chance_in(3))
               you.rotting = 0;
            if (!one_chance_in(3))
               you.duration[DUR_CONF] = 0;
-           mpr("You feel slightly better.");
-           break;
- 	      }
-        mpr("You feel better.");
-        inc_hp(5 + random2(7), false);
-
-        // only fix rot when healed to full 
-        if (you.hp == you.hp_max)
-        {
-            unrot_hp(1);
-            set_hp(you.hp_max, false);
         }
-
-        you.duration[DUR_POISONING] = 0;
-        you.rotting = 0;
-        you.disease = 0;
-        you.duration[DUR_CONF] = 0;
+        else
+        {
+            // only fix rot when healed to full 
+            if (you.hp == you.hp_max)
+            {
+                unrot_hp(1);
+                set_hp(you.hp_max, false);
+            }
+            
+            you.duration[DUR_POISONING] = 0;
+            you.rotting = 0;
+            you.disease = 0;
+            you.duration[DUR_CONF] = 0;
+        }
         break;
 
     case POT_HEAL_WOUNDS:
-        if (you.species == SP_VAMPIRE)
-        {
-            inc_hp((10 + random2avg(28, 3)) / 2, false);
-            mpr("You feel better.");
-            break;
-        }
+        inc_hp((10 + random2avg(28, 3)) / factor, false);
         mpr("You feel much better.");
-        inc_hp(10 + random2avg(28, 3), false);
 
         // only fix rot when healed to full 
-        if (you.hp == you.hp_max)
+        if ( you.species != SP_VAMPIRE && you.hp == you.hp_max )
         {
             unrot_hp( 2 + random2avg(5, 2) );
             set_hp(you.hp_max, false);
@@ -99,39 +95,31 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_SPEED:
-        if (you.species == SP_VAMPIRE)
-        {
- 	         haste_player( (40 + random2(pow)) / 2 );
-       	   break;
-        }
-        haste_player( 40 + random2(pow) );
+        haste_player( (40 + random2(pow)) / factor );
         break;
 
     case POT_MIGHT:
-        {
-            bool were_mighty = (you.duration[DUR_MIGHT] > 0);
+    {
+        const bool were_mighty = (you.duration[DUR_MIGHT] > 0);
+        
+        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
+             were_mighty ? "mightier" : "very mighty");
 
-            if (!were_mighty)
-                mpr( "You feel very mighty all of a sudden." );
-            else 
-            {
-                mpr( "You feel mightier all of a sudden." );
-                contaminate_player(1);
-            }
+        if ( were_mighty )
+            contaminate_player(1);
+        else
+            modify_stat(STAT_STRENGTH, 5, true);
 
-            // conceivable max gain of +184 {dlb}
-            you.duration[DUR_MIGHT] += 35 + random2(pow);
+        // conceivable max gain of +184 {dlb}
+        you.duration[DUR_MIGHT] += 35 + random2(pow);
+        
+        // files.cc permits values up to 215, but ... {dlb}
+        if (you.duration[DUR_MIGHT] > 80)
+            you.duration[DUR_MIGHT] = 80;
 
-            if (!were_mighty)
-                modify_stat(STAT_STRENGTH, 5, true);
-
-            // files.cc permits values up to 215, but ... {dlb}
-            if (you.duration[DUR_MIGHT] > 80)
-                you.duration[DUR_MIGHT] = 80;
-
-            did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
-        }
+        did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
         break;
+    }
 
     case POT_GAIN_STRENGTH:
         mutate(MUT_STRONG);
@@ -179,36 +167,18 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_SLOWING:
-        if (you.species == SP_VAMPIRE)
-        {
-            slow_player( (10 + random2(pow)) / 2 );
-            xom_is_stimulated(32);
-        	  break;
-        }
-        slow_player( 10 + random2(pow) );
-        xom_is_stimulated(64);
+        slow_player( (10 + random2(pow)) / factor );
+        xom_is_stimulated(64 / factor);
         break;
 
     case POT_PARALYSIS:
-        if (you.species == SP_VAMPIRE)
-        {
-            slow_player( 10 + random2(pow) );
-            xom_is_stimulated(32);
-            break;
-        }
         you.paralyse(2 + random2( 6 + you.duration[DUR_PARALYSIS] ));
         xom_is_stimulated(64);
         break;
 
     case POT_CONFUSION:
-        if (you.species == SP_VAMPIRE)
-        {
-            confuse_player( (3 + random2(8)) / 2 );
-            xom_is_stimulated(54);
-            break;
-        }
-        confuse_player( 3 + random2(8) );
-        xom_is_stimulated(128);
+        confuse_player( (3 + random2(8)) / factor );
+        xom_is_stimulated(128 / factor);
         break;
 
     case POT_INVISIBILITY:
@@ -234,20 +204,15 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (you.species == SP_VAMPIRE || you.mutation[MUT_CARNIVOROUS] == 3)
         {
             mpr("Blech - that potion was really gluggy!");
-            break;
         }
-        mpr("That potion was really gluggy!");
-        lessen_hunger(6000, true);
+        else
+        {
+            mpr("That potion was really gluggy!");
+            lessen_hunger(6000, true);
+        }
         break;
 
     case POT_DEGENERATION:
-        if (you.species == SP_VAMPIRE)
-        {
-            mpr("There was something wrong with that liquid!");
-            lose_stat(STAT_RANDOM, 1 + random2(2));
-            xom_is_stimulated(32);
-            break;
-        }
         mpr("There was something very wrong with that liquid!");
         lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
         xom_is_stimulated(64);
@@ -268,13 +233,12 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (you.species == SP_VAMPIRE)
         {
             mpr("Blech - this tastes like water.");
-            break;
         }
-        mpr("This tastes like water.");
-        // we should really separate thirst from hunger {dlb}
-        // Thirst would just be annoying for the player, the
-        // 20 points here doesn't represesent real food anyways -- bwr
-        lessen_hunger(20, true);
+        else
+        {
+            mpr("This tastes like water.");
+            lessen_hunger(20, true);
+        }
         break;
 
     case POT_EXPERIENCE:
@@ -297,19 +261,15 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (you.magic_points + new_value > you.max_magic_points)
         {
             new_value = (you.max_magic_points - you.magic_points)
-                + (you.magic_points + new_value - you.max_magic_points) / 4 + 1;
+                + (you.magic_points + new_value - you.max_magic_points)/4 + 1;
         }
 
         inc_mp( new_value, true );
         break;
 
     case POT_RESTORE_ABILITIES:
-        // messaging taken care of within function {dlb}
-        // not quite true... if no stat's are restore = no message, and
-        // that's just confusing when trying out random potions (this one
-        // still auto-identifies so we know what the effect is, but it
-        // shouldn't require bringing up the descovery screen to do that -- bwr
-        if (restore_stat(STAT_ALL, false) == false)
+        // give a message if restore_stat doesn't
+        if (!restore_stat(STAT_ALL, false))
             mpr( "You feel refreshed." );
         break;
 
@@ -318,28 +278,25 @@ bool potion_effect( potion_type pot_eff, int pow )
         {
             mpr("You feel slightly irritated.");
             make_hungry(100, false);
-            break;
         }
-        go_berserk(true);
-        xom_is_stimulated(64);
+        else
+        {
+            go_berserk(true);
+            xom_is_stimulated(64);
+        }
         break;
 
     case POT_CURE_MUTATION:
         mpr("It has a very clean taste.");
-        for (i = 0; i < 7; i++)
-        {
+        for (int i = 0; i < 7; i++)
             if (random2(10) > i)
                 delete_mutation(RANDOM_MUTATION);
-        }
         break;
 
     case POT_MUTATION:
         mpr("You feel extremely strange.");
-        for (i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++)
             mutate(RANDOM_MUTATION, false);
-        }
-
         did_god_conduct(DID_STIMULANTS, 4 + random2(4));
         break;
         
@@ -366,10 +323,10 @@ bool potion_effect( potion_type pot_eff, int pow )
         else
         {
             bool likes_blood = (you.species == SP_KOBOLD
-		                            || you.species == SP_OGRE
+                                || you.species == SP_OGRE
                                 || you.species == SP_TROLL
                                 || you.mutation[MUT_CARNIVOROUS]);
-                            
+
             if (likes_blood)
             {
                 mpr("This tastes like blood.");
@@ -386,6 +343,15 @@ bool potion_effect( potion_type pot_eff, int pow )
             }
             did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3));
         }
+        break;
+
+    case POT_RESISTANCE:
+        mpr("You feel protected.");
+        you.duration[DUR_RESIST_FIRE] += random2(pow) + 10;
+        you.duration[DUR_RESIST_COLD] += random2(pow) + 10;
+        you.duration[DUR_INSULATION]  += random2(pow) + 10;
+        // one contamination point for each resist
+        contaminate_player(3);
         break;
 
     case NUM_POTIONS:

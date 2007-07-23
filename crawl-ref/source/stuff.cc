@@ -248,6 +248,18 @@ int random_choose_weighted(int weight, int first, ...)
     return (chosen);
 }
 
+int weighted_random( const int weights[], unsigned int numweights )
+{
+    int totalweight = 0;
+    unsigned int result = 0;
+    for ( unsigned int i = 0; i < numweights; ++i )
+    {
+        totalweight += weights[i];
+        if ( random2(totalweight) < weights[i] )
+            result = i;
+    }
+    return result;
+}
 
 int random2( int max )
 {

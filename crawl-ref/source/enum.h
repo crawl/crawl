@@ -2892,6 +2892,7 @@ enum potion_type
     POT_CURE_MUTATION,
     POT_MUTATION,
     POT_BLOOD,
+    POT_RESISTANCE,
     NUM_POTIONS
 };
 

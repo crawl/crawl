@@ -1212,6 +1212,7 @@ static int l_item_potion_type(lua_State *ls)
             case POT_MAGIC:
             case POT_RESTORE_ABILITIES:
             case POT_CURE_MUTATION:
+            case POT_RESISTANCE:
                  val = 1;
                  break;
 
