@@ -846,8 +846,7 @@ int player_res_magic(void)
     }
 
     /* randarts - multiplicative effect */
-    rm *= (scan_randarts(RAP_MAGIC) + 100);
-    rm /= 100;
+    rm += scan_randarts(RAP_MAGIC);
 
     /* armour  */
     rm += 30 * player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE );
