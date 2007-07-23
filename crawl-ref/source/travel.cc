@@ -3291,6 +3291,7 @@ void TravelCache::delete_waypoint()
             if (waypoints[key].is_valid())
             {
                 waypoints[key].clear();
+                update_waypoints();
                 continue;
             }
         }
@@ -3298,6 +3299,7 @@ void TravelCache::delete_waypoint()
         {
             for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
                 waypoints[i].clear();
+            update_waypoints();
             break;
         }
 
