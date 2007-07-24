@@ -10,7 +10,7 @@
 lua {{
     function check_expire_marker(e)
         if not crawl.one_chance_in(3) then
-            e.marker("O = timer: 1000")
+            e.marker("O = timer: 1000-1500")
         end
     end
 }}

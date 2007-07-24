@@ -1334,9 +1334,9 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("labyrinth entrance");
     case DNGN_ENTER_BAZAAR:
         if (temporary)
-            return ("gently fading gateway to a fabulous bazaar");
+            return ("gently fading gateway to a bazaar");
         else
-            return ("gateway to a fabulous bazaar");
+            return ("gateway to a bazaar");
     case DNGN_EXIT_BAZAAR:
         return ("exit from the bazaar");
     case DNGN_ENTER_DIS:

@@ -584,6 +584,7 @@ void CLua::init_lua()
     luaopen_base(_state);
     luaopen_string(_state);
     luaopen_table(_state);
+    luaopen_math(_state);
 
     // Open Crawl bindings
     luaopen_kills(_state);

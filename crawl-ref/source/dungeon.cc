@@ -301,7 +301,7 @@ static inline bool dgn_grid_is_passable(dungeon_feature_type grid)
 
 static inline bool dgn_square_is_passable(const coord_def &c)
 {
-    return ((dgn_map_mask(c) & MMT_OPAQUE) && dgn_grid_is_passable(grd(c)));
+    return (!(dgn_map_mask(c) & MMT_OPAQUE) && dgn_grid_is_passable(grd(c)));
 }
 
 static inline void dgn_point_record_stub(const coord_def &) { }
@@ -489,6 +489,7 @@ static void reset_level()
     minivault_chance = 3;
     use_random_maps  = true;
     dgn_check_connectivity = false;
+    dgn_zones        = 0;
     
     // blank level with DNGN_ROCK_WALL
     make_box(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, DNGN_ROCK_WALL);
@@ -1697,10 +1698,6 @@ static void builder_extras( int level_number, int level_type )
 
     if (one_chance_in(15))
         place_specific_stair(DNGN_ENTER_LABYRINTH, "lab_entry",
-                             level_number, true);
-
-    if (one_chance_in(20))
-        place_specific_stair(DNGN_ENTER_BAZAAR, "bzr_entry",
                              level_number, true);
 
     if (level_number > 6 && one_chance_in(10))
@@ -4396,6 +4393,8 @@ static void place_shops(int level_number, int nshops)
     unsigned char shop_place_x = 0;
     unsigned char shop_place_y = 0;
 
+    bool allow_bazaars = false;
+
     temp_rand = random2(125);
 
     if (!nshops)
@@ -4410,6 +4409,7 @@ static void place_shops(int level_number, int nshops)
         if (nshops == 0 || level_number < 3)
             return;
 #endif
+        allow_bazaars = true;
     }
 
     for (int i = 0; i < nshops; i++)
@@ -4423,12 +4423,22 @@ static void place_shops(int level_number, int nshops)
 
             timeout++;
 
-            if (timeout > 20000)
+            if (timeout > 10000)
                 return;
         }
         while (grd[shop_place_x][shop_place_y] != DNGN_FLOOR);
 
-        place_spec_shop(level_number, shop_place_x, shop_place_y, SHOP_RANDOM);
+        if (allow_bazaars && level_number > 9 && level_number < 27
+            && one_chance_in(30 - level_number))
+        {
+            place_specific_stair(DNGN_ENTER_BAZAAR, "bzr_entry",
+                                 level_number, true);
+        }
+        else
+        {
+            place_spec_shop(level_number,
+                            shop_place_x, shop_place_y, SHOP_RANDOM);
+        }
     }
 }                               // end place_shops()
 
