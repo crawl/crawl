@@ -84,6 +84,8 @@ The contents of this text are:
 6-c     Unix
                 background, use_fake_cursor
 
+7-  Inline Lua.
+
 --------------------------------------------------------------------------------
 
 There are three broad types of Crawl options: true/false values
@@ -206,15 +208,17 @@ sound = <regex>:<path to sound file>
 3-  Lua files.
 ==============
 
-Lua files are scripts which can provide existing commands with a new meaning
-or even create new commands (to be used in macros). If you don't know a 
-specific reason not to include some or all lua files, you'll do best to just 
-include them all.
+Lua files are scripts which can provide existing commands with a new
+meaning or create new commands (to be used in macros). To use Lua
+files, Crawl needs to be compiled with support for user Lua scripts.
+You can if your Crawl has Lua support by hitting V in-game. The list
+of features Crawl displays should include "Lua user scripts".
+
+Lua files are included using the lua_file option (one file per line):
 
 lua_file = <path/name.lua>
 
-The currently available lua's are
-  base.lua      -- needed for other lua scripts
+The available stock Lua scripts are
   stash.lua     -- annotates the stash file for better searching (Ctrl-F)
                    Searching for 'Long blades' will also turn up all weapons
                    with the long blade skill. Similarly, you can use 'altar',
@@ -228,7 +232,10 @@ The currently available lua's are
   gearset.lua   -- provides commands for switching of complete sets via macro
                    New macroable functions: rememberkit, swapkit
   eat.lua       -- prompts to eat chunks in inventory.
+  pickup.lua    -- smarter autopickup.
   trapwalk.lua  -- allows travel to cross certain traps if you have enough HP.
+
+Also see section 7 on inline Lua fragments.
 
 
 4-  Interface.
@@ -1371,3 +1378,36 @@ use_fake_cursor = false
         targeting screens instead of relying on the term to draw the cursor.
         Use this if your term cannot show a cursor over darkgrey/black
         squares.
+
+
+7-      Inline Lua
+------------------
+
+Lua code can be used directly in your init.txt/.crawlrc. You can use
+Lua to selectively include parts of your init.txt (based on character
+type, for instance) using this syntax:
+
+< Lua code >
+or
+<
+Lua code
+>
+or
+: Lua code till end of line
+
+Examples:
+
+# Print a welcome message
+: crawl.mpr("Hello " .. you.name())
+
+< 
+# Another welcome message
+crawl.mpr("Hi there")
+>
+
+# Controlling visibility of options:
+: if you.race() == "Mummy" then
+autopickup = $?+"/
+: else
+autopickup = $?+"/!%
+: end

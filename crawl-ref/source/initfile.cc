@@ -1152,6 +1152,23 @@ void game_options::read_options(InitLineInput &il, bool runscript)
         if ((str.empty() || str[0] == '#') && !inscriptcond && !inscriptblock)
             continue;
 
+        if (!inscriptcond && str[0] == ':')
+        {
+            // The init file is now forced into isconditional mode.
+            isconditional = true;
+            str = str.substr(1);
+            if (!str.empty() && runscript)
+            {
+                // If we're in the middle of an option block, close it.
+                if (luacond.length() && l_init)
+                {
+                    luacond += "]] )\n";
+                    l_init = false;
+                }
+                luacond += str + "\n";
+            }
+            continue;
+        }
         if (!inscriptcond && (str.find("L<") == 0 || str.find("<") == 0))
         {
             // The init file is now forced into isconditional mode.
@@ -1160,7 +1177,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
 
             str = str.substr( str.find("L<") == 0? 2 : 1 );
             // Is this a one-liner?
-            if (!str.empty() && str[ str.length() - 1 ] == '>') {
+            if (!str.empty() && str[ str.length() - 1 ] == '>')
+            {
                 inscriptcond = false;
                 str = str.substr(0, str.length() - 1);
             }
