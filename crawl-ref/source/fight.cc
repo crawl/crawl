@@ -165,7 +165,8 @@ static int maybe_random2( int x, bool random_factor )
 
 // Returns the to-hit for your extra unarmed.attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
-static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK, bool vampiric = false)
+static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
+                                    bool vampiric = false)
 {
     int your_to_hit;
 
@@ -589,8 +590,11 @@ bool melee_attack::player_aux_unarmed()
     for (int scount = 0; scount < 5; scount++)
     {
         unarmed_attack.clear();
+        miss_verb.clear();
+        simple_miss_message = false;
         damage_brand = SPWPN_NORMAL;
         aux_damage = 0;
+        
         bool vampiric = false;
 
         switch (scount)
@@ -768,8 +772,6 @@ bool melee_attack::player_aux_unarmed()
             }
 
             unarmed_attack = "bite";
-//            simple_miss_message = true;
-
             aux_damage += you.mutation[MUT_FANGS] * 2;
 
             // prob: 1/4 when non-hungry, 1/2 when hungry, 100% when starving
@@ -788,7 +790,6 @@ bool melee_attack::player_aux_unarmed()
             /* To add more, add to while part of loop below as well */
         default:
             continue;
-
         }
 
         // unified to-hit calculation
