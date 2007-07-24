@@ -4707,7 +4707,8 @@ void player::init()
 {
     birth_time = time( NULL );
     real_time = 0;
-    num_turns = 0;
+    num_turns = 0L;
+    last_view_update = 0L;
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;

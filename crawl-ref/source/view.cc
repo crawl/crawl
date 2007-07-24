@@ -617,14 +617,18 @@ static bool mons_was_seen_this_turn(const monsters *mons)
             monsters_seen_this_turn.end());
 }
 
-static void beogh_follower_convert(monsters *monster)
+inline static void beogh_follower_convert(monsters *monster)
 {
+    if (you.species != SP_HILL_ORC)
+        return;
+    
+    const bool is_orc = mons_species(monster->type) == MONS_ORC;
     // for followers of Beogh, decide whether orcs will join you
-    if (mons_species(monster->type) == MONS_ORC
-        && you.religion == GOD_BEOGH
-        && !(monster->flags & MF_CONVERT_ATTEMPT)
-        // && !mons_is_unique(monster->type) // does not work on Blork
+    if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
+        && !(monster->flags & MF_CONVERT_ATTEMPT)
+        && is_orc
+        && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
@@ -702,10 +706,8 @@ static void beogh_follower_convert(monsters *monster)
             behaviour_event(monster, ME_ALERT, MHITYOU);
         }
     }
-    else if (mons_species(monster->type) == MONS_ORC
-             && you.species == SP_HILL_ORC
+    else if (is_orc
              && !(you.religion == GOD_BEOGH)
-//                     && monster->foe == MHITYOU
              && monster->attitude == ATT_FRIENDLY
              && (monster->flags & MF_CONVERT_ATTEMPT)
              && (monster->flags & MF_GOD_GIFT)
@@ -817,6 +819,34 @@ static void handle_monster_shouts(monsters* monster)
     }
 }
 
+inline static bool update_monster_grid(const monsters *monster)
+{
+    const int ex = monster->x - you.x_pos + 9;
+    const int ey = monster->y - you.y_pos + 9;
+
+    if (!player_monster_visible( monster ))
+    {
+        // ripple effect?
+        if (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
+            && !mons_flies(monster)
+            && env.cgrid(monster->pos()) == EMPTY_CLOUD)
+        {
+            set_show_backup(ex, ey);
+            env.show[ex][ey] = DNGN_INVIS_EXPOSED;
+            env.show_col[ex][ey] = BLUE; 
+        }
+        return (false);
+    }
+
+    // mimics are always left on map
+    if (!mons_is_mimic( monster->type ))
+        set_show_backup(ex, ey);
+
+    env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
+    env.show_col[ex][ey] = get_mons_colour( monster );
+    return (true);
+}
+
 void monster_grid(bool do_updates)
 {
     monsters *monster = NULL;
@@ -836,27 +866,9 @@ void monster_grid(bool do_updates)
                 handle_monster_shouts(monster);
             }
 
-            const int ex = monster->x - you.x_pos + 9;
-            const int ey = monster->y - you.y_pos + 9;
-
-            if (!player_monster_visible( monster ))
-            {
-                // ripple effect?
-                if (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
-                    && !mons_flies(monster)
-                    && env.cgrid(monster->pos()) == EMPTY_CLOUD)
-                {
-                    set_show_backup(ex, ey);
-                    env.show[ex][ey] = DNGN_INVIS_EXPOSED;
-                    env.show_col[ex][ey] = BLUE; 
-                }
+            if (!update_monster_grid(monster))
                 continue;
-            }
-
-            // mimics are always left on map
-            if (!mons_is_mimic( monster->type ))
-                set_show_backup(ex, ey);
-
+            
             if (player_monster_visible(monster)
                 && !mons_is_submerged(monster)
                 && !mons_friendly(monster)
@@ -865,9 +877,6 @@ void monster_grid(bool do_updates)
             {
                 monsters_seen_this_turn.insert(monster);
             }
-
-            env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
-            env.show_col[ex][ey] = get_mons_colour( monster );
 
             beogh_follower_convert(monster);
         }
@@ -1010,46 +1019,42 @@ static int get_item_dngn_code(const item_def &item)
    }
 }
 
+inline static void update_item_grid(const coord_def &gp, const coord_def &ep)
+{
+    const item_def &eitem = mitm[igrd(gp)];
+    unsigned short &ecol = env.show_col(ep);
+
+    const dungeon_feature_type grid = grd(gp);
+    if (Options.stair_item_brand && is_stair(grid))
+        ecol |= COLFLAG_STAIR_ITEM;
+    else
+    {
+        ecol = (grid == DNGN_SHALLOW_WATER)? CYAN : eitem.colour;
+        if (eitem.link != NON_ITEM)
+            ecol |= COLFLAG_ITEM_HEAP;
+        env.show(ep) = get_item_dngn_code( eitem );
+    }
+}
+
 void item_grid()
 {
-    char count_x, count_y;
-
-    for (count_y = (you.y_pos - 8); (count_y < you.y_pos + 9); count_y++)
+    coord_def gp;
+    for (gp.y = (you.y_pos - 8); (gp.y < you.y_pos + 9); gp.y++)
     {
-        for (count_x = (you.x_pos - 8); (count_x < you.x_pos + 9); count_x++)
+        for (gp.x = (you.x_pos - 8); (gp.x < you.x_pos + 9); gp.x++)
         {
-            if (count_x >= 0 && count_x < GXM && count_y >= 0 && count_y < GYM)
+            if (in_bounds(gp))
             {
-                if (igrd[count_x][count_y] != NON_ITEM)
+                if (igrd(gp) != NON_ITEM)
                 {
-                    const int ix = count_x - you.x_pos + 9;
-                    const int iy = count_y - you.y_pos + 9;
-                    if (env.show[ix][iy])
-                    {
-                        const item_def &eitem = mitm[igrd[count_x][count_y]];
-                        unsigned short &ecol = env.show_col[ix][iy];
-
-                        const dungeon_feature_type grid = grd[count_x][count_y];
-                        if (Options.stair_item_brand && is_stair(grid))
-                            ecol |= COLFLAG_STAIR_ITEM;
-                        else
-                        {
-                            ecol = (grid == DNGN_SHALLOW_WATER)?
-                                CYAN
-                                : eitem.colour;
-
-                            if (eitem.link != NON_ITEM)
-                            {
-                                ecol |= COLFLAG_ITEM_HEAP;
-                            }
-                            env.show[ix][iy] = get_item_dngn_code( eitem );
-                        }
-                    }
+                    const coord_def ep = gp - you.pos() + coord_def(9, 9);
+                    if (env.show(ep))
+                        update_item_grid(gp, ep);
                 }
             }
-        }                       // end of "for count_y, count_x"
+        }
     }
-}                               // end item()
+}
 
 void get_item_glyph( const item_def *item, unsigned *glych,
                      unsigned short *glycol )
@@ -1065,94 +1070,94 @@ void get_mons_glyph( const monsters *mons, unsigned *glych,
     get_symbol( 0, 0, mons->type + DNGN_START_OF_MONSTERS, glych, glycol );
 }
 
+inline static void update_cloud_grid(int cloudno)
+{
+    int which_colour = LIGHTGREY;
+    const int ex = env.cloud[cloudno].x - you.x_pos + 9;
+    const int ey = env.cloud[cloudno].y - you.y_pos + 9;
+                
+    switch (env.cloud[cloudno].type)
+    {
+    case CLOUD_FIRE:
+        if (env.cloud[cloudno].decay <= 20)
+            which_colour = RED;
+        else if (env.cloud[cloudno].decay <= 40)
+            which_colour = LIGHTRED;
+        else if (one_chance_in(4))
+            which_colour = RED;
+        else if (one_chance_in(4))
+            which_colour = LIGHTRED;
+        else
+            which_colour = YELLOW;
+        break;
+
+    case CLOUD_STINK:
+        which_colour = GREEN;
+        break;
+
+    case CLOUD_COLD:
+        if (env.cloud[cloudno].decay <= 20)
+            which_colour = BLUE;
+        else if (env.cloud[cloudno].decay <= 40)
+            which_colour = LIGHTBLUE;
+        else if (one_chance_in(4))
+            which_colour = BLUE;
+        else if (one_chance_in(4))
+            which_colour = LIGHTBLUE;
+        else
+            which_colour = WHITE;
+        break;
+
+    case CLOUD_POISON:
+        which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
+        break;
+
+    case CLOUD_BLUE_SMOKE:
+        which_colour = LIGHTBLUE;
+        break;
+
+    case CLOUD_PURP_SMOKE:
+        which_colour = MAGENTA;
+        break;
+
+    case CLOUD_MIASMA:
+    case CLOUD_BLACK_SMOKE:
+        which_colour = DARKGREY;
+        break;
+
+    case CLOUD_MIST:
+        which_colour = EC_MIST;
+        break;
+
+    default:
+        which_colour = LIGHTGREY;
+        break;
+    }
+
+    set_show_backup(ex, ey);
+    env.show[ex][ey] = DNGN_CLOUD;
+    env.show_col[ex][ey] = which_colour;    
+}
+
 void cloud_grid(void)
 {
     int mnc = 0;
-
-    // btw, this is also the 'default' color {dlb}
-    unsigned char which_colour = LIGHTGREY;
 
     for (int s = 0; s < MAX_CLOUDS; s++)
     {
         // can anyone explain this??? {dlb}
         // its an optimization to avoid looking past the last cloud -bwr
-        if (mnc > env.cloud_no) 
+        if (mnc >= env.cloud_no) 
             break;
 
         if (env.cloud[s].type != CLOUD_NONE)
         {
             mnc++;
-
             if (see_grid(env.cloud[s].x, env.cloud[s].y))
-            {
-                const int ex = env.cloud[s].x - you.x_pos + 9;
-                const int ey = env.cloud[s].y - you.y_pos + 9;
-                
-                switch (env.cloud[s].type)
-                {
-                case CLOUD_FIRE:
-                    if (env.cloud[s].decay <= 20)
-                        which_colour = RED;
-                    else if (env.cloud[s].decay <= 40)
-                        which_colour = LIGHTRED;
-                    else if (one_chance_in(4))
-                        which_colour = RED;
-                    else if (one_chance_in(4))
-                        which_colour = LIGHTRED;
-                    else
-                        which_colour = YELLOW;
-                    break;
-
-                case CLOUD_STINK:
-                    which_colour = GREEN;
-                    break;
-
-                case CLOUD_COLD:
-                    if (env.cloud[s].decay <= 20)
-                        which_colour = BLUE;
-                    else if (env.cloud[s].decay <= 40)
-                        which_colour = LIGHTBLUE;
-                    else if (one_chance_in(4))
-                        which_colour = BLUE;
-                    else if (one_chance_in(4))
-                        which_colour = LIGHTBLUE;
-                    else
-                        which_colour = WHITE;
-                    break;
-
-                case CLOUD_POISON:
-                    which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
-                    break;
-
-                case CLOUD_BLUE_SMOKE:
-                    which_colour = LIGHTBLUE;
-                    break;
-
-                case CLOUD_PURP_SMOKE:
-                    which_colour = MAGENTA;
-                    break;
-
-                case CLOUD_MIASMA:
-                case CLOUD_BLACK_SMOKE:
-                    which_colour = DARKGREY;
-                    break;
-
-                case CLOUD_MIST:
-                    which_colour = EC_MIST;
-                    break;
-
-                default:
-                    which_colour = LIGHTGREY;
-                    break;
-                }
-
-                set_show_backup(ex, ey);
-                env.show[ex][ey] = DNGN_CLOUD;
-                env.show_col[ex][ey] = which_colour;
-            }
-        }                       // end 'if != CLOUD_NONE'
-    }                           // end 'for s' loop
-}                               // end cloud_grid()
+                update_cloud_grid(s);
+        }
+    }
+}
 
 // Noisy now has a messenging service for giving messages to the 
 // player is appropriate.
@@ -3928,6 +3933,67 @@ static int viewmap_flash_colour()
     return (BLACK);
 }
 
+static void update_env_show(const coord_def &gp, const coord_def &ep)
+{
+    // The sequence is grid, items, clouds, monsters.
+    env.show(ep) = grd(gp);
+    env.show_col(ep) = 0;
+
+    if (igrd(gp) != NON_ITEM)
+        update_item_grid(gp, ep);
+
+    const int cloud = env.cgrid(gp);
+    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE)
+        update_cloud_grid(cloud);
+    
+    const monsters *mons = monster_at(gp);
+    if (mons && mons->alive())
+        update_monster_grid(mons);
+}
+
+// Updates one square of the view area. Should only be called for square
+// in LOS.
+void view_update_at(const coord_def &pos)
+{
+    if (pos == you.pos())
+        return;
+
+    const coord_def vp = grid2view(pos);
+    const coord_def ep = view2show(vp);
+    update_env_show(pos, ep);
+
+    int object = env.show(ep);
+
+    if (!object)
+        return;
+    
+    unsigned short  colour = env.show_col(ep);
+    unsigned        ch = 0;
+
+    if (object == DNGN_SECRET_DOOR)
+        object = grid_secret_door_appearance( pos.x, pos.y );
+
+    get_symbol( pos.x, pos.y, object, &ch, &colour );
+
+    int flash_colour = you.flash_colour;
+    if (flash_colour == BLACK)
+        flash_colour = viewmap_flash_colour();
+    
+    gotoxy(vp.x, vp.y);
+    textcolor(flash_colour? flash_colour : colour);
+    putwch(ch);
+}
+
+bool view_update()
+{
+    if (you.num_turns > you.last_view_update)
+    {
+        viewwindow(true, false);
+        return (true);
+    }
+    return (false);
+}
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -3961,6 +4027,7 @@ void viewwindow(bool draw_it, bool do_updates)
         cursor_control cs(false);
 
         const bool map = player_in_mappable_area();
+        const bool draw = !you.running || Options.travel_delay > -1;
         int bufcount = 0;
 
         int flash_colour = you.flash_colour;
@@ -4129,8 +4196,9 @@ void viewwindow(bool draw_it, bool do_updates)
         you.flash_colour = BLACK;
 
         // avoiding unneeded draws when running
-        if (!you.running || (Options.travel_delay > -1))
+        if (draw)
         {
+            you.last_view_update = you.num_turns;
             bufcount = 0;
             for (count_y = 0; count_y < crawl_view.viewsz.y; count_y++)
             {

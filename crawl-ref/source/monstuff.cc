@@ -842,9 +842,17 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         }
     }
 
+    const coord_def mwhere = monster->pos();
     if (!hard_reset)
         monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
     monster_cleanup(monster);
+
+    // Force redraw for monsters that die.
+    if (see_grid(mwhere))
+    {
+        view_update_at(mwhere);
+        update_screen();
+    }
 }                                                   // end monster_die
 
 void monster_cleanup(monsters *monster)
@@ -3556,7 +3564,7 @@ static void handle_monster_move(int i, monsters *monster)
 
     monster->check_speed();
     
-    while (monster->speed_increment >= 80)
+    while (monster->has_action_energy())
     {                   // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
@@ -3580,7 +3588,7 @@ static void handle_monster_move(int i, monsters *monster)
             }
         }
 
-        if (monster->type == MONS_TIAMAT && one_chance_in(3) )
+        if (monster->type == MONS_TIAMAT && one_chance_in(3))
         {
             int cols[] = { RED, WHITE, DARKGREY, GREEN, MAGENTA };
             int newcol = cols[random2(sizeof(cols) / sizeof(cols[0]))];
@@ -4122,6 +4130,8 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
     mgrd[cx][cy] = m2i;
     immobile_monster[m2i] = true;
 
+    mon->check_redraw(coord_def(cx, cy));
+
     mons_trap(mon);
     mons_trap(m2);
 
@@ -4175,6 +4185,8 @@ static void do_move_monster(monsters *monster, int xi, int yi)
        items (eg ammunition) identical to those it's carrying. */
     mgrd[monster->x][monster->y] = monster_index(monster);
 
+    monster->check_redraw(monster->pos() - coord_def(xi, yi));
+    
     // monsters stepping on traps:
     mons_trap(monster);
 
@@ -4575,7 +4587,6 @@ static void monster_move(monsters *monster)
             }
         }
     }
-
 
     // now, if a monster can't move in its intended direction, try
     // either side.  If they're both good, move in whichever dir

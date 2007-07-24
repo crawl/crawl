@@ -259,6 +259,12 @@ unsigned long get_mons_resists(const monsters *mon)
     return (resists);
 }
 
+monsters *monster_at(const coord_def &pos)
+{
+    const int mindex = mgrd(pos);
+    return (mindex != NON_MONSTER? &menv[mindex] : NULL);
+}
+
 int mons_piety(const monsters *mon)
 {
     if (mon->god == GOD_NO_GOD)
@@ -4198,6 +4204,25 @@ void monsters::mutate()
 bool monsters::is_icy() const
 {
     return (mons_is_icy(type));
+}
+
+bool monsters::has_action_energy() const
+{
+    return (speed_increment >= 80);
+}
+
+void monsters::check_redraw(const coord_def &old) const
+{
+    const bool see_new = see_grid(pos());
+    const bool see_old = see_grid(old);
+    if ((see_new || see_old) && !view_update())
+    {
+        if (see_new)
+            view_update_at(pos());
+        if (see_old)
+            view_update_at(old);
+        update_screen();
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////

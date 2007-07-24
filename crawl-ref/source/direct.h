@@ -105,4 +105,9 @@ inline coord_def view2show(const coord_def &pos)
     return (pos - crawl_view.vlos1 + coord_def(1, 1));
 }
 
+inline coord_def grid2show(const coord_def &pos)
+{
+    return (view2show(grid2view(pos)));
+}
+
 #endif

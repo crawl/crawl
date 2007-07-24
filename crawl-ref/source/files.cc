@@ -81,6 +81,7 @@
 #include "tags.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "view.h"
 
 void save_level(int level_saved, level_area_type lt,
                 branch_type where_were_you);
@@ -960,6 +961,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (timeval > 0)
         {
             you.time_taken = timeval;
+            viewwindow(true, false);
             handle_monsters();
         }
     }

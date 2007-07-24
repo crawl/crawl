@@ -170,14 +170,11 @@ void zap_animation( int colour, const monsters *mon, bool force )
 
     if (in_los_bounds(drawx, drawy))
     {
+        view_update();
         textcolor( colour );
         gotoxy( drawx, drawy );
         putch( SYM_ZAP );
-
-#ifdef UNIX
         update_screen();
-#endif
-
         delay(50);
     }
 }

@@ -78,20 +78,6 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg = NULL );
  * *********************************************************************** */
 void show_map( FixedVector<int, 2>& spec_place, bool travel_mode );
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void viewwindow2(char draw_it, bool do_updates);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void viewwindow3(char draw_it, bool do_updates);        // non-IBM graphics
-
 // last updated 19jun2000 (gdl)
 /* ***********************************************************************
  * called from: acr view
@@ -157,6 +143,8 @@ std::string screenshot(bool fullscreen = false);
 unsigned get_sightmap_char(int feature);
 unsigned get_magicmap_char(int feature);
 
+bool view_update();
+void view_update_at(const coord_def &pos);
 void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();
 

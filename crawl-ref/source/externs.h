@@ -769,6 +769,8 @@ public:
   long          real_time;            // real time played (in seconds) 
   long          num_turns;            // number of turns taken
 
+  long          last_view_update;     // what turn was the view last updated?
+
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen
@@ -1023,6 +1025,9 @@ public:
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
 public:
+    bool has_action_energy() const;
+    void check_redraw(const coord_def &oldpos) const;
+    
     kill_category kill_alignment() const;
 
     int  foe_distance() const;

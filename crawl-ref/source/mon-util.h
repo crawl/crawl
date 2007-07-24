@@ -78,6 +78,8 @@ monsterentry *get_monster_data(int p_monsterid);
 void init_monsters( FixedVector<unsigned short, 1000>& colour );
 void init_monster_symbols();
 
+monsters *monster_at(const coord_def &pos);
+
 // this is the old moname()
 std::string mons_type_name(int type, description_level_type desc );
                   

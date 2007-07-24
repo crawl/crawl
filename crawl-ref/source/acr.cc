@@ -2170,7 +2170,7 @@ static void world_reacts()
     // If you're wielding a rod, it'll gradually recharge.
     recharge_rods();
 
-    viewwindow(1, true);
+    viewwindow(true, true);
 
     handle_monsters();
     check_banished();
