@@ -97,7 +97,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
         "death", "necro", "unholy", "vehumet", "crystal", "blood", "smoke",
         "slime", "jewel", "elven", "dwarven", "orcish", "gila", "floor",
-        "rock", "stone", "mist", "random"
+        "rock", "stone", "mist", "shimmer_blue", "random"
     };
 
     for (ret = 0; ret < 16; ret++)
@@ -1392,12 +1392,34 @@ void game_options::set_menu_sort(std::string field)
     sort_menus.push_back(cond);
 }
 
-void game_options::add_all(const std::string &s, const std::string &separator,
-                           void (game_options::*add)(const std::string &))
+void game_options::split_parse(
+    const std::string &s, const std::string &separator,
+    void (game_options::*add)(const std::string &))
 {
     const std::vector<std::string> defs = split_string(separator, s);
     for (int i = 0, size = defs.size(); i < size; ++i)
         (this->*add)( defs[i] );
+}
+
+void game_options::set_option_fragment(const std::string &s)
+{
+    if (s.empty())
+        return;
+    
+    std::string::size_type st = s.find(':');
+    if (st == std::string::npos)
+    {
+        // Boolean option.
+        if (s[0] == '!')
+            read_option_line(s.substr(1) + " = false");
+        else
+            read_option_line(s + " = true");
+    }
+    else
+    {
+        // key:val option.
+        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1));
+    }
 }
 
 void game_options::read_option_line(const std::string &str, bool runscript)
@@ -1476,7 +1498,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
         && key != "feature" && key != "fire_items_start"
-        && key != "mon_glyph"
+        && key != "mon_glyph" && key != "opt" && key != "option"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries")
@@ -1484,8 +1506,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         lowercase( field );
     }
 
-    // everything not a valid line is treated as a comment
-    if (key == "autopickup")
+    if (key == "opt" || key == "option")
+    {
+        split_parse(field, ",", &game_options::set_option_fragment);
+    }
+    else if (key == "autopickup")
     {
         // clear out autopickup
         autopickups = 0L;
@@ -1722,11 +1747,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "feature" || key == "dungeon")
     {
-        add_all(field, ";", &game_options::add_feature_override);
+        split_parse(field, ";", &game_options::add_feature_override);
     }
     else if (key == "mon_glyph")
     {
-        add_all(field, ",", &game_options::add_mon_glyph_override);
+        split_parse(field, ",", &game_options::add_mon_glyph_override);
     }
     else if (key == "friend_brand")
     {

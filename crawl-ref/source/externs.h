@@ -1864,12 +1864,13 @@ private:
     int  read_explore_stop_conditions(const std::string &) const;
     void validate_options();
 
-    void add_all(const std::string &s, const std::string &separator,
-                 void (game_options::*add)(const std::string &));
+    void split_parse(const std::string &s, const std::string &separator,
+                     void (game_options::*add)(const std::string &));
     void add_mon_glyph_override(monster_type mtype, mon_display &mdisp);    
     void add_mon_glyph_overrides(const std::string &mons, mon_display &mdisp);
     void add_mon_glyph_override(const std::string &);
     mon_display parse_mon_glyph(const std::string &s) const;
+    void set_option_fragment(const std::string &s);    
 
     static const std::string interrupt_prefix;
 };

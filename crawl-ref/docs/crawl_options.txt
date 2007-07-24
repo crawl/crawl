@@ -86,21 +86,37 @@ The contents of this text are:
 
 --------------------------------------------------------------------------------
 
-There are basically three types of Crawl options: true/false values (booleans),
-numbers, and lists. An option is most often specified with its default value 
-(if there is one); this should also explain which of the above-mentioned types 
-it is. Each option should have some remarks on how it's typically used - beware
-that this depends strongly on your playing style and sometimes also on hardware
-or operating system.
+There are three broad types of Crawl options: true/false values
+(booleans), arbitrary values, and lists of values. In this document,
+options are usually described with their default values (if there is a
+default); this should also explain which of the above-mentioned types
+it is. Each option should have some remarks on how it's typically used
+- but keep in mind that the options you want to use depend on your
+playing style and sometimes also on your operating system.
 
-Note that the init.txt coming with regular distributions has all boolean 
-options commented out. The commented-out values are always the _non-defaults_, 
-so you can toggle boolean options by just uncommenting them.
+The standard init.txt distributed with Crawl includes all boolean
+options, commented out. The commented-out values are always the
+_non-defaults_, so you can toggle boolean options by uncommenting
+them.
 
-Some options need a path as an argument; here you have to use a filesystem path
-suitable for your system. Other options accept regular expressions (regexes):
-here you can simply use ordinary strings, adapt the suggested regexes to your
-needs or search the internet for regex syntax.
+There are two styles you can use to set options. The classic
+name=value syntax, one option per-line:
+    remember_name  = true
+    explore_greedy = false
+    drop_mode      = multi
+
+And the NetHack-style combined option line:
+    OPTION = remember_name, !explore_greedy, drop_mode:multi
+
+The second style is useful to specify simple options in a few lines,
+but it cannot be used for options that take complex lists of values
+(such as the autopickup_exceptions option).
+
+Some options need a path as an argument; here you have to use a
+filesystem path suitable for your system. Other options accept regular
+expressions (regexes): here you can simply use ordinary strings, adapt
+the suggested regexes to your needs or search the internet for regex
+syntax.
 
 For long option names, you can define option aliases by doing:
     alias := long_option_name
