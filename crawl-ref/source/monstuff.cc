@@ -1101,7 +1101,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
             && MONST_INTERESTING(monster))
     {
         take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
-                       monster->name(DESC_NOCAP_A, true).c_str()));
+                       monster->name(DESC_CAP_A, true).c_str()));
     }
 
     // messaging: {dlb}
