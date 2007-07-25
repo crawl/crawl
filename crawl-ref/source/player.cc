@@ -2952,7 +2952,7 @@ int check_stealth(void)
                     stealth += (you.skills[SK_STEALTH] * 19);
                 }
                 else
-                    stealth += (you.skills[SK_STEALTH * 18]);
+                    stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             case SP_GNOME:
             case SP_HALFLING:
@@ -3134,7 +3134,7 @@ void display_char_status()
         if (you.disease)
             mpr("You are recuperating from your illness.");
         else
-        mpr( "You are regenerating." );
+            mpr( "You are regenerating." );
     }
 
     if (you.duration[DUR_SWIFTNESS])
