@@ -511,7 +511,7 @@ bool mons_speaks(const monsters *monster)
             switch (random2(12))
             {
             case 0:
-                strcat(info, " says, \"Just to tell me who NOT to kill.\"");
+                strcat(info, " says, \"Just tell me who NOT to kill.\"");
                 break;
             case 1:
                 strcat(info, " says, \"OK Boss!\"");
