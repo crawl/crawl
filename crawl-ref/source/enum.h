@@ -3635,29 +3635,32 @@ enum status_redraw_flag_type
 
 enum stave_type
 {
-    STAFF_WIZARDRY,                    //    0
+    // staves
+    STAFF_WIZARDRY = 0,
     STAFF_POWER,
     STAFF_FIRE,
     STAFF_COLD,
     STAFF_POISON,
-    STAFF_ENERGY,                      //    5
+    STAFF_ENERGY,
     STAFF_DEATH,
     STAFF_CONJURATION,
     STAFF_ENCHANTMENT,
     STAFF_SUMMONING,
-    STAFF_SMITING,                     //   10
+    STAFF_AIR,
+    STAFF_EARTH,
+    STAFF_CHANNELING,
+    // rods
+    STAFF_SMITING,              // must be first rod!
     STAFF_SPELL_SUMMONING,
     STAFF_DESTRUCTION_I,
     STAFF_DESTRUCTION_II,
     STAFF_DESTRUCTION_III,
-    STAFF_DESTRUCTION_IV,              //   15
+    STAFF_DESTRUCTION_IV,
     STAFF_WARDING,
     STAFF_DISCOVERY,
-    STAFF_DEMONOLOGY,                  //   18
-    STAFF_STRIKING,                    //   19
-    STAFF_AIR = 25,                    //   25
-    STAFF_EARTH,
-    STAFF_CHANNELING,
+    STAFF_DEMONOLOGY,
+    STAFF_STRIKING,
+    STAFF_VENOM,
     NUM_STAVES                         // must remain last member {dlb}
 };
 

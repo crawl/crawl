@@ -2820,6 +2820,11 @@ static std::string describe_staff( const item_def &item )
                 "which drains four charges. ";
             break;
 
+        case STAFF_VENOM:
+            description +=
+                "contains offensive and defensive spells of poison.";
+            break;
+
         case STAFF_STRIKING:
             description += "allows its wielder to strike foes from afar "
                 "with force bolts. ";

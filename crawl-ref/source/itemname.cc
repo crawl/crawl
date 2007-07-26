@@ -867,6 +867,7 @@ static const char* staff_type_name(int stafftype)
 {
     switch (static_cast<stave_type>(stafftype))
     {
+
     // staves
     case STAFF_WIZARDRY:    return "wizardry";
     case STAFF_POWER:       return "power";
@@ -877,22 +878,26 @@ static const char* staff_type_name(int stafftype)
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
     case STAFF_ENCHANTMENT: return "enchantment";
-    case STAFF_SMITING:     return "smiting";
-    case STAFF_STRIKING:    return "striking";
-    case STAFF_WARDING:     return "warding";
-    case STAFF_DISCOVERY:   return "discovery";
-    case STAFF_DEMONOLOGY:  return "demonology";
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
     case STAFF_SUMMONING:   return "summoning";
+
     // rods
     case STAFF_SPELL_SUMMONING: return "summoning";
+    case STAFF_CHANNELING:      return "channeling";
+    case STAFF_WARDING:         return "warding";
+    case STAFF_DISCOVERY:       return "discovery";
+    case STAFF_SMITING:         return "smiting";
+    case STAFF_STRIKING:        return "striking";
+    case STAFF_DEMONOLOGY:      return "demonology";
+    case STAFF_VENOM:           return "venom";
+
     case STAFF_DESTRUCTION_I:
     case STAFF_DESTRUCTION_II:
     case STAFF_DESTRUCTION_III:
     case STAFF_DESTRUCTION_IV:
         return "destruction";
-    case STAFF_CHANNELING:      return "channeling";
+
     default: return "bugginess";
     }
 }

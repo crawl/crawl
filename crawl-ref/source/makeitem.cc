@@ -2738,29 +2738,26 @@ int items( int allow_uniques,       // not just true-false,
         }
         break;
 
-    case OBJ_STAVES:            // this can be parsed, too {dlb}
+    case OBJ_STAVES:
         if (force_type != OBJ_RANDOM)
             mitm[p].sub_type = force_type;
         else
         {
-            mitm[p].sub_type = random2(13);
+            // assumption: STAFF_SMITING is the first rod
+            mitm[p].sub_type = random2(STAFF_SMITING);
 
-            // top three non-spell staves are in separate block -- bwr
-            if (mitm[p].sub_type >= 10)
-                mitm[p].sub_type = STAFF_AIR + mitm[p].sub_type - 10;  
-
-            // spell staves 
+            // rods are rare (10% of all staves)
             if (one_chance_in(10))
-                mitm[p].sub_type = STAFF_SMITING + random2(10);
+                mitm[p].sub_type = random_rod_subtype();
 
+            // staves of energy/channeling are less common, wizardry/power
+            // are more common
             if ((mitm[p].sub_type == STAFF_ENERGY 
                 || mitm[p].sub_type == STAFF_CHANNELING) && one_chance_in(4))
             {
                 mitm[p].sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER; 
             }
         }
-
-        mitm[p].special = random2(NUM_STAVE_ADJ);
 
         if (item_is_rod( mitm[p] ))
             init_rod_mp( mitm[p] );
@@ -2778,9 +2775,7 @@ int items( int allow_uniques,       // not just true-false,
         set_unique_item_status( OBJ_ORBS, mitm[p].sub_type, UNIQ_EXISTS );
         break;
 
-    // I think these must always be forced, too ... {dlb}
-
-    case OBJ_MISCELLANY: //mv: rewrote with use of NUM_MISCELLANY (9 Aug 01)
+    case OBJ_MISCELLANY:
         if (force_type == OBJ_RANDOM)
         {
             do
@@ -2819,7 +2814,7 @@ int items( int allow_uniques,       // not just true-false,
             mitm[p].plus = item_race;
 
         quant = 1;
-        break; // mv: end of rewrote;
+        break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}
     default:
@@ -2842,7 +2837,6 @@ int items( int allow_uniques,       // not just true-false,
 
     mitm[p].quantity = quant;
 
-    // should really only be used for monster inventories.
     if (dont_place)
     {
         mitm[p].x = 0;
@@ -2873,7 +2867,7 @@ int items( int allow_uniques,       // not just true-false,
 
     // Okay, this check should be redundant since the purpose of 
     // this function is to create valid items.  Still, we're adding 
-    // this safety for fear that a report of Trog giving a non-existant 
+    // this safety for fear that a report of Trog giving a nonexistent 
     // item might symbolize something more serious. -- bwr
     return (is_valid_item( mitm[p] ) ? p : NON_ITEM);
 }                               // end items()

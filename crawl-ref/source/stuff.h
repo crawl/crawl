@@ -37,7 +37,6 @@ int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
-int weighted_random(const int weights[], unsigned int numweights);
 unsigned long random_int();
 int random2avg( int max, int rolls );
 int bestroll(int max, int rolls);
@@ -147,5 +146,7 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     }
     return result;
 }
+
+int random_rod_subtype();
 
 #endif

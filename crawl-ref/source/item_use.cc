@@ -72,8 +72,8 @@
 #include "tutorial.h"
 #include "view.h"
 
-bool drink_fountain(void);
-static bool enchant_armour( void );
+static bool drink_fountain();
+static bool enchant_armour();
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -3004,7 +3004,9 @@ bool drink_fountain()
                                 4, 4, 4 };
 
         ASSERT( ARRAYSIZE(weights) == ARRAYSIZE(effects) );
-        fountain_effect = effects[weighted_random(weights,ARRAYSIZE(weights))];
+        fountain_effect =
+            effects[choose_random_weighted(weights,
+                                           weights + ARRAYSIZE(weights))];
     }
 
     if (fountain_effect != POT_WATER)

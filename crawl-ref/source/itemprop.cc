@@ -1776,15 +1776,12 @@ bool is_throwable( const item_def &wpn, size_type bodysize  )
 //
 bool item_is_rod( const item_def &item )
 {
-    return (item.base_type == OBJ_STAVES 
-            && item.sub_type >= STAFF_SMITING && item.sub_type < STAFF_AIR);
+    return (item.base_type == OBJ_STAVES && item.sub_type >= STAFF_SMITING);
 }
 
 bool item_is_staff( const item_def &item )
 {
-    // Isn't De Morgan's law wonderful. -- bwr
-    return (item.base_type == OBJ_STAVES 
-            && (item.sub_type < STAFF_SMITING || item.sub_type >= STAFF_AIR));
+    return (item.base_type == OBJ_STAVES && !item_is_rod(item));
 }
 
 //

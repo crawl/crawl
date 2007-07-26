@@ -248,19 +248,6 @@ int random_choose_weighted(int weight, int first, ...)
     return (chosen);
 }
 
-int weighted_random( const int weights[], unsigned int numweights )
-{
-    int totalweight = 0;
-    unsigned int result = 0;
-    for ( unsigned int i = 0; i < numweights; ++i )
-    {
-        totalweight += weights[i];
-        if ( random2(totalweight) < weights[i] )
-            result = i;
-    }
-    return result;
-}
-
 int random2( int max )
 {
     if (max <= 1)
@@ -1160,4 +1147,9 @@ void zap_los_monsters()
 int coord_def::distance_from(const coord_def &other) const
 {
     return (grid_distance(x, y, other.x, other.y));
+}
+
+int random_rod_subtype()
+{
+    return STAFF_SMITING + random2(NUM_STAVES - STAFF_SMITING);
 }

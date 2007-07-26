@@ -41,7 +41,7 @@
 #include "stuff.h"
 
 #define SPELLBOOK_SIZE 8
-#define NUMBER_SPELLBOOKS 60
+#define NUMBER_SPELLBOOKS 61
 
 static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
 {
@@ -574,7 +574,9 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 50 - Staff of Smiting //jmf: totally obsolete --- no longer looks here.
+    // Rods - start at 50.
+
+    // 50 - Rod of smiting
     {SPELL_SMITING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -584,7 +586,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 51 - Staff of Summoning
+
+    // 51 - Rod of summoning
     {SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_SUMMON_ELEMENTAL,
@@ -594,7 +597,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 52 - Staff of Destruction
+    // 52 - Rod of destruction (fire)
     {SPELL_THROW_FLAME,
      SPELL_BOLT_OF_FIRE,
      SPELL_FIREBALL,
@@ -604,7 +607,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 53 - Staff of Destruction
+    // 53 - Rod of destruction (ice)
     {SPELL_THROW_FROST,
      SPELL_ICE_BOLT,
      SPELL_FREEZING_CLOUD,
@@ -614,7 +617,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 54 - Staff of Destruction
+    // 54 - Rod of destruction (iron, fireball, lightning)
     {SPELL_BOLT_OF_IRON,
      SPELL_FIREBALL,
      SPELL_LIGHTNING_BOLT,
@@ -624,7 +627,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 55 - Staff of Destruction
+    // 55 - Rod of destruction (bolts)
     {SPELL_BOLT_OF_INACCURACY,
      SPELL_BOLT_OF_MAGMA,
      SPELL_BOLT_OF_COLD,
@@ -634,7 +637,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 56 - Staff of Warding
+    // 56 - Rod of warding
     {SPELL_ABJURATION_I,
      SPELL_CONDENSATION_SHIELD,
      SPELL_CAUSE_FEAR,
@@ -644,7 +647,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 57 - Staff of Exploration
+    // 57 - Rod of discovery
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
      SPELL_DETECT_ITEMS,
@@ -654,7 +657,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 58 - Staff of Demonology
+    // 58 - Rod of demonology
     {SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_CALL_IMP,
@@ -664,7 +667,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 59 - Staff of Striking -- unused like Smiting
+    // 59 - Rod of striking
     {SPELL_STRIKING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -674,6 +677,16 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
+    // 60 - Rod of venom
+    {SPELL_CURE_POISON_II,
+     SPELL_VENOM_BOLT,
+     SPELL_POISON_ARROW,
+     SPELL_POISONOUS_CLOUD,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL
+    },
 };
 
 spell_type which_spell_in_book(int sbook_type, int spl)

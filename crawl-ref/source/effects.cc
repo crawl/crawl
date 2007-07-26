@@ -1045,7 +1045,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 
                 case SK_EVOCATIONS:
                     if (!one_chance_in(4))
-                        type_wanted = STAFF_SMITING + random2(10);
+                        type_wanted = random_rod_subtype();
                     break;
 
                 default: // invocations and leftover spell schools
@@ -1073,16 +1073,15 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                     break;
                 }
 
-                // Increased chance of getting spell staff for new or
+                // Increased chance of getting a rod for new or
                 // non-spellcasters.  -- bwr
                 if (one_chance_in(20)
                     || (spell_skills <= 1               // short on spells
-                        && (type_wanted < STAFF_SMITING // already making one
-                            || type_wanted >= STAFF_AIR)
+                        && type_wanted < STAFF_SMITING
                         && !one_chance_in(4)))
                 {
-                    type_wanted = (coinflip() ? STAFF_STRIKING 
-                                              : STAFF_SMITING + random2(10));
+                    type_wanted = coinflip() ? STAFF_STRIKING :
+                        random_rod_subtype();
                 }
                 break;
 
