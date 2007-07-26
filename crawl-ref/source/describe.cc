@@ -40,6 +40,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "macro.h"
+#include "menu.h"
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
@@ -3847,7 +3848,6 @@ std::string describe_favour(god_type which_god)
 
 void describe_god( god_type which_god, bool give_title )
 {
-    const char *description; // mv: tmp string used for printing description
     int         colour;      // mv: colour used for some messages
 
     clrscr();
@@ -3862,7 +3862,7 @@ void describe_god( god_type which_god, bool give_title )
     if (which_god == GOD_NO_GOD) //mv:no god -> say it and go away
     {
         cprintf( EOL "You are not religious." );
-        getch();
+        get_ch();
         return;
     }
 
@@ -3875,121 +3875,114 @@ void describe_god( god_type which_god, bool give_title )
     cprintf (EOL EOL);
 
     //mv: print god's description
-    textcolor (LIGHTGRAY);
+    textcolor(LIGHTGRAY);
 
-    switch (which_god)
-    {
-    case GOD_ZIN:
-        description = "Zin is an ancient and revered God, dedicated to the establishment of order" EOL
-                      "and the destruction of the forces of chaos and night. Valued worshippers " EOL
-                      "can gain sustenance in times of need, blessings on their weapons, and a " EOL
-                      "variety of powers useful in the fight against evil, but must abstain " EOL
-                      "from the use of necromancy and other forms of unholy magic. Zin appreciates " EOL
-                      "long-standing faith as well as sacrifices of valued objects.";
-        break;
+    const char* god_descriptions[NUM_GODS] = {
+        // GOD_NO_GOD
+        "",
+        // Zin
+        "Zin is an ancient and revered God, dedicated to the establishment of "
+        "order and the destruction of the forces of chaos and night. Valued "
+        "worshippers can gain sustenance in times of need, blessings on their "
+        "weapons, and a variety of powers useful in the fight against evil, "
+        "but must abstain from the use of necromancy and other forms of "
+        "unholy magic. Zin appreciates long-standing faith as well as "
+        "sacrifices of valued objects.",
 
-    case GOD_SHINING_ONE:
-        description = "The Shining One is a powerful crusading deity, allied with Zin in the fight" EOL
-                      "against evil. Followers may be granted blessings on their weapons and the " EOL
-                      "ability to summarily dispense the wrath of heaven, but must never use any " EOL
-                      "form of evil magic and should fight honourably. The Shining One appreciates" EOL
-                      "long-standing persistence in the endless crusade, as well as the dedicated " EOL
-                      "destruction of unholy creatures.";
-        break;
+        // TSO
+        "The Shining One is a powerful crusading deity, allied with Zin in "
+        "the fight against evil. Followers may be granted blessings on their "
+        "weapons and the ability to summarily dispense the wrath of heaven, "
+        "but must never use any form of evil magic and should fight "
+        "honourably. The Shining One appreciates long-standing persistence in "
+        "the endless crusade, as well as the dedicated destruction of unholy "
+        "creatures.",
 
-    case GOD_KIKUBAAQUDGHA:
-        description = "Kikubaaqudgha is a terrible Demon-God, served by those who seek knowledge of" EOL
-                      "the powers of death. Followers gain special powers over the undead, and " EOL
-                      "especially favoured servants can call on mighty demons to slay their foes." EOL
-                      "Kikubaaqudgha requires the deaths of living creatures as often as possible," EOL
-                      "but is not interested in the offering of corpses except at an appropriate" EOL
-                      "altar.";
-        break;
+        // Kikubaaqudgha
+        "Kikubaaqudgha is a terrible Demon-God, served by those who seek "
+        "knowledge of the powers of death. Followers gain special powers over "
+        "the undead, and especially favoured servants can call on mighty "
+        "demons to slay their foes. Kikubaaqudgha requires the deaths of "
+        "living creatures as often as possible, but is not interested in the "
+        "offering of corpses except at an appropriate altar.",
 
-    case GOD_YREDELEMNUL:
-        description = "Yredelemnul is worshipped by those who seek powers over death and the undead" EOL
-                      "without having to learn to use necromancy. Followers can raise legions of " EOL
-                      "servile undead and gain a number of other useful (if unpleasant) powers." EOL
-                      "Yredelemnul appreciates killing, but prefers corpses to be put to use rather" EOL
-                      "than sacrificed.";
-        break;
+        // Yredelemnul
+        "Yredelemnul is worshipped by those who seek powers over death and "
+        "the undead without having to learn to use necromancy. Followers can "
+        "raise legions of servile undead and gain a number of other useful "
+        "(if unpleasant) powers. Yredelemnul appreciates killing, but prefers "
+        "corpses to be put to use rather than sacrificed.",
 
-    case GOD_XOM:
-        description = "Xom is a wild and unpredictable God of chaos, who seeks not worshippers but" EOL
-                      "playthings to toy with. Many choose to follow Xom in the hope of receiving" EOL
-                      "fabulous rewards and mighty powers, but Xom is nothing if not capricious. ";
-        break;
+        // Xom
+        "Xom is a wild and unpredictable God of chaos, who seeks not "
+        "worshippers but playthings to toy with. Many choose to follow Xom "
+        "in the hope of receiving fabulous rewards and mighty powers, but Xom "
+        "is nothing if not capricious. ",
 
-    case GOD_VEHUMET:
-        description = "Vehumet is a God of the destructive powers of magic. Followers gain various" EOL
-                      "useful powers to enhance their command of the hermetic arts, and the most" EOL
-                      "favoured stand to gain access to some of the fearsome spells in Vehumet's" EOL
-                      "library. One's devotion to Vehumet can be proved by the causing of as much" EOL
-                      "carnage and destruction as possible.";
-        break;
+        // Vehumet
+        "Vehumet is a God of the destructive powers of magic. Followers gain "
+        "various useful powers to enhance their command of the hermetic arts, "
+        "and the most favoured stand to gain access to some of the fearsome "
+        "spells in Vehumet's library. One's devotion to Vehumet can be proved "
+        "by the causing of as much carnage and destruction as possible.",
 
-    case GOD_OKAWARU:
-        description = "Okawaru is a dangerous and powerful God of battle. Followers can gain a " EOL
-                      "number of powers useful in combat as well as various rewards, but must " EOL
-                      "constantly prove themselves through battle and the sacrifice of corpses" EOL
-                      "and valuable items. Okawaru despises those who harm their allies.";
-        break;
+        // Okawaru
+        "Okawaru is a dangerous and powerful God of battle. Followers can "
+        "gain a number of powers useful in combat as well as various rewards, "
+        "but must constantly prove themselves through battle and the "
+        "sacrifice of corpses and valuable items. Okawaru despises those who "
+        "harm their allies.",
 
-    case GOD_MAKHLEB:
-        description = "Makhleb the Destroyer is a fearsome God of chaos and violent death. Followers," EOL
-                      "who must constantly appease Makhleb with blood, stand to gain various powers " EOL
-                      "of death and destruction. The Destroyer appreciates sacrifices of corpses and" EOL
-                      "valuable items.";
-        break;
+        // Makhleb
+        "Makhleb the Destroyer is a fearsome God of chaos and violent death. "
+        "Followers, who must constantly appease Makhleb with blood, stand to "
+        "gain various powers of death and destruction. The Destroyer "
+        "appreciates sacrifices of corpses and valuable items.",
 
-    case GOD_SIF_MUNA:
-        description = "Sif Muna is a contemplative but powerful deity, served by those who seek" EOL
-                      "magical knowledge. Sif Muna appreciates sacrifices of valuable items, and" EOL
-                      "the casting of spells as often as possible.";
-        break;
+        // Sif Muna
+        "Sif Muna is a contemplative but powerful deity, served by those who "
+        "seek magical knowledge. Sif Muna appreciates sacrifices of valuable "
+        "items, and the casting of spells as often as possible.",
 
-    case GOD_TROG:
-        description = "Trog is an ancient God of anger and violence. Followers are expected to kill" EOL
-                      "in Trog's name and sacrifice the dead, and in return gain power in battle and" EOL
-                      "occasional rewards. Trog hates wizards, and followers are forbidden the use" EOL
-                      "of spell magic. ";
-        break;
+        // Trog
+        "Trog is an ancient God of anger and violence. Followers are expected "
+        "to kill in Trog's name and sacrifice the dead, and in return gain "
+        "power in battle and occasional rewards. Trog hates wizards, and "
+        "followers are forbidden the use of spell magic. ",
 
-    case GOD_NEMELEX_XOBEH:
-        description = "Nemelex is a strange and unpredictable trickster God, whose powers can be" EOL
-                      "invoked through the magical packs of cards which Nemelex paints in the ichor" EOL
-                      "of demons. Followers receive occasional gifts, and should use these gifts as" EOL
-                      "much as possible. Offerings of any type of item are also appreciated.";
-        break;
+        // Nemelex Xobeh
+        "Nemelex is a strange and unpredictable trickster God, whose powers "
+        "can be invoked through the magical packs of cards which Nemelex "
+        "paints in the ichor of demons. Followers receive occasional gifts, "
+        "and should use these gifts as much as possible. Offerings of any "
+        "type of item are also appreciated. The Trickster may provide certain "
+        "ways to improve one's chances at cards, but prefers those who trust "
+        "to luck.",
 
-    case GOD_ELYVILON:
-        description = "Elyvilon the Healer is worshipped by the healers (among others), who gain" EOL
-                      "their healing powers by long worship and devotion. Although Elyvilon prefers" EOL
-                      "a creed of pacifism, those who crusade against evil are not excluded. Elyvilon" EOL
-                      "appreciates the offering of weapons. ";
-        break;
+        // Elyvilon
+        "Elyvilon the Healer is worshipped by the healers (among others), who "
+        "gain their healing powers by long worship and devotion. Although "
+        "Elyvilon prefers a creed of pacifism, those who crusade against evil "
+        "are not excluded. Elyvilon appreciates the offering of weapons.",
 
-    case GOD_LUGONU:
-        description =
-            "Lugonu the Unformed revels in the chaos of the Abyss. Followers are sent out" EOL
-            "to cause bloodshed and disorder in the world, and must do so unflaggingly to" EOL
-            "earn Lugonu's favour.";
-        break;
+        // Lugonu
+        "Lugonu the Unformed revels in the chaos of the Abyss. Followers are "
+        "sent out to cause bloodshed and disorder in the world, and must do "
+        "so unflaggingly to earn Lugonu's favour.",
 
-    case GOD_BEOGH: 
-        description = "Beogh is a deity worshipped by the cave orcs native to parts of the dungeon." EOL
-                      "Only proper orcs may devote their service to Beogh, proving their devotion  " EOL
-                      "with kills and remnants. Pious orcs may gain the priestly power of smiting. " EOL 
-                      "Also, there are rumours that the orcs still look out for their Messiah. ";
-        break;
+        // Beogh
+        "Beogh is a deity worshipped by the cave orcs native to parts of the "
+        "dungeon. Only proper orcs may devote their service to Beogh, proving "
+        "their devotion with kills and remnants. Pious orcs may gain the "
+        "priestly power of smiting. "
+        EOL
+        "Also, there are rumours that the orcs still look out for "
+        "their Messiah. "
+    };
 
-    default:
-        description = "God of Program Bugs is a weird and dangerous God and his presence should" EOL
-                      "be reported to dev-team.";
-    }
-
-    cprintf("%s", description);
-    //end of printing description
+    const int numcols = get_number_of_cols();
+    cprintf("%s", get_linebreak_string(god_descriptions[which_god],
+                                       numcols).c_str());
 
     // title only shown for our own god
     if (you.religion == which_god)
@@ -4138,5 +4131,14 @@ void describe_god( god_type which_god, bool give_title )
             cprintf( "None." EOL );
     }
 
-    getch(); // wait until keypressed
-}          //mv: That's all folks.
+    if ( which_god == GOD_NEMELEX_XOBEH )
+    {
+        gotoxy(1, get_number_of_lines() - 2);
+        textcolor(DARKGREY);
+        cprintf("Inscribe items with !p or !* to avoid "
+                "accidentally sacrificing them." EOL
+                "Followers of Nemelex Xobeh use Evocations, not Invocations.");
+    }
+
+    get_ch();
+}
