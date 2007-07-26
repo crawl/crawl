@@ -2061,12 +2061,6 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.skills[SK_TRANSLOCATIONS] < 5 && one_chance_in(15))
-            {
-                whichm = MUT_PANDEMONIUM;
-                howm = 1;
-            }
-
             if (you.religion != GOD_VEHUMET && you.religion != GOD_MAKHLEB &&
                 one_chance_in(11))
             {
