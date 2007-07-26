@@ -781,7 +781,7 @@ FLAGS:  no_rotate
 DEPTH:  D:14-26, Orc
 MONS:   orc warlord, orc priest, orc high priest, orc warrior, orc wizard
 MONS:   orc knight, orc sorcerer
-KFEAT:  C = altar of Beogh
+KFEAT:  C = altar_beogh
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx

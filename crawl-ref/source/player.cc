@@ -34,6 +34,7 @@
 
 #include "clua.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
@@ -5523,14 +5524,16 @@ bool player::is_icy() const
 
 void player::moveto(int x, int y)
 {
-    x_pos = x;
-    y_pos = y;
-    crawl_view.set_player_at(coord_def(x, y));
+    moveto(coord_def(x, y));
 }
 
 void player::moveto(const coord_def &c)
 {
+    const bool real_move = c != pos();
     x_pos = c.x;
     y_pos = c.y;
     crawl_view.set_player_at(c);
+
+    if (real_move)
+        dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
 }

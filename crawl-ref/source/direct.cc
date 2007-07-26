@@ -1211,7 +1211,20 @@ std::string feature_description(dungeon_feature_type grid,
     if (add_stop)
         desc += ".";
     if (dtype == DESC_PLAIN || (!grid_is_trap(grid) && isupper(desc[0])))
+    {
+        if (isupper(desc[0]))
+        {
+            switch (dtype)
+            {
+            case DESC_PLAIN: case DESC_NOCAP_THE: case DESC_NOCAP_A:
+                desc[0] = tolower(desc[0]);
+                break;
+            default:
+                break;
+            }
+        }
         return (desc);
+    }
 
     switch (dtype)
     {
@@ -1465,10 +1478,7 @@ std::string feature_description(int mx, int my, description_level_type dtype,
     case DNGN_ENTER_SHOP:
         return (shop_name(mx, my, add_stop));
     default:
-        return (feature_description(
-                    grid, NUM_TRAPS,
-                    env_find_marker(coord_def(mx, my), MAT_TIMED_FEATURE),
-                    dtype, add_stop));
+        return (feature_description(grid, NUM_TRAPS, false, dtype, add_stop));
     }
 }
 
@@ -1703,7 +1713,12 @@ static void describe_cell(int mx, int my)
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
     if (map_marker *mark = env_find_marker(coord_def(mx, my), MAT_ANY))
-        marker = " (" + mark->describe() + ")";
+    {
+        std::string desc = mark->describe();
+        if (desc.empty())
+            desc = "?";
+        marker = " (" + desc + ")";
+    }
     const std::string traveldest =
         stair_destination_description(coord_def(mx, my));
     mprf("(%d,%d): %s - %s%s%s", mx, my,

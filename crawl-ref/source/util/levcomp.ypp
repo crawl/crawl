@@ -15,6 +15,8 @@ int yylex();
 
 extern int yylineno;
 
+static bool start_marker_segment = false;
+
 void yyerror(const char *e)
 {
     if (strstr(e, lc_desfile.c_str()) == e)
@@ -280,19 +282,32 @@ tagstring       : STRING
                 }
                 ;
 
-marker          : MARKER marker_specs { }
+marker          : MARKER 
+                {
+                    lc_map.main.add(yylineno, "marker(");
+                    start_marker_segment = true;
+                }
+                  marker_spec
+                {
+                    lc_map.main.add(yylineno, ")");
+                }
                 ;
 
-marker_specs    : marker_spec                       { }
-                | marker_specs COMMA marker_spec    { }
+marker_spec     : mspec_segments
+
+mspec_segments  : /* nothing */
+                | mspec_segments mspec_segment
                 ;
 
-marker_spec     : ITEM_INFO
+mspec_segment   : STRING
                 {
                     lc_map.main.add(
-                        yylineno,
-                        make_stringf("marker(\"%s\")",
+                        yylineno, 
+                        make_stringf(
+                            "%s\"%s\"",
+                            start_marker_segment? "" : " .. ",
                             quote_lua_string($1).c_str()));
+                    start_marker_segment = false;
                 }
                 ;
 

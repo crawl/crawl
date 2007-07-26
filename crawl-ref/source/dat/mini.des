@@ -398,7 +398,7 @@ NAME:    david_defended_altar
 DEPTH:   7-20, !Lair, !Swamp, !Shoal
 SHUFFLE: 1ID/2TC
 MONS:    orc priest, deep elf priest / w:30 nothing
-KFEAT:   D = altar of Beogh / w:2 altar of Okawaru / w:2 altar of Makhleb
+KFEAT:   D = altar_beogh / w:2 altar_okawaru / w:2 altar_makhleb
 MAP
 ccccc...
 c1..c...
@@ -1106,11 +1106,11 @@ SHUFFLE: !;
 SUBST:   " = .:80 W:30
 SUBST:   ; = .:80 W:30
 SUBST:   ! = w:20 W ? c
-KFEAT:   3 = deep water
-KFEAT:   2 = shallow water / .
-KFEAT:   1 = shallow water / . w:30
-KFEAT:   d = shallow water / .
-KFEAT:   e = shallow water / .
+KFEAT:   3 = w
+KFEAT:   2 = W / .
+KFEAT:   1 = W / . w:30
+KFEAT:   d = W / .
+KFEAT:   e = W / .
 KFEAT:   ? = spear trap / blade trap
 MAP
 .........
@@ -1135,11 +1135,11 @@ MONS:    yaktaur captain, grey snake, storm dragon
 ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
 ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wound
 SHUFFLE: de, !;
-KFEAT:   3 = deep water / .
-KFEAT:   | = shallow water / .
-KFEAT:   d = shallow water / .
-KFEAT:   e = shallow water / .
-KFEAT:   2 = shallow water 
+KFEAT:   3 = w / .
+KFEAT:   | = W / .
+KFEAT:   d = W / .
+KFEAT:   e = W / .
+KFEAT:   2 = W 
 SUBST:   ; = .:80 W:30
 SUBST:   " = .:80 W:30
 SUBST:   ! = w:20 W ? c

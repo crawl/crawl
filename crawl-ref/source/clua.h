@@ -23,6 +23,17 @@ extern "C" {
 #endif
 
 class CLua;
+
+class lua_stack_cleaner
+{
+public:
+    lua_stack_cleaner(lua_State *_ls) : ls(_ls), top(lua_gettop(_ls)) { }
+    ~lua_stack_cleaner() { lua_settop(ls, top); }
+private:
+    lua_State *ls;
+    int top;
+};
+
 class lua_call_throttle
 {
 public:
@@ -55,7 +66,7 @@ public:
 
     void setglobal(const char *name);
     void getglobal(const char *name);
-    
+
     // Assigns the value on top of the stack to a unique name in the registry
     // and returns the name.
     std::string setuniqregistry();
@@ -65,7 +76,8 @@ public:
 
     int loadbuffer(const char *buf, size_t size, const char *context);
     int loadstring(const char *str, const char *context);
-    int execstring(const char *str, const char *context = "init.txt");
+    int execstring(const char *str, const char *context = "init.txt",
+                   int nresults = 0);
     int execfile(const char *filename, bool trusted = false,
                  bool die_on_fail = false);
 
@@ -79,6 +91,8 @@ public:
     static int loadfile(lua_State *ls, const char *file,
                         bool trusted = false, bool die_on_fail = false);
     static bool is_path_safe(std::string file, bool trusted = false);
+
+    static bool is_managed_vm(lua_State *ls);
 
 public:
     std::string error;
@@ -208,8 +222,21 @@ inline static T *clua_get_userdata(lua_State *ls, const char *mt)
 std::string quote_lua_string(const std::string &s);
 
 class map_def;
+class dgn_event;
 void clua_push_map(lua_State *ls, map_def *map);
+void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
+
+template <class T> T *clua_new_userdata(
+        lua_State *ls, const char *mt)
+{
+    void *udata = lua_newuserdata( ls, sizeof(T) );
+    luaL_getmetatable(ls, mt);
+    lua_setmetatable(ls, -2);
+    return static_cast<T*>( udata );
+}
 
 #define MAP_METATABLE "dgn.mtmap"
+#define DEVENT_METATABLE "dgn.devent"
+#define MAPMARK_METATABLE "dgn.mapmark"
 
 #endif

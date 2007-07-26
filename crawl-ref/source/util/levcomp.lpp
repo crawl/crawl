@@ -39,14 +39,12 @@ static void clean()
     alloced = false;
 }
 
-static void settext(bool trim_right = false, int strip_trailing = 0)
+static char *copy_text(bool trim_right, int strip_trailing)
 {
-    clean();
     char *newstring = NULL;
     if ((yylval.text = newstring = strdup(yytext)))
     {
         alloced = true;
-
         char *s = NULL;
         if (trim_right)
         {
@@ -62,6 +60,14 @@ static void settext(bool trim_right = false, int strip_trailing = 0)
                 *s-- = 0;
         }
     }
+    return (newstring);
+}
+
+static void settext(bool trim_right = false, int strip_trailing = 0)
+{
+    clean();
+    char *newstring = copy_text(trim_right, strip_trailing);
+    yylval.text = newstring;
 }
 
 %}
@@ -73,6 +79,7 @@ static void settext(bool trim_right = false, int strip_trailing = 0)
 %s MNAME
 %s KEYWORDS
 %x ITEM_LIST
+%x TOEOL
 
 %option yylineno
 %option never-interactive
@@ -152,6 +159,17 @@ NSPACE [^\ \t\r\n]
 
 <ARGUMENT>\r?\n     { BEGIN(INITIAL); }
 
+<TOEOL>.*\\[ \t]*$  {
+                        settext(true, 1);
+                        return STRING;
+                    }
+
+<TOEOL>.+$          {
+                        BEGIN(INITIAL);
+                        settext();
+                        return STRING;
+                    }
+
 ^[ \t]*#.*          ;
 
 ^\s*MAP[ \t]*$      { BEGIN(MAPDEF); }
@@ -178,7 +196,7 @@ SUBST:              { BEGIN(ITEM_LIST); return SUBST; }
 NSUBST:             { BEGIN(ITEM_LIST); return NSUBST; }
 MONS:               { BEGIN(MNAME); return MONS; }
 ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
-MARKER:             { BEGIN(ITEM_LIST); return MARKER; }
+MARKER:             { BEGIN(TOEOL); return MARKER; }
 SHUFFLE:            { BEGIN(ITEM_LIST); return SHUFFLE; }
 
 KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }

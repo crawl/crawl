@@ -1027,6 +1027,7 @@ public:
 public:
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
+    void apply_location_effects();
     
     kill_category kill_alignment() const;
 

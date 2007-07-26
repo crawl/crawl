@@ -302,9 +302,9 @@ map_transformer::~map_transformer()
 // map_lines
 
 map_lines::map_lines()
-    : transforms(), markers(), lines(), map_width(0), solid_north(false),
-      solid_east(false), solid_south(false), solid_west(false),
-      solid_checked(false)
+    : transforms(), markers(), lines(), map_width(0),
+      solid_north(false), solid_east(false), solid_south(false),
+      solid_west(false), solid_checked(false)
 {
 }
 
@@ -1023,9 +1023,9 @@ dlua_set_map::~dlua_set_map()
 
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(),
-      map(), mons(), items(), keyspecs(), prelude("dlprelude"), main("dlmain"),
-      validate("dlvalidate"), veto("dlveto"), index_only(false),
-      cache_offset(0L)
+      map(), mons(), items(), keyspecs(), prelude("dlprelude"),
+      main("dlmain"), validate("dlvalidate"), veto("dlveto"),
+      index_only(false), cache_offset(0L)
 {
     init();
 }
@@ -1330,6 +1330,7 @@ std::string map_def::validate_map_def()
         break;
     }
 
+    dlua_set_map dl(this);
     return (map.apply_transforms());
 }
 
@@ -1574,6 +1575,7 @@ void map_def::normalise()
 
 std::string map_def::resolve()
 {
+    dlua_set_map dl(this);
     return map.apply_transforms();
 }
 
@@ -2306,27 +2308,27 @@ std::string shuffle_spec::describe() const
 std::string map_marker_spec::apply_transform(map_lines &map)
 {
     std::vector<coord_def> positions = map.find_glyph(key);
-    if (positions.size() == 1)
+    if (positions.empty())
+        return make_stringf("cant find key '%c' for marker", key);
+
+    for (int i = 0, size = positions.size(); i < size; ++i)
     {
         try
         {
-            map_marker *mark = map_marker::parse_marker(marker);
+            map_marker *mark =
+                map_marker::parse_marker(marker);
             if (!mark)
                 return make_stringf("Unable to parse marker from %s",
                                     marker.c_str());
-            mark->pos = positions[0];
+            mark->pos = positions[i];
             map.add_marker(mark);
-            return ("");
         }
         catch (const std::string &err)
         {
             return (err);
         }
     }
-    else if (positions.empty())
-        return make_stringf("cant find key '%c' for marker", key);
-    else
-        return make_stringf("too many matches for key '%c' for marker", key);
+    return ("");
 }
 
 map_transformer::transform_type map_marker_spec::type() const
@@ -2436,15 +2438,13 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         list.push_back( parse_shop(s, weight) );
         return (list);
     }
-    
-    std::vector<dungeon_feature_type> feats =
-        features_by_desc( glob_pattern(s, true) );
-    if (!feats.empty())
-        list.push_back( feature_spec(feats[0], weight) );
 
-    if (feats.empty())
+    const dungeon_feature_type ftype = dungeon_feature_by_name(s);
+    if (ftype == DNGN_UNSEEN)
         err = make_stringf("no features matching \"%s\"",
                            str.c_str());
+    else
+        list.push_back( feature_spec( ftype, weight ) );
     
     return (list);
 }

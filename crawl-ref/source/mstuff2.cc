@@ -835,8 +835,9 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
     if (!silent)
         simple_monster_message(monster, " disappears!");
 
+    const coord_def oldplace = monster->pos();
     // pick the monster up
-    mgrd[monster->x][monster->y] = NON_MONSTER;
+    mgrd(oldplace) = NON_MONSTER;
 
     int newx, newy;
     while(true)
@@ -879,6 +880,9 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 
     if (player_monster_visible(monster) && now_visible)
         seen_monster(monster);
+
+    monster->check_redraw(oldplace);
+    monster->apply_location_effects();
 
     // Teleporting mimics change form - if they reappear out of LOS, they are
     // no longer known.

@@ -7,12 +7,14 @@
 
 #include "AppHdr.h"
 #include "clua.h"
+#include "direct.h"
 #include "files.h"
 #include "luadgn.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "stuff.h"
+#include "tags.h"
 #include "dungeon.h"
 #include <sstream>
 
@@ -41,6 +43,14 @@ int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
     return dlua_gentable(ls, s, dlua_pushcxxstring);
 }
 
+static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
+                                      size_t sz, void *ud)
+{
+    std::ostringstream &out = *static_cast<std::ostringstream*>(ud);
+    out.write((const char *) p, sz);
+    return (0);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // dlua_chunk
 
@@ -49,6 +59,31 @@ dlua_chunk::dlua_chunk(const std::string &_context)
       last(-1), error()
 {
     clear();
+}
+
+// Initialises a chunk from the function on the top of stack.
+// This function must not be a closure, i.e. must not have any upvalues.
+dlua_chunk::dlua_chunk(lua_State *ls)
+    : file(), chunk(), compiled(), context(), first(-1), last(-1), error()
+{
+    clear();
+
+    lua_stack_cleaner cln(ls);
+    std::ostringstream out;
+    const int err = lua_dump(ls, dlua_compiled_chunk_writer, &out);
+    if (err)
+    {
+        const char *e = lua_tostring(ls, -1);
+        error = e? e : "Unknown error compiling chunk";
+    }
+    compiled = out.str();
+}
+
+dlua_chunk dlua_chunk::precompiled(const std::string &chunk)
+{
+    dlua_chunk dchunk;
+    dchunk.compiled = chunk;
+    return (dchunk);
 }
 
 void dlua_chunk::write(FILE *outf) const
@@ -130,14 +165,6 @@ int dlua_chunk::check_op(CLua &interp, int err)
 {
     error = interp.error;
     return (err);
-}
-
-static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
-                                      size_t sz, void *ud)
-{
-    std::ostringstream &out = *static_cast<std::ostringstream*>(ud);
-    out.write((const char *) p, sz);
-    return (0);
 }
 
 int dlua_chunk::load(CLua &interp)
@@ -263,6 +290,10 @@ std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
 
 #define MAP(ls, n, var)                             \
     map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
+#define DEVENT(ls, n, var) \
+    dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
+#define MAPMARKER(ls, n, var) \
+    map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
 
 void dgn_reset_default_depth()
 {
@@ -859,6 +890,123 @@ static int dgn_feature_name(lua_State *ls)
             dungeon_feature_name(static_cast<dungeon_feature_type>(feat)));
 }
 
+static const char *dgn_event_type_names[] =
+{
+    "none", "turn", "mons_move", "player_move", "leave_level", "enter_level",
+    "player_los", "player_climb"
+};
+
+static dgn_event_type dgn_event_type_by_name(const std::string &name)
+{
+    for (unsigned i = 0; i < ARRAYSIZE(dgn_event_type_names); ++i)
+        if (dgn_event_type_names[i] == name)
+            return static_cast<dgn_event_type>(i? 1 << (i - 1) : 0);
+    return (DET_NONE);
+}
+
+static const char *dgn_event_type_name(unsigned evmask)
+{
+    if (evmask == 0)
+        return (dgn_event_type_names[0]);
+    
+    for (unsigned i = 1; i < ARRAYSIZE(dgn_event_type_names); ++i)
+        if (evmask & (1 << (i - 1)))
+            return (dgn_event_type_names[i]);
+
+    return (dgn_event_type_names[0]);
+}
+
+static void dgn_push_event_type(lua_State *ls, int n)
+{
+    if (lua_isstring(ls, n))
+        lua_pushnumber(ls, dgn_event_type_by_name(lua_tostring(ls, n)));
+    else if (lua_isnumber(ls, n))
+        lua_pushstring(ls, dgn_event_type_name(luaL_checkint(ls, n)));
+    else
+        lua_pushnil(ls);
+}
+
+static int dgn_dgn_event(lua_State *ls)
+{
+    const int start = lua_isuserdata(ls, 1)? 2 : 1;
+    int retvals = 0;
+    for (int i = start, nargs = lua_gettop(ls); i <= nargs; ++i)
+    {
+        dgn_push_event_type(ls, i);
+        retvals++;
+    }
+    return (retvals);
+}
+
+static int dgn_register_listener(lua_State *ls)
+{
+    unsigned mask = luaL_checkint(ls, 1);
+    MAPMARKER(ls, 2, mark);
+    map_lua_marker *listener = dynamic_cast<map_lua_marker*>(mark);
+    coord_def pos;
+    // Was a position supplied?
+    if (lua_gettop(ls) == 4)
+    {
+        pos.x = luaL_checkint(ls, 3);
+        pos.y = luaL_checkint(ls, 4);
+    }
+
+    dungeon_events.register_listener(mask, listener, pos);
+    return (0);
+}
+
+static int dgn_remove_listener(lua_State *ls)
+{
+    MAPMARKER(ls, 1, mark);
+    map_lua_marker *listener = dynamic_cast<map_lua_marker*>(mark);
+    coord_def pos;
+    // Was a position supplied?
+    if (lua_gettop(ls) == 3)
+    {
+        pos.x = luaL_checkint(ls, 2);
+        pos.y = luaL_checkint(ls, 3);
+    }
+    dungeon_events.remove_listener(listener, pos);
+    return (0);
+}
+
+static int dgn_remove_marker(lua_State *ls)
+{
+    MAPMARKER(ls, 1, mark);
+    env_remove_marker(mark);
+    return (0);
+}
+
+static int dgn_feature_desc(lua_State *ls)
+{
+    const dungeon_feature_type feat =
+        static_cast<dungeon_feature_type>(luaL_checkint(ls, 1));
+    const description_level_type dtype =
+        lua_isnumber(ls, 2)?
+        static_cast<description_level_type>(luaL_checkint(ls, 2)) :
+        description_type_by_name(lua_tostring(ls, 2));
+    const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
+    const std::string s =
+        feature_description(feat, NUM_TRAPS, false, dtype, need_stop);
+    lua_pushstring(ls, s.c_str());
+    return (1);
+}
+
+static int dgn_terrain_changed(lua_State *ls)
+{
+    dungeon_feature_type type = DNGN_UNSEEN;
+    if (lua_isnumber(ls, 3))
+        type = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
+    else if (lua_isstring(ls, 3))
+        type = dungeon_feature_by_name(lua_tostring(ls, 3));
+    const bool affect_player =
+        lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : true;
+    dungeon_terrain_changed( coord_def( luaL_checkint(ls, 1),
+                                        luaL_checkint(ls, 2) ),
+                             type, affect_player );
+    return (0);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -883,6 +1031,7 @@ static const struct luaL_reg dgn_lib[] =
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
     { "grid", dgn_grid },
+    { "terrain_changed", dgn_terrain_changed },
     { "points_connected", dgn_points_connected },
     { "any_point_connected", dgn_any_point_connected },
     { "has_exit_from", dgn_has_exit_from },
@@ -892,6 +1041,11 @@ static const struct luaL_reg dgn_lib[] =
     { "load_des_file", dgn_load_des_file },
     { "feature_number", dgn_feature_number },
     { "feature_name", dgn_feature_name },
+    { "dgn_event_type", dgn_dgn_event },
+    { "register_listener", dgn_register_listener },
+    { "remove_listener", dgn_remove_listener },
+    { "remove_marker", dgn_remove_marker },
+    { "feature_desc", dgn_feature_desc },
     { NULL, NULL }
 };
 
@@ -906,16 +1060,207 @@ static const struct luaL_reg crawl_lib[] =
     { NULL, NULL }
 };
 
+static int file_marshall(lua_State *ls)
+{
+    if (lua_gettop(ls) != 2)
+        luaL_error(ls, "Need two arguments: tag header and value");
+    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    if (lua_isnumber(ls, 2))
+        marshallLong(th, luaL_checklong(ls, 2));
+    else if (lua_isstring(ls, 2))
+        marshallString(th, lua_tostring(ls, 2));
+    else if (lua_isfunction(ls, 2))
+    {
+        dlua_chunk chunk(ls);
+        marshallString(th, chunk.compiled_chunk());
+    }
+    return (0);
+}
+
+static int file_unmarshall_number(lua_State *ls)
+{
+    if (lua_gettop(ls) != 1)
+        luaL_error(ls, "Need tag header as one argument");
+    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    lua_pushnumber(ls, unmarshallLong(th));
+    return (1);
+}
+
+static int file_unmarshall_string(lua_State *ls)
+{
+    if (lua_gettop(ls) != 1)
+        luaL_error(ls, "Need tag header as one argument");
+    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    lua_pushstring(ls, unmarshallString(th).c_str());
+    return (1);
+}
+
+static int file_unmarshall_fn(lua_State *ls)
+{
+    if (lua_gettop(ls) != 1)
+        luaL_error(ls, "Need tag header as one argument");
+    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    const std::string s(unmarshallString(th, LUA_CHUNK_MAX_SIZE));
+    dlua_chunk chunk = dlua_chunk::precompiled(s);
+    if (chunk.load(dlua))
+        lua_pushnil(ls);
+    return (1);
+}
+
+enum lua_persist_type
+{
+    LPT_NONE,
+    LPT_NUMBER,
+    LPT_STRING,
+    LPT_FUNCTION
+};
+
+static int file_marshall_meta(lua_State *ls)
+{
+    if (lua_gettop(ls) != 2)
+        luaL_error(ls, "Need two arguments: tag header and value");
+    
+    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+
+    lua_persist_type ptype = LPT_NONE;
+    if (lua_isnumber(ls, 2))
+        ptype = LPT_NUMBER;
+    else if (lua_isstring(ls, 2))
+        ptype = LPT_STRING;
+    else if (lua_isfunction(ls, 2))
+        ptype = LPT_FUNCTION;
+    else
+        luaL_error(ls, "Can marshall only numbers, strings and functions.");
+    marshallByte(th, ptype);
+    file_marshall(ls);
+    return (0);
+}
+
+static int file_unmarshall_meta(lua_State *ls)
+{
+    tagHeader &th(*static_cast<tagHeader*>( lua_touserdata(ls, 1) ));
+    const lua_persist_type ptype =
+        static_cast<lua_persist_type>(unmarshallByte(th));
+    switch (ptype)
+    {
+    case LPT_NUMBER:
+        return file_unmarshall_number(ls);
+    case LPT_STRING:
+        return file_unmarshall_string(ls);
+    case LPT_FUNCTION:
+        return file_unmarshall_fn(ls);
+    default:
+        luaL_error(ls, "Unexpected type signature.");
+    }
+    // Never get here.
+    return (0);
+}
+
+static const struct luaL_reg file_lib[] =
+{
+    { "marshall",   file_marshall },
+    { "marshall_meta", file_marshall_meta },
+    { "unmarshall_meta", file_unmarshall_meta },
+    { "unmarshall_number", file_unmarshall_number },
+    { "unmarshall_string", file_unmarshall_string },
+    { "unmarshall_fn", file_unmarshall_fn },
+    { NULL, NULL }
+};
+
+LUARET1(you_can_hear_pos, boolean,
+        player_can_hear(luaL_checkint(ls,1), luaL_checkint(ls, 2)))
+
+static const struct luaL_reg you_lib[] =
+{
+    { "hear_pos", you_can_hear_pos },
+    { NULL, NULL }
+};
+
+static int dgnevent_type(lua_State *ls)
+{
+    DEVENT(ls, 1, dev);
+    PLUARET(number, dev->type);
+}
+
+static int dgnevent_place(lua_State *ls)
+{
+    DEVENT(ls, 1, dev);
+    lua_pushnumber(ls, dev->place.x);
+    lua_pushnumber(ls, dev->place.y);
+    return (2);
+}
+
+static int dgnevent_ticks(lua_State *ls)
+{
+    DEVENT(ls, 1, dev);
+    PLUARET(number, dev->elapsed_ticks);
+}
+
+static const struct luaL_reg dgnevent_lib[] =
+{
+    { "type",  dgnevent_type },
+    { "pos", dgnevent_place },
+    { "ticks", dgnevent_ticks },
+    { NULL, NULL }
+};
+
+static void luaopen_setmeta(lua_State *ls, 
+                            const char *global,
+                            const luaL_reg *lua_lib,
+                            const char *meta)
+{
+    luaL_newmetatable(ls, meta);
+    lua_setglobal(ls, global);
+
+    luaL_openlib(ls, global, lua_lib, 0);
+    
+    // Do <global>.__index = <global>
+    lua_pushstring(ls, "__index");
+    lua_pushvalue(ls, -2);
+    lua_settable(ls, -3);
+}
+
+static void luaopen_dgnevent(lua_State *ls)
+{
+    luaopen_setmeta(ls, "dgnevent", dgnevent_lib, DEVENT_METATABLE);
+}
+
+static int mapmarker_pos(lua_State *ls)
+{
+    MAPMARKER(ls, 1, mark);
+    lua_pushnumber(ls, mark->pos.x);
+    lua_pushnumber(ls, mark->pos.y);
+    return (2);
+}
+
+static const struct luaL_reg mapmarker_lib[] =
+{
+    { "pos", mapmarker_pos },
+    { NULL, NULL }
+};
+
+static void luaopen_mapmarker(lua_State *ls)
+{
+    luaopen_setmeta(ls, "mapmarker", mapmarker_lib, MAPMARK_METATABLE);
+}
+
 void init_dungeon_lua()
 {
+    lua_stack_cleaner clean(dlua);
+    
     luaL_openlib(dlua, "dgn", dgn_lib, 0);
     // Add additional function to the Crawl module.
     luaL_openlib(dlua, "crawl", crawl_lib, 0);
+    luaL_openlib(dlua, "file", file_lib, 0);
+    luaL_openlib(dlua, "you", you_lib, 0);
+    
     dlua.execfile("clua/dungeon.lua", true, true);
-    if (!dlua.error.empty())
-        end(1, false, "Lua error: %s", dlua.error.c_str());
+    dlua.execfile("clua/luamark.lua", true, true);
+    
     lua_getglobal(dlua, "dgn_run_map");
     luaopen_debug(dlua);
     luaL_newmetatable(dlua, MAP_METATABLE);
-    lua_settop(dlua, 1);
+
+    luaopen_dgnevent(dlua);
+    luaopen_mapmarker(dlua);
 }

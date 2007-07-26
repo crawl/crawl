@@ -26,6 +26,7 @@
 #include "externs.h"
 
 #include "branch.h"
+#include "dgnevent.h"
 #include "direct.h"
 #include "files.h"
 #include "menu.h"
@@ -46,11 +47,16 @@ altar_map_type altars_present;
 portal_map_type portals_present;
 
 static void seen_altar( god_type god, const coord_def& pos );
-static void seen_staircase(unsigned char which_staircase,const coord_def& pos);
-static void seen_other_thing(unsigned char which_thing, const coord_def& pos);
+static void seen_staircase(dungeon_feature_type which_staircase,
+                           const coord_def& pos);
+static void seen_other_thing(dungeon_feature_type which_thing,
+                             const coord_def& pos);
 
 void seen_notable_thing( dungeon_feature_type which_thing, int x, int y )
 {
+    // Tell the world first.
+    dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, coord_def(x, y));
+    
     // Don't record in temporary terrain
     if (you.level_type != LEVEL_DUNGEON)
         return;
@@ -348,16 +354,55 @@ std::string overview_description_string()
     return disp;
 }
 
-void unnotice_labyrinth_portal()
+template <typename Z, typename Key>
+inline static bool find_erase(Z &map, const Key &k)
 {
-    level_pos curpos(level_id::current());
-    // XXX Is there really no better way to do this?
-    curpos.pos.x = you.x_pos;
-    curpos.pos.y = you.y_pos;
-    if ( portals_present.find(curpos) != portals_present.end() )
-        portals_present.erase(curpos);
-    else
-        mprf(MSGCH_DIAGNOSTICS, "Oops - tried to unnotice bad portal.");
+    if (map.find(k) != map.end())
+    {
+        map.erase(k);
+        return (true);
+    }
+    return (false);
+}
+
+static bool unnotice_portal(const level_pos &pos)
+{
+    return find_erase(portals_present, pos);
+}
+
+static bool unnotice_altar(const level_pos &pos)
+{
+    return find_erase(altars_present, pos);
+}
+
+static bool unnotice_shop(const level_pos &pos)
+{
+    return find_erase(shops_present, pos);
+}
+
+static bool unnotice_stair(const level_pos &pos)
+{
+    const dungeon_feature_type feat = grd(pos.pos);
+    if (grid_is_branch_stairs(feat))
+    {
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+        {
+            if (branches[i].entry_stairs == feat)
+            {
+                const branch_type br = static_cast<branch_type>(i);
+                return (find_erase(stair_level, br));
+            }
+        }
+    }
+    return (false);
+}
+
+bool unnotice_feature(const level_pos &pos)
+{
+    return (unnotice_portal(pos)
+            || unnotice_altar(pos)
+            || unnotice_shop(pos)
+            || unnotice_stair(pos));
 }
 
 void display_overmap()
@@ -369,7 +414,8 @@ void display_overmap()
     redraw_screen();
 }
 
-void seen_staircase( unsigned char which_staircase, const coord_def& pos )
+void seen_staircase( dungeon_feature_type which_staircase,
+                     const coord_def& pos )
 {
     // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
@@ -427,7 +473,7 @@ portal_type feature_to_portal( unsigned char feat )
 }
 
 // if player has seen any other thing; record it
-void seen_other_thing( unsigned char which_thing, const coord_def& pos )
+void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
 {
     if ( you.level_type != LEVEL_DUNGEON ) // can't record in abyss or pan.
         return;

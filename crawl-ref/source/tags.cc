@@ -374,7 +374,7 @@ void marshallString(struct tagHeader &th, const std::string &data, int maxSize)
 }
 
 // string -- unmarshall length & string data
-void unmarshallCString(struct tagHeader &th, char *data, int maxSize)
+int unmarshallCString(struct tagHeader &th, char *data, int maxSize)
 {
     // get length
     short len = unmarshallShort(th);
@@ -388,6 +388,8 @@ void unmarshallCString(struct tagHeader &th, char *data, int maxSize)
     data[copylen] = 0;
 
     th.offset += len;
+
+    return (copylen);
 }
 
 std::string unmarshallString(tagHeader &th, int maxSize)
@@ -398,10 +400,9 @@ std::string unmarshallString(tagHeader &th, int maxSize)
     if (!buffer)
         return ("");    
     *buffer = 0;
-    unmarshallCString(th, buffer, maxSize);
-    const std::string res = buffer;
+    const int slen = unmarshallCString(th, buffer, maxSize);
+    const std::string res(buffer, slen);
     delete [] buffer;
-
     return (res);
 }
 

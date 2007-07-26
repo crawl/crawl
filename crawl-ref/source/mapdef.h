@@ -167,6 +167,7 @@ struct map_marker_spec : public map_transformer
     map_transformer *clone() const;
 };
 
+class map_def;
 class map_lines
 {
 public:
@@ -260,6 +261,7 @@ private:
     friend class subst_spec;
     friend class nsubst_spec;
     friend class shuffle_spec;
+    friend class map_marker_spec;
     
 private:
     std::vector<map_transformer *> transforms;

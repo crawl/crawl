@@ -535,10 +535,20 @@ static void dgn_check_terrain_monsters(const coord_def &pos)
     }
 }
 
-void dungeon_terrain_changed(const coord_def &pos)
+void dungeon_terrain_changed(const coord_def &pos,
+                             dungeon_feature_type nfeat,
+                             bool affect_player)
 {
+    if (nfeat != DNGN_UNSEEN)
+    {
+        unnotice_feature(level_pos(level_id::current(), pos));
+        grd(pos) = nfeat;
+        if (is_notable_terrain(nfeat) && see_grid(pos))
+            seen_notable_thing(nfeat, pos.x, pos.y);
+    }
+    
     dgn_check_terrain_items(pos);
-    if (pos == you.pos())
+    if (affect_player && pos == you.pos())
     {
         if (!grid_is_solid(grd(pos)))
         {
@@ -776,6 +786,12 @@ static void climb_message(dungeon_feature_type stair, bool going_up)
         mpr(going_up? "You climb upwards." : "You climb downwards.");
 }
 
+static void leaving_level_now()
+{
+    dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
+    dungeon_events.fire_event(DET_LEAVING_LEVEL);
+}
+
 void up_stairs(void)
 {
     dungeon_feature_type stair_find = grd[you.x_pos][you.y_pos];
@@ -828,6 +844,7 @@ void up_stairs(void)
     }
 
     // Checks are done, the character is committed to moving between levels.
+    leaving_level_now();
     exit_stair_message(stair_find, true);
     
     int old_level  = you.your_level;
@@ -1028,6 +1045,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     }
 
     // All checks are done, the player is on the move now.
+
+    // Fire level-leaving trigger.
+    leaving_level_now();
     exit_stair_message(stair_find, false);
     
 #ifdef DGL_MILESTONES
@@ -1132,16 +1152,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         }
     }
 
-    if (stair_find == DNGN_ENTER_LABYRINTH || stair_find == DNGN_ENTER_BAZAAR)
-    {
-        // no longer a feature
-        if (stair_find == DNGN_ENTER_LABYRINTH)
-            unnotice_labyrinth_portal();
-        grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
-        // remove any markers that were going to expire this labyrinth.
-        if (map_marker *marker = env_find_marker(you.pos(), MAT_TIMED_FEATURE))
-            dynamic_cast<map_timed_feature_marker*>(marker)->timeout(false);
-    }
+    if (stair_find == DNGN_ENTER_LABYRINTH)
+        dungeon_terrain_changed(you.pos(), DNGN_FLOOR);
 
     if (stair_find == DNGN_ENTER_LABYRINTH)
     {

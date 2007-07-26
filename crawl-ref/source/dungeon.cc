@@ -4433,6 +4433,7 @@ static void place_shops(int level_number, int nshops)
         {
             place_specific_stair(DNGN_ENTER_BAZAAR, "bzr_entry",
                                  level_number, true);
+            allow_bazaars = false;
         }
         else
         {

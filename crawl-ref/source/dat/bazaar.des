@@ -9,8 +9,14 @@
 
 lua {{
     function check_expire_marker(e)
+        e.messager = 
+            bell_clock_msg { initmsg="You hear coins being counted." }
         if not crawl.one_chance_in(3) then
-            e.marker("O = timer: 1000-1500")
+            e.marker( [[ O = lua: timed_marker {
+                            low=1000, high=1500, msg=messager }
+                      ]] )
+        else
+            e.marker("O = lua: one_way_stair()")
         end
     end
 }}

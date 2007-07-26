@@ -12,6 +12,7 @@
 #include "externs.h"
 #include <list>
 
+// Keep event names in luadgn.cc in sync.
 enum dgn_event_type
 {
     DET_NONE           = 0x0000,
@@ -20,7 +21,9 @@ enum dgn_event_type
     DET_MONSTER_MOVED  = 0x0002,
     DET_PLAYER_MOVED   = 0x0004,
     DET_LEAVING_LEVEL  = 0x0008,
-    DET_ENTERING_LEVEL = 0x0010
+    DET_ENTERING_LEVEL = 0x0010,
+    DET_PLAYER_IN_LOS  = 0x0020,   // Player just entered LOS.
+    DET_PLAYER_CLIMBS  = 0x0040    // Player climbing stairs.
 };
 
 class dgn_event

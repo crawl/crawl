@@ -3,6 +3,8 @@
 
 #include "dungeon.h"
 #include "dgnevent.h"
+#include "clua.h"
+#include "luadgn.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers
@@ -11,7 +13,7 @@
 enum map_marker_type
 {
     MAT_FEATURE,              // Stock marker.
-    MAT_TIMED_FEATURE,
+    MAT_LUA_MARKER,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY
 };
@@ -30,7 +32,8 @@ public:
     virtual std::string describe() const = 0;
     
     static map_marker *read_marker(tagHeader&);
-    static map_marker *parse_marker(const std::string &text)
+    static map_marker *parse_marker(const std::string &text,
+                                    const std::string &ctx = "")
         throw (std::string);
 
 public:
@@ -40,7 +43,8 @@ protected:
     map_marker_type type;
 
     typedef map_marker *(*marker_reader)(tagHeader &, map_marker_type);
-    typedef map_marker *(*marker_parser)(const std::string &);
+    typedef map_marker *(*marker_parser)(const std::string &,
+                                         const std::string &);
     static marker_reader readers[NUM_MAP_MARKER_TYPES];
     static marker_parser parsers[NUM_MAP_MARKER_TYPES];
 };
@@ -55,39 +59,39 @@ public:
     void read(tagHeader &);
     std::string describe() const;
     static map_marker *read(tagHeader &, map_marker_type);
-    static map_marker *parse(const std::string &s) throw (std::string);
+    static map_marker *parse(const std::string &s, const std::string &)
+        throw (std::string);
     
 public:
     dungeon_feature_type feat;
 };
 
-class map_timed_feature_marker : public map_feature_marker, dgn_event_listener
+// A marker powered by Lua.
+class map_lua_marker : public map_marker, public dgn_event_listener
 {
 public:
-    map_timed_feature_marker(const coord_def &pos = coord_def(),
-                             int duration_turns = 0,
-                             dungeon_feature_type feat = DNGN_FLOOR);
+    map_lua_marker();
+    map_lua_marker(const std::string &s, const std::string &ctx);
+    ~map_lua_marker();
+
     void activate();
+
     void write(tagHeader &) const;
     void read(tagHeader &);
     std::string describe() const;
-
+ 
     void notify_dgn_event(const dgn_event &e);
-
-    // Expires this marker *now* and cleans it up.
-    void timeout(bool verbose);
-    
-    static map_marker *read(tagHeader &, map_marker_type);
-    static map_marker *parse(const std::string &s) throw (std::string);
-
-private:
-    const char *bell_urgency(int ticks) const; 
-    const char *noise_maker(int ticks) const;
    
-public:
-    // Ticks are a tenth of a turn.
-    int duration_ticks;
-    int warn_threshold;
+    static map_marker *read(tagHeader &, map_marker_type);
+    static map_marker *parse(const std::string &s, const std::string &)
+        throw (std::string);
+private:
+    bool initialised;
+private:
+    void check_register_table();
+    bool get_table() const;
+    void push_fn_args(const char *fn) const;
+    bool callfn(const char *fn, bool warn_err = false) const;
 };
 
 void env_activate_markers();

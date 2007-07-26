@@ -12,7 +12,10 @@ NAME:   lab_entry_generic
 TAGS:   lab_entry transparent
 DEPTH:  12-26
 ORIENT: float
-MARKER: O = timer:400-600
+: messager = bell_clock_msg { initmsg="You hear a distant snort." }
+MARKER: O = lua: timed_marker {  \
+                 low=400, high=600, msg=messager \
+            }
 MAP
 O
 ENDMAP
@@ -344,7 +347,7 @@ ENDMAP
 # Teaser: fake exit
 NAME: labyrinth_fake_exit
 TAGS: lab
-KFEAT: X = gate * Abyss
+KFEAT: X = enter_abyss
 MAP
 ........
 .vvvvvv.

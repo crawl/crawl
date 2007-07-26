@@ -11,6 +11,7 @@
 #include "chardump.h"
 #include "cio.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"
@@ -32,6 +33,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "travel.h"
+#include "view.h"
 
 #include <cstring>
 #include <map>
@@ -215,7 +217,7 @@ int CLua::loadstring(const char *s, const char *context)
     return loadbuffer(s, strlen(s), context);
 }
 
-int CLua::execstring(const char *s, const char *context)
+int CLua::execstring(const char *s, const char *context, int nresults)
 {
     int err = 0;
     if ((err = loadstring(s, context)))
@@ -223,7 +225,7 @@ int CLua::execstring(const char *s, const char *context)
     
     lua_State *ls = state();
     lua_call_throttle strangler(this);
-    err = lua_pcall(ls, 0, 0, 0);
+    err = lua_pcall(ls, 0, nresults, 0);
     set_error(err, ls);
     return err;
 }
@@ -266,6 +268,9 @@ int CLua::execfile(const char *filename, bool trusted, bool die_on_fail)
     if (!err)
         err = lua_pcall(ls, 0, 0, 0);
     set_error(err);
+    if (die_on_fail && !error.empty())
+        end(1, false, "Lua execfile error (%s): %s",
+            filename, dlua.error.c_str());
     return (err);
 }
 
@@ -410,6 +415,9 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             break;
         case 'b':
             lua_pushboolean(ls, va_arg(args, int));
+            break;
+        case 'D':
+            clua_push_dgn_event(ls, va_arg(args, const dgn_event *));
             break;
         case 'm':
             clua_push_map(ls, va_arg(args, map_def *));
@@ -579,6 +587,8 @@ void CLua::init_lua()
     if (!_state)
         return;
 
+    lua_stack_cleaner clean(_state);
+
     lua_atpanic(_state, clua_panic);
 
     luaopen_base(_state);
@@ -601,16 +611,25 @@ void CLua::init_lua()
     load_cmacro();
     load_chooks();
 
+    lua_register(_state, "loadfile", clua_loadfile);
+    lua_register(_state, "dofile", clua_dofile);
+
     if (managed_vm)
     {
         lua_register(_state, "pcall", clua_guarded_pcall);
-        lua_register(_state, "loadfile", clua_loadfile);
-        lua_register(_state, "dofile", clua_dofile);
-
         execfile("clua/userbase.lua", true, true);
-    }
+    }        
 
-    lua_settop(_state, 1);
+    lua_pushboolean(_state, managed_vm);
+    setregistry("lua_vm_is_managed");
+}
+
+bool CLua::is_managed_vm(lua_State *ls)
+{
+    lua_stack_cleaner clean(ls);
+    lua_pushstring(ls, "lua_vm_is_managed");
+    lua_gettable(ls, LUA_REGISTRYINDEX);
+    return (lua_toboolean(ls, -1));
 }
 
 void CLua::load_chooks()
@@ -650,15 +669,6 @@ static void clua_register_metatable(lua_State *ls, const char *tn,
     luaL_openlib(ls, NULL, lr, 0);
 
     lua_settop(ls, top);
-}
-
-template <class T> T *clua_new_userdata(
-        lua_State *ls, const char *mt)
-{
-    void *udata = lua_newuserdata( ls, sizeof(T) );
-    luaL_getmetatable(ls, mt);
-    lua_setmetatable(ls, -2);
-    return static_cast<T*>( udata );
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -724,6 +734,9 @@ LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
 LUARET1(you_subdepth, number, level_id::current().depth)
 LUARET1(you_absdepth, number, you.your_level + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
+LUARET1(you_turns, number, you.num_turns)
+LUARET1(you_see_grid, boolean,
+        see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
@@ -764,6 +777,7 @@ static int l_you_abils(lua_State *ls)
 static const struct luaL_reg you_lib[] =
 {
     { "turn_is_over", you_turn_is_over },
+    { "turns"       , you_turns },
     { "spells"      , l_you_spells },
     { "abilities"   , l_you_abils },
     { "name"        , you_name },
@@ -800,6 +814,9 @@ static const struct luaL_reg you_lib[] =
     { "branch",       you_branch },
     { "subdepth",     you_subdepth },
     { "absdepth",     you_absdepth },
+
+    { "see_grid",     you_see_grid },
+    
     { NULL, NULL },
 };
 
@@ -1268,33 +1285,6 @@ static int l_item_worn(lua_State *ls)
     return (2);
 }
 
-static description_level_type desc_code(const char *desc)
-{
-    if (!desc)
-        return DESC_PLAIN;
-    
-    if (!strcmp("The", desc))
-        return DESC_CAP_THE;
-    else if (!strcmp("the", desc))
-        return DESC_NOCAP_THE;
-    else if (!strcmp("A", desc))
-        return DESC_CAP_A;
-    else if (!strcmp("a", desc))
-        return DESC_NOCAP_A;
-    else if (!strcmp("Your", desc))
-        return DESC_CAP_YOUR;
-    else if (!strcmp("your", desc))
-        return DESC_NOCAP_YOUR;
-    else if (!strcmp("its", desc))
-        return DESC_NOCAP_ITS;
-    else if (!strcmp("worn", desc))
-        return DESC_INVENTORY_EQUIP;
-    else if (!strcmp("inv", desc))
-        return DESC_INVENTORY;
-
-    return DESC_PLAIN;
-}
-
 static int l_item_name(lua_State *ls)
 {
     LUA_ITEM(item, 1);
@@ -1302,7 +1292,9 @@ static int l_item_name(lua_State *ls)
     {
         description_level_type ndesc = DESC_PLAIN;
         if (lua_isstring(ls, 2))
-            ndesc = desc_code(lua_tostring(ls, 2));
+            ndesc = description_type_by_name(lua_tostring(ls, 2));
+        else if (lua_isnumber(ls, 2))
+            ndesc = static_cast<description_level_type>(luaL_checkint(ls, 2));
         bool terse = lua_toboolean(ls, 3);
         lua_pushstring(ls, item->name(ndesc, terse).c_str());
     }
@@ -1916,6 +1908,9 @@ LUARET1(crawl_random2, number, random2( luaL_checkint(ls, 1) ))
 LUARET1(crawl_one_chance_in, boolean, one_chance_in( luaL_checkint(ls, 1) ))
 LUARET1(crawl_random2avg, number,
         random2avg( luaL_checkint(ls, 1), luaL_checkint(ls, 2) ))
+LUARET1(crawl_random_range, number,
+        random_range( luaL_checkint(ls, 1), luaL_checkint(ls, 2),
+                      lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1 ))
 LUARET1(crawl_coinflip, boolean, coinflip())
 
 static int crawl_err_trace(lua_State *ls)
@@ -1959,6 +1954,7 @@ static const struct luaL_reg crawl_lib[] =
     { "one_chance_in",  crawl_one_chance_in },
     { "random2avg"   ,  crawl_random2avg },
     { "coinflip",       crawl_coinflip },
+    { "random_range",   crawl_random_range },
     { "redraw_screen",  crawl_redraw_screen },
     { "input_line",     crawl_input_line },
     { "c_input_line",   crawl_c_input_line},
@@ -1995,7 +1991,6 @@ void luaopen_crawl(lua_State *ls)
 
 ///////////////////////////////////////////////////////////
 // File operations
-
 
 static const struct luaL_reg file_lib[] =
 {
@@ -2260,6 +2255,13 @@ void clua_push_map(lua_State *ls, map_def *map)
 {
     map_def **mapref = clua_new_userdata<map_def *>(ls, MAP_METATABLE);
     *mapref = map;
+}
+
+void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
+{
+    const dgn_event **de =
+        clua_new_userdata<const dgn_event *>(ls, DEVENT_METATABLE);
+    *de = devent;
 }
 
 void luaopen_monsters(lua_State *ls)
@@ -2626,7 +2628,7 @@ static int clua_loadfile(lua_State *ls)
     if (!file)
         return (0);
 
-    const int err = CLua::loadfile(ls, file);
+    const int err = CLua::loadfile(ls, file, !CLua::is_managed_vm(ls));
     if (err)
     {
         const int place = lua_gettop(ls);
@@ -2643,7 +2645,7 @@ static int clua_dofile(lua_State *ls)
     if (!file)
         return (0);
 
-    const int err = CLua::loadfile(ls, file);
+    const int err = CLua::loadfile(ls, file, !CLua::is_managed_vm(ls));
     if (err)
         return (lua_error(ls));
 

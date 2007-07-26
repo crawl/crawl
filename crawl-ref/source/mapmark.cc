@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 #include "mapmark.h"
 
+#include "clua.h"
 #include "direct.h"
 #include "libutil.h"
 #include "luadgn.h"
@@ -22,13 +23,13 @@
 map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::read,
-    &map_timed_feature_marker::read,
+    &map_lua_marker::read,
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::parse,
-    &map_timed_feature_marker::parse,
+    &map_lua_marker::parse,
 };
 
 map_marker::map_marker(map_marker_type t, const coord_def &p)
@@ -64,13 +65,14 @@ map_marker *map_marker::read_marker(tagHeader &inf)
     return readers[type]? (*readers[type])(inf, type) : NULL;
 }
 
-map_marker *map_marker::parse_marker(const std::string &s) throw (std::string)
+map_marker *map_marker::parse_marker(
+    const std::string &s, const std::string &ctx) throw (std::string)
 {
     for (int i = 0; i < NUM_MAP_MARKER_TYPES; ++i)
     {
         if (parsers[i])
         {
-            if (map_marker *m = parsers[i](s))
+            if (map_marker *m = parsers[i](s, ctx))
                 return (m);
         }
     }
@@ -112,7 +114,8 @@ map_marker *map_feature_marker::read(tagHeader &inf, map_marker_type)
     return (mapf);
 }
 
-map_marker *map_feature_marker::parse(const std::string &s) throw (std::string)
+map_marker *map_feature_marker::parse(
+    const std::string &s, const std::string &) throw (std::string)
 {
     if (s.find("feat:") != 0)
         return (NULL);
@@ -132,190 +135,195 @@ std::string map_feature_marker::describe() const
 }
 
 ////////////////////////////////////////////////////////////////////////////
-// map_feature_marker
+// map_lua_marker
 
-map_timed_feature_marker::map_timed_feature_marker(
-    const coord_def &_pos,
-    int duration_turns,
-    dungeon_feature_type _feat)
-    : map_feature_marker(_pos, _feat), duration_ticks(duration_turns * 10),
-      warn_threshold(-1000)
+map_lua_marker::map_lua_marker()
+    : map_marker(MAT_LUA_MARKER, coord_def()), initialised(false)
 {
-    type = MAT_TIMED_FEATURE;
 }
 
-void map_timed_feature_marker::activate()
+map_lua_marker::map_lua_marker(const std::string &s, const std::string &)
+    : map_marker(MAT_LUA_MARKER, coord_def()), initialised(false)
 {
-    dungeon_events.register_listener(DET_TURN_ELAPSED, this);
+    lua_stack_cleaner clean(dlua);
+    if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
+        mprf(MSGCH_WARN, "lua_marker load error: %s", dlua.error.c_str());
+    if (!dlua.callfn("dgn_run_map", 1, 1))
+        mprf(MSGCH_WARN, "lua_marker exec error: %s", dlua.error.c_str());
+    check_register_table();
+}
 
-    if (player_can_hear(pos))
+map_lua_marker::~map_lua_marker()
+{
+    // Remove the Lua marker table from the registry.
+    if (initialised)
     {
-        const dungeon_feature_type ft = grd(pos);
-        switch (ft)
-        {
-        case DNGN_ENTER_BAZAAR:
-            mprf(MSGCH_SOUND, "You %shear coins being counted.",
-                 duration_ticks < 1000? "can faintly " : "");
-            break;
-        case DNGN_ENTER_LABYRINTH:
-            mprf(MSGCH_SOUND, "You hear a faint echoing snort.");
-            break;
-        default:
-            break;
-        }
+        lua_pushlightuserdata(dlua, this);
+        lua_pushnil(dlua);
+        lua_settable(dlua, LUA_REGISTRYINDEX);
     }
 }
 
-void map_timed_feature_marker::write(tagHeader &th) const
+void map_lua_marker::check_register_table()
 {
-    map_feature_marker::write(th);
-    marshallShort(th, duration_ticks);
-    marshallShort(th, warn_threshold);
-}
-
-void map_timed_feature_marker::read(tagHeader &th)
-{
-    map_feature_marker::read(th);
-    duration_ticks = unmarshallShort(th);
-    warn_threshold = unmarshallShort(th);
-}
-
-std::string map_timed_feature_marker::describe() const
-{
-    return make_stringf("timer: %d ticks (%s)",
-                        duration_ticks, dungeon_feature_name(feat));
-}
-
-const char *map_timed_feature_marker::bell_urgency(int ticks) const
-{
-    if (ticks > 5000)
-        return "stately ";
-    else if (ticks > 4000)
-        return "";
-    else if (ticks > 2500)
-        return "brisk ";
-    else if (ticks > 1500)
-        return "urgent ";
-    else if (ticks > 0)
-        return "frantic ";
-    else
-        return "last, dying notes of the ";
-}
-
-const char *map_timed_feature_marker::noise_maker(int ticks) const
-{
-    switch (grd(pos))
+    if (!lua_istable(dlua, -1))
     {
-    case DNGN_ENTER_LABYRINTH:
-        return (ticks > 0? "tolling of a bell" : "bell");
-    case DNGN_ENTER_BAZAAR:
-        return (ticks > 0? "ticking of an ancient clock" : "clock");
-    default:
-        return (ticks > 0?
-                "trickling of a stream filled with giant, killer bugs."
-                : "stream");
+        mprf(MSGCH_WARN, "lua_marker: Expected table, didn't get it.");
+        initialised = false;
+        return;
     }
+
+    // Got a table. Save it in the registry.
+
+    // Key is this.
+    lua_pushlightuserdata(dlua, this);
+    // Move key before value.
+    lua_insert(dlua, -2);
+    lua_settable(dlua, LUA_REGISTRYINDEX);
+
+    initialised = true;
 }
 
-void map_timed_feature_marker::notify_dgn_event(const dgn_event &e)
+bool map_lua_marker::get_table() const
 {
-    if (!e.elapsed_ticks || e.type != DET_TURN_ELAPSED)
+    // First save the unmarshall Lua function.
+    lua_pushlightuserdata(dlua, const_cast<map_lua_marker*>(this));
+    lua_gettable(dlua, LUA_REGISTRYINDEX);
+    return (lua_istable(dlua, -1));
+}
+
+void map_lua_marker::write(tagHeader &th) const
+{
+    map_marker::write(th);
+    
+    lua_stack_cleaner clean(dlua);
+    bool init = initialised;
+    if (!get_table())
+    {
+        mprf(MSGCH_WARN, "Couldn't find table.");
+        init = false;
+    }
+    
+    marshallByte(th, init);
+    if (!init)
         return;
 
-    if (warn_threshold == -1000)
-        warn_threshold = std::max(50, duration_ticks - 500);
+    // Call dlua_marker_function(table, 'read')
+    lua_pushstring(dlua, "read");
+    if (!dlua.callfn("dlua_marker_function", 2, 1))
+        end(1, false, "lua_marker: write error: %s", dlua.error.c_str());
+
+    // Right, what's on top should be a function. Save it.
+    dlua_chunk reader(dlua);
+    if (!reader.error.empty())
+        end(1, false, "lua_marker: couldn't save read function: %s",
+            reader.error.c_str());
+
+    marshallString(th, reader.compiled_chunk());
+
+    // Okay, saved the reader. Now ask the writer to do its thing.
+
+    // Call: dlua_marker_method(table, fname, marker)
+    get_table();
+    lua_pushstring(dlua, "write");
+    lua_pushlightuserdata(dlua, const_cast<map_lua_marker*>(this));
+    lua_pushlightuserdata(dlua, &th);
+
+    if (!dlua.callfn("dlua_marker_method", 4))
+        end(1, false, "lua_marker::write error: %s", dlua.error.c_str());
+}
+
+void map_lua_marker::read(tagHeader &th)
+{
+    map_marker::read(th);
     
-    duration_ticks -= e.elapsed_ticks;
+    if (!(initialised = unmarshallByte(th)))
+        return;
 
-    if (duration_ticks < warn_threshold || duration_ticks <= 0)
-    {
-        if (duration_ticks > 900)
-            warn_threshold = duration_ticks - 500;
-        else
-            warn_threshold = duration_ticks - 250;
+    lua_stack_cleaner cln(dlua);
+    // Read the Lua chunk we saved.
+    const std::string compiled = unmarshallString(th, LUA_CHUNK_MAX_SIZE);
 
-        if (duration_ticks > 0 && player_can_hear(pos))
-            mprf(MSGCH_SOUND, "You hear the %s%s.",
-                 bell_urgency(duration_ticks),
-                 noise_maker(duration_ticks));
+    dlua_chunk chunk = dlua_chunk::precompiled(compiled);
+    if (chunk.load(dlua))
+        end(1, false, "lua_marker::read error: %s", chunk.error.c_str());
+    dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
+    lua_pushlightuserdata(dlua, &th);
+    if (!dlua.callfn("dlua_marker_read", 3, 1))
+        end(1, false, "lua_marker::read error: %s", dlua.error.c_str());
 
-        if (duration_ticks <= 0)
-            timeout(true);
-    }
+    // Right, what's on top had better be a table.
+    check_register_table();
 }
 
-void map_timed_feature_marker::timeout(bool verbose)
+map_marker *map_lua_marker::read(tagHeader &th, map_marker_type)
 {
-    if (verbose)
-    {
-        if (see_grid(pos))
-            mprf("%s disappears!",
-                 feature_description(grd(pos), NUM_TRAPS, false,
-                                     DESC_CAP_THE, false).c_str());
-        else
-            mpr("The walls and floor vibrate strangely for a moment.");
-    }
-
-    // And it's gone forever.
-    grd(pos) = feat;
-
-    dungeon_terrain_changed(pos);
-
-    // Stop listening for further ticks.
-    dungeon_events.remove_listener(this);
-
-    // Kill this marker.
-    env_remove_marker(this);
+    map_marker *marker = new map_lua_marker;
+    marker->read(th);
+    return (marker);
 }
 
-map_marker *map_timed_feature_marker::read(tagHeader &th, map_marker_type)
+void map_lua_marker::push_fn_args(const char *fn) const
 {
-    map_marker *mt = new map_timed_feature_marker();
-    mt->read(th);
-    return (mt);
+    get_table();
+    lua_pushstring(dlua, fn);
+    dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
 }
 
-map_marker *map_timed_feature_marker::parse(const std::string &s)
-    throw (std::string)
+bool map_lua_marker::callfn(const char *fn, bool warn_err) const
 {
-    if (s.find("timer:") != 0)
+    const int top = lua_gettop(dlua);
+    push_fn_args(fn);
+    const bool res =
+        dlua.callfn("dlua_marker_method", lua_gettop(dlua) - top, 1);
+    if (!res && warn_err)
+        mprf(MSGCH_WARN, "mlua error: %s", dlua.error.c_str());
+    return (res);
+}
+
+void map_lua_marker::activate()
+{
+    lua_stack_cleaner clean(dlua);
+    callfn("activate", true);
+}
+
+void map_lua_marker::notify_dgn_event(const dgn_event &e)
+{
+    lua_stack_cleaner clean(dlua);
+    push_fn_args("event");
+    clua_push_dgn_event(dlua, &e);
+    if (!dlua.callfn("dlua_marker_method", 4, 0))
+        mprf(MSGCH_WARN, "notify_dgn_event: Lua error: %s",
+             dlua.error.c_str());
+}
+
+std::string map_lua_marker::describe() const
+{
+    lua_stack_cleaner cln(dlua);
+    if (!callfn("describe"))
+        return make_stringf("error: %s", dlua.error.c_str());
+
+    std::string desc;
+    if (lua_isstring(dlua, -1))
+        desc = lua_tostring(dlua, -1);
+    return desc;
+}
+
+map_marker *map_lua_marker::parse(
+    const std::string &s, const std::string &ctx) throw (std::string)
+{
+    if (s.find("lua:") != 0)
         return (NULL);
     std::string raw = s;
-    strip_tag(raw, "timer:", true);
-
-    int navg = strip_number_tag(raw, "avg:");
-    if (navg == TAG_UNFOUND)
-        navg = 1;
-
-    if (navg < 1 || navg > 20)
-        throw make_stringf("Bad marker spec '%s' (avg out of bounds)",
-                           s.c_str());
-
-    dungeon_feature_type feat = DNGN_FLOOR;
-    std::string fname = strip_tag_prefix(raw, "feat:");
-    if (!fname.empty()
-        && (feat = dungeon_feature_by_name(fname)) == DNGN_UNSEEN)
+    strip_tag(raw, "lua:");
+    map_lua_marker *mark = new map_lua_marker(raw, ctx);
+    if (!mark->initialised)
     {
-        throw make_stringf("Bad feature name (%s) in marker spec '%s'",
-                           fname.c_str(), s.c_str());
+        delete mark;
+        throw make_stringf("Unable to initialise Lua marker from '%s'",
+                           raw.c_str());
     }
-    
-    std::vector<std::string> limits = split_string("-", raw);
-    const int nlims = limits.size();
-    if (nlims < 1 || nlims > 2)
-        throw make_stringf("Malformed turn range (%s) in marker '%s'",
-                           raw.c_str(), s.c_str());
-
-    const int low = atoi(limits[0].c_str());
-    const int high = nlims == 1? low : atoi(limits[1].c_str());
-
-    if (low == 0 || high < low)
-        throw make_stringf("Malformed turn range (%s) in marker '%s'",
-                           raw.c_str(), s.c_str());
-
-    const int duration = low == high? low : random_range(low, high, navg);
-    return new map_timed_feature_marker(coord_def(0, 0),
-                                        duration, feat);
+    return (mark);
 }
 
 //////////////////////////////////////////////////////////////////////////

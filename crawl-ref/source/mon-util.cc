@@ -33,6 +33,7 @@
 #include "beam.h"
 #include "debug.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -4225,6 +4226,17 @@ void monsters::check_redraw(const coord_def &old) const
     }
 }
 
+void monsters::apply_location_effects()
+{
+    dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
+    
+    // monsters stepping on traps:
+    mons_trap(this);
+
+    if (alive())
+        mons_check_pool(this);
+}
+    
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 

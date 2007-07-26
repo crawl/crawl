@@ -517,7 +517,7 @@ NSUBST:  ? = 3:w / *:l
          omit the initial N: or N=, then 1= is assumed, except for the
          last spec where *= is assumed.
 
-KFEAT:   Z = C / needle trap / antique armour shop / altar of Zin
+KFEAT:   Z = C / needle trap / antique armour shop / altar_zin
          The KFEAT: directive allows you to specify a placeholder symbol 
          that is replaced with another symbol, named feature, trap, or 
          shop. For example, the line above will replace occurrences of Z 
@@ -530,11 +530,11 @@ KFEAT:   Z = C / needle trap / antique armour shop / altar of Zin
          You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx 
          directives allow you to assign arbitrary definitions to any symbol.
 
-         KFEAT features are specified as a unique substring of the in-game
-         description of the feature; simple * and ? wildcards can also be
-         used. For instance, to place a portal to the Abyss, you can use:
+         KFEAT features are specified as a feature name (see section I
+         for a full list of feature names). As another example, you can
+         place a portal to the Abyss as:
 
-         KFEAT: A = gate to the * Abyss
+         KFEAT: A = enter_abyss
 
          If you want no feature as an option in a KFEAT line, use 'floor'.
          If you do not want to specify the type of shop, use 'any shop' or
@@ -611,8 +611,8 @@ MARKER:  A = feat:<feature_name> or timer:
          feature to deep water at the end of it.
 
          Feature names used in markers must be names matching the
-         names in the source code, not the descriptions as used in
-         KFEAT. There's a full list of feature names at the end of this
+         names in the source code. There's a full list of feature
+         names in section I (Feature names) at the end of this
          document.
          
 

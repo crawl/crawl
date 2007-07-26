@@ -232,6 +232,11 @@ void clear_envmap_grid( int x, int y )
     env.map[x][y].clear();
 }
 
+bool is_notable_terrain(dungeon_feature_type ftype)
+{
+    return Feature[ftype].notable;
+}
+
 #if defined(WIN32CONSOLE) || defined(DOS)
 static unsigned colflag2brand(int colflag)
 {

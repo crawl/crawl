@@ -46,6 +46,33 @@
     #include <regex.h>
 #endif
 
+description_level_type description_type_by_name(const char *desc)
+{
+    if (!desc)
+        return DESC_PLAIN;
+    
+    if (!strcmp("The", desc))
+        return DESC_CAP_THE;
+    else if (!strcmp("the", desc))
+        return DESC_NOCAP_THE;
+    else if (!strcmp("A", desc))
+        return DESC_CAP_A;
+    else if (!strcmp("a", desc))
+        return DESC_NOCAP_A;
+    else if (!strcmp("Your", desc))
+        return DESC_CAP_YOUR;
+    else if (!strcmp("your", desc))
+        return DESC_NOCAP_YOUR;
+    else if (!strcmp("its", desc))
+        return DESC_NOCAP_ITS;
+    else if (!strcmp("worn", desc))
+        return DESC_INVENTORY_EQUIP;
+    else if (!strcmp("inv", desc))
+        return DESC_INVENTORY;
+
+    return DESC_PLAIN;
+}
+
 // Should return true if the filename contains nothing that
 // the shell can do damage with.
 bool shell_safe(const char *file)

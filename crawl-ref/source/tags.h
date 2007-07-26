@@ -52,7 +52,7 @@ short unmarshallShort(struct tagHeader &th);
 long unmarshallLong(struct tagHeader &th);
 float unmarshallFloat(struct tagHeader &th);
 bool unmarshallBoolean(struct tagHeader &th);
-void unmarshallCString(struct tagHeader &th, char *data, int maxSize);
+int unmarshallCString(struct tagHeader &th, char *data, int maxSize);
 std::string unmarshallString(tagHeader &th, int maxSize = 1000);
 void unmarshallCoord(tagHeader &th, coord_def &c);
 

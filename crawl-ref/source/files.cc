@@ -931,6 +931,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     sanity_test_monster_inventory();
 
+    dungeon_events.fire_event(DET_ENTERING_LEVEL);
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {

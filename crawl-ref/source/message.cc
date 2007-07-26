@@ -372,6 +372,12 @@ void mprf( const char *format, ... )
 
 void mpr(const char *inf, int channel, int param)
 {
+    if (!crawl_state.io_inited)
+    {
+        if (channel == MSGCH_WARN)
+            fprintf(stderr, "%s\n", inf);
+        return;
+    }
     char mbuf[400];
     size_t i = 0;
     const int stepsize = get_number_of_cols() - 1;

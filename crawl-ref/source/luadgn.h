@@ -43,6 +43,10 @@ public:
 
 public:
     dlua_chunk(const std::string &_context = "dlua_chunk");
+    dlua_chunk(lua_State *ls);
+
+    static dlua_chunk precompiled(const std::string &compiled);
+    
     void clear();
     void add(int line, const std::string &line);
     void set_chunk(const std::string &s);
@@ -57,6 +61,8 @@ public:
     
     bool empty() const;
 
+    const std::string &compiled_chunk() const { return compiled; }
+    
     void write(FILE *) const;
     void read(FILE *);
 };
@@ -68,6 +74,13 @@ int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s);
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name);
 const char *dungeon_feature_name(dungeon_feature_type feat);
+
+template <typename T>
+inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
+{
+    T *de = clua_new_userdata<T>(ls, meta);
+    *de = udata;
+}
 
 //////////////////////////////////////////////////////////////////////////
 

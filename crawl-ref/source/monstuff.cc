@@ -1189,6 +1189,7 @@ bool monster_blink(monsters *monster)
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
 
+    const coord_def oldplace = monster->pos();
     monster->x = nx;
     monster->y = ny;
 
@@ -1196,6 +1197,9 @@ bool monster_blink(monsters *monster)
 
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
+
+    monster->check_redraw(oldplace);
+    monster->apply_location_effects();
 
     return (true);
 }                               // end monster_blink()
@@ -4131,9 +4135,8 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
     immobile_monster[m2i] = true;
 
     mon->check_redraw(coord_def(cx, cy));
-
-    mons_trap(mon);
-    mons_trap(m2);
+    mon->apply_location_effects();
+    m2->apply_location_effects();
 
     return (false);
 }
@@ -4186,12 +4189,7 @@ static void do_move_monster(monsters *monster, int xi, int yi)
     mgrd[monster->x][monster->y] = monster_index(monster);
 
     monster->check_redraw(monster->pos() - coord_def(xi, yi));
-    
-    // monsters stepping on traps:
-    mons_trap(monster);
-
-    if (monster->alive())
-        mons_check_pool(monster);
+    monster->apply_location_effects();
 }
 
 void mons_check_pool(monsters *mons, killer_type killer, int killnum)

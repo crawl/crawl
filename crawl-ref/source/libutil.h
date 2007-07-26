@@ -15,11 +15,14 @@
 
 #include "AppHdr.h"
 #include "defines.h"
+#include "enum.h"
 #include <cctype>
 #include <string>
 #include <vector>
 
 extern const char *standard_plural_qualifiers[];
+
+description_level_type description_type_by_name(const char *desc);
 
 std::string lowercase_string(std::string s);
 std::string &lowercase(std::string &s);

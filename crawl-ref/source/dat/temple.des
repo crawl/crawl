@@ -458,18 +458,18 @@ ORIENT:  encompass
 SHUFFLE: ABC/DEF/GHI/JKL/MNO
 SHUFFLE: ABC, DEF, GHI, JKL, MNO
 SUBST:   A=[, B=(, C={
-KFEAT:   D = altar of Trog
-KFEAT:   E = altar of Makhleb
-KFEAT:   F = altar of Okawaru
-KFEAT:   G = altar of The Shining One
-KFEAT:   H = altar of Zin
-KFEAT:   I = altar of Elyvilon
-KFEAT:   J = altar of Sif Muna
-KFEAT:   K = altar of Vehumet
-KFEAT:   L = altar of Kikubaaqudgha
-KFEAT:   M = altar of Yredelemnul
-KFEAT:   N = altar of Xom
-KFEAT:   O = altar of Nemelex Xobeh
+KFEAT:   D = altar_trog
+KFEAT:   E = altar_makhleb
+KFEAT:   F = altar_okawaru
+KFEAT:   G = altar_shining_one
+KFEAT:   H = altar_zin
+KFEAT:   I = altar_elyvilon
+KFEAT:   J = altar_sif_muna
+KFEAT:   K = altar_vehumet
+KFEAT:   L = altar_kikubaaqudgha
+KFEAT:   M = altar_yredelemnul
+KFEAT:   N = altar_xom
+KFEAT:   O = altar_nemelex_xobeh
 SUBST:   X : GUT
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
