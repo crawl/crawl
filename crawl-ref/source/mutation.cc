@@ -1997,7 +1997,9 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.skills[SK_SUMMONINGS] < 5 && one_chance_in(3))
+            // Makhlebites have the summonings invocation
+            if ((you.religion != GOD_MAKHLEB || you.piety < 100) &&
+                you.skills[SK_SUMMONINGS] < 5 && one_chance_in(3))
             {                       // good summoners don't get summon demon
                 whichm = MUT_SUMMON_DEMONS;
                 howm = 1;
@@ -2065,7 +2067,8 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.religion != GOD_VEHUMET && one_chance_in(11))
+            if (you.religion != GOD_VEHUMET && you.religion != GOD_MAKHLEB &&
+                one_chance_in(11))
             {
                 whichm = MUT_DEATH_STRENGTH;
                 howm = 1;
@@ -2103,22 +2106,30 @@ void demonspawn(void)
                     && !you.mutation[MUT_BREATHE_FLAMES])
                 && (!you.skills[SK_CONJURATIONS]        // conjurers seldomly
                     || one_chance_in(5))
+                // Makhlebites seldom
+                && (you.religion != GOD_MAKHLEB || one_chance_in(4))
                 && (!you.skills[SK_ICE_MAGIC]           // already ice & fire?
                     || !you.skills[SK_FIRE_MAGIC]))
             {
                 // try to give the flavour the character doesn't have:
-                if (!you.skills[SK_FIRE_MAGIC])
+
+                // neither
+                if (!you.skills[SK_FIRE_MAGIC] && !you.skills[SK_ICE_MAGIC])
+                    whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
+                else if (!you.skills[SK_FIRE_MAGIC])
                     whichm = MUT_THROW_FLAMES;
                 else if (!you.skills[SK_ICE_MAGIC])
                     whichm = MUT_THROW_FROST;
-                else
+                else            // both
                     whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
 
                 howm = 1;
             }
 
-            if (!you.skills[SK_SUMMONINGS] && one_chance_in(3))
-            {                           /* summoners don't get summon imp */
+            // summoners don't get summon imp
+            if (!you.skills[SK_SUMMONINGS] && you.religion != GOD_MAKHLEB &&
+                one_chance_in(3))
+            {
                 whichm = (you.experience_level < 10) ? MUT_SUMMON_MINOR_DEMONS
                                                      : MUT_SUMMON_DEMONS;
                 howm = 1;
