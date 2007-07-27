@@ -175,7 +175,7 @@ void writeChar(char c)
 
     // update x position
     cx += 1;
-    if (cx >= screensize.X) cx = screensize.X;
+    if (cx >= screensize.X) cx = screensize.X - 1;
 }
 
 void enable_smart_cursor(bool cursor)
