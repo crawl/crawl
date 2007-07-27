@@ -702,6 +702,13 @@ static int dgn_name(lua_State *ls)
     PLUARET(string, map->name.c_str());
 }
 
+static int dgn_welcome(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    map->welcome_messages.push_back(luaL_checkstring(ls, 2));
+    return (0);
+}
+
 static int dgn_grid(lua_State *ls)
 {
     const int x = luaL_checkint(ls, 1), y = luaL_checkint(ls, 2);
@@ -841,9 +848,9 @@ const char *dngn_feature_names[] =
     "return_from_elven_halls", "return_from_tomb",
     "return_from_swamp", "return_from_shoals", "return_reserved_2",
     "return_reserved_3", "return_reserved_4", "", "", "", "", "", "",
-    "", "", "", "", "", "", "", "enter_bazaar", "exit_bazaar", "", "",
+    "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
     "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-    "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
+    "", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
     "altar_yredelemnul", "altar_xom", "altar_vehumet",
     "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
     "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
@@ -851,7 +858,7 @@ const char *dngn_feature_names[] =
     "dry_fountain_i", "sparkling_fountain", "dry_fountain_ii",
     "dry_fountain_iii", "dry_fountain_iv", "dry_fountain_v",
     "dry_fountain_vi", "dry_fountain_vii", "dry_fountain_viii",
-    "permadry_fountain"    
+    "permadry_fountain"
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)
@@ -987,7 +994,21 @@ static int dgn_feature_desc(lua_State *ls)
         description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
     const std::string s =
-        feature_description(feat, NUM_TRAPS, false, dtype, need_stop);
+        feature_description(feat, NUM_TRAPS, dtype, need_stop);
+    lua_pushstring(ls, s.c_str());
+    return (1);
+}
+
+static int dgn_feature_desc_at(lua_State *ls)
+{
+    const description_level_type dtype =
+        lua_isnumber(ls, 3)?
+        static_cast<description_level_type>(luaL_checkint(ls, 3)) :
+        description_type_by_name(lua_tostring(ls, 3));
+    const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
+    const std::string s =
+        feature_description(luaL_checkint(ls, 1), luaL_checkint(ls, 2),
+                            dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return (1);
 }
@@ -1016,6 +1037,7 @@ static const struct luaL_reg dgn_lib[] =
     { "tags",  dgn_tags },
     { "tags_remove", dgn_tags_remove },
     { "chance", dgn_weight },
+    { "welcome", dgn_welcome },
     { "weight", dgn_weight },
     { "orient", dgn_orient },
     { "shuffle", dgn_shuffle },
@@ -1046,6 +1068,7 @@ static const struct luaL_reg dgn_lib[] =
     { "remove_listener", dgn_remove_listener },
     { "remove_marker", dgn_remove_marker },
     { "feature_desc", dgn_feature_desc },
+    { "feature_desc_at", dgn_feature_desc_at },
     { NULL, NULL }
 };
 
@@ -1112,7 +1135,8 @@ enum lua_persist_type
     LPT_NONE,
     LPT_NUMBER,
     LPT_STRING,
-    LPT_FUNCTION
+    LPT_FUNCTION,
+    LPT_NIL
 };
 
 static int file_marshall_meta(lua_State *ls)
@@ -1129,10 +1153,13 @@ static int file_marshall_meta(lua_State *ls)
         ptype = LPT_STRING;
     else if (lua_isfunction(ls, 2))
         ptype = LPT_FUNCTION;
+    else if (lua_isnil(ls, 2))
+        ptype = LPT_NIL;
     else
         luaL_error(ls, "Can marshall only numbers, strings and functions.");
     marshallByte(th, ptype);
-    file_marshall(ls);
+    if (ptype != LPT_NIL)
+        file_marshall(ls);
     return (0);
 }
 
@@ -1149,6 +1176,9 @@ static int file_unmarshall_meta(lua_State *ls)
         return file_unmarshall_string(ls);
     case LPT_FUNCTION:
         return file_unmarshall_fn(ls);
+    case LPT_NIL:
+        lua_pushnil(ls);
+        return (1);
     default:
         luaL_error(ls, "Unexpected type signature.");
     }

@@ -1023,9 +1023,9 @@ dlua_set_map::~dlua_set_map()
 
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(),
-      map(), mons(), items(), keyspecs(), prelude("dlprelude"),
-      main("dlmain"), validate("dlvalidate"), veto("dlveto"),
-      index_only(false), cache_offset(0L)
+      welcome_messages(), map(), mons(), items(), keyspecs(),
+      prelude("dlprelude"), main("dlmain"), validate("dlvalidate"),
+      veto("dlveto"), index_only(false), cache_offset(0L)
 {
     init();
 }
@@ -1049,6 +1049,7 @@ void map_def::reinit()
 {
     items.clear();
     keyspecs.clear();
+    welcome_messages.clear();
 
     // Base chance; this is not a percentage.
     chance = 10;

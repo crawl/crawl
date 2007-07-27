@@ -736,6 +736,7 @@ public:
   KillMaster kills;
 
   level_area_type level_type;
+  std::string level_type_name;
 
   branch_type where_are_you;
 

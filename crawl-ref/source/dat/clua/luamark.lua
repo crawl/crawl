@@ -3,8 +3,9 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
-dofile('clua/lm_timed.lua')
+dofile('clua/lm_pdesc.lua')
 dofile('clua/lm_1way.lua')
+dofile('clua/lm_timed.lua')
 
 function dlua_marker_function(table, name)
   return table[name]
@@ -17,11 +18,7 @@ function dlua_marker_method(table, name, marker, ...)
 end
 
 function dlua_marker_read(fn, marker, th)
-  return fn(marker, th)
-end
-
-function timed_marker(pars)
-  return TimedMarker.new(pars)
+  return fn({ }, marker, th)
 end
 
 lmark = { }

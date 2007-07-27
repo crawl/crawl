@@ -922,7 +922,7 @@ void end_game( struct scorefile_entry &se )
     unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
                            LEVEL_LABYRINTH, false ).c_str() );
     unlink( make_filename( you.your_name, 0, BRANCH_MAIN_DUNGEON,
-                           LEVEL_BAZAAR, false ).c_str() );
+                           LEVEL_PORTAL_VAULT, false ).c_str() );
 
     // create base file name
     std::string basename = get_savedir_filename( you.your_name, "", "" );

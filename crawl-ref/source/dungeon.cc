@@ -219,9 +219,10 @@ typedef std::list<coord_def> coord_list;
 
 // A mask of vaults and vault-specific flags.
 map_mask dgn_map_mask;
+std::vector<vault_placement> level_vaults;
+
 static dgn_region_list vault_zones;
 static int vault_chance = 9;
-static std::vector<vault_placement> level_vaults;
 static int minivault_chance = 3;
 static bool dgn_level_vetoed = false;
 static bool use_random_maps = true;
@@ -275,6 +276,17 @@ bool builder(int level_number, int level_type)
                                level_id::current().describe().c_str()).c_str());
     }
     return (false);
+}
+
+void level_welcome_messages()
+{
+    for (int i = 0, size = level_vaults.size(); i < size; ++i)
+    {
+        const std::vector<std::string> &msgs =
+            level_vaults[i].map.welcome_messages;
+        for (int j = 0, msize = msgs.size(); j < msize; ++j)
+            mpr(msgs[j].c_str());
+    }
 }
 
 static void dgn_register_vault(const map_def &map)
@@ -711,7 +723,8 @@ static void build_dungeon_level(int level_number, int level_type)
 
     build_layout_skeleton(level_number, level_type, sr);
 
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_BAZAAR
+    if (you.level_type == LEVEL_LABYRINTH
+        || you.level_type == LEVEL_PORTAL_VAULT
         || dgn_level_vetoed)
         return;
     
@@ -1255,9 +1268,16 @@ static bool make_box(int room_x1, int room_y1, int room_x2, int room_y2,
 // -1 if we should immediately quit, and 0 otherwise.
 static builder_rc_type builder_by_type(int level_number, char level_type)
 {
-    if (level_type == LEVEL_BAZAAR)
+    if (level_type == LEVEL_PORTAL_VAULT)
     {
-        bazaar_level(level_number);
+        if (you.level_type_name == "bazaar")
+            bazaar_level(level_number);
+        else
+        {
+            // Need to find encompass vault with tag matching
+            // level_type_name.
+            ASSERT(false);
+        }
         return (BUILD_QUIT);
     }
     
@@ -1340,7 +1360,7 @@ static void fixup_bazaar_stairs()
             if (grid_is_stone_stair(feat) || grid_is_rock_stair(feat))
             {
                 if (grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-                    grd[x][y] = DNGN_EXIT_BAZAAR;
+                    grd[x][y] = DNGN_EXIT_PORTAL_VAULT;
                 else
                     grd[x][y] = DNGN_STONE_ARCH;
             }
@@ -4431,7 +4451,8 @@ static void place_shops(int level_number, int nshops)
         if (allow_bazaars && level_number > 9 && level_number < 27
             && one_chance_in(30 - level_number))
         {
-            place_specific_stair(DNGN_ENTER_BAZAAR, "bzr_entry",
+            place_specific_stair(DNGN_ENTER_PORTAL_VAULT,
+                                 "bzr_entry",
                                  level_number, true);
             allow_bazaars = false;
         }

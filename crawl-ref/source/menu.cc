@@ -760,14 +760,14 @@ std::vector<MenuEntry *> slider_menu::show()
     fix_entry();
     do_menu();
 
-    if (selected >= 0 && selected <= (int) items.size())
+    if (selected >= 0 && selected < (int) items.size())
         sel.push_back(items[selected]);
     return (sel);
 }
 
 const MenuEntry *slider_menu::selected_entry() const
 {
-    if (selected >= 0 && selected <= (int) items.size())
+    if (selected >= 0 && selected < (int) items.size())
         return (items[selected]);
 
     return (NULL);

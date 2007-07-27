@@ -188,6 +188,7 @@ default-depth:      { BEGIN(ARGUMENT); return DEFAULT_DEPTH; }
 DEPTH:              { BEGIN(ARGUMENT); return DEPTH; }
 ORIENT:             { BEGIN(ARGUMENT); return ORIENT; }
 PLACE:              { BEGIN(ARGUMENT); return PLACE; }
+WELCOME:            { BEGIN(ARGUMENT); return WELCOME; }
 CHANCE:             return CHANCE;
 WEIGHT:             return CHANCE;
 FLAGS:              { BEGIN(KEYWORDS); return TAGS; }

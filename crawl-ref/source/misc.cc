@@ -198,7 +198,7 @@ bool grid_sealable_portal(dungeon_feature_type grid)
     case DNGN_ENTER_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_LABYRINTH:
-    case DNGN_ENTER_BAZAAR:
+    case DNGN_ENTER_PORTAL_VAULT:
         return (true);
     default:
         return (false);
@@ -233,10 +233,10 @@ command_type grid_stair_direction(dungeon_feature_type grid)
     case DNGN_RETURN_RESERVED_4:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
-    case DNGN_EXIT_BAZAAR:
+    case DNGN_EXIT_PORTAL_VAULT:
         return (CMD_GO_UPSTAIRS);
         
-    case DNGN_ENTER_BAZAAR:
+    case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_ENTER_HELL:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_STONE_STAIRS_DOWN_I:
@@ -380,7 +380,7 @@ const char *grid_item_destruction_message( dungeon_feature_type grid )
 // Returns true if exits from this type of level involve going upstairs.
 bool level_type_exits_up(level_area_type type)
 {
-    return (type == LEVEL_LABYRINTH || type == LEVEL_BAZAAR);
+    return (type == LEVEL_LABYRINTH || type == LEVEL_PORTAL_VAULT);
 }
 
 bool level_type_exits_down(level_area_type type)
@@ -788,8 +788,15 @@ static void climb_message(dungeon_feature_type stair, bool going_up)
 
 static void leaving_level_now()
 {
+    // Note the name ahead of time because the events may cause
+    // markers to be discarded.
+    const std::string newtype =
+        env_property_at(you.pos(), MAT_ANY, "dst");
+    
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
+
+    you.level_type_name = newtype;    
 }
 
 void up_stairs(void)
@@ -1167,9 +1174,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     {
         you.level_type = LEVEL_PANDEMONIUM;
     }
-    else if (stair_find == DNGN_ENTER_BAZAAR)
+    else if (stair_find == DNGN_ENTER_PORTAL_VAULT)
     {
-        you.level_type = LEVEL_BAZAAR;
+        you.level_type = LEVEL_PORTAL_VAULT;
     }
 
     // When going downstairs into a special level, delete any previous
@@ -1236,10 +1243,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
             mpr("You enter the halls of Pandemonium!");
             mpr("To return, you must find a gate leading back.");
         }
-        break;
-
-    case LEVEL_BAZAAR:
-        mpr("You enter an inter-dimensional bazaar!");
         break;
 
     default:
@@ -1379,8 +1382,8 @@ std::string level_description_string()
     if (you.level_type == LEVEL_LABYRINTH)
         return "- a Labyrinth";
 
-    if (you.level_type == LEVEL_BAZAAR)
-        return "- a Bazaar";
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+        return "- a Portal Chamber";
 
     // level_type == LEVEL_DUNGEON
     char buf[200];
@@ -2250,8 +2253,8 @@ std::string place_name( unsigned short place, bool long_name,
             return ( long_name ? "Pandemonium" : "Pan" );
         case LEVEL_LABYRINTH:
             return ( long_name ? "a Labyrinth" : "Lab" );
-        case LEVEL_BAZAAR:
-            return ( long_name ? "a Bazaar" : "Bzr" );
+        case LEVEL_PORTAL_VAULT:
+            return ( long_name ? "a Portal Chamber" : "Port" );
         default:
             return ( long_name ? "Buggy Badlands" : "Bug" );
         }

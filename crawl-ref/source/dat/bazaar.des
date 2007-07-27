@@ -8,17 +8,26 @@
 # Utility functions
 
 lua {{
-    function check_expire_marker(e)
-        e.messager = 
-            bell_clock_msg { initmsg="You hear coins being counted." }
-        if not crawl.one_chance_in(3) then
-            e.marker( [[ O = lua: timed_marker {
-                            low=1000, high=1500, msg=messager }
-                      ]] )
-        else
-            e.marker("O = lua: one_way_stair()")
-        end
-    end
+
+function bazaar_portal()
+  local messager = bell_clock_msg { initmsg="You hear coins being counted." }
+  if not crawl.one_chance_in(3) then
+    local pdesc = 'flickering gateway to a bazaar'
+    return timed_marker {
+                  low=1000, high=1500, msg=messager,
+                  disappear='The gate to the bazaar disappears!',
+                  props = { desc=pdesc, dst='bazaar' }
+              }
+  else
+    return one_way_stair { desc = 'gateway to a bazaar',
+                           dst = 'bazaar' }
+  end
+end
+
+function bazaar_message(e)
+  e.welcome("You enter an inter-dimensional bazaar!")
+end
+
 }}
 
 default-depth: D:10-27
@@ -29,7 +38,7 @@ default-depth: D:10-27
 NAME: bzr_entry_dummy
 TAGS: bzr_entry transparent
 ORIENT: float
-: check_expire_marker(_G)
+MARKER: O = lua:bazaar_portal()
 MAP
 O
 ENDMAP
@@ -40,7 +49,7 @@ NAME: bzr_entry_001
 TAGS: bzr_entry no_pool_fixup
 ORIENT: float
 SHUFFLE: wwl
-: check_expire_marker(_G)
+MARKER: O = lua:bazaar_portal()
 MAP
  www
 w.w.w
@@ -55,7 +64,7 @@ NAME: bzr_entry_002
 TAGS: bzr_entry 
 ORIENT: float
 SUBST: $=$.
-: check_expire_marker(_G)
+MARKER: O = lua:bazaar_portal()
 MAP
 xx.xx
 x$$$x
@@ -72,7 +81,7 @@ ORIENT:  float
 MONS:    human, orc, goblin, kobold
 SUBST:   . = .:210 1
 SHUFFLE: 1234
-: check_expire_marker(_G)
+MARKER: O = lua:bazaar_portal()
 MAP
  .....
 .......
@@ -91,13 +100,15 @@ ENDMAP
 # Every encompass bazaar level must have at least one downstair, which will be
 # replaced with an exit from the bazaar. It's a good idea to also provide an
 # upstair, which will be converted into a stone arch (and on which the player
-# will be placed when entering the bazaar).
+# will be placed when entering the bazaar). If there's no upstair, the player
+# will arrive on a random square.
 
 NAME:   bazaar_general_marketplace
 TAGS:   bazaar
 ORIENT: encompass
 KFEAT:  A = any shop
 CHANCE: 30
+: bazaar_message(_G)
 MAP
 xxxxxxxxx
 xxxx>xxxx
@@ -120,6 +131,7 @@ KFEAT:   B = antique weapon shop / weapon shop
 KFEAT:   C = antique armour shop / armour shop
 ITEM:    any weapon / w:2 good_item any weapon
 ITEM:    any armour / w:2 good_item any armour
+: bazaar_message(_G)
 MAP
 xxxxxxxxx
 xxxx>xxxx
@@ -141,6 +153,7 @@ KFEAT:   B = jewellery shop
 ITEM:    any jewelry / good_item any jewelry
 ITEM:    any book / good_item any book, any staff 
 SUBST:   w:w.l, x:b, c:., v=bl, d=.d, e=.e, f=.f
+: bazaar_message(_G)
 MAP
 xxxxxxxxxxxxx
 xxxxxxxwwwxxx
@@ -156,6 +169,7 @@ TAGS:    bazaar
 ORIENT:  encompass
 KFEAT:   A = wand shop
 ITEM:    any wand
+: bazaar_message(_G)
 MAP
 xxxxxxxxxxx
 xx...>...xx

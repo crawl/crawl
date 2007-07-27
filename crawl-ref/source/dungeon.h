@@ -112,6 +112,7 @@ struct dgn_region
 };
 
 bool builder(int level_number, int level_type);
+void level_welcome_messages();
 void define_zombie(int mid, int ztype, int cs, int power);
 bool is_wall(int feature);
 bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);

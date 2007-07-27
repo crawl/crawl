@@ -726,6 +726,7 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.special_wield);
     marshallByte(th,you.berserk_penalty);
     marshallByte(th,you.level_type);
+    marshallString(th, you.level_type_name);
     marshallByte(th,you.synch_time);
     marshallByte(th,you.disease);
     marshallByte(th,you.species);
@@ -1032,6 +1033,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.special_wield = unmarshallByte(th);
     you.berserk_penalty = unmarshallByte(th);
     you.level_type = static_cast<level_area_type>( unmarshallByte(th) );
+    you.level_type_name = unmarshallString(th);
     you.synch_time = unmarshallByte(th);
     you.disease = unmarshallByte(th);
     you.species = static_cast<species_type>(unmarshallByte(th));

@@ -1102,8 +1102,8 @@ enum dungeon_feature_type
     DNGN_RETURN_RESERVED_4,             // 146
 
     // Portals to various places unknown.
-    DNGN_ENTER_BAZAAR = 160,
-    DNGN_EXIT_BAZAAR,
+    DNGN_ENTER_PORTAL_VAULT = 160,
+    DNGN_EXIT_PORTAL_VAULT,
 
     DNGN_ALTAR_ZIN = 180,              //  180
     DNGN_ALTAR_SHINING_ONE,
@@ -1763,7 +1763,7 @@ enum level_area_type                   // you.level_type
     LEVEL_LABYRINTH,
     LEVEL_ABYSS,
     LEVEL_PANDEMONIUM,
-    LEVEL_BAZAAR,
+    LEVEL_PORTAL_VAULT,
 
     NUM_LEVEL_AREA_TYPES
 };

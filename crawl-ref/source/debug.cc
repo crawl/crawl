@@ -2273,7 +2273,7 @@ static void mg_build_levels(int niters)
     you.level_type = LEVEL_PANDEMONIUM;
     if (!mg_do_build_level(niters))
         return;
-    you.level_type = LEVEL_BAZAAR;
+    you.level_type = LEVEL_PORTAL_VAULT;
     if (!mg_do_build_level(niters))
         return;
 }
@@ -2337,7 +2337,7 @@ static void write_mapgen_stats()
     check_mapless(level_id(LEVEL_ABYSS), mapless);
     check_mapless(level_id(LEVEL_PANDEMONIUM), mapless);
     check_mapless(level_id(LEVEL_LABYRINTH), mapless);
-    check_mapless(level_id(LEVEL_BAZAAR), mapless);
+    check_mapless(level_id(LEVEL_PORTAL_VAULT), mapless);
 
     if (!mapless.empty())
     {

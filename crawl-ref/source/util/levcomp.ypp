@@ -54,7 +54,7 @@ level_range set_range(const char *s, int start, int end)
 
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM MARKER
-%token <i>      PRELUDE MAIN VALIDATE VETO NSUBST
+%token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME
 
 %token <i>      COMMA INTEGER CHARACTER
 
@@ -152,6 +152,7 @@ metaline        : place
                 | depth
                 | chance
                 | orientation
+                | welcome
                 | mons
                 | items
                 | marker
@@ -409,6 +410,15 @@ orientation     : ORIENT {}
                     lc_map.main.add(
                         yylineno, 
                         make_stringf("orient(\"%s\")", 
+                                     quote_lua_string($2).c_str()));
+                }
+                ;
+
+welcome         : WELCOME STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("welcome(\"%s\")",
                                      quote_lua_string($2).c_str()));
                 }
                 ;

@@ -554,8 +554,8 @@ static std::string get_level_suffix(int level, branch_type where,
         return ("abs");
     case LEVEL_PANDEMONIUM:
         return ("pan");
-    case LEVEL_BAZAAR:
-        return ("bzr");
+    case LEVEL_PORTAL_VAULT:
+        return ("ptl");
     }
 }
 
@@ -704,11 +704,11 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
         // when entering a hell or pandemonium
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
-    else if (stair_taken == DNGN_ENTER_BAZAAR)
+    else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
     {
         stair_taken = DNGN_STONE_ARCH;
     }
-    else if (stair_taken == DNGN_EXIT_BAZAAR)
+    else if (stair_taken == DNGN_EXIT_PORTAL_VAULT)
     {
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
     }
@@ -935,6 +935,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
+        if (just_created_level)
+            level_welcome_messages();
+        
         // Activate markers that want activating, but only when
         // entering a new level in an existing game. If we're starting
         // a new game, or reloading an existing game,

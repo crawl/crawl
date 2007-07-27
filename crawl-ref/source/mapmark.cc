@@ -58,6 +58,16 @@ void map_marker::read(tagHeader &inf)
     unmarshallCoord(inf, pos);
 }
 
+std::string map_marker::feature_description() const
+{
+    return ("");
+}
+
+std::string map_marker::property(const std::string &pname) const
+{
+    return ("");
+}
+
 map_marker *map_marker::read_marker(tagHeader &inf)
 {
     const map_marker_type type =
@@ -129,7 +139,7 @@ map_marker *map_feature_marker::parse(
     return new map_feature_marker(coord_def(0, 0), ft);
 }
 
-std::string map_feature_marker::describe() const
+std::string map_feature_marker::debug_describe() const
 {
     return make_stringf("feature (%s)", dungeon_feature_name(feat));
 }
@@ -270,12 +280,15 @@ void map_lua_marker::push_fn_args(const char *fn) const
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
 }
 
-bool map_lua_marker::callfn(const char *fn, bool warn_err) const
+bool map_lua_marker::callfn(const char *fn, bool warn_err, int args) const
 {
-    const int top = lua_gettop(dlua);
-    push_fn_args(fn);
-    const bool res =
-        dlua.callfn("dlua_marker_method", lua_gettop(dlua) - top, 1);
+    if (args == -1)
+    {
+        const int top = lua_gettop(dlua);
+        push_fn_args(fn);
+        args = lua_gettop(dlua) - top;
+    }
+    const bool res = dlua.callfn("dlua_marker_method", args, 1);
     if (!res && warn_err)
         mprf(MSGCH_WARN, "mlua error: %s", dlua.error.c_str());
     return (res);
@@ -297,16 +310,40 @@ void map_lua_marker::notify_dgn_event(const dgn_event &e)
              dlua.error.c_str());
 }
 
-std::string map_lua_marker::describe() const
+std::string map_lua_marker::call_str_fn(const char *fn) const
 {
     lua_stack_cleaner cln(dlua);
-    if (!callfn("describe"))
-        return make_stringf("error: %s", dlua.error.c_str());
+    if (!callfn(fn))
+        return make_stringf("error (%s): %s", fn, dlua.error.c_str());
 
-    std::string desc;
+    std::string result;
     if (lua_isstring(dlua, -1))
-        desc = lua_tostring(dlua, -1);
-    return desc;
+        result = lua_tostring(dlua, -1);
+    return (result);
+}
+
+std::string map_lua_marker::debug_describe() const
+{
+    return (call_str_fn("describe"));
+}
+
+std::string map_lua_marker::feature_description() const
+{
+    return (call_str_fn("feature_description"));
+}
+
+std::string map_lua_marker::property(const std::string &pname) const
+{
+    lua_stack_cleaner cln(dlua);
+    push_fn_args("property");
+    lua_pushstring(dlua, pname.c_str());
+    if (!callfn("property", false, 4))
+        return make_stringf("error (prop:%s): %s",
+                            pname.c_str(), dlua.error.c_str());
+    std::string result;
+    if (lua_isstring(dlua, -1))
+        result = lua_tostring(dlua, -1);
+    return (result);    
 }
 
 map_marker *map_lua_marker::parse(
@@ -315,7 +352,7 @@ map_marker *map_lua_marker::parse(
     if (s.find("lua:") != 0)
         return (NULL);
     std::string raw = s;
-    strip_tag(raw, "lua:");
+    strip_tag(raw, "lua:", true);
     map_lua_marker *mark = new map_lua_marker(raw, ctx);
     if (!mark->initialised)
     {
@@ -392,6 +429,20 @@ std::vector<map_marker*> env_get_markers(const coord_def &c)
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
     return (rmarkers);
+}
+
+std::string env_property_at(const coord_def &c, map_marker_type type,
+                            const std::string &key)
+{
+    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
+        els = env.markers.equal_range(c);
+    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    {
+        const std::string prop = i->second->property(key);
+        if (!prop.empty())
+            return (prop);
+    }
+    return ("");
 }
 
 void env_clear_markers()

@@ -2238,8 +2238,8 @@ bool is_feature(int feature, int x, int y)
         {
         case DNGN_ENTER_HELL:
         case DNGN_ENTER_LABYRINTH:
-        case DNGN_ENTER_BAZAAR:
-        case DNGN_EXIT_BAZAAR:
+        case DNGN_ENTER_PORTAL_VAULT:
+        case DNGN_EXIT_PORTAL_VAULT:
         case DNGN_ENTER_SHOP:
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
@@ -3400,8 +3400,8 @@ void init_feature_table( void )
             Feature[i].seen_colour = CYAN;
             break;
 
-        case DNGN_ENTER_BAZAAR:
-        case DNGN_EXIT_BAZAAR:
+        case DNGN_ENTER_PORTAL_VAULT:
+        case DNGN_EXIT_PORTAL_VAULT:
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
             Feature[i].colour = EC_SHIMMER_BLUE;
             Feature[i].notable = true;

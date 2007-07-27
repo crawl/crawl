@@ -569,8 +569,8 @@ void initialise_travel()
     traversable_terrain[DNGN_RETURN_FROM_TOMB] =
     traversable_terrain[DNGN_RETURN_FROM_SWAMP] =
     traversable_terrain[DNGN_RETURN_FROM_SHOALS] =
-    traversable_terrain[DNGN_ENTER_BAZAAR] =
-    traversable_terrain[DNGN_EXIT_BAZAAR] =
+    traversable_terrain[DNGN_ENTER_PORTAL_VAULT] =
+    traversable_terrain[DNGN_EXIT_PORTAL_VAULT] =
     traversable_terrain[DNGN_ALTAR_ZIN] =
     traversable_terrain[DNGN_ALTAR_SHINING_ONE] =
     traversable_terrain[DNGN_ALTAR_KIKUBAAQUDGHA] =
@@ -2735,8 +2735,8 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
         return (level_id(LEVEL_PANDEMONIUM));
     else if (branch == "Lab")
         return (level_id(LEVEL_LABYRINTH));
-    else if (branch == "Bzr")
-        return (level_id(LEVEL_BAZAAR));
+    else if (branch == "Port")
+        return (level_id(LEVEL_PORTAL_VAULT));
 
     const branch_type br = str_to_branch(branch);
     if (br == NUM_BRANCHES)

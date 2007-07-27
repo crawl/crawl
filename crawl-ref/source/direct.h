@@ -60,11 +60,9 @@ std::string feature_description(int mx, int my,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true);
 std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type tr = NUM_TRAPS,
-                                    bool temporary = false);
+                                    trap_type tr = NUM_TRAPS);
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS,
-                                bool temporary = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true);
 

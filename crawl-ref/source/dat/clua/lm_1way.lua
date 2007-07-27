@@ -3,12 +3,12 @@
 -- One-way stair marker.
 ------------------------------------------------------------------------------
 
-OneWayStair = { }
+OneWayStair = PortalDescriptor:new()
 OneWayStair.__index = OneWayStair
 
-function OneWayStair.new()
-  local ows = { }
-  setmetatable(ows, OneWayStair)
+function OneWayStair:new(props)
+  local ows = PortalDescriptor.new(self, props)
+  setmetatable(ows, self)
   return ows
 end
 
@@ -26,10 +26,12 @@ function OneWayStair:event(marker, ev)
   end
 end
 
-function OneWayStair.read(marker, th)
-  return OneWayStair.new()
+function OneWayStair:read(marker, th)
+  PortalDescriptor.read(self, marker, th)
+  setmetatable(self, OneWayStair)
+  return self
 end
 
-function one_way_stair()
-  return OneWayStair.new()
+function one_way_stair(pars)
+  return OneWayStair:new(pars)
 end

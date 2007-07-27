@@ -5356,15 +5356,13 @@ flight_type player::flies() const
 
 bool player::light_flight() const
 {
-    return (flies() == FL_FLY && travelling_light());
+    // Only Kenku get perks for flying light.
+    return (species == SP_KENKU && flies() == FL_FLY && travelling_light());
 }
 
 bool player::travelling_light() const
 {
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
-    if (armour && !is_light_armour(*armour))
-        return (false);
-    return (you.burden < carrying_capacity(BS_UNENCUMBERED) * 60 / 100);
+    return (you.burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
 }
 
 int player::mons_species() const

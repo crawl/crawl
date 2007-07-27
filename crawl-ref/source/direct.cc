@@ -1200,17 +1200,14 @@ void describe_floor()
         mpr("Beware, for starvation awaits!");
 }
 
-std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap,
-                                bool temporary,
-                                description_level_type dtype,
-                                bool add_stop)
+static std::string feature_do_grammar(description_level_type dtype,
+                                      bool add_stop,
+                                      bool force_article,
+                                      std::string desc)
 {
-    std::string desc =
-        raw_feature_description(grid, trap, temporary);
     if (add_stop)
         desc += ".";
-    if (dtype == DESC_PLAIN || (!grid_is_trap(grid) && isupper(desc[0])))
+    if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
     {
         if (isupper(desc[0]))
         {
@@ -1238,12 +1235,20 @@ std::string feature_description(dungeon_feature_type grid,
         return article_a(desc, true);
     default:
         return (desc);
-    }
+    }    
+}
+
+std::string feature_description(dungeon_feature_type grid,
+                                trap_type trap,
+                                description_level_type dtype,
+                                bool add_stop)
+{
+    std::string desc = raw_feature_description(grid, trap);
+    return feature_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
 }
 
 std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type trap,
-                                    bool temporary)
+                                    trap_type trap)
 {
     if (grid_is_trap(grid) && trap != NUM_TRAPS)
     {
@@ -1341,17 +1346,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
     case DNGN_ENTER_SHOP:
         return ("shop");
     case DNGN_ENTER_LABYRINTH:
-        if (temporary)
-            return ("slowly fading labyrinth entrance");
-        else
-            return ("labyrinth entrance");
-    case DNGN_ENTER_BAZAAR:
-        if (temporary)
-            return ("gently fading gateway to a bazaar");
-        else
-            return ("gateway to a bazaar");
-    case DNGN_EXIT_BAZAAR:
-        return ("exit from the bazaar");
+        return ("labyrinth entrance");
     case DNGN_ENTER_DIS:
         return ("gateway to the Iron City of Dis");
     case DNGN_ENTER_GEHENNA:
@@ -1400,6 +1395,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("staircase to the Swamp");
     case DNGN_ENTER_SHOALS:
         return ("staircase to the Shoals");
+    case DNGN_EXIT_PORTAL_VAULT:
+        return ("gate leading back to the Dungeon");
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -1464,6 +1461,18 @@ std::string raw_feature_description(dungeon_feature_type grid,
     }
 }
 
+static std::string marker_feature_description(const coord_def &p)
+{
+    std::vector<map_marker*> markers = env_get_markers(p);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        const std::string desc = markers[i]->feature_description();
+        if (!desc.empty())
+            return (desc);
+    }
+    return ("");
+}
+
 std::string feature_description(int mx, int my, description_level_type dtype,
                                 bool add_stop)
 {
@@ -1473,12 +1482,18 @@ std::string feature_description(int mx, int my, description_level_type dtype,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_III:
-        return (feature_description(grid, trap_type_at_xy(mx, my), false,
+        return (feature_description(grid, trap_type_at_xy(mx, my), 
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:
         return (shop_name(mx, my, add_stop));
+
+    case DNGN_ENTER_PORTAL_VAULT:
+        return (feature_do_grammar(
+                    dtype, add_stop, false,
+                    marker_feature_description(coord_def(mx, my))));
+
     default:
-        return (feature_description(grid, NUM_TRAPS, false, dtype, add_stop));
+        return (feature_description(grid, NUM_TRAPS, dtype, add_stop));
     }
 }
 
@@ -1714,7 +1729,7 @@ static void describe_cell(int mx, int my)
     std::string marker;
     if (map_marker *mark = env_find_marker(coord_def(mx, my), MAT_ANY))
     {
-        std::string desc = mark->describe();
+        std::string desc = mark->debug_describe();
         if (desc.empty())
             desc = "?";
         marker = " (" + desc + ")";

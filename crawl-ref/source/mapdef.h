@@ -498,6 +498,8 @@ public:
     map_section_type orient;
     int              chance;
 
+    std::vector<std::string> welcome_messages;
+
     map_lines       map;
     mons_list       mons;
     item_list       items;
