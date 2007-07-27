@@ -716,11 +716,6 @@ bool new_game(void)
     {
         if (check_saved_game())
         {
-            // Seems sort of pointless to print this, since the
-            // game start will kill overwrite it immediately...
-            formatted_string::parse_string(
-                "EOL<brown>Welcome back, <yellow>" +
-                std::string(you.your_name) + "!<lightgrey>").display();
             save_player_name();
             return (false);
         }
