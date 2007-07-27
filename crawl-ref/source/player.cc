@@ -1537,7 +1537,7 @@ int player_AC(void)
         if (item == -1 || i == EQ_SHIELD)
             continue;
 
-        AC += you.inv[ item ].plus;
+        AC += you.inv[ item ].plus * 100;
 
         // Note that helms and boots have a sub-sub classing system
         // which uses "plus2"... since not all members have the same
@@ -1553,7 +1553,7 @@ int player_AC(void)
         // additional *half*-levels of armour skill.
         int racial_bonus = 0;
         const unsigned long armour_race = get_equip_race( you.inv[ item ] );
-        const int ac_value = property( you.inv[ item ], PARM_AC );
+        const int ac_value = property( you.inv[ item ], PARM_AC ) * 100;
 
         // Dwarven armour is universally good -- bwr
         if (armour_race == ISFLAG_DWARVEN)
@@ -1597,24 +1597,24 @@ int player_AC(void)
             AC -= ac_value / 2;
     }
 
-    AC += player_equip( EQ_RINGS_PLUS, RING_PROTECTION );
+    AC += player_equip( EQ_RINGS_PLUS, RING_PROTECTION ) * 100;
 
     if (player_equip_ego_type( EQ_WEAPON, SPWPN_PROTECTION ))
-        AC += 5;
+        AC += 500;
 
     if (player_equip_ego_type( EQ_SHIELD, SPARM_PROTECTION ))
-        AC += 3;
+        AC += 300;
 
-    AC += scan_randarts(RAP_AC);
+    AC += scan_randarts(RAP_AC) * 100;
 
     if (you.duration[DUR_ICY_ARMOUR])
-        AC += 4 + you.skills[SK_ICE_MAGIC] / 3;         // max 13
+        AC += 400 + 100 * you.skills[SK_ICE_MAGIC] / 3;         // max 13
 
     if (you.duration[DUR_STONEMAIL])
-        AC += 5 + you.skills[SK_EARTH_MAGIC] / 2;       // max 18
+        AC += 500 + 100 * you.skills[SK_EARTH_MAGIC] / 2;       // max 18
 
     if (you.duration[DUR_STONESKIN])
-        AC += 2 + you.skills[SK_EARTH_MAGIC] / 5;       // max 7
+        AC += 200 + 100 * you.skills[SK_EARTH_MAGIC] / 5;       // max 7
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
@@ -1625,33 +1625,33 @@ int player_AC(void)
         // Note: Even though necromutation is a high level spell, it does 
         // allow the character full armour (so the bonus is low). -- bwr
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
-            AC += (3 + you.skills[SK_NECROMANCY] / 6);          // max 7
+            AC += (300 + 100 * you.skills[SK_NECROMANCY] / 6);   // max 7
 
         //jmf: only give:
         if (player_genus(GENPC_DRACONIAN))
         {
             if (you.experience_level < 8)
-                AC += 2;
+                AC += 200;
             else if (you.species == SP_GREY_DRACONIAN)
-                AC += 1 + (you.experience_level - 4) / 2;       // max 12
+                AC += 100 + 100 * (you.experience_level - 4) / 2;  // max 12
             else
-                AC += 1 + (you.experience_level / 4);           // max 7
+                AC += 100 + (100 * you.experience_level / 4);      // max 7
         }
         else
         {
             switch (you.species)
             {
             case SP_NAGA:
-                AC += you.experience_level / 3;                 // max 9
+                AC += 100 * you.experience_level / 3;              // max 9
                 break;
 
             case SP_OGRE:
-                AC++;
+                AC += 100;
                 break;
 
             case SP_TROLL:
             case SP_CENTAUR:
-                AC += 3;
+                AC += 300;
                 break;
 
             default:
@@ -1664,61 +1664,61 @@ int player_AC(void)
 
         // mutations:
         // these give: +1, +2, +3
-        AC += you.mutation[MUT_TOUGH_SKIN];
-        AC += you.mutation[MUT_GREY_SCALES];
-        AC += you.mutation[MUT_SPECKLED_SCALES];
-        AC += you.mutation[MUT_IRIDESCENT_SCALES];
-        AC += you.mutation[MUT_PATTERNED_SCALES];
-        AC += you.mutation[MUT_BLUE_SCALES];
+        AC += 100 * you.mutation[MUT_TOUGH_SKIN];
+        AC += 100 * you.mutation[MUT_GREY_SCALES];
+        AC += 100 * you.mutation[MUT_SPECKLED_SCALES];
+        AC += 100 * you.mutation[MUT_IRIDESCENT_SCALES];
+        AC += 100 * you.mutation[MUT_PATTERNED_SCALES];
+        AC += 100 * you.mutation[MUT_BLUE_SCALES];
 
         // these gives: +1, +3, +5
         if (you.mutation[MUT_GREEN_SCALES] > 0)
-            AC += (you.mutation[MUT_GREEN_SCALES] * 2) - 1;
+            AC += (you.mutation[MUT_GREEN_SCALES] * 200) - 100;
         if (you.mutation[MUT_NACREOUS_SCALES] > 0)
-            AC += (you.mutation[MUT_NACREOUS_SCALES] * 2) - 1;
+            AC += (you.mutation[MUT_NACREOUS_SCALES] * 200) - 100;
         if (you.mutation[MUT_BLACK2_SCALES] > 0)
-            AC += (you.mutation[MUT_BLACK2_SCALES] * 2) - 1;
+            AC += (you.mutation[MUT_BLACK2_SCALES] * 200) - 100;
         if (you.mutation[MUT_WHITE_SCALES] > 0)
-            AC += (you.mutation[MUT_WHITE_SCALES] * 2) - 1;
+            AC += (you.mutation[MUT_WHITE_SCALES] * 200) - 100;
 
         // these give: +2, +4, +6
-        AC += you.mutation[MUT_GREY2_SCALES] * 2;
-        AC += you.mutation[MUT_YELLOW_SCALES] * 2;
-        AC += you.mutation[MUT_PURPLE_SCALES] * 2;
+        AC += you.mutation[MUT_GREY2_SCALES] * 200;
+        AC += you.mutation[MUT_YELLOW_SCALES] * 200;
+        AC += you.mutation[MUT_PURPLE_SCALES] * 200;
 
         // black gives: +3, +6, +9
-        AC += you.mutation[MUT_BLACK_SCALES] * 3;
+        AC += you.mutation[MUT_BLACK_SCALES] * 300;
 
         // boney plates give: +2, +3, +4
         if (you.mutation[MUT_BONEY_PLATES] > 0)
-            AC += you.mutation[MUT_BONEY_PLATES] + 1;
+            AC += 100 * (you.mutation[MUT_BONEY_PLATES] + 1);
 
         // red gives +1, +2, +4
-        AC += you.mutation[MUT_RED_SCALES]
-                            + (you.mutation[MUT_RED_SCALES] == 3);
+        AC += 100 * (you.mutation[MUT_RED_SCALES]
+                     + (you.mutation[MUT_RED_SCALES] == 3));
 
         // indigo gives: +2, +3, +5
         if (you.mutation[MUT_INDIGO_SCALES] > 0)
         {
-            AC += 1 + you.mutation[MUT_INDIGO_SCALES]
-                            + (you.mutation[MUT_INDIGO_SCALES] == 3);
+            AC += 100 * (1 + you.mutation[MUT_INDIGO_SCALES]
+                         + (you.mutation[MUT_INDIGO_SCALES] == 3));
         }
 
         // brown gives: +2, +4, +5
-        AC += (you.mutation[MUT_BROWN_SCALES] * 2)
-                            - (you.mutation[MUT_BROWN_SCALES] == 3);
+        AC += 100 * ((you.mutation[MUT_BROWN_SCALES] * 2)
+                     - (you.mutation[MUT_BROWN_SCALES] == 3));
 
         // orange gives: +1, +3, +4
-        AC += you.mutation[MUT_ORANGE_SCALES]
-                            + (you.mutation[MUT_ORANGE_SCALES] > 1);
+        AC += 100 * (you.mutation[MUT_ORANGE_SCALES]
+                     + (you.mutation[MUT_ORANGE_SCALES] > 1));
 
         // knobbly red gives: +2, +5, +7
-        AC += (you.mutation[MUT_RED2_SCALES] * 2)
-                            + (you.mutation[MUT_RED2_SCALES] > 1);
+        AC += 100 * ((you.mutation[MUT_RED2_SCALES] * 2)
+                     + (you.mutation[MUT_RED2_SCALES] > 1));
 
         // metallic gives +3, +7, +10
-        AC += you.mutation[MUT_METALLIC_SCALES] * 3
-                            + (you.mutation[MUT_METALLIC_SCALES] > 1);
+        AC += 100 * (you.mutation[MUT_METALLIC_SCALES] * 3
+                     + (you.mutation[MUT_METALLIC_SCALES] > 1));
     }
     else
     {
@@ -1732,33 +1732,33 @@ int player_AC(void)
 
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += (2 + you.skills[SK_POISON_MAGIC] / 6);        // max 6
+            AC += (200 + 100 * you.skills[SK_POISON_MAGIC] / 6); // max 6
             break;
 
         case TRAN_ICE_BEAST:
-            AC += (5 + (you.skills[SK_ICE_MAGIC] + 1) / 4);     // max 12
+            AC += (500 + 100 * (you.skills[SK_ICE_MAGIC] + 1) / 4); // max 12
 
             if (you.duration[DUR_ICY_ARMOUR])
-                AC += (1 + you.skills[SK_ICE_MAGIC] / 4);       // max +7 
+                AC += (100 + 100 * you.skills[SK_ICE_MAGIC] / 4);   // max +7 
             break;
 
         case TRAN_DRAGON:
-            AC += (7 + you.skills[SK_FIRE_MAGIC] / 3);          // max 16
+            AC += (700 + 100 * you.skills[SK_FIRE_MAGIC] / 3);      // max 16
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += (17 + you.skills[SK_EARTH_MAGIC] / 2);        // max 30
+            AC += (1700 + 100 * you.skills[SK_EARTH_MAGIC] / 2);    // max 30
 
             if (you.duration[DUR_STONESKIN] || you.duration[DUR_STONEMAIL])
-                AC += (1 + you.skills[SK_EARTH_MAGIC] / 4);     // max +7
+                AC += (100 + 100 * you.skills[SK_EARTH_MAGIC] / 4); // max +7
             break;
 
         case TRAN_SERPENT_OF_HELL:
-            AC += (10 + you.skills[SK_FIRE_MAGIC] / 3);         // max 19
+            AC += (1000 + 100 * you.skills[SK_FIRE_MAGIC] / 3);     // max 19
             break;
 
         case TRAN_AIR:    // air - scales & species ought to be irrelevent
-            AC = (you.skills[SK_AIR_MAGIC] * 3) / 2;            // max 40
+            AC = (you.skills[SK_AIR_MAGIC] * 300) / 2;            // max 40
             break;
 
         default:
@@ -1766,7 +1766,7 @@ int player_AC(void)
         }
     }
 
-    return AC;
+    return (AC / 100);
 }
 
 bool is_light_armour( const item_def &item )
@@ -1783,8 +1783,6 @@ bool is_light_armour( const item_def &item )
     case ARM_STEAM_DRAGON_ARMOUR:
     case ARM_MOTTLED_DRAGON_HIDE:
     case ARM_MOTTLED_DRAGON_ARMOUR:
-    //case ARM_TROLL_HIDE: //jmf: these are knobbly and stiff
-    //case ARM_TROLL_LEATHER_ARMOUR:
         return (true);
 
     default:
