@@ -3443,7 +3443,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
     }
 
     // Activate any markers within the map.
-    if (did_map)
+    if (did_map && !generating_level)
     {
         const vault_placement &vp = level_vaults[level_vaults.size() - 1];
         for (int y = vp.y; y < vp.y + vp.height; ++y)
