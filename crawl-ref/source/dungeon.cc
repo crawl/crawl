@@ -3418,6 +3418,13 @@ static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
     return (DNGN_FLOOR);
 }
 
+// Places a map on the current level (minivault or regular vault).
+// generating_level: If true, assumes that this is in the middle of normal
+//                   level generation, and does not link items or handle
+//                   changing terrain.
+// clobber: If true, assumes the newly placed vault can clobber existing
+//          items and monsters (items may be destroyed, monsters may be
+//          teleported).
 bool dgn_place_map(int map, bool generating_level, bool clobber)
 {
     const map_def *mdef = map_by_index(map);
