@@ -2188,6 +2188,44 @@ void debug_set_xl()
         debug_uptick_xl(newxl);
 }
 
+static void debug_load_map_by_name(const std::string &name)
+{
+    level_clear_vault_memory();
+    const int map = find_map_by_name(name);
+    if (map == -1)
+    {
+        mprf("Can't find map named '%s'.", name.c_str());
+        return;
+    }
+
+    if (dgn_place_map(map, false, true))
+        mprf("Successfully placed %s.", map_by_index(map)->name.c_str());
+    else
+        mprf("Failed to place %s.", map_by_index(map)->name.c_str());
+}
+
+void debug_place_map()
+{
+    char what_to_make[100];
+    mesclr();
+    mprf(MSGCH_PROMPT, "Enter map name: ");
+    if (cancelable_get_line(what_to_make, sizeof what_to_make))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    std::string what = what_to_make;
+    trim_string(what);
+    if (what.empty())
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    debug_load_map_by_name(what);
+}
+
 #endif
 
 #ifdef DEBUG_DIAGNOSTICS

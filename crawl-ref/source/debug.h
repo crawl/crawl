@@ -153,6 +153,7 @@ void debug_list_monsters();
 
 void debug_card();
 void debug_set_xl();
+void debug_place_map();
 
 #ifdef DEBUG_DIAGNOSTICS
 void generate_map_stats();

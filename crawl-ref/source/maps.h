@@ -37,10 +37,12 @@ struct vault_placement
 int vault_main(map_type vgrid, 
                vault_placement &vp,
                int vault_force,
-               bool check_place = false);
+               bool check_place = false,
+               bool clobber = false);
 
 const map_def *map_by_index(int index);
 int map_count();
+int find_map_by_name(const std::string &name);
 int random_map_for_place(const level_id &place, bool mini = false);
 int random_map_in_depth(const level_id &lid, bool want_minivault = false);
 int random_map_for_tag(const std::string &tag, bool want_minivault,

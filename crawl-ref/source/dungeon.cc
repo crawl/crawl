@@ -59,6 +59,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "travel.h"
+#include "view.h"
 
 #define MAX_PIT_MONSTERS   10
 
@@ -193,11 +194,16 @@ static void beehive(spec_room &sr);
 static void jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
-static bool build_secondary_vault(int level_number, int vault, int rune_subst = -1);
+static bool build_secondary_vault(int level_number, int vault,
+                                  int rune_subst = -1,
+                                  bool generating_level = true,
+                                  bool clobber = false);
 static bool build_vaults(int level_number, int vault_number,
                          int rune_subst = -1, bool build_only = false,
-                         bool check_vault_place = false);
+                         bool check_vault_place = false,
+                         bool generating_level = true, bool clobber = false);
 static bool build_minivaults(int level_number, int force_vault,
+                             bool level_builder = true, bool clobber = false,
                              coord_def where = coord_def() );
 static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
@@ -221,7 +227,6 @@ typedef std::list<coord_def> coord_list;
 map_mask dgn_map_mask;
 std::vector<vault_placement> level_vaults;
 
-static dgn_region_list vault_zones;
 static int vault_chance = 9;
 static int minivault_chance = 3;
 static bool dgn_level_vetoed = false;
@@ -287,6 +292,12 @@ void level_welcome_messages()
         for (int j = 0, msize = msgs.size(); j < msize; ++j)
             mpr(msgs[j].c_str());
     }
+}
+
+void level_clear_vault_memory()
+{
+    level_vaults.clear();
+    dgn_map_mask.init(0);
 }
 
 static void dgn_register_vault(const map_def &map)
@@ -494,9 +505,7 @@ static bool valid_dungeon_level(int level_number, int level_type)
 
 static void reset_level()
 {
-    dgn_map_mask.init(0);
-    level_vaults.clear();
-    vault_zones.clear();
+    level_clear_vault_memory();
     vault_chance     = 9;
     minivault_chance = 3;
     use_random_maps  = true;
@@ -1090,7 +1099,7 @@ static void prepare_shoals(int level_number)
         } while ( vaultidx == -1 ||
                   !map_by_index(vaultidx)->has_tag("has_rune") );
 
-        build_minivaults( level_number, vaultidx,
+        build_minivaults( level_number, vaultidx, true, false,
                           centres[1] - coord_def(3,3) );
 
         for ( int i = 2; i < num_islands; ++i )
@@ -1100,7 +1109,7 @@ static void prepare_shoals(int level_number)
                 vaultidx = dgn_random_map_for_place(true);
             } while ( vaultidx == -1 ||
                       map_by_index(vaultidx)->has_tag("has_rune") );
-            build_minivaults( level_number, vaultidx,
+            build_minivaults( level_number, vaultidx, true, false,
                               centres[i] - coord_def(3,3) );
         }
     }
@@ -2868,7 +2877,8 @@ static void beehive(spec_room &sr)
 }                               // end beehive()
 
 static bool safe_minivault_place(int v1x, int v1y,
-                                 const vault_placement &place)
+                                 const vault_placement &place,
+                                 bool clobber)
 {
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
@@ -2881,16 +2891,22 @@ static bool safe_minivault_place(int v1x, int v1y,
 
             if (dgn_map_mask[vx][vy])
                 return (false);
+
+            const dungeon_feature_type dfeat = grd[vx][vy];
             
-            if ((grd[vx][vy] != DNGN_FLOOR
-                 && grd[vx][vy] != DNGN_ROCK_WALL
-                 && grd[vx][vy] != DNGN_CLOSED_DOOR
-                 && grd[vx][vy] != DNGN_SECRET_DOOR
-                 && (!water_ok ||
-                     (grd[vx][vy] != DNGN_DEEP_WATER
-                      && grd[vx][vy] != DNGN_SHALLOW_WATER)))
-                || igrd[vx][vy] != NON_ITEM
-                || mgrd[vx][vy] != NON_MONSTER)
+            if ((dfeat != DNGN_FLOOR
+                 && dfeat != DNGN_ROCK_WALL
+                 && dfeat != DNGN_CLOSED_DOOR
+                 && dfeat != DNGN_SECRET_DOOR
+                 && (!water_ok
+                     || (dfeat != DNGN_DEEP_WATER
+                         && dfeat != DNGN_SHALLOW_WATER))
+                 && (!clobber
+                     || (!grid_is_solid(dfeat) && dfeat != DNGN_LAVA
+                         && !grid_is_watery(dfeat))))
+                || (!clobber
+                    && (igrd[vx][vy] != NON_ITEM
+                        || mgrd[vx][vy] != NON_MONSTER)))
             {
                 return (false);
             }
@@ -2925,7 +2941,7 @@ static bool connected_minivault_place(int v1x, int v1y,
 }
 
 static bool find_minivault_place(const vault_placement &place,
-                                 int &v1x, int &v1y)
+                                 int &v1x, int &v1y, bool clobber)
 {
     // [ds] The margin around the edges of the map where the minivault
     // won't be placed. Purely arbitrary as far as I can see.
@@ -2937,7 +2953,7 @@ static bool find_minivault_place(const vault_placement &place,
         v1x = random_range( margin, GXM - margin - place.width );
         v1y = random_range( margin, GYM - margin - place.height );
 
-        if (!safe_minivault_place( v1x, v1y, place ))
+        if (!safe_minivault_place( v1x, v1y, place, clobber ))
             continue;
 
         if (connected_minivault_place(v1x, v1y, place))
@@ -2947,6 +2963,7 @@ static bool find_minivault_place(const vault_placement &place,
 }
 
 static bool build_minivaults(int level_number, int force_vault,
+                             bool building_level, bool clobber,
                              coord_def where)
 {
     // for some weird reason can't put a vault on level 1, because monster equip
@@ -2978,17 +2995,13 @@ static bool build_minivaults(int level_number, int force_vault,
         v1x = where.x;
         v1y = where.y;
     }
-    else if (!find_minivault_place(place, v1x, v1y))
+    else if (!find_minivault_place(place, v1x, v1y, clobber))
         return (false);
 
     place.x = v1x;
     place.y = v1y;
 
-    place.map.map.apply_markers(coord_def(v1x, v1y));
-    
     level_vaults.push_back(place);
-    vault_zones.push_back(
-        dgn_region(place.x, place.y, place.width, place.height));
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -3010,13 +3023,24 @@ static bool build_minivaults(int level_number, int force_vault,
             const int feat = vgrid[vy - v1y][vx - v1x];
             if (feat == ' ')
                 continue;
+            const dungeon_feature_type oldgrid = grd[vx][vy];
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
                                       acq_item_class,
                                       feat, target_connections, 
                                       num_runes );
+            if (!building_level)
+            {
+                link_items();
+                const dungeon_feature_type newgrid = grd[vx][vy];
+                grd[vx][vy] = oldgrid;
+                dungeon_terrain_changed(coord_def(vx, vy), newgrid);
+                env_remove_markers_at(coord_def(vx, vy), MAT_ANY);
+            }
         }
     }
+
+    place.map.map.apply_markers(coord_def(v1x, v1y));    
 
     if (target_connections.empty() && place.map.has_tag("mini_float"))
         pick_float_exits(place, target_connections);
@@ -3351,13 +3375,97 @@ static void connect_vault(const vault_placement &vp)
     }
 }
 
+static dungeon_feature_type dgn_find_rune_subst(const std::string &tag)
+{
+    const std::string suffix("_entry");
+    const std::string::size_type psuffix = tag.find(suffix);
+    if (psuffix == std::string::npos)
+        return (DNGN_FLOOR);
+    const std::string key = tag.substr(0, psuffix);
+    if (key == "bzr")
+        return (DNGN_ENTER_PORTAL_VAULT);
+    else if (key == "lab")
+        return (DNGN_ENTER_LABYRINTH);
+    else if (key == "hell")
+        return (DNGN_ENTER_HELL);
+    else if (key == "pan")
+        return (DNGN_ENTER_PANDEMONIUM);
+    else if (key == "abyss")
+        return (DNGN_ENTER_ABYSS);
+    else
+    {
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+        {
+            if (branches[i].entry_stairs != NUM_FEATURES
+                && !strcasecmp(branches[i].abbrevname, key.c_str()))
+            {
+                return (branches[i].entry_stairs);
+            }
+        }
+    }
+    return (DNGN_FLOOR);
+}
+
+static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
+{
+    std::vector<std::string> words = split_string(" ", tags);
+    for (int i = 0, size = words.size(); i < size; ++i)
+    {
+        const dungeon_feature_type feat = dgn_find_rune_subst(words[i]);
+        if (feat != DNGN_FLOOR)
+            return (feat);
+    }
+    return (DNGN_FLOOR);
+}
+
+bool dgn_place_map(int map, bool generating_level, bool clobber)
+{
+    const map_def *mdef = map_by_index(map);
+    bool did_map = false;
+
+    if (mdef->is_minivault())
+        did_map =
+            build_minivaults(you.your_level, map, generating_level, clobber);
+    else
+    {
+        dungeon_feature_type rune_subst = DNGN_FLOOR;
+        if (mdef->has_tag_suffix("_entry"))
+            rune_subst = dgn_find_rune_subst_tags(mdef->tags);
+        did_map = build_secondary_vault(you.your_level, map, rune_subst,
+                                        generating_level, clobber);
+    }
+
+    // Activate any markers within the map.
+    if (did_map)
+    {
+        const vault_placement &vp = level_vaults[level_vaults.size() - 1];
+        for (int y = vp.y; y < vp.y + vp.height; ++y)
+        {
+            for (int x = vp.x; x < vp.x + vp.width; ++x)
+            {
+                std::vector<map_marker *> markers =
+                    env_get_markers(coord_def(x, y));
+                for (int i = 0, size = markers.size(); i < size; ++i)
+                    markers[i]->activate();
+
+                if (!see_grid(x, y))
+                    set_terrain_changed(x, y);
+            }
+        }
+    }
+    return (did_map);
+}
+
 /*
  * Places a vault somewhere in an already built level if possible.
  * Returns true if the vault was successfully placed.
  */
-static bool build_secondary_vault(int level_number, int vault, int rune_subst)
+static bool build_secondary_vault(int level_number, int vault,
+                                  int rune_subst, bool generating_level,
+                                  bool clobber)
 {
-    if (build_vaults(level_number, vault, rune_subst, true, true))
+    if (build_vaults(level_number, vault, rune_subst, true, true,
+                     generating_level, clobber))
     {
         const vault_placement &vp = level_vaults[ level_vaults.size() - 1 ];
         connect_vault(vp);
@@ -3368,7 +3476,8 @@ static bool build_secondary_vault(int level_number, int vault, int rune_subst)
 }
 
 static bool build_vaults(int level_number, int force_vault, int rune_subst,
-                         bool build_only, bool check_collisions)
+                         bool build_only, bool check_collisions,
+                         bool generating_level, bool clobber)
 {
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
@@ -3392,13 +3501,12 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     vault_placement place;
     std::vector<coord_def> &target_connections = place.exits;
 
-    const int gluggy = vault_main(vgrid, place, force_vault, check_collisions);
+    const int gluggy = vault_main(vgrid, place, force_vault,
+                                  check_collisions, clobber);
 
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
 
-    place.map.map.apply_markers(coord_def(place.x, place.y));
-    
     int vx, vy;
     int  num_runes = 0;
 
@@ -3411,6 +3519,8 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
         {
             if (vgrid[vy][vx] == ' ')
                 continue;
+
+            const dungeon_feature_type oldgrid = grd[vx][vy];
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
                                       acq_item_class,
@@ -3418,9 +3528,20 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
                                       target_connections,
                                       num_runes,
                                       rune_subst );
+            if (!generating_level)
+            {
+                // Have to link items each square at a time, or
+                // dungeon_terrain_changed could blow up.
+                link_items();
+                const dungeon_feature_type newgrid = grd[vx][vy];
+                grd[vx][vy] = oldgrid;
+                dungeon_terrain_changed(coord_def(vx, vy), newgrid);
+                env_remove_markers_at(coord_def(vx, vy), MAT_ANY);
+            }
         }
     }
 
+    place.map.map.apply_markers(coord_def(place.x, place.y));
     register_place(place);
 
     if (gluggy == MAP_FLOAT && target_connections.empty())
@@ -3429,8 +3550,6 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
     level_vaults.push_back(place);
-    vault_zones.push_back(
-        dgn_region(place.x, place.y, place.width, place.height));
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -4125,10 +4244,11 @@ static bool join_the_dots(
     {
         join_count++;
 
-        if (early_exit && at != from && grd(at) == DNGN_FLOOR)
+        const dungeon_feature_type feat = grd(at);
+        if (early_exit && at != from && is_traversable(feat))
             return (true);
 
-        if (unforbidden(at, MMT_VAULT))
+        if (unforbidden(at, MMT_VAULT) && !is_traversable(feat))
             grd(at) = DNGN_FLOOR;
 
         if (join_count > 10000) // just insurance

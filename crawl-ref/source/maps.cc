@@ -30,12 +30,12 @@
 
 static int write_vault(map_def &mdef, map_type mt, 
                        vault_placement &,
-                       bool check_place);
+                       bool check_place, bool clobber);
 static int apply_vault_definition(
                         map_def &def,
                         map_type map,
                         vault_placement &,
-                        bool check_place);
+                        bool check_place, bool clobber);
 
 static bool resolve_map(map_def &def, const map_def &original);
 
@@ -58,7 +58,8 @@ int vault_main(
         map_type vgrid, 
         vault_placement &place,
         int which_vault,
-        bool check_place)
+        bool check_place,
+        bool clobber)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s", 
@@ -80,12 +81,13 @@ int vault_main(
     // Return value of zero forces dungeon.cc to regenerate the level, except
     // for branch entry vaults where dungeon.cc just rejects the vault and
     // places a vanilla entry.
-    return (write_vault( vdefs[which_vault], vgrid, place, check_place ));
+    return (write_vault( vdefs[which_vault], vgrid, place,
+                         check_place, clobber ));
 }
 
 static int write_vault(map_def &mdef, map_type map, 
                        vault_placement &place,
-                       bool check_place)
+                       bool check_place, bool clobber)
 {
     mdef.load();
     
@@ -104,7 +106,7 @@ static int write_vault(map_def &mdef, map_type map,
             continue;
 
         place.orient = apply_vault_definition(place.map, map,
-                                              place, check_place);
+                                              place, check_place, clobber);
 
         if (place.orient != MAP_NONE)
             break;
@@ -157,7 +159,7 @@ static bool resolve_map(map_def &map, const map_def &original)
 // is a bad place to build a vault.
 static bool bad_map_place(const map_def &map,
                           int sx, int sy, int width, int height,
-                          bool check_place)
+                          bool check_place, bool clobber)
 {
     if (!check_place)
         return (false);
@@ -173,7 +175,8 @@ static bool bad_map_place(const map_def &map,
             if (dgn_map_mask[x][y])
                 return (true);
 
-            if (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER)
+            if (!clobber
+                && (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER))
                 return (true);
             
             const dungeon_feature_type grid = grd[x][y];
@@ -186,6 +189,11 @@ static bool bad_map_place(const map_def &map,
                 && grid != DNGN_OPEN_DOOR
                 && grid != DNGN_SECRET_DOOR)
             {
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Rejecting place because of %s at (%d,%d)",
+                     dungeon_feature_name(grid), x, y);
+#endif
                 return (true);
             }
         }
@@ -196,7 +204,7 @@ static bool bad_map_place(const map_def &map,
 
 static bool apply_vault_grid(map_def &def, map_type map, 
                              vault_placement &place,
-                             bool check_place)
+                             bool check_place, bool clobber)
 {
     const map_lines &ml = def.map;
     const int orient = def.orient;
@@ -235,7 +243,8 @@ static bool apply_vault_grid(map_def &def, map_type map,
         starty = where.y;
     }
 
-    if (bad_map_place(def, startx, starty, width, height, check_place))
+    if (bad_map_place(def, startx, starty, width, height, check_place,
+                      clobber))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
@@ -268,9 +277,10 @@ static int apply_vault_definition(
         map_def &def,
         map_type map,
         vault_placement &place,
-        bool check_place)
+        bool check_place,
+        bool clobber)
 {
-    if (!apply_vault_grid(def, map, place, check_place))
+    if (!apply_vault_grid(def, map, place, check_place, clobber))
         return (MAP_NONE);
 
     int orient = def.orient;
@@ -297,6 +307,14 @@ static bool vault_unforbidden(const map_def &map)
     return (you.uniq_map_names.find(map.name) == you.uniq_map_names.end()
             && map_has_no_tags(map, you.uniq_map_tags.begin(),
                                you.uniq_map_tags.end()));
+}
+
+int find_map_by_name(const std::string &name)
+{
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+        if (vdefs[i].name == name)
+            return (i);
+    return (-1);
 }
 
 // Returns a map for which PLACE: matches the given place.

@@ -4270,6 +4270,13 @@ static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
         return (!mechanical || mons_flies(monster));
 }
 
+static void mons_open_door(const coord_def &pos)
+{
+    if (grd(pos) == DNGN_SECRET_DOOR && !see_grid(pos))
+        set_terrain_changed(pos);
+    grd(pos) = DNGN_OPEN_DOOR;
+}
+
 static void monster_move(monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
@@ -4512,10 +4519,11 @@ static void monster_move(monsters *monster)
         }
     } // now we know where we _can_ move.
 
+    const coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
     // normal/smart monsters know about secret doors (they _live_ in the
     // dungeon!)
-    if (grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_CLOSED_DOOR
-        || (grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_SECRET_DOOR
+    if (grd(newpos) == DNGN_CLOSED_DOOR
+        || (grd(newpos) == DNGN_SECRET_DOOR
             && (mons_intel(monster_index(monster)) == I_HIGH
                 || mons_intel(monster_index(monster)) == I_NORMAL)))
     {
@@ -4530,13 +4538,13 @@ static void monster_move(monsters *monster)
             // for zombies, monster type is kept in mon->number
             if (mons_itemuse(monster->number) >= MONUSE_OPEN_DOORS)
             {
-                grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_OPEN_DOOR;
+                mons_open_door(newpos);
                 return;
             }
         }
         else if (mons_itemuse(monster->type) >= MONUSE_OPEN_DOORS)
         {
-            grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_OPEN_DOOR;
+            mons_open_door(newpos);
             return;
         }
     } // endif - secret/closed doors
@@ -4698,6 +4706,7 @@ forget_it:
             && good_move[mmov_x + 1][mmov_y + 1] == true)
         {
             grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
+            set_terrain_changed(monster->pos() + coord_def(mmov_x, mmov_y));
 
             if (!silenced(you.x_pos, you.y_pos))
                 mpr("You hear a grinding noise.", MSGCH_SOUND);

@@ -3015,6 +3015,7 @@ bool magic_mapping(int map_radius, int proportion, bool force)
     const int pfar = (map_radius * 7) / 10;
     const int very_far = (map_radius * 9) / 10;
 
+    const bool wizard_map = map_radius == 1000 && you.wizard;
     for (i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
     {
         for (j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
@@ -3036,7 +3037,7 @@ bool magic_mapping(int map_radius, int proportion, bool force)
             if (is_terrain_changed(i, j))
                 clear_envmap_grid(i, j);
 
-            if (is_terrain_known(i, j))
+            if (!wizard_map && is_terrain_known(i, j))
                 continue;
 
             empty_count = 8;
@@ -3065,17 +3066,14 @@ bool magic_mapping(int map_radius, int proportion, bool force)
 
             if (empty_count > 0)
             {
-                if (!get_envmap_obj(i, j))
+                if (wizard_map || !get_envmap_obj(i, j))
                     set_envmap_obj(i, j, grd[i][j]);
 
                 // Hack to give demonspawn Pandemonium mutation the ability
                 // to detect exits magically.
                 if ((you.mutation[MUT_PANDEMONIUM] > 1
-                        && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
-#ifdef WIZARD
-                    || (map_radius == 1000 && you.wizard)
-#endif
-                    )
+                     && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
+                    || wizard_map)
                 {
                     set_terrain_seen( i, j );
                 }

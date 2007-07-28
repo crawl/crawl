@@ -20,6 +20,7 @@
 #include "misc.h"
 #include "travel.h"
 #include "stuff.h"
+#include <vector>
 
 const int MAKE_GOOD_ITEM = 351;
 
@@ -110,16 +111,6 @@ struct dgn_region
                   const map_mask &dgn_map_mask) const;
     bool overlaps(const map_mask &dgn_map_mask) const;
 };
-
-bool builder(int level_number, int level_type);
-void level_welcome_messages();
-void define_zombie(int mid, int ztype, int cs, int power);
-bool is_wall(int feature);
-bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
-void place_spec_shop(int level_number, int shop_x, int shop_y,
-                     int force_s_type, bool representative = false);
-bool unforbidden(const coord_def &c, unsigned mask);
-coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest);
 
 //////////////////////////////////////////////////////////////////////////
 template <typename fgrd, typename bound_check>
@@ -278,5 +269,18 @@ bool flood_find<fgrd, bound_check>::path_flood(
     return (false);
 }
 //////////////////////////////////////////////////////////////////////////
+
+
+bool builder(int level_number, int level_type);
+bool dgn_place_map(int map, bool generating_level, bool clobber);
+void level_clear_vault_memory();
+void level_welcome_messages();
+void define_zombie(int mid, int ztype, int cs, int power);
+bool is_wall(int feature);
+bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
+void place_spec_shop(int level_number, int shop_x, int shop_y,
+                     int force_s_type, bool representative = false);
+bool unforbidden(const coord_def &c, unsigned mask);
+coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest);
 
 #endif

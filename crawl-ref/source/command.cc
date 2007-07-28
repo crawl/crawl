@@ -1087,6 +1087,7 @@ static void list_wizard_commands()
                        "h/H    : heal yourself (super-Heal)\n"
                        "i/I    : identify/unidentify inventory\n"
                        "l      : make entrance to labyrinth\n"
+                       "L      : place a vault by name\n"
                        "m/M    : create monster by number/name\n"
                        "o/%    : create an object\n"
                        "p      : make entrance to pandemonium\n"
@@ -1094,11 +1095,11 @@ static void list_wizard_commands()
                        "s      : gain 20000 skill points\n"
                        "S      : set skill to level\n"
                        "t      : tweak object properties\n"
-                       "T      : make a trap\n"
-                       "v      : show gold value of an item\n",
+                       "T      : make a trap\n",
                        true, true);
 
     cols.add_formatted(1, 
+                       "v      : show gold value of an item\n"
                        "x      : gain an experience level\n"
                        "Ctrl-X : change experience level\n"
                        "X      : make Xom do something now\n"
@@ -1119,7 +1120,6 @@ static void list_wizard_commands()
                        "?      : list wizard commands\n"
                        "|      : make unrand/fixed artefacts\n"
                        "+      : make randart from item\n"
-                       "=      : sum skill points\n"
                        "@      : set Str Int Dex\n"
                        "\\      : make a shop\n",
                        true, true);

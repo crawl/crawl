@@ -120,6 +120,7 @@ bool is_envmap_detected_item(int x, int y);
 bool is_envmap_detected_mons(int x, int y);
 void set_terrain_mapped( int x, int y );
 void set_terrain_seen( int x, int y );
+void set_terrain_changed( int x, int y );
 bool is_terrain_known( int x, int y );
 bool is_terrain_seen( int x, int y );
 bool is_terrain_changed( int x, int y );
@@ -129,6 +130,11 @@ bool is_notable_terrain(dungeon_feature_type ftype);
 inline bool is_terrain_seen(const coord_def &c)
 {
     return (is_terrain_seen(c.x, c.y));
+}
+
+inline void set_terrain_changed(const coord_def &c)
+{
+    set_terrain_changed(c.x, c.y);
 }
 
 void clear_feature_overrides();

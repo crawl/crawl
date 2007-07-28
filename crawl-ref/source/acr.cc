@@ -644,6 +644,10 @@ static void handle_wizard_command( void )
         grd[you.x_pos][you.y_pos] = DNGN_ENTER_LABYRINTH;
         break;
 
+    case 'L':
+        debug_place_map();
+        break;
+
     case 'i':
         mpr( "You feel a rush of knowledge." );
         for (i = 0; i < ENDOFPACK; i++)
