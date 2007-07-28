@@ -1850,7 +1850,7 @@ Tame Beasts
 
 This spell attempts to tame animals in the caster's vicinity. It works best on animals amenable to domestication. 
 %%%%
-Sleep
+Ensorcelled Hibernation
 
 This spell tries to lower its target's metabolic rate, inducing hypothermic hibernation. It may have side effects on cold-blooded creatures. 
 %%%%
@@ -1906,7 +1906,7 @@ Bend
 
 This spell applies a localized spatial distortion to the detrimentof some nearby creature. 
 %%%%
-Backlight
+Corona
 
 This spell causes a halo of glowing light to surround and effectively outline a creature. This glow offsets the dark, musty atmosphere of the dungeon, and thereby makes the affected creature appreciably easier to hit.
 %%%%
