@@ -526,7 +526,7 @@ static bool is_critical_feature(dungeon_feature_type feat)
 
 static bool is_feature_shift_target(const coord_def &pos)
 {
-    return (grd(pos) == DNGN_FLOOR);
+    return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
 }
 
 static bool dgn_shift_feature(const coord_def &pos)
@@ -550,6 +550,7 @@ static bool dgn_shift_feature(const coord_def &pos)
             }
         }
         env_move_markers(pos, dest);
+        dungeon_events.move_listeners(pos, dest);
 
         if (see_grid(dest) && is_notable_terrain(dfeat))
             seen_notable_thing(dfeat, dest.x, dest.y);

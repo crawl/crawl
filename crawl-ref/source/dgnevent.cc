@@ -21,6 +21,23 @@ void dgn_event_dispatcher::clear()
             grid_triggers[x][y].reset(NULL);
 }
 
+void dgn_event_dispatcher::clear_listeners_at(const coord_def &pos)
+{
+    grid_triggers[pos.x][pos.y].reset(NULL);
+}
+
+void dgn_event_dispatcher::move_listeners(
+    const coord_def &from, const coord_def &to)
+{
+    // Any existing listeners at to will be discarded. YHBW.
+    grid_triggers[to.x][to.y] = grid_triggers[from.x][from.y];
+}
+
+bool dgn_event_dispatcher::has_listeners_at(const coord_def &pos) const
+{
+    return (grid_triggers[pos.x][pos.y].get());
+}
+
 void dgn_event_dispatcher::fire_position_event(
     dgn_event_type event, const coord_def &pos)
 {

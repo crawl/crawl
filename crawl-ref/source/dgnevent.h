@@ -83,6 +83,9 @@ public:
     }
 
     void clear();
+    void clear_listeners_at(const coord_def &pos);
+    bool has_listeners_at(const coord_def &pos) const;
+    void move_listeners(const coord_def &from, const coord_def &to);
     
     void fire_position_event(dgn_event_type et, const coord_def &pos);
     void fire_event(dgn_event_type et);
