@@ -109,5 +109,6 @@ std::vector<map_marker*> env_get_markers(const coord_def &c);
 void env_clear_markers();
 std::string env_property_at(const coord_def &c, map_marker_type,
                             const std::string &key);
+void env_move_markers(const coord_def &from, const coord_def &to);
 
 #endif

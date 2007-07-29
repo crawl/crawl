@@ -55,6 +55,7 @@
 #include "notes.h"
 #include "player.h"
 #include "randart.h"
+#include "spells3.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "tags.h"
@@ -2880,6 +2881,9 @@ static bool safe_minivault_place(int v1x, int v1y,
                                  const vault_placement &place,
                                  bool clobber)
 {
+    if (clobber)
+        return (true);
+    
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
     for (int vx = v1x; vx < v1x + place.width; vx++)
@@ -2893,20 +2897,16 @@ static bool safe_minivault_place(int v1x, int v1y,
                 return (false);
 
             const dungeon_feature_type dfeat = grd[vx][vy];
-            
+
             if ((dfeat != DNGN_FLOOR
                  && dfeat != DNGN_ROCK_WALL
                  && dfeat != DNGN_CLOSED_DOOR
                  && dfeat != DNGN_SECRET_DOOR
                  && (!water_ok
                      || (dfeat != DNGN_DEEP_WATER
-                         && dfeat != DNGN_SHALLOW_WATER))
-                 && (!clobber
-                     || (!grid_is_solid(dfeat) && dfeat != DNGN_LAVA
-                         && !grid_is_watery(dfeat))))
-                || (!clobber
-                    && (igrd[vx][vy] != NON_ITEM
-                        || mgrd[vx][vy] != NON_MONSTER)))
+                         && dfeat != DNGN_SHALLOW_WATER)))
+                || igrd[vx][vy] != NON_ITEM
+                || mgrd[vx][vy] != NON_MONSTER)
             {
                 return (false);
             }
@@ -3419,6 +3419,9 @@ static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
 }
 
 // Places a map on the current level (minivault or regular vault).
+//
+// NOTE: encompass maps will destroy the existing level!
+// 
 // generating_level: If true, assumes that this is in the middle of normal
 //                   level generation, and does not link items or handle
 //                   changing terrain.
@@ -3429,6 +3432,26 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
 {
     const map_def *mdef = map_by_index(map);
     bool did_map = false;
+    bool fixup = false;
+
+    if (mdef->orient == MAP_ENCOMPASS && !generating_level)
+    {
+        if (clobber)
+        {
+            // For encompass maps, clear the entire level.
+            generating_level = true;
+            fixup = true;
+            reset_level();
+            dungeon_events.clear();
+        }
+        else
+        {
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Cannot generate encompass map '%s' without clobber=true",
+                 mdef->name.c_str());
+            return (false);
+        }
+    }
 
     if (mdef->is_minivault())
         did_map =
@@ -3460,6 +3483,18 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
             }
         }
     }
+
+    if (fixup)
+    {
+        link_items();
+        env_activate_markers();
+
+        // Force teleport to place the player somewhere sane.
+        you_teleport_now(false, false);
+    }
+
+    if (fixup || !generating_level)
+        setup_environment_effects();
     return (did_map);
 }
 

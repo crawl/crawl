@@ -161,7 +161,7 @@ static bool bad_map_place(const map_def &map,
                           int sx, int sy, int width, int height,
                           bool check_place, bool clobber)
 {
-    if (!check_place)
+    if (!check_place || clobber)
         return (false);
     
     const std::vector<std::string> &lines = map.map.get_lines();
@@ -175,8 +175,7 @@ static bool bad_map_place(const map_def &map,
             if (dgn_map_mask[x][y])
                 return (true);
 
-            if (!clobber
-                && (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER))
+            if (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER)
                 return (true);
             
             const dungeon_feature_type grid = grd[x][y];

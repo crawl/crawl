@@ -421,6 +421,27 @@ map_marker *env_find_marker(const coord_def &c, map_marker_type type)
     return (NULL);
 }
 
+void env_move_markers(const coord_def &from, const coord_def &to)
+{
+    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
+        els = env.markers.equal_range(from);
+
+    std::list<map_marker*> markers;
+    for (dgn_marker_map::iterator i = els.first; i != els.second; )
+    {
+        dgn_marker_map::iterator curr = i++;
+        markers.push_back(curr->second);
+        env.markers.erase(curr);
+    }
+
+    for (std::list<map_marker*>::iterator i = markers.begin();
+         i != markers.end(); ++i)
+    {
+        (*i)->pos = to;
+        env_add_marker(*i);
+    }
+}
+
 std::vector<map_marker*> env_get_markers(const coord_def &c)
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>

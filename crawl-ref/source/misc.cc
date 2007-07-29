@@ -451,49 +451,110 @@ void search_around( bool only_adjacent )
     return;
 }                               // end search_around()
 
-static bool dgn_shift_item_around(const coord_def &pos, item_def &item)
+static coord_def dgn_find_nearest_square(
+    const coord_def &pos,
+    bool (*acceptable)(const coord_def &),
+    bool (*traversable)(const coord_def &) = NULL)
 {
-    std::list<coord_def> points;
-    for (int yi = -1; yi <= 1; ++yi)
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    
+    std::list<coord_def> points[2];
+    int iter = 0;
+    points[iter].push_back(pos);
+
+    while (!points[iter].empty())
     {
-        for (int xi = -1; xi <= 1; ++xi)
+        for (std::list<coord_def>::iterator i = points[iter].begin();
+             i != points[iter].end(); ++i)
         {
-            if (!xi && !yi)
-                continue;
+            const coord_def &p = *i;
 
-            const coord_def np(pos.x + xi, pos.y + yi);
-            if (!in_bounds(np) || travel_point_distance[np.x][np.y])
-                continue;
-
-            travel_point_distance[np.x][np.y] = 1;
-
-            const dungeon_feature_type feat = grd(np);
-            if (!grid_is_solid(feat) && !grid_destroys_items(feat))
+            if (p != pos && acceptable(p))
+                return (p);
+            
+            travel_point_distance[p.x][p.y] = 1;
+            for (int yi = -1; yi <= 1; ++yi)
             {
-                int index = item.index();
-                move_item_to_grid(&index, np.x, np.y);
-                return (true);
+                for (int xi = -1; xi <= 1; ++xi)
+                {
+                    if (!xi && !yi)
+                        continue;
+
+                    const coord_def np = p + coord_def(xi, yi);
+                    if (!in_bounds(np) || travel_point_distance[np.x][np.y])
+                        continue;
+
+                    if (traversable && !traversable(np))
+                        continue;
+                    
+                    points[!iter].push_back(np);
+                }
             }
-
-            points.push_back(np);
         }
+
+        points[iter].clear();
+        iter = !iter;
     }
 
-    for (std::list<coord_def>::iterator i = points.begin(); i != points.end();
-         ++i)
-    {
-        if (dgn_shift_item_around(*i, item))
-            return (true);
-    }
-    return (false);
+    return (coord_def());
+}
+
+static bool item_safe_square(const coord_def &pos)
+{
+    const dungeon_feature_type feat = grd(pos);
+    return (is_traversable(feat) && !grid_destroys_items(feat));
 }
 
 // Moves an item on the floor to the nearest adjacent floor-space.
 static bool dgn_shift_item(const coord_def &pos, item_def &item)
 {
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    travel_point_distance[pos.x][pos.y] = 0;
-    return (dgn_shift_item_around(pos, item));
+    const coord_def np = dgn_find_nearest_square(pos, item_safe_square);
+    if (in_bounds(np) && np != pos)
+    {
+        int index = item.index();
+        move_item_to_grid(&index, np.x, np.y);
+        return (true);
+    }
+    return (false);
+}
+
+static bool is_critical_feature(dungeon_feature_type feat)
+{
+    return (grid_stair_direction(feat) != CMD_NO_CMD
+            || grid_altar_god(feat) != GOD_NO_GOD);
+}
+
+static bool is_feature_shift_target(const coord_def &pos)
+{
+    return (grd(pos) == DNGN_FLOOR);
+}
+
+static bool dgn_shift_feature(const coord_def &pos)
+{
+    const dungeon_feature_type dfeat = grd(pos);
+    if (!is_critical_feature(dfeat) && !env_find_marker(pos, MAT_ANY))
+        return (false);
+    
+    const coord_def dest =
+        dgn_find_nearest_square(pos, is_feature_shift_target);
+    if (in_bounds(dest) && dest != pos)
+    {
+        grd(dest) = dfeat;
+
+        if (dfeat == DNGN_ENTER_SHOP)
+        {
+            if (shop_struct *s = get_shop(pos.x, pos.y))
+            {
+                s->x = dest.x;
+                s->y = dest.y;
+            }
+        }
+        env_move_markers(pos, dest);
+
+        if (see_grid(dest) && is_notable_terrain(dfeat))
+            seen_notable_thing(dfeat, dest.x, dest.y);
+    }
+    return (true);
 }
 
 static void dgn_check_terrain_items(const coord_def &pos)
@@ -541,6 +602,7 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (nfeat != DNGN_UNSEEN)
     {
+        dgn_shift_feature(pos);
         unnotice_feature(level_pos(level_id::current(), pos));
         grd(pos) = nfeat;
         if (is_notable_terrain(nfeat) && see_grid(pos))

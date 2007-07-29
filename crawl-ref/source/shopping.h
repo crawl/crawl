@@ -24,7 +24,7 @@ int randart_value( const item_def &item );
 unsigned int item_value( item_def item, bool ident = false );
 void shop();
 
-const shop_struct *get_shop(int sx, int sy);
+shop_struct *get_shop(int sx, int sy);
 
 std::string shop_name(int sx, int sy);
 std::string shop_name(int sx, int sy, bool add_stop);

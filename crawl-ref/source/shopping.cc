@@ -1485,7 +1485,7 @@ void shop()
     redraw_screen();
 }                               // end shop()
 
-const shop_struct *get_shop(int sx, int sy)
+shop_struct *get_shop(int sx, int sy)
 {
     if (grd[sx][sy] != DNGN_ENTER_SHOP)
         return (NULL);
