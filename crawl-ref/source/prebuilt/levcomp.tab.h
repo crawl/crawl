@@ -59,14 +59,15 @@
      VALIDATE = 275,
      VETO = 276,
      NSUBST = 277,
-     COMMA = 278,
-     INTEGER = 279,
-     CHARACTER = 280,
-     STRING = 281,
-     MAP_LINE = 282,
-     MONSTER_NAME = 283,
-     ITEM_INFO = 284,
-     LUA_LINE = 285
+     WELCOME = 278,
+     COMMA = 279,
+     INTEGER = 280,
+     CHARACTER = 281,
+     STRING = 282,
+     MAP_LINE = 283,
+     MONSTER_NAME = 284,
+     ITEM_INFO = 285,
+     LUA_LINE = 286
    };
 #endif
 /* Tokens.  */
@@ -90,14 +91,15 @@
 #define VALIDATE 275
 #define VETO 276
 #define NSUBST 277
-#define COMMA 278
-#define INTEGER 279
-#define CHARACTER 280
-#define STRING 281
-#define MAP_LINE 282
-#define MONSTER_NAME 283
-#define ITEM_INFO 284
-#define LUA_LINE 285
+#define WELCOME 278
+#define COMMA 279
+#define INTEGER 280
+#define CHARACTER 281
+#define STRING 282
+#define MAP_LINE 283
+#define MONSTER_NAME 284
+#define ITEM_INFO 285
+#define LUA_LINE 286
 
 
 
@@ -111,7 +113,7 @@ typedef union YYSTYPE
     raw_range range;
 }
 /* Line 1529 of yacc.c.  */
-#line 115 "levcomp.tab.h"
+#line 117 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
