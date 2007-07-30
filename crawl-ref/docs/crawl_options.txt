@@ -41,9 +41,9 @@ The contents of this text are:
                 scroll_margin
 4-g     Travel and Exploration. 
                 travel_delay, travel_avoid_terrain,
-                travel_exclude_radius2, travel_stop_message,
-                explore_greedy, explore_stop, runrest_ignore_message,
-                runrest_ignore_poison, trapwalk_safe_hp, tc_reachable,
+                travel_stop_message, explore_greedy, explore_stop,
+                runrest_ignore_message, runrest_ignore_poison,
+                trapwalk_safe_hp, tc_reachable,
                 tc_dangerous, tc_excluded, tc_exclude_circle
 4-h     Stashes.
                 stash_tracking, stash_filter
@@ -597,12 +597,6 @@ travel_avoid_terrain = (shallow water | deep water)
           travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
 
-travel_exclude_radius2 = 68
-        The square of the radius around travel-excluded squares where travel 
-        will refuse to go. Set to zero if you want to exclude single squares. 
-        The default of 68 ensures that travel won't enter line-of-sight of any
-        dangerous thing at the travel-exclusion center.
-
 travel_stop_message = <list of regexes>
         Travel will always stop upon hitpoint loss, confusion, stat drain, 
         getting encumbered, catching sight of a non-friendly monster, and 
@@ -957,12 +951,7 @@ fire_order = launcher, dart / stone / dagger, spear, handaxe, club
         want it first, as it'll be ignored when you're not wielding a ranged 
         weapon. The default is
         
-          fire_order = launcher, javelin / dart / stone
-          
-        To quickly experiment with a weapon-throwing character - e.g. to 
-        make your Berserker actually use those three spears he carries around,
-        try a line similar to:
-          fire_order = launcher, dagger, spear, handaxe, stone, dart
+          fire_order = launcher, javelin / dart / stone / spear          
 
 <See also pickup_thrown in A.4a.>
 

@@ -617,7 +617,6 @@ void game_options::reset_options()
     travel_colour          = true;
     travel_delay           = 20;
     travel_stair_cost      = 500;
-    travel_exclude_radius2 =  68;
 
     // Sort only pickup menus by default.
     sort_menus.clear();
@@ -693,7 +692,7 @@ void game_options::reset_options()
     fire_items_start       = 0;           // start at slot 'a'
 
     // Clear fire_order and set up the defaults.
-    set_fire_order("launcher, javelin / dart / stone");
+    set_fire_order("launcher, javelin / dart / stone / spear");
 
     item_stack_summary_minimum = 5;
 
@@ -1555,6 +1554,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 type = '+';
                 break;
 
+            case '&':
             case 'x':
                 // also corpses
                 type = 'X';
@@ -2287,14 +2287,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "macro_meta_entry")
     {
         macro_meta_entry = read_bool(field, macro_meta_entry);
-    }
-    else if (key == "travel_exclude_radius2")
-    {
-        travel_exclude_radius2 = atoi( field.c_str() );
-        if (travel_exclude_radius2 < 0)
-            travel_exclude_radius2 = 0;
-        else if (travel_exclude_radius2 > 400)
-            travel_exclude_radius2 = 400;
     }
     else if (key == "stop_travel" || key == "travel_stop_message")
     {
