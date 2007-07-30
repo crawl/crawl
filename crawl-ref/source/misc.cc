@@ -551,9 +551,6 @@ static bool dgn_shift_feature(const coord_def &pos)
         }
         env_move_markers(pos, dest);
         dungeon_events.move_listeners(pos, dest);
-
-        if (see_grid(dest) && is_notable_terrain(dfeat))
-            seen_notable_thing(dfeat, dest.x, dest.y);
     }
     return (true);
 }
@@ -599,11 +596,13 @@ static void dgn_check_terrain_monsters(const coord_def &pos)
 
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
-                             bool affect_player)
+                             bool affect_player,
+                             bool preserve_features)
 {
     if (nfeat != DNGN_UNSEEN)
     {
-        dgn_shift_feature(pos);
+        if (preserve_features)
+            dgn_shift_feature(pos);
         unnotice_feature(level_pos(level_id::current(), pos));
         grd(pos) = nfeat;
         if (is_notable_terrain(nfeat) && see_grid(pos))

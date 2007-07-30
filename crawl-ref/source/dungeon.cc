@@ -3034,7 +3034,8 @@ static bool build_minivaults(int level_number, int force_vault,
                 link_items();
                 const dungeon_feature_type newgrid = grd[vx][vy];
                 grd[vx][vy] = oldgrid;
-                dungeon_terrain_changed(coord_def(vx, vy), newgrid);
+                dungeon_terrain_changed(coord_def(vx, vy), newgrid,
+                                        true, true);
                 env_remove_markers_at(coord_def(vx, vy), MAT_ANY);
             }
         }
@@ -3577,7 +3578,8 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
                 link_items();
                 const dungeon_feature_type newgrid = grd[vx][vy];
                 grd[vx][vy] = oldgrid;
-                dungeon_terrain_changed(coord_def(vx, vy), newgrid);
+                dungeon_terrain_changed(coord_def(vx, vy), newgrid,
+                                        true, true);
                 env_remove_markers_at(coord_def(vx, vy), MAT_ANY);
             }
         }

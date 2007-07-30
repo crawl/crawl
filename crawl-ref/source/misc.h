@@ -173,7 +173,8 @@ void run_environment_effects();
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
-                             bool affect_player = true);
+                             bool affect_player = true,
+                             bool preserve_features = false);
 
 //////////////////////////////////////////////////////////////////////
 // Places and names

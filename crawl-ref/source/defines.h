@@ -55,7 +55,7 @@
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
-#define NON_MONSTER 201
+#define NON_MONSTER (MAX_MONSTERS + 1)
 
 #define MAX_SUBTYPES    50
 
