@@ -14,10 +14,10 @@ MAKEFILE = makefile.unix
 #OTHER=-j2
 
 all:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-O3'
+	$(MAKE) $(OTHER) -f $(MAKEFILE)
 
 profile:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-O3 -pg'
+	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-pg'
 
 noopt:
 	$(MAKE) $(OTHER) -f $(MAKEFILE)
