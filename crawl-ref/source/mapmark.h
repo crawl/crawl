@@ -104,6 +104,7 @@ void env_activate_markers();
 void env_add_marker(map_marker *);
 void env_remove_marker(map_marker *);
 void env_remove_markers_at(const coord_def &c, map_marker_type);
+std::vector<map_marker*> env_get_all_markers();
 map_marker *env_find_marker(const coord_def &c, map_marker_type);
 std::vector<map_marker*> env_get_markers(const coord_def &c);
 void env_clear_markers();

@@ -442,6 +442,17 @@ void env_move_markers(const coord_def &from, const coord_def &to)
     }
 }
 
+std::vector<map_marker*> env_get_all_markers()
+{
+    std::vector<map_marker*> rmarkers;
+    for (dgn_marker_map::const_iterator i = env.markers.begin();
+         i != env.markers.end(); ++i)
+    {
+        rmarkers.push_back(i->second);
+    }
+    return (rmarkers);    
+}
+
 std::vector<map_marker*> env_get_markers(const coord_def &c)
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>

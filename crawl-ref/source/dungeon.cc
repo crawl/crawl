@@ -5600,6 +5600,58 @@ static void place_extra_lab_minivaults(int level_number)
     }
 }
 
+// Checks if there is a square with the given mask within radius of pos.
+static bool has_vault_in_radius(const coord_def &pos, int radius,
+                                unsigned mask)
+{
+    for (int yi = -radius; yi <= radius; ++yi)
+    {
+        for (int xi = -radius; xi <= radius; ++xi)
+        {
+            const coord_def p = pos + coord_def(xi, yi);
+            if (!in_bounds(p))
+                continue;
+            if (!unforbidden(p, mask))
+                return (true);
+        }
+    }
+    return (false);
+}
+
+// Find an entry point that's:
+// * At least 25 squares away from the exit.
+// * At least 4 squares away from the nearest vault.
+// * Floor (well, obviously).
+static coord_def labyrinth_find_entry_point(const dgn_region &reg,
+                                            const coord_def &end)
+{
+    const int min_distance = 25 * 25;
+    // Try many times.
+    for (int i = 0; i < 2000; ++i)
+    {
+        const coord_def place = reg.random_point();
+        if (grd(place) != DNGN_FLOOR)
+            continue;
+
+        if ((place - end).abs() < min_distance)
+            continue;
+
+        if (has_vault_in_radius(place, 4, MMT_VAULT))
+            continue;
+
+        return (place);
+    }
+    return (coord_def());
+}
+
+static void labyrinth_place_entry_point(const dgn_region &region,
+                                        const coord_def &pos)
+{
+    const coord_def p = labyrinth_find_entry_point(region, pos);
+    if (in_bounds(p))
+        env_add_marker(new map_feature_marker(pos, DNGN_ENTER_LABYRINTH));
+}
+
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
@@ -5665,6 +5717,8 @@ static void labyrinth_level(int level_number)
                              15 * 15, DNGN_METAL_WALL,
                              34 * 34, DNGN_STONE_WALL,
                              0);
+
+    labyrinth_place_entry_point(lab, end);
     
     // turn rock walls into undiggable stone or metal:
     // dungeon_feature_type wall_xform =
@@ -6760,7 +6814,24 @@ static coord_def dgn_find_closest_to_stone_stairs()
     return (np.nearest);
 }
 
-coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
+static coord_def dgn_find_labyrinth_entry_point()
+{
+    std::vector<map_marker*> markers = env_get_all_markers();
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() == MAT_FEATURE
+            && dynamic_cast<map_feature_marker*>(mark)->feat
+            == DNGN_ENTER_LABYRINTH)
+        {
+            return (mark->pos);
+        }
+    }
+    return (coord_def());
+}
+
+coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
+                                bool find_closest)
 {
     if (stair_to_find == DNGN_ROCK_STAIRS_UP
         || stair_to_find == DNGN_ROCK_STAIRS_DOWN)
@@ -6768,6 +6839,17 @@ coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest)
         const coord_def pos(dgn_find_closest_to_stone_stairs());
         if (in_bounds(pos))
             return (pos);
+    }
+
+    if (stair_to_find == DNGN_ENTER_LABYRINTH)
+    {
+        const coord_def pos(dgn_find_labyrinth_entry_point());
+        if (in_bounds(pos))
+            return (pos);
+
+        // Couldn't find a good place, warn, and use old behaviour.
+        mpr("Oops, couldn't find labyrinth entry marker.", MSGCH_DIAGNOSTICS);
+        stair_to_find = DNGN_FLOOR;
     }
     
     // scan around the player's position first

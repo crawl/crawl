@@ -281,6 +281,7 @@ bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
 void place_spec_shop(int level_number, int shop_x, int shop_y,
                      int force_s_type, bool representative = false);
 bool unforbidden(const coord_def &c, unsigned mask);
-coord_def dgn_find_nearby_stair(int stair_to_find, bool find_closest);
+coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
+                                bool find_closest);
 
 #endif

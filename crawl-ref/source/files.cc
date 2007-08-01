@@ -643,7 +643,8 @@ static void sanity_test_monster_inventory()
     }
 }
 
-static void place_player_on_stair(branch_type old_branch, int stair_taken)
+static void place_player_on_stair(branch_type old_branch,
+                                  int stair_taken)
 {
     bool find_first = true;
 
@@ -666,8 +667,7 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
         stair_taken = DNGN_ENTER_ABYSS;
         find_first = false;
     }
-    else if (stair_taken == DNGN_ENTER_HELL 
-             || stair_taken == DNGN_ENTER_LABYRINTH)
+    else if (stair_taken == DNGN_ENTER_HELL)
     {
         // the vestibule and labyrith always start from this stair
         stair_taken = DNGN_STONE_STAIRS_UP_I;
@@ -710,7 +710,12 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
     }
     else if (stair_taken == DNGN_EXIT_PORTAL_VAULT)
     {
-        stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+        stair_taken = DNGN_ROCK_STAIRS_DOWN;
+    }
+    else if (stair_taken == DNGN_ENTER_LABYRINTH)
+    {
+        // dgn_find_nearby_stair uses special logic for labyrinths.
+        stair_taken = DNGN_ENTER_LABYRINTH;
     }
     else // Note: stair_taken can equal things like DNGN_FLOOR
     {
@@ -720,7 +725,8 @@ static void place_player_on_stair(branch_type old_branch, int stair_taken)
     }
     
     const coord_def where_to_go =
-        dgn_find_nearby_stair(stair_taken, find_first);
+        dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
+                              find_first);
     you.moveto(where_to_go);
 }
 
