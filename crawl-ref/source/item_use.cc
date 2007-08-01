@@ -2879,9 +2879,15 @@ void inscribe_item()
     }
     mpr( you.inv[item_slot].name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT );
     mpr( "Inscribe with what? ", MSGCH_PROMPT );
-    get_input_line( buf, sizeof(buf) );
-    you.inv[item_slot].inscription = std::string(buf);
-    you.wield_change = true;
+    if (!cancelable_get_line(buf, sizeof buf))
+    {
+        you.inv[item_slot].inscription = std::string(buf);
+        you.wield_change = true;
+    }
+    else
+    {
+        canned_msg(MSG_OK);
+    }
 }
 
 void drink(void)
