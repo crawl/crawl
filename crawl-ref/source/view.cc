@@ -1405,11 +1405,11 @@ void ray_def::advance_and_bounce()
     set_reflect_point(oldaccx, oldaccy, &accx, &accy, blocked_x, blocked_y);
 }
 
-void ray_def::regress(const coord_def &point)
+void ray_def::regress()
 {
     int opp_quadrant[4] = { 2, 3, 0, 1 };
     quadrant = opp_quadrant[quadrant];
-    advance(true, &point);
+    advance(false);
     quadrant = opp_quadrant[quadrant];
 }
 

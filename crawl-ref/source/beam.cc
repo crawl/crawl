@@ -1355,7 +1355,9 @@ void fire_beam( bolt &pbolt, item_def *item )
                 // BEGIN bounce case
                 if (!isBouncy(pbolt, grd[tx][ty]))
                 {
-                    ray.regress(pbolt.target());
+                    do
+                        ray.regress();
+                    while (grid_is_solid(grd(ray.pos())));
                     tx = ray.x();
                     ty = ray.y();
                     break;          // breaks from line tracing
@@ -1365,7 +1367,9 @@ void fire_beam( bolt &pbolt, item_def *item )
 
                 // bounce
                 do {
-                    ray.regress(pbolt.target());
+                    do
+                        ray.regress();
+                    while (grid_is_solid(grd(ray.pos())));
                     ray.advance_and_bounce();
                     --rangeRemaining;
                 } while ( rangeRemaining > 0 &&

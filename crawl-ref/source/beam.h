@@ -71,17 +71,6 @@ void poison_monster( struct monsters *monster, kill_category who,
 
 
 /* ***********************************************************************
- * called from: fight - monstuff - spells - spells1 - spells2
- * *********************************************************************** */
-#if 0
-void delete_cloud( int cloud );
-void new_cloud( int cloud, int type, int x, int y, int decay );
-
-void place_cloud(unsigned char cl_type, unsigned char ctarget_x, unsigned char ctarget_y, unsigned char cl_range);
-#endif
-
-
-/* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
 void fire_tracer( const monsters *monster, struct bolt &pbolt );

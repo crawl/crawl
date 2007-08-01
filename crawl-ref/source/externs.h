@@ -372,7 +372,7 @@ public:
     int advance(bool shorten = false, const coord_def *p = NULL);
     int advance_through(const coord_def &point);
     void advance_and_bounce();
-    void regress(const coord_def &point);
+    void regress();
 
 private:
     int raw_advance();
