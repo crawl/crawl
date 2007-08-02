@@ -2653,6 +2653,11 @@ static int affect_wall(bolt &beam, int x, int y)
                     mpr("The statue twists and shakes as its substance crumbles away!");
             }
 
+            if (targ_grid == DNGN_ORCISH_IDOL)
+            {
+		beogh_idol_revenge();
+	    }
+	    
             beam.obvious_effect = 1;
         }
 

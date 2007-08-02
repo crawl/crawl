@@ -1837,11 +1837,6 @@ static bool beogh_retribution()
     case 0: // smiting (25%)
     case 1:
     {
-        int divine_hurt = 10 + random2(10);
-            
-        for (int i = 0; i < 5; i++)
-            divine_hurt += random2( you.experience_level );
-            
         if (!player_under_penance() && you.piety > random2(400))
         {
             snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
@@ -1850,6 +1845,11 @@ static bool beogh_retribution()
         }
         else
         {
+            int divine_hurt = 10 + random2(10);
+
+            for (int i = 0; i < 5; i++)
+                divine_hurt += random2( you.experience_level );
+
             simple_god_message( " smites you!", god );
             ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
             dec_penance( god, 1 );
@@ -2258,6 +2258,42 @@ bool followers_abandon_you()
         }
     }
     return false;
+}
+
+// Destroying orcish idols (a.k.a. idols of Beogh)
+// may anger Beogh
+void beogh_idol_revenge()
+{
+    // Beogh watches his charges closely, but for others doesn't always notice
+    if (you.religion == GOD_BEOGH || one_chance_in(3))
+    {
+        if (you.religion != GOD_BEOGH &&
+            !player_under_penance() && you.piety > random2(400))
+        {
+             snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
+                            "of %s... this time.", god_name(GOD_BEOGH));
+             god_speaks(you.religion, info);
+        }
+        else
+        {
+             snprintf(info, INFO_SIZE, "%s screams, \"Feel the wrath of %s!\"",
+                      god_name(GOD_BEOGH), god_name(GOD_BEOGH));
+             god_speaks(GOD_BEOGH, info);
+
+             int divine_hurt = 10 + random2(10);
+
+             for (int i = 0; i < 5; i++)
+                 divine_hurt += random2( you.experience_level );
+
+              simple_god_message( " smites you!", GOD_BEOGH );
+              ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
+        }
+        if (you.religion == GOD_BEOGH)
+        {
+            // comes closest and same result (penance + piety loss)
+            did_god_conduct(DID_ATTACK_FRIEND, 8);
+        }
+   }
 }
 
 void excommunication(void)

@@ -45,6 +45,7 @@ void xom_acts(bool niceness, int sever);
 const char *describe_xom_favour();
 
 bool beogh_water_walk();
+void beogh_idol_revenge();
 
 inline void xom_acts(int sever)
 {
