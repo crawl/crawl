@@ -2919,6 +2919,12 @@ void drink(void)
         return;
     }
 
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+       canned_msg(MSG_PRESENT_FORM);
+       return;
+    }
+       
     item_slot = prompt_invent_item( "Drink which item?",
                                     MT_INVLIST, OBJ_POTIONS,
                                     true, true, true, 0, NULL,

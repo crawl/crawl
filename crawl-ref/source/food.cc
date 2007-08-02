@@ -617,7 +617,7 @@ void eat_from_inventory(int which_inventory_slot)
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
 
-        if (!mons_skeleton( mons_type ))
+        if (!mons_skeleton( mons_type ) || one_chance_in(4))
         {
             dec_inv_item_quantity( which_inventory_slot, 1 );
         }
@@ -662,7 +662,7 @@ void eat_floor_item(int item_link)
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
 
-        if (!mons_skeleton( mons_type ))
+        if (!mons_skeleton( mons_type ) || one_chance_in(4))
         {
             dec_mitm_item_quantity( item_link, 1 );
         }

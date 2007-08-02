@@ -617,6 +617,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_TOO_BERSERK:
         mpr("You are too berserk!");
         break;
+    case MSG_PRESENT_FORM:
+        mpr("You can't do that in your present form.");
+        break;
     case MSG_NOTHING_CARRIED:
         mpr("You aren't carrying anything.");
         break;

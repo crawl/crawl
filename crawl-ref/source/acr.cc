@@ -1241,8 +1241,7 @@ void process_command( command_type cmd )
     case CMD_THROW:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
-            mpr("You can't throw anything in your present form!");
-            flush_input_buffer( FLUSH_ON_FAILURE );
+           canned_msg(MSG_PRESENT_FORM);
             break;
         }
         if (Options.tutorial_left)
@@ -1253,8 +1252,7 @@ void process_command( command_type cmd )
     case CMD_FIRE:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
-            mpr("You can't fire anything in your present form!");
-            flush_input_buffer( FLUSH_ON_FAILURE );
+           canned_msg(MSG_PRESENT_FORM);
             break;
         }
         if (Options.tutorial_left)
@@ -1278,8 +1276,7 @@ void process_command( command_type cmd )
     case CMD_REMOVE_JEWELLERY:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
-            mpr("You can't do that in your present form!");
-            flush_input_buffer( FLUSH_ON_FAILURE );
+           canned_msg(MSG_PRESENT_FORM);
             break;
         }
         remove_ring();
@@ -1288,8 +1285,7 @@ void process_command( command_type cmd )
     case CMD_WEAR_JEWELLERY:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
-            mpr("You can't do that in your present form!");
-            flush_input_buffer( FLUSH_ON_FAILURE );
+           canned_msg(MSG_PRESENT_FORM);
             break;
         }
         puton_ring(-1, false);
@@ -1300,11 +1296,21 @@ void process_command( command_type cmd )
         break;
 
     case CMD_MEMORISE_SPELL:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+           canned_msg(MSG_PRESENT_FORM);
+           break;
+        }
         if (!learn_spell())
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
     case CMD_ZAP_WAND:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+           canned_msg(MSG_PRESENT_FORM);
+           break;
+        }
         zap_wand();
         break;
 
@@ -1346,6 +1352,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_READ:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+           canned_msg(MSG_PRESENT_FORM);
+           break;
+        }
         read_scroll();
         break;
 
@@ -1361,6 +1372,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_CAST_SPELL:
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+           canned_msg(MSG_PRESENT_FORM);
+            break;
+        }
         /* randart wpns */
         if (scan_randarts(RAP_PREVENT_SPELLCASTING))
         {
@@ -1368,14 +1384,7 @@ void process_command( command_type cmd )
             flush_input_buffer( FLUSH_ON_FAILURE );
             break;
         }
-/*
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-            mpr("You can't cast spells in your present form!");
-            flush_input_buffer( FLUSH_ON_FAILURE );
-            break;
-        }
-*/
+        
         if (Options.tutorial_left)
             Options.tut_spell_counter++;
         if (!cast_a_spell())

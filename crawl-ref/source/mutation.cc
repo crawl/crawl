@@ -1424,11 +1424,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return false;
     }
 
-    if (mutat == MUT_HERBIVOROUS && you.species == SP_VAMPIRE)
-        return false;
-
-    if (mutat == MUT_FANGS
-        && (you.species == SP_VAMPIRE || you.species == SP_KENKU))
+    if (mutat == MUT_FANGS && you.species == SP_KENKU)
     {
         return false;
     }
@@ -2370,7 +2366,7 @@ bool give_cosmetic_mutation()
             how_much = 1;
         }
 
-        if (you.species != SP_VAMPIRE && one_chance_in(5))
+        if (one_chance_in(5))
         {
             mutation = MUT_FANGS;
             how_much = 1 + random2(3);

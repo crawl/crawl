@@ -469,6 +469,7 @@ enum canned_message_type
     MSG_NOTHING_HAPPENS,
     MSG_YOU_RESIST,
     MSG_TOO_BERSERK,
+    MSG_PRESENT_FORM,
     MSG_NOTHING_CARRIED,
     MSG_CANNOT_DO_YET,
     MSG_OK,
