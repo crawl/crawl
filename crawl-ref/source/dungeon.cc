@@ -5641,7 +5641,8 @@ static coord_def labyrinth_find_entry_point(const dgn_region &reg,
 
         return (place);
     }
-    return (coord_def());
+    coord_def unfound;
+    return (unfound);
 }
 
 static void labyrinth_place_entry_point(const dgn_region &region,
@@ -6827,7 +6828,8 @@ static coord_def dgn_find_labyrinth_entry_point()
             return (mark->pos);
         }
     }
-    return (coord_def());
+    coord_def unfound;
+    return (unfound);
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
