@@ -46,6 +46,8 @@ const char *describe_xom_favour();
 
 bool beogh_water_walk();
 void beogh_idol_revenge();
+void ely_destroy_weapons();
+void trog_burn_books();
 
 inline void xom_acts(int sever)
 {

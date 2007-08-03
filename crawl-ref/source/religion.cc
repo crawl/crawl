@@ -36,6 +36,7 @@
 #include "abl-show.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "debug.h"
 #include "decks.h"
 #include "describe.h"
@@ -62,6 +63,7 @@
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "stuff.h"
 #include "tutorial.h"
@@ -1056,14 +1058,18 @@ bool did_god_conduct( conduct_type thing_done, int level )
         }
         break;
 
-    case DID_DEDICATED_KILL_LIVING:
+    case DID_KILL_LIVING:
         switch (you.religion)
         {
         case GOD_ELYVILON:
-            simple_god_message(" did not appreciate that!");
-            ret = true;
-            piety_change = -level;
-            penance = level * 2;
+            // killing only disapproved during prayer
+            if (you.duration[DUR_PRAYER])
+            { 
+                simple_god_message(" did not appreciate that!");
+                ret = true;
+                piety_change = -level;
+                penance = level * 2;
+            }
             break;
 
         case GOD_KIKUBAAQUDGHA:
@@ -1085,7 +1091,7 @@ bool did_god_conduct( conduct_type thing_done, int level )
         }
         break;
 
-    case DID_DEDICATED_KILL_UNDEAD:
+    case DID_KILL_UNDEAD:
         switch (you.religion)
         {
         case GOD_ZIN:
@@ -1106,7 +1112,7 @@ bool did_god_conduct( conduct_type thing_done, int level )
         }
         break;
 
-    case DID_DEDICATED_KILL_DEMON:  
+    case DID_KILL_DEMON:  
         switch (you.religion)
         {
         case GOD_ZIN:
@@ -1125,7 +1131,7 @@ bool did_god_conduct( conduct_type thing_done, int level )
         }
         break;
 
-    case DID_DEDICATED_KILL_PRIEST:
+    case DID_KILL_PRIEST:
         if (you.religion == GOD_BEOGH)
         {
             simple_god_message(" appreciates your killing of a "
@@ -1136,7 +1142,7 @@ bool did_god_conduct( conduct_type thing_done, int level )
         }
         break;
         
-    case DID_DEDICATED_KILL_WIZARD:
+    case DID_KILL_WIZARD:
         if (you.religion == GOD_TROG) 
         {
             // hooking this up, but is it too good?  
@@ -1309,7 +1315,7 @@ bool did_god_conduct( conduct_type thing_done, int level )
     case DID_STIMULANTS:                        // unused
     case DID_EAT_MEAT:                          // unused
     case DID_CREATED_LIFE:                      // unused
-    case DID_DEDICATED_KILL_NATURAL_EVIL:       // unused
+    case DID_KILL_NATURAL_EVIL:                 // unused
     case DID_NATURAL_EVIL_KILLED_BY_SERVANT:    // unused
     case DID_SPELL_NONUTILITY:                  // unused
     case NUM_CONDUCTS:
@@ -1474,6 +1480,167 @@ static bool need_water_walking()
     return
         !player_is_levitating() && you.species != SP_MERFOLK &&
         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
+}
+
+void ely_destroy_weapons()
+{
+    if (you.religion != GOD_ELYVILON)
+        return;
+        
+    bool success;
+    int i = igrd[you.x_pos][you.y_pos];
+    while (i != NON_ITEM)
+    {
+        const int next = mitm[i].link;  // in case we can't get it later.
+
+        if (mitm[i].base_type != OBJ_WEAPONS
+            && mitm[i].base_type != OBJ_MISSILES)
+        {
+            i = next;
+            continue;
+        }
+        
+        const char *ssuffix = mitm[i].quantity == 1? "s" : "";
+        std::string text = mitm[i].name(DESC_CAP_THE);
+        text += " shimmer"; text += ssuffix;
+        text += " and break"; text += ssuffix;
+        text += " into pieces.";
+
+        mpr(text.c_str());
+
+        const int value = item_value( mitm[i], true );
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
+#endif
+
+        if (random2(value) >= random2(50)
+            || (mitm[i].base_type == OBJ_WEAPONS
+                && (you.piety < 30 || player_under_penance())))
+        {
+                gain_piety(1);
+        }
+        
+        destroy_item(i);
+        success = true;
+        i = next;
+    }
+    if (!success)
+    {
+        mpr("There are no weapons here to destroy!");
+    }
+}
+
+void trog_burn_books()
+{
+    if (you.religion != GOD_TROG)
+        return;
+
+    int i = igrd[you.x_pos][you.y_pos];
+    while (i != NON_ITEM)
+    {
+        const int next = mitm[i].link;  // in case we can't get it later.
+
+        if (mitm[i].base_type == OBJ_BOOKS
+            && mitm[i].sub_type != BOOK_MANUAL)
+        {
+            mpr("Burning your own feet might not be such a smart idea!");
+            return;
+        }
+        i = next;
+    }
+    
+    int totalcount = 0;
+    for (int xpos = you.x_pos - 8; xpos < you.x_pos + 8; xpos++)
+        for (int ypos = you.y_pos - 8; ypos < you.y_pos + 8; ypos++)
+        {
+             // checked above
+             if (xpos == you.x_pos && ypos == you.y_pos)
+             {
+                 continue;
+             }
+
+             // burn only squares in sight
+             if (!see_grid(xpos, ypos))
+             {
+                 continue;
+             }
+
+             // if a grid is blocked, books lying there will be ignored
+             // allow bombing of monsters
+             const int cloud = env.cgrid[xpos][ypos];
+             if (grid_is_solid(grd[ xpos ][ ypos ]) ||
+//                 mgrd[ xpos ][ ypos ] != NON_MONSTER ||
+                 (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
+             {
+                 continue;
+             }
+             
+             int count = 0;
+             int rarity = 0;
+             i = igrd[xpos][ypos];
+             while (i != NON_ITEM)
+             {
+                 const int next = mitm[i].link;  // in case we can't get it later.
+
+                 if (mitm[i].base_type != OBJ_BOOKS
+                     || mitm[i].sub_type == BOOK_MANUAL)
+                 {
+                     i = next;
+                     continue;
+                 }
+
+                 rarity += book_rarity(mitm[i].sub_type);
+                 
+#ifdef DEBUG_DIAGNOSTICS
+                 mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
+#endif
+
+                 destroy_item(i);
+                 count++;
+                 i = next;
+             }
+
+             if (count)
+             {
+                  totalcount += count;
+                  if ( cloud != EMPTY_CLOUD )
+                  {
+                     // reinforce the cloud
+                     mpr( "The fire roars with new energy!" );
+                     const int extra_dur = count + random2(rarity/2);
+                     env.cloud[cloud].decay += extra_dur * 5;
+                     env.cloud[cloud].whose = KC_YOU;
+                     continue;
+                  }
+
+                  int durat = 4 + count + random2(rarity/2);
+
+                  if (durat > 23)
+                      durat = 23;
+
+                  place_cloud( CLOUD_FIRE, xpos, ypos, durat, KC_YOU );
+
+                  const char *plural = count == 1? "" : "s";
+                  const char *ssuffix = count == 1? "s" : "";
+
+                  std::string text = "The book"; text += plural;
+                  text += " burst"; text += ssuffix;
+                  text += " into flames.";
+
+                  mpr(text.c_str());
+             }
+
+        }
+        
+    if (!totalcount)
+    {
+         mpr("There are no books in sight to burn!");
+    }
+    else
+    {
+         simple_god_message(" is delighted!", GOD_TROG);
+         gain_piety(totalcount*5);
+    }
 }
 
 void lose_piety(int pgn)
@@ -2512,11 +2679,12 @@ static bool god_likes_items(god_type god)
     {
     case GOD_ZIN:      case GOD_KIKUBAAQUDGHA: case GOD_OKAWARU:
     case GOD_MAKHLEB:  case GOD_SIF_MUNA:      case GOD_TROG:
-    case GOD_NEMELEX_XOBEH:                    case GOD_ELYVILON:
+    case GOD_NEMELEX_XOBEH:
         return true;
         
     case GOD_SHINING_ONE: case GOD_YREDELEMNUL: case GOD_XOM:
     case GOD_VEHUMET:     case GOD_LUGONU:      case GOD_BEOGH:
+    case GOD_ELYVILON:
         return false;
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
@@ -2533,11 +2701,6 @@ static bool god_likes_item(god_type god, const item_def& item)
 
     switch (god)
     {
-    case GOD_ELYVILON:
-        return
-            item.base_type == OBJ_WEAPONS ||
-            item.base_type == OBJ_MISSILES;
-
     case GOD_KIKUBAAQUDGHA: case GOD_TROG:
         return item.base_type == OBJ_CORPSES;
 
@@ -2610,15 +2773,6 @@ void offer_items()
         case GOD_KIKUBAAQUDGHA:
         case GOD_TROG:
             gain_piety(1);
-            break;
-
-        case GOD_ELYVILON:
-            if (random2(value) >= random2(50) 
-                || (mitm[i].base_type == OBJ_WEAPONS 
-                    && (you.piety < 30 || player_under_penance())))
-            {
-                gain_piety(1);
-            }
             break;
 
         default:

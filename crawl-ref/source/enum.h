@@ -93,7 +93,7 @@ enum ability_type
     ABIL_YRED_CONTROL_UNDEAD,               //  144
     // 160 - reserved for Vehumet
     ABIL_OKAWARU_MIGHT = 170,                //  170
-    ABIL_OKAWARU_HEALING,
+    // Okawaru no longer heals (JPEG)
     ABIL_OKAWARU_HASTE,                        //  172
     ABIL_MAKHLEB_MINOR_DESTRUCTION = 180,      //  180
     ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
@@ -101,9 +101,11 @@ enum ability_type
     ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,   //  183
     ABIL_SIF_MUNA_CHANNEL_ENERGY = 190,        //  190
     ABIL_SIF_MUNA_FORGET_SPELL,
+    ABIL_TROG_BURN_BOOKS,
     ABIL_TROG_BERSERK = 200,          //  200
     ABIL_TROG_MIGHT,
     ABIL_TROG_HASTE_SELF,                   //  202
+    ABIL_ELYVILON_DESTROY_WEAPONS,
     ABIL_ELYVILON_LESSER_HEALING = 220,         //  220
     ABIL_ELYVILON_PURIFICATION,
     ABIL_ELYVILON_HEALING,
@@ -780,15 +782,13 @@ enum conduct_type
     DID_STABBING,
     DID_POISON,
     DID_DEDICATED_BUTCHERY,
-    DID_DEDICATED_KILL_LIVING,
-    DID_DEDICATED_KILL_UNDEAD,
-    DID_DEDICATED_KILL_DEMON,
-    DID_DEDICATED_KILL_NATURAL_EVIL,    // unused
-    DID_DEDICATED_KILL_WIZARD,
-    DID_DEDICATED_KILL_PRIEST,
-
-    // [dshaligram] No distinction between killing Angels during prayer or
-    //              otherwise, borrowed from bwr 4.1.
+    // killings need no longer be dedicated (JPEG)
+    DID_KILL_LIVING,
+    DID_KILL_UNDEAD,
+    DID_KILL_DEMON,
+    DID_KILL_NATURAL_EVIL,    // unused
+    DID_KILL_WIZARD,
+    DID_KILL_PRIEST,
     DID_KILL_ANGEL,
     DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
     DID_LIVING_KILLED_BY_SERVANT,

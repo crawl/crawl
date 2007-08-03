@@ -325,7 +325,8 @@ bool butchery(void)
             else
                 mpr("You start hacking away.");
 
-            if (you.duration[DUR_PRAYER] &&
+            bool rotten = (mitm[objl].special < 100);
+            if (you.duration[DUR_PRAYER] && !rotten &&
                 god_likes_butchery(you.religion))
             {
                 offer_corpse(objl);

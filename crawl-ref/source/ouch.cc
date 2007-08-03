@@ -768,13 +768,23 @@ void ouch( int dam, int death_source, kill_method_type death_type,
             break;
         }
 
-        // Damage applied here:
-        dec_hp( dam, true );
 
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr
         if (dam > 0 && you.hp_max <= dam * 2)
+        {
+            if (you.religion == GOD_ELYVILON && one_chance_in(3))
+            {
+                simple_god_message( " shields you from harm!" );
+                return;
+            }
+            // Damage applied here:
+            dec_hp( dam, true );
             mpr( "Ouch! That really hurt!", MSGCH_DANGER );
+        }
+        else
+            dec_hp( dam, true );
+
 
         if (you.hp > 0)
         {

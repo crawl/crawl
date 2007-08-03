@@ -113,7 +113,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Okawaru
-    { ABIL_OKAWARU_MIGHT, ABIL_OKAWARU_HEALING, ABIL_NON_ABILITY,
+    { ABIL_OKAWARU_MIGHT, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_OKAWARU_HASTE },
     // Makhleb
     { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
@@ -242,7 +242,6 @@ static const ability_def Ability_List[] =
 
     // Okawaru
     { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_OKAWARU_HEALING, "Healing", 2, 0, 75, 1, ABFLAG_NONE },
     { ABIL_OKAWARU_HASTE, "Haste", 5, 0, 100, 3, ABFLAG_NONE },
 
     // Makhleb
@@ -256,11 +255,13 @@ static const ability_def Ability_List[] =
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell", 5, 0, 0, 8, ABFLAG_NONE },
 
     // Trog
+    { ABIL_TROG_BURN_BOOKS, "Burn Books", 0, 0, 10, 0, ABFLAG_NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
     { ABIL_TROG_MIGHT, "Might", 0, 0, 200, 1, ABFLAG_NONE },
     { ABIL_TROG_HASTE_SELF, "Haste Self", 0, 0, 250, 3, ABFLAG_NONE },
 
     // Elyvilon
+    { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0, 100, 0,
       ABFLAG_CONF_OK },
     { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
@@ -618,7 +619,18 @@ static talent get_talent(ability_type ability, bool check_confused)
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
+        
+    // destroying stuff doesn't train anything
+    case ABIL_ELYVILON_DESTROY_WEAPONS:
+        invoc = true;
+        failure = 0;
+        break;
 
+    case ABIL_TROG_BURN_BOOKS:
+        invoc = true;
+        failure = 0;
+        break;
+        
     // These three are Trog abilities... Invocations means nothing -- bwr
     case ABIL_TROG_BERSERK:    // piety >= 30
         invoc = true;
@@ -643,7 +655,6 @@ static talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_HEALING:
     case ABIL_TSO_SMITING:
     case ABIL_BEOGH_SMITING:
-    case ABIL_OKAWARU_HEALING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
     case ABIL_KIKU_ENSLAVE_UNDEAD:
@@ -1378,13 +1389,6 @@ static bool do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1 + random2(3));
         break;
 
-    case ABIL_OKAWARU_HEALING:
-        if (!cast_healing( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
-            break;
-
-        exercise(SK_INVOCATIONS, 2 + random2(5));
-        break;
-
     case ABIL_OKAWARU_HASTE:
         potion_effect( POT_SPEED, you.skills[SK_INVOCATIONS] * 8 );
         exercise(SK_INVOCATIONS, 3 + random2(7));
@@ -1477,6 +1481,10 @@ static bool do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 6 + random2(6));
         break;
 
+    case ABIL_TROG_BURN_BOOKS:
+        trog_burn_books();
+        break;
+
     case ABIL_TROG_BERSERK:
         // Trog abilities don't use or train invocations. 
         if (you.hunger_state < HS_SATIATED)
@@ -1502,6 +1510,17 @@ static bool do_ability(const ability_def& abil)
         cast_selective_amnesia(true);
         break;
 
+    case ABIL_ELYVILON_DESTROY_WEAPONS:
+    {
+        int i = igrd[you.x_pos][you.y_pos];
+        if (i != NON_ITEM)
+        {
+            ely_destroy_weapons();
+            break;
+        }
+        mpr("There are no items here.");
+        break;
+    }
     case ABIL_ELYVILON_LESSER_HEALING:
         if (!cast_healing( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
             break;
@@ -1873,6 +1892,15 @@ std::vector<talent> your_talents( bool check_confused )
         add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
     
+    if (you.religion == GOD_ELYVILON)
+    {
+        add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
+    }
+    else if (you.religion == GOD_TROG)
+    {
+        add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
+    }
+
     //jmf: alternately put check elsewhere
     if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
         (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))

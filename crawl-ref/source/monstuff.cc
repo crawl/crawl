@@ -557,30 +557,27 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // Only affects monsters friendly when created.
             if (!created_friendly)
             {
-                if (you.duration[DUR_PRAYER])
-                {
-                    if (mons_holiness(monster) == MH_NATURAL)
-                        did_god_conduct(DID_DEDICATED_KILL_LIVING, 
-                                        monster->hit_dice);
+                if (mons_holiness(monster) == MH_NATURAL)
+                    did_god_conduct(DID_KILL_LIVING,
+                                    monster->hit_dice);
 
-                    if (mons_holiness(monster) == MH_UNDEAD)
-                        did_god_conduct(DID_DEDICATED_KILL_UNDEAD, 
-                                        monster->hit_dice);
+                if (mons_holiness(monster) == MH_UNDEAD)
+                    did_god_conduct(DID_KILL_UNDEAD,
+                                    monster->hit_dice);
 
-                    if (mons_holiness(monster) == MH_DEMONIC)
-                        did_god_conduct(DID_DEDICATED_KILL_DEMON, 
-                                        monster->hit_dice);
+                if (mons_holiness(monster) == MH_DEMONIC)
+                    did_god_conduct(DID_KILL_DEMON,
+                                    monster->hit_dice);
 
-                    //jmf: Trog hates wizards
-                    if (mons_is_magic_user(monster))
-                        did_god_conduct(DID_DEDICATED_KILL_WIZARD,
-                                        monster->hit_dice);
+                //jmf: Trog hates wizards
+                if (mons_is_magic_user(monster))
+                    did_god_conduct(DID_KILL_WIZARD,
+                                    monster->hit_dice);
 
-                    //jmf: maybe someone hates priests?
-                    if (mons_class_flag(monster->type, M_PRIEST))
-                        did_god_conduct(DID_DEDICATED_KILL_PRIEST, 
-                                        monster->hit_dice);
-                }
+                //Beogh hates priests
+                if (mons_class_flag(monster->type, M_PRIEST))
+                    did_god_conduct(DID_KILL_PRIEST,
+                                    monster->hit_dice);
 
                 if (mons_holiness(monster) == MH_HOLY)
                     did_god_conduct(DID_KILL_ANGEL, monster->hit_dice);
