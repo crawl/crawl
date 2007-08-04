@@ -1549,7 +1549,7 @@ void trog_burn_books()
         i = next;
     }
     
-    int totalcount = 0;
+    int totalpiety = 0;
     for (int xpos = you.x_pos - 8; xpos < you.x_pos + 8; xpos++)
         for (int ypos = you.y_pos - 8; ypos < you.y_pos + 8; ypos++)
         {
@@ -1590,6 +1590,14 @@ void trog_burn_books()
                  }
 
                  rarity += book_rarity(mitm[i].sub_type);
+                 // piety increases by 2 for books never picked up, else by 1
+                 if (mitm[i].flags & ISFLAG_DROPPED
+                     || mitm[i].flags & ISFLAG_THROWN)
+                 {
+                     totalpiety++;
+                 }
+                 else
+                     totalpiety += 2;
                  
 #ifdef DEBUG_DIAGNOSTICS
                  mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
@@ -1602,7 +1610,6 @@ void trog_burn_books()
 
              if (count)
              {
-                  totalcount += count;
                   if ( cloud != EMPTY_CLOUD )
                   {
                      // reinforce the cloud
@@ -1632,14 +1639,14 @@ void trog_burn_books()
 
         }
         
-    if (!totalcount)
+    if (!totalpiety)
     {
          mpr("There are no books in sight to burn!");
     }
     else
     {
          simple_god_message(" is delighted!", GOD_TROG);
-         gain_piety(totalcount*5);
+         gain_piety(totalpiety);
     }
 }
 
