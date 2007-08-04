@@ -690,15 +690,16 @@ PLACE:   Snake:5
 FLAGS:   no_rotate
 ORIENT:  northwest
 KFEAT:   Z = weight:2 teleport trap / .
-KFEAT:   z = teleport trap
+KFEAT:   z = teleport trap / Zot trap / weight:20 .
 MONS:    naga / nothing, greater naga / nothing, guardian naga / nothing
 MONS:    naga warrior / nothing, naga mage / nothing
 MONS:    greater naga / guardian naga
-SHUFFLE: '"
-SUBST:   ':''x, ":"x
+SHUFFLE: 'X / "Y
+SHUFFLE: 'X / 'X / AB, "Y / CD
+SUBST:   A=x, B=x, C=x, D=x
 SUBST:   ' = .:250 1 2 3 4:15 5:5
 SUBST:   " = .:250 1 2 3 4:5  5:15
-SUBST:   X=xc.+, Y=xc+
+SUBST:   X=xc..++, Y=xc++
 SUBST:   T : T U V .:30 b
 SUBST:   _:.!, !:!.x, !=x .:2
 SHUFFLE: 123, 45, ([<
