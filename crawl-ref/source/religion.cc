@@ -2432,7 +2432,8 @@ bool followers_abandon_you()
 void beogh_idol_revenge()
 {
     // Beogh watches his charges closely, but for others doesn't always notice
-    if (you.religion == GOD_BEOGH || one_chance_in(3))
+    if (you.religion == GOD_BEOGH || you.species == SP_HILL_ORC && coinflip()
+        || one_chance_in(3))
     {
         if (you.religion != GOD_BEOGH &&
             !player_under_penance() && you.piety > random2(400))
@@ -2443,17 +2444,43 @@ void beogh_idol_revenge()
         }
         else
         {
-             snprintf(info, INFO_SIZE, "%s screams, \"Feel the wrath of %s!\"",
-                      god_name(GOD_BEOGH), god_name(GOD_BEOGH));
-             god_speaks(GOD_BEOGH, info);
+             if (you.religion == GOD_BEOGH)
+             {
+                switch(random2(3))
+                {
+                case 0:
+                  snprintf(info, INFO_SIZE, " fumes, \"This is no small sin, orc. Repent!\"");
+                  break;
+                case 1:
+                  snprintf(info, INFO_SIZE, " whispers, \"You will pay for this transgression.\"");
+                  break;
+                default:
+                  snprintf(info, INFO_SIZE, " rages, \"Eye for an eye...\"");
+                }
+                simple_god_message(info, GOD_BEOGH);
+             }
+             else if (you.species == SP_HILL_ORC)
+             {
+                if (coinflip())
+                  simple_god_message("'s voice booms out: \"Heretic, die!\"", GOD_BEOGH);
+                else
+                  god_speaks(GOD_BEOGH, "You hear Beogh's thundering voice: \"Suffer, infidel!\"");
+             }
+             else
+             {
+                if (coinflip())
+                   simple_god_message(" is not amused about the destruction of his idols.", GOD_BEOGH);
+                else
+                   simple_god_message(" seems highly displeased.", GOD_BEOGH);
+             }
 
              int divine_hurt = 10 + random2(10);
 
              for (int i = 0; i < 5; i++)
                  divine_hurt += random2( you.experience_level );
 
-              simple_god_message( " smites you!", GOD_BEOGH );
-              ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
+             simple_god_message( " smites you!", GOD_BEOGH );
+             ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
         }
         if (you.religion == GOD_BEOGH)
         {
