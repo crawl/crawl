@@ -189,30 +189,27 @@ void ghost_demon::init_random_demon()
        for the demon, then converts those spells to the monster spell indices.
        Some special monster-only spells are at the end. */
     if (values[ GVAL_DEMONLORD_SPELLCASTER ] == 1)
-    {
-#define RANDOM_ARRAY_ELEMENT(x) x[random2(sizeof(x) / sizeof(x[0]))]
-        
+    {       
         if (coinflip())
-            values[GVAL_SPELL_1]=RANDOM_ARRAY_ELEMENT(search_order_conj);
+            values[GVAL_SPELL_1] = RANDOM_ELEMENT(search_order_conj);
 
         // Might duplicate the first spell, but that isn't a problem.
         if (coinflip())
-            values[GVAL_SPELL_2]=RANDOM_ARRAY_ELEMENT(search_order_conj);
+            values[GVAL_SPELL_2] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
-            values[GVAL_SPELL_3]=RANDOM_ARRAY_ELEMENT(search_order_third);
+            values[GVAL_SPELL_3] = RANDOM_ELEMENT(search_order_third);
 
         if (coinflip())
         {
-            values[GVAL_SPELL_4]=RANDOM_ARRAY_ELEMENT(search_order_misc);
+            values[GVAL_SPELL_4] = RANDOM_ELEMENT(search_order_misc);
             if ( values[GVAL_SPELL_4] == SPELL_DIG )
                 values[GVAL_SPELL_4] = SPELL_NO_SPELL;
         } 
 
         if (coinflip())
-            values[GVAL_SPELL_5]=RANDOM_ARRAY_ELEMENT(search_order_misc);
+            values[GVAL_SPELL_5] = RANDOM_ELEMENT(search_order_misc);
 
-#undef RANDOM_ARRAY_ELEMENT
 
         if (coinflip())
             values[ GVAL_SPELL_6 ] = SPELL_BLINK;

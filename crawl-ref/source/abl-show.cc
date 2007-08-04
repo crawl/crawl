@@ -927,7 +927,6 @@ static bool do_ability(const ability_def& abil)
     }
 
     case ABIL_DELAYED_FIREBALL:
-    {
         if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
             return (false);
         
@@ -937,7 +936,6 @@ static bool do_ability(const ability_def& abil)
         // only one allowed since this is instantaneous -- bwr
         you.attribute[ ATTR_DELAYED_FIREBALL ] = 0;
         break;
-    }
 
     case ABIL_GLAMOUR:
         if (you.duration[DUR_GLAMOUR])
@@ -1511,16 +1509,10 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-    {
-        int i = igrd[you.x_pos][you.y_pos];
-        if (i != NON_ITEM)
-        {
-            ely_destroy_weapons();
-            break;
-        }
-        mpr("There are no items here.");
+        if ( !ely_destroy_weapons() )
+            return false;
         break;
-    }
+
     case ABIL_ELYVILON_LESSER_HEALING:
         if (!cast_healing( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
             break;
@@ -1794,7 +1786,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
     if ( Options.tutorial_left )
     {
-        // XXX This could be buggy if manage to pick up lots and lots
+        // XXX This could be buggy if you manage to pick up lots and lots
         // of abilities during the tutorial.
         abil_menu.set_more(tut_abilities_info());
         abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
@@ -1846,24 +1838,21 @@ std::vector<talent> your_talents( bool check_confused )
 {
     std::vector<talent> talents;
 
-    // first we do the racial abilities:
+    // Species-based abilities
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
-    // checking for species-related abilities and mutagenic counterparts {dlb}:
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-        && ((you.species == SP_GREY_ELF && you.experience_level >= 5)
-            || (you.species == SP_HIGH_ELF && you.experience_level >= 15)))
+    if ( ((you.species == SP_GREY_ELF && you.experience_level >= 5) ||
+          (you.species == SP_HIGH_ELF && you.experience_level >= 15)) &&
+         you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE )         
     {
         add_talent(talents, ABIL_GLAMOUR, check_confused);
     }
 
     if (you.species == SP_NAGA)
     {
-        if (you.mutation[MUT_BREATHE_POISON])
-            add_talent(talents, ABIL_BREATHE_POISON, check_confused );
-        else
-            add_talent(talents, ABIL_SPIT_POISON, check_confused );
+        add_talent(talents, you.mutation[MUT_BREATHE_POISON] ?
+                   ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
     else if (you.mutation[MUT_SPIT_POISON])
     {
@@ -1895,22 +1884,6 @@ std::vector<talent> your_talents( bool check_confused )
         add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
     
-    if (you.religion == GOD_ELYVILON)
-    {
-        add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
-    }
-    else if (you.religion == GOD_TROG)
-    {
-        add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
-    }
-
-    //jmf: alternately put check elsewhere
-    if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
-        (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))
-    {
-        add_talent(talents, ABIL_MAPPING, check_confused );
-    }
-
     if (!you.duration[DUR_CONTROLLED_FLIGHT] && !player_is_levitating())
     {
         // kenku can fly, but only from the ground
@@ -1922,7 +1895,13 @@ std::vector<talent> your_talents( bool check_confused )
             add_talent(talents, ABIL_FLY_II, check_confused );
     }
 
-    // demonic powers {dlb}:
+    // Mutations
+    if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
+        (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))
+    {
+        add_talent(talents, ABIL_MAPPING, check_confused );
+    }
+
     if (you.mutation[MUT_SUMMON_MINOR_DEMONS])
         add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );
 
@@ -1965,6 +1944,16 @@ std::vector<talent> your_talents( bool check_confused )
     if (you.mutation[MUT_TELEPORT_AT_WILL])
         add_talent(talents, ABIL_TELEPORTATION, check_confused );
 
+    // Religious abilities
+    if (you.religion == GOD_ELYVILON)
+    {
+        add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
+    }
+    else if (you.religion == GOD_TROG)
+    {
+        add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
+    }
+
     // gods take abilities away until penance completed -- bwr
     if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
     {
@@ -1990,16 +1979,14 @@ std::vector<talent> your_talents( bool check_confused )
         add_talent(talents, ABIL_BREATHE_HELLFIRE, check_confused );
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                                        || you.mutation[MUT_BREATHE_FLAMES])
+             || you.mutation[MUT_BREATHE_FLAMES])
     {
         add_talent(talents, ABIL_BREATHE_FIRE, check_confused );
     }
 
     // checking for unreleased delayed fireball
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
-    {
         add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused );
-    }
 
     // evocations from items:
     if (scan_randarts(RAP_BLINK))
@@ -2016,8 +2003,8 @@ std::vector<talent> your_talents( bool check_confused )
         || scan_randarts( RAP_INVISIBLE ))
     {
         // Now you can only turn invisibility off if you have an
-        // activatable item.  Wands and potions allow will have 
-        // to time out. -- bwr
+        // activatable item.  Wands and potions will have to time
+        // out. -- bwr
         if (you.duration[DUR_INVIS])
             add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused );
         else
@@ -2034,10 +2021,9 @@ std::vector<talent> your_talents( bool check_confused )
         // activatable item.  Potions and miscast effects will 
         // have to time out (this makes the miscast effect actually
         // a bit annoying). -- bwr
-        if (you.duration[DUR_LEVITATION]) 
-            add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused );
-        else
-            add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused );
+        add_talent(talents, you.duration[DUR_LEVITATION] ?
+                   ABIL_EVOKE_STOP_LEVITATING : ABIL_EVOKE_LEVITATE,
+                   check_confused);
     }
 
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )

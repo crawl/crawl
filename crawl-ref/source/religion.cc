@@ -1482,10 +1482,10 @@ static bool need_water_walking()
         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
 }
 
-void ely_destroy_weapons()
+bool ely_destroy_weapons()
 {
     if (you.religion != GOD_ELYVILON)
-        return;
+        return false;
         
     bool success;
     int i = igrd[you.x_pos][you.y_pos];
@@ -1499,14 +1499,13 @@ void ely_destroy_weapons()
             i = next;
             continue;
         }
-        
-        const char *ssuffix = mitm[i].quantity == 1? "s" : "";
-        std::string text = mitm[i].name(DESC_CAP_THE);
-        text += " shimmer"; text += ssuffix;
-        text += " and break"; text += ssuffix;
-        text += " into pieces.";
 
-        mpr(text.c_str());
+        std::ostream& strm = msg::streams(MSGCH_GOD);
+        strm << mitm[i].name(DESC_CAP_THE);
+        if ( mitm[i].quantity == 1 )
+            strm << " shimmers and breaks into pieces." << std::endl;
+        else
+            strm << " shimmer and break into pieces." << std::endl;
 
         const int value = item_value( mitm[i], true );
 #ifdef DEBUG_DIAGNOSTICS
@@ -1517,17 +1516,20 @@ void ely_destroy_weapons()
             || (mitm[i].base_type == OBJ_WEAPONS
                 && (you.piety < 30 || player_under_penance())))
         {
-                gain_piety(1);
+            gain_piety(1);
         }
         
         destroy_item(i);
         success = true;
         i = next;
     }
+
     if (!success)
     {
         mpr("There are no weapons here to destroy!");
     }
+
+    return success;
 }
 
 void trog_burn_books()
@@ -1548,6 +1550,9 @@ void trog_burn_books()
         }
         i = next;
     }
+
+    // From now on, it will always cost a turn, to prevent leaking
+    // information about whether books exist (not that it matters much.)
     
     int totalpiety = 0;
     for (int xpos = you.x_pos - 8; xpos < you.x_pos + 8; xpos++)
@@ -1627,14 +1632,8 @@ void trog_burn_books()
 
                   place_cloud( CLOUD_FIRE, xpos, ypos, durat, KC_YOU );
 
-                  const char *plural = count == 1? "" : "s";
-                  const char *ssuffix = count == 1? "s" : "";
-
-                  std::string text = "The book"; text += plural;
-                  text += " burst"; text += ssuffix;
-                  text += " into flames.";
-
-                  mpr(text.c_str());
+                  mpr(count == 1 ? "The book bursts into flames."
+                      : "The books burst into flames.", MSGCH_GOD);
              }
 
         }
@@ -1697,7 +1696,7 @@ void lose_piety(int pgn)
                 {
                     // every piety level change also affects AC from
                     // orcish gear
-                    you.redraw_armour_class = 1;
+                    you.redraw_armour_class = true;
                 }
             }
         }
@@ -2434,15 +2433,15 @@ bool followers_abandon_you()
     return false;
 }
 
-// Destroying orcish idols (a.k.a. idols of Beogh)
-// may anger Beogh
+// Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh
 void beogh_idol_revenge()
 {
     // Beogh watches his charges closely, but for others doesn't always notice
-    if (you.religion == GOD_BEOGH || you.species == SP_HILL_ORC && coinflip()
+    if (you.religion == GOD_BEOGH
+        || (you.species == SP_HILL_ORC && coinflip())
         || one_chance_in(3))
     {
-        if (you.religion != GOD_BEOGH &&
+        if (you.religion != GOD_BEOGH && you.religion != GOD_XOM &&
             !player_under_penance() && you.piety > random2(400))
         {
              snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
@@ -2453,32 +2452,28 @@ void beogh_idol_revenge()
         {
              if (you.religion == GOD_BEOGH)
              {
-                switch(random2(3))
-                {
-                case 0:
-                  snprintf(info, INFO_SIZE, " fumes, \"This is no small sin, orc. Repent!\"");
-                  break;
-                case 1:
-                  snprintf(info, INFO_SIZE, " whispers, \"You will pay for this transgression.\"");
-                  break;
-                default:
-                  snprintf(info, INFO_SIZE, " rages, \"Eye for an eye...\"");
-                }
-                simple_god_message(info, GOD_BEOGH);
+                 const char* messages[3] = {
+                     " fumes, \"This is no small sin, orc. Repent!\"",
+                     " whispers, \"You will pay for this transgression.\"",
+                     " rages, \"An eye for an eye...\""
+                 };
+                 simple_god_message(RANDOM_ELEMENT(messages), GOD_BEOGH);
              }
              else if (you.species == SP_HILL_ORC)
              {
-                if (coinflip())
-                  simple_god_message("'s voice booms out: \"Heretic, die!\"", GOD_BEOGH);
-                else
-                  god_speaks(GOD_BEOGH, "You hear Beogh's thundering voice: \"Suffer, infidel!\"");
+                 const char* messages[2] = {
+                     "Beogh's voice booms out: \"Heretic, die!\"",
+                     "You hear Beogh's thundering voice: \"Suffer, infidel!\""
+                 };
+                 god_speaks(GOD_BEOGH, RANDOM_ELEMENT(messages));
              }
              else
              {
-                if (coinflip())
-                   simple_god_message(" is not amused about the destruction of his idols.", GOD_BEOGH);
-                else
-                   simple_god_message(" seems highly displeased.", GOD_BEOGH);
+                 const char* messages[2] = {                
+                   " is not amused about the destruction of his idols.",
+                   " seems highly displeased."
+                 };
+                 simple_god_message(RANDOM_ELEMENT(messages), GOD_BEOGH);
              }
 
              int divine_hurt = 10 + random2(10);
@@ -2489,6 +2484,7 @@ void beogh_idol_revenge()
              simple_god_message( " smites you!", GOD_BEOGH );
              ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
         }
+
         if (you.religion == GOD_BEOGH)
         {
             // comes closest and same result (penance + piety loss)
@@ -2889,11 +2885,13 @@ void god_pitch(god_type which_god)
     
     if (you.religion == GOD_ELYVILON)
     {
-        mpr("You can now call upon Elyvilon to destroy weapons lying on the ground.");
+        mpr("You can now call upon Elyvilon to destroy weapons "
+            "lying on the ground.", MSGCH_GOD);
     }
     else if (you.religion == GOD_TROG)
     {
-        mpr("You can now call upon Trog to burn books in your surroundings.");
+        mpr("You can now call upon Trog to burn books in your surroundings.",
+            MSGCH_GOD);
     }
 
     if (you.worshipped[you.religion] < 100)

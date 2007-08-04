@@ -302,7 +302,7 @@ void direction(dist& moves, targeting_type restricts,
     }
 
     bool show_prompt = true;
-    while (1)
+    while (true)
     {
         // Prompts might get scrolled off if you have too few lines available.
         // We'll live with that.
