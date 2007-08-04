@@ -1316,6 +1316,21 @@ bool acquirement(object_class_type class_wanted, int agent)
             default:
                 break;
             }
+            
+            int plusmod = random2(4);
+            // more damage, less accuracy
+            if (agent == GOD_TROG)
+            {
+                thing.plus  -= plusmod;
+                thing.plus2 += plusmod;
+            }
+            // more accuracy, less damage
+            else if (agent == GOD_OKAWARU)
+            {
+                thing.plus  += plusmod;
+                thing.plus2 -= plusmod;
+            }
+
         }
         else if (thing.base_type == OBJ_ARMOUR
                     && !is_fixed_artefact( thing ))
@@ -1497,18 +1512,22 @@ void yell(void)
 
     mpr("What do you say?", MSGCH_PROMPT);
     mprf(" ! - %s", cap_shout.c_str());
-    mpr(" a - Order allies to attack a monster");
 
-    if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
+    if (!you.duration[DUR_BERSERKER])
     {
-        struct monsters *target = &menv[you.prev_targ];
+        mpr(" a - Order allies to attack a monster");
 
-        if (mons_near(target) && player_monster_visible(target))
+        if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
-            mpr(" p - Order allies to attack your previous target");
-            targ_prev = true;
+            struct monsters *target = &menv[you.prev_targ];
+
+            if (mons_near(target) && player_monster_visible(target))
+            {
+                mpr(" p - Order allies to attack your previous target");
+                targ_prev = true;
+            }
         }
-    }
+   }
 
     mprf(" Anything else - Stay silent%s",
          one_chance_in(20)? " (and be thought a fool)" : "");
@@ -1524,6 +1543,12 @@ void yell(void)
         return;
 
     case 'a':
+        if (you.duration[DUR_BERSERKER])
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
         mpr("Gang up on whom?", MSGCH_PROMPT);
         direction( targ, DIR_TARGET, TARG_ENEMY );
 
@@ -1544,6 +1569,12 @@ void yell(void)
         break;
 
     case 'p':
+        if (you.duration[DUR_BERSERKER])
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
         if (targ_prev)
         {
             mons_targd = you.prev_targ;

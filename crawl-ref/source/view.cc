@@ -4053,8 +4053,13 @@ void viewwindow(bool draw_it, bool do_updates)
                     const int object = env.show(ep);
                     if (object)
                     {
-                        if (is_feature('>', gc.x, gc.y))
-                            learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
+                        if ((grd(gc) == DNGN_ROCK_STAIRS_DOWN || grd(gc) == DNGN_ROCK_STAIRS_UP)
+                            && see_grid( gc.x, gc.y ))
+                        {
+                            learned_something_new(TUT_SEEN_ESCAPE_HATCH, gc.x, gc.y);
+                        }
+                        else if (is_feature('>', gc.x, gc.y))
+                                learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
                         else if (is_feature('_', gc.x, gc.y))
                             learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
                         else if (grd(gc) == DNGN_CLOSED_DOOR

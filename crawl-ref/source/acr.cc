@@ -895,11 +895,11 @@ static void input()
     if (Options.tut_just_triggered)
         Options.tut_just_triggered = false;
 
+    if (Options.tutorial_events[TUT_RUN_AWAY] && 2*you.hp < you.hp_max )
+        learned_something_new(TUT_RUN_AWAY);
+        
     if ( i_feel_safe() )
     {
-        if (Options.tutorial_events[TUT_RUN_AWAY] && 2*you.hp < you.hp_max )
-            learned_something_new(TUT_RUN_AWAY);
-            
         if (Options.tutorial_left)
         {
             if ( 2*you.hp < you.hp_max

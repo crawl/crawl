@@ -1415,6 +1415,64 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
     create_monster( ibc, numsc, beha, you.x_pos, you.y_pos, MHITYOU, 250 );
 }                               // end summon_ice_beast_etc()
 
+// Trog sends some fighting buddies for his followers
+void summon_berserker()
+{
+    beh_type beha = BEH_GOD_GIFT;
+    int pow = you.piety + random2(you.piety/4) - random2(you.piety/4);
+    int numsc = std::min(2 + (random2(pow) / 4), 6);
+
+    int mon = MONS_TROLL;
+    
+    if (pow <= 100)
+    { // bears
+      if (coinflip())
+         mon = MONS_BLACK_BEAR;
+      else
+         mon = MONS_GRIZZLY_BEAR;
+    }
+    else if (pow <= 140)
+    {
+      // ogres
+      if (one_chance_in(3))
+         mon = MONS_TWO_HEADED_OGRE;
+      else
+         mon = MONS_OGRE;
+    }
+    else if (pow <= 180)
+    {
+      // trolls
+      switch(random2(8))
+      {
+        case 0:
+          mon = MONS_DEEP_TROLL;
+          break;
+        case 1:
+        case 2:
+          mon = MONS_IRON_TROLL;
+          break;
+        case 3:
+        case 4:
+          mon = MONS_ROCK_TROLL;
+          break;
+        default:
+          mon = MONS_TROLL;
+          break;
+      }
+    }
+    else
+    {
+      // giants
+      if (coinflip())
+          mon = MONS_HILL_GIANT;
+      else
+          mon = MONS_STONE_GIANT;
+    }
+
+    int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos, MHITYOU, 250 );
+    menv[mons].go_berserk(false);
+}                               // end summon_ice_beast_etc()
+
 bool summon_swarm( int pow, bool unfriendly, bool god_gift )
 {
     int thing_called = MONS_PROGRAM_BUG;        // error trapping {dlb}

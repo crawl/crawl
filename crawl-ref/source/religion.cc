@@ -143,7 +143,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "", "" },
     // Okawaru
     { "give your body great, but temporary strength",
-      "call upon Okawaru for minor healing",
+      "",
       "",
       "",
       "haste yourself" },
@@ -161,9 +161,9 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "give your body great, but temporary, strength",
+      "call upon Trog for regeneration",
       "",
-      "haste yourself",
+      "call in reinforcement",
       "" },
     // Nemelex
     { "peek at the first card of a deck",
@@ -229,7 +229,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Okawaru
     { "give your body great, but temporary strength",
-      "call upon Okawaru for minor healing",
+      "",
       "",
       "",
       "haste yourself" },
@@ -247,9 +247,9 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "give your body great, but temporary, strength",
+      "call upon Trog for regeneration",
       "",
-      "haste yourself",
+      "call in reinforcement",
       "" },
     // Nemelex
     { "peek at the first card of a deck",
@@ -722,8 +722,6 @@ std::string god_prayer_reaction()
 
 void pray()
 {
-    const bool was_praying = (you.duration[DUR_PRAYER] != 0);
-
     if (silenced(you.x_pos, you.y_pos))
     {
         mpr("You are unable to make a sound!");
@@ -797,8 +795,6 @@ void pray()
     mprf(MSGCH_DIAGNOSTICS, "piety: %d", you.piety );
 #endif
 
-    if (!was_praying)
-        do_god_gift();
 }                               // end pray()
 
 const char *god_name( god_type which_god, bool long_name ) // mv - rewritten
@@ -1412,7 +1408,11 @@ void gain_piety(int pgn)
         if (you.piety > 199
             || (you.piety > 150 && one_chance_in(3))
             || (you.piety > 100 && one_chance_in(3)))
+        {
+            if (you.piety > 150)
+                do_god_gift();
             return;
+        }
     }
     else
     {
@@ -2852,6 +2852,15 @@ void god_pitch(god_type which_god)
     
     simple_god_message( info );
     more();
+    
+    if (you.religion == GOD_ELYVILON)
+    {
+        mpr("You can now call upon Elyvilon to destroy weapons lying on the ground.");
+    }
+    else if (you.religion == GOD_TROG)
+    {
+        mpr("You can now call upon Trog to burn books in your surroundings.");
+    }
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;

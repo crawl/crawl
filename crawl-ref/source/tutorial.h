@@ -29,7 +29,7 @@ void tut_starting_screen();
 void tutorial_death_screen(void);
 void tutorial_finished(void);
 
-void tutorial_prayer_reminder(void);
+void tutorial_dissection_reminder(void);
 void tutorial_healing_reminder(void);
 
 void taken_new_item(unsigned char item_type);

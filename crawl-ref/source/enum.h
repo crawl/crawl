@@ -92,20 +92,20 @@ enum ability_type
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_CONTROL_UNDEAD,               //  144
     // 160 - reserved for Vehumet
-    ABIL_OKAWARU_MIGHT = 170,                //  170
+    ABIL_OKAWARU_MIGHT = 170,               //  170
     // Okawaru no longer heals (JPEG)
-    ABIL_OKAWARU_HASTE,                        //  172
+    ABIL_OKAWARU_HASTE = 172,               //  172
     ABIL_MAKHLEB_MINOR_DESTRUCTION = 180,      //  180
     ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
     ABIL_MAKHLEB_MAJOR_DESTRUCTION,
     ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,   //  183
     ABIL_SIF_MUNA_CHANNEL_ENERGY = 190,        //  190
     ABIL_SIF_MUNA_FORGET_SPELL,
-    ABIL_TROG_BURN_BOOKS,
+    ABIL_TROG_BURN_BOOKS = 199,
     ABIL_TROG_BERSERK = 200,          //  200
-    ABIL_TROG_MIGHT,
-    ABIL_TROG_HASTE_SELF,                   //  202
-    ABIL_ELYVILON_DESTROY_WEAPONS,
+    ABIL_TROG_REGENERATION,
+    ABIL_TROG_BROTHERS_IN_ARMS,                   //  202
+    ABIL_ELYVILON_DESTROY_WEAPONS = 219,
     ABIL_ELYVILON_LESSER_HEALING = 220,         //  220
     ABIL_ELYVILON_PURIFICATION,
     ABIL_ELYVILON_HEALING,
@@ -3780,38 +3780,40 @@ enum tutorial_event_type
     TUT_SEEN_CARRION,
     // encountered dungeon features
     TUT_SEEN_STAIRS,        
-    TUT_SEEN_TRAPS,         // 15
+    TUT_SEEN_ESCAPE_HATCH,  // 15
+    TUT_SEEN_TRAPS,    
     TUT_SEEN_ALTAR,         
     TUT_SEEN_SHOP,          
     TUT_SEEN_DOOR,
     // other 'first events'
-    TUT_SEEN_MONSTER,
-    TUT_KILLED_MONSTER,     // 20
+    TUT_SEEN_MONSTER,       // 20
+    TUT_KILLED_MONSTER,   
     TUT_NEW_LEVEL,       
     TUT_SKILL_RAISE,
     TUT_YOU_ENCHANTED,
-    TUT_YOU_SICK,   
-    TUT_YOU_POISON,         // 25
+    TUT_YOU_SICK,           // 25
+    TUT_YOU_POISON,
     TUT_YOU_CURSED,         
     TUT_YOU_HUNGRY, 
     TUT_YOU_STARVING,
-    TUT_MULTI_PICKUP,
-    TUT_HEAVY_LOAD,         // 30
+    TUT_MULTI_PICKUP,       // 30
+    TUT_HEAVY_LOAD,
     TUT_ROTTEN_FOOD,
     TUT_NEED_HEALING,       
     TUT_NEED_POISON_HEALING,
-    TUT_RUN_AWAY,   
-    TUT_MAKE_CHUNKS,        // 35
+    TUT_RUN_AWAY,           // 35
+    TUT_MAKE_CHUNKS,
+    TUT_OFFER_CORPSE,
     TUT_POSTBERSERK, 
     TUT_SHIFT_RUN,
-    TUT_MAP_VIEW,   
+    TUT_MAP_VIEW,           // 40
     TUT_DONE_EXPLORE,
-    TUT_YOU_MUTATED,        // 40
+    TUT_YOU_MUTATED,
     TUT_NEW_ABILITY,  
     TUT_WIELD_WEAPON,
     TUT_FLEEING_MONSTER,
-    TUT_EVENTS_NUM          // 44
-}; // for numbers higher than 45 change size of tutorial_events in externs.h
+    TUT_EVENTS_NUM          // 46
+}; // for numbers higher than 48 change size of tutorial_events in externs.h
 
 enum tutorial_types
 {

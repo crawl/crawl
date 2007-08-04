@@ -288,6 +288,8 @@ static std::string tut_debug_list(int event)
           return "seen first monster";
       case TUT_SEEN_STAIRS:
           return "seen first stairs";
+      case TUT_SEEN_ESCAPE_HATCH:
+          return "seen first escape hatch";
       case TUT_SEEN_TRAPS:
           return "encountered a trap";
       case TUT_SEEN_ALTAR:
@@ -316,6 +318,8 @@ static std::string tut_debug_list(int event)
           return "were starving";
       case TUT_MAKE_CHUNKS:
           return "learned about chunks";
+      case TUT_OFFER_CORPSE:
+          return "learned about sacrifice";
       case TUT_MULTI_PICKUP:
           return "read about pickup menu";
       case TUT_HEAVY_LOAD:
@@ -555,9 +559,7 @@ void tutorial_death_screen()
     {
         text =  "Don't forget to go berserk when fighting particularly "
                 "difficult foes. It is risky, but makes you faster "
-                "and beefier. Also try to pray prior to battles so that ";
-        text += god_name(you.religion);
-        text += " will soon feel like providing more abilities.";
+                "and beefier.";
     }
     else if (Options.tutorial_type == TUT_RANGER_CHAR 
     	     && 2*Options.tut_throw_counter < Options.tut_melee_counter )
@@ -695,23 +697,34 @@ void tutorial_finished()
     Options.tutorial_events.init(false);
 }
 
-// occasionally remind religious characters of praying
-void tutorial_prayer_reminder()
+// occasionally remind religious characters of sacrifices
+void tutorial_dissection_reminder()
 {
     if (Options.tut_just_triggered)
         return;
 
-    if (coinflip()) // always would be too annoying
+    // when hungry, give appropriate message or at least don't suggest sacrifice
+    if (you.hunger_state < HS_SATIATED)
+    {
+        learned_something_new(TUT_MAKE_CHUNKS);
+        return;
+    }
+
+    if (!god_likes_butchery(you.religion))
+        return;
+        
+    if (Options.tutorial_events[TUT_OFFER_CORPSE])
+        learned_something_new(TUT_OFFER_CORPSE);
+    else if (one_chance_in(8))
     {
         std::string text;
-        text =  "Remember to <w>p<magenta>ray before battle, so as to dedicate "
-                "your kills to ";
+        text += "If you don't need to eat it, consider <w>D<magenta>issecting "
+                "this corpse under <w>p<magenta>rayer as a sacrifice to ";
         text += god_name(you.religion);
-        text += ". Should the monster leave a corpse, consider "
-                "<w>D<magenta>issecting it as a sacrifice to ";
-        text += god_name(you.religion);
-        text += ", as well.";
+        text += ".";
+        
         print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
+        Options.tut_just_triggered = true;
     }
 }
 
@@ -992,11 +1005,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "is lying on the ground, you can <w>D<magenta>issect with a "
                   "sharp implement. Once hungry you can <w>e<magenta>at the "
                   "resulting chunks (though they may not be healthy).";
-          if (Options.tutorial_type == TUT_BERSERK_CHAR)
+          if (god_likes_butchery(you.religion))
           {
               text << " During prayer you can offer corpses to "
                    << god_name(you.religion)
-                   << " by dissecting them, as well.";
+                   << " by dissecting them, as well. Note that the gods will not "
+                   << "accept rotting flesh.";
           }
           break;
       case TUT_SEEN_JEWELLERY:
@@ -1025,18 +1039,30 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
       case TUT_SEEN_STAIRS:
           if (you.num_turns < 1)
-          	return;
+              return;
 
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
 
-          text << "The <w>" << colour_to_tag(colour) << static_cast<char>(ch)
+          text << "The " << colour_to_tag(colour) << static_cast<char>(ch)
                << "<magenta> are some downstairs. You can enter the next (deeper) "
                   "level by following them down (<w>><magenta>). To get back to "
                   "this level again, press <w><<<magenta> while standing on the "
                   "upstairs.";
 
+          break;
+      case TUT_SEEN_ESCAPE_HATCH:
+          object = env.show[ex][ey];
+          colour = env.show_col[ex][ey];
+          get_item_symbol( object, &ch, &colour );
+          
+          text << "These " << colour_to_tag(colour) << static_cast<char>(ch);
+          if (ch == '<')
+               text << "<";
+          text << "<magenta> are some kind of escape hatch. You can use them to "
+                  "quickly leave a level with <w><<<magenta> and <w>><magenta>, "
+                  "respectively, but will usually be unable to return right away.";
           break;
       case TUT_SEEN_TRAPS:
           object = env.show[ex][ey];
@@ -1085,13 +1111,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
               text << "with offensive magic will raise your Conjurations and "
                       "Spellcasting skills.";
 
-          if (you.religion != GOD_NO_GOD)
-          {
-              text << "\nTo dedicate your kills to "
+          if (you.religion == GOD_TROG)
+              text << " Also, kills of living creatures are automatically "
+                      "dedicated to "
                    << god_name(you.religion)
-                   << " <w>p<magenta>ray before battle. Note that not all gods "
-                      "will be pleased about you doing this.";
-          }
+                   << ".";
           break;
       case TUT_NEW_LEVEL:
           text << "Well done! Reaching a new experience level is always a nice "
@@ -1140,8 +1164,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
       case TUT_YOU_HUNGRY:
           text << "There are two ways to overcome hunger: food you started "
                   "with or found, and selfmade chunks from corpses. To get the "
-                  "latter, all you need to do is <w>D<magenta> a corpse with a "
-                  "sharp implement. Your starting weapon will do nicely. "
+                  "latter, all you need to do is <w>D<magenta>issect a corpse "
+                  "with a sharp implement. Your starting weapon will do nicely. "
                   "Try to dine on chunks in order to save permanent food.";
           break;
       case TUT_YOU_STARVING:
@@ -1173,31 +1197,32 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           text << "One or more of the chunks or corpses you carry has started to "
                   "rot. Few races can digest these safely, so you might just as "
                   "well <w>d<magenta>rop them now.";
-          if (you.religion == GOD_TROG || you.religion == GOD_MAKHLEB ||
-              you.religion == GOD_OKAWARU)
+          break;
+      case TUT_MAKE_CHUNKS:
+          text << "How lucky! That monster left a corpse which you can now "
+                  "<w>D<magenta>issect. One or more chunks will appear that you "
+                  "can then <w>e<magenta>at. Beware that some chunks may be, "
+                  "sometimes or always, hazardous. Only experience can help "
+                  "you here.";
+          if (you.duration[DUR_PRAYER]
+              && (god_likes_butchery(you.religion)
+                  || god_hates_butchery(you.religion)))
           {
-              text << "\nIf it is a rotting corpse you carry now might be a good "
-                      "time to <w>d<magenta>rop and <w>D<magenta>issect it during "
-                      "prayer (<w>p<magenta>) as an offer to "
+              text << "\nRemember, though, to wait until your prayer is over, or "
+                      "the corpse will instead be sacrificed to "
                    << god_name(you.religion)
                    << ".";
           }
           break;
-      case TUT_MAKE_CHUNKS:
-          text << "How lucky! That monster left a corpse which you can now "
-                  "<w>D<magenta>issect. One or more chunks will appear that you can "
-                  "then <w>e<magenta>at. Beware that some chunks may be, "
-                  "sometimes or always, hazardous. Only experience can help "
-                  "you here.";
-
-          if (you.duration[DUR_PRAYER] &&
-                (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
-                 you.religion == GOD_TROG || you.religion == GOD_ELYVILON))
+      case TUT_OFFER_CORPSE:
+          if (!god_likes_butchery(you.religion))
           {
-              text << "\nNote that dissection under prayer offers the corpse to "
-                   << god_name(you.religion)
-                   << " - check your god's attitude about this with <w>^<magenta>.";
+              return;
           }
+          text << "Hey, that monster left a corpse! If you don't need it for "
+                  "food or other purposes, you can sacrifice it to "
+               << god_name(you.religion)
+               << " by <w>D<magenta>issecting it while <w>p<magenta>raying.";
           break;
       case TUT_SHIFT_RUN:
           text << "Walking around takes less keystrokes if you press "
@@ -1256,9 +1281,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "use of some item might be a viable alternative to fighting on.";
           if (you.species == SP_CENTAUR)
               text << " As a four-legged centaur you are particularly quick - "
-                      "running is an option! ";
-          if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.duration[DUR_BERSERKER]
-              && !you.hunger)
+                      "running is an option!";
+          if (Options.tutorial_type == TUT_BERSERK_CHAR && you.religion == GOD_TROG
+              && !you.duration[DUR_BERSERKER] && you.hunger_state >= HS_SATIATED)
           {
               text << "\nAlso, with "
                    << god_name(you.religion)
@@ -1320,18 +1345,24 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
 formatted_string tut_abilities_info()
 {
-    std::string text = "<magenta>"
+    std::ostringstream text;
+    text << "<magenta>"
         "This screen shows your character's set of talents. You can gain new   " EOL
         "abilities via certain items, through religion or by way of mutations. " EOL
         "Activation of an ability usually comes at a cost, e.g. nutrition or   " EOL
         "Magic power. ";
     
-    if (you.religion == GOD_TROG)
+    if (you.religion != GOD_NO_GOD)
     {
-        text +=
-            "<w>Renounce Religion<magenta> will make your character leave your god" EOL
-            "(and usually anger said god), while <w>Berserk<magenta> temporarily increases your" EOL
-            "damage output in melee fights.";
+       text <<
+         "<w>Renounce Religion<magenta> will make your character leave your god" EOL
+         "(and usually anger said god)";
+       if (you.religion == GOD_TROG)
+       {
+         text << ", while <w>Berserk<magenta> temporarily increases your" EOL
+                 "damage output in melee fights";
+       }
+       text << ".";
     }
-    return formatted_string::parse_string(text, false);
+    return formatted_string::parse_string(text.str(), false);
 }

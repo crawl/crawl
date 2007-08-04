@@ -125,8 +125,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_SIF_MUNA_FORGET_SPELL, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Trog
-    { ABIL_TROG_BERSERK, ABIL_TROG_MIGHT, ABIL_NON_ABILITY,
-      ABIL_TROG_HASTE_SELF, ABIL_NON_ABILITY },
+    { ABIL_TROG_BERSERK, ABIL_TROG_REGENERATION, ABIL_NON_ABILITY,
+      ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
     { ABIL_NEMELEX_PEEK_DECK, ABIL_NEMELEX_DRAW_CARD,
       ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NON_ABILITY,
@@ -257,8 +257,8 @@ static const ability_def Ability_List[] =
     // Trog
     { ABIL_TROG_BURN_BOOKS, "Burn Books", 0, 0, 10, 0, ABFLAG_NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
-    { ABIL_TROG_MIGHT, "Might", 0, 0, 200, 1, ABFLAG_NONE },
-    { ABIL_TROG_HASTE_SELF, "Haste Self", 0, 0, 250, 3, ABFLAG_NONE },
+    { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms", 0, 0, 100, 3, ABFLAG_NONE },
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
@@ -637,12 +637,12 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 30 - you.piety;       // starts at 0%
         break;
 
-    case ABIL_TROG_MIGHT:         // piety >= 50
+    case ABIL_TROG_REGENERATION:         // piety >= 50
         invoc = true;
         failure = 80 - you.piety;       // starts at 30%
         break;
 
-    case ABIL_TROG_HASTE_SELF:       // piety >= 100
+    case ABIL_TROG_BROTHERS_IN_ARMS:       // piety >= 100
         invoc = true;
         failure = 160 - you.piety;      // starts at 60%
         break;
@@ -1496,14 +1496,14 @@ static bool do_ability(const ability_def& abil)
         go_berserk(true);
         break;
 
-    case ABIL_TROG_MIGHT:
+    case ABIL_TROG_REGENERATION:
         // Trog abilities don't use or train invocations. 
-        potion_effect( POT_MIGHT, 150 );
+        cast_regen(you.piety/2);
         break;
 
-    case ABIL_TROG_HASTE_SELF:
+    case ABIL_TROG_BROTHERS_IN_ARMS:
         // Trog abilities don't use or train invocations. 
-        potion_effect( POT_SPEED, 150 );
+        summon_berserker();
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
@@ -1836,7 +1836,10 @@ static void add_talent(std::vector<talent>& vec, const ability_type ability,
 {
     const talent t = get_talent(ability, check_confused);
     if ( t.which != ABIL_NON_ABILITY )
+    {
         vec.push_back(t);
+        learned_something_new(TUT_NEW_ABILITY);
+    }
 }
 
 std::vector<talent> your_talents( bool check_confused )

@@ -322,22 +322,14 @@ static void place_monster_corpse(const monsters *monster)
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
-    if (you.hunger_state < HS_SATIATED && see_grid(monster->x, monster->y))
-        learned_something_new(TUT_MAKE_CHUNKS);
+    if (see_grid(monster->x, monster->y))
+        tutorial_dissection_reminder();
 }                               // end place_monster_corpse()
 
 static void tutorial_inspect_kill()
 {
     if (Options.tutorial_events[TUT_KILLED_MONSTER])
         learned_something_new(TUT_KILLED_MONSTER);
-    else if (Options.tutorial_left
-             && (you.religion == GOD_TROG
-                 || you.religion == GOD_OKAWARU
-                 || you.religion == GOD_MAKHLEB)
-             && !you.duration[DUR_PRAYER])
-    {
-        tutorial_prayer_reminder();
-    }
 }
 
 #ifdef DGL_MILESTONES
@@ -1591,7 +1583,8 @@ static void handle_behaviour(monsters *mon)
     // set friendly target, if they don't already have one
     if (isFriendly 
         && you.pet_target != MHITNOT
-        && (mon->foe == MHITNOT || mon->foe == MHITYOU))
+        && (mon->foe == MHITNOT || mon->foe == MHITYOU)
+        && !mon->has_ench(ENCH_BERSERK))
     {
         mon->foe = you.pet_target;
     }

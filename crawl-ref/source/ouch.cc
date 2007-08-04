@@ -903,7 +903,8 @@ void end_game( struct scorefile_entry &se )
     int i;
     bool dead = true;
 
-    if (se.death_type == KILLED_BY_LEAVING ||
+    if (se.death_type == KILLED_BY_LEAVING  ||
+        se.death_type == KILLED_BY_QUITTING ||
         se.death_type == KILLED_BY_WINNING)
     {
         dead = false;

@@ -153,6 +153,7 @@ void summon_animals(int pow);
  * *********************************************************************** */
 void summon_small_mammals(int pow);
 
+void summon_berserker();
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
