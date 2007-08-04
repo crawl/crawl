@@ -2789,7 +2789,7 @@ static bool initialise(void)
     you.unique_creatures.init(false);
     you.unique_items.init(UNIQ_NOT_EXISTS);
 
-    // initialize tag system before we try loading anything!
+    // initialise tag system before we try loading anything!
     tag_init();
 
     // set up the Lua interpreter for the dungeon builder.

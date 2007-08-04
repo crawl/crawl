@@ -1277,6 +1277,7 @@ std::string map_def::validate_map_def()
     if (!err.empty())
         return (err);
 
+    resolve();
     test_lua_validate(true);
     
     if (orient == MAP_FLOAT || is_minivault())

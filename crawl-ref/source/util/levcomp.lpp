@@ -169,6 +169,7 @@ NSPACE [^\ \t\r\n]
                         settext();
                         return STRING;
                     }
+<TOEOL>\r?\n        ;
 
 ^[ \t]*#.*          ;
 

@@ -5625,7 +5625,7 @@ static bool has_vault_in_radius(const coord_def &pos, int radius,
 static coord_def labyrinth_find_entry_point(const dgn_region &reg,
                                             const coord_def &end)
 {
-    const int min_distance = 25 * 25;
+    const int min_distance = 35 * 35;
     // Try many times.
     for (int i = 0; i < 2000; ++i)
     {
