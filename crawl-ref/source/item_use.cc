@@ -87,9 +87,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
         SAY(canned_msg(MSG_TOO_BERSERK));
         return false;
     }
-    if (!ignore_temporary_disability
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE 
-        && !can_equip( EQ_WEAPON ))
+    if (!can_equip( EQ_WEAPON, ignore_temporary_disability ))
     {
         SAY(mpr("You can't wield anything in your present form."));
         return false;
@@ -720,6 +718,137 @@ static int armour_equip_delay(const item_def &item)
     return (delay);
 }
 
+bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
+{
+    const object_class_type base_type = item.base_type;
+    if (base_type != OBJ_ARMOUR)
+    {
+        if (verbose)
+           mpr("You can't wear that.");
+
+        return (false);
+    }
+    
+    bool can_wear = true;
+    const int sub_type = item.sub_type;
+    const equipment_type slot = get_armour_slot(item);
+    
+    if (sub_type == ARM_NAGA_BARDING)
+        can_wear = (you.species == SP_NAGA);
+
+    if (sub_type == ARM_CENTAUR_BARDING)
+        can_wear = (you.species == SP_CENTAUR);
+
+    if (!can_wear)
+    {
+        if (verbose)
+            mpr("You can't wear that!");
+        return (false);
+    }
+
+    if (sub_type == ARM_BOOTS)
+    {
+        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+        {
+            if (verbose)
+                mpr("You can't wear that!");
+            return (false);
+        }
+
+        if (!ignore_temporary && player_is_swimming()
+            && you.species == SP_MERFOLK)
+        {
+            if (verbose)
+               mpr("You don't currently have feet!");
+
+            return (false);
+        }
+    }
+
+    if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
+        && (ignore_temporary || !player_is_shapechanged()))
+    {
+        // it fits
+        return (true);
+    }
+    else if (you.species == SP_CENTAUR
+             && sub_type == ARM_CENTAUR_BARDING
+             && (ignore_temporary || !player_is_shapechanged()))
+    {
+        // it fits
+        return (true);
+    }
+    else if (sub_type == ARM_HELMET
+             && (get_helmet_type(item) == THELM_CAP
+                 || get_helmet_type(item) == THELM_WIZARD_HAT))
+    {
+        // caps & wiz hats always fit
+        return (true);
+    }
+    else if (!can_equip( slot, ignore_temporary ))
+    {
+        if (verbose)
+           mpr("You can't wear that in your present form.");
+
+        return (false);
+    }
+
+    // Cannot swim in heavy armour
+    if (!ignore_temporary
+        && player_is_swimming()
+        && slot == EQ_BODY_ARMOUR
+        && !is_light_armour( item ))
+    {
+        if (verbose)
+           mpr("You can't swim in that!");
+
+        return (false);
+    }
+
+    // Giant races
+    if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
+        || player_genus(GENPC_DRACONIAN))
+    {
+        if ((sub_type >= ARM_LEATHER_ARMOUR
+                && sub_type <= ARM_PLATE_MAIL)
+            || (sub_type >= ARM_GLOVES
+                && sub_type <= ARM_BUCKLER)
+            || sub_type == ARM_CRYSTAL_PLATE_MAIL
+            || (sub_type == ARM_HELMET
+                && (get_helmet_type(item) == THELM_HELM
+                    || get_helmet_type(item) == THELM_HELMET)))
+        {
+            if (verbose)
+               mpr("This armour doesn't fit on your body.");
+
+            return (false);
+        }
+    }
+
+    // Tiny races
+    if (you.species == SP_SPRIGGAN)
+    {
+        if ((sub_type >= ARM_LEATHER_ARMOUR
+                && sub_type <= ARM_PLATE_MAIL)
+            || sub_type == ARM_GLOVES
+            || sub_type == ARM_BOOTS
+            || sub_type == ARM_SHIELD
+            || sub_type == ARM_LARGE_SHIELD
+            || sub_type == ARM_CRYSTAL_PLATE_MAIL
+            || (sub_type == ARM_HELMET
+                && (get_helmet_type(item) == THELM_HELM
+                    || get_helmet_type(item) == THELM_HELMET)))
+        {
+            if (verbose)
+               mpr("This armour doesn't fit on your body.");
+
+            return (false);
+        }
+    }
+
+    return (true);
+}
+
 bool do_wear_armour( int item, bool quiet )
 {
     if (!is_valid_item( you.inv[item] ))
@@ -730,16 +859,9 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    const object_class_type base_type = you.inv[item].base_type;
-    if (base_type != OBJ_ARMOUR)
-    {
-        if (!quiet)
-           mpr("You can't wear that.");
-
+    if (!can_wear_armour(you.inv[item], !quiet, false))
         return (false);
-    }
-
-    const int sub_type  = you.inv[item].sub_type;
+    
     const item_def &invitem = you.inv[item];
     const equipment_type slot = get_armour_slot(invitem);
 
@@ -772,116 +894,7 @@ bool do_wear_armour( int item, bool quiet )
 
         return (false);
     }
-
-    bool can_wear = true;
-    if (sub_type == ARM_NAGA_BARDING)
-        can_wear = (you.species == SP_NAGA);
-
-    if (sub_type == ARM_CENTAUR_BARDING)
-        can_wear = (you.species == SP_CENTAUR);
-
-    if (!can_wear)
-    {
-        if (!quiet)
-            mpr("You can't wear that!");
-        return (false);
-    }
-
-    if (you.inv[item].sub_type == ARM_BOOTS)
-    {
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
-        {
-            if (!quiet)
-                mpr("You can't wear that!");
-            return (false);
-        }
-
-        if (player_is_swimming() && you.species == SP_MERFOLK)
-        {
-            if (!quiet)
-               mpr("You don't currently have feet!");
-
-            return (false);
-        }
-    }
-
-    if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
-        && !player_is_shapechanged())
-    {
-        // it fits
-    }
-    else if (you.species == SP_CENTAUR
-             && sub_type == ARM_CENTAUR_BARDING
-             && !player_is_shapechanged())
-    {
-        // it fits
-    }
-    else if (sub_type == ARM_HELMET
-             && (get_helmet_type(invitem) == THELM_CAP
-                 || get_helmet_type(invitem) == THELM_WIZARD_HAT))
-    {
-        // caps & wiz hats always fit
-    }
-    else if (!can_equip( slot ))
-    {
-        if (!quiet)
-           mpr("You can't wear that in your present form.");
-
-        return (false);
-    }
-
-    // Cannot swim in heavy armour
-    if (player_is_swimming()
-        && slot == EQ_BODY_ARMOUR
-        && !is_light_armour( invitem ))
-    {
-        if (!quiet)
-           mpr("You can't swim in that!");
-
-        return (false);
-    }
-
-    // Giant races
-    if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
-        || player_genus(GENPC_DRACONIAN))
-    {
-        if ((sub_type >= ARM_LEATHER_ARMOUR
-                && sub_type <= ARM_PLATE_MAIL)
-            || (sub_type >= ARM_GLOVES
-                && sub_type <= ARM_BUCKLER)
-            || sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || (sub_type == ARM_HELMET
-                && (get_helmet_type(invitem) == THELM_HELM
-                    || get_helmet_type(invitem) == THELM_HELMET)))
-        {
-            if (!quiet)
-               mpr("This armour doesn't fit on your body.");
-
-            return (false);
-        }
-    }
-
-    // Tiny races
-    if (you.species == SP_SPRIGGAN)
-    {
-        if ((sub_type >= ARM_LEATHER_ARMOUR
-                && sub_type <= ARM_PLATE_MAIL)
-            || sub_type == ARM_GLOVES
-            || sub_type == ARM_BOOTS
-            || sub_type == ARM_SHIELD
-            || sub_type == ARM_LARGE_SHIELD
-            || sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || (sub_type == ARM_HELMET
-                && (get_helmet_type(invitem) == THELM_HELM
-                    || get_helmet_type(invitem) == THELM_HELMET)))
-        {
-            if (!quiet)
-               mpr("This armour doesn't fit on your body.");
-
-            return (false);
-        }
-    }
-
+    
     bool removedCloak = false;
     int  cloak = -1;
 
@@ -893,7 +906,8 @@ bool do_wear_armour( int item, bool quiet )
         {
             if ( !quiet )
                 mprf("%s is stuck to your body!",
-                     you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR).c_str());
+                     you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR)
+                                                       .c_str());
             return (false);
         }
         if (!item_cursed( you.inv[you.equip[EQ_CLOAK]] ))

@@ -32,7 +32,7 @@ void untransform(void);
 /* ***********************************************************************
  * called from: item_use
  * *********************************************************************** */
-bool can_equip(equipment_type use_which);
+bool can_equip(equipment_type use_which, bool ignore_temporary);
 size_type transform_size(int psize = PSIZE_BODY);
 
 // last updated 12may2000 {dlb}

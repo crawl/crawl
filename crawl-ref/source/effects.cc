@@ -1155,14 +1155,16 @@ bool acquirement(object_class_type class_wanted, int agent)
                 continue;
 
             const item_def &doodad(mitm[thing_created]);
-            if (doodad.base_type == OBJ_WEAPONS
-                && !can_wield(&doodad, false, true))
+            if ((doodad.base_type == OBJ_WEAPONS
+                 && !can_wield(&doodad, false, true))
+                || (doodad.base_type == OBJ_ARMOUR
+                    && !can_wear_armour(doodad, false, true)))
             {
                 destroy_item(thing_created);
                 thing_created = NON_ITEM;
                 continue;
             }
-                        
+
             // MT - Check: god-gifted weapons and armor shouldn't kill you.
             // Except Xom.
             if ((agent == GOD_TROG || agent == GOD_OKAWARU)

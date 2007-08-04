@@ -542,12 +542,12 @@ void untransform(void)
 
 // XXX: This whole system is a mess as it still relies on special
 // cases to handle a large number of things (see wear_armour()) -- bwr
-bool can_equip( equipment_type use_which )
+bool can_equip( equipment_type use_which, bool ignore_temporary )
 {
 
     // if more cases are added to this if must also change in
     // item_use for naga barding
-    if (!player_is_shapechanged())
+    if (ignore_temporary || !player_is_shapechanged())
         /* or a transformation which doesn't change overall shape */
     {
         if (use_which == EQ_BOOTS)
@@ -583,27 +583,30 @@ bool can_equip( equipment_type use_which )
     if (use_which == EQ_GLOVES && you.mutation[MUT_CLAWS] >= 3)
         return (false);
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    if (!ignore_temporary)
     {
-    case TRAN_NONE:
-    case TRAN_LICH:
-        return (true);
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_NONE:
+        case TRAN_LICH:
+            return (true);
 
-    case TRAN_BLADE_HANDS:
-        return (use_which != EQ_WEAPON
-                && use_which != EQ_GLOVES
-                && use_which != EQ_SHIELD);
+        case TRAN_BLADE_HANDS:
+            return (use_which != EQ_WEAPON
+                    && use_which != EQ_GLOVES
+                    && use_which != EQ_SHIELD);
 
-    case TRAN_STATUE:
-        return (use_which == EQ_WEAPON 
-                || use_which == EQ_CLOAK 
-                || use_which == EQ_HELMET);
+        case TRAN_STATUE:
+            return (use_which == EQ_WEAPON 
+                    || use_which == EQ_CLOAK 
+                    || use_which == EQ_HELMET);
 
-    case TRAN_ICE_BEAST:
-        return (use_which == EQ_CLOAK);
+        case TRAN_ICE_BEAST:
+            return (use_which == EQ_CLOAK);
 
-    default:
-        return (false);
+        default:
+            return (false);
+        }
     }
 
     return (true);

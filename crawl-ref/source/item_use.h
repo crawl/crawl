@@ -94,6 +94,8 @@ void throw_anything(void);
  * *********************************************************************** */
 void wear_armour( void );
 
+bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
+
 // last updated 10Sept2001 {bwr}
 /* ***********************************************************************
  * called from: acr
