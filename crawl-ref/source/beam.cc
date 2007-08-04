@@ -106,7 +106,7 @@ static bool beam_is_blockable( bolt &pbolt )
 }
 
 // Kludge to suppress multiple redundant messages for a single beam.
-static void beam_mpr(int channel, const char *s, ...)
+static void beam_mpr(msg_channel_type channel, const char *s, ...)
 {
     va_list args;
     va_start(args, s);

@@ -1625,7 +1625,7 @@ static int crawl_mpr(lua_State *ls)
     if (ch < 0 || ch >= NUM_MESSAGE_CHANNELS)
         ch = MSGCH_PLAIN;
 
-    mpr(message, ch);
+    mpr(message, static_cast<msg_channel_type>(ch));
     return (0);
 }
 

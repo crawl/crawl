@@ -1879,7 +1879,7 @@ static void handle_behaviour(monsters *mon)
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. -- bwr
 bool simple_monster_message(const monsters *monster, const char *event,
-                            int channel, int param,
+                            msg_channel_type channel, int param,
                             description_level_type descrip)
 {
 

@@ -45,7 +45,7 @@ int Message_Line = 0;                // line of next (previous?) message
 int New_Message_Count = 0;
 
 static bool suppress_messages = false;
-static void base_mpr(const char *inf, int channel, int param);
+static void base_mpr(const char *inf, msg_channel_type channel, int param);
 
 namespace msg
 {
@@ -145,7 +145,7 @@ no_messages::~no_messages()
     suppress_messages = msuppressed;
 }
 
-static char god_message_altar_colour( char god )
+static char god_message_altar_colour( god_type god )
 {
     int  rnd;
 
@@ -196,18 +196,23 @@ static char god_message_altar_colour( char god )
     case GOD_SIF_MUNA:
         return (BLUE);
 
+    case GOD_LUGONU:
+        return (LIGHTRED);
+
     case GOD_NO_GOD:
-    default:
-        return(YELLOW);
+    case NUM_GODS:
+    case GOD_RANDOM:
+        return (YELLOW);
     }
+    return (YELLOW);            // for stupid compilers
 }
 
 #ifdef USE_COLOUR_MESSAGES
 
 // returns a colour or MSGCOL_MUTED
-int channel_to_colour( int channel, int param )
+int channel_to_colour( msg_channel_type channel, int param )
 {
-    char        ret;
+    char ret;
 
     switch (Options.channels[ channel ])
     {
@@ -230,7 +235,7 @@ int channel_to_colour( int channel, int param )
         case MSGCH_PRAY:
             ret = (Options.channels[ channel ] == MSGCOL_DEFAULT)
                 ? god_colour( static_cast<god_type>(param) )
-                : god_message_altar_colour( param );
+                : god_message_altar_colour( static_cast<god_type>(param) );
             break;
 
         case MSGCH_DURATION:
@@ -328,14 +333,14 @@ int channel_to_colour( int channel, int param )
 
 #else // don't use colour messages
 
-int channel_to_colour( int channel, int param )
+int channel_to_colour( msg_channel_type channel, int param )
 {
     return (LIGHTGREY);
 }
 
 #endif
 
-static void do_message_print( int channel, int param, 
+static void do_message_print( msg_channel_type channel, int param, 
                               const char *format, va_list argp )
 {
     char buff[200];
@@ -345,7 +350,7 @@ static void do_message_print( int channel, int param,
     mpr(buff, channel, param);
 }
 
-void mprf( int channel, int param, const char *format, ... )
+void mprf( msg_channel_type channel, int param, const char *format, ... )
 {
     va_list  argp;
     va_start( argp, format );
@@ -353,7 +358,7 @@ void mprf( int channel, int param, const char *format, ... )
     va_end( argp );
 }    
 
-void mprf( int channel, const char *format, ... )
+void mprf( msg_channel_type channel, const char *format, ... )
 {
     va_list  argp;
     va_start( argp, format );
@@ -370,7 +375,7 @@ void mprf( const char *format, ... )
     va_end( argp );
 }
 
-void mpr(const char *inf, int channel, int param)
+void mpr(const char *inf, msg_channel_type channel, int param)
 {
     if (!crawl_state.io_inited)
     {
@@ -420,7 +425,8 @@ void mpr(const char *inf, int channel, int param)
 
 // checks whether a given message contains patterns relevant for
 // notes, stop_running or sounds and handles these cases
-static void mpr_check_patterns(const std::string& message, int channel,
+static void mpr_check_patterns(const std::string& message,
+                               msg_channel_type channel,
                                int param)
 {
     for (unsigned i = 0; i < Options.note_messages.size(); ++i)
@@ -466,7 +472,7 @@ static void mpr_check_patterns(const std::string& message, int channel,
 
 // adds a given message to the message history
 static void mpr_store_messages(const std::string& message,
-                               int channel, int param)
+                               msg_channel_type channel, int param)
 {
     const int num_lines = crawl_view.msgsz.y;
 
@@ -501,7 +507,8 @@ static bool need_prefix = false;
 // Does the work common to base_mpr and formatted_mpr.
 // Returns the default colour of the message, or MSGCOL_MUTED if
 // the message should be suppressed.
-static int prepare_message(const std::string& imsg, int channel, int param)
+static int prepare_message(const std::string& imsg, msg_channel_type channel,
+                           int param)
 {
     if (suppress_messages)
         return MSGCOL_MUTED;    
@@ -533,7 +540,7 @@ static int prepare_message(const std::string& imsg, int channel, int param)
     return colour;
 }
 
-static void base_mpr(const char *inf, int channel, int param)
+static void base_mpr(const char *inf, msg_channel_type channel, int param)
 {
     const std::string imsg = inf;
     const int colour = prepare_message( imsg, channel, param );
@@ -587,9 +594,8 @@ static void mpr_formatted_output(formatted_string fs, int colour)
 // Line wrapping is not available here!
 // Note that the colour will be first set to the appropriate channel
 // colour before displaying the formatted_string.
-// XXX This code just reproduces base_mpr(). There must be a better
-// way to do this.
-void formatted_mpr(const formatted_string& fs, int channel, int param)
+void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
+                   int param)
 {
     const std::string imsg = fs.tostring();
     const int colour = prepare_message(imsg, channel, param);
@@ -603,7 +609,8 @@ void formatted_mpr(const formatted_string& fs, int channel, int param)
 // output given string as formatted message, but check patterns
 // for string stripped of tags and store original tagged string
 // for message history
-void formatted_message_history(const std::string &st, int channel, int param)
+void formatted_message_history(const std::string &st, msg_channel_type channel,
+                               int param)
 {
     if (suppress_messages)
         return;
@@ -678,7 +685,7 @@ void more(void)
     mesclr(true);
 }                               // end more()
 
-static bool is_channel_dumpworthy(int channel)
+static bool is_channel_dumpworthy(msg_channel_type channel)
 {
     return (channel != MSGCH_EQUIPMENT
             && channel != MSGCH_DIAGNOSTICS

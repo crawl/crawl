@@ -92,7 +92,8 @@ bool random_near_space( int ox, int oy, int &tx, int &ty,
  *              spells2 - spells4
  * *********************************************************************** */
 bool simple_monster_message(const monsters *monster, const char *event,
-                            int channel = MSGCH_PLAIN, int param = 0,
+                            msg_channel_type channel = MSGCH_PLAIN,
+                            int param = 0,
                             description_level_type descrip = DESC_CAP_THE);
 
 /* ***********************************************************************

@@ -21,7 +21,7 @@
 #include "externs.h"
 
 struct message_item {
-    int                 channel;        // message channel
+    msg_channel_type    channel;        // message channel
     int                 param;          // param for channel (god, enchantment)
     std::string         text;           // text of message
 };
@@ -55,19 +55,20 @@ void more(void);
  *              spells1 - spells2 - spells3 - spells4 - stuff - transfor -
  *              view
  * *********************************************************************** */
-void mpr(const char *inf, int channel = MSGCH_PLAIN, int param = 0);
+void mpr(const char *inf, msg_channel_type channel = MSGCH_PLAIN, int param=0);
 
 class formatted_string;
 
-void formatted_mpr(const formatted_string& fs, int channel = MSGCH_PLAIN,
-                   int param = 0);
+void formatted_mpr(const formatted_string& fs,
+                   msg_channel_type channel = MSGCH_PLAIN, int param = 0);
                    
 void formatted_message_history(const std::string &st,
-                               int channel = MSGCH_PLAIN, int param = 0);
+                               msg_channel_type channel = MSGCH_PLAIN,
+                               int param = 0);
                                
 // 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf( int channel, int param, const char *format, ... );
-void mprf( int channel, const char *format, ... );
+void mprf( msg_channel_type channel, int param, const char *format, ... );
+void mprf( msg_channel_type channel, const char *format, ... );
 void mprf( const char *format, ... );
 
 class no_messages
@@ -91,7 +92,7 @@ void set_colour(char set_message_colour);
  * *********************************************************************** */
 std::string get_last_messages(int mcount);
 
-int channel_to_colour( int channel, int param = 0 );
+int channel_to_colour( msg_channel_type channel, int param = 0 );
 
 namespace msg
 {
