@@ -6850,7 +6850,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             return (pos);
 
         // Couldn't find a good place, warn, and use old behaviour.
+#ifdef DEBUG_DIAGNOSTICS
         mpr("Oops, couldn't find labyrinth entry marker.", MSGCH_DIAGNOSTICS);
+#endif
         stair_to_find = DNGN_FLOOR;
     }
     
