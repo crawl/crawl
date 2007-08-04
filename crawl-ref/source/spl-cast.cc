@@ -3029,7 +3029,7 @@ static void miscast_ice(int severity, const char* cause)
             mpr("You feel extremely cold.");
             break;
         case 1:
-            mpr("You are covered in a thin layer of ice");
+            mpr("You are covered in a thin layer of ice.");
             expose_player_to_element(BEAM_COLD, 2);
 
             if (player_res_cold() < 0)
