@@ -1516,25 +1516,25 @@ bool vampire_consume_corpse(int mons_type, int mass,
 
         switch (mons_type)
         {
-        case MONS_HUMAN:
-            food_value = mass + random2avg(you.experience_level * 10, 2);
-            mpr( "This warm blood tastes really delicious!" );
-            inc_hp(1 + random2(1 + you.experience_level), false);
-            break;
+           case MONS_HUMAN:
+               food_value = mass + random2avg(you.experience_level * 10, 2);
+               mpr( "This warm blood tastes really delicious!" );
+               inc_hp(1 + random2(1 + you.experience_level), false);
+               break;
 
-        case MONS_ELF:
-            food_value = mass + random2avg(you.experience_level * 10, 2);
-            mpr( "This warm blood tastes magically delicious!" );
-            inc_mp(1 + random2(3), false);
-            break;
+           case MONS_ELF:
+               food_value = mass + random2avg(you.experience_level * 10, 2);
+               mpr( "This warm blood tastes magically delicious!" );
+               inc_mp(1 + random2(3), false);
+               break;
 
-        default:
+           default:
                switch (chunk_type)
                {
                   case CE_CLEAN:
-            food_value = mass;
-            mpr( "This warm blood tastes delicious!" );
-            break;
+                      food_value = mass;
+                      mpr( "This warm blood tastes delicious!" );
+                      break;
                   case CE_CONTAMINATED:
                       food_value = mass / (random2(3) + 1);
                       mpr( "Somehow that blood was not very filling!" );

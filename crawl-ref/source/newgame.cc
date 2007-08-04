@@ -3483,7 +3483,7 @@ bool give_items_skills()
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
             if (you.species != SP_VAMPIRE)
-            you.skills[SK_SHIELDS] = 2;
+                you.skills[SK_SHIELDS] = 2;
             you.skills[SK_RANGED_COMBAT] = 2;
             you.skills[((coinflip() || you.species == SP_VAMPIRE)?
                 SK_STABBING : SK_SHIELDS)]++;

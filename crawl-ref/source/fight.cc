@@ -863,6 +863,47 @@ bool melee_attack::player_apply_aux_unarmed()
                     
         if (mons_holiness(def) == MH_HOLY)
             did_god_conduct(DID_KILL_ANGEL, 1);
+
+        // normal vampiric biting attack
+        if (damage_brand == SPWPN_VAMPIRICISM && mons_holiness(def) == MH_NATURAL)
+        {
+            const int chunk_type = mons_corpse_effect( def->type );
+
+            // don't drink poisonous or mutagenic blood
+            if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
+            {
+                mprf( "You draw %s's blood!",
+                      def->name(DESC_NOCAP_THE, true).c_str() );
+                      
+                if (you.hp < you.hp_max)
+                {
+                    int heal = 1 + random2(damage_done);
+                    if (heal > you.experience_level)
+                        heal = you.experience_level;
+                
+                    if (chunk_type == CE_CLEAN)
+                        heal +=  1 + random2(damage_done);
+
+                    inc_hp(heal, false);
+                    mpr("You feel better.");
+                }
+
+                if (you.hunger_state < HS_ENGORGED) // always the case
+                {
+                    int food_value = 0;
+                    if (chunk_type == CE_CLEAN)
+                        food_value = 45 + random2avg(59, 2);
+                    else if (chunk_type == CE_CONTAMINATED)
+                        food_value = 22 + random2avg(29, 2);
+                        
+                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+                        food_value -= 5 + random2(16);
+                        
+                    lessen_hunger(food_value, true);
+                }
+                did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
+            }
+        }
     }
     else // no damage was done
     {
@@ -1040,7 +1081,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.duration[DUR_MIGHT] > 1)
         damage += 1 + random2(10);
     
-    if (you.hunger_state == HS_STARVING)
+    if (you.hunger_state == HS_STARVING && you.species != SP_VAMPIRE)
         damage -= random2(5);
 
     return (damage);
@@ -1214,7 +1255,9 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     // All weak hits look the same, except for when the player 
     // has a non-weapon in hand.  -- bwr
-    if (damage < HIT_WEAK)
+    // Exception: vampire bats only bite to allow for drawing blood
+    if (damage < HIT_WEAK && (you.species != SP_VAMPIRE
+        || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT))
     {
         if (weap_type != WPN_UNKNOWN)
             attack_verb = "hit";
@@ -1386,69 +1429,6 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         && is_demonic( *weapon ))
     {
         did_god_conduct(DID_UNHOLY, 1);
-    }
-    
-    if (you.species == SP_VAMPIRE && damage_brand == SPWPN_VAMPIRICISM)
-    {
-        if (defender->holiness() == MH_NATURAL
-            && damage_done > 0 && !one_chance_in(5))
-        {
-            const int chunk_type = mons_corpse_effect( def->type );
-
-            // don't drink poisonous or mutagenic blood
-            if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
-            {
-                mprf( "You draw %s's blood!",
-                      def->name(DESC_NOCAP_THE, true).c_str() );
-                      
-                if (you.hp < you.hp_max)
-                {
-                    int heal = 1 + random2(damage_done);
-                    if (heal > you.experience_level)
-                        heal = you.experience_level;
-                
-                    if (chunk_type == CE_CLEAN)
-                        heal +=  1 + random2(damage_done);
-
-                    inc_hp(heal, false);
-                    mpr("You feel better.");
-                }
-
-                if (you.hunger_state < HS_ENGORGED) // always the case
-                {
-                    int food_value = 0;
-                    if (chunk_type == CE_CLEAN)
-                        food_value = 45 + random2avg(59, 2);
-                    else if (chunk_type == CE_CONTAMINATED)
-                        food_value = 22 + random2avg(29, 2);
-                        
-                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-                        food_value -= 5 + random2(16);
-                        
-                    lessen_hunger(food_value, true);
-                }
-		        did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
-            }
-        }
-    }
-    else if (mondied && damage_brand == SPWPN_VAMPIRICISM)
-    {
-        if (mons_holiness(def) == MH_NATURAL
-            && damage_done > 0 && you.hp < you.hp_max
-            && !one_chance_in(5))
-        {
-            mpr("You feel better.");
-            
-            // more than if not killed
-            int heal = 1 + random2(damage_done);
-                
-            inc_hp(heal, false);
-            
-            if (you.hunger_state != HS_ENGORGED)
-                lessen_hunger(30 + random2avg(59, 2), true);
-            
-            did_god_conduct(DID_NECROMANCY, 2);
-        }
     }
 
     if (mondied)
@@ -1759,28 +1739,65 @@ bool melee_attack::apply_damage_brand()
         {
             break;
         }
-        
-        // We only get here if we've done base damage, so no
-        // worries on that score.
 
-        if (attacker->atype() == ACT_PLAYER)
-            mpr("You feel better.");
-        else if (attacker_visible)
+        // vampire bat form
+        if (you.species == SP_VAMPIRE && attacker->atype() == ACT_PLAYER
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
-            if (defender->atype() == ACT_PLAYER)
-                mprf("%s draws strength from your injuries!",
-                     attacker->name(DESC_CAP_THE).c_str());
-            else
-                mprf("%s is healed.",
-                     attacker->name(DESC_CAP_THE).c_str());
+            const int chunk_type = mons_corpse_effect( def->type );
+
+            // don't drink poisonous or mutagenic blood
+            if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
+            {
+                mprf( "You draw %s's blood!",
+                      def->name(DESC_NOCAP_THE, true).c_str() );
+
+                if (you.hp < you.hp_max)
+                {
+                    int heal = 1 + random2(damage_done);
+                    if (heal > you.experience_level)
+                        heal = you.experience_level;
+
+                    if (chunk_type == CE_CLEAN)
+                        heal +=  1 + random2(damage_done);
+
+                    inc_hp(heal, false);
+                    mpr("You feel better.");
+                }
+
+                if (you.hunger_state < HS_ENGORGED) // always the case
+                {
+                    int food_value = 0;
+                    if (chunk_type == CE_CLEAN)
+                        food_value = 30 + random2avg(59, 2);
+                    else if (chunk_type == CE_CONTAMINATED)
+                        food_value = 15 + random2avg(29, 2);
+
+                    lessen_hunger(food_value, true);
+                }
+                did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
+            }
         }
+        else { // handle weapon effects
+            // We only get here if we've done base damage, so no
+            // worries on that score.
 
-        {
+            if (attacker->atype() == ACT_PLAYER)
+                mpr("You feel better.");
+            else if (attacker_visible)
+            {
+                if (defender->atype() == ACT_PLAYER)
+                    mprf("%s draws strength from your injuries!",
+                         attacker->name(DESC_CAP_THE).c_str());
+                else
+                    mprf("%s is healed.",
+                        attacker->name(DESC_CAP_THE).c_str());
+            }
+
             int hp_boost = 0;
-            
+
             // thus is probably more valuable on larger weapons?
-            if (weapon
-                && is_fixed_artefact( *weapon ) 
+            if (weapon && is_fixed_artefact( *weapon )
                 && weapon->special == SPWPN_VAMPIRES_TOOTH)
             {
                 hp_boost = damage_done;
@@ -1791,12 +1808,12 @@ bool melee_attack::apply_damage_brand()
             }
 
             attacker->heal(hp_boost);
-        }
 
-        if (attacker->hunger_level() != HS_ENGORGED)
-            attacker->make_hungry(-random2avg(59, 2));
-        
-        attacker->god_conduct( DID_NECROMANCY, 2 );
+            if (attacker->hunger_level() != HS_ENGORGED)
+                attacker->make_hungry(-random2avg(59, 2));
+
+            attacker->god_conduct( DID_NECROMANCY, 2 );
+        }
         break;
 
     case SPWPN_DISRUPTION:

@@ -1242,7 +1242,7 @@ void process_command( command_type cmd )
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
-            break;
+           break;
         }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
@@ -1253,7 +1253,7 @@ void process_command( command_type cmd )
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
-            break;
+           break;
         }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
@@ -1277,7 +1277,7 @@ void process_command( command_type cmd )
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
-            break;
+           break;
         }
         remove_ring();
         break;
@@ -1286,7 +1286,7 @@ void process_command( command_type cmd )
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
-            break;
+           break;
         }
         puton_ring(-1, false);
         break;
@@ -1375,7 +1375,7 @@ void process_command( command_type cmd )
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
-            break;
+           break;
         }
         /* randart wpns */
         if (scan_randarts(RAP_PREVENT_SPELLCASTING))
@@ -1766,9 +1766,9 @@ static void decrement_durations()
     }
 
     // Vampire bat transformations are permanent (until ended.)
-    if ( you.species != SP_VAMPIRE ||
-         you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT ||
-         you.duration[DUR_TRANSFORMATION] < 100 )
+    if ((you.species != SP_VAMPIRE ||
+         you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+         && you.duration[DUR_TRANSFORMATION] < 100 )
     {
         if ( decrement_a_duration(DUR_TRANSFORMATION,
                                   NULL, 10, random2(3),

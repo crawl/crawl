@@ -218,7 +218,10 @@ static void sdump_transform(dump_params &par)
             text += "You are in spider-form.";
             break;
         case TRAN_BAT:
-            text += "You are in bat-form.";
+            text += "You are in ";
+            if (you.species == SP_VAMPIRE)
+                text += "vampire ";
+            text += "bat-form.";
             break;
         case TRAN_BLADE_HANDS:
             text += "Your hands are blades.";

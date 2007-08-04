@@ -1471,7 +1471,10 @@ std::string status_mut_abilities()
           text += "\nYou are in spider-form.";
           break;
      case TRAN_BAT:
-          text += "\nYou are in bat-form.";
+          text += "\nYou are in ";
+          if (you.species == SP_VAMPIRE)
+              text += "vampire ";
+          text += "bat-form.";
           break;
      case TRAN_BLADE_HANDS:
           text += "\nYou have blades for hands.";

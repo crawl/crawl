@@ -2530,7 +2530,7 @@ void level_change(bool skip_ability_increase)
             case SP_VAMPIRE:
                 if (you.experience_level == 3)
                 {
-                    mpr( "You can now transform into a bat.",
+                    mpr( "You can now transform into a vampire bat.",
                           MSGCH_INTRINSIC_GAIN );
                 }
                 else if (you.experience_level == 13 || you.experience_level == 26)
@@ -3076,7 +3076,8 @@ void display_char_status()
         mpr( "You are in spider-form." );
         break;
     case TRAN_BAT:
-        mpr( "You are in bat-form." );
+        mprf( "You are in %sbat-form.",
+              you.species == SP_VAMPIRE ? "vampire " : "" );
         break;
     case TRAN_BLADE_HANDS:
         mpr( "You have blades for hands." );
@@ -5044,7 +5045,7 @@ int player::damage_brand(int)
             break;
 
         case TRAN_BAT:
-            if (you.species == SP_VAMPIRE && one_chance_in(3))
+            if (you.species == SP_VAMPIRE && one_chance_in(5))
             {
                 ret = SPWPN_VAMPIRICISM;
             } // else fall through

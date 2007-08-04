@@ -62,9 +62,9 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (you.species == SP_VAMPIRE)
         {
            if (!one_chance_in(3))
-              you.rotting = 0;
+               you.rotting = 0;
            if (!one_chance_in(3))
-              you.duration[DUR_CONF] = 0;
+               you.duration[DUR_CONF] = 0;
         }
         else
         {
