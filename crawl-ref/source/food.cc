@@ -334,6 +334,14 @@ bool butchery(void)
             }
             else
             {
+                if (you.duration[DUR_PRAYER] && rotten
+                    && god_likes_butchery(you.religion) )
+                {
+                    simple_god_message(" refuses to accept that mouldy sacrifice!",
+                                       you.religion);
+//                    simple_god_message(" demands fresh blood!", you.religion);
+                }
+                
                 // If we didn't switch weapons, we get in one turn of butchery;
                 // otherwise the work has to happen in the delay.
                 if (!wpn_switch && !removed_gloves)

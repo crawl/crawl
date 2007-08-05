@@ -700,7 +700,7 @@ void tutorial_finished()
 // occasionally remind religious characters of sacrifices
 void tutorial_dissection_reminder()
 {
-    if (Options.tut_just_triggered)
+    if (Options.tut_just_triggered || !Options.tutorial_left)
         return;
 
     // when hungry, give appropriate message or at least don't suggest sacrifice
