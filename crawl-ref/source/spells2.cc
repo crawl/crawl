@@ -1470,8 +1470,11 @@ void summon_berserker()
     }
 
     int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos, MHITYOU, 250 );
-    menv[mons].go_berserk(false);
-}                               // end summon_ice_beast_etc()
+    
+    if (mons != -1)
+        menv[mons].go_berserk(false);
+        
+}   // end summon_berserker()
 
 bool summon_swarm( int pow, bool unfriendly, bool god_gift )
 {
