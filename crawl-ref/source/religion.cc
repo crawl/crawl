@@ -1487,7 +1487,7 @@ bool ely_destroy_weapons()
     if (you.religion != GOD_ELYVILON)
         return false;
         
-    bool success;
+    bool success = false;
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
