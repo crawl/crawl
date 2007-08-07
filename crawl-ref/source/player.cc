@@ -5352,7 +5352,9 @@ flight_type player::flies() const
     if ( !is_levitating() )
         return (FL_NONE);
     else
-        return (you.duration[DUR_CONTROLLED_FLIGHT] ? FL_FLY : FL_LEVITATE);
+        return (you.duration[DUR_CONTROLLED_FLIGHT]
+                || wearing_amulet(AMU_CONTROLLED_FLIGHT)
+                ? FL_FLY : FL_LEVITATE);
 }
 
 bool player::light_flight() const

@@ -742,19 +742,29 @@ void pray()
     }
 
     const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
-    if (you.religion != GOD_NO_GOD && altar_god == you.religion)
+    if (altar_god != GOD_NO_GOD)
     {
-        altar_prayer();
-    }
-    else if (altar_god != GOD_NO_GOD)
-    {
-        if (you.species == SP_DEMIGOD)
+        if (player_is_levitating()
+            && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
         {
-            mpr("Sorry, a being of your status cannot worship here.");
+            mpr("You are floating high above the altar.");
             return;
         }
-        god_pitch( grid_altar_god(grd[you.x_pos][you.y_pos]) );
-        return;
+    
+        if (you.religion != GOD_NO_GOD && altar_god == you.religion)
+        {
+            altar_prayer();
+        }
+        else if (altar_god != GOD_NO_GOD)
+        {
+            if (you.species == SP_DEMIGOD)
+            {
+                mpr("Sorry, a being of your status cannot worship here.");
+                return;
+            }
+            god_pitch( grid_altar_god(grd[you.x_pos][you.y_pos]) );
+            return;
+        }
     }
 
     if (you.religion == GOD_NO_GOD)
