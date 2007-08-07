@@ -3613,7 +3613,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
         add_ench( mon_enchant(ENCH_ABJ) );
-        monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
+ 
+	// just for flavour
+	if (this->flags & MF_GOD_GIFT && this->has_ench(ENCH_BERSERK))
+	    simple_monster_message(this, " is no longer berserk.");
+
+	monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
         break;
 
     default:
@@ -3801,7 +3806,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             simple_monster_message(this, " is no longer berserk.");
             
             // this assumes that god gifts outside Trog's are rarely berserked
-            if (this->flags & MF_GOD_GIFT && this->flags & MF_HARD_RESET)
+            if (this->flags & MF_GOD_GIFT)
                 monster_die( this, KILL_RESET, 0 );
                 
             del_ench(ENCH_HASTE);
