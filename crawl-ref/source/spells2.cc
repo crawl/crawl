@@ -1482,7 +1482,7 @@ void summon_berserker()
 
         // Let Trog gifts berserk longer, and set abj timeout ==
         // berserk timeout.
-        berserk.duration *= 2;
+        berserk.duration = berserk.duration * 3 / 2;
         berserk.maxduration = berserk.duration;
         abj.duration = abj.maxduration = berserk.duration;
         summon->update_ench(berserk);

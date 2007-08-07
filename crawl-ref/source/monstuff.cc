@@ -1897,42 +1897,55 @@ static void handle_behaviour(monsters *mon)
     }
 }                               // end handle_behaviour()
 
+static bool mons_check_set_foe(monsters *mon, int x, int y,
+                               bool friendly)
+{
+    if (!in_bounds(x, y))
+        return (false);
+    
+    if (!friendly && x == you.x_pos && y == you.y_pos
+        && mons_player_visible(mon))
+    {
+        mon->foe = MHITYOU;
+        return (true);
+    }
+
+    if (mgrd[x][y] != NON_MONSTER)
+    {
+        monsters *foe = &menv[mgrd[x][y]];
+
+        if (foe != mon
+            && mons_monster_visible(mon, foe)
+            && mons_friendly(foe) != friendly)
+        {
+            mon->foe = mgrd[x][y];
+            return (true);
+        }
+    }
+    return (false);
+}
+
 // choose nearest monster as a foe
 // (used for berserking monsters)
 void set_nearest_monster_foe(monsters *mon)
 {
-    bool friendly = mons_friendly(mon);
+    const bool friendly = mons_friendly(mon);
 
-    int mx = mon->x;
-    int my = mon->y;
+    const int mx = mon->x;
+    const int my = mon->y;
 
-    for (int k = 1; k <= 8; k++)
-       for (int x = mx - k; x <= mx + k; x++)
-          for (int y = my - k; y <= my + k; y++)
-   {
-             if (x != mx-k && x != mx+k && y != my-k && y != my+k)
-                 continue;
-                 
-             if (!friendly && x == you.x_pos && y == you.y_pos
-                 && mons_player_visible(mon))
-             {
-                 mon->foe = MHITYOU;
-                 return;
-             }
+    for (int k = 1; k <= LOS_RADIUS; k++)
+    {
+        for (int x = mx - k; x <= mx + k; ++x)
+            if (mons_check_set_foe(mon, x, my - k, friendly)
+                || mons_check_set_foe(mon, x, my + k, friendly))
+                return;
 
-             if (mgrd[x][y] != NON_MONSTER
-                 && !(x == mx && y == my))
-             {
-                 monsters *foe = &menv[mgrd[x][y]];
-
-                 if (mons_monster_visible(mon, foe)
-                     && mons_friendly(foe) != friendly)
-                 {
-                     mon->foe = mgrd[x][y];
-                     return;
-                 }
-             }
-   }
+        for (int y = my - k + 1; y < my + k; ++y)
+            if (mons_check_set_foe(mon, mx - k, y, friendly)
+                || mons_check_set_foe(mon, mx + k, y, friendly))
+                return;    
+    }
 }
 
 // note that this function *completely* blocks messaging for monsters
