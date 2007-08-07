@@ -2750,6 +2750,15 @@ bool monsters::eat_corpse(item_def &carrion, int near)
     return (true);
 }
 
+bool monsters::pickup_misc(item_def &item, int near)
+{
+    // Never pick up runes.
+    if (item.sub_type == MISC_RUNE_OF_ZOT)
+        return (false);
+    
+    return pickup(item, MSLOT_MISCELLANY, near);
+}
+
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Never pick up stuff when we're in battle.
@@ -2774,7 +2783,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     case OBJ_CORPSES:
         return eat_corpse(item, near);
     case OBJ_MISCELLANY:
-        return pickup(item, MSLOT_MISCELLANY, near);
+        return pickup_misc(item, near);
     case OBJ_GOLD:
         return pickup_gold(item, near);
     default:
