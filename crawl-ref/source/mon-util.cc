@@ -3799,6 +3799,11 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer berserk.");
+            
+            // this assumes that god gifts outside Trog's are rarely berserked
+            if (this->flags & MF_GOD_GIFT && this->flags & MF_HARD_RESET)
+                monster_die( this, KILL_RESET, 0 );
+                
             del_ench(ENCH_HASTE);
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));

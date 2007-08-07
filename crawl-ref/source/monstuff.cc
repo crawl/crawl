@@ -64,6 +64,7 @@
 static bool handle_special_ability(monsters *monster, bolt & beem);
 static bool handle_pickup(monsters *monster);
 static void handle_behaviour(monsters *monster);
+static void set_nearest_monster_foe(monsters *monster);
 static void mons_in_cloud(monsters *monster);
 static void monster_move(monsters *monster);
 static bool plant_spit(monsters *monster, bolt &pbolt);
@@ -1475,6 +1476,10 @@ void behaviour_event( monsters *mon, int event, int src,
         break;
 
     case ME_SCARE:
+        // Berserking monsters don't flee
+        if (mon->has_ench(ENCH_BERSERK))
+            break;
+
         mon->foe = src;
         mon->behaviour = BEH_FLEE;
         // assume monsters know where to run from, even
@@ -1581,12 +1586,29 @@ static void handle_behaviour(monsters *mon)
     }
 
     // set friendly target, if they don't already have one
+    // berserking allies ignore your commands
     if (isFriendly 
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->has_ench(ENCH_BERSERK))
     {
         mon->foe = you.pet_target;
+    }
+
+    // instead berserkers attack nearest monsters
+    if (mon->has_ench(ENCH_BERSERK)
+        && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
+    {
+        // intelligent monsters prefer to attack the player,
+        // even when berserking
+        if (!isFriendly && proxPlayer && mons_intel(mon->type) >= I_NORMAL)
+        {
+            mon->foe = MHITYOU;
+        }
+        else
+        {
+            set_nearest_monster_foe(mon);
+        }
     }
 
     // monsters do not attack themselves {dlb}
@@ -1603,7 +1625,8 @@ static void handle_behaviour(monsters *mon)
     // unfriendly monsters fighting other monsters will usually
     // target the player, if they're healthy
     if (!isFriendly && mon->foe != MHITYOU && mon->foe != MHITNOT
-        && proxPlayer && !one_chance_in(3) && isHealthy)
+        && proxPlayer && !(mon->has_ench(ENCH_BERSERK)) && isHealthy
+        && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
     }
@@ -1873,6 +1896,44 @@ static void handle_behaviour(monsters *mon)
         mon->foe = new_foe;
     }
 }                               // end handle_behaviour()
+
+// choose nearest monster as a foe
+// (used for berserking monsters)
+void set_nearest_monster_foe(monsters *mon)
+{
+    bool friendly = mons_friendly(mon);
+
+    int mx = mon->x;
+    int my = mon->y;
+
+    for (int k = 1; k <= 8; k++)
+       for (int x = mx - k; x <= mx + k; x++)
+          for (int y = my - k; y <= my + k; y++)
+   {
+             if (x != mx-k && x != mx+k && y != my-k && y != my+k)
+                 continue;
+                 
+             if (!friendly && x == you.x_pos && y == you.y_pos
+                 && mons_player_visible(mon))
+             {
+                 mon->foe = MHITYOU;
+                 return;
+             }
+
+             if (mgrd[x][y] != NON_MONSTER
+                 && !(x == mx && y == my))
+             {
+                 monsters *foe = &menv[mgrd[x][y]];
+
+                 if (mons_monster_visible(mon, foe)
+                     && mons_friendly(foe) != friendly)
+                 {
+                     mon->foe = mgrd[x][y];
+                     return;
+                 }
+             }
+   }
+}
 
 // note that this function *completely* blocks messaging for monsters
 // distant or invisible to the player ... look elsewhere for a function

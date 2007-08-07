@@ -91,7 +91,7 @@ const char *sacrifice[] =
     // Okawaru
     " & consumed in a burst of flame.",
     // Makhleb
-    " & consumed in a roaring column of flame.",
+    " flare% blood-red and disappear%.",
     // Sif Muna
     " glow% faintly for a moment, and & gone.",
     // Trog
@@ -730,6 +730,16 @@ void pray()
 
     // almost all prayers take time
     you.turn_is_over = true;
+
+    if (you.duration[DUR_PRAYER])
+    {
+        if ( yesno("Do you want to stop praying?", true, 'y') )
+        {
+             mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
+             you.duration[DUR_PRAYER] = 0;
+             return;
+        }
+    }
 
     const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
     if (you.religion != GOD_NO_GOD && altar_god == you.religion)
