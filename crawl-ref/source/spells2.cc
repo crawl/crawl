@@ -1422,58 +1422,72 @@ void summon_berserker()
     int pow = you.piety + random2(you.piety/4) - random2(you.piety/4);
     int numsc = std::min(2 + (random2(pow) / 4), 6);
 
-    int mon = MONS_TROLL;
+    monster_type mon = MONS_TROLL;
     
     if (pow <= 100)
-    { // bears
-      if (coinflip())
-         mon = MONS_BLACK_BEAR;
-      else
-         mon = MONS_GRIZZLY_BEAR;
+    {
+        // bears
+        if (coinflip())
+            mon = MONS_BLACK_BEAR;
+        else
+            mon = MONS_GRIZZLY_BEAR;
     }
     else if (pow <= 140)
     {
-      // ogres
-      if (one_chance_in(3))
-         mon = MONS_TWO_HEADED_OGRE;
-      else
-         mon = MONS_OGRE;
+        // ogres
+        if (one_chance_in(3))
+            mon = MONS_TWO_HEADED_OGRE;
+        else
+            mon = MONS_OGRE;
     }
     else if (pow <= 180)
     {
-      // trolls
-      switch(random2(8))
-      {
+        // trolls
+        switch(random2(8))
+        {
         case 0:
-          mon = MONS_DEEP_TROLL;
-          break;
+            mon = MONS_DEEP_TROLL;
+            break;
         case 1:
         case 2:
-          mon = MONS_IRON_TROLL;
-          break;
+            mon = MONS_IRON_TROLL;
+            break;
         case 3:
         case 4:
-          mon = MONS_ROCK_TROLL;
-          break;
+            mon = MONS_ROCK_TROLL;
+            break;
         default:
-          mon = MONS_TROLL;
-          break;
-      }
+            mon = MONS_TROLL;
+            break;
+        }
     }
     else
     {
-      // giants
-      if (coinflip())
-          mon = MONS_HILL_GIANT;
-      else
-          mon = MONS_STONE_GIANT;
+        // giants
+        if (coinflip())
+            mon = MONS_HILL_GIANT;
+        else
+            mon = MONS_STONE_GIANT;
     }
 
-    int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos, MHITYOU, 250 );
+    int mons = create_monster( mon, numsc, beha, you.x_pos, you.y_pos,
+                               MHITYOU, 250 );
     
     if (mons != -1)
-        menv[mons].go_berserk(false);
-        
+    {
+        monsters *summon = &menv[mons];
+        summon->go_berserk(false);
+        mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
+        mon_enchant abj = summon->get_ench(ENCH_ABJ);
+
+        // Let Trog gifts berserk longer, and set abj timeout ==
+        // berserk timeout.
+        berserk.duration *= 2;
+        berserk.maxduration = berserk.duration;
+        abj.duration = abj.maxduration = berserk.duration;
+        summon->update_ench(berserk);
+        summon->update_ench(abj);
+    }
 }   // end summon_berserker()
 
 bool summon_swarm( int pow, bool unfriendly, bool god_gift )

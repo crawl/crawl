@@ -3614,11 +3614,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_SHORT_LIVED:
         add_ench( mon_enchant(ENCH_ABJ) );
  
-	// just for flavour
-	if (this->flags & MF_GOD_GIFT && this->has_ench(ENCH_BERSERK))
-	    simple_monster_message(this, " is no longer berserk.");
+        // just for flavour
+        if (this->flags & MF_GOD_GIFT && this->has_ench(ENCH_BERSERK))
+            simple_monster_message(this, " is no longer berserk.");
 
-	monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
+        monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
         break;
 
     default:
@@ -3773,7 +3773,7 @@ bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
     // Decay degree so that higher degrees decay faster than lower
     // degrees, and a degree of 1 does not decay (it expires when the
     // duration runs out).
-    const int level = std::max(me.degree, 1);
+    const int level = me.degree;
     if (level <= 1)
         return (false);
 
@@ -3804,11 +3804,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " is no longer berserk.");
-            
-            // this assumes that god gifts outside Trog's are rarely berserked
-            if (this->flags & MF_GOD_GIFT)
-                monster_die( this, KILL_RESET, 0 );
-                
             del_ench(ENCH_HASTE);
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
