@@ -3391,59 +3391,6 @@ MAP
 ..............................
 ENDMAP
 
-##############################################################################
-# Being Mean Is Cool
-
-NAME: erik_entry_006_a
-TAGS: entry
-ORIENT: float
-CHANCE: 5
-ITEM: scroll of curse armour
-ITEM: scroll of teleportation
-MAP
-xxxxx
-xxexx
-xd{ex
-xxdxx
-xxxxx
-ENDMAP
-
-NAME: erik_entry_006_b
-TAGS: entry
-ORIENT: float
-CHANCE: 4
-ITEM: scroll of curse armour, scroll of random uselessness, scroll of identify
-ITEM: scroll of curse armour, scroll of fear, scroll of teleportation
-SHUFFLE: def, ghi
-MAP
-@.....@
-.xx=xx.
-.xxgxx.
-.=d{g=.
-.xxdxx.
-.xx=xx.
-@.....@
-ENDMAP
-
-NAME: erik_entry_006_c
-TAGS: entry
-ORIENT: float
-CHANCE: 1
-SHUFFLE: uU / vV / wW / zZ
-SUBST: u==, v==, V=~, w=x, W=x, z==, Z=~.
-ITEM: scroll of curse armour, scroll of random uselessness, scroll of identify
-ITEM: scroll of curse armour, scroll of fear, scroll of teleportation
-KFEAT: U = teleport trap
-MAP
-xxxxxxx
-xZxxxWx
-xxzgwxx
-xxd{gxx
-xxudvxx
-xUxxxVx
-xxxxxxx
-ENDMAP
-
 
 ##############################################################################
 # Matt's vaults

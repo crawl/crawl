@@ -150,14 +150,15 @@ static int debug_prompt_for_monster( void )
 {
     char  specs[80];
 
-    mpr( "(Hint: 'generated' names, eg 'orc zombie', won't work)", MSGCH_PROMPT );
     mpr( "Which monster by name? ", MSGCH_PROMPT );
-    get_input_line( specs, sizeof( specs ) );
-    
-    if (specs[0] == '\0')
-        return (-1);
+    if (!cancelable_get_line(specs, sizeof specs))
+    {
+        if (specs[0] == '\0')
+            return (-1);
 
-    return (get_monster_by_name(specs));
+        return (get_monster_by_name(specs));
+    }
+    return (-1);
 }
 #endif
 
@@ -374,27 +375,42 @@ void create_spec_monster(void)
 #ifdef WIZARD
 void create_spec_monster_name(int x, int y)
 {
-    int mon = debug_prompt_for_monster();
-
-    if (mon == -1 || mon == MONS_PROGRAM_BUG)
+    char specs[100];
+    mpr( "Which monster by name? ", MSGCH_PROMPT );
+    if (cancelable_get_line(specs, sizeof specs) || !*specs)
     {
-        mpr("I couldn't find that monster.");
+        canned_msg(MSG_OK);
+        return;
+    }
 
-        if (one_chance_in(20))
-            mpr("Maybe it's hiding.");
-    }
-    else
+    mons_list mlist;
+    std::string err = mlist.add_mons(specs);
+    
+    if (!err.empty())
     {
-        const bool force_place = x != -1 && y != -1;
-        if (x == -1)
-            x = you.x_pos;
-        if (y == -1)
-            y = you.y_pos;
-        
-        create_monster(mon, 0, BEH_SLEEP, x, y,
-                       MHITNOT, 250, false, force_place);
+        mpr(err.c_str());
+        return;
     }
-}                               // end create_spec_monster_name()
+    
+    const bool force_place = x != -1 && y != -1;
+    if (x == -1)
+        x = you.x_pos;
+    if (y == -1)
+        y = you.y_pos;
+
+    const mons_spec mspec = mlist.get_monster(0);
+    if (!force_place && mspec.mid != -1)
+    {
+        coord_def place = find_newmons_square(mspec.mid, x, y);
+        if (in_bounds(place))
+        {
+            x = place.x;
+            y = place.y;
+        }
+    }
+    
+    dgn_place_monster(mspec, you.your_level, x, y, false);
+}
 #endif
 
 

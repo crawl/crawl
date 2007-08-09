@@ -3702,7 +3702,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     return (true);
 }                               // end build_vaults()
 
-static void dngn_place_item_explicit(const item_spec &spec,
+static void dgn_place_item_explicit(const item_spec &spec,
                                      int x, int y, int level)
 {
     // Dummy object?
@@ -3738,15 +3738,15 @@ static void dngn_place_item_explicit(const item_spec &spec,
     }
 }
 
-static void dngn_place_multiple_items(item_list &list,
+static void dgn_place_multiple_items(item_list &list,
                                       int x, int y, int level)
 {
     const int size = list.size();
     for (int i = 0; i < size; ++i)
-        dngn_place_item_explicit(list.get_item(i), x, y, level);
+        dgn_place_item_explicit(list.get_item(i), x, y, level);
 }
 
-static void dngn_place_item_explicit(int index, int x, int y,
+static void dgn_place_item_explicit(int index, int x, int y,
                                      vault_placement &place,
                                      int level)
 {
@@ -3762,20 +3762,17 @@ static void dngn_place_item_explicit(int index, int x, int y,
     }
 
     const item_spec spec = sitems.get_item(index);
-    dngn_place_item_explicit(spec, x, y, level);
+    dgn_place_item_explicit(spec, x, y, level);
 }
 
-static bool dngn_place_monster(
-    const vault_placement &place,
-    const mons_spec &mspec,
-    int monster_level,
-    int vx, int vy)
+bool dgn_place_monster(const mons_spec &mspec,
+                       int monster_level, int vx, int vy,
+                       bool generate_awake)
 {
     if (mspec.mid != -1)
     {
         const int mid = mspec.mid;
-        const bool generate_awake =
-            mspec.generate_awake || place.map.has_tag("generate_awake");
+        const bool m_generate_awake = generate_awake || mspec.generate_awake;
 
         const int mlev = mspec.mlevel;
         if (mlev)
@@ -3800,14 +3797,26 @@ static bool dngn_place_monster(
 
         int not_used;
         return (place_monster( not_used, mid, monster_level,
-                               generate_awake? BEH_WANDER : BEH_SLEEP,
+                               m_generate_awake? BEH_WANDER : BEH_SLEEP,
                                MHITNOT, true, vx, vy, false,
                                PROX_ANYWHERE, mspec.monnum));
     }
-    return (false);
+    return (false);    
 }
 
-static bool dngn_place_one_monster(
+static bool dgn_place_monster(
+    const vault_placement &place,
+    const mons_spec &mspec,
+    int monster_level,
+    int vx, int vy)
+{
+    const bool generate_awake =
+        mspec.generate_awake || place.map.has_tag("generate_awake");
+    return dgn_place_monster(mspec, monster_level, vx, vy,
+                             generate_awake);
+}
+
+static bool dgn_place_one_monster(
     const vault_placement &place,
     mons_list &mons,
     int monster_level,
@@ -3815,7 +3824,7 @@ static bool dngn_place_one_monster(
 {
     for (int i = 0, size = mons.size(); i < size; ++i)
     {
-        if (dngn_place_monster(place, mons.get_monster(i),
+        if (dgn_place_monster(place, mons.get_monster(i),
                                monster_level, vx, vy))
         {
             return (true);
@@ -3940,10 +3949,10 @@ static int vault_grid( vault_placement &place,
             grd[vx][vy] = DNGN_FLOOR;
 
         mons_list &mons = mapsp->get_monsters();
-        dngn_place_one_monster(place, mons, level_number, vx, vy);
+        dgn_place_one_monster(place, mons, level_number, vx, vy);
 
         item_list &items = mapsp->get_items();
-        dngn_place_multiple_items(items, vx, vy, level_number);
+        dgn_place_multiple_items(items, vx, vy, level_number);
 
         return (altar_count);
     }
@@ -4118,7 +4127,7 @@ static int vault_grid( vault_placement &place,
     // defghijk - items
     if (vgrid >= 'd' && vgrid <= 'k')
     {
-        dngn_place_item_explicit(vgrid - 'd', vx, vy, place, level_number);
+        dgn_place_item_explicit(vgrid - 'd', vx, vy, place, level_number);
     }
 
     if (grid == DNGN_ORANGE_CRYSTAL_STATUE
@@ -4149,7 +4158,7 @@ static int vault_grid( vault_placement &place,
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
 
-        dngn_place_monster(place, monster_type_thing, monster_level, vx, vy);
+        dgn_place_monster(place, monster_type_thing, monster_level, vx, vy);
     }
 
     // again, this seems odd, given that this is just one of many

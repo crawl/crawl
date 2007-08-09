@@ -96,5 +96,6 @@ bool monster_habitable_grid(int monster_class, int actual_grid,
                             int flies = -1, bool paralysed = false);
 bool monster_habitable_grid(const monsters *m, int actual_grid);
 bool monster_can_submerge(int monster_class, int grid);
+coord_def find_newmons_square(int mons_class, int x, int y);
 
 #endif  // MONPLACE_H

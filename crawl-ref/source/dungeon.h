@@ -284,4 +284,9 @@ bool unforbidden(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 bool find_closest);
 
+class mons_spec;
+bool dgn_place_monster(const mons_spec &mspec,
+                       int monster_level, int vx, int vy,
+                       bool generate_awake);
+
 #endif
