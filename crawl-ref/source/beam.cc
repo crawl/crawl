@@ -3787,7 +3787,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
         }
 
-        if (simple_monster_message(mon, " looks slightly unstable."))
+        if (mons_near(mon) && player_monster_visible(mon))
             beam.obvious_effect = true;
 
         monster_teleport(mon, false);

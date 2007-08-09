@@ -825,7 +825,11 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
                 simple_monster_message(monster, " seems more stable.");
         }
         else
+        {
+            if (!silent)
+                simple_monster_message(monster, " looks slightly unstable.");
             monster->add_ench( mon_enchant(ENCH_TP, coinflip()? 3 : 4) );
+        }
 
         return;
     }

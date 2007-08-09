@@ -2764,9 +2764,13 @@ void zap_wand(void)
     const bool dangerous = player_in_a_dangerous_place();
     if (alreadyknown)
     {
-        if (wand.sub_type == WAND_HASTING
-            || wand.sub_type == WAND_HEALING
-            || wand.sub_type == WAND_INVISIBILITY)
+        if (wand.sub_type == WAND_TELEPORTATION)
+        {
+            targ_mode = TARG_ANY;
+        }
+        else if (wand.sub_type == WAND_HASTING
+                 || wand.sub_type == WAND_HEALING
+                 || wand.sub_type == WAND_INVISIBILITY)
         {
             targ_mode = TARG_FRIEND;
         }

@@ -310,6 +310,11 @@ void direction(dist& moves, targeting_type restricts,
         {
             mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
                  target_mode_help_text(restricts));
+                 
+            if ((mode == TARG_ANY || mode == TARG_FRIEND)
+                 && moves.tx == you.x_pos && moves.ty == you.y_pos)
+                terse_describe_square(moves.target());
+
             show_prompt = false;
         }
 
@@ -972,12 +977,18 @@ static char find_square( int xps, int yps,
     {
         if (direction == 1 && temp_xps == minx && temp_yps == maxy)
         {
-            return find_square(ctrx, ctry, mfp, direction, find_targ, mode, 
+            if (mode == TARG_ANY || mode == TARG_FRIEND)
+            {
+                mfp[0] = vyou.x;
+                mfp[1] = vyou.y;
+                return (1);
+            }
+            return find_square(ctrx, ctry, mfp, direction, find_targ, mode,
                     false, next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
         {
-            return find_square(minx, maxy, mfp, direction, find_targ, mode, 
+            return find_square(minx, maxy, mfp, direction, find_targ, mode,
                     false, next_los(direction, los, wrap));
         }
 
@@ -1610,7 +1621,10 @@ static std::string stair_destination_description(const coord_def &pos)
 static void describe_cell(int mx, int my)
 {
     bool mimic_item = false;
-    
+
+    if (mx == you.x_pos && my == you.y_pos)
+        mpr("You.");
+
     if (mgrd[mx][my] != NON_MONSTER)
     {
         int i = mgrd[mx][my];
