@@ -17,7 +17,7 @@
 -- in your init.txt.
 --
 -- The full list of item class names is:
--- gold, weapon, missile, armour, wand, food, scroll, jewelry, potion,
+-- gold, weapon, missile, armour, wand, food, scroll, jewellery, potion,
 -- book, staff, orb, misc, carrion
 --
 -- Item annotations are always prefixed to the item name. For instance:

@@ -150,7 +150,7 @@ ORIENT:  encompass
 SHUFFLE: AB, def, xw/vl
 KFEAT:   A = scroll shop / book shop / book shop
 KFEAT:   B = jewellery shop
-ITEM:    any jewelry / good_item any jewelry
+ITEM:    any jewellery / good_item any jewellery
 ITEM:    any book / good_item any book, any staff 
 SUBST:   w:w.l, x:b, c:., v=bl, d=.d, e=.e, f=.f
 : bazaar_message(_G)

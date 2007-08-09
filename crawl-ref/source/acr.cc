@@ -411,6 +411,10 @@ static void handle_wizard_command( void )
         debug_set_xl();
         break;
 
+    case 'O':
+        debug_test_explore();
+        break;
+
     case 's':
         you.exp_available = 20000;
         you.redraw_experience = 1;
@@ -530,16 +534,7 @@ static void handle_wizard_command( void )
         break;
 
     case 'G':
-        // Genocide... "unsummon" all the monsters from the level.
-        for (int mon = 0; mon < MAX_MONSTERS; mon++)
-        {
-            struct monsters *monster = &menv[mon];
-
-            if (monster->type == -1)
-                continue;
-
-            monster_die(monster, KILL_RESET, 0);
-        }
+        debug_dismiss_all_monsters();
         break;
 
     case 'c':
@@ -3038,8 +3033,10 @@ static void move_player(int move_x, int move_y)
     else if (targ_solid)
     {
         stop_running();
+
         move_x = 0;
         move_y = 0;
+
         you.turn_is_over = 0;
     }
 

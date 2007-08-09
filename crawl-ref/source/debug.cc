@@ -39,6 +39,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "decks.h"
+#include "delay.h"
 #include "describe.h"
 #include "direct.h"
 #include "dungeon.h"
@@ -2240,6 +2241,80 @@ void debug_place_map()
     }
 
     debug_load_map_by_name(what);
+}
+
+void debug_dismiss_all_monsters()
+{
+    // Genocide... "unsummon" all the monsters from the level.
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    {
+        monsters *monster = &menv[mon];
+
+        if (monster->alive())
+            monster_die(monster, KILL_DISMISSED, 0);
+    }
+}
+
+void debug_kill_traps()
+{
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+            if (grid_is_trap(grd[x][y]) || grd[x][y] == DNGN_UNDISCOVERED_TRAP)
+                grd[x][y] = DNGN_FLOOR;
+}
+
+static int debug_time_explore()
+{
+    viewwindow(true, false);
+    start_explore(false);
+
+    unwind_var<int> es(Options.explore_stop, 0);
+    
+    const long start = you.num_turns;
+    while (you_are_delayed())
+    {
+        you.turn_is_over = false;
+        handle_delay();
+        you.num_turns++;
+    }
+
+    return (you.num_turns - start);
+}
+
+static void debug_destroy_doors()
+{
+    for (int y = 0; y < GYM; ++y)
+    {
+        for (int x = 0; x < GXM; ++x)
+        {
+            const dungeon_feature_type feat = grd[x][y];
+            if (feat == DNGN_CLOSED_DOOR || feat == DNGN_SECRET_DOOR)
+                grd[x][y] = DNGN_FLOOR;
+        }
+    }
+}
+
+// Turns off greedy explore, then:
+// a) Destroys all traps on the level.
+// b) Kills all monsters on the level.
+// c) Suppresses monster generation.
+// d) Converts all closed doors and secret doors to floor.
+// e) Forgets map.
+// f) Counts number of turns needed to explore the level.
+void debug_test_explore()
+{
+    debug_dismiss_all_monsters();
+    debug_kill_traps();
+    forget_map(100);
+
+    debug_destroy_doors();
+
+    // Remember where we are now.
+    const coord_def where = you.pos();
+
+    const int explore_turns = debug_time_explore();
+
+    mprf("Explore took %d turns.", explore_turns);
 }
 
 #endif
