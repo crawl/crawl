@@ -556,7 +556,7 @@ std::string item_class_name( int type, bool terse )
         case OBJ_FOOD:       return ("food");
         case OBJ_UNKNOWN_I:  return ("?");
         case OBJ_SCROLLS:    return ("scroll");
-        case OBJ_JEWELLERY:  return ("jewelry");
+        case OBJ_JEWELLERY:  return ("jewellery");
         case OBJ_POTIONS:    return ("potion");
         case OBJ_UNKNOWN_II: return ("?");
         case OBJ_BOOKS:      return ("book");
