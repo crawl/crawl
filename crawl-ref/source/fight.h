@@ -70,6 +70,7 @@ public:
     // If all or part of the action is visible to the player, we need a message.
     bool      needs_message;
     bool      attacker_visible, defender_visible;
+    bool      attacker_invisible, defender_invisible;
     
     bool      unarmed_ok;
     int       attack_number;
@@ -124,9 +125,10 @@ public:
 
     int  calc_to_hit(bool random = true);
 
-    static std::string anon_name(description_level_type desc);
+    static std::string anon_name(description_level_type desc,
+                                 bool actor_invisible);
     static std::string actor_name(const actor *a, description_level_type desc,
-                                  bool actor_visible);
+                                  bool actor_visible, bool actor_invisible);
     static std::string pronoun(const actor *a, pronoun_type ptyp,
                                bool actor_visible);
     static std::string anon_pronoun(pronoun_type ptyp);

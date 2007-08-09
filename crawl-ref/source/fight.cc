@@ -288,6 +288,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
       cancel_attack(false),
       did_hit(false), perceived_attack(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
+      attacker_invisible(false), defender_invisible(false),
       unarmed_ok(allow_unarmed),
       attack_number(which_attack),
       to_hit(0), base_damage(0), potential_damage(0), damage_done(0),
@@ -345,7 +346,10 @@ void melee_attack::init_attack()
 
     water_attack = is_water_attack(attacker, defender);
     attacker_visible = attacker->visible();
+    attacker_invisible = !attacker_visible && see_grid(attacker->pos());
     defender_visible = defender && defender->visible();
+    defender_invisible = !defender_visible && defender
+                        && see_grid(defender->pos());
     needs_message = attacker_visible || defender_visible;
 
     if (defender && defender->submerged())
@@ -354,9 +358,10 @@ void melee_attack::init_attack()
 
 std::string melee_attack::actor_name(const actor *a,
                                      description_level_type desc,
-                                     bool actor_visible)
+                                     bool actor_visible,
+                                     bool actor_invisible)
 {
-    return (actor_visible? a->name(desc) : anon_name(desc));
+    return (actor_visible? a->name(desc) : anon_name(desc, actor_invisible));
 }
 
 std::string melee_attack::pronoun(const actor *a,
@@ -379,13 +384,14 @@ std::string melee_attack::anon_pronoun(pronoun_type pron)
     }
 }
 
-std::string melee_attack::anon_name(description_level_type desc)
+std::string melee_attack::anon_name(description_level_type desc,
+                                    bool actor_invisible)
 {
     switch (desc)
     {
     case DESC_CAP_THE:
     case DESC_CAP_A:
-        return ("Something");
+        return (actor_invisible? "It" : "Something");
     case DESC_CAP_YOUR:
         return ("Its");
     case DESC_NOCAP_YOUR:
@@ -395,18 +401,18 @@ std::string melee_attack::anon_name(description_level_type desc)
     case DESC_NOCAP_A:
     case DESC_PLAIN:
     default:
-        return ("something");
+        return (actor_invisible? "it" : "something");
     }
 }
 
 std::string melee_attack::atk_name(description_level_type desc) const
 {
-    return actor_name(attacker, desc, attacker_visible);
+    return actor_name(attacker, desc, attacker_visible, attacker_invisible);
 }
 
 std::string melee_attack::def_name(description_level_type desc) const
 {
-    return actor_name(defender, desc, defender_visible);
+    return actor_name(defender, desc, defender_visible, defender_invisible);
 }
 
 bool melee_attack::is_water_attack(const actor *attk,
