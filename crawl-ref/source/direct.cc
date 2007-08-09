@@ -1736,9 +1736,12 @@ static void describe_cell(int mx, int my)
     }
     const std::string traveldest =
         stair_destination_description(coord_def(mx, my));
-    mprf("(%d,%d): %s - %s%s%s", mx, my,
+    const dungeon_feature_type feat = grd[mx][my];
+    mprf("(%d,%d): %s - %s (%d/%s)%s%s", mx, my,
          stringize_glyph(get_screen_glyph(mx, my)).c_str(),
          feature_desc.c_str(),
+         feat,
+         dungeon_feature_name(feat),
          marker.c_str(),
          traveldest.c_str());
 #else

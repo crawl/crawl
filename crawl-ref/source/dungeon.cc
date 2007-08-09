@@ -6824,26 +6824,38 @@ static coord_def dgn_find_closest_to_stone_stairs()
     return (np.nearest);
 }
 
-static coord_def dgn_find_labyrinth_entry_point()
+static coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 {
     std::vector<map_marker*> markers = env_get_all_markers();
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
         if (mark->get_type() == MAT_FEATURE
-            && dynamic_cast<map_feature_marker*>(mark)->feat
-            == DNGN_ENTER_LABYRINTH)
+            && dynamic_cast<map_feature_marker*>(mark)->feat == feat)
         {
             return (mark->pos);
         }
     }
     coord_def unfound;
-    return (unfound);
+    return (unfound);    
+}
+
+static coord_def dgn_find_labyrinth_entry_point()
+{
+    return (dgn_find_feature_marker(DNGN_ENTER_LABYRINTH));
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 bool find_closest)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "Level entry point on %sstair: %d (%s)",
+         find_closest? "closest " : "",
+         stair_to_find,
+         dungeon_feature_name(stair_to_find));
+#endif
+    
     if (stair_to_find == DNGN_ROCK_STAIRS_UP
         || stair_to_find == DNGN_ROCK_STAIRS_DOWN)
     {
@@ -6865,11 +6877,16 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         stair_to_find = DNGN_FLOOR;
     }
     
+    if (stair_to_find == your_branch().exit_stairs)
+    {
+        const coord_def pos(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
+        if (in_bounds(pos) && grd(pos) == stair_to_find)
+            return (pos);
+    }
+
     // scan around the player's position first
     int basex = you.x_pos;
     int basey = you.y_pos;
-
-    const bool branch_exit = stair_to_find == your_branch().exit_stairs;
 
     // check for illegal starting point
     if ( !in_bounds(basex, basey) )
@@ -6904,10 +6921,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int dist = (xpos-basex)*(xpos-basex) +
                 (ypos-basey)*(ypos-basey);
 
-            if (grd[xpos][ypos] == stair_to_find
-                && (!branch_exit
-                    || env_find_marker(coord_def(xpos, ypos),
-                                       MAT_FEATURE)))
+            if (grd[xpos][ypos] == stair_to_find)
             {
                 found++;
                 if (find_closest)
