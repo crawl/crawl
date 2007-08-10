@@ -883,16 +883,24 @@ static bool class_allowed( species_type speci, job_type char_class )
     switch (char_class)
     {
     case JOB_FIGHTER:
+        if (player_genus(GENPC_DRACONIAN, speci))
+            return false;
+            
         switch (speci)
         {
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
+        case SP_MUMMY:
+        case SP_GREY_ELF:
+        case SP_DEEP_ELF:
             return false;
         default:
             return true;
         }
 
     case JOB_WIZARD:
+        if (speci == SP_MUMMY)
+            return true;
         if (species_is_undead( speci ))
             return false;
 
@@ -915,24 +923,21 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_PRIEST:
         if (player_genus(GENPC_DRACONIAN, speci))
             return false;
-        if (species_is_undead( speci ))
-            return false;
 
         switch (speci)
         {
         case SP_CENTAUR:
         case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
         case SP_GNOME:
-        case SP_HALFLING:
         case SP_KENKU:
-        case SP_KOBOLD:
         case SP_MINOTAUR:
         case SP_NAGA:
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
             return false;
         default:
             return true;
@@ -941,6 +946,8 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_THIEF:
         if (species_is_undead( speci ))
             return false;
+        if (player_genus(GENPC_DRACONIAN, speci))
+            return false;
 
         switch (speci)
         {
@@ -949,8 +956,9 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_MINOTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
-        case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_HIGH_ELF:
+        case SP_GREY_ELF:
             return false;
         default:
             return true;
@@ -966,12 +974,11 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_GNOME:
         case SP_HALFLING:
-        case SP_KOBOLD:
         case SP_NAGA:
-        case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_MOUNTAIN_DWARF:
             return false;
         default:
             return true;
@@ -1007,6 +1014,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_HUMAN:
         case SP_MOUNTAIN_DWARF:
         case SP_HIGH_ELF:
+        case SP_CENTAUR:
+        case SP_MERFOLK:
             return true;
         default:
             return false;
@@ -1022,17 +1031,21 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_CENTAUR:
         case SP_GHOUL:
+        case SP_MUMMY:
         case SP_GNOME:
         case SP_MINOTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
+        case SP_HIGH_ELF:
             return false;
         default:
             return true;
         }
 
     case JOB_BERSERKER:
+        if (speci == SP_SLUDGE_ELF)
+            return true;
         if (player_genus(GENPC_ELVEN, speci))
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -1047,7 +1060,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_HALFLING:
         case SP_KENKU:
         case SP_KOBOLD:
-        case SP_MOUNTAIN_DWARF:
         case SP_NAGA:
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
@@ -1073,14 +1085,16 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_DEMONSPAWN:
         case SP_GREY_ELF:
         case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
         case SP_HUMAN:
         case SP_KENKU:
-        case SP_SLUDGE_ELF:
             // xbows --
         case SP_HILL_ORC:
             // slings --
         case SP_GNOME:
         case SP_HALFLING:
+        case SP_OGRE:
             // javelins
         case SP_MERFOLK:
             return true;
@@ -1104,6 +1118,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_TROLL:
         case SP_MERFOLK:
         case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
             return false;
         default:
             return true;
@@ -1117,7 +1132,6 @@ static bool class_allowed( species_type speci, job_type char_class )
 
         switch (speci)
         {
-        case SP_GNOME:
         case SP_HILL_ORC:
         case SP_KENKU:
         case SP_KOBOLD:
@@ -1125,6 +1139,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_TROLL:
         case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
             return false;
         default:
             return true;
@@ -1148,6 +1163,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
+        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1174,6 +1190,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1182,9 +1199,7 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_SUMMONER:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (speci == SP_VAMPIRE)
-            return true;
-        if (species_is_undead( speci ))
+        if (player_genus(GENPC_DRACONIAN, speci))
             return false;
 
         switch (speci)
@@ -1196,6 +1211,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_GHOUL:
+        case SP_HIGH_ELF:
             return false;
         default:
             return true;
@@ -1221,6 +1238,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
+        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1245,14 +1263,13 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
+        case SP_CENTAUR:
             return false;
         default:
             return true;
         }
 
     case JOB_CRUSADER:
-        if (player_genus(GENPC_DWARVEN, speci))
-            return false;
         if (species_is_undead( speci ))
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
@@ -1261,7 +1278,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         switch (speci)
         {
         case SP_GNOME:
-        //case SP_HALFLING: //jmf: they're such good enchanters...
         case SP_KENKU:
         case SP_KOBOLD:
         case SP_MINOTAUR:
@@ -1269,7 +1285,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_MERFOLK:
         case SP_SLUDGE_ELF:
             return false;
         default:
@@ -1279,6 +1294,8 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_DEATH_KNIGHT:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
+        if (player_genus(GENPC_DRACONIAN, speci))
+            return false;
 
         switch (speci)
         {
@@ -1287,7 +1304,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_GREY_ELF:
         case SP_HALFLING:
         case SP_HIGH_ELF:
-        // case SP_KOBOLD:
         case SP_MINOTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
@@ -1303,6 +1319,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
         if (species_is_undead( speci ))
+            return false;
+        if (player_genus(GENPC_DRACONIAN, speci))
             return false;
 
         switch (speci)
@@ -1324,6 +1342,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
         if (species_is_undead( speci ))
+            return false;
+        if (player_genus(GENPC_DRACONIAN, speci))
             return false;
 
         switch (speci)
@@ -1370,8 +1390,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
-        case SP_GNOME:
-        case SP_HALFLING:
         case SP_KENKU:
         case SP_KOBOLD:
         case SP_MINOTAUR:
@@ -1380,6 +1398,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_HILL_ORC:
+        case SP_SLUDGE_ELF:
             return false;
         default:
             return true;
@@ -1388,6 +1408,8 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_REAVER:
         if (species_is_undead( speci ))
             return false;
+        if (player_genus(GENPC_DRACONIAN, speci))
+            return false;
 
         switch (speci)
         {
@@ -1395,7 +1417,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_GREY_ELF:
         case SP_HALFLING:
         case SP_MINOTAUR:
-        case SP_MOUNTAIN_DWARF:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
@@ -1418,11 +1439,11 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_CENTAUR:
         case SP_GNOME:
-        case SP_HALFLING:
         case SP_MINOTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
+        case SP_HILL_ORC:
             return false;
         default:
             return true;
@@ -1434,7 +1455,6 @@ static bool class_allowed( species_type speci, job_type char_class )
 
         switch (speci)
         {
-        case SP_CENTAUR:
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
@@ -1442,6 +1462,8 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
             return false;
         default:
             return true;
@@ -1451,7 +1473,7 @@ static bool class_allowed( species_type speci, job_type char_class )
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
         if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
+            return true;
         if (species_is_undead( speci ))
             return false;
 
@@ -1460,7 +1482,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_CENTAUR:
         case SP_GNOME:
         case SP_HILL_ORC:
-        case SP_HALFLING:
         case SP_KENKU:
         case SP_MINOTAUR:
         case SP_OGRE:
@@ -1472,12 +1493,24 @@ static bool class_allowed( species_type speci, job_type char_class )
         }
 
     case JOB_WANDERER:
+        if (species_is_undead( speci ))
+            return true;
+        if (player_genus(GENPC_DRACONIAN, speci))
+            return true;
+
         switch (speci)
         {
         case SP_HUMAN:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
-        case SP_GHOUL:
+        case SP_KOBOLD:
+        case SP_NAGA:
+        case SP_HILL_ORC:
+        case SP_OGRE_MAGE:
+        case SP_CENTAUR:
+        case SP_KENKU:
+        case SP_MERFOLK:
+        case SP_SLUDGE_ELF:
             return true;
         default:
             return false;
@@ -2596,6 +2629,21 @@ static void create_wanderer( void )
 
         you.skills[ skill ] = 1;
     }
+    
+    // ogres and draconians cannot wear armour
+    if ((you.species == SP_OGRE_MAGE || player_genus(GENPC_DRACONIAN))
+        && you.skills[ SK_ARMOUR ])
+    {
+        you.skills[ SK_ARMOUR ] = 0;
+
+        do
+        {
+            skill = random2( num_all_skills );
+        }
+        while (skill == SK_ARMOUR && you.skills[all_skills[ skill ]]);
+
+        you.skills[ skill ] = 1;
+    }
 
     int wpn_skill = SK_FIGHTING;  // preferred weapon type
     int wpn_skill_size = 0;       // level of skill in preferred weapon type
@@ -3356,8 +3404,7 @@ bool give_items_skills()
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL
-            || player_genus(GENPC_DRACONIAN))
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
         {
             you.inv[1].quantity = 1;
             you.inv[1].base_type = OBJ_ARMOUR;
@@ -3378,14 +3425,6 @@ bool give_items_skills()
                 // no weapon for trolls
                 you.inv[0] = item_def();
             }
-            else if (player_genus(GENPC_DRACONIAN))
-            {
-                you.inv[2].quantity = 1;
-                you.inv[2].base_type = OBJ_ARMOUR;
-                you.inv[2].sub_type = ARM_SHIELD;
-                you.inv[2].plus = 0;
-                you.inv[2].special = 0;
-            }
         }
         else if (you.is_undead)
         {
@@ -3394,17 +3433,9 @@ bool give_items_skills()
             you.inv[1].sub_type = ARM_ROBE;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
+            
             if (you.species == SP_VAMPIRE && coinflip())
                 you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
-
-            if (you.species == SP_MUMMY)
-            {
-                you.inv[2].quantity = 1;
-                you.inv[2].base_type = OBJ_ARMOUR;
-                you.inv[2].sub_type = ARM_SHIELD;
-                you.inv[2].plus = 0;
-                you.inv[2].special = 0;
-            }
         }
         else if (you.species == SP_KOBOLD)
         {
@@ -3563,6 +3594,9 @@ bool give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
+        
+        if (you.species == SP_KOBOLD || you.species == SP_HALFLING)
+            you.inv[0].sub_type = WPN_KNIFE;
 
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
@@ -3582,102 +3616,117 @@ bool give_items_skills()
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
         you.skills[SK_SHIELDS] = 1;
-        you.skills[SK_MACES_FLAILS] = 2;
         you.skills[SK_STAVES] = 1;
-
         you.skills[SK_INVOCATIONS] = 4;
-
-        // disallow invalid choices
-        if (you.species != SP_HILL_ORC && Options.priest == GOD_BEOGH)
-            Options.priest = GOD_NO_GOD;
-
-        if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
-            ng_pr = you.religion = static_cast<god_type>( Options.priest );
-        else if (Options.random_pick || Options.priest == GOD_RANDOM)
+        
+        if (you.species == SP_KOBOLD || you.species == SP_HALFLING)
         {
-            you.religion = coinflip() ? GOD_YREDELEMNUL : GOD_ZIN;
-            
-            // for orcs 50% chance of Beogh instead
-            if (you.species == SP_HILL_ORC && coinflip())
-                you.religion = GOD_BEOGH;
-                
-            ng_pr = GOD_RANDOM;
+            you.skills[SK_SHORT_BLADES] = 1;
+            you.skills[SK_STAVES] = 2;
+        }
+        else
+            you.skills[SK_MACES_FLAILS] = 2;
+
+
+        // set gods
+        if (you.species == SP_MUMMY || you.species == SP_DEMONSPAWN)
+        {
+            you.religion = GOD_YREDELEMNUL;
         }
         else
         {
-            clrscr();
+            // disallow invalid choices
+            if (you.species != SP_HILL_ORC && Options.priest == GOD_BEOGH)
+                Options.priest = GOD_NO_GOD;
 
-            textcolor( CYAN );
-            cprintf(EOL " Which god do you wish to serve?" EOL);
-
-            textcolor( LIGHTGREY );
-            cprintf("a - Zin (for traditional priests)" EOL);
-            cprintf("b - Yredelemnul (for priests of death)" EOL);
-            if (you.species == SP_HILL_ORC)
-                cprintf("c - Beogh (priest of Orcs)" EOL);
-                
-            textcolor( BROWN );
-            cprintf(EOL "* - Random choice; "
-                        "Bksp - Back to species and class selection; "
-                        "X - Quit" EOL);
-
-            if (Options.prev_pr == GOD_BEOGH && you.species != SP_HILL_ORC)
-               Options.prev_pr = GOD_NO_GOD;
-
-            if (Options.prev_pr != GOD_NO_GOD)
+            if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
+                ng_pr = you.religion = static_cast<god_type>( Options.priest );
+            else if (Options.random_pick || Options.priest == GOD_RANDOM)
             {
-                textcolor(BROWN);
-                cprintf(EOL "Enter - %s" EOL,
-                        Options.prev_pr == GOD_ZIN? "Zin" :
-                        Options.prev_pr == GOD_YREDELEMNUL? "Yredelemnul" :
-                        Options.prev_pr == GOD_BEOGH? "Beogh" :
-                                            "Random");
-            }
-
-          getkey:
-            keyn = get_ch();
-
-            if ((keyn == '\r' || keyn == '\n') 
-                    && Options.prev_pr != GOD_NO_GOD)
-            {
-                keyn =  Options.prev_pr == GOD_ZIN? 'a' :
-                        Options.prev_pr == GOD_YREDELEMNUL? 'b' :
-                        Options.prev_pr == GOD_BEOGH? 'c' :
-                                            '*';
-
-            }
+                you.religion = coinflip() ? GOD_YREDELEMNUL : GOD_ZIN;
             
-            switch (keyn)
-            {
-            case CK_BKSP:
-            case ' ':
-                return false;
-            case 'X':
-                cprintf(EOL "Goodbye!");
-                end(0);
-                break;
-            case '*':
-                you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
+                // for orcs 50% chance of Beogh instead
                 if (you.species == SP_HILL_ORC && coinflip())
                     you.religion = GOD_BEOGH;
-                break;
-            case 'a':
-                you.religion = GOD_ZIN;
-                break;
-            case 'b':
-                you.religion = GOD_YREDELEMNUL;
-                break;
-            case 'c':
-                if (you.species == SP_HILL_ORC)
-                {
-                   you.religion = GOD_BEOGH;
-                   break;
-                } // else fall through
-            default:
-                goto getkey;
+                
+                ng_pr = GOD_RANDOM;
             }
+            else
+            {
+                clrscr();
 
-            ng_pr = keyn == '*'? GOD_RANDOM : you.religion;
+                textcolor( CYAN );
+                cprintf(EOL " Which god do you wish to serve?" EOL);
+
+                textcolor( LIGHTGREY );
+                cprintf("a - Zin (for traditional priests)" EOL);
+                cprintf("b - Yredelemnul (for priests of death)" EOL);
+                if (you.species == SP_HILL_ORC)
+                    cprintf("c - Beogh (priest of Orcs)" EOL);
+
+                textcolor( BROWN );
+                cprintf(EOL "* - Random choice; "
+                            "Bksp - Back to species and class selection; "
+                            "X - Quit" EOL);
+
+                if (Options.prev_pr == GOD_BEOGH && you.species != SP_HILL_ORC)
+                    Options.prev_pr = GOD_NO_GOD;
+
+                if (Options.prev_pr != GOD_NO_GOD)
+                {
+                    textcolor(BROWN);
+                    cprintf(EOL "Enter - %s" EOL,
+                            Options.prev_pr == GOD_ZIN? "Zin" :
+                            Options.prev_pr == GOD_YREDELEMNUL? "Yredelemnul" :
+                            Options.prev_pr == GOD_BEOGH? "Beogh" :
+                                               "Random");
+                }
+
+               getkey:
+                keyn = get_ch();
+
+                if ((keyn == '\r' || keyn == '\n')
+                     && Options.prev_pr != GOD_NO_GOD)
+                {
+                     keyn =  Options.prev_pr == GOD_ZIN? 'a' :
+                             Options.prev_pr == GOD_YREDELEMNUL? 'b' :
+                             Options.prev_pr == GOD_BEOGH? 'c' :
+                                                '*';
+
+                }
+            
+                switch (keyn)
+                {
+                case CK_BKSP:
+                case ' ':
+                    return false;
+                case 'X':
+                    cprintf(EOL "Goodbye!");
+                    end(0);
+                    break;
+                case '*':
+                    you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
+                    if (you.species == SP_HILL_ORC && coinflip())
+                        you.religion = GOD_BEOGH;
+                    break;
+                case 'a':
+                    you.religion = GOD_ZIN;
+                    break;
+                case 'b':
+                    you.religion = GOD_YREDELEMNUL;
+                    break;
+                case 'c':
+                    if (you.species == SP_HILL_ORC)
+                    {
+                        you.religion = GOD_BEOGH;
+                        break;
+                    } // else fall through
+                default:
+                    goto getkey;
+                }
+
+                ng_pr = keyn == '*'? GOD_RANDOM : you.religion;
+            }
         }
         break;
 
@@ -3742,7 +3791,7 @@ bool give_items_skills()
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
 
-        if (player_genus(GENPC_DRACONIAN))
+        if (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE)
         {
             you.inv[1].quantity = 1;
             you.inv[1].base_type = OBJ_ARMOUR;
@@ -4066,6 +4115,8 @@ bool give_items_skills()
 
         if (player_genus(GENPC_DRACONIAN))
             you.inv[2].sub_type = ARM_ROBE;
+        else if (you.species == SP_OGRE)
+            you.inv[2].sub_type = ARM_ANIMAL_SKIN;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 2;
@@ -4073,13 +4124,11 @@ bool give_items_skills()
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_RANGED_COMBAT] = 3;
 
-        // Removing spellcasting -- bwr
-        // you.skills[SK_SPELLCASTING] = 1;
-
         switch (you.species)
         {
         case SP_HALFLING:
         case SP_GNOME:
+        case SP_OGRE:
             you.inv[3].quantity += random2avg(15, 2);
             you.inv[3].sub_type = MI_SLING_BULLET;
             you.inv[1].sub_type = WPN_SLING;
@@ -4211,7 +4260,6 @@ bool give_items_skills()
 
             you.skills[SK_CONJURATIONS] = 1;
             you.skills[SK_FIRE_MAGIC] = 3;
-            //you.skills [SK_ENCHANTMENTS] = 1;
             break;
 
         case JOB_ICE_ELEMENTALIST:
@@ -4219,7 +4267,6 @@ bool give_items_skills()
 
             you.skills[SK_CONJURATIONS] = 1;
             you.skills[SK_ICE_MAGIC] = 3;
-            //you.skills [SK_ENCHANTMENTS] = 1;
             break;
 
         case JOB_AIR_ELEMENTALIST:
@@ -4227,7 +4274,6 @@ bool give_items_skills()
 
             you.skills[SK_CONJURATIONS] = 1;
             you.skills[SK_AIR_MAGIC] = 3;
-            //you.skills [SK_ENCHANTMENTS] = 1;
             break;
 
         case JOB_EARTH_ELEMENTALIST:
@@ -4409,9 +4455,11 @@ bool give_items_skills()
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
 
-        if (you.species == SP_SPRIGGAN || you.species == SP_OGRE_MAGE)
+        if (you.species == SP_SPRIGGAN || you.species == SP_OGRE_MAGE
+              || player_genus(GENPC_DRACONIAN))
+        {
             you.inv[1].sub_type = ARM_ROBE;
-
+        }
         you.inv[2].base_type = OBJ_BOOKS;
         you.inv[2].sub_type = BOOK_SPATIAL_TRANSLOCATIONS;
         you.inv[2].quantity = 1;
@@ -4446,14 +4494,13 @@ bool give_items_skills()
         you.inv[0].quantity = 1;
         you.inv[0].base_type = OBJ_WEAPONS;
         you.inv[0].sub_type = WPN_SHORT_SWORD;
-
-        //if (you.species == SP_OGRE_MAGE) you.inv_sub_type [0] = WPN_GLAIVE;
-
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
+        
         if (!choose_weapon())
             return false;
+            
         weap_skill = 2;
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
@@ -4486,8 +4533,10 @@ bool give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
+        
         if (!choose_weapon())
             return false;
+
         weap_skill = 2;
 
         you.inv[1].quantity = 1;
@@ -4623,6 +4672,7 @@ bool give_items_skills()
 
         if (!choose_weapon())
             return false;
+
         weap_skill = 2;
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
@@ -4719,8 +4769,8 @@ bool give_items_skills()
             // the new (piety-aware) Xom uses piety in his own special way...
             // (namely, 100 is neutral)
             you.piety = 100;
-            // the new (piety-aware) Xom uses gift_timeout in his own special
-            // way... (namely, a countdown to becoming bored)
+            // the new Xom also uses gift_timeout in his own special way...
+            // (namely, a countdown to becoming bored)
             you.gift_timeout = random2(40) + random2(40);
         }
         else // Makhleb
@@ -4776,8 +4826,10 @@ bool give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
+
         if (!choose_weapon())
             return false;
+
         weap_skill = 3;
 
         you.inv[1].quantity = 1;
@@ -4825,7 +4877,6 @@ bool give_items_skills()
         you.inv[2].special = 0;
 
         you.inv[3].base_type = OBJ_BOOKS;
-        //you.inv[3].sub_type = BOOK_YOUNG_POISONERS;
         you.inv[3].sub_type = BOOK_STALKING;   //jmf: new book!
         you.inv[3].quantity = 1;
         you.inv[3].plus = 0;
@@ -4842,8 +4893,6 @@ bool give_items_skills()
         you.skills[SK_STEALTH] = 2;
         you.skills[SK_STABBING] = 2;
         you.skills[SK_DODGING + random2(3)]++;
-        //you.skills[SK_RANGED_COMBAT] = 1; //jmf: removed these, added magic below
-        //you.skills[SK_DARTS] = 1;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_ENCHANTMENTS] = 1;
         break;
