@@ -434,11 +434,15 @@ static bool need_missile_gift()
             && ammo_count(launcher) < 20 + random2(35));
 }
 
-static void do_god_gift()
+static void do_god_gift(bool prayed_for)
 {
+    // Zin worshippers are the only ones that can pray to ask Zin for stuff.
+    if (prayed_for != (you.religion == GOD_ZIN))
+        return;
+    
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
-    if (!you.penance[you.religion]
+    if (!player_under_penance()
         && (!you.gift_timeout || you.religion == GOD_ZIN))
     {
         bool success = false;
@@ -576,7 +580,8 @@ static void do_god_gift()
                 int thing_called = random_undead_servant(GOD_YREDELEMNUL);
                 if (create_monster( thing_called, 0, BEH_FRIENDLY, 
                                     you.x_pos, you.y_pos, 
-                                    you.pet_target, MAKE_ITEM_RANDOM_RACE ) != -1)
+                                    you.pet_target, MAKE_ITEM_RANDOM_RACE )
+                    != -1)
                 {
                     simple_god_message(" grants you an undead servant!");
                     more();
@@ -731,6 +736,7 @@ void pray()
     // almost all prayers take time
     you.turn_is_over = true;
 
+    const bool was_praying = you.duration[DUR_PRAYER];
     if (you.duration[DUR_PRAYER])
     {
         if ( yesno("Do you want to stop praying?", true, 'y') )
@@ -810,6 +816,9 @@ void pray()
         else if (you.piety > 70)
             you.duration[DUR_PRAYER] *= 2;
     }
+
+    if (!was_praying)
+        do_god_gift(true);
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "piety: %d", you.piety );
@@ -1429,8 +1438,7 @@ void gain_piety(int pgn)
             || (you.piety > 150 && one_chance_in(3))
             || (you.piety > 100 && one_chance_in(3)))
         {
-            if (you.piety > 150)
-                do_god_gift();
+            do_god_gift(false);
             return;
         }
     }
@@ -1441,7 +1449,7 @@ void gain_piety(int pgn)
         if ((you.piety > 199) ||
             (you.piety > 150 && one_chance_in(5)))
         {
-            do_god_gift();
+            do_god_gift(false);
             return;
         }
     }
@@ -1483,8 +1491,7 @@ void gain_piety(int pgn)
           you.religion == GOD_LUGONU) && you.num_gifts[you.religion] == 0 )
         simple_god_message( " will now bless your weapon at an altar...once.");
 
-    if (you.religion == GOD_SIF_MUNA)
-        do_god_gift();
+    do_god_gift(false);
 }
 
 bool beogh_water_walk()
