@@ -359,6 +359,7 @@ MONS:   plant, fungus
 SUBST:  ' = . a 2:1
 SUBST:  . = .:90 a:10 2:1
 KITEM:  a : apple/apricot/pear/apricot/orange/banana/strawberry/lemon
+KFEAT:  a = .
 CHANCE: 8
 MAP
  ..... 
@@ -378,6 +379,7 @@ SUBST:  ' = . 1
 SUBST:  . = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4 
 KITEM:  a : apple/apricot/pear/apricot/orange/banana/strawberry/lemon
+KFEAT:  a = .
 CHANCE: 8
 MAP
    ________   
