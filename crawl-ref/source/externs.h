@@ -446,7 +446,7 @@ struct bolt
     bool        in_explosion_phase;   // explosion phase (as opposed to beam phase)
     bool        smart_monster;  // tracer firer can guess at other mons. resists?
     bool        can_see_invis;   // tracer firer can see invisible?
-    bool        is_friendly;    // tracer firer is enslaved or pet
+    mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
     bool        chose_ray;      // do we want a specific ray?
     ray_def     ray;            // shoot on this specific ray

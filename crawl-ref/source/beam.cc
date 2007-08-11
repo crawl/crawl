@@ -2168,7 +2168,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.can_see_invis = (mons_see_invis(monster) != 0);
     pbolt.smart_monster = (mons_intel(monster->type) == I_HIGH ||
                           mons_intel(monster->type) == I_NORMAL);
-    pbolt.is_friendly = mons_friendly(monster);
+    pbolt.attitude = mons_attitude(monster);
 
     // init tracer variables
     pbolt.foe_count = pbolt.fr_count = 0;
@@ -2178,7 +2178,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     // foe ratio for summon gtr. demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
     // than to nuke the player and his minions
-    if (pbolt.is_friendly && monster->attitude != ATT_FRIENDLY)
+    if (pbolt.attitude == ATT_FRIENDLY && monster->attitude != ATT_FRIENDLY)
         pbolt.foe_ratio = 25;
 
     // fire!
@@ -3006,7 +3006,7 @@ static int affect_player( bolt &beam )
         if (beam.can_see_invis || !you.invisible()
                 || fuzz_invis_tracer(beam))
         {
-            if (beam.is_friendly)
+            if (beam.attitude != ATT_HOSTILE)
             {
                 beam.fr_count += 1;
                 beam.fr_power += you.experience_level;
@@ -3474,7 +3474,7 @@ static int affect_monster(bolt &beam, monsters *mon)
         if (beam.is_tracer)
         {
             // enchant case -- enchantments always hit, so update target immed.
-            if (beam.is_friendly != mons_friendly(mon))
+            if (beam.attitude != mons_attitude(mon))
             {
                 beam.foe_count += 1;
                 beam.foe_power += mons_power(mons_type);
@@ -3614,7 +3614,7 @@ static int affect_monster(bolt &beam, monsters *mon)
             // fireball at another fire giant, and it only took
             // 1/3 damage, then power of 5 would be applied to
             // foe_power or fr_power.
-            if (beam.is_friendly != mons_friendly(mon))
+            if (beam.attitude != mons_attitude(mon))
             {
                 beam.foe_count += 1;
                 beam.foe_power += 2 * hurt_final * mons_power(mons_type) / hurt;
@@ -4479,7 +4479,7 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                fr_power(0), foe_power(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), is_friendly(false), foe_ratio(0),
+               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false)
 { }
 
