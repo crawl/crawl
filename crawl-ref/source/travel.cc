@@ -37,6 +37,7 @@
 #include <cstdarg>
 #include <cctype>
 #include <cstdio>
+#include <memory>
 #include <sstream>
 
 #ifdef DOS
@@ -2487,11 +2488,11 @@ static int find_transtravel_stair(  const level_id &cur,
 
 static bool loadlev_populate_stair_distances(const level_pos &target)
 {
-    crawl_environment tmp = env;
+    std::auto_ptr<crawl_environment> tmp(new crawl_environment(env));
     if (!travel_load_map(target.id.branch, 
                     absdungeon_depth(target.id.branch, target.id.depth)))
     {
-        env = tmp;
+        env = *tmp;
         return false;
     }
 
@@ -2503,7 +2504,7 @@ static bool loadlev_populate_stair_distances(const level_pos &target)
 
     populate_stair_distances(target);
 
-    env = tmp;
+    env = *tmp;
     curr_excludes = old_excludes;
     return !curr_stairs.empty();
 }

@@ -1591,26 +1591,26 @@ int mons_power(int mc)
 
 bool mons_aligned(int m1, int m2)
 {
-    bool fr1, fr2;
+    mon_attitude_type fr1, fr2;
     struct monsters *mon1, *mon2;
 
     if (m1 == MHITNOT || m2 == MHITNOT)
         return (true);
 
     if (m1 == MHITYOU)
-        fr1 = true;
+        fr1 = ATT_FRIENDLY;
     else
     {
         mon1 = &menv[m1];
-        fr1 = (mon1->attitude == ATT_FRIENDLY) || mon1->has_ench(ENCH_CHARM);
+        fr1 = mons_attitude(mon1);
     }
 
     if (m2 == MHITYOU)
-        fr2 = true;
+        fr2 = ATT_FRIENDLY;
     else
     {
         mon2 = &menv[m2];
-        fr2 = (mon2->attitude == ATT_FRIENDLY) || mon2->has_ench(ENCH_CHARM);
+        fr2 = mons_attitude(mon2);
     }
 
     return (fr1 == fr2);
@@ -1660,6 +1660,16 @@ int mons_size(const monsters *m)
 bool mons_friendly(const monsters *m)
 {
     return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
+}
+
+bool mons_neutral(const monsters *m)
+{
+    return (m->attitude == ATT_NEUTRAL);
+}
+
+mon_attitude_type mons_attitude(const monsters *m)
+{
+    return (m->has_ench(ENCH_CHARM)? ATT_FRIENDLY : m->attitude);
 }
 
 bool mons_is_submerged( const monsters *mon )
@@ -2762,7 +2772,7 @@ bool monsters::pickup_misc(item_def &item, int near)
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Never pick up stuff when we're in battle.
-    if (!force && behaviour != BEH_WANDER)
+    if (!force && (behaviour != BEH_WANDER || attitude == ATT_NEUTRAL))
         return (false);
     
     // Jellies are not handled here.

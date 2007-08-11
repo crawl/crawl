@@ -20,29 +20,29 @@
 
 // NB - When adding new branches or levels above 50, you must
 // change pre-game deletion routine in new_game in newgame.cc
-int mons_level(int mcls)
+int mons_level(int mcls, const level_id &place)
 {
     int monster_level = 0;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (place.level_type == LEVEL_ABYSS)
         monster_level = ((mons_abyss(mcls)) ? 51 : 0);
-    else if (you.level_type == LEVEL_PANDEMONIUM)
+    else if (place.level_type == LEVEL_PANDEMONIUM)
         monster_level = ((mons_pan(mcls)) ? 52 : 0);
-    else
-        monster_level = your_branch().mons_level_function(mcls);
+    else if (place.level_type == LEVEL_DUNGEON)
+        monster_level = branches[place.branch].mons_level_function(mcls);
 
     return monster_level;
 }
 
 // higher values returned means the monster is "more common"
 // a return value of zero means the monster will never appear {dlb}
-int mons_rarity(int mcls)
+int mons_rarity(int mcls, const level_id &place)
 {
     // now, what about pandemonium ??? {dlb}
-    if (you.level_type == LEVEL_ABYSS)
+    if (place.level_type == LEVEL_ABYSS)
         return mons_rare_abyss(mcls);
     else
-        return your_branch().mons_rarity_function(mcls);
+        return branches[place.branch].mons_rarity_function(mcls);
 }
 
 bool mons_abyss(int mcls)

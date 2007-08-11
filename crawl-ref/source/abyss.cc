@@ -20,14 +20,17 @@
 
 #include "cloud.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "misc.h"
 #include "monplace.h"
 #include "mtransit.h"
+#include "player.h"
 #include "dungeon.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "randart.h"
 #include "stuff.h"
+#include "view.h"
 
 // public for abyss generation
 void generate_abyss(void)
@@ -314,7 +317,7 @@ void abyss_teleport( bool new_area )
     // teleport to a new area of the abyss:
 
     init_pandemonium();          // get new monsters
-    set_colours_from_monsters(); // and new colours
+    dgn_set_colours_from_monsters(); // and new colours
 
     for (i = 0; i < MAX_MONSTERS; i++)
     {
@@ -367,4 +370,296 @@ void abyss_teleport( bool new_area )
         grd[you.x_pos + 1][you.y_pos] = DNGN_ALTAR_LUGONU;
 
     place_transiting_monsters();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Abyss effects in other levels, courtesy Lugonu.
+
+static void place_corruption_seed(const coord_def &pos, int duration)
+{
+    env_add_marker(new map_corruption_marker(pos, duration));
+}
+
+static void initialise_level_corrupt_seeds(int power)
+{
+    const int low = power / 2, high = power * 3 / 2;
+    int nseeds = random_range(1, std::min(2 + power / 110, 4));
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Placing %d corruption seeds", nseeds);
+#endif
+
+    // The corruption centered on the player is free.
+    place_corruption_seed(you.pos(), high + 100);
+
+    for (int i = 0; i < nseeds; ++i)
+    {
+        coord_def where;
+        do
+            where = coord_def(random2(GXM), random2(GYM));
+        while (!in_bounds(where) || grd(where) != DNGN_FLOOR
+               || env_find_marker(where, MAT_ANY));
+
+        place_corruption_seed(where, random_range(low, high, 2));
+    }
+}
+
+static bool spawn_corrupted_servant_near(const coord_def &pos)
+{
+    // Thirty tries for a place
+    for (int i = 0; i < 30; ++i)
+    {
+        const coord_def p( pos.x + random2avg(4, 3) + random2(3),
+                           pos.y + random2avg(4, 3) + random2(3) );
+        if (!in_bounds(p) || p == you.pos() || mgrd(p) != NON_MONSTER
+            || !grid_compatible(DNGN_FLOOR, grd(p), true))
+            continue;
+
+        // Got a place, summon the beast.
+        int level = 51;
+        monster_type mons =
+            pick_random_monster(level_id(LEVEL_ABYSS), level, level);
+        if (mons == MONS_PROGRAM_BUG)
+            return (false);
+
+        const beh_type beh =
+            one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4)?
+            BEH_HOSTILE : BEH_NEUTRAL;
+        const int mid =
+            create_monster( mons, 3, beh, p.x, p.y, MHITNOT, 250 );
+
+        return (mid != -1);
+    }
+    return (false);
+}
+                                        
+static void apply_corruption_effect(
+    map_marker *marker, int duration)
+{
+    if (!duration)
+        return;
+
+    map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(marker);
+    const coord_def center = cmark->pos;
+    const int neffects = std::max(div_rand_round(duration, 5), 1);
+
+    for (int i = 0; i < neffects; ++i)
+    {
+        if (random2(7000) < cmark->duration)
+        {
+            if (!spawn_corrupted_servant_near(cmark->pos))
+                break;
+        }
+    }
+    cmark->duration -= duration;
+    if (cmark->duration < 1)
+        env_remove_marker(cmark);
+}
+
+void run_corruption_effects(int duration)
+{
+    std::vector<map_marker*> markers =
+        env_get_all_markers(MAT_CORRUPTION_NEXUS);
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() != MAT_CORRUPTION_NEXUS)
+            continue;
+
+        apply_corruption_effect(mark, duration);
+    }
+}
+
+static bool is_grid_corruptible(const coord_def &c)
+{
+    if (c == you.pos())
+        return (false);
+    
+    const dungeon_feature_type feat = grd(c);
+    
+    // Stairs and portals cannot be corrupted.
+    if (grid_stair_direction(feat) != CMD_NO_CMD)
+        return (false);
+
+    switch (feat)
+    {
+    case DNGN_PERMAROCK_WALL:
+    case DNGN_GREEN_CRYSTAL_WALL:
+        return (false);
+
+    case DNGN_METAL_WALL:
+        return (one_chance_in(5));
+        
+    case DNGN_STONE_WALL:
+        return (one_chance_in(3));
+
+    case DNGN_ROCK_WALL:
+        return (!one_chance_in(3));
+        
+    default:
+        return (true);
+    }
+}
+
+// Returns true if the square has <= 4 traversable neighbours. 
+static bool is_crowded_square(const coord_def &c)
+{
+    int neighbours = 0;
+    for (int xi = -1; xi <= 1; ++xi)
+    {
+        for (int yi = -1; yi <= 1; ++yi)
+        {
+            if (!xi && !yi)
+                continue;
+
+            const coord_def n(c.x + xi, c.y + yi);
+            if (!in_bounds(n) || !is_traversable(grd(n)))
+                continue;
+
+            if (++neighbours > 4)
+                return (false);
+        }
+    }
+    return (true);
+}
+
+// Returns true if the square has all opaque neighbours.
+static bool is_sealed_square(const coord_def &c)
+{
+    for (int xi = -1; xi <= 1; ++xi)
+    {
+        for (int yi = -1; yi <= 1; ++yi)
+        {
+            if (!xi && !yi)
+                continue;
+
+            const coord_def n(c.x + xi, c.y + yi);
+            if (!in_bounds(n))
+                continue;
+
+            if (!grid_is_opaque(grd(n)))
+                return (false);
+        }
+    }
+    return (true);
+}
+
+static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
+{
+    dungeon_feature_type feat = DNGN_UNSEEN;
+    if (grid_altar_god(grd(c)) != GOD_NO_GOD)
+    {
+        if (!one_chance_in(3))
+            feat = DNGN_ALTAR_LUGONU;
+    }
+    else
+        feat = oenv.grid(c);
+
+    if (grid_is_trap(feat) || feat == DNGN_UNDISCOVERED_TRAP
+        || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
+        return;
+
+    if (is_traversable(grd(c)) && !is_traversable(feat)
+        && is_crowded_square(c))
+        return;
+
+    if (!is_traversable(grd(c)) && is_traversable(feat) && is_sealed_square(c))
+        return;
+
+    if (feat == DNGN_EXIT_ABYSS)
+        feat = DNGN_ENTER_ABYSS;
+
+    dungeon_terrain_changed(c, feat, true, true, true);
+    if (feat == DNGN_ROCK_WALL)
+        env.grid_colours(c) = oenv.rock_colour;
+    else if (feat == DNGN_FLOOR)
+        env.grid_colours(c) = oenv.floor_colour;
+}
+
+static void corrupt_level_features(const crawl_environment &oenv)
+{
+    std::vector<coord_def> corrupt_seeds;
+    std::vector<map_marker*> corrupt_markers =
+        env_get_all_markers(MAT_CORRUPTION_NEXUS);
+
+    for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
+        corrupt_seeds.push_back(corrupt_markers[i]->pos);
+    
+    for (int y = MAPGEN_BORDER; y < GYM - MAPGEN_BORDER; ++y)
+    {
+        for (int x = MAPGEN_BORDER; x < GXM - MAPGEN_BORDER; ++x)
+        {
+            const coord_def c(x, y);
+            int distance = GXM * GXM + GYM * GYM;
+            for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)
+            {
+                const int dist = (c - corrupt_seeds[i]).rdist();
+                if (dist < distance)
+                    distance = dist;
+            }
+
+            if ((distance < 6 || one_chance_in(1 + distance - 6))
+                && is_grid_corruptible(c))
+            {
+                corrupt_square(oenv, c);
+            }
+        }
+    }
+}
+
+static bool is_level_corrupted()
+{
+    if (you.level_type == LEVEL_ABYSS
+        || you.level_type == LEVEL_PANDEMONIUM
+        || player_in_hell()
+        || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+        return (true);
+
+    return (!!env_find_marker(MAT_CORRUPTION_NEXUS));
+}
+
+static bool is_level_incorruptible()
+{
+    if (is_level_corrupted())
+    {
+        mpr("This place is already infused with evil and corruption.");
+        return (true);
+    }
+
+    return (false);
+}
+
+bool lugonu_corrupt_level(int power)
+{
+    if (is_level_incorruptible())
+        return (false);
+
+    mprf(MSGCH_GOD, "Lugonu's Hand of Corruption reaches out!");
+
+    you.flash_colour = EC_MUTAGENIC;
+    viewwindow(true, false);
+    
+    initialise_level_corrupt_seeds(power);
+
+    std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
+    generate_abyss();
+    generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
+                  GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
+    dgn_set_colours_from_monsters();
+
+    std::auto_ptr<crawl_environment> abyssal(new crawl_environment(env));
+    env = *backup;
+    backup.reset(NULL);
+    
+    corrupt_level_features(*abyssal);
+    run_corruption_effects(100);
+
+    you.flash_colour = EC_MUTAGENIC;
+    viewwindow(true, false);
+    // Allow extra time for the flash to linger.
+    delay(1000);
+    viewwindow(true, false);
+
+    return (true);
 }

@@ -35,4 +35,8 @@ void abyss_teleport( bool new_area );
 
 void save_abyss_uniques();
 
+bool lugonu_corrupt_level(int power);
+
+void run_corruption_effects(int duration);
+
 #endif

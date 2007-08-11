@@ -151,6 +151,101 @@ static int fuzz_mons_level(int level)
     return (level);
 }
 
+monster_type pick_random_monster(const level_id &place,
+                                 int power,
+                                 int &lev_mons)
+{
+    monster_type mon_type = MONS_PROGRAM_BUG;
+    
+    lev_mons = power;
+
+    if (place.branch == BRANCH_MAIN_DUNGEON
+        && lev_mons != 51 && one_chance_in(4))
+    {
+        lev_mons = random2(power);
+    }
+
+    if (place.branch == BRANCH_MAIN_DUNGEON
+        && lev_mons < 28)
+    {
+        lev_mons = fuzz_mons_level(lev_mons);
+
+        // potentially nasty surprise, but very rare
+        if (need_super_ood(lev_mons))
+            lev_mons += random2(12);
+
+        // slightly out of depth monsters are more common:
+        // [ds] Replaced with a fuzz above for a more varied mix.
+        //if (need_moderate_ood(lev_mons))
+        //    lev_mons += random2(5);
+
+        if (lev_mons > 27)
+            lev_mons = 27;
+    }
+
+    /* Abyss or Pandemonium. Almost never called from Pan;
+       probably only if a rand demon gets summon anything spell */
+    if (lev_mons == 51
+        || place.level_type == LEVEL_PANDEMONIUM
+        || place.level_type == LEVEL_ABYSS)
+    {
+        do
+        {
+            int count = 0;
+
+            do
+            {
+                // was: random2(400) {dlb}
+                mon_type = static_cast<monster_type>( random2(NUM_MONSTERS) );
+                count++;
+            }
+            while (mons_abyss(mon_type) == 0 && count < 2000);
+
+            if (count == 2000)
+                return (MONS_PROGRAM_BUG);
+        }
+        while (random2avg(100, 2) > mons_rare_abyss(mon_type)
+               && !one_chance_in(100));
+    }
+    else
+    {
+        int level, diff, chance;
+
+        if (lev_mons > 30)
+            lev_mons = 30;
+
+        int i;
+        for (i = 0; i < 10000; i++)
+        {
+            int count = 0;
+
+            do
+            {
+                mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
+                count++;
+            }
+            while (mons_rarity(mon_type) == 0 && count < 2000);
+
+            if (count == 2000)
+                return (MONS_PROGRAM_BUG);
+
+            level  = mons_level( mon_type, place );
+            diff   = level - lev_mons;
+            chance = mons_rarity( mon_type, place ) - (diff * diff);
+
+            if ((lev_mons >= level - 5 && lev_mons <= level + 5)
+                && random2avg(100, 2) <= chance)
+            {
+                break;
+            }
+        }
+
+        if (i == 10000)
+            return (MONS_PROGRAM_BUG);
+    }
+    return (mon_type);
+}
+
 bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                    int target, bool summoned, int px, int py, bool allow_bands,
                    proximity_type proximity, int extra, int dur,
@@ -159,7 +254,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     int band_size = 0;
     int band_monsters[BIG_BAND];        // band monster types
     int lev_mons = power;               // final 'power'
-    int count;
     int i;
 
     // set initial id to -1  (unsuccessful create)
@@ -178,89 +272,10 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
 
     if (mon_type == RANDOM_MONSTER)
     {
-        if (player_in_branch( BRANCH_MAIN_DUNGEON )
-            && lev_mons != 51 && one_chance_in(4))
-        {
-            lev_mons = random2(power);
-        }
-
-        if (player_in_branch( BRANCH_MAIN_DUNGEON )
-            && lev_mons < 28)
-        {
-            lev_mons = fuzz_mons_level(lev_mons);
-
-            // potentially nasty surprise, but very rare
-            if (need_super_ood(lev_mons))
-                lev_mons += random2(12);
-
-            // slightly out of depth monsters are more common:
-            // [ds] Replaced with a fuzz above for a more varied mix.
-            //if (need_moderate_ood(lev_mons))
-            //    lev_mons += random2(5);
-
-            if (lev_mons > 27)
-                lev_mons = 27;
-        }
-
-        /* Abyss or Pandemonium. Almost never called from Pan;
-           probably only if a rand demon gets summon anything spell */
-        if (lev_mons == 51
-            || you.level_type == LEVEL_PANDEMONIUM
-            || you.level_type == LEVEL_ABYSS)
-        {
-            do
-            {
-                count = 0;
-
-                do
-                {
-                    // was: random2(400) {dlb}
-                    mon_type = random2(NUM_MONSTERS);
-                    count++;
-                }
-                while (mons_abyss(mon_type) == 0 && count < 2000);
-
-                if (count == 2000)
-                    return (false);
-            }
-            while (random2avg(100, 2) > mons_rare_abyss(mon_type)
-                    && !one_chance_in(100));
-        }
-        else
-        {
-            int level, diff, chance;
-
-            if (lev_mons > 30)
-                lev_mons = 30;
-
-            for (i = 0; i < 10000; i++)
-            {
-                count = 0;
-
-                do
-                {
-                    mon_type = random2(NUM_MONSTERS);
-                    count++;
-                }
-                while (mons_rarity(mon_type) == 0 && count < 2000);
-
-                if (count == 2000)
-                    return (false);
-
-                level  = mons_level( mon_type );
-                diff   = level - lev_mons;
-                chance = mons_rarity( mon_type ) - (diff * diff);
-
-                if ((lev_mons >= level - 5 && lev_mons <= level + 5)
-                    && random2avg(100, 2) <= chance)
-                {
-                    break;
-                }
-            }
-
-            if (i == 10000)
-                return (false);
-        }
+        mon_type = pick_random_monster(level_id::current(), lev_mons,
+                                       lev_mons);
+        if (mon_type == MONS_PROGRAM_BUG)
+            return (false);
     }
 
     // (3) decide on banding (good lord!)
@@ -618,6 +633,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     {
         if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
             menv[id].attitude = ATT_FRIENDLY;
+
+        if (behaviour == BEH_NEUTRAL)
+            menv[id].attitude = ATT_NEUTRAL;
 
         menv[id].behaviour = BEH_WANDER;
     }

@@ -4119,9 +4119,9 @@ void set_hp(int new_amount, bool max_too)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    //    take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
     if ( max_too )
-      take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
+        take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
+    
     // must remain outside conditional, given code usage {dlb}
     you.redraw_hit_points = 1;
 

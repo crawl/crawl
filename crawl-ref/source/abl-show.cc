@@ -36,6 +36,7 @@
 
 #include "externs.h"
 
+#include "abyss.h"
 #include "beam.h"
 #include "decks.h"
 #include "effects.h"
@@ -70,6 +71,13 @@
 #include "libunix.h"
 #endif
 
+static void lugonu_bends_space();
+static int find_ability_slot( ability_type which_ability );
+static bool activate_talent(const talent& tal);
+static bool do_ability(const ability_def& abil);
+static void pay_ability_costs(const ability_def& abil);
+static std::string describe_talent(const talent& tal);
+
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
 // along with the display routine to piece the strings
@@ -78,13 +86,6 @@
 // it makes more sense to think of them as an array
 // of structs than two arrays that share common index
 // values -- well, doesn't it? {dlb}
-
-static void lugonu_bends_space();
-static int find_ability_slot( ability_type which_ability );
-static bool activate_talent(const talent& tal);
-static bool do_ability(const ability_def& abil);
-static void pay_ability_costs(const ability_def& abil);
-static std::string describe_talent(const talent& tal);
 
 // declaring this const messes up externs later, so don't do it
 ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -137,7 +138,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_ELYVILON_GREATER_HEALING },
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE,
-      ABIL_LUGONU_SUMMON_DEMONS, ABIL_NON_ABILITY,
+      ABIL_LUGONU_BANISH, ABIL_LUGONU_CORRUPT,
       ABIL_LUGONU_ABYSS_ENTER },
     // Beogh
     { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING,
@@ -272,10 +273,11 @@ static const ability_def Ability_List[] =
       ABFLAG_CONF_OK },
 
     // Lugonu
-    { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
-    { ABIL_LUGONU_BEND_SPACE, "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
-    { ABIL_LUGONU_SUMMON_DEMONS, "Summon Abyssal Servants", 7, 0, 100, 5, ABFLAG_NONE },
-    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 200, 40, ABFLAG_NONE },
+    { ABIL_LUGONU_ABYSS_EXIT,  "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
+    { ABIL_LUGONU_BEND_SPACE,  "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
+    { ABIL_LUGONU_BANISH,      "Banish", 4, 0, 200, 5, ABFLAG_NONE },
+    { ABIL_LUGONU_CORRUPT,     "Corrupt", 7, 5, 500, 20, ABFLAG_NONE },
+    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 500, 40, ABFLAG_NONE },
 
     // Nemelex
     { ABIL_NEMELEX_PEEK_DECK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
@@ -1547,6 +1549,7 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
+    {
         if ( you.level_type != LEVEL_ABYSS )
         {
             mpr("You aren't in the Abyss!");
@@ -1555,8 +1558,14 @@ static bool do_ability(const ability_def& abil)
         banished(DNGN_EXIT_ABYSS);
         exercise(SK_INVOCATIONS, 8 + random2(10));
 
-        // Lose 1d2 permanent HP
-        you.hp_max -= (coinflip() ? 2 : 1);
+        const int maxloss = std::max(2, div_rand_round(you.hp_max, 30));
+        // Lose permanent HP
+        you.hp_max -= random_range(1, maxloss);
+
+        // Paranoia.
+        if (you.hp_max < 1)
+            you.hp_max = 1;
+        
         // Deflate HP
         set_hp( 1 + random2(you.hp), false );
 
@@ -1566,25 +1575,25 @@ static bool do_ability(const ability_def& abil)
         if (you.magic_points)
             set_mp(random2(you.magic_points), false);
         break;
+    }
 
     case ABIL_LUGONU_BEND_SPACE:
         lugonu_bends_space();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_LUGONU_SUMMON_DEMONS:
-    {
-        int ndemons = 1 + you.skills[SK_INVOCATIONS] / 4;
-        if (ndemons > 5)
-            ndemons = 5;
-        
-        for ( int i = 0; i < ndemons; ++i )
-            summon_ice_beast_etc( 20 + you.skills[SK_INVOCATIONS] * 3,
-                                  summon_any_demon(DEMON_COMMON), true);
-        
-        exercise(SK_INVOCATIONS, 6 + random2(6));
+    case ABIL_LUGONU_BANISH:
+        if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
+            return (false);
+        zapping( ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam );
+        exercise(SK_INVOCATIONS, 3 + random2(5));        
         break;
-    }
+
+    case ABIL_LUGONU_CORRUPT:
+        if (!lugonu_corrupt_level(300 + you.skills[SK_INVOCATIONS] * 15))
+            return (false);
+        exercise(SK_INVOCATIONS, 5 + random2(5));
+        break;
 
     case ABIL_LUGONU_ABYSS_ENTER:
         if (you.level_type == LEVEL_ABYSS)

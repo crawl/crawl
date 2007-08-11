@@ -52,6 +52,11 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands = false,
                     bool force_place = false, bool force_behaviour = false );
 
+class level_id;
+monster_type pick_random_monster(const level_id &place,
+                                 int power,
+                                 int &lev_mons);
+
 bool player_angers_monster(monsters *mon);
 
 // last updated 12may2000 {dlb}

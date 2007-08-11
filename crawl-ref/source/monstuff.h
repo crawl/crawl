@@ -17,7 +17,8 @@
 #include "mon-util.h"
 
 // useful macro
-#define SAME_ATTITUDE(x) (mons_friendly(x)?BEH_FRIENDLY:BEH_HOSTILE)
+#define SAME_ATTITUDE(x) (mons_friendly(x)? BEH_FRIENDLY:    \
+                          mons_neutral(x)?  BEH_NEUTRAL : BEH_HOSTILE)
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 

@@ -47,6 +47,7 @@
 #include "initfile.h"
 #include "insult.h"
 #include "itemprop.h"
+#include "luadgn.h"
 #include "macro.h"
 #include "misc.h"
 #include "monstuff.h"
@@ -337,16 +338,24 @@ static void get_symbol( int x, int y,
         if (colour)
         {
             const int colmask = *colour & COLFLAG_MASK;
-            // Don't clobber with BLACK, because the colour should be
-            // already set.
-            if (fdef.colour != BLACK)
-                *colour = fdef.colour | colmask;
 
-            if (fdef.em_colour != fdef.colour && fdef.em_colour)
-                *colour =
-                    view_emphasised_colour(
-                        x, y, static_cast<dungeon_feature_type>(object),
-                        *colour, fdef.em_colour | colmask);
+            if (object < NUM_REAL_FEATURES && env.grid_colours[x][y])
+            {
+                *colour = env.grid_colours[x][y] | colmask;
+            }
+            else
+            {
+                // Don't clobber with BLACK, because the colour should be
+                // already set.
+                if (fdef.colour != BLACK)
+                    *colour = fdef.colour | colmask;
+
+                if (fdef.em_colour != fdef.colour && fdef.em_colour)
+                    *colour =
+                        view_emphasised_colour(
+                            x, y, static_cast<dungeon_feature_type>(object),
+                            *colour, fdef.em_colour | colmask);
+            }
         }
 
         // Note anything we see that's notable
@@ -4053,20 +4062,16 @@ void viewwindow(bool draw_it, bool do_updates)
                     const int object = env.show(ep);
                     if (object)
                     {
-                        if ((grd(gc) == DNGN_ROCK_STAIRS_DOWN || grd(gc) == DNGN_ROCK_STAIRS_UP)
-                            && see_grid( gc.x, gc.y ))
-                        {
-                            learned_something_new(TUT_SEEN_ESCAPE_HATCH, gc.x, gc.y);
-                        }
+                        if (grid_is_rock_stair(grd(gc)))
+                            learned_something_new(
+                                TUT_SEEN_ESCAPE_HATCH, gc.x, gc.y);
                         else if (is_feature('>', gc.x, gc.y))
-                                learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
                         else if (is_feature('_', gc.x, gc.y))
                             learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
-                        else if (grd(gc) == DNGN_CLOSED_DOOR
-                                 && see_grid( gc.x, gc.y ))
+                        else if (grd(gc) == DNGN_CLOSED_DOOR)
                             learned_something_new(TUT_SEEN_DOOR, gc.x, gc.y);
-                        else if (grd(gc) == DNGN_ENTER_SHOP
-                                 && see_grid( gc.x, gc.y ))
+                        else if (grd(gc) == DNGN_ENTER_SHOP)
                             learned_something_new(TUT_SEEN_SHOP, gc.x, gc.y);
                     }
                 }

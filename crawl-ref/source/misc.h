@@ -174,7 +174,8 @@ void run_environment_effects();
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
                              bool affect_player = true,
-                             bool preserve_features = false);
+                             bool preserve_features = false,
+                             bool preserve_items = false);
 
 //////////////////////////////////////////////////////////////////////
 // Places and names
@@ -208,10 +209,6 @@ int player_branch_depth();
 
 bool single_level_branch(branch_type branch);
 //////////////////////////////////////////////////////////////////////
-
-// Set floor/wall colour based on the mons_alloc array. Used for
-// Abyss and Pan.
-void set_colours_from_monsters();
 
 int str_to_shoptype(const std::string &s);
 

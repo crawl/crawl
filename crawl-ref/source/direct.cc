@@ -578,8 +578,9 @@ void direction(dist& moves, targeting_type restricts,
 
             {
                 monsters &m = menv[mid];
-                m.attitude = m.attitude == ATT_FRIENDLY?
-                    ATT_HOSTILE : ATT_FRIENDLY;
+                m.attitude = m.attitude == ATT_FRIENDLY? ATT_NEUTRAL :
+                    m.attitude == ATT_HOSTILE? ATT_FRIENDLY :
+                    ATT_HOSTILE;
             }
             break;
 #endif
@@ -1690,6 +1691,9 @@ static void describe_cell(int mx, int my)
 
         if (menv[i].attitude == ATT_FRIENDLY)
             mprf("%s is friendly.", mons_pronoun(menv[i].type, PRONOUN_CAP));
+        else if (menv[i].attitude == ATT_NEUTRAL)
+            mprf("%s is indifferent to you.",
+                 mons_pronoun(menv[i].type, PRONOUN_CAP));
 
         const bool paralysed = mons_is_paralysed(&menv[i]);
         if (paralysed)

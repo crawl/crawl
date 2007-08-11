@@ -24,12 +24,14 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::read,
     &map_lua_marker::read,
+    &map_corruption_marker::read,
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::parse,
     &map_lua_marker::parse,
+    NULL,
 };
 
 map_marker::map_marker(map_marker_type t, const coord_def &p)
@@ -364,6 +366,41 @@ map_marker *map_lua_marker::parse(
 }
 
 //////////////////////////////////////////////////////////////////////////
+// map_corruption_marker
+
+map_corruption_marker::map_corruption_marker(const coord_def &p,
+                                             int dur)
+    : map_marker(MAT_CORRUPTION_NEXUS, p), duration(dur), radius(0)
+{
+}
+
+void map_corruption_marker::write(tagHeader &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, duration);
+    marshallShort(out, radius);
+}
+
+void map_corruption_marker::read(tagHeader &in)
+{
+    map_marker::read(in);
+    duration = unmarshallShort(in);
+    radius   = unmarshallShort(in);
+}
+
+map_marker *map_corruption_marker::read(tagHeader &th, map_marker_type)
+{
+    map_corruption_marker *mc = new map_corruption_marker();
+    mc->read(th);
+    return (mc);
+}
+
+std::string map_corruption_marker::debug_describe() const
+{
+    return make_stringf("Lugonu corrupt (%d)", duration);
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Map markers in env.
 
 void env_activate_markers()
@@ -421,6 +458,17 @@ map_marker *env_find_marker(const coord_def &c, map_marker_type type)
     return (NULL);
 }
 
+map_marker *env_find_marker(map_marker_type type)
+{
+    for (dgn_marker_map::const_iterator i = env.markers.begin();
+         i != env.markers.end(); ++i)
+    {
+        if (type == MAT_ANY || i->second->get_type() == type)
+            return (i->second);
+    }
+    return (NULL);
+}
+
 void env_move_markers(const coord_def &from, const coord_def &to)
 {
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
@@ -442,13 +490,14 @@ void env_move_markers(const coord_def &from, const coord_def &to)
     }
 }
 
-std::vector<map_marker*> env_get_all_markers()
+std::vector<map_marker*> env_get_all_markers(map_marker_type mat)
 {
     std::vector<map_marker*> rmarkers;
     for (dgn_marker_map::const_iterator i = env.markers.begin();
          i != env.markers.end(); ++i)
     {
-        rmarkers.push_back(i->second);
+        if (mat == MAT_ANY || i->second->get_type() == mat)
+            rmarkers.push_back(i->second);
     }
     return (rmarkers);    
 }

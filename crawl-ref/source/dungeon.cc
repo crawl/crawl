@@ -512,9 +512,10 @@ static void reset_level()
     use_random_maps  = true;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
-    
+
     // blank level with DNGN_ROCK_WALL
-    make_box(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, DNGN_ROCK_WALL);
+    grd.init(DNGN_ROCK_WALL);
+    env.grid_colours.init(BLACK);
 
     // delete all traps
     for (int i = 0; i < MAX_TRAPS; i++)
@@ -528,15 +529,8 @@ static void reset_level()
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].type = -1;
 
-    // unlink all monsters and items from the grid
-    for(int x=0; x<GXM; x++)
-    {
-        for(int y=0; y<GYM; y++)
-        {
-            mgrd[x][y] = NON_MONSTER;
-            igrd[x][y] = NON_ITEM;
-        }
-    }
+    mgrd.init(NON_MONSTER);
+    igrd.init(NON_ITEM);
 
     // reset all shops
     for (int shcount = 0; shcount < MAX_SHOPS; shcount++)
@@ -809,7 +803,63 @@ static void build_dungeon_level(int level_number, int level_type)
     // Translate stairs for pandemonium levels:
     if (level_type == LEVEL_PANDEMONIUM)
         fixup_pandemonium_stairs();
+
+    dgn_set_floor_colours();
 }                               // end builder()
+
+
+static char fix_black_colour(char incol)
+{
+    if ( incol == BLACK )
+        return LIGHTGREY;
+    else
+        return incol;
+}
+
+void dgn_set_colours_from_monsters()
+{
+    env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
+    env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
+}
+
+void dgn_set_floor_colours()
+{
+    if (you.level_type == LEVEL_PANDEMONIUM || you.level_type == LEVEL_ABYSS)
+    {
+        dgn_set_colours_from_monsters();
+    }
+    else if (you.level_type == LEVEL_LABYRINTH)
+    {
+        env.floor_colour = LIGHTGREY;
+        env.rock_colour  = BROWN;
+    }
+    else
+    {
+        // level_type == LEVEL_DUNGEON
+        const int youbranch = you.where_are_you;
+        env.floor_colour = branches[youbranch].floor_colour;
+        env.rock_colour = branches[youbranch].rock_colour;
+
+        // Zot is multicoloured
+        if ( you.where_are_you == BRANCH_HALL_OF_ZOT )
+        {
+            const char floorcolours_zot[] = { LIGHTGREY, LIGHTGREY, BLUE,
+                                              LIGHTBLUE, MAGENTA };
+            const char rockcolours_zot[] = { LIGHTGREY, BLUE, LIGHTBLUE,
+                                             MAGENTA, LIGHTMAGENTA };
+
+            const int curr_subdungeon_level = player_branch_depth();
+
+            if ( curr_subdungeon_level > 5 || curr_subdungeon_level < 1 )
+                mpr("Odd colouring!");
+            else
+            {
+                env.floor_colour = floorcolours_zot[curr_subdungeon_level-1];
+                env.rock_colour = rockcolours_zot[curr_subdungeon_level-1];
+            }
+        }
+    }    
+}
 
 static void check_doors()
 {

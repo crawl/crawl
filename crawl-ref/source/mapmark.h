@@ -14,7 +14,7 @@ enum map_marker_type
 {
     MAT_FEATURE,              // Stock marker.
     MAT_LUA_MARKER,
-    MAT_FEATURE_NAME,
+    MAT_CORRUPTION_NEXUS,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY
 };
@@ -69,6 +69,23 @@ public:
     dungeon_feature_type feat;
 };
 
+class map_corruption_marker : public map_marker
+{
+public:
+    map_corruption_marker(const coord_def &pos = coord_def(0, 0),
+                          int dur = 0);
+
+    void write(tagHeader &) const;
+    void read(tagHeader &);
+
+    std::string debug_describe() const;
+
+    static map_marker *read(tagHeader &, map_marker_type);
+
+public:
+    int duration, radius;
+};
+
 // A marker powered by Lua.
 class map_lua_marker : public map_marker, public dgn_event_listener
 {
@@ -104,8 +121,9 @@ void env_activate_markers();
 void env_add_marker(map_marker *);
 void env_remove_marker(map_marker *);
 void env_remove_markers_at(const coord_def &c, map_marker_type);
-std::vector<map_marker*> env_get_all_markers();
+std::vector<map_marker*> env_get_all_markers(map_marker_type = MAT_ANY);
 map_marker *env_find_marker(const coord_def &c, map_marker_type);
+map_marker *env_find_marker(map_marker_type type);
 std::vector<map_marker*> env_get_markers(const coord_def &c);
 void env_clear_markers();
 std::string env_property_at(const coord_def &c, map_marker_type,

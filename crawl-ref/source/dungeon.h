@@ -272,6 +272,12 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
 
 bool builder(int level_number, int level_type);
+
+// Set floor/wall colour based on the mons_alloc array. Used for
+// Abyss and Pan.
+void dgn_set_colours_from_monsters();
+void dgn_set_floor_colours();
+
 bool dgn_place_map(int map, bool generating_level, bool clobber);
 void level_clear_vault_memory();
 void level_welcome_messages();

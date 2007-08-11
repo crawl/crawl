@@ -334,6 +334,56 @@ void unmarshallCoord(tagHeader &th, coord_def &c)
     c.y = unmarshallShort(th);
 }
 
+template <typename marshall, typename grid>
+void run_length_encode(tagHeader &th, marshall m, const grid &g,
+                       int width, int height)
+{
+    int last = 0, nlast = 0;
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            if (!nlast)
+                last = g[x][y];
+            if (last == g[x][y] && nlast < 255)
+            {
+                nlast++;
+                continue;
+            }
+
+            marshallByte(th, nlast);
+            m(th, last);
+
+            last = g[x][y];
+            nlast = 1;
+        }
+    }
+
+    marshallByte(th, nlast);
+    m(th, last);
+}
+
+template <typename unmarshall, typename grid>
+void run_length_decode(tagHeader &th, unmarshall um, grid &g,
+                       int width, int height)
+{
+    const int end = width * height;
+    int offset = 0;
+    while (offset < end)
+    {
+        const int run = (unsigned char) unmarshallByte(th);
+        const int value = um(th);
+
+        for (int i = 0; i < run; ++i)
+        {
+            const int y = offset / width;
+            const int x = offset % width;
+            g[x][y] = value;
+            ++offset;
+        }
+    }
+}
+
 union float_marshall_kludge
 {
     // [ds] Does ANSI C guarantee that sizeof(float) == sizeof(long)?
@@ -1350,6 +1400,8 @@ static void tag_construct_level(struct tagHeader &th)
         }
     }
 
+    run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
+
     marshallShort(th, env.cloud_no);
 
     // how many clouds?
@@ -1576,6 +1628,9 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
             env.cgrid[i][j] = (unsigned char) unmarshallByte(th);
         }
     }
+
+    env.grid_colours.init(BLACK);
+    run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
 
     env.cloud_no = unmarshallShort(th);
 

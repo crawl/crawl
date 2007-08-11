@@ -229,7 +229,7 @@ int list_spells()
     }
 }
 
-static int apply_vehumet_wizardry_boost(spell_type spell, int chance)
+static int apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
     int wizardry = player_mag_abil(false);
     int fail_reduce = 100;
@@ -253,6 +253,10 @@ static int apply_vehumet_wizardry_boost(spell_type spell, int chance)
         fail_reduce  = fail_reduce * wiz_factor / 100;
         wiz_factor  += (100 - wiz_factor) / 3;
     }
+
+    // Draconians get a boost to dragon-form.
+    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
+        fail_reduce = fail_reduce * 70 / 100;
 
     // Hard cap on fail rate reduction.
     if (fail_reduce < 50)
@@ -444,7 +448,7 @@ int spell_fail(spell_type spell)
     }
 
     // Apply the effects of Vehumet prayer and items of wizardry.
-    chance2 = apply_vehumet_wizardry_boost(spell, chance2);
+    chance2 = apply_spellcasting_success_boosts(spell, chance2);
 
     if (chance2 > 100)
         chance2 = 100;

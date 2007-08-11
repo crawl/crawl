@@ -556,7 +556,7 @@ static bool dgn_shift_feature(const coord_def &pos)
     return (true);
 }
 
-static void dgn_check_terrain_items(const coord_def &pos)
+static void dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 {
     const dungeon_feature_type grid = grd(pos);
     if (grid_is_solid(grid) || grid_destroys_items(grid))
@@ -569,7 +569,7 @@ static void dgn_check_terrain_items(const coord_def &pos)
             item = mitm[item].link;
 
             // Game-critical item.
-            if (item_is_critical(mitm[curr]))
+            if (preserve_items || item_is_critical(mitm[curr]))
                 dgn_shift_item(pos, mitm[curr]);
             else
             {
@@ -598,7 +598,8 @@ static void dgn_check_terrain_monsters(const coord_def &pos)
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
                              bool affect_player,
-                             bool preserve_features)
+                             bool preserve_features,
+                             bool preserve_items)
 {
     if (nfeat != DNGN_UNSEEN)
     {
@@ -606,11 +607,12 @@ void dungeon_terrain_changed(const coord_def &pos,
             dgn_shift_feature(pos);
         unnotice_feature(level_pos(level_id::current(), pos));
         grd(pos) = nfeat;
+        env.grid_colours(pos) = BLACK;
         if (is_notable_terrain(nfeat) && see_grid(pos))
             seen_notable_thing(nfeat, pos.x, pos.y);
     }
     
-    dgn_check_terrain_items(pos);
+    dgn_check_terrain_items(pos, preserve_items);
     if (affect_player && pos == you.pos())
     {
         if (!grid_is_solid(grd(pos)))
@@ -1420,20 +1422,6 @@ void trackers_init_new_level(bool transit)
         stash_init_new_level();
 }
 
-static char fix_black_colour(char incol)
-{
-    if ( incol == BLACK )
-        return LIGHTGREY;
-    else
-        return incol;
-}
-
-void set_colours_from_monsters()
-{
-    env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
-    env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
-}
-
 std::string level_description_string()
 {
     if (you.level_type == LEVEL_PANDEMONIUM)
@@ -1476,41 +1464,8 @@ void new_level(void)
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     cprintf("%s", level_description_string().c_str());
 
-    if (you.level_type == LEVEL_PANDEMONIUM || you.level_type == LEVEL_ABYSS)
-    {
-        set_colours_from_monsters();
-    }
-    else if (you.level_type == LEVEL_LABYRINTH)
-    {
-        env.floor_colour = LIGHTGREY;
-        env.rock_colour  = BROWN;
-    }
-    else
-    {
-        // level_type == LEVEL_DUNGEON
-        const int youbranch = you.where_are_you;
-        env.floor_colour = branches[youbranch].floor_colour;
-        env.rock_colour = branches[youbranch].rock_colour;
-
-        // Zot is multicoloured
-        if ( you.where_are_you == BRANCH_HALL_OF_ZOT )
-        {
-            const char floorcolours_zot[] = { LIGHTGREY, LIGHTGREY, BLUE,
-                                              LIGHTBLUE, MAGENTA };
-            const char rockcolours_zot[] = { LIGHTGREY, BLUE, LIGHTBLUE,
-                                             MAGENTA, LIGHTMAGENTA };
-
-            const int curr_subdungeon_level = player_branch_depth();
-
-            if ( curr_subdungeon_level > 5 || curr_subdungeon_level < 1 )
-                mpr("Odd colouring!");
-            else
-            {
-                env.floor_colour = floorcolours_zot[curr_subdungeon_level-1];
-                env.rock_colour = rockcolours_zot[curr_subdungeon_level-1];
-            }
-        }
-    }
+    dgn_set_floor_colours();
+    
     clear_to_end_of_line();
 #ifdef DGL_WHEREIS
     whereis_record();
@@ -2582,6 +2537,8 @@ void run_environment_effects()
             apply_environment_effect( sfx_seeds[i] );
         }
     }
+
+    run_corruption_effects(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(int x, int y)

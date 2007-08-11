@@ -494,6 +494,7 @@ static const char *rand_wpn_names[] = {
     " of Egomania",
     " of Pyrrhic Victory",
     " of Irrepressible Laughter",
+    " of Impeachment",
 };
 
 static const char *rand_armour_names[] = {

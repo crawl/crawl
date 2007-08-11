@@ -12,19 +12,20 @@
 #ifndef MONPICK_H
 #define MONPICK_H
 
+#include "travel.h"
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon - fight
  * *********************************************************************** */
-int mons_rarity(int mcls);
+int mons_rarity(int mcls, const level_id &place = level_id::current());
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon
  * *********************************************************************** */
-int mons_level(int mcls);
+int mons_level(int mcls, const level_id &place = level_id::current());
 
 
 // last updated 12may2000 {dlb}

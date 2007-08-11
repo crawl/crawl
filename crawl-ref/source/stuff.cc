@@ -786,7 +786,8 @@ bool map_bounds( int x, int y )
 // Returns a random location in (x_pos, y_pos)... the grid will be
 // DNGN_FLOOR if clear, and NON_MONSTER if empty.  Exclusive tells
 // if we're using in_bounds() or map_bounds() restriction.
-void random_in_bounds( int &x_pos, int &y_pos, int terr, bool empty, bool excl )
+void random_in_bounds( int &x_pos, int &y_pos, int terr,
+                       bool empty, bool excl )
 {
     bool done = false;
 
@@ -799,7 +800,8 @@ void random_in_bounds( int &x_pos, int &y_pos, int terr, bool empty, bool excl )
             done = true;
         else if (terr == grd[x_pos][y_pos])
             done = true;
-        else if (terr == DNGN_DEEP_WATER && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
+        else if (terr == DNGN_DEEP_WATER
+                 && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
             done = true;
         else if (empty 
                 && mgrd[x_pos][y_pos] != NON_MONSTER 

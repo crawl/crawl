@@ -113,7 +113,8 @@ enum ability_type
     ABIL_ELYVILON_GREATER_HEALING,              //  224
     ABIL_LUGONU_ABYSS_EXIT,
     ABIL_LUGONU_BEND_SPACE,
-    ABIL_LUGONU_SUMMON_DEMONS,
+    ABIL_LUGONU_BANISH,
+    ABIL_LUGONU_CORRUPT,
     ABIL_LUGONU_ABYSS_ENTER,
     ABIL_NEMELEX_PEEK_DECK,
     ABIL_NEMELEX_DRAW_CARD,
@@ -2393,6 +2394,7 @@ enum beh_type
     NUM_BEHAVIOURS,                    //  max # of legal states
     BEH_CHARMED,                       //  hostile-but-charmed; create only
     BEH_FRIENDLY,                      //  used during creation only
+    BEH_NEUTRAL,                       //  creation only
     BEH_HOSTILE,                       //  creation only
     BEH_GOD_GIFT,                      //  creation only
     BEH_GUARD                          //  creation only - monster is guard

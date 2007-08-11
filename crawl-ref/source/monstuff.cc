@@ -1537,6 +1537,7 @@ static void handle_behaviour(monsters *mon)
 {
     bool changed = true;
     bool isFriendly = mons_friendly(mon);
+    bool isNeutral = mons_neutral(mon);
     bool proxPlayer = mons_near(mon);
     bool proxFoe;
     bool isHurt = (mon->hit_points <= mon->max_hit_points / 4 - 1);
@@ -1611,6 +1612,9 @@ static void handle_behaviour(monsters *mon)
         }
     }
 
+    if (mon->attitude == ATT_NEUTRAL && mon->foe == MHITNOT)
+        set_nearest_monster_foe(mon);
+
     // monsters do not attack themselves {dlb}
     if (mon->foe == monster_index(mon))
         mon->foe = MHITNOT;
@@ -1622,9 +1626,17 @@ static void handle_behaviour(monsters *mon)
             mon->foe = MHITNOT;
     }
 
+    // neutral monsters prefer not to attack players, or other neutrals.
+    if (mon->foe != MHITNOT && isNeutral
+        && (mon->foe == MHITYOU || mons_neutral(&menv[mon->foe])))
+    {
+        mon->foe = MHITNOT;
+    }
+
     // unfriendly monsters fighting other monsters will usually
     // target the player, if they're healthy
-    if (!isFriendly && mon->foe != MHITYOU && mon->foe != MHITNOT
+    if (!isFriendly && !isNeutral
+        && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !(mon->has_ench(ENCH_BERSERK)) && isHealthy
         && !one_chance_in(3))
     {
@@ -1688,7 +1700,7 @@ static void handle_behaviour(monsters *mon)
             // no foe? then wander or seek the player
             if (mon->foe == MHITNOT)
             {
-                if (!proxPlayer)
+                if (!proxPlayer || isNeutral)
                     new_beh = BEH_WANDER;
                 else
                 {
@@ -1871,7 +1883,7 @@ static void handle_behaviour(monsters *mon)
             // foe gone out of LOS?
             if (!proxFoe)
             {
-                if (isFriendly || proxPlayer)
+                if ((isFriendly || proxPlayer) && !isNeutral)
                     new_foe = MHITYOU;
                 else
                     new_beh = BEH_WANDER;
@@ -1898,12 +1910,12 @@ static void handle_behaviour(monsters *mon)
 }                               // end handle_behaviour()
 
 static bool mons_check_set_foe(monsters *mon, int x, int y,
-                               bool friendly)
+                               bool friendly, bool neutral)
 {
     if (!in_bounds(x, y))
         return (false);
     
-    if (!friendly && x == you.x_pos && y == you.y_pos
+    if (!friendly && !neutral && x == you.x_pos && y == you.y_pos
         && mons_player_visible(mon))
     {
         mon->foe = MHITYOU;
@@ -1916,7 +1928,8 @@ static bool mons_check_set_foe(monsters *mon, int x, int y,
 
         if (foe != mon
             && mons_monster_visible(mon, foe)
-            && mons_friendly(foe) != friendly)
+            && (mons_friendly(foe) != friendly
+                || (neutral && !mons_neutral(foe))))
         {
             mon->foe = mgrd[x][y];
             return (true);
@@ -1930,6 +1943,7 @@ static bool mons_check_set_foe(monsters *mon, int x, int y,
 void set_nearest_monster_foe(monsters *mon)
 {
     const bool friendly = mons_friendly(mon);
+    const bool neutral  = mons_neutral(mon);
 
     const int mx = mon->x;
     const int my = mon->y;
@@ -1937,13 +1951,13 @@ void set_nearest_monster_foe(monsters *mon)
     for (int k = 1; k <= LOS_RADIUS; k++)
     {
         for (int x = mx - k; x <= mx + k; ++x)
-            if (mons_check_set_foe(mon, x, my - k, friendly)
-                || mons_check_set_foe(mon, x, my + k, friendly))
+            if (mons_check_set_foe(mon, x, my - k, friendly, neutral)
+                || mons_check_set_foe(mon, x, my + k, friendly, neutral))
                 return;
 
         for (int y = my - k + 1; y < my + k; ++y)
-            if (mons_check_set_foe(mon, mx - k, y, friendly)
-                || mons_check_set_foe(mon, mx + k, y, friendly))
+            if (mons_check_set_foe(mon, mx - k, y, friendly, neutral)
+                || mons_check_set_foe(mon, mx + k, y, friendly, neutral))
                 return;    
     }
 }

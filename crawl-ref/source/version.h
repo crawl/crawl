@@ -58,6 +58,6 @@
 #define VERSION_DETAIL BUILD_DATE
 #endif
 
-#define SAVE_MAJOR_VERSION 2
+#define SAVE_MAJOR_VERSION 3
 
 #endif

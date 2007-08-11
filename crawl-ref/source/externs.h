@@ -337,7 +337,7 @@ struct coord_def
 
     int rdist() const
     {
-        return (MAXIMUM(::abs(x), ::abs(y)));
+        return (std::max(std::abs(x), std::abs(y)));
     }
 };
 typedef bool (*coord_predicate)(const coord_def &c);
@@ -1260,6 +1260,7 @@ public:
     FixedArray< unsigned char, GXM, GYM >    mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid
+    FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
 
     FixedArray< map_cell, GXM, GYM >        map;    // discovered terrain
 
