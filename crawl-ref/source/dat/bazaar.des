@@ -79,7 +79,7 @@ NAME:    bzr_entry_003
 TAGS:    bzr_entry 
 ORIENT:  float
 MONS:    human, orc, goblin, kobold
-SUBST:   . = .:210 1
+SUBST:   . = .:150 1
 SHUFFLE: 1234
 MARKER: O = lua:bazaar_portal()
 MAP
@@ -89,6 +89,52 @@ MAP
 .......
  .....
 ENDMAP
+
+###############################################################################
+# Safe
+NAME:    bzr_entry_004
+TAGS:    bzr_entry 
+ORIENT:  float
+MARKER: O = lua:bazaar_portal()
+MAP
+ xxxxx
+xx...xx
++..O..x
+xx...xx
+ xxxxx
+ENDMAP
+
+###############################################################################
+# Safe 2
+NAME:    bzr_entry_005
+TAGS:    bzr_entry 
+ORIENT:  float
+SHUFFLE: wlW
+MARKER: O = lua:bazaar_portal()
+MAP
+ wwwww
+wwwwwww
+ww<O>ww
+wwwwwww
+ wwwww
+ENDMAP
+
+###############################################################################
+# Portal along the road
+NAME:    bzr_entry_006
+TAGS:    bzr_entry 
+ORIENT:  float
+SHUFFLE: XU, TUV
+SUBST:   X=.
+MARKER: O = lua:bazaar_portal()
+MAP
+   xxx
+  xxOxx
+xxx.X.xxx
+.U.....U.
+xxxxxxxxx
+ENDMAP
+
 
 ###############################################################################
 # Bazaar layouts.
@@ -105,20 +151,27 @@ ENDMAP
 
 NAME:   bazaar_general_marketplace
 TAGS:   bazaar
+FLAGS:  no_rotate
 ORIENT: encompass
 KFEAT:  A = any shop
 CHANCE: 30
 : bazaar_message(_G)
 MAP
-xxxxxxxxx
-xxxx>xxxx
-xxx...xxx
-xx..A..xx
-x<.A.A.>x
-xx..A..xx
-xxx...xxx
-xxxx>xxxx
-xxxxxxxxx
+xxxxxxxxxxxxxxx
+xxxxxxx>xxxxxxx
+xxxxxx...xxxxxx
+xxxxx.....xxxxx
+xxxx...A...xxxx
+xxx.........xxx
+xx...........xx
+x<..A.....A..>x
+xx...........xx
+xxx.........xxx
+xxxx...A...xxxx
+xxxxx.....xxxxx
+xxxxxx...xxxxxx
+xxxxxxx>xxxxxxx
+xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_outfitter
@@ -147,37 +200,328 @@ ENDMAP
 NAME:    bazaar_mystics
 TAGS:    bazaar 
 ORIENT:  encompass
-SHUFFLE: AB, def, xw/vl
+SHUFFLE: AB, def, wlb
 KFEAT:   A = scroll shop / book shop / book shop
 KFEAT:   B = jewellery shop
 ITEM:    any jewellery / good_item any jewellery
 ITEM:    any book / good_item any book, any staff 
-SUBST:   w:w.l, x:b, c:., v=bl, d=.d, e=.e, f=.f
+SUBST:   d=.d, e=.e, f=.f
 : bazaar_message(_G)
 MAP
-xxxxxxxxxxxxx
-xxxxxxxwwwxxx
-xxxwwx....Axx
-x<...+.def.>x
-xxxwwx....Bxx
-xxxxxxxwwwxxx
-xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxwwwwwxxxxxx
+xxxxxxxxxxwwww...wwwxxxx
+xwwwwwwwwww....A...wwxxx
+xw<......d+....e....+f>x
+xwwwwwwwwww....B...wwxxx
+xxxxxxxxxxwwww...wwwxxxx
+xxxxxxxxxxxxxwwwwwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_wands
 TAGS:    bazaar 
+FLAGS:   no_rotate
 ORIENT:  encompass
 KFEAT:   A = wand shop
-ITEM:    any wand
+KFEAT:   B = distillery shop
+#ITEM:    any wand, cursed ring of levitation
+ITEM:    any wand, ring of levitation
+SHUFFLE: leAB/wdBA
 : bazaar_message(_G)
 MAP
-xxxxxxxxxxx
-xx...>...xx
-x..A...A..x
-x.........x
-xllll.llllx
-x....>....x
-x..d...d..x
-xx...<...xx
-xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx......>......xxxxxxxxxx
+xxxx.........................xxxx
+xx.....l.................l.....xx
+xx......l...............l.......x
+xl....A.ll.............ll.A....lx
+xl......l...............l......lx
+xll...........................llx
+xllll.......................llllx
+xlllllll.................lllllllx
+xllllllllllll.......llllllllllllx
+xlllllllllllllllllllllllllllllllx
+x...lllllllllllllllllllllllll...x
+x........lllllllllllllll........x
+x............lllllll............x
+x..............lll..............x
+xxxxx.......................xxxxx
+x...x.......................x...x
+x.B.+.......................+.B.x
+x...x..........<e>..........x...x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_row
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff
+SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss
+KFEAT:   A = any shop / antique weapon shop
+KFEAT:   B = any shop / antique armour shop
+KFEAT:   C = any shop / wand shop
+KFEAT:   D = any shop / jewellery shop
+KFEAT:   E = any shop / weapon shop / armour shop
+KFEAT:   F = any shop / book shop / scroll shop
+SUBST:   a=T, b=T, c=T, d=T, e=T, f=T
+SUBST:   z=V, y=V, r=V, s=V
+KFEAT:   Z = stone_arch
+KFEAT:   Y = stone_arch
+KFEAT:   R = stone_arch
+KFEAT:   S = stone_arch
+SHUFFLE: lw
+SUBST:   w:wWx, l:lx
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxxxxxx
+xxx.....xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
+xx..www..xxxxxx.a.xxxxxxxxx.c.xxxxxxxxx.e.xxxxxx..lll..xx
+x<.wwwww..+...........+...........+...........+..lllll.>x
+xx..www..xxxxxx.b.xxxxxxxxx.d.xxxxxxxxx.f.xxxxxx..lll..xx
+xx......xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
+xxxxxxxxxxxxxxxxBxxxxxxxxxxxDxxxxxxxxxxxFxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_circle_1
+CHANCE:  2
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: ABCD, EFGH
+SUBST:   H=>, A=T, B=T
+KFEAT:   C = any shop
+KFEAT:   D = any shop
+KFEAT:   E = any shop
+KFEAT:   F = any shop
+KFEAT:   G = any shop
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+x..E..+.......+.....+.......+..H..x
+x.....xxxxxxxxx..D..xxxxxxxxx.....x
+xx...xxxxx....+.....+....xxxxx...xx
+xxx+xxx....xxxxx...xxxxx....xxx+xxx
+xxx.xx..xxxxxxxxx+xxxxxxxxx..xx.xxx
+xxx.x..xxxxxxxxxx+xxxxxxxxxx..x.xxx
+xxx+x+xxxxxxxxxx...xxxxxxxxxx+x+xxx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xx.....xxxxxx.........xxxxxx.....xx
+xx..A..xxxxxT....<....Txxxxx..B..xx
+xx.....xxxxxx.........xxxxxx.....xx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xxx+x+xxxxxxxxxx...xxxxxxxxxx+x+xxx
+xxx.x..xxxxxxxxxx+xxxxxxxxxx..x.xxx
+xxx.xx..xxxxxxxxx+xxxxxxxxx..xx.xxx
+xxx+xxx....xxxxx...xxxxx....xxx+xxx
+xx...xxxxx....+.....+....xxxxx...xx
+x.....xxxxxxxxx..C..xxxxxxxxx.....x
+x..G..+.......+.....+.......+..F..x
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_circle_2
+CHANCE:  2
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: EFGH
+SUBST:   H=>, D=T, C=T
+KFEAT:   A = any shop
+KFEAT:   B = any shop
+KFEAT:   E = any shop
+KFEAT:   F = any shop
+KFEAT:   G = any shop
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+x..H..xxxxxxxxx.....xxxxxxxxx..E..x
+x.....xxxxxxxxx..D..xxxxxxxxx.....x
+xx...xxxxx....+.....+....xxxxx...xx
+xxx+xxx....xxxxx...xxxxx....xxx+xxx
+xxx.xx..xxxxxxxxx+xxxxxxxxx..xx.xxx
+xxx.x..xxxxxxxxxx+xxxxxxxxxx..x.xxx
+xxx+x+xxxxxxxxxx...xxxxxxxxxx+x+xxx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xx.....xxxxxx.........xxxxxx.....xx
+xx..A..xxxxxT....<....Txxxxx..B..xx
+xx.....xxxxxx.........xxxxxx.....xx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xxx+x+xxxxxxxxxx...xxxxxxxxxx+x+xxx
+xxx.x..xxxxxxxxxx+xxxxxxxxxx..x.xxx
+xxx.xx..xxxxxxxxx+xxxxxxxxx..xx.xxx
+xxx+xxx....xxxxx...xxxxx....xxx+xxx
+xx...xxxxx....+.....+....xxxxx...xx
+x.....xxxxxxxxx..C..xxxxxxxxx.....x
+x..G..xxxxxxxxx.....xxxxxxxxx..F..x
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_circle_3
+CHANCE:  2
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: EFGH
+SUBST:   A=>, D=T, C=T
+KFEAT:   B = any shop
+KFEAT:   H = any shop
+KFEAT:   E = any shop
+KFEAT:   F = any shop
+KFEAT:   G = any shop
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+x..H..+.......+.....+.......+..E..x
+x.....xxxxxxxxx..D..xxxxxxxxx.....x
+xx...xxxxxxxxxx.....xxxxxxxxxx...xx
+xxx+xxxxxxxxxxxx...xxxxxxxxxxxx+xxx
+xxx.xxxxxxxxxxxxx+xxxxxxxxxxxxx.xxx
+xxx.xxxxxxxxxxxxx+xxxxxxxxxxxxx.xxx
+xxx+xxxxxxxxxxxx...xxxxxxxxxxxx+xxx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xx.....xxxxxx.........xxxxxx.....xx
+xx..A..xxxxxT....<....Txxxxx..B..xx
+xx.....xxxxxx.........xxxxxx.....xx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xxx+xxxxxxxxxxxx...xxxxxxxxxxxx+xxx
+xxx.xxxxxxxxxxxxx+xxxxxxxxxxxxx.xxx
+xxx.xxxxxxxxxxxxx+xxxxxxxxxxxxx.xxx
+xxx+xxxxxxxxxxxx...xxxxxxxxxxxx+xxx
+xx...xxxxxxxxxx.....xxxxxxxxxx...xx
+x.....xxxxxxxxx..C..xxxxxxxxx.....x
+x..G..+.......+.....+.......+..F..x
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_circle_4
+CHANCE:  1
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: ABCDEF
+KFEAT:   A = any shop
+KFEAT:   B = any shop
+KFEAT:   E = any shop
+KFEAT:   C = any shop
+KFEAT:   D = any shop
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+x..C..+.......+.....xxxxxxxxx..T..x
+x.....xxxxxxxxx..D..xxxxxxxxx.....x
+xx...xxxxxxxxxx.....xxxxxxxxxx...xx
+xxx+xxxxxx.xxxxx...xxxxxxxxxxxx+xxx
+xxx.xxxxxxxxxxxxx+xxxxxxxxxxxxx.xxx
+xxx.xxxxxxxxxxxxx+xxxxxxxxxxxxx.xxx
+xxx+xxxxxxxxxxxx...xxxxxxxxxxxx+xxx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xx.....xxxxxx.........xxxxxx.....xx
+xx..A..xxxxxT....<....Txxxxx..>..xx
+xx.....xxxxxx.........xxxxxx.....xx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xxx+xxxxxxxxxxxx...xxxxxxxxxxxx+xxx
+xxx.xxxxxxxxxxxxxTxxxxxxxxxxxxx.xxx
+xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx.xxx
+xxx+xxxxxx.xxxxx...xxxxxxxxxxxx+xxx
+xx...xxxxxxxxxx.....xxxxxxxxxx...xx
+x.....xxxxxxxxx..E..xxxxxxxxx.....x
+x..T..+.......+.....+.......+..B..x
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_circle_5
+CHANCE:  2
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+KFEAT:   C = any shop
+KFEAT:   D = any shop
+KFEAT:   E = any shop
+KFEAT:   F = any shop
+KFEAT:   G = any shop
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+x..>..+.......+.....+.......+..E..x
+x.....xxxxxxxxx..D..xxxxxxxxx.....x
+xx...xxxxx....+.....+....xxxxx...xx
+xxxxxxx....xxxxx...xxxxx....xxxxxxx
+xxxxxx..xxxxxxxxxxxxxxxxxxx..xxxxxx
+xxxxx..xxxxxxxxxxTxxxxxxxxxx..xxxxx
+xxxxx+xxxxxxxxxx...xxxxxxxxxx+xxxxx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xx.....xxxxxx.........xxxxxx.....xx
+xx..T..+....+....<....+....+..T..xx
+xx.....xxxxxx.........xxxxxx.....xx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xxx+x+xxxxxxxxxx...xxxxxxxxxx+x+xxx
+xxx.x..xxxxxxxxxxTxxxxxxxxxx..x.xxx
+xxx.xx..xxxxxxxxxxxxxxxxxxx..xx.xxx
+xxx+xxx....xxxxx...xxxxx....xxx+xxx
+xx...xxxxx....+.....+....xxxxx...xx
+x.....xxxxxxxxx..C..xxxxxxxxx.....x
+x..G..xxxxxxxxx.....xxxxxxxxx..F..x
+x.....xxxxxxxxxx...xxxxxxxxxx.....x
+xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    bazaar_circle_6
+CHANCE:  3
+TAGS:    bazaar 
+FLAGS:   no_rotate
+ORIENT:  encompass
+KFEAT:   A = any shop / antique armour shop
+KFEAT:   B = any shop / antique weapon shop
+KFEAT:   C = any shop / jewellery shop
+KFEAT:   D = any shop / book shop
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx..D..xxxxxxxxxxxxxxx
+xxxxxxxxxx....+.....+....xxxxxxxxxx
+xxxxxxx....xxxxx...xxxxx....xxxxxxx
+xxxxxx..xxxxxxxxxxxxxxxxxxx..xxxxxx
+xxxxx..xxxxxxxxxx>xxxxxxxxxx..xxxxx
+xxxxx+xxxxxxxxxx...xxxxxxxxxx+xxxxx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xx.....xxxxxx.........xxxxxx.....xx
+xx..A..xxxxxT....<....Txxxxx..B..xx
+xx.....xxxxxx.........xxxxxx.....xx
+xxx...xxxxxxxx.......xxxxxxxx...xxx
+xxxxx+xxxxxxxxxx...xxxxxxxxxx+xxxxx
+xxxxx..xxxxxxxxxx+xxxxxxxxxx..xxxxx
+xxxxxx..xxxxxxxxx+xxxxxxxxx..xxxxxx
+xxxxxxx....xxxxx...xxxxx....xxxxxxx
+xxxxxxxxxx....+.....+....xxxxxxxxxx
+xxxxxxxxxxxxxxx..C..xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

@@ -1422,7 +1422,13 @@ static void fixup_bazaar_stairs()
                 if (grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
                     grd[x][y] = DNGN_EXIT_PORTAL_VAULT;
                 else
+                {
                     grd[x][y] = DNGN_STONE_ARCH;
+                    env_add_marker(
+                        new map_feature_marker(
+                            coord_def(x, y),
+                            DNGN_STONE_ARCH));
+                }
             }
         }
     }
@@ -6911,6 +6917,13 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     {
         const coord_def pos(dgn_find_closest_to_stone_stairs());
         if (in_bounds(pos))
+            return (pos);
+    }
+
+    if (stair_to_find == DNGN_STONE_ARCH)
+    {
+        const coord_def pos(dgn_find_feature_marker(stair_to_find));
+        if (in_bounds(pos) && grd(pos) == stair_to_find)
             return (pos);
     }
 
