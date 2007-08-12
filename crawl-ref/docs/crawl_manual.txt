@@ -11,11 +11,12 @@ E.      Experience and Skills
 F.      Monsters
 G.      Items
 H.      Spellcasting
-I.      Religion
-J.      Mutations
-K.      Keymaps, Macros, Options, Performance
+I.      Targeting
+J.      Religion
+K.      Mutations
 L.      Licence, Contact, History
-M.      Philosophy
+M.      Macros, Options, Performance
+N.      Philosophy
 
 Appendices
 1.      List of Species
@@ -45,13 +46,14 @@ to explain Crawl's interface. They do not focus on 'optimal' gameplay
 The tutorial has a special help screen (viewed by pressing '?') and ends
 when you reach the fifth experience level.
 
-Detailed instructions for playing Crawl follow. If you want to read the
-most important facts more quickly, then turn to the quick-start guide 
-(quickstart.txt) and learn as you play. You can do this within the game
-as well from the help menu by pressing ?. Otherwise, it may be worth 
-your while to read at least part of this file (although it will probably
-confuse you somewhat). Read at least the disclaimer in section L of this
-document and the licence.txt file, though.
+Detailed instructions for playing Crawl follow. To simplify this
+manual, we assume that you use the standard distribution and that
+you've not changed the default options. If you don't want to read the
+whole manual and would prefer a short summary of the important points,
+look at the quick-start guide (quickstart.txt) and learn as you play.
+
+You can also read these documents while playing Crawl, by hitting ? at
+the help menu.
 
 While Dungeon Crawl is a strict single player game, you can play on a 
 server together with many others. These are the relevant webpage and 
@@ -249,6 +251,9 @@ anything other than normal floor or an undiscovered trap and it is not
 your first move of the long walk. Note that this is functionally 
 equivalent to just pressing the direction key several times.
 
+Another convenient method for moving long distances is described in
+the section on Automated Travel and Exploration.
+
 Resting and Searching:
 ----------------------
 If you press Shift and '5' on the numeric keypad (or just the number '5'
@@ -256,7 +261,7 @@ on the keyboard) you rest for 100 turns or until your hit points or
 magic return to full, whichever is sooner. You can rest for just one 
 turn by pressing '.', Delete, 's', or '5' on the keypad. Whenever you 
 are resting, you are assumed to be observing your surroundings, so you 
-have a chance of detecting any traps or secret doors adjacent to you.
+have a chance of detecting any traps or secret doors near you.
 Resting stops if a monster appears.
 
 Examining your surroundings:
@@ -269,8 +274,9 @@ around to get a description of the various dungeon features, and
 typing 'v' when the cursor is over a monster or feature brings up a
 short description of that monster. You can get a map of the whole
 level (which shows where you've already been) by typing the 'X' key.
-On this map, stairs and known traps are specially colour-coded, even
-if there's something on top of them.
+
+You can see the full set of commands available while looking around by
+pressing '?'.
 
 Staircases and Portals:
 -----------------------
@@ -303,8 +309,7 @@ will attempt to attack any monster which may be standing there (this is
 the only way to attack a friendly creature hand-to- hand). If there is 
 no creature there, you will attempt to disarm any trap in the target
 square. If there is apparently nothing there you will still attack it, 
-just in case there's something invisible lurking around. (There is.)
-## Word missing? 
+just in case there's something invisible lurking around. 
 
 A variety of dangerous and irritating traps are hidden around the
 dungeon. Traps look like normal floor until discovered. Some traps
@@ -502,14 +507,14 @@ such a statue. The best method to destroy statues is by using wands of
 disintegration; you can also bash one into pieces by brute force, 
 however.
 
-When playing Crawl, you will undoubtedly want to develop a feeling for 
-the different monster types. For example, some monsters leave edible 
-corpses, others don't, and still others do so sometimes. Guided by 
-intuition, you will soon figure out which monsters make the best meals.
-Likewise, ranged or magic attackers will prove a different kind of 
-threat from closed combateers. Learn from past deaths and remember which
- monsters pose the most problems. Try to treat problem opponents with 
-different measures in future encounters.
+When playing Crawl, you will undoubtedly want to develop a feeling for
+the different monster types. For example, some monsters leave edible
+corpses, others don't, and still others do so sometimes. Guided by
+intuition, you will soon figure out which monsters make the best
+meals. Likewise, ranged or magic attackers will prove a different kind
+of threat from melee fighters. Learn from past deaths and remember
+which monsters pose the most problems. If particular monsters are
+giving you trouble, try to alter your tactics for future encounters.
 
 
 ------------------------------------------------------------------------
@@ -517,7 +522,7 @@ G.                      ITEMS
 ------------------------------------------------------------------------
 
 In the dungeons of Crawl there are many different kinds of normal and 
-magical artifacts to be found and used. Some of them are useful, some 
+magical artefacts to be found and used. Some of them are useful, some 
 are nasty, and some give great power, but at a price. Some items are 
 unique; these have interesting properties which can make your life 
 rather bizarre for a while. They all fall into several classes of items,
@@ -542,7 +547,7 @@ There are several general keys for item management:
 'd'     drop item
 'g'     pick up item from the ground (also with the comma key ',')
         for several items press 'g' or ',' twice to get a pickup menu
-'='     reassign item slot (works also for spells slots)
+'='     reassign item slot (works also for spells slots and abilities)
 'i'     shows inventory
 'v'     examine item
 '{'     inscribe item
@@ -593,15 +598,19 @@ discoveries with the '\' key.
 The 'v' key, which gives you a description of what an item does, is very
 useful. Try this when comparing different types of armours and weapons, 
 but don't expect too much information from examining unidentified items.
+You can also examine items by pressing the slot key whenever looking at 
+your inventory.
 
-Another useful command is the '{' key, which lets you inscribe items
-with a comment. You can also inscribe commands; in particular inscribing
-'=k' will cause the item to be completely ignored from then on (it can 
-only be picked up if all items on that square have the '=k' mark). An 
-item with '@w9' can be wielded with the command 'w9', regardless of its 
-actual item slot (here 'w'ield could be replaced by any sensible command
-key, using '*' signifies all keys at once; and '9' could be substituted
-by any digit). An item with '!w' demands confirmation before wielding. 
+Another useful command is the '{' key, which lets you inscribe items 
+with a comment. This is often used to denote special properties of an
+item, making for easier navigation of large quantities of artefacts.
+You can also inscribe commands; in particular inscribing '=k' will 
+cause the item to be completely ignored from then on (it can only be 
+picked up if all items on that square have the '=k' mark). An item with 
+'@w9' can be wielded with the command 'w9', regardless of its actual 
+item slot (here 'w'ield could be replaced by any sensible command key, 
+using '*' signifies all keys at once; and '9' could be substituted by 
+any digit). An item with '!w' demands confirmation before wielding. 
 For more on this, especially auto-inscription, see crawl-options.txt.
 
 ) Weapons:
@@ -627,7 +636,7 @@ are quite effective when thrown.
 You can wield weapons with the 'w' command, which is a very quick 
 action. If for some reason you want to go bare-handed, type 'w' 
 followed by a hyphen ('-'). Note that weapons are not the only class 
-of item which you can wield.
+of item which are useful to wield.
 
 The ' (apostrophe) key is a shortcut which automatically wields item 
 in slot a. If item a is being wielded, ' causes you to wield item b 
@@ -654,34 +663,9 @@ hand weapon, you will "shoot" the ammunition, otherwise you "throw" it.
 At times it also sensible to throw weapons like spears, daggers, or 
 hand axes.
 
-The following paragraph describes how to target monsters using your
-ranged attack. The same interface is employed for the casting of many 
-spells, and the zapping of certain wands.
-
-Targeting:
-----------
-When throwing something, you are asked for a direction. There are 
-several ways to tell Crawl which monster to target:
- - Typing Shift-direction on your keypad fires straight away in that 
-   direction.
- - Pressing 'p', 't' or 'f' fires at the previous target (if it is still
-   alive and in sight).
- - Pressing '+' or '=' cycles between hostile monsters, starting from 
-   the one closest to you and proceeding to monster farther away; '-' 
-   cycles backwards. 
-   Press '.' (period) or Del or Enter or Space to fire at the target. If
-   you press '!', you also fire, but the spell/missile will stop at the 
-   target's square if it misses. This is the only way to attack 
-   submerged creatures.
-   Ctrl-F changes which monsters are cycled: hostiles, friends, all.
- - Any direction key will move the cursor; press one of '.', Del, Enter,
-   Space, '!' as above if you have selected your target. It is possible
-   to target empty spaces this way, if you want (this can become useful
-   for spells). 
- - Simply pressing '.' or Del or Enter at the prompt causes you to 
-   target yourself. This can be useful when zapping certain wands (see 
-   below). If the action looks more like an accident, you will be asked
-   for confirmation.
+The interface for shooting or throwing things is also used for zapping
+wands and casting certain spells, and is described in detail in
+section I (Targeting).
 
 [ Armour:
 ---------
@@ -702,7 +686,7 @@ less effective in hand combat. Shields are more effective when you're
 fighting a small number of foes than when you're surrounded. There are 
 three types: bucklers, shields, and large shields. While it is possible
 to use bows (or other launchers) and rods while wearing a shield, you 
-will be much less effective.
+will be less effective.
 
 Some magical armours have special powers. These powers are sometimes
 automatic, affecting you whenever you wear the armour, and sometimes
@@ -721,24 +705,26 @@ starving, you fight less effectively as well. You can eat food with the
 'e' command.
 
 You may wish to dine on the corpses of your casualties (unless you are
-a Spriggan - these despise meat). Despite the fact that corpses are 
-represented by the same '%' sign as food, you can't eat them without 
-first cutting them into pieces with the 'D' command. Being extremely 
-hungry helps you choke down the raw flesh. Even then, you should choose
-your homemade food with great care. In order to dissect a  corpse with 
-the 'D' command, you need to have a proper tool (like a knife or short 
-sword). Cutting off the least bad parts will take some turns and produce
-a number of 'chunks' eventually. These can be  eaten with 'e' command 
-as above. Crawl will automatically switch to an uncursed butchering tool
-when you type 'D', and it will also switch back to your previous weapon 
-as long as you didn't get interrupted.
+a Spriggan, and cannot eat meat, or you are a Mummy, who need not, and
+cannot, eat at all). Despite the fact that corpses are represented by
+the same '%' sign as food, you can't eat them without first cutting
+them into pieces with the 'D' command. Being extremely hungry helps
+you choke down the raw flesh. Even then, you should choose your
+homemade food with great care. In order to dissect a corpse with the
+'D' command, you need to have a proper tool (like a knife or short
+sword), although claws will also do. Cutting off the best parts will
+take some turns and produce a number of 'chunks' eventually. These can
+be eaten with 'e' command as above. Your character will automatically
+switch to an uncursed butchering tool when you type 'D', and will also
+switch back to your previous weapon unless you get interrupted while
+butchering your food.
 
-Some classes are less restricted about selfmade food: Trolls can use 
-their claws, so do not need a cutting device. Also Trolls, Orcs, Ogres, 
-and Kobolds care less (in different degrees) about the quality of the 
-corpse. Ogres and Trolls are happy to have corpse-snacks anytime. This 
-does not apply to Ogre Mages, as that race separated itself from the 
-brutish traits of their distant relatives.
+Some classes are less fastidious about their food: Trolls can use
+their claws, so do not need a cutting device. Also Trolls, Orcs,
+Ogres, and Kobolds care less (in different degrees) about the quality
+of the corpse. Ogres, Trolls and Kobolds are happy to eat raw meat at
+any time. This does not apply to the more civilised (and more
+pretentious) Ogre Mages.
 
 ? Magical Scrolls:
 ------------------
@@ -761,15 +747,17 @@ fountains you encounter in the dungeon.
 
 / Wands:
 --------
-Sometimes you will be lucky enough to find a stick which contains stored
-magical energies. Wands each have a certain amount of charges, and a 
-wand will cease to function when its charges run out. You must identify
-a wand to find out how many uses it has left. This can be done with a 
-scroll of identify; characters with a good Evocations skill may also 
-deduce the number of charges simply upon zapping the wand. Wands are 
-aimed in the same way as missile weapons, and you can invoke the power of
-a wand by 'z'apping it. There are a number of beneficial wands like 
-hasting which can be sensibly targeted at yourself.
+Sometimes you will be lucky enough to find a stick which contains
+stored magical energies. Wands each have a certain amount of charges,
+and a wand will cease to function when its charges run out. You must
+identify a wand to find out how many uses it has left. This can be
+done with a scroll of identify; characters with a good Evocations
+skill may also deduce the number of charges simply upon zapping the
+wand. Wands are aimed in the same way as missile weapons, and you can
+invoke the power of a wand by 'z'apping it. See section I. for
+targeting. There are also a number of wands that may be useful to zap
+at yourself, but it is usually prudent to know what you're zapping at
+yourself before you do so.
 
 =" Rings and Amulets:
 ---------------------
@@ -811,12 +799,15 @@ Most books contain magical spells which your character may be able to
 learn. You can read a book with the 'r' command, which lets you access
 a description of each spell, or memorise spells from it with the 'M' 
 command. Use 'Z' to cast previously memorised spells. For spells 
-demanding a target, the comments on using missile weapons apply.
+demanding a target, the comments on using missile weapons apply. You
+can also press 'I' to just have a look at all spells memorised. Note 
+that '=' allows you to change what spells are assigned to what keys.
 
-Some books have other special effects, and powerful spellbooks have been
-known to punish the attentions of incompetent magicians. Occasionally 
-you will find manuals of some skill. Reading these will cause your free 
-experience to go straight into that skill.
+Some books have other special effects, and powerful spellbooks have
+been known to resent the attentions of incompetent magicians.
+
+Occasionally you will find manuals of some skill. Reading these will
+cause your free experience to go straight into that skill.
 
 { Miscellaneous:
 ----------------
@@ -868,7 +859,7 @@ Spellcasting helps at several places when spells are involved. Next
 there are several general areas (Conjuration, Enchantment, Summoning, 
 Necromancy, Translocation, Transmigration, and Divination) as well as 
 several elemental areas (Fire, Ice, Air, and Earth) and, finally, 
-Poison. A particular spell can belong (and thus train) to up to three 
+Poison. A particular spell can belong to (and thus train) up to three 
 areas. Being good in the areas of a spell will improve the casting 
 chance and in many cases the effect as well.
 
@@ -887,16 +878,13 @@ memorise the more powerful spells. When casting a spell, you temporarily
 expend some of your magical energy and you become hungrier (although 
 more intelligent spellcasters hunger less quickly from using magic).
 
-You activate a memorised spell by pressing 'Z' (for Zap). The spells
-available are labelled with letters; you are free to change this
+You activate a memorised spell by pressing 'Z' (for Zap). Use 'I' to
+display a list of all memorised spells without actually casting one. The
+spells available are labelled with letters; you are free to change this
 labelling with the '=' command. You can assign both lowercase and
 uppercase letters to spells. Some spells, for example most damage
-dealing ones, require a target. This is done in the same way as 
-throwing projectiles: choose a target with the '+' or '-' keys or just
-move the cursor there manually and press '.' (or Enter or Space or Del)
-to fire; or press Shift-direction to shoot straight away in that 
-direction. Press '?' for targeting help or see appendix 4 for a list of
-all commands.
+dealing ones, require a target. See the next section I. for details on
+how to target.
 
 High level spells are difficult to cast, and you may miscast them every
 once in a while (resulting in a waste of magic and possibly dangerous 
@@ -923,7 +911,57 @@ well as you, if not better, and often use it intelligently.
 
 
 --------------------------------------------------------------------------------
-I.                      RELIGION
+I.                      TARGETING
+--------------------------------------------------------------------------------
+
+When throwing something, or zapping certain wands, or casting spells, 
+you are asked for a direction. There are several ways to tell Crawl 
+which monster to target. (The following list assumes the option setting
+ default_target = true which is default.)
+You can press '?' when asked for a direction; this will bring up a help
+screen.
+ - The cursor will target on the monster which is closest to your
+   position. Should you have been firing at something previously, with
+   the offender still being in sight, the cursor will instead rest on
+   the previous target.
+ - Pressing '+' or '=' moves the cursor to the next monster, going from
+   nearer to further away. Similarly, '-' cycles backwards.
+ - Any direction key moves the cursor by one square. Occasionally, it can
+   be useful to target non-inhabited squares.
+ - When you are content with your choice of target, press one of '.' 
+   (period) or Del or Enter or Space to fire at the target. If you press 
+   '!', you also fire, but the spell/missile will stop at the target's 
+   square if it misses. This can be useful to keep friendlies out of the
+   fire, and is also the only way to attack submerged creatures. You can
+   press Escape if you changed your mind - no turns are deducted.
+
+There are some shortcuts while targeting:
+ - Typing Shift-direction on your keypad fires straight away in that 
+   direction.
+ - Pressing 'p', 't' or 'f' fires at the previous target (if it is still
+   alive and in sight).
+   Due to this, most hunters can go a long way by pressing 'ff' to fire
+   their ammunition at a monster and then keep firing at it with further 
+   'ff' strokes. At times, it will be useful to switch targets with the
+   '+' or '-' commands, though.
+
+It is possible to target yourself: obviously beneficial effects like 
+hasting or healing will actually target the cursor on you, leaving to you
+only the pressing of '.', Enter etc. - except if you want to heal or 
+haste someone else. If you target yourself while firing something harmful
+(which can be sensible at times), you will be asked for confirmation.     
+
+Finally, there are some more targeting related commands:
+- Ctrl-F changes which monsters are cycled when using '+', '=' or '-': 
+  hostiles, friends, or all monsters. 
+- Ctrl-P and Ctrl-N allows to change the ammunition. This is useful when
+  you have several types of appropriate ammunition, say poisoned needles
+  and curare needles. Your last usage will be remembered.
+- The ':' key allows you to display the path of your spell/wand/missile.
+
+
+--------------------------------------------------------------------------------
+J.                      RELIGION
 --------------------------------------------------------------------------------
 
 There are a number of Gods, Demons, and other assorted Powers who will 
@@ -933,17 +971,16 @@ whoever it is that you worship, and if you find religion to be an
 inconvenience you can always renounce your faith (use the 'a' command - 
 but some Gods resent being scorned!).
 
-The 'p' command lets you pray to your God. Anything you do while 
-praying, you do in your God's name - this is how you dedicate your kills
-or corpse-sacrifices ('D' command) to your God, for example. Note that 
-not all gods like this. Praying also gives you a sense of what your God 
-thinks of you, and can be used to sacrifice things at altars. Not all
-gods need to be addressed by constant prayers - it's the cast mostly for
-gods who delight in kills or corpses.
+The 'p' command lets you pray to your God. Most gods take note of your
+actions throughout but by praying you ask for attention. This is how you
+dedicate corpse-sacrifices to your God, for example: press 'pD' to pray
+first, and then dissect. Note that not all gods like this. Praying also 
+gives you a sense of what your God thinks of you, and can be used to 
+sacrifice things at altars. If for some reason you would rather like to
+stop praying at some point, just press 'p' again.
 
 To use any powers which your God deems you fit for, access the abilities
-menu with the 'a' command; God-given abilities are listed as 
-invocations.
+menu via the 'a' command; God-given abilities are listed as invocations.
 
 Some classes start out religious; others have to pray at an altar to 
 dedicate themselves to a life of servitude. There are altars scattered
@@ -955,11 +992,11 @@ asked afterwards if you really want to attend this circle.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your class from 
-healer, priest, paladin, berserker, or chaos knight.
+healer, priest, paladin, berserker, or chaos knight. 
 
 
 ------------------------------------------------------------------------
-J.                      MUTATIONS
+K.                      MUTATIONS
 ------------------------------------------------------------------------
 
 Although it would doubtless be a nice thing if you could remain 
@@ -973,7 +1010,7 @@ plenty of nasty ones as well. Many mutations have three levels, each of
 which counts as a single mutation. Some changes to the primary 
 attributes Strength, Intelligence, and Dexterity (apart from those by 
 levelling) are also handled as mutations - in particular, these are not
-necessarily permanent.
+permanent.
 
 You can also become mutated by overusing certain powerful enchantments,
 particularly Haste (not the kind you get from being berserk) and
@@ -1004,7 +1041,63 @@ is displayed in a light blue colour.
 
 
 ------------------------------------------------------------------------
-K.             KEYMAPS, MACROS, OPTIONS, PERFORMANCE
+L.                      LICENCE, CONTACT, HISTORY
+------------------------------------------------------------------------
+
+Licence:        Read Licence.txt for information about the Crawl licence 
+                (which is nearly identical to the Nethack public license).
+
+Disclaimer:     This software is provided as is, with absolutely no 
+                warranty express or implied. Use of it is at the sole 
+                risk of the user. No liability is accepted for any 
+                damage to the user or to any of the user's possessions.
+
+If you'd like to discuss Crawl, a good place to do so is the Usenet
+newsgroup rec.games.roguelike.misc. Flag queries with -crawl- as other
+games are also discussed there. All topics related to this game
+usually meet a warm response, including tales of victories (going
+under 'YAVP', i.e. 'Yet Another Victory Post'), especially first
+victories (YAFVP) as well as sad stories of deceased characters (being
+'YAAD' or 'YASD', i.e. 'Yet Another Annoying/Stupid Death'). Some
+players, especially those on crawl.akrasiac.org, also frequent ##crawl
+on IRC's freenode network.
+
+Stone Soup's homepage is at
+      http://crawl-ref.sourceforge.net
+Use this page for direct links to downloads of the most recent version.
+You can also submit bug reports and feature requests there. Be sure to
+make sure that your bug/feature isn't already in the list. For more 
+complicated requests, it might be a good idea to discuss them in the 
+newsgroup first.
+
+The history of Crawl is somewhat convoluted: Crawl was created in 1995
+by Linley Henzell. Linley based Crawl loosely on Angband and Nethack,
+but avoided several annoying aspects of these games, and added a lot
+of original ideas of his own. Crawl was a hit, and Linley produced
+Crawl versions up to 3.30 in March 1999. Further work was then carried
+out by a group of developers who released 3.40 in February 2000. Of
+them, Brent Ross emerged as the single maintainer, producing versions
+until 4.0 beta 26 in 2002. After a long period of silent work, he went
+a great step by releasing 4.1.2 alpha in August 2005. This alpha
+contained a lot of good ideas, but was nearly unplayable due to
+balance issues. In the meantime, several patchers appeared, improving
+Crawl's interface tremendously. Several of them formed a new devteam;
+reasoning that rebalancing 4.1.2 was a very difficult task, they
+decided to fork Crawl 4.0 beta 26 and selectively include good ideas
+from 4.1.2 and other sources. This fork is Stone Soup, and is the game
+this manual describes. Stone Soup's release versions were restarted at
+0.1 to avoid confusion with the existing plethora of Crawl versions.
+
+It should be mentioned that there have been other Crawl variants over
+the years, among them Ax-Crawl, Tile Crawl, and Dungeon Crawl
+Alternative.
+
+The object of your quest in Crawl (the Orb of Zot) was taken from
+Wizard's Castle, a text adventure written in BASIC.
+
+
+------------------------------------------------------------------------
+M.                      MACROS, OPTIONS, PERFORMANCE
 ------------------------------------------------------------------------
 
 Crawl supports redefining keys via key maps. This is useful when your 
@@ -1041,62 +1134,7 @@ your machine, there are a few measures which may improve the situation:
 
 
 ------------------------------------------------------------------------
-L.                      LICENCE, CONTACT, HISTORY
-------------------------------------------------------------------------
-
-Licence:        Read Licence.txt for information about the Crawl licence 
-                (which is practically identical to the Nethack GPL).
-
-Disclaimer:     This software is provided as is, with absolutely no 
-                warranty express or implied. Use of it is at the sole 
-                risk of the user. No liability is accepted for any 
-                damage to the user or to any of the user's possessions.
-
-If you'd like to discuss Crawl, a good place to do so is the Usenet 
-newsgroup rec.games.roguelike.misc. Flag queries with -crawl- as other
-games are also discussed there. All topics related to this game usually
-meet a warm response, including tales of victories (going under 'YAVP',
-i.e. 'Yet Another Victory Post'), especially first victories (YAFVP) as
-well as sad stories of deceased characters (being 'YAAD' or 'YASD', i.e.
-'Yet Another Annoying/Stupid Death'). Some players, especially those on
-crawl.akrasiac.org, also frequent ##crawl on IRC's freenode network.
-
-Stone Soup's homepage is at
-      http://crawl-ref.sourceforge.net
-Use this page for direct links to downloads of the most recent version.
-You can also submit bug reports and feature requests there. Be sure to
-make sure that your bug/feature isn't already in the list. For more 
-complicated requests, it might be a good idea to discuss them in the 
-newsgroup first.
-
-The history of Crawl is somewhat convoluted: Crawl was created in 1995 
-by Linley Henzell. Linley based Crawl loosely on Angband and Nethack, 
-but avoided several annoying aspects of these games, and added a lot
-of original ideas of his own. Crawl was a hit, and Linley produced
-Crawl versions up to 3.30 in March 1999. Further work was then carried
-out by a group of developers who released 3.40 in February 2000. Of 
-them, Brent Ross emerged as the single maintainer, producing versions
-until 4.0 beta 26 in 2002. After a long period of silent work, he went
-a great step by releasing 4.1.2 alpha in August 2005. This alpha
-contained a lot of good ideas, but was nearly unplayable due to balance
-issues. In the meantime, several patchers appeared, improving Crawl's
-interface tremendously. Several of them formed a new devteam; reasoning 
-that rebalancing 4.1.2 was a very difficult task, they decided to fork 
-Crawl 4.0 beta 26 and selectively include good ideas from 4.1.2 and 
-other sources. This fork is Stone Soup, and is the game this manual 
-describes. Stone Soup's release versions were restarted at 0.1 to avoid 
-confusion with the existing plethora of Crawl versions.
-
-It should be mentioned that there have been other Crawl variants over 
-the years, among them Ax-Crawl, Tile Crawl, and Dungeon Crawl
-Alternative.
-
-The object of your quest in Crawl (the Orb of Zot) was taken from
-Wizard's Castle, a text adventure written in BASIC.
-
-
-------------------------------------------------------------------------
-M.                      PHILOSOPHY (pas de faq)
+N.                      PHILOSOPHY (pas de faq)
 ------------------------------------------------------------------------
 
 You may ponder about the wisdom of certain design decisions of Crawl. 
@@ -1107,7 +1145,7 @@ following, most of which are explained in more detail below. Note that
 almost of all of these date back to Linley's first versions.
 
  o avoidance of grinding (a.k.a. scumming)
- o in particular, permalevels, shops won't buy, food clock
+ o in particular, permanent levels, shops won't buy, and food clock
  o clarity, i.e. playability without access to spoilers
  o class/race differentiation using skills and aptitudes
  o killing no-brainers (well, we try), e.g. no permanent intrinsics
@@ -1121,9 +1159,7 @@ and bring some reward. This is bad for a game's design because it
 encourages players to bore themselves. We try to avoid this!
 
 This explains why shops don't buy: otherwise players would hoover the 
-dungeon for items to sell. Of course, there are gods accepting all kinds
-of sacrifices (and thus altar hoovering) but there are generally better 
-ways to increase piety there. Another instance: there's no infinite 
+dungeon for items to sell. Another instance: there's no infinite 
 commodity available: food, monster and item generation is generally not
 enough to support infinite play. Not messing with lighting also falls 
 into this category: there might be a benefit to mood when players have 
@@ -1134,14 +1170,13 @@ battling. While caution is a virtue in Crawl, as it is in many other
 roguelikes, there are strong forces driving characters deeper.
 
 Another key feature is clarity: things ought to work in an intuitive 
-way. Crawl definitely is winnable without spoiler access (unlike some 
-other games). Concerning important but hidden details (i.e. facts 
-subject to spoilers) our policy is this: the joy of discovering
-something spoily is nice, once. (And disappears before it can start if 
-you feel you need to/must read spoilers - a legitimate feeling.) The joy
-of dealing with ever-changing, unexpected, and challenging strategic and
-tactical situations that arise out of transparent rules, on the other 
-hand, is nice again and again.
+way. Crawl definitely is winnable without spoiler access. Concerning 
+important but hidden details (i.e. facts subject to spoilers) our policy
+is this: the joy of discovering something spoily is nice, once. (And 
+disappears before it can start if you feel you need to read spoilers - a
+legitimate feeling.) The joy of dealing with ever-changing, unexpected, 
+and challenging strategic and tactical situations that arise out of 
+transparent rules, on the other hand, is nice again and again.
 
 The skills and aptitude system is one factor encouraging strategic play.
 It also serves to clearly differentiate the many species, thus providing
@@ -1169,7 +1204,7 @@ example is the absence of clearcut best items, which comes from the fact
 that most artifacts are randomly generated. Furthermore, even fixed 
 artifacts cannot be wished for, as scrolls of acquirement produce random
 items in general. Likewise, there are no sure-fire means of life saving 
-(the closest equivalent are controlled blinks, and good religious 
+(the closest equivalents are controlled blinks, and good religious 
 standings for some deities).
 
 Concerning replayability again, Crawl's dungeon layout was also
@@ -1210,9 +1245,10 @@ autoexplore, the stash tracker, the dump file, inscriptions, and macros
 got into the game.
 
 Still, we make a lot of effort to care for new players (who naturally
-have no access to most of these utilities). In particular, all
-information should be clearly available and documented in-game. We hope
-to have achieved this at least partially.
+have no access to most of these utilities). The tutorials are one step 
+in that direction and in general, all information should be clearly 
+available and documented in-game. The interface is designed with being
+radically player-friendly and customisable.
 
 
 ------------------------------------------------------------------------
@@ -1294,9 +1330,9 @@ exception being crossbows, those being rather mechanical weapons. Since
 pole-arms usually are too big for them to wield comfortably, they make
 quite bad weapons for Dwarves.
 In general, they are rather resistant to magic than capable of dealing
-with it. However, they are very capable at earth and fire magics. Thus,
-many a Mountain Dwarf started career as an elementalist in one of those 
-schools.
+with it. However, they are very proficient at earth and fire magics. 
+Thus, many a Mountain Dwarf started career as an elementalist in one of 
+those schools.
 They advance in levels at a similar rate to Grey and Deep elves.
 
 Halflings:
@@ -1601,13 +1637,14 @@ Note:  Some species have special abilities which can be accessed by the
 2.                      LIST OF CHARACTER CLASSES
 ------------------------------------------------------------------------
 
-In your quest, you play as one of a number of different types of
+In your quest, you play as one of a large number of different types of
 characters. Although each has its own strengths and weaknesses, some are
 definitely easier than others, at least to begin with. The best classes 
 for a beginner are probably Gladiators, Fighters, and Berserkers; if you
 really want to play a magician, try a Conjurer. Each class starts out 
 with a different set of skills and items, but from there you can shape 
-them as you will.
+them as you will. Note that due to peculiarities of size or body shape,
+some characters start with a different inventory.
 
 Fighters:
 ---------
@@ -1854,7 +1891,7 @@ Ranged Combat is the basic skill used when throwing or shooting things.
 It affects in particular how effectively poisoned missiles are. There 
 are a number of individual weapon skills for missile weapons as well:
 
-     o  Darts
+     o  Darts (and hand crossbows as optional laucnhers)
      o  Bows
      o  Crossbows
      o  Slings
@@ -1871,7 +1908,8 @@ Only those characters with at least one magic skill at level one or
 above can learn magical spells. If your character has no magic skills,
 he or she can learn the basic principles of the hermetic arts by reading
 and reciting the spells inscribed on magical scrolls (this stops being 
-useful once you reach level one in Spellcasting).
+useful once you reach level one in Spellcasting). Note that characters
+starting with spells always have at least one point of Spellcasting.
 
 There are also individual skills for each different type of magic; the 
 higher the skill, the more powerful the spell. Multidisciplinary spells 
@@ -2042,6 +2080,7 @@ Character information:
         m               Show skill screen.
         i               Show inventory list. Inside this list, pressing 
                         a slot key shows information on that item.
+        I               Show list of memorised spells.
         %               Show resistances and general character overview,
                         including health, experience, gear, status,
                         mutations, abilities (the latter three more 
@@ -2082,10 +2121,13 @@ Item interaction (floor):
 
 Other game-playing commands:
         a               Use special ability.
-        p               Pray.
+        p               Pray. Also turns prayer off.
         Z               Cast a spell. 
-        I               List spell. 
+        I               List spells. 
         !               Shout or command allies.
+        Ctrl-A          Toggle autopickup. Note that encounters with 
+                        invisible monsters always turns autopickup off.
+                        You need to switch it on with Ctrl-A afterwards.
 
 Non-game playing commands:
         ?               The help menu.
@@ -2099,19 +2141,10 @@ Non-game playing commands:
         ~               Add or save macros and key mappings.
         =               Reassign inventory/spell/abilities letters. 
 
-In-game toggles:
-        Ctrl-A          Toggle autopickup.
-        Ctrl-V          Toggle auto-prayer. (You might want to set 
-                           runrest_ignore_message = offer a prayer
-                           runrest_ignore_message = prayer is over
-                           runrest_ignore_message = pleased with you
-                           runrest_ignore_message = exalted
-                        if you are using autoprayer.)
-
 Stashes:
         Ctrl-F          Find. This searches in stashes and shops, you 
                         can use regular expressions and also terms like
-                        'long blades', 'shop', 'altar', 'artifact'.
+                        'long blades', 'shop', 'altar', 'artefact'.
                         If you are looking for altars to a special god,
                         a seach for 'Trog' etc. works. If all items are
                         stashed (the default), then a string like 'D:13'
@@ -2210,22 +2243,18 @@ work, with the exception of Space (which fires).
         :               Toggles display of the beam path.    
         Ctrl-F          Toggles target modes (between enemies, all, 
                         friends; see also option target_zero_exp).
+        Ctrl-P,         These two commands allow to change ammunition
+        Ctrl-N          while targeting. The choice is subject to the 
+                        fire_order option. Usually, you change missiles
+                        according to your launcher: ie. when wielding a
+                        bow, Ctrl-N and Ctrl-P will cycle through all
+                        stacks of arrows in your inventory.
      Shift-Direction    Fires straight in that direction. You can go 
                         back to the old targeting mode (allowing 
                         straight firing by pressing just the direction 
                         key) using the option target_unshifted_dirs.
                         Note that target_unshifted_dirs is mutually
                         exclusive with default_target.
-
-Interlevel travel menu ('Ctrl-G')
----------------------------------
-Interlevel travel allows you to specify a destination far away from your
-current place. Crawl will chose the shortest path to move there. Should
-you get interrupted, the old destination is saved and can be reused. 
-Other shortcuts are:
-        <               Travels to the nearest upstairs.
-        >               Travels to the  nearest downstairs.
-
                         
 Shortcuts in lists (like multidrop):
 ------------------------------------

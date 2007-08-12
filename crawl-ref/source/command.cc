@@ -671,7 +671,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
         cols.add_formatted(
             1,
-            "Manual Contents\n\n"
+            "<h>Manual Contents\n\n"
             "<w>*</w>       Table of contents\n"
             "<w>A</w>.      Overview\n"
             "<w>B</w>.      Starting Screen\n"
@@ -681,11 +681,12 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>F</w>.      Monsters\n"
             "<w>G</w>.      Items\n"
             "<w>H</w>.      Spellcasting\n"
-            "<w>I</w>.      Religion\n"
-            "<w>J</w>.      Mutations\n"
-            "<w>K</w>.      Keymaps, Macros, Options\n"
-            "<w>L</w>.      Licence, Contact, History\n"
-            "<w>M</w>.      Philosophy\n"
+            "<w>I</w>.      Targeting\n"
+            "<w>J</w>.      Religion\n"
+            "<w>K</w>.      Mutations\n"
+            "<w>L</w>.      Keymaps, Macros, Options\n"
+            "<w>M</w>.      Licence, Contact, History\n"
+            "<w>N</w>.      Philosophy\n"
             "<w>1</w>.      List of Species\n"
             "<w>2</w>.      List of Classes\n"
             "<w>3</w>.      List of Skills\n"
