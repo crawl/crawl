@@ -923,6 +923,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_NAGA:
+        result += "You cannot wear boots." EOL;
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
@@ -939,6 +940,17 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_CENTAUR:
+        result += "You cannot wear boots." EOL;
+        result += "You are unusually fast." EOL;
+        have_any = true;
+        break;
+
+    case SP_SPRIGGAN:
+        result += "You are unusually fast." EOL;
+        have_any = true;
+        break;
+        
     case SP_TROLL:
         if ( you.mutation[MUT_CLAWS] )
             result += "<cyan>";
@@ -952,6 +964,13 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
+        if ( you.mutation[MUT_CLAWS] )
+            result += "<cyan>";
+        result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
+        if ( you.mutation[MUT_CLAWS] )
+            result += "</cyan><lightblue>";
+        result += EOL;
+        result += "You preferably eat rotten meat." EOL;
         have_any = true;
         break;
 

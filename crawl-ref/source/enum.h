@@ -1387,7 +1387,8 @@ enum genus_type
 {
     GENPC_DRACONIAN,                   //    0
     GENPC_ELVEN,                       //    1
-    GENPC_DWARVEN                      //    2
+    GENPC_DWARVEN,                     //    2
+    GENPC_OGRE
 };
 
 enum gender_type

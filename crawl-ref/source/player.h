@@ -303,6 +303,7 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80]);
 bool player_genus( unsigned char which_genus,
                    unsigned char species = SP_UNKNOWN );
 
+bool you_can_wear( int eq );
 
 /* ***********************************************************************
  * called from: ability - effects - fight - it_use3 - ouch - spell -

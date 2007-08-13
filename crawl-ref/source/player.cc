@@ -417,6 +417,10 @@ bool player_genus(unsigned char which_genus, unsigned char species)
 
     case SP_MOUNTAIN_DWARF:
         return (which_genus == GENPC_DWARVEN);
+        
+    case SP_OGRE:
+    case SP_OGRE_MAGE:
+        return (which_genus == GENPC_OGRE);
 
     default:
         break;
@@ -424,6 +428,52 @@ bool player_genus(unsigned char which_genus, unsigned char species)
 
     return (false);
 }                               // end player_genus()
+
+// checks whether the player's current species can
+// use (usually wear) a given piece of equipment
+// Note that EQ_BODY_ARMOUR and EQ_HELMET only check
+// the ill-fitting variant (i.e. not caps and robes)
+// Centaurs and Naga are ignored for now, seeing how
+// Boots are changed to Barding in the % screen.
+// -------------------------------------------------
+bool you_can_wear(int eq)
+{
+   // bats cannot use anything
+   if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+       return false;
+
+   // these can be used by all
+   if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
+       || eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_CLOAK)
+   {
+       return true;
+   }
+
+   // these can wear everything
+   if (player_genus(GENPC_ELVEN))
+       return true;
+
+   if (you.is_undead)
+       return true;
+
+//   if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+//       return false;
+
+   // of the remaining items, these races can't wear anything
+   if (you.species == SP_TROLL || you.species == SP_SPRIGGAN
+       || player_genus(GENPC_OGRE) || player_genus(GENPC_DRACONIAN))
+   {
+       return false;
+   }
+
+   if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
+   {
+       return false;
+   }
+
+   // else no problems
+   return true;
+}
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
 // eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
