@@ -103,4 +103,6 @@ bool monster_habitable_grid(const monsters *m, int actual_grid);
 bool monster_can_submerge(int monster_class, int grid);
 coord_def find_newmons_square(int mons_class, int x, int y);
 
+void spawn_random_monsters();
+
 #endif  // MONPLACE_H

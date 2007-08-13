@@ -14,6 +14,7 @@
 #include "monplace.h"
 
 #include "externs.h"
+#include "lev-pand.h"
 #include "makeitem.h"
 #include "monstuff.h"
 #include "mon-pick.h"
@@ -149,6 +150,81 @@ static int fuzz_mons_level(int level)
     if (fuzz > 5)
         level += fuzz - 5;
     return (level);
+}
+
+static void hell_spawn_random_monsters()
+{
+    const int speedup_turn = 1339;
+    
+    // Monster generation in the Vestibule starts ratcheting up quickly
+    // after speedup_turn turns spent in the Vestibule.
+    int genodds = (you.char_direction == GDT_DESCENDING) ? 240 : 8;
+    if (env.turns_on_level > speedup_turn)
+    {
+        genodds -= (env.turns_on_level - speedup_turn) / 12;
+        if (genodds < 3)
+            genodds = 3;
+    }
+
+    if (one_chance_in(genodds))
+    {
+        int distance_odds = 10;
+        if (env.turns_on_level > speedup_turn)
+            distance_odds -= (env.turns_on_level - speedup_turn) / 100;
+
+        if (distance_odds < 2)
+            distance_odds = 2;
+
+        proximity_type prox =
+            (one_chance_in(distance_odds) ? PROX_NEAR_STAIRS 
+             : PROX_AWAY_FROM_PLAYER);
+        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
+                    50, 50, LEVEL_DUNGEON, prox );
+        viewwindow(true, false);
+    }
+}
+
+void spawn_random_monsters()
+{
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+    {
+        hell_spawn_random_monsters();
+        return;
+    }
+    
+    // place normal dungeon monsters,  but not in player LOS
+    if (you.level_type == LEVEL_DUNGEON
+        && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
+        && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
+    {
+        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS 
+                                                 : PROX_AWAY_FROM_PLAYER);
+
+        // The rules change once the player has picked up the Orb...
+        if (you.char_direction == GDT_ASCENDING)
+            prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
+
+        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
+                    50, 50, LEVEL_DUNGEON, prox );
+        viewwindow(true, false);
+    }
+
+    // place Abyss monsters.
+    if (you.level_type == LEVEL_ABYSS && one_chance_in(5))
+    {
+        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
+                    50, 50, LEVEL_ABYSS, PROX_ANYWHERE );
+        viewwindow(true, false);
+    }
+
+    // place Pandemonium monsters
+    if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
+    {
+        pandemonium_mons();
+        viewwindow(true, false);
+    }
+
+    // No monsters in the Labyrinth, or the Ecumenical Temple, or in Bazaars.
 }
 
 monster_type pick_random_monster(const level_id &place,

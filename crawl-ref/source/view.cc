@@ -1389,7 +1389,7 @@ void ray_def::advance_and_bounce()
     };
     int oldx = x(), oldy = y();
     const double oldaccx = accx, oldaccy = accy;
-    int rc = advance(true);
+    int rc = advance(false);
     int newx = x(), newy = y();
     ASSERT( grid_is_solid(grd[newx][newy]) );
 

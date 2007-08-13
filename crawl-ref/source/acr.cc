@@ -2248,40 +2248,7 @@ static void world_reacts()
     if (you.duration[DUR_PARALYSIS] > 0 && any_messages())
         more();
 
-    // place normal dungeon monsters,  but not in player LOS
-    if (you.level_type == LEVEL_DUNGEON
-        && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-        && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
-    {
-        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS 
-                                                 : PROX_AWAY_FROM_PLAYER);
-
-        // The rules change once the player has picked up the Orb...
-        if (you.char_direction == GDT_ASCENDING)
-            prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
-
-        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
-                    50, 50, LEVEL_DUNGEON, prox );
-        viewwindow(true, false);
-    }
-
-    // place Abyss monsters.
-    if (you.level_type == LEVEL_ABYSS && one_chance_in(5))
-    {
-        mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
-                    50, 50, LEVEL_ABYSS, PROX_ANYWHERE );
-        viewwindow(true, false);
-    }
-
-    // place Pandemonium monsters
-    if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
-    {
-        pandemonium_mons();
-        viewwindow(true, false);
-    }
-
-    // No monsters in the Labyrinth, or the Ecumenical Temple, or in Bazaars.
-    return;
+    spawn_random_monsters();
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
