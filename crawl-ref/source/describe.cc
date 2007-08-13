@@ -34,6 +34,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "cio.h"
 #include "debug.h"
 #include "decks.h"
 #include "fight.h"
@@ -3360,7 +3361,7 @@ static bool describe_spells(const item_def &item)
 // Describes all items in the game.
 //
 //---------------------------------------------------------------
-void describe_item( const item_def &item )
+void describe_item( item_def &item )
 {
     for (;;)
     {
@@ -3371,14 +3372,25 @@ void describe_item( const item_def &item )
             textcolor(LIGHTGREY);
             cprintf("Select a spell to read its description.");
             if (!describe_spells(item))
-                return;
+                break;
             continue;
         }
         break;
     }
     
-    if (getch() == 0)
-        getch();
+    gotoxy(1, wherey() + 2);
+    formatted_string::parse_string("<cyan>Do you wish to inscribe this item? ").display();
+
+    if (toupper(getch()) == 'Y')
+    {
+        char buf[79];
+        cprintf("\nInscribe with what? ");
+        if (!cancelable_get_line(buf, sizeof buf))
+        {
+           item.inscription = std::string(buf);
+        }
+    }
+
 }
 
 

@@ -460,8 +460,8 @@ bool Stash::show_menu(const std::string &prefix, bool can_travel) const
         if (sel.size() != 1)
             break;
 
-        const item_def *item = 
-                static_cast<const item_def *>( sel[0]->data );
+        item_def *item =
+                static_cast<item_def *>( sel[0]->data );
         describe_item(*item);
     }
     return false;
@@ -745,7 +745,8 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
     if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
     
-    describe_item( si.item );
+    item_def it = static_cast<item_def>(si.item);
+    describe_item( it );
 
     if ( oldflags != si.item.flags )
         const_cast<shop_item&>(si).item.flags = oldflags;

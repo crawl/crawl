@@ -43,7 +43,7 @@ void describe_feature_wide(int x, int y);
 /* ***********************************************************************
  * called from: item_use - shopping
  * *********************************************************************** */
-void describe_item( const item_def &item );
+void describe_item( item_def &item );
 
 /* ***********************************************************************
  * called from: direct
