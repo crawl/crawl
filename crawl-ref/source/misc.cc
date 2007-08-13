@@ -1663,7 +1663,7 @@ void handle_traps(char trt, int i, bool trap_known)
                         75 + random2(100), 3, "a Zot trap" );
         break;
     }
-    learned_something_new(TUT_SEEN_TRAPS);
+    learned_something_new(TUT_SEEN_TRAPS, you.x_pos, you.y_pos);
 }                               // end handle_traps()
 
 void disarm_trap( struct dist &disa )
