@@ -1336,6 +1336,11 @@ static int find_next_intercept(double* accx, double* accy, const double slope)
     return rc;
 }
 
+ray_def::ray_def() : accx(0.0), accy(0.0), slope(0.0), quadrant(0),
+                     fullray_idx(0)
+{
+}
+
 double ray_def::reflect(double p, double c) const
 {
     return (c + c - p);

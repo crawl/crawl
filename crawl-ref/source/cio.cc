@@ -364,6 +364,7 @@ void line_reader::backspace()
 {
     if (pos)
     {
+        buffer[length] = 0;
         --cur;
         char *c = cur;
         while (*c)

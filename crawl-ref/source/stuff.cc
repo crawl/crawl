@@ -423,6 +423,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
         if (error[error.length() - 1] != '\n')
             error += "\n";
         fprintf(stderr, "%s", error.c_str());
+        error.clear();
     }
 
 #if defined(WIN32CONSOLE) || defined(DOS)

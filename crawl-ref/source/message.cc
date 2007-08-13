@@ -51,6 +51,7 @@ namespace msg
 {
     std::ostream stream(new mpr_stream_buf(MSGCH_PLAIN));
     std::vector<std::ostream*> stream_ptrs;
+    std::vector<mpr_stream_buf*> stream_buffers;
 
     std::ostream& streams(msg_channel_type chan)
     {
@@ -68,6 +69,7 @@ namespace msg
             std::ostream* pos = new std::ostream(pmsb);
             (*pos) << std::nounitbuf;
             stream_ptrs.push_back(pos);
+            stream_buffers.push_back(pmsb);
         }
         stream << std::nounitbuf;
     }
@@ -76,6 +78,10 @@ namespace msg
     {
         for (unsigned int i = 0; i < stream_ptrs.size(); ++i)
             delete stream_ptrs[i];
+        stream_ptrs.clear();
+        for (unsigned int i = 0; i < stream_buffers.size(); ++i)
+            delete stream_buffers[i];
+        stream_buffers.clear();
     }
 
 

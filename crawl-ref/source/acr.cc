@@ -1356,6 +1356,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_LOOK_AROUND:
+    {
         mpr("Move the cursor around to observe a square "
             "(v - describe square, ? - help)",
             MSGCH_PROMPT);
@@ -1365,6 +1366,7 @@ void process_command( command_type cmd )
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
             start_travel( lmove.tx, lmove.ty );
         break;
+    }
 
     case CMD_CAST_SPELL:
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)

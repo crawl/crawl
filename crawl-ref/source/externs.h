@@ -364,6 +364,7 @@ public:
     int fullray_idx;            // for cycling: where did we come from?
 
 public:
+    ray_def();
     int x() const { return static_cast<int>(accx); }
     int y() const { return static_cast<int>(accy); }
     coord_def pos() const { return coord_def(x(), y()); }
