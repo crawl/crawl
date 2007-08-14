@@ -536,7 +536,7 @@ unsigned char get_invent( int invent_type )
     {
         const int invidx = letter_to_index(select);
         if ( is_valid_item(you.inv[invidx]) )
-            describe_item( you.inv[invidx] );
+            describe_item( you.inv[invidx], true );
     }            
     redraw_screen();
     return select;

@@ -3788,7 +3788,7 @@ void examine_object(void)
         return;
     }
 
-    describe_item( you.inv[item_slot] );
+    describe_item( you.inv[item_slot], true );
     redraw_screen();
     mesclr(true);
 }                               // end original_name()

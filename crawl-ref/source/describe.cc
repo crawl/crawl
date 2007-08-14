@@ -3369,7 +3369,7 @@ static bool describe_spells(const item_def &item)
 // Describes all items in the game.
 //
 //---------------------------------------------------------------
-void describe_item( item_def &item )
+void describe_item( item_def &item, bool allow_inscribe )
 {
     for (;;)
     {
@@ -3391,19 +3391,23 @@ void describe_item( item_def &item )
         gotoxy(1, wherey() + 2);
         tutorial_describe_item(item);
     }
-    
-    gotoxy(1, wherey() + 2);
-    formatted_string::parse_string("<cyan>Do you wish to inscribe this item? ").display();
-
-    if (toupper(getch()) == 'Y')
+    if (allow_inscribe)
     {
-        char buf[79];
-        cprintf("\nInscribe with what? ");
-        if (!cancelable_get_line(buf, sizeof buf))
+        gotoxy(1, wherey() + 2);
+        formatted_string::parse_string("<cyan>Do you wish to inscribe this item? ").display();
+
+        if (toupper(getch()) == 'Y')
         {
-           item.inscription = std::string(buf);
+            char buf[79];
+            cprintf("\nInscribe with what? ");
+            if (!cancelable_get_line(buf, sizeof buf))
+            {
+                item.inscription = std::string(buf);
+            }
         }
     }
+    else if (getch() == 0)
+        getch();
 
 }
 
