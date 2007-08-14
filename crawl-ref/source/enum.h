@@ -3768,54 +3768,59 @@ enum tutorial_event_type
 {
     TUT_SEEN_FIRST_OBJECT,  // 0
     // seen certain items
-    TUT_SEEN_POTION,        
+    TUT_SEEN_POTION,
     TUT_SEEN_SCROLL,
     TUT_SEEN_WAND,
     TUT_SEEN_SPBOOK,
-    TUT_SEEN_JEWELLERY,     // 5    
-    TUT_SEEN_MISC,      
+    TUT_SEEN_JEWELLERY,     // 5
+    TUT_SEEN_MISC,
     TUT_SEEN_STAFF,
     TUT_SEEN_WEAPON,
     TUT_SEEN_MISSILES,
     TUT_SEEN_ARMOUR,        // 10
-    TUT_SEEN_RANDART, 
-    TUT_SEEN_FOOD,  
+    TUT_SEEN_RANDART,
+    TUT_SEEN_FOOD,
     TUT_SEEN_CARRION,
     // encountered dungeon features
-    TUT_SEEN_STAIRS,        
-    TUT_SEEN_ESCAPE_HATCH,  // 15
-    TUT_SEEN_TRAPS,    
+    TUT_SEEN_STAIRS,        // 14
+    TUT_SEEN_ESCAPE_HATCH,
+    TUT_SEEN_TRAP,
     TUT_SEEN_ALTAR,         
     TUT_SEEN_SHOP,          
     TUT_SEEN_DOOR,
     // other 'first events'
     TUT_SEEN_MONSTER,       // 20
-    TUT_KILLED_MONSTER,   
+    TUT_MONSTER_BRAND,
+    TUT_KILLED_MONSTER,
     TUT_NEW_LEVEL,       
     TUT_SKILL_RAISE,
-    TUT_YOU_ENCHANTED,
-    TUT_YOU_SICK,           // 25
-    TUT_YOU_POISON,
-    TUT_YOU_CURSED,         
-    TUT_YOU_HUNGRY, 
-    TUT_YOU_STARVING,
-    TUT_MULTI_PICKUP,       // 30
-    TUT_HEAVY_LOAD,
-    TUT_ROTTEN_FOOD,
-    TUT_NEED_HEALING,       
-    TUT_NEED_POISON_HEALING,
-    TUT_RUN_AWAY,           // 35
-    TUT_MAKE_CHUNKS,
+    TUT_MAKE_CHUNKS,        // 25
     TUT_OFFER_CORPSE,
-    TUT_POSTBERSERK, 
-    TUT_SHIFT_RUN,
-    TUT_MAP_VIEW,           // 40
-    TUT_DONE_EXPLORE,
-    TUT_YOU_MUTATED,
-    TUT_NEW_ABILITY,  
-    TUT_WIELD_WEAPON,
+    TUT_NEW_ABILITY,
     TUT_FLEEING_MONSTER,
-    TUT_EVENTS_NUM          // 46
+    TUT_ROTTEN_FOOD,
+    // status changes
+    TUT_YOU_ENCHANTED,      // 30
+    TUT_YOU_SICK,
+    TUT_YOU_POISON,
+    TUT_YOU_CURSED,
+    TUT_YOU_HUNGRY,
+    TUT_YOU_STARVING,       // 35
+    TUT_YOU_MUTATED,
+    TUT_POSTBERSERK,
+    // warning
+    TUT_RUN_AWAY,           // 38
+    TUT_RETREAT_CASTER,
+    TUT_WIELD_WEAPON,
+    TUT_NEED_HEALING,
+    TUT_NEED_POISON_HEALING,
+    // interface
+    TUT_MULTI_PICKUP,       // 43
+    TUT_HEAVY_LOAD,
+    TUT_SHIFT_RUN,
+    TUT_MAP_VIEW,
+    TUT_DONE_EXPLORE,
+    TUT_EVENTS_NUM          // 48
 }; // for numbers higher than 48 change size of tutorial_events in externs.h
 
 enum tutorial_types

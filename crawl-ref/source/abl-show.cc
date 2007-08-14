@@ -1839,7 +1839,6 @@ static void add_talent(std::vector<talent>& vec, const ability_type ability,
     if ( t.which != ABIL_NON_ABILITY )
     {
         vec.push_back(t);
-        learned_something_new(TUT_NEW_ABILITY);
     }
 }
 

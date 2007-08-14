@@ -47,6 +47,7 @@
 #include "spells4.h"
 #include "stash.h"
 #include "travel.h"
+#include "tutorial.h"
 #include "view.h"
 
 #include "macro.h"
@@ -1763,7 +1764,13 @@ static void describe_cell(int mx, int my)
          marker.c_str(),
          traveldest.c_str());
 #else
-    mpr(feature_desc.c_str());
+    if (Options.tutorial_left && tutorial_feat_interesting(grd[mx][my]))
+    {
+        feature_desc += " (Press <w>v<lightgray> for more information.)";
+        print_formatted_paragraph(feature_desc, 80);
+    }
+    else
+        mpr(feature_desc.c_str());
 #endif
 }
 

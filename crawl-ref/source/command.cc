@@ -115,6 +115,11 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     item_def tmp = you.inv[to_slot];
     you.inv[to_slot] = you.inv[from_slot];
     you.inv[from_slot] = tmp;
+    
+    // slot switching
+    tmp.slot = you.inv[to_slot].slot;
+    you.inv[to_slot].slot = you.inv[from_slot].slot;
+    you.inv[from_slot].slot = tmp.slot;
 
     you.inv[from_slot].link = from_slot;
     you.inv[to_slot].link = to_slot;

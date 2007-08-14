@@ -584,7 +584,7 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
     }
 }
 
-static int get_mons_colour(const monsters *mons)
+int get_mons_colour(const monsters *mons)
 {
     int col = mons->colour;
 

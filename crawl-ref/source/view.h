@@ -107,6 +107,7 @@ void get_item_symbol(unsigned int object, unsigned *ch,
 
 // Applies EC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour);
+int get_mons_colour(const monsters *mons);
 
 void set_envmap_obj( int x, int y, int object );
 unsigned get_envmap_char(int x, int y);

@@ -1,5 +1,5 @@
 /*
- *  File:       itemname.cc
+ *  File:       itemprop.h
  *  Summary:    Misc functions.
  *  Written by: Brent Ross
  *

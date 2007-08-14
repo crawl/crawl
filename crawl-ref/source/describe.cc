@@ -50,6 +50,7 @@
 #include "spl-book.h"
 #include "stuff.h"
 #include "spl-util.h"
+#include "tutorial.h"
 
 
 // ========================================================================
@@ -3310,6 +3311,13 @@ void describe_feature_wide(int x, int y)
 
     clrscr();
     print_description(desc);
+    
+    if (Options.tutorial_left)
+    {
+        gotoxy(1, wherey() + 2);
+        tutorial_describe_feature(grd[x][y]);
+    }
+        
     if ( getch() == 0 )
         getch();
 }
@@ -3376,6 +3384,12 @@ void describe_item( item_def &item )
             continue;
         }
         break;
+    }
+    
+    if (Options.tutorial_left)
+    {
+        gotoxy(1, wherey() + 2);
+        tutorial_describe_item(item);
     }
     
     gotoxy(1, wherey() + 2);

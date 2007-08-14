@@ -1388,6 +1388,9 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     item.y      = -1;
     item.link   = freeslot;
 
+    if (!item.slot)
+        item.slot = index_to_letter(item.link);
+
     autoinscribe_item( item );
 
     origin_freeze(item, you.x_pos, you.y_pos);

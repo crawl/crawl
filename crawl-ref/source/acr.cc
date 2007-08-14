@@ -890,9 +890,6 @@ static void input()
     if (Options.tut_just_triggered)
         Options.tut_just_triggered = false;
 
-    if (Options.tutorial_events[TUT_RUN_AWAY] && 2*you.hp < you.hp_max )
-        learned_something_new(TUT_RUN_AWAY);
-        
     if ( i_feel_safe() )
     {
         if (Options.tutorial_left)
@@ -915,6 +912,14 @@ static void input()
                 learned_something_new(TUT_MAP_VIEW);
             }
         }
+    }
+    else
+    {
+        if (2*you.hp < you.hp_max)
+            learned_something_new(TUT_RUN_AWAY);
+            
+        if (Options.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
+            learned_something_new(TUT_RETREAT_CASTER);
     }
  
     if ( you.duration[DUR_PARALYSIS] )
