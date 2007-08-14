@@ -971,6 +971,7 @@ formatted_string describe_mutations()
             result += "</cyan><lightblue>";
         result += EOL;
         result += "You preferably eat rotten meat." EOL;
+        result += "You resist negative energy." EOL;
         have_any = true;
         break;
 
@@ -1010,6 +1011,7 @@ formatted_string describe_mutations()
             result += " strongly";
 
         result += " in touch with the powers of death." EOL;
+        result += "You resist negative energy." EOL;
 
         if (you.experience_level > 12)
             result += "You can restore your body by infusing magical energy." EOL;
@@ -1101,13 +1103,22 @@ formatted_string describe_mutations()
         break;
 
     case SP_VAMPIRE:
-        result += "You are";
-        result += (you.experience_level > 25 && you.hunger_state == HS_FULL) ?
-                 " very strongly" :
-                  (you.experience_level > 12 && you.hunger_state != HS_HUNGRY) ?
-                 " strongly" : "";
-        result += " in touch with the powers of death." EOL;
-        have_any = true;
+        if (you.hunger_state < HS_SATIATED)
+        {
+            result += "<green>";
+            result += "You are";
+            result += (you.experience_level > 25) ?
+                       " strongly" : "";
+            result += " in touch with the powers of death." EOL;
+            result += "You mostly resist negative energy." EOL;
+            result += "You can see invisible." EOL;
+            if (you.hunger_state < HS_HUNGRY)
+                result += "You do not regenerate." EOL;
+            else
+                result += "You regenerate slowly." EOL;
+            result += "</green>";
+            have_any = true;
+        }
         break;
         
     default:

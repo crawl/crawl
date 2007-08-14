@@ -1261,6 +1261,12 @@ void print_overview_screen()
                         snprintf(buf, sizeof buf, "%-7s: Blade Hands", slot);
                     else if (you.skills[SK_UNARMED_COMBAT])
                         snprintf(buf, sizeof buf, "%-7s: Unarmed", slot);
+                    else if (!you_tran_can_wear(EQ_WEAPON))
+                    {
+                        snprintf(buf, sizeof buf, "%-7s: "
+                                 "<darkgray>(currently unavailable)</darkgray>",
+                                 slot);
+                    }
                     else
                         snprintf(buf, sizeof buf, "%-7s:", slot);
                 }
@@ -1274,8 +1280,14 @@ void print_overview_screen()
                     else
                     {
                         snprintf(buf, sizeof buf,
-                                 "%-7s: <darkgray>(unavailable)</lightgray>", slot);
+                                 "%-7s: <darkgray>(unavailable)</darkgray>", slot);
                     }
+                }
+                else if (!you_tran_can_wear(e_order[i]))
+                {
+                    snprintf(buf, sizeof buf, "%-7s: "
+                             "<darkgray>(currently unavailable)</darkgray>",
+                             slot);
                 }
                 else
                 {

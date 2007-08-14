@@ -219,7 +219,6 @@ bool transform(int pow, transformation_type which_trans)
              you.species == SP_VAMPIRE ? "vampire " : "");
 
         remove_equipment( rem_stuff );
-        // drop_everything();
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_BAT;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
@@ -235,9 +234,12 @@ bool transform(int pow, transformation_type which_trans)
        return (true);
         
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 
-        mpr( "You turn into a creature of crystalline ice." );
-
         rem_stuff.erase(EQ_CLOAK);
+
+        if (check_for_cursed_equipment( rem_stuff ))
+            return false;
+            
+        mpr( "You turn into a creature of crystalline ice." );
 
         remove_equipment( rem_stuff );
 
@@ -276,6 +278,14 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_STATUE: // also AC +20, ev -5, elec +1, pois +1, neg +1, slow
+        rem_stuff.erase(EQ_WEAPON); // can still hold a weapon
+        rem_stuff.erase(EQ_CLOAK);
+        rem_stuff.erase(EQ_HELMET);
+        rem_stuff.erase(EQ_BOOTS);
+
+        if (check_for_cursed_equipment( rem_stuff ))
+            return false;
+
         if (you.species == SP_GNOME && coinflip())
             mpr( "Look, a garden gnome.  How cute!" );
         else if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
@@ -283,13 +293,7 @@ bool transform(int pow, transformation_type which_trans)
         else
             mpr( "You turn into a living statue of rough stone." );
 
-        rem_stuff.erase(EQ_WEAPON); // can still hold a weapon
-        rem_stuff.erase(EQ_CLOAK);
-        rem_stuff.erase(EQ_HELMET);
-        rem_stuff.erase(EQ_BOOTS);
-
         // too stiff to make use of shields, gloves, or armour -- bwr
-
         remove_equipment( rem_stuff );
 
         you.attribute[ATTR_TRANSFORMATION] = TRAN_STATUE;
@@ -310,6 +314,9 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_DRAGON:  // also AC +10, ev -3, cold -1, fire +2, pois +1, flight
+        if (check_for_cursed_equipment( rem_stuff ))
+            return false;
+
         if (you.species == SP_MERFOLK && player_is_swimming())
             mpr("You fly out of the water as you turn into "
                 "a fearsome dragon!");
@@ -370,7 +377,14 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_AIR:
-        // also AC 20, ev +20, regen/2, no hunger, fire -2, cold -2, air +2, 
+        rem_stuff.insert(EQ_LEFT_RING);
+        rem_stuff.insert(EQ_RIGHT_RING);
+        rem_stuff.insert(EQ_AMULET);
+        
+        if (check_for_cursed_equipment( rem_stuff ))
+            return false;
+
+        // also AC 20, ev +20, regen/2, no hunger, fire -2, cold -2, air +2,
         // pois +1, spec_earth -1
         mpr( "You feel diffuse..." );
 
@@ -390,6 +404,9 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_SERPENT_OF_HELL:
+        if (check_for_cursed_equipment( rem_stuff ))
+            return false;
+
         // also AC +10, ev -5, fire +2, pois +1, life +2, slow
         mpr( "You transform into a huge demonic serpent!" );
 

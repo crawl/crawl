@@ -438,10 +438,6 @@ bool player_genus(unsigned char which_genus, unsigned char species)
 // -------------------------------------------------
 bool you_can_wear(int eq)
 {
-   // bats cannot use anything
-   if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-       return false;
-
    // these can be used by all
    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
        || eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_CLOAK)
@@ -472,6 +468,55 @@ bool you_can_wear(int eq)
    }
 
    // else no problems
+   return true;
+}
+
+bool you_tran_can_wear(int eq)
+{
+   int transform = you.attribute[ATTR_TRANSFORMATION];
+
+   // no further restrictions
+   if (transform == TRAN_NONE || transform == TRAN_LICH)
+       return true;
+
+   // bats cannot use anything, clouds obviously so
+   if (transform == TRAN_BAT || transform == TRAN_AIR)
+       return false;
+
+   // everyone else can wear jewellery, at least
+   if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+       return true;
+
+   // these cannot use anything but jewellery
+   if (transform == TRAN_SPIDER || transform == TRAN_DRAGON
+       || transform == TRAN_SERPENT_OF_HELL)
+   {
+       return false;
+   }
+
+   if (transform == TRAN_BLADE_HANDS)
+   {
+       if (eq == EQ_WEAPON || eq == EQ_GLOVES || eq == EQ_SHIELD)
+           return false;
+       return true;
+   }
+
+   if (transform == TRAN_ICE_BEAST)
+   {
+       if (eq != EQ_CLOAK)
+       {
+           return false;
+       }
+       return true;
+   }
+   
+   if (transform == TRAN_STATUE)
+   {
+       if (eq == EQ_BODY_ARMOUR || eq == EQ_GLOVES || eq == EQ_SHIELD)
+           return false;
+       return true;
+   }
+
    return true;
 }
 
