@@ -461,18 +461,17 @@ ENDMAP
 ###################################
 # warg stables, with goblin stableboy
 NAME: mines5_lemuel
+TAGS: mini_float
 SUBST: ?: wx
 MONS: warg/wolf,goblin
 MAP
-...........
-.x???????x.
-.xwwwwwwwx.
-.xwwwwwwwx.
-.x1.1.1.1x.
-.x.1.1.1.x.
-.x1.2...1x.
-.xxxx+xxxx.
-...........
+x???????x
+xwwwwwwwx
+xwwwwwwwx
+x1.1.1.1x
+x.1.1.1.x
+x1.2...1x
+xxxx+xxxx
 ENDMAP
 
 ###################################
@@ -511,37 +510,37 @@ ENDMAP
 # hidden treasure chamber
 #
 NAME: mines2_lemuel
+TAGS: mini_float
 SUBST: ? = x.
 MAP
-..........
-..?x=x?...
-.?xx.xx?..
-?xx$$$xx?.
-?xx$$$xx?.
-.?xxxxx?..
-...???....
+  ?x=x?
+ ?xx.xx?
+?xx$$$xx?
+?xx$$$xx?
+ ?xxxxx?
+   ???
 ENDMAP
 
 ###################################
 # treasure chamber with oklob pant
 #
 NAME: mines3_lemuel
+TAGS: mini_float
 SUBST: ? = +=.
 SUBST: ! = x.
 SUBST: $ = $:30 *
 MONS: oklob plant
 MAP
-.....!.!......
-....!x?x!.....
-....!x.xx!....
-...!xx..xx!...
-...!xxx..xx!..
-....!xxx.1x!..
-....!xxxx.x!..
-...!xxxxx.xx!.
-..!xx$$x..xxx.
-.!!xx$$?.xxxx.
-.!xxx$$xxxx!..
-..!xxxxxxx!...
-..............
+    !.!
+   !x?x!
+   !x.xx!
+  !xx..xx!
+  !xxx..xx!
+   !xxx.1x!
+   !xxxx.x!
+  !xxxxx.xx!
+ !xx$$x..xxx
+!!xx$$?.xxxx
+!xxx$$xxxx!
+ !xxxxxxx!
 ENDMAP

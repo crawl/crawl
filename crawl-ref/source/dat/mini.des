@@ -100,27 +100,27 @@ ENDMAP
 # Centaur isle (Lemuel)
 #
 NAME: centaur_isle
-TAGS: no_monster_gen no_pool_fixup uniq
+TAGS: no_monster_gen no_pool_fixup no_rotate uniq
 SUBST: ? = *$
 DEPTH: D:6-12
 MONS: centaur
 MAP
-..........wwww.........
-.......wwwwwwww........
-....wwwwwwwwwwwwwww....
-.wwwwwwwwwwwwwwwwwwwww.
+          wwww
+       wwwwwwww
+    wwwwwwwwwwwwwww
+ wwwwwwwwwwwwwwwwwwwww
 wwwwwwww..wwwwwwwwwwwww
 wwwwww.11...wwwwwwwwwww
 wwwww........wwwwwwwwww
 wwwww...x=x..wwwwwwwwww
-wwww..11x.x..wwwwwwwww.
-.www...xx>x11wwwwwwwww.
-.www..xx??x.wwwwwwwww..
-.wwww.xx??x.wwwwwww....
-..wwww.xxxx.wwwwww.....
-...wwwwww..wwwww.......
-....wwwwwwwwwww........
-.......wwwwww..........
+wwww..11x.x..wwwwwwwww
+ www...xx>x11wwwwwwwww
+ www..xx??x.wwwwwwwww
+ wwww.xx??x.wwwwwww
+  wwww.xxxx.wwwwww
+   wwwwww..wwwww
+    wwwwwwwwwww
+       wwwwww
 ENDMAP
 
 #################################
@@ -155,7 +155,7 @@ WW343wwwwwwwwww343WW
 WWW3WwwwwwwwwwwW3WWW
 WWWWWWwww..wwwWWWWWW
 .WWWWW........WWWWW.
-..WWW..........WWW..
+ .WWW..........WWW..
 T..................T
 ENDMAP
 
@@ -191,13 +191,11 @@ KFEAT: ? = zot trap
 SUBST: *: *$
 CHANCE: 3
 MAP
-............
-.xxxxxxxxxx.
-.xxxxxxx**x.
-......?=**x.
-.xxxxxxx**x.
-.xxxxxxxxxx.
-............
+xxxxxxxxxx
+xxxxxxx**x
+@....?=**x
+xxxxxxx**x
+xxxxxxxxxx
 ENDMAP
 
 ###################################
@@ -501,20 +499,19 @@ ENDMAP
 # Wizard's laboratory
 #
 NAME: minivault_6
+TAGS: mini_float
 MONS: wizard, small abomination, large abomination
 MAP
-............
-.ccccccc+cc.
-.c........c.
-.c........c.
-.c..1.....c.
-.c........c.
-.cc+ccccccc.
-.c***c3232c.
-.c|**+2223c.
-.c||*c3322c.
-.cccccccccc.
-............
+ccccccc+cc
+c........c
+c........c
+c..1.....c
+c........c
+cc+ccccccc
+c***c3232c
+c|**+2223c
+c||*c3322c
+cccccccccc
 ENDMAP
 
 ###################################
@@ -563,36 +560,33 @@ ENDMAP
 NAME: minivault_9
 DEPTH: 15-27
 MAP
-............
-.==========.
-.=x========.
-.==========.
-.===8888===.
-.===8998===.
-.===8998===.
-.===8888===.
-.==========.
-.==========.
-.==========.
-............
+==========
+=x========
+==========
+===8888===
+===8998===
+===8998===
+===8888===
+==========
+==========
+==========
 ENDMAP
 
 ###################################
 
 NAME: minivault_10
+TAGS: mini_float
 MAP
-............
-.xxxx..xxxx.
-.x**x..x**x.
-.x**+..+**x.
-.xx+x..x+xx.
-............
-............
-.xx+x..x+xx.
-.x**+..+**x.
-.x**x..x**x.
-.xxxx..xxxx.
-............
+xxxx  xxxx
+x**x  x**x
+x**+..+**x
+xx+x..x+xx
+  ......  
+  ......  
+xx+x..x+xx
+x**+..+**x
+x**x  x**x
+xxxx  xxxx
 ENDMAP
 
 ###################################
