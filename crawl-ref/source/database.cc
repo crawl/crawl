@@ -26,9 +26,10 @@ db_list openDBList;
 DBM     *descriptionDB;
 
 #define DESC_BASE_NAME "descript"
-#define DESC_TXT       (DESC_BASE_NAME ".txt")
+#define DESC_TXT_DIR   "descript"
 #define DESC_DB        (DESC_BASE_NAME ".db")
 
+static std::vector<std::string> description_txt_paths();
 static void generate_description_db();
 
 void databaseSystemInit()
@@ -36,9 +37,17 @@ void databaseSystemInit()
     if (!descriptionDB)
     {
         std::string descriptionPath = get_savedir_path(DESC_DB);
-        check_newer(descriptionPath,
-                    datafile_path(DESC_TXT),
-                    generate_description_db);
+        std::vector<std::string> textPaths = description_txt_paths();
+
+        // If any of the description text files are newer then
+        // aggregated description db, then regenerate the whole db
+        for (int i = 0, size = textPaths.size(); i < size; i++)
+            if (is_newer(textPaths[i], descriptionPath))
+            {
+                generate_description_db();
+                break;
+            }
+
         descriptionPath.erase(descriptionPath.length() - 3);
         if (!(descriptionDB = openDB(descriptionPath.c_str())))
             end(1, true, "Failed to open DB: %s", descriptionPath.c_str());
@@ -103,16 +112,43 @@ std::string getLongDescription(const std::string &key)
     return std::string((const char *)result.dptr, result.dsize);
 }
 
+static std::vector<std::string> description_txt_paths()
+{
+    std::vector<std::string> txt_file_names;
+    std::vector<std::string> paths;
+
+    txt_file_names.push_back("features");
+    txt_file_names.push_back("items");
+    txt_file_names.push_back("monsters");
+    txt_file_names.push_back("spells");
+
+    for (int i = 0, size = txt_file_names.size(); i < size; i++)
+    {
+        std::string name = DESC_TXT_DIR;
+        name += FILE_SEPARATOR;
+        name += txt_file_names[i];
+        name += ".txt";
+
+        std::string txt_path = datafile_path(name);
+        paths.push_back(txt_path);
+    }
+
+    return (paths);
+}
+
 static void store_descriptions(const std::string &in, const std::string &out);
 static void generate_description_db()
 {
     std::string db_path = get_savedir_path(DESC_BASE_NAME);
     std::string full_db_path = get_savedir_path(DESC_DB);
-    std::string txt_path = datafile_path(DESC_TXT);
+
+    std::vector<std::string> txt_paths = description_txt_paths();
 
     file_lock lock(get_savedir_path(DESC_BASE_NAME ".lk"), "wb");
     unlink( full_db_path.c_str() );
-    store_descriptions(txt_path, db_path);
+
+    for (int i = 0, size = txt_paths.size(); i < size; i++)
+        store_descriptions(txt_paths[i], db_path);
     DO_CHMOD_PRIVATE(full_db_path.c_str());
 }
 

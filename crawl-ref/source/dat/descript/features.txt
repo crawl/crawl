@@ -1,0 +1,278 @@
+%%%%
+A basalt altar of Yredelemnul
+
+%%%%
+A bloodstained altar of Trog
+
+%%%%
+A burning altar of Makhleb
+
+%%%%
+A closed door
+
+A wooden door. To open it, try simply walking into it, or press 'o'.
+%%%%
+A corrupted altar of Lugonu
+
+%%%%
+A deep blue altar of Sif Muna
+
+%%%%
+A dry fountain
+
+%%%%
+A fountain of clear blue water
+
+'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
+%%%%
+A fountain of sparkling water
+
+'q'uaff to drink from this magic fountain. Expect magical effects, as long as it's still magic.
+%%%%
+A gate leading back out of this place
+
+%%%%
+A gate leading out of Pandemonium
+
+%%%%
+A gate leading to another region of Pandemonium
+
+%%%%
+A gate leading to the halls of Pandemonium
+
+%%%%
+A gate to the Realm of Zot
+
+%%%%
+A gateway leading out of the Abyss
+
+A gateway out of this accursed place, shimmering and shifting in the
+impermanent landscape.
+%%%%
+A gateway to Gehenna
+
+%%%%
+A gateway to Hell
+
+%%%%
+A gateway to the Iron City of Dis
+
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+%%%%
+A glowing golden altar of the Shining One
+
+%%%%
+A glowing white marble altar of Zin
+
+%%%%
+A granite statue
+
+%%%%
+A labyrinth entrance
+
+A gateway to an intricate maze designed by subtle and malicious minds,
+its exit guarded by a fearsome monster, where many a hapless
+adventurer has lost his way and starved to death.
+%%%%
+A magical trap
+
+%%%%
+A mechanical trap
+
+%%%%
+A metal wall
+
+A wall of bluish-grey metal.
+%%%%
+A one-way gate to the infinite horrors of the Abyss
+
+A one-way gate to a demon-haunted realm, riven by chaos, its very
+substance impermanent and whimsical, filled with creatures out
+of nightmare.
+
+"And if you gaze for long into an abyss,
+ the abyss gazes also into you.”
+    – Friedrich Nietzsche, "Beyond Good and Evil"
+%%%%
+A rock wall
+
+%%%%
+A roughly hewn altar of Beogh
+
+%%%%
+A shimmering altar of Xom
+
+%%%%
+A shining altar of Vehumet
+
+%%%%
+A shop
+
+A shop in the dungeon, beyond sight of the world above, manned by a
+secretive and reclusive shopkeeper who cannot be bargained with,
+grants no refunds, and is interested in nothing you may have to sell.
+Some shops hawk antiques of unknown provenance, and offer little hint
+as to the quality or nature of their goods.
+%%%%
+A silver altar of Elyvilon
+
+%%%%
+A sparkling altar of Nemelex Xobeh
+
+%%%%
+A staircase back to the Crypt
+
+%%%%
+A staircase back to the Dungeon
+
+%%%%
+A staircase back to the Lair
+
+%%%%
+A staircase back to the Mines
+
+%%%%
+A staircase back to the Vaults
+
+%%%%
+A staircase to the Crypt
+
+%%%%
+A staircase to the Ecumenical Temple
+
+An entrance to the Temple of the Gods, a place of peace and refuge
+from the insanity of the dungeon.
+%%%%
+A staircase to the Elven Halls
+
+A wide stair down to the murky depths of the halls of the deep elves,
+skilled warriors with blade and bow, and fearsome sorcerers and
+magicians.
+%%%%
+A staircase to the Hall of Blades
+
+%%%%
+A staircase to the Hive
+
+You hear an angry and manifold drone.
+%%%%
+A staircase to the Lair
+
+%%%%
+A staircase to the Orcish Mines
+
+An entrance to the mines of the orcs, filled with their gold, but
+treacherous and easy to get trapped in.
+%%%%
+A staircase to the Shoals
+
+Here be the Shoals: exotic underground beaches, salty spray and
+creatures that bite, stab, and maul.
+%%%%
+A staircase to the Slime Pits
+
+%%%%
+A staircase to the Snake Pit
+
+Here is the way to the place of the serpent, the lair of the naga.
+%%%%
+A staircase to the Swamp
+
+A stair to a swampy waste land, complete with ooze, muck, flies, and
+large slavering carnivorous monsters.
+%%%%
+A staircase to the Tomb
+
+A way to the Tomb of the Ancients, a place of damnation, of horrors
+animated by the vilest necromancy.
+
+"In the depths of every heart, there is a tomb and a dungeon, though
+the lights, the music, and revelry above may cause us to forget their
+existence, and the buried ones, or prisoners whom they hide. But
+sometimes, and oftenest at midnight, those dark receptacles are flung
+wide open. In an hour like this, when the mind has a passive
+sensibility, but no active strength; when the imagination is a mirror,
+imparting vividness to all ideas, without the power of selecting or
+controlling them; then pray that your grieves may slumber, and the
+brotherhood of remorse not break their chain."
+    - Nathaniel Hawthorne
+%%%%
+A staircase to the Vaults
+
+%%%%
+A stone staircase leading down
+
+%%%%
+A stone staircase leading up
+
+%%%%
+A stone wall
+
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls.
+%%%%
+A trap
+
+%%%%
+A wall of green crystal
+
+For some reason, some dungeon walls, like this one, have been made of this polished crystal, imbued with arcane magics. They prevent its destruction, and make it reflect heat and cold.
+%%%%
+A wall of solid wax
+
+These walls are built by bees. Occasionally a dungeon architect will
+manipulate bees into building wax walls for aesthetic reasons. (Theirs,
+not the bees'.) They are susceptible to fire and will melt and burn, given
+sufficient heat.
+%%%%
+A wall of the weird stuff which makes up Pandemonium
+
+%%%%
+An ancient bone altar of Kikubaaqudgha
+
+%%%%
+An empty arch of ancient stone
+
+%%%%
+An escape hatch in the ceiling
+
+A spring-loaded one-way escape hatch set in the ceiling.
+%%%%
+An escape hatch in the floor
+
+A spring-loaded one-way escape hatch set in the dungeon floor,
+allowing the adventurer beset by adversaries to exchange the perils of
+this level for the perils of the next.
+%%%%
+An iron altar of Okawaru
+
+%%%%
+An open door
+
+A wooden door. You can close it by standing next to it and pressing 'c'.
+%%%%
+An orcish idol
+
+An idol of Beogh
+%%%%
+An unnaturally hard rock wall
+
+%%%%
+Floor
+
+%%%%
+Some deep water
+
+%%%%
+Some lava
+
+An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
+%%%%
+Some shallow water
+
+This waist-deep, misty water makes movement and combat cumbersome for landlubbers -- sometimes dangerous, but never directly fatal.
+%%%%
