@@ -2232,7 +2232,6 @@ void jewellery_wear_effects(item_def &item)
     case RING_SUSTENANCE:
     case RING_SLAYING:
     case RING_SEE_INVISIBLE:
-    case RING_TELEPORTATION:
     case RING_WIZARDRY:
     case RING_REGENERATION:
     case RING_TELEPORT_CONTROL:
@@ -2286,6 +2285,15 @@ void jewellery_wear_effects(item_def &item)
         ident = ID_KNOWN_TYPE;
         break;
 
+    case RING_TELEPORTATION:
+        if (!scan_randarts( RAP_CAN_TELEPORT ))
+        {
+            mpr("You feel slightly jumpy.");
+            ident = ID_KNOWN_TYPE;
+            break;
+        }
+        break;
+        
     case AMU_RAGE:
         mpr("You feel a brief urge to hack something to bits.");
         ident = ID_KNOWN_TYPE;
@@ -2899,6 +2907,15 @@ void inscribe_item()
     mpr( "Inscribe with what? ", MSGCH_PROMPT );
     if (!cancelable_get_line(buf, sizeof buf))
     {
+        // strip spaces from the end
+        for (int i = strlen(buf) - 1; i >= 0; i--)
+        {
+            if (isspace( buf[i] ))
+                buf[i] = 0;
+            else
+                break;
+        }
+            
         you.inv[item_slot].inscription = std::string(buf);
         you.wield_change = true;
     }

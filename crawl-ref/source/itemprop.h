@@ -146,6 +146,7 @@ bool can_cut_meat( const item_def &item );
 // generic item property functions:
 bool is_tool( const item_def &item );
 int property( const item_def &item, int prop_type );
+bool gives_ability( const item_def &item );
 int item_mass( const item_def &item );
 size_type item_size( const item_def &item );
 

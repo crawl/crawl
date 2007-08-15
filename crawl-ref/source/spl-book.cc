@@ -1131,6 +1131,43 @@ bool undead_cannot_memorise(spell_type spell, char being)
     return false;
 }                               // end undead_cannot_memorise()
 
+bool player_can_memorize(item_def &book)
+{
+    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
+        return false;
+    
+    if (!player_spell_levels())
+        return false;
+        
+    for (int j = 0; j < SPELLBOOK_SIZE; j++)
+    {
+         const spell_type stype = which_spell_in_book(book.book_number(), j);
+
+         if (stype == SPELL_NO_SPELL)
+             continue;
+
+         // easiest spell already too difficult
+         if (spell_difficulty(stype) > you.experience_level
+             || player_spell_levels() < spell_levels_required(stype))
+         {
+             return false;
+         }
+
+         bool knowsSpell = false;
+         for (int i = 0; i < 25 && !knowsSpell; i++)
+         {
+              knowsSpell = (you.spells[i] == stype);
+         }
+
+         // don't already know this spell
+         if (!knowsSpell)
+         {
+             return true;
+         }
+    }
+    return false;
+}
+                         
 bool learn_spell(void)
 {
     int chance = 0;

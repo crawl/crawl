@@ -1274,8 +1274,17 @@ void print_overview_screen()
                 {
                     if (e_order[i] == EQ_BODY_ARMOUR || e_order[i] == EQ_HELMET)
                     {
-                        snprintf(buf, sizeof buf,
-                                 "%-7s: <lightgray>(ill-fitting)</lightgray>", slot);
+                        if (!you_tran_can_wear(e_order[i]))
+                        {
+                            snprintf(buf, sizeof buf, "%-7s: "
+                                     "<darkgray>(currently unavailable)</darkgray>",
+                                     slot);
+                        }
+                        else
+                        {   snprintf(buf, sizeof buf,
+                                     "%-7s: <lightgray>(ill-fitting)</lightgray>",
+                                     slot);
+                        }
                     }
                     else
                     {

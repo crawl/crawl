@@ -1918,6 +1918,82 @@ int property( const item_def &item, int prop_type )
     return (0);
 }
 
+bool gives_ability( const item_def &item )
+{
+    if (!item_type_known(item))
+        return false;
+
+    switch (item.base_type)
+    {
+       case OBJ_WEAPONS:
+       {
+          // unwielded weapon
+          item_def *weap = you.slot_item(EQ_WEAPON);
+          if (!weap || (*weap).slot != item.slot)
+              return false;
+          break;
+       }
+       case OBJ_JEWELLERY:
+       {
+          if (item.sub_type < NUM_RINGS)
+          {
+              // unworn ring
+              item_def *lring = you.slot_item(EQ_LEFT_RING);
+              item_def *rring = you.slot_item(EQ_RIGHT_RING);
+              if ((!lring || (*lring).slot != item.slot)
+                  && (!rring || (*rring).slot != item.slot))
+              {
+                  return false;
+              }
+              
+              if (item.sub_type == RING_TELEPORTATION
+                  || item.sub_type == RING_LEVITATION
+                  || item.sub_type == RING_INVISIBILITY)
+              {
+                  return true;
+              }
+          }
+          else
+          {
+              // unworn amulet
+              item_def *amul = you.slot_item(EQ_AMULET);
+              if (!amul || (*amul).slot != item.slot)
+                  return false;
+                  
+              if (item.sub_type == AMU_RAGE)
+                  return true;
+          }
+          break;
+       }
+       case OBJ_ARMOUR:
+       {
+          const equipment_type eq = get_armour_slot(item);
+          if (eq == EQ_NONE)
+              return false;
+              
+          // unworn armour
+          item_def *arm = you.slot_item(eq);
+          if (!arm || (*arm).slot != item.slot)
+              return false;
+          break;
+       }
+       default:
+          return false;
+    }
+    
+    if (!is_random_artefact(item))
+        return false;
+
+    // check for evokable randart properties
+    for (int rap = RAP_INVISIBLE; rap <= RAP_MAPPING; rap++)
+    {
+       if (randart_wpn_property( item, rap ))
+           return true;
+    }
+       
+    return false;
+}
+
 int item_mass( const item_def &item )
 {
     int unit_mass = 0;

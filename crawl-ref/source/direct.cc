@@ -1708,6 +1708,11 @@ static void describe_cell(int mx, int my)
 #if DEBUG_DIAGNOSTICS
         stethoscope(i);
 #endif
+        if (Options.tutorial_left && tutorial_monster_interesting(&menv[i]))
+        {
+           std::string msg = "(Press <w>v<lightgray> for more information.)";
+           print_formatted_paragraph(msg, 80);
+        }
     }
 
 #if (!DEBUG_DIAGNOSTICS)

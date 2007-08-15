@@ -3388,10 +3388,10 @@ void describe_item( item_def &item, bool allow_inscribe )
     
     if (Options.tutorial_left)
     {
-        gotoxy(1, wherey() + 2);
         tutorial_describe_item(item);
     }
-    if (allow_inscribe)
+    // Don't ask if there aren't enough rows left
+    if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
     {
         gotoxy(1, wherey() + 2);
         formatted_string::parse_string("<cyan>Do you wish to inscribe this item? ").display();
@@ -3606,7 +3606,7 @@ void describe_monsters(monsters& mons)
         case MONS_GUARDIAN_NAGA:
             description << getLongDescription("naga")
                         << "$These nagas are often used as guardians "
-                "by powerful creatures.$";
+                           "by powerful creatures.$";
             break;
         case MONS_GREATER_NAGA:
             description << getLongDescription("naga")
@@ -3730,6 +3730,12 @@ void describe_monsters(monsters& mons)
 
     clrscr();
     print_description(description.str());
+
+    if (Options.tutorial_left)
+    {
+        gotoxy(1, wherey() + 2);
+        tutorial_describe_monster(static_cast<const monsters*>(&mons));
+    }
 
     if (getch() == 0)
         getch();

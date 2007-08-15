@@ -37,8 +37,12 @@ void tutorial_first_monster(const monsters& mon);
 void tutorial_first_item(const item_def& item);
 void learned_something_new(tutorial_event_type seen_what, int x=0, int y=0);
 formatted_string tut_abilities_info();
-void tutorial_describe_item(item_def& item);
-bool tutorial_feat_interesting(int feat);
-void tutorial_describe_feature(int feat);
+
+// additional information for tutorial players
+void tutorial_describe_item(item_def &item);
+bool tutorial_feat_interesting(dungeon_feature_type feat);
+void tutorial_describe_feature(dungeon_feature_type feat);
+bool tutorial_monster_interesting(const monsters *mons);
+void tutorial_describe_monster(const monsters *mons);
 
 #endif

@@ -15,12 +15,16 @@
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-pick.h"
+#include "mon-util.h"
+#include "monstuff.h"
 #include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
@@ -821,40 +825,39 @@ static std::string colour_to_tag(int col, bool closed = false)
     return tag;
 }
 
-void tutorial_first_monster(const monsters& mon)
+void tutorial_first_monster(const monsters &mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
         return;
 
+    // crude hack:
+    // if the first monster is sleeping wake it
+    // (highlighting is an unnecessary complication)
+    if (get_mons_colour(&mon) != (&mon)->colour)
+    {
+        noisy(1, mon.x, mon.y);
+        viewwindow(true, false);
+    }
+    
     unsigned ch;
     unsigned short col;
     get_mons_glyph(&mon, &ch, &col);
-
-    if (ch == ' ') // happens if monster standing on dropped corpse or item
-       return;
 
     std::string text = "<magenta>That ";
     text += colour_to_tag(col);
     text += ch;
     text += "<magenta> is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r<magenta>, <w>g<magenta>, "
-            "<lightgray>b<magenta> or <brown>K<magenta>. ";
-            
-    if (get_mons_colour(&mon) != (&mon)->colour)
-        learned_something_new(TUT_MONSTER_BRAND);
-    else
-    {
-        text += "You can gain information about it by pressing <w>x<magenta> "
-                "and moving the cursor on the monster.";
-    }
-    text += "\nTo attack this monster with your wielded weapon, just move into "
+            "<lightgray>b<magenta> or <brown>K<magenta>. You can gain information "
+            "about it by pressing <w>x<magenta> and moving the cursor on the "
+            "monster."
+            "\nTo attack this monster with your wielded weapon, just move into "
             "it.";
             
     print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 
     if (Options.tutorial_type == TUT_RANGER_CHAR)
     {
-        more();
         text =  "However, as a hunter you will want to deal with it using your "
                 "bow. If you have a look at your bow with <w>v<magenta>, you'll "
                 "find an explanation of how to do this. First <w>w<magenta>ield "
@@ -863,7 +866,6 @@ void tutorial_first_monster(const monsters& mon)
     }
     else if (Options.tutorial_type == TUT_MAGIC_CHAR)
     {
-        more();
         text =  "However, as a conjurer you will want to deal with it using magic. "
                 "If you have a look at your spellbook with <w>v<magenta>, you'll "
                 "find an explanation of how to do this.";
@@ -875,7 +877,7 @@ void tutorial_first_monster(const monsters& mon)
     Options.tut_just_triggered = 1;
 }
 
-void tutorial_first_item(const item_def& item)
+void tutorial_first_item(const item_def &item)
 {
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]
         || Options.tut_just_triggered)
@@ -886,6 +888,9 @@ void tutorial_first_item(const item_def& item)
     unsigned ch;
     unsigned short col;
     get_item_glyph(&item, &ch, &col);
+
+    if (ch == ' ') // happens if monster standing on dropped corpse or item
+       return;
 
     std::string text = "<magenta>That ";
     text += colour_to_tag(col);
@@ -1077,6 +1082,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
+          if (ch == ' ' || colour == BLACK)
+              colour = LIGHTCYAN;
+
           text << "Oops... you just triggered a trap. An unwary adventurer will "
                   "occasionally stumble into one of these nasty constructions "
                   "depicted by " << colour_to_tag(colour) << "^<magenta>. They "
@@ -1391,12 +1399,12 @@ formatted_string tut_abilities_info()
 static std::string tut_target_mode(bool spells = false)
 {
    std::string result;
-   result = "You'll then find yourself in target mode with the nearest monster "
-            "or previous target already targetted. You can also cycle through "
-            "all hostile monsters in sight with <w>+<magenta> or <w>-<magenta>. "
+   result = "then be taken to target mode with the nearest monster or previous "
+            "target already targetted. You can also cycle through all hostile "
+            "monsters in sight with <w>+<magenta> or <w>-<magenta>. "
             "Once you're aiming at the correct monster, simply hit "
             "<w>f<magenta>, <w>Enter<magenta> or <w>.<magenta> to shoot at it. "
-            "If you miss, <w> ";
+            "If you miss, <w>";
           
    if (spells)
        result += "Zap";
@@ -1406,6 +1414,13 @@ static std::string tut_target_mode(bool spells = false)
    result += "<magenta> fires at the same target again.";
    
    return (result);
+}
+
+static std::string tut_abilities()
+{
+   return ("To do this enter the ability menu with <w>a<magenta>, and then "
+           "choose the corresponding ability. Note that such an attempt of "
+           "activation, especially by the untrained, is likely to fail.");
 }
 
 static std::string tut_throw_stuff(item_def &item)
@@ -1419,7 +1434,7 @@ static std::string tut_throw_stuff(item_def &item)
     result += " ";
     result += item_base_name(item);
     result += (item.quantity > 1? "s" : "");
-    result += ". ";
+    result += ". You'll ";
     result += tut_target_mode();
 
     return (result);
@@ -1436,10 +1451,20 @@ void tutorial_describe_item(item_def &item)
             // for identified artefacts don't give all this information
             // (The screen is likely to overflow.)
             if (is_artefact(item) && item_type_known(item))
+            {
+                // exception: you can activate it
+                if (gives_ability(item))
+                {
+                    ostr << "When wielded, some weapons (such as this one) "
+                            "offer abilities that can be evoked. ";
+                    ostr << tut_abilities();
+                    break;
+                }
                 return;
+            }
             
             item_def *weap = you.slot_item(EQ_WEAPON);
-            bool wielded = (*weap).slot == item.slot;
+            bool wielded = (weap && (*weap).slot == item.slot);
             bool long_text = false;
 
             if (!wielded)
@@ -1485,7 +1510,8 @@ void tutorial_describe_item(item_def &item)
                 if (is_range_weapon(item))
                 {
                     ostr << "To attack a monster, you only need to "
-                            "<w>f<magenta>ire the appropriate type of ammunition. ";
+                            "<w>f<magenta>ire the appropriate type of ammunition. "
+                            "You'll ";
                     ostr << tut_target_mode();
                 }
                 else
@@ -1539,7 +1565,7 @@ void tutorial_describe_item(item_def &item)
                      << (item.quantity > 1 ? "these" : "this")
                      << " " << item.name(DESC_BASENAME)
                      << (item.quantity > 1? "s" : "")
-                     << ". ";
+                     << ". You'll ";
                 ostr << tut_target_mode();
             }
             else
@@ -1555,8 +1581,25 @@ void tutorial_describe_item(item_def &item)
             break;
             
        case OBJ_ARMOUR:
-            ostr << "You can wear pieces of armour with <w>W<magenta> and take "
-                    "them off again with <w>T<magenta>. ";
+       {
+            bool wearable = true;
+            if (you.species == SP_CENTAUR && item.sub_type == ARM_BOOTS)
+            {
+                ostr << "As a Centaur you cannot wear boots.";
+                wearable = false;
+            }
+            else if (you.species == SP_MINOTAUR && item.sub_type == ARM_HELMET
+                     && get_helmet_type(item) != THELM_CAP
+                     && get_helmet_type(item) != THELM_WIZARD_HAT)
+            {
+                ostr << "As a Minotaur you cannot wear helmets.";
+                wearable = false;
+            }
+            else
+            {
+                ostr << "You can wear pieces of armour with <w>W<magenta> and take "
+                        "them off again with <w>T<magenta>.";
+            }
 
             if (!item_type_known(item) &&
                 (is_artefact(item) || get_equip_desc( item ) != ISFLAG_NO_DESC))
@@ -1569,15 +1612,21 @@ void tutorial_describe_item(item_def &item)
 
                 Options.tutorial_events[TUT_SEEN_RANDART] = 0;
             }
-            if (item_known_cursed( item ))
+            if (item_known_cursed( item ) && wearable)
             {
                 ostr << "\nA cursed piece of armour, once worn, cannot be removed "
                         "again until the curse has been lifted by reading a "
                         "scroll of remove curse.";
             }
+            if (is_artefact(item) && gives_ability(item))
+            {
+                ostr << "\nWhen worn, some types of armour (such as this one) "
+                        "offer abilities that can be evoked. ";
+                ostr << tut_abilities();
+            }
             Options.tutorial_events[TUT_SEEN_ARMOUR] = 0;
             break;
-            
+       }
        case OBJ_WANDS:
             ostr << "The magic within can be unleashed by <w>z<magenta>apping it.";
             Options.tutorial_events[TUT_SEEN_WAND] = 0;
@@ -1604,6 +1653,7 @@ void tutorial_describe_item(item_def &item)
             break;
             
        case OBJ_JEWELLERY:
+       {
             ostr << "Jewellery can be <w>P<magenta>ut on or <w>R<magenta>emoved "
                     "again. ";
 
@@ -1614,9 +1664,15 @@ void tutorial_describe_item(item_def &item)
                         "finally lifted when he or she reads a scroll of remove "
                         "curse.";
             }
+            if (gives_ability(item))
+            {
+                ostr << "\nWhen worn, some types of jewellery (such as this one) "
+                        "offer abilities that can be evoked. ";
+                ostr << tut_abilities();
+            }
             Options.tutorial_events[TUT_SEEN_JEWELLERY] = 0;
             break;
-            
+       }
        case OBJ_POTIONS:
             ostr << "Use <w>q<magenta> to quaff this potion. ";
             Options.tutorial_events[TUT_SEEN_POTION] = 0;
@@ -1637,12 +1693,12 @@ void tutorial_describe_item(item_def &item)
                             "this will drain said pool, so only use this manual "
                             "if you think you need the skill in question.";
                 }
-                else
+                else // it's a spellbook
                 {
-                    ostr << "A spellbook! You could <w>M<magenta>emorize some "
-                            "spells and then cast them with <w>Z<magenta>. ";
                     if (you.religion == GOD_TROG)
                     {
+                         ostr << "A spellbook! You could <w>M<magenta>emorize some "
+                                 "spells and then cast them with <w>Z<magenta>. ";
                          ostr << "\nAs a worshipper of "
                               << god_name(GOD_TROG)
                               << ", though, you might instead wish to burn this "
@@ -1654,19 +1710,34 @@ void tutorial_describe_item(item_def &item)
                     }
                     else if (!you.skills[SK_SPELLCASTING])
                     {
+                         ostr << "A spellbook! You could <w>M<magenta>emorize some "
+                                 "spells and then cast them with <w>Z<magenta>. ";
                          ostr << "\nFor now, however, that will have to wait "
                                  "until you've learned the basics of Spellcasting "
                                  "by reading lots of scrolls.";
                     }
-                    else
+                    else // actually can cast spells
                     {
-                         ostr << "Do this as follows: Type <w>Z<magenta>, then "
-                                 "choose the spell you want to cast (with "
-                                 "<w>?<magenta>), for example <w>a<magenta>, "
-                                 "which is the first spell you know, "
-                              << spell_title(get_spell_by_letter('a'))
-                              << ". ";
-                         ostr << tut_target_mode(true);
+                         if (player_can_memorize(item))
+                         {
+                              ostr << "Such a <lightblue>highlighted spell<magenta> "
+                                      "can be <w>M<magenta>emorized right away. ";
+                         }
+                         else
+                         {
+                              ostr << "You cannot memorize any "
+                                   << (you.spell_no ? "more " : "")
+                                   << "spells right now. This will change as you "
+                                      "grow in levels and Spellcasting proficiency. ";
+                         }
+                         
+                         if (you.spell_no)
+                         {
+                             ostr << "\n\nTo do magic, type <w>Z<magenta> and "
+                                     "choose a spell (check with <w>?<magenta>). "
+                                     "For attack spells you'll ";
+                             ostr << tut_target_mode(true);
+                         }
                     }
                 }
             }
@@ -1725,11 +1796,17 @@ void tutorial_describe_item(item_def &item)
 
     std::string broken = ostr.str();
     linebreak_string2(broken, get_tutorial_cols());
+    gotoxy(1, wherey() + 2);
     formatted_string::parse_block(broken, false).display();
-}
+} // tutorial_describe_item
 
-bool tutorial_feat_interesting(int feat)
+bool tutorial_feat_interesting(dungeon_feature_type feat)
 {
+    if (feat >= DNGN_ALTAR_ZIN && feat <= DNGN_ALTAR_BEOGH)
+        return true;
+    if (feat >= DNGN_ENTER_ORCISH_MINES && feat <= DNGN_ENTER_SHOALS)
+        return true;
+        
     switch (feat)
     {
        case DNGN_CLOSED_DOOR:
@@ -1754,7 +1831,7 @@ bool tutorial_feat_interesting(int feat)
     }
 }
 
-void tutorial_describe_feature(int feat)
+void tutorial_describe_feature(dungeon_feature_type feat)
 {
     std::ostringstream ostr;
     ostr << "<magenta>";
@@ -1826,6 +1903,86 @@ void tutorial_describe_feature(int feat)
                     "you will usually be unable to return right away.";
             Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH];
             break;
+            
+       case DNGN_ALTAR_ZIN:
+       case DNGN_ALTAR_SHINING_ONE:
+       case DNGN_ALTAR_KIKUBAAQUDGHA:
+       case DNGN_ALTAR_YREDELEMNUL:
+       case DNGN_ALTAR_XOM:
+       case DNGN_ALTAR_VEHUMET:
+       case DNGN_ALTAR_OKAWARU:
+       case DNGN_ALTAR_MAKHLEB:
+       case DNGN_ALTAR_SIF_MUNA:
+       case DNGN_ALTAR_TROG:
+       case DNGN_ALTAR_NEMELEX_XOBEH:
+       case DNGN_ALTAR_ELYVILON:
+       case DNGN_ALTAR_LUGONU:
+       case DNGN_ALTAR_BEOGH:
+       {
+            god_type altar_god = grid_altar_god(feat);
+
+            if (you.religion == GOD_NO_GOD)
+            {
+                ostr << "This is your chance to join a religion! In general, the "
+                        "gods will help their followers, bestowing powers of all "
+                        "sorts upon them, but many of them demand a life of "
+                        "dedication, constant tributes or entertainment in return. "
+                        "\nYou can get information about <w>"
+                     << god_name(altar_god)
+                     << "<magenta> by pressing <w>p<magenta> while standing on "
+                        "the altar. Before taking up the responding faith you'll "
+                        "be asked for confirmation.";
+            }
+            else
+            {
+                if (you.religion == altar_god)
+                {
+                    ostr << "If "
+                         << god_name(you.religion)
+                         << " likes to have items or corpses sacrificed on altars, "
+                            "here you can do this by <w>d<magenta>ropping them, "
+                            "then <w>p<magenta>raying. As a follower, pressing "
+                            "<w>^<magenta> allows you to check "
+                         << god_name(you.religion)
+                         << "'s likes and dislikes at any time.";
+                }
+                else
+                {
+                    ostr << god_name(you.religion)
+                         << " probably won't like it if you switch allegiance, "
+                            "but having a look won't hurt: to get information on <w>";
+                    ostr << god_name(altar_god);
+                    ostr << "<magenta>, press <w>p<magenta> while standing on the "
+                            "altar. Before taking up the responding faith (and "
+                            "abandoning your current one!) you'll be asked for "
+                            "confirmation."
+                            "\nTo see your current standing with "
+                         << god_name(you.religion)
+                         << " press <w>^<magenta>.";
+                }
+            }
+            Options.tutorial_events[TUT_SEEN_ALTAR];
+            break;
+       }
+       case DNGN_ENTER_ORCISH_MINES:
+       case DNGN_ENTER_HIVE:
+       case DNGN_ENTER_LAIR:
+       case DNGN_ENTER_SLIME_PITS:
+       case DNGN_ENTER_VAULTS:
+       case DNGN_ENTER_CRYPT:
+       case DNGN_ENTER_HALL_OF_BLADES:
+       case DNGN_ENTER_ZOT:
+       case DNGN_ENTER_TEMPLE:
+       case DNGN_ENTER_SNAKE_PIT:
+       case DNGN_ENTER_ELVEN_HALLS:
+       case DNGN_ENTER_TOMB:
+       case DNGN_ENTER_SWAMP:
+       case DNGN_ENTER_SHOALS:
+            ostr << "An entryway into one of the many dungeon branches in Crawl. ";
+            if (feat != DNGN_ENTER_TEMPLE)
+                ostr << "Beware, sometimes these can be deadly!";
+            break;
+
        default:
             return;
     }
@@ -1833,4 +1990,60 @@ void tutorial_describe_feature(int feat)
     std::string broken = ostr.str();
     linebreak_string2(broken, get_tutorial_cols());
     formatted_string::parse_block(broken, false).display();
+} // tutorial_describe_feature
+
+bool tutorial_monster_interesting(const monsters *mons)
+{
+    // highlighted in some way
+    if (get_mons_colour(mons) != mons->colour)
+        return true;
+
+    // monster is (seriously) out of depth
+    if (you.level_type == LEVEL_DUNGEON &&
+        mons_level(mons->type) >= you.your_level + Options.ood_interesting)
+    {
+        return true;
+    }
+    return false;
 }
+
+void tutorial_describe_monster(const monsters *mons)
+{
+    std::ostringstream ostr;
+    ostr << "<magenta>";
+
+    int level_diff
+        = mons_level(mons->type) - (you.your_level + Options.ood_interesting);
+
+    if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
+    {
+        ostr << "This kind of monster is usually only encountered "
+             << (level_diff > 5 ? "much " : "")
+             << "deeper in the dungeon, so it's probably "
+             << (level_diff > 5 ? "extremely" : "very")
+             << " dangerous!\n\n";
+    }
+    
+    if (mons->has_ench(ENCH_BERSERK))
+        ostr << "A berserking monster is bloodthirsty and fighting madly.\n";
+
+    if (mons_friendly(mons))
+    {
+        ostr << "Friendly monsters will follow you around and attempt to aid "
+                "you in battle.";
+    }
+    else if (Options.stab_brand != CHATTR_NORMAL
+             && mons_looks_stabbable(mons))
+    {
+        ostr << "Apparently it has not noticed you - yet.";
+    }
+    else if (Options.may_stab_brand != CHATTR_NORMAL
+             && mons_looks_distracted(mons))
+    {
+        ostr << "Apparently it has been distracted by something.";
+    }
+
+    std::string broken = ostr.str();
+    linebreak_string2(broken, get_tutorial_cols());
+    formatted_string::parse_block(broken, false).display();
+} // tutorial_describe_monster
