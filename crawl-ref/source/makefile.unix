@@ -218,6 +218,7 @@ endif
 	mkdir -p $(DATADIR)/dat/clua
 	cp dat/*.des $(DATADIR)/dat
 	cp dat/*.txt $(DATADIR)/dat
+	cp -r dat/descript $(DATADIR)/dat
 	cp dat/clua/*.lua $(DATADIR)/dat/clua
 	cp -r lua $(DATADIR)/dat
 	mkdir -p $(DATADIR)/docs

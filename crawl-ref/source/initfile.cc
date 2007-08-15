@@ -1670,17 +1670,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
-        const std::string lua_file = datafile_path(field, false, true);
-        if (lua_file.empty())
-        {
-            fprintf(stderr, "Unable to find lua file: %s\n", field.c_str());
-        }
-        else
-        {
-            clua.execfile(lua_file.c_str());
-            if (!clua.error.empty())
-                mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
-        }
+        clua.execfile(field.c_str(), false, false);
+        if (!clua.error.empty())
+            mprf(MSGCH_WARN, "Lua error: %s\n", clua.error.c_str());
 #endif
     }
     else if (key == "colour" || key == "color")
