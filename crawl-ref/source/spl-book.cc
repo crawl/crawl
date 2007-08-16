@@ -997,7 +997,7 @@ static bool which_spellbook( int &book, int &spell )
     return (true);
 }                               // end which_spellbook()
 
-// Returns false if the player cannot read/memorize from the book, 
+// Returns false if the player cannot read/memorize from the book,
 // and true otherwise. -- bwr
 static bool player_can_read_spellbook( const item_def &book )
 {
@@ -1131,7 +1131,7 @@ bool undead_cannot_memorise(spell_type spell, char being)
     return false;
 }                               // end undead_cannot_memorise()
 
-bool player_can_memorize(item_def &book)
+bool player_can_memorise(item_def &book)
 {
     if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
         return false;

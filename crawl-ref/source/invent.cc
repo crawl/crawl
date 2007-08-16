@@ -530,14 +530,19 @@ bool in_inventory( const item_def &i )
 
 unsigned char get_invent( int invent_type )
 {
-    unsigned char select = invent_select(NULL, MT_INVLIST, invent_type,
+    unsigned char select;
+    
+    while (true) {
+       select = invent_select(NULL, MT_INVLIST, invent_type,
                                          MF_SINGLESELECT);
-    if ( isalpha(select) )
-    {
-        const int invidx = letter_to_index(select);
-        if ( is_valid_item(you.inv[invidx]) )
-            describe_item( you.inv[invidx], true );
-    }            
+       if ( isalpha(select) )
+       {
+           const int invidx = letter_to_index(select);
+           if ( is_valid_item(you.inv[invidx]) )
+               describe_item( you.inv[invidx], true );
+       }
+       else break;
+    }
     redraw_screen();
     return select;
 }                               // end get_invent()

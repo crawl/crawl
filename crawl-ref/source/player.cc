@@ -2431,7 +2431,9 @@ void gain_exp( unsigned int exp_gained )
         you.exp_available += exp_gained;
 
     level_change();
-    if (Options.tutorial_left && you.experience_level == 5)
+    // increase tutorial time-out now that it's actually
+    // become useful for a longer time
+    if (Options.tutorial_left && you.experience_level == 7)
         tutorial_finished();
 }                               // end gain_exp()
 

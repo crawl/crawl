@@ -1711,7 +1711,7 @@ static void describe_cell(int mx, int my)
         if (Options.tutorial_left && tutorial_monster_interesting(&menv[i]))
         {
            std::string msg = "(Press <w>v<lightgray> for more information.)";
-           print_formatted_paragraph(msg, 80);
+           print_formatted_paragraph(msg, get_number_of_cols());
         }
     }
 
@@ -1772,7 +1772,7 @@ static void describe_cell(int mx, int my)
     if (Options.tutorial_left && tutorial_feat_interesting(grd[mx][my]))
     {
         feature_desc += " (Press <w>v<lightgray> for more information.)";
-        print_formatted_paragraph(feature_desc, 80);
+        print_formatted_paragraph(feature_desc, get_number_of_cols());
     }
     else
         mpr(feature_desc.c_str());

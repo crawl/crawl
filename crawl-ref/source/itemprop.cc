@@ -1994,6 +1994,110 @@ bool gives_ability( const item_def &item )
     return false;
 }
 
+bool gives_resistance( const item_def &item )
+{
+    if (!item_type_known(item))
+        return false;
+
+    switch (item.base_type)
+    {
+       case OBJ_WEAPONS:
+       {
+          // unwielded weapon
+          item_def *weap = you.slot_item(EQ_WEAPON);
+          if (!weap || (*weap).slot != item.slot)
+              return false;
+          break;
+       }
+       case OBJ_JEWELLERY:
+       {
+          if (item.sub_type < NUM_RINGS)
+          {
+              // unworn ring
+              item_def *lring = you.slot_item(EQ_LEFT_RING);
+              item_def *rring = you.slot_item(EQ_RIGHT_RING);
+              if ((!lring || (*lring).slot != item.slot)
+                  && (!rring || (*rring).slot != item.slot))
+              {
+                  return false;
+              }
+
+              if (item.sub_type >= RING_PROTECTION_FROM_FIRE
+                  && item.sub_type <= RING_PROTECTION_FROM_COLD
+                  || item.sub_type == RING_SEE_INVISIBLE
+                  || item.sub_type >= RING_LIFE_PROTECTION
+                  && item.sub_type <= RING_TELEPORT_CONTROL
+                  || item.sub_type == RING_TELEPORTATION
+                  || item.sub_type == RING_SUSTAIN_ABILITIES)
+              {
+                  return true;
+              }
+          }
+          else
+          {
+              // unworn amulet
+              item_def *amul = you.slot_item(EQ_AMULET);
+              if (!amul || (*amul).slot != item.slot)
+                  return false;
+
+              if (item.sub_type != AMU_RAGE && item.sub_type != AMU_INACCURACY)
+                  return true;
+          }
+          break;
+       }
+       case OBJ_ARMOUR:
+       {
+          const equipment_type eq = get_armour_slot(item);
+          if (eq == EQ_NONE)
+              return false;
+
+          // unworn armour
+          item_def *arm = you.slot_item(eq);
+          if (!arm || (*arm).slot != item.slot)
+              return false;
+          break;
+          
+          const int ego = get_armour_ego_type( item );
+          if (ego >= SPARM_FIRE_RESISTANCE && ego <= SPARM_SEE_INVISIBLE
+              || ego == SPARM_RESISTANCE || ego == SPARM_POSITIVE_ENERGY)
+          {
+              return true;
+          }
+       }
+       case OBJ_STAVES:
+       {
+          // unwielded weapon
+          item_def *weap = you.slot_item(EQ_WEAPON);
+          if (!weap || (*weap).slot != item.slot)
+              return false;
+          
+          if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
+              || item.sub_type == STAFF_AIR)
+          {
+              return true;
+          }
+          return false;
+       }
+       default:
+          return false;
+    }
+
+    if (!is_random_artefact(item))
+        return false;
+
+    // check for randart resistances
+    for (int rap = RAP_FIRE; rap <= RAP_CAN_TELEPORT; rap++)
+    {
+       if (rap == RAP_MAGIC || rap >= RAP_INVISIBLE && rap != RAP_CAN_TELEPORT)
+           continue;
+           
+       if (randart_wpn_property( item, rap ))
+           return true;
+    }
+
+    return false;
+}
+
 int item_mass( const item_def &item )
 {
     int unit_mass = 0;

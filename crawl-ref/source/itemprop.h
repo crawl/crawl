@@ -147,6 +147,7 @@ bool can_cut_meat( const item_def &item );
 bool is_tool( const item_def &item );
 int property( const item_def &item, int prop_type );
 bool gives_ability( const item_def &item );
+bool gives_resistance( const item_def &item );
 int item_mass( const item_def &item );
 size_type item_size( const item_def &item );
 

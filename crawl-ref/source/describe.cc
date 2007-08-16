@@ -3999,7 +3999,7 @@ void describe_god( god_type which_god, bool give_title )
         "Elyvilon the Healer is worshipped by the healers (among others), who "
         "gain their healing powers by long worship and devotion. Although "
         "Elyvilon prefers a creed of pacifism, those who crusade against evil "
-        "are not excluded. Elyvilon appreciates the offering of weapons.",
+        "are not excluded. Elyvilon appreciates the destruction of weapons.",
 
         // Lugonu
         "Lugonu the Unformed revels in the chaos of the Abyss. Followers are "
@@ -4063,9 +4063,6 @@ void describe_god( god_type which_god, bool give_title )
             case GOD_VEHUMET:
             case GOD_OKAWARU:
             case GOD_MAKHLEB:
-            case GOD_SIF_MUNA:
-            //mv: what about
-            //sinner, believer, apprentice, disciple, adept, scholar, oracle
             case GOD_TROG:
             case GOD_NEMELEX_XOBEH:
             case GOD_ELYVILON:
@@ -4075,6 +4072,15 @@ void describe_god( god_type which_god, bool give_title )
                           (you.piety >=  75) ? "Priest" :
                           (you.piety >=  50) ? "Deacon" :
                           (you.piety >=  30) ? "Novice" :
+                          (you.piety >    5) ? "Believer"
+                                             : "Sinner" );
+                break;
+            case GOD_SIF_MUNA:
+                cprintf ( (you.piety >= 120) ? "Oracle" :
+                          (you.piety >= 100) ? "Scholar" :
+                          (you.piety >=  75) ? "Adept" :
+                          (you.piety >=  50) ? "Disciple" :
+                          (you.piety >=  30) ? "Apprentice" :
                           (you.piety >    5) ? "Believer"
                                              : "Sinner" );
                 break;
