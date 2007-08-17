@@ -240,7 +240,7 @@ void formatted_string::add_glyph(const item_def *item)
     unsigned short col;
     get_item_glyph(item, &ch, &col);
     this->textcolor(col);
-    this->cprintf("%c", ch);
+    this->cprintf("%s", stringize_glyph(ch).c_str());
     this->textcolor(last_col);
 }
 
@@ -251,7 +251,7 @@ void formatted_string::add_glyph(const monsters *mons)
     unsigned short col;
     get_mons_glyph(mons, &ch, &col);
     this->textcolor(col);
-    this->cprintf("%c", ch);
+    this->cprintf("%s", stringize_glyph(ch).c_str());
     this->textcolor(last_col);
 }
 

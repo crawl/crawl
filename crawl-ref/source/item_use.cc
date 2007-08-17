@@ -2169,7 +2169,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 #endif
 
     // create message
-    mprf( "You %s %s.", projected == LRET_LAUNCHED ? "shoot" : "throw",
+    mprf( "You %s%s %s.",
+          projected? "" : "awkwardly ",
+          projected == LRET_LAUNCHED ? "shoot" : "throw",
           item.name(DESC_NOCAP_A).c_str() );
 
     // ensure we're firing a 'missile'-type beam
