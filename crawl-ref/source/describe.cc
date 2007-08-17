@@ -3882,6 +3882,69 @@ std::string describe_favour(god_type which_god)
             describe_xom_favour() : describe_favour_generic(which_god);
 }
 
+static std::string religion_help( god_type god )
+{
+    std::string result = "";
+    
+    switch(god)
+    {
+       case GOD_ZIN:
+       case GOD_SHINING_ONE:
+           if (!player_under_penance() && you.piety > 160
+               && !you.num_gifts[god])
+           {
+               result += "Pray at an altar to get a ";
+               result += (god == GOD_ZIN ? "mace" : "long sword");
+               result += " blessed by ";
+               result += god_name(god);
+               result += ".";
+               break;
+           } // else fall through
+       case GOD_XOM:
+       case GOD_SIF_MUNA:
+       case GOD_KIKUBAAQUDGHA:
+       case GOD_YREDELEMNUL:
+       default:
+            result += "Praying is not necessary with this god.";
+            break;
+
+       case GOD_LUGONU:
+           if (!player_under_penance() && you.piety > 160
+               && !you.num_gifts[god])
+           {
+               result += "Pray at an altar to get your weapon blessed." EOL;
+           } // fall through
+       case GOD_OKAWARU:
+       case GOD_MAKHLEB:
+       case GOD_BEOGH:
+            result = "Use prayer to announce the sacrifice of corpses.";
+            break;
+
+       case GOD_TROG:
+            result += "Use prayer to announce the sacrifice of corpses." EOL
+                      "Trog does not demand training of the Invocations skill.";
+            break;
+
+       case GOD_NEMELEX_XOBEH:
+            result += "A prayer will sacrifice all items on your spot. Inscribe "
+                      "items with !p or !* to avoid accidentally sacrificing "
+                      "them." EOL
+                      "Followers of Nemelex Xobeh use Evocations, not Invocations.";
+            break;
+
+       case GOD_ELYVILON:
+            result += "Under prayer Elyvilon watches over you, but also expects "
+                      "you to act positively.";
+            break;
+
+       case GOD_VEHUMET:
+            result += "During prayer, Vehumet supports magics of the Conjuration "
+                      "or Summoning type, but looks down upon more benign castings.";
+            break;
+    }
+    return result;
+}
+
 void describe_god( god_type which_god, bool give_title )
 {
     int         colour;      // mv: colour used for some messages
@@ -3983,14 +4046,15 @@ void describe_god( god_type which_god, bool give_title )
         // Trog
         "Trog is an ancient God of anger and violence. Followers are expected "
         "to kill in Trog's name and sacrifice the dead, and in return gain "
-        "power in battle and occasional rewards. Trog hates wizards, and "
-        "followers are forbidden the use of spell magic. ",
+        "power in battle and occasional rewards. Trog hates wizards, and loves "
+        "to see their magical books burn. Followers are forbidden the use of "
+        "spell magic. ",
 
         // Nemelex Xobeh
         "Nemelex is a strange and unpredictable trickster God, whose powers "
         "can be invoked through the magical packs of cards which Nemelex "
-        "paints in the ichor of demons. Followers receive occasional gifts, "
-        "and should use these gifts as much as possible. Offerings of any "
+        "paints in the ichor of demons. Followers receive occasional decks, "
+        "and should use these as much as possible. Offerings of any "
         "type of item are also appreciated. The Trickster may provide certain "
         "ways to improve one's chances at cards, but prefers those who trust "
         "to luck.",
@@ -4004,7 +4068,8 @@ void describe_god( god_type which_god, bool give_title )
         // Lugonu
         "Lugonu the Unformed revels in the chaos of the Abyss. Followers are "
         "sent out to cause bloodshed and disorder in the world, and must do "
-        "so unflaggingly to earn Lugonu's favour.",
+        "so unflaggingly to earn Lugonu's favour. Lugonu expects followers "
+        "to spread chaos and corruption in the overworld.",
 
         // Beogh
         "Beogh is a deity worshipped by the cave orcs native to parts of the "
@@ -4173,13 +4238,16 @@ void describe_god( god_type which_god, bool give_title )
             cprintf( "None." EOL );
     }
 
-    if ( which_god == GOD_NEMELEX_XOBEH )
+    // only give this additional information for worshippers
+    if ( which_god == you.religion )
     {
-        gotoxy(1, get_number_of_lines() - 2);
+        if (you.religion == GOD_ZIN)
+            gotoxy(1, get_number_of_lines() - 1);
+        else
+            gotoxy(1, get_number_of_lines() - 2);
         textcolor(DARKGREY);
-        cprintf("Inscribe items with !p or !* to avoid "
-                "accidentally sacrificing them." EOL
-                "Followers of Nemelex Xobeh use Evocations, not Invocations.");
+        cprintf(get_linebreak_string(religion_help(which_god),
+                                     numcols).c_str());
     }
 
     get_ch();

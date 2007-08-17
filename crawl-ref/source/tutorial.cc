@@ -1648,8 +1648,7 @@ void tutorial_describe_item(item_def &item)
             break;
        }
        case OBJ_MISSILES:
-            if (item.sub_type == MI_JAVELIN || item.sub_type == MI_SLING_BULLET
-                || item.sub_type == MI_DART || item.sub_type == MI_STONE)
+            if ( is_throwable(item, player_size()) )
             {
                 ostr << item.name(DESC_CAP_YOUR)
                      << " can be thrown without the use of a launcher. ";
