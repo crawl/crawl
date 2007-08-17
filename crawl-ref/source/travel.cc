@@ -2488,9 +2488,16 @@ static int find_transtravel_stair(  const level_id &cur,
 
 static bool loadlev_populate_stair_distances(const level_pos &target)
 {
+    // Copy the current crawl_environment. Note that this is a shallow
+    // copy so tmp holds references to map markers.
     std::auto_ptr<crawl_environment> tmp(new crawl_environment(env));
+
+    // Clear markers. The tmp env still points at the markers, so we
+    // don't leak. XXX: Make crawl_environment fully assignable.
+    env.markers.clear();
+    
     if (!travel_load_map(target.id.branch, 
-                    absdungeon_depth(target.id.branch, target.id.depth)))
+                         absdungeon_depth(target.id.branch, target.id.depth)))
     {
         env = *tmp;
         return false;

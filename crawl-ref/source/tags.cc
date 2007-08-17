@@ -1429,13 +1429,7 @@ static void tag_construct_level(struct tagHeader &th)
         marshallByte(th, env.shop[i].level);
     }
 
-    // how many markers
-    marshallShort(th, env.markers.size());
-    for (dgn_marker_map::const_iterator i = env.markers.begin();
-         i != env.markers.end(); ++i)
-    {
-        i->second->write(th);
-    }
+    env.markers.write(th);
 }
 
 static void marshall_item(tagHeader &th, const item_def &item)
@@ -1660,13 +1654,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         env.shop[i].level = unmarshallByte(th);
     }
 
-    env_clear_markers();
-    const int nmarkers = unmarshallShort(th);
-    for (int i = 0; i < nmarkers; ++i)
-    {
-        if (map_marker *mark = map_marker::read_marker(th))
-            env_add_marker(mark);
-    }
+    env.markers.read(th);
 }
 
 static void tag_read_level_items(struct tagHeader &th, char minorVersion)

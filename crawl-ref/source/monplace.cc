@@ -874,7 +874,7 @@ static band_type choose_band( int mon_type, int power, int &band_size )
 
     case MONS_PANDEMONIUM_DEMON:
         band = BAND_PANDEMONIUM_DEMON;
-        band_size = random_range(4, 8);
+        band_size = random_range(1, 3);
         break;
 
     case MONS_HELLWING:

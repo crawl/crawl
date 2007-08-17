@@ -119,6 +119,11 @@ void map_feature_marker::read(tagHeader &inf)
     feat = static_cast<dungeon_feature_type>(unmarshallShort(inf));
 }
 
+map_marker *map_feature_marker::clone() const
+{
+    return new map_feature_marker(pos, feat);
+}
+
 map_marker *map_feature_marker::read(tagHeader &inf, map_marker_type)
 {
     map_marker *mapf = new map_feature_marker();
@@ -174,6 +179,14 @@ map_lua_marker::~map_lua_marker()
         lua_pushnil(dlua);
         lua_settable(dlua, LUA_REGISTRYINDEX);
     }
+}
+
+map_marker *map_lua_marker::clone() const
+{
+    map_lua_marker *copy = new map_lua_marker();
+    if (get_table())
+        copy->check_register_table();
+    return copy;
 }
 
 void map_lua_marker::check_register_table()
@@ -395,6 +408,13 @@ map_marker *map_corruption_marker::read(tagHeader &th, map_marker_type)
     return (mc);
 }
 
+map_marker *map_corruption_marker::clone() const
+{
+    map_corruption_marker *mark = new map_corruption_marker(pos, duration);
+    mark->radius = radius;
+    return (mark);
+}
+
 std::string map_corruption_marker::debug_describe() const
 {
     return make_stringf("Lugonu corrupt (%d)", duration);
@@ -403,65 +423,98 @@ std::string map_corruption_marker::debug_describe() const
 //////////////////////////////////////////////////////////////////////////
 // Map markers in env.
 
-void env_activate_markers()
+map_markers::map_markers() : markers()
 {
-    for (dgn_marker_map::iterator i = env.markers.begin();
-         i != env.markers.end(); ++i)
+}
+
+map_markers::map_markers(const map_markers &c) : markers()
+{
+    init_from(c);
+}
+
+map_markers &map_markers::operator = (const map_markers &c)
+{
+    if (this != &c)
+    {
+        clear();
+        init_from(c);
+    }
+    return (*this);
+}
+
+map_markers::~map_markers()
+{
+    clear();
+}
+
+void map_markers::init_from(const map_markers &c)
+{
+    for (dgn_marker_map::const_iterator i = c.markers.begin();
+         i != c.markers.end(); ++i)
+    {
+        add( i->second->clone() );
+    }
+}
+
+void map_markers::activate_all()
+{
+    for (dgn_marker_map::iterator i = markers.begin();
+         i != markers.end(); ++i)
     {
         i->second->activate();
     }
 }
 
-void env_add_marker(map_marker *marker)
+void map_markers::add(map_marker *marker)
 {
-    env.markers.insert(dgn_pos_marker(marker->pos, marker));
+    markers.insert(dgn_pos_marker(marker->pos, marker));
 }
 
-void env_remove_marker(map_marker *marker)
+void map_markers::remove(map_marker *marker)
 {
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = env.markers.equal_range(marker->pos);
+        els = markers.equal_range(marker->pos);
     for (dgn_marker_map::iterator i = els.first; i != els.second; ++i)
     {
         if (i->second == marker)
         {
-            env.markers.erase(i);
+            markers.erase(i);
             break;
         }
     }
     delete marker;
 }
 
-void env_remove_markers_at(const coord_def &c,
-                           map_marker_type type)
+void map_markers::remove_markers_at(const coord_def &c,
+                                    map_marker_type type)
 {
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = env.markers.equal_range(c);
+        els = markers.equal_range(c);
     for (dgn_marker_map::iterator i = els.first; i != els.second; )
     {
         dgn_marker_map::iterator todel = i++;
         if (type == MAT_ANY || todel->second->get_type() == type)
         {
             delete todel->second;
-            env.markers.erase(todel);
+            markers.erase(todel);
         }
     }
 }
 
-map_marker *env_find_marker(const coord_def &c, map_marker_type type)
+map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = env.markers.equal_range(c);
+        els = markers.equal_range(c);
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
             return (i->second);
     return (NULL);
 }
 
-map_marker *env_find_marker(map_marker_type type)
+map_marker *map_markers::find(map_marker_type type)
 {
-    for (dgn_marker_map::const_iterator i = env.markers.begin();
-         i != env.markers.end(); ++i)
+    for (dgn_marker_map::const_iterator i = markers.begin();
+         i != markers.end(); ++i)
     {
         if (type == MAT_ANY || i->second->get_type() == type)
             return (i->second);
@@ -469,32 +522,32 @@ map_marker *env_find_marker(map_marker_type type)
     return (NULL);
 }
 
-void env_move_markers(const coord_def &from, const coord_def &to)
+void map_markers::move(const coord_def &from, const coord_def &to)
 {
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = env.markers.equal_range(from);
+        els = markers.equal_range(from);
 
-    std::list<map_marker*> markers;
+    std::list<map_marker*> tmarkers;
     for (dgn_marker_map::iterator i = els.first; i != els.second; )
     {
         dgn_marker_map::iterator curr = i++;
-        markers.push_back(curr->second);
-        env.markers.erase(curr);
+        tmarkers.push_back(curr->second);
+        markers.erase(curr);
     }
 
-    for (std::list<map_marker*>::iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (std::list<map_marker*>::iterator i = tmarkers.begin();
+         i != tmarkers.end(); ++i)
     {
         (*i)->pos = to;
-        env_add_marker(*i);
+        add(*i);
     }
 }
 
-std::vector<map_marker*> env_get_all_markers(map_marker_type mat)
+std::vector<map_marker*> map_markers::get_all(map_marker_type mat)
 {
     std::vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = env.markers.begin();
-         i != env.markers.end(); ++i)
+    for (dgn_marker_map::const_iterator i = markers.begin();
+         i != markers.end(); ++i)
     {
         if (mat == MAT_ANY || i->second->get_type() == mat)
             rmarkers.push_back(i->second);
@@ -502,21 +555,21 @@ std::vector<map_marker*> env_get_all_markers(map_marker_type mat)
     return (rmarkers);    
 }
 
-std::vector<map_marker*> env_get_markers(const coord_def &c)
+std::vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = env.markers.equal_range(c);
+        els = markers.equal_range(c);
     std::vector<map_marker*> rmarkers;
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
     return (rmarkers);
 }
 
-std::string env_property_at(const coord_def &c, map_marker_type type,
-                            const std::string &key)
+std::string map_markers::property_at(const coord_def &c, map_marker_type type,
+                                     const std::string &key)
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = env.markers.equal_range(c);
+        els = markers.equal_range(c);
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
     {
         const std::string prop = i->second->property(key);
@@ -526,10 +579,30 @@ std::string env_property_at(const coord_def &c, map_marker_type type,
     return ("");
 }
 
-void env_clear_markers()
+void map_markers::clear()
 {
-    for (dgn_marker_map::iterator i = env.markers.begin();
-         i != env.markers.end(); ++i)
+    for (dgn_marker_map::iterator i = markers.begin();
+         i != markers.end(); ++i)
         delete i->second;
-    env.markers.clear();
+    markers.clear();
+}
+
+void map_markers::write(tagHeader &th) const
+{
+    // how many markers
+    marshallShort(th, markers.size());
+    for (dgn_marker_map::const_iterator i = markers.begin();
+         i != markers.end(); ++i)
+    {
+        i->second->write(th);
+    }
+}
+
+void map_markers::read(tagHeader &th)
+{
+    clear();
+    const int nmarkers = unmarshallShort(th);
+    for (int i = 0; i < nmarkers; ++i)
+        if (map_marker *mark = map_marker::read_marker(th))
+            add(mark);
 }

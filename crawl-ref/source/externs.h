@@ -1243,10 +1243,43 @@ struct map_cell
     bool seen() const;
 };
 
-typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 class map_marker;
-typedef std::multimap<coord_def, map_marker *> dgn_marker_map;
-typedef std::pair<coord_def, map_marker *> dgn_pos_marker;
+class tagHeader;
+class map_markers
+{
+public:
+    map_markers();
+    map_markers(const map_markers &);
+    map_markers &operator = (const map_markers &);
+    ~map_markers();
+
+    void activate_all();
+    void add(map_marker *marker);
+    void remove(map_marker *marker);
+    void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
+    map_marker *find(const coord_def &c, map_marker_type type = MAT_ANY);
+    map_marker *find(map_marker_type type);
+    void move(const coord_def &from, const coord_def &to);
+    std::vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
+    std::vector<map_marker*> get_markers_at(const coord_def &c);
+    std::string property_at(const coord_def &c, map_marker_type type,
+                            const std::string &key);
+    void clear();
+
+    void write(tagHeader &th) const;
+    void read(tagHeader &);
+
+private:
+    typedef std::multimap<coord_def, map_marker *> dgn_marker_map;
+    typedef std::pair<coord_def, map_marker *> dgn_pos_marker;
+
+    void init_from(const map_markers &);
+
+private:
+    dgn_marker_map markers;
+};
+
+typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 
 struct crawl_environment
 {
@@ -1277,7 +1310,7 @@ public:
     FixedVector< trap_struct, MAX_TRAPS >    trap;  // trap list
 
     FixedVector< int, 20 >                   mons_alloc;
-    dgn_marker_map                           markers;
+    map_markers                              markers;
     
     double                   elapsed_time; // used during level load
 

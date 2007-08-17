@@ -377,7 +377,7 @@ void abyss_teleport( bool new_area )
 
 static void place_corruption_seed(const coord_def &pos, int duration)
 {
-    env_add_marker(new map_corruption_marker(pos, duration));
+    env.markers.add(new map_corruption_marker(pos, duration));
 }
 
 static void initialise_level_corrupt_seeds(int power)
@@ -398,7 +398,7 @@ static void initialise_level_corrupt_seeds(int power)
         do
             where = coord_def(random2(GXM), random2(GYM));
         while (!in_bounds(where) || grd(where) != DNGN_FLOOR
-               || env_find_marker(where, MAT_ANY));
+               || env.markers.find(where, MAT_ANY));
 
         place_corruption_seed(where, random_range(low, high, 2));
     }
@@ -453,13 +453,13 @@ static void apply_corruption_effect(
     }
     cmark->duration -= duration;
     if (cmark->duration < 1)
-        env_remove_marker(cmark);
+        env.markers.remove(cmark);
 }
 
 void run_corruption_effects(int duration)
 {
     std::vector<map_marker*> markers =
-        env_get_all_markers(MAT_CORRUPTION_NEXUS);
+        env.markers.get_all(MAT_CORRUPTION_NEXUS);
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
@@ -581,7 +581,7 @@ static void corrupt_level_features(const crawl_environment &oenv)
 {
     std::vector<coord_def> corrupt_seeds;
     std::vector<map_marker*> corrupt_markers =
-        env_get_all_markers(MAT_CORRUPTION_NEXUS);
+        env.markers.get_all(MAT_CORRUPTION_NEXUS);
 
     for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
         corrupt_seeds.push_back(corrupt_markers[i]->pos);
@@ -616,7 +616,7 @@ static bool is_level_corrupted()
         || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
         return (true);
 
-    return (!!env_find_marker(MAT_CORRUPTION_NEXUS));
+    return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
 
 static bool is_level_incorruptible()

@@ -390,7 +390,7 @@ void map_lines::apply_markers(const coord_def &c)
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         markers[i]->pos += c;
-        env_add_marker(markers[i]);
+        env.markers.add(markers[i]);
     }
     // *not* clear_markers() since we've offloaded marker ownership to
     // the crawl env.

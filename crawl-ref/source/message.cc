@@ -670,6 +670,13 @@ void mesclr( bool force )
 
 void more(void)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    if (you.running)
+    {
+        mesclr();
+        return;
+    }
+#endif
     if (Options.show_more_prompt && !suppress_messages)
     {
         char keypress = 0;

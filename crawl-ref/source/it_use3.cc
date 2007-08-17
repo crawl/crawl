@@ -572,15 +572,15 @@ bool evoke_wielded( void )
                             opened_gates++;
 
                             map_marker *marker =
-                                env_find_marker(coord_def(count_x, count_y),
-                                                MAT_FEATURE);
+                                env.markers.find(coord_def(count_x, count_y),
+                                                 MAT_FEATURE);
 
                             if (marker)
                             {
                                 map_feature_marker *featm =
                                     dynamic_cast<map_feature_marker*>(marker);
                                 grd[count_x][count_y] = featm->feat;
-                                env_remove_marker(marker);
+                                env.markers.remove(marker);
                             }
                         }
                     }

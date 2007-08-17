@@ -980,7 +980,7 @@ static int dgn_remove_listener(lua_State *ls)
 static int dgn_remove_marker(lua_State *ls)
 {
     MAPMARKER(ls, 1, mark);
-    env_remove_marker(mark);
+    env.markers.remove(mark);
     return (0);
 }
 

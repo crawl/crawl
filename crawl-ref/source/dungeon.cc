@@ -537,7 +537,7 @@ static void reset_level()
         env.shop[shcount].type = SHOP_UNASSIGNED;
 
     // clear all markers
-    env_clear_markers();
+    env.markers.clear();
 }
 
 static void build_layout_skeleton(int level_number, int level_type,
@@ -651,7 +651,7 @@ static void fixup_branch_stairs()
                     && grd[x][y] <= DNGN_ROCK_STAIRS_UP)
                 {
                     if (grd[x][y] == DNGN_STONE_STAIRS_UP_I)
-                        env_add_marker(
+                        env.markers.add(
                             new map_feature_marker(coord_def(x,y),
                                                    grd[x][y]));
                     grd[x][y] = exit;
@@ -1424,7 +1424,7 @@ static void fixup_bazaar_stairs()
                 else
                 {
                     grd[x][y] = DNGN_STONE_ARCH;
-                    env_add_marker(
+                    env.markers.add(
                         new map_feature_marker(
                             coord_def(x, y),
                             DNGN_STONE_ARCH));
@@ -3092,7 +3092,7 @@ static bool build_minivaults(int level_number, int force_vault,
                 grd[vx][vy] = oldgrid;
                 dungeon_terrain_changed(coord_def(vx, vy), newgrid,
                                         true, true);
-                env_remove_markers_at(coord_def(vx, vy), MAT_ANY);
+                env.markers.remove_markers_at(coord_def(vx, vy), MAT_ANY);
             }
         }
     }
@@ -3531,7 +3531,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
             for (int x = vp.x; x < vp.x + vp.width; ++x)
             {
                 std::vector<map_marker *> markers =
-                    env_get_markers(coord_def(x, y));
+                    env.markers.get_markers_at(coord_def(x, y));
                 for (int i = 0, size = markers.size(); i < size; ++i)
                     markers[i]->activate();
 
@@ -3544,7 +3544,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
     if (fixup)
     {
         link_items();
-        env_activate_markers();
+        env.markers.activate_all();
 
         // Force teleport to place the player somewhere sane.
         you_teleport_now(false, false);
@@ -3636,7 +3636,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
                 grd[vx][vy] = oldgrid;
                 dungeon_terrain_changed(coord_def(vx, vy), newgrid,
                                         true, true);
-                env_remove_markers_at(coord_def(vx, vy), MAT_ANY);
+                env.markers.remove_markers_at(coord_def(vx, vy), MAT_ANY);
             }
         }
     }
@@ -5715,7 +5715,7 @@ static void labyrinth_place_entry_point(const dgn_region &region,
 {
     const coord_def p = labyrinth_find_entry_point(region, pos);
     if (in_bounds(p))
-        env_add_marker(new map_feature_marker(pos, DNGN_ENTER_LABYRINTH));
+        env.markers.add(new map_feature_marker(pos, DNGN_ENTER_LABYRINTH));
 }
 
 static void labyrinth_level(int level_number)
@@ -6882,7 +6882,7 @@ static coord_def dgn_find_closest_to_stone_stairs()
 
 static coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 {
-    std::vector<map_marker*> markers = env_get_all_markers();
+    std::vector<map_marker*> markers = env.markers.get_all();
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];

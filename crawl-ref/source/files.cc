@@ -742,7 +742,7 @@ static void close_level_gates()
                 if (grid_sealable_portal(grd[i][j]))
                 {
                     grd[i][j] = DNGN_STONE_ARCH;
-                    env_remove_markers_at(coord_def(i,j), MAT_ANY);
+                    env.markers.remove_markers_at(coord_def(i,j), MAT_ANY);
                 }
             }
         }
@@ -947,8 +947,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         // Activate markers that want activating, but only when
         // entering a new level in an existing game. If we're starting
         // a new game, or reloading an existing game,
-        // env_activate_markers() is done in acr.cc.
-        env_activate_markers();
+        // markers are activated in acr.cc.
+        env.markers.activate_all();
 
         // update corpses and fountains
         if (env.elapsed_time != 0.0)

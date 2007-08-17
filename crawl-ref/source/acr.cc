@@ -242,7 +242,7 @@ int main( int argc, char *argv[] )
 
         // Activate markers only after the welcome message, so the
         // player can see any resulting messages.
-        env_activate_markers();
+        env.markers.activate_all();
 
         // Starting messages can go here as this should only happen
         // at the start of a new game -- bwr

@@ -1778,6 +1778,16 @@ enum load_mode_type
     LOAD_ENTER_LEVEL
 };
 
+// Can't change this order without breaking saves.
+enum map_marker_type
+{
+    MAT_FEATURE,              // Stock marker.
+    MAT_LUA_MARKER,
+    MAT_CORRUPTION_NEXUS,
+    NUM_MAP_MARKER_TYPES,
+    MAT_ANY
+};
+
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.
 enum map_section_type                  // see maps.cc and dungeon.cc {dlb}

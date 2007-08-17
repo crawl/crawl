@@ -533,7 +533,7 @@ static bool is_feature_shift_target(const coord_def &pos)
 static bool dgn_shift_feature(const coord_def &pos)
 {
     const dungeon_feature_type dfeat = grd(pos);
-    if (!is_critical_feature(dfeat) && !env_find_marker(pos, MAT_ANY))
+    if (!is_critical_feature(dfeat) && !env.markers.find(pos, MAT_ANY))
         return (false);
     
     const coord_def dest =
@@ -550,7 +550,7 @@ static bool dgn_shift_feature(const coord_def &pos)
                 s->y = dest.y;
             }
         }
-        env_move_markers(pos, dest);
+        env.markers.move(pos, dest);
         dungeon_events.move_listeners(pos, dest);
     }
     return (true);
@@ -856,7 +856,7 @@ static void leaving_level_now()
     // Note the name ahead of time because the events may cause
     // markers to be discarded.
     const std::string newtype =
-        env_property_at(you.pos(), MAT_ANY, "dst");
+        env.markers.property_at(you.pos(), MAT_ANY, "dst");
     
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);

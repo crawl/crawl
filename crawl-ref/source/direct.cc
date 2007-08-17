@@ -1476,7 +1476,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 
 static std::string marker_feature_description(const coord_def &p)
 {
-    std::vector<map_marker*> markers = env_get_markers(p);
+    std::vector<map_marker*> markers = env.markers.get_markers_at(p);
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         const std::string desc = markers[i]->feature_description();
@@ -1751,7 +1751,7 @@ static void describe_cell(int mx, int my)
     std::string feature_desc = feature_description(mx, my);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
-    if (map_marker *mark = env_find_marker(coord_def(mx, my), MAT_ANY))
+    if (map_marker *mark = env.markers.find(coord_def(mx, my), MAT_ANY))
     {
         std::string desc = mark->debug_describe();
         if (desc.empty())
