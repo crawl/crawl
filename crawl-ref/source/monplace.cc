@@ -1342,7 +1342,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 
 static int pick_zot_exit_defender()
 {
-    if (one_chance_in(9))
+    if (one_chance_in(11))
         return (MONS_PANDEMONIUM_DEMON);
     
     const int temp_rand = random2(276);

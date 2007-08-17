@@ -1396,6 +1396,7 @@ struct system_environment
     std::string crawl_pizza;
     std::string crawl_rc;
     std::string crawl_dir;
+    std::string morgue_dir;
     std::string crawl_base;        // Directory from argv[0], may be used to
                                    // locate datafiles.
     std::string home;              // only used by MULTIUSER systems

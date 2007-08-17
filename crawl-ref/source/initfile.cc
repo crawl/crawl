@@ -530,7 +530,7 @@ void game_options::reset_options()
     save_dir.clear();
 #endif
 
-#ifndef SHORT_FILE_NAMES
+#if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH)
     morgue_dir = "morgue/";
 #endif
 
@@ -1870,22 +1870,24 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         remember_name = read_bool( field, remember_name );
     }
+#ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
     {
         // If SAVE_DIR_PATH was defined, there are very likely security issues
         // with allowing the user to specify a different directory.
-#ifndef SAVE_DIR_PATH
         save_dir = field;
-#endif
     }
+#endif
     else if (key == "show_turns")
     {
         show_turns = read_bool( field, show_turns );
     }
+#ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
     {
         morgue_dir = field;
     }
+#endif
     else if (key == "hp_warning")
     {
         hp_warning = atoi( field.c_str() );
@@ -2785,7 +2787,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
             if (!rc_only)
-                Options.morgue_dir = next_arg;
+                SysEnv.morgue_dir = next_arg;
             nextUsed = true;
             break;
 
