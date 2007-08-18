@@ -786,7 +786,6 @@ void pray()
     else if (you.religion == GOD_XOM)
     {
         mpr("Xom ignores you.");
-
         return;
     }
 
@@ -803,7 +802,10 @@ void pray()
         offer_items();
 
     you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
-                                            + (random2(you.piety) / 20);
+                                 + (random2(you.piety) / 20);
+
+    if (you.religion == GOD_NEMELEX_XOBEH)
+        you.duration[DUR_PRAYER] = 1;
     
     if (player_under_penance())
         simple_god_message(" demands penance!");
