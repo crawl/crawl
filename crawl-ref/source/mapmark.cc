@@ -43,7 +43,7 @@ map_marker::~map_marker()
 {
 }
 
-void map_marker::activate()
+void map_marker::activate(bool)
 {
 }
 
@@ -184,6 +184,7 @@ map_lua_marker::~map_lua_marker()
 map_marker *map_lua_marker::clone() const
 {
     map_lua_marker *copy = new map_lua_marker();
+    copy->pos = pos;
     if (get_table())
         copy->check_register_table();
     return copy;
@@ -309,10 +310,12 @@ bool map_lua_marker::callfn(const char *fn, bool warn_err, int args) const
     return (res);
 }
 
-void map_lua_marker::activate()
+void map_lua_marker::activate(bool verbose)
 {
     lua_stack_cleaner clean(dlua);
-    callfn("activate", true);
+    push_fn_args("activate");
+    lua_pushboolean(dlua, verbose);
+    callfn("activate", true, 4);
 }
 
 void map_lua_marker::notify_dgn_event(const dgn_event &e)
@@ -456,12 +459,12 @@ void map_markers::init_from(const map_markers &c)
     }
 }
 
-void map_markers::activate_all()
+void map_markers::activate_all(bool verbose)
 {
     for (dgn_marker_map::iterator i = markers.begin();
          i != markers.end(); ++i)
     {
-        i->second->activate();
+        i->second->activate(verbose);
     }
 }
 

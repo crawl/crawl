@@ -651,6 +651,8 @@ bool lugonu_corrupt_level(int power)
     std::auto_ptr<crawl_environment> abyssal(new crawl_environment(env));
     env = *backup;
     backup.reset(NULL);
+    dungeon_events.clear();
+    env.markers.activate_all(false);
     
     corrupt_level_features(*abyssal);
     run_corruption_effects(100);

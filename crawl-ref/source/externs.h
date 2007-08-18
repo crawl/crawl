@@ -1253,7 +1253,7 @@ public:
     map_markers &operator = (const map_markers &);
     ~map_markers();
 
-    void activate_all();
+    void activate_all(bool verbose = true);
     void add(map_marker *marker);
     void remove(map_marker *marker);
     void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);

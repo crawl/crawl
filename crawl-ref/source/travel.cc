@@ -18,6 +18,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgnevent.h"
 #include "direct.h"
 #include "itemname.h"
 #include "items.h"
@@ -2488,32 +2489,31 @@ static int find_transtravel_stair(  const level_id &cur,
 
 static bool loadlev_populate_stair_distances(const level_pos &target)
 {
-    // Copy the current crawl_environment. Note that this is a shallow
-    // copy so tmp holds references to map markers.
     std::auto_ptr<crawl_environment> tmp(new crawl_environment(env));
 
-    // Clear markers. The tmp env still points at the markers, so we
-    // don't leak. XXX: Make crawl_environment fully assignable.
-    env.markers.clear();
-    
-    if (!travel_load_map(target.id.branch, 
-                         absdungeon_depth(target.id.branch, target.id.depth)))
+    bool loaded = false;
+    if (travel_load_map(target.id.branch, 
+                        absdungeon_depth(target.id.branch, target.id.depth)))
     {
-        env = *tmp;
-        return false;
+        std::vector<travel_exclude> old_excludes = curr_excludes;
+
+        curr_excludes.clear();
+        LevelInfo &li = travel_cache.get_level_info(target.id);
+        li.set_level_excludes();
+
+        populate_stair_distances(target);
+        
+        curr_excludes = old_excludes;
+        loaded = !curr_stairs.empty();
     }
 
-    std::vector<travel_exclude> old_excludes = curr_excludes;
-
-    curr_excludes.clear();
-    LevelInfo &li = travel_cache.get_level_info(target.id);
-    li.set_level_excludes();
-
-    populate_stair_distances(target);
-
     env = *tmp;
-    curr_excludes = old_excludes;
-    return !curr_stairs.empty();
+    // Clear references to freed markers.
+    dungeon_events.clear();
+    // Reactivate cloned markers.
+    env.markers.activate_all(false);
+
+    return (loaded);
 }
 
 static void populate_stair_distances(const level_pos &target)

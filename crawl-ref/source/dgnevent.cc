@@ -66,7 +66,7 @@ void dgn_event_dispatcher::fire_event(const dgn_event &e)
             if (i->eventmask & e.type)
                 i->listener->notify_dgn_event(e);
         }
-    }    
+    }
 }
 
 void dgn_event_dispatcher::fire_event(dgn_event_type et)

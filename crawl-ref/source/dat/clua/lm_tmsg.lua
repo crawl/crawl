@@ -23,7 +23,7 @@ function TimedMessaging.new(pars)
   return m
 end
 
-function TimedMessaging:init(tmarker, cm)
+function TimedMessaging:init(tmarker, cm, verbose)
   local lab = dgn.grid(cm:pos()) == dgn.feature_number('enter_labyrinth')
   if not self.noisemaker then
     self.noisemaker = lab and "an ancient clock" or "a massive bell"
@@ -47,7 +47,7 @@ function TimedMessaging:init(tmarker, cm)
     self.check = 50
   end
 
-  if #self.initmsg > 0 and you.hear_pos(cm:pos()) then
+  if verbose and #self.initmsg > 0 and you.hear_pos(cm:pos()) then
     crawl.mpr(self.initmsg, "sound")
   end
 end

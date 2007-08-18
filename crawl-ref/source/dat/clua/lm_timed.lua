@@ -42,8 +42,8 @@ function TimedMarker:new(pars)
   return tmarker
 end
 
-function TimedMarker:activate(marker)
-  self.msg:init(self, marker)
+function TimedMarker:activate(marker, verbose)
+  self.msg:init(self, marker, verbose)
 
   dgn.register_listener(dgn.dgn_event_type('turn'), marker)
   dgn.register_listener(dgn.dgn_event_type('player_climb'), 

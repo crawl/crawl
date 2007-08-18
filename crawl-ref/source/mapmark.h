@@ -18,7 +18,7 @@ public:
     map_marker_type get_type() const { return type; }
 
     virtual map_marker *clone() const = 0;
-    virtual void activate();
+    virtual void activate(bool verbose = true);
     virtual void write(tagHeader &) const;
     virtual void read(tagHeader &);
     virtual std::string debug_describe() const = 0;
@@ -86,7 +86,7 @@ public:
     map_lua_marker(const std::string &s, const std::string &ctx);
     ~map_lua_marker();
 
-    void activate();
+    void activate(bool verbose);
 
     void write(tagHeader &) const;
     void read(tagHeader &);
