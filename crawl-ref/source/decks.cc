@@ -613,7 +613,7 @@ static void velocity_card(int power, deck_rarity_type rarity)
     }
     else if ( power_level == 1 )
     {
-        potion_effect( POT_LEVITATION, random2(power / 4) );
+        cast_fly( random2(power/4) );
         cast_swiftness( random2(power/4) );
     }
     else
