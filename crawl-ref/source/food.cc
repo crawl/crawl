@@ -647,6 +647,15 @@ void eat_from_inventory(int which_inventory_slot)
         const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten = (you.inv[which_inventory_slot].special < 100);
 
+        if (rotten && you.species != SP_GHOUL && you.species != SP_KOBOLD
+                   && you.species != SP_TROLL && you.species != SP_OGRE
+                   && you.species != SP_HILL_ORC
+            && !yesno("Are you sure you want to eat this rotten meat?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
         eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
     }
     else
@@ -691,6 +700,15 @@ void eat_floor_item(int item_link)
         const int chunk_type = mons_corpse_effect( mitm[item_link].plus );
         const bool rotten = (mitm[item_link].special < 100);
 
+
+        if (rotten && you.species != SP_GHOUL && you.species != SP_KOBOLD
+                   && you.species != SP_TROLL && you.species != SP_OGRE
+                   && you.species != SP_HILL_ORC
+            && !yesno("Are you sure you want to eat this rotten meat?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
         eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
     }
     else

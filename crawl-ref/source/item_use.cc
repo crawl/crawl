@@ -3019,6 +3019,12 @@ bool drink_fountain()
     if ( feat != DNGN_BLUE_FOUNTAIN && feat != DNGN_SPARKLING_FOUNTAIN )
         return false;
 
+    if (you.duration[DUR_LEVITATION] && !you.flies())
+    {
+        mpr("You're floating high above the fountain.");
+        return false;
+    }
+
     potion_type fountain_effect = POT_WATER;
     if ( feat == DNGN_BLUE_FOUNTAIN )
     {
