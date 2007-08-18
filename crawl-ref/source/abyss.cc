@@ -390,7 +390,7 @@ static void initialise_level_corrupt_seeds(int power)
 #endif
 
     // The corruption centered on the player is free.
-    place_corruption_seed(you.pos(), high + 100);
+    place_corruption_seed(you.pos(), high + 300);
 
     for (int i = 0; i < nseeds; ++i)
     {
@@ -400,7 +400,7 @@ static void initialise_level_corrupt_seeds(int power)
         while (!in_bounds(where) || grd(where) != DNGN_FLOOR
                || env.markers.find(where, MAT_ANY));
 
-        place_corruption_seed(where, random_range(low, high, 2));
+        place_corruption_seed(where, random_range(low, high, 2) + 300);
     }
 }
 
@@ -655,7 +655,7 @@ bool lugonu_corrupt_level(int power)
     env.markers.activate_all(false);
     
     corrupt_level_features(*abyssal);
-    run_corruption_effects(100);
+    run_corruption_effects(300);
 
     you.flash_colour = EC_MUTAGENIC;
     viewwindow(true, false);
