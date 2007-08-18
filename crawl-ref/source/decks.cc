@@ -1207,13 +1207,18 @@ static void summon_dancing_weapon(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     const bool friendly = (power_level > 0 || !one_chance_in(4));
-    create_monster( MONS_DANCING_WEAPON, power_level + 3,
-                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                    you.x_pos, you.y_pos,
-                    friendly ? you.pet_target : MHITYOU,
-                    250 );
-    // Intentionally not setting hard_reset here. Maybe this should
-    // depend on power_level?
+    const int mon = create_monster( MONS_DANCING_WEAPON, power_level + 3,
+                                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                    you.x_pos, you.y_pos,
+                                    friendly ? you.pet_target : MHITYOU,
+                                    250 );
+    
+    // Given the abundance of Nemelex decks, not setting hard reset
+    // leaves a trail of weapons behind, most of which just get
+    // offered to Nemelex again, adding an unnecessary source of
+    // piety.
+    if (mon != -1)
+        menv[mon].flags |= MF_HARD_RESET;
 }
 
 static int card_power(deck_rarity_type rarity)

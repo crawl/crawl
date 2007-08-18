@@ -3888,59 +3888,48 @@ static std::string religion_help( god_type god )
     
     switch(god)
     {
-       case GOD_ZIN:
-       case GOD_SHINING_ONE:
-           if (!player_under_penance() && you.piety > 160
-               && !you.num_gifts[god])
-           {
-               result += "Pray at an altar to get a ";
-               result += (god == GOD_ZIN ? "mace" : "long sword");
-               result += " blessed by ";
-               result += god_name(god);
-               result += ".";
-               break;
-           } // else fall through
-       case GOD_XOM:
-       case GOD_SIF_MUNA:
-       case GOD_KIKUBAAQUDGHA:
-       case GOD_YREDELEMNUL:
-       default:
-            result += "Praying is not necessary with this god.";
+    case GOD_ZIN:
+    case GOD_SHINING_ONE:
+        if (!player_under_penance() && you.piety > 160
+            && !you.num_gifts[god])
+        {
+            result += "You can pray at an altar to ask "
+                + std::string(god_name(god)) + " to bless a ";
+            result += (god == GOD_ZIN ? "mace" : "long sword");
+            result += ".";
             break;
+        }
+        break;
+           
+    case GOD_LUGONU:
+        if (!player_under_penance() && you.piety > 160
+            && !you.num_gifts[god])
+        {
+            result += "You can pray at an altar to ask "
+                + std::string(god_name(god)) + " to bless your weapon." EOL;
+        } // fall through
+           
+    case GOD_OKAWARU:
+    case GOD_MAKHLEB:
+    case GOD_BEOGH:
+    case GOD_TROG:
+        result = "You can sacrifice corpses by dissecting "
+                 "them during prayer.";
+        break;
 
-       case GOD_LUGONU:
-           if (!player_under_penance() && you.piety > 160
-               && !you.num_gifts[god])
-           {
-               result += "Pray at an altar to get your weapon blessed." EOL;
-           } // fall through
-       case GOD_OKAWARU:
-       case GOD_MAKHLEB:
-       case GOD_BEOGH:
-            result = "Use prayer to announce the sacrifice of corpses.";
-            break;
+    case GOD_NEMELEX_XOBEH:
+        result += "You can pray to sacrifice all items on your square. "
+             "Inscribe items with !p or !* to avoid sacrificing "
+             "them accidentally.";
+        break;
 
-       case GOD_TROG:
-            result += "Use prayer to announce the sacrifice of corpses." EOL
-                      "Trog does not demand training of the Invocations skill.";
-            break;
+    case GOD_VEHUMET:
+        result += "Vehumet assists you in casting Conjurations"
+                  " and Summonings during prayer.";
+        break;
 
-       case GOD_NEMELEX_XOBEH:
-            result += "A prayer will sacrifice all items on your spot. Inscribe "
-                      "items with !p or !* to avoid accidentally sacrificing "
-                      "them." EOL
-                      "Followers of Nemelex Xobeh use Evocations, not Invocations.";
-            break;
-
-       case GOD_ELYVILON:
-            result += "Under prayer Elyvilon watches over you, but also expects "
-                      "you to act positively.";
-            break;
-
-       case GOD_VEHUMET:
-            result += "During prayer, Vehumet supports magics of the Conjuration "
-                      "or Summoning type, but looks down upon more benign castings.";
-            break;
+    default:
+        break;
     }
     return result;
 }
@@ -4053,7 +4042,7 @@ void describe_god( god_type which_god, bool give_title )
         // Nemelex Xobeh
         "Nemelex is a strange and unpredictable trickster God, whose powers "
         "can be invoked through the magical packs of cards which Nemelex "
-        "paints in the ichor of demons. Followers receive occasional decks, "
+        "paints in the ichor of demons. Followers receive occasional gifts, "
         "and should use these as much as possible. Offerings of any "
         "type of item are also appreciated. The Trickster may provide certain "
         "ways to improve one's chances at cards, but prefers those who trust "
@@ -4073,12 +4062,11 @@ void describe_god( god_type which_god, bool give_title )
 
         // Beogh
         "Beogh is a deity worshipped by the cave orcs native to parts of the "
-        "dungeon. Only proper orcs may devote their service to Beogh, proving "
-        "their devotion with kills and remnants. Pious orcs may gain the "
-        "priestly power of smiting. "
-        EOL
-        "Also, there are rumours that the orcs still look out for "
-        "their Messiah. "
+        "dungeon. Only orcs may devote their service to Beogh, and must prove "
+        "their devotion by bloodshed and sacrifice. Devout followers of Beogh "
+        "can smite their foes, and especially fervent devotees of Beogh may "
+        "even gain followers of their own, for the orcs still look for their "
+        "Messiah."
     };
 
     const int numcols = get_number_of_cols();
@@ -4096,21 +4084,22 @@ void describe_god( god_type which_god, bool give_title )
         // based on your god
         if (you.piety > 160) 
         { 
-            cprintf("%s", (which_god == GOD_SHINING_ONE) ? "Champion of Law" :
-                    (which_god == GOD_ZIN) ? "Divine Warrior" :
-                    (which_god == GOD_ELYVILON) ? "Champion of Light" :
-                    (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
-                    (which_god == GOD_YREDELEMNUL) ? "Master of Eternal Death" :
-                    (which_god == GOD_KIKUBAAQUDGHA) ? "Lord of Darkness" :
-                    (which_god == GOD_MAKHLEB) ? "Champion of Chaos" :
-                    (which_god == GOD_VEHUMET) ? "Lord of Destruction" :
-                    (which_god == GOD_TROG) ? "Great Slayer" :
-                    (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
-                    (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
-                    (which_god == GOD_LUGONU) ? "Agent of Entropy" :
-                    (which_god == GOD_BEOGH) ? "Messiah" :
-                    (which_god == GOD_XOM) ? "Teddy Bear" : 
-                        "Bogy the Lord of the Bugs"); // Xom and no god is handled before
+            cprintf(
+                "%s", (which_god == GOD_SHINING_ONE) ? "Champion of Law" :
+                (which_god == GOD_ZIN) ? "Divine Warrior" :
+                (which_god == GOD_ELYVILON) ? "Champion of Light" :
+                (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
+                (which_god == GOD_YREDELEMNUL) ? "Master of Eternal Death" :
+                (which_god == GOD_KIKUBAAQUDGHA) ? "Lord of Darkness" :
+                (which_god == GOD_MAKHLEB) ? "Champion of Chaos" :
+                (which_god == GOD_VEHUMET) ? "Lord of Destruction" :
+                (which_god == GOD_TROG) ? "Great Slayer" :
+                (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
+                (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
+                (which_god == GOD_LUGONU) ? "Agent of Entropy" :
+                (which_god == GOD_BEOGH) ? "Messiah" :
+                (which_god == GOD_XOM) ? "Teddy Bear" : 
+                "Bogy the Lord of the Bugs");
         }
         else
         {
@@ -4245,7 +4234,8 @@ void describe_god( god_type which_god, bool give_title )
             gotoxy(1, get_number_of_lines() - 1);
         else
             gotoxy(1, get_number_of_lines() - 2);
-        textcolor(DARKGREY);
+        
+        textcolor(LIGHTGRAY);
         cprintf(get_linebreak_string(religion_help(which_god),
                                      numcols).c_str());
     }
