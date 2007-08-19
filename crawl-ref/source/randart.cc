@@ -742,7 +742,7 @@ static const char *randart_weapon_appearance[] = {
 
 static const char *randart_armour_appearance[] = {
     "brightly glowing ", "runed ", "smoking ", "bloodstained ", "twisted ",
-    "shimmering ", "warped ", "heavily runed ", "jeweled ",
+    "shimmering ", "warped ", "heavily runed ", "jewelled ",
     "transparent ", "encrusted ", "pitted ", "slimy ", "polished ", "fine ",
     "crude ", "ancient ", "ichor-stained ", "faintly glowing ",
     "steaming ", "shiny ", "distressingly furry "

@@ -146,7 +146,7 @@ static bool need_moderate_ood(int lev_mons)
 
 static int fuzz_mons_level(int level)
 {
-    int fuzz = random2avg(11, 5);
+    int fuzz = random2avg(11, 8);
     if (fuzz > 5)
         level += fuzz - 5;
     return (level);
@@ -244,7 +244,8 @@ monster_type pick_random_monster(const level_id &place,
     if (place.branch == BRANCH_MAIN_DUNGEON
         && lev_mons < 28)
     {
-        lev_mons = fuzz_mons_level(lev_mons);
+        if (you.your_level)
+            lev_mons = fuzz_mons_level(lev_mons);
 
         // potentially nasty surprise, but very rare
         if (need_super_ood(lev_mons))

@@ -2360,7 +2360,7 @@ std::string item_base_name(const item_def &item)
                     (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
                     (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
                     (dhelm == THELM_DESC_VISORED)  ? "visored " :
-                    (dhelm == THELM_DESC_JEWELLED) ? "jeweled "
+                    (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
                                                    : "buggy ";
             }
             

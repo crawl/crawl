@@ -261,7 +261,7 @@ static const char* fixed_artefact_name( const item_def& item, bool ident )
         case SPWPN_SCYTHE_OF_CURSES:    return "warped scythe";
         case SPWPN_MACE_OF_VARIABILITY: return "shimmering mace";
         case SPWPN_GLAIVE_OF_PRUNE:     return "purple glaive";
-        case SPWPN_SCEPTRE_OF_TORMENT:  return "jeweled golden mace";
+        case SPWPN_SCEPTRE_OF_TORMENT:  return "jewelled golden mace";
         case SPWPN_SWORD_OF_ZONGULDROK: return "bone long sword";
         case SPWPN_SWORD_OF_CEREBOV:    return "great serpentine sword";
         case SPWPN_STAFF_OF_DISPATER:   return "golden staff";
@@ -413,7 +413,7 @@ static const char* wand_secondary_string(int s)
     switch (s)
     {
     case 0:  return "";      
-    case 1:  return "jeweled ";
+    case 1:  return "jewelled ";
     case 2:  return "curved ";
     case 3:  return "long ";
     case 4:  return "short ";
@@ -855,7 +855,7 @@ static const char* staff_primary_string(int p)
     case 3: return "thin";
     case 4: return "long";
     case 5: return "twisted";
-    case 6: return "jeweled";
+    case 6: return "jewelled";
     case 7: return "runed";
     case 8: return "smoking";
     case 9: return "gnarled";
