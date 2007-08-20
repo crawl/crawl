@@ -350,7 +350,8 @@ static missile_def Missile_prop[NUM_MISSILES] =
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20, 1000, true  },
     { MI_SLING_BULLET,  "sling bullet",  6,    4, false },
-    { MI_JAVELIN,       "javelin",      10,   40, true },
+    { MI_JAVELIN,       "javelin",      10,   40, true  },
+    { MI_THROWING_NET,  "throwing net",  0,   30, true  }, 
 };
 
 struct food_def 
@@ -1764,6 +1765,8 @@ bool is_throwable( const item_def &wpn, size_type bodysize  )
     else if (wpn.base_type == OBJ_MISSILES)
     {
         if (bodysize < SIZE_MEDIUM && wpn.sub_type == MI_JAVELIN)
+            return (false);
+        if (bodysize < SIZE_MEDIUM && wpn.sub_type == MI_THROWING_NET)
             return (false);
         return (Missile_prop[ Missile_index[wpn.sub_type] ].throwable);
     }

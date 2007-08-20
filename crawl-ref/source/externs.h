@@ -196,6 +196,7 @@ public:
     
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
+    virtual bool caught() const = 0;
     virtual bool asleep() const { return (false); }
     virtual bool backlit() const = 0;
 
@@ -203,7 +204,7 @@ public:
 
     virtual bool incapacitated() const
     {
-        return paralysed() || confused();
+        return paralysed() || confused() || caught();
     }
 
     virtual int holy_aura() const
@@ -895,6 +896,7 @@ public:
 
     bool paralysed() const;
     bool confused() const;
+    bool caught() const;
     bool backlit() const;
 
     int armour_class() const;
@@ -1146,6 +1148,7 @@ public:
     bool is_icy() const;
     bool paralysed() const;
     bool confused() const;
+    bool caught() const;
     bool asleep() const;
     bool backlit() const;
 

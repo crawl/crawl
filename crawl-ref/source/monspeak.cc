@@ -125,7 +125,7 @@ static bool say_specific_dialogue(const monsters *monster,
         return (false);
 
     const bool friendly = (monster->attitude == ATT_FRIENDLY);
-    
+
     if (mons_is_confused(monster))
         return (say_dialogue(
                     monster,
@@ -372,6 +372,87 @@ bool mons_speaks(const monsters *monster)
             }
         }
 
+    }
+    else if (monster->has_ench(ENCH_CAUGHT))
+    {
+        if (mons_friendly(monster))
+        {
+            switch(random2(8))
+            {
+              case 0:
+                  strcat(info, " says, \"Help me, ");
+                  strcat(info, you.your_name);
+                  strcat(info, ", please!\"");
+                  break;
+              case 1:
+                  strcat(info, " cries, \"MUMMY!\"");
+                  break;
+              case 2:
+                  strcat(info, " shouts, \"");
+                  strcat(info, you.your_name);
+                  strcat(info, "! Can't you see I need your help?\"");
+                  break;
+              case 3:
+                  strcat(info, " shouts, \"I could do with a little help here, you know.\"");
+                  break;
+              case 4:
+                  strcat(info, " mumbles something.");
+                  break;
+              case 5:
+                  strcat(info, " says, \"Umm, ");
+                  strcat(info, you.your_name);
+                  strcat(info, "? Help?\"");
+                  break;
+              case 6:
+                  strcat(info, " cries.");
+                  break;
+              case 7:
+                  strcat(info, " cries, \"Why me?");
+                  break;
+            }
+        }
+        else // unfriendly monsters
+        {
+            switch(random2(12))
+            {
+              case 0:
+                  strcat(info, " screams, \"HEY! This isn't fair!\"");
+                  break;
+              case 1:
+                  strcat(info, " screams, \"Help! Get me out of here!\"");
+                  break;
+              case 2:
+                  strcat(info, " begs, \"Could you help me? I swear I won't hurt you.\"");
+                  break;
+              case 3:
+                  strcat(info, " yells, \"LEMME GO!\"");
+                  break;
+              case 4:
+                  strcat(info, " cries, \"Please! I'll never do it again!\"");
+                  break;
+              case 5:
+                  strcat(info, " mutters, \"Just what did I do to deserve this?\"");
+                  break;
+              case 6:
+                  strcat(info, " asks, \"Hey, want to switch places?\"");
+                  break;
+              case 7:
+                  strcat(info, " cries, \"I hate you!\"");
+                  break;
+              case 8:
+                  strcat(info, " snarls, \"This is all your fault!\"");
+                  break;
+              case 9:
+                  strcat(info, " says, \"I meant to do this, just so you know.\"");
+                  break;
+              case 10:
+                  strcat(info, " shouts, \"This is all a huge misunderstanding!");
+                  break;
+              case 11:
+                  strcat(info, " cries, \"Why me?\"");
+                  break;
+            }
+        }
     }
     else if (monster->behaviour == BEH_FLEE)
     {

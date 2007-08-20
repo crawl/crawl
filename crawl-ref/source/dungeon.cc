@@ -1851,6 +1851,9 @@ static trap_type random_trap_for_level(int level_number)
         random2(1 + level_number) > 2
         : one_chance_in(7))
         type = TRAP_ARROW;
+        
+    if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
+        type = TRAP_NET;
 
     if (random2(1 + level_number) > 7)
         type = TRAP_BOLT;

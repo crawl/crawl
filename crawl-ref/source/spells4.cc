@@ -2989,6 +2989,17 @@ int cast_apportation(int pow)
                  (mitm[ item ].quantity > 1) ? "s" : "" );
         }
         done = 1;
+        
+        // if we apport a net, free the monster under it
+        if (mitm[item].base_type == OBJ_MISSILES
+            && mitm[item].sub_type == MI_THROWING_NET)
+        {
+           int mon = mgrd[ beam.tx ][ beam.ty ];
+           if (mon != NON_MONSTER && mons_is_caught(&menv[mon]))
+           {
+               (&menv[mon])->del_ench(ENCH_CAUGHT, true);
+           }
+        }
     }
     else
         mpr( "The spell fails." );

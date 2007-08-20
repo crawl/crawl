@@ -1283,6 +1283,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("blade trap");
         case TRAP_BOLT:
             return ("bolt trap");
+        case TRAP_NET:
+            return ("net trap");
         case TRAP_ZOT:
             return ("Zot trap");
         case TRAP_NEEDLE:
@@ -1558,6 +1560,9 @@ static void describe_mons_enchantment(const monsters &mons,
         break;
     case ENCH_STICKY_FLAME:
         msg += " is covered in liquid flames.";
+        break;
+    case ENCH_CAUGHT:
+        msg += " is entangled in a net.";
         break;
     default:
         msg.clear();

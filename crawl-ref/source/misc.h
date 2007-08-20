@@ -23,6 +23,8 @@
  * called from: ability - decks - fight - it_use2 - spells1
  * *********************************************************************** */
 bool go_berserk(bool intentional);
+bool trap_item(object_class_type base_type, char sub_type,
+               char beam_x, char beam_y);
 
 
 // last updated 12may2000 {dlb}
@@ -37,7 +39,8 @@ void search_around( bool only_adjacent = false );
  * called from: acr
  * *********************************************************************** */
 void disarm_trap(struct dist &disa);
-
+void remove_net_from( monsters *mon );
+void free_self_from_net( bool damage_net = true );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -59,7 +62,8 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
  * called from: acr - misc
  * *********************************************************************** */
 void handle_traps(char trt, int i, bool trap_known);
-
+void monster_caught_in_net(monsters *mon);
+void player_caught_in_net(void);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

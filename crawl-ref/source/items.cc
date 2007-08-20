@@ -547,7 +547,9 @@ static void item_list_on_square( std::vector<const item_def*>& items,
     while ( obj != NON_ITEM ) {
         /* add them to the items list if they qualify */
         if ( !have_nonsquelched || !invisible_to_player(mitm[obj]) )
+        {
             items.push_back( &mitm[obj] );
+        }
         obj = mitm[obj].link;
     }
 }
@@ -1299,6 +1301,15 @@ int find_free_slot(const item_def &i)
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
+    if (you.attribute[ATTR_CAUGHT] && mitm[obj].base_type == OBJ_MISSILES
+        && mitm[obj].sub_type == MI_THROWING_NET)
+    {
+        quant_got--;
+        mpr("You cannot pick up the net that traps you!");
+        if (!quant_got)
+            return (1);
+    }
+
     int retval = quant_got;
 
     // Gold has no mass, so we handle it first.
@@ -1340,7 +1351,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
         retval = part;
     }
-
+    
     if (is_stackable_item( mitm[obj] ))
     {
         for (int m = 0; m < ENDOFPACK; m++)

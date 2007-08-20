@@ -198,6 +198,48 @@ void mons_trap(struct monsters *monster)
         revealTrap = true;
         break;
 
+    case TRAP_NET:
+    {
+        if (one_chance_in(3))
+        {
+            if (trapKnown)
+            {
+                simple_monster_message(monster,
+                                        " fails to trigger a net trap.");
+            }
+            return;
+        }
+        
+        if (random2(monster->ev) > 8)
+        {
+            if (monsterNearby && !simple_monster_message(monster,
+                                 " nimbly jumps out of the way of a falling net."))
+            {
+                mpr("A large net falls down!");
+            }
+        }
+        else
+        {
+            if (monsterNearby)
+            {
+                std::string msg = "A large net falls down";
+                if (player_monster_visible( monster ))
+                {
+                    msg += " onto ";
+                    msg += monster->name(DESC_NOCAP_THE);
+                }
+                msg += "!";
+                mpr(msg.c_str());
+                monster_caught_in_net(monster);
+            }
+        }
+        
+        trap_item( OBJ_MISSILES, MI_THROWING_NET,
+                   env.trap[which_trap].x, env.trap[which_trap].y );
+        grd[env.trap[which_trap].x][env.trap[which_trap].y] = DNGN_FLOOR;
+        env.trap[which_trap].type = TRAP_UNASSIGNED;
+        break;
+    }
     // zot traps are out to get *the player*! Hostile monsters
     // benefit and friendly monsters suffer - such is life - on
     // rare occasion, the trap affects nearby players, triggering
@@ -887,6 +929,9 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
+
+    if (monster->has_ench(ENCH_CAUGHT))
+        monster->del_ench(ENCH_CAUGHT, true);
 
     // Teleporting mimics change form - if they reappear out of LOS, they are
     // no longer known.

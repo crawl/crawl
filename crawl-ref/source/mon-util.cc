@@ -1689,6 +1689,11 @@ bool mons_is_confused(const monsters *m)
                             !mons_class_flag(m->type, M_CONFUSED));
 }
 
+bool mons_is_caught(const monsters *m)
+{
+    return (m->has_ench(ENCH_CAUGHT));
+}
+
 bool mons_is_fleeing(const monsters *m)
 {
     return (m->behaviour == BEH_FLEE);
@@ -1727,7 +1732,8 @@ bool mons_looks_distracted(const monsters *m)
                 && !mons_friendly(m)
                 && ((m->foe != MHITYOU && !mons_is_batty(m))
                     || mons_is_confused(m)
-                    || mons_is_fleeing(m)));
+                    || mons_is_fleeing(m)
+                    || mons_is_caught(m)));
 }
 
 bool mons_should_fire(struct bolt &beam)
@@ -1842,6 +1848,20 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     }
 
     return (ret);
+}
+
+// spells for a quick get-away
+// currently only used to get out of a net
+bool ms_quick_get_away( const monsters *mon, spell_type monspell )
+{
+    switch (monspell)
+    {
+      case SPELL_TELEPORT_SELF:
+      case SPELL_BLINK:
+        return true;
+      default:
+        return false;
+    }
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -2708,6 +2728,11 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
     // much work for now.
     
     const item_def *miss = missiles();
+    
+    // monster may not pick up trapping net
+    if (mons_is_caught(this) && item.sub_type == MI_THROWING_NET)
+        return (false);
+    
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
 
@@ -3000,6 +3025,11 @@ bool monsters::backlit() const
     return (has_ench(ENCH_BACKLIGHT));
 }
 
+bool monsters::caught() const
+{
+    return (mons_is_caught(this));
+}
+
 int monsters::shield_bonus() const
 {
     // XXX: Monsters don't actually get shields yet.
@@ -3032,6 +3062,8 @@ int monsters::melee_evasion(const actor *act) const
     int evasion = ev;
     if (paralysed() || asleep() || one_chance_in(20))
         evasion = 0;
+    else if (caught())
+        evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused())
         evasion /= 2;
     return (evasion);
@@ -3629,6 +3661,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer rotting.");
         break;
 
+    case ENCH_CAUGHT:
+        if (!quiet)
+            simple_monster_message(this, " breaks free.");
+        break;
+
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
         add_ench( mon_enchant(ENCH_ABJ) );
@@ -3748,6 +3785,10 @@ void monsters::timeout_enchantments(int levels)
             blink();
             break;
 
+        case ENCH_CAUGHT:
+            del_ench(i->first);
+            break;
+
         default:
             break;
         }
@@ -3850,6 +3891,121 @@ void monsters::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+    case ENCH_CAUGHT:
+    {
+        if (mons_is_paralysed(this) || this->behaviour == BEH_SLEEP)
+            break;
+        
+        int net, next;
+        for (net = igrd[x][y]; net != NON_ITEM; net = next)
+        {
+             next = mitm[net].link;
+
+             if (mitm[net].base_type == OBJ_MISSILES
+                 && mitm[net].sub_type == MI_THROWING_NET)
+             {
+                break;
+             }
+        }
+
+        if (net == NON_ITEM) // really shouldn't happen!
+        {
+            del_ench(ENCH_CAUGHT);
+            break;
+        }
+
+        // handled in handle_pickup
+        if (mons_itemuse(type) == MONUSE_EATS_ITEMS)
+            break;
+        
+        // the enchantment doubles as the durability of a net
+        // the more corroded it gets, the more easily it will break
+        int hold = mitm[net].plus; // this will usually be negative
+        int mon_size = body_size(PSIZE_BODY);
+            
+        // smaller monsters can escape more quickly
+        if (mon_size < random2(SIZE_BIG)  // BIG = 5
+            && !has_ench(ENCH_BERSERK))
+        {
+            if (mons_near(this) && !player_monster_visible(this))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles to escape the net.");
+
+            // confused monsters have trouble finding the exit
+            if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
+                break;
+
+            decay_enchantment(me, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
+            
+            // frayed nets are easier to escape
+            if (mon_size <= -(hold-1)/2)
+                decay_enchantment(me, (NUM_SIZE_LEVELS - mon_size));
+        }
+        else // large (and above) monsters always thrash the net and destroy it
+        {    // e.g. ogre, large zombie (large); centaur, nage, hydra (big)
+        
+            if (mons_near(this) && !player_monster_visible(this))
+                mpr("Something wriggles in the net.");
+            else
+                simple_monster_message(this, " struggles against the net.");
+
+            // confused monsters more likely to struggle without result
+            if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
+                break;
+
+            // nets get destroyed more quickly for larger monsters
+            // and if already strongly frayed
+            int damage = 0;
+            
+            // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
+            if (random2(SIZE_GIANT - mon_size) <= mon_size)
+                damage++;
+
+            // extra damage for large (50%) and big (always)
+            if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
+                damage++;
+
+            // overall damage per struggle:
+            // tiny   -> 1/6
+            // little -> 2/5
+            // small  -> 3/4
+            // medium -> 1
+            // large  -> 1,5
+            // big    -> 2
+
+            // extra damage if already damaged
+            if (random2(body_size(PSIZE_BODY) - hold + 1) >= 4)
+                damage++;
+
+            // berserking doubles damage dealt
+            if (has_ench(ENCH_BERSERK))
+                damage *= 2;
+                
+            mitm[net].plus -= damage;
+            
+            if (mitm[net].plus < -7)
+            {
+                if (mons_near(this))
+                {
+                    if (player_monster_visible(this))
+                    {
+                        mprf("The net rips apart, and %s comes free!",
+                             name(DESC_NOCAP_THE).c_str());
+                    }
+                    else
+                    {
+                        mpr("All of a sudden the net rips apart!");
+                    }
+                }
+                dec_mitm_item_quantity( net, 1 );
+
+                del_ench(ENCH_CAUGHT, true);
+            }
+
+        }
+        break;
+    }
     case ENCH_CONFUSION:
         if (!mons_class_flag(type, M_CONFUSED))
             decay_enchantment(me);
@@ -4385,6 +4541,9 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_PARALYSIS:
     case ENCH_CONFUSION:
         cturn = 120 / modded_speed(mons, 5);
+        break;
+    case ENCH_CAUGHT:
+        cturn = 90 / mod_speed(25, mons->speed);
         break;
     case ENCH_POISON:
         cturn = 1000 * deg / mod_speed(125, mons->speed);

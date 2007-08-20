@@ -2046,6 +2046,21 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // Javelins train throwing quickly.
                 exercise(SK_RANGED_COMBAT, 1 + coinflip());
                 break;
+            case MI_THROWING_NET:
+                // Nets use throwing and T&D skills
+                // They don't do any damage!
+                baseDam = 0;
+                exDamBonus = 0;
+
+                // but accuracy is important for this one
+                baseHit = 1;
+                exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 7 / 2);
+                // Adjust for strength and dex.
+                exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
+
+                // Nets train throwing
+                exercise(SK_RANGED_COMBAT, 1);
+            break;
             }
         }
 
@@ -2082,6 +2097,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 pbolt.range = 12;
 
             pbolt.rangeMax = pbolt.range;
+        }
+        else if (wepType == MI_THROWING_NET)
+        {
+            pbolt.rangeMax = pbolt.range = 2 + player_size(PSIZE_BODY);
         }
         else
         {

@@ -253,6 +253,7 @@ enum attribute_type
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
+    ATTR_CAUGHT,                // caught in a net
     NUM_ATTRIBUTES
 };
 
@@ -1288,6 +1289,7 @@ enum enchant_type
     ENCH_SICK,
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
     ENCH_FATIGUE,        // Post-berserk fatigue.
+    ENCH_CAUGHT,         // caught in a net
     
     NUM_ENCHANTMENTS
 };
@@ -1917,6 +1919,7 @@ enum missile_type
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_JAVELIN,
+    MI_THROWING_NET,
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
@@ -3763,6 +3766,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_AMNESIA,                      //    5
     TRAP_BLADE,
     TRAP_BOLT,
+    TRAP_NET,
     TRAP_ZOT,
     TRAP_NEEDLE,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}

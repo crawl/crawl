@@ -1123,6 +1123,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     // the actual polymorphing:
     const int old_hp = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
+    const bool old_mon_caught = mons_is_caught(monster);
 
     /* deal with mons_sec */
     monster->type = targetc;
@@ -1166,6 +1167,40 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
 
+    if (old_mon_caught)
+    {
+        if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
+        {
+            int net, next;
+            for (net = igrd[monster->x][monster->y]; net != NON_ITEM; net = next)
+            {
+                 next = mitm[net].link;
+
+                 if (mitm[net].base_type == OBJ_MISSILES
+                     && mitm[net].sub_type == MI_THROWING_NET)
+                 {
+                     break;
+                 }
+            }
+            dec_mitm_item_quantity( net, 1 );
+
+            if (see_grid(monster->x, monster->y))
+            {
+                if (player_monster_visible(monster))
+                {
+                    mprf("The net rips apart, and %s comes free!",
+                         monster->name(DESC_NOCAP_THE).c_str());
+                }
+                else
+                {
+                    mpr("All of a sudden the net rips apart!");
+                }
+            }
+        }
+        else
+            monster->add_ench(ENCH_CAUGHT);
+    }
+    
     return (player_messaged);
 }                                        // end monster_polymorph()
 
@@ -1190,6 +1225,9 @@ bool monster_blink(monsters *monster)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
+    
+    if (monster->has_ench(ENCH_CAUGHT))
+        monster->del_ench(ENCH_CAUGHT, true);
 
     return (true);
 }                               // end monster_blink()
@@ -2419,7 +2457,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_BLINK_FROG:
     case MONS_KILLER_KLOWN:
-        if (one_chance_in(7))
+        if (one_chance_in(7) || mons_is_caught(monster) && one_chance_in(3))
         {
             simple_monster_message(monster, " blinks.");
             monster_blink(monster);
@@ -2686,7 +2724,7 @@ static bool handle_scroll(monsters *monster)
         case SCR_TELEPORTATION:
             if (!monster->has_ench(ENCH_TP))
             {
-                if (monster->behaviour == BEH_FLEE)
+                if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_CAUGHT))
                 {
                     simple_monster_message(monster, " reads a scroll.");
                     monster_teleport(monster, false);
@@ -2696,7 +2734,7 @@ static bool handle_scroll(monsters *monster)
             break;
 
         case SCR_BLINKING:
-            if (monster->behaviour == BEH_FLEE)
+            if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_CAUGHT))
             {
                 if (mons_near(monster))
                 {
@@ -2839,7 +2877,8 @@ static bool handle_wand(monsters *monster, bolt &beem)
             return (false);
 
         case WAND_TELEPORTATION:
-            if (monster->hit_points <= monster->max_hit_points / 2)
+            if (monster->hit_points <= monster->max_hit_points / 2
+                || mons_is_caught(monster))
             {
                 if (!monster->has_ench(ENCH_TP)
                     && !one_chance_in(20))
@@ -3211,6 +3250,23 @@ static bool handle_spell( monsters *monster, bolt & beem )
             else if (monster->foe == MHITYOU)
             {
                 return (false);
+            }
+        }
+
+        // monsters caught in a net try to get away
+        // this is only urgent if you are around
+        if (!finalAnswer && monsterNearby && mons_is_caught(monster)
+            && one_chance_in(3))
+        {
+            if (ms_quick_get_away( monster, hspell_pass[6]))
+            {
+                spell_cast = hspell_pass[6];
+                finalAnswer = true;
+            }
+            else if (ms_quick_get_away( monster, hspell_pass[5]))
+            {
+                spell_cast = hspell_pass[5];
+                finalAnswer = true;
             }
         }
 
@@ -3686,7 +3742,7 @@ static void handle_monster_move(int i, monsters *monster)
             continue;
         
         handle_behaviour(monster);
-
+        
         // submerging monsters will hide from clouds
         if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
             && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
@@ -3721,71 +3777,73 @@ static void handle_monster_move(int i, monsters *monster)
             } 
         }
 
-        // calculates mmov_x, mmov_y based on monster target.
-        handle_movement(monster);
-
-        brkk = false;
-
-        if (mons_is_confused( monster )
-            || (monster->type == MONS_AIR_ELEMENTAL 
-                && monster->has_ench(ENCH_SUBMERGED)))
+        if (!mons_is_caught(monster))
         {
-            std::vector<coord_def> moves;
+            // calculates mmov_x, mmov_y based on monster target.
+            handle_movement(monster);
 
-            int pfound = 0;
-            for (int yi = -1; yi <= 1; ++yi)
-            {
-                for (int xi = -1; xi <= 1; ++xi)
-                {
-                    coord_def c = monster->pos() + coord_def(xi, yi);
-                    if (in_bounds(c) && !grid_is_solid(grd(c))
-                        && one_chance_in(++pfound))
-                    {
-                        mmov_x = xi;
-                        mmov_y = yi;
-                    }
-                }
-            }
+            brkk = false;
 
-            if (random2(2 + pfound) < 2)
-                mmov_x = mmov_y = 0;
+             if (mons_is_confused( monster )
+                 || (monster->type == MONS_AIR_ELEMENTAL
+                     && monster->has_ench(ENCH_SUBMERGED)))
+             {
+                 std::vector<coord_def> moves;
 
-            // bounds check: don't let confused monsters try to run
-            // off the map
-            if (monster->x + mmov_x < 0 
-                    || monster->x + mmov_x >= GXM)
-            {
-                mmov_x = 0;
-            }
+                 int pfound = 0;
+                 for (int yi = -1; yi <= 1; ++yi)
+                 {
+                     for (int xi = -1; xi <= 1; ++xi)
+                     {
+                         coord_def c = monster->pos() + coord_def(xi, yi);
+                         if (in_bounds(c) && !grid_is_solid(grd(c))
+                             && one_chance_in(++pfound))
+                         {
+                             mmov_x = xi;
+                             mmov_y = yi;
+                         }
+                     }
+                 }
 
-            if (monster->y + mmov_y < 0 
-                    || monster->y + mmov_y >= GYM)
-            {
-                mmov_y = 0;
-            }
+                 if (random2(2 + pfound) < 2)
+                     mmov_x = mmov_y = 0;
 
-            if (grid_is_solid(
-                    grd[ monster->x + mmov_x ][ monster->y + mmov_y ]))
-            {
-                mmov_x = mmov_y = 0;
-            }
+                 // bounds check: don't let confused monsters try to run
+                 // off the map
+                 if (monster->x + mmov_x < 0
+                         || monster->x + mmov_x >= GXM)
+                 {
+                     mmov_x = 0;
+                 }
 
-            if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
-                && (mmov_x != 0 || mmov_y != 0))
-            {
-                monsters_fight(
-                    i,
-                    mgrd[monster->x + mmov_x][monster->y + mmov_y]);
+                 if (monster->y + mmov_y < 0
+                         || monster->y + mmov_y >= GYM)
+                 {
+                     mmov_y = 0;
+                 }
+
+                 if (grid_is_solid(
+                         grd[ monster->x + mmov_x ][ monster->y + mmov_y ]))
+                 {
+                     mmov_x = mmov_y = 0;
+                 }
+
+                 if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
+                     && (mmov_x != 0 || mmov_y != 0))
+                 {
+                     monsters_fight(
+                         i,
+                         mgrd[monster->x + mmov_x][monster->y + mmov_y]);
                 
-                brkk = true;
-                mmov_x = 0;
-                mmov_y = 0;
-            }
+                     brkk = true;
+                     mmov_x = 0;
+                     mmov_y = 0;
+                 }
+             }
+
+             if (brkk)
+                 continue;
         }
-
-        if (brkk)
-            continue;
-
         handle_nearby_ability( monster );
 
         beem.target_x = monster->target_x;
@@ -3832,78 +3890,80 @@ static void handle_monster_move(int i, monsters *monster)
                 continue;
         }
 
-        // see if we move into (and fight) an unfriendly monster
-        int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
-        if (targmon != NON_MONSTER
-            && targmon != i 
-            && !mons_aligned(i, targmon))
+        if (!mons_is_caught(monster))
         {
-            // figure out if they fight
-            if (monsters_fight(i, targmon))
+            // see if we move into (and fight) an unfriendly monster
+            int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
+            if (targmon != NON_MONSTER
+                && targmon != i
+                && !mons_aligned(i, targmon))
             {
-                if (testbits(monster->flags, MF_BATTY))
+                // figure out if they fight
+                if (monsters_fight(i, targmon))
                 {
-                    monster->behaviour = BEH_WANDER;
-                    monster->target_x = 10 + random2(GXM - 10);
-                    monster->target_y = 10 + random2(GYM - 10);
-                    // monster->speed_increment -= monster->speed;
-                }
+                    if (testbits(monster->flags, MF_BATTY))
+                    {
+                        monster->behaviour = BEH_WANDER;
+                        monster->target_x = 10 + random2(GXM - 10);
+                        monster->target_y = 10 + random2(GYM - 10);
+                        // monster->speed_increment -= monster->speed;
+                    }
 
-                mmov_x = 0;
-                mmov_y = 0;
-                brkk = true;
-            }
-        }
-
-        if (brkk)
-            continue;
-
-        if (monster->x + mmov_x == you.x_pos
-            && monster->y + mmov_y == you.y_pos)
-        {
-            bool isFriendly = mons_friendly(monster);
-            bool attacked = false;
-
-            if (!isFriendly)
-            {
-                monster_attack(i);
-                attacked = true;
-
-                if (testbits(monster->flags, MF_BATTY))
-                {
-                    monster->behaviour = BEH_WANDER;
-                    monster->target_x = 10 + random2(GXM - 10);
-                    monster->target_y = 10 + random2(GYM - 10);
+                    mmov_x = 0;
+                    mmov_y = 0;
+                    brkk = true;
                 }
             }
 
-            if ((monster->type == MONS_GIANT_SPORE
-                    || monster->type == MONS_BALL_LIGHTNING)
-                && monster->hit_points < 1)
-            {
-
-                // detach monster from the grid first, so it
-                // doesn't get hit by its own explosion (GDL)
-                mgrd[monster->x][monster->y] = NON_MONSTER;
-
-                spore_goes_pop(monster);
-                monster_cleanup(monster);
+            if (brkk)
                 continue;
-            }
 
-            if (attacked)
+            if (monster->x + mmov_x == you.x_pos
+                && monster->y + mmov_y == you.y_pos)
             {
-                mmov_x = 0;
-                mmov_y = 0;
-                continue;   //break;
+                bool isFriendly = mons_friendly(monster);
+                bool attacked = false;
+
+                if (!isFriendly)
+                {
+                    monster_attack(i);
+                    attacked = true;
+
+                    if (testbits(monster->flags, MF_BATTY))
+                    {
+                        monster->behaviour = BEH_WANDER;
+                        monster->target_x = 10 + random2(GXM - 10);
+                        monster->target_y = 10 + random2(GYM - 10);
+                    }
+                }
+
+                if ((monster->type == MONS_GIANT_SPORE
+                        || monster->type == MONS_BALL_LIGHTNING)
+                    && monster->hit_points < 1)
+                {
+
+                    // detach monster from the grid first, so it
+                    // doesn't get hit by its own explosion (GDL)
+                    mgrd[monster->x][monster->y] = NON_MONSTER;
+
+                    spore_goes_pop(monster);
+                    monster_cleanup(monster);
+                    continue;
+                }
+
+                if (attacked)
+                {
+                    mmov_x = 0;
+                    mmov_y = 0;
+                    continue;   //break;
+                }
             }
+
+            if (invalid_monster(monster) || mons_is_stationary(monster))
+                continue;
+
+            monster_move(monster);
         }
-
-        if (invalid_monster(monster) || mons_is_stationary(monster))
-            continue;
-
-        monster_move(monster);
-
         // reevaluate behaviour, since the monster's
         // surroundings have changed (it may have moved,
         // or died for that matter.  Don't bother for
@@ -4024,6 +4084,7 @@ static bool handle_pickup(monsters *monster)
         int hps_gained = 0;
         int max_eat = roll_dice( 1, 10 );
         int eaten = 0;
+        bool eaten_net = false;
 
         for (item = igrd[monster->x][monster->y]; 
              item != NON_ITEM && eaten < max_eat && hps_gained < 50;
@@ -4041,6 +4102,13 @@ static bool handle_pickup(monsters *monster)
 
                 hps_gained += (quant * item_mass( mitm[item] )) / 20 + quant;
                 eaten += quant;
+                
+                if (mons_is_caught(monster) && mitm[item].base_type == OBJ_MISSILES
+                    && mitm[item].sub_type == MI_THROWING_NET)
+                {
+                    monster->del_ench(ENCH_CAUGHT, true);
+                    eaten_net = true;
+                }
             }
             else
             {
@@ -4075,6 +4143,8 @@ static bool handle_pickup(monsters *monster)
                 mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
                      monsterNearby ? "" : " distant");
             }
+            if (eaten_net)
+                simple_monster_message(monster, " devours the net!");
 
             if (mons_class_flag( monster->type, M_SPLITS )) 
             {

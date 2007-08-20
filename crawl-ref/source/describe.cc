@@ -334,7 +334,7 @@ static const char *trap_names[] =
 {
     "dart", "arrow", "spear", "axe",
     "teleport", "amnesia", "blade",
-    "bolt", "zot", "needle",
+    "bolt", "net", "zot", "needle",
 };
 
 const char *trap_name(trap_type trap)
@@ -1373,6 +1373,29 @@ static std::string describe_ammo( const item_def &item )
         if (!is_throwable(item, you.body_size()))
             description += "Unfortunately, it is too long and awkward "
                            "for you to use.";
+        break;
+    case MI_THROWING_NET:
+        description += "A throwing net as used by gladiators. ";
+        if (!is_throwable(item, you.body_size()))
+            description += "Unfortunately, it is too large for you to throw. ";
+        if (item.plus < 0)
+        {
+            std::string how;
+            if (item.plus > -3)
+                how = "a little";
+            else if (item.plus > -5)
+                how = "somewhat";
+            else if (item.plus > -7)
+                how = "very";
+            else
+                how = "extremely";
+
+            description += "It looks ";
+            description += how;
+            description += " worn.";
+        }
+        else if (item.plus > 1)
+            description += "The net looks brand-new!";
         break;
     case MI_NONE:   // was eggplant
         description += "A purple vegetable. "

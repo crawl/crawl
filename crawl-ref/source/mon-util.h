@@ -302,6 +302,7 @@ bool ms_direct_nasty(spell_type monspell);
 bool ms_requires_tracer(spell_type mons_spell);
 
 bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell );
+bool ms_quick_get_away( const monsters *mon, spell_type monspell );
 bool ms_waste_of_time( const monsters *mon, spell_type monspell );
 bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell );
 
@@ -331,6 +332,7 @@ mon_attitude_type mons_attitude(const monsters *m);
 
 bool mons_behaviour_perceptible(const monsters *mons);
 bool mons_is_confused(const monsters *m);
+bool mons_is_caught(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
 bool mons_is_sleeping(const monsters *m);
 bool mons_is_batty(const monsters *m);

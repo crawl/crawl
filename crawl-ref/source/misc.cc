@@ -74,8 +74,6 @@
 #include "view.h"
 
 bool scramble(void);
-static bool trap_item(object_class_type base_type, char sub_type,
-                      char beam_x, char beam_y);
 static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison);
 
 // void place_chunks(int mcls, unsigned char rot_status, unsigned char chx,
@@ -811,6 +809,35 @@ void curare_hits_player(int agent, int degree)
             ouch( hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea" );
         }
         potion_effect(POT_SLOWING, 2 + random2(4 + degree));
+    }
+}
+
+void monster_caught_in_net(monsters *mon)
+{
+    if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
+        return;
+
+    if (mon->type == MONS_FIRE_VORTEX || mon->type == MONS_SPATIAL_VORTEX)
+        return;
+
+    if (!mons_is_caught(mon) && mon->add_ench(ENCH_CAUGHT))
+    {
+        if (mons_near(mon) && !player_monster_visible(mon))
+            mpr("Something gets caught in the net!");
+        else
+            simple_monster_message(mon, " is caught in the net!");
+    }
+}
+
+void player_caught_in_net()
+{
+    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        return;
+
+    if (!you.attribute[ATTR_CAUGHT])
+    {
+        you.attribute[ATTR_CAUGHT] = 10;
+        mpr("You become entangled in the net!");
     }
 }
 
@@ -1573,6 +1600,10 @@ void itrap( struct bolt &pbolt, int trapped )
         base_type = OBJ_MISSILES;
         sub_type = MI_NEEDLE;
         break;
+    case TRAP_NET:
+        base_type = OBJ_MISSILES;
+        sub_type = MI_THROWING_NET;
+        break;
     default:
         return;
     }
@@ -1655,6 +1686,29 @@ void handle_traps(char trt, int i, bool trap_known)
         }
         break;
 
+    case TRAP_NET:
+
+        if (trap_known && one_chance_in(3))
+            mpr("A net swings high above you.");
+        else
+        {
+            if (random2limit(player_evasion(), 40)
+                        + (random2(you.dex) / 3) + (trap_known ? 3 : 0) > 12)
+            {
+                mpr("A net drops to the ground!");
+            }
+            else
+            {
+                mpr("A large net falls onto you!");
+                player_caught_in_net();
+            }
+
+            trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].x, env.trap[i].y );
+            grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
+            env.trap[i].type = TRAP_UNASSIGNED;
+        }
+        break;
+        
     case TRAP_ZOT:
     default:
         mpr((trap_known) ? "You enter the Zot trap."
@@ -1707,7 +1761,17 @@ void disarm_trap( struct dist &disa )
             exercise(SK_TRAPS_DOORS, 1 + random2(you.your_level / 5));
         else
         {
-            handle_traps(env.trap[i].type, i, false);
+            if (env.trap[i].type == TRAP_NET &&
+                (env.trap[i].x != you.x_pos || env.trap[i].y != you.y_pos))
+            {
+                if (coinflip())
+                    return;
+
+                mpr("You stumble into the trap!");
+                move_player_to_grid( env.trap[i].x, env.trap[i].y, true, false, true);
+            }
+            else
+                handle_traps(env.trap[i].type, i, false);
 
             if (coinflip())
                 exercise(SK_TRAPS_DOORS, 1);
@@ -1723,7 +1787,9 @@ void disarm_trap( struct dist &disa )
     beam.target_x = you.x_pos + disa.dx;
     beam.target_y = you.y_pos + disa.dy;
 
-    if (env.trap[i].type != TRAP_BLADE
+    if (env.trap[i].type == TRAP_NET)
+        trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target_x, beam.target_y );
+    else if (env.trap[i].type != TRAP_BLADE
         && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
     {
         const int num_to_make = 10 + random2(you.skills[SK_TRAPS_DOORS]);
@@ -1741,6 +1807,156 @@ void disarm_trap( struct dist &disa )
     // reduced from 5 + random2(5)
     exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level / 5));
 }                               // end disarm_trap()
+
+// attempts to take a net off a given monster
+// Do not expect gratitude for this!
+// ----------------------------------
+void remove_net_from(monsters *mon)
+{
+    you.turn_is_over = true;
+    
+    int net, next;
+
+    for (net = igrd[mon->x][mon->y]; net != NON_ITEM; net = next)
+    {
+         next = mitm[net].link;
+
+         if (mitm[net].base_type == OBJ_MISSILES
+             && mitm[net].sub_type == MI_THROWING_NET)
+         {
+            break;
+         }
+    }
+    if (net == NON_ITEM)
+    {
+        mon->del_ench(ENCH_CAUGHT, true);
+        return;
+    }
+
+    // factor in whether monster is paralysed or invisible
+    int paralys = 0;
+    if (mons_is_paralysed(mon)) // makes this easier
+        paralys = random2(5);
+        
+    int invis = 0;
+    if (!player_monster_visible(mon)) // makes this harder
+        invis = 3 + random2(5);
+
+    bool net_destroyed = false;
+    if ( random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
+           <= random2( 2*mon->body_size(PSIZE_BODY) + 3 ) + invis)
+    {
+        if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex/2))
+        {
+            mitm[net].plus--;
+            mpr("You tear at the net.");
+            if (mitm[net].plus < -7)
+            {
+                mpr("Whoops! The net comes apart in your hands!");
+                net_destroyed = true;
+                dec_mitm_item_quantity( net, 1 );
+
+                mon->del_ench(ENCH_CAUGHT, true);
+
+            }
+        }
+
+        if (!net_destroyed)
+        {
+            if (player_monster_visible(mon))
+            {
+                mprf("You fail to remove the net from %s.",
+                     mon->name(DESC_NOCAP_THE).c_str());
+            }
+            else
+                mpr("You fail to remove the net.");
+        }
+
+        if (random2(you.dex) > 5 + random2( 2*mon->body_size(PSIZE_BODY) ))
+            exercise(SK_TRAPS_DOORS, 1 + random2(mon->body_size(PSIZE_BODY)/2));
+        return;
+    }
+     
+    mon->del_ench(ENCH_CAUGHT, true);
+    if (player_monster_visible(mon))
+        mprf("You free %s.", mon->name(DESC_NOCAP_THE).c_str());
+    else
+        mpr("You loosen the net.");
+
+}
+
+void free_self_from_net(bool damage_net)
+{
+    int net, next;
+
+    for (net = igrd[you.x_pos][you.y_pos]; net != NON_ITEM; net = next)
+    {
+         next = mitm[net].link;
+         if (mitm[net].base_type == OBJ_MISSILES
+             && mitm[net].sub_type == MI_THROWING_NET)
+         {
+             break;
+         }
+    }
+
+    if (net == NON_ITEM) // really shouldn't happen!
+    {
+        you.attribute[ATTR_CAUGHT] = 0;
+        return;
+    }
+    int hold = mitm[net].plus;
+
+    if (damage_net)
+    {
+        mpr("You struggle against the net.");
+        int damage = 1;
+
+        // extra damage for cutting weapons
+        if (you.equip[EQ_WEAPON] != -1
+            && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]))
+        {
+            damage++;
+        }
+        
+        if (you.body_size(PSIZE_BODY) > SIZE_MEDIUM)
+            damage++;
+            
+        if (hold < 0 && !one_chance_in(-hold/2))
+            damage++;
+         
+        if (you.duration[DUR_BERSERKER])
+            damage *= 2;
+            
+        mitm[net].plus -= damage;
+        
+        if (mitm[net].plus < -7)
+        {
+            mpr("You rip the net and break free!");
+            dec_mitm_item_quantity( net, 1 );
+
+            you.attribute[ATTR_CAUGHT] = 0;
+            return;
+        }
+   }
+   else // you try to escape
+   {
+        mpr("You struggle to escape from the net.");
+        you.attribute[ATTR_CAUGHT]--;
+
+        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
+            you.attribute[ATTR_CAUGHT]--;
+            
+        if (hold < 0 && !one_chance_in(-hold/2))
+            you.attribute[ATTR_CAUGHT]--;
+
+        if (you.attribute[ATTR_CAUGHT] <= 0)
+        {
+            mpr("You break free from the net!");
+            you.attribute[ATTR_CAUGHT] = 0;
+            return;
+        }
+   }
+}
 
 std::string weird_writing()
 {
@@ -2056,6 +2272,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BLADE:
     case TRAP_BOLT:
     case TRAP_NEEDLE:
+    case TRAP_NET:
     default:                    // what *would* be the default? {dlb}
         return (DNGN_TRAP_MECHANICAL);
     }

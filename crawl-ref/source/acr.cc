@@ -2572,6 +2572,14 @@ static void open_door(int move_x, int move_y, bool check_confused)
     struct dist door_move;
     int dx, dy;             // door x, door y
 
+    if (you.attribute[ATTR_CAUGHT])
+    {
+        // struggles against net, damaging it
+        free_self_from_net(true);
+        you.turn_is_over = true;
+        return;
+    }
+
     if (check_confused && you.duration[DUR_CONF] && !one_chance_in(3))
     {
         move_x = random2(3) - 1;
@@ -2591,6 +2599,22 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
         if (mon != NON_MONSTER && player_can_hit_monster(&menv[mon]))
         {
+
+            if (mons_is_caught(&menv[mon]))
+            {
+
+                std::string prompt  = "Do you want to try to take the net off ";
+                            prompt += (&menv[mon])->name(DESC_NOCAP_THE);
+                            prompt += '?';
+
+                if (yesno(prompt.c_str(), true, 'n'))
+                {
+                    remove_net_from(&menv[mon]);
+                    return;
+                }
+
+            }
+
             you_attack(mgrd[dx][dy], true);
             you.turn_is_over = true;
 
@@ -2931,6 +2955,14 @@ static void move_player(int move_x, int move_y)
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
+
+    if (you.attribute[ATTR_CAUGHT])
+    {
+        // tries to escape from net (without damaging it, takes longer)
+        free_self_from_net(false);
+        you.turn_is_over = true;
+        return;
+    }
 
     if (you.duration[DUR_CONF])
     {

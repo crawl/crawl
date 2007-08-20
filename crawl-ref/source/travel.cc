@@ -908,7 +908,8 @@ command_type travel()
     command_type result = CMD_NO_CMD;
 
     // Abort travel/explore if you're confused or a key was pressed.
-    if (kbhit() || you.duration[DUR_CONF])
+    // Or if you got caught in a net.
+    if (kbhit() || you.duration[DUR_CONF] || you.attribute[ATTR_CAUGHT])
     {
         stop_running();
         return CMD_NO_CMD;

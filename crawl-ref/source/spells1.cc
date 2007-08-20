@@ -117,6 +117,9 @@ int blink(int pow, bool high_level_controlled_blink)
         }
         else
         {
+            if (you.attribute[ATTR_CAUGHT])
+                you.attribute[ATTR_CAUGHT] = 0;
+
             move_player_to_grid(beam.tx, beam.ty, false, true, true);
 
             // controlling teleport contaminates the player -- bwr
@@ -164,6 +167,9 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     else
     {
         mpr("You blink.");
+        
+        if (you.attribute[ATTR_CAUGHT])
+            you.attribute[ATTR_CAUGHT] = 0;
 
         succ = true;
         you.moveto(tx, ty);

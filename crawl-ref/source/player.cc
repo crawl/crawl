@@ -5340,6 +5340,11 @@ bool player::confused() const
     return (duration[DUR_CONF]);
 }
 
+bool player::caught() const
+{
+    return (attribute[ATTR_CAUGHT]);
+}
+
 int player::shield_block_penalty() const
 {
     return (5 * shield_blocks * shield_blocks);

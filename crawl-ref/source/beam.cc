@@ -2389,6 +2389,13 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         return;
     }
 
+    // doesn't get destroyed by throwing
+    if (item->sub_type == MI_THROWING_NET)
+    {
+        copy_item_to_grid( *item, x, y, 1 );
+        return;
+    }
+
     if (YOU_KILL(beam.thrower)) // you threw it
     {
         int chance;
@@ -3342,6 +3349,9 @@ static int affect_player( bolt &beam )
             poison_player( 1 + random2(3) );
         }
     }
+    
+    if (beam.name.find("throwing net") != std::string::npos)
+        player_caught_in_net();
 
     if (beam.name.find("curare") != std::string::npos)
     {
@@ -3694,6 +3704,9 @@ static int affect_monster(bolt &beam, monsters *mon)
                 && YOU_KILL(beam.thrower))
             mprf(MSGCH_SOUND, "The %s hits something.", beam.name.c_str());
     }
+
+    if (beam.name.find("throwing net") != std::string::npos)
+        monster_caught_in_net(mon);
 
     // note that hurt_final was calculated above, so we don't need it again.
     // just need to apply flavoured specials (since we called with

@@ -190,6 +190,9 @@ static int newwave_missile_colour(const item_def &item)
     case MI_JAVELIN:
         item_colour = RED;
         break;
+    case MI_THROWING_NET:
+        item_colour = DARKGRAY;
+        break;
     default:
         // huh?
         item_colour = LIGHTCYAN;
@@ -215,6 +218,9 @@ static int classic_missile_colour(const item_def &item)
         break;
     case MI_NEEDLE:
         item_colour = WHITE;
+        break;
+    case MI_THROWING_NET:
+        item_colour = DARKGRAY;
         break;
     default:
         item_colour = LIGHTCYAN;
