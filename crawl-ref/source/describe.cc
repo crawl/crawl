@@ -3920,10 +3920,9 @@ static std::string religion_help( god_type god )
                 + std::string(god_name(god)) + " to bless a ";
             result += (god == GOD_ZIN ? "mace" : "long sword");
             result += ".";
-            break;
         }
         break;
-           
+
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
@@ -3947,8 +3946,9 @@ static std::string religion_help( god_type god )
         break;
 
     case GOD_VEHUMET:
-        result += "Vehumet assists you in casting Conjurations"
-                  " and Summonings during prayer.";
+        if (you.piety >= 50)
+            result += "Vehumet assists you in casting Conjurations"
+                      " and Summonings during prayer.";
         break;
 
     default:

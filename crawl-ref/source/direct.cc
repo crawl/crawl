@@ -619,7 +619,7 @@ void direction(dist& moves, targeting_type restricts,
             if ( moves.isTarget &&
                  moves.tx == you.x_pos && moves.ty == you.y_pos &&
                  mode == TARG_ENEMY && Options.confirm_self_target &&
-                 !yesno("Really target yourself?"))
+                 !yesno("Really target yourself?", false, 'n'))
             {
                 mesclr();
                 show_prompt = true;

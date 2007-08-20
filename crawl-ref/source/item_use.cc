@@ -271,7 +271,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     // warn player about low str/dex or throwing skill
-    wield_warning();
+    if (show_weff_messages)
+        wield_warning();
 
     // time calculations
     you.time_taken /= 2;
@@ -2051,7 +2052,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // They don't do any damage!
                 baseDam = 0;
                 exDamBonus = 0;
-
+                ammoDamBonus = 0;
+                
                 // but accuracy is important for this one
                 baseHit = 1;
                 exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 7 / 2);
