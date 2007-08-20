@@ -233,9 +233,12 @@ void mons_trap(struct monsters *monster)
                 monster_caught_in_net(monster);
             }
         }
-        
         trap_item( OBJ_MISSILES, MI_THROWING_NET,
                    env.trap[which_trap].x, env.trap[which_trap].y );
+                   
+        if (mons_is_caught(monster))
+            mark_net_trapping(monster->x, monster->y);
+
         grd[env.trap[which_trap].x][env.trap[which_trap].y] = DNGN_FLOOR;
         env.trap[which_trap].type = TRAP_UNASSIGNED;
         break;

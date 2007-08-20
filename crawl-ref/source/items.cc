@@ -1302,12 +1302,10 @@ int find_free_slot(const item_def &i)
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
     if (you.attribute[ATTR_CAUGHT] && mitm[obj].base_type == OBJ_MISSILES
-        && mitm[obj].sub_type == MI_THROWING_NET)
+        && mitm[obj].sub_type == MI_THROWING_NET && item_is_stationary(mitm[obj]))
     {
-        quant_got--;
         mpr("You cannot pick up the net that traps you!");
-        if (!quant_got)
-            return (1);
+        return (1);
     }
 
     int retval = quant_got;

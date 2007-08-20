@@ -2992,13 +2992,14 @@ int cast_apportation(int pow)
         
         // if we apport a net, free the monster under it
         if (mitm[item].base_type == OBJ_MISSILES
-            && mitm[item].sub_type == MI_THROWING_NET)
+            && mitm[item].sub_type == MI_THROWING_NET
+            && item_is_stationary(mitm[item]))
         {
            int mon = mgrd[ beam.tx ][ beam.ty ];
-           if (mon != NON_MONSTER && mons_is_caught(&menv[mon]))
-           {
+           remove_item_stationary(mitm[item]);
+           
+           if (mon != NON_MONSTER)
                (&menv[mon])->del_ench(ENCH_CAUGHT, true);
-           }
         }
     }
     else

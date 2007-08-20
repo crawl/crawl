@@ -812,6 +812,65 @@ void curare_hits_player(int agent, int degree)
     }
 }
 
+// returns the number of a net on a given square
+// if trapped only stationary ones are counted
+// otherwise the first net found is returned
+int get_trapping_net(int x, int y, bool trapped)
+{
+    int net, next;
+
+    for (net = igrd[x][y]; net != NON_ITEM; net = next)
+    {
+         next = mitm[net].link;
+
+         if (mitm[net].base_type == OBJ_MISSILES
+             && mitm[net].sub_type == MI_THROWING_NET
+             && (!trapped || item_is_stationary(mitm[net])))
+         {
+             return (net);
+         }
+    }
+    return (NON_ITEM);
+}
+
+// if there are more than one net on this square
+// split off one of them for checking/setting values
+static void maybe_split_nets(item_def &item, int x, int y)
+{
+    if (item.quantity == 1)
+    {
+        set_item_stationary(item);
+        return;
+    }
+
+    item_def it;
+
+    it.base_type = item.base_type;
+    it.sub_type = item.sub_type;
+    it.plus = item.plus;
+    it.plus2 = item.plus2;
+    it.flags = item.flags;
+    it.special = item.special;
+    it.quantity = --item.quantity;
+    item_colour(it);
+
+    item.quantity = 1;
+    set_item_stationary(item);
+
+    copy_item_to_grid( it, x, y );
+}
+
+void mark_net_trapping(int x, int y)
+{
+    int net = get_trapping_net(x,y);
+    if (net == NON_ITEM)
+    {
+        net = get_trapping_net(x,y, false);
+        if (net != NON_ITEM)
+            maybe_split_nets(mitm[net], x, y);
+    }
+}
+
 void monster_caught_in_net(monsters *mon)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
@@ -1704,6 +1763,9 @@ void handle_traps(char trt, int i, bool trap_known)
             }
 
             trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].x, env.trap[i].y );
+            if (you.attribute[ATTR_CAUGHT])
+                mark_net_trapping(you.x_pos, you.y_pos);
+
             grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
             env.trap[i].type = TRAP_UNASSIGNED;
         }
@@ -1815,18 +1877,8 @@ void remove_net_from(monsters *mon)
 {
     you.turn_is_over = true;
     
-    int net, next;
+    int net = get_trapping_net(mon->x, mon->y);
 
-    for (net = igrd[mon->x][mon->y]; net != NON_ITEM; net = next)
-    {
-         next = mitm[net].link;
-
-         if (mitm[net].base_type == OBJ_MISSILES
-             && mitm[net].sub_type == MI_THROWING_NET)
-         {
-            break;
-         }
-    }
     if (net == NON_ITEM)
     {
         mon->del_ench(ENCH_CAUGHT, true);
@@ -1853,11 +1905,9 @@ void remove_net_from(monsters *mon)
             if (mitm[net].plus < -7)
             {
                 mpr("Whoops! The net comes apart in your hands!");
-                net_destroyed = true;
-                dec_mitm_item_quantity( net, 1 );
-
                 mon->del_ench(ENCH_CAUGHT, true);
-
+                destroy_item(net);
+                net_destroyed = true;
             }
         }
 
@@ -1878,6 +1928,8 @@ void remove_net_from(monsters *mon)
     }
      
     mon->del_ench(ENCH_CAUGHT, true);
+    remove_item_stationary(mitm[net]);
+    
     if (player_monster_visible(mon))
         mprf("You free %s.", mon->name(DESC_NOCAP_THE).c_str());
     else
@@ -1887,17 +1939,7 @@ void remove_net_from(monsters *mon)
 
 void free_self_from_net(bool damage_net)
 {
-    int net, next;
-
-    for (net = igrd[you.x_pos][you.y_pos]; net != NON_ITEM; net = next)
-    {
-         next = mitm[net].link;
-         if (mitm[net].base_type == OBJ_MISSILES
-             && mitm[net].sub_type == MI_THROWING_NET)
-         {
-             break;
-         }
-    }
+    int net = get_trapping_net(you.x_pos, you.y_pos);
 
     if (net == NON_ITEM) // really shouldn't happen!
     {
@@ -1953,6 +1995,7 @@ void free_self_from_net(bool damage_net)
         {
             mpr("You break free from the net!");
             you.attribute[ATTR_CAUGHT] = 0;
+            remove_item_stationary(mitm[net]);
             return;
         }
    }
@@ -2245,7 +2288,8 @@ bool trap_item(object_class_type base_type, char sub_type,
 
         // don't want to go overboard here. Will only generate up to three
         // separate trap items, or less if there are other items present.
-        if (mitm[ igrd[beam_x][beam_y] ].link != NON_ITEM)
+        if (mitm[ igrd[beam_x][beam_y] ].link != NON_ITEM
+            && (item.base_type != OBJ_MISSILES || item.sub_type != MI_THROWING_NET))
         {
             if (mitm[ mitm[ igrd[beam_x][beam_y] ].link ].link != NON_ITEM)
                 return (false);

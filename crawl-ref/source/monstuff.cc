@@ -1171,18 +1171,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     {
         if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
         {
-            int net, next;
-            for (net = igrd[monster->x][monster->y]; net != NON_ITEM; net = next)
-            {
-                 next = mitm[net].link;
-
-                 if (mitm[net].base_type == OBJ_MISSILES
-                     && mitm[net].sub_type == MI_THROWING_NET)
-                 {
-                     break;
-                 }
-            }
-            dec_mitm_item_quantity( net, 1 );
+            int net = get_trapping_net(monster->x, monster->y);
+            if (net != NON_ITEM)
+                destroy_item(net);
 
             if (see_grid(monster->x, monster->y))
             {

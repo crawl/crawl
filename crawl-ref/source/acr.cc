@@ -1010,6 +1010,13 @@ static void go_upstairs()
         return;
     }
     
+    
+    if (you.attribute[ATTR_CAUGHT])
+    {
+        mpr("You're trapped in a net!");
+        return;
+    }
+
     if (ygrd == DNGN_ENTER_SHOP)
     {
         if ( you.duration[DUR_BERSERKER] )
@@ -1037,6 +1044,11 @@ static void go_downstairs()
         return;
     }
 
+    if (you.attribute[ATTR_CAUGHT])
+    {
+        mpr("You're trapped in a net!");
+        return;
+    }
     tag_followers();  // only those beside us right now can follow
     start_delay( DELAY_DESCENDING_STAIRS,
                  1 + (you.burden_state > BS_UNENCUMBERED),
@@ -1244,6 +1256,11 @@ void process_command( command_type cmd )
            canned_msg(MSG_PRESENT_FORM);
            break;
         }
+        else if (you.attribute[ATTR_CAUGHT])
+        {
+           mpr("You cannot throw anything while trapped in a net!");
+           break;
+        }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
         throw_anything();
@@ -1253,6 +1270,11 @@ void process_command( command_type cmd )
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
         {
            canned_msg(MSG_PRESENT_FORM);
+           break;
+        }
+        else if (you.attribute[ATTR_CAUGHT])
+        {
+           mpr("You cannot shoot anything while trapped in a net!");
            break;
         }
         if (Options.tutorial_left)

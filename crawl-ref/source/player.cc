@@ -3295,6 +3295,9 @@ void display_char_status()
     if (player_is_levitating())
         mpr( "You are hovering above the floor." );
 
+    if (you.attribute[ATTR_CAUGHT])
+        mpr( "You are trapped in a net." );
+
     if (you.duration[DUR_POISONING])
     { 
         mprf("You are %s poisoned.",

@@ -26,6 +26,11 @@ bool item_known_uncursed( const item_def &item );
 void do_curse_item(  item_def &item );
 void do_uncurse_item(  item_def &item );
 
+// stationary:
+void set_item_stationary( item_def &item );
+void remove_item_stationary( item_def &item );
+bool item_is_stationary( const item_def &item );
+
 // ident:
 bool item_ident( const item_def &item, unsigned long flags );
 void set_ident_flags( item_def &item, unsigned long flags );

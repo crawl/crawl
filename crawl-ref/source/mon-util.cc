@@ -3662,10 +3662,15 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CAUGHT:
+    {
+        int net = get_trapping_net(x,y);
+        if (net != NON_ITEM)
+            remove_item_stationary(mitm[net]);
+            
         if (!quiet)
             simple_monster_message(this, " breaks free.");
         break;
-
+    }
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
         add_ench( mon_enchant(ENCH_ABJ) );
@@ -3896,17 +3901,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (mons_is_paralysed(this) || this->behaviour == BEH_SLEEP)
             break;
         
-        int net, next;
-        for (net = igrd[x][y]; net != NON_ITEM; net = next)
-        {
-             next = mitm[net].link;
-
-             if (mitm[net].base_type == OBJ_MISSILES
-                 && mitm[net].sub_type == MI_THROWING_NET)
-             {
-                break;
-             }
-        }
+        int net = get_trapping_net(x,y);
 
         if (net == NON_ITEM) // really shouldn't happen!
         {
@@ -3998,7 +3993,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                         mpr("All of a sudden the net rips apart!");
                     }
                 }
-                dec_mitm_item_quantity( net, 1 );
+                destroy_item(net);
 
                 del_ench(ENCH_CAUGHT, true);
             }

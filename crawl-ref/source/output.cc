@@ -1466,6 +1466,15 @@ std::string status_mut_abilities()
     else if (!you.duration[DUR_HASTE] && you.duration[DUR_SWIFTNESS])
         text += "swift, ";
 
+    if (you.disease
+        || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
+    {
+        text += "non-regenerating, ";
+    }
+
+    if (you.attribute[ATTR_CAUGHT])
+        text += "trapped, ";
+
     const int mr = player_res_magic();
     snprintf(info, INFO_SIZE, "%s resistant to magic, ",
              (mr <  10) ? "not" :
@@ -1475,6 +1484,7 @@ std::string status_mut_abilities()
              (mr < 120) ? "very" :
              (mr < 140) ? "extremely" :
              "incredibly");
+             
     text += info;
 
     // character evaluates their ability to sneak around:
@@ -1492,12 +1502,6 @@ std::string status_mut_abilities()
           : "incredibly " );
 
     text += info;
-
-    if (you.disease 
-        || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
-    {
-        text += "non-regenerating";
-    }
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {

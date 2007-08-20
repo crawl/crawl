@@ -2393,6 +2393,14 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     if (item->sub_type == MI_THROWING_NET)
     {
         copy_item_to_grid( *item, x, y, 1 );
+        
+        if (you.x_pos == x && you.y_pos == y && !you.attribute[ATTR_CAUGHT]
+            || mgrd[x][y] == NON_MONSTER || !mons_is_caught(&menv[mgrd[x][y]]))
+        {
+            return;
+        }
+        
+        mark_net_trapping(x,y);
         return;
     }
 

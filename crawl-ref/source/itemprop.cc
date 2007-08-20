@@ -452,6 +452,24 @@ void do_uncurse_item( item_def &item )
 }
 
 //
+// Is item stationary (cannot be picked up?)
+//
+void set_item_stationary( item_def &item )
+{
+    item.flags |= ISFLAG_STATIONARY;
+}
+
+void remove_item_stationary( item_def &item )
+{
+    item.flags &= (~ISFLAG_STATIONARY);
+}
+
+bool item_is_stationary( const item_def &item )
+{
+    return (item.flags & ISFLAG_STATIONARY);
+}
+
+//
 // Item identification status:
 //
 bool item_ident( const item_def &item, unsigned long flags )

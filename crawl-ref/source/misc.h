@@ -62,6 +62,8 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
  * called from: acr - misc
  * *********************************************************************** */
 void handle_traps(char trt, int i, bool trap_known);
+int get_trapping_net(int x, int y, bool trapped = true);
+void mark_net_trapping(int x, int y);
 void monster_caught_in_net(monsters *mon);
 void player_caught_in_net(void);
 
