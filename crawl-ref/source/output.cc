@@ -556,6 +556,12 @@ void print_stats(void)
             cprintf( "Rot " );
         }
 
+        if (you.attribute[ATTR_CAUGHT])
+        {
+            textcolor( RED );
+            cprintf( "Held " );
+        }
+
         if (you.backlit())
         {
             textcolor(
@@ -1473,7 +1479,7 @@ std::string status_mut_abilities()
     }
 
     if (you.attribute[ATTR_CAUGHT])
-        text += "trapped, ";
+        text += "held, ";
 
     const int mr = player_res_magic();
     snprintf(info, INFO_SIZE, "%s resistant to magic, ",

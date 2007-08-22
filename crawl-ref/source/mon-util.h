@@ -354,6 +354,7 @@ bool check_mons_resist_magic( const monsters *monster, int pow );
 
 bool mons_class_is_stationary(int monsclass);
 bool mons_is_stationary(const monsters *mons);
+bool mons_is_insubstantial(int type);
 bool mons_is_submerged( const monsters *mon );
 
 bool invalid_monster(const monsters *mons);

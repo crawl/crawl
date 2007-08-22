@@ -3729,6 +3729,18 @@ static void give_ammo(monsters *mon, int level,
             item_race  = MAKE_ITEM_ORCISH;
             qty = random_range(4, 7);
             break;
+
+        case MONS_DRACONIAN_KNIGHT:
+        case MONS_GNOLL:
+        case MONS_HILL_GIANT:
+            if (one_chance_in(20))
+            {
+                weap_class = OBJ_MISSILES;
+                weap_type = MI_THROWING_NET;
+                qty = 1;
+            }
+            break;
+
         }
 
         if (weap_type == -1)

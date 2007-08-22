@@ -3296,7 +3296,7 @@ void display_char_status()
         mpr( "You are hovering above the floor." );
 
     if (you.attribute[ATTR_CAUGHT])
-        mpr( "You are trapped in a net." );
+        mpr( "You are held in a net." );
 
     if (you.duration[DUR_POISONING])
     { 

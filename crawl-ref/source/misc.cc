@@ -871,13 +871,25 @@ void mark_net_trapping(int x, int y)
     }
 }
 
-void monster_caught_in_net(monsters *mon)
+void monster_caught_in_net(monsters *mon, bolt &pbolt)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
 
-    if (mon->type == MONS_FIRE_VORTEX || mon->type == MONS_SPATIAL_VORTEX)
+    if (mons_is_insubstantial(mon->type))
+    {
+        if (mons_near(mon) && player_monster_visible(mon))
+            mprf("The net passes right through %s!", mon->name(DESC_NOCAP_THE).c_str());
         return;
+    }
+
+    const monsters* mons = static_cast<const monsters*>(mon);
+    bool mon_flies = mons->flies();
+    if (mon_flies && !mons_is_confused(mons))
+    {
+        simple_monster_message(mon, " darts out from under the net!");
+        return;
+    }
 
     if (!mons_is_caught(mon) && mon->add_ench(ENCH_CAUGHT))
     {
@@ -885,6 +897,12 @@ void monster_caught_in_net(monsters *mon)
             mpr("Something gets caught in the net!");
         else
             simple_monster_message(mon, " is caught in the net!");
+
+        if (mon_flies)
+        {
+            simple_monster_message(mon, " falls like a stone!");
+            mons_check_pool(mon, pbolt.killer(), pbolt.beam_source);
+        }
     }
 }
 
@@ -893,11 +911,26 @@ void player_caught_in_net()
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
 
+    if (you.flies() && !you.confused())
+    {
+        mpr("You dart out from under the net!");
+        return;
+    }
+
     if (!you.attribute[ATTR_CAUGHT])
     {
         you.attribute[ATTR_CAUGHT] = 10;
         mpr("You become entangled in the net!");
+        
+        // I guess levitation works differently, keeping both you
+        // and the net hovering above the floor
+        if (you.flies())
+        {
+            mpr("You fall like a stone!");
+            fall_into_a_pool(you.x_pos, you.y_pos, false, grd[you.x_pos][you.y_pos]);
+        }
     }
+    
 }
 
 void merfolk_start_swimming(void)

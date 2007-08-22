@@ -347,6 +347,38 @@ bool mons_is_stationary(const monsters *mons)
     return (mons_class_is_stationary(mons->type));
 }
 
+// returns whether a monster is non-solid
+// and thus can't be affected by some traps
+bool mons_is_insubstantial(int type)
+{
+     switch(type)
+     {
+       // vortices
+       case MONS_FIRE_VORTEX:
+       case MONS_SPATIAL_VORTEX:
+       // elementals
+       case MONS_FIRE_ELEMENTAL:
+       case MONS_AIR_ELEMENTAL:
+       case MONS_WATER_ELEMENTAL:
+       // vapours
+       case MONS_INSUBSTANTIAL_WISP:
+       case MONS_VAPOUR:
+       // ghosts and some undead
+       case MONS_PLAYER_GHOST:
+       case MONS_HUNGRY_GHOST:
+       case MONS_SHADOW:
+       case MONS_SMOKE_DEMON:
+       case MONS_SHADOW_WRAITH:
+       // others
+       case MONS_BALL_LIGHTNING:
+       case MONS_GIANT_SPORE:
+       case MONS_ORB_OF_FIRE:
+           return true;
+       default:
+           return false;
+     }
+}
+
 bool mons_behaviour_perceptible(const monsters *mons)
 {
     return (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
@@ -2410,6 +2442,9 @@ bool monsters::can_use_missile(const item_def &item) const
     if (item.base_type != OBJ_MISSILES)
         return (false);
 
+    if (item.sub_type == MI_THROWING_NET && body_size(PSIZE_BODY) < SIZE_MEDIUM)
+        return (false);
+
     if (item.sub_type == MI_LARGE_ROCK && !can_throw_rocks())
         return (false);
 
@@ -3920,7 +3955,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             
         // smaller monsters can escape more quickly
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
-            && !has_ench(ENCH_BERSERK))
+            && !has_ench(ENCH_BERSERK) && type != MONS_DANCING_WEAPON)
         {
             if (mons_near(this) && !player_monster_visible(this))
                 mpr("Something wriggles in the net.");
@@ -3957,6 +3992,16 @@ void monsters::apply_enchantment(const mon_enchant &me)
             if (random2(SIZE_GIANT - mon_size) <= mon_size)
                 damage++;
 
+            // handled specially to make up for its small size
+            if (type == MONS_DANCING_WEAPON)
+            {
+                damage += one_chance_in(3);
+
+                if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
+                    damage++;
+            }
+            
+            
             // extra damage for large (50%) and big (always)
             if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
                 damage++;

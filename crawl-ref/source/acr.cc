@@ -1013,7 +1013,7 @@ static void go_upstairs()
     
     if (you.attribute[ATTR_CAUGHT])
     {
-        mpr("You're trapped in a net!");
+        mpr("You're held in a net!");
         return;
     }
 
@@ -1046,7 +1046,7 @@ static void go_downstairs()
 
     if (you.attribute[ATTR_CAUGHT])
     {
-        mpr("You're trapped in a net!");
+        mpr("You're held in a net!");
         return;
     }
     tag_followers();  // only those beside us right now can follow
@@ -1258,7 +1258,7 @@ void process_command( command_type cmd )
         }
         else if (you.attribute[ATTR_CAUGHT])
         {
-           mpr("You cannot throw anything while trapped in a net!");
+           mpr("You cannot throw anything while held in a net!");
            break;
         }
         if (Options.tutorial_left)
@@ -1274,7 +1274,7 @@ void process_command( command_type cmd )
         }
         else if (you.attribute[ATTR_CAUGHT])
         {
-           mpr("You cannot shoot anything while trapped in a net!");
+           mpr("You cannot shoot anything while held in a net!");
            break;
         }
         if (Options.tutorial_left)

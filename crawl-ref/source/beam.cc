@@ -3714,7 +3714,7 @@ static int affect_monster(bolt &beam, monsters *mon)
     }
 
     if (beam.name.find("throwing net") != std::string::npos)
-        monster_caught_in_net(mon);
+        monster_caught_in_net(mon, beam);
 
     // note that hurt_final was calculated above, so we don't need it again.
     // just need to apply flavoured specials (since we called with

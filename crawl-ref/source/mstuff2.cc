@@ -230,7 +230,7 @@ void mons_trap(struct monsters *monster)
                 }
                 msg += "!";
                 mpr(msg.c_str());
-                monster_caught_in_net(monster);
+                monster_caught_in_net(monster, beem);
             }
         }
         trap_item( OBJ_MISSILES, MI_THROWING_NET,
