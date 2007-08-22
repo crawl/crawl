@@ -150,6 +150,7 @@ bool grid_is_solid(const coord_def &c);
 bool grid_is_trap(dungeon_feature_type grid);
 command_type grid_stair_direction(dungeon_feature_type grid);
 bool grid_sealable_portal(dungeon_feature_type grid);
+bool grid_is_portal(dungeon_feature_type grid);
 
 bool grid_is_water(dungeon_feature_type grid);
 bool grid_is_watery(dungeon_feature_type grid);

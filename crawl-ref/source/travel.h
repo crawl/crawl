@@ -130,7 +130,8 @@ enum explore_stop_type
     ES_GREEDY_PICKUP      = 0x04,
     ES_STAIR              = 0x08,
     ES_SHOP               = 0x10,
-    ES_ALTAR              = 0x20
+    ES_ALTAR              = 0x20,
+    ES_PORTAL             = 0x40
 };
 
 ////////////////////////////////////////////////////////////////////////////

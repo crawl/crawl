@@ -203,6 +203,10 @@ bool grid_sealable_portal(dungeon_feature_type grid)
     }
 }
 
+bool grid_is_portal(dungeon_feature_type grid)
+{
+    return (grid == DNGN_ENTER_PORTAL_VAULT || grid == DNGN_EXIT_PORTAL_VAULT);
+}
 
 command_type grid_stair_direction(dungeon_feature_type grid)
 {
@@ -959,15 +963,25 @@ static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
 
 static void climb_message(dungeon_feature_type stair, bool going_up)
 {
-    if (grid_is_rock_stair(stair))
+    if (grid_is_portal(stair))
+        mpr("You pass through the gateway.");
+    else if (grid_is_rock_stair(stair))
     {
         if (going_up)
             mpr("A mysterious force pulls you upwards.");
         else
-            mpr("You slide downwards.");
+        {
+            mprf("You %s downwards.", you.flies()? "fly" :
+                                     (player_is_levitating()? "float" :
+                                      "slide"));
+        }
     }
     else
-        mpr(going_up? "You climb upwards." : "You climb downwards.");
+    {
+        mprf("You %s %swards.", you.flies()? "fly" :
+                                (player_is_levitating()? "float" : "climb"),
+                                going_up? "up": "down");
+    }
 }
 
 static void leaving_level_now()

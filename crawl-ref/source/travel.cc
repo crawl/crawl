@@ -716,6 +716,7 @@ bool prompt_stop_explore(int es_why)
 #define ES_shop  (Options.explore_stop & ES_SHOP)
 #define ES_stair (Options.explore_stop & ES_STAIR)
 #define ES_altar (Options.explore_stop & ES_ALTAR)
+#define ES_portal (Options.explore_stop & ES_PORTAL)
 
 /*
  * Adds interesting stuf on (x, y) to explore_discoveries.
@@ -3708,6 +3709,12 @@ void explore_discoveries::found_feature(const coord_def &pos,
         const named_thing<int> stair(cleaned_feature_description(grid), 1);
         add_stair(stair);
         es_flags |= ES_STAIR;
+    }
+    else if (grid_is_portal(grid) && ES_portal)
+    {
+        const named_thing<int> portal(cleaned_feature_description(grid), 1);
+        add_stair(portal);
+        es_flags |= ES_PORTAL;
     }
     else if (is_altar(grid)
              && ES_altar
