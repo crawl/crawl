@@ -212,7 +212,10 @@ int cast_smiting(int power, dist &beam)
         if (monster->hit_points < 1)
             monster_die(monster, KILL_YOU, 0);
         else
-            print_wounds(monster);
+        {
+            const monsters *mons = static_cast<const monsters*>(monster);
+            print_wounds(mons);
+        }
 
         success = true;
     }

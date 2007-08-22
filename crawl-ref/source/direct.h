@@ -53,6 +53,7 @@ bool in_vlos(const coord_def &pos);
 void terse_describe_square(const coord_def &c);
 void full_describe_square(const coord_def &c);
 void describe_floor();
+std::string get_monster_desc(const monsters *mon, bool full_desc = true);
 
 int dos_direction_unmunge(int doskey);
 

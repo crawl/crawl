@@ -3731,7 +3731,10 @@ static int affect_monster(bolt &beam, monsters *mon)
     else
     {
         if (thrower == KILL_YOU_MISSILE && mons_near(mon))
-            print_wounds(mon);
+        {
+            const monsters *mons = static_cast<const monsters*>(mon);
+            print_wounds(mons);
+        }
 
         // sticky flame
         if (beam.name == "sticky flame")

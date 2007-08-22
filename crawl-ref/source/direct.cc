@@ -1512,72 +1512,55 @@ std::string feature_description(int mx, int my, description_level_type dtype,
     }
 }
 
-static void describe_mons_enchantment(const monsters &mons,
-                                      const mon_enchant &ench,
-                                      bool paralysed)
+static std::string describe_mons_enchantment(const monsters &mons,
+                                             const mon_enchant &ench,
+                                             bool paralysed)
 {
     // Suppress silly-looking combinations, even if they're
     // internally valid.
     if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE))
-        return;
+        return "";
 
     if (ench.ench == ENCH_HASTE && mons.has_ench(ENCH_BERSERK))
-        return;
-
-    std::string msg = mons_pronoun(mons.type, PRONOUN_CAP);
+        return "";
 
     switch (ench.ench)
     {
     case ENCH_POISON:
-        msg += " is poisoned.";
-        break;
+        return "poisoned";
     case ENCH_SICK:
-        msg += " is sick.";
-        break;
+        return "sick";
     case ENCH_ROT:
-        msg += " is rotting away."; //jmf: "covered in sores"?
-        break;
+        return "rotting away"; //jmf: "covered in sores"?
     case ENCH_BACKLIGHT:
-        msg += " is softly glowing.";
-        break;
+        return "softly glowing";
     case ENCH_SLOW:
-        msg += " is moving slowly.";
-        break;
+        return "moving slowly";
     case ENCH_BERSERK:
-        msg += " is berserk!";
-        break;
+        return "berserk";
     case ENCH_HASTE:
-        msg += " is moving very quickly.";
-        break;
+        return "moving very quickly";
     case ENCH_CONFUSION:
-        msg += " appears to be bewildered and confused.";
-        break;
+        return "bewildered and confused";
     case ENCH_INVIS:
-        msg += " is slightly transparent.";
-        break;
+        return "slightly transparent";
     case ENCH_CHARM:
-        msg += " is in your thrall.";
-        break;
+        return "in your thrall";
     case ENCH_STICKY_FLAME:
-        msg += " is covered in liquid flames.";
-        break;
+        return "covered in liquid flames";
     case ENCH_CAUGHT:
-        msg += " is entangled in a net.";
-        break;
+        return "entangled in a net";
     default:
-        msg.clear();
-        break;
+        return "";
     } // end switch
-
-    if (!msg.empty())
-        mpr(msg.c_str());
 }
 
-static void describe_monster_weapon(monsters *mons)
+static std::string describe_monster_weapon(const monsters *mons)
 {
+    std::string desc = "";
     std::string name1, name2;
-    const item_def *weap = mons->mslot_item(MSLOT_WEAPON),
-        *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
+    const item_def *weap = mons->mslot_item(MSLOT_WEAPON);
+    const item_def *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
     
     if (weap)
         name1 = weap->name(DESC_NOCAP_A);
@@ -1596,19 +1579,21 @@ static void describe_monster_weapon(monsters *mons)
     }
 
     if (name1.empty())
-        return;
+        return (desc);
     
-    std::ostringstream msg;
-    msg << mons_pronoun( mons->type, PRONOUN_CAP )
-        << " is wielding " << name1;
+    desc += " wielding ";
+    desc += name1;
 
     if (!name2.empty())
-        msg << " and " << name2;
+    {
+        desc += " and ";
+        desc += name2;
+    }
     
-    msg << ".";
-    
-    mpr(msg.str().c_str());
+    return (desc);
 }
+
+
 
 #ifdef DEBUG_DIAGNOSTICS
 static std::string stair_destination_description(const coord_def &pos)
@@ -1624,6 +1609,121 @@ static std::string stair_destination_description(const coord_def &pos)
     return ("");
 }
 #endif
+
+static void describe_monster(const monsters *mon)
+{
+
+    // first print type and equipment
+    std::string text = get_monster_desc(mon);
+    text += ".";
+    print_formatted_paragraph(text, get_number_of_cols());
+
+    if (mon->type == MONS_HYDRA)
+    {
+        mprf("It has %d head%s.", mon->number,
+             (mon->number > 1? "s" : ""));
+    }
+
+    print_wounds(mon);
+    
+    if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))
+    {
+       if (mon->behaviour == BEH_SLEEP)
+       {
+           mprf("%s appears to be resting.",
+                mons_pronoun(mon->type, PRONOUN_CAP));
+       }
+       // Applies to both friendlies and hostiles
+       else if (mon->behaviour == BEH_FLEE)
+       {
+           mprf("%s is retreating.",
+                mons_pronoun(mon->type, PRONOUN_CAP));
+       }
+       // hostile with target != you
+       else if (!mons_friendly(mon) && mon->foe != MHITYOU)
+       {
+           // special case: batty monsters get set to BEH_WANDER as
+           // part of their special behaviour.
+           if (!testbits(mon->flags, MF_BATTY))
+           {
+               mprf("%s doesn't appear to have noticed you.",
+                    mons_pronoun(mon->type, PRONOUN_CAP));
+           }
+       }
+    }
+
+    if (mon->attitude == ATT_FRIENDLY)
+        mprf("%s is friendly.", mons_pronoun(mon->type, PRONOUN_CAP));
+    else if (mon->attitude == ATT_NEUTRAL)
+        mprf("%s is indifferent to you.",
+             mons_pronoun(mon->type, PRONOUN_CAP));
+
+    std::string desc = "";
+    std::string last_desc = "";
+    std::string tmp = "";
+    
+    const bool paralysed = mons_is_paralysed(mon);
+    if (paralysed)
+        last_desc += "paralysed";
+
+    for (mon_enchant_list::const_iterator e = mon->enchantments.begin();
+         e != mon->enchantments.end(); ++e)
+    {
+         tmp = describe_mons_enchantment(*mon, e->second, paralysed);
+         if (!tmp.empty())
+         {
+             if (!desc.empty())
+                 desc += ", ";
+             desc += last_desc;
+             last_desc = tmp;
+         }
+    }
+    
+    if (!last_desc.empty())
+    {
+        if (!desc.empty())
+            desc += ", and ";
+        desc += last_desc;
+    }
+
+    if (!desc.empty())
+    {
+        text = mons_pronoun(mon->type, PRONOUN_CAP);
+        text += " is ";
+        text += desc;
+        text += ".";
+        print_formatted_paragraph(text, get_number_of_cols());
+    }
+}
+
+std::string get_monster_desc(const monsters *mon, bool full_desc)
+{
+    std::string desc = mon->name(DESC_CAP_A);
+
+    const int mon_arm = mon->inv[MSLOT_ARMOUR];
+    std::string weap = "";
+
+    if (mon->type != MONS_DANCING_WEAPON)
+        weap = describe_monster_weapon(mon);
+
+    if (!weap.empty())
+    {
+        if (full_desc)
+            desc += ",";
+        desc += weap;
+    }
+
+    if (full_desc && mon_arm != NON_ITEM)
+    {
+        desc += ", ";
+        if (!weap.empty())
+            desc += "and ";
+        desc += "wearing ";
+        desc += mitm[mon_arm].name(DESC_NOCAP_A);
+    }
+    
+    return desc;
+}
 
 static void describe_cell(int mx, int my)
 {
@@ -1652,64 +1752,11 @@ static void describe_cell(int mx, int my)
             goto look_clouds;
 #endif
 
-        const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
-        mprf("%s.", menv[i].name(DESC_CAP_A).c_str());
-
-        if (menv[i].type != MONS_DANCING_WEAPON)
-            describe_monster_weapon(&menv[i]);
-
-        if (mon_arm != NON_ITEM)
-            mprf("%s is wearing %s.",
-                 mons_pronoun(menv[i].type, PRONOUN_CAP),
-                 mitm[mon_arm].name(DESC_NOCAP_A).c_str());
-
-        if (menv[i].type == MONS_HYDRA)
-            mprf("It has %d head%s.", menv[i].number,
-                 (menv[i].number > 1? "s" : ""));;
-
-        print_wounds(&menv[i]);
-
+        describe_monster(&menv[i]);
+        
         if (mons_is_mimic( menv[i].type ))
             mimic_item = true;
-        else if (mons_behaviour_perceptible(&menv[i]))
-        {
-            if (menv[i].behaviour == BEH_SLEEP)
-            {
-                mprf("%s appears to be resting.",
-                     mons_pronoun(menv[i].type, PRONOUN_CAP));
-            }
-            // Applies to both friendlies and hostiles
-            else if (menv[i].behaviour == BEH_FLEE)
-            {
-                mprf("%s is retreating.",
-                     mons_pronoun(menv[i].type, PRONOUN_CAP));
-            }
-            // hostile with target != you
-            else if (!mons_friendly(&menv[i]) && menv[i].foe != MHITYOU)
-            {
-                // special case: batty monsters get set to BEH_WANDER as
-                // part of their special behaviour.
-                if (!testbits(menv[i].flags, MF_BATTY))
-                    mprf("%s doesn't appear to have noticed you.",
-                         mons_pronoun(menv[i].type, PRONOUN_CAP));
-            }
-        }
 
-        if (menv[i].attitude == ATT_FRIENDLY)
-            mprf("%s is friendly.", mons_pronoun(menv[i].type, PRONOUN_CAP));
-        else if (menv[i].attitude == ATT_NEUTRAL)
-            mprf("%s is indifferent to you.",
-                 mons_pronoun(menv[i].type, PRONOUN_CAP));
-
-        const bool paralysed = mons_is_paralysed(&menv[i]);
-        if (paralysed)
-            mprf("%s is paralysed.", mons_pronoun(menv[i].type, PRONOUN_CAP));
-
-        for (mon_enchant_list::const_iterator e = menv[i].enchantments.begin();
-             e != menv[i].enchantments.end(); ++e)
-        {
-            describe_mons_enchantment(menv[i], e->second, paralysed);
-        }
 #if DEBUG_DIAGNOSTICS
         stethoscope(i);
 #endif

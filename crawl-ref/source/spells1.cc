@@ -572,7 +572,10 @@ static int healing_spell( int healed )
         if (monster->hit_points == monster->max_hit_points)
             simple_monster_message( monster, " is completely healed." );
         else
-            print_wounds(monster);
+        {
+            const monsters *mons = static_cast<const monsters*>(monster);
+            print_wounds(mons);
+        }
     }
     else
     {

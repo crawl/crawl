@@ -106,7 +106,7 @@ bool swap_places(struct monsters *monster);
 /* ***********************************************************************
  * called from: bang - beam - direct - fight - spells1 - spells2 - spells3
  * *********************************************************************** */
-void print_wounds(struct monsters *monster);
+void print_wounds(const struct monsters *monster);
 
 
 /* ***********************************************************************

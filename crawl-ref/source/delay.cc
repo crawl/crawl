@@ -994,8 +994,11 @@ inline static void monster_warning(activity_interrupt_type ai,
             return;
 #ifndef DEBUG_DIAGNOSTICS
         if (at.context != "uncharm")
-            mprf(MSGCH_WARN, "%s comes into view.",
-                 mon->name(DESC_CAP_A).c_str());
+        {
+            std::string text = get_monster_desc(mon, false);
+            text += " comes into view.";
+            print_formatted_paragraph(text, get_number_of_cols(), MSGCH_WARN);
+        }
 
         if (Options.tutorial_left)
         {

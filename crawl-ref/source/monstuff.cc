@@ -1353,7 +1353,7 @@ bool swap_places(monsters *monster)
     return (swap);
 }                               // end swap_places()
 
-void print_wounds(monsters *monster)
+void print_wounds(const monsters *monster)
 {
     // prevents segfault -- cannot use info[] here {dlb}
     char str_wound[INFO_SIZE];

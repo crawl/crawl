@@ -900,7 +900,8 @@ void cast_refrigeration(int pow)
                     monster_die(monster, KILL_YOU, 0);
                 else
                 {
-                    print_wounds(monster);
+                    const monsters *mons = static_cast<const monsters*>(monster);
+                    print_wounds(mons);
 
                     //jmf: "slow snakes" finally available
                     if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())

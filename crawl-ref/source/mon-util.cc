@@ -2917,7 +2917,7 @@ item_def *monsters::slot_item(equipment_type eq)
     return mslot_item(equip_slot_to_mslot(eq));
 }
 
-item_def *monsters::mslot_item(mon_inv_type mslot)
+item_def *monsters::mslot_item(mon_inv_type mslot) const
 {
     const int mindex = mslot == NUM_MONSTER_SLOTS? NON_ITEM : inv[mslot];
     return (mindex == NON_ITEM? NULL: &mitm[mindex]);

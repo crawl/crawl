@@ -164,7 +164,10 @@ inline bool player_hurt_monster(int monster, int damage)
         hurt_monster( &menv[monster], damage );
 
         if (menv[monster].hit_points > 0)
-            print_wounds( &menv[monster] );
+        {
+            const monsters *mons = static_cast<const monsters*>(&menv[monster]);
+            print_wounds(mons);
+        }
         else
         {
             monster_die( &menv[monster], KILL_YOU, 0 );
