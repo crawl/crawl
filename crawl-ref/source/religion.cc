@@ -710,7 +710,10 @@ std::string god_prayer_reaction()
 {
     std::string result;
     result += god_name(you.religion);
-    result += " is ";
+    if (!crawl_state.need_save && crawl_state.updating_scores)
+        result += " was ";
+    else
+        result += " is ";
 
     result +=
         (you.piety > 130) ? "exalted by your worship" :

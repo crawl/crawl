@@ -126,7 +126,7 @@ stab_brand = hi:blue
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy = true
-# explore_stop = items,stairs,shops,altars
+# explore_stop = items,stairs,shops,altars,gates
 
 # tc_reachable = blue
 # tc_dangerous = cyan
@@ -223,7 +223,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
 # dump_item_origin_price = 100
 # dump_message_count = 7
-# dump_order  = header,stats,misc,notes,inventory,skills
+# dump_order  = header,hiscore,stats,misc,notes,inventory,skills
 # dump_order += spells,overview,mutations,messages,screenshot,kills
 
 ##### 5-b	Notes #################################

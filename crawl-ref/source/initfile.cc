@@ -740,8 +740,8 @@ void game_options::reset_options()
     extra_levels.clear();
     
     dump_order.clear();
-    new_dump_fields("header,stats,misc,inventory,skills,"
-                   "spells,,overview,mutations,messages,screenshot,"
+    new_dump_fields("header,hiscore,stats,misc,inventory,skills,"
+                    "spells,overview,mutations,messages,screenshot,"
                     "kills,notes");
 
     hp_colour.clear();

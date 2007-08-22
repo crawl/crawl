@@ -110,7 +110,8 @@ static bool is_noteworthy( const Note& note )
          note.type == NOTE_USER_NOTE ||
          note.type == NOTE_MESSAGE ||
          note.type == NOTE_LOSE_GOD ||
-         note.type == NOTE_MOLLIFY_GOD )
+         note.type == NOTE_MOLLIFY_GOD ||
+         note.type == NOTE_DEATH )
         return true;
     
     /* never noteworthy, hooked up for fun or future use */
@@ -304,6 +305,9 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << "Lost mutation: "
                    << mutation_name(static_cast<mutation_type>(first),
                                     second == 3 ? 3 : second+1);
+            break;
+        case NOTE_DEATH:
+            result << name;
             break;
         case NOTE_USER_NOTE:
             result << name;

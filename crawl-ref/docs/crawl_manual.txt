@@ -38,13 +38,13 @@ and hideous creatures.
 If you have never played Crawl (or a similar game) before, you may want
 to try out a tutorial. These are accessed by entering 'T' in the class
 or species selection screens. You can choose among three quite popular
-and rather straight forward combinations: a strong melee fighter with 
+and rather straightforward combinations: a strong melee fighter with 
 the additional help of a mighty war god, a Centaur hunter using bow and
 arrows, and an Elven battle magician. The prime aim of the tutorials is 
 to explain Crawl's interface. They do not focus on 'optimal' gameplay 
 (also, many experienced players share different views on the latter). 
 The tutorial has a special help screen (viewed by pressing '?') and ends
-when you reach the fifth experience level.
+when you reach the seventh experience level.
 
 Detailed instructions for playing Crawl follow. To simplify this
 manual, we assume that you use the standard distribution and that
@@ -306,7 +306,7 @@ option for disabling this); else this can also be done with either the
 direction. They can be closed with the 'c' command. If there is no 
 closed door in the indicated space, both Ctrl-direction and * direction
 will attempt to attack any monster which may be standing there (this is
-the only way to attack a friendly creature hand-to- hand). If there is 
+the only way to attack a friendly creature hand-to-hand). If there is 
 no creature there, you will attempt to disarm any trap in the target
 square. If there is apparently nothing there you will still attack it, 
 just in case there's something invisible lurking around. 
@@ -1888,7 +1888,7 @@ with heavy armour or shields or very big weapons.
 Ranged combat skills:
 ---------------------
 Ranged Combat is the basic skill used when throwing or shooting things.
-It affects in particular how effectively poisoned missiles are. There 
+It affects in particular how effective poisoned missiles are. There 
 are a number of individual weapon skills for missile weapons as well:
 
      o  Darts (and hand crossbows as optional laucnhers)
@@ -2335,6 +2335,8 @@ Fly             You fly, gaining the benefits of levitation with none of
                 kenku, lucky draconians, characters using Dragon form, 
                 or those levitating while wearing an amulet of 
                 controlled flight.
+Held            You are held in a net and cannot move freely and instead 
+                only try to fight your way out of the net.
 Fire            You are plagued with sticky fire. It will time out.
 Regen           You regenerate: health points will increase at an 
                 unnaturally fast rate. This is only shown for temporary 

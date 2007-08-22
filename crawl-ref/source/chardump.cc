@@ -79,6 +79,7 @@ static void sdump_screenshot(dump_params &);
 static void sdump_kills(dump_params &);
 static void sdump_newline(dump_params &);
 static void sdump_overview(dump_params &);
+static void sdump_hiscore(dump_params &);
 static void sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void sdump_lua(dump_params &);
@@ -126,6 +127,7 @@ static dump_section_handler dump_handlers[] = {
     { "screenshot", sdump_screenshot    },
     { "kills",      sdump_kills         },
     { "overview",   sdump_overview      },
+    { "hiscore",    sdump_hiscore       },
 
     // Conveniences for the .crawlrc artist.
     { "",           sdump_newline       },
@@ -189,13 +191,15 @@ static void sdump_stats(dump_params &par)
 
 static void sdump_burden(dump_params &par)
 {
+    std::string verb = par.se? "were" : "are";
+    
     switch (you.burden_state)
     {
     case BS_OVERLOADED:
-        par.text += "You are overloaded with stuff.\n";
+        par.text += "You " + verb + " overloaded with stuff.\n";
         break;
     case BS_ENCUMBERED:
-        par.text += "You are encumbered.\n";
+        par.text += "You " + verb + " encumbered.\n";
         break;
     default:
         break;
@@ -204,7 +208,13 @@ static void sdump_burden(dump_params &par)
 
 static void sdump_hunger(dump_params &par)
 {
-    par.text += std::string("You are ") + hunger_level() + ".\n\n";
+    if (par.se)
+        par.text += "You were ";
+    else
+        par.text += "You are ";
+        
+    par.text += hunger_level();
+    par.text += ".\n\n";
 }
 
 static void sdump_transform(dump_params &par)
@@ -212,37 +222,39 @@ static void sdump_transform(dump_params &par)
     std::string &text(par.text);
     if (you.attribute[ATTR_TRANSFORMATION])
     {
+        std::string verb = par.se? "were" : "are";
+
         switch (you.attribute[ATTR_TRANSFORMATION])
         {
         case TRAN_SPIDER:
-            text += "You are in spider-form.";
+            text += "You " + verb + " in spider-form.";
             break;
         case TRAN_BAT:
-            text += "You are in ";
+            text += "You " + verb + " in ";
             if (you.species == SP_VAMPIRE)
                 text += "vampire ";
             text += "bat-form.";
             break;
         case TRAN_BLADE_HANDS:
-            text += "Your hands are blades.";
+            text += "Your hands " + verb + " blades.";
             break;
         case TRAN_STATUE:
-            text += "You are a stone statue.";
+            text += "You " + verb + " a stone statue.";
             break;
         case TRAN_ICE_BEAST:
-            text += "You are a creature of crystalline ice.";
+            text += "You " + verb + " a creature of crystalline ice.";
             break;
         case TRAN_DRAGON:
-            text += "You are a fearsome dragon!";
+            text += "You " + verb + " a fearsome dragon!";
             break;
         case TRAN_LICH:
-            text += "You are in lich-form.";
+            text += "You " + verb + " in lich-form.";
             break;
         case TRAN_SERPENT_OF_HELL:
-            text += "You are a huge, demonic serpent!";
+            text += "You " + verb + " a huge, demonic serpent!";
             break;
         case TRAN_AIR:
-            text += "You are a cloud of diffuse gas.";
+            text += "You " + verb + " a cloud of diffuse gas.";
             break;
         }
 
@@ -410,6 +422,8 @@ static void sdump_location(dump_params &par)
             && you.where_are_you == BRANCH_MAIN_DUNGEON
             && you.level_type == LEVEL_DUNGEON)
         par.text += "You escaped";
+    else if (par.se)
+        par.text += "You were " + prep_branch_level_name();
     else
         par.text += "You are " + prep_branch_level_name();
 
@@ -422,11 +436,14 @@ static void sdump_religion(dump_params &par)
     std::string &text(par.text);
     if (you.religion != GOD_NO_GOD)
     {
-        text += "You worship ";
+        if (par.se)
+            text += "You worshipped ";
+        else
+            text += "You worship ";
         text += god_name(you.religion);
-        text += ".";
-        text += "\n";
+        text += ".\n";
 
+        std::string verb = par.se? "was" : "is";
         if (!player_under_penance())
         {
             text += god_prayer_reaction();
@@ -435,8 +452,7 @@ static void sdump_religion(dump_params &par)
         else
         {
             text += god_name(you.religion);
-            text += " is demanding penance.";
-            text += "\n";
+            text += verb + " demanding penance.\n";
         }
     }
 }
@@ -616,7 +632,11 @@ static void sdump_skills(dump_params &par)
     std::string &text(par.text);
     char tmp_quant[20];
 
-    text += " You have ";
+    if (par.se)
+        text += " You had ";
+    else
+        text += " You have ";
+
     itoa( you.exp_available, tmp_quant, 10 );
     text += tmp_quant;
     text += " experience left.";
@@ -696,13 +716,22 @@ static void sdump_spells(dump_params &par)
 
     int spell_levels = player_spell_levels();
 
+    std::string verb = par.se? "had" : "have";
+    
     if (spell_levels == 1)
-        text += "You have one spell level left.";
+        text += "You " + verb + " one spell level left.";
     else if (spell_levels == 0)
-        text += "You cannot memorise any spells.";
+    {
+        verb = par.se? "couldn't" : "cannot";
+        
+        text += "You " + verb + " memorise any spells.";
+    }
     else
     {
-        text += "You have ";
+        if (par.se)
+            text += "You had ";
+        else
+            text += "You have ";
         itoa( spell_levels, tmp_quant, 10 );
         text += tmp_quant;
         text += " spell levels left.";
@@ -712,14 +741,15 @@ static void sdump_spells(dump_params &par)
 
     if (!you.spell_no)
     {
-        text += "You don't know any spells.";
-        text += "\n";
-
+        verb = par.se? "didn't" : "don't";
+        
+        text += "You " + verb + " know any spells.\n\n";
     }
     else
     {
-        text += "You know the following spells:" "\n";
-        text += "\n";
+        verb = par.se? "knew" : "know";
+
+        text += "You " + verb + " the following spells:\n\n";
 
         text += " Your Spells              Type           Power          Success   Level" "\n";
 
@@ -774,6 +804,7 @@ static void sdump_spells(dump_params &par)
                 text += spell_line;
             }
         }
+        text += "\n\n";
     }
 }                               // end dump_spells()
 
@@ -789,6 +820,17 @@ static void sdump_overview(dump_params &par)
         formatted_string::parse_string(overview_description_string());
     trim_string(overview);
     par.text += overview;
+    par.text += "\n\n";
+}
+
+static void sdump_hiscore(dump_params &par)
+{
+    if (!par.se)
+        return;
+        
+    std::string hiscore = hiscores_format_single_long( *(par.se), true );
+    trim_string(hiscore);
+    par.text += hiscore;
     par.text += "\n\n";
 }
 

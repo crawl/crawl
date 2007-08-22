@@ -843,6 +843,11 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
 
+    take_note(
+         Note( NOTE_DEATH, you.hp, you.hp_max,
+           scorefile_entry(dam, death_source, death_type, aux)
+           .death_description(scorefile_entry::DDV_NORMAL).c_str()), true );
+
     // prevent bogus notes
     activate_notes(false);
 

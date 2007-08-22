@@ -39,6 +39,7 @@ enum NOTE_TYPES
     NOTE_MESSAGE,               /* needs: message string */
     NOTE_LOSE_GOD,              /* needs: god id */
     NOTE_MOLLIFY_GOD,           /* needs: god id */
+    NOTE_DEATH,                 /* needs: death cause */
     NOTE_NUM_TYPES
 };
 

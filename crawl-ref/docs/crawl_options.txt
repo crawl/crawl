@@ -629,7 +629,7 @@ explore_greedy = false
         for instance). Default is false (no greedy explore) and using greedy
         explore may slow down the performance.
 
-explore_stop = items,stairs,shops,altars
+explore_stop = items,stairs,shops,altars,gates
         Explore will stop for one of these conditions. Whatever you set this 
         option to, anything that stops travel will also stop explore. Multiple 
         explore_stop lines are *not* cumulative! The last explore_stop line 
@@ -1090,7 +1090,7 @@ dump_item_origin_price = 100
 dump_message_count = 7
         The number of last messages to be displayed in character dump files. 
 
-dump_order  = header,stats,misc,notes,inventory,skills
+dump_order  = header,hiscore,stats,misc,notes,inventory,skills
 dump_order += spells,overview,mutations,messages,screenshot,kills
         Controls the order of sections in the dump. You can use multiple
         dump_order lines - all lines but the first must use dump_order +=

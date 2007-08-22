@@ -193,7 +193,10 @@ std::string overview_description_string()
         {
             if ( !branchcount )
             {
-                disp += "\n<green>Branches:</green> (use <white>Ctrl-G</white> to reach them)\n";
+                disp += "\n<green>Branches:</green>";
+                if (crawl_state.need_save || !crawl_state.updating_scores)
+                    disp += " (use <white>Ctrl-G</white> to reach them)";
+                disp += EOL;
                 seen_anything = true;
             }
             
@@ -220,7 +223,10 @@ std::string overview_description_string()
     // we loop through everything a dozen times, oh well
     if ( !notable_altars.empty() )
     {
-        disp += "\n<green>Altars:</green> (use <white>Ctrl-F \"altar\"</white> to reach them)\n";
+        disp += "\n<green>Altars:</green>";
+        if (crawl_state.need_save || !crawl_state.updating_scores)
+            disp += " (use <white>Ctrl-F \"altar\"</white> to reach them)";
+        disp += EOL;
         seen_anything = true;
     }
 
@@ -266,7 +272,10 @@ std::string overview_description_string()
     // print shops
     if (!shops_present.empty())
     {
-        disp +="\n<green>Shops:</green> (use <white>Ctrl-F \"shop\"</white> to reach them)\n";
+        disp +="\n<green>Shops:</green>";
+        if (crawl_state.need_save || !crawl_state.updating_scores)
+            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them)";
+        disp += EOL;
         seen_anything = true;
     }
     last_id.depth = 10000;
@@ -349,7 +358,12 @@ std::string overview_description_string()
     }
 
     if (!seen_anything)
-        disp += "You haven't discovered anything interesting yet.";
+    {
+        if (crawl_state.need_save || !crawl_state.updating_scores)
+            disp += "You haven't discovered anything interesting yet.";
+        else
+            disp += "You didn't discover anything interesting.";
+    }
 
     return disp;
 }
