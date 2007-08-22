@@ -1011,7 +1011,7 @@ static void go_upstairs()
     }
     
     
-    if (you.attribute[ATTR_CAUGHT])
+    if (you.attribute[ATTR_HELD])
     {
         mpr("You're held in a net!");
         return;
@@ -1044,7 +1044,7 @@ static void go_downstairs()
         return;
     }
 
-    if (you.attribute[ATTR_CAUGHT])
+    if (you.attribute[ATTR_HELD])
     {
         mpr("You're held in a net!");
         return;
@@ -1256,7 +1256,7 @@ void process_command( command_type cmd )
            canned_msg(MSG_PRESENT_FORM);
            break;
         }
-        else if (you.attribute[ATTR_CAUGHT])
+        else if (you.attribute[ATTR_HELD])
         {
            mpr("You cannot throw anything while held in a net!");
            break;
@@ -1272,7 +1272,7 @@ void process_command( command_type cmd )
            canned_msg(MSG_PRESENT_FORM);
            break;
         }
-        else if (you.attribute[ATTR_CAUGHT])
+        else if (you.attribute[ATTR_HELD])
         {
            mpr("You cannot shoot anything while held in a net!");
            break;
@@ -2594,7 +2594,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
     struct dist door_move;
     int dx, dy;             // door x, door y
 
-    if (you.attribute[ATTR_CAUGHT])
+    if (you.attribute[ATTR_HELD])
     {
         // struggles against net, damaging it
         free_self_from_net(true);
@@ -2978,7 +2978,7 @@ static void move_player(int move_x, int move_y)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
-    if (you.attribute[ATTR_CAUGHT])
+    if (you.attribute[ATTR_HELD])
     {
         // tries to escape from net (without damaging it, takes longer)
         free_self_from_net(false);

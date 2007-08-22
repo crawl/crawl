@@ -117,13 +117,13 @@ int blink(int pow, bool high_level_controlled_blink)
         }
         else
         {
-            if (you.attribute[ATTR_CAUGHT])
+            if (you.attribute[ATTR_HELD])
             {
                 int net = get_trapping_net(you.x_pos, you.y_pos);
                 if (net != NON_ITEM)
                     remove_item_stationary(mitm[net]);
                     
-                you.attribute[ATTR_CAUGHT] = 0;
+                you.attribute[ATTR_HELD] = 0;
             }
 
             move_player_to_grid(beam.tx, beam.ty, false, true, true);
@@ -174,13 +174,13 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     {
         mpr("You blink.");
         
-        if (you.attribute[ATTR_CAUGHT])
+        if (you.attribute[ATTR_HELD])
         {
             int net = get_trapping_net(you.x_pos, you.y_pos);
             if (net != NON_ITEM)
                 remove_item_stationary(mitm[net]);
 
-            you.attribute[ATTR_CAUGHT] = 0;
+            you.attribute[ATTR_HELD] = 0;
         }
 
         succ = true;

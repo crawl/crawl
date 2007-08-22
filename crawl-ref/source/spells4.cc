@@ -3002,7 +3002,7 @@ int cast_apportation(int pow)
            remove_item_stationary(mitm[item]);
            
            if (mon != NON_MONSTER)
-               (&menv[mon])->del_ench(ENCH_CAUGHT, true);
+               (&menv[mon])->del_ench(ENCH_HELD, true);
         }
     }
     else

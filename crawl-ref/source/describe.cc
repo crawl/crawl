@@ -1377,7 +1377,8 @@ static std::string describe_ammo( const item_def &item )
     case MI_THROWING_NET:
         description += "A throwing net as used by gladiators. ";
         if (!is_throwable(item, you.body_size()))
-            description += "Unfortunately, it is too large for you to throw. ";
+            description += "Unfortunately, it is too large and awkward "
+                           "for you to use. ";
         if (item.plus < 0)
         {
             std::string how;

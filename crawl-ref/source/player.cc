@@ -3295,7 +3295,7 @@ void display_char_status()
     if (player_is_levitating())
         mpr( "You are hovering above the floor." );
 
-    if (you.attribute[ATTR_CAUGHT])
+    if (you.attribute[ATTR_HELD])
         mpr( "You are held in a net." );
 
     if (you.duration[DUR_POISONING])
@@ -5345,7 +5345,7 @@ bool player::confused() const
 
 bool player::caught() const
 {
-    return (attribute[ATTR_CAUGHT]);
+    return (attribute[ATTR_HELD]);
 }
 
 int player::shield_block_penalty() const

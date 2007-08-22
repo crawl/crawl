@@ -556,7 +556,7 @@ void print_stats(void)
             cprintf( "Rot " );
         }
 
-        if (you.attribute[ATTR_CAUGHT])
+        if (you.attribute[ATTR_HELD])
         {
             textcolor( RED );
             cprintf( "Held " );
@@ -1478,7 +1478,7 @@ std::string status_mut_abilities()
         text += "non-regenerating, ";
     }
 
-    if (you.attribute[ATTR_CAUGHT])
+    if (you.attribute[ATTR_HELD])
         text += "held, ";
 
     const int mr = player_res_magic();

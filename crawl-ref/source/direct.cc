@@ -1550,7 +1550,7 @@ static std::string describe_mons_enchantment(const monsters &mons,
         return "in your thrall";
     case ENCH_STICKY_FLAME:
         return "covered in liquid flames";
-    case ENCH_CAUGHT:
+    case ENCH_HELD:
         return "entangled in a net";
     default:
         return "";

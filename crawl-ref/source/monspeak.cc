@@ -373,7 +373,7 @@ bool mons_speaks(const monsters *monster)
         }
 
     }
-    else if (monster->has_ench(ENCH_CAUGHT))
+    else if (monster->has_ench(ENCH_HELD))
     {
         if (mons_friendly(monster))
         {

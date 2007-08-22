@@ -895,7 +895,13 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
         return;
     }
 
-    if (!mons_is_caught(mon) && mon->add_ench(ENCH_CAUGHT))
+    if (mons->type == MONS_OOZE || mons->type == MONS_PULSATING_LUMP)
+    {
+        simple_monster_message(mon, " oozes right through the net!");
+        return;
+    }
+
+    if (!mons_is_caught(mon) && mon->add_ench(ENCH_HELD))
     {
         if (mons_near(mon) && !player_monster_visible(mon))
             mpr("Something gets caught in the net!");
@@ -921,9 +927,9 @@ void player_caught_in_net()
         return;
     }
 
-    if (!you.attribute[ATTR_CAUGHT])
+    if (!you.attribute[ATTR_HELD])
     {
-        you.attribute[ATTR_CAUGHT] = 10;
+        you.attribute[ATTR_HELD] = 10;
         mpr("You become entangled in the net!");
         
         // I guess levitation works differently, keeping both you
@@ -1810,7 +1816,7 @@ void handle_traps(char trt, int i, bool trap_known)
             }
 
             trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].x, env.trap[i].y );
-            if (you.attribute[ATTR_CAUGHT])
+            if (you.attribute[ATTR_HELD])
                 mark_net_trapping(you.x_pos, you.y_pos);
 
             grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
@@ -1928,7 +1934,7 @@ void remove_net_from(monsters *mon)
 
     if (net == NON_ITEM)
     {
-        mon->del_ench(ENCH_CAUGHT, true);
+        mon->del_ench(ENCH_HELD, true);
         return;
     }
 
@@ -1952,7 +1958,7 @@ void remove_net_from(monsters *mon)
             if (mitm[net].plus < -7)
             {
                 mpr("Whoops! The net comes apart in your hands!");
-                mon->del_ench(ENCH_CAUGHT, true);
+                mon->del_ench(ENCH_HELD, true);
                 destroy_item(net);
                 net_destroyed = true;
             }
@@ -1974,7 +1980,7 @@ void remove_net_from(monsters *mon)
         return;
     }
      
-    mon->del_ench(ENCH_CAUGHT, true);
+    mon->del_ench(ENCH_HELD, true);
     remove_item_stationary(mitm[net]);
     
     if (player_monster_visible(mon))
@@ -1990,7 +1996,7 @@ void free_self_from_net(bool damage_net)
 
     if (net == NON_ITEM) // really shouldn't happen!
     {
-        you.attribute[ATTR_CAUGHT] = 0;
+        you.attribute[ATTR_HELD] = 0;
         return;
     }
     int hold = mitm[net].plus;
@@ -2023,25 +2029,25 @@ void free_self_from_net(bool damage_net)
             mpr("You rip the net and break free!");
             dec_mitm_item_quantity( net, 1 );
 
-            you.attribute[ATTR_CAUGHT] = 0;
+            you.attribute[ATTR_HELD] = 0;
             return;
         }
    }
    else // you try to escape
    {
         mpr("You struggle to escape from the net.");
-        you.attribute[ATTR_CAUGHT]--;
+        you.attribute[ATTR_HELD]--;
 
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            you.attribute[ATTR_CAUGHT]--;
+            you.attribute[ATTR_HELD]--;
             
         if (hold < 0 && !one_chance_in(-hold/2))
-            you.attribute[ATTR_CAUGHT]--;
+            you.attribute[ATTR_HELD]--;
 
-        if (you.attribute[ATTR_CAUGHT] <= 0)
+        if (you.attribute[ATTR_HELD] <= 0)
         {
             mpr("You break free from the net!");
-            you.attribute[ATTR_CAUGHT] = 0;
+            you.attribute[ATTR_HELD] = 0;
             remove_item_stationary(mitm[net]);
             return;
         }

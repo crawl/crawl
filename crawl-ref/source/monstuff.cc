@@ -1189,7 +1189,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
             }
         }
         else
-            monster->add_ench(ENCH_CAUGHT);
+            monster->add_ench(ENCH_HELD);
     }
     
     return (player_messaged);
@@ -1217,8 +1217,8 @@ bool monster_blink(monsters *monster)
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
     
-    if (monster->has_ench(ENCH_CAUGHT))
-        monster->del_ench(ENCH_CAUGHT, true);
+    if (monster->has_ench(ENCH_HELD))
+        monster->del_ench(ENCH_HELD, true);
 
     return (true);
 }                               // end monster_blink()
@@ -2715,7 +2715,7 @@ static bool handle_scroll(monsters *monster)
         case SCR_TELEPORTATION:
             if (!monster->has_ench(ENCH_TP))
             {
-                if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_CAUGHT))
+                if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_HELD))
                 {
                     simple_monster_message(monster, " reads a scroll.");
                     monster_teleport(monster, false);
@@ -2725,7 +2725,7 @@ static bool handle_scroll(monsters *monster)
             break;
 
         case SCR_BLINKING:
-            if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_CAUGHT))
+            if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_HELD))
             {
                 if (mons_near(monster))
                 {
@@ -4097,7 +4097,7 @@ static bool handle_pickup(monsters *monster)
                 if (mons_is_caught(monster) && mitm[item].base_type == OBJ_MISSILES
                     && mitm[item].sub_type == MI_THROWING_NET)
                 {
-                    monster->del_ench(ENCH_CAUGHT, true);
+                    monster->del_ench(ENCH_HELD, true);
                     eaten_net = true;
                 }
             }

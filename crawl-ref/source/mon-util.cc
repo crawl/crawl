@@ -1723,7 +1723,7 @@ bool mons_is_confused(const monsters *m)
 
 bool mons_is_caught(const monsters *m)
 {
-    return (m->has_ench(ENCH_CAUGHT));
+    return (m->has_ench(ENCH_HELD));
 }
 
 bool mons_is_fleeing(const monsters *m)
@@ -3696,7 +3696,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer rotting.");
         break;
 
-    case ENCH_CAUGHT:
+    case ENCH_HELD:
     {
         int net = get_trapping_net(x,y);
         if (net != NON_ITEM)
@@ -3825,7 +3825,7 @@ void monsters::timeout_enchantments(int levels)
             blink();
             break;
 
-        case ENCH_CAUGHT:
+        case ENCH_HELD:
             del_ench(i->first);
             break;
 
@@ -3931,7 +3931,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
-    case ENCH_CAUGHT:
+    case ENCH_HELD:
     {
         if (mons_is_paralysed(this) || this->behaviour == BEH_SLEEP)
             break;
@@ -3940,7 +3940,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (net == NON_ITEM) // really shouldn't happen!
         {
-            del_ench(ENCH_CAUGHT);
+            del_ench(ENCH_HELD);
             break;
         }
 
@@ -4040,7 +4040,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 }
                 destroy_item(net);
 
-                del_ench(ENCH_CAUGHT, true);
+                del_ench(ENCH_HELD, true);
             }
 
         }
@@ -4582,7 +4582,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_CONFUSION:
         cturn = 120 / modded_speed(mons, 5);
         break;
-    case ENCH_CAUGHT:
+    case ENCH_HELD:
         cturn = 90 / mod_speed(25, mons->speed);
         break;
     case ENCH_POISON:

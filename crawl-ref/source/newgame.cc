@@ -3820,9 +3820,9 @@ bool give_items_skills()
             you.inv[2].special = 0;
         }
 
-        you.inv[3].quantity  = 1;
+        you.inv[3].quantity  = 4;
         you.inv[3].base_type = OBJ_MISSILES;
-        you.inv[3].sub_type  = MI_JAVELIN;
+        you.inv[3].sub_type  = MI_THROWING_NET;
         you.inv[3].plus      = 0;
         you.inv[3].special   = 0;
 

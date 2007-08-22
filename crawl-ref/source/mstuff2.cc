@@ -933,8 +933,8 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
 
-    if (monster->has_ench(ENCH_CAUGHT))
-        monster->del_ench(ENCH_CAUGHT, true);
+    if (monster->has_ench(ENCH_HELD))
+        monster->del_ench(ENCH_HELD, true);
 
     // Teleporting mimics change form - if they reappear out of LOS, they are
     // no longer known.
