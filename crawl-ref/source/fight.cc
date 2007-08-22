@@ -2629,7 +2629,7 @@ bool melee_attack::mons_attack_mons()
     if (perceived_attack && (def->foe == MHITNOT || one_chance_in(3))
         && atk->alive())
     {
-        def->foe = monster_index(atk);
+        behaviour_event(def, ME_WHACK, monster_index(atk));
     }
     return (did_hit);
 }

@@ -823,6 +823,14 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             }
 
             death_source_name = monster->name(DESC_NOCAP_A, true);
+            if (monster->has_ench(ENCH_SHAPESHIFTER))
+            {
+                death_source_name += " (shapeshifter)";
+            }
+            else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+            {
+                death_source_name += " (glowing shapeshifter)";
+            }
         }
     }
     else
@@ -1451,7 +1459,8 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_STUPIDITY:
-        desc += terse? "stupidity" : "Forgot to breathe";
+        desc += terse? "stupidity" :
+                (you.is_undead? "Forgot to exist" : "Forgot to breathe");
         break;
 
     case KILLED_BY_WEAKNESS:

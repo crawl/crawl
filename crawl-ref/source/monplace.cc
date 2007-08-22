@@ -546,6 +546,9 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                            lev_mons, extra, false, dur);
     }
 
+    // if summoned onto traps, directly affect monster
+    menv[id].apply_location_effects();
+
     // placement of first monster, at least, was a success.
     return (true);
 }
@@ -736,6 +739,9 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     
     if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
         seen_monster(&menv[id]);
+
+    // if summoned onto traps, directly affect monster
+    menv[id].apply_location_effects();
 
     return (id);
 }                               // end place_monster_aux()
