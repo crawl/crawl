@@ -53,6 +53,7 @@
 #include "libunix.h"
 #endif
 
+#include "branch.h"
 #include "delay.h"
 #include "externs.h"
 #include "items.h"
@@ -1062,7 +1063,7 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 // returns 1 if the point is near unoccupied stairs
 // returns 2 if the point is near player-occupied stairs
 
-int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx)
+int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx, branch_type &branch)
 {
     int i,j;
 
@@ -1081,7 +1082,29 @@ int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx)
                 && grd[x][y] <= DNGN_RETURN_FROM_SWAMP
                 && grd[x][y] != DNGN_ENTER_SHOP)        // silly
             {
+                // shouldn't happen for escape hatches
+                if (grd[x][y] == DNGN_ROCK_STAIRS_DOWN
+                    || grd[x][y] == DNGN_ROCK_STAIRS_UP)
+                {
+                    continue;
+                }
+
                 stair_gfx = get_sightmap_char(grd[x][y]);
+                
+                // is it a branch stair?
+                for ( i = 0; i < NUM_BRANCHES; ++i )
+                {
+                     if (branches[i].entry_stairs == grd[x][y])
+                     {
+                         branch = branches[i].id;
+                         break;
+                     }
+                     else if (branches[i].exit_stairs == grd[x][y])
+                     {
+                         branch = branches[i].parent_branch;
+                         break;
+                     }
+                }
                 return ((x == you.x_pos && y == you.y_pos) ? 2 : 1);
             }
         }

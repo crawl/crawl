@@ -13,6 +13,7 @@
 #include "AppHdr.h"
 #include "monplace.h"
 
+#include "branch.h"
 #include "externs.h"
 #include "lev-pand.h"
 #include "makeitem.h"
@@ -301,7 +302,7 @@ monster_type pick_random_monster(const level_id &place,
                 mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
                 count++;
             }
-            while (mons_rarity(mon_type) == 0 && count < 2000);
+            while (mons_rarity(mon_type, place) == 0 && count < 2000);
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
@@ -332,6 +333,13 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     int band_monsters[BIG_BAND];        // band monster types
     int lev_mons = power;               // final 'power'
     int i;
+    
+    // player shoved out of the way?
+    bool shoved = false;
+    unsigned char stair_gfx = 0;
+    int tries = 0;
+    int pval = 0;
+    level_id place = level_id::current();
 
     // set initial id to -1  (unsuccessful create)
     id = -1;
@@ -341,18 +349,89 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         return (false);
 
     // (2) take care of random monsters
-    if (mon_type == RANDOM_MONSTER
-        && player_in_branch( BRANCH_HALL_OF_BLADES ))
-    {
-        mon_type = MONS_DANCING_WEAPON;
-    }
-
     if (mon_type == RANDOM_MONSTER)
     {
-        mon_type = pick_random_monster(level_id::current(), lev_mons,
+        // respect destination level for staircases
+        if (proximity == PROX_NEAR_STAIRS)
+        {
+            while(++tries <= 320)
+            {
+                px = 5 + random2(GXM - 10);
+                py = 5 + random2(GYM - 10);
+
+                if (mgrd[px][py] != NON_MONSTER
+                    || (px == you.x_pos && py == you.y_pos))
+                {
+                    continue;
+                }
+
+                // Is the monster happy where we want to put it?
+                unsigned char grid_wanted = monster_habitat(mon_type);
+                if (!grid_compatible(grid_wanted, grd[px][py], true))
+                    continue;
+
+                // Is the grid verboten?
+                if (!unforbidden( coord_def(px, py), mmask ))
+                    continue;
+
+                // don't generate monsters on top of teleport traps
+                int trap = trap_at_xy(px, py);
+                if (trap >= 0)
+                {
+                    if (env.trap[trap].type == TRAP_TELEPORT)
+                       continue;
+                }
+
+                // check whether there's a stair
+                // and whether it leads to another branch
+                pval = near_stairs(px, py, 1, stair_gfx, place.branch);
+
+                // no monsters spawned in the Temple
+                if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
+                    continue;
+
+                // found a position near the stairs!
+                if (pval > 0)
+                    break;
+            }
+            if (tries > 320)
+            {   // give up and try somewhere else
+                proximity = PROX_AWAY_FROM_PLAYER;
+            }
+            else
+            {
+                if ( stair_gfx == '>' ) // deeper level
+                    lev_mons++;
+                else if (stair_gfx == '<') // higher level
+                {
+                    // monsters don't come from outside the dungeon
+                    if (lev_mons <= 0)
+                    {
+                        proximity = PROX_AWAY_FROM_PLAYER;
+                        // or maybe allow 1st level monsters, having visited the
+                        // surface, to re-enter the dungeon
+                        // in that case lev_mons stays as it is
+                    }
+                    else
+                        lev_mons--;
+                }
+//                mprf("branch := %d, level := %d",
+//                     branches[place.branch].id, lev_mons+1);
+
+            }
+        } // end proximity check
+
+        if (branches[place.branch].id == BRANCH_HALL_OF_BLADES)
+            mon_type = MONS_DANCING_WEAPON;
+        else
+        {
+            // now pick a monster of the given branch and level
+            mon_type = pick_random_monster(place, lev_mons,
                                        lev_mons);
-        if (mon_type == MONS_PROGRAM_BUG)
-            return (false);
+
+            if (mon_type == MONS_PROGRAM_BUG)
+                return (false);
+        }
     }
 
     // (3) decide on banding (good lord!)
@@ -368,22 +447,24 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
             band_monsters[i] = band_member( band, power );
     }
 
-    // Monsters that can't move shouldn't be taking the stairs -- bwr
-    if (proximity == PROX_NEAR_STAIRS && mons_class_is_stationary( mon_type ))
-        proximity = PROX_AWAY_FROM_PLAYER;
+    if (proximity == PROX_NEAR_STAIRS)
+    {
+        // for some cases disallow monsters on stairs
+        if (mons_class_is_stationary( mon_type )
+            || pval == 2 && (mons_speed(mon_type) == 0
+               || grd[px][py] == DNGN_LAVA || grd[px][py] == DNGN_DEEP_WATER))
+        {
+            proximity = PROX_AWAY_FROM_PLAYER;
+        }
+    }
 
     // (4) for first monster, choose location.  This is pretty intensive.
     bool proxOK;
     bool close_to_player;
 
-    // player shoved out of the way?
-    bool shoved = false;
-    unsigned char stair_gfx = 0;
-    int pval = 0;
-
     if (!summoned)
     {
-        int tries = 0;
+        tries = 0;
         // try to pick px, py that is
         // a) not occupied
         // b) compatible
@@ -391,23 +472,27 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         unsigned char grid_wanted = monster_habitat(mon_type);
         while(true)
         {
-            tries ++;
-            // give up on stair placement?
-            if (proximity == PROX_NEAR_STAIRS)
+            // handled above, won't change anymore
+            if (proximity == PROX_NEAR_STAIRS && tries)
             {
-                if (tries > 320)
-                {
-                    proximity = PROX_AWAY_FROM_PLAYER;
-                    tries = 0;
-                }
+                proximity = PROX_AWAY_FROM_PLAYER;
+                tries = 0;
             }
             // Dropped number of tries from 60.
-            else if (tries > 45)
+            else if (tries >= 45)
                 return (false);
 
-            px = 5 + random2(GXM - 10);
-            py = 5 + random2(GYM - 10);
-
+            tries ++;
+            
+            // placement already decided for PROX_NEAR_STAIRS
+            if (proximity != PROX_NEAR_STAIRS)
+            {
+                px = 5 + random2(GXM - 10);
+                py = 5 + random2(GYM - 10);
+            }
+            
+            // Let's recheck these even for PROX_NEAR_STAIRS, just in case
+            
             // occupied?
             if (mgrd[px][py] != NON_MONSTER
                 || (px == you.x_pos && py == you.y_pos))
@@ -456,8 +541,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                     break;
 
                 case PROX_NEAR_STAIRS:
-                    pval = near_stairs(px, py, 1, stair_gfx);
-                    if (pval == 2)
+                    if (pval == 2) // player on stairs
                     {
                         // 0 speed monsters can't shove player out of their way.
                         if (mons_speed(mon_type) == 0)
@@ -545,9 +629,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         place_monster_aux( band_monsters[i], behaviour, target, px, py, 
                            lev_mons, extra, false, dur);
     }
-
-    // if summoned onto traps, directly affect monster
-    menv[id].apply_location_effects();
 
     // placement of first monster, at least, was a success.
     return (true);

@@ -3933,8 +3933,11 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HELD:
     {
-        if (mons_is_paralysed(this) || this->behaviour == BEH_SLEEP)
+        if (mons_is_stationary(this) || mons_is_paralysed(this)
+            || this->behaviour == BEH_SLEEP)
+        {
             break;
+        }
         
         int net = get_trapping_net(x,y);
 
