@@ -334,8 +334,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     int lev_mons = power;               // final 'power'
     int i;
     
-    // player shoved out of the way?
-    bool shoved = false;
     unsigned char stair_gfx = 0;
     int tries = 0;
     int pval = 0;
@@ -364,11 +362,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 {
                     continue;
                 }
-
-                // Is the monster happy where we want to put it?
-                unsigned char grid_wanted = monster_habitat(mon_type);
-                if (!grid_compatible(grid_wanted, grd[px][py], true))
-                    continue;
 
                 // Is the grid verboten?
                 if (!unforbidden( coord_def(px, py), mmask ))
@@ -408,8 +401,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                     if (lev_mons <= 0)
                     {
                         proximity = PROX_AWAY_FROM_PLAYER;
-                        // or maybe allow 1st level monsters, having visited the
-                        // surface, to re-enter the dungeon
                         // in that case lev_mons stays as it is
                     }
                     else
@@ -462,9 +453,13 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     bool proxOK;
     bool close_to_player;
 
+    // player shoved out of the way?
+    bool shoved = false;
+
     if (!summoned)
     {
         tries = 0;
+        
         // try to pick px, py that is
         // a) not occupied
         // b) compatible
@@ -1419,7 +1414,9 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
               mons_level(monster->type) >= you.your_level + ood_limit() &&
               mons_level(monster->type) < 99 &&
               !(monster->type >= MONS_EARTH_ELEMENTAL &&
-                monster->type <= MONS_AIR_ELEMENTAL) )
+                monster->type <= MONS_AIR_ELEMENTAL)
+              && (!Options.safe_zero_exp ||
+                  !mons_class_flag( monster->type, M_NO_EXP_GAIN )))
         interesting = true;
 
     if ( interesting )

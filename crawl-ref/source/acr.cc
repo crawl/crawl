@@ -380,8 +380,7 @@ static void handle_wizard_command( void )
         mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
 #endif
 
-        if (!yesno( "Do you really want to enter wizard mode?", 
-                    false, 'n' ))
+        if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
             return;
 
         you.wizard = true;

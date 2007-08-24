@@ -4,7 +4,7 @@
 # init.txt to ~/.crawlrc as:
 #   cp init.txt ~/.crawlrc
 #
-# Lines begining with '#' are comments.  The basic syntax is:
+# Lines beginning with '#' are comments.  The basic syntax is:
 #
 # field = value         or      field.subfield = value
 #
@@ -14,13 +14,13 @@
 # cases (the character's name and specifying files or directories when
 # on a system that has case-sensitive filenames).
 #
-# White space is stripped from the begining and end of the line, as well 
-# as imediately before and after the '='. If the option allows multiple
+# White space is stripped from the beginning and end of the line, as well 
+# as immediately before and after the '='. If the option allows multiple
 # comma/semicolon-separated terms (such as autopickup_exceptions), all
 # whitespace around the separator is also trimmed. All other whitespace 
 # is left intact.
 #
-# For descriptions concerning the option consult the file 
+# For descriptions concerning an option consult the file 
 #    crawl_options.txt 
 # in your crawl/doc directory. Also note that the ordering of the options
 # is taken from that file; this is for presentational reasons only.

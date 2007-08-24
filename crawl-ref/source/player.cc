@@ -4964,6 +4964,11 @@ std::string player::short_desc() const
     desc += " ";
     desc += class_name;
 
+#ifdef WIZARD
+    if (wizard)
+        desc += " (WIZ)";
+#endif
+
     return (desc);
 }
 

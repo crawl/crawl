@@ -1180,12 +1180,18 @@ static int l_item_subtype(lua_State *ls)
             {
                 if (item->sub_type == POT_BLOOD)
                    s = "blood";
-                else if (item->sub_type == POT_BERSERK_RAGE)
-                   s = "berserk";
                 else if (item->sub_type == POT_WATER)
                    s = "water";
                 else if (item->sub_type == POT_PORRIDGE)
                    s = "porridge";
+                else if (item->sub_type == POT_BERSERK_RAGE)
+                   s = "berserk";
+                else if (item->sub_type == POT_GAIN_STRENGTH
+                         || item->sub_type == POT_GAIN_DEXTERITY
+                         || item->sub_type == POT_GAIN_INTELLIGENCE)
+                   s = "gain ability";
+                else if (item->sub_type == POT_CURE_MUTATION)
+                   s = "cure mutation";
             }
             
             if (s)
@@ -1207,11 +1213,13 @@ static int l_item_potion_type(lua_State *ls)
 {
     LUA_ITEM(item, 1);
     int val = 99;
-    
+
     if (item && item->base_type == OBJ_POTIONS)
     {
        if (!item_type_known(*item))
+       {
           val = 0;
+       }
        else
        {
           switch(item->sub_type)
@@ -1221,15 +1229,11 @@ static int l_item_potion_type(lua_State *ls)
             case POT_HEAL_WOUNDS:
             case POT_SPEED:
             case POT_MIGHT:
-            case POT_GAIN_STRENGTH:
-            case POT_GAIN_DEXTERITY:
-            case POT_GAIN_INTELLIGENCE:
             case POT_LEVITATION:
             case POT_INVISIBILITY:
             case POT_EXPERIENCE:
             case POT_MAGIC:
             case POT_RESTORE_ABILITIES:
-            case POT_CURE_MUTATION:
             case POT_RESISTANCE:
                  val = 1;
                  break;
@@ -1247,10 +1251,16 @@ static int l_item_potion_type(lua_State *ls)
                  break;
 
             // need more refined handling:
-            case POT_BERSERK_RAGE:
+            // for eating habits
             case POT_BLOOD:
             case POT_WATER:
             case POT_PORRIDGE:
+            // for undead
+            case POT_BERSERK_RAGE:
+            case POT_GAIN_STRENGTH:
+            case POT_GAIN_DEXTERITY:
+            case POT_GAIN_INTELLIGENCE:
+            case POT_CURE_MUTATION:
             default:
                  val = 3;
           }

@@ -1699,8 +1699,10 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_RENOUNCE_RELIGION:
-        if (yesno("Really renounce your faith, foregoing its fabulous benefits?")
-            && yesno( "Are you sure you won't change your mind later?" ))
+        if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
+                   false, 'n')
+            && yesno("Are you sure you won't change your mind later?",
+                      false, 'n' ))
         {
             excommunication();
         }
