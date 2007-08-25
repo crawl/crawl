@@ -15,7 +15,7 @@ The contents of this text are:
 3-  Lua files.
                 lua_file,
                 base.lua, stash.lua, wield.lua, kills.lua, runrest.lua, 
-                gearset.lua, eat.lua, trapwalk.lua
+                gearset.lua, eat.lua, pickup.lua, trapwalk.lua
 4-  Interface. 
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,

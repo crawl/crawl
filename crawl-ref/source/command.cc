@@ -34,6 +34,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "ouch.h"
+#include "player.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -373,6 +374,21 @@ void list_armour()
 
         if (armour_id != -1)
             estr << you.inv[armour_id].name(DESC_INVENTORY);
+
+        if (!you_can_wear(i))
+        {
+            if (i == EQ_BODY_ARMOUR || i == EQ_HELMET)
+            {
+                if (!you_tran_can_wear(i))
+                    estr << "    (currently unavailable)";
+                else
+                    estr << "    (ill-fitting)";
+            }
+            else
+                estr << "    (unavailable)";
+        }
+        else if (!you_tran_can_wear(i))
+            estr << "    (currently unavailable)";
         else
             estr << "    none";
 
@@ -399,6 +415,8 @@ void list_jewellery(void)
 
         if (jewellery_id != -1)
             jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
+        else if (!you_tran_can_wear(i))
+            jstr << "    (currently unavailable)";
         else
             jstr << "    none";
 
@@ -424,6 +442,8 @@ void list_weapons(void)
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
             wstring += "    blade hands";
+        else if (!you_tran_can_wear(EQ_WEAPON))
+            wstring += "    (currently unavailable)";
         else
             wstring += "    empty hands";
     }
@@ -445,6 +465,8 @@ void list_weapons(void)
 
         if (is_valid_item( you.inv[i] ))
             wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
+        else if (!you_tran_can_wear(EQ_WEAPON))
+            wstring += "    (currently unavailable)";
         else
             wstring += "    none";
 

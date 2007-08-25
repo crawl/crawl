@@ -970,7 +970,7 @@ static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
 static void climb_message(dungeon_feature_type stair, bool going_up)
 {
     if (grid_is_portal(stair))
-        mpr("You pass through the gateway.");
+        mpr("The world spins around you as you enter the gateway.");
     else if (grid_is_rock_stair(stair))
     {
         if (going_up)

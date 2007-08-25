@@ -1796,7 +1796,8 @@ static void decrement_durations()
 
     // Vampire bat transformations are permanent (until ended.)
     if ((you.species != SP_VAMPIRE ||
-         you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
+         you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
+         || you.duration[DUR_TRANSFORMATION] <= 2)
          && you.duration[DUR_TRANSFORMATION] < 100 )
     {
         if ( decrement_a_duration(DUR_TRANSFORMATION,

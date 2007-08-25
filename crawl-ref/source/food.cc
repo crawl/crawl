@@ -337,9 +337,11 @@ bool butchery(void)
                 if (you.duration[DUR_PRAYER] && rotten
                     && god_likes_butchery(you.religion) )
                 {
-                    simple_god_message(" refuses to accept that mouldy sacrifice!",
-                                       you.religion);
-//                    simple_god_message(" demands fresh blood!", you.religion);
+                    if (coinflip())
+                        simple_god_message(" refuses to accept that mouldy "
+                                             "sacrifice!", you.religion);
+                    else
+                        simple_god_message(" demands fresh blood!", you.religion);
                 }
                 
                 // If we didn't switch weapons, we get in one turn of butchery;

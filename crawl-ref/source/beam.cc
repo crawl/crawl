@@ -40,6 +40,7 @@
 #include "enum.h"
 #include "it_use2.h"
 #include "items.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
@@ -3170,10 +3171,16 @@ static int affect_player( bolt &beam )
             {
                 mpr("Strange energies course through your body.");
                 you.mutate();
+                beam.obvious_effect = true;
+            }
+            else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER) == ID_KNOWN_TYPE)
+            {
+                mpr("This is polymorph other only!");
             }
             else
-                mpr("This is polymorph other only!");
-            beam.obvious_effect = true;
+            {
+                canned_msg( MSG_NOTHING_HAPPENS );
+            }
             break;
 
         case BEAM_SLOW:
