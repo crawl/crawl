@@ -2291,6 +2291,7 @@ bool is_feature(int feature, int x, int y)
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
+        case DNGN_EXIT_PORTAL_VAULT:
             return true;
         default:
             return false;
