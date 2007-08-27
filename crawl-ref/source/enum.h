@@ -1263,6 +1263,7 @@ enum element_type
     EC_RANDOM           // any colour (except BLACK)
 };
 
+// This list must match the enchant_names array in mon-util.cc
 enum enchant_type
 {
     ENCH_NONE = 0,                     //    0

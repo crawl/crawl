@@ -4468,7 +4468,8 @@ static const char *enchant_names[] =
     "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short lived", "paralysis", "sick", "sleep", "fatigue", "bug"
+    "short lived", "paralysis", "sick", "sleep", "fatigue", "held",
+    "bug"
 };
 
 const char *mons_enchantment_name(enchant_type ench)
