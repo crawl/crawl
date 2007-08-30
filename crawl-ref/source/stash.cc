@@ -109,7 +109,7 @@ void describe_stash(int x, int y)
         {
             std::string desc = "[Stash: " 
                        + s->description() + "]";
-            mpr(desc.c_str());
+            mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
         }
     }
 }

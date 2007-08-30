@@ -781,7 +781,7 @@ static void extend_move_to_edge(dist &moves)
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void describe_oos_square(int x, int y)
 {
-    mpr("You can't see that place.");
+    mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
     
     if (!in_bounds(x, y) || !is_terrain_seen(x, y))
         return;
@@ -1159,7 +1159,12 @@ static void describe_feature(int mx, int my, bool oos)
     {
         if (oos)
             desc = "[" + desc + "]";
-        mpr(desc.c_str());
+
+        msg_channel_type channel = MSGCH_EXAMINE;
+        if (oos || grd[mx][my] == DNGN_FLOOR)
+            channel = MSGCH_EXAMINE_FILTER;
+
+        mpr(desc.c_str(), channel);
     }
 }
 
@@ -1208,9 +1213,9 @@ void describe_floor()
     if (feat.empty())
         return;
 
-    mpr((prefix + feat + suffix).c_str());
+    mpr((prefix + feat + suffix).c_str(), MSGCH_EXAMINE);
     if (grid == DNGN_ENTER_LABYRINTH)
-        mpr("Beware, for starvation awaits!");
+        mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
 }
 
 static std::string feature_do_grammar(description_level_type dtype,
@@ -1622,7 +1627,7 @@ static void describe_monster(const monsters *mon)
 
     if (mon->type == MONS_HYDRA)
     {
-        mprf("It has %d head%s.", mon->number,
+        mprf(MSGCH_EXAMINE, "It has %d head%s.", mon->number,
              (mon->number > 1? "s" : ""));
     }
 
@@ -1632,13 +1637,13 @@ static void describe_monster(const monsters *mon)
     {
        if (mon->behaviour == BEH_SLEEP)
        {
-           mprf("%s appears to be resting.",
+           mprf(MSGCH_EXAMINE, "%s appears to be resting.",
                 mons_pronoun(mon->type, PRONOUN_CAP));
        }
        // Applies to both friendlies and hostiles
        else if (mon->behaviour == BEH_FLEE)
        {
-           mprf("%s is retreating.",
+           mprf(MSGCH_EXAMINE, "%s is retreating.",
                 mons_pronoun(mon->type, PRONOUN_CAP));
        }
        // hostile with target != you
@@ -1648,16 +1653,16 @@ static void describe_monster(const monsters *mon)
            // part of their special behaviour.
            if (!testbits(mon->flags, MF_BATTY))
            {
-               mprf("%s doesn't appear to have noticed you.",
+               mprf(MSGCH_EXAMINE, "%s doesn't appear to have noticed you.",
                     mons_pronoun(mon->type, PRONOUN_CAP));
            }
        }
     }
 
     if (mon->attitude == ATT_FRIENDLY)
-        mprf("%s is friendly.", mons_pronoun(mon->type, PRONOUN_CAP));
+        mprf(MSGCH_EXAMINE, "%s is friendly.", mons_pronoun(mon->type, PRONOUN_CAP));
     else if (mon->attitude == ATT_NEUTRAL)
-        mprf("%s is indifferent to you.",
+        mprf(MSGCH_EXAMINE, "%s is indifferent to you.",
              mons_pronoun(mon->type, PRONOUN_CAP));
 
     std::string desc = "";
@@ -1732,7 +1737,7 @@ static void describe_cell(int mx, int my)
     bool mimic_item = false;
 
     if (mx == you.x_pos && my == you.y_pos)
-        mpr("You.");
+        mpr("You.", MSGCH_EXAMINE_FILTER);
 
     if (mgrd[mx][my] != NON_MONSTER)
     {
@@ -1742,7 +1747,8 @@ static void describe_cell(int mx, int my)
         {
             if (!player_monster_visible(&menv[i]) && !mons_flies(&menv[i]))
             {
-                mpr("There is a strange disturbance in the water here.");
+                mpr("There is a strange disturbance in the water here.",
+                    MSGCH_EXAMINE_FILTER);
             }
         }
 
@@ -1778,7 +1784,7 @@ static void describe_cell(int mx, int my)
         const int cloud_inspected = env.cgrid[mx][my];
         const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
-        mprf("There is a cloud of %s here.", cloud_name(ctype).c_str());
+        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.", cloud_name(ctype).c_str());
     }
 
     int targ_item = igrd[ mx ][ my ];
@@ -1815,7 +1821,7 @@ static void describe_cell(int mx, int my)
     const std::string traveldest =
         stair_destination_description(coord_def(mx, my));
     const dungeon_feature_type feat = grd[mx][my];
-    mprf("(%d,%d): %s - %s (%d/%s)%s%s", mx, my,
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", mx, my,
          stringize_glyph(get_screen_glyph(mx, my)).c_str(),
          feature_desc.c_str(),
          feat,
@@ -1829,7 +1835,12 @@ static void describe_cell(int mx, int my)
         print_formatted_paragraph(feature_desc, get_number_of_cols());
     }
     else
-        mpr(feature_desc.c_str());
+    {
+        msg_channel_type channel = MSGCH_EXAMINE;
+        if (grd[mx][my] == DNGN_FLOOR)
+            channel = MSGCH_EXAMINE_FILTER;
+        mpr(feature_desc.c_str(), channel);
+    }
 #endif
 }
 

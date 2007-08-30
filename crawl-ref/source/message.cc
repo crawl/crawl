@@ -304,6 +304,8 @@ int channel_to_colour( msg_channel_type channel, int param )
         case MSGCH_PLAIN:
         case MSGCH_ROTTEN_MEAT:
         case MSGCH_EQUIPMENT:
+        case MSGCH_EXAMINE:
+        case MSGCH_EXAMINE_FILTER:
         default:
             ret = param > 0? param : LIGHTGREY;
             break;
@@ -495,7 +497,7 @@ static void mpr_store_messages(const std::string& message,
     textcolor(LIGHTGREY);
 
     // equipment lists just waste space in the message recall
-    if (channel != MSGCH_EQUIPMENT)
+    if (channel != MSGCH_EQUIPMENT && channel != MSGCH_EXAMINE_FILTER)
     {
         // Put the message into Store_Message, and move the '---' line forward
         Store_Message[ Next_Message ].text = message;

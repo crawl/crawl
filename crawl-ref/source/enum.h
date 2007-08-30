@@ -1850,7 +1850,9 @@ enum msg_channel_type
     MSGCH_EQUIPMENT,      // equipment listing messages
     MSGCH_FLOOR_ITEMS,    // like equipment, but lists of floor items
     MSGCH_MULTITURN_ACTION,  // delayed action messages
-    MSGCH_DIAGNOSTICS,    // various diagnostic messages 
+    MSGCH_EXAMINE,        // messages describing monsters, features, items
+    MSGCH_EXAMINE_FILTER, // "less important" instances of the above
+    MSGCH_DIAGNOSTICS,    // various diagnostic messages
     MSGCH_TUTORIAL,       // messages for tutorial
     NUM_MESSAGE_CHANNELS  // always last
 };
