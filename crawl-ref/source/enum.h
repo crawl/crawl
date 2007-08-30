@@ -619,6 +619,7 @@ enum command_type
     CMD_LIST_WEAPONS,
     CMD_LIST_ARMOUR,
     CMD_LIST_JEWELLERY,
+    CMD_LIST_EQUIPMENT,
     CMD_ZAP_WAND,
     CMD_CAST_SPELL,
     CMD_MEMORISE_SPELL,
@@ -2794,7 +2795,8 @@ enum object_selector
 {
     OSEL_ANY     = -1,
     OSEL_WIELD   = -2,
-    OSEL_UNIDENT = -3
+    OSEL_UNIDENT = -3,
+    OSEL_EQUIP   = -4
 };
 
 enum operation_types

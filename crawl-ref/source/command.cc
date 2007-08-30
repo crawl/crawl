@@ -374,21 +374,12 @@ void list_armour()
 
         if (armour_id != -1)
             estr << you.inv[armour_id].name(DESC_INVENTORY);
-
-        if (!you_can_wear(i))
-        {
-            if (i == EQ_BODY_ARMOUR || i == EQ_HELMET)
-            {
-                if (!you_tran_can_wear(i))
-                    estr << "    (currently unavailable)";
-                else
-                    estr << "    (ill-fitting)";
-            }
-            else
-                estr << "    (unavailable)";
-        }
+        else if (!you_can_wear(i,true))
+            estr << "    (unavailable)";
         else if (!you_tran_can_wear(i))
             estr << "    (currently unavailable)";
+        else if (!you_can_wear(i))
+            estr << "    (ill-fitting)";
         else
             estr << "    none";
 
@@ -463,10 +454,13 @@ void list_weapons(void)
         else
             wstring = "Secondary : ";
 
-        if (is_valid_item( you.inv[i] ))
+        if (is_valid_item( you.inv[i]) &&
+               (you.inv[i].base_type == OBJ_WEAPONS
+                || you.inv[i].base_type == OBJ_STAVES
+                || you.inv[i].base_type == OBJ_MISCELLANY))
+        {
             wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
-        else if (!you_tran_can_wear(EQ_WEAPON))
-            wstring += "    (currently unavailable)";
+        }
         else
             wstring += "    none";
 

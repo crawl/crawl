@@ -567,6 +567,10 @@ Spider Form
 
 This spell temporarily transforms the caster into a venomous, spider-like creature. Spellcasting is slightly more difficult in this form. This spell is not powerful enough to allow the caster to slip out of cursed equipment. 
 %%%%
+Static Discharge
+
+This spell releases electric charges against those next to the caster. These may arc to adjacent monsters (or even the caster) before they eventually ground out. 
+%%%%
 Statue Form
 
 This spell temporarily transforms the caster into a slow-moving (but extremely robust) stone statue. 

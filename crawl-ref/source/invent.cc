@@ -633,6 +633,13 @@ static bool item_class_selected(const item_def &i, int selector)
                 || itype == OBJ_MISCELLANY);
     case OBJ_SCROLLS:
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
+    case OSEL_EQUIP:
+        for (int eq = 0; eq < NUM_EQUIP; eq++)
+        {
+             if (you.equip[eq] == i.link)
+                 return (true);
+        }
+        // fall through
     default:
         return (false);
     }
@@ -913,7 +920,7 @@ bool has_warning_inscription(const item_def& item,
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
-    if ( has_warning_inscription(item, oper) )
+    if (is_valid_item( item ) && has_warning_inscription(item, oper) )
     {
         std::string prompt = "Really choose ";
         prompt += item.name(DESC_INVENTORY);

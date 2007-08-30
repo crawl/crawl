@@ -2427,22 +2427,29 @@ static void give_random_secondary_armour( int slot )
     switch (random2(4))
     {
     case 0:
-        you.inv[ slot ].sub_type = ARM_CLOAK;
-        you.equip[EQ_CLOAK] = slot;
-        break;
-    case 1:
         you.inv[ slot ].sub_type = ARM_BOOTS;
         you.equip[EQ_BOOTS] = slot;
-        break;
+        if (you_can_wear(EQ_BOOTS))
+            break;
+        // else fall through
+    case 1:
+        you.inv[ slot ].sub_type = ARM_HELMET;
+        you.equip[EQ_HELMET] = slot;
+        if (you_can_wear(EQ_HELMET))
+            break;
+        // else fall through
     case 2:
         you.inv[ slot ].sub_type = ARM_GLOVES;
         you.equip[EQ_GLOVES] = slot;
-        break;
-    case 3:
-        you.inv[ slot ].sub_type = ARM_HELMET;
-        you.equip[EQ_HELMET] = slot;
+        if (you_can_wear(EQ_GLOVES))
+            break;
+        // else fall through
+    case 3: // anyone can wear this
+        you.inv[ slot ].sub_type = ARM_CLOAK;
+        you.equip[EQ_CLOAK] = slot;
         break;
     }
+    
 }
 
 // Returns true if a "good" weapon is given

@@ -433,10 +433,11 @@ bool player_genus(unsigned char which_genus, unsigned char species)
 // use (usually wear) a given piece of equipment
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
 // the ill-fitting variant (i.e. not caps and robes)
-// Centaurs and Naga are ignored for now, seeing how
-// Boots are changed to Barding in the % screen.
+// If special_armour is set to true, special cases
+// such as bardings, light armour and caps are
+// considered. Otherwise these simply return false.
 // -------------------------------------------------
-bool you_can_wear(int eq)
+bool you_can_wear(int eq, bool special_armour)
 {
    // these can be used by all
    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
@@ -452,8 +453,12 @@ bool you_can_wear(int eq)
    if (you.is_undead)
        return true;
 
-//   if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
-//       return false;
+   // anyone can wear caps/hats and robes
+   if (special_armour && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR))
+       return true;
+
+   if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+       return (special_armour);
 
    // of the remaining items, these races can't wear anything
    if (you.species == SP_TROLL || you.species == SP_SPRIGGAN
@@ -466,6 +471,9 @@ bool you_can_wear(int eq)
    {
        return false;
    }
+
+   if (you.species == SP_MINOTAUR && eq == EQ_HELMET)
+       return false;
 
    // else no problems
    return true;
@@ -5246,8 +5254,12 @@ void player::attacking(actor *other)
     if (other && other->atype() == ACT_MONSTER)
     {
         const monsters *mons = dynamic_cast<monsters*>(other);
-        if (mons_friendly(mons))
+        if (mons_friendly(mons)
+            && (you.religion != GOD_BEOGH // Beogh only cares about orcs
+                || ::mons_species(mons->type) == MONS_ORC))
+        {
             did_god_conduct(DID_ATTACK_FRIEND, 5);
+        }
         else
             pet_target = monster_index(mons);
     }

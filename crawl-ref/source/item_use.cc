@@ -1174,6 +1174,7 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
 static bool fire_item_okay(const item_def &item, unsigned flags)
 {
     return (fire_item_matches(item, flags)
+            && !(you.equip[EQ_WEAPON] == item.link && item_cursed(item))
             && check_warning_inscriptions(item, OPER_FIRE));
 }
 

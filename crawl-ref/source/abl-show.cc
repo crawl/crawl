@@ -358,7 +358,7 @@ const std::string make_cost_description( ability_type ability )
         ret << " HP";
     }
 
-    if (abil.food_cost)
+    if (abil.food_cost && you.species != SP_MUMMY)
     {
         if (!ret.str().empty())
             ret << ", ";

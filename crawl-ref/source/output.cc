@@ -23,10 +23,12 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "describe.h"
 #include "format.h"
 #include "fight.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "items.h"
 #include "menu.h"
 #include "ouch.h"
 #include "player.h"
@@ -637,8 +639,13 @@ static const char *s_equip_slot_names[] =
 
 const char *equip_slot_to_name(int equip)
 {
-    if (equip == EQ_RINGS)
+    if (equip == EQ_RINGS || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING)
         return "Ring";
+
+    if (equip == EQ_BOOTS &&
+           (you.species == SP_CENTAUR || you.species == SP_NAGA))
+        return "Barding";
+
     if (equip < 0 || equip >= NUM_EQUIP)
         return "";
     return s_equip_slot_names[equip];
@@ -844,11 +851,6 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
         {
             int eqslot = e_order[i];
             const char *slot = equip_slot_to_name( eqslot );
-            if (eqslot == EQ_LEFT_RING || eqslot == EQ_RIGHT_RING)
-                slot = "Ring";
-            else if (eqslot == EQ_BOOTS &&
-                     (you.species == SP_CENTAUR || you.species == SP_NAGA))
-                slot = "Barding";
 
             if ( you.equip[ e_order[i] ] != -1)
             {
@@ -1245,11 +1247,6 @@ void print_overview_screen()
         {
             int eqslot = e_order[i];
             const char *slot = equip_slot_to_name( eqslot );
-            if (eqslot == EQ_LEFT_RING || eqslot == EQ_RIGHT_RING)
-                slot = "Ring";
-            else if (eqslot == EQ_BOOTS &&
-                     (you.species == SP_CENTAUR || you.species == SP_NAGA))
-                slot = "Barding";
 
             if ( you.equip[ e_order[i] ] != -1)
             {
@@ -1276,32 +1273,21 @@ void print_overview_screen()
                     else
                         snprintf(buf, sizeof buf, "%-7s:", slot);
                 }
-                else if (!you_can_wear(e_order[i]))
+                else if (!you_can_wear(e_order[i], true))
                 {
-                    if (e_order[i] == EQ_BODY_ARMOUR || e_order[i] == EQ_HELMET)
-                    {
-                        if (!you_tran_can_wear(e_order[i]))
-                        {
-                            snprintf(buf, sizeof buf, "%-7s: "
-                                     "<darkgray>(currently unavailable)</darkgray>",
-                                     slot);
-                        }
-                        else
-                        {   snprintf(buf, sizeof buf,
-                                     "%-7s: <lightgray>(ill-fitting)</lightgray>",
-                                     slot);
-                        }
-                    }
-                    else
-                    {
-                        snprintf(buf, sizeof buf,
-                                 "%-7s: <darkgray>(unavailable)</darkgray>", slot);
-                    }
+                    snprintf(buf, sizeof buf,
+                             "%-7s: <darkgray>(unavailable)</darkgray>", slot);
                 }
                 else if (!you_tran_can_wear(e_order[i]))
                 {
                     snprintf(buf, sizeof buf, "%-7s: "
                              "<darkgray>(currently unavailable)</darkgray>",
+                             slot);
+                }
+                else if (!you_can_wear(e_order[i]))
+                {
+                    snprintf(buf, sizeof buf,
+                             "%-7s: <lightgray>(ill-fitting)</lightgray>",
                              slot);
                 }
                 else

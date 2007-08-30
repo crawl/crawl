@@ -1577,19 +1577,23 @@ void process_command( command_type cmd )
     case CMD_LIST_WEAPONS:
         list_weapons();
         break;
+        
+    case CMD_LIST_ARMOUR:
+        list_armour();
+        break;
+        
+    case CMD_LIST_JEWELLERY:
+        list_jewellery();
+        break;
+
+    case CMD_LIST_EQUIPMENT:
+        get_invent( OSEL_EQUIP );
+        break;
 
     case CMD_INSCRIBE_ITEM:
         inscribe_item();
         break;
         
-    case CMD_LIST_ARMOUR:
-        list_armour();
-        break;
-
-    case CMD_LIST_JEWELLERY:
-        list_jewellery();
-        break;
-
 #ifdef WIZARD
     case CMD_WIZARD:
         handle_wizard_command();
@@ -1888,9 +1892,8 @@ static void decrement_durations()
     decrement_a_duration(DUR_RESIST_POISON, "Your poison resistance expires.");
     decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
     
-    decrement_a_duration(DUR_INVIS, "You flicker for a moment.",
-                         6, coinflip(),
-                         "You flicker back into view.");
+    decrement_a_duration(DUR_INVIS, "You flicker back into view.",
+                         6, coinflip(), "You flicker for a moment.");
 
     decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
     decrement_a_duration(DUR_CONF, "You feel less confused.");
@@ -2529,7 +2532,7 @@ command_type keycode_to_command( keycode_type key )
     case '"': return CMD_LIST_JEWELLERY;
     case '{': return CMD_INSCRIBE_ITEM;
     case '[': return CMD_LIST_ARMOUR;
-    case ']': return CMD_LIST_ARMOUR;
+    case ']': return CMD_LIST_EQUIPMENT;
     case ')': return CMD_LIST_WEAPONS;
     case '(': return CMD_LIST_WEAPONS;
     case '\\': return CMD_DISPLAY_KNOWN_OBJECTS;

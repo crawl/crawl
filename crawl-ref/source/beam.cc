@@ -3525,8 +3525,12 @@ static int affect_monster(bolt &beam, monsters *mon)
         {
             if (YOU_KILL( beam.thrower ))
             {
-                if (mons_friendly( mon ))
+                if (mons_friendly( mon )
+                     && (you.religion != GOD_BEOGH // Beogh only cares about orcs
+                         || mons_species(mon->type) == MONS_ORC))
+                {
                     did_god_conduct( DID_ATTACK_FRIEND, 5 );
+                }
 
                 if (mons_holiness( mon ) == MH_HOLY)
                     did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
