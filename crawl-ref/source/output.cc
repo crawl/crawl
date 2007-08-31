@@ -1287,7 +1287,7 @@ void print_overview_screen()
                 else if (!you_can_wear(e_order[i]))
                 {
                     snprintf(buf, sizeof buf,
-                             "%-7s: <lightgray>(ill-fitting)</lightgray>",
+                             "%-7s: <lightgray>(restricted)</lightgray>",
                              slot);
                 }
                 else

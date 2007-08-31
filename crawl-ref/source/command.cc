@@ -379,7 +379,7 @@ void list_armour()
         else if (!you_tran_can_wear(i))
             estr << "    (currently unavailable)";
         else if (!you_can_wear(i))
-            estr << "    (ill-fitting)";
+            estr << "    (restricted)";
         else
             estr << "    none";
 

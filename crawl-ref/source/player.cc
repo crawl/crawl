@@ -441,7 +441,7 @@ bool you_can_wear(int eq, bool special_armour)
 {
    // these can be used by all
    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
-       || eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_CLOAK)
+       || eq == EQ_WEAPON || eq == EQ_CLOAK)
    {
        return true;
    }
@@ -453,9 +453,12 @@ bool you_can_wear(int eq, bool special_armour)
    if (you.is_undead)
        return true;
 
-   // anyone can wear caps/hats and robes
-   if (special_armour && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR))
+   // anyone can wear caps/hats and robes and at least one of buckler/shield
+   if (special_armour
+       && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR || eq == EQ_SHIELD))
+   {
        return true;
+   }
 
    if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
        return (special_armour);

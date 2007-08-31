@@ -111,7 +111,9 @@ function ch_autopickup(it)
        end 
        if you_undead() and
             (item.subtype(it) == "regeneration" 
-	       or item.subtype(it) == "rage") then
+	       or item.subtype(it) == "rage"
+	       or item.subtype(it) == "sustenance"
+	          and you.race() == "Mummy") then
           return false
        end 
     end
