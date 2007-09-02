@@ -28,6 +28,7 @@
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
+#include "invent.h"
 #include "items.h"
 #include "it_use2.h"
 #include "itemname.h"
@@ -324,6 +325,10 @@ bool evoke_wielded( void )
 
     item_def& wpn = you.inv[wield];
     bool unevokable = false;
+
+    // Check inscriptions.
+    if ( !check_warning_inscriptions(wpn, OPER_EVOKE) )
+        return false;
 
     switch (wpn.base_type)
     {

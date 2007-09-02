@@ -1559,7 +1559,13 @@ void set_ident_type( object_class_type basetype, int subtype,
     const item_type_id_type idt = objtype_to_idtype(basetype);
 
     if ( idt != NUM_IDTYPE )
-        type_ids[idt][subtype] = setting;
+    {
+        if (type_ids[idt][subtype] != setting)
+        {
+            type_ids[idt][subtype] = setting;
+            request_autoinscribe();
+        }
+    }
 }
 
 item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)

@@ -71,9 +71,11 @@ static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
                                  int obj, bool force_squelch = false );
 static void autoinscribe_item( item_def& item );
-static void autoinscribe_items();
+static void autoinscribe_floor_items();
+static void autoinscribe_inventory();
 
-static bool will_autopickup = false;
+static bool will_autopickup   = false;
+static bool will_autoinscribe = false;
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
@@ -625,7 +627,6 @@ void item_check(bool verbose)
 {
 
     describe_floor();
-    autoinscribe_items();
     origin_set(you.x_pos, you.y_pos);
 
     std::ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
@@ -1664,8 +1665,13 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
     
-    if ( grid_destroys_items(my_grid) && !silenced(you.pos()) )
-        mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+    if ( grid_destroys_items(my_grid) )
+    {
+        if( !silenced(you.pos()) )
+            mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+    }
+    else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
+        stashes.add_stash();
    
     dec_inv_item_quantity( item_dropped, quant_drop );
     you.turn_is_over = true;
@@ -2622,7 +2628,7 @@ void handle_time( long time_delta )
 static void autoinscribe_item( item_def& item )
 {
     std::string iname = item.name(DESC_INVENTORY);
-    
+
     /* if there's an inscription already, do nothing */
     if ( item.inscription.size() > 0 )
         return;
@@ -2631,11 +2637,63 @@ static void autoinscribe_item( item_def& item )
     {
         if ( Options.autoinscriptions[i].first.matches(iname) )
         {
+            // Don't autoinscribe dropped items on ground with
+            // "=g".  If the item matches a rule which adds "=g",
+            // "=g" got added to it before it was dropped, and
+            // then the user explictly removed it because they
+            // don't want to autopickup it again.
+            std::string str = Options.autoinscriptions[i].second;
+            if ((item.flags & ISFLAG_DROPPED)
+                && (item.x != -1 || item.y != -1))
+            {
+                str = replace_all(str, "=g", "");
+            }
+
             // Note that this might cause the item inscription to
             // pass 80 characters.
-            item.inscription += Options.autoinscriptions[i].second;
+            item.inscription += str;
         }
     }
+}
+
+static void autoinscribe_floor_items()
+{
+    int o, next;
+    o = igrd[you.x_pos][you.y_pos];
+
+    while (o != NON_ITEM)
+    {
+        next = mitm[o].link;
+        autoinscribe_item( mitm[o] );
+        o = next;
+    }
+}
+
+static void autoinscribe_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item(you.inv[i]))
+            autoinscribe_item( you.inv[i] );
+    }
+}
+
+bool need_to_autoinscribe()
+{
+    return will_autoinscribe;
+}
+
+void request_autoinscribe(bool do_inscribe)
+{
+    will_autoinscribe = do_inscribe;
+}
+
+void autoinscribe()
+{
+    autoinscribe_floor_items();
+    autoinscribe_inventory();
+
+    will_autoinscribe = false;
 }
 
 static inline std::string autopickup_item_name(const item_def &item)
@@ -2666,19 +2724,6 @@ static bool is_forced_autopickup(const item_def &item, std::string &iname)
             return (true);
     }
     return false;
-}
-
-static void autoinscribe_items()
-{
-    int o, next;
-    o = igrd[you.x_pos][you.y_pos];
-
-    while (o != NON_ITEM)
-    {
-        next = mitm[o].link;
-        autoinscribe_item( mitm[o] );
-        o = next;
-    }
 }
 
 bool item_needs_autopickup(const item_def &item)
@@ -2804,6 +2849,7 @@ static void do_autopickup()
 
 void autopickup()
 {
+    autoinscribe_floor_items();
     do_autopickup();
     item_check(false);
 }

@@ -494,7 +494,12 @@ bool item_is_critical(const item_def &item)
 
 void set_ident_flags( item_def &item, unsigned long flags )
 {
-    item.flags |= flags;
+    if ((item.flags & flags) != flags)
+    {
+        item.flags |= flags;
+        request_autoinscribe();
+    }
+
     if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID) &&
         fully_identified(item) && is_interesting_item(item))
     {

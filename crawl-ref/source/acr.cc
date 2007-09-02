@@ -961,6 +961,9 @@ static void input()
     if (need_to_autopickup())
         autopickup();
 
+    if (need_to_autoinscribe())
+        autoinscribe();
+
     handle_delay();
 
     const coord_def cwhere = grid2view(you.pos());
@@ -1009,6 +1012,9 @@ static void input()
         if (cmd != CMD_MOUSE_MOVE)
             c_input_reset(false, true);
     }
+
+    if (need_to_autoinscribe())
+        autoinscribe();
 
     if (you.turn_is_over)
     {

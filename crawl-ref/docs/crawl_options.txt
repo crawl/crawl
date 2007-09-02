@@ -1042,9 +1042,13 @@ functional, namely all containing one of the following
  @*9    -- now any action command followed by '9' will use this item
  !w     -- before wielding this item, Crawl will ask for confirmation
  !*     -- any action with this item causes a prompt
+ !p     -- Nemelex Xobeh worshippers will be prompted before
+           sacrificing this item at the portable altar
  =g     -- item will be picked up automatically if autopickup is on
  =k     -- item will be ignored in all listings on the ground
            (it can still be picked up if it's the only item on the ground)
+ =s     -- If stash tracking is explicit, then dropping this item will
+           cause a stash to automatically be marked.
 (in the example 'w' could be any sensible command and '9' could be any digit).
 An item may contain more than one shortcut. 
 

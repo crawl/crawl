@@ -830,6 +830,11 @@ void create_spec_object()
                 if (!(type_wanted = atoi(specs)))
                 {
                     mpr( "No such item." );
+
+                    // Clean up item
+                    mitm[thing_created].base_type = OBJ_UNASSIGNED;
+                    mitm[thing_created].quantity  = 0;
+
                     return;
                 }
                 type_wanted--;

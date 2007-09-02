@@ -848,6 +848,10 @@ game_start:
         }
     }
 
+    // Apply autoinscribe rules to inventory.
+    request_autoinscribe();
+    autoinscribe();
+
     // Brand items as original equipment.
     origin_set_inventory(origin_set_startequip);
 
