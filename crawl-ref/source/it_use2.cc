@@ -281,8 +281,8 @@ bool potion_effect( potion_type pot_eff, int pow )
         }
         else
         {
-            go_berserk(true);
-            xom_is_stimulated(64);
+            if (go_berserk(true))
+                xom_is_stimulated(64);
         }
         break;
 

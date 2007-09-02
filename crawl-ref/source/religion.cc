@@ -266,8 +266,8 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Lugonu
     { "depart the Abyss at will",
       "bend space around yourself",
-      "summon the demons of the Abyss to your aid",
-      "",
+      "banish your foes",
+      "corrupt the fabric of space",
       "gate yourself to the Abyss" },
     // Beogh
     { "Beogh no longer supports the use of orcish gear.",
