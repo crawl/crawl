@@ -964,11 +964,7 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
-        if ( you.mutation[MUT_CLAWS] )
-            result += "<cyan>";
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
-        if ( you.mutation[MUT_CLAWS] )
-            result += "</cyan><lightblue>";
         result += EOL;
         result += "You preferably eat rotten meat." EOL;
         result += "You resist negative energy." EOL;
@@ -1103,7 +1099,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_VAMPIRE:
-        if (you.hunger_state < HS_SATIATED)
+        if (you.hunger_state >= HS_SATIATED)
         {
             result += "<green>";
             result += "You are";
@@ -1112,13 +1108,15 @@ formatted_string describe_mutations()
             result += " in touch with the powers of death." EOL;
             result += "You mostly resist negative energy." EOL;
             result += "You can see invisible." EOL;
-            if (you.hunger_state < HS_HUNGRY)
-                result += "You do not regenerate." EOL;
-            else
-                result += "You regenerate slowly." EOL;
             result += "</green>";
-            have_any = true;
         }
+        result += "<green>";
+        if (you.hunger_state < HS_HUNGRY)
+            result += "You do not regenerate." EOL;
+        else
+            result += "You regenerate slowly." EOL;
+        result += "</green>";
+        have_any = true;
         break;
         
     default:
