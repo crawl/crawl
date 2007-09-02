@@ -2346,7 +2346,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     bool hole = true;
     const char *what = NULL;
 
-    mpr("Fragment what (e.g. a wall)?", MSGCH_PROMPT);
+    mpr("Fragment what (e.g. a wall or monster)?", MSGCH_PROMPT);
     direction( beam, DIR_TARGET, TARG_ENEMY );
 
     if (!beam.isValid)
@@ -2363,6 +2363,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     blast.type = '#';
     blast.colour = 0;
     blast.set_target(beam);
+    blast.source_x = you.x_pos;
+    blast.source_y = you.y_pos;
     blast.is_tracer = false;
     blast.flavour = BEAM_FRAG;
     blast.hit = AUTOMATIC_HIT;
@@ -2680,7 +2682,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         if (what != NULL)
             mprf("The %s explodes!", what);
 
-        explosion( blast, hole );
+        explosion( blast, hole, true );
     }
     else if (blast.damage.num == 0)
     {

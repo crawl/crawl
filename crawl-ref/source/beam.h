@@ -39,8 +39,10 @@ bool nasty_beam( struct monsters *mon, struct bolt &beam );
  * called from: ability - it_use3 - item_use - mstuff2 - religion -
  *              spells - spells4
  * *********************************************************************** */
-void explosion( struct bolt &pbolt, bool hole_in_the_middle = false );
-
+void explosion( struct bolt &pbolt, bool hole_in_the_middle = false,
+                bool explode_in_wall = false,
+                bool stop_at_statues = true,
+                bool stop_at_walls   = true);
 
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************

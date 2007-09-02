@@ -4248,8 +4248,90 @@ static void explosion1(bolt &pbolt)
 
 // for each cell affected by the explosion, affect() is called.
 
-void explosion( bolt &beam, bool hole_in_the_middle )
+void explosion( bolt &beam, bool hole_in_the_middle,
+                bool explode_in_wall, bool stop_at_statues,
+                bool stop_at_walls)
 {
+    if (in_bounds(beam.source_x, beam.source_y)
+        && !(beam.source_x == beam.target_x
+             && beam.source_y == beam.target_y)
+        && (!explode_in_wall || stop_at_statues || stop_at_walls))
+    {
+        ray_def ray;
+        int     max_dist = grid_distance(beam.source_x, beam.source_y,
+                                     beam.target_x, beam.target_y);
+
+        ray.fullray_idx = -1; // to quiet valgrind
+        find_ray( beam.source_x, beam.source_y, beam.target_x, beam.target_y,
+                  true, ray, 0, true );
+
+        // Can cast explosions out from statues or walls.
+        if (ray.x() == beam.source_x && ray.y() == beam.source_y)
+        {
+            max_dist--;
+            ray.advance(true); 
+        }
+
+        int dist = 0;
+        while (dist++ <= max_dist && !(ray.x()    == beam.target_x
+                                       && ray.y() == beam.target_y))
+        {
+            if (grid_is_solid(ray.x(), ray.y()))
+            {
+                bool is_wall = grid_is_wall(grd[ray.x()][ray.y()]);
+                if (!stop_at_statues && !is_wall)
+                {
+#if DEBUG_DIAGNOSTICS
+                    mpr("Explosion beam passing over a statue or other "
+                        "non-wall solid feature.", MSGCH_DIAGNOSTICS);
+#endif
+                    continue;
+                }
+                else if (!stop_at_walls && is_wall)
+                {
+#if DEBUG_DIAGNOSTICS
+                    mpr("Explosion beam passing through a wall.",
+                        MSGCH_DIAGNOSTICS);
+#endif
+                    continue;
+                }
+
+#if DEBUG_DIAGNOSTICS
+                if (!is_wall && stop_at_statues)
+                    mpr("Explosion beam stopped by a statue or other "
+                        "non-wall solid feature.", MSGCH_DIAGNOSTICS);
+                else if (is_wall && stop_at_walls)
+                    mpr("Explosion beam stopped by a by wall.",
+                        MSGCH_DIAGNOSTICS);
+                else
+                    mpr("Explosion beam stopped by someting buggy.",
+                        MSGCH_DIAGNOSTICS);
+#endif
+
+                break;
+            }
+            ray.advance(true);
+        } // while (dist++ <= max_dist)
+
+        // Backup so we don't explode inside the wall.
+        if (!explode_in_wall && grid_is_wall(grd[ray.x()][ray.y()]))
+        {
+#if DEBUG_DIAGNOSTICS
+            int old_x = ray.x();
+            int old_y = ray.y();
+#endif
+            ray.regress();
+#if DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Can't explode in a solid wall, backing up a step "
+                 "along the beam path from (%d, %d) to (%d, %d)",
+                 old_x, old_y, ray.x(), ray.y());
+#endif
+        }
+        beam.target_x = ray.x();
+        beam.target_y = ray.y();
+    } // if (!explode_in_wall)
+
     int r = beam.ex_size;
 
     // beam is now an explosion;  set in_explosion_phase

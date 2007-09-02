@@ -363,6 +363,10 @@ Iskenderun's Mystic Blast
 
 This spell throws a crackling sphere of destructive energy. 
 %%%%
+Lee's Rapid Deconstruction
+
+This spells fragments a wall into an explosion of deadly shrapnel.  It can also be used directly on monsters made of wall-like substances.
+%%%%
 Lehudib's Crystal Spear
 
 This spell hurls a lethally sharp bolt of crystal. 
