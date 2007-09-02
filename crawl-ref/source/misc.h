@@ -114,8 +114,7 @@ int trap_at_xy(int which_x, int which_y);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void up_stairs(void);
-
+void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

@@ -573,12 +573,12 @@ static void handle_wizard_command( void )
 
     case 'd':
     case 'D':
-        level_travel(1);
+        level_travel(true);
         break;
 
     case 'u':
     case 'U':
-        level_travel(-1);
+        level_travel(false);
         break;
 
     case '%':
@@ -623,11 +623,11 @@ static void handle_wizard_command( void )
         break;
 
     case '>':
-        grd[you.x_pos][you.y_pos] = DNGN_STONE_STAIRS_DOWN_I;
+        wizard_place_stairs(true);
         break;
 
     case '<':
-        grd[you.x_pos][you.y_pos] = DNGN_ROCK_STAIRS_UP;
+        wizard_place_stairs(false);
         break;
 
     case 'p':
@@ -701,15 +701,46 @@ static void handle_wizard_command( void )
         get_input_line(specs, sizeof specs);
         if (*specs)
         {
-            const dungeon_feature_type feat = dungeon_feature_by_name(specs);
+            // Accept both "shallow_water" and "Shallow water"
+            std::string name = lowercase_string(specs);
+            name = replace_all(name, " ", "_");
+
+            dungeon_feature_type feat = dungeon_feature_by_name(name);
             if (feat == DNGN_UNSEEN)
-                canned_msg(MSG_OK);
-            else
             {
-                mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
-                     you.x_pos, you.y_pos, specs, feat);
-                grd(you.pos()) = feat;
+                std::vector<std::string> matches =
+                    dungeon_feature_matches(name);
+
+                if (matches.empty())
+                {
+                    mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
+                         name.c_str());
+                    return;
+                }
+
+                // Only one possible match, use that.
+                if (matches.size() == 1)
+                {
+                    name = matches[0];
+                    feat = dungeon_feature_by_name(name);
+                }
+                // Multiple matches, list them to wizard
+                else
+                {
+                    std::string prefix = "No exact match for feature '" +
+                        name +  "', possible matches are: ";
+
+                    // Use mpr_comma_separated_list() because the list
+                    // might be *LONG*.
+                    mpr_comma_separated_list(prefix, matches, ", ", " and ",
+                                             MSGCH_DIAGNOSTICS);
+                    return;
+                }
             }
+
+            mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
+                 you.x_pos, you.y_pos, name.c_str(), feat);
+            grd(you.pos()) = feat;
         }
         break;
 

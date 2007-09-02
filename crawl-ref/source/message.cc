@@ -431,6 +431,39 @@ void mpr(const char *inf, msg_channel_type channel, int param)
     }
 }
 
+// mpr() an arbitrarily long list of strings without truncation or risk
+// of overflow.
+void mpr_comma_separated_list(const std::string prefix,
+                              const std::vector<std::string> list,
+                              const std::string &andc,
+                              const std::string &comma,
+                              const msg_channel_type channel,
+                              const int param)
+{
+    std::string out = prefix;
+    unsigned width  = get_number_of_cols() - 1;
+
+    for(int i = 0, size = list.size(); i < size; i++)
+    {
+        std::string new_str = list[i];
+
+        if (size > 0 && i < (size - 2))
+            new_str += comma;
+        else if (i == (size - 2))
+            new_str += andc;
+
+        if (out.length() + new_str.length() >= width)
+        {
+            mpr(out.c_str(), channel, param);
+            out = new_str;
+        }
+        else
+            out += new_str;
+    }
+    mpr(out.c_str(), channel, param);
+}
+
+
 // checks whether a given message contains patterns relevant for
 // notes, stop_running or sounds and handles these cases
 static void mpr_check_patterns(const std::string& message,

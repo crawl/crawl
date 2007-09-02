@@ -49,6 +49,8 @@ int random_map_for_tag(const std::string &tag, bool want_minivault,
                        bool check_depth = false);
 void add_parsed_map(const map_def &md);
 
+std::vector<std::string> find_map_matches(const std::string &name);
+
 void read_maps();
 void read_map(const std::string &file);
 void run_map_preludes();

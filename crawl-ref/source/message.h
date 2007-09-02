@@ -65,6 +65,14 @@ void formatted_mpr(const formatted_string& fs,
 void formatted_message_history(const std::string &st,
                                msg_channel_type channel = MSGCH_PLAIN,
                                int param = 0);
+
+// mpr() an arbitrarily long list of strings
+void mpr_comma_separated_list(const std::string prefix,
+                              const std::vector<std::string> list,
+                              const std::string &andc = " and ",
+                              const std::string &comma = ", ",
+                              const msg_channel_type channel = MSGCH_PLAIN,
+                              const int param = 0);
                                
 // 4.1-style mpr, currently named mprf for minimal disruption.
 void mprf( msg_channel_type channel, int param, const char *format, ... );

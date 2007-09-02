@@ -1003,9 +1003,10 @@ static void leaving_level_now()
     you.level_type_name = newtype;    
 }
 
-void up_stairs(void)
+void up_stairs(dungeon_feature_type force_stair)
 {
-    dungeon_feature_type stair_find = grd[you.x_pos][you.y_pos];
+    dungeon_feature_type stair_find =
+        force_stair? force_stair : grd[you.x_pos][you.y_pos];
     const branch_type old_where = you.where_are_you;
     const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
 

@@ -414,6 +414,110 @@ void create_spec_monster_name(int x, int y)
 }
 #endif
 
+#ifdef WIZARD
+static dungeon_feature_type find_appropriate_stairs(bool down)
+{
+    if (you.level_type == LEVEL_DUNGEON)
+    {
+        int depth = subdungeon_depth(you.where_are_you, you.your_level);
+        if (down)
+            depth++;
+        else
+            depth--;
+
+        // Can't go down from bottom level of a branch.
+        if (depth > branches[you.where_are_you].depth)
+        {
+            mpr("Can't go down from the bottom of a branch.");
+            return DNGN_UNSEEN;
+        }
+        // Going up from top level of branch
+        else if (depth == 0)
+        {
+            // Special cases
+            if (you.where_are_you == BRANCH_VESTIBULE_OF_HELL)
+                return DNGN_EXIT_HELL;
+            else if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+                return DNGN_STONE_STAIRS_UP_I;
+
+            // General case: look for branch exit and copy it
+            for (int y = 1; y < GYM; ++y)
+            {
+                for (int x = 1; x < GXM; ++x)
+                {
+                    if (grd[x][y] >= DNGN_RETURN_FROM_ORCISH_MINES &&
+                        grd[x][y] <= DNGN_RETURN_RESERVED_4)
+                        return grd[x][y];
+                }
+            }
+
+            mpr("Unable to find appropriate branch exit.");
+            return DNGN_UNSEEN;
+        }
+        // Branch non-edge cases
+        else if (depth >= 1)
+        {
+            if (down)
+                return DNGN_STONE_STAIRS_DOWN_I;
+            else
+                return DNGN_ROCK_STAIRS_UP;
+        }
+        else
+        {
+            mpr("Bug in determing level exit.");
+            return DNGN_UNSEEN;
+        }
+    }
+
+    switch(you.level_type)
+    {
+    case LEVEL_LABYRINTH:
+        if (down)
+        {
+            // Can't go down in the Labyrinth
+            mpr("Can't go down in the Labyrinth.");
+            return DNGN_UNSEEN;
+        }
+        else
+            return DNGN_ROCK_STAIRS_UP;
+        break;
+
+    case LEVEL_ABYSS:
+        return DNGN_EXIT_ABYSS;
+        break;
+
+    case LEVEL_PANDEMONIUM:
+        if (down)
+            return DNGN_TRANSIT_PANDEMONIUM;
+        else
+            return DNGN_EXIT_PANDEMONIUM;
+        break;
+
+    case LEVEL_PORTAL_VAULT:
+        return DNGN_EXIT_PORTAL_VAULT;
+        break;
+
+    default:
+        mpr("Unknown level type.");
+        return DNGN_UNSEEN;
+    }
+
+    mpr("Impossible occurence in find_appropriate_stairs()");
+    return DNGN_UNSEEN;
+}
+#endif
+
+#ifdef WIZARD
+void wizard_place_stairs( bool down )
+{
+    dungeon_feature_type stairs = find_appropriate_stairs(down);
+
+    if (stairs == DNGN_UNSEEN)
+        return;
+
+    grd[you.x_pos][you.y_pos] = stairs;
+}
+#endif
 
 //---------------------------------------------------------------
 //
@@ -421,24 +525,24 @@ void create_spec_monster_name(int x, int y)
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void level_travel( int delta )
+void level_travel( bool down )
 {
-    int   old_level = you.your_level;
-    int   new_level = you.your_level + delta;
+    dungeon_feature_type stairs = find_appropriate_stairs(down);
 
-    if (delta == 0)
-    {
-        new_level = debug_prompt_for_int( "Travel to which level? ", true ) - 1;
-    }
-
-    if (new_level < 0 || new_level >= 50)
-    {
-        mpr( "That level is out of bounds." );
+    if (stairs == DNGN_UNSEEN)
         return;
-    }
 
-    you.your_level = new_level - 1;
-    down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
+    // This lets us, for example, use &U to exit from Pandemonium and
+    // &D to go to the next level.
+    command_type real_dir = grid_stair_direction(stairs);
+    if ((down && real_dir == CMD_GO_UPSTAIRS)
+        || (!down && real_dir == CMD_GO_DOWNSTAIRS))
+        down = !down;
+
+    if (down)
+        down_stairs(you.your_level, stairs);
+    else
+        up_stairs(stairs);
 }                               // end level_travel()
 
 static void wizard_go_to_level(const level_pos &pos)
@@ -487,26 +591,19 @@ void wizard_interlevel_travel()
 
 void debug_list_monsters()
 {
-    std::string mons = "Monsters: ";
+    std::vector<std::string> mons;
     int nfound = 0;
+
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         const monsters *m = &menv[i];
         if (!m->alive())
             continue;
 
-        const std::string mname = m->name(DESC_PLAIN, true);
-        std::string news = (nfound++? ", " : "") + mname;
-        if (news.length() + mons.length() >= (unsigned) get_number_of_cols() - 1)
-        {
-            mpr(mons.c_str());
-            mons.clear();
-            news = mname;
-        }
-        mons += news;
+        mons.push_back(m->name(DESC_PLAIN, true));
+        nfound++;
     }
-    if (!mons.empty())
-        mpr(mons.c_str());
+    mpr_comma_separated_list("Monsters: ", mons);
     mprf("%d monsters", nfound);
 }
 
@@ -2052,6 +2149,8 @@ void debug_make_trap()
         return;
 
     strlwr(requested_trap);
+    std::vector<int>         matches;
+    std::vector<std::string> match_names;
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
         if (strstr(requested_trap, 
@@ -2060,12 +2159,32 @@ void debug_make_trap()
             trap = trap_type(t);
             break;
         }
+        else if (strstr(trap_name(trap_type(t)), requested_trap))
+        {
+            matches.push_back(t);
+            match_names.push_back(trap_name(trap_type(t)));
+        }
     }
 
     if (trap == TRAP_UNASSIGNED)
     {
-        mprf("I know no traps named \"%s\"", requested_trap);
-        return;
+        if (matches.empty())
+        {
+            mprf("I know no traps named \"%s\"", requested_trap);
+            return;
+        }
+        // Only one match, use that
+        else if (matches.size() == 1)
+            trap = trap_type(matches[0]);
+        else
+        {
+            std::string prefix = "No exact match for trap '";
+            prefix += requested_trap;
+            prefix += "', possible matches are: ";
+            mpr_comma_separated_list(prefix, match_names);
+
+            return;
+        }
     }
 
     place_specific_trap(you.x_pos, you.y_pos, trap);
@@ -2208,11 +2327,34 @@ void debug_set_xl()
 static void debug_load_map_by_name(const std::string &name)
 {
     level_clear_vault_memory();
-    const int map = find_map_by_name(name);
+    int map = find_map_by_name(name);
     if (map == -1)
     {
-        mprf("Can't find map named '%s'.", name.c_str());
-        return;
+        std::vector<std::string> matches = find_map_matches(name);
+
+        if (matches.empty())
+        {
+            mprf("Can't find map named '%s'.", name.c_str());
+            return;
+        }
+        else if (matches.size() == 1)
+        {
+            std::string prompt = "Only match is '";
+            prompt += matches[0];
+            prompt += "', use that?";
+            if (!yesno(prompt.c_str()))
+                return;
+
+            map = find_map_by_name(matches[0]);
+        }
+        else
+        {
+            std::string prompt = "No exact matches for '";
+            prompt += name;
+            prompt += "', possible matches are: ";
+            mpr_comma_separated_list(prompt, matches);
+            return;
+        }
     }
 
     if (dgn_place_map(map, false, true))

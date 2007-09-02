@@ -3001,5 +3001,5 @@ void menu_sort_condition::set_comparators(std::string &s)
 {
     init_item_sort_comparators(
         cmp,
-        s.empty()? "basename, qualname, curse, qty" : s);
+        s.empty()? "equipped, basename, qualname, curse, qty" : s);
 }

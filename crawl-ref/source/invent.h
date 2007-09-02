@@ -71,6 +71,11 @@ public:
     const std::string &get_qualname() const;
     const std::string &get_fullname() const;
     const bool        is_item_cursed() const;
+    const bool        is_item_glowing() const;
+    const bool        is_item_ego() const;
+    const bool        is_item_art() const;
+    const bool        is_item_equipped() const;
+    const int         item_freshness() const;
 
 private:
     void add_class_hotkeys(const item_def &i);

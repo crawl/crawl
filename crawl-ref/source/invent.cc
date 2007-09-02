@@ -39,6 +39,7 @@
 #include "stuff.h"
 #include "view.h"
 #include "menu.h"
+#include "randart.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
@@ -106,6 +107,62 @@ const std::string &InvEntry::get_fullname() const
 const bool InvEntry::is_item_cursed() const
 {
     return (item_ident(*item, ISFLAG_KNOW_CURSE) && item_cursed(*item));
+}
+
+const bool InvEntry::is_item_glowing() const
+{
+    return (!item_ident(*item, ISFLAG_KNOW_TYPE)
+            && (get_equip_desc(*item)
+                || (is_artefact(*item)
+                    && (item->base_type == OBJ_WEAPONS
+                        || item->base_type == OBJ_MISSILES
+                        || item->base_type == OBJ_ARMOUR))));
+}
+
+const bool InvEntry::is_item_ego() const
+{
+    return (item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
+            && item->special != 0
+            && (item->base_type == OBJ_WEAPONS
+                || item->base_type == OBJ_MISSILES
+                || item->base_type == OBJ_ARMOUR));
+}
+
+const bool InvEntry::is_item_art() const
+{
+    return (item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item));
+}
+
+const bool InvEntry::is_item_equipped() const
+{
+    if (item->link == -1 || item->x != -1 || item->y != -1)
+        return(false);
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+        if (item->link == you.equip[i])
+            return (true);
+
+    return (false);
+}
+
+const int InvEntry::item_freshness() const
+{
+    if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
+        return 0;
+
+    int freshness = item->special - 100;
+
+    // Ensure that chunk freshness is never zero, since zero means
+    // that the item isn't a chunk.
+    if (freshness >= 0)
+        freshness++;
+
+    // Invert if not a ghoul, so that the freshest chunks will go
+    // at the top.
+    if (you.species != SP_GHOUL)
+        freshness *= -1;
+
+    return freshness;
 }
 
 std::string InvEntry::get_text() const
@@ -323,9 +380,35 @@ int sort_item_slot(const InvEntry *a)
 {
     return a->item->link;
 }
+
+int sort_item_freshness(const InvEntry *a)
+{
+    return a->item_freshness();
+}
+
 bool sort_item_curse(const InvEntry *a)
 {
     return a->is_item_cursed();
+}
+
+bool sort_item_glowing(const InvEntry *a)
+{
+    return !a->is_item_glowing();
+}
+
+bool sort_item_ego(const InvEntry *a)
+{
+    return !a->is_item_ego();
+}
+
+bool sort_item_art(const InvEntry *a)
+{
+    return !a->is_item_art();
+}
+
+bool sort_item_equipped(const InvEntry *a)
+{
+    return !a->is_item_equipped();
 }
 
 static bool compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -368,14 +451,19 @@ void init_item_sort_comparators(item_sort_comparators &list,
         item_sort_fn cmp;
     } cmp_map[]  =
       {
-          { "basename", compare_item_str<sort_item_basename> },
-          { "qualname", compare_item_str<sort_item_qualname> },
-          { "fullname", compare_item_str<sort_item_fullname> },
-          { "curse",    compare_item<bool, sort_item_curse> },
-          { "qty",      compare_item<int, sort_item_qty> },
-          { "slot",     compare_item<int, sort_item_slot> },
+          { "basename",  compare_item_str<sort_item_basename> },
+          { "qualname",  compare_item_str<sort_item_qualname> },
+          { "fullname",  compare_item_str<sort_item_fullname> },
+          { "curse",     compare_item<bool, sort_item_curse> },
+          { "glowing",   compare_item<bool, sort_item_glowing> },
+          { "ego",       compare_item<bool, sort_item_ego> },
+          { "art",       compare_item<bool, sort_item_art> },
+          { "equipped",  compare_item<bool, sort_item_equipped> },
+          { "qty",       compare_item<int, sort_item_qty> },
+          { "slot",      compare_item<int, sort_item_slot> },
+          { "freshness", compare_item<int, sort_item_freshness> }
       };
-    
+
     list.clear();
     std::vector<std::string> cmps = split_string(",", set);
     for (int i = 0, size = cmps.size(); i < size; ++i)

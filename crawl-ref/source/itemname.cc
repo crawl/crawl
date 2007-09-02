@@ -1265,6 +1265,16 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_JEWELLERY:
+        if (basename)
+        {
+            if ( jewellery_is_amulet(*this) )
+                buff << " amulet";
+            else                // i.e., an amulet
+                buff << " ring";
+
+            break;
+        }
+
         // not using {tried} here because there are some confusing 
         // issues to work out with how we want to handle jewellery 
         // artefacts and base type id. -- bwr
@@ -1282,7 +1292,7 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
 
-        if (is_random_artefact( *this ) && !basename)
+        if (is_random_artefact( *this ))
         {
             buff << randart_jewellery_name(*this);
             break;

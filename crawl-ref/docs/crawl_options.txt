@@ -784,18 +784,28 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         option as:
             sort_menus = true : basename, qualname, curse, qty
 
+        Two items will be compared based on the first sort criteria
+        where they differ.  So with the sort_menus line given above,
+        if the basenames of two different items are different they
+        will be alphabetically compared using their basenames; if
+        the basenames are the same but the qualified names different
+        it will compare their qualified names, and so on.
+
         The available sort criteria are:
         
         * basename:
           This is the name of the item type. The basename for all of
           "a +0 robe", "an embroidered robe" and "the cursed +2 robe
-          of Ponies" is just "robe".
+          of Ponies" is just "robe".  The basename for both of
+          "a brass ring" and "a ring of fire resistance" are "ring".
 
         * qualname:
           The name of the item without articles (a/an/the),
           quantities, enchantments, or curse-status. The qualified
           names for the robes described above are "robe", "embroidered
-          robe" and "robe of Ponies", respectively.
+          robe" and "robe of Ponies", respectively.  The qualified
+          names for the rings describe above are "brass ring" and
+          "ring of fire resistance", respectively.
 
         * fullname:
           This is the name of the item as displayed in menus
@@ -805,6 +815,18 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           Curse-status of the item (if known). Uncursed items show up
           first.
 
+        * equipped:
+          Equipped items show up first.
+
+        * art:
+          Identified artefacts show up first.
+
+        * ego:
+          Identified ego items show up first.
+
+        * glowing:
+          Unidentified glowing/shiny/runed/etc items show up first.
+
         * qty:
           The quantity for stackable items (such as scrolls, potions,
           etc.)
@@ -813,7 +835,17 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           The inventory letter for items in inventory; irrelevant for
           items on the floor.
 
-        The default sort criteria are: "basename, qualname, curse, qty".
+        * freshness:
+          The freshness of chunks of meat; irrelevant for everything
+          else.  For non-ghouls it makes the freshest chunks of meat
+          show up first, and for ghouls the mons rotten chunks of
+          meat go fist.  If this sort criteria is placed before (or
+          in the absence of) basename and qualname, then non-chunk
+          food items will be sorted between the non-rotting and
+          rotting chunks.
+
+        The default sort criteria are: "equipped, basename, qualname,
+        curse, qty".
 
         You can ask for a descending order sort by prefixing one or
         more sort criteria with > as:

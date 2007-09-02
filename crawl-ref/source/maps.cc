@@ -316,6 +316,17 @@ int find_map_by_name(const std::string &name)
     return (-1);
 }
 
+std::vector<std::string> find_map_matches(const std::string &name)
+{
+    std::vector<std::string> matches;
+    
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+        if (vdefs[i].name.find(name) != std::string::npos)
+            matches.push_back(vdefs[i].name);
+    return (matches);
+}
+
+
 // Returns a map for which PLACE: matches the given place.
 int random_map_for_place(const level_id &place, bool want_minivault)
 {

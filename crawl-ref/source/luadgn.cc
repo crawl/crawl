@@ -874,6 +874,21 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name)
     return (DNGN_UNSEEN);
 }
 
+std::vector<std::string> dungeon_feature_matches(const std::string &name)
+{
+    std::vector<std::string> matches;
+
+    ASSERT(ARRAYSIZE(dngn_feature_names) == NUM_REAL_FEATURES);
+    if (name.empty())
+        return (matches);
+
+    for (unsigned i = 0; i < ARRAYSIZE(dngn_feature_names); ++i)
+        if (strstr(dngn_feature_names[i], name.c_str()))
+            matches.push_back(dngn_feature_names[i]);
+
+    return (matches);
+}
+
 const char *dungeon_feature_name(dungeon_feature_type rfeat)
 {
     const unsigned feat = rfeat;

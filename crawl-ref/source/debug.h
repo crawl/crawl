@@ -133,7 +133,8 @@ void error_message_to_player(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void level_travel( int delta );
+void wizard_place_stairs( bool down );
+void level_travel( bool down );
 void wizard_interlevel_travel();
 
 // last updated 12may2000 {dlb}
