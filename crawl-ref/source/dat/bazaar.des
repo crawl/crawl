@@ -175,7 +175,6 @@ TAGS:   bazaar
 FLAGS:  no_rotate
 ORIENT: encompass
 KFEAT:  A = any shop
-CHANCE: 30
 : bazaar_message(_G)
 MAP
 xxxxxxxxxxxxxxx
