@@ -15,6 +15,10 @@ Airstrike
 
 This spell causes the air around a creature to twist itself into a whirling vortex of meteorological fury. This spell is especially effective against flying enemies.
 %%%%
+Alistair's Intoxication
+
+This spell works by converting a small portion of brain matter into alcohol. It affects all intelligent humanoids within the caster's view (presumably including the caster). It is frequently used as an icebreaker at wizard parties. 
+%%%%
 Alter Self
 
 This spell causes aberrations to form in the caster's body, leaving the caster in a weakened state (though it is not fatal in and of itself). It may fail to affect those who are already heavily mutated. 
@@ -90,6 +94,10 @@ This spell instantly heals any and all wounds suffered by the caster with an att
 Burn
 
 This spell burns a creature. 
+%%%%
+Call Canine Familiar
+
+This spell summons a canine to the caster's aid.
 %%%%
 Call Imp
 
@@ -206,10 +214,6 @@ This spell reveals traps in the caster's vicinity.
 Dig
 
 This spell digs a tunnel through unworked rock. 
-%%%%
-Discharge
-
-This spell releases electric charges against those next to the caster. These may arc to adjacent monsters (or even the caster) before they eventually ground out. 
 %%%%
 Disintegrate
 
@@ -351,10 +355,6 @@ Insulation
 
 This spell protects the caster from electric shocks. 
 %%%%
-Intoxicate
-
-This spell works by converting a small portion of brain matter into alcohol. It affects all intelligent humanoids within the caster's view (presumably including the caster). It is frequently used as an icebreaker at wizard parties. 
-%%%%
 Invisibility
 
 This spell hides a creature from the sight of others. 
@@ -366,6 +366,10 @@ This spell throws a crackling sphere of destructive energy.
 Lee's Rapid Deconstruction
 
 This spells fragments a wall into an explosion of deadly shrapnel.  It can also be used directly on monsters made of wall-like substances.
+%%%%
+Lee's Rapid Deconstruction
+
+This spell throws a heavy sphere of metal which explodes on impact into a rain of deadly, jagged fragments. It can rip a creature to shreds, but proves ineffective against heavily-armoured targets. 
 %%%%
 Lehudib's Crystal Spear
 
@@ -422,10 +426,6 @@ This spell bathes the caster's surroundings in poisonous green light.
 Orb of Electrocution
 
 This spell hurls a crackling orb of electrical energy which explodes with immense force on impact. 
-%%%%
-Orb of Fragmentation
-
-This spell throws a heavy sphere of metal which explodes on impact into a rain of deadly, jagged fragments. It can rip a creature to shreds, but proves ineffective against heavily-armoured targets. 
 %%%%
 Ozocubu's Armour
 
@@ -639,17 +639,17 @@ Summon Ice Beast
 
 This spell calls forth a beast of ice to serve the caster. 
 %%%%
-Summon Large Mammal
-
-This spell summons a canine to the caster's aid.
-%%%%
 Summon Scorpions
 
 This spell summons one or more giant scorpions to the caster's assistance. 
 %%%%
-Summon Small Mammal
+Summon Small Mammals
 
 This spell summons one or more small creatures to the caster's aid. 
+%%%%
+Summon Swarm
+
+This spell summons forth a pestilential swarm. 
 %%%%
 Summon Wraiths
 
@@ -662,10 +662,6 @@ This spell forms a mystical bond between the caster and a wielded short blade, m
 Swap
 
 This spell allows the caster to swap positions with an adjacent being. 
-%%%%
-Swarm
-
-This spell summons forth a pestilential swarm. 
 %%%%
 Swiftness
 
@@ -723,7 +719,7 @@ Venom Bolt
 
 This spell throws a bolt of poison. 
 %%%%
-Warp Brand
+Warp Weapon
 
 This spell temporarily binds a localized warp field to the invoker's weapon. This spell is very dangerous to cast, as the field is likely to affect the caster as well. 
 %%%%
