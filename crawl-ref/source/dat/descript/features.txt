@@ -176,6 +176,10 @@ creatures that bite, stab, and maul.
 %%%%
 A staircase to the Slime Pits
 
+An entrance to the amorphous realm of acids, jellies and slimes. 
+Any trace of intelligent beings has long been dissolved. Still, 
+there are rumours of great treasures deep down, hidden safely away
+in secret chambers without door or window for acid to leak in.
 %%%%
 A staircase to the Snake Pit
 
