@@ -599,11 +599,14 @@ void game_options::reset_options()
     default_target         = true;
     safe_autopickup        = true;
     autopickup_no_burden   = false;
+    
     use_notes              = true;
+    note_all_skill_levels  = false;
     note_skill_max         = false;
     note_all_spells        = false;
     note_hp_percent        = 5;
     ood_interesting        = 8;
+
     terse_hand             = true;
     increasing_skill_progress = true;
 

@@ -153,14 +153,13 @@ const struct coord_def Compass[8] =
 };
 
 // Functions in main module
-static void close_door(int move_x, int move_y);
 static void do_berserk_no_combat_penalty(void);
 static bool initialise(void);
 static void input(void);
 static void move_player(int move_x, int move_y);
 static void open_door(int move_x, int move_y, bool check_confused = true);
-static void start_running( int dir, int mode );
 static void close_door(int move_x, int move_y);
+static void start_running( int dir, int mode );
 
 static void prep_input();
 static void input();
@@ -2722,7 +2721,17 @@ static void open_door(int move_x, int move_y, bool check_confused)
     {
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
-        if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
+        if (you.duration[DUR_BERSERKER])
+        {
+            if (silenced(you.x_pos, you.y_pos))
+                mpr("The door flies open!");
+            else
+            {
+                mpr("The door flies open with a bang!");
+                noisy( 15, you.x_pos, you.y_pos );
+            }
+        }
+        else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
             mpr( "As you open the door, it creaks loudly!" );
             noisy( 10, you.x_pos, you.y_pos );
@@ -2795,7 +2804,17 @@ static void close_door(int door_x, int door_y)
 
         int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
-        if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
+        if (you.duration[DUR_BERSERKER])
+        {
+            if (silenced(you.x_pos, you.y_pos))
+                mpr("You slam the door shut!");
+            else
+            {
+                mpr("You slam the door shut with an echoing bang!");
+                noisy( 25, you.x_pos, you.y_pos );
+            }
+        }
+        else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
             mpr("As you close the door, it creaks loudly!");
             noisy( 10, you.x_pos, you.y_pos );

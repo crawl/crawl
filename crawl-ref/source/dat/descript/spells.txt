@@ -45,7 +45,7 @@ This spell banishes one creature to the Abyss. Those wishing to visit that unple
 %%%%
 Bend
 
-This spell applies a localized spatial distortion to the detrimentof some nearby creature. 
+This spell applies a localized spatial distortion to the detriment of some nearby creature. 
 %%%%
 Berserker Rage
 
@@ -217,7 +217,7 @@ This spell digs a tunnel through unworked rock.
 %%%%
 Disintegrate
 
-This spell violently rends apart anything in a small volume of space. Can be used to cause severe damage.
+This spell violently rends apart anything in a small volume of space. It can be used to cause severe damage.
 %%%%
 Dispel Undead
 
@@ -429,11 +429,11 @@ This spell hurls a crackling orb of electrical energy which explodes with immens
 %%%%
 Ozocubu's Armour
 
-This spell enaster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. the caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour. the effects of this spell are boosted if the caster is in ice form. 
+This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour. The effects of this spell are boosted if the caster is in ice form. 
 %%%%
 Ozocubu's Refrigeration
 
-This spell drains the heat from the caster and her surroundings, causing harm to all creatures not resistant to cold. 
+This spell drains the heat from the caster and his or her surroundings, causing harm to all creatures not resistant to cold. 
 %%%%
 Pain
 
@@ -457,7 +457,7 @@ This spell hurls a magical arrow of the most vile and noxious toxin. No living t
 %%%%
 Poison Weapon
 
-This spell temporarily coats any sharp bladed weapon with poison. Will only work on weapons without an existing enchantment.
+This spell temporarily coats any sharp bladed weapon with poison. It will only work on weapons without an existing enchantment.
 %%%%
 Poisonous Cloud
 
@@ -709,7 +709,7 @@ This spell causes a slight spatial distortion around a monster in line of sight 
 %%%%
 Twisted Resurrection
 
-This spell allows its caster to imbue a mass of deceased flesh with a magical life force. Casting this spell involves the assembling several corpses together; the greater the combined mass of flesh available, the greater the chances of success. 
+This spell allows its caster to imbue a mass of deceased flesh with a magical life force. Casting this spell involves the assembling of several corpses together; the greater the combined mass of flesh available, the greater the chances of success. 
 %%%%
 Vampiric Draining
 

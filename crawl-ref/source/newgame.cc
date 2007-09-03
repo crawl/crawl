@@ -4026,7 +4026,7 @@ bool give_items_skills()
             you.inv[0].special = 0;
             you.equip[EQ_WEAPON] = 0;
 
-            for (unsigned char i = 1; i <= 3; i++)
+            for (unsigned char i = 2; i <= 4; i++)
             {
                 you.inv[i].quantity = 1;
                 you.inv[i].base_type = OBJ_WEAPONS;
@@ -4039,24 +4039,17 @@ bool give_items_skills()
 
         // ARMOUR
 
+        you.inv[1].quantity = 1;
+        you.inv[1].base_type = OBJ_ARMOUR;
+        you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
+        you.inv[1].plus = 0;
+        you.inv[1].special = 0;
+        you.equip[EQ_BODY_ARMOUR] = 1;
+
         if (you.species == SP_OGRE || you.species == SP_TROLL
             || player_genus(GENPC_DRACONIAN))
         {
-            you.inv[1].quantity = 1;
-            you.inv[1].base_type = OBJ_ARMOUR;
             you.inv[1].sub_type = ARM_ANIMAL_SKIN;
-            you.inv[1].plus = 0;
-            you.inv[1].special = 0;
-            you.equip[EQ_BODY_ARMOUR] = 1;
-        }
-        else
-        {
-            you.inv[4].quantity = 1;
-            you.inv[4].base_type = OBJ_ARMOUR;
-            you.inv[4].sub_type = ARM_LEATHER_ARMOUR;
-            you.inv[4].plus = 0;
-            you.inv[4].special = 0;
-            you.equip[EQ_BODY_ARMOUR] = 4;
         }
 
         // SKILLS
@@ -4101,6 +4094,7 @@ bool give_items_skills()
 
         if (you.species == SP_MERFOLK)
         // Merfolk are spear hunters -- clobber bow, give six javelins
+        // possibly allow choice between javelin and net
         {
             you.inv[1].quantity = 6;
             you.inv[1].base_type = OBJ_MISSILES;

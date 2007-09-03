@@ -1875,7 +1875,7 @@ static void display_skill_table(bool show_aptitudes)
 
                 if ( !show_aptitudes )
                 {
-                    textcolor(BLUE);
+                    textcolor(CYAN);
                     if ( !Options.increasing_skill_progress )
                         cprintf( " (%d)", (100 - percent_done) / 10 );
                     else

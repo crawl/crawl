@@ -135,6 +135,8 @@ static bool is_noteworthy( const Note& note )
        it's a new maximal skill (depending on options) */
     if ( note.type == NOTE_GAIN_SKILL )
     {
+        if ( Options.note_all_skill_levels )
+            return true;
         if ( is_noteworthy_skill_level(note.second) )
             return true;
         if ( Options.note_skill_max && is_highest_skill(note.first) )

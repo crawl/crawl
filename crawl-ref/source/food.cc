@@ -1032,7 +1032,6 @@ static void eating(unsigned char item_class, int item_type)
         }                       // end base sustenance listing {dlb}
 
         // next, sustenance modifier for carnivores/herbivores {dlb}:
-        // for some reason, sausages do not penalize herbivores {dlb}:
         switch (item_type)
         {
         case FOOD_MEAT_RATION:
@@ -1040,6 +1039,7 @@ static void eating(unsigned char item_class, int item_type)
             herbivore_modifier = -1500;
             break;
         case FOOD_BEEF_JERKY:
+        case FOOD_SAUSAGE:
             carnivore_modifier = 200;
             herbivore_modifier = -200;
             break;
@@ -1095,6 +1095,9 @@ static void eating(unsigned char item_class, int item_type)
                 mprf("That beef jerky was %s!",
                      one_chance_in(4) ? "jerk-a-riffic"
                                       : "delicious");
+                break;
+            case FOOD_SAUSAGE:
+                mpr("That sausage was delicious!");
                 break;
             default:
                 break;
@@ -1168,7 +1171,13 @@ static void eating(unsigned char item_class, int item_type)
                 mprf("Mmm... %s.", SysEnv.crawl_pizza.c_str());
             else
             {
-                temp_rand = random2(9);
+                if (how_carnivorous >= 1) // non-vegetable
+                    temp_rand = 5 + random2(4);
+                else if (how_herbivorous >= 1) // non-meaty
+                    temp_rand = random2(6) + 2;
+                else
+                    temp_rand = random2(9);
+                    
                 mprf("Mmm... %s",
                      (temp_rand == 0) ? "Ham and pineapple." :
                      (temp_rand == 2) ? "Vegetable." :
@@ -1192,9 +1201,6 @@ static void eating(unsigned char item_class, int item_type)
                  (temp_rand == 6) ? "Mozzarella" :
                  (temp_rand == 7) ? "Sheep cheese"
                                   : "Yak cheese");
-            break;
-        case FOOD_SAUSAGE:
-            mpr("That sausage was delicious!");
             break;
         default:
             break;

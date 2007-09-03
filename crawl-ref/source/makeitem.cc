@@ -3733,12 +3733,14 @@ static void give_ammo(monsters *mon, int level,
         case MONS_DRACONIAN_KNIGHT:
         case MONS_GNOLL:
         case MONS_HILL_GIANT:
-            if (one_chance_in(20))
-            {
-                weap_class = OBJ_MISSILES;
-                weap_type = MI_THROWING_NET;
-                qty = 1;
-            }
+            if (!one_chance_in(20))
+                break;
+            // fall through
+        case MONS_HAROLD: // bounty hunters
+        case MONS_JOZEF:
+            weap_class = OBJ_MISSILES;
+            weap_type = MI_THROWING_NET;
+            qty = coinflip() + 1;
             break;
 
         }

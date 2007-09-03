@@ -512,8 +512,9 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         {
             // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
             // but it's easier to just give them a potion of blood
-            class_wanted = OBJ_POTIONS;
+            // class type is set elsewhere
             type_wanted = POT_BLOOD;
+            unique = 2 + random2(4);
         }
         else 
         {
@@ -1146,6 +1147,10 @@ bool acquirement(object_class_type class_wanted, int agent)
         {
             unique = 1;
             int type_wanted = find_acquirement_subtype(class_wanted, unique);
+            
+            // clobber class_wanted for vampires
+            if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
+                class_wanted = OBJ_POTIONS;
 
             // BCR - unique is now used for food quantity.
             thing_created = items( unique, class_wanted, type_wanted, true, 

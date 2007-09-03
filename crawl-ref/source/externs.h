@@ -1665,6 +1665,7 @@ public:
     bool        default_target;  // start targeting on a real target
     bool        safe_autopickup; // don't autopickup when monsters visible
     bool        autopickup_no_burden; // don't autopickup if it changes burden
+    bool        note_all_skill_levels; // take note for all skill levels (1-27)
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
     bool        use_notes;      // take (and dump) notes
