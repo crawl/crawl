@@ -856,7 +856,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 13:
                 strcat(info,
-                       " sighs, \"Being guard is usually so boring...\"");
+                       " sighs, \"Being a guard is usually so boring...\"");
                 break;
             case 14:
                 strcat(info, " shouts, \"At last some action!\"");

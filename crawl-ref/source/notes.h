@@ -38,6 +38,7 @@ enum NOTE_TYPES
     NOTE_USER_NOTE,             /* needs: description string */
     NOTE_MESSAGE,               /* needs: message string */
     NOTE_LOSE_GOD,              /* needs: god id */
+    NOTE_PENANCE,               /* needs: god id */
     NOTE_MOLLIFY_GOD,           /* needs: god id */
     NOTE_DEATH,                 /* needs: death cause */
     NOTE_NUM_TYPES

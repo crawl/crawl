@@ -40,6 +40,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
+#include "clua.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "fight.h"
@@ -2447,7 +2448,32 @@ std::string cloud_name(cloud_type type)
     }
 }
 
-bool i_feel_safe(bool announce)
+bool mons_is_safe(const struct monsters *mon, bool want_move)
+{
+    bool is_safe = mons_friendly(mon) ||
+        (Options.safe_zero_exp &&
+         mons_class_flag( mon->type, M_NO_EXP_GAIN ));
+
+#ifdef CLUA_BINDINGS
+    bool moving = ((!you.delay_queue.empty() &&
+                   is_run_delay(you.delay_queue.front().type) &&
+                   you.delay_queue.front().type != DELAY_REST) ||
+                   you.running < RMODE_NOT_RUNNING || want_move);
+
+    int  dist   = grid_distance(you.x_pos, you.y_pos,
+                                mon->x, mon->y);
+    bool result = is_safe;
+
+    if (clua.callfn("ch_mon_is_safe", "Mbbd>b",
+                    mon, is_safe, moving, dist,
+                    &result))
+        is_safe = result;
+#endif
+
+    return is_safe;
+}
+
+bool i_feel_safe(bool announce, bool want_move)
 {
     /* This is probably unnecessary, but I'm not sure that
        you're always at least 9 away from a wall */
@@ -2486,12 +2512,10 @@ bool i_feel_safe(bool announce)
                 if ( targ_monst != NON_MONSTER )
                 {
                     const monsters *mon = &menv[targ_monst];
-                    if ( !mons_friendly(mon) &&
-                         player_monster_visible(mon) &&
+                    if ( player_monster_visible(mon) &&
                          !mons_is_submerged(mon) &&
                          !mons_is_mimic(mon->type) &&
-                         (!Options.safe_zero_exp ||
-                          !mons_class_flag( mon->type, M_NO_EXP_GAIN )))
+                         !mons_is_safe(mon, want_move))
                     {
                         if (announce)
                             mons.push_back(mon);

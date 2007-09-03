@@ -110,6 +110,7 @@ static bool is_noteworthy( const Note& note )
          note.type == NOTE_USER_NOTE ||
          note.type == NOTE_MESSAGE ||
          note.type == NOTE_LOSE_GOD ||
+         note.type == NOTE_PENANCE ||
          note.type == NOTE_MOLLIFY_GOD ||
          note.type == NOTE_DEATH )
         return true;
@@ -256,6 +257,10 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         case NOTE_LOSE_GOD:
             result << "Fell from the grace of "
+                   << god_name(static_cast<god_type>(first));
+            break;
+        case NOTE_PENANCE:
+            result << "Was placed under penance by "
                    << god_name(static_cast<god_type>(first));
             break;
         case NOTE_MOLLIFY_GOD:

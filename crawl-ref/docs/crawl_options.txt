@@ -228,7 +228,8 @@ The available stock Lua scripts are
   kills.lua     -- improves the Vanquished Creatures list in dump files; 
                    currently gives three lists (Vanquished, Friendly, Others)
   runrest.lua   -- allows overriding certain stop conditions when running
-                   New options: runrest_ignore_poison, runrest_ignore_message
+                   New options: runrest_ignore_poison, runrest_ignore_message,
+		   runrest_ignore_monster
   gearset.lua   -- provides commands for switching of complete sets via macro
                    New macroable functions: rememberkit, swapkit
   eat.lua       -- prompts to eat chunks in inventory.
@@ -1145,6 +1146,7 @@ use_notes = true
         - Memorizing a spell of higher level than any learned before
         - Becoming a worshipper of a god
         - Abandoning a god
+	- Being put under penance and being forgiven
         - Receiving a gift from a god (except Xom)
         - Being able to invoke a godly power for the first time
         - Identifying items (see below)
@@ -1152,6 +1154,7 @@ use_notes = true
         - Reaching critical HP levels (see below)
         - Gaining or losing mutations
         - Reaching significant levels in a skill (see below)
+	- Dying
         You can use the command ':' for manually adding notes.
 
 note_items = <regexes>

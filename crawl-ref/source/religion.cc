@@ -344,10 +344,13 @@ void dec_penance(int val)
 
 void inc_penance(int god, int val)
 {
-    // orcish bonuses don't apply under penance
-    if ( god == GOD_BEOGH && you.penance[god] == 0)
+    if (you.penance[god] == 0 && val > 0)
     {
-         you.redraw_armour_class = 1;
+        take_note(Note(NOTE_PENANCE, god));
+        
+        // orcish bonuses don't apply under penance
+        if (god == GOD_BEOGH)
+            you.redraw_armour_class = 1;
     }
     
     if (you.penance[god] + val > 200)

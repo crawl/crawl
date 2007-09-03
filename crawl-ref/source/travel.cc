@@ -2204,7 +2204,7 @@ travel_target prompt_translevel_target(int prompt_flags)
 
 void start_translevel_travel(const travel_target &pos)
 {
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true, true))
         return;
     
     if (!can_travel_to(pos.p.id))
@@ -2235,7 +2235,7 @@ void start_translevel_travel(const travel_target &pos)
 
 void start_translevel_travel(bool prompt_for_destination)
 {
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true, true))
         return;
 
     // Update information for this level. We need it even for the prompts, so
@@ -2592,7 +2592,7 @@ void start_travel(int x, int y)
     you.travel_x = x;
     you.travel_y = y;
 
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true, true))
         return;
 
     you.running.x = x;
@@ -2622,7 +2622,7 @@ void start_explore(bool grab_items)
         return;
     }
         
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true, true))
         return;
 
     you.running = grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE;

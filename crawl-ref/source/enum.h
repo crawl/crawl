@@ -2506,8 +2506,9 @@ enum monster_flag_type
                                    // or that the player has inspected with ?
     MF_BANISHED           = 0x200, // Monster that has been banished.
     MF_HARD_RESET         = 0x400, // Summoned, should not drop gear on reset
-    MF_CONVERT_ATTEMPT    = 0x800  // Orcs only: seen player and was converted
+    MF_CONVERT_ATTEMPT    = 0x800, // Orcs only: seen player and was converted
                                    // (or not)
+    MF_WAS_IN_VIEW        = 0x1000 // Was in view during previous turn
 };
 
 enum mon_dam_level_type

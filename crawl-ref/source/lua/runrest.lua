@@ -10,7 +10,10 @@
 --  * Any message in runrest_ignore_message will *not* stop your run.
 --  * Poison damage of x will be ignored if you have at least y hp if you've
 --    defined a runrest_ignore_poison = x:y option.
---    
+--  * Any monster in runrest_ignore_monster will *not* stop your run
+--    if it's at least the specified distance away.
+--    You can specify this with runrest_ignore_monster = regex:distance.
+--
 -- IMPORTANT: You must define runrest_ options *after* sourcing runrest.lua.
 ---------------------------------------------------------------------------
 
@@ -109,3 +112,89 @@ function rr_add_messages(key, value)
 end
 
 chk_lua_option.runrest_ignore_message = rr_add_messages
+
+-----------------------------------------------------------------------
+
+g_rr_monsters        = { {}, {} }
+g_rr_monsters_moving = { {}, {} }
+
+function rr_add_monster(mons_table, s)
+    local parts = crawl.split(s, ":")
+
+    if #parts ~= 2 then
+        return
+    end
+
+    local regexp = parts[1]
+    local dist   = tonumber(parts[2])
+
+    if dist == 0 then
+        return
+    end
+
+    table.insert( mons_table[1], crawl.regex( regexp ) )
+    table.insert( mons_table[2], dist )
+end
+
+function rr_add_monsters(key, value)
+    local mons_table
+
+    if (key == "runrest_ignore_monster") then
+        mons_table = g_rr_monsters
+    elseif (key == "runrest_ignore_monster_moving") then
+        mons_table = g_rr_monsters_moving
+    else
+        return
+    end
+
+    local segs = crawl.split(value, ',')
+    for _, s in ipairs(segs) do
+        rr_add_monster(mons_table, s)
+    end
+end
+
+function ch_mon_is_safe(mon, default_is_safe, moving, dist)
+    if default_is_safe then
+        return true
+    end
+
+    local mons_table
+
+    -- If player is moving and the monster is in g_rr_monsters_moving,
+    -- then we do the distance comparison without decreasing the
+    -- distance value.
+    if moving then
+        mons_table  = g_rr_monsters_moving
+
+        for i = 1, #mons_table[1] do
+            local m        = mons_table[1][i]
+            local min_dist = mons_table[2][i]
+
+            if m:matches(mon.name) then
+                return min_dist <= dist
+            end
+        end
+    end
+
+    mons_table = g_rr_monsters
+
+    -- Reduce distance by 1 if moving, since the safety check is
+    -- done *before* moving closer to the monster
+    if moving then
+        dist = dist - 1
+    end
+
+    for i = 1, #mons_table[1] do
+        local m        = mons_table[1][i]
+        local min_dist = mons_table[2][i]
+
+        if m:matches(mon.name) then
+            return min_dist <= dist
+        end
+    end
+
+    return false
+end
+
+chk_lua_option.runrest_ignore_monster            = rr_add_monsters
+chk_lua_option.runrest_ignore_monster_moving     = rr_add_monsters

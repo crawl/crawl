@@ -907,16 +907,29 @@ void fire_monster_alerts()
         {
             if ((player_monster_visible(monster)
                  || mons_was_seen_this_turn(monster))
-                && !mons_is_submerged( monster )
-                && !mons_friendly( monster ))
+                && !mons_is_submerged( monster ))
             {
-                if (!mons_class_flag( monster->type, M_NO_EXP_GAIN )
+                if (!mons_is_safe( static_cast<const monsters*>(monster) )
+                    && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
                     && !mons_is_mimic( monster->type ))
                 {
                     interrupt_activity( AI_SEE_MONSTER, monster );
                 }
                 seen_monster( monster );
+
+                // Monster was viewed this turn
+                monster->flags |= MF_WAS_IN_VIEW;
             }
+            else
+            {
+                // Monster was not viewed this turn
+                monster->flags &= ~MF_WAS_IN_VIEW;
+            }
+        }
+        else
+        {
+            // Monster was not viewed this turn
+            monster->flags &= ~MF_WAS_IN_VIEW;
         }
     }
 

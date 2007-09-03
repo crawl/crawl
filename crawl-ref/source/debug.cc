@@ -832,9 +832,7 @@ void create_spec_object()
                     mpr( "No such item." );
 
                     // Clean up item
-                    mitm[thing_created].base_type = OBJ_UNASSIGNED;
-                    mitm[thing_created].quantity  = 0;
-
+                    destroy_item(thing_created);
                     return;
                 }
                 type_wanted--;

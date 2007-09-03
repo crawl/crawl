@@ -169,7 +169,8 @@ const char *grid_item_destruction_message( dungeon_feature_type grid );
 
 void curare_hits_player(int agent, int degree);
 
-bool i_feel_safe(bool announce = false);
+bool mons_is_safe(const struct monsters *mon, bool want_move = false);
+bool i_feel_safe(bool announce = false, bool want_move = false);
 
 void setup_environment_effects();
 
