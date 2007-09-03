@@ -1626,16 +1626,6 @@ static bool choose_weapon( void )
     int num_choices = 4;
     int temp_rand;              // probability determination {dlb}
 
-    if (you.char_class == JOB_CHAOS_KNIGHT)
-    {
-        temp_rand = random2(4);
-
-        you.inv[0].sub_type = ((temp_rand == 0) ? WPN_SHORT_SWORD :
-                           (temp_rand == 1) ? WPN_MACE :
-                           (temp_rand == 2) ? WPN_HAND_AXE : WPN_SPEAR);
-        return true;
-    }
-
     if (you.char_class == JOB_GLADIATOR || you.species == SP_MERFOLK)
         num_choices = 5;
 
@@ -4085,6 +4075,7 @@ bool give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
+        you.equip[EQ_WEAPON] = 0;
 
         you.inv[2].quantity = 1;
         you.inv[2].base_type = OBJ_ARMOUR;
@@ -4092,19 +4083,29 @@ bool give_items_skills()
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
 
+        if (player_genus(GENPC_DRACONIAN))
+            you.inv[2].sub_type = ARM_ROBE;
+        else if (you.species == SP_OGRE)
+            you.inv[2].sub_type = ARM_ANIMAL_SKIN;
+
         if (you.species == SP_MERFOLK)
         // Merfolk are spear hunters -- clobber bow, give six javelins
         // possibly allow choice between javelin and net
         {
-            you.inv[1].quantity = 6;
-            you.inv[1].base_type = OBJ_MISSILES;
-            you.inv[1].sub_type = MI_JAVELIN;
-            you.inv[1].plus = 0;
-            you.inv[1].plus2 = 0;
-            you.inv[1].special = 0;
+            you.inv[1] = you.inv[2];
+            you.equip[EQ_BODY_ARMOUR] = 1;
+
+            you.inv[2].quantity = 6;
+            you.inv[2].base_type = OBJ_MISSILES;
+            you.inv[2].sub_type = MI_JAVELIN;
+            you.inv[2].plus = 0;
+            you.inv[2].plus2 = 0;
+            you.inv[2].special = 0;
         }
         else
         {
+            you.equip[EQ_BODY_ARMOUR] = 2;
+            
             you.inv[3].quantity = 15 + random2avg(21, 5);
             you.inv[3].base_type = OBJ_MISSILES;
             you.inv[3].sub_type = MI_ARROW;
@@ -4119,14 +4120,6 @@ bool give_items_skills()
             you.inv[1].plus2 = 0;
             you.inv[1].special = 0;
         }
-
-        if (player_genus(GENPC_DRACONIAN))
-            you.inv[2].sub_type = ARM_ROBE;
-        else if (you.species == SP_OGRE)
-            you.inv[2].sub_type = ARM_ANIMAL_SKIN;
-
-        you.equip[EQ_WEAPON] = 0;
-        you.equip[EQ_BODY_ARMOUR] = 2;
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_RANGED_COMBAT] = 3;
