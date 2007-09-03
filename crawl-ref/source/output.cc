@@ -1980,14 +1980,14 @@ std::string status_mut_abilities()
             case MUT_FRAIL:
                 if (have_any)
                     text += ", ";
-                snprintf(info, INFO_SIZE, "-%d hp", level*10);
+                snprintf(info, INFO_SIZE, "-%d%% hp", level*10);
                 text += info;
                 have_any = true;
                 break;
             case MUT_ROBUST:
                 if (have_any)
                     text += ", ";
-                snprintf(info, INFO_SIZE, "+%d hp", level*10);
+                snprintf(info, INFO_SIZE, "+%d hp%%", level*10);
                 text += info;
                 have_any = true;
                 break;

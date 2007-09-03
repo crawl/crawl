@@ -688,8 +688,7 @@ void game_options::reset_options()
 
     lowercase_invocations  = true; 
 
-    // Note: These fire options currently match the old behaviour. -- bwr
-    fire_items_start       = 0;           // start at slot 'a'
+    fire_items_start       = 2;           // start at slot 'c'
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, javelin / dart / stone / spear");

@@ -198,7 +198,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 
 ##### 4-k	Firing Commands #######################
 #
-# fire_items_start = a
+# fire_items_start = c
 # fire_order = launcher, dart / stone / javelin, dagger, spear, handaxe, club
 
 ##### 4-l	Channels ##############################
