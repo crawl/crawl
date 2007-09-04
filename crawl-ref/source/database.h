@@ -42,4 +42,7 @@ datum database_fetch(DBM *database, const std::string &key);
 
 std::string getLongDescription(const std::string &key);
 
+std::string getShoutString(const std::string &monst,
+                           const std::string &suffix = "");
+std::string getSpeakString(const std::string &monst);
 #endif

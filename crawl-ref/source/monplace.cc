@@ -618,11 +618,17 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     if (proximity == PROX_NEAR_STAIRS)
         return (true);
 
+    // Not PROX_NEAR_STAIRS, so will it will be part of a band, if there
+    // is any.
+    if (band_size > 1)
+        menv[id].flags |= MF_BAND_MEMBER;
+
     // (5) for each band monster, loop call to place_monster_aux().
     for(i = 1; i < band_size; i++)
     {
-        place_monster_aux( band_monsters[i], behaviour, target, px, py, 
-                           lev_mons, extra, false, dur);
+        id = place_monster_aux( band_monsters[i], behaviour, target, px, py,
+                                lev_mons, extra, false, dur);
+        menv[id].flags |= MF_BAND_MEMBER;
     }
 
     // placement of first monster, at least, was a success.

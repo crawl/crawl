@@ -40,12 +40,12 @@
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "initfile.h"
-#include "insult.h"
 #include "itemprop.h"
 #include "luadgn.h"
 #include "macro.h"
@@ -744,94 +744,201 @@ inline static void beogh_follower_convert(monsters *monster)
     }
 }
 
-static void handle_monster_shouts(monsters* monster)
+static void handle_monster_shouts(monsters* monster, bool force = false)
 {
-    if (you.turn_is_over
-        && mons_shouts(monster->type) != S_SILENT
-        && random2(30) >= you.skills[SK_STEALTH])
+    if (!force
+        && (!you.turn_is_over || random2(30) < you.skills[SK_STEALTH]))
+        return;
+
+    // Get it once, since monster might be S_RANDOM, in which case
+    // mons_shouts() will return a different value every time.
+    shout_type type = mons_shouts(monster->type);
+
+    // Silent monsters can give noiseless "visual shouts" if the
+    // player can see them, in which case silence isn't checked for.
+    if (mons_friendly(monster)
+        || (type == S_SILENT && !player_monster_visible(monster))
+        || (type != S_SILENT && (silenced(you.x_pos, you.y_pos) 
+                                 || silenced(monster->x, monster->y))))
+        return;
+
+    int         noise_level = 8;
+    std::string default_msg_key;
+
+    switch (type)
     {
-        int noise_level = 8; 
+    case NUM_SHOUTS:
+    case S_RANDOM:
+        default_msg_key = "__BUGGY";
+        break;
+    case S_SILENT:
+        default_msg_key = "";
+        noise_level = 0;
+        break;
+    case S_SHOUT:
+        default_msg_key = "__SHOUT";
+        break;
+    case S_BARK:
+        default_msg_key = "__BARK";
+        break;
+    case S_SHOUT2:
+        default_msg_key = "__TWO_SHOUTS";
+        noise_level = 12;
+        break;
+    case S_ROAR:
+        default_msg_key = "__ROAR";
+        noise_level = 12;
+        break;
+    case S_SCREAM:
+        default_msg_key = "__SCREAM";
+        break;
+    case S_BELLOW:
+        default_msg_key = "__BELLOW";
+        break;
+    case S_SCREECH:
+        default_msg_key = "__SCREECH";
+        break;
+    case S_BUZZ:
+        default_msg_key = "__BUZZ";
+        break;
+    case S_MOAN:
+        default_msg_key = "__MOAN";
+        break;
+    case S_WHINE:
+        default_msg_key = "__WHINE";
+        break;
+    case S_CROAK:
+        default_msg_key = "__CROAK";
+        break;
+    case S_GROWL:
+        default_msg_key = "__GROWL";
+        break;
+    case S_HISS:
+        default_msg_key = "__HISS";
+        noise_level = 4;  // not very loud -- bwr
+        break;
 
-        if (!mons_friendly(monster)
-            && (!silenced(you.x_pos, you.y_pos) 
-                && !silenced(monster->x, monster->y)))
-        {
-            if (mons_is_demon( monster->type ) && coinflip())
-            {
-                if (monster->type == MONS_IMP
-                    || monster->type == MONS_WHITE_IMP
-                    || monster->type == MONS_SHADOW_IMP)
-                {
-                    imp_taunt( monster );
-                }
-                else
-                {
-                    demon_taunt( monster );
-                }
-            }
-            else
-            {
-                std::string msg = "You hear ";
-                switch (mons_shouts(monster->type))
-                {
-                case S_SILENT:
-                case NUM_SHOUTS:
-                case S_RANDOM:
-                    msg += "buggy behaviour!";
-                    break;
-                case S_SHOUT:
-                    msg += "a shout!";
-                    break;
-                case S_BARK:
-                    msg += "a bark!";
-                    break;
-                case S_SHOUT2:
-                    msg += "two shouts!";
-                    noise_level = 12;
-                    break;
-                case S_ROAR:
-                    msg += "a roar!";
-                    noise_level = 12;
-                    break;
-                case S_SCREAM:
-                    msg += "a hideous shriek!";
-                    break;
-                case S_BELLOW:
-                    msg += "a bellow!";
-                    break;
-                case S_SCREECH:
-                    msg += "a screech!";
-                    break;
-                case S_BUZZ:
-                    msg += "an angry buzzing noise.";
-                    break;
-                case S_MOAN:
-                    msg += "a chilling moan.";
-                    break;
-                case S_WHINE:
-                    msg += "an irritating high-pitched whine.";
-                    break;
-                case S_CROAK:
-                    if (coinflip())
-                        msg += "a loud, deep croak!";
-                    else
-                        msg += "a croak.";
-                    break;
-                case S_GROWL:
-                    msg += "an angry growl!";
-                    break;
-                case S_HISS:
-                    msg += "an angry hiss!";
-                    noise_level = 4;  // not very loud -- bwr
-                    break;
-                }
-                msg::streams(MSGCH_SOUND) << msg << std::endl;
-            }
-        }
-
-        noisy( noise_level, monster->x, monster->y );
+    // Loudness setting for shouts that are only defined in dat/shout.txt
+    case S_VERY_SOFT:
+        default_msg_key = "";
+        noise_level = 4;
+        break;
+    case S_SOFT:
+        default_msg_key = "";
+        noise_level = 6;
+        break;
+    case S_NORMAL:
+        default_msg_key = "";
+        noise_level = 8;
+        break;
+    case S_LOUD:
+        default_msg_key = "";
+        noise_level = 10;
+        break;
+    case S_VERY_LOUD:
+        default_msg_key = "";
+        noise_level = 12;
+        break;
     }
+
+    // Use get_monster_data(monster->type) to bypass mon_shouts()
+    // replacing S_RANDOM with a random value.
+    if (mons_is_demon( monster->type ) && coinflip()
+        && (type != S_SILENT ||
+            get_monster_data(monster->type)->shouts == S_RANDOM))
+    {
+        noise_level     = 8;
+        default_msg_key = "__DEMON_TAUNT";
+    }
+
+    std::string msg, suffix;
+    std::string key = mons_type_name(monster->type, DESC_PLAIN);
+
+    // Pandemonium demons have random names, so use "pandemonium lord"
+    if (monster->type == MONS_PANDEMONIUM_DEMON)
+        key = "pandemonium lord";
+    // Search for player ghost shout by the ghost's class.
+    else if (monster->type == MONS_PLAYER_GHOST)
+    {
+        const ghost_demon &ghost = *(monster->ghost);
+        std::string ghost_class = get_class_name(ghost.values[GVAL_CLASS]);
+
+        key = ghost_class + " player ghost";
+
+        default_msg_key = "player ghost";
+    }
+
+    // Tries to find an entry for "name seen" or "name unseen",
+    // and if no such entry exists then looks simply for "name".
+    if (player_monster_visible(monster))
+        suffix = " seen";
+     else
+        suffix = " unseen";
+
+    msg = getShoutString(key, suffix);
+
+    if (msg == "__DEFAULT" || msg == "__NEXT")
+        msg = getShoutString(default_msg_key, suffix);
+    else if (msg == "")
+    {
+        // See if there's a shout for all monsters using the
+        // same glyph/symbol
+        std::string glyph_key = "'";
+
+        // Database keys are case-insensitve.
+        if (isupper(mons_char(monster->type)))
+            glyph_key += "cap-";
+
+        glyph_key += mons_char(monster->type);
+        glyph_key += "'";
+        msg = getShoutString(glyph_key, suffix);
+
+        if (msg == "" || msg == "__DEFAULT")
+            msg = getShoutString(default_msg_key, suffix);
+    }
+
+    if (default_msg_key == "__BUGGY")
+        msg::streams(MSGCH_SOUND) << "You hear something buggy!"
+                                  << std::endl;
+    else if ((msg == "" || msg == "__NONE")
+             && mons_shouts(monster->type) == S_SILENT)
+        ; // No "visual shout" defined for silent monster, do nothing
+    else if (msg == "")
+    {
+        msg::streams(MSGCH_DIAGNOSTICS)
+            << "No shout entry for default shout type '"
+            << default_msg_key << "'" << std::endl;
+        msg::streams(MSGCH_SOUND) << "You hear something buggy!"
+                                  << std::endl;
+    }
+    else if (msg == "__NONE")
+    {
+        msg::streams(MSGCH_DIAGNOSTICS)
+            << "__NONE returned as shout for non-silent monster '"
+            << default_msg_key << "'" << std::endl;
+        msg::streams(MSGCH_SOUND) << "You hear something buggy!"
+                                  << std::endl;
+    }
+    else
+    {
+        msg = do_mon_str_replacements(msg, monster);
+
+        if (mons_shouts(monster->type) == S_SILENT)
+            msg::streams(MSGCH_TALK) << msg << std::endl;
+        else
+            msg::streams(MSGCH_SOUND) << msg << std::endl;
+    }
+
+    if (noise_level > 0)
+        noisy( noise_level, monster->x, monster->y );
 }
+
+#ifdef WIZARD
+void force_monster_shout(monsters* monster)
+{
+    handle_monster_shouts(monster, true);
+}
+#endif
 
 inline static bool update_monster_grid(const monsters *monster)
 {

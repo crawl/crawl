@@ -582,9 +582,26 @@ void direction(dist& moves, targeting_type restricts,
                 m.attitude = m.attitude == ATT_FRIENDLY? ATT_NEUTRAL :
                     m.attitude == ATT_HOSTILE? ATT_FRIENDLY :
                     ATT_HOSTILE;
+
+                // To update visual branding of friendlies.  Only
+                // seem capabable of adding bolding, not removing it,
+                // though.
+                viewwindow(true, false);
             }
             break;
+
+        case CMD_TARGET_WIZARD_MAKE_SHOUT:
+            // Maybe we can skip this check...but it can't hurt
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER) // can put in terrain description here
+                break;
+
+            debug_make_monster_shout(&menv[mid]);
+            break;
 #endif
+
             
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target());
@@ -1887,6 +1904,7 @@ command_type targeting_behaviour::get_command(int key)
         
 #ifdef WIZARD
     case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
+    case 's': return CMD_TARGET_WIZARD_MAKE_SHOUT;
 #endif
     case 'v': return CMD_TARGET_DESCRIBE;
     case '?': return CMD_TARGET_HELP;

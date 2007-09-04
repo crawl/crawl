@@ -2134,10 +2134,33 @@ static void handle_nearby_ability(monsters *monster)
         return;
     }
 
+#define MON_SPEAK_CHANCE 21
+
     if (mons_class_flag(monster->type, M_SPEAKS)
-        && monster->behaviour != BEH_WANDER && one_chance_in(21))
+        && monster->behaviour != BEH_WANDER && one_chance_in(MON_SPEAK_CHANCE))
     {
         mons_speaks(monster);
+    }
+    else if (get_mon_shape(monster) >= MON_SHAPE_QUADRUPED)
+    {
+        // Non-humanoid-ish monsters have a low chance of speaking
+        // wihtout the M_SPEAKS flag, to give the dungeon some
+        // atmosphere/flavor.
+        int chance = MON_SPEAK_CHANCE * 4;
+
+        // Band members are a lot less likely to speak, since there's
+        // a lot of them.
+        if (testbits(monster->flags, MF_BAND_MEMBER))
+            chance *= 10;
+
+        // However, confused and fleeing monsters are more interesting.
+        if (monster->behaviour == BEH_FLEE)
+            chance /= 2;
+        if (monster->has_ench(ENCH_CONFUSION))
+            chance /= 2;
+
+        if (one_chance_in(chance))
+            mons_speaks(monster);
     }
 
     switch (monster->type)

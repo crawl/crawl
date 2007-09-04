@@ -34,6 +34,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "insult.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -2067,7 +2068,7 @@ bool mons_has_ranged_attack( const monsters *mon )
     const item_def *primary = mnc->mslot_item(MSLOT_WEAPON);
     const item_def *missile = mnc->missiles();
 
-    if (!missile && weapon != primary
+    if (!missile && weapon != primary && primary
         && get_weapon_brand(*primary) == SPWPN_RETURNING)
     {
         return (true);
@@ -4654,3 +4655,397 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
+
+// Replaces the "@foo@" strings in monster shout and monster speak
+// definitions.
+std::string do_mon_str_replacements(const std::string in_msg,
+                                    const monsters* monster)
+{
+    std::string msg = in_msg;
+
+    description_level_type nocap, cap;
+
+    if (monster->attitude == ATT_FRIENDLY && player_monster_visible(monster))
+    {
+        nocap = DESC_PLAIN;
+        cap   = DESC_PLAIN;
+
+        msg = replace_all(msg, "@the_something@", "your @the_something@");
+        msg = replace_all(msg, "@The_something@", "Your @The_something@");
+        msg = replace_all(msg, "@the_monster@",   "your @the_monster@");
+        msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
+    }
+    else
+    {
+        nocap = DESC_NOCAP_THE;
+        cap   = DESC_CAP_THE;
+    }
+
+    if (see_grid(monster->x, monster->y))
+    {
+        dungeon_feature_type feat = grd[monster->x][monster->y];
+        if (feat < MINMOVE || feat >= NUM_REAL_FEATURES)
+            msg = replace_all(msg, "@surface@", "buggy surface");
+        else if (feat == DNGN_LAVA)
+            msg = replace_all(msg, "@surface@", "lava");
+        else if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
+            msg = replace_all(msg, "@surface@", "water");
+        else if (feat >= DNGN_ALTAR_ZIN && feat < DNGN_BLUE_FOUNTAIN)
+            msg = replace_all(msg, "@surface@", "altar");
+        else
+            msg = replace_all(msg, "@surface@", "ground");
+
+        msg = replace_all(msg, "@feature@", raw_feature_description(feat));
+    }
+    else
+    {
+        msg = replace_all(msg, "@surface@", "buggy unseen surface");
+        msg = replace_all(msg, "@feature@", "buggy unseen feature");
+    }
+
+    msg = replace_all(msg, "@player_name@", you.your_name);
+
+    if (player_monster_visible(monster))
+    {
+        std::string something = monster->name(DESC_PLAIN);
+        msg = replace_all(msg, "@something@",   something);
+        msg = replace_all(msg, "@a_something@", monster->name(DESC_NOCAP_A));
+        msg = replace_all(msg, "@the_something@", monster->name(nocap));
+
+        something[0] = toupper(something[0]);
+        msg = replace_all(msg, "@Something@",   something);
+        msg = replace_all(msg, "@A_something@", monster->name(DESC_CAP_A));
+        msg = replace_all(msg, "@The_something@", monster->name(cap));
+    }
+    else
+    {
+        msg = replace_all(msg, "@something@",     "something");
+        msg = replace_all(msg, "@a_something@",   "something");
+        msg = replace_all(msg, "@the_something@", "something");
+
+        msg = replace_all(msg, "@Something@",     "Something");
+        msg = replace_all(msg, "@A_something@",   "Something");
+        msg = replace_all(msg, "@The_something@", "Something");
+    }
+
+    std::string plain = monster->name(DESC_PLAIN);
+    msg = replace_all(msg, "@monster@",     plain);
+    msg = replace_all(msg, "@a_monster@",   monster->name(DESC_NOCAP_A));
+    msg = replace_all(msg, "@the_monster@", monster->name(nocap));
+
+    plain[0] = toupper(plain[0]);
+    msg = replace_all(msg, "@Monster@",     plain);
+    msg = replace_all(msg, "@A_monster@",   monster->name(DESC_CAP_A));
+    msg = replace_all(msg, "@The_monster@", monster->name(cap));
+
+    msg = replace_all(msg, "@possessive@",
+                      mons_pronoun(monster->type, 3));
+    msg = replace_all(msg, "@pronoun@",
+                      mons_pronoun(monster->type, 0));
+
+    msg = replace_all(msg, "@imp_taunt@",   imp_taunt_str());
+    msg = replace_all(msg, "@demon_taunt@", demon_taunt_str());
+
+    static const char * sound_list[] = 
+    {
+        "says",         // actually S_SILENT
+        "shouts", 
+        "barks", 
+        "shouts", 
+        "roars", 
+        "screams", 
+        "bellows", 
+        "screeches", 
+        "buzzes", 
+        "moans", 
+        "whines", 
+        "croaks", 
+        "growls",
+        "hisses",
+        "breathes", // S_VERY_SOFT
+        "whispers", // S_SOFT
+        "says",     // S_NORMAL
+        "shouts",   // S_LOUD
+        "screams"   // S_VERY_LOUD
+    };
+
+    if (mons_shouts(monster->type) >= NUM_SHOUTS)
+    {
+        mpr("Invalid @says@ type.", MSGCH_DIAGNOSTICS);
+        msg = replace_all(msg, "@says@", "bugilly says");
+    }
+    else
+        msg = replace_all(msg, "@says@",
+                          sound_list[mons_shouts(monster->type)]);
+
+    // The proper possessive for a word ending in an "s" is to
+    // put an appostraphe after the "s": "Chris" -> "Chris'",
+    // not "Chris" -> "Chris's".  Stupid English language...
+    msg = replace_all(msg, "s's", "s'");
+
+    return msg;
+}
+
+static mon_body_shape get_ghost_shape(const monsters *mon)
+{
+    const ghost_demon &ghost = *(mon->ghost);
+
+    switch(ghost.values[GVAL_SPECIES])
+    {
+    case SP_NAGA:
+        return (MON_SHAPE_NAGA);
+
+    case SP_CENTAUR:
+        return (MON_SHAPE_CENTAUR);
+
+    case SP_KENKU:
+        return (MON_SHAPE_HUMANOID_WINGED);
+
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_GOLDEN_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+    case SP_PALE_DRACONIAN:
+    case SP_UNK0_DRACONIAN:
+    case SP_UNK1_DRACONIAN:
+    case SP_BASE_DRACONIAN:
+        return (MON_SHAPE_HUMANOID_TAILED);
+    }
+
+    return (MON_SHAPE_HUMANOID);
+}
+
+mon_body_shape get_mon_shape(const monsters *mon)
+{
+    if (mon->type == MONS_PLAYER_GHOST)
+        return get_ghost_shape(mon);
+    else if (mons_is_zombified(mon))
+        return get_mon_shape(mon->number);
+    else
+        return get_mon_shape(mon->type);
+}
+
+mon_body_shape get_mon_shape(const int type)
+{
+    switch(mons_char(type))
+    {
+    case 'a': // ants and cockroaches
+        return(MON_SHAPE_INSECT);
+    case 'b':  // bats and butterflys
+        if (type == MONS_BUTTERFLY)
+            return(MON_SHAPE_INSECT_WINGED);
+        else
+            return(MON_SHAPE_BAT);
+    case 'c': // centaurs
+        return(MON_SHAPE_CENTAUR);
+    case 'd': // draconions and drakes
+        if (mons_genus(type) == MONS_DRACONIAN ||
+            mons_class_flag(type, M_HUMANOID))
+        {
+            if (mons_class_flag(type, M_FLIES))
+                return(MON_SHAPE_HUMANOID_WINGED_TAILED);
+            else
+                return(MON_SHAPE_HUMANOID_TAILED);
+        }
+        else if (mons_class_flag(type, M_FLIES))
+            return(MON_SHAPE_QUADRUPED_WINGED);
+        else
+            return(MON_SHAPE_QUADRUPED);
+    case 'e': // elves
+        return(MON_SHAPE_HUMANOID);
+    case 'f': // fungi
+        return(MON_SHAPE_FUNGUS);
+    case 'g': // gargoyles, gnolls, goblins and hobgoblins
+        if (type == MONS_GARGOYLE)
+            return(MON_SHAPE_HUMANOID_WINGED_TAILED);
+        else
+            return(MON_SHAPE_HUMANOID);
+    case 'h': // hounds
+    case 'j': // jackals
+        return(MON_SHAPE_QUADRUPED);
+    case 'k': // killer bees
+        return(MON_SHAPE_INSECT_WINGED);
+    case 'l': // lizards
+        return(MON_SHAPE_QUADRUPED);
+    case 'm': // minotaurs, manticores, and snails/slugs/etc
+        if (type == MONS_MINOTAUR)
+            return(MON_SHAPE_HUMANOID);
+        else if (type == MONS_MANTICORE)
+            return(MON_SHAPE_QUADRUPED);
+        else
+            return(MON_SHAPE_SNAIL);
+    case 'n': // necrophages and ghouls
+        return(MON_SHAPE_HUMANOID);
+    case 'o': // orcs
+        return(MON_SHAPE_HUMANOID);
+    case 'p': // ghosts
+        if (type != MONS_INSUBSTANTIAL_WISP &&
+            type != MONS_PLAYER_GHOST)
+            return(MON_SHAPE_HUMANOID);
+    case 'q': // quasists
+        return(MON_SHAPE_HUMANOID_TAILED);
+    case 'r': // rodents
+        return(MON_SHAPE_QUADRUPED);
+    case 's': // arachnids and centidpeds
+        if (type == MONS_GIANT_CENTIPEDE)
+            return(MON_SHAPE_CENTIPEDE);
+        else
+            return(MON_SHAPE_ARACHNID);
+    case 'u': // ugly things are humanoid???
+        return(MON_SHAPE_HUMANOID);
+    case 'v': // vortices and elementals
+        return(MON_SHAPE_MISC);
+    case 'w': // worms
+        return(MON_SHAPE_SNAKE);
+    case 'x': // small abominations
+        return(MON_SHAPE_MISC);
+    case 'y': // winged insects
+        return(MON_SHAPE_INSECT_WINGED);
+    case 'z': // small skeletons
+        if (type == MONS_SKELETAL_WARRIOR)
+            return(MON_SHAPE_HUMANOID);
+        else
+            // constructed type, not enough info to determine shape
+            return(MON_SHAPE_MISC);
+    case 'A': // angelic beings
+        return(MON_SHAPE_HUMANOID_WINGED);
+    case 'B': // beetles
+        return(MON_SHAPE_INSECT);
+    case 'C': // giants
+        return(MON_SHAPE_HUMANOID);
+    case 'D': // dragons
+        if (mons_class_flag(type, M_FLIES))
+            return(MON_SHAPE_QUADRUPED_WINGED);
+        else
+            return(MON_SHAPE_QUADRUPED);
+    case 'E': // effreets
+        return(MON_SHAPE_HUMANOID);
+    case 'F': // frogs
+        return(MON_SHAPE_QUADRUPED_TAILLESS);
+    case 'G': // floating eyeballs and orbs
+        return(MON_SHAPE_ORB);
+    case 'H': // hippogriffs and griffns
+        return(MON_SHAPE_QUADRUPED_WINGED);
+    case 'I': // ice beasts
+        return(MON_SHAPE_QUADRUPED);
+    case 'J': // jellies and jellyfish
+        return(MON_SHAPE_BLOB);
+    case 'K': // kobolds
+        return(MON_SHAPE_HUMANOID);
+    case 'L': // liches
+        return(MON_SHAPE_HUMANOID);
+    case 'M': // mummies
+        return(MON_SHAPE_HUMANOID);
+    case 'N': // nagas
+        return(MON_SHAPE_NAGA);
+    case 'O': // ogres
+        return(MON_SHAPE_HUMANOID);
+    case 'P': // plants
+        return(MON_SHAPE_PLANT);
+    case 'Q': // queen insects
+        if (type == MONS_QUEEN_BEE)
+            return(MON_SHAPE_INSECT_WINGED);
+        else
+            return(MON_SHAPE_INSECT);
+    case 'R': // rakshasa; humanoid?
+        return(MON_SHAPE_HUMANOID);
+    case 'S': // snakes
+        return(MON_SHAPE_SNAKE);
+    case 'T': // trolls
+        return(MON_SHAPE_HUMANOID);
+    case 'U': // bears
+        return(MON_SHAPE_QUADRUPED_TAILLESS);
+    case 'V': // vampires
+        return(MON_SHAPE_HUMANOID);
+    case 'W': // wraiths, humanoid if not a spectral thing
+        if (type == MONS_SPECTRAL_THING)
+            // constructed type, not enough info to determine shape
+            return(MON_SHAPE_MISC);
+        else
+            return(MON_SHAPE_HUMANOID);
+    case 'X': // large abominations
+        return(MON_SHAPE_MISC);
+    case 'Y': // yaks and sheep
+        if (type == MONS_SHEEP)
+            return(MON_SHAPE_QUADRUPED_TAILLESS);
+        else
+            return(MON_SHAPE_QUADRUPED);
+    case 'Z': // constructed type, not enough info to determine shape
+        return(MON_SHAPE_MISC);
+    case ';': // Fish and eels
+        if (type == MONS_ELECTRICAL_EEL)
+            return(MON_SHAPE_SNAKE);
+        else
+            return (MON_SHAPE_FISH);
+
+    // The various demons, plus some golems and statues.  And humanoids.
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '&':
+    case '8':
+    case '@':
+        // Assume demon has wings if it can fly.
+        bool flies = mons_class_flag(type, M_FLIES);
+
+        // Assume demon has a tail if it has a sting attack or a
+        // tail slap attack.
+        monsterentry *mon_data = get_monster_data(type);
+        bool tailed = false;
+        for (int i = 0; i < 4; i++)
+            if (mon_data->attack[i].type == AT_STING ||
+                mon_data->attack[i].type == AT_TAIL_SLAP)
+            {
+                tailed = true;
+                break;
+            }
+
+        if (flies && tailed)
+            return(MON_SHAPE_HUMANOID_WINGED_TAILED);
+        else if (flies && !tailed)
+            return(MON_SHAPE_HUMANOID_WINGED);
+        else if (!flies && tailed)
+            return(MON_SHAPE_HUMANOID_TAILED);
+        else
+            return(MON_SHAPE_HUMANOID);
+    }
+
+    return(MON_SHAPE_MISC);
+}
+
+std::string get_mon_shape_str(const monsters *mon)
+{
+    return get_mon_shape_str(get_mon_shape(mon));
+}
+
+std::string get_mon_shape_str(const int type)
+{
+    return get_mon_shape_str(get_mon_shape(type));
+}
+
+std::string get_mon_shape_str(const mon_body_shape shape)
+{
+    ASSERT(shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_MISC);
+
+    if (shape < MON_SHAPE_HUMANOID || shape > MON_SHAPE_MISC)
+        return("buggy shape");
+
+    static const char *shape_names[] =
+    {
+        "humanoid", "winged humanoid", "tailed humanoid",
+        "winged tailed humanoid", "centaur", "naga",
+        "quadruped", "tailless quadruped", "winged quadruped",
+        "bat", "snake", "fish",  "insect", "winged insect",
+        "arachnid", "centipede", "snail", "plant", "fungus", "orb",
+        "blob", "misc"
+    };
+
+    return (shape_names[shape]);
+}
+

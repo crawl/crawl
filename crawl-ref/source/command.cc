@@ -535,7 +535,14 @@ static const char *targeting_help_1 =
     "<w>!</w> : fire at target and stop there (may hit submerged creatures)\n"
     "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
-    "<w>Shift-Dir</w> : shoot straight-line beam\n";
+    "<w>Shift-Dir</w> : shoot straight-line beam\n"
+#ifdef WIZARD
+    " \n"
+    "<h>Wizard targeting comands:</h>\n"
+    "<w>F</w>: make target friendly\n"
+    "<w>s</w>: force target to shout or speak\n"
+#endif
+;
 
 static const char *targeting_help_2 =
     "<h>Firing or throwing a missile:\n"

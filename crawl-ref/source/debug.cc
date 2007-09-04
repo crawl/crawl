@@ -51,11 +51,17 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
+
+#ifdef WIZARD
+#include "macro.h"
+#endif
+
 #include "makeitem.h"
 #include "mapdef.h"
 #include "maps.h"
 #include "misc.h"
 #include "monplace.h"
+#include "monspeak.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -402,6 +408,31 @@ void create_spec_monster_name(int x, int y)
     const mons_spec mspec = mlist.get_monster(0);
     if (!force_place && mspec.mid != -1)
     {
+        // Only one ghost allowed per level
+        if (mspec.mid == MONS_PLAYER_GHOST)
+        {
+            for (int i = 0; i < MAX_MONSTERS; i++)
+                if (menv[i].type == MONS_PLAYER_GHOST
+                    && menv[i].alive())
+                {
+                    mpr("Only one player ghost per level allowed, "
+                        "and this level already has one.");
+                        return;
+                }
+        }
+        // Only one pandemonium lord allowed per level as well.
+        else if (mspec.mid == MONS_PANDEMONIUM_DEMON)
+        {
+            for (int i = 0; i < MAX_MONSTERS; i++)
+                if (menv[i].type == MONS_PANDEMONIUM_DEMON
+                    && menv[i].alive())
+                {
+                    mpr("Only one Pandemonium lord per level allowed, "
+                        "and this level already has one.");
+                        return;
+                }
+        }
+
         coord_def place = find_newmons_square(mspec.mid, x, y);
         if (in_bounds(place))
         {
@@ -410,7 +441,58 @@ void create_spec_monster_name(int x, int y)
         }
     }
     
-    dgn_place_monster(mspec, you.your_level, x, y, false);
+    if (!dgn_place_monster(mspec, you.your_level, x, y, false))
+    {
+        mpr("Unable to place monster");
+        return;
+    }
+
+    // Need to set a name for the player ghost
+    if (mspec.mid == MONS_PLAYER_GHOST)
+    {
+        unsigned char mid  = mgrd[x][y];
+
+        if (mid >= MAX_MONSTERS || menv[mid].type != MONS_PLAYER_GHOST)
+        {
+            for (mid = 0; mid < MAX_MONSTERS; mid++)
+                if (menv[mid].type == MONS_PLAYER_GHOST 
+                    && menv[mid].alive())
+                    break;
+        }
+
+        if (mid >= MAX_MONSTERS)
+        {
+            mpr("Couldn't find player ghost, probably going to crash.");
+            more();
+            return;
+        }
+
+        monsters    &mon = menv[mid];
+        ghost_demon ghost;
+
+        ghost.name = "John Doe";
+        ghost.values.init(0);
+
+        char class_str[80];
+        mpr( "Make player ghost which class? ", MSGCH_PROMPT );
+        get_input_line( class_str, sizeof( class_str ) );
+
+        int class_id = get_class_index_by_abbrev(class_str);
+
+        if (class_id == -1)
+            class_id = get_class_index_by_name(class_str);
+
+        if (class_id == -1)
+        {
+            mpr("No such class, making it a Fighter.");
+            class_id = JOB_FIGHTER;
+        }
+        ghost.values[GVAL_CLASS] = class_id;
+
+        mon.set_ghost(ghost);
+
+        ghosts.push_back(ghost);
+    }
 }
 #endif
 
@@ -2463,6 +2545,64 @@ void debug_test_explore()
 }
 
 #endif
+
+#ifdef WIZARD
+extern void force_monster_shout(monsters* monster);
+
+void debug_make_monster_shout(monsters* mon)
+{
+
+    mpr("Make the monster (S)hout or (T)alk?", MSGCH_PROMPT);
+
+    char type = (char) getchm(KC_DEFAULT);
+    type = tolower(type);
+
+    if (type != 's' && type != 't')
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    int num_times = debug_prompt_for_int("How many times? ", false);
+
+    if (num_times <= 0)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    if (type == 's')
+    {
+        if (silenced(mon->x, mon->y))
+            mpr("The monster is silenced and likely won't give any shouts.");
+        if (silenced(you.x_pos, you.y_pos))
+            mpr("You are silenced and likely won't hear any shouts.");
+
+        for (int i = 0; i < num_times; i++)
+            force_monster_shout(mon);
+    }
+    else
+    {
+        if (mon->invisible())
+            mpr("The monster is invisble and likely won't speak.");
+
+        if (silenced(you.x_pos, you.y_pos) && !silenced(mon->x, mon->y))
+            mpr("You are silenced but the monster isn't; you will "
+                "probably hear/see nothing.");
+        else if (!silenced(you.x_pos, you.y_pos) && silenced(mon->x, mon->y))
+            mpr("The monster is silenced and likely won't say anything.");
+        else if (silenced(you.x_pos, you.y_pos) && silenced(mon->x, mon->y))
+            mpr("Both you and the monster are silenced, so you likely "
+                "won't hear anything.");
+
+        for (int i = 0; i< num_times; i++)
+            mons_speaks(mon);
+    }
+
+    mpr("== Done ==");
+}
+#endif
+
 
 #ifdef DEBUG_DIAGNOSTICS
 

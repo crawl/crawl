@@ -757,6 +757,7 @@ enum command_type
     CMD_TARGET_FIND_YOU,
     CMD_TARGET_DESCRIBE,
     CMD_TARGET_WIZARD_MAKE_FRIENDLY,
+    CMD_TARGET_WIZARD_MAKE_SHOUT,
     CMD_TARGET_HELP,
 
     // Disable/enable -more- prompts.
@@ -2492,23 +2493,24 @@ enum mon_flight_type
 // These are now saved in an unsigned long in the monsters struct.
 enum monster_flag_type
 {
-    MF_CREATED_FRIENDLY   = 0x01,  // no benefit from killing
-    MF_GOD_GIFT           = 0x02,  // player not penalized by its death
-    MF_BATTY              = 0x04,  // flutters like a bat
-    MF_JUST_SUMMONED      = 0x08,  // monster skips next available action
-    MF_TAKING_STAIRS      = 0x10,  // is following player through stairs
+    MF_CREATED_FRIENDLY   = 0x01,   // no benefit from killing
+    MF_GOD_GIFT           = 0x02,   // player not penalized by its death
+    MF_BATTY              = 0x04,   // flutters like a bat
+    MF_JUST_SUMMONED      = 0x08,   // monster skips next available action
+    MF_TAKING_STAIRS      = 0x10,   // is following player through stairs
 
-    MF_INTERESTING        = 0x20,  // Player finds monster interesting
-    MF_SEEN               = 0x40,  // Player already seen monster
-    MF_DIVINE_PROTECTION  = 0x80,  // Monster has divine protection.
+    MF_INTERESTING        = 0x20,   // Player finds monster interesting
+    MF_SEEN               = 0x40,   // Player already seen monster
+    MF_DIVINE_PROTECTION  = 0x80,   // Monster has divine protection.
     
-    MF_KNOWN_MIMIC        = 0x100, // Mimic that has taken a swing at the PC,
-                                   // or that the player has inspected with ?
-    MF_BANISHED           = 0x200, // Monster that has been banished.
-    MF_HARD_RESET         = 0x400, // Summoned, should not drop gear on reset
-    MF_CONVERT_ATTEMPT    = 0x800, // Orcs only: seen player and was converted
-                                   // (or not)
-    MF_WAS_IN_VIEW        = 0x1000 // Was in view during previous turn
+    MF_KNOWN_MIMIC        = 0x100,  // Mimic that has taken a swing at the PC,
+                                    // or that the player has inspected with ?
+    MF_BANISHED           = 0x200,  // Monster that has been banished.
+    MF_HARD_RESET         = 0x400,  // Summoned, should not drop gear on reset
+    MF_CONVERT_ATTEMPT    = 0x800,  // Orcs only: seen player and was converted
+                                    // (or not)
+    MF_WAS_IN_VIEW        = 0x1000, // Was in view during previous turn
+    MF_BAND_MEMBER        = 0x2000  // Created as a member of a band
 };
 
 enum mon_dam_level_type
@@ -3109,6 +3111,14 @@ enum shout_type
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
+
+    // Loudness setting for shouts that are only defined in dat/shout.txt
+    S_VERY_SOFT,
+    S_SOFT,
+    S_NORMAL,
+    S_LOUD,
+    S_VERY_LOUD,
+
     NUM_SHOUTS,
     S_RANDOM
 };

@@ -371,4 +371,39 @@ monster_type random_monster_at_grid(int grid);
 
 monster_type get_monster_by_name(std::string name, bool exact = false);
 
+std::string do_mon_str_replacements(const std::string msg,
+                                    const monsters* monster);
+
+enum mon_body_shape {
+    MON_SHAPE_HUMANOID,
+    MON_SHAPE_HUMANOID_WINGED,
+    MON_SHAPE_HUMANOID_TAILED,
+    MON_SHAPE_HUMANOID_WINGED_TAILED,
+    MON_SHAPE_CENTAUR,
+    MON_SHAPE_NAGA,
+    MON_SHAPE_QUADRUPED,
+    MON_SHAPE_QUADRUPED_TAILLESS,
+    MON_SHAPE_QUADRUPED_WINGED,
+    MON_SHAPE_BAT,
+    MON_SHAPE_SNAKE, // Including eels and worms
+    MON_SHAPE_FISH,
+    MON_SHAPE_INSECT,
+    MON_SHAPE_INSECT_WINGED,
+    MON_SHAPE_ARACHNID,
+    MON_SHAPE_CENTIPEDE,
+    MON_SHAPE_SNAIL,
+    MON_SHAPE_PLANT,
+    MON_SHAPE_FUNGUS,
+    MON_SHAPE_ORB,
+    MON_SHAPE_BLOB,
+    MON_SHAPE_MISC
+};
+
+mon_body_shape get_mon_shape(const monsters *mon);
+mon_body_shape get_mon_shape(const int type);
+
+std::string get_mon_shape_str(const monsters *mon);
+std::string get_mon_shape_str(const int type);
+std::string get_mon_shape_str(const mon_body_shape shape);
+
 #endif

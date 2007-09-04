@@ -38,11 +38,9 @@ void init_cap(char * str)
         str[0] = toupper( str[0] );
 }
 
-void imp_taunt( const monsters *mons )
+std::string imp_taunt_str()
 {
     char buff[80];
-    const std::string mon_name = mons->name(DESC_CAP_THE);
-
     snprintf( buff, sizeof(buff), 
               "%s, thou %s!", 
               random2(7) ? run_away() : give_up(),
@@ -50,41 +48,31 @@ void imp_taunt( const monsters *mons )
 
     init_cap( buff );
 
+    return (buff);
+}
+
+void imp_taunt( const monsters *mons )
+{
+    std::string str      = imp_taunt_str();
+    std::string mon_name = mons->name(DESC_CAP_THE);
+
+
     // XXX: Not pretty, but stops truncation...
-    if (mon_name.length() + 11 + strlen( buff ) >= 79)
+    if (mon_name.length() + 11 + str.length() >= 79)
     {
         mprf(MSGCH_TALK, "%s shouts:", mon_name.c_str() );
-        mprf(MSGCH_TALK, "%s", buff );
+        mprf(MSGCH_TALK, "%s", str.c_str() );
     }
     else
     {
-        mprf(MSGCH_TALK, "%s shouts, \"%s\"", mon_name.c_str(), buff );
+        mprf(MSGCH_TALK, "%s shouts, \"%s\"", mon_name.c_str(),
+             str.c_str() );
     }
 }
 
-void demon_taunt( const monsters *mons )
+std::string demon_taunt_str()
 {
-    static const char * sound_list[] = 
-    {
-        "says",         // actually S_SILENT
-        "shouts", 
-        "barks", 
-        "shouts", 
-        "roars", 
-        "screams", 
-        "bellows", 
-        "screeches", 
-        "buzzes", 
-        "moans", 
-        "whines", 
-        "croaks", 
-        "growls", 
-    };
-  
     char buff[80];
-    const std::string mon_name = mons->name(DESC_CAP_THE);
-    const char *voice = sound_list[ mons_shouts(mons->type) ];
-
     if (coinflip())
     {
         snprintf( buff, sizeof(buff), 
@@ -126,15 +114,49 @@ void demon_taunt( const monsters *mons )
 
     init_cap( buff );
 
+    return (buff);
+}
+
+void demon_taunt( const monsters *mons )
+{
+    std::string str = demon_taunt_str();
+    const std::string mon_name = mons->name(DESC_CAP_THE);
+
+    static const char * sound_list[] = 
+    {
+        "says",         // actually S_SILENT
+        "shouts", 
+        "barks", 
+        "shouts", 
+        "roars", 
+        "screams", 
+        "bellows", 
+        "screeches", 
+        "buzzes", 
+        "moans", 
+        "whines", 
+        "croaks", 
+        "growls",
+        "hisses",
+        "breathes", // S_VERY_SOFT
+        "whispers", // S_SOFT
+        "says",     // S_NORMAL
+        "shouts",   // S_LOUD
+        "screams"   // S_VERY_LOUD
+    };
+
+    const char *voice = sound_list[ mons_shouts(mons->type) ];
+
     // XXX: Not pretty, but stops truncation...
-    if (mon_name.length() + strlen(voice) + strlen(buff) + 5 >= 79)
+    if (mon_name.length() + strlen(voice) + str.length() + 5 >= 79)
     {
         mprf(MSGCH_TALK, "%s %s:", mon_name.c_str(), voice );
-        mprf(MSGCH_TALK, "%s",  buff);
+        mprf(MSGCH_TALK, "%s",  str.c_str());
     }
     else
     {
-        mprf(MSGCH_TALK, "%s %s, \"%s\"", mon_name.c_str(), voice, buff );
+        mprf(MSGCH_TALK, "%s %s, \"%s\"", mon_name.c_str(), voice,
+             str.c_str() );
     }
 }
 
