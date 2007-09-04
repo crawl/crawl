@@ -3008,16 +3008,24 @@ void level_change(bool skip_ability_increase)
         if (you.magic_points < 0)
             you.magic_points = 0;
 
+        if (Options.use_notes)
+        {
+            // calculate "real" values for note-taking, i.e. ignore Berserk,
+            // transformations or equipped items
+            calc_hp(true);
+            calc_mp(true);
+
+            char buf[200];
+            sprintf(buf, "HP: %d/%d MP: %d/%d",
+                    you.hp, you.hp_max, you.magic_points, you.max_magic_points);
+            take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+        }
+        // recalculate for game
         calc_hp();
         calc_mp();
 
         if (you.experience_level > you.max_level)
             you.max_level = you.experience_level;
-        
-        char buf[200];
-        sprintf(buf, "HP: %d/%d MP: %d/%d",
-                you.hp, you.hp_max, you.magic_points, you.max_magic_points);
-        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
         xom_is_stimulated(16);
 

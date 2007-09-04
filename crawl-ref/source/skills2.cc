@@ -2170,7 +2170,7 @@ void init_skill_order( void )
     }
 }
 
-int calc_hp(void)
+int calc_hp(bool real_hp)
 {
     int hitp;
 
@@ -2178,14 +2178,14 @@ int calc_hp(void)
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
 
     // being berserk makes you resistant to damage. I don't know why.
-    if (you.duration[DUR_BERSERKER])
+    if (you.duration[DUR_BERSERKER] && !real_hp)
     {
         hitp *= 15;
         hitp /= 10;
     }
 
     // some transformations give you extra hp
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.attribute[ATTR_TRANSFORMATION] && !real_hp)
     {
     case TRAN_STATUE:
         hitp *= 15;
@@ -2213,7 +2213,7 @@ int calc_hp(void)
 }                               // end calc_hp()
 
 
-int calc_mp(void)
+int calc_mp(bool real_mp)
 {
     int enp;
 
@@ -2240,7 +2240,8 @@ int calc_mp(void)
         you.max_magic_points = 50;
 
     // now applied after scaling so that power items are more useful -- bwr
-    you.max_magic_points += player_magical_power();
+    if (!real_mp)
+        you.max_magic_points += player_magical_power();
 
     if (you.max_magic_points > 50)
         you.max_magic_points = 50 + ((you.max_magic_points - 50) / 2);

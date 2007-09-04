@@ -2868,6 +2868,9 @@ static void create_wanderer( void )
 
     you.equip[EQ_WEAPON] = 0;
     you.equip[EQ_BODY_ARMOUR] = 2;
+    
+    if (you.species == SP_MUMMY)
+        you.inv[3].quantity = 0; // remove potion
 }
 
 static job_type letter_to_class(int keyn)

@@ -55,7 +55,7 @@ void init_skill_order( void );
 /* ***********************************************************************
  * called from: acr - it_use2 - item_use - newgame - ouch - player - skills
  * *********************************************************************** */
-int calc_mp(void);
+int calc_mp(bool real_mp = false);
 
 
 // last_updated 24may2000 {dlb}
@@ -63,7 +63,7 @@ int calc_mp(void);
  * called from: ability - acr - food - it_use2 - misc - mutation -
  *              newgame - ouch - player - skills - spells1 - transfor
  * *********************************************************************** */
-int calc_hp(void);
+int calc_hp(bool real_hp = false);
 
 
 // last_updated 24may2000 {dlb}

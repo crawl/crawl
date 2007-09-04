@@ -482,6 +482,7 @@ void dancing_weapon(int pow, bool force_hostile)
 
     menv[summs].inv[MSLOT_WEAPON] = i;
     menv[summs].colour = mitm[i].colour;
+    burden_change();
 }                               // end dancing_weapon()
 
 static bool monster_on_level(int monster)

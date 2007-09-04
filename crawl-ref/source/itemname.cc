@@ -1019,8 +1019,11 @@ std::string item_def::name_aux( description_level_type desc,
             if (know_type && !terse &&
                 (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
                 buff << "vampiric ";
-
-            buff << item_base_name(*this);
+        }
+        buff << item_base_name(*this);
+            
+        if (!basename)
+        {
             if ( know_type )
                 buff << weapon_brand_name(*this, terse);
 
@@ -1152,6 +1155,11 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_WANDS:
+        if (basename)
+        {
+            buff << "wand";
+            break;
+        }
         if (know_type)
         {
             buff << "wand of " << wand_type_name(item_typ);
@@ -1174,6 +1182,11 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_POTIONS:
+        if (basename)
+        {
+            buff << "potion";
+            break;
+        }
         if (know_type)
         {
             buff << "potion of " << potion_type_name(item_typ);
@@ -1248,7 +1261,11 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_SCROLLS:
-        buff << "scroll ";
+        buff << "scroll";
+        if (basename)
+            break;
+        else
+            buff << " ";
 
         if (know_type)
         {
@@ -1268,9 +1285,9 @@ std::string item_def::name_aux( description_level_type desc,
         if (basename)
         {
             if ( jewellery_is_amulet(*this) )
-                buff << " amulet";
+                buff << "amulet";
             else                // i.e., an amulet
-                buff << " ring";
+                buff << "ring";
 
             break;
         }
@@ -1343,6 +1360,11 @@ std::string item_def::name_aux( description_level_type desc,
         {
             if ( is_deck(*this) )
             {
+                if (basename)
+                {
+                    buff << "deck of cards";
+                    break;
+                }
                 buff << deck_rarity_name(deck_rarity(*this)) << ' ';
             }
             buff << misc_type_name(item_typ, know_type);
@@ -1380,15 +1402,17 @@ std::string item_def::name_aux( description_level_type desc,
     case OBJ_STAVES:
         if (!know_type)
         {
-            buff << staff_primary_string(this->special) << " "
-                 << (item_is_rod( *this ) ? "rod" : "staff");
+            if (!basename)
+                buff << staff_primary_string(this->special) << " ";
+                
+            buff << (item_is_rod( *this ) ? "rod" : "staff");
         }      
         else
         {
             buff << (item_is_rod( *this ) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
 
-            if (item_is_rod(*this))
+            if (item_is_rod(*this) && !basename)
             {
                 buff << " (" << (this->plus / ROD_CHARGE_MULT)
                      << "/" << (this->plus2 / ROD_CHARGE_MULT)

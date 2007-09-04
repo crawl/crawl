@@ -158,15 +158,18 @@ void stop_delay( void )
     // until it is done... it merely chains up individual actions
     // into a single action.  -- bwr
     clear_pending_delays();
-
+    
     switch (delay.type)
     {
     case DELAY_BUTCHER:
         // Corpse keeps track of work in plus2 field, see handle_delay() -- bwr
         if (butcher_swap_warn)
-            mpr("You stop butchering the corpse; not switching back to "
-                "primary weapon.",
-                MSGCH_WARN);
+        {
+            int swapwpn = you.delay_queue[1].parm1;
+            mprf(MSGCH_WARN, "You stop butchering the corpse; not switching "
+                 "back to your %s.",
+                 you.inv[swapwpn].name(DESC_BASENAME).c_str());
+        }
         else
             mpr( "You stop butchering the corpse." );
         pop_delay();

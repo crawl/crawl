@@ -1141,8 +1141,7 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     {
         if ((fire_type & FIRE_DART) && item.sub_type == MI_DART)
             return (true);
-        if ((fire_type & FIRE_STONE)
-            && (item.sub_type == MI_STONE || item.sub_type == MI_SLING_BULLET))
+        if ((fire_type & FIRE_STONE) && item.sub_type == MI_STONE)
             return (true);
         if ((fire_type & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
             return (true);
