@@ -1624,7 +1624,6 @@ static bool choose_weapon( void )
 {
     unsigned char keyin = 0;
     int num_choices = 4;
-    int temp_rand;              // probability determination {dlb}
 
     if (you.char_class == JOB_GLADIATOR || you.species == SP_MERFOLK)
         num_choices = 5;

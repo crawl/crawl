@@ -21,6 +21,7 @@ are in use:
 
  asciiart.des - a few entry vaults which contain proper ASCII art.
                 these are a matter of taste - some find this annoying.
+ bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
  elf.des      - Elf:7
  entry.des    - entry vaults (each game - but not tutorial games - uses one of 
                 these premade maps for the vicinity of the entrance)
