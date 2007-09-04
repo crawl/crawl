@@ -3538,6 +3538,16 @@ static bool handle_throw(monsters *monster, bolt & beem)
     if (mon_item == NON_ITEM || !is_valid_item(mitm[mon_item]))
         return (false);
 
+    // throwing a net at a target that is already caught would be
+    // completely useless, so bail out
+    if (mitm[mon_item].base_type == OBJ_MISSILES
+        && mitm[mon_item].sub_type == MI_THROWING_NET
+        && (beem.target_x == you.x_pos && beem.target_y == you.y_pos
+            && you.caught()))
+    {
+        return (false);
+    }
+
     // If the attack needs a launcher that we can't wield, bail out.
     if (launcher)
     {

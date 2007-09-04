@@ -2128,6 +2128,10 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         merfolk_start_swimming();
         return (false);
     }
+    
+    // sanity check
+    if (terrain != DNGN_LAVA && beogh_water_walk())
+        return (false);
 
     mprf("You fall into the %s!",
          (terrain == DNGN_LAVA)       ? "lava" :

@@ -160,6 +160,7 @@ int player_mental_clarity(bool calc_unid = true);
 
 bool player_can_smell();
 bool player_can_swim();
+bool player_likes_water();
 
 /* ***********************************************************************
  * called from: fight - files - ouch

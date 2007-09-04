@@ -491,7 +491,7 @@ void direction(dist& moves, targeting_type restricts,
             // Do we have a previous target?
             if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
             {
-                mpr("You haven't got a previous target.");
+                mpr("You haven't got a previous target.", MSGCH_EXAMINE_FILTER);
                 break;
             }
 
@@ -502,7 +502,7 @@ void direction(dist& moves, targeting_type restricts,
                 if (!mons_near(montarget) ||
                     !player_monster_visible( montarget ))
                 {
-                    mpr("You can't see that creature any more.");
+                    mpr("You can't see that creature any more.", MSGCH_EXAMINE_FILTER);
                 }
                 else
                 {
@@ -626,7 +626,7 @@ void direction(dist& moves, targeting_type restricts,
             }
             else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
-                mpr("Sorry, you can't target what you can't see.");
+                mpr("Sorry, you can't target what you can't see.", MSGCH_EXAMINE_FILTER);
             }
             // Ask for confirmation if we're quitting for some odd reason
             else if ( moves.isValid || moves.isCancel ||
@@ -1213,7 +1213,16 @@ void describe_floor()
     if (feat.empty())
         return;
 
-    mpr((prefix + feat + suffix).c_str(), MSGCH_EXAMINE);
+    msg_channel_type channel = MSGCH_EXAMINE;
+    
+    // water is not terribly important if you don't mind it
+    if ((grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
+        || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
+        && player_likes_water())
+    {
+        channel = MSGCH_EXAMINE_FILTER;
+    }
+    mpr((prefix + feat + suffix).c_str(), channel);
     if (grid == DNGN_ENTER_LABYRINTH)
         mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
 }
@@ -1837,8 +1846,12 @@ static void describe_cell(int mx, int my)
     else
     {
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (grd[mx][my] == DNGN_FLOOR)
+        if (grd[mx][my] == DNGN_FLOOR
+            || grd[mx][my] == DNGN_SHALLOW_WATER
+            || grd[mx][my] == DNGN_DEEP_WATER)
+        {
             channel = MSGCH_EXAMINE_FILTER;
+        }
         mpr(feature_desc.c_str(), channel);
     }
 #endif

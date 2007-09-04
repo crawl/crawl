@@ -1656,8 +1656,8 @@ void process_command( command_type cmd )
            std::string msg = "Unknown command. (For a list of commands type <w>?<lightgray>.)";
            print_formatted_paragraph(msg, get_number_of_cols());
         }
-        else
-           mpr("Unknown command.");
+        else // well, not examine, but...
+           mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
         break;
 
     }

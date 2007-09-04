@@ -43,6 +43,7 @@ The contents of this text are:
                 travel_delay, travel_avoid_terrain,
                 travel_stop_message, explore_greedy, explore_stop,
                 runrest_ignore_message, runrest_ignore_poison,
+		runrest_ignore_monster,
                 trapwalk_safe_hp, tc_reachable,
                 tc_dangerous, tc_excluded, tc_exclude_circle
 4-h     Stashes.
@@ -653,6 +654,16 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
           runrest_ignore_message = You feel.*sick
           runrest_ignore_poison = 4:100 
 
+runrest_ignore_monster = <string>:<distance>
+        This only works if runrest.lua has been sourced already in init.txt.
+	Any monster containing the string will only interrupt your activity
+	if the distance between you and the monster is less than the 
+	specified number. E.g. with
+	  runrest_ingore_monster = fish:3
+	all of big fish, jellyfish, giant goldfish and lavafish will be 
+	considered safe for travel, explore and resting as long as the distance
+	is at least 3.
+
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         This only works if trapwalk.lua has been sourced already in init.txt.
         Any square containing one of the listed trap types will be considered
@@ -1179,6 +1190,10 @@ note_hp_percent = 5
 note_skill_levels = 1,5,13,27
         This sets which skill levels are noteworthy. You can have multiple 
         note_skill_levels lines. The default is nothing (no notes.)
+
+note_all_skill_levels = false
+        This is a shortcut for note_skill_levels = 1,2,..,27. If you set this 
+	to true, all skill levels are noteworthy.
 
 note_skill_max = false
         Setting this option will cause a note whenever a new maximum in skill

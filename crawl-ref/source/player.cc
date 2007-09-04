@@ -246,7 +246,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                     merfolk_start_swimming();
                 }
             }
-            else if ( !player_can_swim() )
+            else if ( !player_likes_water() )
             {
                 ASSERT( new_grid != DNGN_DEEP_WATER );
 
@@ -347,7 +347,7 @@ bool is_grid_dangerous(int grid)
 {
     return (!player_is_levitating()
             && (grid == DNGN_LAVA
-                || (grid == DNGN_DEEP_WATER && !player_can_swim())));
+                || (grid == DNGN_DEEP_WATER && !player_likes_water()) ));
 }
 
 bool player_in_mappable_area( void )
@@ -370,8 +370,13 @@ bool player_in_hell( void )
 
 bool player_in_water(void)
 {
-    return (!player_is_levitating()
+    return (!player_is_levitating() && !beogh_water_walk()
             && grid_is_water(grd[you.x_pos][you.y_pos]));
+}
+
+bool player_likes_water(void)
+{
+     return (player_can_swim() || beogh_water_walk());
 }
 
 bool player_is_swimming(void)
@@ -5010,8 +5015,7 @@ bool player::in_water() const
 
 bool player::can_swim() const
 {
-    return (species == SP_MERFOLK ||
-            (you.religion == GOD_BEOGH && you.piety >= piety_breakpoint(4)));
+    return (species == SP_MERFOLK);
 }
 
 bool player::swimming() const

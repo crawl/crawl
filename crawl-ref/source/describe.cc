@@ -2246,8 +2246,8 @@ static const char* describe_potion( const item_def &item )
         return "A potion containing the essence of life. Vital for all living "
                "creatures, as well as some undead ones.$";
     case POT_RESISTANCE:
-        return "A potion which grants you "
-            "temporary resistance to the elements.$";
+        return "A potion which grants you temporary resistance to the elements "
+               "and poison.$";
     case NUM_POTIONS:
         return "A buggy potion.";
     }
