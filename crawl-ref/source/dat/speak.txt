@@ -1,0 +1,1768 @@
+##################################################################
+# Library of randomized word/phrase substitutions. (The keys will 
+# have to be changed in the unlikely event that monsters are ever 
+# given names like "yells" or "begs".)
+##################################################################%%%%
+__RESIST_OR_NOTHING
+
+__YOU_RESIST
+
+__NOTHING_HAPPENS
+%%%%
+ATTACK
+
+ATTACK
+
+DIE
+%%%%
+shouts
+
+shouts
+
+yells
+%%%%
+yells
+
+yells
+
+wails
+
+cries
+
+screams
+%%%%
+begs
+
+begs
+
+pleads
+%%%%
+almost
+
+almost
+
+nearly
+%%%%
+moans
+
+moans
+
+wails
+%%%%
+mutters
+
+mutters
+
+mumbles
+%%%%
+blubbers
+
+blubbers
+
+cries
+%%%%
+Mommeee
+
+Mommeee
+
+Daddeee
+%%%%
+rattled
+
+rattled
+
+scared stiff
+%%%%
+pointless
+
+pointless
+
+senseless
+
+useless
+%%%%
+ploy
+
+ploy
+
+trick
+
+######################################################################
+# Library of speeches for types of monsters, like priests, wizards,
+# guards and so on.
+######################################################################
+%%%%
+_high_priest_
+
+SPELL:@The_monster@ prays.
+
+SPELL:@The_monster@ mumbles some strange prayers.
+
+SPELL:@The_monster@ intones a terrible prayer.
+
+@The_monster@ looks excited.
+
+@The_monster@ starts to sing a prayer.
+
+@The_monster@ says, "All sinners must die."
+
+@The_monster@ says, "You will make a fine sacrifice."
+
+@The_monster@ says, "Right in the middle of my sermon, too."
+
+@The_monster@ says "The wages of sin are death, you know."
+
+@The_monster@ shouts, "You must be punished!"
+
+@The_monster@ shouts, "You are a heretic and must be destroyed!"
+## END _high_priest_ ##
+%%%%
+_mercenary_guard_
+
+@The_monster@ looks very unfriendly.
+
+@The_monster@ looks very cold.
+
+@The_monster@ grins evilly.
+
+@The_monster@ says, "Now you've reached the end of your journey."
+
+@The_monster@ says, "Drop everything you've found here and return home."
+
+@The_monster@ says, "Return every stolen item!"
+
+@The_monster@ says, "No trespassing is allowed here."
+
+@The_monster@ says, "It's nothing personal."
+
+@The_monster@ says, "A dead adventurer is a good adventurer."
+
+@The_monster@ says, "Coming here was your last mistake."
+
+@The_monster@ screams, "One false step and I'll kill you."
+
+@The_monster@ screams, "I'm going to kill you!  Now!"
+
+@The_monster@ screams, "You must be punished!"
+
+@The_monster@ shouts, "You will never get the Orb!"
+
+@The_monster@ shouts, "Return immediately or I'll kill you!"
+
+@The_monster@ shouts, "Intruder!"
+
+@The_monster@ shouts, "It's the end of the party!"
+## END _mercenary_guard_ ##
+%%%%
+_wizard_
+
+w:30
+SPELL:@The_monster@ wildly gestures.
+@__RESIST_OR_NOTHING@
+
+w:30
+SPELL:@The_monster@ mumbles some strange words.
+@__RESIST_OR_NOTHING@
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ becomes transparent for a moment.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ glows brightly for a moment.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ becomes larger for a moment.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@possessive@ fingertips start to glow.
+
+SPELL:@The_monster@ casts a spell.
+__YOU_RESIST
+
+SPELL:@The_monster@ throws some strange powder towards you.
+
+SPELL:@The_monster@ says, "Argatax netranoch dertex."
+
+SPELL:@The_monster@ says, "Dogrw nutew berg."
+
+SPELL:@The_monster@ shouts, "Entram moth deg ulag!"
+
+SPELL:@The_monster@'s eyes start to glow.
+
+SPELL:@The_monster@ tries to paralyze you with @possessive@ gaze.
+
+@The_monster@ shouts, "You can't withstand my power!"
+
+@The_monster@ shouts, "You are history!"
+## END _wizard_ ##
+%%%%
+_hostile_adventurer_
+
+@The_monster@ frowns.
+
+@The_monster@ looks very upset.
+
+@The_monster@ screams, "Return home!"
+
+@The_monster@ screams, "The Orb is mine!"
+
+@The_monster@ screams, "Give me all your treasure!"
+
+@The_monster@ screams, "You will never get the Orb!"
+
+@The_monster@ screams, "I was here first!"
+
+@The_monster@ screams, "Go away or die!"
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "First you have to pass me!"
+
+@The_monster@ scream, "I hate you!"
+## END _hostile_adventurer_ ##
+%%%%
+_friendly_imp_
+
+@The_monster@ jumps up and down with excitement.
+
+@The_monster@ grins impishly at you.
+
+@The_monster@ picks up some beetles from the @surface@ and offers them to you.
+
+@The_monster@ blows smoke rings.
+
+@The_monster@ says, "Just tell me who NOT to kill."
+
+@The_monster@ says, "OK boss!"
+
+@The_monster@ says, "The Orb is all yours."
+
+@The_monster@ says, "Isn't this more fun with friends?"
+
+@The_monster@ says, "Uh-oh!  Wait.  OK."
+
+@The_monster@ says, "You're so much nicer than my last boss."
+
+@The_monster@ shouts, "Stay back!  It could be a trick!"
+
+@The_monster@ shouts, "Over here!  I found it!"
+## END _friendly_imp_ ##
+%%%%
+_hostile_imp_
+
+@The_monster@ laughs crazily.
+
+@The_monster@ grins evilly.
+
+@The_monster@ breathes smoke at you.
+
+@The_monster@ lashes his tail.
+
+@The_monster@ grinds his teeth.
+
+@The_monster@ sputters.
+
+@The_monster@ breathes steam at you.
+
+@The_monster@ spits at you.
+
+@The_monster@ disappears for a moment.
+
+@The_monster@ summons a swarm of flies.
+
+@The_monster@ picks up a beetle and eats it.
+## END _hostile_imp_ ##
+%%%%
+_demon_taunt_
+
+@The_monster@ @says@: @demon_taunt@
+%%%%
+_imp_taunt_
+
+@The_monster@ @says@: @imp_taunt@
+################################################################
+# Messages by monster body shape
+################################################################
+%%%%
+default stupid friendly humanoid
+
+__NONE
+%%%%
+default stupid fleeing humanoid
+
+__NONE
+%%%%
+default stupid silenced humanoid
+
+__NONE
+%%%%
+default stupid confused humanoid
+
+__NONE
+%%%%
+default silenced confused humanoid
+
+w:40
+@The_monster@ gestures wildly.
+
+w:20
+@The_monster@ says something but you don't hear anything.
+@The_monster@ looks confused.
+
+@The_monster@ grins evilly.
+
+@The_monster@ smiles happily.
+
+@The_monster@ cries.
+## END silenced confused humanoid ##
+%%%%
+default fleeing silenced humanoid
+
+w:30
+@The_monster@ glances furtively about.
+
+w:30
+@The_monster@ seems to say something.
+
+@The_monster@ opens @possessive@ mouth, as if shouting.
+
+@The_monster@ looks around. 
+
+@The_monster@ ponders the situation.
+## END fleeing silenced humanoid ##
+%%%%
+default friendly silenced humanoid
+
+w:30
+@The_monster@ gives you a thumbs up.
+
+w:30
+@The_monster@ says something you can't hear.
+
+@The_monster@ looks at you.
+
+@The_monster@ waves at you.
+
+@The_monster@ smiles happily.
+
+@The_monster@ winks at you.
+## END friendly silenced humanoid ##
+%%%%
+default silenced humanoid
+
+w:30
+@The_monster@ says something but you don't hear anything.
+
+w:30
+@The_monster@ gestures.
+
+@The_monster@ gestures obscenely.
+
+@The_monster@ grins.
+
+@The_monster@ looks angry.
+
+@The_monster@ seems to be listening.
+## END silenced humanoid ##
+%%%%
+default friendly confused humanoid
+
+@The_monster@ prays for help.
+
+@The_monster@ screams, "Help!"
+
+@The_monster@ shouts, "I'm loosing control!"
+
+@The_monster@ shouts, "What's happening?!"
+
+@The_monster@ cries.
+
+@The_monster@ shouts, "Yeah!"
+
+@The_monster@ sings.
+
+@The_monster@ laughs crazily.
+
+@The_monster@ ponders the situation.
+
+@The_monster@ grins madly.
+
+@The_monster@ looks very confused.
+
+@The_monster@ mumbles something.
+
+@The_monster@ giggles crazily.
+
+@The_monster@ screams, "@player_name@!  Help!"
+
+@The_monster@ screams, "@player_name@!  What's going on?!"
+
+@The_monster@ says, "@player_name@, I'm a little confused!"
+## END friendly confused humanoid ##
+%%%%
+default confused humanoid
+
+w:30
+@The_monster@ gestures wildly.
+
+@The_monster@ yells, "Get them off me!"
+
+@The_monster@ screams, "I'll kill you anyway!"
+
+@The_monster@ shouts, "What's happening?!"
+
+@The_monster@ cries.
+
+@The_monster@ shouts, "NO!"
+
+@The_monster@ shouts, "YES!"
+
+@The_monster@ laughs crazily.
+
+@The_monster@ ponders the situation.
+
+@The_monster@ grins madly.
+
+@The_monster@ looks very confused.
+
+@The_monster@ mumbles something.
+
+@The_monster@ says, "I'm a little confused."
+
+@The_monster@ asks, "Where am I?"
+
+@The_monster@ shakes.
+
+@The_monster@ asks, "Who are you?"
+
+@The_monster@ asks, "What the hell are we doing here?  Hmm, I see..."
+
+@The_monster@ cries, "My head! MY HEAD!!!"
+
+@The_monster@ says, "Why is everything spinning?"
+
+@The_monster@ screams, "NO!  I can't bear this much noise."
+
+@The_monster@ covers @possessive@ eyes.
+## END confused humanoid ##
+%%%%
+default friendly fleeing humanoid
+
+w:30
+@The_monster@ tries to hide somewhere.
+
+@The_monster@ @shouts@, "WAIT FOR ME, @your_nam@!  Could you help me?"
+
+@The_monster@ screams, "Help!"
+
+@The_monster@ shouts, "Cover me!"
+
+@The_monster@ screams, "@player_name@!  Help me!"
+
+@The_monster@ prays for help.
+
+@The_monster@ shouts, "Protect me!"
+
+@The_monster@ cries, "Don't forget your friends!"
+## END friendly fleeing humanoid ##
+%%%%
+default fleeing humanoid
+
+w:30
+@The_monster@ gives up.
+
+w:20
+@The_monster@ @yells@, "Help!"
+
+@The_monster@ @begs@, "Why can't we all just get along?"
+
+# This one won't work for nagas.
+@The_monster@ @almost@ stumbles in trying to escape.
+
+@The_monster@ @mutters@, "Of all the rotten luck!"
+
+@The_monster@ @moans@, "Oh dear!  Oh dear!"
+
+@The_monster@ @mutters@, "Damn and blast!"
+
+@The_monster@ prays for help.
+
+@The_monster@ shouts, "No!  I'll never do that again!"
+
+@The_monster@ begs for mercy.
+
+@The_monster@ cries, "Mercy!"
+
+@The_monster@ @blubbers@, "@Mommeee@!"
+
+@The_monster@ @begs@, "Please don't kill me!"
+
+@The_monster@ @begs@, "Please!  I have a lot of children..."
+
+@The_monster@ tries to recover @possessive@ lost courage.
+
+@The_monster@ looks really @rattled@.
+## END fleeing humanoid ##
+%%%%
+default friendly humanoid
+
+@The_monster@ yells, "Run!  I'll cover you!"
+
+@The_monster@ shouts, "Die, monster!"
+
+@The_monster@ says, "It's nice to have friends."
+
+@The_monster@ looks at you.
+
+@The_monster@ smiles at you.
+
+@The_monster@ says, "@player_name@, you are my only friend."
+
+@The_monster@ says, "@player_name@, I like you."
+
+@The_monster@ waves at you.
+
+@The_monster@ says, "Be careful!"
+
+@The_monster@ says, "Don't worry.  I'm here with you."
+
+@The_monster@ smiles happily.
+
+@The_monster@ shouts, "No mercy!  Kill them all!"
+
+@The_monster@ says, "I'll never leave you."
+
+@The_monster@ says, "I would die for you."
+
+@The_monster@ shouts, "Beware of monsters!"
+
+@The_monster@ looks friendly.
+## END friendly humanoid ##
+
+%%%%
+default insect
+
+@The_monster@ waves @possessive@ antennas.
+%%%%
+default confused insect
+
+@The_monster@ wildly waves @possessive@ antennas.
+
+@The_monster@ seems to be having trouble coordinating all six of @possessive@ legs.
+%%%%
+default confused winged insect
+
+@The_monster@ wildly waves @possessive@ antennas.
+
+@The_monster@ wobbles in @possessive@ flight.
+%%%%
+default confused arachnid
+
+@The_monster@ seems to be having trouble coordinating all eight of @possessive@ legs.
+%%%%
+centipede
+
+@The_monster@ waves its antennas.
+%%%%
+default confused centipede
+
+@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
+
+@The_monster@ wildly waves @possessive@ antennas.
+
+####################################################################### Speech strings by monster symbol
+######################################################################%%%%
+default confused 'b'
+
+@The_monster@ flutters around in erratic circles.
+%%%%
+default 'cap-G'
+
+@The_monster@ pulsates ominously.
+%%%%
+default 'cap-J'
+
+@The_monster@ jiggles.
+%%%%
+default confused 'k'
+
+@The_monster@ buzzes around in tight circles.
+%%%%
+default silenced confused 'k'
+
+@The_monster@ flies around in tight circles.
+%%%%
+'l'
+
+@The_monster@ hisses menacingly.
+%%%%
+'r'
+
+@The_monster@ twitches @possessive@ whiskers.
+%%%%
+default confused 'r'
+
+@The_monster@ runs around in a circle.
+%%%%
+# Excluding the moth of wrath, which being a moth doesn't buzz.
+default confused 'y'
+
+@The_monster@ buzzes around in tight circles.
+%%%%
+# Statues and golems never speak unless assigned a message to their
+# specific species.
+default '8'
+
+__NONE
+
+######################
+# Demon taunts
+######################
+%%%%
+'&'
+
+@_demon_taunt_@
+%%%%
+'1'
+
+@_demon_taunt_@
+%%%%
+'2'
+
+@_demon_taunt_@
+%%%%
+'3'
+
+@_demon_taunt_@
+%%%%
+'4'
+
+@_demon_taunt_@
+
+#####################################
+# Demons are silent when not taunting
+#####################################
+%%%%
+default '&'
+
+__NONE
+%%%%
+default '1'
+
+__NONE
+%%%%
+default '2'
+
+__NONE
+%%%%
+default '3'
+
+__NONE
+%%%%
+default '4'
+
+__NONE
+%%%%
+default '5'
+
+__NONE
+
+###############
+# Friendly imps
+###############
+%%%%
+# Friendly imps are very common so they speak very very rarely
+friendly '5'
+
+w:9
+__NONE
+
+w:1
+@_friendly_imp_@
+
+##################################################################### Player ghost phrases.  Ghosts with different classes can be given 
+# different messages.
+####################################################################%%%%
+# Only use messages that are explicitly for the player ghost, since
+# other messages might seem weird coming out of it.
+default player ghost
+
+__NONE
+%%%%
+silenced player ghost
+
+SPELL:@The_monster@ stares at you.
+WARN:You feel cold.
+
+@The_monster@ points at you threateningly.
+
+@The_monster@ stares at you while slowly dragging a finger across @possessive@ throat.
+## END silenced player ghost ##
+%%%%
+player ghost
+
+SPELL:@The_monster@ stares at you.
+WARN:You feel cold.
+
+@The_monster@ lets out a mournful wail.
+
+@The_monster@ keens inconsolably.
+
+@The_monster@ laughs crazily.
+
+@The_monster@ grins evilly.
+
+@The_monster@ makes a sound of rattling chains.
+
+@The_monster@ wails.
+
+# mv: ghosts are usually wailing instead of speaking normally, 
+# aren't they?
+@The_monster@ says, "I have seen your future, and it is all used up."
+
+@The_monster@ says, "They lied to you.  The Dungeon just goes down and down forever."
+
+@The_monster@ says, "Do you think the gods will protect you?"
+
+@The_monster@ says "I was like you once."
+
+@The_monster@ says, "Very impressive.  But it won't help.  Nothing will."
+
+@The_monster@ says, "What have you got that I didn't have?"
+
+@The_monster@ says very slowly, "There's no hope."
+
+@The_monster@ shouts, "You will never get the ORB!"
+
+@The_monster@ screams, "You must not succeed where I failed!"
+
+@The_monster@ screams, "I'll kill anyone who wants the ORB!"
+
+@The_monster@ screams, "Don't try to defend!  You have no chance!"
+
+@The_monster@ screams, "You will join me soon!"
+
+# Hamlet
+@The_monster@ wails, "To die, to sleep, no more."
+
+@The_monster@ wails, "Death is your only future!"
+
+@The_monster@ whispers, "They're coming for you..."
+
+@The_monster@ whispers, "Trust me. Just give in."
+
+@The_monster@ whispers, "Meet the emptiness of death!"
+
+@The_monster@ whispers, "Death is liberation."
+
+@The_monster@ whispers, "Everlasting silence awaits you."
+
+@The_monster@ whispers, "Death doesn't hurt.  What you feel is life."
+
+@The_monster@ whispers, "The ORB doesn't exist."
+## END player ghost ##
+
+####################################################################### Unique monsters
+######################################################################%%%%
+# She is trying to get money and treasure
+Agnes
+
+@The_monster@ grins evilly.
+
+@The_monster@ says, "I need a new robe.  I'll buy it with your money." 
+
+@The_monster@ says, "How can you wear that ugly dress?"
+
+@The_monster@ screams, "Give me all your money!"
+
+@The_monster@ screams, "All treasure is mine!"
+
+@The_monster@ screams, "You'll never get my money!"
+
+@The_monster@ screams, "Give me everything and get away!"
+
+@The_monster@ screams, "I want your rings!  And amulets!  And... EVERYTHIGNG!"
+
+@The_monster@ screams, "I hate dirty adventurers like you!"
+
+@The_monster@ screams, "Die, beast!"
+## END Agnes ##
+%%%%
+Blork the orc
+
+@The_monster@ grins evilly.
+
+@The_monster@ frowns.
+
+@The_monster@ looks angry.
+
+@The_monster@ screams, "I don't like you!"
+
+@The_monster@ screams, "I'm going to kill you!"
+
+@The_monster@ screams, "I'm much stronger than you!"
+
+@The_monster@ screams, "I'll eat your brain!  And then I'll vomit it back up!"
+
+@The_monster@ screams, "You are the ugliest creature I've ever seen!"
+
+@The_monster@ screams, "I'll cut your head off!"
+
+@The_monster@ screams, "I'll break your legs!"
+
+@The_monster@ screams, "I'll break your arms!"
+
+@The_monster@ screams, "I'll crush all your ribs!  One by one!"
+
+@The_monster@ screams, "I'll make a cloak from your skin!"
+
+@The_monster@ screams, "I'll decorate my home with your organs!"
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "I'll cover the dungeon with your blood!"
+
+@The_monster@ screams, "I'll drink your blood!  Soon!"
+## END Blork the orc ##
+%%%%
+# An ancient lich
+Boris
+
+SPELL:@The_monster@ stares at you.
+WARN:You feel drained.
+
+SPELL:@The_monster@ stares at you.
+WARN:You feel weakened.
+
+SPELL:@The_monster@ stares at you.
+WARN:You feel troubled.", MSGCH_WARN
+
+SPELL:@The_monster@ casts a spell.
+WARN:Your equipment suddenly seems to weigh more.
+
+SPELL:@The_monster@ casts a spell.
+__YOU_RESIST
+
+SPELL:@The_monster@ casts a spell.
+WARN:Suddenly you are surrounded with a pale green light.
+
+SPELL:@The_monster@ casts a spell.
+WARN:You have a terrible headache.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ speeds up.
+
+SPELL:@The_monster@ gestures.
+
+@The_monster@ laughs.
+
+@The_monster@ says, "I didn't invite you."
+
+@The_monster@ says, "You can't imagine my power."
+
+@The_monster@ says, "Orb?  You want the Orb?  You'll never get it."
+
+@The_monster@ says, "The world, the flesh, and the devil."
+
+@The_monster@ says "Magic.  You know nothing about it."
+
+@The_monster@ says, "My power is unlimited."
+
+@The_monster@ says, "You can't kill me.  I'm immortal."
+
+@The_monster@ says, "I know the secret of eternal life.  Do you?"
+
+@The_monster@ says, "I'll be back."
+
+@The_monster@ says, "I know your future.  Your future is death."
+
+@The_monster@ says, "Who wants to live forever?  Me."
+
+@The_monster@ says, "Join the legion of my servants."
+
+@The_monster@ says, "There's only one solution for you.  To die."
+
+@The_monster@ says, "You can never win."
+## END Boris ##
+%%%%
+# An adventurer hating competition
+Donald
+
+@_hostile_adventurer_@
+%%%%
+# A mercenary guarding the dungeon
+Duane
+
+@_mercenary_guard_@
+%%%%
+# A mercenary guarding the dungeon
+Edmund
+
+@_mercenary_guard_@
+%%%%
+# A wild tempered adventuress
+Erica
+
+@The_monster@ looks angry.
+
+@The_monster@ drinks a potion.
+
+@The_monster@ laughs wildly.
+
+@The_monster@ says, "I'm so much better than you."
+
+@The_monster@ says, "I love to fight, but killing is better."
+
+@The_monster@ says, "Fast and perfect.  Such is my way of killing."
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "Do you want it fast or slow?!"
+
+@The_monster@ screams, "Hurry, death awaits!"
+
+@The_monster@ screams, "I'll never tell where it is!"
+
+@The_monster@ screams, "You'll never get it!"
+
+@The_monster@ screams, "Coming here was suicide!"
+## END Erica ##
+%%%%
+# An ugly ogre
+Erolcha
+
+@The_monster@ roars.
+
+@The_monster@ growls.
+
+@The_monster@ tries to grin evilly.
+
+@The_monster@ screams, "Eat!"
+
+@The_monster@ screams, "Stand! Erolcha hit you!"
+
+@The_monster@ screams, "Blood!"
+
+@The_monster@ screams, "Erolcha kill you!"
+
+@The_monster@ screams, "Erolcha crush your head!"
+
+@The_monster@ screams, "Lunch!"
+
+@The_monster@ screams, "Erolcha happy to kill you!"
+
+@The_monster@ screams, "Erolcha angry!"
+## END Erolcha ##
+%%%%
+# A mercenary guarding the dungeon
+Frances
+
+@_mercenary_guard_@
+%%%%
+# A wizard looking for body-parts as spell components
+Francis
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@'s hands start to glow with a soft light.
+
+@The_monster@ ponders the situation.
+
+@The_monster@ looks for a scalpel.
+
+@The_monster@ throws something at you.
+
+@The_monster@ asks, "Did you know that corpses are an important natural resource?"
+
+@The_monster@ asks, "What about a little dissection?"
+
+@The_monster@ says, "You've nice eyes.  I could use them."
+
+@The_monster@ says, "Excuse me, but I need your head."
+
+@The_monster@ says, "I only need a few of your organs!"
+
+@The_monster@ says, "This won't hurt a bit."
+
+@The_monster@ says, "I want you in my laboratory!"
+
+@The_monster@ says, "I have something special for you."
+
+@The_monster@ says, "What about your heart?  Do you need it?"
+
+@The_monster@ says, "Don't worry, I'll take only what I need."
+
+@The_monster@ screams, "Don't move!  I want to cut off your ear!"
+## END Francis ##
+%%%%
+# A mercenary guarding the dungeon
+Frederick
+
+@_mercenary_guard_@
+%%%%
+# A twisted goblin
+Ijyb
+
+@The_monster@ grins evilly.
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "Me kill you!"
+
+@The_monster@ screams, "Me stronger than you!"
+
+@The_monster@ screams, "It's all mine!"
+
+@The_monster@ screams, "Get away!"
+
+@The_monster@ screams, "Level is mine! All mine!"
+
+@The_monster@ screams, "I cut your head off!"
+
+@The_monster@ screams, "I dance on your bones!"
+
+@The_monster@ screams, "Me very upset!"
+
+@The_monster@ screams, "You nasty! Big nasty!"
+
+@The_monster@ screams, "No! No, no, no, no!"
+
+@The_monster@ screams, "I no like you!"
+## END Ijyb ##
+%%%%
+# A middle aged man, hired to kill you. He is in a hurry.
+Harold
+
+@The_monster@ looks nervous.
+
+@The_monster@ says, "Stand still.  I'm trying to kill you."
+
+@The_monster@ says, "Only a few hits and it's over."
+
+@The_monster@ says, "You know, I'm in a hurry."
+
+@The_monster@ says, "Mine is not to reason why.  Mine's to do, yours to die."
+
+@The_monster@ says, "I hope you die faster."
+
+@The_monster@ screams, "Hurry up!"
+
+@The_monster@ screams, "Could you die faster?!"
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "I'll finish you soon!"
+
+@The_monster@ screams, "Don't delay it!"
+## END Harold ##
+%%%%
+# A sorceress disturbed by player
+Jessica
+
+@The_monster@ grins evilly.
+
+@The_monster@ looks very angry.
+
+@The_monster@ says, "I'm really upset."
+
+@The_monster@ very coldly says, "I hate your company."
+
+@The_monster@ shouts, "I don't like beings like you!"
+
+@The_monster@ shouts, "Stop bothering me, or I'll kill you!"
+
+@The_monster@ shouts, "You're disturbing me!  I'll have to kill you!"
+
+@The_monster@ shouts, "You are a ghastly nuisance!"
+
+SPELL:@The_monster@ mumbles something strange.
+
+SPELL:@The_monster@ gestures wildly.
+## END Jessica ##
+%%%%
+Joseph
+
+@The_monster@ smiles happily.
+
+@The_monster@ tries to grin evilly.
+
+@The_monster@ says, "I'm happy to see you.  And I'll be happy to kill you."
+
+@The_monster@ says, "I've waited for this moment for such a long time."
+
+@The_monster@ says, "It's nothing personal, but I have to kill you."
+
+@The_monster@ says, "You will never get the Orb, sorry."
+
+@The_monster@ says, "I'm here to kill trespassers. I like my job."
+
+@The_monster@ says, "You must be punished!  Or...  I want to punish you!"
+
+@The_monster@ sighs, "Being a guard is usually so boring..."
+
+@The_monster@ shouts, "At last, some action!"
+
+@The_monster@ shouts, "I love to fight! I love killing!"
+
+@The_monster@ shouts, "Wow!"
+## END Joseph ##
+%%%%
+# An ugly old witch looking for someone to kill
+Josephine
+
+@The_monster@ grins evilly.
+
+@The_monster@ grins malevolently.
+
+@The_monster@ grinds her teeth.
+
+@The_monster@ laughs insanely.
+
+@The_monster@ says, "I'll make a rug of your skin."
+
+@The_monster@ says, "How about some decapitation?"
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "I have something special for you."
+
+@The_monster@ screams, "I'll use your head as a decoration in my hut!"
+## END Josephine ##
+%%%%
+# A bounty hunter
+Jozef
+
+@The_monster@ looks satisfied.
+
+@The_monster@ asks, "Did you write a testament?  You should."
+
+@The_monster@ asks, "You are @player_name@, aren't you?"
+
+@The_monster@ says, "You don't look worth it for that money."
+
+@The_monster@ says, "It's nothing personal.  I'm paid for it!"
+
+@The_monster@ says, "I suppose that you are @player_name@.  Sorry if I'm wrong."
+
+@The_monster@ says, "One dead @player_name@, 500 gold pieces.  It's in my contract."
+
+@The_monster@ says, "My job is sometimes very exciting.  Sometimes..."
+
+@The_monster@ says, "I think I deserve my money."
+
+@The_monster@ shouts, "I'll get 500 gold for your head!"
+
+@The_monster@ shouts, "Your time has come!"
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "At last I found you!"
+
+@The_monster@ screams, "Die!  I've got more contracts today."
+## END Jozef ##
+%%%%
+# A powerful sorceress, guarding the ORB
+Margery
+
+SPELL:@The_monster@ gestures.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ is surrounded with an aura of power.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ becomes transparent for a moment.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@'s hands start to glow.
+
+SPELL:@The_monster@ screams, "Ergichanteg reztahaw!"
+WARN:You feel really bad.
+
+SPELL:@The_monster@ gestures.
+WARN:You feel doomed.
+
+SPELL:@The_monster@ gestures.
+WARN:You feel weakened.
+
+SPELL:@The_monster@ throws some purple powder towards you.
+WARN:You feel cursed.
+
+@The_monster@'s eyes start to glow with a red light.
+
+@The_monster@'s eyes start to glow with a green light.
+
+@The_monster@'s eyes start to glow with a blue light.
+
+@The_monster@ looks very self-confident.
+
+@The_monster@ says, "You are dead."
+
+@The_monster@ says, "Die!"
+
+@The_monster@ screams, "You must be punished!"
+
+@The_monster@ screams, "You can't withstand my power!"
+
+@The_monster@ screams, "All trespassers must die!"
+
+@The_monster@ screams, "You'll have to get past me!"
+
+@The_monster@ screams, "You are doomed!"
+
+@The_monster@ screams, "Nothing can help you."
+
+@The_monster@ screams, "Death is my middle name!"
+
+@The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!"
+## END Margery
+%%%%
+# A mercenary guarding the dungeon
+Louise
+
+@_mercenary_guard_@
+%%%%
+# A warrior princess looking for the sword "Entarex".
+Maud
+
+@The_monster@ frowns.
+
+@The_monster@ looks upset.
+
+@The_monster@ asks, "Will you think of me as you die?"
+
+@The_monster@ screams, "Submit or die!"
+
+@The_monster@ screams, "Give me 'Entarex'!"
+
+@The_monster@ screams, "You can't face my power!"
+
+@The_monster@ screams, "Give me that sword!  Immediately!"
+
+@The_monster@ screams, "Your life or 'Entarex'!  You must choose!"
+
+@The_monster@ screams, "I want it!"
+
+@The_monster@ screams, "Die, you thief!"
+
+@The_monster@ screams, "If you give me 'Entarex', I'll let you live!"
+## END Maud ##
+%%%%
+# Loner spell-caster
+Michael
+
+SPELL:@The_monster@ mumbles some strange words.
+
+SPELL:@The_monster@ gestures wildly.
+
+SPELL:@The_monster@ points at you.
+__YOU_RESIST
+
+@The_monster@ drinks a potion.
+
+@The_monster@ looks very angry.
+
+@The_monster@ frowns.
+
+@The_monster@ looks angry.
+
+@The_monster@ shakes with wrath.
+
+@The_monster@ says, "You really are a nuisance."
+
+@The_monster@ screams, "I want to be alone!"
+
+@The_monster@ screams, "Get away!  Or better yet, die!"
+%%%%
+# A disembodied skull.
+Murray
+
+@The_monster@ rolls in a circle.
+
+@The_monster@ rolls around.
+
+@The_monster@ spins like a top.
+
+@The_monster@ grins evilly.
+
+@The_monster@ laughs evilly.
+
+@The_monster@'s teeth chatter loudly.
+
+@The_monster@ says, "You're the second biggest fool I've ever met!"
+
+@The_monster@ says, "You're the second biggest fool I've ever met!"
+
+@The_monster@ cackles, "I will rule the world!"
+
+@The_monster@ screams, "If I had legs, you would be dead twenty times over!"
+
+@The_monster@ shouts, "Give me your head, so I can impale it on a pike!"
+
+@The_monster@ shouts, "Let the forces of evil and voodoo overcome you!"
+
+@The_monster@ yells, "I'm a mighty demonic power!"
+
+@The_monster@ yells, "My visage is famous all over the dungeon!"
+## END Murray ##
+%%%%
+silenced Murray
+
+@The_monster@ rolls in a circle.
+
+@The_monster@ rolls around.
+
+@The_monster@ spins like a top.
+
+@The_monster@ grins evilly.
+
+@The_monster@ seems to say something.
+
+@The_monster@ says something you can't hear.  It was probably not a compliment.
+## END silenced Murray ##
+%%%%
+# A skilled warrior looking for some fame.  More kills = more fame.
+Norbert
+
+@The_monster@ smiles happily.
+
+@The_monster@ asks, "Did you write a will?  You should."
+
+@The_monster@ says, "A pity your head will make such an ugly trophy."
+
+@The_monster@ says, "I love killing ugly monsters like you."
+
+@The_monster@ says, "You know, it's an honour to die by my hand."
+
+@The_monster@ says, "Another dead monster...  It must be my lucky day!"
+
+@The_monster@ says, "I'm sorry but you don't have a chance."
+
+@The_monster@ screams, "Die, monster!"
+
+@The_monster@ screams, "I'm a hero!"
+
+@The_monster@ screams, "Blood an destruction!"
+
+@The_monster@ screams, "Pray, because you'll die soon!"
+
+@The_monster@ shouts, "YES!  Another notch!"
+
+@The_monster@ shouts, "Your time has come!"
+
+@The_monster@ says, "I'm sorry but you don't have a chance."
+## END Norbert ##
+%%%%
+# An enlightened but crazy man
+Norris
+
+SPELL:@The_monster@ mumbles some mantras.
+
+@The_monster@ is surrounded with aura of peace.
+
+@The_monster@ looks very balanced.
+
+@The_monster@ smiles at you.
+
+@The_monster@ looks relaxed.
+
+@The_monster@ sings "Hare Rama, Hare Krishna!"
+
+@The_monster@ sings, "Peace now, freedom now!  Peace now, freedom now!"
+
+@The_monster@ says, "After death you'll find inner peace."
+
+@The_monster@ says, "Life is just suffering. I'll help you."
+
+@The_monster@ says, "Don't resist. I'll do it for you."
+
+@The_monster@ says, "Death is just a liberation!"
+
+@The_monster@ says, "Feel free to die. It's great thing."
+
+@The_monster@ says, "OHM MANI PADME HUM!"
+
+@The_monster@ says, "Breathe deeply."
+
+@The_monster@ says, "The Orb is only a myth.  Forget about it."
+
+@The_monster@ says, "It's all maya."
+
+@The_monster@ says, "Drop out!"
+
+@The_monster@ says, "This is called Combat Meditation."
+
+@The_monster@ sighs "Enlightenment is such responsibility."
+
+@The_monster@ screams, "Enter NIRVANA!  Now!"
+
+@The_monster@ screams, "Love!  Eternal love!"
+
+@The_monster@ screams, "Peace!  I bring you eternal peace!"
+
+@The_monster@ screams, "Free your soul! Die!"
+
+@The_monster@ screams, "Blow your mind!"
+## END Norris ##
+%%%%
+# An insane sorceress
+Psyche
+
+@The_monster@ smiles happily.
+
+@The_monster@ giggles crazily.
+
+@The_monster@ cries.
+
+@The_monster@ stares at you for a moment.
+
+@The_monster@ sings.
+
+@The_monster@ sings a strange song.
+
+@The_monster@ bursts into tears.
+
+@The_monster@ sucks her thumb.
+
+@The_monster@ says, "Please, could you die a little faster?"
+
+@The_monster@ says, "I'm a bad girl, but I can't do anything about it."
+
+@The_monster@ says, "I'm so lonely.  Only corpses are my friends."
+
+@The_monster@ says, "I'll kill you and take you home."
+
+@The_monster@ cries, "I hate blood and violence."
+
+@The_monster@ cries, "You've killed my pet."
+
+@The_monster@ screams, "YOU ARE VIOLATING AREA SECURITY!!!"
+
+@The_monster@ screams, "Peace! Flowers! Freedom! Dead adventurers!"
+
+@The_monster@ shouts, "Well, maybe I'm nutty, but who cares?!"
+
+@The_monster@ shouts, "I hope that you are sorry for that!"
+
+# Copyright U2?
+@The_monster@ whispers, "Hold me, thrill me, kiss me, kill me."
+## END Psyche ##
+%%%%
+# A crazy adventurer
+Rupert
+
+@The_monster@ looks excited.
+
+@The_monster@ looks confused.
+
+@The_monster@ asks, "You're a monster, aren't you?"
+
+@The_monster@ says, "My Mom always said: 'Kill them all'."
+
+@The_monster@ shouts, "I'm a great and powerful hero!"
+
+@The_monster@ screams, "Die, monster!"
+
+@The_monster@ screams, "Give me the Holy Grail!"
+
+@The_monster@ screams, "Get ready!  I'll kill you!  Or something like that..."
+
+@The_monster@ screams, "You killed all those lovely monsters, you murderer!"
+
+@The_monster@ screams, "Hurray!"
+
+@The_monster@ screams, "Red!  No, blue!"
+## END Rupert ##
+%%%%
+# Mad old wizard
+Sigmund
+
+w:30
+@The_monster@ laughs crazily.
+
+@The_monster@ grinds his teeth.
+
+@The_monster@ tries to bite you.
+
+@The_monster@ asks, "Do you like me?"
+
+@The_monster@ says, "Don't worry, I'll kill you fast."
+
+@The_monster@ says, "You will soon forget everything."
+
+@The_monster@ says, "Look into my eyes.
+
+@The_monster@ says, "I'm your fate."
+
+@The_monster@ screams, "Die, monster!"
+
+@The_monster@ screams, "You will never... NEVER!!!"
+
+@The_monster@ screams, "I am the angel of Death!"
+
+@The_monster@ screams, "Only death can liberate you!"
+
+@The_monster@ screams, "Don't try to resist!"
+
+@The_monster@ whispers, "You'll know eternity soon."
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@'s eyes start glowing with a red light.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ is suddenly surrounded by pale blue light.
+
+SPELL:@The_monster@ casts a spell.
+ENCHANT:@The_monster@ is suddenly surrounded by pale green light.
+## END Sigmund ##
+%%%%
+# A fighter who likes to kill
+Terence
+
+@The_monster@ looks scornfully at you.
+
+@The_monster@ bares @possessive@ teeth.
+
+@The_monster@ asks, "Do you want it fast or slow?"
+
+@The_monster@ says, "Rest in peace."
+
+@The_monster@ says, "How do you enjoy it?"
+
+@The_monster@ says, "You're history."
+
+@The_monster@ says, "Did you write a will?  You should..."
+
+@The_monster@ says, "Time to say good-bye..."
+
+@The_monster@ says, "Don't bother to defend, it's @pointless@."
+
+@The_monster@ says, "I'll show you a few @ploy@s."
+
+@The_monster@ shouts, "Now you die!"
+
+@The_monster@ shouts, "@ATTACK@!!!"
+
+@The_monster@ shouts, "Get ready for death!"
+
+@The_monster@ screams, "I want your blood!"
+
+@The_monster@ screams, "I'm going to kill you!"
+## END Terence ###
+%%%%
+# An orc hired to kill you
+Urug
+
+@The_monster@ grins evilly.
+
+@The_monster@ roars.
+
+@The_monster@ howls with blood-lust.
+
+@The_monster@ says, "Maybe you aren't @player_name@.  It doesn't matter."
+
+@The_monster@ sneers, "Innocent? I'll kill you anyway."
+
+@The_monster@ screams, "Die!"
+
+@The_monster@ screams, "I'm going to kill you! Now!"
+
+@The_monster@ screams, "Blood and destruction!"
+
+@The_monster@ screams, "I'll get 30 silver pieces for your head!"
+
+@The_monster@ screams, "You are already dead."
+
+@The_monster@ screams, "I love blood!"
+## END Urug ##
+%%%%
+# An adventurer hating competition
+Wayne
+
+@_hostile_adventurer_@
+%%%%
+# An ancient dragon
+Xtahua
+
+@The_monster@ glares at you.
+
+@The_monster@ growls, "YOU BORE ME SO."
+
+@The_monster@ rumbles, "YOU'RE BARELY A SNACK."
+
+@The_monster@ roars, "DIE, PUNY ONE!"
+
+@The_monster@ roars, "I HATE BEING BOTHERED!"
+
+@The_monster@ roars, "I HOPE YOU'RE TASTY!"
+
+@The_monster@ roars, "BAH!  BLOODY ADVENTURERS."
+
+@The_monster@ roars, "FACE MY WRATH!"
+
+@The_monster@ roars, "COMING HERE WAS YOUR LAST MISTAKE!"
+
+@The_monster@ roars, "I'VE KILLED HUNDREDS OF ADVENTURERS!"
+
+@The_monster@ roars horribly.
+You are afraid.
+## END Xtahua ##
+
+####################################################################### Specific non-unique monsters
+######################################################################%%%%
+crystal golem
+
+@The_monster@ glitters in the dim dungeon light.
+%%%%
+death cob
+
+w:1
+The death cob makes a corny joke.
+
+w:1999
+__NONE
+%%%%
+death yak
+
+@yak@
+%%%%
+deep elf sorcerer
+
+@_wizard_@
+%%%%
+default electric golem
+
+@The_monster@ crackles and sizzles.
+%%%%
+default ice statue
+
+@The_monster@ glitters in the dim dungeon light.
+%%%%
+imp
+
+w:1
+@_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+# Too many killer bees in the hive to have them give messages, unless
+# they're confused or fleeing.
+killer bee
+
+__NONE
+%%%%
+Killer Klown
+
+@The_monster@ giggles crazily.
+
+@The_monster@ laughs merrily.
+
+@The_monster@ beckons to you.
+
+@The_monster@ does a flip.
+
+@The_monster@ does a somersault.
+
+@The_monster@ smiles at you.
+
+@The_monster@ grins with merry abandon.
+
+@The_monster@ howls with blood-lust!
+
+@The_monster@ pokes out @possessive@ tongue.
+
+@The_monster@ says, "Come and play with me!"
+## END Killer Klown ##
+%%%%
+# The moth of wrath doesn't buzz like the other 'y' monsters, what
+# with it being a moth.
+default confused moth of wrath
+
+@The_monster@ flutters around in erratic circles.
+%%%%
+default orange crystal statue
+
+@The_monster@ glitters in the dim dungeon light.
+%%%%
+orc sorcerer
+
+@_wizard_@
+%%%%
+shadow imp
+
+w:1
+@_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+sheep
+
+@The_monster@ "Baaaas" balefully.
+%%%%
+default silver statue
+
+@The_monster@ glitters in the dim dungeon light.
+%%%%
+# A cruel demon
+tormentor
+
+w:1
+@_demon_taunt_@
+
+w:9
+@_tormentor_@
+%%%%
+_tormentor_
+
+w:20
+@The_monster@ says, "I'll crush your bones, one by one."
+
+@The_monster@ laughs crazily.
+
+@The_monster@ grins evilly.
+
+@The_monster@ grins madly.
+
+@The_monster@ grins malevolently.
+
+@The_monster@ says, "I am all your nightmares come true."
+
+@The_monster@ says, "I will show you what pain is."
+
+@The_monster@ says, "You will wish to die when I get to you."
+
+@The_monster@ says, "I will drown you in your own blood."
+
+@The_monster@ says, "I will eat your liver."
+
+@The_monster@ says, "I know a thousand and one ways to kill you."
+
+@The_monster@ says, "I'll show you my torture chamber!"
+
+@The_monster@ says, "I know your fate. It's pain."
+
+@The_monster@ says, "Get ready! Throes of agony await you."
+
+@The_monster@ screams, "You will die horribly!"
+
+@The_monster@ shouts, "Prepare for my thousand needles of pain!"
+
+@The_monster@ shouts, "I'll tear you apart!"
+## END _tormentor_ ##
+%%%%
+white imp
+
+w:1
+@_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+wizard
+
+@_wizard_@
+%%%%
+yak
+
+@The_monster@ snorts and paws the @surface@.
+%%%%
