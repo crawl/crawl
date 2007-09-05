@@ -4696,6 +4696,11 @@ static void place_shops(int level_number, int nshops)
     }
 }                               // end place_shops()
 
+static bool need_varied_selection(shop_type shop)
+{
+    return (shop == SHOP_BOOK);
+}
+
 void place_spec_shop( int level_number, 
                       int shop_x, int shop_y,
                       int force_s_type, bool representative )
@@ -4747,6 +4752,14 @@ void place_spec_shop( int level_number,
     if (representative)
         plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
 
+    // for books shops, store how many copies of a given book are on display
+    int stocked[NUM_BOOKS];
+    if (need_varied_selection(env.shop[i].type))
+    {
+        for (int k=0; k < NUM_BOOKS; k++)
+             stocked[k] = 0;
+    }
+
     for (j = 0; j < plojy; j++)
     {
         if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
@@ -4769,7 +4782,14 @@ void place_spec_shop( int level_number,
                          one_chance_in(4)? MAKE_GOOD_ITEM : item_level,
                          MAKE_ITEM_RANDOM_RACE );
 
-            if (orb != NON_ITEM 
+            // try for a better selection
+            if (orb != NON_ITEM && need_varied_selection(env.shop[i].type))
+            {
+                if (!one_chance_in(stocked[mitm[orb].sub_type] + 1))
+                    orb = NON_ITEM; // try again
+            }
+
+            if (orb != NON_ITEM
                 && mitm[orb].base_type != OBJ_GOLD
                 && (env.shop[i].type != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
@@ -4788,6 +4808,12 @@ void place_spec_shop( int level_number,
 
         if (orb == NON_ITEM)
             break;
+
+        // increase stock of this subtype by 1, unless it is an artefact
+        // (allow for several artefacts of the same underlying subtype)
+        // - the latter is currently unused but would apply to e.g. jewellery
+        if (need_varied_selection(env.shop[i].type) && !is_artefact(mitm[orb]))
+            stocked[mitm[orb].sub_type]++;
 
         if (representative && mitm[orb].base_type == OBJ_WANDS)
             mitm[orb].plus = 7;

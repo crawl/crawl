@@ -1058,22 +1058,27 @@ static void paranoid_option_disable( activity_interrupt_type ai,
         if (mon && !player_monster_visible(mon) && !mons_is_submerged(mon))
         {
             std::vector<std::string> deactivatees;
+            std::vector<std::string> restart;
             if (Options.autoprayer_on)
             {
                 deactivatees.push_back("autoprayer");
                 Options.autoprayer_on = false;
+                restart.push_back("Ctrl+V");
             }
 
             if (Options.autopickup_on && Options.safe_autopickup)
             {
                 deactivatees.push_back("autopickup");
                 Options.autopickup_on = false;
+                restart.push_back("Ctrl+A");
             }
 
             if (!deactivatees.empty())
-                mprf(MSGCH_WARN, "Deactivating %s.",
+                mprf(MSGCH_WARN, "Deactivating %s; reactivate with %s.",
                       comma_separated_line(deactivatees.begin(),
-                                           deactivatees.end()).c_str());
+                                           deactivatees.end()).c_str(),
+                      comma_separated_line(restart.begin(),
+                                           restart.end()).c_str());
         }
     }
 }
