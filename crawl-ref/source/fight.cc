@@ -2818,7 +2818,20 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 std::string melee_attack::mons_weapon_desc()
 {
     if (weapon && attacker->id() != MONS_DANCING_WEAPON)
-        return std::string(" with ") + weapon->name(DESC_NOCAP_A);
+    {
+        std::string result = "";
+        const item_def wpn = *weapon;
+        if (get_weapon_brand(wpn) == SPWPN_REACHING)
+        {
+            int dx = abs(attacker->pos().x - defender->pos().x);
+            int dy = abs(attacker->pos().y - defender->pos().y);
+            if ((dx == 2 && dy <= 2) || (dy == 2 && dx <= 2))
+                result += " from afar";
+        }
+        result += " with ";
+        result += weapon->name(DESC_NOCAP_A);
+        return result;
+    }
 
     return ("");
 }

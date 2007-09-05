@@ -880,12 +880,15 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         }        
     }
-    
+
+    // enhancers only matter for calc_spell_power() and spell_fail()
+    // not sure about this: is it flavour or misleading?
+    if (powc == 0 || allow_fail)
+        surge_power(spell);
+
     // Added this so that the passed in powc can have meaning -- bwr
     if (powc == 0)
         powc = calc_spell_power( spell, true );
-
-    surge_power(spell);
 
     if (allow_fail)
     {
@@ -1185,7 +1188,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         summon_small_mammals(powc); //jmf: hmm, that's definitely *plural* ;-)
         break;
 
-    case SPELL_ABJURATION_I:    //jmf: why not group with SPELL_ABJURATION_II?
+    case SPELL_ABJURATION_I:
+    case SPELL_ABJURATION_II:
         abjuration(powc);
         break;
 
@@ -1371,10 +1375,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_SUMMON_DAEVA:
         summon_ice_beast_etc(powc, MONS_DAEVA);
-        break;
-
-    case SPELL_ABJURATION_II:
-        abjuration(powc);
         break;
 
     // Remember that most holy spells above don't yet use powc!

@@ -786,7 +786,7 @@ void extension(int pow)
         contamination++;  
     }
 
-    if (you.duration[DUR_LEVITATION])
+    if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT])
         potion_effect(POT_LEVITATION, pow);
 
     if (you.duration[DUR_INVIS])
