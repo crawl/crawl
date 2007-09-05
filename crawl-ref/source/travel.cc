@@ -2577,8 +2577,14 @@ static bool find_transtravel_square(const level_pos &target, bool verbose)
             return find_transtravel_square(newlev, verbose);
     }
 
-    if (verbose && target.id != current)
-        mpr("Sorry, I don't know how to get there.");
+    if (verbose)
+    {
+        if (target.id != current || target.pos.x != -1 && target.pos != you.pos())
+            mpr("Sorry, I don't know how to get there.");
+        if (target.id == current && target.pos.x != -1 && target.pos == you.pos())
+            mpr("You're already here!");
+    }
+
     return (false);
 }
 

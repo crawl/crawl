@@ -2768,6 +2768,8 @@ int items( int allow_uniques,       // not just true-false,
         if (item_is_rod( mitm[p] ))
             init_rod_mp( mitm[p] );
 
+        // add different looks
+        mitm[p].special = random2(10);
         quant = 1;
         break;
 

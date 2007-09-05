@@ -3607,11 +3607,13 @@ bool give_items_skills()
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
 
-        you.inv[2].base_type = OBJ_POTIONS;
-        you.inv[2].sub_type = POT_HEALING;
-        you.inv[2].quantity = 2;
-        you.inv[2].plus = 0;
-
+        if (you.species != SP_MUMMY)
+        {
+            you.inv[2].base_type = OBJ_POTIONS;
+            you.inv[2].sub_type = POT_HEALING;
+            you.inv[2].quantity = 2;
+            you.inv[2].plus = 0;
+        }
         you.equip[EQ_WEAPON] = 0;
 
         you.equip[EQ_BODY_ARMOUR] = 1;

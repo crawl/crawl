@@ -255,10 +255,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(&you.inv[item_slot], true))
         return (false);
 
-    // check inscriptions
-    if ( !check_warning_inscriptions(you.inv[item_slot], OPER_WIELD) )
-        return false;
-
     // Go ahead and wield the weapon.
     if (you.equip[EQ_WEAPON] != -1)
         unwield_item(you.equip[EQ_WEAPON], show_weff_messages);
@@ -2863,7 +2859,7 @@ void zap_wand(void)
     zapping( static_cast<zap_type>(type_zapped),
              30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
-    if ((beam.obvious_effect || wand.sub_type == WAND_FIREBALL) &&
+    if ((beam.obvious_effect || type_zapped == WAND_FIREBALL) &&
         !alreadyknown)
     {
         set_ident_type( wand.base_type, wand.sub_type, ID_KNOWN_TYPE );

@@ -1004,6 +1004,61 @@ bool has_warning_inscription(const item_def& item,
     return false;
 }
 
+// checks if current item (to be removed) has a warning inscription
+// and prompts the user for confirmation
+static bool check_old_item_warning( const item_def& item,
+                                    operation_types oper )
+{
+    item_def old_item;
+    std::string prompt = "";
+    if (oper == OPER_WIELD) // can we safely unwield old item?
+    {
+        if (you.equip[EQ_WEAPON] == -1)
+            return (true);
+            
+        old_item = you.inv[you.equip[EQ_WEAPON]];
+        if (!has_warning_inscription(old_item, OPER_WIELD))
+            return (true);
+            
+        prompt += "Really unwield ";
+    }
+    else if (oper == OPER_WEAR) // can we safely take off old item?
+    {
+        equipment_type eq_slot = get_armour_slot(item);
+        if (you.equip[eq_slot] == -1)
+            return (true);
+           
+        old_item = you.inv[you.equip[eq_slot]];
+        if (!has_warning_inscription(old_item, OPER_TAKEOFF))
+            return (true);
+            
+        prompt += "Really take off ";
+    }
+    else if (oper == OPER_PUTON) // can we safely remove old item?
+    {
+        if (jewellery_is_amulet(item))
+        {
+            if (you.equip[EQ_AMULET] == -1)
+                return (true);
+
+            old_item = you.inv[you.equip[EQ_AMULET]];
+            if (!has_warning_inscription(old_item, OPER_TAKEOFF))
+                return (true);
+                
+            prompt += "Really remove ";
+        }
+        else // rings handled in prompt_ring_to_remove
+            return (true);
+    }
+    else // anything else doesn't have a counterpart
+        return (true);
+
+    // now ask
+    prompt += old_item.name(DESC_INVENTORY);
+    prompt += '?';
+    return yesno(prompt.c_str(), false, 'n');
+}
+
 /* return true if user OK'd it (or no warning), false otherwise */ 
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
@@ -1013,10 +1068,11 @@ bool check_warning_inscriptions( const item_def& item,
         std::string prompt = "Really choose ";
         prompt += item.name(DESC_INVENTORY);
         prompt += '?';
-        return yesno(prompt.c_str(), false, 'n');
+        return (yesno(prompt.c_str(), false, 'n')
+                && check_old_item_warning(item, oper));
     }
     else
-        return true;
+        return (check_old_item_warning(item, oper));
 }
 
 // This function prompts the user for an item, handles the '?' and '*'

@@ -1585,6 +1585,11 @@ static bool do_ability(const ability_def& abil)
     case ABIL_LUGONU_BANISH:
         if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
             return (false);
+        if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
+        {
+            mpr("You cannot banish yourself!");
+            return (false);
+        }
         zapping( ZAP_BANISHMENT, 16 + you.skills[SK_INVOCATIONS] * 8, beam );
         exercise(SK_INVOCATIONS, 3 + random2(5));        
         break;
