@@ -6791,7 +6791,9 @@ static void build_river( dungeon_feature_type river_type ) //mv
                 // So we'll avoid the silliness of orcs/royal jelly on
                 // lava and deep water grids. -- bwr
                 if (!one_chance_in(200)
-                    // && grd[i][j] == DNGN_FLOOR
+                    && (grd[i][j] < DNGN_ENTER_SHOP
+			|| grd[i][j] > DNGN_EXIT_PORTAL_VAULT)
+		    && grd[i][j] != DNGN_EXIT_HELL // just to be safe
                     && mgrd[i][j] == NON_MONSTER
                     && igrd[i][j] == NON_ITEM)
                 {
@@ -6855,7 +6857,9 @@ static void build_lake(dungeon_feature_type lake_type) //mv
                 // So we'll avoid the silliness of monsters and items 
                 // on lava and deep water grids. -- bwr
                 if (!one_chance_in(200)
-                    // && grd[i][j] == DNGN_FLOOR
+                    && (grd[i][j] < DNGN_ENTER_SHOP
+			|| grd[i][j] > DNGN_EXIT_PORTAL_VAULT)
+		    && grd[i][j] != DNGN_EXIT_HELL // just to be safe
                     && mgrd[i][j] == NON_MONSTER
                     && igrd[i][j] == NON_ITEM)
                 {

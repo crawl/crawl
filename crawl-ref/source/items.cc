@@ -1890,7 +1890,7 @@ void update_corpses(double elapsedTime)
             continue;
         }
 
-        if (rot_time >= it.special)
+        if (rot_time >= it.special && !is_being_butchered(it))
         {
             if (it.base_type == OBJ_FOOD)
             {
