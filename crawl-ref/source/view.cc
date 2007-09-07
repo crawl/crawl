@@ -105,6 +105,11 @@ static int get_item_dngn_code(const item_def &item);
 static void set_show_backup( int ex, int ey );
 static int get_viewobj_flags(int viewobj);
 
+const feature_def &get_feature_def(dungeon_feature_type feat)
+{
+    return (Feature[feat]);
+}
+
 unsigned map_cell::glyph() const
 {
     if (!object)
@@ -235,7 +240,7 @@ void clear_envmap_grid( int x, int y )
 
 bool is_notable_terrain(dungeon_feature_type ftype)
 {
-    return Feature[ftype].notable;
+    return (Feature[ftype].is_notable());
 }
 
 #if defined(WIN32CONSOLE) || defined(DOS)
@@ -359,7 +364,7 @@ static void get_symbol( int x, int y,
         }
 
         // Note anything we see that's notable
-        if ((x || y) && fdef.notable)
+        if ((x || y) && fdef.is_notable())
             seen_notable_thing( static_cast<dungeon_feature_type>(object),
                                 x, y );
     }
@@ -3372,8 +3377,7 @@ void init_feature_table( void )
     {
         Feature[i].symbol = 0;
         Feature[i].colour = BLACK;      // means must be set some other way
-        Feature[i].notable = false;
-        Feature[i].seen_effect = false;
+        Feature[i].flags  = FFT_NONE;
         Feature[i].magic_symbol = 0;    // made equal to symbol if untouched
         Feature[i].map_colour = DARKGREY;
         Feature[i].seen_colour = BLACK;    // marks no special seen map handling
@@ -3439,21 +3443,9 @@ void init_feature_table( void )
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;                  // wax wall
 
-        case DNGN_SILVER_STATUE:
-            Feature[i].symbol = Options.char_table[ DCHAR_STATUE ];
-            Feature[i].colour = WHITE;
-            Feature[i].seen_effect = true;
-            break;
-
         case DNGN_GRANITE_STATUE:
             Feature[i].symbol = Options.char_table[ DCHAR_STATUE ];
             Feature[i].colour = LIGHTGREY;
-            break;
-
-        case DNGN_ORANGE_CRYSTAL_STATUE:
-            Feature[i].symbol = Options.char_table[ DCHAR_STATUE ];
-            Feature[i].colour = LIGHTRED;
-            Feature[i].seen_effect = true;
             break;
 
         case DNGN_LAVA:
@@ -3480,7 +3472,6 @@ void init_feature_table( void )
         case DNGN_EXIT_HELL:
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
             Feature[i].colour = LIGHTRED;
-            Feature[i].notable = false;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = LIGHTRED;
             break;
@@ -3488,7 +3479,7 @@ void init_feature_table( void )
         case DNGN_ENTER_HELL:
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
             Feature[i].colour = RED;
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = RED;
             break;
@@ -3520,7 +3511,7 @@ void init_feature_table( void )
         case DNGN_ENTER_SHOP:
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
             Feature[i].colour = YELLOW;
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = YELLOW;
             break;
@@ -3528,17 +3519,19 @@ void init_feature_table( void )
         case DNGN_ENTER_LABYRINTH:
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
             Feature[i].colour = CYAN;
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
             break;
 
         case DNGN_ENTER_PORTAL_VAULT:
+            Feature[i].flags |= FFT_NOTABLE;
+            // fall through
+            
         case DNGN_EXIT_PORTAL_VAULT:
-            Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].colour = EC_SHIMMER_BLUE;
-            Feature[i].notable = true;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].symbol      = Options.char_table[ DCHAR_ARCH ];
+            Feature[i].colour      = EC_SHIMMER_BLUE;
+            Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = EC_SHIMMER_BLUE;
             break;            
 
@@ -3577,7 +3570,7 @@ void init_feature_table( void )
         case DNGN_ENTER_DIS:
             Feature[i].colour = CYAN;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
             break;
@@ -3585,7 +3578,7 @@ void init_feature_table( void )
         case DNGN_ENTER_GEHENNA:
             Feature[i].colour = RED;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = RED;
             break;
@@ -3593,7 +3586,7 @@ void init_feature_table( void )
         case DNGN_ENTER_COCYTUS:
             Feature[i].colour = LIGHTCYAN;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = LIGHTCYAN;
             break;
@@ -3601,7 +3594,7 @@ void init_feature_table( void )
         case DNGN_ENTER_TARTARUS:
             Feature[i].colour = DARKGREY;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = DARKGREY;
             break;
@@ -3609,7 +3602,7 @@ void init_feature_table( void )
         case DNGN_ENTER_ABYSS:
             Feature[i].colour = EC_RANDOM;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = EC_RANDOM;
             break;
@@ -3629,7 +3622,7 @@ void init_feature_table( void )
         case DNGN_ENTER_PANDEMONIUM:
             Feature[i].colour = LIGHTBLUE;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = LIGHTBLUE;
             break;
@@ -3667,7 +3660,7 @@ void init_feature_table( void )
         case DNGN_ENTER_RESERVED_4:
             Feature[i].colour = YELLOW;
             Feature[i].symbol = Options.char_table[ DCHAR_STAIRS_DOWN ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = RED;
             Feature[i].seen_colour = YELLOW;
             break;
@@ -3675,7 +3668,7 @@ void init_feature_table( void )
         case DNGN_ENTER_ZOT:
             Feature[i].colour = MAGENTA;
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = LIGHTGREY;
             Feature[i].seen_colour = MAGENTA;
             break;
@@ -3712,7 +3705,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_ZIN:
             Feature[i].colour = WHITE;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = WHITE;
             break;
@@ -3720,7 +3713,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_SHINING_ONE:
             Feature[i].colour = YELLOW;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = YELLOW;
             break;
@@ -3728,7 +3721,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_KIKUBAAQUDGHA:
             Feature[i].colour = DARKGREY;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = DARKGREY;
             break;
@@ -3736,7 +3729,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_YREDELEMNUL:
             Feature[i].colour = EC_UNHOLY;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = EC_UNHOLY;
             break;
@@ -3744,7 +3737,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_XOM:
             Feature[i].colour = EC_RANDOM;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = EC_RANDOM;
             break;
@@ -3752,7 +3745,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_VEHUMET:
             Feature[i].colour = EC_VEHUMET;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = EC_VEHUMET;
             break;
@@ -3760,7 +3753,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_OKAWARU:
             Feature[i].colour = CYAN;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = CYAN;
             break;
@@ -3768,7 +3761,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_MAKHLEB:
             Feature[i].colour = EC_FIRE;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = EC_FIRE;
             break;
@@ -3776,7 +3769,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_SIF_MUNA:
             Feature[i].colour = BLUE;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = BLUE;
             break;
@@ -3784,7 +3777,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_TROG:
             Feature[i].colour = RED;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = RED;
             break;
@@ -3792,7 +3785,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_NEMELEX_XOBEH:
             Feature[i].colour = LIGHTMAGENTA;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = LIGHTMAGENTA;
             break;
@@ -3800,7 +3793,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_ELYVILON:
             Feature[i].colour = LIGHTGREY;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = LIGHTGREY;
             break;
@@ -3808,7 +3801,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_LUGONU:
             Feature[i].colour = GREEN;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = GREEN;
             break;
@@ -3816,7 +3809,7 @@ void init_feature_table( void )
         case DNGN_ALTAR_BEOGH:
             Feature[i].colour = EC_BEOGH;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
-            Feature[i].notable = true;
+            Feature[i].flags |= FFT_NOTABLE;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = EC_BEOGH;
             break;
@@ -3910,6 +3903,10 @@ void init_feature_table( void )
             Feature[i].symbol = Options.char_table[ DCHAR_CLOUD ];
             break;
         }
+
+        if (i == DNGN_ENTER_ORCISH_MINES || i == DNGN_ENTER_SLIME_PITS
+            || i == DNGN_ENTER_LABYRINTH)
+            Feature[i].flags |= FFT_EXAMINE_HINT;
     }
 
     apply_feature_overrides();

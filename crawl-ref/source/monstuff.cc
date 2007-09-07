@@ -4486,7 +4486,7 @@ static void monster_move(monsters *monster)
         || habitat != DNGN_FLOOR
         || mons_class_flag( monster->type, M_AMPHIBIOUS ))
     {
-        okmove = MINMOVE;
+        okmove = DNGN_MINMOVE;
     }
 
     for (count_x = 0; count_x < 3; count_x++)

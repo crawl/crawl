@@ -281,12 +281,12 @@ command_type grid_stair_direction(dungeon_feature_type grid)
 
 bool grid_is_opaque( dungeon_feature_type grid )
 {
-    return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);
+    return (grid < DNGN_MINSEE && grid != DNGN_ORCISH_IDOL);
 }
 
 bool grid_is_solid( dungeon_feature_type grid )
 {
-    return (grid < MINMOVE);
+    return (grid < DNGN_MINMOVE);
 }
 
 bool grid_is_solid( int x, int y )

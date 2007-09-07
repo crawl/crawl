@@ -4684,7 +4684,7 @@ std::string do_mon_str_replacements(const std::string in_msg,
     if (see_grid(monster->x, monster->y))
     {
         dungeon_feature_type feat = grd[monster->x][monster->y];
-        if (feat < MINMOVE || feat >= NUM_REAL_FEATURES)
+        if (feat < DNGN_MINMOVE || feat >= NUM_REAL_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
             msg = replace_all(msg, "@surface@", "lava");

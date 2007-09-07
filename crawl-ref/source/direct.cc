@@ -1352,12 +1352,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("orcish idol");
     case DNGN_WAX_WALL:
         return ("wall of solid wax");
-    case DNGN_SILVER_STATUE:
-        return ("silver statue");
     case DNGN_GRANITE_STATUE:
         return ("granite statue");
-    case DNGN_ORANGE_CRYSTAL_STATUE:
-        return ("orange crystal statue");
     case DNGN_LAVA:
         return ("Some lava");
     case DNGN_DEEP_WATER:
@@ -1521,22 +1517,16 @@ static std::string marker_feature_description(const coord_def &p)
     return ("");
 }
 
+#ifndef DEBUG_DIAGNOSTICS
 // Is a feature interesting enough to 'v'iew it, even if a player normally
 // doesn't care about descriptions, i.e. does the description hold important
 // information? (Yes, this is entirely subjective. JPEG)
+
 static bool interesting_feature(dungeon_feature_type feat)
 {
-    switch (feat)
-    {
-        case DNGN_ENTER_ORCISH_MINES:
-        case DNGN_ENTER_SLIME_PITS:
-        case DNGN_ENTER_LABYRINTH:
-//        case DNGN_SPARKLING_FOUNTAIN:
-           return true;
-        default:
-           return false;
-    }
+    return (get_feature_def(feat).flags & FFT_EXAMINE_HINT);
 }
+#endif
 
 std::string feature_description(int mx, int my, description_level_type dtype,
                                 bool add_stop)

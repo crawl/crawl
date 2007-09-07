@@ -1933,8 +1933,6 @@ bool tutorial_feat_interesting(dungeon_feature_type feat)
     {
        case DNGN_ORCISH_IDOL:
        case DNGN_GRANITE_STATUE:
-       case DNGN_SILVER_STATUE:
-       case DNGN_ORANGE_CRYSTAL_STATUE:
        case DNGN_TRAP_MAGICAL:
        case DNGN_TRAP_MECHANICAL:
        case DNGN_STONE_STAIRS_DOWN_I:
@@ -1960,10 +1958,6 @@ void tutorial_describe_feature(dungeon_feature_type feat)
     {
        case DNGN_ORCISH_IDOL:
        case DNGN_GRANITE_STATUE:
-       case DNGN_SILVER_STATUE:
-       case DNGN_ORANGE_CRYSTAL_STATUE:
-            ostr << "Beware! Sometimes such a statue actually has a mind of its own.";
-            break;
        case DNGN_TRAP_MAGICAL:
        case DNGN_TRAP_MECHANICAL:
             ostr << "These nasty constructions can do physical damage (with "

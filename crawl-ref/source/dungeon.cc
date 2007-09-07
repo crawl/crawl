@@ -3952,9 +3952,7 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
             (rawfeat == 'C') ? pick_an_altar() :   // f(x) elsewhere {dlb}
             (rawfeat == 'F') ? DNGN_GRANITE_STATUE :
             (rawfeat == 'I') ? DNGN_ORCISH_IDOL :
-            (rawfeat == 'S') ? DNGN_SILVER_STATUE :
             (rawfeat == 'G') ? DNGN_GRANITE_STATUE :
-            (rawfeat == 'H') ? DNGN_ORANGE_CRYSTAL_STATUE :
             (rawfeat == 'T') ? DNGN_BLUE_FOUNTAIN :
             (rawfeat == 'U') ? DNGN_SPARKLING_FOUNTAIN :
             (rawfeat == 'V') ? DNGN_PERMADRY_FOUNTAIN :
@@ -4024,8 +4022,7 @@ static int vault_grid( vault_placement &place,
     }
     
     // first, set base tile for grids {dlb}:
-    const dungeon_feature_type grid =
-        grd[vx][vy] =
+    grd[vx][vy] =
                   ((vgrid == -1)  ? grd[vx][vy] : 
                    (vgrid == 'x') ? DNGN_ROCK_WALL :
                    (vgrid == 'X') ? DNGN_PERMAROCK_WALL :
@@ -4053,9 +4050,7 @@ static int vault_grid( vault_placement &place,
                    (vgrid == 'C') ? pick_an_altar() :   // f(x) elsewhere {dlb}
                    (vgrid == 'F') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
-                   (vgrid == 'S') ? DNGN_SILVER_STATUE :
                    (vgrid == 'G') ? DNGN_GRANITE_STATUE :
-                   (vgrid == 'H') ? DNGN_ORANGE_CRYSTAL_STATUE :
                    (vgrid == 'T') ? DNGN_BLUE_FOUNTAIN :
                    (vgrid == 'U') ? DNGN_SPARKLING_FOUNTAIN :
                    (vgrid == 'V') ? DNGN_PERMADRY_FOUNTAIN :
@@ -4189,12 +4184,10 @@ static int vault_grid( vault_placement &place,
         dgn_place_item_explicit(vgrid - 'd', vx, vy, place, level_number);
     }
 
-    if (grid == DNGN_ORANGE_CRYSTAL_STATUE
-            || grid == DNGN_SILVER_STATUE)
+    if (vgrid == 'S' || vgrid == 'H')
     {
         const int mtype = 
-            grid == DNGN_ORANGE_CRYSTAL_STATUE? MONS_ORANGE_STATUE
-                                              : MONS_SILVER_STATUE;
+            vgrid == 'H'? MONS_ORANGE_STATUE : MONS_SILVER_STATUE;
 
         grd[vx][vy] = DNGN_FLOOR;
 

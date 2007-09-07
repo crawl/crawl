@@ -2655,9 +2655,7 @@ static int affect_wall(bolt &beam, int x, int y)
         }
 
         if (targ_grid == DNGN_ORCISH_IDOL 
-                || targ_grid == DNGN_SILVER_STATUE 
-                || targ_grid == DNGN_GRANITE_STATUE 
-                || targ_grid == DNGN_ORANGE_CRYSTAL_STATUE)
+                || targ_grid == DNGN_GRANITE_STATUE)
         {
             grd[x][y] = DNGN_FLOOR;
 

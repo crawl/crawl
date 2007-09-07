@@ -126,12 +126,6 @@
 // max shops randomly generated in a level.
 #define MAX_RANDOM_SHOPS  5
 
-// lowest grid value which can be passed by walking etc.
-#define MINMOVE 31
-
-// lowest grid value which can be seen through
-#define MINSEE 11
-
 // Can be passed to monster_die to indicate that a friendly did the killing.
 #define ANON_FRIENDLY_MONSTER   -1
 

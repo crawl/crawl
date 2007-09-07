@@ -528,8 +528,6 @@ static void finish_delay(const delay_queue_item &delay)
             case DNGN_METAL_WALL:
             case DNGN_GREEN_CRYSTAL_WALL:
             case DNGN_WAX_WALL:
-            case DNGN_SILVER_STATUE:
-            case DNGN_ORANGE_CRYSTAL_STATUE:
                 ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
                 break;
 

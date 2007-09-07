@@ -993,12 +993,6 @@ enum drop_mode_type
     DM_MULTI
 };
 
-// lowest grid value which can be occupied (walk, swim, fly)
-#define MINMOVE         31
-
-// lowest grid value which can be seen through
-#define MINSEE          11
-
 // When adding:
 // 
 // * New stairs/portals: update grid_stair_direction.
@@ -1023,11 +1017,15 @@ enum dungeon_feature_type
     DNGN_WAX_WALL,                     //    8
     DNGN_PERMAROCK_WALL,               //    9 - for undiggable walls
 
-    DNGN_SILVER_STATUE = 21,           //   21
-    DNGN_GRANITE_STATUE,
-    DNGN_ORANGE_CRYSTAL_STATUE,        //   23
+    // XXX: lowest grid value which can be seen through
+    DNGN_MINSEE = 11,
+
+    DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED_1,
-    DNGN_STATUE_RESERVED_2,            //   25
+    DNGN_STATUE_RESERVED_2,
+
+    // XXX: lowest grid value which can be passed by walking etc.
+    DNGN_MINMOVE = 31,
 
     DNGN_LAVA = 61,                    //   61
     DNGN_DEEP_WATER,                   //   62
@@ -1332,6 +1330,13 @@ enum equipment_type
     EQ_RINGS_PLUS,                     // check both rings and sum plus
     EQ_RINGS_PLUS2,                    // check both rings and sum plus2
     EQ_ALL_ARMOUR                      // check all armour types
+};
+
+enum feature_flag_type
+{
+    FFT_NONE          = 0,
+    FFT_NOTABLE       = 0x1,           // should be noted for dungeon overview
+    FFT_EXAMINE_HINT  = 0x2            // could get an "examine-this" hint.
 };
 
 enum fire_type

@@ -23,12 +23,6 @@
 void init_char_table(char_set_type set);
 void init_feature_table();
 
-/* ***********************************************************************
- * called from: dump_screenshot - chardump
- * *********************************************************************** */
-void get_non_ibm_symbol(unsigned int object, unsigned short *ch,
-                        unsigned short *color);
-
 // last updated 29may2000 {dlb}
 /* ***********************************************************************
  * called from: bang - beam - direct - effects - fight - monstuff -
@@ -108,6 +102,8 @@ void get_item_symbol(unsigned int object, unsigned *ch,
 // Applies EC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour);
 int get_mons_colour(const monsters *mons);
+
+const feature_def &get_feature_def(dungeon_feature_type feat);
 
 void set_envmap_obj( int x, int y, int object );
 unsigned get_envmap_char(int x, int y);

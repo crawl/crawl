@@ -348,7 +348,6 @@ static int shatter_walls(int x, int y, int pow, int garbage)
         break;
 
     case DNGN_METAL_WALL:
-    case DNGN_SILVER_STATUE:
         stuff = DEBRIS_METAL;
         chance = pow / 10;
         break;
@@ -367,11 +366,6 @@ static int shatter_walls(int x, int y, int pow, int garbage)
     case DNGN_ROCK_WALL:
         chance = pow / 4;
         stuff = DEBRIS_ROCK;
-        break;
-
-    case DNGN_ORANGE_CRYSTAL_STATUE:
-        chance = pow / 6;
-        stuff = DEBRIS_CRYSTAL;
         break;
 
     case DNGN_GREEN_CRYSTAL_WALL:
@@ -2389,6 +2383,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         switch (menv[mon].type)
         {
+        case MONS_ICE_STATUE:
         case MONS_ICE_BEAST: // blast of ice fragments
         case MONS_SIMULACRUM_SMALL:
         case MONS_SIMULACRUM_LARGE:
@@ -2477,8 +2472,14 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
                 blast.damage.num = 6;
             }
 
-            if (player_hurt_monster(mon, roll_dice( blast.damage )))
-                blast.damage.num += 2;
+            {
+                int statue_damage = roll_dice(blast.damage) * 2;
+                if (pow >= 50 && one_chance_in(10))
+                    statue_damage = menv[mon].hit_points;
+                
+                if (player_hurt_monster(mon, statue_damage))
+                    blast.damage.num += 2;
+            }
             break;
 
         case MONS_CRYSTAL_GOLEM:
@@ -2558,14 +2559,6 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_METAL_WALL:       
         what = "metal wall";
         blast.colour = CYAN;
-        // fallthru
-    case DNGN_SILVER_STATUE:
-        if (what == NULL)
-        {
-            what = "silver statue";
-            blast.colour = WHITE;
-        }
-
         explode = true;
         blast.name = "blast of metal fragments";
         blast.damage.num = 4;
@@ -2585,23 +2578,13 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
         what = "crystal wall";
         blast.colour = GREEN;
-        // fallthru
-    case DNGN_ORANGE_CRYSTAL_STATUE:
-        if (what == NULL)
-        {
-            what = "crystal statue";
-            blast.colour = LIGHTRED; //jmf: == orange, right?
-        }
-
         explode = true;
         blast.ex_size = 2;
         blast.name = "blast of crystal shards";
         blast.damage.num = 5;
 
         if (okay_to_dest
-            && ((grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
-                || (grid == DNGN_ORANGE_CRYSTAL_STATUE 
-                    && pow >= 50 && one_chance_in(10))))
+            && grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
         {
             blast.ex_size = coinflip() ? 3 : 2;
             grd[beam.tx][beam.ty] = DNGN_FLOOR;
