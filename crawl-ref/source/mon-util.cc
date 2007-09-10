@@ -2459,14 +2459,19 @@ void monsters::swap_slots(mon_inv_type a, mon_inv_type b)
     inv[b] = swap;
 }
 
-void monsters::equip_weapon(const item_def &item, int near)
+void monsters::equip_weapon(item_def &item, int near)
 {
+    if (need_message(near))
+        mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
+             item.name(DESC_NOCAP_A).c_str());
+
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
         ac += 5;
 
     if (brand != SPWPN_NORMAL && need_message(near))
     {
+        bool message_given = true;
         switch (brand)
         {
         case SPWPN_FLAMING:
@@ -2499,52 +2504,137 @@ void monsters::equip_weapon(const item_def &item, int near)
         case SPWPN_RETURNING:
             mpr("It wiggles slightly.");
             break;
+        case SPWPN_DISTORTION:
+            mpr("Its appearance distorts for a moment.");
+            break;
+        default:
+            message_given = false;
         }
+        if (message_given)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
     }    
 }
 
-void monsters::equip(const item_def &item, int slot, int near)
+void monsters::equip_armour(item_def &item, int near)
+{
+    if (need_message(near))
+        mprf("%s wears %s.", name(DESC_CAP_THE).c_str(),
+             item.name(DESC_NOCAP_A).c_str());
+
+    ac += property( item, PARM_AC );
+
+    const int armour_plus = item.plus;
+    ASSERT(abs(armour_plus) < 20);
+    if (abs(armour_plus) < 20) 
+        ac += armour_plus;
+    ev += property( item, PARM_EVASION ) / 2;
+        
+    if (ev < 1)
+        ev = 1;   // This *shouldn't* happen.
+}
+
+void monsters::equip(item_def &item, int slot, int near)
 {
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (need_message(near))
-            mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
-                 item.name(DESC_NOCAP_A).c_str());
         equip_weapon(item, near);
         break;
     case OBJ_ARMOUR:
-    {
-        ac += property( item, PARM_AC );
-
-        const int armour_plus = item.plus;
-        ASSERT(abs(armour_plus) < 20);
-        if (abs(armour_plus) < 20) 
-            ac += armour_plus;
-        ev += property( item, PARM_EVASION ) / 2;
-        
-        if (ev < 1)
-            ev = 1;   // This *shouldn't* happen.
+        equip_armour(item, near);
         break;
-    }
     default:
         break;
     }
 }
 
-void monsters::unequip(const item_def &item, int slot, int near)
+void monsters::unequip_weapon(item_def &item, int near)
 {
-    // XXX: Handle armour removal when armour swapping is implemented.
+    if (need_message(near))
+        mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
+             item.name(DESC_NOCAP_A).c_str());
+
+    const int brand = get_weapon_brand(item);
+    if (brand == SPWPN_PROTECTION)
+        ac -= 5;
+
+    if (brand != SPWPN_NORMAL && need_message(near))
+    {
+        bool message_given = true;
+        switch (brand)
+        {
+        case SPWPN_FLAMING:
+            mpr("It stops flaming.");
+            break;
+
+        case SPWPN_HOLY_WRATH:
+            mpr("It stops glowing.");
+            break;
+
+        case SPWPN_ELECTROCUTION:
+            mpr("It stops crackling.");
+            break;
+
+        case SPWPN_VENOM:
+            mpr("It stops dripping with poison.");
+            break;
+
+        case SPWPN_DISTORTION:
+            mpr("Its appearance distorts for a moment.");
+            break;
+
+        default:
+            message_given = false;
+        }
+        if (message_given)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+    }    
+}
+
+void monsters::unequip_armour(item_def &item, int near)
+{
+    if (need_message(near))
+        mprf("%s takes off %s.", name(DESC_CAP_THE).c_str(),
+             item.name(DESC_NOCAP_A).c_str());
+
+    ac -= property( item, PARM_AC );
+
+    const int armour_plus = item.plus;
+    ASSERT(abs(armour_plus) < 20);
+    if (abs(armour_plus) < 20) 
+        ac -= armour_plus;
+    ev -= property( item, PARM_EVASION ) / 2;
+        
+    if (ev < 1)
+        ev = 1;   // This *shouldn't* happen.
+}
+
+bool monsters::unequip(item_def &item, int slot, int near, bool force)
+{
+    if (item.cursed() && !force)
+        return false;
+
+    if (!force && mons_near(this) && player_monster_visible(this))
+        set_ident_flags(item, ISFLAG_KNOW_CURSE);
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (get_weapon_brand(item) == SPWPN_PROTECTION)
-            ac -= 5;
+        unequip_weapon(item, near);
+        break;
+
+    // Armour swapping not implemented yet, but armour can be
+    // removed if wizard forces monster to wear a new piece of
+    // armour with the "give item" wizard command.
+    case OBJ_ARMOUR:
+        unequip_armour(item, near);
         break;
 
     default:
         break;
     }
+
+    return true;
 }
 
 void monsters::lose_pickup_energy()
@@ -2597,16 +2687,28 @@ bool monsters::drop_item(int eslot, int near)
     if (index == NON_ITEM)
         return (true);
 
-    // Cannot drop cursed weapon or armour.
-    if ((eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR)
-        && mitm[index].cursed())
-        return (false);
+    // Unequip equipped items before dropping them; unequip() prevents
+    // cursed items from being removed.
+    bool was_unequipped = false;
+    if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
+        || (eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this) ))
+    {
+        if (!unequip(mitm[index], eslot, near))
+            return (false);
+        was_unequipped = true;
+    }
 
     const std::string iname = mitm[index].name(DESC_NOCAP_A);
     move_item_to_grid(&index, x, y);
 
     if (index == inv[eslot])
+    {
+        // Re-equip item if we somehow failed to drop it.
+        if (was_unequipped)
+            equip(mitm[index], eslot, near);
+
         return (false);
+    }
 
     if (need_message(near))
         mprf("%s drops %s.", name(DESC_CAP_THE).c_str(), iname.c_str());
@@ -2869,20 +2971,15 @@ bool monsters::need_message(int &near) const
 
 void monsters::swap_weapons(int near)
 {
-    const item_def *weap = mslot_item(MSLOT_WEAPON);
-    const item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
+    item_def *weap = mslot_item(MSLOT_WEAPON);
+    item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
     
     if (weap)
-        unequip(*weap, MSLOT_WEAPON, !alt && need_message(near));
+        if(!unequip(*weap, MSLOT_WEAPON, near))
+            // Item was cursed
+            return;
 
     swap_slots(MSLOT_WEAPON, MSLOT_ALT_WEAPON);
-
-    if (need_message(near))
-    {
-        if (!alt && weap)
-            mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
-                 weap->name(DESC_NOCAP_A).c_str());
-    }
 
     if (alt)
         equip(*alt, MSLOT_WEAPON, near);

@@ -213,16 +213,28 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    const bool tried = (!ident && item_type_tried(*this));
+    const bool  tried     = (!ident && item_type_tried(*this));
+    std::string tried_str = "";
+
+    if (tried)
+    {
+        item_type_id_state_type id_type =
+            get_ident_type(this->base_type, this->sub_type);
+        if (id_type == ID_MON_TRIED_TYPE)
+            tried_str = "tried by monster";
+        else
+            tried_str = "tried";
+    }
+
     if ( with_inscription && !(this->inscription.empty()) )
     {
         buff << " {";
         if ( tried )
-            buff << "tried, ";
+            buff << tried_str << ", ";
         buff << this->inscription << "}";
     }
     else if ( tried )
-        buff << " {tried}";
+        buff << " {" << tried_str << "}";
 
     return buff.str();
 }
@@ -1559,7 +1571,8 @@ bool item_type_tried( const item_def& item )
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if (idt != NUM_IDTYPE && item.sub_type < 50)
-        return ( type_ids[idt][item.sub_type] == ID_TRIED_TYPE );
+        return ( type_ids[idt][item.sub_type] == ID_TRIED_TYPE
+                 || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE);
     else
         return false;
 }
@@ -1574,8 +1587,8 @@ void set_ident_type( object_class_type basetype, int subtype,
 {
     // Don't allow overwriting of known type with tried unless forced.
     if (!force 
-        && setting == ID_TRIED_TYPE
-        && get_ident_type( basetype, subtype ) == ID_KNOWN_TYPE)
+        && (setting == ID_MON_TRIED_TYPE || setting == ID_TRIED_TYPE)
+        && setting <= get_ident_type( basetype, subtype ))
     {
         return;
     }

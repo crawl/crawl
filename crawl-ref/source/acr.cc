@@ -669,6 +669,33 @@ static void handle_wizard_command( void )
             }
         }
         you.wield_change = true;
+
+        // Forget things that nearby monsters are carrying, as well
+        // (for use with the "give monster an item" wizard targetting
+        // command).
+        for (i = 0; i < MAX_MONSTERS; i++)
+        {
+            monsters* mon = &menv[i];
+
+            if (!invalid_monster(mon) && mons_near(mon))
+            {
+                for (j = 0; j < NUM_MONSTER_SLOTS; j++)
+                {
+                    if (mon->inv[j] == NON_ITEM)
+                        continue;
+
+                    item_def &item = mitm[mon->inv[j]];
+
+                    if (!is_valid_item(item))
+                        continue;
+
+                    set_ident_type( item.base_type, item.sub_type, 
+                                ID_UNKNOWN_TYPE );
+
+                    unset_ident_flags( item, ISFLAG_IDENT_MASK );
+                }
+            }
+        }
         break;
 
     case 'X':

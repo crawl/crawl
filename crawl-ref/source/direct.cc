@@ -600,8 +600,17 @@ void direction(dist& moves, targeting_type restricts,
 
             debug_make_monster_shout(&menv[mid]);
             break;
-#endif
 
+        case CMD_TARGET_WIZARD_GIVE_ITEM:
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER) // can put in terrain description here
+                break;
+
+            wizard_give_monster_item(&menv[mid]);
+            break;
+#endif
             
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target());
@@ -1915,6 +1924,7 @@ command_type targeting_behaviour::get_command(int key)
 #ifdef WIZARD
     case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
     case 's': return CMD_TARGET_WIZARD_MAKE_SHOUT;
+    case 'g': return CMD_TARGET_WIZARD_GIVE_ITEM;
 #endif
     case 'v': return CMD_TARGET_DESCRIBE;
     case '?': return CMD_TARGET_HELP;

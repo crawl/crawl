@@ -2603,6 +2603,193 @@ void debug_make_monster_shout(monsters* mon)
 }
 #endif
 
+#ifdef WIZARD
+void wizard_give_monster_item(monsters *mon)
+{
+    mon_itemuse_type item_use = mons_itemuse( mon->type );
+    if (item_use < MONUSE_STARTING_EQUIPMENT)
+    {
+        mpr("That type of monster can't use any items.");
+        return;
+    }
+
+    int player_slot = prompt_invent_item( "Give which item to monster?",
+                                          MT_DROP, -1 );
+
+    if (player_slot == PROMPT_ABORT)
+        return;
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+        if (you.equip[i] == player_slot)
+        {
+            mpr("Can't give equipped items to a monster.");
+            return;
+        }
+
+    item_def     &item = you.inv[player_slot];
+    mon_inv_type mon_slot;
+
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+        // Let wizard specify which slot to put weapon into via
+        // inscriptions.
+        if (item.inscription.find("first") != std::string::npos
+            || item.inscription.find("primary") != std::string::npos)
+        {
+            mpr("Putting weapon into primary slot by inscription");
+            mon_slot = MSLOT_WEAPON;
+            break;
+        }
+        else if (item.inscription.find("second") != std::string::npos
+                 || item.inscription.find("alt") != std::string::npos)
+        {
+            mpr("Putting weapon into alt slot by inscription");
+            mon_slot = MSLOT_ALT_WEAPON;
+            break;
+        }
+
+        // For monsters which can wield two weapons, prefer whichever
+        // slot is empty (if there is an empty slot).
+        if (mons_wields_two_weapons(mon))
+        {
+            if (mon->inv[MSLOT_WEAPON] == NON_ITEM)
+            {
+                mpr("Dual wielding monster, putting into empty primary slot");
+                mon_slot = MSLOT_WEAPON;
+                break;
+            }
+            else if (mon->inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            {
+                mpr("Dual wielding monster, putting into empty alt slot");
+                mon_slot = MSLOT_ALT_WEAPON;
+                break;
+            }
+        }
+
+        // Try to replace a ranged weapon with a ranged weapon and
+        // a non-ranged weapon with a non-ranged weapon
+        if (mon->inv[MSLOT_WEAPON] != NON_ITEM
+            && (is_range_weapon(mitm[mon->inv[MSLOT_WEAPON]])
+                == is_range_weapon(item)))
+        {
+            mpr("Replacing primary slot with similar weapon");
+            mon_slot = MSLOT_WEAPON;
+            break;
+        }
+        if (mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM
+            && (is_range_weapon(mitm[mon->inv[MSLOT_ALT_WEAPON]])
+                == is_range_weapon(item)))
+        {
+            mpr("Replacing alt slot with similar weapon");
+            mon_slot = MSLOT_ALT_WEAPON;
+            break;
+        }
+
+        // Prefer the empty slot (if any)
+        if (mon->inv[MSLOT_WEAPON] == NON_ITEM)
+        {
+            mpr("Putting weapon into empty primary slot");
+            mon_slot = MSLOT_WEAPON;
+            break;
+        }
+        else if (mon->inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+        {
+            mpr("Putting weapon into empty alt slot");
+            mon_slot = MSLOT_ALT_WEAPON;
+            break;
+        }
+
+        // Default to primary weapon slot
+        mpr("Defaulting to primary slot");
+        mon_slot = MSLOT_WEAPON;
+        break;
+
+    case OBJ_ARMOUR:
+        mon_slot = MSLOT_ARMOUR;
+        break;
+    case OBJ_MISSILES:
+        mon_slot = MSLOT_MISSILE;
+        break;
+    case OBJ_WANDS:
+        mon_slot = MSLOT_WAND;
+        break;
+    case OBJ_SCROLLS:
+        mon_slot = MSLOT_SCROLL;
+        break;
+    case OBJ_POTIONS:
+        mon_slot = MSLOT_POTION;
+        break;
+    case OBJ_MISCELLANY:
+        mon_slot = MSLOT_MISCELLANY;
+        break;
+    default:
+        mpr("You can't give that type of item to a monster.");
+        return;
+    }
+
+    // Shouldn't be be using MONUSE_MAGIC_ITEMS?
+    if (item_use == MONUSE_STARTING_EQUIPMENT 
+        && !mons_is_unique( mon->type ))
+    {
+        switch(mon_slot)
+        {
+        case MSLOT_WEAPON:
+        case MSLOT_ALT_WEAPON:
+        case MSLOT_ARMOUR:
+        case MSLOT_MISSILE:
+            break;
+
+        default:
+            mpr("That type of monster can only use weapons and armour.");
+            return;
+        }
+    }
+
+    int index = get_item_slot(10);
+
+    if (index == NON_ITEM)
+    {
+        mpr("Too many items on level, bailing.");
+        return;
+    }
+
+    // Move monster's old item to player's inventory as last step
+    int old_eq = NON_ITEM;
+    if (mon->inv[mon_slot] != NON_ITEM)
+    {
+        old_eq = mon->inv[mon_slot];
+
+        // Alternative weapons don't get (un)wielded unless the monster
+        // can wield two weapons.
+        if (mon_slot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
+            mon->unequip(*(mon->mslot_item(mon_slot)), mon_slot, 1, true);
+    }
+
+    item_def &new_item = mitm[index];
+    new_item = item;
+    new_item.link = NON_ITEM;
+    new_item.x    = 0;
+    new_item.y    = 0;
+
+    mon->inv[mon_slot] = index;
+
+    // Alternative weapons don't get (un)wielded unless the monster
+    // can wield two weapons.
+    if (mon_slot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
+        mon->equip(new_item, mon_slot, 1);
+
+    // Item is gone from player's inventory
+    dec_inv_item_quantity(player_slot, item.quantity);
+
+    // Monster's old item moves to player's inventory.
+    if (old_eq != NON_ITEM)
+    {
+        mpr("Fetching monster's old item.");
+        move_item_to_player(old_eq, mitm[old_eq].quantity);
+    }
+}
+#endif
 
 #ifdef DEBUG_DIAGNOSTICS
 

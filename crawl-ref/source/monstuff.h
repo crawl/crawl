@@ -173,4 +173,7 @@ int mons_missile_damage(const item_def *launch,
                         const item_def *missile);
 int mons_thrown_weapon_damage(const item_def *weap);
 
+bool mons_eq_obvious_ego(const item_def &item,
+                         const struct monsters *mon = NULL);
+
 #endif

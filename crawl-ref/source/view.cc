@@ -1009,6 +1009,29 @@ void monster_grid(bool do_updates)
     }
 }
 
+static void learn_visible_mon_eq_egos(monsters *mon)
+{
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        mon_inv_type slot  = static_cast<mon_inv_type>(i);
+        int          index = mon->inv[slot]; 
+
+        if (index == NON_ITEM)
+            continue;
+
+        // Alternate weapons aren't wielded (and thus have no
+        // visible differences) unless the monster can wield two
+        // weapons at once.
+        if (slot == MSLOT_ALT_WEAPON && !mons_wields_two_weapons(mon))
+            continue;
+
+        item_def &item = mitm[index];
+
+        if (mons_eq_obvious_ego(item, mon))
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+    }
+}
+
 void fire_monster_alerts()
 {
     for (int s = 0; s < MAX_MONSTERS; s++)
@@ -1028,6 +1051,7 @@ void fire_monster_alerts()
                     interrupt_activity( AI_SEE_MONSTER, monster );
                 }
                 seen_monster( monster );
+                learn_visible_mon_eq_egos(monster);
 
                 // Monster was viewed this turn
                 monster->flags |= MF_WAS_IN_VIEW;

@@ -541,6 +541,7 @@ static const char *targeting_help_1 =
     "<h>Wizard targeting comands:</h>\n"
     "<w>F</w>: make target friendly\n"
     "<w>s</w>: force target to shout or speak\n"
+    "<w>g</w>: give item to monster\n"
 #endif
 ;
 

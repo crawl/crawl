@@ -160,6 +160,7 @@ void debug_dismiss_all_monsters();
 
 class monsters;
 void debug_make_monster_shout(monsters* mon);
+void wizard_give_monster_item(monsters* mon);
 
 #ifdef DEBUG_DIAGNOSTICS
 void generate_map_stats();

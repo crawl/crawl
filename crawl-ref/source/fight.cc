@@ -286,7 +286,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     : attacker(attk), defender(defn),
       atk(NULL), def(NULL),
       cancel_attack(false),
-      did_hit(false), perceived_attack(false),
+      did_hit(false), perceived_attack(false), obvious_effect(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
       attacker_invisible(false), defender_invisible(false),
       unarmed_ok(allow_unarmed),
@@ -1615,6 +1615,8 @@ bool melee_attack::distortion_affects_defender()
     if (one_chance_in(3))
     {
         emit_nodmg_hit_message();
+        if (defender_visible)
+            obvious_effect = true;
         defender->blink();
         return (false);
     }
@@ -1626,6 +1628,8 @@ bool melee_attack::distortion_affects_defender()
     if (!one_chance_in(3))
     {
         emit_nodmg_hit_message();
+        if (defender_visible)
+            obvious_effect = true;
         defender->teleport(coinflip(), one_chance_in(5));
         return (false);
     }
@@ -1633,6 +1637,19 @@ bool melee_attack::distortion_affects_defender()
     if (you.level_type != LEVEL_ABYSS && coinflip())
     {
         emit_nodmg_hit_message();
+
+        if (defender->atype() == ACT_PLAYER && attacker_visible
+            && weapon != NULL && !is_artefact(*weapon))
+        {
+            // If the player is being sent to the Abyss by being attacked
+            // with a distortion weapon, then we have to ID it before
+            // the player goes to Abyss, while the weapon object is
+            // still in memory.
+            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+        }
+        else if (defender_visible)
+            obvious_effect = true;
+
         defender->banish( atk? atk->name(DESC_PLAIN, true)
                           : attacker->name(DESC_PLAIN) );
         return (true);
@@ -1643,10 +1660,13 @@ bool melee_attack::distortion_affects_defender()
 
 bool melee_attack::apply_damage_brand()
 {
+    bool ret = false;
+
     // Monster resistance to the brand.
     int res = 0;
-    
+
     special_damage = 0;
+    obvious_effect = false;
     switch (damage_brand)
     {
     case SPWPN_FLAMING:
@@ -1718,12 +1738,24 @@ bool melee_attack::apply_damage_brand()
     case SPWPN_STAFF_OF_OLGREB:
         if (!one_chance_in(4))
         {
+            int old_poison = 0;
+
+            if (defender->atype() == ACT_PLAYER)
+                old_poison = you.duration[DUR_POISONING];
+
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
 
             // Weapons of venom do two levels of poisoning to the player,
             // but only one level to monsters.
             defender->poison( attacker, 2 );
+
+            if (defender->atype() == ACT_PLAYER
+                && old_poison < you.duration[DUR_POISONING])
+            {
+                obvious_effect = true;
+            }
+            
         }
         break;
 
@@ -1746,6 +1778,8 @@ bool melee_attack::apply_damage_brand()
         {
             break;
         }
+
+        obvious_effect = true;
 
         // vampire bat form
         if (you.species == SP_VAMPIRE && attacker->atype() == ACT_PLAYER
@@ -1853,8 +1887,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_DISTORTION:
-        if (distortion_affects_defender())
-            return (true);
+        ret = distortion_affects_defender();
         break;
 
     case SPWPN_CONFUSE:
@@ -1885,7 +1918,15 @@ bool melee_attack::apply_damage_brand()
     }
     }
 
-    return (false);
+    obvious_effect = obvious_effect || (special_damage_message != "");
+
+    if (obvious_effect && attacker_visible && weapon != NULL
+        && !is_artefact(*weapon))
+    {
+        set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+    }
+
+    return (ret);
 }
 
 // Returns true if a head got lopped off.

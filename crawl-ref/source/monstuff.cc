@@ -2587,7 +2587,10 @@ static bool handle_potion(monsters *monster, bolt & beem)
         return (false);
     else
     {
-        bool imbibed = false;
+        bool                    imbibed     = false;
+        item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
+        bool                    was_visible =
+            mons_near(monster) && player_monster_visible(monster);
 
         const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
         switch (potion_type)
@@ -2602,7 +2605,10 @@ static bool handle_potion(monsters *monster, bolt & beem)
                 simple_monster_message(monster, " drinks a potion.");
 
                 if (heal_monster(monster, 5 + random2(7), false))
+                {
                     simple_monster_message(monster, " is healed!");
+                    ident = ID_MON_TRIED_TYPE;
+                }
 
                 if (mitm[monster->inv[MSLOT_POTION]].sub_type
                                                     == POT_HEAL_WOUNDS)
@@ -2614,8 +2620,10 @@ static bool handle_potion(monsters *monster, bolt & beem)
                 {
                     monster->del_ench(ENCH_POISON);
                     monster->del_ench(ENCH_SICK);
-                    monster->del_ench(ENCH_CONFUSION);
-                    monster->del_ench(ENCH_ROT);
+                    if (monster->del_ench(ENCH_CONFUSION))
+                        ident = ID_KNOWN_TYPE;
+                    if (monster->del_ench(ENCH_ROT))
+                        ident = ID_KNOWN_TYPE;
                 }
 
                 imbibed = true;
@@ -2646,6 +2654,7 @@ static bool handle_potion(monsters *monster, bolt & beem)
 
                 imbibed = true;
             }
+            ident = ID_KNOWN_TYPE;
             break;
         }
 
@@ -2653,6 +2662,9 @@ static bool handle_potion(monsters *monster, bolt & beem)
         {
             if (dec_mitm_item_quantity( monster->inv[MSLOT_POTION], 1 ))
                 monster->inv[MSLOT_POTION] = NON_ITEM;
+
+            if (ident != ID_UNKNOWN_TYPE && was_visible)
+                set_ident_type(OBJ_POTIONS, potion_type, ident);
         }
 
         return (imbibed);
@@ -2704,6 +2716,13 @@ static bool handle_reaching(monsters *monster)
         }
     }
 
+    // Player saw the item reach
+    if (ret && !is_artefact(mitm[wpn]) && mons_near(monster)
+        && player_monster_visible(monster))
+    {
+        set_ident_flags(mitm[wpn], ISFLAG_KNOW_TYPE);
+    }
+
     return ret;
 }                               // end handle_reaching()
 
@@ -2730,10 +2749,14 @@ static bool handle_scroll(monsters *monster)
         return (false);
     else
     {
-        bool read = false;
+        bool                    read        = false;
+        item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
+        bool                    was_visible =
+            mons_near(monster) && player_monster_visible(monster);
 
         // notice how few cases are actually accounted for here {dlb}:
-        switch (mitm[monster->inv[MSLOT_SCROLL]].sub_type)
+        const int scroll_type = mitm[monster->inv[MSLOT_SCROLL]].sub_type;
+        switch (scroll_type)
         {
         case SCR_TELEPORTATION:
             if (!monster->has_ench(ENCH_TP))
@@ -2742,7 +2765,8 @@ static bool handle_scroll(monsters *monster)
                 {
                     simple_monster_message(monster, " reads a scroll.");
                     monster_teleport(monster, false);
-                    read = true;
+                    read  = true;
+                    ident = ID_KNOWN_TYPE;
                 }
             }
             break;
@@ -2755,7 +2779,8 @@ static bool handle_scroll(monsters *monster)
                     simple_monster_message(monster, " reads a scroll.");
                     simple_monster_message(monster, " blinks!");
                     monster_blink(monster);
-                    read = true;
+                    read  = true;
+                    ident = ID_KNOWN_TYPE;
                 }
             }
             break;
@@ -2767,7 +2792,8 @@ static bool handle_scroll(monsters *monster)
                 create_monster( MONS_ABOMINATION_SMALL, 2,
                                 SAME_ATTITUDE(monster), monster->x, monster->y,
                                 monster->foe, 250 );
-                read = true;
+                read  = true;
+                ident = ID_KNOWN_TYPE;
             }
             break;
         }
@@ -2776,6 +2802,9 @@ static bool handle_scroll(monsters *monster)
         {
             if (dec_mitm_item_quantity( monster->inv[MSLOT_SCROLL], 1 ))
                 monster->inv[MSLOT_SCROLL] = NON_ITEM;
+
+            if (ident != ID_UNKNOWN_TYPE && was_visible)
+                set_ident_type(OBJ_SCROLLS, scroll_type, ident);
         }
 
         return read;
@@ -2806,8 +2835,10 @@ static bool handle_wand(monsters *monster, bolt &beem)
     }
     else if (coinflip())
     {
-        bool niceWand = false;
-        bool zap = false;
+        bool niceWand    = false;
+        bool zap         = false;
+        bool was_visible =
+            mons_near(monster) && player_monster_visible(monster);
 
         // map wand type to monster spell type
         int mzap = map_wand_to_mspell(mitm[monster->inv[MSLOT_WAND]].sub_type);
@@ -2845,7 +2876,8 @@ static bool handle_wand(monsters *monster, bolt &beem)
 
         beem.aux_source = item.name(DESC_PLAIN);
 
-        switch (mitm[monster->inv[MSLOT_WAND]].sub_type)
+        const int wand_type = mitm[monster->inv[MSLOT_WAND]].sub_type;
+        switch (wand_type)
         {
             // these have been deemed "too tricky" at this time {dlb}:
         case WAND_POLYMORPH_OTHER:
@@ -2930,6 +2962,14 @@ static bool handle_wand(monsters *monster, bolt &beem)
             mitm[monster->inv[MSLOT_WAND]].plus--;
             beem.is_tracer = false;
             fire_beam( beem );
+
+            if (was_visible)
+            {
+                if (niceWand || beem.name != "0" || beem.obvious_effect)
+                    set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+                else
+                    set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+            }
 
             return (true);
         }
@@ -3514,6 +3554,39 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
         *launcher = launch;
         return (missiles->index());
     }
+}
+
+bool mons_eq_obvious_ego(const item_def &item, const struct monsters *mon)
+{
+    if (is_artefact(item))
+        return false;
+
+    // Only do weapons for now
+    if (item.base_type != OBJ_WEAPONS)
+        return false;
+
+    int ego = item.special;
+
+    switch(ego)
+    {
+     
+    case SPWPN_FLAMING:
+    case SPWPN_FREEZING:
+    case SPWPN_HOLY_WRATH:
+    case SPWPN_VENOM:
+    // Electric branded weapons are constantly crackling
+    case SPWPN_ELECTROCUTION:
+    // Unlike SPWPN_FLAME, SPWPN_FROST has a persistant visual effect.
+    case SPWPN_FROST: 
+        return true;
+
+    // SPWPN_FLAME just "glows red for a moment" when first equipped,
+    // so it isn't obvious after that.
+    case SPWPN_FLAME:
+        return false;
+    }
+
+    return false;
 }
 
 //---------------------------------------------------------------

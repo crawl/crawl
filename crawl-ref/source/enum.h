@@ -758,6 +758,7 @@ enum command_type
     CMD_TARGET_DESCRIBE,
     CMD_TARGET_WIZARD_MAKE_FRIENDLY,
     CMD_TARGET_WIZARD_MAKE_SHOUT,
+    CMD_TARGET_WIZARD_GIVE_ITEM,
     CMD_TARGET_HELP,
 
     // Disable/enable -more- prompts.
@@ -1605,8 +1606,9 @@ enum item_type_id_type
 enum item_type_id_state_type  // used for values in id[4][50]
 {
     ID_UNKNOWN_TYPE = 0,
-    ID_KNOWN_TYPE,
-    ID_TRIED_TYPE
+    ID_MON_TRIED_TYPE,
+    ID_TRIED_TYPE,
+    ID_KNOWN_TYPE
 };
 
 enum jewellery_type

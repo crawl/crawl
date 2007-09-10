@@ -65,7 +65,7 @@ public:
     monsters  *atk, *def;
 
     bool      cancel_attack;
-    bool      did_hit, perceived_attack;
+    bool      did_hit, perceived_attack, obvious_effect;
 
     // If all or part of the action is visible to the player, we need a message.
     bool      needs_message;
