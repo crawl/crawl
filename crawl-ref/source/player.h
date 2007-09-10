@@ -394,10 +394,10 @@ void contaminate_player(int change, bool statusOnly = false);
 bool poison_player( int amount, bool force = false );
 void reduce_poison_player( int amount );
 
-void confuse_player( int amount, bool resistable = true );
+bool confuse_player( int amount, bool resistable = true );
 void reduce_confuse_player( int amount );
 
-void slow_player( int amount );
+bool slow_player( int amount );
 void dec_slow_player();
 
 void haste_player( int amount );
@@ -407,7 +407,7 @@ void dec_haste_player();
 bool disease_player( int amount );
 void dec_disease_player();
 
-void rot_player( int amount );
+bool rot_player( int amount );
 
 bool player_has_spell( int spell );
 size_type player_size( int psize = PSIZE_TORSO, bool base = false );

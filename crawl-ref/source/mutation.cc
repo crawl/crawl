@@ -402,8 +402,8 @@ const char *gain_mutation[][3] = {
 
     {"You feel weaker.", "You feel weaker.", "You feel weaker."},
 
-    {"You feel less intelligent.", "You feel less intelligent",
-     "You feel less intelligent"},
+    {"You feel less intelligent.", "You feel less intelligent.",
+     "You feel less intelligent."},
 // 20
     {"You feel clumsy.", "You feel clumsy.",
      "You feel clumsy."},
@@ -967,7 +967,7 @@ formatted_string describe_mutations()
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
         result += EOL;
         result += "You preferably eat rotten meat." EOL;
-        result += "You resist negative energy." EOL;
+        result += "You heal slowly." EOL;
         have_any = true;
         break;
 
@@ -1007,7 +1007,7 @@ formatted_string describe_mutations()
             result += " strongly";
 
         result += " in touch with the powers of death." EOL;
-        result += "You resist negative energy." EOL;
+        result += "Your flesh is vulnerable to fire." EOL;
 
         if (you.experience_level > 12)
             result += "You can restore your body by infusing magical energy." EOL;
@@ -1089,6 +1089,7 @@ formatted_string describe_mutations()
 
     case SP_KOBOLD:
         result += "You can eat rotten meat." EOL;
+        result += "You recuperate from illness quickly." EOL;
         have_any = true;
         break;
 
@@ -1106,16 +1107,16 @@ formatted_string describe_mutations()
             result += (you.experience_level > 25) ?
                        " strongly" : "";
             result += " in touch with the powers of death." EOL;
-            result += "You mostly resist negative energy." EOL;
+            result += "You are quite resistant to negative energy." EOL;
             result += "You can see invisible." EOL;
             result += "</green>";
         }
-        result += "<green>";
-        if (you.hunger_state < HS_HUNGRY)
-            result += "You do not regenerate." EOL;
-        else
-            result += "You regenerate slowly." EOL;
-        result += "</green>";
+        if (you.hunger_state == HS_FULL)
+            result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
+        else if (you.hunger_state == HS_HUNGRY)
+            result += "<green>You heal slowly.</green>" EOL;
+        else if (you.hunger_state < HS_HUNGRY)
+            result += "<green>You do not heal.</green>" EOL;
         have_any = true;
         break;
         

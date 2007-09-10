@@ -167,8 +167,8 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_SLOWING:
-        slow_player( (10 + random2(pow)) / factor );
-        xom_is_stimulated(64 / factor);
+        if (slow_player((10 + random2(pow)) / factor))
+            xom_is_stimulated(64 / factor);
         break;
 
     case POT_PARALYSIS:
@@ -177,8 +177,8 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_CONFUSION:
-        confuse_player( (3 + random2(8)) / factor );
-        xom_is_stimulated(128 / factor);
+        if (confuse_player((3 + random2(8)) / factor))
+            xom_is_stimulated(128 / factor);
         break;
 
     case POT_INVISIBILITY:
@@ -214,19 +214,14 @@ bool potion_effect( potion_type pot_eff, int pow )
 
     case POT_DEGENERATION:
         mpr("There was something very wrong with that liquid!");
-        lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
-        xom_is_stimulated(64);
+        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2)))
+            xom_is_stimulated(64);
         break;
 
     // Don't generate randomly - should be rare and interesting
     case POT_DECAY:
-        if (you.is_undead)
-            mpr( "You feel terrible." );
-        else
-        {
-            rot_player( 10 + random2(10) );
+        if (rot_player(10 + random2(10)))
             xom_is_stimulated(64);
-        }
         break;
 
     case POT_WATER:

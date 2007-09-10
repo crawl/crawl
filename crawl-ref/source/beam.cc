@@ -3248,7 +3248,7 @@ static int affect_player( bolt &beam )
             break;     // banishment to the abyss
 
         case BEAM_PAIN:      // pain
-            if (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE])
+            if (player_res_torment())
             {
                 mpr("You are unaffected.");
                 break;

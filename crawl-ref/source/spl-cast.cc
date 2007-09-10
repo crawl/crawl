@@ -2705,12 +2705,6 @@ static void miscast_necromancy(int severity, const char* cause)
             break;
 
         case 3:
-            if (you.is_undead)
-            {
-                mpr("You feel terrible.");
-                break;
-            }
-
             rot_player( random2avg(7, 2) + 1 );
             break;
 

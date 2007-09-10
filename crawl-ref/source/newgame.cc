@@ -1925,15 +1925,19 @@ static void give_basic_mutations(species_type speci)
         you.mutation[MUT_DEFORMED] = 1;
         break;
     case SP_MUMMY:
+        you.mutation[MUT_TORMENT_RESISTANCE] = 1;
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         break;
     case SP_GNOME:
         you.mutation[MUT_MAPPING] = 2;
         break;
     case SP_GHOUL:
+        you.mutation[MUT_TORMENT_RESISTANCE] = 1;
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_TROLL:
@@ -1946,6 +1950,7 @@ static void give_basic_mutations(species_type speci)
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS] = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 1;
+        you.mutation[MUT_TORMENT_RESISTANCE] = 1;
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         break;
     default:

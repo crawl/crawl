@@ -1229,7 +1229,7 @@ bool player_control_teleport(bool calc_unid) {
 
 int player_res_torment(bool)
 {
-    return (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE]);
+    return (you.mutation[MUT_TORMENT_RESISTANCE]);
 }
 
 // funny that no races are susceptible to poisons {dlb}
@@ -1472,8 +1472,6 @@ int player_prot_life(bool calc_unid)
     {
         pl += 2;
     }
-    else if (you.is_undead && you.species != SP_VAMPIRE)
-        pl += 3;
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -1496,7 +1494,7 @@ int player_prot_life(bool calc_unid)
     // randart wpns
     pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
 
-    // demonic power
+    // undead/demonic power
     pl += you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE];
 
     if (pl > 3)
@@ -3352,7 +3350,7 @@ void display_char_status()
     }
 
     if (you.disease || you.species == SP_VAMPIRE && you.hunger_state < HS_HUNGRY)
-        mpr("You do not regenerate.");
+        mpr("You do not heal.");
         
     // prints a contamination message
     contaminate_player( 0, true );
@@ -4520,15 +4518,15 @@ void reduce_poison_player( int amount )
     }
 }
 
-void confuse_player( int amount, bool resistable )
+bool confuse_player( int amount, bool resistable )
 {
     if (amount <= 0)
-        return;
+        return false;
 
     if (resistable && wearing_amulet(AMU_CLARITY))
     {
         mpr( "You feel momentarily confused." );
-        return;
+        return false;
     }
 
     const int old_value = you.duration[DUR_CONF];
@@ -4545,6 +4543,7 @@ void confuse_player( int amount, bool resistable )
 
         xom_is_stimulated(you.duration[DUR_CONF] - old_value);
     }
+    return true;
 }
 
 void reduce_confuse_player( int amount )
@@ -4561,13 +4560,16 @@ void reduce_confuse_player( int amount )
     }
 }
 
-void slow_player( int amount )
+bool slow_player( int amount )
 {
     if (amount <= 0)
-        return;
+        return false;
 
     if (wearing_amulet( AMU_RESIST_SLOW ))
+    {
         mpr("You feel momentarily lethargic.");
+        return false;
+    }
     else if (you.duration[DUR_SLOW] >= 100)
         mpr( "You already are as slow as you could be." );
     else
@@ -4583,6 +4585,7 @@ void slow_player( int amount )
             you.duration[DUR_SLOW] = 100;
         learned_something_new(TUT_YOU_ENCHANTED);
     }
+    return true;
 }
 
 void dec_slow_player( void )
@@ -4667,6 +4670,7 @@ void dec_disease_player( void )
     {       
         you.disease--;
                 
+        // kobolds and regenerators recuperate quickly
         if (you.disease > 5
             && (you.species == SP_KOBOLD 
                 || you.duration[ DUR_REGENERATION ]
@@ -4680,10 +4684,16 @@ void dec_disease_player( void )
     }
 }
 
-void rot_player( int amount )
+bool rot_player( int amount )
 {
     if (amount <= 0)
-        return;
+        return false;
+
+    if (you.is_undead)
+    {
+        mpr( "You feel terrible." );
+        return false;
+    }
 
     if (you.rotting < 40)
     {
@@ -4694,6 +4704,7 @@ void rot_player( int amount )
 
         you.rotting += amount;
     }
+    return true;
 }
 
 
