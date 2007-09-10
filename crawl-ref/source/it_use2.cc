@@ -593,19 +593,35 @@ void unuse_randart(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
+    const bool ident = fully_identified(item);
+
     randart_properties_t proprt;
     randart_wpn_properties( item, proprt );
 
     if (proprt[RAP_AC])
+    {
         you.redraw_armour_class = 1;
+        if (!ident)
+        {
+            mprf("You feel less %s.",
+            proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
+        }
+    }
 
     if (proprt[RAP_EVASION])
+    {
         you.redraw_evasion = 1;
+        if (!ident)
+        {
+            mprf("You feel less %s.",
+                 proprt[RAP_EVASION] > 0? "nimble" : "awkward");
+        }
+    }
 
-    // modify ability scores
-    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     true );
-    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], true );
-    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    true );
+    // modify ability scores, always output messages
+    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false );
+    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false );
+    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    false );
 
     if (proprt[RAP_NOISES] != 0)
         you.special_wield = SPWLD_NONE;

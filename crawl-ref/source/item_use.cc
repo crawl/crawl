@@ -2239,6 +2239,12 @@ void jewellery_wear_effects(item_def &item)
 {
     item_type_id_state_type ident = ID_TRIED_TYPE;
 
+    // Randart jewellery shouldn't auto-ID just because the 
+    // base type is known. Somehow the player should still 
+    // be told, preferably by message. (jpeg)
+    const bool artefact = is_random_artefact( item );
+    const bool identified = fully_identified( item );
+
     switch (item.sub_type)
     {
     case RING_FIRE:
@@ -2261,63 +2267,86 @@ void jewellery_wear_effects(item_def &item)
     case RING_PROTECTION:
         you.redraw_armour_class = 1;
         if (item.plus != 0)
-            ident = ID_KNOWN_TYPE;
+        {
+            if (!artefact)
+                ident = ID_KNOWN_TYPE;
+            else if (!identified)
+            {
+                mprf("You feel %s.", item.plus > 0?
+                     "well-protected" : "more vulnerable");
+            }
+        }
         break;
 
     case RING_INVISIBILITY:
         if (!you.duration[DUR_INVIS])
         {
             mpr("You become transparent for a moment.");
-            ident = ID_KNOWN_TYPE;
+            if (!artefact)
+                ident = ID_KNOWN_TYPE;
         }
         break;
 
     case RING_EVASION:
         you.redraw_evasion = 1;
         if (item.plus != 0)
-            ident = ID_KNOWN_TYPE;
+        {
+            if (!artefact)
+                ident = ID_KNOWN_TYPE;
+            else if (!identified)
+                mprf("You feel %s.", item.plus > 0? "nimbler" : "more awkward");
+        }
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, item.plus, true);
-        if (item.plus != 0)
+        modify_stat(STAT_STRENGTH, item.plus, !artefact);
+        if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, item.plus, true);
-        if (item.plus != 0)
+        modify_stat(STAT_DEXTERITY, item.plus, !artefact);
+        if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, item.plus, true);
-        if (item.plus != 0)
+        modify_stat(STAT_INTELLIGENCE, item.plus, !artefact);
+        if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_MAGICAL_POWER:
         calc_mp();
-        ident = ID_KNOWN_TYPE;
+        if (!artefact)
+            ident = ID_KNOWN_TYPE;
         break;
 
     case RING_LEVITATION:
-        mpr("You feel buoyant.");
-        ident = ID_KNOWN_TYPE;
+        if (!scan_randarts( RAP_LEVITATE ))
+        {
+            mpr("You feel buoyant.");
+            if (!artefact)
+                ident = ID_KNOWN_TYPE;
+        }
         break;
 
     case RING_TELEPORTATION:
         if (!scan_randarts( RAP_CAN_TELEPORT ))
         {
             mpr("You feel slightly jumpy.");
-            ident = ID_KNOWN_TYPE;
-            break;
+            if (!artefact)
+                ident = ID_KNOWN_TYPE;
         }
         break;
         
     case AMU_RAGE:
-        mpr("You feel a brief urge to hack something to bits.");
-        ident = ID_KNOWN_TYPE;
+        if (!scan_randarts( RAP_BERSERK ))
+        {
+            mpr("You feel a brief urge to hack something to bits.");
+            if (!artefact)
+                ident = ID_KNOWN_TYPE;
+        }
         break;
 
     case AMU_THE_GOURMAND:
@@ -2327,7 +2356,7 @@ void jewellery_wear_effects(item_def &item)
 
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known
-    if (is_random_artefact( item ))
+    if (artefact)
         use_randart(item);
     else
         set_ident_type( item.base_type, item.sub_type, ident );
@@ -3852,21 +3881,56 @@ void use_randart(const item_def &item)
 
     const bool alreadyknown = item_type_known(item);
     const bool dangerous = player_in_a_dangerous_place();
+    const bool ident = fully_identified(item);
 
     randart_properties_t proprt;
     randart_wpn_properties( item, proprt );
 
+    // Give messages for stat changes, possibly only if !identified
     if (proprt[RAP_AC])
+    {
         you.redraw_armour_class = 1;
+        if (!ident)
+        {
+            mprf("You feel %s.", proprt[RAP_AC] > 0?
+                 "well-protected" : "more vulnerable");
+        }
+    }
 
     if (proprt[RAP_EVASION])
+    {
         you.redraw_evasion = 1;
+        if (!ident)
+        {
+            mprf("You feel somewhat %s.", proprt[RAP_EVASION] > 0?
+                 "nimbler" : "more awkward");
+        }
+    }
 
     // modify ability scores
-    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     true );
-    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], true );
-    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    true );
+    // output result even when identified (because of potential fatality)
+    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false );
+    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false );
+    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false );
 
+
+    // For evokable stuff, check whether other equipped items yield
+    // the same ability. If not, give a message.
+    // Do NOT give all these messages if the randart is identified.
+    if (!ident)
+    {
+        if (proprt[RAP_LEVITATE] && !items_give_ability(item.link, RAP_LEVITATE))
+            mpr("You feel buoyant.");
+
+        if (proprt[RAP_INVISIBLE] && !you.duration[DUR_INVIS])
+            mpr("You become transparent for a moment.");
+
+        if (proprt[RAP_CAN_TELEPORT] && !items_give_ability(item.link, RAP_CAN_TELEPORT))
+            mpr("You feel slightly jumpy.");
+
+        if (proprt[RAP_BERSERK] && !items_give_ability(item.link, RAP_BERSERK))
+            mpr("You feel a brief urge to hack something to bits.");
+    }
     if (proprt[RAP_NOISES])
         you.special_wield = 50 + proprt[RAP_NOISES];
 

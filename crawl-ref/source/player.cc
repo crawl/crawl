@@ -3933,6 +3933,52 @@ int slaying_bonus(char which_affected)
     return (ret);
 }                               // end slaying_bonus()
 
+// Checks each equip slot for an evokable item (jewellery or randart).
+// Returns true if any of these has the same ability as the one handed in.
+bool items_give_ability(const int slot, char abil)
+{
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
+    {
+        const int eq = you.equip[i];
+
+        if (eq == -1)
+            continue;
+
+        // skip item to compare with
+        if (eq == slot)
+            continue;
+
+        // only weapons give their effects when in our hands
+        if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
+            continue;
+            
+        if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING)
+        {
+            if (abil == RAP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
+                return (true);
+            if (abil == RAP_CAN_TELEPORT && you.inv[eq].sub_type == RING_TELEPORTATION)
+                return (true);
+            if (abil == RAP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
+                return (true);
+        }
+        else if (eq == EQ_AMULET)
+        {
+            if (abil == RAP_BERSERK && you.inv[eq].sub_type == AMU_RAGE)
+                return (true);
+        }
+
+        // other items are not evokable
+        if (!is_random_artefact( you.inv[ eq ] ))
+            continue;
+
+        if (randart_wpn_property(you.inv[ eq ], abil))
+            return (true);
+    }
+
+    // none of the equipped items possesses this ability
+    return (false);
+}                               // end scan_randarts()
+
 /* Checks each equip slot for a randart, and adds up all of those with
    a given property. Slow if any randarts are worn, so avoid where possible. */
 int scan_randarts(char which_property, bool calc_unid)
@@ -4012,7 +4058,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg)
         break;
     }
 
-    if (!suppress_msg)
+    if (!suppress_msg && amount != 0)
         mpr( msg.c_str(), (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
 
     *ptr_stat += amount;
