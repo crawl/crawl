@@ -3,7 +3,7 @@
 #             Vaults system, including Vaults:8, Hall of Blades, Tomb:*.
 #
 # Note the regular (mini)vaults are no longer in vaults.des, they have been
-# moved to small.des and large.des. Portal vaults live in portal.des.
+# moved to mini.des, float.des and large.des. Portal vaults live in portal.des.
 ###############################################################################
  
 ##############################################################################
@@ -186,35 +186,26 @@ PLACE:   Vault:8
 ORIENT:  encompass
 #
 # the rune's spot, occassionally put nasty on the rune
-SHUFFLE: Rr, OPQR
-SUBST:   r = |
 KMONS:   O = 8 / 9 / w:80 nothing
-KMONS:   P = 8 / 9 / w:80 nothing
-KMONS:   Q = 8 / 9 / w:80 nothing
-KMONS:   R = 8 / 9 / w:80 nothing
-KITEM:   P = any good_item
-KITEM:   Q = any good_item
-KITEM:   R = any good_item
-KFEAT:   P = w:150 . / any shop / jewellery shop / wand shop
-KFEAT:   Q = w:150 . / any shop / scroll shop / book shop 
-KFEAT:   R = w:150 . / any shop / armour shop / weapon shop
+NSUBST:  O = O / o
+KITEM:   o = any good_item
+KFEAT:   o = w:120 . / any shop
+KFEAT:   O = .
 #
 # NW
 SHUFFLE: AC/BD, EG/FH, IKN/NJL, '"
-SUBST:   A=., B=X, C=+, D=x, E=+, F=X, G=., H=x, I=., M=X, J=x, K=+, N=+, L=x
-SUBST:   X = x =:5
+SUBST:   A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
+SUBST:   I=., M=xx=, J=x, K=+, N=+, L=xx=
 SUBST:   ':$, ":*, ^=^., a:x.
 #
 # SW
-SHUFFLE: !_
+SHUFFLE: !_	
 SUBST:   ! = | * .:20
 SUBST:   _ = 8 9 .:20
-SUBST:   b : x .
 #
 # NE
-SHUFFLE: UVW
-SUBST:   U=., V=X, W=X
-SUBST:   X = x =:2
+NSUBST:  U = 1:. / *:xxxx=
+NSUBST:  V = 1:. / *:xxxx=
 SUBST:   - = 8 9 .:20
 #
 # SE (double use of Y=Y. and Z=Z. for decreasing variance)
@@ -223,19 +214,19 @@ SUBST:   Y = Y ., Z = Z .
 SUBST:   Y = Y ., Z = Z .
 SUBST:   Y = 9:30 8:10 .:40
 SUBST:   Z = 9:10 8:30 .:40
-SUBST:   c = x .:20
 #
 # general loot and additional features
 SUBST:   / : / .:3
 SUBST:   / = 8 9 ^ * | .:50
 SUBST:   | = | *:2
 SUBST:   * = * |:2
-SHUFFLE: klmnopqs
+SHUFFLE: klmnpqst
 SUBST:   k : ^ x =:3 .:40
 SUBST:   l : ^ x =:3 .:40
 SUBST:   m : ^ x =:3 .:80
 SUBST:   n : ^ x =:3 .:80
 SUBST:   o=., p=., q=., s=.
+KFEAT:   T = teleport trap / Zot trap
 #
 MONS: vault guard
 #
@@ -248,7 +239,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx??/.............m.............................l............/??xxxxxxxxx
+xxxxxxxxxT?/.............m.............................l............/?Txxxxxxxxx
 xxxxxxxxx??/.............m.............................l............/??xxxxxxxxx
 xxxxxxxxx//xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx//xxxxxxxxx
 xxxxxxxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
@@ -256,38 +247,38 @@ xxxxxxxxx..x.xxxxxxxxxxx..xxxxxxxxJxIx....xxxxx.................xxxxx..xxxxxxxxx
 xxxxxxxxx..x.x'.'.'.'.'x..x........x.x....xxx...........-.........xxx..xxxxxxxxx
 xxxxxxxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xxx...-.................xxx..xxxxxxxxx
 xxxxxxxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.........-.......-.....xx..xxxxxxxxx
-xxxxxxxxx..x.x.'.'.'.'.x..x..^Rr^..x.x....xx.......................xx..xxxxxxxxx
+xxxxxxxxx..x.x.'.'.'.'.x..x..^O|^..x.x....xx.......................xx..xxxxxxxxx
 xxxxxxxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.-....xxxxxxxxxxx....-.xx..xxxxxxxxx
 xxxxxxxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xx......x.........x......xx..xxxxxxxxx
-xxxxxxxxx..x.x'.'.'.'.'L..K........x.x....xx....xxU.........Vxx....xx..xxxxxxxxx
+xxxxxxxxx..x.x'.'.'.'.'L..K........x.x....xx....xxU.........Uxx....xx..xxxxxxxxx
 xxxxxxxxx..x.N.'.'.'.'.xxxxxxxxxxxxx.x....xx..-.x....xxxxx....x....xx..xxxxxxxxx
-xxxxxxxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Wx$$$xx...x.-..xx..xxxxxxxxx
+xxxxxxxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Vx$$$xx...x.-..xx..xxxxxxxxx
 xxxxxxxxx..x...........G99xxxxxxxxDx.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxHx99x........x.x....xx.-..x..x$$*Q*$$x-.x....xx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxFx99x........x.x....xx.-..x..x$$*O*$$x-.x....xx..xxxxxxxxx
 xxxxxxxxxnnx.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xxkkxxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xU...x..-.xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Wxx....xx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xV...x..-.xx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Uxx....xx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......x.........x......xx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......xxxxxxxxxxx.-....xx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..x."""""".x.x....xxx...-.................xxx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..C........x.x....xxx........-....-.......xxx..xxxxxxxxx
 xxxxxxxxx..x.xxxxxxxxxEx..xxxxxxxxxx.a..11....xx................xxxxx..xxxxxxxxx
-xxxxxxxxx..x...........F..B............1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..x...........H..B............1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
 xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxa..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
 xxxxxxxxx............................1..(}..1..........................xxxxxxxxx
 xxxxxxxxx...........................11.[..{.11.........................xxxxxxxxx
 xxxxxxxxx............................1..])..1..........................xxxxxxxxx
 xxxxxxxxx.............................1....1...........................xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx.b...1111.cxcxxxcxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xx!x.x.x!x.x.x.x.x.x.x.x.b...11........................??x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x!x.x.x_x.x.b....c................Y..Z...??x..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx.a...1111.axaxxaaxaxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xx!x.x.x!x.x.x.x.x.x.x.x.a...11........................??x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x!x.x.x_x.x.a....a................Y..Z...??x..xxxxxxxxx
 xxxxxxxxx..xx.x!x.x.x.x.x.x.x.x!x.x.x.....x..Y..Y..Y..Y..Y..Z..Y..Y.x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x_x.x.x_x.x.x.x.x.x....c...Y..Y..Y..Z..Y..Y..Z...x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x_x.x.x_x.x.x.x.x.x....a...Y..Y..Y..Z..Y..Y..Z...x..xxxxxxxxx
 xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxxxxxxx
 xxxxxxxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxxxxxxx
-xxxxxxxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....x...Y..Z..Y..Y..Z..Y..Y...x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....c.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxxxxxxx
-xxxxxxxxxooxx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.xssxxxxxxxxx
+xxxxxxxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....a...Y..Z..Y..Y..Z..Y..Y...x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....a.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxxxxxxx
+xxxxxxxxxttxx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.xssxxxxxxxxx
 xxxxxxxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxxxxxxx
 xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxxxxxxx
 xxxxxxxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxxxxxxx
@@ -299,10 +290,10 @@ xxxxxxxxx..xx.x_x.x.x.x.x.x.x.x.x.x_xx....x....Z..Y..Z..Y..Z........x..xxxxxxxxx
 xxxxxxxxx..x.x!x.x.x.x.x.x.x!x.x.x.x.x....x..Z..Z..Y..Z....Z..??????x..xxxxxxxxx
 xxxxxxxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Y..Z..Z...Z..??????x..xxxxxxxxx
 xxxxxxxxx..x.x.x.x.x.x_x.x.x.x.x.x.x.x....x??..Y..Z..Z..Z..Z..??????x..xxxxxxxxx
-xxxxxxxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Px..xxxxxxxxx
+xxxxxxxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Ox..xxxxxxxxx
 xxxxxxxxx//xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx//xxxxxxxxx
 xxxxxxxxx??/.............p.............................q............/??xxxxxxxxx
-xxxxxxxxx??/.............p.............................q............/??xxxxxxxxx
+xxxxxxxxxT?/.............p.............................q............/?Txxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

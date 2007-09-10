@@ -16,6 +16,7 @@ FLAGS:  no_rotate
 MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
 ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+KFEAT:  A = enter_hell
 ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
 
@@ -51,6 +52,7 @@ MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
 ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / w:30 nothing
+KFEAT:  A = enter_hell
 ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
@@ -83,6 +85,7 @@ NAME:   hellmouth_3
 MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / nothing
 ORIENT: float
+KFEAT:  A = enter_hell
 SUBST:  ? : . l ?:40, ?=l.
 MAP
 ................??............

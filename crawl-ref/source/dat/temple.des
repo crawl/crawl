@@ -133,7 +133,7 @@ ENDMAP
 #
 NAME:    temple_pool_a
 TAGS:    temple_entry no_monster_gen no_pool_fixup
-CHANCE:  5
+CHANCE:  3
 FLAGS:   no_rotate
 ORIENT:  float
 SHUFFLE: XY
@@ -154,6 +154,7 @@ ENDMAP
 
 NAME:    temple_pool_b
 TAGS:    temple_entry no_monster_gen
+CHANCE:  7
 FLAGS:   no_rotate
 ORIENT:  float
 SHUFFLE: ABCDEFGHIJKL
@@ -216,7 +217,7 @@ ENDMAP
 ##############################################################################
 
 ##########################################################################
-# Circular temple (David Ploog).
+# Circular temple (David Ploog). 12 = 1 x 12
 
 NAME: circular_temple
 PLACE: Temple
@@ -264,7 +265,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Three leaves temple (David Ploog)
+# Three leaves temple (David Ploog). 12 = 3 x 4
 
 NAME: three_leaves__temple
 PLACE: Temple
@@ -308,7 +309,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Twelve chambers temple (David Ploog). 
+# Twelve chambers temple (David Ploog). 12 = 12 x 1
 
 NAME: twelve_chambers_temple
 PLACE: Temple
@@ -356,7 +357,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################
-# Another temple (David Ploog)
+# Another temple (David Ploog). 12 + 3 = 1 + 2 + 3 + 4 + 5
 
 NAME: triangle_temple
 PLACE: Temple
@@ -449,7 +450,7 @@ ENDMAP
 
 
 ##########################################################################
-# Five rooms temple (David Ploog).
+# Five rooms temple (David Ploog). 12 + 3 = 5 x 3
 
 NAME:    five_temple
 PLACE:   Temple
@@ -504,3 +505,4 @@ xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+

@@ -1,7 +1,7 @@
 ###############################################################################
 # mini.des: This is the place where minivaults should go. These are defined
 #           without any ORIENT line. Vaults with ORIENT lines are stored in
-#           either small.des or large.des.
+#           either float.des or large.des.
 #
 #           All maps dealing with the Vault branch system, including Vaults:8
 #           reside in vaults.des.
@@ -24,15 +24,12 @@
 # Minivaults must NOT have an ORIENT: attribute. Including an ORIENT: attribute
 # makes the map a normal vault, and mayhem can result.
 #
-# Minivaults should be surrounded by (enough) floor or shallow water. Otherwise
-# they can impede navigation on the level.
-#
 ###############################################################################
 
 
 
 # Default depth for minivaults. If your minivault is suitable for one of the
-# branches below, add it via DEPTH: Lair or similar.
+# branches, add it via DEPTH: Lair or similar.
 default-depth: D:8-27
 
 ##############################################################################
@@ -1094,7 +1091,9 @@ ENDMAP
 NAME:    onia_ninara_007_chamber_of_wet_secrets
 DEPTH:   D:8-13
 TAGS:    no_monster_gen no_pool_fixup
-MONS:    centaur, brown snake, electrical eel
+KMONS:   1 = centaur
+KMONS:   2 = brown snake
+KMONS:   3 = electrical eel
 ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
 SHUFFLE: !;
 SUBST:   " = .:80 W:30
@@ -1113,7 +1112,7 @@ MAP
 .ccWccec.
 .c.w"c3c.
 .c"w"ccc.
-.c.w!;!c.
+.c>w!;!c.
 .c"w!!;c.
 .c.w!;!c.
 .c1w?T!c.
@@ -1125,7 +1124,9 @@ ENDMAP
 NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
 DEPTH:   D:20-26
 TAGS:    no_monster_gen no_pool_fixup
-MONS:    yaktaur captain, grey snake, storm dragon
+KMONS:   1 = yaktaur captain
+KMONS:   2 = grey snake
+KMONS:   3 = storm dragon
 ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
 ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wound
 SHUFFLE: de, !;

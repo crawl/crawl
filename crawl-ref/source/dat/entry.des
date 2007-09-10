@@ -3867,7 +3867,8 @@ TAGS:    entry no_monster_gen no_pool_fixup
 FLAGS:   no_rotate
 ORIENT:  float
 SHUFFLE: ({[, x+/x+/x+/x+/cC/vV/lL/wW
-SUBST:   C=+, V=+, L=.
+SUBST:   C=+, V=+ 
+NSUBST:  L = 1:. / *:l
 MAP
 ...........................
 .............x.............

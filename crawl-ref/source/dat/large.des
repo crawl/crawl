@@ -919,15 +919,18 @@ NAME:    box_level_dp
 DEPTH:   D:20-26
 ORIENT:  encompass
 TAGS:    no_pool_fixup uniq
-SHUFFLE: ABCD, EFGH, IJKL, MNOP, RS, zZ
-SUBST:   A==, B=b, C=b, D=b, E==, F=b, G=b, H=b
-SUBST:   I==, J=b, K=b, L=b, M==, N=b, O=b, P=b
+SHUFFLE: zZ
+NSUBST:  A = 1:= / *:b
+NSUBST:  B = 1:= / *:b
+NSUBST:  C = 1:= / *:b
+NSUBST:  D = 1:= / *:b
+NSUBST:  E = 1:= / *:b
+KFEAT:   ^ = teleport trap / Zot trap
 SUBST:   ':''l. , '=l.
 SUBST:   ":""W. , "=Ww..
 ITEM:    ring of teleportation
 ITEM:    royal jelly / honeycomb w:20 / nothing w:30
 ITEM:    scroll of teleportation
-SUBST:   R==, S=b
 KFEAT:   T = teleport trap
 KMONS:   w = electrical eel / jellyfish / nothing w:120
 KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 / nothing w:50
@@ -960,11 +963,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx.......xccccccxxxxxxx.........................................w"..xxxxxxxx
 xxxxxx.{...{.xc....cbbbbbxx................xxx...................."w......xxxxxx
 xxxxxx.......++.U..++.].++.....'''....'l'....xxx................."ww".....xxxxxx
-xxxxxx...[...xc....cbbbbbxx...'''..''lllll'....xx...bbbbbbb......"ww"....xxxxxxx
+xxxxxx...[...xc....cbbbbbxx...'''..''lllll'....xx...bbEbbEb......"ww"....xxxxxxx
 xxxxxx.......xcccccccxxxxxx.......'llllllll.....x...bd...9b...."www".....xxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...b.....b.."ww.w".....xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxxxxxxx
 xxxxxx.............................'lllll'.....xx...b9...Vb.www..w".....xxxxxxxx
-xxxxxx....""w.............".xxx......'ll'......x....bbbRbSbwww.www.....xxxxxxxxx
+xxxxxx....""w.............".xxx......'ll'......x....bbEEEEbwww.www.....xxxxxxxxx
 xxxxxx.."wwwww"..........w....xxxx............xx....."wwwwwwww.ww"....xxxxxxxxxx
 xxxxxx.wwwwwwww"........w........xxxxxxx....xxx........"www"...ww"...xxxxxxxxxxx
 xxxxxx..wwwwwww"......"ww......""......xxxxxx....."...........ww"....xxxxxxxxxxx
@@ -977,31 +980,31 @@ xxxxxxwwwwwwww".."wwwxww.."w........................................>xx...xxxxxx
 xxxxxxxwwww""....."xwxw"...ww........................................xx...xxxxxx
 xxxxxxxww".........xxxw..............................................xx..xxxxxxx
 xxxxxxww............xx"w...ccccccccccccccccccccccccccccccccccccc.....xx..xxxxxxx
-xxxxxxw"...xxx.......x..w..c...*...*...*...*...*...*...*...*...c.....x...xxxxxxx
+xxxxxxw"...xxx.......x..w..c^..*...*...*...*...*...*...*...*...c.....x...xxxxxxx
 xxxxxxw....x!x..xxx..x..w..c...................................c.....x...xxxxxxx
 xxxxxxxx...x+x..x!x..x.....c*..;...;...;...;...;...;...;...;..*c.....xx..xxxxxxx
 xxxxxxxx....1..1+!x..x.....c...................................c.....xx...xxxxxx
 xxxxxx..........xxx.xx.....c.......bbbbbbbbbbbbbbbbbbbbb.......c.....xx..xxxxxxx
 xxxxxx..xxxx........xx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x...xxxxxxx
-xxxxxx..x!!+1..xxxx..x.....c*..;...bTbbbBbbbTbTbbbFbbbTb...;..*c.....x..xxxxxxxx
+xxxxxx..x!!+1..xxxx..x.....c*..;...bTbbbAbbbTbTbbbBbbbTb...;..*c.....x..xxxxxxxx
 xxxxxx..xxxx..1+!!x..x.....c.......bTb8...|bTbTb|...8bTb.......c.....xx.xxxxxxxx
-xxxxxx.........xxxx..x.....c.......bTA|...|CTbTE|...|GTb.......c.....xx.xxxxxxxx
+xxxxxx.........xxxx..x.....c.......bTA|...|ATbTB|...|BTb.......c.....xx.xxxxxxxx
 xxxxxx.......1.......x.....c.......bTb|...8bTbTb8...|bTb.......c.....x...xxxxxxx
-xxxxxxxx....121....xxx.....c*..;...bTbbbDbbbTbTbbbHbbbTb...;..*c.....x...xxxxxxx
+xxxxxxxx....121....xxx.....c*..;...bTbbbAbbbTbTbbbBbbbTb...;..*c.....x...xxxxxxx
 xxxxxx!x...cc+cc...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xx..xxxxxxx
 xxxxxx&+1..c!2!c...xxx.....c.......bbbbbbbbbbbbbbbbbbbbb.......c.....x..xxxxxxxx
 xxxxxx!x...c&&&c...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x..xxxxxxxx
-xxxxxxxx...ccccc...xxx.....c*..;...bTbbbPbbbTbTbbbIbbbTb...;..*c.....x.xxxxxxxxx
+xxxxxxxx...ccccc...xxx.....c*..;...bTbbbDbbbTbTbbbCbbbTb...;..*c.....x.xxxxxxxxx
 xxxxxx...............x.....c.......bTb|...8bTbTb|...8bTb.......c.....x.xxxxxxxxx
-xxxxxxx...1...xxxx...x.....c.......bTO|...|MTbTL|...|JTb.......c.....x..x.xxxxxx
+xxxxxxx...1...xxxx...x.....c.......bTD|...|DTbTC|...|CTb.......c.....x..x.xxxxxx
 xxxxxxx..x+x.1+!!x...x.....c.......bTb8...|bTbTb8...|bTb.......c.....xx...xxxxxx
-xxxxxx...x!x..xxxx...x.....c*..;...bTbbbNbbbTbTbbbKbbbTb...;..*c.....xxx.xxxxxxx
+xxxxxx...x!x..xxxx...x.....c*..;...bTbbbDbbbTbTbbbCbbbTb...;..*c.....xxx.xxxxxxx
 xxxxxx...xxx.........x.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xxx.xxxxxxx
 xxxxxx.........xxxxxxx.....c.......bbbbbbbbbbbbbbbbbbbbb.......c.....xxx..xxxxxx
 xxxxxxxxx......x***99+.....c...................................c.....xxxx.xxxxxx
 xxxxxxxxx..xx..xxxxxxx.....c*..;...;...;...;...;...;...;...;..*c.....x....xxxxxx
 xxxxxx.....xx........x.....c...................................c.....x.xx.xxxxxx
-xxxxxx.xx.....xxx....x.....c...*...*...*...*...*...*...*...*...c.....x.xx=xxxxxx
+xxxxxx.xx.....xxx....x.....c...*...*...*...*...*...*...*...*..^c.....x.xx=xxxxxx
 xxxxxx.xx....1+!x..xxx.....ccccccccccccccccccccccccccccccccccccc.....xxx..xxxxxx
 xxxxxx....xx..xxx..xxx...............................................xx..xxxxxxx
 xxxxxx....xx.......xxx.........................................z..z..x....xxxxxx
@@ -1020,114 +1023,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-###########################################################################
-# Meet the feebles - Oklobs on the run! (dp)
-#
-NAME:    cascading_oklobs
-ORIENT:  east
-FLAGS:   no_rotate
-TAGS:    no_monster_gen uniq
-DEPTH:   D:16-27
-MONS:    oklob plant
-MONS:    plant / oklob plant w:1
-MONS:    eye of draining / eye of devastation w:1 / giant eyeball w:4
-MONS:    plant
-MONS:    fungus / wandering mushroom w:1
-SUBST:   ; = .:40 w:10 W:20 4:9  1:1
-SUBST:   ' = .:20 w:20 W:20 4:5  1:5
-SUBST:   " = .:10 w:30 W:10 4:11 1:9
-SUBST:   P = 4 2:1 5:1 .:5
-SUBST:   p = 4 2:1 5:1 .:100
-SUBST:   _ = 4 2:1 5:1 .:200
-SHUFFLE: def, ghi, defD/ghiI
-SUBST:   d=dD , e=eD , f=fD , g=gH , h=hH , i=iI
-KITEM:   d = good_item cloak
-KITEM:   e = good_item gloves
-KITEM:   f = good_item helm / good_item cap
-#KITEM:   d = any good cloak of preservation
-#KITEM:   e = any good gloves of dexterity / any good gloves of strength
-#KITEM:   f = any good helm of intelligence / any good helm of see invisible
-KITEM:   D = any good_item armour / any armour
-KITEM:   I = any good_item jewellery / any jewellery
-KFEAT:   I = floor
-KITEM:   g = good_item amulet
-KITEM:   h = good_item ring
-KITEM:   i = good_item ring
-#KITEM:   g = any good amulet of resist corrosion / any good amulet of conservation
-#KITEM:   h = any good ring of evasion / any good ring of armour
-#KITEM:   i = any good ring of strength / any good ring of dexterity / any good ring of intelligence
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-........pxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-........_pppPPPPPPPPPPPPPPPPPxxxxxxxxxx
-@.....______ppppppPPPPPPPPPPPPPPxxxxxxx
-.....__________pppppppppppPPPPPPPxxxxxx
-.....____________ppppppppppppPPPPxxxxxx
-....._____________pppppppppppppPPxxxxxx
-......_____________pppPPPppppppPPxxxxxx
-......______________ppPPPpppppppPxxxxxx
-.....______________pppPPPppppppppxxxxxx
-..._______________pppppppppppppppxxxxxx
-..___pppppppppppppppppppppppppPPPxxxxxx
-..__ppPPPPPPPPPPPPcPPPPcPPPPPPPPPxxxxxx
-..__ppPcbbbbbbbbbbc++++cbbbbbbbbbxxxxxx
-.__pppPcb.........c....c......wwwxxxxxx
-.___ppPcbww..................wwwwxxxxxx
-.___ppPcbwww22222222222222222wwwwxxxxxx
-.___ppPcbwww...................wwxxxxxx
-.___ppPcbwwwwwww..c....c........wxxxxxx
-.__ppPPcbbbbbbbbbbc++++cbbbbbbbbbxxxxxx
-.__ppPPcb"""''';;;c....c;;;'''"""xxxxxx
-.__ppPPcb"""''';;;......;;;'''"""xxxxxx
-.__ppPPcb"""''';;;;;;;;;;;;'''"""xxxxxx
-.__ppPPcb"""'''';;;;;;;;;;''''"""xxxxxx
-.__ppPPcb"""''''';;;;;;;;'''''"""xxxxxx
-.__ppPPcb""""''''''''''''''''""""xxxxxx
-__ppPPPcb"""""''''''''''''''"""""xxxxxx
-__ppPPPcb""""""''''''''''''""""""xxxxxx
-__ppPPPcb""""""''';;;;;;'''""""""xxxxxx
-_ppPPPPcb""""""'';;;;;;;;''""""""xxxxxx
-_pPPPPPcb""""""'c.c;;;;c.c'""""""xxxxxx
-PPPPPPPcbbbbbbbbc+cccccc+cbbbbbbbxxxxxx
-ccccccccccccccccc.cccccc.ccccccccxxxxxx
-c1..*...*...*...+.cccccc.ccccccccxxxxxx
-c...............cccccccc+ccccccccxxxxxx
-c...............cwwwwwwwwwwwwwwwcxxxxxx
-c*.............*cwwwwwwwwwwwwwwwcxxxxxx
-c.......1.......cwww.........wwwcxxxxxx
-c...............cw....22222....wcxxxxxx
-c...............c...222222222...cxxxxxx
-c*.............*c..223.....322..cxxxxxx
-c...............c.222...|...222.cxxxxxx
-c...............c.223..|||..322.cxxxxxx
-c.......1.......c.222...|...222.cxxxxxx
-c*.............*c..223.....322..cxxxxxx
-c...............c...222222222...cxxxxxx
-c...............cc....22222....ccxxxxxx
-c1..*.......*..1cccc.........ccccxxxxxx
-cccccccc+ccccccccccccccc+ccccccccxxxxxx
-c..............lll..............cxxxxxx
-c........lllllllllllllll........cxxxxxx
-c...lllllllllllllllllllllllll...cxxxxxx
-c2222222222222222222222222222222cxxxxxx
-c2222222222222222222222222222222cxxxxxx
-c...lllllllllllllllllllllllll...cxxxxxx
-c........lllllllllllllll........cxxxxxx
-cD.d.D.e.D.f.D.D.I.I.g.I.h.I.i.Icxxxxxx
-cccccccccccccccccccccccccccccccccxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
 
 ##############################################################################
 # Rubicon

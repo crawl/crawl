@@ -257,7 +257,7 @@ ENDMAP
 NAME: strawberry_fields_big
 ORIENT: float
 DEPTH: Lair
-SUBST: .= d .:150 1:8 2:4 W:2
+SUBST: .= d .:150 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 2
@@ -283,7 +283,7 @@ ENDMAP
 NAME: strawberry_fields_big_rounded
 ORIENT: float
 DEPTH: Lair
-SUBST: .= d .:140 1:8 2:4 W:2
+SUBST: .= d .:140 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 2
@@ -309,7 +309,7 @@ ENDMAP
 NAME: strawberry_fields_round
 ORIENT: float
 DEPTH: Lair
-SUBST: .= d .:50 1:8 2:4 W:2
+SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 3
@@ -328,7 +328,7 @@ ENDMAP
 NAME: strawberry_fields_patches_spacepadded
 ORIENT: float
 DEPTH: Lair
-SUBST: .= d .:50 1:8 2:4 W:2
+SUBST: .= d .:50 1:8 2:4 
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 3
@@ -358,7 +358,7 @@ DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . a 2:1
 SUBST:  . = .:90 a:10 2:1
-KITEM:  a : apple/apricot/pear/apricot/orange/banana/strawberry/lemon
+KITEM:  a : apple/apricot/pear/orange/banana/strawberry/lemon
 KFEAT:  a = .
 CHANCE: 8
 MAP
@@ -378,9 +378,9 @@ MONS:   plant, fungus
 SUBST:  ' = . 1
 SUBST:  . = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4 
-KITEM:  a : apple/apricot/pear/apricot/orange/banana/strawberry/lemon
+KITEM:  a : apple/apricot/pear/orange/banana/strawberry/lemon
 KFEAT:  a = .
-CHANCE: 8
+CHANCE: 2
 MAP
    ________   
   _........_  
