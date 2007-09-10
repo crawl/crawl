@@ -2790,6 +2790,9 @@ void zap_wand(void)
     }
 
     const bool alreadyknown = item_type_known(wand);
+    if (!alreadyknown)
+        beam.effect_known = false;
+
     const bool dangerous = player_in_a_dangerous_place();
     if (alreadyknown)
     {
@@ -2842,6 +2845,7 @@ void zap_wand(void)
     if (type_zapped == WAND_RANDOM_EFFECTS)
     {
         type_zapped = random2(16);
+        beam.effect_known = false;
         if (one_chance_in(20))
             type_zapped = ZAP_NEGATIVE_ENERGY;
         if (one_chance_in(17))

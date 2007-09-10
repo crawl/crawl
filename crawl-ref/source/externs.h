@@ -437,21 +437,22 @@ struct bolt
     std::string aux_source;            // source of KILL_MISC beams
 
     // OUTPUT parameters (tracing, ID)
-    bool        obvious_effect;         // did an 'obvious' effect happen?
+    bool        obvious_effect;        // did an 'obvious' effect happen?
+    bool        effect_known;          // did we _know_ this would happen?
     int         fr_count, foe_count;   // # of times a friend/foe is "hit"
     int         fr_power, foe_power;   // total levels/hit dice affected
 
     // INTERNAL use - should not usually be set outside of beam.cc
-    bool        is_tracer;      // is this a tracer?
+    bool        is_tracer;       // is this a tracer?
     bool        aimed_at_feet;   // this was aimed at self!
-    bool        msg_generated;  // an appropriate msg was already mpr'd
+    bool        msg_generated;   // an appropriate msg was already mpr'd
     bool        in_explosion_phase;   // explosion phase (as opposed to beam phase)
-    bool        smart_monster;  // tracer firer can guess at other mons. resists?
+    bool        smart_monster;   // tracer firer can guess at other mons. resists?
     bool        can_see_invis;   // tracer firer can see invisible?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
-    int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
-    bool        chose_ray;      // do we want a specific ray?
-    ray_def     ray;            // shoot on this specific ray
+    int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
+    bool        chose_ray;       // do we want a specific ray?
+    ray_def     ray;             // shoot on this specific ray
 
 public:
     // A constructor to try and fix some of the bugs that occur because

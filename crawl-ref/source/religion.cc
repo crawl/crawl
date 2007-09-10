@@ -1003,6 +1003,8 @@ bool did_god_conduct( conduct_type thing_done, int level )
         }
         break;
 
+    // If you make some god like these acts, modify did_god_conduct call 
+    // in beam.cc with god_likes_necromancy check or something similar
     case DID_NECROMANCY:
     case DID_UNHOLY:
     case DID_ATTACK_HOLY:

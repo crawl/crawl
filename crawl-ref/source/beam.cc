@@ -794,7 +794,6 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_NEG;                       // drains levels
 
-        pbolt.obvious_effect = true;
         pbolt.is_beam = true;
         break;
 
@@ -1416,7 +1415,10 @@ void fire_beam( bolt &pbolt, item_def *item )
             rangeRemaining -= affect(pbolt, tx, ty);
 
             if (random_beam)
+            {
                 pbolt.flavour = BEAM_RANDOM;
+                pbolt.effect_known = false;
+            }
         }
 
         // always decrease range by 1
@@ -1654,9 +1656,14 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                 return (hurted);
 
             simple_monster_message(monster, " is drained.");
+            pbolt.obvious_effect = true;
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_NECROMANCY, 2 + random2(3));
+            {
+                // currently no gods who enjoy use of necromancy
+                if (pbolt.effect_known)
+                    did_god_conduct(DID_NECROMANCY, 2 + random2(3));
+            }
 
             if (one_chance_in(5))
                 monster->hit_dice--;
@@ -3917,6 +3924,9 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
              "HD: %d; pow: %d", mon->hit_dice, beam.ench_power );
 #endif
 
+        if (mon->attitude == ATT_FRIENDLY)
+            return (MON_UNAFFECTED);
+
         if (check_mons_resist_magic( mon, beam.ench_power ))
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
@@ -3942,6 +3952,10 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
             return (MON_RESIST);
         }
 
+        // already friendly
+        if (mon->attitude == ATT_FRIENDLY)
+            return (MON_UNAFFECTED);
+        
         simple_monster_message(mon, " is enslaved.");
         beam.obvious_effect = true;
 
@@ -4596,9 +4610,9 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                is_beam(false), is_explosion(false), is_big_cloud(false),
                is_enchant(false), is_energy(false), is_launched(false),
                is_thrown(false), target_first(false), aimed_at_spot(false),
-               aux_source(), obvious_effect(false), fr_count(0), foe_count(0),
-               fr_power(0), foe_power(0), is_tracer(false),
-               aimed_at_feet(false), msg_generated(false),
+               aux_source(), obvious_effect(false), effect_known(true), 
+               fr_count(0), foe_count(0), fr_power(0), foe_power(0), 
+               is_tracer(false), aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false)
