@@ -2675,8 +2675,8 @@ static int affect_wall(bolt &beam, int x, int y)
 
             if (targ_grid == DNGN_ORCISH_IDOL)
             {
-		beogh_idol_revenge();
-	    }
+                beogh_idol_revenge();
+            }
 	    
             beam.obvious_effect = 1;
         }

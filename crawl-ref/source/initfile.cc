@@ -263,6 +263,8 @@ static fire_type str_to_fire_types( const std::string &str )
         return (FIRE_CLUB);
     else if (str == "javelin")
         return (FIRE_JAVELIN);
+    else if (str == "net")
+        return (FIRE_NET);
 
     return (FIRE_NONE);
 }

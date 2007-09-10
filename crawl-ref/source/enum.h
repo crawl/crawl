@@ -1350,7 +1350,8 @@ enum fire_type
     FIRE_SPEAR    = 0x0020,
     FIRE_HAND_AXE = 0x0040,
     FIRE_CLUB     = 0x0080,
-    FIRE_ROCK     = 0x0100
+    FIRE_ROCK     = 0x0100,
+    FIRE_NET      = 0x0200
 };
 
 enum flush_reason_type

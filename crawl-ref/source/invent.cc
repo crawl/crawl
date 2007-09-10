@@ -1025,7 +1025,7 @@ static bool check_old_item_warning( const item_def& item,
     else if (oper == OPER_WEAR) // can we safely take off old item?
     {
         equipment_type eq_slot = get_armour_slot(item);
-        if (you.equip[eq_slot] == -1)
+        if (item.base_type != OBJ_ARMOUR || you.equip[eq_slot] == -1)
             return (true);
            
         old_item = you.inv[you.equip[eq_slot]];
@@ -1036,6 +1036,9 @@ static bool check_old_item_warning( const item_def& item,
     }
     else if (oper == OPER_PUTON) // can we safely remove old item?
     {
+        if (item.base_type != OBJ_JEWELLERY)
+            return (true);
+            
         if (jewellery_is_amulet(item))
         {
             if (you.equip[EQ_AMULET] == -1)

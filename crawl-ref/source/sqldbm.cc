@@ -183,7 +183,8 @@ sql_datum::sql_datum(const std::string &s) : dptr(NULL), dsize(s.length()),
 {
     if ((dptr = new char [dsize]))
     {
-        strcpy(dptr, s.c_str());
+        if (dsize)
+            memcpy(dptr, s.c_str(), dsize);
         need_free = true;
     }
 }

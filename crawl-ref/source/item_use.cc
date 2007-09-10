@@ -1143,6 +1143,8 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
             return (true);
         if ((fire_type & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
             return (true);
+        if ((fire_type & FIRE_NET) && item.sub_type == MI_THROWING_NET)
+            return (true);
 
         if (fire_type & FIRE_LAUNCHER)
         {
