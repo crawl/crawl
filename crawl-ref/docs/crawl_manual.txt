@@ -131,6 +131,13 @@ Chaos Knights, or a starting weapon for Fighters.
 You can choose a tutorial from the species and class selection screens 
 by pressing 'T'. Three different tutorial combinations are available.
 
+When you start a new character and want to get a rough impression, you
+may examine it with the following commands:
+ A - shows any pecularities like unusual speed or eating behaviours
+ m - shows your skills and lets you switch off some if wanted
+ i - the equipment
+ ^ - the text for your god, should you have started with a religion
+ 
 
 ------------------------------------------------------------------------
 C.                      ATTRIBUTES AND STATS 
@@ -383,7 +390,7 @@ the search are (or have been) located; you can then travel there or
 examine the pile. The Find command will also search in shop inventories.
 Furthermore, you can search skills like 'long blades' (this will find 
 all weapons training the long blades skill) or general terms like 
-'shop', 'altar', 'portal', 'artefact'.
+'shop', 'altar', 'portal', 'artefact', 'dart trap' etc.
 
 The above assumes that use of the default option 'stash_tracking =
 all'. If for some reasons (e.g. to speed up performance) you've
@@ -1769,9 +1776,9 @@ Although not as directly powerful as conjurations, high-level
 enchantments offer a wide range of very handy effects. The Enchanter
 begins with lightly enchanted weapons and armour, but no direct damage
 spell (since enchantments do not deal with direct attacks). Instead 
-they begin with the "confusing touch" spell and some enchanted darts, 
-which should help them out until they can use the higher level 
-enchantment spells.
+they begin with the "Corona" spell and some enchanted darts, which 
+should help them out until they can use the higher level enchantment 
+spells.
 
 Summoner:
 ---------
@@ -1864,7 +1871,7 @@ Weapon skills include:
 If you are already good at a weapon, say a long sword, and you practise
 for a while with similar weapon such as a short sword, your practise 
 will be speeded up (and will require less experience) until both skills
-are equal. Similar types of weapons include:
+are equal; this is called crosstraining. Similar types of weapons are:
 
      o  Short Blades and Long Blades
      o  Maces & Flails and Axes
@@ -1887,14 +1894,22 @@ with heavy armour or shields or very big weapons.
 
 Ranged combat skills:
 ---------------------
-Ranged Combat is the basic skill used when throwing or shooting things.
-It affects in particular how effective poisoned missiles are. There 
-are a number of individual weapon skills for missile weapons as well:
+There are a number of individual weapon skills for missile weapons:
 
-     o  Darts (and hand crossbows as optional laucnhers)
+     o  Throwing
+     o  Darts (and hand crossbows as optional launchers)
      o  Bows
      o  Crossbows
      o  Slings
+
+Throwing is the skill for all things hurled without a launcher: axes,
+spears, stones, nets etc. The other skills refer to various types of
+missiles shot with a launcher. Since darts and stones can be thrown
+without launchers to good effect, their skills crosstrain:
+
+     o Throwing and Darts
+     o Throwing and Slings
+
 
 Magic skills:
 -------------
@@ -1997,7 +2012,7 @@ damage as well as in terms of precision. Furthermore, with high
 Evocations, you can easily deduce the number of charges in a wand 
 through usage. Similarly, all other items that have certain powers 
 (like crystal balls) work better for characters trained in this skill.
-Like Invocations, Evocations easier to learn than other skills.
+Like Invocations, Evocations is easier to learn than other skills.
 
 If your character does not have a particular skill, s/he can gain it by
 practising the activities mentioned above. 
@@ -2080,6 +2095,8 @@ Character information:
         m               Show skill screen.
         i               Show inventory list. Inside this list, pressing 
                         a slot key shows information on that item.
+        ]               Shows a restricted inventory, only containing 
+                        worn and wielded items.
         I               Show list of memorised spells.
         %               Show resistances and general character overview,
                         including health, experience, gear, status,
@@ -2090,8 +2107,11 @@ Character information:
                         Pressing the key of a displayed item views it.
 
 Item interaction (inventory):
-        v               View item description.
+        v               View item description. When doing this, you can
+                        inscribe the item.
         {               Inscribe item (check the autoinscribe option).
+                        An empty inscription or inscribing only space 
+                        will remove prior inscriptions.
         t               Throw/shoot an item.
         f               Fire first available appropriate missile.
         q               Quaff a potion.      
