@@ -858,6 +858,7 @@ void list_commands(bool wizard, int hotkey)
             0,
             "<h>Item Interaction (inventory):\n"
             "<w>i</w> : show Inventory list\n"
+            "<w>]</w> : show inventory of equipped items\n"
             "<w>v</w> : View item description\n"
             "<w>{</w> : inscribe item\n"
             "<w>t</w> : Throw/shoot an item\n"
@@ -900,8 +901,8 @@ void list_commands(bool wizard, int hotkey)
             "<lightcyan>+</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>Z</w>ap)\n"   
             "<brown>\\</brown> : staves and rods (<w>w</w>ield and <w>E</w>voke)\n"
             "<lightgreen>}</lightgreen> : miscellaneous items (<w>E</w>voke)\n"
-            "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
-            "\n"
+            "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
+            "    to the surface and win!)\n"
             "<yellow>$</yellow> : gold\n"
             " \n",
             true, true, cmdhelp_textfilter);
@@ -968,7 +969,8 @@ void list_commands(bool wizard, int hotkey)
             "<w>a</w> : use special Ability\n"
             "<w>p</w> : Pray\n"
             "<w>Z</w> : cast a spell\n"
-            "<w>!</w> : shout or command allies\n",
+            "<w>!</w> : shout or command allies\n"
+            " \n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1000,7 +1002,6 @@ void list_commands(bool wizard, int hotkey)
             "<w>+</w> : selects books\n"
             "<w>\\</w> : selects staves\n"
             "<w>}</w> : selects miscellaneous items\n"
-            "Carry the Orb to the surface and win!\n"
             "<w>,</w> : global selection\n"
             "<w>-</w> : global deselection\n"
             "<w>*</w> : invert selection\n",
@@ -1008,6 +1009,7 @@ void list_commands(bool wizard, int hotkey)
 
     cols.add_formatted(            
             1, 
+            " \n"
             " \n"
             "Crawl usually considers every item it\n"
             "sees as a stash. When using a value\n"
