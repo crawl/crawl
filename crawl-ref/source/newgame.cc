@@ -2356,12 +2356,20 @@ static void give_random_scroll( int slot )
 
 static void give_random_potion( int slot )
 {
+    // Mummies can't quaff and don't care
+    if (you.species == SP_MUMMY)
+	return;
+	
     you.inv[ slot ].quantity = 1;
     you.inv[ slot ].base_type = OBJ_POTIONS;
     you.inv[ slot ].plus = 0;
     you.inv[ slot ].plus2 = 0;
 
-    switch (random2(8))
+    int temp_rand = 8;
+    if (you.is_undead)
+	temp_rand--;
+
+    switch (random2(temp_rand))
     {
     case 0:
     case 1:
@@ -2877,9 +2885,6 @@ static void create_wanderer( void )
 
     you.equip[EQ_WEAPON] = 0;
     you.equip[EQ_BODY_ARMOUR] = 2;
-    
-    if (you.species == SP_MUMMY)
-        you.inv[3].quantity = 0; // remove potion
 }
 
 static job_type letter_to_class(int keyn)

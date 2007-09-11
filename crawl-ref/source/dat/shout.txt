@@ -50,7 +50,15 @@ __CROAK
 
 You hear a loud, deep croak!
 
-Your hear a croak.
+You hear a croak.
+%%%%
+__GROWL
+
+You hear an angry growl.
+%%%%
+__HISS
+
+You hear an angry hiss.
 %%%%
 __DEMON_TAUNT
 
