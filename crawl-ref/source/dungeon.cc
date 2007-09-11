@@ -833,6 +833,20 @@ void dgn_set_floor_colours()
         env.floor_colour = LIGHTGREY;
         env.rock_colour  = BROWN;
     }
+    else if (you.level_type == LEVEL_PORTAL_VAULT
+             && you.level_type_name == "bazaar")
+    {
+        // bazaars get gold walls
+        env.rock_colour = YELLOW;
+        
+        // bazaar floor is colourful
+        const char floorcolours_bzr[] =
+        { BLUE, RED, LIGHTGREEN, LIGHTBLUE, MAGENTA, GREEN };
+             
+        // set colour according to current level
+        // randomization would reset between save/reload and after showing map
+        env.floor_colour = floorcolours_bzr[player_branch_depth() % 6];
+    }
     else
     {
         // level_type == LEVEL_DUNGEON

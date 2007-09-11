@@ -198,7 +198,7 @@ NAME:    bazaar_outfitter
 TAGS:    bazaar
 ORIENT:  encompass
 KFEAT:   A = any shop
-SHUFFLE: ABC, de, xcv
+SHUFFLE: ABC, de
 KFEAT:   A = weapon shop / armour shop
 KFEAT:   B = antique weapon shop / weapon shop
 KFEAT:   C = antique armour shop / armour shop
@@ -223,7 +223,6 @@ NAME:    bazaar_oval
 TAGS:    bazaar
 ORIENT:  encompass
 FLAGS:   no_rotate
-SHUFFLE: abcvx
 SUBST:   A = TVBG
 KFEAT:   B = any shop
 : bazaar_message(_G)
@@ -575,7 +574,7 @@ TAGS:    bazaar
 ORIENT:  encompass
 FLAGS:   no_rotate
 MONS:    plant
-SHUFFLE: ABCDEF, abx
+SHUFFLE: ABCDEF
 SUBST:   A = >, B = >
 SUBST:   . = .:1000 $
 SUBST:   K = T:20 1 .:5 
@@ -616,7 +615,7 @@ ORIENT:  encompass
 FLAGS:   no_rotate
 MONS:    giant goldfish
 SUBST:   a = W.
-SHUFFLE: abcx, ABCDEF
+SHUFFLE: ABCDEF
 SUBST:   A = Y
 SHUFFLE: XY
 SUBST:   X = <, Y = >
@@ -675,7 +674,7 @@ TAGS:    bazaar
 CHANCE:  5
 FLAGS:   no_rotate
 ORIENT:  encompass
-SHUFFLE: abcvx, ABCD
+SHUFFLE: ABCD
 SUBST:   A = <, B = >
 KFEAT:   C = any shop / jewellery shop / wand shop
 KFEAT:   D = any shop / book shop / scroll shop
@@ -707,7 +706,7 @@ TAGS:    bazaar
 CHANCE:  5
 FLAGS:   no_rotate
 ORIENT:  encompass
-SHUFFLE: abcvx, ABCD
+SHUFFLE: ABCD
 SUBST:   A = T E, B = >
 KFEAT:   C = any shop / antique weapon shop / distillery shop
 KFEAT:   D = any shop / antique armour shop
@@ -744,7 +743,7 @@ FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: zZ
 SUBST:   z = ., Z = w
-SHUFFLE: wl, abcx, ABCD
+SHUFFLE: wl, ABCD
 SHUFFLE: AX
 SUBST:   X = <, A = >
 SUBST:   B : T G
@@ -781,7 +780,6 @@ CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   k : . x
-SHUFFLE: abcvx
 NSUBST:  A = 2=T:30 V / *:C
 NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
@@ -820,7 +818,6 @@ CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   k : . x
-SHUFFLE: abcvx
 NSUBST:  A = 2=T:30 V / *:C
 NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
@@ -860,7 +857,6 @@ FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   z = .:50 +
 SUBST:   k : . x
-SHUFFLE: abcvx
 NSUBST:  A = 1:< / 1=<TC / 2=T:30 V / *:C
 NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
@@ -900,7 +896,6 @@ FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   z = .:50 +
 SUBST:   k : . x
-SHUFFLE: abcvx
 NSUBST:  A = 1:< / 1=<TC / 2=T:30 V / *:C
 NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
@@ -939,7 +934,6 @@ CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
 SUBST:   k : . x
-SHUFFLE: abcvx
 NSUBST:  A = 1:< / 1:> / 1:T C / 3=T:30 V / *:C
 SUBST:   B = > C:20
 KFEAT:   C = any shop
@@ -979,7 +973,7 @@ NAME:    bazaar_triangles
 TAGS:    bazaar
 ORIENT:  encompass
 FLAGS:   no_rotate
-SHUFFLE: abcvx, ACD
+SHUFFLE: ACD
 SUBST:   A = <
 KFEAT:   B = any shop
 SUBST:   C = >
@@ -1001,7 +995,7 @@ NAME:    bazaar_hexagon
 TAGS:    bazaar
 ORIENT:  encompass
 FLAGS:   no_rotate
-SHUFFLE: abcvx, AC, BD
+SHUFFLE: AC, BD
 KFEAT:   A = armour shop / weapon shop / wand shop
 KFEAT:   B = general shop / food shop
 KFEAT:   C = scroll shop / book shop / distillery shop
@@ -1031,7 +1025,7 @@ NAME:    bazaar_triangle_bulge
 TAGS:    bazaar
 ORIENT:  encompass
 FLAGS:   no_rotate
-SHUFFLE: abcvx, ABC
+SHUFFLE: ABC
 SUBST:   A = <, B = >
 KFEAT:   C = any shop
 : bazaar_message(_G)
