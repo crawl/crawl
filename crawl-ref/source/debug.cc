@@ -1679,7 +1679,7 @@ static void fsim_set_melee_skill(int skill, const item_def *item)
 static void fsim_set_ranged_skill(int skill, const item_def *item)
 {
     you.skills[range_skill(*item)] = skill;
-    you.skills[SK_RANGED_COMBAT]   = skill * 15 / 27;
+    you.skills[SK_THROWING]        = skill * 15 / 27;
 }
 
 static void fsim_item(FILE *out, 

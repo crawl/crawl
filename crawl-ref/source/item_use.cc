@@ -1663,7 +1663,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
         bool poisoned = (ammo_brand == SPMSL_POISONED);
-        const int rc_skill = you.skills[SK_RANGED_COMBAT];
+//        const int throw_skill = you.skills[SK_THROWING];
 
         const int item_base_dam = property( item, PWPN_DAMAGE );
         const int lnch_base_dam = property( launcher, PWPN_DAMAGE );
@@ -1727,8 +1727,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // [dshaligram] Throwing now two parts launcher skill, one part
         // ranged combat. Removed the old model which is... silly.
         
+        // [jpeg] Throwing now only affects actual throwing weapons,
+        // i.e. not launched ones. (Sep 10, 2007)
+        
         shoot_skill = you.skills[launcher_skill];
-        effSkill = (shoot_skill * 2 + rc_skill) / 3;
+//        effSkill = (shoot_skill * 2 + throw_skill) / 3;
+        effSkill = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, player_shield());
 #ifdef DEBUG_DIAGNOSTICS
@@ -1736,7 +1740,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 #endif
         you.time_taken = speed * you.time_taken / 100;
 
-        // effSkill = you.skills[SK_RANGED_COMBAT] * 2 + 1;
+        // effSkill = you.skills[SK_THROWING] * 2 + 1;
         // effSkill = (shoot_skill > effSkill) ? effSkill : shoot_skill;
 
         // [dshaligram] Improving missile weapons:
@@ -1860,13 +1864,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             break;
         }
 
-        // all launched weapons have a slight chance of improving
-        // throwing skill
-        if (coinflip())
-            exercise(SK_RANGED_COMBAT, 1);
+        // Slings and Darts train Throwing a bit
+        if (launcher_skill == SK_SLINGS || launcher_skill == SK_DARTS)
+        {
+            if (coinflip())
+                exercise(SK_THROWING, 1);
 
-        // all launched weapons get a minor tohit boost from throwing skill.
-        exHitBonus += you.skills[SK_RANGED_COMBAT] / 5;
+            // they also get a minor tohit boost from throwing skill.
+            exHitBonus += you.skills[SK_THROWING] / 5;
+        }
 
         if (bow_brand == SPWPN_VORPAL)
         {
@@ -1937,7 +1943,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
         {
             if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
-                 random2(100) < rc_skill )
+                 random2(100) < shoot_skill )
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -1961,7 +1967,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (projected == LRET_THROWN)
     {
         returning = (get_weapon_brand(item) == SPWPN_RETURNING &&
-                     !one_chance_in(1 + skill_bump(SK_RANGED_COMBAT)));
+                     !one_chance_in(1 + skill_bump(SK_THROWING)));
         baseHit = 0;
 
         // since darts/rocks are missiles, they only use inv_plus
@@ -1999,11 +2005,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 }
             }
 
-            exHitBonus = you.skills[SK_RANGED_COMBAT] * 2;
+            exHitBonus = you.skills[SK_THROWING] * 2;
 
             baseDam = property( item, PWPN_DAMAGE );
             exDamBonus =
-                (10 * (you.skills[SK_RANGED_COMBAT] / 2 + you.strength - 10)) / 12;
+                (10 * (you.skills[SK_THROWING] / 2 + you.strength - 10)) / 12;
 
             // now, exDamBonus is a multiplier.  The full multiplier
             // is applied to base damage, but only a third is applied
@@ -2021,9 +2027,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 baseDam = property( item, PWPN_DAMAGE );
 
                 exHitBonus = you.skills[SK_DARTS] * 2;
-                exHitBonus += (you.skills[SK_RANGED_COMBAT] * 2) / 3;
+                exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
                 exDamBonus = you.skills[SK_DARTS] / 3;
-                exDamBonus += you.skills[SK_RANGED_COMBAT] / 5;
+                exDamBonus += you.skills[SK_THROWING] / 5;
 
                 // exercise skills
                 exercise(SK_DARTS, 1 + random2avg(3, 2));
@@ -2032,8 +2038,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // Javelins use polearm and throwing skills.
                 baseHit = -1;
                 baseDam = property( item, PWPN_DAMAGE );
-                exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 7 / 2);
-                exDamBonus += you.skills[SK_RANGED_COMBAT] * 3 / 5;
+                exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
+                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
 
                 // Adjust for strength and dex.
                 exDamBonus = str_adjust_thrown_damage(exDamBonus);
@@ -2043,10 +2049,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exDamBonus = stat_adjust(exDamBonus, you.dex, 20, 150, 100);
 
                 // Javelins train throwing quickly.
-                exercise(SK_RANGED_COMBAT, 1 + coinflip());
+                exercise(SK_THROWING, 1 + coinflip());
                 break;
             case MI_THROWING_NET:
-                // Nets use throwing and T&D skills
+                // Nets use throwing skill
                 // They don't do any damage!
                 baseDam = 0;
                 exDamBonus = 0;
@@ -2054,12 +2060,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 
                 // but accuracy is important for this one
                 baseHit = 1;
-                exHitBonus += (skill_bump(SK_RANGED_COMBAT) * 7 / 2);
+                exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
                 // Adjust for strength and dex.
                 exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
 
                 // Nets train throwing
-                exercise(SK_RANGED_COMBAT, 1);
+                exercise(SK_THROWING, 1);
             break;
             }
         }
@@ -2074,11 +2080,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         
         // exercise skill
         if (coinflip())
-            exercise(SK_RANGED_COMBAT, 1);
+            exercise(SK_THROWING, 1);
         
         // ID check
         if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
-             random2(100) < you.skills[SK_RANGED_COMBAT] )
+             random2(100) < you.skills[SK_THROWING] )
         {                
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -2134,7 +2140,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.rangeMax = pbolt.range;
 
         if (one_chance_in(20))
-            exercise(SK_RANGED_COMBAT, 1);
+            exercise(SK_THROWING, 1);
 
         exHitBonus = you.dex / 4;
 

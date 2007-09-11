@@ -426,7 +426,7 @@ static int ammo_count(const item_def *launcher)
 
 static bool need_missile_gift()
 {
-    const int best_missile_skill = best_skill(SK_SLINGS, SK_RANGED_COMBAT);
+    const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = find_missile_launcher(best_missile_skill);
     return (you.piety > 80
             && random2( you.piety ) > 70

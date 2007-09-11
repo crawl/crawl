@@ -3165,7 +3165,7 @@ enum skill_type
     SK_BOWS,
     SK_CROSSBOWS,                      //   10
     SK_DARTS,
-    SK_RANGED_COMBAT,
+    SK_THROWING,
     SK_ARMOUR,
     SK_DODGING,
     SK_STEALTH,                        //   15

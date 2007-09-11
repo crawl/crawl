@@ -1520,7 +1520,7 @@ skill_type range_skill( const item_def &item )
         }
     }
 
-    return (SK_RANGED_COMBAT);
+    return (SK_THROWING);
 }
 
 // front function for the above when we don't have a physical item to check

@@ -583,7 +583,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                 continue;
 
             int wskill = range_skill(OBJ_WEAPONS, i);
-            if (wskill == SK_RANGED_COMBAT)
+            if (wskill == SK_THROWING)
                 wskill = weapon_skill(OBJ_WEAPONS, i);
 
             if (wskill == skill && random2(count += acqweight) < acqweight)
@@ -593,7 +593,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
     else if (class_wanted == OBJ_MISSILES)
     {
         int count = 0;
-        int skill = SK_RANGED_COMBAT;
+        int skill = SK_THROWING;
 
         for (int i = SK_SLINGS; i <= SK_DARTS; i++)
         {

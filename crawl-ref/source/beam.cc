@@ -3433,7 +3433,7 @@ static int beam_source(const bolt &beam)
 
 static int name_to_skill_level(const std::string& name)
 {
-    skill_type type = SK_RANGED_COMBAT;
+    skill_type type = SK_THROWING;
 
     if (name.find("dart") != std::string::npos)
         type = SK_DARTS;
@@ -3446,7 +3446,10 @@ static int name_to_skill_level(const std::string& name)
     else if (name.find("stone") != std::string::npos)
         type = SK_SLINGS;
 
-    return you.skills[type] + you.skills[SK_RANGED_COMBAT];
+    if (type == SK_DARTS || type == SK_SLINGS)
+        return (you.skills[type] + you.skills[SK_THROWING]);
+        
+    return (2 * you.skills[type]);
 }
 
 // return amount of range used up by affectation of this monster

@@ -63,7 +63,7 @@ const char *skills[50][6] =
     {"Bows", "Shooter", "Yeoman", "Archer", "Merry %s", "Merry %s"},
     {"Crossbows", "Shooter", "Sharpshooter", "Archer", "%s Ballista", "%s Ballista"},     // 10
     {"Darts", "Dart Thrower", "Hurler", "Hurler, First Class", "%s Darts Champion", "Universal Darts Champion"},
-    {"Ranged Combat", "Chucker", "Thrower", "Deadly Accurate", "Hawkeye", "Sniper"},
+    {"Throwing", "Chucker", "Thrower", "Deadly Accurate", "Hawkeye", "Sniper"},
 
     {"Armour", "Covered", "Protected", "Tortoise", "Impregnable", "Invulnerable"},
     {"Dodging", "Ducker", "Dodger", "Nimble", "Spry", "Acrobat"},
@@ -139,7 +139,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_BOWS
      100,                       // SK_CROSSBOWS
      100,                       // SK_DARTS
-     100,                       // SK_RANGED_COMBAT
+     100,                       // SK_THROWING
      100,                       // SK_ARMOUR
      100,                       // SK_DODGING
      100,                       // SK_STEALTH
@@ -182,7 +182,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      60,                        // SK_BOWS
      100,                       // SK_CROSSBOWS
      90,                        // SK_DARTS
-     80,                        // SK_RANGED_COMBAT
+     80,                        // SK_THROWING
      110,                       // SK_ARMOUR
      90,                        // SK_DODGING
      90,                        // SK_STEALTH
@@ -225,7 +225,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_BOWS
      100,                       // SK_CROSSBOWS
      90,                        // SK_DARTS
-     80,                        // SK_RANGED_COMBAT
+     80,                        // SK_THROWING
      140,                       // SK_ARMOUR
      75,                        // SK_DODGING
      70,                        // SK_STEALTH
@@ -268,7 +268,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      74,                        // SK_BOWS
      75,                        // SK_CROSSBOWS
      75,                        // SK_DARTS
-     80,                        // SK_RANGED_COMBAT
+     80,                        // SK_THROWING
      140,                       // SK_ARMOUR
      70,                        // SK_DODGING
      65,                        // SK_STEALTH
@@ -311,7 +311,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_BOWS
      100,                       // SK_CROSSBOWS
      100,                       // SK_DARTS
-     70,                        // SK_RANGED_COMBAT
+     70,                        // SK_THROWING
      140,                       // SK_ARMOUR
      70,                        // SK_DODGING
      75,                        // SK_STEALTH
@@ -354,7 +354,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_BOWS
      90,                        // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      60,                        // SK_ARMOUR
      110,                       // SK_DODGING
      150,                       // SK_STEALTH
@@ -397,7 +397,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_BOWS
      90,                        // SK_CROSSBOWS
      50,                        // SK_DARTS
-     60,                        // SK_RANGED_COMBAT
+     60,                        // SK_THROWING
      150,                       // SK_ARMOUR
      70,                        // SK_DODGING
      60,                        // SK_STEALTH
@@ -440,7 +440,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      130,                       // SK_DARTS
-     130,                       // SK_RANGED_COMBAT
+     130,                       // SK_THROWING
      90,                        // SK_ARMOUR
      140,                       // SK_DODGING
      150,                       // SK_STEALTH
@@ -483,7 +483,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      80,                        // SK_BOWS
      90,                        // SK_CROSSBOWS
      50,                        // SK_DARTS
-     60,                        // SK_RANGED_COMBAT
+     60,                        // SK_THROWING
      140,                       // SK_ARMOUR
      70,                        // SK_DODGING
      60,                        // SK_STEALTH
@@ -526,7 +526,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      140,                       // SK_BOWS
      140,                       // SK_CROSSBOWS
      140,                       // SK_DARTS
-     140,                       // SK_RANGED_COMBAT
+     140,                       // SK_THROWING
      140,                       // SK_ARMOUR
      140,                       // SK_DODGING
      140,                       // SK_STEALTH
@@ -569,7 +569,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      150,                       // SK_ARMOUR
      150,                       // SK_DODGING
      40,                        // SK_STEALTH
@@ -612,7 +612,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_BOWS
      90,                        // SK_CROSSBOWS
      60,                        // SK_DARTS
-     100,                       // SK_RANGED_COMBAT
+     100,                       // SK_THROWING
      150,                       // SK_ARMOUR
      70,                        // SK_DODGING
      70,                        // SK_STEALTH
@@ -655,7 +655,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_BOWS
      180,                       // SK_CROSSBOWS
      150,                       // SK_DARTS
-     100,                       // SK_RANGED_COMBAT
+     100,                       // SK_THROWING
      140,                       // SK_ARMOUR
      150,                       // SK_DODGING
      200,                       // SK_STEALTH
@@ -698,7 +698,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      180,                       // SK_BOWS
      180,                       // SK_CROSSBOWS
      180,                       // SK_DARTS
-     130,                       // SK_RANGED_COMBAT
+     130,                       // SK_THROWING
      150,                       // SK_ARMOUR
      130,                       // SK_DODGING
      250,                       // SK_STEALTH
@@ -741,7 +741,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_BOWS
      150,                       // SK_CROSSBOWS
      150,                       // SK_DARTS
-     150,                       // SK_RANGED_COMBAT
+     150,                       // SK_THROWING
      170,                       // SK_ARMOUR
      130,                       // SK_DODGING
      100,                       // SK_STEALTH
@@ -784,7 +784,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -827,7 +827,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -870,7 +870,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -913,7 +913,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -956,7 +956,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -999,7 +999,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1042,7 +1042,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1085,7 +1085,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1128,7 +1128,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1171,7 +1171,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1214,7 +1214,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1257,7 +1257,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_BOWS
      120,                       // SK_CROSSBOWS
      120,                       // SK_DARTS
-     120,                       // SK_RANGED_COMBAT
+     120,                       // SK_THROWING
      200,                       // SK_ARMOUR
      120,                       // SK_DODGING
      120,                       // SK_STEALTH
@@ -1300,7 +1300,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      60,                        // SK_BOWS
      85,                        // SK_CROSSBOWS
      80,                        // SK_DARTS
-     60,                        // SK_RANGED_COMBAT
+     60,                        // SK_THROWING
      180,                       // SK_ARMOUR
      170,                       // SK_DODGING
      200,                       // SK_STEALTH
@@ -1343,7 +1343,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_BOWS
      110,                       // SK_CROSSBOWS
      110,                       // SK_DARTS
-     110,                       // SK_RANGED_COMBAT
+     110,                       // SK_THROWING
      110,                       // SK_ARMOUR
      110,                       // SK_DODGING
      110,                       // SK_STEALTH
@@ -1386,7 +1386,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_BOWS
      100,                       // SK_CROSSBOWS
      70,                        // SK_DARTS
-     90,                        // SK_RANGED_COMBAT
+     90,                        // SK_THROWING
      170,                       // SK_ARMOUR
      50,                        // SK_DODGING
      50,                        // SK_STEALTH
@@ -1429,7 +1429,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      90,                        // SK_BOWS
      90,                        // SK_CROSSBOWS
      90,                        // SK_DARTS
-     90,                        // SK_RANGED_COMBAT
+     90,                        // SK_THROWING
      80,                        // SK_ARMOUR
      80,                        // SK_DODGING
      130,                       // SK_STEALTH
@@ -1472,7 +1472,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_BOWS
      110,                       // SK_CROSSBOWS
      110,                       // SK_DARTS
-     110,                       // SK_RANGED_COMBAT
+     110,                       // SK_THROWING
      110,                       // SK_ARMOUR
      110,                       // SK_DODGING
      110,                       // SK_STEALTH
@@ -1515,7 +1515,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      130,                       // SK_BOWS
      130,                       // SK_CROSSBOWS
      130,                       // SK_DARTS
-     130,                       // SK_RANGED_COMBAT
+     130,                       // SK_THROWING
      110,                       // SK_ARMOUR
      110,                       // SK_DODGING
      80,                        // SK_STEALTH
@@ -1558,7 +1558,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      80,                        // SK_BOWS
      80,                        // SK_CROSSBOWS
      90,                        // SK_DARTS
-     90,                        // SK_RANGED_COMBAT
+     90,                        // SK_THROWING
      90,                        // SK_ARMOUR
      90,                        // SK_DODGING
      100,                       // SK_STEALTH
@@ -1601,7 +1601,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      140,                       // SK_BOWS
      140,                       // SK_CROSSBOWS
      100,                       // SK_DARTS
-     100,                       // SK_RANGED_COMBAT
+     100,                       // SK_THROWING
      160,                       // SK_ARMOUR
      60,                        // SK_DODGING
      90,                        // SK_STEALTH
@@ -1644,7 +1644,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      140,                       // SK_BOWS
      140,                       // SK_CROSSBOWS
      140,                       // SK_DARTS
-     140,                       // SK_RANGED_COMBAT
+     140,                       // SK_THROWING
      140,                       // SK_ARMOUR
      110,                       // SK_DODGING
       50,                       // SK_STEALTH
@@ -1699,7 +1699,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
         120,               // SK_BOWS
         120,               // SK_CROSSBOWS
         120,               // SK_DARTS
-        120,               // SK_RANGED_COMBAT
+        120,               // SK_THROWING
         200,               // SK_ARMOUR
         120,               // SK_DODGING
         120,               // SK_STEALTH
@@ -1761,7 +1761,7 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
-    SK_RANGED_COMBAT, SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_DARTS, 
+    SK_BOWS, SK_CROSSBOWS, SK_THROWING, SK_SLINGS, SK_DARTS,
 
     SK_BLANK_LINE,
    
@@ -2364,7 +2364,7 @@ void wield_warning(bool newWeapon)
     // [dshaligram] No more annoying throwing skill warnings.
 #ifdef OBSOLETE_THROW_SKILL_WARNING
     // must be a launcher
-    int effSkill = you.skills[SK_RANGED_COMBAT] * 2 + 1;
+    int effSkill = you.skills[SK_THROWING] * 2 + 1;
     int shoot_skill = 0;
 
     switch (wepType)

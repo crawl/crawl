@@ -1386,7 +1386,7 @@ static int l_item_weap_skill(lua_State *ls)
         return (0);
 
     int skill = range_skill(*item);
-    if (skill == SK_RANGED_COMBAT)
+    if (skill == SK_THROWING)
         skill = weapon_skill(*item);
     if (skill == SK_FIGHTING)
         return (0);

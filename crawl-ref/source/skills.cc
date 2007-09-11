@@ -190,7 +190,7 @@ static int exercise2( int exsk )
     int i;
 
     // being good at some weapons makes others easier to learn:
-    if (exsk < SK_SLINGS)
+    if (exsk < SK_ARMOUR)
     {
         /* blades to blades */
         if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_SWORDS)
@@ -220,6 +220,22 @@ static int exercise2( int exsk )
         if ((exsk == SK_AXES || exsk == SK_MACES_FLAILS)
             && (you.skills[SK_AXES] > you.skills[exsk]
                 || you.skills[SK_MACES_FLAILS] > you.skills[exsk]))
+        {
+            bonus += random2(3);
+        }
+        
+        /* Slings and Throwing */
+        if ((exsk == SK_SLINGS || exsk == SK_THROWING)
+            && (you.skills[SK_SLINGS] > you.skills[exsk]
+                || you.skills[SK_THROWING] > you.skills[exsk]))
+        {
+            bonus += random2(3);
+        }
+
+        /* Darts and Throwing */
+        if ((exsk == SK_DARTS || exsk == SK_THROWING)
+            && (you.skills[SK_DARTS] > you.skills[exsk]
+                || you.skills[SK_THROWING] > you.skills[exsk]))
         {
             bonus += random2(3);
         }

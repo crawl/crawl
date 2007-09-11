@@ -1937,7 +1937,7 @@ void cast_evaporate(int pow)
     beem.is_beam = false;
     beem.is_tracer = false;
 
-    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_RANGED_COMBAT] / 2 + 1 );
+    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
     beem.damage = dice_def( 1, 0 );  // no damage, just producing clouds
     beem.ench_power = pow;           // used for duration only?
 
@@ -2014,7 +2014,7 @@ void cast_evaporate(int pow)
     }
 
     if (coinflip())
-        exercise( SK_RANGED_COMBAT, 1 );
+        exercise( SK_THROWING, 1 );
 
     fire_beam(beem);
 

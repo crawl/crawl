@@ -1175,8 +1175,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
               text << "in melee battle will raise your Axes and Fighting skills.";
           else if (Options.tutorial_type == TUT_RANGER_CHAR)
-              text << "using bow and arrows will raise your Bows and Ranged Combat "
-                      "skills.";
+              text << "using bow and arrows will raise your Bows skill.";
           else // if (Options.tutorial_type == TUT_MAGIC_CHAR)
               text << "with offensive magic will raise your Conjurations and "
                       "Spellcasting skills.";
@@ -1617,8 +1616,8 @@ void tutorial_describe_item(item_def &item)
             }
             if (is_throwable(item, you.body_size()) && !long_text)
             {
-                ostr << "\n\nSome weapons (including this one), can also be used "
-                        "for ranged combat. ";
+                ostr << "\n\nSome weapons (including this one), can also be "
+                        "<w>t<magenta>hrown. ";
                 ostr << tut_throw_stuff(item);
                 long_text = true;
             }

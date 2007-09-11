@@ -711,7 +711,7 @@ static void xom_checks_damage(kill_method_type death_type,
     
     if (death_type != KILLED_BY_BEAM)
     {
-        if (you.skills[SK_RANGED_COMBAT] <= (you.experience_level / 4))
+        if (you.skills[SK_THROWING] <= (you.experience_level / 4))
             amusementvalue += 2;
     }
     else
