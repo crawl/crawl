@@ -1212,16 +1212,30 @@ bool items_stack( const item_def &item1, const item_def &item2,
     if (ident_flags(item1) != ident_flags(item2))
         return false;
 
-    // Check the non-ID flags
-    if ((item1.flags & (~ISFLAG_IDENT_MASK)) !=
-        (item2.flags & (~ISFLAG_IDENT_MASK)))
+    // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
+    // and note flags
+#define NON_IDENT_FLAGS ~(ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK | \
+                          ISFLAG_DROPPED | ISFLAG_THROWN | \
+                          ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)
+    if ((item1.flags & NON_IDENT_FLAGS) !=
+        (item2.flags & NON_IDENT_FLAGS))
+    {
         return false;
+    }
 
     // Thanks to mummy cursing, we can have potions of decay 
     // that don't look alike... so we don't stack potions 
     // if either isn't identified and they look different.  -- bwr
     if (item1.base_type == OBJ_POTIONS && item1.special != item2.special &&
         (!item_type_known(item1) || !item_type_known(item2)))
+    {
+        return false;
+    }
+
+    // The inscriptions can differ if one of them is blank, but if they
+    // are differing non-blank inscriptions then don't stack.
+    if (item1.inscription != item2.inscription
+        && item1.inscription != "" && item2.inscription != "")
     {
         return false;
     }
@@ -1361,6 +1375,15 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     mpr("You can only carry some of what is here.");
 
                 check_note_item(mitm[obj]);
+
+                // If the object on the ground is inscribed, but not
+                // the one in inventory, then the inventory object
+                // picks up the other's inscription.
+                if (mitm[obj].inscription != ""
+                    && you.inv[m].inscription == "")
+                {
+                    you.inv[m].inscription = mitm[obj].inscription;
+                }
 
                 inc_inv_item_quantity( m, quant_got );
                 dec_mitm_item_quantity( obj, quant_got );
