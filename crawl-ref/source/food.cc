@@ -49,12 +49,14 @@
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
 static void  eat_chunk( int chunk_effect );
+static void  ghoul_consume_flesh(int chunk_type);
 static void  eating(unsigned char item_class, int item_type);
-static void  ghoul_eat_flesh( int chunk_effect );
 static void  describe_food_change(int hunger_increment);
 static bool  food_change(bool suppress_message);
-bool vampire_consume_corpse(int mons_type, int mass,
-                            int chunk_type, bool rotten);
+static bool  vampire_consume_corpse(int mons_type, int mass,
+                                    int chunk_type, bool rotten);
+static void  heal_from_food(int hp_amt, int mp_amt, bool unrot,
+                            bool restore_str);
 
 /*
  **************************************************
@@ -867,7 +869,7 @@ static void eat_chunk( int chunk_effect )
 
     if (you.species == SP_GHOUL)
     {
-        ghoul_eat_flesh( chunk_effect );
+        ghoul_consume_flesh(chunk_effect);
         start_delay( DELAY_EAT, 2 );
         lessen_hunger( CHUNK_BASE_NUTRITION, true );
     }
@@ -921,53 +923,28 @@ static void eat_chunk( int chunk_effect )
     return;
 }                               // end eat_chunk()
 
-static void ghoul_eat_flesh( int chunk_effect )
+static void ghoul_consume_flesh(int chunk_type)
 {
-    bool healed = false;
+    int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
 
-    if (chunk_effect != CE_ROTTEN && chunk_effect != CE_CONTAMINATED)
+    if (chunk_type != CE_ROTTEN && chunk_type != CE_CONTAMINATED)
     {
         mpr("This raw flesh tastes good.");
 
-        if (!one_chance_in(5))
-            healed = true;
-
-        if (player_rotted() && !one_chance_in(3))
-        {
-            mpr("You feel more resilient.");
-            unrot_hp(1);
-        }
+        heal_from_food((!one_chance_in(5)) ? hp_amt : 0, 0,
+            !one_chance_in(3), false);
     }
     else
     {
-        if (chunk_effect == CE_ROTTEN)
-            mpr( "This rotting flesh tastes delicious!" );
-        else // CE_CONTAMINATED
-            mpr( "This flesh tastes delicious!" );
+        if (chunk_type == CE_ROTTEN)
+            mpr("This rotting flesh tastes delicious!");
+        else // CE_CONTAMINATED or CE_HCL
+            mpr("This flesh tastes delicious!");
 
-        healed = true;
-
-        if (player_rotted() && !one_chance_in(4))
-        {
-            mpr("You feel more resilient.");
-            unrot_hp(1);
-        }
+        heal_from_food(hp_amt, 0,
+            !one_chance_in(4), one_chance_in(5));
     }
-
-    if (you.strength < you.max_strength && one_chance_in(5))
-    {
-        mpr("You feel your strength returning.");
-        you.strength++;
-        you.redraw_strength = 1;
-    }
-
-    if (healed && you.hp < you.hp_max)
-        inc_hp(1 + random2(5) + random2(1 + you.experience_level), false);
-
-    calc_hp();
-
-    return;
-}                               // end ghoul_eat_flesh()
+} // end ghoul_consume_flesh()
 
 static void eating(unsigned char item_class, int item_type)
 {
@@ -1534,32 +1511,33 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     return (this_chunk_effect);
 }                               // end determine_chunk_effect()
 
-bool vampire_consume_corpse(int mons_type, int mass,
-                            int chunk_type, bool rotten)
+static bool vampire_consume_corpse(int mons_type, int mass,
+                                   int chunk_type, bool rotten)
 {
-    int food_value = 0;
-
     if (chunk_type == CE_HCL)
     {
         mpr( "There is no blood in this body!" );
         return false;
     }
-    else if (!rotten)
+
+    int food_value = 0, hp_amt = 0, mp_amt = 0;
+
+    if (!rotten)
     {
-        inc_hp(1, false);
+        hp_amt++;
 
         switch (mons_type)
         {
            case MONS_HUMAN:
                food_value = mass + random2avg(you.experience_level * 10, 2);
                mpr( "This warm blood tastes really delicious!" );
-               inc_hp(1 + random2(1 + you.experience_level), false);
+               hp_amt += 1 + random2(1 + you.experience_level);
                break;
 
            case MONS_ELF:
                food_value = mass + random2avg(you.experience_level * 10, 2);
                mpr( "This warm blood tastes magically delicious!" );
-               inc_mp(1 + random2(3), false);
+               mp_amt += 1 + random2(3);
                break;
 
            default:
@@ -1599,23 +1577,39 @@ bool vampire_consume_corpse(int mons_type, int mass,
         return false;
     }
 
+    heal_from_food(hp_amt, mp_amt,
+        !rotten && one_chance_in(4), one_chance_in(3));
+
     lessen_hunger( food_value, true );
     describe_food_change(food_value);
-
-    if (player_rotted() && !rotten && one_chance_in(4))
-    {
-        mpr("You feel more resilient.");
-        unrot_hp(1);
-    }
-
-    if (you.strength < you.max_strength && one_chance_in(3))
-    {
-        mpr("You feel your strength returning.");
-        you.strength++;
-        you.redraw_strength = 1;
-    }
 
 //    start_delay( DELAY_EAT, 3 );
     start_delay( DELAY_EAT, 1 + mass/300 );
     return true;
 } // end vampire_consume_corpse()
+
+static void heal_from_food(int hp_amt, int mp_amt, bool unrot,
+                           bool restore_str)
+{
+    if (hp_amt > 0)
+        inc_hp(hp_amt, false);
+
+    if (mp_amt > 0)
+        inc_mp(mp_amt, false);
+
+    if (unrot && player_rotted())
+    {
+        mpr("You feel more resilient.");
+        unrot_hp(1);
+    }
+
+    if (restore_str && you.strength < you.max_strength)
+    {
+        mpr("You feel your strength returning.");
+        you.strength++;
+        you.redraw_strength = true;
+    }
+
+    calc_hp();
+    calc_mp();
+} // end heal_from_food()

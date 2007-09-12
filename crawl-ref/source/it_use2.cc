@@ -336,8 +336,8 @@ bool potion_effect( potion_type pot_eff, int pow )
                     disease_player( 50 + random2(100) );
                 xom_is_stimulated(32);
             }
-            did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3));
         }
+        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3));
         break;
 
     case POT_RESISTANCE:

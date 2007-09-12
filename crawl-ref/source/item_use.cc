@@ -3077,7 +3077,7 @@ bool drink_fountain()
     if ( feat != DNGN_BLUE_FOUNTAIN && feat != DNGN_SPARKLING_FOUNTAIN )
         return false;
 
-    if (you.duration[DUR_LEVITATION] && !you.flies())
+    if (you.flies() == FL_LEVITATE)
     {
         mpr("You're floating high above the fountain.");
         return false;
