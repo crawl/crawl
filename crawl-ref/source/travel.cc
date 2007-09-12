@@ -520,6 +520,7 @@ void initialise_travel()
 {
     // Need a better way to do this. :-(
     traversable_terrain[DNGN_FLOOR] =
+    traversable_terrain[DNGN_FLOOR_SPECIAL] =
     traversable_terrain[DNGN_ENTER_HELL] =
     traversable_terrain[DNGN_OPEN_DOOR] =
     traversable_terrain[DNGN_UNDISCOVERED_TRAP] =
@@ -3556,6 +3557,9 @@ static char base_grid_type( char grid )
 {
     // Don't stop for undiscovered traps:
     if (grid == DNGN_UNDISCOVERED_TRAP)
+        return (DNGN_FLOOR);
+
+    if (grid == DNGN_FLOOR_SPECIAL)
         return (DNGN_FLOOR);
 
     // Or secret doors (which currently always look like rock walls):

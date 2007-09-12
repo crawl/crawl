@@ -1034,6 +1034,8 @@ enum dungeon_feature_type
     DNGN_WATER_STUCK,
 
     DNGN_FLOOR,                        //   67
+    DNGN_FLOOR_SPECIAL,     // currently only used for colouring bazaars
+    DNGN_FLOOR_RESERVED,
     DNGN_EXIT_HELL,                    //   68
     DNGN_ENTER_HELL,                   //   69
     DNGN_OPEN_DOOR,                    //   70

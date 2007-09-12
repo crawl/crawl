@@ -273,6 +273,7 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
 bool builder(int level_number, int level_type);
 
+int bazaar_floor_colour(int curr_level);
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
 void dgn_set_colours_from_monsters();

@@ -1225,6 +1225,7 @@ void describe_floor()
     switch (grid)
     {
     case DNGN_FLOOR:
+    case DNGN_FLOOR_SPECIAL:
         return;
 
     case DNGN_ENTER_SHOP:
@@ -1371,6 +1372,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("Some shallow water");
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
+    case DNGN_FLOOR_SPECIAL:
         return ("Floor");
     case DNGN_OPEN_DOOR:
         return ("open door");
@@ -1883,6 +1885,7 @@ static void describe_cell(int mx, int my)
             
         msg_channel_type channel = MSGCH_EXAMINE;
         if (grd[mx][my] == DNGN_FLOOR
+            || grd[mx][my] == DNGN_FLOOR_SPECIAL
             || grd[mx][my] == DNGN_SHALLOW_WATER
             || grd[mx][my] == DNGN_DEEP_WATER)
         {

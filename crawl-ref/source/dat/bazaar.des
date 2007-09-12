@@ -240,12 +240,22 @@ ENDMAP
 NAME:    bazaar_mystics
 TAGS:    bazaar 
 ORIENT:  encompass
-SHUFFLE: AB, def, wlb
+SUBST:   w : wlx
+SHUFFLE: AB, def
 KFEAT:   A = scroll shop / book shop / book shop
 KFEAT:   B = jewellery shop
 ITEM:    any jewellery / good_item any jewellery
 ITEM:    any book / good_item any book, any staff 
 SUBST:   d=.d, e=.e, f=.f
+# special cases for blue/red floor
+: if you.bazaar_floor() == "red" then
+SUBST: l = w
+: else
+: if you.bazaar_floor() == "blue" then
+SUBST: w = l
+: end
+: end
+#
 : bazaar_message(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -268,6 +278,15 @@ KFEAT:   B = distillery shop
 #ITEM:    any wand, cursed ring of levitation
 ITEM:    any wand, ring of levitation
 SHUFFLE: leAB/wdBA
+# special cases for blue/red floor
+: if you.bazaar_floor() == "red" then
+SUBST: l = w
+: else
+: if you.bazaar_floor() == "blue" then
+SUBST: w = l
+: end
+: end
+#
 : bazaar_message(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -312,6 +331,15 @@ KFEAT:   Y = stone_arch
 KFEAT:   R = stone_arch
 KFEAT:   S = stone_arch
 SHUFFLE: lw
+# special cases for blue/red floor
+: if you.bazaar_floor() == "red" then
+SUBST:   l : wWx
+: else
+: if you.bazaar_floor() == "blue" then
+SUBST:   w : Wx
+: end
+: end
+#
 SUBST:   w:wWx, l:lx
 : bazaar_message(_G)
 MAP
@@ -626,6 +654,11 @@ KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
 : bazaar_message(_G)
+# special case for floor
+: if you.bazaar_floor() == "blue" then
+SUBST:   w = W
+: end
+#
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -633,31 +666,31 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxcccc.....X.....ccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxcccc.................ccccxxxxxxxxxxxxx
-xxxxxxxxxxccc.......................cccxxxxxxxxxxx
-xxxxxxxxxcc......T......F......T......ccxxxxxxxxxx
-xxxxxxxxcc.............................ccxxxxxxxxx
-xxxxxxxcc...............................ccxxxxxxxx
-xxxxxxxc..............aaaaa..............cxxxxxxxx
-xxxxxxcc.....E.......awwwwwaa......A.....ccxxxxxxx
-xxxxxxc............aawwwwwwwww............cxxxxxxx
-xxxxxxc...........awwwwwWwwwwa............cxxxxxxx
-xxxxxxc..........awwwww1WWwwwa............cxxxxxxx
-xxxxxxcY.T........awwwwwwWWwww.........T.Ycxxxxxxx
-xxxxxxc............awwwwwwwwaX............cxxxxxxx
-xxxxxxc.............aawwwwwwwwa...........cxxxxxxx
-xxxxxxc...............aaaaaaaa............cxxxxxxx
-xxxxxxcc.....D.....................B.....ccxxxxxxx
-xxxxxxcc.................................cxxxxxxxx
-xxxxxxxcc...............................ccxxxxxxxx
-xxxxxxxxcc.............................ccxxxxxxxxx
-xxxxxxxxxcc......T......C......T......ccxxxxxxxxxx
-xxxxxxxxxxccc.......................cccxxxxxxxxxxx
-xxxxxxxxxxxxcccc.................ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxcccc.....X.....ccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.....X.....xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.................xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.......................xxxxxxxxxxxxxx
+xxxxxxxxxxx......T......F......T......xxxxxxxxxxxx
+xxxxxxxxxx.............................xxxxxxxxxxx
+xxxxxxxxx...............................xxxxxxxxxx
+xxxxxxxx..............aaaaa..............xxxxxxxxx
+xxxxxxxx.....E.......awwwwwaa......A.....xxxxxxxxx
+xxxxxxx............aawwwwwwwww............xxxxxxxx
+xxxxxxx...........awwwwwWwwwwa............xxxxxxxx
+xxxxxxx..........awwwww1WWwwwa............xxxxxxxx
+xxxxxxxY.T........awwwwwwWWwwwa........T.Yxxxxxxxx
+xxxxxxx............awwwwwwwwaX............xxxxxxxx
+xxxxxxx.............aawwwwwwwwa...........xxxxxxxx
+xxxxxxx...............aaaaaaaa............xxxxxxxx
+xxxxxxxx.....D.....................B.....xxxxxxxxx
+xxxxxxxx.................................xxxxxxxxx
+xxxxxxxxx...............................xxxxxxxxxx
+xxxxxxxxxx.............................xxxxxxxxxxx
+xxxxxxxxxxx......T......C......T......xxxxxxxxxxxx
+xxxxxxxxxxxxx.......................xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.................xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.....X.....xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -744,6 +777,15 @@ ORIENT:  encompass
 SHUFFLE: zZ
 SUBST:   z = ., Z = w
 SHUFFLE: wl, ABCD
+# special cases for blue/red floor
+: if you.bazaar_floor() == "red" then
+SUBST: l = w
+: else
+: if you.bazaar_floor() == "blue" then
+SUBST: w = l
+: end
+: end
+#
 SHUFFLE: AX
 SUBST:   X = <, A = >
 SUBST:   B : T G

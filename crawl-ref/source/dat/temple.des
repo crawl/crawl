@@ -471,7 +471,7 @@ KFEAT:   L = altar_kikubaaqudgha
 KFEAT:   M = altar_yredelemnul
 KFEAT:   N = altar_xom
 KFEAT:   O = altar_nemelex_xobeh
-SUBST:   X : GUT
+KFEAT:   X : G / U / T
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx

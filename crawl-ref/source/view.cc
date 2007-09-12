@@ -3493,6 +3493,12 @@ void init_feature_table( void )
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
             break;
 
+        case DNGN_FLOOR_SPECIAL:
+            Feature[i].symbol = Options.char_table[ DCHAR_FLOOR ];
+            Feature[i].colour = YELLOW;
+            Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
+            break;
+
         case DNGN_EXIT_HELL:
             Feature[i].symbol = Options.char_table[ DCHAR_ARCH ];
             Feature[i].colour = LIGHTRED;

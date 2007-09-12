@@ -816,6 +816,16 @@ static char fix_black_colour(char incol)
         return incol;
 }
 
+int bazaar_floor_colour(int curr_level)
+{
+    const char floorcolours_bzr[] =
+    { BLUE, RED, LIGHTBLUE, MAGENTA, GREEN };
+
+    // set colour according to current level
+    // randomization would reset between save/reload and after showing map
+    return (floorcolours_bzr[curr_level % 5]);
+}
+
 void dgn_set_colours_from_monsters()
 {
     env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
@@ -840,12 +850,7 @@ void dgn_set_floor_colours()
         env.rock_colour = YELLOW;
         
         // bazaar floor is colourful
-        const char floorcolours_bzr[] =
-        { BLUE, RED, LIGHTGREEN, LIGHTBLUE, MAGENTA, GREEN };
-             
-        // set colour according to current level
-        // randomization would reset between save/reload and after showing map
-        env.floor_colour = floorcolours_bzr[player_branch_depth() % 6];
+        env.floor_colour = bazaar_floor_colour(you.your_level + 1);
     }
     else
     {
@@ -1443,6 +1448,17 @@ static void fixup_bazaar_stairs()
                             coord_def(x, y),
                             DNGN_STONE_ARCH));
                 }
+            }
+            
+            // colour floor squares around shops
+            if (feat == DNGN_ENTER_SHOP)
+            {
+                for (int i=-1; i<=1; i++)
+                     for (int j=-1; j<=1; j++)
+                     {
+                          if (grd[x+i][y+j] == DNGN_FLOOR)
+                              grd[x+i][y+j] = DNGN_FLOOR_SPECIAL;
+                     }
             }
         }
     }

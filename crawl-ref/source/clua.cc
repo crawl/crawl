@@ -12,6 +12,7 @@
 #include "cio.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "dungeon.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"
@@ -737,6 +738,9 @@ LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_see_grid, boolean,
         see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+// increase by 1 because check happens on old level
+LUARET1(bzr_floor_colour, string,
+        colour_to_str(bazaar_floor_colour(you.your_level + 2)))
 
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
@@ -816,6 +820,7 @@ static const struct luaL_reg you_lib[] =
     { "absdepth",     you_absdepth },
 
     { "see_grid",     you_see_grid },
+    { "bazaar_floor", bzr_floor_colour },
     
     { NULL, NULL },
 };
