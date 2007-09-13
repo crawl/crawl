@@ -1625,6 +1625,13 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
     return (newme);
 }
 
+bool item_names( const item_def *it1,
+                 const item_def *it2 )
+{
+    return it1->name(DESC_PLAIN, false, false, false)
+           < it2->name(DESC_PLAIN, false, false, false);
+}
+
 void check_item_knowledge()
 {
     std::vector<const item_def*> items;
@@ -1657,6 +1664,7 @@ void check_item_knowledge()
         mpr("You don't recognise anything yet!");
     else
     {
+        std::sort(items.begin(), items.end(), item_names);
         InvMenu menu;
         menu.set_title("You recognise:");
         menu.load_items(items, discoveries_item_mangle);

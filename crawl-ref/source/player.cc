@@ -170,31 +170,47 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     //     return (false);
 
     // if we're walking along, give a chance to avoid trap
-    if (stepped 
-        && !force
-        && new_grid == DNGN_UNDISCOVERED_TRAP)
+    if (stepped && !force)
     {
-        const int skill = 4 + you.skills[SK_TRAPS_DOORS] 
-                            + you.mutation[MUT_ACUTE_VISION]
-                            - 2 * you.mutation[MUT_BLURRY_VISION];
-
-        if (random2( skill ) > 6)
+        if (new_grid == DNGN_UNDISCOVERED_TRAP)
         {
-            mprf( MSGCH_WARN,
-                  "Wait a moment, %s!  Do you really want to step there?",
-                  you.your_name );
+            const int skill = 4 + you.skills[SK_TRAPS_DOORS]
+                                + you.mutation[MUT_ACUTE_VISION]
+                                - 2 * you.mutation[MUT_BLURRY_VISION];
 
-            more();
+            if (random2( skill ) > 6)
+            {
+                mprf( MSGCH_WARN,
+                      "Wait a moment, %s!  Do you really want to step there?",
+                      you.your_name );
 
-            exercise( SK_TRAPS_DOORS, 3 );
+                more();
 
-            you.turn_is_over = false;
+                exercise( SK_TRAPS_DOORS, 3 );
 
-            id = trap_at_xy( x, y );
-            if (id != -1)
-                grd[x][y] = trap_category( env.trap[id].type );
+                you.turn_is_over = false;
 
-            return (false);
+                id = trap_at_xy( x, y );
+                if (id != -1)
+                    grd[x][y] = trap_category( env.trap[id].type );
+
+                return (false);
+            }
+        } // unknown trap
+        else if (new_grid == DNGN_TRAP_MAGICAL)
+        {
+            std::string prompt = "Really step onto that "; // preposition?
+            prompt += feature_description(new_grid, trap_type_at_xy(x,y),
+                                          DESC_PLAIN, false);
+            prompt += '?';
+            
+            // Zot traps require capital confirmation
+            bool harmless = (trap_type_at_xy(x,y) != TRAP_ZOT);
+            if (!yesno(prompt.c_str(), harmless, 'n'))
+            {
+                you.turn_is_over = false;
+                return (false);
+            }
         }
     }
 

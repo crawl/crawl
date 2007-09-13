@@ -2880,7 +2880,7 @@ void god_pitch(god_type which_god)
     snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?", 
               (you.worshipped[which_god]) ? "re" : "" );
 
-    if (!yesno( info, false, 'n' ) || !yesno("Are you sure?", false, 'n'))
+    if (!yesno( info, true, 'n' ) || !yesno("Are you sure?", false, 'n'))
     {
         redraw_screen();
         return;

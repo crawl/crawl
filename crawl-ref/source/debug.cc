@@ -2357,16 +2357,24 @@ void debug_card()
     msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
     char buf[80];
     if (cancelable_get_line(buf, sizeof buf))
+    {
+        mpr("Unknown card.");
         return;
+    }
+    
+    bool found_card = false;
     for ( int i = 0; i < NUM_CARDS; ++i )
     {
         const card_type c = static_cast<card_type>(i);
         if ( strstr(card_name(c), buf) != NULL )
         {
             card_effect(c, DECK_RARITY_LEGENDARY);
+            found_card = true;
             break;
         }
     }
+    if (!found_card)
+        mpr("Unknown card.");
 }
 
 static void debug_uptick_xl(int newxl)

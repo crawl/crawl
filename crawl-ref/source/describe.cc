@@ -1180,6 +1180,10 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             case SPWPN_REACHING:
                 description += "It can be evoked to extend its reach. ";
                 break;
+            case SPWPN_RETURNING:
+                description += "It is enchanted to return to its owner "
+                               "when thrown.";
+                break;
             }
         }
 
