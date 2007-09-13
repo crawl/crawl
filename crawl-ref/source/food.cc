@@ -141,7 +141,7 @@ void weapon_switch( int targ )
     // code is a mess... this whole function's purpose was to 
     // isolate this hack until there's a proper way to do things. -- bwr
     if (you.equip[EQ_WEAPON] != -1)
-        unwield_item(you.equip[EQ_WEAPON], false);
+        unwield_item(false);
 
     you.equip[EQ_WEAPON] = targ;
 

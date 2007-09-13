@@ -2136,10 +2136,7 @@ int fsim_kit_equip(const std::string &kit)
         }
     }
     else if (you.equip[EQ_WEAPON] != -1)
-    {
-        unwield_item(you.equip[EQ_WEAPON], false);
-        you.equip[EQ_WEAPON] = -1;
-    }
+        unwield_item(false);
 
     if (!missile.empty())
     {

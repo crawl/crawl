@@ -463,7 +463,7 @@ void dancing_weapon(int pow, bool force_hostile)
     }
 
     // We are successful:
-    unwield_item( wpn );                        // remove wield effects
+    unwield_item(); // unwield the weapon (including removing wield effects)
 
     // copy item (done here after any wield effects are removed)
     mitm[i] = you.inv[wpn];
@@ -478,7 +478,6 @@ void dancing_weapon(int pow, bool force_hostile)
     mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
 
     you.inv[ wpn ].quantity = 0;
-    you.equip[EQ_WEAPON] = -1;
 
     menv[summs].inv[MSLOT_WEAPON] = i;
     menv[summs].colour = mitm[i].colour;

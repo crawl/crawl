@@ -603,8 +603,7 @@ static void finish_delay(const delay_queue_item &delay)
         // so that temporary brands and such are cleared. -- bwr
         if (delay.parm1 == you.equip[EQ_WEAPON])
         {   
-            unwield_item( delay.parm1 );
-            you.equip[EQ_WEAPON] = -1;
+            unwield_item();
             canned_msg( MSG_EMPTY_HANDED );
         }
 

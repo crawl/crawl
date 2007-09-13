@@ -350,7 +350,7 @@ void inc_penance(int god, int val)
         
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
     }
     
     if (you.penance[god] + val > 200)
@@ -2769,6 +2769,9 @@ static bool god_likes_item(god_type god, const item_def& item)
     {
     case GOD_KIKUBAAQUDGHA: case GOD_TROG:
         return item.base_type == OBJ_CORPSES;
+        
+    case GOD_NEMELEX_XOBEH:
+        return !is_deck(item);
 
     default:
         return true;

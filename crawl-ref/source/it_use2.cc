@@ -358,8 +358,13 @@ bool potion_effect( potion_type pot_eff, int pow )
     return (effect);
 }                               // end potion_effect()
 
-void unwield_item(char unw, bool showMsgs)
+void unwield_item(bool showMsgs)
 {
+    const int unw = you.equip[EQ_WEAPON];
+    if ( unw == -1 )
+        return;
+    
+    you.equip[EQ_WEAPON] = -1;
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
 
@@ -392,7 +397,8 @@ void unwield_item(char unw, bool showMsgs)
             case SPWPN_STAFF_OF_WUCAD_MU:
                 you.inv[unw].plus = 0;
                 you.inv[unw].plus2 = 0;
-                miscast_effect( SPTYP_DIVINATION, 9, 90, 100, "the Staff of Wucad Mu" );
+                miscast_effect( SPTYP_DIVINATION, 9, 90, 100,
+                                "the Staff of Wucad Mu" );
                 break;
             default:
                 break;
@@ -401,14 +407,14 @@ void unwield_item(char unw, bool showMsgs)
             return;
         }
 
-        int brand = get_weapon_brand( you.inv[unw] );
+        const int brand = get_weapon_brand( you.inv[unw] );
 
         if (is_random_artefact( you.inv[unw] ))
             unuse_randart(unw);
 
         if (brand != SPWPN_NORMAL)
         {
-            std::string msg = you.inv[unw].name(DESC_CAP_YOUR);
+            const std::string msg = you.inv[unw].name(DESC_CAP_YOUR);
             
             switch (brand)
             {
@@ -459,7 +465,8 @@ void unwield_item(char unw, bool showMsgs)
                 // if it's to be allowed as a player spell. -- bwr
 
                 // int effect = 9 - random2avg( you.skills[SK_TRANSLOCATIONS] * 2, 2 );
-                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
+                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
+                                "a distortion effect" );
                 break;
 
                 // when more are added here, *must* duplicate unwielding
@@ -470,24 +477,14 @@ void unwield_item(char unw, bool showMsgs)
             {
                 you.duration[DUR_WEAPON_BRAND] = 0;
                 set_item_ego_type( you.inv[unw], OBJ_WEAPONS, SPWPN_NORMAL );
-                // we're letting this through
+                // we're letting this through even if hiding messages
                 mpr("Your branding evaporates.");
             }
         }                       // end if
     }
 
     if (player_equip( EQ_STAFF, STAFF_POWER ))
-    {
-        // XXX: Ugly hack so that this currently works (don't want to
-        // mess with the fact that currently this function doesn't 
-        // actually unwield the item, but we need it out of the player's
-        // hand for this to work. -- bwr
-        int tmp = you.equip[ EQ_WEAPON ];
-
-        you.equip[ EQ_WEAPON ] = -1;
         calc_mp();
-        you.equip[ EQ_WEAPON ] = tmp;
-    }
 
     return;
 }                               // end unwield_item()

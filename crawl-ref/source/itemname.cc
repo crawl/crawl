@@ -689,8 +689,8 @@ static const char* deck_rarity_name(deck_rarity_type rarity)
 {
     switch (rarity)
     {
-    case DECK_RARITY_COMMON:    return "common";
-    case DECK_RARITY_RARE:      return "rare";
+    case DECK_RARITY_COMMON:    return "plain";
+    case DECK_RARITY_RARE:      return "ornate";
     case DECK_RARITY_LEGENDARY: return "legendary";
     }
     return "buggy rarity";

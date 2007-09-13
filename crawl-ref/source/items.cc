@@ -242,12 +242,12 @@ bool dec_inv_item_quantity( int obj, int amount )
         {
             if (you.equip[i] == obj)
             {
-                you.equip[i] = -1;
                 if (i == EQ_WEAPON)
                 {
-                    unwield_item( obj );
+                    unwield_item();
                     canned_msg( MSG_EMPTY_HANDED );
                 }
+                you.equip[i] = -1;
             }
         }
 
@@ -1670,8 +1670,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON])
     {
-        unwield_item(item_dropped);
-        you.equip[EQ_WEAPON] = -1;
+        unwield_item();
         canned_msg( MSG_EMPTY_HANDED );
     }
 
@@ -2532,13 +2531,10 @@ void handle_time( long time_delta )
             if (you.inv[i].base_type == OBJ_FOOD)
             {
                 if (you.equip[EQ_WEAPON] == i)
-                {
-                    unwield_item(you.equip[EQ_WEAPON]);
-                    you.equip[EQ_WEAPON] = -1;
-                    you.wield_change = true;
-                }
+                    unwield_item();
 
-                mpr( "Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT );
+                mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
+                // FIXME should replace with a destroy_item call
                 you.inv[i].quantity = 0;
                 burden_change();
                 continue;
@@ -2550,11 +2546,9 @@ void handle_time( long time_delta )
             if (!mons_skeleton( you.inv[i].plus ))
             {
                 if (you.equip[EQ_WEAPON] == i)
-                {
-                    unwield_item(you.equip[EQ_WEAPON]);
-                    you.equip[EQ_WEAPON] = -1;
-                }
+                    unwield_item();
 
+                // FIXME should replace with a destroy_item call
                 you.inv[i].quantity = 0;
                 burden_change();
                 continue;

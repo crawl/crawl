@@ -48,9 +48,8 @@ bool remove_equipment(std::set<equipment_type> removed)
     if ( removed.find(EQ_WEAPON) != removed.end() &&
          you.equip[EQ_WEAPON] != -1)
     {
-        unwield_item(you.equip[EQ_WEAPON]);
-        you.equip[EQ_WEAPON] = -1;
-        mpr("You are empty-handed.");
+        unwield_item();
+        canned_msg(MSG_EMPTY_HANDED);
         you.wield_change = true;
     }
 

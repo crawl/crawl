@@ -404,7 +404,7 @@ bool deck_triple_draw()
     {
         mpr("The deck of cards disappears in a puff of smoke.");
         if ( slot == you.equip[EQ_WEAPON] )
-            unwield_item(slot);
+            unwield_item();
 
         dec_inv_item_quantity( slot, 1 );
     }
@@ -630,13 +630,32 @@ static void damnation_card(int power, deck_rarity_type rarity)
         return;
     }
 
-    // pick a random monster nearby to banish (or yourself)
-    const int mon_to_banish = choose_random_nearby_monster(1);
+    // Calculate how many extra banishments you get.
+    const int power_level = get_power_level(power, rarity);
+    int nemelex_bonus = 0;
+    if ( you.religion == GOD_NEMELEX_XOBEH && !player_under_penance() )
+        nemelex_bonus = you.piety / 20;    
+    int extra_targets = power_level + random2(you.skills[SK_EVOCATIONS] +
+                                              nemelex_bonus) / 12;
+    
+    for ( int i = 0; i < 1 + extra_targets; ++i )
+    {
+        // pick a random monster nearby to banish (or yourself)
+        const int mon_to_banish = choose_random_nearby_monster(1);
 
-    if ( mon_to_banish == NON_MONSTER ) // banish yourself!
-        banished(DNGN_ENTER_ABYSS);
-    else
-        menv[mon_to_banish].banish();
+        // bonus banishments only banish monsters
+        if ( i != 0 && mon_to_banish == NON_MONSTER )
+            continue;
+
+        if ( mon_to_banish == NON_MONSTER ) // banish yourself!
+        {
+            banished(DNGN_ENTER_ABYSS);
+            break;              // don't banish anything else
+        }
+        else
+            menv[mon_to_banish].banish();
+    }
+
 }
 
 static void warpwright_card(int power, deck_rarity_type rarity)
@@ -788,7 +807,10 @@ static void battle_lust_card(int power, deck_rarity_type rarity)
     if ( power_level >= 2 )
         you.duration[DUR_SLAYING] = random2(power/6) + 1;
     else if ( power_level == 1 )
+    {
+        // FIXME change to "go berserk next turn"
         go_berserk(false);
+    }
     else if ( power_level == 0 )
         potion_effect(POT_MIGHT, random2(power/4));
 }
@@ -1229,7 +1251,7 @@ static int card_power(deck_rarity_type rarity)
     {
         result -= you.penance[GOD_NEMELEX_XOBEH];
     }
-    else if ( you.religion == GOD_NEMELEX_XOBEH && you.duration[DUR_PRAYER] )
+    else if ( you.religion == GOD_NEMELEX_XOBEH )
     {
         result = you.piety;
         result *= (you.skills[SK_EVOCATIONS] + 25);

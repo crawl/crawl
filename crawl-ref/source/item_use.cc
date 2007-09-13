@@ -230,11 +230,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         {
             if (you.equip[EQ_WEAPON] != -1)
             {
-                unwield_item(you.equip[EQ_WEAPON], show_weff_messages);
-                you.turn_is_over = true;
-
-                you.equip[EQ_WEAPON] = -1;
+                unwield_item(show_weff_messages);
                 canned_msg( MSG_EMPTY_HANDED );
+
+                you.turn_is_over = true;
                 you.time_taken *= 3;
                 you.time_taken /= 10;
             }
@@ -257,7 +256,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     // Go ahead and wield the weapon.
     if (you.equip[EQ_WEAPON] != -1)
-        unwield_item(you.equip[EQ_WEAPON], show_weff_messages);
+        unwield_item(show_weff_messages);
 
     you.equip[EQ_WEAPON] = item_slot;
 
@@ -1554,8 +1553,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // like temporary branding. -- bwr
     if (throw_2 == you.equip[EQ_WEAPON] && you.inv[throw_2].quantity == 1)
     {
-        unwield_item( throw_2 );
-        you.equip[EQ_WEAPON] = -1;
+        unwield_item();
         canned_msg( MSG_EMPTY_HANDED );
     }
 

@@ -281,7 +281,7 @@ static const ability_def Ability_List[] =
 
     // Nemelex
     { ABIL_NEMELEX_PEEK_DECK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
-    { ABIL_NEMELEX_DRAW_CARD, "Draw Card", 1, 0, 0, 1, ABFLAG_NONE },
+    { ABIL_NEMELEX_DRAW_CARD, "Draw Card", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
     { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 150, 6, ABFLAG_NONE },
 

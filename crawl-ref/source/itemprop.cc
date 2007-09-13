@@ -2192,6 +2192,11 @@ int item_mass( const item_def &item )
         break;
 
     case OBJ_MISCELLANY:
+        if ( is_deck(item) )
+        {
+            unit_mass = 50;
+            break;
+        }
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:           
