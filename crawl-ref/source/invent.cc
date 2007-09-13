@@ -1024,11 +1024,15 @@ static bool check_old_item_warning( const item_def& item,
     }
     else if (oper == OPER_WEAR) // can we safely take off old item?
     {
-        equipment_type eq_slot = get_armour_slot(item);
-        if (item.base_type != OBJ_ARMOUR || you.equip[eq_slot] == -1)
+        if (item.base_type != OBJ_ARMOUR)
             return (true);
-           
+
+        equipment_type eq_slot = get_armour_slot(item);
+        if (you.equip[eq_slot] == -1)
+            return (true);
+
         old_item = you.inv[you.equip[eq_slot]];
+
         if (!has_warning_inscription(old_item, OPER_TAKEOFF))
             return (true);
             

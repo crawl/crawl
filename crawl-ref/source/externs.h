@@ -1656,6 +1656,7 @@ public:
     bool        show_more_prompt;
 
     bool        show_turns;     // Show turns used in HUD.
+    bool        show_beam;      // Show targeting beam by default.
 
     long        autopickups;    // items to autopickup
     bool        show_inventory_weights; // show weights in inventory listings

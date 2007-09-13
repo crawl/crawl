@@ -756,8 +756,7 @@ void pray()
     const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
     if (altar_god != GOD_NO_GOD)
     {
-        if (player_is_levitating()
-            && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
+        if (you.flies() == FL_LEVITATE)
         {
             mpr("You are floating high above the altar.");
             return;
@@ -2881,7 +2880,7 @@ void god_pitch(god_type which_god)
     snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?", 
               (you.worshipped[which_god]) ? "re" : "" );
 
-    if (!yesno( info ) || !yesno("Are you sure?"))
+    if (!yesno( info, false, 'n' ) || !yesno("Are you sure?", false, 'n'))
     {
         redraw_screen();
         return;

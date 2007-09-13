@@ -560,6 +560,7 @@ void game_options::reset_options()
     show_more_prompt = true;
 
     show_turns = false;
+    show_beam = false;
 
     prev_race = 0;
     prev_cls  = 0;
@@ -1885,6 +1886,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "show_turns")
     {
         show_turns = read_bool( field, show_turns );
+    }
+    else if (key == "show_beam")
+    {
+        show_beam = read_bool( field, show_beam );
     }
 #ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")

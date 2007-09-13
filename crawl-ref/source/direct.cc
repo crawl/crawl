@@ -271,7 +271,7 @@ void direction(dist& moves, targeting_type restricts,
     cursor_control con(!Options.use_fake_cursor);
     
     int dir = 0;
-    bool show_beam = false;
+    bool show_beam = Options.show_beam;
     ray_def ray;
 
     FixedVector < char, 2 > objfind_pos;

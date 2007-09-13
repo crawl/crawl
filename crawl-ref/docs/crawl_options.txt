@@ -56,7 +56,7 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, always_greet,
                 terse_hand, delay_message_clear, menu_colour, message_colour,
                 increasing_skill_progress, show_inventory_weights,
-                show_turns, item_stack_summary_minimum
+                show_turns, show_beam, item_stack_summary_minimum
 4-k     Missiles.
                 fire_items_start, fire_order
 4-l     Message Channels.
@@ -965,6 +965,12 @@ show_inventory_weights = false
 show_turns = false
         This option controls whether the turn counter (of turns elapsed) is
         displayed in the main view.
+
+show_beam = false
+        When performing actions such as throwing or zapping, you can toggle 
+	whether to show the beam path or not. This option controls the 
+	initial status of this toggle. When set to true, the path will be 
+	shown.
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in it,
