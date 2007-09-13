@@ -55,7 +55,8 @@ void losight(FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>& sh,
              int x_p, int y_p);
 
 
-bool magic_mapping(int map_radius, int proportion, bool force = false);
+bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
+                   bool force = false);
 
 
 // last updated 12may2000 {dlb}

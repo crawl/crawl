@@ -979,21 +979,29 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_MAPPING:    // randarts
-        if ( magic_mapping(  3 + roll_dice( 2, you.skills[SK_EVOCATIONS]),
-                             40 + roll_dice( 2, you.skills[SK_EVOCATIONS])))
+    case ABIL_MAPPING:          // Gnome + sense surrounds mut
+        if (abil.ability == ABIL_MAPPING && you.mutation[MUT_MAPPING] < 3 &&
+            you.level_type == LEVEL_PANDEMONIUM)
+        {
+            mpr("You feel momentarily disoriented.");
+            return (false);
+        }
+
+        power = (abil.ability == ABIL_EVOKE_MAPPING) ?
+            you.skills[SK_EVOCATIONS] : you.experience_level;
+
+        if ( magic_mapping(  3 + roll_dice( 2,
+                             (abil.ability == ABIL_EVOKE_MAPPING) ? power :
+                             power + you.mutation[MUT_MAPPING] * 10),
+                             40 + roll_dice( 2, power), true) )
+        {
             mpr("You sense your surroundings.");
+        }
         else
             mpr("You feel momentarily disoriented.");
 
-        exercise( SK_EVOCATIONS, 1 ); 
-        break;
-
-    case ABIL_MAPPING:          // Gnome + sense surrounds mut
-        mpr("You sense your surroundings.");
-
-        magic_mapping(  3 + roll_dice( 2, you.experience_level )
-                            + you.mutation[MUT_MAPPING] * 10,
-                       40 + roll_dice( 2, you.experience_level ) );
+        if (abil.ability == ABIL_EVOKE_MAPPING)
+            exercise( SK_EVOCATIONS, 1 ); 
         break;
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
@@ -1911,11 +1919,8 @@ std::vector<talent> your_talents( bool check_confused )
     }
 
     // Mutations
-    if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
-        (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))
-    {
+    if (you.mutation[MUT_MAPPING])
         add_talent(talents, ABIL_MAPPING, check_confused );
-    }
 
     if (you.mutation[MUT_SUMMON_MINOR_DEMONS])
         add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused );

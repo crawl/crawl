@@ -707,7 +707,7 @@ static bool ball_of_seeing(void)
     {
         mpr("You see nothing.");
     }
-    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS])))
+    else if (magic_mapping( 15, 50 + random2( you.skills[SK_EVOCATIONS]), true))
     {
         mpr("You see a map of your surroundings!");
         ret = true;

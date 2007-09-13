@@ -3640,12 +3640,18 @@ void read_scroll(void)
         break;
 
     case SCR_MAGIC_MAPPING:
-        id_the_scroll = magic_mapping(50, 90 + random2(11));
-
-        if ( id_the_scroll )
-            mpr("You feel aware of your surroundings.");
+        if (you.level_type == LEVEL_PANDEMONIUM)
+        {
+            if (!item_type_known(scroll))
+            {
+                mpr("You feel momentarily disoriented.");
+                id_the_scroll = false;
+            }
+            else
+                mpr("Your Earth magic cannot map Pandemonium.");
+        }
         else
-            mpr("You feel momentarily disoriented.");
+            id_the_scroll = magic_mapping(50, 90 + random2(11), false);
         break;
 
     case SCR_TORMENT:

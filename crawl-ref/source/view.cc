@@ -3159,14 +3159,20 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
 
 // Returns true if succeeded
-bool magic_mapping(int map_radius, int proportion, bool force)
+bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
+                   bool force)
 {
     if (!force &&
         ((you.level_type == LEVEL_ABYSS) ||
          (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)))
     {
+        if (!suppress_msg)
+            mpr("You feel momentarily disoriented.");
         return false;
     }
+
+    if (!suppress_msg)
+        mpr( "You feel aware of your surroundings." );
 
     int i, j, k, l, empty_count;
 
