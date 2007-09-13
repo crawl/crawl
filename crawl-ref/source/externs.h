@@ -1763,6 +1763,7 @@ public:
     unsigned    stab_brand;       // Highlight monsters that are stabbable
     unsigned    may_stab_brand;   // Highlight potential stab candidates
     unsigned    stair_item_brand; // Highlight stairs covered by items.
+    unsigned    trap_item_brand;  // Highlight traps covered by items.
 
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information

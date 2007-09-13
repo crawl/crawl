@@ -252,7 +252,8 @@
     #define COLFLAG_WILLSTAB                 0x0400
     #define COLFLAG_MAYSTAB                  0x0800
     #define COLFLAG_STAIR_ITEM               0x1000
-    #define COLFLAG_REVERSE                  0x2000
+    #define COLFLAG_TRAP_ITEM                0x2000
+    #define COLFLAG_REVERSE                  0x4000
     #define COLFLAG_MASK                     0xFF00
 
     enum CHAR_ATTRIBUTES

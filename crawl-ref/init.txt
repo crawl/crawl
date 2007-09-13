@@ -104,6 +104,7 @@ friend_brand = hi:green
 stab_brand = hi:blue
 # may_stab_brand = hi:yellow
 # stair_item_brand = reverse
+# trap_item_brand = reverse
 
 ##### 4-e	Level Map Functions ###################
 #

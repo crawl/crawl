@@ -666,6 +666,7 @@ inline unsigned get_brand(int col)
         (col & COLFLAG_WILLSTAB)?            Options.stab_brand :
         (col & COLFLAG_MAYSTAB)?             Options.may_stab_brand :
         (col & COLFLAG_STAIR_ITEM)?          Options.stair_item_brand :
+        (col & COLFLAG_TRAP_ITEM)?           Options.trap_item_brand :
         (col & COLFLAG_REVERSE)?             CHATTR_REVERSE :
                                              CHATTR_NORMAL;
 }

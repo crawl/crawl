@@ -258,6 +258,8 @@ static unsigned colflag2brand(int colflag)
         return (Options.may_stab_brand);
     case COLFLAG_STAIR_ITEM:
         return (Options.stair_item_brand);
+    case COLFLAG_TRAP_ITEM:
+        return (Options.trap_item_brand);
     default:
         return (CHATTR_NORMAL);
     }
@@ -552,7 +554,12 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     {
         tc |= COLFLAG_STAIR_ITEM;
     }
-
+    else if (Options.trap_item_brand
+	     && grid_is_trap(grid_value) && igrd[x][y] != NON_ITEM)
+    {
+	tc |= COLFLAG_TRAP_ITEM;
+    }
+    
     return real_colour(tc);
 }
 
@@ -1190,6 +1197,8 @@ inline static void update_item_grid(const coord_def &gp, const coord_def &ep)
     const dungeon_feature_type grid = grd(gp);
     if (Options.stair_item_brand && is_stair(grid))
         ecol |= COLFLAG_STAIR_ITEM;
+    else if (Options.trap_item_brand && grid_is_trap(grid))
+        ecol |= COLFLAG_TRAP_ITEM;
     else
     {
         ecol = (grid == DNGN_SHALLOW_WATER)? CYAN : eitem.colour;

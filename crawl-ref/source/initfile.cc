@@ -719,7 +719,8 @@ void game_options::reset_options()
     stab_brand       = CHATTR_NORMAL;
     may_stab_brand   = CHATTR_NORMAL;
     stair_item_brand = CHATTR_REVERSE;
-    
+    trap_item_brand  = CHATTR_NORMAL;
+
     no_dark_brand    = true;
 
 #ifdef WIZARD
@@ -1790,6 +1791,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "stair_item_brand")
     {
         stair_item_brand = curses_attribute(field);
+    }
+    else if (key == "trap_item_brand")
+    {
+        trap_item_brand = curses_attribute(field);
     }
     else if (key == "no_dark_brand")
     {
