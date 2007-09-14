@@ -1306,6 +1306,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
                 rot_hp( roll_dice( 1, 3 ) );
             }
 
+	    xom_is_stimulated(64);
             return (true);
         }
 

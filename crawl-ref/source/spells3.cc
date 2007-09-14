@@ -739,7 +739,7 @@ bool entomb(void)
     char srx = 0, sry = 0;
     char number_built = 0;
 
-    FixedVector < unsigned char, 7 > safe_to_overwrite;
+    FixedVector < unsigned char, 8 > safe_to_overwrite;
 
     // hack - passing chars through '...' promotes them to ints, which
     // barfs under gcc in fixvec.h.  So don't.
@@ -750,6 +750,7 @@ bool entomb(void)
     safe_to_overwrite[4] = DNGN_TRAP_MAGICAL;
     safe_to_overwrite[5] = DNGN_TRAP_III;
     safe_to_overwrite[6] = DNGN_UNDISCOVERED_TRAP;
+    safe_to_overwrite[7] = DNGN_FLOOR_SPECIAL;
 
 
     for (srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
