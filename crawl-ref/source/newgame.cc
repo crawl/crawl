@@ -4175,7 +4175,8 @@ bool give_items_skills()
             }
 
             you.skills[SK_DODGING] = 1;
-            you.skills[SK_SHIELDS] = 1;
+            // don't hand out shields skill to (Cross)Bow users
+//            you.skills[SK_SHIELDS] = 1;
             you.skills[SK_CROSSBOWS] = 3;
             break;
 
@@ -4189,7 +4190,8 @@ bool give_items_skills()
         default:
             you.skills[SK_DODGING] = 1;
             you.skills[SK_STEALTH] = 1;
-            you.skills[(coinflip() ? SK_STABBING : SK_SHIELDS)]++;
+            // don't hand out shields skill to Bow users
+            you.skills[(coinflip() ? SK_STABBING : SK_STEALTH)]++;
             you.skills[SK_BOWS] = 3;
             break;
         }

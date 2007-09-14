@@ -477,7 +477,8 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
         || num_corpses < (coinflip() ? 3 : 2))
     {
         mpr("The spell fails.");
-        mpr("The corpses collapse into a pulpy mess.");
+        mprf("The corpse%s collapse%s into a pulpy mess.",
+             num_corpses > 1 ? "s": "", num_corpses > 1 ? "": "s");
         return;
     }
 
@@ -498,6 +499,9 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
         mpr("The corpses collapse into a pulpy mess.");
     else
     {
+        // This was probably intended, but it's really boring. (jpeg)
+        // Use menv[mon].number instead (set in create_monster)
+//        menv[mon].colour = colour;
         mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
         if (type_resurr == MONS_ABOMINATION_LARGE)
         {

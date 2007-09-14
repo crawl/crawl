@@ -909,6 +909,21 @@ bool project_noise(void)
     return (success);
 }                               // end project_noise()
 
+// Returns true if a given monster is an abomination
+// created by Twisted Resurrection
+static bool mons_your_abomination(const monsters *mon)
+{
+    if ( mon->type != MONS_ABOMINATION_SMALL
+         && mon->type != MONS_ABOMINATION_LARGE )
+    {
+        return (false);
+    }
+
+    // Reusing the colour scheme - hacky! (jpeg)
+    return (mon->number == BROWN || mon->number == RED
+            || mon->number == LIGHTRED);
+}
+
 /*
    Type recalled:
    0 = anything
@@ -949,20 +964,13 @@ bool recall(char type_recalled)
         if (!monster_habitable_grid(monster, DNGN_FLOOR))
             continue;
 
-        if (type_recalled == 1)
+        if (type_recalled == 1) // undead
         {
-            /* abomin created by twisted res, although it gets others too */
-            if ( !((monster->type == MONS_ABOMINATION_SMALL
-                            || monster->type == MONS_ABOMINATION_LARGE)
-                        && (monster->colour == BROWN
-                            || monster->colour == RED
-                            || monster->colour == LIGHTRED)) )
+            if (monster->type != MONS_REAPER
+                && mons_holiness(monster) != MH_UNDEAD
+                && !mons_your_abomination(monster))
             {
-                if (monster->type != MONS_REAPER
-                        && mons_holiness(monster) != MH_UNDEAD)
-                {
-                    continue;
-                }
+                continue;
             }
         }
         else if (type_recalled == 2) // Beogh

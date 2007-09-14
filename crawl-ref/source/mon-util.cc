@@ -3919,8 +3919,11 @@ void monsters::timeout_enchantments(int levels)
             break;
 
         case ENCH_CONFUSION:
-            del_ench(i->first);
-            blink();
+            if (!mons_class_flag(type, M_CONFUSED))
+            {
+                del_ench(i->first);
+                blink();
+            }
             break;
 
         case ENCH_HELD:
