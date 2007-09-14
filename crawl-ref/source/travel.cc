@@ -1869,7 +1869,7 @@ static std::vector<branch_type> get_branches(bool (*selector)(const Branch &))
 
 static bool is_valid_branch(const Branch &br)
 {
-    return (!!br.shortname);
+    return (br.shortname != NULL && br.depth != -1);
 }
 
 static int prompt_travel_branch(int prompt_flags)
@@ -1970,7 +1970,33 @@ static int prompt_travel_branch(int prompt_flags)
             for (int i = 0, count = br.size(); i < count; ++i)
             {
                 if (toupper(keyin) == branches[br[i]].travel_shortcut)
+                {
+#ifdef WIZARD
+                    Branch     &target = branches[br[i]];
+                    std::string msg    = "";
+
+                    if (target.startdepth == -1
+                        && (i == BRANCH_SWAMP || i == BRANCH_SHOALS ))
+                    {
+                        msg += "Branch not generated this game.  ";
+                    }
+
+                    if (target.entry_stairs == NUM_FEATURES
+                        && br[i] != BRANCH_MAIN_DUNGEON)
+                    {
+                        msg += "Branch has no entry stairs.  ";
+                    }
+
+                    if (msg != "")
+                    {
+                        msg += "Go there anyways?";
+                        if(!yesno(msg.c_str()))
+                            return (ID_CANCEL);
+                    }
+#endif
+
                     return (br[i]);
+                }
             }
 
             // Possibly a waypoint number?

@@ -1122,6 +1122,13 @@ void up_stairs(dungeon_feature_type force_stair)
             mprf("Welcome back to %s!",
                  branches[branches[i].parent_branch].longname);
             you.where_are_you = branches[i].parent_branch;
+
+            // If leaving a branch which wasn't generated in this
+            // particular game (like the Swamp or Shoals), then
+            // its startdepth is set to -1; compensate for that,
+            // so we don't end up on "level -1".
+            if (branches[i].startdepth == -1)
+                you.your_level += 2;
             break;
         }
     }

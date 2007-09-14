@@ -720,7 +720,9 @@ const char *lose_mutation[][3] = {
 
     {"Your hooves expand and flesh out into feet!", "", ""},
     // 60
-    {"Your teeth shrink and become duller.", "", ""},
+    {"Your teeth shrink to normal size.",
+     "Your teeth shrink and become duller.",
+     "Your teeth shrink and become duller."},
     
     {"", "", ""},
     {"", "", ""},
@@ -942,15 +944,9 @@ formatted_string describe_mutations()
 
     case SP_CENTAUR:
         result += "You cannot wear boots." EOL;
-        result += "You are unusually fast." EOL;
         have_any = true;
         break;
 
-    case SP_SPRIGGAN:
-        result += "You are unusually fast." EOL;
-        have_any = true;
-        break;
-        
     case SP_TROLL:
         if ( you.mutation[MUT_CLAWS] )
             result += "<cyan>";

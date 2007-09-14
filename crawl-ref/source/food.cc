@@ -512,10 +512,7 @@ bool eat_food(bool run_hook)
     if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
     {
         if (eat_from_floor())
-        {
-            burden_change();    // ghouls regain strength from rotten food
             return (true);
-        }
     }
 
     return (prompt_eat_from_inventory());
@@ -1608,6 +1605,7 @@ static void heal_from_food(int hp_amt, int mp_amt, bool unrot,
         mpr("You feel your strength returning.");
         you.strength++;
         you.redraw_strength = true;
+        burden_change();
     }
 
     calc_hp();

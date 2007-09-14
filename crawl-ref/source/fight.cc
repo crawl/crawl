@@ -1525,7 +1525,10 @@ void melee_attack::drain_defender()
 {
     // What to do, they're different...
     if (defender->atype() == ACT_PLAYER)
+    {
         drain_player();
+        obvious_effect = true;
+    }
     else
         drain_monster();
 }

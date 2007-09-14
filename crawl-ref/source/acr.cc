@@ -782,10 +782,19 @@ static void handle_wizard_command( void )
     case ':':
         j = 0;
         for (i = 0; i < NUM_BRANCHES; i++)
+        {
             if (branches[i].startdepth != - 1)
+            {
                 mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
                      i, branches[i].longname, branches[i].startdepth,
                      branches[branches[i].parent_branch].abbrevname);
+            }
+            else if (i == BRANCH_SWAMP || i == BRANCH_SHOALS)
+            {
+                mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
+                     "this game", i, branches[i].longname);
+            }
+        }
         break;
 
     case '{':
@@ -1516,7 +1525,7 @@ void process_command( command_type cmd )
         if (Options.tutorial_events[TUT_MAP_VIEW])
             Options.tutorial_events[TUT_MAP_VIEW] = 0;
 #if (!DEBUG_DIAGNOSTICS)
-        if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+        if (!player_in_mappable_area())
         {
             mpr("It would help if you knew where you were, first.");
             break;

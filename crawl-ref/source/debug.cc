@@ -522,19 +522,15 @@ static dungeon_feature_type find_appropriate_stairs(bool down)
             else if (you.where_are_you == BRANCH_MAIN_DUNGEON)
                 return DNGN_STONE_STAIRS_UP_I;
 
-            // General case: look for branch exit and copy it
-            for (int y = 1; y < GYM; ++y)
-            {
-                for (int x = 1; x < GXM; ++x)
-                {
-                    if (grd[x][y] >= DNGN_RETURN_FROM_ORCISH_MINES &&
-                        grd[x][y] <= DNGN_RETURN_RESERVED_4)
-                        return grd[x][y];
-                }
-            }
+            dungeon_feature_type stairs = your_branch().exit_stairs;
 
-            mpr("Unable to find appropriate branch exit.");
-            return DNGN_UNSEEN;
+            if (stairs < DNGN_RETURN_FROM_ORCISH_MINES
+                || stairs > DNGN_RETURN_RESERVED_4)
+            {
+                mpr("This branch has no exit stairs defined.");
+                return DNGN_UNSEEN;
+            }
+            return (stairs);
         }
         // Branch non-edge cases
         else if (depth >= 1)
