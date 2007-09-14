@@ -3325,10 +3325,7 @@ enum special_wield_type                     // you.special_wield
     SPWLD_WUCAD_MU,                    //    9
     SPWLD_OLGREB,                      //   10
     SPWLD_SHADOW = 50,                 //   50
-    SPWLD_HUM, //   51 - see it_use3::special_wielded() {dlb}
-    SPWLD_CHIME, //   52 - see it_use3::special_wielded() {dlb}
-    SPWLD_BECKON, //   53 - see it_use3::special_wielded() {dlb}
-    SPWLD_SHOUT //   54 - see it_use3::special_wielded() {dlb}
+    SPWLD_NOISE //   further differentiation useless -> removed (jpeg)
 };
 
 enum species_type

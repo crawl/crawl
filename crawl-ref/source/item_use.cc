@@ -438,6 +438,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 mpr("You really shouldn't be using a nasty item like this.");
         }
 
+        // only used for Singing Sword introduction
+        const bool was_known = item_type_known(you.inv[item_wield_2]);
+        const char *old_desc = you.inv[item_wield_2].name(DESC_CAP_THE).c_str();
+        
         set_ident_flags( you.inv[item_wield_2], ISFLAG_EQ_WEAPON_MASK );
 
         if (is_random_artefact( you.inv[item_wield_2] ))
@@ -524,7 +528,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_SINGING_SWORD:
-                    mpr("The Singing Sword hums in delight!");
+                    if (!was_known)
+                        mprf("%s says, 'Hi! I'm the Singing Sword!'", old_desc);
+                    else
+                        mpr("The Singing Sword hums in delight!");
                     break;
 
                 case SPWPN_WRATH_OF_TROG:
@@ -3942,7 +3949,7 @@ void use_randart(const item_def &item)
             mpr("You feel a brief urge to hack something to bits.");
     }
     if (proprt[RAP_NOISES])
-        you.special_wield = 50 + proprt[RAP_NOISES];
+        you.special_wield = SPWLD_NOISE;
 
     if (!alreadyknown && dangerous)
     {

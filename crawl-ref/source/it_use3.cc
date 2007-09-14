@@ -64,46 +64,137 @@ void special_wielded()
     const int old_plus = you.inv[wpn].plus;
     const int old_plus2 = you.inv[wpn].plus2;
     const char old_colour = you.inv[wpn].colour;
-
-    bool makes_noise = (one_chance_in(20) && !silenced(you.x_pos, you.y_pos));
+    bool makes_noise = false;
 
     switch (you.special_wield)
     {
     case SPWLD_SING:
+    case SPWLD_NOISE:
+    {
+        makes_noise = (one_chance_in(20) && !silenced(you.x_pos, you.y_pos));
+          
         if (makes_noise)
         {
-            const char* suffixes[] = {
-                "hums a little tune.", "breaks into glorious song!",
-                "sings.", "sings loudly.", "chimes melodiously.",
-                "makes a horrible noise.", "sings off-key.",
-                "sings 'tra-la-la'.", "burbles away merrily.",
-                "gurgles.", "suddenly shrieks!", "cackles.", "warbles.",
-                "chimes harmoniously.", "makes beautiful music.",
-                "produces a loud orchestral chord.", "whines plaintively.",
-                "tinkles.", "rings like a bell.", "wails mournfully.",
-                "practices its scales.", "lilts tunefully.",
-                "hums tunelessly.", "sighs.", "makes a deep moaning sound.",
-                "makes a popping sound.", "sings a sudden staccato note.",
-                "says 'Hi! I'm the Singing Sword!'.", "whispers something.",
-                "speaks gibberish.", "raves incoherently",
-                "yells in some weird language."
+            // Singing Sword only: singing and other musical noises
+            const char* suffixes_sing[] = {
+                 "hums a little tune.", "breaks into glorious song!",
+                 "sings.", "sings loudly.", "chimes melodiously.",
+                 "sings off-key.", "sings 'tra-la-la'.", "sings a lullaby.",
+                 "chimes harmoniously.", "makes beautiful music.",
+                 "produces a loud orchestral chord.", "whines plaintively.",
+                 "tinkles.", "rings like a bell.", "wails mournfully.",
+                 "practices its scales.", "lilts tunefully.", "yodels.",
+                 "hums tunelessly.", "makes a painfully high-pitched squeak.",
+                 "sings a sudden staccato note.", "sings a catchy tune.",
+                 "says 'Hi! I'm the Singing Sword!'", "hums a slow waltz.",
+                 "imitates a saxophone.", "shouts 'Sing with me!'",
+                 "chimes like a gong.", "applauds itself.", "whistles merrily.",
+                 "goes 'Da-da-da-dum.", "goes toot-toot!", "chants serenely.",
+                 "trills happily.", "shouts 'One, two, three...'",
+                 "chants a little melody.", "sings a deeply moving song.",
+                 "hums an eerie melody.", "hums a slow and mournful tune.",
+                 "launches into yet another solo.", "strikes up a merry tune.",
+                 "emits a series of high-pitched trills.", "does a drum roll.",
+                 "holds a dissonant chord.", "composes a new song.",
+                 "makes a sound as if to clear its throat.", "beats time.",
+                 "sings a quivering drawn-out note.", "sings a little jingle.",
+                 "makes a twanging sound.", "spouts musical wisdom."
             };
-            const int num_suffixes = sizeof(suffixes) / sizeof(suffixes[0]);
-            msg::stream << "The Singing Sword "
-                        << suffixes[random2(num_suffixes)] << std::endl;
-        }
+
+            // mostly chatter and other human-like sounds
+            const char* suffixes_talk[] = {
+                 "speaks gibberish.", "raves incoherently.", "shouts 'Help!'",
+                 "growls menacingly.", "sputters and hisses.", "hollers!",
+                 "pants and wheezes.", "barks abruptly.", "sighs.", "wails.",
+                 "howls with laughter!", "laughs crazily.", "burps!",
+                 "goes snicker-snack!", "lets out a mournful sigh.",
+                 "yells in some weird language.", "makes a horrible noise.",
+                 "makes a deep moaning sound.", "gives off a wolf whistle.",
+                 "wails.", "giggles.", "lets out a whoop!", "yawns loudly.",
+                 "chatters happily.", "recites a poem.", "prattles on and on.",
+                 "regales you with its life story.", "intones a prayer.", 
+                 "shouts 'Whoopee!'", "hurls insults at you.", "cries out!",
+                 "argues with itself.", "complains about the scenery.",
+                 "says 'I'm bored.'", "calls out a warning!", "swears loudly.",
+                 "inquires about your family.", "coughs loudly.",
+                 "burbles away merrily.", "gurgles.", "suddenly shrieks!",
+                 "cackles.", "warbles.", "suddenly bursts into laughter!",
+                 "shouts out instructions!", "cheers you on.", "snorts.",
+                 "comments on the weather.", "makes a deep, guttural noise.",
+                 "gives off a sizzling sound.", "whistles innocently.",
+                 "makes a popping sound.", "says 'Ssh! Did you hear that?'",
+                 "yelps loudly!", "lets out a series of bird calls."
+            };
+
+            // noises in the form "Your hear ...", mostly in-game noises
+            const char* suffixes_sounds[] = {
+                "a voice call your name.", "a shout.", "an angry hiss.",
+                "a very strange noise.", "a high-pitched scream!",
+                "a roar!", "someone snoring.", "a hideous shriek!",
+                "a piteous moan.", "a screech!", "a bellow!",
+                "a loud, deep croak!", "an angry buzzing noise.", 
+                "an irritating high-pitched whine.", "a splashing noise.",
+                "the sound of rushing water.", "a sizzling sound.",
+                "someone calling for help!", "strange voices.", 
+                "a loud clanging noise!", "a grinding noise.", "a knock.",
+                "a mighty clap of thunder!", "maniacal laughter.",
+                "a hideous screaming!", "snatches of song.", "a bark!",
+                "a rumbling sound.", "a twanging sound.", "an echo. Echo.",
+                "the chiming of a distant gong.", "a crunching sound.",
+                "the tinkle of an enormous bell.", "a distant \"Zot\"!",
+                "the distant roaring of an enraged frog.", "an echo.",
+                "the wailing of sirens.", "a flourish of trumpets!"
+            };
+
+            int num_suffixes;
+            std::string message;
+            if (you.special_wield == SPWLD_SING)
+            {
+                message = "The Singing Sword ";
+                if (!one_chance_in(5)) // sings
+                {
+                    num_suffixes = sizeof(suffixes_sing)
+                                   / sizeof(suffixes_sing[0]);
+                    message += suffixes_sing[random2(num_suffixes)];
+                }
+                else // talks
+                {
+                    num_suffixes = sizeof(suffixes_talk)
+                                   / sizeof(suffixes_talk[0]);
+                    message += suffixes_talk[random2(num_suffixes)];
+                }
+            }
+            else // SPWLD_NOISE
+            {
+                if (one_chance_in(3)) // "You hear..." noises
+                {
+                    message = "You hear ";
+                    num_suffixes = sizeof(suffixes_sounds)
+                                   / sizeof(suffixes_sounds[0]);
+                    message += suffixes_sounds[random2(num_suffixes)];
+                }
+                else // normal chatter
+                {
+                    message = "Your ";
+                    message += you.inv[wpn].name(DESC_BASENAME);
+                    message += " ";
+                    num_suffixes = sizeof(suffixes_talk)
+                                   / sizeof(suffixes_talk[0]);
+                    message += suffixes_talk[random2(num_suffixes)];
+                }
+            }
+            mpr(message.c_str(), MSGCH_SOUND);
+
+        } // makes_noise
         break;
-
+    } 
+    
     case SPWLD_CURSE:
-        makes_noise = false;
-
         if (one_chance_in(30))
             curse_an_item(false);
         break;
 
     case SPWLD_VARIABLE:
-        makes_noise = false;
-
         do_uncurse_item( you.inv[wpn] );
 
         if (random2(5) < 2)     // 40% chance {dlb}
@@ -126,8 +217,6 @@ void special_wielded()
         break;
 
     case SPWLD_TORMENT:
-        makes_noise = false;
-
         if (one_chance_in(200))
         {
             torment( TORMENT_SPWLD, you.x_pos, you.y_pos );
@@ -136,8 +225,6 @@ void special_wielded()
         break;
 
     case SPWLD_ZONGULDROK:
-        makes_noise = false;
-
         if (one_chance_in(5))
         {
             animate_dead( 1 + random2(3), BEH_HOSTILE, MHITYOU, 1 );
@@ -146,15 +233,11 @@ void special_wielded()
         break;
 
     case SPWLD_POWER:
-        makes_noise = false;
-
         you.inv[wpn].plus = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
         you.inv[wpn].plus2 = you.inv[wpn].plus;
         break;
 
     case SPWLD_OLGREB:
-        makes_noise = false;
-
         // Giving Olgreb's staff a little lift since staves of poison have
         // been made better. -- bwr
         you.inv[wpn].plus = you.skills[SK_POISON_MAGIC] / 3;
@@ -162,15 +245,11 @@ void special_wielded()
         break;
 
     case SPWLD_WUCAD_MU:
-        makes_noise = false;
-
         you.inv[wpn].plus  = ((you.intel > 25) ? 22 : you.intel - 3);
         you.inv[wpn].plus2 = ((you.intel > 25) ? 13 : you.intel / 2);
         break;
 
     case SPWLD_SHADOW:
-        makes_noise = false;
-
         if (random2(8) <= player_spec_death())
         {
             did_god_conduct( DID_NECROMANCY, 1 );
@@ -179,30 +258,6 @@ void special_wielded()
         }
 
         show_green = DARKGREY;
-        break;
-
-    case SPWLD_HUM:
-        if (makes_noise)
-        {
-        }
-        break;                  // to noisy() call at foot 2apr2000 {dlb}
-
-    case SPWLD_CHIME:
-        if (makes_noise)
-        {
-            mprf(MSGCH_SOUND, "%s chimes like a gong.",
-                 you.inv[wpn].name(DESC_CAP_YOUR).c_str());
-        }
-        break;
-
-    case SPWLD_BECKON:
-        if (makes_noise)
-            mpr("You hear a voice call your name.", MSGCH_SOUND);
-        break;
-
-    case SPWLD_SHOUT:
-        if (makes_noise)
-            mpr("You hear a shout.", MSGCH_SOUND);
         break;
 
     //case SPWLD_PRUNE:
