@@ -909,21 +909,6 @@ bool project_noise(void)
     return (success);
 }                               // end project_noise()
 
-// Returns true if a given monster is an abomination
-// created by Twisted Resurrection
-static bool mons_your_abomination(const monsters *mon)
-{
-    if ( mon->type != MONS_ABOMINATION_SMALL
-         && mon->type != MONS_ABOMINATION_LARGE )
-    {
-        return (false);
-    }
-
-    // Reusing the colour scheme - hacky! (jpeg)
-    return (mon->number == BROWN || mon->number == RED
-            || mon->number == LIGHTRED);
-}
-
 /*
    Type recalled:
    0 = anything
@@ -967,8 +952,7 @@ bool recall(char type_recalled)
         if (type_recalled == 1) // undead
         {
             if (monster->type != MONS_REAPER
-                && mons_holiness(monster) != MH_UNDEAD
-                && !mons_your_abomination(monster))
+                && mons_holiness(monster) != MH_UNDEAD)
             {
                 continue;
             }
