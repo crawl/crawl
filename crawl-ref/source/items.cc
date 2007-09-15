@@ -2196,26 +2196,32 @@ void handle_time( long time_delta )
     {
         temp_rand = random2(17);
 
-        mpr((temp_rand == 0) ? "\"You will not leave this place.\"" :
-            (temp_rand == 1) ? "\"Die, mortal!\"" :
-            (temp_rand == 2) ? "\"We do not forgive those who trespass against us!\"" :
-            (temp_rand == 3) ? "\"Trespassers are not welcome here!\"" :
-            (temp_rand == 4) ? "\"You do not belong in this place!\"" :
-            (temp_rand == 5) ? "\"Leave now, before it is too late!\"" :
-            (temp_rand == 6) ? "\"We have you now!\"" :
-            (temp_rand == 7) ? "You feel a terrible foreboding..." :
-            (temp_rand == 8) ? "You hear words spoken in a strange and terrible language..." :
-
-            (temp_rand == 9) ? (player_can_smell()) ? "You smell brimstone." :
-            "Brimstone rains from above." :
-            (temp_rand == 10) ? "Something frightening happens." :
-            (temp_rand == 11) ? "You sense an ancient evil watching you..." :
-            (temp_rand == 12) ? "You feel lost and a long, long way from home..." :
+        mpr((temp_rand == 0)  ? "\"You will not leave this place.\"" :
+            (temp_rand == 1)  ? "\"Die, mortal!\"" :
+            (temp_rand == 2)  ? "\"We do not forgive those who trespass against us!\"" :
+            (temp_rand == 3)  ? "\"Trespassers are not welcome here!\"" :
+            (temp_rand == 4)  ? "\"You do not belong in this place!\"" :
+            (temp_rand == 5)  ? "\"Leave now, before it is too late!\"" :
+            (temp_rand == 6)  ? "\"We have you now!\"" :
+            // plain messages
+            (temp_rand == 7)  ? (player_can_smell()) ? "You smell brimstone." :
+                                "Brimstone rains from above." :
+            (temp_rand == 8)  ? "You feel lost and a long, long way from home..." :
+            (temp_rand == 9)  ? "You shiver with fear." :
+            // warning
+            (temp_rand == 10) ? "You feel a terrible foreboding..." :
+            (temp_rand == 11) ? "Something frightening happens." :
+            (temp_rand == 12) ? "You sense an ancient evil watching you..." :
             (temp_rand == 13) ? "You suddenly feel all small and vulnerable." :
-            (temp_rand == 14) ? "A gut-wrenching scream fills the air!" :
-            (temp_rand == 15) ? "You shiver with fear." :
-            (temp_rand == 16) ? "You sense a hostile presence."
-                              : "You hear diabolical laughter!", MSGCH_TALK);
+            (temp_rand == 14) ? "You sense a hostile presence." :
+            // sounds
+            (temp_rand == 15) ? "A gut-wrenching scream fills the air!" :
+            (temp_rand == 16) ? "You hear words spoken in a strange and terrible language..."
+                              : "You hear diabolical laughter!",
+                                (temp_rand < 7  ? MSGCH_TALK :
+                                 temp_rand < 10 ? MSGCH_PLAIN :
+                                 temp_rand < 15 ? MSGCH_WARN
+                                                : MSGCH_SOUND) );
 
         temp_rand = random2(27);
 

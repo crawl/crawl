@@ -479,8 +479,12 @@ static void mpr_check_patterns(const std::string& message,
         }
     }
 
-    if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
+    // reusing travel_stop_message here
+    if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT
+        && channel != MSGCH_SOUND && channel != MSGCH_TALK)
+    {
         interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + message );
+    }
 
     // Check messages for all forms of running now.
     if (you.running)
@@ -588,6 +592,12 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     
     if ( colour == MSGCOL_MUTED )
         return;
+
+    if (silenced(you.x_pos, you.y_pos) &&
+        (channel == MSGCH_SOUND || channel == MSGCH_TALK))
+    {
+        return;
+    }
    
     if (need_prefix)
     {

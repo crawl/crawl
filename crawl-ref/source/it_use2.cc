@@ -383,7 +383,7 @@ void unwield_item(bool showMsgs)
             {
             case SPWPN_SINGING_SWORD:
                 if (showMsgs)
-                    mpr("The Singing Sword sighs.");
+                    mpr("The Singing Sword sighs.", MSGCH_TALK);
                 break;
             case SPWPN_WRATH_OF_TROG:
                 if (showMsgs)

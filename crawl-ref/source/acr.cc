@@ -1798,6 +1798,9 @@ static void decrement_durations()
     if (decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
         you.redraw_armour_class = true;
 
+    if (decrement_a_duration(DUR_SILENCE, "Your hearing returns."))
+        you.attribute[ATTR_WAS_SILENCED] = 0;
+
     decrement_a_duration(DUR_REPEL_MISSILES,
                          "You feel less protected from missiles.",
                          6, coinflip(),
@@ -2202,8 +2205,6 @@ static void world_reacts()
             StashTracker::ST_AGGRESSIVE :
             StashTracker::ST_PASSIVE);
 
-    bool its_quiet;             //jmf: for silence messages
-
     if (you.num_turns != -1)
     {
         you.num_turns++;
@@ -2334,7 +2335,10 @@ static void world_reacts()
     }
 
     //jmf: added silence messages
-    its_quiet = silenced(you.x_pos, you.y_pos);
+    // [jpeg] Commenting out until we add other sources of Silence
+    // than the player casting the spell (messages handled elsewhere)
+/*
+    bool its_quiet = silenced(you.x_pos, you.y_pos);
 
     if (you.attribute[ATTR_WAS_SILENCED] != its_quiet)
     {
@@ -2352,7 +2356,7 @@ static void world_reacts()
 
         you.attribute[ATTR_WAS_SILENCED] = its_quiet;
     }
-
+*/
     viewwindow(true, false);
 
     if (you.duration[DUR_PARALYSIS] > 0 && any_messages())

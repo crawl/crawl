@@ -112,7 +112,7 @@ void special_wielded()
                  "makes a deep moaning sound.", "gives off a wolf whistle.",
                  "wails.", "giggles.", "lets out a whoop!", "yawns loudly.",
                  "chatters happily.", "recites a poem.", "prattles on and on.",
-                 "regales you with its life story.", "intones a prayer.", 
+                 "regales you with its life story.", "intones a prayer.",
                  "shouts 'Whoopee!'", "hurls insults at you.", "cries out!",
                  "argues with itself.", "complains about the scenery.",
                  "says 'I'm bored.'", "calls out a warning!", "swears loudly.",
@@ -148,6 +148,8 @@ void special_wielded()
 
             int num_suffixes;
             std::string message;
+            msg_channel_type channel = MSGCH_TALK;
+            
             if (you.special_wield == SPWLD_SING)
             {
                 message = "The Singing Sword ";
@@ -172,6 +174,7 @@ void special_wielded()
                     num_suffixes = sizeof(suffixes_sounds)
                                    / sizeof(suffixes_sounds[0]);
                     message += suffixes_sounds[random2(num_suffixes)];
+                    channel = MSGCH_SOUND;
                 }
                 else // normal chatter
                 {
@@ -183,7 +186,7 @@ void special_wielded()
                     message += suffixes_talk[random2(num_suffixes)];
                 }
             }
-            mpr(message.c_str(), MSGCH_SOUND);
+            mpr(message.c_str(), channel);
 
         } // makes_noise
         break;

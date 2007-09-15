@@ -475,7 +475,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_ELECTROCUTION:
-                    mpr("You hear the crackle of electricity.");
+                    if (!silenced(you.x_pos, you.y_pos))
+                        mpr("You hear the crackle of electricity.", MSGCH_SOUND);
+                    else
+                        mpr("You see sparks fly.");
                     break;
 
                 case SPWPN_ORC_SLAYING:
@@ -529,9 +532,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 case SPWPN_SINGING_SWORD:
                     if (!was_known)
-                        mprf("%s says, 'Hi! I'm the Singing Sword!'", old_desc);
+                        mprf(MSGCH_TALK, "%s says, 'Hi! I'm the Singing Sword!'", old_desc);
                     else
-                        mpr("The Singing Sword hums in delight!");
+                        mpr("The Singing Sword hums in delight!", MSGCH_TALK);
                     break;
 
                 case SPWPN_WRATH_OF_TROG:
