@@ -446,6 +446,12 @@ void direction(dist& moves, targeting_type restricts,
             }
             else
             {
+                if (!needs_path)
+                {
+                    mprf(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
+                    break;
+                }
+                
                 show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
                                      true, ray, 0, true);
                 need_beam_redraw = show_beam;

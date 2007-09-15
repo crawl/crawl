@@ -2570,7 +2570,8 @@ bool puton_ring(int slot, bool prompt_finger)
         item_slot = slot;
     else
         item_slot = prompt_invent_item( "Put on which piece of jewellery?",
-                        MT_INVLIST, OBJ_JEWELLERY );
+                        MT_INVLIST, OBJ_JEWELLERY, true, true, true, 0, NULL,
+                        OPER_PUTON );
 
     if (item_slot == PROMPT_ABORT)
     {
@@ -3516,7 +3517,10 @@ void read_scroll(void)
     int item_slot = prompt_invent_item(
                         "Read which item?", 
                         MT_INVLIST, 
-                        OBJ_SCROLLS );
+                        OBJ_SCROLLS, 
+                        true, true, true, 0, NULL,
+                        OPER_READ );
+
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
