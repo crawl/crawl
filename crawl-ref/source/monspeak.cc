@@ -28,6 +28,7 @@
 #include "fight.h"
 #include "insult.h"
 #include "itemname.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"

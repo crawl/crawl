@@ -17,6 +17,18 @@
 
 #include "externs.h"
 
+// Various ways to get the acquirement effect.
+enum acquirement_agent_type
+{
+    AQ_SCROLL   = 0,
+    
+    // Empty space for the gods
+    
+    AQ_CARD_GENIE = 100,
+
+    AQ_WIZMODE          = 200
+};
+
 bool is_valid_item( const item_def &item );
 
 bool dec_inv_item_quantity( int obj, int amount );

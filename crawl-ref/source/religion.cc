@@ -49,6 +49,7 @@
 #include "item_use.h"
 #include "items.h"
 #include "makeitem.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -65,7 +66,10 @@
 #include "spells3.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "tutorial.h"
 #include "view.h"
 

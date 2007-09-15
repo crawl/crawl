@@ -41,7 +41,9 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "Kills.h"
 #include "macro.h"
+#include "message.h"
 #include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -58,7 +60,9 @@
 #include "spl-util.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "transfor.h"
+#include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
@@ -4769,12 +4773,12 @@ bool rot_player( int amount )
 }
 
 
-int count_worn_ego( special_armour_type ego )
+int count_worn_ego( int which_ego )
 {
     int result = 0;
     for ( int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot )
         if (you.equip[slot] != -1 &&
-            get_armour_ego_type(you.inv[you.equip[slot]]) == ego)
+            get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
             result++;
     return result;
 }
@@ -4896,7 +4900,30 @@ actor::~actor()
 player::player()
 {
     init();
+    kills = new KillMaster();
 }
+
+player::player(const player &other)
+{
+    init();
+    *this = other;
+
+    kills = new KillMaster(*(other.kills));
+}
+
+void player::copy_from(const player &other)
+{
+    if (this == &other)
+        return;
+
+    KillMaster *_kills = kills;
+
+    *this = other;
+
+    kills  = _kills;
+    *kills = *(other.kills);
+}
+
 
 // player struct initialization
 void player::init()
@@ -5037,6 +5064,11 @@ void player::init()
     duration.init(0);
 
     exp_available = 25;
+}
+
+player::~player()
+{
+    delete kills;
 }
 
 bool player::is_valid() const

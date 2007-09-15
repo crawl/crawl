@@ -46,6 +46,7 @@
 
 #include "cio.h"
 #include "externs.h"
+#include "message.h"
 #include "stuff.h"
 
 // for trim_string:

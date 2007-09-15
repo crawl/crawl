@@ -26,7 +26,9 @@
 #include "monplace.h"
 #include "mapdef.h"
 #include "misc.h"
+#include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 
 static int write_vault(map_def &mdef, map_type mt, 
                        vault_placement &,

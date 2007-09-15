@@ -18,6 +18,46 @@
 
 #include "externs.h"
 
+// various elemental colour schemes... used for abstracting random short lists
+// MUST match the order in initfile.cc or breakage results.
+enum element_type
+{
+    EC_FIRE = 32,       // fiery colours (must be first and > highest colour)
+    EC_ICE,             // icy colours
+    EC_EARTH,           // earthy colours
+    EC_ELECTRICITY,     // electrical side of air
+    EC_AIR,             // non-electric and general air magic
+    EC_POISON,          // used only for venom mage and stalker stuff
+    EC_WATER,           // used only for the elemental
+    EC_MAGIC,           // general magical effect
+    EC_MUTAGENIC,       // transmute, poly, radiation effects
+    EC_WARP,            // teleportation and anything similar
+    EC_ENCHANT,         // magical enhancements
+    EC_HEAL,            // holy healing (not necromantic stuff)
+    EC_HOLY,            // general "good" god effects
+    EC_DARK,            // darkness
+    EC_DEATH,           // currently only assassin (and equal to EC_NECRO)
+    EC_NECRO,           // necromancy stuff
+    EC_UNHOLY,          // demonology stuff
+    EC_VEHUMET,         // vehumet's odd-ball colours
+    EC_BEOGH,           // Beogh altar colours
+    EC_CRYSTAL,         // colours of crystal
+    EC_BLOOD,           // colours of blood
+    EC_SMOKE,           // colours of smoke
+    EC_SLIME,           // colours of slime
+    EC_JEWEL,           // colourful 
+    EC_ELVEN,           // used for colouring elf fabric items
+    EC_DWARVEN,         // used for colouring dwarf fabric items
+    EC_ORCISH,          // used for colouring orc fabric items
+    EC_GILA,            // gila monster colours
+    EC_FLOOR,           // colour of the area's floor
+    EC_ROCK,            // colour of the area's rock
+    EC_STONE,           // colour of the area's stone
+    EC_MIST,            // colour of mist
+    EC_SHIMMER_BLUE,    // shimmering colours of blue.
+    EC_RANDOM           // any colour (except BLACK)
+};
+
 #define BORDER_COLOR BROWN
 
 void init_char_table(char_set_type set);
@@ -153,6 +193,7 @@ void view_update_at(const coord_def &pos);
 void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();
 
+struct ray_def;
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir = 0,
                bool find_shortest = false );

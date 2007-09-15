@@ -16,8 +16,8 @@
 #include "externs.h"
 
 #include "cloud.h"
-#include "misc.h"
 #include "stuff.h"
+#include "terrain.h"
 
 // Returns true if this cloud spreads out as it dissipates.
 static bool cloud_spreads(const cloud_struct &cloud)

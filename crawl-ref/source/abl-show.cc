@@ -42,6 +42,7 @@
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "message.h"
 #include "menu.h"
@@ -52,6 +53,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
+#include "randart.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
@@ -70,6 +72,19 @@
 #ifdef UNIX
 #include "libunix.h"
 #endif
+
+enum ability_flag_type
+{
+    ABFLAG_NONE         = 0x00000000,
+    ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON 
+    ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie glamour)
+    ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
+    ABFLAG_EXHAUSTION   = 0x00000008, // fails if you.exhausted
+    ABFLAG_INSTANT      = 0x00000010, // doesn't take time to use
+    ABFLAG_PERMANENT_HP = 0x00000020, // costs permanent HPs
+    ABFLAG_PERMANENT_MP = 0x00000040, // costs permanent MPs
+    ABFLAG_CONF_OK      = 0x00000080  // can use even if confused.
+};
 
 static void lugonu_bends_space();
 static int find_ability_slot( ability_type which_ability );

@@ -24,6 +24,8 @@
 
 #include "externs.h"
 
+#include "decks.h"
+#include "food.h"
 #include "items.h"
 #include "itemprop.h"
 #include "macro.h"
@@ -2338,28 +2340,6 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     return  hand == HANDS_TWO 
             && !item_is_rod(weapon) 
             && !is_range_weapon(weapon);
-}
-
-bool is_deck(const item_def &item)
-{
-    return item.base_type == OBJ_MISCELLANY
-        && (item.sub_type >= MISC_DECK_OF_ESCAPE &&
-            item.sub_type <= MISC_DECK_OF_DEFENSE);
-}
-
-deck_rarity_type deck_rarity(const item_def &item)
-{
-    ASSERT( is_deck(item) );
-    switch (item.colour)
-    {
-    case BLACK: case BLUE: case GREEN: case CYAN: case RED:
-    default:
-        return DECK_RARITY_COMMON;
-    case MAGENTA: case BROWN:
-        return DECK_RARITY_RARE;
-    case LIGHTMAGENTA:
-        return DECK_RARITY_LEGENDARY;
-    }
 }
 
 std::string item_base_name(const item_def &item)

@@ -24,6 +24,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -38,7 +39,9 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "transfor.h"
+#include "traps.h"
 #include "view.h"
 
 #define VECFROM(x) (x), (x) + ARRAYSIZE(x)
@@ -1364,4 +1367,26 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     }
 
     return;
+}
+
+bool is_deck(const item_def &item)
+{
+    return item.base_type == OBJ_MISCELLANY
+        && (item.sub_type >= MISC_DECK_OF_ESCAPE &&
+            item.sub_type <= MISC_DECK_OF_DEFENSE);
+}
+
+deck_rarity_type deck_rarity(const item_def &item)
+{
+    ASSERT( is_deck(item) );
+    switch (item.colour)
+    {
+    case BLACK: case BLUE: case GREEN: case CYAN: case RED:
+    default:
+        return DECK_RARITY_COMMON;
+    case MAGENTA: case BROWN:
+        return DECK_RARITY_RARE;
+    case LIGHTMAGENTA:
+        return DECK_RARITY_LEGENDARY;
+    }
 }

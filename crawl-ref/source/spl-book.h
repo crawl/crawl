@@ -18,6 +18,13 @@
 #include "menu.h"
 #include "FixVec.h"
 
+enum read_book_action_type
+{
+    RBOOK_USE_STAFF,
+    RBOOK_MEMORISE,
+    RBOOK_READ_SPELL
+};
+
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon - effects - shopping

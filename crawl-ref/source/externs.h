@@ -29,9 +29,8 @@
 #include "defines.h"
 #include "enum.h"
 #include "FixAry.h"
-#include "Kills.h"
 #include "libutil.h"
-#include "message.h"
+#include "mpr.h"
 
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
@@ -59,45 +58,6 @@ const int kPathLen = 256;
 // This value is used to mark that the current berserk is free from
 // penalty (Xom's granted or from a deck of cards).
 #define NO_BERSERK_PENALTY    -1
-
-struct monsters;
-struct ait_hp_loss;
-
-struct activity_interrupt_data
-{
-    activity_interrupt_payload_type apt;
-    const void *data;
-    std::string context;
-
-    activity_interrupt_data()
-        : apt(AIP_NONE), data(NULL), context()
-    {
-    }
-    activity_interrupt_data(const int *i)
-        : apt(AIP_INT), data(i), context()
-    {
-    }
-    activity_interrupt_data(const char *s)
-        : apt(AIP_STRING), data(s), context()
-    {
-    }
-    activity_interrupt_data(const std::string &s) 
-        : apt(AIP_STRING), data(s.c_str()), context()
-    {
-    }
-    activity_interrupt_data(const monsters *m, const std::string &ctx = "")
-        : apt(AIP_MONSTER), data(m), context(ctx)
-    {
-    }
-    activity_interrupt_data(const ait_hp_loss *ahl)
-        : apt(AIP_HP_LOSS), data(ahl), context()
-    {
-    }
-    activity_interrupt_data(const activity_interrupt_data &a)
-        : apt(a.apt), data(a.data), context(a.context)
-    {
-    }
-};
 
 class item_def;
 class melee_attack;
@@ -223,14 +183,6 @@ public:
     }
 };
 
-struct ait_hp_loss
-{
-    int hp;
-    int hurt_type;  // KILLED_BY_POISON, etc.
-
-    ait_hp_loss(int _hp, int _ht) : hp(_hp), hurt_type(_ht) { }
-};
-
 struct coord_def
 {
     int         x;
@@ -351,126 +303,6 @@ struct dice_def
     dice_def( int n = 0, int s = 0 ) : num(n), size(s) {}
 };
 
-struct ray_def
-{
-public:
-    double accx;
-    double accy;
-    double slope;
-    // Quadrant 1: down-right
-    // Quadrant 2: down-left
-    // Quadrant 3: up-left
-    // Quadrant 4: up-right
-    int quadrant;
-    int fullray_idx;            // for cycling: where did we come from?
-
-public:
-    ray_def();
-    int x() const { return static_cast<int>(accx); }
-    int y() const { return static_cast<int>(accy); }
-    coord_def pos() const { return coord_def(x(), y()); }
-    
-    // returns the direction taken (0,1,2)
-    int advance(bool shorten = false, const coord_def *p = NULL);
-    int advance_through(const coord_def &point);
-    void advance_and_bounce();
-    void regress();
-
-private:
-    int raw_advance();
-    double reflect(bool x, double oldc, double newc) const;
-    double reflect(double x, double c) const;
-    void set_reflect_point(const double oldx, const double oldy,
-                           double *newx, double *newy,
-                           bool blocked_x, bool blocked_y);
-};
-
-// output from direction() function:
-struct dist
-{
-    bool isValid;       // valid target chosen?
-    bool isTarget;      // target (true), or direction (false)?
-    bool isMe;          // selected self (convenience: tx == you.x_pos,
-                        // ty == you.y_pos)
-    bool isEndpoint;    // Does the player want the attack to stop at (tx,ty)?
-    bool isCancel;      // user cancelled (usually <ESC> key)
-    bool choseRay;      // user wants a specific beam
-    int  tx,ty;         // target x,y or logical extension of beam to map edge
-    int  dx,dy;         // delta x and y if direction - always -1,0,1
-    ray_def ray;        // ray chosen if necessary
-
-    // internal use - ignore
-    int  prev_target;   // previous target
-
-    // target - source (source == you.pos())
-    coord_def target() const
-    {
-        return coord_def(tx, ty);
-    }
-};
-
-struct bolt
-{
-    // INPUT parameters set by caller
-    int         range;                 // minimum range
-    int         rangeMax;              // maximum range
-    int         type;                  // missile gfx
-    int         colour;
-    int         flavour;
-    int         source_x, source_y;    // beam origin
-    dice_def    damage;
-    int         ench_power, hit;
-    int         target_x, target_y;    // intended target
-    char        thrower;               // what kind of thing threw this?
-    char        ex_size;               // explosion radius (0==none)
-    int         beam_source;           // NON_MONSTER or monster index #
-    std::string name;
-    bool        is_beam;               // beams? (can hits multiple targets?)
-    bool        is_explosion;
-    bool        is_big_cloud;          // expands into big_cloud at endpoint
-    bool        is_enchant;            // no block/dodge, but mag resist
-    bool        is_energy;             // mostly energy/non-physical attack
-    bool        is_launched;           // was fired from launcher?
-    bool        is_thrown;             // was thrown from hand?
-    bool        target_first;          // targeting by direction 
-    bool        aimed_at_spot;         // aimed at (x,y), should not cross
-    std::string aux_source;            // source of KILL_MISC beams
-
-    // OUTPUT parameters (tracing, ID)
-    bool        obvious_effect;        // did an 'obvious' effect happen?
-    bool        effect_known;          // did we _know_ this would happen?
-    int         fr_count, foe_count;   // # of times a friend/foe is "hit"
-    int         fr_power, foe_power;   // total levels/hit dice affected
-
-    // INTERNAL use - should not usually be set outside of beam.cc
-    bool        is_tracer;       // is this a tracer?
-    bool        aimed_at_feet;   // this was aimed at self!
-    bool        msg_generated;   // an appropriate msg was already mpr'd
-    bool        in_explosion_phase;   // explosion phase (as opposed to beam phase)
-    bool        smart_monster;   // tracer firer can guess at other mons. resists?
-    bool        can_see_invis;   // tracer firer can see invisible?
-    mon_attitude_type attitude;  // attitude of whoever fired tracer
-    int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
-    bool        chose_ray;       // do we want a specific ray?
-    ray_def     ray;             // shoot on this specific ray
-
-public:
-    // A constructor to try and fix some of the bugs that occur because
-    // this struct never seems to be properly initialized.  Definition
-    // is over in beam.cc.
-    bolt();
-
-    void set_target(const dist &);
-
-    // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
-    killer_type  killer() const;
-
-    coord_def target() const
-    {
-        return (coord_def(target_x, target_y));
-    }
-};
-
 struct run_check_dir
 {
     unsigned char       grid;
@@ -540,26 +372,6 @@ private:
                           bool terse, bool ident ) const;
 };
 
-class input_history
-{
-public:
-    input_history(size_t size);
-
-    void new_input(const std::string &s);
-    void clear();
-    
-    const std::string *prev();
-    const std::string *next();
-
-    void go_end();
-private:
-    typedef std::list<std::string> string_list;
-    
-    string_list             history;
-    string_list::iterator   pos;
-    size_t maxsize;
-};
-
 class runrest
 {
 public:
@@ -605,6 +417,8 @@ private:
 };
 
 typedef std::vector<delay_queue_item> delay_queue_type;
+
+class KillMaster;
 
 class player : public actor
 {
@@ -736,7 +550,16 @@ public:
   FixedVector<unique_item_status_type, 50> unique_items;
   FixedVector<bool, NUM_MONSTERS> unique_creatures;
 
-  KillMaster kills;
+  // NOTE: The kills member is a pointer to a KillMaster object,
+  // rather than the object itself, so that we can get away with
+  // just a foward declare of the KillMaster class, rather than
+  // having to #include Kills.h and thus make every single .cc file
+  // dependant on Kills.h.  Having a pointer means that we have
+  // to do our own implementations of copying the player object,
+  // since the default implementations will lead to the kills member
+  // pointing to freed memory, or worse yet lead to the same piece of
+  // memory being freed twice.
+  KillMaster* kills;
 
   level_area_type level_type;
   std::string level_type_name;
@@ -797,6 +620,11 @@ public:
 
 public:
     player();
+    player(const player &other);
+    ~player();
+
+    void copy_from(const player &other);
+
     void init();
     
     bool is_valid() const;
@@ -926,21 +754,6 @@ public:
         : FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>(SPELL_NO_SPELL)
     { }
     void clear() { init(SPELL_NO_SPELL); }
-};
-
-struct mon_attack_def
-{
-    mon_attack_type     type;
-    mon_attack_flavour  flavour;
-    int                 damage;
-
-    static mon_attack_def attk(int damage,
-                               mon_attack_type type = AT_HIT,
-                               mon_attack_flavour flav = AF_PLAIN)
-    {
-        mon_attack_def def = { type, flav, damage };
-        return (def);
-    }
 };
 
 class ghost_demon;
@@ -1328,48 +1141,6 @@ public:
 
 extern struct crawl_environment env;
 
-// Track various aspects of Crawl game state.
-struct game_state
-{
-    bool mouse_enabled;     // True if mouse input is currently relevant.
-    
-    bool waiting_for_command; // True when the game is waiting for a command.
-    bool terminal_resized;   // True if the term was resized and we need to
-                             // take action to handle it.
-    
-    bool io_inited;         // Is curses or the equivalent initialised?
-    bool need_save;         // Set to true when game has started.
-    bool saving_game;       // Set to true while in save_game.
-    bool updating_scores;   // Set to true while updating hiscores.
-
-    int  seen_hups;         // Set to true if SIGHUP received.
-
-    bool map_stat_gen;      // Set if we're generating stats on maps.
-    
-    bool unicode_ok;        // Is unicode support available?
-
-    std::string (*glyph2strfn)(unsigned glyph);
-    int  (*multibyte_strlen)(const std::string &s);
-    void (*terminal_resize_handler)();
-    void (*terminal_resize_check)();
-
-    game_state() : mouse_enabled(false), waiting_for_command(false),
-                   terminal_resized(false), io_inited(false), need_save(false),
-                   saving_game(false), updating_scores(false),
-                   seen_hups(0), map_stat_gen(false), unicode_ok(false),
-                   glyph2strfn(NULL), multibyte_strlen(NULL),
-                   terminal_resize_handler(NULL), terminal_resize_check(NULL)
-    {
-    }
-
-    void check_term_size() const
-    {
-        if (terminal_resize_check)
-            (*terminal_resize_check)();
-    }
-};
-extern game_state crawl_state;
-
 struct ghost_demon
 {
 public:
@@ -1397,100 +1168,6 @@ private:
 };
 
 extern std::vector<ghost_demon> ghosts;
-
-struct system_environment
-{
-    std::string crawl_name;
-    std::string crawl_pizza;
-    std::string crawl_rc;
-    std::string crawl_dir;
-    std::string morgue_dir;
-    std::string crawl_base;        // Directory from argv[0], may be used to
-                                   // locate datafiles.
-    std::string home;              // only used by MULTIUSER systems
-    bool  board_with_nail;         // Easter Egg silliness
-
-#ifdef DGL_SIMPLE_MESSAGING
-    std::string messagefile;       // File containing messages from other users.
-    bool have_messages;            // There are messages waiting to be read.
-    unsigned  message_check_tick;
-#endif
-
-    std::string scorefile;
-    std::vector<std::string> cmd_args;
-
-    int map_gen_iters;
-};
-
-extern system_environment SysEnv;
-
-struct crawl_view_geometry
-{
-public:
-    coord_def termsz;              // Size of the terminal.
-    coord_def viewp;               // Left-top pos of viewport.
-    coord_def viewsz;              // Size of the viewport (play area).
-    coord_def hudp;                // Left-top pos of status area.
-    coord_def hudsz;               // Size of the status area.
-    coord_def msgp;                // Left-top pos of the message pane.
-    coord_def msgsz;               // Size of the message pane.
-
-    coord_def vgrdc;               // What grid pos is at the centre of the view
-                                   // usually you.pos().
-
-    coord_def viewhalfsz;
-
-    coord_def glos1, glos2;        // LOS limit grid coords (inclusive)
-    coord_def vlos1, vlos2;        // LOS limit viewport coords (inclusive)
-
-    coord_def mousep;              // Where the mouse is.
-
-    static const int message_min_lines = 7;
-    static const int hud_min_width  = 41;
-    static const int hud_min_gutter = 3;
-    static const int hud_max_gutter = 6;
-
-private:
-    coord_def last_player_pos;
-    
-public:
-    crawl_view_geometry();
-    void init_geometry();
-
-    void init_view();
-    void set_player_at(const coord_def &c, bool force_centre = false);
-
-    coord_def view_centre() const
-    {
-        return viewp + viewhalfsz;
-    }
-
-    bool in_grid_los(const coord_def &c) const
-    {
-        return (c.x >= glos1.x && c.x <= glos2.x
-                && c.y >= glos1.y && c.y <= glos2.y);
-    }
-
-    bool in_view_los(const coord_def &c) const
-    {
-        return (c.x >= vlos1.x && c.x <= vlos2.x
-                && c.y >= vlos1.y && c.y <= vlos2.y);
-    }
-
-    bool in_view_viewport(const coord_def &c) const
-    {
-        return (c.x >= viewp.x && c.y >= viewp.y
-                && c.x < viewp.x + viewsz.x
-                && c.y < viewp.y + viewsz.y);
-    }
-
-    bool in_grid_viewport(const coord_def &c) const
-    {
-        return in_view_viewport(c - vgrdc + view_centre());
-    }
-};
-
-extern crawl_view_geometry crawl_view;
 
 struct message_filter
 {
@@ -1931,18 +1608,5 @@ private:
 };
 
 extern game_options  Options;
-
-struct tagHeader 
-{
-    short tagID;
-    long offset;
-};
-
-extern const struct coord_def Compass[8];
-extern const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES];
-
-typedef int keycode_type;
-
-typedef FixedArray < item_type_id_state_type, 4, 50 > id_arr;
 
 #endif // EXTERNS_H

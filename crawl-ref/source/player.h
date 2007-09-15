@@ -16,6 +16,14 @@
 
 #include "externs.h"
 
+enum genus_type
+{
+    GENPC_DRACONIAN,                   //    0
+    GENPC_ELVEN,                       //    1
+    GENPC_DWARVEN,                     //    2
+    GENPC_OGRE
+};
+
 bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                           bool force );
 
@@ -424,7 +432,7 @@ void run_macro(const char *macroname = NULL);
 
 int player_ghost_base_movement_speed();
 
-int count_worn_ego( special_armour_type ego );
+int count_worn_ego( int which_ego );
 int stat_modifier( stat_type stat );
 
 #endif

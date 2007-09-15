@@ -17,10 +17,31 @@
 #include "FixVec.h"
 #include "FixAry.h"
 #include "externs.h"
-#include "misc.h"
+#include "terrain.h"
 #include "travel.h"
 #include "stuff.h"
 #include <vector>
+
+enum portal_type
+{
+    PORTAL_NONE = 0,
+    PORTAL_LABYRINTH,
+    PORTAL_HELL,
+    PORTAL_ABYSS,
+    PORTAL_PANDEMONIUM,
+    NUM_PORTALS
+};
+
+enum special_room_type
+{
+    SROOM_LAIR_ORC,                    //    0
+    SROOM_LAIR_KOBOLD,
+    SROOM_TREASURY,
+    SROOM_BEEHIVE,
+    SROOM_JELLY_PIT,
+    SROOM_MORGUE,
+    NUM_SPECIAL_ROOMS                  //    5 - must remain final member {dlb}
+};
 
 const int MAKE_GOOD_ITEM = 351;
 

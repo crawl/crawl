@@ -17,7 +17,231 @@
 #include "externs.h"
 #include "enum.h"
 
+enum corpse_effect_type
+{
+    CE_NOCORPSE,                       //    0
+    CE_CLEAN,                          //    1
+    CE_CONTAMINATED,                   //    2
+    CE_POISONOUS,                      //    3
+    CE_HCL,                            //    4
+    CE_MUTAGEN_RANDOM,                 //    5
+    CE_MUTAGEN_GOOD, //    6 - may be worth implementing {dlb}
+    CE_MUTAGEN_BAD, //    7 - may be worth implementing {dlb}
+    CE_RANDOM, //    8 - not used, but may be worth implementing {dlb}
+    CE_ROTTEN = 50 //   50 - must remain at 50 for now {dlb}
+};
+
+enum gender_type
+{
+    GENDER_NEUTER,
+    GENDER_MALE,
+    GENDER_FEMALE
+};
+
+enum mon_attack_type
+{
+    AT_NONE,
+    AT_HIT,         // including weapon attacks
+    AT_BITE,
+    AT_STING,
+    AT_SPORE,
+    AT_TOUCH,
+    AT_ENGULF,
+    AT_CLAW,
+    AT_TAIL_SLAP,
+    AT_BUTT,
+    
+    AT_SHOOT        // attack representing missile damage for M_ARCHER
+};
+
+enum mon_attack_flavour
+{
+    AF_PLAIN,
+    AF_ACID,
+    AF_BLINK,
+    AF_COLD,
+    AF_CONFUSE,
+    AF_DISEASE,
+    AF_DRAIN_DEX,
+    AF_DRAIN_STR,
+    AF_DRAIN_XP,
+    AF_ELEC,
+    AF_FIRE,
+    AF_HUNGER,
+    AF_MUTATE,
+    AF_BAD_MUTATE,
+    AF_PARALYSE,
+    AF_POISON,
+    AF_POISON_NASTY,
+    AF_POISON_MEDIUM,
+    AF_POISON_STRONG,
+    AF_POISON_STR,
+    AF_ROT,
+    AF_VAMPIRIC,
+    AF_KLOWN,
+    AF_DISTORT,
+    AF_RAGE
+};
+
+// properties of the monster class (other than resists/vulnerabilities)
+enum mons_class_flags
+{
+    M_NO_FLAGS          = 0,
+
+    M_SPELLCASTER       = (1<< 0),        // any non-physical-attack powers,
+    M_ACTUAL_SPELLS     = (1<< 1),        // monster is a wizard,
+    M_PRIEST            = (1<< 2),        // monster is a priest
+    M_FIGHTER           = (1<< 3),        // monster is skilled fighter
+
+    M_FLIES             = (1<< 4),        // will crash to ground if paralysed?
+    M_LEVITATE          = (1<< 5),        // ... but not if this is set
+    M_INVIS             = (1<< 6),        // is created invis
+    M_SEE_INVIS         = (1<< 7),        // can see invis
+    M_SENSE_INVIS       = (1<< 8),        // can sense invisible things
+    M_SPEAKS            = (1<< 9),        // uses talking code
+    M_CONFUSED          = (1<<10),        // monster is perma-confused,
+    M_BATTY             = (1<<11),        // monster is batty
+    M_SPLITS            = (1<<12),        // monster can split
+    M_AMPHIBIOUS        = (1<<13),        // monster can swim in water,
+    M_THICK_SKIN        = (1<<14),        // monster has more effective AC,
+    M_HUMANOID          = (1<<15),        // for Glamour 
+    M_COLD_BLOOD        = (1<<16),        // susceptible to cold
+    M_WARM_BLOOD        = (1<<17),        // no effect currently
+    M_REGEN             = (1<<18),        // regenerates quickly
+    M_BURROWS           = (1<<19),        // monster digs through rock
+    M_EVIL              = (1<<20),        // monster vulnerable to holy spells
+
+    M_UNIQUE            = (1<<21),        // monster is a unique
+    M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
+
+    M_ARCHER            = (1<<23),        // gets various archery boosts
+
+    M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
+
+    M_NO_SKELETON       = (1<<29),        // boneless corpses
+    M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
+};
+
+enum mon_event_type
+{
+    ME_EVAL,                            // 0, evaluate monster AI state
+    ME_DISTURB,                         // noisy
+    ME_ANNOY,                           // annoy at range
+    ME_ALERT,                           // alert to presence
+    ME_WHACK,                           // physical attack
+    ME_SHOT,                            // attack at range
+    ME_SCARE,                           // frighten monster
+    ME_CORNERED                         // cannot flee
+};
+
+enum mon_intel_type             // Must be in increasing intelligence order
+{
+    I_PLANT = 0,
+    I_INSECT,
+    I_ANIMAL,
+    I_NORMAL,
+    I_HIGH
+};
+
+// order of these is important:
+enum mon_itemuse_type
+{
+    MONUSE_NOTHING,
+    MONUSE_EATS_ITEMS,
+    MONUSE_OPEN_DOORS,
+    MONUSE_STARTING_EQUIPMENT,
+    MONUSE_WEAPONS_ARMOUR, 
+    MONUSE_MAGIC_ITEMS
+};
+
+// now saved in an unsigned long.
+enum mon_resist_flags
+{
+    MR_NO_FLAGS          = 0,
+
+    // resistances 
+    // Notes: 
+    // - negative energy is mostly handled via mons_has_life_force()
+    // - acid is handled mostly by genus (jellies) plus non-living
+    // - asphyx-resistance replaces hellfrost resistance.
+    MR_RES_ELEC          = (1<< 0),
+    MR_RES_POISON        = (1<< 1),
+    MR_RES_FIRE          = (1<< 2),
+    MR_RES_HELLFIRE      = (1<< 3),
+    MR_RES_COLD          = (1<< 4),
+    MR_RES_ASPHYX        = (1<< 5),
+    MR_RES_ACID          = (1<< 6),
+
+    // vulnerabilities
+    MR_VUL_ELEC          = (1<< 7),
+    MR_VUL_POISON        = (1<< 8),
+    MR_VUL_FIRE          = (1<< 9),
+    MR_VUL_COLD          = (1<<10),
+
+    // melee armour resists/vulnerabilities 
+    // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
+    MR_RES_PIERCE        = (1<<11),
+    MR_RES_SLICE         = (1<<12),
+    MR_RES_BLUDGEON      = (1<<13),
+
+    MR_VUL_PIERCE        = (1<<14),
+    MR_VUL_SLICE         = (1<<15),
+    MR_VUL_BLUDGEON      = (1<<16)
+};
+
+enum shout_type
+{
+    S_SILENT,               // silent
+    S_SHOUT,                // shout                                           
+    S_BARK,                 // bark
+    S_SHOUT2,               // shout twice (e.g. two-headed ogres)
+    S_ROAR,                 // roar
+    S_SCREAM,               // scream
+    S_BELLOW,               // bellow (?)
+    S_SCREECH,              // screech
+    S_BUZZ,                 // buzz
+    S_MOAN,                 // moan
+    S_WHINE,                // irritating whine (mosquito)
+    S_CROAK,                // frog croak
+    S_GROWL,                // for bears
+    S_HISS,                 // for snakes and lizards
+
+    // Loudness setting for shouts that are only defined in dat/shout.txt
+    S_VERY_SOFT,
+    S_SOFT,
+    S_NORMAL,
+    S_LOUD,
+    S_VERY_LOUD,
+
+    NUM_SHOUTS,
+    S_RANDOM
+};
+
+enum zombie_size_type
+{
+    Z_NOZOMBIE,
+    Z_SMALL,
+    Z_BIG
+};
+
+struct bolt;
+
 // ($pellbinder) (c) D.G.S.E. 1998
+
+struct mon_attack_def
+{
+    mon_attack_type     type;
+    mon_attack_flavour  flavour;
+    int                 damage;
+
+    static mon_attack_def attk(int damage,
+                               mon_attack_type type = AT_HIT,
+                               mon_attack_flavour flav = AF_PLAIN)
+    {
+        mon_attack_def def = { type, flav, damage };
+        return (def);
+    }
+};
 
 struct monsterentry
 {

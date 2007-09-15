@@ -37,6 +37,7 @@
 #include "skills2.h"
 #include "spells2.h"
 #include "spl-cast.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
 

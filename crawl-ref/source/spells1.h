@@ -16,6 +16,7 @@
 #include "externs.h"
 #include "direct.h"
 
+struct bolt;
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

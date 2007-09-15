@@ -13,6 +13,7 @@
 #include "it_use2.h"
 #include "items.h"
 #include "makeitem.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "monplace.h"
@@ -23,6 +24,7 @@
 #include "religion.h"
 #include "spells3.h"
 #include "spl-cast.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
 

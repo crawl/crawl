@@ -49,6 +49,7 @@
 #include "itemprop.h"
 #include "luadgn.h"
 #include "macro.h"
+#include "message.h"
 #include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -58,6 +59,8 @@
 #include "stuff.h"
 #include "spells4.h"
 #include "stash.h"
+#include "state.h"
+#include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
 

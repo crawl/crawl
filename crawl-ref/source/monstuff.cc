@@ -38,11 +38,13 @@
 #include "describe.h"
 #include "fight.h"
 #include "hiscores.h"
+#include "it_use2.h"
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
+#include "Kills.h"
 #include "makeitem.h"
-#include "misc.h"
+#include "message.h"
 #include "monplace.h"
 #include "monspeak.h"
 #include "mon-pick.h"
@@ -57,6 +59,8 @@
 #include "spells2.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "traps.h"
 #include "tutorial.h"
 #include "view.h"
 #include "stash.h"
@@ -800,7 +804,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-        you.kills.record_kill(monster, killer, pet_kill);
+        you.kills->record_kill(monster, killer, pet_kill);
 
         if (monster->has_ench(ENCH_ABJ))
         {

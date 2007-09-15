@@ -16,6 +16,28 @@
 
 #include "mon-util.h"
 
+enum mon_dam_level_type
+{
+    MDAM_OKAY,
+    MDAM_LIGHTLY_DAMAGED,
+    MDAM_MODERATELY_DAMAGED,
+    MDAM_HEAVILY_DAMAGED,
+    MDAM_HORRIBLY_DAMAGED,
+    MDAM_ALMOST_DEAD,
+    MDAM_DEAD
+};
+
+enum mon_desc_type   // things that cross categorical lines {dlb}
+{
+    MDSC_LEAVES_HIDE,                  //    0
+    MDSC_REGENERATES,
+    MDSC_NOMSG_WOUNDS
+};
+
+#define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
+                     || (x) == KILL_YOU_CONF)
+#define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
+
 // useful macro
 #define SAME_ATTITUDE(x) (mons_friendly(x)? BEH_FRIENDLY:    \
                           mons_neutral(x)?  BEH_NEUTRAL : BEH_HOSTILE)

@@ -19,6 +19,12 @@
 
 #include "enum.h"
 
+enum drop_mode_type
+{
+    DM_SINGLE,
+    DM_MULTI
+};
+
 god_type str_to_god(std::string god);
 int str_to_colour( const std::string &str, int default_colour = -1,
                    bool accept_number = true );
@@ -43,6 +49,32 @@ void apply_ascii_display(bool ascii);
  * called from: acr
  * *********************************************************************** */
 void get_system_environment(void);
+
+struct system_environment
+{
+    std::string crawl_name;
+    std::string crawl_pizza;
+    std::string crawl_rc;
+    std::string crawl_dir;
+    std::string morgue_dir;
+    std::string crawl_base;        // Directory from argv[0], may be used to
+                                   // locate datafiles.
+    std::string home;              // only used by MULTIUSER systems
+    bool  board_with_nail;         // Easter Egg silliness
+
+#ifdef DGL_SIMPLE_MESSAGING
+    std::string messagefile;       // File containing messages from other users.
+    bool have_messages;            // There are messages waiting to be read.
+    unsigned  message_check_tick;
+#endif
+
+    std::string scorefile;
+    std::vector<std::string> cmd_args;
+
+    int map_gen_iters;
+};
+
+extern system_environment SysEnv;
 
 
 // last updated 16feb2001 {gdl}

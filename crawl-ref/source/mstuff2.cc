@@ -32,6 +32,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -42,6 +43,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "traps.h"
 #include "view.h"
 
 static int monster_abjuration(const monsters *mons, bool test);

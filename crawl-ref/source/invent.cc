@@ -31,9 +31,12 @@
 
 #include "clua.h"
 #include "describe.h"
+#include "food.h"
+#include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "message.h"
 #include "player.h"
 #include "shopping.h"
 #include "stuff.h"

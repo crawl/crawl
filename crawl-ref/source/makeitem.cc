@@ -11,6 +11,10 @@
 #include "externs.h"
 #include "makeitem.h"
 
+#include "decks.h"
+#include "describe.h"
+#include "food.h"
+#include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"

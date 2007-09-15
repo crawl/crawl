@@ -34,6 +34,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "mapmark.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"

@@ -25,6 +25,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"
+#include "output.h"
 #include "player.h"
 #include "skills2.h"
 #include "stuff.h"

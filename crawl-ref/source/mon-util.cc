@@ -39,6 +39,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "Kills.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "mstuff2.h"
@@ -47,6 +48,8 @@
 #include "randart.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 //jmf: moved from inside function

@@ -9,6 +9,7 @@
 #include "cio.h"
 #include "command.h"
 #include "files.h"
+#include "food.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -27,6 +28,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "view.h"
 
 static species_type get_tutorial_species(unsigned int type);

@@ -6,17 +6,21 @@
  */
 
 #include "AppHdr.h"
+
+#include <sstream>
+
 #include "clua.h"
 #include "direct.h"
+#include "dungeon.h"
 #include "files.h"
+#include "initfile.h"
 #include "luadgn.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "stuff.h"
 #include "tags.h"
-#include "dungeon.h"
-#include <sstream>
+#include "terrain.h"
 
 // Lua interpreter for the dungeon builder.
 CLua dlua(false);

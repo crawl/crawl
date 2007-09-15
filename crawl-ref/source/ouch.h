@@ -21,6 +21,46 @@
 
 #include "enum.h"
 
+enum kill_method_type
+{
+    KILLED_BY_MONSTER,                 //    0
+    KILLED_BY_POISON,
+    KILLED_BY_CLOUD,
+    KILLED_BY_BEAM,                    //    3
+    KILLED_BY_DEATHS_DOOR,  // should be deprecated, but you never know {dlb}
+    KILLED_BY_LAVA,                    //    5
+    KILLED_BY_WATER,
+    KILLED_BY_STUPIDITY,
+    KILLED_BY_WEAKNESS,
+    KILLED_BY_CLUMSINESS,
+    KILLED_BY_TRAP,                    //   10
+    KILLED_BY_LEAVING,
+    KILLED_BY_WINNING,
+    KILLED_BY_QUITTING,
+    KILLED_BY_DRAINING,
+    KILLED_BY_STARVATION,              //   15
+    KILLED_BY_FREEZING,
+    KILLED_BY_BURNING,
+    KILLED_BY_WILD_MAGIC,
+    KILLED_BY_XOM,
+    KILLED_BY_STATUE,                  //   20
+    KILLED_BY_ROTTING,
+    KILLED_BY_TARGETTING,
+    KILLED_BY_SPORE,
+    KILLED_BY_TSO_SMITING,
+    KILLED_BY_PETRIFICATION,           // 25
+    KILLED_BY_SOMETHING = 27,
+    KILLED_BY_FALLING_DOWN_STAIRS,
+    KILLED_BY_ACID,
+    KILLED_BY_CURARE,                  
+    KILLED_BY_MELTING,
+    KILLED_BY_BLEEDING,
+    KILLED_BY_BEOGH_SMITING,
+
+    NUM_KILLBY
+};
+
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: bang - beam - effects - spells

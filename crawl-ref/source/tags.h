@@ -16,6 +16,36 @@
 #include <stdio.h>
 #include "externs.h"
 
+enum tag_type   // used during save/load process to identify data blocks
+{
+    TAG_VERSION = 0,                    // should NEVER be read in!
+    TAG_YOU = 1,                        // 'you' structure
+    TAG_YOU_ITEMS,                      // your items
+    TAG_YOU_DUNGEON,                    // dungeon specs (stairs, branches, features)
+    TAG_LEVEL,                          // various grids & clouds
+    TAG_LEVEL_ITEMS,                    // items/traps
+    TAG_LEVEL_MONSTERS,                 // monsters
+    TAG_GHOST,                          // ghost
+    TAG_LEVEL_ATTITUDE,                 // monster attitudes
+    TAG_LOST_MONSTERS,                  // monsters in transit
+    NUM_TAGS
+};
+
+enum tag_file_type   // file types supported by tag system
+{
+    TAGTYPE_PLAYER=0,           // Foo.sav
+    TAGTYPE_LEVEL,              // Foo.00a, .01a, etc.
+    TAGTYPE_GHOST,              // bones.xxx
+
+    TAGTYPE_PLAYER_NAME         // Used only to read the player name
+};
+
+struct tagHeader 
+{
+    short tagID;
+    long offset;
+};
+
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************
  * called from: files tags

@@ -10,6 +10,7 @@
 #include "cio.h"
 #include "menu.h"
 #include "macro.h"
+#include "message.h"
 #include "tutorial.h"
 #include "view.h"
 #include "initfile.h"

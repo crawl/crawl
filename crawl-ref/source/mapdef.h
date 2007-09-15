@@ -16,7 +16,30 @@
 #include "luadgn.h"
 #include "enum.h"
 #include "externs.h"
+#include "makeitem.h"
 #include "travel.h"
+
+// [dshaligram] Maps can be mirrored; for every orientation, there must be
+// a suitable mirror.
+enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
+{
+    MAP_NONE  = -1,
+    MAP_NORTH = 1,                     //    1
+    MAP_SOUTH,
+    MAP_EAST,
+    MAP_WEST,
+    MAP_NORTHWEST,                     //    5
+    MAP_NORTHEAST,
+    MAP_SOUTHWEST,
+    MAP_SOUTHEAST,
+    MAP_ENCOMPASS,
+
+    // A "floating" vault is placed somewhat like a minivault, away from
+    // the edges, although in other respects it behaves like a regular vault.
+    MAP_FLOAT,
+
+    MAP_NUM_SECTION_TYPES
+};
 
 struct raw_range
 {

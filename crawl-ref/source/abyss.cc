@@ -21,7 +21,7 @@
 #include "cloud.h"
 #include "makeitem.h"
 #include "mapmark.h"
-#include "misc.h"
+#include "message.h"
 #include "monplace.h"
 #include "mtransit.h"
 #include "player.h"
@@ -30,6 +30,8 @@
 #include "lev-pand.h"
 #include "randart.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 // public for abyss generation

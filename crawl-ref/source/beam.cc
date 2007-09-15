@@ -42,6 +42,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -56,6 +57,8 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this

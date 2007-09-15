@@ -15,8 +15,9 @@
 #include <vector>
 
 #include "externs.h"
-#include "misc.h"
 #include "travel.h"
+
+class input_history;
 
 // Stash definitions
 void stash_init_new_level();

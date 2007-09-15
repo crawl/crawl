@@ -20,6 +20,7 @@
 #include <string>
 #include "externs.h"
 
+struct bolt;
 
 /*
    beam_colour = _pass[0];

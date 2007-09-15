@@ -20,10 +20,11 @@
 #include "monstuff.h"
 #include "mon-pick.h"
 #include "mon-util.h"
-#include "misc.h"
 #include "player.h"
 #include "stuff.h"
 #include "spells4.h"
+#include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 // NEW place_monster -- note that power should be set to:

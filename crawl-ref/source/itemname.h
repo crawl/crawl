@@ -16,6 +16,66 @@
 
 #include "externs.h"
 
+enum item_type_id_type
+{
+    IDTYPE_WANDS = 0,
+    IDTYPE_SCROLLS,
+    IDTYPE_JEWELLERY,
+    IDTYPE_POTIONS,
+    NUM_IDTYPE
+};
+
+enum item_type_id_state_type  // used for values in id[4][50]
+{
+    ID_UNKNOWN_TYPE = 0,
+    ID_MON_TRIED_TYPE,
+    ID_TRIED_TYPE,
+    ID_KNOWN_TYPE
+};
+
+// [dshaligram] If you edit potion colours/descriptions, also update 
+// itemname.cc.
+enum potion_description_colour_type
+{
+    PDC_CLEAR,
+    PDC_BLUE,
+    PDC_BLACK,
+    PDC_SILVERY,
+    PDC_CYAN,
+    PDC_PURPLE,
+    PDC_ORANGE,
+    PDC_INKY,
+    PDC_RED,
+    PDC_YELLOW,
+    PDC_GREEN,
+    PDC_BROWN,
+    PDC_PINK,
+    PDC_WHITE,
+    PDC_NCOLOURS
+};
+
+// [dshaligram] If you edit potion colours/descriptions, also update 
+// itemname.cc.
+enum potion_description_qualifier_type
+{
+    PDQ_NONE,
+    PDQ_BUBBLING,
+    PDQ_FUMING,
+    PDQ_FIZZY,
+    PDQ_VISCOUS,
+    PDQ_LUMPY,
+    PDQ_SMOKY,
+    PDQ_GLOWING,
+    PDQ_SEDIMENTED,
+    PDQ_METALLIC,
+    PDQ_MURKY,
+    PDQ_GLUGGY,
+    PDQ_OILY,
+    PDQ_SLIMY,
+    PDQ_EMULSIFIED,
+    PDQ_NQUALS
+};
+
 bool is_vowel( const char chr );
 
 /* ***********************************************************************
@@ -44,6 +104,8 @@ std::string make_name( unsigned long seed, bool all_caps );
  * called from: acr
  * *********************************************************************** */
 void init_properties();
+
+typedef FixedArray < item_type_id_state_type, NUM_IDTYPE, 50 > id_arr;
 
 id_arr& get_typeid_array();
 item_type_id_state_type get_ident_type(object_class_type basetype,

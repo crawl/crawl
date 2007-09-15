@@ -22,6 +22,7 @@
 #include <string>
 #include <ctype.h>
 
+#include "chardump.h"
 #include "clua.h"
 #include "delay.h"
 #include "direct.h"
@@ -29,11 +30,15 @@
 #include "files.h"
 #include "defines.h"
 #include "invent.h"
+#include "item_use.h"
+#include "itemprop.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "travel.h"
 #include "items.h"

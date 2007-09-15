@@ -58,6 +58,7 @@ notes.o \
 ouch.o \
 output.o \
 overmap.o \
+place.o \
 player.o \
 randart.o \
 religion.o \
@@ -75,7 +76,9 @@ sqldbm.o \
 stash.o \
 stuff.o \
 tags.o \
+terrain.o \
 transfor.o \
+traps.o \
 travel.o \
 tutorial.o \
 view.o \

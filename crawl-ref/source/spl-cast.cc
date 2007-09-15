@@ -35,6 +35,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "macro.h"
+#include "message.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mutation.h"

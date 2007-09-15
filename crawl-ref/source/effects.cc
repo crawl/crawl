@@ -21,12 +21,15 @@
 
 #include "beam.h"
 #include "direct.h"
+#include "food.h"
 #include "hiscores.h"
+#include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -44,6 +47,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "view.h"
 
 // torment_monsters is called with power 0 because torment is

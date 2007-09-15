@@ -10,6 +10,7 @@
 #include "cio.h"
 #include "externs.h"
 #include "macro.h"
+#include "state.h"
 
 #include <queue>
 

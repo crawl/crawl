@@ -18,6 +18,30 @@
 #include "enum.h"    // just for NUM_SPELL_TYPES and TARG_ENEMY
 #include "direct.h"  // just for DIR_NONE 
 
+enum spschool_flag_type
+{
+  SPTYP_NONE           = 0, // "0" is reserved for no type at all {dlb}
+  SPTYP_CONJURATION    = 1, // was 11, but only for old typematch routine {dlb}
+  SPTYP_ENCHANTMENT    = 1<<1,
+  SPTYP_FIRE           = 1<<2,
+  SPTYP_ICE            = 1<<3,
+  SPTYP_TRANSMIGRATION = 1<<4,
+  SPTYP_NECROMANCY     = 1<<5,
+  SPTYP_SUMMONING      = 1<<6,
+  SPTYP_DIVINATION     = 1<<7,
+  SPTYP_TRANSLOCATION  = 1<<8,
+  SPTYP_POISON         = 1<<9,
+  SPTYP_EARTH          = 1<<10,
+  SPTYP_AIR            = 1<<11,
+  SPTYP_HOLY           = 1<<12, //jmf: moved to accomodate "random" miscast f/x
+  SPTYP_LAST_EXPONENT  = 12,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
+  NUM_SPELL_TYPES      = 14,
+  SPTYP_RANDOM         = 1<<14
+};
+
+struct bolt;
+struct dist;
+
 struct spell_desc
 {
     int id;

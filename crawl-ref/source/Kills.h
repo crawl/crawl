@@ -154,6 +154,10 @@ private:
 class KillMaster
 {
 public:
+    KillMaster();
+    KillMaster(const KillMaster& other);
+    ~KillMaster();
+
     void record_kill(const monsters *mon, int killer, bool ispet);
 
     bool empty() const;

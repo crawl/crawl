@@ -11,9 +11,30 @@
 #include "AppHdr.h"
 #include "externs.h"
 #include "defines.h"
+#include "direct.h"
 #include <cctype>
 #include <string>
 #include <vector>
+
+class input_history
+{
+public:
+    input_history(size_t size);
+
+    void new_input(const std::string &s);
+    void clear();
+    
+    const std::string *prev();
+    const std::string *next();
+
+    void go_end();
+private:
+    typedef std::list<std::string> string_list;
+    
+    string_list             history;
+    string_list::iterator   pos;
+    size_t maxsize;
+};
 
 void cursorxy(int x, int y);
 
@@ -36,7 +57,6 @@ void get_input_line( char *const buff, int len );
 // In view.cc, declared here for default argument to cancelable_get_line()
 int get_number_of_cols(void);
 
-class input_history;
 // Returns zero if user entered text and pressed Enter, otherwise returns the 
 // key pressed that caused the exit, usually Escape.
 //
@@ -223,5 +243,7 @@ private:
     int             length;
     int             pos;
 };
+
+typedef int keycode_type;
 
 #endif

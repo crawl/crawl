@@ -15,6 +15,7 @@
 #define UNRAND_H
 
 #include "defines.h"
+#include "itemprop.h"
 
 /*
    List of "unrandom" artefacts. Not the same as "fixed" artefacts, which are

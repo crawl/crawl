@@ -19,6 +19,21 @@
 #include "FixVec.h"
 #include "enum.h"
 
+enum transformation_type
+{
+    TRAN_NONE,                         //    0
+    TRAN_SPIDER,
+    TRAN_BLADE_HANDS,
+    TRAN_STATUE,
+    TRAN_ICE_BEAST,
+    TRAN_DRAGON,                       //    5
+    TRAN_LICH,
+    TRAN_SERPENT_OF_HELL,
+    TRAN_AIR,
+    TRAN_BAT,
+    NUM_TRANSFORMATIONS                // must remain last member {dlb}
+};
+
 bool transform_can_butcher_barehanded(transformation_type tt);
 
 // last updated 12may2000 {dlb}

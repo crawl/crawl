@@ -35,6 +35,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -46,6 +47,8 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 static int raise_corpse( int corps, int corx, int cory, beh_type corps_beh,

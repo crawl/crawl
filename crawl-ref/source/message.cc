@@ -24,18 +24,22 @@
 #endif
 
 #include "externs.h"
+
 #include "cio.h"
+#include "delay.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"
-#include "delay.h"
+#include "message.h"
+#include "monstuff.h"
+#include "notes.h"
+#include "religion.h"
+#include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "travel.h"
-#include "view.h"
-#include "notes.h"
-#include "stash.h"
-#include "religion.h"
 #include "tutorial.h"
+#include "view.h"
 
 // circular buffer for keeping past messages
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages

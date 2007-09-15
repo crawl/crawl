@@ -18,6 +18,79 @@
 #include "dungeon.h"
 #include "FixVec.h"
 
+enum band_type
+{
+    BAND_NO_BAND                = 0,
+    BAND_KOBOLDS                = 1,
+    BAND_ORCS,
+    BAND_ORC_KNIGHT,
+    BAND_KILLER_BEES,
+    BAND_FLYING_SKULLS,         // 5
+    BAND_SLIME_CREATURES,
+    BAND_YAKS,
+    BAND_UGLY_THINGS,
+    BAND_HELL_HOUNDS,
+    BAND_JACKALS,               // 10
+    BAND_HELL_KNIGHTS,
+    BAND_ORC_HIGH_PRIEST,
+    BAND_GNOLLS,                // 13
+    BAND_BUMBLEBEES             = 16,
+    BAND_CENTAURS,
+    BAND_YAKTAURS,
+    BAND_INSUBSTANTIAL_WISPS,
+    BAND_OGRE_MAGE,             // 20
+    BAND_DEATH_YAKS,
+    BAND_NECROMANCER,
+    BAND_BALRUG,
+    BAND_CACODEMON,
+    BAND_EXECUTIONER,           // 25
+    BAND_HELLWING,
+    BAND_DEEP_ELF_FIGHTER,
+    BAND_DEEP_ELF_KNIGHT,
+    BAND_DEEP_ELF_HIGH_PRIEST,
+    BAND_KOBOLD_DEMONOLOGIST,   // 30
+    BAND_NAGAS,
+    BAND_WAR_DOGS,
+    BAND_GREY_RATS,
+    BAND_GREEN_RATS,
+    BAND_ORANGE_RATS,           // 35
+    BAND_SHEEP,
+    BAND_GHOULS,
+    BAND_DEEP_TROLLS,
+    BAND_HOGS,
+    BAND_HELL_HOGS,             // 40
+    BAND_GIANT_MOSQUITOES,
+    BAND_BOGGARTS,
+    BAND_BLINK_FROGS,
+    BAND_SKELETAL_WARRIORS,     // 44
+    BAND_DRACONIAN,             // 45
+    BAND_PANDEMONIUM_DEMON,
+    NUM_BANDS                   // always last
+};
+
+enum demon_class_type
+{
+    DEMON_LESSER,                      //    0: Class V
+    DEMON_COMMON,                      //    1: Class II-IV
+    DEMON_GREATER,                     //    2: Class I
+    DEMON_RANDOM                       //    any of the above
+};
+
+enum dragon_class_type
+{
+    DRAGON_LIZARD,
+    DRAGON_DRACONIAN,
+    DRAGON_DRAGON
+};
+
+enum proximity_type   // proximity to player to create monster
+{
+    PROX_ANYWHERE,
+    PROX_CLOSE_TO_PLAYER,
+    PROX_AWAY_FROM_PLAYER,
+    PROX_NEAR_STAIRS
+};
+
 // last updated 13mar2001 {gdl}
 /* ***********************************************************************
  * called from: acr - lev-pand - monplace - dungeon

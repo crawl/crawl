@@ -16,6 +16,26 @@
 
 #include "enum.h"
 
+enum spflag_type
+{
+    SPFLAG_NONE                 = 0x0000,
+    SPFLAG_DIR_OR_TARGET        = 0x0001,       // use DIR_NONE targeting
+    SPFLAG_TARGET               = 0x0002,       // use DIR_TARGET targeting
+    SPFLAG_GRID                 = 0x0004,       // use DIR_GRID targeting
+    SPFLAG_DIR                  = 0x0008,       // use DIR_DIR targeting
+    SPFLAG_TARGETING_MASK       = 0x000f,       // used to test for targeting
+    SPFLAG_HELPFUL              = 0x0010,       // TARG_FRIENDS used
+    SPFLAG_NOT_SELF             = 0x0020,       // aborts on isMe
+    SPFLAG_UNHOLY               = 0x0040        // counts at "unholy"
+};
+
+enum spret_type
+{
+    SPRET_ABORT = 0,            // should be left as 0
+    SPRET_FAIL,
+    SPRET_SUCCESS
+};
+
 int list_spells();
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,

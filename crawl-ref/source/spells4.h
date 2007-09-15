@@ -16,6 +16,8 @@
 
 #include "externs.h"
 
+struct bolt;
+
 std::string your_hand(bool plural);
 bool backlight_monsters(int x, int y, int pow, int garbage);
 int make_a_normal_cloud(int x, int y, int pow, cloud_type ctype,

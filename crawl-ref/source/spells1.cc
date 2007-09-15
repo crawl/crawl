@@ -34,6 +34,7 @@
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -45,6 +46,9 @@
 #include "spells4.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "transfor.h"
+#include "traps.h"
 #include "view.h"
 
 static bool abyss_blocks_teleport(bool cblink)

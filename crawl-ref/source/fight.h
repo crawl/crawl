@@ -18,6 +18,18 @@
 #include "externs.h"
 #include "randart.h"
 
+enum unarmed_attack_type
+{
+    UNAT_NO_ATTACK,                    //    0
+    UNAT_KICK,
+    UNAT_HEADBUTT,
+    UNAT_TAILSLAP,
+    UNAT_PUNCH,
+    UNAT_BITE
+};
+
+struct mon_attack_def;
+
 // added Sept 18, 2000 -- bwr
 /* ***********************************************************************
  * called from: item_use.cc

@@ -14,6 +14,33 @@
 #ifndef FOOD_H
 #define FOOD_H
 
+enum food_type
+{
+    FOOD_MEAT_RATION,                  //    0
+    FOOD_BREAD_RATION,
+    FOOD_PEAR,
+    FOOD_APPLE,
+    FOOD_CHOKO,
+    FOOD_HONEYCOMB,                    //    5
+    FOOD_ROYAL_JELLY,
+    FOOD_SNOZZCUMBER,
+    FOOD_PIZZA,
+    FOOD_APRICOT,
+    FOOD_ORANGE,                       //   10
+    FOOD_BANANA,
+    FOOD_STRAWBERRY,
+    FOOD_RAMBUTAN,
+    FOOD_LEMON,
+    FOOD_GRAPE,                        //   15
+    FOOD_SULTANA,
+    FOOD_LYCHEE,
+    FOOD_BEEF_JERKY,
+    FOOD_CHEESE,
+    FOOD_SAUSAGE,                      //   20
+    FOOD_CHUNK,
+    NUM_FOODS
+};
+
 
 // last updated 19jun2000 {dlb}
 /* ***********************************************************************

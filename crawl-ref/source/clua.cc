@@ -21,6 +21,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "it_use2.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
@@ -32,7 +33,9 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "travel.h"
 #include "view.h"
 

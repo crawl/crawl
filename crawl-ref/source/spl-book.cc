@@ -34,6 +34,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "it_use3.h"
+#include "message.h"
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"

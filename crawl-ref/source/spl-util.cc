@@ -23,6 +23,7 @@
 
 #include "externs.h"
 
+#include "beam.h"
 #include "direct.h"
 #include "debug.h"
 #include "stuff.h"
@@ -33,6 +34,9 @@
 #include "notes.h"
 #include "player.h"
 #include "spl-book.h"
+#include "spl-cast.h"
+#include "spl-util.h"
+#include "terrain.h"
 #include "view.h"
 
 

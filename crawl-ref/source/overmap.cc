@@ -28,12 +28,15 @@
 #include "branch.h"
 #include "dgnevent.h"
 #include "direct.h"
+#include "dungeon.h"
 #include "files.h"
 #include "menu.h"
 #include "misc.h"
 #include "religion.h"
 #include "shopping.h"
+#include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "view.h"
 
 typedef std::map<branch_type, level_id> stair_map_type;

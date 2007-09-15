@@ -60,10 +60,13 @@
 #include "cloud.h"
 #include "clua.h"
 #include "debug.h"
+#include "direct.h"
 #include "dungeon.h"
+#include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "Kills.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
@@ -73,12 +76,16 @@
 #include "mstuff2.h"
 #include "mtransit.h"
 #include "notes.h"
+#include "output.h"
+#include "place.h"
 #include "player.h"
 #include "randart.h"
 #include "skills2.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "tags.h"
+#include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
@@ -172,7 +179,7 @@ bool is_packed_save(const std::string &name)
 player read_character_info(const std::string &savefile)
 {
     player fromfile;
-    player backup = you;
+    player backup;
 
     FILE *charf = fopen(savefile.c_str(), "rb");
     if (!charf)
@@ -181,12 +188,13 @@ player read_character_info(const std::string &savefile)
     char majorVersion = 0;
     char minorVersion = 0;
 
+    backup.copy_from(you);
     if (determine_version(charf, majorVersion, minorVersion)
         && majorVersion == SAVE_MAJOR_VERSION)
     {
         restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
-        fromfile = you;
-        you      = backup;
+        fromfile.copy_from(you);
+        you     .copy_from(backup);
     }
 
     fclose(charf);
@@ -1040,7 +1048,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     FILE *killf = fopen(killFile.c_str(), "wb");
     if (killf)
     {
-        you.kills.save(killf);
+        you.kills->save(killf);
         fclose(killf);
         DO_CHMOD_PRIVATE(killFile.c_str());
     }
@@ -1239,7 +1247,7 @@ void restore_game(void)
     FILE *killf = fopen(killFile.c_str(), "rb");
     if (killf)
     {
-        you.kills.load(killf);
+        you.kills->load(killf);
         fclose(killf);
     }
 

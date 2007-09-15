@@ -14,8 +14,8 @@
 #include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
-#include "misc.h"
 #include "mtransit.h"
+#include "place.h"
 #include "player.h"
 #include <vector>
 

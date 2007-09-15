@@ -17,6 +17,7 @@
 #include "externs.h"
 #include "branch.h"
 #include "misc.h"
+#include "place.h"
 
 // NB - When adding new branches or levels above 50, you must
 // change pre-game deletion routine in new_game in newgame.cc

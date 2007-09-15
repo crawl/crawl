@@ -37,7 +37,6 @@
 #include "invent.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -52,6 +51,9 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "terrain.h"
+#include "transfor.h"
+#include "traps.h"
 #include "view.h"
 
 enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw

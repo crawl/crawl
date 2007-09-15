@@ -17,6 +17,20 @@
 
 #include <string>
 
+enum item_origin_dump_selector
+{
+    IODS_PRICE            = 0,      // Extra info is provided based on price
+    IODS_ARTEFACTS        = 1,      // Extra information on artefacts
+    IODS_EGO_ARMOUR       = 2,
+    IODS_EGO_WEAPON       = 4,
+    IODS_JEWELLERY        = 8,
+    IODS_RUNES            = 16,
+    IODS_RODS             = 32,
+    IODS_STAVES           = 64,
+    IODS_BOOKS            = 128,
+    IODS_EVERYTHING       = 0xFF
+};
+
 struct scorefile_entry;
 bool dump_char(const std::string &fname,
                bool show_prices,

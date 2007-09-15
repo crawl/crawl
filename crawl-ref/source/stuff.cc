@@ -17,7 +17,9 @@
 #include "database.h"
 #include "direct.h"
 #include "message.h"
+#include "misc.h"
 #include "monplace.h"
+#include "state.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -56,6 +58,7 @@
 #include "branch.h"
 #include "delay.h"
 #include "externs.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
 #include "misc.h"

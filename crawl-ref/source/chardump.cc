@@ -38,14 +38,17 @@
 #include "debug.h"
 #include "describe.h"
 #include "hiscores.h"
+#include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
+#include "Kills.h"
 #include "macro.h"
-#include "misc.h"
+#include "message.h"
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "overmap.h"
+#include "place.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -56,6 +59,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "version.h"
 #include "view.h"
 
@@ -811,7 +815,7 @@ static void sdump_spells(dump_params &par)
 
 static void sdump_kills(dump_params &par)
 {
-    par.text += you.kills.kill_info();
+    par.text += you.kills->kill_info();
 }
 
 static void sdump_overview(dump_params &par)

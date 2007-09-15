@@ -12,9 +12,10 @@
 #include "chardump.h"
 #include "describe.h"
 #include "mon-util.h"
+#include "monstuff.h"
 #include "files.h"
 #include "itemname.h"
-#include "misc.h"
+#include "place.h"
 #include "travel.h"
 #include "tags.h"
 #include "Kills.h"
@@ -37,6 +38,19 @@ const char *kill_category_names[] =
     "collateral kills",
     "others",
 };
+
+KillMaster::KillMaster()
+{
+}
+
+KillMaster::KillMaster(const KillMaster &other)
+{
+    *this = other;
+}
+
+KillMaster::~KillMaster()
+{
+}
 
 const char *KillMaster::category_name(kill_category kc) const
 {

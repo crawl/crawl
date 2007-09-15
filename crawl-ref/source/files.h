@@ -20,6 +20,13 @@
 #include <string>
 #include <vector>
 
+enum load_mode_type
+{
+    LOAD_START_GAME,
+    LOAD_RESTART_GAME,
+    LOAD_ENTER_LEVEL
+};
+
 // referenced in files - newgame - ouch - overmap:
 #define MAX_LEVELS 50
 

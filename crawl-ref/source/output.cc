@@ -24,17 +24,21 @@
 
 #include "abl-show.h"
 #include "describe.h"
+#include "direct.h"
 #include "format.h"
 #include "fight.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "menu.h"
+#include "message.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "transfor.h"
 
 static int bad_ench_colour( int lvl, int orange, int red )
 {

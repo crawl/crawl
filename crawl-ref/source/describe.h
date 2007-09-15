@@ -19,6 +19,16 @@
 #include "externs.h"
 #include "enum.h"
 
+enum item_description_type
+{
+    IDESC_WANDS = 0,
+    IDESC_POTIONS,
+    IDESC_SCROLLS,                      // special field (like the others)
+    IDESC_RINGS,
+    IDESC_SCROLLS_II,
+    NUM_IDESC
+};
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: chardump - spells4
@@ -64,5 +74,7 @@ std::string ghost_description(const monsters &mons, bool concise = false);
 
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);
+
+extern const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 
 #endif

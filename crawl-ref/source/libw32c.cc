@@ -68,12 +68,13 @@
 #include <string.h>
 #include <stdio.h>
 #include "AppHdr.h"
-#include "version.h"
 #include "cio.h"
 #include "defines.h"
-#include "stuff.h"
-#include "view.h"
 #include "libutil.h"
+#include "state.h"
+#include "stuff.h"
+#include "version.h"
+#include "view.h"
 
 char oldTitle[80];
 

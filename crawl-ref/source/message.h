@@ -18,7 +18,8 @@
 #include <streambuf>
 #include <iostream>
 
-#include "externs.h"
+#include "enum.h"
+#include "mpr.h"
 
 struct message_item {
     msg_channel_type    channel;        // message channel
@@ -45,18 +46,6 @@ void mesclr( bool force = false );
 void more(void);
 
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - acr - bang - beam - chardump - command - debug -
- *              decks - direct - effects - fight - files - food - it_use2 -
- *              it_use3 - item_use - items - macro - misc - monplace -
- *              monstuff - mstuff2 - mutation - ouch - overmap - player -
- *              religion - shopping - skills - spell - spl-book - spells -
- *              spells1 - spells2 - spells3 - spells4 - stuff - transfor -
- *              view
- * *********************************************************************** */
-void mpr(const char *inf, msg_channel_type channel = MSGCH_PLAIN, int param=0);
-
 class formatted_string;
 
 void formatted_mpr(const formatted_string& fs,
@@ -74,11 +63,6 @@ void mpr_comma_separated_list(const std::string prefix,
                               const msg_channel_type channel = MSGCH_PLAIN,
                               const int param = 0);
                                
-// 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf( msg_channel_type channel, int param, const char *format, ... );
-void mprf( msg_channel_type channel, const char *format, ... );
-void mprf( const char *format, ... );
-
 class no_messages
 {
 public:

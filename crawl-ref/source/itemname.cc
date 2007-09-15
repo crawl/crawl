@@ -28,7 +28,9 @@
 #include "externs.h"
 
 #include "decks.h"
+#include "food.h"
 #include "invent.h"
+#include "it_use2.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
