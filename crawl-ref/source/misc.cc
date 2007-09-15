@@ -1257,8 +1257,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         return;
     }
 
-    if (!force_stair && player_is_levitating() 
-            && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (!force_stair && you.flies() == FL_LEVITATE)
     {
         mpr("You're floating high up above the floor!");
         return;

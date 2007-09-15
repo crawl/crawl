@@ -725,10 +725,8 @@ LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
 LUARET1(you_res_slowing, number, wearing_amulet(AMU_RESIST_SLOW, false))
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
-LUARET1(you_levitating, boolean, 
-        player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
-LUARET1(you_flying, boolean,
-        player_is_levitating() && wearing_amulet(AMU_CONTROLLED_FLIGHT))
+LUARET1(you_levitating, boolean, you.flies() == FL_LEVITATE)
+LUARET1(you_flying, boolean, you.flies() == FL_FLY)
 LUARET1(you_transform, string, transform_name())
 LUARET1(you_where, string, level_id::current().describe().c_str())
 LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())

@@ -386,8 +386,7 @@ bool player_in_hell( void )
 
 bool player_in_water(void)
 {
-    return (!player_is_levitating() && !beogh_water_walk()
-            && grid_is_water(grd[you.x_pos][you.y_pos]));
+    return (you.in_water());
 }
 
 bool player_likes_water(void)
@@ -5090,8 +5089,8 @@ bool player::is_levitating() const
 
 bool player::in_water() const
 {
-    return !is_levitating()
-        && grid_is_water(grd[you.x_pos][you.y_pos]);
+    return (!player_is_levitating() && !beogh_water_walk()
+            && grid_is_water(grd[you.x_pos][you.y_pos]));
 }
 
 bool player::can_swim() const

@@ -1704,11 +1704,6 @@ std::string status_mut_abilities()
           text += "saprovore 1";
           have_any = true;
           break;
-
-      case SP_VAMPIRE:
-          text += "sharp teeth 3";
-          have_any = true;
-          break;
       default:
           break;
     }                           //end switch - innate abilities
@@ -2096,8 +2091,6 @@ std::string status_mut_abilities()
                 have_any = true;
                 break;
             case MUT_FANGS:
-                if (you.species == SP_VAMPIRE)
-                   break;
                 if (have_any)
                     text += ", ";
                 snprintf(info, INFO_SIZE, "sharp teeth %d", level);

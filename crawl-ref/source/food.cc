@@ -230,7 +230,7 @@ bool butchery(void)
         return (false);
     }
 
-    if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (you.flies() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
         return (false);
@@ -724,7 +724,7 @@ void eat_floor_item(int item_link)
 
 bool eat_from_floor(void)
 {
-    if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (you.flies() == FL_LEVITATE)
         return (false);
 
     bool need_more = false;
