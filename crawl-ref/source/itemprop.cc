@@ -1357,7 +1357,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         if (ret == HANDS_DOUBLE)
         {
             doub = true;
-            ret = HANDS_HALF;
+            ret = HANDS_TWO; // HANDS_HALF once double-ended is implemented
         }
 
         // adjust handedness for size only for non-whip melee weapons

@@ -1774,7 +1774,8 @@ bool mons_looks_stabbable(const monsters *m)
 {
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
-            && mons_is_sleeping(m));
+            && (mons_is_sleeping(m)
+                || mons_is_paralysed(m)));
 }
 
 bool mons_looks_distracted(const monsters *m)
@@ -3917,7 +3918,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
-        case ENCH_SICK: case ENCH_SLEEPY:
+        case ENCH_SICK: case ENCH_SLEEPY: case ENCH_PARALYSIS:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -3940,8 +3941,8 @@ void monsters::timeout_enchantments(int levels)
             if (!mons_class_flag(type, M_CONFUSED))
             {
                 del_ench(i->first);
-                blink();
             }
+            blink();
             break;
 
         case ENCH_HELD:

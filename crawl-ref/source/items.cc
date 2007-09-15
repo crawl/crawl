@@ -2033,7 +2033,7 @@ void update_level( double elapsedTime )
         }
 
         // Let sleeping monsters lie
-        if (mon->behaviour == BEH_SLEEP)
+        if (mon->behaviour == BEH_SLEEP || mons_is_paralysed(mon))
             continue;
 
         const int range = (turns * mon->speed) / 10;

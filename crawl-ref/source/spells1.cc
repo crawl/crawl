@@ -465,6 +465,12 @@ bool conjure_flame(int pow)
             mpr("You can't see that place!");
             continue;
         }
+        
+        if (spelld.tx == you.x_pos && spelld.ty == you.y_pos)
+        {
+            mpr("You can't place the cloud here!");
+            continue;
+        }
 
         const int cloud = env.cgrid[spelld.tx][spelld.ty];
 
