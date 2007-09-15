@@ -678,12 +678,12 @@ void apply_area_cloud( int (*func) (int, int, int, cloud_type, kill_category),
 // Return false if the user canceled, true otherwise.
 bool spell_direction( dist &spelld, bolt &pbolt, 
                       targeting_type restrict, targ_mode_type mode,
-                      const char *prompt )
+                      bool needs_path, const char *prompt )
 {
     if (restrict != DIR_DIR)
         message_current_target();
 
-    direction( spelld, restrict, mode, false, prompt );
+    direction( spelld, restrict, mode, false, needs_path, prompt );
 
     if (!spelld.isValid)
     {

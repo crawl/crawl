@@ -1555,7 +1555,7 @@ void yell(void)
         }
 
         mpr("Gang up on whom?", MSGCH_PROMPT);
-        direction( targ, DIR_TARGET, TARG_ENEMY );
+        direction( targ, DIR_TARGET, TARG_ENEMY, false, false );
 
         if (targ.isCancel)
         {

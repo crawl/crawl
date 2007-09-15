@@ -42,7 +42,8 @@ public:
 
 void direction( dist &moves, targeting_type restricts = DIR_NONE,
                 targ_mode_type mode = TARG_ANY, bool just_looking = false,
-                const char *prompt = NULL, targeting_behaviour *mod = NULL );
+                bool needs_path = true, const char *prompt = NULL,
+                targeting_behaviour *mod = NULL );
 
 bool in_los_bounds(int x, int y);
 bool in_viewport_bounds(int x, int y);

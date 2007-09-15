@@ -1340,7 +1340,7 @@ static bool choose_fire_target(dist &target, int &item)
     message_current_target();
 
     fire_target_behaviour beh(item);
-    direction( target, DIR_NONE, TARG_ENEMY, false, NULL, &beh );
+    direction( target, DIR_NONE, TARG_ENEMY, false, true, NULL, &beh );
     
     if (!target.isValid)
     {

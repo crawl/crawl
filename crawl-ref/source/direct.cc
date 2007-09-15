@@ -251,7 +251,8 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 //---------------------------------------------------------------
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, bool just_looking,
-               const char *prompt, targeting_behaviour *beh)
+               bool needs_path, const char *prompt,
+               targeting_behaviour *beh)
 {
     static targeting_behaviour stock_behaviour;
     if (!beh)
@@ -271,7 +272,7 @@ void direction(dist& moves, targeting_type restricts,
     cursor_control con(!Options.use_fake_cursor);
     
     int dir = 0;
-    bool show_beam = Options.show_beam;
+    bool show_beam = Options.show_beam && !just_looking && needs_path;
     ray_def ray;
 
     FixedVector < char, 2 > objfind_pos;

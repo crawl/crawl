@@ -31,6 +31,7 @@
 #include "format.h"
 #include "initfile.h"
 #include "it_use2.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "macro.h"
@@ -859,10 +860,24 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
-        if (dir == DIR_DIR)
+        if (spell == SPELL_PORTALED_PROJECTILE)
+        {
+            const int idx = get_fire_item_index();
+            if ( idx == ENDOFPACK )
+            {
+                mpr("No suitable missiles.");
+                return (SPRET_ABORT);
+            }
+            mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
+                               you.inv[idx].name(DESC_NOCAP_YOUR).c_str());
+        }
+        else if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
-        
-        if ( !spell_direction( spd, beam, dir, targ, prompt ) )
+
+        bool needs_path =
+             !(testbits(flags, SPFLAG_GRID) || testbits(flags, SPFLAG_TARGET));
+             
+        if ( !spell_direction( spd, beam, dir, targ, needs_path, prompt ) )
             return (SPRET_ABORT);
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
