@@ -207,7 +207,6 @@
 		7B9740080BE3AC8000AAE35B /* makeitem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B9740060BE3AC8000AAE35B /* makeitem.h */; };
 		7BA3DBBB0B3D90A700B5B3D7 /* branch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BA3DBB90B3D90A700B5B3D7 /* branch.cc */; };
 		7BA3DBBC0B3D90A700B5B3D7 /* branch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BA3DBBA0B3D90A700B5B3D7 /* branch.h */; };
-		7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352EEC0B001F4200CABB32 /* levcomp.cc */; };
 		7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
 		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
 		7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
@@ -221,6 +220,14 @@
 		7BDEBB320BB4CB5C008DF39F /* tutorial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB300BB4CB5C008DF39F /* tutorial.h */; };
 		7BDEBB360BB4CB93008DF39F /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB340BB4CB93008DF39F /* format.cc */; };
 		7BDEBB370BB4CB93008DF39F /* format.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB350BB4CB93008DF39F /* format.h */; };
+		7BF855620C9C912B00B7C520 /* cio.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855600C9C912B00B7C520 /* cio.cc */; };
+		7BF855630C9C912B00B7C520 /* cio.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF855610C9C912B00B7C520 /* cio.h */; };
+		7BF855670C9C914D00B7C520 /* mapmark.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855650C9C914D00B7C520 /* mapmark.cc */; };
+		7BF855680C9C914D00B7C520 /* mapmark.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF855660C9C914D00B7C520 /* mapmark.h */; };
+		7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855690C9C916800B7C520 /* dgnevent.cc */; };
+		7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556A0C9C916800B7C520 /* dgnevent.h */; };
+		7BF855700C9C919100B7C520 /* luadgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8556E0C9C919100B7C520 /* luadgn.cc */; };
+		7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556F0C9C919100B7C520 /* luadgn.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -315,6 +322,10 @@
 				7BDEBB370BB4CB93008DF39F /* format.h in CopyFiles */,
 				7B973FFE0BE3AA8400AAE35B /* database.h in CopyFiles */,
 				7B9740080BE3AC8000AAE35B /* makeitem.h in CopyFiles */,
+				7BF855630C9C912B00B7C520 /* cio.h in CopyFiles */,
+				7BF855680C9C914D00B7C520 /* mapmark.h in CopyFiles */,
+				7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */,
+				7BF855710C9C919100B7C520 /* luadgn.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -515,7 +526,6 @@
 		7B352E9E0B00183400CABB32 /* mapdef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mapdef.h; sourceTree = "<group>"; };
 		7B352ED10B001B9E00CABB32 /* levcomp.lpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.lex; name = levcomp.lpp; path = util/levcomp.lpp; sourceTree = "<group>"; };
 		7B352ED20B001B9E00CABB32 /* levcomp.ypp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.yacc; name = levcomp.ypp; path = util/levcomp.ypp; sourceTree = "<group>"; };
-		7B352EEC0B001F4200CABB32 /* levcomp.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = levcomp.cc; path = util/levcomp.cc; sourceTree = "<group>"; };
 		7B352F1F0B00232500CABB32 /* splev.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = splev.des; path = dat/splev.des; sourceTree = "<group>"; };
 		7B352F200B00232500CABB32 /* vaults.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = vaults.des; path = dat/vaults.des; sourceTree = "<group>"; };
 		7B3B07560BD13A8100F2980E /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = /usr/lib/libreadline.dylib; sourceTree = "<absolute>"; };
@@ -537,6 +547,14 @@
 		7BDEBB300BB4CB5C008DF39F /* tutorial.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tutorial.h; sourceTree = "<group>"; };
 		7BDEBB340BB4CB93008DF39F /* format.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = format.cc; sourceTree = "<group>"; };
 		7BDEBB350BB4CB93008DF39F /* format.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = format.h; sourceTree = "<group>"; };
+		7BF855600C9C912B00B7C520 /* cio.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = cio.cc; sourceTree = SOURCE_ROOT; };
+		7BF855610C9C912B00B7C520 /* cio.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = cio.h; sourceTree = SOURCE_ROOT; };
+		7BF855650C9C914D00B7C520 /* mapmark.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mapmark.cc; sourceTree = SOURCE_ROOT; };
+		7BF855660C9C914D00B7C520 /* mapmark.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mapmark.h; sourceTree = SOURCE_ROOT; };
+		7BF855690C9C916800B7C520 /* dgnevent.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dgnevent.cc; sourceTree = SOURCE_ROOT; };
+		7BF8556A0C9C916800B7C520 /* dgnevent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dgnevent.h; sourceTree = SOURCE_ROOT; };
+		7BF8556E0C9C919100B7C520 /* luadgn.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = luadgn.cc; sourceTree = SOURCE_ROOT; };
+		7BF8556F0C9C919100B7C520 /* luadgn.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = luadgn.h; sourceTree = SOURCE_ROOT; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -659,7 +677,6 @@
 		7B352E950B0017CF00CABB32 /* Levcomp */ = {
 			isa = PBXGroup;
 			children = (
-				7B352EEC0B001F4200CABB32 /* levcomp.cc */,
 				7B352ED10B001B9E00CABB32 /* levcomp.lpp */,
 				7B352ED20B001B9E00CABB32 /* levcomp.ypp */,
 			);
@@ -680,6 +697,8 @@
 				7BA3DBBA0B3D90A700B5B3D7 /* branch.h */,
 				7B237E2A0A8EC9D000580F30 /* chardump.cc */,
 				7B237E2B0A8EC9D000580F30 /* chardump.h */,
+				7BF855600C9C912B00B7C520 /* cio.cc */,
+				7BF855610C9C912B00B7C520 /* cio.h */,
 				7B237E590A8EC9D000580F30 /* cloud.cc */,
 				7B237E580A8EC9D000580F30 /* cloud.h */,
 				7B237E570A8EC9D000580F30 /* clua.cc */,
@@ -696,6 +715,8 @@
 				7B237E430A8EC9D000580F30 /* delay.h */,
 				7B237E4A0A8EC9D000580F30 /* describe.cc */,
 				7B237E050A8EC9D000580F30 /* describe.h */,
+				7BF855690C9C916800B7C520 /* dgnevent.cc */,
+				7BF8556A0C9C916800B7C520 /* dgnevent.h */,
 				7B237E0F0A8EC9D000580F30 /* direct.cc */,
 				7B237E1B0A8EC9D000580F30 /* direct.h */,
 				7B237E670A8EC9D000580F30 /* dungeon.cc */,
@@ -739,10 +760,14 @@
 				7B237E630A8EC9D000580F30 /* libunix.h */,
 				7B237E620A8EC9D000580F30 /* libutil.cc */,
 				7B237E250A8EC9D000580F30 /* libutil.h */,
+				7BF8556E0C9C919100B7C520 /* luadgn.cc */,
+				7BF8556F0C9C919100B7C520 /* luadgn.h */,
 				7B237E380A8EC9D000580F30 /* macro.cc */,
 				7B237E190A8EC9D000580F30 /* macro.h */,
 				7B9740050BE3AC8000AAE35B /* makeitem.cc */,
 				7B9740060BE3AC8000AAE35B /* makeitem.h */,
+				7BF855650C9C914D00B7C520 /* mapmark.cc */,
+				7BF855660C9C914D00B7C520 /* mapmark.h */,
 				7B237DE60A8EC9D000580F30 /* maps.cc */,
 				7B237DE50A8EC9D000580F30 /* maps.h */,
 				7B237E370A8EC9D000580F30 /* menu.cc */,
@@ -763,10 +788,10 @@
 				7B237E400A8EC9D000580F30 /* monstuff.h */,
 				7B237E3F0A8EC9D000580F30 /* mstuff2.cc */,
 				7B237E6B0A8EC9D000580F30 /* mstuff2.h */,
-				7BDEBB280BB4CB0B008DF39F /* mtransit.cc */,
-				7BDEBB2C0BB4CB32008DF39F /* mtransit.h */,
 				7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */,
 				7B237E690A8EC9D000580F30 /* mt19937ar.h */,
+				7BDEBB280BB4CB0B008DF39F /* mtransit.cc */,
+				7BDEBB2C0BB4CB32008DF39F /* mtransit.h */,
 				7B237DFB0A8EC9D000580F30 /* mutation.cc */,
 				7B237DFA0A8EC9D000580F30 /* mutation.h */,
 				7B237DF90A8EC9D000580F30 /* newgame.cc */,
@@ -1007,7 +1032,6 @@
 				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
 				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
 				7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */,
-				7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */,
 				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
 				7B237E800A8EC9D000580F30 /* newgame.cc in Sources */,
 				7B237E820A8EC9D000580F30 /* mutation.cc in Sources */,
@@ -1079,6 +1103,10 @@
 				7B973FFD0BE3AA8400AAE35B /* database.cc in Sources */,
 				7B9740070BE3AC8000AAE35B /* makeitem.cc in Sources */,
 				4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */,
+				7BF855620C9C912B00B7C520 /* cio.cc in Sources */,
+				7BF855670C9C914D00B7C520 /* mapmark.cc in Sources */,
+				7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */,
+				7BF855700C9C919100B7C520 /* luadgn.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1102,6 +1130,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
+					DB_NDBM,
 				);
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
@@ -1202,6 +1231,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
+					DB_NDBM,
 					WIZARD,
 					DEBUG,
 					DEBUG_ITEM_SCAN,
@@ -1260,6 +1290,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
+					DB_NDBM,
 					WIZARD,
 					DEBUG,
 					DEBUG_ITEM_SCAN,
@@ -1320,6 +1351,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
+					DB_NDBM,
 				);
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
