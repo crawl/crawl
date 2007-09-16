@@ -44,6 +44,7 @@
 #include "Kills.h"
 #include "macro.h"
 #include "message.h"
+#include "menu.h"
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"

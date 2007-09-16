@@ -10,6 +10,7 @@
 #include "command.h"
 #include "files.h"
 #include "food.h"
+#include "format.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"

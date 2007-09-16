@@ -45,6 +45,7 @@
 #include "delay.h"
 #include "direct.h"
 #include "dungeon.h"
+#include "format.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "luadgn.h"

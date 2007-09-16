@@ -32,7 +32,8 @@ Menu::Menu( int _flags )
     highlighter(new MenuHighlighter),
     num(-1),
     lastch(0),
-    alive(false)
+    alive(false),
+    last_selected(-1)
 {
     set_flags(flags);
 }
@@ -242,6 +243,22 @@ bool Menu::process_key( int keyin )
         repaint = true;
         break;
     }
+    case '.':
+        if (last_selected != -1)
+        {
+            if ((first_entry + pagesize - last_selected) == 1)
+            {
+                page_down();
+                nav = true;
+            }
+
+            select_index(last_selected + 1);
+            get_selected(&sel);
+
+            repaint = true;
+        }
+        break;
+
     default:
         keyin = post_process(keyin);
         lastch = keyin;
@@ -271,6 +288,14 @@ bool Menu::process_key( int keyin )
         }
 
         break;
+    }
+
+    if (last_selected != -1 &&
+        (items.size() == ((unsigned int) last_selected + 1)
+         || items[last_selected + 1] == NULL
+         || items[last_selected + 1]->level != MEL_ITEM))
+    {
+        last_selected = -1;
     }
 
     if (!isdigit( keyin ))
@@ -463,6 +488,7 @@ void Menu::select_index( int index, int qty )
                     continue;
                 if (is_hotkey(i, items[i]->hotkeys[0]) && is_selectable(i))
                 {
+                    last_selected = i;
                     items[i]->select( qty );
                     draw_item( i );
                 }
@@ -478,6 +504,7 @@ void Menu::select_index( int index, int qty )
                 continue;
             if (is_hotkey(i, items[i]->hotkeys[0]))
             {
+                last_selected = i;
                 items[i]->select( qty );
                 draw_item( i );
             }
@@ -486,6 +513,7 @@ void Menu::select_index( int index, int qty )
     else if (items[si]->level == MEL_ITEM && 
             (flags & (MF_SINGLESELECT | MF_MULTISELECT))) 
     {
+        last_selected = si;
         items[si]->select( qty );
         draw_item( si );
     }

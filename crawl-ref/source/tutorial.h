@@ -9,13 +9,15 @@
 #ifndef TUTORIAL_H
 #define TUTORIAL_H
 
-// for formatted_string
-#include "menu.h"
-
 #include <string>
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "AppHdr.h"
+#include "externs.h"
+
+class formatted_string;
 
 void save_tutorial( FILE* fp );
 void load_tutorial( FILE* fp );

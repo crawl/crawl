@@ -41,6 +41,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "menu.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"

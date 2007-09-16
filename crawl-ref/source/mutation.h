@@ -15,7 +15,7 @@
 #define MUTATION_H
 
 // for formatted_string
-#include "menu.h"
+class formatted_string;
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

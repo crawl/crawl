@@ -237,6 +237,8 @@ protected:
 
     bool alive;
 
+    int last_selected;
+
 protected:
     void do_menu();
     virtual void draw_select_count(int count, bool force = false);

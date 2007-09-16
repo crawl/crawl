@@ -35,6 +35,7 @@
 
 #include "defines.h"
 #include "effects.h"
+#include "format.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "notes.h"
