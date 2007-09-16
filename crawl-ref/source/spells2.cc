@@ -1180,7 +1180,15 @@ int summon_elemental(int pow, int restricted_type,
         targ_y = you.y_pos + dir_y;
 
         if (mgrd[ targ_x ][ targ_y ] != NON_MONSTER)
-            mpr("Not there!");
+        {
+            if ( player_monster_visible(&menv[mgrd[targ_x][targ_y]]) )
+                mpr("There's something there already!");
+            else
+            {
+                mpr("Something seems to disrupt your summoning.");
+                return 0;
+            }
+        }
         else if (dir_x == 0 && dir_y == 0)
             mpr("You can't summon an elemental from yourself!");
         else 
