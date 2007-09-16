@@ -90,7 +90,7 @@ bool detect_curse(bool suppress_msg);
 /* ***********************************************************************
  * called from: decks - spell
  * *********************************************************************** */
-bool entomb(void);
+bool entomb(int powc);
 
 
 // updated 24may2000 {dlb}

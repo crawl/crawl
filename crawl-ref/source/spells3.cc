@@ -735,34 +735,26 @@ void you_teleport_now( bool allow_control, bool new_abyss_area )
         xom_is_stimulated(255);
 }
 
-bool entomb(void)
+bool entomb(int powc)
 {
-    int loopy = 0;              // general purpose loop variable {dlb}
-    bool proceed = false;       // loop management varaiable {dlb}
-    int which_trap = 0;         // used in clearing out certain traps {dlb}
-    char srx = 0, sry = 0;
-    char number_built = 0;
+    int number_built = 0;
 
-    FixedVector < unsigned char, 8 > safe_to_overwrite;
+    const dungeon_feature_type safe_to_overwrite[] = {
+        DNGN_FLOOR, DNGN_SHALLOW_WATER, DNGN_OPEN_DOOR,
+        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_III,
+        DNGN_UNDISCOVERED_TRAP,
+        DNGN_FLOOR_SPECIAL
+    };
 
-    // hack - passing chars through '...' promotes them to ints, which
-    // barfs under gcc in fixvec.h.  So don't.
-    safe_to_overwrite[0] = DNGN_FLOOR;
-    safe_to_overwrite[1] = DNGN_SHALLOW_WATER;
-    safe_to_overwrite[2] = DNGN_OPEN_DOOR;
-    safe_to_overwrite[3] = DNGN_TRAP_MECHANICAL;
-    safe_to_overwrite[4] = DNGN_TRAP_MAGICAL;
-    safe_to_overwrite[5] = DNGN_TRAP_III;
-    safe_to_overwrite[6] = DNGN_UNDISCOVERED_TRAP;
-    safe_to_overwrite[7] = DNGN_FLOOR_SPECIAL;
+    if ( powc > 95 )
+        powc = 95;
+    if ( powc < 25 )
+        powc = 25;
 
-
-    for (srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
+    for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
     {
-        for (sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)
+        for (int sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)
         {
-            proceed = false;
-
             // tile already occupied by monster or yourself {dlb}:
             if (mgrd[srx][sry] != NON_MONSTER
                     || (srx == you.x_pos && sry == you.y_pos))
@@ -770,10 +762,13 @@ bool entomb(void)
                 continue;
             }
 
-            // the break here affects innermost containing loop {dlb}:
-            for (loopy = 0; loopy < 7; loopy++)
+            if ( random2(100) > powc )
+                continue;
+
+            bool proceed = false;
+            for (int i = 0; i < ARRAYSIZE(safe_to_overwrite); ++i)
             {
-                if (grd[srx][sry] == safe_to_overwrite[loopy])
+                if (grd[srx][sry] == safe_to_overwrite[i])
                 {
                     proceed = true;
                     break;
@@ -819,6 +814,7 @@ bool entomb(void)
                 delete_cloud( env.cgrid[srx][sry] );
 
             // mechanical traps are destroyed {dlb}:
+            int which_trap;
             if ((which_trap = trap_at_xy(srx, sry)) != -1)
             {
                 if (trap_category(env.trap[which_trap].type)

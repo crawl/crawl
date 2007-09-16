@@ -1310,7 +1310,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_GENIE:            genie_card(power, rarity); break;
     case CARD_CURSE:            curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       warpwright_card(power, rarity); break;
-    case CARD_TOMB:             entomb(); break;
+    case CARD_TOMB:             entomb(power/2); break;
     case CARD_WRAITH:           drain_exp(); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
     case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
