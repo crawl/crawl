@@ -521,6 +521,29 @@ static void handle_wizard_command( void )
                 move_item_to_grid( &islot, you.x_pos, you.y_pos );
             }
         }
+
+        // Create Horn of Geryon
+        {
+            int islot = get_item_slot();
+            if (islot == NON_ITEM)
+                break;
+
+            mitm[islot].base_type = OBJ_MISCELLANY;
+            mitm[islot].sub_type  = MISC_HORN_OF_GERYON;
+            mitm[islot].plus      = 0;
+            mitm[islot].plus2     = 0;
+            mitm[islot].special   = 0;
+            mitm[islot].flags     = 0;
+            mitm[islot].quantity  = 1;
+
+            set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
+            move_item_to_grid( &islot, you.x_pos, you.y_pos );
+
+            msg::streams(MSGCH_DIAGNOSTICS) << "Made "
+                                            << mitm[islot].name(DESC_NOCAP_A)
+                                            << std::endl;
+        }
+
         break;
 
     case 'B':
@@ -1163,7 +1186,10 @@ static void go_upstairs()
     }
     else if (grid_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
-        mpr( "You can't go up here!" );
+        if (ygrd == DNGN_STONE_ARCH)
+            mpr("There is nothing on the other side of the stone arch.");
+        else
+            mpr( "You can't go up here!" );
         return;
     }
 
@@ -1176,7 +1202,10 @@ static void go_downstairs()
 {
     if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS)
     {
-        mpr( "You can't go down here!" );
+        if (grd(you.pos()) == DNGN_STONE_ARCH)
+            mpr("There is nothing on the other side of the stone arch.");
+        else
+            mpr( "You can't go down here!" );
         return;
     }
 
