@@ -766,7 +766,7 @@ bool entomb(int powc)
                 continue;
 
             bool proceed = false;
-            for (int i = 0; i < (int) ARRAYSIZE(safe_to_overwrite); ++i)
+            for (unsigned int i = 0; i < ARRAYSIZE(safe_to_overwrite); ++i)
             {
                 if (grd[srx][sry] == safe_to_overwrite[i])
                 {
