@@ -3,7 +3,7 @@
  *  Summary:    Ray definition
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-09-10 11:21:32 -0700 (Mon, 10 Sep 2007) $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

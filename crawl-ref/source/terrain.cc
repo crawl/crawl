@@ -3,7 +3,7 @@
  *  Summary:    Terrain related functions.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-09-03 06:41:30 -0700 (Mon, 03 Sep 2007) $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *

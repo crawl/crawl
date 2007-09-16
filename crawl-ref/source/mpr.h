@@ -3,7 +3,7 @@
  *  Summary:    Functions used to print simple messages.
  *  Written by: Linley Henzell
  *
- *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2007-09-02 05:40:44 -0700 (Sun, 02 Sep 2007) $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  Change History (most recent first):
  *
