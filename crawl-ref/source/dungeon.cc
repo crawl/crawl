@@ -791,7 +791,7 @@ static void build_dungeon_level(int level_number, int level_type)
     builder_monsters(level_number, level_type, num_mons_wanted(level_type));
 
     // place shops, if appropriate
-    if ( your_branch().has_shops )
+    if ( level_type == LEVEL_DUNGEON && your_branch().has_shops )
         place_shops(level_number);
 
     fixup_walls();
