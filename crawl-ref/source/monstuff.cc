@@ -2216,35 +2216,17 @@ static void handle_nearby_ability(monsters *monster)
     case MONS_JELLYFISH:
     case MONS_WATER_ELEMENTAL:
     case MONS_SWAMP_WORM:
-        // XXX: We're being a bit player-centric here right now...
-        // really we should replace the grid_distance() check
-        // with one that checks for unaligned monsters as well. -- bwr
-        if (monster->has_ench(ENCH_SUBMERGED))
-        {
-            if (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
-                || grd[monster->x][monster->y] == DNGN_BLUE_FOUNTAIN
-                || (!mons_friendly(monster) 
-                    && grid_distance( monster->x, monster->y, 
-                                      you.x_pos, you.y_pos ) == 1
-                    && (monster->hit_points == monster->max_hit_points
-                        || (monster->hit_points > monster->max_hit_points / 2
-                            && coinflip()))))
-            {
-                monster->del_ench(ENCH_SUBMERGED);
-            }
-        }
-        else if (monster_can_submerge(monster->type,
-                                      grd[monster->x][monster->y])
-                 && (one_chance_in(5) 
-                     || (grid_distance( monster->x, monster->y, 
-                                        you.x_pos, you.y_pos ) > 1
-                            // FIXME This is better expressed as a function
-                            // such as monster_has_ranged_attack:
-                            && monster->type != MONS_ELECTRICAL_EEL
-                            && monster->type != MONS_LAVA_SNAKE
-                            && !one_chance_in(20))
-                     || monster->hit_points <= monster->max_hit_points / 2)
-                     || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
+        if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
+            && (one_chance_in(5) || (grid_distance( monster->x, monster->y, 
+                                                    you.x_pos, you.y_pos ) > 1
+                                     // FIXME This is better expressed as a
+                                     // function such as
+                                     // monster_has_ranged_attack:
+                                     && monster->type != MONS_ELECTRICAL_EEL
+                                     && monster->type != MONS_LAVA_SNAKE
+                                     && !one_chance_in(20))
+                || monster->hit_points <= monster->max_hit_points / 2)
+            || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             monster->add_ench(ENCH_SUBMERGED);
         }
