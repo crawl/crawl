@@ -1849,6 +1849,10 @@ static void decrement_durations()
     else
         you.duration[DUR_GOURMAND] = 0;
 
+    // must come before might/haste/berserk
+    if (decrement_a_duration(DUR_BUILDING_RAGE))
+        go_berserk(false);
+
     // paradox: it both lasts longer & does more damage overall if you're
     //          moving slower.
     // rationalisation: I guess it gets rubbed off/falls off/etc if you
@@ -1885,10 +1889,10 @@ static void decrement_durations()
         {
             mpr("Your icy shield dissipates!", MSGCH_DURATION);
             you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
         }
     }
-
+   
     if (decrement_a_duration(DUR_ICY_ARMOUR, "Your icy armour evaporates."))
         you.redraw_armour_class = true;
 

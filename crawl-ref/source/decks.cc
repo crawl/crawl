@@ -808,11 +808,14 @@ static void battle_lust_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if ( power_level >= 2 )
+    {
         you.duration[DUR_SLAYING] = random2(power/6) + 1;
+        mpr("You feel deadly.");
+    }
     else if ( power_level == 1 )
     {
-        // FIXME change to "go berserk next turn"
-        go_berserk(false);
+        you.duration[DUR_BUILDING_RAGE] = 1;
+        mpr("You feel your rage building.");
     }
     else if ( power_level == 0 )
         potion_effect(POT_MIGHT, random2(power/4));

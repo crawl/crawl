@@ -991,6 +991,7 @@ enum duration_type
     DUR_DEATHS_DOOR,
     DUR_FIRE_SHIELD,
 
+    DUR_BUILDING_RAGE,          // countdown to starting berserk
     DUR_EXHAUSTED,              // fatigue counter for berserk
 
     DUR_LIQUID_FLAMES,

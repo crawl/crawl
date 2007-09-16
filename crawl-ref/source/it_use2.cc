@@ -275,6 +275,11 @@ bool potion_effect( potion_type pot_eff, int pow )
             mpr("You feel slightly irritated.");
             make_hungry(100, false);
         }
+        else if ( you.duration[DUR_BUILDING_RAGE] )
+        {
+            you.duration[DUR_BUILDING_RAGE] = 0;
+            mpr("Your blood cools.");
+        }
         else
         {
             if (go_berserk(true))
