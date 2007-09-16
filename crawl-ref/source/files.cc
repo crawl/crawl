@@ -906,6 +906,9 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         redraw_all();
     }
 
+    if (load_mode == LOAD_START_GAME)
+        just_created_level = true;
+
     // closes all the gates if you're on the way out
     if (you.char_direction == GDT_ASCENDING &&
         you.level_type != LEVEL_PANDEMONIUM)
