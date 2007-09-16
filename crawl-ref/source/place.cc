@@ -10,6 +10,8 @@
  *               <1>     9/11/07        MPC             Split from misc.cc
  */
 
+#include "AppHdr.h"
+
 #include "externs.h"
 #include "place.h"
 
