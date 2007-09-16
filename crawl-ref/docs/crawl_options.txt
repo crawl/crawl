@@ -882,7 +882,12 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         inv:    Inventory listings for any command (but not for dropping
                 items).
         any:    All menus; this is the default when unspecified.
-        
+
+        For example, 
+            sort_menus = true : equipped, basename, qualname, curse, qty
+        will produce the same inventory and drop menus as by default, with 
+        the exception that all worn/wielded items come first. This can be
+        convenient if you use the '.' command to select subsequent items.
 
 4-j     Messages and Display Enhancements.
 ------------------------------------------

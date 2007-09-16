@@ -2279,7 +2279,9 @@ work, with the exception of Space (which fires).
 Shortcuts in lists (like multidrop):
 ------------------------------------
 When dropping (with the drop_mode=multi option), the drop menu accepts 
-several shortcuts.
+several shortcuts. The same applies to the pickup menu.
+In the following, if an item is already selected, the key will deselect 
+it (except for ',' and '-', obviously).
         (               Selects all missiles.
         )               Selects all hand weapons.
         [               Selects all armour.
@@ -2297,6 +2299,10 @@ several shortcuts.
         -               Global deselect (subject to drop_filter option).
         *               Invert selection. This will allow you to select
                         all items even if you use the drop_filter option.
+        .               Selects next item. (If you have pressed the key
+                        of an item in the list, '.' will toggle the next
+                        item. This can be repeated, quickly selecting
+                        several subsequent items).
 
 
 ------------------------------------------------------------------------
