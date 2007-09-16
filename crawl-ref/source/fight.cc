@@ -1299,9 +1299,20 @@ int melee_attack::player_weapon_type_modify(int damage)
             else
                 attack_verb = "shred";
             break;
-        case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_LICH:
+            if (you.has_usable_claws())
+            {
+                if (damage < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+                break;
+            }
+            // or fall-through
+        case TRAN_ICE_BEAST:
             if (damage < HIT_MED)
                 attack_verb = "punch";
             else
@@ -2268,7 +2279,7 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 5;
 
     const bool see_invis = player_see_invis();
-    // if you can't see yourself, you're a little less acurate.
+    // if you can't see yourself, you're a little less accurate.
     if (you.invisible() && !see_invis)
         your_to_hit -= 5;
 

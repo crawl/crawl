@@ -724,6 +724,7 @@ public:
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
+    bool      has_claws() const;
     bool      has_usable_claws() const;
     item_def *weapon(int which_attack = -1);
     item_def *shield();

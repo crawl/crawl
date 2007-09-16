@@ -323,8 +323,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         }
         else
         {
-            bool likes_blood = (you.species == SP_KOBOLD
-                                || you.species == SP_OGRE
+            bool likes_blood = (you.species == SP_OGRE
                                 || you.species == SP_TROLL
                                 || you.mutation[MUT_CARNIVOROUS]);
 

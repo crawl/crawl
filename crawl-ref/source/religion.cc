@@ -3068,7 +3068,7 @@ void handle_god_time(void)
             // something interesting happening.
             if (you.gift_timeout == 1)
             {
-                mpr("Xom is getting BORED.");
+                god_speaks(you.religion, "Xom is getting BORED.");
                 you.gift_timeout = 0;
             }
             else if (you.gift_timeout > 1)

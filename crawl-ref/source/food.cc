@@ -195,31 +195,23 @@ bool butchery(void)
     bool wpn_switch = false;
     bool new_cursed = false;
     int old_weapon = you.equip[EQ_WEAPON];
+    int old_gloves = you.equip[EQ_GLOVES];
 
     const transformation_type transform =
         static_cast<transformation_type>(you.attribute[ATTR_TRANSFORMATION]);
  
     // Xom probably likes this, occasionally
     bool teeth_butcher = (you.mutation[MUT_FANGS] == 3);
-   
-    bool barehand_butcher =
-        (you.equip[ EQ_GLOVES ] == -1
-         && (transform_can_butcher_barehanded(transform)
-             || (transform == TRAN_NONE
-                 && (you.species == SP_TROLL
-                     || you.species == SP_GHOUL
-                     || you.mutation[MUT_CLAWS]))));
 
-    bool gloved_butcher = (you.species == SP_TROLL ||
-                           you.species == SP_GHOUL ||
-                           you.mutation[MUT_CLAWS]) &&
-        (you.equip[EQ_GLOVES] != -1 &&
-         !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
-    int old_gloves = you.equip[EQ_GLOVES];
+    bool barehand_butcher = (transform_can_butcher_barehanded(transform)
+                             || you.has_claws()) && you.equip[EQ_GLOVES] == -1;
 
-    bool can_butcher = teeth_butcher || barehand_butcher ||
-        (you.equip[EQ_WEAPON] != -1 &&
-         can_cut_meat(you.inv[you.equip[EQ_WEAPON]]));
+    bool gloved_butcher = you.has_claws() && (you.equip[EQ_GLOVES] != -1
+                          && !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
+
+    bool can_butcher = teeth_butcher || barehand_butcher
+                       || you.equip[EQ_WEAPON] != -1
+                          && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
     
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {

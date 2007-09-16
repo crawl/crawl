@@ -68,7 +68,7 @@ const char* troll_claw_descrip[4] = {
     "You have claws for hands.",
     "You have sharp claws for hands.",
     "You have very sharp claws for hands.",
-    "Your claws are sharper than steel."
+    "You have claws sharper than steel for hands."
 };
 
 const char *mutation_descrip[][3] = {
@@ -260,7 +260,7 @@ const char *mutation_descrip[][3] = {
     {"Your wings are large and strong.", "", ""},       //jmf: dracos only
 
     //jmf: these next two are for evil gods to mark their followers; good gods
-    //     will never accept a 'marked' worhsipper
+    //     will never accept a 'marked' worshipper
 
     {"There is a blue sigil on each of your hands.",
      "There are several blue sigils on your hands and arms.",
@@ -1608,14 +1608,16 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
          break;
          
     case MUT_CLAWS:
-
         mpr((you.species == SP_TROLL ? troll_claw_messages
              : gain_mutation[mutat])[you.mutation[mutat]],
              MSGCH_MUTATION);
 
-        // gloves aren't prevented until level three
-        if (you.mutation[ mutat ] >= 3)
+        // gloves aren't prevented until level 3; we don't have the
+        // mutation yet, so we have to check for level 2 or higher claws
+        // here
+        if (you.mutation[mutat] >= 2)
             remove_one_equip(EQ_GLOVES);
+
         break;
 
     case MUT_HORNS:             // horns force your helmet off

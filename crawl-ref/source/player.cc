@@ -475,9 +475,6 @@ bool you_can_wear(int eq, bool special_armour)
    if (player_genus(GENPC_ELVEN))
        return true;
 
-   if (you.is_undead)
-       return true;
-
    // anyone can wear caps/hats and robes and at least one of buckler/shield
    if (special_armour
        && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR || eq == EQ_SHIELD))
@@ -496,19 +493,34 @@ bool you_can_wear(int eq, bool special_armour)
    }
 
    if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
-   {
        return false;
-   }
 
    if (you.species == SP_MINOTAUR && eq == EQ_HELMET)
+       return false;
+
+   if (you.species == SP_GHOUL && eq == EQ_GLOVES)
        return false;
 
    // else no problems
    return true;
 }
 
-bool you_tran_can_wear(int eq)
+bool you_tran_can_wear(int eq, bool check_mutation)
 {
+   // not a transformation, but also temporary -> check first
+   if (check_mutation)
+   {
+       if (you.mutation[MUT_CLAWS] >= 3 && eq == EQ_GLOVES)
+           return false;
+
+       if (eq == EQ_BOOTS
+           && (player_is_swimming() && you.species == SP_MERFOLK
+               || you.mutation[MUT_HOOVES] >= 2))
+       {
+           return false;
+       }
+   }
+
    int transform = you.attribute[ATTR_TRANSFORMATION];
 
    // no further restrictions
@@ -5729,13 +5741,28 @@ void player::slow_down(int str)
     ::slow_player( str );
 }
 
+bool player::has_claws() const
+{
+    // these transformations bring claws with them
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+        || attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
+    {
+        return true;
+    }
+
+    // these are the only other sources for claws
+    if (species != SP_TROLL && species != SP_GHOUL && !mutation[MUT_CLAWS])
+        return false;
+
+    // transformations other than these will override claws
+    return ( attribute[ATTR_TRANSFORMATION] == TRAN_NONE
+             || attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+             || attribute[ATTR_TRANSFORMATION] == TRAN_LICH );
+}
+
 bool player::has_usable_claws() const
 {
-    return (equip[EQ_GLOVES] == -1 &&
-            (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-             || mutation[MUT_CLAWS] 
-             || species == SP_TROLL
-             || species == SP_GHOUL));
+    return (equip[EQ_GLOVES] == -1 && has_claws());
 }
 
 god_type player::deity() const

@@ -564,9 +564,8 @@ static void finish_delay(const delay_queue_item &delay)
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
             mprf("You finish %s the corpse into pieces.",
-                 (you.species == SP_TROLL || you.species == SP_GHOUL
-                  || you.mutation[MUT_FANGS] == 3) ? "ripping"
-                 : "chopping");
+                 (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
+                 "ripping" : "chopping");
 
             if (you.species == SP_VAMPIRE &&
                 (!god_likes_butchery(you.religion) ||

@@ -1282,7 +1282,7 @@ void print_overview_screen()
                     snprintf(buf, sizeof buf,
                              "%-7s: <darkgray>(unavailable)</darkgray>", slot);
                 }
-                else if (!you_tran_can_wear(e_order[i]))
+                else if (!you_tran_can_wear(e_order[i], true))
                 {
                     snprintf(buf, sizeof buf, "%-7s: "
                              "<darkgray>(currently unavailable)</darkgray>",

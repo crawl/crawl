@@ -86,14 +86,14 @@ std::string your_hand( bool plural )
         mpr("ERROR: unknown transformation in your_hand() (spells4.cc)");
     case TRAN_NONE:
     case TRAN_STATUE:
-        if (you.species == SP_TROLL || you.species == SP_GHOUL)
+    case TRAN_LICH:
+        if (you.has_usable_claws())
         {
             result = "claw";
             break;
         }
         // or fall-through
     case TRAN_ICE_BEAST:
-    case TRAN_LICH:
         result = "hand";
         break;
     case TRAN_SPIDER:

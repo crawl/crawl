@@ -754,6 +754,18 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return (false);
     }
 
+    if (sub_type == ARM_GLOVES)
+    {
+        if (you.species == SP_TROLL || you.species == SP_GHOUL
+            || you.mutation[MUT_CLAWS] >= 3)
+        {
+            if (verbose)
+                mpr( "You can't wear gloves with your huge claws!" );
+
+            return (false);
+        }
+    }
+
     if (sub_type == ARM_BOOTS)
     {
         if (you.species == SP_NAGA || you.species == SP_CENTAUR)

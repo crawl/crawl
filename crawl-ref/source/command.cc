@@ -379,7 +379,7 @@ void list_armour()
             estr << you.inv[armour_id].name(DESC_INVENTORY);
         else if (!you_can_wear(i,true))
             estr << "    (unavailable)";
-        else if (!you_tran_can_wear(i))
+        else if (!you_tran_can_wear(i, true))
             estr << "    (currently unavailable)";
         else if (!you_can_wear(i))
             estr << "    (restricted)";
