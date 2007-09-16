@@ -1,8 +1,22 @@
-##################################################################
-# Library of randomized word/phrase substitutions. (The keys will 
-# have to be changed in the unlikely event that monsters are ever 
-# given names like "yells" or "begs".)
-##################################################################%%%%
+############################################################
+# As of Stone Soup 0.3 the previously hardcoded monster 
+# speech has been outsourced. This makes changing existing 
+# messages, and adding new ones really easy.
+#
+# speak.txt contains the messages of monsters that "talk" 
+# to the player, or at least the biggest part there-of. 
+#
+# For an explanation of how to read shout.txt and speak.txt 
+# and how to add new messages, see monster_speech.txt in the
+# docs directory
+############################################################
+
+############################################################
+# Library of randomized word/phrase substitutions. (The keys 
+# will have to be changed in the unlikely event that 
+# monsters are ever given names like "yells" or "begs".)
+############################################################
+%%%%
 __RESIST_OR_NOTHING
 
 __YOU_RESIST
@@ -28,6 +42,17 @@ yells
 wails
 
 cries
+
+screams
+%%%%
+# for ghosts
+wails
+
+wails
+
+shouts
+
+says
 
 screams
 %%%%
@@ -87,10 +112,10 @@ ploy
 
 trick
 
-######################################################################
-# Library of speeches for types of monsters, like priests, wizards,
-# guards and so on.
-######################################################################
+############################################################
+# Library of speeches for types of monsters, like priests, 
+# wizards, guards and so on.
+############################################################
 %%%%
 _high_priest_
 
@@ -100,7 +125,7 @@ SPELL:@The_monster@ mumbles some strange prayers.
 
 SPELL:@The_monster@ intones a terrible prayer.
 
-@The_monster@ looks excited.
+VISUAL:@The_monster@ looks excited.
 
 @The_monster@ starts to sing a prayer.
 
@@ -119,11 +144,11 @@ SPELL:@The_monster@ intones a terrible prayer.
 %%%%
 _mercenary_guard_
 
-@The_monster@ looks very unfriendly.
+VISUAL:@The_monster@ looks very unfriendly.
 
-@The_monster@ looks very cold.
+VISUAL:@The_monster@ looks very cold.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ says, "Now you've reached the end of your journey."
 
@@ -179,7 +204,7 @@ ENCHANT:@possessive@ fingertips start to glow.
 SPELL:@The_monster@ casts a spell.
 __YOU_RESIST
 
-SPELL:@The_monster@ throws some strange powder towards you.
+VISUAL SPELL:@The_monster@ throws some strange powder towards you.
 
 SPELL:@The_monster@ says, "Argatax netranoch dertex."
 
@@ -187,9 +212,9 @@ SPELL:@The_monster@ says, "Dogrw nutew berg."
 
 SPELL:@The_monster@ shouts, "Entram moth deg ulag!"
 
-SPELL:@The_monster@'s eyes start to glow.
+VISUAL SPELL:@The_monster@'s eyes start to glow.
 
-SPELL:@The_monster@ tries to paralyze you with @possessive@ gaze.
+VISUAL SPELL:@The_monster@ tries to paralyze you with @possessive@ gaze.
 
 @The_monster@ shouts, "You can't withstand my power!"
 
@@ -198,9 +223,9 @@ SPELL:@The_monster@ tries to paralyze you with @possessive@ gaze.
 %%%%
 _hostile_adventurer_
 
-@The_monster@ frowns.
+VISUAL:@The_monster@ frowns.
 
-@The_monster@ looks very upset.
+VISUAL:@The_monster@ looks very upset.
 
 @The_monster@ screams, "Return home!"
 
@@ -218,18 +243,18 @@ _hostile_adventurer_
 
 @The_monster@ screams, "First you have to pass me!"
 
-@The_monster@ scream, "I hate you!"
+@The_monster@ screams, "I hate you!"
 ## END _hostile_adventurer_ ##
 %%%%
 _friendly_imp_
 
-@The_monster@ jumps up and down with excitement.
+VISUAL:@The_monster@ jumps up and down with excitement.
 
-@The_monster@ grins impishly at you.
+VISUAL:@The_monster@ grins impishly at you.
 
-@The_monster@ picks up some beetles from the @surface@ and offers them to you.
+VISUAL:@The_monster@ picks up some beetles from the @surface@ and offers them to you.
 
-@The_monster@ blows smoke rings.
+VISUAL:@The_monster@ blows smoke rings.
 
 @The_monster@ says, "Just tell me who NOT to kill."
 
@@ -252,25 +277,25 @@ _hostile_imp_
 
 @The_monster@ laughs crazily.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ breathes smoke at you.
+VISUAL:@The_monster@ breathes smoke at you.
 
-@The_monster@ lashes his tail.
+VISUAL:@The_monster@ lashes his tail.
 
-@The_monster@ grinds his teeth.
+VISUAL:@The_monster@ grinds his teeth.
 
 @The_monster@ sputters.
 
-@The_monster@ breathes steam at you.
+VISUAL:@The_monster@ breathes steam at you.
 
-@The_monster@ spits at you.
+VISUAL:@The_monster@ spits at you.
 
-@The_monster@ disappears for a moment.
+VISUAL:@The_monster@ disappears for a moment.
 
-@The_monster@ summons a swarm of flies.
+VISUAL:@The_monster@ summons a swarm of flies.
 
-@The_monster@ picks up a beetle and eats it.
+VISUAL:@The_monster@ picks up a beetle and eats it.
 ## END _hostile_imp_ ##
 %%%%
 _demon_taunt_
@@ -280,9 +305,9 @@ _demon_taunt_
 _imp_taunt_
 
 @The_monster@ @says@: @imp_taunt@
-################################################################
+##########################################
 # Messages by monster body shape
-################################################################
+##########################################
 %%%%
 default stupid friendly humanoid
 
@@ -303,66 +328,67 @@ __NONE
 default silenced confused humanoid
 
 w:40
-@The_monster@ gestures wildly.
+VISUAL:@The_monster@ gestures wildly.
 
 w:20
-@The_monster@ says something but you don't hear anything.
-@The_monster@ looks confused.
+VISUAL:@The_monster@ says something but you don't hear anything.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ looks confused.
 
-@The_monster@ smiles happily.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ cries.
+VISUAL:@The_monster@ smiles happily.
+
+VISUAL:@The_monster@ cries.
 ## END silenced confused humanoid ##
 %%%%
 default fleeing silenced humanoid
 
 w:30
-@The_monster@ glances furtively about.
+VISUAL:@The_monster@ glances furtively about.
 
 w:30
-@The_monster@ seems to say something.
+VISUAL:@The_monster@ seems to say something.
 
-@The_monster@ opens @possessive@ mouth, as if shouting.
+VISUAL:@The_monster@ opens @possessive@ mouth, as if shouting.
 
-@The_monster@ looks around. 
+VISUAL:@The_monster@ looks around. 
 
-@The_monster@ ponders the situation.
+VISUAL:@The_monster@ ponders the situation.
 ## END fleeing silenced humanoid ##
 %%%%
 default friendly silenced humanoid
 
 w:30
-@The_monster@ gives you a thumbs up.
+VISUAL:@The_monster@ gives you the thumbs up.
 
 w:30
-@The_monster@ says something you can't hear.
+VISUAL:@The_monster@ says something you can't hear.
 
-@The_monster@ looks at you.
+VISUAL:@The_monster@ looks at you.
 
-@The_monster@ waves at you.
+VISUAL:@The_monster@ waves at you.
 
-@The_monster@ smiles happily.
+VISUAL:@The_monster@ smiles happily.
 
-@The_monster@ winks at you.
+VISUAL:@The_monster@ winks at you.
 ## END friendly silenced humanoid ##
 %%%%
 default silenced humanoid
 
 w:30
-@The_monster@ says something but you don't hear anything.
+VISUAL:@The_monster@ says something but you don't hear anything.
 
 w:30
-@The_monster@ gestures.
+VISUAL:@The_monster@ gestures.
 
-@The_monster@ gestures obscenely.
+VISUAL:@The_monster@ gestures obscenely.
 
-@The_monster@ grins.
+VISUAL:@The_monster@ grins.
 
-@The_monster@ looks angry.
+VISUAL:@The_monster@ looks angry.
 
-@The_monster@ seems to be listening.
+VISUAL:@The_monster@ seems to be listening.
 ## END silenced humanoid ##
 %%%%
 default friendly confused humanoid
@@ -375,7 +401,7 @@ default friendly confused humanoid
 
 @The_monster@ shouts, "What's happening?!"
 
-@The_monster@ cries.
+VISUAL:@The_monster@ cries.
 
 @The_monster@ shouts, "Yeah!"
 
@@ -383,11 +409,11 @@ default friendly confused humanoid
 
 @The_monster@ laughs crazily.
 
-@The_monster@ ponders the situation.
+VISUAL:@The_monster@ ponders the situation.
 
-@The_monster@ grins madly.
+VISUAL:@The_monster@ grins madly.
 
-@The_monster@ looks very confused.
+VISUAL:@The_monster@ looks very confused.
 
 @The_monster@ mumbles something.
 
@@ -403,7 +429,7 @@ default friendly confused humanoid
 default confused humanoid
 
 w:30
-@The_monster@ gestures wildly.
+VISUAL:@The_monster@ gestures wildly.
 
 @The_monster@ yells, "Get them off me!"
 
@@ -411,7 +437,7 @@ w:30
 
 @The_monster@ shouts, "What's happening?!"
 
-@The_monster@ cries.
+VISUAL:@The_monster@ cries.
 
 @The_monster@ shouts, "NO!"
 
@@ -419,11 +445,11 @@ w:30
 
 @The_monster@ laughs crazily.
 
-@The_monster@ ponders the situation.
+VISUAL:@The_monster@ ponders the situation.
 
-@The_monster@ grins madly.
+VISUAL:@The_monster@ grins madly.
 
-@The_monster@ looks very confused.
+VISUAL:@The_monster@ looks very confused.
 
 @The_monster@ mumbles something.
 
@@ -431,7 +457,7 @@ w:30
 
 @The_monster@ asks, "Where am I?"
 
-@The_monster@ shakes.
+VISUAL:@The_monster@ shakes.
 
 @The_monster@ asks, "Who are you?"
 
@@ -443,15 +469,15 @@ w:30
 
 @The_monster@ screams, "NO!  I can't bear this much noise."
 
-@The_monster@ covers @possessive@ eyes.
+VISUAL:@The_monster@ covers @possessive@ eyes.
 ## END confused humanoid ##
 %%%%
 default friendly fleeing humanoid
 
 w:30
-@The_monster@ tries to hide somewhere.
+VISUAL:@The_monster@ tries to hide somewhere.
 
-@The_monster@ @shouts@, "WAIT FOR ME, @your_nam@!  Could you help me?"
+@The_monster@ @shouts@, "WAIT FOR ME, @player_name@!  Could you help me?"
 
 @The_monster@ screams, "Help!"
 
@@ -469,7 +495,7 @@ w:30
 default fleeing humanoid
 
 w:30
-@The_monster@ gives up.
+VISUAL:@The_monster@ gives up.
 
 w:20
 @The_monster@ @yells@, "Help!"
@@ -477,7 +503,7 @@ w:20
 @The_monster@ @begs@, "Why can't we all just get along?"
 
 # This one won't work for nagas.
-@The_monster@ @almost@ stumbles in trying to escape.
+VISUAL:@The_monster@ @almost@ stumbles in trying to escape.
 
 @The_monster@ @mutters@, "Of all the rotten luck!"
 
@@ -499,9 +525,9 @@ w:20
 
 @The_monster@ @begs@, "Please!  I have a lot of children..."
 
-@The_monster@ tries to recover @possessive@ lost courage.
+VISUAL:@The_monster@ tries to recover @possessive@ lost courage.
 
-@The_monster@ looks really @rattled@.
+VISUAL:@The_monster@ looks really @rattled@.
 ## END fleeing humanoid ##
 %%%%
 default friendly humanoid
@@ -512,21 +538,21 @@ default friendly humanoid
 
 @The_monster@ says, "It's nice to have friends."
 
-@The_monster@ looks at you.
+VISUAL:@The_monster@ looks at you.
 
-@The_monster@ smiles at you.
+VISUAL:@The_monster@ smiles at you.
 
 @The_monster@ says, "@player_name@, you are my only friend."
 
 @The_monster@ says, "@player_name@, I like you."
 
-@The_monster@ waves at you.
+VISUAL:@The_monster@ waves at you.
 
 @The_monster@ says, "Be careful!"
 
 @The_monster@ says, "Don't worry.  I'm here with you."
 
-@The_monster@ smiles happily.
+VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ shouts, "No mercy!  Kill them all!"
 
@@ -536,61 +562,63 @@ default friendly humanoid
 
 @The_monster@ shouts, "Beware of monsters!"
 
-@The_monster@ looks friendly.
+VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
 
 %%%%
 default insect
 
-@The_monster@ waves @possessive@ antennas.
+VISUAL:@The_monster@ waves @possessive@ antennas.
 %%%%
 default confused insect
 
-@The_monster@ wildly waves @possessive@ antennas.
+VISUAL:@The_monster@ wildly waves @possessive@ antennas.
 
-@The_monster@ seems to be having trouble coordinating all six of @possessive@ legs.
+VISUAL:@The_monster@ seems to be having trouble coordinating all six of @possessive@ legs.
 %%%%
 default confused winged insect
 
-@The_monster@ wildly waves @possessive@ antennas.
+VISUAL:@The_monster@ wildly waves @possessive@ antennas.
 
-@The_monster@ wobbles in @possessive@ flight.
+VISUAL:@The_monster@ wobbles in @possessive@ flight.
 %%%%
 default confused arachnid
 
-@The_monster@ seems to be having trouble coordinating all eight of @possessive@ legs.
+VISUAL:@The_monster@ seems to be having trouble coordinating all eight of @possessive@ legs.
 %%%%
 centipede
 
-@The_monster@ waves its antennas.
+VISUAL:@The_monster@ waves its antennas.
 %%%%
 default confused centipede
 
-@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
+VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
 
-@The_monster@ wildly waves @possessive@ antennas.
+VISUAL:@The_monster@ wildly waves @possessive@ antennas.
 
-####################################################################### Speech strings by monster symbol
-######################################################################%%%%
+#########################################
+# Speech strings by monster symbol
+#########################################
+%%%%
 default confused 'b'
 
-@The_monster@ flutters around in erratic circles.
+VISUAL:@The_monster@ flutters around in erratic circles.
 %%%%
 default 'cap-G'
 
-@The_monster@ pulsates ominously.
+VISUAL:@The_monster@ pulsates ominously.
 %%%%
 default 'cap-J'
 
-@The_monster@ jiggles.
+VISUAL:@The_monster@ jiggles.
 %%%%
 default confused 'k'
 
-@The_monster@ buzzes around in tight circles.
+SOUND:@The_monster@ buzzes around in tight circles.
 %%%%
 default silenced confused 'k'
 
-@The_monster@ flies around in tight circles.
+VISUAL:@The_monster@ flies around in tight circles.
 %%%%
 'l'
 
@@ -598,16 +626,16 @@ default silenced confused 'k'
 %%%%
 'r'
 
-@The_monster@ twitches @possessive@ whiskers.
+VISUAL:@The_monster@ twitches @possessive@ whiskers.
 %%%%
 default confused 'r'
 
-@The_monster@ runs around in a circle.
+VISUAL:@The_monster@ runs around in a circle.
 %%%%
 # Excluding the moth of wrath, which being a moth doesn't buzz.
 default confused 'y'
 
-@The_monster@ buzzes around in tight circles.
+SOUND:@The_monster@ buzzes around in tight circles.
 %%%%
 # Statues and golems never speak unless assigned a message to their
 # specific species.
@@ -680,9 +708,13 @@ __NONE
 w:1
 @_friendly_imp_@
 
-##################################################################### Player ghost phrases.  Ghosts with different classes can be given 
+%%%%
+
+####################################################################
+# Player ghost phrases.  Ghosts with different classes can be given 
 # different messages.
-####################################################################%%%%
+####################################################################
+%%%%
 # Only use messages that are explicitly for the player ghost, since
 # other messages might seem weird coming out of it.
 default player ghost
@@ -691,12 +723,12 @@ __NONE
 %%%%
 silenced player ghost
 
-SPELL:@The_monster@ stares at you.
-WARN:You feel cold.
+VISUAL SPELL:@The_monster@ stares at you.
+VISUAL WARN:You feel cold.
 
-@The_monster@ points at you threateningly.
+VISUAL:@The_monster@ points at you threateningly.
 
-@The_monster@ stares at you while slowly dragging a finger across @possessive@ throat.
+VISUAL:@The_monster@ stares at you while slowly dragging a finger across @possessive@ throat.
 ## END silenced player ghost ##
 %%%%
 player ghost
@@ -710,7 +742,7 @@ WARN:You feel cold.
 
 @The_monster@ laughs crazily.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ makes a sound of rattling chains.
 
@@ -718,34 +750,34 @@ WARN:You feel cold.
 
 # mv: ghosts are usually wailing instead of speaking normally, 
 # aren't they?
-@The_monster@ says, "I have seen your future, and it is all used up."
+@The_monster@ @wails@, "I have seen your future, and it is all used up."
 
-@The_monster@ says, "They lied to you.  The Dungeon just goes down and down forever."
+@The_monster@ @wails@, "They lied to you.  The Dungeon just goes down and down forever."
 
-@The_monster@ says, "Do you think the gods will protect you?"
+@The_monster@ @wails@, "Do you think the gods will protect you?"
 
-@The_monster@ says "I was like you once."
+@The_monster@ @wails@, "I was like you once."
 
-@The_monster@ says, "Very impressive.  But it won't help.  Nothing will."
+@The_monster@ @wails@, "Very impressive.  But it won't help.  Nothing will."
 
-@The_monster@ says, "What have you got that I didn't have?"
+@The_monster@ @wails@, "What have you got that I didn't have?"
 
 @The_monster@ says very slowly, "There's no hope."
 
-@The_monster@ shouts, "You will never get the ORB!"
+@The_monster@ @wails@, "You will never get the ORB!"
 
-@The_monster@ screams, "You must not succeed where I failed!"
+@The_monster@ @wails@, "You must not succeed where I failed!"
 
 @The_monster@ screams, "I'll kill anyone who wants the ORB!"
 
 @The_monster@ screams, "Don't try to defend!  You have no chance!"
 
-@The_monster@ screams, "You will join me soon!"
+@The_monster@ @wails@, "You will join me soon!"
 
 # Hamlet
 @The_monster@ wails, "To die, to sleep, no more."
 
-@The_monster@ wails, "Death is your only future!"
+@The_monster@ @wails@, "Death is your only future!"
 
 @The_monster@ whispers, "They're coming for you..."
 
@@ -762,12 +794,14 @@ WARN:You feel cold.
 @The_monster@ whispers, "The ORB doesn't exist."
 ## END player ghost ##
 
-####################################################################### Unique monsters
-######################################################################%%%%
+#######################################
+# Unique monsters
+#######################################
+%%%%
 # She is trying to get money and treasure
 Agnes
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ says, "I need a new robe.  I'll buy it with your money." 
 
@@ -790,11 +824,11 @@ Agnes
 %%%%
 Blork the orc
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ frowns.
+VISUAL:@The_monster@ frowns.
 
-@The_monster@ looks angry.
+VISUAL:@The_monster@ looks angry.
 
 @The_monster@ screams, "I don't like you!"
 
@@ -828,14 +862,14 @@ Blork the orc
 # An ancient lich
 Boris
 
-SPELL:@The_monster@ stares at you.
-WARN:You feel drained.
+VISUAL SPELL:@The_monster@ stares at you.
+VISUAL WARN:You feel drained.
 
-SPELL:@The_monster@ stares at you.
-WARN:You feel weakened.
+VISUAL SPELL:@The_monster@ stares at you.
+VISUAL WARN:You feel weakened.
 
-SPELL:@The_monster@ stares at you.
-WARN:You feel troubled.", MSGCH_WARN
+VISUAL SPELL:@The_monster@ stares at you.
+VISUAL WARN:You feel troubled.
 
 SPELL:@The_monster@ casts a spell.
 WARN:Your equipment suddenly seems to weigh more.
@@ -852,7 +886,7 @@ WARN:You have a terrible headache.
 SPELL:@The_monster@ casts a spell.
 ENCHANT:@The_monster@ speeds up.
 
-SPELL:@The_monster@ gestures.
+VISUAL SPELL:@The_monster@ gestures.
 
 @The_monster@ laughs.
 
@@ -903,9 +937,9 @@ Edmund
 # A wild tempered adventuress
 Erica
 
-@The_monster@ looks angry.
+VISUAL:@The_monster@ looks angry.
 
-@The_monster@ drinks a potion.
+VISUAL:@The_monster@ drinks a potion.
 
 @The_monster@ laughs wildly.
 
@@ -935,7 +969,7 @@ Erolcha
 
 @The_monster@ growls.
 
-@The_monster@ tries to grin evilly.
+VISUAL:@The_monster@ tries to grin evilly.
 
 @The_monster@ screams, "Eat!"
 
@@ -965,11 +999,11 @@ Francis
 SPELL:@The_monster@ casts a spell.
 ENCHANT:@The_monster@'s hands start to glow with a soft light.
 
-@The_monster@ ponders the situation.
+VISUAL:@The_monster@ ponders the situation.
 
-@The_monster@ looks for a scalpel.
+VISUAL:@The_monster@ looks for a scalpel.
 
-@The_monster@ throws something at you.
+VISUAL:@The_monster@ throws something at you.
 
 @The_monster@ asks, "Did you know that corpses are an important natural resource?"
 
@@ -1002,7 +1036,7 @@ Frederick
 # A twisted goblin
 Ijyb
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams, "Die!"
 
@@ -1032,7 +1066,7 @@ Ijyb
 # A middle aged man, hired to kill you. He is in a hurry.
 Harold
 
-@The_monster@ looks nervous.
+VISUAL:@The_monster@ looks nervous.
 
 @The_monster@ says, "Stand still.  I'm trying to kill you."
 
@@ -1058,9 +1092,9 @@ Harold
 # A sorceress disturbed by player
 Jessica
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ looks very angry.
+VISUAL:@The_monster@ looks very angry.
 
 @The_monster@ says, "I'm really upset."
 
@@ -1081,9 +1115,9 @@ SPELL:@The_monster@ gestures wildly.
 %%%%
 Joseph
 
-@The_monster@ smiles happily.
+VISUAL:@The_monster@ smiles happily.
 
-@The_monster@ tries to grin evilly.
+VISUAL:@The_monster@ tries to grin evilly.
 
 @The_monster@ says, "I'm happy to see you.  And I'll be happy to kill you."
 
@@ -1109,11 +1143,11 @@ Joseph
 # An ugly old witch looking for someone to kill
 Josephine
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ grins malevolently.
+VISUAL:@The_monster@ grins malevolently.
 
-@The_monster@ grinds her teeth.
+VISUAL:@The_monster@ grinds her teeth.
 
 @The_monster@ laughs insanely.
 
@@ -1131,7 +1165,7 @@ Josephine
 # A bounty hunter
 Jozef
 
-@The_monster@ looks satisfied.
+VISUAL:@The_monster@ looks satisfied.
 
 @The_monster@ asks, "Did you write a testament?  You should."
 
@@ -1163,7 +1197,7 @@ Jozef
 # A powerful sorceress, guarding the ORB
 Margery
 
-SPELL:@The_monster@ gestures.
+VISUAL SPELL:@The_monster@ gestures.
 
 SPELL:@The_monster@ casts a spell.
 ENCHANT:@The_monster@ is surrounded with an aura of power.
@@ -1177,22 +1211,22 @@ ENCHANT:@The_monster@'s hands start to glow.
 SPELL:@The_monster@ screams, "Ergichanteg reztahaw!"
 WARN:You feel really bad.
 
-SPELL:@The_monster@ gestures.
-WARN:You feel doomed.
+VISUAL SPELL:@The_monster@ gestures.
+VISUAL WARN:You feel doomed.
 
-SPELL:@The_monster@ gestures.
-WARN:You feel weakened.
+VISUAL SPELL:@The_monster@ gestures.
+VISUAL WARN:You feel weakened.
 
-SPELL:@The_monster@ throws some purple powder towards you.
-WARN:You feel cursed.
+VISUAL SPELL:@The_monster@ throws some purple powder towards you.
+VISUAL WARN:You feel cursed.
 
-@The_monster@'s eyes start to glow with a red light.
+VISUAL SPELL:@The_monster@'s eyes start to glow with a red light.
 
-@The_monster@'s eyes start to glow with a green light.
+VISUAL SPELL:@The_monster@'s eyes start to glow with a green light.
 
-@The_monster@'s eyes start to glow with a blue light.
+VISUAL SPELL:@The_monster@'s eyes start to glow with a blue light.
 
-@The_monster@ looks very self-confident.
+VISUAL:@The_monster@ looks very self-confident.
 
 @The_monster@ says, "You are dead."
 
@@ -1223,9 +1257,9 @@ Louise
 # A warrior princess looking for the sword "Entarex".
 Maud
 
-@The_monster@ frowns.
+VISUAL:@The_monster@ frowns.
 
-@The_monster@ looks upset.
+VISUAL:@The_monster@ looks upset.
 
 @The_monster@ asks, "Will you think of me as you die?"
 
@@ -1253,18 +1287,18 @@ SPELL:@The_monster@ mumbles some strange words.
 
 SPELL:@The_monster@ gestures wildly.
 
-SPELL:@The_monster@ points at you.
-__YOU_RESIST
+VISUAL SPELL:@The_monster@ points at you.
+VISUAL:__YOU_RESIST
 
-@The_monster@ drinks a potion.
+VISUAL:@The_monster@ drinks a potion.
 
-@The_monster@ looks very angry.
+VISUAL:@The_monster@ looks very angry.
 
-@The_monster@ frowns.
+VISUAL:@The_monster@ frowns.
 
-@The_monster@ looks angry.
+VISUAL:@The_monster@ looks angry.
 
-@The_monster@ shakes with wrath.
+VISUAL:@The_monster@ shakes with wrath.
 
 @The_monster@ says, "You really are a nuisance."
 
@@ -1275,13 +1309,13 @@ __YOU_RESIST
 # A disembodied skull.
 Murray
 
-@The_monster@ rolls in a circle.
+VISUAL:@The_monster@ rolls in a circle.
 
-@The_monster@ rolls around.
+VISUAL:@The_monster@ rolls around.
 
-@The_monster@ spins like a top.
+VISUAL:@The_monster@ spins like a top.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ laughs evilly.
 
@@ -1306,23 +1340,23 @@ Murray
 %%%%
 silenced Murray
 
-@The_monster@ rolls in a circle.
+VISUAL:@The_monster@ rolls in a circle.
 
-@The_monster@ rolls around.
+VISUAL:@The_monster@ rolls around.
 
-@The_monster@ spins like a top.
+VISUAL:@The_monster@ spins like a top.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ seems to say something.
+VISUAL:@The_monster@ seems to say something.
 
-@The_monster@ says something you can't hear.  It was probably not a compliment.
+VISUAL:@The_monster@ says something you can't hear.  It was probably not a compliment.
 ## END silenced Murray ##
 %%%%
 # A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
 
-@The_monster@ smiles happily.
+VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ asks, "Did you write a will?  You should."
 
@@ -1356,13 +1390,13 @@ Norris
 
 SPELL:@The_monster@ mumbles some mantras.
 
-@The_monster@ is surrounded with aura of peace.
+VISUAL:@The_monster@ is surrounded with aura of peace.
 
-@The_monster@ looks very balanced.
+VISUAL:@The_monster@ looks very balanced.
 
-@The_monster@ smiles at you.
+VISUAL:@The_monster@ smiles at you.
 
-@The_monster@ looks relaxed.
+VISUAL:@The_monster@ looks relaxed.
 
 @The_monster@ sings "Hare Rama, Hare Krishna!"
 
@@ -1406,21 +1440,21 @@ SPELL:@The_monster@ mumbles some mantras.
 # An insane sorceress
 Psyche
 
-@The_monster@ smiles happily.
+VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ giggles crazily.
 
-@The_monster@ cries.
+VISUAL:@The_monster@ cries.
 
-@The_monster@ stares at you for a moment.
+VISUAL:@The_monster@ stares at you for a moment.
 
 @The_monster@ sings.
 
 @The_monster@ sings a strange song.
 
-@The_monster@ bursts into tears.
+VISUAL:@The_monster@ bursts into tears.
 
-@The_monster@ sucks her thumb.
+VISUAL:@The_monster@ sucks her thumb.
 
 @The_monster@ says, "Please, could you die a little faster?"
 
@@ -1449,9 +1483,9 @@ Psyche
 # A crazy adventurer
 Rupert
 
-@The_monster@ looks excited.
+VISUAL:@The_monster@ looks excited.
 
-@The_monster@ looks confused.
+VISUAL:@The_monster@ looks confused.
 
 @The_monster@ asks, "You're a monster, aren't you?"
 
@@ -1478,9 +1512,9 @@ Sigmund
 w:30
 @The_monster@ laughs crazily.
 
-@The_monster@ grinds his teeth.
+VISUAL:@The_monster@ grinds his teeth.
 
-@The_monster@ tries to bite you.
+VISUAL:@The_monster@ tries to bite you.
 
 @The_monster@ asks, "Do you like me?"
 
@@ -1517,9 +1551,9 @@ ENCHANT:@The_monster@ is suddenly surrounded by pale green light.
 # A fighter who likes to kill
 Terence
 
-@The_monster@ looks scornfully at you.
+VISUAL:@The_monster@ looks scornfully at you.
 
-@The_monster@ bares @possessive@ teeth.
+VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ asks, "Do you want it fast or slow?"
 
@@ -1551,7 +1585,7 @@ Terence
 # An orc hired to kill you
 Urug
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ roars.
 
@@ -1582,7 +1616,7 @@ Wayne
 # An ancient dragon
 Xtahua
 
-@The_monster@ glares at you.
+VISUAL:@The_monster@ glares at you.
 
 @The_monster@ growls, "YOU BORE ME SO."
 
@@ -1606,11 +1640,13 @@ Xtahua
 You are afraid.
 ## END Xtahua ##
 
-####################################################################### Specific non-unique monsters
-######################################################################%%%%
+##########################################
+# Specific non-unique monsters
+##########################################
+%%%%
 crystal golem
 
-@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters in the dim dungeon light.
 %%%%
 death cob
 
@@ -1630,11 +1666,11 @@ deep elf sorcerer
 %%%%
 default electric golem
 
-@The_monster@ crackles and sizzles.
+SOUND:@The_monster@ crackles and sizzles.
 %%%%
 default ice statue
 
-@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters in the dim dungeon light.
 %%%%
 imp
 
@@ -1656,19 +1692,19 @@ Killer Klown
 
 @The_monster@ laughs merrily.
 
-@The_monster@ beckons to you.
+VISUAL:@The_monster@ beckons to you.
 
-@The_monster@ does a flip.
+VISUAL:@The_monster@ does a flip.
 
-@The_monster@ does a somersault.
+VISUAL:@The_monster@ does a somersault.
 
-@The_monster@ smiles at you.
+VISUAL:@The_monster@ smiles at you.
 
-@The_monster@ grins with merry abandon.
+VISUAL:@The_monster@ grins with merry abandon.
 
 @The_monster@ howls with blood-lust!
 
-@The_monster@ pokes out @possessive@ tongue.
+VISUAL:@The_monster@ pokes out @possessive@ tongue.
 
 @The_monster@ says, "Come and play with me!"
 ## END Killer Klown ##
@@ -1677,11 +1713,11 @@ Killer Klown
 # with it being a moth.
 default confused moth of wrath
 
-@The_monster@ flutters around in erratic circles.
+VISUAL:@The_monster@ flutters around in erratic circles.
 %%%%
 default orange crystal statue
 
-@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters in the dim dungeon light.
 %%%%
 orc sorcerer
 
@@ -1701,7 +1737,7 @@ sheep
 %%%%
 default silver statue
 
-@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters in the dim dungeon light.
 %%%%
 # A cruel demon
 tormentor
@@ -1719,11 +1755,11 @@ w:20
 
 @The_monster@ laughs crazily.
 
-@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ grins madly.
+VISUAL:@The_monster@ grins madly.
 
-@The_monster@ grins malevolently.
+VISUAL:@The_monster@ grins malevolently.
 
 @The_monster@ says, "I am all your nightmares come true."
 

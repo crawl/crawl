@@ -42,21 +42,30 @@
 
 static std::string get_speak_string(const std::vector<std::string> prefixes,
                                     const std::string key,
-                                    const monsters *monster)
+                                    const monsters *monster,
+                                    bool ignore_silenced = false)
 {
     std::string prefix = "";
+    bool silenced = false;
     const int   size   = prefixes.size();
     for (int i = 0; i < size; i++)
     {
+        if (prefixes[i] == "silenced")
+        {
+            if (ignore_silenced)
+                continue;
+            silenced = true;
+        }
         prefix += prefixes[i];
         prefix += " ";
     }
 
     std::string msg = "";
+    // try string of all prefixes
     msg = getSpeakString(prefix + key);
     if (msg != "")
         return msg;
-
+    
     // Combinations of prefixes by threes
     if (size >= 3)
     {
@@ -105,6 +114,10 @@ static std::string get_speak_string(const std::vector<std::string> prefixes,
     // No prefixes
     msg = getSpeakString("default " + key);
 
+    // try the same ignoring silence
+    if (msg == "" && silenced)
+        return get_speak_string(prefixes, key, monster, true);
+        
     return msg;
 }
 
@@ -150,18 +163,23 @@ bool mons_speaks(const monsters *monster)
     // *is* silenced, and is hence able to see the monsters' gestures
     // and such but not hear any sounds it makes, would be a big
     // headache to deal with, so skip it.
+    
+    // [jpeg] Why? Only print visible stuff! :p
+/*
     if (!silenced(monster->x, monster->y)
         && silenced(you.x_pos, you.y_pos))
         return false;
-
+*/
     // Silenced monsters only "speak" 1/3 as often as non-silenced,
     // unless they're normally silent (S_SILENT).  Use
     // get_monster_data(monster->type) to bypass mon_shouts()
     // replacing S_RANDOM with a random value.
     if (silenced(monster->x, monster->y)
         && get_monster_data(monster->type)->shouts != S_SILENT)
+    {
         if (!one_chance_in(3))
             return false;
+    }
 
     // charmed monsters aren't too expressive
     if (monster->has_ench(ENCH_CHARM))
@@ -178,8 +196,12 @@ bool mons_speaks(const monsters *monster)
     if (monster->behaviour == BEH_FLEE)
         prefixes.push_back("fleeing");
 
+    bool silence = silenced(you.x_pos, you.y_pos);
     if (silenced(monster->x, monster->y))
+    {
+        silence = true;
         prefixes.push_back("silenced");
+    }
 
     if (monster->has_ench(ENCH_CONFUSION))
         prefixes.push_back("confused");
@@ -327,47 +349,37 @@ bool mons_speaks(const monsters *monster)
     for (int i = 0, size = lines.size(); i < size; i++)
     {
         std::string line = lines[i];
-
-        if (line == "__YOU_RESIST")
-        {
-            canned_msg( MSG_YOU_RESIST );
-            continue;
-        }
-        else if (line == "__NOTHING_HAPPENS")
-        {
-            canned_msg( MSG_NOTHING_HAPPENS );
-            continue;
-        }
-        else if (line == "__MORE")
-        {
-            more();
-            continue;
-        }
-
+        
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
         // warning to scare the player.  In order to accomidate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr
+        // [jpeg] Added MSGCH_TALK_VISUAL for silent "chatter"
         msg_channel_type msg_type = MSGCH_TALK;
 
+        std::string param = "";
         std::string::size_type pos = line.find(":");
 
         if (pos != std::string::npos)
+            param = line.substr(0, pos);
+
+        if (!param.empty())
         {
-            std::string param = line.substr(0, pos);
-            bool        match = true;
+            bool match = true;
 
             if (param == "DANGER")
                 msg_type = MSGCH_DANGER;
-            else if (param == "WARN")
+            else if (param == "WARN" && !silence || param == "VISUAL WARN")
                 msg_type = MSGCH_WARN;
             else if (param == "SOUND")
                 msg_type = MSGCH_SOUND;
-            else if (param == "SPELL")
+            else if (param == "VISUAL")
+                msg_type = MSGCH_TALK_VISUAL;
+            else if (param == "SPELL" && !silence || param == "VISUAL SPELL")
                 msg_type = MSGCH_MONSTER_SPELL;
-            else if (param == "ENCHANT")
+            else if (param == "ENCHANT" && !silence || param == "VISUAL ENCHANT")
                 msg_type = MSGCH_MONSTER_ENCHANT;
             else if (param == "PLAIN")
                 msg_type = MSGCH_PLAIN;
@@ -376,6 +388,23 @@ bool mons_speaks(const monsters *monster)
 
             if (match)
                 line = line.substr(pos + 1);
+        }
+
+        // except for VISUAL none of the above influence these
+        if (line == "__YOU_RESIST" && (!silence || param == "VISUAL"))
+        {
+            canned_msg( MSG_YOU_RESIST );
+            continue;
+        }
+        else if (line == "__NOTHING_HAPPENS" && (!silence || param == "VISUAL"))
+        {
+            canned_msg( MSG_NOTHING_HAPPENS );
+            continue;
+        }
+        else if (line == "__MORE" && (!silence || param == "VISUAL"))
+        {
+            more();
+            continue;
         }
 
         mpr(line.c_str(), msg_type);

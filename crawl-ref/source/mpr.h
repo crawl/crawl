@@ -31,6 +31,7 @@ enum msg_channel_type
     MSGCH_RECOVERY,       // recovery from disease/stat/poison condition
     MSGCH_SOUND,          // messages about things the player hears
     MSGCH_TALK,           // monster talk (param is monster type)
+    MSGCH_TALK_VISUAL,    // silent monster "talk" (not restricted by silence)
     MSGCH_INTRINSIC_GAIN, // player level/stat/species-power gains
     MSGCH_MUTATION,       // player gain/lose mutations
     MSGCH_MONSTER_SPELL,  // monsters casting spells

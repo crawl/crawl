@@ -1,81 +1,94 @@
+############################################################
+# As of Stone Soup 0.3 the previously hardcoded monster 
+# speech has been outsourced. This makes changing existing 
+# messages, and adding new ones really easy.
+#
+# shout.txt holds the utterances (and visual equivalents) of
+# monsters that notice you.
+#
+# For an explanation of how to read shout.txt and speak.txt 
+# and how to add new messages, see monster_speech.txt in the
+# docs directory.
+############################################################
 %%%%
 __BUGGY
 
 # This line should never get displayed to the user, even if
-# handle_monster_shouts() in view.cc detects buggy behavior, so
-# showing this line would itself be a bug.
-You hear doubly buggy behavior!
+# handle_monster_shouts() in view.cc detects buggy behavior, 
+# so showing this line would itself be a bug.
+SOUND:You hear doubly buggy behavior!
 %%%%
 __SHOUT
 
-You hear a shout!
+SOUND:You hear a shout!
 %%%%
 __BARK
 
-You hear a bark!
+SOUND:You hear a bark!
 %%%%
 __TWO_SHOUTS
 
-You hear two shouts!
+SOUND:You hear two shouts!
 %%%%
 __ROAR
 
-You hear a roar!
+SOUND:You hear a roar!
 %%%%
 __SCREAM
 
-You hear a hideous shriek!
+SOUND:You hear a hideous shriek!
 %%%%
 __BELLOW
 
-You hear a bellow!
+SOUND:You hear a bellow!
 %%%%
 __SCREECH
 
-You hear a screech!
+SOUND:You hear a screech!
 %%%%
 __BUZZ
 
-You hear an angry buzzing noise.
+SOUND:You hear an angry buzzing noise.
 %%%%
 __MOAN
 
-You hear a chilling moan.
+SOUND:You hear a chilling moan.
 %%%%
 __WHINE
 
-You hear an irritating high-pitched whine.
+SOUND:You hear an irritating high-pitched whine.
 %%%%
 __CROAK
 
-You hear a loud, deep croak!
+SOUND:You hear a loud, deep croak!
 
-You hear a croak.
+SOUND:You hear a croak.
 %%%%
 __GROWL
 
-You hear an angry growl.
+SOUND:You hear an angry growl.
 %%%%
 __HISS
 
-You hear an angry hiss.
+SOUND:You hear an angry hiss.
 %%%%
 __DEMON_TAUNT
 
 @The_monster@ @says@: @demon_taunt@
-####################################################################
+############################################
 # End of default shouts
-####################################################################
+############################################
 
 
-####################################################################
-# Player ghost shouts.  Potentially different ones for each class,
-# though currently they all just copy the default player ghost.
-####################################################################
+############################################################
+# Player ghost shouts.  Potentially different ones for each 
+# class, though currently they all just copy the default 
+# player ghost.
+############################################################
 %%%%
 player ghost
 
-@The_monster@ turns @possessive@ malevolent gaze towards you.
+VISUAL:@The_monster@ turns @possessive@ malevolent gaze towards you.
 %%%%
 Fighter player ghost
 
@@ -189,9 +202,9 @@ Wanderer player ghost
 
 @player ghost@
 
-######################################################################
+########################################
 # Shouts by monster symbol
-######################################################################
+########################################
 %%%%
 '&'
 
@@ -222,9 +235,9 @@ Wanderer player ghost
 'r'
 
 @The_monster@ angrily lashes @possessive@ tail.
-######################################################################
+########################################
 # Shouts for specific monsters
-######################################################################
+########################################
 %%%%
 # The giant spore has no eyes, so it can't gaze at the player like the
 # other 'G' monsters.

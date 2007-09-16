@@ -938,11 +938,23 @@ static void handle_monster_shouts(monsters* monster, bool force = false)
     else
     {
         msg = do_mon_str_replacements(msg, monster);
+        msg_channel_type channel = MSGCH_TALK;
+        
+        std::string param = "";
+        std::string::size_type pos = msg.find(":");
 
-        if (mons_shouts(monster->type) == S_SILENT)
-            msg::streams(MSGCH_TALK) << msg << std::endl;
-        else
-            msg::streams(MSGCH_SOUND) << msg << std::endl;
+        if (pos != std::string::npos)
+        {
+            param = msg.substr(0, pos);
+            msg   = msg.substr(pos + 1);
+        }
+
+        if (mons_shouts(monster->type) == S_SILENT || param == "VISUAL")
+            channel = MSGCH_TALK_VISUAL;
+        else if (param == "SOUND")
+            channel = MSGCH_SOUND;
+
+        msg::streams(channel) << msg << std::endl;
     }
 
     if (noise_level > 0)

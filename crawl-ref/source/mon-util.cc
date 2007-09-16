@@ -4860,10 +4860,14 @@ std::string do_mon_str_replacements(const std::string in_msg,
     msg = replace_all(msg, "@A_monster@",   monster->name(DESC_CAP_A));
     msg = replace_all(msg, "@The_monster@", monster->name(cap));
 
-    msg = replace_all(msg, "@possessive@",
-                      mons_pronoun(monster->type, 3));
     msg = replace_all(msg, "@pronoun@",
                       mons_pronoun(monster->type, 0));
+    msg = replace_all(msg, "@pronoun@",
+                      mons_pronoun(monster->type, 1));
+    msg = replace_all(msg, "@Possessive@",
+                      mons_pronoun(monster->type, 2));
+    msg = replace_all(msg, "@possessive@",
+                      mons_pronoun(monster->type, 3));
 
     msg = replace_all(msg, "@imp_taunt@",   imp_taunt_str());
     msg = replace_all(msg, "@demon_taunt@", demon_taunt_str());
