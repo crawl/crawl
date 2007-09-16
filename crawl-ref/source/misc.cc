@@ -420,8 +420,12 @@ static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
         mpr("The hatch slams shut behind you.");
 }
 
-static void climb_message(dungeon_feature_type stair, bool going_up)
+static void climb_message(dungeon_feature_type stair, bool going_up,
+                          level_area_type old_level_type)
 {
+    if (old_level_type != LEVEL_DUNGEON)
+        return;
+
     if (grid_is_portal(stair))
         mpr("The world spins around you as you enter the gateway.");
     else if (grid_is_rock_stair(stair))
@@ -472,7 +476,10 @@ void up_stairs(dungeon_feature_type force_stair)
     // probably still need this check here (teleportation) -- bwr
     if (grid_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
     {
-        mpr("You can't go up here.");
+        if (stair_find == DNGN_STONE_ARCH)
+            mpr("There is nothing on the other side of the stone arch.");
+        else
+            mpr("You can't go up here.");
         return;
     }
 
@@ -510,7 +517,6 @@ void up_stairs(dungeon_feature_type force_stair)
 
     // Checks are done, the character is committed to moving between levels.
     leaving_level_now();
-    exit_stair_message(stair_find, true);
     
     int old_level  = you.your_level;
 
@@ -571,8 +577,6 @@ void up_stairs(dungeon_feature_type force_stair)
     {
         if ( branches[i].exit_stairs == stair_find )
         {
-            mprf("Welcome back to %s!",
-                 branches[branches[i].parent_branch].longname);
             you.where_are_you = branches[i].parent_branch;
 
             // If leaving a branch which wasn't generated in this
@@ -595,7 +599,13 @@ void up_stairs(dungeon_feature_type force_stair)
             mpr("You float upwards... And bob straight up to the ceiling!");
     }
     else
-        climb_message(stair_find, true);
+        climb_message(stair_find, true, old_level_type);
+
+    exit_stair_message(stair_find, true);
+
+    if (old_where != you.where_are_you && you.level_type == LEVEL_DUNGEON)
+        mprf("Welcome back to %s!",
+             branches[you.where_are_you].longname);
 
     load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
 
@@ -690,7 +700,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     // probably still need this check here (teleportation) -- bwr
     if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS)
     {
-        mpr( "You can't go down here!" );
+        if (stair_find == DNGN_STONE_ARCH)
+            mpr("There is nothing on the other side of the stone arch.");
+        else
+            mpr( "You can't go down here!" );
         return;
     }
 
@@ -704,7 +717,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     if (stair_find == DNGN_STONE_ARCH)
     {
-        mpr("You can't go down here!");
+        mpr("There is nothing on the other side of the stone arch.");
         return;
     }
 
@@ -718,7 +731,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     // Fire level-leaving trigger.
     leaving_level_now();
-    exit_stair_message(stair_find, false);
     
 #ifdef DGL_MILESTONES
     if (!force_stair)
@@ -797,26 +809,17 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
         you.hell_exit = you.your_level;
 
-        mpr("Welcome to Hell!");
-        mpr("Please enjoy your stay.");
-
-        // Kill -more- prompt if we're traveling.
-        if (!you.running && !force_stair)
-            more();
-
         you.your_level = 26;
     }
 
     // welcome message
     // try to find a branch stair
+    bool entered_branch = false;
     for ( i = 0; i < NUM_BRANCHES; ++i )
     {
         if ( branches[i].entry_stairs == stair_find )
         {
-            if ( branches[i].entry_message )
-                mpr(branches[i].entry_message);
-            else
-                mprf("Welcome to %s!", branches[i].longname);
+            entered_branch = true;
             you.where_are_you = branches[i].id;
             break;
         }
@@ -860,6 +863,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         mpr("You pass through the gate.");
         more();
     }
+
+    if (old_level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
+        mprf("Welcome back to %s!",
+             branches[you.where_are_you].longname);
 
     if (!player_is_levitating()
         && you.duration[DUR_CONF] 
@@ -909,8 +916,28 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         break;
 
     default:
-        climb_message(stair_find, false);
+        climb_message(stair_find, false, old_level_type);
         break;
+    }
+
+    exit_stair_message(stair_find, false);
+
+    if (entered_branch)
+    {
+        if ( branches[you.where_are_you].entry_message )
+            mpr(branches[you.where_are_you].entry_message);
+        else
+            mprf("Welcome to %s!", branches[you.where_are_you].longname);
+    }
+
+    if (stair_find == DNGN_ENTER_HELL)
+    {
+        mpr("Welcome to Hell!");
+        mpr("Please enjoy your stay.");
+
+        // Kill -more- prompt if we're traveling.
+        if (!you.running && !force_stair)
+            more();
     }
 
     const bool newlevel =
