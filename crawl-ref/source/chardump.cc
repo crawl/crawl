@@ -73,7 +73,9 @@ static void sdump_religion(dump_params &);
 static void sdump_burden(dump_params &);
 static void sdump_hunger(dump_params &);
 static void sdump_transform(dump_params &);
+static void sdump_visits(dump_params &);
 static void sdump_misc(dump_params &);
+static void sdump_turns_by_place(dump_params &);
 static void sdump_notes(dump_params &);
 static void sdump_inventory(dump_params &);
 static void sdump_skills(dump_params &);
@@ -81,6 +83,7 @@ static void sdump_spells(dump_params &);
 static void sdump_mutations(dump_params &);
 static void sdump_messages(dump_params &);
 static void sdump_screenshot(dump_params &);
+static void sdump_kills_by_place(dump_params &);
 static void sdump_kills(dump_params &);
 static void sdump_newline(dump_params &);
 static void sdump_overview(dump_params &);
@@ -115,33 +118,36 @@ struct dump_params
 };
 
 static dump_section_handler dump_handlers[] = {
-    { "header",     sdump_header        },
-    { "stats",      sdump_stats         },
-    { "location",   sdump_location      },
-    { "religion",   sdump_religion      },
-    { "burden",     sdump_burden        },
-    { "hunger",     sdump_hunger        },
-    { "transform",  sdump_transform     },
-    { "misc",       sdump_misc          },
-    { "notes",      sdump_notes         },
-    { "inventory",  sdump_inventory     },
-    { "skills",     sdump_skills        },
-    { "spells",     sdump_spells        },
-    { "mutations",  sdump_mutations     },
-    { "messages",   sdump_messages      },
-    { "screenshot", sdump_screenshot    },
-    { "kills",      sdump_kills         },
-    { "overview",   sdump_overview      },
-    { "hiscore",    sdump_hiscore       },
+    { "header",         sdump_header        },
+    { "stats",          sdump_stats         },
+    { "location",       sdump_location      },
+    { "religion",       sdump_religion      },
+    { "burden",         sdump_burden        },
+    { "hunger",         sdump_hunger        },
+    { "transform",      sdump_transform     },
+    { "visits",         sdump_visits        },
+    { "misc",           sdump_misc          },
+    { "turns_by_place", sdump_turns_by_place},
+    { "notes",          sdump_notes         },
+    { "inventory",      sdump_inventory     },
+    { "skills",         sdump_skills        },
+    { "spells",         sdump_spells        },
+    { "mutations",      sdump_mutations     },
+    { "messages",       sdump_messages      },
+    { "screenshot",     sdump_screenshot    },
+    { "kills_by_place", sdump_kills_by_place},
+    { "kills",          sdump_kills         },
+    { "overview",       sdump_overview      },
+    { "hiscore",        sdump_hiscore       },
 
     // Conveniences for the .crawlrc artist.
-    { "",           sdump_newline       },
-    { "-",          sdump_separator     },
+    { "",               sdump_newline       },
+    { "-",              sdump_separator     },
 
 #ifdef CLUA_BINDINGS
-    { NULL,         sdump_lua           }
+    { NULL,             sdump_lua           }
 #else
-    { NULL,         NULL                }
+    { NULL,             NULL                }
 #endif
 };
 
@@ -267,6 +273,74 @@ static void sdump_transform(dump_params &par)
     }
 }
 
+static void sdump_visits(dump_params &par)
+{
+    std::string &text(par.text);
+
+    std::vector<PlaceInfo> branches_visited =
+        you.get_all_place_info(true, true);
+
+    PlaceInfo branches_total;
+    for (unsigned int i = 0; i < branches_visited.size(); i++)
+        branches_total += branches_visited[i];
+
+    text += make_stringf("You have visited %ld branch",
+                         branches_visited.size());
+    if (branches_visited.size() > 1)
+        text += "es";
+    text += make_stringf(" of the dungeon, and seen %ld of its level",
+                         branches_total.levels_seen);
+    if (branches_total.levels_seen > 1)
+        text += "s";
+    text += ".\n";
+
+    PlaceInfo place_info = you.get_place_info(LEVEL_PANDEMONIUM);
+    if (place_info.num_visits > 0)
+    {
+        text += make_stringf("You have visited Pandemonium %ld time",
+                             place_info.num_visits);
+        if (place_info.num_visits > 1)
+            text += "s";
+        text += make_stringf(", and seen %ld of its levels.\n",
+                             place_info.levels_seen);
+        if (place_info.levels_seen > 1)
+            text += "s";
+        text += ".\n";
+    }
+
+    place_info = you.get_place_info(LEVEL_ABYSS);
+    if (place_info.num_visits > 0)
+    {
+        text += make_stringf("You have visited the Abyss %ld time",
+                             place_info.num_visits);
+        if (place_info.num_visits > 1)
+            text += "s";
+        text += ".\n";
+    }
+
+    place_info = you.get_place_info(LEVEL_LABYRINTH);
+    if (place_info.num_visits > 0)
+    {
+        text += make_stringf("You have visited %ld Labyrinth",
+                             place_info.num_visits);
+        if (place_info.num_visits > 1)
+            text += "s";
+        text += ".\n";
+    }
+
+    place_info = you.get_place_info(LEVEL_PORTAL_VAULT);
+    if (place_info.num_visits > 0)
+    {
+        text += make_stringf("You have visited %ld portal chamber",
+                             place_info.num_visits);
+        if (place_info.num_visits > 1)
+            text += "s";
+        text += " (including bazaars).\n";
+    }
+
+    text += "\n";
+}
+
 static void sdump_misc(dump_params &par)
 {
     sdump_location(par);
@@ -274,6 +348,82 @@ static void sdump_misc(dump_params &par)
     sdump_burden(par);
     sdump_hunger(par);
     sdump_transform(par);
+    sdump_visits(par);
+}
+
+#define TO_PERCENT(x, y) (100.0 * ((float) (x)) / ((float) (y)))
+
+static std::string sdump_turns_place_info(PlaceInfo place_info,
+                                          std::string name = "")
+{
+    PlaceInfo   gi = you.global_info;
+    std::string out;
+
+    if (name == "")
+        name = place_info.short_name();
+
+    float a, b, c, d, e, f;
+    unsigned int non_interlevel =
+        place_info.turns_total - place_info.turns_interlevel;
+    unsigned int global_non_interlevel = 
+        gi.turns_total - gi.turns_interlevel;
+
+
+    a = TO_PERCENT(place_info.turns_total, gi.turns_total);
+    b = TO_PERCENT(non_interlevel, global_non_interlevel);
+    c = TO_PERCENT(place_info.turns_interlevel, place_info.turns_total);
+    d = TO_PERCENT(place_info.turns_resting, non_interlevel);
+    e = TO_PERCENT(place_info.turns_explore, non_interlevel);
+    f = (float) non_interlevel / (float) place_info.levels_seen;
+
+    out =
+        make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %13.1f\n",
+                     name.c_str(), a, b, c , d, e, f);
+
+    out = replace_all(out, " nan ", " N/A ");
+
+    return out;
+}
+
+static void sdump_turns_by_place(dump_params &par)
+{
+    std::string &text(par.text);
+
+    std::vector<PlaceInfo> all_visited =
+        you.get_all_place_info(true);
+
+    text += 
+"Table legend:\n"
+" A = Turns spent in this place as a percentage of turns spent in the\n"
+"     entire game.\n"
+" B = Non-inter-level travel turns spent in this place as a perecentage of\n"
+"     non-inter-level travel turns spent in the entire game.\n"
+" C = Inter-level travel turns spent in this place as a perecentage  of\n"
+"     turns spent in this place.\n"
+" D = Turns resting spent in this place as a percentage of non-inter-level\n"
+"     travel turns spent in this place.\n"
+" E = Turns spent auto-exloring this place as a percentage of\n"
+"     non-inter-level travel turns spent in this place.\n"
+" F = Non-inter-level travel turns spent in this place divided by the\n"
+"     number of levels of this place that you've seen.\n\n";
+
+    text += "               ";
+    text += "    A       B       C       D       E               F\n";
+    text += "               ";
+    text += "+-------+-------+-------+-------+-------+----------------------\n";
+
+    text += sdump_turns_place_info(you.global_info, "Total");
+
+    for (unsigned int i = 0; i < all_visited.size(); i++)
+    {
+        PlaceInfo pi = all_visited[i];
+        text += sdump_turns_place_info(pi);
+    }
+
+    text += "               ";
+    text += "+-------+-------+-------+-------+-------+----------------------\n";
+
+    text += "\n";
 }
 
 static void sdump_newline(dump_params &par)
@@ -817,6 +967,102 @@ static void sdump_spells(dump_params &par)
 static void sdump_kills(dump_params &par)
 {
     par.text += you.kills->kill_info();
+}
+
+static std::string sdump_kills_place_info(PlaceInfo place_info,
+                                          std::string name = "")
+{
+    PlaceInfo   gi = you.global_info;
+    std::string out;
+
+    if (name == "")
+        name = place_info.short_name();
+
+    unsigned int global_total_kills = 0;
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        global_total_kills += you.global_info.mon_kill_num[i];
+
+    unsigned int total_kills = 0;
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        total_kills += place_info.mon_kill_num[i];
+
+    // Skip places where nothing was killed.
+    if (total_kills == 0)
+        return "";
+
+    float a, b, c, d, e, f, g;
+
+    a = TO_PERCENT(total_kills, global_total_kills);
+    b = TO_PERCENT(place_info.mon_kill_num[KC_YOU],
+                   you.global_info.mon_kill_num[KC_YOU]);
+    c = TO_PERCENT(place_info.mon_kill_num[KC_FRIENDLY],
+                   you.global_info.mon_kill_num[KC_FRIENDLY]);
+    d = TO_PERCENT(place_info.mon_kill_num[KC_OTHER],
+                   you.global_info.mon_kill_num[KC_OTHER]);
+    e = TO_PERCENT(place_info.mon_kill_exp,
+                   you.global_info.mon_kill_exp);
+    f = TO_PERCENT(place_info.mon_kill_exp_avail,
+                   you.global_info.mon_kill_exp_avail);
+
+    g = (float) MAXIMUM(place_info.mon_kill_exp,
+                        place_info.mon_kill_exp_avail) /
+        (float) place_info.levels_seen;
+
+    out =
+        make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f |"
+                     " %5.1f | %13.1f\n",
+                     name.c_str(), a, b, c , d, e, f, g);
+
+    out = replace_all(out, " nan ", " N/A ");
+
+    return out;
+}
+
+static void sdump_kills_by_place(dump_params &par)
+{
+    std::string &text(par.text);
+
+    std::vector<PlaceInfo> all_visited =
+        you.get_all_place_info(true);
+
+    std::string result = "";
+
+    std::string header =
+"Table legend:\n"
+" A = Kills in this place as a percentage of kills in entire the game.\n"
+" B = Kills by you in this place as a percentage of kills by you in\n"
+"     the entire game.\n"
+" C = Kills by friends in this place as a percentage of kills by\n"
+"     friends in the entire game.\n"
+" D = Other kills in this place as a percentage of other kills in the\n"
+"     entire game.\n"
+" E = Character level experience gained in this place as a percentage of\n"
+"     character level experience gained in the entire game.\n"
+" F = Skills experience gained in this place as a percentage of skills\n"
+"     experience gained in the entire game.\n"
+" G = Experience gained in this place divided by the number of levels of\n"
+"     this place that you have seen.\n\n";
+
+    header += "               ";
+    header += "    A       B       C       D       E       F          G\n";
+    header += "               ";
+    header += "+-------+-------+-------+-------+-------+-------+--------------\n";
+
+    std::string footer = "               ";
+    footer += "+-------+-------+-------+-------+-------+-------+--------------\n";
+
+    result += sdump_kills_place_info(you.global_info, "Total");
+
+    for (unsigned int i = 0; i < all_visited.size(); i++)
+    {
+        PlaceInfo pi = all_visited[i];
+        result += sdump_kills_place_info(pi);
+    }
+
+    if (result.length() > 0)
+    {
+        text += header + result + footer + "\n";
+    }
 }
 
 static void sdump_overview(dump_params &par)

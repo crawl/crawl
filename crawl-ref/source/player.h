@@ -282,8 +282,8 @@ void forget_map(unsigned char chance_forgotten);
 /* ***********************************************************************
  * called from: acr - fight
  * *********************************************************************** */
-void gain_exp(unsigned int exp_gained);
-
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
+              unsigned int* actual_avail_gain = NULL);
 
 // last updated 17dec2000 {gdl}
 /* ***********************************************************************

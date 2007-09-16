@@ -460,8 +460,8 @@ void up_stairs(dungeon_feature_type force_stair)
 {
     dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
-    const branch_type old_where = you.where_are_you;
-    const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
+    const branch_type     old_where      = you.where_are_you;
+    const level_area_type old_level_type = you.level_type;
 
     if (stair_find == DNGN_ENTER_SHOP)
     {
@@ -597,7 +597,7 @@ void up_stairs(dungeon_feature_type force_stair)
     else
         climb_message(stair_find, true);
 
-    load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
+    load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
 
     you.turn_is_over = true;
 
@@ -672,8 +672,7 @@ void up_stairs(dungeon_feature_type force_stair)
 void down_stairs( int old_level, dungeon_feature_type force_stair )
 {
     int i;
-    const level_area_type old_level_type = you.level_type;
-    const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
+    const level_area_type      old_level_type = you.level_type;
     const dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
@@ -915,7 +914,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     }
 
     const bool newlevel =
-        load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth,
+        load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
              old_level, old_where);
     
     if (newlevel)

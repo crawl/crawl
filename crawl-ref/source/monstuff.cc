@@ -364,12 +364,16 @@ static void check_kill_milestone(const monsters *mons,
 #endif // DGL_MILESTONES
 
 static void give_adjusted_experience(monsters *monster, killer_type killer,
-                                     bool pet_kill)
+                                     bool pet_kill, unsigned int *exp_gain,
+                                     unsigned int *avail_gain)
 {
-    if (YOU_KILL(killer))
-        gain_exp( exper_value( monster ) );
+    if (testbits(monster->flags, MF_CREATED_FRIENDLY))
+        ; // No experience if monster was created friendly
+    else if (YOU_KILL(killer))
+        gain_exp( exper_value( monster ), exp_gain, avail_gain );
     else if (pet_kill)
-        gain_exp( exper_value( monster ) / 2 + 1 );
+        gain_exp( exper_value( monster ) / 2 + 1,
+                  exp_gain, avail_gain );
 }
 
 static bool is_pet_kill(killer_type killer, int i)
@@ -477,9 +481,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             simple_monster_message( monster, " dissipates!",
                                     MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
 
-        if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
-            give_adjusted_experience(monster, killer, pet_kill);
-
         if (monster->type == MONS_FIRE_VORTEX)
             place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
                         monster->kill_alignment());
@@ -492,9 +493,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 monster, " vapourises!", MSGCH_MONSTER_DAMAGE,
                 MDAM_DEAD );
 
-        if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
-            give_adjusted_experience(monster, killer, pet_kill);
-        
         place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
                     monster->kill_alignment());
     }
@@ -514,10 +512,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             place_cloud( random_smoke_type(),
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
-
-
-        if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
-            give_adjusted_experience(monster, killer, pet_kill);
     }
     else
     {
@@ -537,15 +531,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                      monster->name(DESC_NOCAP_THE).c_str());
             }
 
-            if (!created_friendly)
-            {
-                gain_exp(exper_value( monster ));
-            }
-            else
-            {
-                if (death_message)
-                    mpr("That felt strangely unrewarding.");
-            }
+            if (created_friendly && death_message)
+                mpr("That felt strangely unrewarding.");
 
             // killing triggers tutorial lesson
             tutorial_inspect_kill();
@@ -642,7 +629,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             {
                 bool notice = false;
                 const bool anon = (i == ANON_FRIENDLY_MONSTER);
-                gain_exp(exper_value( monster ) / 2 + 1);
 
                 const mon_holy_type targ_holy  = mons_holiness(monster),
                     attacker_holy = anon? MH_NATURAL : mons_holiness(&menv[i]);
@@ -805,6 +791,28 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
         you.kills->record_kill(monster, killer, pet_kill);
+
+        kill_category kc = 
+            (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
+            (pet_kill)?                                          KC_FRIENDLY :
+                                                                 KC_OTHER;
+
+        unsigned int exp_gain = 0, avail_gain = 0;
+        give_adjusted_experience(monster, killer, pet_kill,
+                                 &exp_gain, &avail_gain);
+
+        PlaceInfo& curr_PlaceInfo = you.get_place_info();
+        PlaceInfo  delta;
+
+        delta.mon_kill_num[kc]++;
+        delta.mon_kill_exp       += exp_gain;
+        delta.mon_kill_exp_avail += avail_gain;
+
+        you.global_info += delta;
+        you.global_info.assert_validity();
+
+        curr_PlaceInfo += delta;
+        curr_PlaceInfo.assert_validity();
 
         if (monster->has_ench(ENCH_ABJ))
         {

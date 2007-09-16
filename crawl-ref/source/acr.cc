@@ -1063,6 +1063,68 @@ static void input()
     }
     else
         viewwindow(true, false);
+
+    if (you.num_turns != -1)
+    {
+        PlaceInfo& curr_PlaceInfo = you.get_place_info();
+        PlaceInfo  delta;
+ 
+        delta.turns_total++;
+        delta.elapsed_total += you.time_taken;
+ 
+        switch(you.running)
+        {
+        case RMODE_INTERLEVEL:
+            delta.turns_interlevel++;
+            delta.elapsed_interlevel += you.time_taken;
+            break;
+ 
+        case RMODE_EXPLORE_GREEDY:
+        case RMODE_EXPLORE:
+            delta.turns_explore++;
+            delta.elapsed_explore += you.time_taken;
+            break;
+ 
+        case RMODE_TRAVEL:
+            delta.turns_travel++;
+            delta.elapsed_travel += you.time_taken;
+            break;
+ 
+        default:
+            // prev_was_rest is needed so that the turn in which
+            // a player is interrupted from resting is counted
+            // as a resting turn, rather than "other".
+            static bool prev_was_rest = false;
+ 
+            if (!you.delay_queue.empty() &&
+                you.delay_queue.front().type == DELAY_REST)
+                prev_was_rest = true;
+ 
+            if (prev_was_rest)
+            {
+                delta.turns_resting++;
+                delta.elapsed_resting += you.time_taken;
+ 
+            }
+            else
+            {
+                delta.turns_other++;
+                delta.elapsed_other += you.time_taken;
+            }
+ 
+            if (you.delay_queue.empty() ||
+                you.delay_queue.front().type != DELAY_REST)
+                prev_was_rest = false;
+ 
+            break;
+        }
+ 
+        you.global_info += delta;
+        you.global_info.assert_validity();
+ 
+        curr_PlaceInfo += delta;
+        curr_PlaceInfo.assert_validity();
+    }
 }
 
 static bool toggle_flag( bool* flag, const char* flagname )
@@ -2957,7 +3019,7 @@ static bool initialise(void)
     load( you.entering_level? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
           you.entering_level? LOAD_ENTER_LEVEL :
           newc              ? LOAD_START_GAME : LOAD_RESTART_GAME,
-          true, -1, you.where_are_you );
+          NUM_LEVEL_AREA_TYPES, -1, you.where_are_you );
 
 #if DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz

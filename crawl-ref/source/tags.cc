@@ -13,7 +13,7 @@
 
 /* ------------------------- how tags work ----------------------------------
 
-1. Tag types are enumerated in enum.h, from TAG_VERSION (more a placeholder
+1. Tag types are enumerated in tags.h, from TAG_VERSION (more a placeholder
    than anything else, it is not actually saved as a tag) to TAG_XXX. NUM_TAGS
    is equal to the actual number of defined tags.
 
@@ -978,6 +978,35 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallBoolean(th, does_unrandart_exist(j));
 }
 
+static void marshallPlaceInfo(struct tagHeader &th, PlaceInfo place_info)
+{
+    marshallLong(th, place_info.level_type);
+    marshallLong(th, place_info.branch);
+
+    marshallLong(th, place_info.num_visits);
+    marshallLong(th, place_info.levels_seen);
+
+    marshallLong(th, place_info.mon_kill_exp);
+    marshallLong(th, place_info.mon_kill_exp_avail);
+
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        marshallLong(th, place_info.mon_kill_num[i]);
+
+    marshallLong(th, place_info.turns_total);
+    marshallLong(th, place_info.turns_explore);
+    marshallLong(th, place_info.turns_travel);
+    marshallLong(th, place_info.turns_interlevel);
+    marshallLong(th, place_info.turns_resting);
+    marshallLong(th, place_info.turns_other);
+
+    marshallFloat(th, place_info.elapsed_total);
+    marshallFloat(th, place_info.elapsed_explore);
+    marshallFloat(th, place_info.elapsed_travel);
+    marshallFloat(th, place_info.elapsed_interlevel);
+    marshallFloat(th, place_info.elapsed_resting);
+    marshallFloat(th, place_info.elapsed_other);
+}
+
 static void tag_construct_you_dungeon(struct tagHeader &th)
 {
     int i,j;
@@ -1005,6 +1034,14 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
                 marshall_level_pos, marshall_as_long<god_type>);
     marshallMap(th, portals_present,
                 marshall_level_pos, marshall_as_long<portal_type>);
+
+    marshallPlaceInfo(th, you.global_info);
+    std::vector<PlaceInfo> list = you.get_all_place_info();
+    // How many different places we have info on?
+    marshallShort(th, list.size());
+
+    for (unsigned int k = 0; k < list.size(); k++)
+        marshallPlaceInfo(th, list[k]);
 
     marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
                       marshallString);
@@ -1315,11 +1352,46 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
         set_unrandart_exist(j, 0);
 }
 
+static PlaceInfo unmarshallPlaceInfo(struct tagHeader &th)
+{
+    PlaceInfo place_info;
+
+    place_info.level_type = (int) unmarshallLong(th);
+    place_info.branch     = (int) unmarshallLong(th);
+
+    place_info.num_visits  = (unsigned long) unmarshallLong(th);
+    place_info.levels_seen = (unsigned long) unmarshallLong(th);
+
+    place_info.mon_kill_exp       = (unsigned long) unmarshallLong(th);
+    place_info.mon_kill_exp_avail = (unsigned long) unmarshallLong(th);
+
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        place_info.mon_kill_num[i] = (unsigned long) unmarshallLong(th);
+
+    place_info.turns_total      = unmarshallLong(th);
+    place_info.turns_explore    = unmarshallLong(th);
+    place_info.turns_travel     = unmarshallLong(th);
+    place_info.turns_interlevel = unmarshallLong(th);
+    place_info.turns_resting    = unmarshallLong(th);
+    place_info.turns_other      = unmarshallLong(th);
+
+    place_info.elapsed_total      = (double) unmarshallFloat(th);
+    place_info.elapsed_explore    = (double) unmarshallFloat(th);
+    place_info.elapsed_travel     = (double) unmarshallFloat(th);
+    place_info.elapsed_interlevel = (double) unmarshallFloat(th);
+    place_info.elapsed_resting    = (double) unmarshallFloat(th);
+    place_info.elapsed_other      = (double) unmarshallFloat(th);
+
+    return place_info;
+}
+
 static void tag_read_you_dungeon(struct tagHeader &th)
 {
-    int i,j;
-    int count_c;
+    int   i,j;
+    int   count_c;
     short count_s;
+
+    unsigned short count_p;
 
     // how many unique creatures?
     count_c = unmarshallShort(th);
@@ -1353,6 +1425,23 @@ static void tag_read_you_dungeon(struct tagHeader &th)
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
     unmarshallMap(th, portals_present,
                   unmarshall_level_pos, unmarshall_long_as<portal_type>);
+
+    PlaceInfo place_info = unmarshallPlaceInfo(th);
+    ASSERT(place_info.is_global());
+    you.set_place_info(place_info);
+
+    std::vector<PlaceInfo> list = you.get_all_place_info();
+    count_p = (unsigned short) unmarshallShort(th);
+    // Use "<=" so that adding more branches or non-dungeon places
+    // won't break save-file compatibility.
+    ASSERT(count_p <= list.size());
+
+    for (i = 0; i < count_p; i++)
+    {
+        place_info = unmarshallPlaceInfo(th);
+        ASSERT(!place_info.is_global());
+        you.set_place_info(place_info);
+    }
 
     typedef std::set<std::string> string_set;
     typedef std::pair<string_set::iterator, bool> ssipair;

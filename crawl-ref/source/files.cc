@@ -812,8 +812,10 @@ static void grab_followers()
     }
 }
 
-bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
-           bool was_a_labyrinth, int old_level, branch_type old_branch )
+
+bool load( dungeon_feature_type stair_taken, int load_mode,
+           level_area_type old_level_type, char old_level,
+           branch_type where_were_you2 )
 {
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
@@ -826,7 +828,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                                          you.level_type,
                                          false );
 
-    if (you.level_type == LEVEL_DUNGEON)
+    if (you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON)
     {
         if (tmp_file_pairs[you.your_level][you.where_are_you] == false)
         {
@@ -853,10 +855,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         grab_followers();
 
-        if (!was_a_labyrinth)
-            save_level( old_level, LEVEL_DUNGEON, old_branch );
 
-        was_a_labyrinth = false;
+        if (old_level_type == LEVEL_DUNGEON)
+            save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
     }
 
     // Try to open level savefile.
@@ -920,7 +921,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_RESTART_GAME)
     {
         if (you.level_type != LEVEL_ABYSS)
-            place_player_on_stair(old_branch, stair_taken);
+            place_player_on_stair(where_were_you2, stair_taken);
         else
             you.moveto(45, 35);
     }
@@ -988,6 +989,28 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
+
+    if (load_mode != LOAD_RESTART_GAME)
+    {
+        // Update PlaceInfo entries
+        PlaceInfo& curr_PlaceInfo = you.get_place_info();
+        PlaceInfo  delta;
+
+        if (load_mode == LOAD_START_GAME ||
+            (load_mode == LOAD_ENTER_LEVEL &&
+             (where_were_you2 != you.where_are_you ||
+              old_level_type != you.level_type)))
+            delta.num_visits++;
+
+        if (just_created_level)
+            delta.levels_seen++;
+
+        you.global_info += delta;
+        you.global_info.assert_validity();
+
+        curr_PlaceInfo += delta;
+        curr_PlaceInfo.assert_validity();
+    }
 
     return just_created_level;
 }                               // end load()

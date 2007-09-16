@@ -644,13 +644,13 @@ static void wizard_go_to_level(const level_pos &pos)
 
     const int old_level = you.your_level;
     const branch_type old_where = you.where_are_you;
-    const bool was_a_labyrinth = you.level_type == LEVEL_LABYRINTH;
+    const level_area_type old_level_type = you.level_type;
 
     you.level_type    = LEVEL_DUNGEON;
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.your_level    = abs_depth;
 
-    load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
+    load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
     save_game_state();
     new_level();
     viewwindow(1, true);

@@ -416,6 +416,50 @@ private:
     bool run_grids_changed() const;
 };
 
+class PlaceInfo
+{
+public:
+    int level_type;
+    int branch;
+
+    unsigned long num_visits;
+    unsigned long levels_seen;
+
+    unsigned long mon_kill_exp;
+    unsigned long mon_kill_exp_avail;
+    unsigned long mon_kill_num[KC_NCATEGORIES];
+
+    long turns_total;
+    long turns_explore;
+    long turns_travel;
+    long turns_interlevel;
+    long turns_resting;
+    long turns_other;
+
+    double elapsed_total;
+    double elapsed_explore;
+    double elapsed_travel;
+    double elapsed_interlevel;
+    double elapsed_resting;
+    double elapsed_other;
+
+public:
+    PlaceInfo();
+
+    bool is_global() const;
+    void make_global();
+
+    void assert_validity() const;
+
+    const std::string short_name() const;
+
+    const PlaceInfo &operator += (const PlaceInfo &other);
+    const PlaceInfo &operator -= (const PlaceInfo &other);
+    PlaceInfo operator + (const PlaceInfo &other) const;
+    PlaceInfo operator - (const PlaceInfo &other) const;
+};
+
+
 typedef std::vector<delay_queue_item> delay_queue_type;
 
 class KillMaster;
@@ -618,6 +662,12 @@ public:
   std::set<std::string> uniq_map_tags;
   std::set<std::string> uniq_map_names;
 
+  PlaceInfo global_info;
+
+protected:
+  FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
+  FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
+
 public:
     player();
     player(const player &other);
@@ -743,6 +793,18 @@ public:
     bool wearing_light_armour(bool with_skill = false) const;
     void exercise(skill_type skill, int qty);
     int  skill(skill_type skill, bool skill_bump = false) const;
+
+    PlaceInfo& get_place_info() const ; // Current place info
+    PlaceInfo& get_place_info(branch_type branch,
+                              level_area_type level_type2) const;
+    PlaceInfo& get_place_info(branch_type branch) const;
+    PlaceInfo& get_place_info(level_area_type level_type2) const;
+
+    void set_place_info(PlaceInfo info);
+    // Returns copies of the PlaceInfo; modifying the vector won't
+    // modify the player object.
+    std::vector<PlaceInfo> get_all_place_info(bool visited_only = false,
+                                              bool dungeon_only = false) const;
 };
 
 extern player you;
