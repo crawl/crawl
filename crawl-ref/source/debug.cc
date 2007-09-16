@@ -47,6 +47,11 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+
+#ifdef DEBUG_DIAGNOSTICS
+#include "initfile.h"
+#endif
+
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
