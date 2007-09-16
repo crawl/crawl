@@ -13,8 +13,8 @@ MAKEFILE = makefile.unix
 #     cuts build time a lot on multi-cpu machines
 #OTHER=-j2
 
-all: wizard
-	@echo Built wizard binary
+all:
+	$(MAKE) $(OTHER) -f $(MAKEFILE)
 
 profile:
 	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-pg'
