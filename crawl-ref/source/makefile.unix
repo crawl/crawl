@@ -110,7 +110,7 @@ INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 CFWARN := -Wall -Wwrite-strings \
 	-Wshadow -pedantic
 
-CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS)
+CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS
 
 ifneq ($(SAVEDIR),)
 CFOTHERS += '-DSAVE_DIR_PATH="$(SAVEDIR)"'
