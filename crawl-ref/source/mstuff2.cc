@@ -1346,8 +1346,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 // should really do something about mons_hit, but can't be bothered
 void spore_goes_pop(struct monsters *monster)
 {
-    struct bolt beam;
-    int type = monster->type;
+    bolt beam;
+    const int type = monster->type;
 
     if (monster == NULL)
         return;
@@ -1361,7 +1361,7 @@ void spore_goes_pop(struct monsters *monster)
     beam.thrower = KILL_MON;    // someone else's explosion
     beam.aux_source.clear();
 
-    const char* msg = "";
+    const char* msg = NULL;
 
     if (type == MONS_GIANT_SPORE)
     {
@@ -1372,7 +1372,7 @@ void spore_goes_pop(struct monsters *monster)
         beam.ex_size = 2;
         msg = "The giant spore explodes!";
     }
-    else
+    else if (type == MONS_BALL_LIGHTNING)
     {
         beam.flavour = BEAM_ELECTRICITY;
         beam.name = "blast of lightning";
@@ -1380,6 +1380,13 @@ void spore_goes_pop(struct monsters *monster)
         beam.damage = dice_def( 3, 20 );
         beam.ex_size = coinflip() ? 3 : 2;
         msg = "The ball lightning explodes!";
+    }
+    else
+    {
+        msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
+                                        << static_cast<int>(type)
+                                        << std::endl;
+        return;
     }
 
     if (mons_near(monster))

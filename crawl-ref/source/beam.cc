@@ -4371,11 +4371,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
     noisy( 10 + 5*r, beam.target_x, beam.target_y );
 
     // set map to false
-    for (int i=0; i<19; i++)
-    {
-        for (int j=0; j<19; j++)
-            explode_map[i][j] = false;
-    }
+    explode_map.init(false);
 
     // discover affected cells - recursion is your friend!
     // this is done to model an explosion's behaviour around
@@ -4444,6 +4440,13 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         drawing = false;
     }
 
+    bool seen_anything = false;
+    for ( int i = -9; i <= 9; ++i )
+        for ( int j = -9; j <= 9; ++j )
+            if ( explode_map[i+9][j+9] &&
+                 see_grid(beam.target_x + i, beam.target_y + j) )
+                seen_anything = true;
+
     // ---------------- end boom --------------------------
 
 #ifdef WIN32CONSOLE
@@ -4453,7 +4456,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 
     // duplicate old behaviour - pause after entire explosion
     // has been drawn.
-    if (!beam.is_tracer)
+    if (!beam.is_tracer && seen_anything)
         more();
 }
 
@@ -4526,7 +4529,7 @@ static void explosion_map( bolt &beam, int x, int y,
     // 3. check to see if we're blocked by something
     //    specifically, we're blocked by WALLS.  Not
     //    statues, idols, etc.
-    int dngn_feat = grd[beam.target_x + x][beam.target_y + y];
+    const int dngn_feat = grd[beam.target_x + x][beam.target_y + y];
 
     // special case: explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
