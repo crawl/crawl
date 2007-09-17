@@ -1832,16 +1832,13 @@ void drop(void)
         return;
     }
 
-    items_for_multidrop = prompt_invent_items( "Drop what?",
-                                               MT_DROP,
-                                               -1, 
-                                               drop_menu_title,
-                                               true, true, 0,
-                                               &Options.drop_filter,
-                                               drop_selitem_text,
-                                               &items_for_multidrop );
+    std::vector<SelItem> tmp_items;
+    tmp_items = prompt_invent_items( "Drop what?", MT_DROP, -1, 
+                                     drop_menu_title, true, true, 0,
+                                     &Options.drop_filter, drop_selitem_text,
+                                     &items_for_multidrop );
 
-    if (items_for_multidrop.empty())
+    if (tmp_items.empty())
     {
         canned_msg( MSG_OK );
         return;
@@ -1851,18 +1848,20 @@ void drop(void)
     // dropping a worn robe before a cloak (old behaviour: remove
     // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
     // cloak).
-    std::sort( items_for_multidrop.begin(), items_for_multidrop.end(),
-               drop_item_order );
+    std::sort( tmp_items.begin(), tmp_items.end(), drop_item_order );
 
-    for ( unsigned int i = 0; i < items_for_multidrop.size(); ++i )
+    // If the user answers "no" to an item an with a warning inscription,
+    // then remove it from the list of items to drop by not copying it
+    // over to items_for_multidrop
+    items_for_multidrop.clear();
+    for ( unsigned int i = 0; i < tmp_items.size(); ++i )
+        if ( check_warning_inscriptions( *(tmp_items[i].item), OPER_DROP))
+            items_for_multidrop.push_back(tmp_items[i]);
+
+    if ( items_for_multidrop.empty() ) // only one item
     {
-        if ( !check_warning_inscriptions( *(items_for_multidrop[i].item),
-                                          OPER_DROP))
-        {
-            canned_msg( MSG_OK );
-            items_for_multidrop.clear();
-            return;
-        }
+        canned_msg( MSG_OK );
+        return;
     }
 
     if ( items_for_multidrop.size() == 1 ) // only one item
