@@ -555,7 +555,7 @@
     SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     3,
+     4,
      0,
      NULL,
      false,
