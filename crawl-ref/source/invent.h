@@ -18,6 +18,7 @@
 #include <vector>
 #include "menu.h"
 #include "enum.h"
+#include "itemname.h"
 
 enum object_selector
 {
@@ -84,6 +85,13 @@ public:
     const bool        is_item_art() const;
     const bool        is_item_equipped() const;
     const int         item_freshness() const;
+
+    virtual int highlight_colour() const
+    {
+        return menu_colour(get_text(),
+                           menu_colour_item_prefix( *( (item_def*) item) ) );
+    }
+
 
 private:
     void add_class_hotkeys(const item_def &i);

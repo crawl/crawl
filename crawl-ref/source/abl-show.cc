@@ -883,7 +883,7 @@ static bool activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && you.hunger_state < HS_HUNGRY)
+    if (hungerCheck && you.hunger_state <= HS_STARVING)
     {
         mpr("You're too hungry.");
         return (false);

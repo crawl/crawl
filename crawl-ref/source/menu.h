@@ -47,6 +47,9 @@ struct menu_letter
 
 struct item_def;
 
+int menu_colour(const std::string &itemtext,
+                const std::string &prefix = "");
+
 struct MenuEntry
 {
     std::string text;
@@ -101,6 +104,11 @@ struct MenuEntry
             return std::string(buf);
         }
         return text;
+    }
+
+    virtual int highlight_colour() const
+    {
+        return (menu_colour(get_text()));
     }
 
     virtual bool selected() const
@@ -403,7 +411,6 @@ protected:
     bool jump_to( int linenum );
 };
 
-int menu_colour(const std::string &itemtext);
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
 int linebreak_string2( std::string& s, int maxcol );
 void print_formatted_paragraph( std::string &s, int maxcol,

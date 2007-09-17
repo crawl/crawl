@@ -610,6 +610,7 @@ void game_options::reset_options()
     autopickup_no_burden   = false;
     
     use_notes              = true;
+    user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = false;
     note_all_spells        = false;
@@ -661,6 +662,7 @@ void game_options::reset_options()
     assign_item_slot       = SS_FORWARD;
 
     macro_meta_entry       = true;
+    detailed_hunger        = false;
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
@@ -775,6 +777,8 @@ void game_options::reset_options()
     travel_stop_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
+    menu_colour_prefix_class = false;
+    menu_colour_prefix_id    = false;
     message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
@@ -2065,6 +2069,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         use_notes = read_bool( field, use_notes );
     }
+    else if (key == "user_note_prefix")
+    {
+        // field is already cleaned up from trim_string()
+        user_note_prefix = field;
+    }
     else if (key == "note_skill_max")
     {
         note_skill_max = read_bool( field, note_skill_max );
@@ -2302,6 +2311,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         macro_meta_entry = read_bool(field, macro_meta_entry);
     }
+    else if (key == "detailed_hunger")
+    {
+        detailed_hunger = read_bool(field, detailed_hunger);
+    }
     else if (key == "stop_travel" || key == "travel_stop_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
@@ -2457,6 +2470,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                     menu_colour_mappings.push_back(mapping);
             }
         }
+    }
+    else if (key == "menu_colour_prefix_class" ||
+             key == "menu_color_prefix_class")
+    {
+        menu_colour_prefix_class = read_bool(field, menu_colour_prefix_class);
+    }
+    else if (key == "menu_colour_prefix_id" ||
+             key == "menu_color_prefix_id")
+    {
+        menu_colour_prefix_id = read_bool(field, menu_colour_prefix_id);
     }
     else if (key == "message_colour" || key == "message_color")
     {

@@ -652,7 +652,7 @@ bool cast_a_spell()
     }
 
     if (you.is_undead != US_UNDEAD
-        && (you.hunger_state < HS_HUNGRY
+        && (you.hunger_state <= HS_STARVING
             || you.hunger <= spell_hunger( spell )))
     {
         mpr("You don't have the energy to cast that spell.");

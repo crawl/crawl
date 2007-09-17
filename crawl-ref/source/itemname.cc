@@ -1986,3 +1986,54 @@ bool is_interesting_item( const item_def& item )
             return (true);
     return (false);
 }
+
+const std::string menu_colour_item_prefix(const item_def &item)
+{
+    std::string str = "";
+
+    if (Options.menu_colour_prefix_id)
+    {
+        if (item_ident(item, ISFLAG_KNOW_TYPE)
+            || item.base_type == OBJ_FOOD
+            || item.base_type == OBJ_CORPSES)
+        {
+            str += "identified ";
+        }
+        else
+        {
+            if (get_ident_type(item.base_type,
+                               item.sub_type) == ID_KNOWN_TYPE)
+            {
+                // Wands are only fully identified if we know the
+                // number of charges.
+                if (item.base_type == OBJ_WANDS)
+                    str += "known ";
+                // Rings are fully identified simply by knowing their
+                // type, unless the ring has plusses, like a ring of
+                // dexterity.
+                else if (item.base_type == OBJ_JEWELLERY
+                         && !jewellery_is_amulet(item))
+                {
+                    if (item.plus == 0 && item.plus2 == 0)
+                        str += "identified ";
+                    else
+                        str += "known ";
+                }
+                // All other types of magical items are fully identified
+                // simply by knowing the type
+                else
+                    str += "identified ";
+            }
+            else
+                str += "unidentified ";
+        }
+    }
+
+    if (Options.menu_colour_prefix_class)
+    {
+        str += item_class_name(item.base_type, true) + " ";
+    }
+
+    return str;
+}
+

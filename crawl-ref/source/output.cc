@@ -334,7 +334,8 @@ void print_stats(void)
             const item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
             textcolor(wpn.colour);
 
-            const int prefcol = menu_colour(wpn.name(DESC_INVENTORY));
+            const std::string prefix = menu_colour_item_prefix(wpn);
+            const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
             if (prefcol != -1)
                 textcolor(prefcol);
 
@@ -390,30 +391,79 @@ void print_stats(void)
             break;
         }
 
-        switch (you.hunger_state)
+        if (Options.detailed_hunger)
         {
-        case HS_ENGORGED:
-            textcolor( LIGHTGREEN );
-            cprintf( "Engorged" );
-            break;
+            switch (you.hunger_state)
+            {
+            case HS_ENGORGED:
+                textcolor( LIGHTGREEN );
+                cprintf( "Engorged" );
+                break;
 
-        case HS_FULL:
-            textcolor( GREEN );
-            cprintf( "Full" );
-            break;
+            case HS_VERY_FULL:
+                textcolor( GREEN );
+                cprintf( "Very Full" );
+                break;
 
-        case HS_SATIATED:
-            break;
+            case HS_FULL:
+                textcolor( GREEN );
+                cprintf( "Full" );
+                break;
 
-        case HS_HUNGRY:
-            textcolor( YELLOW );
-            cprintf( "Hungry" );
-            break;
+            case HS_SATIATED:
+                break;
 
-        case HS_STARVING:
-            textcolor( RED );
-            cprintf( "Starving" );
-            break;
+            case HS_HUNGRY:
+                textcolor( YELLOW );
+                cprintf( "Hungry" );
+                break;
+
+            case HS_VERY_HUNGRY:
+                textcolor( YELLOW );
+                cprintf( "Very Hungry" );
+                break;
+
+            case HS_NEAR_STARVING:
+                textcolor( YELLOW );
+                cprintf( "Near Starving" );
+                break;
+
+            case HS_STARVING:
+                textcolor( RED );
+                cprintf( "Starving" );
+                break;
+            }
+        }
+        else
+        {
+            switch (you.hunger_state)
+            {
+            case HS_ENGORGED:
+                textcolor( LIGHTGREEN );
+                cprintf( "Engorged" );
+                break;
+
+            case HS_VERY_FULL:
+            case HS_FULL:
+                textcolor( GREEN );
+                cprintf( "Full" );
+                break;
+
+            case HS_SATIATED:
+                break;
+
+            case HS_HUNGRY:
+            case HS_VERY_HUNGRY:
+            case HS_NEAR_STARVING:
+                textcolor( YELLOW );
+                cprintf( "Hungry" );
+                break;
+
+            case HS_STARVING:
+                textcolor( RED );
+                cprintf( "Starving" );
+                break;
+            }
         }
 
         textcolor( LIGHTGREY );

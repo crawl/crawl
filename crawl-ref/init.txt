@@ -177,12 +177,24 @@ stab_brand = hi:blue
 # show_turns = true
 # show_beam = true
 # item_stack_summary_minimum = 500
+# menu_colour_prefix_id    = true
+# menu_colour_prefix_class = true
 
 # Colouring for the inventory
 menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
 menu_colour = green:(worn|neck|hand|weapon)\)
 menu_colour = red: cursed
 menu_colour = red: rotting
+
+# Identified artefacts
+menu_colour = white:( [-+] the)
+
+# These lines will colour ego items; they require that
+# menu_colour_prefix_id and menu_colour_prefix_class be set to true
+
+# menu_colour = green:(^identified armour .* pair of .* of )
+# menu_colour = lightgrey:(^identified armour .* pair of )
+# menu_colour = green:(^identified (weapon|armour) .* of )
 
 # Colouring for the notes
 menu_colour = white:Reached XP level
@@ -228,11 +240,12 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # dump_message_count = 7
 # dump_order  = header,hiscore,stats,misc,notes,inventory,turns_by_place,
 # dump_order += skills,spells,overview,mutations,messages,screenshot
-# dump_order += kills_by_place,,kills
+# dump_order += kills_by_place,kills
 
 ##### 5-b	Notes #################################
 #
 # use_notes = false
+# user_note_prefix=@@@
 # note_items = rod,book,rune
 # ood_interesting = 8
 # note_hp_percent = 5
@@ -257,6 +270,8 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # wiz_mode = no
 #
 # classic_item_colours = true
+#
+# detailed_hunger = true
 #
 # See crawl_options.txt for the options
 # char_set, cset_ascii, cset_ibm, cset_dec, cset_any, feature, mon_glyph

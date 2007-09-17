@@ -991,12 +991,14 @@ bool slider_menu::line_up()
 // Menu colouring
 //
 
-int menu_colour(const std::string &text)
+int menu_colour(const std::string &text, const std::string &prefix)
 {
+    std::string tmp_text = prefix + text;
+
     for (int i = 0, size = Options.menu_colour_mappings.size(); i < size; ++i)
     {
         colour_mapping &cm = Options.menu_colour_mappings[i];
-        if (cm.pattern.matches(text))
+        if (cm.pattern.matches(tmp_text))
             return (cm.colour);
     }
     return (-1);
@@ -1004,7 +1006,7 @@ int menu_colour(const std::string &text)
 
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 {
-    return (::menu_colour(entry->get_text()));
+    return entry->highlight_colour();
 }
 
 ///////////////////////////////////////////////////////////////////////

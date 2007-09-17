@@ -113,4 +113,9 @@ item_type_id_state_type get_ident_type(object_class_type basetype,
 void set_ident_type( object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
 
+/* ***********************************************************************
+ * called from: command - itemname - invent.h
+ * *********************************************************************** */
+const std::string menu_colour_item_prefix(const item_def &item);
+
 #endif

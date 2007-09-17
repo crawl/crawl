@@ -1177,10 +1177,13 @@ enum hunger_state                  // you.hunger_state
 {
     HS_RAVENOUS,                       //    0: not used within code, really
     HS_STARVING,
+    HS_NEAR_STARVING,
+    HS_VERY_HUNGRY,
     HS_HUNGRY,
     HS_SATIATED,                       // "not hungry" state
     HS_FULL,
-    HS_ENGORGED                        //    5
+    HS_VERY_FULL,
+    HS_ENGORGED                        //    8
 };
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status

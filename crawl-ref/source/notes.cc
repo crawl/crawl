@@ -318,7 +318,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << name;
             break;
         case NOTE_USER_NOTE:
-            result << name;
+            result << Options.user_note_prefix << name;
             break;
         case NOTE_MESSAGE:
             result << name;

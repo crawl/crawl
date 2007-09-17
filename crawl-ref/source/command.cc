@@ -361,6 +361,7 @@ void list_armour()
     for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
     {        
         const int armour_id = you.equip[i];
+        int       colour    = MSGCOL_BLACK;
 
         estr.str("");
         estr.clear();
@@ -376,7 +377,11 @@ void list_armour()
              << " : ";
 
         if (armour_id != -1)
+        {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
+            colour = menu_colour(estr.str(),
+                                 menu_colour_item_prefix(you.inv[armour_id]));
+        }
         else if (!you_can_wear(i,true))
             estr << "    (unavailable)";
         else if (!you_tran_can_wear(i, true))
@@ -386,7 +391,10 @@ void list_armour()
         else
             estr << "    none";
 
-        mpr( estr.str().c_str(), MSGCH_EQUIPMENT, menu_colour(estr.str()) );
+        if (colour == MSGCOL_BLACK)
+            colour = menu_colour(estr.str());
+
+        mpr( estr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
 }                               // end list_armour()
 
@@ -397,6 +405,7 @@ void list_jewellery(void)
     for (int i = EQ_LEFT_RING; i <= EQ_AMULET; i++)
     {
         const int jewellery_id = you.equip[i];
+        int       colour       = MSGCOL_BLACK;
 
         jstr.str("");
         jstr.clear();
@@ -408,15 +417,23 @@ void list_jewellery(void)
              << " : ";
 
         if (jewellery_id != -1)
+        {
             jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
+            std::string
+                prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
+            colour = menu_colour(jstr.str(), prefix);
+        }
         else if (!you_tran_can_wear(i))
             jstr << "    (currently unavailable)";
         else
             jstr << "    none";
 
-        mpr( jstr.str().c_str(), MSGCH_EQUIPMENT, menu_colour(jstr.str()) );
+        if (colour == MSGCOL_BLACK)
+            colour = menu_colour(jstr.str());
+
+        mpr( jstr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
-}                               // end list_jewellery()
+}
 
 void list_weapons(void)
 {
@@ -427,10 +444,13 @@ void list_weapons(void)
     // Yes, this is already on the screen... I'm outputing it
     // for completeness and to avoid confusion.
     std::string wstring = "Current   : ";
+    int         colour;
 
     if (weapon_id != -1)
     {
         wstring += you.inv[weapon_id].name(DESC_INVENTORY_EQUIP);
+        colour = menu_colour(wstring,
+                             menu_colour_item_prefix(you.inv[weapon_id]));
     }
     else
     {
@@ -440,9 +460,10 @@ void list_weapons(void)
             wstring += "    (currently unavailable)";
         else
             wstring += "    empty hands";
+        colour = menu_colour(wstring);
     }
 
-    mpr(wstring.c_str(), MSGCH_EQUIPMENT, menu_colour(wstring));
+    mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
 
     // Print out the swap slots
     for (int i = 0; i <= 1; i++)
@@ -457,17 +478,23 @@ void list_weapons(void)
         else
             wstring = "Secondary : ";
 
+        colour = MSGCOL_BLACK;
         if (is_valid_item( you.inv[i]) &&
                (you.inv[i].base_type == OBJ_WEAPONS
                 || you.inv[i].base_type == OBJ_STAVES
                 || you.inv[i].base_type == OBJ_MISCELLANY))
         {
             wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
+            colour = menu_colour(wstring,
+                                 menu_colour_item_prefix(you.inv[i]));
         }
         else
             wstring += "    none";
 
-        mpr(wstring.c_str(), MSGCH_EQUIPMENT, menu_colour(wstring));
+        if (colour == MSGCOL_BLACK)
+            colour = menu_colour(wstring);
+
+        mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
     }
 
     // Now we print out the current default fire weapon
@@ -475,12 +502,20 @@ void list_weapons(void)
 
     const int item = get_fire_item_index();
 
+    colour = MSGCOL_BLACK;
     if (item == ENDOFPACK)
         wstring += "    nothing";
     else
+    {
         wstring += you.inv[item].name(DESC_INVENTORY_EQUIP);
+        colour = menu_colour(wstring,
+                             menu_colour_item_prefix(you.inv[item]));
+    }
 
-    mpr( wstring.c_str(), MSGCH_EQUIPMENT, menu_colour(wstring) );
+    if (colour == MSGCOL_BLACK)
+        colour = menu_colour(wstring);
+
+    mpr( wstring.c_str(), MSGCH_EQUIPMENT, colour );
 }                               // end list_weapons()
 
 static bool cmdhelp_textfilter(const std::string &tag)

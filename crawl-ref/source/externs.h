@@ -1416,6 +1416,7 @@ public:
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
     bool        use_notes;      // take (and dump) notes
+    std::string user_note_prefix; // Prefix for user notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
     int         easy_confirm;   // make yesno() confirming easier
@@ -1439,6 +1440,7 @@ public:
     bool        no_dark_brand;  // Attribute for branding friendly monsters
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
+    bool        detailed_hunger; // Informational-only hunger levels
 
     int         fire_items_start;     // index of first item for fire command
     std::vector<unsigned> fire_order; // missile search order for 'f' command
@@ -1515,13 +1517,16 @@ public:
     int         explore_stop_prompt;
 
     bool        explore_greedy;    // Explore goes after items as well.
-    
+
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
     
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
     std::vector<message_colour_mapping> message_colour_mappings;
+
+    bool       menu_colour_prefix_class; // Prefix item class to string
+    bool       menu_colour_prefix_id;    // Prefix id-status to string
 
     std::vector<menu_sort_condition> sort_menus;
 
