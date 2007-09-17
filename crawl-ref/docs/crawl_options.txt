@@ -63,8 +63,11 @@ The contents of this text are:
                 fire_items_start, fire_order
 4-l     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
-                recovery, multiturn, talk, intrinsic_gain, mutation,
-                monster_spell, monster_enchant, monster_damage, rotten_meat
+                recovery, talk, talk_visual, intrinsic_gain, mutation,
+                monster_spell, monster_enchant, monster_damage, rotten_meat,
+                equipment, floor, multiturn, examine, examine_filter,
+                diagnostics, tutorial
+
 4-m     Inscriptions.
                 autoinscribe
 4-n     Macro related Options.
@@ -1065,14 +1068,21 @@ CHANNEL_NAME can currently be one of these:
    food            = warnings about food
    warning         = various other warnings
    recovery        = recovery from disease/stat loss/poison conditions
-   multiturn       = indicates long actions (wearing armour, dissecting etc.)
-   talk            = monsters talking (acting)
+   talk            = monsters talking
+   talk_visual     = monster performing some action which the player sees
    intrinsic_gain  = level/stat/species power gains
    mutation        = gain/lose mutations
    monster_spell   = messages about monsters gesturing and casting spells
    monster_enchant = messages pertaining to monster enchantments (up or down)
    monster_damage  = messages telling how damaged a monster is
    rotten_meat     = messages about chunks/corpses becoming rotten
+   equipment       = messages inidcating worn/wielded equipment
+   floor           = messages when looking at or walking over a floor item
+   multiturn       = indicates long actions (wearing armour, dissecting etc.)
+   examine         = messages from examine your surroundings
+   examine_filter  = boring messages from examining your surroundings
+   diagnostics     = debugging messages
+   tutorial        = messages from the tutorial
 
 The channel options are
    mute      = show no messages from channel (dangerous, be careful!)
