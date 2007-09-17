@@ -1,5 +1,6 @@
-The Dungeon Crawl Stone Soup team (Peter Berger, Nat Lanza, Haran Pilpel, 
-Erik Piper, David Ploog, Johanna Ploog, Darshan Shaligram) would like to thank:
+The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Nat Lanza,
+Haran Pilpel, Erik Piper, David Ploog, Johanna Ploog, Darshan Shaligram) would
+like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -13,13 +14,12 @@ Erik Piper, David Ploog, Johanna Ploog, Darshan Shaligram) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison            R. Dan Henry            Yuuma Oohara
-Juha Arpiainen             Benoit Hudson           Pedro
-Roy Axenov                 Ilyak                   Lemuel Pitkin
-Alexander Beisig           Mitsuhiro Itakura       David Lawrence Ramsey 
-Erik Inge Bolsø            Eino Keskitalo          Remsleep         
-Peter Borgmann             Jarmo Kielosto          David Rose
-Matthew Cline              Kornel Kisielewicz      Sebastian Salman
+Warwick Allison            Benoit Hudson           Pedro
+Juha Arpiainen             Ilyak                   Lemuel Pitkin
+Roy Axenov                 Mitsuhiro Itakura       David Lawrence Ramsey
+Alexander Beisig           Eino Keskitalo          Remsleep
+Erik Inge Bolsø            Jarmo Kielosto          David Rose
+Peter Borgmann             Kornel Kisielewicz      Sebastian Salman
 Rachel Elizabeth Dillon    Ryan Kusnery            Brett Scarborough
 Dylan O'Donnell            Jukka Kuusisto          Roman Sêk
 Jesse Luehrs               Jordan Lewis            Sigurd
@@ -29,4 +29,5 @@ Elethiomel                 Shawn M Moore           Marc H. Thoben
 Christopher Evenstar       Eva Myers               Matt Titus
 Ben Goetter                Onia Ninara             Steven Wheeler
 Ciaran Hamilton            Erkki Nurmi             Jeremey Wilson
-Chris Hamons               nyra                    Zooko            
+Chris Hamons               nyra                    Zooko
+R. Dan Henry               Yuuma Oohara
