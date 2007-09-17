@@ -1123,13 +1123,21 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
+        // FIXME This is not the best way to do stuff, because
+        // you have a chance of failing the evocation test, in
+        // which case you'll lose MP, etc.
+        // We should add a pre-failure-test check in general.
         if (you.hunger_state < HS_SATIATED)
         {
             mpr("You're too hungry to berserk.");
             return (false);
         }
+        else if ( !you.can_go_berserk(true) )
+            return (false);
 
         // only exercise if berserk succeeds
+        // because of the test above, this should always happen,
+        // but I'm leaving it in -- haranp
         if ( go_berserk(true) )
             exercise( SK_EVOCATIONS, 1 );
         break;
@@ -1145,8 +1153,9 @@ static bool do_ability(const ability_def& abil)
             you.duration[DUR_CONTROLLED_FLIGHT] = 100;
         }
         break;
-
-    case ABIL_FLY_II:           // Fly (Draconians, or anything else with wings)
+    
+    // Fly (Draconians, or anything else with wings)
+    case ABIL_FLY_II: 
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to fly.");

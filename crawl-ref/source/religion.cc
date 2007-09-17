@@ -76,41 +76,87 @@
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
-const char *sacrifice[] =
+// First message is if there's no piety gain, second is if there is.
+const char *sacrifice[NUM_GODS][2] =
 {
     // No god
-    " & eaten by a ravening swarm of bugs.",
+    {
+        " & eaten by a bored swarm of bugs.",
+        " & eaten by a ravening swarm of bugs."
+    },
     // Zin
-    " glow% silver and disappear%.",
+    {
+        " faintly glow% silver and disappear%.",
+        " glow% silver and disappear%.",
+    },
     // TSO
-    " glow% a brilliant golden colour and disappear%.",
+    {
+        " glow% a golden colour and disappear%.",
+        " glow% a brilliant golden colour and disappear%.",
+    },
     // Kikubaaqudgha
-    " rot% away in an instant.",
+    {
+        " slowly rot% away.",
+        " rot% away in an instant.",
+    },
     // Yredelemnul
-    " crumble% to dust.",
+    {
+        " crumble% to dust.",
+        " crumble% to dust.",
+    },
     // Xom (no sacrifices)
-    " & eaten by a bug.",
+    {
+        " & eaten by a bored bug.",
+        " & eaten by a bug.",
+    },
     // Vehumet
-    " explode% into nothingness.",
+    {
+        " burn% into nothingness.",
+        " explode% into nothingness.",
+    },
     // Okawaru
-    " & consumed in a burst of flame.",
+    {
+        " & consumed by flame.",
+        " & consumed in a burst of flame.",
+    },
     // Makhleb
-    " flare% blood-red and disappear%.",
+    {
+        " flare% red and disappear%.",
+        " flare% blood-red and disappear%.",
+    },
     // Sif Muna
-    " glow% faintly for a moment, and & gone.",
+    {
+        " glow% very faintly for a moment, and & gone.",
+        " glow% faintly for a moment, and & gone.",
+    },
     // Trog
-    " & consumed in a roaring column of flame.",
+    {
+        " & consumed in a column of flame.",
+        " & consumed in a roaring column of flame.",
+    },
     // Nemelex
-    " glow% with a rainbow of weird colours and disappear%.",
+    {
+        " glow% slightly and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
+    },
     // Elyvilon
-    " evaporate%.",
+    {
+        " slowly evaporate%.",
+        " evaporate%.",
+    },
     // Lugonu
-    " & consumed by the void.",
+    {
+        " & disappears into the void.",
+        " & consumed by the void.",
+    },
     // Beogh
-    " crumble% into the ground."
+    {
+        " slowly crumble% into the ground."
+        " crumble% into the ground."
+    }
 };
 
-const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
     { "", "", "", "", "" },
@@ -195,7 +241,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "walk on water" }
 };
 
-const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
     { "", "", "", "", "" },
@@ -2670,9 +2716,10 @@ static bool bless_weapon( int god, int brand, int colour )
     return (false);
 }
 
-static std::string sacrifice_message(god_type god, const item_def &item)
+static std::string sacrifice_message(god_type god, const item_def &item,
+                                     bool gained_piety)
 {
-    const char *msg = sacrifice[god];
+    const char *msg = sacrifice[god][!!gained_piety];
     const char *be = item.quantity == 1? "is" : "are";
 
     // "The bread ration evaporates", "The arrows evaporate" - the s suffix
@@ -2799,9 +2846,7 @@ void offer_items()
             continue;
         }
 
-        msg::streams(MSGCH_GOD) << mitm[i].name(DESC_CAP_THE)
-                                << sacrifice_message(you.religion, mitm[i])
-                                << std::endl;
+        bool gained_piety = false;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -2824,6 +2869,7 @@ void offer_items()
                 || random2(value) >= random2(60))
             {
                 gain_piety(1);
+                gained_piety = true;
             }
             break;
 
@@ -2834,24 +2880,33 @@ void offer_items()
                 || random2(value) >= 50
                 || player_under_penance())
             {
+                gained_piety = true;
                 gain_piety(1);
             }
             break;
 
         case GOD_SIF_MUNA:
             if (value >= 150)
+            {
                 gain_piety(1 + random2(3));
+                gained_piety = true;
+            }
             break;
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_TROG:
             gain_piety(1);
+            gained_piety = true;
             break;
 
         default:
             break;
         }
 
+        msg::streams(MSGCH_GOD) << mitm[i].name(DESC_CAP_THE)
+                                << sacrifice_message(you.religion, mitm[i],
+                                                     gained_piety)
+                                << std::endl;
         destroy_item(i);
         i = next;
     }
@@ -2978,8 +3033,10 @@ bool god_hates_butchery(god_type god)
 
 void offer_corpse(int corpse)
 {
+    // We always give the "good" (piety-gain) message when doing
+    // dedicated butchery. Uh, call it a feature.
     mprf(MSGCH_GOD, "%s%s", mitm[corpse].name(DESC_CAP_THE).c_str(),
-         sacrifice_message(you.religion, mitm[corpse]).c_str());
+         sacrifice_message(you.religion, mitm[corpse], true).c_str());
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 }                               // end offer_corpse()
