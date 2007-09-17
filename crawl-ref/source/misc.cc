@@ -1424,10 +1424,13 @@ static bool should_autopray()
 {
     if ( Options.autoprayer_on == false ||
          you.religion == GOD_NO_GOD ||
+         you.religion == GOD_NEMELEX_XOBEH ||
          you.duration[DUR_PRAYER] ||
          grid_altar_god( grd[you.x_pos][you.y_pos] ) != GOD_NO_GOD ||
          !i_feel_safe() )
+    {
         return false;
+    }
 
     // We already know that we're not praying now. So if you
     // just autoprayed, there's a problem.

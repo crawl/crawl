@@ -1337,7 +1337,13 @@ void process_command( command_type cmd )
         break;
 
     case CMD_TOGGLE_AUTOPRAYER:
-        toggle_flag( &Options.autoprayer_on, "Autoprayer" );
+        if (you.religion == GOD_NEMELEX_XOBEH)
+        {
+            mpr("Those worshipping Nemelex Xobeh don't need to autopray.");
+            Options.autoprayer_on = false;
+        }
+        else
+            toggle_flag( &Options.autoprayer_on, "Autoprayer" );
         break;
    
     case CMD_MAKE_NOTE:
