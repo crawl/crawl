@@ -39,6 +39,7 @@
 
 #include "abyss.h"
 #include "branch.h"
+#include "chardump.h"
 #include "clua.h"
 #include "cloud.h"
 #include "delay.h"
@@ -47,6 +48,7 @@
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "hiscores.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"

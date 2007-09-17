@@ -243,6 +243,32 @@ int give_first_conjuration_book()
     return (book);
 }
 
+// Determines if a species is valid. If 'display' is true, returns if
+// the species is displayable in the new game screen - this is
+// primarily used to suppress the display of the draconian variants.
+static bool is_species_valid_choice(species_type species, bool display = true)
+{
+    return (species
+            && species != NUM_SPECIES
+            && species != SP_UNKNOWN
+            && !((display?
+                  (species > SP_RED_DRACONIAN
+                   && species <= SP_BASE_DRACONIAN)
+                  : (species >= SP_UNK0_DRACONIAN
+                     && species <= SP_BASE_DRACONIAN))
+                 || species == SP_ELF
+                 || species == SP_HILL_DWARF));
+}
+
+static species_type random_species()
+{
+    species_type sp = SP_UNKNOWN;
+    do
+        sp = static_cast<species_type>( random2(NUM_SPECIES) );
+    while (!is_species_valid_choice(sp));
+    return (sp);
+}
+
 static void pick_random_species_and_class( void )
 {
     //
@@ -260,8 +286,7 @@ static void pick_random_species_and_class( void )
     {
         // we only want draconians counted once in this loop...
         // we'll add the variety lower down -- bwr
-        if ((sp >= SP_WHITE_DRACONIAN && sp <= SP_BASE_DRACONIAN)
-            || sp == SP_ELF || sp == SP_HILL_DWARF)
+        if (!is_species_valid_choice(static_cast<species_type>(sp)))
             continue;
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
@@ -2954,9 +2979,10 @@ static job_type letter_to_class(int keyn)
 
 static species_type letter_to_species(int keyn)
 {
-    if ( keyn < 'a' || keyn > 'y' )
-        return SP_UNKNOWN;
-    const int offset = keyn - 'a';
+    const int offset = letter_to_index(keyn);
+    if (index < 0)
+        return (SP_UNKNOWN);
+    
     int rc;
     if ( offset + SP_HUMAN < SP_RED_DRACONIAN )
         rc = offset + SP_HUMAN;
@@ -2964,7 +2990,7 @@ static species_type letter_to_species(int keyn)
         rc = random_draconian_species();
     else                        // skip over draconian species
         rc = offset + (SP_BASE_DRACONIAN - SP_RED_DRACONIAN) + 1;
-    return static_cast<species_type>(rc);
+    return (rc >= NUM_SPECIES? SP_UNKNOWN : static_cast<species_type>(rc));
 }
 
 static char species_to_letter(int spec)
@@ -2973,7 +2999,10 @@ static char species_to_letter(int spec)
         spec = SP_RED_DRACONIAN;
     else if (spec > SP_BASE_DRACONIAN)
         spec -= SP_BASE_DRACONIAN - SP_RED_DRACONIAN;
-    return 'a' + spec - 1;
+    int letter = 'a' + spec - 1;
+    if (letter > 'z')
+        letter = 'A' + (letter - 'z') - 1;
+    return (letter);
 }
 
 // choose_race returns true if the player should also pick a class.
@@ -3045,8 +3074,7 @@ spec_query:
         *linebuf = 0;
         for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
         {
-            if ((i > SP_RED_DRACONIAN && i <= SP_BASE_DRACONIAN)
-                || i == SP_ELF || i == SP_HILL_DWARF)
+            if (!is_species_valid_choice(static_cast<species_type>(i)))
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
@@ -3148,9 +3176,10 @@ spec_query:
     if (keyn == '*')
     {
         do
-            keyn = 'a' + random2(26);
-        while (you.char_class != JOB_UNKNOWN &&
-                !class_allowed(letter_to_species(keyn), you.char_class));
+            keyn = species_to_letter(random_species());
+        while (!is_species_valid_choice(letter_to_species(keyn), false)
+               || (you.char_class != JOB_UNKNOWN &&
+                   !class_allowed(letter_to_species(keyn), you.char_class)));
     }
     else if (keyn == '!')
     {
@@ -3164,7 +3193,8 @@ spec_query:
         return !pick_tutorial();
     }
 
-    if ((you.species = letter_to_species(keyn)) == SP_UNKNOWN)
+    if ((you.species = letter_to_species(keyn)) == SP_UNKNOWN
+        || !is_species_valid_choice(you.species, false))
     {
         switch (keyn)
         {
