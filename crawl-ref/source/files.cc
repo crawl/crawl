@@ -828,7 +828,8 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
                                          you.level_type,
                                          false );
 
-    if (you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON)
+    if ((you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON)
+        || load_mode == LOAD_START_GAME)
     {
         if (tmp_file_pairs[you.your_level][you.where_are_you] == false)
         {
