@@ -242,7 +242,8 @@ const char *mutation_descrip[][3] = {
     {"You can throw forth the frost of Cocytus.", "", ""},
 
     {"You can invoke the powers of Tartarus to smite your living foes.", "", ""},
-    {"You have sharp fingernails.", "Your fingernails are very sharp.",
+
+    {"You have sharp fingernails.", "You have very sharp fingernails.",
      "You have claws for hands."},
 
     {"You have hooves in place of feet.", "", ""},
@@ -943,11 +944,6 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_CENTAUR:
-        result += "You cannot wear boots." EOL;
-        have_any = true;
-        break;
-
     case SP_TROLL:
         if ( you.mutation[MUT_CLAWS] )
             result += "<cyan>";
@@ -1140,9 +1136,11 @@ formatted_string describe_mutations()
 
     textcolor(LIGHTGREY);
 
+    // first add (non-removable) inborn abilities and demon powers
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0)
+        // mutation is actually a demonic power
+        if (you.mutation[i] != 0 && you.demon_pow[i])
         {
             have_any = true;
 
@@ -1154,38 +1152,42 @@ formatted_string describe_mutations()
                 continue;
 
             const char* colourname = "";
-            // mutation is actually a demonic power
-            if ( you.demon_pow[i] )
+            if ( you.species == SP_DEMONSPAWN )
             {
-                if ( you.species == SP_DEMONSPAWN )
-                {
-                    if ( you.demon_pow[i] < you.mutation[i] )
-                        colourname = "lightred";
-                    else
-                        colourname = "red";
-                }
-                else            // innate ability
-                {
-                    if ( you.demon_pow[i] < you.mutation[i] )
-                        colourname = "cyan";
-                    else
-                        colourname = "lightblue";
-                }
+                if ( you.demon_pow[i] < you.mutation[i] )
+                    colourname = "lightred";
+                else
+                    colourname = "red";
+            }
+            else            // innate ability
+            {
+                if ( you.demon_pow[i] < you.mutation[i] )
+                    colourname = "cyan";
+                else
+                    colourname = "lightblue";
             }
 
-            if ( you.demon_pow[i] )
-            {
-                result += '<';
-                result += colourname;
-                result += '>';
-            }
+            result += '<';
+            result += colourname;
+            result += '>';
+            
             result += mutation_name(static_cast<mutation_type>(i));
-            if ( you.demon_pow[i] )
-            {
-                result += "</";
-                result += colourname;
-                result += '>';
-            }
+            
+            result += "</";
+            result += colourname;
+            result += '>';
+            result += EOL;
+        }
+    }
+
+    // now add removable mutations
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        if (you.mutation[i] != 0 && !you.demon_pow[i])
+        {
+            have_any = true;
+
+            result += mutation_name(static_cast<mutation_type>(i));
             result += EOL;
         }
     }

@@ -101,7 +101,7 @@ const char *sacrifice[NUM_GODS][2] =
     },
     // Yredelemnul
     {
-        " crumble% to dust.",
+        " slowly crumble% to dust.",
         " crumble% to dust.",
     },
     // Xom (no sacrifices)

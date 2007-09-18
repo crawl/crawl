@@ -768,7 +768,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BOOTS)
     {
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+        if (you.mutation[MUT_HOOVES] >= 2)
+        {
+            if (verbose)
+                mpr("You can't wear boots with hooves!");
+            return (false);
+        }
+
+        if (you.species == SP_NAGA)
         {
             if (verbose)
                 mpr("You can't wear that!");

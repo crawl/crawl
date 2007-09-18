@@ -1052,6 +1052,15 @@ bool check_armour_shape( const item_def &item, bool quiet )
         switch (slot)
         {
         case EQ_BOOTS:
+
+            if (you.mutation[MUT_HOOVES] >= 2)
+            {
+                if (!quiet)
+                    mpr("You can't wear boots with hooves!");
+
+                return (false);
+            }
+
             switch (you.species)
             {
             case SP_NAGA:
