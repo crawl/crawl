@@ -1452,22 +1452,31 @@ damage of this poison increases with the naga's experience level.
 
 Ogres and Ogre Mages:
 ---------------------
-Ogres are huge, chunky creatures related to orcs. They are terrible
-monsters who usually live to do nothing more than smash, smash, smash,
-and destroy.
+Genealogists would call these species Common Ogres and Sapient Ogres rather, 
+yet the folklore labels stuck somehow. These two are genuinely different 
+races stemming from a mythological progenitor, the Primordial Ogre. 
+While crossbreeding is possible, it is generally frowned upon in Ogre 
+societies: the resulting offspring is often ill-fated, and in very rare cases, even two-headed ogres result.
 
-They have great physical strength, but are bad at almost everything
-except fighting and learn quite slowly. Because of their large size
-they can only wear loose robes, cloaks and animal skins. Although ogres
-can eat almost anything, their size means that they need to do so more 
-frequently than smaller folk.
+Ogres are huge, chunky creatures who usually live to do nothing more than 
+smash, smash, smash, and destroy. They have great physical strength, but 
+are bad at almost everything except fighting and mature quite slowly. 
+Because of their large size they can only wear loose robes, cloaks and 
+animal skins. Although ogres can eat almost anything, their size also 
+means that they need to do so more frequently than smaller folk.
 
-Ogre-mages are a separate race of ogres who are unique among the beefier
-species in their ability to use magic, especially enchantments. Although
-slighter than their common ogre relatives they nevertheless have great 
-strength and can survive a lot of punishment. They advance in level as 
-slowly as high elves. In contrast to their Ogre cousins, Ogre Mages have
-lost the ability to digest corpses when not hungry.
+Ogre Mages are slightly smaller and nimbler than their Common 
+counterparts and grow a bit slower. They are unique among the beefier 
+species in their ability to use magic, especially enchantments. Still, 
+they also perform well in all types of melee combat, with a slight 
+disadvantage at short blades. While they perform better than Ogres in all 
+more civilised aspects of life, Ogre Mages have lost the ability to 
+digest corpsed when not hungry.
+
+Most often, small bands of Common Ogres raid the countryside or
+underground dungeons, accompanied by a Sapient Ogre. The latter is 
+usually at once the undisputed spokesman, medicine man and shaman of the 
+group. 
 
 Trolls:
 -------

@@ -2973,7 +2973,7 @@ static job_type letter_to_class(int keyn)
 static species_type letter_to_species(int keyn)
 {
     const int offset = letter_to_index(keyn);
-    if (index < 0)
+    if (offset < 0)
         return (SP_UNKNOWN);
     
     int rc;
