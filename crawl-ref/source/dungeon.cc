@@ -68,6 +68,10 @@
 #include "travel.h"
 #include "view.h"
 
+#ifdef WIZARD
+#include "cio.h" // for cancelable_get_line()
+#endif
+
 #define MAX_PIT_MONSTERS   10
 
 struct pit_mons_def
@@ -1473,6 +1477,35 @@ static void fixup_bazaar_stairs()
 static void bazaar_level(int level_number)
 {
     int vault = random_map_for_place(level_id::current(), false);
+
+#ifdef WIZARD
+    if (vault == -1 && you.wizard)
+    {
+        char buf[80];
+
+        do
+        {
+            mprf(MSGCH_PROMPT, "Which bazaar (ESC or ENTER for random): ");
+            if (cancelable_get_line(buf, sizeof buf))
+                break;
+
+            std::string name = buf;
+            trim_string(name);
+
+            if (name.empty())
+                break;
+
+            lowercase(name);
+            name = replace_all(name, " ", "_");
+
+            vault = find_map_by_name("bazaar_" + name);
+
+            if (vault == -1)
+                mprf(MSGCH_DIAGNOSTICS, "No such bazaar, try again.");
+        } while (vault == -1);
+    }
+#endif
+
     if (vault == -1)
         vault = random_map_for_tag("bazaar", false);
 

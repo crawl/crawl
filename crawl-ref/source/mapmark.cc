@@ -25,6 +25,7 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_feature_marker::read,
     &map_lua_marker::read,
     &map_corruption_marker::read,
+    &map_wiz_props_marker::read,
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -32,6 +33,7 @@ map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
     &map_feature_marker::parse,
     &map_lua_marker::parse,
     NULL,
+    NULL
 };
 
 map_marker::map_marker(map_marker_type t, const coord_def &p)
@@ -421,6 +423,94 @@ map_marker *map_corruption_marker::clone() const
 std::string map_corruption_marker::debug_describe() const
 {
     return make_stringf("Lugonu corrupt (%d)", duration);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// map_feature_marker
+
+map_wiz_props_marker::map_wiz_props_marker(
+    const coord_def &p)
+    : map_marker(MAT_WIZ_PROPS, p)
+{
+}
+
+map_wiz_props_marker::map_wiz_props_marker(
+    const map_wiz_props_marker &other)
+    : map_marker(MAT_WIZ_PROPS, other.pos), properties(other.properties)
+{
+}
+
+void map_wiz_props_marker::write(tagHeader &outf) const
+{
+    this->map_marker::write(outf);
+    marshallShort(outf, properties.size());
+    for (std::map<std::string, std::string>::const_iterator i =
+             properties.begin(); i != properties.end(); ++i)
+    {
+        marshallString(outf, i->first);
+        marshallString(outf, i->second);
+    }
+}
+
+void map_wiz_props_marker::read(tagHeader &inf)
+{
+    map_marker::read(inf);
+
+    short numPairs = unmarshallShort(inf);
+    for (short i = 0; i < numPairs; i++)
+    {
+        const std::string key = unmarshallString(inf);
+        const std::string val = unmarshallString(inf);
+
+        set_property(key, val);
+    }
+}
+
+std::string map_wiz_props_marker::feature_description() const
+{
+    return property("desc");
+}
+
+std::string map_wiz_props_marker::property(const std::string &pname) const
+{
+    std::map<std::string, std::string>::const_iterator
+        i = properties.find(pname);
+
+    if (i != properties.end())
+        return (i->second);
+    else
+        return ("");
+}
+
+std::string map_wiz_props_marker::set_property(const std::string &key,
+                                               const std::string &val)
+{
+    std::string old_val = properties[key];
+    properties[key] = val;
+    return (old_val);
+}
+
+map_marker *map_wiz_props_marker::clone() const
+{
+    return new map_wiz_props_marker(*this);
+}
+
+map_marker *map_wiz_props_marker::read(tagHeader &inf, map_marker_type)
+{
+    map_marker *mapf = new map_wiz_props_marker();
+    mapf->read(inf);
+    return (mapf);
+}
+
+map_marker *map_wiz_props_marker::parse(
+    const std::string &s, const std::string &) throw (std::string)
+{
+    throw make_stringf("map_wiz_props_marker::parse() not implemented");
+}
+
+std::string map_wiz_props_marker::debug_describe() const
+{
+    return make_stringf("wizard props: ") + feature_description();
 }
 
 //////////////////////////////////////////////////////////////////////////
