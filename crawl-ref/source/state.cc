@@ -63,7 +63,7 @@ void game_state::cancel_cmd_repeat(std::string reason)
     if (!is_repeating_cmd())
         return;
 
-    if (is_replaying_keys())
+    if (is_replaying_keys() || cmd_repeat_start)
         flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
 
     if (is_processing_macro())
@@ -123,14 +123,6 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 {
     if (crawl_state.cmd_repeat_start)
         return false;
-
-    // If command repitition is being used to immitate the rest command,
-    // then everything interrupts it.
-    if (crawl_state.repeat_cmd == CMD_MOVE_NOWHERE
-        || crawl_state.repeat_cmd == CMD_SEARCH)
-    {
-        return true;
-    }
 
     if (crawl_state.repeat_cmd == CMD_WIZARD)
         return false;
@@ -192,6 +184,20 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         return true;
     }
         
+    // If command repitition is being used to immitate the rest command,
+    // then everything interrupts it.
+    if (crawl_state.repeat_cmd == CMD_MOVE_NOWHERE
+        || crawl_state.repeat_cmd == CMD_SEARCH)
+    {
+        if (ai == AI_FULL_MP)
+            crawl_state.cancel_cmd_repeat("Magic restored.");
+        else if (ai = AI_FULL_HP)
+            crawl_state.cancel_cmd_repeat("HP restored.");
+        else
+            crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
+        return true;
+    }
+
     if (crawl_state.cmd_repeat_started_unsafe)
         return false;
 

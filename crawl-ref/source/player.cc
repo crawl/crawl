@@ -4200,6 +4200,8 @@ void inc_mp(int mp_gain, bool max_too)
     if (mp_gain < 1)
         return;
 
+    bool wasnt_max = (you.magic_points < you.max_magic_points);
+
     you.magic_points += mp_gain;
 
     if (max_too)
@@ -4207,6 +4209,9 @@ void inc_mp(int mp_gain, bool max_too)
 
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
+
+    if (wasnt_max && you.magic_points == you.max_magic_points)
+        interrupt_activity(AI_FULL_MP);
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = 1;
@@ -4221,6 +4226,8 @@ void inc_hp(int hp_gain, bool max_too)
     if (hp_gain < 1)
         return;
 
+    bool wasnt_max = (you.hp < you.hp_max);
+
     you.hp += hp_gain;
 
     if (max_too)
@@ -4228,6 +4235,9 @@ void inc_hp(int hp_gain, bool max_too)
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
+
+    if (wasnt_max && you.hp == you.hp_max)
+        interrupt_activity(AI_FULL_HP);
 
     // to avoid message spam, no information when HP increases
     // take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
