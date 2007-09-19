@@ -16,8 +16,9 @@
 #include "delay.h"
 #include "direct.h"
 #include "macro.h"
-#include "mon-util.h"
 #include "menu.h" // For print_formatted_paragraph()
+#include "message.h"
+#include "mon-util.h"
 #include "player.h"
 #include "state.h"
 #include "tutorial.h"

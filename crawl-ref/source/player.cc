@@ -30,6 +30,8 @@
 #include <math.h>
 #include <ctype.h>
 
+#include <sstream>
+
 #include "externs.h"
 
 #include "branch.h"
@@ -5124,45 +5126,41 @@ void player::init()
     }
 }
 
-player::~player()
+player_save_info player_save_info::operator=(const player& rhs)
 {
-    delete kills;
+    name = rhs.your_name;
+    experience = rhs.experience;
+    experience_level = rhs.experience_level;
+    wizard = rhs.wizard;
+    species = rhs.species;
+    class_name = rhs.class_name;
+    return *this;
 }
 
-bool player::is_valid() const
+bool player_save_info::operator<(const player_save_info& rhs) const
 {
-    // Check if there's a name.
-    return (your_name[0] != 0);
+    return experience < rhs.experience ||
+        (experience == rhs.experience && name < rhs.name);
 }
 
-std::string player::short_desc() const
+std::string player_save_info::short_desc() const
 {
-    std::string desc;
-    desc += your_name;
-    desc += ", a level ";
-
-    char st_prn[20];
-    itoa(experience_level, st_prn, 10);
-    desc += st_prn;
-
-    desc += " ";
-    desc += species_name(species, experience_level);
-    desc += " ";
-    desc += class_name;
+    std::ostringstream desc;
+    desc << name << ", a level " << experience_level << ' '
+         << species_name(species, experience_level) << ' '
+         << class_name;
 
 #ifdef WIZARD
     if (wizard)
-        desc += " (WIZ)";
+        desc << " (WIZ)";
 #endif
 
-    return (desc);
+    return desc.str();
 }
 
-bool player::operator < (const player &p) const
+player::~player()
 {
-    return (experience > p.experience
-        || (experience == p.experience &&
-                stricmp(your_name, p.your_name) < 0));
+    delete kills;
 }
 
 coord_def player::pos() const
