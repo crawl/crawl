@@ -29,6 +29,7 @@
 #include "player.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "traps.h"
 
 void drop_everything(void);
 void extra_hp(int amount_extra);
@@ -336,6 +337,15 @@ bool transform(int pow, transformation_type which_trans)
 
         you.symbol = 'D';
         you.colour = GREEN;
+        
+        if (you.attribute[ATTR_HELD])
+        {
+            mpr("The net rips apart!");
+            you.attribute[ATTR_HELD] = 0;
+            int net = get_trapping_net(you.x_pos, you.y_pos);
+            if (net != NON_ITEM)
+                destroy_item(net);
+        }
         return (true);
 
     case TRAN_LICH:
@@ -401,6 +411,15 @@ bool transform(int pow, transformation_type which_trans)
         modify_stat( STAT_DEXTERITY, 8, true );
         you.symbol = '#';
         you.colour = DARKGREY;
+        
+        if (you.attribute[ATTR_HELD])
+        {
+            mpr("You drift through the net!");
+            you.attribute[ATTR_HELD] = 0;
+            int net = get_trapping_net(you.x_pos, you.y_pos);
+            if (net != NON_ITEM)
+                remove_item_stationary(mitm[net]);
+        }
         return (true);
 
     case TRAN_SERPENT_OF_HELL:

@@ -31,6 +31,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "terrain.h"
+#include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
 
@@ -108,8 +109,8 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
     }
 
     const monsters* mons = static_cast<const monsters*>(mon);
-    bool mon_flies = mons->flies();
-    if (mon_flies && !mons_is_confused(mons))
+    bool mon_flies = mons->flies() == FL_FLY;
+    if (mon_flies && (!mons_is_confused(mons) || one_chance_in(3)))
     {
         simple_monster_message(mon, " darts out from under the net!");
         return;
@@ -141,7 +142,13 @@ void player_caught_in_net()
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
 
-    if (you.flies() && !you.confused())
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
+    {
+        mpr("The net passes right through you!");
+        return;
+    }
+
+    if (you.flies() == FL_FLY && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");
         return;
@@ -154,13 +161,12 @@ void player_caught_in_net()
         
         // I guess levitation works differently, keeping both you
         // and the net hovering above the floor
-        if (you.flies())
+        if (you.flies() == FL_FLY)
         {
             mpr("You fall like a stone!");
             fall_into_a_pool(you.x_pos, you.y_pos, false, grd[you.x_pos][you.y_pos]);
         }
     }
-    
 }
 
 static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
@@ -579,7 +585,7 @@ void free_self_from_net(bool damage_net)
         if (mitm[net].plus < -7)
         {
             mpr("You rip the net and break free!");
-            dec_mitm_item_quantity( net, 1 );
+            destroy_item(net);
 
             you.attribute[ATTR_HELD] = 0;
             return;

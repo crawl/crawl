@@ -3874,14 +3874,18 @@ bool give_items_skills()
             you.inv[2].special = 0;
         }
 
-	if (you.species != SP_KOBOLD)
-	{
+        if (you.species != SP_KOBOLD)
+        {
             you.inv[3].quantity  = 4;
             you.inv[3].base_type = OBJ_MISSILES;
             you.inv[3].sub_type  = MI_THROWING_NET;
             you.inv[3].plus      = 0;
             you.inv[3].special   = 0;
-	}
+            you.skills[SK_THROWING] = 1;
+        }
+        else
+            you.skills[SK_DODGING] = 1;
+            
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
         you.equip[EQ_SHIELD] = 2;
@@ -3889,7 +3893,7 @@ bool give_items_skills()
         you.skills[SK_FIGHTING] = 3;
         weap_skill = 3;
 
-        you.skills[SK_DODGING] = 2;
+        you.skills[SK_DODGING] += 2;
         you.skills[SK_SHIELDS] = 1;
         you.skills[SK_UNARMED_COMBAT] = 2;
         break;

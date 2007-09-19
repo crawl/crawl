@@ -405,6 +405,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (monster->type == -1)
         return;
     
+    if (mons_is_caught(monster))
+    {
+        int net = get_trapping_net(monster->x,monster->y);
+        if (net != NON_ITEM)
+            remove_item_stationary(mitm[net]);
+    }
+    
     const int monster_killed = monster_index(monster);
     const bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
@@ -1212,6 +1219,18 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
                 }
             }
         }
+        else if (mons_is_insubstantial(monster->type)
+                 || monster->type == MONS_OOZE || monster->type == MONS_PULSATING_LUMP)
+        {
+            int net = get_trapping_net(monster->x, monster->y);
+            if (net != NON_ITEM)
+                remove_item_stationary(mitm[net]);
+                
+            if (mons_is_insubstantial(monster->type))
+                simple_monster_message(monster, " drifts right through the net!");
+            else
+                simple_monster_message(monster, " oozes right through the net!");
+        }
         else
             monster->add_ench(ENCH_HELD);
     }
@@ -1227,6 +1246,9 @@ bool monster_blink(monsters *monster)
             false, false))
         return (false);
 
+    if (monster->has_ench(ENCH_HELD))
+        monster->del_ench(ENCH_HELD, true);
+
     mgrd[monster->x][monster->y] = NON_MONSTER;
 
     const coord_def oldplace = monster->pos();
@@ -1241,9 +1263,6 @@ bool monster_blink(monsters *monster)
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
     
-    if (monster->has_ench(ENCH_HELD))
-        monster->del_ench(ENCH_HELD, true);
-
     return (true);
 }                               // end monster_blink()
 
@@ -3378,17 +3397,16 @@ static bool handle_spell( monsters *monster, bolt & beem )
         // monsters caught in a net try to get away
         // this is only urgent if you are around
         if (!finalAnswer && monsterNearby && mons_is_caught(monster)
-            && one_chance_in(3))
+            && one_chance_in(4))
         {
-            if (ms_quick_get_away( monster, hspell_pass[6]))
+            for (int i = 0; i < 6; i++)
             {
-                spell_cast = hspell_pass[6];
-                finalAnswer = true;
-            }
-            else if (ms_quick_get_away( monster, hspell_pass[5]))
-            {
-                spell_cast = hspell_pass[5];
-                finalAnswer = true;
+                if (ms_quick_get_away( monster, hspell_pass[i] ))
+                {
+                    spell_cast = hspell_pass[5];
+                    finalAnswer = true;
+                    break;
+                }
             }
         }
 
@@ -4269,7 +4287,8 @@ static bool handle_pickup(monsters *monster)
                 eaten += quant;
                 
                 if (mons_is_caught(monster) && mitm[item].base_type == OBJ_MISSILES
-                    && mitm[item].sub_type == MI_THROWING_NET)
+                    && mitm[item].sub_type == MI_THROWING_NET
+                    && item_is_stationary(mitm[item]))
                 {
                     monster->del_ench(ENCH_HELD, true);
                     eaten_net = true;

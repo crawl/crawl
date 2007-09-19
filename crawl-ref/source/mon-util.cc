@@ -1907,7 +1907,7 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 
 // spells for a quick get-away
 // currently only used to get out of a net
-bool ms_quick_get_away( const monsters *mon, spell_type monspell )
+bool ms_quick_get_away( const monsters *mon /*unused*/, spell_type monspell )
 {
     switch (monspell)
     {
@@ -2900,8 +2900,11 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
     const item_def *miss = missiles();
     
     // monster may not pick up trapping net
-    if (mons_is_caught(this) && item.sub_type == MI_THROWING_NET)
+    if (mons_is_caught(this) && item.sub_type == MI_THROWING_NET
+        && item_is_stationary(item))
+    {
         return (false);
+    }
     
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));

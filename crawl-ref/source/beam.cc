@@ -2406,7 +2406,7 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         copy_item_to_grid( *item, x, y, 1 );
         
         // nobody there
-        if (you.x_pos != x && you.y_pos != y && mgrd[x][y] == NON_MONSTER)
+        if ((you.x_pos != x || you.y_pos != y) && mgrd[x][y] == NON_MONSTER)
             return;
             
         // player or monster on position but hasn't been caught
