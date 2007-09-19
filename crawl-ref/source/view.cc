@@ -1068,11 +1068,17 @@ void fire_monster_alerts()
                 && !mons_is_submerged( monster ))
             {
                 learn_visible_mon_eq_egos(monster);
+                activity_interrupt_data aid(monster);
+                if (testbits(monster->flags, MF_WAS_IN_VIEW))
+                    aid.context = "already seen";
+                else
+                    aid.context = "newly seen";
+
                 if (!mons_is_safe( static_cast<const monsters*>(monster) )
                     && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
                     && !mons_is_mimic( monster->type ))
                 {
-                    interrupt_activity( AI_SEE_MONSTER, monster );
+                    interrupt_activity( AI_SEE_MONSTER, aid );
                 }
                 seen_monster( monster );
 
