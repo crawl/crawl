@@ -1444,7 +1444,6 @@ public:
     bool        no_dark_brand;  // Attribute for branding friendly monsters
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
-    bool        detailed_hunger; // Informational-only hunger levels
 
     int         fire_items_start;     // index of first item for fire command
     std::vector<unsigned> fire_order; // missile search order for 'f' command

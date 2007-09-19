@@ -1458,12 +1458,6 @@ classic_item_colours = false
         This option will not affect the colour of existing items, only items
         generated after the option is set.
 
-detailed_hunger = false
-        If set to true, then Crawl will tell you about three additional
-        hunger states: near starving, very hungry, and very full.
-        These hunger states are informational only, and have no effect
-        upon game play.
-
 6-b     DOS and Windows.
 ------------------------
 
