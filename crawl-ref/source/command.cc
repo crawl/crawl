@@ -912,16 +912,16 @@ void list_commands(bool wizard, int hotkey)
             "<w>W</w> : Wear armour\n"
             "<w>T</w> : Take off armour\n"
             "<w>P</w> : Put on jewellery\n"
-            "<w>R</w> : Remove jewellery\n",
+            "<w>R</w> : Remove jewellery"
+            "\n ",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "<h>In-game Toggles:\n"
             "<w>Ctrl-A</w> : toggle Autopickup\n"
-            "<w>Ctrl-V</w> : toggle auto-prayer"
-            " \n"
-            " \n",
+            "<w>Ctrl-V</w> : toggle auto-prayer\n"
+            "\n ",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -941,8 +941,7 @@ void list_commands(bool wizard, int hotkey)
             "<lightgreen>}</lightgreen> : miscellaneous items (<w>E</w>voke)\n"
             "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
             "    to the surface and win!)\n"
-            "<yellow>$</yellow> : gold\n"
-            " \n",
+            "<yellow>$</yellow> : gold\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(            
@@ -1040,6 +1039,7 @@ void list_commands(bool wizard, int hotkey)
             "<w>+</w> : selects books\n"
             "<w>\\</w> : selects staves\n"
             "<w>}</w> : selects miscellaneous items\n"
+            "<w>.</w> : selects next item\n"
             "<w>,</w> : global selection\n"
             "<w>-</w> : global deselection\n"
             "<w>*</w> : invert selection\n",
