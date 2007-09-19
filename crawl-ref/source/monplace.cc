@@ -1687,8 +1687,9 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
             if (mgrd[tx][ty] != NON_MONSTER)
                 continue;
 
-            // players won't summon out of LOS
-            if (!see_grid(tx, ty) && playerSummon)
+            // players won't summon out of LOS, or past transparent
+            // walls.
+            if (!see_grid_no_trans(tx, ty) && playerSummon)
                 continue;
 
             if (grd[tx][ty] == spc_wanted)

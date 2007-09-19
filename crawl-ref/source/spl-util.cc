@@ -266,7 +266,8 @@ const char *spell_title(spell_type spell)
 
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
-int apply_area_visible( int (*func) (int, int, int, int), int power )
+int apply_area_visible( int (*func) (int, int, int, int), int power,
+                        bool pass_through_trans)
 {
     int x, y;
     int rv = 0;
@@ -276,7 +277,8 @@ int apply_area_visible( int (*func) (int, int, int, int), int power )
     {
         for (y = you.y_pos - 8; y <= you.y_pos + 8; y++)
         {
-            if (see_grid(x, y))
+            if ((pass_through_trans && see_grid(x, y))
+                 || (!pass_through_trans && see_grid_no_trans(x, y)))
                 rv += func(x, y, power, 0);
         }
     }

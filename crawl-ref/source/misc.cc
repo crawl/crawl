@@ -168,7 +168,8 @@ void search_around( bool only_adjacent )
     {
         for ( int sry=you.y_pos - max_dist; sry<=you.y_pos + max_dist; ++sry )
         {
-            if ( see_grid(srx,sry) ) // must have LOS
+            // must have LOS, with no translucent walls in the way.
+            if ( see_grid_no_trans(srx,sry) )
             {
                 // maybe we want distance() instead of grid_distance()?
                 int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);

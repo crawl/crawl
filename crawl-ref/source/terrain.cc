@@ -38,7 +38,10 @@ bool grid_is_wall( dungeon_feature_type grid )
             || grid == DNGN_METAL_WALL
             || grid == DNGN_GREEN_CRYSTAL_WALL
             || grid == DNGN_WAX_WALL
-            || grid == DNGN_PERMAROCK_WALL);
+            || grid == DNGN_PERMAROCK_WALL
+            || grid == DNGN_CLEAR_ROCK_WALL
+            || grid == DNGN_CLEAR_STONE_WALL
+            || grid == DNGN_CLEAR_PERMAROCK_WALL);
 }
 
 bool grid_is_stone_stair(dungeon_feature_type grid)

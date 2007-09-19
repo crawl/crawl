@@ -93,7 +93,7 @@ void find_features(const std::vector<coord_def>& features,
  * *********************************************************************** */
 void losight(FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>& sh,
              FixedArray<dungeon_feature_type, GXM, GYM>& gr,
-             int x_p, int y_p);
+             int x_p, int y_p, bool clear_walls_block = false);
 
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
@@ -184,6 +184,14 @@ void add_cset_override(char_set_type set, const std::string &overrides);
 bool see_grid( int grx, int gry );
 inline bool see_grid(const coord_def &p) { return see_grid(p.x, p.y); }
 
+bool see_grid_no_trans( int grx, int gry );
+inline bool see_grid_no_trans(const coord_def &p)
+{
+    return see_grid_no_trans(p.x, p.y);
+}
+
+bool trans_wall_blocking( int grx, int gry );
+
 std::string screenshot(bool fullscreen = false);
 
 unsigned get_sightmap_char(int feature);
@@ -197,7 +205,12 @@ void fire_monster_alerts();
 struct ray_def;
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir = 0,
-               bool find_shortest = false );
+               bool find_shortest = false, bool ignore_solid = false );
+
+int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
+                      dungeon_feature_type min_feat,
+                      dungeon_feature_type max_feat,
+                      bool exclude_endpoints = true);
 
 dungeon_char_type dchar_by_name(const std::string &name);
 

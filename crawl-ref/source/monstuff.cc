@@ -1245,31 +1245,93 @@ bool monster_blink(monsters *monster)
 // allow_adjacent:  allow target to be adjacent to origin
 // restrict_LOS:    restict target to be within PLAYER line of sight
 bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
-    bool restrict_LOS)
+                       bool restrict_LOS)
 {
-    int tries = 0;
 
-    do
+    // This might involve ray tracing (via num_feats_between()), so
+    // cache results to avoid duplicating ray traces.
+    FixedArray<bool, 14, 14> tried;
+    tried.init(false);
+
+    // Is the monster on the other side of a tranparent wall?
+    bool trans_wall_block  = trans_wall_blocking(ox, oy);
+    bool origin_is_player  = (you.pos() == coord_def(ox, oy));
+    int  min_walls_between = 0;
+
+    // Skip ray tracing if possible.
+    if (trans_wall_block)
+        min_walls_between = num_feats_between(ox, oy, you.x_pos, you.y_pos,
+                                              DNGN_CLEAR_ROCK_WALL,
+                                              DNGN_CLEAR_PERMAROCK_WALL);
+    int  tries = 0;
+    while (tries++ < 150)
     {
-        tx = ox - 6 + random2(14);
-        ty = oy - 6 + random2(14);
+        int dx = random2(14);
+        int dy = random2(14);
+
+        tx = ox - 6 + dx;
+        ty = oy - 6 + dy;
 
         // origin is not 'near'
         if (tx == ox && ty == oy)
             continue;
 
-        tries++;
+        if (tried[dx][dy])
+            continue;
 
-        if (tries > 149)
-            break;
+        tried[dx][dy] = true;
+
+        if ((!see_grid(tx, ty) && restrict_LOS)
+            || grd[tx][ty] < DNGN_SHALLOW_WATER
+            || mgrd[tx][ty] != NON_MONSTER
+            || (tx == you.x_pos && ty == you.y_pos)
+            || (!allow_adjacent && distance(ox, oy, tx, ty) <= 2))
+            continue;
+
+        if (!trans_wall_block && !origin_is_player)
+            return (true);
+
+        // If the monster is on a visible square which is on the other
+        // side of one or more translucent from the player, then it
+        // can only blink through translucent walls if the end point
+        // is either not visible to the player, or there are at least
+        // as many translucent walls between the player and the end
+        // point as between the player and the start point.  However,
+        // monsters can still blink through translucent walls to get
+        // away from the player, since in the absence of tranlucent
+        // walls monsters can blink to places which are not in either
+        // the monster's nor the player's LOS.
+        if (!see_grid(tx, ty) && !origin_is_player)
+            return (true);
+
+        // Player can't randomly pass through translucent walls.
+        if (origin_is_player)
+        {
+            if (see_grid_no_trans(tx, ty))
+                return (true);
+
+            continue;
+        }
+
+        int walls_passed = num_feats_between(tx, ty, ox, oy,
+                                             DNGN_CLEAR_ROCK_WALL,
+                                             DNGN_CLEAR_PERMAROCK_WALL);
+        if (walls_passed == 0)
+            return (true);
+
+        // Player can't randomly pass through translucent walls.
+        if (origin_is_player)
+            continue;
+
+        int walls_between = num_feats_between(tx, ty, you.x_pos, you.y_pos,
+                                              DNGN_CLEAR_ROCK_WALL,
+                                              DNGN_CLEAR_PERMAROCK_WALL);
+
+        if (walls_between >= min_walls_between)
+            return (true);
     }
-    while ((!see_grid(tx, ty) && restrict_LOS)
-           || grd[tx][ty] < DNGN_SHALLOW_WATER
-           || mgrd[tx][ty] != NON_MONSTER
-           || (tx == you.x_pos && ty == you.y_pos)
-           || (!allow_adjacent && distance(ox, oy, tx, ty) <= 2));
 
-    return (tries < 150);
+    return (false);
 }                               // end random_near_space()
 
 static bool habitat_okay( const monsters *monster, int targ )
@@ -4597,7 +4659,8 @@ static void monster_move(monsters *monster)
                 deep_water_available = true;
 
             if (monster->type == MONS_BORING_BEETLE
-                && target_grid == DNGN_ROCK_WALL)
+                && (target_grid == DNGN_ROCK_WALL
+                    || target_grid == DNGN_CLEAR_ROCK_WALL))
             {
                 // don't burrow out of bounds
                 if (targ_x <= 7 || targ_x >= (GXM - 8)
@@ -4948,7 +5011,9 @@ forget_it:
     // take care of beetle burrowing
     if (monster->type == MONS_BORING_BEETLE)
     {
-        if (grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_ROCK_WALL
+        dungeon_feature_type feat = 
+            grd[monster->x + mmov_x][monster->y + mmov_y];
+        if ((feat == DNGN_ROCK_WALL || feat == DNGN_ROCK_WALL)
             && good_move[mmov_x + 1][mmov_y + 1] == true)
         {
             grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;

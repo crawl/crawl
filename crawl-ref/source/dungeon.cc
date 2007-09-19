@@ -4003,6 +4003,9 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
             (rawfeat == 'v') ? DNGN_METAL_WALL :
             (rawfeat == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
             (rawfeat == 'a') ? DNGN_WAX_WALL :
+            (rawfeat == 'm') ? DNGN_CLEAR_ROCK_WALL : 
+            (rawfeat == 'n') ? DNGN_CLEAR_STONE_WALL :
+            (rawfeat == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
             (rawfeat == '+') ? DNGN_CLOSED_DOOR :
             (rawfeat == '=') ? DNGN_SECRET_DOOR :
             (rawfeat == 'w') ? DNGN_DEEP_WATER :
@@ -4099,6 +4102,9 @@ static int vault_grid( vault_placement &place,
                    (vgrid == 'v') ? DNGN_METAL_WALL :
                    (vgrid == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
                    (vgrid == 'a') ? DNGN_WAX_WALL :
+                   (vgrid == 'm') ? DNGN_CLEAR_ROCK_WALL : 
+                   (vgrid == 'n') ? DNGN_CLEAR_STONE_WALL :
+                   (vgrid == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
                    (vgrid == '+') ? DNGN_CLOSED_DOOR :
                    (vgrid == '=') ? DNGN_SECRET_DOOR :
                    (vgrid == 'w') ? DNGN_DEEP_WATER :
@@ -5897,6 +5903,9 @@ static bool is_wall(int x, int y)
         case DNGN_METAL_WALL:
         case DNGN_GREEN_CRYSTAL_WALL:
         case DNGN_WAX_WALL:
+        case DNGN_CLEAR_ROCK_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+        case DNGN_CLEAR_PERMAROCK_WALL:
             return true;
         default:
             return false;

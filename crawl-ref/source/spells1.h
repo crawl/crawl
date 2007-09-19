@@ -65,7 +65,8 @@ void big_cloud(cloud_type cl_type, kill_category whose, int cl_x, int cl_y,
 /* ***********************************************************************
  * called from: acr (WIZARD only) - item_use - spell
  * *********************************************************************** */
-int blink(int pow, bool high_level_controlled_blink);
+int blink(int pow, bool high_level_controlled_blink,
+          bool wizard_blink = false);
 
 
 /* ***********************************************************************

@@ -101,7 +101,8 @@ const char* spelltype_short_name( int which_spelltype );
 
 //int spell_restriction(int which_spell, int which_restriction);
 
-int apply_area_visible(int (*func) (int, int, int, int), int power);
+int apply_area_visible(int (*func) (int, int, int, int), int power,
+                       bool pass_through_trans = false);
 
 int apply_area_square(int (*func) (int, int, int, int),
                               int cx, int cy, int power);

@@ -360,11 +360,13 @@ static int shatter_walls(int x, int y, int pow, int garbage)
         stuff = DEBRIS_STONE;
         break;
 
+    case DNGN_CLEAR_STONE_WALL:
     case DNGN_STONE_WALL:
         chance = pow / 6;
         stuff = DEBRIS_STONE;
         break;
 
+    case DNGN_CLEAR_ROCK_WALL:
     case DNGN_ROCK_WALL:
         chance = pow / 4;
         stuff = DEBRIS_ROCK;
@@ -1622,7 +1624,7 @@ static int passwall(int x, int y, int pow, int garbage)
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
 
     // allow statues as entry points?
-    if (grd[x][y] != DNGN_ROCK_WALL)
+    if (grd[x][y] != DNGN_ROCK_WALL && grd[x][y] != DNGN_CLEAR_ROCK_WALL)
         // Irony: you can start on a secret door but not a door.
         // Worked stone walls are out, they're not diggable and
         // are used for impassable walls... I'm not sure we should
@@ -1651,6 +1653,7 @@ static int passwall(int x, int y, int pow, int garbage)
             done = true;
             break;
         case DNGN_ROCK_WALL:
+        case DNGN_CLEAR_ROCK_WALL:
         case DNGN_ORCISH_IDOL:
         case DNGN_GRANITE_STATUE:
         case DNGN_SECRET_DOOR:
@@ -2516,9 +2519,11 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     // Stone and rock terrain
     //
     case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SECRET_DOOR:
         blast.colour = env.rock_colour;
         // fall-through
+    case DNGN_CLEAR_STONE_WALL:
     case DNGN_STONE_WALL:
         what = "wall";
         if (player_in_branch( BRANCH_HALL_OF_ZOT ))
@@ -2545,7 +2550,11 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             && (grid == DNGN_ORCISH_IDOL 
                 || grid == DNGN_GRANITE_STATUE
                 || (pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3))
-                || (pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10))))
+                || (pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
+                    && one_chance_in(3))
+                || (pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10))
+                || (pow >= 60 && grid == DNGN_CLEAR_STONE_WALL &&
+                    one_chance_in(10)) ))
         {
             // terrain blew up real good:
             blast.ex_size = 2;
@@ -2732,6 +2741,12 @@ bool cast_portaled_projectile(int pow, bolt& beam)
         return false;
     }
 
+    if (trans_wall_blocking( beam.target_x, beam.target_y ))
+    {
+        mpr("A translucent wall is in the way.");
+        return 0;
+    }
+
     const int idx = get_fire_item_index();
     if ( idx == ENDOFPACK )
     {
@@ -2773,6 +2788,12 @@ void cast_far_strike(int pow)
         || targ.isMe)
     {
         mpr("There is no monster there!");
+        return;
+    }
+
+    if (trans_wall_blocking( targ.tx, targ.ty ))
+    {
+        mpr("A translucent wall is in the way.");
         return;
     }
 
@@ -2896,6 +2917,12 @@ int cast_apportation(int pow)
     {
         mpr( "That's just silly." );
         return (-1);
+    }
+
+    if (trans_wall_blocking( beam.tx, beam.ty ))
+    {
+        mpr("A translucent wall is in the way.");
+        return (0);
     }
 
     // Protect the player from destroying the item
@@ -3074,19 +3101,34 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
     const int dist = random2(6) + 2;  // 2-7
     const int ox = you.x_pos + (x - you.x_pos) * dist;
     const int oy = you.y_pos + (y - you.y_pos) * dist;
-   
+
+    // This can take a while if pow is high and there's lots of translucent
+    // walls nearby.
     int tx, ty;
+    bool found = false;
     for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
-        // find a space near our target...
-        if ( !random_near_space(ox, oy, tx, ty) )
+        // find a space near our target...  First try to find a random
+        // square not adjacent to the player, then one adjacent if
+        // that fails.
+        if ( !random_near_space(ox, oy, tx, ty) &&
+             !random_near_space(ox, oy, tx, ty, true))
             return 0;
-        
+
         // which is close enough, and also far enough from us
-        if ( distance(ox, oy, tx, ty) <= 10 &&
-             distance(you.x_pos, you.y_pos, tx, ty) >= 8 )
-            break;
+        if ( distance(ox, oy, tx, ty) > 10 &&
+             distance(you.x_pos, you.y_pos, tx, ty) < 8 )
+            continue;
+
+        if (!see_grid_no_trans(tx, ty))
+            continue;
+        
+        found = true;
+        break;
     }
+
+    if (!found)
+        return(0);
 
     you.moveto(tx, ty);
     return 1;

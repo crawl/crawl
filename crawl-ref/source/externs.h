@@ -1191,6 +1191,11 @@ public:
     FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
                                              show_col;  // view window colour
 
+    // What would be visible, if all of the translucent wall were
+    // made opaque.
+    FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+                                             no_trans_show;
+
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     unsigned char cloud_no;
 

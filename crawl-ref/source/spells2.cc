@@ -248,7 +248,7 @@ int corpse_rot(int power)
     {
         for (ady = miny; ady != maxy; ady += yinc)
         {
-            if (see_grid(adx, ady))
+            if (see_grid_no_trans(adx, ady))
             {
                 if (igrd[adx][ady] == NON_ITEM
                     || env.cgrid[adx][ady] != EMPTY_CLOUD)
@@ -328,7 +328,7 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
     {
         for (ady = miny; ady != maxy; ady += yinc)
         {
-            if (see_grid(adx, ady))
+            if (see_grid_no_trans(adx, ady))
             {
                 if (igrd[adx][ady] != NON_ITEM)
                 {
@@ -1076,6 +1076,12 @@ char burn_freeze(int pow, char flavour)
             mpr("There isn't anything close enough!");
             return 0;
         }
+
+        if (trans_wall_blocking( bmove.tx, bmove.ty ))
+        {
+            mpr("A translucent wall is in the way.");
+            return 0;
+        }
     }
 
     monster = &menv[mgr];
@@ -1195,7 +1201,8 @@ int summon_elemental(int pow, int restricted_type,
             break;
     }
 
-    if (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
+    if ((grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
+         || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL)
         && (restricted_type == 0 || restricted_type == MONS_EARTH_ELEMENTAL))
     {
         type_summoned = MONS_EARTH_ELEMENTAL;

@@ -627,7 +627,9 @@ static void handle_wizard_command( void )
         break;
 
     case 'b':
-        blink(1000, true);        // wizards can always blink
+        // wizards can always blink, with no restrictions or
+        // magical contamination.
+        blink(1000, true, true);
         break;
 
     case '~':

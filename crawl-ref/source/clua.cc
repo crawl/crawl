@@ -739,6 +739,8 @@ LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_see_grid, boolean,
         see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(you_see_grid_no_trans, boolean,
+        see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 // increase by 1 because check happens on old level
 LUARET1(bzr_floor_colour, string,
         colour_to_str(bazaar_floor_colour(you.your_level + 2)))
@@ -820,8 +822,9 @@ static const struct luaL_reg you_lib[] =
     { "subdepth",     you_subdepth },
     { "absdepth",     you_absdepth },
 
-    { "see_grid",     you_see_grid },
-    { "bazaar_floor", bzr_floor_colour },
+    { "see_grid",          you_see_grid },
+    { "see_grid_no_trans", you_see_grid_no_trans },
+    { "bazaar_floor",      bzr_floor_colour },
     
     { NULL, NULL },
 };

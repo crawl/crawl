@@ -2064,7 +2064,7 @@ static bool superior_ray(int shortest, int imbalance,
 
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir,
-               bool find_shortest )
+               bool find_shortest, bool ignore_solid )
 {
     int cellray, inray;
     const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
@@ -2106,7 +2106,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 {
                     const int xi = signx * ray_coord_x[inray + cur_offset];
                     const int yi = signy * ray_coord_y[inray + cur_offset];
-                    if (inray < cellray
+                    if (inray < cellray && !ignore_solid
                         && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
                         blocked = true;
@@ -2224,6 +2224,48 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     return false;
 }
 
+// Count the number of matching features between two points along
+// a beam-like path; the path will pass through solid features.
+// By default, it exludes enpoints from the count.
+int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
+                      dungeon_feature_type min_feat,
+                      dungeon_feature_type max_feat,
+                      bool exclude_endpoints)
+{
+    ray_def ray;
+    int     count    = 0;
+    int     max_dist = grid_distance(sourcex, sourcey, targetx, targety);
+
+    ray.fullray_idx = -1; // to quiet valgrind
+    find_ray( sourcex, sourcey, targetx, targety, true, ray, 0, true, true );
+
+    if (exclude_endpoints && ray.x() == sourcex && ray.y() == sourcey)
+    {
+        ray.advance(true);
+        max_dist--;
+    }
+
+    int dist = 0;
+    while (dist++ <= max_dist)
+    {
+        dungeon_feature_type feat = grd[ray.x()][ray.y()];
+
+        if (feat >= min_feat && feat <= max_feat)
+            count++;
+
+        if (ray.x() == targetx && ray.y() == targety)
+        {
+            if (exclude_endpoints && feat >= min_feat && feat <= max_feat)
+                count--;
+
+            break;
+        }
+        ray.advance(true);
+    }
+
+    return count;
+}
+
 // The rule behind LOS is:
 // Two cells can see each other if there is any line from some point
 // of the first to some point of the second ("generous" LOS.)
@@ -2262,7 +2304,8 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
-             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p)
+             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p,
+             bool clear_walls_block)
 {
     raycast();
     // go quadrant by quadrant
@@ -2299,7 +2342,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                     continue;
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy]) )
+                if ( grid_is_opaque(gr[realx][realy])
+                     || (clear_walls_block && grid_is_wall(gr[realx][realy])))
                 {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
@@ -3341,6 +3385,33 @@ bool see_grid( int grx, int gry )
     return (false);
 }  // end see_grid() 
 
+// answers the question: "Would a grid be within character's line of sight,
+// even if all translucent/clear walls were made opaque?"
+bool see_grid_no_trans( int grx, int gry )
+{
+    // rare case: can player see self?  (of course!)
+    if (grx == you.x_pos && gry == you.y_pos)
+        return (true);
+
+    // check no_trans_show array
+    if (grid_distance( grx, gry, you.x_pos, you.y_pos ) < 9)
+    {
+        const int ex = grx - you.x_pos + 9;
+        const int ey = gry - you.y_pos + 9;
+
+        if (env.no_trans_show[ex][ey])
+            return (true);
+    }
+
+    return (false);
+}
+
+// Is the grid visible, but a translucent wall is in the way?
+bool trans_wall_blocking( int grx, int gry )
+{
+    return see_grid(grx, gry) && !see_grid_no_trans(grx, gry);
+}
+
 static const unsigned table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
 {
     // CSET_ASCII
@@ -3463,6 +3534,15 @@ void init_feature_table( void )
             Feature[i].colour = EC_STONE;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
+
+        case DNGN_CLEAR_ROCK_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+        case DNGN_CLEAR_PERMAROCK_WALL:
+            Feature[i].symbol = Options.char_table[ DCHAR_WALL ];
+            Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            Feature[i].colour = LIGHTCYAN;
+            break;
+
 
         case DNGN_OPEN_DOOR:
             Feature[i].symbol = Options.char_table[ DCHAR_DOOR_OPEN ];
@@ -4216,6 +4296,10 @@ void viewwindow(bool draw_it, bool do_updates)
     int count_x, count_y;
 
     losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
+
+    // What would be visible, if all of the translucent walls were
+    // made opaque.
+    losight( env.no_trans_show, grd, you.x_pos, you.y_pos, true );
 
     env.show_col.init(LIGHTGREY);
     Show_Backup.init(0);

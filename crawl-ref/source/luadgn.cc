@@ -822,7 +822,8 @@ const char *dngn_feature_names[] =
 {
     "unseen", "rock_wall", "stone_wall", "closed_door", "metal_wall",
     "secret_door", "green_crystal_wall", "orcish_idol", "wax_wall",
-    "permarock_wall", "", "", "", "", "", "", "", "", "", "", "",
+    "permarock_wall", "clear_rock_wall", "clear_stone_wall",
+    "clear_permarock_wall", "", "", "", "", "", "", "", "",
     "silver_statue", "granite_statue", "orange_crystal_statue",
     "statue_reserved_1", "statue_reserved_2", "", "", "", "", "", "",
     "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",

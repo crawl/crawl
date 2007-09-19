@@ -1511,6 +1511,12 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("metal wall");
     case DNGN_GREEN_CRYSTAL_WALL:
         return ("wall of green crystal");
+    case DNGN_CLEAR_ROCK_WALL:
+        return ("translucent rock wall");
+    case DNGN_CLEAR_STONE_WALL:
+        return ("translucent stone wall");
+    case DNGN_CLEAR_PERMAROCK_WALL:
+        return ("translucent unnaturally hard rock wall");    
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
         {

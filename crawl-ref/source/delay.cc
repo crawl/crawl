@@ -532,6 +532,8 @@ static void finish_delay(const delay_queue_item &delay)
             {
             case DNGN_ROCK_WALL:
             case DNGN_STONE_WALL:
+            case DNGN_CLEAR_ROCK_WALL:
+            case DNGN_CLEAR_STONE_WALL:
             case DNGN_METAL_WALL:
             case DNGN_GREEN_CRYSTAL_WALL:
             case DNGN_WAX_WALL:
