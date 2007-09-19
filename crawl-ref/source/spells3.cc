@@ -52,8 +52,6 @@
 #include "traps.h"
 #include "view.h"
 
-static bool monster_on_level(int monster);
-
 bool cast_selective_amnesia(bool force)
 {
     char ep_gain = 0;
@@ -488,31 +486,6 @@ void dancing_weapon(int pow, bool force_hostile)
     burden_change();
 }                               // end dancing_weapon()
 
-static bool monster_on_level(int monster)
-{
-    for (int i = 0; i < MAX_MONSTERS; i++)
-    {
-        if (menv[i].type == monster)
-            return true;
-    }
-
-    return false;
-}                               // end monster_on_level()
-
-// XXX: Relies on RUNE_xxx == BRANCH_xxx. See rune_type in enum.h.
-static bool player_has_rune(branch_type branch)
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (is_valid_item( you.inv[i] )
-            && you.inv[i].base_type == OBJ_MISCELLANY
-            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT
-            && you.inv[i].plus == branch)
-        {
-            return (true);
-        }
-    return (false);
-}
-
 //
 // This function returns true if the player can use controlled
 // teleport here.
@@ -521,58 +494,10 @@ bool allow_control_teleport( bool silent )
 {
     bool ret = true;
 
-    if (you.level_type == LEVEL_ABYSS || you.level_type == LEVEL_LABYRINTH)
-        ret = false;
-    else
+    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
+        || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL))
     {
-        switch (you.where_are_you)
-        {
-        case BRANCH_TOMB:
-            ret = player_has_rune(you.where_are_you);
-            break;
-
-        case BRANCH_COCYTUS:
-        case BRANCH_DIS:
-        case BRANCH_TARTARUS:
-        case BRANCH_GEHENNA:
-            if (player_branch_depth() == branches[you.where_are_you].depth)
-                ret = player_has_rune(you.where_are_you);
-            break;
-            
-        case BRANCH_SLIME_PITS:
-            // Cannot teleport into the slime pit vaults until
-            // royal jelly is gone.
-            if (monster_on_level(MONS_ROYAL_JELLY))
-                ret = false;
-            break;
-
-        case BRANCH_ELVEN_HALLS:
-            // Cannot raid the elven halls vaults until fountain drained
-            if (player_branch_depth() == branches[BRANCH_ELVEN_HALLS].depth)
-            {
-                for (int x = 5; x < GXM - 5; x++) 
-                {
-                    for (int y = 5; y < GYM - 5; y++) 
-                    {
-                        if (grd[x][y] == DNGN_SPARKLING_FOUNTAIN)
-                            ret = false;
-                    }
-                }
-            }
-            break;
-
-        case BRANCH_HALL_OF_ZOT:
-            // Cannot control teleport until the Orb is picked up
-            if (player_branch_depth() == branches[BRANCH_HALL_OF_ZOT].depth
-                && you.char_direction != GDT_ASCENDING)
-            {
-                ret = false;
-            }
-            break;
-
-        default:
-            break;
-        }
+        ret = false;
     }
 
     // Tell the player why if they have teleport control.

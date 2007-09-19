@@ -9,11 +9,13 @@
 
 #include <sstream>
 
+#include "branch.h"
 #include "clua.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "files.h"
 #include "initfile.h"
+#include "items.h"
 #include "luadgn.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -430,6 +432,94 @@ static int dgn_tags_remove(lua_State *ls)
     PLUARET(string, map->tags.c_str());
 }
 
+static const std::string level_flag_names[] =
+    {"no_tele_control", "not_mappable", "no_magic_map", ""};
+
+static int dgn_lflags(lua_State *ls)
+{
+    MAP(ls, 1, map);
+
+    try {
+        map->level_flags = map_flags::parse(level_flag_names,
+                                            luaL_checkstring(ls, 2));
+    }
+    catch (const std::string &error)
+    {
+        luaL_argerror(ls, 2, error.c_str());
+    }
+
+    return (0);
+}
+
+static int dgn_change_level_flags(lua_State *ls)
+{
+    map_flags flags;
+
+    try {
+        flags = map_flags::parse(level_flag_names,
+                                 luaL_checkstring(ls, 1));
+    }
+    catch (const std::string &error)
+    {
+        luaL_argerror(ls, 2, error.c_str());
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    bool silent = lua_toboolean(ls, 2);
+
+    bool changed1 = set_level_flags(flags.flags_set, silent);
+    bool changed2 = unset_level_flags(flags.flags_unset, silent);
+
+    lua_pushboolean(ls, changed1 || changed2);
+
+    return (1);
+}
+
+static const std::string branch_flag_names[] =
+    {"no_tele_control", "not_mappable", "no_magic_map", ""};
+
+static int dgn_bflags(lua_State *ls)
+{
+    MAP(ls, 1, map);
+
+    try {
+        map->branch_flags = map_flags::parse(branch_flag_names,
+                                             luaL_checkstring(ls, 2));
+    }
+    catch (const std::string &error)
+    {
+        luaL_argerror(ls, 2, error.c_str());
+    }
+
+    return (0);
+}
+
+static int dgn_change_branch_flags(lua_State *ls)
+{
+    map_flags flags;
+
+    try {
+        flags = map_flags::parse(branch_flag_names,
+                                 luaL_checkstring(ls, 1));
+    }
+    catch (const std::string &error)
+    {
+        luaL_argerror(ls, 2, error.c_str());
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    bool silent = lua_toboolean(ls, 2);
+
+    bool changed1 = set_branch_flags(flags.flags_set, silent);
+    bool changed2 = unset_branch_flags(flags.flags_unset, silent);
+
+    lua_pushboolean(ls, changed1 || changed2);
+
+    return (1);
+}
+
 static int dgn_weight(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -700,6 +790,15 @@ static int dgn_kitem(lua_State *ls)
     return (0);
 }
 
+static int dgn_kmask(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    std::string err = map->add_key_mask(luaL_checkstring(ls, 2));
+    if (!err.empty())
+        luaL_error(ls, err.c_str());
+    return (0);
+}
+
 static int dgn_name(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -920,7 +1019,8 @@ static int dgn_feature_name(lua_State *ls)
 static const char *dgn_event_type_names[] =
 {
     "none", "turn", "mons_move", "player_move", "leave_level", "enter_level",
-    "player_los", "player_climb"
+    "player_los", "player_climb", "monster_dies", "item_pickup",
+    "feat_change"
 };
 
 static dgn_event_type dgn_event_type_by_name(const std::string &name)
@@ -1004,6 +1104,22 @@ static int dgn_remove_marker(lua_State *ls)
     return (0);
 }
 
+static int dgn_num_matching_markers(lua_State *ls)
+{
+    const char* key     = luaL_checkstring(ls, 1);
+    const char* val_ptr = lua_tostring(ls, 2);
+    const char* val;
+
+    if (val_ptr == NULL)
+        val = "";
+    else
+        val = val_ptr;
+
+    std::vector<map_marker*> markers = env.markers.get_all(key, val);
+
+    PLUARET(number, markers.size());
+}
+
 static int dgn_feature_desc(lua_State *ls)
 {
     const dungeon_feature_type feat =
@@ -1048,6 +1164,34 @@ static int dgn_terrain_changed(lua_State *ls)
     return (0);
 }
 
+static int dgn_item_from_index(lua_State *ls)
+{
+    const int index = luaL_checkint(ls, 1);
+
+    item_def *item = &mitm[index];
+
+    if (is_valid_item(*item))
+        lua_pushlightuserdata(ls, item);
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
+static int dgn_mons_from_index(lua_State *ls)
+{
+    const int index = luaL_checkint(ls, 1);
+
+    monsters *mons = &menv[index];
+
+    if (mons->type != -1)
+        push_monster(ls, mons);
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -1056,6 +1200,8 @@ static const struct luaL_reg dgn_lib[] =
     { "place", dgn_place },
     { "tags",  dgn_tags },
     { "tags_remove", dgn_tags_remove },
+    { "lflags", dgn_lflags },
+    { "bflags", dgn_bflags },
     { "chance", dgn_weight },
     { "welcome", dgn_welcome },
     { "weight", dgn_weight },
@@ -1072,6 +1218,7 @@ static const struct luaL_reg dgn_lib[] =
     { "kfeat", dgn_kfeat },
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
+    { "kmask", dgn_kmask },
     { "grid", dgn_grid },
     { "terrain_changed", dgn_terrain_changed },
     { "points_connected", dgn_points_connected },
@@ -1087,8 +1234,14 @@ static const struct luaL_reg dgn_lib[] =
     { "register_listener", dgn_register_listener },
     { "remove_listener", dgn_remove_listener },
     { "remove_marker", dgn_remove_marker },
+    { "num_matching_markers", dgn_num_matching_markers},
     { "feature_desc", dgn_feature_desc },
     { "feature_desc_at", dgn_feature_desc_at },
+    { "item_from_index", dgn_item_from_index },
+    { "mons_from_index", dgn_mons_from_index },
+    { "change_level_flags", dgn_change_level_flags},
+    { "change_branch_flags", dgn_change_branch_flags},
+
     { NULL, NULL }
 };
 
@@ -1246,11 +1399,25 @@ static int dgnevent_ticks(lua_State *ls)
     PLUARET(number, dev->elapsed_ticks);
 }
 
+static int dgnevent_arg1(lua_State *ls)
+{
+    DEVENT(ls, 1, dev);
+    PLUARET(number, dev->arg1);
+}
+
+static int dgnevent_arg2(lua_State *ls)
+{
+    DEVENT(ls, 1, dev);
+    PLUARET(number, dev->arg2);
+}
+
 static const struct luaL_reg dgnevent_lib[] =
 {
     { "type",  dgnevent_type },
-    { "pos", dgnevent_place },
+    { "pos",   dgnevent_place },
     { "ticks", dgnevent_ticks },
+    { "arg1",  dgnevent_arg1 },
+    { "arg2",  dgnevent_arg2 },
     { NULL, NULL }
 };
 

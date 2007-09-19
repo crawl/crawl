@@ -890,6 +890,19 @@ static void handle_wizard_command( void )
         break;
 
     case '{':
+        if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
+            || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
+        {
+            if (!yesno("Force level to be mappable? "))
+            {
+                canned_msg( MSG_OK );
+                return;
+            }
+
+            unset_level_flags(LFLAG_NOT_MAPPABLE | LFLAG_NO_MAGIC_MAP);
+            unset_branch_flags(BFLAG_NOT_MAPPABLE | BFLAG_NO_MAGIC_MAP);
+        }
+
         magic_mapping(1000, 100, true, true);
         break;
 

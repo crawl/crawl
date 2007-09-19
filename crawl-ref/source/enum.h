@@ -581,6 +581,8 @@ enum command_type
 
     CMD_MAP_GOTO_TARGET,
 
+    CMD_MAP_WIZARD_TELEPORT,
+
     CMD_MAP_EXIT_MAP,
 
     /* targeting commands */
@@ -763,6 +765,15 @@ enum game_direction_type
     GDT_NONE,
     GDT_DESCENDING,
     GDT_ASCENDING
+};
+
+enum level_flag_type
+{
+    LFLAG_NONE = 0,
+
+    LFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
+    LFLAG_NOT_MAPPABLE    = (1 << 1), // Level not mappable (like Abyss).
+    LFLAG_NO_MAGIC_MAP    = (1 << 2)  // Level can't be magic mapped.
 };
 
 // NOTE: The order of these is very important to their usage!

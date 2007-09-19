@@ -364,6 +364,8 @@ ENDMAP
 NAME:    tomb_1
 PLACE:   Tomb:1
 ORIENT:  encompass
+# The whole branch starts off with teleport control prevention.
+BFLAGS:  no_tele_control
 #
 SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
 SUBST:   A=|*, B=|*
@@ -580,6 +582,9 @@ SUBST:   $ = *:2 |:1 $:17
 #
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
 #
+MARKER:  O = lua:item_pickup_change_flags { \
+            branch_flags="!no_tele_control", item="golden rune" \
+         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

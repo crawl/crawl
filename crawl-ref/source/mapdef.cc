@@ -1606,6 +1606,12 @@ bool map_def::has_tag_suffix(const std::string &suffix) const
         && tags.find(suffix + " ") != std::string::npos;
 }
 
+const keyed_mapspec *map_def::mapspec_for_key(int key) const
+{
+    keyed_specs::const_iterator i = keyspecs.find(key);
+    return i != keyspecs.end()? &i->second : NULL;
+}
+
 keyed_mapspec *map_def::mapspec_for_key(int key)
 {
     keyed_specs::iterator i = keyspecs.find(key);
@@ -1641,6 +1647,11 @@ std::string map_def::add_key_feat(const std::string &s)
 std::string map_def::add_key_mons(const std::string &s)
 {
     return add_key_field(s, &keyed_mapspec::set_mons);
+}
+
+std::string map_def::add_key_mask(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_mask);
 }
 
 std::vector<std::string> map_def::get_shuffle_strings() const
@@ -2351,6 +2362,50 @@ map_transformer *map_marker_spec::clone() const
 }
 
 //////////////////////////////////////////////////////////////////////////
+// map_flags
+map_flags::map_flags()
+    : flags_set(0), flags_unset(0)
+{
+}
+
+typedef std::map<std::string, unsigned long> flag_map;
+
+map_flags map_flags::parse(const std::string flag_list[],
+                           const std::string &s) throw(std::string)
+{
+    map_flags mf;
+
+    const std::vector<std::string> segs = split_string("/", s);
+
+    flag_map flag_vals;
+    for (int i = 0; flag_list[i] != ""; i++)
+        flag_vals[flag_list[i]] = 1 << i;
+
+    for (int i = 0, size = segs.size(); i < size; i++)
+    {
+        std::string flag   = segs[i];
+        bool        negate = false;
+
+        if (flag[0] == '!')
+        {
+            flag   = flag.substr(1);
+            negate = true;
+        }
+
+        flag_map::const_iterator val = flag_vals.find(flag);
+        if (val == flag_vals.end())
+            throw make_stringf("Unknown flag: '%s'", flag.c_str());
+
+        if (negate)
+            mf.flags_unset |= val->second;
+        else
+            mf.flags_set |= val->second;
+    }
+
+    return mf;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // keyed_mapspec
 
 keyed_mapspec::keyed_mapspec()
@@ -2477,6 +2532,28 @@ std::string keyed_mapspec::set_item(const std::string &s, bool fix)
     return (err);
 }
 
+std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
+{
+    UNUSED(garbage);
+
+    err.clear();
+
+    try
+    {
+        static std::string flag_list[] =
+            {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
+             "no_secret_doors", "opaque", ""};
+        map_mask = map_flags::parse(flag_list, s);
+    }
+    catch (const std::string &error)
+    {
+        err = error;
+        return (err);
+    }
+
+    return (err);
+}
+
 feature_spec keyed_mapspec::get_feat()
 {
     return feat.get_feat(key_glyph);
@@ -2490,6 +2567,11 @@ mons_list &keyed_mapspec::get_monsters()
 item_list &keyed_mapspec::get_items()
 {
     return (item);
+}
+
+map_flags &keyed_mapspec::get_mask()
+{
+    return (map_mask);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -2680,6 +2680,11 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
     {
         if (items_stack(item, mitm[inv[slot]], force_merge))
         {
+            dungeon_events.fire_position_event(
+                dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
+                          monster_index(this)),
+                pos());
+
             pickup_message(item, near);
             inc_mitm_item_quantity( inv[slot], item.quantity );
             destroy_item(item.index());
@@ -2689,6 +2694,11 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
         }
         return (false);
     }
+
+    dungeon_events.fire_position_event(
+        dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
+                  monster_index(this)),
+        pos());
     
     const int index = item.index();
     unlink_item(index);

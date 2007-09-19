@@ -3169,7 +3169,10 @@ bool drink_fountain()
         if (one_chance_in(10))
             gone_dry = true;
         else if ( random2(50) > 40 ) // no message!
+        {
             grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
+            set_terrain_changed(you.x_pos, you.y_pos);
+        }
     }
 
     if (gone_dry)
@@ -3179,6 +3182,8 @@ bool drink_fountain()
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_I;
         else
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_II;
+
+        set_terrain_changed(you.x_pos, you.y_pos);
 
         crawl_state.cancel_cmd_repeat();
     }

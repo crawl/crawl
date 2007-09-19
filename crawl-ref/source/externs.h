@@ -1149,6 +1149,8 @@ public:
     map_marker *find(map_marker_type type);
     void move(const coord_def &from, const coord_def &to);
     std::vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
+    std::vector<map_marker*> get_all(const std::string &key,
+                                     const std::string &val = "");
     std::vector<map_marker*> get_markers_at(const coord_def &c);
     std::string property_at(const coord_def &c, map_marker_type type,
                             const std::string &key);
@@ -1209,6 +1211,10 @@ public:
 
     // Number of turns the player has spent on this level.
     int turns_on_level;
+
+    // Flags for things like preventing teleport control; see
+    // level_flag_type in enum.h
+    unsigned long level_flags;
 };
 
 extern struct crawl_environment env;

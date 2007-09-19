@@ -36,6 +36,7 @@
 
 #include "externs.h"
 
+#include "branch.h"
 #include "command.h"
 #include "cio.h"
 #include "cloud.h"
@@ -43,6 +44,7 @@
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "format.h"
@@ -223,6 +225,8 @@ bool is_terrain_changed( int x, int y )
 void set_terrain_changed( int x, int y )
 {
     env.map[x][y].flags |= MAP_CHANGED_FLAG;
+
+    dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
 }
 
 void set_terrain_mapped( int x, int y )
@@ -3164,6 +3168,18 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
                 break;
             }
         }
+
+#ifdef WIZARD
+        case 'T':
+        {
+            if (!you.wizard)
+                break;
+            you.moveto(start_x + curs_x - 1, start_y + curs_y - 1);
+            map_alive = false;
+            break;
+        }
+#endif
+
         default:
             move_x = 0;
             move_y = 0;
@@ -3238,8 +3254,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force)
 {
     if (!force &&
-        ((you.level_type == LEVEL_ABYSS) ||
-         (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)))
+        (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
+         || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
     {
         if (!suppress_msg)
             mpr("You feel momentarily disoriented.");

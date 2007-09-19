@@ -449,6 +449,17 @@ struct feature_slot
     feature_spec get_feat(int default_glyph);
 };
 
+struct map_flags
+{
+    unsigned long flags_set, flags_unset; 
+
+    map_flags();
+
+    static map_flags parse(const std::string flag_list[],
+                           const std::string &s) throw(std::string);
+};
+
+
 struct keyed_mapspec
 {
 public:
@@ -457,6 +468,7 @@ public:
     feature_slot feat;
     item_list    item;
     mons_list    mons;
+    map_flags    map_mask;
 
 public:
     keyed_mapspec();
@@ -464,10 +476,12 @@ public:
     std::string set_feat(const std::string &s, bool fix);
     std::string set_mons(const std::string &s, bool fix);
     std::string set_item(const std::string &s, bool fix);
+    std::string set_mask(const std::string &s, bool garbage);
 
     feature_spec get_feat();
-    mons_list &get_monsters();
-    item_list &get_items();
+    mons_list   &get_monsters();
+    item_list   &get_items();
+    map_flags   &get_mask();
 
 private:
     std::string err;
@@ -527,6 +541,8 @@ public:
     mons_list       mons;
     item_list       items;
 
+    map_flags       level_flags, branch_flags;
+
     keyed_specs     keyspecs;
 
     dlua_chunk      prelude, main, validate, veto;
@@ -584,6 +600,7 @@ public:
     bool is_usable_in(const level_id &lid) const;
     
     keyed_mapspec *mapspec_for_key(int key);
+    const keyed_mapspec *mapspec_for_key(int key) const;
 
     bool has_depth() const;
     void add_depth(const level_range &depth);
@@ -593,6 +610,7 @@ public:
     std::string add_key_item(const std::string &s);
     std::string add_key_mons(const std::string &s);
     std::string add_key_feat(const std::string &s);
+    std::string add_key_mask(const std::string &s);
     
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;

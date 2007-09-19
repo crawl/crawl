@@ -373,7 +373,6 @@ void CLua::vfnreturns(const char *format, va_list args)
     lua_pop(ls, nrets);
 }
 
-static void push_monster(lua_State *ls, monsters *mons);
 static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
@@ -2263,7 +2262,7 @@ static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
     return 0;
 }
 
-static void push_monster(lua_State *ls, monsters *mons)
+void push_monster(lua_State *ls, monsters *mons)
 {
     MonsterWrap *mw = clua_new_userdata< MonsterWrap >(ls, MONS_METATABLE);
     mw->turn = you.num_turns;

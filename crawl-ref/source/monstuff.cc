@@ -36,6 +36,7 @@
 #include "cloud.h"
 #include "debug.h"
 #include "describe.h"
+#include "dgnevent.h"
 #include "fight.h"
 #include "hiscores.h"
 #include "it_use2.h"
@@ -850,6 +851,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             place_monster_corpse(monster);
         }
     }
+
+    dungeon_events.fire_event(
+        dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
+                  monster_index(monster), killer));
 
     const coord_def mwhere = monster->pos();
     if (!hard_reset)

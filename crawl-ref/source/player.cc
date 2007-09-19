@@ -374,7 +374,8 @@ bool is_grid_dangerous(int grid)
 
 bool player_in_mappable_area( void )
 {
-    return (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS);
+    return (!(testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
+              || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE)));
 }
 
 bool player_in_branch( int branch )

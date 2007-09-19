@@ -174,8 +174,8 @@ Terrain
  w - deep water - can be randomly turned into shallow water by the
      level-builder; you can prevent this conversion with the no_pool_fixup TAG.
      Also, water may automatically receive water creatures! For entry
-     vaults, avoid this with the no_monster_gen TAG.
- l - lava - again, use the no_monster_gen TAG for entry vaults!
+     vaults, avoid this with the no_monster_gen TAG or KMASK.
+ l - lava - again, use the no_monster_gen TAG or KMASK for entry vaults!
 
 Features
 --------
@@ -364,6 +364,7 @@ TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry,
          * "no_monster_gen": Prevents random monster generation at the time
            of the vault's creation. Highly advised for entry vaults with
            a player-hostile geography, MUST-HAVE for those with water/lava.
+           Can be applied only to particular symbols with KMASK.
          * "no_pool_fixup": prevents water squares next to land from being 
            randomly converted from deep water (the default) to shallow.
          * "branch_entry" eg. "orc_entry", "lair_entry" etc.
@@ -389,6 +390,32 @@ FLAGS:   no_rotate, no_hmirror, no_vmirror
            vault!"
          * "no_hmirror": Like no_rotate, but for horizontal mirroring.
          * "no_vmirror": Like no_rotate, but for vertical mirroring.
+
+LFLAGS:  Persistent, changeable per-level flags which affect game
+         behavior (FLAGS just controls how the vault is placed); should
+         only be used for vaults with ORIENT encompass or with PLACE.
+         This causes a level's flags to be set when the level is first
+         created.  These flags can later be altered using Lua markers;
+         see the slime pit vault in lair.des, and the vaults in hell.des
+         and elf.des for examples.
+
+         Valid flags are: no_tele_control, which prevents the player
+         from using teleport control; not_mappable, which prevents
+         the player from remembering where they've been (like in
+         the Abyss), and no_magic_map, which prevents magic mapping
+         from working.
+
+BFLAGS:  Persistent, changeable per-*branch* flags which affect game
+         behavior; should only be used for vaults which go on the fist
+         level of a particular branch.  These flags can later be altered
+         using Lua markers; see the Tomb vaults in vaults.lua for an
+         example.
+
+         Valid flags are: no_tele_control, which prevents the player
+         from using teleport control; not_mappable, which prevents
+         the player from remembering where they've been (like in
+         the Abyss), and no_magic_map, which prevents magic mapping
+         from working.
 
 ITEM:    (list of items, separated by comma)
          These are used to help place specified items at specific places 
@@ -568,6 +595,42 @@ KMONS:   ? = orc priest / w:3 deep elf priest
            KMONS: n = Terence, Michael, Erica, human
          Or if you want to pick randomly:
            KMONS: n = Terence / Michael / Erica, human
+
+KMASK:   Z = no_monster_gen
+
+         KMASK allows you set or unset various masks for particular
+         symbols, rather than for the entire vault like if you did it
+         with TAGS.  Valid masks are 
+
+         * "no_item_gen":   Prevents random item on that symbol.  Items
+            explicitly placed on that symbol aren't affected.
+         * "no_monster_gen": Prevents random monster generation on that
+           symbol.  MUST-HAVE for those with water/lava symbols in
+           entry vaults.
+         * "no_pool_fixup": prevents a water square next to land from being 
+           randomly converted from deep water (the default) to shallow.
+         * "no_secret_doors": prevents a door from randomly being turned
+           into a secret door.
+
+         For example
+
+           KMASK: W = no_monster_gen
+
+         will prevent monsters from randomly being generated on shallow
+         water squares.  Note that if shuffling and substitutions cause
+         W to end up as water 10% of the time and floor 90% of the time,
+         then those floor squares will still have no_monster_gen set, but
+         that's still a higher degree of control than you get with TAGS.
+
+         If TAGS has been used to set a mask for the entire vault, you
+         can use KMASK to remove that mask from particular symbols.
+         For instance:
+
+           TAGS:  no_monster_gen
+           KMASK: W = !no_monster_gen
+
+         would make it so that monsters are only randomly generated
+         on shallow water squares.
 
 KITEM:   ? = potion of healing / potion of restore abilities
          KITEM: places the specified item at all occurrences of the 
@@ -1094,7 +1157,11 @@ default_depth, name, depth, place, tags, tags_remove, chance, weight,
 orient, shuffle, shuffle_remove, subst, subst_remove, map, mons, item,
 kfeat, kitem, kmons, grid, points_connected, gly_point, gly_points,
 original_map, glyphs_connected, orig_glyphs_connected, orig_gly_point,
-orig_gly_points.
+orig_gly_points, load_des_file, feature_number, feature_name,
+dgn_event_type, register_listener, remove_listener, remove_marker,
+num_matching_markers, feature_desc, feature_desc_at, item_from_index,
+mons_from_index, change_level_flags, change_branch_flags
+
 
 
 Lua API - global game state

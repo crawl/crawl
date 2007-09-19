@@ -405,6 +405,8 @@ static void dgn_check_terrain_monsters(const coord_def &pos)
         else
             mons_check_pool(mons, KILL_MISC, -1);
     }
+
+    set_terrain_changed(pos.x, pos.y);
 }
 
 void dungeon_terrain_changed(const coord_def &pos,

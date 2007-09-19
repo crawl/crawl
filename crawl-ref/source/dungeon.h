@@ -317,4 +317,7 @@ bool dgn_place_monster(const mons_spec &mspec,
                        int monster_level, int vx, int vy,
                        bool generate_awake);
 
+bool set_level_flags(unsigned long flags, bool silent = false);
+bool unset_level_flags(unsigned long flags, bool silent = false);
+
 #endif

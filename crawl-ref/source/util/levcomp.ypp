@@ -52,9 +52,9 @@ level_range set_range(const char *s, int start, int end)
 /* Two harmless shift/reduce conflicts */
 %expect 2
 
-%token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
+%token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM MARKER
-%token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME
+%token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
 
 %token <i>      COMMA INTEGER CHARACTER
 
@@ -160,9 +160,12 @@ metaline        : place
                 | nsubst
                 | shuffle
                 | tags
+                | lflags
+                | bflags
                 | kfeat
                 | kitem
                 | kmons
+                | kmask
                 | main_lua
                 | prelude_lua
                 | validate_lua
@@ -252,6 +255,15 @@ kitem           : KITEM { }
                             quote_lua_string($2).c_str()));
                 }
 
+kmask           : KMASK { }
+                | KMASK STRING
+                {
+                    lc_map.main.add(
+                        yylineno, 
+                        make_stringf("kmask(\"%s\")", 
+                            quote_lua_string($2).c_str()));
+                }
+
 shuffle         : SHUFFLE shuffle_specifiers {} 
                 ;
 
@@ -280,6 +292,24 @@ tagstring       : STRING
                         yylineno, 
                         make_stringf("tags(\"%s\")", 
                             quote_lua_string($1).c_str()));
+                }
+                ;
+
+lflags          : LFLAGS STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("lflags(\"%s\")",
+                                     quote_lua_string($2).c_str()));
+                }
+                ;
+
+bflags          : BFLAGS STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("bflags(\"%s\")",
+                                     quote_lua_string($2).c_str()));
                 }
                 ;
 

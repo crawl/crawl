@@ -311,6 +311,64 @@ void level_clear_vault_memory()
     dgn_map_mask.init(0);
 }
 
+bool set_level_flags(unsigned long flags, bool silent)
+{
+    bool could_control = allow_control_teleport(true);
+    bool could_map     = player_in_mappable_area();
+
+    unsigned long old_flags = env.level_flags;
+    env.level_flags |= flags;
+
+    bool can_control = allow_control_teleport(true);
+    bool can_map     = player_in_mappable_area();
+
+    if (you.skills[SK_TRANSLOCATIONS] > 0
+        && could_control && !can_control && !silent)
+    {
+        mpr("You sense the appearence of a powerful magical force "
+            "which warps space.", MSGCH_WARN);
+    }
+
+    if (could_map && !can_map && !silent)
+    {
+        mpr("A powerful force appears that prevents you from "
+            "remembering where you've been.", MSGCH_WARN);
+    }
+
+    return (old_flags != env.level_flags);
+}
+
+bool unset_level_flags(unsigned long flags, bool silent)
+{
+    bool could_control = allow_control_teleport(true);
+    bool could_map     = player_in_mappable_area();
+
+    unsigned long old_flags = env.level_flags;
+    env.level_flags &= ~flags;
+
+    bool can_control = allow_control_teleport(true);
+    bool can_map     = player_in_mappable_area();
+
+    if (you.skills[SK_TRANSLOCATIONS] > 0
+        && !could_control && can_control && !silent)
+    {
+        // Isn't really a "recovery", but I couldn't think of where
+        // else to send it.
+        mpr("You sense the disappearence of a powerful magical force "
+            "which warped space.", MSGCH_RECOVERY);
+    }
+
+    if (!could_map && can_map && !silent)
+    {
+        // Isn't really a "recovery", but I couldn't think of where
+        // else to send it.
+        mpr("You sense the disappearence the force that prevented you "
+            "from remembering where you've been.", MSGCH_RECOVERY);
+    }
+
+    return (old_flags != env.level_flags);
+}
+
 static void dgn_register_vault(const map_def &map)
 {
     if (map.has_tag("uniq"))
@@ -461,6 +519,27 @@ static void register_place(const vault_placement &place)
 
     if (!place.map.has_tag("transparent"))
         mask_vault(place, MMT_OPAQUE);
+
+    // Now do per-square by-symbol masking
+    for (int y = place.y + place.height - 1; y >= place.y; --y)
+        for (int x = place.x + place.width - 1; x >= place.x; --x)
+            if (place.map.in_map(coord_def(x - place.x, y - place.y)))
+            {
+                int key = place.map.map.glyph(x - place.x, y - place.y);
+                const keyed_mapspec* spec = place.map.mapspec_for_key(key);
+
+                if (spec != NULL)
+                {
+                    dgn_map_mask[x][y] |= (short)spec->map_mask.flags_set;
+                    dgn_map_mask[x][y] &= ~((short)spec->map_mask.flags_unset);
+                }
+            }
+    
+    set_branch_flags(place.map.branch_flags.flags_set, true);
+    unset_branch_flags(place.map.branch_flags.flags_unset, true);
+
+    set_level_flags(place.map.level_flags.flags_set, true);
+    unset_level_flags(place.map.level_flags.flags_unset, true);
 }
 
 static bool ensure_vault_placed(bool vault_success)
@@ -548,6 +627,23 @@ static void reset_level()
 
     // clear all markers
     env.markers.clear();
+
+    // Set default level flags
+    if (you.level_type == LEVEL_DUNGEON)
+        env.level_flags = branches[you.where_are_you].default_level_flags;
+    else if (you.level_type == LEVEL_LABYRINTH ||
+             you.level_type == LEVEL_ABYSS)
+    {
+        env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NOT_MAPPABLE;
+
+        if (!(you.level_type == LEVEL_LABYRINTH
+              && you.species != SP_MINOTAUR))
+        {
+            env.level_flags |= LFLAG_NO_MAGIC_MAP;
+        }
+    }
+    else
+        env.level_flags = 0;
 }
 
 static void build_layout_skeleton(int level_number, int level_type,

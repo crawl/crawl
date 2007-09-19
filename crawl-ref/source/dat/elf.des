@@ -97,6 +97,7 @@ NAME:    elf_hall
 PLACE:   Elf:7
 ORIENT:  northwest
 FLAGS:   no_rotate
+LFLAGS:  no_tele_control
 MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
 MONS:    deep elf sorcerer, deep elf death mage
 MONS:    deep elf blademaster, deep elf master archer
@@ -110,6 +111,10 @@ SUBST:   v : xvb
 SUBST:   | = | *:2 
 SUBST:   $ = $:20 *:4 |:1
 SUBST:   * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -157,6 +162,7 @@ NAME:    elf_hall_gauntlet_wide
 PLACE:   Elf:7
 TAGS:    no_pool_fixup
 FLAGS:   no_rotate
+LFLAGS:  no_tele_control
 ORIENT:  float
 CHANCE:  5
 MONS:    deep elf high priest, deep elf demonologist
@@ -173,6 +179,10 @@ KMONS:   A = deep elf master archer
 KFEAT:   A = |
 KMONS:   B = deep elf blademaster
 KFEAT:   B = |
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 cccccccccccccccccccccccccc
 c2ccccccc........ccccccccc
@@ -204,6 +214,7 @@ ENDMAP
 NAME:    elf_hall_gauntlet_narrow
 PLACE:   Elf:7
 FLAGS:   no_rotate
+LFLAGS:  no_tele_control
 TAGS:    no_pool_fixup
 ORIENT:  float
 CHANCE:  5
@@ -226,6 +237,10 @@ SUBST:   | = | *:2
 SUBST:   * = * |:3
 KITEM:   6 = |
 KITEM:   7 = |
+#MARKER:  U = lua:feat_change_change_flags { \
+#            level_flags="!no_tele_control", final_feat="dry_fountain", \
+#            group="fountain" \
+#         }
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc
@@ -260,7 +275,8 @@ NAME: elf_hall_rogue_1
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -272,6 +288,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce**|||**eccccccce%*%%%*%ec$$ccccxc
@@ -305,7 +325,8 @@ NAME: elf_hall_rogue_2
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -317,6 +338,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%ecccccc=e**|||**ec$$ccccxc
@@ -350,7 +375,8 @@ NAME: elf_hall_rogue_3
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -362,6 +388,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%*%eccccccce**|||**ec$$=cccxc
@@ -395,7 +425,8 @@ NAME: elf_hall_rogue_4
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -407,6 +438,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%eccccccce**|||**ec$$ccccxc
@@ -440,7 +475,8 @@ NAME: elf_hall_rogue_5
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -452,6 +488,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd%%%%%%%dc==c===e%%%%%%%ec$$ccccxc
@@ -485,7 +525,8 @@ NAME: elf_hall_rogue_6
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -497,6 +538,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%%%eccccccce**|||**ec$$ccccxc
@@ -530,7 +575,8 @@ NAME: elf_hall_rogue_7
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -542,6 +588,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd|*|||**dcccccccd*||*|**dc$$ccccxc
@@ -575,7 +625,8 @@ NAME: elf_hall_rogue_8
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -587,6 +638,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce*|||||*ec==ccc=e*|||||*ec$$ccccxc
@@ -620,7 +675,8 @@ NAME: elf_hall_rogue_9
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -632,6 +688,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$=e**|||**eccccccce%%|%|%%e=$$ccccxc
@@ -665,7 +725,8 @@ NAME: elf_hall_rogue_10
 PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
-FLAGS: no_rotate
+FLAGS:  no_rotate
+LFLAGS: no_tele_control
 ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
@@ -677,6 +738,10 @@ SUBST: !=15, ?=.?, ?:23, 4=4.
 SUBST: % = % *:1
 SUBST: | = | *:2 
 SUBST: * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxccc====ccccc=======cccc====ccccccccccccxc

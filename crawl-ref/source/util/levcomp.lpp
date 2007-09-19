@@ -194,6 +194,8 @@ CHANCE:             return CHANCE;
 WEIGHT:             return CHANCE;
 FLAGS:              { BEGIN(KEYWORDS); return TAGS; }
 TAGS:               { BEGIN(KEYWORDS); return TAGS; }
+LFLAGS:             { BEGIN(ARGUMENT); return LFLAGS; }
+BFLAGS:             { BEGIN(ARGUMENT); return BFLAGS; }
 SUBST:              { BEGIN(ITEM_LIST); return SUBST; }
 NSUBST:             { BEGIN(ITEM_LIST); return NSUBST; }
 MONS:               { BEGIN(MNAME); return MONS; }
@@ -204,6 +206,7 @@ SHUFFLE:            { BEGIN(ITEM_LIST); return SHUFFLE; }
 KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }
 KITEM:              { BEGIN(ARGUMENT); return KITEM; }
 KMONS:              { BEGIN(ARGUMENT); return KMONS; }
+KMASK:              { BEGIN(ARGUMENT); return KMASK; }
 
 ,                   return COMMA;
 

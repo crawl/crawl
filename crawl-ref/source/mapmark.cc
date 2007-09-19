@@ -648,6 +648,24 @@ std::vector<map_marker*> map_markers::get_all(map_marker_type mat)
     return (rmarkers);    
 }
 
+std::vector<map_marker*> map_markers::get_all(const std::string &key,
+                                              const std::string &val)
+{
+    std::vector<map_marker*> rmarkers;
+
+    for (dgn_marker_map::const_iterator i = markers.begin();
+         i != markers.end(); ++i)
+    {
+        map_marker*       marker = i->second;
+        const std::string prop   = marker->property(key);
+
+        if ((val == "" && !prop.empty()) || (val != "" && val == prop))
+            rmarkers.push_back(marker);
+    }
+
+    return (rmarkers);    
+}
+
 std::vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 {
     std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>

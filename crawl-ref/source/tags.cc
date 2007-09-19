@@ -1019,7 +1019,10 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
     // how many branches?
     marshallByte(th, NUM_BRANCHES);
     for (j = 0; j < NUM_BRANCHES; ++j)
+    {
         marshallLong(th, branches[j].startdepth);
+        marshallLong(th, branches[j].branch_flags);
+    }
 
     marshallShort(th, MAX_LEVELS);
     for (i = 0; i < MAX_LEVELS; ++i)
@@ -1407,7 +1410,10 @@ static void tag_read_you_dungeon(struct tagHeader &th)
     // how many branches?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        branches[j].startdepth = unmarshallLong(th);
+    {
+        branches[j].startdepth   = unmarshallLong(th);
+        branches[j].branch_flags = (unsigned long) unmarshallLong(th);
+    }
 
     count_s = unmarshallShort(th);
     for (i = 0; i < count_s; ++i)
@@ -1467,6 +1473,8 @@ static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
 
 static void tag_construct_level(struct tagHeader &th)
 {
+    marshallLong(th, env.level_flags);
+
     marshallFloat(th, (float)you.elapsed_time);
 
     // map grids
@@ -1686,6 +1694,8 @@ void tag_construct_level_attitude(struct tagHeader &th)
 
 static void tag_read_level( struct tagHeader &th, char minorVersion )
 {
+    env.level_flags = (unsigned long) unmarshallLong(th);
+
     env.elapsed_time = unmarshallFloat(th);
     // map grids
     // how many X?

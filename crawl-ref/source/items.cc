@@ -1434,6 +1434,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         return (-1);
     }
 
+    coord_def pos(mitm[obj].x, mitm[obj].y);
+    dungeon_events.fire_position_event(
+        dgn_event(DET_ITEM_PICKUP, pos, 0, obj, -1), pos);
+
     item_def &item = you.inv[freeslot];
     // copy item
     item        = mitm[obj];
