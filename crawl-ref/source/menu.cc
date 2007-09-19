@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
+#include "player.h"
 #include "tutorial.h"
 #include "view.h"
 #include "initfile.h"
@@ -548,11 +549,42 @@ void Menu::update_title()
     gotoxy(x, y);
 }
 
+// to highlight species in aptitudes list ('?%')
+static std::string get_species_key()
+{
+    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
+        return "";
+
+    std::string result = "";
+    switch (you.species)
+    {
+        case SP_RED_DRACONIAN:     result = "Red"; break;
+        case SP_WHITE_DRACONIAN:   result = "White"; break;
+        case SP_GREEN_DRACONIAN:   result = "Green"; break;
+        case SP_GOLDEN_DRACONIAN:  result = "Yellow"; break;
+        case SP_GREY_DRACONIAN:    result = "Grey"; break;
+        case SP_BLACK_DRACONIAN:   result = "Black"; break;
+        case SP_PURPLE_DRACONIAN:  result = "Purple"; break;
+        case SP_MOTTLED_DRACONIAN: result = "Mottled"; break;
+        case SP_PALE_DRACONIAN:    result = "Pale"; break;
+        default:
+             result = species_name(you.species, 1);
+    }
+    result += "  ";
+    return (result);
+}
+
 int Menu::item_colour(int, const MenuEntry *entry) const
 {
     int icol = -1;
     if (highlighter)
         icol = highlighter->entry_colour(entry);
+    else
+    {
+        text_pattern tp(get_species_key());
+        if (!tp.empty() && tp.matches(entry->text))
+            icol = WHITE;
+    }
 
     return (icol == -1? entry->colour : icol);
 }
