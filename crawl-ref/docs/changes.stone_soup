@@ -1,3 +1,21 @@
+Stone Soup 0.3.0 (2007????)
+---------------------------
+* Three new informational-only hunger states: near starving, very hungry
+  and very full.
+* Nemelexites no longer need a portable altar in order to sacrifice objects,
+  any items on the floor when they pray will be sacrificed.
+* Nemelexites are granted various deck manipulation abilites as they
+  gain piety.
+* [1789869] Items which the player sees a monster use become identified if
+  they have an obvious effect.
+* [1793698] In the item selection menu, pressing "." will toggle the
+  selection of the item after the previously selected item.
+* [1783003] More menu sorting methods, and fixed jewellery sorting bug.
+* [1777426] Explosions can no longer pass through walls.
+* [1772497] runrest_ignore_monster can be used to ignore distant mosters
+  when running, resting or exploring.
+* [1795568] !r now prevents scrolls from being read.
+
 Stone Soup 0.2.7 (20070611)
 ---------------------------
 * Pandemonium unique demons (Cerebov et al.) were not being generated, fixed.
