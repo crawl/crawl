@@ -45,6 +45,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -64,6 +65,14 @@ static bool abyss_blocks_teleport(bool cblink)
 int blink(int pow, bool high_level_controlled_blink)
 {
     dist beam;
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return(1);
+    }
 
     // yes, there is a logic to this ordering {dlb}:
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
@@ -142,6 +151,9 @@ int blink(int pow, bool high_level_controlled_blink)
             you.redraw_armour_class = 1;
         }
     }
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
 
     return (1);
 }                               // end blink()

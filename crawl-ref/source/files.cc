@@ -841,7 +841,8 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         }
     }
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ      = MHITNOT;
+    you.prev_grd_targ = coord_def(0, 0);
 
     // We clear twice - on save and on load.
     // Once would be enough...
@@ -1026,7 +1027,8 @@ void save_level(int level_saved, level_area_type old_ltype,
                                          where_were_you, old_ltype,
                                          false );
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ      = MHITNOT;
+    you.prev_grd_targ = coord_def(0, 0);
 
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");
 

@@ -49,6 +49,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -379,6 +380,7 @@ bool evoke_wielded( void )
     else if (wield == -1)
     {
         mpr("You aren't wielding anything!");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -708,6 +710,8 @@ bool evoke_wielded( void )
 
     if (!unevokable)
         you.turn_is_over = true;
+    else
+        crawl_state.zero_turns_taken();
 
     return (did_work);
 }                               // end evoke_wielded()

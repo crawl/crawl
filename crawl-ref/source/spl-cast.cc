@@ -51,6 +51,7 @@
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
@@ -587,6 +588,7 @@ bool cast_a_spell()
     if (!you.spell_no)
     {
         mpr("You don't know any spells.");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -599,6 +601,7 @@ bool cast_a_spell()
     if (silenced(you.x_pos, you.y_pos))
     {
         mpr("You cannot cast spells when silenced!");
+        crawl_state.zero_turns_taken();
         more();
         return (false);
     }
@@ -629,11 +632,15 @@ bool cast_a_spell()
     }
 
     if (keyin == ESCAPE)
+    {
+        canned_msg( MSG_OK );
         return (false);
+    }
 
     if (!isalpha(keyin))
     {
         mpr("You don't know that spell.");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -642,6 +649,7 @@ bool cast_a_spell()
     if (spell == SPELL_NO_SPELL)
     {
         mpr("You don't know that spell.");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -665,7 +673,10 @@ bool cast_a_spell()
     {
         const spret_type cast_result = your_spells( spell );
         if (cast_result == SPRET_ABORT)
+        {
+            crawl_state.zero_turns_taken();
             return (false);
+        }
 
         exercise_spell( spell, true, cast_result == SPRET_SUCCESS );
         did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
@@ -1005,6 +1016,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DELAYED_FIREBALL:
+        crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
         // This spell has two main advantages over Fireball:
         //
         // (1) The release is instantaneous, so monsters will not 
@@ -1177,6 +1189,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SELECTIVE_AMNESIA:
+        crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
+
         if (!cast_selective_amnesia(false))
             return (SPRET_ABORT);
         break;                  //     Sif Muna power calls with true
@@ -1422,6 +1436,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_TUKIMAS_DANCE:
+        crawl_state.cant_cmd_repeat("You can't repeat dancing weapon.");
         dancing_weapon(powc, false);
         break;
 
@@ -1561,6 +1576,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ALTER_SELF:
+        crawl_state.cant_cmd_repeat("You can't repeat alter self.");
         if (!enough_hp( you.hp_max / 2, true ))
         {
             mpr( "Your body is in too poor a condition "
@@ -1586,6 +1602,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_PORTAL:
+        crawl_state.cant_cmd_repeat("You can't repeat create portal.");
         if (portal() == -1)
             return (SPRET_ABORT);
         break;
@@ -1835,6 +1852,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SWAP:
+        crawl_state.cant_cmd_repeat("You can't swap.");
         cast_swap(powc);
         break;
 

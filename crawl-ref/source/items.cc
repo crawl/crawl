@@ -68,6 +68,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "stash.h"
+#include "state.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "tutorial.h"
@@ -156,6 +157,8 @@ static bool item_ok_to_clean(int item)
 // unsuccessful cleanup (should be exceedingly rare!)
 int cull_items(void)
 {
+    crawl_state.cancel_cmd_repeat();
+
     // XXX: Not the prettiest of messages, but the player 
     // deserves to know whenever this kicks in. -- bwr
     mpr( "Too many items on level, removing some.", MSGCH_WARN );
@@ -261,6 +264,12 @@ bool dec_inv_item_quantity( int obj, int amount )
         you.inv[obj].quantity = 0;
 
         ret = true;
+
+        // If we're repeating a command, the repetitions used up the
+        // item stack being repeated on, so stop rather than move onto
+        // the next stack.
+        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_again();
     }
     else
     {
@@ -280,6 +289,11 @@ bool dec_mitm_item_quantity( int obj, int amount )
     if (mitm[obj].quantity <= amount)
     {
         destroy_item( obj );
+        // If we're repeating a command, the repetitions used up the
+        // item stack being repeated on, so stop rather than move onto
+        // the next stack.
+        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_again();
         return (true);
     }
 

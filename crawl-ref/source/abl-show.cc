@@ -63,6 +63,7 @@
 #include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
+#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
@@ -811,6 +812,7 @@ bool activate_ability()
     if ( talents.empty() )
     {
         mpr("Sorry, you're not good enough to have a special ability.");
+        crawl_state.zero_turns_taken();
         return false;
     }
     if ( you.duration[DUR_CONF] )
@@ -819,6 +821,7 @@ bool activate_ability()
         if ( talents.empty() )
         {
             mpr("You're too confused!");
+            crawl_state.zero_turns_taken();
             return false;
         }
     }
@@ -857,6 +860,7 @@ bool activate_ability()
             if ( selected < 0 )
             {
                 mpr("You can't do that.");
+                crawl_state.zero_turns_taken();
                 return (false);
             }
         }
@@ -886,6 +890,7 @@ static bool activate_talent(const talent& tal)
     if (hungerCheck && you.hunger_state <= HS_STARVING)
     {
         mpr("You're too hungry.");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -893,10 +898,16 @@ static bool activate_talent(const talent& tal)
 
     // check that we can afford to pay the costs
     if (!enough_mp( abil.mp_cost, false ))
+    {
+        crawl_state.zero_turns_taken();
         return (false);
+    }
 
     if (!enough_hp( abil.hp_cost, false ))
+    {
+        crawl_state.zero_turns_taken();
         return (false);
+    }
 
     // no turning back now... {dlb}
     if (random2avg(100, 3) < tal.fail)

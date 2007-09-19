@@ -37,6 +37,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -102,6 +103,8 @@ static void clear_pending_delays()
 void start_delay( delay_type type, int turns, int parm1, int parm2 )
 /***********************************************************/
 {
+    ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
+
     delay_queue_item delay;
     
     delay.type = type;
@@ -145,6 +148,8 @@ void stop_delay( void )
         return;
 
     delay_queue_item delay = you.delay_queue.front(); 
+
+    ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     const bool butcher_swap_warn =
         delay.type == DELAY_BUTCHER
@@ -303,6 +308,8 @@ void handle_delay( void )
         return;
 
     delay_queue_item &delay = you.delay_queue.front();
+
+    ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     // Run delays and Lua delays don't have a specific end time.
     if (is_run_delay(delay.type))
@@ -992,7 +999,7 @@ inline static void monster_warning(activity_interrupt_type ai,
         if (!mon->visible())
             return;
 #ifndef DEBUG_DIAGNOSTICS
-        if (at.context != "uncharm")
+        if (at.context == "newly seen")
         {
             // Only say "comes into view" if the monster wasn't in view
             // during the previous turn.
@@ -1084,7 +1091,10 @@ bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
 {
     paranoid_option_disable(ai, at);
-    
+
+    if (crawl_state.is_repeating_cmd())
+        return interrupt_cmd_repeat(ai, at);
+
     const int delay = current_delay_action();
     
     if (delay == DELAY_NOT_DELAYED)

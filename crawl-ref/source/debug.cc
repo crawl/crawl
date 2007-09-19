@@ -82,6 +82,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -328,7 +329,11 @@ void cast_spec_spell(void)
     if (spell == -1)
         canned_msg( MSG_OK );
     else
-        your_spells( static_cast<spell_type>(spell), 0, false );
+        if (your_spells( static_cast<spell_type>(spell), 0, false )
+            == SPRET_ABORT)
+        {
+            crawl_state.cancel_cmd_repeat();
+        }
 }
 #endif
 
@@ -355,7 +360,11 @@ void cast_spec_spell_name(void)
 
         if (strstr( strlwr(spname), strlwr(specs) ) != NULL)
         {
-            your_spells(static_cast<spell_type>(i), 0, false);
+            if (your_spells(static_cast<spell_type>(i), 0, false)
+                == SPRET_ABORT)
+            {
+                crawl_state.cancel_cmd_repeat();
+            }
             return;
         }
     }
@@ -1250,6 +1259,8 @@ static void dump_item( const char *name, int num, const item_def &item )
          get_ident_type( item.base_type, item.sub_type ) );
 
     mprf("    x: %d; y: %d; link: %d", item.x, item.y, item.link );
+
+    crawl_state.cancel_cmd_repeat();
 }
 
 //---------------------------------------------------------------

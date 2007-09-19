@@ -1165,6 +1165,7 @@ int prompt_invent_item( const char *prompt,
             {
                 if (count)
                     *count = items[0].quantity;
+
                 redraw_screen();
                 mesclr( true );
             }

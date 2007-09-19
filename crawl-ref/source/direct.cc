@@ -46,6 +46,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "shopping.h"
+#include "state.h"
 #include "stuff.h"
 #include "spells4.h"
 #include "stash.h"
@@ -234,6 +235,135 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
     putch(glych);
 }
 
+// We handle targeting for repeating commands and re-doing the
+// previous command differently (i.e., not just letting the keys
+// stuffed into the macro buffer replay as-is) because if the player
+// targeted a monster using the movement keys and the monster then
+// moved between repititions, then simply replaying the keys in the
+// buffer will target an empty square.
+static void direction_again(dist& moves, targeting_type restricts,
+                            targ_mode_type mode, bool just_looking,
+                            const char *prompt, targeting_behaviour *beh)
+{
+    moves.isValid       = false;
+    moves.isTarget      = false;
+    moves.isMe          = false;
+    moves.isCancel      = false;
+    moves.isEndpoint    = false;
+    moves.choseRay      = false;
+
+    if (you.prev_targ == MHITNOT && you.prev_grd_targ == coord_def(0, 0))
+    {
+        moves.isCancel = true;
+        crawl_state.cancel_cmd_repeat();
+        return;
+    }
+
+    int targ_types = 0;
+    if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
+        targ_types++;
+    if (you.prev_targ == MHITYOU)
+        targ_types++;
+    if (you.prev_grd_targ != coord_def(0, 0))
+        targ_types++;
+    ASSERT(targ_types == 1);
+
+    // Discard keys until we get to a set-target command
+    command_type key_command;
+
+    while (crawl_state.is_replaying_keys())
+    {
+        key_command = beh->get_command();
+
+        if (key_command == CMD_TARGET_PREV_TARGET
+            || key_command == CMD_TARGET_SELECT_ENDPOINT
+            || key_command == CMD_TARGET_SELECT
+            || key_command == CMD_TARGET_MAYBE_PREV_TARGET)
+        {
+            break;
+        }
+    }
+
+    if (!crawl_state.is_replaying_keys())
+    {
+        moves.isCancel = true;
+
+        mpr("Ran out of keys.");
+
+        return;
+    }
+
+    if (key_command == CMD_TARGET_SELECT_ENDPOINT)
+        moves.isEndpoint = true;
+
+    if (you.prev_grd_targ != coord_def(0, 0))
+    {
+        if (!see_grid(you.prev_grd_targ))
+        {
+            moves.isCancel = true;
+
+            crawl_state.cancel_cmd_repeat("You can no longer see the dungeon "
+                                          "square you previously targeted.");
+            return;
+        }
+        else if (you.prev_grd_targ.x == you.x_pos
+                 && you.prev_grd_targ.y == you.y_pos)
+        {
+            moves.isCancel = true;
+
+            crawl_state.cancel_cmd_repeat("You are now standing on your "
+                                          "previously targeted dungeon "
+                                          "square.");
+            return;
+        }
+
+        moves.tx = you.prev_grd_targ.x;
+        moves.ty = you.prev_grd_targ.y;
+
+        ray_def ray;
+        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
+                 0, true);
+        moves.ray = ray;
+    }
+    else if (you.prev_targ == MHITYOU)
+    {
+        moves.isMe = true;
+        moves.tx   = you.x_pos;
+        moves.ty   = you.y_pos;
+
+        // Discard 'Y' player gave to yesno()
+        if (mode == TARG_ENEMY && Options.confirm_self_target)
+            getchm();
+    }
+    else
+    {
+        const monsters *montarget = &menv[you.prev_targ];
+                
+        if (!mons_near(montarget) ||
+            !player_monster_visible( montarget ))
+        {
+            moves.isCancel = true;
+
+            crawl_state.cancel_cmd_repeat("Your target is gone.");
+
+            return;
+        }
+
+        moves.tx = montarget->x;
+        moves.ty = montarget->y;
+
+        ray_def ray;
+        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
+                 0, true);
+        moves.ray = ray;
+    }
+
+    moves.isValid  = true;
+    moves.isTarget = true;
+
+    return;
+}
+
 //---------------------------------------------------------------
 //
 // direction
@@ -264,7 +394,14 @@ void direction(dist& moves, targeting_type restricts,
         beh = &stock_behaviour;
 
     beh->just_looking = just_looking;
-    
+
+    if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
+    {
+        direction_again(moves, restricts, mode, just_looking,
+                        prompt, beh);
+        return;
+    }
+
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
 
@@ -536,10 +673,18 @@ void direction(dist& moves, targeting_type restricts,
             moves.isValid = true;
             moves.isTarget = true;
             loop_done = true;
+
+            you.prev_grd_targ = coord_def(0, 0);
+ 
             // maybe we should except just_looking here?
             mid = mgrd[moves.tx][moves.ty];
+
             if ( mid != NON_MONSTER )
                 you.prev_targ = mid;
+            else if (moves.tx == you.x_pos && moves.ty == you.y_pos)
+                you.prev_targ = MHITYOU;
+            else
+                you.prev_grd_targ = coord_def(moves.tx, moves.ty);
             break;
 
         case CMD_TARGET_OBJ_CYCLE_BACK:
@@ -1922,7 +2067,9 @@ targeting_behaviour::~targeting_behaviour()
 
 int targeting_behaviour::get_key()
 {
-    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+    if (!crawl_state.is_replaying_keys())
+        flush_input_buffer(FLUSH_BEFORE_COMMAND);
+
     return unmangle_direction_keys(
         getchm(KC_TARGETING), KC_TARGETING, false, false);
 }

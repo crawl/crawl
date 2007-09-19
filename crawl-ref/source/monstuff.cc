@@ -58,6 +58,7 @@
 #include "spl-util.h"
 #include "spells2.h"
 #include "spells4.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -464,7 +465,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     }
 
     if (you.prev_targ == monster_killed)
+    {
         you.prev_targ = MHITNOT;
+        crawl_state.cancel_cmd_repeat();
+    }
+
+    if (killer == KILL_YOU)
+        crawl_state.cancel_cmd_repeat();
 
     const bool pet_kill = is_pet_kill(killer, i);
 
@@ -5313,6 +5320,17 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
 
 bool message_current_target()
 {
+
+    if (crawl_state.is_replaying_keys())
+    {
+        if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
+            return false;
+
+        const monsters *montarget = &menv[you.prev_targ];
+        return (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU
+                && mons_near(montarget) && player_monster_visible(montarget));
+    }
+
     if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
     {
         const monsters *montarget = &menv[you.prev_targ];

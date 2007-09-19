@@ -38,6 +38,7 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -248,6 +249,7 @@ bool choose_deck_and_draw()
     if ( !is_deck(deck) )
     {
         mpr("That isn't a deck!");
+        crawl_state.zero_turns_taken();
         return false;
     }
     evoke_deck(deck);
@@ -261,12 +263,14 @@ bool deck_peek()
     if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
+        crawl_state.zero_turns_taken();
         return false;
     }
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
     if ( item.plus2 != 0 )
     {
         mpr("You already know what the next card will be.");
+        crawl_state.zero_turns_taken();
         return false;
     }
 
@@ -297,12 +301,14 @@ bool deck_stack()
     if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
+        crawl_state.zero_turns_taken();
         return false;
     }
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
     if ( item.plus2 != 0 )
     {
         mpr("You can't stack a marked deck.");
+        crawl_state.zero_turns_taken();
         return false;
     }
     const int num_to_stack = (item.plus < 5 ? item.plus : 5);
@@ -357,6 +363,7 @@ bool deck_triple_draw()
     if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
+        crawl_state.zero_turns_taken();
         return false;
     }
 
@@ -366,6 +373,7 @@ bool deck_triple_draw()
     if ( item.plus2 != 0 )
     {
         mpr("You can't triple draw from a marked deck.");
+        crawl_state.zero_turns_taken();
         return false;
     }
 

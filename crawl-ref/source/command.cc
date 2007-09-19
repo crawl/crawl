@@ -1008,6 +1008,8 @@ void list_commands(bool wizard, int hotkey)
             "<w>p</w> : Pray\n"
             "<w>Z</w> : cast a spell\n"
             "<w>!</w> : shout or command allies\n"
+            "<w>`</w> : re-do previous command\n"
+            "<w>0</w> : repeat next command # of times\n"
             " \n",
             true, true, cmdhelp_textfilter);
 

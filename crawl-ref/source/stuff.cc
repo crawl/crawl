@@ -621,27 +621,34 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_TOO_BERSERK:
         mpr("You are too berserk!");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_PRESENT_FORM:
         mpr("You can't do that in your present form.");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_NOTHING_CARRIED:
         mpr("You aren't carrying anything.");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_CANNOT_DO_YET:
         mpr("You can't do that yet.");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_OK:
         mpr("Okay, then.");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_UNTHINKING_ACT:
         mpr("Why would you want to do that?");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_SPELL_FIZZLES:
         mpr("The spell fizzles.");
         break;
     case MSG_HUH:
         mpr("Huh?");
+        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_EMPTY_HANDED:
         mpr("You are now empty-handed.");
@@ -656,8 +663,9 @@ void canned_msg(canned_message_type which_message)
 bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             bool interrupt_delays, bool noprompt )
 {
-    if (interrupt_delays)
+    if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
+
     for (;;)
     {
         if ( !noprompt )
@@ -691,7 +699,9 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
 // like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
 int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
 {
-    interrupt_activity( AI_FORCE_INTERRUPT );
+    if (!crawl_state.is_repeating_cmd())
+        interrupt_activity( AI_FORCE_INTERRUPT );
+
     while (1)
     {
         mpr(str, MSGCH_PROMPT);

@@ -38,14 +38,40 @@ struct game_state
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 
-    game_state() : mouse_enabled(false), waiting_for_command(false),
-                   terminal_resized(false), io_inited(false), need_save(false),
-                   saving_game(false), updating_scores(false),
-                   seen_hups(0), map_stat_gen(false), unicode_ok(false),
-                   glyph2strfn(NULL), multibyte_strlen(NULL),
-                   terminal_resize_handler(NULL), terminal_resize_check(NULL)
-    {
-    }
+    bool            doing_prev_cmd_again;
+    command_type    prev_cmd;
+    std::deque<int> prev_cmd_keys;
+
+    command_type    repeat_cmd;
+    std::deque<int> repeat_cmd_keys;
+    bool            cmd_repeat_start;
+    int             cmd_repeat_count;
+    int             cmd_repeat_goal;
+    int             prev_cmd_repeat_goal;
+    int             prev_repetition_turn;
+    bool            cmd_repeat_started_unsafe;
+
+    std::vector<std::string> input_line_strs;
+    unsigned int             input_line_curr;
+
+protected:
+    void reset_cmd_repeat();
+    void reset_cmd_again();
+
+public:
+    game_state();
+
+    bool is_replaying_keys() const;
+
+    bool is_repeating_cmd() const;
+
+    void cancel_cmd_repeat(std::string reason = "");
+    void cancel_cmd_again(std::string reason = "");
+
+    void cant_cmd_repeat(std::string reason = "");
+    void cant_cmd_again(std::string reason = "");
+
+    void zero_turns_taken();
 
     void check_term_size() const
     {

@@ -60,6 +60,7 @@
 #include "spells3.h"
 #include "spl-util.h"
 #include "spells4.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -4168,6 +4169,8 @@ bool enough_hp(int minimum, bool suppress_msg)
         if (!suppress_msg)
             mpr("You haven't enough vitality at the moment.");
 
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
         return false;
     }
 
@@ -4181,6 +4184,8 @@ bool enough_mp(int minimum, bool suppress_msg)
         if (!suppress_msg)
             mpr("You haven't enough magic at the moment.");
 
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
         return false;
     }
 
@@ -5021,6 +5026,8 @@ void player::init()
 
     prev_targ = MHITNOT;
     pet_target = MHITNOT;
+
+    prev_grd_targ = coord_def(0, 0);
 
     x_pos = 0;
     y_pos = 0;
@@ -6044,3 +6051,4 @@ std::vector<PlaceInfo> player::get_all_place_info(bool visited_only,
 
     return list;
 }
+

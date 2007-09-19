@@ -43,16 +43,19 @@
 #include "clua.h"
 #include "cloud.h"
 #include "delay.h"
+#include "direct.h"
 #include "dgnevent.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "format.h"
 #include "hiscores.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-util.h"
 #include "monstuff.h"
@@ -557,8 +560,10 @@ void up_stairs(dungeon_feature_type force_stair)
         ouch(INSTANT_DEATH, 0, KILLED_BY_LEAVING);
     }
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ  = MHITNOT;
     you.pet_target = MHITNOT;
+
+    you.prev_grd_targ = coord_def(0, 0);
 
     if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
@@ -803,8 +808,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         you.level_type = LEVEL_DUNGEON;
     }
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ  = MHITNOT;
     you.pet_target = MHITNOT;
+
+    you.prev_grd_targ = coord_def(0, 0);
 
     if (stair_find == DNGN_ENTER_HELL)
     {
@@ -1623,4 +1630,3 @@ int speed_to_duration(int speed)
     
     return div_rand_round(100, speed);
 }
-

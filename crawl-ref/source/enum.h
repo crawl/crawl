@@ -633,8 +633,17 @@ enum command_type
     CMD_ENABLE_MORE,
     
     // [ds] Silently ignored, requests another round of input.
-    CMD_NEXT_CMD
+    CMD_NEXT_CMD,
 
+    // Repeat previous command
+    CMD_PREV_CMD_AGAIN,
+
+    // Repeat next command a given number of times
+    CMD_REPEAT_CMD,
+
+    // Stick the keyspresses of the command to be repeated into the
+    // input buffer.
+    CMD_REPEAT_KEYS
 };
 
 enum conduct_type
@@ -1114,6 +1123,10 @@ enum flush_reason_type
     FLUSH_ON_PROMPT,                   // flush on MSGCH_PROMPT messages
     FLUSH_ON_UNSAFE_YES_OR_NO_PROMPT,  // flush when !safe set to yesno()
     FLUSH_LUA,                         // flush when Lua wants to flush
+    FLUSH_KEY_REPLAY_CANCEL,           // flush when key replay is cancelled
+    FLUSH_ABORT_MACRO,                 // something wrong with macro being
+                                       // processed, so stop it
+    FLUSH_REPLAY_SETUP_FAILURE,        // setup for key replay failed
     NUM_FLUSH_REASONS
 };
 

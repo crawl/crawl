@@ -728,6 +728,14 @@ void more(void)
         return;
     }
 #endif
+
+    if (crawl_state.is_repeating_cmd()
+        && !crawl_state.cmd_repeat_start)
+    {
+        mesclr();
+        return;
+    }
+
     if (Options.show_more_prompt && !suppress_messages)
     {
         char keypress = 0;

@@ -19,6 +19,8 @@
 
 struct bolt;
 struct dist;
+struct activity_interrupt_data;
+
 
 // last updated 08jan2001 {gdl}
 /* ***********************************************************************
@@ -115,5 +117,8 @@ coord_def pick_adjacent_free_square(int x, int y);
 int speed_to_duration(int speed);
 
 bool scramble(void);
+
+bool interrupt_cmd_repeat( activity_interrupt_type ai, 
+                           const activity_interrupt_data &at );
 
 #endif

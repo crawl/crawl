@@ -23,6 +23,7 @@
 #include <set>
 #include <memory>
 #include <cstdlib>
+#include <deque>
 
 #include <time.h>
 
@@ -464,6 +465,8 @@ typedef std::vector<delay_queue_item> delay_queue_type;
 
 class KillMaster;
 
+
+
 class player : public actor
 {
 public:
@@ -476,6 +479,7 @@ public:
   bool just_autoprayed;         // autopray just kicked in
     
   unsigned char prev_targ;
+  coord_def     prev_grd_targ;
   char your_name[kNameLen];
 
   species_type species;

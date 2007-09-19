@@ -62,6 +62,7 @@ enum element_type
 
 void init_char_table(char_set_type set);
 void init_feature_table();
+void init_monsters_seens();
 
 // last updated 29may2000 {dlb}
 /* ***********************************************************************

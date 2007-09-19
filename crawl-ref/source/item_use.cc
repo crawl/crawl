@@ -69,6 +69,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
@@ -3178,6 +3179,8 @@ bool drink_fountain()
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_I;
         else
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_II;
+
+        crawl_state.cancel_cmd_repeat();
     }
 
     you.turn_is_over = true;
@@ -3553,6 +3556,7 @@ void read_scroll(void)
     if (scroll.base_type != OBJ_BOOKS && scroll.base_type != OBJ_SCROLLS)
     {
         mpr("You can't read that!");
+        crawl_state.zero_turns_taken();
         return;
     }
 
@@ -3566,6 +3570,7 @@ void read_scroll(void)
     if (silenced(you.x_pos, you.y_pos))
     {
         mpr("Magic scrolls do not work when you're silenced!");
+        crawl_state.zero_turns_taken();
         return;
     }
 

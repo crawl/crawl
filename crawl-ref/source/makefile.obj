@@ -73,6 +73,7 @@ spl-book.o \
 spl-cast.o \
 spl-util.o \
 sqldbm.o \
+state.o \
 stash.o \
 stuff.o \
 tags.o \

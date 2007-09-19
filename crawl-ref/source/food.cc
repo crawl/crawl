@@ -46,6 +46,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"
+#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
@@ -490,19 +491,23 @@ bool eat_food(bool run_hook)
     if (you.is_undead == US_UNDEAD)
     {
         mpr("You can't eat.");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
     if (you.hunger >= 11000)
     {
         mpr("You're too full to eat anything.");
+        crawl_state.zero_turns_taken();
         return (false);
     }
 
     // If user hook ran, we don't know whether something
     // was eaten or not...
     if (run_hook && userdef_eat_food())
+    {
         return (false);
+    }
 
     if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
     {

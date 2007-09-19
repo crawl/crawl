@@ -2157,6 +2157,11 @@ Other game-playing commands:
         Ctrl-A          Toggle autopickup. Note that encounters with 
                         invisible monsters always turns autopickup off.
                         You need to switch it on with Ctrl-A afterwards.
+        Ctrl-V          Toggle autoprayer. Note that encounters with 
+                        invisible monsters always turns autopickup off.
+                        You need to switch it on with Ctrl-V afterwards.
+        `               Re-do previous command
+        0               Repeat next command a given number of times
 
 Non-game playing commands:
         ?               The help menu.
@@ -2168,7 +2173,7 @@ Non-game playing commands:
         :               Add note to dump file (see option take_notes).
         ?:              Read the notes in-game.
         ~               Add or save macros and key mappings.
-        =               Reassign inventory/spell/abilities letters. 
+        =               Reassign inventory/spell/abilities letters.
 
 Stashes:
         Ctrl-F          Find. This searches in stashes and shops, you 
