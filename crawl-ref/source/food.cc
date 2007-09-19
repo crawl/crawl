@@ -558,77 +558,35 @@ static bool food_change(bool suppress_message)
 
     if (newstate != you.hunger_state)
     {
-        char oldstate = you.hunger_state;
         state_changed = true;
         you.hunger_state = newstate;
         set_redraw_status( REDRAW_HUNGER );
 
-        // Stop the travel command, if it's in progress and we just got hungry
-        if (Options.detailed_hunger)
-        {
-            if (newstate < HS_SATIATED)
-                interrupt_activity( AI_HUNGRY );
-        }
-        else
-        {
-            // Don't interrupt on changing from hungry to very hungry
-            // or very hungry to near starving if they don't want
-            // detailed hunger info.
-            if (newstate == HS_STARVING ||
-                (newstate < HS_SATIATED && oldstate >= HS_SATIATED))
-                interrupt_activity( AI_HUNGRY );
-
-            // Don't inform user of changing from hungry to very hungry
-            // or very hungry to near starving if they don't want
-            // detailed hunger info.
-            if (newstate < HS_SATIATED && oldstate < HS_SATIATED &&
-                newstate != HS_STARVING)
-                suppress_message = true;
-        }
+        if (newstate < HS_SATIATED)
+            interrupt_activity( AI_HUNGRY );
 
         if (suppress_message == false)
         {
-            if (Options.detailed_hunger)
+            switch (you.hunger_state)
             {
-                switch (you.hunger_state)
-                {
-                case HS_STARVING:
-                    mpr("You are starving!", MSGCH_FOOD);
-                    learned_something_new(TUT_YOU_STARVING);
-                    break;
-                case HS_HUNGRY:
-                    mpr("You are feeling hungry.", MSGCH_FOOD);
-                    learned_something_new(TUT_YOU_HUNGRY);
-                    break;
-                case HS_VERY_HUNGRY:
-                    mpr("You are feeling very hungry.", MSGCH_FOOD);
-                    learned_something_new(TUT_YOU_HUNGRY);
-                    break;
-                case HS_NEAR_STARVING:
-                    mpr("You are near starving.", MSGCH_FOOD);
-                    learned_something_new(TUT_YOU_HUNGRY);
-                    break;
-                default:
-                    break;
-                }
-            }
-            else
-            {
-                switch (you.hunger_state)
-                {
-                case HS_STARVING:
-                    mpr("You are starving!", MSGCH_FOOD);
-                    learned_something_new(TUT_YOU_STARVING);
-                    break;
-                case HS_HUNGRY:
-                case HS_VERY_HUNGRY:
-                case HS_NEAR_STARVING:
-                    mpr("You are feeling hungry.", MSGCH_FOOD);
-                    learned_something_new(TUT_YOU_HUNGRY);
-                    break;
-                default:
-                    break;
-                }
+            case HS_STARVING:
+                mpr("You are starving!", MSGCH_FOOD);
+                learned_something_new(TUT_YOU_STARVING);
+                break;
+            case HS_HUNGRY:
+                mpr("You are feeling hungry.", MSGCH_FOOD);
+                learned_something_new(TUT_YOU_HUNGRY);
+                break;
+            case HS_VERY_HUNGRY:
+                mpr("You are feeling very hungry.", MSGCH_FOOD);
+                learned_something_new(TUT_YOU_HUNGRY);
+                break;
+            case HS_NEAR_STARVING:
+                mpr("You are near starving.", MSGCH_FOOD);
+                learned_something_new(TUT_YOU_HUNGRY);
+                break;
+            default:
+                break;
             }
         }
     }

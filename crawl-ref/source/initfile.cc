@@ -662,7 +662,6 @@ void game_options::reset_options()
     assign_item_slot       = SS_FORWARD;
 
     macro_meta_entry       = true;
-    detailed_hunger        = false;
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
@@ -2310,10 +2309,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "macro_meta_entry")
     {
         macro_meta_entry = read_bool(field, macro_meta_entry);
-    }
-    else if (key == "detailed_hunger")
-    {
-        detailed_hunger = read_bool(field, detailed_hunger);
     }
     else if (key == "stop_travel" || key == "travel_stop_message")
     {
