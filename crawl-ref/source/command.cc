@@ -1161,6 +1161,7 @@ static void list_wizard_commands()
                        "m/M    : create monster by number/name\n"
                        "o/%    : create an object\n"
                        "p      : make entrance to pandemonium\n"
+                       "P      : make a portal (i.e., bazaars)\n"
                        "r      : change character's species\n"
                        "s      : gain 20000 skill points\n"
                        "S      : set skill to level\n"

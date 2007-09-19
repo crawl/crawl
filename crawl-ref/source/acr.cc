@@ -659,6 +659,28 @@ static void handle_wizard_command( void )
         grd[you.x_pos][you.y_pos] = DNGN_ENTER_PANDEMONIUM;
         break;
 
+    case 'P':
+    {
+        mpr( "Destination for portal? ", MSGCH_PROMPT );
+        get_input_line( specs, sizeof( specs ) );
+
+        std::string dst = specs;
+        dst = trim_string(dst);
+
+        if (dst == "")
+            canned_msg( MSG_OK );
+        else
+        {
+            grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
+            map_wiz_props_marker
+                *marker = new map_wiz_props_marker(you.pos());
+            marker->set_property("dst", dst);
+            marker->set_property("desc", "wizard portal, dest = " + dst);
+            env.markers.add(marker);
+        }
+        break;
+    }
+
     case 'l':
         grd[you.x_pos][you.y_pos] = DNGN_ENTER_LABYRINTH;
         break;

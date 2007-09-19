@@ -5,6 +5,8 @@
 #include "dgnevent.h"
 #include "clua.h"
 #include "luadgn.h"
+#include <map>
+#include <string>
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers
@@ -110,6 +112,26 @@ private:
     void push_fn_args(const char *fn) const;
     bool callfn(const char *fn, bool warn_err = false, int args = -1) const;
     std::string call_str_fn(const char *fn) const;
+};
+
+class map_wiz_props_marker : public map_marker
+{
+public:
+    map_wiz_props_marker(const coord_def &pos = coord_def(0, 0));
+    map_wiz_props_marker(const map_wiz_props_marker &other);
+    void write(tagHeader &) const;
+    void read(tagHeader &);
+    std::string debug_describe() const;
+    std::string feature_description() const;
+    std::string property(const std::string &pname) const; 
+    std::string set_property(const std::string &key, const std::string &val); 
+    map_marker *clone() const;
+    static map_marker *read(tagHeader &, map_marker_type);
+    static map_marker *parse(const std::string &s, const std::string &)
+        throw (std::string);
+    
+public:
+    std::map<std::string, std::string> properties;
 };
 
 #endif
