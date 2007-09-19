@@ -458,17 +458,17 @@ void do_uncurse_item( item_def &item )
 //
 void set_item_stationary( item_def &item )
 {
-    item.flags |= ISFLAG_STATIONARY;
+    item.plus2 = 1;
 }
 
 void remove_item_stationary( item_def &item )
 {
-    item.flags &= (~ISFLAG_STATIONARY);
+    item.plus2 = 0;
 }
 
 bool item_is_stationary( const item_def &item )
 {
-    return (item.flags & ISFLAG_STATIONARY);
+    return (item.plus2);
 }
 
 //
@@ -619,8 +619,11 @@ void set_equip_race( item_def &item, unsigned long flags )
         break;
 
     case OBJ_MISSILES:
-        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK)
+        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK
+            || item.sub_type == MI_THROWING_NET)
+        {
             return;
+        }
         break;
 
     default:
