@@ -420,6 +420,7 @@ static void handle_wizard_command( void )
         case 'X':
         case '!':
         case '[':
+        case ']':
         case '^':
         case '%':
         case 'o':
@@ -613,7 +614,7 @@ static void handle_wizard_command( void )
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         set_hp( abs(you.hp_max), false );
-        set_hunger( 5000 + abs(you.hunger), true );
+        set_hunger( 10999, true );
         break;
 
     case 'H':
@@ -622,7 +623,7 @@ static void handle_wizard_command( void )
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
-        set_hunger( 12000, true );
+        set_hunger( 10999, true );
         you.redraw_hit_points = 1;
         break;
 
@@ -850,7 +851,7 @@ static void handle_wizard_command( void )
 
                     // Use mpr_comma_separated_list() because the list
                     // might be *LONG*.
-                    mpr_comma_separated_list(prefix, matches, ", ", " and ",
+                    mpr_comma_separated_list(prefix, matches, " and ", ", ",
                                              MSGCH_DIAGNOSTICS);
                     return;
                 }
@@ -1053,6 +1054,7 @@ static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_LIST_WEAPONS:
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
+    case CMD_LIST_EQUIPMENT:
     case CMD_CHARACTER_DUMP:
     case CMD_DISPLAY_COMMANDS:
     case CMD_DISPLAY_INVENTORY:

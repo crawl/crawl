@@ -1547,43 +1547,218 @@ void debug_set_all_skills(void)
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
+
+static const char *mutation_type_names[] = {
+    "tough skin",
+    "strong",
+    "clever",
+    "agile",
+    "green scales",
+    "black scales",
+    "grey scales",
+    "boney plates",
+    "repulsion field",
+    "poison resistance",
+    "carnivorous",
+    "herbivorous",
+    "heat resistance",
+    "cold resistance",
+    "shock resistance",
+    "regeneration",
+    "fast metabolism",
+    "slow metabolism",
+    "weak",
+    "dopey",
+    "clumsy",
+    "teleport control",
+    "teleport",
+    "magic resistance",
+    "fast",
+    "acute vision",
+    "deformed",
+    "teleport at will",
+    "spit poison",
+    "mapping",
+    "breathe flames",
+    "blink",
+    "horns",
+    "strong stiff",
+    "flexible weak",
+    "lost",
+    "clarity",
+    "berserk",
+    "deterioration",
+    "blurry vision",
+    "mutation resistance",
+    "frail",
+    "robust",
+    "torment resistance",
+    "negative energy resistance",
+    "summon minor demons",
+    "summon demons",
+    "hurl hellfire",
+    "call torment",
+    "raise dead",
+    "control demons",
+    "pandemonium",
+    "death strength",
+    "channel hell",
+    "drain life",
+    "throw flames",
+    "throw frost",
+    "smite",
+    "claws",
+    "hooves",
+    "fangs",
+    "breathe poison",
+    "stinger",
+    "big wings",
+    "blue marks",
+    "green marks",
+    "",
+    "",
+    "",
+    "",
+    "red scales",
+    "nacreous scales",
+    "grey2 scales",
+    "metallic scales",
+    "black2 scales",
+    "white scales",
+    "yellow scales",
+    "brown scales",
+    "blue scales",
+    "purple scales",
+    "speckled scales",
+    "orange scales",
+    "indigo scales",
+    "red2 scales",
+    "iridescent scales",
+    "patterned scales"
+};
+
 bool debug_add_mutation(void)
 {
     bool success = false;
     char specs[80];
 
+    if ((sizeof(mutation_type_names) / sizeof(char*)) != NUM_MUTATIONS)
+    {
+        mprf("Mutation name list has %d entries, but there are %d "
+             "mutations total; update mutation_type_names in debug.cc "
+             "to reflect current list.",
+             (sizeof(mutation_type_names) / sizeof(char*)),
+             (int) NUM_MUTATIONS);
+        crawl_state.cancel_cmd_repeat();
+        return (false);
+    }
+
+    if (you.mutation[MUT_MUTATION_RESISTANCE] > 0)
+    {
+        const char* msg;
+
+        if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
+            msg = "You are immune to mutations, remove immunity?";
+        else
+            msg = "You are resistant to mutations, remove resistance?";
+
+        if (yesno(msg))
+        {
+            you.mutation[MUT_MUTATION_RESISTANCE] = 0;
+            crawl_state.cancel_cmd_repeat();
+            crawl_state.cancel_cmd_again();
+        }
+    }
+
+    bool force = yesno("Force mutation to happen?");
+
+    if (you.mutation[MUT_MUTATION_RESISTANCE] == 3 && !force)
+    {
+        mpr("Can't mutate when immune to mutations without forcing it.");
+        crawl_state.cancel_cmd_repeat();
+        return (false);
+    }
+
     // Yeah, the gaining message isn't too good for this... but
     // there isn't an array of simple mutation names. -- bwr
-    mpr( "Which mutation (by message when getting mutation)? ", MSGCH_PROMPT );
+    mpr( "Which mutation ('any' for any, 'xom' for xom mutation)? ",
+         MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
     
     if (specs[0] == '\0')
         return (false);
 
+    if (strcasecmp(specs, "any") == 0)
+    {
+        int old_resist = you.mutation[MUT_MUTATION_RESISTANCE];
+
+        success = mutate(RANDOM_MUTATION, true, force);
+
+        if (old_resist < you.mutation[MUT_MUTATION_RESISTANCE] && !force)
+            crawl_state.cancel_cmd_repeat("Your mutation resistance has "
+                                          "increased.");
+        return (success);
+    }
+
+    if (strcasecmp(specs, "xom") == 0)
+        return mutate(RANDOM_XOM_MUTATION, true, force);
+
+    std::vector<int> partial_matches;
     mutation_type mutation = NUM_MUTATIONS;
 
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        char mut_name[80];
-        const mutation_type m = static_cast<mutation_type>(i);
-        strncpy( mut_name, mutation_name( m, 1 ), sizeof( mut_name ) );
-
-        char *ptr = strstr( strlwr(mut_name), strlwr(specs) );
-        if (ptr != NULL)
+        if (strcasecmp(specs, mutation_type_names[i]) == 0)
         {
-            // we take the first mutation that matches
-            mutation = m;
+            mutation = (mutation_type) i;
             break;
         }
+
+        if (strstr(mutation_type_names[i] , strlwr(specs) ))
+            partial_matches.push_back(i);
+    }
+
+    // If only one matching mutation, use that.
+    if (mutation == NUM_MUTATIONS)
+    {
+        if (partial_matches.size() == 1)
+            mutation = (mutation_type) partial_matches[0];
     }
 
     if (mutation == NUM_MUTATIONS)
-        mpr("I can't warp you that way!");
+    {
+        crawl_state.cancel_cmd_repeat();
+
+        if (partial_matches.size() == 0)
+            mpr("No matching mutation names.");
+        else
+        {
+            std::vector<std::string> matches;
+
+            for (unsigned int i = 0, size = partial_matches.size();
+                 i < size; i++)
+            {
+                matches.push_back(mutation_type_names[partial_matches[i]]);
+            }
+            std::string prefix = "No exact match for mutation '" +
+                std::string(specs) +  "', possible matches are: ";
+
+            // Use mpr_comma_separated_list() because the list
+            // might be *LONG*.
+            mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                     MSGCH_DIAGNOSTICS);
+        }
+
+        return (false);
+    }
     else
     {
-        mprf("Found: %s", mutation_name( mutation, 1 ) );
+        mprf("Found #%d: %s (\"%s\")", (int) mutation,
+             mutation_type_names[mutation], mutation_name( mutation, 1 ) );
 
-        const int levels = debug_prompt_for_int( "How many levels? ", false );
+        const int levels =
+            debug_prompt_for_int( "How many levels to increase or decrease? ",
+                                  false );
 
         if (levels == 0)
         {
@@ -1594,7 +1769,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < levels; i++)
             {
-                if (mutate( mutation ))
+                if (mutate( mutation, true, force ))
                     success = true;
             }
         }
@@ -1602,7 +1777,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < -levels; i++)
             {
-                if (delete_mutation( mutation ))
+                if (delete_mutation( mutation, force ))
                     success = true;
             }
         }
@@ -2495,12 +2670,37 @@ void debug_place_map()
 
 void debug_dismiss_all_monsters()
 {
-    // Genocide... "unsummon" all the monsters from the level.
+    char buf[80];
+    mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
+    bool validline = !cancelable_get_line(buf, sizeof buf, 80);
+
+    if (!validline)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    // Dismiss all
+    if (buf[0] == '\0')
+    {
+        // Genocide... "unsummon" all the monsters from the level.
+        for (int mon = 0; mon < MAX_MONSTERS; mon++)
+        {
+            monsters *monster = &menv[mon];
+
+            if (monster->alive())
+                monster_die(monster, KILL_DISMISSED, 0);
+        }
+        return;
+    }
+
+    // Dismiss by regex
+    text_pattern tpat(buf);
     for (int mon = 0; mon < MAX_MONSTERS; mon++)
     {
         monsters *monster = &menv[mon];
 
-        if (monster->alive())
+        if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN)))
             monster_die(monster, KILL_DISMISSED, 0);
     }
 }
