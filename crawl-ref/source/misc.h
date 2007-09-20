@@ -81,7 +81,7 @@ void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN);
 /* ***********************************************************************
  * called from: acr - effects
  * *********************************************************************** */
-std::string weird_colours(unsigned char coll);
+std::string weird_glow_colour();
 
 
 // last updated 12may2000 {dlb}

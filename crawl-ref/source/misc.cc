@@ -1107,6 +1107,43 @@ void new_level(void)
 #endif
 }
 
+static std::string weird_colour()
+{
+    int temp_rand;             // for probability determinations {dlb}
+    std::string result;
+
+    temp_rand = random2(25);
+    result =
+        (temp_rand ==  0) ? "red" :
+        (temp_rand ==  1) ? "purple" :
+        (temp_rand ==  2) ? "orange" :
+        (temp_rand ==  3) ? "green" :
+        (temp_rand ==  4) ? "magenta" :
+        (temp_rand ==  5) ? "black" :
+        (temp_rand ==  6) ? "blue" :
+        (temp_rand ==  7) ? "grey" :
+        (temp_rand ==  8) ? "umber" :
+        (temp_rand ==  9) ? "charcoal" :
+        (temp_rand == 10) ? "bronze" :
+        (temp_rand == 11) ? "silver" :
+        (temp_rand == 12) ? "gold" :
+        (temp_rand == 13) ? "pink" :
+        (temp_rand == 14) ? "yellow" :
+        (temp_rand == 15) ? "white" :
+        (temp_rand == 16) ? "brown" :
+        (temp_rand == 17) ? "aubergine" :
+        (temp_rand == 18) ? "ochre" :
+        (temp_rand == 19) ? "leaf green" :
+        (temp_rand == 20) ? "mauve" :
+        (temp_rand == 21) ? "azure" :
+        (temp_rand == 22) ? "lime green" :
+        (temp_rand == 23) ? "scarlet" :
+        (temp_rand == 24) ? "chartreuse"
+                          : "colourless";
+
+    return result;
+}
+
 std::string weird_writing()
 {
     int temp_rand;             // for probability determinations {dlb}
@@ -1127,24 +1164,7 @@ std::string weird_writing()
     if (!result.empty())
         result += ' ';
 
-    temp_rand = random2(14);
-
-    result +=
-        (temp_rand ==  0) ? "yellow" :
-        (temp_rand ==  1) ? "brown" :
-        (temp_rand ==  2) ? "black" :
-        (temp_rand ==  3) ? "purple" :
-        (temp_rand ==  4) ? "orange" :
-        (temp_rand ==  5) ? "lime-green" :
-        (temp_rand ==  6) ? "blue" :
-        (temp_rand ==  7) ? "grey" :
-        (temp_rand ==  8) ? "silver" :
-        (temp_rand ==  9) ? "gold" :
-        (temp_rand == 10) ? "umber" :
-        (temp_rand == 11) ? "charcoal" :
-        (temp_rand == 12) ? "pastel" :
-        (temp_rand == 13) ? "mauve"
-                          : "colourless";
+    result += weird_colour();
 
     result += ' ';
 
@@ -1176,47 +1196,26 @@ bool scramble(void)
         return true;
 }                               // end scramble()
 
-std::string weird_colours(unsigned char coll)
+std::string weird_glow_colour()
 {
-    unsigned char coll_div16 = coll / 16; // conceivable max is then 16 {dlb}
+    int temp_rand;             // for probability determinations {dlb}
     std::string result;
 
     // Must start with a consonant!
+    temp_rand = random2(8);
     result =
-        (coll_div16 == 0 || coll_div16 ==  7) ? "brilliant" :
-        (coll_div16 == 1 || coll_div16 ==  8) ? "pale" :
-        (coll_div16 == 2 || coll_div16 ==  9) ? "mottled" :
-        (coll_div16 == 3 || coll_div16 == 10) ? "shimmering" :
-        (coll_div16 == 4 || coll_div16 == 11) ? "bright" :
-        (coll_div16 == 5 || coll_div16 == 12) ? "dark" :
-        (coll_div16 == 6 || coll_div16 == 13) ? "shining"
-                                              : "faint";
+        (temp_rand ==  0) ? "brilliant" :
+        (temp_rand ==  1) ? "pale" :
+        (temp_rand ==  2) ? "mottled" :
+        (temp_rand ==  3) ? "shimmering" :
+        (temp_rand ==  4) ? "bright" :
+        (temp_rand ==  5) ? "dark" :
+        (temp_rand ==  6) ? "shining"
+                          : "faint";
 
     result += ' ';
 
-    while (coll > 17)
-        coll -= 10;
-
-    result +=
-        (coll ==  0) ? "red" :
-        (coll ==  1) ? "purple" :
-        (coll ==  2) ? "green" :
-        (coll ==  3) ? "orange" :
-        (coll ==  4) ? "magenta" :
-        (coll ==  5) ? "black" :
-        (coll ==  6) ? "grey" :
-        (coll ==  7) ? "silver" :
-        (coll ==  8) ? "gold" :
-        (coll ==  9) ? "pink" :
-        (coll == 10) ? "yellow" :
-        (coll == 11) ? "white" :
-        (coll == 12) ? "brown" :
-        (coll == 13) ? "aubergine" :
-        (coll == 14) ? "ochre" :
-        (coll == 15) ? "leaf green" :
-        (coll == 16) ? "mauve" :
-        (coll == 17) ? "azure"
-                     : "colourless";
+    result += weird_colour();
 
     return result;
 }

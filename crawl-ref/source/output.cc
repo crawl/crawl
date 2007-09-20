@@ -1366,12 +1366,12 @@ std::string status_mut_abilities()
 
     if (you.duration[DUR_REGENERATION]
         && (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY)
-        || you.species == SP_VAMPIRE && you.hunger_state == HS_FULL)
+        || you.species == SP_VAMPIRE && you.hunger_state >= HS_FULL)
     {
         if (you.disease)
             text += "recuperating, ";
         else
-        text += "regenerating, ";
+            text += "regenerating, ";
     }
 
 // not used as resistance part already says so

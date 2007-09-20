@@ -1106,12 +1106,12 @@ formatted_string describe_mutations()
             result += "You can see invisible." EOL;
             result += "</green>";
         }
-        if (you.hunger_state == HS_FULL)
-            result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
-        else if (you.hunger_state == HS_HUNGRY)
-            result += "<green>You heal slowly.</green>" EOL;
-        else if (you.hunger_state < HS_HUNGRY)
+        if (you.hunger_state <= HS_STARVING)
             result += "<green>You do not heal.</green>" EOL;
+        else if (you.hunger_state <= HS_HUNGRY)
+            result += "<green>You heal slowly.</green>" EOL;
+        else if (you.hunger_state >= HS_FULL)
+            result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
         have_any = true;
         break;
         
@@ -1449,7 +1449,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     // putting boots on after they are forced off. -- bwr
     if (mutat == MUT_HOOVES
-        && (you.species == SP_NAGA || you.species == SP_CENTAUR
+        && (you.species == SP_NAGA || you.mutation[MUT_HOOVES]
             || you.species == SP_KENKU || player_genus(GENPC_DRACONIAN)))
     {
         return false;
@@ -2392,7 +2392,7 @@ bool give_cosmetic_mutation()
             how_much = 1 + random2(3);
         }
 
-        if (you.species != SP_CENTAUR && you.species != SP_NAGA
+        if (you.species != SP_NAGA && !you.mutation[MUT_HOOVES]
             && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN)
             && one_chance_in(5))
         {

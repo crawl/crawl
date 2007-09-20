@@ -519,7 +519,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
        if (eq == EQ_BOOTS
            && (player_is_swimming() && you.species == SP_MERFOLK
-               || you.mutation[MUT_HOOVES] >= 2))
+               || you.mutation[MUT_HOOVES]))
        {
            return false;
        }
@@ -844,17 +844,17 @@ int player_regen(void)
     // healing depending on satiation
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state == HS_FULL)
+        if (you.hunger_state <= HS_STARVING)
+            return 0; // no regeneration for starving vampires
+        else if (you.hunger_state <= HS_HUNGRY)
+            return (rr / 2);
+        else if (you.hunger_state >= HS_FULL)
             return (rr + 20);
         else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
                  || you.hunger_state > HS_HUNGRY)
         {
             return rr;
         }
-        else if (you.hunger_state == HS_HUNGRY)
-            return (rr / 2);
-        else if (you.hunger_state == HS_STARVING)
-            return 0; // no regeneration for starving vampires
     }
 
     if (rr < 1)
@@ -3293,8 +3293,9 @@ void display_char_status()
     if (you.duration[DUR_PRAYER])
         mpr( "You are praying." );
 
-    if (you.duration[DUR_REGENERATION] &&
-        (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY))
+    if (you.duration[DUR_REGENERATION]
+        && (you.species != SP_VAMPIRE || you.hunger_state >= HS_HUNGRY)
+        || you.species == SP_VAMPIRE && you.hunger_state >= HS_FULL)
     {
         if (you.disease)
             mpr("You are recuperating from your illness.");
