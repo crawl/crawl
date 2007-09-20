@@ -614,8 +614,7 @@ bool melee_attack::player_aux_unarmed()
         {
             if (uattack != UNAT_KICK)        //jmf: hooves mutation
             {
-                if ((you.species != SP_CENTAUR && you.species != SP_KENKU
-                     && !you.mutation[MUT_HOOVES])
+                if (you.species != SP_KENKU && !you.mutation[MUT_HOOVES]
                     || coinflip())
                 {
                     continue;
@@ -643,9 +642,7 @@ bool melee_attack::player_aux_unarmed()
             else
                 unarmed_attack = "kick";
             
-            aux_damage = ((you.mutation[MUT_HOOVES]
-                           || you.species == SP_CENTAUR
-                           || clawed_kick) ? 10 : 5);
+            aux_damage = ((you.mutation[MUT_HOOVES] || clawed_kick) ? 10 : 5);
             break;
         }
 

@@ -609,7 +609,7 @@ void canned_msg(canned_message_type which_message)
     {
     case MSG_SOMETHING_APPEARS:
         mprf("Something appears %s!",
-             (you.species == SP_NAGA || you.species == SP_CENTAUR)
+             (you.species == SP_NAGA || you.mutation[MUT_HOOVES])
              ? "before you" : "at your feet");
         break;
 

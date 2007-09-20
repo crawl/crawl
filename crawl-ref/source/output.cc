@@ -1604,7 +1604,6 @@ std::string status_mut_abilities()
 
       case SP_GHOUL:
           text += "saprovore 3";
-          text += ", deterioration";
           have_any = true;
           break;
 

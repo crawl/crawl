@@ -702,7 +702,7 @@ static void armour_wear_effects(const int item_slot)
         {
         case SPARM_RUNNING:
             mprf("You feel quick%s.",
-                    (you.species == SP_NAGA || you.species == SP_CENTAUR) 
+                    (you.species == SP_NAGA || you.mutation[MUT_HOOVES])
                     ? "" : " on your feet");
             break;
 

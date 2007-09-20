@@ -1940,6 +1940,7 @@ static void give_basic_mutations(species_type speci)
         you.mutation[MUT_FAST] = 2;
         you.mutation[MUT_DEFORMED] = 1;
         you.mutation[MUT_FAST_METABOLISM] = 2;
+        you.mutation[MUT_HOOVES] = 2;
         break;
     case SP_NAGA:
         you.mutation[MUT_ACUTE_VISION] = 1;
