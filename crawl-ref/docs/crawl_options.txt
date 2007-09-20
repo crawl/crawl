@@ -711,9 +711,12 @@ stash_tracking = (all | explicit | dropped)
         want it to keep track of. You do that by stepping onto the square 
         containing your stash of goodies and hitting Ctrl+S. The game will now 
         keep track of what's on the square, when you add and remove stuff from 
-        your stash. If you remove everything from that square, the game will 
-        stop tracking the square altogether. You can also erase a stash square 
-        with Ctrl-E.
+        your stash. You can also inscribe an item with "=s" to automatically
+        mark a square as a stash whenever that item is dropped.  If you
+        remove everything from that square, the game will stop tracking
+        the square altogether. You can also erase a stash square with
+        Ctrl-E. Explicitly marked stashes will never be sacrificed by a
+        Nemelex Xobeh worshipper.
         
         When stash_tracking is set to 'dropped', any square where you drop 
         something becomes a stash, and the game keeps track of all such 
@@ -1112,7 +1115,12 @@ functional, namely all containing one of the following
  !w     -- before wielding this item, Crawl will ask for confirmation
  !*     -- any action with this item causes a prompt
  !p     -- Nemelex Xobeh worshippers will be prompted before
-           sacrificing this item at the portable altar
+           sacrificing a stack of items containing an item with this
+           inscription; if the answer is "no", the whole stack will be
+           skipped, and none of the items sacrificed.
+ =p     -- Nemelex Xobeh worshippers will be prompted before
+           sacrificing this particular item; if the answer is "no",
+           then Crawl will go on to sacrifice further items in the stack.
  =g     -- item will be picked up automatically if autopickup is on
  =k     -- item will be ignored in all listings on the ground
            (it can still be picked up if it's the only item on the ground)
