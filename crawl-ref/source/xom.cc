@@ -167,6 +167,7 @@ static void xom_make_item(object_class_type base,
 
     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
     canned_msg(MSG_SOMETHING_APPEARS);
+    stop_running();
 
     origin_acquired(mitm[thing_created], GOD_XOM);
 }

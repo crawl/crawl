@@ -1056,7 +1056,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
         {
         case EQ_BOOTS:
 
-            if (you.mutation[MUT_HOOVES] >= 2)
+            if (you.mutation[MUT_HOOVES])
             {
                 if (!quiet)
                     mpr("You can't wear boots with hooves!");
@@ -1115,7 +1115,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                     return (false);
                 }
 
-                if (you.mutation[MUT_HOOVES] >= 2)
+                if (you.mutation[MUT_HOOVES])
                 {
                     if (!quiet)
                         mpr( "You can't wear boots with hooves!" );

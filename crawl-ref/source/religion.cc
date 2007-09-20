@@ -509,7 +509,7 @@ static void do_god_gift(bool prayed_for)
 
         case GOD_ZIN:
             //jmf: "good" god will feed you (a la Nethack)
-            if (you.hunger_state == HS_STARVING
+            if (you.hunger_state <= HS_STARVING
                 && you.piety >= 30)
             {
                 god_speaks(you.religion, "Your stomach feels content.");

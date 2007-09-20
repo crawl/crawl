@@ -1931,7 +1931,7 @@ static void display_skill_table(bool show_aptitudes)
         {
             gotoxy(1, bottom_line);
             formatted_string::parse_string("Press '!' to toggle between "
-                                           "<blue>progress</blue> and "
+                                           "<cyan>progress</cyan> and "
                                            "<red>aptitude</red> "
                                            "display.").display();
         }
