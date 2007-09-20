@@ -67,6 +67,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -742,6 +743,13 @@ static bool is_risky_sacrifice(const item_def& item)
 
 static bool confirm_pray_sacrifice()
 {
+    if (Options.stash_tracking == STM_EXPLICIT
+        && is_stash(you.x_pos, you.y_pos))
+    {
+        mpr("You can't sacrifice explictly marked stashes.");
+        return false;
+    }
+
     for ( int i = igrd[you.x_pos][you.y_pos]; i != NON_ITEM;
           i = mitm[i].link )
     {
@@ -749,9 +757,9 @@ static bool confirm_pray_sacrifice()
         if ( is_risky_sacrifice(item) ||
              has_warning_inscription(item, OPER_PRAY) )
         {
-            std::string prompt = "Really sacrifice ";
+            std::string prompt = "Really sacrifice stack with ";
             prompt += item.name(DESC_NOCAP_A);
-            prompt += '?';
+            prompt += " in it?";
             if ( !yesno(prompt.c_str(), false, 'n') )
                 return false;
         }
@@ -2837,8 +2845,10 @@ void offer_items()
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
-        const int next = mitm[i].link;  // in case we can't get it later.
-        const int value = item_value( mitm[i], true );
+        item_def &item(mitm[i]);
+        const int next  = item.link;  // in case we can't get it later.
+        const int value = item_value( item, true );
+
 
         if (!god_likes_item(you.religion, mitm[i]))
         {
@@ -2855,6 +2865,20 @@ void offer_items()
         switch (you.religion)
         {
         case GOD_NEMELEX_XOBEH:
+            if ( is_risky_sacrifice(item) ||
+                 item.inscription.find("=p") != std::string::npos)
+            {
+                std::string msg = "Really sacrifice ";
+                msg += item.name(DESC_NOCAP_A);
+                msg += "?";
+
+                if (!yesno(msg.c_str()))
+                {
+                    i = next;
+                    continue;
+                }
+            }
+
             you.sacrifice_value[mitm[i].base_type] += value;
             if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
             {
