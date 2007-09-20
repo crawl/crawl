@@ -51,24 +51,30 @@
 int how_mutated(void);
 char body_covered(void);
 
-const char* troll_claw_messages[3] = {
+const char *troll_claw_descrip[4] = {
+    "You have claws for hands.",
+    "You have sharp claws for hands.",
+    "You have very sharp claws for hands.",
+    "You have claws sharper than steel for hands."
+};
+
+const char *troll_claw_gain[3] = {
     "Your claws sharpen.",
     "Your claws sharpen.",
     "Your claws steel!"
 };
 
-const char* naga_speed_descrip[4] = {
+const char *troll_claw_lose[3] = {
+    "Your claws look duller.",
+    "Your claws look duller.",
+    "Your claws feel softer."
+};
+
+const char *naga_speed_descrip[4] = {
     "You cover the ground very slowly.",    // 10*14/10 = 14
     "You cover the ground rather slowly.",  //  8*14/10 = 11
     "You cover the ground rather quickly.", //  7*14/10 = 9
-    "You cover the ground quickly.",        //  6*14/10 = 8
-};
-
-const char* troll_claw_descrip[4] = {
-    "You have claws for hands.",
-    "You have sharp claws for hands.",
-    "You have very sharp claws for hands.",
-    "You have claws sharper than steel for hands."
+    "You cover the ground quickly."         //  6*14/10 = 8
 };
 
 const char *mutation_descrip[][3] = {
@@ -1187,6 +1193,13 @@ formatted_string describe_mutations()
     {
         if (you.mutation[i] != 0 && !you.demon_pow[i])
         {
+            // this is already handled above:
+            if (you.species == SP_NAGA &&
+                (i == MUT_BREATHE_POISON || i == MUT_FAST))
+                continue;
+            if (you.species == SP_TROLL && i == MUT_CLAWS)
+                continue;
+                
             have_any = true;
 
             result += mutation_name(static_cast<mutation_type>(i));
@@ -1460,6 +1473,9 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return false;
     }
 
+    if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
+        return false;
+
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
         return false;
 
@@ -1612,7 +1628,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
          break;
          
     case MUT_CLAWS:
-        mpr((you.species == SP_TROLL ? troll_claw_messages
+        mpr((you.species == SP_TROLL ? troll_claw_gain
              : gain_mutation[mutat])[you.mutation[mutat]],
              MSGCH_MUTATION);
 
@@ -1874,6 +1890,12 @@ bool delete_mutation(mutation_type which_mutation, bool force)
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
         modify_stat(STAT_DEXTERITY, 1, true);
+
+    case MUT_CLAWS:
+        mpr((you.species == SP_TROLL ? troll_claw_lose
+             : lose_mutation[mutat])[you.mutation[mutat] - 1],
+             MSGCH_MUTATION);
+        break;
 
     default:
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);

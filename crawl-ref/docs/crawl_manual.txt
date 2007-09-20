@@ -1336,11 +1336,12 @@ at using armour and shields. They are poor at missile combat, the single
 exception being crossbows, those being rather mechanical weapons. Since
 pole-arms usually are too big for them to wield comfortably, they make
 quite bad weapons for Dwarves.
+
 In general, they are rather resistant to magic than capable of dealing
 with it. However, they are very proficient at earth and fire magics. 
 Thus, many a Mountain Dwarf started career as an elementalist in one of 
-those schools.
-They advance in levels at a similar rate to Grey and Deep elves.
+those schools. They advance in levels at a similar rate to Grey and Deep
+elves.
 
 Halflings:
 ----------
@@ -1377,14 +1378,14 @@ Hill orcs are orcs from the upper world who, jealous of the riches which
 their cousins the cave orcs possess below the ground, descend in search 
 of plunder and adventure.
 
-Hill orcs are as robust as the hill dwarves, but have very low reserves 
-of magical energy. Their forte is brute-force fighting, and they are 
-skilled at using most hand weapons (with the exception of short blades, 
-at which they are only fair), although they are not particularly good at
-using missile weapons. They prefer to use their own weapons. Orcs are 
-poor at using most types of magic with the exception of conjurations, 
-necromancy, and earth and fire elemental magic. They advance as quickly
-as humans.
+Hill orcs are as robust as the mountain dwarves, but have very low 
+reserves of magical energy. Their forte is brute-force fighting, and 
+they are skilled at using most hand weapons (with the exception of short 
+blades, at which they are only fair), although they are not particularly 
+good at using missile weapons. They prefer to use their own weapons. 
+Orcs are poor at using most types of magic with the exception of 
+conjurations, necromancy, and earth and fire elemental magic. They 
+advance as quickly as humans.
 
 Kobolds:
 --------
@@ -1456,7 +1457,8 @@ Genealogists would call these species Common Ogres and Sapient Ogres rather,
 yet the folklore labels stuck somehow. These two are genuinely different 
 races stemming from a mythological progenitor, the Primordial Ogre. 
 While crossbreeding is possible, it is generally frowned upon in Ogre 
-societies: the resulting offspring is often ill-fated, and in very rare cases, even two-headed ogres result.
+societies: the resulting offspring is often ill-fated, and in very rare
+cases, even two-headed ogres result.
 
 Ogres are huge, chunky creatures who usually live to do nothing more than 
 smash, smash, smash, and destroy. They have great physical strength, but 
