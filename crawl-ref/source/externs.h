@@ -318,6 +318,7 @@ struct delay_queue_item
     int         duration;
     int         parm1;
     int         parm2;
+    bool        started;
 };
 
 

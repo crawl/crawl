@@ -317,12 +317,6 @@ bool butchery(void)
 
         if ( can_butcher )
         {
-            // we actually butcher now
-            if ( teeth_butcher || barehand_butcher )
-                mpr("You start tearing the corpse apart.");
-            else
-                mpr("You start hacking away.");
-
             bool rotten = (mitm[objl].special < 100);
             if (you.duration[DUR_PRAYER] && !rotten &&
                 god_likes_butchery(you.religion))

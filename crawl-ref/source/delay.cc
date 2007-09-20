@@ -111,32 +111,16 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     delay.duration = turns;
     delay.parm1 = parm1;
     delay.parm2 = parm2;
+    delay.started = false;
 
     // Handle zero-turn delays (possible with butchering).
     if (turns == 0)
     {
+        delay.started = true;
         // Don't issue startup message.
         if (push_delay(delay) == 0)
             finish_delay(delay);
         return;
-    }
-
-    switch ( delay.type )
-    {
-    case DELAY_ARMOUR_ON:
-        mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
-        break;
-    case DELAY_ARMOUR_OFF:
-        mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
-        break;
-    case DELAY_MEMORISE:
-        mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
-        break;
-    case DELAY_PASSWALL:
-        mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
-        break;
-    default:
-        break;
     }
     push_delay( delay ); 
 }
@@ -308,6 +292,31 @@ void handle_delay( void )
         return;
 
     delay_queue_item &delay = you.delay_queue.front();
+
+    if ( !delay.started )
+    {
+        switch ( delay.type )
+        {
+        case DELAY_ARMOUR_ON:
+            mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
+            break;
+        case DELAY_ARMOUR_OFF:
+            mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
+            break;
+        case DELAY_BUTCHER:
+            mpr("You start butchering the corpse.", MSGCH_MULTITURN_ACTION);
+            break;
+        case DELAY_MEMORISE:
+            mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
+            break;
+        case DELAY_PASSWALL:
+            mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
+            break;
+        default:
+            break;
+        }
+        delay.started = true;
+    }
 
     ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
