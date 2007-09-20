@@ -729,8 +729,7 @@ void more(void)
     }
 #endif
 
-    if (crawl_state.is_repeating_cmd()
-        && !crawl_state.cmd_repeat_start)
+    if (crawl_state.is_replaying_keys())
     {
         mesclr();
         return;
