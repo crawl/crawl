@@ -267,6 +267,7 @@ const char *mutation_descrip[][3] = {
      "There are several blue sigils on your hands and arms.",
      "Your hands, arms and shoulders are covered in intricate, arcane blue writing."},
 
+    // 65
     {"There is a green sigil on your chest.",
      "There are several green sigils on your chest and abdomen.",
      "Your chest, abdomen and neck are covered in intricate, arcane green writing."},
@@ -275,7 +276,7 @@ const char *mutation_descrip[][3] = {
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-    {"", "", ""},
+
     // 70
 
     {"You are partially covered in red scales (AC + 1).",
@@ -514,6 +515,7 @@ const char *gain_mutation[][3] = {
     {"Your hands itch.", "Your hands and forearms itch.",
      "Your arms, hands and shoulders itch."},
 
+    // 65
     {"Your chest itches.", "Your chest and abdomen itch.",
      "Your chest, abdomen and neck itch."},
 
@@ -521,7 +523,7 @@ const char *gain_mutation[][3] = {
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-    {"", "", ""},
+
     // 70
 
     {"Red scales grow over part of your body.",
@@ -730,14 +732,15 @@ const char *lose_mutation[][3] = {
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
-// 70
 
+    // 65
+    {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
+
+    // 70
     {"Your red scales disappear.", "Your red scales recede somewhat.",
      "Your red scales recede somewhat."},
 
@@ -770,8 +773,8 @@ const char *lose_mutation[][3] = {
 
     {"Your purple scales disappear.", "Your purple scales recede somewhat.",
      "Your purple scales recede somewhat."},
-// 80
 
+    // 80
     {"Your speckled scales disappear.",
      "Your speckled scales recede somewhat.",
      "Your speckled scales recede somewhat."},
@@ -867,7 +870,6 @@ const char mutation_rarity[] = {
     1,                          //jmf: hooves
 // 60
     1,
-    0,
     0,
     0,
     0,
@@ -1757,13 +1759,14 @@ int how_mutated(void)
     return (j);
 }                               // end how_mutated()
 
-bool delete_mutation(mutation_type which_mutation)
+bool delete_mutation(mutation_type which_mutation, bool force)
 {
     mutation_type mutat = which_mutation;
     int i;
 
-    if (you.mutation[MUT_MUTATION_RESISTANCE] > 1
-        && (you.mutation[MUT_MUTATION_RESISTANCE] == 3 || coinflip()))
+    if (!force
+        && (you.mutation[MUT_MUTATION_RESISTANCE] > 1
+            && (you.mutation[MUT_MUTATION_RESISTANCE] == 3 || coinflip())))
     {
         mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
         return false;
