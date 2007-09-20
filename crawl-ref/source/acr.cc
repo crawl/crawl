@@ -1276,11 +1276,6 @@ static void input()
                                && !crawl_state.cmd_repeat_start);
 
     crawl_state.input_line_curr = 0;
-    if (!crawl_state.is_repeating_cmd()
-        && !crawl_state.doing_prev_cmd_again)
-    {
-        crawl_state.input_line_strs.clear();
-    }
 
     {
         // Enable the cursor to read input. The cursor stays on while
@@ -1299,6 +1294,7 @@ static void input()
             && !crawl_state.is_replaying_keys())
         {
             crawl_state.prev_cmd = cmd;
+            crawl_state.input_line_strs.clear();
         }
 
         if (cmd != CMD_MOUSE_MOVE)
