@@ -979,7 +979,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                more();
                text << "\n\nAs a worshipper of "
                     << god_name(GOD_TROG)
-                    << ", though, you might instead wish to burn this tome of "
+                    << ", though, you might instead wish to burn those tomes of "
                        "hated magic by using the corresponding "
                        "<w>a<magenta>bility.";
           }
@@ -996,7 +996,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
           {
               text << "\nAs you're already trained in Axes you should stick "
-                  "with these. Checking other axes can be worthwhile.";
+                      "with these. Checking other axes can be worthwhile.";
           }
           break;
           

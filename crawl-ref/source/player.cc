@@ -5689,9 +5689,12 @@ void player::teleport(bool now, bool abyss_shift)
 
 void player::hurt(const actor *agent, int amount)
 {
+    const monsters *mon = dynamic_cast<const monsters*>(agent);
     if (agent->atype() == ACT_MONSTER)
-        ouch(amount, monster_index( dynamic_cast<const monsters*>(agent) ),
-             KILLED_BY_MONSTER);
+    {
+        ouch(amount, monster_index( mon ),
+             KILLED_BY_MONSTER, "", player_monster_visible(mon));
+    }
     else
     {
         // Should never happen!

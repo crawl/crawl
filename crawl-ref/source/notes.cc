@@ -130,7 +130,9 @@ static bool is_noteworthy( const Note& note )
     /* hp noteworthiness is handled in its own function */
     if ( note.type == NOTE_HP_CHANGE &&
          !is_noteworthy_hp(note.first, note.second) )
+    {
         return false;
+    }
 
     /* skills are noteworthy if in the skill value list or if
        it's a new maximal skill (depending on options) */
