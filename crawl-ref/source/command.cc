@@ -26,6 +26,8 @@
 #include "abl-show.h"
 #include "chardump.h"
 #include "cio.h"
+#include "database.h"
+#include "describe.h"
 #include "files.h"
 #include "invent.h"
 #include "itemname.h"
@@ -679,6 +681,65 @@ help_file help_files[] = {
     { NULL, 0, false }
 };
 
+static void find_description()
+{
+    clrscr();
+    viewwindow(true, false);
+
+    mpr("Describe what? (can be a partial name or a regex) ");
+    char buf[80];
+    if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    {
+        canned_msg( MSG_OK);
+        return;
+    }
+
+    std::string regex = trimmed_string(buf);
+
+    if (regex == "")
+    {
+        mpr("Description must contain at least one non-space.");
+        return;
+    }
+
+    // Try to get an exact match first.
+    std::string key   = regex;
+    std::string desc  = getLongDescription(key);
+
+    if (desc == "")
+    {
+        std::vector<std::string> matches = getLongDescriptionByRegex(regex);
+
+        if (matches.size() == 0)
+        {
+            mprf("Nothing matches '%s'", buf);
+            return;
+        }
+        else if (matches.size() > 1)
+        {
+            std::string prefix = "No exact match for '" +
+                regex +  "', possible matches are: ";
+
+            // Use mpr_comma_separated_list() because the list
+            // might be *LONG*.
+            mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                     MSGCH_PLAIN);
+            return;
+        }
+        else
+        {
+            // Only one match, use that.
+            key  = matches[0];
+            desc = getLongDescription(key);
+        }
+    }
+    key = uppercase_first(key);
+    key += "$$";
+
+    clrscr();
+    print_description(key + desc);
+}
+
 static int keyhelp_keyfilter(int ch)
 {
     switch (ch)
@@ -690,10 +751,19 @@ static int keyhelp_keyfilter(int ch)
             display_notes();
             return -1;
         }
-        // fall through
-    default:
-        return ch;
+        break;
+
+    case '/':
+        find_description();
+
+        if ( getch() == 0 )
+            getch();
+
+        viewwindow(true, false);
+
+        return -1;
     }
+    return ch;
 }
 
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
@@ -733,6 +803,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>~</w>: Macros help\n"
             "<w>!</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
+            "<w>/</w>: Lookup description\n"
             "<w>Home</w>: This screen\n",
             true, true, cmdhelp_textfilter);
 

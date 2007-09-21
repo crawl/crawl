@@ -89,7 +89,7 @@ static void append_value( std::string & description, int valu, bool plussed )
 // word and such. The character $ is interpreted as a CR.
 //
 //---------------------------------------------------------------
-static void print_description( const std::string &d )
+void print_description( const std::string &d )
 {
     std::string::size_type nextLine = std::string::npos;
     unsigned int  currentPos = 0;
