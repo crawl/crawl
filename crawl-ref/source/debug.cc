@@ -2668,20 +2668,23 @@ void debug_place_map()
     debug_load_map_by_name(what);
 }
 
-void debug_dismiss_all_monsters()
+void debug_dismiss_all_monsters(bool force_all)
 {
     char buf[80];
-    mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
-    bool validline = !cancelable_get_line(buf, sizeof buf, 80);
-
-    if (!validline)
+    if (!force_all)
     {
-        canned_msg( MSG_OK );
-        return;
+        mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
+        bool validline = !cancelable_get_line(buf, sizeof buf, 80);
+
+        if (!validline)
+        {
+            canned_msg( MSG_OK );
+            return;
+        }
     }
 
     // Dismiss all
-    if (buf[0] == '\0')
+    if (buf[0] == '\0' || force_all)
     {
         // Genocide... "unsummon" all the monsters from the level.
         for (int mon = 0; mon < MAX_MONSTERS; mon++)
@@ -2753,7 +2756,7 @@ static void debug_destroy_doors()
 // f) Counts number of turns needed to explore the level.
 void debug_test_explore()
 {
-    debug_dismiss_all_monsters();
+    debug_dismiss_all_monsters(true);
     debug_kill_traps();
     forget_map(100);
 
