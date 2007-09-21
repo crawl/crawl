@@ -732,7 +732,7 @@ static void xom_checks_damage(kill_method_type death_type,
 
 // death_source should be set to zero for non-monsters {dlb}
 void ouch( int dam, int death_source, kill_method_type death_type,
-           const char *aux )
+           const char *aux, bool see_source )
 {
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );
@@ -797,18 +797,25 @@ void ouch( int dam, int death_source, kill_method_type death_type,
             }
 
             xom_checks_damage(death_type, dam, death_source);
-            return;
-        }
-        
-        take_note(
-                Note(
-                    NOTE_HP_CHANGE, 
-                    you.hp, 
-                    you.hp_max, 
-                    scorefile_entry(dam, death_source, death_type, aux, true)
-                        .death_description(scorefile_entry::DDV_TERSE)
-                        .c_str()) );
 
+            // for note taking
+            std::string damage_desc = "";
+            if (!see_source)
+            {
+                snprintf(info, INFO_SIZE, "something (%d)", dam);
+                damage_desc = info;
+            }
+            else
+            {
+                damage_desc = scorefile_entry(dam, death_source, death_type, aux, true)
+                              .death_description(scorefile_entry::DDV_TERSE);
+            }
+
+            take_note(
+                Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
+                
+            return;
+        } // else hp <= 0
     }
 
 #ifdef WIZARD

@@ -96,7 +96,7 @@ void scrolls_burn(char burn_strength, char target_class);
  *              ouch - output - religion - spells - spells2 - spells4
  * *********************************************************************** */
 void ouch(int dam, int death_source, kill_method_type death_type,
-          const char *aux = NULL);
+          const char *aux = NULL, bool see_source = true);
 
 
 // last updated 12may2000 {dlb}
