@@ -785,7 +785,7 @@ you can wear only one at a time.
 
 You can press '"' to quickly check what jewellery you're wearing.
 
-| Staves:
+\| Staves:
 ----------
 There are a number of types of magical staves. Some enhance your general
 spellcasting ability, while some greatly increase the power of a certain
