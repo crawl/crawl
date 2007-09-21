@@ -2927,8 +2927,10 @@ static bool handle_wand(monsters *monster, bolt &beem)
         bool was_visible =
             mons_near(monster) && player_monster_visible(monster);
 
+        item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
+
         // map wand type to monster spell type
-        int mzap = map_wand_to_mspell(mitm[monster->inv[MSLOT_WAND]].sub_type);
+        int mzap = map_wand_to_mspell(wand.sub_type);
         if (mzap == 0)
             return (false);
 
@@ -2952,18 +2954,17 @@ static bool handle_wand(monsters *monster, bolt &beem)
         beem.is_beam = theBeam.is_beam;
         beem.is_explosion = theBeam.is_explosion;
 
-        item_def item = mitm[ monster->inv[MSLOT_WAND] ];
-
+        unsigned long old_flags = wand.flags;
 #if HISCORE_WEAPON_DETAIL
-        set_ident_flags( item, ISFLAG_IDENT_MASK );
+        set_ident_flags( wand, ISFLAG_IDENT_MASK );
 #else
-        unset_ident_flags( item, ISFLAG_IDENT_MASK );
-        set_ident_flags( item, ISFLAG_KNOW_TYPE );
+        unset_ident_flags( wand, ISFLAG_IDENT_MASK );
+        set_ident_flags( wand, ISFLAG_KNOW_TYPE );
 #endif
+        beem.aux_source = wand.name(DESC_PLAIN);
+        wand.flags      = old_flags;
 
-        beem.aux_source = item.name(DESC_PLAIN);
-
-        const int wand_type = mitm[monster->inv[MSLOT_WAND]].sub_type;
+        const int wand_type = wand.sub_type;
         switch (wand_type)
         {
             // these have been deemed "too tricky" at this time {dlb}:
@@ -3046,7 +3047,7 @@ static bool handle_wand(monsters *monster, bolt &beem)
             }
 
             // charge expenditure {dlb}
-            mitm[monster->inv[MSLOT_WAND]].plus--;
+            wand.plus--;
             beem.is_tracer = false;
             fire_beam( beem );
 
@@ -3056,6 +3057,10 @@ static bool handle_wand(monsters *monster, bolt &beem)
                     set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
                 else
                     set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+
+                // increment zap count
+                if ( wand.plus2 >= 0 )
+                    wand.plus2++;
             }
 
             return (true);
@@ -3640,39 +3645,6 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
         *launcher = launch;
         return (missiles->index());
     }
-}
-
-bool mons_eq_obvious_ego(const item_def &item, const struct monsters *mon)
-{
-    if (is_artefact(item))
-        return false;
-
-    // Only do weapons for now
-    if (item.base_type != OBJ_WEAPONS)
-        return false;
-
-    int ego = item.special;
-
-    switch(ego)
-    {
-     
-    case SPWPN_FLAMING:
-    case SPWPN_FREEZING:
-    case SPWPN_HOLY_WRATH:
-    case SPWPN_VENOM:
-    // Electric branded weapons are constantly crackling
-    case SPWPN_ELECTROCUTION:
-    // Unlike SPWPN_FLAME, SPWPN_FROST has a persistant visual effect.
-    case SPWPN_FROST: 
-        return true;
-
-    // SPWPN_FLAME just "glows red for a moment" when first equipped,
-    // so it isn't obvious after that.
-    case SPWPN_FLAME:
-        return false;
-    }
-
-    return false;
 }
 
 //---------------------------------------------------------------
