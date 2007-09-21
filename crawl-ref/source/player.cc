@@ -5920,6 +5920,9 @@ const std::string PlaceInfo::short_name() const
 
         case LEVEL_LABYRINTH:
             return "Labyrinth";
+            
+        case LEVEL_PORTAL_VAULT:
+            return "Portal Vault";
 
         default:
             return "Bug";

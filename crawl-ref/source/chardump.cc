@@ -277,6 +277,14 @@ static void sdump_visits(dump_params &par)
 {
     std::string &text(par.text);
 
+    std::string have = "have ";
+    std::string seen = "seen";
+    if (par.se) // you died -> past tense
+    {
+        have = "";
+        seen = "saw";
+    }
+
     std::vector<PlaceInfo> branches_visited =
         you.get_all_place_info(true, true);
 
@@ -284,35 +292,29 @@ static void sdump_visits(dump_params &par)
     for (unsigned int i = 0; i < branches_visited.size(); i++)
         branches_total += branches_visited[i];
 
-    text += make_stringf("You have visited %ld branch",
-                         branches_visited.size());
+    text += make_stringf("You %svisited %ld branch",
+                         have.c_str(), branches_visited.size());
     if (branches_visited.size() > 1)
         text += "es";
-    text += make_stringf(" of the dungeon, and seen %ld of its level",
-                         branches_total.levels_seen);
-    if (branches_total.levels_seen > 1)
-        text += "s";
-    text += ".\n";
+    text += make_stringf(" of the dungeon, and %s %ld of its levels.\n",
+                         seen.c_str(), branches_total.levels_seen);
 
     PlaceInfo place_info = you.get_place_info(LEVEL_PANDEMONIUM);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You have visited Pandemonium %ld time",
-                             place_info.num_visits);
+        text += make_stringf("You %svisited Pandemonium %ld time",
+                             have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
-        text += make_stringf(", and seen %ld of its levels.\n",
-                             place_info.levels_seen);
-        if (place_info.levels_seen > 1)
-            text += "s";
-        text += ".\n";
+        text += make_stringf(", and %s %ld of its levels.\n",
+                             seen.c_str(), place_info.levels_seen);
     }
 
     place_info = you.get_place_info(LEVEL_ABYSS);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You have visited the Abyss %ld time",
-                             place_info.num_visits);
+        text += make_stringf("You %svisited the Abyss %ld time",
+                             have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
         text += ".\n";
@@ -321,8 +323,8 @@ static void sdump_visits(dump_params &par)
     place_info = you.get_place_info(LEVEL_LABYRINTH);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You have visited %ld Labyrinth",
-                             place_info.num_visits);
+        text += make_stringf("You %svisited %ld Labyrinth",
+                             have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
         text += ".\n";
@@ -331,8 +333,8 @@ static void sdump_visits(dump_params &par)
     place_info = you.get_place_info(LEVEL_PORTAL_VAULT);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You have visited %ld portal chamber",
-                             place_info.num_visits);
+        text += make_stringf("You %svisited %ld portal chamber",
+                             have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
         text += " (including bazaars).\n";
