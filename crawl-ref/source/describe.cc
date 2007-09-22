@@ -3595,7 +3595,10 @@ void describe_monsters(monsters& mons)
     // -peterb 4/14/07
     description << getLongDescription(mons.name(DESC_PLAIN));
 
-    unsigned char symbol = get_monster_data(mons.type)->showchar;
+    std::string symbol = "";
+    symbol += get_monster_data(mons.type)->showchar;
+    if (isupper(symbol[0]))
+        symbol = "cap-" + symbol;
 
     std::string symbol_prefix = "__";
     symbol_prefix += symbol;

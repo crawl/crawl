@@ -909,7 +909,10 @@ static bool find_description()
             return (false);
         }
 
-        unsigned char symbol = get_monster_data(mon_num)->showchar;
+        std::string symbol = "";
+        symbol += get_monster_data(mon_num)->showchar;
+        if (isupper(symbol[0]))
+            symbol = "cap-" + symbol;
 
         std::string symbol_prefix = "__";
         symbol_prefix += symbol;

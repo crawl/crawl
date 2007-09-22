@@ -1,5 +1,5 @@
 %%%%
-__N_suffix
+__cap-N_suffix
 
 $"The insensible son of Pandu sank down till he reached the Naga kingdom.
 Nagas, furnished with fangs containing virulent venom, bit him by
