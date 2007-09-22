@@ -165,7 +165,44 @@ std::vector<std::string> database_find_keys(DBM *database,
     {
         std::string key((const char *)dbKey.dptr, dbKey.dsize);
 
+        if (key.find("__") != std::string::npos)
+        {
+            dbKey = dbm_nextkey(database);
+            continue;
+        }
+
         if (tpat.matches(key))
+            matches.push_back(key);
+
+        dbKey = dbm_nextkey(database);
+    }
+
+    return (matches);
+}
+
+std::vector<std::string> database_find_bodies(DBM *database,
+                                              const std::string &regex,
+                                              bool ignore_case)
+{
+    text_pattern             tpat(regex, ignore_case);
+    std::vector<std::string> matches;
+
+    datum dbKey = dbm_firstkey(database);
+
+    while (dbKey.dptr != NULL)
+    {
+        std::string key((const char *)dbKey.dptr, dbKey.dsize);
+
+        if (key.find("__") != std::string::npos)
+        {
+            dbKey = dbm_nextkey(database);
+            continue;
+        }
+
+        datum dbBody = dbm_fetch(database, dbKey);
+        std::string body((const char *)dbBody.dptr, dbBody.dsize);
+
+        if (tpat.matches(body))
             matches.push_back(key);
 
         dbKey = dbm_nextkey(database);
@@ -425,7 +462,7 @@ std::string getLongDescription(const std::string &key)
     return std::string((const char *)result.dptr, result.dsize);
 }
 
-std::vector<std::string> getLongDescriptionByRegex(const std::string &regex)
+std::vector<std::string> getLongDescKeysByRegex(const std::string &regex)
 {
     if (!descriptionDB)
     {
@@ -434,6 +471,17 @@ std::vector<std::string> getLongDescriptionByRegex(const std::string &regex)
     }
 
     return database_find_keys(descriptionDB, regex, true);
+}
+
+std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex)
+{
+    if (!descriptionDB)
+    {
+        std::vector<std::string> empty;
+        return (empty);
+    }
+
+    return database_find_bodies(descriptionDB, regex, true);
 }
 
 static std::vector<std::string> description_txt_paths()

@@ -438,8 +438,7 @@ static void handle_wizard_command( void )
     switch (wiz_command)
     { 
     case '?':
-        list_commands(true);        // tell it to list wizard commands
-        redraw_screen();
+        list_commands(true, 0, true);  // tell it to list wizard commands
         break;
 
     case CONTROL('G'):
@@ -1963,10 +1962,12 @@ void process_command( command_type cmd )
 
     case CMD_DISPLAY_COMMANDS:
         if (Options.tutorial_left)
+        {
             list_tutorial_help();
+            redraw_screen();
+        }
         else
-            list_commands(false);
-        redraw_screen();
+            list_commands(false, 0, true);
         break;
 
     case CMD_EXPERIENCE_CHECK:

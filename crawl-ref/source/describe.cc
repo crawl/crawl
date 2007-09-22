@@ -3555,10 +3555,12 @@ static std::string describe_draconian(const monsters *mon)
     description += "scaled humanoid with wings.";
     
     if (subsp != MONS_DRACONIAN)
-        description += "  " + describe_draconian_colour(subsp);
+        if (describe_draconian_colour(subsp) != "")
+            description += "  " + describe_draconian_colour(subsp);
 
     if (subsp != mon->type)
-        description += "  " + describe_draconian_role(mon);
+        if (describe_draconian_role(mon) != "")
+            description += "  " + describe_draconian_role(mon);
 
     return (description);
 }
@@ -3592,6 +3594,13 @@ void describe_monsters(monsters& mons)
     //
     // -peterb 4/14/07
     description << getLongDescription(mons.name(DESC_PLAIN));
+
+    unsigned char symbol = get_monster_data(mons.type)->showchar;
+
+    std::string symbol_prefix = "__";
+    symbol_prefix += symbol;
+    symbol_prefix += "_prefix";
+    description << getLongDescription(symbol_prefix);
 
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))
@@ -3632,26 +3641,6 @@ void describe_monsters(monsters& mons)
     case MONS_NAGA_WARRIOR:
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
-        switch (mons.type)
-        {
-        case MONS_GUARDIAN_NAGA:
-            description << getLongDescription("naga")
-                        << "$These nagas are often used as guardians "
-                           "by powerful creatures.$";
-            break;
-        case MONS_GREATER_NAGA:
-            description << getLongDescription("naga")
-                        << "$It looks strong and aggressive.$";
-            break;
-        case MONS_NAGA_MAGE:
-            description << getLongDescription("naga")
-                        << "$An eldritch nimbus trails its motions.$";
-            break;
-        case MONS_NAGA_WARRIOR:
-            description << getLongDescription("naga")
-                        << "$It bears scars of many past battles.$";
-            break;
-        }
         if (you.species == SP_NAGA)
             description << "It is particularly attractive.";
         else
@@ -3717,6 +3706,12 @@ void describe_monsters(monsters& mons)
     default:
         break;
     }
+
+    description << "\n";
+    std::string symbol_suffix = "__";
+    symbol_suffix += symbol;
+    symbol_suffix += "_suffix";
+    description << getLongDescription(symbol_suffix);
 
 #if DEBUG_DIAGNOSTICS
 
