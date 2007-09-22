@@ -15,7 +15,7 @@
 
 SQL_DBM::SQL_DBM(const std::string &dbname, bool do_open)
     : error(), errc(SQLITE_OK), db(NULL), s_insert(NULL),
-      s_query(NULL), dbfile(dbname)
+      s_query(NULL), s_iterator(NULL), dbfile(dbname)
 {
     if (do_open && !dbfile.empty())
         open();
@@ -95,6 +95,7 @@ void SQL_DBM::close()
         sqlite3_exec(db, "COMMIT;", NULL, NULL, NULL);
         finalise_query(&s_insert);
         finalise_query(&s_query);
+        finalise_query(&s_iterator);
         sqlite3_close(db);
         db = NULL;
     }
@@ -145,10 +146,43 @@ std::string SQL_DBM::query(const std::string &key)
     return (res);
 }
 
+std::auto_ptr<std::string> SQL_DBM::firstkey()
+{
+    if (init_iterator() != SQLITE_OK)
+    {
+        std::auto_ptr<std::string> result;        
+        return (result);
+    }
+
+    return nextkey();
+}
+
+std::auto_ptr<std::string> SQL_DBM::nextkey()
+{
+    std::auto_ptr<std::string> result;        
+    if (s_iterator)
+    {
+        int err = SQLITE_OK;
+        if ((err = ec(sqlite3_step(s_iterator))) == SQLITE_ROW)
+            result.reset(
+                new std::string(
+                    (const char *) sqlite3_column_text(s_iterator, 0) ));
+        else
+            sqlite3_reset(s_iterator);
+    }
+    return (result);    
+}
+
 int SQL_DBM::init_query()
 {
     return s_query? SQLITE_OK :
         prepare_query(&s_query, "SELECT value FROM dbm WHERE key = ?");
+}
+
+int SQL_DBM::init_iterator()
+{
+    return s_iterator? SQLITE_OK :
+        prepare_query(&s_iterator, "SELECT key FROM dbm");
 }
 
 int SQL_DBM::finalise_query(sqlite3_stmt **q)
@@ -179,7 +213,7 @@ sql_datum::sql_datum() : dptr(NULL), dsize(0), need_free(false)
 }
 
 sql_datum::sql_datum(const std::string &s) : dptr(NULL), dsize(s.length()),
-                                     need_free(false)
+                                             need_free(false)
 {
     if ((dptr = new char [dsize]))
     {
@@ -267,6 +301,30 @@ sql_datum dbm_fetch(SQL_DBM *db, const sql_datum &key)
 {
     std::string ans = db->query(std::string(key.dptr, key.dsize));
     return sql_datum(ans);
+}
+
+static sql_datum dbm_key(
+    SQL_DBM *db,
+    std::auto_ptr<std::string> (SQL_DBM::*key)())
+{
+    std::auto_ptr<std::string> res = (db->*key)();
+    if (res.get())
+        return sql_datum(*res.get());
+    else
+    {
+        sql_datum dummy;
+        return dummy;
+    }
+}
+
+sql_datum dbm_firstkey(SQL_DBM *db)
+{
+    return dbm_key(db, &SQL_DBM::firstkey);
+}
+
+sql_datum dbm_nextkey(SQL_DBM *db)
+{
+    return dbm_key(db, &SQL_DBM::nextkey);
 }
 
 int dbm_store(SQL_DBM *db, const sql_datum &key, const sql_datum &value, int)
