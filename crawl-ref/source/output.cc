@@ -198,9 +198,6 @@ void print_stats(void)
 
         you.redraw_strength = 0;
 
-        if (you.strength < 1)
-            ouch(INSTANT_DEATH, 0, KILLED_BY_WEAKNESS);
-
         burden_change();
     }
 
@@ -228,9 +225,6 @@ void print_stats(void)
             cprintf( "       " );
 
         you.redraw_intelligence = 0;
-
-        if (you.intel < 1)
-            ouch(INSTANT_DEATH, 0, KILLED_BY_STUPIDITY);
     }
 
     if (you.redraw_dexterity)
@@ -257,9 +251,6 @@ void print_stats(void)
             cprintf( "       " );
 
         you.redraw_dexterity = 0;
-
-        if (you.dex < 1)
-            ouch(INSTANT_DEATH, 0, KILLED_BY_CLUMSINESS);
     }
 
     if (you.redraw_armour_class)

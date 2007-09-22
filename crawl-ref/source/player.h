@@ -16,6 +16,9 @@
 
 #include "externs.h"
 
+class monsters;
+class item_def;
+
 enum genus_type
 {
     GENPC_DRACONIAN,                   //    0
@@ -290,7 +293,14 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
  * called from: acr - it_use2 - item_use - mutation - transfor - player -
  *              misc - stuff
  * *********************************************************************** */
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg);
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const std::string cause, bool see_source = true);
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const char* cause, bool see_source = true);
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const monsters* cause);
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const item_def &cause, bool removed = false);
 
 
 // last updated 19may2000 {dlb}

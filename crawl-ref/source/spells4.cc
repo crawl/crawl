@@ -1725,8 +1725,12 @@ void cast_intoxicate(int pow)
 {
     potion_effect( POT_CONFUSION, 10 + (100 - pow) / 10);
 
-    if (one_chance_in(20) && lose_stat( STAT_INTELLIGENCE, 1 + random2(3) ))
+    if (one_chance_in(20)
+        && lose_stat( STAT_INTELLIGENCE, 1 + random2(3), false,
+                      "casting intoxication"))
+    {
         mpr("Your head spins!");
+    }
 
     apply_area_visible(intoxicate_monsters, pow);
 }                               // end cast_intoxicate()

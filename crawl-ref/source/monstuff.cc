@@ -2954,15 +2954,14 @@ static bool handle_wand(monsters *monster, bolt &beem)
         beem.is_beam = theBeam.is_beam;
         beem.is_explosion = theBeam.is_explosion;
 
-        unsigned long old_flags = wand.flags;
 #if HISCORE_WEAPON_DETAIL
-        set_ident_flags( wand, ISFLAG_IDENT_MASK );
+        beem.aux_source =
+            wand.name(DESC_QUALNAME, false, true, false, false);
 #else
-        unset_ident_flags( wand, ISFLAG_IDENT_MASK );
-        set_ident_flags( wand, ISFLAG_KNOW_TYPE );
+        beem.aux_source =
+            wand.name(DESC_QUALNAME, false, true, false, false,
+                      ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
 #endif
-        beem.aux_source = wand.name(DESC_PLAIN);
-        wand.flags      = old_flags;
 
         const int wand_type = wand.sub_type;
         switch (wand_type)

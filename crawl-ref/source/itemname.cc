@@ -73,11 +73,13 @@ std::string quant_name( const item_def &item, int quant,
 std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
                            bool with_inscription,
-                           bool quantity_words) const
+                           bool quantity_words,
+                           unsigned long ignore_flags) const
 {
     std::ostringstream buff;
 
-    const std::string auxname = this->name_aux(descrip, terse, ident);
+    const std::string auxname = this->name_aux(descrip, terse, ident,
+                                               ignore_flags);
     const bool startvowel = is_vowel(auxname[0]);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
@@ -943,7 +945,8 @@ static void output_with_sign(std::ostream& os, int val)
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 std::string item_def::name_aux( description_level_type desc,
-                                bool terse, bool ident ) const
+                                bool terse, bool ident,
+                                unsigned long ignore_flags) const
 {
     // Shortcuts
     const int item_typ = this->sub_type;
@@ -954,13 +957,19 @@ std::string item_def::name_aux( description_level_type desc,
     const bool qualname = desc == DESC_QUALNAME;
     
     const bool know_curse =
-        !basename && !qualname
+        !basename && !qualname && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
     
     const bool know_type = ident || item_type_known(*this);
-    const bool know_pluses =
+    const bool __know_pluses =
         !basename && !qualname
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
+
+    const bool know_cosmetic = !__know_pluses && !terse & !basename;
+
+    // So that know_cosmetic won't be affected by ignore_flags
+    const bool know_pluses = __know_pluses
+        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
     bool need_plural = true;
     int brand;
@@ -1012,15 +1021,17 @@ std::string item_def::name_aux( description_level_type desc,
         // Now that we can have "glowing elven" weapons, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (!know_pluses && !terse && !basename)
+        if (know_cosmetic)
         {
             switch (get_equip_desc( *this ))
             {
             case ISFLAG_RUNED:
-                buff << "runed ";
+                if (!testbits(ignore_flags, ISFLAG_RUNED))
+                    buff << "runed ";
                 break;
             case ISFLAG_GLOWING:
-                buff << "glowing ";
+                if (!testbits(ignore_flags, ISFLAG_GLOWING))
+                    buff << "glowing ";
                 break;
             }
         } 
@@ -1117,11 +1128,13 @@ std::string item_def::name_aux( description_level_type desc,
         // Now that we can have "glowing elven" armour, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (!know_pluses && !terse & !basename)
+        if (know_cosmetic)
         {
             switch (get_equip_desc( *this ))
             {
             case ISFLAG_EMBROIDERED_SHINY:
+                if (testbits(ignore_flags, ISFLAG_EMBROIDERED_SHINY))
+                    break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
                 {
@@ -1135,11 +1148,13 @@ std::string item_def::name_aux( description_level_type desc,
                 break;
 
             case ISFLAG_RUNED:
-                buff << "runed ";
+                if (!testbits(ignore_flags, ISFLAG_RUNED))
+                    buff << "runed ";
                 break;
 
             case ISFLAG_GLOWING:
-                buff << "glowing ";
+                if (!testbits(ignore_flags, ISFLAG_GLOWING))
+                    buff << "glowing ";
                 break;
             }
         }

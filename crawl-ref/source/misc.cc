@@ -1241,7 +1241,7 @@ bool go_berserk(bool intentional)
     deflate_hp(you.hp_max, false);
 
     if (!you.duration[DUR_MIGHT])
-        modify_stat( STAT_STRENGTH, 5, true );
+        modify_stat( STAT_STRENGTH, 5, true, "going berserk" );
 
     you.duration[DUR_MIGHT] += you.duration[DUR_BERSERKER];
     haste_player( you.duration[DUR_BERSERKER] );

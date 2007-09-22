@@ -2335,19 +2335,19 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, item.plus, !artefact);
+        modify_stat(STAT_STRENGTH, item.plus, !artefact, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, item.plus, !artefact);
+        modify_stat(STAT_DEXTERITY, item.plus, !artefact, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, item.plus, !artefact);
+        modify_stat(STAT_INTELLIGENCE, item.plus, !artefact, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         break;
@@ -2646,15 +2646,15 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, -item.plus, true);
+        modify_stat(STAT_STRENGTH, -item.plus, true, item, true);
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -item.plus, true);
+        modify_stat(STAT_DEXTERITY, -item.plus, true, item, true);
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -item.plus, true);
+        modify_stat(STAT_INTELLIGENCE, -item.plus, true, item, true);
         break;
 
     case RING_INVISIBILITY:
@@ -3964,9 +3964,9 @@ void use_randart(const item_def &item)
 
     // modify ability scores
     // output result even when identified (because of potential fatality)
-    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false );
-    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false );
-    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false );
+    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false, item );
+    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false, item );
+    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false, item );
 
 
     // For evokable stuff, check whether other equipped items yield

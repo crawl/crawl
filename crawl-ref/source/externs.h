@@ -124,7 +124,7 @@ public:
     virtual void confuse(int strength) = 0;
     virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
-    virtual void drain_stat(int stat, int amount) { }
+    virtual void drain_stat(int stat, int amount, actor* attacker) { }
 
     virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
@@ -354,7 +354,8 @@ public:
     std::string name(description_level_type descrip,
                      bool terse = false, bool ident = false,
                      bool with_inscription = true,
-                     bool quantity_in_words = false) const;
+                     bool quantity_in_words = false,
+                     unsigned long ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
     int  book_number() const;
@@ -371,7 +372,8 @@ public:
     }
 private:
     std::string name_aux( description_level_type desc,
-                          bool terse, bool ident ) const;
+                          bool terse, bool ident,
+                          unsigned long ignore_flags ) const;
 };
 
 class runrest
@@ -742,7 +744,7 @@ public:
     void banish(const std::string &who = "");
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
-    void drain_stat(int stat, int amount);
+    void drain_stat(int stat, int amount, actor* attacker);
 
     void expose_to_element(beam_type element, int strength = 0);
     void god_conduct(conduct_type thing_done, int level);

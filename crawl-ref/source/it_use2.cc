@@ -109,7 +109,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         if ( were_mighty )
             contaminate_player(1);
         else
-            modify_stat(STAT_STRENGTH, 5, true);
+            modify_stat(STAT_STRENGTH, 5, true, "");
 
         // conceivable max gain of +184 {dlb}
         you.duration[DUR_MIGHT] += 35 + random2(pow);
@@ -215,7 +215,8 @@ bool potion_effect( potion_type pot_eff, int pow )
 
     case POT_DEGENERATION:
         mpr("There was something very wrong with that liquid!");
-        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2)))
+        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
+                      "drinking a potion of degeneration"))
             xom_is_stimulated(64);
         break;
 
@@ -500,7 +501,9 @@ void unwear_armour(char unw)
     you.redraw_armour_class = 1;
     you.redraw_evasion = 1;
 
-    switch (get_armour_ego_type( you.inv[unw] ))
+    item_def &item(you.inv[unw]);
+
+    switch (get_armour_ego_type( item ))
     {
     case SPARM_RUNNING:
         mpr("You feel rather sluggish.");
@@ -530,15 +533,15 @@ void unwear_armour(char unw)
         break;
 
     case SPARM_STRENGTH:
-        modify_stat(STAT_STRENGTH, -3, false);
+        modify_stat(STAT_STRENGTH, -3, false, item, true);
         break;
 
     case SPARM_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -3, false);
+        modify_stat(STAT_DEXTERITY, -3, false, item, true);
         break;
 
     case SPARM_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -3, false);
+        modify_stat(STAT_INTELLIGENCE, -3, false, item, true);
         break;
 
     case SPARM_PONDEROUSNESS:
@@ -621,9 +624,12 @@ void unuse_randart(const item_def &item)
     }
 
     // modify ability scores, always output messages
-    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false );
-    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false );
-    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    false );
+    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false, item,
+                 true);
+    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false, item,
+                 true);
+    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    false, item,
+                 true);
 
     if (proprt[RAP_NOISES] != 0)
         you.special_wield = SPWLD_NONE;

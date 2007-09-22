@@ -2546,7 +2546,7 @@ void level_change(bool skip_ability_increase)
             {
             case SP_HUMAN:
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_HIGH_ELF:
@@ -2565,7 +2565,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 3))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false );
+                                                : STAT_DEXTERITY), 1, false,
+                        "level gain");
                 }
                 break;
 
@@ -2586,7 +2587,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false );
+                                                : STAT_DEXTERITY), 1, false,
+                                 "level gain");
                 }
 
                 break;
@@ -2600,7 +2602,7 @@ void level_change(bool skip_ability_increase)
                 mp_adjust++;
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_INTELLIGENCE, 1, false);
+                    modify_stat(STAT_INTELLIGENCE, 1, false, "level gain");
                 break;
 
             case SP_SLUDGE_ELF:
@@ -2612,7 +2614,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false );
+                                                : STAT_DEXTERITY), 1, false,
+                                 "level gain");
                 }
                 break;
 
@@ -2628,12 +2631,12 @@ void level_change(bool skip_ability_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_STRENGTH, 1, false);
+                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
             case SP_HALFLING:
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_DEXTERITY, 1, false);
+                    modify_stat(STAT_DEXTERITY, 1, false, "level gain");
 
                 if (you.experience_level < 17)
                     hp_adjust--;
@@ -2646,7 +2649,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 5))
                 {
                     modify_stat( (coinflip() ? STAT_STRENGTH
-                                                : STAT_DEXTERITY), 1, false );
+                                            : STAT_DEXTERITY), 1, false,
+                                 "level gain");
                 }
 
                 if (you.experience_level < 17)
@@ -2668,7 +2672,7 @@ void level_change(bool skip_ability_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_STRENGTH, 1, false);
+                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
             case SP_MUMMY:
@@ -2704,7 +2708,7 @@ void level_change(bool skip_ability_increase)
                 hp_adjust++;
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (!(you.experience_level % 3))
                 {
@@ -2723,7 +2727,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false );
+                                                : STAT_DEXTERITY), 1, false,
+                                 "level gain");
                 }
                 break;
 
@@ -2742,7 +2747,7 @@ void level_change(bool skip_ability_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 3))
-                    modify_stat(STAT_STRENGTH, 1, false);
+                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
             case SP_OGRE_MAGE:
@@ -2755,7 +2760,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 5))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_STRENGTH), 1, false );
+                                                 : STAT_STRENGTH), 1, false,
+                                 "level gain");
                 }
                 break;
 
@@ -2843,7 +2849,7 @@ void level_change(bool skip_ability_increase)
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = 1;
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 }
                 break;
 
@@ -2871,7 +2877,7 @@ void level_change(bool skip_ability_increase)
                 if ((you.experience_level > 7 && !(you.experience_level % 3))
                     || you.experience_level == 4 || you.experience_level == 7)
                 {
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 }
                 break;
 
@@ -2879,7 +2885,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_DEXTERITY
-                                                : STAT_STRENGTH), 1, false );
+                                              : STAT_STRENGTH), 1, false,
+                                 "level gain");
                 }
 
                 // lowered because of HD raise -- bwr
@@ -2895,7 +2902,7 @@ void level_change(bool skip_ability_increase)
 
             case SP_DEMIGOD:
                 if (!(you.experience_level % 3))
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 // lowered because of HD raise -- bwr
                 // if (you.experience_level < 17)
@@ -2920,7 +2927,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 5))
                 {
                     modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                : STAT_DEXTERITY), 1, false );
+                                  : STAT_DEXTERITY), 1, false,
+                                 "level gain");
                 }
                 break;
 
@@ -2938,7 +2946,8 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_DEXTERITY
-                                                : STAT_STRENGTH), 1, false );
+                                              : STAT_STRENGTH), 1, false,
+                                 "level gain");
                 }
                 break;
 
@@ -2989,7 +2998,7 @@ void level_change(bool skip_ability_increase)
                 }
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             case SP_GHOUL:
@@ -3004,7 +3013,7 @@ void level_change(bool skip_ability_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_STRENGTH, 1, false);
+                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
             case SP_KENKU:
@@ -3015,7 +3024,7 @@ void level_change(bool skip_ability_increase)
                     hp_adjust--;
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 5)
                     mpr("You have gained the ability to fly.", MSGCH_INTRINSIC_GAIN);
@@ -3035,7 +3044,7 @@ void level_change(bool skip_ability_increase)
                     hp_adjust++;
 
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_RANDOM, 1, false);
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
             default:
@@ -3210,17 +3219,17 @@ void ability_increase(void)
         {
         case 's':
         case 'S':
-            modify_stat(STAT_STRENGTH, 1, false);
+            modify_stat(STAT_STRENGTH, 1, false, "level gain");
             return;
 
         case 'i':
         case 'I':
-            modify_stat(STAT_INTELLIGENCE, 1, false);
+            modify_stat(STAT_INTELLIGENCE, 1, false, "level gain");
             return;
 
         case 'd':
         case 'D':
-            modify_stat(STAT_DEXTERITY, 1, false);
+            modify_stat(STAT_DEXTERITY, 1, false, "level gain");
             return;
         }
     }
@@ -4058,12 +4067,14 @@ int scan_randarts(char which_property, bool calc_unid)
     return (retval);
 }                               // end scan_randarts()
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg)
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const char *cause, bool see_source)
 {
     char *ptr_stat = NULL;
     char *ptr_stat_max = NULL;
     bool *ptr_redraw = NULL;
 
+    kill_method_type kill_type = NUM_KILLBY;
 
     // sanity - is non-zero amount?
     if (amount == 0)
@@ -4081,23 +4092,26 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg)
     switch (which_stat)
     {
     case STAT_STRENGTH:
-        ptr_stat = &you.strength;
+        ptr_stat     = &you.strength;
         ptr_stat_max = &you.max_strength;
-        ptr_redraw = &you.redraw_strength;
+        ptr_redraw   = &you.redraw_strength;
+        kill_type    = KILLED_BY_WEAKNESS;
         msg += ((amount > 0) ? "stronger." : "weaker.");
         break;
 
     case STAT_DEXTERITY:
-        ptr_stat = &you.dex;
+        ptr_stat     = &you.dex;
         ptr_stat_max = &you.max_dex;
-        ptr_redraw = &you.redraw_dexterity;
+        ptr_redraw   = &you.redraw_dexterity;
+        kill_type    = KILLED_BY_CLUMSINESS;
         msg += ((amount > 0) ? "agile." : "clumsy.");
         break;
 
     case STAT_INTELLIGENCE:
-        ptr_stat = &you.intel;
+        ptr_stat     = &you.intel;
         ptr_stat_max = &you.max_intel;
-        ptr_redraw = &you.redraw_intelligence;
+        ptr_redraw   = &you.redraw_intelligence;
+        kill_type    = KILLED_BY_STUPIDITY;
         msg += ((amount > 0) ? "clever." : "stupid.");
         break;
 
@@ -4108,15 +4122,85 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg)
     if (!suppress_msg && amount != 0)
         mpr( msg.c_str(), (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
 
-    *ptr_stat += amount;
+    *ptr_stat     += amount;
     *ptr_stat_max += amount;
-    *ptr_redraw = 1;
+    *ptr_redraw    = 1;
+
+    if (amount < 0 && *ptr_stat < 1)
+    {
+        if (cause == NULL)
+            ouch(INSTANT_DEATH, 0, kill_type);
+        else
+            ouch(INSTANT_DEATH, 0, kill_type, cause, see_source);
+    }
 
     if (ptr_stat == &you.strength)
         burden_change();
 
     return;
 }                               // end modify_stat()
+
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const std::string cause, bool see_source)
+{
+    modify_stat(which_stat, amount, suppress_msg, cause.c_str(), see_source);
+}
+
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const monsters* cause)
+{
+    if (cause == NULL || invalid_monster(cause))
+    {
+        modify_stat(which_stat, amount, suppress_msg, NULL, true);
+        return;
+    }
+
+    bool        vis  = mons_near(cause) && player_monster_visible(cause);
+    std::string name = cause->name(DESC_NOCAP_A, true);
+
+    if (cause->has_ench(ENCH_SHAPESHIFTER))
+        name += " (shapeshifter)";
+    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        name += " (glowing shapeshifter)";
+
+    modify_stat(which_stat, amount, suppress_msg, name, vis);
+}
+
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
+                 const item_def &cause, bool removed)
+{
+    std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
+                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+    std::string verb;
+
+    switch(cause.base_type)
+    {
+    case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
+        if (removed)
+            verb = "removing";
+        else
+            verb = "wearing";
+        break;
+
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+        if (removed)
+            verb = "unwielding";
+        else
+            verb = "wielding";
+        break;
+
+    case OBJ_WANDS:   verb = "zapping";  break;
+    case OBJ_FOOD:    verb = "eating";   break;
+    case OBJ_SCROLLS: verb = "reading";  break;
+    case OBJ_POTIONS: verb = "drinking"; break;
+    default:          verb = "using";
+    }
+
+    modify_stat(which_stat, amount, suppress_msg,
+                verb + " " + name, true);
+}
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
@@ -5719,9 +5803,16 @@ void player::hurt(const actor *agent, int amount)
     }
 }
 
-void player::drain_stat(int stat, int amount)
+void player::drain_stat(int stat, int amount, actor* attacker)
 {
-    lose_stat(stat, amount);
+    if (attacker == NULL)
+        lose_stat(stat, amount, false, "");
+    else if (attacker->atype() == ACT_MONSTER)
+        lose_stat(stat, amount, dynamic_cast<monsters*>(attacker), false);
+    else if (attacker->atype() == ACT_PLAYER)
+        lose_stat(stat, amount, false, "suicide");
+    else
+        lose_stat(stat, amount, false, "");
 }
 
 void player::rot(actor *who, int rotlevel, int immed_rot)

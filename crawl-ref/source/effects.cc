@@ -194,12 +194,15 @@ bool forget_spell(void)
 // use player::decrease_stats() instead iff:
 // (a) player_sust_abil() should not factor in; and
 // (b) there is no floor to the final stat values {dlb}
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
+               const char *cause, bool see_source)
 {
     bool statLowered = false;   // must initialize to false {dlb}
     char *ptr_stat = NULL;
     bool *ptr_redraw = NULL;
     char newValue = 0;          // holds new value, for comparison to old {dlb}
+
+    kill_method_type kill_type = NUM_KILLBY;
 
     // begin outputing message: {dlb}
     std::string msg = "You feel ";
@@ -211,21 +214,24 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
     switch (which_stat)
     {
     case STAT_STRENGTH:
-        msg += "weakened";
-        ptr_stat = &you.strength;
+        msg       += "weakened";
+        ptr_stat   = &you.strength;
         ptr_redraw = &you.redraw_strength;
+        kill_type  = KILLED_BY_WEAKNESS;
         break;
 
     case STAT_DEXTERITY:
-        msg += "clumsy";
-        ptr_stat = &you.dex;
+        msg       += "clumsy";
+        ptr_stat   = &you.dex;
         ptr_redraw = &you.redraw_dexterity;
+        kill_type  = KILLED_BY_CLUMSINESS;
         break;
 
     case STAT_INTELLIGENCE:
-        msg += "dopey";
-        ptr_stat = &you.intel;
+        msg       += "dopey";
+        ptr_stat   = &you.intel;
         ptr_redraw = &you.redraw_intelligence;
+        kill_type  = KILLED_BY_STUPIDITY;
         break;
     }
 
@@ -236,10 +242,6 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
 
     // newValue is current value less modifier: {dlb}
     newValue = *ptr_stat - stat_loss;
-
-    // XXX: Death by stat loss is currently handled in the redraw code. -- bwr
-    if (newValue < 0)
-        newValue = 0;
 
     // conceivable that stat was already *at* three
     // or stat_loss zeroed by player_sust_abil(): {dlb}
@@ -269,12 +271,84 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
     msg += ".";
     mpr(msg.c_str());
 
+    if (newValue < 1)
+    {
+        if (cause == NULL)
+            ouch(INSTANT_DEATH, 0, kill_type);
+        else
+            ouch(INSTANT_DEATH, 0, kill_type, cause, see_source);
+    }
+
+
     return (statLowered);
 }                               // end lose_stat()
+
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
+               const std::string cause, bool see_source)
+{
+    return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
+}
+
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
+               const monsters* cause, bool force)
+{
+    if (cause == NULL || invalid_monster(cause))
+        return lose_stat(which_stat, stat_loss, force, NULL, true);
+
+    bool        vis  = mons_near(cause) && player_monster_visible(cause);
+    std::string name = cause->name(DESC_NOCAP_A, true);
+
+    if (cause->has_ench(ENCH_SHAPESHIFTER))
+        name += " (shapeshifter)";
+    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        name += " (glowing shapeshifter)";
+
+    return lose_stat(which_stat, stat_loss, force, name, vis);
+}
+
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
+               const item_def &cause, bool removed, bool force)
+{
+    std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
+                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+    std::string verb;
+
+    switch(cause.base_type)
+    {
+    case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
+        if (removed)
+            verb = "removing";
+        else
+            verb = "wearing";
+        break;
+
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+        if (removed)
+            verb = "unwielding";
+        else
+            verb = "wielding";
+        break;
+
+    case OBJ_WANDS:   verb = "zapping";  break;
+    case OBJ_FOOD:    verb = "eating";   break;
+    case OBJ_SCROLLS: verb = "reading";  break;
+    case OBJ_POTIONS: verb = "drinking"; break;
+    default:          verb = "using";
+    }
+
+    return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
+}
 
 void direct_effect(struct bolt &pbolt)
 {
     int damage_taken = 0;
+
+    monsters* source = NULL;
+
+    if (pbolt.beam_source != NON_MONSTER)
+        source = &menv[pbolt.beam_source];
 
     switch (pbolt.type)
     {
@@ -304,7 +378,8 @@ void direct_effect(struct bolt &pbolt)
 
     case DMNBM_BRAIN_FEED:
         // lose_stat() must come last {dlb}
-        if (one_chance_in(3) && lose_stat(STAT_INTELLIGENCE, 1))
+        if (one_chance_in(3) &&
+            lose_stat(STAT_INTELLIGENCE, 1, source))
         {
             mpr("Something feeds on your intellect!");
             xom_is_stimulated(50);

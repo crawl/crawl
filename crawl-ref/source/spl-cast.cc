@@ -2550,7 +2550,8 @@ static void miscast_divination(int severity, const char* cause)
         case 0:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life!");
-            else if (lose_stat(STAT_INTELLIGENCE, 1 + random2(3)))
+            else if (lose_stat(STAT_INTELLIGENCE, 1 + random2(3),
+                               false, cause))
                 mpr("You have damaged your brain!");
             else
                 mpr("You have a terrible headache.");
@@ -2578,7 +2579,8 @@ static void miscast_divination(int severity, const char* cause)
         case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
-            else if (lose_stat(STAT_INTELLIGENCE, 3 + random2(3)))
+            else if (lose_stat(STAT_INTELLIGENCE, 3 + random2(3),
+                               false, cause))
                 mpr("You have damaged your brain!");
             else
                 mpr("You have a terrible headache.");
@@ -2733,7 +2735,7 @@ static void miscast_necromancy(int severity, const char* cause)
             }               // otherwise it just flows through...
 
         case 2:
-            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2), false, cause);
             break;
 
         case 3:
@@ -3428,7 +3430,7 @@ static void miscast_poison(int severity, const char* cause)
             if (player_res_poison())
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
-                lose_stat(STAT_RANDOM, 1);
+                lose_stat(STAT_RANDOM, 1, false, cause);
             break;
         }
         break;
@@ -3455,7 +3457,7 @@ static void miscast_poison(int severity, const char* cause)
             if (player_res_poison())
                 canned_msg(MSG_NOTHING_HAPPENS);               
             else
-                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
+                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2), false, cause);
             break;
         }
         break;
@@ -3481,6 +3483,9 @@ void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
     }
+
+    if (cause == NULL || strlen(cause) == 0)
+        cause = "spell miscasting";
 
     sever /= 100;
 

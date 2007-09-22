@@ -2367,7 +2367,7 @@ void handle_time( long time_delta )
         if (one_chance_in(30))
         {
             mpr("Your disease is taking its toll.", MSGCH_WARN);
-            lose_stat(STAT_RANDOM, 1);
+            lose_stat(STAT_RANDOM, 1, false, "disease");
         }
     }
 
@@ -2375,7 +2375,7 @@ void handle_time( long time_delta )
     if (you.mutation[MUT_DETERIORATION]
         && random2(200) <= you.mutation[MUT_DETERIORATION] * 5 - 2)
     {
-        lose_stat(STAT_RANDOM, 1);
+        lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
     }
 
     int added_contamination = 0;

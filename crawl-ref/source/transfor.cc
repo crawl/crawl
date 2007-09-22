@@ -205,7 +205,8 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[DUR_TRANSFORMATION] > 60)
             you.duration[DUR_TRANSFORMATION] = 60;
 
-        modify_stat( STAT_DEXTERITY, 5, true );
+        modify_stat( STAT_DEXTERITY, 5, true,
+                     "gaining the spider transformation");
 
         you.symbol = 's';
         you.colour = BROWN;
@@ -227,8 +228,10 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[DUR_TRANSFORMATION] > 100)
             you.duration[DUR_TRANSFORMATION] = 100;
 
-       modify_stat( STAT_DEXTERITY, 5, true );
-       modify_stat( STAT_STRENGTH, -5, true );
+       modify_stat( STAT_DEXTERITY, 5, true,
+                    "gaining the bat transformation");
+       modify_stat( STAT_STRENGTH, -5, true,
+                    "gaining the bat transformation" );
    
        you.symbol = 'b';
        you.colour = DARKGREY;
@@ -303,8 +306,10 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[ DUR_TRANSFORMATION ] > 100)
             you.duration[ DUR_TRANSFORMATION ] = 100;
 
-        modify_stat( STAT_DEXTERITY, -2, true );
-        modify_stat( STAT_STRENGTH, 2, true );
+        modify_stat( STAT_DEXTERITY, -2, true,
+                     "gaining the statue transformation" );
+        modify_stat( STAT_STRENGTH, 2, true,
+                     "gaining the statue transformation");
         extra_hp(15);   // must occur after attribute set
 
         if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
@@ -332,7 +337,8 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[ DUR_TRANSFORMATION ] > 100)
             you.duration[ DUR_TRANSFORMATION ] = 100;
 
-        modify_stat( STAT_STRENGTH, 10, true );
+        modify_stat( STAT_STRENGTH, 10, true,
+                     "gaining the dragon transformation" );
         extra_hp(16);   // must occur after attribute set
 
         you.symbol = 'D';
@@ -378,7 +384,8 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[ DUR_TRANSFORMATION ] > 100)
             you.duration[ DUR_TRANSFORMATION ] = 100;
 
-        modify_stat( STAT_STRENGTH, 3, true );
+        modify_stat( STAT_STRENGTH, 3, true,
+                     "gaining the lich transformation" );
         you.symbol = 'L';
         you.colour = LIGHTGREY;
         you.is_undead = US_UNDEAD;
@@ -408,7 +415,8 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[ DUR_TRANSFORMATION ] > 150)
             you.duration[ DUR_TRANSFORMATION ] = 150;
 
-        modify_stat( STAT_DEXTERITY, 8, true );
+        modify_stat( STAT_DEXTERITY, 8, true,
+                     "gaining the air transformation" );
         you.symbol = '#';
         you.colour = DARKGREY;
         
@@ -437,7 +445,8 @@ bool transform(int pow, transformation_type which_trans)
         if (you.duration[ DUR_TRANSFORMATION ] > 120)
             you.duration[ DUR_TRANSFORMATION ] = 120;
 
-        modify_stat( STAT_STRENGTH, 13, true );
+        modify_stat( STAT_STRENGTH, 13, true,
+                     "gaining the Serpent of Hell transformation");
         extra_hp(17);   // must occur after attribute set
 
         you.symbol = 'S';
@@ -479,13 +488,16 @@ void untransform(void)
     {
     case TRAN_SPIDER:
         mpr("Your transformation has ended.", MSGCH_DURATION);
-        modify_stat( STAT_DEXTERITY, -5, true );
+        modify_stat( STAT_DEXTERITY, -5, true,
+                     "losing the spider transformation" );
         break;
 
     case TRAN_BAT:
         mpr("Your transformation has ended.", MSGCH_DURATION);
-        modify_stat( STAT_DEXTERITY, -5, true );
-        modify_stat( STAT_STRENGTH, 5, true );
+        modify_stat( STAT_DEXTERITY, -5, true,
+                     "losing the bat transformation" );
+        modify_stat( STAT_STRENGTH, 5, true,
+                     "losing the bat transformation" );
         break;
 
     case TRAN_BLADE_HANDS:
@@ -495,8 +507,10 @@ void untransform(void)
 
     case TRAN_STATUE:
         mpr( "You revert to your normal fleshy form.", MSGCH_DURATION );
-        modify_stat( STAT_DEXTERITY, 2, true );
-        modify_stat( STAT_STRENGTH, -2, true );
+        modify_stat( STAT_DEXTERITY, 2, true,
+                     "losing the statue transformation" );
+        modify_stat( STAT_STRENGTH, -2, true,
+                     "losing the statue transformation");
 
         // Note: if the core goes down, the combined effect soon disappears, 
         // but the reverse isn't true. -- bwr
@@ -524,7 +538,8 @@ void untransform(void)
 
     case TRAN_DRAGON:
         mpr( "Your transformation has ended.", MSGCH_DURATION );
-        modify_stat(STAT_STRENGTH, -10, true);
+        modify_stat(STAT_STRENGTH, -10, true,
+                    "losing the dragon transformation" );
 
         // re-check terrain now that be may no longer be flying.
         move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
@@ -535,18 +550,21 @@ void untransform(void)
 
     case TRAN_LICH:
         mpr( "You feel yourself come back to life.", MSGCH_DURATION );
-        modify_stat(STAT_STRENGTH, -3, true);
+        modify_stat(STAT_STRENGTH, -3, true,
+                    "losing the lich transformation" );
         you.is_undead = US_ALIVE;
         break;
 
     case TRAN_AIR:
         mpr( "Your body solidifies.", MSGCH_DURATION );
-        modify_stat(STAT_DEXTERITY, -8, true);
+        modify_stat(STAT_DEXTERITY, -8, true,
+                    "losing the air transformation");
         break;
 
     case TRAN_SERPENT_OF_HELL:
         mpr( "Your transformation has ended.", MSGCH_DURATION );
-        modify_stat(STAT_STRENGTH, -13, true);
+        modify_stat(STAT_STRENGTH, -13, true,
+                    "losing the Serpent of Hell transformation");
         hp_downscale = 17;
         break;
 

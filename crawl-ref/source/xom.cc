@@ -633,7 +633,8 @@ static bool xom_is_bad(int sever)
                        (temp_rand == 2) ? "Xom's power touches on you for a moment."
                        : "You hear Xom's maniacal laughter.");
                 
-            lose_stat(STAT_RANDOM, 1 + random2(3), true);
+            lose_stat(STAT_RANDOM, 1 + random2(3), true,
+                      "the capriciousness of Xom" );
                 
             done = true;
         }

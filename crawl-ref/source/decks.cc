@@ -1354,7 +1354,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case CARD_WILD_MAGIC:
         // yes, high power is bad here
         miscast_effect( SPTYP_RANDOM, random2(power/15) + 5,
-                        random2(power), 0 );
+                        random2(power), 0, "a card of wild magic" );
         break;
 
 

@@ -2391,7 +2391,7 @@ static void decrement_durations()
     dec_haste_player();
 
     if (decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
-        modify_stat(STAT_STRENGTH, -5, true);
+        modify_stat(STAT_STRENGTH, -5, true, "might running out");
 
     if (decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {

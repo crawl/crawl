@@ -1313,7 +1313,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             mpr( "Your body decomposes!", MSGCH_MUTATION );
 
             if (coinflip())
-                lose_stat( STAT_RANDOM, 1 );
+                lose_stat( STAT_RANDOM, 1 , false, "mutating");
             else
             {
                 ouch( 3, 0, KILLED_BY_ROTTING );
@@ -1498,7 +1498,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             return true;
         }
         // replaces earlier, redundant code - 12mar2000 {dlb}
-        modify_stat(STAT_STRENGTH, 1, false);
+        modify_stat(STAT_STRENGTH, 1, false, "gaining a mutation");
         break;
 
     case MUT_CLEVER:
@@ -1508,7 +1508,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             return true;
         }
         // replaces earlier, redundant code - 12mar2000 {dlb}
-        modify_stat(STAT_INTELLIGENCE, 1, false);
+        modify_stat(STAT_INTELLIGENCE, 1, false, "gaining a mutation");
         break;
 
     case MUT_AGILE:
@@ -1518,7 +1518,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             return true;
         }
         // replaces earlier, redundant code - 12mar2000 {dlb}
-        modify_stat(STAT_DEXTERITY, 1, false);
+        modify_stat(STAT_DEXTERITY, 1, false, "gaining a mutation");
         break;
 
     case MUT_WEAK:
@@ -1527,7 +1527,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             delete_mutation(MUT_STRONG);
             return true;
         }
-        modify_stat(STAT_STRENGTH, -1, true);
+        modify_stat(STAT_STRENGTH, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -1537,7 +1537,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             delete_mutation(MUT_CLEVER);
             return true;
         }
-        modify_stat(STAT_INTELLIGENCE, -1, true);
+        modify_stat(STAT_INTELLIGENCE, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -1547,7 +1547,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             delete_mutation(MUT_AGILE);
             return true;
         }
-        modify_stat(STAT_DEXTERITY, -1, true);
+        modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -1661,8 +1661,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             delete_mutation(MUT_FLEXIBLE_WEAK);
             return true;
         }
-        modify_stat(STAT_STRENGTH, 1, true);
-        modify_stat(STAT_DEXTERITY, -1, true);
+        modify_stat(STAT_STRENGTH, 1, true, "gaining a mutation");
+        modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -1672,8 +1672,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             delete_mutation(MUT_STRONG_STIFF);
             return true;
         }
-        modify_stat(STAT_STRENGTH, -1, true);
-        modify_stat(STAT_DEXTERITY, 1, true);
+        modify_stat(STAT_STRENGTH, -1, true, "gaining a mutation");
+        modify_stat(STAT_DEXTERITY, 1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -1705,7 +1705,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
-        modify_stat(STAT_DEXTERITY, -1, true);
+        modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
         // deliberate fall-through
     default:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
@@ -1713,16 +1713,16 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     case MUT_GREY2_SCALES:
         if (you.mutation[mutat] != 1)
-            modify_stat(STAT_DEXTERITY, -1, true);
+            modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
     case MUT_METALLIC_SCALES:
         if (you.mutation[mutat] == 0)
-            modify_stat(STAT_DEXTERITY, -2, true);
+            modify_stat(STAT_DEXTERITY, -2, true, "gaining a mutation");
         else
-            modify_stat(STAT_DEXTERITY, -1, true);
+            modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
@@ -1730,7 +1730,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     case MUT_RED2_SCALES:
     case MUT_YELLOW_SCALES:
         if (you.mutation[mutat] != 0)
-            modify_stat(STAT_DEXTERITY, -1, true);
+            modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
@@ -1814,31 +1814,31 @@ bool delete_mutation(mutation_type which_mutation, bool force)
     switch (mutat)
     {
     case MUT_STRONG:
-        modify_stat(STAT_STRENGTH, -1, true);
+        modify_stat(STAT_STRENGTH, -1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
     case MUT_CLEVER:
-        modify_stat(STAT_INTELLIGENCE, -1, true);
+        modify_stat(STAT_INTELLIGENCE, -1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
     case MUT_AGILE:
-        modify_stat(STAT_DEXTERITY, -1, true);
+        modify_stat(STAT_DEXTERITY, -1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
     case MUT_WEAK:
-        modify_stat(STAT_STRENGTH, 1, false);
+        modify_stat(STAT_STRENGTH, 1, false, "losing a mutation");
         break;
 
     case MUT_DOPEY:
-        modify_stat(STAT_INTELLIGENCE, 1, false);
+        modify_stat(STAT_INTELLIGENCE, 1, false, "losing a mutation");
         break;
 
     case MUT_CLUMSY:
         // replaces earlier, redundant code - 12mar2000 {dlb}
-        modify_stat(STAT_DEXTERITY, 1, false);
+        modify_stat(STAT_DEXTERITY, 1, false, "losing a mutation");
         break;
 
     case MUT_SHOCK_RESISTANCE:
@@ -1858,14 +1858,14 @@ bool delete_mutation(mutation_type which_mutation, bool force)
         break;
 
     case MUT_STRONG_STIFF:
-        modify_stat(STAT_STRENGTH, -1, true);
-        modify_stat(STAT_DEXTERITY, 1, true);
+        modify_stat(STAT_STRENGTH, -1, true, "losing a mutation");
+        modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
     case MUT_FLEXIBLE_WEAK:
-        modify_stat(STAT_STRENGTH, 1, true);
-        modify_stat(STAT_DEXTERITY, -1, true);
+        modify_stat(STAT_STRENGTH, 1, true, "losing a mutation");
+        modify_stat(STAT_DEXTERITY, -1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -1889,7 +1889,7 @@ bool delete_mutation(mutation_type which_mutation, bool force)
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
-        modify_stat(STAT_DEXTERITY, 1, true);
+        modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
 
     case MUT_CLAWS:
         mpr((you.species == SP_TROLL ? troll_claw_lose
@@ -1903,15 +1903,15 @@ bool delete_mutation(mutation_type which_mutation, bool force)
 
     case MUT_GREY2_SCALES:
         if (you.mutation[mutat] != 2)
-            modify_stat(STAT_DEXTERITY, 1, true);
+            modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
 
     case MUT_METALLIC_SCALES:
         if (you.mutation[mutat] == 1)
-            modify_stat(STAT_DEXTERITY, 2, true);
+            modify_stat(STAT_DEXTERITY, 2, true, "losing a mutation");
         else
-            modify_stat(STAT_DEXTERITY, 1, true);
+            modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
 
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
@@ -1919,7 +1919,7 @@ bool delete_mutation(mutation_type which_mutation, bool force)
     case MUT_RED2_SCALES:
     case MUT_YELLOW_SCALES:
         if (you.mutation[mutat] != 1)
-            modify_stat(STAT_DEXTERITY, 1, true);
+            modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
 
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
@@ -2331,9 +2331,9 @@ void demonspawn(void)
     {
         /* unlikely but remotely possible */
         /* I know this is a cop-out */
-        modify_stat(STAT_STRENGTH, 1, true);
-        modify_stat(STAT_INTELLIGENCE, 1, true);
-        modify_stat(STAT_DEXTERITY, 1, true);
+        modify_stat(STAT_STRENGTH, 1, true, "demonspawn mutation");
+        modify_stat(STAT_INTELLIGENCE, 1, true, "demonspawn mutation");
+        modify_stat(STAT_DEXTERITY, 1, true, "demonspawn mutation");
         mpr("You feel much better now.", MSGCH_INTRINSIC_GAIN);
     }
 }                               // end demonspawn()

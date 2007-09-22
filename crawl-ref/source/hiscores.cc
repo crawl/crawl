@@ -842,6 +842,14 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         mon_num = 0;
         death_source_name[0] = 0;
     }
+
+    if (death_type == KILLED_BY_WEAKNESS
+        || death_type == KILLED_BY_STUPIDITY
+        || death_type == KILLED_BY_CLUMSINESS)
+    {
+        if (auxkilldata == "")
+            auxkilldata = "unknown source";
+    }
 }
 
 void scorefile_entry::reset()
@@ -1621,6 +1629,31 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "program bug" : "Nibbled to death by software bugs";
         break;
     }                           // end switch
+
+    switch (death_type)
+    {
+    case KILLED_BY_STUPIDITY:
+    case KILLED_BY_WEAKNESS:
+    case KILLED_BY_CLUMSINESS:
+        if (terse)
+        {
+            desc += " (";
+            desc += auxkilldata;
+            desc += ")";
+        }
+        else
+        {
+            desc += "\n";
+            desc += "             ";
+            desc += "... caused by ";
+            desc += auxkilldata;
+        }
+        break;
+
+    default:
+        break;
+    }
+
 
     if (oneline && desc.length() > 2)
         desc[1] = tolower(desc[1]);
