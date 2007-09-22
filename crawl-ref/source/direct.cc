@@ -269,7 +269,7 @@ static void direction_again(dist& moves, targeting_type restricts,
     ASSERT(targ_types == 1);
 
     // Discard keys until we get to a set-target command
-    command_type key_command;
+    command_type key_command = CMD_NO_CMD;
 
     while (crawl_state.is_replaying_keys())
     {
