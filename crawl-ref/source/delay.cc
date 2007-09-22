@@ -139,6 +139,9 @@ void stop_delay( void )
         delay.type == DELAY_BUTCHER
         && (you.delay_queue.size() >= 2
             && you.delay_queue[1].type == DELAY_WEAPON_SWAP);
+
+    const int butcher_swap_weapon =
+        butcher_swap_warn? you.delay_queue[1].parm1 : -10;
     
     // At the very least we can remove any queued delays, right 
     // now there is no problem with doing this... note that
@@ -154,10 +157,15 @@ void stop_delay( void )
         // Corpse keeps track of work in plus2 field, see handle_delay() -- bwr
         if (butcher_swap_warn)
         {
-            int swapwpn = you.delay_queue[1].parm1;
+            std::string weapon;
+            if (butcher_swap_weapon == -1)
+                weapon = "unarmed combat";
+            else
+                weapon = "your " +
+                    you.inv[butcher_swap_weapon].name(DESC_BASENAME);
             mprf(MSGCH_WARN, "You stop butchering the corpse; not switching "
-                 "back to your %s.",
-                 you.inv[swapwpn].name(DESC_BASENAME).c_str());
+                 "back to %s.",
+                 weapon.c_str());
         }
         else
             mpr( "You stop butchering the corpse." );

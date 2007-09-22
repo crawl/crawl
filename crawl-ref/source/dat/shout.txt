@@ -212,11 +212,11 @@ Wanderer player ghost
 %%%%
 'a'
 
-@The_monster@ twitches @possessive@ antennas in your direction.
+@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
 'cap-B'
 
-@The_monster@ twitches @possessive@ antennas in your direction.
+@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
 # Giant spores have their own visual, this is only for the eyeball
 # related ones.
@@ -227,14 +227,6 @@ Wanderer player ghost
 'cap-J'
 
 @The_monster@ quivers.
-%%%%
-'l'
-
-@The_monster@ angrily lashes @possessive@ tail.
-%%%%
-'r'
-
-@The_monster@ angrily lashes @possessive@ tail.
 ########################################
 # Shouts for specific monsters
 ########################################
