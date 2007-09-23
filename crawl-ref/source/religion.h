@@ -16,6 +16,8 @@
 
 #include "enum.h"
 
+#define MAX_PIETY 200
+
 bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);

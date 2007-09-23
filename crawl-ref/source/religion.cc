@@ -74,6 +74,13 @@
 #include "tutorial.h"
 #include "view.h"
 
+#if DEBUG_RELIGION
+#    define DEBUG_DIAGNOSTICS 1
+#    define DEBUG_GIFTS       1
+#    define DEBUG_SACRIFICE   1
+#    define DEBUG_PIETY       1
+#endif
+
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
@@ -371,6 +378,9 @@ void dec_penance(god_type god, int val)
 {
     if (you.penance[god] > 0)
     {
+#if DEBUG_PIETY
+        mprf(MSGCH_DIAGNOSTICS, "Decreasing penance by %d", val);
+#endif
         if (you.penance[god] <= val)
         {
             simple_god_message(" seems mollified.", god);
@@ -488,11 +498,53 @@ static bool need_missile_gift()
             && ammo_count(launcher) < 20 + random2(35));
 }
 
+static void get_pure_deck_weights(int weights[])
+{
+    weights[0] = you.sacrifice_value[OBJ_ARMOUR] + 1;
+    weights[1] = you.sacrifice_value[OBJ_WEAPONS] +
+        you.sacrifice_value[OBJ_STAVES] +
+        you.sacrifice_value[OBJ_MISSILES] + 1;
+    weights[2] = you.sacrifice_value[OBJ_MISCELLANY] +
+        you.sacrifice_value[OBJ_JEWELLERY] +
+        you.sacrifice_value[OBJ_BOOKS] +
+        you.sacrifice_value[OBJ_GOLD];
+    weights[3] = you.sacrifice_value[OBJ_CORPSES] / 2;
+    weights[4] = you.sacrifice_value[OBJ_POTIONS] +
+        you.sacrifice_value[OBJ_SCROLLS] +
+        you.sacrifice_value[OBJ_WANDS] +
+        you.sacrifice_value[OBJ_FOOD];
+}
+
+#if DEBUG_GIFTS || DEBUG_CARDS
+static void show_pure_deck_chances()
+{
+    int weights[5];
+
+    get_pure_deck_weights(weights);
+
+    float total = (float) (weights[0] + weights[1] + weights[2] + weights[3] +
+                           weights[4]);
+
+    mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
+         "escape %0.2f%%, destruction %0.2f%%, dungeons %0.2f%%,"
+         "summoning %0.2f%%, wonders %0.2f%%",
+         (float)weights[0] / total * 100.0,
+         (float)weights[1] / total * 100.0,
+         (float)weights[2] / total * 100.0,
+         (float)weights[3] / total * 100.0,
+         (float)weights[4] / total * 100.0);
+}
+#endif
+
 static void do_god_gift(bool prayed_for)
 {
     // Zin worshippers are the only ones that can pray to ask Zin for stuff.
     if (prayed_for != (you.religion == GOD_ZIN))
         return;
+
+#if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
+    int old_gifts = you.num_gifts[ you.religion ];
+#endif
     
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
@@ -520,13 +572,13 @@ static void do_god_gift(bool prayed_for)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            if (random2(200) <= you.piety
+            if (random2(MAX_PIETY) <= you.piety
                 && one_chance_in(3)
                 && !you.attribute[ATTR_CARD_COUNTDOWN]
                 && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
             {
                 misc_item_type gift_type;
-                if ( random2(200) <= you.piety )
+                if ( random2(MAX_PIETY) <= you.piety )
                 {
                     // make a pure deck
                     const misc_item_type pure_decks[] = {
@@ -537,19 +589,13 @@ static void do_god_gift(bool prayed_for)
                         MISC_DECK_OF_WONDERS
                     };
                     int weights[5];
-                    // FIXME do something with OBJ_FOOD,
-                    // OBJ_WANDS, OBJ_JEWELLERY, OBJ_BOOKS
-                    // (and maybe OBJ_ORBS...)
-                    weights[0] = you.sacrifice_value[OBJ_SCROLLS] +
-                        you.sacrifice_value[OBJ_ARMOUR] + 1;
-                    weights[1] = you.sacrifice_value[OBJ_WEAPONS] +
-                        you.sacrifice_value[OBJ_STAVES] +
-                        you.sacrifice_value[OBJ_MISSILES] + 1;
-                    weights[2] = you.sacrifice_value[OBJ_MISCELLANY];
-                    weights[3] = you.sacrifice_value[OBJ_CORPSES] * 100;
-                    weights[4] = you.sacrifice_value[OBJ_POTIONS];
+                    get_pure_deck_weights(weights);
                     gift_type = pure_decks[choose_random_weighted(weights,
                                                                   weights+5)];
+
+#if DEBUG_GIFTS || DEBUG_CARDS
+                    show_pure_deck_chances();
+#endif
                 }
                 else
                 {
@@ -567,8 +613,38 @@ static void do_god_gift(bool prayed_for)
 
                 if (thing_created != NON_ITEM)
                 {
+                    // Piety|Common  | Rare  |Legendary
+                    // --------------------------------
+                    //     0:  95.00%,  5.00%,  0.00%
+                    //    20:  86.00%, 10.50%,  3.50%
+                    //    40:  77.00%, 16.00%,  7.00%
+                    //    60:  68.00%, 21.50%, 10.50%
+                    //    80:  59.00%, 27.00%, 14.00%
+                    //   100:  50.00%, 32.50%, 17.50%
+                    //   120:  41.00%, 38.00%, 21.00%
+                    //   140:  32.00%, 43.50%, 24.50%
+                    //   160:  23.00%, 49.00%, 28.00%
+                    //   180:  14.00%, 54.50%, 31.50%
+                    //   200:   5.00%, 60.00%, 35.00%
+                    int common_weight = 95 - (90 * you.piety / MAX_PIETY);
+                    int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
+                    int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
+
+                    deck_rarity_type rarity = (deck_rarity_type)
+                        random_choose_weighted(common_weight,
+                                               DECK_RARITY_COMMON,
+                                               rare_weight,
+                                               DECK_RARITY_RARE,
+                                               legend_weight,
+                                               DECK_RARITY_LEGENDARY,
+                                               0);
+
+                    item_def &deck(mitm[thing_created]);
+
+                    deck.colour = deck_rarity_to_color(rarity);
+
                     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-                    origin_acquired(mitm[thing_created], you.religion);
+                    origin_acquired(deck, you.religion);
                     
                     simple_god_message(" grants you a gift!");
                     more();
@@ -734,6 +810,12 @@ static void do_god_gift(bool prayed_for)
             break;
         } 
     }                           // end of gift giving
+
+#if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
+    if (old_gifts < you.num_gifts[ you.religion ])
+        mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
+             you.num_gifts[ you.religion ] );
+#endif
 }
 
 static bool is_risky_sacrifice(const item_def& item)
@@ -1401,6 +1483,31 @@ bool did_god_conduct( conduct_type thing_done, int level )
         {
             piety_change = level;
             ret = true;
+
+            // For a stacked deck, 0% chance of card countdown decrement
+            // drawing a card which doesn't use up the deck, and 40%
+            // on a card which does.  For a non-stacked deck, an
+            // average 50% of decrement for drawing a card which doesn't
+            // use up the deck, and 80% on a card which does use up the
+            // deck.
+            int chance = 0;
+            switch(level)
+            {
+            case 0: chance = 0;   break;
+            case 1: chance = 40;  break;
+            case 2: chance = 70;  break;
+            default:
+            case 3: chance = 100; break;
+            }
+
+            if (random2(100) < chance && you.attribute[ATTR_CARD_COUNTDOWN])
+            {
+                you.attribute[ATTR_CARD_COUNTDOWN]--;
+#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_GIFTS
+                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                     you.attribute[ATTR_CARD_COUNTDOWN]);
+#endif
+            }
         }
         break;
 
@@ -1495,13 +1602,22 @@ void gain_piety(int pgn)
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them
         if (!one_chance_in(8))
+        {
+#if DEBUG_PIETY
+            mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
+#endif
             return;
+        }
     }
+
+#if DEBUG_PIETY
+    mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d", pgn);
+#endif
 
     // slow down gain at upper levels of piety
     if (you.religion != GOD_SIF_MUNA)
     {
-        if (you.piety > 199
+        if (you.piety >= MAX_PIETY
             || (you.piety > 150 && one_chance_in(3))
             || (you.piety > 100 && one_chance_in(3)))
         {
@@ -1513,7 +1629,7 @@ void gain_piety(int pgn)
     {
         // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
-        if ((you.piety > 199) ||
+        if ((you.piety >= MAX_PIETY) ||
             (you.piety > 150 && one_chance_in(5)))
         {
             do_god_gift(false);
@@ -1524,6 +1640,8 @@ void gain_piety(int pgn)
     int old_piety = you.piety;
 
     you.piety += pgn;
+    if (you.piety > MAX_PIETY)
+        you.piety = MAX_PIETY;
 
     for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
@@ -1746,6 +1864,10 @@ void trog_burn_books()
 void lose_piety(int pgn)
 {
     const int old_piety = you.piety;
+
+#if DEBUG_PIETY
+    mprf(MSGCH_DIAGNOSTICS, "Piety decreasing by %d", pgn);
+#endif
 
     if (you.piety - pgn < 0)
         you.piety = 0;
@@ -2844,7 +2966,8 @@ void offer_items()
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
         return;
 
-    int i = igrd[you.x_pos][you.y_pos];
+    int num_sacced = 0;
+    int i          = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
         item_def &item(mitm[i]);
@@ -2852,7 +2975,7 @@ void offer_items()
         const int value = item_value( item, true );
 
 
-        if (!god_likes_item(you.religion, mitm[i]))
+        if (!god_likes_item(you.religion, item))
         {
             i = next;
             continue;
@@ -2860,7 +2983,7 @@ void offer_items()
 
         bool gained_piety = false;
 
-#ifdef DEBUG_DIAGNOSTICS
+#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
 #endif
         
@@ -2881,22 +3004,47 @@ void offer_items()
                 }
             }
 
-            you.sacrifice_value[mitm[i].base_type] += value;
             if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
             {
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
-#ifdef DEBUG_DIAGNOSTICS
+#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
                 mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
                      you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
             }
-            if ((mitm[i].base_type == OBJ_CORPSES && coinflip())
+            // Aproximate piety gain chance.
+            // Value:  %
+            // ---------
+            //    10:  9.0%
+            //    20: 17.5%
+            //    30: 25.5%
+            //    40: 34.0%
+            //    50: 42.5%
+            //    60: 50.0%
+            //    70: 58.0%
+            //    80: 63.0%
+            if ((item.base_type == OBJ_CORPSES && coinflip())
                 // Nemelex piety gain is fairly fast.
                 || random2(value) >= random2(60))
             {
                 gain_piety(1);
                 gained_piety = true;
             }
+
+            if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
+                // No sacrifice value for chunks of flesh, since food
+                // value goes towards decks of wonder.
+                ; 
+            else if (item.base_type == OBJ_CORPSES)
+            {
+#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
+                mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
+                     item_mass(item));
+#endif
+                you.sacrifice_value[item.base_type] += item_mass(item);
+            }
+            else
+                you.sacrifice_value[item.base_type] += value;
             break;
 
         case GOD_ZIN:
@@ -2935,7 +3083,13 @@ void offer_items()
                                 << std::endl;
         destroy_item(i);
         i = next;
+        num_sacced++;
     }
+
+#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
+    if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
+        show_pure_deck_chances();
+#endif
 }
 
 void god_pitch(god_type which_god)

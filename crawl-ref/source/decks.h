@@ -45,5 +45,6 @@ void draw_from_deck_of_punishment();
 
 bool is_deck(const item_def &item);
 deck_rarity_type deck_rarity(const item_def &item);
+unsigned char deck_rarity_to_color(deck_rarity_type rarity);
 
 #endif

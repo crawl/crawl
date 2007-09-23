@@ -1401,3 +1401,26 @@ deck_rarity_type deck_rarity(const item_def &item)
         return DECK_RARITY_LEGENDARY;
     }
 }
+
+unsigned char deck_rarity_to_color(deck_rarity_type rarity)
+{
+    switch(rarity)
+    {
+    case DECK_RARITY_COMMON:
+    {
+        const unsigned char colours[] = {BLACK, BLUE, GREEN, CYAN, RED};
+        return RANDOM_ELEMENT(colours);
+    }
+
+    case DECK_RARITY_RARE:
+        if (coinflip())
+            return (MAGENTA);
+        else
+            return (BROWN);
+
+    case DECK_RARITY_LEGENDARY:
+        return LIGHTMAGENTA;
+    }
+
+    return (WHITE);
+}
