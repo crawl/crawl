@@ -1568,12 +1568,13 @@ void melee_attack::drain_monster()
     if (defender->res_negative_energy() > 0 || one_chance_in(3))
         return;
 
-    special_damage_message =
-        make_stringf(
-            "%s %s %s!",
-            atk_name(DESC_CAP_THE).c_str(),
-            attacker->conj_verb("drain").c_str(),
-            def_name(DESC_NOCAP_THE).c_str());
+    if (defender_visible)
+        special_damage_message =
+            make_stringf(
+                "%s %s %s!",
+                atk_name(DESC_CAP_THE).c_str(),
+                attacker->conj_verb("drain").c_str(),
+                def_name(DESC_NOCAP_THE).c_str());
         
     if (one_chance_in(5))
         def->hit_dice--;
