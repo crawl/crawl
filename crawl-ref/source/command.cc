@@ -1023,13 +1023,10 @@ static bool find_description()
         }
         else
         {
-            char num_buf[10];
-            sprintf(num_buf, "%lu", key_list.size());
-            list_commands_err  = "Too many matching ";
-            list_commands_err += type;
-            list_commands_err += "s (";
-            list_commands_err += num_buf;
-            list_commands_err += ") to display";
+            std::ostringstream os;
+            os << "Too many matching " << type << "s (" << key_list.size()
+               << ") to display.";
+            list_commands_err = os.str();
         }
         return (false);
     }
