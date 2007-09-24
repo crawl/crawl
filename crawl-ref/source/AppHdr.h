@@ -217,6 +217,10 @@
     //
     #define DGL_CLEAR_SCREEN "\033[2J"
 
+    // Startup preferences are saved by player name rather than uid,
+    // since all players use the same uid in dgamelaunch.
+    #define DGL_STARTUP_PREFS_BY_NAME
+
     // Increase the size of the topscores file for public servers.
     #define SCORE_FILE_ENTRIES 1000
 
