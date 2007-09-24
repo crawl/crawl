@@ -347,30 +347,28 @@ void cast_spec_spell(void)
 void cast_spec_spell_name(void)
 {
     char specs[80];
-    char spname[80];
 
     mpr( "Cast which spell by name? ", MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
-    
-    for (int i = 0; i < NUM_SPELLS; i++)
-    {
-        strncpy( spname,
-                 spell_title(static_cast<spell_type>(i)),
-                 sizeof( spname ) );
 
-        if (strstr( strlwr(spname), strlwr(specs) ) != NULL)
-        {
-            if (your_spells(static_cast<spell_type>(i), 0, false)
-                == SPRET_ABORT)
-            {
-                crawl_state.cancel_cmd_repeat();
-            }
-            return;
-        }
+    if (specs[0] == '\0')
+    {
+        canned_msg( MSG_OK );
+        crawl_state.cancel_cmd_repeat();
+        return;
     }
 
-    mpr((one_chance_in(20)) ? "Maybe you should go back to WIZARD school."
-                            : "I couldn't find that spell.");
+    spell_type type = spell_by_name(specs);
+    if (type == SPELL_NO_SPELL)
+    {
+        mpr((one_chance_in(20)) ? "Maybe you should go back to WIZARD school."
+            : "I couldn't find that spell.");
+        crawl_state.cancel_cmd_repeat();
+        return;
+    }
+
+    if (your_spells(type, 0, false) == SPRET_ABORT)
+        crawl_state.cancel_cmd_repeat();
 }
 #endif
 

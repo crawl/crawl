@@ -29,6 +29,7 @@
 #include "database.h"
 #include "describe.h"
 #include "files.h"
+#include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
 #include "item_use.h"
@@ -36,6 +37,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-pick.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
@@ -684,81 +686,129 @@ help_file help_files[] = {
 
 static std::string list_commands_err = "";
 
-static std::string select_desc_key(std::vector<std::string> keys)
+
+static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    Menu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                   MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+    int a = (int) entry_a->data;
+    int b = (int) entry_b->data;
 
-    desc_menu.set_title(new MenuEntry("Describe which?", MEL_TITLE));
+    if (a == b)
+        return false;
 
-    desc_menu.set_highlighter(NULL);
-
-    for (unsigned int i = 0, size = keys.size(); i < size; i++)
-    {
-        const char  letter = index_to_letter(i);
-        std::string str    = uppercase_first(keys[i]);
-
-        MenuEntry *me = new MenuEntry(uppercase_first(keys[i]),
-                                      MEL_ITEM, 1, letter);
-
-        monster_type mon = get_monster_by_name(str, true);
-        if (mon < NUM_MONSTERS && mon != MONS_PROGRAM_BUG)
-        {
-            monsterentry *mon_en = get_monster_data(mon);
-
-            me->colour = mon_en->colour;
-            if (me->colour == BLACK)
-                me->colour = LIGHTGREY;
-            str += " ('";
-            str += (char) mon_en->showchar;
-            str += "')";
-
-            me->text = str;
-        }
-
-        me->data = (void*) &keys[i];
-
-        desc_menu.add_entry(me);
-    }
-
-    std::vector<MenuEntry*> sel = desc_menu.show();
-    redraw_screen();
-    if ( sel.empty() )
-    {
-        list_commands_err = "Okay, then.";
-        return ("");
-    }
-    else
-    {
-        ASSERT(sel.size() == 1);
-        ASSERT(sel[0]->hotkeys.size() == 1);
-        return *((std::string*) sel[0]->data);
-    }
+    std::string a_name = mons_type_name(a, DESC_PLAIN);
+    std::string b_name = mons_type_name(b, DESC_PLAIN);
+    return ( lowercase(a_name) < lowercase(b_name));
 }
 
-static std::string find_description_key(std::string regex)
+// Compare monsters by level if there's a place where they both have a
+// level defined, or by hitdice otherwise.  If monsters are of equal
+// toughness, compare names.
+static bool compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    std::vector<std::string> key_matches = getLongDescKeysByRegex(regex);
+    int a = (int) entry_a->data;
+    int b = (int) entry_b->data;
+
+    if (a == b)
+        return false;
+
+    int a_toughness = (*mons_standard_level)(a);
+    int b_toughness = (*mons_standard_level)(b);
+
+    if (a_toughness < 1 || a_toughness >= 99
+        || b_toughness < 1 || b_toughness >= 99
+        || a_toughness == b_toughness)
+    {
+        a_toughness = mons_type_hit_dice(a);
+        b_toughness = mons_type_hit_dice(b);
+    }
+
+    if (a_toughness == b_toughness)
+    {
+        std::string a_name = mons_type_name(a, DESC_PLAIN);
+        std::string b_name = mons_type_name(b, DESC_PLAIN);
+        return ( lowercase(a_name) < lowercase(b_name));
+    }
+
+    return (a_toughness < b_toughness);
+}
+
+class DescMenu : public Menu
+{
+public:
+    DescMenu( int _flags, bool _show_mon )
+        : Menu(_flags), sort_alpha(true), showing_monsters(_show_mon)
+        {
+            set_highlighter(NULL);
+
+            set_prompt();
+        }
+
+    bool sort_alpha;
+    bool showing_monsters;
+
+    void set_prompt()
+        {
+            std::string prompt = "Describe which? ";
+
+            if (showing_monsters)
+            {
+                if (sort_alpha)
+                    prompt += "(CTRL-S to sort by monster toughness)";
+                else
+                    prompt += "(CTRL-S to sort by name)";
+            }
+            set_title(new MenuEntry(prompt, MEL_TITLE));
+        }
+
+    void sort()
+        {
+            if (!showing_monsters)
+                return;
+
+            if (sort_alpha)
+                std::sort(items.begin(), items.end(), compare_mon_names);
+            else
+                std::sort(items.begin(), items.end(), compare_mon_toughness);
+
+            for (unsigned int i = 0, size = items.size(); i < size; i++)
+            {
+                const char letter = index_to_letter(i);
+
+                items[i]->hotkeys.clear();
+                items[i]->add_hotkey(letter);
+            }
+        }
+
+    void toggle_sorting()
+        {
+            if (!showing_monsters)
+                return;
+
+            sort_alpha = !sort_alpha;
+
+            sort();
+            set_prompt();
+        }
+};
+
+static std::vector<std::string> get_desc_keys(std::string regex,
+                                              db_find_filter filter)
+{
+    std::vector<std::string> key_matches = getLongDescKeysByRegex(regex,
+                                                                  filter);
 
     if (key_matches.size() == 1)
-        return (key_matches[0]);
+        return (key_matches);
     else if (key_matches.size() > 52)
-    {
-        list_commands_err = "Too many matches for '";
-        list_commands_err += regex + "'";
-        return ("");
-    }
+        return (key_matches);
 
-    std::vector<std::string> body_matches = getLongDescBodiesByRegex(regex);
+    std::vector<std::string> body_matches = getLongDescBodiesByRegex(regex,
+                                                                     filter);
 
     if (key_matches.size() == 0 && body_matches.size() == 0)
-    {
-        list_commands_err = "No matches for '";
-        list_commands_err += regex + "'";
-        return ("");
-    }
+        return (key_matches);
     else if (key_matches.size() == 0 && body_matches.size() == 1)
-        return (body_matches[0]);
+        return (body_matches);
 
     // Merge key_matches and body_matches, discarding duplicates.
     std::vector<std::string> tmp = key_matches;
@@ -771,17 +821,10 @@ static std::string find_description_key(std::string regex)
             all_matches.push_back(tmp[i]);
         }
 
-    if (all_matches.size() > 52)
-    {
-        list_commands_err = "Too many matches for '";
-        list_commands_err += regex + "'";
-        return ("");
-    }
-
-    return select_desc_key(all_matches);
+    return (all_matches);
 }
 
-static std::string find_monster_key(unsigned char showchar)
+static std::vector<std::string> get_monster_keys(unsigned char showchar)
 {
     std::vector<std::string> mon_keys;
 
@@ -805,82 +848,31 @@ static std::string find_monster_key(unsigned char showchar)
             mon_keys.push_back(me->name);
     }
 
-    if (mon_keys.size() == 0)
-    {
-        list_commands_err = "No monsters displayed with symbol '";
-        list_commands_err += showchar;
-        list_commands_err += "'";
-
-        return ("");
-    }        
-    else if (mon_keys.size() > 52)
-    {
-        list_commands_err = "Too many monsters for symbol '";
-        list_commands_err += showchar;
-        list_commands_err += "'";
-
-        return ("");
-    }
-
-    std::sort(mon_keys.begin(), mon_keys.end());
-
-    return select_desc_key(mon_keys);
+    return (mon_keys);
 }
 
-static bool find_description()
+static bool monster_filter(std::string key, std::string body)
 {
-    clrscr();
-    viewwindow(true, false);
+    return (get_monster_by_name(key.c_str(), true) == MONS_PROGRAM_BUG);
+}
 
-    mpr("Describe a monster, spell, or feature; regexs and partial names "
-        "are fine.  Enter a single letter to list monsters displayed by "
-        "that symbol.");
-    mpr("Describe what? ");
-    char buf[80];
-    if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
-    {
-        list_commands_err = "Okay, then.";
-        return (false);
-    }
+static bool spell_filter(std::string key, std::string body)
+{
+    return (spell_by_name(key) == SPELL_NO_SPELL);
+}
 
-    std::string regex = trimmed_string(buf);
+static bool feature_filter(std::string key, std::string body)
+{
+    return (spell_by_name(key) != SPELL_NO_SPELL
+            || get_monster_by_name(key.c_str(), true) != MONS_PROGRAM_BUG);
+}
 
-    if (regex == "")
-    {
-        list_commands_err = "Description must contain at least one non-space.";
-        return (false);
-    }
-
-    // Try to get an exact match first.
-    std::string key;
-    std::string desc;
-
-    if (regex.size() == 1)
-    {
-        key = find_monster_key(regex[0]);
-
-        if (key == "")
-            return (false);
-
-        desc = getLongDescription(key);
-    }
-    else if (desc == "")
-    {
-        // Try to get an exact match first.
-        key   = regex;
-        desc  = getLongDescription(key);
-
-
-        key = find_description_key(regex);
-
-        if (key == "")
-            return (false);
-
-        desc = getLongDescription(key);
-    }
+static bool do_description(std::string key)
+{
+    std::string desc = getLongDescription(key);
 
     monster_type mon_num = get_monster_by_name(key, true);
-    if (mon_num < NUM_MONSTERS && mon_num != MONS_PROGRAM_BUG)
+    if (mon_num != MONS_PROGRAM_BUG)
     {
         if (mons_genus(mon_num) == MONS_DRACONIAN)
         {
@@ -932,6 +924,193 @@ static bool find_description()
     print_description(key + desc);
 
     return (true);
+}
+
+static bool find_description()
+{
+    clrscr();
+    viewwindow(true, false);
+
+    mpr("Describe a (M)onster, (S)pell or (F)eature? ");
+
+    int ch = toupper(getch());
+    std::string    type;
+    std::string    extra;
+    db_find_filter filter;
+
+    switch(ch)
+    {
+    case 'M':
+        type   = "monster";
+        extra  = "  Enter a single letter to list monsters displayed by "
+            "that symbol.";
+        filter = monster_filter;
+        break;
+    case 'S':
+        type   = "spell";
+        filter = spell_filter;
+        break;
+    case 'F':
+        type   = "feature";
+        filter = feature_filter;
+        break;
+    default:
+        list_commands_err = "Okay, then.";
+        return (false);
+    }
+
+    mprf("Describe a %s; partial names and regexs are fine.%s",
+         type.c_str(), extra.c_str());
+    mpr("Describe what? ");
+    char buf[80];
+    if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    {
+        list_commands_err = "Okay, then.";
+        return (false);
+    }
+
+    std::string regex = trimmed_string(buf);
+
+    if (regex == "")
+    {
+        list_commands_err = "Description must contain at least one non-space.";
+        return (false);
+    }
+
+    bool doing_mons    = (ch == 'M');
+    bool by_mon_symbol = (doing_mons && regex.size() == 1);
+
+    // Try to get an exact match first.
+    if (!by_mon_symbol && !(*filter)(regex, ""))
+    {
+        // Try to get an exact match first.
+        std::string desc = getLongDescription(regex);
+
+        if (desc != "")
+        {
+            return do_description(regex);
+        }
+    }
+
+    std::vector<std::string> key_list;
+
+    if (by_mon_symbol)
+        key_list = get_monster_keys(regex[0]);
+    else
+        key_list = get_desc_keys(regex, filter);
+
+    if (key_list.size() == 0)
+    {
+        if (by_mon_symbol)
+        {
+            list_commands_err  = "No monsters with symbol '";
+            list_commands_err += regex;
+            list_commands_err += "'";
+        }
+        else
+        {
+            list_commands_err  = "No matching ";
+            list_commands_err += type;
+            list_commands_err += "s";
+        }
+        return (false);
+    }
+    else if (key_list.size() > 52)
+    {
+        if (by_mon_symbol)
+        {
+            list_commands_err  = "Too many monsters with symbol '";
+            list_commands_err += regex;
+            list_commands_err += "' to display";
+        }
+        else
+        {
+            char num_buf[10];
+            sprintf(num_buf, "%d", key_list.size());
+            list_commands_err  = "Too many matching ";
+            list_commands_err += type;
+            list_commands_err += "s (";
+            list_commands_err += num_buf;
+            list_commands_err += ") to display";
+        }
+        return (false);
+    }
+    else if (key_list.size() == 1)
+    {
+        return do_description(key_list[0]);
+    }
+
+    std::sort(key_list.begin(), key_list.end());
+
+    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                       MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
+                       doing_mons);
+
+    for (unsigned int i = 0, size = key_list.size(); i < size; i++)
+    {
+        const char  letter = index_to_letter(i);
+        std::string str    = uppercase_first(key_list[i]);
+
+        MenuEntry *me = new MenuEntry(uppercase_first(key_list[i]),
+                                      MEL_ITEM, 1, letter);
+
+        if (doing_mons)
+        {
+            monster_type  mon    = get_monster_by_name(str, true);
+            unsigned char colour = mons_class_colour(mon);
+
+            if (colour == BLACK)
+                colour = LIGHTGREY;
+
+            std::string prefix = "(<";
+            prefix += colour_to_str(colour);
+            prefix += ">";
+            prefix += (char) mons_char(mon);
+            prefix += "</";
+            prefix += colour_to_str(colour);
+            prefix += ">) ";
+
+            me->text = prefix + str;
+            me->data = (void*) mon;
+        }
+        else
+            me->data = (void*) &key_list[i];
+
+        desc_menu.add_entry(me);
+    }
+
+    desc_menu.sort();
+
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = desc_menu.show();
+        redraw_screen();
+        if ( sel.empty() )
+        {
+            if (doing_mons && desc_menu.getkey() == CONTROL('S'))
+                desc_menu.toggle_sorting();
+            else
+                return (false);
+        }
+        else
+        {
+            ASSERT(sel.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() == 1);
+
+            std::string key;
+
+            if (doing_mons)
+                key = mons_type_name((int) sel[0]->data, DESC_PLAIN);
+            else
+                key = *((std::string*) sel[0]->data);
+
+            if (do_description(key))
+                if ( getch() == 0 )
+                    getch();
+        }
+    }
+
+    return (false);
 }
 
 static int keyhelp_keyfilter(int ch)

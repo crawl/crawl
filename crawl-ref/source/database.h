@@ -40,16 +40,22 @@ void databaseSystemShutdown();
 DBM  *openDB(const char *dbFilename);
 datum database_fetch(DBM *database, const std::string &key);
 
+typedef bool (*db_find_filter)(std::string key, std::string body);
+
 std::vector<std::string> database_find_keys(DBM *database,
                                             const std::string &regex,
-                                            bool ignore_case = false);
+                                            bool ignore_case = false,
+                                            db_find_filter filter = NULL);
 std::vector<std::string> database_find_bodies(DBM *database,
                                               const std::string &regex,
-                                              bool ignore_case = false);
+                                              bool ignore_case = false,
+                                              db_find_filter filter = NULL);
 
 std::string              getLongDescription(const std::string &key);
-std::vector<std::string> getLongDescKeysByRegex(const std::string &regex);
-std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex);
+std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
+                                                db_find_filter filter = NULL);
+std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
+                                                 db_find_filter filter = NULL);
 
 std::string getShoutString(const std::string &monst,
                            const std::string &suffix = "");

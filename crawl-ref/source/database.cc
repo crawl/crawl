@@ -154,7 +154,8 @@ datum database_fetch(DBM *database, const std::string &key)
 
 std::vector<std::string> database_find_keys(DBM *database,
                                             const std::string &regex,
-                                            bool ignore_case)
+                                            bool ignore_case,
+                                            db_find_filter filter)
 {
     text_pattern             tpat(regex, ignore_case);
     std::vector<std::string> matches;
@@ -165,14 +166,12 @@ std::vector<std::string> database_find_keys(DBM *database,
     {
         std::string key((const char *)dbKey.dptr, dbKey.dsize);
 
-        if (key.find("__") != std::string::npos)
+        if (tpat.matches(key) &&
+            key.find("__") == std::string::npos
+            && (filter == NULL || !(*filter)(key, "")))
         {
-            dbKey = dbm_nextkey(database);
-            continue;
-        }
-
-        if (tpat.matches(key))
             matches.push_back(key);
+        }
 
         dbKey = dbm_nextkey(database);
     }
@@ -182,7 +181,8 @@ std::vector<std::string> database_find_keys(DBM *database,
 
 std::vector<std::string> database_find_bodies(DBM *database,
                                               const std::string &regex,
-                                              bool ignore_case)
+                                              bool ignore_case,
+                                              db_find_filter filter)
 {
     text_pattern             tpat(regex, ignore_case);
     std::vector<std::string> matches;
@@ -193,17 +193,15 @@ std::vector<std::string> database_find_bodies(DBM *database,
     {
         std::string key((const char *)dbKey.dptr, dbKey.dsize);
 
-        if (key.find("__") != std::string::npos)
-        {
-            dbKey = dbm_nextkey(database);
-            continue;
-        }
-
         datum dbBody = dbm_fetch(database, dbKey);
         std::string body((const char *)dbBody.dptr, dbBody.dsize);
 
-        if (tpat.matches(body))
+        if (tpat.matches(body) &&
+            key.find("__") == std::string::npos
+            && (filter == NULL || !(*filter)(key, body)))
+        {
             matches.push_back(key);
+        }
 
         dbKey = dbm_nextkey(database);
     }
@@ -462,7 +460,8 @@ std::string getLongDescription(const std::string &key)
     return std::string((const char *)result.dptr, result.dsize);
 }
 
-std::vector<std::string> getLongDescKeysByRegex(const std::string &regex)
+std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
+                                                db_find_filter filter)
 {
     if (!descriptionDB)
     {
@@ -470,10 +469,11 @@ std::vector<std::string> getLongDescKeysByRegex(const std::string &regex)
         return (empty);
     }
 
-    return database_find_keys(descriptionDB, regex, true);
+    return database_find_keys(descriptionDB, regex, true, filter);
 }
 
-std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex)
+std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
+                                                  db_find_filter filter)
 {
     if (!descriptionDB)
     {
@@ -481,7 +481,7 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex)
         return (empty);
     }
 
-    return database_find_bodies(descriptionDB, regex, true);
+    return database_find_bodies(descriptionDB, regex, true, filter);
 }
 
 static std::vector<std::string> description_txt_paths()

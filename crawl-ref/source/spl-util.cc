@@ -83,6 +83,30 @@ void init_spell_descs(void)
     return;
 }                               // end init_spell_descs()
 
+spell_type spell_by_name(const char* name)
+{
+    if (name == NULL || strlen(name) == 0)
+        return (SPELL_NO_SPELL);
+
+    char spname[80];
+
+    for (int i = 0; i < NUM_SPELLS; i++)
+    {
+        spell_type type = static_cast<spell_type>(i);
+        strncpy( spname, spell_title(type), sizeof( spname ) );
+
+        if (strcasecmp(spname, name) == 0)
+            return (type);
+    }
+
+    return (SPELL_NO_SPELL);
+}
+
+spell_type spell_by_name(std::string name)
+{
+    return spell_by_name(name.c_str());
+}
+
 int get_spell_slot_by_letter( char letter )
 {
     ASSERT( isalpha( letter ) );
