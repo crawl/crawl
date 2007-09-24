@@ -1024,7 +1024,7 @@ static bool find_description()
         else
         {
             char num_buf[10];
-            sprintf(num_buf, "%d", key_list.size());
+            sprintf(num_buf, "%lu", key_list.size());
             list_commands_err  = "Too many matching ";
             list_commands_err += type;
             list_commands_err += "s (";
