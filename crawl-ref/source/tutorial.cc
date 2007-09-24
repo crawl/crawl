@@ -753,6 +753,9 @@ void tutorial_dissection_reminder()
 // occasionally remind injured characters of resting
 void tutorial_healing_reminder()
 {
+    if (!Options.tutorial_left)
+        return;
+        
     if (you.duration[DUR_POISONING] && 2*you.hp < you.hp_max)
     {
         if (Options.tutorial_events[TUT_NEED_POISON_HEALING])
@@ -762,7 +765,8 @@ void tutorial_healing_reminder()
     {
         if (Options.tutorial_events[TUT_NEED_HEALING]) 
             learned_something_new(TUT_NEED_HEALING);
-        else if (you.num_turns - Options.tut_last_healed >= 50 && !you.duration[DUR_POISONING])
+        else if (you.num_turns - Options.tut_last_healed >= 50
+                 && !you.duration[DUR_POISONING])
         {
             if (Options.tut_just_triggered)
                 return;
@@ -780,6 +784,7 @@ void tutorial_healing_reminder()
                       "<w>a<magenta>.";
             }
             print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
+            Options.tut_just_triggered = 1;
         }
         Options.tut_last_healed = you.num_turns;
     }
@@ -1316,7 +1321,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           
       case TUT_SHIFT_RUN:
           text << "Walking around takes less keystrokes if you press "
-                  "<w>Shift-direction<magenta> or <w>/ direction<magenta>. "
+                  "<w>Shift-direction<magenta> or <w>/ <w>direction<magenta>. "
                   "That will let you run until a monster comes into sight or "
                   "your character sees something interesting.";
           break;
@@ -1973,7 +1978,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "causes the trap to go off, so it can be quite a "
                         "dangerous task.";
             }
-            Options.tutorial_events[TUT_SEEN_TRAP];
+            Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
        case DNGN_STONE_STAIRS_DOWN_I:
        case DNGN_STONE_STAIRS_DOWN_II:
@@ -1981,7 +1986,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             ostr << "You can enter the next (deeper) level by following them "
                     "down (<w>><magenta>). To get back to this level again, "
                     "press <w><<<magenta> while standing on the upstairs.";
-            Options.tutorial_events[TUT_SEEN_STAIRS];
+            Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
             break;
        case DNGN_STONE_STAIRS_UP_I:
        case DNGN_STONE_STAIRS_UP_II:
@@ -1995,11 +2000,11 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             else
             {
                 ostr << "You can enter the previous (lower) level by following "
-                        "these down (<w><<<magenta>). To get back to this level "
+                        "these up (<w><<<magenta>). To get back to this level "
                         "again, press <w>><magenta> while standing on the "
                         "downstairs.";
             }
-            Options.tutorial_events[TUT_SEEN_STAIRS];
+            Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
             break;
 
        case DNGN_ROCK_STAIRS_DOWN:
@@ -2007,7 +2012,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             ostr << "Escape hatches can be used to quickly leave a level with "
                     "<w><<<magenta> and <w>><magenta>, respectively. Note that "
                     "you will usually be unable to return right away.";
-            Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH];
+            Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH] = 0;
             break;
             
        case DNGN_ALTAR_ZIN:
@@ -2067,7 +2072,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                          << " press <w>^<magenta>.";
                 }
             }
-            Options.tutorial_events[TUT_SEEN_ALTAR];
+            Options.tutorial_events[TUT_SEEN_ALTAR] = 0;
             break;
        }
        case DNGN_ENTER_ORCISH_MINES:

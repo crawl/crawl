@@ -231,14 +231,6 @@ static int exercise2( int exsk )
         {
             bonus += random2(3);
         }
-
-        /* Darts and Throwing */
-        if ((exsk == SK_DARTS || exsk == SK_THROWING)
-            && (you.skills[SK_DARTS] > you.skills[exsk]
-                || you.skills[SK_THROWING] > you.skills[exsk]))
-        {
-            bonus += random2(3);
-        }
     }
 
     // Quick fix for the fact that stealth can't be gained fast enough to
