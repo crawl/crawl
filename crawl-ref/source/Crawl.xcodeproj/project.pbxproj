@@ -201,6 +201,7 @@
 		7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B352E9E0B00183400CABB32 /* mapdef.h */; };
 		7B3B075B0BD13AAB00F2980E /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
 		7B3B07600BD13AF000F2980E /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
+		7B54B51B0CA8217900612805 /* state.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B54B51A0CA8217900612805 /* state.cc */; };
 		7B61642D0C9CA8E80054B3D9 /* mpr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164240C9CA8E80054B3D9 /* mpr.h */; };
 		7B61642E0C9CA8E80054B3D9 /* place.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164250C9CA8E80054B3D9 /* place.cc */; };
 		7B61642F0C9CA8E80054B3D9 /* place.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164260C9CA8E80054B3D9 /* place.h */; };
@@ -545,6 +546,7 @@
 		7B352F200B00232500CABB32 /* vaults.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = vaults.des; path = dat/vaults.des; sourceTree = "<group>"; };
 		7B3B07560BD13A8100F2980E /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = /usr/lib/libreadline.dylib; sourceTree = "<absolute>"; };
 		7B3B075F0BD13AF000F2980E /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = /usr/lib/libncurses.dylib; sourceTree = "<absolute>"; };
+		7B54B51A0CA8217900612805 /* state.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = state.cc; sourceTree = SOURCE_ROOT; };
 		7B6164240C9CA8E80054B3D9 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mpr.h; sourceTree = SOURCE_ROOT; };
 		7B6164250C9CA8E80054B3D9 /* place.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = place.cc; sourceTree = SOURCE_ROOT; };
 		7B6164260C9CA8E80054B3D9 /* place.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = place.h; sourceTree = SOURCE_ROOT; };
@@ -710,15 +712,6 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				7B6164240C9CA8E80054B3D9 /* mpr.h */,
-				7B6164250C9CA8E80054B3D9 /* place.cc */,
-				7B6164260C9CA8E80054B3D9 /* place.h */,
-				7B6164270C9CA8E80054B3D9 /* ray.h */,
-				7B6164280C9CA8E80054B3D9 /* state.h */,
-				7B6164290C9CA8E80054B3D9 /* terrain.cc */,
-				7B61642A0C9CA8E80054B3D9 /* terrain.h */,
-				7B61642B0C9CA8E80054B3D9 /* traps.cc */,
-				7B61642C0C9CA8E80054B3D9 /* traps.h */,
 				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
 				7B237E290A8EC9D000580F30 /* abl-show.h */,
 				7B237E280A8EC9D000580F30 /* abyss.cc */,
@@ -819,6 +812,7 @@
 				7B237E420A8EC9D000580F30 /* monspeak.h */,
 				7B237E410A8EC9D000580F30 /* monstuff.cc */,
 				7B237E400A8EC9D000580F30 /* monstuff.h */,
+				7B6164240C9CA8E80054B3D9 /* mpr.h */,
 				7B237E3F0A8EC9D000580F30 /* mstuff2.cc */,
 				7B237E6B0A8EC9D000580F30 /* mstuff2.h */,
 				7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */,
@@ -837,10 +831,13 @@
 				7B237DEF0A8EC9D000580F30 /* output.h */,
 				7B237DEE0A8EC9D000580F30 /* overmap.cc */,
 				7B237DED0A8EC9D000580F30 /* overmap.h */,
+				7B6164250C9CA8E80054B3D9 /* place.cc */,
+				7B6164260C9CA8E80054B3D9 /* place.h */,
 				7B237E0B0A8EC9D000580F30 /* player.cc */,
 				7B237E0A0A8EC9D000580F30 /* player.h */,
 				7B237E090A8EC9D000580F30 /* randart.cc */,
 				7B237E080A8EC9D000580F30 /* randart.h */,
+				7B6164270C9CA8E80054B3D9 /* ray.h */,
 				7B237E3B0A8EC9D000580F30 /* religion.cc */,
 				7B237E3A0A8EC9D000580F30 /* religion.h */,
 				7B237E390A8EC9D000580F30 /* shopping.cc */,
@@ -865,12 +862,18 @@
 				7B237E060A8EC9D000580F30 /* spl-util.h */,
 				7B237E200A8EC9D000580F30 /* stash.cc */,
 				7B237E1F0A8EC9D000580F30 /* stash.h */,
+				7B54B51A0CA8217900612805 /* state.cc */,
+				7B6164280C9CA8E80054B3D9 /* state.h */,
 				7B237E1E0A8EC9D000580F30 /* stuff.cc */,
 				7B237E1D0A8EC9D000580F30 /* stuff.h */,
 				7B237E240A8EC9D000580F30 /* tags.cc */,
 				7B237E230A8EC9D000580F30 /* tags.h */,
+				7B6164290C9CA8E80054B3D9 /* terrain.cc */,
+				7B61642A0C9CA8E80054B3D9 /* terrain.h */,
 				7B237E220A8EC9D000580F30 /* transfor.cc */,
 				7B237E210A8EC9D000580F30 /* transfor.h */,
+				7B61642B0C9CA8E80054B3D9 /* traps.cc */,
+				7B61642C0C9CA8E80054B3D9 /* traps.h */,
 				7B237DF50A8EC9D000580F30 /* travel.cc */,
 				7B237DF40A8EC9D000580F30 /* travel.h */,
 				7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */,
@@ -1002,9 +1005,11 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Crawl" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 08FB7794FE84155DC02AAC07 /* Crawl */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				7B0EFD410BD12E9200002671 /* Lua */,
 				8DD76FA90486AB0100D96B5E /* Crawl */,
@@ -1143,6 +1148,7 @@
 				7B61642E0C9CA8E80054B3D9 /* place.cc in Sources */,
 				7B6164320C9CA8E80054B3D9 /* terrain.cc in Sources */,
 				7B6164340C9CA8E80054B3D9 /* traps.cc in Sources */,
+				7B54B51B0CA8217900612805 /* state.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1168,6 +1174,7 @@
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
