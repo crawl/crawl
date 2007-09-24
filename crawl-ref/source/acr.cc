@@ -219,6 +219,10 @@ int main( int argc, char *argv[] )
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );
 
+    // read the options the player used last time they created a new
+    // character.
+    read_startup_prefs();
+
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
     {
         hiscores_print_all( Options.sc_entries, Options.sc_format );

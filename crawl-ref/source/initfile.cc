@@ -50,8 +50,6 @@ game_options Options;
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
 const static int   obj_syms_len = 16;
 
-static void read_startup_prefs();
-
 template<class A, class B> void append_vector(A &dest, const B &src)
 {
     dest.insert( dest.end(), src.begin(), src.end() );
@@ -1016,14 +1014,11 @@ std::string read_init_file(bool runscript)
     }
 
     read_options(f, runscript);
-    if (!runscript)
-        read_startup_prefs();
-
     fclose(f);
     return std::string(name_buff);
 }                               // end read_init_file()
 
-static void read_startup_prefs()
+void read_startup_prefs()
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
     std::string fn = get_prefs_filename();
@@ -1589,11 +1584,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
+#ifndef DGAMELAUNCH
     else if (key == "name")
     {
         // field is already cleaned up from trim_string()
         player_name = field;
     }
+#endif
     else if (key == "char_set" || key == "ascii_display")
     {
         bool valid = true;

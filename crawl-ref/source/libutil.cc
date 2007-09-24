@@ -101,7 +101,7 @@ void play_sound( const char *file )
 
 std::string strip_filename_unsafe_chars(const std::string &s)
 {
-    return replace_all_of(s, " .", "");
+    return replace_all_of(s, " .&`\"\'|;:/\\{}()[]<>*%$#@!~?", "");
 }
 
 std::string make_stringf(const char *s, ...)

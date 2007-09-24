@@ -36,8 +36,8 @@ const char* colour_to_str( unsigned char colour );
  * *********************************************************************** */
 std::string read_init_file(bool runscript = false);
 
+void read_startup_prefs();
 void read_options(FILE *f, bool runscript = false);
-
 void read_options(const std::string &s, bool runscript = false);
 
 void parse_option_line(const std::string &line, bool runscript = false);
