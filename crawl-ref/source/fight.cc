@@ -1127,6 +1127,14 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
             if (coinflip())
                 damage++;
         }
+        
+        if (you.species == SP_DEMONSPAWN
+            && (weapon->sub_type == WPN_DEMON_BLADE ||
+                weapon->sub_type == WPN_DEMON_WHIP ||
+                weapon->sub_type == WPN_DEMON_TRIDENT))
+        {
+            damage += random2(3);
+        }
     }
 
     return (damage);
@@ -2322,7 +2330,7 @@ int melee_attack::player_to_hit(bool random_factor)
             {
                 your_to_hit++;
             }
-
+            
         }
         else if (item_is_staff( *weapon ))
         {

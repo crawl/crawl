@@ -3420,9 +3420,10 @@ void describe_item( item_def &item, bool allow_inscribe )
     if (Options.tutorial_left)
     {
         tutorial_describe_item(item);
+        getch();
     }
-    // Don't ask if there aren't enough rows left
-    if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
+    // Don't ask during tutorial, or if there aren't enough rows left
+    else if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
     {
         gotoxy(1, wherey() + 2);
         formatted_string::parse_string("<cyan>Do you wish to inscribe this item? ").display();
@@ -4242,8 +4243,23 @@ void describe_god( god_type which_god, bool give_title )
                                           "sometimes");  // less than 2:3
 
             if (which_god == GOD_ZIN)
+            {
                 cprintf("Praying to %s will provide sustenance if starving."
                         EOL, god_name(which_god));
+            }
+        }
+
+        if (which_god == GOD_TROG)
+        {
+            have_any = true;
+            cprintf("You can call upon %s to burn books in your surroundings."
+                    EOL, god_name(which_god));
+        }
+        else if (which_god == GOD_ELYVILON)
+        {
+            have_any = true;
+            cprintf("You can call upon %s to destroy weapons "
+                    "lying on the ground." EOL, god_name(which_god));
         }
 
         // mv: No abilities (except divine protection) under penance
