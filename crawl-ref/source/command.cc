@@ -700,9 +700,8 @@ static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
     return ( lowercase(a_name) < lowercase(b_name));
 }
 
-// Compare monsters by level if there's a place where they both have a
-// level defined, or by hitdice otherwise.  If monsters are of equal
-// toughness, compare names.
+// Compare monsters by location-independant level, or by hitdice if
+// levels are equal, or by name if both level and hitdice are equal.
 static bool compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
     int a = (int) entry_a->data;
@@ -711,12 +710,10 @@ static bool compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     if (a == b)
         return false;
 
-    int a_toughness = (*mons_standard_level)(a);
-    int b_toughness = (*mons_standard_level)(b);
+    int a_toughness = mons_global_level(a);
+    int b_toughness = mons_global_level(b);
 
-    if (a_toughness < 1 || a_toughness >= 99
-        || b_toughness < 1 || b_toughness >= 99
-        || a_toughness == b_toughness)
+    if (a_toughness == b_toughness)
     {
         a_toughness = mons_type_hit_dice(a);
         b_toughness = mons_type_hit_dice(b);
@@ -830,7 +827,7 @@ static std::vector<std::string> get_monster_keys(unsigned char showchar)
 
     for (int i = 0; i < NUM_MONSTERS; i++)
     {
-        if (i == MONS_PROGRAM_BUG)
+        if (i == MONS_PROGRAM_BUG || mons_global_level(i) == 0)
             continue;
 
         monsterentry *me = get_monster_data(i);
@@ -853,7 +850,8 @@ static std::vector<std::string> get_monster_keys(unsigned char showchar)
 
 static bool monster_filter(std::string key, std::string body)
 {
-    return (get_monster_by_name(key.c_str(), true) == MONS_PROGRAM_BUG);
+    int mon_num = get_monster_by_name(key.c_str(), true);
+    return (mon_num == MONS_PROGRAM_BUG || mons_global_level(mon_num) == 0);
 }
 
 static bool spell_filter(std::string key, std::string body)
