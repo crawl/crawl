@@ -72,6 +72,8 @@ std::string pronoun_you(description_level_type desc)
 {
     switch (desc)
     {
+    case DESC_NONE:
+        return "";
     case DESC_CAP_A: case DESC_CAP_THE:
         return "You";
     case DESC_NOCAP_A: case DESC_NOCAP_THE:

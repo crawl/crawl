@@ -69,6 +69,8 @@ description_level_type description_type_by_name(const char *desc)
         return DESC_INVENTORY_EQUIP;
     else if (!strcmp("inv", desc))
         return DESC_INVENTORY;
+    else if (!strcmp("none", desc))
+        return DESC_NONE;
 
     return DESC_PLAIN;
 }
@@ -101,7 +103,7 @@ void play_sound( const char *file )
 
 std::string strip_filename_unsafe_chars(const std::string &s)
 {
-    return replace_all_of(s, " .&`\"\'|;:/\\{}()[]<>*%$#@!~?", "");
+    return replace_all_of(s, " .&`\"\'|;{}()[]<>*%$#@!~?", "");
 }
 
 std::string make_stringf(const char *s, ...)

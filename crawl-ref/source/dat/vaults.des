@@ -190,7 +190,7 @@ KMONS:   O = 8 / 9 / w:80 nothing
 NSUBST:  O = O / o
 KITEM:   o = any good_item
 KFEAT:   o = w:120 . / any shop
-KFEAT:   O = .
+
 #
 # NW
 SHUFFLE: AC/BD, EG/FH, IKN/NJL, '"

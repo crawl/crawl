@@ -1457,6 +1457,9 @@ void define_monster(int index)
 static std::string str_monam(const monsters& mon, description_level_type desc,
                              bool force_seen)
 {
+    if (desc == DESC_NONE)
+        return ("");
+    
     // Handle non-visible case first
     if ( !force_seen && !player_monster_visible(&mon) )
     {       

@@ -745,8 +745,10 @@ enum description_level_type
 
     // Partial item names.
     DESC_BASENAME,                     // Base name of item subtype
-    DESC_QUALNAME                      // Name without articles, quantities,
+    DESC_QUALNAME,                     // Name without articles, quantities,
                                        // enchantments.
+
+    DESC_NONE
 };
 
 enum game_direction_type
