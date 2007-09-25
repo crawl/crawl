@@ -1651,7 +1651,8 @@ bool debug_add_mutation(void)
         return (false);
     }
 
-    if (you.mutation[MUT_MUTATION_RESISTANCE] > 0)
+    if (you.mutation[MUT_MUTATION_RESISTANCE] > 0 &&
+        !crawl_state.is_replaying_keys())
     {
         const char* msg;
 
@@ -1664,7 +1665,6 @@ bool debug_add_mutation(void)
         {
             you.mutation[MUT_MUTATION_RESISTANCE] = 0;
             crawl_state.cancel_cmd_repeat();
-            crawl_state.cancel_cmd_again();
         }
     }
 
