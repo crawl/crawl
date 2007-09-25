@@ -1457,6 +1457,9 @@ void define_monster(int index)
 static std::string str_monam(const monsters& mon, description_level_type desc,
                              bool force_seen)
 {
+    if (desc == DESC_NONE)
+        return ("");
+    
     // Handle non-visible case first
     if ( !force_seen && !player_monster_visible(&mon) )
     {       
@@ -2485,7 +2488,8 @@ void monsters::equip_weapon(item_def &item, int near)
 {
     if (need_message(near))
         mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A).c_str());
+             item.name(DESC_NOCAP_A, false, false, true,
+                       false, ISFLAG_CURSED).c_str());
 
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
@@ -2574,7 +2578,8 @@ void monsters::unequip_weapon(item_def &item, int near)
 {
     if (need_message(near))
         mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A).c_str());
+             item.name(DESC_NOCAP_A, false, false, true,
+                       false, ISFLAG_CURSED).c_str());
 
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)

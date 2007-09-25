@@ -1035,20 +1035,28 @@ inline static void monster_warning(activity_interrupt_type ai,
                           mon->name(DESC_CAP_THE).c_str());
                      break;
                    case 2:
-                     mprf(MSGCH_WARN, "You feel that %s is too close now for comfort.",
+                     mprf(MSGCH_WARN,
+                          "You feel that %s is too close now for comfort.",
                           mon->name(DESC_NOCAP_THE).c_str());
                      break;
                    default:
-                     mprf(MSGCH_WARN, "%s's presence makes you stop your activity.",
+                     mprf(MSGCH_WARN,
+                          "%s's presence makes you stop your activity.",
                           mon->name(DESC_CAP_THE).c_str());
                      break;
                 }
             }
             else
             {
-                std::string text = get_monster_desc(mon, false);
-                text += " comes into view.";
-                print_formatted_paragraph(text, get_number_of_cols(), MSGCH_WARN);
+                const std::string mweap =
+                    get_monster_desc(mon, false, DESC_NONE);
+                std::string text = mon->name(DESC_CAP_A) + " comes into view.";
+                if (!mweap.empty())
+                    text += " " + mon->pronoun(PRONOUN_CAP)
+                        + " is" + mweap + ".";
+                print_formatted_paragraph(text,
+                                          get_number_of_cols(),
+                                          MSGCH_WARN);
             }
         }
 

@@ -2785,12 +2785,19 @@ static void show_message_line(std::string line)
         mpr(line.c_str());
     else
     {
+        take_note(Note( NOTE_MESSAGE, MSGCH_PLAIN, 0, line.c_str() ));
+        
         std::string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
         // XXX: Eventually fix mpr so it can do a different colour for
         // the sender.
-        mprf("%s: %s", sender.c_str(), line.c_str());
+        formatted_string fs;
+        fs.textcolor(WHITE);
+        fs.cprintf("%s: ", sender.c_str());
+        fs.textcolor(LIGHTGREY);
+        fs.cprintf("%s", line.c_str());
+        formatted_mpr(fs, MSGCH_PLAIN, 0);
     }
 }
 
@@ -3289,6 +3296,8 @@ static void close_door(int door_x, int door_y)
 // returns true if a new character
 static bool initialise(void)
 {
+    Options.fixup_options();
+    
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
@@ -3407,6 +3416,7 @@ static bool initialise(void)
     clua.runhook("chk_startgame", "b", newc);
     std::string yname = you.your_name;
     read_init_file(true);
+    Options.fixup_options();
     strncpy(you.your_name, yname.c_str(), kNameLen);
     you.your_name[kNameLen - 1] = 0;
 

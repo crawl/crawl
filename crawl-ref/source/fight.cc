@@ -401,6 +401,8 @@ std::string melee_attack::anon_name(description_level_type desc,
     case DESC_NOCAP_YOUR:
     case DESC_NOCAP_ITS:
         return ("its");
+    case DESC_NONE:
+        return ("");
     case DESC_NOCAP_THE:
     case DESC_NOCAP_A:
     case DESC_PLAIN:
@@ -1193,12 +1195,9 @@ int melee_attack::player_stab(int damage)
         stab_message( def, stab_bonus );
 
         exercise(SK_STABBING, 1 + random2avg(5, 4));
-        
-        if (mons_holiness(def) == MH_NATURAL
-            || mons_holiness(def) == MH_HOLY)
-        {
+
+        if (!tso_stab_safe_monster(defender))
             did_god_conduct(DID_STABBING, 4);
-        }
     }
     else
     {
@@ -2475,10 +2474,12 @@ void melee_attack::player_stab_check()
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 
-    if (stab_attempt && you.religion == GOD_SHINING_ONE
+    if (stab_attempt
+        && you.religion == GOD_SHINING_ONE
         && !you.duration[DUR_BERSERKER])
     {
-        if (!yesno("Really attack this helpless creature?", false, 'n'))
+        if (!tso_stab_safe_monster(defender)
+            && !yesno("Really attack this helpless creature?", false, 'n'))
         {
             stab_attempt  = false;
             cancel_attack = true;

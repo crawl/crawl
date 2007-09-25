@@ -3454,3 +3454,10 @@ int piety_breakpoint(int i)
     else
         return breakpoints[i];
 }
+
+// Returns true if The Shining One doesn't mind you stabbing this creature.
+bool tso_stab_safe_monster(const actor *act)
+{
+    const mon_holy_type holy = act->holiness();
+    return (holy != MH_NATURAL && holy != MH_HOLY);
+}

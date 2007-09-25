@@ -76,6 +76,9 @@ std::string item_def::name(description_level_type descrip,
                            bool quantity_words,
                            unsigned long ignore_flags) const
 {
+    if (descrip == DESC_NONE)
+        return ("");
+    
     std::ostringstream buff;
 
     const std::string auxname = this->name_aux(descrip, terse, ident,
@@ -1205,8 +1208,7 @@ std::string item_def::name_aux( description_level_type desc,
         else if (item_plus2 == ZAPCOUNT_EMPTY)
             buff << " {empty}";
         else if (item_plus2 > 0)
-            buff << " {zapped " << item_plus2
-                 << ((item_plus2 > 1) ? " times" : " time")
+            buff << " {zapped: " << item_plus2
                  << '}';
         break;
 

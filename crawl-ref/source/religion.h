@@ -51,6 +51,9 @@ void beogh_idol_revenge();
 bool ely_destroy_weapons();
 void trog_burn_books();
 
+class actor;
+bool tso_stab_safe_monster(const actor *act);
+
 inline void xom_acts(int sever)
 {
     xom_acts(xom_is_nice(), sever);

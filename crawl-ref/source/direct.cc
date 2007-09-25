@@ -1444,6 +1444,8 @@ static std::string feature_do_grammar(description_level_type dtype,
         return article_a(desc, false);
     case DESC_NOCAP_A:
         return article_a(desc, true);
+    case DESC_NONE:
+        return ("");
     default:
         return (desc);
     }    
@@ -1775,11 +1777,13 @@ static std::string describe_monster_weapon(const monsters *mons)
     std::string name1, name2;
     const item_def *weap = mons->mslot_item(MSLOT_WEAPON);
     const item_def *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
-    
+
     if (weap)
-        name1 = weap->name(DESC_NOCAP_A);
+        name1 = weap->name(DESC_NOCAP_A, false, false, true,
+                           false, ISFLAG_KNOW_CURSE);
     if (alt && (!weap || mons_wields_two_weapons(mons)))
-        name2 = alt->name(DESC_NOCAP_A);
+        name2 = alt->name(DESC_NOCAP_A, false, false, true,
+                          false, ISFLAG_KNOW_CURSE);
 
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
@@ -1788,7 +1792,8 @@ static std::string describe_monster_weapon(const monsters *mons)
     {
         item_def dup = *weap;
         ++dup.quantity;
-        name1 = dup.name(DESC_NOCAP_A, false, false, true, true);
+        name1 = dup.name(DESC_NOCAP_A, false, false, true, true,
+                         ISFLAG_KNOW_CURSE);
         name2.clear();
     }
 
@@ -1806,8 +1811,6 @@ static std::string describe_monster_weapon(const monsters *mons)
     
     return (desc);
 }
-
-
 
 #ifdef DEBUG_DIAGNOSTICS
 static std::string stair_destination_description(const coord_def &pos)
@@ -1910,9 +1913,10 @@ static void describe_monster(const monsters *mon)
     }
 }
 
-std::string get_monster_desc(const monsters *mon, bool full_desc)
+std::string get_monster_desc(const monsters *mon, bool full_desc,
+                             description_level_type mondtype)
 {
-    std::string desc = mon->name(DESC_CAP_A);
+    std::string desc = mon->name(mondtype);
 
     const int mon_arm = mon->inv[MSLOT_ARMOUR];
     std::string weap = "";

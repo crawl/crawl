@@ -1655,6 +1655,9 @@ public:
     std::string o_str(const char *name, const char *def = NULL) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
+    // Fix option values if necessary, specifically file paths.
+    void fixup_options();
+
 private:
     std::string unalias(const std::string &key) const;
     void add_alias(const std::string &alias, const std::string &name);
@@ -1685,7 +1688,6 @@ private:
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;
-    void validate_options();
 
     void split_parse(const std::string &s, const std::string &separator,
                      void (game_options::*add)(const std::string &));

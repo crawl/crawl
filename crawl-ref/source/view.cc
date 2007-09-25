@@ -565,7 +565,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     else if (Options.trap_item_brand
 	     && grid_is_trap(grid_value) && igrd[x][y] != NON_ITEM)
     {
-	tc |= COLFLAG_TRAP_ITEM;
+        tc |= COLFLAG_TRAP_ITEM;
     }
     
     return real_colour(tc);

@@ -367,6 +367,8 @@ ENDMAP
 # Greed's colour
 
 NAME: david_greed
+TAGS: uniq
+CHANCE: 4
 DEPTH: 10-26, !Orc, !Lair, !Swamp, !Shoal
 ITEM: nothing / any good_item
 MONS: silver statue / orange crystal statue / ice statue
