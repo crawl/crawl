@@ -74,6 +74,18 @@ formatted_string formatted_string::parse_string(
         bool invert_colour = false;
         std::string::size_type endpos = std::string::npos;
 
+        // Break string up if it gets too big.
+        if (currs.size() >= 999)
+        {
+            fs.cprintf(currs.substr(0, 999));
+            if (currs.size() > 999)
+                currs = currs.substr(999);
+            else
+                currs.clear();
+            tag--;
+            continue;
+        }
+
         if (s[tag] != '<' || tag >= length - 2)
         {
             if (!masked)
