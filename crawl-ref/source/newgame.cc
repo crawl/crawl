@@ -759,6 +759,14 @@ game_start:
     }
     else
     {
+        if (Options.race != 0 && Options.cls != 0
+            && !class_allowed(letter_to_species(Options.race),
+                              letter_to_class(Options.cls)))
+        {
+            end(1, false, "Incompatible race and class specified in "
+                "options file.");
+        }
+
         while (choose_race() && !choose_class());
     }
 
