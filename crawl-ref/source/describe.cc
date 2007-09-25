@@ -256,7 +256,7 @@ static void randart_descrip( std::string &description, const item_def &item )
         description += "$It renders you almost immune to negative energy. ";
 
     if (proprt[ RAP_MAGIC ])
-        description += "$It amplifies your intrinsic magic resistance. ";
+        description += "$It increases your resistance to enchantments. ";
 
     if (proprt[ RAP_STEALTH ] < 0)
     {

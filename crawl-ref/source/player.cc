@@ -995,7 +995,7 @@ int player_res_magic(void)
         break;
     }
 
-    /* randarts - multiplicative effect */
+    /* randarts */
     rm += scan_randarts(RAP_MAGIC);
 
     /* armour  */
