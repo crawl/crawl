@@ -148,22 +148,26 @@ const bool InvEntry::is_item_equipped() const
     return (false);
 }
 
+// returns values < 0 for edible chunks (non-rotten except for Saprovores),
+// 0 for non-chunks, and values > 0 for rotten chunks for non-Saprovores
 const int InvEntry::item_freshness() const
 {
     if (item->base_type != OBJ_FOOD || item->sub_type != FOOD_CHUNK)
         return 0;
 
-    int freshness = item->special - 100;
+    int freshness = item->special;
+    
+    if (freshness >= 100 || you.species == SP_TROLL || you.species == SP_KOBOLD 
+                         || you.species == SP_GHOUL || you.species == SP_OGRE
+                         || you.species == SP_HILL_ORC)
+    {
+        freshness -= 300;
+    }
 
     // Ensure that chunk freshness is never zero, since zero means
     // that the item isn't a chunk.
-    if (freshness >= 0)
+    if (freshness >= 0) // possibly rotten chunks
         freshness++;
-
-    // Invert if not a ghoul, so that the freshest chunks will go
-    // at the top.
-    if (you.species != SP_GHOUL)
-        freshness *= -1;
 
     return freshness;
 }
