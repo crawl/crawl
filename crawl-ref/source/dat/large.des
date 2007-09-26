@@ -56,7 +56,6 @@ ENDMAP
 NAME:    statuecave_lemuel
 ORIENT:  northeast
 DEPTH:   D:7-27, Lair, Crypt
-TAGS:    uniq
 MONS:    ice statue/orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
@@ -92,7 +91,6 @@ ENDMAP
 NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-20, Lair
-TAGS:    uniq
 MONS:    dragon, ice dragon
 ITEM:    potion of levitation / scroll of teleportation
 SUBST:   ! : ?x
@@ -138,7 +136,6 @@ ENDMAP
 NAME:    Giant_Chief
 DEPTH:   D:11-22, Orc:2-4
 ORIENT:  north
-TAGS:    uniq
 MONS:    stone giant, frost giant, fire giant
 MONS:    hill giant, cyclops
 MONS:    w:50 ogre / w:5 ogre-mage / two-headed ogre
@@ -200,7 +197,6 @@ ENDMAP
 NAME:    River_Lethe
 ORIENT:  encompass
 DEPTH:   D:16-26
-TAGS:    uniq
 SUBST:   + = +=
 SUBST:   . = .:100 !:1 6:4
 SUBST:   ; = .:200 !:1 1:3
@@ -305,7 +301,6 @@ ENDMAP
 NAME:    vault_1
 ORIENT:  north
 DEPTH:   D:16-26
-TAGS:    uniq
 MONS:    shapeshifter, shapeshifter, glowing shapeshifter
 MONS:    silver statue, nothing
 SUBST:   E=E.
@@ -364,7 +359,6 @@ ENDMAP
 NAME:    cell_vault
 ORIENT:  northwest
 DEPTH:   D:16-26
-TAGS:    uniq
 SHUFFLE: 890
 KITEM:   8 = | / nothing w:50
 KITEM:   9 = * / nothing w:50
@@ -412,7 +406,6 @@ ENDMAP
 # A little maze vault
 #
 NAME:   little_maze_vault
-TAGS:   uniq
 DEPTH:  D:16-26
 ORIENT: northeast
 MAP
@@ -458,7 +451,6 @@ ENDMAP
 # thingy vault.
 #
 NAME:   thingy_vault
-TAGS:   uniq
 DEPTH:  D:12-26
 ORIENT: southwest
 FLAGS:  no_rotate
@@ -505,7 +497,6 @@ ENDMAP
 NAME:   hourglass_vault
 ORIENT: southeast
 DEPTH:  D:12-26
-TAGS:   uniq
 FLAGS:  no_rotate
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -550,7 +541,6 @@ ENDMAP
 NAME:   Angbandy_vault
 ORIENT: northeast
 DEPTH:  D:16-26
-TAGS:   uniq
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -594,7 +584,6 @@ ENDMAP
 # four-leaf vault
 #
 NAME:   four-leaf_vault
-TAGS:   uniq
 DEPTH:  D:12-26
 ORIENT: northwest
 MAP
@@ -640,7 +629,6 @@ ENDMAP
 # Cross-vault
 #
 NAME:   cross_vault
-TAGS:   uniq
 DEPTH:  D:12-26
 ORIENT: northwest
 MAP
@@ -686,7 +674,6 @@ ENDMAP
 # Another thingy vault
 #
 NAME:   thingy_vault_2
-TAGS:   uniq
 DEPTH:  D:14-26
 ORIENT: southeast
 SUBST:  ' = ^ .:50
@@ -733,7 +720,6 @@ ENDMAP
 #
 NAME:   impenetrable_vault
 DEPTH:  D:16-26
-TAGS:   uniq
 ORIENT: southeast
 MAP
 ..............@................xxxxxxxxx
@@ -826,7 +812,6 @@ ENDMAP
 NAME:   mludivico_vault
 ORIENT: southwest
 DEPTH:  D:18-27
-TAGS:   uniq
 MONS:   hell hound, necromancer, wizard, orange demon, rotting devil
 MONS:   hell knight, great orb of eyes
 MAP
@@ -871,7 +856,6 @@ ENDMAP
 NAME:   fort_yaktaur
 ORIENT: southeast
 DEPTH:  D:14-26
-TAGS:   uniq
 MONS:   yaktaur, death yak, minotaur, random
 MONS:   yak, gnoll, random
 MAP
@@ -918,7 +902,7 @@ ENDMAP
 NAME:    box_level_dp
 DEPTH:   D:20-26
 ORIENT:  encompass
-TAGS:    no_pool_fixup uniq
+TAGS:    no_pool_fixup
 SHUFFLE: zZ
 NSUBST:  A = 1:= / *:b
 NSUBST:  B = 1:= / *:b
@@ -1031,7 +1015,7 @@ NAME:    erik_rubicon_a
 DEPTH:   D:10-16
 ORIENT:  south
 FLAGS:   no_rotate
-TAGS:    no_pool_fixup uniq
+TAGS:    no_pool_fixup uniq_rubicon
 CHANCE:  6
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
 ITEM:    nothing, nothing, nothing
@@ -1066,8 +1050,8 @@ ENDMAP
 NAME:    erik_rubicon_b
 DEPTH:   D:10-16
 ORIENT:  south
-TAGS:    uniq
 FLAGS:   no_rotate
+TAGS:    uniq_rubicon
 CHANCE:  4
 ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
 ITEM:    nothing, nothing, nothing, nothing

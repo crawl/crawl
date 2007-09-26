@@ -37,7 +37,7 @@ ENDMAP
 #
 NAME: erik_1
 ORIENT: float
-TAGS: no_monster_gen uniq
+TAGS: no_monster_gen
 DEPTH: D:7-11, Lair
 #
 SHUFFLE: rR/sS/uU/vV/wW/yY/zZ, uU/nN
@@ -80,7 +80,6 @@ ENDMAP
 #
 NAME:    erik_ogre
 DEPTH:   D:6-10
-TAGS:    uniq
 ORIENT:  float
 SHUFFLE: 1X / 1X / 2l / 3Y
 SUBST:   X=x, Y:x.
@@ -137,7 +136,7 @@ ENDMAP
 #
 NAME: shooting_gallery_Lemuel
 ORIENT: float
-TAGS: no_pool_fixup no_monster_gen uniq
+TAGS: no_pool_fixup no_monster_gen
 ITEM: potion of levitation q:2
 : if you.absdepth() <= 16 then
 MONS: orc wizard/centaur/jackal/killer bee larva/giant lizard/kobold/giant mite/grey rat/green rat/orange rat
@@ -169,7 +168,6 @@ ENDMAP
 NAME:    MiniTomb
 ORIENT:  float
 DEPTH:   D:15-26
-TAGS:    uniq
 MONS:    large zombie/nothing, mummy, guardian mummy, greater mummy, large zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
@@ -222,7 +220,7 @@ ENDMAP
 NAME:   troll_bridge
 DEPTH:  D:7-15
 ORIENT: float
-TAGS:   no_pool_fixup uniq
+TAGS:   no_pool_fixup
 MONS:   troll w:50 / rock troll / iron troll w:5
 MAP
 xxxxx...........................xxxxxx
@@ -277,7 +275,6 @@ ENDMAP
 #
 NAME:    vampire
 ORIENT:  float
-TAGS:    uniq
 DEPTH:   D:12-27, Vault, Crypt
 MONS:    rat/grey rat/w:6 green rat/w:3 orange rat/w:20 giant bat
 MONS:    flying skull, human zombie
