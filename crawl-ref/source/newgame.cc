@@ -2389,8 +2389,8 @@ static void give_random_potion( int slot )
 {
     // Mummies can't quaff and don't care
     if (you.species == SP_MUMMY)
-	return;
-	
+        return;
+
     you.inv[ slot ].quantity = 1;
     you.inv[ slot ].base_type = OBJ_POTIONS;
     you.inv[ slot ].plus = 0;
@@ -2398,7 +2398,7 @@ static void give_random_potion( int slot )
 
     int temp_rand = 8;
     if (you.is_undead)
-	temp_rand--;
+        temp_rand--;
 
     switch (random2(temp_rand))
     {

@@ -644,7 +644,8 @@ bool melee_attack::player_aux_unarmed()
             else
                 unarmed_attack = "kick";
             
-            aux_damage = ((you.mutation[MUT_HOOVES] || clawed_kick) ? 10 : 5);
+            aux_damage = (you.mutation[MUT_HOOVES] ? 10
+                          : clawed_kick            ?  8 : 5);
             break;
         }
 

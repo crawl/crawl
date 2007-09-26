@@ -848,6 +848,10 @@ bool in_los(int x, int y)
 static bool find_monster( int x, int y, int mode )
 {
     const int targ_mon = mgrd[ x ][ y ];
+    if ((mode == TARG_FRIEND || mode == TARG_ANY)
+            && x == you.x_pos && y == you.y_pos)
+        return (true);
+    
     return (targ_mon != NON_MONSTER 
         && in_los(x, y)
         && player_monster_visible( &(menv[targ_mon]) )
@@ -1013,24 +1017,22 @@ static char find_square( int xps, int yps,
               ctrx = vyou.x, ctry = vyou.y;
 
     while (temp_xps >= minx - 1 && temp_xps <= maxx
-                && temp_yps <= maxy && temp_yps >= miny - 1)
+           && temp_yps <= maxy && temp_yps >= miny - 1)
     {
         if (direction == 1 && temp_xps == minx && temp_yps == maxy)
         {
-            if (mode == TARG_ANY || mode == TARG_FRIEND)
+            if (find_targ(you.x_pos, you.y_pos, mode))
             {
-                mfp[0] = vyou.x;
-                mfp[1] = vyou.y;
+                mfp[0] = ctrx;
+                mfp[1] = ctry;
                 return (1);
             }
             return find_square(ctrx, ctry, mfp, direction, find_targ, mode,
-                    false, next_los(direction, los, wrap));
+                               false, next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
-        {
             return find_square(minx, maxy, mfp, direction, find_targ, mode,
-                    false, next_los(direction, los, wrap));
-        }
+                               false, next_los(direction, los, wrap));
 
         if (direction == 1)
         {

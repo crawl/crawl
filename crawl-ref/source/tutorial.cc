@@ -1167,7 +1167,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           
       case TUT_SEEN_DOOR:
           if (you.num_turns < 1)
-          	return;
+              return;
 
           text << "The <w>" << stringize_glyph(get_screen_glyph(x,y))
                << "<magenta> is a closed door. You can open it by walking into it. "

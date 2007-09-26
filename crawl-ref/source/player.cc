@@ -1342,7 +1342,7 @@ int player_spec_death()
     }
     else if (you.species == SP_VAMPIRE)
     {
- 	      // Vampires get bonus only when not hungry
+        // Vampires get bonus only when not hungry
         if (you.experience_level >= 13 && you.hunger_state > HS_HUNGRY)
         {
             sd++;

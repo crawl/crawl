@@ -1373,7 +1373,7 @@ static std::string describe_ammo( const item_def &item )
         break;
     case MI_SLING_BULLET:
         description += "A small heavy projectile made of lead. "
-            "It can be fired with a sling, or thrown by hand.";
+            "It can be fired from a sling.";
         break;
     case MI_JAVELIN:
         description += "A long, light polearm that can be thrown by hand. ";
