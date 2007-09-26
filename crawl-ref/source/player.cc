@@ -5416,12 +5416,8 @@ void player::attacking(actor *other)
     if (other && other->atype() == ACT_MONSTER)
     {
         const monsters *mons = dynamic_cast<monsters*>(other);
-        if (mons_friendly(mons)
-            && (you.religion != GOD_BEOGH // Beogh only cares about orcs
-                || ::mons_species(mons->type) == MONS_ORC))
-        {
-            did_god_conduct(DID_ATTACK_FRIEND, 5);
-        }
+        if (mons_friendly(mons))
+            did_god_conduct(DID_ATTACK_FRIEND, 5, mons);
         else
             pet_target = monster_index(mons);
     }

@@ -3545,15 +3545,11 @@ static int affect_monster(bolt &beam, monsters *mon)
         {
             if (YOU_KILL( beam.thrower ))
             {
-                if (mons_friendly( mon )
-                     && (you.religion != GOD_BEOGH // Beogh only cares about orcs
-                         || mons_species(mon->type) == MONS_ORC))
-                {
-                    did_god_conduct( DID_ATTACK_FRIEND, 5 );
-                }
+                if (mons_friendly( mon ))
+                    did_god_conduct( DID_ATTACK_FRIEND, 5, mon );
 
                 if (mons_holiness( mon ) == MH_HOLY)
-                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
+                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
             }
 
             behaviour_event( mon, ME_ANNOY, beam_source(beam) );
@@ -3692,10 +3688,10 @@ static int affect_monster(bolt &beam, monsters *mon)
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
             if (mons_friendly(mon))
-                did_god_conduct( DID_ATTACK_FRIEND, 5 );
+                did_god_conduct( DID_ATTACK_FRIEND, 5, mon );
 
             if (mons_holiness( mon ) == MH_HOLY)
-                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
+                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
         }
 
         // Don't annoy friendlies if the player's beam did no damage.

@@ -1099,11 +1099,9 @@ char burn_freeze(int pow, char flavour)
 
     if (hurted)
     {
-        if (mons_friendly( monster )
-            && (you.religion != GOD_BEOGH // Beogh only cares about orcs
-                || mons_species(monster->type) == MONS_ORC))
+        if (mons_friendly( monster ))
         {
-            did_god_conduct( DID_ATTACK_FRIEND, 5 );
+            did_god_conduct( DID_ATTACK_FRIEND, 5, monster );
         }
         
         if (mons_holiness( monster ) == MH_HOLY)
