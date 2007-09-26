@@ -2690,7 +2690,6 @@ static int affect_wall(bolt &beam, int x, int y)
             {
                 beogh_idol_revenge();
             }
-	    
             beam.obvious_effect = 1;
         }
 

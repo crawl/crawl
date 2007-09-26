@@ -760,7 +760,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         case GOD_ELYVILON:
         case GOD_YREDELEMNUL:
             if (dam >= you.hp && you.duration[DUR_PRAYER]
-                                                && random2(you.piety) >= 30)
+                && random2(you.piety) >= 30)
             {
                 simple_god_message( " protects you from harm!" );
                 return;
@@ -771,22 +771,12 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         }
 
 
+        dec_hp( dam, true );
+
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr
         if (dam > 0 && you.hp_max <= dam * 2)
-        {
-            if (you.religion == GOD_ELYVILON && one_chance_in(3))
-            {
-                simple_god_message( " shields you from harm!" );
-                return;
-            }
-            // Damage applied here:
-            dec_hp( dam, true );
             mpr( "Ouch! That really hurt!", MSGCH_DANGER );
-        }
-        else
-            dec_hp( dam, true );
-
 
         if (you.hp > 0)
         {
@@ -807,7 +797,8 @@ void ouch( int dam, int death_source, kill_method_type death_type,
             }
             else
             {
-                damage_desc = scorefile_entry(dam, death_source, death_type, aux, true)
+                damage_desc = scorefile_entry(dam, death_source,
+                                              death_type, aux, true)
                               .death_description(scorefile_entry::DDV_TERSE);
             }
 

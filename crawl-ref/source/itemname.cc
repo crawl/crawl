@@ -181,6 +181,7 @@ std::string item_def::name(description_level_type descrip,
 
     buff << auxname;
 
+    bool equipped = false;
     if (descrip == DESC_INVENTORY_EQUIP && this->x == -1 && this->y == -1)
     {
         ASSERT( this->link != -1 );
@@ -196,6 +197,7 @@ std::string item_def::name(description_level_type descrip,
             {
                 buff << " (in hand)";
             }
+            equipped = true;
         }
         else if (this->link == you.equip[EQ_CLOAK]
                 || this->link == you.equip[EQ_HELMET]
@@ -205,22 +207,26 @@ std::string item_def::name(description_level_type descrip,
                 || this->link == you.equip[EQ_BODY_ARMOUR])
         {
             buff << " (worn)";
+            equipped = true;
         }
         else if (this->link == you.equip[EQ_LEFT_RING])
         {
             buff << " (left hand)";
+            equipped = true;
         }
         else if (this->link == you.equip[EQ_RIGHT_RING])
         {
             buff << " (right hand)";
+            equipped = true;
         }
         else if (this->link == you.equip[EQ_AMULET])
         {
             buff << " (around neck)";
+            equipped = true;
         }
     }
 
-    const bool  tried     = (!ident && item_type_tried(*this));
+    const bool  tried     = (!ident && !equipped && item_type_tried(*this));
     std::string tried_str = "";
 
     if (tried)

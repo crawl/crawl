@@ -350,7 +350,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         mpr("You feel protected.");
         you.duration[DUR_RESIST_FIRE]   += random2(pow) + 10;
         you.duration[DUR_RESIST_COLD]   += random2(pow) + 10;
-	you.duration[DUR_RESIST_POISON] += random2(pow) + 10;
+        you.duration[DUR_RESIST_POISON] += random2(pow) + 10;
         you.duration[DUR_INSULATION]    += random2(pow) + 10;
         // one contamination point for each resist
         contaminate_player(4);

@@ -1742,8 +1742,8 @@ bool mons_is_paralysed(const monsters *m)
 
 bool mons_is_confused(const monsters *m)
 {
-    return (m->has_ench(ENCH_CONFUSION) &&
-                            !mons_class_flag(m->type, M_CONFUSED));
+    return (m->has_ench(ENCH_CONFUSION)
+            && !mons_class_flag(m->type, M_CONFUSED));
 }
 
 bool mons_is_caught(const monsters *m)
@@ -5192,4 +5192,3 @@ std::string get_mon_shape_str(const mon_body_shape shape)
 
     return (shape_names[shape]);
 }
-
