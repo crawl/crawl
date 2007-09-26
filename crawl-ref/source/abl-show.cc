@@ -258,7 +258,7 @@ static const ability_def Ability_List[] =
 
     // Okawaru
     { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_OKAWARU_HASTE, "Haste", 5, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_OKAWARU_HASTE, "Haste", 5, 0, 100, 5, ABFLAG_NONE },
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction", 1, 0, 20, 0, ABFLAG_NONE },
@@ -301,7 +301,7 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 150, 6, ABFLAG_NONE },
 
     // Beogh
-    { ABIL_BEOGH_SMITING, "Smiting", 3, 0, 80, 4, ABFLAG_NONE },
+    { ABIL_BEOGH_SMITING, "Smiting", 3, 0, 80, 3, ABFLAG_NONE },
     { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers", 2, 0, 50, 0, ABFLAG_NONE },
 
     // These six are unused "evil" god abilities:

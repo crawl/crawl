@@ -156,14 +156,14 @@ static int fuzz_mons_level(int level)
 
 static void hell_spawn_random_monsters()
 {
-    const int speedup_turn = 1339;
+    const int speedup_turn = 3000;
     
     // Monster generation in the Vestibule starts ratcheting up quickly
     // after speedup_turn turns spent in the Vestibule.
     int genodds = (you.char_direction == GDT_DESCENDING) ? 240 : 8;
     if (env.turns_on_level > speedup_turn)
     {
-        genodds -= (env.turns_on_level - speedup_turn) / 12;
+        genodds -= (env.turns_on_level - speedup_turn) / 14;
         if (genodds < 3)
             genodds = 3;
     }
