@@ -489,7 +489,8 @@ static void mpr_check_patterns(const std::string& message,
         && channel != MSGCH_TALK && channel != MSGCH_TALK_VISUAL
         && channel != MSGCH_SOUND)
     {
-        interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + message );
+        interrupt_activity( AI_MESSAGE,
+                            channel_to_str(channel) + ":" + message );
     }
 
     // Check messages for all forms of running now.
