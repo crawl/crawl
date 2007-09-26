@@ -73,7 +73,6 @@ ENDMAP
 # No loot but the elves' gear, but at the depth this appears that may be good
 #
 NAME:    elves_outpost_lemuel
-TAGS:    uniq
 DEPTH:   D:8-20, Orc:*
 MONS:    deep elf soldier/w:4 deep elf fighter
 MONS:    w:20 deep elf mage/deep elf conjurer/deep elf summoner
@@ -97,7 +96,7 @@ ENDMAP
 # Centaur isle (Lemuel)
 #
 NAME: centaur_isle
-TAGS: no_monster_gen no_pool_fixup no_rotate uniq
+TAGS: no_monster_gen no_pool_fixup no_rotate
 SUBST: ? = *$
 DEPTH: D:6-12
 MONS: centaur
@@ -125,7 +124,7 @@ ENDMAP
 #
 NAME:  ice2_lemuel
 DEPTH: D:12-27, Lair, Swamp, Coc
-TAGS:  no_pool_fixup no_monster_gen uniq
+TAGS:  no_pool_fixup no_monster_gen
 SUBST: T = TU
 SUBST: W = w:20 W .:5
 MONS:  ice statue
@@ -211,7 +210,6 @@ ENDMAP
 # Should work without explicit floor margin (dp)
 NAME:  hive_lemuel
 DEPTH: D:9-27,Hive:*,Lair:*,Swamp:*
-TAGS:  uniq
 MONS:  killer bee, yellow wasp, red wasp, spiny worm, killer bee zombie
 SUBST: ? : .w
 SUBST: 1 = 1 a:2
@@ -259,7 +257,6 @@ ENDMAP
 # My mission is to annoy. -LP
 #
 NAME: jelly_drop
-TAGS: uniq
 MONS: jelly
 KFEAT: a = teleport trap
 DEPTH: D:8-27, Vault:*, Slime:*, Lair:*
@@ -335,7 +332,7 @@ ENDMAP
 NAME: aerie
 DEPTH: 12-26
 MONS: insubstantial wisp, ball lightning, vapour, air elemental
-TAGS: no_monster_gen uniq
+TAGS: no_monster_gen
 SUBST: .:..w
 SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3
 MAP
@@ -367,7 +364,6 @@ ENDMAP
 # Greed's colour
 
 NAME: david_greed
-TAGS: uniq
 CHANCE: 4
 DEPTH: 10-26, !Orc, !Lair, !Swamp, !Shoal
 ITEM: nothing / any good_item

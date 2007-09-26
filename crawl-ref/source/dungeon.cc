@@ -313,7 +313,7 @@ void level_clear_vault_memory()
 
 static void dgn_register_vault(const map_def &map)
 {
-    if (map.has_tag("uniq"))
+    if (!map.has_tag("allow_dup"))
         you.uniq_map_names.insert(map.name);
 
     std::vector<std::string> tags = split_string(" ", map.tags);

@@ -2432,11 +2432,12 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         case MI_NEEDLE:
             chance = (get_ammo_brand(*item) == SPMSL_CURARE? 3 : 6);
             break;
+        case MI_SLING_BULLET:
         case MI_STONE:  chance = 4; break;
         case MI_DART:   chance = 3; break;
         case MI_ARROW:  chance = 4; break;
         case MI_BOLT:   chance = 4; break;
-        case MI_JAVELIN: chance = 8; break;
+        case MI_JAVELIN: chance = 6; break;
 
         case MI_LARGE_ROCK:
         default:
