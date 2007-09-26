@@ -685,7 +685,7 @@
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     2,
+     3,
      1000,
      NULL,
      true
