@@ -18,13 +18,16 @@
 
 #define MAX_PIETY 200
 
+class actor;
+
 bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);
 const char *god_name(god_type which_god, bool long_name = false); //mv
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
-bool did_god_conduct(conduct_type thing_done, int pgain);
+bool did_god_conduct(conduct_type thing_done, int pgain,
+                     const actor *victim = NULL);
 void excommunication(void);
 void gain_piety(int pgn);
 void god_speaks(god_type god, const char *mesg );
@@ -51,7 +54,6 @@ void beogh_idol_revenge();
 bool ely_destroy_weapons();
 void trog_burn_books();
 
-class actor;
 bool tso_stab_safe_monster(const actor *act);
 
 inline void xom_acts(int sever)
