@@ -35,9 +35,9 @@ default-depth: D:8-27
 ##############################################################################
 # Minivault balancer
 NAME: mini_dummy
-DEPTH: D:1-7
+DEPTH: 1-50, !D:8-27
 TAGS: dummy
-CHANCE: 100
+CHANCE: 90
 MAP
 .
 ENDMAP
