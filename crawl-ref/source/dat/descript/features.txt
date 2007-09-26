@@ -221,12 +221,11 @@ A harder obstacle than rock walls.  Only the mightiest magic can shatter stone w
 %%%%
 A translucent rock wall
 
+An unnaturally hard translucent rock wall
 %%%%
 A translucent stone wall
 
 A harder obstacle than rock walls.  Only the mightiest magic can shatter stone walls.  It has been imbued with arcane magics which render it translucent.
-%%%%
-An translucent unnaturally hard rock wall
 
 %%%%
 A trap

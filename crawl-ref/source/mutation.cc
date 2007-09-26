@@ -875,7 +875,7 @@ const char mutation_rarity[] = {
     2,                          //jmf: claws
     1,                          //jmf: hooves
 // 60
-    1,
+    1,                          // fangs
     0,
     0,
     0,
