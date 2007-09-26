@@ -937,7 +937,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.colour = YELLOW;
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 12, 40 + (power * 3) / 2 );
-        pbolt.hit = 2;                                  // hit: 2 (very hard)
+        pbolt.hit = 1;
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_ENERGY;                    // unresisted
 
@@ -3010,6 +3010,9 @@ static bool fuzz_invis_tracer(bolt &beem)
 // 4.0.
 bool test_beam_hit(int attack, int defence)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Beam attack: %d, defence: %d", attack, defence);
+#endif
     return (attack == AUTOMATIC_HIT
             || random2(attack) >= random2avg(defence, 2));
 }
