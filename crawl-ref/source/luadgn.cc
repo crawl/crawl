@@ -529,6 +529,13 @@ static int dgn_nsubst(lua_State *ls)
                                  &map_lines::clear_nsubsts);
 }
 
+static int dgn_colour(lua_State *ls)
+{
+    return dgn_map_add_transform(ls,
+                                 &map_lines::add_colour,
+                                 &map_lines::clear_colours);
+}
+
 static int dgn_subst_remove(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1063,6 +1070,7 @@ static const struct luaL_reg dgn_lib[] =
     { "shuffle_remove", dgn_shuffle_remove },
     { "subst", dgn_subst },
     { "nsubst", dgn_nsubst },
+    { "colour", dgn_colour },
     { "subst_remove", dgn_subst_remove },
     { "map", dgn_map },
     { "mons", dgn_mons },

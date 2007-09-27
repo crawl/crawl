@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "makeitem.h"
 #include "travel.h"
+#include "FixAry.h"
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.
@@ -104,13 +105,13 @@ public:
         TT_SHUFFLE,
         TT_SUBST,
         TT_NSUBST,
-        TT_MARKER
+        TT_MARKER,
+        TT_COLOUR
     };
     
 public:
     virtual ~map_transformer() = 0;
     virtual std::string apply_transform(map_lines &map) = 0;
-    virtual map_transformer *clone() const = 0;
     virtual transform_type type() const = 0;
     virtual std::string describe() const = 0;
 };
@@ -129,7 +130,6 @@ public:
     int value();
     
     std::string apply_transform(map_lines &map);
-    map_transformer *clone() const;
     transform_type type() const;
     std::string describe() const;
 
@@ -148,7 +148,6 @@ class nsubst_spec : public map_transformer
 public:
     nsubst_spec(int key, const std::vector<subst_spec> &specs);
     std::string apply_transform(map_lines &map);
-    map_transformer *clone() const;
     transform_type type() const { return TT_NSUBST; }
     std::string describe() const;
     
@@ -157,6 +156,27 @@ public:
     std::vector<subst_spec> specs;
 };
 
+typedef std::pair<int, int> map_weighted_colour;
+typedef std::vector<map_weighted_colour> map_colour_list;
+struct colour_spec : public map_transformer
+{
+public:
+    colour_spec(int _key, bool _fix, const map_colour_list &clist)
+        : key(_key), fix(_fix), fixed_colour(BLACK), colours(clist)
+    {
+    }
+    std::string apply_transform(map_lines &map);
+    transform_type type() const { return TT_COLOUR; }
+    std::string describe() const;
+
+    int get_colour();
+
+public:
+    int key;
+    bool fix;
+    int fixed_colour;
+    map_colour_list colours;
+};
 
 struct shuffle_spec : public map_transformer
 {
@@ -168,7 +188,6 @@ struct shuffle_spec : public map_transformer
     }
     
     std::string apply_transform(map_lines &map);
-    map_transformer *clone() const;
     transform_type type() const;
     std::string describe() const;
     bool operator == (const shuffle_spec &other) const
@@ -187,7 +206,6 @@ struct map_marker_spec : public map_transformer
     std::string apply_transform(map_lines &map);
     transform_type type() const;
     std::string describe() const;
-    map_transformer *clone() const;
 };
 
 class map_def;
@@ -206,12 +224,14 @@ public:
     std::string add_nsubst(const std::string &st);
     std::string add_subst(const std::string &st);
     std::string add_shuffle(const std::string &s);
+    std::string add_colour(const std::string &col);
     void remove_shuffle(const std::string &s);
     void remove_subst(const std::string &s);
     void clear_shuffles();
     void clear_substs();
     void clear_nsubsts();
     void clear_markers();
+    void clear_colours();
 
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
@@ -241,7 +261,11 @@ public:
 
     void add_marker(map_marker *marker);
     std::string add_feature_marker(const std::string &desc);
+    
     void apply_markers(const coord_def &pos);
+    void apply_colours(const coord_def &pos);
+    void apply_overlays(const coord_def &pos);
+    
     const std::vector<std::string> &get_lines() const;
     std::vector<std::string> &get_lines();
     std::vector<std::string> get_shuffle_strings() const;
@@ -266,6 +290,7 @@ private:
     void subst(std::string &s, subst_spec &spec);
     void subst(subst_spec &);
     void nsubst(nsubst_spec &);
+    void overlay_colours(colour_spec &);
     void check_borders();
     void clear_transforms(map_transformer::transform_type);
     std::string shuffle(std::string s);
@@ -280,16 +305,21 @@ private:
                      subst_spec &spec);
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
+    std::string parse_weighted_colours(const std::string &cspec,
+                                       map_colour_list &colours) const;
 
     friend class subst_spec;
     friend class nsubst_spec;
     friend class shuffle_spec;
     friend class map_marker_spec;
+    friend class colour_spec;
     
 private:
     std::vector<map_transformer *> transforms;
     std::vector<map_marker *> markers;
     std::vector<std::string> lines;
+    std::auto_ptr< Matrix<int> > colour_overlay;
+    
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;
     bool solid_checked;

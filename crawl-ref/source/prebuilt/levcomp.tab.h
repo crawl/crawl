@@ -54,20 +54,21 @@
      MONS = 270,
      ITEM = 271,
      MARKER = 272,
-     PRELUDE = 273,
-     MAIN = 274,
-     VALIDATE = 275,
-     VETO = 276,
-     NSUBST = 277,
-     WELCOME = 278,
-     COMMA = 279,
-     INTEGER = 280,
-     CHARACTER = 281,
-     STRING = 282,
-     MAP_LINE = 283,
-     MONSTER_NAME = 284,
-     ITEM_INFO = 285,
-     LUA_LINE = 286
+     COLOUR = 273,
+     PRELUDE = 274,
+     MAIN = 275,
+     VALIDATE = 276,
+     VETO = 277,
+     NSUBST = 278,
+     WELCOME = 279,
+     COMMA = 280,
+     INTEGER = 281,
+     CHARACTER = 282,
+     STRING = 283,
+     MAP_LINE = 284,
+     MONSTER_NAME = 285,
+     ITEM_INFO = 286,
+     LUA_LINE = 287
    };
 #endif
 /* Tokens.  */
@@ -86,20 +87,21 @@
 #define MONS 270
 #define ITEM 271
 #define MARKER 272
-#define PRELUDE 273
-#define MAIN 274
-#define VALIDATE 275
-#define VETO 276
-#define NSUBST 277
-#define WELCOME 278
-#define COMMA 279
-#define INTEGER 280
-#define CHARACTER 281
-#define STRING 282
-#define MAP_LINE 283
-#define MONSTER_NAME 284
-#define ITEM_INFO 285
-#define LUA_LINE 286
+#define COLOUR 273
+#define PRELUDE 274
+#define MAIN 275
+#define VALIDATE 276
+#define VETO 277
+#define NSUBST 278
+#define WELCOME 279
+#define COMMA 280
+#define INTEGER 281
+#define CHARACTER 282
+#define STRING 283
+#define MAP_LINE 284
+#define MONSTER_NAME 285
+#define ITEM_INFO 286
+#define LUA_LINE 287
 
 
 
@@ -113,7 +115,7 @@ typedef union YYSTYPE
     raw_range range;
 }
 /* Line 1529 of yacc.c.  */
-#line 117 "levcomp.tab.h"
+#line 119 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -344,10 +344,14 @@ PLACE:   Used to specify certain special levels. Existing special levels are:
 
          PLACE can be used with random vaults and minivaults for testing them.
          
-TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry,
-         mini_float, uniq, uniq_BAR
+TAGS:    allow_dup, generate_awake, mini_float, no_item_gen, no_monster_gen,
+         no_pool_fixup, orc_entry, uniq_BAR
          
          Tags go an a TAGS: line and are space-separated. Valid tags are:
+         * "allow_dup": Vaults are normally used only once per game. If you
+                        have a vault that can be used more than once, use
+                        allow_dup to tell the dungeon builder that the vault
+                        can be reused.
          * "dummy": this tag indicates that the vault is a stub; if the dungeon
                     builder picks a dummy vault, it pretends no vault was
                     selected. Dummies are used to reduce the probability
@@ -358,6 +362,10 @@ TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry,
            vault will be generated awake.
          * "no_item_gen":   Prevents random item generation in the vault. 
            Items explicitly placed by the vault are not affected.
+         * "mini_float": applicable only to minivaults, requests that
+           the dungeon builder pick random exits from the minivault and
+           connect it to the rest of the level, similar to the exit
+           behaviour for floating vaults.
          * "no_monster_gen": Prevents random monster generation at the time
            of the vault's creation. Highly advised for entry vaults with
            a player-hostile geography, MUST-HAVE for those with water/lava.
@@ -369,13 +377,8 @@ TAGS:    generate_awake, no_item_gen, no_monster_gen, no_pool_fixup, orc_entry,
            few entries, a dummy entry is advisable to make sure the
            player doesn't get bored of the same few entries recycled
            ad nauseam.
-         * "mini_float": applicable only to minivaults, requests that
-           the dungeon builder pick random exits from the minivault and
-           connect it to the rest of the level, similar to the exit
-           behaviour for floating vaults.
          * "mnoleg" or the name of some other pandemonium lord. This makes
            the map eligible for said pan lord's lair.
-         * "uniq": specifies that this vault should be used only once in a game.
          * "uniq_BAR": (uniq_ with any suffix) specifies that only one vault
            with this tag can be used in a game.
 
@@ -442,6 +445,21 @@ MONS:    (list of monsters)
          Note that 8, 9, 0 also place monsters (see the table).
  
 
+COLOUR:  . = green / blue:5 / red / none
+         COLOUR: allows you to attach explicit colours to any feature.
+         Explicit colours will override the default colour for that
+         feature. The example shown above colours all . (floor) in the
+         map green, blue, red, or unchanged (use the default colour).
+
+         You can use : to specify that all glyphs get the same colour:
+         COLOUR: x : red / blue
+         will colour all rock walls in the map red, or all rock
+         walls blue.
+
+         COLOUR: should be used very sparingly, and only for features
+         where it won't cause confusion (i.e.: never re-colour features
+         like lava!)
+         
 SHUFFLE: def, 12/3?
          This allows you to randomly permute glyphs on the map. There are 
          two ways:

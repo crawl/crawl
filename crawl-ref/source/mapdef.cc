@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "direct.h"
 #include "files.h"
+#include "initfile.h"
 #include "invent.h"
 #include "items.h"
 #include "libutil.h"
@@ -52,12 +53,12 @@ const char *map_section_name(int msect)
     return map_section_names[msect];
 }
 
-static int find_weight(std::string &s)
+static int find_weight(std::string &s, int defweight = TAG_UNFOUND)
 {
     int weight = strip_number_tag(s, "weight:");
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
-    return (weight);
+    return (weight == TAG_UNFOUND? defweight : weight);
 }
 
 static std::string split_key_item(const std::string &s,
@@ -304,9 +305,9 @@ map_transformer::~map_transformer()
 // map_lines
 
 map_lines::map_lines()
-    : transforms(), markers(), lines(), map_width(0),
-      solid_north(false), solid_east(false), solid_south(false),
-      solid_west(false), solid_checked(false)
+    : transforms(), markers(), lines(), colour_overlay(),
+      map_width(0), solid_north(false), solid_east(false),
+      solid_south(false), solid_west(false), solid_checked(false)
 {
 }
 
@@ -343,6 +344,7 @@ void map_lines::init_from(const map_lines &map)
     // Transforms and markers have to be regenerated, they will not be copied.
     clear_transforms();
     clear_markers();
+    colour_overlay.reset(NULL);
     lines         = map.lines;
     map_width     = map.map_width;
     solid_north   = map.solid_north;
@@ -397,6 +399,26 @@ void map_lines::apply_markers(const coord_def &c)
     // *not* clear_markers() since we've offloaded marker ownership to
     // the crawl env.
     markers.clear();
+}
+
+void map_lines::apply_colours(const coord_def &c)
+{
+    if (!colour_overlay.get())
+        return;
+    const Matrix<int> &overlay = *colour_overlay;
+    for (int y = height() - 1; y >= 0; --y)
+        for (int x = width() - 1; x >= 0; --x)
+        {
+            const int colour = overlay(x, y);
+            if (colour)
+                env.grid_colours(c + coord_def(x, y)) = colour;
+        }
+}
+
+void map_lines::apply_overlays(const coord_def &c)
+{
+    apply_markers(c);
+    apply_colours(c);
 }
 
 const std::vector<std::string> &map_lines::get_lines() const
@@ -473,6 +495,65 @@ std::string map_lines::parse_glyph_replacements(std::string s,
         }
     }
 
+    return ("");
+}
+
+std::string map_lines::parse_weighted_colours(const std::string &cspec,
+                                              map_colour_list &colours) const
+{
+    std::vector<std::string> cspeclist = split_string("/", cspec);
+    for (int i = 0, size = cspeclist.size(); i < size; ++i)
+    {
+        std::string col = cspeclist[i];
+        lowercase(col);
+        
+        int weight = find_weight(col);
+
+        if (weight == TAG_UNFOUND)
+        {
+            // :number suffix?
+            std::string::size_type cpos = col.find(':');
+            if (cpos != std::string::npos)
+            {
+                weight = atoi(col.substr(cpos + 1).c_str());
+                if (weight <= 0)
+                    weight = 10;
+                col.erase(cpos);
+                trim_string(col);
+            }
+        }
+        
+        const int colour = col == "none"? BLACK : str_to_colour(col, -1);
+        if (colour != -1)
+            colours.push_back(map_weighted_colour(colour, weight));
+        else
+            return make_stringf("bad colour spec: '%s' in '%s'",
+                                col.c_str(), cspec.c_str());
+    }
+    return ("");
+}
+
+std::string map_lines::add_colour(const std::string &sub)
+{
+    std::string s = trimmed_string(sub);
+
+    if (s.empty())
+        return ("");
+    
+    int sep = 0;
+    std::string key;
+    std::string substitute;
+
+    std::string err = split_key_item(sub, &key, &sep, &substitute);
+    if (!err.empty())
+        return (err);
+
+    map_colour_list colours;
+    err = parse_weighted_colours(substitute, colours);
+    if (!err.empty())
+        return (err);
+
+    transforms.push_back( new colour_spec( key[0], sep == ':', colours ) );
     return ("");
 }
 
@@ -631,6 +712,11 @@ void map_lines::clear_transforms(map_transformer::transform_type tt)
         }
 }
 
+void map_lines::clear_colours()
+{
+    clear_transforms(map_transformer::TT_COLOUR);
+}
+
 void map_lines::clear_shuffles()
 {
     clear_transforms(map_transformer::TT_SHUFFLE);
@@ -716,6 +802,7 @@ void map_lines::clear()
     clear_transforms();
     clear_markers();
     lines.clear();
+    colour_overlay.reset(NULL);
     map_width = 0;
     solid_checked = false;
 }
@@ -731,6 +818,22 @@ void map_lines::subst(subst_spec &spec)
 {
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
         subst(lines[y], spec);
+}
+
+void map_lines::overlay_colours(colour_spec &spec)
+{
+    if (!colour_overlay.get())
+        colour_overlay.reset( new Matrix<int>(width(), height(), BLACK) );
+    
+    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
+    {
+        std::string::size_type pos = 0;
+        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        {
+            (*colour_overlay)(pos, y) = spec.get_colour();
+            ++pos;
+        }
+    }
 }
 
 void map_lines::nsubst(nsubst_spec &spec)
@@ -2217,11 +2320,6 @@ std::string subst_spec::apply_transform(map_lines &map)
     return ("");
 }
 
-map_transformer *subst_spec::clone() const
-{
-    return new subst_spec(*this);
-}
-
 map_transformer::transform_type subst_spec::type() const
 {
     return (TT_SUBST);
@@ -2272,14 +2370,38 @@ std::string nsubst_spec::apply_transform(map_lines &map)
     return ("");
 }
 
-map_transformer *nsubst_spec::clone() const
-{
-    return new nsubst_spec(key, specs);
-}
-
 std::string nsubst_spec::describe() const
 {
     return ("");
+}
+
+//////////////////////////////////////////////////////////////////////////
+// colour_spec
+
+std::string colour_spec::apply_transform(map_lines &map)
+{
+    map.overlay_colours(*this);
+    return ("");
+}
+
+std::string colour_spec::describe() const
+{
+    return ("");
+}
+
+int colour_spec::get_colour()
+{
+    if (fixed_colour != BLACK)
+        return (fixed_colour);
+
+    int chosen = BLACK;
+    int cweight = 0;
+    for (int i = 0, size = colours.size(); i < size; ++i)
+        if (random2(cweight += colours[i].second) < colours[i].second)
+            chosen = colours[i].first;
+    if (fix)
+        fixed_colour = chosen;
+    return (chosen);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2289,11 +2411,6 @@ std::string shuffle_spec::apply_transform(map_lines &map)
 {
     map.resolve_shuffle(shuffle);
     return ("");
-}
-
-map_transformer *shuffle_spec::clone() const
-{
-    return new shuffle_spec(*this);
 }
 
 map_transformer::transform_type shuffle_spec::type() const
@@ -2343,11 +2460,6 @@ map_transformer::transform_type map_marker_spec::type() const
 std::string map_marker_spec::describe() const
 {
     return ("unimplemented");
-}
-
-map_transformer *map_marker_spec::clone() const
-{
-    return new map_marker_spec(key, marker);
 }
 
 //////////////////////////////////////////////////////////////////////////
