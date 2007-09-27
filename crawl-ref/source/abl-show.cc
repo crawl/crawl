@@ -275,7 +275,7 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BURN_BOOKS, "Burn Books", 0, 0, 10, 0, ABFLAG_NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
     { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms", 0, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms", 0, 0, 100, 6, ABFLAG_NONE },
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
@@ -285,7 +285,7 @@ static const ability_def Ability_List[] =
       ABFLAG_CONF_OK },
     { ABIL_ELYVILON_HEALING, "Healing", 2, 0, 250, 2, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 4,
+    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 5,
       ABFLAG_CONF_OK },
 
     // Lugonu

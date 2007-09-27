@@ -198,6 +198,7 @@ LFLAGS:             { BEGIN(ARGUMENT); return LFLAGS; }
 BFLAGS:             { BEGIN(ARGUMENT); return BFLAGS; }
 SUBST:              { BEGIN(ITEM_LIST); return SUBST; }
 NSUBST:             { BEGIN(ITEM_LIST); return NSUBST; }
+COLOUR:             { BEGIN(ITEM_LIST); return COLOUR; }
 MONS:               { BEGIN(MNAME); return MONS; }
 ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
 MARKER:             { BEGIN(TOEOL); return MARKER; }

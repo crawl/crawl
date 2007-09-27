@@ -261,6 +261,7 @@ SUBST: .= d .:150 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 2
+COLOUR: . = green:20 / brown:15 / none
 MAP
 .....................
 .....................
@@ -287,6 +288,7 @@ SUBST: .= d .:140 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 2
+COLOUR: . = green:20 / brown:15 / none
 MAP
        .......
      ...........
@@ -314,6 +316,7 @@ MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 3
 PLACE: Lair:3
+COLOUR: . = green:20 / brown:15 / none
 MAP
    ....
  ........
@@ -332,6 +335,7 @@ SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
 CHANCE: 3
+COLOUR: . = green:20 / brown:15 / none
 MAP
    ..
  ......

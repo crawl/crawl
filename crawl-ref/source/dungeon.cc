@@ -3249,23 +3249,25 @@ static bool build_minivaults(int level_number, int force_vault,
                 continue;
             const dungeon_feature_type oldgrid = grd[vx][vy];
             altar_count = vault_grid( place,
-                                      level_number, vx, vy, altar_count, 
+                                      level_number, vx, vy,
+                                      altar_count,
                                       acq_item_class,
-                                      feat, target_connections, 
+                                      feat, target_connections,
                                       num_runes );
             if (!building_level)
             {
                 link_items();
                 const dungeon_feature_type newgrid = grd[vx][vy];
                 grd[vx][vy] = oldgrid;
-                dungeon_terrain_changed(coord_def(vx, vy), newgrid,
+                dungeon_terrain_changed(coord_def(vx, vy),
+                                        newgrid,
                                         true, true);
                 env.markers.remove_markers_at(coord_def(vx, vy), MAT_ANY);
             }
         }
     }
 
-    place.map.map.apply_markers(coord_def(v1x, v1y));    
+    place.map.map.apply_overlays(coord_def(v1x, v1y));
 
     if (target_connections.empty() && place.map.has_tag("mini_float"))
         pick_float_exits(place, target_connections);
@@ -3809,7 +3811,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
         }
     }
 
-    place.map.map.apply_markers(coord_def(place.x, place.y));
+    place.map.map.apply_overlays(coord_def(place.x, place.y));
     register_place(place);
 
     if (gluggy == MAP_FLOAT && target_connections.empty())
