@@ -36,7 +36,7 @@ default-depth: D:10-27
 # Dummy entry
 
 NAME: bzr_entry_dummy
-TAGS: bzr_entry transparent
+TAGS: bzr_entry transparent allow_dup
 ORIENT: float
 MARKER: O = lua:bazaar_portal()
 MAP
@@ -46,7 +46,7 @@ ENDMAP
 ###############################################################################
 # A simple water entry.
 NAME: bzr_entry_001
-TAGS: bzr_entry no_pool_fixup
+TAGS: bzr_entry no_pool_fixup allow_dup
 ORIENT: float
 SHUFFLE: wwl
 MARKER: O = lua:bazaar_portal()
@@ -61,7 +61,7 @@ ENDMAP
 ###############################################################################
 # Some coins to shop with.
 NAME: bzr_entry_002
-TAGS: bzr_entry 
+TAGS: bzr_entry allow_dup
 ORIENT: float
 SUBST: $=$.
 MARKER: O = lua:bazaar_portal()
@@ -76,7 +76,7 @@ ENDMAP
 ###############################################################################
 # Many customers
 NAME:    bzr_entry_003
-TAGS:    bzr_entry 
+TAGS:    bzr_entry allow_dup
 ORIENT:  float
 MONS:    human, orc, goblin, kobold
 SUBST:   . = .:150 1
@@ -93,7 +93,7 @@ ENDMAP
 ###############################################################################
 # Safe
 NAME:    bzr_entry_004
-TAGS:    bzr_entry 
+TAGS:    bzr_entry allow_dup
 ORIENT:  float
 MARKER: O = lua:bazaar_portal()
 MAP
@@ -107,7 +107,7 @@ ENDMAP
 ###############################################################################
 # Safe 2
 NAME:    bzr_entry_005
-TAGS:    bzr_entry 
+TAGS:    bzr_entry allow_dup
 ORIENT:  float
 SHUFFLE: wlW
 MARKER: O = lua:bazaar_portal()
@@ -122,7 +122,7 @@ ENDMAP
 ###############################################################################
 # Portal along the road
 NAME:    bzr_entry_006
-TAGS:    bzr_entry 
+TAGS:    bzr_entry allow_dup
 ORIENT:  float
 SHUFFLE: XU, TUV
 SUBST:   X=.
@@ -138,7 +138,7 @@ ENDMAP
 #########################################
 # Portal by the lakeside (jpeg)
 NAME:    bzr_entry_007
-TAGS:    bzr_entry 
+TAGS:    bzr_entry allow_dup
 ORIENT:  float
 FLAGS:   no_rotate
 MONS:    plant
@@ -171,7 +171,7 @@ ENDMAP
 # will arrive on a random square.
 
 NAME:   bazaar_general_marketplace
-TAGS:   bazaar
+TAGS:   bazaar allow_dup
 FLAGS:  no_rotate
 ORIENT: encompass
 KFEAT:  A = any shop
@@ -195,7 +195,7 @@ xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_outfitter
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 KFEAT:   A = any shop
 SHUFFLE: ABC, de
@@ -220,7 +220,7 @@ ENDMAP
 ########################################
 # Another simple one (jpeg)
 NAME:    bazaar_oval
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
 SUBST:   A = TVBG
@@ -238,7 +238,7 @@ ENDMAP
 
 
 NAME:    bazaar_mystics
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 SUBST:   w : wlx
 SHUFFLE: AB, def
@@ -270,7 +270,7 @@ xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_wands
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 KFEAT:   A = wand shop
@@ -313,7 +313,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_row
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff
@@ -356,7 +356,7 @@ ENDMAP
 
 NAME:    bazaar_circle_1
 CHANCE:  2
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD, EFGH
@@ -397,7 +397,7 @@ ENDMAP
 
 NAME:    bazaar_circle_2
 CHANCE:  2
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: EFGH
@@ -438,7 +438,7 @@ ENDMAP
 
 NAME:    bazaar_circle_3
 CHANCE:  2
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: EFGH
@@ -479,7 +479,7 @@ ENDMAP
 
 NAME:    bazaar_circle_4
 CHANCE:  1
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCDEF
@@ -519,7 +519,7 @@ ENDMAP
 
 NAME:    bazaar_circle_5
 CHANCE:  2
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 KFEAT:   C = any shop
@@ -558,7 +558,7 @@ ENDMAP
 
 NAME:    bazaar_circle_6
 CHANCE:  3
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 KFEAT:   A = any shop / antique armour shop
@@ -598,7 +598,7 @@ ENDMAP
 # bazaar in honeycomb form (jpeg)
 #
 NAME:    bazaar_honeycomb
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
 MONS:    plant
@@ -638,7 +638,7 @@ ENDMAP
 ##########################################
 # bazaar lakeside with goldfish (jpeg)
 NAME:    bazaar_lake
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
 MONS:    giant goldfish
@@ -703,7 +703,7 @@ ENDMAP
 # Bazaars in cross form (jpeg)
 #
 NAME:    bazaar_cross1
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  5
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -735,7 +735,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_cross2
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  5
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -771,7 +771,7 @@ ENDMAP
 # strange pattern (jpeg) 
 #
 NAME:    bazaar_ribbon
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: zZ
@@ -817,7 +817,7 @@ ENDMAP
 # Five bazaars in nine rooms (jpeg)
 #
 NAME:    bazaar_ninerooms1
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -855,7 +855,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms2
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -893,7 +893,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms3
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -932,7 +932,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms4
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -971,7 +971,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_ninerooms5
-TAGS:    bazaar 
+TAGS:    bazaar allow_dup
 CHANCE:  2
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -1012,7 +1012,7 @@ ENDMAP
 # some more bazaars based on triangles (jpeg)
 
 NAME:    bazaar_triangles
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
 SHUFFLE: ACD
@@ -1034,7 +1034,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_hexagon
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
 SHUFFLE: AC, BD
@@ -1064,7 +1064,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_triangle_bulge
-TAGS:    bazaar
+TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
 SHUFFLE: ABC
@@ -1087,5 +1087,3 @@ xxxxxxxxxxx...A...xxxxxxxxxxx
 xxxxxxxxxxxx.....xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
-
