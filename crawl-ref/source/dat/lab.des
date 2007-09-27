@@ -9,7 +9,7 @@
 # Labyrinth entry vaults
 
 NAME:   lab_entry_generic
-TAGS:   lab_entry transparent
+TAGS:   lab_entry transparent allow_dup
 DEPTH:  12-26
 ORIENT: float
 : messager = bell_clock_msg { initmsg="You hear a distant snort." }
