@@ -50,7 +50,7 @@ ENDMAP
 #############################################################################
 # Watery exit 
 NAME: labyrinth_watery
-TAGS: minotaur generate_loot no_pool_fixup
+TAGS: minotaur generate_loot no_pool_fixup allow_dup
 MONS: minotaur
 SHUFFLE: def
 SUBST: d=~, e=~, f=.
@@ -69,7 +69,7 @@ ENDMAP
 #############################################################################
 # Green exit
 NAME: labyrinth_green
-TAGS: minotaur generate_loot
+TAGS: minotaur generate_loot allow_dup
 MONS: minotaur
 MAP
 ........
@@ -82,7 +82,7 @@ ENDMAP
 #############################################################################
 # Spiral exit
 NAME: labyrinth_spiral
-TAGS: minotaur generate_loot
+TAGS: minotaur generate_loot allow_dup
 MONS: minotaur
 SUBST: c : cvz, z = vc
 MAP
@@ -102,7 +102,7 @@ ENDMAP
 #############################################################################
 # Hidden exit, and trapped loot
 NAME: labyrinth_hidden_loot
-TAGS: minotaur generate_loot
+TAGS: minotaur generate_loot allow_dup
 MONS: minotaur
 SHUFFLE: def
 SUBST: d = 1, e = 1
@@ -127,7 +127,7 @@ ENDMAP
 #############################################################################
 # Mini labyrinth exit
 NAME: labyrinth_mini_lab
-TAGS: minotaur generate_loot
+TAGS: minotaur generate_loot allow_dup
 MONS: minotaur
 SHUFFLE: def, gh, ij, klm
 SUBST: d = c, e = ., f = c.
@@ -180,7 +180,7 @@ ENDMAP
 #############################################################################
 # Trapped exits - this is evil!
 NAME: labyrinth_trapped
-TAGS: minotaur generate_loot
+TAGS: minotaur generate_loot allow_dup
 SHUFFLE: dD/eE/fF, ghi
 MONS: minotaur
 SUBST: g = c, h = c, i = .
@@ -206,7 +206,7 @@ ENDMAP
 #############################################################################
 # Another trapped exit - most evil again! 
 NAME: labyrinth_trapped_2
-TAGS: lab
+TAGS: lab allow_dup
 MONS: minotaur
 ITEM: potion of porridge
 SHUFFLE: xX / yY / zZ
@@ -260,7 +260,7 @@ ENDMAP
 ############################################################################
 # Labyrinth furniture
 NAME: lab_block
-TAGS: lab
+TAGS: lab allow_dup
 MAP
 .....
 .xxx.
@@ -272,7 +272,7 @@ ENDMAP
 ############################################################################
 # Labyrinth furniture II
 NAME: lab_fountain
-TAGS: lab
+TAGS: lab allow_dup
 MAP
 .......
 ..b.b..
@@ -286,7 +286,7 @@ ENDMAP
 ############################################################################
 # Labyrinth hedge
 NAME: lab_hedge
-TAGS: lab
+TAGS: lab allow_dup
 SHUFFLE: 1l
 MONS: plant
 MAP
@@ -304,7 +304,7 @@ ENDMAP
 ############################################################################
 # Teaser: inaccessible loot
 NAME: labyrinth_statues
-TAGS: lab
+TAGS: lab allow_dup
 MAP
 ......
 .GGGG.
@@ -317,7 +317,7 @@ ENDMAP
 ############################################################################
 # The other minotaur's lava lair
 NAME: labyrinth_lava_lair
-TAGS: lab
+TAGS: lab allow_dup
 MONS: minotaur zombie
 MAP
 .......
@@ -332,7 +332,7 @@ ENDMAP
 ############################################################################
 # Baited teleport trap - this is evil!
 NAME: labyrinth_baited_teleportation_trap
-TAGS: lab
+TAGS: lab allow_dup
 SHUFFLE: XY / !! / !! / !!
 SUBST: !=x
 SUBST: X==
@@ -349,7 +349,7 @@ ENDMAP
 ############################################################################
 # Teaser: fake exit
 NAME: labyrinth_fake_exit
-TAGS: lab
+TAGS: lab allow_dup
 KFEAT: X = enter_abyss
 MAP
 ........
