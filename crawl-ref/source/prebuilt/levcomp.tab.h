@@ -1,7 +1,9 @@
-/* A Bison parser, made by GNU Bison 2.0.  */
+/* A Bison parser, made by GNU Bison 2.3.  */
 
-/* Skeleton parser for Yacc-like parsing with Bison,
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Skeleton interface for Bison's Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,13 +17,21 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
 
-/* As a special exception, when this file is copied by Bison into a
-   Bison output file, you may use that output file without restriction.
-   This special exception was added by the Free Software Foundation
-   in version 1.24 of Bison.  */
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
+
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -45,24 +55,26 @@
      MONS = 271,
      ITEM = 272,
      MARKER = 273,
-     PRELUDE = 274,
-     MAIN = 275,
-     VALIDATE = 276,
-     VETO = 277,
-     NSUBST = 278,
-     WELCOME = 279,
-     LFLAGS = 280,
-     BFLAGS = 281,
-     COMMA = 282,
-     INTEGER = 283,
-     CHARACTER = 284,
-     STRING = 285,
-     MAP_LINE = 286,
-     MONSTER_NAME = 287,
-     ITEM_INFO = 288,
-     LUA_LINE = 289
+     COLOUR = 274,
+     PRELUDE = 275,
+     MAIN = 276,
+     VALIDATE = 277,
+     VETO = 278,
+     NSUBST = 279,
+     WELCOME = 280,
+     LFLAGS = 281,
+     BFLAGS = 282,
+     COMMA = 283,
+     INTEGER = 284,
+     CHARACTER = 285,
+     STRING = 286,
+     MAP_LINE = 287,
+     MONSTER_NAME = 288,
+     ITEM_INFO = 289,
+     LUA_LINE = 290
    };
 #endif
+/* Tokens.  */
 #define DEFAULT_DEPTH 258
 #define SHUFFLE 259
 #define SUBST 260
@@ -79,41 +91,42 @@
 #define MONS 271
 #define ITEM 272
 #define MARKER 273
-#define PRELUDE 274
-#define MAIN 275
-#define VALIDATE 276
-#define VETO 277
-#define NSUBST 278
-#define WELCOME 279
-#define LFLAGS 280
-#define BFLAGS 281
-#define COMMA 282
-#define INTEGER 283
-#define CHARACTER 284
-#define STRING 285
-#define MAP_LINE 286
-#define MONSTER_NAME 287
-#define ITEM_INFO 288
-#define LUA_LINE 289
+#define COLOUR 274
+#define PRELUDE 275
+#define MAIN 276
+#define VALIDATE 277
+#define VETO 278
+#define NSUBST 279
+#define WELCOME 280
+#define LFLAGS 281
+#define BFLAGS 282
+#define COMMA 283
+#define INTEGER 284
+#define CHARACTER 285
+#define STRING 286
+#define MAP_LINE 287
+#define MONSTER_NAME 288
+#define ITEM_INFO 289
+#define LUA_LINE 290
 
 
 
 
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+typedef union YYSTYPE
 #line 46 "levcomp.ypp"
-typedef union YYSTYPE {
+{
     int i;
     const char *text;
     raw_range range;
-} YYSTYPE;
-/* Line 1274 of yacc.c.  */
-#line 111 "levcomp.tab.h"
+}
+/* Line 1529 of yacc.c.  */
+#line 125 "levcomp.tab.h"
+	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE yylval;
-
-
 
