@@ -508,9 +508,9 @@ std::string map_lines::parse_weighted_colours(const std::string &cspec,
         lowercase(col);
         
         int weight = find_weight(col);
-
         if (weight == TAG_UNFOUND)
         {
+            weight = 10;
             // :number suffix?
             std::string::size_type cpos = col.find(':');
             if (cpos != std::string::npos)
@@ -973,6 +973,16 @@ void map_lines::rotate(bool clockwise)
         newlines.push_back(line);
     }
 
+    if (colour_overlay.get())
+    {
+        std::auto_ptr< Matrix<int> > new_overlay(
+            new Matrix<int>( lines.size(), map_width ) );
+        for (int i = xs, y = 0; i != xe; i += xi, ++y)
+            for (int j = ys, x = 0; j != ye; j += yi, ++x)
+                (*new_overlay)(x, y) = (*colour_overlay)(i, j);
+        colour_overlay = new_overlay;
+    }
+
     map_width = lines.size();
     lines     = newlines;
     rotate_markers(clockwise);
@@ -1032,6 +1042,15 @@ void map_lines::vmirror()
         lines[i] = lines[size - 1 - i];
         lines[size - 1 - i] = temp;
     }
+
+    if (colour_overlay.get())
+    {
+        for (int i = 0; i < midpoint; ++i)
+            for (int j = 0, wide = width(); j < wide; ++j)
+                std::swap( (*colour_overlay)(j, i),
+                           (*colour_overlay)(j, size - 1 - i) );
+    }
+    
     vmirror_markers();
     solid_checked = false;
 }
@@ -1049,6 +1068,15 @@ void map_lines::hmirror()
             s[map_width - 1 - j] = c;
         }
     }
+
+    if (colour_overlay.get())
+    {
+        for (int i = 0, size = lines.size(); i < size; ++i)
+            for (int j = 0; j < midpoint; ++j)
+                std::swap( (*colour_overlay)(j, i),
+                           (*colour_overlay)(map_width - 1 - j, i) );
+    }
+    
     hmirror_markers();
     solid_checked = false;
 }
