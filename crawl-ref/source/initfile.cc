@@ -1582,7 +1582,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
-#ifndef DGAMELAUNCH
+#if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else if (key == "name")
     {
         // field is already cleaned up from trim_string()
