@@ -802,6 +802,7 @@ void map_lines::clear()
     clear_transforms();
     clear_markers();
     lines.clear();
+    colour_overlay.reset(NULL);
     map_width = 0;
     solid_checked = false;
 }

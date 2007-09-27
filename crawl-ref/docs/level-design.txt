@@ -475,6 +475,21 @@ MONS:    (list of monsters)
          Note that 8, 9, 0 also place monsters (see the table).
  
 
+COLOUR:  . = green / blue:5 / red / none
+         COLOUR: allows you to attach explicit colours to any feature.
+         Explicit colours will override the default colour for that
+         feature. The example shown above colours all . (floor) in the
+         map green, blue, red, or unchanged (use the default colour).
+
+         You can use : to specify that all glyphs get the same colour:
+         COLOUR: x : red / blue
+         will colour all rock walls in the map red, or all rock
+         walls blue.
+
+         COLOUR: should be used very sparingly, and only for features
+         where it won't cause confusion (i.e.: never re-colour features
+         like lava!)
+         
 SHUFFLE: def, 12/3?
          This allows you to randomly permute glyphs on the map. There are 
          two ways:
