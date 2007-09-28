@@ -2687,7 +2687,8 @@ static int affect_wall(bolt &beam, int x, int y)
                     mpr("The statue twists and shakes as its substance crumbles away!");
             }
 
-            if (targ_grid == DNGN_ORCISH_IDOL)
+            if (targ_grid == DNGN_ORCISH_IDOL
+                && beam.beam_source == NON_MONSTER)
             {
                 beogh_idol_revenge();
             }
