@@ -297,6 +297,8 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "efreet"))
         // efreet -> efreeti. Not sure this is correct.
         return name + "i";
+    else if (ends_with(name, "staff"))
+        return name.substr(0, name.length() - 2) + "ves";
 
     return name + "s";
 }

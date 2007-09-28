@@ -478,7 +478,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.x_pos, you.y_pos))
-                        mpr("You hear the crackle of electricity.", MSGCH_SOUND);
+                        mpr("You hear the crackle of electricity.",
+                            MSGCH_SOUND);
                     else
                         mpr("You see sparks fly.");
                     break;

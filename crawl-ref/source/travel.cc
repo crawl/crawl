@@ -3783,18 +3783,24 @@ void explore_discoveries::add_stair(
 
 void explore_discoveries::add_item(const item_def &i)
 {
-    if (is_stackable_item(i))
+    item_def copy = i;
+    copy.quantity = 1;
+    const std::string cname = copy.name(DESC_PLAIN);
+    
+    // Try to find something to stack it with, stacking by name.
+    for (int j = 0, size = items.size(); j < size; ++j)
     {
-        // Try to find something to stack it with.
-        for (int j = 0, size = items.size(); j < size; ++j)
+        const int orig_quantity = items[j].thing.quantity;
+        items[j].thing.quantity = 1;
+        if (cname == items[j].thing.name(DESC_PLAIN))
         {
-            if (items_stack(i, items[j].thing))
-            {
-                items[j].thing.quantity += i.quantity;
-                items[j].name = items[j].thing.name(DESC_NOCAP_A);
-                return;
-            }
+            items[j].thing.quantity = orig_quantity + i.quantity;
+            items[j].name =
+                items[j].thing.name(DESC_NOCAP_A, false, false, true,
+                                    !is_stackable_item(i));
+            return;
         }
+        items[j].thing.quantity = orig_quantity;
     }
 
     items.push_back( named_thing<item_def>(i.name(DESC_NOCAP_A), i) );
