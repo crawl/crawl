@@ -84,7 +84,7 @@ ORIENT:  float
 SHUFFLE: 1X / 1X / 2l / 3Y
 SUBST:   X=x, Y:x.
 MONS:    ogre, iron devil, nothing
-ITEM:    potion of heal wounds / speed / berserk rage / scroll of blinking
+ITEM:    potion of heal wounds / potion of speed / potion of berserk rage / scroll of blinking
 MAP
         xx@xx
         x...x

@@ -1556,7 +1556,7 @@ TAGS: entry no_monster_gen
 ORIENT: float
 FLAGS: no_rotate
 MONS: worm / giant beetle, worm / giant beetle
-ITEM: nothing / ring of hunger / protection from fire / protection from cold
+ITEM: nothing / ring of hunger / ring of protection from fire / ring of protection from cold
 ITEM: nothing / choko / pear / apple / sausage / banana / any scroll
 SHUFFLE: dD1AB/yyyyy, eE2FG/yyyyy, AB, FG
 SUBST: y=x, A==, B=x, D=., F==, G=x, E=.
