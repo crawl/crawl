@@ -310,6 +310,7 @@ ENDMAP
 
 NAME: strawberry_fields_round
 ORIENT: float
+TAGS: allow_dup
 DEPTH: Lair
 SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
@@ -358,6 +359,7 @@ ENDMAP
 #
 NAME:   fruit_tree_single
 ORIENT: float
+TAGS:   allow_dup
 DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . a 2:1
@@ -617,7 +619,6 @@ MARKER:  X = lua:mons_dies_change_flags { \
 MONS:    royal jelly, acid blob, great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
 SUBST:   " : " .:3,  " = .c
-SUBST:   X = .
 SHUFFLE: ([{ 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -652,7 +653,7 @@ xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
 xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
 xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
 xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
-xxxxxxxxxxx'..................2.c.4.c.X..c.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.c....c.4.c.2....................'xxxxxxxxxxx
 xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
 xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
 xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx

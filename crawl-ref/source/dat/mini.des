@@ -45,9 +45,10 @@ ENDMAP
 ###################################
 # pond with fungi
 #
-NAME: fungi_pond__lemuel
-DEPTH:  D:8-20, Lair, Orc
-MONS: fungus, wandering mushroom
+NAME:  fungi_pond__lemuel
+DEPTH: D:8-20, Lair, Orc
+TAGS:  allow_dup
+MONS:  fungus, wandering mushroom
 SUBST: 1 = . 1 2:4
 SUBST: ? : w..
 SUBST: ! : ww.
@@ -160,6 +161,7 @@ ENDMAP
 #
 NAME:    oklob_1
 DEPTH:   D:16-27, Lair:4-
+TAGS:    allow_dup
 MONS:    plant, oklob plant
 SUBST:   ? = 1 2:5 '
 SHUFFLE: '"
@@ -181,15 +183,18 @@ ENDMAP
 ################################
 # Treasure trove with Zot trap
 #
-NAME: zot_lemuel
-DEPTH: 10-27
-KFEAT: ? = zot trap
-SUBST: *: *$
-CHANCE: 3
+NAME:    zot_lemuel
+DEPTH:   10-27
+TAGS:    allow_dup
+SHUFFLE: UVXYZ
+NSUBST:  Z = 4=. / z
+KFEAT:   z = zot trap
+SUBST:   *: *$
+CHANCE:  3
 MAP
 xxxxxxxxxx
 xxxxxxx**x
-@....?=**x
+@ZZZZZ=**x
 xxxxxxx**x
 xxxxxxxxxx
 ENDMAP
@@ -390,6 +395,7 @@ ENDMAP
 NAME:    david_defended_altar
 DEPTH:   7-20, !Lair, !Swamp, !Shoal
 SHUFFLE: 1ID/2TC
+TAGS:    allow_dup
 MONS:    orc priest, deep elf priest / w:30 nothing
 KFEAT:   D = altar_beogh / w:2 altar_okawaru / w:2 altar_makhleb
 MAP
@@ -403,6 +409,7 @@ ENDMAP
 ##############################################################################
 
 NAME: minivault_1
+TAGS: allow_dup
 MAP
 ............
 ..xxxx=xxx..
@@ -421,6 +428,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_2
+TAGS: allow_dup
 SHUFFLE: cvxx
 MAP
 ...........
@@ -439,6 +447,7 @@ ENDMAP
 ###################################
 #
 NAME: minitemple
+TAGS: allow_dup
 # More common than the others.
 CHANCE: 20
 MAP
@@ -457,6 +466,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_4
+TAGS: allow_dup
 MAP
 ............
 ....xwxx....
@@ -475,6 +485,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_5
+TAGS: allow_dup
 MAP
 ............
 .x.xxxxxxxx.
@@ -494,7 +505,7 @@ ENDMAP
 # Wizard's laboratory
 #
 NAME: minivault_6
-TAGS: mini_float
+TAGS: mini_float allow_dup
 MONS: wizard, small abomination, large abomination
 MAP
 ccccccc+cc
@@ -513,6 +524,7 @@ ENDMAP
 # Beehive minivault
 #
 NAME: minivault_7
+TAGS: allow_dup
 MONS: queen bee, killer bee, killer bee larva
 MAP
 ............
@@ -533,6 +545,7 @@ ENDMAP
 # Lava pond
 #
 NAME: minivault_8
+TAGS: allow_dup
 MONS: molten gargoyle
 MAP
 x.x.x.x.x.x.
@@ -553,6 +566,7 @@ ENDMAP
 # Evil zoo
 #
 NAME: minivault_9
+TAGS: allow_dup
 DEPTH: 15-27
 MAP
 ==========
@@ -570,7 +584,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_10
-TAGS: mini_float
+TAGS: mini_float allow_dup
 MAP
 xxxx  xxxx
 x**x  x**x
@@ -588,6 +602,7 @@ ENDMAP
 # Multicoloured onion
 #
 NAME: minivault_11
+TAGS: allow_dup
 SHUFFLE: bcva
 MAP
 ............
@@ -608,6 +623,7 @@ ENDMAP
 # Closed-box minivault
 #
 NAME: minivault_12
+TAGS: allow_dup
 MAP
 ............
 .xxxxxxxxxx.
@@ -627,6 +643,7 @@ ENDMAP
 # Little trap spiral
 #
 NAME: minivault_13
+TAGS: allow_dup
 SHUFFLE: AB, CD, EH/FG
 KFEAT: A = any trap
 KFEAT: C = any trap
@@ -655,6 +672,7 @@ ENDMAP
 # Water cross
 #
 NAME: minivault_14
+TAGS: allow_dup
 MAP
 ............
 .wwwww.wwww.
@@ -674,6 +692,7 @@ ENDMAP
 # Lava pond
 #
 NAME: minivault_15
+TAGS: allow_dup
 MONS: silver statue / ice statue
 KFEAT: 1 = <
 MAP
@@ -691,6 +710,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_16
+TAGS: allow_dup
 CHANCE: 40
 # as this replaces the former statue only minivaults
 SHUFFLE: G111
@@ -712,6 +732,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_19
+TAGS: allow_dup
 MAP
 ............
 .xx......xx.
@@ -730,6 +751,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_20
+TAGS: allow_dup
 MAP
 ............
 .xxxx..xxxx.
@@ -748,6 +770,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_21
+TAGS: allow_dup
 MAP
 ............
 .~xxxxxxxx~.
@@ -766,6 +789,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_22
+TAGS: allow_dup
 SUBST: $ : $ *:5
 MAP
 ............
@@ -785,6 +809,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_23
+TAGS: allow_dup
 MAP
 x.x.x.x.x.x.
 .x.x.x.x.x.x
@@ -803,6 +828,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_24
+TAGS: allow_dup
 MAP
 ............
 ....xxxx....
@@ -821,6 +847,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_25
+TAGS: allow_dup
 MAP
 ............
 .xx+xxxxxxx.
@@ -839,6 +866,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_26
+TAGS: allow_dup
 MAP
 c..........c
 .c...cc...c.
@@ -857,6 +885,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_27
+TAGS: allow_dup
 MAP
 ............
 .x.xxxxxxxx.
@@ -874,6 +903,7 @@ ENDMAP
 ###################################
 
 NAME: minivault_28
+TAGS: allow_dup
 MAP
 ...........
 .xxxx.xxxx.
@@ -892,6 +922,7 @@ ENDMAP
 # Anthill
 #
 NAME: minivault_29
+TAGS: allow_dup
 MONS: queen ant, soldier ant, giant ant, ant larva
 MAP
 .3......3...
@@ -912,6 +943,7 @@ ENDMAP
 # Solitary fountain
 #
 NAME: solitary_fountain
+TAGS: allow_dup
 SUBST: ?=TUV
 MAP
 .....
@@ -925,6 +957,7 @@ ENDMAP
 # Fountainhead
 #
 NAME: fountainhead
+TAGS: allow_dup
 SUBST: ?=TUV
 MAP
 ..............
@@ -1010,6 +1043,7 @@ ENDMAP
 # Dispersion (David)
 #
 NAME:  dispersion
+TAGS:  allow_dup
 DEPTH: 13-26, !Orc, !Lair, !Swamp, !Shoal
 SUBST: Y = 89
 KITEM: 8 = % / * / w:1 |
@@ -1057,7 +1091,7 @@ ENDMAP
 #
 NAME: supply_closet
 DEPTH: 1-9
-TAGS: no_monster_gen
+TAGS: no_monster_gen allow_dup
 ITEM: potion of water w:20 / bread ration / meat ration / arrow / bolt / spear / any potion w:5
 SUBST: ? = +=
 MAP
@@ -1159,6 +1193,7 @@ ENDMAP
 # Loot vs monsters (Onia Ninara)
 #
 NAME:    onia_ninara_009_dug_in_and_dangerous
+TAGS:    allow_dup
 DEPTH:   8-26, !Swamp
 SHUFFLE: vcb, AB?/CD!, d<>
 SUBST:   A=9, B=8, C=1, D=9
@@ -1234,7 +1269,7 @@ ENDMAP
 #
 NAME: library
 DEPTH: 1-27
-TAGS: mini_float
+TAGS: mini_float allow_dup
 ITEM: any book w:20/any scroll/nothing
 MAP
 x=xx
@@ -1246,9 +1281,10 @@ ENDMAP
 #############################################################################
 # Small statue alley (Eino)
 
-NAME:    small_statue_alley_a
-DEPTH:   D:10-20
-CHANCE:  7
+NAME:   small_statue_alley_a
+TAGS:   allow_dup
+DEPTH:  D:10-20
+CHANCE: 7
 MAP
 xxxcccccx
 ...G...G@
@@ -1258,9 +1294,10 @@ xxxcccccx
 xcccccxxx
 ENDMAP
 
-NAME:    small_statue_alley_b
-DEPTH:   D:3-10
-CHANCE:  2
+NAME:   small_statue_alley_b
+TAGS:   allow_dup
+DEPTH:  D:3-10
+CHANCE: 2
 MAP
 xxxcccccx
 ...G...G@
@@ -1270,9 +1307,10 @@ xxxcccccx
 xcccccxxx
 ENDMAP
 
-NAME:    small_statue_alley_c
-DEPTH:   D:6-12, Orc
-CHANCE:  1
+NAME:   small_statue_alley_c
+TAGS:   allow_dup
+DEPTH:  D:6-12, Orc
+CHANCE: 1
 MAP
 xxxcccccx
 ...I...I@
@@ -1452,7 +1490,7 @@ ENDMAP
 NAME:    small_statue_room
 DEPTH:   D:2-26
 FLAGS:   no_hmirror no_vmirror
-TAGS:    mini_float
+TAGS:    mini_float allow_dup
 MAP
 xxx.xxx
 xG...Gx
@@ -1466,7 +1504,7 @@ ENDMAP
 # not necessarily versions of the same vault
 
 NAME:   small_chamber_a
-TAGS:   mini_float
+TAGS:   mini_float allow_dup
 DEPTH:  4-27
 MAP
  xxxxxxx
@@ -1478,7 +1516,7 @@ xx.....xx
 ENDMAP
 
 NAME:   small_chamber_b
-TAGS:   mini_float
+TAGS:   mini_float allow_dup
 DEPTH:  8-27, Elf, Snake, Vault, Crypt
 MAP
 xxxxxxxxx
@@ -1492,7 +1530,7 @@ xxT...Txx
 ENDMAP
 
 NAME:   tiny_chamber_a
-TAGS:   mini_float
+TAGS:   mini_float allow_dup
 DEPTH:  2-27, Elf, Snake, Vault, Crypt
 MAP
 xxxxx
