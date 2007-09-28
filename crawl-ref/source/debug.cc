@@ -3024,6 +3024,9 @@ static std::map<std::string, int> mapgen_use_count;
 static std::map<level_id, int> mapgen_level_mapcounts;
 static std::map< level_id, std::pair<int,int> > mapgen_map_builds;
 static std::map< level_id, std::set<std::string> > mapgen_level_mapsused;
+
+typedef std::map< std::string, std::set<level_id> > mapname_place_map;
+static mapname_place_map mapgen_map_levelsused;
 static std::map<std::string, std::string> mapgen_errors;
 static std::string mapgen_last_error;
 
@@ -3060,6 +3063,9 @@ static bool mg_do_build_level(int niters)
     {
         if (kbhit() && getch() == ESCAPE)
             return (false);
+
+        you.uniq_map_tags.clear();
+        you.uniq_map_names.clear();
         ++mg_levels_tried;
         if (!builder(you.your_level, you.level_type))
             ++mg_levels_failed;
@@ -3084,7 +3090,10 @@ static void mg_build_levels(int niters)
             you.where_are_you = branch;
             you.level_type = LEVEL_DUNGEON;
 
-            if (!mg_do_build_level(niters))
+            int iters = niters;
+            if (branch == BRANCH_MAIN_DUNGEON && depth == 1)
+                iters *= 10;
+            if (!mg_do_build_level(iters))
                 return;
         }
     }
@@ -3099,6 +3108,7 @@ static void mg_build_levels(int niters)
     if (!mg_do_build_level(niters))
         return;
     you.level_type = LEVEL_PORTAL_VAULT;
+    you.level_type_name = "bazaar";
     if (!mg_do_build_level(niters))
         return;
 }
@@ -3113,6 +3123,7 @@ void mapgen_report_map_use(const map_def &map)
     mapgen_use_count[map.name]++;
     mapgen_level_mapcounts[level_id::current()]++;
     mapgen_level_mapsused[level_id::current()].insert(map.name);
+    mapgen_map_levelsused[map.name].insert(level_id::current());
 }
 
 void mapgen_report_error(const map_def &map, const std::string &err)
@@ -3222,26 +3233,26 @@ static void write_mapgen_stats()
          ++i)
     {
         std::string line =
-            make_stringf("%-10s: ", i->first.describe().c_str());
+            make_stringf("%s ------------\n", i->first.describe().c_str());
         const std::set<std::string> &maps = i->second;
-        bool unfinished = false;
         for (std::set<std::string>::const_iterator j = maps.begin();
              j != maps.end(); ++j)
         {
             if (j != maps.begin())
                 line += ", ";
-            line += *j;
-            if (line.length() > 79)
+            if (line.length() + j->length() > 79)
             {
-                unfinished = true;
-                break;
+                fprintf(outf, "%s\n", line.c_str());
+                line = *j;
             }
+            else
+                line += *j;
         }
 
-        const unsigned margin = unfinished? 74 : 79;
-        if (line.length() > margin)
-            line = line.substr(0, margin);
-        fprintf(outf, "%s%s\n", line.c_str(), unfinished? ", ..." : "");
+        if (!line.empty())
+            fprintf(outf, "%s\n", line.c_str());
+
+        fprintf(outf, "------------\n\n");
     }
 
     fprintf(outf, "\n\nMaps used:\n\n");
@@ -3261,6 +3272,32 @@ static void write_mapgen_stats()
             fprintf(outf, "%4d       : %s\n", tries, i->second.c_str());
         else
             fprintf(outf, "%4d (%4d): %s\n", uses, tries, i->second.c_str());
+    }
+
+    fprintf(outf, "\n\nMaps and where used:\n\n");
+    for (mapname_place_map::iterator i = mapgen_map_levelsused.begin();
+         i != mapgen_map_levelsused.end(); ++i)
+    {
+        fprintf(outf, "%s ============\n", i->first.c_str());
+        std::string line;
+        for (std::set<level_id>::const_iterator j = i->second.begin();
+             j != i->second.end(); ++j)
+        {
+            if (!line.empty())
+                line += ", ";
+            std::string level = j->describe();
+            if (line.length() + level.length() > 79)
+            {
+                fprintf(outf, "%s\n", line.c_str());
+                line = level;
+            }
+            else
+                line += level;
+        }
+        if (!line.empty())
+            fprintf(outf, "%s\n", line.c_str());
+
+        fprintf(outf, "==================\n\n");
     }
     fclose(outf);
 }
