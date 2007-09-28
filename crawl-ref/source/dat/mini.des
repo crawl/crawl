@@ -186,7 +186,6 @@ ENDMAP
 NAME:    zot_lemuel
 DEPTH:   10-27
 TAGS:    allow_dup
-SHUFFLE: UVXYZ
 NSUBST:  Z = 4=. / z
 KFEAT:   z = zot trap
 SUBST:   *: *$
