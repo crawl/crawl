@@ -35,6 +35,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "debug.h"
+#include "delay.h"
 #include "describe.h"
 #include "fight.h"
 #include "hiscores.h"
@@ -4959,13 +4960,29 @@ forget_it:
         // movement is towards the player. -- bwr
         if (testbits( monster->flags, MF_TAKING_STAIRS ))
         {
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "%s is skipping movement in order to follow.",
-                 monster->name(DESC_CAP_THE).c_str() );
+            const delay_type delay = current_delay_action();
+            if (delay != DELAY_ASCENDING_STAIRS
+                && delay != DELAY_DESCENDING_STAIRS)
+            {
+                monster->flags &= ~MF_TAKING_STAIRS;
+
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS,
+                     "BUG: %s was marked as follower when not following!",
+                     monster->name(DESC_PLAIN).c_str());
 #endif
-            mmov_x = 0;
-            mmov_y = 0;
+            }
+            else
+            {
+                mmov_x = 0;
+                mmov_y = 0;
+                
+#if DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS,
+                     "%s is skipping movement in order to follow.",
+                     monster->name(DESC_CAP_THE).c_str() );
+#endif
+            }
         }
 
         // check for attacking another monster
