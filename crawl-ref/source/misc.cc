@@ -459,7 +459,7 @@ static void leaving_level_now()
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
-    you.level_type_name = newtype;    
+    you.level_type_name = newtype;
 }
 
 void up_stairs(dungeon_feature_type force_stair)

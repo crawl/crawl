@@ -774,13 +774,9 @@ static void clear_clouds()
     env.cgrid.init(EMPTY_CLOUD);
 }
 
-static bool level_type_allows_followers(level_area_type type)
-{
-    return (type == LEVEL_DUNGEON || type == LEVEL_PANDEMONIUM);
-}
-
 static void grab_followers()
 {
+    const bool can_follow = level_type_allows_followers(you.level_type);
     for (int i = you.x_pos - 1; i < you.x_pos + 2; i++)
     {
         for (int j = you.y_pos - 1; j < you.y_pos + 2; j++)
@@ -805,11 +801,18 @@ static void grab_followers()
             if (!testbits( fmenv->flags, MF_TAKING_STAIRS ))
                 continue;
 
+            if (!can_follow)
+            {
+                // Monster can't follow us, so clear the follower flag.
+                fmenv->flags &= ~MF_TAKING_STAIRS;
+                continue;
+            }
+            
 #if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "%s is following.",
-                 fmenv->name(DESC_CAP_THE, true).c_str());
+            mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
+                 fmenv->name(DESC_CAP_THE, true).c_str(),
+                 level_id::current().describe().c_str());
 #endif
-
             fmenv->set_transit(level_id::current());
             fmenv->destroy_inventory();
             monster_cleanup(fmenv);
@@ -860,7 +863,6 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     if (load_mode == LOAD_ENTER_LEVEL && old_level != -1)
     {
         grab_followers();
-
 
         if (old_level_type == LEVEL_DUNGEON)
             save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
