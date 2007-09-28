@@ -147,7 +147,7 @@ void tag_followers( void )
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
                  fmenv->name(DESC_CAP_THE, true).c_str() );
-#endif  
+#endif
         }
     }
 }
