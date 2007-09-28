@@ -241,8 +241,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 19 - Book of Practical Magic
     {SPELL_PROJECTED_NOISE,
-     SPELL_SELECTIVE_AMNESIA,
      SPELL_DETECT_CURSE,
+     SPELL_SELECTIVE_AMNESIA,
      SPELL_DIG,
      SPELL_REMOVE_CURSE,
      SPELL_NO_SPELL,
