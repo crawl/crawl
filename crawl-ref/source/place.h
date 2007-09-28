@@ -49,5 +49,6 @@ bool single_level_branch(branch_type branch);
 
 bool level_type_exits_up(level_area_type type);
 bool level_type_exits_down(level_area_type type);
+bool level_type_allows_followers(level_area_type type);
 
 #endif

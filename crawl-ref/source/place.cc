@@ -172,3 +172,8 @@ bool level_type_exits_down(level_area_type type)
 {
     return (type == LEVEL_PANDEMONIUM || type == LEVEL_ABYSS);
 }
+
+bool level_type_allows_followers(level_area_type type)
+{
+    return (type == LEVEL_DUNGEON || type == LEVEL_PANDEMONIUM);
+}
