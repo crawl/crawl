@@ -477,6 +477,7 @@ ENDMAP
 ###################################
 # Beogh 1
 NAME: mines1_david
+TAGS: allow_dup
 KFEAT: C = altar_beogh
 MAP
 ...........
@@ -495,6 +496,7 @@ ENDMAP
 ###################################
 # Beogh 2
 NAME: mines2_david
+TAGS: allow_dup
 KFEAT: C = altar_beogh
 MONS: orc / orc warrior w:1
 SUBST: . = . 1:2

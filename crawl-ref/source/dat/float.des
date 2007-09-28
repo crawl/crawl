@@ -351,7 +351,7 @@ SUBST:   x : y:1 x:5 .:30
 SUBST:   x = x:2 .
 SHUFFLE: xcv
 SUBST:   y = x
-MONS:    oklob plant / w:2 plant
+MONS:    oklob plant / w:3 plant
 MAP
 xxxxxxxxxxxxxxx
 xxxx...1...xxxx

@@ -310,6 +310,7 @@ ENDMAP
 
 NAME: strawberry_fields_round
 ORIENT: float
+TAGS: allow_dup
 DEPTH: Lair
 SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
@@ -358,6 +359,7 @@ ENDMAP
 #
 NAME:   fruit_tree_single
 ORIENT: float
+TAGS:   allow_dup
 DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . a 2:1
