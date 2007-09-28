@@ -629,7 +629,8 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     {
         id = place_monster_aux( band_monsters[i], behaviour, target, px, py,
                                 lev_mons, extra, false, dur);
-        menv[id].flags |= MF_BAND_MEMBER;
+        if (id != -1 && id != NON_MONSTER)
+            menv[id].flags |= MF_BAND_MEMBER;
     }
 
     // placement of first monster, at least, was a success.
