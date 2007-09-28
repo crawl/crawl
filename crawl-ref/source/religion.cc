@@ -542,6 +542,8 @@ static void do_god_gift(bool prayed_for)
     if (prayed_for != (you.religion == GOD_ZIN))
         return;
 
+    crawl_state.inc_god_acting();
+
 #if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
     int old_gifts = you.num_gifts[ you.religion ];
 #endif
@@ -816,6 +818,7 @@ static void do_god_gift(bool prayed_for)
         mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
              you.num_gifts[ you.religion ] );
 #endif
+    crawl_state.dec_god_acting();
 }
 
 static bool is_risky_sacrifice(const item_def& item)
@@ -1124,6 +1127,8 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
 
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return (false);
+
+    crawl_state.inc_god_acting();
 
     switch (thing_done)
     {
@@ -1581,6 +1586,8 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
     }
 #endif
 
+    crawl_state.dec_god_acting();
+
     return (ret);
 }
 
@@ -1703,6 +1710,8 @@ bool ely_destroy_weapons()
     if (you.religion != GOD_ELYVILON)
         return false;
         
+    crawl_state.inc_god_acting();
+
     bool success = false;
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
@@ -1745,6 +1754,8 @@ bool ely_destroy_weapons()
         mpr("There are no weapons here to destroy!");
     }
 
+    crawl_state.dec_god_acting();
+
     return success;
 }
 
@@ -1752,6 +1763,8 @@ void trog_burn_books()
 {
     if (you.religion != GOD_TROG)
         return;
+
+    crawl_state.inc_god_acting();
 
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
@@ -1863,6 +1876,7 @@ void trog_burn_books()
          simple_god_message(" is delighted!", GOD_TROG);
          gain_piety(totalpiety);
     }
+    crawl_state.dec_god_acting();
 }
 
 void lose_piety(int pgn)
@@ -2516,6 +2530,8 @@ void divine_retribution( god_type god )
     if (god == you.religion && is_good_god(god) )
         return;
 
+    crawl_state.inc_god_acting(god, true);
+
     // Just the thought of retribution (getting this far) mollifies
     // the god by at least a point... the punishment might reduce
     // penance further.
@@ -2566,6 +2582,7 @@ void divine_retribution( god_type god )
             }
         }
     }
+    crawl_state.dec_god_acting(god);
 }
 
 // upon excommunication, (now ex) Beogh adepts lose their orcish followers
@@ -2658,6 +2675,8 @@ bool followers_abandon_you()
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh
 void beogh_idol_revenge()
 {
+    crawl_state.inc_god_acting(GOD_BEOGH, true);
+
     // Beogh watches his charges closely, but for others doesn't always notice
     if (you.religion == GOD_BEOGH
         || (you.species == SP_HILL_ORC && coinflip())
@@ -2713,11 +2732,15 @@ void beogh_idol_revenge()
             did_god_conduct(DID_ATTACK_FRIEND, 8);
         }
    }
+
+    crawl_state.dec_god_acting(GOD_BEOGH);
 }
 
 void excommunication(void)
 {
     const god_type old_god = you.religion;
+
+    crawl_state.inc_god_acting(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
@@ -2810,6 +2833,8 @@ void excommunication(void)
         inc_penance( old_god, 25 );
         break;
     }
+
+    crawl_state.dec_god_acting(old_god);
 }                               // end excommunication()
 
 static bool bless_weapon( int god, int brand, int colour )
@@ -2872,6 +2897,8 @@ void altar_prayer(void)
     if (you.religion == GOD_XOM)
         return;
 
+    crawl_state.inc_god_acting();
+
     // TSO blesses long swords with holy wrath
     if (you.religion == GOD_SHINING_ONE
         && !you.num_gifts[GOD_SHINING_ONE]
@@ -2924,6 +2951,8 @@ void altar_prayer(void)
     }
 
     offer_items();
+
+    crawl_state.dec_god_acting();
 }                               // end altar_prayer()
 
 static bool god_likes_items(god_type god)
@@ -2969,6 +2998,8 @@ void offer_items()
 {
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
         return;
+
+    crawl_state.inc_god_acting();
 
     int num_sacced = 0;
     int i          = igrd[you.x_pos][you.y_pos];
@@ -3094,6 +3125,8 @@ void offer_items()
     if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
         show_pure_deck_chances();
 #endif
+
+    crawl_state.dec_god_acting();
 }
 
 void god_pitch(god_type which_god)
@@ -3117,7 +3150,9 @@ void god_pitch(god_type which_god)
     if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
     {
         simple_god_message(" is most displeased with you!", which_god);
+        crawl_state.inc_god_acting(GOD_LUGONU, true);
         lugonu_retribution();
+        crawl_state.dec_god_acting(GOD_LUGONU);
         return;
     }
 

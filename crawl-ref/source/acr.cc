@@ -1183,6 +1183,8 @@ bool apply_berserk_penalty = false;
  */
 static void input()
 {
+    crawl_state.clear_god_acting();
+
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
     {
@@ -1394,6 +1396,8 @@ static void input()
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
     }
+
+    crawl_state.clear_god_acting();
 }
 
 static bool toggle_flag( bool* flag, const char* flagname )
@@ -2604,6 +2608,8 @@ static void check_banished()
 
 static void world_reacts()
 {
+    crawl_state.clear_god_acting();
+
     if (Options.stash_tracking)
         stashes.update_visible_stashes(
             Options.stash_tracking == STM_ALL? 

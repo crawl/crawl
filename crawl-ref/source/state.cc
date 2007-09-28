@@ -240,3 +240,105 @@ void game_state::reset_cmd_again()
 
     prev_cmd_keys.clear();
 }
+
+///////////////////////////////////////////////////////////
+// Keeping track of which god is currently doing something
+///////////////////////////////////////////////////////////
+
+god_act_state::god_act_state()
+{
+    reset();
+}
+
+void god_act_state::reset()
+{
+    which_god   = GOD_NO_GOD;
+    retribution = false;
+    depth       = 0;
+}
+
+bool game_state::is_god_acting() const
+{
+    ASSERT(god_act.depth >= 0);
+    ASSERT(!(god_act.depth > 0 && god_act.which_god == GOD_NO_GOD));
+    ASSERT(!(god_act.depth == 0 && god_act.which_god != GOD_NO_GOD));
+    ASSERT(!(god_act.depth == 0 && god_act_stack.size() > 0));
+
+    return (god_act.depth > 0);
+}
+
+bool game_state::is_god_retribution() const
+{
+    ASSERT(is_god_acting());
+
+    return (god_act.retribution);
+}
+
+god_type game_state::which_god_acting() const
+{
+    return god_act.which_god;
+}
+
+void game_state::inc_god_acting(bool is_retribution)
+{
+    inc_god_acting(you.religion, is_retribution);
+}
+
+void game_state::inc_god_acting(god_type which_god, bool is_retribution)
+{
+    ASSERT(which_god != GOD_NO_GOD);
+
+    if (god_act.which_god != GOD_NO_GOD &&
+        god_act.which_god != which_god)
+    {
+        ASSERT(god_act.depth >= 1);
+
+        god_act_stack.push_back(god_act);
+        god_act.reset();
+    }
+
+    god_act.which_god   = which_god;
+    god_act.retribution = is_retribution;
+    god_act.depth++;
+}
+
+void game_state::dec_god_acting()
+{
+    dec_god_acting(you.religion);
+}
+
+void game_state::dec_god_acting(god_type which_god)
+{
+    ASSERT(which_god != GOD_NO_GOD);
+    ASSERT(god_act.depth > 0);
+    ASSERT(god_act.which_god == which_god);
+
+    god_act.depth--;
+
+    if (god_act.depth == 0)
+    {
+        god_act.reset();
+        if (god_act_stack.size() > 0)
+        {
+            god_act = god_act_stack[god_act_stack.size() - 1];
+            god_act_stack.pop_back();
+            ASSERT(god_act.depth >= 1);
+            ASSERT(god_act.which_god != GOD_NO_GOD);
+            ASSERT(god_act.which_god != which_god);
+        }
+    }
+}
+
+void game_state::clear_god_acting()
+{
+    ASSERT(!is_god_acting());
+    ASSERT(god_act_stack.size() == 0);
+
+    god_act.reset();
+}
+
+std::vector<god_act_state> game_state::other_gods_acting() const
+{
+    ASSERT(is_god_acting());
+    return god_act_stack;
+}

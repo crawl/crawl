@@ -13,6 +13,20 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include "enum.h"
+
+struct god_act_state
+{
+public:
+
+    god_act_state();
+    void reset();
+
+    god_type which_god;
+    bool     retribution;
+    int      depth;
+};
+
 // Track various aspects of Crawl game state.
 struct game_state
 {
@@ -58,6 +72,9 @@ protected:
     void reset_cmd_repeat();
     void reset_cmd_again();
 
+    god_act_state              god_act;
+    std::vector<god_act_state> god_act_stack;
+
 public:
     game_state();
 
@@ -78,6 +95,17 @@ public:
         if (terminal_resize_check)
             (*terminal_resize_check)();
     }
+
+    bool     is_god_acting() const;
+    bool     is_god_retribution() const;
+    god_type which_god_acting() const;
+    void     inc_god_acting(bool is_retribution = false);
+    void     inc_god_acting(god_type which_god, bool is_retribution = false);
+    void     dec_god_acting();
+    void     dec_god_acting(god_type which_god);
+    void     clear_god_acting();
+
+    std::vector<god_act_state> other_gods_acting() const;
 };
 extern game_state crawl_state;
 
