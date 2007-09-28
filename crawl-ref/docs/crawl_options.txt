@@ -861,12 +861,11 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
 
         * freshness:
           The freshness of chunks of meat; irrelevant for everything
-          else.  For non-ghouls it makes the freshest chunks of meat
-          show up first, and for ghouls the mons rotten chunks of
-          meat go fist.  If this sort criteria is placed before (or
-          in the absence of) basename and qualname, then non-chunk
-          food items will be sorted between the non-rotting and
-          rotting chunks.
+          else.  It makes the oldest chunks of meat show up first, 
+          with rotting chunks listed last for non-Saprovores.
+          If this sort criteria is placed before (or in the absence of) 
+          basename and qualname, then non-chunk food items will be 
+          sorted between the non-rotting and rotting chunks.
 
         The default sort criteria are: "equipped, basename, qualname,
         curse, qty".
