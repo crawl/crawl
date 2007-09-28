@@ -2953,24 +2953,14 @@ static bool find_subtype_by_name(item_def &item,
         return (true);
 
     int type_wanted = -1;
-    int best_index  = 10000;
 
-    const char *ptr;
     for (int i = 0; i < ntypes; i++)
     {
         item.sub_type = i;
-        char obj_name[ITEMNAME_SIZE];
-        strncpy(obj_name, item.name(DESC_PLAIN).c_str(), sizeof obj_name);
-
-        ptr = strstr( strlwr(obj_name), name.c_str() );
-        if (ptr != NULL)
+        if (name == lowercase_string(item.name(DESC_PLAIN)))
         {
-            // earliest match is the winner
-            if (ptr - obj_name < best_index)
-            {
-                type_wanted = i;    
-                best_index = ptr - obj_name;
-            }
+            type_wanted = i;
+            break;
         }
     }
 
