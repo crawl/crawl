@@ -84,83 +84,99 @@
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
-// First message is if there's no piety gain, second is if there is.
-const char *sacrifice[NUM_GODS][2] =
+// First message is if there's no piety gain, second is if piety gain 
+// is one, third message is for piety gain > 1 (currently unused).
+const char *sacrifice[NUM_GODS][3] =
 {
     // No god
     {
         " & eaten by a bored swarm of bugs.",
+        " & eaten by a swarm of bugs.",
         " & eaten by a ravening swarm of bugs."
     },
     // Zin
     {
-        " faintly glow% silver and disappear%.",
-        " glow% silver and disappear%.",
+         " barely glow% and disappear%.",
+         " glow% silver and disappear%.",
+         " glow% blindingly silver and disappear%.",
     },
     // TSO
     {
-        " glow% a golden colour and disappear%.",
-        " glow% a brilliant golden colour and disappear%.",
+         " faintly glow% and disappear%.",
+         " glow% a golden colour and disappear%.",
+         " glow% a brilliant golden colour and disappear%.",
     },
     // Kikubaaqudgha
     {
-        " slowly rot% away.",
-        " rot% away in an instant.",
+         " slowly rot% away.",
+         " rot% away.",
+         " rot% away in an instant.",
     },
     // Yredelemnul
     {
         " slowly crumble% to dust.",
         " crumble% to dust.",
+        " turn% to dust in an instant.",
     },
     // Xom (no sacrifices)
     {
         " & eaten by a bored bug.",
         " & eaten by a bug.",
+        " & eaten by a greedy bug.",
     },
     // Vehumet
     {
-        " burn% into nothingness.",
-        " explode% into nothingness.",
+         " fade% into nothingness.",
+         " burn% into nothingness.",
+         " explode% into nothingness.",
     },
     // Okawaru
     {
-        " & consumed by flame.",
-        " & consumed in a burst of flame.",
+         " slowly burn% to ash.",
+         " & consumed by flame.",
+         " & consumed in a burst of flame.",
     },
     // Makhleb
     {
-        " flare% red and disappear%.",
-        " flare% blood-red and disappear%.",
+         " disappear% without a sign.",
+         " flare% red and disappear%.",
+         " flare% blood-red and disappear%.",
     },
     // Sif Muna
     {
-        " glow% very faintly for a moment, and & gone.",
-        " glow% faintly for a moment, and & gone.",
+         " & gone without a glow.",
+         " glow% faintly for a moment, and & gone.",
+         " glow% for a moment, and & gone.",
     },
     // Trog
     {
-        " & consumed in a column of flame.",
-        " & consumed in a roaring column of flame.",
+         " & slowly consumed by flames.",
+         " & consumed in a column of flame.",
+         " & consumed in a roaring column of flame.",
     },
     // Nemelex
     {
-        " glow% slightly and disappear%.",
-        " glow% with a rainbow of weird colours and disappear%.",
+         " disappear% without a glow.",
+         " glow% slightly and disappear%.",
+         " glow% with a rainbow of weird colours and disappear%.",
     },
     // Elyvilon
     {
-        " slowly evaporate%.",
-        " evaporate%.",
+         " slowly evaporate%.",
+         " evaporate%.",
+         " glow% and evaporate%.",
     },
     // Lugonu
     {
-        " & disappears into the void.",
-        " & consumed by the void.",
+         " & disappears into the void.",
+         " & consumed by the void.",
+         " & voraciously consumed by the void.",
     },
     // Beogh
     {
-        " slowly crumble% into the ground.",
-        " crumble% into the ground.",
+         " slowly crumble% into the ground."
+         " crumble% into the ground."
+         " disintegrate% into the ground."
     }
 };
 
