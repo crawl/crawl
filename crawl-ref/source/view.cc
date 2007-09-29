@@ -760,7 +760,7 @@ inline static void beogh_follower_convert(monsters *monster)
     }
 }
 
-static void handle_monster_shouts(monsters* monster, bool force = false)
+void handle_monster_shouts(monsters* monster, bool force)
 {
     if (!force
         && (!you.turn_is_over || random2(30) < you.skills[SK_STEALTH]))
@@ -772,13 +772,13 @@ static void handle_monster_shouts(monsters* monster, bool force = false)
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
-    if (mons_friendly(monster)
+    if (!force && mons_friendly(monster)
         || (type == S_SILENT && !player_monster_visible(monster))
         || (type != S_SILENT && (silenced(you.x_pos, you.y_pos) 
                                  || silenced(monster->x, monster->y))))
         return;
 
-    int         noise_level = 8;
+    int         noise_level = get_shout_noise_level(type);
     std::string default_msg_key;
 
     switch (type)
@@ -786,10 +786,6 @@ static void handle_monster_shouts(monsters* monster, bool force = false)
     case NUM_SHOUTS:
     case S_RANDOM:
         default_msg_key = "__BUGGY";
-        break;
-    case S_SILENT:
-        default_msg_key = "";
-        noise_level = 0;
         break;
     case S_SHOUT:
         default_msg_key = "__SHOUT";
@@ -799,11 +795,9 @@ static void handle_monster_shouts(monsters* monster, bool force = false)
         break;
     case S_SHOUT2:
         default_msg_key = "__TWO_SHOUTS";
-        noise_level = 12;
         break;
     case S_ROAR:
         default_msg_key = "__ROAR";
-        noise_level = 12;
         break;
     case S_SCREAM:
         default_msg_key = "__SCREAM";
@@ -831,30 +825,9 @@ static void handle_monster_shouts(monsters* monster, bool force = false)
         break;
     case S_HISS:
         default_msg_key = "__HISS";
-        noise_level = 4;  // not very loud -- bwr
         break;
-
-    // Loudness setting for shouts that are only defined in dat/shout.txt
-    case S_VERY_SOFT:
+    default:
         default_msg_key = "";
-        noise_level = 4;
-        break;
-    case S_SOFT:
-        default_msg_key = "";
-        noise_level = 6;
-        break;
-    case S_NORMAL:
-        default_msg_key = "";
-        noise_level = 8;
-        break;
-    case S_LOUD:
-        default_msg_key = "";
-        noise_level = 10;
-        break;
-    case S_VERY_LOUD:
-        default_msg_key = "";
-        noise_level = 12;
-        break;
     }
 
     // Use get_monster_data(monster->type) to bypass mon_shouts()

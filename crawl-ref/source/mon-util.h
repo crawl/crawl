@@ -336,6 +336,7 @@ bool mons_player_visible( struct monsters *mon );
 /* ***********************************************************************
  * called from: view
  * *********************************************************************** */
+int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(int mclass);
 
 bool mons_is_unique(int mclass);

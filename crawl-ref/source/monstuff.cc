@@ -4518,6 +4518,30 @@ static void monster_move(monsters *monster)
     const int habitat = monster_habitat( monster->type ); 
     bool deep_water_available = false;
 
+    // Berserking monsters make a lot of racket
+    if (monster->has_ench(ENCH_BERSERK))
+    {
+        int noise_level = get_shout_noise_level(mons_shouts(monster->type));
+        if (noise_level > 0)
+        {
+            if (mons_near(monster) && player_monster_visible(monster))
+            {
+                if (one_chance_in(10))
+                {
+                    mprf(MSGCH_TALK_VISUAL, "%s rages.",
+                         monster->name(DESC_CAP_THE).c_str());
+                }
+                noisy( noise_level, monster->x, monster->y );
+            }
+            else if (one_chance_in(5))
+            {
+                handle_monster_shouts(monster, true);
+            }
+            else // just be noisy without messaging the player
+                noisy( noise_level, monster->x, monster->y );
+        }
+    }
+
     if (monster->confused())
     {
         if (mmov_x || mmov_y || one_chance_in(15))
