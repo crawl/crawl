@@ -551,6 +551,29 @@ monster_type draco_subspecies( const monsters *mon )
     return (ret);
 }
 
+int get_shout_noise_level(const shout_type shout)
+{
+    switch (shout)
+    {
+    case S_SILENT:
+        return 0;
+    case S_HISS:
+    case S_VERY_SOFT:
+        return 4;
+    case S_SOFT:
+        return 6;
+    case S_LOUD:
+        return 10;
+    case S_SHOUT2:
+    case S_ROAR:
+    case S_VERY_LOUD:
+        return 12;
+
+    default:
+        return 8;
+    }
+}
+
 shout_type mons_shouts(int mc)
 {
     shout_type u = smc->shouts;

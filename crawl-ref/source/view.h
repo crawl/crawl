@@ -106,7 +106,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
  *              spells - spells3 - spells4
  * *********************************************************************** */
 bool noisy( int loudness, int nois_x, int nois_y, const char *msg = NULL );
-
+void handle_monster_shouts(monsters* monster, bool force = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
