@@ -1365,20 +1365,32 @@ void StashTracker::update_visible_stashes(
 static std::string lastsearch;
 static input_history search_history(15);
 
+void StashTracker::show_stash_search_prompt()
+{
+    std::vector<std::string> opts;
+    if (!lastsearch.empty())
+        opts.push_back(
+            make_stringf("Enter for \"%s\"", lastsearch.c_str()) );
+    if (level_type_is_stash_trackable(you.level_type)
+        && lastsearch != ".")
+    {
+        opts.push_back(
+            make_stringf("press . for all items on level"));
+    }
+
+    std::string prompt_qual =
+        comma_separated_line(opts.begin(), opts.end(), ", or ", ", or ");
+
+    if (!prompt_qual.empty())
+        prompt_qual = " [" + prompt_qual + "]";
+
+    mprf(MSGCH_PROMPT, "Search for what%s?\n", prompt_qual.c_str());
+}
+
 void StashTracker::search_stashes()
 {
-    char prompt[200];
-    if (lastsearch.length())
-        snprintf(prompt, sizeof prompt,
-                "Search for what [Enter for \"%s\"%s]?\n",
-                lastsearch.c_str(), lastsearch != "." ?
-                    ", or press . for all items on level" : "");
-    else
-        snprintf(prompt, sizeof prompt,
-                "Search for what [Press . for all items on level]?\n");
+    show_stash_search_prompt();
     
-    mpr(prompt, MSGCH_PROMPT);
-
     char buf[400];
     bool validline = 
         !cancelable_get_line(buf, sizeof buf, 80, &search_history);
@@ -1392,25 +1404,22 @@ void StashTracker::search_stashes()
 
     if (csearch == ".")
     {
-        if (you.level_type == LEVEL_DUNGEON)
+        if (!level_type_is_stash_trackable(you.level_type))
         {
-            snprintf(info, INFO_SIZE, "%s:%d",
-                branches[you.where_are_you].abbrevname, player_branch_depth());
-            csearch = info;
+            mpr("Cannot track items on this level.");
+            return;
         }
-        else if (you.level_type == LEVEL_PORTAL_VAULT)
-            csearch = "{Port}";
-        else if (you.level_type == LEVEL_PANDEMONIUM)
-            csearch = "{Pan}";
-        // items in Abyss and Labyrinths are not tracked
-        else if (you.level_type == LEVEL_ABYSS
-                 || you.level_type == LEVEL_LABYRINTH)
-        {
-             mprf("Items in %s cannot be tracked.",
-                  you.level_type == LEVEL_ABYSS ? "the Abyss" : "labyrinths");
-             return;
-        }
+#if defined(REGEX_PCRE) || defined(REGEX_POSIX)
+#define RE_ESCAPE "\\"
+#else
+#define RE_ESCAPE ""
+#endif
+        
+        csearch = (RE_ESCAPE "{")
+            + level_id::current().describe()
+            + (RE_ESCAPE "}");
     }
+    
     std::vector<stash_search_result> results;
 
     base_pattern *search = NULL;

@@ -831,8 +831,6 @@ static void _xom_check_lost_items(level_area_type old_level_type)
     if (old_level_type == LEVEL_DUNGEON)
         return;
     
-    int amusement = 0;
-
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         item_def& item(mitm[i]);
