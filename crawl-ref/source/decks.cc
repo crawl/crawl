@@ -802,6 +802,8 @@ static void elixir_card(int power, deck_rarity_type rarity)
         you.hp = you.hp_max;
         you.magic_points = you.max_magic_points;
     }
+    you.redraw_hit_points = 1;
+    you.redraw_magic_points = 1;
 }
 
 static void battle_lust_card(int power, deck_rarity_type rarity)

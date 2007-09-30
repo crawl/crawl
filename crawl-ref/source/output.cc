@@ -1111,7 +1111,7 @@ void print_overview_screen()
                      colour_to_str(god_colour(you.religion)));
             // piety rankings
             int prank = piety_rank() - 1;
-            if ( prank < 0 )
+            if ( prank < 0 || you.religion == GOD_XOM)
                 prank = 0;
             // Careful about overflow. We erase some of the god's name
             // if necessary.
