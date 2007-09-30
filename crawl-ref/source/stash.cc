@@ -7,6 +7,7 @@
  */
 
 #include "AppHdr.h"
+#include "branch.h"
 #include "chardump.h"
 #include "cio.h"
 #include "clua.h"
@@ -1369,15 +1370,14 @@ void StashTracker::search_stashes()
     char prompt[200];
     if (lastsearch.length())
         snprintf(prompt, sizeof prompt,
-                "Search for what [Enter for \"%s\"]?",
-                lastsearch.c_str());
+                "Search for what [Enter for \"%s\"%s]?\n",
+                lastsearch.c_str(), lastsearch != "." ?
+                    ", or press . for all items on level" : "");
     else
         snprintf(prompt, sizeof prompt,
-                "Search for what?");
+                "Search for what [Press . for all items on level]?\n");
     
     mpr(prompt, MSGCH_PROMPT);
-    // Push the cursor down to the next line.
-    mpr("", MSGCH_PROMPT);
 
     char buf[400];
     bool validline = 
@@ -1387,6 +1387,30 @@ void StashTracker::search_stashes()
         return;
 
     std::string csearch = *buf? buf : lastsearch;
+    std::string help = lastsearch;
+    lastsearch = csearch;
+
+    if (csearch == ".")
+    {
+        if (you.level_type == LEVEL_DUNGEON)
+        {
+            snprintf(info, INFO_SIZE, "%s:%d",
+                branches[you.where_are_you].abbrevname, player_branch_depth());
+            csearch = info;
+        }
+        else if (you.level_type == LEVEL_PORTAL_VAULT)
+            csearch = "{Port}";
+        else if (you.level_type == LEVEL_PANDEMONIUM)
+            csearch = "{Pan}";
+        // items in Abyss and Labyrinths are not tracked
+        else if (you.level_type == LEVEL_ABYSS
+                 || you.level_type == LEVEL_LABYRINTH)
+        {
+             mprf("Items in %s cannot be tracked.",
+                  you.level_type == LEVEL_ABYSS ? "the Abyss" : "labyrinths");
+             return;
+        }
+    }
     std::vector<stash_search_result> results;
 
     base_pattern *search = NULL;
@@ -1402,11 +1426,10 @@ void StashTracker::search_stashes()
     if (!search->valid())
     {
         mpr("Your search expression is invalid.", MSGCH_PLAIN);
+        lastsearch = help;
         return ;
     }
 
-    lastsearch = csearch;
-    
     get_matching_stashes(*search, results);
 
     if (results.empty())
