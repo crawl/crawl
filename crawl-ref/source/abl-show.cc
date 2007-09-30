@@ -1514,7 +1514,8 @@ static bool do_ability(const ability_def& abil)
         break;
 
     case ABIL_TROG_BURN_BOOKS:
-        trog_burn_books();
+        if (!trog_burn_books())
+            return (false);
         break;
 
     case ABIL_TROG_BERSERK:
