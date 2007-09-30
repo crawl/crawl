@@ -915,8 +915,7 @@ command_type travel()
     command_type result = CMD_NO_CMD;
 
     // Abort travel/explore if you're confused or a key was pressed.
-    // Or if you got caught in a net.
-    if (kbhit() || you.duration[DUR_CONF] || you.attribute[ATTR_HELD])
+    if (kbhit() || you.duration[DUR_CONF])
     {
         stop_running();
         return CMD_NO_CMD;
@@ -2240,7 +2239,13 @@ void start_translevel_travel(const travel_target &pos)
         return;
     
     if (!can_travel_to(pos.p.id))
+    {
+        if (you.level_type != LEVEL_DUNGEON)
+            mpr("Sorry, you can't auto-travel out of here.");
+        else
+            mpr("Sorry, I don't know how to get there.");
         return;
+    }
 
     if (!can_travel_interlevel())
     {

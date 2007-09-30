@@ -158,7 +158,8 @@ void player_caught_in_net()
     {
         you.attribute[ATTR_HELD] = 10;
         mpr("You become entangled in the net!");
-        
+        stop_running();
+
         // I guess levitation works differently, keeping both you
         // and the net hovering above the floor
         if (you.flies() == FL_FLY)
