@@ -33,6 +33,7 @@
 #include <ctype.h>
 
 #include <algorithm>
+#include <functional>
 
 #ifdef DOS
 #include <conio.h>
@@ -175,12 +176,10 @@ bool is_packed_save(const std::string &name)
 }
 #endif
 
-// Returns a full player struct read from the save.
-player read_character_info(const std::string &savefile)
+// Return the save_info from the save.
+player_save_info read_character_info(const std::string &savefile)
 {
-    player fromfile;
-    player backup;
-
+    player_save_info fromfile;
     FILE *charf = fopen(savefile.c_str(), "rb");
     if (!charf)
         return fromfile;
@@ -188,13 +187,16 @@ player read_character_info(const std::string &savefile)
     char majorVersion = 0;
     char minorVersion = 0;
 
-    backup.copy_from(you);
     if (determine_version(charf, majorVersion, minorVersion)
         && majorVersion == SAVE_MAJOR_VERSION)
     {
+        // backup before we clobber "you"
+        const player backup(you);
+
         restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
-        fromfile.copy_from(you);
-        you     .copy_from(backup);
+        
+        fromfile = you;
+        you.copy_from(backup);
     }
 
     fclose(charf);
@@ -450,9 +452,10 @@ std::string get_savedir_path(const std::string &shortpath)
  * Returns a list of the names of characters that are already saved for the
  * current user.
  */
-std::vector<player> find_saved_characters()
+
+std::vector<player_save_info> find_saved_characters()
 {
-    std::vector<player> chars;
+    std::vector<player_save_info> chars;
 #ifndef DISABLE_SAVEGAME_LISTS
     std::string searchpath = Options.save_dir;
 
@@ -460,7 +463,7 @@ std::vector<player> find_saved_characters()
         searchpath = ".";
 
     std::vector<std::string> allfiles = get_dir_files(searchpath);
-    for (int i = 0, size = allfiles.size(); i < size; ++i)
+    for (unsigned int i = 0; i < allfiles.size(); ++i)
     {
         std::string filename = allfiles[i];
 #ifdef LOAD_UNPACKAGE_CMD
@@ -490,8 +493,8 @@ std::vector<player> find_saved_characters()
 #endif
         if (is_save_file_name(filename))
         {
-            player p = read_character_info(get_savedir_path(filename));
-            if (p.is_valid())
+            player_save_info p=read_character_info(get_savedir_path(filename));
+            if (!p.name.empty())
                 chars.push_back(p);
         }
 
@@ -501,7 +504,7 @@ std::vector<player> find_saved_characters()
 #endif
     }
 
-    std::sort(chars.begin(), chars.end());
+    std::sort(chars.rbegin(), chars.rend());
 #endif // !DISABLE_SAVEGAME_LISTS
     return (chars);
 }

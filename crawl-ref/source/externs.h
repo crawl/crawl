@@ -677,13 +677,6 @@ public:
 
     void init();
     
-    bool is_valid() const;
-    std::string short_desc() const;
-    
-    // For sorting
-    bool operator < (const player &p) const;
-
-public:
     // Low-level move the player to (x, y). Use these functions instead of
     // changing x_pos and y_pos directly.
     void moveto(int x, int y);
@@ -809,6 +802,19 @@ public:
 };
 
 extern player you;
+
+struct player_save_info
+{
+    std::string name;
+    unsigned long experience;
+    int experience_level;
+    bool wizard;
+    species_type species;
+    std::string class_name;
+    player_save_info operator=(const player& rhs);
+    bool operator<(const player_save_info& rhs) const;
+    std::string short_desc() const;
+};
 
 class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
 {

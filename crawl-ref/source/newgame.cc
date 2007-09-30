@@ -2115,7 +2115,7 @@ static void openingScreen(void)
 }
 
 static void show_name_prompt(int where, bool blankOK, 
-        const std::vector<player> &existing_chars,
+        const std::vector<player_save_info> &existing_chars,
         slider_menu &menu)
 {
     gotoxy(1, where);
@@ -2205,7 +2205,7 @@ static int newname_keyfilter(int &ch)
 static bool read_player_name(
         char *name, 
         int len,
-        const std::vector<player> &existing,
+        const std::vector<player_save_info> &existing,
         slider_menu &menu)
 {
     const int name_x = wherex(), name_y = wherey();
@@ -2237,8 +2237,9 @@ static bool read_player_name(
             const MenuEntry *sel = menu.selected_entry();
             if (sel)
             {
-                const player &p = *static_cast<player*>( sel->data );
-                strncpy(name, p.your_name, kNameLen);
+                const player_save_info &p =
+                    *static_cast<player_save_info*>( sel->data );
+                strncpy(name, p.name.c_str(), kNameLen);
                 name[kNameLen - 1] = 0;
                 return (true);
             }
@@ -2253,7 +2254,7 @@ static void enter_player_name(bool blankOK)
     int prompt_start = wherey();
     bool ask_name = true;
     char *name = you.your_name;
-    std::vector<player> existing_chars;
+    std::vector<player_save_info> existing_chars;
     slider_menu char_menu;
 
     if (you.your_name[0] != 0)
@@ -2262,7 +2263,7 @@ static void enter_player_name(bool blankOK)
     if (blankOK && (ask_name || !is_good_name(you.your_name, false, false)))
     {
         existing_chars = find_saved_characters();
-        if (existing_chars.size() == 0) 
+        if (existing_chars.empty()) 
         {
              gotoxy(1,12);
              formatted_string::parse_string(
@@ -2274,7 +2275,7 @@ static void enter_player_name(bool blankOK)
         MenuEntry *title = new MenuEntry("Or choose an existing character:");
         title->colour = LIGHTCYAN;
         char_menu.set_title( title );
-        for (int i = 0, size = existing_chars.size(); i < size; ++i)
+        for (unsigned int i = 0; i < existing_chars.size(); ++i)
         {
             std::string desc = " " + existing_chars[i].short_desc();
             if (static_cast<int>(desc.length()) >= get_number_of_cols())
