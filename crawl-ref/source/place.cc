@@ -177,3 +177,8 @@ bool level_type_allows_followers(level_area_type type)
 {
     return (type == LEVEL_DUNGEON || type == LEVEL_PANDEMONIUM);
 }
+
+bool level_type_is_stash_trackable(level_area_type type)
+{
+    return (type != LEVEL_ABYSS && type != LEVEL_LABYRINTH);
+}

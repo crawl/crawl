@@ -315,6 +315,7 @@ private:
     void get_matching_stashes(const base_pattern &search, 
                               std::vector<stash_search_result> &results) const;
     void display_search_results(std::vector<stash_search_result> &results);
+    void show_stash_search_prompt();    
 
 private:
     typedef std::map<level_id, LevelStashes> stash_levels_t;
