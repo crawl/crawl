@@ -1776,10 +1776,11 @@ bool ely_destroy_weapons()
     return success;
 }
 
-void trog_burn_books()
+// returns false if invocation fails (no books in sight etc.)
+bool trog_burn_books()
 {
     if (you.religion != GOD_TROG)
-        return;
+        return (false);
 
     crawl_state.inc_god_acting();
 
@@ -1792,29 +1793,22 @@ void trog_burn_books()
             && mitm[i].sub_type != BOOK_MANUAL)
         {
             mpr("Burning your own feet might not be such a smart idea!");
-            return;
+            return (false);
         }
         i = next;
     }
 
-    // From now on, it will always cost a turn, to prevent leaking
-    // information about whether books exist (not that it matters much.)
-    
     int totalpiety = 0;
     for (int xpos = you.x_pos - 8; xpos < you.x_pos + 8; xpos++)
         for (int ypos = you.y_pos - 8; ypos < you.y_pos + 8; ypos++)
         {
              // checked above
              if (xpos == you.x_pos && ypos == you.y_pos)
-             {
                  continue;
-             }
 
              // burn only squares in sight
              if (!see_grid(xpos, ypos))
-             {
                  continue;
-             }
 
              // if a grid is blocked, books lying there will be ignored
              // allow bombing of monsters
@@ -1887,6 +1881,7 @@ void trog_burn_books()
     if (!totalpiety)
     {
          mpr("There are no books in sight to burn!");
+         return (false);
     }
     else
     {
@@ -1894,6 +1889,7 @@ void trog_burn_books()
          gain_piety(totalpiety);
     }
     crawl_state.dec_god_acting();
+    return (true);
 }
 
 void lose_piety(int pgn)

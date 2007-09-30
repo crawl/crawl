@@ -47,7 +47,7 @@ void divine_retribution(god_type god);
 bool beogh_water_walk();
 void beogh_idol_revenge();
 bool ely_destroy_weapons();
-void trog_burn_books();
+bool trog_burn_books();
 
 bool tso_stab_safe_monster(const actor *act);
 #endif
