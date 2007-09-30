@@ -1572,7 +1572,8 @@ bool acquirement(object_class_type class_wanted, int agent)
                     thing.sub_type = ARM_NAGA_BARDING;
                 else if ( you.species == SP_CENTAUR )
                     thing.sub_type = ARM_CENTAUR_BARDING;
-                else {
+                else
+                {
                     thing.sub_type = ARM_BOOTS;
                     // Fix illegal ego types
                     if (get_armour_ego_type(thing) == SPARM_COLD_RESISTANCE ||
