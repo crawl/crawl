@@ -153,18 +153,90 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
                        "escaped from the Abyss!" + who_banished(who));
 #endif
 
-    if (gate_type == DNGN_ENTER_ABYSS)
+    std::string cast_into = "";
+
+    switch(gate_type)
     {
-        const std::string what = "Cast into the Abyss" + who_banished(who);
-        take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
+    case DNGN_ENTER_ABYSS:
+        if (you.level_type == LEVEL_ABYSS)
+        {
+            mpr("You feel trapped.");
+            return;
+        }
+        cast_into = "the Abyss";
+        break;
+
+    case DNGN_EXIT_ABYSS:
+        if (you.level_type != LEVEL_ABYSS)
+        {
+            mpr("You feel dizzy for a moment.");
+            return;
+        }
+        break;
+
+    case DNGN_ENTER_PANDEMONIUM:
+        if (you.level_type == LEVEL_PANDEMONIUM)
+        {
+            mpr("You feel trapped.");
+            return;
+        }
+        cast_into = "Pandemonium";
+        break;
+
+    case DNGN_TRANSIT_PANDEMONIUM:
+        if (you.level_type != LEVEL_PANDEMONIUM)
+        {
+            banished(DNGN_ENTER_PANDEMONIUM, who);
+            return;
+        }
+        break;
+
+    case DNGN_EXIT_PANDEMONIUM:
+        if (you.level_type != LEVEL_PANDEMONIUM)
+        {
+            mpr("You feel dizzy for a moment.");
+            return;
+        }
+        break;
+
+    case DNGN_ENTER_LABYRINTH:
+        if (you.level_type == LEVEL_LABYRINTH)
+        {
+            mpr("You feel trapped.");
+            return;
+        }
+        cast_into = "a Labyrinth";
+        break;
+
+    case DNGN_ENTER_HELL:
+    case DNGN_ENTER_DIS:
+    case DNGN_ENTER_GEHENNA:
+    case DNGN_ENTER_COCYTUS:
+    case DNGN_ENTER_TARTARUS: 
+        if (player_in_hell() || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+        {
+            mpr("You feel dizzy for a moment.");
+            return;
+        }
+        cast_into = "Hell";
+        break;
+
+    default:
+        mprf(MSGCH_DIAGNOSTICS, "Invalid banished() gateway %d",
+             static_cast<int>(gate_type));
+        ASSERT(false);
     }
 
     // Now figure out how we got here.
-    if (who.find("self") != std::string::npos || who == you.your_name
-        || who == "you" || who == "You" || crawl_state.is_god_acting())
+    if (crawl_state.is_god_acting())
     {
         // down_stairs() will take care of setting things.
         you.entry_cause = EC_UNKNOWN;
+    }
+    else if (who.find("self") != std::string::npos || who == you.your_name
+             || who == "you" || who == "You")
+    {
+        you.entry_cause = EC_SELF_EXPLICIT;
     }
     else if (who.find("distortion") != std::string::npos)
     {
@@ -190,6 +262,15 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         you.entry_cause = EC_SELF_EXPLICIT;
     else
         you.entry_cause = EC_MONSTER;
+
+    if (!crawl_state.is_god_acting())
+        you.entry_cause_god = GOD_NO_GOD;
+
+    if (cast_into != "" && you.entry_cause != EC_SELF_EXPLICIT)
+    {
+        const std::string what = "Cast into " + cast_into + who_banished(who);
+        take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
+    }
 
     down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh
 }

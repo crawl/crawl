@@ -473,8 +473,11 @@ static void set_entry_cause(entry_cause_type default_cause,
 {
     ASSERT(default_cause != NUM_ENTRY_CAUSE_TYPES);
 
-    if (old_level_type == you.level_type)
+    if (!(old_level_type != you.level_type
+          || you.entry_cause == EC_UNKNOWN))
+    {
         return;
+    }
 
     if (crawl_state.is_god_acting())
     {
