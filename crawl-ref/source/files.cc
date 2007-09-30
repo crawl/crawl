@@ -90,6 +90,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 void save_level(int level_saved, level_area_type lt,
                 branch_type where_were_you);
@@ -823,6 +824,29 @@ static void grab_followers()
     }
 }
 
+// Should be called afetr grab_followers(), so that items carried by
+// followers won't be considered lost.
+static void _xom_check_lost_items(level_area_type old_level_type)
+{
+    if (old_level_type == LEVEL_DUNGEON)
+        return;
+    
+    int amusement = 0;
+
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        item_def& item(mitm[i]);
+
+        if (!is_valid_item(item))
+            continue;
+
+        // Item is in player intentory, so it's not lost.
+        if (item.x == -1 && item.y == -1)
+            continue;
+
+        xom_check_lost_item(item);
+    }
+}
 
 bool load( dungeon_feature_type stair_taken, int load_mode,
            level_area_type old_level_type, char old_level,
@@ -871,6 +895,8 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         if (old_level_type == LEVEL_DUNGEON)
             save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
     }
+
+    _xom_check_lost_items(old_level_type);
 
     // Try to open level savefile.
     FILE *levelFile = fopen(cha_fil.c_str(), "rb");
@@ -1026,6 +1052,9 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
     }
+
+    if (just_created_level)
+        you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
 
     return just_created_level;
 }                               // end load()

@@ -298,7 +298,7 @@ void game_state::inc_god_acting(god_type which_god, bool is_retribution)
     }
 
     god_act.which_god   = which_god;
-    god_act.retribution = is_retribution;
+    god_act.retribution = is_retribution || god_act.retribution;
     god_act.depth++;
 }
 

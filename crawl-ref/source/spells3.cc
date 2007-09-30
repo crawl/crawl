@@ -43,7 +43,6 @@
 #include "place.h"
 #include "player.h"
 #include "randart.h"
-#include "religion.h"
 #include "spells1.h"
 #include "spells4.h"
 #include "spl-cast.h"
@@ -51,6 +50,7 @@
 #include "stuff.h"
 #include "traps.h"
 #include "view.h"
+#include "xom.h"
 
 bool cast_selective_amnesia(bool force)
 {
@@ -654,10 +654,17 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 void you_teleport_now( bool allow_control, bool new_abyss_area )
 {
     const bool randtele = teleport_player(allow_control, new_abyss_area);
+
     // Xom is amused by uncontrolled teleports that land you in a
-    // dangerous place.
-    if (randtele && player_in_a_dangerous_place())
+    // dangerous place, unless the player is in the Abyss and
+    // teleported to escape from all the monsters chasing him/her,
+    // since in that case the new dangerous area is almost certainly
+    // *less* dangerous than the old dangerous area.
+    if (randtele && player_in_a_dangerous_place()
+        && you.level_type != LEVEL_ABYSS)
+    {
         xom_is_stimulated(255);
+    }
 }
 
 bool entomb(int powc)

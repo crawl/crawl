@@ -61,6 +61,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -74,6 +75,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 static bool drink_fountain();
 static bool enchant_armour();
@@ -401,6 +403,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
 {
     unsigned char i_dam = 0;
 
+    const bool known_cursed = item_known_cursed(you.inv[item_wield_2]);
+
     // and here we finally get to the special effects of wielding {dlb}
     if (you.inv[item_wield_2].base_type == OBJ_MISCELLANY)
     {
@@ -593,7 +597,11 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 break;
 
             case SPWPN_DISTORTION:
-                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
+                if (!was_known)
+                    xom_is_stimulated(128);
+                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
+                                was_known ? "distortion wield" :
+                                            "uknowning distortion wield");
                 break;
 
             case SPWPN_SINGING_SWORD:
@@ -645,7 +653,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
         if (item_cursed( you.inv[item_wield_2] ))
         {
             mpr("It sticks to your hand!");
-            xom_is_stimulated(64);
+            if (known_cursed)
+                xom_is_stimulated(32);
+            else
+                xom_is_stimulated(64);
         }
     }
 
@@ -2279,8 +2290,11 @@ void jewellery_wear_effects(item_def &item)
     // Randart jewellery shouldn't auto-ID just because the 
     // base type is known. Somehow the player should still 
     // be told, preferably by message. (jpeg)
-    const bool artefact = is_random_artefact( item );
-    const bool identified = fully_identified( item );
+    const bool artefact     = is_random_artefact( item );
+    const bool identified   = fully_identified( item );
+    const bool known_cursed = item_known_cursed( item );
+    const bool known_bad    = item_type_known( item )
+        && (item_value( item ) <= 2);
 
     switch (item.sub_type)
     {
@@ -2406,7 +2420,11 @@ void jewellery_wear_effects(item_def &item)
         mprf("Oops, that %s feels deathly cold.", 
                 jewellery_is_amulet(item)? "amulet" : "ring");
         learned_something_new(TUT_YOU_CURSED);
-        xom_is_stimulated(128);
+
+        if (known_cursed || known_bad)
+            xom_is_stimulated(64);
+        else
+            xom_is_stimulated(128);
     }
 
     // cursed or not, we know that since we've put the ring on
@@ -3268,7 +3286,7 @@ static bool affix_weapon_enchantment()
 
         // from unwield_item
         miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, 
-                        "a distortion effect" );
+                        "distortion affixation" );
         success = false;
         break;
 

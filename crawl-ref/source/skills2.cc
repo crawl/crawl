@@ -34,7 +34,6 @@
 #include "menu.h"
 #include "player.h"
 #include "randart.h"
-#include "religion.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"

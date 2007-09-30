@@ -18,7 +18,8 @@ enum branch_flag_type
 
     BFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
     BFLAG_NOT_MAPPABLE    = (1 << 1), // Branch levels not mappable.
-    BFLAG_NO_MAGIC_MAP    = (1 << 2)  // Branch levels can't be magic mapped.
+    BFLAG_NO_MAGIC_MAP    = (1 << 2), // Branch levels can't be magic mapped.
+    BFLAG_HAS_ORB         = (1 << 3)  // Orb is on the floor in this branch
 };
 
 struct Branch

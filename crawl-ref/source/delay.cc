@@ -42,6 +42,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 extern std::vector<SelItem> items_for_multidrop;
 
@@ -293,6 +294,17 @@ bool is_being_butchered(const item_def &item)
     return (false);
 }
 
+// Xom is amused by a potential food source going to waste, and is
+// more amused the hungrier you are.
+static void xom_check_corpse_waste()
+{
+    int food_need = 7000 - you.hunger;
+    if (food_need < 0)
+        food_need = 0;
+
+    xom_is_stimulated(64 + (191 * food_need / 6000));
+}
+
 void handle_delay( void )
 /***********************/
 {
@@ -353,24 +365,41 @@ void handle_delay( void )
         // Note that a monster could have raised the corpse and another
         // monster could die and create a corpse with the same ID number...
         // However, it would not be at the player's square like the 
-        // original and that's why we do it this way.  Note that 
-        // we ignore the conversion to skeleton possibility just to 
-        // be nice. -- bwr
+        // original and that's why we do it this way.
         if (is_valid_item( mitm[ delay.parm1 ] )
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
             && mitm[ delay.parm1 ].x == you.x_pos
             && mitm[ delay.parm1 ].y == you.y_pos )
         {
-            // special < 100 is the rottenness check
-            if ( (mitm[delay.parm1].special < 100) &&
-                 (delay.parm2 >= 100) )
+            if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
             {
-                mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
-                delay.parm2 = 99; // don't give the message twice
+                mpr("The corpse rots away into a skeleton!");
+                if (you.species == SP_GHOUL)
+                    xom_check_corpse_waste();
+                else
+                    xom_is_stimulated(32);
+                delay.duration = 0;
             }
+            else
+            {
+                // special < 100 is the rottenness check
+                if ( (mitm[delay.parm1].special < 100) &&
+                     (delay.parm2 >= 100) )
+                {
+                    mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+                    delay.parm2 = 99; // don't give the message twice
 
-            // mark work done on the corpse in case we stop -- bwr
-            mitm[ delay.parm1 ].plus2++;
+                    if (you.species != SP_VAMPIRE
+                        && you.species != SP_MUMMY
+                        && you.species != SP_GHOUL)
+                    {
+                        xom_check_corpse_waste();
+                    }
+                }
+
+                // mark work done on the corpse in case we stop -- bwr
+                mitm[ delay.parm1 ].plus2++;
+            }
         }
         else
         {
@@ -589,6 +618,20 @@ static void finish_delay(const delay_queue_item &delay)
         const item_def &item = mitm[delay.parm1];
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
+
+            if (item.sub_type == CORPSE_SKELETON)
+            {
+                mpr("The corpse rots away into a skeleton just before you "
+                    "finish butchering it!");
+
+                if (you.species == SP_GHOUL)
+                    xom_check_corpse_waste();
+                else
+                    xom_is_stimulated(64);
+
+                break;
+            }
+
             mprf("You finish %s the corpse into pieces.",
                  (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
                  "ripping" : "chopping");
@@ -679,7 +722,8 @@ static void armour_wear_effects(const int item_slot)
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
     mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
-    const equipment_type eq_slot = get_armour_slot(arm);
+    const equipment_type eq_slot      = get_armour_slot(arm);
+    const bool           known_cursed = item_known_cursed(arm);
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -811,7 +855,16 @@ static void armour_wear_effects(const int item_slot)
     {
         mpr( "Oops, that feels deathly cold." );
         learned_something_new(TUT_YOU_CURSED);
-        xom_is_stimulated(128);
+
+        // Cursed cloaks prevent you from removing body armour
+        int cloak_mult = 1;
+        if (get_armour_slot(arm) == EQ_CLOAK)
+            cloak_mult = 2;
+
+        if (known_cursed)
+            xom_is_stimulated(32 * cloak_mult);
+        else
+            xom_is_stimulated(64 * cloak_mult);
     }
 
     if (eq_slot == EQ_SHIELD)

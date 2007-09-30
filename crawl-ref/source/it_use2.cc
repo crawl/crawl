@@ -40,6 +40,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
+#include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
 bool potion_effect( potion_type pot_eff, int pow )
@@ -472,7 +473,7 @@ void unwield_item(bool showMsgs)
 
                 // int effect = 9 - random2avg( you.skills[SK_TRANSLOCATIONS] * 2, 2 );
                 miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
-                                "a distortion effect" );
+                                "distortion unwield" );
                 break;
 
                 // when more are added here, *must* duplicate unwielding

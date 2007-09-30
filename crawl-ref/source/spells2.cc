@@ -50,6 +50,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
+#include "xom.h"
 
 static int raise_corpse( int corps, int corx, int cory, beh_type corps_beh,
                          int corps_hit, int actual );
@@ -379,9 +380,16 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
         if (is_animatable_corpse(item) &&
             (class_allowed == CORPSE_BODY || item.sub_type == CORPSE_SKELETON))
         {
+            bool was_butchering = is_being_butchered(item);
+
             rc = raise_corpse(objl, axps, ayps, corps_beh, corps_hit, 1);
             if ( rc )
+            {
                 mpr("The dead are walking!");
+
+                if (was_butchering)
+                    xom_is_stimulated(255);
+            }
             break;
         }
         objl = item.link;
@@ -611,7 +619,7 @@ bool brand_weapon(int which_brand, int power)
         // with removing the miscast effect. We may need to revise the spell
         // to level 8 or 9. XXX.
         // miscast_effect(SPTYP_TRANSLOCATION, 
-        //                9, 90, 100, "a distortion effect");
+        //                9, 90, 100, "distortion branding");
         break;
 
     case SPWPN_PAIN:

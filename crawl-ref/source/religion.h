@@ -44,21 +44,10 @@ bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
 void divine_retribution(god_type god);
 
-bool xom_is_nice();
-void xom_is_stimulated(int maxinterestingness);
-void xom_acts(bool niceness, int sever);
-const char *describe_xom_favour();
-
 bool beogh_water_walk();
 void beogh_idol_revenge();
 bool ely_destroy_weapons();
 void trog_burn_books();
 
 bool tso_stab_safe_monster(const actor *act);
-
-inline void xom_acts(int sever)
-{
-    xom_acts(xom_is_nice(), sever);
-}
-
 #endif

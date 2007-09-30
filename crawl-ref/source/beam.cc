@@ -60,6 +60,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
+#include "xom.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -1505,6 +1506,14 @@ void fire_beam( bolt &pbolt, item_def *item )
     {
         if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect)
             canned_msg(MSG_NOTHING_HAPPENS);
+    }
+
+    if (!pbolt.is_tracer && pbolt.beam_source != NON_MONSTER)
+    {
+        if (pbolt.foe_hurt == 0 && pbolt.fr_hurt > 0)
+            xom_is_stimulated(128);
+        else if (pbolt.foe_helped > 0 && pbolt.fr_helped == 0)
+            xom_is_stimulated(128);
     }
 
     // that's it!
@@ -3146,6 +3155,8 @@ static int affect_player( bolt &beam )
     }
     else
     {
+        bool nasty = true, nice = false;
+
         // BEGIN enchantment beam
         if (beam.flavour != BEAM_HASTE 
             && beam.flavour != BEAM_INVISIBILITY
@@ -3156,6 +3167,12 @@ static int affect_player( bolt &beam )
             && you_resist_magic( beam.ench_power ))
         {
             canned_msg(MSG_YOU_RESIST);
+
+            // You *could* have gotten a free teleportation in the Abyss,
+            // but no, you resisted.
+            if (beam.flavour != BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
+                xom_is_stimulated(255);
+
             return (range_used_on_hit(beam));
         }
 
@@ -3213,11 +3230,15 @@ static int affect_player( bolt &beam )
             potion_effect( POT_SPEED, beam.ench_power );
             contaminate_player( 1 );
             beam.obvious_effect = true;
+            nasty = false;
+            nice  = true;
             break;     // haste
 
         case BEAM_HEALING:
             potion_effect( POT_HEAL_WOUNDS, beam.ench_power );
             beam.obvious_effect = true;
+            nasty = false;
+            nice  = true;
             break;     // heal (heal wounds potion eff)
 
         case BEAM_PARALYSIS:
@@ -3234,12 +3255,20 @@ static int affect_player( bolt &beam )
             potion_effect( POT_INVISIBILITY, beam.ench_power );
             contaminate_player( 1 + random2(2) );
             beam.obvious_effect = true;
+            nasty = false;
+            nice  = true;
             break;     // invisibility
 
             // 6 is used by digging
 
         case BEAM_TELEPORT:
             you_teleport();
+
+            // An enemy helping you escape while in the Abyss, or an
+            // enemy stabalizing a teleport that was about to happen.
+            if (beam.attitude == ATT_HOSTILE && you.level_type == LEVEL_ABYSS)
+                xom_is_stimulated(255);
+
             beam.obvious_effect = true;
             break;
 
@@ -3312,6 +3341,28 @@ static int affect_player( bolt &beam )
             break;
         }               // end of switch (beam.colour)
 
+        if (nasty)
+        {
+            if (beam.attitude != ATT_HOSTILE)
+            {
+                beam.fr_hurt++;
+                xom_is_stimulated(128);
+            }
+            else
+                beam.foe_hurt++;
+        }
+
+        if (nice)
+        {
+            if (beam.attitude != ATT_HOSTILE)
+                beam.fr_helped++;
+            else
+            {
+                beam.foe_helped++;
+                xom_is_stimulated(128);
+            }
+        }
+
         // regardless of affect, we need to know if this is a stopper
         // or not - it seems all of the above are.
         return (range_used_on_hit(beam));
@@ -3359,6 +3410,9 @@ static int affect_player( bolt &beam )
         }
     }
 
+    bool was_affected = false;
+    int  old_hp       = you.hp;
+
     if (hurted < 0)
         hurted = 0;
 
@@ -3367,10 +3421,16 @@ static int affect_player( bolt &beam )
     if (beam.flavour == BEAM_MIASMA && hurted > 0)
     {
         if (player_res_poison() <= 0)
+        {
             poison_player(1);
+            was_affected = true;
+        }
 
         if (one_chance_in( 3 + 2 * player_prot_life() ))
+        {
             potion_effect( POT_SLOWING, 5 );
+            was_affected = true;
+        }
     }
 
     // poisoning
@@ -3383,17 +3443,22 @@ static int affect_player( bolt &beam )
                         && random2(100) < 90 - (3 * player_AC())))
         {
             poison_player( 1 + random2(3) );
+            was_affected = true;
         }
     }
     
     if (beam.name.find("throwing net") != std::string::npos)
+    {
         player_caught_in_net();
+        was_affected = true;
+    }
 
     if (beam.name.find("curare") != std::string::npos)
     {
         if (random2(100) < 90 - (3 * player_AC()))
         {
             curare_hits_player( beam_ouch_agent(beam), 1 + random2(3) );
+            was_affected = true;
         }
     }
 
@@ -3403,7 +3468,10 @@ static int affect_player( bolt &beam )
             || you.experience_level < 6))
     {
         if (!player_equip( EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR ))
+        {
             you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
+            was_affected = true;
+        }
     }
 
     // simple cases for scroll burns
@@ -3428,6 +3496,21 @@ static int affect_player( bolt &beam )
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
 #endif
+
+    if (hurted > 0 || old_hp < you.hp || was_affected)
+    {
+        if (beam.attitude != ATT_HOSTILE)
+        {
+            beam.fr_hurt++;
+
+            // Xom's ammusement at the player being damaged is handled
+            // elsewhere.
+            if (was_affected)
+                xom_is_stimulated(128);
+        }
+        else
+            beam.foe_hurt++;
+    }
 
     beam_ouch( hurted, beam );
 
@@ -3460,6 +3543,24 @@ static int name_to_skill_level(const std::string& name)
         return (you.skills[type] + you.skills[SK_THROWING]);
         
     return (2 * you.skills[type]);
+}
+
+static void update_hurt_or_helped(bolt &beam, monsters *mon)
+{
+    if (beam.attitude != mons_attitude(mon))
+    {
+        if (nasty_beam(mon, beam))
+            beam.foe_hurt++;
+        else if (nice_beam(mon, beam))
+            beam.foe_helped++;
+    }
+    else
+    {
+        if (nasty_beam(mon, beam))
+            beam.fr_hurt++;
+        else if (nice_beam(mon, beam))
+            beam.fr_helped++;
+    }
 }
 
 // return amount of range used up by affectation of this monster
@@ -3513,6 +3614,7 @@ static int affect_monster(bolt &beam, monsters *mon)
                         "crumbles away!");
         }
         beam.obvious_effect = true;
+        update_hurt_or_helped(beam, mon);
         mon->hit_points = 0;
         monster_die(mon, beam);
         return (BEAM_STOP);
@@ -3585,6 +3687,7 @@ static int affect_monster(bolt &beam, monsters *mon)
                     beam.msg_generated = true;
                 break;
             default:
+                update_hurt_or_helped(beam, mon);
                 break;
         }
         return (rangeUsed);
@@ -3724,6 +3827,8 @@ static int affect_monster(bolt &beam, monsters *mon)
         }
         return (0);
     }
+
+    update_hurt_or_helped(beam, mon);
 
     // the beam hit.
     if (mons_near(mon))
@@ -4606,6 +4711,18 @@ bool nasty_beam(monsters *mon, bolt &beam)
     return (true);
 }
 
+bool nice_beam( struct monsters *mon, struct bolt &beam )
+{
+    // haste
+    if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING
+        || beam.flavour == BEAM_INVISIBILITY)
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // bolt
 
@@ -4624,6 +4741,7 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                is_thrown(false), target_first(false), aimed_at_spot(false),
                aux_source(), obvious_effect(false), effect_known(true), 
                fr_count(0), foe_count(0), fr_power(0), foe_power(0), 
+               fr_hurt(0), foe_hurt(0), fr_helped(0), foe_helped(0),
                is_tracer(false), aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),

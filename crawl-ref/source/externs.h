@@ -615,6 +615,9 @@ public:
   level_area_type level_type;
   std::string level_type_name;
 
+  entry_cause_type entry_cause;
+  god_type         entry_cause_god;
+
   branch_type where_are_you;
 
   FixedVector<unsigned char, 30> branch_stairs;

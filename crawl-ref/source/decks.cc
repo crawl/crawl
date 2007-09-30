@@ -44,6 +44,7 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "xom.h"
 
 #define VECFROM(x) (x), (x) + ARRAYSIZE(x)
 #define DEFVEC(Z) static std::vector<card_type> Z(VECFROM(a_##Z))
@@ -169,7 +170,8 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
-static card_type choose_one_card(const item_def& item, bool message)
+static card_type choose_one_card(const item_def& item, bool message,
+                                 bool &was_oddity)
 {
     std::vector<card_type> *pdeck = NULL;
     switch ( item.sub_type )
@@ -212,7 +214,8 @@ static card_type choose_one_card(const item_def& item, bool message)
     {
         if ( message )
             mpr("This card doesn't seem to belong here.");
-        pdeck = &deck_of_oddities;
+        pdeck      = &deck_of_oddities;
+        was_oddity = true;
     }
 
     card_type chosen = (*pdeck)[random2(pdeck->size())];
@@ -223,6 +226,13 @@ static card_type choose_one_card(const item_def& item, bool message)
         chosen = (*pdeck)[random2(pdeck->size())];
 
     return chosen;
+}
+
+static card_type choose_one_card(const item_def& item, bool message)
+{
+    bool garbage;
+
+    return choose_one_card(item, message, garbage);
 }
 
 static bool wielding_deck()
@@ -449,7 +459,52 @@ void evoke_deck( item_def& deck )
     // If the deck wasn't marked, draw a fair card.
     if ( deck.plus2 == 0 )
     {
-        card_effect( choose_one_card(deck, true), deck_rarity(deck) );
+        // Could a Xom worshipper ever get a stacked deck in the first
+        // place?
+        int       amusement  = 64;
+        bool      was_oddity = false;
+        card_type card       = choose_one_card(deck, true, was_oddity);
+
+        if (!item_type_known(deck))
+            amusement *= 2;
+        // Expecting one type of card but got another, real funny.
+        else if (was_oddity)
+            amusement = 255;
+
+        if (player_in_a_dangerous_place())
+            amusement *= 2;
+
+        switch (card)
+        {
+        case CARD_XOM:
+            // Handled elswehre
+            amusement = 0;
+            break;
+
+        case CARD_BLANK:
+            // Boring
+            amusement = 0;
+            break;
+
+        case CARD_DAMNATION:
+            // Nothing happened, boring.
+            if (you.level_type != LEVEL_DUNGEON)
+                amusement = 0;
+            break;
+
+        case CARD_MINEFIELD:
+        case CARD_FAMINE:
+        case CARD_CURSE:
+            // Always hilarious.
+            amusement = 255;
+
+        default:
+            break;
+        }
+
+        card_effect(card, deck_rarity(deck) );
+
+        xom_is_stimulated(amusement);
 
         if ( deck.sub_type != MISC_DECK_OF_PUNISHMENT )
         {
@@ -458,6 +513,7 @@ void evoke_deck( item_def& deck )
             if (one_chance_in(3))
                 brownie_points++;
         }
+
     }
     else
     {
@@ -660,7 +716,7 @@ static void damnation_card(int power, deck_rarity_type rarity)
 
         if ( mon_to_banish == NON_MONSTER ) // banish yourself!
         {
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, "drawing a card");
             break;              // don't banish anything else
         }
         else
@@ -1293,6 +1349,19 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     msg::stream << "You have drawn " << card_name( which_card )
                 << '.' << std::endl;
 
+    if (which_card == CARD_XOM && !crawl_state.is_god_acting())
+    {
+        if (you.religion == GOD_XOM)
+        {
+            // Being a self-centered diety, Xom *always* finds this
+            // maximally hilarious.
+            god_speaks(GOD_XOM, "Xom roars with laughter!");
+            you.gift_timeout = 255;
+        }
+        else if (you.penance[GOD_XOM] > 0)
+            god_speaks(GOD_XOM, "Xom laughs nastily.");
+    }
+
     switch (which_card)
     {
     case CARD_BLANK: break;
@@ -1375,6 +1444,13 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
     case NUM_CARDS:
         mpr("You have drawn a buggy card!");
         break;
+    }
+
+    if (you.religion == GOD_XOM && which_card == CARD_BLANK)
+    {
+        god_speaks(GOD_XOM, "\"How boring, lets spice things up a little.\"");
+
+        xom_acts(abs(you.piety - 100));
     }
 
     return;

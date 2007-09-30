@@ -1598,9 +1598,11 @@ static void list_wizard_commands()
     cols.add_formatted(0,
                        "a      : acquirement\n"
                        "A      : set all skills to level\n"
+                       "Ctrl-A : generate new Abyss area\n"
                        "b      : controlled blink\n"
                        "B      : banish yourself to the Abyss\n"
                        "c      : card effect\n"
+                       "C      : (un)curse item\n"
                        "g      : add a skill\n"
                        "G      : banish all monsters\n"
                        "Ctrl-G : save ghost (bones file)\n"
@@ -1618,11 +1620,11 @@ static void list_wizard_commands()
                        "r      : change character's species\n"
                        "s      : gain 20000 skill points\n"
                        "S      : set skill to level\n"
-                       "t      : tweak object properties\n"
-                       "T      : make a trap\n",
+                       "t      : tweak object properties\n",
                        true, true);
 
     cols.add_formatted(1, 
+                       "T      : make a trap\n"
                        "v      : show gold value of an item\n"
                        "x      : gain an experience level\n"
                        "Ctrl-X : change experience level\n"

@@ -39,8 +39,9 @@ void search_around( bool only_adjacent = false );
 /* ***********************************************************************
  * called from: acr - effects - spells3
  * *********************************************************************** */
-void down_stairs(int old_level, dungeon_feature_type force_stair = DNGN_UNSEEN);
-
+void down_stairs(int old_level,
+                 dungeon_feature_type force_stair = DNGN_UNSEEN,
+                 entry_cause_type entry_cause = EC_UNKNOWN);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -75,7 +76,8 @@ void turn_corpse_into_chunks( item_def &item );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN);
+void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
+               entry_cause_type entry_cause = EC_UNKNOWN);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

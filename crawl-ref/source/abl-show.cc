@@ -1230,7 +1230,7 @@ static bool do_ability(const ability_def& abil)
             return (false);
         }
 
-        banished(DNGN_ENTER_PANDEMONIUM);
+        banished(DNGN_ENTER_PANDEMONIUM, "self");
         break;
 
     case ABIL_CHANNELING:

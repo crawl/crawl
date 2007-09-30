@@ -54,7 +54,7 @@
 #include "stuff.h"
 #include "spl-util.h"
 #include "tutorial.h"
-
+#include "xom.h"
 
 // ========================================================================
 //      Internal Functions

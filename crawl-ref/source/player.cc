@@ -70,6 +70,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 std::string pronoun_you(description_level_type desc)
 {
@@ -5121,7 +5122,9 @@ void player::init()
 
     your_level = 0;
     level_type = LEVEL_DUNGEON;
-    where_are_you = BRANCH_MAIN_DUNGEON;
+    entry_cause     = EC_SELF_EXPLICIT;
+    entry_cause_god = GOD_NO_GOD;
+    where_are_you  = BRANCH_MAIN_DUNGEON;
     char_direction = GDT_DESCENDING;
 
     prev_targ = MHITNOT;

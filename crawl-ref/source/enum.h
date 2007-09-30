@@ -171,6 +171,8 @@ enum attribute_type
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
     ATTR_HELD,                  // caught in a net
+    ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
+                                // sight of the player while in the Abyss.
     NUM_ATTRIBUTES
 };
 
@@ -1338,6 +1340,19 @@ enum level_area_type                   // you.level_type
     LEVEL_PORTAL_VAULT,
 
     NUM_LEVEL_AREA_TYPES
+};
+
+enum entry_cause_type
+{
+    EC_UNKNOWN,
+    EC_SELF_EXPLICIT,
+    EC_SELF_RISKY,    // i.e., wielding an id'd distorion weapon
+    EC_SELF_ACCIDENT, // i.e., wielding an un-id'd distortion weapon
+    EC_MISCAST,
+    EC_GOD_RETRIUBTION,
+    EC_GOD_ACT, // Xom sending the player somewhere for amusement
+    EC_MONSTER,
+    NUM_ENTRY_CAUSE_TYPES
 };
 
 // Can't change this order without breaking saves.

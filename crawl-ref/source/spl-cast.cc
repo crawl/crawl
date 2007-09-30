@@ -55,6 +55,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
+#include "xom.h"
 
 #ifdef DOS
 #include <conio.h>

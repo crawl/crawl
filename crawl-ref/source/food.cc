@@ -50,6 +50,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
+#include "xom.h"
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
 static void  eat_chunk( int chunk_effect );

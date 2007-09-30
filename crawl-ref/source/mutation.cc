@@ -46,6 +46,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
+#include "xom.h"
 
 
 int how_mutated(void);

@@ -37,6 +37,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
+#include "xom.h"
 
 
 // XXX: name strings in most of the following are currently unused!
@@ -445,6 +446,26 @@ bool item_known_uncursed( const item_def &item )
 
 void do_curse_item( item_def &item )
 {
+    // Xom is amused by the player's items being cursed, especially
+    // if they're worn/equipped.
+    if (!(item.flags & ISFLAG_CURSED) && item.x == -1 && item.y == -1)
+    {
+        int amusement = 64;
+
+        if (item_is_equipped(item))
+        {
+            amusement *= 2;
+
+            // Cursed cloaks prevent you from removing body armour
+            if (item.base_type == OBJ_ARMOUR
+                && get_armour_slot(item) == EQ_CLOAK)
+            {
+                amusement *= 2;
+            }
+        }
+        xom_is_stimulated(amusement);
+    }
+
     item.flags |= ISFLAG_CURSED;
 }
 

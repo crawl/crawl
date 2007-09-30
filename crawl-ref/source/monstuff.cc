@@ -67,6 +67,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "stash.h"
+#include "xom.h"
 
 static bool handle_special_ability(monsters *monster, bolt & beem);
 static bool handle_pickup(monsters *monster);
@@ -242,6 +243,10 @@ bool curse_an_item( bool decay_potions )
     /* don't change you.inv_special (just for fun) */
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
+        // Xom is amused by useful potions being ruined.
+        if (item_value(you.inv[item], true) / you.inv[item].quantity > 2)
+            xom_is_stimulated(32 * you.inv[item].quantity);
+
         you.inv[item].sub_type = POT_DECAY;
         unset_ident_flags( you.inv[item], ISFLAG_IDENT_MASK ); // all different
     }

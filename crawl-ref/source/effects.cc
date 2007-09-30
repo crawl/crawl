@@ -40,15 +40,16 @@
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
-#include "religion.h"
 #include "skills2.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "xom.h"
 
 // torment_monsters is called with power 0 because torment is
 // UNRESISTABLE except for being undead or having torment
@@ -158,10 +159,39 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
     }
 
-    down_stairs(you.your_level, gate_type);  // heh heh
+    // Now figure out how we got here.
+    if (who.find("self") != std::string::npos || who == you.your_name
+        || who == "you" || who == "You" || crawl_state.is_god_acting())
+    {
+        // down_stairs() will take care of setting things.
+        you.entry_cause = EC_UNKNOWN;
+    }
+    else if (who.find("distortion") != std::string::npos)
+    {
+        if (who.find("wield") != std::string::npos)
+        {
+            if (who.find("unknowing") != std::string::npos)
+                you.entry_cause = EC_SELF_ACCIDENT;
+            else
+                you.entry_cause = EC_SELF_RISKY;
+        }
+        else if (who.find("affixation") != std::string::npos)
+            you.entry_cause = EC_SELF_ACCIDENT;
+        else if (who.find("branding")  != std::string::npos)
+            you.entry_cause = EC_SELF_RISKY;
+        else
+            you.entry_cause = EC_MONSTER;
+    }
+    else if (who == "drawing a card")
+        you.entry_cause = EC_SELF_RISKY;
+    else if (who.find("miscast") != std::string::npos)
+        you.entry_cause = EC_MISCAST;
+    else if (who == "wizard command")
+        you.entry_cause = EC_SELF_EXPLICIT;
+    else
+        you.entry_cause = EC_MONSTER;
 
-    if (gate_type == DNGN_ENTER_ABYSS || gate_type == DNGN_ENTER_PANDEMONIUM)
-        xom_is_stimulated(255);
+    down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh
 }
 
 bool forget_spell(void)

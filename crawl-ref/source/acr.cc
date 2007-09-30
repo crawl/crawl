@@ -136,6 +136,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "stash.h"
+#include "xom.h"
 
 crawl_environment env;
 player you;
@@ -588,11 +589,39 @@ static void handle_wizard_command( void )
 
         break;
 
+    case 'C':
+    {
+        // this command isn't very exciting... feel free to replace
+        i = prompt_invent_item( "(Un)curse which item?", MT_INVLIST, -1 );
+        if (i == PROMPT_ABORT)
+        {
+            canned_msg( MSG_OK );
+            break;
+        }
+
+        item_def& item(you.inv[i]);
+
+        if (item_cursed(item))
+            do_uncurse_item(item);
+        else
+            do_curse_item(item);
+
+        break;
+    }
+
     case 'B':
         if (you.level_type != LEVEL_ABYSS)
-            banished( DNGN_ENTER_ABYSS );
+            banished( DNGN_ENTER_ABYSS, "wizard command" );
         else
             down_stairs(you.your_level, DNGN_EXIT_ABYSS);
+        break;
+
+    case CONTROL('A'):
+        if (you.level_type == LEVEL_ABYSS)
+            abyss_teleport(true);
+        else
+            mpr("You can only abyss_teleport() inside the Abyss.");
+
         break;
 
     case 'g':

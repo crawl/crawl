@@ -278,7 +278,7 @@ Branch branches[] = {
       NULL, NULL,
       0, '0', false },
 
-    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27, 0, 0,
+    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27, BFLAG_HAS_ORB, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
       NULL,

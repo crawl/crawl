@@ -66,6 +66,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "xom.h"
 
 // These are hidden from the rest of the world... use the functions
 // below to get information about the map grid.
@@ -1011,6 +1012,8 @@ void monster_grid(bool do_updates)
 
 void fire_monster_alerts()
 {
+    int num_hostile = 0;
+
     for (int s = 0; s < MAX_MONSTERS; s++)
     {
         monsters *monster = &menv[s];
@@ -1037,6 +1040,9 @@ void fire_monster_alerts()
 
                 // Monster was viewed this turn
                 monster->flags |= MF_WAS_IN_VIEW;
+
+                if (mons_attitude(monster) == ATT_HOSTILE)
+                    num_hostile++;
             }
             else
             {
@@ -1049,6 +1055,21 @@ void fire_monster_alerts()
             // Monster was not viewed this turn
             monster->flags &= ~MF_WAS_IN_VIEW;
         }
+    }
+
+    // Xom thinks it's hilarious the way the player picks up an ever
+    // growing entourage of monsters while running through the Abyss.
+    // To approximate this, if the number of hostile monsters in view
+    // is greater than it ever was for this particular trip to the
+    // Abyss, Xom is stimulated in proprotion to the number of
+    // hostile monsters.  Thus if the entourage doesn't grow, then
+    // Xom becomes bored.
+    if (you.level_type == LEVEL_ABYSS
+        && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
+    {
+        you.attribute[ATTR_ABYSS_ENTOURAGE] = num_hostile;
+
+        xom_is_stimulated(16 * num_hostile);
     }
 
     monsters_seen_this_turn.clear();

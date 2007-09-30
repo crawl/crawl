@@ -76,6 +76,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 #define HIT_WEAK 7
 #define HIT_MED 18
@@ -475,10 +476,26 @@ bool melee_attack::attack()
     identify_mimic(atk);
     identify_mimic(def);
 
+    // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
     {
-        xom_is_stimulated(14); // Xom thinks that is funny.
+        // ... and thinks fumbling when trying to hit yourself is just
+        // hilarious.
+        if (attacker == defender)
+            xom_is_stimulated(255);
+        else
+            xom_is_stimulated(14);
         return (false);
+    }
+    // Non-fumbled self-attacks due to confusion are still pretty
+    // funny, though.
+    else if (attacker == defender && attacker->confused())
+    {
+        // And is still hilarious if it's the player.
+        if (attacker->atype() == ACT_PLAYER)
+            xom_is_stimulated(255);
+        else
+            xom_is_stimulated(128);
     }
 
     // Allow god to get offended, etc.

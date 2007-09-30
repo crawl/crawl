@@ -44,7 +44,6 @@
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
-#include "religion.h"
 #include "skills.h"
 #include "spells1.h"
 #include "spells4.h"
@@ -1360,12 +1359,12 @@ static int distortion_monsters(int x, int y, int pow, int message)
         if (you.skills[SK_TRANSLOCATIONS] < random2(8))
         {
             miscast_effect( SPTYP_TRANSLOCATION, pow / 9 + 1, pow, 100, 
-                            "a distortion effect" );
+                            "cast bend on self" );
         }
         else
         {
             miscast_effect( SPTYP_TRANSLOCATION, 1, 1, 100, 
-                            "a distortion effect" );
+                            "cast bend on self" );
         }
 
         return 1;

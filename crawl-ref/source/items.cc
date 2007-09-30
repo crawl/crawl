@@ -34,6 +34,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "debug.h"
 #include "delay.h"
@@ -73,6 +74,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
@@ -530,6 +532,8 @@ void destroy_item_stack( int x, int y )
                                         UNIQ_LOST_IN_ABYSS );
             }
 
+            xom_check_lost_item( mitm[o] );
+
             mitm[o].base_type = OBJ_UNASSIGNED;
             mitm[o].quantity = 0;
         }
@@ -944,8 +948,16 @@ static std::string origin_place_desc(const item_def &item)
 
 bool is_rune(const item_def &item)
 {
-    return (item.base_type == OBJ_MISCELLANY &&
-            item.sub_type == MISC_RUNE_OF_ZOT);
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT);
+}
+
+bool is_unique_rune(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT
+            && item.plus != RUNE_DEMONIC
+            && item.plus != RUNE_ABYSSAL);
 }
 
 bool origin_describable(const item_def &item)
@@ -1473,7 +1485,11 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         if (!quiet)
             mpr("Now all you have to do is get back out of the dungeon!");
         you.char_direction = GDT_ASCENDING;
+        xom_is_stimulated(255, XM_INTRIGUED);
     }
+
+    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
+        unset_branch_flags(BFLAG_HAS_ORB);
 
     you.turn_is_over = true;
 
@@ -1541,6 +1557,9 @@ void move_item_to_grid( int *const obj, int x, int y )
     // link item to top of list.
     mitm[*obj].link = igrd[x][y];
     igrd[x][y] = *obj;
+
+    if (mitm[*obj].base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
+        set_branch_flags(BFLAG_HAS_ORB);
 
     return;
 }
@@ -3024,6 +3043,30 @@ item_def find_item_type(object_class_type base_type, std::string name)
     }
 
     return (item);
+}
+
+bool item_is_equipped(const item_def &item)
+{
+    if (item.x != -1 || item.y != -1)
+        return (false);
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        if (you.equip[i] == EQ_NONE)
+            continue;
+
+        item_def& eq(you.inv[you.equip[i]]);
+
+        if (!is_valid_item(eq))
+            continue;
+
+        if (eq.slot == item.slot)
+            return (true);
+        else if (&eq == &item)
+            return (true);
+    }
+
+    return (false);
 }
 
 ////////////////////////////////////////////////////////////////////////

@@ -68,6 +68,7 @@
 #include "skills2.h"
 #include "spells3.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -75,6 +76,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 // void place_chunks(int mcls, unsigned char rot_status, unsigned char chx,
 //                   unsigned char chy, unsigned char ch_col)
@@ -466,7 +468,54 @@ static void leaving_level_now()
     you.level_type_name = newtype;
 }
 
-void up_stairs(dungeon_feature_type force_stair)
+static void set_entry_cause(entry_cause_type default_cause,
+                            level_area_type old_level_type)
+{
+    ASSERT(default_cause != NUM_ENTRY_CAUSE_TYPES);
+
+    if (old_level_type == you.level_type)
+        return;
+
+    if (crawl_state.is_god_acting())
+    {
+        if (crawl_state.is_god_retribution())
+            you.entry_cause = EC_GOD_RETRIUBTION;
+        else
+            you.entry_cause = EC_GOD_ACT;
+
+        you.entry_cause_god = crawl_state.which_god_acting();
+    }
+    else if (default_cause != EC_UNKNOWN)
+    {
+        you.entry_cause     = default_cause;
+        you.entry_cause_god = GOD_NO_GOD;
+    }
+    else
+    {
+        you.entry_cause     = EC_SELF_EXPLICIT;
+        you.entry_cause_god = GOD_NO_GOD;
+    }
+}
+
+static int runes_in_pack()
+{
+    int num_runes = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item( you.inv[i] )
+            && you.inv[i].base_type == OBJ_MISCELLANY
+            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
+        {
+            num_runes += you.inv[i].quantity;
+        }
+    }
+
+    return num_runes;
+}
+
+void up_stairs(dungeon_feature_type force_stair,
+               entry_cause_type entry_cause)
 {
     dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
@@ -617,6 +666,9 @@ void up_stairs(dungeon_feature_type force_stair)
 
     load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
 
+    set_entry_cause(entry_cause, old_level_type);
+    entry_cause = you.entry_cause;
+
     you.turn_is_over = true;
 
     save_game_state();
@@ -624,6 +676,16 @@ void up_stairs(dungeon_feature_type force_stair)
     new_level();
 
     viewwindow(1, true);
+
+    // Left Zot without enough runes to get back in (probably because
+    // of dropping some runes within Zot), but need to get back in Zot
+    // to get the Orb?  Zom finds that funny.
+    if (stair_find == DNGN_RETURN_FROM_ZOT
+        && runes_in_pack() < NUMBER_OF_RUNES_NEEDED
+        && (branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB))
+    {
+        xom_is_stimulated(255, "Xom snickers loudly.", true);
+    }
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
@@ -687,7 +749,8 @@ void up_stairs(dungeon_feature_type force_stair)
     }
 }                               // end up_stairs()
 
-void down_stairs( int old_level, dungeon_feature_type force_stair )
+void down_stairs( int old_level, dungeon_feature_type force_stair,
+                  entry_cause_type entry_cause )
 {
     int i;
     const level_area_type      old_level_type = you.level_type;
@@ -761,17 +824,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     if (stair_find == DNGN_ENTER_ZOT)
     {
-        int num_runes = 0;
-
-        for (i = 0; i < ENDOFPACK; i++)
-        {
-            if (is_valid_item( you.inv[i] )
-                && you.inv[i].base_type == OBJ_MISCELLANY
-                && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
-            {
-                num_runes += you.inv[i].quantity;
-            }
-        }
+        int num_runes = runes_in_pack();
 
         if (num_runes < NUMBER_OF_RUNES_NEEDED)
         {
@@ -871,7 +924,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
     {
         mpr("You pass through the gate.");
-        more();
+        if (!(you.wizard && crawl_state.is_replaying_keys()))
+            more();
     }
 
     if (old_level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
@@ -953,9 +1007,64 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     const bool newlevel =
         load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
              old_level, old_where);
-    
+
+    set_entry_cause(entry_cause, old_level_type);
+    entry_cause = you.entry_cause;
+
     if (newlevel)
-        xom_is_stimulated(49);
+    {
+        switch(you.level_type)
+        {
+        case LEVEL_DUNGEON:
+            xom_is_stimulated(49);
+            break;
+
+        case LEVEL_PORTAL_VAULT:
+            // Portal vaults aren't as interesting.
+            xom_is_stimulated(25);
+            break;
+
+        case LEVEL_LABYRINTH:
+            // Finding the way out of a labyrinth interests Xom.
+            xom_is_stimulated(98);
+            break;
+
+        case LEVEL_ABYSS:
+        case LEVEL_PANDEMONIUM:
+        {
+            // Paranoia
+            if (old_level_type == you.level_type)
+                break;
+
+            PlaceInfo &place_info = you.get_place_info();
+
+            // Entering voluntarily only stimulates Xom if you've never
+            // been there before
+            if ((place_info.num_visits == 1 && place_info.levels_seen == 1)
+                || entry_cause != EC_SELF_EXPLICIT)
+            {
+                if (crawl_state.is_god_acting())
+                    xom_is_stimulated(256);
+                else if (entry_cause == EC_SELF_EXPLICIT)
+                {
+                    // Entering Pandemonium or the Abyss for the first
+                    // time *voluntarily* stimulates Xom much more than
+                    // entering a normal dungeon level for the first time.
+                    xom_is_stimulated(128, XM_INTRIGUED);
+                }
+                else if (entry_cause == EC_SELF_RISKY)
+                    xom_is_stimulated(128);
+                else
+                    xom_is_stimulated(256);
+            }
+
+            break;
+        }
+
+        default:
+            ASSERT(false);
+        }
+    }
 
     unsigned char pc = 0;
     unsigned char pt = random2avg(28, 3);

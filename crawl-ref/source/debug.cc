@@ -2549,12 +2549,17 @@ void debug_card()
         mpr("Unknown card.");
         return;
     }
-    
+
+    std::string wanted = buf;
+    lowercase(wanted);
+
     bool found_card = false;
     for ( int i = 0; i < NUM_CARDS; ++i )
     {
         const card_type c = static_cast<card_type>(i);
-        if ( strstr(card_name(c), buf) != NULL )
+        std::string card = card_name(c);
+        lowercase(card);
+        if ( card.find(wanted) != std::string::npos )
         {
             card_effect(c, DECK_RARITY_LEGENDARY);
             found_card = true;

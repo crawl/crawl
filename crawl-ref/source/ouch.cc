@@ -77,6 +77,7 @@
 #include "stuff.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 
 static void end_game( scorefile_entry &se );
@@ -682,18 +683,37 @@ static void xom_checks_damage(kill_method_type death_type,
     //if (you.hp <= dam)
     //    xom_is_stimulated(32);
 
-    if ((death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
-        || death_source < 0 || death_source >= MAX_MONSTERS)
+    if (death_type == KILLED_BY_TARGETTING)
+    {
+        // Xom thinks the player hurting him/herself is funny.
+        xom_is_stimulated(255 * dam / (dam + you.hp));
+        return;
+    }
+    else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS)
+    {
+        // Xom thinks falling down the stairs is hilarious
+        xom_is_stimulated(255);
+        return;
+    }
+    else if ((death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
+             || death_source < 0 || death_source >= MAX_MONSTERS)
     {
         return ;
     }
-    
+
     int amusementvalue = 1;
 
     const monsters *monster = &menv[death_source];
 
     if (!monster->alive())
         return;
+
+    if (mons_attitude(monster) == ATT_FRIENDLY)
+    {
+        // Xom thinks collateral damage is funny
+        xom_is_stimulated(255 * dam / (dam + you.hp));
+        return;
+    }
 
     int leveldif = monster->hit_dice - you.experience_level;
 
