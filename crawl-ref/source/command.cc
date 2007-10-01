@@ -689,40 +689,40 @@ static std::string list_commands_err = "";
 
 static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    int a = (int) entry_a->data;
-    int b = (int) entry_b->data;
+    monster_type *a = static_cast<monster_type*>( entry_a->data );
+    monster_type *b = static_cast<monster_type*>( entry_b->data );
 
-    if (a == b)
+    if (*a == *b)
         return false;
 
-    std::string a_name = mons_type_name(a, DESC_PLAIN);
-    std::string b_name = mons_type_name(b, DESC_PLAIN);
-    return ( lowercase(a_name) < lowercase(b_name));
+    std::string a_name = mons_type_name(*a, DESC_PLAIN);
+    std::string b_name = mons_type_name(*b, DESC_PLAIN);
+    return (lowercase(a_name) < lowercase(b_name));
 }
 
 // Compare monsters by location-independant level, or by hitdice if
 // levels are equal, or by name if both level and hitdice are equal.
 static bool compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    int a = (int) entry_a->data;
-    int b = (int) entry_b->data;
+    monster_type *a = static_cast<monster_type*>( entry_a->data );
+    monster_type *b = static_cast<monster_type*>( entry_b->data );
 
-    if (a == b)
+    if (*a == *b)
         return false;
 
-    int a_toughness = mons_global_level(a);
-    int b_toughness = mons_global_level(b);
+    int a_toughness = mons_global_level(*a);
+    int b_toughness = mons_global_level(*b);
 
     if (a_toughness == b_toughness)
     {
-        a_toughness = mons_type_hit_dice(a);
-        b_toughness = mons_type_hit_dice(b);
+        a_toughness = mons_type_hit_dice(*a);
+        b_toughness = mons_type_hit_dice(*b);
     }
 
     if (a_toughness == b_toughness)
     {
-        std::string a_name = mons_type_name(a, DESC_PLAIN);
-        std::string b_name = mons_type_name(b, DESC_PLAIN);
+        std::string a_name = mons_type_name(*a, DESC_PLAIN);
+        std::string b_name = mons_type_name(*b, DESC_PLAIN);
         return ( lowercase(a_name) < lowercase(b_name));
     }
 
@@ -929,7 +929,7 @@ static bool find_description()
     clrscr();
     viewwindow(true, false);
 
-    mpr("Describe a (M)onster, (S)pell or (F)eature? ");
+    mpr("Describe a (M)onster, (S)pell or (F)eature? ", MSGCH_PROMPT);
 
     int ch = toupper(getch());
     std::string    type;
@@ -957,9 +957,10 @@ static bool find_description()
         return (false);
     }
 
-    mprf("Describe a %s; partial names and regexs are fine.%s",
+    mprf(MSGCH_PROMPT,
+         "Describe a %s; partial names and regexps are fine.%s",
          type.c_str(), extra.c_str());
-    mpr("Describe what? ");
+    mpr("Describe what? ", MSGCH_PROMPT);
     char buf[80];
     if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
     {
@@ -1040,7 +1041,7 @@ static bool find_description()
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons);
-
+    std::list<monster_type> monster_types;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
         const char  letter = index_to_letter(i);
@@ -1054,19 +1055,21 @@ static bool find_description()
             monster_type  mon    = get_monster_by_name(str, true);
             unsigned char colour = mons_class_colour(mon);
 
+            monster_types.push_back(mon);
+
             if (colour == BLACK)
                 colour = LIGHTGREY;
 
             std::string prefix = "(<";
             prefix += colour_to_str(colour);
             prefix += ">";
-            prefix += (char) mons_char(mon);
+            prefix += stringize_glyph(mons_char(mon));
             prefix += "</";
             prefix += colour_to_str(colour);
             prefix += ">) ";
 
             me->text = prefix + str;
-            me->data = (void*) mon;
+            me->data = &*monster_types.rbegin();
         }
         else
             me->data = (void*) &key_list[i];
@@ -1095,7 +1098,7 @@ static bool find_description()
             std::string key;
 
             if (doing_mons)
-                key = mons_type_name((int) sel[0]->data, DESC_PLAIN);
+                key = mons_type_name(*(monster_type*) sel[0]->data, DESC_PLAIN);
             else
                 key = *((std::string*) sel[0]->data);
 
