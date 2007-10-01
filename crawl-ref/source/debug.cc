@@ -1345,7 +1345,7 @@ void tweak_object(void)
             return;
 
         char *end;
-        int   new_value = strtol( specs, &end, 10 );
+        int   new_value = strtol( specs, &end, 0 );
 
         if (new_value == 0 && end == specs)
             return;
