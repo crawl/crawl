@@ -1078,7 +1078,41 @@ static void shuffle_card(int power, deck_rarity_type rarity)
         new_base[perm[i]] = old_base[i] - modifiers[i] + modifiers[perm[i]];
         new_max[perm[i]] = old_max[i] - modifiers[i] + modifiers[perm[i]];
     }
-    
+
+    // Did the shuffling kill the player?
+    kill_method_type kill_types[3] = {
+        KILLED_BY_WEAKNESS,
+        KILLED_BY_CLUMSINESS,
+        KILLED_BY_STUPIDITY
+    };
+
+    std::string cause = "drawing a card";
+
+    if (crawl_state.is_god_acting())
+    {
+        god_type which_god = crawl_state.which_god_acting();
+        if (crawl_state.is_god_retribution()) {
+            cause  = "the wrath of ";
+            cause += god_name(which_god);
+        }
+        else
+        {
+            if (which_god == GOD_XOM)
+                cause = "the capriciousness of Xom";
+            else
+            {
+                cause = "the 'helpfullness' of ";
+                cause += god_name(which_god);
+            }
+        }
+    }
+                
+    for ( int i = 0; i < 3; ++i )
+        if (new_base[i] < 1 || new_max[i] < 1)
+            ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
+
+    // The player survived!
+
     // Sometimes you just long for Python.
     you.strength = new_base[0];
     you.dex = new_base[1];
@@ -1092,6 +1126,8 @@ static void shuffle_card(int power, deck_rarity_type rarity)
     you.redraw_intelligence = true;
     you.redraw_dexterity = true;
     you.redraw_evasion = true;
+
+    burden_change();
 }
 
 static void helix_card(int power, deck_rarity_type rarity)
