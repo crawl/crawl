@@ -254,12 +254,15 @@ static bool check_buggy_deck(item_def& deck)
 
     if (deck.special != 0)
     {
-        long fixed = 0;
-        long holes = 0;
+        long special = deck.special;
+        long fixed   = 0;
+        long holes   = 0;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4 && special != 0; i++)
         {
-            const short next_card = ((deck.special >> (8 * i)) & 0xFF);
+            const short next_card = special & 0xFF;
+
+            special >>= 8;
 
             if (next_card == 0 || next_card > NUM_CARDS)
             {
@@ -489,13 +492,13 @@ bool deck_stack()
 
     if ( draws.size() == 1 )
         mpr("There's only one card left!");
-    else
-        mpr("Order the cards (bottom to top)...", MSGCH_PROMPT);
 
     item.special = 0;
 
     while ( draws.size() > 1 )
     {
+        mesclr();
+        mpr("Order the cards (bottom to top)...", MSGCH_PROMPT);
         for ( unsigned int i = 0; i < draws.size(); ++i )
         {
             msg::stream << (static_cast<char>(i + 'a')) << " - "
