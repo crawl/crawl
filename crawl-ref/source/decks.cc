@@ -30,6 +30,7 @@
 #include "monstuff.h"
 #include "mutation.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "spells1.h"
@@ -225,6 +226,10 @@ static card_type choose_one_card(const item_def& item, bool message,
         you.skills[SK_EVOCATIONS] > random2(30))
         chosen = (*pdeck)[random2(pdeck->size())];
 
+    // Paranoia
+    if (chosen < CARD_BLANK || chosen > NUM_CARDS)
+        chosen = NUM_CARDS;
+
     return chosen;
 }
 
@@ -241,6 +246,153 @@ static bool wielding_deck()
         return false;
     return is_deck(you.inv[you.equip[EQ_WEAPON]]);
 }
+
+static bool check_buggy_deck(item_def& deck)
+{
+    bool stacked_wrong = false;
+    bool buggy_cards   = false;
+
+    if (deck.special != 0)
+    {
+        long fixed = 0;
+        long holes = 0;
+
+        for (int i = 0; i < 4; i++)
+        {
+            const short next_card = ((deck.special >> (8 * i)) & 0xFF);
+
+            if (next_card == 0 || next_card > NUM_CARDS)
+            {
+                if (next_card == 0)
+                {
+#ifdef WIZARD
+                    if (you.wizard && !stacked_wrong && !buggy_cards)
+                    {
+                        mpr("Stacked deck has a hole in it (1).");
+                        if (yesno("Preserve state for debugging?"))
+                        {
+                            crawl_state.zero_turns_taken();
+                            return true;
+                        }
+                    }
+#endif
+                    mpr("Stacked deck has a hole in it (1), fixing...");
+                    stacked_wrong = true;
+                }
+                else if (next_card > NUM_CARDS)
+                {
+#ifdef WIZARD
+                    if (you.wizard && !buggy_cards && !stacked_wrong)
+                    {
+                        mprf("Buggy card (%d) in deck.", next_card - 1);
+                        if (yesno("Preserve state for debugging?"))
+                        {
+                            crawl_state.zero_turns_taken();
+                            return true;
+                        }
+                    }
+#endif
+                    mprf("Buggy card (%d) in deck, discarding it.",
+                         next_card - 1);
+                    buggy_cards = true;
+                }
+                holes++;
+                continue;
+            }
+
+            fixed |= next_card << (8 * (i - holes));
+        }
+
+        if (stacked_wrong || buggy_cards)
+        {
+            mprf("Original deck.special was 0x%x, is now 0x%x",
+                 deck.special, fixed);
+
+            deck.special = fixed;
+        }
+    }
+
+    if (deck.plus2 == 0 && deck.special != 0)
+    {
+#ifdef WIZARD
+        if (you.wizard && !stacked_wrong && !buggy_cards)
+        {
+            mpr("Stacked deck has a hole in it (2).");
+            if (yesno("Preserve state for debugging?"))
+            {
+                crawl_state.zero_turns_taken();
+                return true;
+            }
+        }
+#endif
+        mpr("Stacked deck has a hole in it (2), fixing...");
+
+        const short next_card = (deck.special & 0xFF);
+        deck.special >>= 8;
+        deck.plus2 = next_card;
+        stacked_wrong = true;
+    }
+
+    if (deck.plus2 > NUM_CARDS)
+    {
+#ifdef WIZARD
+        if (you.wizard && !buggy_cards && !stacked_wrong)
+        {
+            mprf("Buggy card (%d) in deck.", deck.plus2 - 1);
+            if (yesno("Preserve state for debugging?"))
+            {
+                crawl_state.zero_turns_taken();
+                return true;
+            }
+        }
+#endif
+        mprf("Buggy card (%d) in deck, discarding it.", deck.plus2 - 1);
+
+        buggy_cards = true;
+        deck.plus2  = 0;
+    }
+
+    if (deck.plus <= 0)
+    {
+        crawl_state.zero_turns_taken();
+
+        mpr("Strange, that deck is already empty.");
+        if (deck.plus2 != 0)
+            mpr("And it was stacked, too.  Weird.");
+
+#ifdef WIZARD
+        if (you.wizard)
+            if (yesno("Preserve deck for debugging?"))
+                return true;
+#endif
+
+        mpr("A swarm of software bugs snatches the deck from you and "
+            "carries it away.");
+
+        if ( deck.link == you.equip[EQ_WEAPON] )
+            unwield_item();
+
+        dec_inv_item_quantity( deck.link, 1 );
+        did_god_conduct(DID_CARDS, 1);
+
+        return true;
+    }
+
+    if (stacked_wrong || buggy_cards)
+    {
+        you.wield_change = true;
+        print_stats();
+
+        if(!yesno("Deck had problems; use it anyways?"))
+        {
+            return true;
+            crawl_state.zero_turns_taken();
+        }
+    }
+
+    return false;
+}
+
 
 // Select a deck from inventory and draw a card from it.
 bool choose_deck_and_draw()
@@ -277,6 +429,10 @@ bool deck_peek()
         return false;
     }
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+
+    if (check_buggy_deck(item))
+        return false;
+
     if ( item.plus2 != 0 )
     {
         mpr("You already know what the next card will be.");
@@ -315,6 +471,10 @@ bool deck_stack()
         return false;
     }
     item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+
+    if (check_buggy_deck(item))
+        return false;
+
     if ( item.plus2 != 0 )
     {
         mpr("You can't stack a marked deck.");
@@ -379,6 +539,9 @@ bool deck_triple_draw()
 
     const int slot = you.equip[EQ_WEAPON];
     item_def& item(you.inv[slot]);
+
+    if (check_buggy_deck(item))
+        return false;
 
     if ( item.plus2 != 0 )
     {
@@ -452,6 +615,9 @@ void draw_from_deck_of_punishment()
 // card could clobber the sign bit in special.
 void evoke_deck( item_def& deck )
 {
+    if (check_buggy_deck(deck))
+        return;
+
     int brownie_points = 0;
     mpr("You draw a card...");
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
