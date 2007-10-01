@@ -851,7 +851,7 @@ bool melee_attack::player_apply_aux_unarmed()
     // Clear stab bonus which will be set for the primary weapon attack.
     stab_bonus = 0;
     aux_damage = player_apply_monster_ac(aux_damage);
-                
+
     if (aux_damage < 1)
         aux_damage = 0;
     else
@@ -876,7 +876,8 @@ bool melee_attack::player_apply_aux_unarmed()
             did_god_conduct(DID_KILL_ANGEL, 1);
 
         // normal vampiric biting attack
-        if (damage_brand == SPWPN_VAMPIRICISM && mons_holiness(def) == MH_NATURAL)
+        if (damage_brand == SPWPN_VAMPIRICISM
+            && defender->holiness() == MH_NATURAL)
         {
             const int chunk_type = mons_corpse_effect( def->type );
 
@@ -1456,6 +1457,27 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         && is_demonic( *weapon ))
     {
         did_god_conduct(DID_UNHOLY, 1);
+    }
+
+    // Vampiric effects for the killing blow.
+    if (mondied && damage_brand == SPWPN_VAMPIRICISM)
+    {
+        if (defender->holiness() == MH_NATURAL
+            && damage_done > 0 && you.hp < you.hp_max
+            && !one_chance_in(5))
+        {
+            mpr("You feel better.");
+
+            // more than if not killed
+            int heal = 1 + random2(damage_done);
+
+            inc_hp(heal, false);
+
+            if (you.hunger_state != HS_ENGORGED)
+                lessen_hunger(30 + random2avg(59, 2), true);
+
+            did_god_conduct(DID_NECROMANCY, 2);
+        }
     }
 
     if (mondied)
