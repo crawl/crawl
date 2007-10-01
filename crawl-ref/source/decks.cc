@@ -385,8 +385,8 @@ static bool check_buggy_deck(item_def& deck)
 
         if(!yesno("Deck had problems; use it anyways?"))
         {
-            return true;
             crawl_state.zero_turns_taken();
+            return true; 
         }
     }
 
