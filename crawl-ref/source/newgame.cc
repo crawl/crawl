@@ -4122,13 +4122,11 @@ bool give_items_skills()
         else if (you.species == SP_OGRE)
         {
             you.skills[SK_FIGHTING] += 3;
-            you.skills[SK_AXES] = 1;
             you.skills[SK_MACES_FLAILS] = 3;
         }
         else
         {
             you.skills[SK_AXES] = 3;
-            you.skills[SK_POLEARMS] = 1;
             you.skills[SK_ARMOUR] = 2;
             you.skills[SK_DODGING] = 2;
             you.skills[SK_THROWING] = 2;
