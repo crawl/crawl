@@ -589,7 +589,11 @@ void lose_level()
     // because you.experience is unsigned long, if it's going to be -ve
     // must die straightaway.
     if (you.experience_level == 1)
+    {
         ouch( -9999, 0, KILLED_BY_DRAINING );
+        // Return in case death was canceled via wizard mode
+        return;
+    }
 
     you.experience = exp_needed( you.experience_level + 1 ) - 1;
     you.experience_level--;
@@ -636,7 +640,11 @@ void drain_exp(void)
     }
 
     if (you.experience == 0)
+    {
         ouch(-9999, 0, KILLED_BY_DRAINING);
+        // Return in case death was escaped via wizard mode;
+        return;
+    }
 
     if (you.experience_level == 1)
     {
