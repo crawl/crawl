@@ -706,6 +706,231 @@ void debug_list_monsters()
 #endif
 
 #ifdef WIZARD
+
+static void rune_from_specs(const char* _specs, item_def &item)
+{
+    char specs[80];
+    char obj_name[ ITEMNAME_SIZE ];
+
+    item.sub_type = MISC_RUNE_OF_ZOT;
+
+    if (strstr(_specs, "rune of zot"))
+        strncpy(specs, _specs, strlen(_specs) - strlen(" of zot"));
+    else
+        strcpy(specs, _specs);
+
+    if (strlen(specs) > 4)
+    {
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        {
+            item.plus = i;
+
+            strcpy(obj_name, item.name(DESC_PLAIN).c_str());
+
+            if (strstr(strlwr(obj_name), specs))
+                return;
+        }
+    }
+
+    while (true)
+    {
+        mpr(
+"[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy   [f] silver",
+            MSGCH_PROMPT);
+        mpr(
+"[g] serpentine [h] elven    [i] golden   [j] decaying [k] liquid  [l] demonic",
+            MSGCH_PROMPT);
+        mpr(
+"[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark    [r] buggy",
+            MSGCH_PROMPT);
+        mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
+
+        int keyin = tolower( get_ch() );
+
+        if (keyin == ESCAPE  || keyin == ' ' 
+            || keyin == '\r' || keyin == '\n')
+        {
+            canned_msg( MSG_OK );
+            item.base_type = OBJ_UNASSIGNED;
+            return;
+        }
+
+        if (keyin < 'a' || keyin > 'r')
+            continue;
+
+        rune_type types[] = {
+            RUNE_DIS,
+            RUNE_GEHENNA,
+            RUNE_COCYTUS,
+            RUNE_TARTARUS,
+            RUNE_SLIME_PITS,
+            RUNE_VAULTS,
+            RUNE_SNAKE_PIT,
+            RUNE_ELVEN_HALLS,
+            RUNE_TOMB,
+            RUNE_SWAMP,
+            RUNE_SHOALS,
+
+            RUNE_DEMONIC,
+            RUNE_ABYSSAL,
+
+            RUNE_MNOLEG,
+            RUNE_LOM_LOBON,
+            RUNE_CEREBOV,
+            RUNE_GLOORX_VLOQ,
+            NUM_RUNE_TYPES
+        };
+
+        item.plus = static_cast<int>(types[keyin - 'a']);
+
+        return;
+    }
+}
+
+static void deck_from_specs(const char* _specs, item_def &item)
+{
+    std::string specs    = _specs;
+    std::string type_str = "";
+
+    trim_string(specs);
+
+    if (specs.find(" of ") != std::string::npos)
+    {
+        type_str = specs.substr(specs.find(" of ") + 4);
+
+        if (type_str.find("card") != std::string::npos
+            || type_str.find("deck") != std::string::npos)
+        {
+            type_str = "";
+        }
+
+        trim_string(type_str);
+    }
+
+    misc_item_type types[] = {
+        MISC_DECK_OF_ESCAPE,
+        MISC_DECK_OF_DESTRUCTION,
+        MISC_DECK_OF_DUNGEONS,
+        MISC_DECK_OF_SUMMONING,
+        MISC_DECK_OF_WONDERS,
+        MISC_DECK_OF_PUNISHMENT,
+        MISC_DECK_OF_WAR,
+        MISC_DECK_OF_CHANGES,
+        MISC_DECK_OF_DEFENSE,
+        NUM_MISCELLANY
+    };
+
+    item.colour   = BLACK;
+    item.sub_type = NUM_MISCELLANY;
+
+    if (type_str != "")
+    {
+        for (int i = 0; types[i] != NUM_MISCELLANY; i++)
+        {
+            item.sub_type = types[i];
+            
+            // Remove "plain " from front
+            std::string name = item.name(DESC_PLAIN).substr(6);
+
+            if (name.find(type_str) != std::string::npos)
+                break;
+        }
+    }
+
+    if (item.sub_type == NUM_MISCELLANY)
+    {
+        while (true)
+        {
+            mpr(
+"[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders",
+                MSGCH_PROMPT);
+            mpr(
+"[f] punishment [g] war         [h] changes  [i] defense",
+                MSGCH_PROMPT);
+            mpr("Which deck (ESC to exit)? ");
+
+            int keyin = tolower( get_ch() );
+
+            if (keyin == ESCAPE  || keyin == ' ' 
+                || keyin == '\r' || keyin == '\n')
+            {
+                canned_msg( MSG_OK );
+                item.base_type = OBJ_UNASSIGNED;
+                return;
+            }
+
+            if (keyin < 'a' || keyin > 'i')
+                continue;
+
+            item.sub_type = types[keyin - 'a'];
+            break;
+        }
+    }
+
+    const char* rarities[] = {
+        "plain",
+        "ornate",
+        "legendary",
+        NULL
+    };
+
+    int rarity_val = -1;
+
+    for (int i = 0; rarities[i] != NULL; i++)
+        if (specs.find(rarities[i]) != std::string::npos)
+        {
+            rarity_val = i;
+            break;
+        }
+
+    if (rarity_val == -1)
+    {
+        while (true)
+        {
+            mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
+                MSGCH_PROMPT);
+
+            int keyin = tolower( get_ch() );
+
+            if (keyin == ESCAPE  || keyin == ' ' 
+                || keyin == '\r' || keyin == '\n')
+            {
+                canned_msg( MSG_OK );
+                item.base_type = OBJ_UNASSIGNED;
+                return;
+            }
+
+            switch (keyin)
+            {
+            case 'p': keyin = 'a'; break;
+            case 'o': keyin = 'b'; break;
+            case 'l': keyin = 'c'; break;
+            }
+
+            if (keyin < 'a' || keyin > 'c')
+                continue;
+
+            rarity_val = keyin - 'a';
+            break;
+        }
+    }
+
+    int              base   = static_cast<int>(DECK_RARITY_COMMON);
+    deck_rarity_type rarity =
+        static_cast<deck_rarity_type>(base + rarity_val);
+    item.colour = deck_rarity_to_color(rarity);
+
+    item.plus = 4 + random2(10);
+}
+
+static void rune_or_deck_from_specs(const char* specs, item_def &item)
+{
+    if (strstr(specs, "rune"))
+        rune_from_specs(specs, item);
+    else if (strstr(specs, "deck"))
+        deck_from_specs(specs, item);
+}
+
 //---------------------------------------------------------------
 //
 // create_spec_object
@@ -850,6 +1075,11 @@ void create_spec_object()
         mpr( "What type of item? ", MSGCH_PROMPT );
         get_input_line( specs, sizeof( specs ) );
 
+        std::string temp = specs;
+        trim_string(temp);
+        lowercase(temp);
+        strcpy(specs, temp.c_str());
+
         if (specs[0] == '\0')
         {
             canned_msg( MSG_OK );
@@ -868,7 +1098,19 @@ void create_spec_object()
         mitm[thing_created].quantity  = 1;
         set_ident_flags( mitm[thing_created], ISFLAG_IDENT_MASK );
 
-        if (class_wanted == OBJ_ARMOUR) 
+        if (class_wanted == OBJ_MISCELLANY)
+        {
+            // Leaves object unmodified if it wasn't a rune or deck
+            rune_or_deck_from_specs(specs, mitm[thing_created]);
+
+            if (mitm[thing_created].base_type == OBJ_UNASSIGNED)
+            {
+                // Rune or deck creation canceled, clean up item
+                destroy_item(thing_created);
+                return;
+            }
+        }
+        else if (class_wanted == OBJ_ARMOUR) 
         {
             if (strstr( "naga barding", specs ))
             {
@@ -905,7 +1147,7 @@ void create_spec_object()
                 mitm[thing_created].sub_type = i;
                 strcpy(obj_name,mitm[thing_created].name(DESC_PLAIN).c_str());
 
-                ptr = strstr( strlwr(obj_name), strlwr(specs) );
+                ptr = strstr( strlwr(obj_name), specs );
                 if (ptr != NULL)
                 {
                     // earliest match is the winner
@@ -999,8 +1241,8 @@ void create_spec_object()
             break;
 
         case OBJ_MISCELLANY:
-            // Runes to "demonic", decks have 50 cards, ignored elsewhere?
-            mitm[thing_created].plus = 50;
+            if (!is_rune(mitm[thing_created]) && !is_deck(mitm[thing_created]))
+                mitm[thing_created].plus = 50;
             break;
 
         case OBJ_FOOD:
@@ -1014,7 +1256,9 @@ void create_spec_object()
         }
     }
 
-    item_colour( mitm[thing_created] );
+    // Deck colour (which control rarity) already set
+    if (!is_deck(mitm[thing_created]))
+        item_colour( mitm[thing_created] );
 
     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
