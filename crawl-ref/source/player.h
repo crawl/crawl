@@ -76,7 +76,8 @@ bool wearing_amulet(char which_am, bool calc_unid = true);
 /* ***********************************************************************
  * called from: acr - chardump - describe - newgame - view
  * *********************************************************************** */
-char *species_name( int speci, int level, bool genus = false, bool adj = false, bool cap = true );
+std::string species_name( int speci, int level, bool genus = false,
+                          bool adj = false, bool cap = true );
 int str_to_species(const std::string &species);
 
 /* ***********************************************************************
@@ -303,7 +304,7 @@ void level_change(bool skip_ability_increase = false);
 /* ***********************************************************************
  * called from: skills
  * *********************************************************************** */
-void redraw_skill(const char your_name[kNameLen], const char class_name[80]);
+void redraw_skill(const std::string &your_name, const std::string &class_name);
 
 
 /* ***********************************************************************

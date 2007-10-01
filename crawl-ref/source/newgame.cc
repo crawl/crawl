@@ -770,12 +770,12 @@ game_start:
     {
         clrscr();
 
-        char spec_buff[80];
-        strncpy(spec_buff,
-                species_name(you.species, you.experience_level), 80);
+        std::string specs = species_name(you.species, you.experience_level);
+        if (specs.length() > 79)
+            specs = specs.substr(0, 79);
 
         cprintf( "You are a%s %s %s." EOL, 
-                 (is_vowel( spec_buff[0] )) ? "n" : "", spec_buff,
+                 (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                  you.class_name );
 
         enter_player_name(false);
@@ -2465,29 +2465,34 @@ static void give_random_secondary_armour( int slot )
     switch (random2(4))
     {
     case 0:
-        you.inv[ slot ].sub_type = ARM_BOOTS;
-        you.equip[EQ_BOOTS] = slot;
         if (you_can_wear(EQ_BOOTS))
+        {
+            you.inv[ slot ].sub_type = ARM_BOOTS;
+            you.equip[EQ_BOOTS] = slot;
             break;
+        }
         // else fall through
     case 1:
-        you.inv[ slot ].sub_type = ARM_HELMET;
-        you.equip[EQ_HELMET] = slot;
         if (you_can_wear(EQ_HELMET))
+        {
+            you.inv[ slot ].sub_type = ARM_HELMET;
+            you.equip[EQ_HELMET] = slot;
             break;
+        }
         // else fall through
     case 2:
-        you.inv[ slot ].sub_type = ARM_GLOVES;
-        you.equip[EQ_GLOVES] = slot;
         if (you_can_wear(EQ_GLOVES))
+        {
+            you.inv[ slot ].sub_type = ARM_GLOVES;
+            you.equip[EQ_GLOVES] = slot;
             break;
+        }
         // else fall through
     case 3: // anyone can wear this
         you.inv[ slot ].sub_type = ARM_CLOAK;
         you.equip[EQ_CLOAK] = slot;
         break;
     }
-    
 }
 
 // Returns true if a "good" weapon is given
@@ -3087,8 +3092,8 @@ spec_query:
             char buf[100];
             char sletter = species_to_letter(i);
             snprintf(buf, sizeof buf, "%c - %-26s",
-                        sletter,
-                        species_name(i, 1));
+                     sletter,
+                     species_name(i, 1).c_str());
             if (sletter == Options.prev_race)
                 prevraceok = true;
             strncat(linebuf, buf, sizeof linebuf);
@@ -3254,7 +3259,8 @@ job_query:
             textcolor( YELLOW );
             if (you.your_name[0])
                 cprintf("%s the ", you.your_name);
-            cprintf("%s.", species_name(you.species,you.experience_level));
+            cprintf("%s.",
+                    species_name(you.species,you.experience_level).c_str());
         }
         else
         {

@@ -1245,7 +1245,8 @@ static void go_downstairs()
 static void experience_check()
 {
     mprf("You are a level %d %s %s.",
-         you.experience_level, species_name(you.species,you.experience_level),
+         you.experience_level,
+         species_name(you.species,you.experience_level).c_str(),
          you.class_name);
 
     if (you.experience_level < 27)

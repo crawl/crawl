@@ -188,7 +188,8 @@ void print_tutorial_menu(unsigned int type)
           break;
     }
 
-    cprintf("%c - %s %s %s" EOL, letter, species_name(get_tutorial_species(type), 1),
+    cprintf("%c - %s %s %s" EOL,
+            letter, species_name(get_tutorial_species(type), 1).c_str(),
             get_class_name(get_tutorial_job(type)), desc);
 }
 

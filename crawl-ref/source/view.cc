@@ -2308,8 +2308,9 @@ void draw_border(void)
     const int xcol = crawl_view.hudp.x;
     
     gotoxy(xcol, 2);
-    cprintf( "%s %s", species_name( you.species, you.experience_level ), 
-                     (you.wizard ? "*WIZARD*" : "" ) );
+    cprintf( "%s %s",
+             species_name( you.species, you.experience_level ).c_str(),
+             (you.wizard ? "*WIZARD*" : "" ) );
 
     gotoxy(xcol,  3); cprintf("HP:");
     gotoxy(xcol,  4); cprintf("Magic:");
