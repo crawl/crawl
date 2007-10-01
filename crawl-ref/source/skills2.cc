@@ -1997,7 +1997,7 @@ int str_to_skill(const std::string &skill)
     return (SK_FIGHTING);
 }
 
-const char *skill_title( unsigned char best_skill, unsigned char skill_lev,
+std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
                          int species, int str, int dex, int god )
 {
     unsigned char skill_rank;
@@ -2067,7 +2067,8 @@ const char *skill_title( unsigned char best_skill, unsigned char skill_lev,
         // need species name
         snprintf( title_buff, sizeof(title_buff), tempstr, 
                   species_name(species, 0, true, 
-                                (ptr == tempstr && best_skill != SK_NECROMANCY)) );
+                               (ptr == tempstr
+                                && best_skill != SK_NECROMANCY)).c_str() );
                   // The above code only capitalises start-of-string racenames
         tempstr = title_buff;
     }
@@ -2075,10 +2076,9 @@ const char *skill_title( unsigned char best_skill, unsigned char skill_lev,
     return ((tempstr == NULL) ? "Invalid Title" : tempstr);
 }                               // end skill_title()
 
-const char *player_title( void )
+std::string player_title( void )
 {
     const unsigned char best = best_skill( SK_FIGHTING, (NUM_SKILLS - 1), 99 );
-
     return (skill_title( best, you.skills[ best ] ));
 }                               // end player_title()
 

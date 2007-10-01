@@ -30,15 +30,16 @@ int str_to_skill(const std::string &skill);
 /* ***********************************************************************
  * called from: describe
  * *********************************************************************** */
-const char * skill_title( unsigned char best_skill, unsigned char skill_lev, 
-                 // these used for ghosts and hiscores:
-                 int species = -1, int str = -1, int dex = -1, int god = -1 );  
+std::string skill_title(
+    unsigned char best_skill, unsigned char skill_lev, 
+    // these used for ghosts and hiscores:
+    int species = -1, int str = -1, int dex = -1, int god = -1 );  
 
 // last_updated Sept 20 -- bwr
 /* ***********************************************************************
  * called from: acr - chardump - player - skills - stuff
  * *********************************************************************** */
-const char *player_title( void );
+std::string player_title( void );
 
 
 // last_updated 24may2000 {dlb}

@@ -726,11 +726,13 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              "Worship    : %s%s\n"
              "Level      : %7d\n"
              "Exp        : %7lu\n",
-             you.your_name, player_title(),
+             you.your_name,
+             player_title().c_str(),
              score.c_str(),
-             species_name(you.species,you.experience_level),
+             species_name(you.species,you.experience_level).c_str(),
              you.class_name,
-             god_colour_tag, godpowers.c_str(),
+             god_colour_tag,
+             godpowers.c_str(),
              you.experience_level,
              you.experience);
     cols.add_formatted(0, buf, false);
@@ -993,12 +995,13 @@ void print_overview_screen()
 
     std::string text;
     char title[50];
-    snprintf(title, sizeof title, " the %s ", player_title());
+    snprintf(title, sizeof title, " the %s ", player_title().c_str());
 
     char race_class[50];
     snprintf(race_class, sizeof race_class,
              "(%s %s)",
-             species_name(you.species, you.experience_level), you.class_name);
+             species_name(you.species, you.experience_level).c_str(),
+             you.class_name);
 
     char time_turns[50] = "";
 

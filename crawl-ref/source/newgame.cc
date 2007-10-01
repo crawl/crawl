@@ -777,12 +777,12 @@ game_start:
     {
         clrscr();
 
-        char spec_buff[80];
-        strncpy(spec_buff,
-                species_name(you.species, you.experience_level), 80);
+        std::string specs = species_name(you.species, you.experience_level);
+        if (specs.length() > 79)
+            specs = specs.substr(0, 79);
 
         cprintf( "You are a%s %s %s." EOL, 
-                 (is_vowel( spec_buff[0] )) ? "n" : "", spec_buff,
+                 (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                  you.class_name );
 
         enter_player_name(false);
@@ -3099,8 +3099,8 @@ spec_query:
             char buf[100];
             char sletter = species_to_letter(i);
             snprintf(buf, sizeof buf, "%c - %-26s",
-                        sletter,
-                        species_name(i, 1));
+                     sletter,
+                     species_name(i, 1).c_str());
             if (sletter == Options.prev_race)
                 prevraceok = true;
             strncat(linebuf, buf, sizeof linebuf);
@@ -3266,7 +3266,8 @@ job_query:
             textcolor( YELLOW );
             if (you.your_name[0])
                 cprintf("%s the ", you.your_name);
-            cprintf("%s.", species_name(you.species,you.experience_level));
+            cprintf("%s.",
+                    species_name(you.species,you.experience_level).c_str());
         }
         else
         {

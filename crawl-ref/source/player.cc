@@ -3517,40 +3517,31 @@ void display_char_status()
 #endif
 }                               // end display_char_status()
 
-void redraw_skill(const char your_name[kNameLen], const char class_name[80])
+void redraw_skill(const std::string &your_name, const std::string &class_name)
 {
-    char print_it[80];
+    std::string title = your_name + " the " + class_name;
 
-    snprintf( print_it, sizeof(print_it), "%s the %s", your_name, class_name );
-
-    int in_len = strlen( print_it );
+    int in_len = title.length();
     if (in_len > 40)
     {
         in_len -= 3;  // what we're getting back from removing "the"
 
-        const int name_len = strlen(your_name);
-        char name_buff[kNameLen];
-        strncpy( name_buff, your_name, kNameLen );
+        const int name_len = your_name.length();
+        std::string trimmed_name = your_name;
 
-        // squeeze name if required, the "- 8" is too not squeeze too much
+        // squeeze name if required, the "- 8" is to not squeeze too much
         if (in_len > 40 && (name_len - 8) > (in_len - 40))
-            name_buff[ name_len - (in_len - 40) - 1 ] = 0;
-        else 
-            name_buff[ kNameLen - 1 ] = 0;
+            trimmed_name =
+                trimmed_name.substr(0, name_len - (in_len - 40) - 1);
 
-        snprintf( print_it, sizeof(print_it), "%s, %s", name_buff, class_name );
+        title = trimmed_name + ", " + class_name;
     }
-
-    for (int i = strlen(print_it); i < 41; i++)
-        print_it[i] = ' ';
-
-    print_it[40] = 0;
 
     gotoxy(crawl_view.hudp.x, 1);
 
     textcolor( LIGHTGREY );
-    cprintf( "%s", print_it );
-}                               // end redraw_skill()
+    cprintf( "%-41s", title.c_str() );
+}
 
 // Does a case-sensitive lookup of the species name supplied.
 int str_to_species(const std::string &species)
@@ -3575,7 +3566,8 @@ int str_to_species(const std::string &species)
 
 // Note that this function only has the one static buffer, so if you
 // want to use the results, you'll want to make a copy.
-char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
+std::string species_name( int  speci, int level, bool genus,
+                          bool adj, bool cap )
 // defaults:                               false       false     true
 {
     static char species_buff[80];
@@ -4498,7 +4490,7 @@ int get_species_index_by_name( const char *name )
     int i;
     int sp = -1;
 
-    char *ptr;
+    std::string::size_type pos = std::string::npos;
     char lowered_buff[80];
 
     strncpy( lowered_buff, name, sizeof( lowered_buff ) );
@@ -4506,12 +4498,13 @@ int get_species_index_by_name( const char *name )
 
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
-        char *lowered_species = species_name( i, 0, false, false, false );
-        ptr = strstr( lowered_species, lowered_buff );
-        if (ptr != NULL)
+        std::string lowered_species =
+            lowercase_string( species_name( i, 0, false, false, false ) );
+        pos = lowered_species.find( lowered_buff );
+        if (pos != std::string::npos)
         {
             sp = i;
-            if (ptr == lowered_species)  // prefix takes preference
+            if (pos == 0)  // prefix takes preference
                 break;
         }
     }

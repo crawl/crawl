@@ -659,7 +659,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("lv", SCORE_VERSION);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid", "%d", uid);
-    fields->add_field("race", "%s", species_name(race, lvl));
+    fields->add_field("race", "%s", species_name(race, lvl).c_str());
     fields->add_field("cls", "%s", get_class_name(cls));
     fields->add_field("char", "%s%s",
                       get_species_abbrev(race),
@@ -667,8 +667,9 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("xl", "%d", lvl);
     fields->add_field("sk", "%s", skill_name(best_skill));
     fields->add_field("sklev", "%d", best_skill_lvl);
-    fields->add_field("title", "%s", skill_title( best_skill, best_skill_lvl, 
-                                                  race, str, dex, god ) );
+    fields->add_field("title", "%s",
+                      skill_title( best_skill, best_skill_lvl, 
+                                   race, str, dex, god ).c_str() );
 
     fields->add_field("place", "%s",
               place_name(get_packed_place(branch, dlvl, level_type),
@@ -1201,19 +1202,17 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        strncpy( scratch, skill_title( best_skill, best_skill_lvl, 
-                                       race, str, dex, god ), 
-                 INFO_SIZE );
-
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s (level %d",
-                  points, name.c_str(), scratch, lvl );
-
+                  points, name.c_str(),
+                  skill_title( best_skill, best_skill_lvl, 
+                               race, str, dex, god ).c_str(),
+                  lvl );
         desc = buf;
     }
     else 
     {
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
-                  points, name.c_str(), species_name(race, lvl), 
+                  points, name.c_str(), species_name(race, lvl).c_str(), 
                   get_class_name(cls), lvl );
         desc = buf;
     }
@@ -1237,10 +1236,11 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     if (verbose)
     {
-        const char *const srace = species_name( race, lvl );
-
+        std::string srace = species_name( race, lvl );
         snprintf( scratch, INFO_SIZE, "Began as a%s %s %s",
-                  is_vowel(*srace) ? "n" : "", srace, get_class_name(cls) );
+                  is_vowel(srace[0]) ? "n" : "",
+                  srace.c_str(),
+                  get_class_name(cls) );
         desc += scratch;
 
         if (birth_time > 0)

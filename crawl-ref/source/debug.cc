@@ -242,18 +242,19 @@ void debug_change_species( void )
     
     if (specs[0] == '\0')
         return;
+    strlwr(specs);
 
     species_type sp = SP_UNKNOWN;
 
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
-        char sp_name[80];
-        strncpy( sp_name, species_name(i, you.experience_level), sizeof( sp_name ) );
+        const std::string sp_name =
+            lowercase_string(species_name(i, you.experience_level));
 
-        char *ptr = strstr( strlwr(sp_name), strlwr(specs) );
-        if (ptr != NULL)
+        std::string::size_type pos = sp_name.find(specs);
+        if (pos != std::string::npos)
         {
-            if (ptr == sp_name && strlen(specs) > 0)
+            if (pos == 0 && *specs)
             {
                 // we prefer prefixes over partial matches
                 sp = static_cast<species_type>(i);
@@ -276,8 +277,9 @@ void debug_change_species( void )
 
         you.species = sp;         
         you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
-                         (you.species == SP_GHOUL || you.species == SP_VAMPIRE) ? US_HUNGRY_DEAD : US_ALIVE);
-
+                         (you.species == SP_GHOUL
+                          || you.species == SP_VAMPIRE) ? US_HUNGRY_DEAD
+                         : US_ALIVE);
         redraw_screen();
     }
 } 
@@ -2367,7 +2369,7 @@ static void fsim_title(FILE *o, int mon, int ms)
 {
     fprintf(o, CRAWL " version " VERSION "\n\n");
     fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
-            species_name(you.species, you.experience_level),
+            species_name(you.species, you.experience_level).c_str(),
             you.class_name,
             menv[mon].name(DESC_PLAIN, true).c_str(),
             Options.fsim_rounds,
@@ -2391,7 +2393,7 @@ static void fsim_defence_title(FILE *o, int mon)
     fprintf(o, CRAWL " version " VERSION "\n\n");
     fprintf(o, "Combat simulation: %s vs. %s %s (%ld rounds) (%s)\n",
             menv[mon].name(DESC_PLAIN).c_str(),
-            species_name(you.species, you.experience_level),
+            species_name(you.species, you.experience_level).c_str(),
             you.class_name,
             Options.fsim_rounds,
             fsim_time_string().c_str());
