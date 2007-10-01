@@ -21,6 +21,7 @@
 #include "items.h"
 #include "itemprop.h"
 #include "makeitem.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
@@ -549,7 +550,82 @@ void remove_net_from(monsters *mon)
 
 }
 
-void free_self_from_net(bool damage_net)
+// decides whether you will try to tear the net (result <= 0)
+// or try to slip out of it (result > 0)
+// both damage and escape could be 9 (more likely for damage)
+// but are capped at 5 (damage) and 4 (escape)
+static int damage_or_escape_net(int hold)
+{
+    // Spriggan: little (+2)
+    // Halfling, Kobold, Gnome: small (+1)
+    // Ogre, Troll, Centaur, Naga: large (-1)
+    // transformations: spider, bat: tiny (+3); ice beast: large (-1)
+    int escape = SIZE_MEDIUM - you.body_size(PSIZE_BODY);
+    
+    int damage = -escape;
+
+    // your weapon may damage the net, max. bonus of 2
+    if (you.equip[EQ_WEAPON] != -1)
+    {
+        if (can_cut_meat(you.inv[you.equip[EQ_WEAPON]]))
+            damage++;
+            
+        int brand = get_weapon_brand( you.inv[you.equip[EQ_WEAPON]] );
+        if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
+            damage++;
+    }
+    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        damage += 2;
+    else if (you.mutation[MUT_CLAWS])
+        damage += random2(you.mutation[MUT_CLAWS]);
+        
+    // Berserkers get a fighting bonus
+    if (you.duration[DUR_BERSERKER])
+        damage += 2;
+
+    // damaged nets are easier to slip out of
+    if (hold < 0)
+    {
+        escape += random2(-hold/2) + 1;
+        damage += random2(-hold/3 + 1); // ... and easier to destroy
+    }
+        
+    // check stats
+    if (you.strength > random2(18))
+        damage++;
+    if (you.dex > random2(12))
+        escape++;
+    if (player_evasion() > random2(20))
+        escape++;
+
+    // monsters around you add urgency
+    if (!i_feel_safe())
+    {
+        damage++;
+        escape++;
+    }
+    
+    // confusion makes the whole thing somewhat harder
+    // (less so for trying to escape)
+    if (you.duration[DUR_CONF])
+    {
+        if (escape > 1)
+            escape--;
+        else if (damage >= 2)
+            damage -= 2;
+    }
+    
+    // if undecided, choose damaging approach (it's quicker)
+    if (damage >= escape)
+        return (-damage); // negate value
+        
+    return (escape);
+}
+
+// calls the above function to decide on how to get free
+// note that usually the net will be damaged until trying to slip out
+// becomes feasible (for size etc.), so it may take even longer
+void free_self_from_net()
 {
     int net = get_trapping_net(you.x_pos, you.y_pos);
 
@@ -558,58 +634,86 @@ void free_self_from_net(bool damage_net)
         you.attribute[ATTR_HELD] = 0;
         return;
     }
-    int hold = mitm[net].plus;
 
-    if (damage_net)
-    {
-        mpr("You struggle against the net.");
+    int do_what = damage_or_escape_net(mitm[net].plus);
+#ifdef DEBUG
+    mprf(MSGCH_DIAGNOSTICS, "net.plus: %d, ATTR_HELD: %d, do_what: %d",
+         mitm[net].plus, you.attribute[ATTR_HELD], do_what);
+#endif
+
+    if (do_what <= 0) // you try to destroy the net
+    {                 // for previously undamaged nets this takes at least 2 
+                      // and at most 8 turns
+        bool can_slice = you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
+                         || you.equip[EQ_WEAPON] != -1
+                            && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
+                         
         int damage = 1;
-
-        // extra damage for cutting weapons
-        if (you.equip[EQ_WEAPON] != -1
-            && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]))
-        {
-            damage++;
-        }
+        damage += random2(-do_what);
         
-        if (you.body_size(PSIZE_BODY) > SIZE_MEDIUM)
-            damage++;
-            
-        if (hold < 0 && !one_chance_in(-hold/2))
-            damage++;
-         
         if (you.duration[DUR_BERSERKER])
             damage *= 2;
-            
+
+        if (damage > 5)
+            damage = 5;
+                    
         mitm[net].plus -= damage;
-        
+
         if (mitm[net].plus < -7)
         {
-            mpr("You rip the net and break free!");
+            mprf("You %s the net and break free!",
+                 can_slice ? (damage >= 4? "slice" : "cut") :
+                             (damage >= 4? "shred" : "rip"));
+                  
             destroy_item(net);
 
             you.attribute[ATTR_HELD] = 0;
             return;
         }
-   }
-   else // you try to escape
-   {
-        mpr("You struggle to escape from the net.");
-        you.attribute[ATTR_HELD]--;
-
-        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            you.attribute[ATTR_HELD]--;
-            
-        if (hold < 0 && !one_chance_in(-hold/2))
-            you.attribute[ATTR_HELD]--;
-
-        if (you.attribute[ATTR_HELD] <= 0)
+        
+        if (damage >= 4)
         {
-            mpr("You break free from the net!");
+            mprf("You %s into the net.",
+                 can_slice? "slice" : "tear a large gash");
+        }
+        else
+            mpr("You struggle against the net.");
+
+        // occasionally decrease duration a bit
+        // (this is so switching from damage to escape does not hurt as much)
+        if (you.attribute[ATTR_HELD] > 1 && one_chance_in(3))
+            you.attribute[ATTR_HELD]--;
+   }
+   else // you try to escape (takes at least 3 turns, and at most 10)
+   {
+        int escape = random2(do_what);
+        
+        if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
+            escape++;
+            
+        if (escape < 1)
+            escape = 1;
+        else if (escape > 4)
+            escape = 4;
+            
+        if (escape >= you.attribute[ATTR_HELD])
+        {
+            if (escape >= 3)
+                mpr("You slip out of the net!");
+            else
+                mpr("You break free from the net!");
+                
             you.attribute[ATTR_HELD] = 0;
             remove_item_stationary(mitm[net]);
             return;
         }
+        
+        if (escape >= 3)
+            mpr("You try to slip out of the net.");
+        else
+            mpr("You struggle to escape the net.");
+
+        you.attribute[ATTR_HELD] -= escape;
    }
 }
 

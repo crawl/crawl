@@ -3124,8 +3124,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
     if (you.attribute[ATTR_HELD])
     {
-        // struggles against net, damaging it
-        free_self_from_net(true);
+        free_self_from_net();
         you.turn_is_over = true;
         return;
     }
@@ -3536,8 +3535,7 @@ static void move_player(int move_x, int move_y)
 
     if (you.attribute[ATTR_HELD])
     {
-        // tries to escape from net (without damaging it, takes longer)
-        free_self_from_net(false);
+        free_self_from_net();
         you.turn_is_over = true;
         return;
     }
