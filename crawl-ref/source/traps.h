@@ -28,7 +28,7 @@ bool trap_item(object_class_type base_type, char sub_type,
  * *********************************************************************** */
 void disarm_trap(struct dist &disa);
 void remove_net_from( monsters *mon );
-void free_self_from_net( bool damage_net = true );
+void free_self_from_net(void);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
