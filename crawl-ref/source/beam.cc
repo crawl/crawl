@@ -3676,8 +3676,10 @@ static int affect_monster(bolt &beam, monsters *mon)
 
         // now do enchantment affect
         int ench_result = affect_monster_enchantment(beam, mon);
-        switch(ench_result)
+        if (mon->alive())
         {
+            switch (ench_result)
+            {
             case MON_RESIST:
                 if (simple_monster_message(mon, " resists."))
                     beam.msg_generated = true;
@@ -3689,6 +3691,7 @@ static int affect_monster(bolt &beam, monsters *mon)
             default:
                 update_hurt_or_helped(beam, mon);
                 break;
+            }
         }
         return (rangeUsed);
 

@@ -924,16 +924,10 @@ static bool class_allowed( species_type speci, job_type char_class )
     switch (char_class)
     {
     case JOB_FIGHTER:
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
-            
         switch (speci)
         {
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
-        case SP_MUMMY:
-        case SP_GREY_ELF:
-        case SP_DEEP_ELF:
             return false;
         default:
             return true;
@@ -987,8 +981,6 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_THIEF:
         if (species_is_undead( speci ))
             return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
 
         switch (speci)
         {
@@ -998,8 +990,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
-        case SP_HIGH_ELF:
-        case SP_GREY_ELF:
             return false;
         default:
             return true;
@@ -1019,7 +1009,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_MOUNTAIN_DWARF:
             return false;
         default:
             return true;
@@ -1034,7 +1023,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         switch (speci)
         {
         case SP_CENTAUR:
-        case SP_GHOUL:
         case SP_GNOME:
         case SP_GREY_ELF:
         case SP_HALFLING:
@@ -1072,13 +1060,11 @@ static bool class_allowed( species_type speci, job_type char_class )
         {
         case SP_CENTAUR:
         case SP_GHOUL:
-        case SP_MUMMY:
         case SP_GNOME:
         case SP_MINOTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
-        case SP_HIGH_ELF:
             return false;
         default:
             return true;
@@ -1159,7 +1145,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_TROLL:
         case SP_MERFOLK:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
             return false;
         default:
             return true;
@@ -1180,31 +1165,24 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_TROLL:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
             return false;
         default:
             return true;
         }
 
     case JOB_FIRE_ELEMENTALIST:
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
         if (species_is_undead( speci ))
             return false;
 
         switch (speci)
         {
         case SP_GNOME:
-        case SP_GREY_ELF:
         case SP_HALFLING:
-        case SP_KOBOLD:
         case SP_MINOTAUR:
-        case SP_NAGA:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
-        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1213,25 +1191,18 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_ICE_ELEMENTALIST:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
         if (species_is_undead( speci ))
             return false;
 
         switch (speci)
         {
         case SP_GNOME:
-        case SP_GREY_ELF:
         case SP_HALFLING:
-        case SP_HILL_ORC:
         case SP_KENKU:
-        case SP_KOBOLD:
         case SP_MINOTAUR:
-        case SP_NAGA:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1240,20 +1211,16 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_SUMMONER:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
 
         switch (speci)
         {
         case SP_CENTAUR:
-        case SP_GNOME:
         case SP_HALFLING:
         case SP_MINOTAUR:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_GHOUL:
-        case SP_HIGH_ELF:
             return false;
         default:
             return true;
@@ -1272,14 +1239,11 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_GNOME:
         case SP_HALFLING:
         case SP_HILL_ORC:
-        case SP_KOBOLD:
         case SP_MINOTAUR:
-        case SP_NAGA:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
-        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1297,14 +1261,12 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_HALFLING:
         case SP_HIGH_ELF:
         case SP_KENKU:
-        case SP_KOBOLD:
         case SP_MINOTAUR:
         case SP_NAGA:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_MERFOLK:
-        case SP_CENTAUR:
             return false;
         default:
             return true;
@@ -1335,8 +1297,6 @@ static bool class_allowed( species_type speci, job_type char_class )
     case JOB_DEATH_KNIGHT:
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
 
         switch (speci)
         {
@@ -1361,8 +1321,6 @@ static bool class_allowed( species_type speci, job_type char_class )
             return false;
         if (species_is_undead( speci ))
             return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
-            return false;
 
         switch (speci)
         {
@@ -1383,8 +1341,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         if (player_genus(GENPC_DWARVEN, speci))
             return false;
         if (species_is_undead( speci ))
-            return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
             return false;
 
         switch (speci)
@@ -1439,8 +1395,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_HILL_ORC:
-        case SP_SLUDGE_ELF:
             return false;
         default:
             return true;
@@ -1448,8 +1402,6 @@ static bool class_allowed( species_type speci, job_type char_class )
 
     case JOB_REAVER:
         if (species_is_undead( speci ))
-            return false;
-        if (player_genus(GENPC_DRACONIAN, speci))
             return false;
 
         switch (speci)
@@ -1461,8 +1413,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_MERFOLK:
-        case SP_SLUDGE_ELF:
             return false;
         default:
             return true;
@@ -1484,7 +1434,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
-        case SP_HILL_ORC:
             return false;
         default:
             return true;
@@ -1503,8 +1452,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_OGRE_MAGE:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
             return false;
         default:
             return true;
