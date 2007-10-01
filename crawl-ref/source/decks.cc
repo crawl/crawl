@@ -1218,9 +1218,45 @@ static void focus_card(int power, deck_rarity_type rarity)
     (*max_statp[worst_stat])--;
     (*base_statp[best_stat])++;
     (*base_statp[worst_stat])--;
+
+    // Did focusing kill the player?
+    kill_method_type kill_types[3] = {
+        KILLED_BY_WEAKNESS,
+        KILLED_BY_CLUMSINESS,
+        KILLED_BY_STUPIDITY
+    };
+
+    std::string cause = "the Focus card";
+
+    if (crawl_state.is_god_acting())
+    {
+        god_type which_god = crawl_state.which_god_acting();
+        if (crawl_state.is_god_retribution()) {
+            cause  = "the wrath of ";
+            cause += god_name(which_god);
+        }
+        else
+        {
+            if (which_god == GOD_XOM)
+                cause = "the capriciousness of Xom";
+            else
+            {
+                cause = "the 'helpfullness' of ";
+                cause += god_name(which_god);
+            }
+        }
+    }
+                
+    for ( int i = 0; i < 3; ++i )
+        if (*max_statp[i] < 1 || *base_statp[i] < 1)
+            ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
+
+    // The player survived!
     you.redraw_strength = true;
     you.redraw_intelligence = true;
     you.redraw_dexterity = true;
+
+    burden_change();
 }
 
 static void shuffle_card(int power, deck_rarity_type rarity)
@@ -1252,7 +1288,7 @@ static void shuffle_card(int power, deck_rarity_type rarity)
         KILLED_BY_STUPIDITY
     };
 
-    std::string cause = "drawing a card";
+    std::string cause = "the Shuffle card";
 
     if (crawl_state.is_god_acting())
     {
