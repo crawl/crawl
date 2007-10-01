@@ -1549,9 +1549,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
               dist *target)
 {
     dist thr;
-    char shoot_skill = 0;
+    int shoot_skill = 0;
 
-    char lnchClass, lnchType;   // launcher class and type
+    // launcher weapon sub-type
+    weapon_type lnchType;
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1644,17 +1645,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // get the launcher class,type.  Convenience.
     if (you.equip[EQ_WEAPON] < 0)
-    {
-        lnchClass = -1;
-        // set lnchType to 0 so the 'figure out if launched'
-        // code doesn't break
-        lnchType = 0;
-    }
+        lnchType = NUM_WEAPONS;
     else
-    {
-        lnchClass = you.inv[you.equip[EQ_WEAPON]].base_type;
-        lnchType = you.inv[you.equip[EQ_WEAPON]].sub_type;
-    }
+        lnchType =
+            static_cast<weapon_type>( you.inv[you.equip[EQ_WEAPON]].sub_type );
 
     // baseHit and damage for generic objects
     baseHit = you.strength - item_mass(item) / 10;
@@ -1693,7 +1687,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
         bool poisoned = (ammo_brand == SPMSL_POISONED);
-//        const int throw_skill = you.skills[SK_THROWING];
 
         const int item_base_dam = property( item, PWPN_DAMAGE );
         const int lnch_base_dam = property( launcher, PWPN_DAMAGE );
@@ -1761,7 +1754,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // i.e. not launched ones. (Sep 10, 2007)
         
         shoot_skill = you.skills[launcher_skill];
-//        effSkill = (shoot_skill * 2 + throw_skill) / 3;
         effSkill = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, player_shield());
@@ -1769,9 +1761,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         mprf(MSGCH_DIAGNOSTICS, "Final launcher speed: %d", speed);
 #endif
         you.time_taken = speed * you.time_taken / 100;
-
-        // effSkill = you.skills[SK_THROWING] * 2 + 1;
-        // effSkill = (shoot_skill > effSkill) ? effSkill : shoot_skill;
 
         // [dshaligram] Improving missile weapons:
         //  - Remove the strength/enchantment cap where you need to be strong
@@ -1983,7 +1972,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
         else if (random2(100) < shoot_skill)
         {
-            item_def& weapon = you.inv[you.equip[EQ_WEAPON]];            
+            item_def& weapon = you.inv[you.equip[EQ_WEAPON]];
             set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
 
             mprf("You are wielding %s.", weapon.name(DESC_NOCAP_A).c_str());
@@ -2065,7 +2054,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exercise(SK_DARTS, 1 + random2avg(3, 2));
                 break;
             case MI_JAVELIN:
-                // Javelins use polearm and throwing skills.
+                // Javelins use throwing skill.
                 baseHit = -1;
                 baseDam = property( item, PWPN_DAMAGE );
                 exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
@@ -2096,7 +2085,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
                 // Nets train throwing
                 exercise(SK_THROWING, 1);
-            break;
+                break;
             }
         }
 

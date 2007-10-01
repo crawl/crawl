@@ -5370,18 +5370,12 @@ unsigned int monster_index(const monsters *monster)
     return (monster - menv.buffer());
 }                               // end monster_index()
 
-bool hurt_monster(monsters * victim, int damage_dealt)
+int hurt_monster(monsters * victim, int damage_dealt)
 {
-    bool just_a_scratch = true;
-
-    if (damage_dealt > 0)
-    {
-        just_a_scratch = false;
-        victim->hit_points -= damage_dealt;
-    }
-
-    return (!just_a_scratch);
-}                               // end hurt_monster()
+    damage_dealt = std::max(std::min(damage_dealt, victim->hit_points), 0);
+    victim->hit_points -= damage_dealt;
+    return (damage_dealt);
+}
 
 bool heal_monster(monsters * patient, int health_boost,
                   bool permit_growth)

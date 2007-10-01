@@ -173,7 +173,7 @@ unsigned int monster_index(const monsters *monster);
  * called from: bang - beam - effects - fight - monstuff - mstuff2 -
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
-bool hurt_monster(struct monsters *victim, int damage_dealt);
+int hurt_monster(monsters *victim, int damage_dealt);
 
 
 /* ***********************************************************************

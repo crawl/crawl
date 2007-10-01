@@ -852,11 +852,7 @@ bool melee_attack::player_apply_aux_unarmed()
     stab_bonus = 0;
     aux_damage = player_apply_monster_ac(aux_damage);
 
-    if (aux_damage < 1)
-        aux_damage = 0;
-    else
-        hurt_monster(def, aux_damage);
-
+    aux_damage  = hurt_monster(def, aux_damage);
     damage_done = aux_damage;
     
     if (damage_done > 0)
@@ -1420,7 +1416,7 @@ int melee_attack::player_weapon_type_modify(int damage)
 
 bool melee_attack::player_hurt_monster()
 {
-    return damage_done && hurt_monster(def, damage_done);
+    return damage_done && (damage_done = hurt_monster(def, damage_done));
 }
 
 void melee_attack::player_exercise_combat_skills()
@@ -1463,14 +1459,20 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     if (mondied && damage_brand == SPWPN_VAMPIRICISM)
     {
         if (defender->holiness() == MH_NATURAL
-            && damage_done > 0 && you.hp < you.hp_max
+            && damage_done > 0
+            && you.hp < you.hp_max
             && !one_chance_in(5))
         {
             mpr("You feel better.");
 
             // more than if not killed
-            int heal = 1 + random2(damage_done);
+            const int heal = 1 + random2(damage_done);
 
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Vampiric healing: damage %d, healed %d",
+                 damage_done, heal);
+#endif
             inc_hp(heal, false);
 
             if (you.hunger_state != HS_ENGORGED)
@@ -1508,8 +1510,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     if (needs_message && !special_damage_message.empty())
         mprf("%s", special_damage_message.c_str());
 
-
-    hurt_monster(def, special_damage);
+    special_damage = hurt_monster(def, special_damage);
 
     if (def->hit_points < 1)
     {
