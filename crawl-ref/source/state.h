@@ -107,6 +107,28 @@ public:
 
     std::vector<god_act_state> other_gods_acting() const;
 };
+
 extern game_state crawl_state;
+
+class god_acting
+{
+public:
+    god_acting(bool is_retribution = false)
+        : god(you.religion)
+    {
+        crawl_state.inc_god_acting(god, is_retribution);
+    }
+    god_acting(god_type who, bool is_retribution = false)
+        : god(who)
+    {
+        crawl_state.inc_god_acting(god, is_retribution);
+    }
+    ~god_acting()
+    {
+        crawl_state.dec_god_acting(god);
+    }
+private:
+    god_type god;
+};
 
 #endif

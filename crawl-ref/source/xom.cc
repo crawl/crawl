@@ -207,7 +207,7 @@ void xom_makes_you_cast_random_spell(int sever)
 {
     int spellenum = sever;
 
-    crawl_state.inc_god_acting(GOD_XOM);
+    god_acting gdact(GOD_XOM);
 
     const int nxomspells = ARRAYSIZE(xom_spells);
     if (spellenum >= nxomspells)
@@ -223,8 +223,6 @@ void xom_makes_you_cast_random_spell(int sever)
 #endif
 
     your_spells(spell, sever, false);
-
-    crawl_state.dec_god_acting(GOD_XOM);
 }
 
 static void xom_make_item(object_class_type base,
@@ -241,15 +239,13 @@ static void xom_make_item(object_class_type base,
         return;
     }
 
-    crawl_state.inc_god_acting(GOD_XOM);
+    god_acting gdact(GOD_XOM);
 
     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
     canned_msg(MSG_SOMETHING_APPEARS);
     stop_running();
 
     origin_acquired(mitm[thing_created], GOD_XOM);
-
-    crawl_state.dec_god_acting(GOD_XOM);
 }
 
 static object_class_type get_unrelated_wield_class(object_class_type ref)
@@ -283,9 +279,7 @@ static object_class_type get_unrelated_wield_class(object_class_type ref)
 
 static bool xom_annoyance_gift(int power)
 {
-    // Can't simply use unwind_var because of the way that god act
-    // state is maintained.
-    crawl_state.inc_god_acting(GOD_XOM);
+    god_acting gdact(GOD_XOM);
 
     if (coinflip() && player_in_a_dangerous_place())
     {
@@ -301,7 +295,6 @@ static bool xom_annoyance_gift(int power)
                 xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
             else
                 acquirement(weapon->base_type, GOD_XOM);
-            crawl_state.dec_god_acting(GOD_XOM);
             return (true);
         }
 
@@ -314,7 +307,6 @@ static bool xom_annoyance_gift(int power)
             // A random ring.  (Not necessarily a good one.)
             god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
-            crawl_state.dec_god_acting(GOD_XOM);
             return (true);
         };
 
@@ -325,7 +317,6 @@ static bool xom_annoyance_gift(int power)
             // you an amulet. Ha ha!
             god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this));
             xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
-            crawl_state.dec_god_acting(GOD_XOM);
             return (true);
         };
 
@@ -338,7 +329,6 @@ static bool xom_annoyance_gift(int power)
             // a ring. Ha ha!
             god_speaks(GOD_XOM, RANDOM_ELEMENT(xom_try_this_ring));
             xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
-            crawl_state.dec_god_acting(GOD_XOM);
             return (true);
         }
 
@@ -355,12 +345,10 @@ static bool xom_annoyance_gift(int power)
                 acquirement(objtype, GOD_XOM);
             else
                 xom_make_item(objtype, OBJ_RANDOM, power * 3);
-            crawl_state.dec_god_acting(GOD_XOM);
             return (true);
         }
     }
 
-    crawl_state.dec_god_acting(GOD_XOM);
     return (false);
 }
 
@@ -403,9 +391,8 @@ bool xom_gives_item(int power)
             (r == 6) ? OBJ_MISCELLANY :
                        OBJ_GOLD;
 
-        crawl_state.inc_god_acting(GOD_XOM);
+        god_acting gdact(GOD_XOM);
         acquirement(objtype, GOD_XOM);
-        crawl_state.dec_god_acting(GOD_XOM);
     }
     else
     {
@@ -492,7 +479,7 @@ static bool xom_is_good(int sever)
     
     // Okay, now for the nicer stuff (note: these things are not
     // necessarily nice):
-    crawl_state.inc_god_acting(GOD_XOM);
+    god_acting gdact(GOD_XOM);
     if (random2(sever) <= 1)
     {
         temp_rand = random2(4);
@@ -675,7 +662,6 @@ static bool xom_is_good(int sever)
         done = true;
     }
 
-    crawl_state.dec_god_acting(GOD_XOM);
     return (done);
 }
 
@@ -686,8 +672,8 @@ static bool xom_is_bad(int sever)
     bool done = false;
 
     bolt beam;
-    
-    crawl_state.inc_god_acting(GOD_XOM);
+
+    god_acting gdact(GOD_XOM);
 
     // begin "Bad Things"
     while (!done)
@@ -876,8 +862,6 @@ static bool xom_is_bad(int sever)
             done = true;
         }
     }
-
-    crawl_state.dec_god_acting(GOD_XOM);
 
     return (done);
 }
