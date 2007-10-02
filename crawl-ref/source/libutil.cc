@@ -242,7 +242,7 @@ std::string article_a(const std::string &name, bool lowercase)
 
 const char *standard_plural_qualifiers[] =
 {
-    " of ", " labeled "
+    " of ", " labeled ", NULL
 };
 
 // Pluralises a monster or item name. This'll need to be updated for

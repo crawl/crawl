@@ -3868,7 +3868,7 @@ std::vector<std::string> explore_discoveries::apply_quantities(
 {
     static const char *feature_plural_qualifiers[] =
     {
-        " leading ", " back to ", " to ", " of "
+        " leading ", " back to ", " to ", " of ", " in ", NULL
     };
     
     std::vector<std::string> things;
