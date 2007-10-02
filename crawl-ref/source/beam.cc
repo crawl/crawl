@@ -3346,7 +3346,12 @@ static int affect_player( bolt &beam )
             if (beam.attitude != ATT_HOSTILE)
             {
                 beam.fr_hurt++;
-                xom_is_stimulated(128);
+                if (beam.beam_source == NON_MONSTER)
+                    // Beam from player rebounded and hit player
+                    xom_is_stimulated(255);
+                else
+                    // Beam from an ally
+                    xom_is_stimulated(128);
             }
             else
                 beam.foe_hurt++;
@@ -3503,9 +3508,12 @@ static int affect_player( bolt &beam )
         {
             beam.fr_hurt++;
 
+            // Beam from player rebounded and hit player
+            if (beam.beam_source == NON_MONSTER)
+                xom_is_stimulated(255);
             // Xom's ammusement at the player being damaged is handled
             // elsewhere.
-            if (was_affected)
+            else if (was_affected)
                 xom_is_stimulated(128);
         }
         else
@@ -3557,7 +3565,14 @@ static void update_hurt_or_helped(bolt &beam, monsters *mon)
     else
     {
         if (nasty_beam(mon, beam))
+        {
             beam.fr_hurt++;
+
+            // Harmful beam from this monster rebounded and hit the monster
+            int midx = (int) monster_index(mon);
+            if (midx == beam.beam_source)
+                xom_is_stimulated(128);
+        }
         else if (nice_beam(mon, beam))
             beam.fr_helped++;
     }
