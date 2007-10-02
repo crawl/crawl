@@ -3525,6 +3525,9 @@ bool give_items_skills()
             // starting armour now (note: the armour has to be equipped
             // for this function to work)
 
+            // Elven armour is light, we need to know this up front.
+            racialise_starting_equipment();
+            
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
             if (you.species != SP_VAMPIRE)
