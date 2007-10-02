@@ -3133,9 +3133,7 @@ bool monsters::fumbles_attack(bool verbose)
     {
         if (verbose)
         {
-            const bool can_see =
-                mons_near(this) && player_monster_visible(this);
-            if (can_see)
+            if (you.can_see(this))
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
@@ -4579,6 +4577,43 @@ bool monsters::can_see_invisible() const
 bool monsters::invisible() const
 {
     return (has_ench(ENCH_INVIS) && !backlit());
+}
+
+bool monsters::visible_to(actor *looker)
+{
+    if (this == looker)
+        return (!invisible() || can_see_invisible());
+
+    if (looker->atype() == ACT_PLAYER)
+        return player_monster_visible(this);
+    else
+    {
+        monsters* mon = dynamic_cast<monsters*>(looker);
+
+        return mons_monster_visible(mon, this);
+    }
+}
+
+bool monsters::can_see(actor *target)
+{
+    if (this == target)
+        return visible_to(target);
+
+    if (!target->visible_to(this))
+        return false;
+
+    if (target->atype() == ACT_PLAYER)
+        return mons_near(this);
+
+    monsters* mon = dynamic_cast<monsters*>(target);
+    int       tx  = mon->x;
+    int       ty  = mon->y;
+
+    if (distance(x, y, tx, ty) > LOS_RADIUS)
+        return false;
+
+    // Ignoring clouds for now.
+    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, DNGN_MAXOPAQUE) == 0);
 }
 
 void monsters::mutate()

@@ -5904,6 +5904,26 @@ bool player::invisible() const
     return (duration[DUR_INVIS] && !backlit());
 }
 
+bool player::visible_to(actor *looker)
+{
+    if (this == looker)
+        return (!invisible() || can_see_invisible());
+
+    monsters* mon = dynamic_cast<monsters*>(looker);
+
+    return mons_player_visible(mon);
+}
+
+bool player::can_see(actor *target)
+{
+    if (this == target)
+        return visible_to(target);
+
+    monsters* mon = dynamic_cast<monsters*>(target);
+
+    return (mons_near(mon) && target->visible_to(this));
+}
+
 bool player::backlit() const
 {
     return (magic_contamination >= 5 || duration[DUR_BACKLIGHT]);

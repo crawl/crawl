@@ -33,15 +33,7 @@
 
 bool grid_is_wall( dungeon_feature_type grid )
 {
-    return (grid == DNGN_ROCK_WALL
-            || grid == DNGN_STONE_WALL
-            || grid == DNGN_METAL_WALL
-            || grid == DNGN_GREEN_CRYSTAL_WALL
-            || grid == DNGN_WAX_WALL
-            || grid == DNGN_PERMAROCK_WALL
-            || grid == DNGN_CLEAR_ROCK_WALL
-            || grid == DNGN_CLEAR_STONE_WALL
-            || grid == DNGN_CLEAR_PERMAROCK_WALL);
+    return (grid >= DNGN_MINWALL && grid <= DNGN_MAXWALL);
 }
 
 bool grid_is_stone_stair(dungeon_feature_type grid)
@@ -164,7 +156,7 @@ command_type grid_stair_direction(dungeon_feature_type grid)
 
 bool grid_is_opaque( dungeon_feature_type grid )
 {
-    return (grid < DNGN_MINSEE && grid != DNGN_ORCISH_IDOL);
+    return (grid < DNGN_MINSEE);
 }
 
 bool grid_is_solid( dungeon_feature_type grid )

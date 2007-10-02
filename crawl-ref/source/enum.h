@@ -840,21 +840,28 @@ enum dungeon_char_type
 enum dungeon_feature_type
 {
     DNGN_UNSEEN,                       //    0
+    DNGN_CLOSED_DOOR,
+    DNGN_SECRET_DOOR,
     DNGN_ROCK_WALL,
     DNGN_STONE_WALL,
-    DNGN_CLOSED_DOOR,
-    DNGN_METAL_WALL,
-    DNGN_SECRET_DOOR,                  //    5
+    DNGN_METAL_WALL,                   //    5
     DNGN_GREEN_CRYSTAL_WALL,
-    DNGN_ORCISH_IDOL,
-    DNGN_WAX_WALL,                     //    8
-    DNGN_PERMAROCK_WALL,               //    9 - for undiggable walls
-    DNGN_CLEAR_ROCK_WALL,              //   10 - Transparent
-    DNGN_CLEAR_STONE_WALL,             //   11 - Transparent
-    DNGN_CLEAR_PERMAROCK_WALL,         //   12 - Transparent
+    DNGN_WAX_WALL,
+    DNGN_PERMAROCK_WALL,               //    8 - for undiggable walls
+    DNGN_CLEAR_ROCK_WALL,              //    9 - Transparent
+    DNGN_CLEAR_STONE_WALL,             //   10 - Transparent
+    DNGN_CLEAR_PERMAROCK_WALL,         //   11 - Transparent
+    DNGN_ORCISH_IDOL,                  //   12 - Can see past
+
+    // XXX: lowest/highest grid value which is a wall
+    DNGN_MINWALL = DNGN_ROCK_WALL,
+    DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
+
+    // XXX: highest grid value which is opaque
+    DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
 
     // XXX: lowest grid value which can be seen through
-    DNGN_MINSEE = 10,
+    DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
 
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED_1,
@@ -871,9 +878,9 @@ enum dungeon_feature_type
     DNGN_FLOOR,                        //   67
     DNGN_FLOOR_SPECIAL,     // currently only used for colouring bazaars
     DNGN_FLOOR_RESERVED,
-    DNGN_EXIT_HELL,                    //   68
-    DNGN_ENTER_HELL,                   //   69
-    DNGN_OPEN_DOOR,                    //   70
+    DNGN_EXIT_HELL,                    //   70
+    DNGN_ENTER_HELL,                   //   71
+    DNGN_OPEN_DOOR,                    //   72
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
     DNGN_TRAP_III,

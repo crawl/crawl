@@ -4645,7 +4645,7 @@ static void explosion_map( bolt &beam, int x, int y,
     // special case: explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
     // solid cells at the center of the explosion.
-    if (dngn_feat < DNGN_GREEN_CRYSTAL_WALL || dngn_feat == DNGN_WAX_WALL)
+    if (dngn_feat <= DNGN_MAXWALL)
     {
         if (!(x==0 && y==0) && !affects_wall(beam, dngn_feat))
             return;

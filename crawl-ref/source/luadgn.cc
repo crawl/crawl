@@ -926,17 +926,17 @@ static int dgn_load_des_file(lua_State *ls)
 
 const char *dngn_feature_names[] =
 {
-    "unseen", "rock_wall", "stone_wall", "closed_door", "metal_wall",
-    "secret_door", "green_crystal_wall", "orcish_idol", "wax_wall",
-    "permarock_wall", "clear_rock_wall", "clear_stone_wall",
-    "clear_permarock_wall", "", "", "", "", "", "", "", "",
+    "unseen", "closed_door", "secret_door", "rock_wall", "stone_wall",
+    "metal_wall", "green_crystal_wall", "wax_wall", "permarock_wall",
+    "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall",
+    "orcish_idol", "", "", "", "", "", "", "", "",
     "silver_statue", "granite_statue", "orange_crystal_statue",
     "statue_reserved_1", "statue_reserved_2", "", "", "", "", "", "",
     "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
     "", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
     "deep_water", "", "", "shallow_water", "water_stuck", "floor",
-    "exit_hell", "enter_hell", "open_door", "", "", "", "",
-    "trap_mechanical", "trap_magical", "trap_iii",
+    "floor_special", "floor_reserved", "exit_hell", "enter_hell",
+    "open_door", "", "", "trap_mechanical", "trap_magical", "trap_iii",
     "undiscovered_trap", "", "enter_shop", "enter_labyrinth",
     "stone_stairs_down_i", "stone_stairs_down_ii",
     "stone_stairs_down_iii", "rock_stairs_down", "stone_stairs_up_i",
