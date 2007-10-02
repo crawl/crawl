@@ -268,6 +268,8 @@ static void monster_drop_ething(monsters *monster,
         hostile_grid = true;
     }
 
+    int midx = (int) monster_index(monster);
+
     for (i = MSLOT_GOLD; i >= MSLOT_WEAPON; i--)
     {
         int item = monster->inv[i];
@@ -276,6 +278,7 @@ static void monster_drop_ething(monsters *monster,
         {
             if (hostile_grid)
             {
+                item_was_destroyed(mitm[item], midx);
                 destroyed = true;
                 destroy_item( item );
             }
@@ -301,7 +304,6 @@ static void monster_drop_ething(monsters *monster,
 static void place_monster_corpse(const monsters *monster)
 {
     int corpse_class = mons_species(monster->type);
-
     if (corpse_class == MONS_DRACONIAN)
         corpse_class = draco_subspecies(monster);
 
@@ -310,12 +312,8 @@ static void place_monster_corpse(const monsters *monster)
     else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
-    if (mons_weight(corpse_class) == 0
-        || grid_destroys_items(grd[monster->x][monster->y])
-        || coinflip())
-    {
+    if (mons_weight(corpse_class) == 0 || coinflip())
         return;
-    }
 
     int o = get_item_slot();
     if (o == NON_ITEM)
@@ -332,6 +330,13 @@ static void place_monster_corpse(const monsters *monster)
 
     if (mitm[o].colour == BLACK)
         mitm[o].colour = monster->colour;
+
+    if (grid_destroys_items(grd[monster->x][monster->y]))
+    {
+        item_was_destroyed(mitm[o]);
+        mitm[o].base_type = OBJ_UNASSIGNED;
+        return;
+    }
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
@@ -4242,10 +4247,11 @@ static bool handle_pickup(monsters *monster)
 
     if (mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
     {
-        int hps_gained = 0;
-        int max_eat = roll_dice( 1, 10 );
-        int eaten = 0;
-        bool eaten_net = false;
+        int  midx       = monster_index(monster);
+        int  hps_gained = 0;
+        int  max_eat    = roll_dice( 1, 10 );
+        int  eaten      = 0;
+        bool eaten_net  = false;
 
         for (item = igrd[monster->x][monster->y]; 
              item != NON_ITEM && eaten < max_eat && hps_gained < 50;
@@ -4281,6 +4287,9 @@ static bool handle_pickup(monsters *monster)
                 hps_gained += quant / 10 + 1;
                 eaten++;
             }
+
+            if (quant >= mitm[item].quantity)
+                item_was_destroyed(mitm[item], midx);
 
             dec_mitm_item_quantity( item, quant );
         }

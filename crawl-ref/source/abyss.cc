@@ -219,7 +219,7 @@ static int abyss_exit_nearness()
 
             // HACK: Why doesn't is_terrain_known() work here?
             if (grd[x][y] == DNGN_EXIT_ABYSS
-                && get_screen_glyph(x, y) != '\0')
+                && get_screen_glyph(x, y) != ' ')
             {
                 nearness = MIN(nearness,
                                grid_distance(you.x_pos, you.y_pos,
@@ -241,7 +241,7 @@ static int abyss_rune_nearness()
                 continue;
 
             // HACK: Why doesn't is_terrain_known() work here?
-            if (get_screen_glyph(x, y) != '\0')
+            if (get_screen_glyph(x, y) != ' ')
             {
                 int i = igrd[x][y];
 
@@ -279,19 +279,22 @@ static void xom_check_nearness()
     viewwindow(true, false);
 
     int exit_is_near = abyss_exit_nearness();
-    if ((exit_was_near < INFINITE_DISTANCE &&
-         exit_is_near == INFINITE_DISTANCE)
-        || (exit_was_near == INFINITE_DISTANCE &&
-            exit_is_near  <  INFINITE_DISTANCE))
+    int rune_is_near = abyss_rune_nearness();
+
+    if ((exit_was_near   <  INFINITE_DISTANCE
+         && exit_is_near == INFINITE_DISTANCE)
+        || (rune_was_near < INFINITE_DISTANCE
+            && rune_is_near == INFINITE_DISTANCE
+            && you.attribute[ATTR_ABYSSAL_RUNES] == 0))
     {
-        xom_is_stimulated(255);
+        xom_is_stimulated(255, "Xom snickers loudly.", true);
     }
 
-    int rune_is_near = abyss_rune_nearness();
-    if ((rune_was_near < INFINITE_DISTANCE &&
-         rune_is_near == INFINITE_DISTANCE)
-        || (rune_was_near == INFINITE_DISTANCE &&
-            rune_is_near  <  INFINITE_DISTANCE))
+    if ((rune_was_near   == INFINITE_DISTANCE
+         && rune_is_near <  INFINITE_DISTANCE
+         && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
+        || (exit_was_near == INFINITE_DISTANCE &&
+            exit_is_near  <  INFINITE_DISTANCE))
     {
         xom_is_stimulated(255);
     }
@@ -338,7 +341,7 @@ void area_shift(void)
             grd[i][j] = DNGN_UNSEEN;
 
             // nuke items
-            destroy_item_stack( i, j );
+            lose_item_stack( i, j );
 
             if (mgrd[i][j] != NON_MONSTER)
                 abyss_lose_monster( menv[ mgrd[i][j] ] );
@@ -474,19 +477,7 @@ void abyss_teleport( bool new_area )
     {
         if (is_valid_item( mitm[k] ))
         {
-            if (mitm[k].base_type == OBJ_ORBS)
-            {
-                set_unique_item_status( OBJ_ORBS, mitm[k].sub_type, 
-                                        UNIQ_LOST_IN_ABYSS );
-            }
-            else if (is_fixed_artefact( mitm[k] ))
-            {
-                set_unique_item_status( OBJ_WEAPONS, mitm[k].special, 
-                                        UNIQ_LOST_IN_ABYSS );
-            }
-
-            xom_check_lost_item( mitm[k] );
-
+            item_was_lost( mitm[k] );
             destroy_item( k );
         }
     }

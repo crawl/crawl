@@ -3114,6 +3114,7 @@ void offer_items()
                                 << sacrifice_message(you.religion, mitm[i],
                                                      gained_piety)
                                 << std::endl;
+        item_was_destroyed(mitm[i]);
         destroy_item(i);
         i = next;
         num_sacced++;

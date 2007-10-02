@@ -173,6 +173,10 @@ enum attribute_type
     ATTR_HELD,                  // caught in a net
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
+    ATTR_UNIQUE_RUNES,
+    ATTR_DEMONIC_RUNES,
+    ATTR_ABYSSAL_RUNES,
+    ATTR_RUNES_IN_ZOT,
     NUM_ATTRIBUTES
 };
 
@@ -1270,7 +1274,9 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_RACIAL_MASK       = 0x07000000,  // mask of racial equipment types
 
     ISFLAG_NOTED_ID          = 0x08000000,
-    ISFLAG_NOTED_GET         = 0x10000000
+    ISFLAG_NOTED_GET         = 0x10000000,
+
+    ISFLAG_BEEN_IN_INV       = 0x20000000  // Item has been in inventory
 };
 
 enum job_type

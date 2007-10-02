@@ -684,10 +684,15 @@ void up_stairs(dungeon_feature_type force_stair,
     // of dropping some runes within Zot), but need to get back in Zot
     // to get the Orb?  Zom finds that funny.
     if (stair_find == DNGN_RETURN_FROM_ZOT
-        && runes_in_pack() < NUMBER_OF_RUNES_NEEDED
-        && (branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB))
+        && branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB)
     {
-        xom_is_stimulated(255, "Xom snickers loudly.", true);
+        int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
+            + you.attribute[ATTR_DEMONIC_RUNES]
+            + you.attribute[ATTR_ABYSSAL_RUNES]
+            - you.attribute[ATTR_RUNES_IN_ZOT];
+
+        if (runes_avail < NUMBER_OF_RUNES_NEEDED)
+            xom_is_stimulated(255, "Xom snickers loudly.", true);
     }
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))

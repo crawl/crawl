@@ -873,6 +873,8 @@ game_start:
     {
         if (is_valid_item(you.inv[i]))
         {
+            you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
+
             // identify all items in pack
             set_ident_type( you.inv[i].base_type, 
                             you.inv[i].sub_type, ID_KNOWN_TYPE );

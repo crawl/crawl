@@ -76,7 +76,8 @@ int get_item_slot( int reserve = 50 );
  * *********************************************************************** */
 void unlink_item(int dest);
 void destroy_item(int dest);
-void destroy_item_stack( int x, int y );
+void destroy_item_stack( int x, int y, int cause = -1 );
+void lose_item_stack( int x, int y );
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
@@ -170,5 +171,8 @@ void request_autoinscribe(bool do_inscribe = true);
 void autoinscribe();
 
 bool item_is_equipped(const item_def &item);
+
+void item_was_lost(const item_def &item);
+void item_was_destroyed(const item_def &item, int cause = -1);
 
 #endif

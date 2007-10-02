@@ -826,7 +826,7 @@ static void grab_followers()
 
 // Should be called afetr grab_followers(), so that items carried by
 // followers won't be considered lost.
-static void _xom_check_lost_items(level_area_type old_level_type)
+static void do_lost_items(level_area_type old_level_type)
 {
     if (old_level_type == LEVEL_DUNGEON)
         return;
@@ -842,7 +842,7 @@ static void _xom_check_lost_items(level_area_type old_level_type)
         if (item.x == -1 && item.y == -1)
             continue;
 
-        xom_check_lost_item(item);
+        item_was_lost(item);
     }
 }
 
@@ -894,7 +894,7 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
             save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
     }
 
-    _xom_check_lost_items(old_level_type);
+    do_lost_items(old_level_type);
 
     // Try to open level savefile.
     FILE *levelFile = fopen(cha_fil.c_str(), "rb");

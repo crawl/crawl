@@ -289,6 +289,12 @@ bool dec_inv_item_quantity( int obj, int amount )
 bool dec_mitm_item_quantity( int obj, int amount )
 {
     if (mitm[obj].quantity <= amount)
+        amount = mitm[obj].quantity;
+
+    if (player_in_branch(BRANCH_HALL_OF_ZOT) && is_rune(mitm[obj]))
+        you.attribute[ATTR_RUNES_IN_ZOT] -= amount;
+
+    if (mitm[obj].quantity == amount)
     {
         destroy_item( obj );
         // If we're repeating a command, the repetitions used up the
@@ -315,6 +321,9 @@ void inc_inv_item_quantity( int obj, int amount )
 
 void inc_mitm_item_quantity( int obj, int amount )
 {
+    if (player_in_branch(BRANCH_HALL_OF_ZOT) && is_rune(mitm[obj]))
+        you.attribute[ATTR_RUNES_IN_ZOT] += amount;
+
     mitm[obj].quantity += amount;
 }
 
@@ -509,7 +518,52 @@ void destroy_item( int dest )
     mitm[dest].clear();
 }
 
-void destroy_item_stack( int x, int y )
+static void handle_gone_item(const item_def &item)
+{
+    if (item.base_type == OBJ_ORBS)
+    {   
+        set_unique_item_status(OBJ_ORBS, item.sub_type,
+                                UNIQ_LOST_IN_ABYSS);
+    }
+    else if (is_fixed_artefact(item))
+    {   
+        set_unique_item_status(OBJ_WEAPONS, item.special, 
+                                UNIQ_LOST_IN_ABYSS);
+    }
+
+    if (is_rune(item))
+    {
+        if ((item.flags & ISFLAG_BEEN_IN_INV))
+        {
+            if (is_unique_rune(item))
+                you.attribute[ATTR_UNIQUE_RUNES] -= item.quantity;
+            else if (item.plus == RUNE_ABYSSAL)
+                you.attribute[ATTR_ABYSSAL_RUNES] -= item.quantity;
+            else
+                you.attribute[ATTR_DEMONIC_RUNES] -= item.quantity;
+        }
+
+        if (player_in_branch(BRANCH_HALL_OF_ZOT)
+            && item.x != -1 && item.y != -1)
+        {
+            you.attribute[ATTR_RUNES_IN_ZOT] -= item.quantity;
+        }
+    }
+}
+
+void item_was_lost(const item_def &item)
+{
+    handle_gone_item( item );
+    xom_check_lost_item( item );
+}
+
+void item_was_destroyed(const item_def &item, int cause)
+{
+    handle_gone_item( item );
+    xom_check_destroyed_item( item, cause );
+}
+
+void lose_item_stack( int x, int y )
 {
     int o = igrd[x][y];
 
@@ -521,18 +575,29 @@ void destroy_item_stack( int x, int y )
 
         if (is_valid_item( mitm[o] ))
         {
-            if (mitm[o].base_type == OBJ_ORBS)
-            {   
-                set_unique_item_status( OBJ_ORBS, mitm[o].sub_type,
-                                        UNIQ_LOST_IN_ABYSS );
-            }
-            else if (is_fixed_artefact( mitm[o] ))
-            {   
-                set_unique_item_status( OBJ_WEAPONS, mitm[o].special, 
-                                        UNIQ_LOST_IN_ABYSS );
-            }
+            item_was_lost(mitm[o]);
 
-            xom_check_lost_item( mitm[o] );
+            mitm[o].base_type = OBJ_UNASSIGNED;
+            mitm[o].quantity = 0;
+        }
+
+        o = next;
+    }
+}
+
+void destroy_item_stack( int x, int y, int cause )
+{
+    int o = igrd[x][y];
+
+    igrd[x][y] = NON_ITEM;
+
+    while (o != NON_ITEM)
+    {
+        int next = mitm[o].link;
+
+        if (is_valid_item( mitm[o] ))
+        {
+            item_was_destroyed(mitm[o], cause);
 
             mitm[o].base_type = OBJ_UNASSIGNED;
             mitm[o].quantity = 0;
@@ -1344,6 +1409,25 @@ int find_free_slot(const item_def &i)
 #undef slotisfree
 }
 
+static void got_item(item_def& item, int quant)
+{
+    if (!is_rune(item))
+        return;
+
+    // Picking up the rune for the first time.
+    if (!(item.flags & ISFLAG_BEEN_IN_INV))
+    {
+        if (is_unique_rune(item))
+            you.attribute[ATTR_UNIQUE_RUNES] += quant;
+        else if (item.plus == RUNE_ABYSSAL)
+            you.attribute[ATTR_ABYSSAL_RUNES] += quant;
+        else
+            you.attribute[ATTR_DEMONIC_RUNES] += quant;
+    }
+
+    item.flags |= ISFLAG_BEEN_IN_INV;
+}
+
 // Returns quantity of items moved into player's inventory and -1 if 
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
@@ -1421,6 +1505,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 dec_mitm_item_quantity( obj, quant_got );
                 burden_change();
 
+                got_item(mitm[obj], quant_got);
+
                 if (!quiet)
                     mpr( you.inv[m].name(DESC_INVENTORY).c_str() );
 
@@ -1491,6 +1577,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
         unset_branch_flags(BFLAG_HAS_ORB);
 
+    got_item(item, item.quantity);
+
     you.turn_is_over = true;
 
     return (retval);
@@ -1558,8 +1646,16 @@ void move_item_to_grid( int *const obj, int x, int y )
     mitm[*obj].link = igrd[x][y];
     igrd[x][y] = *obj;
 
-    if (mitm[*obj].base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
+    if (is_rune(mitm[*obj]))
+    {
+        if (player_in_branch(BRANCH_HALL_OF_ZOT))
+            you.attribute[ATTR_RUNES_IN_ZOT] += mitm[*obj].quantity;
+    }
+    else if (mitm[*obj].base_type == OBJ_ORBS
+             && you.level_type == LEVEL_DUNGEON)
+    {
         set_branch_flags(BFLAG_HAS_ORB);
+    }
 
     return;
 }
@@ -1734,6 +1830,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     {
         if( !silenced(you.pos()) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+
+        item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
     }
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         stashes.add_stash();

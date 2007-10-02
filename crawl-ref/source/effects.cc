@@ -1330,6 +1330,8 @@ bool acquirement(object_class_type class_wanted, int agent)
         if (!silenced(you.pos()))
             mprf(MSGCH_SOUND, 
                  grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
+
+        item_was_destroyed(mitm[igrd[you.x_pos][you.y_pos]], NON_MONSTER);
     }
     else
     {

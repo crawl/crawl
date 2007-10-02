@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 
 #include "beam.h"
+#include "branch.h"
 #include "effects.h"
 #include "it_use2.h"
 #include "items.h"
@@ -927,7 +928,29 @@ void xom_acts(bool niceness, int sever)
         you.piety = 200 - you.piety;
 }
 
-void xom_check_lost_item(item_def& item)
+static void xom_check_less_runes(int runes_gones)
+{
+    if (player_in_branch(BRANCH_HALL_OF_ZOT) ||
+        !(branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB))
+    {
+        return;
+    }
+
+    int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
+        + you.attribute[ATTR_DEMONIC_RUNES]
+        + you.attribute[ATTR_ABYSSAL_RUNES]
+        - you.attribute[ATTR_RUNES_IN_ZOT];
+    int was_avail = runes_avail + runes_gones;
+
+    // No longer enough available runes to get into Zot
+    if (was_avail >= NUMBER_OF_RUNES_NEEDED &&
+        runes_avail < NUMBER_OF_RUNES_NEEDED)
+    {
+        xom_is_stimulated(128, "Xom snickers.", true);
+    }
+}
+
+void xom_check_lost_item(const item_def& item)
 {
     if (item.base_type == OBJ_ORBS)
         xom_is_stimulated(255, "Xom laughs nastily.", true);
@@ -935,14 +958,20 @@ void xom_check_lost_item(item_def& item)
         xom_is_stimulated(128, "Xom snickers.", true);
     else if (is_rune(item))
     {
+        // If you'd dropped it, check if that means you'd dropped your
+        // third rune and now don't have enough to get into Zot.
+        if (item.flags & ISFLAG_BEEN_IN_INV)
+            xom_check_less_runes(item.quantity);
+
         if (is_unique_rune(item))
             xom_is_stimulated(255, "Xom snickers loudly.", true);
         else if (you.entry_cause == EC_SELF_EXPLICIT &&
-                !(item.flags & ISFLAG_DROPPED))
+                 !(item.flags & ISFLAG_BEEN_IN_INV))
         {
-            // Player voluntarily entered Pan or the Abyss looking
-            // for runes, yet never found it.
-            if (item.plus == RUNE_ABYSSAL)
+            // Player voluntarily entered Pan or the Abyss looking for
+            // runes, yet never found it.
+            if (item.plus == RUNE_ABYSSAL &&
+                you.attribute[ATTR_ABYSSAL_RUNES] == 0)
             {
                 // Ignore Abyss area shifts.
                 if (you.level_type != LEVEL_ABYSS)
@@ -951,8 +980,39 @@ void xom_check_lost_item(item_def& item)
                     // stimulation.
                     xom_is_stimulated(128, "Xom snickers.", true);
             }
-            else
+            else if (item.plus == RUNE_DEMONIC &&
+                     you.attribute[ATTR_DEMONIC_RUNES] == 0)
+            {
                 xom_is_stimulated(64, "Xom snickers softly.", true);
+            }
         }
     }
+}
+
+void xom_check_destroyed_item(const item_def& item, int cause)
+{
+    int amusement = 0;
+
+    if (item.base_type == OBJ_ORBS)
+    {
+        xom_is_stimulated(255, "Xom laughs nastily.", true);
+        return;
+    }
+    else if (is_fixed_artefact(item))
+        xom_is_stimulated(128, "Xom snickers.", true);
+    else if (is_rune(item))
+    {
+        xom_check_less_runes(item.quantity);
+
+        if (is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
+            amusement = 255;
+        else
+            amusement = 64 * item.quantity;
+    }
+
+    xom_is_stimulated(amusement,
+                      amusement > 128 ? "Xom snickers loudly." :
+                      amusement > 64  ? "Xom snickers." :
+                      "Xom snickers softly.",
+                      true);
 }

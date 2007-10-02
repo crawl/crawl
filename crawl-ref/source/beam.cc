@@ -2406,6 +2406,8 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         // Too much message spam otherwise
         if ( YOU_KILL(beam.thrower) && player_can_hear(x, y) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
+
+        item_was_destroyed(*item, beam.beam_source);
         return;
     }
 
@@ -2932,6 +2934,8 @@ static void affect_items(bolt &beam, int x, int y)
         if (objs_vulnerable != -1 &&
             mitm[igrd[x][y]].base_type == objs_vulnerable)
         {
+            item_was_destroyed(mitm[igrd[x][y]], beam.beam_source);
+
             destroy_item( igrd[ x ][ y ] );
 
             if (objs_vulnerable == OBJ_SCROLLS && see_grid(x,y))
