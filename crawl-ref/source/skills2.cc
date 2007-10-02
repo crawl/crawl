@@ -266,7 +266,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      165,                       // SK_POLEARMS
      100,                       // SK_STAVES
      135,                       // SK_SLINGS
-     74,                        // SK_BOWS
+     75,                        // SK_BOWS
      75,                        // SK_CROSSBOWS
      75,                        // SK_DARTS
      80,                        // SK_THROWING
