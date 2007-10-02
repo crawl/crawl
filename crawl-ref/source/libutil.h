@@ -36,9 +36,10 @@ int strip_number_tag(std::string &s, const std::string &tagprefix);
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
 
 std::string article_a(const std::string &name, bool lowercase = true);
-std::string pluralise(const std::string &name,
-                      const char *stock_plural_quals[] = standard_plural_qualifiers,
-                      const char *no_of[] = NULL);
+std::string pluralise(
+    const std::string &name,
+    const char *stock_plural_quals[] = standard_plural_qualifiers,
+    const char *no_of[] = NULL);
 
 std::string number_in_words(unsigned number, int pow = 0);
 

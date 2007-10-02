@@ -376,7 +376,8 @@ static std::string n_names(const std::string &name, int n)
     {
         char buf[20];
         snprintf(buf, sizeof buf, "%d ", n);
-        return buf + pluralise(name, standard_plural_qualifiers, modifier_suffixes);
+        return buf + pluralise(name, standard_plural_qualifiers,
+                               modifier_suffixes);
     }
     else
         return article_a(name, false);
