@@ -101,8 +101,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "holy", "dark", "death", "necro", "unholy", "vehumet",
         "beogh", "crystal", "blood", "smoke", "slime", "jewel",
         "elven", "dwarven", "orcish", "gila", "floor", "rock",
-        "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
-        "iron", "bone", "random"
+        "stone", "mist", "shimmer_blue", "random"
     };
 
     ASSERT(ARRAYSIZE(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
