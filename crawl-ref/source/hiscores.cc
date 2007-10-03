@@ -940,11 +940,23 @@ void scorefile_entry::init()
             if (you.inv[d].base_type == OBJ_MISCELLANY
                 && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
             {
+                num_runes += you.inv[d].quantity;
+
+                // Don't assert in rune_array[] due to buggy runes,
+                // since checks for buggy runes are already done
+                // elsewhere.
+                if (you.inv[d].plus < 0 || you.inv[d].plus >= NUM_RUNE_TYPES)
+                {
+                    mpr("WARNING: Buggy rune in pack!");
+                    // Be nice and assume the buggy rune was originally
+                    // different from any of the other rune types.
+                    num_diff_runes++;
+                    continue;
+                }
+
+                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
                 if (rune_array[ you.inv[d].plus ] == 0)
                     num_diff_runes++;
-
-                num_runes += you.inv[d].quantity;
-                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
             }
         }
     }
