@@ -3,7 +3,7 @@
  *  Summary:    All things Xomly
  *  Written by: Zooko
  *
- *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-05-15T17:02:30.826843Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

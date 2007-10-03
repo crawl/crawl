@@ -2,7 +2,7 @@
  *  File:       dgnevent.cc
  *  Summary:    General dungeon events.
  *  
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-07-20T11:40:25.964128Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *  
  */
 

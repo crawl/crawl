@@ -3,7 +3,7 @@
  *  Summary:    Dungeon branch classes
  *  Written by: Haran Pilpel
  *
- *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2006-11-29 13:12:52 -0500 (Wed, 29 Nov 2006) $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  */
 

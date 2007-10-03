@@ -3,7 +3,7 @@
  *  Summary:    dbm wrapper for SQLite
  *  Written by: Darshan Shaligram
  *  
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-26T17:43:23.491102Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

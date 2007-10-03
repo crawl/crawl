@@ -3,7 +3,7 @@
  * Summary: Player ghost and random Pandemonium demon handling.
  *
  * Created for Dungeon Crawl Reference by $Author:dshaligram $ on
- * $Date: 2007-03-15 $.
+ * $Date$.
  */
 
 #include "AppHdr.h"

@@ -2,7 +2,7 @@
  *  File:       mapdef.cc
  *  Summary:    Support code for Crawl des files.
  *
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-30T15:49:18.688054Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include <iostream>

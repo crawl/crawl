@@ -3,7 +3,7 @@
  * Summary:    Tracking monsters in transit between levels.
  * Written by: Darshan Shaligram
  *
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-03-15T20:10:20.648083Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef MTRANSIT_H
