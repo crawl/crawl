@@ -18,8 +18,9 @@
 
 #include "externs.h"
 
-// various elemental colour schemes... used for abstracting random short lists
-// MUST match the order in initfile.cc or breakage results.
+// various elemental colour schemes... used for abstracting random
+// short lists. When adding colours, please also add their names in
+// initfile.cc (str_to_colour)!
 enum element_type
 {
     EC_FIRE = 32,       // fiery colours (must be first and > highest colour)

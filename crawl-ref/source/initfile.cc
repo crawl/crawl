@@ -94,14 +94,18 @@ int str_to_colour( const std::string &str, int default_colour,
 {
     int ret;
 
-    const std::string element_cols[] =
+    static const std::string element_cols[] =
     {
-        "fire", "ice", "earth", "electricity", "air", "poison", "water",
-        "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
-        "death", "necro", "unholy", "vehumet", "crystal", "blood", "smoke",
-        "slime", "jewel", "elven", "dwarven", "orcish", "gila", "floor",
-        "rock", "stone", "mist", "shimmer_blue", "random"
+        "fire", "ice", "earth", "electricity", "air", "poison",
+        "water", "magic", "mutagenic", "warp", "enchant", "heal",
+        "holy", "dark", "death", "necro", "unholy", "vehumet",
+        "beogh", "crystal", "blood", "smoke", "slime", "jewel",
+        "elven", "dwarven", "orcish", "gila", "floor", "rock",
+        "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
+        "iron", "bone", "random"
     };
+
+    ASSERT(ARRAYSIZE(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
 
     for (ret = 0; ret < 16; ret++)
     {
