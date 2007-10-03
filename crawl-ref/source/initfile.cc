@@ -94,7 +94,7 @@ int str_to_colour( const std::string &str, int default_colour,
 {
     int ret;
 
-    const std::string element_cols[] =
+    static const std::string element_cols[] =
     {
         "fire", "ice", "earth", "electricity", "air", "poison",
         "water", "magic", "mutagenic", "warp", "enchant", "heal",
