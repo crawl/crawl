@@ -540,7 +540,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 case SPWPN_SINGING_SWORD:
                     if (!was_known)
-                        mprf(MSGCH_TALK, "%s says, 'Hi! I'm the Singing Sword!'", old_desc);
+                        mprf(MSGCH_TALK, "%s says, \"Hi! I'm the Singing Sword!\"", old_desc);
                     else
                         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
                     break;

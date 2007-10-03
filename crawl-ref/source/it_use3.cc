@@ -23,6 +23,7 @@
 
 #include "beam.h"
 #include "cloud.h"
+#include "database.h"
 #include "decks.h"
 #include "direct.h"
 #include "effects.h"
@@ -78,118 +79,83 @@ void special_wielded()
           
         if (makes_noise)
         {
-            // Singing Sword only: singing and other musical noises
-            const char* suffixes_sing[] = {
-                 "hums a little tune.", "breaks into glorious song!",
-                 "sings.", "sings loudly.", "chimes melodiously.",
-                 "sings off-key.", "sings 'tra-la-la'.", "sings a lullaby.",
-                 "chimes harmoniously.", "makes beautiful music.",
-                 "produces a loud orchestral chord.", "whines plaintively.",
-                 "tinkles.", "rings like a bell.", "wails mournfully.",
-                 "practices its scales.", "lilts tunefully.", "yodels.",
-                 "hums tunelessly.", "makes a painfully high-pitched squeak.",
-                 "sings a sudden staccato note.", "sings a catchy tune.",
-                 "says 'Hi! I'm the Singing Sword!'", "hums a slow waltz.",
-                 "imitates a saxophone.", "shouts 'Sing with me!'",
-                 "chimes like a gong.", "applauds itself.", "whistles merrily.",
-                 "goes 'Da-da-da-dum.", "goes toot-toot!", "chants serenely.",
-                 "trills happily.", "shouts 'One, two, three...'",
-                 "chants a little melody.", "sings a deeply moving song.",
-                 "hums an eerie melody.", "hums a slow and mournful tune.",
-                 "launches into yet another solo.", "strikes up a merry tune.",
-                 "emits a series of high-pitched trills.", "does a drum roll.",
-                 "holds a dissonant chord.", "composes a new song.",
-                 "makes a sound as if to clear its throat.", "beats time.",
-                 "sings a quivering drawn-out note.", "sings a little jingle.",
-                 "makes a twanging sound.", "spouts musical wisdom."
-            };
+            std::string msg;
 
-            // mostly chatter and other human-like sounds
-            const char* suffixes_talk[] = {
-                 "speaks gibberish.", "raves incoherently.", "shouts 'Help!'",
-                 "growls menacingly.", "sputters and hisses.", "hollers!",
-                 "pants and wheezes.", "barks abruptly.", "sighs.", "wails.",
-                 "howls with laughter!", "laughs crazily.", "burps!",
-                 "goes snicker-snack!", "lets out a mournful sigh.",
-                 "yells in some weird language.", "makes a horrible noise.",
-                 "makes a deep moaning sound.", "gives off a wolf whistle.",
-                 "wails.", "giggles.", "lets out a whoop!", "yawns loudly.",
-                 "chatters happily.", "recites a poem.", "prattles on and on.",
-                 "regales you with its life story.", "intones a prayer.",
-                 "shouts 'Whoopee!'", "hurls insults at you.", "cries out!",
-                 "argues with itself.", "complains about the scenery.",
-                 "says 'I'm bored.'", "calls out a warning!", "swears loudly.",
-                 "inquires about your family.", "coughs loudly.",
-                 "burbles away merrily.", "gurgles.", "suddenly shrieks!",
-                 "cackles.", "warbles.", "suddenly bursts into laughter!",
-                 "shouts out instructions!", "cheers you on.", "snorts.",
-                 "comments on the weather.", "makes a deep, guttural noise.",
-                 "gives off a sizzling sound.", "whistles innocently.",
-                 "makes a popping sound.", "says 'Ssh! Did you hear that?'",
-                 "yelps loudly!", "lets out a series of bird calls."
-            };
-
-            // noises in the form "Your hear ...", mostly in-game noises
-            const char* suffixes_sounds[] = {
-                "a voice call your name.", "a shout.", "an angry hiss.",
-                "a very strange noise.", "a high-pitched scream!",
-                "a roar!", "someone snoring.", "a hideous shriek!",
-                "a piteous moan.", "a screech!", "a bellow!",
-                "a loud, deep croak!", "an angry buzzing noise.", 
-                "an irritating high-pitched whine.", "a splashing noise.",
-                "the sound of rushing water.", "a sizzling sound.",
-                "someone calling for help!", "strange voices.", 
-                "a loud clanging noise!", "a grinding noise.", "a knock.",
-                "a mighty clap of thunder!", "maniacal laughter.",
-                "a hideous screaming!", "snatches of song.", "a bark!",
-                "a rumbling sound.", "a twanging sound.", "an echo. Echo.",
-                "the chiming of a distant gong.", "a crunching sound.",
-                "the tinkle of an enormous bell.", "a distant \"Zot\"!",
-                "the distant roaring of an enraged frog.", "an echo.",
-                "the wailing of sirens.", "a flourish of trumpets!"
-            };
-
-            int num_suffixes;
-            std::string message;
-            msg_channel_type channel = MSGCH_TALK;
-            
             if (you.special_wield == SPWLD_SING)
             {
-                message = "The Singing Sword ";
-                if (!one_chance_in(5)) // sings
+                msg = getSpeakString("Singing Sword");
+                if (msg != "")
                 {
-                    num_suffixes = sizeof(suffixes_sing)
-                                   / sizeof(suffixes_sing[0]);
-                    message += suffixes_sing[random2(num_suffixes)];
-                }
-                else // talks
-                {
-                    num_suffixes = sizeof(suffixes_talk)
-                                   / sizeof(suffixes_talk[0]);
-                    message += suffixes_talk[random2(num_suffixes)];
+                    // "Your Singing Sword" sounds disrespectful
+                    // (as if there could be more than one!)
+                    msg = replace_all(msg, "@Your_weapon@", "@The_weapon@");
+                    msg = replace_all(msg, "@your_weapon@", "@the_weapon@");
                 }
             }
             else // SPWLD_NOISE
             {
-                if (one_chance_in(3)) // "You hear..." noises
+                msg = getSpeakString("noisy weapon");
+                if (msg != "")
                 {
-                    message = "You hear ";
-                    num_suffixes = sizeof(suffixes_sounds)
-                                   / sizeof(suffixes_sounds[0]);
-                    message += suffixes_sounds[random2(num_suffixes)];
-                    channel = MSGCH_SOUND;
-                }
-                else // normal chatter
-                {
-                    message = "Your ";
-                    message += you.inv[wpn].name(DESC_BASENAME);
-                    message += " ";
-                    num_suffixes = sizeof(suffixes_talk)
-                                   / sizeof(suffixes_talk[0]);
-                    message += suffixes_talk[random2(num_suffixes)];
+                    msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
+                    msg = replace_all(msg, "@your_weapon@", "your @weapon@");
                 }
             }
-            mpr(message.c_str(), channel);
+            
+            // set appropriate channel (will usually be TALK)
+            msg_channel_type channel = MSGCH_TALK;
+
+            // disallow anything with VISUAL in it;
+            if (msg != "" && msg.find("VISUAL") != std::string::npos)
+                msg = "";
+                
+            if (msg != "")
+            {
+                std::string param = "";
+                std::string::size_type pos = msg.find(":");
+
+                if (pos != std::string::npos)
+                    param = msg.substr(0, pos);
+
+                if (!param.empty())
+                {
+                    bool match = true;
+
+                    if (param == "DANGER")
+                        channel = MSGCH_DANGER;
+                    else if (param == "WARN")
+                        channel = MSGCH_WARN;
+                    else if (param == "SOUND")
+                        channel = MSGCH_SOUND;
+                    else if (param == "PLAIN")
+                        channel = MSGCH_PLAIN;
+                    else if (param == "SPELL" || param == "ENCHANT")
+                        msg = ""; // disallow these as well, channel stays TALK
+                    else if (param != "TALK")
+                        match = false;
+
+                    if (match && msg != "")
+                        msg = msg.substr(pos + 1);
+                }
+            }
+            
+            if (msg == "") // give default noises
+            {
+                if (you.special_wield == SPWLD_SING)
+                    msg = "@The_weapon@ sings.";
+                else
+                {
+                    channel = MSGCH_SOUND;
+                    msg = "You hear a strange noise.";
+                }
+            }
+            
+            // replace weapon references
+            msg = replace_all(msg, "@The_weapon@", "The @weapon@");
+            msg = replace_all(msg, "@the_weapon@", "the @weapon@");
+            msg = replace_all(msg, "@weapon@", you.inv[wpn].name(DESC_BASENAME));
+
+            mpr(msg.c_str(), channel);
 
         } // makes_noise
         break;
