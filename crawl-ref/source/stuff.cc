@@ -940,7 +940,7 @@ int element_colour( int element, bool no_random )
         break;
 
     case EC_DARK:
-        ret = DARKGREY;
+        ret = (tmp_rand < 80) ? DARKGREY : LIGHTGREY;
         break;
 
     case EC_HOLY:
@@ -1031,6 +1031,28 @@ int element_colour( int element, bool no_random )
 
     case EC_SHIMMER_BLUE:
         ret = random_choose_weighted(80, BLUE, 20, LIGHTBLUE, 5, CYAN, 0);
+        break;
+
+    case EC_DECAY:
+        ret = (tmp_rand < 60) ? BROWN : GREEN;
+        break;
+
+    case EC_SILVER:
+        ret = (tmp_rand < 90) ? LIGHTGREY : WHITE;
+        break;
+
+    case EC_GOLD:
+        ret = (tmp_rand < 60) ? YELLOW : BROWN;
+        break;
+
+    case EC_IRON:
+        ret = (tmp_rand < 40) ? CYAN :
+              (tmp_rand < 80) ? LIGHTGREY :
+                                DARKGREY;
+        break;
+
+    case EC_BONE:
+        ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
         break;
 
     case EC_RANDOM:

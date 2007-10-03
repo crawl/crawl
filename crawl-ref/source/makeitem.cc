@@ -23,6 +23,7 @@
 #include "randart.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "view.h"
 
 static bool weapon_is_visibly_special(const item_def &item);
 
@@ -727,7 +728,7 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_ORBS:
-        item.colour = LIGHTMAGENTA;
+        item.colour = EC_MUTAGENIC;
         break;
 
     case OBJ_MISCELLANY:
@@ -770,64 +771,78 @@ void item_colour( item_def &item )
             switch (item.plus)
             {
             case RUNE_DIS:                      // iron
-                item.colour = CYAN;
+                item.colour = EC_IRON;
                 break;
 
             case RUNE_COCYTUS:                  // icy
-                item.colour = LIGHTBLUE;
+                item.colour = EC_ICE;
                 break;
 
             case RUNE_TARTARUS:                 // bone
-                item.colour = WHITE;
+                item.colour = EC_BONE;
                 break;
 
             case RUNE_SLIME_PITS:               // slimy
-                item.colour = GREEN;
+                item.colour = EC_SLIME;
                 break;
 
             case RUNE_SNAKE_PIT:                // serpentine
+                item.colour = EC_POISON;
+                break;
+                
             case RUNE_ELVEN_HALLS:              // elven
-                item.colour = LIGHTGREEN;
+                item.colour = EC_ELVEN;
                 break;
 
             case RUNE_VAULTS:                   // silver
-                item.colour = LIGHTGREY;
+                item.colour = EC_SILVER;
                 break;
 
             case RUNE_TOMB:                     // golden
-                item.colour = YELLOW;
+                item.colour = EC_GOLD;
                 break;
 
             case RUNE_SWAMP:                    // decaying
-                item.colour = BROWN;
+                item.colour = EC_DECAY;
                 break;
                 
-            case RUNE_SHOALS:
-                item.colour = BLUE;             // liquid
+            case RUNE_SHOALS:                   // liquid
+                item.colour = EC_WATER;
+                break;
 
-            // These two are hardly unique, but since colour isn't used for 
+            // This one is hardly unique, but since colour isn't used for 
             // stacking, so we don't have to worry to much about this. -- bwr
             case RUNE_DEMONIC:             // random pandemonium demonlords
+            {
+                element_type types[] =
+                    {EC_EARTH, EC_ELECTRICITY, EC_ENCHANT, EC_HEAL,
+                     EC_BLOOD, EC_DEATH, EC_UNHOLY, EC_VEHUMET, EC_BEOGH,
+                     EC_CRYSTAL, EC_SMOKE, EC_DWARVEN, EC_ORCISH, EC_GILA};
+                
+                item.colour = RANDOM_ELEMENT(types);
+                break;
+            }
+
             case RUNE_ABYSSAL:             // random in abyss
-                item.colour = random_colour();
+                item.colour = EC_RANDOM;
                 break;
 
             case RUNE_MNOLEG:                   // glowing
-                item.colour = coinflip() ? MAGENTA : LIGHTMAGENTA;
+                item.colour = EC_MUTAGENIC;
                 break;
 
             case RUNE_LOM_LOBON:                // magical
-                item.colour = BLUE;
+                item.colour = EC_MAGIC;
                 break;
 
             case RUNE_CEREBOV:                  // fiery
-                item.colour = coinflip() ? RED : LIGHTRED;
+                item.colour = EC_FIRE;
                 break;
 
             case RUNE_GEHENNA:                  // obsidian
             case RUNE_GLOORX_VLOQ:              // dark
             default:
-                item.colour = DARKGREY;
+                item.colour = EC_DARK;
                 break;
             }
             break;

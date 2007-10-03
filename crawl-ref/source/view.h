@@ -55,6 +55,11 @@ enum element_type
     EC_STONE,           // colour of the area's stone
     EC_MIST,            // colour of mist
     EC_SHIMMER_BLUE,    // shimmering colours of blue.
+    EC_DECAY,           // colour of decay/swamp
+    EC_SILVER,          // colour of silver
+    EC_GOLD,            // colour of gold
+    EC_IRON,            // colour of iron
+    EC_BONE,            // colour of bone
     EC_RANDOM           // any colour (except BLACK)
 };
 
