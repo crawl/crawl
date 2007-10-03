@@ -2530,7 +2530,7 @@ static void newgame_make_item(int slot, equipment_type eqslot,
     item.plus2     = plus2;
     item.special   = 0;
 
-    if (slot != EQ_NONE)
+    if (eqslot != EQ_NONE)
         you.equip[eqslot] = slot;
 }
 
