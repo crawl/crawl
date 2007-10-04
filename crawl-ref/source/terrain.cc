@@ -198,8 +198,8 @@ bool grid_destroys_items( dungeon_feature_type grid )
 // returns 0 if grid is not an altar, else it returns the GOD_* type
 god_type grid_altar_god( dungeon_feature_type grid )
 {
-    if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_BEOGH)
-        return (static_cast<god_type>( grid - DNGN_ALTAR_ZIN + 1 ));
+    if (grid >= DNGN_ALTAR_FIRST_GOD && grid <= DNGN_ALTAR_LAST_GOD)
+        return (static_cast<god_type>( grid - DNGN_ALTAR_FIRST_GOD + 1 ));
 
     return (GOD_NO_GOD);
 }
@@ -211,12 +211,12 @@ dungeon_feature_type altar_for_god( god_type god )
     if (god == GOD_NO_GOD || god >= NUM_GODS)
         return (DNGN_FLOOR);  // Yeah, lame. Tell me about it.
 
-    return static_cast<dungeon_feature_type>(DNGN_ALTAR_ZIN + god - 1);
+    return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
 }
 
 bool grid_is_branch_stairs( dungeon_feature_type grid )
 {
-    return ((grid >= DNGN_ENTER_ORCISH_MINES && grid <= DNGN_ENTER_RESERVED_4)
+    return ((grid >= DNGN_ENTER_FIRST_BRANCH && grid <= DNGN_ENTER_LAST_BRANCH)
             || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
 }
 

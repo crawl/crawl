@@ -73,6 +73,8 @@ enum ability_type
     ABIL_EVOKE_LEVITATE,
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_END_TRANSFORMATION,           //   55
+    
+    // Divine abilities
     ABIL_ZIN_REPEL_UNDEAD = 110,       //  110
     ABIL_ZIN_HEALING,
     ABIL_ZIN_PESTILENCE,
@@ -896,13 +898,15 @@ enum dungeon_feature_type
     DNGN_STONE_STAIRS_DOWN_I,
     DNGN_STONE_STAIRS_DOWN_II,
     DNGN_STONE_STAIRS_DOWN_III,
-    DNGN_ROCK_STAIRS_DOWN,   //   85 - was this supposed to be a ladder? {dlb}
+    DNGN_ROCK_STAIRS_DOWN,   //  85 - now escape hatch (Stonesoup 0.3)
 
+    // corresponding up stairs (same order as above)
     DNGN_STONE_STAIRS_UP_I,
     DNGN_STONE_STAIRS_UP_II,
     DNGN_STONE_STAIRS_UP_III,
-    DNGN_ROCK_STAIRS_UP,    //   89 - was this supposed to be a ladder? {dlb}
+    DNGN_ROCK_STAIRS_UP,    //   89 - now escape hatch (Stonesoup 0.3)
 
+    // Various gates
     DNGN_ENTER_DIS = 92,               //   92
     DNGN_ENTER_GEHENNA,
     DNGN_ENTER_COCYTUS,
@@ -917,7 +921,9 @@ enum dungeon_feature_type
     DNGN_BUILDER_SPECIAL_WALL = 105,   //  105; builder() only
     DNGN_BUILDER_SPECIAL_FLOOR,        //  106; builder() only
 
-    DNGN_ENTER_ORCISH_MINES = 110,     //  110
+    // Entrances to various branches
+    DNGN_ENTER_FIRST_BRANCH = 110,     //  110
+    DNGN_ENTER_ORCISH_MINES = DNGN_ENTER_FIRST_BRANCH,
     DNGN_ENTER_HIVE,
     DNGN_ENTER_LAIR,
     DNGN_ENTER_SLIME_PITS,
@@ -934,8 +940,12 @@ enum dungeon_feature_type
     DNGN_ENTER_RESERVED_2,
     DNGN_ENTER_RESERVED_3,
     DNGN_ENTER_RESERVED_4,             // 126 
+    DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_RESERVED_4,
 
-    DNGN_RETURN_FROM_ORCISH_MINES = 130, //  130
+    // Exits from various branches
+    // Order must be the same as above
+    DNGN_RETURN_FROM_FIRST_BRANCH = 130, //  130
+    DNGN_RETURN_FROM_ORCISH_MINES = DNGN_RETURN_FROM_FIRST_BRANCH,
     DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_LAIR,
     DNGN_RETURN_FROM_SLIME_PITS,
@@ -952,12 +962,15 @@ enum dungeon_feature_type
     DNGN_RETURN_RESERVED_2,
     DNGN_RETURN_RESERVED_3,
     DNGN_RETURN_RESERVED_4,             // 146
+    DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_RESERVED_4,
 
     // Portals to various places unknown.
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
 
-    DNGN_ALTAR_ZIN = 180,              //  180
+    // Order of altars must match order of gods (god_type)
+    DNGN_ALTAR_FIRST_GOD = 180,        // 180
+    DNGN_ALTAR_ZIN = DNGN_ALTAR_FIRST_GOD,
     DNGN_ALTAR_SHINING_ONE,
     DNGN_ALTAR_KIKUBAAQUDGHA,
     DNGN_ALTAR_YREDELEMNUL,
@@ -971,6 +984,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_ELYVILON,               //  191
     DNGN_ALTAR_LUGONU,
     DNGN_ALTAR_BEOGH,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_BEOGH,
 
     DNGN_BLUE_FOUNTAIN = 200,          //  200
     DNGN_DRY_FOUNTAIN_I,
