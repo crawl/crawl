@@ -80,8 +80,7 @@
    Ranges for all these: 0 or 1.
 
    make noise: Irritate nearby creatures and disrupts rest. Weapons only.
-   Range: 1 - 4, for different types of noises (see special_wielded() in
-   it_use3.cc); 0 for none.
+   Range: 0 or 1.
    no spells: Prevents any spellcasting (but not scrolls or wands etc)
    Range: 0 or 1.
    teleport: Every now and then randomly teleports you. *Really* annoying.
@@ -861,7 +860,7 @@
         SPWPN_VAMPIRICISM, 0, 0, 0, 0, 0,
         0, 0, 0, 1, 1, 0,       // res poison, prot life
         0, 0, 0, 0, 0, 0,
-        0, 3, 0, 0, 0,          // noise
+        0, 1, 0, 0, 0,          // noise
         0, 0, 0, 0, 0,
         0, -30                  // stealth
     }

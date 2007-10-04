@@ -5,7 +5,8 @@ messages, or adding new ones really easy. This file will
 hopefully help you in this endeavour.
 
 shout.txt handles message output for monsters noticing you.
-speak.txt handles messages for monsters communicating.
+speak.txt handles messages for monsters communicating, and 
+also the messages for weapon noises.
 
 If you take a look through the two files, you'll see that 
 all entries have basically the same structure. Let's have a 
@@ -78,6 +79,11 @@ friendly '5'
   in this last round still nothing has been found, the 
   monster stays silent.
 
+  For obvious reasons, weapon noises get by without any such
+  prefixes, and the only hardcoded keywords are 
+  "noisy weapon" for weapons with the noises property, and 
+  "singing sword" for (who'd have guessed?) the Singing 
+  Sword.
 
 w:9
   After a clear line the actual talk begins. You can skew 
@@ -122,6 +128,10 @@ Again, there have to be clear lines between the different
 messages. If messages are placed directly one after another 
 they will be printed as a block. This can be useful, e.g. 
 for outputting first a "spell" and then it's (fake) result.
+
+Note that this does not work for weapon noises. Here only 
+the first part of a paragraph before a carriage return is 
+parsed.
 
 The message entries themselves can be longer than a line, 
 though Crawl will simply truncate it should it exceed the 
@@ -182,6 +192,11 @@ VISUAL:
   that can't speak (animals, usually), and manually set to 
   MSGCH_SOUND for all those variants of "You hear a shout!"
 
+  For weapon noises only a subset of the above is relevant,
+  as anything including VISUAL and the channel keys SPELL 
+  and ENCHANT are considered invalid and will trigger a 
+  default message instead. Again, the default channel is 
+  MSGCH_TALK.
 
 @The_monster@, @surface@
   Like with @_friendly_imp_@ above, a number of variables 
@@ -249,12 +264,24 @@ But wait, there's more!
 Also, @says@ will get replaced with a synonym of 'say' that 
 fits a monster's (hardcoded) speech pattern and noise level.
 
+Weapon noises are handled differently in that all of the 
+above replacements don't hold. Instead you can use 
+@The_weapon@, @the_weapon@, @Your_weapon@, @your_weapon@ and
+@weapon@ which will get replaced by "The (weapon name)", 
+"the (weapon name)", "Your (weapon name)", "your (weapon 
+name)" and the plain weapon name, respectively. Note that 
+the Singing Sword, being unique, cannot be referred to by 
+the possessive variants, so they will be replaced with one 
+of the definite article ones.
+
 Pre-defined variables in the database include _high_priest_, 
 _mercenary_guard_, _wizard_, _hostile_adventurer_, 
 _friendly_imp_, _hostile_imp_, and _tormentor_. There are 
 also a few synonyms defined at the beginning of speak.txt 
 such as for @ATTACK@, @pointless@, @shouts@, @wails@, and
 others.
+Weapon noises also use a number of synonyms which are 
+defined at the end of speak.txt.
  
 The best way to learn about how variables and other concepts
 can be used is probably to see how it has been done for 
@@ -286,6 +313,10 @@ as usual). In wizard mode this offers several new commands
 such as 'F' (make monster friendly/unfriendly) and 's' 
 (make monster shout). These last two are of particular 
 interest to monster speech designers.
+
+The Singing Sword and all other hardcoded artefacts can be 
+created with '&|'. The Elemental Staff and the spear of 
+Voo-Doo are examples of noisy weapons.
 
 You can also temporarily increase the likelihood of a given
 message by adding a high weight value before it, e.g. w:500,
