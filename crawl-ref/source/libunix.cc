@@ -217,7 +217,7 @@ static void termio_init()
     tcsetattr(0, TCSAFLUSH, &game_term);
 
 #ifdef UNICODE_GLYPHS
-    if ((crawl_state.unicode_ok = !!setlocale(LC_ALL, "")))
+    if ((crawl_state.unicode_ok = !!setlocale(LC_ALL, UNICODE_LOCALE)))
     {
         crawl_state.glyph2strfn = unix_glyph2string;
         crawl_state.multibyte_strlen = unix_multibyte_strlen;
