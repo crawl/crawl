@@ -738,7 +738,7 @@ static void handle_wizard_command( void )
         if (cancelable_get_line( specs, sizeof( specs ) ))
         {
             canned_msg( MSG_OK );
-            return;
+            break;
         }
 
         std::string dst = specs;
@@ -753,7 +753,7 @@ static void handle_wizard_command( void )
         {
             mprf("No map named '%s' or tagged '%s'.",
                  dst.c_str(), dst.c_str());
-            return;
+            break;
         }
 
         grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
@@ -1007,6 +1007,7 @@ static void handle_wizard_command( void )
         formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
         break;
     }
+    you.turn_is_over = false;
 }
 #endif
 
