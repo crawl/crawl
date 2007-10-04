@@ -4105,7 +4105,12 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
     //
     // Using check_mons_resist_magic here since things like disintegrate
     // are beyond this point. -- bwr
-    if (check_mons_resist_magic( mon, beam.ench_power )
+
+    // death_check should be set true already if one of the beams above
+    // did its thing but wants to see if the monster died.
+    //
+    if (!death_check
+        && check_mons_resist_magic( mon, beam.ench_power )
         && beam.flavour != BEAM_HASTE 
         && beam.flavour != BEAM_HEALING
         && beam.flavour != BEAM_INVISIBILITY)
