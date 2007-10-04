@@ -700,19 +700,19 @@ static void place_player_on_stair(branch_type old_branch,
         // look for coresponding down stair
         stair_taken += (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I);
     }
-    else if (stair_taken >= DNGN_RETURN_FROM_ORCISH_MINES 
+    else if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
              && stair_taken < 150) // 20 slots reserved
     {
         // find entry point to subdungeon when leaving
-        stair_taken += (DNGN_ENTER_ORCISH_MINES
-                        - DNGN_RETURN_FROM_ORCISH_MINES);
+        stair_taken += (DNGN_ENTER_FIRST_BRANCH
+                        - DNGN_RETURN_FROM_FIRST_BRANCH);
     }
-    else if (stair_taken >= DNGN_ENTER_ORCISH_MINES
-             && stair_taken < DNGN_RETURN_FROM_ORCISH_MINES)
+    else if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
+             && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
     {
         // find exit staircase from subdungeon when entering 
-        stair_taken += (DNGN_RETURN_FROM_ORCISH_MINES
-                        - DNGN_ENTER_ORCISH_MINES);
+        stair_taken += (DNGN_RETURN_FROM_FIRST_BRANCH
+                        - DNGN_ENTER_FIRST_BRANCH);
     }
     else if (stair_taken >= DNGN_ENTER_DIS 
              && stair_taken <= DNGN_TRANSIT_PANDEMONIUM)

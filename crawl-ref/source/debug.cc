@@ -537,8 +537,8 @@ static dungeon_feature_type find_appropriate_stairs(bool down)
 
             dungeon_feature_type stairs = your_branch().exit_stairs;
 
-            if (stairs < DNGN_RETURN_FROM_ORCISH_MINES
-                || stairs > DNGN_RETURN_RESERVED_4)
+            if (stairs < DNGN_RETURN_FROM_FIRST_BRANCH
+                || stairs > DNGN_RETURN_FROM_LAST_BRANCH)
             {
                 mpr("This branch has no exit stairs defined.");
                 return DNGN_UNSEEN;
@@ -1641,7 +1641,7 @@ void debug_get_religion(void)
     else
     {
         grd[you.x_pos][you.y_pos] =
-            static_cast<dungeon_feature_type>( DNGN_ALTAR_ZIN + god - 1 );
+            static_cast<dungeon_feature_type>( DNGN_ALTAR_FIRST_GOD + god - 1 );
         god_pitch(god);
     }
 }                               // end debug_add_skills()

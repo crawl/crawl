@@ -4117,7 +4117,7 @@ static int vault_grid( vault_placement &place,
                    (vgrid == 'A') ? DNGN_STONE_ARCH :
                    (vgrid == 'B') ?
                    static_cast<dungeon_feature_type>(
-                       DNGN_ALTAR_ZIN + altar_count) :// see below
+                       DNGN_ALTAR_FIRST_GOD + altar_count) :// see below
                    (vgrid == 'C') ? pick_an_altar() :   // f(x) elsewhere {dlb}
                    (vgrid == 'F') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
@@ -4613,7 +4613,7 @@ static dungeon_feature_type pick_an_altar()
             do
             {
                 altar_type =
-                    static_cast<dungeon_feature_type>(DNGN_ALTAR_ZIN +
+                    static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD +
                                                       random2(NUM_GODS - 1));
             }
             while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH

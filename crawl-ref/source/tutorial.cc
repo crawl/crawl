@@ -1932,9 +1932,9 @@ void tutorial_describe_item(item_def &item)
 
 bool tutorial_feat_interesting(dungeon_feature_type feat)
 {
-    if (feat >= DNGN_ALTAR_ZIN && feat <= DNGN_ALTAR_BEOGH)
+    if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
         return true;
-    if (feat >= DNGN_ENTER_ORCISH_MINES && feat <= DNGN_ENTER_SHOALS)
+    if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
         return true;
         
     switch (feat)
@@ -1966,6 +1966,11 @@ void tutorial_describe_feature(dungeon_feature_type feat)
     {
        case DNGN_ORCISH_IDOL:
        case DNGN_GRANITE_STATUE:
+            ostr << "It's just a harmless statue - or is it?\n Even if not "
+                    "a danger by themselves, statues often mark special "
+                    "areas, dangerous ones or ones harbouring treasure.";
+            break;
+
        case DNGN_TRAP_MAGICAL:
        case DNGN_TRAP_MECHANICAL:
             ostr << "These nasty constructions can do physical damage (with "
@@ -1981,6 +1986,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             }
             Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
+            
        case DNGN_STONE_STAIRS_DOWN_I:
        case DNGN_STONE_STAIRS_DOWN_II:
        case DNGN_STONE_STAIRS_DOWN_III:
@@ -1989,6 +1995,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                     "press <w><<<magenta> while standing on the upstairs.";
             Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
             break;
+            
        case DNGN_STONE_STAIRS_UP_I:
        case DNGN_STONE_STAIRS_UP_II:
        case DNGN_STONE_STAIRS_UP_III:
@@ -2016,25 +2023,13 @@ void tutorial_describe_feature(dungeon_feature_type feat)
             Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH] = 0;
             break;
             
-       case DNGN_ALTAR_ZIN:
-       case DNGN_ALTAR_SHINING_ONE:
-       case DNGN_ALTAR_KIKUBAAQUDGHA:
-       case DNGN_ALTAR_YREDELEMNUL:
-       case DNGN_ALTAR_XOM:
-       case DNGN_ALTAR_VEHUMET:
-       case DNGN_ALTAR_OKAWARU:
-       case DNGN_ALTAR_MAKHLEB:
-       case DNGN_ALTAR_SIF_MUNA:
-       case DNGN_ALTAR_TROG:
-       case DNGN_ALTAR_NEMELEX_XOBEH:
-       case DNGN_ALTAR_ELYVILON:
-       case DNGN_ALTAR_LUGONU:
-       case DNGN_ALTAR_BEOGH:
-       {
-            god_type altar_god = grid_altar_god(feat);
-
-            if (you.religion == GOD_NO_GOD)
+       default:
+            if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
             {
+                god_type altar_god = grid_altar_god(feat);
+
+                if (you.religion == GOD_NO_GOD)
+                {
                 ostr << "This is your chance to join a religion! In general, the "
                         "gods will help their followers, bestowing powers of all "
                         "sorts upon them, but many of them demand a life of "
@@ -2044,11 +2039,11 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                      << "<magenta> by pressing <w>p<magenta> while standing on "
                         "the altar. Before taking up the responding faith you'll "
                         "be asked for confirmation.";
-            }
-            else
-            {
-                if (you.religion == altar_god)
+                }
+                else
                 {
+                    if (you.religion == altar_god)
+                    {
                     ostr << "If "
                          << god_name(you.religion)
                          << " likes to have items or corpses sacrificed on altars, "
@@ -2057,9 +2052,9 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                             "<w>^<magenta> allows you to check "
                          << god_name(you.religion)
                          << "'s likes and dislikes at any time.";
-                }
-                else
-                {
+                    }
+                    else
+                    {
                     ostr << god_name(you.religion)
                          << " probably won't like it if you switch allegiance, "
                             "but having a look won't hurt: to get information on <w>";
@@ -2071,32 +2066,21 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                             "\nTo see your current standing with "
                          << god_name(you.religion)
                          << " press <w>^<magenta>.";
+                   }
                 }
+                Options.tutorial_events[TUT_SEEN_ALTAR] = 0;
+                break;
             }
-            Options.tutorial_events[TUT_SEEN_ALTAR] = 0;
-            break;
-       }
-       case DNGN_ENTER_ORCISH_MINES:
-       case DNGN_ENTER_HIVE:
-       case DNGN_ENTER_LAIR:
-       case DNGN_ENTER_SLIME_PITS:
-       case DNGN_ENTER_VAULTS:
-       case DNGN_ENTER_CRYPT:
-       case DNGN_ENTER_HALL_OF_BLADES:
-       case DNGN_ENTER_ZOT:
-       case DNGN_ENTER_TEMPLE:
-       case DNGN_ENTER_SNAKE_PIT:
-       case DNGN_ENTER_ELVEN_HALLS:
-       case DNGN_ENTER_TOMB:
-       case DNGN_ENTER_SWAMP:
-       case DNGN_ENTER_SHOALS:
-            ostr << "An entryway into one of the many dungeon branches in Crawl. ";
-            if (feat != DNGN_ENTER_TEMPLE)
-                ostr << "Beware, sometimes these can be deadly!";
-            break;
-
-       default:
-            return;
+            else if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
+            {
+                ostr << "An entryway into one of the many dungeon branches in "
+                        "Crawl. ";
+                if (feat != DNGN_ENTER_TEMPLE)
+                    ostr << "Beware, sometimes these can be deadly!";
+                break;
+            }
+            else
+                return;
     }
 
     std::string broken = ostr.str();
