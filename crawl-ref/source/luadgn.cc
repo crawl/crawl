@@ -1405,7 +1405,7 @@ static int dgn_floor_halo(lua_State *ls)
     }
 
     const char* s2 = luaL_checkstring(ls, 2);
-    unsigned char colour = str_to_colour(s2);
+    short colour = str_to_colour(s2);
 
     if (colour == -1)
     {
