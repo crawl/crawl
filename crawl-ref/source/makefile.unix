@@ -21,6 +21,11 @@ OS_TYPE = UNIX
 # libncursesw available.
 UNICODE_GLYPHS = n
 
+# If you're using UNICODE_GLYPHS=y, and have a preferred Unicode
+# (UTF-8) locale you want Crawl to use, you can set it here. The
+# default is en_US.UTF-8.
+UNICODE_LOCALE =
+
 # If you have lex and yacc, set DOYACC to y (lowercase y).
 DOYACC := y
 
@@ -53,6 +58,10 @@ INCLUDES = -I/usr/include/ncursesw
 # separate libncursesw; in that case, change this line accordingly.
 LIBCURS  = ncursesw
 EXTRA_FLAGS += -DUNICODE_GLYPHS
+
+ifneq ($(UNICODE_LOCALE),)
+EXTRA_FLAGS += -DUNICODE_LOCALE=\"$(UNICODE_LOCALE)\"
+endif
 
 # The standard ncurses library also supports Unicode on Mac OS/Darwin.
 ifeq ($(shell uname),Darwin)
