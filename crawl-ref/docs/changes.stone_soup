@@ -1,9 +1,5 @@
 Stone Soup 0.3.0 (2007????)
 ---------------------------
-Breaks save files.
-
-Outsourced monster, spell and feature descriptions as well as monster talk, so 
-players can add to them.
 
 Gods
 ----
@@ -58,7 +54,7 @@ Monsters
 * Berserked friendlies ignore commands
 * Monsters confused by you that kill themselves or others now give xp
 * [1779770] Monsters taking stairs are created according to stair destination
-* Condensed monster descriptions
+* Monster descriptions are shorter when looking at them with 'x' and targeting.
 
 Levels
 ------
@@ -82,8 +78,17 @@ Interface
 * Added visible beam path for targetting
 * Added warning when trying to fight wielding a non-weapon
 * Intertravel also allows travelling to entrances of branches
+* Polearms can be used to attack monsters submerged in shallow water using
+  Ctrl+direction when adjacent.
 
-... and what feels like a million of bug fixes. :)
+Miscellaneous
+-------------
+* Monster, spell and feature descriptions and monster dialogue are now
+  loaded from text files.
+* Invisibility is more useful.
+
+... and what feels like a million bug fixes. :)
+
 
 Stone Soup 0.2.7 (20070611)
 ---------------------------

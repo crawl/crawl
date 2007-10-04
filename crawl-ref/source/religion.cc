@@ -1194,6 +1194,7 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
         case GOD_VEHUMET:
+        case GOD_MAKHLEB:
         case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
@@ -1214,6 +1215,7 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
+        case GOD_MAKHLEB:
             simple_god_message(" accepts your kill.");
             ret = true;
             // Holy gods are easier to please this way
