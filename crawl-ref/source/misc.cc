@@ -1216,8 +1216,6 @@ void new_level(void)
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     cprintf("%s", level_description_string().c_str());
 
-    dgn_set_floor_colours();
-    
     clear_to_end_of_line();
 #ifdef DGL_WHEREIS
     whereis_record();

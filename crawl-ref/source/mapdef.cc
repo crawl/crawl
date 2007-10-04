@@ -1158,7 +1158,8 @@ map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(),
       welcome_messages(), map(), mons(), items(), keyspecs(),
       prelude("dlprelude"), main("dlmain"), validate("dlvalidate"),
-      veto("dlveto"), index_only(false), cache_offset(0L)
+      veto("dlveto"), rock_colour(BLACK), floor_colour(BLACK),
+      index_only(false), cache_offset(0L)
 {
     init();
 }

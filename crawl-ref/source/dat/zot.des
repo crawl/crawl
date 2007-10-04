@@ -6,10 +6,13 @@
 ##############################################################################
 # hall_of_Zot
 
-NAME:    hall_of_Zot
+NAME:    hall_of_Zot_5
 PLACE:   Zot:5
 ORIENT:  north
 LFLAGS:  no_tele_control
+
+FLOORCOL: magenta
+ROCKCOL:  lightmagenta
 
 #traps
 SUBST:   C = c:1000 =
@@ -79,6 +82,60 @@ xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
 xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
 ENDMAP
 
+################################################################
 
+# For colouring the walls and floors of the first four levels
 
+NAME:     hall_of_Zot_1
+PLACE:    Zot:1
+TAGS:     transparent
+ORIENT:   float
 
+FLOORCOL: lightgrey
+ROCKCOL:  lightgrey
+
+MAP
+.
+ENDMAP
+
+###
+
+NAME:     hall_of_Zot_2
+PLACE:    Zot:2
+TAGS:     transparent
+ORIENT:   float
+
+FLOORCOL: lightgrey
+ROCKCOL:  blue
+
+MAP
+.
+ENDMAP
+
+###
+
+NAME:     hall_of_Zot_3
+PLACE:    Zot:3
+TAGS:     transparent
+ORIENT:   float
+
+FLOORCOL: blue
+ROCKCOL:  lightblue
+
+MAP
+.
+ENDMAP
+
+###
+
+NAME:     hall_of_Zot_4
+PLACE:    Zot:4
+TAGS:     transparent
+ORIENT:   float
+
+FLOORCOL: lightblue
+ROCKCOL:  magenta
+
+MAP
+.
+ENDMAP

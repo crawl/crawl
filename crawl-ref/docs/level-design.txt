@@ -420,6 +420,16 @@ BFLAGS:  Persistent, changeable per-*branch* flags which affect game
          the Abyss), and no_magic_map, which prevents magic mapping
          from working.
 
+FLOORCOL: blue
+          FLOORCOL: allows you to set the floor colour for the level
+          the vault appears in.  Should only be used for bazaars and
+          other portal vaults.
+
+ROCKCOL:  yellow
+          ROCKCOL: allows you to set the colour of rock walls for the
+          level the vault appears in.  Should only be used for bazaars and
+          other portal vaults.
+         
 ITEM:    (list of items, separated by comma)
          These are used to help place specified items at specific places 
          within a vault. They create an array with up to 8 positions. What's
@@ -489,7 +499,7 @@ COLOUR:  . = green / blue:5 / red / none
          COLOUR: should be used very sparingly, and only for features
          where it won't cause confusion (i.e.: never re-colour features
          like lava!)
-         
+
 SHUFFLE: def, 12/3?
          This allows you to randomly permute glyphs on the map. There are 
          two ways:

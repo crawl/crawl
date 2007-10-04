@@ -55,6 +55,7 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
+%token <i>      FLOORCOL ROCKCOL
 
 %token <i>      COMMA INTEGER CHARACTER
 
@@ -159,6 +160,8 @@ metaline        : place
                 | subst
                 | nsubst
                 | colour
+                | floorcol
+                | rockcol
                 | shuffle
                 | tags
                 | lflags
@@ -345,6 +348,24 @@ mspec_segment   : STRING
 
 colour          : COLOUR colour_specifiers { }
                 ;
+
+floorcol        : FLOORCOL { }
+                | FLOORCOL STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("floor_colour(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
+
+rockcol         : ROCKCOL { }
+                | ROCKCOL STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("rock_colour(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
 
 colour_specifiers : colour_specifier  { }
                   | colour_specifiers COMMA colour_specifier { }

@@ -734,23 +734,34 @@ static void handle_wizard_command( void )
 
     case 'P':
     {
-        mpr( "Destination for portal? ", MSGCH_PROMPT );
-        get_input_line( specs, sizeof( specs ) );
+        mpr( "Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT );
+        if (cancelable_get_line( specs, sizeof( specs ) ))
+        {
+            canned_msg( MSG_OK );
+            return;
+        }
 
         std::string dst = specs;
         dst = trim_string(dst);
+        dst = replace_all(dst, " ", "_");
 
         if (dst == "")
-            canned_msg( MSG_OK );
-        else
+            dst = "bazaar";
+
+        if (find_map_by_name(dst) == -1 &&
+            random_map_for_tag(dst, false) == -1)
         {
-            grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
-            map_wiz_props_marker
-                *marker = new map_wiz_props_marker(you.pos());
-            marker->set_property("dst", dst);
-            marker->set_property("desc", "wizard portal, dest = " + dst);
-            env.markers.add(marker);
+            mprf("No map named '%s' or tagged '%s'.",
+                 dst.c_str(), dst.c_str());
+            return;
         }
+
+        grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
+        map_wiz_props_marker
+            *marker = new map_wiz_props_marker(you.pos());
+        marker->set_property("dst", dst);
+        marker->set_property("desc", "wizard portal, dest = " + dst);
+        env.markers.add(marker);
         break;
     }
 

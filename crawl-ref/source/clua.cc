@@ -742,8 +742,6 @@ LUARET1(you_see_grid, boolean,
 LUARET1(you_see_grid_no_trans, boolean,
         see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 // increase by 1 because check happens on old level
-LUARET1(bzr_floor_colour, string,
-        colour_to_str(bazaar_floor_colour(you.your_level + 2)))
 
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
@@ -824,7 +822,6 @@ static const struct luaL_reg you_lib[] =
 
     { "see_grid",          you_see_grid },
     { "see_grid_no_trans", you_see_grid_no_trans },
-    { "bazaar_floor",      bzr_floor_colour },
     
     { NULL, NULL },
 };

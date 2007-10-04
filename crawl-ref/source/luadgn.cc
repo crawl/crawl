@@ -23,6 +23,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
+#include "view.h"
 
 // Lua interpreter for the dungeon builder.
 CLua dlua(false);
@@ -924,6 +925,139 @@ static int dgn_load_des_file(lua_State *ls)
     return (0);
 }
 
+static int dgn_floor_colour(lua_State *ls)
+{
+    MAP(ls, 1, map);
+
+    const char *s = luaL_checkstring(ls, 2);
+    int colour = str_to_colour(s);
+
+    if (colour < 0 || colour == BLACK)
+    {
+        std::string error;
+
+        if (colour == BLACK)
+        {
+            error = "Can't set floor to black.";
+        }
+        else {
+            error = "No such colour as '";
+            error += s;
+            error += "'";
+        }
+
+        luaL_argerror(ls, 2, error.c_str());
+
+        return (0);
+    }
+
+    map->floor_colour = (unsigned char) colour;
+    return (0);
+}
+
+static int dgn_rock_colour(lua_State *ls)
+{
+    MAP(ls, 1, map);
+
+    const char *s = luaL_checkstring(ls, 2);
+    int colour = str_to_colour(s);
+
+    if (colour < 0 || colour == BLACK)
+    {
+        std::string error;
+
+        if (colour == BLACK)
+        {
+            error = "Can't set rock to black.";
+        }
+        else {
+            error = "No such colour as '";
+            error += s;
+            error += "'";
+        }
+
+        luaL_argerror(ls, 2, error.c_str());
+
+        return (0);
+    }
+
+    map->rock_colour = (unsigned char) colour;
+
+    return (0);
+}
+
+static int dgn_get_floor_colour(lua_State *ls)
+{
+    PLUARET(string, colour_to_str(env.floor_colour));
+}
+
+static int dgn_get_rock_colour(lua_State *ls)
+{
+    PLUARET(string, colour_to_str(env.rock_colour));
+}
+
+static int dgn_change_floor_colour(lua_State *ls)
+{
+    const char *s = luaL_checkstring(ls, 1);
+    int colour = str_to_colour(s);
+
+    if (colour < 0 || colour == BLACK)
+    {
+        std::string error;
+
+        if (colour == BLACK)
+        {
+            error = "Can't set floor to black.";
+        }
+        else {
+            error = "No such colour as '";
+            error += s;
+            error += "'";
+        }
+
+        luaL_argerror(ls, 1, error.c_str());
+
+        return (0);
+    }
+
+    env.floor_colour = (unsigned char) colour;
+
+    viewwindow(true, false);
+
+    return (0);
+}
+
+static int dgn_change_rock_colour(lua_State *ls)
+{
+    const char *s = luaL_checkstring(ls, 1);
+    int colour = str_to_colour(s);
+
+    if (colour < 0 || colour == BLACK)
+    {
+        std::string error;
+
+        if (colour == BLACK)
+        {
+            error = "Can't set rock to black.";
+        }
+        else {
+            error = "No such colour as '";
+            error += s;
+            error += "'";
+        }
+
+        luaL_argerror(ls, 1, error.c_str());
+
+        return (0);
+    }
+
+    env.rock_colour = (unsigned char) colour;
+
+    viewwindow(true, false);
+
+    return (0);
+}
+
 const char *dngn_feature_names[] =
 {
     "unseen", "closed_door", "secret_door", "rock_wall", "stone_wall",
@@ -1199,6 +1333,127 @@ static int dgn_mons_from_index(lua_State *ls)
     return (1);
 }
 
+static int lua_dgn_set_lt_callback(lua_State *ls)
+{
+    const char *level_type = luaL_checkstring(ls, 1);
+
+    if (level_type == NULL || strlen(level_type) == 0)
+        return (0);
+
+    const char *callback_name = luaL_checkstring(ls, 2);
+
+    if (callback_name == NULL || strlen(callback_name) == 0)
+        return (0);
+
+    dgn_set_lt_callback(level_type, callback_name);
+
+    return (0);
+}
+
+static int dgn_fixup_stairs(lua_State *ls)
+{
+    const dungeon_feature_type up_feat =
+        dungeon_feature_by_name(luaL_checkstring(ls, 1));
+
+    const dungeon_feature_type down_feat =
+        dungeon_feature_by_name(luaL_checkstring(ls, 2));
+
+    if (up_feat == DNGN_UNSEEN && down_feat == DNGN_UNSEEN)
+        return(0);
+
+    for (int y = 0; y < GYM; ++y)
+    {
+        for (int x = 0; x < GXM; ++x)
+        {
+            const dungeon_feature_type feat = grd[x][y];
+            if (grid_is_stone_stair(feat) || grid_is_rock_stair(feat))
+            {
+                dungeon_feature_type new_feat = DNGN_UNSEEN;
+
+                if (grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
+                    new_feat = down_feat;
+                else
+                    new_feat = up_feat;
+
+                if (new_feat != DNGN_UNSEEN)
+                {
+                    grd[x][y] = new_feat;
+                    env.markers.add(
+                        new map_feature_marker(
+                            coord_def(x, y),
+                            new_feat));
+                }
+            }
+        }
+    }
+
+    return (0);
+}
+
+static int dgn_floor_halo(lua_State *ls)
+{
+    std::string error = "";
+
+    const char* s1 = luaL_checkstring(ls, 1);
+    const dungeon_feature_type target = dungeon_feature_by_name(s1);
+
+    if (target == DNGN_UNSEEN)
+    {
+        error += "No such dungeon feature as '";
+        error += s1;
+        error += "'.  ";
+    }
+
+    const char* s2 = luaL_checkstring(ls, 2);
+    unsigned char colour = str_to_colour(s2);
+
+    if (colour == -1)
+    {
+        error += "No such colour as '";
+        error += s2;
+        error += "'.";
+    }
+    else if (colour == BLACK)
+    {
+        error += "Can't set floor colour to black.";
+    }
+
+    if (error != "")
+    {
+        luaL_argerror(ls, 2, error.c_str());
+        return(0);
+    }
+
+    for (int y = 0; y < GYM; ++y)
+    {
+        for (int x = 0; x < GXM; ++x)
+        {
+            const dungeon_feature_type feat = grd[x][y];
+            if (feat == target)
+            {
+
+                for (int i=-1; i<=1; i++)
+                     for (int j=-1; j<=1; j++)
+                     {
+                         if (!map_bounds(x+i, y+j))
+                             continue;
+
+                         const dungeon_feature_type feat2 = grd[x+i][y+j];
+
+                         if (feat2 == DNGN_FLOOR
+                             || feat2 == DNGN_UNDISCOVERED_TRAP)
+                         {
+                             env.grid_colours[x+i][y+j] = colour;
+                         }
+                     }
+            }
+        }
+    }
+
+    return (0);
+}
+
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -1218,6 +1473,8 @@ static const struct luaL_reg dgn_lib[] =
     { "subst", dgn_subst },
     { "nsubst", dgn_nsubst },
     { "colour", dgn_colour },
+    { "floor_colour", dgn_floor_colour},
+    { "rock_colour", dgn_rock_colour},
     { "subst_remove", dgn_subst_remove },
     { "map", dgn_map },
     { "mons", dgn_mons },
@@ -1249,6 +1506,13 @@ static const struct luaL_reg dgn_lib[] =
     { "mons_from_index", dgn_mons_from_index },
     { "change_level_flags", dgn_change_level_flags},
     { "change_branch_flags", dgn_change_branch_flags},
+    { "get_floor_colour", dgn_get_floor_colour},
+    { "get_rock_colour",  dgn_get_rock_colour},
+    { "change_floor_colour", dgn_change_floor_colour},
+    { "change_rock_colour",  dgn_change_rock_colour},
+    { "set_lt_callback", lua_dgn_set_lt_callback},
+    { "fixup_stairs", dgn_fixup_stairs},
+    { "floor_halo", dgn_floor_halo},
 
     { NULL, NULL }
 };

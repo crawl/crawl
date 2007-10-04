@@ -173,7 +173,7 @@ static char plan_5();
 static char plan_6(int level_number);
 static bool octa_room(spec_room &sr, int oblique_max,
                       dungeon_feature_type type_floor);
-static void bazaar_level(int level_number);
+static void portal_vault_level(int level_number);
 static void labyrinth_level(int level_number);
 static void box_room(int bx1, int bx2, int by1, int by2,
                      dungeon_feature_type wall_type);
@@ -231,6 +231,9 @@ static void place_altars();
 
 typedef std::list<coord_def> coord_list;
 
+// MISC FUNCTIONS
+static void dgn_set_floor_colours();
+
 //////////////////////////////////////////////////////////////////////////
 // Static data
 
@@ -244,6 +247,9 @@ static bool dgn_level_vetoed = false;
 static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
+
+typedef std::map<std::string, std::string> callback_map;
+static callback_map level_type_post_callbacks;
 
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
@@ -540,6 +546,12 @@ static void register_place(const vault_placement &place)
 
     set_level_flags(place.map.level_flags.flags_set, true);
     unset_level_flags(place.map.level_flags.flags_unset, true);
+
+    if (place.map.floor_colour != BLACK)
+        env.floor_colour = place.map.floor_colour;
+
+    if (place.map.rock_colour != BLACK)
+        env.rock_colour = place.map.rock_colour;
 }
 
 static bool ensure_vault_placed(bool vault_success)
@@ -644,6 +656,9 @@ static void reset_level()
     }
     else
         env.level_flags = 0;
+
+    env.floor_colour = BLACK;
+    env.rock_colour  = BLACK;
 }
 
 static void build_layout_skeleton(int level_number, int level_type,
@@ -836,7 +851,10 @@ static void build_dungeon_level(int level_number, int level_type)
     if (you.level_type == LEVEL_LABYRINTH
         || you.level_type == LEVEL_PORTAL_VAULT
         || dgn_level_vetoed)
+    {
+        dgn_set_floor_colours();
         return;
+    }
     
     // hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level())
@@ -922,68 +940,39 @@ static char fix_black_colour(char incol)
         return incol;
 }
 
-int bazaar_floor_colour(int curr_level)
-{
-    const char floorcolours_bzr[] =
-    { BLUE, RED, LIGHTBLUE, MAGENTA, GREEN };
-
-    // set colour according to current level
-    // randomization would reset between save/reload and after showing map
-    return (floorcolours_bzr[curr_level % 5]);
-}
-
 void dgn_set_colours_from_monsters()
 {
     env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
     env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
 }
 
-void dgn_set_floor_colours()
+static void dgn_set_floor_colours()
 {
+    unsigned char old_floor_colour = env.floor_colour;
+    unsigned char old_rock_colour  = env.rock_colour;
+
     if (you.level_type == LEVEL_PANDEMONIUM || you.level_type == LEVEL_ABYSS)
     {
         dgn_set_colours_from_monsters();
     }
-    else if (you.level_type == LEVEL_LABYRINTH)
-    {
-        env.floor_colour = LIGHTGREY;
-        env.rock_colour  = BROWN;
-    }
-    else if (you.level_type == LEVEL_PORTAL_VAULT
-             && you.level_type_name == "bazaar")
-    {
-        // bazaars get gold walls
-        env.rock_colour = YELLOW;
-        
-        // bazaar floor is colourful
-        env.floor_colour = bazaar_floor_colour(you.your_level + 1);
-    }
-    else
+    else if (you.level_type == LEVEL_DUNGEON)
     {
         // level_type == LEVEL_DUNGEON
+        // Hall of Zot colours handled in dat/zot.des
         const int youbranch = you.where_are_you;
         env.floor_colour = branches[youbranch].floor_colour;
         env.rock_colour = branches[youbranch].rock_colour;
+    }
 
-        // Zot is multicoloured
-        if ( you.where_are_you == BRANCH_HALL_OF_ZOT )
-        {
-            const char floorcolours_zot[] = { LIGHTGREY, LIGHTGREY, BLUE,
-                                              LIGHTBLUE, MAGENTA };
-            const char rockcolours_zot[] = { LIGHTGREY, BLUE, LIGHTBLUE,
-                                             MAGENTA, LIGHTMAGENTA };
+    if (old_floor_colour != BLACK)
+        env.floor_colour = old_floor_colour;
+    if (old_rock_colour != BLACK)
+        env.rock_colour = old_rock_colour;
 
-            const int curr_subdungeon_level = player_branch_depth();
-
-            if ( curr_subdungeon_level > 5 || curr_subdungeon_level < 1 )
-                mpr("Odd colouring!");
-            else
-            {
-                env.floor_colour = floorcolours_zot[curr_subdungeon_level-1];
-                env.rock_colour = rockcolours_zot[curr_subdungeon_level-1];
-            }
-        }
-    }    
+    if (env.floor_colour == BLACK)
+        env.floor_colour = LIGHTGREY;
+    if (env.rock_colour == BLACK)
+        env.rock_colour  = BROWN;
 }
 
 static void check_doors()
@@ -1455,14 +1444,7 @@ static builder_rc_type builder_by_type(int level_number, char level_type)
 {
     if (level_type == LEVEL_PORTAL_VAULT)
     {
-        if (you.level_type_name == "bazaar")
-            bazaar_level(level_number);
-        else
-        {
-            // Need to find encompass vault with tag matching
-            // level_type_name.
-            ASSERT(false);
-        }
+        portal_vault_level(level_number);
         return (BUILD_QUIT);
     }
     
@@ -1535,53 +1517,25 @@ static builder_rc_type builder_by_type(int level_number, char level_type)
     return BUILD_CONTINUE;
 }
 
-static void fixup_bazaar_stairs()
+static void portal_vault_level(int level_number)
 {
-    for (int y = 0; y < GYM; ++y)
-    {
-        for (int x = 0; x < GXM; ++x)
-        {
-            const dungeon_feature_type feat = grd[x][y];
-            if (grid_is_stone_stair(feat) || grid_is_rock_stair(feat))
-            {
-                if (grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
-                    grd[x][y] = DNGN_EXIT_PORTAL_VAULT;
-                else
-                {
-                    grd[x][y] = DNGN_STONE_ARCH;
-                    env.markers.add(
-                        new map_feature_marker(
-                            coord_def(x, y),
-                            DNGN_STONE_ARCH));
-                }
-            }
-            
-            // colour floor squares around shops
-            if (feat == DNGN_ENTER_SHOP)
-            {
-                for (int i=-1; i<=1; i++)
-                     for (int j=-1; j<=1; j++)
-                     {
-                          if (grd[x+i][y+j] == DNGN_FLOOR)
-                              grd[x+i][y+j] = DNGN_FLOOR_SPECIAL;
-                     }
-            }
-        }
-    }
-}
+    std::string trimmed_name = trimmed_string(you.level_type_name);
+    ASSERT(trimmed_name.c_str() != "");
 
-static void bazaar_level(int level_number)
-{
+    const char* level_name = trimmed_name.c_str();
+
     int vault = random_map_for_place(level_id::current(), false);
 
 #ifdef WIZARD
-    if (vault == -1 && you.wizard)
+    if (vault == -1 && you.wizard
+        && random_map_for_tag(level_name, false) != -1)
     {
         char buf[80];
 
         do
         {
-            mprf(MSGCH_PROMPT, "Which bazaar (ESC or ENTER for random): ");
+            mprf(MSGCH_PROMPT, "Which %s (ESC or ENTER for random): ",
+                 level_name);
             if (cancelable_get_line(buf, sizeof buf))
                 break;
 
@@ -1594,35 +1548,43 @@ static void bazaar_level(int level_number)
             lowercase(name);
             name = replace_all(name, " ", "_");
 
-            vault = find_map_by_name("bazaar_" + name);
+            vault = find_map_by_name(you.level_type_name + "_" + name);
 
             if (vault == -1)
-                mprf(MSGCH_DIAGNOSTICS, "No such bazaar, try again.");
+                mprf(MSGCH_DIAGNOSTICS, "No such %s, try again.",
+                     level_name);
         } while (vault == -1);
     }
 #endif
 
     if (vault == -1)
-        vault = random_map_for_tag("bazaar", false);
+        vault = random_map_for_tag(level_name, false);
 
     if (vault != -1)
-    {
         ensure_vault_placed( build_vaults(level_number, vault) );
-        link_items();
-        fixup_bazaar_stairs();
-        return;
+    else
+    {
+        plan_main(level_number, 0);
+        place_minivaults(level_name, 1, 1, true);
+
+        if (level_vaults.empty())
+        {
+            mprf(MSGCH_WARN, "No maps or tags named '%s'.",
+                 level_name);
+            ASSERT(false);
+            end(-1);
+        }
     }
 
-    // No primary Bazaar vaults (ugh).
-    plan_main(level_number, 0);
-    place_minivaults("bazaar", 1, 1, true);
-
-    // No vaults placed yet? Place some shops of our own.
-    if (level_vaults.empty())
-        place_shops(level_number, random_range(5, MAX_SHOPS));
-
     link_items();
-    fixup_bazaar_stairs();    
+
+    // TODO: Let portal vault map have arbitrary properties which can
+    // be passed onto the callback.
+    callback_map::const_iterator
+        i = level_type_post_callbacks.find(you.level_type_name);
+
+    if (i != level_type_post_callbacks.end())
+        dlua.callfn(i->second.c_str(), 0, 0);
 }
 
 static int random_portal_vault(const std::string &tag)
@@ -7286,6 +7248,15 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     ASSERT( found );
     return result;
+}
+
+void dgn_set_lt_callback(std::string level_type_name,
+                         std::string callback_name)
+{
+    ASSERT(level_type_name != "");
+    ASSERT(callback_name   != "");
+
+    level_type_post_callbacks[level_type_name] = callback_name;
 }
 
 ////////////////////////////////////////////////////////////////////

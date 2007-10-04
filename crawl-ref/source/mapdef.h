@@ -581,6 +581,8 @@ public:
 
     map_def         *original;
 
+    unsigned char   rock_colour, floor_colour;
+
 private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;

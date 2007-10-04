@@ -1477,6 +1477,9 @@ static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
 
 static void tag_construct_level(struct tagHeader &th)
 {
+    marshallByte(th, env.floor_colour);
+    marshallByte(th, env.rock_colour);
+
     marshallLong(th, env.level_flags);
 
     marshallFloat(th, (float)you.elapsed_time);
@@ -1698,6 +1701,9 @@ void tag_construct_level_attitude(struct tagHeader &th)
 
 static void tag_read_level( struct tagHeader &th, char minorVersion )
 {
+    env.floor_colour = unmarshallByte(th);
+    env.rock_colour  = unmarshallByte(th);
+
     env.level_flags = (unsigned long) unmarshallLong(th);
 
     env.elapsed_time = unmarshallFloat(th);
