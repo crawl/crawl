@@ -75,32 +75,25 @@ void init_spell_descs(void)
         spell_list[spelldata[i].id] = i;
 }                               // end init_spell_descs()
 
-spell_type spell_by_name(const char* name)
+spell_type spell_by_name(std::string name)
 {
-    if (name == NULL || strlen(name) == 0)
+    if (name.empty())
         return (SPELL_NO_SPELL);
 
-    char spname[80];
-
+    lowercase(name);
+    
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
         const char *sptitle = spell_title(type);
         if (!sptitle)
             continue;
-        
-        strncpy( spname, sptitle, sizeof( spname ) );
 
-        if (strcasecmp(spname, name) == 0)
+        if (name == lowercase_string(sptitle))
             return (type);
     }
 
     return (SPELL_NO_SPELL);
-}
-
-spell_type spell_by_name(std::string name)
-{
-    return spell_by_name(name.c_str());
 }
 
 int get_spell_slot_by_letter( char letter )
@@ -834,7 +827,8 @@ int spell_type2skill(unsigned int spelltype)
 //jmf: simplified; moved init code to top function, init_spell_descs()
 static spell_desc *seekspell(spell_type spell)
 {
-    return (&spelldata[spell_list[spell]]);
+    const int index = spell_list[spell];
+    return (index != -1? &spelldata[index] : NULL);
 }
 
 static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),
