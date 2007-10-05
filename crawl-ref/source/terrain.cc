@@ -377,7 +377,7 @@ static void dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
                 dgn_shift_item(pos, mitm[curr]);
             else
             {
-                item_was_destroyed(mitm[item]);
+                item_was_destroyed(mitm[curr]);
                 destroy_item(curr);
                 did_destroy = true;
             }
