@@ -73,15 +73,28 @@ void init_spell_descs(void)
     // which corrupts the heap.
     for (unsigned int i = 0; i < SPELLDATASIZE - 1; i++)
         spell_list[spelldata[i].id] = i;
+}                               // end init_spell_descs()
 
+spell_type spell_by_name(std::string name)
+{
+    if (name.empty())
+        return (SPELL_NO_SPELL);
+
+    lowercase(name);
+    
     for (int i = 0; i < NUM_SPELLS; i++)
     {
-        if (spell_list[i] == -1)
-            spell_list[i] = spell_list[SPELL_NO_SPELL];
+        spell_type type = static_cast<spell_type>(i);
+        const char *sptitle = spell_title(type);
+        if (!sptitle)
+            continue;
+
+        if (name == lowercase_string(sptitle))
+            return (type);
     }
 
-    return;
-}                               // end init_spell_descs()
+    return (SPELL_NO_SPELL);
+}
 
 int get_spell_slot_by_letter( char letter )
 {
@@ -254,7 +267,8 @@ int count_bits(unsigned int bits)
 
 const char *spell_title(spell_type spell)
 {
-    return (seekspell(spell)->title);
+    const spell_desc *spd = seekspell(spell);
+    return (spd? spd->title : NULL);
 }
 
 
@@ -809,9 +823,10 @@ int spell_type2skill(unsigned int spelltype)
  */
 
 //jmf: simplified; moved init code to top function, init_spell_descs()
-static struct spell_desc *seekspell(spell_type spell)
+static spell_desc *seekspell(spell_type spell)
 {
-    return (&spelldata[spell_list[spell]]);
+    const int index = spell_list[spell];
+    return (index != -1? &spelldata[index] : NULL);
 }
 
 static bool cloud_helper(int (*func)(int, int, int, cloud_type, kill_category),

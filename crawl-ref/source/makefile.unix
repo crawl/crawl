@@ -74,10 +74,7 @@ INCLUDES = -I/usr/include/ncurses
 LIBCURS  = ncurses
 endif
 
-ifeq ($(LUASRC),)
 LUASRC := util/lua/src
-endif
-
 LUALIB = lua
 LUALIBA = l$(LUALIB).a
 
