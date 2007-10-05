@@ -946,7 +946,8 @@ void dgn_set_colours_from_monsters()
     if (env.mons_alloc[9] < 0 || env.mons_alloc[9] == MONS_PROGRAM_BUG
         || env.mons_alloc[9] >= NUM_MONSTERS)
     {
-        env.floor_colour = LIGHTGREY;
+        if (env.floor_colour == BLACK)
+            env.floor_colour = LIGHTGREY;
     }
     else
         env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
@@ -955,7 +956,8 @@ void dgn_set_colours_from_monsters()
     if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_PROGRAM_BUG
         || env.mons_alloc[8] >= NUM_MONSTERS)
     {
-        env.rock_colour = BROWN;
+        if (env.rock_colour == BLACK)
+            env.rock_colour = BROWN;
     }
     else
         env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
