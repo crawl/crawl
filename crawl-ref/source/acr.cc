@@ -1448,6 +1448,23 @@ static bool toggle_flag( bool* flag, const char* flagname )
     return *flag;
 }
 
+static bool can_go_down_shaft()
+{
+    // Not a shaft
+    if (trap_type_at_xy(you.x_pos, you.y_pos) != TRAP_SHAFT)
+        return (false);
+
+    // Undiscovered shaft
+    if (grd[you.x_pos][you.y_pos] == DNGN_UNDISCOVERED_TRAP)
+        return (false);
+
+    // Have to fly to dive through it.
+    if (you.flies() != FL_FLY)
+        return (false);
+
+    return (true);
+}
+
 static void go_downstairs();
 static void go_upstairs()
 {
@@ -1491,6 +1508,14 @@ static void go_upstairs()
 
 static void go_downstairs()
 {
+    if (trap_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
+        && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP
+        && !can_go_down_shaft())
+    {
+        mpr("You must have controlled flight to dive through a shaft.");
+        return;
+    }
+
     if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS)
     {
         if (grd(you.pos()) == DNGN_STONE_ARCH)
@@ -1951,6 +1976,10 @@ void process_command( command_type cmd )
         start_translevel_travel();
         if (you.running)
             mesclr();
+        break;
+
+    case CMD_ANNOTATE_LEVEL:
+        annotate_level();
         break;
 
     case CMD_EXPLORE:
@@ -3094,7 +3123,7 @@ command_type keycode_to_command( keycode_type key )
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
     case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
-    case CONTROL('I'): return CMD_NO_CMD;
+    case CONTROL('I'): return CMD_ANNOTATE_LEVEL;
     case CONTROL('M'): return CMD_NO_CMD;
     case CONTROL('O'): return CMD_EXPLORE;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;
@@ -3186,7 +3215,8 @@ static void open_door(int move_x, int move_y, bool check_confused)
             return;
         }
 
-        if (grd[dx][dy] >= DNGN_TRAP_MECHANICAL && grd[dx][dy] <= DNGN_TRAP_III)
+        if (grd[dx][dy] >= DNGN_TRAP_MECHANICAL
+            && grd[dx][dy] <= DNGN_TRAP_NATURAL)
         {
             if (env.cgrid[dx][dy] != EMPTY_CLOUD)
             {

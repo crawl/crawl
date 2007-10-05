@@ -60,6 +60,7 @@
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
+#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
@@ -541,6 +542,31 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
+    level_id  old_level_id    = level_id::current();
+    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
+
+    // Does the next level have a warning annotation?
+    coord_def pos(you.x_pos, you.y_pos);
+    level_id  next_level_id = level_id::get_next_level_id(pos);
+
+    crawl_state.level_annotation_shown = false;
+
+    if (level_annotation_has("WARN", next_level_id)
+        && next_level_id != level_id::current()
+        && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
+    {
+        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PROMPT);
+
+        if (!yesno("Enter next level anyways?", true, 0, true, false))
+        {
+            interrupt_activity( AI_FORCE_INTERRUPT );
+            return;
+        }
+
+        crawl_state.level_annotation_shown = true;
+    }
+
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
@@ -581,9 +607,6 @@ void up_stairs(dungeon_feature_type force_stair,
     // Interlevel travel data:
     const bool collect_travel_data = can_travel_interlevel();
 
-    level_id  old_level_id    = level_id::current();
-    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
-    int stair_x = you.x_pos, stair_y = you.y_pos;
     if (collect_travel_data)
         old_level_info.update();
 
@@ -713,6 +736,8 @@ void up_stairs(dungeon_feature_type force_stair,
                         travel_cache.get_level_info(new_level_id);
             new_level_info.update();
 
+            int stair_x = you.x_pos, stair_y = you.y_pos;
+
             // First we update the old level's stair.
             level_pos lp;
             lp.id  = new_level_id;
@@ -737,7 +762,7 @@ void up_stairs(dungeon_feature_type force_stair,
                 guess = true;
             }
 
-            old_level_info.update_stair(stair_x, stair_y, lp, guess);
+            old_level_info.update_stair(you.x_pos, you.y_pos, lp, guess);
 
             // We *guess* that going up a staircase lands us on a downstair,
             // and that we can descend that downstair and get back to where we
@@ -767,6 +792,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     branch_type old_where = you.where_are_you;
 
+    bool shaft = ((!force_stair
+                   && trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT)
+                  || force_stair == DNGN_TRAP_NATURAL);
+    level_id shaft_dest;
+    int      shaft_level = -1;
+
 #ifdef SHUT_LABYRINTH
     if (stair_find == DNGN_ENTER_LABYRINTH)
     {
@@ -777,7 +808,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 #endif
 
     // probably still need this check here (teleportation) -- bwr
-    if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS)
+    if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -804,6 +835,46 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     {
         mpr("You're floating high up above the floor!");
         return;
+    }
+
+    if (shaft)
+    {
+        bool known_trap = (grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP
+                           && !force_stair);
+
+        if (you.airborne() && !known_trap && !force_stair)
+        {
+            mpr("You can't go down here!");
+            return;
+        }
+
+        if (you.airborne() && you.flies() != FL_FLY && !force_stair)
+        {
+            if (known_trap)
+                mpr("You must have controlled flight to dive through "
+                    "a shaft.");
+            return;
+        }
+
+        if (!is_valid_shaft_level())
+        {
+            if (known_trap)
+                mpr("Strange, the shaft doesn't seem to lead anywhere.");
+            return;
+        }
+
+        shaft_dest = you.shaft_dest();
+        if (shaft_dest == level_id::current())
+        {
+            if (known_trap)
+                mpr("Strange, the shaft doesn't seem to lead anywhere.");
+            return;
+        }
+        shaft_level = absdungeon_depth(shaft_dest.branch,
+                                          shaft_dest.depth);
+
+        if (you.flies() != FL_FLY || force_stair)
+            mpr("You fall through a shaft!");
     }
 
     // All checks are done, the player is on the move now.
@@ -839,7 +910,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             switch (NUMBER_OF_RUNES_NEEDED)
             {
             case 1:
-                mpr("You need a Rune to enter this place.");
+                mpr("You need one more Rune to enter this place.");
                 break;
 
             default:
@@ -848,6 +919,28 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             }
             return;
         }
+    }
+
+    // Does the next level have a warning annotation?
+    coord_def pos = you.pos();
+    level_id  next_level_id = level_id::get_next_level_id(pos);
+
+    crawl_state.level_annotation_shown = false;
+
+    if (level_annotation_has("WARN", next_level_id)
+        && next_level_id != level_id::current()
+        && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
+    {
+        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PROMPT);
+
+        if (!yesno("Enter next level anyways?", true, 0, true, false))
+        {
+            interrupt_activity( AI_FORCE_INTERRUPT );
+            return;
+        }
+
+        crawl_state.level_annotation_shown = true;
     }
 
     // Interlevel travel data:
@@ -954,7 +1047,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
               KILLED_BY_FALLING_DOWN_STAIRS );
     }
 
-    if (you.level_type == LEVEL_DUNGEON)
+    if (shaft)
+    {
+        you.your_level    = shaft_level;
+        you.where_are_you = shaft_dest.branch;
+    }
+    else if (you.level_type == LEVEL_DUNGEON)
         you.your_level++;
 
     dungeon_feature_type stair_taken = stair_find;
@@ -964,6 +1062,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (you.level_type == LEVEL_PANDEMONIUM)
         stair_taken = DNGN_TRANSIT_PANDEMONIUM;
+
+    if (shaft)
+        stair_taken = DNGN_ROCK_STAIRS_DOWN;
 
     switch (you.level_type)
     {
@@ -988,11 +1089,18 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         break;
 
     default:
-        climb_message(stair_find, false, old_level_type);
+        if (shaft)
+        {
+            if (you.flies() == FL_FLY && !force_stair)
+                mpr("You dive down through the shaft.");
+        }
+        else
+            climb_message(stair_find, false, old_level_type);
         break;
     }
 
-    exit_stair_message(stair_find, false);
+    if (!shaft)
+        exit_stair_message(stair_find, false);
 
     if (entered_branch)
     {
@@ -1077,7 +1185,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     unsigned char pc = 0;
     unsigned char pt = random2avg(28, 3);
 
-    if (level_type_exits_up(you.level_type))
+    if (shaft)
+    {
+        you.your_level    = shaft_level;
+        you.where_are_you = shaft_dest.branch;
+    }
+    else if (level_type_exits_up(you.level_type))
         you.your_level++;
     else if (level_type_exits_down(you.level_type)
              && !level_type_exits_down(old_level_type))
@@ -1366,6 +1479,33 @@ bool go_berserk(bool intentional)
 
     return true;
 }                               // end go_berserk()
+
+bool is_valid_shaft_level()
+{
+    if (you.level_type != LEVEL_DUNGEON)
+        return (false);
+
+    // Don't generate shafts in branches where teleport control
+    // is prevented.  Prevents player from going down levels without
+    // reaching stairs, and also keeps player from getting stuck
+    // on lower levels with the innability to use teleport control to
+    // get back up.
+    if (testbits(get_branch_flags(), LFLAG_NO_TELE_CONTROL))
+    {
+        return (false);
+    }
+
+    int depth = subdungeon_depth(you.where_are_you, you.your_level);
+
+    // When generating levels, don't place a shaft on the level
+    // immediately above the bottom of a branch if that branch is
+    // significantly more dangerous than normal.
+    int min_delta = 1;
+    if (env.turns_on_level == -1 && your_branch().dangerous_bottom_level)
+        min_delta = 2;
+
+    return ((your_branch().depth - depth) >= min_delta);
+}
 
 bool is_damaging_cloud(cloud_type type)
 {

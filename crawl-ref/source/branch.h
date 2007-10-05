@@ -46,6 +46,7 @@ struct Branch
     int altar_chance;           // in percent
     int travel_shortcut;        // which key to press for travel
     bool any_upstair_exits;     // any upstair exits the branch (Hell branches)
+    bool dangerous_bottom_level; // bottom level is more dangerous than normal
 };
 
 extern Branch branches[];

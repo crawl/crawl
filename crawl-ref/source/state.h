@@ -68,6 +68,8 @@ struct game_state
     std::vector<std::string> input_line_strs;
     unsigned int             input_line_curr;
 
+    bool level_annotation_shown;
+
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();

@@ -2667,7 +2667,6 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
                                            : "The dungeon floor");
         break;
 
-    case DNGN_TRAP_III: // What are these? Should they explode? -- bwr
     default:
         // FIXME: cute message for water?
         break;

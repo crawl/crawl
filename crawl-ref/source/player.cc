@@ -54,6 +54,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"
+#include "place.h"
 #include "randart.h"
 #include "religion.h"
 #include "skills.h"
@@ -5016,6 +5017,46 @@ actor::~actor()
 {
 }
 
+bool actor::will_trigger_shaft() const
+{
+    return (!airborne() && total_weight() >= 300
+            && is_valid_shaft_level());
+}
+
+level_id actor::shaft_dest() const
+{
+    if (you.level_type != LEVEL_DUNGEON)
+        return level_id::current();
+
+    level_id lev        = level_id::current();
+    int      curr_depth = subdungeon_depth(you.where_are_you, you.your_level);
+
+    lev.depth += ((pos().x + pos().y) % 3) + 1;
+
+    if (lev.depth > your_branch().depth)
+        lev.depth = your_branch().depth;
+
+    if (lev.depth == curr_depth)
+        return lev;
+
+    // Only shafts on the level immediately above a dangeorus branch
+    // bottom will take you to that dangerous bottom, and shafts can't
+    // be created during level generation time.
+    if (your_branch().dangerous_bottom_level
+        && lev.depth == your_branch().depth
+        && (your_branch().depth - curr_depth) > 1)
+    {
+        lev.depth--;
+    }
+
+    return lev;
+}
+
+bool actor::airborne() const
+{
+    return (is_levitating() || (flies() == FL_FLY && !paralysed()));
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // player
 
@@ -5253,14 +5294,12 @@ coord_def player::pos() const
 
 bool player::is_levitating() const
 {
-    return (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
-            attribute[ATTR_TRANSFORMATION] == TRAN_BAT ||
-            duration[DUR_LEVITATION]);
+    return (duration[DUR_LEVITATION]);
 }
 
 bool player::in_water() const
 {
-    return (!player_is_levitating() && !beogh_water_walk()
+    return (!airborne() && !beogh_water_walk()
             && grid_is_water(grd[you.x_pos][you.y_pos]));
 }
 
@@ -5339,6 +5378,64 @@ size_type player::body_size(int psize, bool base) const
     }
 
     return (ret);
+}
+
+int player::body_weight() const
+{
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
+        return 0;
+
+    int weight;
+    switch(body_size(PSIZE_BODY))
+    {
+    case SIZE_TINY:
+        weight = 150;
+        break;
+    case SIZE_LITTLE:
+        weight = 300;
+        break;
+    case SIZE_SMALL:
+        weight = 425;
+        break;
+    case SIZE_MEDIUM:
+        weight = 550;
+        break;
+    case SIZE_LARGE:
+        weight = 1300;
+        break;
+    case SIZE_BIG:
+        weight = 1500;
+        break;
+    case SIZE_GIANT:
+        weight = 1800;
+        break;
+    case SIZE_HUGE:
+        weight = 2200;
+        break;
+    default:
+        mpr("ERROR: invalid player body weight");
+        perror("player::body_weight(): invalid player body weight");
+        end(0);
+    }
+
+    switch(attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_STATUE:
+        weight *= 2;
+        break;
+    case TRAN_LICH:
+        weight /= 2;
+        break;
+    default:
+        break;
+    }
+
+    return (weight);
+}
+
+int player::total_weight() const
+{
+    return (body_weight() + burden);
 }
 
 bool player::cannot_speak() const
@@ -5723,14 +5820,29 @@ int player::res_negative_energy() const
     return (player_prot_life());
 }
 
+bool player::confusable() const
+{
+    return (player_mental_clarity() == 0);
+}
+
+bool player::slowable() const
+{
+    return (!wearing_amulet(AMU_RESIST_SLOW));
+}
+
 flight_type player::flies() const
 {
-    if ( !is_levitating() )
-        return (FL_NONE);
-    else
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
+        attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        return FL_FLY;
+    }
+    else if (is_levitating())
         return (you.duration[DUR_CONTROLLED_FLIGHT]
                 || wearing_amulet(AMU_CONTROLLED_FLIGHT)
                 ? FL_FLY : FL_LEVITATE);
+    else
+        return (FL_NONE);
 }
 
 bool player::light_flight() const
@@ -6171,5 +6283,45 @@ std::vector<PlaceInfo> player::get_all_place_info(bool visited_only,
     }
 
     return list;
+}
+
+bool player::do_shaft()
+{
+    dungeon_feature_type force_stair = DNGN_UNSEEN;
+
+    if (!is_valid_shaft_level())
+        return (false);
+
+    // Handle instances of do_shaft() being invoked magically when
+    // the player isn't standing over a shaft.
+    if (trap_type_at_xy(x_pos, y_pos) != TRAP_SHAFT)
+    {
+        switch(grd[x_pos][y_pos])
+        {
+        case DNGN_FLOOR:
+        case DNGN_OPEN_DOOR:
+        case DNGN_TRAP_MECHANICAL:
+        case DNGN_TRAP_MAGICAL:
+        case DNGN_TRAP_NATURAL:
+        case DNGN_UNDISCOVERED_TRAP:
+        case DNGN_ENTER_SHOP:
+            break;
+
+        default:
+            return (false);
+        }
+
+        if (airborne() || total_weight() == 0)
+        {
+            mpr("A shaft briefly opens up underneath you!");
+            return (true);
+        }
+
+        force_stair = DNGN_TRAP_NATURAL;
+    }
+
+    down_stairs(your_level, force_stair);
+
+    return (true);
 }
 

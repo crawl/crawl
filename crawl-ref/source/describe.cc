@@ -338,6 +338,7 @@ static const char *trap_names[] =
     "dart", "arrow", "spear", "axe",
     "teleport", "amnesia", "blade",
     "bolt", "net", "zot", "needle",
+    "shaft"
 };
 
 const char *trap_name(trap_type trap)
@@ -357,6 +358,9 @@ int str_to_trap(const std::string &s)
         return (TRAP_RANDOM);
     else if (s == "suitable")
         return (TRAP_INDEPTH);
+    else if (s == "nonteleport" || s == "noteleport" || s == "nontele"
+             || s == "notele")
+        return (TRAP_NONTELEPORT);
 
     for (int i = 0; i < NUM_TRAPS; ++i)
     {

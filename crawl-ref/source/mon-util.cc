@@ -369,6 +369,17 @@ bool mons_is_stationary(const monsters *mons)
     return (mons_class_is_stationary(mons->type));
 }
 
+bool mons_class_is_confusable(int mc)
+{
+    return (smc->resist_magic < MAG_IMMUNE
+            && mons_intel(mc) > I_PLANT);
+}
+
+bool mons_class_is_slowable(int mc)
+{
+    return (smc->resist_magic < MAG_IMMUNE);
+}
+
 // returns whether a monster is non-solid
 // and thus can't be affected by some traps
 bool mons_is_insubstantial(int type)
@@ -2387,6 +2398,145 @@ size_type monsters::body_size(int /* psize */, bool /* base */) const
     return (e? e->size : SIZE_MEDIUM);
 }
 
+int monsters::body_weight() const
+{
+    int mclass = type;
+
+    switch(mclass)
+    {
+    case MONS_SPECTRAL_THING:
+    case MONS_SPECTRAL_WARRIOR:
+    case MONS_ELECTRIC_GOLEM:
+    case MONS_RAKSHASA_FAKE:
+        return 0;
+
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        mclass = number;
+        break;
+    default:
+        break;
+    }
+
+    int weight = mons_weight(mclass);
+
+    // Water elementals are "insubstantial", but still have weight.
+    if (weight == 0 && type == MONS_WATER_ELEMENTAL)
+        weight = 1500;
+
+    // weight == 0 in the monster entry indicates "no corpse".  Can't
+    // use CE_NOCORPSE, because the corpse-effect field is used for
+    // corpseless monsters to indicate what happens if their blood
+    // is sucked.  Grrrr.
+    if (weight == 0 && !mons_is_insubstantial(type))
+    {
+        const monsterentry *entry = get_monster_data(mclass);
+        switch(entry->size)
+        {
+        case SIZE_TINY:
+            weight = 150;
+            break;
+        case SIZE_LITTLE:
+            weight = 300;
+            break;
+        case SIZE_SMALL:
+            weight = 425;
+            break;
+        case SIZE_MEDIUM:
+            weight = 550;
+            break;
+        case SIZE_LARGE:
+            weight = 1300;
+            break;
+        case SIZE_BIG:
+            weight = 1500;
+            break;
+        case SIZE_GIANT:
+            weight = 1800;
+            break;
+        case SIZE_HUGE:
+            weight = 2200;
+            break;
+        default:
+            mpr("ERROR: invalid monster body weight");
+            perror("monsters::body_weight(): invalid monster body weight");
+            end(0);
+        }
+
+        switch(mclass)
+        {
+        case MONS_IRON_DEVIL:
+            weight += 550;
+            break;
+
+        case MONS_STONE_GOLEM:
+        case MONS_EARTH_ELEMENTAL:
+        case MONS_CRYSTAL_GOLEM:
+            weight *= 2;
+            break;
+
+        case MONS_IRON_DRAGON:
+        case MONS_IRON_GOLEM:
+            weight *= 3;
+            break;
+
+        case MONS_QUICKSILVER_DRAGON:
+        case MONS_SILVER_STATUE:
+            weight *= 4;
+            break;
+
+        case MONS_WOOD_GOLEM:
+            weight *= 2;
+            weight /= 3;
+            break;
+
+        case MONS_FLYING_SKULL:
+        case MONS_CURSE_SKULL:
+        case MONS_SKELETAL_DRAGON:
+        case MONS_SKELETAL_WARRIOR:
+            weight /= 2;
+            break;
+
+        case MONS_SHADOW_FIEND:
+        case MONS_SHADOW_IMP:
+        case MONS_SHADOW_DEMON:
+            weight /= 3;
+            break;
+        }
+
+        switch(monster_symbols[mclass].glyph)
+        {
+        case 'L':
+            weight /= 2;
+            break;
+
+        case 'p':
+            weight = 0;
+            break;
+        }
+    }
+
+    if (type == MONS_SKELETON_SMALL || type == MONS_SKELETON_LARGE)
+        weight /= 2;
+
+    return (weight);
+}
+
+int monsters::total_weight() const
+{
+    int burden = 0;
+
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        if (inv[i] != NON_ITEM)
+            burden += item_mass(mitm[inv[i]]) * mitm[inv[i]].quantity;
+
+    return (body_weight() + burden);
+}
+
 int monsters::damage_type(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
@@ -3305,6 +3455,11 @@ int monsters::res_negative_energy() const
 flight_type monsters::flies() const
 {
     return (mons_flies(this));
+}
+
+bool monsters::is_levitating() const
+{
+    return (mons_class_flag(type, M_LEVITATE));
 }
 
 int monsters::mons_species() const
@@ -4657,6 +4812,70 @@ void monsters::apply_location_effects()
 
     if (alive())
         mons_check_pool(this);
+}
+
+bool monsters::do_shaft()
+{
+    if (!is_valid_shaft_level())
+        return (false);
+
+    bool nearby  = mons_near(this);
+    bool vis     = player_monster_visible(this);
+
+    // Handle instances of do_shaft() being invoked magically when
+    // the monster isn't standing over a shaft.
+    if (trap_type_at_xy(x, y) != TRAP_SHAFT)
+    {
+        switch(grd[x][y])
+        {
+        case DNGN_FLOOR:
+        case DNGN_OPEN_DOOR:
+        case DNGN_TRAP_MECHANICAL:
+        case DNGN_TRAP_MAGICAL:
+        case DNGN_TRAP_NATURAL:
+        case DNGN_UNDISCOVERED_TRAP:
+        case DNGN_ENTER_SHOP:
+            break;
+
+        default:
+            return (false);
+        }
+
+        if (airborne() || total_weight() == 0)
+        {
+            if (nearby)
+            {
+                if (vis)
+                    mprf("A shaft briefly opens up underneath %s!",
+                         name(DESC_NOCAP_THE).c_str());
+                else
+                    mpr("A shaft briefly opens up in the floor!");
+            }
+            return (true);
+        }
+    }
+
+    level_id lev = shaft_dest();
+
+    if (lev == level_id::current())
+        return (false);
+
+    set_transit(lev);
+
+    if (nearby)
+    {
+        if (vis)
+            mprf("%s falls through a shaft!",
+                 name(DESC_CAP_THE).c_str());
+        else
+            mpr("A shaft briefly opens up in the floor!");
+    }
+
+    // Monster is no longer on this level
+    destroy_inventory();
+    monster_cleanup(this);
+
+    return true;
 }
     
 /////////////////////////////////////////////////////////////////////////

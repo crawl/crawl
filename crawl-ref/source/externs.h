@@ -63,6 +63,7 @@ const int kPathLen = 256;
 class item_def;
 class melee_attack;
 class coord_def;
+class level_id;
 
 class actor
 {
@@ -84,6 +85,8 @@ public:
     
     virtual size_type body_size(int psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
+    virtual int       body_weight() const = 0;
+    virtual int       total_weight() const = 0;
     
     virtual int       damage_type(int which_attack = -1) = 0;
     virtual int       damage_brand(int which_attack = -1) = 0;
@@ -156,6 +159,8 @@ public:
     virtual int res_negative_energy() const = 0;
 
     virtual flight_type flies() const = 0;
+    virtual bool is_levitating() const = 0;
+    virtual bool airborne() const;
     
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
@@ -184,6 +189,10 @@ public:
     {
         return (true);
     }
+
+    virtual bool     will_trigger_shaft() const;
+    virtual level_id shaft_dest() const;
+    virtual bool     do_shaft() = 0;
 };
 
 struct coord_def
@@ -729,6 +738,8 @@ public:
     bool      submerged() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    int       body_weight() const;
+    int       total_weight() const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
     bool      has_claws() const;
@@ -778,6 +789,8 @@ public:
     int res_elec() const;
     int res_poison() const;
     int res_negative_energy() const;
+    bool confusable() const;
+    bool slowable() const;
 
     flight_type flies() const;
 
@@ -813,6 +826,8 @@ public:
     // modify the player object.
     std::vector<PlaceInfo> get_all_place_info(bool visited_only = false,
                                               bool dungeon_only = false) const;
+
+    bool do_shaft();
 };
 
 extern player you;
@@ -840,7 +855,6 @@ public:
 };
 
 class ghost_demon;
-class level_id;
 
 class mon_enchant
 {
@@ -980,6 +994,8 @@ public:
     bool      can_drown() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    int       body_weight() const;
+    int       total_weight() const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
 
@@ -1041,6 +1057,7 @@ public:
     int res_negative_energy() const;
 
     flight_type flies() const;
+    bool is_levitating() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(actor *looker);
@@ -1084,6 +1101,8 @@ public:
     std::string describe_enchantments() const;
 
     static int base_speed(int mcls);
+
+    bool do_shaft();
 
 private:
     void init_with(const monsters &mons);

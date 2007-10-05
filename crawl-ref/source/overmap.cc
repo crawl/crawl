@@ -26,6 +26,7 @@
 #include "externs.h"
 
 #include "branch.h"
+#include "cio.h"
 #include "dgnevent.h"
 #include "direct.h"
 #include "dungeon.h"
@@ -43,11 +44,13 @@ typedef std::map<branch_type, level_id> stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;
 typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
+typedef std::map<level_id, std::string> annotation_map_type;
 
 stair_map_type stair_level;
 shop_map_type shops_present;
 altar_map_type altars_present;
 portal_map_type portals_present;
+annotation_map_type level_annotations;
 
 static void seen_altar( god_type god, const coord_def& pos );
 static void seen_staircase(dungeon_feature_type which_staircase,
@@ -368,6 +371,61 @@ std::string overview_description_string()
             disp += "You didn't discover anything interesting.";
     }
 
+    bool notes_exist = false;
+    bool has_notes[NUM_BRANCHES];
+
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+    {
+        Branch branch = branches[i];
+
+        has_notes[i] = false;
+        for (int depth = 1; depth <= branch.depth; depth++)
+        {
+            const level_id li(branch.id, depth);
+
+            if (get_level_annotation(li).length() > 0)
+            {
+                notes_exist  = true;
+                has_notes[i] = true;
+                break;
+            }
+        }
+    }
+
+    if (notes_exist)
+    {
+        disp += "\n\n                    <white>Level Annotations</white>\n" ;
+
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+        {
+            if (!has_notes[i])
+                continue;
+
+            Branch branch = branches[i];
+
+            disp += "\n<yellow>";
+            disp += branch.shortname;
+            disp += "</yellow>\n";
+
+            for (int depth = 1; depth <= branch.depth; depth++)
+            {
+                const level_id li(branch.id, depth);
+
+                if (get_level_annotation(li).length() > 0)
+                {
+                    char depth_str[3];
+                    sprintf(depth_str, "%2d", depth);
+
+                    disp += "<white>";
+                    disp += depth_str;
+                    disp += ":</white> ";
+                    disp += get_level_annotation(li);
+                    disp += + "\n";
+                }
+            }
+        }
+    }
+
     return disp;
 }
 
@@ -510,3 +568,95 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
         break;
     }
 }          // end seen_other_thing()
+
+////////////////////////////////////////////////////////////////////////
+
+void set_level_annotation(std::string str,
+                          level_id li)
+{
+    if (str == "")
+    {
+        clear_level_annotation(li);
+        return;
+    }
+
+    level_annotations[li] = str;
+}
+
+void clear_level_annotation(level_id li)
+{
+    level_annotations.erase(li);
+}
+
+std::string get_level_annotation(level_id li)
+{
+    annotation_map_type::const_iterator i = level_annotations.find(li);
+
+    if (i == level_annotations.end())
+        return "";
+
+    return (i->second);
+}
+
+bool level_annotation_has(std::string find,
+                          level_id li)
+{
+    std::string str = get_level_annotation(li);
+
+    return (str.find(find) != std::string::npos);
+}
+
+void annotate_level()
+{
+    level_id li  = level_id::current();
+    level_id li2 = level_id::current();
+
+    if (is_stair(grd[you.x_pos][you.y_pos]))
+    {
+        li2 = level_id::get_next_level_id(you.pos());
+
+        if (li2.level_type != LEVEL_DUNGEON || li2.depth <= 0)
+            li2 = level_id::current();
+    }
+
+    if (you.level_type != LEVEL_DUNGEON && li2.level_type != LEVEL_DUNGEON)
+    {
+        mpr("You can't annotate this level.");
+        return;
+    }
+
+    if (you.level_type != LEVEL_DUNGEON)
+        li = li2;
+    else if (li2 != level_id::current())
+    {
+        if (yesno("Annotate level on other end of current stairs?"))
+            li = li2;
+    }
+
+    if (get_level_annotation(li).length() > 0)
+    {
+        mpr("Current level annotation is:", MSGCH_PROMPT);
+        mpr(get_level_annotation(li).c_str() );
+    }
+
+    mpr( "Set level annotation to what? ", MSGCH_PROMPT );
+
+    char buf[77];
+    get_input_line( buf, sizeof(buf) );
+
+    if (strlen(buf) == 0)
+    {
+        if (get_level_annotation(li).length() > 0)
+        {
+            if (!yesno("Really clear the annotation?"))
+                return;
+        }
+        else
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+
+    set_level_annotation(buf, li);
+}

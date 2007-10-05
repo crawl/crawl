@@ -6673,8 +6673,24 @@ static void jelly_pit(int level_number, spec_room &sr)
 bool place_specific_trap(int spec_x, int spec_y,
                          trap_type spec_type)
 {
-    if (spec_type == TRAP_RANDOM)
-        spec_type = static_cast<trap_type>( random2(NUM_TRAPS) );
+    if (spec_type == TRAP_RANDOM || spec_type == TRAP_NONTELEPORT)
+    {
+        trap_type forbidden1 = NUM_TRAPS;
+        trap_type forbidden2 = NUM_TRAPS;
+
+        if (spec_type == TRAP_NONTELEPORT)
+        {
+            forbidden1 = TRAP_SHAFT;
+            forbidden2 = TRAP_TELEPORT;
+        }
+        else if (!is_valid_shaft_level())
+            forbidden1 = TRAP_SHAFT;
+
+        do
+        {
+            spec_type = static_cast<trap_type>( random2(NUM_TRAPS) );
+        } while (spec_type == forbidden1 || spec_type == forbidden2);
+    }
 
     for (int tcount = 0; tcount < MAX_TRAPS; tcount++)
     {

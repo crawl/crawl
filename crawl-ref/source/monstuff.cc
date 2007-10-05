@@ -4514,8 +4514,7 @@ static void do_move_monster(monsters *monster, int xi, int yi)
 void mons_check_pool(monsters *mons, killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
-    const flight_type lev = mons->flies();
-    if (lev == FL_LEVITATE || (lev == FL_FLY && !mons->paralysed()))
+    if (mons->airborne())
         return;
     
     int grid = grd(mons->pos());
@@ -4570,6 +4569,9 @@ static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
     // Dumb monsters don't care at all.
     if (mons_intel(monster->type) == I_PLANT)
         return (true);
+
+    if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
+        return (false);
 
     // Healthy monsters don't mind a little pain. XXX: Smart humanoids
     // with low hp should probably not try to go through high-damage

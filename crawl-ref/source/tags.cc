@@ -96,6 +96,7 @@ extern std::map<branch_type, level_id> stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
 extern std::map<level_pos, portal_type> portals_present;
+extern std::map<level_id, std::string> level_annotations;
 
 // temp file pairs used for file level cleanup
 FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
@@ -423,6 +424,12 @@ void marshallString(struct tagHeader &th, const std::string &data, int maxSize)
     th.offset += len;
 }
 
+// To pass to marsahllMap
+static void marshall_string(struct tagHeader &th, const std::string &data)
+{
+    marshallString(th, data);
+}
+
 // string -- unmarshall length & string data
 int unmarshallCString(struct tagHeader &th, char *data, int maxSize)
 {
@@ -454,6 +461,12 @@ std::string unmarshallString(tagHeader &th, int maxSize)
     const std::string res(buffer, slen);
     delete [] buffer;
     return (res);
+}
+
+// To pass to unmarshallMap
+static std::string unmarshall_string(struct tagHeader &th)
+{
+    return unmarshallString(th);
 }
 
 // boolean (to avoid system-dependant bool implementations)
@@ -1039,6 +1052,8 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
                 marshall_level_pos, marshall_as_long<god_type>);
     marshallMap(th, portals_present,
                 marshall_level_pos, marshall_as_long<portal_type>);
+    marshallMap(th, level_annotations,
+                marshall_level_id, marshall_string);
 
     marshallPlaceInfo(th, you.global_info);
     std::vector<PlaceInfo> list = you.get_all_place_info();
@@ -1435,6 +1450,8 @@ static void tag_read_you_dungeon(struct tagHeader &th)
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
     unmarshallMap(th, portals_present,
                   unmarshall_level_pos, unmarshall_long_as<portal_type>);
+    unmarshallMap(th, level_annotations,
+                  unmarshall_level_id, unmarshall_string);
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
     ASSERT(place_info.is_global());

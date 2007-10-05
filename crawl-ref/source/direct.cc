@@ -1491,6 +1491,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("Zot trap");
         case TRAP_NEEDLE:
             return ("needle trap");
+        case TRAP_SHAFT:
+            return ("shaft trap");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -1561,8 +1563,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("mechanical trap");
     case DNGN_TRAP_MAGICAL:
         return ("magical trap");
-    case DNGN_TRAP_III:
-        return ("trap");
+    case DNGN_TRAP_NATURAL:
+        return ("natural trap");
     case DNGN_ENTER_SHOP:
         return ("shop");
     case DNGN_ENTER_LABYRINTH:
@@ -1714,7 +1716,7 @@ std::string feature_description(int mx, int my, description_level_type dtype,
     {
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
-    case DNGN_TRAP_III:
+    case DNGN_TRAP_NATURAL:
         return (feature_description(grid, trap_type_at_xy(mx, my), 
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:

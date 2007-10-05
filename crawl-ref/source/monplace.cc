@@ -325,6 +325,24 @@ monster_type pick_random_monster(const level_id &place,
     return (mon_type);
 }
 
+static bool can_place_on_trap(int mon_type, trap_type trap)
+{
+    if (trap == TRAP_TELEPORT)
+        return (false);
+
+    if (trap == TRAP_SHAFT)
+    {
+        if (mon_type == RANDOM_MONSTER)
+            return (false);
+
+        return (mons_class_flag(mon_type, M_FLIES)
+                || mons_class_flag(mon_type, M_LEVITATE)
+                || get_monster_data(mon_type)->size == SIZE_TINY);
+    }
+
+    return (true);
+}
+
 bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                    int target, bool summoned, int px, int py, bool allow_bands,
                    proximity_type proximity, int extra, int dur,
@@ -372,7 +390,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 int trap = trap_at_xy(px, py);
                 if (trap >= 0)
                 {
-                    if (env.trap[trap].type == TRAP_TELEPORT)
+                    if (!can_place_on_trap(mon_type, env.trap[trap].type))
                        continue;
                 }
 
@@ -509,7 +527,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
             int trap = trap_at_xy(px, py);
             if (trap >= 0)
             {
-                if (env.trap[trap].type == TRAP_TELEPORT)
+                if (!can_place_on_trap(mon_type, env.trap[trap].type))
                     continue;
             }
 
@@ -686,7 +704,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
             // (how do they get there?)
             int trap = trap_at_xy(fx, fy);
             if (trap >= 0)
-                if (env.trap[trap].type == TRAP_TELEPORT)
+                if (!can_place_on_trap(mon_type, env.trap[trap].type))
                     continue;
 
             // cool.. passes all tests

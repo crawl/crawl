@@ -673,7 +673,7 @@ bool entomb(int powc)
 
     const dungeon_feature_type safe_to_overwrite[] = {
         DNGN_FLOOR, DNGN_SHALLOW_WATER, DNGN_OPEN_DOOR,
-        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_III,
+        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_NATURAL,
         DNGN_UNDISCOVERED_TRAP,
         DNGN_FLOOR_SPECIAL
     };

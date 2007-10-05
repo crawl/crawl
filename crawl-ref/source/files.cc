@@ -78,6 +78,7 @@
 #include "mtransit.h"
 #include "notes.h"
 #include "output.h"
+#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "randart.h"
@@ -902,6 +903,7 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     // GENERATE new level when the file can't be opened:
     if (levelFile == NULL)
     {
+        env.turns_on_level = -1;
         builder( you.your_level, you.level_type );
         just_created_level = true;
 
@@ -1028,6 +1030,19 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
+
+    // Inform user of level's annotation.
+    if (get_level_annotation().length() > 0
+        && !crawl_state.level_annotation_shown)
+    {
+        char buf[200];
+
+        sprintf(buf, "Level annotation: %s\n",
+                get_level_annotation().c_str() );
+        mpr(buf, MSGCH_PLAIN, YELLOW);
+    }
+
+    crawl_state.level_annotation_shown = false;
 
     if (load_mode != LOAD_RESTART_GAME)
     {

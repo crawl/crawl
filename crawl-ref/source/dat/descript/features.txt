@@ -85,6 +85,9 @@ A magical trap
 A mechanical trap
 
 %%%%
+A natural trap
+
+%%%%
 A metal wall
 
 A wall of bluish-grey metal.

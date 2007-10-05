@@ -299,6 +299,32 @@ void mons_trap(struct monsters *monster)
         damage_taken = 0;      // just to be certain {dlb}
         break;
 
+    case TRAP_SHAFT:
+    {
+        // Paranoia
+        if (!is_valid_shaft_level())
+        {
+            if (trapKnown && monsterNearby)
+                mpr("The shaft disappears in a puff of logic!");
+
+            grd[env.trap[which_trap].x][env.trap[which_trap].y] = DNGN_FLOOR;
+            env.trap[which_trap].type = TRAP_UNASSIGNED;
+            return;
+        }
+
+        if (!monster->will_trigger_shaft())
+        {
+            if (trapKnown && !monster->airborne())
+                simple_monster_message(monster,
+                                        " fails to trigger the shaft.");
+
+            return;
+        }
+
+        revealTrap = monster->do_shaft();
+        break;
+    }
+
     default:
         break;
     }

@@ -2524,7 +2524,7 @@ bool is_feature(int feature, int x, int y)
         {
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
-        case DNGN_TRAP_III:
+        case DNGN_TRAP_NATURAL:
             return true;
         default:
             return false;
@@ -3630,10 +3630,10 @@ void init_feature_table( void )
             Feature[i].map_colour = MAGENTA;
             break;
 
-        case DNGN_TRAP_III:
-            Feature[i].colour = LIGHTGREY;
+        case DNGN_TRAP_NATURAL:
+            Feature[i].colour = BROWN;
             Feature[i].symbol = Options.char_table[ DCHAR_TRAP ];
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].map_colour = BROWN;
             break;
 
         case DNGN_UNDISCOVERED_TRAP:

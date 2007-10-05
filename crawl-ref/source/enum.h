@@ -549,6 +549,8 @@ enum command_type
     CMD_MOUSE_MOVE,
     CMD_MOUSE_CLICK,
 
+    CMD_ANNOTATE_LEVEL,
+
     /* overmap commands */
     CMD_MAP_CLEAR_MAP,
     CMD_MAP_ADD_WAYPOINT,
@@ -889,7 +891,7 @@ enum dungeon_feature_type
     DNGN_OPEN_DOOR,                    //   72
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
-    DNGN_TRAP_III,
+    DNGN_TRAP_NATURAL,
     DNGN_UNDISCOVERED_TRAP,            //   78
 
     DNGN_ENTER_SHOP = 80,              //   80
@@ -2548,6 +2550,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_NET,
     TRAP_ZOT,
     TRAP_NEEDLE,
+    TRAP_SHAFT,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
     TRAP_INDEPTH = 253,                // Level-appropriate trap.

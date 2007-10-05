@@ -1463,6 +1463,7 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
             "<w>Ctrl-P</w> : show Previous messages\n"
             "<w>Ctrl-R</w> : Redraw screen\n"
             "<w>Ctrl-C</w> : Clear main and level maps\n"
+            "<w>Ctrl-I</w> : annotate the dungeon level\n"
             "<w>#</w> : dump character to file\n"
             "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
             "<w>~</w> : add macro\n"

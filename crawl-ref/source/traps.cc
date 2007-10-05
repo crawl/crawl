@@ -383,6 +383,42 @@ void handle_traps(char trt, int i, bool trap_known)
             env.trap[i].type = TRAP_UNASSIGNED;
         }
         break;
+
+    // If we don't trigger the shaft, and the player doesn't
+    // already know about it, don't let him/her notice it.
+    case TRAP_SHAFT:
+    {
+        // Paranoia
+        if (!is_valid_shaft_level())
+        {
+            if (trap_known);
+                mpr("The shaft disappears in a puff of logic!");
+
+            grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
+            env.trap[i].type = TRAP_UNASSIGNED;
+            return;
+        }
+
+        if (!you.will_trigger_shaft())
+        {
+            if (trap_known && !you.airborne())
+                mpr("You fail to trigger the shaft.");
+
+            if (!trap_known)
+                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+
+            return;
+        }
+
+        if (!you.do_shaft())
+            if (!trap_known)
+            {
+                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+                return;
+            }
+
+        break;
+    }
         
     case TRAP_ZOT:
     default:
@@ -770,6 +806,9 @@ dungeon_feature_type trap_category(trap_type type)
 {
     switch (type)
     {
+    case TRAP_SHAFT:
+        return (DNGN_TRAP_NATURAL);
+
     case TRAP_TELEPORT:
     case TRAP_AMNESIA:
     case TRAP_ZOT:

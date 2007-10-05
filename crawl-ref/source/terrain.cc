@@ -177,7 +177,7 @@ bool grid_is_solid(const coord_def &c)
 bool grid_is_trap(dungeon_feature_type grid)
 {
     return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
-              || grid == DNGN_TRAP_III);
+              || grid == DNGN_TRAP_NATURAL);
 }
 
 bool grid_is_water( dungeon_feature_type grid )
