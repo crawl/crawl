@@ -842,17 +842,16 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         bool known_trap = (grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP
                            && !force_stair);
 
-        if (you.airborne() && !known_trap && !force_stair)
+        if (!known_trap && !force_stair)
         {
             mpr("You can't go down here!");
             return;
         }
 
-        if (you.airborne() && you.flies() != FL_FLY && !force_stair)
+        if (you.flies() == FL_LEVITATE && !force_stair)
         {
             if (known_trap)
-                mpr("You must have controlled flight to dive through "
-                    "a shaft.");
+                mpr("You can't fall through a shaft while levitating.");
             return;
         }
 

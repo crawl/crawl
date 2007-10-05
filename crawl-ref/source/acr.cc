@@ -1448,23 +1448,6 @@ static bool toggle_flag( bool* flag, const char* flagname )
     return *flag;
 }
 
-static bool can_go_down_shaft()
-{
-    // Not a shaft
-    if (trap_type_at_xy(you.x_pos, you.y_pos) != TRAP_SHAFT)
-        return (false);
-
-    // Undiscovered shaft
-    if (grd[you.x_pos][you.y_pos] == DNGN_UNDISCOVERED_TRAP)
-        return (false);
-
-    // Have to fly to dive through it.
-    if (you.flies() != FL_FLY)
-        return (false);
-
-    return (true);
-}
-
 static void go_downstairs();
 static void go_upstairs()
 {
@@ -1508,15 +1491,17 @@ static void go_upstairs()
 
 static void go_downstairs()
 {
-    if (trap_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
-        && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP
-        && !can_go_down_shaft())
+    bool shaft = (trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
+                  && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP);
+
+    if (shaft && you.flies() == FL_LEVITATE)
     {
-        mpr("You must have controlled flight to dive through a shaft.");
+        mpr("You can't fall through a shaft while levitating.");
         return;
     }
 
-    if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS)
+    if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS
+        && !shaft)
     {
         if (grd(you.pos()) == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -1530,10 +1515,18 @@ static void go_downstairs()
         mpr("You're held in a net!");
         return;
     }
-    tag_followers();  // only those beside us right now can follow
-    start_delay( DELAY_DESCENDING_STAIRS,
-                 1 + (you.burden_state > BS_UNENCUMBERED),
-                 you.your_level );
+
+    if (shaft)
+    {
+        start_delay( DELAY_DESCENDING_STAIRS, 0, you.your_level );
+    }
+    else
+    {
+        tag_followers();  // only those beside us right now can follow
+        start_delay( DELAY_DESCENDING_STAIRS,
+                     1 + (you.burden_state > BS_UNENCUMBERED),
+                     you.your_level );
+    }
 }
 
 static void experience_check()

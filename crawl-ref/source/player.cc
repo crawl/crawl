@@ -5019,8 +5019,7 @@ actor::~actor()
 
 bool actor::will_trigger_shaft() const
 {
-    return (!airborne() && total_weight() >= 300
-            && is_valid_shaft_level());
+    return (!airborne() && total_weight() > 0 && is_valid_shaft_level());
 }
 
 level_id actor::shaft_dest() const

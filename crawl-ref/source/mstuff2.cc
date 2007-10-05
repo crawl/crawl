@@ -316,7 +316,7 @@ void mons_trap(struct monsters *monster)
         {
             if (trapKnown && !monster->airborne())
                 simple_monster_message(monster,
-                                        " fails to trigger the shaft.");
+                                        " doesn't fall through the shaft.");
 
             return;
         }

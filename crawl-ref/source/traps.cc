@@ -402,7 +402,7 @@ void handle_traps(char trt, int i, bool trap_known)
         if (!you.will_trigger_shaft())
         {
             if (trap_known && !you.airborne())
-                mpr("You fail to trigger the shaft.");
+                mpr("You don't fall through the shaft..");
 
             if (!trap_known)
                 grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
