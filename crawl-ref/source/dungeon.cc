@@ -277,6 +277,7 @@ bool builder(int level_number, int level_type)
             use_random_maps = false;
         
         build_dungeon_level(level_number, level_type);
+        dgn_set_floor_colours();
 
 #ifdef DEBUG_DIAGNOSTICS
         if (dgn_level_vetoed)
@@ -630,6 +631,9 @@ static void reset_level()
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].type = -1;
 
+    for (int i = 0; i < 20; i++)
+        env.mons_alloc[i] = -1;
+
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
 
@@ -852,7 +856,6 @@ static void build_dungeon_level(int level_number, int level_type)
         || you.level_type == LEVEL_PORTAL_VAULT
         || dgn_level_vetoed)
     {
-        dgn_set_floor_colours();
         return;
     }
     
@@ -927,8 +930,6 @@ static void build_dungeon_level(int level_number, int level_type)
     // Translate stairs for pandemonium levels:
     if (level_type == LEVEL_PANDEMONIUM)
         fixup_pandemonium_stairs();
-
-    dgn_set_floor_colours();
 }                               // end builder()
 
 
@@ -942,8 +943,22 @@ static char fix_black_colour(char incol)
 
 void dgn_set_colours_from_monsters()
 {
-    env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
-    env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
+    if (env.mons_alloc[9] < 0 || env.mons_alloc[9] == MONS_PROGRAM_BUG
+        || env.mons_alloc[9] >= NUM_MONSTERS)
+    {
+        env.floor_colour = LIGHTGREY;
+    }
+    else
+        env.floor_colour = fix_black_colour(mcolour[env.mons_alloc[9]]);
+
+
+    if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_PROGRAM_BUG
+        || env.mons_alloc[8] >= NUM_MONSTERS)
+    {
+        env.rock_colour = BROWN;
+    }
+    else
+        env.rock_colour = fix_black_colour(mcolour[env.mons_alloc[8]]);
 }
 
 static void dgn_set_floor_colours()
