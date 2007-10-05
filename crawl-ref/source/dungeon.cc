@@ -2010,6 +2010,8 @@ static trap_type random_trap_for_level(int level_number)
         type = TRAP_ZOT;
     }
 
+    if (one_chance_in(50) && is_valid_shaft_level())
+        type = TRAP_SHAFT;
     if (one_chance_in(20))
         type = TRAP_TELEPORT;
     if (one_chance_in(40))
