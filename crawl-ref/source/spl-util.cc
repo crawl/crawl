@@ -73,14 +73,6 @@ void init_spell_descs(void)
     // which corrupts the heap.
     for (unsigned int i = 0; i < SPELLDATASIZE - 1; i++)
         spell_list[spelldata[i].id] = i;
-
-    for (int i = 0; i < NUM_SPELLS; i++)
-    {
-        if (spell_list[i] == -1)
-            spell_list[i] = spell_list[SPELL_NO_SPELL];
-    }
-
-    return;
 }                               // end init_spell_descs()
 
 spell_type spell_by_name(const char* name)
@@ -93,7 +85,11 @@ spell_type spell_by_name(const char* name)
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
-        strncpy( spname, spell_title(type), sizeof( spname ) );
+        const char *sptitle = spell_title(type);
+        if (!sptitle)
+            continue;
+        
+        strncpy( spname, sptitle, sizeof( spname ) );
 
         if (strcasecmp(spname, name) == 0)
             return (type);
@@ -278,7 +274,8 @@ int count_bits(unsigned int bits)
 
 const char *spell_title(spell_type spell)
 {
-    return (seekspell(spell)->title);
+    const spell_desc *spd = seekspell(spell);
+    return (spd? spd->title : NULL);
 }
 
 
@@ -835,7 +832,7 @@ int spell_type2skill(unsigned int spelltype)
  */
 
 //jmf: simplified; moved init code to top function, init_spell_descs()
-static struct spell_desc *seekspell(spell_type spell)
+static spell_desc *seekspell(spell_type spell)
 {
     return (&spelldata[spell_list[spell]]);
 }
