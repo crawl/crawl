@@ -561,10 +561,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
         return true;
     }
 
-    FixedVector < int, 2 > plox;
-
-    plox[0] = 1;
-    plox[1] = 0;
+    coord_def pos(1, 0);
 
     if (is_controlled)
     {
@@ -572,25 +569,24 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
         mpr("Expect minor deviation.");
         more();
 
-        show_map(plox, false);
+        show_map(pos, false);
 
         redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", plox[0], plox[1] );
+        mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
 
-        plox[0] += random2(3) - 1;
-        plox[1] += random2(3) - 1;
+        pos.x += random2(3) - 1;
+        pos.y += random2(3) - 1;
 
         if (one_chance_in(4))
         {
-            plox[0] += random2(3) - 1;
-            plox[1] += random2(3) - 1;
+            pos.x += random2(3) - 1;
+            pos.y += random2(3) - 1;
         }
 
-        if (plox[0] < 6 || plox[1] < 6 || plox[0] > (GXM - 5)
-                || plox[1] > (GYM - 5))
+        if (!in_bounds(pos))
         {
             mpr("Nearby solid objects disrupt your rematerialisation!");
             is_controlled = false;
@@ -598,12 +594,12 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "Scattered target square (%d,%d)", plox[0], plox[1] );
+             "Scattered target square (%d,%d)", pos.x, pos.y );
 #endif
 
         if (is_controlled)
         {
-            you.moveto(plox[0], plox[1]);
+            you.moveto(pos.x, pos.y);
 
             if ((grd[you.x_pos][you.y_pos] != DNGN_FLOOR
                     && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
@@ -626,8 +622,8 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
         do
         {
-            newx = 5 + random2( GXM - 10 );
-            newy = 5 + random2( GYM - 10 );
+            newx = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+            newy = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
         while ((grd[newx][newy] != DNGN_FLOOR
                 && grd[newx][newy] != DNGN_SHALLOW_WATER)
@@ -802,29 +798,24 @@ void cast_poison_ammo(void)
 bool project_noise(void)
 {
     bool success = false;
-    FixedVector < int, 2 > plox;
 
-    plox[0] = 1;
-    plox[1] = 0;
+    coord_def pos(1, 0);
 
     mpr( "Choose the noise's source (press '.' or delete to select)." );
     more();
-    show_map(plox, false);
+    show_map(pos, false);
 
     redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", plox[0], plox[1] );
+    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
 
-    if (!silenced( plox[0], plox[1] ))
+    if (!silenced( pos.x, pos.y ))
     {
-        // player can use this spell to "sound out" the dungeon -- bwr
-        if (plox[0] > 1 && plox[0] < (GXM - 2) 
-            && plox[1] > 1 && plox[1] < (GYM - 2)
-            && !grid_is_solid(grd[ plox[0] ][ plox[1] ]))
+        if (in_bounds(pos) && !grid_is_solid(grd(pos)))
         {
-            noisy( 30, plox[0], plox[1] );
+            noisy( 30, pos.x, pos.y );
             success = true;
         }
 
@@ -832,7 +823,7 @@ bool project_noise(void)
         {
             if (success)
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (see_grid( plox[0], plox[1] ) ? "distant " : "") );
+                     (!see_grid( pos.x, pos.y ) ? "distant " : "") );
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");
         }

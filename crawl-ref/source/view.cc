@@ -2721,7 +2721,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
 
             coord_def c(start_x + screen_x, start_y + screen_y);
 
-            if (!in_bounds(c))
+            if (!map_bounds(c))
             {
                 buffer2[bufcount2 + 1] = DARKGREY;
                 buffer2[bufcount2] = 0;
@@ -2793,7 +2793,7 @@ static void reset_travel_colours(std::vector<coord_def> &features)
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
-void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
+void show_map( coord_def &spec_place, bool travel_mode )
 {
     cursor_control ccon(!Options.use_fake_cursor);
     int i, j;
@@ -3098,8 +3098,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             
             if (cme.left_clicked() && in_bounds(grdp))
             {
-                spec_place[0] = grdp.x;
-                spec_place[1] = grdp.y;
+                spec_place = grdp;
                 map_alive     = false;
             }
             else if (cme.scroll_up())
@@ -3133,8 +3132,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             }
             else
             {
-                spec_place[0] = x;
-                spec_place[1] = y;
+                spec_place = coord_def(x, y);
                 map_alive = false;
                 break;
             }

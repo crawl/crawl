@@ -118,7 +118,7 @@ void handle_monster_shouts(monsters* monster, bool force = false);
 /* ***********************************************************************
  * called from: acr - spells3
  * *********************************************************************** */
-void show_map( FixedVector<int, 2>& spec_place, bool travel_mode );
+void show_map( coord_def &spec_place, bool travel_mode );
 
 // last updated 19jun2000 (gdl)
 /* ***********************************************************************

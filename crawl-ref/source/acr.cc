@@ -1573,8 +1573,6 @@ static void experience_check()
 
 void process_command( command_type cmd )
 {
-
-    FixedVector < int, 2 > plox;
     apply_berserk_penalty = true;
 
     switch (cmd)
@@ -1990,11 +1988,13 @@ void process_command( command_type cmd )
             break;
         }
 #endif
-        plox[0] = 0;
-        show_map(plox, true);
-        redraw_screen();
-        if (plox[0] > 0)
-            start_travel(plox[0], plox[1]);
+        {
+            coord_def pos;
+            show_map(pos, true);
+            redraw_screen();
+            if (pos.x > 0)
+                start_travel(pos.x, pos.y);
+        }
         break;
 
     case CMD_DISPLAY_KNOWN_OBJECTS:

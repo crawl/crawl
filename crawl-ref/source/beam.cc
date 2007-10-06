@@ -2602,8 +2602,7 @@ static int affect_wall(bolt &beam, int x, int y)
             || grd[x][y] == DNGN_PERMAROCK_WALL
             || grd[x][y] == DNGN_CLEAR_STONE_WALL
             || grd[x][y] == DNGN_CLEAR_PERMAROCK_WALL
-            || x <= 5 || x >= (GXM - 5)
-            || y <= 5 || y >= (GYM - 5))
+            || !in_bounds(x, y))
         {
             return (0);
         }
@@ -2669,7 +2668,7 @@ static int affect_wall(bolt &beam, int x, int y)
 
         if ((targ_grid == DNGN_ROCK_WALL || targ_grid == DNGN_WAX_WALL
              || targ_grid == DNGN_CLEAR_ROCK_WALL)
-            && !(x <= 6 || y <= 6 || x >= (GXM - 6) || y >= (GYM - 6)))
+            && in_bounds(x, y))
         {
             grd[ x ][ y ] = DNGN_FLOOR;
             if (!silenced(you.x_pos, you.y_pos))

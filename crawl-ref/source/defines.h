@@ -82,7 +82,7 @@
 
 // This is the border that must be left around the map. I'm not sure why it's
 // necessary, beyond hysterical raisins.
-#define MAPGEN_BORDER           6
+#define MAPGEN_BORDER           2
 
 // Now some defines about the actual play area:
 // Note: these boundaries are exclusive for the zone the player can move/dig,

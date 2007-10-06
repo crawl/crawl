@@ -1358,9 +1358,9 @@ static void prepare_water( int level_number )
     int i, j, k, l;             // loop variables {dlb}
     unsigned char which_grid;   // code compaction {dlb}
 
-    for (i = 10; i < (GXM - 10); i++)
+    for (i = 1; i < (GXM - 1); i++)
     {
-        for (j = 10; j < (GYM - 10); j++)
+        for (j = 1; j < (GYM - 1); j++)
         {
             if (!unforbidden(coord_def(i, j), MMT_NO_POOL))
                 continue;
@@ -2053,8 +2053,8 @@ static void place_specific_feature(dungeon_feature_type feat)
 
     do
     {
-        sx = random2(GXM-10);
-        sy = random2(GYM-10);
+        sx = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+        sy = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
     }
     while(grd[sx][sy] != DNGN_FLOOR || mgrd[sx][sy] != NON_MONSTER);
 
@@ -2224,25 +2224,25 @@ static void make_trail(int xs, int xr, int ys, int yr, int corrlength,
         if (dir_x == 0 && dir_y == 0)
             continue;
 
-        if (x_ps < 8)
+        if (x_ps < X_BOUND_1 + 3)
         {
             dir_x = 1;
             dir_y = 0;
         }
 
-        if (y_ps < 8)
+        if (y_ps < Y_BOUND_1 + 3)
         {
             dir_y = 1;
             dir_x = 0;
         }
 
-        if (x_ps > (GXM - 8))
+        if (x_ps > (X_BOUND_2 - 3))
         {
             dir_x = -1;
             dir_y = 0;
         }
 
-        if (y_ps > (GYM - 8))
+        if (y_ps > (Y_BOUND_2 - 3))
         {
             dir_y = -1;
             dir_x = 0;
@@ -2258,25 +2258,25 @@ static void make_trail(int xs, int xr, int ys, int yr, int corrlength,
         {
             // Below, I've changed the values of the unimportant variable from
             // 0 to random2(3) - 1 to avoid getting stuck on the "stuck!" bit
-            if (x_ps < 9)
+            if (x_ps < X_BOUND_1 + 4)
             {
                 dir_y = 0;      //random2(3) - 1;
                 dir_x = 1;
             }
 
-            if (x_ps > (GXM - 9))
+            if (x_ps > (X_BOUND_2 - 4))
             {
                 dir_y = 0;      //random2(3) - 1;
                 dir_x = -1;
             }
 
-            if (y_ps < 9)
+            if (y_ps < Y_BOUND_1 + 4)
             {
                 dir_y = 1;
                 dir_x = 0;      //random2(3) - 1;
             }
 
-            if (y_ps > (GYM - 9))
+            if (y_ps > (Y_BOUND_2 - 4))
             {
                 dir_y = -1;
                 dir_x = 0;      //random2(3) - 1;
@@ -2707,7 +2707,7 @@ static void specr_2(spec_room &sr)
         sy += dy;
 
         // quit if we run off the map before finding floor
-        if (sx < 6 || sx > (GXM - 7) || sy < 6 || sy > (GYM - 7))
+        if (!in_bounds(sx, sy))
         {
             bkout++;
             goto grolko;
@@ -3895,8 +3895,8 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
 
             do
             {
-                pos_x = 10 + random2(GXM - 20);
-                pos_y = 10 + random2(GYM - 20);
+                pos_x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+                pos_y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
             }
             while (grd[pos_x][pos_y] != DNGN_FLOOR
                    || (pos_x >= v1x && pos_x <= v2x && pos_y >= v1y
@@ -4619,8 +4619,8 @@ static void many_pools(dungeon_feature_type pool_type)
 
     for ( int timeout = 0; pools < num_pools && timeout < 30000; ++timeout )
     {
-        const int i = 6 + random2( GXM - 26 );
-        const int j = 6 + random2( GYM - 26 );
+        const int i = random_range(X_BOUND_1 + 1, X_BOUND_2 - 21);
+        const int j = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 21);
         const int k = i + 2 + roll_dice( 2, 9 );
         const int l = j + 2 + roll_dice( 2, 9 );
 
@@ -4817,8 +4817,8 @@ static void place_shops(int level_number, int nshops)
 
         do
         {
-            shop_place_x = random2(GXM - 20) + 10;
-            shop_place_y = random2(GYM - 20) + 10;
+            shop_place_x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+            shop_place_y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
 
             timeout++;
 
@@ -5044,8 +5044,8 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
 
             do
             {
-                j = 10 + random2(GXM - 20);
-                k = 10 + random2(GYM - 20);
+                j = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+                k = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
             }
             while (grd[j][k] != DNGN_ROCK_WALL
                     && grd[j + 1][k] != DNGN_ROCK_WALL);
@@ -5080,8 +5080,8 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
     {
         do
         {
-            j = random2(GXM - 20) + 10;
-            k = random2(GYM - 20) + 10;
+            j = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+            k = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
         while (grd[j][k] == DNGN_ROCK_WALL
                && grd[j - 1][k] == DNGN_ROCK_WALL
