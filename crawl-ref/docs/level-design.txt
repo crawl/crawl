@@ -19,8 +19,6 @@ the dat directory. If you are interested in adding some vaults, say, start
 with the existing ones and modify them. Currently, the following .des files
 are in use:
 
- asciiart.des - a few entry vaults which contain proper ASCII art.
-                these are a matter of taste - some find this annoying.
  bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
  elf.des      - Elf:7
  entry.des    - entry vaults (each game - but not tutorial games - uses one of 
@@ -36,8 +34,6 @@ are in use:
  pan.des      - vaults of the Pan demon lords, Pan minivaults
  portal.des   - portal vaults entrances
  temple.des   - Ecumenical Temples, and Temple entrances
- tricky.des   - a few entry vaults which are harder in some regard 
-                (use of special items, or being puzzles)
  vaults.des   - entrances for the Vaults, Vaults:8, Blades, Tomb:?
  zot.des      - Zot:5
 
