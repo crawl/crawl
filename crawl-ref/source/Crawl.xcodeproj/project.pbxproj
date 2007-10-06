@@ -562,6 +562,7 @@
 		7B9740060BE3AC8000AAE35B /* makeitem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = makeitem.h; sourceTree = "<group>"; };
 		7BA3DBB90B3D90A700B5B3D7 /* branch.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = branch.cc; sourceTree = "<group>"; };
 		7BA3DBBA0B3D90A700B5B3D7 /* branch.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = branch.h; sourceTree = "<group>"; };
+		7BB0A2280CB735C00034A741 /* xom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xom.h; sourceTree = SOURCE_ROOT; };
 		7BC222E50ABBB286003A7D9A /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
 		7BC222E60ABBB286003A7D9A /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
 		7BD75A330AC214A200B74F6E /* notes.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = notes.cc; sourceTree = "<group>"; };
@@ -881,6 +882,7 @@
 				7B237E140A8EC9D000580F30 /* view.cc */,
 				7B237E130A8EC9D000580F30 /* view.h */,
 				4CEF15890C128CA5002C7D7A /* xom.cc */,
+				7BB0A2280CB735C00034A741 /* xom.h */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
