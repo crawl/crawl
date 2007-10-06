@@ -3408,7 +3408,7 @@ bool give_items_skills()
 {
     char keyn;
     int weap_skill = 0;
-    int to_hit_bonus;           // used for assigning primary weapons {dlb}
+    int to_hit_bonus = 0;       // used for assigning primary weapons {dlb}
     int choice;                 // used for third-screen choices
 
     switch (you.char_class)

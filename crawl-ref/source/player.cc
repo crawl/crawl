@@ -5384,7 +5384,7 @@ int player::body_weight() const
     if (attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
         return 0;
 
-    int weight;
+    int weight = 0;
     switch(body_size(PSIZE_BODY))
     {
     case SIZE_TINY:
