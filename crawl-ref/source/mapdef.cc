@@ -2697,7 +2697,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
 
 feature_spec keyed_mapspec::get_feat()
 {
-    return feat.get_feat(key_glyph);
+    return feat.get_feat('.');
 }
 
 mons_list &keyed_mapspec::get_monsters()
