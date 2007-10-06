@@ -1,0 +1,524 @@
+##############################################################################
+# crypt.des: Maps for the Crypt and Tomb.
+##############################################################################
+
+############################################################################
+#	churchlike map with customizeable monster sets
+#
+NAME:   church_of_pain_bobbens
+ORIENT: float
+TAGS:   no_monster_gen no_item_gen
+PLACE:  Crypt:5
+# MONSTER LAYOUT
+# boss (1)
+# boss guard (2)
+# secondary boss (3)
+# support (4)
+# primary guard (5)
+# advanced guard (6)
+# in tombs (7)
+
+# 30% - skeletal (standard)
+# 30% - vampire (pretty hardcore, with easier bosses)
+# 30% - ghost
+# 10% - mummy (pretty evil)
+
+# skeletal monsters
+: local brnd = crawl.random2(13)
+: if brnd > 8 then
+MONS:   ancient lich
+MONS:   skeletal dragon
+MONS:   lich
+MONS:   necromancer
+MONS:   skeletal warrior
+MONS:   flying skull
+MONS:   skeletal warrior/w:20 large skeleton/w:5 small skeleton/w:5 nothing
+# vampire layout
+: elseif brnd > 4 then
+MONS:   vampire mage
+MONS:   spectral warrior
+MONS:   vampire knight
+MONS:   vampire
+MONS:   skeletal warrior/wraith
+MONS:   dancing weapon
+MONS:   vampire/skeletal warrior/large zombie/w:5 small zombie/wraith/w:5 nothing
+# ghost layout
+: elseif brnd > 0 then
+MONS:   curse skull
+MONS:   crystal golem
+MONS:   lich
+MONS:   spectral warrior
+MONS:   flayed ghost/wraith/freezing wraith/spectral warrior
+MONS:   flying skull
+MONS:   flayed ghost/wraith/freezing wraith/spectral warrior/hungry ghost/large zombie/w:5 small zombie/w:5 nothing
+# mummy layout - rare
+: else
+MONS:   greater mummy
+MONS:   sphinx
+MONS:   mummy priest
+MONS:   mummy priest
+MONS:   guardian mummy
+MONS:   flying skull
+MONS:   mummy/guardian mummy/w:5 nothing
+: end
+SUBST:  ; = .:6 ~:2 ^:1
+MAP
+           xxxxvvvvvvvvvvvvvvvvvxxxx           
+           xxxvv..WWWWWWWWWWW..vvxxx           
+           xxvv..WWWWWWWWWWWWW..vvxx           
+           xxv...WWWb.b.b.bWWW...vxx           
+           xxv...WWb$$|*|$$bWW...vxx           
+     xxxxxxxxv...WW.$||1||$.WW...vxxxxxxxx     
+     xxccccccv...WWb$$|*|$$bWW...vccccccxx     
+     xxc|*cccv...WWWb.b.b.bWWW...vccc*|cxx     
+     xxc$$$ccvv..WWWWWWWWWWWWW..vvcc$$$cxx     
+xxxxxxxc;;;|ccvv..WWWWWWWWWWW..vvcc|;;;cxxxxxxx
+xxccccccc=cccccv...............vccccc=cccccccxx
+xxcU$.....cxxxxvv....2...2....vvxxxxc.....$Ucxx
+xxc$.3....cxxxxxvv.....6.....vvxxxxxc....3.$cxx
+xxc.......cxxxxxvvv.6.....6.vvvxxxxxc.......cxx
+xxc.......cxxxxxvvvvv.....vvvvvxxxxxc.......cxx
+xxc...5.5.cxxxxxvvvvvvv+vvvvvvvxxxxxc.5.5...cxx
+xxccccc+cccxxxxxvcccccU.Ucccccvxxxxxccc+cccccxx
+xxxxxxc;cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc;cxxxxxx
+    xxc.cxxxxxccccG..F;^;F..Gccccxxxxxc.cxx    
+    xxc;cccccccG....45...54....Gccccccc;cxx    
+    xxc.;;;;;;+.................+;;;;;;.cxx    
+    xxc;cccccccG.......C.......Gccccccc;cxx    
+    xxc.c|$$+;ccc56.........65cccxxxxcc.cxx    
+  xxxxc;c|*$c;ccc5...........5cccxxxxcc;cxxxx  
+xxxxccc+ccc|c;=7+.............+7ccccccc+cccxxxx
+xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.....ccccccc..c.......c..ccccccc.....cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.....ccccccc..c.55555.c..ccccccc.....cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
+xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
+xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
+xxxxccc+cccxxxc7+.............+7=$*cccc+cccxxxx
+   xxc...cxxxxccc..c.......c..ccc||ccc...cxx   
+   xxc.4.cxxxxc7+.............+7cccccc.4.cxx   
+   xxc.|.cxxxxccc..c.......c..cccxxxxc.|.cxx   
+   xxcccccxxxxc7+.............+7cxxxxcccccxx   
+   xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx   
+            xxxxc5.Vcc...ccV.5cxxxx            
+              xxcccccc...ccccccxx              
+              xxc..;;;...;;;..cxx              
+              xxc;;vcccccccv;;cxx              
+                c..;;;...;;;..c                
+                cccccc@c@cccccc                
+ENDMAP
+
+
+############################################################################
+#	gigantic sort of aquatic base, pretty good looking :)
+#
+NAME:   cryptofortress_bobbens
+ORIENT: encompass
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
+FLAGS:  no_rotate no_vmirror
+PLACE:  Crypt:5
+KFEAT:  A = w
+KMONS:  A = flying skull
+KFEAT:  B = .
+KMONS:  B = ancient lich
+KFEAT:  D = .
+KMONS:  D = skeletal dragon
+KFEAT:  V = .
+KMONS:  V = vampire knight
+KFEAT:  X = .
+KMONS:  X = dancing weapon
+KFEAT:  L = .
+KMONS:  L = lich
+KFEAT:  I = .
+KMONS:  I = iron golem
+KFEAT:  G = .
+KMONS:  G = crystal golem
+KFEAT:  z = .
+KMONS:  z = skeletal warrior
+KFEAT:  N = .
+KMONS:  N = necromancer
+KFEAT:  H = .
+KMONS:  H = hell knight
+KFEAT:  M = .
+KMONS:  M = large zombie/small zombie/large skeleton/small skeleton/ghoul/necrophage
+KFEAT:  h = .
+KMONS:  h = titan zombie/dragon zombie/golden dragon zombie
+# red metal walls
+COLOUR: = = red
+COLOUR: r = red
+SUBST:  r = v
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........r||||||r.........vAAAAAAwwwwwwwwv
+vwwwwwwvvvvvvvvv......rr=rr****rr=rr......vvvvvvvvvwwwwwwv
+vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
+vwwwwwwv....H..v.....rrrr|r$$$$r|rrrr.....v.......vwwwwwwv
+vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
+vwwwwwwv....H..v......L...r$$$$r...L......v....H..vwwwwwwv
+vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
+vwwwwwwv...v...vv....rr.rrrU..Urrr.rr....vvv+v....vwwwwwwv
+vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
+vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
+vwwwwwwv...v..V.$vvv...rr........rr...vvvM+.....vvvwwwwwwv
+vwwwwwwv...v...$*v.vv...rrrU..Urrr...vv.vvv.....+Mvwwwwwwv
+vwwwwwwv...vvvvvvv..vv....rr..rr....vv..vM+.....vvvwwwwwwv
+vwwwwwwv...vvv...v...vv............vv...vvv.....+Mvwwwwwwv
+vwwwwwwv...vv....+....vv..........vv....+....N..vvvwwwwwwv
+vwwwwwwv...vNz...v.....vv........vv.....vvv.....+Mvwwwwwwv
+vwwwwwwv...v.M...v....G.vv......vvI.....vM+.....vvvwwwwwwv
+vwwwwwwv...v....vv....vvvvvvvvvvvvvv....vvv.....+Mvwwwwwwv
+vwwwwwAv.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
+vwwwwwAv......vv....vv..............vv....vvMv..+Mvwwwwwwv
+vwwwwAAv.....vv....vv................vv....vvv..vvvwwwwwwv
+vwwwAAAv.....v....vv.......N..N.......vv....vv..+Mvwwwwwwv
+vwvvvvvvvvvvvvv+vvvvv+vv.Mzz..zzM.vv+vvvvv+vvvvvvvvvvvvvwv
+vwvv.........v..I.v....v..........v....v.........v..%*vvwv
+vwvv.........v....v....v..........v....v.........v...$vvwv
+vwvv.........+....v....v..........v....v.....X..V+....vvwv
+vwvv....D....v....v..z.v..........v.z..v.........v....vvwv
+vwvvv....z...v....+...Nvr........rvN...+......X..vvvvvvvwv
+vwwvv........v....v..z.vrr......rrv.z..v.............vvwwv
+vwwvvv.......+....v....vrrrr++rrrrv....v............vvvwwv
+vwwwvv.......v....v....vrrUz..zUrrv....v............vvwwwv
+vwwwvvvvvvvvvvvvvvvv+vvvrI......Irvvv+vvvvvvvvvvvvvvvvwwwv
+vwwwwvvv|**$$v.........vrrrr++rrrrv.........v$$**|vvvwwwwv
+vwwwwwvvv|*$$+.........vrrww..wwrrv.........+$$*|vvvwwwwwv
+vwwwwwwvvv*$$v...X.....vrwAw..wAwrv...X.....v$$*vvvAwwwwwv
+vwwwwwwwwvvv$v....G....vwwww..wwwwv..G......v$vvvAAwwwwwwv
+vwwwwwwwwwvvvv.........vwwww..wwwwv.........vvvvwwwwwwwwwv
+vwwwwwwwwwwwvvvv.......vwwww..wwwwv.......vvvvwwwwwwwwwwwv
+vwwwwwwwwwwwwwvvvv.....vwwww..wwwwv.....vvvvwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwvvvvv..vwwww..wwwwv..vvvvvwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwvvvvvAwww..wwwAvvvvvwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwvvAwww..wwwAvvwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwAwwww..wwwwAwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwAww....wwAwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwww...(..wwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwAwww.[..{.wwwAwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwAwwwwwwAwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+##############################################################################
+# The three Tomb levels: these should generally be of a confusing layout.
+##############################################################################
+
+##############################################################################
+# Tomb:1
+#
+NAME:    tomb_1
+PLACE:   Tomb:1
+ORIENT:  encompass
+# The whole branch starts off with teleport control prevention.
+BFLAGS:  no_tele_control
+#
+SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
+SUBST:   A=|*, B=|*
+SUBST:   f = F, i = G, j = G, k = G, l = F
+SUBST:   I = G:900 6
+SUBST:   J = G:750 6
+SUBST:   K = G:550 6
+SUBST:   L = G:300 6
+SUBST:   - = T
+SUBST:   _ = F 6 ^:30 .:30
+SUBST:   T = ^ .
+SUBST:   t = ~ .:50
+SUBST:   ' = ^ ':200
+SUBST:   ' = 5 .:100  
+SUBST:   2 = 2 1:2 .
+SUBST:   1 = 1 2:3 .
+SUBST:   3 = 3., 4 = 4., 5 = 5.
+#
+MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
+MONS:    silver statue / orange crystal statue / ice statue
+#
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx(.............................[..............................{xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cc'''''''''''''''''''''''''''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc'''''''''''''''''''''''''''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''ccccccccccccccccccccccccccccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ttttttttttc................ctt)c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ccccccccctc..3..........2..ct-tc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..cA22c111ctc....3..........5c_ttc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..c2c222ctttc......2.........+cccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ccccccccccc.5........3...3..5..c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c............3.............3....2.c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cccccccccccccc.......2...2........c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c............c....................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c............c.................3..c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..cccccccc..c..........2..2......c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctttc1Bc..c....................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctctc11c..c...3.......3........c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctct11cc..c..............2.....c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctcccccc..c.......2............c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..cttttttt..c.3...............2..c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ccccccccccc....2.....3.........c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c.......5.........................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''ccccccccccccccTTTTTTTcccccccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c'''''''''''ccc+++++ccc'''''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c'''''''''''cc.2...2.cc'''''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''ccccccc''cc.L...L.cc''ccccccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''cc.322c''cc.......cc''c22.'cc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''c]'c22c''cc.2...2.cc''c22c.}c''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''cccc''c''cc.K...K.cc''c3'cccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''''''''c''cc.......cc''c''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''''''''c''cc.2...2.cc''c''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cccccccccc''cc.J...J.cc''cccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.I...I.cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx.............................4...4............................xxxxxxxxx
+xxxxxxxxx.............................F...F............................xxxxxxxxx
+xxxxxxxxx...........................4.4...4.4..........................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx...........................4..V.V..4..........................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx.............................4...4............................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx...........................4.......4..........................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Tomb:2
+#
+NAME:    tomb_2
+PLACE:   Tomb:2
+# Can be rotated!
+ORIENT:  encompass
+#
+SHUFFLE: ABCD[, Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
+SUBST:   W=', w=c, Y=T, y=+, Z=T, z=+
+SUBST:   U=', u=c, V=T, v=+
+SUBST:   Q=', q=c, R=T, r=+, S=T, s=+
+#
+SHUFFLE: ])}def
+SUBST:   d=", e=", f="
+#
+SUBST:   T = ^ .
+SUBST:   ' = ^ ':100
+SUBST:   ' = 1:5 2:5 3:1 .:89
+SUBST:   " = ^ ":50
+SUBST:   " = 2:3 3:1 .:96
+#
+# Number of ' symbols is 211+3=214, hence statistically in the lower 
+# circumference we'll have 10.7 mummies, another 10.7 guardian mummies
+# and 2.1 mummy priests.
+# Number of " symbols is 205+3=208, hence the upper circumference
+# has in mean 4.0 mummy priests and 8.3 guardian mummies.
+#
+# Perhaps to do: use KFEAT to make mummies possibly appear at T spots.
+#                have clustering of 1, 2 in the lower area as before?
+#
+MONS: mummy, guardian mummy, mummy priest, greater mummy
+#
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c""""""c"""""{""""c""""""""c"""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c"""""TcT""""""""TcT""""""TcT""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c"""2"T+T""""""""T+T""2"""T+T""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc"""TcT""""TcT""""""""TcT""""""TcT""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""TT+T"""""c""""""""""c""""""""c"""""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccc+ccccccccccccccccccccccccccccccc""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""TTc.............................c"3""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c.............................c""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""3"c..ccc4.................4ccc..c"""fccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c..ccc...................ccc..c""""ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c..ccc.........1.........ccc..c)""}ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c..ccc.....2.......2.....ccc..cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c.............................c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcce"""c.............................cT'''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc""""c........c...........c........+T'''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc]""dc.............................cT'''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc.....3........(........3.....c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc''''c.............................c'QQQccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''Tc........c...........c........cccqcccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''T+.............................c'QQQccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''Tc.............................c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'ZZZc..ccc.....2.......2.....ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccczcc..ccc.........1.........ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'ZZZc..ccc...................ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccA'''c..ccc4.................4ccc..c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'YYYc.............................c''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccycc.............................cRRR[ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'YYYc.............................ccrccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc''''ccccc+ccccccccccccccc+cccccccccRRR'ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc''''''c'TTTc''''''''''''cTT''''''c'''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''''WwW''UuU''''''''''VvV''''''SsS''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccB'''''c''''cC'''''''''''c''''''''c''''Dccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#############################################################################
+# Tomb:3
+#
+NAME:    tomb_3
+PLACE:   Tomb:3
+ORIENT:  encompass
+FLAGS:   no_rotate
+#
+SUBST:   ' : " $ ':80
+SUBST:   ' = " $
+SUBST:   " = ^:1 .
+SUBST:   $ = *:2 |:1 $:17
+#
+MONS:    mummy, guardian mummy, mummy priest, greater mummy
+#
+MARKER:  O = lua:item_pickup_change_flags { \
+            branch_flags="!no_tele_control", item="golden rune" \
+         }
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc.............................cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc...............cccccc..............ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc...............cccccccc..............cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc.......4......ccccO4cccc......4......cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc............cccc......cccc...........cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc............cccc........cccc...........ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc............cccc........cccc...........ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...........cccc..444444..cccc..........ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.................222222................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc................223322...............cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc...3............223322............3..cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc...............222222..............ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc....2..........................2...ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc....2......................2....cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc............................cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccc+ccc..................ccc+ccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc""""cc................cc""""cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc"""""""cc22222222222222cc"""""'$cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc""""""""""cc............cc"""""""'$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc'""""""""""cc..........cc""""""""'$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc$''""""""""""cc........cc"""""""""'$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc$$$'""""""""""cc222222cc""""""""''$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|$$$''"""""""""c......c"""""""''$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc||$$$$'""""""""c......c""""""'$$$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|||||$$'"""""""c......c"""""'$$$$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc|||||$'"""""""c......c""""'$$$$$$$$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccc||||$$'""""""c......c""""'$$$$$$$cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc||||$'""""""c......c""""'$$$$$$ccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc|||$$'"""""c......c"""'$$$$$$cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc|||$'""""cc..{...cc""'$$$$$ccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccc||$'""""cc...(..cc"'$$$$$cccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccc|$'""cccc..[...cccc$$$$ccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
