@@ -2503,9 +2503,6 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
 
 void level_change(bool skip_ability_increase)
 {
-    int hp_adjust = 0;
-    int mp_adjust = 0;
-
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
     you.redraw_experience = 1;
@@ -2513,6 +2510,9 @@ void level_change(bool skip_ability_increase)
     while (you.experience_level < 27
             && you.experience > exp_needed(you.experience_level + 2))
     {
+        int hp_adjust = 0;
+        int mp_adjust = 0;
+
         you.experience_level++;
 
         if (you.experience_level <= you.max_level)
