@@ -636,7 +636,12 @@ void Menu::draw_stock_item(int index, const MenuEntry *me) const
     if ( flags & MF_ALLOW_FORMATTING )
         formatted_string::parse_string(items[index]->get_text()).display();
     else
-        cprintf( "%s", items[index]->get_text().c_str() );
+    {
+        std::string text = items[index]->get_text();
+        if ((int) text.length() > get_number_of_cols())
+            text = text.substr(0, get_number_of_cols());
+        cprintf( "%s", text.c_str() );
+    }
 }
 
 bool Menu::page_down()
