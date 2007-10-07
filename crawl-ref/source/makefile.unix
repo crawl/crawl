@@ -50,30 +50,6 @@ INSTALLDIR   := /usr/games/crawl
 LEX  := flex
 YACC := bison -y
 
-ifeq ($(UNICODE_GLYPHS),y)
-# Include path for (n)curses with Unicode support.
-INCLUDES = -I/usr/include/ncursesw
-
-# Your ncurses library may include Unicode support, and you may not have a
-# separate libncursesw; in that case, change this line accordingly.
-LIBCURS  = ncursesw
-EXTRA_FLAGS += -DUNICODE_GLYPHS
-
-ifneq ($(UNICODE_LOCALE),)
-EXTRA_FLAGS += -DUNICODE_LOCALE=\"$(UNICODE_LOCALE)\"
-endif
-
-# The standard ncurses library also supports Unicode on Mac OS/Darwin.
-ifeq ($(shell uname),Darwin)
-LIBCURS = ncurses
-endif
-
-else
-# Include path for curses or ncurses (non-Unicode).
-INCLUDES = -I/usr/include/ncurses
-LIBCURS  = ncurses
-endif
-
 LUASRC := util/lua/src
 LUALIB = lua
 LUALIBA = l$(LUALIB).a
@@ -124,6 +100,30 @@ endif
 
 ifneq ($(DATADIR),)
 CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
+endif
+
+ifeq ($(UNICODE_GLYPHS),y)
+# Include path for (n)curses with Unicode support.
+INCLUDES += -I/usr/include/ncursesw
+
+# Your ncurses library may include Unicode support, and you may not have a
+# separate libncursesw; in that case, change this line accordingly.
+LIBCURS  = ncursesw
+CFOTHERS += -DUNICODE_GLYPHS
+
+ifneq ($(UNICODE_LOCALE),)
+CFOTHERS += -DUNICODE_LOCALE=\"$(UNICODE_LOCALE)\"
+endif
+
+# The standard ncurses library also supports Unicode on Mac OS/Darwin.
+ifeq ($(shell uname),Darwin)
+LIBCURS = ncurses
+endif
+
+else
+# Include path for curses or ncurses (non-Unicode).
+INCLUDES += -I/usr/include/ncurses
+LIBCURS  = ncurses
 endif
 
 CFOTHERS += $(SELDBM)
