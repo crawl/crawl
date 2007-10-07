@@ -785,10 +785,11 @@ void holy_word(int pow, bool silent)
             continue;
 
         if (mons_holiness(monster) == MH_UNDEAD
-                || mons_holiness(monster) == MH_DEMONIC)
+            || mons_holiness(monster) == MH_DEMONIC)
         {
             simple_monster_message(monster, " convulses!");
 
+            behaviour_event( monster, ME_ANNOY, MHITYOU );
             hurt_monster( monster, roll_dice( 2, 15 ) + (random2(pow) / 3) );
 
             if (monster->hit_points < 1)
