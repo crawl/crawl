@@ -2612,7 +2612,7 @@ bool followers_abandon_you()
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            const unsigned char targ_monst = mgrd[x][y];
+            const unsigned short targ_monst = mgrd[x][y];
             if ( targ_monst != NON_MONSTER )
             {
                 monsters *monster = &menv[targ_monst];

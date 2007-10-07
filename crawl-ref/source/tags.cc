@@ -1517,7 +1517,7 @@ static void tag_construct_level(struct tagHeader &th)
             marshallShort(th, env.map[count_x][count_y].object);
             marshallShort(th, env.map[count_x][count_y].colour);            
             marshallShort(th, env.map[count_x][count_y].flags);
-            marshallByte(th, env.cgrid[count_x][count_y]);
+            marshallShort(th, env.cgrid[count_x][count_y]);
         }
     }
 
@@ -1745,7 +1745,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
             env.map[i][j].flags  = unmarshallShort(th);
 
             mgrd[i][j] = NON_MONSTER;
-            env.cgrid[i][j] = (unsigned char) unmarshallByte(th);
+            env.cgrid[i][j] = (unsigned short) unmarshallShort(th);
         }
     }
 

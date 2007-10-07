@@ -3610,7 +3610,7 @@ static void move_player(int move_x, int move_y)
     const int targ_x = you.x_pos + move_x;
     const int targ_y = you.y_pos + move_y;
     const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
-    const unsigned char targ_monst = mgrd[ targ_x ][ targ_y ];
+    const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
     const bool          targ_solid = grid_is_solid(targ_grid);
 
     if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))

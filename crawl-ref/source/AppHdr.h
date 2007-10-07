@@ -447,6 +447,6 @@
 template < class T >
 inline void UNUSED(const volatile T &)
 {
-}                               // Note that this generates no code with CodeWarrior or MSVC (if inlining is on).
+}
 
 #endif

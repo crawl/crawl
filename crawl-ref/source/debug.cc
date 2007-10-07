@@ -470,7 +470,7 @@ void create_spec_monster_name(int x, int y)
     // Need to set a name for the player ghost
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
-        unsigned char mid  = mgrd[x][y];
+        unsigned short mid  = mgrd[x][y];
 
         if (mid >= MAX_MONSTERS || menv[mid].type != MONS_PLAYER_GHOST)
         {

@@ -1609,11 +1609,10 @@ bool i_feel_safe(bool announce, bool want_move)
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            /* if you can see a nonfriendly monster then you feel
-               unsafe */
+            // if you can see a nonfriendly monster then you feel unsafe
             if ( see_grid(x,y) )
             {
-                const unsigned char targ_monst = mgrd[x][y];
+                const unsigned short targ_monst = mgrd[x][y];
                 if ( targ_monst != NON_MONSTER )
                 {
                     const monsters *mon = &menv[targ_monst];
