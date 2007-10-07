@@ -148,9 +148,11 @@ static bool need_moderate_ood(int lev_mons)
 
 static int fuzz_mons_level(int level)
 {
-    int fuzz = random2avg(11, 8);
-    if (fuzz > 5)
-        level += fuzz - 5;
+    if (one_chance_in(10))
+    {
+        const int fuzz = random2avg(9, 2);
+        return (fuzz > 4? level + fuzz - 4 : level);
+    }
     return (level);
 }
 
