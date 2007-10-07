@@ -1450,12 +1450,8 @@ void melee_attack::player_exercise_combat_skills()
     }
 }
 
-// Returns true if the combat round should end here.
-bool melee_attack::player_monattk_hit_effects(bool mondied)
+void melee_attack::player_check_weapon_effects()
 {
-    if (mons_holiness(def) == MH_HOLY)
-        did_god_conduct(mondied? DID_KILL_ANGEL : DID_ATTACK_HOLY, 1);
-
     if (spwld == SPWLD_TORMENT && coinflip())
     {
         torment(TORMENT_SPWLD, you.x_pos, you.y_pos);
@@ -1465,12 +1461,37 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     if (spwld == SPWLD_ZONGULDROK || spwld == SPWLD_CURSE)
         did_god_conduct(DID_NECROMANCY, 3);
 
-    if (weapon
-        && weapon->base_type == OBJ_WEAPONS
-        && is_demonic( *weapon ))
+    if (weapon)
     {
-        did_god_conduct(DID_UNHOLY, 1);
-    }
+        if (weapon->base_type == OBJ_WEAPONS
+            && is_demonic( *weapon ))
+        {
+            did_god_conduct(DID_UNHOLY, 1);
+        }
+
+        if (is_fixed_artefact(*weapon))
+        {
+            switch (weapon->special)
+            {
+            case SPWPN_SCEPTRE_OF_ASMODEUS:
+            case SPWPN_STAFF_OF_DISPATER:
+            case SPWPN_SWORD_OF_CEREBOV:
+                did_god_conduct(DID_UNHOLY, 3);
+                break;
+            default:
+                break;
+            }
+        }
+    }    
+}
+
+// Returns true if the combat round should end here.
+bool melee_attack::player_monattk_hit_effects(bool mondied)
+{
+    if (mons_holiness(def) == MH_HOLY)
+        did_god_conduct(mondied? DID_KILL_ANGEL : DID_ATTACK_HOLY, 1);
+
+    player_check_weapon_effects();
 
     // Vampiric effects for the killing blow.
     if (mondied && damage_brand == SPWPN_VAMPIRICISM)

@@ -242,6 +242,7 @@ private:
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();
+    void player_check_weapon_effects();
 };
 
 #endif
