@@ -1407,6 +1407,7 @@ int staff_spell( int staff )
     if (!item_type_known(istaff))
     {
         set_ident_flags( istaff, ISFLAG_KNOW_TYPE );
+        mprf(MSGCH_EQUIPMENT, "%s", istaff.name(DESC_INVENTORY_EQUIP).c_str());
         you.wield_change = true;
     }
 
