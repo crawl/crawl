@@ -29,6 +29,7 @@
 #include "religion.h"
 #include "spells3.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "view.h"
 
 bool grid_is_wall( dungeon_feature_type grid )
@@ -515,7 +516,10 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
     }
     else
     {
-        mpr("You try to escape, but your burden drags you down!");
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+            mpr("You sink like a stone!");
+        else
+            mpr("You try to escape, but your burden drags you down!");
     }
 
     if (escape)

@@ -212,6 +212,7 @@ int cast_smiting(int power, dist &beam)
         // Maxes out at around 40 damage at 27 Invocations, which is plenty
         // in my book (the old max damage was around 70, which seems excessive)
         hurt_monster(monster, 7 + (random2(power) * 33 / 191));
+        behaviour_event( monster, ME_ANNOY, MHITYOU );
 
         if (monster->hit_points < 1)
             monster_die(monster, KILL_YOU, 0);

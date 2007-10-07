@@ -3054,6 +3054,10 @@ void level_change(bool skip_ability_increase)
 
         if (Options.use_notes)
         {
+            unwind_var<int> hpmax(you.hp_max);
+            unwind_var<int> hp(you.hp);
+            unwind_var<int> mpmax(you.max_magic_points);
+            unwind_var<int> mp(you.magic_points);
             // calculate "real" values for note-taking, i.e. ignore Berserk,
             // transformations or equipped items
             calc_hp(true);
