@@ -1416,6 +1416,8 @@ std::string weird_writing()
 
 bool scramble(void)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
+        return (false);
     int max_carry = carrying_capacity();
 
     if ((max_carry / 2) + random2(max_carry / 2) <= you.burden)
