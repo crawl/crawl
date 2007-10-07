@@ -85,6 +85,7 @@ void turn_corpse_into_chunks( item_def &item )
     item.base_type = OBJ_FOOD;
     item.sub_type = FOOD_CHUNK;
     item.quantity = 1 + random2( max_chunks );
+    item.flags   &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     item.quantity = stepdown_value( item.quantity, 4, 4, 12, 12 );
 
