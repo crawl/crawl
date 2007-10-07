@@ -1537,7 +1537,7 @@ static builder_rc_type builder_by_type(int level_number, char level_type)
 static void portal_vault_level(int level_number)
 {
     std::string trimmed_name = trimmed_string(you.level_type_name);
-    ASSERT(trimmed_name.c_str() != "");
+    ASSERT(!trimmed_name.empty());
 
     const char* level_name = trimmed_name.c_str();
 
