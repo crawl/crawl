@@ -1807,7 +1807,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     //
     // Unwield needs to be done before copy in order to clear things
     // like temporary brands. -- bwr
-    if (item_dropped == you.equip[EQ_WEAPON])
+    if (item_dropped == you.equip[EQ_WEAPON]
+        && quant_drop >= you.inv[item_dropped].quantity)
     {
         unwield_item();
         canned_msg( MSG_EMPTY_HANDED );
