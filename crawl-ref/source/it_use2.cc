@@ -375,18 +375,20 @@ void unwield_item(bool showMsgs)
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
 
-    if ( you.inv[unw].base_type == OBJ_MISCELLANY &&
-         you.inv[unw].sub_type == MISC_LANTERN_OF_SHADOWS )
+    item_def &item(you.inv[unw]);
+
+    if ( item.base_type == OBJ_MISCELLANY &&
+         item.sub_type == MISC_LANTERN_OF_SHADOWS )
     {
         you.current_vision += 2;
         setLOSRadius(you.current_vision);
     }
 
-    if (you.inv[unw].base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS)
     {
-        if (is_fixed_artefact( you.inv[unw] ))
+        if (is_fixed_artefact( item ))
         {
-            switch (you.inv[unw].special)
+            switch (item.special)
             {
             case SPWPN_SINGING_SWORD:
                 if (showMsgs)
@@ -398,12 +400,12 @@ void unwield_item(bool showMsgs)
                 break;
             case SPWPN_SCYTHE_OF_CURSES:
             case SPWPN_STAFF_OF_OLGREB:
-                you.inv[unw].plus = 0;
-                you.inv[unw].plus2 = 0;
+                item.plus = 0;
+                item.plus2 = 0;
                 break;
             case SPWPN_STAFF_OF_WUCAD_MU:
-                you.inv[unw].plus = 0;
-                you.inv[unw].plus2 = 0;
+                item.plus = 0;
+                item.plus2 = 0;
                 miscast_effect( SPTYP_DIVINATION, 9, 90, 100,
                                 "the Staff of Wucad Mu" );
                 break;
@@ -414,14 +416,14 @@ void unwield_item(bool showMsgs)
             return;
         }
 
-        const int brand = get_weapon_brand( you.inv[unw] );
+        const int brand = get_weapon_brand( item );
 
-        if (is_random_artefact( you.inv[unw] ))
+        if (is_random_artefact( item ))
             unuse_randart(unw);
 
         if (brand != SPWPN_NORMAL)
         {
-            const std::string msg = you.inv[unw].name(DESC_CAP_YOUR);
+            const std::string msg = item.name(DESC_CAP_YOUR);
             
             switch (brand)
             {
@@ -483,14 +485,14 @@ void unwield_item(bool showMsgs)
             if (you.duration[DUR_WEAPON_BRAND])
             {
                 you.duration[DUR_WEAPON_BRAND] = 0;
-                set_item_ego_type( you.inv[unw], OBJ_WEAPONS, SPWPN_NORMAL );
+                set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
                 // we're letting this through even if hiding messages
                 mpr("Your branding evaporates.");
             }
         }                       // end if
     }
 
-    if (player_equip( EQ_STAFF, STAFF_POWER ))
+    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
         calc_mp();
 
     return;
