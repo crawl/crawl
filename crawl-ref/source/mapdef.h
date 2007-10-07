@@ -333,12 +333,13 @@ struct mons_spec
     int  genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
+    int colour;
 
     mons_spec(int id = RANDOM_MONSTER, int num = 250,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false)
         : mid(id), monnum(num), genweight(gw), mlevel(ml), fix_mons(_fixmons),
-          generate_awake(awaken)
+        generate_awake(awaken), colour(BLACK)
     {
     }
 };
