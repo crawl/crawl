@@ -620,7 +620,7 @@ bool mons_see_invis(const monsters *mon)
 
 // This does NOT do line of sight!  It checks the targ's visibility 
 // with respect to mon's perception, but doesn't do walls or range.
-bool mons_monster_visible( struct monsters *mon, struct monsters *targ )
+bool mons_monster_visible( const monsters *mon, const monsters *targ )
 {
     if (targ->has_ench(ENCH_SUBMERGED)
         || (targ->invisible() && !mons_see_invis(mon)))
@@ -633,7 +633,7 @@ bool mons_monster_visible( struct monsters *mon, struct monsters *targ )
 
 // This does NOT do line of sight!  It checks the player's visibility 
 // with respect to mon's perception, but doesn't do walls or range.
-bool mons_player_visible( struct monsters *mon )
+bool mons_player_visible( const monsters *mon )
 {
     if (you.invisible())
     {
@@ -4118,6 +4118,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
         case ENCH_SICK: case ENCH_SLEEPY: case ENCH_PARALYSIS:
+        case ENCH_BATTLE_FRENZY:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4248,6 +4249,10 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
         decay_enchantment(me);
+        break;
+            
+    case ENCH_BATTLE_FRENZY:
+        decay_enchantment(me, false);
         break;
 
     case ENCH_HELD:
@@ -4736,7 +4741,7 @@ bool monsters::invisible() const
     return (has_ench(ENCH_INVIS) && !backlit());
 }
 
-bool monsters::visible_to(actor *looker)
+bool monsters::visible_to(const actor *looker) const
 {
     if (this == looker)
         return (!invisible() || can_see_invisible());
@@ -4745,13 +4750,12 @@ bool monsters::visible_to(actor *looker)
         return player_monster_visible(this);
     else
     {
-        monsters* mon = dynamic_cast<monsters*>(looker);
-
+        const monsters* mon = dynamic_cast<const monsters*>(looker);
         return mons_monster_visible(mon, this);
     }
 }
 
-bool monsters::can_see(actor *target)
+bool monsters::can_see(const actor *target) const
 {
     if (this == target)
         return visible_to(target);
@@ -4762,7 +4766,7 @@ bool monsters::can_see(actor *target)
     if (target->atype() == ACT_PLAYER)
         return mons_near(this);
 
-    monsters* mon = dynamic_cast<monsters*>(target);
+    const monsters* mon = dynamic_cast<const monsters*>(target);
     int       tx  = mon->x;
     int       ty  = mon->y;
 
@@ -4901,7 +4905,7 @@ static const char *enchant_names[] =
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short lived", "paralysis", "sick", "sleep", "fatigue", "held",
-    "bug"
+    "blood-lust", "bug"
 };
 
 const char *mons_enchantment_name(enchant_type ench)

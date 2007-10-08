@@ -113,8 +113,8 @@ public:
     virtual bool can_go_berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
-    virtual bool visible_to(actor *looker) = 0;
-    virtual bool can_see(actor *target) = 0;
+    virtual bool visible_to(const actor *looker) const = 0;
+    virtual bool can_see(const actor *target) const = 0;
     virtual bool is_icy() const = 0;
     virtual void go_berserk(bool intentional) = 0;
     virtual void mutate() = 0;
@@ -714,8 +714,8 @@ public:
     bool cannot_speak() const;
     bool invisible() const;
     bool can_see_invisible() const;
-    bool visible_to(actor *looker);
-    bool can_see(actor *target);
+    bool visible_to(const actor *looker) const;
+    bool can_see(const actor *target) const;
     bool is_icy() const;
 
     bool light_flight() const;
@@ -1072,8 +1072,8 @@ public:
     bool is_levitating() const;
     bool invisible() const;
     bool can_see_invisible() const;
-    bool visible_to(actor *looker);
-    bool can_see(actor *target);
+    bool visible_to(const actor *looker) const ;
+    bool can_see(const actor *target) const;
     bool is_icy() const;
     bool paralysed() const;
     bool confused() const;

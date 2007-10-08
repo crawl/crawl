@@ -1061,6 +1061,7 @@ enum enchant_type
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
     ENCH_FATIGUE,        // Post-berserk fatigue.
     ENCH_HELD,           // caught in a net
+    ENCH_BATTLE_FRENZY,  // Monster is in a battle frenzy
     
     NUM_ENCHANTMENTS
 };

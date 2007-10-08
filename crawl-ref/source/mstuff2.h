@@ -92,6 +92,7 @@ void monster_teleport(struct monsters *monster, bool instan,
  * *********************************************************************** */
 void spore_goes_pop(struct monsters *monster);
 
+bool orc_battle_cry(monsters *chief);
 bool orange_statue_effects(monsters *mons);
 bool silver_statue_effects(monsters *mons);
 bool moth_incite_monsters(const monsters *mon);

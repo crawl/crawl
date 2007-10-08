@@ -6019,23 +6019,21 @@ bool player::invisible() const
     return (duration[DUR_INVIS] && !backlit());
 }
 
-bool player::visible_to(actor *looker)
+bool player::visible_to(const actor *looker) const
 {
     if (this == looker)
         return (!invisible() || can_see_invisible());
 
-    monsters* mon = dynamic_cast<monsters*>(looker);
-
+    const monsters* mon = dynamic_cast<const monsters*>(looker);
     return mons_player_visible(mon);
 }
 
-bool player::can_see(actor *target)
+bool player::can_see(const actor *target) const
 {
     if (this == target)
         return visible_to(target);
 
-    monsters* mon = dynamic_cast<monsters*>(target);
-
+    const monsters* mon = dynamic_cast<const monsters*>(target);
     return (mons_near(mon) && target->visible_to(this));
 }
 

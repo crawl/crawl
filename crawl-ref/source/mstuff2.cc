@@ -2147,6 +2147,78 @@ bool orange_statue_effects(monsters *mons)
     return (false);
 }
 
+bool orc_battle_cry(monsters *chief)
+{
+    const actor *foe = chief->get_foe();
+    if (foe && chief->can_see(foe) && coinflip())
+    {
+        const int boss_index = monster_index(chief);
+        const int level = chief->hit_dice > 12? 2 : 1;
+        std::vector<monsters*> affected;
+        for (int i = 0; i < MAX_MONSTERS; ++i)
+        {
+            monsters *mons = &menv[i];
+            if (mons != chief
+                && mons->alive()
+                && mons_species(mons->type) == MONS_ORC
+                && mons_aligned(boss_index, i)
+                && mons->hit_dice < chief->hit_dice
+                && chief->can_see(mons))
+            {
+                mon_enchant ench = mons->get_ench(ENCH_BATTLE_FRENZY);
+                if (ench.ench == ENCH_NONE || ench.degree < level)
+                {
+                    const int dur =
+                        random_range(5, 10) * speed_to_duration(mons->speed);
+                
+                    if (ench.ench != ENCH_NONE)
+                    {
+                        ench.degree   = level;
+                        ench.duration = std::max(ench.duration, dur);
+                        mons->update_ench(ench);
+                    }
+                    else
+                    {
+                        mons->add_ench(
+                            mon_enchant(ENCH_BATTLE_FRENZY, level,
+                                        KC_OTHER,
+                                        dur));
+                    }
+                    affected.push_back(mons);
+                }
+            }
+        }
+        
+        if (!affected.empty())
+        {
+            if (you.can_see(chief))
+                mprf("%s roars a battle-cry!",
+                     chief->name(DESC_CAP_THE).c_str());
+
+            // Disabling detailed frenzy announcement because it's so spammy.
+#ifdef ANNOUNCE_BATTLE_FRENZY
+            std::map<std::string, int> names;
+            for (int i = 0, size = affected.size(); i < size; ++i)
+            {
+                if (you.can_see(affected[i]))
+                    names[affected[i]->name(DESC_PLAIN)]++;
+            }
+
+            for (std::map<std::string,int>::const_iterator i = names.begin();
+                 i != names.end(); ++i)
+            {
+                const std::string s =
+                    i->second> 1? pluralise(i->first) : i->first;
+                mprf("The %s go%s into a battle-frenzy!",
+                     s.c_str(), i->second == 1? "es" : "");
+            }
+#endif
+        }
+    }
+    // Orc battle cry doesn't cost the monster an action.
+    return (false);
+}
+
 static bool make_monster_angry(const monsters *mon, monsters *targ)
 {
     if (mons_friendly(mon) != mons_friendly(targ))

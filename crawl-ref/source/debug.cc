@@ -428,31 +428,6 @@ void create_spec_monster_name(int x, int y)
     const mons_spec mspec = mlist.get_monster(0);
     if (!force_place && mspec.mid != -1)
     {
-        // Only one ghost allowed per level
-        if (mspec.mid == MONS_PLAYER_GHOST)
-        {
-            for (int i = 0; i < MAX_MONSTERS; i++)
-                if (menv[i].type == MONS_PLAYER_GHOST
-                    && menv[i].alive())
-                {
-                    mpr("Only one player ghost per level allowed, "
-                        "and this level already has one.");
-                        return;
-                }
-        }
-        // Only one pandemonium lord allowed per level as well.
-        else if (mspec.mid == MONS_PANDEMONIUM_DEMON)
-        {
-            for (int i = 0; i < MAX_MONSTERS; i++)
-                if (menv[i].type == MONS_PANDEMONIUM_DEMON
-                    && menv[i].alive())
-                {
-                    mpr("Only one Pandemonium lord per level allowed, "
-                        "and this level already has one.");
-                        return;
-                }
-        }
-
         coord_def place = find_newmons_square(mspec.mid, x, y);
         if (in_bounds(place))
         {

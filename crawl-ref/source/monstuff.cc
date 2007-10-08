@@ -2373,10 +2373,13 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         return (false);
     }
 
-//    losight(show, grd, you.x_pos, you.y_pos);
-
     switch (mclass)
     {
+    case MONS_ORC_KNIGHT:
+    case MONS_ORC_WARLORD:
+        used = orc_battle_cry(monster);
+        break;
+        
     case MONS_ORANGE_STATUE:
         used = orange_statue_effects(monster);
         break;
