@@ -274,7 +274,8 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BURN_BOOKS, "Burn Books", 0, 0, 10, 0, ABFLAG_NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
     { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms", 0, 0, 100, 6, ABFLAG_NONE },
+    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
+      0, 0, 100, generic_cost::range(5, 6), ABFLAG_NONE },
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
@@ -290,9 +291,12 @@ static const ability_def Ability_List[] =
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT,  "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
     { ABIL_LUGONU_BEND_SPACE,  "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
-    { ABIL_LUGONU_BANISH,      "Banish", 4, 0, 200, 5, ABFLAG_NONE },
-    { ABIL_LUGONU_CORRUPT,     "Corrupt", 7, 5, 500, 20, ABFLAG_NONE },
-    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 500, 40, ABFLAG_NONE },
+    { ABIL_LUGONU_BANISH,      "Banish",
+      4, 0, 200, generic_cost::range(3, 4), ABFLAG_NONE },
+    { ABIL_LUGONU_CORRUPT,     "Corrupt",
+      7, 5, 500, generic_cost::fixed(10), ABFLAG_NONE },
+    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
+      9, 0, 500, generic_cost::fixed(35), ABFLAG_NONE },
 
     // Nemelex
     { ABIL_NEMELEX_PEEK_DECK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
@@ -301,8 +305,10 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 150, 6, ABFLAG_NONE },
 
     // Beogh
-    { ABIL_BEOGH_SMITING, "Smiting", 3, 0, 80, 3, ABFLAG_NONE },
-    { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers", 2, 0, 50, 0, ABFLAG_NONE },
+    { ABIL_BEOGH_SMITING, "Smiting",
+      3, 0, 80, generic_cost::fixed(3), ABFLAG_NONE },
+    { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
+      2, 0, 50, 0, ABFLAG_NONE },
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
@@ -1768,8 +1774,7 @@ static void pay_ability_costs(const ability_def& abil)
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     const int food_cost = abil.food_cost + random2avg(abil.food_cost, 2);
-    const int piety_cost = abil.piety_cost +
-        random2((abil.piety_cost + 1) / 2 + 1);
+    const int piety_cost = abil.piety_cost.cost();
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
@@ -2280,4 +2285,12 @@ static void lugonu_bends_space()
     
     const int damage = roll_dice(1, 4);
     ouch(damage, 0, KILLED_BY_WILD_MAGIC, "a spatial distortion");
+}
+
+////////////////////////////////////////////////////////////////////////
+// generic_cost
+
+int generic_cost::cost() const
+{
+    return base + (add > 0? random2avg(add, rolls) : 0);
 }

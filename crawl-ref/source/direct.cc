@@ -1718,7 +1718,8 @@ static void describe_monster(const monsters *mon)
     }
 
     if (mon->attitude == ATT_FRIENDLY)
-        mprf(MSGCH_EXAMINE, "%s is friendly.", mons_pronoun(mon->type, PRONOUN_CAP));
+        mprf(MSGCH_EXAMINE, "%s is friendly.",
+             mons_pronoun(mon->type, PRONOUN_CAP));
     else if (mon->attitude == ATT_NEUTRAL)
         mprf(MSGCH_EXAMINE, "%s is indifferent to you.",
              mons_pronoun(mon->type, PRONOUN_CAP));

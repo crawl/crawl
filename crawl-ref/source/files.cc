@@ -881,10 +881,9 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         just_created_level = true;
 
         if ((you.your_level > 1 || you.level_type != LEVEL_DUNGEON)
-            && one_chance_in(3)
-            && you.level_type != LEVEL_LABYRINTH)
+            && one_chance_in(3))
         {
-            load_ghost();       // no ghosts in Labyrinth
+            load_ghost();
         }
         env.turns_on_level = 0;
     }
