@@ -1185,6 +1185,8 @@ void map_def::reinit()
     keyspecs.clear();
     welcome_messages.clear();
 
+    rock_colour = floor_colour = BLACK;
+
     // Base chance; this is not a percentage.
     chance = 10;
 

@@ -253,6 +253,10 @@
     // Uses Options.macro_dir as the full path to the macro file. Mutually
     // exclusive with DGL_NAMED_MACRO_FILE.
     #define DGL_MACRO_ABSOLUTE_PATH
+
+    // Makes the game ask the user to hit Enter after bailing out with
+    // an error message.
+    #define DGL_PAUSE_AFTER_ERROR
 #endif
 
 #if defined(REGEX_POSIX) && defined(REGEX_PCRE)
