@@ -1376,15 +1376,7 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
-    if (searchforward)
-    {
-        // Return first free slot
-        for (slot = 0; slot < ENDOFPACK; ++slot) {
-            if (!is_valid_item(you.inv[slot]))
-                return slot;
-        }
-    }
-    else
+    if (!searchforward)
     {
         // This is the new default free slot search. We look for the last
         // available slot that does not leave a gap in the inventory.
@@ -1405,6 +1397,16 @@ int find_free_slot(const item_def &i)
             }
         }
     }
+
+    // Either searchforward is true, or search backwards failed and
+    // we re-try searching the oposite direction.
+
+    // Return first free slot
+    for (slot = 0; slot < ENDOFPACK; ++slot) {
+        if (!is_valid_item(you.inv[slot]))
+            return slot;
+    }
+
     return (-1);
 #undef slotisfree
 }
