@@ -733,14 +733,7 @@ void item_colour( item_def &item )
 
     case OBJ_MISCELLANY:
         if ( is_deck(item) )
-        {
-            item.colour = GREEN;
-            if ( one_chance_in(10) )
-                item.colour = LIGHTMAGENTA; // legendary
-            if ( one_chance_in(5) )
-                item.colour = (coinflip() ? MAGENTA : BROWN);
             break;
-        }
 
         switch (item.sub_type)
         {
@@ -2835,7 +2828,17 @@ int items( int allow_uniques,       // not just true-false,
         }
 
         if ( is_deck(mitm[p]) )
+        {
             mitm[p].plus = 4 + random2(10);
+
+            mitm[p].special = DECK_RARITY_COMMON;
+            if ( one_chance_in(10) )
+                mitm[p].special = DECK_RARITY_LEGENDARY;
+            if ( one_chance_in(5) )
+                mitm[p].special = DECK_RARITY_RARE;
+
+            init_deck(mitm[p]);
+        }
 
         if (mitm[p].sub_type == MISC_RUNE_OF_ZOT)
             mitm[p].plus = item_race;

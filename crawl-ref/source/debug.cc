@@ -822,7 +822,7 @@ static void deck_from_specs(const char* _specs, item_def &item)
         NUM_MISCELLANY
     };
 
-    item.colour   = BLACK;
+    item.special  = DECK_RARITY_COMMON;
     item.sub_type = NUM_MISCELLANY;
 
     if (type_str != "")
@@ -920,9 +920,20 @@ static void deck_from_specs(const char* _specs, item_def &item)
     int              base   = static_cast<int>(DECK_RARITY_COMMON);
     deck_rarity_type rarity =
         static_cast<deck_rarity_type>(base + rarity_val);
-    item.colour = deck_rarity_to_color(rarity);
+    item.special = rarity;
 
-    item.plus = 4 + random2(10);
+    int num = debug_prompt_for_int("How many cards? ", false);
+
+    if (num <= 0)
+    {
+        canned_msg( MSG_OK );
+        item.base_type = OBJ_UNASSIGNED;
+        return;
+    }
+
+    item.plus = num; 
+
+    init_deck(item);
 }
 
 static void rune_or_deck_from_specs(const char* specs, item_def &item)

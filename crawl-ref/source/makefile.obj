@@ -24,6 +24,7 @@ files.o \
 food.o \
 format.o \
 ghost.o \
+hash.o \
 hiscores.o \
 initfile.o \
 insult.o \

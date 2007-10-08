@@ -121,6 +121,7 @@ enum ability_type
     ABIL_NEMELEX_PEEK_DECK,
     ABIL_NEMELEX_DRAW_CARD,
     ABIL_NEMELEX_TRIPLE_DRAW,
+    ABIL_NEMELEX_MARK_DECK,
     ABIL_NEMELEX_STACK_DECK,
     ABIL_BEOGH_SMITING,
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
@@ -356,64 +357,6 @@ enum canned_message_type
     MSG_SPELL_FIZZLES,
     MSG_HUH,
     MSG_EMPTY_HANDED
-};
-
-enum card_type
-{
-    CARD_BLANK = 0,
-    CARD_PORTAL,                // "the mover"
-    CARD_WARP,                  // "the jumper"
-    CARD_SWAP,                  // "swap"
-    CARD_VELOCITY,              // "the runner"
-
-    CARD_TOMB,                  // "the wall"
-    CARD_BANSHEE,               // "the scream"
-    CARD_DAMNATION,             // banishment
-    CARD_SOLITUDE,              // dispersal
-    CARD_WARPWRIGHT,            // create teleport trap
-    
-    CARD_VITRIOL,               // acid damage
-    CARD_FLAME,                 // fire damage
-    CARD_FROST,                 // cold damage
-    CARD_VENOM,                 // poison damage
-    CARD_HAMMER,                // pure damage
-    
-    CARD_ELIXIR,                // healing
-    CARD_BATTLELUST,            // melee boosts
-    CARD_METAMORPHOSIS,         // transformation
-    CARD_HELM,                  // defense
-    CARD_BLADE,                 // weapon boosts
-    CARD_SHADOW,                // assassin skills
-    
-    CARD_SUMMON_ANIMAL,
-    CARD_SUMMON_DEMON,
-    CARD_SUMMON_WEAPON,
-    CARD_SUMMON_ANY,
-
-    CARD_POTION,
-    CARD_FOCUS,
-    CARD_SHUFFLE,
-
-    CARD_EXPERIENCE,
-    CARD_WILD_MAGIC,
-    CARD_HELIX,                 // remove one *bad* mutation
-
-    CARD_MAP,                   // magic mapping
-    CARD_DOWSING,               // detect SD/traps/items/monsters
-    CARD_SPADE,                 // dig
-    CARD_TROWEL,                // create feature/vault
-    CARD_MINEFIELD,             // plant traps
-
-    CARD_GENIE,                 // acquirement OR rotting/deterioration
-    CARD_BARGAIN,               // shopping discount
-    CARD_WRATH,                 // Godly wrath
-    CARD_WRAITH,                // drain XP
-    CARD_XOM,
-    CARD_FEAST,
-    CARD_FAMINE,
-    CARD_CURSE,                 // Curse your items
-
-    NUM_CARDS
 };
 
 enum char_set_type

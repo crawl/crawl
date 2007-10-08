@@ -241,10 +241,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call in reinforcement",
       "" },
     // Nemelex
-    { "peek at the first card of a deck",
+    { "peek at three random cards from a deck",
       "draw cards from decks in your inventory",
       "draw cards with careful consideration",
-      "",
+      "mark decks",
       "stack decks" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
@@ -327,10 +327,10 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call in reinforcement",
       "" },
     // Nemelex
-    { "peek at the first card of a deck",
+    { "peek at three random cards from a deck",
       "draw cards from decks in your inventory",
       "draw cards with careful consideration",
-      "",
+      "mark decks",
       "stack decks" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
@@ -660,7 +660,8 @@ static void do_god_gift(bool prayed_for)
 
                     item_def &deck(mitm[thing_created]);
 
-                    deck.colour = deck_rarity_to_color(rarity);
+                    deck.special = rarity;
+                    deck.colour  = deck_rarity_to_color(rarity);
 
                     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
                     origin_acquired(deck, you.religion);

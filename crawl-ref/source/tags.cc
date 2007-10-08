@@ -128,8 +128,6 @@ static void marshallGhost(tagHeader &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost( tagHeader &th );
 static void marshall_monster(tagHeader &th, const monsters &m);
 static void unmarshall_monster(tagHeader &th, monsters &m);
-static void marshall_item(tagHeader &th, const item_def &item);
-static void unmarshall_item(tagHeader &th, item_def &item);
 
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
@@ -939,19 +937,7 @@ static void tag_construct_you_items(struct tagHeader &th)
     // how many inventory slots?
     marshallByte(th, ENDOFPACK);
     for (i = 0; i < ENDOFPACK; ++i)
-    {
-        marshallByte(th,you.inv[i].base_type);
-        marshallByte(th,you.inv[i].sub_type);
-        marshallShort(th,you.inv[i].plus);
-        marshallLong(th,you.inv[i].special);
-        marshallByte(th,you.inv[i].colour);
-        marshallLong(th,you.inv[i].flags);
-        marshallShort(th,you.inv[i].quantity);
-        marshallShort(th,you.inv[i].plus2);
-        marshallShort(th, you.inv[i].orig_place);
-        marshallShort(th, you.inv[i].orig_monnum);
-        marshallString(th, you.inv[i].inscription.c_str(), 80);
-    }
+        marshallItem(th, you.inv[i]);
 
     marshallByte(th, you.quiver);
 
@@ -1073,14 +1059,14 @@ static void marshall_follower(tagHeader &th, const follower &f)
 {
     marshall_monster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        marshall_item(th, f.items[i]);    
+        marshallItem(th, f.items[i]);    
 }
 
 static void unmarshall_follower(tagHeader &th, follower &f)
 {
     unmarshall_monster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        unmarshall_item(th, f.items[i]);
+        unmarshallItem(th, f.items[i]);
 }
 
 static void marshall_follower_list(tagHeader &th, const m_transit_list &mlist)
@@ -1288,26 +1274,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     // how many inventory slots?
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
-    {
-        you.inv[i].base_type =
-            static_cast<object_class_type>(unmarshallByte(th));
-        you.inv[i].sub_type = (unsigned char) unmarshallByte(th);
-        you.inv[i].plus = unmarshallShort(th);
-        you.inv[i].special = unmarshallLong(th);
-        you.inv[i].colour = (unsigned char) unmarshallByte(th);
-        you.inv[i].flags = (unsigned long) unmarshallLong(th);
-        you.inv[i].quantity = unmarshallShort(th);
-        you.inv[i].plus2 = unmarshallShort(th);       
-        you.inv[i].orig_place  = unmarshallShort(th);
-        you.inv[i].orig_monnum = unmarshallShort(th);
-        you.inv[i].inscription = unmarshallString(th, 80);
-
-        // these never need to be saved for items in the inventory -- bwr
-        you.inv[i].x = -1;
-        you.inv[i].y = -1;
-        you.inv[i].link = i;
-        you.inv[i].slot = index_to_letter(i);
-    }
+        unmarshallItem(th, you.inv[i]);
 
     you.quiver = unmarshallByte(th);
 
@@ -1553,7 +1520,7 @@ static void tag_construct_level(struct tagHeader &th)
     env.markers.write(th);
 }
 
-static void marshall_item(tagHeader &th, const item_def &item)
+void marshallItem(tagHeader &th, const item_def &item)
 {
     marshallByte(th, item.base_type);
     marshallByte(th, item.sub_type);
@@ -1568,16 +1535,21 @@ static void marshall_item(tagHeader &th, const item_def &item)
     marshallLong(th, item.flags);
 
     marshallShort(th, item.link);                //  unused
-    marshallShort(th, igrd[item.x][item.y]);  //  unused
+    if (item.x == -1 && item.y == -1)
+        marshallShort(th, -1); // unused
+    else
+        marshallShort(th, igrd[item.x][item.y]);  //  unused
 
     marshallByte(th, item.slot);
 
     marshallShort(th, item.orig_place);
     marshallShort(th, item.orig_monnum);
     marshallString(th, item.inscription.c_str(), 80);
+
+    item.props.write(th);
 }
 
-static void unmarshall_item(tagHeader &th, item_def &item)
+void unmarshallItem(tagHeader &th, item_def &item)
 {
     item.base_type = static_cast<object_class_type>(unmarshallByte(th));
     item.sub_type = (unsigned char) unmarshallByte(th);
@@ -1603,6 +1575,8 @@ static void unmarshall_item(tagHeader &th, item_def &item)
     item.orig_place  = unmarshallShort(th);
     item.orig_monnum = unmarshallShort(th);        
     item.inscription = unmarshallString(th, 80);
+
+    item.props.read(th);
 }
 
 static void tag_construct_level_items(struct tagHeader &th)
@@ -1619,7 +1593,7 @@ static void tag_construct_level_items(struct tagHeader &th)
     // how many items?
     marshallShort(th, MAX_ITEMS);
     for (int i = 0; i < MAX_ITEMS; ++i)
-        marshall_item(th, mitm[i]);
+        marshallItem(th, mitm[i]);
 }
 
 static void marshall_mon_enchant(tagHeader &th, const mon_enchant &me)
@@ -1799,7 +1773,7 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
     // how many items?
     const int item_count = unmarshallShort(th);
     for (int i = 0; i < item_count; ++i)
-        unmarshall_item(th, mitm[i]);
+        unmarshallItem(th, mitm[i]);
 }
 
 static void unmarshall_monster(tagHeader &th, monsters &m)

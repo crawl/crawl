@@ -72,6 +72,7 @@ void marshallBoolean(struct tagHeader &th, bool data);
 void marshallString(struct tagHeader &th, const std::string &data,
                     int maxSize = 0);
 void marshallCoord(tagHeader &th, const coord_def &c);
+void marshallItem(tagHeader &th, const item_def &item);
 
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************
@@ -85,6 +86,7 @@ bool unmarshallBoolean(struct tagHeader &th);
 int unmarshallCString(struct tagHeader &th, char *data, int maxSize);
 std::string unmarshallString(tagHeader &th, int maxSize = 1000);
 void unmarshallCoord(tagHeader &th, coord_def &c);
+void unmarshallItem(tagHeader &th, item_def &item);
 
 std::string make_date_string( time_t in_date );
 time_t parse_date_string( char[20] );

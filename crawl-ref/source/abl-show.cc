@@ -146,7 +146,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
     { ABIL_NEMELEX_PEEK_DECK, ABIL_NEMELEX_DRAW_CARD,
-      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NON_ABILITY,
+      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NEMELEX_MARK_DECK,
       ABIL_NEMELEX_STACK_DECK },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
@@ -299,6 +299,7 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_PEEK_DECK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
     { ABIL_NEMELEX_DRAW_CARD, "Draw Card", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
+    { ABIL_NEMELEX_MARK_DECK, "Mark Deck", 4, 0, 125, 5, ABFLAG_NONE },
     { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 150, 6, ABFLAG_NONE },
 
     // Beogh
@@ -728,14 +729,20 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 80 - (you.piety / 25) - (4 * you.skills[SK_EVOCATIONS]);
         break;
         
-    case ABIL_NEMELEX_PEEK_DECK:
+    case ABIL_NEMELEX_MARK_DECK:
         invoc = true;
-        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        failure = 70 - (you.piety * 2 / 45)
+            - (9 * you.skills[SK_EVOCATIONS] / 2);
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
+        break;
+
+    case ABIL_NEMELEX_PEEK_DECK:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
     case ABIL_NEMELEX_DRAW_CARD:
@@ -1677,6 +1684,12 @@ static bool do_ability(const ability_def& abil)
         if ( !deck_peek() )
             return false;
         exercise(SK_EVOCATIONS, 2 + random2(2));
+        break;
+
+    case ABIL_NEMELEX_MARK_DECK:
+        if ( !deck_mark() )
+            return false;
+        exercise(SK_EVOCATIONS, 4 + random2(4));
         break;
 
     case ABIL_NEMELEX_STACK_DECK:

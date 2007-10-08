@@ -1402,15 +1402,41 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << "deck of cards";
                     break;
                 }
+                else if (bad_deck(*this))
+                {
+                    buff << "BUGGY deck of cards";
+                    break;
+                }
                 buff << deck_rarity_name(deck_rarity(*this)) << ' ';
             }
             buff << misc_type_name(item_typ, know_type);
-            if ( is_deck(*this) && item_plus2 != 0 )
+            if ( is_deck(*this)
+                 && (top_card_is_known(*this) || this->plus2 != 0))
             {
-                // an inscribed deck!
-                buff << " {"
-                     << card_name(static_cast<card_type>(item_plus2 - 1))
-                     << "}";
+                buff << " {";
+                // A marked deck!
+                if (top_card_is_known(*this))
+                    buff << card_name(top_card(*this));
+
+                // How many cards have been drawn, or how many are
+                // left.
+                if (this->plus2 != 0)
+                {
+                    if(top_card_is_known(*this))
+                        buff << ", ";
+
+                    buff << abs(this->plus2) << " card";
+
+                    if (abs(this->plus2) > 1)
+                        buff << "s";
+
+                    if (this->plus2 > 0)
+                        buff << " drawn";
+                    else
+                        buff << " left";
+                }
+
+                buff << "}";
             }
         }
         break;

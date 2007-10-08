@@ -30,6 +30,7 @@
 #include "defines.h"
 #include "enum.h"
 #include "FixAry.h"
+#include "hash.h"
 #include "libutil.h"
 #include "mpr.h"
 
@@ -353,6 +354,8 @@ struct item_def
     short          orig_monnum;
 
     std::string inscription;
+
+    CrawlHashTable props;
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
