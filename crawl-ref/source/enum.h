@@ -855,13 +855,13 @@ enum dungeon_feature_type
     DNGN_STONE_STAIRS_DOWN_I,
     DNGN_STONE_STAIRS_DOWN_II,
     DNGN_STONE_STAIRS_DOWN_III,
-    DNGN_ROCK_STAIRS_DOWN,   //  85 - now escape hatch (Stonesoup 0.3)
+    DNGN_ROCK_STAIRS_DOWN,             //  85 - now escape hatch (Stonesoup 0.3)
 
     // corresponding up stairs (same order as above)
     DNGN_STONE_STAIRS_UP_I,
     DNGN_STONE_STAIRS_UP_II,
     DNGN_STONE_STAIRS_UP_III,
-    DNGN_ROCK_STAIRS_UP,    //   89 - now escape hatch (Stonesoup 0.3)
+    DNGN_ROCK_STAIRS_UP,               //  89 - now escape hatch (Stonesoup 0.3)
 
     // Various gates
     DNGN_ENTER_DIS = 92,               //   92

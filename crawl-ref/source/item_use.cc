@@ -2909,7 +2909,7 @@ void zap_wand(void)
         {
             // Xom loves it when you use a Wand of Random Effects and
             // there is a dangerous monster nearby...
-            xom_is_stimulated(256);
+            xom_is_stimulated(255);
         }
     }
 
@@ -2959,7 +2959,7 @@ void zap_wand(void)
     {
         // Xom loves it when you use an unknown wand and there is a
         // dangerous monster nearby...
-        xom_is_stimulated(256);
+        xom_is_stimulated(255);
     }
 
     you.turn_is_over = true;
@@ -3081,7 +3081,7 @@ void drink(void)
     {
         // Xom loves it when you drink an unknown potion and there is
         // a dangerous monster nearby...
-        xom_is_stimulated(256);
+        xom_is_stimulated(255);
     }
 
     dec_inv_item_quantity( item_slot, 1 );
@@ -3884,7 +3884,7 @@ void read_scroll(void)
     {
          // Xom loves it when you read an unknown scroll and there is
          // a dangerous monster nearby...
-        xom_is_stimulated(256);
+        xom_is_stimulated(255);
     }
 }                               // end read_scroll()
 
@@ -3973,7 +3973,7 @@ void use_randart(const item_def &item)
     {
         // Xom loves it when you use an unknown random artefact and
         // there is a dangerous monster nearby...
-        xom_is_stimulated(256);
+        xom_is_stimulated(255);
     }
 }
 
