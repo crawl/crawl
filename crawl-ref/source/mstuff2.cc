@@ -1337,6 +1337,24 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     }
     pbolt.damage.size = diceMult * pbolt.damage.size / 100;
 
+    if (monster->has_ench(ENCH_BATTLE_FRENZY))
+    {
+        const mon_enchant ench = monster->get_ench(ENCH_BATTLE_FRENZY);
+        
+#ifdef DEBUG_DIAGNOSTICS
+        const dice_def orig_damage = pbolt.damage;
+#endif
+        
+        pbolt.damage.size = pbolt.damage.size * (115 + ench.degree * 15) / 100;
+        
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %dd%d -> %dd%d",
+             monster->name(DESC_PLAIN).c_str(),
+             orig_damage.num, orig_damage.size,
+             pbolt.damage.num, pbolt.damage.size);
+#endif
+    }
+    
     // Skilled archers get better to-hit and damage.
     if (skilled)
     {
@@ -2150,7 +2168,9 @@ bool orange_statue_effects(monsters *mons)
 bool orc_battle_cry(monsters *chief)
 {
     const actor *foe = chief->get_foe();
-    if (foe && chief->can_see(foe) && coinflip())
+    if (foe && !silenced(chief->x, chief->y)
+        && chief->can_see(foe)
+        && coinflip())
     {
         const int boss_index = monster_index(chief);
         const int level = chief->hit_dice > 12? 2 : 1;
@@ -2191,9 +2211,12 @@ bool orc_battle_cry(monsters *chief)
         
         if (!affected.empty())
         {
-            if (you.can_see(chief))
+            if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
+            {
                 mprf("%s roars a battle-cry!",
                      chief->name(DESC_CAP_THE).c_str());
+                noisy(15, chief->x, chief->y);
+            }
 
             // Disabling detailed frenzy announcement because it's so spammy.
 #ifdef ANNOUNCE_BATTLE_FRENZY
