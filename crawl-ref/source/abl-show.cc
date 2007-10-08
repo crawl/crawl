@@ -844,6 +844,11 @@ bool activate_ability()
         if ( keyin == '?' || keyin == '*' )
         {
             selected = choose_ability_menu(talents);
+            if (selected == -1)
+            {
+                canned_msg( MSG_OK );
+                return (false);
+            }
         }
         else if (keyin == ESCAPE || keyin == ' ' ||
                  keyin == '\r' || keyin == '\n')
@@ -1820,7 +1825,9 @@ int choose_ability_menu(const std::vector<talent>& talents)
 {
     Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
     abil_menu.set_highlighter(NULL);
-    abil_menu.set_title(new MenuEntry("  Ability                           Cost                    Success"));
+    abil_menu.set_title(
+        new MenuEntry("  Ability                           "
+                      "Cost                    Success"));
 
     int numbers[52];
     for ( int i = 0; i < 52; ++i )

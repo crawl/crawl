@@ -618,10 +618,12 @@ bool cast_a_spell()
         if (keyin == '?' || keyin == '*')
         {
             keyin = list_spells();
+            if (!keyin)
+                keyin = ESCAPE;
 
             redraw_screen();
 
-            if ( isalpha(keyin) )
+            if ( isalpha(keyin) || keyin == ESCAPE )
                 break;
             else
                 mesclr();
