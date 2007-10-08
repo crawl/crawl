@@ -456,6 +456,8 @@ void mpr_comma_separated_list(const std::string prefix,
             new_str += comma;
         else if (i == (size - 2))
             new_str += andc;
+		else if (i == (size - 1))
+            new_str += ".";
 
         if (out.length() + new_str.length() >= width)
         {
