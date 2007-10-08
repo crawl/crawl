@@ -1394,17 +1394,17 @@ static std::string describe_ammo( const item_def &item )
         {
             std::string how;
             if (item.plus > -3)
-                how = "a little";
+                how = "a little worn";
             else if (item.plus > -5)
-                how = "somewhat";
+                how = "slightly damaged";
             else if (item.plus > -7)
-                how = "very";
+                how = "damaged";
             else
-                how = "extremely";
+                how = "heavily frayed";
 
             description += "It looks ";
             description += how;
-            description += " worn.";
+            description += ".";
         }
         else if (item.plus > 1)
             description += "The net looks brand-new!";

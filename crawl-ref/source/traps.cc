@@ -672,7 +672,7 @@ void free_self_from_net()
     }
 
     int do_what = damage_or_escape_net(mitm[net].plus);
-#ifdef DEBUG
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "net.plus: %d, ATTR_HELD: %d, do_what: %d",
          mitm[net].plus, you.attribute[ATTR_HELD], do_what);
 #endif
