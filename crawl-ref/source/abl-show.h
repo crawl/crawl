@@ -19,6 +19,32 @@
 #include <string>
 #include <vector>
 
+struct generic_cost
+{
+    int base, add, rolls;
+
+    generic_cost(int num)
+        : base(num), add((num + 1) / 2 + 1), rolls(1)
+    {
+    }
+    generic_cost(int num, int _add, int _rolls = 1)
+        : base(num), add(_add), rolls(_rolls)
+    {
+    }
+    static generic_cost fixed(int fixed)
+    {
+        return generic_cost(fixed, 0, 1);
+    }
+    static generic_cost range(int low, int high, int rolls = 1)
+    {
+        return generic_cost(low, high - low + 1, rolls);
+    }
+    
+    int cost() const;
+
+    operator bool () const { return base > 0 || add > 0; }
+};
+
 // Structure for representing an ability:
 struct ability_def
 {
@@ -27,7 +53,7 @@ struct ability_def
     unsigned int        mp_cost;        // magic cost of ability
     unsigned int        hp_cost;        // hit point cost of ability
     unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
-    unsigned int        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
+    generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
     unsigned int        flags;          // used for additonal cost notices
 };
 
