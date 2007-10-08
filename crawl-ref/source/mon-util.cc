@@ -2306,7 +2306,7 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 monsters::monsters()
     : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
-      target_x(0), target_y(0), inv(), spells(), attitude(ATT_NEUTRAL),
+      target_x(0), target_y(0), inv(), spells(), attitude(ATT_HOSTILE),
       behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
       number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
       ghost()
