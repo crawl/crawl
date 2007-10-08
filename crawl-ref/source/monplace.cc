@@ -427,8 +427,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                     else
                         lev_mons--;
                 }
-//                mprf("branch := %d, level := %d",
-//                     branches[place.branch].id, lev_mons+1);
 
             }
         } // end proximity check
@@ -843,9 +841,6 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     
     if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
         seen_monster(&menv[id]);
-
-    // if summoned onto traps, directly affect monster
-    menv[id].apply_location_effects();
 
     return (id);
 }                               // end place_monster_aux()
