@@ -430,7 +430,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
         error.clear();
     }
 
-#if defined(WIN32CONSOLE) || defined(DOS)
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(DGL_PAUSE_AFTER_ERROR)
     if (exit_code)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
