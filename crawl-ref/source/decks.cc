@@ -2031,7 +2031,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     {
         if (you.religion == GOD_XOM)
         {
-            // Being a self-centered diety, Xom *always* finds this
+            // Being a self-centered deity, Xom *always* finds this
             // maximally hilarious.
             god_speaks(GOD_XOM, "Xom roars with laughter!");
             you.gift_timeout = 255;

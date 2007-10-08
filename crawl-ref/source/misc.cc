@@ -1160,7 +1160,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
                 || entry_cause != EC_SELF_EXPLICIT)
             {
                 if (crawl_state.is_god_acting())
-                    xom_is_stimulated(256);
+                    xom_is_stimulated(255);
                 else if (entry_cause == EC_SELF_EXPLICIT)
                 {
                     // Entering Pandemonium or the Abyss for the first
@@ -1171,7 +1171,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
                 else if (entry_cause == EC_SELF_RISKY)
                     xom_is_stimulated(128);
                 else
-                    xom_is_stimulated(256);
+                    xom_is_stimulated(255);
             }
 
             break;

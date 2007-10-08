@@ -270,7 +270,7 @@ static void xom_check_nearness_setup()
 }
 
 // If the player was almost to the exit when it disppeared, Xom is
-// exteremely amused.  He's also extremely amused if the player winds
+// extremely amused.  He's also extremely amused if the player winds
 // up right next to an exit when there wasn't one there before.  The
 // same applies to Abyssal runes.
 static void xom_check_nearness()

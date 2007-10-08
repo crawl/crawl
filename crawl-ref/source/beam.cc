@@ -3273,7 +3273,7 @@ static int affect_player( bolt &beam )
             you_teleport();
 
             // An enemy helping you escape while in the Abyss, or an
-            // enemy stabalizing a teleport that was about to happen.
+            // enemy stabilizing a teleport that was about to happen.
             if (beam.attitude == ATT_HOSTILE && you.level_type == LEVEL_ABYSS)
                 xom_is_stimulated(255);
 
@@ -3519,7 +3519,7 @@ static int affect_player( bolt &beam )
             // Beam from player rebounded and hit player
             if (beam.beam_source == NON_MONSTER)
                 xom_is_stimulated(255);
-            // Xom's ammusement at the player being damaged is handled
+            // Xom's amusement at the player being damaged is handled
             // elsewhere.
             else if (was_affected)
                 xom_is_stimulated(128);

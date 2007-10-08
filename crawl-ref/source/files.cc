@@ -825,7 +825,7 @@ static void grab_followers()
     }
 }
 
-// Should be called afetr grab_followers(), so that items carried by
+// Should be called after grab_followers(), so that items carried by
 // followers won't be considered lost.
 static void do_lost_items(level_area_type old_level_type)
 {
