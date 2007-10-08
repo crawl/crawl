@@ -6078,7 +6078,7 @@ bool player::asleep() const
     return duration[DUR_SLEEP] > 0;
 }
 
-bool player::cannot_move() const
+bool player::cannot_act() const
 {
     return (asleep() || paralysed());
 }

@@ -809,7 +809,7 @@ public:
     void awake();
     void check_awaken(int disturbance);
 
-    bool cannot_move() const;
+    bool cannot_act() const;
 
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;
