@@ -131,6 +131,7 @@ public:
     virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
+    virtual void put_to_sleep(int power = 0) { };
 
     virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
@@ -1087,6 +1088,8 @@ public:
     void heal(int amount, bool max_too = false);
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
+
+    void put_to_sleep(int power = 0);
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }

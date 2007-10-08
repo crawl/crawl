@@ -4877,6 +4877,15 @@ bool monsters::do_shaft()
 
     return true;
 }
+
+void monsters::put_to_sleep(int)
+{
+    behaviour = BEH_SLEEP;
+    add_ench(
+        mon_enchant(ENCH_SLEEPY, 0, KC_OTHER,
+                    12 * speed_to_duration(speed)));
+    add_ench(ENCH_SLEEP_WARY);
+}
     
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant

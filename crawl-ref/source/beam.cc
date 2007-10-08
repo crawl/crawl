@@ -4169,9 +4169,7 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         if (simple_monster_message(mon, " looks drowsy..."))
             beam.obvious_effect = true;
 
-        mon->behaviour = BEH_SLEEP;
-        mon->add_ench(ENCH_SLEEPY);
-        mon->add_ench(ENCH_SLEEP_WARY);
+        mon->put_to_sleep();
 
         return (MON_AFFECTED);
     }

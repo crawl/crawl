@@ -862,12 +862,12 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     // if (mons_friendly( &menv[mnstr] ))                          return 0;
 
     //jmf: now that sleep == hibernation:
-    if (mons_res_cold( &menv[mnstr] ) > 0 && coinflip())        return 0;
-    if (menv[mnstr].has_ench(ENCH_SLEEP_WARY))         return 0;
+    if (mons_res_cold( &menv[mnstr] ) > 0 && coinflip())
+        return 0;
+    if (menv[mnstr].has_ench(ENCH_SLEEP_WARY))
+        return 0;
 
-    menv[mnstr].behaviour = BEH_SLEEP;
-    menv[mnstr].add_ench(ENCH_SLEEPY);
-    menv[mnstr].add_ench(ENCH_SLEEP_WARY);
+    menv[mnstr].put_to_sleep();
 
     if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
         menv[mnstr].add_ench(ENCH_SLOW);
