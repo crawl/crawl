@@ -6073,6 +6073,48 @@ void player::moveto(const coord_def &c)
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
 }
 
+bool player::asleep() const
+{
+    return duration[DUR_SLEEP] > 0;
+}
+
+bool player::cannot_move() const
+{
+    return (asleep() || paralysed());
+}
+
+void player::put_to_sleep(int)
+{
+    if (asleep())   // No cumulative sleeps.
+        return;
+
+    // Not all species can be put to sleep. Check holiness.
+    const mon_holy_type holy = holiness();
+    if (holy == MH_UNDEAD || holy == MH_NONLIVING)
+        return;
+
+    mpr("You fall asleep.");
+    you.flash_colour = DARKGREY;
+    viewwindow(true, false);
+
+    // Do this *after* redrawing the view, or viewwindow() will no-op.
+    duration[DUR_SLEEP] = 3 + random2avg(5, 2);
+}
+
+void player::awake()
+{
+    duration[DUR_SLEEP] = 0;
+    mpr("You wake up.");
+    you.flash_colour = BLACK;
+    viewwindow(true, false);
+}
+
+void player::check_awaken(int disturbance)
+{
+    if (asleep() && random2(50) <= disturbance)
+        awake();
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 PlaceInfo::PlaceInfo()
@@ -6223,7 +6265,6 @@ PlaceInfo PlaceInfo::operator - (const PlaceInfo &other) const
     return copy;
 }
 
-
 PlaceInfo& player::get_place_info() const
 {
     return get_place_info(where_are_you, level_type);
@@ -6327,4 +6368,3 @@ bool player::do_shaft()
 
     return (true);
 }
-

@@ -3184,6 +3184,10 @@ static int affect_player( bolt &beam )
         // these colors are misapplied - see mons_ench_f2() {dlb}
         switch (beam.flavour)
         {
+        case BEAM_SLEEP:
+            you.put_to_sleep(beam.ench_power);
+            break;
+            
         case BEAM_BACKLIGHT:
             if (!you.duration[DUR_INVIS])
             {
@@ -3214,7 +3218,8 @@ static int affect_player( bolt &beam )
                 you.mutate();
                 beam.obvious_effect = true;
             }
-            else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER) == ID_KNOWN_TYPE)
+            else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
+                     == ID_KNOWN_TYPE)
             {
                 mpr("This is polymorph other only!");
             }

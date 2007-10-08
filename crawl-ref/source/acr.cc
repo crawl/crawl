@@ -1276,9 +1276,9 @@ static void input()
             learned_something_new(TUT_RETREAT_CASTER);
     }
  
-    if ( you.duration[DUR_PARALYSIS] )
+    if ( you.cannot_move() )
     {
-        crawl_state.cancel_cmd_repeat("Paralyzed, cancelling command "
+        crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                       "repetition.");
 
         world_reacts();
@@ -2228,6 +2228,9 @@ static void decrement_durations()
     if (decrement_a_duration(DUR_BUILDING_RAGE))
         go_berserk(false);
 
+    if (decrement_a_duration(DUR_SLEEP))
+        you.awake();
+
     // paradox: it both lasts longer & does more damage overall if you're
     //          moving slower.
     // rationalisation: I guess it gets rubbed off/falls off/etc if you
@@ -2691,10 +2694,12 @@ static void world_reacts()
 
     run_environment_effects();
 
-    if ( !you.duration[DUR_PARALYSIS] && !you.mutation[MUT_BLURRY_VISION] &&
+    if ( !you.cannot_move() && !you.mutation[MUT_BLURRY_VISION] &&
          (you.mutation[MUT_ACUTE_VISION] >= 2 ||
           random2(50) < you.skills[SK_TRAPS_DOORS]) )
+    {
         search_around(false); // check nonadjacent squares too
+    }
 
     stealth = check_stealth();
 
@@ -2793,7 +2798,7 @@ static void world_reacts()
     // food death check:
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
     {
-        if (!you.duration[DUR_PARALYSIS] && one_chance_in(40))
+        if (!you.cannot_move() && one_chance_in(40))
         {
             mpr("You lose consciousness!", MSGCH_FOOD);
             you.duration[DUR_PARALYSIS] += 5 + random2(8);
@@ -2834,7 +2839,7 @@ static void world_reacts()
 */
     viewwindow(true, false);
 
-    if (you.duration[DUR_PARALYSIS] > 0 && any_messages())
+    if (you.cannot_move() && any_messages())
         more();
 
     spawn_random_monsters();
@@ -2856,8 +2861,6 @@ static void show_message_line(std::string line)
         std::string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
-        // XXX: Eventually fix mpr so it can do a different colour for
-        // the sender.
         formatted_string fs;
         fs.textcolor(WHITE);
         fs.cprintf("%s: ", sender.c_str());

@@ -765,6 +765,9 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );
 
+    if (dam > 0)
+        you.check_awaken(500);
+    
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
         && death_type != KILLED_BY_WATER)
     {

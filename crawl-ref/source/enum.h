@@ -1029,6 +1029,7 @@ enum duration_type
     DUR_SLAYING,
     DUR_STEALTH,
     DUR_MAGIC_SHIELD,
+    DUR_SLEEP,
     NUM_DURATIONS
 };
 

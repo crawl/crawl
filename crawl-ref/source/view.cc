@@ -1343,12 +1343,15 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 
     const int dist = loudness * loudness;
 
+    const int player_distance =
+        distance( you.x_pos, you.y_pos, nois_x, nois_y );
     // message the player
-    if (distance( you.x_pos, you.y_pos, nois_x, nois_y ) <= dist
-        && player_can_hear( nois_x, nois_y ))
+    if (player_distance <= dist && player_can_hear( nois_x, nois_y ))
     {
         if (msg)
             mpr( msg, MSGCH_SOUND );
+
+        you.check_awaken(dist - player_distance);
 
         ret = true;
     }
@@ -4298,7 +4301,8 @@ void viewwindow(bool draw_it, bool do_updates)
         cursor_control cs(false);
 
         const bool map = player_in_mappable_area();
-        const bool draw = !you.running || Options.travel_delay > -1;
+        const bool draw =
+            (!you.running || Options.travel_delay > -1) && !you.asleep();
         int bufcount = 0;
 
         int flash_colour = you.flash_colour;

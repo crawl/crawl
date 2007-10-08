@@ -132,6 +132,7 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
     virtual void put_to_sleep(int power = 0) { };
+    virtual void check_awaken(int disturbance) = 0;
 
     virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
@@ -803,6 +804,13 @@ public:
     bool caught() const;
     bool backlit() const;
 
+    bool asleep() const;
+    void put_to_sleep(int power = 0);
+    void awake();
+    void check_awaken(int disturbance);
+
+    bool cannot_move() const;
+
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;
 
@@ -1090,6 +1098,7 @@ public:
     void teleport(bool right_now = false, bool abyss_shift = false);
 
     void put_to_sleep(int power = 0);
+    void check_awaken(int disturbance);
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }

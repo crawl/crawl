@@ -1962,6 +1962,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     bool ret = false;
     int intel, est_magic_resist, power, diff;
 
+    const actor *foe = mon->get_foe();
     // Eventually, we'll probably want to be able to have monsters 
     // learn which of their elemental bolts were resisted and have those 
     // handled here as well. -- bwr
@@ -1969,11 +1970,10 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     {
     case SPELL_BACKLIGHT:
     {
-        const actor *foe = mon->get_foe();
-        ret = !foe || foe->backlit() || foe->invisible();
+        ret = !foe || foe->backlit();
         break;
     }
-        
+
     case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
             ret = true;
@@ -2021,6 +2021,10 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_BANISHMENT:
     case SPELL_DISINTEGRATE:
     case SPELL_PARALYSE:
+    case SPELL_SLEEP:
+        if (monspell == SPELL_SLEEP && (!foe || foe->asleep()))
+            return (true);
+        
         // occasionally we don't estimate... just fire and see:
         if (one_chance_in(5))
             return (false);
@@ -2039,9 +2043,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             if (mon->foe == MHITYOU)
                 est_magic_resist = player_res_magic();
             else
-            {
                 est_magic_resist = mons_resist_magic(&menv[mon->foe]);
-            }
 
             // now randomize (normal intels less accurate than high):
             if (intel == I_NORMAL)
@@ -4884,7 +4886,12 @@ void monsters::put_to_sleep(int)
     add_ench(ENCH_SLEEPY);
     add_ench(ENCH_SLEEP_WARY);
 }
-    
+
+void monsters::check_awaken(int)
+{
+    // XXX
+}
+
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 

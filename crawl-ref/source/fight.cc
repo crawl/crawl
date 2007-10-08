@@ -2886,6 +2886,17 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     if (water_attack)
         damage *= 2;
 
+    // If the defender is asleep, the attacker gets a stab.
+    if (defender && defender->asleep())
+    {
+        damage = damage * 5 / 2;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Stab damage vs %s: %d",
+             defender->name(DESC_PLAIN).c_str(),
+             damage);
+#endif
+    }
+
     return (mons_apply_defender_ac(damage, damage_max));
 }
 

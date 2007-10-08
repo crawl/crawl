@@ -222,6 +222,9 @@ static char god_message_altar_colour( god_type god )
 // returns a colour or MSGCOL_MUTED
 int channel_to_colour( msg_channel_type channel, int param )
 {
+    if (you.asleep())
+        return (DARKGREY);
+    
     char ret;
 
     switch (Options.channels[ channel ])
@@ -486,7 +489,6 @@ static void mpr_check_patterns(const std::string& message,
         }
     }
 
-    // reusing travel_stop_message here
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT
         && channel != MSGCH_TALK && channel != MSGCH_TALK_VISUAL
         && channel != MSGCH_SOUND)
@@ -494,6 +496,10 @@ static void mpr_check_patterns(const std::string& message,
         interrupt_activity( AI_MESSAGE,
                             channel_to_str(channel) + ":" + message );
     }
+
+    // Any sound has a chance of waking the PC if the PC is asleep.
+    if (channel == MSGCH_SOUND)
+        you.check_awaken(5);
 
     // Check messages for all forms of running now.
     if (you.running)
@@ -565,7 +571,7 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
                            int param)
 {
     if (suppress_messages)
-        return MSGCOL_MUTED;    
+        return MSGCOL_MUTED;
 
     int colour = channel_to_colour( channel, param );
 
