@@ -4901,6 +4901,21 @@ void place_spec_shop( int level_number,
     {
         env.shop[i].greed = 15 + random2avg(19, 2) + random2(level_number);
     }
+    
+    // allow bargains in bazaars, prices randomly between 60% and 95%
+    if (you.level_type == LEVEL_PORTAL_VAULT && you.level_type_name == "bazaar")
+    {
+        // need to calculate with factor as greed (unsigned char) is capped at 255
+        int factor = random2(8)+12;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "shop type %d: original greed = %d, factor = %d",
+                                env.shop[i].type, env.shop[i].greed, factor);
+        mprf(MSGCH_DIAGNOSTICS, "discount at shop %d is %d%%", i, (20-factor)*5);
+#endif
+        factor *= env.shop[i].greed;
+        factor /= 20;
+        env.shop[i].greed = factor;
+    }
 
     int plojy = 5 + random2avg(12, 3);
     if (representative)
@@ -4925,6 +4940,16 @@ void place_spec_shop( int level_number,
         else
         {
             item_level = level_number + random2((level_number + 1) * 3);
+        }
+
+        // make bazaar items more valuable (up to double value)
+        if (you.level_type == LEVEL_PORTAL_VAULT && you.level_type_name == "bazaar")
+        {
+            int help = random2(item_level) + 1;
+            item_level += help;
+            
+            if (item_level > level_number * 5)
+                item_level = level_number * 5;
         }
 
         // don't generate gold in shops!  This used to be possible with

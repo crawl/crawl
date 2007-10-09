@@ -980,16 +980,18 @@ int player_res_magic(void)
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
     case SP_SLUDGE_ELF:
+    case SP_DEEP_ELF:
     case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
+    case SP_DEMIGOD:
         rm = you.experience_level * 4;
         break;
     case SP_NAGA:
+    case SP_OGRE_MAGE:
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_GNOME:
-    case SP_DEEP_ELF:
         rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:
