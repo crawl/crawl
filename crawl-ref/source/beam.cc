@@ -4673,6 +4673,11 @@ void bolt::set_target(const dist &d)
 
 void bolt::setup_retrace()
 {
+    if (pos.x && pos.y)
+    {
+        target_x = pos.x;
+        target_y = pos.y;
+    }
     std::swap(source_x, target_x);
     std::swap(source_y, target_y);
     affects_nothing = true;
