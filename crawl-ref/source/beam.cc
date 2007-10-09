@@ -1265,7 +1265,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 void fire_beam( bolt &pbolt, item_def *item )
 {
     bool beamTerminate;     // has beam been 'stopped' by something?
-    int tx = 0, ty = 0;     // test(new) x,y - integer
+    int &tx(pbolt.pos.x), &ty(pbolt.pos.y);     // test(new) x,y - integer
     int rangeRemaining;
     bool did_bounce = false;
     cursor_control coff(false);
@@ -1383,7 +1383,6 @@ void fire_beam( bolt &pbolt, item_def *item )
                     break;
                 tx = ray.x();
                 ty = ray.y();
-
             } // end else - beam doesn't affect walls
         } // endif - is tx, ty wall?
 
@@ -1416,7 +1415,8 @@ void fire_beam( bolt &pbolt, item_def *item )
                 pbolt.flavour = BEAM_FIRE + random2(7);
             }
 
-            rangeRemaining -= affect(pbolt, tx, ty);
+            if (!pbolt.affects_nothing)
+                rangeRemaining -= affect(pbolt, tx, ty);
 
             if (random_beam)
             {
@@ -4763,19 +4763,19 @@ bool nice_beam( struct monsters *mon, struct bolt &beam )
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
-               ench_power(0), hit(0), target_x(0), target_y(0),
+               ench_power(0), hit(0), target_x(0), target_y(0), pos(),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),
                is_beam(false), is_explosion(false), is_big_cloud(false),
                is_enchant(false), is_energy(false), is_launched(false),
                is_thrown(false), target_first(false), aimed_at_spot(false),
-               aux_source(), obvious_effect(false), effect_known(true), 
-               fr_count(0), foe_count(0), fr_power(0), foe_power(0), 
-               fr_hurt(0), foe_hurt(0), fr_helped(0), foe_helped(0),
-               is_tracer(false), aimed_at_feet(false), msg_generated(false),
-               in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
-               chose_ray(false)
-{ }
+               aux_source(), affects_nothing(false), obvious_effect(false),
+               effect_known(true), fr_count(0), foe_count(0), fr_power(0),
+               foe_power(0), is_tracer(false), aimed_at_feet(false),
+               msg_generated(false), in_explosion_phase(false),
+               smart_monster(false), can_see_invis(false),
+               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false)
+{
+}
 
 killer_type bolt::killer() const
 {
@@ -4811,4 +4811,17 @@ void bolt::set_target(const dist &d)
 
     if (d.isEndpoint)
         aimed_at_spot = true;
+}
+
+void bolt::setup_retrace()
+{
+    if (pos.x && pos.y)
+    {
+        target_x = pos.x;
+        target_y = pos.y;
+    }
+    std::swap(source_x, target_x);
+    std::swap(source_y, target_y);
+    affects_nothing = true;
+    aimed_at_spot   = true;    
 }

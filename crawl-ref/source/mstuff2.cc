@@ -1375,9 +1375,13 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     if ( really_returns )
     {
+        // Fire beam in reverse
+        pbolt.setup_retrace();
+        viewwindow(true, false);
+        fire_beam(pbolt, NULL);
         msg::stream << "The weapon returns to "
                     << monster->name(DESC_NOCAP_THE)
-                    << "'s hand!" << std::endl;
+                    << "!" << std::endl;
     }
 
     if ( !really_returns )
