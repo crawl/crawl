@@ -2189,7 +2189,7 @@ bool orc_battle_cry(monsters *chief)
                 if (ench.ench == ENCH_NONE || ench.degree < level)
                 {
                     const int dur =
-                        random_range(5, 10) * speed_to_duration(mons->speed);
+                        random_range(9, 15) * speed_to_duration(mons->speed);
                 
                     if (ench.ench != ENCH_NONE)
                     {
@@ -2213,7 +2213,7 @@ bool orc_battle_cry(monsters *chief)
         {
             if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
             {
-                mprf("%s roars a battle-cry!",
+                mprf(MSGCH_SOUND, "%s roars a battle-cry!",
                      chief->name(DESC_CAP_THE).c_str());
                 noisy(15, chief->x, chief->y);
             }
