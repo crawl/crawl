@@ -109,7 +109,8 @@ ENDMAP
 NAME: temple_secret_doors
 TAGS: temple_entry
 ORIENT: float
-SUBST: ? : ?:40 T:30 U, ? = T:30 U, X = c:1 =
+SUBST: ? : ?:40 T:30 U, ? = T:30 U
+NSUBST: X = + / *: c:1 =
 MAP
 cccccc@cccccc
 cccccc.cccccc
@@ -118,7 +119,7 @@ cccccc.cccccc
 cccccc.cccccc
 ccccccXcccccc
 ccccc?.?ccccc
-@...X.O.=...@
+@...X.O.X...@
 ccccc?.?ccccc
 ccccccXcccccc
 cccccc.cccccc
