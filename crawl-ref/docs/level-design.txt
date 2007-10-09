@@ -14,16 +14,17 @@ Contents:  A. Introduction
 A.   Introduction
 -----------------
 
-All fixed level information resides in various .des files to be found in 
+All fixed level information resides in various .des files to be found in
 the dat directory. If you are interested in adding some vaults, say, start
 with the existing ones and modify them. Currently, the following .des files
 are in use:
 
  bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
+ crypt.des    - Crypt:5, Tomb:1, Tomb:2, Tomb:3
  elf.des      - Elf:7
- entry.des    - entry vaults (each game - but not tutorial games - uses one of 
+ entry.des    - entry vaults (each game - but not tutorial games - uses one of
                 these premade maps for the vicinity of the entrance)
- float.des    - floating vaults 
+ float.des    - floating vaults
  hells.des    - hell entrances, Geryon's vestibule, Coc:7, Tar:7, Dis:7, Geh:7
  hive.des     - hive entrances, Hive:4
  lab.des      - labyrinths exits and flavour vaults
@@ -34,13 +35,13 @@ are in use:
  pan.des      - vaults of the Pan demon lords, Pan minivaults
  portal.des   - portal vaults entrances
  temple.des   - Ecumenical Temples, and Temple entrances
- vaults.des   - entrances for the Vaults, Vaults:8, Blades, Tomb:?
+ vaults.des   - entrances for the Vaults, and Vaults:8
  zot.des      - Zot:5
 
 
 Kinds of Vaults
 ---------------
-The different kinds of vaults used by Crawl are described briefly below.  In
+The different kinds of vaults used by Crawl are described briefly below. In
 most cases, when the dungeon builder places a vault on a level, the rest of the
 level (assuming the vault is not a full-map vault) is generated as
 rooms+corridors. The only exceptions to this are branch entry vaults and
@@ -130,12 +131,12 @@ sections.
 "SHUFFLE: de" may replace all 'd' with 'e' in the map.
 "SUBST: 1=12." may replace each '1' with either '1' or '2' or '.'.
 "MONS: butterfly, plant" turns all '1' into butterflies, and '2' into plants.
-"ITEM: stone" turns all 'd' into stones
+"ITEM: stone" turns all 'd' into stones.
 "ITEM: w:10 any book / w:90 nothing" turns all 'e' into a book
        (with 10% chance) or creates no object (with 90% chance).
-       
+
 The symbols on the map:
- x - rock wall       
+ x - rock wall
  w - water (could be deep or shallow)
  W - shallow water
  . - plain floor
@@ -145,8 +146,8 @@ The symbols on the map:
  2 - second monster from the list (plant)
  d - first item from the list (here stones)
  e - second item from the list (here occassionally a book)
- 
- 
+
+
 D.   Map symbols
 ----------------
 
@@ -179,29 +180,29 @@ Features
      not use any @, the dungeon builder will connect at least one floorspace on
      the edge of your map to the rest of the level; if there is no floorspace
      on the edge of your map, it will be isolated.
- }{ - Stone stairs - You must be able to reach these from each other. The 
-      { upstair is also the stair on which the player will enter the 
+ }{ - Stone stairs - You must be able to reach these from each other. The
+      { upstair is also the stair on which the player will enter the
       dungeon for entry vaults.
  )( - Stone stairs, set 2.
  ][ - Stone stairs, set 3.
 
- >< - extra rock stairs - you can leave the level by these but will rarely be 
-      placed on them from another level
+ >< - escape hatches - you can leave the level by these but will usually
+      not land on stairs/hatches
 
  I - orcish idol (does nothing)
 
  ^ - random trap.
  ~ - random trap suitable for the branch and depth the map is being used.
 
- A - Vestibule gateway (opened by Horn). 
+ A - Vestibule gateway (opened by Horn).
  B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc,
      in order.
  C - Random Altar.
 
- F - Usually a Granite Statue, but may be Orange or Silver or Ice (1 in 100) 
- G - Granite statue (does nothing) - you can see through but not walk through
- H - orange crystal statue (attacks mind)
- S - Silver statue (summons demons). Avoid using (rare).
+ F - Usually a Granite Statue, but may be Orange or Silver or Ice (1 in 100)
+ G - Granite statue (does nothing) - you can see through but not walk through.
+     Also, sight-based effects like smiting work past granite statues, as does
+     apportation.
 
  T - Water fountain
  U - Magic fountain
@@ -210,7 +211,7 @@ Features
 Note: Due to the level maker having seen incremental improvements over
 the years, there are some inconsistencies. For examples, dangerous
 statues (orange, silver ice) are now genuine monsters. In particular,
-the 'H' and 'S' glyphs could be dispensed with (but many older vaults
+the 'H' and 'S' glyphs should be dispensed with (but many older vaults
 use them, of course) - especially as there's no glyph for ice statues.
 
 Also, the most of the other feature glyphs can be replaced with KFEAT:
@@ -218,7 +219,7 @@ lines. The same goes for some item glyphs ('R', 'Z') which
 could be replaced by KITEM: lines.
 
 Items
------ 
+-----
  $ - gold
  % - normal item
  * - higher level item (good)
@@ -235,7 +236,7 @@ Monsters
  9 - +5 depth monster
  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
      this way.
- 1-7 - monster array monster. See section below on MONS: arrays for more 
+ 1-7 - monster array monster. See section below on MONS: arrays for more
      information
 
 
@@ -245,473 +246,472 @@ D.   Header information
 (All declarations apart from NAME: are translated to Lua function
 calls behind the scenes. See the Lua reference for more information.)
 
-NAME:    a_string
-         Each map must have a unique name. Underscores and digits are ok.
+NAME:     a_string
+          Each map must have a unique name. Underscores and digits are ok.
 
-ORIENT:  (float |encompass | north | northwest | ... | southeast)
-         
-         Some kind of ORIENT: line is mandatory for vaults; skipping
-         ORIENT: makes your map a minivault. As a rule of thumb, if
-         you're writing a small random map, skip the ORIENT: line and
-         make it a minivault. For special levels and (branch) entry
-         vaults, you do need an ORIENT: line.
-         
-         * "float": The dungeon builder puts your vault wherever it wants to.
-         * "some_direction": The vault lies along that side of the map:
-           xxxxxxxxxx       xxxxxxxxxxxxx
-           xORIENT:Nx       xORIENT:NW|..
-           x.VAULT..x       x.VAULT...|..
-           x--------x       x---------|..
-           xrest....x       xrest........
-           x...of...x       x.....of.....
-           x...levelx       x.......level
-           ...which brings us to padding. With any some_direction orientation, 
-           you need 6 layers of x-padding along any level-edge that the vault 
-           borders. For instance, if your map is ORIENT: north, you must have a 
-           6 deep border of rock wall (or any other kind of wall) along the 
-           northern, eastern, and western edges of the map.
-         * "encompass": the vault completely occupies the entire level. 
-           Padding is needed on all 4 sides.
+ORIENT:   (float |encompass | north | northwest | ... | southeast)
 
-         ORIENT: float vaults need no padding and give a lot of
-         flexibility to the dungeon generator; float should generally
-         be preferred to other ORIENT: settings for new vaults.
-         
+          Some kind of ORIENT: line is mandatory for vaults; skipping
+          ORIENT: makes your map a minivault. As a rule of thumb, if
+          you're writing a small random map, skip the ORIENT: line and
+          make it a minivault. For special levels and (branch) entry
+          vaults, you do need an ORIENT: line.
 
-DEPTH:   For random vaults, branch entry vaults, and minivaults, this
-         specifies the range of levels where the vault may be placed
-         in the dungeon. E.g.
-         
-           DEPTH: 7-20
+          * "float": The dungeon builder puts your vault wherever it wants to.
+          * "some_direction": The vault lies along that side of the map:
+              xxxxxxxxxx       xxxxxxxxxxxxx
+              xORIENT:Nx       xORIENT:NW|..
+              x.VAULT..x       x.VAULT...|..
+              x--------x       x---------|..
+              xrest....x       xrest........
+              x...of...x       x.....of.....
+              x...levelx       x.......level
+            ...which brings us to padding. With any some_direction orientation,
+            you need 6 layers of x-padding along any level-edge that the vault
+            borders. For instance, if your map is ORIENT: north, you must have a
+            6 deep border of rock wall (or any other kind of wall) along the
+            northern, eastern, and western edges of the map.
+          * "encompass": the vault completely occupies the entire level.
+            Padding is needed on all 4 sides.
 
-         DEPTH: does not force a map to be placed in a particular place; it 
-         applies only when the dungeon builder is looking for a random vault
-         or minivault, so you can control at what depths your vault gets
-         placed.
-         
-         A simple DEPTH: declaration that does not specify a branch
-         applies to all branches. A map declared with depth 7-20 could
-         be used in the Lair, for instance. (Lair:1 will be treated as
-         a depth of 12 if the Lair entrance is on D:11.)
+          ORIENT: float vaults need no padding and give a lot of
+          flexibility to the dungeon generator; float should generally
+          be preferred to other ORIENT: settings for new vaults.
 
-         You can constrain a map by branch:
 
-           DEPTH: Lair:7-9
+DEPTH:    For random vaults, branch entry vaults, and minivaults, this
+          specifies the range of levels where the vault may be placed
+          in the dungeon. E.g.
 
-         (Anywhere between levels 7-9 of the Lair, inclusive.)
+            DEPTH: 7-20
 
-         You can apply multiple constraints in one DEPTH line,
-         comma-separated:
+          DEPTH: does not force a map to be placed in a particular place; it
+          applies only when the dungeon builder is looking for a random vault
+          or minivault, so you can control at what depths your vault gets
+          placed.
 
-           DEPTH: 7-20, !12-14
+          A simple DEPTH: declaration that does not specify a branch
+          applies to all branches. A map declared with depth 7-20 could
+          be used in the Lair, for instance. (Lair:1 will be treated as
+          a depth of 12 if the Lair entrance is on D:11.)
 
-         (Anywhere in the dungeon between depths 7-20, but not on levels
-         12-14.)
+          You can constrain a map by branch:
 
-           DEPTH: 7-20, !Orc
+            DEPTH: Lair:7-9
 
-         (Anywhere in the dungeon between depths 7-20, but never in the Orcish
-         Mines.)
+          (Anywhere between levels 7-9 of the Lair, inclusive.)
 
-           DEPTH: Lair:*
+          You can apply multiple constraints in one DEPTH line,
+          comma-separated:
 
-         (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair".)
+            DEPTH: 7-20, !12-14
 
-         Maps that do not specify a DEPTH: attribute will inherit their depth
-         constraints from the closest preceding default-depth: line. If there
-         is no preceding default-depth directive in the .des file, the map will
-         have no DEPTH: constraint. Note that maps without a DEPTH: constraint
-         cannot be selected as random vaults or minivaults.
-         
-CHANCE:  (number with 10 being default)
-         For entry vaults and any other vaults randomly picked from among 
-         a set, this type of line affects the likelihood of the given vault
-         being picked in a given game. The default CHANCE: is 10. The 
-         likelihood of a vault getting picked is:
-         [vault's CHANCE: / sum of all CHANCE:s of vaults of that type]
+          (Anywhere in the dungeon between depths 7-20, but not on levels
+          12-14.)
 
-PLACE:   Used to specify certain special levels. Existing special levels are:
-         Temple, Hell, Dis:7, Geh:7, Coc:7, Tar:7, Hive:4, Vault:8, Snake:5, 
-         Elf:7, Slime:6, Blade, Zot:5, Tomb:1, Tomb:2, Tomb:3, Swamp:5.
+            DEPTH: 7-20, !Orc
 
-         PLACE can also be used to specify arbitrary places, like D:3, which
-         will force the map (or one of the maps with PLACE: D:3) to be picked
-         when D:3 is generated.
+          (Anywhere in the dungeon between depths 7-20, but never in the Orcish
+          Mines.)
 
-         PLACE cannot be used to specify places in the Abyss, Pandemonium,
-         or Labyrinths.
+            DEPTH: Lair:*
 
-         PLACE can be used with random vaults and minivaults for testing them.
-         
-TAGS:    allow_dup, generate_awake, mini_float, no_item_gen, no_monster_gen,
-         no_pool_fixup, orc_entry, uniq_BAR
-         
-         Tags go an a TAGS: line and are space-separated. Valid tags are:
-         * "allow_dup": Vaults are normally used only once per game. If you
-                        have a vault that can be used more than once, use
-                        allow_dup to tell the dungeon builder that the vault
-                        can be reused.
-         * "dummy": this tag indicates that the vault is a stub; if the dungeon
-                    builder picks a dummy vault, it pretends no vault was
-                    selected. Dummies are used to reduce the probability
-                    of other vaults at the same depth / place.
-         * "entry": this tag MUST be there for a vault to be pickable as 
-           an entry vault.
-         * "generate_awake": Monsters placed (using MONS, KMONS) in this 
-           vault will be generated awake.
-         * "no_item_gen":   Prevents random item generation in the vault. 
-           Items explicitly placed by the vault are not affected.
-         * "mini_float": applicable only to minivaults, requests that
-           the dungeon builder pick random exits from the minivault and
-           connect it to the rest of the level, similar to the exit
-           behaviour for floating vaults.
-         * "no_monster_gen": Prevents random monster generation at the time
-           of the vault's creation. Highly advised for entry vaults with
-           a player-hostile geography, MUST-HAVE for those with water/lava.
-           Can be applied only to particular symbols with KMASK.
-         * "no_pool_fixup": prevents water squares next to land from being 
-           randomly converted from deep water (the default) to shallow.
-         * "branch_entry" eg. "orc_entry", "lair_entry" etc.
-           If chosen, these maps will contain the stairs for that
-           branch. Use "O" to place the stairs. If a branch has very
-           few entries, a dummy entry is advisable to make sure the
-           player doesn't get bored of the same few entries recycled
-           ad nauseam.
-         * "mnoleg" or the name of some other pandemonium lord. This makes
-           the map eligible for said pan lord's lair.
-         * "uniq_BAR": (uniq_ with any suffix) specifies that only one vault
-           with this tag can be used in a game.
+          (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair".)
 
-FLAGS:   no_rotate, no_hmirror, no_vmirror
-         Flags go on a FLAGS: line and are space-separated. Valid flags are:
-         * "no_rotate":  Normally, the dungeon builder can, at its whim, 
-           rotate your vault. This flag tells it, "hey, don't do that to my
-           vault!"
-         * "no_hmirror": Like no_rotate, but for horizontal mirroring.
-         * "no_vmirror": Like no_rotate, but for vertical mirroring.
+          Maps that do not specify a DEPTH: attribute will inherit their depth
+          constraints from the closest preceding default-depth: line. If there
+          is no preceding default-depth directive in the .des file, the map will
+          have no DEPTH: constraint. Note that maps without a DEPTH: constraint
+          cannot be selected as random vaults or minivaults.
 
-LFLAGS:  Persistent, changeable per-level flags which affect game
-         behavior (FLAGS just controls how the vault is placed); should
-         only be used for vaults with ORIENT encompass or with PLACE.
-         This causes a level's flags to be set when the level is first
-         created.  These flags can later be altered using Lua markers;
-         see the slime pit vault in lair.des, and the vaults in hell.des
-         and elf.des for examples.
+CHANCE:   (number with 10 being default)
+          For entry vaults and any other vaults randomly picked from among
+          a set, this type of line affects the likelihood of the given vault
+          being picked in a given game. The default CHANCE: is 10. The
+          likelihood of a vault getting picked is:
+          [vault's CHANCE: / sum of all CHANCE:s of vaults of that type]
 
-         Valid flags are: no_tele_control, which prevents the player
-         from using teleport control; not_mappable, which prevents
-         the player from remembering where they've been (like in
-         the Abyss), and no_magic_map, which prevents magic mapping
-         from working.
+PLACE:    Used to specify certain special levels. Existing special levels are:
+          Temple, Hell, Dis:7, Geh:7, Coc:7, Tar:7, Hive:4, Vault:8, Snake:5,
+          Elf:7, Slime:6, Blade, Zot:5, Tomb:1, Tomb:2, Tomb:3, Swamp:5.
 
-BFLAGS:  Persistent, changeable per-*branch* flags which affect game
-         behavior; should only be used for vaults which go on the fist
-         level of a particular branch.  These flags can later be altered
-         using Lua markers; see the Tomb vaults in vaults.lua for an
-         example.
+          PLACE can also be used to specify arbitrary places, like D:3, which
+          will force the map (or one of the maps with PLACE: D:3) to be picked
+          when D:3 is generated.
 
-         Valid flags are: no_tele_control, which prevents the player
-         from using teleport control; not_mappable, which prevents
-         the player from remembering where they've been (like in
-         the Abyss), and no_magic_map, which prevents magic mapping
-         from working.
+          PLACE cannot be used to specify places in the Abyss, Pandemonium,
+          or Labyrinths.
+
+          PLACE can be used with random vaults and minivaults for testing them.
+
+TAGS:     allow_dup, generate_awake, mini_float, no_item_gen, no_monster_gen,
+          no_pool_fixup, orc_entry, uniq_BAR
+
+          Tags go an a TAGS: line and are space-separated. Valid tags are:
+          * "allow_dup": Vaults are normally used only once per game. If you
+             have a vault that can be used more than once, use allow_dup to tell
+             the dungeon builder that the vault can be reused.
+          * "dummy": this tag indicates that the vault is a stub; if the dungeon
+             builder picks a dummy vault, it pretends no vault was selected.
+             Dummies are used to reduce the probability of other vaults at the
+             same depth / place.
+          * "entry": this tag MUST be there for a vault to be pickable as an
+             entry vault.
+          * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
+             will be generated awake.
+          * "no_item_gen": Prevents random item generation in the vault.
+             Items explicitly placed by the vault are not affected.
+          * "mini_float": applicable only to minivaults, requests that
+             the dungeon builder pick random exits from the minivault and
+             connect it to the rest of the level, similar to the exit behaviour
+             for floating vaults.
+          * "no_monster_gen": Prevents random monster generation at the time of
+             the vault's creation. Highly advised for entry vaults with a
+             player-hostile geography, MUST-HAVE for those with water/lava.
+             Can be applied only to particular symbols with KMASK.
+          * "no_pool_fixup": prevents water squares next to land from being
+             randomly converted from deep water (the default) to shallow.
+          * "branch_entry" eg. "orc_entry", "lair_entry" etc.
+             If chosen, these maps will contain the stairs for that
+             branch. Use "O" to place the stairs. If a branch has very
+             few entries, a dummy entry is advisable to make sure the
+             player doesn't get bored of the same few entries recycled
+             ad nauseam.
+          * "mnoleg" or the name of some other pandemonium lord. This makes
+             the map eligible for said pan lord's lair.
+          * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
+             the vaults with this tag can be used in a game.
+
+FLAGS:    no_rotate, no_hmirror, no_vmirror
+          Flags go on a FLAGS: line and are space-separated. Valid flags are:
+          * "no_rotate":  Normally, the dungeon builder can, at its whim,
+             rotate your vault. This flag tells it, "hey, don't do that to my
+             vault!"
+          * "no_hmirror": Like no_rotate, but for horizontal mirroring.
+          * "no_vmirror": Like no_rotate, but for vertical mirroring.
+
+LFLAGS:   Persistent, changeable per-level flags which affect game
+          behavior (FLAGS just controls how the vault is placed); should
+          only be used for vaults with ORIENT encompass or with PLACE.
+          This causes a level's flags to be set when the level is first
+          created. These flags can later be altered using Lua markers;
+          see the slime pit vault in lair.des, and the vaults in hell.des
+          and elf.des for examples.
+
+          Valid flags are: no_tele_control, which prevents the player
+          from using teleport control; not_mappable, which prevents
+          the player from remembering where they've been (like in
+          the Abyss), and no_magic_map, which prevents magic mapping
+          from working.
+
+BFLAGS:   Persistent, changeable per-*branch* flags which affect game
+          behavior; should only be used for vaults which go on the fist
+          level of a particular branch. These flags can later be altered
+          using Lua markers; see the Tomb vaults in vaults.lua for an
+          example.
+
+          Valid flags are: no_tele_control, which prevents the player
+          from using teleport control; not_mappable, which prevents
+          the player from remembering where they've been (like in
+          the Abyss), and no_magic_map, which prevents magic mapping
+          from working.
 
 FLOORCOL: blue
           FLOORCOL: allows you to set the floor colour for the level
-          the vault appears in.  Should only be used for bazaars and
+          the vault appears in. Should only be used for bazaars and
           other portal vaults.
 
 ROCKCOL:  yellow
           ROCKCOL: allows you to set the colour of rock walls for the
-          level the vault appears in.  Should only be used for bazaars and
+          level the vault appears in. Should only be used for bazaars and
           other portal vaults.
-         
-ITEM:    (list of items, separated by comma)
-         These are used to help place specified items at specific places 
-         within a vault. They create an array with up to 8 positions. What's
-         in the first position in the array will be used when the dungeon 
-         builder sees a "d" in the vault definition, the second will be used 
-         for "e"s, etc. Positions are comma-separated; several ITEM: lines 
-         are possible as well. The following defines letters 'd' - 'g':
-           ITEM: stone, ring mail, meat ration, ring of hunger
-           
-         Positions can contain multiple possibilities, one of which the 
-         builder will choose randomly. Separate such multiple possibilities 
-         using a slash. Note that "nothing" (without the quotes) is a valid 
-         possibility. The random choice is done for each individual occurence 
-         of the letter. You can also give possibilities a "weight," which 
-         affects their chance of being picked. The default weight is 10. You
-         can abbreviate "weight:30" by "w:30". The chance to pick a 
-         possibility is
-         [possibility's weight: / sum of all weight:s in that array position]
-         
-         For example, the following line makes letter 'd' into a bread ration
-         with 50% chance, or apple or orange with 25% chance each:
-         
-           ITEM: bread ration / w:5 apple / w:5 orange
 
-         Modifiers:
-         * "q:N" sets the item quantity to N (if N > 0). Does nothing
-           if the item is not stackable.
-         * "good_item" makes the builder try to make the item a good one.
-         * "any" by itself gives random choice; you can combine "any" with 
-           "good_item."
-         * "any book", "any misc" etc. gives a random item of that class.
-           Valid item class names are: gold, weapon, missile, armour,
-           wand, food, scroll, jewelry, potion, book, staff, orb,
-           misc, carrion. All of these are usable in map definitions,
-           apart from "orb" and "carrion".
+ITEM:     (list of items, separated by comma)
+          These are used to help place specified items at specific places
+          within a vault. They create an array with up to 8 positions. What's
+          in the first position in the array will be used when the dungeon
+          builder sees a "d" in the vault definition, the second will be used
+          for "e"s, etc. Positions are comma-separated; several ITEM: lines
+          are possible as well. The following defines letters 'd' - 'g':
+            ITEM: stone, ring mail, meat ration, ring of hunger
 
-         Limitations: You can't specify curse status nor item race,
-         nor can you give specific egos, nor can give fixedarts. You
-         also can't lay down corpses, skeletons, or chunks.
- 
-MONS:    (list of monsters)
-         These are used to help place specific monsters at specific places 
-         in a vault. They create an array with up to 7 positions. What's in 
-         the first position in the array will be used when the dungeon 
-         builder sees a "1" in the vault definition, the second for "2," 
-         etc. Note that if, for example, you place a 3 on the map, but your
-         MONS: line has no third position, the 3 will be filled with 
-         RANDOM_MONSTER.
-         You can use weights as for ITEM: lines.
+          Positions can contain multiple possibilities, one of which the
+          builder will choose randomly. Separate such multiple possibilities
+          using a slash. Note that "nothing" (without the quotes) is a valid
+          possibility. The random choice is done for each individual occurence
+          of the letter. You can also give possibilities a "weight," which
+          affects their chance of being picked. The default weight is 10. You
+          can abbreviate "weight:30" by "w:30". The chance to pick a
+          possibility is
+          [possibility's weight: / sum of all weight:s in that array position]
 
-         Individual monsters may be prefixed with the "generate_awake" 
-         (without the quotes). Use this sparingly:
-         MONS: generate_awake giant beetle
+          For example, the following line makes letter 'd' into a bread ration
+          with 50% chance, or apple or orange with 25% chance each:
 
-         Monsters can also be given colours that override their default
-         colour. Use this *very* sparingly:
-         MONS: col:darkgrey fungus
-         
-         Note that 8, 9, 0 also place monsters (see the table).
- 
+            ITEM: bread ration / w:5 apple / w:5 orange
 
-COLOUR:  . = green / blue:5 / red / none
-         COLOUR: allows you to attach explicit colours to any feature.
-         Explicit colours will override the default colour for that
-         feature. The example shown above colours all . (floor) in the
-         map green, blue, red, or unchanged (use the default colour).
+          Modifiers:
+          * "q:N" sets the item quantity to N (if N > 0). Does nothing
+             if the item is not stackable.
+          * "good_item" makes the builder try to make the item a good one.
+          * "any" by itself gives random choice; you can combine "any" with
+            "good_item."
+          * "any book", "any misc" etc. gives a random item of that class.
+             Valid item class names are: gold, weapon, missile, armour,
+             wand, food, scroll, jewelry, potion, book, staff, orb,
+             misc, carrion. All of these are usable in map definitions,
+             apart from "orb" and "carrion".
 
-         You can use : to specify that all glyphs get the same colour:
-         COLOUR: x : red / blue
-         will colour all rock walls in the map red, or all rock
-         walls blue.
+          Limitations: You can't specify curse status nor item race,
+          nor can you give specific egos, nor can give fixedarts. You
+          also can't lay down corpses, skeletons, or chunks.
 
-         COLOUR: should be used very sparingly, and only for features
-         where it won't cause confusion (i.e.: never re-colour features
-         like lava!)
+MONS:     (list of monsters)
+          These are used to help place specific monsters at specific places
+          in a vault. They create an array with up to 7 positions. What's in
+          the first position in the array will be used when the dungeon
+          builder sees a "1" in the vault definition, the second for "2,"
+          etc. Note that if, for example, you place a 3 on the map, but your
+          MONS: line has no third position, the 3 will be filled with
+          RANDOM_MONSTER.
+          You can use weights as for ITEM: lines.
 
-SHUFFLE: def, 12/3?
-         This allows you to randomly permute glyphs on the map. There are 
-         two ways:
+          Individual monsters may be prefixed with the "generate_awake"
+          (without the quotes). Use this sparingly:
+          MONS: generate_awake giant beetle
 
-         SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
-         could, for example, swap all occurences of "1" with "2", as well as
-         swapping all "3" with "w" (or any other of the 24 possibilities).
+          Monsters can also be given colours that override their default
+          colour. Use this *very* sparingly:
+          MONS: col:darkgrey fungus
 
-         SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
-         will either do nothing or swap all "1" with "3" and then also swap 
-         "2" with "w" everywhere.
+          Note that 8, 9, 0 also place monsters (see the table).
 
-         Several SHUFFLE: lines can be used, and mixed with SUBST:, and the
-         shuffles and substitutions will be applied in order. You can also 
-         put multiple SHUFFLEs on one line, comma-separated. Shuffles cannot 
-         use , or /. All spaces are stripped before shuffling.
-  
-SUBST:   ?=xc, !:bv, 1=2 1:100
-         The SUBST: directive allows you to specify a placeholder symbol 
-         that is replaced with a random glyph from a set. For instance:
 
-         SUBST: ? = TUV
-         replaces occurrences of ? with one of TUV. Since whitespaces are
-         irrelevant, this is the same as
-         SUBST: ? = T U V   
+COLOUR:   . = green / blue:5 / red / none
+          COLOUR: allows you to attach explicit colours to any feature.
+          Explicit colours will override the default colour for that
+          feature. The example shown above colours all . (floor) in the
+          map green, blue, red, or unchanged (use the default colour).
 
-         SUBST:  ? = T:20 U V
-         makes T twice as likely to be used as U or V (the default weight
-         is 10). Note that there has to be at least one space before and 
-         after T:20 and that whitespace in T:20 is not permitted.
+          You can use : to specify that all glyphs get the same colour:
+          COLOUR: x : red / blue
+          will colour all rock walls in the map red, or all rock
+          walls blue.
 
-         SUBST:  ? : TUV
-         replaces occurrences of ? with one of TUV, and guarantees that all
-         occurrences of ? will get the same replacement symbol.
+          COLOUR: should be used very sparingly, and only for features
+          where it won't cause confusion (i.e.: never re-colour features
+          like lava!)
 
-         The placeholder and replacement symbols can be any non-space, 
-         printable character, including : and =, apart from commas. For 
-         example, the following is valid:
-         SUBST: = = +=:123def" 
+SHUFFLE:  def, 12/3?
+          This allows you to randomly permute glyphs on the map. There are
+          two ways:
 
-         SUBST: lines can safely replace symbols with themselves, as in:
-         SUBST: w = wW
+          SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
+          could, for example, swap all occurences of "1" with "2", as well as
+          swapping all "3" with "w" (or any other of the 24 possibilities).
 
-         Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and 
-         will be applied in order. Multiple substitutions can be performed
-         on one line, using commas.
+          SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
+          will either do nothing or swap all "1" with "3" and then also swap
+          "2" with "w" everywhere.
 
-NSUBST:  ? = 3:w / *:l
+          Several SHUFFLE: lines can be used, and mixed with SUBST:, and the
+          shuffles and substitutions will be applied in order. You can also
+          put multiple SHUFFLEs on one line, comma-separated. Shuffles cannot
+          use , or /. All spaces are stripped before shuffling.
 
-         NSUBST is similar to SUBST, replacing placeholders with
-         replacement values. Unlike SUBST, however, it allows you to
-         replace different instances of the same placeholder with
-         completely different substitutions. For instance:
+SUBST:    ?=xc, !:bv, 1=2 1:100
+          The SUBST: directive allows you to specify a placeholder symbol
+          that is replaced with a random glyph from a set. For instance:
 
-         ? = 3:w / *:l
+          SUBST: ? = TUV
+          replaces occurrences of ? with one of TUV. Since whitespaces are
+          irrelevant, this is the same as
+          SUBST: ? = T U V
 
-         replaces three occurrences (randomly selected) of ? with w
-         and all others with l.
-         
-         You can use complex SUBST specifications:
+          SUBST: ? = T:20 U V
+          makes T twice as likely to be used as U or V (the default weight
+          is 10). Note that there has to be at least one space before and
+          after T:20 and that whitespace in T:20 is not permitted.
 
-         ? = 3= w .:15 A / *: =+CF
+          SUBST: ? : TUV
+          replaces occurrences of ? with one of TUV, and guarantees that all
+          occurrences of ? will get the same replacement symbol.
 
-         This is equivalent to SUBST: ? = w .:15 A for three ? and
-         SUBST: ? : =+CF for all the others.
+          The placeholder and replacement symbols can be any non-space,
+          printable character, including : and =, apart from commas. For
+          example, the following is valid:
+          SUBST: = = +=:123def"
 
-         You use any number of NSUBST specifiers:
+          SUBST: lines can safely replace symbols with themselves, as in:
+          SUBST: w = wW
 
-         ? = wW / l / A / 1234
+          Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and
+          will be applied in order. Multiple substitutions can be performed
+          on one line, using commas.
 
-         Each specifier is preceded by the number of symbols to apply
-         it to, followed by : or = (: to use one substitution for all
-         occurrences, = to randomly pick for each occurrence). If you
-         omit the initial N: or N=, then 1= is assumed, except for the
-         last spec where *= is assumed.
+NSUBST:   ? = 3:w / *:l
 
-KFEAT:   Z = C / needle trap / antique armour shop / altar_zin
-         The KFEAT: directive allows you to specify a placeholder symbol 
-         that is replaced with another symbol, named feature, trap, or 
-         shop. For example, the line above will replace occurrences of Z 
-         with C (random altar), a needle trap, an antique armour shop, or
-         an altar of Zin. Different instances of Z may receive different 
-         replacements. To force a single replacement for all Z,  use:
+          NSUBST is similar to SUBST, replacing placeholders with
+          replacement values. Unlike SUBST, however, it allows you to
+          replace different instances of the same placeholder with
+          completely different substitutions. For instance:
 
-         KFEAT: Z : C / needle trap / antique armour shop
+          ? = 3:w / *:l
 
-         You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx 
-         directives allow you to assign arbitrary definitions to any symbol.
+          replaces three occurrences (randomly selected) of ? with w
+          and all others with l.
 
-         KFEAT features are specified as a feature name (see section I
-         for a full list of feature names). As another example, you can
-         place a portal to the Abyss as:
+          You can use complex SUBST specifications:
 
-         KFEAT: A = enter_abyss
+          ? = 3= w .:15 A / *: =+CF
 
-         If you want no feature as an option in a KFEAT line, use 'floor'.
-         If you do not want to specify the type of shop, use 'any shop' or
-         'random shop'.
+          This is equivalent to SUBST: ? = w .:15 A for three ? and
+          SUBST: ? : =+CF for all the others.
 
-         The placeholder used by KFEAT can be shared by KITEM and KMONS;
-         see below. If the placeholder is shared, all defined Kxxxx 
-         operations for the placeholder are performed. Also, all Kxxx 
-         lines accept weights as for MONS or ITEM.
+          You use any number of NSUBST specifiers:
 
-KMONS:   ? = orc priest / w:3 deep elf priest
+          ? = wW / l / A / 1234
 
-         KMONS: allows you to specify a placeholder symbol that indicates 
-         the position of a monster (or monsters).
-         Using KMONS: allows you to exceed the 7 slot limit for monsters. 
-         It is also useful if you want to place a monster on a non-floor 
-         square (used in association with a KFEAT:). For example,
-           KFEAT: Z = W
-           KMONS: Z = rat
-         places a rat on a shallow water square for all occurrences of Z.
+          Each specifier is preceded by the number of symbols to apply
+          it to, followed by : or = (: to use one substitution for all
+          occurrences, = to randomly pick for each occurrence). If you
+          omit the initial N: or N=, then 1= is assumed, except for the
+          last spec where *= is assumed.
 
-         KMONS: also allows you to specify alternative monsters if the
-         primary monster you want to place is unavailable (because it
-         is a unique that was already generated). For instance, if you want
-         to generate one of Terence, Michael or Erica or a generic human
-         (whoever is available, in that order, you can use):
-           KMONS: n = Terence, Michael, Erica, human
-         Or if you want to pick randomly:
-           KMONS: n = Terence / Michael / Erica, human
+KFEAT:    Z = C / needle trap / antique armour shop / altar_zin
+          The KFEAT: directive allows you to specify a placeholder symbol
+          that is replaced with another symbol, named feature, trap, or
+          shop. For example, the line above will replace occurrences of Z
+          with C (random altar), a needle trap, an antique armour shop, or
+          an altar of Zin. Different instances of Z may receive different
+          replacements. To force a single replacement for all Z,  use:
 
-KMASK:   Z = no_monster_gen
+          KFEAT: Z : C / needle trap / antique armour shop
 
-         KMASK allows you set or unset various masks for particular
-         symbols, rather than for the entire vault like if you did it
-         with TAGS.  Valid masks are 
+          You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx
+          directives allow you to assign arbitrary definitions to any symbol.
 
-         * "no_item_gen":   Prevents random item on that symbol.  Items
-            explicitly placed on that symbol aren't affected.
-         * "no_monster_gen": Prevents random monster generation on that
-           symbol.  MUST-HAVE for those with water/lava symbols in
-           entry vaults.
-         * "no_pool_fixup": prevents a water square next to land from being 
-           randomly converted from deep water (the default) to shallow.
-         * "no_secret_doors": prevents a door from randomly being turned
-           into a secret door.
+          KFEAT features are specified as a feature name (see section I
+          for a full list of feature names). As another example, you can
+          place a portal to the Abyss as:
 
-         For example
+          KFEAT: A = enter_abyss
 
-           KMASK: W = no_monster_gen
+          If you want no feature as an option in a KFEAT line, use '.' or
+          'floor'. If you do not want to specify the type of shop, use
+          'any shop' or 'random shop'.
 
-         will prevent monsters from randomly being generated on shallow
-         water squares.  Note that if shuffling and substitutions cause
-         W to end up as water 10% of the time and floor 90% of the time,
-         then those floor squares will still have no_monster_gen set, but
-         that's still a higher degree of control than you get with TAGS.
+          The placeholder used by KFEAT can be shared by KITEM and KMONS;
+          see below. If the placeholder is shared, all defined Kxxxx
+          operations for the placeholder are performed. Also, all Kxxx
+          lines accept weights as for MONS or ITEM.
 
-         If TAGS has been used to set a mask for the entire vault, you
-         can use KMASK to remove that mask from particular symbols.
-         For instance:
+KMONS:    ? = orc priest / w:3 deep elf priest
 
-           TAGS:  no_monster_gen
-           KMASK: W = !no_monster_gen
+          KMONS: allows you to specify a placeholder symbol that indicates
+          the position of a monster (or monsters).
+          Using KMONS: allows you to exceed the 7 slot limit for monsters.
+          It is also useful if you want to place a monster on a non-floor
+          square (used in association with a KFEAT:). For example,
+            KFEAT: Z = W
+            KMONS: Z = rat
+          places a rat on a shallow water square for all occurrences of Z.
 
-         would make it so that monsters are only randomly generated
-         on shallow water squares.
+          KMONS: also allows you to specify alternative monsters if the
+          primary monster you want to place is unavailable (because it
+          is a unique that was already generated). For instance, if you want
+          to generate one of Terence, Michael or Erica or a generic human
+          (whoever is available, in that order, you can use):
+            KMONS: n = Terence, Michael, Erica, human
+          Or if you want to pick randomly:
+            KMONS: n = Terence / Michael / Erica, human
 
-KITEM:   ? = potion of healing / potion of restore abilities
-         KITEM: places the specified item at all occurrences of the 
-         placeholder. It can be combined with KFEAT: and KMONS: lines for
-         the same placeholder.
+KMASK:    Z = no_monster_gen
 
-         You can use "gold" or "$" to place gold:
-           KITEM: ? = nothing / gold
-           KITEM: ? = nothing / $
+          KMASK allows you set or unset various masks for particular
+          symbols, rather than for the entire vault like if you did it
+          with TAGS. Valid masks are
 
-         You can use q: to specify quantities:
-           KITEM: ? = q:100 gold
+          * "no_item_gen":   Prevents random item on that symbol. Items
+             explicitly placed on that symbol aren't affected.
+          * "no_monster_gen": Prevents random monster generation on that
+             symbol. MUST-HAVE for those with water/lava symbols in
+             entry vaults.
+          * "no_pool_fixup": prevents a water square next to land from being
+             randomly converted from deep water (the default) to shallow.
+          * "no_secret_doors": prevents a door from randomly being turned
+             into a secret door.
 
-         KITEM: allows you to place multiple items on the same square:
-           KITEM: ? = bread ration, potion of water, potion of porridge
+          For example
 
-MARKER:  A = feat:<feature_name> or timer:
+            KMASK: W = no_monster_gen
 
-         A marker ties a square on the map to a game-trigger of some
-         sort (which depends on the marker and what feature it is on).
-         
-         The portals to the Hells in the Vestibule of Hell are each
-         annotated with feature markers like this:
+          will prevent monsters from randomly being generated on shallow
+          water squares. Note that if shuffling and substitutions cause
+          W to end up as water 10% of the time and floor 90% of the time,
+          then those floor squares will still have no_monster_gen set, but
+          that's still a higher degree of control than you get with TAGS.
 
-         MARKER: D=feat:enter_dis, G=feat:enter_gehenna
+          If TAGS has been used to set a mask for the entire vault, you
+          can use KMASK to remove that mask from particular symbols.
+          For instance:
 
-         When the horn is sounded, the stone arch at D becomes the
-         portal to Dis, the arch at G becomes the portal to Gehenna,
-         etc. This behaviour applies only to the Vestibule of Hell.
+            TAGS:  no_monster_gen
+            KMASK: W = !no_monster_gen
 
-         Timer feature markers set a timer on a particular square;
-         when time runs out, the feature at that square is changed
-         (usually to floor). For instance:
+          would make it so that monsters are only randomly generated
+          on shallow water squares.
 
-         MARKER: A = timer: 500-1000
+KITEM:    ? = potion of healing / potion of restore abilities
+          KITEM: places the specified item at all occurrences of the
+          placeholder. It can be combined with KFEAT: and KMONS: lines for
+          the same placeholder.
 
-         Sets a timer that's between 500-1000 turns, inclusive, at the
-         end of which whatever feature is on A gets converted to floor.
+          You can use "gold" or "$" to place gold:
+            KITEM: ? = nothing / gold
+            KITEM: ? = nothing / $
 
-         You can specify the final feature with a feat: qualifier:
+          You can use q: to specify quantities:
+            KITEM: ? = q:100 gold
 
-         MARKER: A = timer: 500 feat:deep_water
+          KITEM: allows you to place multiple items on the same square:
+            KITEM: ? = bread ration, potion of water, potion of porridge
 
-         This sets a timer for exactly 500 turns, and changes the
-         feature to deep water at the end of it.
+MARKER:   A = feat:<feature_name> or timer:
 
-         Feature names used in markers must be names matching the
-         names in the source code. There's a full list of feature
-         names in section I (Feature names) at the end of this
-         document.
-         
+          A marker ties a square on the map to a game-trigger of some
+          sort (which depends on the marker and what feature it is on).
+
+          The portals to the Hells in the Vestibule of Hell are each
+          annotated with feature markers like this:
+
+          MARKER: D=feat:enter_dis, G=feat:enter_gehenna
+
+          When the horn is sounded, the stone arch at D becomes the
+          portal to Dis, the arch at G becomes the portal to Gehenna,
+          etc. This behaviour applies only to the Vestibule of Hell.
+
+          Timer feature markers set a timer on a particular square;
+          when time runs out, the feature at that square is changed
+          (usually to floor). For instance:
+
+          MARKER: A = timer: 500-1000
+
+          Sets a timer that's between 500-1000 turns, inclusive, at the
+          end of which whatever feature is on A gets converted to floor.
+
+          You can specify the final feature with a feat: qualifier:
+
+          MARKER: A = timer: 500 feat:deep_water
+
+          This sets a timer for exactly 500 turns, and changes the
+          feature to deep water at the end of it.
+
+          Feature names used in markers must be names matching the
+          names in the source code. There's a full list of feature
+          names in section I (Feature names) at the end of this
+          document.
+
 
 E.    Conditionalising levels
 -----------------------------
@@ -905,9 +905,9 @@ NOTE: You cannot use the colon-prefixed syntax for validation Lua. If
 you have a big block of code, use the multiline syntax:
 
 validate {{
-   -- This level is always cool.
-   crawl.mpr("This level is guaranteed perfect!")
-   return true
+    -- This level is always cool.
+    crawl.mpr("This level is guaranteed perfect!")
+    return true
 }}
 
 
@@ -916,18 +916,18 @@ G.    Hints for level makers
 
 * Technical stuff:
 
-  If your map is not a minivault or a floating vault, make sure the 
+  If your map is not a minivault or a floating vault, make sure the
   side(s) forming the border have a rock wall padding at least 6 deep. For
-  instance, if your map is ORIENT: north, you must have a 6 deep border of 
-  rock wall (or any other kind of wall) along the northern, eastern, and 
-  western edges of the map. If you're doing a fullscreen map (encompass), 
+  instance, if your map is ORIENT: north, you must have a 6 deep border of
+  rock wall (or any other kind of wall) along the northern, eastern, and
+  western edges of the map. If you're doing a fullscreen map (encompass),
   you must pad all around the map with 6 layers of wall.
 
-  You do not have to place all of the stairs unless the level is full 
+  You do not have to place all of the stairs unless the level is full
   screen, in which case you must place all except the extra stairs (> and
-  <). The <> stairs can be put anywhere and in any quantities but do not 
-  have to be there. Any of the other stairs which are not present in the 
-  vault will be randomly placed outside it. Also generally try to avoid 
+  <). The <> stairs can be put anywhere and in any quantities but do not
+  have to be there. Any of the other stairs which are not present in the
+  vault will be randomly placed outside it. Also generally try to avoid
   rooms with no exit (use at least > or < to make it possible for players
   to get away).
 
@@ -935,7 +935,7 @@ G.    Hints for level makers
   one space of floor for accessibility. Alternatively, you can request
   that the dungeon builder pick appropriate exits as it does for
   floating vaults by using the "mini_float" tag.
-  
+
   The entry point '@' must be present for all vaults (except
   full-screen vaults where it must not, and floating vaults and
   minivaults where it is optional). All @ will be connected to floor
@@ -951,12 +951,12 @@ G.    Hints for level makers
   The level-builder will also implicitly treat doors and secret doors
   on the edge of a map as explicit exits (the same as using @) and
   connect them to the rest of the level.
-  
+
   Not using @ and allowing the level-builder to pick exits is
   acceptable in floating vaults, but when you use no @'s with this
   feature in mind, please add comments stating this - else somebody
   may just add @'s later on. :)
-  
+
   Non-rectangular maps will be padded (to the right) with rock walls
   (or with floor spaces for minivaults) for the smallest rectangle
   containing them. Unfortunately.
@@ -965,7 +965,7 @@ G.    Hints for level makers
   atmosphere for the starting room, not to get a grip on the whole of D:1.
   Minivaults should be rather small, as well, in order to increase the
   chances they may actually be chosen during level generation.
-  
+
 * Randomise!
   The level making syntax is now very supportive for making a single map
   appear in many versions. Use the SHUFFLE: and SUBST: directives and look
@@ -974,18 +974,18 @@ G.    Hints for level makers
   always at the same place, it's a no-brainer for those who know. The same
   goes for traps. This is much less so if there are several places for the
   chamber (or trap) and there's even a chance it doesn't exist.
-  
+
   You can also use CHANCE to create modified versions of the same map. In
-  order to do this, make several maps and endow each with a chance such 
+  order to do this, make several maps and endow each with a chance such
   that the sum of chances add up to 10.
 
-  Randomisation does not just apply to layout: you could also have 
+  Randomisation does not just apply to layout: you could also have
   different monster population sets (for example make a branch end skewed
-  for either melee or ranged opponents), or perhaps couple difficulty to 
+  for either melee or ranged opponents), or perhaps couple difficulty to
   loot.
 
 * Not too much loot.
-  For example, entry vaults should in general have very little loot - in 
+  For example, entry vaults should in general have very little loot - in
   particular no good_xxx or '*' items lest they might give incentive for
   start-scumming. For random vaults, there needn't be loot at all and, in
   any case, there shouldn't be too much of it. Compare with the branch ends
@@ -994,16 +994,16 @@ G.    Hints for level makers
 * Have a theme.
   It is often worthwhile (to me at least) to have a theme in mind before
   making the actual level. For entry vaults, something simple like
-  'fortress' or  'forest' may be enough. For later (or larger) maps, try 
-  to think of distinguishing features your map may have. Being cool can 
+  'fortress' or  'forest' may be enough. For later (or larger) maps, try
+  to think of distinguishing features your map may have. Being cool can
   be good enough, but possessing some gameplay value (for example by being
-  easier for particular skills/capabilities like ranged attacks or 
+  easier for particular skills/capabilities like ranged attacks or
   necromancy or Traps & Doors) is even better.
-  
+
 * Testing your maps.
   This is easy for entry vaults. Temporarily introducing a CHANCE: 5000
   will make your entry appear almost always. For other vaults, you can
-  for the moment declare them as entry vaults with a huge CHANCE: as 
+  for the moment declare them as entry vaults with a huge CHANCE: as
   above (and preferably in wizard mode). For more intricate things like
   new branch ends, you have to resort to wizard mode and use the &~ command
   to go directly to the place where the map is used, say Snake:5. You may want
@@ -1012,33 +1012,38 @@ G.    Hints for level makers
   which makes it very likely that the minivault will appear in the chosen
   level.
 
-  If the .des file syntax is incorrect, Crawl will tell you on which line of 
+  Larger vaults can be conjured up in wizard mode using the &L command.
+  You don't need to specify the full name of the vault, a substring which
+  uniquely determines the vault is enough. You can playtest portal vaults
+  using the &P wizard command. Branch ends can be conveniently tested with
+  the &~ command.
+
+  If the .des file syntax is incorrect, Crawl will tell you on which line of
   which des file it found the syntax error, making for easier debugging.
 
 * Be fair!
   Crawl is hard but try to balance your monsters. While it is true that Orc:1
   can show an orcish knight, this is very rare. Hence it's probably a bad idea
-  to use orcish knights for an entry to the Orcish Mines. 
+  to use orcish knights for an entry to the Orcish Mines.
 
   Phrased more generally, do not use OOD (out-of-depth) monsters unless you
-  really know what you want. 
+  really know what you want.
 
-  Be especially fair when creating entry vaults. If your entry is too
-  hard, it might get degraded to tricky.des (or just removed). Keep in
-  mind that your vault will be played very very often, so even small
-  chances of something stupid happening (like creation of a really nasty
-  monster) will kick in often enough.
-  
+  Be especially fair when creating entry vaults. If your entry is too hard,
+  it might get just trashed. Keep in mind that your vault will be played
+  very very often, so even small chances of something stupid happening
+  (like creation of a really nasty monster) will kick in often enough.
+
 * Minivaults vs random vaults.
   Minivaults are handled very differently from regular vaults and special
-  levels. They're placed *after* normal map generation, whereas normal 
-  vaults are placed before generating the rest of the level. There's no 
+  levels. They're placed *after* normal map generation, whereas normal
+  vaults are placed before generating the rest of the level. There's no
   way to guarantee generation of a minivault on a particular level, although
   using a PLACE: attribute makes the dungeon builder try very hard to place
   the minivault on the specified level. Regular vaults can always be forced to
   appear using a PLACE: attribute.
 
-  Technically, you make a minivault like a normal floating vault but 
+  Technically, you make a minivault like a normal floating vault but
   without an ORIENT: line. Note that minivaults used to be exclusively of
   size 12x12 but this restriction is gone. Still, the smaller the better.
 
@@ -1105,34 +1110,34 @@ Syntax for using Lua in .des files
 * Colon-prefixed lines are individual Lua lines, extending to the end
   of the line. E.g.
 
-  : crawl.mpr("Hello")
+   : crawl.mpr("Hello")
 
   Colon-prefixed lines are always in the main Lua chunk, unless they occur
   before any map definitions, in which case they go to the global prelude.
 
 * Lua blocks for the main (body) Lua
-  lua {{ <code> }}
+   lua {{ <code> }}
   or
-  lua {{
-      <code>
-  }}
+   lua {{
+       <code>
+   }}
 
 NOTE: Colon-prefixed lines, or lua {{ }} blocks defined before any
 map's NAME: directive will add the Lua code to the global prelude.
 
 * Lua blocks for the prelude:
-  prelude {{ <code> }}
+   prelude {{ <code> }}
   or
-  prelude {{
-      <code>
-  }}
+   prelude {{
+       <code>
+   }}
 
 * Lua blocks for the validate chunk:
-  validate {{ <code> }}
+   validate {{ <code> }}
   or
-  validate {{
-      <code>
-  }}
+   validate {{
+       <code>
+   }}
 
 
 Debugging Lua
@@ -1155,7 +1160,7 @@ It's very important that your finished level never croaks during
 level-generation. A Lua error at this stage is considered a validation
 failure.
 
-  
+
 Lua API reference
 -----------------
 a. The Map.
@@ -1170,11 +1175,11 @@ Lua functions dealing with the map are mostly grouped under the "dgn"
 module. For convenience, .des file Lua chunks are run in an environment
 such that function calls written as:
 
-fn(x, y, ...)
+ fn(x, y, ...)
 
 are translated to
 
-dgn.fn(map, x, y, ...)
+ dgn.fn(map, x, y, ...)
 
 where "map" is the reference to the map that the currently executing
 Lua chunk belongs to. This is only for Lua chunks that belong to a
