@@ -144,7 +144,7 @@ static unsigned long cards_in_deck(const item_def &deck)
     const CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
 
-    return (unsigned long) props["cards"].get_table().size();
+    return (unsigned long) props["cards"].get_vector().size();
 }
 
 static void shuffle_deck(item_def &deck)
@@ -154,16 +154,14 @@ static void shuffle_deck(item_def &deck)
     CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
 
-    CrawlHashTable &cards = props["cards"];
+    CrawlVector &cards = props["cards"];
     ASSERT(cards.size() > 1);
 
-    CrawlHashTable &flags = props["card_flags"];
+    CrawlVector &flags = props["card_flags"];
     ASSERT(flags.size() == cards.size());
 
     // Don't use std::shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
-    // Also, the CrawlHashTable iterator doesn't provide the interface
-    // required for using it with std::shuffle().
     std::vector<long> pos;
     for (unsigned long i = 0, size = cards.size(); i < size; i++)
         pos.push_back(random2(size));
@@ -179,8 +177,8 @@ static card_type get_card_and_flags(const item_def& deck, int idx,
                                     unsigned char& _flags)
 {
     const CrawlHashTable &props = deck.props;
-    const CrawlHashTable &cards = props["cards"].get_table();
-    const CrawlHashTable &flags = props["card_flags"].get_table();
+    const CrawlVector    &cards = props["cards"].get_vector();
+    const CrawlVector    &flags = props["card_flags"].get_vector();
 
     if (idx == -1)
         idx = (int) cards.size() - 1;
@@ -194,8 +192,8 @@ static void set_card_and_flags(item_def& deck, int idx, card_type card,
                                unsigned char _flags)
 {
     CrawlHashTable &props = deck.props;
-    CrawlHashTable &cards = props["cards"];
-    CrawlHashTable &flags = props["card_flags"];
+    CrawlVector    &cards = props["cards"];
+    CrawlVector    &flags = props["card_flags"];
 
     if (idx == -1)
         idx = (int) cards.size() - 1;
@@ -365,8 +363,8 @@ static card_type draw_top_card(item_def& deck, bool message,
                                unsigned char &_flags)
 {
     CrawlHashTable &props = deck.props;
-    CrawlHashTable &cards = props["cards"].get_table();
-    CrawlHashTable &flags = props["card_flags"].get_table();
+    CrawlVector    &cards = props["cards"].get_vector();
+    CrawlVector    &flags = props["card_flags"].get_vector();
 
     int num_cards = cards.size();
     int idx       = num_cards - 1;
@@ -374,9 +372,8 @@ static card_type draw_top_card(item_def& deck, bool message,
     ASSERT(num_cards > 0);
 
     card_type card = get_card_and_flags(deck, idx, _flags);
-
-    cards.erase(idx);
-    flags.erase(idx);
+    cards.pop_back();
+    flags.pop_back();
 
     retry_blank_card(card, deck, _flags);
 
@@ -397,13 +394,11 @@ static void push_top_card(item_def& deck, card_type card,
                           unsigned char _flags)
 {
     CrawlHashTable &props = deck.props;
-    CrawlHashTable &cards = props["cards"].get_table();
-    CrawlHashTable &flags = props["card_flags"].get_table();
+    CrawlVector    &cards = props["cards"].get_vector();
+    CrawlVector    &flags = props["card_flags"].get_vector();
 
-    int idx = cards.size();
-
-    cards[idx] = (char) card;
-    flags[idx] = (char) _flags;
+    cards.push_back((char) card);
+    flags.push_back((char) _flags);
 }
 
 static bool wielding_deck()
@@ -425,33 +420,43 @@ static bool check_buggy_deck(item_def& deck)
 
     CrawlHashTable &props = deck.props;
 
-    if (!props.exists("cards") || cards_in_deck(deck) == 0)
+    if (!props.exists("cards")
+        || props["cards"].get_type() != SV_VEC
+        || props["cards"].get_vector().get_type() != SV_BYTE
+        || cards_in_deck(deck) == 0)
     {
         crawl_state.zero_turns_taken();
 
-        std::string msg = "";
-
         if (!props.exists("cards"))
-            msg += "Seems this deck never had any cards in the first place!";
+            msg::stream << "Seems this deck never had any cards in the "
+                "first place!";
+        else if (props["cards"].get_type() != SV_VEC)
+            msg::stream << "'cards' property isn't a vector.";
         else
         {
-            msg += "Strange, this deck is already empty.";
+            if (props["cards"].get_vector().get_type() != SV_BYTE)
+                msg::stream << "'cards' vector doesn't contain bytes.  ";
 
-            int cards_left = 0;
-            if (deck.plus2 >= 0)
-                cards_left = deck.plus - deck.plus2;
-            else
-                cards_left = -deck.plus;
-
-            if (cards_left != 0)
+            if (cards_in_deck(deck) == 0)
             {
-                msg += "  But there should be been ";
-                msg += cards_left;
-                msg += " cards left.";
+                msg::stream << "Strange, this deck is already empty.";
+
+                int cards_left = 0;
+                if (deck.plus2 >= 0)
+                    cards_left = deck.plus - deck.plus2;
+                else
+                    cards_left = -deck.plus;
+
+                if (cards_left != 0)
+                {
+                    msg::stream << "  But there should be been ";
+                    msg::stream <<  cards_left;
+                    msg::stream << " cards left.";
+                }
             }
         }
+        msg::stream << std::endl;
 
-        mpr(msg.c_str());
         mpr("A swarm of software bugs snatches the deck from you and "
             "whisk it away.");
 
@@ -466,32 +471,29 @@ static bool check_buggy_deck(item_def& deck)
 
     bool problems = false;
 
-    CrawlHashTable &cards = props["cards"].get_table();
-    CrawlHashTable &flags = props["card_flags"].get_table();
-
-    problems = cards.fixup_indexed_array("the card stack");
-    problems = flags.fixup_indexed_array("the flag stack");
+    CrawlVector &cards = props["cards"].get_vector();
+    CrawlVector &flags = props["card_flags"].get_vector();
 
     unsigned long num_cards = cards.size();
     unsigned long num_flags = flags.size();
 
     unsigned int num_buggy     = 0;
     unsigned int num_marked    = 0;
-    unsigned int counted_cards = 0;
 
     for (unsigned long i = 0; i < num_cards; i++)
     {
-        unsigned char card   = (unsigned char) cards[i].get_byte();
-        unsigned char _flags = (unsigned char) flags[i].get_byte();
+        unsigned char card   = cards[i].get_byte();
+        unsigned char _flags = flags[i].get_byte();
         if (card >= NUM_CARDS)
         {
             cards.erase(i);
             flags.erase(i);
+            i--;
+            num_cards--;
             num_buggy++;
         }
         else
         {
-            counted_cards++;
             if (_flags & CFLAG_MARKED)
                 num_marked++;
         }
@@ -501,8 +503,6 @@ static bool check_buggy_deck(item_def& deck)
     {
         mprf("%d buggy cards found in the deck, discarding them.",
              num_buggy);
-        cards.compact_indicies(0, num_cards - 1);
-        flags.compact_indicies(0, num_flags - 1);
 
         deck.plus2 += num_buggy;
 
@@ -512,7 +512,7 @@ static bool check_buggy_deck(item_def& deck)
         problems = true;
     }
 
-    if (num_cards == 0)
+    if (num_cards <= 0)
     {
         crawl_state.zero_turns_taken();
 
@@ -567,7 +567,7 @@ static bool check_buggy_deck(item_def& deck)
         problems = true;
     }
 
-    if (props["num_marked"].get_byte() > (char) counted_cards)
+    if (props["num_marked"].get_byte() > (char) num_cards)
     {
         mpr("More cards marked than in the deck?");
         props["num_marked"] = (char) num_marked;
@@ -686,8 +686,8 @@ bool deck_peek()
         return false;
     }
 
-    CrawlHashTable &cards     = deck.props["cards"];
-    int             num_cards = cards.size();
+    CrawlVector &cards     = deck.props["cards"];
+    int          num_cards = cards.size();
 
     card_type card1, card2, card3;
     unsigned char flags1, flags2, flags3;
@@ -2141,8 +2141,6 @@ bool top_card_is_known(const item_def &deck)
     if (!is_deck(deck))
         return false;
 
-    ASSERT(cards_in_deck(deck) > 0);
-
     unsigned char flags;
     get_card_and_flags(deck, -1, flags);
 
@@ -2153,8 +2151,6 @@ card_type top_card(const item_def &deck)
 {
     if (!is_deck(deck))
         return NUM_CARDS;
-
-    ASSERT(cards_in_deck(deck) > 0);
 
     unsigned char flags;
     card_type card = get_card_and_flags(deck, -1, flags);
@@ -2177,7 +2173,9 @@ bool bad_deck(const item_def &item)
         return false;
 
     return (!item.props.exists("cards")
-            || item.props["cards"].get_table().get_type() != HV_BYTE);
+            || item.props["cards"].get_type() != SV_VEC
+            || item.props["cards"].get_vector().get_type() != SV_BYTE
+            || cards_in_deck(item) == 0);
 }
 
 deck_rarity_type deck_rarity(const item_def &item)
@@ -2221,10 +2219,10 @@ void init_deck(item_def &item)
     ASSERT(item.special >= DECK_RARITY_COMMON
            && item.special <= DECK_RARITY_LEGENDARY);
 
-    props.set_default_flags(HFLAG_CONST_TYPE);
+    props.set_default_flags(SFLAG_CONST_TYPE);
 
-    props["cards"].new_table(HV_BYTE);
-    props["card_flags"].new_table(HV_BYTE);
+    props["cards"].new_vector(SV_BYTE).resize(item.plus);
+    props["card_flags"].new_vector(SV_BYTE).resize(item.plus);
 
     for (int i = 0; i < item.plus; i++)
     {

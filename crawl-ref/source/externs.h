@@ -30,9 +30,9 @@
 #include "defines.h"
 #include "enum.h"
 #include "FixAry.h"
-#include "hash.h"
 #include "libutil.h"
 #include "mpr.h"
+#include "store.h"
 
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc

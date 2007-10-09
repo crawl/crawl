@@ -264,6 +264,7 @@ bool dec_inv_item_quantity( int obj, int amount )
 
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity = 0;
+        you.inv[obj].props.clear();
 
         ret = true;
 
@@ -462,6 +463,7 @@ void unlink_item( int dest )
     mitm[dest].x = 0;
     mitm[dest].y = 0;
     mitm[dest].link = NON_ITEM;
+    mitm[dest].props.clear();
 
     // Look through all items for links to this item.
     for (c = 0; c < MAX_ITEMS; c++)
@@ -579,6 +581,7 @@ void lose_item_stack( int x, int y )
 
             mitm[o].base_type = OBJ_UNASSIGNED;
             mitm[o].quantity = 0;
+            mitm[o].props.clear();
         }
 
         o = next;
@@ -601,6 +604,7 @@ void destroy_item_stack( int x, int y, int cause )
 
             mitm[o].base_type = OBJ_UNASSIGNED;
             mitm[o].quantity = 0;
+            mitm[o].props.clear();
         }
 
         o = next;
