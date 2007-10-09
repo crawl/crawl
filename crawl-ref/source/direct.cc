@@ -1588,8 +1588,11 @@ static std::string describe_mons_enchantment(const monsters &mons,
     if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE))
         return "";
 
-    if (ench.ench == ENCH_HASTE && mons.has_ench(ENCH_BERSERK))
+    if ((ench.ench == ENCH_HASTE || ench.ench == ENCH_BATTLE_FRENZY)
+        && mons.has_ench(ENCH_BERSERK))
+    {
         return "";
+    }
 
     switch (ench.ench)
     {
@@ -1605,6 +1608,8 @@ static std::string describe_mons_enchantment(const monsters &mons,
         return "moving slowly";
     case ENCH_BERSERK:
         return "berserk";
+    case ENCH_BATTLE_FRENZY:
+        return "consumed by blood-lust";
     case ENCH_HASTE:
         return "moving very quickly";
     case ENCH_CONFUSION:

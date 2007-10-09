@@ -2844,6 +2844,21 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     // Berserk monsters get bonus damage.
     if (atk->has_ench(ENCH_BERSERK))
         damage = damage * 3 / 2;
+    else if (atk->has_ench(ENCH_BATTLE_FRENZY))
+    {
+        const mon_enchant ench = atk->get_ench(ENCH_BATTLE_FRENZY);
+        
+#ifdef DEBUG_DIAGNOSTICS
+        const int orig_damage = damage;
+#endif
+        
+        damage = damage * (115 + ench.degree * 15) / 100;
+        
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %d->%d",
+             attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
+#endif
+    }
 
     if (water_attack)
         damage *= 2;

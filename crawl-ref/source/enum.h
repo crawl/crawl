@@ -823,6 +823,9 @@ enum dungeon_feature_type
     DNGN_WAX_WALL,                     //    8
     DNGN_PERMAROCK_WALL,               //    9 - for undiggable walls
 
+    // XXX: highest grid value which is opaque
+    DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
+    
     // XXX: lowest grid value which can be seen through
     DNGN_MINSEE = 11,
 
@@ -1072,6 +1075,7 @@ enum enchant_type
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
     ENCH_FATIGUE,        // Post-berserk fatigue.
     ENCH_HELD,           // caught in a net
+    ENCH_BATTLE_FRENZY,  // Monster is in a battle frenzy
     
     NUM_ENCHANTMENTS
 };
