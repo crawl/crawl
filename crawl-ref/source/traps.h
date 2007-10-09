@@ -34,7 +34,7 @@ void free_self_from_net(void);
 /* ***********************************************************************
  * called from: acr - misc
  * *********************************************************************** */
-void handle_traps(char trt, int i, bool trap_known);
+void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(int x, int y, bool trapped = true);
 void mark_net_trapping(int x, int y);
 void monster_caught_in_net(monsters *mon, bolt &pbolt);

@@ -285,44 +285,64 @@ void itrap( struct bolt &pbolt, int trapped )
     return;
 }                               // end itrap()
 
-void handle_traps(char trt, int i, bool trap_known)
+void handle_traps(trap_type trt, int i, bool trap_known)
 {
     struct bolt beam;
+    
+    bool branchtype = false;
+    if (trap_category(trt) == DNGN_TRAP_MECHANICAL && trt != TRAP_NET
+        && trt != TRAP_BLADE)
+    {
+        if (you.where_are_you == BRANCH_ORCISH_MINES)
+        {
+            beam.name = "n orcish";
+            branchtype = true;
+        }
+        else if (you.where_are_you == BRANCH_ELVEN_HALLS)
+        {
+            beam.name = "n elven";
+            branchtype = true;
+        }
+        else
+            beam.name = "";
+    }
 
     switch (trt)
     {
     case TRAP_DART:
-        beam.name = " dart";
+        beam.name += " dart";
         beam.damage = dice_def( 1, 4 + (you.your_level / 2) );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_NEEDLE:
-        beam.name = " needle";
+        beam.name += " needle";
         beam.damage = dice_def( 1, 0 );
         dart_trap(trap_known, i, beam, true);
         break;
 
     case TRAP_ARROW:
-        beam.name = "n arrow";
+        beam.name += (branchtype? "" : "n");
+        beam.name += " arrow";
         beam.damage = dice_def( 1, 7 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_BOLT:
-        beam.name = " bolt";
+        beam.name += " bolt";
         beam.damage = dice_def( 1, 13 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_SPEAR:
-        beam.name = " spear";
+        beam.name += " spear";
         beam.damage = dice_def( 1, 10 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_AXE:
-        beam.name = "n axe";
+        beam.name += (branchtype? "" : "n");
+        beam.name += " axe";
         beam.damage = dice_def( 1, 15 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
@@ -359,7 +379,6 @@ void handle_traps(char trt, int i, bool trap_known)
         break;
 
     case TRAP_NET:
-
         if (trap_known && one_chance_in(3))
             mpr("A net swings high above you.");
         else
@@ -757,7 +776,6 @@ bool trap_item(object_class_type base_type, char sub_type,
                char beam_x, char beam_y)
 {
     item_def  item;
-
     item.base_type = base_type;
     item.sub_type = sub_type;
     item.plus = 0;
@@ -798,6 +816,15 @@ bool trap_item(object_class_type base_type, char sub_type,
         }
     }                           // end of if igrd != NON_ITEM
 
+    // give appropriate racial flag for Orcish Mines and Elven Halls
+    // should we ever allow properties of dungeon features, we could use that
+    if ( item.sub_type != MI_THROWING_NET )
+    {
+        if (you.where_are_you == BRANCH_ORCISH_MINES)
+            set_equip_race( item, ISFLAG_ORCISH );
+        else if (you.where_are_you == BRANCH_ELVEN_HALLS)
+            set_equip_race( item, ISFLAG_ELVEN );
+    }
     return (!copy_item_to_grid( item, beam_x, beam_y, 1 ));
 }                               // end trap_item()
 
