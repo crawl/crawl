@@ -130,6 +130,7 @@ struct bolt
     dice_def    damage;
     int         ench_power, hit;
     int         target_x, target_y;    // intended target
+    coord_def   pos;                   // actual position
     char        thrower;               // what kind of thing threw this?
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
@@ -144,6 +145,8 @@ struct bolt
     bool        target_first;          // targeting by direction 
     bool        aimed_at_spot;         // aimed at (x,y), should not cross
     std::string aux_source;            // source of KILL_MISC beams
+
+    bool        affects_nothing;       // should not hit monsters or features
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
@@ -170,6 +173,7 @@ public:
     bolt();
 
     void set_target(const dist &);
+    void setup_retrace();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;

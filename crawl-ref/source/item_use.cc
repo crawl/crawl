@@ -2243,8 +2243,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
 
     if ( returning )
+    {
+        // Fire beam in reverse
+        pbolt.setup_retrace();
+        viewwindow(true, false);
+        fire_beam(pbolt, NULL);
+        
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;
+    }
     else
         dec_inv_item_quantity( throw_2, 1 );
 
