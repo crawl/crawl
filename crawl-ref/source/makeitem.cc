@@ -2222,12 +2222,10 @@ int items( int allow_uniques,       // not just true-false,
         }
 
         // if not given a racial type, and special, give shiny/runed/etc desc.
-        if (get_equip_race(mitm[p]) == 0
-            && get_equip_desc(mitm[p]) == 0
-            && (((is_random_artefact(mitm[p]) 
-                        || get_armour_ego_type( mitm[p] ) != SPARM_NORMAL)
-                    && !one_chance_in(10))
-                || (mitm[p].plus != 0 && one_chance_in(3))))
+        if (get_equip_desc(mitm[p]) == 0
+            && (is_random_artefact(mitm[p]) 
+                || get_armour_ego_type( mitm[p] ) != SPARM_NORMAL
+                || (mitm[p].plus != 0 && !one_chance_in(3))))
         {
             switch (random2(3))
             {
@@ -2918,19 +2916,15 @@ void init_rod_mp(item_def &item)
 static bool weapon_is_visibly_special(const item_def &item)
 {
     const int brand = get_weapon_brand(item);
-    const bool visibly_branded =
-        brand != SPWPN_NORMAL && brand != SPWPN_DISTORTION;
+    const bool visibly_branded = brand != SPWPN_NORMAL;
 
-    return (((is_random_artefact(item) || visibly_branded)
-             && !one_chance_in(10))
+    return ((is_random_artefact(item) || visibly_branded)
             || ((item.plus != 0 || item.plus2 != 0)
-                && one_chance_in(3)
-                && brand != SPWPN_DISTORTION))
+                && !one_chance_in(3)))
         && item.sub_type != WPN_CLUB
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB
-        && get_equip_desc(item) == 0
-        && get_equip_race(item) == 0;
+        && get_equip_desc(item) == 0;
 }
 
 static void give_monster_item(
@@ -3959,10 +3953,15 @@ void give_armour(monsters *mon, int level)
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_TIAMAT:
-    case MONS_ORC_WIZARD:
     case MONS_WIZARD:
-    case MONS_BLORK_THE_ORC:
         item_race = MAKE_ITEM_NO_RACE;
+        mitm[bp].base_type = OBJ_ARMOUR;
+        mitm[bp].sub_type = ARM_ROBE;
+        break;
+
+    case MONS_ORC_WIZARD:
+    case MONS_BLORK_THE_ORC:
+        item_race = MAKE_ITEM_ORCISH;
         mitm[bp].base_type = OBJ_ARMOUR;
         mitm[bp].sub_type = ARM_ROBE;
         break;
