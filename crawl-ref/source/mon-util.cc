@@ -4606,7 +4606,7 @@ bool monsters::can_see(const actor *target) const
     // Assume we can see any monster within LOS radius. This is inaccurate,
     // but can be followed up with a tracer if essential. Trunk does full
     // (expensive) ray tracing up front to figure this out.
-    return (distance(x, y, tx, ty) <= LOS_RADIUS);
+    return (distance(x, y, tx, ty) <= LOS_RADIUS * LOS_RADIUS);
 }
 
 void monsters::mutate()
