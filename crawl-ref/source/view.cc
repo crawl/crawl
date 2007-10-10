@@ -521,7 +521,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
                       : DARKGREY;
     
     if (map_flags & MAP_DETECTED_ITEM)
-        tc = Options.detected_item_colour;
+        return real_colour(Options.detected_item_colour);
     
     if (map_flags & MAP_DETECTED_MONSTER)
     {
@@ -529,9 +529,9 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         return real_colour(tc);
     }
 
-    // XXX: [ds] If we've an important colour, override other feature
-    // colouring. Yes, this is hacky. Story of my life.
-    if (tc == LIGHTGREEN || tc == LIGHTMAGENTA)
+    // If this is an important travel square, don't allow the colour
+    // to be overridden.
+    if (is_waypoint(x, y) || travel_point_distance[x][y] == PD_EXCLUDED)
         return real_colour(tc);
 
     if (item_colour && is_envmap_item(x, y))

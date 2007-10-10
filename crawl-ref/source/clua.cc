@@ -1829,8 +1829,8 @@ static int crawl_regex_find(lua_State *ls)
 
 static int crawl_regex_gc(lua_State *ls)
 {
-    text_pattern **pattern = 
-            clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
+    text_pattern **pattern =
+        static_cast<text_pattern **>( lua_touserdata(ls, 1) );        
     if (pattern)
         delete *pattern;
     return (0);
@@ -1879,8 +1879,8 @@ static int crawl_messf_matches(lua_State *ls)
 
 static int crawl_messf_gc(lua_State *ls)
 {
-    message_filter **pattern = 
-            clua_get_userdata< message_filter* >(ls, REGEX_METATABLE);
+    message_filter **pattern =
+        static_cast<message_filter**>( lua_touserdata(ls, 1) );
     if (pattern)
         delete *pattern;
     return (0);
