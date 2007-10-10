@@ -526,7 +526,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
                       : DARKGREY;
     
     if (map_flags & MAP_DETECTED_ITEM)
-        tc = Options.detected_item_colour;
+        return real_colour(Options.detected_item_colour);
     
     if (map_flags & MAP_DETECTED_MONSTER)
     {
