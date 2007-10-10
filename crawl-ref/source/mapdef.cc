@@ -1895,6 +1895,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.fix_mons = strip_tag(s, "fix_mons");
         mspec.generate_awake = strip_tag(s, "generate_awake");
 
+        std::string colour = strip_tag_prefix(s, "col:");
+        if (!colour.empty())
+        {
+            mspec.colour = str_to_colour(colour, BLACK);
+            if (mspec.colour == BLACK)
+            {
+                error = make_stringf("bad monster colour \"%s\" in \"%s\"",
+                                     colour.c_str(), specs[i].c_str());
+                return (slot);
+            }
+        }
+
         trim_string(s);
 
         if (s == "8")

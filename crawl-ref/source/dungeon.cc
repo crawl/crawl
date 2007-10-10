@@ -3925,11 +3925,18 @@ bool dgn_place_monster(const mons_spec &mspec,
                 grd[vx][vy] = habitat;
         }
 
-        int not_used;
-        return (place_monster( not_used, mid, monster_level,
-                               m_generate_awake? BEH_WANDER : BEH_SLEEP,
-                               MHITNOT, true, vx, vy, false,
-                               PROX_ANYWHERE, mspec.monnum));
+        int mindex = NON_MONSTER;
+        const bool placed =
+            place_monster( mindex, mid, monster_level,
+                           m_generate_awake? BEH_WANDER : BEH_SLEEP,
+                           MHITNOT, true, vx, vy, false,
+                           PROX_ANYWHERE, mspec.monnum);
+        if (placed && mindex != -1 && mindex != NON_MONSTER
+            && mspec.colour != BLACK)
+        {
+            menv[mindex].colour = mspec.colour;
+        }
+        return (placed);
     }
     return (false);    
 }

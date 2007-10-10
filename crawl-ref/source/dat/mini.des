@@ -392,7 +392,7 @@ ENDMAP
 # Defended altar
 #
 NAME:    david_defended_altar
-DEPTH:   7-20, !Lair, !Swamp, !Shoal
+DEPTH:   D:7-20, Orc, Elf, Snake
 SHUFFLE: 1ID/2TC
 TAGS:    allow_dup
 MONS:    orc priest, deep elf priest / w:30 nothing

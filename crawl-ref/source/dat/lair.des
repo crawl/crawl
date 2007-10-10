@@ -448,6 +448,110 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 ##############################################################################
+#	Ice dragon lair with assorted imp pets
+#
+NAME:   ice_dragon_lair_bobbens
+DEPTH:  Lair:5-10
+TAGS:   no_monster_gen
+MONS:   ice dragon
+MONS:   w:9 white imp/w:1 nothing
+MONS:   white imp
+ITEM:   any good_item
+SUBST:  ! = $:3 d:2
+SUBST:  ' = w:15 x:9 c:3 .:1
+SUBST:  ? = x:3 c:1
+SUBST:  ; = x:2 .:3
+SUBST:  _ = %:1 .:3
+SUBST:  " = G:1 .:3
+MAP
+;;..;..;;;.;;.;;;   
+;;...wwww.;;..ww.;;   
+;..ww'''ww..wwwww;;;; 
+;.ww'???wwwwwwwww;....
+;.ww'?!??''''''w...ww.
+;..ww?!!??????'w..www.
+;;..w?!1?...??'w"www.;
+;;;.w?!!.2?3.?'wwww.; 
+;;;ww??w2.?W.''www.;; 
+;..www'??????'.wwww.;; 
+..wwww''????ww'''ww.;; 
+.wwwwwww...www'_'ww.;  
+..wwwww....www'''w.;;  
+.;www...V..wwwwww.;;  
+;;...........www.;;;  
+;;   ;;;....w..;  
+ENDMAP
+
+##############################################################################
+#	Dragon lair embedded in wall
+#
+NAME:   dragon_lair_wall_bobbens
+DEPTH:  Lair:5-10
+TAGS:   no_monster_gen mini_float
+: if you.absdepth() >= 18 then
+MONS:   dragon
+MONS:   w:5 firedrake/w:1 mottled dragon/w:2 nothing
+: else
+MONS:   mottled dragon/steam dragon
+MONS:   firedrake/w:15 nothing
+: end
+ITEM:   any good_item
+SUBST:  ! = $:3 d:2
+SUBST:  ' = l:15 x:9 c:3
+SUBST:  ? = x:3 c:1
+SUBST:  ; = x:3 c:1 .:4
+SUBST:  / = l:3 .:1
+SUBST:  _ = %:1 .:3
+MAP
+xxxxx?????????xxxxx
+xxx?????..//???xxxx
+xx???'.../?/!????xx
+x???;.2./???!!???xx
+x??;.1../;??!!???xx
+x??;.../''???!???xx
+x??;'.../'???????xx
+x???;/..???????xxxx
+x??????;.?????xxxxx
+xx?????.;?????xxxxx
+xx????./??????xxlxx
+xx????.;_????xxxlxx
+xx?./'.2///???x?xlx
+x?//.././///x??xl/x
+.._....//..//?x//..
+.././...G./..//....
+./........./.......
+ENDMAP
+
+##############################################################################
+#	Hibernating monster in a tunnel, can be pretty dangerous
+#
+NAME:   hibernation_bobbens
+DEPTH:  Lair:5-10
+TAGS:   allow_dup no_monster_gen no_item_gen mini_float
+MONS:   w:5 death drake/ice dragon/dragon/swamp dragon
+MONS:   swamp dragon/hydra/grey snake
+MONS:   swamp drake/w:20 spiny frog/w:20 komodo dragon/w:20 gila monster/w:20 black snake
+: if you.absdepth() >= 18 then
+SUBST:  M = 1:1 2:9 3:20
+: elseif you.absdepth() >= 13 then
+SUBST:  M = 2:1 3:4
+: else
+SUBST:  M = 3
+: end
+SUBST:  ; = x:3 .:1
+MAP
+xxxxxxxxxx
+xxx....xxx
+xx......xx
+xx..xx.Mxx
+xxx..xxxxx
+xxx;.;xxxx
+xxx;..xxxx
+xxxx..;xxx
+xxx....xxx
+ENDMAP
+
+##############################################################################
 # Branch ends: Shoal, Slime Pit, Snake Pit, Swamp
 # Note that the Shoals usually have a randomised end map; predrawn maps 
 # (which need not be encompassing) are sometimes used, though.
