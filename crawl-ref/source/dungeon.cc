@@ -5076,8 +5076,8 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
 
             do
             {
-                j = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
-                k = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
+                j = random_range(X_BOUND_1 + 4, X_BOUND_2 - 4);
+                k = random_range(Y_BOUND_1 + 4, Y_BOUND_2 - 4);
             }
             while (grd[j][k] != DNGN_ROCK_WALL
                     && grd[j + 1][k] != DNGN_ROCK_WALL);
@@ -5112,8 +5112,8 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
     {
         do
         {
-            j = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
-            k = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
+            j = random_range(X_BOUND_1 + 4, X_BOUND_2 - 4);
+            k = random_range(Y_BOUND_1 + 4, Y_BOUND_2 - 4);
         }
         while (grd[j][k] == DNGN_ROCK_WALL
                && grd[j - 1][k] == DNGN_ROCK_WALL
