@@ -2922,6 +2922,8 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 
 std::string melee_attack::mons_weapon_desc()
 {
+    if (!player_monster_visible(atk))
+        return("");
     if (weapon && attacker->id() != MONS_DANCING_WEAPON)
     {
         std::string result = "";
