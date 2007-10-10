@@ -27,6 +27,8 @@
 #include "itemprop.h"
 #include "stuff.h"
 
+#define KNOWN_PROPS_KEY "randart_known_props"
+
 /*
    The initial generation of a randart is very simple - it occurs
    in dungeon.cc and consists of giving it a few random things - plus & plus2
@@ -879,9 +881,28 @@ static long calc_seed( const item_def &item )
 }
 
 void randart_wpn_properties( const item_def &item, 
-                             randart_properties_t &proprt )
+                             randart_properties_t &proprt,
+                             randart_known_props_t &known)
 {
     ASSERT( is_random_artefact( item ) ); 
+    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
+    const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
+    ASSERT( _val.get_type() == SV_VEC );
+    const CrawlVector &known_vec = _val.get_vector();
+    ASSERT( known_vec.get_type()     == SV_BOOL );
+    ASSERT( known_vec.size()         == RA_PROPERTIES);
+    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
+
+    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+    {
+        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+            known[i] = (bool) true;
+    }
+    else
+    {
+        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+            known[i] = known_vec[i];
+    }
 
     const object_class_type aclass = item.base_type;
     const int atype  = item.sub_type;
@@ -1347,13 +1368,55 @@ void randart_wpn_properties( const item_def &item,
         proprt[RAP_CURSED] = 1;
 }
 
+void randart_wpn_properties( const item_def &item, 
+                             randart_properties_t &proprt )
+{
+    randart_known_props_t known;
+
+    randart_wpn_properties(item, proprt, known);
+}
+
+int randart_wpn_property( const item_def &item, int prop, bool &_known )
+{
+    randart_properties_t  proprt;
+    randart_known_props_t known;
+
+    randart_wpn_properties( item, proprt, known );
+
+    _known = known[prop];
+
+    return ( proprt[prop] );
+}
+
 int randart_wpn_property( const item_def &item, int prop )
 {
-    randart_properties_t proprt;
+    bool known;
 
-    randart_wpn_properties( item, proprt );
+    return randart_wpn_property( item, prop, known );
+}
 
-    return (proprt[prop]);
+void randart_wpn_learn_prop( item_def &item, int prop )
+{
+    ASSERT( is_random_artefact( item ) ); 
+    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
+    CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
+    ASSERT( _val.get_type() == SV_VEC );
+    CrawlVector &known_vec = _val.get_vector();
+    ASSERT( known_vec.get_type()     == SV_BOOL );
+    ASSERT( known_vec.size()         == RA_PROPERTIES);
+    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
+
+    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+        return;
+    else
+        known_vec[prop] = (bool) true;
+}
+
+bool randart_wpn_known_prop( const item_def &item, int prop )
+{
+    bool known;
+    randart_wpn_property( item, prop, known );
+    return known;
 }
 
 std::string randart_name( const item_def &item )
@@ -1732,8 +1795,30 @@ bool make_item_randart( item_def &item )
         return (false);
     }
 
-    item.flags |= ISFLAG_RANDART;
+    if (item.flags & ISFLAG_RANDART)
+    {
+        return (true);
+    }
+
+    if (item.flags & ISFLAG_UNRANDART)
+    {
+#if DEBUG
+        mprf(MSGCH_DIAGNOSTICS, "Trying to turn '%s' from an unrandart to"
+             "a randart.", item.name(DESC_PLAIN, false, true).c_str());
+#endif
+        return (false);
+    }
+
+    item.flags  |= ISFLAG_RANDART;
     item.special = (random_int() & RANDART_SEED_MASK);
+
+    ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
+
+    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
+    CrawlVector &known = item.props[KNOWN_PROPS_KEY];
+    known.set_max_size(RA_PROPERTIES);
+    for (vec_size i = 0; i < RA_PROPERTIES; i++)
+        known[i] = (bool) false;
 
     return (true);
 }

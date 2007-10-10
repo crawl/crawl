@@ -601,15 +601,14 @@ void unuse_randart(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
-    const bool ident = fully_identified(item);
-
     randart_properties_t proprt;
-    randart_wpn_properties( item, proprt );
+    randart_known_props_t known;
+    randart_wpn_properties( item, proprt, known );
 
     if (proprt[RAP_AC])
     {
         you.redraw_armour_class = 1;
-        if (!ident)
+        if (!known[RAP_AC])
         {
             mprf("You feel less %s.",
             proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
@@ -619,7 +618,7 @@ void unuse_randart(const item_def &item)
     if (proprt[RAP_EVASION])
     {
         you.redraw_evasion = 1;
-        if (!ident)
+        if (!known[RAP_EVASION])
         {
             mprf("You feel less %s.",
                  proprt[RAP_EVASION] > 0? "nimble" : "awkward");

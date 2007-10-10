@@ -152,7 +152,7 @@ void wield_effects(int item_wield_2, bool showMsgs);
  * called from: delay.cc item_use.cc it_use2.cc
  * *********************************************************************** */
 void use_randart( unsigned char item_wield_2 );
-void use_randart(const item_def &item);
+void use_randart(item_def &item);
 
 bool puton_item(int slot, bool prompt_finger = true);
 

@@ -94,16 +94,26 @@ bool does_unrandart_exist(int whun);
  * *********************************************************************** */
 int find_okay_unrandart(unsigned char aclass, unsigned char atype = OBJ_RANDOM);
 
-typedef FixedVector< int, RA_PROPERTIES > randart_properties_t;
+typedef FixedVector< int, RA_PROPERTIES >  randart_properties_t;
+typedef FixedVector< bool, RA_PROPERTIES > randart_known_props_t;
 
 /* ***********************************************************************
  * called from: describe - fight - it_use2 - item_use - player
  * *********************************************************************** */
 void randart_wpn_properties( const item_def &item, 
+                             randart_properties_t &proprt,
+                             randart_known_props_t &known );
+
+void randart_wpn_properties( const item_def &item, 
                              randart_properties_t &proprt );
+
+int randart_wpn_property( const item_def &item, int prop,
+                          bool &known );
 
 int randart_wpn_property( const item_def &item, int prop );
 
+void randart_wpn_learn_prop( item_def &item, int prop );
+bool randart_wpn_known_prop( item_def &item, int prop );
 
 /* ***********************************************************************
  * called from: dungeon

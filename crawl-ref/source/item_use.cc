@@ -3945,35 +3945,39 @@ void use_randart(unsigned char item_wield_2)
     use_randart( you.inv[ item_wield_2 ] );
 }
 
-void use_randart(const item_def &item)
+void use_randart(item_def &item)
 {
+#define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
+
     ASSERT( is_random_artefact( item ) );
 
     const bool alreadyknown = item_type_known(item);
     const bool dangerous = player_in_a_dangerous_place();
-    const bool ident = fully_identified(item);
 
-    randart_properties_t proprt;
-    randart_wpn_properties( item, proprt );
+    randart_properties_t  proprt;
+    randart_known_props_t known;
+    randart_wpn_properties( item, proprt, known );
 
-    // Give messages for stat changes, possibly only if !identified
+    // Only give property messages for previously unknown properties.
     if (proprt[RAP_AC])
     {
         you.redraw_armour_class = 1;
-        if (!ident)
+        if (!known[RAP_AC])
         {
             mprf("You feel %s.", proprt[RAP_AC] > 0?
                  "well-protected" : "more vulnerable");
+            randart_wpn_learn_prop(item, RAP_AC);
         }
     }
 
     if (proprt[RAP_EVASION])
     {
         you.redraw_evasion = 1;
-        if (!ident)
+        if (!known[RAP_EVASION])
         {
             mprf("You feel somewhat %s.", proprt[RAP_EVASION] > 0?
                  "nimbler" : "more awkward");
+            randart_wpn_learn_prop(item, RAP_EVASION);
         }
     }
 
@@ -3983,24 +3987,41 @@ void use_randart(const item_def &item)
     modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false, item );
     modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false, item );
 
+    int stat_props[3] = {RAP_STRENGTH, RAP_INTELLIGENCE, RAP_DEXTERITY};
+    for (int i = 0; i < 3; i++)
+        if (unknown_proprt(stat_props[i]))
+            randart_wpn_learn_prop(item, stat_props[i]);
 
     // For evokable stuff, check whether other equipped items yield
-    // the same ability. If not, give a message.
-    // Do NOT give all these messages if the randart is identified.
-    if (!ident)
+    // the same ability.  If not, and if the ability granted hasn't
+    // already been discovered, give a message.
+    if (unknown_proprt(RAP_LEVITATE)
+        && !items_give_ability(item.link, RAP_LEVITATE))
     {
-        if (proprt[RAP_LEVITATE] && !items_give_ability(item.link, RAP_LEVITATE))
-            mpr("You feel buoyant.");
-
-        if (proprt[RAP_INVISIBLE] && !you.duration[DUR_INVIS])
-            mpr("You become transparent for a moment.");
-
-        if (proprt[RAP_CAN_TELEPORT] && !items_give_ability(item.link, RAP_CAN_TELEPORT))
-            mpr("You feel slightly jumpy.");
-
-        if (proprt[RAP_BERSERK] && !items_give_ability(item.link, RAP_BERSERK))
-            mpr("You feel a brief urge to hack something to bits.");
+        mpr("You feel buoyant.");
+        randart_wpn_learn_prop(item, RAP_LEVITATE);
     }
+
+    if (unknown_proprt(RAP_INVISIBLE) && !you.duration[DUR_INVIS])
+    {
+        mpr("You become transparent for a moment.");
+        randart_wpn_learn_prop(item, RAP_INVISIBLE);
+    }
+
+    if (unknown_proprt(RAP_CAN_TELEPORT)
+        && !items_give_ability(item.link, RAP_CAN_TELEPORT))
+    {
+        mpr("You feel slightly jumpy.");
+        randart_wpn_learn_prop(item, RAP_CAN_TELEPORT);
+    }
+
+    if (unknown_proprt(RAP_BERSERK)
+        && !items_give_ability(item.link, RAP_BERSERK))
+    {
+        mpr("You feel a brief urge to hack something to bits.");
+        randart_wpn_learn_prop(item, RAP_BERSERK);
+    }
+
     if (proprt[RAP_NOISES])
         you.special_wield = SPWLD_NOISE;
 
@@ -4010,6 +4031,7 @@ void use_randart(const item_def &item)
         // there is a dangerous monster nearby...
         xom_is_stimulated(255);
     }
+#undef unknown_proprt
 }
 
 bool wearing_slot(int inv_slot)

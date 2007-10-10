@@ -162,162 +162,184 @@ void print_description( const std::string &d )
 //---------------------------------------------------------------
 static void randart_descrip( std::string &description, const item_def &item )
 {
+#define known_proprt(prop) (proprt[(prop)] && known[(prop)])
+
     unsigned int old_length = description.length();
 
-    randart_properties_t proprt;
-    randart_wpn_properties( item, proprt );
+    randart_properties_t  proprt;
+    randart_known_props_t known;
+    randart_wpn_properties( item, proprt, known );
 
-    if (proprt[ RAP_AC ])
+    if (known_proprt( RAP_AC ))
     {
         description += "$It affects your AC (";
         append_value(description, proprt[ RAP_AC ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_EVASION ])
+    if (known_proprt( RAP_EVASION ))
     {
         description += "$It affects your evasion (";
         append_value(description, proprt[ RAP_EVASION ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_STRENGTH ])
+    if (known_proprt( RAP_STRENGTH ))
     {
         description += "$It affects your strength (";
         append_value(description, proprt[ RAP_STRENGTH ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_INTELLIGENCE ])
+    if (known_proprt( RAP_INTELLIGENCE ))
     {
         description += "$It affects your intelligence (";
         append_value(description, proprt[ RAP_INTELLIGENCE ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_DEXTERITY ])
+    if (known_proprt( RAP_DEXTERITY ))
     {
         description += "$It affects your dexterity (";
         append_value(description, proprt[ RAP_DEXTERITY ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_ACCURACY ])
+    if (known_proprt( RAP_ACCURACY ))
     {
         description += "$It affects your accuracy (";
         append_value(description, proprt[ RAP_ACCURACY ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_DAMAGE ])
+    if (known_proprt( RAP_DAMAGE ))
     {
         description += "$It affects your damage-dealing abilities (";
         append_value(description, proprt[ RAP_DAMAGE ], true);
         description += ").";
     }
 
-    if (proprt[ RAP_FIRE ] < -2)
-        description += "$It makes you extremely vulnerable to fire. ";
-    else if (proprt[ RAP_FIRE ] == -2)
-        description += "$It makes you very vulnerable to fire. ";
-    else if (proprt[ RAP_FIRE ] == -1)
-        description += "$It makes you vulnerable to fire. ";
-    else if (proprt[ RAP_FIRE ] == 1)
-        description += "$It protects you from fire. ";
-    else if (proprt[ RAP_FIRE ] == 2)
-        description += "$It greatly protects you from fire. ";
-    else if (proprt[ RAP_FIRE ] > 2)
-        description += "$It renders you almost immune to fire. ";
+    if (known_proprt( RAP_FIRE ))
+    {
+        if (proprt[ RAP_FIRE ] < -2)
+            description += "$It makes you extremely vulnerable to fire. ";
+        else if (proprt[ RAP_FIRE ] == -2)
+            description += "$It makes you very vulnerable to fire. ";
+        else if (proprt[ RAP_FIRE ] == -1)
+            description += "$It makes you vulnerable to fire. ";
+        else if (proprt[ RAP_FIRE ] == 1)
+            description += "$It protects you from fire. ";
+        else if (proprt[ RAP_FIRE ] == 2)
+            description += "$It greatly protects you from fire. ";
+        else if (proprt[ RAP_FIRE ] > 2)
+            description += "$It renders you almost immune to fire. ";
+    }
 
-    if (proprt[ RAP_COLD ] < -2)
-        description += "$It makes you extremely vulnerable to cold. ";
-    else if (proprt[ RAP_COLD ] == -2)
-        description += "$It makes you very vulnerable to cold. ";
-    else if (proprt[ RAP_COLD ] == -1)
-        description += "$It makes you vulnerable to cold. ";
-    else if (proprt[ RAP_COLD ] == 1)
-        description += "$It protects you from cold. ";
-    else if (proprt[ RAP_COLD ] == 2)
-        description += "$It greatly protects you from cold. ";
-    else if (proprt[ RAP_COLD ] > 2)
-        description += "$It renders you almost immune to cold. ";
+    if (known_proprt( RAP_COLD ))
+    {
+        if (proprt[ RAP_COLD ] < -2)
+            description += "$It makes you extremely vulnerable to cold. ";
+        else if (proprt[ RAP_COLD ] == -2)
+            description += "$It makes you very vulnerable to cold. ";
+        else if (proprt[ RAP_COLD ] == -1)
+            description += "$It makes you vulnerable to cold. ";
+        else if (proprt[ RAP_COLD ] == 1)
+            description += "$It protects you from cold. ";
+        else if (proprt[ RAP_COLD ] == 2)
+            description += "$It greatly protects you from cold. ";
+        else if (proprt[ RAP_COLD ] > 2)
+            description += "$It renders you almost immune to cold. ";
+    }
 
-    if (proprt[ RAP_ELECTRICITY ])
+    if (known_proprt( RAP_ELECTRICITY ))
         description += "$It insulates you from electricity. ";
 
-    if (proprt[ RAP_POISON ])
+    if (known_proprt( RAP_POISON ))
         description += "$It protects you from poison. ";
 
-    if (proprt[ RAP_NEGATIVE_ENERGY ] == 1)
-        description += "$It partially protects you from negative energy. ";
-    else if (proprt[ RAP_NEGATIVE_ENERGY ] == 2)
-        description += "$It protects you from negative energy. ";
-    else if (proprt[ RAP_NEGATIVE_ENERGY ] > 2)
-        description += "$It renders you almost immune to negative energy. ";
+    if (known_proprt( RAP_NEGATIVE_ENERGY ))
+    {
+        if (proprt[ RAP_NEGATIVE_ENERGY ] == 1)
+            description += "$It partially protects you from negative energy. ";
+        else if (proprt[ RAP_NEGATIVE_ENERGY ] == 2)
+            description += "$It protects you from negative energy. ";
+        else if (proprt[ RAP_NEGATIVE_ENERGY ] > 2)
+            description += "$It renders you almost immune to "
+                "negative energy. ";
+    }
 
-    if (proprt[ RAP_MAGIC ])
+    if (known_proprt( RAP_MAGIC ))
         description += "$It increases your resistance to enchantments. ";
 
-    if (proprt[ RAP_STEALTH ] < 0)
+    if (known_proprt( RAP_STEALTH ))
     {
-        if (proprt[ RAP_STEALTH ] < -20)
-            description += "$It makes you much less stealthy. ";
-        else
-            description += "$It makes you less stealthy. ";
-    }
-    else if (proprt[ RAP_STEALTH ] > 0)
-    {
-        if (proprt[ RAP_STEALTH ] > 20)
-            description += "$It makes you much more stealthy. ";
-        else
-            description += "$It makes you more stealthy. ";
+        if (proprt[ RAP_STEALTH ] < 0)
+        {
+            if (proprt[ RAP_STEALTH ] < -20)
+                description += "$It makes you much less stealthy. ";
+            else
+                description += "$It makes you less stealthy. ";
+        }
+        else if (proprt[ RAP_STEALTH ] > 0)
+        {
+            if (proprt[ RAP_STEALTH ] > 20)
+                description += "$It makes you much more stealthy. ";
+            else
+                description += "$It makes you more stealthy. ";
+        }
     }
 
-    if (proprt[ RAP_EYESIGHT ])
+    if (known_proprt( RAP_EYESIGHT ))
         description += "$It enhances your eyesight. ";
 
-    if (proprt[ RAP_INVISIBLE ])
+    if (known_proprt( RAP_INVISIBLE ))
         description += "$It lets you turn invisible. ";
 
-    if (proprt[ RAP_LEVITATE ])
+    if (known_proprt( RAP_LEVITATE ))
         description += "$It lets you levitate. ";
 
-    if (proprt[ RAP_BLINK ])
+    if (known_proprt( RAP_BLINK ))
         description += "$It lets you blink. ";
 
-    if (proprt[ RAP_CAN_TELEPORT ])
+    if (known_proprt( RAP_CAN_TELEPORT ))
         description += "$It lets you teleport. ";
 
-    if (proprt[ RAP_BERSERK ])
+    if (known_proprt( RAP_BERSERK ))
         description += "$It lets you go berserk. ";
 
-    if (proprt[ RAP_MAPPING ])
+    if (known_proprt( RAP_MAPPING ))
         description += "$It lets you sense your surroundings. ";
 
-    if (proprt[ RAP_NOISES ])
+    if (known_proprt( RAP_NOISES ))
         description += "$It makes noises. ";
 
-    if (proprt[ RAP_PREVENT_SPELLCASTING ])
+    if (known_proprt( RAP_PREVENT_SPELLCASTING ))
         description += "$It prevents spellcasting. ";
 
-    if (proprt[ RAP_CAUSE_TELEPORTATION ])
+    if (known_proprt( RAP_CAUSE_TELEPORTATION ))
         description += "$It causes teleportation. ";
 
-    if (proprt[ RAP_PREVENT_TELEPORTATION ])
+    if (known_proprt( RAP_PREVENT_TELEPORTATION ))
         description += "$It prevents most forms of teleportation. ";
 
-    if (proprt[ RAP_ANGRY ])
+    if (known_proprt( RAP_ANGRY ))
         description += "$It makes you angry. ";
 
-    if (proprt[ RAP_METABOLISM ] >= 3)
-        description += "$It greatly speeds your metabolism. ";
-    else if (proprt[ RAP_METABOLISM ])
-        description += "$It speeds your metabolism. ";
+    if (known_proprt( RAP_METABOLISM ))
+    {
+        if (proprt[ RAP_METABOLISM ] >= 3)
+            description += "$It greatly speeds your metabolism. ";
+        else if (proprt[ RAP_METABOLISM ])
+            description += "$It speeds your metabolism. ";
+    }
 
-    if (proprt[ RAP_MUTAGENIC ] > 3)
-        description += "$It glows with mutagenic radiation.";
-    else if (proprt[ RAP_MUTAGENIC ])
-        description += "$It emits mutagenic radiation.";
+    if (known_proprt( RAP_MUTAGENIC ))
+    {
+        if (proprt[ RAP_MUTAGENIC ] > 3)
+            description += "$It glows with mutagenic radiation.";
+        else if (proprt[ RAP_MUTAGENIC ])
+            description += "$It emits mutagenic radiation.";
+    }
 
     if (old_length != description.length())
         description += "$";
@@ -331,6 +353,7 @@ static void randart_descrip( std::string &description, const item_def &item )
             description += "$";
         }
     }
+#undef known_proprt
 }
 
 static const char *trap_names[] =
@@ -1196,15 +1219,13 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
         if (is_random_artefact( item ))
         {
-            if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
-            {
-                unsigned int old_length = description.length();
-                randart_descrip( description, item );
+            unsigned int old_length = description.length();
+            randart_descrip( description, item );
 
-                if (description.length() == old_length)
-                    description += "$";
-            }
-            else if (item_type_known(item))
+            if (description.length() == old_length)
+                description += "$";
+            else if (!item_ident( item, ISFLAG_KNOW_PROPERTIES )
+                     && item_type_known(item))
             {
                 description += "$This weapon may have some hidden properties.$";
             }
@@ -1793,10 +1814,12 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
     if (is_random_artefact( item ))
     {
-        if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
-            randart_descrip( description, item );
-        else if (item_type_known(item))
+        randart_descrip( description, item );
+        if (!item_ident( item, ISFLAG_KNOW_PROPERTIES )
+            && item_type_known(item))
+        {
             description += "$This armour may have some hidden properties.$";
+        }
     }
     else 
     {
@@ -2753,9 +2776,9 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     // randart properties
     if (is_random_artefact( item ))
     {
-        if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
-            randart_descrip( description, item );
-        else if (item_type_known(item))
+        randart_descrip( description, item );
+        if (!item_ident( item, ISFLAG_KNOW_PROPERTIES )
+            && item_type_known(item))
         {
             if (item.sub_type >= AMU_RAGE)
                 description += "$This amulet may have hidden properties.$";
