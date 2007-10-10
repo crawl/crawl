@@ -2,6 +2,131 @@
 # crypt.des: Maps for the Crypt and Tomb.
 ##############################################################################
 
+##############################################################################
+# Crypt minivaults
+
+##############################################################################
+#	small crypt building
+NAME:   minicrypt_bobbens
+TAGS:   mini_float allow_dup
+DEPTH:  Crypt
+MONS:   necromancer
+MONS:   large zombie/small zombie/large skeleton/small skeleton
+MONS:   flying skull
+MAP
+  ccccccc  
+ cc2c2c2cc 
+ccc+c+c+ccc
+c2+.....+2c
+ccc..1..ccc
+c2+.3.3.+2c
+ccc.....ccc
+c2+.....+2c
+ccc.....ccc
+c2+.....+2c
+cccc+c+cccc
+ENDMAP
+
+############################################################################
+# death oozes - they're sort of like garden slugs
+NAME:   minigarden_bobbens
+TAGS:   allow_dup
+DEPTH:  Crypt
+MONS:   death ooze
+KFEAT:  f = .
+KMONS:  f = w:2 col:darkgrey plant/w:1 col:lightgrey plant
+SUBST:  p = f:2 .:1
+SUBST:  1 = 1:3 .:1
+MAP
+..........
+..p1pp.p..
+.pp.pp..p.
+.ppp.1.p..
+..p1pp.p..
+...pppp1..
+.p.pfffp..
+..ppfffp..
+..p.1p1p..
+.1.p..pp..
+..........
+ENDMAP
+
+############################################################################
+# Tomb entries
+
+############################################################################
+#	simple entrance
+NAME:   tomb_entry_simple_bobbens
+ORIENT: float
+TAGS:   tomb_entry no_monster_gen no_item_gen
+MONS:   guardian mummy
+MONS:   sphinx
+# crawl will rotate for the rest of possibilities
+: if crawl.coinflip() then
+KFEAT:  A = =
+KFEAT:  B = c
+: else
+KFEAT:  A = c
+KFEAT:  B = =
+: end
+MAP
+cccc.cccc
+c1.....1c
+c.ccccc.c
+c.c.2.c.c
+..c.O.c..
+c.c...c.c
+c.cABcc.c
+c1.....1c
+cccc.cccc
+ENDMAP
+
+############################################################################
+# forgotten tomb entrance
+NAME:   tomb_entry_forgotten_bobbens
+ORIENT: float
+TAGS:   tomb_entry no_monster_gen
+KFEAT:  f = .
+KMONS:  f = w:2 col:darkgrey plant/w:1 col:lightgrey plant
+SUBST:  p = f.
+MAP
+cccccccccc
+cfffffppp.
+cfOfffppp.
+cffffppp..
+cffpppp.. 
+cppppp..  
+cppp...   
+cpp..     
+c...      
+ENDMAP
+
+############################################################################
+# she sells tomb entry shells by the sea shore
+NAME:   tomb_entry_shell_bobbens
+TAGS:   tomb_entry no_monster_gen no_item_gen
+FLAGS:  no_rotate
+MONS:   guardian mummy
+MONS:   mummy priest
+MAP
+          c      
+        ccc..    
+      ccc.c1.    
+    ccc......    
+   cc.....c1.    
+  cc......cccc   
+ cc.......c..ccc 
+ c........c....cc
+cc1.......c.O2..c
+c.....1...c.....c
+c.....ccUcc.....c
+cc.....ccc1.....c
+ cc............cc
+  ccc........1cc 
+    ccc.....ccc  
+      ccccccc    
+ENDMAP
+
 ############################################################################
 #	churchlike map with customizeable monster sets
 #
@@ -218,6 +343,107 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
+##############################################################################
+# big garden full of undead - monster colour enabled for this
+NAME:   garden_of_evil_bobbens
+ORIENT: encompass
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
+FLAGS:  no_rotate
+PLACE:  Crypt:5
+KFEAT:  z = .
+KMONS:  z = skeletal warrior
+KFEAT:  I = .
+KMONS:  I = iron golem
+KFEAT:  C = .
+KMONS:  C = crystal golem
+KFEAT:  N = .
+KMONS:  N = necromancer
+KFEAT:  M = .
+KMONS:  M = large zombie/small zombie/large skeleton/small skeleton/ghoul/necrophage
+KFEAT:  H = .
+KMONS:  H = hell knight
+KFEAT:  D = .
+KMONS:  D = skeletal dragon
+KFEAT:  s = .
+KMONS:  s = flying skull
+KFEAT:  S = .
+KMONS:  S = sun demon
+KFEAT:  J = .
+KMONS:  J = death ooze
+KFEAT:  B = .
+KMONS:  B = ancient lich
+KFEAT:  A = .
+KMONS:  A = large abomination/w:5 small abomination
+KFEAT:  X = .
+KMONS:  X = dancing weapon
+KFEAT:  E = .
+KMONS:  E = vampire knight
+# death plants
+KFEAT:  F = .
+KMONS:  F = w:20 col:darkgrey plant/col:lightgrey plant
+SUBST:  p = .F
+# red walls
+COLOUR: r = red
+SUBST:  r = v
+# traps
+SUBST:  ; = .:6 ~:2 ^:1
+# gateway to pan
+KFEAT:  / = enter_pandemonium
+# water may be lava
+SUBST:  w : wl
+MAP
+xxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+xxxxxxxxxxxxv...v.zz.......zz..........v*$$$$$$$v........v
+xxxxxxxxxxxxv...vc..c..c..c..c..c..c...v|*$$$$$$=..H.....v
+xxxxxxxxxxxxv...........s............z.vvvvvvvvvv.A...E..v
+xxxxxxxxxxxxv..................s.....zNv........v...U....v
+xxxxxxxxxxxxv...........s..............+........+........v
+xxxxxxxxxxxxv...vc..c..c..c..c..c..c...v........v........v
+xxxxxxxxxxxxv...v.zz.......zz..........v........v........v
+xxxxxxxxxxxxvvv+vvvvvvvvvvvvvvvvvvvvvvvv........vvvvvvvvvv
+xxxxxxxxxxxxvc;;;ccccFFJpFFJ.FppFp.....v........vFFFFpp..v
+xxxxxxxxxxxxvcc+cc..cFF.ppFp.p..p.....pv........vFFFpp...v
+xxxxxxxxxxxxccc...H.c$FpJ.p...p.......pvvvz..zvvvpppp....v
+xxxxxxxxxxccc.....H.ccccpp.JpFFp.......pFvv++vvppp.......v
+xxxxxxxxccc....cccccc..ccccvvvvvvvvvv..pppp.pFFp.........v
+xxxxxxxcc....ccc....c.I...ccc.D.+...v...p....pp..........v
+xxxxxccc....cc......cz.z....ccc.vvv.+.....p......vvvvvvv.v
+xxxxcc....ccc..z.N..c...c.....cccM+.vp..........pvMvMvMv.v
+xxxcc.....c.....z...c...cccc....ccv+vpp...HHH..pFv+v+v+v.v
+xxcc................c...c|$ccc...ccMvFp.p.......pv..s..v.v
+xxc...............ccc+c.c*$..c+...ccvFp....N.....+...NUv.v
+xcccccccccccc+ccccc.z.ccc.E...cc...ccFpp....V....v..s..v.v
+cc....;;;;;;;..cc.......cc.X...ccMz.ccFpp.....p..v+v+v+v.v
+cI....;;;;;;;.cc....(....cc.....ccN..cFFpp.......vMvMvMv.v
+ccccc+cccccccccz...{.....zccccccccc+cccccp..p....vvvvvvv.v
+v|pc..........cc....[....cc.............c...........pFp..v
+vFFcc....D....ccc.......cc..ccc........cc.p.......p..p...v
+vpppcc.....cccc.ccc.z.ccc...cAc.c+c...cc......p..........v
+vJ.ppcc...cc......ccccc.N...c+c.cAc...c..p..........p...pv
+v.p.ppcc............c...........ccc..cc.....p..........ppv
+vpp.Jppcc.......c...c.ccc..H.......Ncc.......pp..ppppppppv
+v.Jpp.p.ccc.....c...c.cAc..c+c.....cc...p...pvvv+vvvFpFFFv
+vp.p.p.pppccc...c..;c.c+c..cAc...cccp.....pppv.....vFFFFFv
+v.pp......p.ccc.c..;+......ccc..ccp.....pppFFv.....vFFFFFv
+v.J...p.p.....cccc.;c.........cccp...p.vvvvvvv.....vvvvvvv
+v..p......p...p..cccc...N...ccc.p......v...;;;.D.D.;;;...v
+v..p..p...........pFc.....ccc.....p..p.vz..;vvvvvvvvv;..zv
+v..........p.......pc..cccc...pp......pv...;;;;...;;;;...v
+vp.....p............ccccFp...pFFp....ppvvvvvvvv.v.vvvvvvvv
+v........rrrrrrrr......ppp...pFTFp...pFvwwwwwww.w.wwwwwwwv
+v...rrrrrr$|r...r............pFFpJ...pFvwwwwww..w..wwwwwwv
+v..rr....r+rr...r..G..p.....ppppppp..ppvwwwwwv.....vwwwwwv
+v..r...S........rrrC......vvvv+vvvpp..pvwwwwvvv...vvvwwwwv
+v..r../.........+;+....p..v$$$$$*vp....vwwwvvU.....Uvvwwwv
+v..r...S........rrrC......v$**$$|vp...pvwwwv...GBG...vwwwv
+v..rr....r+rr...rFpG......v|||*||v...p.vwwwvv$$vvv$$vvwwwv
+v...rrrrrr$|r...rp...p....vvvvvvvv..J..vwwwwvv$*|*$vvwwwwv
+v.....ppFrrrrrrrrp..................p..vwwwwwvv|||vvwwwwwv
+vp.....ppp........ppppp...p.......p....vwwwwwwvvvvvwwwwwwv
+vpp..............ppFFFppp.....ppp......vwwwwwwwwvwwwwwwwwv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwWwwwwwwwv
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvv
+ENDMAP
 
 ##############################################################################
 # The three Tomb levels: these should generally be of a confusing layout.

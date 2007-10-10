@@ -487,7 +487,7 @@ ENDMAP
 #
 NAME:   dragon_lair_wall_bobbens
 DEPTH:  Lair:5-10
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
 MONS:   dragon
 MONS:   w:5 firedrake/w:1 mottled dragon/w:2 nothing
@@ -526,8 +526,8 @@ ENDMAP
 #	Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
-DEPTH:  Lair:4-10
-TAGS:   allow_dup no_monster_gen no_item_gen
+DEPTH:  Lair:5-10
+TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake/ice dragon/dragon/swamp dragon
 MONS:   swamp dragon/hydra/grey snake
 MONS:   swamp drake/w:20 spiny frog/w:20 komodo dragon/w:20 gila monster/w:20 black snake
