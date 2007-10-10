@@ -4770,7 +4770,7 @@ bool monsters::can_see(const actor *target) const
     int       tx  = mon->x;
     int       ty  = mon->y;
 
-    if (distance(x, y, tx, ty) > LOS_RADIUS)
+    if (distance(x, y, tx, ty) > LOS_RADIUS * LOS_RADIUS)
         return false;
 
     // Ignoring clouds for now.
