@@ -522,15 +522,16 @@ void destroy_item( int dest )
 
 static void handle_gone_item(const item_def &item)
 {
-    if (item.base_type == OBJ_ORBS)
+    if (you.level_type == LEVEL_ABYSS
+        && place_type(item.orig_place) == LEVEL_ABYSS
+        && !(item.flags & ISFLAG_BEEN_IN_INV))
     {   
-        set_unique_item_status(OBJ_ORBS, item.sub_type,
-                                UNIQ_LOST_IN_ABYSS);
-    }
-    else if (is_fixed_artefact(item))
-    {   
-        set_unique_item_status(OBJ_WEAPONS, item.special, 
-                                UNIQ_LOST_IN_ABYSS);
+        if (item.base_type == OBJ_ORBS)
+            set_unique_item_status(OBJ_ORBS, item.sub_type, 
+                                   UNIQ_LOST_IN_ABYSS);
+        else if (is_fixed_artefact(item))
+            set_unique_item_status(OBJ_WEAPONS, item.special, 
+                                   UNIQ_LOST_IN_ABYSS);
     }
 
     if (is_rune(item))
