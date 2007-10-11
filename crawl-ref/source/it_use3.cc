@@ -685,12 +685,13 @@ bool evoke_wielded( void )
 
 static bool efreet_flask(void)
 {
-    const beh_type behaviour = ((you.skills[SK_EVOCATIONS] > random2(20)) 
-                                ? BEH_FRIENDLY : BEH_HOSTILE);
+    const beh_type behaviour =
+        ((you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20)) 
+         ? BEH_FRIENDLY : BEH_HOSTILE);
 
     mpr("You open the flask...");
 
-    const int efreet = create_monster( MONS_EFREET, 5, behaviour, 
+    const int efreet = create_monster( MONS_EFREET, 0, behaviour, 
                                        you.x_pos, you.y_pos, MHITYOU, 250,
                                        false, false, true );
     if (efreet != -1)
