@@ -2411,27 +2411,24 @@ int items( int allow_uniques,       // not just true-false,
             case 4:
                 // enhancements
                 if (coinflip())
-                    mitm[p].sub_type = POT_SPEED;               //  6.122%
+                    mitm[p].sub_type = POT_SPEED;
                 else
-                    mitm[p].sub_type = POT_MIGHT;               //  6.122%
+                    mitm[p].sub_type = POT_MIGHT;
 
                 if (one_chance_in(10))
-                    mitm[p].sub_type = POT_BERSERK_RAGE;        //  1.360%
+                    mitm[p].sub_type = POT_BERSERK_RAGE;
 
                 if (one_chance_in(5))
-                    mitm[p].sub_type = POT_INVISIBILITY;        //  3.401%
+                    mitm[p].sub_type = POT_INVISIBILITY;
 
                 if (one_chance_in(6))                           
-                    mitm[p].sub_type = POT_LEVITATION;          //  3.401%
+                    mitm[p].sub_type = POT_LEVITATION;
 
                 if (one_chance_in(8))
                     mitm[p].sub_type = POT_RESISTANCE;
 
                 if (one_chance_in(30))                         
-                    mitm[p].sub_type = POT_PORRIDGE;            //  0.704%
-
-                if (one_chance_in(20))
-                    mitm[p].sub_type = POT_BLOOD;               //  1.111%
+                    mitm[p].sub_type = POT_PORRIDGE;
                 break;
 
             case 5:
