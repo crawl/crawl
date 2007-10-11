@@ -1395,6 +1395,25 @@ int randart_wpn_property( const item_def &item, int prop )
     return randart_wpn_property( item, prop, known );
 }
 
+int randart_wpn_num_props( const item_def &item )
+{
+    randart_properties_t proprt;
+    randart_wpn_properties( item, proprt );
+
+    return randart_wpn_num_props( proprt );
+}
+
+int randart_wpn_num_props( const randart_properties_t &proprt )
+{
+    int num;
+
+    for (int i = 0; i < RAP_NUM_PROPERTIES; i++)
+        if (proprt[i] != 0)
+            num++;
+
+    return num;
+}
+
 void randart_wpn_learn_prop( item_def &item, int prop )
 {
     ASSERT( is_random_artefact( item ) ); 
@@ -1786,6 +1805,212 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
     return (true);
 }
 
+static bool randart_is_redundant( const item_def &item,
+                                  randart_properties_t &proprt )
+{
+    if (item.base_type != OBJ_JEWELLERY)
+        return false;
+
+    randart_prop_type provides  = RAP_NUM_PROPERTIES;
+    randart_prop_type provides2 = RAP_NUM_PROPERTIES;
+
+    switch (item.sub_type)
+    {
+    case RING_SUSTAIN_ABILITIES:
+    case RING_SUSTENANCE:
+    case RING_REGENERATION:
+    case RING_TELEPORT_CONTROL:
+    case RING_WIZARDRY:
+    case RING_MAGICAL_POWER:
+        break;
+
+    case RING_PROTECTION:
+        provides = RAP_AC;
+        break;
+
+    case RING_FIRE:
+    case RING_PROTECTION_FROM_FIRE:
+        provides = RAP_FIRE;
+        break;
+
+    case RING_POISON_RESISTANCE:
+        provides = RAP_POISON;
+        break;
+
+    case RING_ICE:
+    case RING_PROTECTION_FROM_COLD:
+        provides = RAP_COLD;
+        break;
+
+    case RING_STRENGTH:
+        provides = RAP_STRENGTH;
+        break;
+
+    case RING_SLAYING:
+        provides  = RAP_DAMAGE;
+        provides2 = RAP_ACCURACY;
+        break;
+
+    case RING_SEE_INVISIBLE:
+        provides = RAP_ACCURACY;
+        break;
+
+    case RING_INVISIBILITY:
+        provides = RAP_INVISIBLE;
+        break;
+
+    case RING_HUNGER:
+        provides = RAP_METABOLISM;
+        break;
+
+    case RING_TELEPORTATION:
+        provides = RAP_CAN_TELEPORT;
+        provides = RAP_CAUSE_TELEPORTATION;
+        break;
+
+    case RING_EVASION:
+        provides = RAP_EVASION;
+        break;
+
+    case RING_DEXTERITY:
+        provides = RAP_DEXTERITY;
+        break;
+
+    case RING_INTELLIGENCE:
+        provides = RAP_INTELLIGENCE;
+        break;
+
+    case RING_LEVITATION:
+        provides = RAP_LEVITATE;
+        break;
+
+    case RING_LIFE_PROTECTION:
+        provides = RAP_AC;
+        break;
+
+    case RING_PROTECTION_FROM_MAGIC:
+        provides = RAP_MAGIC;
+        break;
+
+    case AMU_RAGE:
+        provides = RAP_BERSERK;
+        break;
+
+    case AMU_INACCURACY:
+        provides = RAP_ACCURACY;
+        break;
+
+    case AMU_RESIST_SLOW:
+    case AMU_CLARITY:
+    case AMU_WARDING:
+    case AMU_RESIST_CORROSION:
+    case AMU_THE_GOURMAND:
+    case AMU_CONSERVATION:
+    case AMU_CONTROLLED_FLIGHT:
+    case AMU_RESIST_MUTATION:
+        break;
+    }
+
+    if (provides == RAP_NUM_PROPERTIES)
+        return false;
+
+    if (proprt[provides] != 0)
+        return true;
+
+    if (provides2 == RAP_NUM_PROPERTIES)
+        return false;
+
+    if (proprt[provides2] != 0)
+        return true;
+    
+    return false;
+}
+
+static bool randart_is_conflicting( const item_def &item,
+                                    randart_properties_t &proprt )
+{
+    if (item.base_type != OBJ_JEWELLERY)
+        return false;
+
+    randart_prop_type conflicts = RAP_NUM_PROPERTIES;
+
+    switch (item.sub_type)
+    {
+    case RING_REGENERATION:
+    case RING_PROTECTION:
+    case RING_PROTECTION_FROM_FIRE:
+    case RING_POISON_RESISTANCE:
+    case RING_PROTECTION_FROM_COLD:
+    case RING_STRENGTH:
+    case RING_SLAYING:
+    case RING_SEE_INVISIBLE:
+    case RING_INVISIBILITY:
+    case RING_HUNGER:
+    case RING_EVASION:
+    case RING_SUSTAIN_ABILITIES:
+    case RING_DEXTERITY:
+    case RING_INTELLIGENCE:
+    case RING_LEVITATION:
+    case RING_LIFE_PROTECTION:
+    case RING_PROTECTION_FROM_MAGIC:
+        break;
+
+    case RING_SUSTENANCE:
+        conflicts = RAP_METABOLISM;
+        break;
+
+    case RING_FIRE:
+    case RING_ICE:
+    case RING_WIZARDRY:
+    case RING_MAGICAL_POWER:
+        conflicts = RAP_PREVENT_SPELLCASTING;
+        break;
+
+    case RING_TELEPORTATION:
+    case RING_TELEPORT_CONTROL:
+        conflicts = RAP_PREVENT_TELEPORTATION;
+        break;
+
+    case AMU_RESIST_MUTATION:
+        conflicts = RAP_MUTAGENIC;
+        break;
+
+    case AMU_RAGE:
+        conflicts = RAP_STEALTH;
+        break;
+
+    case AMU_RESIST_SLOW:
+    case AMU_CLARITY:
+    case AMU_WARDING:
+    case AMU_RESIST_CORROSION:
+    case AMU_THE_GOURMAND:
+    case AMU_CONSERVATION:
+    case AMU_CONTROLLED_FLIGHT:
+    case AMU_INACCURACY:
+        break;
+    }        
+
+    if (conflicts == RAP_NUM_PROPERTIES)
+        return false;
+
+    if (proprt[conflicts] != 0)
+        return true;
+
+    return false;
+}
+
+static bool randart_is_bad( const item_def &item )
+{
+    randart_properties_t proprt;
+    randart_wpn_properties( item, proprt );
+
+    if (randart_wpn_num_props( proprt ) == 0)
+        return true;
+
+    return ( randart_is_redundant( item, proprt ) || 
+             randart_is_conflicting( item, proprt ) );
+}
+
 bool make_item_randart( item_def &item )
 {
     if (item.base_type != OBJ_WEAPONS 
@@ -1796,29 +2021,23 @@ bool make_item_randart( item_def &item )
     }
 
     if (item.flags & ISFLAG_RANDART)
-    {
         return (true);
-    }
 
     if (item.flags & ISFLAG_UNRANDART)
-    {
-#if DEBUG
-        mprf(MSGCH_DIAGNOSTICS, "Trying to turn '%s' from an unrandart to"
-             "a randart.", item.name(DESC_PLAIN, false, true).c_str());
-#endif
         return (false);
-    }
-
-    item.flags  |= ISFLAG_RANDART;
-    item.special = (random_int() & RANDART_SEED_MASK);
 
     ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
-
     item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
     CrawlVector &known = item.props[KNOWN_PROPS_KEY];
     known.set_max_size(RA_PROPERTIES);
     for (vec_size i = 0; i < RA_PROPERTIES; i++)
         known[i] = (bool) false;
+
+    item.flags |= ISFLAG_RANDART;
+    do
+    {
+        item.special = (random_int() & RANDART_SEED_MASK);
+    } while (randart_is_bad( item ));
 
     return (true);
 }
@@ -1826,6 +2045,15 @@ bool make_item_randart( item_def &item )
 // void make_item_unrandart( int x, int ura_item )
 bool make_item_unrandart( item_def &item, int unrand_index )
 {
+    if (!item.props.exists( KNOWN_PROPS_KEY ))
+    {
+        item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
+        CrawlVector &known = item.props[KNOWN_PROPS_KEY];
+        known.set_max_size(RA_PROPERTIES);
+        for (vec_size i = 0; i < RA_PROPERTIES; i++)
+            known[i] = (bool) false;
+    }
+
     item.base_type = unranddata[unrand_index].ura_cl;
     item.sub_type  = unranddata[unrand_index].ura_ty;
     item.plus      = unranddata[unrand_index].ura_pl;
