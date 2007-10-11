@@ -295,7 +295,7 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_BANISH,      "Banish",
       4, 0, 200, generic_cost::range(3, 4), ABFLAG_NONE },
     { ABIL_LUGONU_CORRUPT,     "Corrupt",
-      7, 5, 500, generic_cost::fixed(10), ABFLAG_NONE },
+      7, 5, 500, generic_cost::range(10, 14), ABFLAG_NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), ABFLAG_NONE },
 

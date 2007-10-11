@@ -2193,6 +2193,8 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     // init tracer variables
     pbolt.foe_count = pbolt.fr_count = 0;
     pbolt.foe_power = pbolt.fr_power = 0;
+    pbolt.fr_helped = pbolt.fr_hurt  = 0;
+    pbolt.foe_helped = pbolt.foe_hurt = 0;
     pbolt.foe_ratio = 80;        // default - see mons_should_fire()
 
     // foe ratio for summon gtr. demons & undead -- they may be
@@ -4770,7 +4772,8 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                is_thrown(false), target_first(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), obvious_effect(false),
                effect_known(true), fr_count(0), foe_count(0), fr_power(0),
-               foe_power(0), is_tracer(false), aimed_at_feet(false),
+               foe_power(0), fr_hurt(0), foe_hurt(0), fr_helped(0),
+               foe_helped(0), is_tracer(false), aimed_at_feet(false),
                msg_generated(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false)
