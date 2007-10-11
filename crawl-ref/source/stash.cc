@@ -24,6 +24,7 @@
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
+#include "notes.h"
 #include "overmap.h"
 #include "place.h"
 #include "shopping.h"
@@ -563,6 +564,7 @@ void Stash::write(std::ostream &os,
                   bool identify) 
     const
 {
+    activate_notes(false);
     if (!enabled || (items.size() == 0 && verified)) return;
     os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
        << (place.length()? ", " + place : "")
@@ -616,6 +618,7 @@ void Stash::write(std::ostream &os,
 
     if (items.size() <= 1 && !verified)
         os << "  (unseen)" << std::endl;
+    activate_notes(true);
 }
 
 void Stash::save(FILE *file) const
@@ -871,6 +874,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
 void ShopInfo::write(std::ostream &os, bool identify) const
 {
+    activate_notes(false);
     os << "[Shop] " << name << std::endl;
     if (items.size() > 0)
     {
@@ -891,6 +895,7 @@ void ShopInfo::write(std::ostream &os, bool identify) const
         os << "  (Shop is empty)" << std::endl;
     else
         os << "  (Shop contents are unknown)" << std::endl;
+    activate_notes(true);
 }
 
 void ShopInfo::save(FILE *file) const
