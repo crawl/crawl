@@ -47,12 +47,13 @@ enum randart_prop_type
     RAP_DAMAGE,
     RAP_CURSED,
     RAP_STEALTH,
+    RAP_MAGICAL_POWER,                 //   30
     RAP_NUM_PROPERTIES
 };
 
 // used in files.cc, newgame.cc, randart.cc {dlb}
 #define NO_UNRANDARTS 53
-#define RA_PROPERTIES 30
+#define RA_PROPERTIES RAP_NUM_PROPERTIES
 
 // Reserving the upper bits for later expansion/versioning.
 #define RANDART_SEED_MASK  0x00ffffff
@@ -100,6 +101,10 @@ typedef FixedVector< bool, RA_PROPERTIES > randart_known_props_t;
 /* ***********************************************************************
  * called from: describe - fight - it_use2 - item_use - player
  * *********************************************************************** */
+void randart_desc_properties( const item_def &item, 
+                              randart_properties_t &proprt,
+                              randart_known_props_t &known );
+
 void randart_wpn_properties( const item_def &item, 
                              randart_properties_t &proprt,
                              randart_known_props_t &known );

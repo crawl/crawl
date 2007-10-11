@@ -426,6 +426,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             // inc_max_mp(13);
             calc_mp();
             set_ident_flags( you.inv[item_wield_2], ISFLAG_EQ_WEAPON_MASK );
+            mpr("You fell your mana capacity increase.");
         }
         else
         {
@@ -2281,13 +2282,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
 void jewellery_wear_effects(item_def &item)
 {
-    item_type_id_state_type ident = ID_TRIED_TYPE;
+    item_type_id_state_type ident        = ID_TRIED_TYPE;
+    randart_prop_type       fake_rap     = RAP_NUM_PROPERTIES;
+    bool                    learn_pluses = false;
 
     // Randart jewellery shouldn't auto-ID just because the 
     // base type is known. Somehow the player should still 
     // be told, preferably by message. (jpeg)
     const bool artefact     = is_random_artefact( item );
-    const bool identified   = fully_identified( item );
+    const bool known_pluses = item_ident( item, ISFLAG_KNOW_PLUSES );
     const bool known_cursed = item_known_cursed( item );
     const bool known_bad    = item_type_known( item )
         && (item_value( item ) <= 2);
@@ -2317,11 +2320,12 @@ void jewellery_wear_effects(item_def &item)
         {
             if (!artefact)
                 ident = ID_KNOWN_TYPE;
-            else if (!identified)
+            else if (!known_pluses)
             {
                 mprf("You feel %s.", item.plus > 0?
                      "well-protected" : "more vulnerable");
             }
+            learn_pluses = true;
         }
         break;
 
@@ -2329,7 +2333,9 @@ void jewellery_wear_effects(item_def &item)
         if (!you.duration[DUR_INVIS])
         {
             mpr("You become transparent for a moment.");
-            if (!artefact)
+            if (artefact)
+                fake_rap = RAP_INVISIBLE;
+            else
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2340,8 +2346,9 @@ void jewellery_wear_effects(item_def &item)
         {
             if (!artefact)
                 ident = ID_KNOWN_TYPE;
-            else if (!identified)
+            else if (!known_pluses)
                 mprf("You feel %s.", item.plus > 0? "nimbler" : "more awkward");
+            learn_pluses = true;
         }
         break;
 
@@ -2349,23 +2356,29 @@ void jewellery_wear_effects(item_def &item)
         modify_stat(STAT_STRENGTH, item.plus, !artefact, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
+        learn_pluses = true;
         break;
 
     case RING_DEXTERITY:
         modify_stat(STAT_DEXTERITY, item.plus, !artefact, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
+        learn_pluses = true;
         break;
 
     case RING_INTELLIGENCE:
         modify_stat(STAT_INTELLIGENCE, item.plus, !artefact, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
+        learn_pluses = true;
         break;
 
     case RING_MAGICAL_POWER:
+        mpr("You feel you mana capacity increase.");
         calc_mp();
-        if (!artefact)
+        if (artefact)
+            fake_rap = RAP_MAGICAL_POWER;
+        else
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -2373,7 +2386,9 @@ void jewellery_wear_effects(item_def &item)
         if (!scan_randarts( RAP_LEVITATE ))
         {
             mpr("You feel buoyant.");
-            if (!artefact)
+            if (artefact)
+                fake_rap = RAP_LEVITATE;
+            else
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2382,7 +2397,9 @@ void jewellery_wear_effects(item_def &item)
         if (!scan_randarts( RAP_CAN_TELEPORT ))
         {
             mpr("You feel slightly jumpy.");
-            if (!artefact)
+            if (artefact)
+                fake_rap = RAP_CAUSE_TELEPORTATION;
+            else
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2391,7 +2408,9 @@ void jewellery_wear_effects(item_def &item)
         if (!scan_randarts( RAP_BERSERK ))
         {
             mpr("You feel a brief urge to hack something to bits.");
-            if (!artefact)
+            if (artefact)
+                fake_rap = RAP_BERSERK;
+            else
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2404,12 +2423,22 @@ void jewellery_wear_effects(item_def &item)
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known
     if (artefact)
+    {
         use_randart(item);
+
+        if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
+            set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+
+        if (fake_rap != RAP_NUM_PROPERTIES)
+            randart_wpn_learn_prop( item, fake_rap );
+    }
     else
+    {
         set_ident_type( item.base_type, item.sub_type, ident );
 
-    if (ident == ID_KNOWN_TYPE)
-        set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
+        if (ident == ID_KNOWN_TYPE)
+            set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
+    }
 
     if (item_cursed( item ))
     {
@@ -2685,6 +2714,7 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_MAGICAL_POWER:
+        mpr("You feel you mana capacity decrease.");
         // dec_max_mp(9);
         break;
 
@@ -3978,6 +4008,17 @@ void use_randart(item_def &item)
             mprf("You feel somewhat %s.", proprt[RAP_EVASION] > 0?
                  "nimbler" : "more awkward");
             randart_wpn_learn_prop(item, RAP_EVASION);
+        }
+    }
+
+    if (proprt[RAP_MAGICAL_POWER])
+    {
+        you.redraw_magic_points = 1;
+        if (!known[RAP_MAGICAL_POWER])
+        {
+            mprf("You feel you mana capacity %s.", proprt[RAP_EVASION] > 0?
+                 "increase" : "decrease");
+            randart_wpn_learn_prop(item, RAP_MAGICAL_POWER);
         }
     }
 

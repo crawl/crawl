@@ -493,7 +493,10 @@ void unwield_item(bool showMsgs)
     }
 
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
+    {
         calc_mp();
+        mpr("You fell your mana capacity decrease.");
+    }
 
     return;
 }                               // end unwield_item()
@@ -622,6 +625,16 @@ void unuse_randart(const item_def &item)
         {
             mprf("You feel less %s.",
                  proprt[RAP_EVASION] > 0? "nimble" : "awkward");
+        }
+    }
+
+    if (proprt[RAP_MAGICAL_POWER])
+    {
+        you.redraw_magic_points = 1;
+        if (!known[RAP_MAGICAL_POWER])
+        {
+            mprf("You feel you mana capacity %s.", proprt[RAP_EVASION] > 0?
+                 "decrease" : "increase");
         }
     }
 

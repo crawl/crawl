@@ -2223,8 +2223,9 @@ int player_magical_power( void )
 {
     int ret = 0;
 
-    ret += 13 * player_equip( EQ_STAFF, STAFF_POWER );
-    ret +=  9 * player_equip( EQ_RINGS, RING_MAGICAL_POWER );
+    ret += 13 * player_equip(  EQ_STAFF, STAFF_POWER );
+    ret +=  9 * player_equip(  EQ_RINGS, RING_MAGICAL_POWER );
+    ret +=      scan_randarts( RAP_MAGICAL_POWER );
     
     return (ret);
 }

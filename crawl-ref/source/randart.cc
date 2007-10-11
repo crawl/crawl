@@ -880,6 +880,49 @@ static long calc_seed( const item_def &item )
     return (item.special & RANDART_SEED_MASK);
 }
 
+void randart_desc_properties( const item_def &item, 
+                              randart_properties_t &proprt,
+                              randart_known_props_t &known )
+{
+    randart_wpn_properties( item, proprt, known);
+
+    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+        return;
+
+    if (item.base_type != OBJ_JEWELLERY)
+        return;
+
+    randart_prop_type fake_rap  = RAP_NUM_PROPERTIES;
+    int               fake_plus = 1;
+
+    switch (item.sub_type)
+    {
+    case RING_INVISIBILITY:
+        fake_rap = RAP_INVISIBLE;
+        break;
+
+    case RING_TELEPORTATION:
+        fake_rap = RAP_CAUSE_TELEPORTATION;
+        break;
+
+    case RING_MAGICAL_POWER:
+        fake_rap  = RAP_MAGICAL_POWER;
+        fake_plus = 9;
+        break;
+
+    case RING_LEVITATION:
+        fake_rap = RAP_LEVITATE;
+        break;
+
+    case AMU_RAGE:
+        fake_rap = RAP_BERSERK;
+        break;
+    }    
+
+    if (fake_rap != RAP_NUM_PROPERTIES)
+        proprt[fake_rap] += fake_plus;
+}
+
 void randart_wpn_properties( const item_def &item, 
                              randart_properties_t &proprt,
                              randart_known_props_t &known)
@@ -1405,7 +1448,7 @@ int randart_wpn_num_props( const item_def &item )
 
 int randart_wpn_num_props( const randart_properties_t &proprt )
 {
-    int num;
+    int num = 0;
 
     for (int i = 0; i < RAP_NUM_PROPERTIES; i++)
         if (proprt[i] != 0)
@@ -1816,14 +1859,6 @@ static bool randart_is_redundant( const item_def &item,
 
     switch (item.sub_type)
     {
-    case RING_SUSTAIN_ABILITIES:
-    case RING_SUSTENANCE:
-    case RING_REGENERATION:
-    case RING_TELEPORT_CONTROL:
-    case RING_WIZARDRY:
-    case RING_MAGICAL_POWER:
-        break;
-
     case RING_PROTECTION:
         provides = RAP_AC;
         break;
@@ -1880,6 +1915,10 @@ static bool randart_is_redundant( const item_def &item,
         provides = RAP_INTELLIGENCE;
         break;
 
+    case RING_MAGICAL_POWER:
+        provides = RAP_MAGICAL_POWER;
+        break;
+
     case RING_LEVITATION:
         provides = RAP_LEVITATE;
         break;
@@ -1898,16 +1937,6 @@ static bool randart_is_redundant( const item_def &item,
 
     case AMU_INACCURACY:
         provides = RAP_ACCURACY;
-        break;
-
-    case AMU_RESIST_SLOW:
-    case AMU_CLARITY:
-    case AMU_WARDING:
-    case AMU_RESIST_CORROSION:
-    case AMU_THE_GOURMAND:
-    case AMU_CONSERVATION:
-    case AMU_CONTROLLED_FLIGHT:
-    case AMU_RESIST_MUTATION:
         break;
     }
 
@@ -1936,25 +1965,6 @@ static bool randart_is_conflicting( const item_def &item,
 
     switch (item.sub_type)
     {
-    case RING_REGENERATION:
-    case RING_PROTECTION:
-    case RING_PROTECTION_FROM_FIRE:
-    case RING_POISON_RESISTANCE:
-    case RING_PROTECTION_FROM_COLD:
-    case RING_STRENGTH:
-    case RING_SLAYING:
-    case RING_SEE_INVISIBLE:
-    case RING_INVISIBILITY:
-    case RING_HUNGER:
-    case RING_EVASION:
-    case RING_SUSTAIN_ABILITIES:
-    case RING_DEXTERITY:
-    case RING_INTELLIGENCE:
-    case RING_LEVITATION:
-    case RING_LIFE_PROTECTION:
-    case RING_PROTECTION_FROM_MAGIC:
-        break;
-
     case RING_SUSTENANCE:
         conflicts = RAP_METABOLISM;
         break;
@@ -1977,16 +1987,6 @@ static bool randart_is_conflicting( const item_def &item,
 
     case AMU_RAGE:
         conflicts = RAP_STEALTH;
-        break;
-
-    case AMU_RESIST_SLOW:
-    case AMU_CLARITY:
-    case AMU_WARDING:
-    case AMU_RESIST_CORROSION:
-    case AMU_THE_GOURMAND:
-    case AMU_CONSERVATION:
-    case AMU_CONTROLLED_FLIGHT:
-    case AMU_INACCURACY:
         break;
     }        
 

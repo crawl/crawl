@@ -168,7 +168,7 @@ static void randart_descrip( std::string &description, const item_def &item )
 
     randart_properties_t  proprt;
     randart_known_props_t known;
-    randart_wpn_properties( item, proprt, known );
+    randart_desc_properties( item, proprt, known );
 
     if (known_proprt( RAP_AC ))
     {
@@ -287,6 +287,13 @@ static void randart_descrip( std::string &description, const item_def &item )
             else
                 description += "$It makes you more stealthy. ";
         }
+    }
+
+    if (known_proprt( RAP_MAGICAL_POWER ))
+    {
+        description += "$It affects your mana capacity (";
+        append_value(description, proprt[ RAP_MAGICAL_POWER ], true);
+        description += ").";
     }
 
     if (known_proprt( RAP_EYESIGHT ))
