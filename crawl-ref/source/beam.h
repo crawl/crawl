@@ -47,6 +47,7 @@ enum zap_symbol_type
     SYM_EXPLOSION = '#'
 };
 
+// must match wand subtypes! (see item_def::zap())
 enum zap_type
 {
     ZAP_FLAME,                         //    0

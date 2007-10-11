@@ -529,7 +529,8 @@ enum vorpal_damage_type
 };
 
 // NOTE:  This order is very special!  Its basically the same as ZAP_*, 
-// and there are bits of the code that still use that fact.. see zap_wand().
+// and there are bits of the code that still use that fact.
+// See item_def::zap().
 enum wand_type                         // mitm[].subtype
 {
     WAND_FLAME,                        //    0

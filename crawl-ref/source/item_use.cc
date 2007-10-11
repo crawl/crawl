@@ -2907,19 +2907,21 @@ void zap_wand(void)
     const bool dangerous = player_in_a_dangerous_place();
     if (alreadyknown)
     {
-        if (wand.sub_type == WAND_TELEPORTATION)
+        switch ( wand.sub_type )
         {
+        case WAND_TELEPORTATION:
             targ_mode = TARG_ANY;
-        }
-        else if (wand.sub_type == WAND_HASTING
-                 || wand.sub_type == WAND_HEALING
-                 || wand.sub_type == WAND_INVISIBILITY)
-        {
+            break;
+
+        case WAND_HASTING:
+        case WAND_HEALING:
+        case WAND_INVISIBILITY:
             targ_mode = TARG_FRIEND;
-        }
-        else 
-        {
+            break;
+            
+        default:
             targ_mode = TARG_ENEMY;
+            break;
         }
     }
 
@@ -2939,28 +2941,10 @@ void zap_wand(void)
         zap_wand.ty = you.y_pos + random2(13) - 6;
     }
 
-    // blargh! blech! this is just begging to be a problem ...
-    // not to mention work-around after work-around as wands are
-    // added, removed, or altered {dlb}:
-    char type_zapped = wand.sub_type;
-
-    if (type_zapped == WAND_ENSLAVEMENT)
-        type_zapped = ZAP_ENSLAVEMENT;
-
-    if (type_zapped == WAND_DRAINING)
-        type_zapped = ZAP_NEGATIVE_ENERGY;
-
-    if (type_zapped == WAND_DISINTEGRATION)
-        type_zapped = ZAP_DISINTEGRATION;
-
-    if (type_zapped == WAND_RANDOM_EFFECTS)
+    const zap_type type_zapped = static_cast<zap_type>(wand.zap());
+    if (wand.sub_type == WAND_RANDOM_EFFECTS)
     {
-        type_zapped = random2(16);
         beam.effect_known = false;
-        if (one_chance_in(20))
-            type_zapped = ZAP_NEGATIVE_ENERGY;
-        if (one_chance_in(17))
-            type_zapped = ZAP_ENSLAVEMENT;
         if (dangerous)
         {
             // Xom loves it when you use a Wand of Random Effects and
@@ -2973,10 +2957,11 @@ void zap_wand(void)
     beam.source_y = you.y_pos;
     beam.set_target(zap_wand);
 
+    // zapping() updates beam
     zapping( static_cast<zap_type>(type_zapped),
              30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
-    if ((beam.obvious_effect || type_zapped == WAND_FIREBALL) &&
+    if ((beam.obvious_effect || type_zapped == ZAP_FIREBALL) &&
         !alreadyknown)
     {
         set_ident_type( wand.base_type, wand.sub_type, ID_KNOWN_TYPE );
@@ -3000,7 +2985,8 @@ void zap_wand(void)
     {
         if (!item_ident( wand, ISFLAG_KNOW_PLUSES ))
         {
-            mpr("Your skill with magical items lets you calculate the power of this device...");
+            mpr("Your skill with magical items lets you calculate "
+                "the power of this device...");
         }
 
         mprf("This wand has %d charge%s left.",
@@ -3078,7 +3064,7 @@ void drink(void)
             return;
     }
 
-    if (inv_count() < 1)
+    if (inv_count() == 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;

@@ -790,7 +790,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         break;
 
     case ZAP_NEGATIVE_ENERGY:                           // cap 150
-        pbolt.name = "bolt of negative energy";
+        pbolt.name = pbolt.effect_known ? "bolt of negative energy" : "bolt";
         pbolt.colour = DARKGREY;
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 ); 
@@ -1670,12 +1670,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             simple_monster_message(monster, " is drained.");
             pbolt.obvious_effect = true;
 
-            if (YOU_KILL(pbolt.thrower))
-            {
-                // currently no gods who enjoy use of necromancy
-                if (pbolt.effect_known)
-                    did_god_conduct(DID_NECROMANCY, 2 + random2(3));
-            }
+            if (YOU_KILL(pbolt.thrower) && pbolt.effect_known)
+                did_god_conduct(DID_NECROMANCY, 2 + random2(3));
 
             if (one_chance_in(5))
                 monster->hit_dice--;

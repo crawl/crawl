@@ -375,6 +375,9 @@ public:
     bool has_spells() const;
     bool cursed() const;
     int  book_number() const;
+    int zap() const; // what kind of beam it shoots (if wand).
+                     // XXX should really return zap_type!
+    
 
     // Returns index in mitm array. Results are undefined if this item is
     // not in the array!

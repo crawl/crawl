@@ -3206,6 +3206,33 @@ bool item_def::launched_by(const item_def &launcher) const
     return (sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET));
 }
 
+int item_def::zap() const
+{
+    if (base_type != OBJ_WANDS)
+        return ZAP_DEBUGGING_RAY;
+
+    zap_type result;
+    switch (sub_type)
+    {
+    case WAND_ENSLAVEMENT:    result = ZAP_ENSLAVEMENT;     break;
+    case WAND_DRAINING:       result = ZAP_NEGATIVE_ENERGY; break;
+    case WAND_DISINTEGRATION: result = ZAP_DISINTEGRATION;  break;
+
+    case WAND_RANDOM_EFFECTS:
+        result = static_cast<zap_type>(random2(16));
+        if ( one_chance_in(20) )
+            result = ZAP_NEGATIVE_ENERGY;
+        if ( one_chance_in(17) )
+            result = ZAP_ENSLAVEMENT;
+        break;
+
+    default:
+        result = static_cast<zap_type>(sub_type);
+        break;
+    }
+    return result;
+}
+
 int item_def::index() const
 {
     return (this - mitm.buffer());

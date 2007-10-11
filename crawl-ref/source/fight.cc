@@ -3631,7 +3631,7 @@ int weapon_str_weight( object_class_type wpn_class, int wpn_type )
     // - Short Blades are the best for the dexterous... although they
     //   are very limited in damage potential
     // - Long Swords are better for the dexterous, the two-handed
-    //   swords are a 50/50 spit; bastard swords are in between.
+    //   swords are a 50/50 split; bastard swords are in between.
     // - Staves: didn't want to punish the mages who want to use
     //   these... made it a 50/50 split after the 2-hnd bonus
     // - Polearms: Spears and tridents are the only ones that can
@@ -3739,12 +3739,10 @@ static inline int calc_stat_to_dam_base( void )
 
 static void stab_message( struct monsters *defender, int stab_bonus )
 {
-    int r = random2(6);     // for randomness
-
     switch(stab_bonus)
     {
     case 3:     // big melee, monster surrounded/not paying attention
-        if (r<3)
+        if (coinflip())
         {
             mprf( "You strike %s from a blind spot!",
                   defender->name(DESC_NOCAP_THE).c_str() );
@@ -3756,7 +3754,7 @@ static void stab_message( struct monsters *defender, int stab_bonus )
         }
         break;
     case 2:     // confused/fleeing
-        if (r<4)
+        if ( !one_chance_in(3) )
         {
             mprf( "You catch %s completely off-guard!",
                   defender->name(DESC_NOCAP_THE).c_str() );
@@ -3772,5 +3770,5 @@ static void stab_message( struct monsters *defender, int stab_bonus )
               defender->name(DESC_CAP_THE).c_str(),
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
         break;
-    } // end switch
+    }
 }
