@@ -243,7 +243,7 @@ imp
 # Shout one half the time, taunt the other half.
 @__SHOUT@
 
-@The_monster@ @says@: @imp_taunt@
+@The_monster@ @says@, "@imp_taunt@"
 %%%%
 shadow imp
 

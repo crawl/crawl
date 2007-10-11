@@ -45,7 +45,6 @@ std::string imp_taunt_str()
               "%s, thou %s!", 
               random2(7) ? run_away() : give_up(),
               generic_insult() );
-
     init_cap( buff );
 
     return (buff);

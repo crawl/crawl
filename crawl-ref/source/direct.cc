@@ -1857,13 +1857,13 @@ static void describe_monster(const monsters *mon)
        if (mon->behaviour == BEH_SLEEP)
        {
            mprf(MSGCH_EXAMINE, "%s appears to be resting.",
-                mons_pronoun(mon->type, PRONOUN_CAP));
+                mon->pronoun(PRONOUN_CAP).c_str());
        }
        // Applies to both friendlies and hostiles
        else if (mon->behaviour == BEH_FLEE)
        {
            mprf(MSGCH_EXAMINE, "%s is retreating.",
-                mons_pronoun(mon->type, PRONOUN_CAP));
+                mon->pronoun(PRONOUN_CAP).c_str());
        }
        // hostile with target != you
        else if (!mons_friendly(mon) && mon->foe != MHITYOU)
@@ -1873,17 +1873,17 @@ static void describe_monster(const monsters *mon)
            if (!testbits(mon->flags, MF_BATTY))
            {
                mprf(MSGCH_EXAMINE, "%s doesn't appear to have noticed you.",
-                    mons_pronoun(mon->type, PRONOUN_CAP));
+                    mon->pronoun(PRONOUN_CAP).c_str());
            }
        }
     }
 
     if (mon->attitude == ATT_FRIENDLY)
         mprf(MSGCH_EXAMINE, "%s is friendly.",
-             mons_pronoun(mon->type, PRONOUN_CAP));
+             mon->pronoun(PRONOUN_CAP).c_str());
     else if (mon->attitude == ATT_NEUTRAL)
         mprf(MSGCH_EXAMINE, "%s is indifferent to you.",
-             mons_pronoun(mon->type, PRONOUN_CAP));
+             mon->pronoun(PRONOUN_CAP).c_str());
 
     std::string desc = "";
     std::string last_desc = "";
@@ -1915,7 +1915,7 @@ static void describe_monster(const monsters *mon)
 
     if (!desc.empty())
     {
-        text = mons_pronoun(mon->type, PRONOUN_CAP);
+        text = mon->pronoun(PRONOUN_CAP);
         text += " is ";
         text += desc;
         text += ".";

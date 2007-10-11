@@ -3758,8 +3758,8 @@ static void stab_message( struct monsters *defender, int stab_bonus )
         break;
     case 1:
         mprf( "%s fails to defend %s.", 
-              defender->name(DESC_CAP_THE).c_str(), 
-              mons_pronoun( defender->type, PRONOUN_REFLEXIVE ) );
+              defender->name(DESC_CAP_THE).c_str(),
+              defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
         break;
     } // end switch
 }

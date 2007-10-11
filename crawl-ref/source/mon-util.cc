@@ -2149,9 +2149,9 @@ bool mons_has_ranged_attack( const monsters *mon )
 // 3 : It sticks to her sword!      (lower case possessive)
 // ... as needed
 
-const char *mons_pronoun(int mon_type, int variant)
+const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
 {
-    int gender = GENDER_NEUTER;         
+    gender_type gender = GENDER_NEUTER;
 
     if (mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST)
     {
@@ -3260,7 +3260,7 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
 
 std::string monsters::pronoun(pronoun_type pro) const
 {
-    return (mons_pronoun(type, pro));
+    return (mons_pronoun(static_cast<monster_type>(type), pro));
 }
 
 std::string monsters::conj_verb(const std::string &verb) const
@@ -5093,11 +5093,10 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
 
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
-std::string do_mon_str_replacements(const std::string in_msg,
+std::string do_mon_str_replacements(const std::string &in_msg,
                                     const monsters* monster)
 {
     std::string msg = in_msg;
-
     description_level_type nocap, cap;
 
     if (monster->attitude == ATT_FRIENDLY && player_monster_visible(monster))
@@ -5173,14 +5172,14 @@ std::string do_mon_str_replacements(const std::string in_msg,
     msg = replace_all(msg, "@A_monster@",   monster->name(DESC_CAP_A));
     msg = replace_all(msg, "@The_monster@", monster->name(cap));
 
+    msg = replace_all(msg, "@Pronoun@",
+                      monster->pronoun(PRONOUN_CAP));
     msg = replace_all(msg, "@pronoun@",
-                      mons_pronoun(monster->type, 0));
-    msg = replace_all(msg, "@pronoun@",
-                      mons_pronoun(monster->type, 1));
+                      monster->pronoun(PRONOUN_NOCAP));
     msg = replace_all(msg, "@Possessive@",
-                      mons_pronoun(monster->type, 2));
+                      monster->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
-                      mons_pronoun(monster->type, 3));
+                      monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
 
     msg = replace_all(msg, "@imp_taunt@",   imp_taunt_str());
     msg = replace_all(msg, "@demon_taunt@", demon_taunt_str());
