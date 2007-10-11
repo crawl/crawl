@@ -428,7 +428,7 @@ static bool spawn_corrupted_servant_near(const coord_def &pos)
             one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4)?
             BEH_HOSTILE : BEH_NEUTRAL;
         const int mid =
-            create_monster( mons, 3, beh, p.x, p.y, MHITNOT, 250 );
+            create_monster( mons, 5, beh, p.x, p.y, MHITNOT, 250 );
 
         return (mid != -1);
     }
@@ -447,7 +447,7 @@ static void apply_corruption_effect(
 
     for (int i = 0; i < neffects; ++i)
     {
-        if (random2(7000) < cmark->duration)
+        if (random2(4000) < cmark->duration)
         {
             if (!spawn_corrupted_servant_near(cmark->pos))
                 break;
@@ -632,6 +632,20 @@ static bool is_level_incorruptible()
     return (false);
 }
 
+static void corrupt_choose_colours()
+{
+    int colour = BLACK;
+    do
+        colour = random_uncommon_colour();
+    while (colour == env.rock_colour || colour == LIGHTGREY || colour == WHITE);
+    env.rock_colour = colour;
+    do
+        colour = random_uncommon_colour();
+    while (colour == env.floor_colour || colour == LIGHTGREY
+           || colour == WHITE);
+    env.floor_colour = colour;
+}
+
 bool lugonu_corrupt_level(int power)
 {
     if (is_level_incorruptible())
@@ -648,7 +662,8 @@ bool lugonu_corrupt_level(int power)
     generate_abyss();
     generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER);
-    dgn_set_colours_from_monsters();
+
+    corrupt_choose_colours();
 
     std::auto_ptr<crawl_environment> abyssal(new crawl_environment(env));
     env = *backup;

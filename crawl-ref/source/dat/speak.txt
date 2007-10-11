@@ -300,11 +300,11 @@ VISUAL:@The_monster@ picks up a beetle and eats it.
 %%%%
 _demon_taunt_
 
-@The_monster@ @says@: @demon_taunt@
+@The_monster@ @says@, "@demon_taunt@"
 %%%%
 _imp_taunt_
 
-@The_monster@ @says@: @imp_taunt@
+@The_monster@ @says@, "@imp_taunt@"
 ##########################################
 # Messages by monster body shape
 ##########################################

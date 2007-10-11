@@ -4132,7 +4132,7 @@ void view_update_at(const coord_def &pos)
         flash_colour = viewmap_flash_colour();
     
     gotoxy(vp.x, vp.y);
-    textcolor(flash_colour? flash_colour : colour);
+    textcolor(flash_colour? real_colour(flash_colour) : colour);
     putwch(ch);
 }
 
@@ -4338,7 +4338,8 @@ void viewwindow(bool draw_it, bool do_updates)
                 // alter colour if flashing the characters vision
                 if (flash_colour && buffy[bufcount])
                     buffy[bufcount + 1] =
-                        see_grid(gc.x, gc.y)? flash_colour : DARKGREY;
+                        see_grid(gc.x, gc.y)?
+                        real_colour(flash_colour) : DARKGREY;
 
                 bufcount += 2;
             }

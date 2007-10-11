@@ -74,7 +74,7 @@ SOUND:You hear an angry hiss.
 %%%%
 __DEMON_TAUNT
 
-@The_monster@ @says@: @demon_taunt@
+@The_monster@ @says@, "@demon_taunt@"
 ############################################
 # End of default shouts
 ############################################

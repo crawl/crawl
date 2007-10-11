@@ -1118,10 +1118,21 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
             && you.species == SP_HILL_ORC)
         {
-            if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH]
-                && (you.piety > 80 || coinflip()))
+            if (you.religion == GOD_BEOGH && !you.penance[GOD_BEOGH])
             {
-                damage++;
+#ifdef DEBUG_DIAGNOSTICS
+                const int orig_damage = damage;
+#endif
+                if (you.piety > 80 || coinflip())
+                    damage++;
+                damage +=
+                    random2avg(
+                        div_rand_round(
+                            std::min(static_cast<int>(you.piety), 180), 33), 2);
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, "Damage: %d -> %d, Beogh bonus: %d",
+                     orig_damage, damage, damage - orig_damage);
+#endif
             }
             
             if (coinflip())
