@@ -539,7 +539,7 @@ bool mons_is_magic_user( const monsters *mon );
 /* ***********************************************************************
  * called from:
  * *********************************************************************** */
-const char *mons_pronoun(int mon_type, int variant);
+const char *mons_pronoun(monster_type mon_type, pronoun_type variant);
 
 // last updated 14mar2001 (gdl)
 /* ***********************************************************************
@@ -596,7 +596,7 @@ monster_type random_monster_at_grid(int grid);
 
 monster_type get_monster_by_name(std::string name, bool exact = false);
 
-std::string do_mon_str_replacements(const std::string msg,
+std::string do_mon_str_replacements(const std::string &msg,
                                     const monsters* monster);
 
 enum mon_body_shape {
