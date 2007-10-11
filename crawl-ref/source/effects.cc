@@ -1251,7 +1251,8 @@ bool acquirement(object_class_type class_wanted, int agent)
             }
         }
         else if (thing.base_type == OBJ_WEAPONS
-                    && !is_fixed_artefact( thing ))
+                 && !is_fixed_artefact( thing )
+                 && !is_unrandom_artefact( thing ))
         {
             // HACK: make unwieldable weapons wieldable 
             // Note: messing with fixed artefacts is probably very bad.
@@ -1342,7 +1343,8 @@ bool acquirement(object_class_type class_wanted, int agent)
 
         }
         else if (thing.base_type == OBJ_ARMOUR
-                    && !is_fixed_artefact( thing ))
+                 && !is_fixed_artefact( thing )
+                 && !is_unrandom_artefact( thing ))
         {
             // HACK: make unwearable hats and boots wearable
             // Note: messing with fixed artefacts is probably very bad.
