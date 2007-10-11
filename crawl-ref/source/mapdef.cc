@@ -1242,8 +1242,10 @@ void map_def::load()
 {
     if (!index_only)
         return;
-    
-    const std::string loadfile = get_descache_path(file, ".dsc");
+
+    const std::string descache_base = get_descache_path(file, "");
+    file_lock deslock(descache_base + ".lk", "rb", false);
+    const std::string loadfile = descache_base + ".dsc";
     FILE *inf = fopen(loadfile.c_str(), "rb");
     fseek(inf, cache_offset, SEEK_SET);
     read_full(inf);
