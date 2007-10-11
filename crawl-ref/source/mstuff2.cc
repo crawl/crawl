@@ -1655,7 +1655,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.name = "bolt of lightning";
         beam.range = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 10 + power / 9 );
+        beam.damage = dice_def( 3, 10 + power / 17 );
         beam.colour = LIGHTCYAN;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;

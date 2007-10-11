@@ -3331,8 +3331,10 @@ static int affect_player( bolt &beam )
     int roll = hurted;
 #endif
 
-    hurted -= random2( 1 + player_AC() );
-
+    int armour_damage_reduction = random2( 1 + player_AC() );
+    if (beam.flavour == BEAM_ELECTRICITY)
+        armour_damage_reduction /= 2;
+    hurted -= armour_damage_reduction;
 
     // shrapnel
     if (beam.flavour == BEAM_FRAG && !player_light_armour())
