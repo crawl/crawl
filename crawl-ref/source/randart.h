@@ -104,6 +104,8 @@ void randart_wpn_properties( const item_def &item,
 
 int randart_wpn_property( const item_def &item, int prop );
 
+int randart_wpn_num_props( const item_def &item );
+int randart_wpn_num_props( const randart_properties_t &proprt );
 
 /* ***********************************************************************
  * called from: dungeon
