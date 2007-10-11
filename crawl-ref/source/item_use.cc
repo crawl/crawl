@@ -2013,8 +2013,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             // elves with elven weapons
             if (get_equip_race(item) == ISFLAG_ELVEN 
-                    && player_genus(GENPC_ELVEN))
+                && player_genus(GENPC_ELVEN))
                 baseHit += 1;
+            if ( (get_equip_race(item) == ISFLAG_DWARVEN
+                  && player_genus(GENPC_DWARVEN)) ||
+                 (get_equip_race(item) == ISFLAG_ORCISH
+                  && you.species == SP_HILL_ORC)) 
+            {
+                baseDam += 1;
+            }
 
             // give an appropriate 'tohit' -
             // hand axes and clubs are -5
