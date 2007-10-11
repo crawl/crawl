@@ -71,10 +71,10 @@ const char *troll_claw_lose[3] = {
 };
 
 const char *naga_speed_descrip[4] = {
-    "You cover the ground very slowly.",    // 10*14/10 = 14
-    "You cover the ground rather slowly.",  //  8*14/10 = 11
-    "You cover the ground rather quickly.", //  7*14/10 = 9
-    "You cover the ground quickly."         //  6*14/10 = 8
+    "You cover ground very slowly.",    // 10*14/10 = 14
+    "You cover ground rather slowly.",  //  8*14/10 = 11
+    "You cover ground rather quickly.", //  7*14/10 = 9
+    "You cover ground quickly."         //  6*14/10 = 8
 };
 
 const char *mutation_descrip[][3] = {
@@ -149,8 +149,8 @@ const char *mutation_descrip[][3] = {
     {"You are resistant to magic.", "You are highly resistant to magic.",
      "You are extremely resistant to the effects of magic."},
 
-    {"You cover the ground quickly.", "You cover the ground very quickly.",
-     "You cover the ground extremely quickly."},
+    {"You cover ground quickly.", "You cover ground very quickly.",
+     "You cover ground extremely quickly."},
 
     {"You have supernaturally acute eyesight.",
      "You have supernaturally acute eyesight.",
@@ -804,110 +804,121 @@ const char *lose_mutation[][3] = {
      "Your patterned scales recede somewhat."},
 };
 
-/*
-   Chance out of 10 that mutation will be given/removed randomly. 0 means never.
- */
-const char mutation_rarity[] = {
-    10,                         // tough skin
-    8,                          // str
-    8,                          // int
-    8,                          // dex
-    2,                          // gr scales
-    1,                          // bl scales
-    2,                          // grey scales
-    1,                          // bone
-    1,                          // repuls field
-    4,                          // res poison
+static const mutation_def mutation_defs[] = {
+    { MUT_TOUGH_SKIN, 10, 3 },
+    { MUT_STRONG, 8, 14 },
+    { MUT_CLEVER, 8, 14 },
+    { MUT_AGILE, 8,  14 },
+    { MUT_GREEN_SCALES, 2, 3 },
+    { MUT_BLACK_SCALES, 1, 3 },
+    { MUT_GREY_SCALES, 2, 3 },
+    { MUT_BONEY_PLATES, 1, 3 },
+    { MUT_REPULSION_FIELD, 1, 3 },
+    { MUT_POISON_RESISTANCE, 4, 1 },
 // 10
-    5,                          // carn
-    5,                          // herb
-    4,                          // res fire
-    4,                          // res cold
-    2,                          // res elec
-    3,                          // regen
-    10,                         // fast meta
-    7,                          // slow meta
-    10,                         // abil loss
-    10,                         // ""
+    { MUT_CARNIVOROUS, 5, 3 },
+    { MUT_HERBIVOROUS, 5, 3 },
+    { MUT_HEAT_RESISTANCE, 4, 3 },
+    { MUT_COLD_RESISTANCE, 4, 3 },
+    { MUT_SHOCK_RESISTANCE, 2, 1 },
+    { MUT_REGENERATION, 3, 3 },
+    { MUT_FAST_METABOLISM, 10, 3 },
+    { MUT_SLOW_METABOLISM, 7, 3 },
+    { MUT_WEAK, 10,  14 },
+    { MUT_DOPEY, 10, 14 },
 // 20
-    10,                         // ""
-    2,                          // tele control
-    3,                          // teleport
-    5,                          // res magic
-    1,                          // run
-    2,                          // see invis
-    8,                          // deformation
-    2,                          // teleport at will
-    8,                          // spit poison
-    3,                          // sense surr
+    { MUT_CLUMSY, 10, 14 },
+    { MUT_TELEPORT_CONTROL, 2, 1 },
+    { MUT_TELEPORT, 3, 3 },
+    { MUT_MAGIC_RESISTANCE, 5, 3 },
+    { MUT_FAST, 1, 3 },
+    { MUT_ACUTE_VISION, 2, 1 },
+    { MUT_DEFORMED, 8, 3 },
+    { MUT_TELEPORT_AT_WILL, 2, 3 },
+    { MUT_SPIT_POISON, 8, 3 },
+    { MUT_MAPPING, 3, 3 },
 // 30
-    4,                          // breathe fire
-    3,                          // blink
-    7,                          // horns
-    10,                         // strong/stiff muscles
-    10,                         // weak/loose muscles
-    6,                          // forgetfulness
-    6,                          // clarity (as the amulet)
-    7,                          // berserk/temper
-    10,                         // deterioration
-    10,                         // blurred vision
+    { MUT_BREATHE_FLAMES, 4, 3 },
+    { MUT_BLINK, 3, 3 },
+    { MUT_HORNS, 7, 3 },
+    { MUT_STRONG_STIFF, 10, 3 },
+    { MUT_FLEXIBLE_WEAK, 10, 3 },
+    { MUT_LOST, 6, 3 },
+    { MUT_CLARITY, 6, 1 },
+    { MUT_BERSERK, 7, 3 },
+    { MUT_DETERIORATION, 10, 3 },
+    { MUT_BLURRY_VISION, 10, 3 },
 // 40
-    4,                          // resist mutation
-    10,                         // frail
-    5,                          // robust
+    { MUT_MUTATION_RESISTANCE, 4, 3 },
+    { MUT_FRAIL, 10, 3 },
+    { MUT_ROBUST, 5, 3 },
 /* Some demonic powers start here: */
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    { MUT_TORMENT_RESISTANCE, 0, 1 },
+    { MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3 },
+    { MUT_SUMMON_MINOR_DEMONS, 0, 1 },
+    { MUT_SUMMON_DEMONS, 0, 1 },
+    { MUT_HURL_HELLFIRE, 0, 1 },
+    { MUT_CALL_TORMENT, 0, 1 },
+    { MUT_RAISE_DEAD, 0, 1 },
 // 50
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    2,                          //jmf: claws
-    1,                          //jmf: hooves
+    { MUT_CONTROL_DEMONS, 0, 1 },
+    { MUT_PANDEMONIUM, 0, 1 },
+    { MUT_DEATH_STRENGTH, 0, 1 },
+    { MUT_CHANNEL_HELL, 0, 1 },
+    { MUT_DRAIN_LIFE, 0, 1 },
+    { MUT_THROW_FLAMES, 0, 1 },
+    { MUT_THROW_FROST, 0, 1 },
+    { MUT_SMITE, 0, 1 },
+    { MUT_CLAWS, 2, 3 },
+    { MUT_HOOVES, 1, 1 },
 // 60
-    1,                          // fangs
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    { MUT_FANGS, 1, 3 },
+    { MUT_BREATHE_POISON, 0, 1 },
+    { MUT_STINGER, 0, 3 },
+    { MUT_BIG_WINGS, 0, 3 },
+    { MUT_BLUE_MARKS, 0, 3 },
+    { MUT_GREEN_MARKS, 0, 3 },
+
+    // Four placeholders:
+    { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3 },
 // 70
-    2,                          // red scales
-    1,                          // nac scales
-    2,                          // r-grey scales
-    1,                          // metal scales
-    2,                          // black scales
-    2,                          // wh scales
-    2,                          // yel scales
-    2,                          // brown scales
-    2,                          // blue scales
-    2,                          // purple scales
+    { MUT_RED_SCALES, 2, 3 },
+    { MUT_NACREOUS_SCALES, 1, 3 },
+    { MUT_GREY2_SCALES, 2, 3 },
+    { MUT_METALLIC_SCALES, 1, 3 },
+    { MUT_BLACK2_SCALES, 2, 3 },
+    { MUT_WHITE_SCALES, 2, 3 },
+    { MUT_YELLOW_SCALES, 2, 3 },
+    { MUT_BROWN_SCALES, 2, 3 },
+    { MUT_BLUE_SCALES, 2, 3 },
+    { MUT_PURPLE_SCALES, 2, 3 },
 // 80
-    2,                          // speckled scales
-    2,                          // orange scales
-    2,                          // indigo scales
-    1,                          // kn red scales
-    1,                          // irid scales
-    1,                          // pattern scales
-    0,                          //
-    0,                          //
-    0,                          //
-    0                           //
+    { MUT_SPECKLED_SCALES, 2, 3 },
+    { MUT_ORANGE_SCALES, 2, 3 },
+    { MUT_INDIGO_SCALES, 2, 3 },
+    { MUT_RED2_SCALES, 1, 3 },
+    { MUT_IRIDESCENT_SCALES, 1, 3 },
+    { MUT_PATTERNED_SCALES, 1, 3 },
 };
+
+#ifdef DEBUG_DIAGNOSTICS
+
+void sanity_check_mutation_defs()
+{
+    ASSERT(ARRAYSIZE(mutation_defs) == NUM_MUTATIONS);
+
+    for (unsigned i = 0; i < ARRAYSIZE(mutation_defs); ++i)
+    {
+        const mutation_def &mdef(mutation_defs[i]);
+        ASSERT(mdef.mutation == static_cast<mutation_type>(i)
+               || mdef.mutation == RANDOM_MUTATION);
+    }
+}
+
+#endif
 
 formatted_string describe_mutations()
 {
@@ -1225,7 +1236,7 @@ void display_mutations()
 
 static int calc_mutation_amusement_value(mutation_type which_mutation)
 {
-    int amusement = 16 * (11 - mutation_rarity[which_mutation]);
+    int amusement = 16 * (11 - mutation_defs[which_mutation].rarity);
 
     switch (which_mutation)
     {
@@ -1281,16 +1292,10 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
 
 static bool accept_mutation( mutation_type mutat )
 {
-    int limit = 3;
-    if ( mutat == MUT_STRONG || mutat == MUT_CLEVER ||
-         mutat == MUT_AGILE || mutat == MUT_WEAK ||
-         mutat == MUT_DOPEY || mutat == MUT_CLUMSY )
-        limit = 14;
-    
-    if ( you.mutation[mutat] >= limit )
+    if ( you.mutation[mutat] >= mutation_defs[mutat].levels )
         return false;
     
-    const int rarity = mutation_rarity[mutat] + you.demon_pow[mutat];
+    const int rarity = mutation_defs[mutat].rarity + you.demon_pow[mutat];
     // low rarity means unlikely to choose it
     return (rarity > random2(10));
 }
@@ -1801,7 +1806,7 @@ bool delete_mutation(mutation_type which_mutation, bool force)
                     && mutat != MUT_AGILE) 
                 && (mutat != MUT_WEAK && mutat != MUT_DOPEY
                     && mutat != MUT_CLUMSY))
-               || random2(10) >= mutation_rarity[mutat]
+               || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]);
     }
 

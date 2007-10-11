@@ -3068,6 +3068,7 @@ static bool initialise(void)
     clrscr();
 
 #ifdef DEBUG_DIAGNOSTICS
+    sanity_check_mutation_defs();
     if (crawl_state.map_stat_gen)
     {
         generate_map_stats();
