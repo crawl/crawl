@@ -1366,7 +1366,7 @@ int randart_wpn_num_props( const item_def &item )
 
 int randart_wpn_num_props( const randart_properties_t &proprt )
 {
-    int num;
+    int num = 0;
 
     for (int i = 0; i < RAP_NUM_PROPERTIES; i++)
         if (proprt[i] != 0)
