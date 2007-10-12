@@ -504,8 +504,8 @@ stair_item_brand = reverse
 
 trap_item_brand = none
         Brands traps that would otherwise be hidden by items. If you 
-	use this brand, the items on the square are hidden by the trap
-	symbol (^) and the trap symbol is branded.
+        use this brand, the items on the square are hidden by the trap
+        symbol (^) and the trap symbol is branded.
 
 4-e     Level Map Functions.
 ----------------------------
@@ -637,8 +637,7 @@ explore_greedy = false
         explore behaviour is used). Greedy explore is also best with
         pickup_dropped = false. Explore greed is disabled if you're
         temporarily unable to pick up items (from uncontrolled levitation,
-        for instance). Default is false (no greedy explore) and using greedy
-        explore may slow down the performance.
+        for instance).
 
 explore_stop = items,stairs,shops,altars,gates
         Explore will stop for one of these conditions. Whatever you set this 
@@ -665,13 +664,14 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
 
 runrest_ignore_monster = <string>:<distance>
         This only works if runrest.lua has been sourced already in init.txt.
-	Any monster containing the string will only interrupt your activity
-	if the distance between you and the monster is less than the 
-	specified number. E.g. with
-	  runrest_ingore_monster = fish:3
-	all of big fish, jellyfish, giant goldfish and lavafish will be 
-	considered safe for travel, explore and resting as long as the distance
-	is at least 3.
+
+        Any monster containing the string will only interrupt your
+        activity if the distance between you and the monster is
+        less than the specified number. E.g. with
+             runrest_ingore_monster = fish:3
+        all of big fish, jellyfish, giant goldfish and lavafish will be 
+        considered safe for travel, explore and resting as long as the distance
+        is at least 3.
 
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         This only works if trapwalk.lua has been sourced already in init.txt.
