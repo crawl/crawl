@@ -89,10 +89,9 @@ LIB = -l$(LIBCURS) -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
-CFWARN := -Wall -Wwrite-strings \
-	-Wshadow -pedantic
+CFWARN := -Wall -Wwrite-strings -Wshadow -Wuninitialized -pedantic
 
-CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS
+CFOTHERS := -O2 -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS
 
 ifneq ($(SAVEDIR),)
 CFOTHERS += '-DSAVE_DIR_PATH="$(SAVEDIR)"'
