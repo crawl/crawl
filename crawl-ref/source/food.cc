@@ -943,7 +943,7 @@ static void ghoul_consume_flesh(int chunk_type)
     {
         if (chunk_type == CE_ROTTEN)
             mpr("This rotting flesh tastes delicious!");
-        else // CE_CONTAMINATED or CE_HCL
+        else // CE_CONTAMINATED
             mpr("This flesh tastes delicious!");
 
         heal_from_food(hp_amt, 0,
@@ -1389,7 +1389,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 // understood why liches are hungry and not true undead beings ... {dlb}:
 static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 {
-    const int poison_resistance_level = player_res_poison();
     int this_chunk_effect = which_chunk_type;
 
     // determine the initial effect of eating a particular chunk {dlb}:
@@ -1405,9 +1404,8 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         break;
 
     case CE_POISONOUS:
-        if (you.species == SP_GHOUL
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-                || poison_resistance_level > 0 && you.species != SP_VAMPIRE)
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+                || player_res_poison() > 0 && you.species != SP_VAMPIRE)
         {
             this_chunk_effect = CE_CLEAN;
         }

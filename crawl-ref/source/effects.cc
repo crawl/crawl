@@ -1449,6 +1449,7 @@ bool acquirement(object_class_type class_wanted, int agent)
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
+            case SP_VAMPIRE:
                 {
                     int brand = get_weapon_brand( thing );
                     if (brand == SPWPN_HOLY_WRATH 

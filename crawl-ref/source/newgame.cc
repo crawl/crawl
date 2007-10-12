@@ -2345,8 +2345,8 @@ static void give_random_scroll( int slot )
 
 static void give_random_potion( int slot )
 {
-    // Mummies can't quaff and don't care
-    if (you.species == SP_MUMMY)
+    // If you can't quaff, you don't care
+    if (you.is_undead == US_UNDEAD)
         return;
 
     you.inv[ slot ].quantity = 1;
@@ -3554,7 +3554,7 @@ bool give_items_skills()
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        if (you.species != SP_MUMMY)
+        if (you.is_undead != US_UNDEAD)
             newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, 2);
             
         you.skills[SK_FIGHTING] = 2;

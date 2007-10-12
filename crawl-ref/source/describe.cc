@@ -2191,7 +2191,7 @@ static std::string describe_food( const item_def &item )
             {
                 if (you.species == SP_GHOUL)
                     description += "It looks nice and ripe. ";
-                else if (you.species != SP_MUMMY)
+                else if (you.is_undead != US_UNDEAD)
                 {
                     description += "In fact, it is "
                         "rotting away before your eyes. "

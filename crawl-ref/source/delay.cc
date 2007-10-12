@@ -390,7 +390,7 @@ void handle_delay( void )
                     delay.parm2 = 99; // don't give the message twice
 
                     if (you.species != SP_VAMPIRE
-                        && you.species != SP_MUMMY
+                        && you.is_undead != US_UNDEAD
                         && you.species != SP_GHOUL)
                     {
                         xom_check_corpse_waste();
