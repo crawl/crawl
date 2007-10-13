@@ -3890,18 +3890,28 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
     
     case ENCH_HASTE:
+    {
+        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
+
+        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
+    }
 
     case ENCH_SLOW:
+    {
+        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
+
+        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
+    }
 
     case ENCH_SUBMERGED:
         if (type == MONS_AIR_ELEMENTAL && mons_near(this) && !quiet)
@@ -3936,18 +3946,28 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HASTE:
+    {
+        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
+
+        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
+    }
 
     case ENCH_SLOW:
+    {
+        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
+
+        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
+    }
 
     case ENCH_PARALYSIS:
         if (!quiet)
