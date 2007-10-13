@@ -968,6 +968,17 @@ A hideous cross-breed, bearing the features of a human and a lion, with great ba
 "Ctesias writeth, that in Æthiopia likewise there is a beast which he calleth Mantichora, having three rankes of teeth, which when they meet togither are let in one within another like the teeth of combes: with the face and eares of a man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile armed with a sting like a scorpion: his voice resembleth the noise of a flute and trumpet sounded together: very swift he is, and mans flesh of all others hee most desireth."
 	-Pliny the Elder, _Natural History_, Book 8, Chapter XXI
 %%%%
+merfolk fighter
+
+Half fish, half man, the merfolk are citizens of both water and land, and they'll fiercely protect their chosen territory.
+%%%%
+mermaid
+
+A young woman with a fish tail in place of legs. Mermaids love to sing and charm their audience.
+
+... To the Sirens first shalt thou come, who beguile all men whosoever comes to them. Whoso in ignorance draws near to them and hears the Sirens' voice, he nevermore returns, that his wife and little children may stand at his side rejoicing, but the Sirens beguile him with their clear-toned song, as they sit in a meadow, and about them is a great heap of bones of mouldering men, and round the bones the skin is shrivelling.
+        -Homer, _The Odyssey_, Book XII
+%%%%
 metal gargoyle
 
 A hideous metal statue come to life.
