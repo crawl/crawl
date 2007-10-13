@@ -541,6 +541,12 @@ void print_stats(void)
             textcolor( RED );   // no different levels
             cprintf( "Conf " );
         }
+        
+        if (you.duration[DUR_BEHELD])
+        {
+            textcolor( RED );   // no different levels
+            cprintf( "Bhld " );
+        }
 
         if (you.duration[DUR_LIQUID_FLAMES])
         {

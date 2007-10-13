@@ -1359,6 +1359,15 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 
         you.check_awaken(dist - player_distance);
 
+        if (loudness >= 20 && you.duration[DUR_BEHELD])
+        {
+            mprf("For a moment, you cannot hear the mermaid%s!",
+                 you.beheld_by.size() == 1? "" : "s");
+            mpr("You break out of your daze!", MSGCH_DURATION);
+            you.duration[DUR_BEHELD] = 0;
+            you.beheld_by.clear();
+        }
+
         ret = true;
     }
     

@@ -493,10 +493,12 @@ class player : public actor
 {
 public:
   bool turn_is_over; // flag signaling that player has performed a timed action
-
+  
   // If true, player is headed to the Abyss.
   bool banished;
   std::string banished_by;
+
+  std::vector<int> beheld_by; // monsters beholding player
 
   bool just_autoprayed;         // autopray just kicked in
     

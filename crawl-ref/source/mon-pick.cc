@@ -2029,6 +2029,8 @@ int mons_shoals_level(int mcls)
     case MONS_GIANT_BAT:
         break;
 
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_CENTAUR:
     case MONS_ETTIN:
     case MONS_SHEEP:
@@ -2069,7 +2071,11 @@ int mons_shoals_rare(int mcls)
 
     case MONS_ETTIN:
     case MONS_SHEEP:
+    case MONS_MERFOLK:
         return 50;
+
+    case MONS_MERMAID:
+        return 40;
 
     case MONS_HIPPOGRIFF:
     case MONS_GIANT_BAT:
@@ -2112,6 +2118,8 @@ int mons_swamp_level(int mcls)
     case MONS_SWAMP_DRAKE:
     case MONS_WORM:
     case MONS_SWAMP_WORM:
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
         mlev++;
         break;
 
@@ -2189,6 +2197,7 @@ int mons_swamp_rare(int mcls)
         return 61;
 
     case MONS_SLIME_CREATURE:
+    case MONS_MERFOLK:
         return 54;
 
     case MONS_SNAKE:
@@ -2216,6 +2225,7 @@ int mons_swamp_rare(int mcls)
     case MONS_KOMODO_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
+    case MONS_MERMAID:
         return 15;
 
     case MONS_PHANTOM:
@@ -2669,6 +2679,8 @@ int mons_standard_level(int mcls)
     case MONS_DEEP_ELF_MASTER_ARCHER:
         return 33;
 
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_ELECTRICAL_EEL:
     case MONS_GIANT_GOLDFISH:
@@ -2691,6 +2703,8 @@ int mons_standard_rare(int mcls)
     {
 // "another lava thing" has no stats!  (GDL)
 //    case MONS_ANOTHER_LAVA_THING:
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_ELECTRICAL_EEL:
     case MONS_GIANT_GOLDFISH:

@@ -422,6 +422,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
     }
+    // update list of monsters beholding player
+    update_beholders(monster, true);
     
     const int monster_killed = monster_index(monster);
     const bool death_message =
@@ -2321,6 +2323,8 @@ static void handle_nearby_ability(monsters *monster)
     case MONS_LAVA_FISH:
     case MONS_LAVA_SNAKE:
     case MONS_SALAMANDER:
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_GIANT_GOLDFISH:
     case MONS_ELECTRICAL_EEL:
@@ -2328,18 +2332,22 @@ static void handle_nearby_ability(monsters *monster)
     case MONS_WATER_ELEMENTAL:
     case MONS_SWAMP_WORM:
         if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
-            && (one_chance_in(5) || (grid_distance( monster->x, monster->y, 
-                                                    you.x_pos, you.y_pos ) > 1
+            && ( !player_beheld_by(monster) // no submerging if player entranced
+                 && (one_chance_in(5) || (grid_distance( monster->x, monster->y,
+                                         you.x_pos, you.y_pos ) > 1
                                      // FIXME This is better expressed as a
                                      // function such as
                                      // monster_has_ranged_attack:
                                      && monster->type != MONS_ELECTRICAL_EEL
                                      && monster->type != MONS_LAVA_SNAKE
-                                     && !one_chance_in(20))
+                                     && (monster->type != MONS_MERMAID
+                                          || you.species == SP_MERFOLK)
+                                     && !one_chance_in(20)) )
                 || monster->hit_points <= monster->max_hit_points / 2)
             || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             monster->add_ench(ENCH_SUBMERGED);
+            update_beholders(monster);
         }
         break;
 
@@ -2668,6 +2676,87 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         }
         break;
 
+    case MONS_MERMAID:
+    {
+        // won't sing if either of you silenced, or it's friendly or confused
+        if (monster->has_ench(ENCH_CONFUSION) || mons_friendly(monster)
+            || silenced(monster->x, monster->y) || silenced(you.x_pos, you.y_pos))
+        {
+            break;
+        }
+
+        // reduce probability because of spamminess
+        if (you.species == SP_MERFOLK && !one_chance_in(4))
+            break;
+
+        // a wounded invisible mermaid is less likely to give away her position
+        if (monster->invisible()
+            && monster->hit_points <= monster->max_hit_points / 2
+            && !one_chance_in(3))
+        {
+            break;
+        }
+
+        bool already_beheld = player_beheld_by(monster);
+            
+        if (one_chance_in(5)
+            || monster->foe == MHITYOU && !already_beheld && coinflip())
+        {
+            if (player_monster_visible(monster))
+            {
+                simple_monster_message(monster,
+                    make_stringf(" chants %s song.",
+                    already_beheld? "her luring" : "a haunting").c_str(),
+                    MSGCH_MONSTER_SPELL);
+            }
+            else
+            {
+                // if you're already beheld by an invisible mermaid she can
+                // still prolong the enchantment; otherwise you "resist"
+                if (already_beheld)
+                    mpr("You hear a luring song.", MSGCH_SOUND);
+                else
+                {
+                    if (one_chance_in(4)) // reduce spamminess
+                    {
+                        if (coinflip())
+                            mpr("You hear a haunting song.", MSGCH_SOUND);
+                        else
+                            mpr("You hear an eerie melody.", MSGCH_SOUND);
+                            
+                        canned_msg(MSG_YOU_RESIST); // flavour only
+                    }
+                    break;
+                }
+            }
+                
+            // once beheld by a particular monster, cannot resist anymore
+            if (!already_beheld
+                && (you.species == SP_MERFOLK || you_resist_magic(100)))
+            {
+                canned_msg(MSG_YOU_RESIST);
+                break;
+            }
+
+            if (!you.duration[DUR_BEHELD])
+            {
+                you.duration[DUR_BEHELD] = 7;
+                you.beheld_by.push_back(monster_index(monster));
+                mpr("You are beheld!", MSGCH_WARN);
+            }
+            else
+            {
+                you.duration[DUR_BEHELD] += 5;
+                if (!already_beheld)
+                    you.beheld_by.push_back(monster_index(monster));
+            }
+            used = true;
+
+            if (you.duration[DUR_BEHELD] > 12)
+                you.duration[DUR_BEHELD] = 12;
+        }
+        break;
+    }
     default:
         break;
     }
@@ -4241,6 +4330,8 @@ static void handle_monster_move(int i, monsters *monster)
             if (!monster_move(monster))
                 monster->speed_increment -= non_move_energy;
         }
+        update_beholders(monster);
+        
         // reevaluate behaviour, since the monster's
         // surroundings have changed (it may have moved,
         // or died for that matter.  Don't bother for
@@ -4306,7 +4397,15 @@ void handle_monsters(void)
 
         // If the player got banished, discard pending monster actions.
         if (you.banished)
+        {
+            // clear list of beholding monsters
+            if (you.duration[DUR_BEHELD])
+            {
+                you.beheld_by.clear();
+                you.duration[DUR_BEHELD] = 0;
+            }
             break;
+        }
     }                           // end of for loop
 
     // Clear any summoning flags so that lower indiced 
@@ -5493,6 +5592,8 @@ dungeon_feature_type monster_habitat(int which_class)
 {
     switch (which_class)
     {
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_GIANT_GOLDFISH:
     case MONS_ELECTRICAL_EEL:

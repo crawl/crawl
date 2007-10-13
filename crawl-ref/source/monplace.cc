@@ -104,7 +104,9 @@ bool monster_habitable_grid(int monster_class, int actual_grid, int flies,
 
             // And water elementals are native to the water but happy on land
             // as well.
-            || (monster_class == MONS_WATER_ELEMENTAL
+            || ((monster_class == MONS_WATER_ELEMENTAL
+                  || monster_class == MONS_MERFOLK
+                  || monster_class == MONS_MERMAID)
                 && grid_compatible(DNGN_FLOOR, actual_grid)));
 }
 
@@ -113,6 +115,8 @@ bool monster_can_submerge(int monster_class, int grid)
 {
     switch (monster_class)
     {
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_GIANT_GOLDFISH:
     case MONS_ELECTRICAL_EEL:

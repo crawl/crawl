@@ -2546,6 +2546,13 @@ static void place_aquatic_monsters(int level_number, char level_type)
             swimming_things[i] = MONS_BIG_FISH + random2(4);
             if (player_in_branch( BRANCH_SWAMP ) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
+            else if (player_in_branch( BRANCH_SHOALS ))
+            {
+                if (one_chance_in(3))
+                    swimming_things[i] = MONS_MERFOLK;
+                else if (one_chance_in(5))
+                    swimming_things[i] = MONS_MERMAID;
+            }
         }
 
         if (level_number >= 25 && one_chance_in(5))

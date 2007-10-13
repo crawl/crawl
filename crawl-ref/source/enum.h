@@ -983,6 +983,7 @@ enum duration_type
     DUR_CONF,
     DUR_PARALYSIS,
     DUR_SLOW,
+    DUR_BEHELD,
     DUR_HASTE,
     DUR_MIGHT,
     DUR_LEVITATION,
@@ -1557,6 +1558,8 @@ enum monster_type                      // (int) menv[].type
     MONS_BLACK_BEAR,  // 189
     MONS_SIMULACRUM_SMALL,
     MONS_SIMULACRUM_LARGE,
+    MONS_MERFOLK,
+    MONS_MERMAID,     // 193
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,

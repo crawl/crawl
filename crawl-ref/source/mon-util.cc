@@ -488,6 +488,11 @@ bool mons_is_humanoid( int mc )
     case 'T':   // trolls
         return (true);
 
+    case 'm':   // merfolk
+        if (mc == MONS_MERFOLK || mc == MONS_MERMAID)
+            return (true);
+        return (false);
+
     case 'g':   // goblines, hobgoblins, gnolls, boggarts -- but not gargoyles
         if (mc != MONS_GARGOYLE
             && mc != MONS_METAL_GARGOYLE
@@ -2169,6 +2174,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
             case MONS_EROLCHA:
             case MONS_ERICA:
             case MONS_TIAMAT:
+            case MONS_MERMAID:
                 gender = GENDER_FEMALE;
                 break;
             default:

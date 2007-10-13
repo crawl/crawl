@@ -928,6 +928,11 @@ static void tag_construct_you(struct tagHeader &th)
 
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
+    
+    // list of currently beholding monsters (usually empty)
+    marshallByte(th, you.beheld_by.size());
+    for (unsigned int k = 0; k < you.beheld_by.size(); k++)
+         marshallByte(th, you.beheld_by[k]);
 }
 
 static void tag_construct_you_items(struct tagHeader &th)
@@ -1263,6 +1268,11 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
 
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
+    
+    // list of currently beholding monsters (usually empty)
+    count_c = unmarshallByte(th);
+    for (i = 0; i < count_c; i++)
+         you.beheld_by.push_back(unmarshallByte(th));
 }
 
 static void tag_read_you_items(struct tagHeader &th, char minorVersion)

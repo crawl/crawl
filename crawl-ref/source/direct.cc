@@ -1844,6 +1844,9 @@ static void describe_monster(const monsters *mon)
     text += ".";
     print_formatted_paragraph(text, get_number_of_cols());
 
+    if (player_beheld_by(mon))
+        mpr("You are beheld by her song.", MSGCH_EXAMINE);
+
     if (mon->type == MONS_HYDRA)
     {
         mprf(MSGCH_EXAMINE, "It has %d head%s.", mon->number,

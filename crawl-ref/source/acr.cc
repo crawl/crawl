@@ -648,6 +648,12 @@ static void handle_wizard_command( void )
     case 'H':
         you.rotting = 0;
         you.duration[DUR_POISONING] = 0;
+        if (you.duration[DUR_BEHELD])
+        {
+            you.duration[DUR_BEHELD] = 0;
+            you.beheld_by.clear();
+        }
+        you.duration[DUR_CONF] = 0;
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
@@ -2458,6 +2464,12 @@ static void decrement_durations()
     decrement_a_duration( DUR_SURE_BLADE,
                           "The bond with your blade fades away." );
 
+    if ( decrement_a_duration( DUR_BEHELD, "You break out of your daze.",
+                               -1, 0, NULL, MSGCH_RECOVERY ))
+    {
+        you.beheld_by.clear();
+    }
+
     dec_slow_player();
     dec_haste_player();
 
@@ -3602,6 +3614,34 @@ static void move_player(int move_x, int move_y)
         }
     } // end of if you.duration[DUR_CONF]
 
+    const int targ_x = you.x_pos + move_x;
+    const int targ_y = you.y_pos + move_y;
+    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
+    const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
+    const bool          targ_solid = grid_is_solid(targ_grid);
+
+    // cannot move away from mermaid but you CAN fight neighbouring squares
+    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF]
+        && (targ_monst == NON_MONSTER || mons_is_submerged(&menv[targ_monst])))
+    {   
+        for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+        {
+             coord_def pos = menv[you.beheld_by[i]].pos();
+             int olddist = distance(you.x_pos, you.y_pos, pos.x, pos.y);
+             int newdist = distance(you.x_pos + move_x, you.y_pos + move_y, pos.x, pos.y);
+             
+             if (olddist < newdist)
+             {
+                 mprf("You cannot move away from %s!",
+                      (menv[you.beheld_by[i]]).name(DESC_NOCAP_THE, true).c_str());
+                      
+                 move_x = 0;
+                 move_y = 0;
+                 return;
+             }
+        }
+    } // end of beholding check
+
     if (you.running.check_stop_running())
     {
         move_x = 0;
@@ -3610,12 +3650,6 @@ static void move_player(int move_x, int move_y)
         you.turn_is_over = false;
         return;
     }
-
-    const int targ_x = you.x_pos + move_x;
-    const int targ_y = you.y_pos + move_y;
-    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
-    const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
-    const bool          targ_solid = grid_is_solid(targ_grid);
 
     if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
     {

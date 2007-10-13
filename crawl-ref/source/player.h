@@ -263,6 +263,8 @@ int slaying_bonus(char which_affected);
 int player_see_invis(bool calc_unid = true);
 bool player_monster_visible( const monsters *mon );
 
+bool player_beheld_by( const monsters *mon );
+void update_beholders( const monsters *mon, bool force = false);
 
 /* ***********************************************************************
  * called from: acr - decks - it_use2 - ouch

@@ -1243,6 +1243,13 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     new_level();
 
+    // clear list of beholding monsters
+    if (you.duration[DUR_BEHELD])
+    {
+        you.beheld_by.clear();
+        you.duration[DUR_BEHELD] = 0;
+    }
+    
     viewwindow(1, true);
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))

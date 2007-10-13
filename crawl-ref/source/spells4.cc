@@ -1232,6 +1232,13 @@ void cast_silence(int pow)
 
     if (you.duration[DUR_SILENCE] > 100)
         you.duration[DUR_SILENCE] = 100;
+        
+    if (you.duration[DUR_BEHELD])
+    {
+        mpr("You break out of your daze!", MSGCH_RECOVERY);
+        you.duration[DUR_BEHELD] = 0;
+        you.beheld_by.clear();
+    }
 }                               // end cast_silence()
 
 

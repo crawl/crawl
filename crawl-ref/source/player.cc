@@ -2324,7 +2324,7 @@ int player_see_invis(bool calc_unid)
 
 // This does NOT do line of sight!  It checks the monster's visibility 
 // with repect to the players perception, but doesn't do walls or range...
-// to find if the square the monster is in is visible see mons_near().
+// to find if the square the monster is in los see mons_near().
 bool player_monster_visible( const monsters *mon )
 {
     if (mon->has_ench(ENCH_SUBMERGED)
@@ -2334,6 +2334,69 @@ bool player_monster_visible( const monsters *mon )
     }
 
     return (true);
+}
+
+// returns true if player is beheld by a given monster
+bool player_beheld_by( const monsters *mon )
+{
+    if (!you.duration[DUR_BEHELD])
+        return false;
+        
+    // can this monster even behold you?
+    if (mon->type != MONS_MERMAID)
+        return false;
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "beheld_by.size: %d, DUR_BEHELD: %d, current mon: %d",
+                            you.beheld_by.size(), you.duration[DUR_BEHELD],
+                            monster_index(mon));
+#endif
+
+    if (you.beheld_by.empty()) // shouldn't happen
+    {
+        you.duration[DUR_BEHELD] = 0;
+        return false;
+    }
+    
+    for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+    {
+         unsigned int which_mon = you.beheld_by[i];
+         if (monster_index(mon) == which_mon)
+             return true;
+    }
+    
+    return false;
+}
+
+// removes a monster from the list of beholders
+// if force == true (e.g. monster dead) or one of
+// several cases is met
+void update_beholders(const monsters *mon, bool force)
+{
+    if (!player_beheld_by(mon)) // not in list?
+        return;
+        
+    // is an update even necessary?
+    if (force || !mons_near(mon) || mons_friendly(mon) || mon->submerged()
+        || mon->has_ench(ENCH_CONFUSION) || mons_is_paralysed(mon) || mon->asleep()
+        || silenced(you.x_pos, you.y_pos) || silenced(mon->x, mon->y))
+    {
+        const std::vector<int> help = you.beheld_by;
+        you.beheld_by.clear();
+
+        for (unsigned int i = 0; i < help.size(); i++)
+        {
+             unsigned int which_mon = help[i];
+             if (monster_index(mon) != which_mon)
+                 you.beheld_by.push_back(i);
+        }
+
+        if (you.beheld_by.empty())
+        {
+            mpr("You are no longer entranced.", MSGCH_RECOVERY);
+            you.duration[DUR_BEHELD] = 0;
+        }
+    }
 }
 
 int player_sust_abil(bool calc_unid)
@@ -3361,6 +3424,9 @@ void display_char_status()
 
     if (you.duration[DUR_CONF])
         mpr( "You are confused." );
+
+    if (you.duration[DUR_BEHELD])
+        mpr( "You are beheld." );
 
     if (you.duration[DUR_PARALYSIS])
         mpr( "You are paralysed." );
