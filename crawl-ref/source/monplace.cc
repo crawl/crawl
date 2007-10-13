@@ -676,6 +676,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     menv[id].inv.init(NON_ITEM);
     // scrap monster enchantments
     menv[id].enchantments.clear();
+    menv[id].ench_countdown = 0;
 
     // setup habitat and placement
     if (first_band_member)

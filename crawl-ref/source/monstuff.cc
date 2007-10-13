@@ -74,7 +74,7 @@ static bool handle_pickup(monsters *monster);
 static void handle_behaviour(monsters *monster);
 static void set_nearest_monster_foe(monsters *monster);
 static void mons_in_cloud(monsters *monster);
-static void monster_move(monsters *monster);
+static bool monster_move(monsters *monster);
 static bool plant_spit(monsters *monster, bolt &pbolt);
 static int map_wand_to_mspell(int wand_type);
 
@@ -970,6 +970,7 @@ static bool jelly_divide(monsters * parent)
     child->attitude = parent->attitude;
     child->colour = parent->colour;
     child->enchantments = parent->enchantments;
+    child->ench_countdown = parent->ench_countdown;
     child->x = parent->x + jex;
     child->y = parent->y + jey;
 
@@ -1167,6 +1168,8 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     const int old_hp = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;
     const bool old_mon_caught = mons_is_caught(monster);
+    const char old_ench_countdown = monster->ench_countdown;
+    const int  old_speed = monster->speed;
 
     /* deal with mons_sec */
     monster->type = targetc;
@@ -1181,6 +1184,9 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     monster->add_ench(abj);
     monster->add_ench(shifter);
+
+    monster->ench_countdown = old_ench_countdown * old_speed
+        / monster->speed;
 
     if (mons_class_flag( monster->type, M_INVIS ))
         monster->add_ench(ENCH_INVIS);
@@ -2138,30 +2144,30 @@ static bool handle_enchantment(monsters *monster)
     // and (2) the monster cannot move (speed == 0) and the monster loop 
     // is running.
     //
-    // In the first case we don't have to figure in the player's time, 
-    // since the rate of call to this function already does that (ie.
-    // a bat would get here 6 times in 2 normal player turns, and if
-    // the player was twice as fast it would be 6 times every four player
-    // moves.  So the only speed we care about is the monster vs the
-    // absolute time frame.
+    // In the first case we in the player's time by keeping track of
+    // how much energy the monster has expended since the last time
+    // apply_enchantments() was called, and calling it each time that
+    // it equals or exceeds the monsters speed.  For example, a bat
+    // gets 30 energy points for every 10 the player gets, and each
+    // time it spends 30 energy points apply_enchantments() is called.
     //
     // In the second case, we're hacking things so that plants can suffer
     // from sticky flame.  The rate of call in this case is once every 
     // player action... so the time_taken by the player is the ratio to
     // the absolute time frame.  
     //
-    // This will be used below for poison and sticky flame so that the
-    // damage is apparently in the absolute time frame.  This is done
-    // by scaling the damage and the chance that the effect goes away.
-    // The result is that poison on a regular monster will be doing
-    // 1d3 damage every two rounds, and last eight rounds, and on 
-    // a bat the same poison will be doing 1/3 the damage each action
-    // it gets (the mod fractions are randomized in), will have three
-    // turns to the other monster's one, and the effect will survive
-    // 3 times as many calls to this function (ie 8 rounds * 3 calls).
-    //
     // -- bwr
-    monster->apply_enchantments();
+    if (monster->speed == 0)
+        monster->apply_enchantments();
+    else
+    {
+        while (monster->ench_countdown <= 0)
+        {
+            monster->apply_enchantments();
+            monster->ench_countdown += monster->speed;
+        }
+    }
+
     return (!monster->alive());
 }                               // end handle_enchantment()
 
@@ -2666,6 +2672,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         break;
     }
 
+    if (used)
+    {
+        monsterentry *entry = get_monster_data(monster->type);
+        monster->speed_increment -= entry->energy_usage.special;
+    }
+
     return (used);
 }                               // end handle_special_ability()
 
@@ -2767,6 +2779,9 @@ static bool handle_potion(monsters *monster, bolt & beem)
 
             if (ident != ID_UNKNOWN_TYPE && was_visible)
                 set_ident_type(OBJ_POTIONS, potion_type, ident);
+
+            monsterentry *entry = get_monster_data(monster->type);
+            monster->speed_increment -= entry->energy_usage.item;
         }
 
         return (imbibed);
@@ -2907,6 +2922,9 @@ static bool handle_scroll(monsters *monster)
 
             if (ident != ID_UNKNOWN_TYPE && was_visible)
                 set_ident_type(OBJ_SCROLLS, scroll_type, ident);
+
+            monsterentry *entry = get_monster_data(monster->type);
+            monster->speed_increment -= entry->energy_usage.item;
         }
 
         return read;
@@ -3076,6 +3094,9 @@ static bool handle_wand(monsters *monster, bolt &beem)
                 if ( wand.plus2 >= 0 )
                     wand.plus2++;
             }
+
+            monsterentry *entry = get_monster_data(monster->type);
+            monster->speed_increment -= entry->energy_usage.item;
 
             return (true);
         }
@@ -3580,6 +3601,9 @@ static bool handle_spell( monsters *monster, bolt & beem )
             {
                 simple_monster_message(monster, " blinks!");
                 monster_blink(monster);
+
+                monsterentry *entry = get_monster_data(monster->type);
+                monster->speed_increment -= entry->energy_usage.spell;
             }
             else
                 return (false);
@@ -3589,6 +3613,8 @@ static bool handle_spell( monsters *monster, bolt & beem )
             mons_cast(monster, beem, spell_cast);
             mmov_x = 0;
             mmov_y = 0;
+            monsterentry *entry = get_monster_data(monster->type);
+            monster->speed_increment -= entry->energy_usage.spell;
         }
     } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
 
@@ -3815,6 +3841,46 @@ static void monster_regenerate(monsters *monster)
     }
 }
 
+static void handle_ench_countdown(monsters *monster, int &old_energy)
+{
+    // Paranoia
+    if (monster->speed_increment >= old_energy)
+    {
+#if DEBUG
+        if (monster->speed_increment == old_energy)
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Monster '%s' has same energy as last iteration.",
+                 monster->name(DESC_PLAIN).c_str(), true);
+        else
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Monster '%s' has MORE energy than last iteration.",
+                 monster->name(DESC_PLAIN).c_str(), true);
+#endif
+
+        monster->speed_increment = old_energy - 10;
+        monster->ench_countdown -= 10;
+    }
+    else
+    {
+        if (old_energy != INT_MAX)
+        {
+            int energy_spent = old_energy - monster->speed_increment;
+            monster->ench_countdown -= energy_spent;
+        }
+    }
+    old_energy = monster->speed_increment;
+}
+
+#if DEBUG
+#    define DEBUG_ENERGY_USE(problem) \
+         if (monster->speed_increment == old_energy) \
+             mprf(MSGCH_DIAGNOSTICS, \
+                  problem " for monster '%s' consumed no energy", \
+                  monster->name(DESC_PLAIN).c_str(), true);
+#else
+#    define DEBUG_ENERGY_USE(problem) ((void) 0)
+#endif
+
 static void handle_monster_move(int i, monsters *monster)
 {
     bool brkk = false;
@@ -3870,21 +3936,36 @@ static void handle_monster_move(int i, monsters *monster)
     }
 
     monster->check_speed();
-    
+
+    monsterentry* entry = get_monster_data(monster->type);
+
+    int old_energy      = INT_MAX;
+    int non_move_energy =  std::min(entry->energy_usage.move,
+                                    entry->energy_usage.swim);
+
     while (monster->has_action_energy())
     {                   // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
 
-        monster->speed_increment -= 10;
+        if (handle_enchantment(monster))
+            break;
+
+        handle_ench_countdown(monster, old_energy);
 
         if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             if (monster->has_ench(ENCH_SUBMERGED))
+            {
+                monster->speed_increment -= entry->energy_usage.swim;
                 break;
+            }
 
             if (monster->type == -1)
+            {
+                monster->speed_increment -= entry->energy_usage.move;
                 break;  // problem with vortices
+            }
 
             mons_in_cloud(monster);
 
@@ -3902,13 +3983,13 @@ static void handle_monster_move(int i, monsters *monster)
             monster->colour = newcol;
         }
 
-        if (handle_enchantment(monster))
-            break;
-
         monster_regenerate(monster);
 
         if (mons_is_paralysed(monster))
+        {
+            monster->speed_increment -= non_move_energy;
             continue;
+        }
         
         handle_behaviour(monster);
         
@@ -3942,7 +4023,10 @@ static void handle_monster_move(int i, monsters *monster)
             if (monster->attitude != ATT_FRIENDLY)
             {
                 if (handle_pickup(monster))
+                {
+                    DEBUG_ENERGY_USE("handle_pickup()");
                     continue;
+                }
             } 
         }
 
@@ -4003,10 +4087,11 @@ static void handle_monster_move(int i, monsters *monster)
                      monsters_fight(
                          i,
                          mgrd[monster->x + mmov_x][monster->y + mmov_y]);
-                
+
                      brkk = true;
                      mmov_x = 0;
                      mmov_y = 0;
+                     DEBUG_ENERGY_USE("monsters_fight()");
                  }
              }
 
@@ -4039,24 +4124,40 @@ static void handle_monster_move(int i, monsters *monster)
                     :   handle_monster_spell(monster, beem)
                             || handle_special_ability(monster, beem))
                 {
+                    DEBUG_ENERGY_USE("spell or special");
                     continue;
                 }
 
                 if (handle_potion(monster, beem))
+                {
+                    DEBUG_ENERGY_USE("handle_potion()");
                     continue;
+                }
 
                 if (handle_scroll(monster))
+                {
+                    DEBUG_ENERGY_USE("handle_scroll()");
                     continue;
+                }
 
                 if (handle_wand(monster, beem))
+                {
+                    DEBUG_ENERGY_USE("handle_wand()");
                     continue;
+                }
 
                 if (handle_reaching(monster))
+                {
+                    DEBUG_ENERGY_USE("handle_reaching()");
                     continue;
+                }
             }
 
             if (handle_throw(monster, beem))
+            {
+                DEBUG_ENERGY_USE("handle_throw()");
                 continue;
+            }
         }
 
         if (!mons_is_caught(monster))
@@ -4081,6 +4182,7 @@ static void handle_monster_move(int i, monsters *monster)
                     mmov_x = 0;
                     mmov_y = 0;
                     brkk = true;
+                    DEBUG_ENERGY_USE("monsters_fight()");
                 }
             }
 
@@ -4104,6 +4206,7 @@ static void handle_monster_move(int i, monsters *monster)
                         monster->target_x = 10 + random2(GXM - 10);
                         monster->target_y = 10 + random2(GYM - 10);
                     }
+                    DEBUG_ENERGY_USE("monster_attack()");
                 }
 
                 if ((monster->type == MONS_GIANT_SPORE
@@ -4129,9 +4232,14 @@ static void handle_monster_move(int i, monsters *monster)
             }
 
             if (invalid_monster(monster) || mons_is_stationary(monster))
+            {
+                if (monster->speed_increment == old_energy)
+                    monster->speed_increment -= non_move_energy;
                 continue;
+            }
 
-            monster_move(monster);
+            if (!monster_move(monster))
+                monster->speed_increment -= non_move_energy;
         }
         // reevaluate behaviour, since the monster's
         // surroundings have changed (it may have moved,
@@ -4142,24 +4250,30 @@ static void handle_monster_move(int i, monsters *monster)
 
     }                   // end while
 
-    if (monster->type != -1 && monster->hit_points < 1)
-    {
-        if (monster->type == MONS_GIANT_SPORE
-            || monster->type == MONS_BALL_LIGHTNING)
-        {
-            // detach monster from the grid first, so it
-            // doesn't get hit by its own explosion (GDL)
-            mgrd[monster->x][monster->y] = NON_MONSTER;
 
-            spore_goes_pop( monster );
-            monster_cleanup( monster );
-            return;
-        }
+    if (monster->type != -1)
+    {
+        if ( monster->hit_points >= 1)
+            handle_ench_countdown(monster, old_energy);
         else
         {
-            monster_die( monster, KILL_MISC, 0 );
+            if (monster->type == MONS_GIANT_SPORE
+                || monster->type == MONS_BALL_LIGHTNING)
+            {
+                // detach monster from the grid first, so it
+                // doesn't get hit by its own explosion (GDL)
+                mgrd[monster->x][monster->y] = NON_MONSTER;
+                
+                spore_goes_pop( monster );
+                monster_cleanup( monster );
+                return;
+            }
+            else
+            {
+                monster_die( monster, KILL_MISC, 0 );
+            }
         }
-    }    
+    }
 }
 
 //---------------------------------------------------------------
@@ -4445,6 +4559,16 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
         return (false);
 
     // Okay, do the swap!
+    monsterentry        *entry = get_monster_data(mon->type);
+    dungeon_feature_type feat  = grd[mon->x][mon->y];
+    if (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+        && !mon->airborne())
+    {
+        mon->speed_increment -= entry->energy_usage.swim;
+    }
+    else
+        mon->speed_increment -= entry->energy_usage.move;
+
     mon->x = nx;
     mon->y = ny;
     mgrd[nx][ny] = monster_index(mon);
@@ -4463,48 +4587,51 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
     return (false);
 }
 
-static void do_move_monster(monsters *monster, int xi, int yi)
+static bool do_move_monster(monsters *monster, int xi, int yi)
 {
     const int fx = monster->x + xi,
         fy = monster->y + yi;
 
     if (!in_bounds(fx, fy))
-        return;
+        return false;
 
     if (fx == you.x_pos && fy == you.y_pos)
     {
         monster_attack( monster_index(monster) );
-        return;
+        return true;
     }
     
     if (!xi && !yi)
     {
         const int mx = monster_index(monster);
         monsters_fight( mx, mx );
-        return;
+        return true;
     }
 
     if (mgrd[fx][fy] != NON_MONSTER)
     {
         monsters_fight( monster_index(monster), mgrd[fx][fy] );
-        return;
+        return true;
     }
 
     if (!xi && !yi)
-        return;
+        return false;
+
+    /* this appears to be the real one, ie where the movement occurs: */
+    monsterentry        *entry = get_monster_data(monster->type);
+    dungeon_feature_type feat  = grd[monster->x][monster->y];
+    if (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+        && !monster->airborne())
+    {
+        monster->speed_increment -= entry->energy_usage.swim;
+    }
+    else
+        monster->speed_increment -= entry->energy_usage.move;
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
     
-    /* this appears to be the real one, ie where the movement occurs: */
     monster->x = fx;
     monster->y = fy;
-    
-    if (monster->type == MONS_CURSE_TOE)
-    {
-        // Curse toes are a special case; they can only move at half their
-        // attack rate. To simulate that, the toe loses more energy.
-        monster->speed_increment -= 5;
-    }
     
     /* need to put in something so that monster picks up multiple
        items (eg ammunition) identical to those it's carrying. */
@@ -4512,6 +4639,8 @@ static void do_move_monster(monsters *monster, int xi, int yi)
 
     monster->check_redraw(monster->pos() - coord_def(xi, yi));
     monster->apply_location_effects();
+
+    return true;
 }
 
 void mons_check_pool(monsters *mons, killer_type killer, int killnum)
@@ -4594,14 +4723,17 @@ static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
         return (!mechanical || mons_flies(monster));
 }
 
-static void mons_open_door(const coord_def &pos)
+static void mons_open_door(monsters* monster, const coord_def &pos)
 {
     if (grd(pos) == DNGN_SECRET_DOOR && !see_grid(pos))
         set_terrain_changed(pos);
     grd(pos) = DNGN_OPEN_DOOR;
+
+    monsterentry *entry = get_monster_data(monster->type);
+    monster->speed_increment -= entry->energy_usage.move;
 }
 
-static void monster_move(monsters *monster)
+static bool monster_move(monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
     int count_x, count_y, count;
@@ -4643,15 +4775,15 @@ static void monster_move(monsters *monster)
                 && (monster_habitat(monster->type) == DNGN_FLOOR
                     || monster_habitable_grid(monster, grd(newpos))))
             {
-                do_move_monster(monster, mmov_x, mmov_y);
+                return do_move_monster(monster, mmov_x, mmov_y);
             }
         }
-        return;
+        return false;
     }
     
     // let's not even bother with this if mmov_x and mmov_y are zero.
     if (mmov_x == 0 && mmov_y == 0)
-        return;
+        return false;
 
     // effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
@@ -4887,14 +5019,14 @@ static void monster_move(monsters *monster)
             // for zombies, monster type is kept in mon->number
             if (mons_itemuse(monster->number) >= MONUSE_OPEN_DOORS)
             {
-                mons_open_door(newpos);
-                return;
+                mons_open_door(monster, newpos);
+                return true;
             }
         }
         else if (mons_itemuse(monster->type) >= MONUSE_OPEN_DOORS)
         {
-            mons_open_door(newpos);
-            return;
+            mons_open_door(monster, newpos);
+            return true;
         }
     } // endif - secret/closed doors
 
@@ -5064,6 +5196,7 @@ forget_it:
         }
     }
 
+    bool ret = false;
     if (good_move[mmov_x + 1][mmov_y + 1] && !(mmov_x == 0 && mmov_y == 0))
     {
         // check for attacking player
@@ -5071,6 +5204,7 @@ forget_it:
             && monster->y + mmov_y == you.y_pos)
         {
             monster_attack( monster_index(monster) );
+            ret    = true;
             mmov_x = 0;
             mmov_y = 0;
         }
@@ -5088,18 +5222,19 @@ forget_it:
 #ifdef DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "BUG: %s was marked as follower when not following!",
-                     monster->name(DESC_PLAIN).c_str());
+                     monster->name(DESC_PLAIN).c_str(), true);
 #endif
             }
             else
             {
+                ret    = true;
                 mmov_x = 0;
                 mmov_y = 0;
                 
 #if DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "%s is skipping movement in order to follow.",
-                     monster->name(DESC_CAP_THE).c_str() );
+                     monster->name(DESC_CAP_THE).c_str(), true );
 #endif
             }
         }
@@ -5114,6 +5249,7 @@ forget_it:
                 monsters_fight(monster_index(monster), targmon);
 
             // If the monster swapped places, the work's already done.
+            ret    = true;
             mmov_x = 0;
             mmov_y = 0;
         }
@@ -5143,7 +5279,9 @@ forget_it:
     }
 
     if (mmov_x || mmov_y || (monster->confused() && one_chance_in(6)))
-        do_move_monster(monster, mmov_x, mmov_y);
+        return do_move_monster(monster, mmov_x, mmov_y);
+
+    return ret;
 }                               // end monster_move()
 
 static void setup_plant_spit(monsters *monster, bolt &pbolt)

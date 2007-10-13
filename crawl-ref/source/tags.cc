@@ -1576,6 +1576,7 @@ void unmarshallItem(tagHeader &th, item_def &item)
     item.orig_monnum = unmarshallShort(th);        
     item.inscription = unmarshallString(th, 80);
 
+    item.props.clear();
     item.props.read(th);
 }
 
@@ -1636,6 +1637,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     {
         marshall_mon_enchant(th, i->second);
     }
+    marshallByte(th, m.ench_countdown);
 
     marshallShort(th, m.type);
     marshallShort(th, m.hit_points);
@@ -1798,6 +1800,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
         mon_enchant me = unmarshall_mon_enchant(th);
         m.enchantments[me.ench] = me;
     }
+    m.ench_countdown = unmarshallByte(th);
 
     m.type = unmarshallShort(th);
     m.hit_points = unmarshallShort(th);

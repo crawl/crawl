@@ -243,6 +243,23 @@ struct mon_attack_def
     }
 };
 
+// Amount of monster->speed_increment used by different actions; defaults
+// to 10.
+struct mon_energy_usage
+{
+    char move;
+    char swim;
+    char attack;
+    char missile; // Arrows/crossbows/etc
+    char spell;
+    char special;
+    char item;    // Using an item (i.e., drinking a potion)
+
+    // Percent of monster->speed used when picking up an item; defaults
+    // to 100%
+    char pickup_percent; 
+};
+
 struct monsterentry
 {
     short mc;            // monster number
@@ -278,17 +295,16 @@ struct monsterentry
     // hp will be around 135 each time.
     unsigned       hpdice[4];
 
-    char AC;             // armour class
-
-    char ev;             // evasion
-
-    char speed, speed_inc;        // duh!
-
+    char AC;  // armour class
+    char ev; // evasion
     mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;
     zombie_size_type zombie_size;
     shout_type shouts;
     mon_intel_type intel;
+
+    char             speed;        // How quickly speed_increment increases
+    mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
     size_type size;
 };

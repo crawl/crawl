@@ -1486,6 +1486,7 @@ void define_monster(int index)
 
     // reset monster enchantments
     mons.enchantments.clear();
+    mons.ench_countdown = 0;
 }                               // end define_monster()
 
 static std::string str_monam(const monsters& mon, description_level_type desc,
@@ -2841,8 +2842,11 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
 
 void monsters::lose_pickup_energy()
 {
-    if (speed_increment > 25 && speed < speed_increment)
-        speed_increment -= speed;
+    monsterentry* entry = get_monster_data(type);
+    int           delta = speed * entry->energy_usage.pickup_percent / 100;
+
+    if (speed_increment > 25 && delta < speed_increment)
+        speed_increment -= delta;
 }
 
 void monsters::pickup_message(const item_def &item, int near)
@@ -3201,7 +3205,10 @@ void monsters::swap_weapons(int near)
 
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)
-        speed_increment -= 2;
+    {
+        monsterentry *entry = get_monster_data(type);
+        speed_increment -= div_rand_round(entry->energy_usage.attack, 5);
+    }
 }
 
 void monsters::wield_melee_weapon(int near)
@@ -3619,6 +3626,7 @@ void monsters::ghost_init()
 
     inv.init(NON_ITEM);
     enchantments.clear();
+    ench_countdown = 0;
 
     find_place_to_live();
 }
@@ -3723,6 +3731,7 @@ void monsters::reset()
     destroy_inventory();
     
     enchantments.clear();
+    ench_countdown = 0;
     inv.init(NON_ITEM);
 
     flags = 0;
@@ -4182,7 +4191,10 @@ static inline int mod_speed( int val, int speed )
 
 bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 {
-    const int spd = speed == 0? you.time_taken : speed;
+    // Faster monsters can wiggle out of the net more quickly.
+    const int spd = (speed == 0)           ? you.time_taken :
+                    (me.ench == ENCH_HELD) ? speed :
+                    10;
     const int actdur = speed_to_duration(spd);
     if (lose_ench_duration(me, actdur))
         return (true);
@@ -4217,7 +4229,7 @@ bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 
 void monsters::apply_enchantment(const mon_enchant &me)
 {
-    const int spd = speed == 0? you.time_taken : speed;
+    const int spd = speed == 0? you.time_taken : 10;
     switch (me.ench)
     {
     case ENCH_BERSERK:
@@ -4348,7 +4360,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // berserking doubles damage dealt
             if (has_ench(ENCH_BERSERK))
                 damage *= 2;
-                
+
+            // Faster monsters can damage the net more often per
+            // time period.
+            if (speed != 0)
+                damage = div_rand_round(damage * speed, spd);
+
             mitm[net].plus -= damage;
             
             if (mitm[net].plus < -7)

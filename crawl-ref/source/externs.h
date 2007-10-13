@@ -941,6 +941,7 @@ public:
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned int foe;
+    char             ench_countdown;
     mon_enchant_list enchantments;
     unsigned long flags;               // bitfield of boolean flags
 

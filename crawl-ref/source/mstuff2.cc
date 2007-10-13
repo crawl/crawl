@@ -1079,6 +1079,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
 
+    const monsterentry *entry       = get_monster_data(monster->type);
+    const int          throw_energy = entry->energy_usage.missile;
+    monster->speed_increment       -= throw_energy;
+
     item_def item = mitm[hand_used];  // copy changed for venom launchers 
     item.quantity = 1;
 
@@ -1275,11 +1279,24 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             pbolt.type = SYM_ZAP;
         }
 
-        // Note: we already have 10 energy taken off.  -- bwr
+        // Note: we already have throw_energy taken off.  -- bwr
+        int speed_delta = 0;
         if (lnchType == WPN_CROSSBOW)
-            monster->speed_increment += ((bow_brand == SPWPN_SPEED) ? 4 : -2);
+        {
+            if (bow_brand == SPWPN_SPEED)
+                // Speed crossbows take 50% less time to use than
+                // ordinary crossbows.
+                speed_delta = div_rand_round(throw_energy * 2, 5);
+            else
+                // Ordinary crossbows take 20% more time to use
+                // than ordinary bows.
+                speed_delta = -div_rand_round(throw_energy, 5);
+        }
         else if (bow_brand == SPWPN_SPEED)
-            monster->speed_increment += 5;
+            // Speed bows take 50% time to use than ordinary bows.
+            speed_delta = div_rand_round(throw_energy, 2);
+
+        monster->speed_increment += speed_delta;
     }
 
     // monster intelligence bonus
