@@ -1071,7 +1071,7 @@ inline static void monster_warning(activity_interrupt_type ai,
         if (!mon->visible())
             return;
 #ifndef DEBUG_DIAGNOSTICS
-        if (at.context == "newly seen")
+        if (at.context == "already seen")
         {
             // Only say "comes into view" if the monster wasn't in view
             // during the previous turn.
@@ -1099,18 +1099,29 @@ inline static void monster_warning(activity_interrupt_type ai,
                      break;
                 }
             }
-            else
+        }
+        else
+        {
+            const std::string mweap =
+                get_monster_desc(mon, false, DESC_NONE);
+            std::string text = mon->name(DESC_CAP_A);
+
+            if (at.context == "thin air")
             {
-                const std::string mweap =
-                    get_monster_desc(mon, false, DESC_NONE);
-                std::string text = mon->name(DESC_CAP_A) + " comes into view.";
-                if (!mweap.empty())
-                    text += " " + mon->pronoun(PRONOUN_CAP)
-                        + " is" + mweap + ".";
-                print_formatted_paragraph(text,
-                                          get_number_of_cols(),
-                                          MSGCH_WARN);
+                if (mon->type == MONS_AIR_ELEMENTAL)
+                    text += " forms itself from the air.";
+                else
+                    text += " appears from thin air.";
             }
+            else
+                text += " comes into view.";
+
+            if (!mweap.empty())
+                text += " " + mon->pronoun(PRONOUN_CAP)
+                    + " is" + mweap + ".";
+            print_formatted_paragraph(text,
+                                      get_number_of_cols(),
+                                      MSGCH_WARN);
         }
 
         if (Options.tutorial_left)

@@ -3879,7 +3879,7 @@ bool monsters::add_ench(const mon_enchant &ench)
     return (true);
 }
 
-void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
+void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 {
     // check for slow/haste
     switch (ench.ench)
@@ -3901,6 +3901,12 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
+        break;
+
+    case ENCH_SUBMERGED:
+        if (type == MONS_AIR_ELEMENTAL && mons_near(this) && !quiet)
+            mprf("%s merges itself into the air.",
+                 name(DESC_CAP_A, true).c_str() );
         break;
 
     default:
@@ -4040,6 +4046,29 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer berserk.");
 
         monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
+        break;
+
+    case ENCH_SUBMERGED:
+        if (type == MONS_AIR_ELEMENTAL)
+        {
+            if (mons_near(this))
+            {
+                if (!mons_is_safe( static_cast<const monsters*>(this)))
+                {
+                    activity_interrupt_data aid(this);
+                    aid.context = "thin air";
+                    interrupt_activity( AI_SEE_MONSTER, aid );
+                }
+                else if (!quiet)
+                    mprf("%s forms itself from the air!",
+                         name(DESC_CAP_A, true).c_str() );
+
+                seen_monster( this );
+
+                // Monster was viewed this turn
+                flags |= MF_WAS_IN_VIEW;
+            }
+        }
         break;
 
     default:
