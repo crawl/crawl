@@ -701,12 +701,16 @@ static int item_name_specialness(const item_def& item)
     std::string itname = item.name(DESC_PLAIN, false, false, false);
     lowercase(itname);
     
+    // FIXME Maybe we should replace this with a test of ISFLAG_COSMETIC_MASK?
     const bool item_runed = itname.find("runed ") != std::string::npos;
     const bool heav_runed = itname.find("heavily ") != std::string::npos;
     const bool item_glows = itname.find("glowing") != std::string::npos;
 
-    if ( item_glows || (item_runed && !heav_runed) )
+    if ( item_glows || (item_runed && !heav_runed) ||
+         get_equip_desc(item) == ISFLAG_EMBROIDERED_SHINY )
+    {
         return 1;
+    }
 
     // You can tell artefacts, because they'll have a description which
     // rules out anything else.
