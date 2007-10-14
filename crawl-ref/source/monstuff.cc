@@ -1171,7 +1171,6 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     const int old_hp_max = monster->max_hit_points;
     const bool old_mon_caught = mons_is_caught(monster);
     const char old_ench_countdown = monster->ench_countdown;
-    const int  old_speed = monster->speed;
 
     /* deal with mons_sec */
     monster->type = targetc;
@@ -1187,8 +1186,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     monster->add_ench(abj);
     monster->add_ench(shifter);
 
-    monster->ench_countdown = old_ench_countdown * old_speed
-        / monster->speed;
+    monster->ench_countdown = old_ench_countdown;
 
     if (mons_class_flag( monster->type, M_INVIS ))
         monster->add_ench(ENCH_INVIS);
@@ -2138,40 +2136,6 @@ bool simple_monster_message(const monsters *monster, const char *event,
 
     return (false);
 }                               // end simple_monster_message()
-
-static bool handle_enchantment(monsters *monster)
-{
-    // Yes, this is the speed we want.  This function will be called in
-    // two circumstances: (1) the monster can move and has enough energy, 
-    // and (2) the monster cannot move (speed == 0) and the monster loop 
-    // is running.
-    //
-    // In the first case we in the player's time by keeping track of
-    // how much energy the monster has expended since the last time
-    // apply_enchantments() was called, and calling it each time that
-    // it equals or exceeds the monsters speed.  For example, a bat
-    // gets 30 energy points for every 10 the player gets, and each
-    // time it spends 30 energy points apply_enchantments() is called.
-    //
-    // In the second case, we're hacking things so that plants can suffer
-    // from sticky flame.  The rate of call in this case is once every 
-    // player action... so the time_taken by the player is the ratio to
-    // the absolute time frame.  
-    //
-    // -- bwr
-    if (monster->speed == 0)
-        monster->apply_enchantments();
-    else
-    {
-        while (monster->ench_countdown <= 0)
-        {
-            monster->apply_enchantments();
-            monster->ench_countdown += monster->speed;
-        }
-    }
-
-    return (!monster->alive());
-}                               // end handle_enchantment()
 
 //---------------------------------------------------------------
 //
@@ -3930,34 +3894,17 @@ static void monster_regenerate(monsters *monster)
     }
 }
 
-static void handle_ench_countdown(monsters *monster, int &old_energy)
+static void swim_or_move_energy(monsters *mon)
 {
-    // Paranoia
-    if (monster->speed_increment >= old_energy)
+    monsterentry        *entry = get_monster_data(mon->type);
+    dungeon_feature_type feat  = grd[mon->x][mon->y];
+    if (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+        && !mon->airborne())
     {
-#if DEBUG
-        if (monster->speed_increment == old_energy)
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Monster '%s' has same energy as last iteration.",
-                 monster->name(DESC_PLAIN).c_str(), true);
-        else
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Monster '%s' has MORE energy than last iteration.",
-                 monster->name(DESC_PLAIN).c_str(), true);
-#endif
-
-        monster->speed_increment = old_energy - 10;
-        monster->ench_countdown -= 10;
+        mon->speed_increment -= entry->energy_usage.swim;
     }
     else
-    {
-        if (old_energy != INT_MAX)
-        {
-            int energy_spent = old_energy - monster->speed_increment;
-            monster->ench_countdown -= energy_spent;
-        }
-    }
-    old_energy = monster->speed_increment;
+        mon->speed_increment -= entry->energy_usage.move;
 }
 
 #if DEBUG
@@ -3988,7 +3935,7 @@ static void handle_monster_move(int i, monsters *monster)
 
     monster_add_energy(monster);
 
-    // Handle enchantments and clouds on nonmoving monsters:
+    // Handle clouds on nonmoving monsters:
     if (monster->speed == 0) 
     {
         if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD
@@ -3996,9 +3943,23 @@ static void handle_monster_move(int i, monsters *monster)
         {
             mons_in_cloud( monster );
         }
+    }
 
-        if (handle_enchantment( monster ))
-            return;
+    // Apply monster enchantments once for every normal-speed
+    // player turn.
+    monster->ench_countdown -= you.time_taken;
+    if (you.duration[DUR_SLOW] > 0)
+        monster->ench_countdown -= you.time_taken;
+    while (monster->ench_countdown < 0)
+    {
+        monster->ench_countdown += 10;
+        monster->apply_enchantments();
+
+        // Don't return if the monster died, since we have to deal
+        // with giant spores and ball lightning exploding at the
+        // end of the function.
+        if (!monster->alive())
+            break;
     }
 
     // memory is decremented here for a reason -- we only want it
@@ -4029,18 +3990,29 @@ static void handle_monster_move(int i, monsters *monster)
     monsterentry* entry = get_monster_data(monster->type);
 
     int old_energy      = INT_MAX;
-    int non_move_energy =  std::min(entry->energy_usage.move,
-                                    entry->energy_usage.swim);
+    int non_move_energy = std::min(entry->energy_usage.move,
+                                   entry->energy_usage.swim);
 
     while (monster->has_action_energy())
     {                   // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
 
-        if (handle_enchantment(monster))
-            break;
-
-        handle_ench_countdown(monster, old_energy);
+        if (monster->speed_increment >= old_energy)
+        {
+#if DEBUG
+            if (monster->speed_increment == old_energy)
+                mprf(MSGCH_DIAGNOSTICS, "'%s' has same energy as last loop",
+                     monster->name(DESC_PLAIN, true).c_str());
+            else
+                mprf(MSGCH_DIAGNOSTICS, "'%s' has MORE energy than last loop",
+                     monster->name(DESC_PLAIN, true).c_str());
+#endif
+            monster->speed_increment = old_energy - 10;
+            old_energy               = monster->speed_increment;
+            continue;
+        }
+        old_energy = monster->speed_increment;
 
         if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
@@ -4119,7 +4091,10 @@ static void handle_monster_move(int i, monsters *monster)
             } 
         }
 
-        if (!mons_is_caught(monster))
+        if (mons_is_caught(monster))
+            // Struggling against the net takes time.
+            swim_or_move_energy(monster);
+        else
         {
             // calculates mmov_x, mmov_y based on monster target.
             handle_movement(monster);
@@ -4341,28 +4316,22 @@ static void handle_monster_move(int i, monsters *monster)
 
     }                   // end while
 
-
-    if (monster->type != -1)
+    if (monster->type != -1 && monster->hit_points < 1)
     {
-        if ( monster->hit_points >= 1)
-            handle_ench_countdown(monster, old_energy);
+        if (monster->type == MONS_GIANT_SPORE
+            || monster->type == MONS_BALL_LIGHTNING)
+        {
+            // detach monster from the grid first, so it
+            // doesn't get hit by its own explosion (GDL)
+            mgrd[monster->x][monster->y] = NON_MONSTER;
+                
+            spore_goes_pop( monster );
+            monster_cleanup( monster );
+            return;
+        }
         else
         {
-            if (monster->type == MONS_GIANT_SPORE
-                || monster->type == MONS_BALL_LIGHTNING)
-            {
-                // detach monster from the grid first, so it
-                // doesn't get hit by its own explosion (GDL)
-                mgrd[monster->x][monster->y] = NON_MONSTER;
-                
-                spore_goes_pop( monster );
-                monster_cleanup( monster );
-                return;
-            }
-            else
-            {
-                monster_die( monster, KILL_MISC, 0 );
-            }
+            monster_die( monster, KILL_MISC, 0 );
         }
     }
 }
@@ -4658,15 +4627,7 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
         return (false);
 
     // Okay, do the swap!
-    monsterentry        *entry = get_monster_data(mon->type);
-    dungeon_feature_type feat  = grd[mon->x][mon->y];
-    if (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-        && !mon->airborne())
-    {
-        mon->speed_increment -= entry->energy_usage.swim;
-    }
-    else
-        mon->speed_increment -= entry->energy_usage.move;
+    swim_or_move_energy(mon);
 
     mon->x = nx;
     mon->y = ny;
@@ -4717,15 +4678,7 @@ static bool do_move_monster(monsters *monster, int xi, int yi)
         return false;
 
     /* this appears to be the real one, ie where the movement occurs: */
-    monsterentry        *entry = get_monster_data(monster->type);
-    dungeon_feature_type feat  = grd[monster->x][monster->y];
-    if (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-        && !monster->airborne())
-    {
-        monster->speed_increment -= entry->energy_usage.swim;
-    }
-    else
-        monster->speed_increment -= entry->energy_usage.move;
+    swim_or_move_energy(monster);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
     

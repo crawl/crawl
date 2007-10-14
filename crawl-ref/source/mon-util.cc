@@ -3896,28 +3896,20 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
     
     case ENCH_HASTE:
-    {
-        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
 
-        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
-    }
 
     case ENCH_SLOW:
-    {
-        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
 
-        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
-    }
 
     case ENCH_SUBMERGED:
         if (type == MONS_AIR_ELEMENTAL && mons_near(this) && !quiet)
@@ -3952,28 +3944,20 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HASTE:
-    {
-        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
 
-        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
-    }
 
     case ENCH_SLOW:
-    {
-        int old_speed = speed;
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
 
-        ench_countdown = div_rand_round(ench_countdown * speed, old_speed);
         break;
-    }
 
     case ENCH_PARALYSIS:
         if (!quiet)
@@ -4235,11 +4219,11 @@ std::string monsters::describe_enchantments() const
     return (oss.str());
 }
 
-// used to adjust time durations in handle_enchantment() for monster speed
+// used to adjust time durations in calc_duration() for monster speed
 static inline int mod_speed( int val, int speed )
 {
     if (!speed)
-        speed = you.time_taken;
+        speed = 10;
     const int modded = (speed ? (val * 10) / speed : val);
     return (modded? modded : 1);
 }
@@ -4247,9 +4231,8 @@ static inline int mod_speed( int val, int speed )
 bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 {
     // Faster monsters can wiggle out of the net more quickly.
-    const int spd = (speed == 0)           ? you.time_taken :
-                    (me.ench == ENCH_HELD) ? speed :
-                    10;
+    const int spd = (me.ench == ENCH_HELD) ? speed :
+                                             10;
     const int actdur = speed_to_duration(spd);
     if (lose_ench_duration(me, actdur))
         return (true);
@@ -4284,7 +4267,7 @@ bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 
 void monsters::apply_enchantment(const mon_enchant &me)
 {
-    const int spd = speed == 0? you.time_taken : 10;
+    const int spd = 10;
     switch (me.ench)
     {
     case ENCH_BERSERK:
@@ -4485,11 +4468,11 @@ void monsters::apply_enchantment(const mon_enchant &me)
             break;
         else if (((type == MONS_ELECTRICAL_EEL
                    || type == MONS_LAVA_SNAKE)
-                  && (random2(1000) < mod_speed( 20, spd )
+                  && (random2(1000) < 20
                       || (mons_near(this) 
                           && hit_points == max_hit_points
                           && !one_chance_in(10))))
-                 || random2(2000) < mod_speed(10, spd)
+                 || random2(2000) < 10
                  || (mons_near(this)
                      && hit_points == max_hit_points
                      && !one_chance_in(5)))
@@ -4508,12 +4491,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (mons_res_poison(this) < 0)
             dam += roll_dice( 2, poisonval ) - 1;
-
-        // We adjust damage for monster speed (since this is applied 
-        // only when the monster moves), and we handle the factional
-        // part as well (so that speed 30 creatures will take damage).
-        dam *= 10;
-        dam = (dam / spd) + ((random2(spd) < (dam % spd)) ? 1 : 0);
 
         if (dam > 0)
         {
@@ -4539,7 +4516,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_ROT:
     {
         if (hit_points > 1 
-                 && random2(1000) < mod_speed( 333, spd ))
+                 && random2(1000) < 333)
         {
             hurt_monster(this, 1);
             if (hit_points < max_hit_points && coinflip())
@@ -4557,12 +4534,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (mons_res_fire( this ) < 0)
             dam += roll_dice( 2, 5 ) - 1;
-
-        // We adjust damage for monster speed (since this is applied 
-        // only when the monster moves), and we handle the factional
-        // part as well (so that speed 30 creatures will take damage).
-        dam *= 10;
-        dam = (dam / spd) + ((random2(spd) < (dam % spd)) ? 1 : 0);
 
         if (dam > 0)
         {
@@ -4593,7 +4564,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_GLOWING_SHAPESHIFTER:     // this ench never runs out
         // number of actions is fine for shapeshifters
         if (type == MONS_GLOWING_SHAPESHIFTER 
-            || random2(1000) < mod_speed( 250, spd ))
+            || random2(1000) < 250)
         {
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
         }
@@ -4601,7 +4572,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SHAPESHIFTER:     // this ench never runs out
         if (type == MONS_SHAPESHIFTER 
-            || random2(1000) < mod_speed( 1000 / ((15 * hit_dice) / 5), spd ))
+            || random2(1000) < ( 1000 / ((15 * hit_dice) / 5)))
         {
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
         }
