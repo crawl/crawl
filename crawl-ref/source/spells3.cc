@@ -666,6 +666,10 @@ void you_teleport_now( bool allow_control, bool new_abyss_area )
 
 bool entomb(int powc)
 {
+    // power guidelines:
+    // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
+    // up to 300 or so with godly assistance or end-level, and 1200
+    // as more or less the theoretical maximum.
     int number_built = 0;
 
     const dungeon_feature_type safe_to_overwrite[] = {
@@ -675,10 +679,10 @@ bool entomb(int powc)
         DNGN_FLOOR_SPECIAL
     };
 
-    if ( powc > 95 )
-        powc = 95;
-    if ( powc < 25 )
-        powc = 25;
+    if ( powc > 98 )
+        powc = 98;
+    if ( powc < 30 )
+        powc = 30;
 
     for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
     {
@@ -691,7 +695,7 @@ bool entomb(int powc)
                 continue;
             }
 
-            if ( random2(100) > powc )
+            if ( one_chance_in(powc/5) )
                 continue;
 
             bool proceed = false;

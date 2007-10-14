@@ -2036,7 +2036,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             god_speaks(GOD_XOM, "Xom roars with laughter!");
             you.gift_timeout = 255;
         }
-        else if (you.penance[GOD_XOM] > 0)
+        else if (you.penance[GOD_XOM])
             god_speaks(GOD_XOM, "Xom laughs nastily.");
     }
 
@@ -2066,7 +2066,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_GENIE:            genie_card(power, rarity); break;
     case CARD_CURSE:            curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       warpwright_card(power, rarity); break;
-    case CARD_TOMB:             entomb(power/2); break;
+    case CARD_TOMB:             entomb(power); break;
     case CARD_WRAITH:           drain_exp(); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
     case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
@@ -2076,7 +2076,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_WEAPON:    summon_dancing_weapon(power, rarity); break;
     case CARD_TROWEL:           trowel_card(power, rarity); break;
     case CARD_SPADE: your_spells(SPELL_DIG, random2(power/4), false); break;
-        
+    case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
+
     case CARD_VENOM:
         if ( coinflip() )
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE,random2(power/4), false);
@@ -2097,14 +2098,11 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             mpr("The map is blank.");
         break;
 
-    case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
-
     case CARD_WILD_MAGIC:
         // yes, high power is bad here
         miscast_effect( SPTYP_RANDOM, random2(power/15) + 5,
                         random2(power), 0, "a card of wild magic" );
         break;
-
 
     case CARD_FAMINE:
         if (you.is_undead == US_UNDEAD)
@@ -2128,7 +2126,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     if (you.religion == GOD_XOM
         && (which_card == CARD_BLANK1 || which_card == CARD_BLANK2))
     {
-        god_speaks(GOD_XOM, "\"How boring, lets spice things up a little.\"");
+        god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
 
         xom_acts(abs(you.piety - 100));
     }
