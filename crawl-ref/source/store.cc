@@ -1206,6 +1206,8 @@ void CrawlHashTable::clear()
         ASSERT(!(i->second.flags & SFLAG_NO_ERASE));
 
     hash_map.clear();
+    default_flags = 0;
+    type          = SV_NONE;
 }
 
 CrawlHashTable::iterator CrawlHashTable::begin()
@@ -1540,6 +1542,8 @@ void CrawlVector::clear()
         ASSERT(!(vector[i].flags & SFLAG_NO_ERASE));
 
     vector.clear();
+    default_flags = 0;
+    type          = SV_NONE;
 }
 
 CrawlVector::iterator CrawlVector::begin()
