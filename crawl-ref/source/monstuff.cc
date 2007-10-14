@@ -4777,9 +4777,25 @@ static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
 
 static void mons_open_door(monsters* monster, const coord_def &pos)
 {
-    if (grd(pos) == DNGN_SECRET_DOOR && !see_grid(pos))
+    bool was_secret = (grd(pos) == DNGN_SECRET_DOOR);
+
+    if (was_secret && !see_grid(pos))
         set_terrain_changed(pos);
     grd(pos) = DNGN_OPEN_DOOR;
+
+    if (see_grid(pos))
+    {
+        viewwindow(true, false);
+
+        if (was_secret)
+            mpr("The rock wall was actually a secret door!");
+
+        if (!you.can_see(monster))
+        {
+            mpr("Something unseen opens the door.");
+            interrupt_activity(AI_FORCE_INTERRUPT);
+        }
+    }
 
     monsterentry *entry = get_monster_data(monster->type);
     monster->speed_increment -= entry->energy_usage.move;
@@ -5090,6 +5106,17 @@ static bool monster_move(monsters *monster)
         grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
 
         jelly_grows(monster);
+
+        if (see_grid(monster->x + mmov_x, monster->y + mmov_y))
+        {
+            viewwindow(true, false);
+
+            if (!you.can_see(monster))
+            {
+                mpr("The door mysteriously vanishes.");
+                interrupt_activity( AI_FORCE_INTERRUPT );
+            }
+        }
     } // done door-eating jellies
 
 
