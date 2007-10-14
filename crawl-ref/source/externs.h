@@ -83,6 +83,10 @@ public:
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
+
+    virtual bool can_pass_through(const dungeon_feature_type grid) const = 0;
+    virtual bool can_pass_through(const int x, const int y) const = 0;
+    virtual bool can_pass_through(const coord_def &c) const = 0;
     
     virtual size_type body_size(int psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
@@ -747,6 +751,9 @@ public:
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
+    bool      can_pass_through(const dungeon_feature_type grid) const;
+    bool      can_pass_through(const int x, const int y) const;
+    bool      can_pass_through(const coord_def &c) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
@@ -1011,6 +1018,9 @@ public:
     bool      submerged() const;
     bool      can_drown() const;
     bool      floundering() const;
+    bool      can_pass_through(const dungeon_feature_type grid) const;
+    bool      can_pass_through(const int x, const int y) const;
+    bool      can_pass_through(const coord_def &c) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;

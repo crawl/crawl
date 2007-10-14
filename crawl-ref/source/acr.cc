@@ -3603,7 +3603,7 @@ static void move_player(int move_x, int move_y)
         const int new_targ_x = you.x_pos + move_x;
         const int new_targ_y = you.y_pos + move_y;
         if (!in_bounds(new_targ_x, new_targ_y)
-                || grid_is_solid(grd[new_targ_x][new_targ_y]))
+            || !you.can_pass_through(new_targ_x, new_targ_y))
         {
             you.turn_is_over = true;
             mpr("Ouch!");
@@ -3618,7 +3618,7 @@ static void move_player(int move_x, int move_y)
     const int targ_y = you.y_pos + move_y;
     const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
     const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
-    const bool          targ_solid = grid_is_solid(targ_grid);
+    const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
 
     // cannot move away from mermaid but you CAN fight neighbouring squares
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF]
@@ -3677,7 +3677,7 @@ static void move_player(int move_x, int move_y)
         }
     }
 
-    if (!attacking && !targ_solid && moving)
+    if (!attacking && targ_pass && moving)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
@@ -3694,7 +3694,7 @@ static void move_player(int move_x, int move_y)
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
         open_door(move_x, move_y, false);
-    else if (targ_solid)
+    else if (!targ_pass)
     {
         stop_running();
 

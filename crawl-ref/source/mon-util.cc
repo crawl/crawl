@@ -2391,6 +2391,36 @@ bool monsters::floundering() const
             && !mons_flies(this));
 }
 
+bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
+{
+    // Permanent walls can't be passed through.
+    if (grid == DNGN_CLEAR_PERMAROCK_WALL || grid == DNGN_PERMAROCK_WALL)
+        return false;
+
+    switch (mclass)
+    {
+    case MONS_ROCK_WORM:
+        return (grid >= DNGN_ROCK_WALL && grid <= DNGN_CLEAR_PERMAROCK_WALL);
+    }
+
+    return !grid_is_solid(grid);
+}
+
+bool monsters::can_pass_through(const dungeon_feature_type grid) const
+{
+    return mons_class_can_pass(type, grid);
+}
+
+bool monsters::can_pass_through(const int _x, const int _y) const
+{
+    return can_pass_through(grd[_x][_y]);
+}
+
+bool monsters::can_pass_through(const coord_def &c) const
+{
+    return can_pass_through(grd(c));
+}
+
 bool monsters::can_drown() const
 {
     // Mummies can fall apart in water; ghouls and demons can drown in

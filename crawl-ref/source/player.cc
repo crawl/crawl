@@ -169,7 +169,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     const dungeon_feature_type new_grid = grd[x][y];
 
     // really must be clear
-    ASSERT( !grid_is_solid( new_grid ) );
+    ASSERT( you.can_pass_through( new_grid ) );
 
     // if (grid_is_solid( new_grid ))
     //     return (false);
@@ -5404,6 +5404,21 @@ bool player::has_spell(int spell) const
 bool player::floundering() const
 {
     return in_water() && !can_swim();
+}
+
+bool player::can_pass_through(const dungeon_feature_type grid) const
+{
+    return !grid_is_solid(grid);
+}
+
+bool player::can_pass_through(const int _x, const int _y) const
+{
+    return can_pass_through(grd[_x][_y]);
+}
+
+bool player::can_pass_through(const coord_def &c) const
+{
+    return can_pass_through(grd(c));
 }
 
 size_type player::body_size(int psize, bool base) const

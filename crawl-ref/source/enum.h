@@ -793,11 +793,11 @@ enum dungeon_feature_type
     DNGN_UNSEEN,                       //    0
     DNGN_CLOSED_DOOR,
     DNGN_SECRET_DOOR,
+    DNGN_WAX_WALL,
+    DNGN_METAL_WALL,
+    DNGN_GREEN_CRYSTAL_WALL,           //    5
     DNGN_ROCK_WALL,
     DNGN_STONE_WALL,
-    DNGN_METAL_WALL,                   //    5
-    DNGN_GREEN_CRYSTAL_WALL,
-    DNGN_WAX_WALL,
     DNGN_PERMAROCK_WALL,               //    8 - for undiggable walls
     DNGN_CLEAR_ROCK_WALL,              //    9 - Transparent
     DNGN_CLEAR_STONE_WALL,             //   10 - Transparent
@@ -805,8 +805,12 @@ enum dungeon_feature_type
     DNGN_ORCISH_IDOL,                  //   12 - Can see past
 
     // XXX: lowest/highest grid value which is a wall
-    DNGN_MINWALL = DNGN_ROCK_WALL,
+    DNGN_MINWALL = DNGN_WAX_WALL,
     DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
+
+    // Random wall types for big rooms
+    DNGN_RNDWALL_MIN = DNGN_METAL_WALL,
+    DNGN_RNDWALL_MAX = DNGN_STONE_WALL,
 
     // XXX: highest grid value which is opaque
     DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
@@ -1749,6 +1753,9 @@ enum monster_type                      // (int) menv[].type
     MONS_JELLYFISH,
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
+
+    // Monsters which move through rock:
+    MONS_ROCK_WORM = 440,
 
     // Statuary
     MONS_ORANGE_STATUE,

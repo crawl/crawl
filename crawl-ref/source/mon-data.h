@@ -3894,6 +3894,19 @@
 
 // end water monsters {dlb}
 
+// begin "move through rock" monsters {mpc}
+{
+    MONS_ROCK_WORM, 'w', BROWN, "rock worm",
+    M_NO_FLAGS,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
+    0, 10, MONS_WORM, MONS_ROCK_WORM, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
+    { 5, 5, 5, 0 },
+    3, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_PLANT, 
+    12, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LARGE
+},
+// end "move through rock" monsters {mpc}
+
 {
     MONS_WOLF, 'h', LIGHTGREY, "wolf",
     M_WARM_BLOOD | M_SENSE_INVIS,

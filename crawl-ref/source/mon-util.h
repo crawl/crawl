@@ -649,4 +649,6 @@ std::string get_mon_shape_str(const monsters *mon);
 std::string get_mon_shape_str(const int type);
 std::string get_mon_shape_str(const mon_body_shape shape);
 
+bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid);
+
 #endif

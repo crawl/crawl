@@ -1201,6 +1201,10 @@ redback
 
 A vicious black spider with a splash of red on its swollen abdomen. Its mandibles drip with lethal poison.
 %%%%
+rock worm
+
+A large worm which moves through rock as if it were air.
+%%%%
 rock troll
 
 An enormous and very nasty-looking humanoid creature. Its rocky hide seems to heal almost instantaneously from most wounds.

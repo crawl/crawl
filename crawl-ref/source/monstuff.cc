@@ -925,7 +925,7 @@ static bool jelly_divide(monsters * parent)
         {
             // 10-50 for now - must take clouds into account:
             if (mgrd[parent->x + jex][parent->y + jey] == NON_MONSTER
-                && !grid_is_solid(grd[parent->x + jex][parent->y + jey])
+                && parent->can_pass_through(parent->x + jex, parent->y + jey)
                 && (parent->x + jex != you.x_pos || parent->y + jey != you.y_pos))
             {
                 foundSpot = true;
@@ -4113,7 +4113,7 @@ static void handle_monster_move(int i, monsters *monster)
                      for (int xi = -1; xi <= 1; ++xi)
                      {
                          coord_def c = monster->pos() + coord_def(xi, yi);
-                         if (in_bounds(c) && !grid_is_solid(grd(c))
+                         if (in_bounds(c) && monster->can_pass_through(c)
                              && one_chance_in(++pfound))
                          {
                              mmov_x = xi;
@@ -4139,8 +4139,8 @@ static void handle_monster_move(int i, monsters *monster)
                      mmov_y = 0;
                  }
 
-                 if (grid_is_solid(
-                         grd[ monster->x + mmov_x ][ monster->y + mmov_y ]))
+                 if (!monster->can_pass_through(monster->x + mmov_x,
+                                                monster->y + mmov_y))
                  {
                      mmov_x = mmov_y = 0;
                  }
@@ -4855,8 +4855,10 @@ static bool monster_move(monsters *monster)
 
     // effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
+    bool no_water = false;
     if (monster->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
-        okmove = DNGN_WATER_STUCK;
+        //okmove = DNGN_WATER_STUCK;
+        no_water = true;
 
     if (mons_flies(monster) > 0 
         || habitat != DNGN_FLOOR
@@ -4883,7 +4885,7 @@ static bool monster_move(monsters *monster)
                 continue;
             }
 
-            int target_grid = grd[targ_x][targ_y];
+            dungeon_feature_type target_grid = grd[targ_x][targ_y];
 
             const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
             const int targ_cloud_type = 
@@ -4917,7 +4919,9 @@ static bool monster_move(monsters *monster)
                     continue;
                 }
             } 
-            else if (grd[ targ_x ][ targ_y ] < okmove)
+            else if (!monster->can_pass_through(target_grid)
+                     || (no_water && target_grid >= DNGN_DEEP_WATER
+                         && target_grid <= DNGN_WATER_STUCK))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -5588,6 +5592,9 @@ dungeon_feature_type monster_habitat(int which_class)
     case MONS_LAVA_SNAKE:
     case MONS_SALAMANDER:
         return (DNGN_LAVA);
+
+    case MONS_ROCK_WORM:
+        return (DNGN_ROCK_WALL);
 
     default:
         return (DNGN_FLOOR);      // closest match to terra firma {dlb}

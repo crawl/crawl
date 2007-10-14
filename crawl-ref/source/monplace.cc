@@ -56,6 +56,13 @@ bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
             || (!generation 
                     && actual_grid == DNGN_SHALLOW_WATER);
 
+    if (grid_wanted >= DNGN_ROCK_WALL
+        && grid_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
+    {
+        return (actual_grid >= DNGN_ROCK_WALL &&
+                actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
+    }
+
     return (grid_wanted == actual_grid
             || (grid_wanted == DNGN_DEEP_WATER
                 && (actual_grid == DNGN_SHALLOW_WATER
@@ -1617,7 +1624,7 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
 {
     int summd = -1;
     coord_def pos = find_newmons_square(cls, cr_x, cr_y);
-    if (force_place && !grid_is_solid(grd[cr_x][cr_y])
+    if (force_place && mons_class_can_pass(cls, grd[cr_x][cr_y])
         && mgrd[cr_x][cr_y] == NON_MONSTER)
     {
         pos.x = cr_x;

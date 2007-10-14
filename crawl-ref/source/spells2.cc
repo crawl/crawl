@@ -155,7 +155,8 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
             gx = gridx + random2(fuzz_diam) - fuzz_radius;
             gy = gridy + random2(fuzz_diam) - fuzz_radius;
 
-            if (map_bounds(gx, gy) && !grid_is_solid(grd[gx][gy]))
+            if (map_bounds(gx, gy)
+                && mon->can_pass_through(grd[gx][gy]))
             {
                 found_good = true;
                 break;

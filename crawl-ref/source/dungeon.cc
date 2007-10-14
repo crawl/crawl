@@ -2742,7 +2742,7 @@ static void specr_2(spec_room &sr)
         if (grd[sx][sy] == DNGN_BUILDER_SPECIAL_WALL)
             grd[sx][sy] = DNGN_CLOSED_DOOR;
 
-        if (j > 0 && grd[sx + dx][sy + dy] > DNGN_ROCK_WALL
+        if (j > 0 && grd[sx + dx][sy + dy] > DNGN_MINWALL
             && grd[sx + dx][sy + dy] < DNGN_FLOOR)
             grd[sx][sy] = DNGN_BUILDER_SPECIAL_FLOOR;
 
@@ -6415,7 +6415,11 @@ static void big_room(int level_number)
     replace_area(sr.x1, sr.y1, sr.x2, sr.y2, DNGN_CLOSED_DOOR, type_floor);
 
     if (type_floor == DNGN_FLOOR)
-        type_2 = static_cast<dungeon_feature_type>(DNGN_ROCK_WALL + random2(4));
+    {
+        const int minwall = DNGN_RNDWALL_MIN;
+        const int range   = DNGN_RNDWALL_MAX - DNGN_RNDWALL_MIN + 1;
+        type_2 = static_cast<dungeon_feature_type>(minwall + random2(range));
+    }
 
     // no lava in the Crypt or Tomb, thanks!
     if (player_in_branch( BRANCH_CRYPT ) || player_in_branch( BRANCH_TOMB ))
