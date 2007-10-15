@@ -2027,6 +2027,7 @@ bolt mons_spells( int spell_cast, int power )
 
     case SPELL_HELLFIRE:           // fiend's hellfire
         beam.name = "hellfire";
+        beam.aux_source = "blast of hellfire";
         beam.colour = RED;
         beam.range = 4;
         beam.rangeMax = 13;
