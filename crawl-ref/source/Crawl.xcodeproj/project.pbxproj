@@ -221,6 +221,7 @@
 		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
 		7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
 		7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BC222E60ABBB286003A7D9A /* itemprop.h */; };
+		7BD222200CC2D51300B475D8 /* store.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD2221F0CC2D51300B475D8 /* store.cc */; };
 		7BD75A350AC214A200B74F6E /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
 		7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BD75A340AC214A200B74F6E /* notes.h */; };
 		7BDEBB290BB4CB0B008DF39F /* mtransit.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB280BB4CB0B008DF39F /* mtransit.cc */; };
@@ -565,6 +566,8 @@
 		7BB0A2280CB735C00034A741 /* xom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xom.h; sourceTree = SOURCE_ROOT; };
 		7BC222E50ABBB286003A7D9A /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
 		7BC222E60ABBB286003A7D9A /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
+		7BD2221E0CC2D51300B475D8 /* store.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = store.h; sourceTree = SOURCE_ROOT; };
+		7BD2221F0CC2D51300B475D8 /* store.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = store.cc; sourceTree = SOURCE_ROOT; };
 		7BD75A330AC214A200B74F6E /* notes.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = notes.cc; sourceTree = "<group>"; };
 		7BD75A340AC214A200B74F6E /* notes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = notes.h; sourceTree = "<group>"; };
 		7BDEBB280BB4CB0B008DF39F /* mtransit.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mtransit.cc; sourceTree = "<group>"; };
@@ -865,6 +868,8 @@
 				7B237E1F0A8EC9D000580F30 /* stash.h */,
 				7B54B51A0CA8217900612805 /* state.cc */,
 				7B6164280C9CA8E80054B3D9 /* state.h */,
+				7BD2221E0CC2D51300B475D8 /* store.h */,
+				7BD2221F0CC2D51300B475D8 /* store.cc */,
 				7B237E1E0A8EC9D000580F30 /* stuff.cc */,
 				7B237E1D0A8EC9D000580F30 /* stuff.h */,
 				7B237E240A8EC9D000580F30 /* tags.cc */,
@@ -1151,6 +1156,7 @@
 				7B6164320C9CA8E80054B3D9 /* terrain.cc in Sources */,
 				7B6164340C9CA8E80054B3D9 /* traps.cc in Sources */,
 				7B54B51B0CA8217900612805 /* state.cc in Sources */,
+				7BD222200CC2D51300B475D8 /* store.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1169,13 +1175,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
@@ -1271,7 +1280,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
@@ -1282,11 +1292,13 @@
 					DEBUG_ITEM_SCAN,
 					FULLDEBUG,
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
