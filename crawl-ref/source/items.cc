@@ -210,7 +210,7 @@ int cull_items(void)
                         // 9. unmark unrandart
                         int z = find_unrandart_index(item);
                         if (z >= 0)
-                            set_unrandart_exist(z, 0);
+                            set_unrandart_exist(z, false);
                     }
 
                     // POOF!
@@ -506,7 +506,7 @@ void unlink_item( int dest )
 #endif
 }                               // end unlink_item()
 
-void destroy_item( int dest )
+void destroy_item( int dest, bool never_created )
 {
     // Don't destroy non-items, but this function may be called upon 
     // to remove items reduced to zero quantity, so we allow "invalid"
@@ -515,6 +515,19 @@ void destroy_item( int dest )
         return;
 
     unlink_item( dest );
+
+    if (never_created)
+    {
+        if (is_fixed_artefact(mitm[dest]))
+            set_unique_item_status( mitm[dest].base_type, mitm[dest].special,
+                                    UNIQ_NOT_EXISTS );
+        else if (is_unrandom_artefact(mitm[dest]))
+        {
+            const int unrand = find_unrandart_index(dest);
+            if (unrand != -1)
+                set_unrandart_exist( unrand, false );
+        }
+    }
 
     // paranoia, shouldn't be needed
     mitm[dest].clear();

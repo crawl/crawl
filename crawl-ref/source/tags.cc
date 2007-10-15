@@ -1348,7 +1348,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     // # of unrandarts could certainly change.  If it does,
     // the new ones won't exist yet - zero them out.
     for (; j < NO_UNRANDARTS; j++)
-        set_unrandart_exist(j, 0);
+        set_unrandart_exist(j, false);
 }
 
 static PlaceInfo unmarshallPlaceInfo(struct tagHeader &th)

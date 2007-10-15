@@ -1355,9 +1355,13 @@ bool acquirement(object_class_type class_wanted, int agent)
             if ((doodad.base_type == OBJ_WEAPONS
                  && !can_wield(&doodad, false, true))
                 || (doodad.base_type == OBJ_ARMOUR
-                    && !can_wear_armour(doodad, false, true)))
+                    && !can_wear_armour(doodad, false, true))
+
+                // Trog does not gift the Wrath of Trog.
+                || (agent == GOD_TROG && is_fixed_artefact(doodad)
+                    && doodad.special == SPWPN_WRATH_OF_TROG))
             {
-                destroy_item(thing_created);
+                destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
                 continue;
             }

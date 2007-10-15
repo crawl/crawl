@@ -5326,7 +5326,7 @@ void player::init()
     unique_items.init(UNIQ_NOT_EXISTS);
 
     for (int i = 0; i < NO_UNRANDARTS; i++)
-        set_unrandart_exist(i, 0);
+        set_unrandart_exist(i, false);
 
     skills.init(0);
     skill_points.init(0);
