@@ -54,7 +54,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void monster_attack(int monster_attacking);
+bool monster_attack(int monster_attacking);
 
 
 // last updated: 08jun2000 {dlb}

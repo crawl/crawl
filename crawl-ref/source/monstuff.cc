@@ -4069,7 +4069,10 @@ static void handle_monster_move(int i, monsters *monster)
         }
 
         if (monster->speed >= 100)
+        {
+            monster->speed_increment -= non_move_energy;
             continue;
+        }
 
         if (monster->type == MONS_ZOMBIE_SMALL
             || monster->type == MONS_ZOMBIE_LARGE
@@ -5293,8 +5296,7 @@ forget_it:
         if (monster->x + mmov_x == you.x_pos
             && monster->y + mmov_y == you.y_pos)
         {
-            monster_attack( monster_index(monster) );
-            ret    = true;
+            ret    = monster_attack( monster_index(monster) );
             mmov_x = 0;
             mmov_y = 0;
         }
@@ -5334,12 +5336,14 @@ forget_it:
         if (targmon != NON_MONSTER)
         {
             if (mons_aligned(monster_index(monster), targmon))
-                monster_swaps_places(monster, mmov_x, mmov_y);
+                ret = monster_swaps_places(monster, mmov_x, mmov_y);
             else
+            {
                 monsters_fight(monster_index(monster), targmon);
+                ret = true;
+            }
 
             // If the monster swapped places, the work's already done.
-            ret    = true;
             mmov_x = 0;
             mmov_y = 0;
         }

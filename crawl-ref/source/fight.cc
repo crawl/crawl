@@ -3613,15 +3613,17 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     }
 }
 
-void monster_attack(int monster_attacking)
+bool monster_attack(int monster_attacking)
 {
     monsters *attacker = &menv[monster_attacking];
     
     if (mons_friendly(attacker) && !mons_is_confused(attacker))
-        return;
+        return false;
 
     melee_attack attk(attacker, &you);
     attk.attack();
+
+    return true;
 }                               // end monster_attack()
 
 bool monsters_fight(int monster_attacking, int monster_attacked)
