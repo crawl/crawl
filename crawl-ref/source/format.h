@@ -38,6 +38,7 @@ public:
     void swap(formatted_string& other);
 
     std::string::size_type length() const;
+    std::string html_dump() const;
 
     const formatted_string &operator += (const formatted_string &other);
 
@@ -58,7 +59,7 @@ private:
     int find_last_colour() const;
 
 public:
-
+    
     struct fs_op
     {
         fs_op_type type;
