@@ -2399,6 +2399,63 @@ void update_beholders(const monsters *mon, bool force)
     }
 }
 
+void check_beholders()
+{
+    for (int i = you.beheld_by.size() - 1; i >= 0; i--)
+    {
+        const monsters* mon = &menv[you.beheld_by[i]];
+        if (!mon->alive() || mon->type != MONS_MERMAID)
+        {
+#if DEBUG
+            if (!mon->alive())
+                mpr("Dead mermaid still beholding?", MSGCH_DIAGNOSTICS);
+            else if (mon->type != MONS_MERMAID)
+                mprf(MSGCH_DIAGNOSTICS, "Non-mermaid '%s' beholding?",
+                     mon->name(DESC_PLAIN, true).c_str());
+#endif
+
+            you.beheld_by.erase(you.beheld_by.begin() + i);
+            if (you.beheld_by.empty())
+            {
+                mpr("You are no longer entranced.", MSGCH_RECOVERY);
+                you.duration[DUR_BEHELD] = 0;
+                break;
+            }
+            continue;
+        }
+        const coord_def pos = mon->pos();
+        int walls = num_feats_between(you.x_pos, you.y_pos,
+                                      pos.x, pos.y, DNGN_UNSEEN,
+                                      DNGN_MAXWALL);
+
+        if (walls > 0)
+        {
+#if DEBUG
+            mprf(MSGCH_DIAGNOSTICS, "%d walls between beholding '%s' "
+                 "and player", walls, mon->name(DESC_PLAIN, true).c_str());
+#endif
+            you.beheld_by.erase(you.beheld_by.begin() + i);
+            if (you.beheld_by.empty())
+            {
+                mpr("You are no longer entranced.", MSGCH_RECOVERY);
+                you.duration[DUR_BEHELD] = 0;
+                break;
+            }
+            continue;
+        }
+    }
+
+    if (you.duration[DUR_BEHELD] > 0 && you.beheld_by.empty())
+    {
+#if DEBUG
+        mpr("Beheld with no mermaids left?", MSGCH_DIAGNOSTICS);
+#endif
+
+        mpr("You are no longer entranced.", MSGCH_RECOVERY);
+        you.duration[DUR_BEHELD] = 0;
+    }
+}
+
 int player_sust_abil(bool calc_unid)
 {
     int sa = 0;

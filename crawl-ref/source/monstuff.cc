@@ -1166,6 +1166,13 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     bool player_messaged =
         simple_monster_message(monster, str_polymon.c_str() );
 
+    // Even if the monster transforms from one type that can behold the
+    // player into a different type which can also behold the player,
+    // the polymoprh disrupts the beholding process.  Do this before
+    // changing monster->type, since unbeholding can only happen while
+    // monster is still a mermaid.
+    update_beholders(monster, true);
+
     // the actual polymorphing:
     const int old_hp = monster->hit_points;
     const int old_hp_max = monster->max_hit_points;

@@ -1231,6 +1231,7 @@ bool apply_berserk_penalty = false;
 static void input()
 {
     crawl_state.clear_god_acting();
+    check_beholders();
 
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
@@ -1454,10 +1455,25 @@ static bool toggle_flag( bool* flag, const char* flagname )
     return *flag;
 }
 
+static bool stairs_check_beheld()
+{
+    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
+    {
+        mprf("You cannot move away from %s!",
+             menv[you.beheld_by[0]].name(DESC_NOCAP_THE, true).c_str());
+        return true;
+    }
+
+    return false;
+}
+
 static void go_downstairs();
 static void go_upstairs()
 {
     const dungeon_feature_type ygrd = grd(you.pos());
+
+    if (stairs_check_beheld())
+        return;
 
     // Allow both < and > to work for Abyss exits.
     if (ygrd == DNGN_EXIT_ABYSS)
@@ -1499,6 +1515,10 @@ static void go_downstairs()
 {
     bool shaft = (trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
                   && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP);
+
+
+    if (stairs_check_beheld())
+        return;
 
     if (shaft && you.flies() == FL_LEVITATE)
     {
@@ -3663,14 +3683,16 @@ static void move_player(int move_x, int move_y)
     {   
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {
-             coord_def pos = menv[you.beheld_by[i]].pos();
+             monsters* mon = &menv[you.beheld_by[i]];
+             coord_def pos = mon->pos();
              int olddist = distance(you.x_pos, you.y_pos, pos.x, pos.y);
-             int newdist = distance(you.x_pos + move_x, you.y_pos + move_y, pos.x, pos.y);
-             
+             int newdist = distance(you.x_pos + move_x, you.y_pos + move_y,
+                                    pos.x, pos.y);
+
              if (olddist < newdist)
              {
                  mprf("You cannot move away from %s!",
-                      (menv[you.beheld_by[i]]).name(DESC_NOCAP_THE, true).c_str());
+                      mon->name(DESC_NOCAP_THE, true).c_str());
                       
                  move_x = 0;
                  move_y = 0;

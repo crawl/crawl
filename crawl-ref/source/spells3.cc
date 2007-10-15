@@ -766,7 +766,29 @@ bool entomb(int powc)
     }
 
     if (number_built > 0)
+    {
         mpr("Walls emerge from the floor!");
+
+        for (int i = you.beheld_by.size() - 1; i >= 0; i--)
+        {
+            const monsters* mon = &menv[you.beheld_by[i]];
+            const coord_def pos = mon->pos();
+            int walls = num_feats_between(you.x_pos, you.y_pos,
+                                          pos.x, pos.y, DNGN_UNSEEN,
+                                          DNGN_MAXWALL);
+
+            if (walls > 0)
+            {
+                update_beholders(mon, true);
+                if (you.beheld_by.empty())
+                {
+                    you.duration[DUR_BEHELD] = 0;
+                    break;
+                }
+                continue;
+            }
+        }
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

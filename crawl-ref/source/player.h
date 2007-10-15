@@ -265,6 +265,7 @@ bool player_monster_visible( const monsters *mon );
 
 bool player_beheld_by( const monsters *mon );
 void update_beholders( const monsters *mon, bool force = false);
+void check_beholders();
 
 /* ***********************************************************************
  * called from: acr - decks - it_use2 - ouch
