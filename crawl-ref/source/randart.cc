@@ -1981,7 +1981,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     if (unranddata[ unrand_index ].prpty[ RAP_CURSED ])
         do_curse_item( item );
 
-    set_unrandart_exist( unrand_index, 1 );
+    set_unrandart_exist( unrand_index, true );
 
     return (true);
 }                               // end make_item_unrandart()

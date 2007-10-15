@@ -2897,9 +2897,10 @@ static bool weapon_is_visibly_special(const item_def &item)
     const int brand = get_weapon_brand(item);
     const bool visibly_branded = brand != SPWPN_NORMAL;
 
-    return ((is_random_artefact(item) || visibly_branded)
-            || ((item.plus != 0 || item.plus2 != 0)
-                && !one_chance_in(3)))
+    return (is_random_artefact(item) || visibly_branded
+            || ((item.plus || item.plus2)
+                && (get_equip_race(item)? one_chance_in(7)
+                    : one_chance_in(3))))
         && item.sub_type != WPN_CLUB
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB

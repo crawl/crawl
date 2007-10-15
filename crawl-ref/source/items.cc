@@ -205,7 +205,7 @@ int cull_items(void)
                         // 9. unmark unrandart
                         int z = find_unrandart_index(item);
                         if (z >= 0)
-                            set_unrandart_exist(z, 0);
+                            set_unrandart_exist(z, false);
                     }
 
                     // POOF!
@@ -479,7 +479,7 @@ void unlink_item( int dest )
 #endif
 }                               // end unlink_item()
 
-void destroy_item( int dest )
+void destroy_item( int dest, bool never_created )
 {
     // Don't destroy non-items, but this function may be called upon 
     // to remove items reduced to zero quantity, so we allow "invalid"
@@ -488,6 +488,19 @@ void destroy_item( int dest )
         return;
 
     unlink_item( dest );
+
+    if (never_created)
+    {
+        if (is_fixed_artefact(mitm[dest]))
+            set_unique_item_status( mitm[dest].base_type, mitm[dest].special,
+                                    UNIQ_NOT_EXISTS );
+        else if (is_unrandom_artefact(mitm[dest]))
+        {
+            const int unrand = find_unrandart_index(dest);
+            if (unrand != -1)
+                set_unrandart_exist( unrand, false );
+        }
+    }
 
     // paranoia, shouldn't be needed
     mitm[dest].clear();
@@ -1470,11 +1483,11 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 //
 // Done this way in the hopes that it will be obvious from
 // calling code that "obj" is possibly modified.
-void move_item_to_grid( int *const obj, int x, int y )
+bool move_item_to_grid( int *const obj, int x, int y )
 {
     // must be a valid reference to a valid object
     if (*obj == NON_ITEM || !is_valid_item( mitm[*obj] ))
-        return;
+        return (false);
 
     // If it's a stackable type...
     if (is_stackable_item( mitm[*obj] ))
@@ -1484,7 +1497,7 @@ void move_item_to_grid( int *const obj, int x, int y )
         {
             // check if item already linked here -- don't want to unlink it
             if (*obj == i)
-                return;            
+                return (false);            
 
             if (items_stack( mitm[*obj], mitm[i] ))
             {
@@ -1493,7 +1506,7 @@ void move_item_to_grid( int *const obj, int x, int y )
                 inc_mitm_item_quantity( i, mitm[*obj].quantity );
                 destroy_item( *obj );
                 *obj = i;
-                return;
+                return (true);
             }
         }
     }
@@ -1526,7 +1539,7 @@ void move_item_to_grid( int *const obj, int x, int y )
     mitm[*obj].link = igrd[x][y];
     igrd[x][y] = *obj;
 
-    return;
+    return (true);
 }
 
 void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )

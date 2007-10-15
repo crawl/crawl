@@ -157,11 +157,13 @@ void ghost_demon::init_random_demon()
             values[ GVAL_BRAND ] = random2(17);
             /* some brands inappropriate (eg holy wrath) */
         } while (values[ GVAL_BRAND ] == SPWPN_HOLY_WRATH 
-                 || values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
+                 || (values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
+                     && you.mons_species() != MONS_ORC)
                  || values[ GVAL_BRAND ] == SPWPN_PROTECTION 
                  || values[ GVAL_BRAND ] == SPWPN_FLAME 
                  || values[ GVAL_BRAND ] == SPWPN_FROST 
-                 || values[ GVAL_BRAND ] == SPWPN_DISRUPTION);
+                 || (values[ GVAL_BRAND ] == SPWPN_DISRUPTION
+                     && you.holiness() != MH_UNDEAD));
     }
 
     // is demon a spellcaster?
@@ -439,6 +441,8 @@ int ghost_demon::translate_spell(int spel) const
     case SPELL_SYMBOL_OF_TORMENT:
         /* Too powerful to give ghosts Torment for Agony? Nah. */
         return (SPELL_SYMBOL_OF_TORMENT);
+    case SPELL_DELAYED_FIREBALL:
+        return (SPELL_FIREBALL);
     default:
         break;
     }

@@ -437,7 +437,13 @@ MONS:    (list of monsters)
          You can use weights as for ITEM: lines.
 
          Individual monsters may be prefixed with the "generate_awake" 
-         (without the quotes). Use this sparingly.
+         (without the quotes). Use this sparingly:
+         MONS: generate_awake giant beetle
+
+         Monsters can also be given colours that override their default
+         colour. Use this *very* sparingly:
+         MONS: col:darkgrey fungus
+         
          Note that 8, 9, 0 also place monsters (see the table).
  
 

@@ -37,7 +37,7 @@ bool dec_mitm_item_quantity( int obj, int amount );
 void inc_inv_item_quantity( int obj, int amount );
 void inc_mitm_item_quantity( int obj, int amount );
 
-void move_item_to_grid( int *const obj, int x, int y );
+bool move_item_to_grid( int *const obj, int x, int y );
 void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y );
 int  move_item_to_player( int obj, int quant_got, bool quiet = false );
 bool is_stackable_item( const item_def &item );
@@ -75,7 +75,7 @@ int get_item_slot( int reserve = 50 );
  *              religion - spells2 - spells3 - spells4
  * *********************************************************************** */
 void unlink_item(int dest);
-void destroy_item(int dest);
+void destroy_item(int dest, bool never_created = false);
 void destroy_item_stack( int x, int y );
 
 // last updated: 08jun2000 {dlb}
