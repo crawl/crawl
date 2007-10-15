@@ -324,9 +324,9 @@ struct dice_def
 
 struct run_check_dir
 {
-    unsigned char       grid;
-    char                dx;
-    char                dy;
+    dungeon_feature_type grid;
+    int dx;
+    int dy;
 };
 
 

@@ -3589,7 +3589,7 @@ const runrest &runrest::operator = (int newrunmode)
     return (*this);
 }
 
-static char base_grid_type( char grid )
+static dungeon_feature_type base_grid_type( dungeon_feature_type grid )
 {
     // Don't stop for undiscovered traps:
     if (grid == DNGN_UNDISCOVERED_TRAP)
@@ -3599,7 +3599,7 @@ static char base_grid_type( char grid )
         return (DNGN_FLOOR);
 
     // Or secret doors (which currently always look like rock walls):
-    if (grid == DNGN_SECRET_DOOR)
+    if (grid_is_wall(grid))
         return (DNGN_ROCK_WALL);
 
     return (grid);
@@ -3640,7 +3640,8 @@ bool runrest::run_grids_changed() const
     {
         const int targ_x = you.x_pos + run_check[i].dx;
         const int targ_y = you.y_pos + run_check[i].dy;
-        const int targ_grid = base_grid_type( grd[ targ_x ][ targ_y ] );
+        const dungeon_feature_type targ_grid =
+            base_grid_type( grd[ targ_x ][ targ_y ] );
 
         if (run_check[i].grid != targ_grid)
             return (true);
