@@ -4465,7 +4465,8 @@ static bool handle_pickup(monsters *monster)
                 hps_gained += (quant * item_mass( mitm[item] )) / 20 + quant;
                 eaten += quant;
                 
-                if (mons_is_caught(monster) && mitm[item].base_type == OBJ_MISSILES
+                if (mons_is_caught(monster)
+                    && mitm[item].base_type == OBJ_MISSILES
                     && mitm[item].sub_type == MI_THROWING_NET
                     && item_is_stationary(mitm[item]))
                 {

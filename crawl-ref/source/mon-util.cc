@@ -2978,7 +2978,7 @@ bool monsters::pickup_launcher(item_def &launch, int near)
     {
         if (const item_def *elaunch = mslot_item(static_cast<mon_inv_type>(i)))
         {
-            if (is_range_weapon(*elaunch))
+            if (!is_range_weapon(*elaunch))
                 continue;
             
             return (fires_ammo_type(*elaunch) == mt
