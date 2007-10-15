@@ -938,6 +938,11 @@ void handle_monster_shouts(monsters* monster, bool force)
         else if (param == "SOUND")
             channel = MSGCH_SOUND;
 
+        // Monster must come up from being submerged if it wants to
+        // shout.
+        if (mons_is_submerged(monster))
+            monster->del_ench(ENCH_SUBMERGED);
+
         msg::streams(channel) << msg << std::endl;
     }
 

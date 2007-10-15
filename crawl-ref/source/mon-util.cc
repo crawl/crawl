@@ -4089,26 +4089,43 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
-        if (type == MONS_AIR_ELEMENTAL)
+        if (you.can_see(this))
         {
-            if (mons_near(this))
+            if (!mons_is_safe( static_cast<const monsters*>(this))
+                && is_run_delay(current_delay_action()))
             {
-                if (!mons_is_safe( static_cast<const monsters*>(this)))
-                {
-                    activity_interrupt_data aid(this);
+                activity_interrupt_data aid(this);
+
+                if (type == MONS_AIR_ELEMENTAL)
                     aid.context = "thin air";
-                    interrupt_activity( AI_SEE_MONSTER, aid );
-                }
-                else if (!quiet)
+                else if (monster_habitable_grid(this, DNGN_FLOOR))
+                    aid.context = "bursts forth";
+                else
+                    aid.context = "surfaces";
+
+                interrupt_activity( AI_SEE_MONSTER, aid );
+            }
+            else if (!quiet)
+            {
+                if (type == MONS_AIR_ELEMENTAL)
                     mprf("%s forms itself from the air!",
                          name(DESC_CAP_A, true).c_str() );
-
-                seen_monster( this );
-
-                // Monster was viewed this turn
-                flags |= MF_WAS_IN_VIEW;
+                else if (monster_habitable_grid(this, DNGN_FLOOR))
+                    mprf("%s bursts forth from the water!",
+                         name(DESC_CAP_A, true).c_str() );
             }
+
+            seen_monster( this );
+
+            // Monster was viewed this turn
+            flags |= MF_WAS_IN_VIEW;
         }
+        else if (mons_near(this) && monster_habitable_grid(this, DNGN_FLOOR))
+        {
+            mpr("Something invisble bursts forth from the water.");
+            interrupt_activity( AI_FORCE_INTERRUPT );
+        }
+
         break;
 
     default:
@@ -4891,6 +4908,12 @@ void monsters::apply_location_effects()
 
     if (alive())
         mons_check_pool(this);
+
+    if (alive() && has_ench(ENCH_SUBMERGED)
+        && !monster_can_submerge(type, grd[x][y]))
+    {
+        del_ench(ENCH_SUBMERGED);
+    }
 }
 
 bool monsters::do_shaft()
