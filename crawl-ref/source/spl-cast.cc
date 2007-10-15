@@ -794,15 +794,19 @@ void spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (!spell_is_utility_spell(spell))
         did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell) );
 
-    if (spell_is_unholy( spell ))
-        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );        
+    // Self-banishment gets a special exemption - you're there to spread light
+    if (spell_is_unholy(spell) &&
+        (spell != SPELL_BANISHMENT || !you.banished))
+    {
+        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );
+    }
 
     // Linley says: Condensation Shield needs some disadvantages to keep 
     // it from being a no-brainer... this isn't much, but its a start -- bwr
     if (spell_typematch(spell, SPTYP_FIRE))
         expose_player_to_element(BEAM_FIRE, 0);
 
-    if (spell_typematch( spell, SPTYP_NECROMANCY ))
+    if (spell_typematch(spell, SPTYP_NECROMANCY))
     {
         did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spell) );
 
