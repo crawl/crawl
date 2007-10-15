@@ -2355,8 +2355,11 @@ void demonspawn(void)
 
 bool perma_mutate(mutation_type which_mut, int how_much)
 {
-    char levels = 0;
+    int levels = 0;
 
+    how_much = std::min(static_cast<short>(how_much),
+                        mutation_defs[which_mut].levels);
+    
     if (mutate(which_mut, false, true, true))
         levels++;
 
