@@ -2015,7 +2015,7 @@ static trap_type random_trap_for_level(int level_number)
     if (one_chance_in(20))
         type = TRAP_TELEPORT;
     if (one_chance_in(40))
-        type = TRAP_AMNESIA;
+        type = TRAP_ALARM;
 
     return (type);
 }

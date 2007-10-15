@@ -1772,7 +1772,7 @@ static void helix_card(int power, deck_rarity_type rarity)
 {
     mutation_type bad_mutations[] = {
         MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
-        MUT_TELEPORT, MUT_DEFORMED, MUT_LOST, MUT_DETERIORATION,
+        MUT_TELEPORT, MUT_DEFORMED, MUT_SCREAM, MUT_DETERIORATION,
         MUT_BLURRY_VISION, MUT_FRAIL
     };
 

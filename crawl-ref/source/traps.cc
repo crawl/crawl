@@ -356,10 +356,18 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             you_teleport_now( true );
         break;
 
-    case TRAP_AMNESIA:
-        mpr("You feel momentarily disoriented.");
-        if (!wearing_amulet(AMU_CLARITY))
-            forget_map(random2avg(100, 2));
+    case TRAP_ALARM:
+        if (silenced(you.x_pos, you.y_pos))
+        {
+            if (trap_known)
+                mpr("The alarm is silenced.");
+            else
+                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+            return;
+        }
+
+        noisy(12, you.x_pos, you.y_pos, "An alarm trap emits a blaring wail!");
+
         break;
 
     case TRAP_BLADE:
@@ -837,7 +845,7 @@ dungeon_feature_type trap_category(trap_type type)
         return (DNGN_TRAP_NATURAL);
 
     case TRAP_TELEPORT:
-    case TRAP_AMNESIA:
+    case TRAP_ALARM:
     case TRAP_ZOT:
         return (DNGN_TRAP_MAGICAL);
 

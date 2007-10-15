@@ -366,7 +366,7 @@ static void randart_descrip( std::string &description, const item_def &item )
 static const char *trap_names[] =
 {
     "dart", "arrow", "spear", "axe",
-    "teleport", "amnesia", "blade",
+    "teleport", "alarm", "blade",
     "bolt", "net", "zot", "needle",
     "shaft"
 };
@@ -2403,11 +2403,6 @@ static std::string describe_scroll( const item_def &item )
         case SCR_MAGIC_MAPPING:
             description += "This scroll reveals the nearby surroundings "
                 "of one who reads it. ";
-            break;
-
-        case SCR_FORGETFULNESS:
-            description += "This scroll induces "
-                "an irritating disorientation. ";
             break;
 
         case SCR_ACQUIREMENT:

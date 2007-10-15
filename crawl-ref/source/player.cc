@@ -5540,11 +5540,19 @@ std::string player::shout_verb() const
     switch (transform)
     {
     case TRAN_DRAGON:
+    case TRAN_SERPENT_OF_HELL:
         return "roar";
     case TRAN_SPIDER:
         return "hiss";
+    case TRAN_BAT:
+        return "squeak";
+    case TRAN_AIR:
+        return "__NONE";
     default:
-        return "yell";
+        if (you.mutation[MUT_SCREAM])
+            return "scream";
+        else
+            return "yell";
     }
 }
 

@@ -191,9 +191,9 @@ const char *mutation_descrip[][3] = {
      "Your muscles are very flexible (Dex +2), but weak (Str -2).",
      "Your muscles are extremely flexible (Dex +3), but weak (Str -3)."},
 
-    {"You occasionally forget where you are.",
-     "You sometimes forget where you are.",
-     "You frequently forget where you are."},
+    {"You occasionally scream uncontrollably.",
+     "You sometimes scream uncontrollably.",
+     "You frequently scream uncontrollably."},
 
     {"You possess an exceptional clarity of mind.",
      "You possess an unnatural clarity of mind.",
@@ -279,7 +279,9 @@ const char *mutation_descrip[][3] = {
      "There are several green sigils on your chest and abdomen.",
      "Your chest, abdomen and neck are covered in intricate, arcane green writing."},
 
-    {"", "", ""},
+    {"You occasionally drift when moving.",
+     "You sometimes drift when moving.",
+     "You frequently drift when moving."},
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -460,8 +462,8 @@ const char *gain_mutation[][3] = {
     {"Your muscles feel sore.", "Your muscles feel sore.",
      "Your muscles feel sore."},
 
-    {"Your muscles feel loose.", "Your muscles feel loose.",
-     "Your muscles feel loose."},
+    {"You feel the urge to scream.", "You feel the urge to scream.",
+     "You feel the urge to scream."},
 
     {"You feel a little disoriented.", "You feel a little disoriented.",
      "Where the Hells are you?"},
@@ -526,7 +528,9 @@ const char *gain_mutation[][3] = {
     {"Your chest itches.", "Your chest and abdomen itch.",
      "Your chest, abdomen and neck itch."},
 
-    {"", "", ""},
+    {"Your movements feel uncertain.",
+     "Your movements feel even more uncertian.",
+     "Your movements feel even more uncertian."},
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -686,8 +690,8 @@ const char *lose_mutation[][3] = {
     {"Your muscles feel sore.", "Your muscles feel sore.",
      "Your muscles feel sore."},
 
-    {"You feel less disoriented.", "You feel less disoriented.",
-     "You feel less disoriented."},
+    {"Your urge to scream disappears.", "Your urge to scream lessens.",
+     "Your urge to scream lessens."},
 
     {"Your thinking seems confused.", "Your thinking seems confused.",
      "Your thinking seems confused."},
@@ -742,7 +746,9 @@ const char *lose_mutation[][3] = {
 
     // 65
     {"", "", ""},
-    {"", "", ""},
+    {"Your movements feel completely certain again.",
+     "Your movements feel more certain.",
+     "Your movements feel more certain."},
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -844,7 +850,7 @@ static const mutation_def mutation_defs[] = {
     { MUT_HORNS, 7, 3 },
     { MUT_STRONG_STIFF, 10, 3 },
     { MUT_FLEXIBLE_WEAK, 10, 3 },
-    { MUT_LOST, 6, 3 },
+    { MUT_SCREAM, 6, 3 },
     { MUT_CLARITY, 6, 1 },
     { MUT_BERSERK, 7, 3 },
     { MUT_DETERIORATION, 10, 3 },
@@ -878,10 +884,12 @@ static const mutation_def mutation_defs[] = {
     { MUT_STINGER, 0, 3 },
     { MUT_BIG_WINGS, 0, 3 },
     { MUT_BLUE_MARKS, 0, 3 },
-    { MUT_GREEN_MARKS, 0, 3 },
 
-    // Four placeholders:
-    { RANDOM_MUTATION, 0, 3 },
+// 65
+    { MUT_GREEN_MARKS, 0, 3 },
+    { MUT_DRIFTING, 3, 3 },
+
+    // Three placeholders:
     { RANDOM_MUTATION, 0, 3 },
     { RANDOM_MUTATION, 0, 3 },
     { RANDOM_MUTATION, 0, 3 },
@@ -1268,7 +1276,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BREATHE_FLAMES:
     case MUT_BLINK:
     case MUT_HORNS:
-    case MUT_LOST:
+    case MUT_SCREAM:
     case MUT_BERSERK:
     case MUT_DETERIORATION:
     case MUT_BLURRY_VISION:
@@ -1281,6 +1289,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BIG_WINGS:
     case MUT_BLUE_MARKS:
     case MUT_GREEN_MARKS:
+    case MUT_DRIFTING:
         amusement *= 2; // funny!
         break;
 
@@ -1390,7 +1399,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
                 case 1: mutat = MUT_DOPEY; break;
                 case 2: mutat = MUT_CLUMSY; break;
                 case 3: mutat = MUT_DEFORMED; break;
-                case 4: mutat = MUT_LOST; break;
+                case 4: mutat = MUT_SCREAM; break;
                 case 5: mutat = MUT_DETERIORATION; break;
                 case 6: mutat = MUT_BLURRY_VISION; break;
                 case 7: mutat = MUT_FRAIL; break;
@@ -2376,7 +2385,7 @@ bool give_bad_mutation(bool forceMutation, bool failMsg)
                      (temp_rand ==  6) ? MUT_CLUMSY :
                      (temp_rand ==  5) ? MUT_TELEPORT :
                      (temp_rand ==  4) ? MUT_DEFORMED :
-                     (temp_rand ==  3) ? MUT_LOST :
+                     (temp_rand ==  3) ? MUT_SCREAM :
                      (temp_rand ==  2) ? MUT_DETERIORATION :
                      (temp_rand ==  1) ? MUT_BLURRY_VISION
                                        : MUT_FRAIL);

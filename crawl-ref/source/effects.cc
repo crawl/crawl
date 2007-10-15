@@ -1687,17 +1687,11 @@ bool recharge_wand(void)
     return (true);
 }                               // end recharge_wand()
 
-void yell(void)
+void yell(bool force)
 {
     bool targ_prev = false;
     int mons_targd = MHITNOT;
     struct dist targ;
-
-    if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
-    {
-        mpr("You are unable to make a sound!");
-        return;
-    }
 
     const std::string shout_verb = you.shout_verb();
     std::string cap_shout = shout_verb;
@@ -1710,6 +1704,36 @@ void yell(void)
         noise_level = 18;
     else if (shout_verb == "hiss")
         noise_level = 8;
+    else if (shout_verb == "squeak")
+        noise_level = 4;
+    else if (shout_verb == "__NONE")
+        noise_level = 0;
+
+    if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
+        noise_level = 0;
+
+    if (noise_level == 0)
+    {
+        if (force)
+        {
+            if (shout_verb == "__NONE")
+                mpr("You must scream but have no lips!");
+            else
+                mprf("A %s rips itself from your lips, but you make no sound!",
+                     shout_verb.c_str());
+        }
+        else
+            mpr("You are unable to make a sound!");
+
+        return;
+    }
+
+    if (force)
+    {
+        mprf("A %s rips itself from your lips!", shout_verb.c_str());
+        noisy( noise_level, you.x_pos, you.y_pos );
+        return;
+    }
 
     mpr("What do you say?", MSGCH_PROMPT);
     mprf(" ! - %s", cap_shout.c_str());

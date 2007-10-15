@@ -145,13 +145,33 @@ void mons_trap(struct monsters *monster)
     case TRAP_TELEPORT:
         monster_teleport(monster, true);
         break;
-    // amnesia traps do not affect monsters (yet) and
-    // only monsters of normal+ IQ will direct a msg
-    // to the player - also, *never* revealed: {dlb}
-    case TRAP_AMNESIA:
-        if (mons_intel(monster->type) > I_ANIMAL)
-            simple_monster_message(monster,
-                                   " seems momentarily disoriented.");
+    // alarm trap aren't set off by hostile monsters, because that would
+    // be way too nasty for the player.
+    case TRAP_ALARM:
+        if (!mons_friendly(monster) || silenced(monster->x, monster->y))
+        {
+            if (trapKnown && you.can_see(monster) 
+                && !silenced(you.x_pos, you.y_pos))
+            {
+                mpr("The alarm trap makes no noise.");
+            }
+            return;
+        }
+
+        noisy(12, monster->x, monster->y);
+
+        if (!silenced(you.x_pos, you.y_pos))
+        {
+            if (monsterNearby)
+            {
+                mpr("You hear a blaring wail!", MSGCH_SOUND);
+                if (you.can_see(monster))
+                    revealTrap = true;
+            }
+            else
+                mpr("You hear a distant blaring wail!", MSGCH_SOUND);
+        }
+
         break;
     // blade traps sometimes fail to trigger altogether,
     // resulting in an "early return" from this f(x) for

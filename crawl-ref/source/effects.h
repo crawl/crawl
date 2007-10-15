@@ -92,7 +92,7 @@ void mons_direct_effect(struct bolt &pbolt, int i);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void yell(void);
+void yell(bool force = false);
 
 
 // last updated 12may2000 {dlb}

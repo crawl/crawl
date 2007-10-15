@@ -1260,7 +1260,6 @@ unsigned int item_value( item_def item, bool ident )
                 break;
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
-            case SCR_FORGETFULNESS:
             case SCR_PAPER:
             case SCR_IMMOLATION:
                 valued++;

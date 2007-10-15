@@ -3577,8 +3577,45 @@ static void do_berserk_no_combat_penalty(void)
 }                               // end do_berserk_no_combat_penalty()
 
 
-// Called when the player moves by walking/running. Also calls
-// attack function and trap function etc when necessary.
+static void drift_player(int move_x, int move_y)
+{
+    int drift_dir = -1;
+    int okay_dirs = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+        const coord_def      drift_delta = Compass[i];
+        const coord_def      new_pos     = you.pos() + drift_delta;
+        const unsigned short targ_monst  = mgrd(new_pos);
+
+        if (you.can_pass_through(new_pos)
+            && !is_grid_dangerous(grd(new_pos))
+            && (targ_monst == NON_MONSTER ||
+                mons_is_submerged(&menv[targ_monst])))
+        {
+            if (one_chance_in(++okay_dirs))
+                drift_dir = i;
+        }
+    }
+
+    if (okay_dirs > 0)
+    {
+        const coord_def drift_delta = Compass[drift_dir];
+        const coord_def new_pos     = you.pos() + drift_delta;
+
+        if (drift_delta == coord_def(-move_x, -move_y))
+            mpr("You drift backwards.");
+        else if (drift_delta == coord_def(move_x, move_y))
+            mpr("You drift forwards.");
+        else
+            mpr("You drift.");
+
+        move_player_to_grid(new_pos.x, new_pos.y, true, true, false);
+    }
+}
+
+// Called when the player moves by walking/running. Also calls attack
+// function etc when necessary.
 static void move_player(int move_x, int move_y)
 {
     bool attacking = false;
@@ -3683,12 +3720,19 @@ static void move_player(int move_x, int move_y)
         you.time_taken /= 10;
         move_player_to_grid(targ_x, targ_y, true, false, swap);
 
+        if (you.mutation[MUT_DRIFTING]
+            && (random2(100) <= you.mutation[MUT_DRIFTING] * 5) )
+        {
+            drift_player(move_x, move_y);
+        }
+
         move_x = 0;
         move_y = 0;
 
         you.turn_is_over = true;
         // item_check( false );
         request_autopickup();
+
     }
 
     // BCR - Easy doors single move

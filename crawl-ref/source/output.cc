@@ -1949,10 +1949,10 @@ std::string status_mut_abilities()
                 Str_change -= level;
                 Dex_change += level;
                 break;
-            case MUT_LOST:
+            case MUT_SCREAM:
                 if (have_any)
                     text += ", ";
-                snprintf(info, INFO_SIZE, "forgetfulness %d", level);
+                snprintf(info, INFO_SIZE, "screaming %d", level);
                 text += info;
                 have_any = true;
                 break;

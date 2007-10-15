@@ -3714,12 +3714,6 @@ void read_scroll(void)
         }
         break;
 
-    case SCR_FORGETFULNESS:
-        mpr("You feel momentarily disoriented.");
-        if (!wearing_amulet(AMU_CLARITY))
-            forget_map(50 + random2(50));
-        break;
-
     case SCR_MAGIC_MAPPING:
         if (you.level_type == LEVEL_PANDEMONIUM)
         {

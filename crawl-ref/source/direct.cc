@@ -1479,8 +1479,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("axe trap");
         case TRAP_TELEPORT:
             return ("teleportation trap");
-        case TRAP_AMNESIA:
-            return ("amnesia trap");
+        case TRAP_ALARM:
+            return ("alarm trap");
         case TRAP_BLADE:
             return ("blade trap");
         case TRAP_BOLT:

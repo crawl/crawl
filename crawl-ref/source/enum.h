@@ -1980,7 +1980,7 @@ enum mutation_type
     MUT_HORNS,
     MUT_STRONG_STIFF,
     MUT_FLEXIBLE_WEAK,
-    MUT_LOST,                          //   35
+    MUT_SCREAM,                        //   35
     MUT_CLARITY,
     MUT_BERSERK,
     MUT_DETERIORATION,
@@ -2011,6 +2011,7 @@ enum mutation_type
     MUT_BIG_WINGS,
     MUT_BLUE_MARKS, //   64 - decorative, as in "mark of the devil"
     MUT_GREEN_MARKS,                   //   65
+    MUT_DRIFTING,
     MUT_RED_SCALES = 70,               //   70
     MUT_NACREOUS_SCALES,
     MUT_GREY2_SCALES,
@@ -2499,7 +2500,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_SPEAR,
     TRAP_AXE,
     TRAP_TELEPORT,
-    TRAP_AMNESIA,                      //    5
+    TRAP_ALARM,                        //    5
     TRAP_BLADE,
     TRAP_BOLT,
     TRAP_NET,
