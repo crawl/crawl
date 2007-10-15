@@ -2951,9 +2951,7 @@ bool monsters::drop_item(int eslot, int near)
     }
 
     const std::string iname = mitm[index].name(DESC_NOCAP_A);
-    move_item_to_grid(&index, x, y);
-
-    if (index == inv[eslot])
+    if (!move_item_to_grid(&index, x, y))
     {
         // Re-equip item if we somehow failed to drop it.
         if (was_unequipped)

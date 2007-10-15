@@ -1601,11 +1601,11 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 //
 // Done this way in the hopes that it will be obvious from
 // calling code that "obj" is possibly modified.
-void move_item_to_grid( int *const obj, int x, int y )
+bool move_item_to_grid( int *const obj, int x, int y )
 {
     // must be a valid reference to a valid object
     if (*obj == NON_ITEM || !is_valid_item( mitm[*obj] ))
-        return;
+        return (false);
 
     // If it's a stackable type...
     if (is_stackable_item( mitm[*obj] ))
@@ -1615,7 +1615,7 @@ void move_item_to_grid( int *const obj, int x, int y )
         {
             // check if item already linked here -- don't want to unlink it
             if (*obj == i)
-                return;            
+                return (false);            
 
             if (items_stack( mitm[*obj], mitm[i] ))
             {
@@ -1624,7 +1624,7 @@ void move_item_to_grid( int *const obj, int x, int y )
                 inc_mitm_item_quantity( i, mitm[*obj].quantity );
                 destroy_item( *obj );
                 *obj = i;
-                return;
+                return (true);
             }
         }
     }
@@ -1668,7 +1668,7 @@ void move_item_to_grid( int *const obj, int x, int y )
         set_branch_flags(BFLAG_HAS_ORB);
     }
 
-    return;
+    return (true);
 }
 
 void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )
