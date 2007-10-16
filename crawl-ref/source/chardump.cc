@@ -559,7 +559,7 @@ static void sdump_notes(dump_params &par)
     if ( note_list.size() == 0 || Options.use_notes == false )
         return;
 
-    text += "\nNotes\n| Turn  | Place   | Note\n";
+    text += "\nNotes\nTurn   | Place   | Note\n";
     text += "--------------------------------------------------------------\n";
     for ( unsigned i = 0; i < note_list.size(); ++i ) {
         text += note_list[i].describe();
@@ -1169,7 +1169,7 @@ static bool write_dump(
 void display_notes()
 {
     Menu scr;
-    scr.set_title( new MenuEntry("| Turn  | Place   | Note"));
+    scr.set_title( new MenuEntry("Turn   | Place   | Note"));
     for ( unsigned int i = 0; i < note_list.size(); ++i )
     {
         std::string prefix = note_list[i].describe(true, true, false);
