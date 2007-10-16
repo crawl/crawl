@@ -1620,7 +1620,8 @@ bool player_angers_monster(monsters *creation)
 
 int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands,
-                    bool force_place, bool force_behaviour )
+                    bool force_place, bool force_behaviour,
+                    bool player_made )
 {
     int summd = -1;
     coord_def pos = find_newmons_square(cls, cr_x, cr_y);
@@ -1652,6 +1653,11 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
         // dur should always be ENCH_ABJ_xx
         if (dur >= 1 && dur <= 6)
             creation->add_ench( mon_enchant(ENCH_ABJ, dur) );
+
+        // player summons do not give XP or other bonuses
+        // (you can still train skills on them though)
+        if ( player_made )
+            creation->flags |= MF_CREATED_FRIENDLY;
 
         // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
         // alert summoned being to player's presence

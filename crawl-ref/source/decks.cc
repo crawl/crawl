@@ -1979,7 +1979,7 @@ static void summon_dancing_weapon(int power, deck_rarity_type rarity)
                                     friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                                     you.x_pos, you.y_pos,
                                     friendly ? you.pet_target : MHITYOU,
-                                    250 );
+                                    250, false, false, false, true );
     
     // Given the abundance of Nemelex decks, not setting hard reset
     // leaves a trail of weapons behind, most of which just get
