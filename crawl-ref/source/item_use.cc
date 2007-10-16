@@ -36,6 +36,7 @@
 
 #include "beam.h"
 #include "cio.h"
+#include "cloud.h"
 #include "command.h"
 #include "debug.h"
 #include "delay.h"
@@ -3714,11 +3715,10 @@ void read_scroll(void)
         }
         break;
 
-    case SCR_FORGETFULNESS:
-        if (wearing_amulet(AMU_CLARITY))
-            mpr("You feel forgetfull for a moment.");
-        else
-            id_the_scroll = forget_inventory();
+    case SCR_FOG:
+        mpr("The scroll dissolves into smoke.");
+        big_cloud( one_chance_in(10) ? CLOUD_MIASMA : random_smoke_type(),
+                   KC_YOU, you.x_pos, you.y_pos, 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:
@@ -3924,6 +3924,7 @@ void read_scroll(void)
             do_curse_item( item );
         }
         break;
+
     }                           // end switch
 
     // finally, destroy and identify the scroll

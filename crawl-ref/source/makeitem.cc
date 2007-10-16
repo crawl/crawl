@@ -2530,7 +2530,7 @@ int items( int allow_uniques,       // not just true-false,
                      (temp_rand > 464) ? SCR_FEAR :              //  3.26%
                      (temp_rand > 434) ? SCR_NOISE :             //  3.26%
                      (temp_rand > 404) ? SCR_MAGIC_MAPPING :     //  3.26%
-                     (temp_rand > 374) ? SCR_FORGETFULNESS :     //  3.26%
+                     (temp_rand > 374) ? SCR_FOG :               //  3.26%
                      (temp_rand > 344) ? SCR_RANDOM_USELESSNESS ://  3.26%
                      (temp_rand > 314) ? SCR_CURSE_WEAPON :      //  3.26%
                      (temp_rand > 284) ? SCR_CURSE_ARMOUR :      //  3.26%

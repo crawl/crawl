@@ -310,7 +310,7 @@ enum scroll_type
     SCR_BLINKING,
     SCR_PAPER,                         //   15
     SCR_MAGIC_MAPPING,
-    SCR_FORGETFULNESS,
+    SCR_FOG,
     SCR_ACQUIREMENT,
     SCR_ENCHANT_WEAPON_II,
     SCR_VORPALISE_WEAPON,              //   20
