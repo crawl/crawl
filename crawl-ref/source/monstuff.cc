@@ -3966,10 +3966,14 @@ static void handle_monster_move(int i, monsters *monster)
         monster->ench_countdown += 10;
         monster->apply_enchantments();
 
-        // Don't return if the monster died, since we have to deal
-        // with giant spores and ball lightning exploding at the
-        // end of the function.
-        if (!monster->alive())
+        // If the monster *merely* died just break from the loop
+        // rather than quit altogether, since we have to deal with
+        // giant spores and ball lightning exploding at the end of the
+        // function, but do return if the monster's data has been
+        // reset, since then the monster type is invalid.
+        if (monster->type == -1)
+            return;
+        else if (monster->hit_points < 1)
             break;
     }
 
