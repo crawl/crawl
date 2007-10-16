@@ -2299,6 +2299,10 @@ int items( int allow_uniques,       // not just true-false,
         // generate charges randomly:
         mitm[p].plus = random2avg(range_charges, 3);
 
+        // but 0 charges is silly
+        if ( mitm[p].plus == 0 )
+            mitm[p].plus++;
+
         // plus2 tracks how many times the player has zapped it.
         // If it is -1, then the player knows it's empty.
         // If it is -2, then the player has messed with it somehow
