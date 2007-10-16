@@ -3714,6 +3714,13 @@ void read_scroll(void)
         }
         break;
 
+    case SCR_FORGETFULNESS:
+        if (wearing_amulet(AMU_CLARITY))
+            mpr("You feel forgetfull for a moment.");
+        else
+            id_the_scroll = forget_inventory();
+        break;
+
     case SCR_MAGIC_MAPPING:
         if (you.level_type == LEVEL_PANDEMONIUM)
         {

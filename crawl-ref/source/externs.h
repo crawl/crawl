@@ -964,6 +964,9 @@ public:
 
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
+    std::string seen_context;          // Non-standard context for
+                                       // AI_SEE_MONSTER
+
 public:
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;

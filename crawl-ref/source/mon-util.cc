@@ -2316,7 +2316,7 @@ monsters::monsters()
       target_x(0), target_y(0), inv(), spells(), attitude(ATT_HOSTILE),
       behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
       number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
-      ghost()
+      ghost(), seen_context("")
 {
 }
 
@@ -4092,31 +4092,21 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!mons_is_safe( static_cast<const monsters*>(this))
                 && is_run_delay(current_delay_action()))
             {
-                activity_interrupt_data aid(this);
+                // Already set somewhere else.
+                if (seen_context != "")
+                    return;
 
                 if (type == MONS_AIR_ELEMENTAL)
-                    aid.context = "thin air";
+                    seen_context = "thin air";
                 else if (monster_habitable_grid(this, DNGN_FLOOR))
-                    aid.context = "bursts forth";
+                    seen_context = "bursts forth";
                 else
-                    aid.context = "surfaces";
-
-                interrupt_activity( AI_SEE_MONSTER, aid );
+                    seen_context = "surfaces";
             }
             else if (!quiet)
-            {
                 if (type == MONS_AIR_ELEMENTAL)
                     mprf("%s forms itself from the air!",
                          name(DESC_CAP_A, true).c_str() );
-                else if (monster_habitable_grid(this, DNGN_FLOOR))
-                    mprf("%s bursts forth from the water!",
-                         name(DESC_CAP_A, true).c_str() );
-            }
-
-            seen_monster( this );
-
-            // Monster was viewed this turn
-            flags |= MF_WAS_IN_VIEW;
         }
         else if (mons_near(this) && monster_habitable_grid(this, DNGN_FLOOR))
         {

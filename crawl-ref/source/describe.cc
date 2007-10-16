@@ -2405,6 +2405,10 @@ static std::string describe_scroll( const item_def &item )
                 "of one who reads it. ";
             break;
 
+        case SCR_FORGETFULNESS:
+            description += "This annoying scrolls causes you to forget "
+                "about the items in your inventory.";
+
         case SCR_ACQUIREMENT:
             description += "This wonderful scroll causes the "
                 "creation of a valuable item to "

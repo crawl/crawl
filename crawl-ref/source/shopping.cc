@@ -1262,6 +1262,7 @@ unsigned int item_value( item_def item, bool ident )
             case SCR_CURSE_WEAPON:
             case SCR_PAPER:
             case SCR_IMMOLATION:
+            case SCR_FORGETFULNESS:
                 valued++;
                 break;
             }

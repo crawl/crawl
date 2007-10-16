@@ -20,6 +20,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "decks.h"
 #include "direct.h"
 #include "food.h"
 #include "hiscores.h"
@@ -1820,3 +1821,55 @@ void yell(bool force)
     noisy( 10, you.x_pos, you.y_pos );
     mpr("Attack!");
 }                               // end yell()
+
+bool forget_inventory(bool quiet)
+{
+    int items_forgotten = 0;
+    
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item(you.inv[i]);
+        if (!is_valid_item(item) || item_is_equipped(item))
+            continue;
+
+        unsigned long orig_flags = item.flags;
+
+        unset_ident_flags(item, ISFLAG_KNOW_CURSE);
+
+        // Don't forget times used or uses left for wands or decks.
+        if (item.base_type != OBJ_WANDS && item.base_type != OBJ_MISCELLANY)
+            unset_ident_flags(item, ISFLAG_KNOW_PLUSES);
+
+        if (!is_artefact(item))
+        {
+            switch (item.base_type)
+            {
+            case OBJ_WEAPONS:
+            case OBJ_ARMOUR:
+            case OBJ_BOOKS:
+            case OBJ_STAVES:
+            case OBJ_MISCELLANY:
+                // Don't forget identity of decks if it the player has
+                // used any of its cards, or knows how many are left.
+                if (!is_deck(item) || item.plus2 == 0)
+                    unset_ident_flags(item, ISFLAG_KNOW_TYPE);
+                break;
+
+            default:
+                break;
+            }
+        }
+        // Non-jewellery artifacts can easily be re-identified by
+        // equipping them.
+        else if (item.base_type != OBJ_JEWELLERY)
+            unset_ident_flags(item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
+
+        if (item.flags != orig_flags)
+            items_forgotten++;
+    }
+
+    if (items_forgotten > 0)
+        mpr("Wait, did you forget something?");
+
+    return (items_forgotten > 0);
+}

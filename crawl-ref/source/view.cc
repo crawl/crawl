@@ -771,6 +771,28 @@ inline static void beogh_follower_convert(monsters *monster)
     }
 }
 
+static void handle_seen_interrupt(monsters* monster)
+{
+    activity_interrupt_data aid(monster);
+    if (monster->seen_context != "")
+        aid.context = monster->seen_context;
+    else if (testbits(monster->flags, MF_WAS_IN_VIEW))
+        aid.context = "already seen";
+    else
+        aid.context = "newly seen";
+
+    if (!mons_is_safe( static_cast<const monsters*>(monster) )
+        && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
+        && !mons_is_mimic( monster->type ))
+    {
+        interrupt_activity( AI_SEE_MONSTER, aid );
+    }
+    seen_monster( monster );
+
+    // Monster was viewed this turn
+    monster->flags |= MF_WAS_IN_VIEW;
+}
+
 void handle_monster_shouts(monsters* monster, bool force)
 {
     if (!force
@@ -941,7 +963,15 @@ void handle_monster_shouts(monsters* monster, bool force)
         // Monster must come up from being submerged if it wants to
         // shout.
         if (mons_is_submerged(monster))
+        {
             monster->del_ench(ENCH_SUBMERGED);
+            if (you.can_see(monster))
+            {
+                monster->seen_context = "bursts forth shouting";
+                // Give interrupt message before shout message.
+                handle_seen_interrupt(monster);
+            }
+        }
 
         msg::streams(channel) << msg << std::endl;
     }
@@ -1035,22 +1065,7 @@ void fire_monster_alerts()
                  || mons_was_seen_this_turn(monster))
                 && !mons_is_submerged( monster ))
             {
-                activity_interrupt_data aid(monster);
-                if (testbits(monster->flags, MF_WAS_IN_VIEW))
-                    aid.context = "already seen";
-                else
-                    aid.context = "newly seen";
-
-                if (!mons_is_safe( static_cast<const monsters*>(monster) )
-                    && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
-                    && !mons_is_mimic( monster->type ))
-                {
-                    interrupt_activity( AI_SEE_MONSTER, aid );
-                }
-                seen_monster( monster );
-
-                // Monster was viewed this turn
-                monster->flags |= MF_WAS_IN_VIEW;
+                handle_seen_interrupt(monster);
 
                 if (mons_attitude(monster) == ATT_HOSTILE)
                     num_hostile++;
@@ -1066,6 +1081,7 @@ void fire_monster_alerts()
             // Monster was not viewed this turn
             monster->flags &= ~MF_WAS_IN_VIEW;
         }
+        monster->seen_context = "";
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever

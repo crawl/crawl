@@ -1115,7 +1115,7 @@ inline static void monster_warning(activity_interrupt_type ai,
             }
             else if (at.context == "surfaces")
                 text += " surfaces.";
-            else if (at.context == "bursts forth")
+            else if (at.context.find("bursts forth") != std::string::npos)
                 text += " bursts forth from the water.";
             else
                 text += " comes into view.";

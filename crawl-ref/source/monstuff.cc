@@ -2304,16 +2304,20 @@ static void handle_nearby_ability(monsters *monster)
     case MONS_SWAMP_WORM:
         if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
             && ( !player_beheld_by(monster) // no submerging if player entranced
-                 && (one_chance_in(5) || (grid_distance( monster->x, monster->y,
+                 && (one_chance_in(5)
+                     || ((grid_distance( monster->x, monster->y,
                                          you.x_pos, you.y_pos ) > 1
-                                     // FIXME This is better expressed as a
-                                     // function such as
-                                     // monster_has_ranged_attack:
-                                     && monster->type != MONS_ELECTRICAL_EEL
-                                     && monster->type != MONS_LAVA_SNAKE
-                                     && (monster->type != MONS_MERMAID
-                                          || you.species == SP_MERFOLK)
-                                     && !one_chance_in(20)) )
+                          // FIXME This is better expressed as a
+                          // function such as
+                          // monster_has_ranged_attack:
+                          && monster->type != MONS_ELECTRICAL_EEL
+                          && monster->type != MONS_LAVA_SNAKE
+                          && (monster->type != MONS_MERMAID
+                              || you.species == SP_MERFOLK)
+                          // Don't submerge if we just unsubmerged for
+                          // the sake of shouting.
+                          && monster->seen_context != "bursts forth shouting"
+                          && !one_chance_in(20)) ))
                 || monster->hit_points <= monster->max_hit_points / 2)
             || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
