@@ -1167,6 +1167,7 @@ struct cloud_struct
     int           y;
     cloud_type    type;
     int           decay;
+    unsigned char spread_rate;
     kill_category whose;
 };
 

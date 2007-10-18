@@ -11,6 +11,7 @@
 
 #include "branch.h"
 #include "clua.h"
+#include "cloud.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "files.h"
@@ -20,6 +21,8 @@
 #include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "misc.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
@@ -1159,9 +1162,9 @@ static int dgn_feature_name(lua_State *ls)
 
 static const char *dgn_event_type_names[] =
 {
-    "none", "turn", "mons_move", "player_move", "leave_level", "enter_level",
-    "player_los", "player_climb", "monster_dies", "item_pickup",
-    "feat_change"
+    "none", "turn", "mons_move", "player_move", "leave_level",
+    "entering_level", "entered_level", "player_los", "player_climb",
+    "monster_dies", "item_pickup", "feat_change"
 };
 
 static dgn_event_type dgn_event_type_by_name(const std::string &name)
@@ -1453,6 +1456,205 @@ static int dgn_floor_halo(lua_State *ls)
     return (0);
 }
 
+#define SQRT_2 1.41421356237309504880
+
+static int dgn_random_walk(lua_State *ls)
+{
+    const int x     = luaL_checkint(ls, 1);
+    const int y     = luaL_checkint(ls, 2);
+    const int dist = luaL_checkint(ls, 3);
+
+    // Fourth param being true means that we can move past
+    // statues.
+    const dungeon_feature_type minmove =
+        lua_isnil(ls, 4) ? DNGN_MINMOVE : DNGN_ORCISH_IDOL;
+
+    if (!in_bounds(x, y))
+    {
+        char buf[80];
+        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        luaL_argerror(ls, 1, buf);
+        return (0);
+    }
+    if (dist < 1)
+    {
+        luaL_argerror(ls, 3, "Distance must be positive.");
+        return (0);
+    }
+
+    float dist_left = dist;
+    // Allow movement to all 8 adjacent squares if distance is 1
+    // (needed since diagonal moves are distance sqrt(2))
+    if (dist == 1)
+        dist_left = SQRT_2;
+
+    int moves_left = dist;
+    coord_def pos(x, y);
+    while (dist_left >= 1.0 && moves_left-- > 0)
+    {
+        int okay_dirs = 0;
+        int dir       = -1;
+        for (int j = 0; j < 8; j++)
+        {
+            const coord_def new_pos   = pos + Compass[j];
+            const float     move_dist = (j % 2 == 0) ? 1.0 : SQRT_2;
+
+            if (in_bounds(new_pos) && grd(new_pos) >= minmove
+                && move_dist <= dist_left)
+            {
+                if (one_chance_in(++okay_dirs))
+                    dir = j;
+            }
+        }
+
+        if (okay_dirs == 0)
+            break;
+
+        if (one_chance_in(++okay_dirs))
+            continue;
+
+        pos       += Compass[dir];
+        dist_left -= (dir % 2 == 0) ? 1.0 : SQRT_2;
+    }
+
+    dlua_push_coord(ls, pos);
+
+    return (2);
+}
+
+static cloud_type dgn_cloud_name_to_type(std::string name)
+{
+    lowercase(name);
+
+    if (name == "random")
+        return (CLOUD_RANDOM);
+    else if (name == "debugging")
+        return (CLOUD_DEBUGGING);
+
+    for (int i = CLOUD_NONE; i < CLOUD_RANDOM; i++)
+        if (cloud_name(static_cast<cloud_type>(i)) == name)
+            return static_cast<cloud_type>(i);
+
+    return (CLOUD_NONE);
+}
+
+static kill_category dgn_kill_name_to_category(std::string name)
+{
+    if (name == "")
+        return KC_OTHER;
+
+    lowercase(name);
+
+    if (name == "you")
+        return KC_YOU;
+    else if (name == "friendly")
+        return KC_FRIENDLY;
+    else if (name == "other")
+        return KC_OTHER;
+    else
+        return KC_NCATEGORIES;
+}
+
+static int lua_cloud_pow_min;
+static int lua_cloud_pow_max;
+static int lua_cloud_pow_rolls;
+
+static int make_a_lua_cloud(int x, int y, int garbage, int spread_rate,
+                             cloud_type ctype, kill_category whose)
+{
+    UNUSED( garbage );
+    const int pow = random_range(lua_cloud_pow_min,
+                                 lua_cloud_pow_max,
+                                 lua_cloud_pow_rolls);
+    place_cloud( ctype, x, y, pow, whose, spread_rate );
+
+    return 1;
+}
+
+static int dgn_apply_area_cloud(lua_State *ls)
+{
+    const int x         = luaL_checkint(ls, 1);
+    const int y         = luaL_checkint(ls, 2);
+    lua_cloud_pow_min   = luaL_checkint(ls, 3);
+    lua_cloud_pow_max   = luaL_checkint(ls, 4);
+    lua_cloud_pow_rolls = luaL_checkint(ls, 5);
+    const int size      = luaL_checkint(ls, 6);
+
+    const cloud_type ctype = dgn_cloud_name_to_type(luaL_checkstring(ls, 7));
+    const char*      kname = lua_isstring(ls, 8) ? luaL_checkstring(ls, 8)
+                                                 : "";
+    const kill_category kc = dgn_kill_name_to_category(kname);
+
+    const int spread_rate = lua_isnumber(ls, 9) ? luaL_checkint(ls, 9) : -1;
+
+    if (!in_bounds(x, y))
+    {
+        char buf[80];
+        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        luaL_argerror(ls, 1, buf);
+        return (0);
+    }
+
+    if (lua_cloud_pow_min < 0)
+    {
+        luaL_argerror(ls, 4, "pow_min must be non-negative");
+        return (0);
+    }
+
+    if (lua_cloud_pow_max < lua_cloud_pow_min)
+    {
+        luaL_argerror(ls, 5, "pow_max must not be less than pow_min");
+        return (0);
+    }
+
+    if (lua_cloud_pow_max == 0)
+    {
+        luaL_argerror(ls, 5, "pow_max must be positive");
+        return (0);
+    }
+
+    if (lua_cloud_pow_rolls <= 0)
+    {
+        luaL_argerror(ls, 6, "pow_rolls must be positive");
+        return (0);
+    }
+
+    if (size < 1)
+    {
+        luaL_argerror(ls, 4, "size must be positive.");
+        return (0);
+    }
+
+    if (ctype == CLOUD_NONE)
+    {
+        std::string error = "Invalid cloud type '";
+        error += luaL_checkstring(ls, 7);
+        error += "'";
+        luaL_argerror(ls, 7, error.c_str());
+        return (0);
+    }
+
+    if (kc == KC_NCATEGORIES)
+    {
+        std::string error = "Invalid kill category '";
+        error += kname;
+        error += "'";
+        luaL_argerror(ls, 8, error.c_str());
+        return (0);
+    }
+
+    if (spread_rate < -1 || spread_rate > 100)
+    {
+        luaL_argerror(ls, 9, "spread_rate must be between -1 and 100,"
+                      "inclusive");
+        return (0);
+    }
+
+    apply_area_cloud(make_a_lua_cloud, x, y, 0, size,
+                     ctype, kc, spread_rate);
+
+    return (0);
+}
 
 static const struct luaL_reg dgn_lib[] =
 {
@@ -1513,6 +1715,8 @@ static const struct luaL_reg dgn_lib[] =
     { "set_lt_callback", lua_dgn_set_lt_callback},
     { "fixup_stairs", dgn_fixup_stairs},
     { "floor_halo", dgn_floor_halo},
+    { "random_walk", dgn_random_walk},
+    { "apply_area_cloud", dgn_apply_area_cloud},
 
     { NULL, NULL }
 };

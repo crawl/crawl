@@ -7,6 +7,7 @@ dofile('clua/lm_pdesc.lua')
 dofile('clua/lm_1way.lua')
 dofile('clua/lm_timed.lua')
 dofile('clua/lm_flags.lua')
+dofile('clua/lm_fog.lua')
 
 function dlua_marker_function(table, name)
   return table[name]

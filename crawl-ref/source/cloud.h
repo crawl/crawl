@@ -20,9 +20,9 @@ void delete_cloud( int cloud );
 void move_cloud( int cloud, int new_x, int new_y );
 
 void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
-                        kill_category whose );
+                        kill_category whose, int spread_rate = -1 );
 void place_cloud(cloud_type cl_type, int ctarget_x, int ctarget_y,
-                 int cl_range, kill_category whose);
+                 int cl_range, kill_category whose, int spread_rate = -1 );
 
 void manage_clouds(void);
 

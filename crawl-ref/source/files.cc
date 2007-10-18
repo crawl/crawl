@@ -1068,6 +1068,8 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     if (just_created_level)
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
 
+    dungeon_events.fire_event(DET_ENTERED_LEVEL);
+
     return just_created_level;
 }                               // end load()
 

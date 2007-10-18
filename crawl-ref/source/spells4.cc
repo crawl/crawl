@@ -1568,12 +1568,12 @@ static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
     return 0;
 }                               // end make_a_rot_cloud()
 
-int make_a_normal_cloud(int x, int y, int pow, cloud_type ctype,
-                        kill_category whose)
+int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
+                        cloud_type ctype, kill_category whose)
 {
     place_cloud( ctype, x, y, 
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose );
+                 whose, spread_rate );
 
     return 1;
 }                               // end make_a_normal_cloud()

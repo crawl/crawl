@@ -128,9 +128,10 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       bool needs_path = true,
                       const char *prompt = NULL );
 
-void apply_area_cloud(int (*func) (int, int, int, cloud_type, kill_category),
+void apply_area_cloud(int (*func) (int, int, int, int, cloud_type,
+                                   kill_category),
                       int x, int y, int pow, int number, cloud_type ctype,
-                      kill_category);
+                      kill_category kc, int spread_rate = -1);
 
 const char *spelltype_name(unsigned int which_spelltype);
 

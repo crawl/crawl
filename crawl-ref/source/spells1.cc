@@ -580,10 +580,10 @@ int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 }                               // end cast_big_c()
 
 void big_cloud(cloud_type cl_type, kill_category whose,
-               int cl_x, int cl_y, int pow, int size)
+               int cl_x, int cl_y, int pow, int size, int spread_rate)
 {
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
-                     cl_type, whose);
+                     cl_type, whose, spread_rate);
 }                               // end big_cloud()
 
 static int healing_spell( int healed )

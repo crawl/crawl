@@ -20,21 +20,24 @@
 #include "terrain.h"
 
 // Returns true if this cloud spreads out as it dissipates.
-static bool cloud_spreads(const cloud_struct &cloud)
+static unsigned char actual_spread_rate(cloud_type type, int spread_rate)
 {
-    switch (cloud.type)
+    if (spread_rate > 0)
+        return (unsigned char) spread_rate;
+
+    switch (type)
     {
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
-        return (true);
+        return 20;
     default:
-        return (false);
+        return 0;
     }
 }
 
 static void new_cloud( int cloud, cloud_type type, int x, int y, int decay,
-                       kill_category whose )
+                       kill_category whose, unsigned char spread_rate )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
 
@@ -43,12 +46,13 @@ static void new_cloud( int cloud, cloud_type type, int x, int y, int decay,
     env.cloud[ cloud ].x = x;
     env.cloud[ cloud ].y = y;
     env.cloud[ cloud ].whose = whose;
+    env.cloud[ cloud ].spread_rate = spread_rate;
     env.cgrid[ x ][ y ] = cloud;
     env.cloud_no++;
 }
 
 static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
-                            kill_category whose)
+                            kill_category whose, int spread_rate)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -58,7 +62,7 @@ static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
         {
-            new_cloud( ci, cltype, x, y, decay, whose );
+            new_cloud( ci, cltype, x, y, decay, whose, spread_rate );
             break;
         }
     }
@@ -90,7 +94,8 @@ static int spread_cloud(const cloud_struct &cloud)
             if (newdecay >= cloud.decay)
                 newdecay = cloud.decay - 1;
 
-            place_new_cloud( cloud.type, x, y, newdecay, cloud.whose );
+            place_new_cloud( cloud.type, x, y, newdecay, cloud.whose,
+                             cloud.spread_rate );
 
             extra_decay += 8;
         }
@@ -104,7 +109,7 @@ static void dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
     // apply calculated rate to the actual cloud:
     cloud.decay -= dissipate;
 
-    if (cloud_spreads(cloud) && cloud.decay > 10 && one_chance_in(5))
+    if (random2(100) < cloud.spread_rate)
         cloud.decay -= spread_cloud(cloud);
 
     // check for total dissipation and handle accordingly:
@@ -159,6 +164,7 @@ void delete_cloud( int cloud )
         env.cloud[ cloud ].x = 0;
         env.cloud[ cloud ].y = 0;
         env.cloud[ cloud ].whose = KC_OTHER;
+        env.cloud[ cloud ].spread_rate = 0;
         env.cgrid[ cloud_x ][ cloud_y ] = EMPTY_CLOUD;
         env.cloud_no--;
     }
@@ -183,12 +189,12 @@ void move_cloud( int cloud, int new_x, int new_y )
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
-                        kill_category whose )
+                        kill_category whose, int spread_rate )
 {
     if (!in_bounds(x, y) || env.cgrid[x][y] != EMPTY_CLOUD)
         return;
 
-    place_cloud( cl_type, x, y, lifetime, whose );
+    place_cloud( cl_type, x, y, lifetime, whose, spread_rate );
 }
 
 int steam_cloud_damage(const cloud_struct &cloud)
@@ -208,7 +214,7 @@ int steam_cloud_damage(const cloud_struct &cloud)
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, int ctarget_x,
                  int ctarget_y, int cl_range,
-                 kill_category whose)
+                 kill_category whose, int _spread_rate)
 {
     int cl_new = -1;
 
@@ -233,6 +239,8 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
             return;
         }
     }
+
+    unsigned char spread_rate = actual_spread_rate( cl_type, _spread_rate );
 
     // too many clouds
     if (env.cloud_no >= MAX_CLOUDS) 
@@ -261,7 +269,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
     // create new cloud
     if (cl_new != -1)
         new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10,
-                   whose );
+                   whose, spread_rate );
     else
     {
         // find slot for cloud
@@ -270,7 +278,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
                 new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10,
-                           whose );
+                           whose, spread_rate );
                 break;
             }
         }

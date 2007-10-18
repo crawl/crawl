@@ -22,11 +22,12 @@ enum dgn_event_type
     DET_PLAYER_MOVED    = 0x0004,
     DET_LEAVING_LEVEL   = 0x0008,
     DET_ENTERING_LEVEL  = 0x0010,
-    DET_PLAYER_IN_LOS   = 0x0020,   // Player just entered LOS.
-    DET_PLAYER_CLIMBS   = 0x0040,   // Player climbing stairs.
-    DET_MONSTER_DIED    = 0x0080,
-    DET_ITEM_PICKUP     = 0x0100,
-    DET_FEAT_CHANGE     = 0x0200
+    DET_ENTERED_LEVEL   = 0x0020,
+    DET_PLAYER_IN_LOS   = 0x0040,   // Player just entered LOS.
+    DET_PLAYER_CLIMBS   = 0x0080,   // Player climbing stairs.
+    DET_MONSTER_DIED    = 0x0100,
+    DET_ITEM_PICKUP     = 0x0200,
+    DET_FEAT_CHANGE     = 0x0400
 };
 
 class dgn_event
