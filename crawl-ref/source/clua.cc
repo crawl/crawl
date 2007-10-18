@@ -741,6 +741,10 @@ LUARET1(you_see_grid, boolean,
         see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(you_see_grid_no_trans, boolean,
         see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(you_x_pos, number, you.x_pos)
+LUARET1(you_y_pos, number, you.y_pos)
+LUARET2(you_pos, number, you.x_pos, you.y_pos)
+
 // increase by 1 because check happens on old level
 
 void lua_push_floor_items(lua_State *ls);
@@ -822,7 +826,11 @@ static const struct luaL_reg you_lib[] =
 
     { "see_grid",          you_see_grid },
     { "see_grid_no_trans", you_see_grid_no_trans },
-    
+
+    { "x_pos", you_x_pos },
+    { "y_pos", you_y_pos },
+    { "pos",   you_pos },
+
     { NULL, NULL },
 };
 
