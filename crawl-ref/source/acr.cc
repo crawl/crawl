@@ -344,7 +344,7 @@ int main( int argc, char *argv[] )
                 << species_name(you.species,you.experience_level) << " "
                 << you.class_name
                 << ", began the quest for the Orb.";
-        take_note(Note(NOTE_USER_NOTE, 0, 0, notestr.str().c_str()));
+        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
 
         notestr.str("");
         notestr.clear();

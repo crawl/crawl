@@ -270,7 +270,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     if (cast_into != "" && you.entry_cause != EC_SELF_EXPLICIT)
     {
         const std::string what = "Cast into " + cast_into + who_banished(who);
-        take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
     down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh

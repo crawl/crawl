@@ -888,7 +888,6 @@ int items( int allow_uniques,       // not just true-false,
 
     int quant = 0;
 
-    int icky = 0;
     int p = 0;
 
     // find an empty slot for the item (with culling if required)
@@ -1010,7 +1009,7 @@ int items( int allow_uniques,       // not just true-false,
                     && you.level_type != LEVEL_PANDEMONIUM
                     && one_chance_in(50))
                 {
-                    icky = find_okay_unrandart( OBJ_WEAPONS, force_type );
+                    const int icky=find_okay_unrandart(OBJ_WEAPONS,force_type);
 
                     if (icky != -1)
                     {
@@ -1882,7 +1881,7 @@ int items( int allow_uniques,       // not just true-false,
                  && you.level_type != LEVEL_PANDEMONIUM)
                 && one_chance_in(50))
             {
-                icky = find_okay_unrandart(OBJ_ARMOUR);
+                const int icky = find_okay_unrandart(OBJ_ARMOUR);
                 if (icky != -1)
                 {
                     quant = 1;
@@ -2592,7 +2591,7 @@ int items( int allow_uniques,       // not just true-false,
             && random2(2000) <= 100 + (item_level * 3) 
             && one_chance_in(20))
         {
-            icky = find_okay_unrandart(OBJ_JEWELLERY);
+            const int icky = find_okay_unrandart(OBJ_JEWELLERY);
 
             if (icky != -1)
             {
