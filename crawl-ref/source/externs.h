@@ -1348,6 +1348,7 @@ struct sound_mapping
 
 struct colour_mapping
 {
+    std::string tag;
     text_pattern pattern;
     int colour;
 };

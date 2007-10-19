@@ -1829,7 +1829,7 @@ static void pay_ability_costs(const ability_def& abil)
 
 int choose_ability_menu(const std::vector<talent>& talents)
 {
-    Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
+    Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, "ability");
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
         new MenuEntry("  Ability                           "

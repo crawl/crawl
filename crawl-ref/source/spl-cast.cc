@@ -205,6 +205,7 @@ int list_spells()
     spell_menu.set_highlighter(NULL);
     spell_menu.set_more(formatted_string("Press '!' to toggle spell view."));
     spell_menu.add_toggle_key('!');
+    spell_menu.set_tag("spell");
 
     for ( int i = 0; i < 52; ++i )
     {

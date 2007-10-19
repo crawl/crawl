@@ -1169,6 +1169,7 @@ static bool write_dump(
 void display_notes()
 {
     Menu scr;
+    scr.set_tag("notes");
     scr.set_title( new MenuEntry("Turn   | Place   | Note"));
     for ( unsigned int i = 0; i < note_list.size(); ++i )
     {
@@ -1201,6 +1202,7 @@ void resists_screen()
     textcolor(LIGHTGREY);
     
     formatted_scroller scr;
+    scr.set_tag("resists");
     for ( unsigned i = 0; i < vfs.size(); ++i )
         scr.add_item_formatted_string(vfs[i]);
 

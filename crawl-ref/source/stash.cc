@@ -394,6 +394,7 @@ public:
     StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false)
     {
         set_type(MT_PICKUP);
+        set_tag("stash");       // override "inventory" tag
     }
     unsigned char getkey() const;
 public:
@@ -1541,6 +1542,7 @@ void StashTracker::display_search_results(
     bool travelable = can_travel_interlevel();
 
     StashSearchMenu stashmenu;
+    stashmenu.set_tag("stash");
     stashmenu.can_travel = travelable;
     std::string title = "match";
 

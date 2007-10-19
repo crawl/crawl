@@ -385,7 +385,8 @@ void list_armour()
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(),
-                                 menu_colour_item_prefix(you.inv[armour_id]));
+                                 menu_colour_item_prefix(you.inv[armour_id]),
+                                 "equip");
         }
         else if (!you_can_wear(i,true))
             estr << "    (unavailable)";
@@ -397,7 +398,7 @@ void list_armour()
             estr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str());
+            colour = menu_colour(estr.str(), "", "equip");
 
         mpr( estr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
@@ -426,7 +427,7 @@ void list_jewellery(void)
             jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
             std::string
                 prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(jstr.str(), prefix);
+            colour = menu_colour(jstr.str(), prefix, "equip");
         }
         else if (!you_tran_can_wear(i))
             jstr << "    (currently unavailable)";
@@ -434,7 +435,7 @@ void list_jewellery(void)
             jstr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(jstr.str());
+            colour = menu_colour(jstr.str(), "", "equip");
 
         mpr( jstr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
@@ -455,7 +456,8 @@ void list_weapons(void)
     {
         wstring += you.inv[weapon_id].name(DESC_INVENTORY_EQUIP);
         colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[weapon_id]));
+                             menu_colour_item_prefix(you.inv[weapon_id]),
+                             "equip");
     }
     else
     {
@@ -465,7 +467,7 @@ void list_weapons(void)
             wstring += "    (currently unavailable)";
         else
             wstring += "    empty hands";
-        colour = menu_colour(wstring);
+        colour = menu_colour(wstring, "", "equip");
     }
 
     mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
@@ -491,13 +493,14 @@ void list_weapons(void)
         {
             wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
             colour = menu_colour(wstring,
-                                 menu_colour_item_prefix(you.inv[i]));
+                                 menu_colour_item_prefix(you.inv[i]),
+                                 "equip");
         }
         else
             wstring += "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(wstring);
+            colour = menu_colour(wstring, "", "equip");
 
         mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
     }
@@ -514,11 +517,12 @@ void list_weapons(void)
     {
         wstring += you.inv[item].name(DESC_INVENTORY_EQUIP);
         colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[item]));
+                             menu_colour_item_prefix(you.inv[item]),
+                             "equip");
     }
 
     if (colour == MSGCOL_BLACK)
-        colour = menu_colour(wstring);
+        colour = menu_colour(wstring, "", "equip");
 
     mpr( wstring.c_str(), MSGCH_EQUIPMENT, colour );
 }                               // end list_weapons()
@@ -1041,6 +1045,7 @@ static bool find_description()
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons);
+    desc_menu.set_tag("description");
     std::list<monster_type> monster_types;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
@@ -1146,6 +1151,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     if (easy_exit)
         flags |= MF_EASY_EXIT;
     cmd_help.set_flags(flags, false);
+    cmd_help.set_tag("help");
     
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.

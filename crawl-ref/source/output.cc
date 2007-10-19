@@ -998,6 +998,7 @@ void print_overview_screen()
     cmd_help.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
     cmd_help.set_more( formatted_string::parse_string(
                        "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
+    cmd_help.set_tag("help");
 
     std::string text;
     char title[50];

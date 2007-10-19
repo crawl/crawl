@@ -2453,16 +2453,31 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         std::vector<std::string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            const std::string &sub = seg[i];
-            std::string::size_type cpos = sub.find(":", 0);
-            if (cpos != std::string::npos)
+            // format: tag:string:colour
+            // FIXME: arrange so that you can use ':' inside a pattern
+            std::vector<std::string> subseg = split_string(":", seg[i]);
+            std::string tagname, patname, colname;
+            if ( subseg.size() < 2 )
+                continue;
+            if ( subseg.size() >= 3 )
             {
-                colour_mapping mapping;
-                mapping.pattern = sub.substr(cpos + 1);
-                mapping.colour  = str_to_colour(sub.substr(0, cpos));
-                if (mapping.colour != -1)
-                    menu_colour_mappings.push_back(mapping);
+                tagname = subseg[0];
+                colname = subseg[1];
+                patname = subseg[2];
             }
+            else
+            {
+                colname = subseg[0];
+                patname = subseg[1];
+            }
+
+            colour_mapping mapping;
+            mapping.tag = tagname;
+            mapping.pattern = patname;
+            mapping.colour = str_to_colour(colname);
+
+            if (mapping.colour != -1)
+                menu_colour_mappings.push_back(mapping);
         }
     }
     else if (key == "menu_colour_prefix_class" ||
