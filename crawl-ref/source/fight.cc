@@ -869,7 +869,7 @@ bool melee_attack::player_apply_aux_unarmed()
             poison_monster( def, KC_YOU );
                     
         if (mons_holiness(def) == MH_HOLY)
-            did_god_conduct(DID_KILL_ANGEL, 1);
+            did_god_conduct(DID_ATTACK_HOLY, 1);
 
         // normal vampiric biting attack
         if (damage_brand == SPWPN_VAMPIRICISM
