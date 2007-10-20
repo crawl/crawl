@@ -1848,10 +1848,16 @@ static const struct luaL_reg file_lib[] =
 
 LUARET1(you_can_hear_pos, boolean,
         player_can_hear(luaL_checkint(ls,1), luaL_checkint(ls, 2)))
+LUARET1(you_x_pos, number, you.x_pos)
+LUARET1(you_y_pos, number, you.y_pos)
+LUARET2(you_pos, number, you.x_pos, you.y_pos)
 
 static const struct luaL_reg you_lib[] =
 {
     { "hear_pos", you_can_hear_pos },
+    { "x_pos", you_x_pos },
+    { "y_pos", you_y_pos },
+    { "pos",   you_pos },
     { NULL, NULL }
 };
 

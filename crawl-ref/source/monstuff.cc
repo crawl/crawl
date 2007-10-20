@@ -4534,7 +4534,7 @@ static bool handle_pickup(monsters *monster)
         return (false);
     }                           // end "if jellies"
 
-    // Note: Monsters only look at top of stacks.
+    // Note: Monsters only look at stuff near the top of stacks.
     
     for (item = igrd[monster->x][monster->y]; item != NON_ITEM; )
     {
