@@ -181,23 +181,23 @@ stab_brand = hi:blue
 # menu_colour_prefix_class = true
 
 # Colouring for the inventory
-menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
-menu_colour = green:(worn|neck|hand|weapon)\)
-menu_colour = red: cursed
-menu_colour = red: rotting
+menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)
+menu_colour = inventory:green:(worn|neck|hand|weapon)\)
+menu_colour = inventory:red: cursed
+menu_colour = inventory:red: rotting
 
 # Identified artefacts
-menu_colour = white:( [-+] the)
+menu_colour = inventory:white:( [-+] the)
 
 # These lines will colour ego items; they require that
 # menu_colour_prefix_id and menu_colour_prefix_class be set to true
 
-# menu_colour = green:(^identified armour .* pair of .* of )
-# menu_colour = lightgrey:(^identified armour .* pair of )
-# menu_colour = green:(^identified (weapon|armour) .* of )
+# menu_colour = inventory:green:(^identified armour .* pair of .* of )
+# menu_colour = inventory:lightgrey:(^identified armour .* pair of )
+# menu_colour = inventory:green:(^identified (weapon|armour) .* of )
 
 # Colouring for the notes
-menu_colour = white:Reached XP level
+menu_colour = notes:white:Reached XP level
 
 # Message colours
 message_colour = lightcyan:LOW MAGIC WARNING

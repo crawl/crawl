@@ -931,34 +931,47 @@ always_greet = true
         always_greet will give the race/class and god messages everytime the 
         game is started. 
 
-menu_colour = <colour>:<regex>
-        This prints a line (of the inventory, a menu, or the discoveries 
-        screen) containing regex in the stated colour. There can be several 
+menu_colour = <match>:<colour>:<regex>
+        This prints a line (of the inventory, a menu, or the discoveries
+        screen) containing regex in the stated colour. There can be several
         statements in a list, or also several menu_colour lines. When using
-        several menu_colour lines, the colour of the _first_ matching regex 
+        several menu_colour lines, the colour of the _first_ matching regex
         is applied. For a list of colours, check the colour option in 6-a.
 
+        The match specifies which listings are affected by the colouring.
+        If you specify 'any', or completely skip the <match>: part, then all
+        listings are used. Possible values for match are:
+           ability       (the A screen)
+           description   (the \ screen)
+           equip         (the [, (, ), " screens)
+           help          (the manual)
+           inventory
+           notes         (the ?: screen)
+           resists       (the % screen)
+           spell         (the Z and I screens)
+           stash         (the results from Ctrl-F)
+
         To colour worn stuff and highlight cursed items, take
-          menu_colour = lightred: cursed.*(worn|neck|hand|weapon)
-          menu_colour = green:(worn|neck|hand|weapon)
-          menu_colour = red: cursed
+          menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)
+          menu_colour = inventory:green:(worn|neck|hand|weapon)
+          menu_colour = inventory:red: cursed
 
         To colour identified artefacts, try
-          menu_colour = white:( [-+] the)
+          menu_colour = inventory:white:( [-+] the)
 
         If you frequently die because you forget to use emergency items, try
-          menu_colour = cyan:(potions? of heal wounds|teleportation)
-          menu_colour = lightcyan:(blinking|wand of (fire|cold|draining))
+          menu_colour = inventory:cyan:(potions? of heal wounds|teleportation)
+          menu_colour = inventory:lightcyan:(blinking|wand of (fire|cold|draining))
 
         To quickly check what potions were trashed by a mummy curse, use
-          menu_colour = lightred:potions? of (degeneration|decay)
+          menu_colour = inventory:lightred:potions? of (degeneration|decay)
 
         If you like to see rotten chunks and corpses at a glance, use
-          menu_colour = red: rotting
+          menu_colour = inventory:red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to be
         read with '?:'). The following line will show level ups in white:
-          menu_colour = white:Reached XP level
+          menu_colour = notes:white:Reached XP level
 
 menu_colour_prefix_id = false
         Setting this option to true will prefix the string against
@@ -970,7 +983,7 @@ menu_colour_prefix_id = false
         "identified" for other identified items.
 
         Note that the prefix is put before the the *entire* string which
-        is displayed, so if you're wielding a uncursed dagger which has
+        is displayed, so if you're wielding an uncursed dagger which has
         the 'a' slot, the string the regexes will match against is
         "identified  a - an uncursed dagger (weapon)".
 
@@ -1025,7 +1038,8 @@ item_stack_summary_minimum = 5
         like this:
         Items here: !! """ % ( )))))) [[[
         Known artefacts will be coloured in yellow; glowing or runed
-        items will be in white.
+        items will be in white, unless you already know that they
+        are not ego items.
 
 4-k     Missiles.
 -----------------
