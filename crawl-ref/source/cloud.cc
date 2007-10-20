@@ -22,7 +22,7 @@
 // Returns true if this cloud spreads out as it dissipates.
 static unsigned char actual_spread_rate(cloud_type type, int spread_rate)
 {
-    if (spread_rate > 0)
+    if (spread_rate >= 0)
         return (unsigned char) spread_rate;
 
     switch (type)
