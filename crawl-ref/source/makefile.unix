@@ -145,7 +145,7 @@ ifeq ($(YACC),)
 DOYACC :=
 endif
 
-GAME_DEPENDS := $(EXTRA_DEPENDS) $(OBJECTS)
+GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(EXTRA_DEPENDS) $(OBJECTS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | \
 			egrep -o '[0-9]\.[0-9](\.[0-9])?')
@@ -260,7 +260,7 @@ distclean: clean clean-lua clean-sql
 	$(DELETE) *.lab
 	$(DELETE) $(DEPENDENCY_MKF)
 
-$(GAME): $(LUASRC)$(LUALIBA) $(GAME_DEPENDS)
+$(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
 debug: $(GAME_DEPENDS)
