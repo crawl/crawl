@@ -372,7 +372,7 @@ static unsigned curses_attribute(const std::string &field)
         else
             return CHATTR_HILITE | (colour << 8);          
     }
-    else
+    else if (field != "none")
         fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
     return CHATTR_NORMAL;
 }
