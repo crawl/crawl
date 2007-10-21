@@ -1476,21 +1476,22 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     // putting boots on after they are forced off. -- bwr
     if (mutat == MUT_HOOVES
-        && (you.species == SP_NAGA || you.mutation[MUT_HOOVES]
-            || you.species == SP_KENKU || player_genus(GENPC_DRACONIAN)))
+        && (you.species == SP_NAGA || you.species == SP_KENKU
+            || player_genus(GENPC_DRACONIAN)))
     {
         return false;
     }
 
     if (mutat == MUT_FANGS && you.species == SP_KENKU)
-    {
         return false;
-    }
 
     if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
         return false;
 
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
+        return false;
+
+    if (you.mutation[mutat] >= mutation_defs[mutat].levels)
         return false;
 
     // find where these things are actually changed
@@ -1605,10 +1606,6 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
-    case MUT_SHOCK_RESISTANCE:
-        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
-        break;
-
     case MUT_FAST_METABOLISM:
         if (you.mutation[MUT_SLOW_METABOLISM] > 0)
         {
@@ -1628,19 +1625,11 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
-    case MUT_TELEPORT_CONTROL:
-        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
-        break;
-
     case MUT_HOOVES:            //jmf: like horns
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         remove_one_equip(EQ_BOOTS);
         break;
 
-    case MUT_FANGS:
-         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
-         break;
-         
     case MUT_CLAWS:
         mpr((you.species == SP_TROLL ? troll_claw_gain
              : gain_mutation[mutat])[you.mutation[mutat]],
@@ -1720,9 +1709,6 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
         modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
-        // deliberate fall-through
-    default:
-        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
     case MUT_GREY2_SCALES:
@@ -1746,6 +1732,10 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         if (you.mutation[mutat] != 0)
             modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
+        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        break;
+
+    default:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
     }
@@ -1855,22 +1845,6 @@ bool delete_mutation(mutation_type which_mutation, bool force)
         modify_stat(STAT_DEXTERITY, 1, false, "losing a mutation");
         break;
 
-    case MUT_SHOCK_RESISTANCE:
-        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
-        break;
-
-    case MUT_FAST_METABOLISM:
-        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
-        break;
-
-    case MUT_SLOW_METABOLISM:
-        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
-        break;
-
-    case MUT_TELEPORT_CONTROL:
-        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
-        break;
-
     case MUT_STRONG_STIFF:
         modify_stat(STAT_STRENGTH, -1, true, "losing a mutation");
         modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
@@ -1911,10 +1885,6 @@ bool delete_mutation(mutation_type which_mutation, bool force)
              MSGCH_MUTATION);
         break;
 
-    default:
-        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
-        break;
-
     case MUT_GREY2_SCALES:
         if (you.mutation[mutat] != 2)
             modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
@@ -1949,6 +1919,10 @@ bool delete_mutation(mutation_type which_mutation, bool force)
                     you.ability_letter_table[i] = ABIL_SPIT_POISON;
             }
         }
+        break;
+
+    default:
+        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
     }
 
@@ -2023,12 +1997,7 @@ const char *mutation_name(mutation_type which_mutat, int level)
         return (mut_string);
     }
 
-    // Some mutations only have one "level", and it's better
-    // to show the first level description than a blank description.
-    if (mutation_descrip[ which_mutat ][ level - 1 ][0] == 0)
-        return (mutation_descrip[ which_mutat ][ 0 ]);
-    else 
-        return (mutation_descrip[ which_mutat ][ level - 1 ]);
+    return (mutation_descrip[ which_mutat ][ level - 1 ]);
 }                               // end mutation_name()
 
 /* Use an attribute counter for how many demonic mutations a dspawn has */
@@ -2394,112 +2363,3 @@ bool give_bad_mutation(bool forceMutation, bool failMsg)
 
     return mutate(which_bad_one, failMsg, forceMutation);
 }                               // end give_bad_mutation()
-
-//jmf: might be useful somewhere (eg Xom or transmigration effect)
-bool give_cosmetic_mutation()
-{
-    mutation_type mutation = NUM_MUTATIONS;
-    int how_much = 0;
-    int counter = 0;
-
-    do
-    {
-        mutation = MUT_DEFORMED;
-        how_much = 1 + random2(3);
-
-        if (one_chance_in(6))
-        {
-            mutation = MUT_ROBUST;
-            how_much = 1 + random2(3);
-        }
-
-        if (one_chance_in(6))
-        {
-            mutation = MUT_FRAIL;
-            how_much = 1 + random2(3);
-        }
-
-        if (one_chance_in(5))
-        {
-            mutation = MUT_TOUGH_SKIN;
-            how_much = 1 + random2(3);
-        }
-
-        if (one_chance_in(4))
-        {
-            mutation = MUT_CLAWS;
-            how_much = 1 + random2(3);
-        }
-
-        if (you.species != SP_NAGA && !you.mutation[MUT_HOOVES]
-            && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN)
-            && one_chance_in(5))
-        {
-            mutation = MUT_HOOVES;
-            how_much = 1;
-        }
-
-        if (one_chance_in(5))
-        {
-            mutation = MUT_FANGS;
-            how_much = 1 + random2(3);
-        }
-    
-        if (player_genus(GENPC_DRACONIAN) && one_chance_in(5))
-        {
-            mutation = MUT_BIG_WINGS;
-            how_much = 1;
-        }
-
-        if (one_chance_in(5))
-        {
-            mutation = MUT_CARNIVOROUS;
-            how_much = 1 + random2(3);
-        }
-
-        if (one_chance_in(6))
-        {
-            mutation = MUT_HORNS;
-            how_much = 1 + random2(3);
-        }
-
-        if ((you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
-            && one_chance_in(4))
-        {
-            mutation = MUT_STINGER;
-            how_much = 1 + random2(3);
-        }
-
-        if (you.species == SP_NAGA && one_chance_in(6))
-        {
-            mutation = MUT_BREATHE_POISON;
-            how_much = 1;
-        }
-
-        if (!(you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
-            && one_chance_in(7))
-        {
-            mutation = MUT_SPIT_POISON;
-            how_much = 1;
-        }
-
-        if (!(you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
-            && one_chance_in(8))
-        {
-            mutation = MUT_BREATHE_FLAMES;
-            how_much = 1 + random2(3);
-        }
-
-        if (you.mutation[mutation] > 0)
-            how_much -= you.mutation[mutation];
-
-        if (how_much < 0)
-            how_much = 0;
-    }
-    while (how_much == 0 && counter++ < 5000);
-
-    if (how_much != 0)
-        return mutate(mutation);
-    else
-        return false;
-}                               // end give_cosmetic_mutation()
