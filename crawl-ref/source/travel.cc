@@ -2460,6 +2460,17 @@ static int find_transtravel_stair(  const level_id &cur,
 
             const level_pos &dest = si.destination;
 
+            // Never use rock stairs as the last leg of the trip, since
+            // that will leave the player unable to retrace their path.
+            // This does not apply if we have a destination with a specific
+            // position on the target level travel wants to get to.
+            if (grid_is_rock_stair(si.grid)
+                && target.pos.x == -1
+                && dest.id == target.id)
+            {
+                continue;
+            }
+            
             // We can only short-circuit the stair-following process if we
             // have no exact target location. If there *is* an exact target
             // location, we can't follow stairs for which we have incomplete
@@ -2467,15 +2478,18 @@ static int find_transtravel_stair(  const level_id &cur,
             //
             // We can also not use incomplete stair information if there are
             // excludes on the target level.
-            if (target.pos.x == -1 && dest.id == target.id
-                    && !target_has_excludes)
+            if (target.pos.x == -1
+                && dest.id == target.id
+                && !target_has_excludes)
             {
                 if (local_distance == -1 || local_distance > dist2stair)
                 {
                     local_distance = dist2stair;
-                    if (cur == player_level && you.x_pos == stair.x &&
-                            you.y_pos == stair.y)
+                    if (cur == player_level && you.x_pos == stair.x
+                        && you.y_pos == stair.y)
+                    {
                         best_stair = si.position;
+                    }
                 }
                 continue;
             }
