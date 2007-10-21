@@ -1522,7 +1522,7 @@ VISUAL:@The_monster@ tries to bite you.
 
 @The_monster@ says, "You will soon forget everything."
 
-@The_monster@ says, "Look into my eyes.
+@The_monster@ says, "Look into my eyes."
 
 @The_monster@ says, "I'm your fate."
 
