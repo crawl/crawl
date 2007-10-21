@@ -1285,7 +1285,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
         case WPN_DEMON_BLADE:
         case WPN_DEMON_WHIP:
         case WPN_DEMON_TRIDENT:
-            description += "$Demonspawns are more deadly with it.";
+            description += "$Demonspawn are more deadly with it.";
             break;
         default:
             break;
