@@ -2744,42 +2744,43 @@ void handle_time( long time_delta )
     //mv: messages when chunks/corpses become rotten
     if (new_rotting_item)
     {
-        switch (you.species)
-        {
         // XXX: should probably still notice?
-        case SP_MUMMY: // no smell 
-        case SP_TROLL: // stupid, living in mess - doesn't care about it
-            break;
+        // Races that can't smell don't care, and trolls are stupid and
+        // don't care.
+        if (player_can_smell() && you.species != SP_TROLL)
+        {
+            switch (you.mutation[MUT_SAPROVOROUS])
+            {
+            // level 1 and level 2 saprovores aren't so touchy
+            case 1:
+            case 2:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "You smell rotting flesh." :
+                      (temp_rand == 6) ? "You smell decay."
+                                       : "There is something rotten in your inventory."),
+                    MSGCH_ROTTEN_MEAT );
+                break;
 
-        case SP_GHOUL: //likes it
-            temp_rand = random2(8);
-            mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
-                  (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                   : "Wow! There is something tasty in your inventory."),
-                MSGCH_ROTTEN_MEAT );
-            break;
+            // level 3 saprovores like it
+            case 3:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
+                      (temp_rand == 6) ? "You smell decay. Yum-yum."
+                                       : "Wow! There is something tasty in your inventory."),
+                    MSGCH_ROTTEN_MEAT );
+                break;
 
-        case SP_KOBOLD: //mv: IMO these race aren't so "touchy"
-        case SP_OGRE:
-        case SP_MINOTAUR:
-        case SP_HILL_ORC:
-            temp_rand = random2(8);
-            mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "You smell rotting flesh." :
-                  (temp_rand == 6) ? "You smell decay."
-                                   : "There is something rotten in your inventory."),
-                MSGCH_ROTTEN_MEAT );
-            break;
-
-        default:
-            temp_rand = random2(8);
-            mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                  (temp_rand == 6) ? "You smell decay. Yuck!"
-                                   : "Ugh! There is something really disgusting in your inventory."), 
-                MSGCH_ROTTEN_MEAT );
-            break;
+            default:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
+                      (temp_rand == 6) ? "You smell decay. Yuck!"
+                                       : "Ugh! There is something really disgusting in your inventory."), 
+                    MSGCH_ROTTEN_MEAT );
+                break;
+            }
         }
         learned_something_new(TUT_ROTTEN_FOOD);
     }

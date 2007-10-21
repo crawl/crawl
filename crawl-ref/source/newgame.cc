@@ -1880,8 +1880,12 @@ static void give_basic_mutations(species_type speci)
     // for the fast/slow metabolism when we get around to it.
     switch ( speci )
     {
+    case SP_HILL_ORC:
+        you.mutation[MUT_SAPROVOROUS] = 1;
+        break;
     case SP_OGRE:
         you.mutation[MUT_FAST_METABOLISM] = 1;
+        you.mutation[MUT_SAPROVOROUS] = 1;
         break;
     case SP_OGRE_MAGE:
         you.mutation[MUT_FAST_METABOLISM] = 1;
@@ -1926,13 +1930,16 @@ static void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         you.mutation[MUT_COLD_RESISTANCE] = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
+        you.mutation[MUT_SAPROVOROUS] = 3;
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_TROLL:
         you.mutation[MUT_REGENERATION] = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
+        you.mutation[MUT_SAPROVOROUS] = 2;
         break;
     case SP_KOBOLD:
+        you.mutation[MUT_SAPROVOROUS] = 2;
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_VAMPIRE:

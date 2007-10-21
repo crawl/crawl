@@ -809,6 +809,8 @@ public:
     bool confusable() const;
     bool slowable() const;
 
+    bool omnivorous() const;
+
     flight_type flies() const;
 
     bool paralysed() const;

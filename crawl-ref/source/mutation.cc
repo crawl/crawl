@@ -282,7 +282,10 @@ const char *mutation_descrip[][3] = {
     {"You occasionally drift when moving.",
      "You sometimes drift when moving.",
      "You frequently drift when moving."},
-    {"", "", ""},
+
+    {"You can tolerate rotten meat.", "You can eat rotten meat.",
+     "You thrive on rotten meat."},    
+    
     {"", "", ""},
     {"", "", ""},
 
@@ -531,6 +534,8 @@ const char *gain_mutation[][3] = {
     {"Your movements feel uncertain.",
      "Your movements feel even more uncertain.",
      "Your movements feel even more uncertain."},
+
+    // saprovorous: can never be gained or lost, only started with    
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -741,7 +746,10 @@ const char *lose_mutation[][3] = {
     
     {"", "", ""},
     {"", "", ""},
+
+    // saprovorous: can never be gained or lost, only started with
     {"", "", ""},
+
     {"", "", ""},
 
     // 65
@@ -889,10 +897,10 @@ static const mutation_def mutation_defs[] = {
     { MUT_GREEN_MARKS, 0, 3 },
     { MUT_DRIFTING, 3, 3 },
 
-    // Three placeholders:
+    { MUT_SAPROVOROUS, 0, 3 },
     { RANDOM_MUTATION, 0, 3 },
     { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
+    
 // 70
     { MUT_RED_SCALES, 2, 3 },
     { MUT_NACREOUS_SCALES, 1, 3 },
@@ -979,7 +987,6 @@ formatted_string describe_mutations()
         if ( you.mutation[MUT_CLAWS] )
             result += "</cyan><lightblue>";
         result += EOL;
-        result += "You can eat rotten meat." EOL;
         have_any = true;
         break;
 
@@ -987,7 +994,6 @@ formatted_string describe_mutations()
         result += "Your body is rotting away." EOL;
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
         result += EOL;
-        result += "You preferably eat rotten meat." EOL;
         result += "You heal slowly." EOL;
         have_any = true;
         break;
@@ -1109,14 +1115,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_KOBOLD:
-        result += "You can eat rotten meat." EOL;
         result += "You recuperate from illness quickly." EOL;
-        have_any = true;
-        break;
-
-    case SP_HILL_ORC:
-    case SP_OGRE:
-        result += "You can tolerate rotten meat." EOL;
         have_any = true;
         break;
 

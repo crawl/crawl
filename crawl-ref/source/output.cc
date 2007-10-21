@@ -917,30 +917,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
              determine_color_string(rcorr), itosym1(rcorr));
     cols.add_formatted(2, buf, false);
 
-    int saplevel = 0;
-    switch (you.species)
-    {
-    case SP_GHOUL:
-        saplevel = 3;
-        snprintf(buf, sizeof buf, "%sSaprovore  : %s",
-                 determine_color_string(3), itosym3(3) );
-        break;
-
-    case SP_KOBOLD:
-    case SP_TROLL:
-        saplevel = 2;
-        snprintf(buf, sizeof buf, "%sSaprovore  : %s",
-                 determine_color_string(2), itosym3(2) );
-        break;
-
-    case SP_HILL_ORC:
-    case SP_OGRE:
-        saplevel = 1;
-        break;
-    default:
-        saplevel = 0;
-        break;
-    }
+    int saplevel = you.mutation[MUT_SAPROVOROUS];
     const char* pregourmand;
     const char* postgourmand;
     if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
@@ -1171,30 +1148,7 @@ void print_overview_screen()
              determine_color_string(rslow), itosym1(rslow));
     cols.add_formatted(0, buf, false);
 
-    int saplevel = 0;
-    switch (you.species)
-    {
-      case SP_GHOUL:
-          saplevel = 3;
-          snprintf(buf, sizeof buf, "%sSaprovore : %s",
-                   determine_color_string(3), itosym3(3) );
-          break;
-
-      case SP_KOBOLD:
-      case SP_TROLL:
-          saplevel = 2;
-          snprintf(buf, sizeof buf, "%sSaprovore : %s",
-                   determine_color_string(2), itosym3(2) );
-          break;
-
-      case SP_HILL_ORC:
-      case SP_OGRE:
-          saplevel = 1;
-          break;
-      default:
-          saplevel = 0;
-          break;
-    }
+    int saplevel = you.mutation[MUT_SAPROVOROUS];
     const char* pregourmand;
     const char* postgourmand;
     if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
@@ -1598,16 +1552,6 @@ std::string status_mut_abilities()
           have_any = true;
           break;
 
-      case SP_TROLL:
-          text += "saprovore 2";
-          have_any = true;
-          break;
-
-      case SP_GHOUL:
-          text += "saprovore 3";
-          have_any = true;
-          break;
-
       case SP_GREY_ELF:
           if (you.experience_level > 4)
           {
@@ -1714,16 +1658,6 @@ std::string status_mut_abilities()
           }
           break;
 
-      case SP_KOBOLD:
-          text += "saprovore 2";
-          have_any = true;
-          break;
-
-      case SP_HILL_ORC:
-      case SP_OGRE:
-          text += "saprovore 1";
-          have_any = true;
-          break;
       default:
           break;
     }                           //end switch - innate abilities
@@ -1796,6 +1730,13 @@ std::string status_mut_abilities()
                 if (have_any)
                     text += ", ";
                 text += "poison resistance";
+                have_any = true;
+                break;
+            case MUT_SAPROVOROUS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "saprovore %d", level);
+                text += info;
                 have_any = true;
                 break;
             case MUT_CARNIVOROUS:

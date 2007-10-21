@@ -54,7 +54,6 @@
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
 static void  eat_chunk( int chunk_effect );
-static void  ghoul_consume_flesh(int chunk_type);
 static void  eating(unsigned char item_class, int item_type);
 static void  describe_food_change(int hunger_increment);
 static bool  food_change(bool suppress_message);
@@ -624,9 +623,7 @@ static void describe_food_change(int food_increment)
 
 static bool prompt_eat_chunk(const item_def &item, bool rotten)
 {
-    if (rotten && you.species != SP_GHOUL && you.species != SP_KOBOLD
-        && you.species != SP_TROLL && you.species != SP_OGRE
-        && you.species != SP_HILL_ORC
+    if (rotten && !you.mutation[MUT_SAPROVOROUS]
         && !yesno("Are you sure you want to eat this rotten meat?",
                   false, 'n'))
     {
@@ -869,87 +866,93 @@ static void say_chunk_flavour(bool likes_chunks)
 static void eat_chunk( int chunk_effect )
 {
 
-    bool likes_chunks = (you.species == SP_OGRE || you.species == SP_TROLL ||
-                         you.mutation[MUT_CARNIVOROUS] > 0);
+    bool likes_chunks = (you.omnivorous() ||
+                         you.mutation[MUT_CARNIVOROUS]);
+    int nutrition = chunk_nutrition(likes_chunks);
+    int hp_amt = 0;
+    bool suppress_msg = false; // do we display the chunk nutrition message?
+    bool do_eat = false;
 
     if (you.species == SP_GHOUL)
     {
-        ghoul_consume_flesh(chunk_effect);
-        start_delay( DELAY_EAT, 2 );
-        lessen_hunger( CHUNK_BASE_NUTRITION, true );
+        nutrition = CHUNK_BASE_NUTRITION;
+        hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
+        suppress_msg = true;
     }
-    else
+
+    switch (chunk_effect)
     {
-        switch (chunk_effect)
+    case CE_MUTAGEN_RANDOM:
+        mpr("This meat tastes really weird.");
+        mutate(RANDOM_MUTATION);
+        xom_is_stimulated(100);
+        break;
+
+    case CE_MUTAGEN_BAD:
+        mpr("This meat tastes *really* weird.");
+        give_bad_mutation();
+        xom_is_stimulated(random2(200));
+        break;
+
+    case CE_HCL:
+        rot_player( 10 + random2(10) );
+        if (disease_player( 50 + random2(100) ))
+            xom_is_stimulated(random2(100));
+        break;
+
+    case CE_POISONOUS:
+        mpr("Yeeuch - this meat is poisonous!");
+        if (poison_player( 3 + random2(4) ))
+            xom_is_stimulated(random2(128));
+        break;
+
+    case CE_ROTTEN:
+    case CE_CONTAMINATED:
+        if (you.mutation[MUT_SAPROVOROUS] == 3)
         {
-        case CE_MUTAGEN_RANDOM:
-            mpr("This meat tastes really weird.");
-            mutate(RANDOM_MUTATION);
-            xom_is_stimulated(100);
-            break;
+            mprf("This %sflesh tastes delicious!",
+                (chunk_effect == CE_ROTTEN) ? "rotting " : "");
 
-        case CE_MUTAGEN_BAD:
-            mpr("This meat tastes *really* weird.");
-            give_bad_mutation();
-            xom_is_stimulated(random2(200));
-            break;
+            if (you.species == SP_GHOUL)
+                heal_from_food(hp_amt, 0, !one_chance_in(4),
+                    one_chance_in(5));
 
-        case CE_HCL:
-            rot_player( 10 + random2(10) );
-            if (disease_player( 50 + random2(100) ))
-                xom_is_stimulated(random2(100));
-            break;
-
-        case CE_POISONOUS:
-            mpr("Yeeuch - this meat is poisonous!");
-            if (poison_player( 3 + random2(4) ))
-                xom_is_stimulated(random2(128));
-            break;
-
-        case CE_ROTTEN:
-        case CE_CONTAMINATED:
+            do_eat = true;
+        }
+        else
+        {
             mpr("There is something wrong with this meat.");
             if (disease_player( 50 + random2(100) ))
                 xom_is_stimulated(random2(100));
-            break;
+        }
+        break;
 
-        // note that this is the only case that takes time and forces redraw
-        case CE_CLEAN:
+    case CE_CLEAN:
+    {
+        if (you.mutation[MUT_SAPROVOROUS] == 3)
         {
+            mpr("This raw flesh tastes good.");
+
+            if (you.species == SP_GHOUL)
+                heal_from_food((!one_chance_in(5)) ? hp_amt : 0, 0,
+                    !one_chance_in(3), false);
+        }
+        else
             say_chunk_flavour(likes_chunks);
-            const int nutrition = chunk_nutrition(likes_chunks);
-            start_delay( DELAY_EAT, 2, nutrition );
-            lessen_hunger( nutrition, true );
-            break;
-        }
-        }
+
+        do_eat = true;
+        break;
+    }
+    }
+
+    if (do_eat)
+    {
+        start_delay( DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition );
+        lessen_hunger( nutrition, true );
     }
 
     return;
 }                               // end eat_chunk()
-
-static void ghoul_consume_flesh(int chunk_type)
-{
-    int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-
-    if (chunk_type != CE_ROTTEN && chunk_type != CE_CONTAMINATED)
-    {
-        mpr("This raw flesh tastes good.");
-
-        heal_from_food((!one_chance_in(5)) ? hp_amt : 0, 0,
-            !one_chance_in(3), false);
-    }
-    else
-    {
-        if (chunk_type == CE_ROTTEN)
-            mpr("This rotting flesh tastes delicious!");
-        else // CE_CONTAMINATED
-            mpr("This flesh tastes delicious!");
-
-        heal_from_food(hp_amt, 0,
-            !one_chance_in(4), one_chance_in(5));
-    }
-} // end ghoul_consume_flesh()
 
 static void eating(unsigned char item_class, int item_type)
 {
@@ -1257,8 +1260,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     bool ur_chunkslover = ( 
                 (check_hunger? you.hunger_state <= HS_HUNGRY : true)
                            || wearing_amulet(AMU_THE_GOURMAND, !reqid)
-                           || you.species == SP_OGRE
-                           || you.species == SP_TROLL
+                           || you.omnivorous()
                            || you.mutation[MUT_CARNIVOROUS]);
 
     switch (what_isit)
@@ -1412,27 +1414,28 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         break;
 
     case CE_CONTAMINATED:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+                && you.mutation[MUT_SAPROVOROUS] < 3)
+        {
             this_chunk_effect = CE_CLEAN;
+        }
         else
         {
-            switch (you.species)
+            switch (you.mutation[MUT_SAPROVOROUS])
             {
-            case SP_GHOUL:
-                // Doing this here causes a odd message later. -- bwr
-                // this_chunk_effect = CE_ROTTEN;
+            case 1:
+                if (!one_chance_in(15))
+                    this_chunk_effect = CE_CLEAN;
                 break;
 
-            case SP_KOBOLD:
-            case SP_TROLL:
+            case 2:
                 if (!one_chance_in(45))
                     this_chunk_effect = CE_CLEAN;
                 break;
 
-            case SP_HILL_ORC:
-            case SP_OGRE:
-                if (!one_chance_in(15))
-                    this_chunk_effect = CE_CLEAN;
+            case 3:
+                // Doing this here causes a odd message later. -- bwr
+                // this_chunk_effect = CE_ROTTEN;
                 break;
 
             default:
@@ -1467,38 +1470,41 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     // one last chance for some species to safely eat rotten food {dlb}:
     if (this_chunk_effect == CE_ROTTEN)
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+                && you.mutation[MUT_SAPROVOROUS] < 3)
+        {
             this_chunk_effect = CE_CLEAN;
+        }
         else
         {
-            switch (you.species)
+            switch (you.mutation[MUT_SAPROVOROUS])
             {
-            case SP_KOBOLD:
-            case SP_TROLL:
-                if (!one_chance_in(15))
-                    this_chunk_effect = CE_CLEAN;
-                break;
-            case SP_HILL_ORC:
-            case SP_OGRE:
+            case 1:
                 if (!one_chance_in(5))
                     this_chunk_effect = CE_CLEAN;
                 break;
+
+            case 2:
+                if (!one_chance_in(15))
+                    this_chunk_effect = CE_CLEAN;
+                break;
+
             default:
                 break;
             }
         }
     }
 
-    // the amulet of the gourmad will permit consumption of
-    // contaminated meat as though it were "clean" meat - ghouls get
-    // rotting meat effect from clean chunks, since they love rotting
-    // meat.
+    // The amulet of the gourmand will permit consumption of
+    // contaminated meat as though it were "clean" meat - level 3
+    // saprovores get rotting meat effect from clean chunks, since they
+    // love rotting meat.
     if (wearing_amulet(AMU_THE_GOURMAND)
         && random2(GOURMAND_MAX) < you.duration[DUR_GOURMAND])
     {
-        if (you.species == SP_GHOUL)
+        if (you.mutation[MUT_SAPROVOROUS] == 3)
         {
-            // [dshaligram] Ghouls relish contaminated meat.
+            // [dshaligram] Level 3 saprovores relish contaminated meat.
             if (this_chunk_effect == CE_CLEAN)
                 this_chunk_effect = CE_CONTAMINATED;
         }

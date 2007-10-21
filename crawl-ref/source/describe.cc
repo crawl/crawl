@@ -678,7 +678,7 @@ static std::string describe_demon(const monsters &mons)
         break;
     case 1:
         description += " It smells like rotting flesh";
-        if (you.species == SP_GHOUL)
+        if (you.mutation[MUT_SAPROVOROUS] == 3)
             description += " - yum!";
         else
             description += ".";
@@ -2184,12 +2184,12 @@ static std::string describe_food( const item_def &item )
             description += "Don't tell me you don't know what that is! ";
             break;
         case FOOD_CHUNK:
-            if (you.species != SP_GHOUL)
+            if (you.mutation[MUT_SAPROVOROUS] < 3)
                 description += "It looks rather unpleasant. ";
 
             if (item.special < 100)
             {
-                if (you.species == SP_GHOUL)
+                if (you.mutation[MUT_SAPROVOROUS] == 3)
                     description += "It looks nice and ripe. ";
                 else if (you.is_undead != US_UNDEAD)
                 {
@@ -3663,10 +3663,13 @@ void describe_monsters(monsters& mons)
         break;
 
     case MONS_ROTTING_DEVIL:
-        if (you.species == SP_GHOUL)
-            description << "It smells great!";
-        else if (player_can_smell())
-            description << "It stinks.";
+        if (player_can_smell())
+        {
+            if (you.mutation[MUT_SAPROVOROUS] == 3)
+                description << "It smells great!";
+            else
+                description << "It stinks.";
+        }
         break;
 
     case MONS_SWAMP_DRAKE:

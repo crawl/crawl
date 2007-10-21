@@ -5982,6 +5982,11 @@ bool player::slowable() const
     return (!wearing_amulet(AMU_RESIST_SLOW));
 }
 
+bool player::omnivorous() const
+{
+    return (species == SP_TROLL || species == SP_OGRE);
+}
+
 flight_type player::flies() const
 {
     if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||

@@ -374,7 +374,7 @@ void handle_delay( void )
             if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
             {
                 mpr("The corpse rots away into a skeleton!");
-                if (you.species == SP_GHOUL)
+                if (you.mutation[MUT_SAPROVOROUS] == 3)
                     xom_check_corpse_waste();
                 else
                     xom_is_stimulated(32);
@@ -391,7 +391,7 @@ void handle_delay( void )
 
                     if (you.species != SP_VAMPIRE
                         && you.is_undead != US_UNDEAD
-                        && you.species != SP_GHOUL)
+                        && you.mutation[MUT_SAPROVOROUS] < 3)
                     {
                         xom_check_corpse_waste();
                     }
@@ -624,7 +624,7 @@ static void finish_delay(const delay_queue_item &delay)
                 mpr("The corpse rots away into a skeleton just before you "
                     "finish butchering it!");
 
-                if (you.species == SP_GHOUL)
+                if (you.mutation[MUT_SAPROVOROUS] == 3)
                     xom_check_corpse_waste();
                 else
                     xom_is_stimulated(64);
