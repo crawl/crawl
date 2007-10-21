@@ -1096,8 +1096,6 @@ int items( int allow_uniques,       // not just true-false,
             case WPN_SPIKED_FLAIL:
             case WPN_GREAT_MACE:
             case WPN_DIRE_FLAIL:
-                if (one_chance_in(6))
-                    set_equip_race( mitm[p], ISFLAG_ELVEN );
                 if (one_chance_in(4))
                     set_equip_race( mitm[p], ISFLAG_DWARVEN );
                 if (one_chance_in(3))

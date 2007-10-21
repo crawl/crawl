@@ -539,11 +539,19 @@ static void racialise_starting_equipment()
                 case SP_GREY_ELF:
                 case SP_DEEP_ELF:
                 case SP_SLUDGE_ELF:
-                    set_equip_race( you.inv[i], ISFLAG_ELVEN );
+                    if (you.inv[i].sub_type != OBJ_WEAPONS
+                        || weapon_skill(you.inv[i]) != SK_MACES_FLAILS)
+                    {
+                        set_equip_race( you.inv[i], ISFLAG_ELVEN );
+                    }
                     break;
 
                 case SP_MOUNTAIN_DWARF:
-                    set_equip_race( you.inv[i], ISFLAG_DWARVEN );
+                    if (you.inv[i].sub_type != OBJ_WEAPONS
+                        || weapon_skill(you.inv[i]) != SK_POLEARMS)
+                    {
+                        set_equip_race( you.inv[i], ISFLAG_DWARVEN );
+                    }
                     break;
 
                 case SP_HILL_ORC:
