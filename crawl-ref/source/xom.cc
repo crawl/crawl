@@ -767,11 +767,15 @@ static bool xom_is_bad(int sever)
             temp_rand = random2(3);
                 
             god_speaks(GOD_XOM,
-                       (temp_rand == 0) ? "\"You have grown too comfortable in your little world, mortal!\"" :
-                       (temp_rand == 1) ? "Xom casts you into the Abyss!"
-                       : "The world seems to spin as Xom's maniacal laughter rings in your ears.");
+                       (temp_rand == 0) ?
+                       "\"You have grown too comfortable in your little world, "
+                       "mortal!\"" :
+                       (temp_rand == 1) ?
+                       "Xom casts you into the Abyss!"
+                       : "The world seems to spin as Xom's "
+                         "maniacal laughter rings in your ears.");
                 
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, "Xom");
                 
             done = true;
         }

@@ -652,7 +652,7 @@ static void damnation_card(int power, deck_rarity_type rarity)
 
         if ( mon_to_banish == NON_MONSTER ) // banish yourself!
         {
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, "drawing a card");
             break;              // don't banish anything else
         }
         else
