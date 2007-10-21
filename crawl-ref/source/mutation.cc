@@ -529,8 +529,8 @@ const char *gain_mutation[][3] = {
      "Your chest, abdomen and neck itch."},
 
     {"Your movements feel uncertain.",
-     "Your movements feel even more uncertian.",
-     "Your movements feel even more uncertian."},
+     "Your movements feel even more uncertain.",
+     "Your movements feel even more uncertain."},
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
