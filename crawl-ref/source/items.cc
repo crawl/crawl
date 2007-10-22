@@ -2669,7 +2669,7 @@ void handle_time( long time_delta )
     handle_god_time();
 
     if (you.mutation[MUT_SCREAM]
-        && (random2(100) <= you.mutation[MUT_SCREAM] * 5) )
+        && (random2(100) <= 2 + you.mutation[MUT_SCREAM] * 3) )
     {
         yell(true);
     }

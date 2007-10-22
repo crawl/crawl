@@ -5587,6 +5587,9 @@ bool player::cannot_speak() const
     if (silenced(x_pos, y_pos))
         return (true);
 
+    if (you.duration[DUR_PARALYSIS])
+        return (true);
+        
     // No transform that prevents the player from speaking yet.
     return (false);
 }
@@ -5605,11 +5608,13 @@ std::string player::shout_verb() const
         return "squeak";
     case TRAN_AIR:
         return "__NONE";
-    default:
-        if (you.mutation[MUT_SCREAM])
-            return "scream";
-        else
+    default: // depends on SCREAM mutation
+        if (you.mutation[MUT_SCREAM] <= 1)
+            return "shout";
+        else if (you.mutation[MUT_SCREAM] == 2)
             return "yell";
+        else
+            return "scream";
     }
 }
 

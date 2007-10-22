@@ -1702,7 +1702,7 @@ void yell(bool force)
     std::string cap_shout = shout_verb;
     cap_shout[0] = toupper(cap_shout[0]);
 
-    int noise_level = 12;
+    int noise_level = 12; // "shout"
 
     // Tweak volume for different kinds of vocalisation.
     if (shout_verb == "roar")
@@ -1713,6 +1713,10 @@ void yell(bool force)
         noise_level = 4;
     else if (shout_verb == "__NONE")
         noise_level = 0;
+    else if (shout_verb == "yell")
+        noise_level = 14;
+    else if (shout_verb == "scream")
+        noise_level = 16;
 
     if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
         noise_level = 0;
@@ -1721,10 +1725,11 @@ void yell(bool force)
     {
         if (force)
         {
-            if (shout_verb == "__NONE")
-                mpr("You must scream but have no lips!");
+            if (shout_verb == "__NONE" || you.paralysed())
+                mprf("You feel a strong urge to %s, but you are unable to make a sound!",
+                     shout_verb == "__NONE" ? "scream" : shout_verb.c_str());
             else
-                mprf("A %s rips itself from your lips, but you make no sound!",
+                mprf("You feel a %s rip itself from your throat, but you make no sound!",
                      shout_verb.c_str());
         }
         else
@@ -1735,7 +1740,7 @@ void yell(bool force)
 
     if (force)
     {
-        mprf("A %s rips itself from your lips!", shout_verb.c_str());
+        mprf("A %s rips itself from your throat!", shout_verb.c_str());
         noisy( noise_level, you.x_pos, you.y_pos );
         return;
     }

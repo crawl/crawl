@@ -105,6 +105,7 @@ const char *mutation_descrip[][3] = {
     {"You are surrounded by a mild repulsion field (ev + 1).",
      "You are surrounded by a moderate repulsion field (ev + 3).",
      "You are surrounded by a strong repulsion field (ev + 5; repel missiles)."},
+     
     {"Your system is immune to poisons.", "Your system is immune to poisons.",
      "Your system is immune to poisons."},
 // 10
@@ -171,7 +172,6 @@ const char *mutation_descrip[][3] = {
      "You can sense a large area of your surroundings."},
 
 // 30
-
     {"You can breathe flames.", "You can breathe fire.",
      "You can breathe blasts of fire."},
 
@@ -191,8 +191,8 @@ const char *mutation_descrip[][3] = {
      "Your muscles are very flexible (Dex +2), but weak (Str -2).",
      "Your muscles are extremely flexible (Dex +3), but weak (Str -3)."},
 
-    {"You occasionally scream uncontrollably.",
-     "You sometimes scream uncontrollably.",
+    {"You occasionally shout uncontrollably.",
+     "You sometimes yell uncontrollably.",
      "You frequently scream uncontrollably."},
 
     {"You possess an exceptional clarity of mind.",
@@ -208,8 +208,8 @@ const char *mutation_descrip[][3] = {
 
     {"Your vision is a little blurry.", "Your vision is quite blurry.",
      "Your vision is extremely blurry."},
-// 40
 
+// 40
     {"You are somewhat resistant to further mutation.",
      "You are somewhat resistant to both further mutation and mutation removal.",
      "Your current mutations are irrevocably fixed, and you can mutate no more."},
@@ -254,6 +254,7 @@ const char *mutation_descrip[][3] = {
      "You have claws for hands."},
 
     {"You have hooves in place of feet.", "", ""},
+
     // 60 - leave some space for more demonic powers...
     
     {"You have very sharp teeth.", "You have extremely sharp teeth.",
@@ -290,7 +291,6 @@ const char *mutation_descrip[][3] = {
     {"", "", ""},
 
     // 70
-
     {"You are partially covered in red scales (AC + 1).",
      "You are mostly covered in red scales (AC + 2).",
      "You are covered in red scales (AC + 4)."},
@@ -332,7 +332,6 @@ const char *mutation_descrip[][3] = {
      "You are completely covered in purple scales (AC + 6)."},
 
 // 80
-
     {"You are partially covered in speckled scales (AC + 1).",
      "You are mostly covered in speckled scales (AC + 2).",
      "You are covered in speckled scales (AC + 3)."},
@@ -391,6 +390,7 @@ const char *gain_mutation[][3] = {
      "Your repulsive radiation grows stronger."},
 
     {"You feel healthy.", "You feel healthy.",  "You feel healthy."},
+
 // 10
     {"You hunger for flesh.", "You hunger for flesh.", "You hunger for flesh."},
 
@@ -419,6 +419,7 @@ const char *gain_mutation[][3] = {
 
     {"You feel less intelligent.", "You feel less intelligent.",
      "You feel less intelligent."},
+
 // 20
     {"You feel clumsy.", "You feel clumsy.",
      "You feel clumsy."},
@@ -450,8 +451,8 @@ const char *gain_mutation[][3] = {
     {"You feel aware of your surroundings.",
      "You feel more aware of your surroundings.",
      "You feel even more aware of your surroundings."},
-// 30
 
+// 30
     {"Your throat feels hot.", "Your throat feels hot.",
      "Your throat feels hot."},
 
@@ -465,11 +466,11 @@ const char *gain_mutation[][3] = {
     {"Your muscles feel sore.", "Your muscles feel sore.",
      "Your muscles feel sore."},
 
-    {"You feel the urge to scream.", "You feel the urge to scream.",
-     "You feel the urge to scream."},
+    {"Your muscles feel loose.", "Your muscles feel loose.",
+     "Your muscles feel loose."},
 
-    {"You feel a little disoriented.", "You feel a little disoriented.",
-     "Where the Hells are you?"},
+    {"You feel the urge to shout.", "You feel a strong urge to yell.",
+     "You feel a strong urge to scream."},
 
     {"Your thoughts seem clearer.", "Your thoughts seem clearer.",
      "Your thoughts seem clearer."},
@@ -481,8 +482,8 @@ const char *gain_mutation[][3] = {
      "You feel your body start to fall apart."},
 
     {"Your vision blurs.", "Your vision blurs.", "Your vision blurs."},
-// 40
 
+// 40
     {"You feel genetically stable.", "You feel genetically stable.",
      "You feel genetically immutable."},
 
@@ -509,8 +510,8 @@ const char *gain_mutation[][3] = {
      "Your hands twist into claws."},
 
     {"Your feet shrivel into cloven hooves.", "", ""},
+    
    // 60
-
     {"Your teeth lengthen and sharpen.",
      "Your teeth lengthen and sharpen some more.",
      "Your teeth are very long and razor-sharp."},
@@ -541,7 +542,6 @@ const char *gain_mutation[][3] = {
     {"", "", ""},
 
     // 70
-
     {"Red scales grow over part of your body.",
      "Red scales spread over more of your body.",
      "Red scales cover you completely."},
@@ -572,8 +572,8 @@ const char *gain_mutation[][3] = {
     {"Purple scales grow over part of your body.",
      "Purple scales spread over more of your body.",
      "Purple scales cover you completely."},
-    // 80
 
+    // 80
     {"Speckled scales grow over part of your body.",
      "Speckled scales spread over more of your body.",
      "Speckled scales cover you completely."},
@@ -676,8 +676,8 @@ const char *lose_mutation[][3] = {
 
     {"You feel slightly disorientated.", "You feel slightly disorientated.",
      "You feel slightly disorientated."},
-// 30
 
+// 30
     {"A chill runs up and down your throat.",
      "A chill runs up and down your throat.",
      "A chill runs up and down your throat."},
@@ -695,7 +695,7 @@ const char *lose_mutation[][3] = {
     {"Your muscles feel sore.", "Your muscles feel sore.",
      "Your muscles feel sore."},
 
-    {"Your urge to scream disappears.", "Your urge to scream lessens.",
+    {"Your urge to shout disappears.", "Your urge to yell lessens.",
      "Your urge to scream lessens."},
 
     {"Your thinking seems confused.", "Your thinking seems confused.",
@@ -709,8 +709,8 @@ const char *lose_mutation[][3] = {
 
     {"Your vision sharpens.", "Your vision sharpens a little.",
      "Your vision sharpens a little."},
-// 40
 
+// 40
     {"You feel genetically unstable.", "You feel genetically unstable.",
      "You feel genetically unstable."},
 
@@ -739,6 +739,7 @@ const char *lose_mutation[][3] = {
      "Your fingernails look duller.", "Your hands feel fleshier."},
 
     {"Your hooves expand and flesh out into feet!", "", ""},
+
     // 60
     {"Your teeth shrink to normal size.",
      "Your teeth shrink and become duller.",
