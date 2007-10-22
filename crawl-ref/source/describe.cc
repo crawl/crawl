@@ -1247,6 +1247,17 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             description += "$It is a buggy weapon.";
             break;
         }
+        
+        switch(item.sub_type)
+        {
+        case WPN_DEMON_BLADE:
+        case WPN_DEMON_WHIP:
+        case WPN_DEMON_TRIDENT:
+            description += "$Demonspawn are more deadly with it.";
+            break;
+        default:
+            break;
+        }
     }
 
     if (!is_random_artefact( item ))
