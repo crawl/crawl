@@ -175,9 +175,9 @@ const char *sacrifice[NUM_GODS][3] =
     },
     // Beogh
     {
-         " slowly crumble% into the ground."
-         " crumble% into the ground."
-         " disintegrate% into the ground."
+         " slowly crumble% into the ground.",
+         " crumble% into the ground.",
+         " disintegrate% into the ground.",
     }
 };
 

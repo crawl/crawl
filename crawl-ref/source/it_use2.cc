@@ -632,7 +632,7 @@ void unuse_randart(const item_def &item)
         you.redraw_magic_points = 1;
         if (!known[RAP_MAGICAL_POWER])
         {
-            mprf("You feel you mana capacity %s.", proprt[RAP_EVASION] > 0?
+            mprf("You feel your mana capacity %s.", proprt[RAP_EVASION] > 0?
                  "decrease" : "increase");
         }
     }

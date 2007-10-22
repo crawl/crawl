@@ -427,7 +427,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             // inc_max_mp(13);
             calc_mp();
             set_ident_flags( you.inv[item_wield_2], ISFLAG_EQ_WEAPON_MASK );
-            mpr("You fell your mana capacity increase.");
+            mpr("You feel your mana capacity increase.");
         }
         else
         {
@@ -2382,7 +2382,7 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_MAGICAL_POWER:
-        mpr("You feel you mana capacity increase.");
+        mpr("You feel your mana capacity increase.");
         calc_mp();
         if (artefact)
             fake_rap = RAP_MAGICAL_POWER;
@@ -2722,7 +2722,7 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_MAGICAL_POWER:
-        mpr("You feel you mana capacity decrease.");
+        mpr("You feel your mana capacity decrease.");
         // dec_max_mp(9);
         break;
 
@@ -4011,7 +4011,7 @@ void use_randart(item_def &item)
         you.redraw_magic_points = 1;
         if (!known[RAP_MAGICAL_POWER])
         {
-            mprf("You feel you mana capacity %s.", proprt[RAP_EVASION] > 0?
+            mprf("You feel your mana capacity %s.", proprt[RAP_EVASION] > 0?
                  "increase" : "decrease");
             randart_wpn_learn_prop(item, RAP_MAGICAL_POWER);
         }

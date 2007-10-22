@@ -66,7 +66,7 @@ MAP
 ENDMAP
 
 #####################################################################
-# A good item encased in *permanet* glass.  If the player wants it,
+# A good item encased in *permanent* glass.  If the player wants it,
 # teleport control will be needed.
 NAME:  item_on_display_b
 DEPTH:

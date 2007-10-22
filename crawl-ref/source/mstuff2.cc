@@ -145,7 +145,7 @@ void mons_trap(struct monsters *monster)
     case TRAP_TELEPORT:
         monster_teleport(monster, true);
         break;
-    // alarm trap aren't set off by hostile monsters, because that would
+    // alarm traps aren't set off by hostile monsters, because that would
     // be way too nasty for the player.
     case TRAP_ALARM:
         if (!mons_friendly(monster) || silenced(monster->x, monster->y))
