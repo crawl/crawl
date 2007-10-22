@@ -386,6 +386,8 @@ public:
     // Returns index in mitm array. Results are undefined if this item is
     // not in the array!
     int  index() const;
+
+    int  armour_rating() const;
     
     bool launched_by(const item_def &launcher) const;
 
@@ -1053,6 +1055,7 @@ public:
     bool      pickup_melee_weapon(item_def &item, int near);
     bool      pickup_throwable_weapon(item_def &item, int near);
     bool      pickup_weapon(item_def &item, int near, bool force);
+    bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
     bool      eat_corpse(item_def &carrion, int near);
@@ -1155,6 +1158,7 @@ private:
     
     bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;
+    bool wants_armour(const item_def &item) const;
     bool can_throw_rocks() const;
     void lose_pickup_energy();
     bool check_set_valid_home(const coord_def &place,

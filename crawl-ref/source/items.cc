@@ -3256,3 +3256,11 @@ int item_def::index() const
 {
     return (this - mitm.buffer());
 }
+
+int item_def::armour_rating() const
+{
+    if (!is_valid_item(*this) || base_type != OBJ_ARMOUR)
+        return (0);
+
+    return (property(*this, PARM_AC) + plus);
+}
