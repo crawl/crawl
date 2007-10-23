@@ -628,27 +628,41 @@ static bool check_buggy_deck(item_def& deck)
     return false;
 }
 
-// Select a deck from inventory and draw a card from it.
-bool choose_deck_and_draw()
+// Choose a deck from inventory and return its slot (or -1.)
+static int choose_inventory_deck( const char* prompt )
 {
-    int slot = prompt_invent_item( "Draw from which deck?",
-                                   MT_INVLIST, OBJ_MISCELLANY,
-                                   true, true, true, 0, NULL,
-                                   OPER_EVOKE );
+    const int slot = prompt_invent_item( prompt,
+                                         MT_INVLIST, OBJ_MISCELLANY,
+                                         true, true, true, 0, NULL,
+                                         OPER_EVOKE );
+    
     if ( slot == PROMPT_ABORT )
     {
         canned_msg(MSG_OK);
-        return false;
+        return -1;
     }
 
-    item_def& deck(you.inv[slot]);
-    if ( !is_deck(deck) )
+    if ( !is_deck(you.inv[slot]) )
     {
         mpr("That isn't a deck!");
+        return -1;
+    }
+
+    return slot;
+}
+
+// Select a deck from inventory and draw a card from it.
+bool choose_deck_and_draw()
+{
+    const int slot = choose_inventory_deck( "Draw from which deck?" );
+
+    if ( slot == -1 )
+    {
         crawl_state.zero_turns_taken();
         return false;
     }
-    evoke_deck(deck);
+
+    evoke_deck(you.inv[slot]);
     return true;
 }
 
@@ -944,14 +958,13 @@ bool deck_stack()
 // Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
-    if ( !wielding_deck() )
+    const int slot = choose_inventory_deck("Triple draw from which deck?");
+    if ( slot == -1 )
     {
-        mpr("You aren't wielding a deck!");
         crawl_state.zero_turns_taken();
         return false;
     }
 
-    const int slot = you.equip[EQ_WEAPON];
     item_def& deck(you.inv[slot]);
 
     if (check_buggy_deck(deck))
