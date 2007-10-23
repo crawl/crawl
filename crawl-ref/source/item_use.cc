@@ -1985,7 +1985,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // CALCULATIONS FOR THROWN WEAPONS
     if (projected == LRET_THROWN)
     {
-        returning = (get_weapon_brand(item) == SPWPN_RETURNING &&
+        returning = (get_weapon_brand(item) == SPWPN_RETURNING && !teleport &&
                      !one_chance_in(1 + skill_bump(SK_THROWING)));
         baseHit = 0;
 
