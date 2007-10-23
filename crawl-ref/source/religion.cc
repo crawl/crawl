@@ -532,6 +532,48 @@ static void get_pure_deck_weights(int weights[])
         you.sacrifice_value[OBJ_FOOD];
 }
 
+static void update_sacrifice_weights(int which)
+{
+    switch ( which )
+    {
+    case 0:
+        you.sacrifice_value[OBJ_ARMOUR] /= 5;
+        you.sacrifice_value[OBJ_ARMOUR] *= 4;
+        break;
+    case 1:
+        you.sacrifice_value[OBJ_WEAPONS]  /= 5;
+        you.sacrifice_value[OBJ_STAVES]   /= 5;
+        you.sacrifice_value[OBJ_MISSILES] /= 5;
+        you.sacrifice_value[OBJ_WEAPONS]  *= 4;
+        you.sacrifice_value[OBJ_STAVES]   *= 4;
+        you.sacrifice_value[OBJ_MISSILES] *= 4;
+        break;
+    case 2:
+        you.sacrifice_value[OBJ_MISCELLANY] /= 5;
+        you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
+        you.sacrifice_value[OBJ_BOOKS]      /= 5;
+        you.sacrifice_value[OBJ_GOLD]       /= 5;
+        you.sacrifice_value[OBJ_MISCELLANY] *= 4;
+        you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
+        you.sacrifice_value[OBJ_BOOKS]      *= 4;
+        you.sacrifice_value[OBJ_GOLD]       *= 4;
+    case 3:
+        you.sacrifice_value[OBJ_CORPSES] /= 5;
+        you.sacrifice_value[OBJ_CORPSES] *= 4;
+        break;
+    case 4:
+        you.sacrifice_value[OBJ_POTIONS] /= 5;
+        you.sacrifice_value[OBJ_SCROLLS] /= 5;
+        you.sacrifice_value[OBJ_WANDS]   /= 5;
+        you.sacrifice_value[OBJ_FOOD]    /= 5;
+        you.sacrifice_value[OBJ_POTIONS] *= 4;
+        you.sacrifice_value[OBJ_SCROLLS] *= 4;
+        you.sacrifice_value[OBJ_WANDS]   *= 4;
+        you.sacrifice_value[OBJ_FOOD]    *= 4;
+        break;
+    }
+}
+
 #if DEBUG_GIFTS || DEBUG_CARDS
 static void show_pure_deck_chances()
 {
@@ -573,11 +615,12 @@ static void give_nemelex_gift()
             };
             int weights[5];
             get_pure_deck_weights(weights);
-            gift_type = pure_decks[choose_random_weighted(weights, weights+5)];
-
+            const int choice = choose_random_weighted(weights, weights+5);
+            gift_type = pure_decks[choice];
 #if DEBUG_GIFTS || DEBUG_CARDS
             show_pure_deck_chances();
 #endif
+            update_sacrifice_weights(choice);
         }
         else
         {
