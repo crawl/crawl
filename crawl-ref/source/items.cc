@@ -2530,12 +2530,24 @@ void handle_time( long time_delta )
     if (you.duration[DUR_INVIS] && random2(10) < 6)
         added_contamination++;
 
-    if (you.duration[DUR_HASTE] && !you.duration[DUR_BERSERKER] && random2(10) < 6)
+    if (you.duration[DUR_HASTE] && !you.duration[DUR_BERSERKER]
+        && random2(10) < 6)
+    {
         added_contamination++;
+    }
 
-    // randarts are usually about 20x worse than running around invisible
-    // or hasted.. this seems OK.
-    added_contamination += random2(1 + scan_randarts(RAP_MUTAGENIC));
+    if (const int randart_glow = scan_randarts(RAP_MUTAGENIC))
+    {
+        // Reduced randart glow. Note that one randart will contribute
+        // 2 - 5 units of glow to randart_glow. A randart with a mutagen
+        // index of 2 does about 0.58 points of contamination per turn.
+        // A randart with a mutagen index of 5 does about 0.7 points of
+        // contamination per turn.
+        
+        const int mean_glow   = 500 + randart_glow * 40;
+        const int actual_glow = mean_glow / 2 + random2(mean_glow);
+        added_contamination += div_rand_round(actual_glow, 1000);
+    }
 
     // we take off about .5 points per turn
     if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
