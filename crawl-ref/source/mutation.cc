@@ -538,6 +538,7 @@ const char *gain_mutation[][3] = {
 
     // saprovorous: can never be gained or lost, only started with    
     {"", "", ""},
+    
     {"", "", ""},
     {"", "", ""},
 
@@ -747,10 +748,7 @@ const char *lose_mutation[][3] = {
     
     {"", "", ""},
     {"", "", ""},
-
-    // saprovorous: can never be gained or lost, only started with
     {"", "", ""},
-
     {"", "", ""},
 
     // 65
@@ -758,7 +756,10 @@ const char *lose_mutation[][3] = {
     {"Your movements feel completely certain again.",
      "Your movements feel more certain.",
      "Your movements feel more certain."},
+
+    // saprovorous: can never be gained or lost, only started with
     {"", "", ""},
+    
     {"", "", ""},
     {"", "", ""},
 

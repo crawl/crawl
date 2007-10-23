@@ -610,7 +610,6 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
             switch (you.species)
             {
             case SP_NAGA:
-            case SP_CENTAUR:
             case SP_KENKU:
                 return (false);
             default:

@@ -882,6 +882,7 @@ game_start:
     {
         if (is_valid_item(you.inv[i]))
         {
+            // Why is this here? Elsewhere it's only ever used for runes
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
 
             // identify all items in pack
@@ -2367,7 +2368,7 @@ static void give_random_potion( int slot )
     you.inv[ slot ].plus2 = 0;
 
     int temp_rand = 8;
-    if (you.is_undead)
+    if (you.is_undead) // no Berserk for undeads
         temp_rand--;
 
     switch (random2(temp_rand))
