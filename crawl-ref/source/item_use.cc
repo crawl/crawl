@@ -3986,7 +3986,7 @@ void use_randart(item_def &item)
     // Only give property messages for previously unknown properties.
     if (proprt[RAP_AC])
     {
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
         if (!known[RAP_AC])
         {
             mprf("You feel %s.", proprt[RAP_AC] > 0?
@@ -3997,7 +3997,7 @@ void use_randart(item_def &item)
 
     if (proprt[RAP_EVASION])
     {
-        you.redraw_evasion = 1;
+        you.redraw_evasion = true;
         if (!known[RAP_EVASION])
         {
             mprf("You feel somewhat %s.", proprt[RAP_EVASION] > 0?
@@ -4008,11 +4008,11 @@ void use_randart(item_def &item)
 
     if (proprt[RAP_MAGICAL_POWER])
     {
-        you.redraw_magic_points = 1;
+        you.redraw_magic_points = true;
         if (!known[RAP_MAGICAL_POWER])
         {
-            mprf("You feel your mana capacity %s.", proprt[RAP_EVASION] > 0?
-                 "increase" : "decrease");
+            mprf("You feel your mana capacity %s.",
+                 proprt[RAP_MAGICAL_POWER] > 0? "increase" : "decrease");
             randart_wpn_learn_prop(item, RAP_MAGICAL_POWER);
         }
     }
@@ -4023,7 +4023,9 @@ void use_randart(item_def &item)
     modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false, item );
     modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false, item );
 
-    int stat_props[3] = {RAP_STRENGTH, RAP_INTELLIGENCE, RAP_DEXTERITY};
+    const randart_prop_type stat_props[3] =
+        {RAP_STRENGTH, RAP_INTELLIGENCE, RAP_DEXTERITY};
+
     for (int i = 0; i < 3; i++)
         if (unknown_proprt(stat_props[i]))
             randart_wpn_learn_prop(item, stat_props[i]);

@@ -2102,6 +2102,42 @@ enum pronoun_type
     PRONOUN_REFLEXIVE                   // 4 (reflexive is always lowercase)
 };
 
+enum randart_prop_type
+{
+    RAP_BRAND,                         //    0
+    RAP_AC,
+    RAP_EVASION,
+    RAP_STRENGTH,
+    RAP_INTELLIGENCE,
+    RAP_DEXTERITY,                     //    5
+    RAP_FIRE,
+    RAP_COLD,
+    RAP_ELECTRICITY,
+    RAP_POISON,
+    RAP_NEGATIVE_ENERGY,               //   10
+    RAP_MAGIC,
+    RAP_EYESIGHT,
+    RAP_INVISIBLE,
+    RAP_LEVITATE,
+    RAP_BLINK,                         //   15
+    RAP_CAN_TELEPORT,
+    RAP_BERSERK,
+    RAP_MAPPING,
+    RAP_NOISES,
+    RAP_PREVENT_SPELLCASTING,          //   20
+    RAP_CAUSE_TELEPORTATION,
+    RAP_PREVENT_TELEPORTATION,
+    RAP_ANGRY,
+    RAP_METABOLISM,
+    RAP_MUTAGENIC,                     //   25
+    RAP_ACCURACY,
+    RAP_DAMAGE,
+    RAP_CURSED,
+    RAP_STEALTH,
+    RAP_MAGICAL_POWER,                 //   30
+    RAP_NUM_PROPERTIES
+};
+
 enum score_format_type
 {
     SCORE_TERSE,                // one line

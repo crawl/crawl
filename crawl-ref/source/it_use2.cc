@@ -609,17 +609,17 @@ void unuse_randart(const item_def &item)
 
     if (proprt[RAP_AC])
     {
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
         if (!known[RAP_AC])
         {
             mprf("You feel less %s.",
-            proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
+                 proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
         }
     }
 
     if (proprt[RAP_EVASION])
     {
-        you.redraw_evasion = 1;
+        you.redraw_evasion = true;
         if (!known[RAP_EVASION])
         {
             mprf("You feel less %s.",
@@ -629,11 +629,11 @@ void unuse_randart(const item_def &item)
 
     if (proprt[RAP_MAGICAL_POWER])
     {
-        you.redraw_magic_points = 1;
+        you.redraw_magic_points = true;
         if (!known[RAP_MAGICAL_POWER])
         {
-            mprf("You feel your mana capacity %s.", proprt[RAP_EVASION] > 0?
-                 "decrease" : "increase");
+            mprf("You feel your mana capacity %s.",
+                 proprt[RAP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
         }
     }
 

@@ -834,7 +834,8 @@ bool is_fixed_artefact( const item_def &item )
     return (false);
 }
 
-unique_item_status_type get_unique_item_status( int base_type, int art )
+unique_item_status_type get_unique_item_status( object_class_type base_type,
+                                                int art )
 {
     // Note: for weapons "art" is in item.special,
     //       for orbs it's the sub_type.
@@ -855,7 +856,7 @@ unique_item_status_type get_unique_item_status( int base_type, int art )
     return (UNIQ_NOT_EXISTS);
 }
 
-void set_unique_item_status( int base_type, int art,
+void set_unique_item_status( object_class_type base_type, int art,
                              unique_item_status_type status )
 {
     // Note: for weapons "art" is in item.special,
@@ -1419,7 +1420,8 @@ void randart_wpn_properties( const item_def &item,
     randart_wpn_properties(item, proprt, known);
 }
 
-int randart_wpn_property( const item_def &item, int prop, bool &_known )
+int randart_wpn_property( const item_def &item, randart_prop_type prop,
+                          bool &_known )
 {
     randart_properties_t  proprt;
     randart_known_props_t known;
@@ -1431,7 +1433,7 @@ int randart_wpn_property( const item_def &item, int prop, bool &_known )
     return ( proprt[prop] );
 }
 
-int randart_wpn_property( const item_def &item, int prop )
+int randart_wpn_property( const item_def &item, randart_prop_type prop )
 {
     bool known;
 
@@ -1457,7 +1459,7 @@ int randart_wpn_num_props( const randart_properties_t &proprt )
     return num;
 }
 
-void randart_wpn_learn_prop( item_def &item, int prop )
+void randart_wpn_learn_prop( item_def &item, randart_prop_type prop )
 {
     ASSERT( is_random_artefact( item ) ); 
     ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
@@ -1474,7 +1476,7 @@ void randart_wpn_learn_prop( item_def &item, int prop )
         known_vec[prop] = (bool) true;
 }
 
-bool randart_wpn_known_prop( const item_def &item, int prop )
+bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
 {
     bool known;
     randart_wpn_property( item, prop, known );

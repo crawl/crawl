@@ -2048,8 +2048,8 @@ bool gives_ability( const item_def &item )
     // check for evokable randart properties
     for (int rap = RAP_INVISIBLE; rap <= RAP_MAPPING; rap++)
     {
-       if (randart_wpn_property( item, rap ))
-           return true;
+        if (randart_wpn_property( item, static_cast<randart_prop_type>(rap) ))
+            return true;
     }
        
     return false;
@@ -2149,11 +2149,11 @@ bool gives_resistance( const item_def &item )
     // check for randart resistances
     for (int rap = RAP_FIRE; rap <= RAP_CAN_TELEPORT; rap++)
     {
-       if (rap == RAP_MAGIC || rap >= RAP_INVISIBLE && rap != RAP_CAN_TELEPORT)
-           continue;
-           
-       if (randart_wpn_property( item, rap ))
-           return true;
+        if (rap == RAP_MAGIC || rap >= RAP_INVISIBLE && rap != RAP_CAN_TELEPORT)
+            continue;
+        
+        if (randart_wpn_property( item, static_cast<randart_prop_type>(rap) ))
+            return true;
     }
 
     return false;

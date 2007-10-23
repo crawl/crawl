@@ -294,7 +294,8 @@ bool mons_class_flag(int mc, int bf)
     return ((me->bitfields & bf) != 0);
 }                               // end mons_class_flag()
 
-static int scan_mon_inv_randarts( const monsters *mon, int ra_prop )
+static int scan_mon_inv_randarts( const monsters *mon,
+                                  randart_prop_type ra_prop)
 {
     int ret = 0;
 

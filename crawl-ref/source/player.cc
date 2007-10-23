@@ -4117,7 +4117,7 @@ int slaying_bonus(char which_affected)
 
 // Checks each equip slot for an evokable item (jewellery or randart).
 // Returns true if any of these has the same ability as the one handed in.
-bool items_give_ability(const int slot, char abil)
+bool items_give_ability(const int slot, randart_prop_type abil)
 {
     for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
@@ -4163,7 +4163,7 @@ bool items_give_ability(const int slot, char abil)
 
 /* Checks each equip slot for a randart, and adds up all of those with
    a given property. Slow if any randarts are worn, so avoid where possible. */
-int scan_randarts(char which_property, bool calc_unid)
+int scan_randarts(randart_prop_type which_property, bool calc_unid)
 {
     int i = 0;
     int retval = 0;

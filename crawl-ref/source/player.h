@@ -245,8 +245,8 @@ int player_teleport(bool calc_unid = true);
 /* ***********************************************************************
  * called from: ability - acr - items - misc - spells1 - spells3
  * *********************************************************************** */
-bool items_give_ability(const int slot, char abil);
-int scan_randarts(char which_property, bool calc_unid = true);
+bool items_give_ability(const int slot, randart_prop_type abil);
+int scan_randarts(randart_prop_type which_property, bool calc_unid = true);
 
 
 /* ***********************************************************************
