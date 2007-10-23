@@ -58,7 +58,7 @@
 // brownie points from it again.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
-// for a maximum of 256 differetn kinds of cards and 8 bits of flags.
+// for a maximum of 256 different kinds of cards and 8 bits of flags.
 
 #define VECFROM(x) (x), (x) + ARRAYSIZE(x)
 #define DEFVEC(Z) static std::vector<card_type> Z(VECFROM(a_##Z))
@@ -144,7 +144,7 @@ static unsigned long cards_in_deck(const item_def &deck)
     const CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
 
-    return (unsigned long) props["cards"].get_vector().size();
+    return static_cast<unsigned long>(props["cards"].get_vector().size());
 }
 
 static void shuffle_deck(item_def &deck)
@@ -410,11 +410,11 @@ static bool wielding_deck()
 
 static bool check_buggy_deck(item_def& deck)
 {
+    std::ostream& strm = msg::streams(MSGCH_DIAGNOSTICS);
     if (!is_deck(deck))
     {
         crawl_state.zero_turns_taken();
-
-        mpr("This isn't a deck at all!");
+        strm << "This isn't a deck at all!" << std::endl;
         return true;
     }
 
@@ -428,18 +428,17 @@ static bool check_buggy_deck(item_def& deck)
         crawl_state.zero_turns_taken();
 
         if (!props.exists("cards"))
-            msg::stream << "Seems this deck never had any cards in the "
-                "first place!";
+            strm << "Seems this deck never had any cards in the first place!";
         else if (props["cards"].get_type() != SV_VEC)
-            msg::stream << "'cards' property isn't a vector.";
+            strm << "'cards' property isn't a vector.";
         else
         {
             if (props["cards"].get_vector().get_type() != SV_BYTE)
-                msg::stream << "'cards' vector doesn't contain bytes.  ";
+                strm << "'cards' vector doesn't contain bytes.";
 
             if (cards_in_deck(deck) == 0)
             {
-                msg::stream << "Strange, this deck is already empty.";
+                strm << "Strange, this deck is already empty.";
 
                 int cards_left = 0;
                 if (deck.plus2 >= 0)
@@ -449,16 +448,15 @@ static bool check_buggy_deck(item_def& deck)
 
                 if (cards_left != 0)
                 {
-                    msg::stream << "  But there should be been ";
-                    msg::stream <<  cards_left;
-                    msg::stream << " cards left.";
+                    strm << " But there should be been " <<  cards_left
+                         << " cards left.";
                 }
             }
         }
-        msg::stream << std::endl;
-
-        mpr("A swarm of software bugs snatches the deck from you and "
-            "whisk it away.");
+        strm << std::endl
+             << "A swarm of software bugs snatches the deck from you "
+            "and whisks it away."
+             << std::endl;
 
         if ( deck.link == you.equip[EQ_WEAPON] )
             unwield_item();
@@ -501,8 +499,8 @@ static bool check_buggy_deck(item_def& deck)
 
     if (num_buggy > 0)
     {
-        mprf("%d buggy cards found in the deck, discarding them.",
-             num_buggy);
+        strm << num_buggy << " buggy cards found in the deck, discarding them."
+             << std::endl;
 
         deck.plus2 += num_buggy;
 
@@ -512,13 +510,13 @@ static bool check_buggy_deck(item_def& deck)
         problems = true;
     }
 
-    if (num_cards <= 0)
+    if (num_cards == 0)
     {
         crawl_state.zero_turns_taken();
 
-        mpr("Oops, all of the cards seem to be gone.");
-        mpr("A swarm of software bugs snatches the deck from you and "
-            "whisk it away.");
+        strm << "Oops, all of the cards seem to be gone." << std::endl
+             << "A swarm of software bugs snatches the deck from you "
+            "and whisks it away." << std::endl;
 
         if ( deck.link == you.equip[EQ_WEAPON] )
             unwield_item();
@@ -529,14 +527,15 @@ static bool check_buggy_deck(item_def& deck)
         return true;
     }
 
-    if ((long) num_cards > deck.plus)
+    if (static_cast<long>(num_cards) > deck.plus)
     {
         if (deck.plus == 0)
-            mpr("Deck was created with zero cards???");
+            strm << "Deck was created with zero cards???" << std::endl;
         else if (deck.plus < 0)
-            mpr("Deck was created with *negative* cards?!");
+            strm << "Deck was created with *negative* cards?!" << std::endl;
         else
-            mpr("Deck has more cards than it was created with?");
+            strm << "Deck has more cards than it was created with?"
+                 << std::endl;
 
         deck.plus = num_cards;
         problems  = true;
@@ -545,70 +544,79 @@ static bool check_buggy_deck(item_def& deck)
     if (num_cards > num_flags)
     {
 #ifdef WIZARD
-        mprf("%d more cards than flags.", num_cards - num_flags);
+        strm << (num_cards - num_flags) << " more cards than flags.";
 #else
-        mpr("More cards than flags.");
+        strm << "More cards than flags.";
 #endif
+        strm << std::endl;
         for (unsigned int i = num_flags + 1; i <= num_cards; i++)
-            flags[i] = (char) 0;
+            flags[i] = static_cast<char>(0);
 
         problems = true;
     }
     else if (num_flags > num_cards)
     {
 #ifdef WIZARD
-        mprf("%d more flags than cards.", num_flags - num_cards);
+        strm << (num_cards - num_flags) << " more cards than flags.";
 #else
-        mpr("More flags than cards.");
+        strm << "More cards than flags.";
 #endif
+        strm << std::endl;
+
         for (unsigned int i = num_flags; i > num_cards; i--)
             flags.erase(i);
 
         problems = true;
     }
 
-    if (props["num_marked"].get_byte() > (char) num_cards)
+    if (props["num_marked"].get_byte() > static_cast<char>(num_cards))
     {
-        mpr("More cards marked than in the deck?");
-        props["num_marked"] = (char) num_marked;
+        strm << "More cards marked than in the deck?" << std::endl;
+        props["num_marked"] = static_cast<char>(num_marked);
         problems = true;
     }
-    else if (props["num_marked"].get_byte() != (char) num_marked)
+    else if (props["num_marked"].get_byte() != static_cast<char>(num_marked))
     {
 #ifdef WIZARD
-        mprf("Oops, counted %d marked cards, but num_marked is %d.",
-             (int) num_marked, (int) props["num_marked"].get_byte());
+
+        strm << "Oops, counted " << static_cast<int>(num_marked)
+             << " marked cards, but num_marked is "
+             << (static_cast<int>(props["num_marked"].get_byte()));        
 #else
-        mpr("Oops, book-keeping on marked cards is wrong.");
+        strm << "Oops, book-keeping on marked cards is wrong.";
 #endif
-        props["num_marked"] = (char) num_marked;
+        strm << std::endl;
+
+        props["num_marked"] = static_cast<char>(num_marked);
         problems = true;
     }        
 
     if (deck.plus2 >= 0)
     {
-        if (deck.plus != (deck.plus2 + (long) num_cards))
+        if (deck.plus != (deck.plus2 + static_cast<long>(num_cards)))
         {
 #ifdef WIZARD
-            mprf("Have you used %d cards, or %d?  Oops.",
-                 deck.plus2, deck.plus - num_cards);
+            strm << "Have you used " << deck.plus2 << " cards, or "
+                 << (deck.plus - num_cards) << "? Oops.";
 #else
-            mpr("Oops, book-keeping on used cards is wrong.");
+            strm << "Oops, book-keeping on used cards is wrong.";
 #endif
+            strm << std::endl;
             deck.plus2 = deck.plus - num_cards;
             problems = true;
         }
     }
     else
     {
-        if (-deck.plus2 != (long) num_cards)
+        if (-deck.plus2 != static_cast<long>(num_cards))
         {
 #ifdef WIZARD
-            mprf("There are %d cards left, not %d.  Oops.",
-                 num_cards, -deck.plus2);
+            strm << "There are " << num_cards << " cards left, not "
+                 << (-deck.plus2) << ".  Oops.";
 #else
-            mpr("Oops, book-keeping on cards left is wrong.");
+            strm << "Oops, book-keeping on cards left is wrong.";
 #endif
+            strm << std::endl;
             deck.plus2 = -num_cards;
             problems = true;
         }
@@ -748,7 +756,7 @@ bool deck_peek()
             deck.props["num_marked"] = (char) 2;
         }
 
-        // "Shuffle" the two cards (even if they're teh same, since
+        // "Shuffle" the two cards (even if they're the same, since
         // the flags might differ).
         if (coinflip())
         {
@@ -801,7 +809,7 @@ bool deck_peek()
 
 // Mark a deck: look at the next four cards, mark them, and shuffle
 // them back into the deck without losing any cards.  The player won't
-// know whate order they're in, and the if the top card is non-marked
+// know what order they're in, and the if the top card is non-marked
 // then the player won't know what the next card is.
 // Return false if the operation was failed/aborted along the way.
 bool deck_mark()
@@ -1481,8 +1489,8 @@ static void elixir_card(int power, deck_rarity_type rarity)
         you.hp = you.hp_max;
         you.magic_points = you.max_magic_points;
     }
-    you.redraw_hit_points = 1;
-    you.redraw_magic_points = 1;
+    you.redraw_hit_points = true;
+    you.redraw_magic_points = true;
 }
 
 static void battle_lust_card(int power, deck_rarity_type rarity)
@@ -1769,7 +1777,7 @@ static void shuffle_card(int power, deck_rarity_type rarity)
                 cause = "the capriciousness of Xom";
             else
             {
-                cause = "the 'helpfullness' of ";
+                cause = "the 'helpfulness' of ";
                 cause += god_name(which_god);
             }
         }
@@ -1816,6 +1824,8 @@ static void helix_card(int power, deck_rarity_type rarity)
     }
     if ( numfound )
         delete_mutation(which_mut);
+    else
+        mpr("You feel transcendent for a moment.");
 }
 
 static void dowsing_card(int power, deck_rarity_type rarity)
@@ -2215,7 +2225,7 @@ deck_rarity_type deck_rarity(const item_def &item)
 
 unsigned char deck_rarity_to_color(deck_rarity_type rarity)
 {
-    switch(rarity)
+    switch (rarity)
     {
     case DECK_RARITY_COMMON:
     {
@@ -2224,10 +2234,7 @@ unsigned char deck_rarity_to_color(deck_rarity_type rarity)
     }
 
     case DECK_RARITY_RARE:
-        if (coinflip())
-            return (MAGENTA);
-        else
-            return (BROWN);
+        return (coinflip() ? MAGENTA : BROWN);
 
     case DECK_RARITY_LEGENDARY:
         return LIGHTMAGENTA;

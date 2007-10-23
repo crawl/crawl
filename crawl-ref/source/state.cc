@@ -109,8 +109,8 @@ void game_state::cant_cmd_again(std::string reason)
     cancel_cmd_again(reason);
 }
 
-// The mehtod is called to prevent the "no repeating zero turns
-// commands" message that input() generates (in the abscence of
+// The method is called to prevent the "no repeating zero turns
+// commands" message that input() generates (in the absence of
 // cancelling the repeition) for a repeated command that took no
 // turns.  A wrapper around cancel_cmd_repeat(), its only purpose it
 // to make it clear why cancel_cmd_repeat() is being called.

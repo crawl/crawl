@@ -151,11 +151,11 @@ public:
     void set_item(const item_def &val);
 
 public:
-    // NOTE: All operators will assert if the alue is of the wrong
+    // NOTE: All operators will assert if the value is of the wrong
     // type for the operation.  If the value has no type yet, the
     // operation will set it to the appropriate type.  If the value
     // has no type yet and the operation modifies the existing value
-    // rather than replacing it (i.e., ++) the value will be set to a
+    // rather than replacing it (e.g., ++) the value will be set to a
     // default before the operation is done.
 
     // If the value is a hash table or vector, the container's values
@@ -231,7 +231,7 @@ protected:
 // By default a hash table's value data types are heterogeneous.  To
 // make it homogeneous (which causes dynamic type checking) you have
 // to give a type to the hash table constructor; once it's been
-// created it's type (or lack of type) is immutable.
+// created its type (or lack of type) is immutable.
 //
 // An empty hash table will take up only 1 byte in the savefile.  A
 // non-empty hash table will have an overhead of 3 bytes for the hash
@@ -268,6 +268,11 @@ public:
     bool           exists(const std::string key) const;
     void           assert_validity() const;
 
+    // NOTE: If the const versions of get_value() or [] are given a
+    // key which doesn't exist, they will assert.
+    const CrawlStoreValue& get_value(const std::string &key) const;
+    const CrawlStoreValue& operator[] (const std::string &key) const;
+
     // NOTE: If get_value() or [] is given a key which doesn't exist
     // in the table, an unset/empty CrawlStoreValue will be created
     // with that key and returned.  If it is not then given a value
@@ -278,11 +283,6 @@ public:
     CrawlStoreValue& get_value(const std::string &key);
     CrawlStoreValue& operator[] (const std::string &key);
 
-    // NOTE: If the const versions of get_value() or [] are given a
-    // key which doesn't exist, they will assert.
-    const CrawlStoreValue& get_value(const std::string &key) const;
-    const CrawlStoreValue& operator[] (const std::string &key) const;
-
     // std::map style interface
     hash_size size() const;
     bool      empty() const;
@@ -290,11 +290,11 @@ public:
     void      erase(const std::string key);
     void      clear();
 
-    iterator  begin();
-    iterator  end();
-
     const_iterator begin() const;
     const_iterator end() const;
+
+    iterator  begin();
+    iterator  end();
 };
 
 // A CrawlVector is the vector version of CrawlHashTable, except that
@@ -335,20 +335,20 @@ public:
     void           set_max_size(vec_size size);
     vec_size       get_max_size() const;
 
-    CrawlStoreValue& get_value(const vec_size &index);
-    CrawlStoreValue& operator[] (const vec_size &index);
-
     // NOTE: If the const versions of get_value() or [] are given a
     // index which doesn't exist, they will assert.
     const CrawlStoreValue& get_value(const vec_size &index) const;
     const CrawlStoreValue& operator[] (const vec_size &index) const;
+
+    CrawlStoreValue& get_value(const vec_size &index);
+    CrawlStoreValue& operator[] (const vec_size &index);
 
     // std::vector style interface
     vec_size size() const;
     bool     empty() const;
 
     // NOTE: push_back() and insert() have val passed by value rather
-    // than by reference so that coversion constructors will work.
+    // than by reference so that conversion constructors will work.
     CrawlStoreValue& pop_back();
     void             push_back(CrawlStoreValue val);
     void insert(const vec_size index, CrawlStoreValue val);
@@ -358,11 +358,11 @@ public:
     void erase(const vec_size index);
     void clear();
 
-    iterator begin();
-    iterator end();
-
     const_iterator begin() const;
     const_iterator end() const;
+
+    iterator begin();
+    iterator end();
 };
 
 // A wrapper for non-heterogeneous hash tables, so that the values can
@@ -384,11 +384,11 @@ public:
     void wrap(CrawlHashTable& table);
     void wrap(CrawlHashTable* table);
 
-    CrawlHashTable* get_table();
-    T& operator[] (const std::string &key);
-
     const CrawlHashTable* get_table() const;
     const T operator[] (const std::string &key) const;
+
+    CrawlHashTable* get_table();
+    T& operator[] (const std::string &key);
 };
 
 typedef CrawlTableWrapper<bool, SV_BOOL>       CrawlBoolTable;

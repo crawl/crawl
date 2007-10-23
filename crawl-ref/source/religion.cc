@@ -553,6 +553,94 @@ static void show_pure_deck_chances()
 }
 #endif
 
+static void give_nemelex_gift()
+{
+    if (random2(MAX_PIETY) <= you.piety
+        && one_chance_in(3)
+        && !you.attribute[ATTR_CARD_COUNTDOWN]
+        && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    {
+        misc_item_type gift_type;
+        if ( random2(MAX_PIETY) <= you.piety )
+        {
+            // make a pure deck
+            const misc_item_type pure_decks[] = {
+                MISC_DECK_OF_ESCAPE,
+                MISC_DECK_OF_DESTRUCTION,
+                MISC_DECK_OF_DUNGEONS,
+                MISC_DECK_OF_SUMMONING,
+                MISC_DECK_OF_WONDERS
+            };
+            int weights[5];
+            get_pure_deck_weights(weights);
+            gift_type = pure_decks[choose_random_weighted(weights, weights+5)];
+
+#if DEBUG_GIFTS || DEBUG_CARDS
+            show_pure_deck_chances();
+#endif
+        }
+        else
+        {
+            // make a mixed deck
+            const misc_item_type mixed_decks[] = {
+                MISC_DECK_OF_WAR,
+                MISC_DECK_OF_CHANGES,
+                MISC_DECK_OF_DEFENSE
+            };
+            gift_type = RANDOM_ELEMENT(mixed_decks);
+        }
+
+        int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
+                                   true, 1, MAKE_ITEM_RANDOM_RACE );
+
+        if (thing_created != NON_ITEM)
+        {
+            // Piety|Common  | Rare  |Legendary
+            // --------------------------------
+            //     0:  95.00%,  5.00%,  0.00%
+            //    20:  86.00%, 10.50%,  3.50%
+            //    40:  77.00%, 16.00%,  7.00%
+            //    60:  68.00%, 21.50%, 10.50%
+            //    80:  59.00%, 27.00%, 14.00%
+            //   100:  50.00%, 32.50%, 17.50%
+            //   120:  41.00%, 38.00%, 21.00%
+            //   140:  32.00%, 43.50%, 24.50%
+            //   160:  23.00%, 49.00%, 28.00%
+            //   180:  14.00%, 54.50%, 31.50%
+            //   200:   5.00%, 60.00%, 35.00%
+            int common_weight = 95 - (90 * you.piety / MAX_PIETY);
+            int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
+            int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
+
+            deck_rarity_type rarity = static_cast<deck_rarity_type>(
+                random_choose_weighted(common_weight,
+                                       DECK_RARITY_COMMON,
+                                       rare_weight,
+                                       DECK_RARITY_RARE,
+                                       legend_weight,
+                                       DECK_RARITY_LEGENDARY,
+                                       0));
+
+            item_def &deck(mitm[thing_created]);
+
+            deck.special = rarity;
+            deck.colour  = deck_rarity_to_color(rarity);
+
+            move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+            origin_acquired(deck, you.religion);
+                    
+            simple_god_message(" grants you a gift!");
+            more();
+            canned_msg(MSG_SOMETHING_APPEARS);
+
+            you.attribute[ATTR_CARD_COUNTDOWN] = 10;
+            inc_gift_timeout(5 + random2avg(9, 2));
+            you.num_gifts[you.religion]++;
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
+        }
+    }
+}
+
 static void do_god_gift(bool prayed_for)
 {
     // Zin worshippers are the only ones that can pray to ask Zin for stuff.
@@ -591,91 +679,7 @@ static void do_god_gift(bool prayed_for)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            if (random2(MAX_PIETY) <= you.piety
-                && one_chance_in(3)
-                && !you.attribute[ATTR_CARD_COUNTDOWN]
-                && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
-            {
-                misc_item_type gift_type;
-                if ( random2(MAX_PIETY) <= you.piety )
-                {
-                    // make a pure deck
-                    const misc_item_type pure_decks[] = {
-                        MISC_DECK_OF_ESCAPE,
-                        MISC_DECK_OF_DESTRUCTION,
-                        MISC_DECK_OF_DUNGEONS,
-                        MISC_DECK_OF_SUMMONING,
-                        MISC_DECK_OF_WONDERS
-                    };
-                    int weights[5];
-                    get_pure_deck_weights(weights);
-                    gift_type = pure_decks[choose_random_weighted(weights,
-                                                                  weights+5)];
-
-#if DEBUG_GIFTS || DEBUG_CARDS
-                    show_pure_deck_chances();
-#endif
-                }
-                else
-                {
-                    // make a mixed deck
-                    const misc_item_type mixed_decks[] = {
-                        MISC_DECK_OF_WAR,
-                        MISC_DECK_OF_CHANGES,
-                        MISC_DECK_OF_DEFENSE
-                    };
-                    gift_type = RANDOM_ELEMENT(mixed_decks);
-                }
-
-                int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
-                                           true, 1, MAKE_ITEM_RANDOM_RACE );
-
-                if (thing_created != NON_ITEM)
-                {
-                    // Piety|Common  | Rare  |Legendary
-                    // --------------------------------
-                    //     0:  95.00%,  5.00%,  0.00%
-                    //    20:  86.00%, 10.50%,  3.50%
-                    //    40:  77.00%, 16.00%,  7.00%
-                    //    60:  68.00%, 21.50%, 10.50%
-                    //    80:  59.00%, 27.00%, 14.00%
-                    //   100:  50.00%, 32.50%, 17.50%
-                    //   120:  41.00%, 38.00%, 21.00%
-                    //   140:  32.00%, 43.50%, 24.50%
-                    //   160:  23.00%, 49.00%, 28.00%
-                    //   180:  14.00%, 54.50%, 31.50%
-                    //   200:   5.00%, 60.00%, 35.00%
-                    int common_weight = 95 - (90 * you.piety / MAX_PIETY);
-                    int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
-                    int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
-
-                    deck_rarity_type rarity = (deck_rarity_type)
-                        random_choose_weighted(common_weight,
-                                               DECK_RARITY_COMMON,
-                                               rare_weight,
-                                               DECK_RARITY_RARE,
-                                               legend_weight,
-                                               DECK_RARITY_LEGENDARY,
-                                               0);
-
-                    item_def &deck(mitm[thing_created]);
-
-                    deck.special = rarity;
-                    deck.colour  = deck_rarity_to_color(rarity);
-
-                    move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-                    origin_acquired(deck, you.religion);
-                    
-                    simple_god_message(" grants you a gift!");
-                    more();
-                    canned_msg(MSG_SOMETHING_APPEARS);
-
-                    you.attribute[ATTR_CARD_COUNTDOWN] = 10;
-                    inc_gift_timeout(5 + random2avg(9, 2));
-                    you.num_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
-            }
+            give_nemelex_gift();
             break;
         
         case GOD_OKAWARU:
