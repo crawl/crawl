@@ -534,7 +534,7 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
     }
 }                               // end cast_twisted()
 
-bool brand_weapon(int which_brand, int power)
+bool brand_weapon(brand_type which_brand, int power)
 {
     int temp_rand;              // probability determination {dlb}
     int duration_affected = 0;  //jmf: NB: now HOW LONG, not WHICH BRAND.
@@ -638,6 +638,8 @@ bool brand_weapon(int which_brand, int power)
         which_brand = SPWPN_VORPAL;
         msg += " glows silver and feels heavier.";
         duration_affected = 7;
+        break;
+    default:
         break;
     }
 

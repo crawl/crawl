@@ -1588,7 +1588,24 @@ static void blade_card(int power, deck_rarity_type rarity)
     }
     else
     {
-        brand_weapon(SPWPN_VORPAL, random2(power/4)); // maybe other brands?
+        const brand_type brands[] = {
+            SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM, SPWPN_DRAINING,
+            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN, SPWPN_DUMMY_CRUSHING
+        };
+
+        if ( !brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)) )
+        {
+            if ( you.equip[EQ_WEAPON] == -1 )
+            {
+                msg::stream << "Your " << your_hand(true) << " twitch."
+                            << std::endl;
+            }
+            else
+            {
+                msg::stream << "Your weapon vibrates for a moment."
+                            << std::endl;
+            }
+        }
     }
 }
 
