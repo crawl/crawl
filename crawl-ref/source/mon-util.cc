@@ -2881,6 +2881,37 @@ bool monsters::wants_weapon(const item_def &weap) const
     return (true);    
 }
 
+bool monsters::wants_armour(const item_def &item) const
+{
+    // FIXME: Need monster body-size handling. For now, never attempt to
+    // change armour.
+    return (!mslot_item(MSLOT_ARMOUR));
+}
+
+bool monsters::pickup_armour(item_def &item, int near, bool force)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    
+    if (!force && !wants_armour(item))
+        return (false);
+
+    // XXX: Monsters can only equip body armour (as of 0.3).
+    if (get_armour_slot(item) != EQ_BODY_ARMOUR)
+        return (false);
+
+    // XXX: Very simplistic armour evaluation for the moment.
+    if (const item_def *existing_armour = slot_item(EQ_BODY_ARMOUR))
+    {
+        if (!force && existing_armour->armour_rating() >= item.armour_rating())
+            return (false);
+
+        if (!drop_item(MSLOT_ARMOUR, near))
+            return (false);
+    }
+
+    return pickup(item, MSLOT_ARMOUR, near);
+}
+
 bool monsters::pickup_weapon(item_def &item, int near, bool force)
 {
     if (!force && !wants_weapon(item))
@@ -2993,7 +3024,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     case OBJ_WEAPONS:
         return pickup_weapon(item, near, force);
     case OBJ_ARMOUR:
-        return pickup(item, MSLOT_ARMOUR, near);
+        return pickup_armour(item, near, force);
     case OBJ_MISSILES:
         return pickup_missile(item, near, force);
     case OBJ_WANDS:
