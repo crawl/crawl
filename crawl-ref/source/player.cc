@@ -2896,7 +2896,7 @@ void level_change(bool skip_ability_increase)
                 break;
 
             case SP_DEMIGOD:
-                if (!(you.experience_level % 3))
+                if (!(you.experience_level % 2))
                     modify_stat(STAT_RANDOM, 1, false);
 
                 // lowered because of HD raise -- bwr

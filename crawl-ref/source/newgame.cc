@@ -1880,9 +1880,6 @@ static void give_basic_mutations(species_type speci)
     case SP_HALFLING:
         you.mutation[MUT_SLOW_METABOLISM] = 1;
         break;
-    case SP_DEMIGOD:
-        you.mutation[MUT_FAST_METABOLISM] = 1;
-        break;
     case SP_MINOTAUR:
         you.mutation[MUT_HORNS] = 2;
         break;
