@@ -754,9 +754,9 @@ void game_options::reset_options()
     extra_levels.clear();
     
     dump_order.clear();
-    new_dump_fields("header,hiscore,stats,misc,turns_by_place,inventory,"
+    new_dump_fields("header,hiscore,stats,misc,inventory,"
                     "skills,spells,overview,mutations,messages,screenshot,"
-                    "kills_by_place,kills,notes");
+                    "kills,notes");
 
     hp_colour.clear();
     hp_colour.push_back(std::pair<int,int>(100, LIGHTGREY));

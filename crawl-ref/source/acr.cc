@@ -303,6 +303,9 @@ int main( int argc, char *argv[] )
         case GOD_ELYVILON:
             simple_god_message( " says: Go forth and aid the weak!" );
             break;
+        case GOD_LUGONU:
+            simple_god_message( " says: Spread carnage and corruption!");
+            break;
         case GOD_BEOGH:
             simple_god_message(
                 " says: Drown the unbelievers in a sea of blood!");

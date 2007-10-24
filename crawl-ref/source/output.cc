@@ -823,7 +823,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
         snprintf(buf, sizeof buf,
                  "Play time  : %10s\n"
                  "Turns      : %10ld\n",
-                 make_time_string(curr).c_str(), you.num_turns );
+                 make_time_string(curr, true).c_str(), you.num_turns );
         cols.add_formatted(0, buf, true);
     }
 
