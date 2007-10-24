@@ -2223,6 +2223,7 @@ level_map_title option to get rid of that.
         /               Cycles backward through stashes.
         Ctrl-C          Clear level and main maps (from temporarily 
                         seen monsters, clouds etc.).
+	Ctrl-F          Forget level map.
 
 Waypoints can be set on the level map. You can travel to waypoints 
 using Ctrl-G. Check the option show_waypoints. The commands are
