@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "macro.h"
 #include "stuff.h"
+#include <sstream>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>
@@ -73,6 +74,39 @@ description_level_type description_type_by_name(const char *desc)
         return DESC_NONE;
 
     return DESC_PLAIN;
+}
+
+std::string number_to_string(unsigned number, bool in_words)
+{
+    return (in_words? number_in_words(number) : make_stringf("%u", number));
+}
+
+std::string apply_description(description_level_type desc,
+                              const std::string &name,
+                              int quantity, bool in_words)
+{
+    switch (desc)
+    {
+    case DESC_CAP_THE:
+        return ("The " + name);
+    case DESC_NOCAP_THE:
+        return ("the " + name);
+    case DESC_CAP_A:
+        return (quantity > 1?
+                number_to_string(quantity, in_words) + name
+                : article_a(name, false));
+    case DESC_NOCAP_A:
+        return (quantity > 1?
+                number_to_string(quantity, in_words) + name
+                : article_a(name, true));
+    case DESC_CAP_YOUR:
+        return ("Your " + name);
+    case DESC_NOCAP_YOUR:
+        return ("your " + name);
+    case DESC_PLAIN:
+    default:
+        return (name);
+    }
 }
 
 // Should return true if the filename contains nothing that
@@ -526,6 +560,77 @@ int snprintf( char *str, size_t size, const char *format, ... )
 }
 
 #endif
+
+//////////////////////////////////////////////////////////////////////////
+// named_thing_collection
+
+named_thing_collection::named_thing_collection()
+    : names(), nnames(0u)
+{
+}
+
+void named_thing_collection::add_thing(const std::string &name)
+{
+    names[name]++;
+    nnames++;
+}
+
+size_t named_thing_collection::size() const
+{
+    return (nnames);
+}
+
+bool named_thing_collection::empty() const
+{
+    return (!nnames);
+}
+
+std::string named_thing_collection::describe(
+    description_level_type desc,
+    const char **plural_qualifiers,
+    const char **no_qualifier_suffixes) const
+{
+    if (empty())
+        return ("");
+    
+    std::ostringstream out;
+    for (name_count_map::const_iterator i = names.begin();
+         i != names.end(); )
+    {
+        const std::pair<std::string, int> &curr(*i);
+        if (i != names.begin())
+        {
+            ++i;
+            out << (i == names.end()? " and " : ", ");
+        }
+        else
+            ++i;
+        
+        const std::string name =
+            curr.second > 1? pluralise(curr.first, plural_qualifiers,
+                                     no_qualifier_suffixes)
+            : curr.first;
+        out << apply_description(desc, name, curr.second);
+
+        switch (desc)
+        {
+        case DESC_CAP_A:
+            desc = DESC_NOCAP_A;
+            break;
+        case DESC_CAP_THE:
+            desc = DESC_NOCAP_THE;
+            break;
+        case DESC_CAP_YOUR: case DESC_NOCAP_YOUR:
+            desc = DESC_PLAIN;
+            break;
+        default:
+            break;
+        }
+    }
+    return (out.str());
+}
+
+/////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 // Pattern matching

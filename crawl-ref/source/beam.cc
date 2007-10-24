@@ -2116,16 +2116,17 @@ bool curare_hits_monster( const bolt &beam,
 }
 
 // actually poisons a monster (w/ message)
-void poison_monster( monsters *monster,
+bool poison_monster( monsters *monster,
                      kill_category from_whom,
                      int levels,
-                     bool force )
+                     bool force,
+                     bool verbose)
 {
     if (!monster->alive())
-        return;
+        return (false);
 
     if (!force && mons_res_poison(monster) > 0)
-        return;
+        return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
     monster->add_ench( mon_enchant(ENCH_POISON, levels, from_whom) );
@@ -2133,7 +2134,7 @@ void poison_monster( monsters *monster,
 
     // actually do the poisoning
     // note: order important here
-    if (new_pois.degree > old_pois.degree)
+    if (new_pois.degree > old_pois.degree && verbose)
     {
         simple_monster_message( monster, 
                                 !old_pois.degree? " is poisoned." 
@@ -2143,7 +2144,9 @@ void poison_monster( monsters *monster,
     // finally, take care of deity preferences
     if (from_whom == KC_YOU)
         did_god_conduct( DID_POISON, 5 + random2(3) );
-}                               // end poison_monster()
+
+    return (new_pois.degree > old_pois.degree);
+}
 
 // actually napalms a monster (w/ message)
 void sticky_flame_monster( int mn, kill_category who, int levels )

@@ -238,8 +238,8 @@ int mons_ench_f2( struct monsters *monster, struct bolt &pbolt );
 /* ***********************************************************************
  * called from: fight - monstuff - spells2
  * *********************************************************************** */
-void poison_monster( struct monsters *monster, kill_category who,
-                     int levels = 1, bool force = false );
+bool poison_monster( monsters *monster, kill_category who,
+                     int levels = 1, bool force = false, bool verbose = true );
 
 
 /* ***********************************************************************
