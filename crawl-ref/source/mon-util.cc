@@ -5011,6 +5011,8 @@ bool monsters::do_shaft()
 
 void monsters::put_to_sleep(int)
 {
+    if (has_ench(ENCH_BERSERK))
+        return;
     behaviour = BEH_SLEEP;
     add_ench(ENCH_SLEEPY);
     add_ench(ENCH_SLEEP_WARY);

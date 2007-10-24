@@ -6242,7 +6242,7 @@ bool player::cannot_act() const
 
 void player::put_to_sleep(int)
 {
-    if (asleep())   // No cumulative sleeps.
+    if (duration[DUR_BERSERKER] || asleep())   // No cumulative sleeps.
         return;
 
     // Not all species can be put to sleep. Check holiness.
