@@ -332,7 +332,7 @@ pickup_thrown = true
         you're fighting, or use safe_autopickup=true.
 
 pickup_dropped = false
-        Pickup_dropped lets autopickup affect objects you've dropped. Set to 
+        pickup_dropped lets autopickup affect objects you've dropped. Set to 
         false to block autopickup for dropped objects. This can be convenient.
 
 assign_item_slot = (forward | backward)
@@ -1027,9 +1027,9 @@ show_turns = false
 
 show_beam = false
         When performing actions such as throwing or zapping, you can toggle 
-	whether to show the beam path or not. This option controls the 
-	initial status of this toggle. When set to true, the path will be 
-	shown.
+        whether to show the beam path or not. This option controls the 
+	    initial status of this toggle. When set to true, the path will be 
+    	shown.
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in it,
@@ -1216,12 +1216,18 @@ dump_item_origin_price = 100
 dump_message_count = 7
         The number of last messages to be displayed in character dump files. 
 
-dump_order  = header,hiscore,stats,misc,notes,inventory,turns_by_place,
+dump_order  = header,hiscore,stats,misc,notes,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot
-dump_order += kills_by_place,,kills
+dump_order += kills
         Controls the order of sections in the dump. You can use multiple
         dump_order lines - all lines but the first must use dump_order +=
 
+        Two optional dump sections are turns_by_place and kills_by_place,
+        which add detailed statistics to where turns were spent and monsters
+        were killed. You can add them to your dump as:
+
+             dump_order += turns_by_place, kills_by_place
+        
 
 5-b     Notes.
 --------------
@@ -1463,8 +1469,8 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         (The left hand side of the : is case-sensitive.)
         
         You can specify symbols using their code points using the
-        syntax as shown in feature. If you're using char_set=unicode,
-        you can use unicode code points:
+        syntax as shown in the "feature" option. If you're using
+        char_set=unicode, you can use unicode code points:
         
         mon_glyph = draconian scorcher : x6e9
 
