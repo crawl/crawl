@@ -77,6 +77,18 @@ const char *naga_speed_descrip[4] = {
     "You cover ground quickly."         //  6*14/10 = 8
 };
 
+const char *centaur_deformed_descrip[3] = {
+    "Armour fits poorly on your equine body.",
+    "Armour fits poorly on your deformed equine body.",
+    "Armour fits poorly on your badly deformed equine body."
+};
+
+const char *naga_deformed_descrip[3] = {
+    "Armour fits poorly on your serpentine body.",
+    "Armour fits poorly on your deformed serpentine body.",
+    "Armour fits poorly on your badly deformed serpentine body."
+};
+
 const char *mutation_descrip[][3] = {
     {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
      "You have extremely tough skin (AC +3)."},
@@ -946,7 +958,14 @@ formatted_string describe_mutations()
         break;
 
     case SP_NAGA:
+        if ( you.mutation[MUT_DEFORMED] > 1)
+            result += "<cyan>";
+        result += naga_deformed_descrip[you.mutation[MUT_DEFORMED] - 1];
+        if ( you.mutation[MUT_DEFORMED] > 1)
+            result += "</cyan><lightblue>";
+        result += EOL;
         result += "You cannot wear boots." EOL;
+        
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
@@ -973,6 +992,17 @@ formatted_string describe_mutations()
         result += "You can eat rotten meat." EOL;
         have_any = true;
         break;
+
+    case SP_CENTAUR:
+        if ( you.mutation[MUT_DEFORMED] > 1)
+            result += "<cyan>";
+        result += centaur_deformed_descrip[you.mutation[MUT_DEFORMED] - 1];
+        if ( you.mutation[MUT_DEFORMED] > 1)
+            result += "</cyan><lightblue>";
+        result += EOL;
+        have_any = true;
+        break;
+
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
@@ -1165,9 +1195,11 @@ formatted_string describe_mutations()
 
             // this is already handled above:
             if (you.species == SP_NAGA &&
-                (i == MUT_BREATHE_POISON || i == MUT_FAST))
+                (i == MUT_BREATHE_POISON || i == MUT_FAST || i == MUT_DEFORMED))
                 continue;
             if (you.species == SP_TROLL && i == MUT_CLAWS)
+                continue;
+            if (you.species == SP_CENTAUR && i == MUT_DEFORMED)
                 continue;
 
             const char* colourname = "";
