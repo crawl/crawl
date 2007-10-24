@@ -26,7 +26,8 @@ enum spflag_type
     SPFLAG_TARGETING_MASK       = 0x000f,       // used to test for targeting
     SPFLAG_HELPFUL              = 0x0010,       // TARG_FRIENDS used
     SPFLAG_NOT_SELF             = 0x0020,       // aborts on isMe
-    SPFLAG_UNHOLY               = 0x0040        // counts at "unholy"
+    SPFLAG_UNHOLY               = 0x0040,       // counts at "unholy"
+    SPFLAG_MAPPING              = 0x0080        // a mapping spell of some kind
 };
 
 enum spret_type

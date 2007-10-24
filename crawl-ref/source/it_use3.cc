@@ -719,7 +719,8 @@ static bool ball_of_seeing(void)
 
     mpr("You gaze into the crystal ball.");
 
-    use = ((!you.duration[DUR_CONF]) ? random2(you.skills[SK_EVOCATIONS] * 6) : random2(5));
+    use = ((!you.duration[DUR_CONF]) ?
+           random2(you.skills[SK_EVOCATIONS] * 6) : random2(5));
 
     if (use < 2)
     {
@@ -730,8 +731,10 @@ static bool ball_of_seeing(void)
         mpr("You feel power drain from you!");
         set_mp(0, false);
     }
-    else if (use < 10)
+    else if (use < 10 || you.level_type == LEVEL_LABYRINTH)
     {
+        if (you.level_type == LEVEL_LABYRINTH)
+            mpr("You see a maze of twisty little passages, all alike.");
         confuse_player( 10 + random2(10), false );
     }
     else if (use < 15 || coinflip())

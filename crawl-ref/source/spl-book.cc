@@ -1499,17 +1499,22 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    // All checks passed, we can cast the spell
-    if (your_spells(spell, powc, false) == SPRET_ABORT)
+    const int flags = get_spell_flags(spell);
+    // Labyrinths block divinations.
+    if (you.level_type == LEVEL_LABYRINTH
+        && testbits(flags, SPFLAG_MAPPING))
+    {
+        mpr("Something interferes with your magic!");
+    }
+    // All checks passed, we can cast the spell    
+    else if (your_spells(spell, powc, false) == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return (-1);
     }
 
     make_hungry( food, true );
-
     istaff.plus -= mana;
-
     you.wield_change = true;
     you.turn_is_over = true;
 

@@ -1030,8 +1030,9 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_MAPPING:    // randarts
     case ABIL_MAPPING:          // Gnome + sense surrounds mut
-        if (abil.ability == ABIL_MAPPING && you.mutation[MUT_MAPPING] < 3 &&
-            you.level_type == LEVEL_PANDEMONIUM)
+        if (abil.ability == ABIL_MAPPING && you.mutation[MUT_MAPPING] < 3
+            && (you.level_type == LEVEL_PANDEMONIUM
+                || you.level_type == LEVEL_LABYRINTH))
         {
             mpr("You feel momentarily disoriented.");
             return (false);

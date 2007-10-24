@@ -715,7 +715,7 @@
 {
     SPELL_DETECT_TRAPS, "Detect Traps",
      SPTYP_DIVINATION,
-     SPFLAG_NONE,
+     SPFLAG_MAPPING,
      2,
      50,
      NULL,
@@ -782,7 +782,7 @@
 {
     SPELL_MAGIC_MAPPING, "Magic Mapping",
      SPTYP_DIVINATION | SPTYP_EARTH,
-     SPFLAG_NONE,
+     SPFLAG_MAPPING,
      4,
      45,
      NULL,
@@ -879,7 +879,7 @@
 {
     SPELL_DETECT_ITEMS, "Detect Items",
      SPTYP_DIVINATION,
-     SPFLAG_NONE,
+     SPFLAG_MAPPING,
      2,
      50,
      NULL,
@@ -1385,7 +1385,7 @@
 {
     SPELL_DETECT_CREATURES, "Detect Creatures",
      SPTYP_DIVINATION,
-     SPFLAG_NONE,
+     SPFLAG_MAPPING,
      2,
      60,                        // not 50, note the fuzz
      NULL,
