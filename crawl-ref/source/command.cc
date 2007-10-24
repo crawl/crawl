@@ -557,7 +557,8 @@ static const char *level_map_help =
     "<w>Ctrl-X</w> : set travel eXclusion\n"
     "<w>Ctrl-E</w> : Erase all travel exclusions\n"
     "<w>Ctrl-W</w> : set Waypoint\n"
-    "<w>Ctrl-C</w> : Clear level and main maps\n";
+    "<w>Ctrl-C</w> : Clear level and main maps\n"
+    "<w>Ctrl-F</w> : Forget level map\n";
 
 static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"

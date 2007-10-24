@@ -2941,6 +2941,9 @@ void show_map( coord_def &spec_place, bool travel_mode )
             break;
 
         case CONTROL('F'):
+            forget_map(100, true);
+            break;
+            
         case CONTROL('W'):
             travel_cache.add_waypoint(start_x + curs_x - 1,
                                       start_y + curs_y - 1);

@@ -282,7 +282,7 @@ void display_char_status(void);
 /* ***********************************************************************
  * called from: item_use - items - misc - spells - spells3
  * *********************************************************************** */
-void forget_map(unsigned char chance_forgotten);
+void forget_map(unsigned char chance_forgotten = 100, bool force = false);
 
 
 // last updated 19may2000 {dlb}

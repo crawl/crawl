@@ -2574,19 +2574,24 @@ bool you_resist_magic(int power)
    return 1; */
 }
 
-void forget_map(unsigned char chance_forgotten)
+// force is true for forget_map command on level map
+void forget_map(unsigned char chance_forgotten, bool force)
 {
-    unsigned char xcount, ycount = 0;
+    if ( force && !yesno("Really forget level map?", true, 'n') )
+         return;
 
-    for (xcount = 0; xcount < GXM; xcount++)
+    for (unsigned char xcount = 0; xcount < GXM; xcount++)
     {
-        for (ycount = 0; ycount < GYM; ycount++)
+        for (unsigned char ycount = 0; ycount < GYM; ycount++)
         {
-            if (random2(100) < chance_forgotten)
-                env.map[xcount][ycount].clear();
+             if (!see_grid(xcount, ycount) &&
+                 (force || random2(100) < chance_forgotten))
+             {
+                 env.map[xcount][ycount].clear();
+             }
         }
     }
-}                               // end forget_map()
+} // end forget_map()
 
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
                unsigned int* actual_avail_gain)
