@@ -261,6 +261,8 @@ static fire_type str_to_fire_types( const std::string &str )
         return (FIRE_DART);
     else if (str == "stone")
         return (FIRE_STONE);
+    else if (str == "rock")
+        return (FIRE_ROCK);
     else if (str == "dagger")
         return (FIRE_DAGGER);
     else if (str == "spear")
@@ -706,7 +708,8 @@ void game_options::reset_options()
     fire_items_start       = 2;           // start at slot 'c'
 
     // Clear fire_order and set up the defaults.
-    set_fire_order("launcher, javelin / dart / stone / spear");
+    set_fire_order("launcher, "
+                   "javelin / dart / stone / rock / spear / net / handaxe");
 
     item_stack_summary_minimum = 5;
 

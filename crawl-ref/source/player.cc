@@ -6245,6 +6245,12 @@ bool player::cannot_act() const
     return (asleep() || paralysed());
 }
 
+bool player::can_throw_rocks() const
+{
+    return (species == SP_OGRE || species == SP_TROLL
+            || species == SP_OGRE_MAGE);
+}
+
 void player::put_to_sleep(int)
 {
     if (duration[DUR_BERSERKER] || asleep())   // No cumulative sleeps.

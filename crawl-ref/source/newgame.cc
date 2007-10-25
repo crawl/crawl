@@ -3900,9 +3900,18 @@ bool give_items_skills()
 
         switch (you.species)
         {
+        case SP_OGRE:
+            // Ogres chop up their food without finesse.
+            you.inv[0].sub_type = WPN_HAND_AXE;
+            you.inv[1].quantity = 0;
+
+            // And they get to throw rocks.
+            you.inv[3].sub_type = MI_LARGE_ROCK;
+            you.inv[3].quantity = 3;
+            break;
+            
         case SP_HALFLING:
         case SP_GNOME:
-        case SP_OGRE:
             you.inv[3].quantity += random2avg(15, 2);
             you.inv[3].sub_type = MI_SLING_BULLET;
             you.inv[1].sub_type = WPN_SLING;

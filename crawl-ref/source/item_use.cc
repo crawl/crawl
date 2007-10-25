@@ -2010,7 +2010,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // all weapons that use 'throwing' go here..
         if (wepClass == OBJ_WEAPONS
             || (wepClass == OBJ_MISSILES
-                && (wepType == MI_STONE || wepType == MI_SLING_BULLET)))
+                && (wepType == MI_STONE || wepType == MI_LARGE_ROCK)))
         {
             // elves with elven weapons
             if (get_equip_race(item) == ISFLAG_ELVEN 
@@ -2061,6 +2061,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             switch (wepType)
             {
+            case MI_LARGE_ROCK:
+                if (you.can_throw_rocks())
+                    baseHit = 1;
+                break;
             case MI_DART:
                 // give an appropriate 'tohit' & damage
                 baseHit = 2;
@@ -2078,7 +2082,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // Javelins use throwing skill.
                 baseHit = -1;
                 baseDam = property( item, PWPN_DAMAGE );
-                exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
+                exHitBonus += skill_bump(SK_THROWING) * 3 / 2;
                 exDamBonus += you.skills[SK_THROWING] * 3 / 5;
 
                 // Adjust for strength and dex.
@@ -2114,8 +2118,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // for launchers. Hand-thrown stones and darts do only half
         // base damage. Yet another evil 4.0ism.
         if (wepClass == OBJ_MISSILES
-                && (wepType == MI_DART || wepType == MI_STONE
-                    || wepType == MI_SLING_BULLET))
+                && (wepType == MI_DART || wepType == MI_STONE))
             baseDam = div_rand_round(baseDam, 2);
         
         // exercise skill
@@ -2139,6 +2142,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (wepType == MI_LARGE_ROCK)
         {
             pbolt.range = 1 + random2( you.strength / 5 );
+            if (you.can_throw_rocks())
+                pbolt.range += random_range(4, 7);
             if (pbolt.range > 12)
                 pbolt.range = 12;
 
