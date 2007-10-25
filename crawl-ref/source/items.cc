@@ -1591,12 +1591,13 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     return (retval);
 }                               // end move_item_to_player()
 
-void mark_items_dropped_at(const coord_def &pos)
+void mark_items_non_pickup_at(const coord_def &pos)
 {
     int item = igrd(pos);
     while (item != NON_ITEM)
     {
         mitm[item].flags |= ISFLAG_DROPPED;
+        mitm[item].flags &= ~ISFLAG_THROWN;
         item = mitm[item].link;
     }
 }

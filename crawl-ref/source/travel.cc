@@ -922,7 +922,6 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     // pick up, so the only thing to do is to stop.
     if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
     {
-        stop_delay();
         if (explore_stopped_pos == you.pos()
             && !Options.pickup_dropped)
         {
@@ -931,10 +930,15 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                     "Could not pick up %s here, shall I ignore %s? ",
                     tried_pickup == 1? "an item" : "some items",
                     tried_pickup == 1? "it" : "them");
-            if (yesno(prompt.c_str(), true, 'y'))
-                mark_items_dropped_at(you.pos());
+            if (yesno(prompt.c_str(), true, 'y', true, false))
+            {
+                mark_items_non_pickup_at(you.pos());
+                // Don't stop explore.
+                return;
+            }
         }
         explore_stopped_pos = you.pos();
+        stop_delay();
     }
 }
 
