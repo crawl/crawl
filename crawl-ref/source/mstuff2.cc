@@ -2152,6 +2152,9 @@ bool orc_battle_cry(monsters *chief)
                 && mons_species(mons->type) == MONS_ORC
                 && mons_aligned(boss_index, i)
                 && mons->hit_dice < chief->hit_dice
+                && !mons->has_ench(ENCH_BERSERK)
+                && !mons->paralysed()
+                && !mons->confused()
                 && chief->can_see(mons))
             {
                 mon_enchant ench = mons->get_ench(ENCH_BATTLE_FRENZY);
@@ -2159,7 +2162,7 @@ bool orc_battle_cry(monsters *chief)
                 {
                     const int dur =
                         random_range(9, 15) * speed_to_duration(mons->speed);
-                
+                    
                     if (ench.ench != ENCH_NONE)
                     {
                         ench.degree   = level;
@@ -2174,6 +2177,10 @@ bool orc_battle_cry(monsters *chief)
                                         dur));
                     }
                     affected.push_back(mons);
+
+                    if (mons->asleep())
+                        behaviour_event( mons, ME_DISTURB, MHITNOT,
+                                         chief->x, chief->y );
                 }
             }
         }
@@ -2181,11 +2188,11 @@ bool orc_battle_cry(monsters *chief)
         if (!affected.empty())
         {
             if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
-            {
                 mprf(MSGCH_SOUND, "%s roars a battle-cry!",
                      chief->name(DESC_CAP_THE).c_str());
-                noisy(15, chief->x, chief->y);
-            }
+
+            // The yell happens whether you happen to see it or not.
+            noisy(15, chief->x, chief->y);
 
             // Disabling detailed frenzy announcement because it's so spammy.
 #ifdef ANNOUNCE_BATTLE_FRENZY

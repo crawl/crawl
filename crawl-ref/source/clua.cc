@@ -47,7 +47,7 @@
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
 
 #define CL_RESETSTACK_RETURN(ls, oldtop, retval) \
-    if (true) \
+    do \
     {\
         if (oldtop != lua_gettop(ls)) \
         { \
@@ -55,7 +55,7 @@
         } \
         return (retval); \
     } \
-    else
+    while (false)
 
 static int clua_panic(lua_State *);
 static void clua_throttle_hook(lua_State *, lua_Debug *);
@@ -255,7 +255,9 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
         return (-1);
     }
     
-    const std::string file = datafile_path(filename, die_on_fail);
+    std::string file = datafile_path(filename, die_on_fail);
+    if (file.empty())
+        file = filename;
     return (luaL_loadfile(ls, file.c_str()));
 }
 

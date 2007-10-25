@@ -578,9 +578,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // Divine health and mp restoration doesn't happen when killing
             // born-friendly monsters. The mutation still applies, however.
             if (you.mutation[MUT_DEATH_STRENGTH]
-                || (!created_friendly && 
-                    you.religion == GOD_MAKHLEB && you.duration[DUR_PRAYER] &&
-                    (!player_under_penance() && random2(you.piety) >= 30)))
+                || (!created_friendly
+                    && you.religion == GOD_MAKHLEB
+                    && (!player_under_penance() && random2(you.piety) >= 30)))
             {
                 if (you.hp < you.hp_max)
                 {
@@ -592,7 +592,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
             if (!created_friendly 
                 && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET)
-                && you.duration[DUR_PRAYER]
                 && (!player_under_penance() && random2(you.piety) >= 30))
             {
                 if (you.magic_points < you.max_magic_points)

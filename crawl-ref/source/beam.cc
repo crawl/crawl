@@ -685,10 +685,10 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "stone arrow";
         pbolt.colour = LIGHTGREY;
         pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 2, 4 + power / 8 );    // 25: 2d7  50: 2d10
-        pbolt.hit = 5 + power / 10;                     // 25: 6    50: 7
+        pbolt.damage = dice_def( 2, 5 + power / 7 );    // 25: 2d8  50: 2d12
+        pbolt.hit = 8 + power / 10;                     // 25: 10    50: 13
         pbolt.type = SYM_MISSILE;
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
+        pbolt.flavour = BEAM_MMISSILE;                  // irresistible
 
         pbolt.obvious_effect = true;
         break;
@@ -753,7 +753,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "bolt of fire";
         pbolt.colour = RED;
         pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 6, 20 + (power * 3) / 4 );
+        pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_FIRE;
@@ -766,7 +766,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "bolt of cold";
         pbolt.colour = WHITE;
         pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 6, 20 + (power * 3) / 4 );
+        pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_COLD;
@@ -897,8 +897,8 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_CRYSTAL_SPEAR:                             // cap 200
         pbolt.name = "crystal spear";
         pbolt.colour = WHITE;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 12, 30 + (power * 4) / 3 );
+        pbolt.range = 6 + random2(4);
+        pbolt.damage = calc_dice( 10, 23 + power );
         pbolt.hit = 10 + power / 15;                    // 50: 13   100: 16
         pbolt.type = SYM_MISSILE;
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
@@ -923,7 +923,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "great blast of cold";
         pbolt.colour = BLUE;
         pbolt.range = 9 + random2(5);
-        pbolt.damage = calc_dice( 6, 15 + power );
+        pbolt.damage = calc_dice( 10, 18 + power );
         pbolt.damage.num = 0;                    // only does explosion damage
         pbolt.hit = 20 + power / 10;                    // 50: 25   100: 30
         pbolt.ench_power = power;                       // used for radius
@@ -2111,16 +2111,17 @@ bool curare_hits_monster( const bolt &beam,
 }
 
 // actually poisons a monster (w/ message)
-void poison_monster( monsters *monster,
+bool poison_monster( monsters *monster,
                      kill_category from_whom,
                      int levels,
-                     bool force )
+                     bool force,
+                     bool verbose)
 {
     if (!monster->alive())
-        return;
+        return (false);
 
     if (!force && mons_res_poison(monster) > 0)
-        return;
+        return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
     monster->add_ench( mon_enchant(ENCH_POISON, levels, from_whom) );
@@ -2128,7 +2129,7 @@ void poison_monster( monsters *monster,
 
     // actually do the poisoning
     // note: order important here
-    if (new_pois.degree > old_pois.degree)
+    if (new_pois.degree > old_pois.degree && verbose)
     {
         simple_monster_message( monster, 
                                 !old_pois.degree? " is poisoned." 
@@ -2138,7 +2139,9 @@ void poison_monster( monsters *monster,
     // finally, take care of deity preferences
     if (from_whom == KC_YOU)
         did_god_conduct( DID_POISON, 5 + random2(3) );
-}                               // end poison_monster()
+
+    return (new_pois.degree > old_pois.degree);
+}
 
 // actually napalms a monster (w/ message)
 void sticky_flame_monster( int mn, kill_category who, int levels )

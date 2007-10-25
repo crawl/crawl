@@ -927,7 +927,18 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
                 dec_penance(GOD_SIF_MUNA, 1);
         }
 
-        if (spfl < spell_fail(spell))
+        const int spfail_chance = spell_fail(spell);
+        // Divination mappings backfire in Labyrinths.
+        if (you.level_type == LEVEL_LABYRINTH
+            && testbits(flags, SPFLAG_MAPPING))
+        {
+            mprf(MSGCH_WARN,
+                 "The warped magic of this place twists your "
+                 "spell in on itself!");
+            spfl = spfail_chance / 2 - 1;
+        }
+
+        if (spfl < spfail_chance)
         {
             spellcasting_side_effects(spell, true);
 
@@ -955,14 +966,14 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             // spells can be quite nasty: 9 * 9 * 90 / 500 = 15
             // points of contamination!
             int nastiness = spell_mana(spell) * spell_mana(spell)
-                                    * (spell_fail(spell) - spfl) + 250;
+                                    * (spfail_chance - spfl) + 250;
 
             const int cont_points = div_rand_round(nastiness, 500);
 
             contaminate_player( cont_points );
 
             miscast_effect( sptype, spell_mana(spell),
-                            spell_fail(spell) - spfl, 100 );
+                            spfail_chance - spfl, 100 );
 
             return (SPRET_FAIL);
         }

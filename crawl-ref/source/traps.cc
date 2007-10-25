@@ -755,7 +755,8 @@ bool trap_item(object_class_type base_type, char sub_type,
         // don't want to go overboard here. Will only generate up to three
         // separate trap items, or less if there are other items present.
         if (mitm[ igrd[beam_x][beam_y] ].link != NON_ITEM
-            && (item.base_type != OBJ_MISSILES || item.sub_type != MI_THROWING_NET))
+            && (item.base_type != OBJ_MISSILES
+                || item.sub_type != MI_THROWING_NET))
         {
             if (mitm[ mitm[ igrd[beam_x][beam_y] ].link ].link != NON_ITEM)
                 return (false);

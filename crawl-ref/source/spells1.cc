@@ -228,7 +228,7 @@ int cast_fire_storm(int powc, bolt &beam)
     beam.ench_power = powc;     // used for radius
     beam.name = "great blast of fire";
     beam.hit = 20 + powc / 10;
-    beam.damage = calc_dice( 6, 15 + powc );
+    beam.damage = calc_dice( 9, 20 + powc );
 
     explosion( beam );
     mpr("A raging storm of fire appears!");

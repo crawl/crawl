@@ -224,7 +224,9 @@
     #endif
 
     // Increase the size of the topscores file for public servers.
+    #ifndef SCORE_FILE_ENTRIES
     #define SCORE_FILE_ENTRIES 1000
+    #endif
 
     // If defined, the hiscores code dumps preformatted verbose and terse
     // death message strings in the logfile for the convenience of logfile
@@ -321,6 +323,9 @@
 // =========================================================================
 // number of back messages saved during play (currently none saved into files)
 #define NUM_STORED_MESSAGES   1000
+
+// clamp time between command inputs at 5 minutes when reporting play time.
+#define IDLE_TIME_CLAMP  (5 * 60)
 
 // Uncomment this if you find the labyrinth to be buggy and want to
 // remove it from the game.

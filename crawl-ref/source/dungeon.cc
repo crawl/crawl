@@ -223,6 +223,8 @@ static int vault_grid( vault_placement &,
                        int &num_runes, int rune_subst = -1, bool foll = false);
 
 static int dgn_random_map_for_place(bool wantmini);
+static void dgn_load_colour_grid();
+static void dgn_map_colour_fixup();
 
 // ALTAR FUNCTIONS
 static dungeon_feature_type pick_an_altar();
@@ -244,6 +246,34 @@ static bool dgn_level_vetoed = false;
 static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
+
+struct coloured_feature
+{
+    dungeon_feature_type feature;
+    int                  colour;
+
+    coloured_feature() : feature(DNGN_UNSEEN), colour(BLACK) { }
+    coloured_feature(dungeon_feature_type f, int c)
+        : feature(f), colour(c)
+    {
+    }
+};
+
+struct dgn_colour_override_manager
+{
+    dgn_colour_override_manager()
+    {
+        dgn_load_colour_grid();
+    }
+
+    ~dgn_colour_override_manager()
+    {
+        dgn_map_colour_fixup();
+    }
+};
+
+typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
+static std::auto_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
@@ -278,7 +308,10 @@ bool builder(int level_number, int level_type)
 #endif
 
         if (!dgn_level_vetoed && valid_dungeon_level(level_number, level_type))
+        {
+            dgn_map_colour_fixup();
             return (true);
+        }
 
         you.uniq_map_tags  = uniq_tags;
         you.uniq_map_names = uniq_names;
@@ -309,6 +342,46 @@ void level_clear_vault_memory()
 {
     level_vaults.clear();
     dgn_map_mask.init(0);
+}
+
+static void dgn_load_colour_grid()
+{
+    dgn_colour_grid.reset(new dungeon_colour_grid);
+    dungeon_colour_grid &dcgrid(*dgn_colour_grid);
+    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+            if (env.grid_colours[x][y] != BLACK)
+                dcgrid[x][y] =
+                    coloured_feature(grd[x][y], env.grid_colours[x][y]);
+}
+
+static void dgn_map_colour_fixup()
+{
+    if (!dgn_colour_grid.get())
+        return;
+
+    // If the original coloured feature has been changed, reset the colour.
+    const dungeon_colour_grid &dcgrid(*dgn_colour_grid);
+    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+            if (dcgrid[x][y].colour != BLACK
+                && grd[x][y] != dcgrid[x][y].feature)
+            {
+                env.grid_colours[x][y] = BLACK;
+            }
+
+    dgn_colour_grid.reset(NULL);
+}
+
+void dgn_set_grid_colour_at(const coord_def &c, int colour)
+{
+    if (colour != BLACK)
+    {
+        env.grid_colours(c) = colour;
+        if (!dgn_colour_grid.get())
+            dgn_colour_grid.reset( new dungeon_colour_grid );
+        (*dgn_colour_grid)(c) = coloured_feature(grd(c), colour);
+    }
 }
 
 static void dgn_register_vault(const map_def &map)
@@ -517,6 +590,8 @@ static bool valid_dungeon_level(int level_number, int level_type)
 static void reset_level()
 {
     level_clear_vault_memory();
+    dgn_colour_grid.reset(NULL);
+    
     vault_chance     = 9;
     minivault_chance = 3;
     use_random_maps  = true;
@@ -3561,6 +3636,8 @@ static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
 //          teleported).
 bool dgn_place_map(int map, bool generating_level, bool clobber)
 {
+    const dgn_colour_override_manager colour_man;
+    
     const map_def *mdef = map_by_index(map);
     bool did_map = false;
     bool fixup = false;
@@ -5840,15 +5917,16 @@ static void labyrinth_place_entry_point(const dgn_region &region,
 {
     const coord_def p = labyrinth_find_entry_point(region, pos);
     if (in_bounds(p))
-        env.markers.add(new map_feature_marker(pos, DNGN_ENTER_LABYRINTH));
+        env.markers.add(new map_feature_marker(p, DNGN_ENTER_LABYRINTH));
 }
 
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
-        dgn_region::absolute( MAPGEN_BORDER * 5 / 2, MAPGEN_BORDER * 5 / 2,
-                              GXM - MAPGEN_BORDER * 5 / 2 - 1,
-                              GYM - MAPGEN_BORDER * 5 / 2 - 1 );
+        dgn_region::absolute( MAPGEN_BORDER * 2,
+                              MAPGEN_BORDER * 2,
+                              GXM - MAPGEN_BORDER * 2 - 1,
+                              GYM - MAPGEN_BORDER * 2 - 1 );
     
     // First decide if we're going to use a Lab minivault.
     int vault = random_map_for_tag("minotaur", true, false);

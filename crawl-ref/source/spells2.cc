@@ -822,6 +822,7 @@ void cast_toxic_radiance(void)
         poison_player(2);
     }
 
+    named_thing_collection affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
     for (int toxy = 0; toxy < MAX_MONSTERS; toxy++)
     {
@@ -834,11 +835,14 @@ void cast_toxic_radiance(void)
             // this check should not be !monster->invisible().
             if (!monster->has_ench(ENCH_INVIS))
             {
-                poison_monster(monster, KC_YOU);
+                bool affected =
+                    poison_monster(monster, KC_YOU, 1, false, false);
 
-                if (coinflip()) // 50-50 chance for a "double hit" {dlb}
-                    poison_monster(monster, KC_YOU);
+                if (coinflip() && poison_monster(monster, KC_YOU, false, false))
+                    affected = true;
 
+                if (affected)
+                    affected_monsters.add_thing(monster->name(DESC_PLAIN));
             }
             else if (player_see_invis())
             {
@@ -848,7 +852,21 @@ void cast_toxic_radiance(void)
             }
         }
     }
-}                               // end cast_toxic_radiance()
+
+    if (!affected_monsters.empty())
+    {
+        const std::string message =
+            make_stringf("%s %s poisoned.",
+                         affected_monsters.describe(DESC_CAP_THE).c_str(),
+                         affected_monsters.size() == 1? "is" : "are");
+        if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+            // Exclamation mark to suggest that a lot of creatures were
+            // affected.
+            mpr("The monsters around you are poisoned!");
+    }
+}
 
 void cast_refrigeration(int pow)
 {

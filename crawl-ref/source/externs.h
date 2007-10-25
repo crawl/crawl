@@ -778,6 +778,8 @@ public:
     bool caught() const;
     bool backlit() const;
 
+    bool can_throw_rocks() const;
+
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;
 

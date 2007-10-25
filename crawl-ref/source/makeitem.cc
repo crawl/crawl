@@ -1815,6 +1815,13 @@ int items( int allow_uniques,       // not just true-false,
         if (get_equip_race(mitm[p]) == ISFLAG_ORCISH && one_chance_in(3))
             set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED );
 
+        // Un-poison sling bullets.
+        if (mitm[p].sub_type == MI_SLING_BULLET
+            && get_ammo_brand( mitm[p] ) == SPMSL_POISONED)
+        {
+            set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_NORMAL );
+        }
+
         // reduced quantity if special
         if (mitm[p].sub_type == MI_JAVELIN
             || get_ammo_brand( mitm[p] ) == SPMSL_CURARE)

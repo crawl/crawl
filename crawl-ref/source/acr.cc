@@ -2651,7 +2651,18 @@ static command_type get_next_cmd()
 #if DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
+
+    const time_t before = time(NULL);
     keycode_type keyin = get_next_keycode();
+    
+    const time_t after = time(NULL);
+
+    // Clamp idle time so that play time is more meaningful.
+    if (after - before > IDLE_TIME_CLAMP)
+    {
+        you.real_time  += (before - you.start_time) + IDLE_TIME_CLAMP;
+        you.start_time  = after;
+    }
 
     if (is_userfunction(keyin))
     {

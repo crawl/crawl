@@ -347,7 +347,7 @@ void cast_spec_spell_name(void)
     mpr( "Cast which spell by name? ", MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
     
-    spell_type type = spell_by_name(specs);
+    spell_type type = spell_by_name(specs, true);
     if (type == SPELL_NO_SPELL)
     {
         mpr((one_chance_in(20)) ? "Maybe you should go back to WIZARD school."

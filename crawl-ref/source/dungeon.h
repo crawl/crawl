@@ -299,6 +299,7 @@ int bazaar_floor_colour(int curr_level);
 // Abyss and Pan.
 void dgn_set_colours_from_monsters();
 void dgn_set_floor_colours();
+void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(int map, bool generating_level, bool clobber);
 void level_clear_vault_memory();

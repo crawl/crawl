@@ -959,25 +959,6 @@ bool origin_describable(const item_def &item)
 
 std::string article_it(const item_def &item)
 {
-    /*
-    bool them = false;
-    if (item.quantity > 1)
-        them = true;
-    else if (item.base_type == OBJ_ARMOUR && 
-            item.sub_type == ARM_BOOTS)
-    {
-        if (item.plus2 != TBOOT_NAGA_BARDING &&
-                item.plus2 != TBOOT_CENTAUR_BARDING)
-            them = true;
-    }
-    else if (item.base_type == OBJ_ARMOUR && 
-            item.sub_type == ARM_GLOVES)
-    {
-        them = true;
-    }
-
-    return them? "them" : "it";
-    */
     // "it" is always correct, since gloves and boots also come in pairs.
     return "it";
 }
@@ -1338,7 +1319,8 @@ int find_free_slot(const item_def &i)
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
     if (you.attribute[ATTR_HELD] && mitm[obj].base_type == OBJ_MISSILES
-        && mitm[obj].sub_type == MI_THROWING_NET && item_is_stationary(mitm[obj]))
+        && mitm[obj].sub_type == MI_THROWING_NET
+        && item_is_stationary(mitm[obj]))
     {
         mpr("You cannot pick up the net that holds you!");
         return (1);
@@ -1477,6 +1459,16 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     return (retval);
 }                               // end move_item_to_player()
 
+void mark_items_non_pickup_at(const coord_def &pos)
+{
+    int item = igrd(pos);
+    while (item != NON_ITEM)
+    {
+        mitm[item].flags |= ISFLAG_DROPPED;
+        mitm[item].flags &= ~ISFLAG_THROWN;
+        item = mitm[item].link;
+    }
+}
 
 // Moves mitm[obj] to (x,y)... will modify the value of obj to 
 // be the index of the final object (possibly different).  
@@ -2825,8 +2817,8 @@ static void do_autopickup()
 {
     //David Loewenstern 6/99
     int result, o, next;
-    bool did_pickup = false;
-    bool tried_pickup = false;
+    int n_did_pickup = 0;
+    int n_tried_pickup = 0;
 
     will_autopickup = false;
     
@@ -2841,7 +2833,6 @@ static void do_autopickup()
 
         if (item_needs_autopickup(mitm[o]))
         {
-
             int num_to_take = mitm[o].quantity;
             if ( Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
             {
@@ -2851,10 +2842,10 @@ static void do_autopickup()
 
                 if ( num_can_take < num_to_take )
                 {
-                    if (!tried_pickup)
+                    if (!n_tried_pickup)
                         mpr("You can't pick everything up without burdening "
                             "yourself.");
-                    tried_pickup = true;
+                    n_tried_pickup++;
                     num_to_take = num_can_take;
                 }
 
@@ -2865,49 +2856,40 @@ static void do_autopickup()
                 }
             }
 
+            const unsigned long iflags(mitm[o].flags);
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
             result = move_item_to_player(o, num_to_take);
 
-            if (result == 0)
+            if (result == 0 || result == -1)
             {
-                tried_pickup = true;
-                mpr("You can't carry any more.");
-                break;
-            }
-            else if (result == -1)
-            {
-                tried_pickup = true;
-                mpr("Your pack is full.");
+                n_tried_pickup++;
+                if (result == 0)
+                    mpr("You can't carry any more.");
+                else
+                    mpr("Your pack is full.");
+                mitm[o].flags = iflags;
                 break;
             }
 
-            did_pickup = true;
+            n_did_pickup++;
         }
 
         o = next;
     }
 
-    if (did_pickup)
-    {
+    if (n_did_pickup)
         you.turn_is_over = true;
-        const int estop =
-            you.running == RMODE_EXPLORE_GREEDY?
-            ES_GREEDY_PICKUP : ES_PICKUP;
-        if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
-            stop_delay();
-    }
-    // Greedy explore has no good way to deal with an item that we can't
-    // pick up, so the only thing to do is to stop.
-    else if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
-        stop_delay();
+
+    item_check(false);
+    
+    explore_pickup_event(n_did_pickup, n_tried_pickup);
 }
 
 void autopickup()
 {
     autoinscribe_floor_items();
     do_autopickup();
-    item_check(false);
 }
 
 int inv_count(void)

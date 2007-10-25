@@ -85,6 +85,9 @@ static level_id last_stair;
 // Where travel wants to get to.
 static travel_target level_target;
 
+// Remember the last place explore stopped because autopickup failed.
+static coord_def explore_stopped_pos;
+
 // The place in the Vestibule of Hell where all portals to Hell land.
 static level_pos travel_hell_entry;
 
@@ -512,10 +515,12 @@ void travel_init_new_level()
     // Zero out last travel coords
     you.travel_x = you.travel_y  = 0;
 
-    traps_inited    = false;
+    traps_inited = false;
     curr_excludes.clear();
     travel_cache.set_level_excludes();
     travel_cache.update_waypoints();
+
+    explore_stopped_pos.reset();
 }
 
 /*
@@ -896,6 +901,47 @@ static void explore_find_target_square()
     }
 }
 
+void explore_pickup_event(int did_pickup, int tried_pickup)
+{
+    if (!did_pickup && !tried_pickup)
+        return;
+    
+    if (!you.running.is_explore())
+        return;
+
+    if (did_pickup)
+    {
+        const int estop =
+            you.running == RMODE_EXPLORE_GREEDY?
+            ES_GREEDY_PICKUP : ES_PICKUP;
+        if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
+            stop_delay();
+    }
+    
+    // Greedy explore has no good way to deal with an item that we can't
+    // pick up, so the only thing to do is to stop.
+    if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
+    {
+        if (explore_stopped_pos == you.pos()
+            && !Options.pickup_dropped)
+        {
+            const std::string prompt =
+                make_stringf(
+                    "Could not pick up %s here, shall I ignore %s? ",
+                    tried_pickup == 1? "an item" : "some items",
+                    tried_pickup == 1? "it" : "them");
+            if (yesno(prompt.c_str(), true, 'y', true, false))
+            {
+                mark_items_non_pickup_at(you.pos());
+                // Don't stop explore.
+                return;
+            }
+        }
+        explore_stopped_pos = you.pos();
+        stop_delay();
+    }
+}
+
 /*
  * Top-level travel control (called from input() in acr.cc).
  *
@@ -1006,7 +1052,10 @@ command_type travel()
                 {
                     if ((Options.explore_stop & ES_ITEM)
                             && prompt_stop_explore(ES_ITEM))
+                    {
+                        explore_stopped_pos = coord_def(new_x, new_y);
                         stop_running();
+                    }
                     return direction_to_command( *move_x, *move_y );
                 }
             }
@@ -2292,7 +2341,6 @@ void start_translevel_travel(bool prompt_for_destination)
         level_target = target;
     }
 
-
     if (level_id::current() == level_target.p.id
         && (level_target.p.pos.x == -1 || level_target.p.pos == you.pos()))
     {
@@ -2630,10 +2678,11 @@ static bool find_transtravel_square(const level_pos &target, bool verbose)
 
     if (verbose)
     {
-        if (target.id != current || target.pos.x != -1 && target.pos != you.pos())
+        if (target.id != current
+            || target.pos.x != -1 && target.pos != you.pos())
+        {
             mpr("Sorry, I don't know how to get there.");
-        if (target.id == current && target.pos.x != -1 && target.pos == you.pos())
-            mpr("You're already here!");
+        }
     }
 
     return (false);
@@ -3612,8 +3661,8 @@ static dungeon_feature_type base_grid_type( dungeon_feature_type grid )
     if (grid == DNGN_FLOOR_SPECIAL)
         return (DNGN_FLOOR);
 
-    // Or secret doors (which currently always look like rock walls):
-    if (grid_is_wall(grid))
+    // Merge walls and secret doors.
+    if (grid_is_wall(grid) || grid == DNGN_SECRET_DOOR)
         return (DNGN_ROCK_WALL);
 
     return (grid);

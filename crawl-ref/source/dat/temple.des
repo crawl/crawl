@@ -34,29 +34,27 @@ c@..@..@c
 ENDMAP
 
 NAME: temple_hall_b
-TAGS: temple_entry
+TAGS: temple_entry no_pool_fixup no_monster_gen
 CHANCE: 1
 ORIENT: float
-SUBST: ? : c:20 x v b G:5
-SHUFFLE: defghij
-SUBST: d==, e=c, f=c, g=c, h=c, i=c, j=c
+SUBST: ? : v b G:5
 MAP
-ccccccccc
-c...O...c
-cdefghijc
-c...G...c
-c.......c
-c.?...?.c
-c.......c
-c.......c
-c.?...?.c
-c.......c
-c.......c
-c.?...?.c
-c.......c
-c.......c
-c.?...?.c
-c.......c
+   ccc
+   cOc
+cccc+cccc
+cwwG.Gwwc
+cwww.wwwc
+cw?w.w?wc
+cwww.wwwc
+cwww.wwwc
+cw?w.w?wc
+cwww.wwwc
+cwww.wwwc
+cw?w.w?wc
+cwww.wwwc
+cwww.wwwc
+cw?w.w?wc
+cwww.wwwc
 c@..@..@c
 ENDMAP
 

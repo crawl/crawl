@@ -890,7 +890,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     dungeon_feature_type stair_taken = stair_find;
 
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    if (you.level_type == LEVEL_ABYSS)
         stair_taken = DNGN_FLOOR;
 
     if (you.level_type == LEVEL_PANDEMONIUM)

@@ -640,6 +640,7 @@ static talent get_talent(ability_type ability, bool check_confused)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_OKAWARU_MIGHT:
     case ABIL_ELYVILON_LESSER_HEALING:
+    case ABIL_LUGONU_ABYSS_EXIT:
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
@@ -685,6 +686,7 @@ static talent get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_HEALING:
+    case ABIL_LUGONU_BEND_SPACE:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
@@ -701,6 +703,7 @@ static talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_PESTILENCE:
     case ABIL_TSO_ANNIHILATE_UNDEAD:
+    case ABIL_LUGONU_BANISH:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
@@ -717,6 +720,7 @@ static talent get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_CONTROL_UNDEAD:
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+    case ABIL_LUGONU_CORRUPT:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -725,6 +729,7 @@ static talent get_talent(ability_type ability, bool check_confused)
     case ABIL_TSO_SUMMON_DAEVA:
     case ABIL_KIKU_INVOKE_DEATH:
     case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_LUGONU_ABYSS_ENTER:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1007,8 +1012,9 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_MAPPING:    // randarts
     case ABIL_MAPPING:          // Gnome + sense surrounds mut
-        if (abil.ability == ABIL_MAPPING && you.mutation[MUT_MAPPING] < 3 &&
-            you.level_type == LEVEL_PANDEMONIUM)
+        if (abil.ability == ABIL_MAPPING && you.mutation[MUT_MAPPING] < 3
+            && (you.level_type == LEVEL_PANDEMONIUM
+                || you.level_type == LEVEL_LABYRINTH))
         {
             mpr("You feel momentarily disoriented.");
             return (false);

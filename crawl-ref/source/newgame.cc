@@ -2510,6 +2510,19 @@ static void newgame_make_item(int slot, equipment_type eqslot,
                               int sub_type, int qty = 1,
                               int plus = 0, int plus2 = 0)
 {
+    if (slot == -1)
+    {
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (!is_valid_item(you.inv[i]))
+            {
+                slot = i;
+                break;
+            }
+        }
+        ASSERT(slot != -1);
+    }
+    
     item_def &item(you.inv[slot]);
     item.base_type = base;
     item.sub_type  = sub_type;
@@ -3843,9 +3856,9 @@ bool give_items_skills()
         }
 
         if (you.species == SP_MERFOLK)
-        // Merfolk are spear hunters -- clobber bow, give six javelins
-        // possibly allow choice between javelin and net
         {
+            // Merfolk are spear hunters -- clobber bow, give six javelins
+            // possibly allow choice between javelin and net
             you.inv[1] = you.inv[2];
             you.equip[EQ_BODY_ARMOUR] = 1;
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, 6);
@@ -3862,9 +3875,18 @@ bool give_items_skills()
 
         switch (you.species)
         {
+        case SP_OGRE:
+            // Ogres chop up their food without finesse.
+            you.inv[0].sub_type = WPN_HAND_AXE;
+            you.inv[1].quantity = 0;
+
+            // And they get to throw rocks.
+            you.inv[3].sub_type = MI_LARGE_ROCK;
+            you.inv[3].quantity = 3;
+            break;
+            
         case SP_HALFLING:
         case SP_GNOME:
-        case SP_OGRE:
             you.inv[3].quantity += random2avg(15, 2);
             you.inv[3].sub_type = MI_SLING_BULLET;
             you.inv[1].sub_type = WPN_SLING;
@@ -3900,6 +3922,9 @@ bool give_items_skills()
             you.skills[SK_POLEARMS] = 2;
             you.skills[SK_DODGING] = 2;
             you.skills[SK_THROWING] += 3;
+
+            // And a hunting knife.
+            newgame_make_item(-1, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
             break;
 
         default:

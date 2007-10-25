@@ -10,3 +10,9 @@ fi
 if [ -f WIZARD/crawl ]; then
 	ln -sf WIZARD/crawl wcrawl
 fi
+
+if [ -d dat/lua ]; then
+	true
+else
+	cp -r source/lua dat/lua
+fi
