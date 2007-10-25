@@ -920,8 +920,9 @@ int player_hunger_rate(void)
         hunger += 2 * player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRES_TOOTH );
     }
   
-    // troll leather armour 
-    hunger += player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR );
+    // troll leather armour
+    if (you.species != SP_TROLL)
+        hunger += player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR );
 
     // randarts
     hunger += scan_randarts(RAP_METABOLISM);
