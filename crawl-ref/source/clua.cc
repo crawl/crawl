@@ -257,7 +257,11 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     
     std::string file = datafile_path(filename, die_on_fail);
     if (file.empty())
-        file = filename;
+    {
+        lua_pushstring(ls,
+                       make_stringf("Can't find \"%s\"", filename).c_str());
+        return (-1);
+    }
     return (luaL_loadfile(ls, file.c_str()));
 }
 
