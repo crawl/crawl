@@ -686,6 +686,8 @@ static void give_nemelex_gift()
 
 static void do_god_gift(bool prayed_for)
 {
+    ASSERT(you.religion != GOD_NO_GOD);
+    
     // Zin worshippers are the only ones that can pray to ask Zin for stuff.
     if (prayed_for != (you.religion == GOD_ZIN))
         return;
@@ -1670,7 +1672,7 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
 void gain_piety(int pgn)
 {
     // Xom uses piety differently...
-    if (you.religion == GOD_XOM)
+    if (you.religion == GOD_XOM || you.religion == GOD_NO_GOD)
         return;
  
     // check to see if we owe anything first
