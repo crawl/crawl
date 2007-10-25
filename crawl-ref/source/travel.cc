@@ -2341,7 +2341,6 @@ void start_translevel_travel(bool prompt_for_destination)
         level_target = target;
     }
 
-
     if (level_id::current() == level_target.p.id
         && (level_target.p.pos.x == -1 || level_target.p.pos == you.pos()))
     {
@@ -2679,10 +2678,11 @@ static bool find_transtravel_square(const level_pos &target, bool verbose)
 
     if (verbose)
     {
-        if (target.id != current || target.pos.x != -1 && target.pos != you.pos())
+        if (target.id != current
+            || target.pos.x != -1 && target.pos != you.pos())
+        {
             mpr("Sorry, I don't know how to get there.");
-        if (target.id == current && target.pos.x != -1 && target.pos == you.pos())
-            mpr("You're already here!");
+        }
     }
 
     return (false);
