@@ -622,8 +622,7 @@ travel_stop_message = <list of regexes>
              travel_stop_message = god:wrath finds you
         If you'd like to stop travel for any message sent to a particular 
         channel, use a travel_stop_message line with that message channel name
-        and a colon alone. For example, if you've an amulet of the gourmand,
-        and are hankering after rotten meat, or you're playing a ghoul: 
+        and a colon alone. For example, if you're playing a ghoul:
              travel_stop_message = rotten_meat:
         Stop travel for any god messages (including prayer)
              travel_stop_message = god:
@@ -668,7 +667,7 @@ runrest_ignore_monster = <string>:<distance>
         Any monster containing the string will only interrupt your
         activity if the distance between you and the monster is
         less than the specified number. E.g. with
-             runrest_ingore_monster = fish:3
+             runrest_ignore_monster = fish:3
         all of big fish, jellyfish, giant goldfish and lavafish will be 
         considered safe for travel, explore and resting as long as the distance
         is at least 3.
