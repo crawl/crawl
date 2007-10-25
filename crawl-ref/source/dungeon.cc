@@ -6034,15 +6034,16 @@ static void labyrinth_place_entry_point(const dgn_region &region,
 {
     const coord_def p = labyrinth_find_entry_point(region, pos);
     if (in_bounds(p))
-        env.markers.add(new map_feature_marker(pos, DNGN_ENTER_LABYRINTH));
+        env.markers.add(new map_feature_marker(p, DNGN_ENTER_LABYRINTH));
 }
 
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
-        dgn_region::absolute( MAPGEN_BORDER * 5 / 2, MAPGEN_BORDER * 5 / 2,
-                              GXM - MAPGEN_BORDER * 5 / 2 - 1,
-                              GYM - MAPGEN_BORDER * 5 / 2 - 1 );
+        dgn_region::absolute( MAPGEN_BORDER * 2,
+                              MAPGEN_BORDER * 2,
+                              GXM - MAPGEN_BORDER * 2 - 1,
+                              GYM - MAPGEN_BORDER * 2 - 1 );
     
     // First decide if we're going to use a Lab minivault.
     int vault = random_map_for_tag("minotaur", true, false);
