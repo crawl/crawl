@@ -952,11 +952,21 @@ void pray()
     const bool was_praying = you.duration[DUR_PRAYER];
     if (you.duration[DUR_PRAYER])
     {
-        if ( yesno("Do you want to stop praying?", true, 'y') )
+        mpr("Stop praying? ('y' ends prayer, 'r' will renew prayer)", MSGCH_PROMPT);
+
+        int tmp = get_ch();
+
+        if ( tmp == 'y' || tmp == 'Y')
         {
              mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
              you.duration[DUR_PRAYER] = 0;
              return;
+        }
+
+        if ( tmp != 'r' && tmp != 'R')
+        {
+            mesclr();
+            return;
         }
     }
 
