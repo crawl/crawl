@@ -27,7 +27,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 #include <ctype.h>
 
 #include <sstream>
@@ -3956,8 +3955,7 @@ unsigned long exp_needed(int lev)
         if (lev < 13)
         {
             lev -= 4;
-            level = 10 + 10 * lev 
-                       + 30 * (static_cast<int>(pow( 2.0, lev + 1 )));
+            level = 10 + 10 * lev + 30 * (2 << lev);
         }
         else 
         {

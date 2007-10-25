@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <math.h>
 
 #ifdef DOS
 #include <conio.h>
@@ -1162,14 +1161,13 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
         str_polymon += "!";
     }
 
-    bool player_messaged =
-        simple_monster_message(monster, str_polymon.c_str() );
+    bool player_messaged = simple_monster_message(monster, str_polymon.c_str());
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
-    // the polymoprh disrupts the beholding process.  Do this before
+    // the polymorph disrupts the beholding process.  Do this before
     // changing monster->type, since unbeholding can only happen while
-    // monster is still a mermaid.
+    // the monster is still a mermaid.
     update_beholders(monster, true);
 
     // the actual polymorphing:
@@ -1244,16 +1242,23 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
             }
         }
         else if (mons_is_insubstantial(monster->type)
-                 || monster->type == MONS_OOZE || monster->type == MONS_PULSATING_LUMP)
+                 || monster->type == MONS_OOZE
+                 || monster->type == MONS_PULSATING_LUMP)
         {
-            int net = get_trapping_net(monster->x, monster->y);
+            const int net = get_trapping_net(monster->x, monster->y);
             if (net != NON_ITEM)
                 remove_item_stationary(mitm[net]);
                 
             if (mons_is_insubstantial(monster->type))
-                simple_monster_message(monster, " drifts right through the net!");
+            {
+                simple_monster_message(monster,
+                                       " drifts right through the net!");
+            }
             else
-                simple_monster_message(monster, " oozes right through the net!");
+            {
+                simple_monster_message(monster,
+                                       " oozes right through the net!");
+            }
         }
         else
             monster->add_ench(ENCH_HELD);
