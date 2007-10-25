@@ -689,7 +689,7 @@ tc_dangerous = cyan
 tc_excluded = lightmagenta
 tc_exclude_circle = red
         The above four settle the colouring of the level map ('X'). They are
-        reachable: all squares reachable without problems (perhaps via stairs)
+        reachable: all squares safely reachable (without leaving the level)
         dangerous: squares which are only connected to your place via traps
         excluded: the colour for the centre of travel exclusions (Ctrl-X)
         excluded_circle: the colour for travel exclusions apart from centre 
