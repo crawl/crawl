@@ -209,15 +209,18 @@ static bool build_secondary_vault(int level_number, int vault,
                                   int rune_subst = -1,
                                   bool generating_level = true,
                                   bool clobber = false,
+                                  bool make_no_exits = false,
                                   const coord_def &where = coord_def(-1, -1));
 static bool build_vaults(int level_number, int vault_number,
                          int rune_subst = -1, bool build_only = false,
                          bool check_vault_place = false,
                          bool generating_level = true, bool clobber = false,
+                         bool make_no_exits = false,
                          const coord_def &where = coord_def(-1, -1));
 static bool build_minivaults(int level_number, int force_vault,
                              bool level_builder = true, bool clobber = false,
-                             coord_def where = coord_def() );
+                             bool make_no_exits = false,
+                             const coord_def &where = coord_def() );
 static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
                        FixedVector < object_class_type, 7 > &acq_item_class, 
@@ -1283,8 +1286,8 @@ static void prepare_shoals(int level_number)
         } while ( vaultidx == -1 ||
                   !map_by_index(vaultidx)->has_tag("has_rune") );
 
-        build_minivaults( level_number, vaultidx, true, false,
-                          centres[1] - coord_def(3,3) );
+        build_minivaults( level_number, vaultidx, true, false, false,
+                          centres[1] );
 
         for ( int i = 2; i < num_islands; ++i )
         {
@@ -1293,8 +1296,8 @@ static void prepare_shoals(int level_number)
                 vaultidx = dgn_random_map_for_place(true);
             } while ( vaultidx == -1 ||
                       map_by_index(vaultidx)->has_tag("has_rune") );
-            build_minivaults( level_number, vaultidx, true, false,
-                              centres[i] - coord_def(3,3) );
+            build_minivaults( level_number, vaultidx, true, false, false,
+                              centres[i] );
         }
     }
     else
@@ -3178,7 +3181,7 @@ static bool find_minivault_place(const vault_placement &place,
 
 static bool build_minivaults(int level_number, int force_vault,
                              bool building_level, bool clobber,
-                             coord_def where)
+                             bool make_no_exits, const coord_def &where)
 {
     // for some weird reason can't put a vault on level 1, because monster equip
     // isn't generated.
@@ -3260,11 +3263,14 @@ static bool build_minivaults(int level_number, int force_vault,
 
     place.map.map.apply_overlays(coord_def(v1x, v1y));
 
-    if (target_connections.empty() && place.map.has_tag("mini_float"))
-        pick_float_exits(place, target_connections);
+    if (!make_no_exits)
+    {
+        if (target_connections.empty() && place.map.has_tag("mini_float"))
+            pick_float_exits(place, target_connections);
         
-    if (!target_connections.empty())
-        connect_vault(place);
+        if (!target_connections.empty())
+            connect_vault(place);
+    }
 
     return (true);
 }                               // end build_minivaults()
@@ -3653,7 +3659,7 @@ static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
 bool dgn_place_map(int map, bool generating_level, bool clobber,
-                   const coord_def &where)
+                   bool make_no_exits, const coord_def &where)
 {
     const map_def *mdef = map_by_index(map);
     bool did_map = false;
@@ -3681,14 +3687,15 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
     if (mdef->is_minivault())
         did_map =
             build_minivaults(you.your_level, map, generating_level, clobber,
-                             where);
+                             make_no_exits, where);
     else
     {
         dungeon_feature_type rune_subst = DNGN_FLOOR;
         if (mdef->has_tag_suffix("_entry"))
             rune_subst = dgn_find_rune_subst_tags(mdef->tags);
         did_map = build_secondary_vault(you.your_level, map, rune_subst,
-                                        generating_level, clobber, where);
+                                        generating_level, clobber,
+                                        make_no_exits, where);
     }
 
     // Activate any markers within the map.
@@ -3730,10 +3737,11 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
  */
 static bool build_secondary_vault(int level_number, int vault,
                                   int rune_subst, bool generating_level,
-                                  bool clobber, const coord_def &where)
+                                  bool clobber, bool no_exits,
+                                  const coord_def &where)
 {
     if (build_vaults(level_number, vault, rune_subst, true, true,
-                     generating_level, clobber, where))
+                     generating_level, clobber, no_exits, where))
     {
         const vault_placement &vp = level_vaults[ level_vaults.size() - 1 ];
         connect_vault(vp);
@@ -3746,7 +3754,7 @@ static bool build_secondary_vault(int level_number, int vault,
 static bool build_vaults(int level_number, int force_vault, int rune_subst,
                          bool build_only, bool check_collisions,
                          bool generating_level, bool clobber,
-                         const coord_def &where)
+                         bool make_no_exits, const coord_def &where)
 {
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
@@ -3819,6 +3827,9 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
 
     if (gluggy == MAP_FLOAT && target_connections.empty())
         pick_float_exits(place, target_connections);
+
+    if (make_no_exits)
+        target_connections.clear();
 
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.

@@ -304,6 +304,7 @@ bool builder(int level_number, int level_type);
 void dgn_set_colours_from_monsters();
 
 bool dgn_place_map(int map, bool generating_level, bool clobber,
+                   bool make_no_exits,
                    const coord_def &pos = coord_def(-1, -1));
 void level_clear_vault_memory();
 void level_welcome_messages();

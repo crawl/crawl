@@ -2885,7 +2885,7 @@ static void debug_load_map_by_name(std::string name)
         where = you.pos();
     }
     
-    if (dgn_place_map(map, false, true, where))
+    if (dgn_place_map(map, false, true, false, where))
         mprf("Successfully placed %s.", map_by_index(map)->name.c_str());
     else
         mprf("Failed to place %s.", map_by_index(map)->name.c_str());
