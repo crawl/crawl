@@ -411,7 +411,7 @@ void map_lines::apply_colours(const coord_def &c)
         {
             const int colour = overlay(x, y);
             if (colour)
-                env.grid_colours(c + coord_def(x, y)) = colour;
+                dgn_set_grid_colour_at(c + coord_def(x, y), colour);
         }
 }
 

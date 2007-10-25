@@ -302,6 +302,7 @@ bool builder(int level_number, int level_type);
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
 void dgn_set_colours_from_monsters();
+void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(int map, bool generating_level, bool clobber,
                    bool make_no_exits,
