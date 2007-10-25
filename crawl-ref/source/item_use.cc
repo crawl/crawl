@@ -790,6 +790,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
+        if (you.mutation[MUT_TALONS])
+        {
+            if (verbose)
+                mpr("Boots don't fit your talons!");
+           return (false);
+        }
+
         if (you.species == SP_NAGA)
         {
             if (verbose)

@@ -523,7 +523,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
        if (eq == EQ_BOOTS
            && (player_is_swimming() && you.species == SP_MERFOLK
-               || you.mutation[MUT_HOOVES]))
+               || (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS])))
        {
            return false;
        }

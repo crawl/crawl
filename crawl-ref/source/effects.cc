@@ -857,7 +857,8 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         type_wanted = (coinflip()) ? OBJ_RANDOM : ARM_SHIELD + random2(5);
 
         // mutation specific problems (horns allow caps)
-        if ((you.mutation[MUT_HOOVES] && type_wanted == ARM_BOOTS)
+        if (((you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS])
+            && type_wanted == ARM_BOOTS)
             || (you.mutation[MUT_CLAWS] >= 3 && type_wanted == ARM_GLOVES))
         {
             type_wanted = OBJ_RANDOM;
@@ -897,11 +898,6 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             {
                 type_wanted = ARM_ROBE;  // no heavy armour, see below
             }
-            break;
-
-        case SP_KENKU:
-            if (type_wanted == ARM_BOOTS)
-                type_wanted = OBJ_RANDOM;
             break;
 
         default:

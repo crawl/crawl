@@ -641,7 +641,7 @@ bool melee_attack::player_aux_unarmed()
         {
             if (uattack != UNAT_KICK)        //jmf: hooves mutation
             {
-                if (you.species != SP_KENKU && !you.mutation[MUT_HOOVES]
+                if (!you.mutation[MUT_HOOVES] && !you.mutation[MUT_TALONS]
                     || coinflip())
                 {
                     continue;
@@ -658,8 +658,7 @@ bool melee_attack::player_aux_unarmed()
             }
 
             // Kenku have large taloned feet that do good damage.
-            const bool clawed_kick =
-                you.species == SP_KENKU && !you.mutation[MUT_HOOVES];
+            const bool clawed_kick = you.mutation[MUT_TALONS];
 
             if (clawed_kick)
             {

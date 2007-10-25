@@ -1847,7 +1847,7 @@ static const char *mutation_type_names[] = {
     "green marks",
     "drifting",
     "saprovorous",
-    "",
+    "talons",
     "",
     "red scales",
     "nacreous scales",

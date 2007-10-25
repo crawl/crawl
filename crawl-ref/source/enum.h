@@ -2013,6 +2013,7 @@ enum mutation_type
     MUT_GREEN_MARKS,                   //   65
     MUT_DRIFTING,
     MUT_SAPROVOROUS,
+    MUT_TALONS,
     MUT_RED_SCALES = 70,               //   70
     MUT_NACREOUS_SCALES,
     MUT_GREY2_SCALES,

@@ -2051,6 +2051,12 @@ std::string status_mut_abilities()
                 text += "hooves";
                 have_any = true;
                 break;
+            case MUT_TALONS:
+                if (have_any)
+                    text += ", ";
+                text += "talons";
+                have_any = true;
+                break;
             case MUT_FANGS:
                 if (have_any)
                     text += ", ";

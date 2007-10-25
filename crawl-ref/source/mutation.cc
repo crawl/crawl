@@ -298,8 +298,9 @@ const char *mutation_descrip[][3] = {
 
     {"You can tolerate rotten meat.", "You can eat rotten meat.",
      "You thrive on rotten meat."},    
-    
-    {"", "", ""},
+
+    {"You have talons in place of feet.", "", ""},
+
     {"", "", ""},
 
     // 70
@@ -551,7 +552,8 @@ const char *gain_mutation[][3] = {
     // saprovorous: can never be gained or lost, only started with    
     {"", "", ""},
     
-    {"", "", ""},
+    {"Your feet stretch and sharpen into talons.", "", ""},
+
     {"", "", ""},
 
     // 70
@@ -771,8 +773,9 @@ const char *lose_mutation[][3] = {
 
     // saprovorous: can never be gained or lost, only started with
     {"", "", ""},
-    
-    {"", "", ""},
+
+    {"Your talons dull and shrink into feet.", "", ""},
+
     {"", "", ""},
 
     // 70
@@ -910,11 +913,11 @@ static const mutation_def mutation_defs[] = {
 // 65
     { MUT_GREEN_MARKS, 0, 3 },
     { MUT_DRIFTING, 3, 3 },
-
     { MUT_SAPROVOROUS, 0, 3 },
+    { MUT_TALONS, 1, 1 },
+
     { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
-    
+
 // 70
     { MUT_RED_SCALES, 2, 3 },
     { MUT_NACREOUS_SCALES, 1, 3 },
@@ -1047,7 +1050,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_KENKU:
-        result += "You cannot wear boots or helmets." EOL;
+        result += "You cannot wear helmets." EOL;
         if (you.experience_level > 4)
         {
             result += "You can fly";
@@ -1323,6 +1326,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLUE_MARKS:
     case MUT_GREEN_MARKS:
     case MUT_DRIFTING:
+    case MUT_TALONS:
         amusement *= 2; // funny!
         break;
 
@@ -1510,7 +1514,15 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
     // putting boots on after they are forced off. -- bwr
     if (mutat == MUT_HOOVES
-        && (you.species == SP_NAGA || you.species == SP_KENKU
+        && (you.mutation[MUT_TALONS] || you.species == SP_NAGA
+            || player_genus(GENPC_DRACONIAN)))
+    {
+        return false;
+    }
+
+    // putting boots on after they are forced off. -- bwr
+    if (mutat == MUT_TALONS
+        && (you.mutation[MUT_HOOVES] || you.species == SP_NAGA
             || player_genus(GENPC_DRACONIAN)))
     {
         return false;
@@ -1659,7 +1671,9 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
-    case MUT_HOOVES:            //jmf: like horns
+    //jmf: like horns
+    case MUT_HOOVES:
+    case MUT_TALONS:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         remove_one_equip(EQ_BOOTS);
         break;

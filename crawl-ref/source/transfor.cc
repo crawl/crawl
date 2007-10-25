@@ -610,7 +610,6 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
             switch (you.species)
             {
             case SP_NAGA:
-            case SP_KENKU:
                 return (false);
             default:
                 break;
@@ -631,7 +630,8 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     if (use_which == EQ_HELMET && you.mutation[MUT_HORNS])
         return (false);
 
-    if (use_which == EQ_BOOTS && you.mutation[MUT_HOOVES])
+    if (use_which == EQ_BOOTS &&
+        (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
         return (false);
 
     if (use_which == EQ_GLOVES && you.mutation[MUT_CLAWS] >= 3)

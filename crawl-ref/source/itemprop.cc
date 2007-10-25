@@ -1085,6 +1085,14 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 return (false);
             }
 
+            if (you.mutation[MUT_TALONS])
+            {
+                if (!quiet)
+                    mpr("Boots don't fit your talons!");
+
+                return (false);
+            }
+
             switch (you.species)
             {
             case SP_NAGA:
@@ -1106,16 +1114,6 @@ bool check_armour_shape( const item_def &item, bool quiet )
                     return (false);
                 }
                 break;
-
-            case SP_KENKU:
-                if (!quiet)
-                {
-                    if (item.sub_type == ARM_BOOTS)
-                        mpr( "Boots don't fit your feet!" );
-                    else
-                        mpr( "You can't wear barding!" );
-                }
-                return (false);
 
             case SP_MERFOLK:
                 if (player_in_water() && item.sub_type == ARM_BOOTS)
