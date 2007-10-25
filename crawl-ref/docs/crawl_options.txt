@@ -307,7 +307,7 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
           autopickup_exceptions = noise, torment
 
 default_autopickup = true
-        When set false, the game starts with autopickup turned off. You can
+        When set to false, the game starts with autopickup turned off. You can
         still toggle autopickup in-game with Ctrl-A.
 
 safe_autopickup = true
@@ -726,25 +726,25 @@ stash_tracking = (all | explicit | dropped)
 -----------------------------
 
 auto_list = true
-        Change to true if you want to automatically list appropriate inventory 
-        items for commands like eat and read. This is like immediately hitting 
-        '?', and can be confusing to beginners because they won't get to see 
-        the prompts. This option does not apply to spell casting... Conjurers 
-        would probably find that really annoying. 
+        When set (the default), the appropriate inventory items are
+        automatically listed for commands like eat and read. This is like
+        immediately hitting '?', and can be confusing to beginners because they
+        won't get to see the prompts. This option does not apply to spell
+        casting... Conjurers would probably find that really annoying. 
 
 lowercase_invocations = true
         Set this option to true if you prefer to have invocations on 'a'-'e' 
         instead of the older 'A'-'E'. Note that you can change the letters of
         invocations (and other abilites) with the '=' command.
 
-easy_open = false
+easy_open = true
         Open doors by moving on to them. Highly convenient. Note that travel 
         and exploration will automatically open doors depending on this option.
 
 easy_butcher = true
-        If true, auto-switch to uncursed short blade for butchery. For such 
-        tools any special messages are ignored. If false, you have to wield the
-        tool manually.
+        If true, auto-switch to an appropriate uncursed weapon for butchery.
+        For such tools any special messages are ignored. If false, you have to
+        wield the tool manually.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it. 
@@ -771,9 +771,6 @@ easy_exit_menu = true
 default_autoprayer = false
         When set to true, the game will start with automatic prayers. This 
         option can be toggled in-game with Ctrl-V.
-        Letting Crawl pray throughout and automatically can be useful for gods 
-        like Trog and Makhleb, who constantly demand kills from their
-        followers.
 
         Automatic prayers take a turn like manual prayers and happen only if
         - there is no hostile monster in sight
