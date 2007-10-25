@@ -259,9 +259,9 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
-static std::vector<card_type>* random_sub_deck(unsigned char deck_type)
+static const std::vector<card_type>* random_sub_deck(unsigned char deck_type)
 {
-    std::vector<card_type> *pdeck = NULL;
+    const std::vector<card_type> *pdeck = NULL;
     switch ( deck_type )
     {
     case MISC_DECK_OF_ESCAPE:
@@ -303,7 +303,7 @@ static std::vector<card_type>* random_sub_deck(unsigned char deck_type)
 
 static card_type random_card(unsigned char deck_type, bool &was_oddity)
 {
-    std::vector<card_type> *pdeck = random_sub_deck(deck_type);
+    const std::vector<card_type> *pdeck = random_sub_deck(deck_type);
 
     if ( one_chance_in(100) )
     {
@@ -339,7 +339,7 @@ static void retry_blank_card(card_type &card, unsigned char deck_type,
         return;
     }
 
-    std::vector<card_type> *pdeck = random_sub_deck(deck_type);
+    const std::vector<card_type> *pdeck = random_sub_deck(deck_type);
 
     if (flags & CFLAG_ODDITY)
         pdeck = &deck_of_oddities;
@@ -1122,7 +1122,6 @@ void evoke_deck( item_def& deck )
     unsigned char    flags      = 0;
     card_type        card       = draw_top_card(deck, true, flags);
     int              amusement  = xom_check_card(deck, card, flags);
-    bool             deck_gone  = false;
     deck_rarity_type rarity     = deck_rarity(deck);
     CrawlHashTable  &props      = deck.props;
     bool             no_brownie = (props["non_brownie_draws"].get_byte() > 0);
@@ -1139,17 +1138,19 @@ void evoke_deck( item_def& deck )
     // might cause a wielded deck to be swapped out for something else,
     // in which case we don't want an empty deck to go through the
     // swapping process.
-    if ( cards_in_deck(deck) == 0 )
+    const bool deck_gone = (cards_in_deck(deck) == 0);
+    if ( deck_gone )
     {
         mpr("The deck of cards disappears in a puff of smoke.");
         dec_inv_item_quantity( deck.link, 1 );
-        deck_gone = true;
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
         brownie_points++;
     }
 
-    card_effect(card, rarity, flags, false);
+    const bool fake_draw = !card_effect(card, rarity, flags, false);
+    if ( fake_draw && !deck_gone )
+        props["non_brownie_draws"]++;
 
     if (!(flags & CFLAG_MARKED))
     {
@@ -1178,7 +1179,8 @@ void evoke_deck( item_def& deck )
                                       << std::endl;
     }
 
-    did_god_conduct(DID_CARDS, brownie_points);
+    if ( !fake_draw )
+        did_god_conduct(DID_CARDS, brownie_points);
 
     // Always wield change, since the number of cards used/left has
     // changed.
@@ -1424,8 +1426,11 @@ static void minefield_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void damaging_card(card_type card, int power, deck_rarity_type rarity)
+// Return true if it was a "genuine" draw, i.e., there was a monster
+// to target. This is still exploitable by finding popcorn monsters.
+static bool damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
+    bool rc = there_are_monsters_nearby();
     const int power_level = get_power_level(power, rarity);
 
     dist target;
@@ -1470,6 +1475,10 @@ static void damaging_card(card_type card, int power, deck_rarity_type rarity)
 
     if ( spell_direction( target, beam ) )
         zapping(ztype, random2(power/4), beam);
+    else
+        rc = false;
+
+    return rc;
 }
 
 static void elixir_card(int power, deck_rarity_type rarity)
@@ -2060,9 +2069,10 @@ static int card_power(deck_rarity_type rarity)
     return result;
 }
 
-void card_effect(card_type which_card, deck_rarity_type rarity,
+bool card_effect(card_type which_card, deck_rarity_type rarity,
                  unsigned char flags, bool tell_card)
 {
+    bool rc = true;
     const int power = card_power(rarity);
 #ifdef DEBUG_DIAGNOSTICS
     msg::streams(MSGCH_DIAGNOSTICS) << "Card power: " << power
@@ -2130,12 +2140,12 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         if ( coinflip() )
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE,random2(power/4), false);
         else
-            damaging_card(which_card, power, rarity);
+            rc = damaging_card(which_card, power, rarity);
         break;
 
     case CARD_VITRIOL: case CARD_FLAME: case CARD_FROST: case CARD_HAMMER:
     case CARD_PAIN:
-        damaging_card(which_card, power, rarity);
+        rc = damaging_card(which_card, power, rarity);
         break;
 
     case CARD_BARGAIN:
@@ -2173,14 +2183,16 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     }
 
     if (you.religion == GOD_XOM
-        && (which_card == CARD_BLANK1 || which_card == CARD_BLANK2))
+        && (which_card == CARD_BLANK1 || which_card == CARD_BLANK2 || !rc))
     {
         god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
-
         xom_acts(abs(you.piety - 100));
     }
+    
+    if (you.religion == GOD_NEMELEX_XOBEH && !rc)
+        simple_god_message(" seems disappointed in you.");
 
-    return;
+    return rc;
 }
 
 bool top_card_is_known(const item_def &deck)

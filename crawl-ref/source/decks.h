@@ -28,7 +28,7 @@
 // brownie points from it again.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
-// for a maximum of 256 differetn kinds of cards and 8 bits of flags.
+// for a maximum of 256 different kinds of cards and 8 bits of flags.
 
 enum deck_rarity_type
 {
@@ -122,7 +122,9 @@ bool deck_peek();
 bool deck_mark();
 bool deck_stack();
 bool choose_deck_and_draw();
-void card_effect(card_type which_card, deck_rarity_type rarity,
+
+// Return true if it was a "genuine" draw, false otherwise.
+bool card_effect(card_type which_card, deck_rarity_type rarity,
                  unsigned char card_flags = 0, bool tell_card = true);
 void draw_from_deck_of_punishment();
 
