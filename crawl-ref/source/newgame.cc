@@ -191,8 +191,8 @@ static bool prev_startup_options_set(void)
 
 static std::string get_opt_race_name(char race)
 {
-    int prace = letter_to_species(race);
-    return prace && prace != SP_UNKNOWN? species_name(prace, 1) : "Random";
+    species_type prace = letter_to_species(race);
+    return prace != SP_UNKNOWN? species_name(prace, 1) : "Random";
 }
 
 static std::string get_opt_class_name(char oclass)
@@ -3069,18 +3069,19 @@ spec_query:
         *linebuf = 0;
         for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
         {
-            if (!is_species_valid_choice(static_cast<species_type>(i)))
+            const species_type si = static_cast<species_type>(i);
+            if (!is_species_valid_choice(si))
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
-                !class_allowed(static_cast<species_type>(i), you.char_class))
+                !class_allowed(si, you.char_class))
                 continue;
 
             char buf[100];
-            char sletter = species_to_letter(i);
+            char sletter = species_to_letter(si);
             snprintf(buf, sizeof buf, "%c - %-26s",
                      sletter,
-                     species_name(i, 1).c_str());
+                     species_name(si, 1).c_str());
             if (sletter == Options.prev_race)
                 prevraceok = true;
             strncat(linebuf, buf, sizeof linebuf);

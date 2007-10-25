@@ -659,7 +659,9 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("lv", SCORE_VERSION);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid", "%d", uid);
-    fields->add_field("race", "%s", species_name(race, lvl).c_str());
+    fields->add_field("race", "%s",
+                      species_name(static_cast<species_type>(race),
+                                   lvl).c_str());
     fields->add_field("cls", "%s", get_class_name(cls));
     fields->add_field("char", "%s%s",
                       get_species_abbrev(race),
@@ -1224,7 +1226,8 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     else 
     {
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
-                  points, name.c_str(), species_name(race, lvl).c_str(), 
+                  points, name.c_str(),
+                  species_name(static_cast<species_type>(race), lvl).c_str(), 
                   get_class_name(cls), lvl );
         desc = buf;
     }
@@ -1248,7 +1251,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     if (verbose)
     {
-        std::string srace = species_name( race, lvl );
+        std::string srace = species_name(static_cast<species_type>(race), lvl);
         snprintf( scratch, INFO_SIZE, "Began as a%s %s %s",
                   is_vowel(srace[0]) ? "n" : "",
                   srace.c_str(),

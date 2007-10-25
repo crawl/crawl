@@ -2066,7 +2066,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
     {
         // need species name
         snprintf( title_buff, sizeof(title_buff), tempstr, 
-                  species_name(species, 0, true, 
+                  species_name(static_cast<species_type>(species), 0, true, 
                                (ptr == tempstr
                                 && best_skill != SK_NECROMANCY)).c_str() );
                   // The above code only capitalises start-of-string racenames

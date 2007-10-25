@@ -92,63 +92,10 @@ std::string pronoun_you(description_level_type desc)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*
-   you.duration []: //jmf: obsolete, see enum.h instead
-                    //[ds] Well, can we lose it yet?
-   0 - liquid flames
-   1 - icy armour
-   2 - repel missiles
-   3 - prayer
-   4 - regeneration
-   5 - vorpal blade
-   6 - fire brand
-   7 - ice brand
-   8 - lethal infusion
-   9 - swiftness
-   10 - insulation
-   11 - stonemail
-   12 - controlled flight
-   13 - teleport
-   14 - control teleport
-   15 - poison weapon
-   16 - resist poison
-   17 - breathe something
-   18 - transformation (duration)
-   19 - death channel
-   20 - deflect missiles
- */
-
-/* attributes
-   0 - resist lightning
-   1 - spec_air
-   2 - spec_earth
-   3 - control teleport
-   4 - walk slowly (eg naga)
-   5 - transformation (form)
-   6 - Nemelex card gift countdown
-   7 - Nemelex has given you a card table
-   8 - How many demonic powers a dspawn has
- */
-
-/* armour list
-   0 - wielded
-   1 - cloak
-   2 - helmet
-   3 - gloves
-   4 - boots
-   5 - shield
-   6 - body armour
-   7 - ring 0
-   8 - ring 1
-   9 - amulet
- */
-
 /* Contains functions which return various player state vars,
    and other stuff related to the player. */
 
-int species_exp_mod(char species);
-void ability_increase(void);
+static void ability_increase();
 
 // Use this function whenever the player enters (or lands and thus re-enters)
 // a grid.  
@@ -420,7 +367,7 @@ bool player_under_penance(void)
         return (false);
 }
 
-bool player_genus(unsigned char which_genus, unsigned char species)
+bool player_genus(genus_type which_genus, species_type species)
 {
     if (species == SP_UNKNOWN)
         species = you.species;
@@ -3338,7 +3285,7 @@ int check_stealth(void)
     return (stealth);
 }                               // end check_stealth()
 
-void ability_increase(void)
+static void ability_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
@@ -3688,72 +3635,51 @@ int str_to_species(const std::string &species)
 
     for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
     {
-        if (species == species_name(i, 10))
+        if (species == species_name(static_cast<species_type>(i), 10))
             return (i);
     }
 
     for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
     {
-        if (species == species_name(i, 1))
+        if (species == species_name(static_cast<species_type>(i), 1))
             return (i);
     }
 
     return (SP_HUMAN);
 }
 
-// Note that this function only has the one static buffer, so if you
-// want to use the results, you'll want to make a copy.
-std::string species_name( int  speci, int level, bool genus,
-                          bool adj, bool cap )
-// defaults:                               false       false     true
+std::string species_name(species_type speci, int level, bool genus, bool adj)
+// defaults:                                            false       false 
 {
-    static char species_buff[80];
+    std::string res;
 
     if (player_genus( GENPC_DRACONIAN, speci ))
     {
         if (adj || genus)  // adj doesn't care about exact species
-            strcpy( species_buff, "Draconian" );
+            res = "Draconian";
         else
         {
-            // No longer have problems with ghosts here -- Sharp Aug2002
             if (level < 7)
-                strcpy( species_buff, "Draconian" );
+                res = "Draconian";
             else
             {
                 switch (speci)
                 {
-                case SP_RED_DRACONIAN:
-                    strcpy( species_buff, "Red Draconian" );
-                    break;
-                case SP_WHITE_DRACONIAN:
-                    strcpy( species_buff, "White Draconian" );
-                    break;
-                case SP_GREEN_DRACONIAN:
-                    strcpy( species_buff, "Green Draconian" );
-                    break;
-                case SP_GOLDEN_DRACONIAN:
-                    strcpy( species_buff, "Yellow Draconian" );
-                    break;
-                case SP_GREY_DRACONIAN:
-                    strcpy( species_buff, "Grey Draconian" );
-                    break;
-                case SP_BLACK_DRACONIAN:
-                    strcpy( species_buff, "Black Draconian" );
-                    break;
-                case SP_PURPLE_DRACONIAN:
-                    strcpy( species_buff, "Purple Draconian" );
-                    break;
-                case SP_MOTTLED_DRACONIAN:
-                    strcpy( species_buff, "Mottled Draconian" );
-                    break;
-                case SP_PALE_DRACONIAN:
-                    strcpy( species_buff, "Pale Draconian" );
-                    break;
+                case SP_RED_DRACONIAN:     res = "Red Draconian";     break;
+                case SP_WHITE_DRACONIAN:   res = "White Draconian";   break;
+                case SP_GREEN_DRACONIAN:   res = "Green Draconian";   break;
+                case SP_GOLDEN_DRACONIAN:  res = "Yellow Draconian";  break;
+                case SP_GREY_DRACONIAN:    res = "Grey Draconian";    break;
+                case SP_BLACK_DRACONIAN:   res = "Black Draconian";   break;
+                case SP_PURPLE_DRACONIAN:  res = "Purple Draconian";  break;
+                case SP_MOTTLED_DRACONIAN: res = "Mottled Draconian"; break;
+                case SP_PALE_DRACONIAN:    res = "Pale Draconian";    break;
+
                 case SP_UNK0_DRACONIAN:
                 case SP_UNK1_DRACONIAN:
                 case SP_BASE_DRACONIAN:
                 default:
-                    strcpy( species_buff, "Draconian" );
+                    res = "Draconian";
                     break;
                 }
             }
@@ -3762,47 +3688,33 @@ std::string species_name( int  speci, int level, bool genus,
     else if (player_genus( GENPC_ELVEN, speci ))
     {
         if (adj)  // doesn't care about species/genus
-            strcpy( species_buff, "Elven" );
+            res = "Elven";
         else if (genus)
-            strcpy( species_buff, "Elf" );
+            res = "Elf";
         else
         {
             switch (speci)
             {
-            default:
-                strcpy( species_buff, "Elf" );
-                break;
-            case SP_HIGH_ELF:
-                strcpy( species_buff, "High Elf" );
-                break;
-            case SP_GREY_ELF:
-                strcpy( species_buff, "Grey Elf" );
-                break;
-            case SP_DEEP_ELF:
-                strcpy( species_buff, "Deep Elf" );
-                break;
-            case SP_SLUDGE_ELF:
-                strcpy( species_buff, "Sludge Elf" );
-                break;
+            case SP_HIGH_ELF:   res = "High Elf";   break;
+            case SP_GREY_ELF:   res = "Grey Elf";   break;
+            case SP_DEEP_ELF:   res = "Deep Elf";   break;
+            case SP_SLUDGE_ELF: res = "Sludge Elf"; break;
+            default:            res = "Elf";        break;
             }
         }
     }
     else if (player_genus( GENPC_DWARVEN, speci ))
     {
         if (adj)  // doesn't care about species/genus
-            strcpy( species_buff, "Dwarven" );
+            res = "Dwarven";
         else if (genus)
-            strcpy( species_buff, "Dwarf" );
+            res = "Dwarf";
         else
         {
             switch (speci)
             {
-            case SP_MOUNTAIN_DWARF:
-                strcpy( species_buff, "Mountain Dwarf" );
-                break;
-            default:
-                strcpy( species_buff, "Dwarf" );
-                break;
+            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf"; break;
+            default:                res = "Dwarf";          break;
             }
         }
     }
@@ -3810,78 +3722,37 @@ std::string species_name( int  speci, int level, bool genus,
     {
         switch (speci)
         {
-        case SP_HUMAN:
-            strcpy( species_buff, "Human" );
-            break;
-        case SP_HALFLING:
-            strcpy( species_buff, "Halfling" );
-            break;
+        case SP_HUMAN:      res = "Human";                           break;
+        case SP_HALFLING:   res = "Halfling";                        break;
+        case SP_KOBOLD:     res = "Kobold";                          break;
+        case SP_MUMMY:      res = "Mummy";                           break;
+        case SP_NAGA:       res = "Naga";                            break;
+        // We've previously declared that these are radically 
+        // different from Ogres... so we're not going to 
+        // refer to them as Ogres.  -- bwr
+        case SP_OGRE_MAGE:  res = "Ogre-Mage";                       break;
+        case SP_CENTAUR:    res = "Centaur";                         break;
+        case SP_SPRIGGAN:   res = "Spriggan";                        break;
+        case SP_MINOTAUR:   res = "Minotaur";                        break;
+        case SP_KENKU:      res = "Kenku";                           break;
+        case SP_VAMPIRE:    res = "Vampire";                         break;
+
         case SP_HILL_ORC:
-            strcpy( species_buff, (adj) ? "Orcish" : (genus) ? "Orc" 
-                                                             : "Hill Orc" );
+            res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
             break;
-        case SP_KOBOLD:
-            strcpy( species_buff, "Kobold" );
-            break;
-        case SP_MUMMY:
-            strcpy( species_buff, "Mummy" );
-            break;
-        case SP_NAGA:
-            strcpy( species_buff, "Naga" );
-            break;
-        case SP_GNOME:
-            strcpy( species_buff, (adj) ? "Gnomish" : "Gnome" );
-            break;
-        case SP_OGRE:
-            strcpy( species_buff, (adj) ? "Ogreish" : "Ogre" );
-            break;
-        case SP_TROLL:
-            strcpy( species_buff, (adj) ? "Trollish" : "Troll" );
-            break;
-        case SP_OGRE_MAGE:
-            // We've previously declared that these are radically 
-            // different from Ogres... so we're not going to 
-            // refer to them as Ogres.  -- bwr
-            strcpy( species_buff, "Ogre-Mage" );
-            break;
-        case SP_CENTAUR:
-            strcpy( species_buff, "Centaur" );
-            break;
-        case SP_DEMIGOD:
-            strcpy( species_buff, (adj) ? "Divine" : "Demigod" );
-            break;
-        case SP_SPRIGGAN:
-            strcpy( species_buff, "Spriggan" );
-            break;
-        case SP_MINOTAUR:
-            strcpy( species_buff, "Minotaur" );
-            break;
-        case SP_DEMONSPAWN:
-            strcpy( species_buff, (adj) ? "Demonic" : "Demonspawn" );
-            break;
-        case SP_GHOUL:
-            strcpy( species_buff, (adj) ? "Ghoulish" : "Ghoul" );
-            break;
-        case SP_KENKU:
-            strcpy( species_buff, "Kenku" );
-            break;
-        case SP_MERFOLK:
-            strcpy( species_buff, (adj) ? "Merfolkian" : "Merfolk" );
-            break;
-        case SP_VAMPIRE:
-            strcpy( species_buff, "Vampire" );
-            break;
-        default:
-            strcpy( species_buff, (adj) ? "Yakish" : "Yak" );
-            break;
+
+        case SP_GNOME:      res = (adj ? "Gnomish" : "Gnome");       break;
+        case SP_OGRE:       res = (adj ? "Ogreish" : "Ogre");        break;
+        case SP_TROLL:      res = (adj ? "Trollish" : "Troll");      break;
+        case SP_DEMIGOD:    res = (adj ? "Divine" : "Demigod");      break;
+        case SP_DEMONSPAWN: res = (adj ? "Demonic" : "Demonspawn" ); break;
+        case SP_GHOUL:      res = (adj ? "Ghoulish" : "Ghoul");      break;
+        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");  break;
+        default:            res = (adj ? "Yakish" : "Yak");          break;
         }
     }
-
-    if (!cap)
-        strlwr( species_buff );
-
-    return (species_buff);
-}                               // end species_name()
+    return res;
+}
 
 bool player_res_corrosion(bool calc_unid)
 {
@@ -3945,12 +3816,11 @@ bool player_has_spell( int spell )
     return you.has_spell(spell);
 }
 
-int species_exp_mod(char species)
+static int species_exp_mod(species_type species)
 {
-
-    if (player_genus(GENPC_DRACONIAN))
+    if (player_genus(GENPC_DRACONIAN, species))
         return 14;
-    else if (player_genus(GENPC_DWARVEN))
+    else if (player_genus(GENPC_DWARVEN, species))
         return 13;
     {
         switch (species)
@@ -4273,7 +4143,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 }                               // end modify_stat()
 
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const std::string cause, bool see_source)
+                 const std::string& cause, bool see_source)
 {
     modify_stat(which_stat, amount, suppress_msg, cause.c_str(), see_source);
 }
@@ -4635,8 +4505,8 @@ int get_species_index_by_name( const char *name )
 
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
-        std::string lowered_species =
-            lowercase_string( species_name( i, 0, false, false, false ) );
+        const std::string lowered_species =
+            lowercase_string(species_name(static_cast<species_type>(i),0));
         pos = lowered_species.find( lowered_buff );
         if (pos != std::string::npos)
         {

@@ -79,8 +79,8 @@ bool wearing_amulet(char which_am, bool calc_unid = true);
 /* ***********************************************************************
  * called from: acr - chardump - describe - newgame - view
  * *********************************************************************** */
-std::string species_name( int speci, int level, bool genus = false,
-                          bool adj = false, bool cap = true );
+std::string species_name( species_type speci, int level,
+                          bool genus = false, bool adj = false);
 int str_to_species(const std::string &species);
 
 /* ***********************************************************************
@@ -298,7 +298,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
  *              misc - stuff
  * *********************************************************************** */
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const std::string cause, bool see_source = true);
+                 const std::string& cause, bool see_source = true);
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const char* cause, bool see_source = true);
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
@@ -324,8 +324,8 @@ void redraw_skill(const std::string &your_name, const std::string &class_name);
  * called from: ability - fight - item_use - mutation - newgame - spells0 -
  *              transfor
  * *********************************************************************** */
-bool player_genus( unsigned char which_genus,
-                   unsigned char species = SP_UNKNOWN );
+bool player_genus( genus_type which_genus,
+                   species_type species = SP_UNKNOWN );
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool you_tran_can_wear( int eq, bool check_mutation = false );

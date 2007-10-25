@@ -248,8 +248,9 @@ void debug_change_species( void )
 
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
+        const species_type si = static_cast<species_type>(i);
         const std::string sp_name =
-            lowercase_string(species_name(i, you.experience_level));
+            lowercase_string(species_name(si, you.experience_level));
 
         std::string::size_type pos = sp_name.find(specs);
         if (pos != std::string::npos)
@@ -257,11 +258,11 @@ void debug_change_species( void )
             if (pos == 0 && *specs)
             {
                 // we prefer prefixes over partial matches
-                sp = static_cast<species_type>(i);
+                sp = si;
                 break;
             }
             else
-                sp = static_cast<species_type>(i);
+                sp = si;
         }
     }
 
