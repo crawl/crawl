@@ -2186,12 +2186,10 @@ enum speed_type
 enum species_type
 {
     SP_HUMAN = 1,                      //    1
-    SP_MERFOLK,
     SP_HIGH_ELF,
     SP_GREY_ELF,
     SP_DEEP_ELF,                       //    5
     SP_SLUDGE_ELF,
-    SP_KENKU,
     SP_MOUNTAIN_DWARF,
     SP_HALFLING,
     SP_HILL_ORC,                       //   10
@@ -2220,6 +2218,8 @@ enum species_type
     SP_MINOTAUR,
     SP_DEMONSPAWN,
     SP_GHOUL,                          //   35
+    SP_KENKU,
+    SP_MERFOLK,
     SP_VAMPIRE,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
