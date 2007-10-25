@@ -255,7 +255,9 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
         return (-1);
     }
     
-    const std::string file = datafile_path(filename, die_on_fail);
+    std::string file = datafile_path(filename, die_on_fail);
+    if (file.empty())
+        file = filename;
     return (luaL_loadfile(ls, file.c_str()));
 }
 
