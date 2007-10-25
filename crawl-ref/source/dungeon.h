@@ -82,6 +82,11 @@ struct dgn_region
     {
     }
 
+    dgn_region(const coord_def &_pos, const coord_def &_size)
+        : pos(_pos), size(_size)
+    {
+    }
+
     dgn_region() : pos(-1, -1), size()
     {
     }
@@ -298,7 +303,8 @@ bool builder(int level_number, int level_type);
 // Abyss and Pan.
 void dgn_set_colours_from_monsters();
 
-bool dgn_place_map(int map, bool generating_level, bool clobber);
+bool dgn_place_map(int map, bool generating_level, bool clobber,
+                   const coord_def &pos = coord_def(-1, -1));
 void level_clear_vault_memory();
 void level_welcome_messages();
 void define_zombie(int mid, int ztype, int cs, int power);

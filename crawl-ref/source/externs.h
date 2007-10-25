@@ -311,6 +311,11 @@ struct coord_def
     {
         return (std::max(std::abs(x), std::abs(y)));
     }
+
+    bool origin() const
+    {
+        return (!x && !y);
+    }
 };
 typedef bool (*coord_predicate)(const coord_def &c);
 

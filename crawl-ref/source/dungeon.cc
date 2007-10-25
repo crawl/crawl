@@ -208,11 +208,13 @@ static void jelly_pit(int level_number, spec_room &sr);
 static bool build_secondary_vault(int level_number, int vault,
                                   int rune_subst = -1,
                                   bool generating_level = true,
-                                  bool clobber = false);
+                                  bool clobber = false,
+                                  const coord_def &where = coord_def(-1, -1));
 static bool build_vaults(int level_number, int vault_number,
                          int rune_subst = -1, bool build_only = false,
                          bool check_vault_place = false,
-                         bool generating_level = true, bool clobber = false);
+                         bool generating_level = true, bool clobber = false,
+                         const coord_def &where = coord_def(-1, -1));
 static bool build_minivaults(int level_number, int force_vault,
                              bool level_builder = true, bool clobber = false,
                              coord_def where = coord_def() );
@@ -504,9 +506,9 @@ static void fixup_pandemonium_stairs()
 
 static void mask_vault(const vault_placement &place, unsigned mask)
 {
-    for (int y = place.y + place.height - 1; y >= place.y; --y)
-        for (int x = place.x + place.width - 1; x >= place.x; --x)
-            if (place.map.in_map(coord_def(x - place.x, y - place.y)))
+    for (int y = place.pos.y + place.size.y - 1; y >= place.pos.y; --y)
+        for (int x = place.pos.x + place.size.x - 1; x >= place.pos.x; --x)
+            if (place.map.in_map(coord_def(x - place.pos.x, y - place.pos.y)))
                 dgn_map_mask[x][y] |= mask;
 }
 
@@ -528,11 +530,11 @@ static void register_place(const vault_placement &place)
         mask_vault(place, MMT_OPAQUE);
 
     // Now do per-square by-symbol masking
-    for (int y = place.y + place.height - 1; y >= place.y; --y)
-        for (int x = place.x + place.width - 1; x >= place.x; --x)
-            if (place.map.in_map(coord_def(x - place.x, y - place.y)))
+    for (int y = place.pos.y + place.size.y - 1; y >= place.pos.y; --y)
+        for (int x = place.pos.x + place.size.x - 1; x >= place.pos.x; --x)
+            if (place.map.in_map(coord_def(x - place.pos.x, y - place.pos.y)))
             {
-                int key = place.map.map.glyph(x - place.x, y - place.y);
+                int key = place.map.map.glyph(x - place.pos.x, y - place.pos.y);
                 const keyed_mapspec* spec = place.map.mapspec_for_key(key);
 
                 if (spec != NULL)
@@ -3098,9 +3100,9 @@ static bool safe_minivault_place(int v1x, int v1y,
     
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
-    for (int vx = v1x; vx < v1x + place.width; vx++)
+    for (int vx = v1x; vx < v1x + place.size.x; vx++)
     {
-        for (int vy = v1y; vy < v1y + place.height; vy++)
+        for (int vy = v1y; vy < v1y + place.size.y; vy++)
         {
             if (lines[vy - v1y][vx - v1x] == ' ')
                 continue;
@@ -3133,9 +3135,9 @@ static bool connected_minivault_place(int v1x, int v1y,
     /* must not be completely isolated: */
     const bool water_ok = place.map.has_tag("water_ok");
     const std::vector<std::string> &lines = place.map.map.get_lines();
-    for (int vx = v1x; vx < v1x + place.width; vx++)
+    for (int vx = v1x; vx < v1x + place.size.x; vx++)
     {
-        for (int vy = v1y; vy < v1y + place.height; vy++)
+        for (int vy = v1y; vy < v1y + place.size.y; vy++)
         {
             if (lines[vy - v1y][vx - v1x] == ' ')
                 continue;
@@ -3162,8 +3164,8 @@ static bool find_minivault_place(const vault_placement &place,
     /* find a target area which can be safely overwritten: */
     for (int tries = 0; tries < 600; ++tries)
     {
-        v1x = random_range( margin, GXM - margin - place.width );
-        v1y = random_range( margin, GYM - margin - place.height );
+        v1x = random_range( margin, GXM - margin - place.size.x );
+        v1y = random_range( margin, GYM - margin - place.size.y );
 
         if (!safe_minivault_place( v1x, v1y, place, clobber ))
             continue;
@@ -3202,16 +3204,17 @@ static bool build_minivaults(int level_number, int force_vault,
 
     int v1x, v1y;
 
-    if ( where.x > 0 && where.y > 0 )
+    if (in_bounds(where)) // not map_bounds, minivaults should never touch edge
     {
-        v1x = where.x;
-        v1y = where.y;
+        coord_def tl(where - place.size / 2);
+        fit_region_into_map_bounds(tl, place.size);
+        v1x = tl.x;
+        v1y = tl.y;
     }
     else if (!find_minivault_place(place, v1x, v1y, clobber))
         return (false);
 
-    place.x = v1x;
-    place.y = v1y;
+    place.pos = coord_def(v1x, v1y);
 
     level_vaults.push_back(place);
 
@@ -3228,9 +3231,9 @@ static bool build_minivaults(int level_number, int force_vault,
     std::vector<coord_def> &target_connections = place.exits;
     
     // paint the minivault onto the grid
-    for (int vx = v1x; vx < v1x + place.width; vx++)
+    for (int vx = v1x; vx < v1x + place.size.x; vx++)
     {
-        for (int vy = v1y; vy < v1y + place.height; vy++)
+        for (int vy = v1y; vy < v1y + place.size.y; vy++)
         {
             const int feat = vgrid[vy - v1y][vx - v1x];
             if (feat == ' ')
@@ -3363,14 +3366,14 @@ static coord_def dig_away_dir(const vault_placement &place,
 {
     // Figure out which way we need to go to dig our way out of the vault.
     bool x_edge = 
-        pos.x == place.x || pos.x == place.x + place.width - 1;
+        pos.x == place.pos.x || pos.x == place.pos.x + place.size.x - 1;
     bool y_edge =
-        pos.y == place.y || pos.y == place.y + place.height - 1;
+        pos.y == place.pos.y || pos.y == place.pos.y + place.size.y - 1;
 
     // Handle exits in non-rectangular areas.
     if (!x_edge && !y_edge)
     {
-        const coord_def rel = pos - coord_def(place.x, place.y);
+        const coord_def rel = pos - place.pos;
         for (int yi = -1; yi <= 1; ++yi)
             for (int xi = -1; xi <= 1; ++xi)
             {
@@ -3394,24 +3397,24 @@ static coord_def dig_away_dir(const vault_placement &place,
     coord_def dig_dir;
     if (x_edge)
     {
-        if (place.width == 1)
+        if (place.size.x == 1)
             dig_dir.x =
                 away_from_edge(pos.x,
                                MAPGEN_BORDER * 2,
                                GXM - MAPGEN_BORDER * 2);
         else
-            dig_dir.x = pos.x == place.x? -1 : 1;
+            dig_dir.x = pos.x == place.pos.x? -1 : 1;
     }
 
     if (y_edge)
     {
-        if (place.height == 1)
+        if (place.size.y == 1)
             dig_dir.y =
                 away_from_edge(pos.y,
                                MAPGEN_BORDER * 2,
                                GYM - MAPGEN_BORDER * 2);
         else
-            dig_dir.y = pos.y == place.y? -1 : 1;
+            dig_dir.y = pos.y == place.pos.y? -1 : 1;
     }
 
     return (dig_dir);
@@ -3481,7 +3484,7 @@ static bool map_grid_is_on_edge(const vault_placement &place,
 {
     for (int xi = c.x - 1; xi <= c.x + 1; ++xi)
         for (int yi = c.y - 1; yi <= c.y + 1; ++yi)
-            if (!place.map.in_map(coord_def(xi - place.x, yi - place.y)))
+            if (!place.map.in_map(coord_def(xi, yi) - place.pos))
                 return (true);
     return (false);
 }
@@ -3489,8 +3492,8 @@ static bool map_grid_is_on_edge(const vault_placement &place,
 static void pick_internal_float_exits(const vault_placement &place,
                                       std::vector<coord_def> &exits)
 {
-    for (int y = place.y + 1; y < place.y + place.height - 1; ++y)
-        for (int x = place.x + 1; x < place.x + place.width - 1; ++x)
+    for (int y = place.pos.y + 1; y < place.pos.y + place.size.y - 1; ++y)
+        for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
             if (grid_needs_exit(x, y)
                 && map_grid_is_on_edge(place, coord_def(x, y)))
             {
@@ -3502,21 +3505,22 @@ static void pick_float_exits(vault_placement &place,
                              std::vector<coord_def> &targets)
 {
     std::vector<coord_def> possible_exits;
-    for (int y = place.y; y < place.y + place.height; ++y)
+    for (int y = place.pos.y; y < place.pos.y + place.size.y; ++y)
     {
-        if (grid_needs_exit(place.x, y))
-            possible_exits.push_back( coord_def(place.x, y) );
-        if (grid_needs_exit(place.x + place.width - 1, y))
-            possible_exits.push_back( coord_def(place.x + place.width - 1, y) );
+        if (grid_needs_exit(place.pos.x, y))
+            possible_exits.push_back( coord_def(place.pos.x, y) );
+        if (grid_needs_exit(place.pos.x + place.size.x - 1, y))
+            possible_exits.push_back(
+                coord_def(place.pos.x + place.size.x - 1, y) );
     }
 
-    for (int x = place.x + 1; x < place.x + place.width - 1; ++x)
+    for (int x = place.pos.x + 1; x < place.pos.x + place.size.x - 1; ++x)
     {
-        if (grid_needs_exit(x, place.y))
-            possible_exits.push_back( coord_def(x, place.y) );
-        if (grid_needs_exit(x, place.y + place.height - 1))
+        if (grid_needs_exit(x, place.pos.y))
+            possible_exits.push_back( coord_def(x, place.pos.y) );
+        if (grid_needs_exit(x, place.pos.y + place.size.y - 1))
             possible_exits.push_back(
-                coord_def(x, place.y + place.height - 1) );
+                coord_def(x, place.pos.y + place.size.y - 1) );
     }
 
     pick_internal_float_exits(place, possible_exits);
@@ -3634,6 +3638,11 @@ static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
 }
 
 // Places a map on the current level (minivault or regular vault).
+// 
+// You can specify the centre of the map using "where" for floating vaults
+// and minivaults. "where" is ignored for other vaults. XXX: it might be
+// nice to specify a square that is not the centre, but is identified by
+// a marker in the vault to be placed.
 //
 // NOTE: encompass maps will destroy the existing level!
 // 
@@ -3643,7 +3652,8 @@ static dungeon_feature_type dgn_find_rune_subst_tags(const std::string &tags)
 // clobber: If true, assumes the newly placed vault can clobber existing
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
-bool dgn_place_map(int map, bool generating_level, bool clobber)
+bool dgn_place_map(int map, bool generating_level, bool clobber,
+                   const coord_def &where)
 {
     const map_def *mdef = map_by_index(map);
     bool did_map = false;
@@ -3670,23 +3680,24 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
 
     if (mdef->is_minivault())
         did_map =
-            build_minivaults(you.your_level, map, generating_level, clobber);
+            build_minivaults(you.your_level, map, generating_level, clobber,
+                             where);
     else
     {
         dungeon_feature_type rune_subst = DNGN_FLOOR;
         if (mdef->has_tag_suffix("_entry"))
             rune_subst = dgn_find_rune_subst_tags(mdef->tags);
         did_map = build_secondary_vault(you.your_level, map, rune_subst,
-                                        generating_level, clobber);
+                                        generating_level, clobber, where);
     }
 
     // Activate any markers within the map.
     if (did_map && !generating_level)
     {
         const vault_placement &vp = level_vaults[level_vaults.size() - 1];
-        for (int y = vp.y; y < vp.y + vp.height; ++y)
+        for (int y = vp.pos.y; y < vp.pos.y + vp.size.y; ++y)
         {
-            for (int x = vp.x; x < vp.x + vp.width; ++x)
+            for (int x = vp.pos.x; x < vp.pos.x + vp.size.x; ++x)
             {
                 std::vector<map_marker *> markers =
                     env.markers.get_markers_at(coord_def(x, y));
@@ -3719,10 +3730,10 @@ bool dgn_place_map(int map, bool generating_level, bool clobber)
  */
 static bool build_secondary_vault(int level_number, int vault,
                                   int rune_subst, bool generating_level,
-                                  bool clobber)
+                                  bool clobber, const coord_def &where)
 {
     if (build_vaults(level_number, vault, rune_subst, true, true,
-                     generating_level, clobber))
+                     generating_level, clobber, where))
     {
         const vault_placement &vp = level_vaults[ level_vaults.size() - 1 ];
         connect_vault(vp);
@@ -3734,7 +3745,8 @@ static bool build_secondary_vault(int level_number, int vault,
 
 static bool build_vaults(int level_number, int force_vault, int rune_subst,
                          bool build_only, bool check_collisions,
-                         bool generating_level, bool clobber)
+                         bool generating_level, bool clobber,
+                         const coord_def &where)
 {
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
@@ -3758,6 +3770,9 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     vault_placement place;
     std::vector<coord_def> &target_connections = place.exits;
 
+    if (map_bounds(where))
+        place.pos = where;
+    
     const int gluggy = vault_main(vgrid, place, force_vault,
                                   check_collisions, clobber);
 
@@ -3767,12 +3782,12 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     int vx, vy;
     int  num_runes = 0;
 
-    dgn_region this_vault(place.x, place.y, place.width, place.height);
+    dgn_region this_vault(place.pos, place.size);
     // note: assumes *no* previous item (I think) or monster (definitely)
     // placement
-    for (vx = place.x; vx < place.x + place.width; vx++)
+    for (vx = place.pos.x; vx < place.pos.x + place.size.x; vx++)
     {
-        for (vy = place.y; vy < place.y + place.height; vy++)
+        for (vy = place.pos.y; vy < place.pos.y + place.size.y; vy++)
         {
             if (vgrid[vy][vx] == ' ')
                 continue;
@@ -3799,7 +3814,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
         }
     }
 
-    place.map.map.apply_overlays(coord_def(place.x, place.y));
+    place.map.map.apply_overlays(place.pos);
     register_place(place);
 
     if (gluggy == MAP_FLOAT && target_connections.empty())
@@ -3824,10 +3839,10 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     // kind of wallification it wants.
     const bool dis_wallify = place.map.has_tag("dis");
 
-    const int v1x = place.x;
-    const int v1y = place.y;
-    const int v2x = place.x + place.width - 1;
-    const int v2y = place.y + place.height - 1;
+    const int v1x = place.pos.x;
+    const int v1y = place.pos.y;
+    const int v2x = place.pos.x + place.size.x - 1;
+    const int v2y = place.pos.y + place.size.y - 1;
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -4243,8 +4258,9 @@ static int vault_grid( vault_placement &place,
     }
 
     if ((vgrid == '=' || vgrid == '+')
-        && (vx == place.x || vy == place.y || vx == place.x + place.width - 1
-            || vy == place.y + place.height - 1))
+        && (vx == place.pos.x || vy == place.pos.y
+            || vx == place.pos.x + place.size.x - 1
+            || vy == place.pos.y + place.size.y - 1))
     {
         targets.push_back( coord_def(vx, vy) );
     }
@@ -5947,7 +5963,7 @@ static void labyrinth_level(int level_number)
     {
         init_minivault_placement(vault, place);
 
-        int ex = place.width / 4, ey = place.height / 4;
+        int ex = place.size.x / 4, ey = place.size.y / 4;
 
         labyrinth_dimension_adjust(ex, lab.pos.x, lab.size.x);
         labyrinth_dimension_adjust(ey, lab.pos.y, lab.size.y);
@@ -5966,9 +5982,11 @@ static void labyrinth_level(int level_number)
         const vault_placement &rplace = *(level_vaults.end() - 1);
         if (rplace.map.has_tag("generate_loot"))
         {
-            for (int y = rplace.y; y <= rplace.y + rplace.height - 1; ++y)
+            for (int y = rplace.pos.y;
+                 y <= rplace.pos.y + rplace.size.y - 1; ++y)
             {
-                for (int x = rplace.x; x <= rplace.x + rplace.height - 1; ++x)
+                for (int x = rplace.pos.x;
+                     x <= rplace.pos.x + rplace.size.x - 1; ++x)
                 {
                     if (grd[x][y] == DNGN_ROCK_STAIRS_UP)
                     {
@@ -5978,18 +5996,14 @@ static void labyrinth_level(int level_number)
                 }
             }
         }
-        place.x = rplace.x;
-        place.y = rplace.y;
-        place.width = rplace.width;
-        place.height = rplace.height;
+        place.pos  = rplace.pos;
+        place.size = rplace.size;
 
-        pad_region(dgn_region(place.x, place.y, place.width, place.height),
-                   1, DNGN_FLOOR);
+        pad_region(dgn_region(place.pos, place.size), 1, DNGN_FLOOR);
     }
     
     if (vault != -1)
-        end = coord_def(place.x + place.width / 2,
-                        place.y + place.height / 2);
+        end = place.pos + place.size / 2;
 
     place_extra_lab_minivaults(level_number);
 

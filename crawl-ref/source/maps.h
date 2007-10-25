@@ -21,14 +21,15 @@
 class map_def;
 struct vault_placement
 {
-    int x, y;
-    int width, height;
+    coord_def pos;
+    coord_def size;
+
     int orient;
     map_def map;
     std::vector<coord_def> exits;
 
     vault_placement()
-        : x(-1), y(-1), width(0), height(0), orient(0), map(),
+        : pos(-1, -1), size(0, 0), orient(0), map(),
           exits()
     {
     }
@@ -39,6 +40,10 @@ int vault_main(map_type vgrid,
                int vault_force,
                bool check_place = false,
                bool clobber = false);
+
+// Given a rectangular region, slides it to fit into the map. size must be
+// smaller than (GXM,GYM).
+void fit_region_into_map_bounds(coord_def &pos, const coord_def &size);
 
 const map_def *map_by_index(int index);
 int map_count();
