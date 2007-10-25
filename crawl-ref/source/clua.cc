@@ -47,7 +47,7 @@
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
 
 #define CL_RESETSTACK_RETURN(ls, oldtop, retval) \
-    if (true) \
+    do \
     {\
         if (oldtop != lua_gettop(ls)) \
         { \
@@ -55,7 +55,7 @@
         } \
         return (retval); \
     } \
-    else
+    while (false)
 
 static int clua_panic(lua_State *);
 static void clua_throttle_hook(lua_State *, lua_Debug *);
