@@ -76,7 +76,8 @@ static card_type a_deck_of_emergency[] = {
 DEFVEC(deck_of_emergency);
 
 static card_type a_deck_of_destruction[] = {
-    CARD_VITRIOL, CARD_FLAME, CARD_FROST, CARD_VENOM, CARD_HAMMER
+    CARD_VITRIOL, CARD_FLAME, CARD_FROST, CARD_VENOM, CARD_HAMMER,
+    CARD_PAIN, CARD_TORMENT
 };
 
 DEFVEC(deck_of_destruction);
@@ -246,6 +247,8 @@ const char* card_name(card_type card)
     case CARD_FROST: return "Frost";
     case CARD_VENOM: return "Venom";
     case CARD_HAMMER: return "the Hammer";
+    case CARD_PAIN: return "Pain";
+    case CARD_TORMENT: return "Torment";
     case CARD_SPADE: return "the Spade";
     case CARD_BARGAIN: return "the Bargain";
     case CARD_WRATH: return "Wrath";
@@ -1457,6 +1460,10 @@ static void damaging_card(card_type card, int power, deck_rarity_type rarity)
         ztype = venomzaps[power_level];
         break;
 
+    case CARD_PAIN:
+        ztype = ZAP_AGONY;
+        break;
+
     default:
         break;
     }
@@ -2117,6 +2124,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TROWEL:           trowel_card(power, rarity); break;
     case CARD_SPADE: your_spells(SPELL_DIG, random2(power/4), false); break;
     case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
+    case CARD_TORMENT: torment(TORMENT_CARDS, you.x_pos, you.y_pos); break;
 
     case CARD_VENOM:
         if ( coinflip() )
@@ -2126,6 +2134,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_VITRIOL: case CARD_FLAME: case CARD_FROST: case CARD_HAMMER:
+    case CARD_PAIN:
         damaging_card(which_card, power, rarity);
         break;
 

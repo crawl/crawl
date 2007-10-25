@@ -305,7 +305,7 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_DRAW_CARD, "Draw Card", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
     { ABIL_NEMELEX_MARK_DECK, "Mark Deck", 4, 0, 125, 5, ABFLAG_NONE },
-    { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 150, 6, ABFLAG_NONE },
+    { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 250, 10, ABFLAG_NONE },
 
     // Beogh
     { ABIL_BEOGH_SMITING, "Smiting",
