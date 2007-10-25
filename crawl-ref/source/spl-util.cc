@@ -76,13 +76,14 @@ void init_spell_descs(void)
         spell_list[spelldata[i].id] = i;
 }                               // end init_spell_descs()
 
-spell_type spell_by_name(std::string name)
+spell_type spell_by_name(std::string name, bool partial_match)
 {
     if (name.empty())
         return (SPELL_NO_SPELL);
 
     lowercase(name);
-    
+
+    int spellmatch = -1;
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
@@ -90,11 +91,16 @@ spell_type spell_by_name(std::string name)
         if (!sptitle)
             continue;
 
-        if (name == lowercase_string(sptitle))
+        const std::string spell_name = lowercase_string(sptitle);
+        if (name == spell_name)
             return (type);
+
+        if (partial_match && spell_name.find(name) != std::string::npos)
+            spellmatch = i;
     }
 
-    return (SPELL_NO_SPELL);
+    return (spellmatch != -1? static_cast<spell_type>(spellmatch)
+            : SPELL_NO_SPELL);
 }
 
 int get_spell_slot_by_letter( char letter )

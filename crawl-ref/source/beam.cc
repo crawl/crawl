@@ -686,10 +686,10 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "stone arrow";
         pbolt.colour = LIGHTGREY;
         pbolt.range = 8 + random2(5);
-        pbolt.damage = dice_def( 2, 4 + power / 8 );    // 25: 2d7  50: 2d10
-        pbolt.hit = 5 + power / 10;                     // 25: 6    50: 7
+        pbolt.damage = dice_def( 2, 5 + power / 7 );    // 25: 2d8  50: 2d12
+        pbolt.hit = 8 + power / 10;                     // 25: 10    50: 13
         pbolt.type = SYM_MISSILE;
-        pbolt.flavour = BEAM_MMISSILE;                  // unresistable
+        pbolt.flavour = BEAM_MMISSILE;                  // irresistible
 
         pbolt.obvious_effect = true;
         break;
@@ -754,7 +754,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "bolt of fire";
         pbolt.colour = RED;
         pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 6, 20 + (power * 3) / 4 );
+        pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_FIRE;
@@ -767,7 +767,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "bolt of cold";
         pbolt.colour = WHITE;
         pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 6, 20 + (power * 3) / 4 );
+        pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_COLD;
@@ -898,8 +898,8 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_CRYSTAL_SPEAR:                             // cap 200
         pbolt.name = "crystal spear";
         pbolt.colour = WHITE;
-        pbolt.range = 7 + random2(10);
-        pbolt.damage = calc_dice( 12, 30 + (power * 4) / 3 );
+        pbolt.range = 6 + random2(4);
+        pbolt.damage = calc_dice( 10, 23 + power );
         pbolt.hit = 10 + power / 15;                    // 50: 13   100: 16
         pbolt.type = SYM_MISSILE;
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
@@ -924,7 +924,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name = "great blast of cold";
         pbolt.colour = BLUE;
         pbolt.range = 9 + random2(5);
-        pbolt.damage = calc_dice( 6, 15 + power );
+        pbolt.damage = calc_dice( 10, 18 + power );
         pbolt.damage.num = 0;                    // only does explosion damage
         pbolt.hit = 20 + power / 10;                    // 50: 25   100: 30
         pbolt.ench_power = power;                       // used for radius
