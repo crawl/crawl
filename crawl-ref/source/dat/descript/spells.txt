@@ -473,7 +473,7 @@ This spell creates a gate allowing long-distance travel in relatively ordinary e
 %%%%
 Portaled Projectile
 
-This spell teleports a missile directly to its target, greatly increasing its accuracy (but not damage.)
+This spell teleports a fired or thrown missile directly to its target, greatly increasing its accuracy (but not damage).
 %%%%
 Projected Noise
 

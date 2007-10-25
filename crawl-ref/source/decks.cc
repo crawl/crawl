@@ -451,7 +451,7 @@ static bool check_buggy_deck(item_def& deck)
 
                 if (cards_left != 0)
                 {
-                    strm << " But there should be been " <<  cards_left
+                    strm << " But there should have been " <<  cards_left
                          << " cards left.";
                 }
             }
