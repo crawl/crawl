@@ -3661,8 +3661,8 @@ static dungeon_feature_type base_grid_type( dungeon_feature_type grid )
     if (grid == DNGN_FLOOR_SPECIAL)
         return (DNGN_FLOOR);
 
-    // Or secret doors (which currently always look like rock walls):
-    if (grid_is_wall(grid))
+    // Merge walls and secret doors.
+    if (grid_is_wall(grid) || grid == DNGN_SECRET_DOOR)
         return (DNGN_ROCK_WALL);
 
     return (grid);
