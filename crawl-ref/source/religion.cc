@@ -423,10 +423,10 @@ static void inc_gift_timeout(int val)
         you.gift_timeout += val;
 }                               // end inc_gift_timeout()
 
-static int random_undead_servant(int religion)
+static monster_type random_undead_servant(int religion /* unused */)
 {
     // error trapping {dlb}
-    int thing_called = MONS_PROGRAM_BUG;
+    monster_type thing_called = MONS_PROGRAM_BUG;
     int temp_rand = random2(100);
     thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
                     (temp_rand > 52) ? MONS_WIGHT :             // 12%
@@ -631,7 +631,9 @@ static void do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) > 80 && one_chance_in(5))
             {
-                int thing_called = random_undead_servant(GOD_YREDELEMNUL);
+                monster_type thing_called =
+                    random_undead_servant(GOD_YREDELEMNUL);
+
                 if (create_monster( thing_called, 0, BEH_FRIENDLY, 
                                     you.x_pos, you.y_pos, 
                                     you.pet_target, MAKE_ITEM_RANDOM_RACE )
@@ -1966,34 +1968,23 @@ static bool yredelemnul_retribution()
     // undead theme
     if (random2(you.experience_level) > 4)
     {
-        bool success = false;
+        int count = 0;
         int how_many = 1 + random2(1 + (you.experience_level / 5));
 
         for (int i = 0; i < how_many; i++)
         {
-            const int temp_rand = random2(100);
-
-            const monster_type punisher =
-                ((temp_rand > 66) ? MONS_WRAITH :            // 33%
-                 (temp_rand > 52) ? MONS_WIGHT :             // 12%
-                 (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
-                 (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
-                 (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
-                 (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
-                 (temp_rand > 10) ? MONS_GHOUL :             //  6%
-                 (temp_rand >  4) ? MONS_MUMMY               //  6%
-                 : MONS_FLAYED_GHOST);      //  5%
+            monster_type punisher =
+                random_undead_servant(GOD_YREDELEMNUL);
 
             if (create_monster( punisher, 0, BEH_HOSTILE, 
                                 you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
-                success = true;
+                count++;
 
         }
 
-        simple_god_message(success ?
-                           " sends a servant to punish you." :
-                           "'s servant fails to arrive.",
-                           god);
+        simple_god_message(count > 1? " sends servants to punish you." :
+                           count > 0? " sends a servant to punish you." :
+                                      "'s servants fail to arrive.", god);
     }
     else
     {
