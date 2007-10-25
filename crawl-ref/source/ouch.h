@@ -110,7 +110,7 @@ void lose_level(void);
 /* ***********************************************************************
  * called from: decks - fight - item_use - ouch - religion - spells
  * *********************************************************************** */
-void drain_exp(void);
+void drain_exp(bool announce_full = true);
 
 void expose_player_to_element( beam_type flavour, int strength = 0 );
 
