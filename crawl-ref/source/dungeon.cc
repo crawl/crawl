@@ -5849,8 +5849,8 @@ static void init_minivault_placement(int vault, vault_placement &place)
 
 static void labyrinth_dimension_adjust(int delta, int &ds, int &dw)
 {
-    if (delta > MAPGEN_BORDER)
-        delta = MAPGEN_BORDER;
+    if (delta > LABYRINTH_BORDER / 2)
+        delta = LABYRINTH_BORDER / 2;
 
     if (delta)
     {
@@ -6040,10 +6040,10 @@ static void labyrinth_place_entry_point(const dgn_region &region,
 static void labyrinth_level(int level_number)
 {
     dgn_region lab =
-        dgn_region::absolute( MAPGEN_BORDER * 2,
-                              MAPGEN_BORDER * 2,
-                              GXM - MAPGEN_BORDER * 2 - 1,
-                              GYM - MAPGEN_BORDER * 2 - 1 );
+        dgn_region::absolute( LABYRINTH_BORDER,
+                              LABYRINTH_BORDER,
+                              GXM - LABYRINTH_BORDER - 1,
+                              GYM - LABYRINTH_BORDER - 1 );
     
     // First decide if we're going to use a Lab minivault.
     int vault = random_map_for_tag("minotaur", true, false);
