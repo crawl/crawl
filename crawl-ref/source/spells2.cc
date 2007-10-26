@@ -1186,7 +1186,7 @@ int summon_elemental(int pow, int restricted_type,
                      unsigned char unfriendly)
 {
     int type_summoned = MONS_PROGRAM_BUG;       // error trapping {dlb}
-    char summ_success = 0;
+    int summ_success = 0;
     struct dist smove;
 
     int dir_x;
@@ -1298,7 +1298,11 @@ int summon_elemental(int pow, int restricted_type,
                                        false, false, false, true);
 
         if (summ_success >= 0)
+        {
+            // Don't award experience for slaying this monster.
+            menv[summ_success].flags |= MF_CREATED_FRIENDLY;
             mpr( "The elemental doesn't seem to appreciate being summoned." );
+        }
     }
     else
     {
@@ -1412,10 +1416,13 @@ void summon_scorpions(int pow)
     {
         if (random2(pow) <= 3)
         {
-            if (create_monster( MONS_SCORPION, 3, BEH_HOSTILE,
+            const int mindex =
+                create_monster( MONS_SCORPION, 3, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU, 250,
-                                false, false, false, true) != -1)
+                                false, false, false, true);
+            if (mindex != -1)
             {
+                menv[mindex].flags |= MF_CREATED_FRIENDLY;
                 mpr("A scorpion appears. It doesn't look very happy.");
             }
         }
