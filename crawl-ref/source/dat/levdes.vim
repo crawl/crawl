@@ -61,7 +61,7 @@ syn keyword desOrientation D: contained
 
 syn match desComment "^\s*#.*$"
 
-syn match desEntry "\w*_entry"
+syn match desEntry "\<\w*_entry\>"
 " 'transparent' is a Vim syntax keyword??? 
 syn match desTransparent "transparent"
 syn match desRange "\d*-\d*"
