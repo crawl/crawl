@@ -428,9 +428,47 @@ static bool is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
+static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
+{
+    if (monster->hit_points < -25
+        || monster->hit_points < -monster->max_hit_points
+        || monster->max_hit_points <= 0
+        || monster->hit_dice < 1)
+        return (false);
+
+    // Orcs may convert to Beogh under threat of death.
+    if (YOU_KILL(killer)
+        && mons_near(monster)
+        && !mons_friendly(monster)
+        && mons_species(monster->type) == MONS_ORC
+        && you.species == SP_HILL_ORC && you.religion == GOD_BEOGH
+        && !player_under_penance() && you.piety >= 75)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
+             "your xl: %d",
+             monster->name(DESC_PLAIN).c_str(),
+             monster->hit_dice,
+             you.experience_level);
+#endif
+        if (random2(you.piety) > 30
+            && random2(you.experience_level) >= random2(monster->hit_dice)
+            // bias beaten-up-conversion towards the stronger orcs.
+            && random2(monster->hit_dice) > 2)
+        {
+            beogh_convert_orc(monster);
+            return (true);
+        }
+    }
+    return (false);
+}
+
 void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 {
     if (monster->type == -1)
+        return;
+
+    if (!silent && monster_avoided_death(monster, killer, i))
         return;
     
     if (mons_is_caught(monster))

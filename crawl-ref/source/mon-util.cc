@@ -1489,6 +1489,7 @@ void define_monster(monsters &mons)
     mons.speed_increment = 70;
     mons.number = monnumber;
     mons.flags = 0L;
+    mons.experience = 0L;
     mons.colour = col;
     
     mons_load_spells( &mons, spells );
@@ -3814,6 +3815,7 @@ void monsters::reset()
     inv.init(NON_ITEM);
 
     flags = 0;
+    experience = 0L;
     type = -1;
     hit_points = 0;
     max_hit_points = 0;

@@ -13,9 +13,9 @@
 #include "stuff.h"
 
 // Base experience required by a monster to reach HD 1.
-const int monster_xp_base       = 8;
+const int monster_xp_base       = 10;
 // Experience multiplier to determine the experience needed to gain levels.
-const int monster_xp_multiplier = 120;
+const int monster_xp_multiplier = 130;
 const mons_experience_levels mexplevs;
 
 // Monster growing-up sequences. You can specify a chance to indicate that
@@ -70,7 +70,7 @@ mons_experience_levels::mons_experience_levels()
         delta =
             std::min(
                 std::max(delta, monster_xp_base * monster_xp_multiplier / 100),
-                3000);
+                2500);
         experience += delta;
     }
 }
@@ -143,6 +143,10 @@ bool monsters::level_up()
     if (max_hit_points < 1000)
     {
         int hpboost = hit_dice > 3? max_hit_points / 8 : max_hit_points / 4;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s: HD: %d, maxhp: %d, boost: %d",
+             name(DESC_PLAIN).c_str(), hit_dice, max_hit_points, hpboost);
+#endif
         if (hpboost < 2)
             hpboost = 2;
         if (hpboost > 20)
