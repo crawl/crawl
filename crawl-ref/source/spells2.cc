@@ -1298,11 +1298,7 @@ int summon_elemental(int pow, int restricted_type,
                                        false, false, false, true);
 
         if (summ_success >= 0)
-        {
-            // Don't award experience for slaying this monster.
-            menv[summ_success].flags |= MF_CREATED_FRIENDLY;
             mpr( "The elemental doesn't seem to appreciate being summoned." );
-        }
     }
     else
     {
@@ -1421,10 +1417,7 @@ void summon_scorpions(int pow)
                                 you.x_pos, you.y_pos, MHITYOU, 250,
                                 false, false, false, true);
             if (mindex != -1)
-            {
-                menv[mindex].flags |= MF_CREATED_FRIENDLY;
                 mpr("A scorpion appears. It doesn't look very happy.");
-            }
         }
         else
         {
