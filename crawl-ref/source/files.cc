@@ -112,7 +112,8 @@ static void redraw_all(void)
     you.redraw_experience = 1;
     you.redraw_gold = 1;
 
-    you.redraw_status_flags = REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    you.redraw_status_flags =
+        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
 static bool determine_version( FILE *restoreFile, 

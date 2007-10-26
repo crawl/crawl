@@ -994,7 +994,7 @@ formatted_string describe_mutations()
         else
             result += "<cyan>You can exhale a cloud of poison.</cyan>" EOL "<lightblue>";
 
-        // slowness can be overriden
+        // slowness can be overridden
         if ( you.mutation[MUT_FAST] )
             result += "<cyan>";
         result += naga_speed_descrip[you.mutation[MUT_FAST]];
