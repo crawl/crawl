@@ -371,6 +371,8 @@ enum card_type
     CARD_FROST,                 // cold damage
     CARD_VENOM,                 // poison damage
     CARD_HAMMER,                // pure damage
+    CARD_PAIN,                  // single target, like spell of agony
+    CARD_TORMENT,               // Symbol of Torment
     
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
