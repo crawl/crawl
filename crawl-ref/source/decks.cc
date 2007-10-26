@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "food.h"
 #include "invent.h"
@@ -24,6 +25,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "maps.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
@@ -1096,8 +1098,31 @@ static void trowel_card(int power, deck_rarity_type rarity)
     bool done_stuff = false;
     if ( power_level >= 2 )
     {
-        // XXX FIXME Vaults not implemented
-        // generate a vault
+        // generate a portal to something
+        int mapidx = -1;
+        if ( coinflip() )
+        {
+            // generate a bazaar portal
+            mapidx = find_map_by_name("bzr_entry_dummy");
+        }
+        else
+        {
+            mapidx = find_map_by_name("lab_entry_generic");
+        }
+
+        if ( mapidx == -1 )
+        {
+            mpr("A buggy portal flickers into view, then vanishes.");
+        }
+        else
+        {
+            {
+                no_messages n;
+                dgn_place_map(mapidx, false, true, true, you.pos());
+            }
+            mpr("A mystic portal forms.");
+        }
+        done_stuff = true;
     }
     else if ( power_level == 1 )
     {

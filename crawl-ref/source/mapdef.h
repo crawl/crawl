@@ -580,6 +580,8 @@ public:
     void load();
 
     bool in_map(const coord_def &p) const;
+
+    coord_def size() const { return coord_def(map.width(), map.height()); }
     
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;

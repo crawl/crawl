@@ -1301,7 +1301,7 @@ void map_def::read_index(FILE *inf)
 void map_def::write_depth_ranges(FILE *outf) const
 {
     writeShort(outf, depths.size());
-    for (int i = 0, size = depths.size(); i < size; ++i)
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
         depths[i].write(outf);
 }
 
@@ -1474,7 +1474,7 @@ std::string map_def::validate_map_def()
 bool map_def::is_usable_in(const level_id &lid) const
 {
     bool any_matched = false;
-    for (int i = 0, size = depths.size(); i < size; ++i)
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
     {
         const level_range &lr = depths[i];
         if (lr.matches(lid))

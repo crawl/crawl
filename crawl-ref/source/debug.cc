@@ -2391,8 +2391,10 @@ void debug_set_xl()
         debug_uptick_xl(newxl);
 }
 
-static void debug_load_map_by_name(const std::string &name)
+static void debug_load_map_by_name(std::string name)
 {
+    const bool place_on_us = strip_tag(name, "*", true);
+    
     level_clear_vault_memory();
     int map = find_map_by_name(name);
     if (map == -1)
@@ -2424,7 +2426,15 @@ static void debug_load_map_by_name(const std::string &name)
         }
     }
 
-    if (dgn_place_map(map, false, true))
+    const map_def *toplace = map_by_index(map);
+    coord_def where(-1, -1);
+    if ((toplace->orient == MAP_FLOAT || toplace->orient == MAP_NONE)
+        && place_on_us)
+    {
+        where = you.pos();
+    }
+    
+    if (dgn_place_map(map, false, true, false, where))
         mprf("Successfully placed %s.", map_by_index(map)->name.c_str());
     else
         mprf("Failed to place %s.", map_by_index(map)->name.c_str());

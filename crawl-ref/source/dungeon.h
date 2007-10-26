@@ -82,6 +82,11 @@ struct dgn_region
     {
     }
 
+    dgn_region(const coord_def &_pos, const coord_def &_size)
+        : pos(_pos), size(_size)
+    {
+    }
+
     dgn_region() : pos(-1, -1), size()
     {
     }
@@ -301,7 +306,9 @@ void dgn_set_colours_from_monsters();
 void dgn_set_floor_colours();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
-bool dgn_place_map(int map, bool generating_level, bool clobber);
+bool dgn_place_map(int map, bool generating_level, bool clobber,
+                   bool make_no_exits,
+                   const coord_def &pos = coord_def(-1, -1));
 void level_clear_vault_memory();
 void level_welcome_messages();
 void define_zombie(int mid, int ztype, int cs, int power);

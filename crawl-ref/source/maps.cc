@@ -64,8 +64,9 @@ int vault_main(
         bool clobber)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Generating level: %s", 
-                            vdefs[which_vault].name.c_str());
+    mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)", 
+         vdefs[which_vault].name.c_str(),
+         place.pos.x, place.pos.y);
     if (crawl_state.map_stat_gen)
         mapgen_report_map_try(vdefs[which_vault]);
 #endif
@@ -203,6 +204,19 @@ static bool bad_map_place(const map_def &map,
     return (false);
 }
 
+void fit_region_into_map_bounds(coord_def &pos, const coord_def &size)
+{
+    ASSERT(size.x <= GXM && size.y <= GYM);
+    if (pos.x < X_BOUND_1)
+        pos.x = X_BOUND_1;
+    if (pos.y < Y_BOUND_1)
+        pos.y = Y_BOUND_1;
+    if (pos.x + size.x - 1 > X_BOUND_2)
+        pos.x = X_BOUND_2 - size.x + 1;
+    if (pos.y + size.y - 1 > Y_BOUND_2)
+        pos.y = Y_BOUND_2 - size.y + 1;
+}
+
 static bool apply_vault_grid(map_def &def, map_type map, 
                              vault_placement &place,
                              bool check_place, bool clobber)
@@ -212,44 +226,46 @@ static bool apply_vault_grid(map_def &def, map_type map,
     const int width = ml.width();
     const int height = ml.height();
 
-    int startx = 0, starty = 0;
+    coord_def start(0, 0);
 
     if (orient == MAP_SOUTH || orient == MAP_SOUTHEAST
             || orient == MAP_SOUTHWEST)
-        starty = GYM - height;
+        start.y = GYM - height;
 
     if (orient == MAP_EAST || orient == MAP_NORTHEAST 
             || orient == MAP_SOUTHEAST)
-        startx = GXM - width;
+        start.x = GXM - width;
 
     // Handle maps aligned along cardinals that are smaller than
     // the corresponding map dimension.
     if ((orient == MAP_NORTH || orient == MAP_SOUTH
                 || orient == MAP_ENCOMPASS)
             && width < GXM)
-        startx = (GXM - width) / 2;
+        start.x = (GXM - width) / 2;
 
     if ((orient == MAP_EAST || orient == MAP_WEST
                 || orient == MAP_ENCOMPASS)
             && height < GYM)
-        starty = (GYM - height) / 2;
+        start.y = (GYM - height) / 2;
 
     // Floating maps can go anywhere, ask the map_def to suggest a place.
     if (orient == MAP_FLOAT)
     {
-        coord_def where = def.float_place();
-
-        // No further sanity checks.
-        startx = where.x;
-        starty = where.y;
+        if (map_bounds(place.pos))
+        {
+            start = place.pos - coord_def(width, height) / 2;
+            fit_region_into_map_bounds(start, coord_def(width, height));
+        }
+        else
+            start = def.float_place();
     }
 
-    if (bad_map_place(def, startx, starty, width, height, check_place,
+    if (bad_map_place(def, start.x, start.y, width, height, check_place,
                       clobber))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
-             startx, starty, width, height);
+             start.x, start.y, width, height);
 #endif
         return (false);
     }
@@ -257,19 +273,17 @@ static bool apply_vault_grid(map_def &def, map_type map,
     const std::vector<std::string> &lines = ml.get_lines();
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Applying %s at (%d,%d), dimensions (%d,%d)",
-            def.name.c_str(), startx, starty, width, height);
+            def.name.c_str(), start.x, start.y, width, height);
 #endif
 
-    for (int y = starty; y < starty + height; ++y)
+    for (int y = start.y; y < start.y + height; ++y)
     {
-        const std::string &s = lines[y - starty];
-        strncpy(&map[y][startx], s.c_str(), s.length());
+        const std::string &s = lines[y - start.y];
+        strncpy(&map[y][start.x], s.c_str(), s.length());
     }
 
-    place.x = startx;
-    place.y = starty;
-    place.width = width;
-    place.height = height;
+    place.pos  = start;
+    place.size = coord_def(width, height);
 
     return (true);
 }
