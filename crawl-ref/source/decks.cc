@@ -440,11 +440,13 @@ void evoke_deck( item_def& deck )
     int brownie_points = 0;
     mpr("You draw a card...");
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
-
+    bool fake_draw = false;
+    
     // If the deck wasn't marked, draw a fair card.
     if ( deck.plus2 == 0 )
     {
-        card_effect( choose_one_card(deck, true), deck_rarity(deck) );
+        fake_draw =
+            !card_effect( choose_one_card(deck, true), deck_rarity(deck) );
 
         if ( deck.sub_type != MISC_DECK_OF_PUNISHMENT )
         {
@@ -460,8 +462,8 @@ void evoke_deck( item_def& deck )
         allow_id = false;
 
         // draw the marked card
-        card_effect(static_cast<card_type>(deck.plus2 - 1),
-                    deck_rarity(deck));
+        fake_draw = !card_effect(static_cast<card_type>(deck.plus2 - 1),
+                                 deck_rarity(deck));
 
         // If there are more marked cards, shift them up
         if ( deck.special )
@@ -495,7 +497,8 @@ void evoke_deck( item_def& deck )
         you.wield_change = true;
     }
 
-    did_god_conduct(DID_CARDS, brownie_points);
+    if (!fake_draw)
+        did_god_conduct(DID_CARDS, brownie_points);
 }
 
 int get_power_level(int power, deck_rarity_type rarity)
@@ -737,8 +740,13 @@ static void minefield_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void damaging_card(card_type card, int power, deck_rarity_type rarity)
+// Return true if it was a "genuine" draw, i.e., there was a monster
+// to target. This is still exploitable by finding popcorn monsters.
+static bool damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
+    extern bool there_are_monsters_nearby();
+    bool rc = there_are_monsters_nearby();
+    
     const int power_level = get_power_level(power, rarity);
 
     dist target;
@@ -783,6 +791,10 @@ static void damaging_card(card_type card, int power, deck_rarity_type rarity)
 
     if ( spell_direction( target, beam ) )
         zapping(ztype, random2(power/4), beam);
+    else
+        rc = false;
+
+    return rc;
 }
 
 static void elixir_card(int power, deck_rarity_type rarity)
@@ -1282,8 +1294,9 @@ static int card_power(deck_rarity_type rarity)
     return result;
 }
 
-void card_effect(card_type which_card, deck_rarity_type rarity)
+bool card_effect(card_type which_card, deck_rarity_type rarity)
 {
+    bool rc = true;
     const int power = card_power(rarity);
 #ifdef DEBUG_DIAGNOSTICS
     msg::streams(MSGCH_DIAGNOSTICS) << "Card power: " << power
@@ -1336,12 +1349,12 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
         if ( coinflip() )
             your_spells(SPELL_OLGREBS_TOXIC_RADIANCE,random2(power/4), false);
         else
-            damaging_card(which_card, power, rarity);
+            rc = damaging_card(which_card, power, rarity);
         break;
 
     case CARD_VITRIOL: case CARD_FLAME: case CARD_FROST: case CARD_HAMMER:
     case CARD_PAIN:
-        damaging_card(which_card, power, rarity);
+        rc = damaging_card(which_card, power, rarity);
         break;
 
     case CARD_BARGAIN:
@@ -1379,7 +1392,10 @@ void card_effect(card_type which_card, deck_rarity_type rarity)
         break;
     }
 
-    return;
+    if (you.religion == GOD_NEMELEX_XOBEH && !rc)
+        simple_god_message(" seems disappointed in you.");
+    
+    return rc;
 }
 
 bool is_deck(const item_def &item)

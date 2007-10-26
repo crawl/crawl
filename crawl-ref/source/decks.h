@@ -40,7 +40,7 @@ bool deck_triple_draw();
 bool deck_peek();
 bool deck_stack();
 bool choose_deck_and_draw();
-void card_effect(card_type which_card, deck_rarity_type rarity);
+bool card_effect(card_type which_card, deck_rarity_type rarity);
 void draw_from_deck_of_punishment();
 
 bool is_deck(const item_def &item);
