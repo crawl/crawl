@@ -17,6 +17,7 @@
 #include "enum.h"
 
 class actor;
+class monsters;
 
 bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
@@ -49,10 +50,11 @@ const char *describe_xom_favour();
 
 bool beogh_water_walk();
 void beogh_idol_revenge();
+void beogh_convert_orc(monsters *orc);
 bool ely_destroy_weapons();
 bool trog_burn_books();
-
 bool tso_stab_safe_monster(const actor *act);
+
 
 inline void xom_acts(int sever)
 {

@@ -527,25 +527,26 @@ bool melee_attack::player_attack()
         // always upset monster regardless of damage
         behaviour_event(def, ME_WHACK, MHITYOU);
         
-        if (player_hurt_monster())
+        player_hurt_monster();
+
+        if (damage_done > 0 || !defender_visible)
+            player_announce_hit();
+        else if (damage_done <= 0)
+            no_damage_message =
+                make_stringf("You %s %s.",
+                             attack_verb.c_str(),
+                             defender->name(DESC_NOCAP_THE).c_str());
+
+        if (damage_done)
             player_exercise_combat_skills();
         
         if (player_check_monster_died())
             return (true);
 
         player_sustain_passive_damage();
-
-        if (damage_done < 1)
-            no_damage_message =
-                make_stringf("You %s %s.",
-                             attack_verb.c_str(),
-                             defender->name(DESC_NOCAP_THE).c_str());
     }
     else
         player_warn_miss();
-
-    if (did_hit && (damage_done > 0 || !player_monster_visible(def)))
-        player_announce_hit();
 
     if (did_hit && player_monattk_hit_effects(false))
         return (true);
@@ -1611,11 +1612,14 @@ void melee_attack::drain_monster()
                 def_name(DESC_NOCAP_THE).c_str());
         
     if (one_chance_in(5))
+    {
         def->hit_dice--;
-        
+        def->experience = 0;
+    }
+
     def->max_hit_points -= 2 + random2(3);
     def->hit_points -= 2 + random2(3);
-        
+
     if (def->hit_points >= def->max_hit_points)
         def->hit_points = def->max_hit_points;
         

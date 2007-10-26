@@ -91,6 +91,8 @@
 // THE BIG IMPORTANT TAG CONSTRUCTION/PARSE BUFFER
 static char *tagBuffer = NULL;
 
+static int tag_minor_version = -1;
+
 // defined in overmap.cc
 extern std::map<branch_type, level_id> stair_level;
 extern std::map<level_pos, shop_type> shops_present;
@@ -722,7 +724,7 @@ void tag_set_expected(char tags[], int fileType)
         switch(fileType)
         {
             case TAGTYPE_PLAYER:
-                if ((i >= TAG_YOU && i <=TAG_YOU_DUNGEON)
+                if ((i >= TAG_YOU && i <= TAG_YOU_DUNGEON)
                     || i == TAG_LOST_MONSTERS)
                 {
                     tags[i] = 1;
@@ -1458,7 +1460,9 @@ static void tag_read_you_dungeon(struct tagHeader &th)
 static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
 {
     the_lost_ones.clear();
-    
+
+    unwind_var<int> minor_version(tag_minor_version,
+                                  static_cast<int>(minorVersion));    
     unmarshallMap(th, the_lost_ones,
                   unmarshall_level_id, unmarshall_follower_list);
 }
@@ -1623,6 +1627,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     marshallByte(th, m.target_x);
     marshallByte(th, m.target_y);
     marshallLong(th, m.flags);
+    marshallLong(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
     for (mon_enchant_list::const_iterator i = m.enchantments.begin();
@@ -1780,6 +1785,11 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.target_y = unmarshallByte(th);
     m.flags = unmarshallLong(th);
 
+    if (tag_minor_version >= 2)
+        m.experience = static_cast<unsigned long>(unmarshallLong(th));
+    else
+        m.experience = 0L;
+
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);
     for (int i = 0; i < nenchs; ++i)
@@ -1824,6 +1834,8 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
     // how many monster inventory slots?
     icount = unmarshallByte(th);
 
+    unwind_var<int> minor_version(tag_minor_version,
+                                  static_cast<int>(minorVersion));
     for (i = 0; i < count; i++)
     {
         monsters &m = menv[i];

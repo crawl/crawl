@@ -506,6 +506,7 @@ void mons_load_spells( monsters *mon, mon_spellbook_type book );
  * called from: dungeon - fight
  * *********************************************************************** */
 void define_monster(int mid);
+void define_monster(monsters &mons);
 
 // last updated 4jan2001 (gdl)
 /* ***********************************************************************

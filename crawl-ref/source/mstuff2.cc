@@ -2137,7 +2137,9 @@ bool orange_statue_effects(monsters *mons)
 bool orc_battle_cry(monsters *chief)
 {
     const actor *foe = chief->get_foe();
-    if (foe && !silenced(chief->x, chief->y)
+    if (foe
+        && (foe != &you || !mons_friendly(chief))
+        && !silenced(chief->x, chief->y)
         && chief->can_see(foe)
         && coinflip())
     {
@@ -2161,7 +2163,7 @@ bool orc_battle_cry(monsters *chief)
                 if (ench.ench == ENCH_NONE || ench.degree < level)
                 {
                     const int dur =
-                        random_range(9, 15) * speed_to_duration(mons->speed);
+                        random_range(12, 20) * speed_to_duration(mons->speed);
                     
                     if (ench.ench != ENCH_NONE)
                     {

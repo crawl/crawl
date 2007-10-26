@@ -2591,6 +2591,104 @@ void beogh_idol_revenge()
    }
 }
 
+static void beogh_orc_emergency_conversion_speech(
+    std::ostream &chan,
+    const monsters *orc)
+{
+    switch (random2(3))
+    {
+    case 0: chan << " surrenders. "; break;
+    case 1: chan << " falls to " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
+                 << " knees. "; break;
+    case 2: chan << " raises " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
+                 << " hands in surrender. "; break;
+    }
+    chan << std::endl;
+    
+    static const char *mercy_message[] =
+    {
+        " shouts, \"I'll follow you, let me live!\"",
+        " says, \"You must be the Messiah, I see it now!\"",
+        " yells, \"Beogh is my god, I swear it!\""
+    };
+    msg::streams(MSGCH_TALK) << orc->pronoun(PRONOUN_CAP)
+                             << RANDOM_ELEMENT(mercy_message)
+                             << std::endl;
+}
+
+static void beogh_orc_spontaneous_conversion_speech(
+    std::ostream &chan,
+    const monsters *orc)
+{
+    switch (random2(3))
+    {
+    case 0:
+        chan << " stares at you in amazement and kneels.";
+        break;
+    case 1:
+        chan << " relaxes " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
+             << " fighting stance and smiles at you.";
+        break;
+    case 2:
+        chan << " falls on " << orc->pronoun(PRONOUN_NOCAP_POSSESSIVE)
+             << " knees before you.";
+        break;
+    }
+    chan << std::endl;
+
+    if (!one_chance_in(3))
+    {
+        std::ostream& tchan = msg::streams(MSGCH_TALK);
+        tchan << orc->pronoun(PRONOUN_CAP) << " ";
+        switch (random2(4))
+        {
+        case 0:
+            tchan << "shouts, \"I'll follow thee gladly!\"";
+            break;
+        case 1:
+            tchan << "shouts, \"Surely Beogh must have "
+                "sent you!\"";
+            break;
+        case 2:
+            tchan << "asks, \"Are you our saviour?\"";
+            break;
+        case 3:
+            tchan << "says, \"I'm so glad you are here now.\"";
+            break;
+        }
+        tchan << std::endl;
+    }    
+}
+
+void beogh_convert_orc(monsters *orc)
+{
+    ASSERT(mons_species(orc->type) == MONS_ORC);
+    
+    if (player_monster_visible(orc)) // show reaction
+    {
+        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+        chan << orc->name(DESC_CAP_THE);
+
+        if (orc->hit_points <= 0)
+            beogh_orc_emergency_conversion_speech(chan, orc);
+        else
+            beogh_orc_spontaneous_conversion_speech(chan, orc);
+    }
+
+    orc->attitude  = ATT_FRIENDLY;
+    
+    // not really "created" friendly, but should it become
+    // hostile later on, it won't count as a good kill
+    orc->flags |= MF_CREATED_FRIENDLY;
+    orc->flags |= MF_GOD_GIFT;
+
+    if (orc->hit_points <= 0)
+        orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
+                   
+    // to avoid immobile "followers"
+    behaviour_event(orc, ME_ALERT, MHITNOT);
+}
+
 void excommunication(void)
 {
     const god_type old_god = you.religion;

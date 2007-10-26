@@ -56,6 +56,7 @@
 #include "mon-util.h"
 #include "overmap.h"
 #include "player.h"
+#include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "spells4.h"
@@ -667,7 +668,7 @@ inline static void beogh_follower_convert(monsters *monster)
         const int hd = monster->hit_dice;
 
         if (you.piety >= 75 && !you.penance[GOD_BEOGH] &&
-            random2(you.piety/18) + random2( you.skills[SK_INVOCATIONS]-4 )
+            random2(you.piety / 15) + random2(12)
               > random2(hd) + hd + random2(5))
         {
             int wpn = you.equip[EQ_WEAPON];
@@ -681,59 +682,7 @@ inline static void beogh_follower_convert(monsters *monster)
                             << std::endl;
                 return;
             }
-                       
-            if (player_monster_visible(monster)) // show reaction
-            {
-                std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
-                chan << monster->name(DESC_CAP_THE);
-                       
-                switch (random2(3))
-                {
-                case 0:
-                    chan << " stares at you in amazement and kneels.";
-                    break;
-                case 1:
-                    chan << " relaxes its fighting stance and smiles at you.";
-                    break;
-                case 2:
-                    chan << " falls on its knees before you.";
-                    break;
-                }
-                chan << std::endl;
-
-                if (!one_chance_in(3))
-                {
-                    std::ostream& tchan = msg::streams(MSGCH_TALK);
-                    tchan << "He ";
-                    switch (random2(4))
-                    {
-                    case 0:
-                        tchan << "shouts, \"I'll follow thee gladly!\"";
-                        break;
-                    case 1:
-                        tchan << "shouts, \"Surely Beogh must have "
-                            "sent you!\"";
-                        break;
-                    case 2:
-                        tchan << "asks, \"Are you our saviour?\"";
-                        break;
-                    case 3:
-                        tchan << "says, \"I'm so glad you are here now.\"";
-                        break;
-                    }
-                    tchan << std::endl;
-                }
-            }
-
-            monster->attitude = ATT_FRIENDLY;
-            monster->behaviour = BEH_GOD_GIFT; // alternative to BEH_FRIENDLY
-            // not really "created" friendly, but should it become
-            // hostile later on, it won't count as a good kill
-            monster->flags |= MF_CREATED_FRIENDLY;
-            monster->flags |= MF_GOD_GIFT;
-                   
-            // to avoid immobile "followers"
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            beogh_convert_orc(monster);
         }
     }
     else if (is_orc
@@ -746,7 +695,7 @@ inline static void beogh_follower_convert(monsters *monster)
     {      // reconversion if no longer Beogh
                 
         monster->attitude = ATT_HOSTILE;
-        monster->behaviour = BEH_HOSTILE;
+        behaviour_event(monster, ME_ALERT, MHITYOU);
         // CREATED_FRIENDLY stays -> no piety bonus on killing these
                 
         // give message only sometimes

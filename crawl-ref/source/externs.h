@@ -909,8 +909,9 @@ public:
     mon_enchant_list enchantments;
     unsigned long flags;               // bitfield of boolean flags
 
-    unsigned int number;               // #heads (hydra), etc.
-    int          colour;
+    unsigned long experience;
+    unsigned int  number;              // #heads (hydra), etc.
+    int           colour;
 
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight
@@ -920,6 +921,8 @@ public:
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
 public:
+    void init_experience();
+    
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects();
@@ -940,6 +943,7 @@ public:
     bool lose_ench_levels(const mon_enchant &e, int lev);
 
     void scale_hp(int num, int den);
+    void gain_exp(int xp);
 
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
@@ -1084,7 +1088,8 @@ private:
     void init_with(const monsters &mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);
     bool need_message(int &near) const;
-
+    bool level_up();
+    bool level_up_change();
     bool pickup(item_def &item, int slot, int near, bool force_merge = false);
     void equip_weapon(item_def &item, int near);
     void equip_armour(item_def &item, int near);

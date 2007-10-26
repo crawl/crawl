@@ -364,17 +364,35 @@ static void check_kill_milestone(const monsters *mons,
 }
 #endif // DGL_MILESTONES
 
+static void give_monster_experience( int killer_index, int experience,
+                                     bool victim_was_born_friendly )
+{
+    if (killer_index < 0 || killer_index >= MAX_MONSTERS)
+        return;
+    monsters *mons = &menv[killer_index];
+    if (!mons->alive())
+        return;
+
+    if (!victim_was_born_friendly || !mons_friendly(mons))
+        mons->gain_exp(experience);
+}
+
 static void give_adjusted_experience(monsters *monster, killer_type killer,
-                                     bool pet_kill, unsigned int *exp_gain,
+                                     bool pet_kill, int killer_index,
+                                     unsigned int *exp_gain,
                                      unsigned int *avail_gain)
 {
-    if (testbits(monster->flags, MF_CREATED_FRIENDLY))
+    const int experience = exper_value(monster);
+    const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
+    if (created_friendly)
         ; // No experience if monster was created friendly
     else if (YOU_KILL(killer))
-        gain_exp( exper_value( monster ), exp_gain, avail_gain );
+        gain_exp( experience, exp_gain, avail_gain );
     else if (pet_kill)
-        gain_exp( exper_value( monster ) / 2 + 1,
-                  exp_gain, avail_gain );
+        gain_exp( experience / 2 + 1, exp_gain, avail_gain );
+
+    if (MON_KILL(killer))
+        give_monster_experience( killer_index, experience, created_friendly );
 }
 
 static bool is_pet_kill(killer_type killer, int i)
@@ -399,9 +417,47 @@ static bool is_pet_kill(killer_type killer, int i)
             && (me.who == KC_YOU || me.who == KC_FRIENDLY));
 }
 
+static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
+{
+    if (monster->hit_points < -25
+        || monster->hit_points < -monster->max_hit_points
+        || monster->max_hit_points <= 0
+        || monster->hit_dice < 1)
+        return (false);
+
+    // Orcs may convert to Beogh under threat of death.
+    if (YOU_KILL(killer)
+        && mons_near(monster)
+        && !mons_friendly(monster)
+        && mons_species(monster->type) == MONS_ORC
+        && you.species == SP_HILL_ORC && you.religion == GOD_BEOGH
+        && !player_under_penance() && you.piety >= 75)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
+             "your xl: %d",
+             monster->name(DESC_PLAIN).c_str(),
+             monster->hit_dice,
+             you.experience_level);
+#endif
+        if (random2(you.piety) > 30
+            && random2(you.experience_level) >= random2(monster->hit_dice)
+            // bias beaten-up-conversion towards the stronger orcs.
+            && random2(monster->hit_dice) > 2)
+        {
+            beogh_convert_orc(monster);
+            return (true);
+        }
+    }
+    return (false);
+}
+
 void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 {
     if (monster->type == -1)
+        return;
+
+    if (!silent && monster_avoided_death(monster, killer, i))
         return;
     
     if (mons_is_caught(monster))
@@ -561,12 +617,12 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     did_god_conduct(DID_KILL_DEMON,
                                     monster->hit_dice);
 
-                //jmf: Trog hates wizards
+                // jmf: Trog hates wizards
                 if (mons_is_magic_user(monster))
                     did_god_conduct(DID_KILL_WIZARD,
                                     monster->hit_dice);
 
-                //Beogh hates priests
+                // Beogh hates priests of other gods.
                 if (mons_class_flag(monster->type, M_PRIEST))
                     did_god_conduct(DID_KILL_PRIEST,
                                     monster->hit_dice);
@@ -806,7 +862,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                                                  KC_OTHER;
 
         unsigned int exp_gain = 0, avail_gain = 0;
-        give_adjusted_experience(monster, killer, pet_kill,
+        give_adjusted_experience(monster, killer, pet_kill, i,
                                  &exp_gain, &avail_gain);
 
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
@@ -931,22 +987,15 @@ static bool jelly_divide(monsters * parent)
     if (parent->hit_points > parent->max_hit_points)
         parent->hit_points = parent->max_hit_points;
 
+    parent->init_experience();
+    parent->experience = parent->experience * 3 / 5 + 1;
+
     // create child {dlb}:
     // this is terribly partial and really requires
     // more thought as to generation ... {dlb}
-    child->type = parent->type;
-    child->hit_dice = parent->hit_dice;
-    child->hit_points = parent->hit_points;
+    *child = *parent;
     child->max_hit_points = child->hit_points;
-    child->ac = parent->ac;
-    child->ev = parent->ev;
-    child->speed = parent->speed;
     child->speed_increment = 70 + random2(5);
-    child->behaviour = parent->behaviour; /* Look at this! */
-    child->foe = parent->foe;
-    child->attitude = parent->attitude;
-    child->colour = parent->colour;
-    child->enchantments = parent->enchantments;
     child->x = parent->x + jex;
     child->y = parent->y + jey;
 
