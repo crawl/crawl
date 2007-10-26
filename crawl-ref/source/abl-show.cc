@@ -276,7 +276,7 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
     { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
-      0, 0, 100, generic_cost::range(5, 6), ABFLAG_NONE },
+      0, 0, 100, generic_cost::fixed(4), ABFLAG_NONE },
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
@@ -1781,7 +1781,11 @@ static void pay_ability_costs(const ability_def& abil)
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     const int food_cost = abil.food_cost + random2avg(abil.food_cost, 2);
-    const int piety_cost = abil.piety_cost.cost();
+    int piety_cost = abil.piety_cost.cost();
+    
+    if (abil.ability == ABIL_TROG_BROTHERS_IN_ARMS)
+    // increase cost depending on current piety
+        piety_cost += (you.piety-100)/20;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",

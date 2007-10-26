@@ -1455,12 +1455,13 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 void summon_berserker()
 {
     beh_type beha = BEH_GOD_GIFT;
-    int pow = you.piety + random2(you.piety/4) - random2(you.piety/4);
+    // randomize a bit to make things more interesting
+    int pow = you.piety + random2(30) - random2(30);
     int numsc = std::min(2 + (random2(pow) / 4), 6);
 
     monster_type mon = MONS_TROLL;
     
-    if (pow <= 100)
+    if (pow <= 120) // 100-120 -> 20
     {
         // bears
         if (coinflip())
@@ -1468,7 +1469,7 @@ void summon_berserker()
         else
             mon = MONS_GRIZZLY_BEAR;
     }
-    else if (pow <= 140)
+    else if (pow <= 150) // 121-150 -> 30
     {
         // ogres
         if (one_chance_in(3))
@@ -1476,28 +1477,28 @@ void summon_berserker()
         else
             mon = MONS_OGRE;
     }
-    else if (pow <= 180)
+    else if (pow <= 180) // 151-180 -> 30
     {
         // trolls
         switch(random2(8))
         {
-        case 0:
+        case 0:  // 12.5%
             mon = MONS_DEEP_TROLL;
             break;
         case 1:
-        case 2:
+        case 2:  // 25%
             mon = MONS_IRON_TROLL;
             break;
         case 3:
-        case 4:
+        case 4:  // 25%
             mon = MONS_ROCK_TROLL;
             break;
-        default:
+        default: // 37.5%
             mon = MONS_TROLL;
             break;
         }
     }
-    else
+    else // 181-200 -> 20
     {
         // giants
         if (coinflip())

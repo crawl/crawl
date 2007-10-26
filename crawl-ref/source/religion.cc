@@ -1612,25 +1612,32 @@ bool ely_destroy_weapons()
             continue;
         }
 
-        std::ostream& strm = msg::streams(MSGCH_GOD);
-        strm << mitm[i].name(DESC_CAP_THE);
-        if ( mitm[i].quantity == 1 )
-            strm << " shimmers and breaks into pieces." << std::endl;
-        else
-            strm << " shimmer and break into pieces." << std::endl;
-
         const int value = item_value( mitm[i], true );
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
 #endif
 
-        if (random2(value) >= random2(50)
+        bool pgain = false;
+        if (random2(value) >= random2(250) // artefacts (incl. most randarts)
+            || random2(value) >= random2(100) && one_chance_in(1 + you.piety/50)
             || (mitm[i].base_type == OBJ_WEAPONS
                 && (you.piety < 30 || player_under_penance())))
         {
+            pgain = true;
             gain_piety(1);
         }
         
+        std::ostream& strm = msg::streams(MSGCH_GOD);
+        strm << mitm[i].name(DESC_CAP_THE);
+        
+        if (!pgain)
+            strm << " barely";
+        
+        if ( mitm[i].quantity == 1 )
+            strm << " shimmers and breaks into pieces." << std::endl;
+        else
+            strm << " shimmer and break into pieces." << std::endl;
+
         destroy_item(i);
         success = true;
         i = next;
