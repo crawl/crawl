@@ -1641,6 +1641,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     marshallByte(th, m.target_x);
     marshallByte(th, m.target_y);
     marshallLong(th, m.flags);
+    marshallLong(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
     for (mon_enchant_list::const_iterator i = m.enchantments.begin();
@@ -1804,6 +1805,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.target_x = unmarshallByte(th);
     m.target_y = unmarshallByte(th);
     m.flags = unmarshallLong(th);
+    m.experience = static_cast<unsigned long>(unmarshallLong(th));
 
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);

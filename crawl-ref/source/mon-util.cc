@@ -1305,11 +1305,14 @@ void mons_load_spells( monsters *mon, mon_spellbook_type book )
     mon->load_spells(book);
 }
 
-// generate a shiny new and unscarred monster
 void define_monster(int index)
 {
-    monsters &mons = menv[index];
+    define_monster(menv[index]);
+}
 
+// generate a shiny new and unscarred monster
+void define_monster(monsters &mons)
+{
     int temp_rand = 0;          // probability determination {dlb}
     int mcls = mons.type;
     int hd, hp, hp_max, ac, ev, speed;
@@ -2316,7 +2319,7 @@ monsters::monsters()
       ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
       target_x(0), target_y(0), inv(), spells(), attitude(ATT_HOSTILE),
       behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
-      number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
+      experience(0), number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
       ghost(), seen_context("")
 {
 }
@@ -2354,6 +2357,7 @@ void monsters::init_with(const monsters &mon)
     foe               = mon.foe;
     enchantments      = mon.enchantments;
     flags             = mon.flags;
+    experience        = mon.experience;
     number            = mon.number;
     colour            = mon.colour;
     foe_memory        = mon.foe_memory;

@@ -1416,8 +1416,10 @@ void stethoscope(int mwh)
 
     // print stats and other info
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d HP=%d/%d AC=%d EV=%d MR=%d SP=%d energy=%d num=%d flags=%04lx",
-         menv[i].hit_dice, 
+         "HD=%d (%lu) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
+         "energy=%d num=%d flags=%04lx",
+         menv[i].hit_dice,
+         menv[i].experience,
          menv[i].hit_points, menv[i].max_hit_points, 
          menv[i].ac, menv[i].ev,
          mons_resist_magic( &menv[i] ),
