@@ -2841,7 +2841,8 @@ static std::string sacrifice_message(god_type god, const item_def &item,
 
 void altar_prayer(void)
 {
-    mpr( "You kneel at the altar and pray." );
+    // different message than when first joining a religion
+    mpr( "You prostrate yourself in front of the altar and pray." );
 
     if (you.religion == GOD_XOM)
         return;
@@ -3040,7 +3041,10 @@ void offer_items()
 
 void god_pitch(god_type which_god)
 {
-    mprf("You kneel at the altar of %s.", god_name(which_god));
+    mprf("You %s the altar of %s.",
+         you.species == SP_NAGA ? "coil in front of"
+                                : "kneel at",
+         god_name(which_god));
     more();
 
     // Note: using worship we could make some gods not allow followers to
