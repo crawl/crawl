@@ -39,6 +39,7 @@ int get_trapping_net(int x, int y, bool trapped = true);
 void mark_net_trapping(int x, int y);
 void monster_caught_in_net(monsters *mon, bolt &pbolt);
 void player_caught_in_net(void);
+void clear_trapping_net(void);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

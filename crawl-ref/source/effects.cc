@@ -49,6 +49,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "traps.h"
 #include "view.h"
 #include "xom.h"
 
@@ -272,6 +273,9 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         const std::string what = "Cast into " + cast_into + who_banished(who);
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
+
+    // no longer held in net
+    clear_trapping_net();
 
     down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh
 }
