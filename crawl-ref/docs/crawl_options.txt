@@ -83,8 +83,8 @@ The contents of this text are:
 6-  Miscellaneous.
 6-a     All OS.
                 macro_meta_entry, mouse_input, wiz_mode, colours,
-                char_set, cset_ascii, cset_ibm, cset_dec, feature,
-                mon_glyph, classic_item_colours
+                char_set, cset_ascii, cset_ibm, cset_dec, cset_unicode,
+                feature, mon_glyph, classic_item_colours
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix

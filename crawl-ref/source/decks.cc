@@ -1099,17 +1099,7 @@ static void trowel_card(int power, deck_rarity_type rarity)
     if ( power_level >= 2 )
     {
         // generate a portal to something
-        int mapidx = -1;
-        if ( coinflip() )
-        {
-            // generate a bazaar portal
-            mapidx = find_map_by_name("bzr_entry_dummy");
-        }
-        else
-        {
-            mapidx = find_map_by_name("lab_entry_generic");
-        }
-
+        const int mapidx = random_map_for_tag("trowel_portal", false, false);
         if ( mapidx == -1 )
         {
             mpr("A buggy portal flickers into view, then vanishes.");
