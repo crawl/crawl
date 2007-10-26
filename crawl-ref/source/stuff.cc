@@ -102,53 +102,117 @@ void set_redraw_status( unsigned long flags )
     you.redraw_status_flags |= flags;
 }
 
-void tag_followers( void )
-{   
-    int count_x, count_y;
+static bool tag_follower_at(const coord_def &pos)
+{
+    if (!in_bounds(pos) || pos == you.pos())
+        return (false);
 
-    for (count_x = you.x_pos - 1; count_x <= you.x_pos + 1; count_x++)
-    {   
-        for (count_y = you.y_pos - 1; count_y <= you.y_pos + 1; count_y++)
-        {   
-            if (count_x == you.x_pos && count_y == you.y_pos)
-                continue;
+    if (mgrd(pos) == NON_MONSTER)
+        return (false);
 
-            if (mgrd[count_x][count_y] == NON_MONSTER)
-                continue;
+    monsters *fmenv = &menv[mgrd(pos)];
 
-            struct monsters *fmenv = &menv[mgrd[count_x][count_y]];
+    if (fmenv->type == MONS_PLAYER_GHOST
+        || !fmenv->alive()
+        || mons_is_stationary(fmenv)
+        || fmenv->incapacitated())
+    {
+        return (false);
+    }
 
-            if (fmenv->type == MONS_PANDEMONIUM_DEMON
-                || fmenv->type == MONS_PLAYER_GHOST  // cdl
-                || !fmenv->alive()
-                || mons_is_stationary(fmenv)
-                || fmenv->incapacitated())
-            {   
-                continue;
-            }
+    if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
+        return (false);
 
-            if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
-                continue;
+    if (fmenv->speed_increment < 50)
+        return (false);
 
-            if (fmenv->speed_increment < 50)
-                continue;
+    // only friendly monsters, or those actively seeking the
+    // player, will follow up/down stairs.
+    if (!(mons_friendly(fmenv) ||
+          (fmenv->behaviour == BEH_SEEK && fmenv->foe == MHITYOU)))
+    {
+        return (false);
+    }
 
-            // only friendly monsters, or those actively seeking the
-            // player, will follow up/down stairs.
-            if (!(mons_friendly(fmenv) ||
-                (fmenv->behaviour == BEH_SEEK && fmenv->foe == MHITYOU)))
-            {   
-                continue;
-            }
+    // Monsters that are not directly adjacent are subject to more
+    // stringent checks.
+    if ((pos - you.pos()).abs() > 2)
+    {
+        if (!mons_friendly(fmenv))
+            return (false);
 
-            // monster is chasing player through stairs:
-            fmenv->flags |= MF_TAKING_STAIRS;
+        // Orcs will follow Beogh worshippers.
+        if (!(mons_species(fmenv->type) == MONS_ORC
+              && you.religion == GOD_BEOGH))
+            return (false);
+    }
+
+    // monster is chasing player through stairs:
+    fmenv->flags |= MF_TAKING_STAIRS;
 
 #if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
-                 fmenv->name(DESC_CAP_THE, true).c_str() );
+    mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
+         fmenv->name(DESC_CAP_THE, true).c_str() );
 #endif
+    return (true);
+}
+
+static int follower_tag_radius2()
+{
+    // If only friendlies are adjacent, we set a max radius of 6, otherwise
+    // only adjacent friendlies may follow.
+    coord_def p;
+    for (p.x = you.x_pos - 1; p.x <= you.x_pos + 1; ++p.x)
+        for (p.y = you.y_pos - 1; p.y <= you.y_pos + 1; ++p.y)
+        {
+            if (p == you.pos())
+                continue;
+            if (const monsters *mon = monster_at(p))
+            {
+                if (!mons_friendly(mon))
+                    return (2);
+            }
         }
+    return (6 * 6);
+}
+
+void tag_followers()
+{
+    const int radius2 = follower_tag_radius2();
+    int n_followers = 18;
+
+    std::vector<coord_def> places[2];
+    int place_set = 0;
+
+    places[place_set].push_back(you.pos());
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    while (!places[place_set].empty())
+    {
+        for (int i = 0, size = places[place_set].size(); i < size; ++i)
+        {
+            const coord_def &p = places[place_set][i];
+
+            coord_def fp;
+            for (fp.x = p.x - 1; fp.x <= p.x + 1; ++fp.x)
+                for (fp.y = p.y - 1; fp.y <= p.y + 1; ++fp.y)
+                {
+                    if (fp == p || (fp - you.pos()).abs() > radius2
+                        || !in_bounds(fp) || travel_point_distance[fp.x][fp.y])
+                    {
+                        continue;
+                    }
+                    travel_point_distance[fp.x][fp.y] = 1;
+                    if (tag_follower_at(fp))
+                    {
+                        // If we've run out of our follower allowance, bail.
+                        if (--n_followers <= 0)
+                            return;
+                        places[!place_set].push_back(fp);
+                    }
+                }
+        }
+        places[place_set].clear();
+        place_set = !place_set;
     }
 }
 

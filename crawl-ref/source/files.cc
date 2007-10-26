@@ -780,6 +780,30 @@ static void clear_clouds()
     env.cgrid.init(EMPTY_CLOUD);
 }
 
+static bool grab_follower_at(const coord_def &pos)
+{
+    if (pos == you.pos())
+        return (false);
+    
+    monsters *fmenv = monster_at(pos);
+    if (!fmenv || !fmenv->alive())
+        return (false);
+        
+    // monster has to be already tagged in order to follow:
+    if (!testbits( fmenv->flags, MF_TAKING_STAIRS ))
+        return (false);
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
+         fmenv->name(DESC_CAP_THE, true).c_str(),
+         level_id::current().describe().c_str());
+#endif
+    fmenv->set_transit(level_id::current());
+    fmenv->destroy_inventory();
+    monster_cleanup(fmenv);
+    return (true);
+}
+
 static void grab_followers()
 {
     const bool can_follow = level_type_allows_followers(you.level_type);
@@ -802,27 +826,43 @@ static void grab_followers()
                 monster_teleport(fmenv, true);
                 continue;
             }
-
-            // monster has to be already tagged in order to follow:
-            if (!testbits( fmenv->flags, MF_TAKING_STAIRS ))
-                continue;
-
-            if (!can_follow)
-            {
-                // Monster can't follow us, so clear the follower flag.
-                fmenv->flags &= ~MF_TAKING_STAIRS;
-                continue;
-            }
-            
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
-                 fmenv->name(DESC_CAP_THE, true).c_str(),
-                 level_id::current().describe().c_str());
-#endif
-            fmenv->set_transit(level_id::current());
-            fmenv->destroy_inventory();
-            monster_cleanup(fmenv);
         }
+    }
+
+    if (can_follow)
+    {
+        memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+        std::vector<coord_def> places[2];
+        int place_set = 0;
+        places[place_set].push_back(you.pos());
+        while (!places[place_set].empty())
+        {
+            for (int i = 0, size = places[place_set].size(); i < size; ++i)
+            {
+                const coord_def &p = places[place_set][i];
+                coord_def fp;
+                for (fp.x = p.x - 1; fp.x <= p.x + 1; ++fp.x)
+                    for (fp.y = p.y - 1; fp.y <= p.y + 1; ++fp.y)
+                    {
+                        if (!in_bounds(fp) || travel_point_distance[fp.x][fp.y])
+                            continue;
+                        travel_point_distance[fp.x][fp.y] = 1;
+                        if (grab_follower_at(fp))
+                            places[!place_set].push_back(fp);
+                    }
+            }
+            places[place_set].clear();
+            place_set = !place_set;
+        }
+    }
+
+    // Clear flags on the followers that didn't make it.
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *mons = &menv[i];
+        if (!mons->alive())
+            continue;
+        mons->flags &= ~MF_TAKING_STAIRS;
     }
 }
 
