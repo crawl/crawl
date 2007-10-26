@@ -3800,13 +3800,16 @@ std::string ghost_description(const monsters &mons, bool concise)
 
     const ghost_demon &ghost = *(mons.ghost);
 
+    const species_type gspecies =
+        static_cast<species_type>(ghost.values[GVAL_SPECIES]);
+
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact 
     // stats aren't required anyways, all that matters is whether
     // dex >= str. -- bwr
     const int dex = 10;
     int str;
-    switch (ghost.values[GVAL_SPECIES])
+    switch (gspecies)
     {
     case SP_MOUNTAIN_DWARF:
     case SP_TROLL:
@@ -3835,7 +3838,7 @@ std::string ghost_description(const monsters &mons, bool concise)
     gstr << ghost.name << " the "
          << skill_title( ghost.values[GVAL_BEST_SKILL], 
                          ghost.values[GVAL_SKILL_LEVEL],
-                         ghost.values[GVAL_SPECIES], 
+                         gspecies,
                          str, dex, GOD_NO_GOD )
          << ", a"
          << ((ghost.values[GVAL_EXP_LEVEL] <  4) ? " weakling" :
@@ -3848,10 +3851,10 @@ std::string ghost_description(const monsters &mons, bool concise)
                                                  : " legendary")
          << " ";
     if ( concise )
-        gstr << get_species_abbrev(ghost.values[GVAL_SPECIES])
+        gstr << get_species_abbrev(gspecies)
              << get_class_abbrev(ghost.values[GVAL_CLASS]);
     else
-        gstr << species_name(ghost.values[GVAL_SPECIES], 
+        gstr << species_name(gspecies,
                              ghost.values[GVAL_EXP_LEVEL])
              << " "
              << get_class_name(ghost.values[GVAL_CLASS]);
