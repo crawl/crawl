@@ -717,6 +717,18 @@ void free_self_from_net()
    }
 }
 
+void clear_trapping_net()
+{
+   if (!you.attribute[ATTR_HELD])
+       return;
+       
+   const int net = get_trapping_net(you.x_pos, you.y_pos);
+   if (net != NON_ITEM)
+       remove_item_stationary(mitm[net]);
+
+   you.attribute[ATTR_HELD] = 0;
+}
+
 bool trap_item(object_class_type base_type, char sub_type,
                char beam_x, char beam_y)
 {

@@ -679,6 +679,10 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
         if (is_controlled)
         {
+            // no longer held in net
+            if (plox[0] != you.x_pos || plox[1] != you.y_pos)
+                clear_trapping_net();
+
             you.moveto(plox[0], plox[1]);
 
             if ((grd[you.x_pos][you.y_pos] != DNGN_FLOOR
@@ -709,6 +713,10 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
                 && grd[newx][newy] != DNGN_SHALLOW_WATER)
                || mgrd[newx][newy] != NON_MONSTER
                || env.cgrid[newx][newy] != EMPTY_CLOUD);
+               
+        // no longer held in net
+        if (newx != you.x_pos || newy != you.y_pos)
+            clear_trapping_net();
 
         if ( newx == you.x_pos && newy == you.y_pos )
             mpr("Your surroundings flicker for a moment.");

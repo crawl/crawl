@@ -48,6 +48,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 // torment_monsters is called with power 0 because torment is
@@ -158,6 +159,9 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
     }
 
+    // no longer held in net
+    clear_trapping_net();
+    
     down_stairs(you.your_level, gate_type);  // heh heh
 
     if (gate_type == DNGN_ENTER_ABYSS || gate_type == DNGN_ENTER_PANDEMONIUM)
