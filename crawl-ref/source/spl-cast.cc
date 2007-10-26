@@ -671,6 +671,7 @@ bool cast_a_spell()
         return (false);
     }
 
+    const bool staff_energy = player_energy();
     if (you.duration[DUR_CONF])
         random_uselessness( 2 + random2(7), 0 );
     else
@@ -688,7 +689,7 @@ bool cast_a_spell()
     
     dec_mp( spell_mana(spell) );
 
-    if (!player_energy() && you.is_undead != US_UNDEAD)
+    if (!staff_energy && you.is_undead != US_UNDEAD)
     {
         const int spellh = spell_hunger( spell );
         if (spellh > 0)
