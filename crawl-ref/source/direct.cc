@@ -1959,6 +1959,9 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
 static void describe_cell(int mx, int my)
 {
     bool mimic_item = false;
+    bool monster_described = false;
+    bool cloud_described = false;
+    bool item_described = false;
 
     if (mx == you.x_pos && my == you.y_pos)
         mpr("You.", MSGCH_EXAMINE_FILTER);
@@ -1987,15 +1990,20 @@ static void describe_cell(int mx, int my)
         describe_monster(&menv[i]);
         
         if (mons_is_mimic( menv[i].type ))
+        {
             mimic_item = true;
+            item_described = true;
+        }
+        else
+            monster_described = true;
 
 #if DEBUG_DIAGNOSTICS
         stethoscope(i);
 #endif
         if (Options.tutorial_left && tutorial_monster_interesting(&menv[i]))
         {
-           std::string msg = "(Press <w>v<lightgray> for more information.)";
-           print_formatted_paragraph(msg, get_number_of_cols());
+            std::string msg = "(Press <w>v<lightgray> for more information.)";
+            print_formatted_paragraph(msg, get_number_of_cols());
         }
     }
 
@@ -2008,7 +2016,10 @@ static void describe_cell(int mx, int my)
         const int cloud_inspected = env.cgrid[mx][my];
         const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
-        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.", cloud_name(ctype).c_str());
+        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
+             cloud_name(ctype).c_str());
+
+        cloud_described = true;
     }
 
     int targ_item = igrd[ mx ][ my ];
@@ -2030,6 +2041,7 @@ static void describe_cell(int mx, int my)
                 mprf( MSGCH_FLOOR_ITEMS,
                       "There is something else lying underneath.");
         }
+        item_described = true;
     }
 
     std::string feature_desc = feature_description(mx, my);
@@ -2060,14 +2072,22 @@ static void describe_cell(int mx, int my)
     }
     else
     {
-        if (interesting_feature(grd[mx][my]))
+        const dungeon_feature_type feat = grd[mx][my];
+        
+        if (interesting_feature(feat))
             feature_desc += " (Press 'v' for more information.)";
-            
+
+        // Suppress "Floor." if there's something on that square that we've
+        // already described.
+        if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL)
+            && (monster_described || item_described || cloud_described))
+            return;
+        
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (grd[mx][my] == DNGN_FLOOR
-            || grd[mx][my] == DNGN_FLOOR_SPECIAL
-            || grd[mx][my] == DNGN_SHALLOW_WATER
-            || grd[mx][my] == DNGN_DEEP_WATER)
+        if (feat == DNGN_FLOOR
+            || feat == DNGN_FLOOR_SPECIAL
+            || feat == DNGN_SHALLOW_WATER
+            || feat == DNGN_DEEP_WATER)
         {
             channel = MSGCH_EXAMINE_FILTER;
         }
