@@ -1674,7 +1674,10 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                 did_god_conduct(DID_NECROMANCY, 2 + random2(3));
 
             if (one_chance_in(5))
+            {
                 monster->hit_dice--;
+                monster->experience = 0;
+            }
 
             monster->max_hit_points -= 2 + random2(3);
             monster->hit_points -= 2 + random2(3);

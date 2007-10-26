@@ -1656,11 +1656,14 @@ void melee_attack::drain_monster()
                 def_name(DESC_NOCAP_THE).c_str());
         
     if (one_chance_in(5))
+    {
         def->hit_dice--;
-        
+        def->experience = 0;
+    }
+
     def->max_hit_points -= 2 + random2(3);
     def->hit_points -= 2 + random2(3);
-        
+
     if (def->hit_points >= def->max_hit_points)
         def->hit_points = def->max_hit_points;
         
