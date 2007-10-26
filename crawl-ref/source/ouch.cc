@@ -616,7 +616,7 @@ void lose_level()
     xom_is_stimulated(255);
 }                               // end lose_level()
 
-void drain_exp(void)
+void drain_exp(bool announce_full)
 {
     int protection = player_prot_life();
 
@@ -630,7 +630,8 @@ void drain_exp(void)
 
     if (protection >= 3 || you.is_undead)
     {
-        mpr("You fully resist.");
+        if ( announce_full )
+            mpr("You fully resist.");
         return;
     }
 
