@@ -601,7 +601,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
         if (is_controlled)
         {
             // no longer held in net
-            if (pos.x != you.x_pos && pos.y != you.y_pos)
+            if (pos.x != you.x_pos || pos.y != you.y_pos)
                 clear_trapping_net();
 
             you.moveto(pos.x, pos.y);
@@ -636,7 +636,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
                || env.cgrid[newx][newy] != EMPTY_CLOUD);
                
         // no longer held in net
-        if (newx != you.x_pos && newy != you.y_pos)
+        if (newx != you.x_pos || newy != you.y_pos)
             clear_trapping_net();
 
         if ( newx == you.x_pos && newy == you.y_pos )
