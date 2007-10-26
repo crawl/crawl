@@ -2970,7 +2970,10 @@ static void do_autopickup()
     will_autopickup = false;
     
     if (!can_autopickup())
+    {
+        item_check(false);
         return;
+    }
     
     o = igrd[you.x_pos][you.y_pos];
 
