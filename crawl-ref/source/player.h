@@ -328,6 +328,7 @@ bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
 
 bool you_can_wear( int eq, bool special_armour = false );
+bool player_has_feet(void);
 bool you_tran_can_wear( int eq, bool check_mutation = false );
 
 /* ***********************************************************************

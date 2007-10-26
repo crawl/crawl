@@ -2002,34 +2002,38 @@ enum mutation_type
     MUT_DRAIN_LIFE,
     MUT_THROW_FLAMES,                  //   55
     MUT_THROW_FROST,
-    MUT_SMITE,                         //   57
-    MUT_CLAWS,                         //jmf: added
-    MUT_HOOVES,                        //jmf: etc.
-    MUT_FANGS,                         // 60
+    MUT_SMITE,
+    MUT_CLAWS,                         
+    MUT_FANGS,      // new in 0.3
+    // hooves, talons, paws can replace feet
+    MUT_HOOVES,                        //   60
+    MUT_TALONS,     // new in 0.4
+    MUT_PAWS,       // new in 0.4
     MUT_BREATHE_POISON,
     MUT_STINGER,
-    MUT_BIG_WINGS,
-    MUT_BLUE_MARKS, //   64 - decorative, as in "mark of the devil"
-    MUT_GREEN_MARKS,                   //   65
+    MUT_BIG_WINGS,                     //   65
+    MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
+    MUT_GREEN_MARKS,
     MUT_DRIFTING,
     MUT_SAPROVOROUS,
-    MUT_TALONS,
-    MUT_RED_SCALES = 70,               //   70
+    MUT_EXTRA_EYES, // new in 0.4      --   70
+    // several types of scales (affect AC and sometimes more)
+    MUT_RED_SCALES = 75,               //   75
     MUT_NACREOUS_SCALES,
     MUT_GREY2_SCALES,
     MUT_METALLIC_SCALES,
     MUT_BLACK2_SCALES,
-    MUT_WHITE_SCALES,                  //   75
+    MUT_WHITE_SCALES,                  //   80
     MUT_YELLOW_SCALES,
     MUT_BROWN_SCALES,
     MUT_BLUE_SCALES,
     MUT_PURPLE_SCALES,
-    MUT_SPECKLED_SCALES,               //   80
+    MUT_SPECKLED_SCALES,               //   85
     MUT_ORANGE_SCALES,
     MUT_INDIGO_SCALES,
     MUT_RED2_SCALES,
     MUT_IRIDESCENT_SCALES,
-    MUT_PATTERNED_SCALES,              //   85
+    MUT_PATTERNED_SCALES,              //   90
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = 100,

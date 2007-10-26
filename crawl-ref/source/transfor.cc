@@ -605,17 +605,7 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     if (ignore_temporary || !player_is_shapechanged())
         /* or a transformation which doesn't change overall shape */
     {
-        if (use_which == EQ_BOOTS)
-        {
-            switch (you.species)
-            {
-            case SP_NAGA:
-                return (false);
-            default:
-                break;
-            }
-        }
-        else if (use_which == EQ_HELMET)
+        if (use_which == EQ_HELMET)
         {
             switch (you.species)
             {
@@ -630,8 +620,7 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     if (use_which == EQ_HELMET && you.mutation[MUT_HORNS])
         return (false);
 
-    if (use_which == EQ_BOOTS &&
-        (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]))
+    if (use_which == EQ_BOOTS && !player_has_feet())
         return (false);
 
     if (use_which == EQ_GLOVES && you.mutation[MUT_CLAWS] >= 3)

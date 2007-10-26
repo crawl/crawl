@@ -459,6 +459,20 @@ bool you_can_wear(int eq, bool special_armour)
    return true;
 }
 
+bool player_has_feet()
+{
+   if (you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
+       return false;
+       
+   if (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]
+       || you.mutation[MUT_PAWS])
+   {
+       return false;
+   }
+   
+   return true;
+}
+
 bool you_tran_can_wear(int eq, bool check_mutation)
 {
    // not a transformation, but also temporary -> check first
@@ -469,7 +483,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
        if (eq == EQ_BOOTS
            && (player_is_swimming() && you.species == SP_MERFOLK
-               || (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS])))
+               || you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS]
+               || you.mutation[MUT_PAWS]))
        {
            return false;
        }
@@ -3267,7 +3282,12 @@ int check_stealth(void)
             stealth /= 2;       // splashy-splashy
     }
     else
-        stealth -= you.mutation[MUT_HOOVES] * 10; // clippety-clop
+    {
+        if (you.mutation[MUT_HOOVES])
+            stealth -= 10;  // clippety-clop
+        else if (you.mutation[MUT_PAWS])
+            stealth += 10;
+    }
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going

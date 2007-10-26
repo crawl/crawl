@@ -265,19 +265,22 @@ const char *mutation_descrip[][3] = {
     {"You have sharp fingernails.", "You have very sharp fingernails.",
      "You have claws for hands."},
 
-    {"You have hooves in place of feet.", "", ""},
-
-    // 60 - leave some space for more demonic powers...
-    
     {"You have very sharp teeth.", "You have extremely sharp teeth.",
      "You have razor-sharp teeth."},
-     
+
+    // 60 - leave some space for more demonic powers...
+
+    {"You have hooves in place of feet.", "", ""},
+    {"You have talons in place of feet.", "", ""},
+    {"You have soft paws in place of feet.", "", ""},
+
     {"You can exhale a cloud of poison.", "", ""},
 
     {"Your tail ends in a poisonous barb.",
      "Your tail ends in a sharp poisonous barb.",
      "Your tail ends in a wicked poisonous barb."}, //jmf: nagas & dracos
 
+    // 65
     {"Your wings are large and strong.", "", ""},       //jmf: dracos only
 
     //jmf: these next two are for evil gods to mark their followers; good gods
@@ -287,7 +290,6 @@ const char *mutation_descrip[][3] = {
      "There are several blue sigils on your hands and arms.",
      "Your hands, arms and shoulders are covered in intricate, arcane blue writing."},
 
-    // 65
     {"There is a green sigil on your chest.",
      "There are several green sigils on your chest and abdomen.",
      "Your chest, abdomen and neck are covered in intricate, arcane green writing."},
@@ -299,11 +301,17 @@ const char *mutation_descrip[][3] = {
     {"You can tolerate rotten meat.", "You can eat rotten meat.",
      "You thrive on rotten meat."},    
 
-    {"You have talons in place of feet.", "", ""},
+    // 70
+    {"You have a third eye on your forehead.",
+     "You have two additional eyes on your forehead.",
+     "You have three additional eyes on your forehead."},
 
     {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
 
-    // 70
+    // 75
     {"You are partially covered in red scales (AC + 1).",
      "You are mostly covered in red scales (AC + 2).",
      "You are covered in red scales (AC + 4)."},
@@ -344,7 +352,7 @@ const char *mutation_descrip[][3] = {
      "You are mostly covered in purple scales (AC + 4).",
      "You are completely covered in purple scales (AC + 6)."},
 
-// 80
+    // 85
     {"You are partially covered in speckled scales (AC + 1).",
      "You are mostly covered in speckled scales (AC + 2).",
      "You are covered in speckled scales (AC + 3)."},
@@ -522,12 +530,14 @@ const char *gain_mutation[][3] = {
     {"Your fingernails lengthen.", "Your fingernails sharpen.",
      "Your hands twist into claws."},
 
-    {"Your feet shrivel into cloven hooves.", "", ""},
-    
-   // 60
     {"Your teeth lengthen and sharpen.",
      "Your teeth lengthen and sharpen some more.",
      "Your teeth are very long and razor-sharp."},
+
+    // 60
+    {"Your feet shrivel into cloven hooves.", "", ""},
+    {"Your feet stretch and sharpen into talons.", "", ""},
+    {"Your feet sprout fur and twist into soft paws.", "", ""},
 
     {"You taste something nasty.", "You taste something very nasty.",
      "You taste something extremely nasty."},
@@ -536,12 +546,12 @@ const char *gain_mutation[][3] = {
      "The barb on your tail looks sharper.",
      "The barb on your tail looks very sharp."},
 
+    // 65
     {"Your wings grow larger and stronger.", "", ""},
 
     {"Your hands itch.", "Your hands and forearms itch.",
      "Your arms, hands and shoulders itch."},
 
-    // 65
     {"Your chest itches.", "Your chest and abdomen itch.",
      "Your chest, abdomen and neck itch."},
 
@@ -552,11 +562,17 @@ const char *gain_mutation[][3] = {
     // saprovorous: can never be gained or lost, only started with    
     {"", "", ""},
     
-    {"Your feet stretch and sharpen into talons.", "", ""},
-
+    // 70
+    {"You sprout an extra eye.",
+     "You sprout another eye.",
+     "You sprout another eye."},
+     
+    {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
     {"", "", ""},
 
-    // 70
+    // 75
     {"Red scales grow over part of your body.",
      "Red scales spread over more of your body.",
      "Red scales cover you completely."},
@@ -588,7 +604,7 @@ const char *gain_mutation[][3] = {
      "Purple scales spread over more of your body.",
      "Purple scales cover you completely."},
 
-    // 80
+    // 85
     {"Speckled scales grow over part of your body.",
      "Speckled scales spread over more of your body.",
      "Speckled scales cover you completely."},
@@ -753,20 +769,23 @@ const char *lose_mutation[][3] = {
     {"Your fingernails shrink to normal size.",
      "Your fingernails look duller.", "Your hands feel fleshier."},
 
-    {"Your hooves expand and flesh out into feet!", "", ""},
-
-    // 60
     {"Your teeth shrink to normal size.",
      "Your teeth shrink and become duller.",
      "Your teeth shrink and become duller."},
-    
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
 
+    // 60
+    {"Your hooves expand and flesh out into feet!", "", ""},
+    {"Your talons dull and shrink into feet.", "", ""},
+    {"Your paws shed and extend into feet.", "", ""},
+
+    {"", "", ""},
+    {"", "", ""},
+    
     // 65
     {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
+    
     {"Your movements feel completely certain again.",
      "Your movements feel more certain.",
      "Your movements feel more certain."},
@@ -774,11 +793,17 @@ const char *lose_mutation[][3] = {
     // saprovorous: can never be gained or lost, only started with
     {"", "", ""},
 
-    {"Your talons dull and shrink into feet.", "", ""},
+    // 70
+    {"Your extra eye disappears.",
+     "One of your extra eyes disappears.",
+     "One of your extra eyes disappears."},
 
     {"", "", ""},
-
-    // 70
+    {"", "", ""},
+    {"", "", ""},
+    {"", "", ""},
+    
+    // 75
     {"Your red scales disappear.", "Your red scales recede somewhat.",
      "Your red scales recede somewhat."},
 
@@ -812,7 +837,7 @@ const char *lose_mutation[][3] = {
     {"Your purple scales disappear.", "Your purple scales recede somewhat.",
      "Your purple scales recede somewhat."},
 
-    // 80
+    // 85
     {"Your speckled scales disappear.",
      "Your speckled scales recede somewhat.",
      "Your speckled scales recede somewhat."},
@@ -836,6 +861,9 @@ const char *lose_mutation[][3] = {
      "Your patterned scales recede somewhat."},
 };
 
+/* mutation definitions:
+   first number = probability  (0 means it doesn't appear naturally?)
+   second number = maximum levels */
 static const mutation_def mutation_defs[] = {
     { MUT_TOUGH_SKIN, 10, 3 },
     { MUT_STRONG, 8, 14 },
@@ -884,6 +912,7 @@ static const mutation_def mutation_defs[] = {
     { MUT_MUTATION_RESISTANCE, 4, 3 },
     { MUT_FRAIL, 10, 3 },
     { MUT_ROBUST, 5, 3 },
+    
 /* Some demonic powers start here: */
     { MUT_TORMENT_RESISTANCE, 0, 1 },
     { MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3 },
@@ -901,24 +930,29 @@ static const mutation_def mutation_defs[] = {
     { MUT_THROW_FLAMES, 0, 1 },
     { MUT_THROW_FROST, 0, 1 },
     { MUT_SMITE, 0, 1 },
-    { MUT_CLAWS, 2, 3 },
-    { MUT_HOOVES, 1, 1 },
-// 60
-    { MUT_FANGS, 1, 3 },
-    { MUT_BREATHE_POISON, 0, 1 },
-    { MUT_STINGER, 0, 3 },
-    { MUT_BIG_WINGS, 0, 3 },
-    { MUT_BLUE_MARKS, 0, 3 },
+/* end of demonic powers */
 
-// 65
-    { MUT_GREEN_MARKS, 0, 3 },
-    { MUT_DRIFTING, 3, 3 },
-    { MUT_SAPROVOROUS, 0, 3 },
+    { MUT_CLAWS, 2, 3 },
+    { MUT_FANGS, 1, 3 },
+// 60
+    { MUT_HOOVES, 1, 1 },
     { MUT_TALONS, 1, 1 },
+    { MUT_PAWS, 1, 1 },
+
+    { MUT_BREATHE_POISON, 0, 1 }, // Naga only
+    { MUT_STINGER, 0, 3 },        // Naga and Draconian only
+// 65
+    { MUT_BIG_WINGS, 0, 3 },      // Draconian only
+    { MUT_BLUE_MARKS, 0, 3 },     // used by evil gods to mark followers
+    { MUT_GREEN_MARKS, 0, 3 },
+
+    { MUT_DRIFTING, 3, 3 },
+    { MUT_SAPROVOROUS, 0, 3 },    // species-dependent innate mutation
+    { MUT_EXTRA_EYES, 1, 3 },
 
     { RANDOM_MUTATION, 0, 3 },
 
-// 70
+// 75 -- scales of various colours and effects
     { MUT_RED_SCALES, 2, 3 },
     { MUT_NACREOUS_SCALES, 1, 3 },
     { MUT_GREY2_SCALES, 2, 3 },
@@ -929,7 +963,7 @@ static const mutation_def mutation_defs[] = {
     { MUT_BROWN_SCALES, 2, 3 },
     { MUT_BLUE_SCALES, 2, 3 },
     { MUT_PURPLE_SCALES, 2, 3 },
-// 80
+// 85
     { MUT_SPECKLED_SCALES, 2, 3 },
     { MUT_ORANGE_SCALES, 2, 3 },
     { MUT_INDIGO_SCALES, 2, 3 },
@@ -1318,15 +1352,17 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
     case MUT_CLAWS:
-    case MUT_HOOVES:
     case MUT_FANGS:
+    case MUT_HOOVES:
+    case MUT_TALONS:
+    case MUT_PAWS:
     case MUT_BREATHE_POISON:
     case MUT_STINGER:
     case MUT_BIG_WINGS:
     case MUT_BLUE_MARKS:
     case MUT_GREEN_MARKS:
     case MUT_DRIFTING:
-    case MUT_TALONS:
+    case MUT_EXTRA_EYES:
         amusement *= 2; // funny!
         break;
 
@@ -1513,17 +1549,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     }
 
     // putting boots on after they are forced off. -- bwr
-    if (mutat == MUT_HOOVES
-        && (you.mutation[MUT_TALONS] || you.species == SP_NAGA
-            || player_genus(GENPC_DRACONIAN)))
-    {
-        return false;
-    }
-
-    // putting boots on after they are forced off. -- bwr
-    if (mutat == MUT_TALONS
-        && (you.mutation[MUT_HOOVES] || you.species == SP_NAGA
-            || player_genus(GENPC_DRACONIAN)))
+    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS || mutat == MUT_PAWS)
+         && !player_has_feet())
     {
         return false;
     }
@@ -1674,6 +1701,7 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     //jmf: like horns
     case MUT_HOOVES:
     case MUT_TALONS:
+    case MUT_PAWS:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         remove_one_equip(EQ_BOOTS);
         break;
@@ -1704,6 +1732,10 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
             remove_one_equip(EQ_HELMET);
         }
+        break;
+        
+    case MUT_EXTRA_EYES:
+        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
     case MUT_STRONG_STIFF:

@@ -797,6 +797,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
            return (false);
         }
 
+        if (you.mutation[MUT_PAWS])
+        {
+            if (verbose)
+                mpr("Boots don't fit your paws!");
+           return (false);
+        }
+        
         if (you.species == SP_NAGA)
         {
             if (verbose)
@@ -1700,6 +1707,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // extract weapon/ammo bonuses due to magic
     ammoHitBonus = item.plus;
     ammoDamBonus = item.plus2;
+
+    ammoHitBonus += you.mutation[MUT_EXTRA_EYES];
 
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)

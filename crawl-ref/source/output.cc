@@ -2045,6 +2045,13 @@ std::string status_mut_abilities()
                 text += info;
                 have_any = true;
                 break;
+            case MUT_FANGS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "sharp teeth %d", level);
+                text += info;
+                have_any = true;
+                break;
             case MUT_HOOVES:
                 if (have_any)
                     text += ", ";
@@ -2057,11 +2064,10 @@ std::string status_mut_abilities()
                 text += "talons";
                 have_any = true;
                 break;
-            case MUT_FANGS:
+            case MUT_PAWS:
                 if (have_any)
                     text += ", ";
-                snprintf(info, INFO_SIZE, "sharp teeth %d", level);
-                text += info;
+                text += "soft paws";
                 have_any = true;
                 break;
             case MUT_BREATHE_POISON:
@@ -2097,6 +2103,16 @@ std::string status_mut_abilities()
                 text += info;
                 have_any = true;
                 break;
+            case MUT_EXTRA_EYES:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "%d extra eye%s",
+                         level, level > 1? "s" : "");
+                text += info;
+                have_any = true;
+                break;
+
+            // scales -> calculate sum of AC bonus
             case MUT_RED_SCALES:
                 AC_change += level;
                 if (level == 3)
