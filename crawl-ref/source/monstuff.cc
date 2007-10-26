@@ -384,7 +384,7 @@ static void give_monster_experience( int killer_index, int experience,
     if (!mons->alive())
         return;
 
-    if (mons_friendly(mons) != victim_was_born_friendly)
+    if (!victim_was_born_friendly || !mons_friendly(mons))
         mons->gain_exp(experience);
 }
 
