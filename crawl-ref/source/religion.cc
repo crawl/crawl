@@ -3507,10 +3507,7 @@ void handle_god_time(void)
 
             if (one_chance_in(20))
             {
-                // If you.gift_timeout was == 0, then Xom was BORED.
-                // He HATES that.
-                xom_acts(you.gift_timeout > 0 && you.piety > 100,
-                         abs(you.piety - 100));
+                xom_acts(abs(you.piety - 100));
             }
             break;
         }

@@ -121,7 +121,9 @@ const char *describe_xom_favour()
 
 bool xom_is_nice()
 {
-    return (you.gift_timeout > 0 && you.piety > 100);
+    // If you.gift_timeout was == 0, then Xom was BORED.
+    // He HATES that.
+    return (you.gift_timeout > 0 && you.piety > 100) || coinflip();
 }
 
 static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
@@ -900,7 +902,7 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
-    if (niceness)
+    if (niceness && !one_chance_in(5))
     {
         // Good stuff.
         while (!xom_is_good(sever))
