@@ -8,6 +8,8 @@
 #include <string>
 #include <stdarg.h>
 
+typedef unsigned short screen_buffer_t;
+
 void init_libw32c(void);
 void deinit_libw32c(void);
 
@@ -45,6 +47,7 @@ int getche(void);
 int kbhit(void);
 void delay(int ms);
 void textbackground(int c);
+void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *);
 void update_screen();
 
 void enable_smart_cursor(bool cursor);
@@ -52,5 +55,3 @@ bool is_smart_cursor_enabled();
 void set_mouse_enabled(bool enabled);
 
 #endif
-
-

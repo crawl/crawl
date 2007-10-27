@@ -593,6 +593,44 @@ int window(int x1, int y1, int x2, int y2)
     return (refresh());
 }
 
+// NOTE: This affects libunix.cc draw state; use this just before setting
+// textcolour and drawing a character and call set_altcharset(false)
+// after you're done drawing.
+//
+int cset_adjust(int raw)
+{
+    if (Options.char_set != CSET_ASCII && Options.char_set != CSET_UNICODE)
+    {
+        // switch to alternate char set for 8-bit characters:
+        set_altcharset( raw > 127 );
+
+        // shift the DEC line drawing set:
+        if (Options.char_set == CSET_DEC 
+            && raw >= 0xE0)
+        {
+            raw &= 0x7F;
+        }
+    }
+    return (raw);
+}
+
+void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
+{
+    for (int y = y1; y <= y2; ++y)
+    {
+        gotoxy(x1, y);
+        for (int x = x1; x <= x2; ++x)
+        {
+            const screen_buffer_t ch = cset_adjust( *buf );
+            textattr( buf[1] );
+            putwch( ch );
+            buf += 2;
+        }
+    }
+    set_altcharset(false);
+    update_screen();
+}
+
 // These next four are front functions so that we can reduce 
 // the amount of curses special code that occurs outside this
 // this file.  This is good, since there are some issues with 

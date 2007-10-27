@@ -621,10 +621,8 @@ void print_stats(void)
     cprintf( "Position (%2d,%2d)", you.x_pos, you.y_pos );
 #endif
 
-#ifdef UNIX
     // get curses to redraw screen
     update_screen();
-#endif
 }                               // end print_stats()
 
 const char* itosym1(int stat)

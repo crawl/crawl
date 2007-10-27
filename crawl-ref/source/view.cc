@@ -80,12 +80,6 @@
 
 static FixedVector<feature_def, NUM_FEATURES> Feature;
 
-#ifdef UNICODE_GLYPHS
-typedef unsigned int screen_buffer_t;
-#else
-typedef unsigned short screen_buffer_t;
-#endif
-
 crawl_view_geometry crawl_view;
 FixedArray < unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER > Show_Backup;
 
@@ -2530,29 +2524,6 @@ static int find_feature( const std::vector<coord_def>& features,
     return 0;
 }
 
-#ifdef USE_CURSES
-// NOTE: This affects libunix.cc draw state; use this just before setting
-// textcolour and drawing a character and call set_altcharset(false)
-// after you're done drawing.
-//
-static int cset_adjust(int raw)
-{
-    if (Options.char_set != CSET_ASCII && Options.char_set != CSET_UNICODE)
-    {
-        // switch to alternate char set for 8-bit characters:
-        set_altcharset( raw > 127 );
-
-        // shift the DEC line drawing set:
-        if (Options.char_set == CSET_DEC 
-            && raw >= 0xE0)
-        {
-            raw &= 0x7F;
-        }
-    }
-    return (raw);
-}
-#endif
-
 static int get_number_of_lines_levelmap()
 {
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
@@ -2639,25 +2610,9 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
             }
             
             bufcount2 += 2;
-
-            // newline
-            if (screen_x == 0 && screen_y > 0)
-                gotoxy( 1, screen_y + top );
-
-            unsigned ch = buffer2[bufcount2 - 2];
-#ifdef USE_CURSES
-            ch = cset_adjust( ch );
-#endif
-            textcolor( buffer2[bufcount2 - 1] );
-            putwch(ch);
         }
     }
-
-#ifdef USE_CURSES
-    set_altcharset(false);
-#endif
-
-    update_screen();
+    puttext(1, top, num_cols - 1, top + num_lines - 1, buffer2);
 }
 
 static void reset_travel_colours(std::vector<coord_def> &features)
@@ -4081,7 +4036,7 @@ void view_update_at(const coord_def &pos)
         flash_colour = viewmap_flash_colour();
     
     gotoxy(vp.x, vp.y);
-    textcolor(flash_colour? real_colour(flash_colour) : colour);
+    textattr(flash_colour? real_colour(flash_colour) : colour);
     putwch(ch);
 }
 
@@ -4109,8 +4064,7 @@ bool view_update()
 //---------------------------------------------------------------
 void viewwindow(bool draw_it, bool do_updates)
 {
-    std::vector<screen_buffer_t> buffy(
-        crawl_view.viewsz.y * crawl_view.viewsz.x * 2);
+    screen_buffer_t *buffy(crawl_view.vbuf);
     
     int count_x, count_y;
 
@@ -4302,28 +4256,32 @@ void viewwindow(bool draw_it, bool do_updates)
         if (draw)
         {
             you.last_view_update = you.num_turns;
-            bufcount = 0;
-            for (count_y = 0; count_y < crawl_view.viewsz.y; count_y++)
-            {
-                gotoxy( crawl_view.viewp.x, crawl_view.viewp.y + count_y );
-                for (count_x = 0; count_x < crawl_view.viewsz.x; count_x++)
-                {
-#ifdef USE_CURSES
-                    buffy[bufcount] = cset_adjust( buffy[bufcount] );
-#endif
-                    textcolor( buffy[bufcount + 1] );
-                    putwch( buffy[bufcount] );
-                    bufcount += 2;
-                }
-            }
+            puttext(crawl_view.viewp.x, crawl_view.viewp.y,
+                    crawl_view.viewp.x + crawl_view.viewsz.x - 1,
+                    crawl_view.viewp.y + crawl_view.viewsz.y - 1,
+                    buffy);
         }
-
-#ifdef USE_CURSES
-        set_altcharset( false );
-#endif
-        update_screen();
     }
 }                               // end viewwindow()
+
+//////////////////////////////////////////////////////////////////////////////
+// crawl_view_buffer
+
+crawl_view_buffer::crawl_view_buffer()
+    : buffer(NULL)
+{
+}
+
+crawl_view_buffer::~crawl_view_buffer()
+{
+    delete [] buffer;
+}
+
+void crawl_view_buffer::size(const coord_def &sz)
+{
+    delete [] buffer;
+    buffer = new screen_buffer_t [ sz.x * sz.y * 2 ];
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // crawl_view_geometry
@@ -4336,7 +4294,9 @@ const int crawl_view_geometry::hud_max_gutter;
 crawl_view_geometry::crawl_view_geometry()
     : termsz(80, 24), viewp(1, 1), viewsz(33, 17),
       hudp(40, 1), hudsz(41, 17),
-      msgp(1, viewp.y + viewsz.y), msgsz(80, 7)
+      msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
+      vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
+      vlos1(), vlos2(), mousep(), last_player_pos()
 {
 }
 
@@ -4439,6 +4399,8 @@ void crawl_view_geometry::init_geometry()
 
     if (viewsz.x < VIEW_MIN_WIDTH)
         viewsz.x = VIEW_MIN_WIDTH;
+
+    vbuf.size(viewsz);
 
     // The hud appears after the viewport + gutter.
     hudp = coord_def(viewsz.x + 1 + hud_min_gutter, 1);

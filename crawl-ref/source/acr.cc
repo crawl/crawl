@@ -1829,11 +1829,7 @@ static void prep_input()
 {
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
-#ifdef UNIX
     update_screen();
-#else
-    window( 1, 1, 80, get_number_of_lines() );
-#endif
 
     textcolor(LIGHTGREY);
 
