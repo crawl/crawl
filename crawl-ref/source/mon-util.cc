@@ -2856,6 +2856,15 @@ bool monsters::wants_weapon(const item_def &weap) const
     if (is_fixed_artefact( weap ))
         return (false);
 
+    // Blademasters and master archers like their starting weapon and
+    // don't want another, thank you.
+    if (type == MONS_DEEP_ELF_BLADEMASTER
+        || type == MONS_DEEP_ELF_MASTER_ARCHER)
+    {
+        return (false);
+    }
+    
+    // XXX: Make this check dependent on creature size.
     // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
     // of course, this also block knives {dlb}:
     if ((::mons_species(type) == MONS_KOBOLD
