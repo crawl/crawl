@@ -1069,15 +1069,41 @@ static bool check_old_item_warning( const item_def& item,
     return yesno(prompt.c_str(), false, 'n');
 }
 
+static std::string operation_verb(operation_types oper)
+{
+    switch (oper)
+    {
+    case OPER_WIELD:          return "wield";
+    case OPER_QUAFF:          return "quaff";
+    case OPER_DROP:           return "drop";
+    case OPER_EAT:            return "eat";
+    case OPER_TAKEOFF:        return "take off";
+    case OPER_WEAR:           return "wear";
+    case OPER_PUTON:          return "put on";
+    case OPER_REMOVE:         return "remove";
+    case OPER_READ:           return "read";
+    case OPER_MEMORISE:       return "memorise from";
+    case OPER_ZAP:            return "zap";
+    case OPER_THROW:          return "throw";
+    case OPER_EXAMINE:        return "examine";
+    case OPER_FIRE:           return "fire";
+    case OPER_PRAY:           return "sacrifice";
+    case OPER_EVOKE:          return "evoke";
+    case OPER_ANY:
+    default:
+        return "choose";
+    }
+}
+
 /* return true if user OK'd it (or no warning), false otherwise */ 
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
     if (is_valid_item( item ) && has_warning_inscription(item, oper) )
     {
-        std::string prompt = "Really choose ";
+        std::string prompt = "Really " + operation_verb(oper) + " ";
         prompt += item.name(DESC_INVENTORY);
-        prompt += '?';
+        prompt += "? ";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));
     }
