@@ -4094,21 +4094,27 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
              "HD: %d; pow: %d", mon->hit_dice, beam.ench_power );
 #endif
 
-        if (mon->hit_dice * 7 >= random2(beam.ench_power)
+        if (mon->hit_dice * 11 / 2 >= random2(beam.ench_power)
             || mons_is_unique(mon->type))
         {
             return (MON_RESIST);
         }
 
         // already friendly
-        if (mon->attitude == ATT_FRIENDLY)
+        if (mons_friendly(mon))
             return (MON_UNAFFECTED);
         
         simple_monster_message(mon, " is enslaved.");
         beam.obvious_effect = true;
 
         // wow, permanent enslaving
-        mon->attitude = ATT_FRIENDLY;
+        if (one_chance_in(2 + mon->hit_dice / 4))
+            mon->attitude = ATT_FRIENDLY;
+        else
+            mon->add_ench(ENCH_CHARM);
+        
+        // break fleeing and suchlike
+        mon->behaviour = BEH_SEEK;
         return (MON_AFFECTED);
     }
 
