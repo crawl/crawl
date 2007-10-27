@@ -487,7 +487,8 @@ void direction(dist& moves, targeting_type restricts,
             }
             else
             {
-                flush_input_buffer(FLUSH_ON_FAILURE);
+                if (!skip_iter)
+                    flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
 
@@ -556,7 +557,8 @@ void direction(dist& moves, targeting_type restricts,
             }
             else
             {
-                flush_input_buffer(FLUSH_ON_FAILURE);
+                if (!skip_iter)
+                    flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
         
@@ -571,7 +573,8 @@ void direction(dist& moves, targeting_type restricts,
             }
             else
             {
-                flush_input_buffer(FLUSH_ON_FAILURE);
+                if (!skip_iter)
+                    flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
 

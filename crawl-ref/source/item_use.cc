@@ -2763,6 +2763,12 @@ bool remove_ring(int slot, bool announce)
             return (false);
         }
     }
+    else if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
+                                         OPER_REMOVE))
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
 
     if (you.equip[EQ_GLOVES] != -1 
         && item_cursed( you.inv[you.equip[EQ_GLOVES]] )
