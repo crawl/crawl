@@ -169,30 +169,19 @@ static int fuzz_mons_level(int level)
 
 static void hell_spawn_random_monsters()
 {
-    const int speedup_turn = 3000;
-    
-    // Monster generation in the Vestibule starts ratcheting up quickly
-    // after speedup_turn turns spent in the Vestibule.
-    int genodds = (you.char_direction == GDT_DESCENDING) ? 240 : 8;
-    if (env.turns_on_level > speedup_turn)
+    // Monster generation in the Vestibule drops off quickly.
+    const int taper_off_turn = 500;
+    int genodds = 240;
+    if (env.turns_on_level > taper_off_turn)
     {
-        genodds -= (env.turns_on_level - speedup_turn) / 14;
-        if (genodds < 3)
-            genodds = 3;
+        genodds += (env.turns_on_level - taper_off_turn);
+        genodds = (genodds < 0? 20000 : std::min(genodds, 20000));
     }
 
     if (one_chance_in(genodds))
     {
-        int distance_odds = 10;
-        if (env.turns_on_level > speedup_turn)
-            distance_odds -= (env.turns_on_level - speedup_turn) / 100;
-
-        if (distance_odds < 2)
-            distance_odds = 2;
-
         proximity_type prox =
-            (one_chance_in(distance_odds) ? PROX_NEAR_STAIRS 
-             : PROX_AWAY_FROM_PLAYER);
+            (one_chance_in(10) ? PROX_NEAR_STAIRS : PROX_AWAY_FROM_PLAYER);
         mons_place( WANDERING_MONSTER, BEH_HOSTILE, MHITNOT, false,
                     50, 50, LEVEL_DUNGEON, prox );
         viewwindow(true, false);
