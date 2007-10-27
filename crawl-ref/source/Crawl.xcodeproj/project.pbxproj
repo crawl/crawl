@@ -201,6 +201,7 @@
 		7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B352E9E0B00183400CABB32 /* mapdef.h */; };
 		7B3B075B0BD13AAB00F2980E /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
 		7B3B07600BD13AF000F2980E /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
+		7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B4896600CD3A5D2004A5F43 /* mgrow.cc */; };
 		7B54B51B0CA8217900612805 /* state.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B54B51A0CA8217900612805 /* state.cc */; };
 		7B61642D0C9CA8E80054B3D9 /* mpr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B6164240C9CA8E80054B3D9 /* mpr.h */; };
 		7B61642E0C9CA8E80054B3D9 /* place.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B6164250C9CA8E80054B3D9 /* place.cc */; };
@@ -547,6 +548,8 @@
 		7B352F200B00232500CABB32 /* vaults.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = vaults.des; path = dat/vaults.des; sourceTree = "<group>"; };
 		7B3B07560BD13A8100F2980E /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = /usr/lib/libreadline.dylib; sourceTree = "<absolute>"; };
 		7B3B075F0BD13AF000F2980E /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = /usr/lib/libncurses.dylib; sourceTree = "<absolute>"; };
+		7B4896600CD3A5D2004A5F43 /* mgrow.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mgrow.cc; sourceTree = SOURCE_ROOT; };
+		7B4896610CD3A5D2004A5F43 /* mgrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mgrow.h; sourceTree = SOURCE_ROOT; };
 		7B54B51A0CA8217900612805 /* state.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = state.cc; sourceTree = SOURCE_ROOT; };
 		7B6164240C9CA8E80054B3D9 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mpr.h; sourceTree = SOURCE_ROOT; };
 		7B6164250C9CA8E80054B3D9 /* place.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = place.cc; sourceTree = SOURCE_ROOT; };
@@ -804,6 +807,8 @@
 				7B237E360A8EC9D000580F30 /* menu.h */,
 				7B237E350A8EC9D000580F30 /* message.cc */,
 				7B237DFD0A8EC9D000580F30 /* message.h */,
+				7B4896600CD3A5D2004A5F43 /* mgrow.cc */,
+				7B4896610CD3A5D2004A5F43 /* mgrow.h */,
 				7B237DFC0A8EC9D000580F30 /* misc.cc */,
 				7B237DE90A8EC9D000580F30 /* misc.h */,
 				7B237DE80A8EC9D000580F30 /* mon-pick.cc */,
@@ -1157,6 +1162,7 @@
 				7B6164340C9CA8E80054B3D9 /* traps.cc in Sources */,
 				7B54B51B0CA8217900612805 /* state.cc in Sources */,
 				7BD222200CC2D51300B475D8 /* store.cc in Sources */,
+				7B4896620CD3A5D2004A5F43 /* mgrow.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
