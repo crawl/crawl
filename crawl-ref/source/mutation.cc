@@ -951,6 +951,9 @@ static const mutation_def mutation_defs[] = {
     { MUT_EXTRA_EYES, 1, 3 },
 
     { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3 },
 
 // 75 -- scales of various colours and effects
     { MUT_RED_SCALES, 2, 3 },
