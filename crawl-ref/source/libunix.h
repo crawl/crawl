@@ -7,6 +7,12 @@
 #define O_BINARY O_RDWR
 #endif
 
+#ifdef UNICODE_GLYPHS
+typedef unsigned int screen_buffer_t;
+#else
+typedef unsigned short screen_buffer_t;
+#endif
+
 char getche(void);
 
 void message_out(int mline, int colour, const char *str, int firstcol = 0,
@@ -30,6 +36,7 @@ int translate_keypad(int keyin);
 int wherex(void);
 int wherey(void);
 int window(int x1, int y1, int x2, int y2);
+void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *);
 void update_screen(void);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
@@ -41,6 +48,7 @@ void unixcurses_startup(void);
 void textbackground(int bg);
 void textcolor(int col);
 void textattr(int col);
+int cset_adjust(int raw);
 
 void set_altcharset(bool alt_on);
 bool get_altcharset();

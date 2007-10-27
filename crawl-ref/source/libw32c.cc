@@ -987,6 +987,21 @@ int get_console_string(char *buf, int maxlen)
     return (int)nread;
 }
 
+void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
+{
+    for (int y = y1; y <= y2; ++y)
+    {
+        gotoxy(x1, y);
+        for (int x = x1; x <= x2; x++)
+        {
+            textattr( buf[1] );
+            putwch( *buf );
+            buf += 2;
+        }
+    }
+    update_screen();
+}
+
 void update_screen()
 {
     bFlush();

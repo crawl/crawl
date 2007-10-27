@@ -18,6 +18,19 @@
 #include "enum.h"
 #include "ray.h"
 
+class crawl_view_buffer
+{
+public:
+    crawl_view_buffer();
+    ~crawl_view_buffer();
+    void size(const coord_def &size);
+    operator screen_buffer_t * () { return (buffer); }
+
+    void draw();
+private:
+    screen_buffer_t *buffer;
+};
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - debug - effects - it_use3 - item_use - spells1 -
@@ -33,6 +46,8 @@ public:
     coord_def hudsz;               // Size of the status area.
     coord_def msgp;                // Left-top pos of the message pane.
     coord_def msgsz;               // Size of the message pane.
+
+    crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
     coord_def vgrdc;               // What grid pos is at the centre of the view
                                    // usually you.pos().
