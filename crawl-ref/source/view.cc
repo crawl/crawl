@@ -2756,7 +2756,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
 #ifdef USE_CURSES
             ch = cset_adjust( ch );
 #endif
-            textcolor( buffer2[bufcount2 - 1] );
+            textattr( buffer2[bufcount2 - 1] );
             putwch(ch);
         }
     }
@@ -4238,7 +4238,7 @@ void view_update_at(const coord_def &pos)
         flash_colour = viewmap_flash_colour();
     
     gotoxy(vp.x, vp.y);
-    textcolor(flash_colour? real_colour(flash_colour) : colour);
+    textattr(flash_colour? real_colour(flash_colour) : colour);
     putwch(ch);
 }
 
@@ -4473,7 +4473,7 @@ void viewwindow(bool draw_it, bool do_updates)
 #ifdef USE_CURSES
                     buffy[bufcount] = cset_adjust( buffy[bufcount] );
 #endif
-                    textcolor( buffy[bufcount + 1] );
+                    textattr( buffy[bufcount + 1] );
                     putwch( buffy[bufcount] );
                     bufcount += 2;
                 }
