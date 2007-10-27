@@ -806,10 +806,12 @@ static void deck_from_specs(const char* _specs, item_def &item)
         for (int i = 0; types[i] != NUM_MISCELLANY; i++)
         {
             item.sub_type = types[i];
-            
+            item.plus     = 1;
+            init_deck(item);
             // Remove "plain " from front
             std::string name = item.name(DESC_PLAIN).substr(6);
-
+            item.props.clear();
+            
             if (name.find(type_str) != std::string::npos)
                 break;
         }
