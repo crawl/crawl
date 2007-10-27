@@ -668,7 +668,7 @@ inline static void beogh_follower_convert(monsters *monster)
         const int hd = monster->hit_dice;
 
         if (you.piety >= 75 && !you.penance[GOD_BEOGH] &&
-            random2(you.piety / 15) + random2(12)
+            random2(you.piety / 15) + random2(4 + you.experience_level / 3)
               > random2(hd) + hd + random2(5))
         {
             int wpn = you.equip[EQ_WEAPON];

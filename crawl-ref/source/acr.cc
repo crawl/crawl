@@ -2505,8 +2505,6 @@ static void show_message_line(std::string line)
         mpr(line.c_str());
     else
     {
-        take_note(Note( NOTE_MESSAGE, MSGCH_PLAIN, 0, line.c_str() ));
-        
         std::string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
@@ -2518,6 +2516,8 @@ static void show_message_line(std::string line)
         fs.textcolor(LIGHTGREY);
         fs.cprintf("%s", line.c_str());
         formatted_mpr(fs, MSGCH_PLAIN, 0);
+        take_note(Note( NOTE_MESSAGE, MSGCH_PLAIN, 0,
+                        (sender + ": " + line).c_str() ));
     }
 }
 
