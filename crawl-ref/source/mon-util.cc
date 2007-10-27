@@ -3541,7 +3541,7 @@ int monsters::res_negative_energy() const
     return (mons_res_negative_energy(this));
 }
 
-flight_type monsters::flies() const
+flight_type monsters::flight_mode() const
 {
     return (mons_flies(this));
 }

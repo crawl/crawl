@@ -1814,7 +1814,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        if (defender->flies())
+        if (defender->airborne())
             break;
         else if (defender->res_elec() > 0)
             break;
@@ -3228,7 +3228,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 defender->res_elec(),
                 atk->hit_dice + random2( atk->hit_dice / 2 ));
 
-        if (defender->flies())
+        if (defender->airborne())
             special_damage = special_damage * 2 / 3;
 
         if (needs_message && special_damage)

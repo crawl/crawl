@@ -173,7 +173,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     }
 
     // only consider terrain if player is not levitating
-    if (!player_is_levitating())
+    if (!player_is_airborne())
     {
         // XXX: at some point we're going to need to fix the swimming 
         // code to handle burden states.
@@ -286,7 +286,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             if (!stepped)
                 trap_known = false;
 
-            if (!player_is_levitating()
+            if (!player_is_airborne()
                 || trap_category( env.trap[id].type ) != DNGN_TRAP_MECHANICAL)
             {
                 handle_traps(env.trap[id].type, id, trap_known);
@@ -319,7 +319,7 @@ bool player_can_swim()
 
 bool is_grid_dangerous(int grid)
 {
-    return (!player_is_levitating()
+    return (!player_is_airborne()
             && (grid == DNGN_LAVA
                 || (grid == DNGN_DEEP_WATER && !player_likes_water()) ));
 }
@@ -1571,7 +1571,7 @@ int player_movement_speed(void)
         // Swiftness is an Air spell, it doesn't work in water, but
         // flying players will move faster.
         if (you.duration[DUR_SWIFTNESS] > 0 && !player_in_water())
-            mv -= (you.flies() == FL_FLY ? 4 : 2);
+            mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
 
         /* Mutations: -2, -3, -4, unless innate and shapechanged */
         if (you.mutation[MUT_FAST] > 0 &&
@@ -2069,7 +2069,7 @@ int player_evasion()
 
     case SP_KENKU:
         // Flying kenku get an evasion bonus.
-        if (you.flies() == FL_FLY)
+        if (you.flight_mode() == FL_FLY)
         {
             const int ev_bonus = std::min(9, std::max(1, ev / 5));
             ev += ev_bonus;
@@ -2429,7 +2429,7 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity( burden_state_type bs )
 {
-    int cap = 3500+(you.strength * 100)+(player_is_levitating() ? 1000 : 0);
+    int cap = 3500+(you.strength * 100)+(player_is_airborne() ? 1000 : 0);
     if ( bs == BS_UNENCUMBERED )
         return (cap * 5) / 6;
     else if ( bs == BS_ENCUMBERED )
@@ -3271,7 +3271,7 @@ int check_stealth(void)
 
     stealth += scan_randarts( RAP_STEALTH );
 
-    if (player_is_levitating())
+    if (player_is_airborne())
         stealth += 10;
     else if (player_in_water())
     {
@@ -3476,7 +3476,7 @@ void display_char_status()
     if (you.duration[DUR_BERSERKER])
         mpr( "You are possessed by a berserker rage." );
 
-    if (player_is_levitating())
+    if (player_is_airborne())
         mpr( "You are hovering above the floor." );
 
     if (you.attribute[ATTR_HELD])
@@ -3540,7 +3540,7 @@ void display_char_status()
     const bool water  = player_in_water();
     const bool swim   = player_is_swimming();
 
-    const bool lev    = player_is_levitating();
+    const bool lev    = player_is_airborne();
     const bool fly    = (lev && you.duration[DUR_CONTROLLED_FLIGHT]);
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
 
@@ -3825,9 +3825,9 @@ bool wearing_amulet(char amulet, bool calc_unid)
     return false;
 }                               // end wearing_amulet()
 
-bool player_is_levitating(void)
+bool player_is_airborne(void)
 {
-    return you.is_levitating();
+    return you.airborne();
 }
 
 bool player_has_spell( int spell )
@@ -5077,7 +5077,7 @@ level_id actor::shaft_dest() const
 
 bool actor::airborne() const
 {
-    return (is_levitating() || (flies() == FL_FLY && !paralysed()));
+    return (is_levitating() || (flight_mode() == FL_FLY && !paralysed()));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -5886,7 +5886,7 @@ bool player::omnivorous() const
     return (species == SP_TROLL || species == SP_OGRE);
 }
 
-flight_type player::flies() const
+flight_type player::flight_mode() const
 {
     if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
         attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
@@ -5904,7 +5904,8 @@ flight_type player::flies() const
 bool player::light_flight() const
 {
     // Only Kenku get perks for flying light.
-    return (species == SP_KENKU && flies() == FL_FLY && travelling_light());
+    return (species == SP_KENKU
+            && flight_mode() == FL_FLY && travelling_light());
 }
 
 bool player::travelling_light() const

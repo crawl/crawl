@@ -165,7 +165,7 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_negative_energy() const = 0;
 
-    virtual flight_type flies() const = 0;
+    virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
     virtual bool airborne() const;
     
@@ -818,7 +818,7 @@ public:
 
     bool omnivorous() const;
 
-    flight_type flies() const;
+    flight_type flight_mode() const;
 
     bool paralysed() const;
     bool confused() const;
@@ -1103,7 +1103,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    flight_type flies() const;
+    flight_type flight_mode() const;
     bool is_levitating() const;
     bool invisible() const;
     bool can_see_invisible() const;

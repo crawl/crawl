@@ -1049,7 +1049,7 @@ void cast_fly(int power)
 {
     int dur_change = 25 + random2(power) + random2(power);
 
-    const bool was_levitating = player_is_levitating();
+    const bool was_levitating = player_is_airborne();
 
     if (you.duration[DUR_LEVITATION] + dur_change > 100)
         you.duration[DUR_LEVITATION] = 100;

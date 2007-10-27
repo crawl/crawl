@@ -425,7 +425,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     {
         if (!grid_is_solid(grd(pos)))
         {
-            if (!you.flies())
+            if (!you.airborne())
                 move_player_to_grid(pos.x, pos.y, false, true, false);
         }
         else

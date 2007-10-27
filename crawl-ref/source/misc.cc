@@ -444,15 +444,15 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
             mpr("A mysterious force pulls you upwards.");
         else
         {
-            mprf("You %s downwards.", you.flies()? "fly" :
-                                     (player_is_levitating()? "float" :
+            mprf("You %s downwards.", you.flight_mode() == FL_FLY? "fly" :
+                                     (player_is_airborne()? "float" :
                                       "slide"));
         }
     }
     else
     {
-        mprf("You %s %swards.", you.flies()? "fly" :
-                                (player_is_levitating()? "float" : "climb"),
+        mprf("You %s %swards.", you.flight_mode() == FL_FLY? "fly" :
+                                (player_is_airborne()? "float" : "climb"),
                                 going_up? "up": "down");
     }
 }
@@ -571,7 +571,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
-    if (!player_is_levitating()
+    if (!player_is_airborne()
         && you.duration[DUR_CONF] 
         && (stair_find >= DNGN_STONE_STAIRS_UP_I 
             && stair_find <= DNGN_ROCK_STAIRS_UP)
@@ -675,7 +675,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (player_is_levitating())
+    if (player_is_airborne())
     {
         if (you.duration[DUR_CONTROLLED_FLIGHT])
             mpr("You fly upwards.");
@@ -832,7 +832,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         return;
     }
 
-    if (!force_stair && you.flies() == FL_LEVITATE)
+    if (!force_stair && you.flight_mode() == FL_LEVITATE)
     {
         mpr("You're floating high up above the floor!");
         return;
@@ -849,7 +849,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             return;
         }
 
-        if (you.flies() == FL_LEVITATE && !force_stair)
+        if (you.flight_mode() == FL_LEVITATE && !force_stair)
         {
             if (known_trap)
                 mpr("You can't fall through a shaft while levitating.");
@@ -873,7 +873,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         shaft_level = absdungeon_depth(shaft_dest.branch,
                                           shaft_dest.depth);
 
-        if (you.flies() != FL_FLY || force_stair)
+        if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");
     }
 
@@ -1033,7 +1033,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
 
-    if (!player_is_levitating()
+    if (!player_is_airborne()
         && you.duration[DUR_CONF] 
         && (stair_find >= DNGN_STONE_STAIRS_DOWN_I 
             && stair_find <= DNGN_ROCK_STAIRS_DOWN)
@@ -1091,7 +1091,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     default:
         if (shaft)
         {
-            if (you.flies() == FL_FLY && !force_stair)
+            if (you.flight_mode() == FL_FLY && !force_stair)
                 mpr("You dive down through the shaft.");
         }
         else
