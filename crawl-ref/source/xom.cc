@@ -106,7 +106,9 @@ const char *describe_xom_favour()
 
 bool xom_is_nice()
 {
-    return (you.gift_timeout > 0 && you.piety > 100);
+    // If you.gift_timeout was == 0, then Xom was BORED.
+    // He HATES that.
+    return (you.gift_timeout > 0 && you.piety > 100) || coinflip();
 }
 
 void xom_is_stimulated(int maxinterestingness)
@@ -794,7 +796,7 @@ void xom_acts(bool niceness, int sever)
     if (sever < 1)
         sever = 1;
     
-    if (niceness)
+    if (niceness && !one_chance_in(5))
     {
         // Good stuff.
         while (!xom_is_good(sever))

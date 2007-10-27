@@ -1341,14 +1341,17 @@ bool acquirement(object_class_type class_wanted, int agent)
             {
                 thing.plus  -= plusmod;
                 thing.plus2 += plusmod;
+                if (!is_random_artefact(thing))
+                    thing.plus = std::max(static_cast<int>(thing.plus), 0);
             }
             // more accuracy, less damage
             else if (agent == GOD_OKAWARU)
             {
                 thing.plus  += plusmod;
                 thing.plus2 -= plusmod;
+                if (!is_random_artefact(thing))
+                    thing.plus2 = std::max(static_cast<int>(thing.plus2), 0);
             }
-
         }
         else if (thing.base_type == OBJ_ARMOUR
                  && !is_fixed_artefact( thing )

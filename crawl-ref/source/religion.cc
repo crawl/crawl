@@ -597,6 +597,8 @@ static void do_god_gift(bool prayed_for)
                 else
                 {
                     success = acquirement(OBJ_ARMOUR, you.religion);
+                    // Okawaru charges extra for armour acquirements.
+                    inc_gift_timeout(20 + random2avg(15, 2));
                 }
 
                 if (success)
@@ -1512,7 +1514,7 @@ void gain_piety(int pgn)
 
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them
-        if (!one_chance_in(8))
+        if (!one_chance_in(4))
             return;
     }
 
@@ -3272,10 +3274,7 @@ void handle_god_time(void)
 
             if (one_chance_in(20))
             {
-                // If you.gift_timeout was == 0, then Xom was BORED.
-                // He HATES that.
-                xom_acts(you.gift_timeout > 0 && you.piety > 100,
-                         abs(you.piety - 100));
+                xom_acts(abs(you.piety - 100));
             }
             break;
         }
