@@ -225,7 +225,7 @@ bool butchery(void)
         return (false);
     }
 
-    if (you.flies() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
         return (false);
@@ -732,7 +732,7 @@ void eat_floor_item(int item_link)
 
 bool eat_from_floor(void)
 {
-    if (you.flies() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE)
         return (false);
 
     bool need_more = false;

@@ -826,7 +826,7 @@ void pray()
     const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
     if (altar_god != GOD_NO_GOD)
     {
-        if (you.flies() == FL_LEVITATE)
+        if (you.flight_mode() == FL_LEVITATE)
         {
             mpr("You are floating high above the altar.");
             return;
@@ -1590,7 +1590,7 @@ bool beogh_water_walk()
 static bool need_water_walking()
 {
     return
-        !player_is_levitating() && you.species != SP_MERFOLK &&
+        !player_is_airborne() && you.species != SP_MERFOLK &&
         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
 }
 

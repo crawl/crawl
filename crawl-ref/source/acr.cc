@@ -2924,7 +2924,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
         }
         else
         {
-            mpr( player_is_levitating() ? "You reach down and open the door."
+            mpr( player_is_airborne() ? "You reach down and open the door."
                                         : "You open the door." );
         }
 
@@ -3007,7 +3007,7 @@ static void close_door(int door_x, int door_y)
         }
         else
         {
-            mpr( player_is_levitating() ? "You reach down and close the door."
+            mpr( player_is_airborne() ? "You reach down and close the door."
                                         : "You close the door." );
         }
 

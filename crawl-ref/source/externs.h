@@ -154,7 +154,9 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_negative_energy() const = 0;
 
-    virtual flight_type flies() const = 0;
+    virtual flight_type flight_mode() const = 0;
+    virtual bool is_levitating() const = 0;
+    virtual bool airborne() const;
     
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
@@ -693,7 +695,6 @@ public:
     
     bool in_water() const;
     bool can_swim() const;
-    bool is_levitating() const;
     bool cannot_speak() const;
     bool invisible() const;
     bool can_see_invisible() const;
@@ -776,7 +777,8 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    flight_type flies() const;
+    bool is_levitating() const;    
+    flight_type flight_mode() const;
 
     bool paralysed() const;
     bool confused() const;
@@ -1044,7 +1046,8 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    flight_type flies() const;
+    bool is_levitating() const;
+    flight_type flight_mode() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const ;

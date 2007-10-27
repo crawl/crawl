@@ -110,7 +110,7 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
     }
 
     const monsters* mons = static_cast<const monsters*>(mon);
-    bool mon_flies = mons->flies() == FL_FLY;
+    bool mon_flies = mons->flight_mode() == FL_FLY;
     if (mon_flies && (!mons_is_confused(mons) || one_chance_in(3)))
     {
         simple_monster_message(mon, " darts out from under the net!");
@@ -149,7 +149,7 @@ void player_caught_in_net()
         return;
     }
 
-    if (you.flies() == FL_FLY && (!you.confused() || one_chance_in(3)))
+    if (you.flight_mode() == FL_FLY && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");
         return;
@@ -163,10 +163,10 @@ void player_caught_in_net()
 
         // I guess levitation works differently, keeping both you
         // and the net hovering above the floor
-        if (you.flies() == FL_FLY)
+        if (you.flight_mode() == FL_FLY)
         {
             mpr("You fall like a stone!");
-            fall_into_a_pool(you.x_pos, you.y_pos, false, grd[you.x_pos][you.y_pos]);
+            fall_into_a_pool(you.x_pos, you.y_pos, false, grd(you.pos()));
         }
     }
 }

@@ -483,7 +483,7 @@ void print_stats(void)
             cprintf( "Ins " );
         }
 
-        if (player_is_levitating())
+        if (player_is_airborne())
         {
             bool perm = (you.species == SP_KENKU && you.experience_level >= 15)
                         || (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ))
@@ -975,7 +975,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid, long sc)
     cols.add_formatted(2, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);
-    const int rlevi = player_is_levitating();
+    const int rlevi = player_is_airborne();
     const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
@@ -1248,7 +1248,7 @@ void print_overview_screen()
     cols.add_formatted(1, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);
-    const int rlevi = player_is_levitating();
+    const int rlevi = player_is_airborne();
     const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
@@ -1425,7 +1425,7 @@ std::string status_mut_abilities()
     if (you.duration[DUR_BERSERKER])
         text += "berserking, ";
 
-    if (player_is_levitating())
+    if (player_is_airborne())
         text += "levitating, ";
 
     if (you.duration[DUR_BARGAIN])

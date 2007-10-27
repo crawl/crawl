@@ -1028,7 +1028,7 @@ bool pickup_single_item(int link, int qty)
         return (false);
     }
 
-    if (you.flies() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
         return (false);
@@ -1070,7 +1070,7 @@ void pickup()
         return;
     }
 
-    if (you.flies() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You can't reach the floor from up here.");
         return;
@@ -2804,7 +2804,7 @@ bool can_autopickup()
             && you.duration[DUR_TRANSFORMATION] > 0)
         return (false);
 
-    if (you.flies() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE)
         return (false);
 
     if ( Options.safe_autopickup && !i_feel_safe() )

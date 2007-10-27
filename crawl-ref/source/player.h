@@ -56,7 +56,7 @@ bool player_light_armour(bool with_skill = false);
  * *********************************************************************** */
 bool player_in_water(void);
 bool player_is_swimming(void);
-bool player_is_levitating(void);
+bool player_is_airborne(void);
 
 /* ***********************************************************************
  * called from: ability - chardump - fight - religion - spell - spells -
