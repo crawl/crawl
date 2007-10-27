@@ -100,7 +100,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         // query for location {dlb}:
         for (;;)
         {
-            direction(beam, DIR_TARGET, TARG_ANY, false, false, "Blink to where?");
+            direction(beam, DIR_TARGET, TARG_ANY, false, false,
+                      "Blink to where?");
 
             if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
             {

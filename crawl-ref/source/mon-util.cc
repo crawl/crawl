@@ -3548,7 +3548,8 @@ flight_type monsters::flight_mode() const
 
 bool monsters::is_levitating() const
 {
-    return (mons_class_flag(type, M_LEVITATE));
+    // Checking class flags is not enough - see mons_flies.
+    return (flight_mode() == FL_LEVITATE);
 }
 
 int monsters::mons_species() const
