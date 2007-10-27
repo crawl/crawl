@@ -840,7 +840,8 @@ void cast_toxic_radiance(void)
     {
         monster = &menv[toxy];
 
-        if (monster->type != -1 && mons_near(monster))
+        if (monster->type != -1 && mons_near(monster)
+            && !monster->submerged())
         {
             // Monsters affected by corona are still invisible in that
             // radiation passes through them without affecting them. Therefore,
