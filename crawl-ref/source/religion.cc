@@ -742,6 +742,8 @@ static void do_god_gift(bool prayed_for)
                 else
                 {
                     success = acquirement(OBJ_ARMOUR, you.religion);
+                    // Okawaru charges extra for armour acquirements.
+                    inc_gift_timeout(20 + random2avg(15, 2));
                 }
 
                 if (success)
@@ -1690,7 +1692,7 @@ void gain_piety(int pgn)
 
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them
-        if (!one_chance_in(8))
+        if (!one_chance_in(4))
         {
 #if DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
