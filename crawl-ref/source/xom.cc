@@ -372,21 +372,34 @@ monsters *get_random_nearby_monster()
     return (monster);
 }
 
-static int xom_random_demon(int sever)
+static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
 {
-    int demontype;
+    const int roll = random2(1000 - (27 - you.experience_level) * 10);
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "xom_random_demon: sever = %d, roll: %d",
+         sever, roll);
+#endif    
+    const demon_class_type dct =
+        roll >= 850 ? DEMON_GREATER :
+        roll >= 340 ? DEMON_COMMON  :
+        DEMON_LESSER;
+    const monster_type demontype =
+        summon_any_demon(
+            use_greater_demons || dct != DEMON_GREATER? dct : DEMON_COMMON);
+    return (demontype);
+}
 
+// Returns a demon suitable for use in Xom's punishments, filtering out the
+// really nasty ones early on.
+static monster_type xom_random_punishment_demon(int sever)
+{
+    monster_type demon = MONS_PROGRAM_BUG;
     do
-    {
-        // XXX Change the 20 if we add/remove demons!
-        // XXX Maybe we should use summon_any_demon() instead?
-        demontype = MONS_WHITE_IMP +
-            std::min(random2(random2(random2(sever))), 20);
-
-        // Don't make Green Deaths for non-poison-resistant characters.
-    } while ( demontype == MONS_GREEN_DEATH && !player_res_poison());
-
-    return demontype;
+        demon = xom_random_demon(sever);
+    while ((demon == MONS_HELLION
+            && you.experience_level < 12
+            && !one_chance_in(3 + (12 - you.experience_level) / 2)));
+    return (demon);
 }
 
 static bool xom_is_good(int sever)
@@ -457,7 +470,7 @@ static bool xom_is_good(int sever)
                    (temp_rand == 1) ? "Xom grants you some temporary aid."
                    : "Xom momentarily opens a gate.");
                 
-        int numdemons = std::min(random2(random2(random2(sever+1)+1)+1)+2, 24);
+        int numdemons = std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
         for (int i = 0; i < numdemons; i++)
         {
             create_monster(xom_random_demon(sever), 3, BEH_GOD_GIFT,
@@ -482,7 +495,6 @@ static bool xom_is_good(int sever)
                        (temp_rand == 0) ? "\"Serve the mortal, my child!\"" :
                        (temp_rand == 1) ? "Xom grants you a demonic assistant."
                        : "Xom opens a gate.");
-                    
             done = true;
         }
     }
@@ -539,7 +551,8 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 9)
     {
-        if (create_monster( xom_random_demon(sever), 0, BEH_GOD_GIFT,
+        if (create_monster( xom_random_demon(sever, one_chance_in(8)),
+                            0, BEH_GOD_GIFT,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {
             temp_rand = random2(3);
@@ -738,12 +751,13 @@ static bool xom_is_bad(int sever)
             else
             {
                 const int numdemons =
-                    std::min(random2(random2(random2(sever+1)+1)+1)+1, 24);
+                    std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
                 for (int i = 0; i < numdemons; i++)
                 {
-                    create_monster(MONS_WHITE_IMP + random2(random2(random2(std::min(sever,22)))),
-                                   4, BEH_HOSTILE, you.x_pos, you.y_pos,
-                                   MHITNOT, 250);
+                    create_monster(
+                        xom_random_punishment_demon(sever),
+                        4, BEH_HOSTILE, you.x_pos, you.y_pos,
+                        MHITNOT, 250);
                 }
             }
                 

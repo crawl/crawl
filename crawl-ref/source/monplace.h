@@ -144,7 +144,7 @@ bool empty_surrounds( int emx, int emy, unsigned char spc_wanted, int radius,
 /* ***********************************************************************
  * called from: ability - acr - items - maps - mstuff2 - spell - spells
  * *********************************************************************** */
-int summon_any_demon( demon_class_type demon_class );
+monster_type summon_any_demon( demon_class_type demon_class );
 
 
 // last update 13mar2001 {gdl}
