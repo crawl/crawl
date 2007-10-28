@@ -571,6 +571,7 @@ static bool food_change(bool suppress_message)
             case HS_STARVING:
                 mpr("You are starving!", MSGCH_FOOD);
                 learned_something_new(TUT_YOU_STARVING);
+                you.check_awaken(500);
                 break;
             case HS_HUNGRY:
                 mpr("You are feeling hungry.", MSGCH_FOOD);

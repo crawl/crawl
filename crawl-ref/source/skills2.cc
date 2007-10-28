@@ -2243,6 +2243,10 @@ int calc_mp(bool real_mp)
     if (!real_mp)
         you.max_magic_points += player_magical_power();
 
+    // analogous to ROBUST/FRAIL
+    you.max_magic_points *= (10 + you.mutation[MUT_HIGH_MAGIC] - you.mutation[MUT_LOW_MAGIC]);
+    you.max_magic_points /= 10;
+
     if (you.max_magic_points > 50)
         you.max_magic_points = 50 + ((you.max_magic_points - 50) / 2);
 

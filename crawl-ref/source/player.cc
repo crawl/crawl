@@ -1099,6 +1099,9 @@ int player_res_cold(bool calc_unid)
 
     // mutations:
     rc += you.mutation[MUT_COLD_RESISTANCE];
+    
+    if (you.mutation[MUT_SHAGGY_FUR] == 3)
+        rc++;
 
     if (you.duration[DUR_FIRE_SHIELD])
         rc -= 2;
@@ -1783,6 +1786,7 @@ int player_AC(void)
         AC += 100 * you.mutation[MUT_IRIDESCENT_SCALES];
         AC += 100 * you.mutation[MUT_PATTERNED_SCALES];
         AC += 100 * you.mutation[MUT_BLUE_SCALES];
+        AC += 100 * you.mutation[MUT_SHAGGY_FUR];
 
         // these gives: +1, +3, +5
         if (you.mutation[MUT_GREEN_SCALES] > 0)
@@ -3457,9 +3461,12 @@ void display_char_status()
     if (you.duration[DUR_BEHELD])
         mpr( "You are beheld." );
 
+    // how exactly did you get to show the status?
     if (you.duration[DUR_PARALYSIS])
         mpr( "You are paralysed." );
-
+    if (you.duration[DUR_SLEEP])
+        mpr( "You are asleep." );
+        
     if (you.duration[DUR_EXHAUSTED])
         mpr( "You are exhausted." );
 
@@ -4750,6 +4757,7 @@ bool confuse_player( int amount, bool resistable )
     if (you.duration[DUR_CONF] > old_value)
     {
         // XXX: which message channel for this message?
+        you.check_awaken(500);
         mprf("You are %sconfused.", (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_ENCHANTED);
 
@@ -5481,7 +5489,7 @@ bool player::cannot_speak() const
     if (silenced(x_pos, y_pos))
         return (true);
 
-    if (you.duration[DUR_PARALYSIS])
+    if (you.duration[DUR_PARALYSIS]) // we allow talking during sleep ;)
         return (true);
         
     // No transform that prevents the player from speaking yet.
@@ -6127,7 +6135,7 @@ void player::moveto(const coord_def &c)
 
 bool player::asleep() const
 {
-    return duration[DUR_SLEEP] > 0;
+    return (duration[DUR_SLEEP] > 0);
 }
 
 bool player::cannot_act() const
@@ -6152,6 +6160,7 @@ void player::put_to_sleep(int)
         return;
 
     mpr("You fall asleep.");
+    stop_delay();
     you.flash_colour = DARKGREY;
     viewwindow(true, false);
 

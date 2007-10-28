@@ -1227,6 +1227,7 @@ static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
    of round */
 bool apply_berserk_penalty = false;
 
+static void drift_player(int move_x, int move_y);
 /*
  * This function handles the player's input. It's called from main(),
  * from inside an endless loop.
@@ -1291,6 +1292,13 @@ static void input()
         crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                       "repetition.");
 
+        // may sleep walk
+        if (!you.paralysed() && you.mutation[MUT_DRIFTING]
+            && (random2(100) <= you.mutation[MUT_DRIFTING] * 5) )
+        {
+            drift_player(0, 0);
+        }
+        
         world_reacts();
         return;
     }
@@ -3606,7 +3614,7 @@ static void do_berserk_no_combat_penalty(void)
 }                               // end do_berserk_no_combat_penalty()
 
 
-static void drift_player(int move_x, int move_y)
+void drift_player(int move_x, int move_y)
 {
     int drift_dir = -1;
     int okay_dirs = 0;

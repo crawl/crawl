@@ -226,7 +226,8 @@ const char *mutation_descrip[][3] = {
      "You are somewhat resistant to both further mutation and mutation removal.",
      "Your current mutations are irrevocably fixed, and you can mutate no more."},
 
-    {"You are frail (-10 percent hp).", "You are very frail (-20 percent hp).",
+    {"You are frail (-10 percent hp).",
+     "You are very frail (-20 percent hp).",
      "You are extremely frail (-30 percent hp)."},
 
     {"You are robust (+10 percent hp).",
@@ -302,13 +303,22 @@ const char *mutation_descrip[][3] = {
      "You thrive on rotten meat."},    
 
     // 70
-    {"You have a third eye on your forehead.",
-     "You have two additional eyes on your forehead.",
-     "You have three additional eyes on your forehead."},
+    {"You are covered in fur.",
+     "You are covered in thick fur.",
+     "Your thick and shaggy fur keeps you warm."},
+     
+    {"You have an increased reservoir of magic (+10 percent mp).",
+     "You have an strongly increased reservoir of magic (+20 percent mp).",
+     "You have an extremely increased reservoir of magic (+30 percent mp)."},
 
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
+    {"Your magical capacity is low (-10 percent mp).",
+     "Your magical capacity is very low (-20 percent mp).",
+     "Your magical capacity is extremy low (-30 percent mp)."},
+
+    {"You occasionally fall asleep.",
+     "You sometimes fall asleep.",
+     "You frequently fall asleep."},
+    
     {"", "", ""},
 
     // 75
@@ -375,7 +385,7 @@ const char *mutation_descrip[][3] = {
 
     {"You are partially covered in patterned scales (AC + 1).",
      "You are mostly covered in patterned scales (AC + 2).",
-     "You are completely covered in patterned scales (AC + 3)."},
+     "You are completely covered in patterned scales (AC + 3)."}
 };
 
 /*
@@ -563,13 +573,18 @@ const char *gain_mutation[][3] = {
     {"", "", ""},
     
     // 70
-    {"You sprout an extra eye.",
-     "You sprout another eye.",
-     "You sprout another eye."},
+    {"Fur sprouts all over your body.",
+     "Your fur grows into a thick mane.",
+     "Your thick fur grows shaggy and warm."},
+
+    {"You feel more energetic.", "You feel more energetic.",
+     "You feel more energetic."},
      
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
+    {"You feel less energetic.", "You feel less energetic.",
+     "You feel less energetic."},
+
+    {"You feel a bit tired.", "You feel drowsy.", "You feel really drowsy."},
+    
     {"", "", ""},
 
     // 75
@@ -622,7 +637,7 @@ const char *gain_mutation[][3] = {
      "Iridescent scales cover you completely."},
     {"Patterned scales grow over part of your body.",
      "Patterned scales spread over more of your body.",
-     "Patterned scales cover you completely."},
+     "Patterned scales cover you completely."}
 };
 
 const char *lose_mutation[][3] = {
@@ -794,13 +809,18 @@ const char *lose_mutation[][3] = {
     {"", "", ""},
 
     // 70
-    {"Your extra eye disappears.",
-     "One of your extra eyes disappears.",
-     "One of your extra eyes disappears."},
+    {"You shed all your fur.",
+     "Your thick fur recedes somewhat.",
+     "Your shaggy fur recedes somewhat."},
 
-    {"", "", ""},
-    {"", "", ""},
-    {"", "", ""},
+    {"You feel less energetic.", "You feel less energetic.",
+     "You feel less energetic."},
+
+    {"You feel more energetic.", "You feel more energetic.",
+     "You feel more energetic."},
+
+    {"You feel wide awake.", "You feel more awake.", "You feel more awake."},
+    
     {"", "", ""},
     
     // 75
@@ -858,7 +878,7 @@ const char *lose_mutation[][3] = {
 
     {"Your patterned scales disappear.",
      "Your patterned scales recede somewhat.",
-     "Your patterned scales recede somewhat."},
+     "Your patterned scales recede somewhat."}
 };
 
 /* mutation definitions:
@@ -946,13 +966,14 @@ static const mutation_def mutation_defs[] = {
     { MUT_BLUE_MARKS, 0, 3 },     // used by evil gods to mark followers
     { MUT_GREEN_MARKS, 0, 3 },
 
-    { MUT_DRIFTING, 3, 3 },
+    { MUT_DRIFTING, 2, 3 },
     { MUT_SAPROVOROUS, 0, 3 },    // species-dependent innate mutation
-    { MUT_EXTRA_EYES, 1, 3 },
 
-    { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
+// 70
+    { MUT_SHAGGY_FUR, 2, 3 },
+    { MUT_HIGH_MAGIC, 1, 3 },
+    { MUT_LOW_MAGIC, 9, 3 },
+    { MUT_SLEEPINESS, 3, 3 },
     { RANDOM_MUTATION, 0, 3 },
 
 // 75 -- scales of various colours and effects
@@ -972,7 +993,7 @@ static const mutation_def mutation_defs[] = {
     { MUT_INDIGO_SCALES, 2, 3 },
     { MUT_RED2_SCALES, 1, 3 },
     { MUT_IRIDESCENT_SCALES, 1, 3 },
-    { MUT_PATTERNED_SCALES, 1, 3 },
+    { MUT_PATTERNED_SCALES, 1, 3 }
 };
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1354,6 +1375,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_DETERIORATION:
     case MUT_BLURRY_VISION:
     case MUT_FRAIL:
+    case MUT_LOW_MAGIC:
     case MUT_CLAWS:
     case MUT_FANGS:
     case MUT_HOOVES:
@@ -1365,7 +1387,6 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BLUE_MARKS:
     case MUT_GREEN_MARKS:
     case MUT_DRIFTING:
-    case MUT_EXTRA_EYES:
         amusement *= 2; // funny!
         break;
 
@@ -1737,10 +1758,6 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         }
         break;
         
-    case MUT_EXTRA_EYES:
-        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
-        break;
-
     case MUT_STRONG_STIFF:
         if (you.mutation[MUT_FLEXIBLE_WEAK] > 0)
         {
@@ -1785,6 +1802,32 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
+        /* special-case check */
+        take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
+        return true;
+
+    case MUT_LOW_MAGIC:
+        if (you.mutation[MUT_HIGH_MAGIC] > 0)
+        {
+            delete_mutation(MUT_HIGH_MAGIC);
+            return true;
+        }
+        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        you.mutation[mutat]++;
+        calc_mp();
+        /* special-case check */
+        take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
+        return true;
+
+    case MUT_HIGH_MAGIC:
+        if (you.mutation[MUT_LOW_MAGIC] > 0)
+        {
+            delete_mutation(MUT_LOW_MAGIC);
+            return true;
+        }
+        mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        you.mutation[mutat]++;
+        calc_mp();
         /* special-case check */
         take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
@@ -1941,6 +1984,7 @@ bool delete_mutation(mutation_type which_mutation, bool force)
         break;
 
     case MUT_FRAIL:
+    case MUT_ROBUST:
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
@@ -1949,11 +1993,12 @@ bool delete_mutation(mutation_type which_mutation, bool force)
         take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
-    case MUT_ROBUST:
+    case MUT_LOW_MAGIC:
+    case MUT_HIGH_MAGIC:
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
-        calc_hp();
+        calc_mp();
         /* special-case check */
         take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;

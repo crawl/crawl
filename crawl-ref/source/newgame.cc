@@ -1946,6 +1946,7 @@ static void give_basic_mutations(species_type speci)
         you.mutation[MUT_REGENERATION] = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
         you.mutation[MUT_SAPROVOROUS] = 2;
+        you.mutation[MUT_SHAGGY_FUR] = 1;
         break;
     case SP_KOBOLD:
         you.mutation[MUT_SAPROVOROUS] = 2;

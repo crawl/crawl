@@ -1708,8 +1708,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     ammoHitBonus = item.plus;
     ammoDamBonus = item.plus2;
 
-    ammoHitBonus += you.mutation[MUT_EXTRA_EYES];
-
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)
     {

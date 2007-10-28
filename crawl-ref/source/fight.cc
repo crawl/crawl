@@ -176,8 +176,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     int your_to_hit;
 
     your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
-                  + you.skills[SK_FIGHTING] / 5
-                  + 2 * you.mutation[MUT_EXTRA_EYES];
+                  + you.skills[SK_FIGHTING] / 5;
     
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
@@ -2364,8 +2363,6 @@ int melee_attack::player_to_hit(bool random_factor)
 
     if (water_attack)
         your_to_hit += 5;
-
-    your_to_hit += you.mutation[MUT_EXTRA_EYES] * 2;
 
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;

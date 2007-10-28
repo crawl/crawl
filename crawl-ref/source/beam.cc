@@ -1221,8 +1221,6 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         break;
     }                           // end of switch
 
-    pbolt.hit += you.mutation[MUT_EXTRA_EYES] * 2;
-
     if ( wearing_amulet(AMU_INACCURACY) )
     {
         pbolt.hit -= 5;

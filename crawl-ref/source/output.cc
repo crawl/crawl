@@ -1363,8 +1363,11 @@ std::string status_mut_abilities()
     if (you.duration[DUR_CONF])
         text += "confused, ";
 
+    // how exactly did you get to show the status?
     if (you.duration[DUR_PARALYSIS])
         text += "paralysed, ";
+    if (you.duration[DUR_SLEEP])
+        text += "sleeping, ";
 
     if (you.duration[DUR_EXHAUSTED])
         text += "exhausted, ";
@@ -1945,6 +1948,36 @@ std::string status_mut_abilities()
                 text += info;
                 have_any = true;
                 break;
+            case MUT_LOW_MAGIC:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "-%d%% mp", level*10);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_HIGH_MAGIC:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "+%d mp%%", level*10);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_DRIFTING:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "drifting %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_SLEEPINESS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "sleepiness %d", level);
+                text += info;
+                have_any = true;
+                break;
+
+            /* demonspawn mutations */
             case MUT_TORMENT_RESISTANCE:
                 if (have_any)
                     text += ", ";
@@ -2036,6 +2069,7 @@ std::string status_mut_abilities()
                 text += "invoke powers of Tartarus";
                 have_any = true;
                 break;
+            /* end of demonspawn mutations */
             case MUT_CLAWS:
                 if (have_any)
                     text += ", ";
@@ -2101,16 +2135,8 @@ std::string status_mut_abilities()
                 text += info;
                 have_any = true;
                 break;
-            case MUT_EXTRA_EYES:
-                if (have_any)
-                    text += ", ";
-                snprintf(info, INFO_SIZE, "%d extra eye%s",
-                         level, level > 1? "s" : "");
-                text += info;
-                have_any = true;
-                break;
 
-            // scales -> calculate sum of AC bonus
+            // scales etc. -> calculate sum of AC bonus
             case MUT_RED_SCALES:
                 AC_change += level;
                 if (level == 3)
@@ -2175,6 +2201,9 @@ std::string status_mut_abilities()
                 AC_change += level;
                 break;
             case MUT_PATTERNED_SCALES:
+                AC_change += level;
+                break;
+            case MUT_SHAGGY_FUR:
                 AC_change += level;
                 break;
             default: break;
