@@ -106,7 +106,7 @@ TAGS: minotaur generate_loot allow_dup
 MONS: minotaur
 NSUBST: d = 1 / %
 SUBST: c : cvv
-MAi
+MAP
 ............
 .cccccccccc.
 .cxxxxdxxxc.

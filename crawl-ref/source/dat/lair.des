@@ -253,7 +253,7 @@ ENDMAP
 # edited and varied by Eino. Placing into Lair only because of the floor colour.
 # would be nice to have in the main dungeon, if it once becomes possible to
 # change the floor colour (to green/brown)
-ä adapted towards less strawberries (dp). I'm against using these outside Lair.
+# adapted towards less strawberries (dp). I'm against using these outside Lair.
 #
 NAME: strawberry_fields_big
 ORIENT: float
