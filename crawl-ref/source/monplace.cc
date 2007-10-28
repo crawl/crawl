@@ -1733,9 +1733,9 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
     return (good_count > 0);
 }                               // end empty_surrounds()
 
-int summon_any_demon(demon_class_type demon_class)
+monster_type summon_any_demon(demon_class_type demon_class)
 {
-    int summoned;    // error trapping {dlb}
+    monster_type summoned = MONS_PROGRAM_BUG;
     int temp_rand;          // probability determination {dlb}
 
     switch (demon_class)
