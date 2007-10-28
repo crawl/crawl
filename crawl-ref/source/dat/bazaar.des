@@ -5,6 +5,11 @@
 ###############################################################################
 # Bazaar entries
 
+# What is still missing:
+# The timer should be more generous for lower levels.
+# Bazaars would also make sense outside of the dungeon (at least in the Vaults,
+# Orc, and Elf).
+
 # Utility functions
 
 lua {{
@@ -109,7 +114,7 @@ ENDMAP
 NAME:    bzr_entry_005
 TAGS:    bzr_entry allow_dup
 ORIENT:  float
-SHUFFLE: wlW
+SHUFFLE: wwlW
 MARKER: O = lua:bazaar_portal()
 MAP
  wwwww
@@ -312,24 +317,25 @@ x...x..........<e>..........x...x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+########################################
+# bazaars in a row
+#
 NAME:    bazaar_row
 TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff
 SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss
+# two guaranteed shops, expected four shops
 KFEAT:   A = any shop / antique weapon shop
 KFEAT:   B = any shop / antique armour shop
 KFEAT:   C = any shop / wand shop
 KFEAT:   D = any shop / jewellery shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
-SUBST:   a=T, b=T, c=T, d=T, e=T, f=T
-SUBST:   z=V, y=V, r=V, s=V
+SUBST:   b=a, c=a, d=a, e=a, f=a, a=T
+SUBST:   y=z, r=z, s=z, z=V, Y=Z, R=Z, S=Z
 KFEAT:   Z = stone_arch
-KFEAT:   Y = stone_arch
-KFEAT:   R = stone_arch
-KFEAT:   S = stone_arch
 SHUFFLE: lw
 # special cases for blue/red floor
 : if you.bazaar_floor() == "red" then
@@ -353,6 +359,51 @@ xx......xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
 xxxxxxxxxxxxxxxxBxxxxxxxxxxxDxxxxxxxxxxxFxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+########################################
+# bazaars in a row v2
+#
+NAME:    bazaar_row_2
+TAGS:    bazaar allow_dup
+FLAGS:   no_rotate
+ORIENT:  encompass
+SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
+SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk, Gg/Mm
+# one guaranteed shop, expected 4.5 shops
+SUBST:   B=A, C=A, D=A, E=A, F=A, G=A, H=A
+SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
+SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
+SUBST:   y=z, r=z, s=z, j=z, k=z, m=z
+KFEAT:   A = any shop
+KFEAT:   Z = stone_arch
+SUBST:   a=T, z=V
+SHUFFLE: lw
+# special cases for blue/red floor
+: if you.bazaar_floor() == "red" then
+SUBST:   l : wWx
+: else
+: if you.bazaar_floor() == "blue" then
+SUBST:   w : Wx
+: end
+: end
+#
+SUBST:   w:wWx, l:lx
+: bazaar_message(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxGxxxxxxxxxxxxxxxx
+xxx.....xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
+xx..www..xxxxxx.a.xxxxxxxxx.c.xxxxxxxxx.e.xxxxxxxxx.g.xxxxxx..lll..xx
+x<.wwwww..+...........+...........+...........+...........+..lllll.>x
+xx..www..xxxxxx.b.xxxxxxxxx.d.xxxxxxxxx.f.xxxxxxxxx.h.xxxxxx..lll..xx
+xx......xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
+xxxxxxxxxxxxxxxxBxxxxxxxxxxxDxxxxxxxxxxxFxxxxxxxxxxxHxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+# circle bazaar
+#
 
 NAME:    bazaar_circle_1
 CHANCE:  2
@@ -557,7 +608,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_circle_6
-CHANCE:  3
+CHANCE:  1
 TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
 ORIENT:  encompass
@@ -913,7 +964,7 @@ xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
-xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxx=xxxxx
+xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 x.........xxxxxxxxx.........xxxxxxxxx.........x
 x....A....z.......z....A....z.......z....A....x
@@ -925,7 +976,7 @@ xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxxxxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
-x....B....z.......=....A....z.......z....A....x
+x....B....z.......z....A....z.......z....A....x
 x.........xxxxxxxxx.........xxxxxxxxx.........x
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -952,13 +1003,13 @@ xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
-xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxx=xxxxx
+xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 x.........xxxxxxxxx.........xxxxxxxxx.........x
 x....A....z.......z....A....z.......z....A....x
 x.........xxxxxxxxx.........xxxxxxxxx.........x
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
-xxxxx=xxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
+xxxxxzxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxzxxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
@@ -1014,6 +1065,7 @@ ENDMAP
 NAME:    bazaar_triangles
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
+CHANCE:  1
 FLAGS:   no_rotate
 SHUFFLE: ACD
 SUBST:   A = <
@@ -1036,6 +1088,7 @@ ENDMAP
 NAME:    bazaar_hexagon
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
+CHANCE:  4
 FLAGS:   no_rotate
 SHUFFLE: AC, BD
 KFEAT:   A = armour shop / weapon shop / wand shop
@@ -1067,6 +1120,7 @@ NAME:    bazaar_triangle_bulge
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
 FLAGS:   no_rotate
+CHANCE:  5
 SHUFFLE: ABC
 SUBST:   A = <, B = >
 KFEAT:   C = any shop

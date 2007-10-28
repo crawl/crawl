@@ -218,7 +218,7 @@ ENDMAP
 # possibility to script the trolls guard the bridge would be great here -evk
 #
 NAME:   troll_bridge
-DEPTH:  D:7-15
+DEPTH:  D:9-18
 ORIENT: float
 TAGS:   no_pool_fixup
 MONS:   troll w:50 / rock troll / iron troll w:5
@@ -342,8 +342,12 @@ ENDMAP
 #############################################################################
 # Oklob shooting range
 #
+# Disallowing this vault on branch starts, as brown stairs can't help there.
+# Chance for a plant to turn oklob based on dungeon level.
+#
 NAME:    oklob_3
-DEPTH:   D:21-27, Lair, Elf
+DEPTH:   D:21-27, Lair:2-10, Elf:2-7
+CHANCE:  1
 ORIENT:  float
 SHUFFLE: ab" / AB'
 SUBST:   a=[, b=(, A=., B=., "=., ':>', '=>.

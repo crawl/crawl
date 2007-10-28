@@ -253,13 +253,14 @@ ENDMAP
 # edited and varied by Eino. Placing into Lair only because of the floor colour.
 # would be nice to have in the main dungeon, if it once becomes possible to
 # change the floor colour (to green/brown)
+ä adapted towards less strawberries (dp). I'm against using these outside Lair.
 #
 NAME: strawberry_fields_big
 ORIENT: float
 DEPTH: Lair
 SUBST: .= d .:150 1:8 2:4
 MONS: plant, butterfly
-ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 2
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -286,7 +287,7 @@ ORIENT: float
 DEPTH: Lair
 SUBST: .= d .:140 1:8 2:4
 MONS: plant, butterfly
-ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 2
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -314,7 +315,7 @@ TAGS: allow_dup
 DEPTH: Lair
 SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
-ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 3
 PLACE: Lair:3
 COLOUR: . = green:20 / brown:15 / none
@@ -334,7 +335,7 @@ ORIENT: float
 DEPTH: Lair
 SUBST: .= d .:50 1:8 2:4 
 MONS: plant, butterfly
-ITEM: strawberry / strawberry q:1 / strawberry q:2 / strawberry q:3 / strawberry q:4 / strawberry q:5 / strawberry q:6 / strawberry q:8
+ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 3
 COLOUR: . = green:20 / brown:15 / none
 MAP
@@ -364,7 +365,7 @@ DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . a 2:1
 SUBST:  . = .:90 a:10 2:1
-KITEM:  a : apple/apricot/pear/orange/banana/strawberry/lemon
+KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 / strawberry q:2 w:5 / lemon
 KFEAT:  a = .
 CHANCE: 8
 MAP
@@ -384,7 +385,7 @@ MONS:   plant, fungus
 SUBST:  ' = . 1
 SUBST:  . = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4 
-KITEM:  a : apple/apricot/pear/orange/banana/strawberry/lemon
+KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 / strawberry q:2 w:5 / lemon
 KFEAT:  a = .
 CHANCE: 2
 MAP

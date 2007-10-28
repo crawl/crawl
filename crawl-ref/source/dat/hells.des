@@ -333,6 +333,8 @@ MONS: Serpent of Hell, random, random
 ############################################################################
 # Antaeus; bottom of Cocytus. David's Improved Demon Lairs, episode I.
 #
+# To do: this level has much shorter distances to travel, hence should
+#        come up with harder resistance.
 
 NAME:    antaeus_david_1
 PLACE:   Coc:7
