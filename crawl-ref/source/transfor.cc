@@ -566,8 +566,7 @@ void untransform(void)
     if (you.species == SP_NAGA || you.species == SP_CENTAUR)
         remove_one_equip(EQ_BOOTS);
 
-    calc_hp();
-    if (hp_downscale != 10)
+    if (hp_downscale != 10 && you.hp != you.hp_max)
     {
         you.hp = you.hp * 10 / hp_downscale;
         if (you.hp < 1)
@@ -575,6 +574,7 @@ void untransform(void)
         else if (you.hp > you.hp_max)
             you.hp = you.hp_max;
     }
+    calc_hp();    
 }                               // end untransform()
 
 // XXX: This whole system is a mess as it still relies on special
