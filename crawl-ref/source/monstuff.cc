@@ -375,7 +375,8 @@ static void check_kill_milestone(const monsters *mons,
 }
 #endif // DGL_MILESTONES
 
-static void give_monster_experience( int killer_index, int experience,
+static void give_monster_experience( monsters *victim,
+                                     int killer_index, int experience,
                                      bool victim_was_born_friendly )
 {
     if (killer_index < 0 || killer_index >= MAX_MONSTERS)
@@ -384,8 +385,11 @@ static void give_monster_experience( int killer_index, int experience,
     if (!mons->alive())
         return;
 
-    if (!victim_was_born_friendly || !mons_friendly(mons))
+    if ((!victim_was_born_friendly || !mons_friendly(mons))
+        && !mons_aligned(killer_index, monster_index(victim)))
+    {
         mons->gain_exp(experience);
+    }
 }
 
 static void give_adjusted_experience(monsters *monster, killer_type killer,
@@ -403,7 +407,8 @@ static void give_adjusted_experience(monsters *monster, killer_type killer,
         gain_exp( experience / 2 + 1, exp_gain, avail_gain );
 
     if (MON_KILL(killer))
-        give_monster_experience( killer_index, experience, created_friendly );
+        give_monster_experience( monster, killer_index, experience,
+                                 created_friendly );
 }
 
 static bool is_pet_kill(killer_type killer, int i)
