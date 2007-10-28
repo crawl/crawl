@@ -1539,17 +1539,3 @@ x.*.=
 x...x
 xxxxx
 ENDMAP
-
-NAME:   dig_this
-TAGS:   mini_float
-DEPTH:  8-27, Elf, Snake, Vault, Crypt
-NSUBST: Z = 1:| / 1:* / *:Z
-KFEAT:  Z = teleport trap
-MAP
-xxxxxxxxxxxxxxx
-xvvvvvvvvvvvvvx
-x.vxvZxZxZvvvvx
-=.xvxxZxZxvvvvx
-xvvvvvvvvvvvvvx
-xxxxxxxxxxxxxxx
-ENDMAP
