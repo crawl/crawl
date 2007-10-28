@@ -2184,21 +2184,24 @@ int calc_hp(bool real_hp)
         hitp /= 10;
     }
 
-    // some transformations give you extra hp
-    switch (you.attribute[ATTR_TRANSFORMATION] && !real_hp)
+    if (!real_hp)
     {
-    case TRAN_STATUE:
-        hitp *= 15;
-        hitp /= 10;
-        break;
-    case TRAN_ICE_BEAST:
-        hitp *= 12;
-        hitp /= 10;
-        break;
-    case TRAN_DRAGON:
-        hitp *= 16;
-        hitp /= 10;
-        break;
+        // some transformations give you extra hp
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_STATUE:
+            hitp *= 15;
+            hitp /= 10;
+            break;
+        case TRAN_ICE_BEAST:
+            hitp *= 12;
+            hitp /= 10;
+            break;
+        case TRAN_DRAGON:
+            hitp *= 16;
+            hitp /= 10;
+            break;
+        }
     }
 
     // frail and robust mutations
