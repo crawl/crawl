@@ -981,6 +981,7 @@ ENDMAP
 NAME: multi_god_temple
 SHUFFLE: abc
 SUBST: a:=, b:x, c:x
+DEPTH: 14-
 MAP
 ............
 .axxxxxxxxa.
@@ -1000,6 +1001,7 @@ ENDMAP
 # jmf: Another multi-god temple thing
 #
 NAME: multi_god_temple2
+DEPTH: 14-
 MAP
 ............
 ..vvvvvvvv..
