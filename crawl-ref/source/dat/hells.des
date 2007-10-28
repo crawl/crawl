@@ -203,10 +203,6 @@ NAME: castle_dis
 PLACE: Dis:7
 TAGS: dis
 ORIENT: north
-LFLAGS: no_tele_control
-MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="iron rune" \
-         }
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -257,10 +253,6 @@ MONS: random, random
 NAME: asmodeus
 PLACE: Geh:7
 ORIENT: encompass
-LFLAGS: no_tele_control
-MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="obsidian rune" \
-         }
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -341,20 +333,18 @@ MONS: Serpent of Hell, random, random
 ############################################################################
 # Antaeus; bottom of Cocytus. David's Improved Demon Lairs, episode I.
 #
+# To do: this level has much shorter distances to travel, hence should
+#        come up with harder resistance.
 
 NAME:    antaeus_david_1
 PLACE:   Coc:7
 ORIENT:  encompass
-LFLAGS:  no_tele_control
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1d / e0% / f9* / g8|
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
 KITEM:   d = any
 SUBST:   ' = w .
-MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="icy rune" \
-         }
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -435,13 +425,9 @@ ENDMAP
 NAME:    antaeus_in_days_of_yore
 PLACE:   Coc:7
 ORIENT:  encompass
-LFLAGS:  no_tele_control
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
 MONS: Antaeus, Ice Fiend, ice dragon, Ice Fiend
-MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="icy rune" \
-         }
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -524,12 +510,8 @@ ENDMAP
 NAME: ereshkigal
 PLACE: Tar:7
 ORIENT: encompass
-LFLAGS: no_tele_control
 MONS: Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS: small skeleton, Shadow Fiend
-MARKER:  O = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="bone rune" \
-         }
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

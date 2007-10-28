@@ -1025,19 +1025,19 @@ MONS: orc wizard, deep elf conjurer
 SHUFFLE: 1*/2d
 SUBST: * = * |:1 %:4
 SUBST: d = * |
+NSUBST: X = + / x
 MAP
-...............
-.bbbbbbbbbbbbb.
-.b.1.........b.
-.b..........1b.
-.bb..........b.
-......*bbbbb.b.
-.b.bbbb*.......
-.b..........bb.
-.b1..........b.
-.b.........1.b.
-.bbbbbbbbbbbbb.
-...............
+.............
+.xxxxxxxxxxx.
+.x*1......bx.
+.x1.......bx.
+.x..bbbbb+bx.
+.x..bxxxb.bx.
+.x..bbbbb.bx.
+.x..+......x.
+.xbbbbbbb..X.
+.xxxxxxxxxXx.
+.............
 ENDMAP
 
 ##############################################################################
@@ -1118,76 +1118,75 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-# Wet chambers - two mutually exclusive versions (Onia Ninara)
+###############################################################################
+## Wet chambers - two mutually exclusive versions (Onia Ninara)
+##
+#NAME:    onia_ninara_007_chamber_of_wet_secrets
+#DEPTH:   D:8-13
+#TAGS:    no_monster_gen no_pool_fixup
+#KMONS:   1 = centaur
+#KMONS:   2 = brown snake
+#KMONS:   3 = electrical eel
+#ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
+#SHUFFLE: !;
+#SUBST:   " = .:80 W:30
+#SUBST:   ; = .:80 W:30
+#SUBST:   ! = w:20 W ? c
+#KFEAT:   3 = w
+#KFEAT:   2 = W / .
+#KFEAT:   1 = W / . w:30
+#KFEAT:   d = W / .
+#KFEAT:   e = W / .
+#KFEAT:   ? = spear trap / blade trap
+#MAP
+#.........
+#.ccccccc.
+#.c?;2Wdc.
+#.ccWccec.
+#.c.w"c3c.
+#.c"w"ccc.
+#.c>w!;!c.
+#.c"w!!;c.
+#.c.w!;!c.
+#.c1w?T!c.
+#.c$w;!!c.
+#.cccc=cc.
+#.........
+#ENDMAP
 #
-NAME:    onia_ninara_007_chamber_of_wet_secrets
-DEPTH:   D:8-13
-TAGS:    no_monster_gen no_pool_fixup
-KMONS:   1 = centaur
-KMONS:   2 = brown snake
-KMONS:   3 = electrical eel
-ITEM:    bread ration/meat ration/royal jelly/potion of porridge, good_item cloak/any book
-SHUFFLE: !;
-SUBST:   " = .:80 W:30
-SUBST:   ; = .:80 W:30
-SUBST:   ! = w:20 W ? c
-KFEAT:   3 = w
-KFEAT:   2 = W / .
-KFEAT:   1 = W / . w:30
-KFEAT:   d = W / .
-KFEAT:   e = W / .
-KFEAT:   ? = spear trap / blade trap
-MAP
-.........
-.ccccccc.
-.c?;2Wdc.
-.ccWccec.
-.c.w"c3c.
-.c"w"ccc.
-.c>w!;!c.
-.c"w!!;c.
-.c.w!;!c.
-.c1w?T!c.
-.c$w;!!c.
-.cccc=cc.
-.........
-ENDMAP
-
-NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
-DEPTH:   D:20-26
-TAGS:    no_monster_gen no_pool_fixup
-KMONS:   1 = yaktaur captain
-KMONS:   2 = grey snake
-KMONS:   3 = storm dragon
-ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
-ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds
-SHUFFLE: de, !;
-KFEAT:   3 = w / .
-KFEAT:   | = W / .
-KFEAT:   d = W / .
-KFEAT:   e = W / .
-KFEAT:   2 = W 
-SUBST:   ; = .:80 W:30
-SUBST:   " = .:80 W:30
-SUBST:   ! = w:20 W ? c
-KFEAT:   ? = zot trap
-MAP
-.........
-.ccccccc.
-.c?.2Wdc.
-.ccWcc|c.
-.c"w"c3c.
-.c"w"ccc.
-.c"w!;!c.
-.c"w!?;c.
-.c"w!!;c.
-.c1w;U!c.
-.c$w!!;c.
-.cccc=cc.
-.........
-ENDMAP
-
+#NAME:    onia_ninara_008_deeper_chamber_of_wet_secrets
+#DEPTH:   D:20-26
+#TAGS:    no_monster_gen no_pool_fixup
+#KMONS:   1 = yaktaur captain
+#KMONS:   2 = grey snake
+#KMONS:   3 = storm dragon
+#ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
+#ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds
+#SHUFFLE: de, !;
+#KFEAT:   3 = w / .
+#KFEAT:   | = W / .
+#KFEAT:   d = W / .
+#KFEAT:   e = W / .
+#KFEAT:   2 = W 
+#SUBST:   ; = .:80 W:30
+#SUBST:   " = .:80 W:30
+#SUBST:   ! = w:20 W ? c
+#KFEAT:   ? = zot trap
+#MAP
+#.........
+#.ccccccc.
+#.c?.2Wdc.
+#.ccWcc|c.
+#.c"w"c3c.
+#.c"w"ccc.
+#.c"w!;!c.
+#.c"w!?;c.
+#.c"w!!;c.
+#.c1w;U!c.
+#.c$w!!;c.
+#.cccc=cc.
+#.........
+#ENDMAP
 
 
 ##############################################################################

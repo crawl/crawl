@@ -344,108 +344,6 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 ##############################################################################
-# big garden full of undead - monster colour enabled for this
-NAME:   garden_of_evil_bobbens
-ORIENT: encompass
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
-FLAGS:  no_rotate
-PLACE:  Crypt:5
-KFEAT:  z = .
-KMONS:  z = skeletal warrior
-KFEAT:  I = .
-KMONS:  I = iron golem
-KFEAT:  C = .
-KMONS:  C = crystal golem
-KFEAT:  N = .
-KMONS:  N = necromancer
-KFEAT:  M = .
-KMONS:  M = large zombie/small zombie/large skeleton/small skeleton/ghoul/necrophage
-KFEAT:  H = .
-KMONS:  H = hell knight
-KFEAT:  D = .
-KMONS:  D = skeletal dragon
-KFEAT:  s = .
-KMONS:  s = flying skull
-KFEAT:  S = .
-KMONS:  S = sun demon
-KFEAT:  J = .
-KMONS:  J = death ooze
-KFEAT:  B = .
-KMONS:  B = ancient lich
-KFEAT:  A = .
-KMONS:  A = large abomination/w:5 small abomination
-KFEAT:  X = .
-KMONS:  X = dancing weapon
-KFEAT:  E = .
-KMONS:  E = vampire knight
-# death plants
-KFEAT:  F = .
-KMONS:  F = w:20 col:darkgrey plant/col:lightgrey plant
-SUBST:  p = .F
-# red walls
-COLOUR: r = red
-SUBST:  r = v
-# traps
-SUBST:  ; = .:6 ~:2 ^:1
-# gateway to pan
-KFEAT:  / = enter_pandemonium
-# water may be lava
-SUBST:  w : wl
-MAP
-xxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-xxxxxxxxxxxxv...v.zz.......zz..........v*$$$$$$$v........v
-xxxxxxxxxxxxv...vc..c..c..c..c..c..c...v|*$$$$$$=..H.....v
-xxxxxxxxxxxxv...........s............z.vvvvvvvvvv.A...E..v
-xxxxxxxxxxxxv..................s.....zNv........v...U....v
-xxxxxxxxxxxxv...........s..............+........+........v
-xxxxxxxxxxxxv...vc..c..c..c..c..c..c...v........v........v
-xxxxxxxxxxxxv...v.zz.......zz..........v........v........v
-xxxxxxxxxxxxvvv+vvvvvvvvvvvvvvvvvvvvvvvv........vvvvvvvvvv
-xxxxxxxxxxxxvc;;;ccccFFJpFFJ.FppFp.....v........vFFFFpp..v
-xxxxxxxxxxxxvcc+cc..cFF.ppFp.p..p.....pv........vFFFpp...v
-xxxxxxxxxxxxccc...H.c$FpJ.p...p.......pvvvz..zvvvpppp....v
-xxxxxxxxxxccc.....H.ccccpp.JpFFp.......pFvv++vvppp.......v
-xxxxxxxxccc....cccccc..ccccvvvvvvvvvv..pppp.pFFp.........v
-xxxxxxxcc....ccc....c.I...ccc.D.+...v...p....pp..........v
-xxxxxccc....cc......cz.z....ccc.vvv.+.....p......vvvvvvv.v
-xxxxcc....ccc..z.N..c...c.....cccM+.vp..........pvMvMvMv.v
-xxxcc.....c.....z...c...cccc....ccv+vpp...HHH..pFv+v+v+v.v
-xxcc................c...c|$ccc...ccMvFp.p.......pv..s..v.v
-xxc...............ccc+c.c*$..c+...ccvFp....N.....+...NUv.v
-xcccccccccccc+ccccc.z.ccc.E...cc...ccFpp....V....v..s..v.v
-cc....;;;;;;;..cc.......cc.X...ccMz.ccFpp.....p..v+v+v+v.v
-cI....;;;;;;;.cc....(....cc.....ccN..cFFpp.......vMvMvMv.v
-ccccc+cccccccccz...{.....zccccccccc+cccccp..p....vvvvvvv.v
-v|pc..........cc....[....cc.............c...........pFp..v
-vFFcc....D....ccc.......cc..ccc........cc.p.......p..p...v
-vpppcc.....cccc.ccc.z.ccc...cAc.c+c...cc......p..........v
-vJ.ppcc...cc......ccccc.N...c+c.cAc...c..p..........p...pv
-v.p.ppcc............c...........ccc..cc.....p..........ppv
-vpp.Jppcc.......c...c.ccc..H.......Ncc.......pp..ppppppppv
-v.Jpp.p.ccc.....c...c.cAc..c+c.....cc...p...pvvv+vvvFpFFFv
-vp.p.p.pppccc...c..;c.c+c..cAc...cccp.....pppv.....vFFFFFv
-v.pp......p.ccc.c..;+......ccc..ccp.....pppFFv.....vFFFFFv
-v.J...p.p.....cccc.;c.........cccp...p.vvvvvvv.....vvvvvvv
-v..p......p...p..cccc...N...ccc.p......v...;;;.D.D.;;;...v
-v..p..p...........pFc.....ccc.....p..p.vz..;vvvvvvvvv;..zv
-v..........p.......pc..cccc...pp......pv...;;;;...;;;;...v
-vp.....p............ccccFp...pFFp....ppvvvvvvvv.v.vvvvvvvv
-v........rrrrrrrr......ppp...pFTFp...pFvwwwwwww.w.wwwwwwwv
-v...rrrrrr$|r...r............pFFpJ...pFvwwwwww..w..wwwwwwv
-v..rr....r+rr...r..G..p.....ppppppp..ppvwwwwwv.....vwwwwwv
-v..r...S........rrrC......vvvv+vvvpp..pvwwwwvvv...vvvwwwwv
-v..r../.........+;+....p..v$$$$$*vp....vwwwvvU.....Uvvwwwv
-v..r...S........rrrC......v$**$$|vp...pvwwwv...GBG...vwwwv
-v..rr....r+rr...rFpG......v|||*||v...p.vwwwvv$$vvv$$vvwwwv
-v...rrrrrr$|r...rp...p....vvvvvvvv..J..vwwwwvv$*|*$vvwwwwv
-v.....ppFrrrrrrrrp..................p..vwwwwwvv|||vvwwwwwv
-vp.....ppp........ppppp...p.......p....vwwwwwwvvvvvwwwwwwv
-vpp..............ppFFFppp.....ppp......vwwwwwwwwvwwwwwwwwv
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwWwwwwwwwv
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvv
-ENDMAP
-
-##############################################################################
 # The three Tomb levels: these should generally be of a confusing layout.
 ##############################################################################
 
@@ -455,8 +353,6 @@ ENDMAP
 NAME:    tomb_1
 PLACE:   Tomb:1
 ORIENT:  encompass
-# The whole branch starts off with teleport control prevention.
-BFLAGS:  no_tele_control
 #
 SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
 SUBST:   A=|*, B=|*
@@ -673,9 +569,6 @@ SUBST:   $ = *:2 |:1 $:17
 #
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
 #
-MARKER:  O = lua:item_pickup_change_flags { \
-            branch_flags="!no_tele_control", item="golden rune" \
-         }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

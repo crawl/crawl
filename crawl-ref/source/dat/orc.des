@@ -148,7 +148,7 @@ ENDMAP
 NAME:    david_orc_5
 TAGS:    orc_entry
 ORIENT:  float
-KFEAT:   C = altar_beogh w:70 / altar_yredelemnul / altar_makhleb / altar_trog
+KFEAT:   C = altar_beogh
 SHUFFLE: EFGH
 SUBST:   E=3
 SUBST:   F=1, G=1, H=1
@@ -167,8 +167,6 @@ MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
 MONS:    orc w:32 / w:7 orc warrior
 : end
 SUBST:   x : cxv
-SHUFFLE: () / XY
-SUBST:   X=., Y=. 
 MAP
 xxxxxxxxxxxxxxx
 x......O......x
