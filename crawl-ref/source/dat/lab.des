@@ -190,12 +190,12 @@ KFEAT: N = teleport trap
 SUBST: g=., h=., i=., j=., k=., l=., n=.
 SUBST: G=., H=., I=., J=., K=., L=., N=.
 SUBST: Y=*, Z=*
-KFEAT: X = exit_portal_vault
+KFEAT: X = <
 KMONS: X = minotaur
 KFEAT: S = granite_statue
 CHANCE: 2
 MAP
-............
+.............
 .vvvvvvvvvvv.
 .vvXvvYvvZvv.
 .vv+vv+vv+vv.

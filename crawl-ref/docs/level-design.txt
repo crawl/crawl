@@ -10,6 +10,7 @@ Contents:  A. Introduction
            G. Hints for level makers
            H. Lua reference
            I. Feature names
+           J. Map statistics
 
 A.   Introduction
 -----------------
@@ -1172,3 +1173,25 @@ altar_elyvilon, altar_lugonu, altar_beogh, blue_fountain,
 dry_fountain_i, sparkling_fountain, dry_fountain_ii, dry_fountain_iii,
 dry_fountain_iv, dry_fountain_v, dry_fountain_vi, dry_fountain_vii,
 dry_fountain_viii, permadry_fountain
+
+
+J.   Map Statistics
+-------------------
+
+Full-debug Crawl builds (this does not include normal Crawl builds
+that have wizard-mode) can produce map generation statistics. To
+generate statistics, run crawl from the command-line as:
+
+crawl -mapstat
+
+This will generate 100 Crawl dungeons and report on the maps used in a
+file named "mapgen.log" in the working directory.
+
+You can change the number of dungeons to generate:
+
+crawl -mapstat 10
+
+Will generate 10 dungeons. If you merely want statistics on the
+probabilities of the levels, use:
+
+crawl -mapstat 1

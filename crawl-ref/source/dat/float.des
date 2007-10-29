@@ -144,38 +144,6 @@ xxxx111xxx
 xxxxxxxxxx
 ENDMAP
 
-####################################
-# shoot the duckies, win a prize!
-#(warning: some duckies may shoot back)
-#
-NAME: shooting_gallery_Lemuel
-ORIENT: float
-TAGS: no_pool_fixup no_monster_gen
-ITEM: potion of levitation q:2
-: if you.absdepth() <= 16 then
-MONS: orc wizard/centaur/jackal/killer bee larva/giant lizard/kobold/giant mite/grey rat/green rat/orange rat
-MONS: deep elf priest/orc high priest/cyclops/orc priest/jelly/ogre/troll/yak/orc warrior/sheep/hog
-: elseif you.absdepth() >= 17 then
-MONS: deep elf priest/orc high priest/cyclops/yaktaur/slime creature/yak/wyvern/big kobold/toenail golem
-MONS: yaktaur captain/manticore/deep elf high priest/orc sorcerer/ogre-mage/ugly thing/unseen horror
-: end
-KFEAT: $ = >
-KFEAT: * = <
-MAP
-ccccccccccccccccccccccccccccccccccccccccccccc
-ccxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxc$cxc*cxcc
-cxwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwwxwwxc
-ccwwww2www2www2www2www2www2www2www2www2wwwwcc
-cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
-ccww1www1www1www1www1www1www1www1www1www1wwcc
-cxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxc
-cc.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.w.cc
-cx.........................................xc
-cc.........................................cc
-cx.........d..........d..........d.........xc
-cc.........................................cc
-ENDMAP
-
 ##############################################################################
 # Beware the mummy's curse (Lemuel)
 #
@@ -403,6 +371,7 @@ NAME: onia_ninara_012_swampy_vault
 TAGS: no_pool_fixup no_monster_gen uniq_swamp_vault
 ORIENT: float
 SHUFFLE: AB@
+SUBST: x = .:30 W x:4 
 SUBST: A : x, B : x
 SUBST: D = .:30 W
 KFEAT: E = w:20 . / x / w:50 W / w:30 w / ~

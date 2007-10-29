@@ -671,15 +671,6 @@ void read_maps()
 {
     if (dlua.execfile("clua/loadmaps.lua", true, true))
         end(1, false, "Lua error: %s", dlua.error.c_str());
-    
-    for (int i = 0, size = Options.extra_levels.size(); i < size; ++i)
-    {
-        lc_desfile = datafile_path( Options.extra_levels[i] + ".des", false );
-        if (lc_desfile.empty())
-            continue;
-
-        parse_maps( lc_desfile );
-    }
 
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
@@ -751,13 +742,21 @@ static weighted_map_names mg_find_random_vaults(
         }
     }
 
-    return (wms);    
+    return (wms);
+}
+
+static bool weighted_map_more_likely(
+    const weighted_map_name &a,
+    const weighted_map_name &b)
+{
+    return (a.second > b.second);
 }
 
 static void mg_report_random_vaults(
     FILE *outf, const level_id &place, bool wantmini)
 {
     weighted_map_names wms = mg_find_random_vaults(place, wantmini);
+    std::sort(wms.begin(), wms.end(), weighted_map_more_likely);
     int weightsum = 0;
     for (int i = 0, size = wms.size(); i < size; ++i)
         weightsum += wms[i].second;

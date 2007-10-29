@@ -74,7 +74,7 @@ ENDMAP
 # No loot but the elves' gear, but at the depth this appears that may be good
 #
 NAME:    elves_outpost_lemuel
-DEPTH:   D:8-20, Orc:*
+DEPTH:   D:14-20, Orc:2-
 MONS:    deep elf soldier/w:4 deep elf fighter
 MONS:    w:20 deep elf mage/deep elf conjurer/deep elf summoner
 SHUFFLE: ?:/bb, :;/ww

@@ -67,7 +67,8 @@ syn match desMapWaxWall /a/ contained
 syn match desMapMonst /[0-9]/ contained
 syn match desMapGold /\$/ contained
 syn match desMapLava /l/ contained
-syn match desMapWater /[wW]/ contained
+syn match desMapWater /w/ contained
+syn match desMapShallow /W/ contained
 syn match desMapEntry /@/ contained
 syn match desMapTrap  /\^/ contained
 
@@ -78,8 +79,8 @@ syn match desMapOrb /Z/ contained
 syn cluster desMapElements contains=desMapBookend,desMapWall,desMapFloor
 syn cluster desMapElements add=desMapMonst,desMapCrystalWall,desMapGold
 syn cluster desMapElements add=desMapLava,desMapMetalWall,desMapDoor
-syn cluster desMapElements add=desMapStoneWall,desMapWater,desMapTrap
-syn cluster desMapElements add=desMapEntry,desMapWaxWall
+syn cluster desMapElements add=desMapStoneWall,desMapWater,desMapShallow
+syn cluster desMapElements add=desMapTrap,desMapEntry,desMapWaxWall
 
 syn cluster desMapElements add=desMapRune,desMapOrb,desMapValuable
 
@@ -114,6 +115,7 @@ hi desMapMonst guifg=red ctermfg=darkred
 hi desMapLava guifg=red gui=bold ctermfg=red
 hi desMapTrap guifg=red gui=bold ctermfg=red
 hi desMapWater guifg=lightblue ctermfg=darkblue
+hi desMapShallow guifg=lightcyan ctermfg=darkcyan
 hi desMapGold guifg=#c09000 ctermfg=yellow
 hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
 hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
