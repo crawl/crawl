@@ -1438,9 +1438,7 @@ static void got_item(item_def& item, int quant)
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
-    if (you.attribute[ATTR_HELD] && mitm[obj].base_type == OBJ_MISSILES
-        && mitm[obj].sub_type == MI_THROWING_NET
-        && item_is_stationary(mitm[obj]))
+    if (item_is_stationary(mitm[obj]))
     {
         mpr("You cannot pick up the net that holds you!");
         return (1);
@@ -2928,6 +2926,9 @@ static bool is_forced_autopickup(const item_def &item, std::string &iname)
 
 bool item_needs_autopickup(const item_def &item)
 {
+    if (item_is_stationary(item))
+        return (false);
+    
     if (strstr(item.inscription.c_str(), "=g") != 0)
         return (true);
 
