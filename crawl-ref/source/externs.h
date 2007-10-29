@@ -1467,8 +1467,6 @@ public:
     std::string morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
 
-    std::vector<std::string> extra_levels;
-
     std::string player_name;
 
 #ifdef DGL_SIMPLE_MESSAGING

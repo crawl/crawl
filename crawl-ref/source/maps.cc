@@ -671,15 +671,6 @@ void read_maps()
 {
     if (dlua.execfile("clua/loadmaps.lua", true, true))
         end(1, false, "Lua error: %s", dlua.error.c_str());
-    
-    for (int i = 0, size = Options.extra_levels.size(); i < size; ++i)
-    {
-        lc_desfile = datafile_path( Options.extra_levels[i] + ".des", false );
-        if (lc_desfile.empty())
-            continue;
-
-        parse_maps( lc_desfile );
-    }
 
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
