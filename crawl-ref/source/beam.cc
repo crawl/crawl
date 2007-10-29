@@ -2450,11 +2450,11 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         case MI_DART:   chance = 3; break;
         case MI_ARROW:  chance = 4; break;
         case MI_BOLT:   chance = 4; break;
-        case MI_JAVELIN: chance = 8; break;
+        case MI_JAVELIN: chance = 10; break;
 
         case MI_LARGE_ROCK:
         default:
-            chance = 20;
+            chance = 25;
             break;
         }
 

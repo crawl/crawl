@@ -3912,7 +3912,7 @@ bool give_items_skills()
 
             // And they get to throw rocks.
             you.inv[3].sub_type = MI_LARGE_ROCK;
-            you.inv[3].quantity = 3;
+            you.inv[3].quantity = 4;
             break;
             
         case SP_HALFLING:
