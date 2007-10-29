@@ -568,17 +568,17 @@ VISUAL:@The_monster@ looks friendly.
 %%%%
 default insect
 
-VISUAL:@The_monster@ waves @possessive@ antennas.
+VISUAL:@The_monster@ waves @possessive@ antennae.
 %%%%
 default confused insect
 
-VISUAL:@The_monster@ wildly waves @possessive@ antennas.
+VISUAL:@The_monster@ wildly waves @possessive@ antennae.
 
 VISUAL:@The_monster@ seems to be having trouble coordinating all six of @possessive@ legs.
 %%%%
 default confused winged insect
 
-VISUAL:@The_monster@ wildly waves @possessive@ antennas.
+VISUAL:@The_monster@ wildly waves @possessive@ antennae.
 
 VISUAL:@The_monster@ wobbles in @possessive@ flight.
 %%%%
@@ -588,13 +588,13 @@ VISUAL:@The_monster@ seems to be having trouble coordinating all eight of @posse
 %%%%
 centipede
 
-VISUAL:@The_monster@ waves its antennas.
+VISUAL:@The_monster@ waves its antennae.
 %%%%
 default confused centipede
 
 VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many legs.
 
-VISUAL:@The_monster@ wildly waves @possessive@ antennas.
+VISUAL:@The_monster@ wildly waves @possessive@ antennae.
 
 #########################################
 # Speech strings by monster symbol
