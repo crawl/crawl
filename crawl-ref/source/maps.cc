@@ -342,7 +342,6 @@ std::vector<std::string> find_map_matches(const std::string &name)
     return (matches);
 }
 
-
 // Returns a map for which PLACE: matches the given place.
 int random_map_for_place(const level_id &place, bool want_minivault)
 {
@@ -717,3 +716,79 @@ void run_map_preludes()
         }
     }
 }
+
+///////////////////////////////////////////////////////////////////////////
+// Debugging code
+
+#ifdef DEBUG_DIAGNOSTICS
+
+typedef std::pair<std::string, int> weighted_map_name;
+typedef std::vector<weighted_map_name> weighted_map_names;
+
+static weighted_map_names mg_find_random_vaults(
+    const level_id &place, bool wantmini)
+{
+    weighted_map_names wms;
+    
+    if (!place.is_valid())
+        return (wms);
+
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+    {
+        if (vdefs[i].is_minivault() == wantmini
+            && !vdefs[i].place.is_valid()
+            && vdefs[i].is_usable_in(place)
+            // Some tagged levels cannot be selected by depth. This is
+            // the only thing preventing Pandemonium demon vaults from
+            // showing up in the main dungeon.
+            && !vdefs[i].has_tag_suffix("entry")
+            && !vdefs[i].has_tag("pan")
+            && !vdefs[i].has_tag("unrand")
+            && !vdefs[i].has_tag("bazaar"))        
+        {
+            wms.push_back(
+                weighted_map_name( vdefs[i].name, vdefs[i].chance ) );
+        }
+    }
+
+    return (wms);    
+}
+
+static void mg_report_random_vaults(
+    FILE *outf, const level_id &place, bool wantmini)
+{
+    weighted_map_names wms = mg_find_random_vaults(place, wantmini);
+    int weightsum = 0;
+    for (int i = 0, size = wms.size(); i < size; ++i)
+        weightsum += wms[i].second;
+
+    std::string line;
+    for (int i = 0, size = wms.size(); i < size; ++i)
+    {
+        std::string curr =
+            make_stringf("%s (%.2f%%)",
+                         wms[i].first.c_str(),
+                         100.0 * wms[i].second / weightsum);
+        if (i < size - 1)
+            curr += ", ";
+        if (line.length() + curr.length() > 80u)
+        {
+            fprintf(outf, "%s\n", line.c_str());
+            line.clear();
+        }
+
+        line += curr;
+    }
+    if (!line.empty())
+        fprintf(outf, "%s\n", line.c_str());
+}
+
+void mg_report_random_maps(FILE *outf, const level_id &place)
+{
+    fprintf(outf, "---------------- Mini\n");
+    mg_report_random_vaults(outf, place, true);
+    fprintf(outf, "------------- Regular\n");
+    mg_report_random_vaults(outf, place, false);
+}
+
+#endif
