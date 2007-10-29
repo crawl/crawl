@@ -1173,9 +1173,20 @@ static void trowel_card(int power, deck_rarity_type rarity)
 static void genie_card(int power, deck_rarity_type rarity)
 {
     if ( coinflip() )
+    {
+        mpr("A genie takes forms and thunders: "
+            "\"Choose your reward, mortal!\"");
+        more();
         acquirement( OBJ_RANDOM, AQ_CARD_GENIE );
+    }
     else
-        potion_effect( coinflip() ? POT_DEGENERATION : POT_DECAY, 40 );
+    {
+        mpr("A genie takes form and thunders: "
+            "\"You disturbed me, fool!\"");
+        // use 41 not 40 to tell potion_effect() that this isn't
+        // a real potion
+        potion_effect( coinflip() ? POT_DEGENERATION : POT_DECAY, 41 );
+    }
 }
 
 static void godly_wrath()
