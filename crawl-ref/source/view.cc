@@ -642,7 +642,7 @@ static bool mons_was_seen_this_turn(const monsters *mons)
             monsters_seen_this_turn.end());
 }
 
-inline static void beogh_follower_convert(monsters *monster)
+void beogh_follower_convert(monsters *monster, bool orc_hit)
 {
     if (you.species != SP_HILL_ORC)
         return;
@@ -676,7 +676,7 @@ inline static void beogh_follower_convert(monsters *monster)
                             << std::endl;
                 return;
             }
-            beogh_convert_orc(monster);
+            beogh_convert_orc(monster, orc_hit);
         }
     }
     else if (is_orc

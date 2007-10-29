@@ -4906,7 +4906,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     std::string msg = in_msg;
     description_level_type nocap, cap;
 
-    if (monster->attitude == ATT_FRIENDLY && player_monster_visible(monster))
+    if (monster->attitude == ATT_FRIENDLY && !mons_is_unique(monster->type)
+        && player_monster_visible(monster))
     {
         nocap = DESC_PLAIN;
         cap   = DESC_PLAIN;

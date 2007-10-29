@@ -3521,6 +3521,7 @@ static int affect_monster(bolt &beam, monsters *mon)
         return (BEAM_STOP);
     }
 
+    bool hit_woke_orc = false;
     if (beam.name[0] == '0')
     {
         if (beam.is_tracer)
@@ -3557,6 +3558,14 @@ static int affect_monster(bolt &beam, monsters *mon)
 
                 if (mons_holiness( mon ) == MH_HOLY)
                     did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
+
+                if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
+                    && mon->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
+                    && !player_under_penance() && you.piety >= 75)
+                {
+                    hit_woke_orc = true;
+                }
+
             }
 
             behaviour_event( mon, ME_ANNOY, beam_source(beam) );
@@ -3593,6 +3602,8 @@ static int affect_monster(bolt &beam, monsters *mon)
                 break;
             }
         }
+        if (hit_woke_orc)
+            beogh_follower_convert(mon, true);
         return (rangeUsed);
 
         // END non-tracer enchantment
@@ -3704,6 +3715,14 @@ static int affect_monster(bolt &beam, monsters *mon)
                 did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
         }
 
+        if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
+            && mon->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
+            && YOU_KILL(beam.thrower) && !player_under_penance()
+            && you.piety >= 75)
+        {
+            hit_woke_orc = true;
+        }
+        
         // Don't annoy friendlies if the player's beam did no damage.
         // Hostiles will still take umbrage.
         if (hurt_final > 0 || !mons_friendly(mon) || !YOU_KILL(beam.thrower))
@@ -3831,6 +3850,8 @@ static int affect_monster(bolt &beam, monsters *mon)
 
         if (wake_mimic && mons_is_mimic( mon->type ))
             mimic_alert(mon);
+        else if (hit_woke_orc)
+            beogh_follower_convert(mon, true);
     }
 
     return (range_used_on_hit(beam));

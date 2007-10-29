@@ -524,9 +524,17 @@ bool melee_attack::player_attack()
         // messages, etc.
         player_calc_hit_damage();
 
+        bool hit_woke_orc = false;
+        if (you.religion == GOD_BEOGH && mons_species(def->type) == MONS_ORC
+            && def->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
+            && !player_under_penance() && you.piety >= 75 )
+        {
+            hit_woke_orc = true;
+        }
+        
         // always upset monster regardless of damage
         behaviour_event(def, ME_WHACK, MHITYOU);
-        
+
         player_hurt_monster();
 
         if (damage_done > 0 || !defender_visible)
@@ -542,6 +550,13 @@ bool melee_attack::player_attack()
         
         if (player_check_monster_died())
             return (true);
+            
+        if (hit_woke_orc)
+        {
+            // call function of orcs first noticing you but with
+            // beaten-up conversion messages (if applicable)
+            beogh_follower_convert(def, true);
+        }
 
         player_sustain_passive_damage();
     }

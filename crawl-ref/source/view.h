@@ -64,6 +64,9 @@ enum element_type
 void init_char_table(char_set_type set);
 void init_feature_table();
 
+/* called from: beam - fight */
+void beogh_follower_convert(monsters *monster, bool orc_hit = false);
+
 // last updated 29may2000 {dlb}
 /* ***********************************************************************
  * called from: bang - beam - direct - effects - fight - monstuff -
