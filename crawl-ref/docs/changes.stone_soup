@@ -1,70 +1,77 @@
-Stone Soup 0.3.0 (2007????)
+Stone Soup 0.3.0 (20071031)
 ---------------------------
+Characters
+----------
+* Removed Hill Dwarf and Elf species.
+* Demigods lose fast metabolism, get better stat gain.
+* Kenku can kick with their taloned feet, and can fly faster than
+  normal when lightly burdened.
+* Kenku and merfolk get an evasion bonus when in their element.
+* Demonspawn get a bonus with demonic weapons.
 
 Gods
 ----
-* New god: Beogh, god of Orcs
-* Overhauled Nemelex and Xom
-* Major tweaks to Lugonu and Trog
-* Smaller tweaks to Elyvilon, Okawaru, Sif Muna, and Vehumet
-* Nemelexites no longer need a portable altar in order to sacrifice objects,
-  any items on the floor when they pray will be sacrificed.
+* New god: Beogh, god of Orcs.
+* Changed gods: Nemelex, Xom, Lugonu, Trog, Elyvilon, Okawaru.
+* No need to pray to dedicate kills.
+* Nemelexites no longer need a portable altar in order to sacrifice
+  objects.
 * Nemelexites are granted various deck manipulation abilites as they
   gain piety.
-* [1761974] Trog gets a Burn Books ability
-* [1754125] Trog's Hand and Brothers in Arms replace Might and Haste
-* Lugonu gains ...
-* Elyvilon gets Destroy Weapon, and no longer accepts weapon sacrifices
-* Okawaru loses Minor Healing
-* Gods won't accept sacrifices of rotten corpses
-* Good gods no longer punish for unintended draining (unknown wand, ...)
-* different messages now indicate piety gain for offered items
-
-Races and Classes
------------------
-* Removed Hill Dwarf and (plain) Elf
-* [1772666] Chaos Knights can choose their weapon
+* [1761974] Trog gets a Burn Books ability.
+* [1754125] Trog's Hand and Brothers in Arms replace Might and Haste.
+* Elyvilon: Destroy Weapon ability replaces weapon sacrifices.
+* Okawaru loses Minor Healing.
+* Gods won't accept sacrifices of rotten corpses.
+* Good gods no longer punish for unintended draining.
+* Different messages now indicate piety gain for offered items.
 
 Items
 -----
-* New missiles: javelins, sling bullets and throwing nets
-* [1756363] New potion: potion of resistance
-* [1744612] Introduced weapons of returning
-* [1789869] Items which the player sees a monster use become identified if
-  they have an obvious effect.
-* Artefact jewellery doesn't autoid anymore, instead "obvious" changes and 
-  abilities give a message
-* [1768865] Added inscription prompt when viewing items
-* Viewing via inventory listing won't leave the inventory
-* [1735752] Autoinscribe wands with zap count
-* Added autoinscriptions for items used by monsters
+* New missiles: javelins, sling bullets and throwing nets.
+* Throwing weapons may be generated with the "returning" brand.
+* [1756363] New potion: potion of resistance.
+* [1744612] Introduced weapons of returning.
+* [1789869] Items which the player sees a monster use become
+  identified if they have an obvious effect.
+* Artefact jewellery doesn't autoid anymore, instead "obvious" changes
+  and abilities give a message.
+* [1768865] Added inscription prompt when viewing items.
+* Viewing via inventory listing won't leave the inventory.
+* [1735752] Autoinscribe wands with zap count.
+* Added autoinscriptions for items used by monsters.
 * Warning inscriptions now actually work for all advertised commands
   ([1795568] !r now prevents scrolls from being read.)
 * [1793698] In the item selection menu, pressing "." will toggle the
   selection of the item after the previously selected item.
 * [1783003] More menu sorting methods, and fixed jewellery sorting bug.
-* Book shops are less likely to stock duplicate copies
-* [1746014] Added command to cycle through ammunition when 'f'iring
+* Book shops are less likely to stock duplicate copies.
+* [1746014] Added command to cycle through ammunition when 'f'iring.
 
 Monsters
 --------
-* Abominations created by Twisted Resurrection now count as undead
-* Increased spawning rate after picking up the Orb
-* Berserked monsters attack nearby enemies
-* Berserked friendlies ignore commands
-* Monsters confused by you that kill themselves or others now give xp
-* [1779770] Monsters taking stairs are created according to stair destination
-* Monster descriptions are shorter when looking at them with 'x' and targeting.
+* Abominations created by Twisted Resurrection now count as undead.
+* Increased spawning rate after picking up the Orb.
+* Berserked monsters attack nearby enemies and ignore ally commands.
+* Monsters confused by you that kill themselves or others now give xp.
+* [1779770] Monsters taking stairs are created according to stair
+  destination.
+* Monster descriptions are shorter when looking at them with 'x' and
+  targeting.
+* Unflasked efreets are permanent
+* Mummy priests and greater mummies now have high intelligence.
 
 Levels
 ------
-* Added portal vaults, specifically bazaars
-* Labyrinths look much different now
-* Changed rock stairs to escape hatches
-* New trap type: net trap
-* [1777426] Explosions can no longer pass through walls.
-* Added several new vault maps
-
+* Added portal vaults, specifically bazaars.
+* Labyrinths look much different now.
+* Changed rock stairs to escape hatches.
+* New trap type: net trap.
+* Added several new vault maps.
+* Monster generation rate in the Vestibule drops with time spent in
+  the Vestibule.
+* Fixed sealed rooms being generated in the Vaults.
+  
 Interface
 ---------
 * [1772497] runrest_ignore_monster can be used to ignore distant mosters
@@ -77,17 +84,26 @@ Interface
 * Added trap_item_brand for traps hidden by items
 * Added visible beam path for targetting
 * Added warning when trying to fight wielding a non-weapon
-* Intertravel also allows travelling to entrances of branches
+* Interlevel travel also allows travelling to entrances of branches
 * Polearms can be used to attack monsters submerged in shallow water using
   Ctrl+direction when adjacent.
+* Added support for Unicode glyphs in Unix.
+* Large viewport support for terminals larger than 80x24 if the
+  view_max_width and view_max_height options are set.
+* Quit prompt needs "Yes" to confirm.
 
 Miscellaneous
 -------------
+* Crawl needs Lua - Lua 5.1 sources are included with the Crawl sources.
 * Monster, spell and feature descriptions and monster dialogue are now
   loaded from text files.
+* [1777426] Explosions can no longer pass through walls.
 * Invisibility is more useful.
-
-... and what feels like a million bug fixes. :)
+* User Lua scripts now have limits on CPU usage and memory use and are safer
+  to use on public servers.
+* Fixed DOS glitches.
+* Game time reported by Crawl clamps time-per-move at 5 minutes.
+* More fixes for Crawl to play well with dgamelaunch.
 
 
 Stone Soup 0.2.7 (20070611)
