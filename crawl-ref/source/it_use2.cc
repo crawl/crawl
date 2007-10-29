@@ -215,7 +215,8 @@ bool potion_effect( potion_type pot_eff, int pow )
         break;
 
     case POT_DEGENERATION:
-        mpr("There was something very wrong with that liquid!");
+        if ( pow == 40 )
+            mpr("There was something very wrong with that liquid!");
         if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
                       "drinking a potion of degeneration"))
             xom_is_stimulated(64);

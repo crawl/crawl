@@ -3719,6 +3719,8 @@ void read_scroll(void)
         break;
 
     case SCR_ACQUIREMENT:
+        mpr("This is a scroll of acquirement!");
+        more();
         acquirement(OBJ_RANDOM, AQ_SCROLL);
         break;
 

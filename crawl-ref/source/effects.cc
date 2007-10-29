@@ -1304,7 +1304,6 @@ bool acquirement(object_class_type class_wanted, int agent)
     while (class_wanted == OBJ_RANDOM)
     {
         mesclr();
-        mpr("This is a scroll of acquirement!");
         mpr( "[a] Weapon  [b] Armour  [c] Jewellery      [d] Book" );
         mpr( "[e] Staff   [f] Food    [g] Miscellaneous  [h] Gold" );
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
