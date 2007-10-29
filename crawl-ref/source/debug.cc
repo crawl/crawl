@@ -2816,16 +2816,19 @@ void mapgen_report_map_veto()
 
 static bool mg_do_build_level(int niters)
 {
-    mesclr();
-    mprf("On %s (%d); %d g, %d fail, %d err%s, %d uniq, "
-         "%d try, %d (%.2lf%%) vetos",
-         level_id::current().describe().c_str(), niters,
-         mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
-         mapgen_last_error.empty()? ""
-         : (" (" + mapgen_last_error + ")").c_str(),
-         mapgen_use_count.size(),
-         mg_build_attempts, mg_vetoes,
-         mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
+    if (niters > 1)
+    {
+        mesclr();
+        mprf("On %s (%d); %d g, %d fail, %d err%s, %d uniq, "
+             "%d try, %d (%.2lf%%) vetos",
+             level_id::current().describe().c_str(), niters,
+             mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+             mapgen_last_error.empty()? ""
+             : (" (" + mapgen_last_error + ")").c_str(),
+             mapgen_use_count.size(),
+             mg_build_attempts, mg_vetoes,
+             mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
+    }
 
     no_messages mx;
     for (int i = 0; i < niters; ++i)
@@ -2833,8 +2836,6 @@ static bool mg_do_build_level(int niters)
         if (kbhit() && getch() == ESCAPE)
             return (false);
 
-        you.uniq_map_tags.clear();
-        you.uniq_map_names.clear();
         ++mg_levels_tried;
         if (!builder(you.your_level, you.level_type))
             ++mg_levels_failed;
@@ -2842,11 +2843,9 @@ static bool mg_do_build_level(int niters)
     return (true);
 }
 
-static void mg_build_levels(int niters)
+static std::vector<level_id> mg_dungeon_places()
 {
-    mesclr();
-    mprf("Generating dungeon map stats");
-
+    std::vector<level_id> places;
     for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
     {
         if (branches[br].depth == -1)
@@ -2854,32 +2853,56 @@ static void mg_build_levels(int niters)
         
         const branch_type branch = static_cast<branch_type>(br);
         for (int depth = 1; depth <= branches[br].depth; ++depth)
-        {
-            you.your_level = absdungeon_depth(branch, depth);
-            you.where_are_you = branch;
-            you.level_type = LEVEL_DUNGEON;
-
-            int iters = niters;
-            if (branch == BRANCH_MAIN_DUNGEON && depth == 1)
-                iters *= 10;
-            if (!mg_do_build_level(iters))
-                return;
-        }
+            places.push_back( level_id(branch, depth) );
     }
 
-    you.level_type = LEVEL_ABYSS;
-    if (!mg_do_build_level(niters))
-        return;
-    you.level_type = LEVEL_LABYRINTH;
-    if (!mg_do_build_level(niters))
-        return;
-    you.level_type = LEVEL_PANDEMONIUM;
-    if (!mg_do_build_level(niters))
-        return;
-    you.level_type = LEVEL_PORTAL_VAULT;
-    you.level_type_name = "bazaar";
-    if (!mg_do_build_level(niters))
-        return;
+    places.push_back(LEVEL_ABYSS);
+    places.push_back(LEVEL_LABYRINTH);
+    places.push_back(LEVEL_PANDEMONIUM);
+    places.push_back(LEVEL_PORTAL_VAULT);
+
+    return (places);
+}
+
+static void mg_build_dungeon()
+{
+    const std::vector<level_id> places = mg_dungeon_places();
+
+    for (int i = 0, size = places.size(); i < size; ++i)
+    {
+        const level_id &lid = places[i];
+        you.your_level = absdungeon_depth(lid.branch, lid.depth);
+        you.where_are_you = lid.branch;
+        you.level_type = lid.level_type;
+        if (you.level_type == LEVEL_PORTAL_VAULT)
+            you.level_type_name = "bazaar";
+        if (!mg_do_build_level(1))
+            return;
+    }
+}
+
+static void mg_build_levels(int niters)
+{
+    mesclr();
+    mprf("Generating dungeon map stats");
+
+    for (int i = 0; i < niters; ++i)
+    {
+        mesclr();
+        mprf("On %d of %d; %d g, %d fail, %d err%s, %d uniq, "
+             "%d try, %d (%.2lf%%) vetos",
+             i, niters,
+             mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+             mapgen_last_error.empty()? ""
+             : (" (" + mapgen_last_error + ")").c_str(),
+             mapgen_use_count.size(),
+             mg_build_attempts, mg_vetoes,
+             mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
+        
+        you.uniq_map_tags.clear();
+        you.uniq_map_names.clear();
+        mg_build_dungeon();
+    }
 }
 
 void mapgen_report_map_try(const map_def &map)
@@ -2898,6 +2921,23 @@ void mapgen_report_map_use(const map_def &map)
 void mapgen_report_error(const map_def &map, const std::string &err)
 {
     mapgen_last_error = err;
+}
+
+static void mapgen_report_avaiable_random_vaults(FILE *outf)
+{
+    you.uniq_map_tags.clear();
+    you.uniq_map_names.clear();
+    
+    const std::vector<level_id> places = mg_dungeon_places();
+    fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
+
+    for (std::vector<level_id>::const_iterator i = places.begin();
+         i != places.end(); ++i)
+    {
+        fprintf(outf, "\n%s -------------\n", i->describe().c_str());
+        mg_report_random_maps(outf, *i);
+        fprintf(outf, "---------------------------------\n");
+    }
 }
 
 static void check_mapless(const level_id &lid, std::vector<level_id> &mapless)
@@ -2950,6 +2990,8 @@ static void write_mapgen_stats()
         for (int i = 0, size = mapless.size(); i < size; ++i)
             fprintf(outf, "%3d) %s\n", i + 1, mapless[i].describe().c_str());
     }
+
+    mapgen_report_avaiable_random_vaults(outf);
 
     std::vector<std::string> unused_maps;
     for (int i = 0, size = map_count(); i < size; ++i)

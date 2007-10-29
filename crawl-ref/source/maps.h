@@ -75,4 +75,9 @@ extern bool            lc_run_global_prelude;
 
 const int              MAP_CACHE_VERSION = 1007;
 
+
+#ifdef DEBUG_DIAGNOSTICS
+void mg_report_random_maps(FILE *outf, const level_id &place);
+#endif
+
 #endif
