@@ -2094,7 +2094,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
             case MI_JAVELIN:
                 // Javelins use throwing skill.
-                baseHit = -1;
+                baseHit = 1;
                 baseDam = property( item, PWPN_DAMAGE );
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skills[SK_THROWING] * 3 / 5;
