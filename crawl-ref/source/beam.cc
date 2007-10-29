@@ -2452,7 +2452,8 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         if (item->base_type != OBJ_MISSILES || !one_chance_in(chance))
             copy_item_to_grid( *item, x, y, 1 );
     }
-    else if (MON_KILL(beam.thrower) && coinflip()) // monster threw it.
+    else if (MON_KILL(beam.thrower)
+             && (item->base_type != OBJ_MISSILES || coinflip()))
     {
         copy_item_to_grid( *item, x, y, 1 );
     }                           // if (thing_throw == 2) ...
