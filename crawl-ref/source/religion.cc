@@ -2863,7 +2863,7 @@ static void beogh_orc_spontaneous_conversion_speech(
     }    
 }
 
-void beogh_convert_orc(monsters *orc)
+void beogh_convert_orc(monsters *orc, bool emergency)
 {
     ASSERT(mons_species(orc->type) == MONS_ORC);
     
@@ -2872,7 +2872,7 @@ void beogh_convert_orc(monsters *orc)
         std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
         chan << orc->name(DESC_CAP_THE);
 
-        if (orc->hit_points <= 0)
+        if (emergency || orc->hit_points <= 0)
             beogh_orc_emergency_conversion_speech(chan, orc);
         else
             beogh_orc_spontaneous_conversion_speech(chan, orc);

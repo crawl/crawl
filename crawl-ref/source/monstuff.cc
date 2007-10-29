@@ -461,7 +461,7 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
             // bias beaten-up-conversion towards the stronger orcs.
             && random2(monster->hit_dice) > 2)
         {
-            beogh_convert_orc(monster);
+            beogh_convert_orc(monster, true);
             return (true);
         }
     }
