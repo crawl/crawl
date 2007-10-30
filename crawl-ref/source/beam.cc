@@ -2126,7 +2126,7 @@ bool poison_monster( monsters *monster,
     if (!monster->alive())
         return (false);
 
-    if (!force && mons_res_poison(monster) > 0)
+    if (!levels || (!force && mons_res_poison(monster) > 0))
         return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
@@ -3967,8 +3967,7 @@ static int affect_monster(bolt &beam, monsters *mon)
             {
                 if ( num_success == 2 )
                     num_levels++;
-                if ( num_levels )
-                    poison_monster( mon, whose_kill(beam), num_levels );
+                poison_monster( mon, whose_kill(beam), num_levels );
             }
         }
 

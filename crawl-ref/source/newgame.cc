@@ -4450,7 +4450,8 @@ bool give_items_skills()
         weap_skill = 3;
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, give_first_conjuration_book());
+        if (!choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
+            return false;
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_ARMOUR] = 1;
