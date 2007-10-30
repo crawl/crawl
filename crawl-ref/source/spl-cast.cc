@@ -1946,7 +1946,7 @@ static bool send_abyss(const char *cause)
     if (you.level_type != LEVEL_ABYSS)
     {
         mpr("You are cast into the Abyss!");
-        banished(DNGN_ENTER_ABYSS, cause? cause : "");
+        you.banish(cause? cause : "");
         return (true);
     }
     else
