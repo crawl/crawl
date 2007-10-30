@@ -2135,7 +2135,7 @@ bool poison_monster( monsters *monster,
 
     // actually do the poisoning
     // note: order important here
-    if (new_pois.degree > old_pois.degree && verbose)
+    if (verbose && new_pois.degree > old_pois.degree)
     {
         simple_monster_message( monster, 
                                 !old_pois.degree? " is poisoned." 
@@ -3967,15 +3967,19 @@ static int affect_monster(bolt &beam, monsters *mon)
             {
                 if ( num_success == 2 )
                     num_levels++;
-                poison_monster( mon, whose_kill(beam), num_levels );
+                if ( num_levels )
+                    poison_monster( mon, whose_kill(beam), num_levels );
             }
         }
 
         bool wake_mimic = true;
         if (beam.name.find("curare") != std::string::npos)
         {
-            if (curare_hits_monster( beam, mon, whose_kill(beam), 2 ))
+            if (beam.ench_power == AUTOMATIC_HIT
+                && curare_hits_monster( beam, mon, whose_kill(beam), 2 ))
+            {
                 wake_mimic = false;
+            }
         }
 
         if (wake_mimic && mons_is_mimic( mon->type ))
