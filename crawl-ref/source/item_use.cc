@@ -2934,6 +2934,7 @@ void zap_wand(void)
     }
 
     const bool alreadyknown = item_type_known(wand);
+    const bool alreadytried = item_type_tried(wand);
     if (!alreadyknown)
         beam.effect_known = false;
 
@@ -3030,7 +3031,7 @@ void zap_wand(void)
     exercise( SK_EVOCATIONS, 1 );
     alert_nearby_monsters();
 
-    if (!alreadyknown && dangerous)
+    if (!alreadyknown && !alreadytried && dangerous)
     {
         // Xom loves it when you use an unknown wand and there is a
         // dangerous monster nearby...

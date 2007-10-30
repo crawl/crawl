@@ -577,8 +577,8 @@ static bool xom_is_good(int sever)
                     
             god_speaks(GOD_XOM,
                        (temp_rand == 0) ? "\"Serve the mortal, my child!\"" :
-                       (temp_rand == 1) ? "Xom grants you a demonic assistant."
-                       : "Xom opens a gate.");
+                       (temp_rand == 1) ? "\"Serve the toy, my child!\"" :
+                       "Xom opens a gate.");
             done = true;
         }
     }
@@ -641,8 +641,8 @@ static bool xom_is_good(int sever)
         {
             temp_rand = random2(3);
             god_speaks(GOD_XOM,
-                       (temp_rand == 0) ? "\"Serve the toy, my child!\"" :
-                       (temp_rand == 1) ? "Xom grants you a demonic servitor."
+                       (temp_rand == 0) ? "Xom grants you a demonic assistant."
+                       : (temp_rand == 1) ? "Xom grants you a demonic servitor."
                        : "Xom opens a gate.");
             done = true;
         }
