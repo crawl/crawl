@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "cio.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "food.h"
@@ -294,11 +295,24 @@ bool deck_peek()
     return true;
 }
 
+static void redraw_stacked_cards(const std::vector<card_type>& draws,
+                                 unsigned int selected)
+{
+    for (unsigned int i = 0; i < draws.size(); ++i)
+    {
+        gotoxy(1,i+2);
+        textcolor(selected == i ? WHITE : LIGHTGREY);
+        cprintf("%u - %s", i+1, card_name(draws[i]) );
+        clear_to_end_of_line();
+    }
+}
+
 // Stack a deck: look at the next five cards, put them back in any
 // order, discard the rest of the deck.
 // Return false if the operation was failed/aborted along the way.
 bool deck_stack()
 {
+    cursor_control con(false);
     if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
@@ -319,38 +333,54 @@ bool deck_stack()
     if ( draws.size() == 1 )
         mpr("There's only one card left!");
     else
-        mpr("Order the cards (bottom to top)...", MSGCH_PROMPT);
-
-    item.special = 0;
-
-    while ( draws.size() > 1 )
     {
-        for ( unsigned int i = 0; i < draws.size(); ++i )
-        {
-            msg::stream << (static_cast<char>(i + 'a')) << " - "
-                        << card_name(draws[i]) << std::endl;
-        }
-
-        int selected = -1;
-        while ( true )
-        {
-            const int keyin = tolower(get_ch());
-            if (keyin >= 'a' && keyin < 'a' + static_cast<int>(draws.size()))
+        unsigned int selected = draws.size();
+        clrscr();
+        gotoxy(1,1);
+        textcolor(WHITE);
+        cprintf("Press a digit to select a card, "
+                "then another digit to swap it.");
+        gotoxy(1,10);
+        cprintf("Press Enter to accept.");
+        redraw_stacked_cards(draws, selected);
+        
+        // Hand-hacked implementation, instead of using Menu. Oh well.
+        while (1) {
+            const int c = getch();
+            if ( c == CK_ENTER )
             {
-                selected = keyin - 'a';
-                break;
+                gotoxy(1,11);
+                textcolor(LIGHTGREY);
+                cprintf("Are you sure? (press y or Y to confirm)");
+                if ( toupper(getch()) == 'Y' )
+                    break;
+                gotoxy(1,11);
+                clear_to_end_of_line();
+                continue;
             }
-            else
+            if ( c >= '1' && c <= '0' + static_cast<int>(draws.size()) )
             {
-                canned_msg(MSG_HUH);
+                const unsigned int new_selected = c - '1';
+                if ( selected < draws.size() )
+                {
+                    std::swap(draws[selected], draws[new_selected]);
+                    selected = draws.size();
+                }
+                else
+                    selected = new_selected;
+                redraw_stacked_cards(draws, selected);
             }
         }
-        item.special <<= 8;
-        item.special += draws[selected] + 1;
-        draws.erase(draws.begin() + selected);
-        mpr("Next card?", MSGCH_PROMPT);
+        redraw_screen();
     }
+
     item.plus2 = draws[0] + 1;
+    item.special = 0;    
+    for ( unsigned int i = draws.size() - 1; i > 0; --i )
+    {
+        item.special <<= 8;
+        item.special += draws[i] + 1;
+    }
     item.plus = num_to_stack;   // no more deck after the stack
     you.wield_change = true;
     return true;
