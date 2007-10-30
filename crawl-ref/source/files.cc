@@ -310,7 +310,7 @@ static int create_directory(const char *dir)
     return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
 #elif defined(DOS)
     // djgpp doesn't seem to have mkdir.
-    return (-1);
+    return mkdir(dir, 0755);
 #else
     return mkdir(dir);
 #endif
