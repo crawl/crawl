@@ -1,12 +1,12 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20070331 for Dungeon Crawl Stone Soup 0.2.)
+(Last updated on 20071030 for Dungeon Crawl Stone Soup 0.3.)
 
 Building Dungeon Crawl Stone Soup
 ---------------------------------
 
 Crawl Stone Soup is known to compile successfully on the following
-platforms as of version 0.2:
+platforms as of version 0.3:
 
 - Any Unix with a recent gcc (and g++), GNU make and libncurses,
   including Linux and Mac OS X. "Recent" is defined as gcc 3.3 or
@@ -64,9 +64,9 @@ Makefile system
 ---------------
 
 Crawl uses a selector makefile (under source/makefile) to control what
-platform it's building for. Your first step in building Crawl should
-be to edit source/makefile and point it at the correct platform
-makefile. For instance, if you're building for Windows, you'd use
+platform it's building for. Your first step in building Crawl should be
+to edit source/makefile and point it at the correct platform makefile.
+For instance, if you're building for Windows, you'd use
 MAKEFILE=makefile.mgw to build with MinGW for Windows (# is used for
 comments in makefiles).
 
@@ -77,6 +77,24 @@ information on building Crawl.
 Building on Unix (Linux, *BSD, Solaris, etc.)
 ---------------------------------------------
 
+Security:
+
+If you have untrusted local users, we highly recommend you do not
+install Crawl setgid or setuid. Just running "make install" will install
+Crawl setgid games, do *not* do this unless you're sure you trust your
+users.
+
+If you have untrusted users, the correct way to install a multiplayer
+Crawl is using a chrooted game launcher such as dgamelaunch.
+
+
+To install or not to install:
+
+If only one user on the system (you) is going to be playing Crawl, you
+do not need to use "make install". A simple "make" will build Crawl in
+the source directory, where you can run it as "./crawl".
+
+
 Prerequisites:
 
 GNU gcc and g++, GNU make, libncurses or libcurses. You need the
@@ -86,10 +104,12 @@ on some Unixes.
 flex and bison are optional but highly recommended. Recent versions of
 byacc are also fine (edit your makefile appropriately).
 
-If you have ncursesw and the development headers (usually in the
-/usr/include/ncursesw directory) you can build Crawl with support for
-Unicode display characters in the map by setting UNICODE_GLYPHS = y
-in makefile.unix.
+If you want to use Unicode, you need to link with a curses library that
+understands Unicode characters, usually named libncursesw (the
+development headers for libncursesw are usually in
+/usr/include/ncursesw.) You also need to have a UTF-8 locale installed.
+You can then build Crawl with support for Unicode by setting
+UNICODE_GLYPHS = y in makefile.unix.
 
 Building:
 
@@ -117,7 +137,7 @@ Building:
 
 * Run make to build the normal (non-wizard) Crawl. On systems such as
   Solaris, you may have to use gmake for GNU make. Make sure your make
-  identifies itself as GNU make when you do make --version.
+  identifies itself as GNU Make when you do make --version.
 
 * If you're installing Crawl for multiple users, run make install.
   Crawl will be copied into the directory specified by INSTALLDIR. The
@@ -125,11 +145,8 @@ Building:
   level layout (.des) and help files will be copied to the data
   directory.
 
-* If you'd like users to be able to script Crawl with Lua, you can
-  edit AppHdr.h, uncomment
-        // #define CLUA_BINDINGS
-  clean, and rebuild to compile with user Lua support. See the section
-  on Lua (below) for more information.
+* If you do not want players to be able to script Crawl with Lua,
+  edit makefile.unix and remove -DCLUA_BINDINGS from the CFOTHERS line.
 
 
 Building on Mac OS X
@@ -180,11 +197,11 @@ NT family). If you're on 9x/ME, you can use the Cygwin build
 instructions, or build a binary on a Windows NT/2k/XP system (the
 binary will run on 9x), or build a DOS binary.
 
-* Install MinGW from http://www.mingw.org. The MinGW 5.0.2 installer
-  is best so you don't have to fiddle with individual packages (you
-  can mess with the individual packages if you like to, of course). If
-  you want to edit the level compiler, also get the flex and bison
-  packages (available from the GnuWin32 project on Sourceforge:
+* Install MinGW from http://www.mingw.org. The MinGW installer
+  is best so you don't have to fiddle with individual packages (you can
+  mess with the individual packages if you like to, of course). If you
+  want to edit the level compiler, also get the flex and bison packages
+  (available from the GnuWin32 project on Sourceforge:
   http://gnuwin32.sourceforge.net/).
 
 * Make sure you have g++ and mingw32-make in your path.
@@ -198,7 +215,8 @@ binary will run on 9x), or build a DOS binary.
   uncomment this line:
         // #define REGEX_PCRE
   Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h
-  - find the one in the Windows-specific section.
+  - find the one in the Windows-specific section. Also see the section
+  below on obtaining the pcre library to link against.
 
 * If you have flex and bison, edit makefile.mgw and set DOYACC := y.
 
@@ -343,6 +361,7 @@ not UTF-8, you can force it to UTF-8 on most systems by doing "export
 LC_ALL=en_US.UTF-8" or the equivalent, depending on your language
 locale and what shell you're using.
 
-If you're playing Crawl on a remote machine, the remote Crawl should
-be built with Unicode support, *and* your local terminal (where you're
-running telnet/ssh) needs to be able to decode UTF-8.
+If you're playing Crawl on a remote machine, the remote Crawl should be
+built with Unicode support, it needs to have a UTF-8 locale installed,
+*and* your local terminal (where you're running telnet/ssh) needs to be
+able to decode UTF-8.

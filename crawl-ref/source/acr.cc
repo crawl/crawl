@@ -3482,6 +3482,9 @@ static bool initialise(void)
     const bool newc = new_game();
     if (!newc)
         restore_game();
+
+    // Fix the mutation definitions for the species we're playing.
+    fixup_mutations();
     
     // Load macros
     macro_init();

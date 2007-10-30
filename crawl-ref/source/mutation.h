@@ -22,7 +22,12 @@ struct mutation_def
     mutation_type mutation;
     short         rarity;    // Rarity of the mutation.
     short         levels;    // The number of levels of the mutation.
+    bool          bad;       // A mutation that's more bad than good. Xom uses
+                             // this to decide which mutations to hand out as
+                             // rewards.
 };
+
+void fixup_mutations();
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -31,7 +36,6 @@ struct mutation_def
  * *********************************************************************** */
 bool mutate(mutation_type which_mutation, bool failMsg = true,
             bool force_mutation = false, bool demonspawn = false);
-
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

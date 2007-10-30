@@ -2041,7 +2041,8 @@ enum mutation_type
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = 100,
-    RANDOM_XOM_MUTATION = 101
+    RANDOM_XOM_MUTATION = 101,
+    RANDOM_GOOD_MUTATION = 102
 };
 
 enum object_class_type                 // (unsigned char) mitm[].base_type

@@ -626,7 +626,7 @@ static bool xom_is_good(int sever)
         int j = random2(4);
         while (i < j)
         {
-            if (mutate(RANDOM_MUTATION, failMsg, true))
+            if (mutate(RANDOM_GOOD_MUTATION, failMsg, true))
                 done = true;
             else
                 failMsg = false;
@@ -704,8 +704,7 @@ static bool xom_is_bad(int sever)
                        (temp_rand == 2) ? "Xom's power almost touches on you for a moment."
                        : "You almost hear Xom's maniacal laughter.");
                 
-            miscast_effect( SPTYP_RANDOM, 0, 0, 0, 
-                            "the mischievity of Xom" );
+            miscast_effect( SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom" );
                 
             done = true;
         }
