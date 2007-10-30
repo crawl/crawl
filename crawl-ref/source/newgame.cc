@@ -1274,7 +1274,6 @@ static bool class_allowed( species_type speci, job_type char_class )
         case SP_HIGH_ELF:
         case SP_KENKU:
         case SP_MINOTAUR:
-        case SP_NAGA:
         case SP_OGRE:
         case SP_SPRIGGAN:
         case SP_TROLL:
