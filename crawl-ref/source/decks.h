@@ -137,4 +137,8 @@ deck_rarity_type deck_rarity(const item_def &item);
 unsigned char deck_rarity_to_color(deck_rarity_type rarity);
 void init_deck(item_def &item);
 
+int cards_in_deck(const item_def &deck);
+card_type get_card_and_flags(const item_def& deck, int idx,
+                             unsigned char& _flags);
+
 #endif

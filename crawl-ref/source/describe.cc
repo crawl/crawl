@@ -2971,6 +2971,10 @@ static std::string describe_staff( const item_def &item )
     return (description);
 }
 
+static bool compare_card_names(card_type a, card_type b)
+{
+    return std::string(card_name(a)) < std::string(card_name(b));
+}
 
 //---------------------------------------------------------------
 //
@@ -3186,16 +3190,47 @@ static std::string describe_misc_item( const item_def &item )
 
     description += "$";
 
-    if ( is_deck(item) && item.plus2 != 0 )
+    if ( is_deck(item) )
     {
-        description += "$Next card(s): ";
-        description += card_name(static_cast<card_type>(item.plus2 - 1));
-        long spec = item.special;
-        while ( spec )
+        const int num_cards = cards_in_deck(item);
+        if ( top_card_is_known(item) )
         {
-            description += ", ";
-            description += card_name(static_cast<card_type>((spec & 0xFF)-1));
-            spec >>= 8;
+            description += "Next card(s): ";
+            for ( int i = 0; i < num_cards; ++i )
+            {
+                unsigned char flags;
+                const card_type card = get_card_and_flags(item, -i-1, flags);
+                if ( flags & CFLAG_MARKED )
+                {
+                    if ( i != 0 )
+                        description += ", ";
+                    description += card_name(card);
+                }
+                else
+                    break;
+            }
+        }
+
+        std::vector<card_type> seen_cards;
+        for ( int i = 0; i < num_cards; ++i )
+        {
+            unsigned char flags;
+            const card_type card = get_card_and_flags(item, -i-1, flags);
+            // This *might* leak a bit of information...oh well.
+            if ( (flags & CFLAG_SEEN) && !(flags & CFLAG_MARKED) )
+                seen_cards.push_back(card);
+        }
+        if ( !seen_cards.empty() )
+        {
+            std::sort(seen_cards.begin(), seen_cards.end(),
+                      compare_card_names);
+            description += "$Seen cards: ";
+            for ( unsigned int i = 0; i < seen_cards.size(); ++i )
+            {
+                if ( i != 0 )
+                    description += ", ";
+                description += card_name(seen_cards[i]);
+            }
         }
         description += "$";
     }

@@ -54,7 +54,7 @@
 // with, deck.plus2 is the number of cards drawn, deck.special is the
 // deck rarity, deck.props["cards"] holds the list of cards (with the
 // highest index card being the top card, and index 0 being the bottom
-// card), deck.props.["card_flags"] holds the flags for each card,
+// card), deck.props["card_flags"] holds the flags for each card,
 // deck.props["num_marked"] is the number of marked cards left in the
 // deck, and deck.props["non_brownie_draws"] is the number of
 // non-marked draws you have to make from that deck before earning
@@ -141,7 +141,7 @@ static void check_odd_card(unsigned char flags)
         mpr("This card doesn't seem to belong here.");
 }
 
-static unsigned long cards_in_deck(const item_def &deck)
+int cards_in_deck(const item_def &deck)
 {
     ASSERT(is_deck(deck));
 
@@ -167,25 +167,26 @@ static void shuffle_deck(item_def &deck)
     // Don't use std::shuffle(), since we want to apply exactly the
     // same shuffling to both the cards vector and the flags vector.
     std::vector<long> pos;
-    for (unsigned long i = 0, size = cards.size(); i < size; i++)
-        pos.push_back(random2(size));
+    for (unsigned long i = 0; i < cards.size(); i++)
+        pos.push_back(random2(cards.size()));
 
-    for (unsigned long i = 0, size = pos.size(); i < size; i++)
+    for (unsigned long i = 0; i < pos.size(); i++)
     {
         std::swap(cards[i], cards[pos[i]]);
         std::swap(flags[i], flags[pos[i]]);
     }
 }
 
-static card_type get_card_and_flags(const item_def& deck, int idx,
-                                    unsigned char& _flags)
+card_type get_card_and_flags(const item_def& deck, int idx,
+                             unsigned char& _flags)
 {
     const CrawlHashTable &props = deck.props;
     const CrawlVector    &cards = props["cards"].get_vector();
     const CrawlVector    &flags = props["card_flags"].get_vector();
 
-    if (idx == -1)
-        idx = (int) cards.size() - 1;
+    // negative idx means read from the end
+    if (idx < 0)
+        idx += static_cast<int>(cards.size());
 
     _flags = (unsigned char) flags[idx].get_byte();
 
@@ -2351,7 +2352,7 @@ void init_deck(item_def &item)
         set_card_and_flags(item, i, card, flags);
     }
 
-    ASSERT(cards_in_deck(item) == (unsigned long) item.plus);
+    ASSERT(cards_in_deck(item) == item.plus);
 
     props["num_marked"]        = (char) 0;
     props["non_brownie_draws"] = (char) 0;
