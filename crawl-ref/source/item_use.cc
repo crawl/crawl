@@ -2995,6 +2995,14 @@ void zap_wand(void)
     zapping( static_cast<zap_type>(type_zapped),
              30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
+    // take off a charge
+    wand.plus--;
+
+    // increment zap count
+    if ( wand.plus2 >= 0 )
+        wand.plus2++;
+
+    // identify if necessary
     if ((beam.obvious_effect || type_zapped == ZAP_FIREBALL) &&
         !alreadyknown)
     {
@@ -3005,13 +3013,6 @@ void zap_wand(void)
     {
         set_ident_type( wand.base_type, wand.sub_type, ID_TRIED_TYPE );
     }
-
-    // take off a charge
-    wand.plus--;
-
-    // increment zap count
-    if ( wand.plus2 >= 0 )
-        wand.plus2++;
 
     if (item_type_known(wand)
         && (item_ident( wand, ISFLAG_KNOW_PLUSES )
