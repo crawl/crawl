@@ -455,7 +455,8 @@ PLACE:   Tomb:2
 # Can be rotated!
 ORIENT:  encompass
 #
-SHUFFLE: ABCD[, Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
+NSUBST:  A = [ / '
+SHUFFLE: Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
 SUBST:   W=', w=c, Y=T, y=+, Z=T, z=+
 SUBST:   U=', u=c, V=T, v=+
 SUBST:   Q=', q=c, R=T, r=+, S=T, s=+
@@ -521,14 +522,14 @@ xxxxxxxxxxxxxxcccczcc..ccc.........1.........ccc..c''''ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc'ZZZc..ccc...................ccc..c''''ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxccA'''c..ccc4.................4ccc..c''''ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc'YYYc.............................c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccycc.............................cRRR[ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccycc.............................cRRRAccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc'YYYc.............................ccrccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc''''ccccc+ccccccccccccccc+cccccccccRRR'ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc''''''c'TTTc''''''''''''cTT''''''c'''''ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc'''''WwW''UuU''''''''''VvV''''''SsS''''ccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccB'''''c''''cC'''''''''''c''''''''c''''Dccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccA'''''c''''cA'''''''''''c''''''''c''''Accxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

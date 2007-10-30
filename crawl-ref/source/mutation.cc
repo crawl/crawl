@@ -816,108 +816,107 @@ const char *lose_mutation[][3] = {
      "Your patterned scales recede somewhat."},
 };
 
-static const mutation_def mutation_defs[] = {
-    { MUT_TOUGH_SKIN, 10, 3 },
-    { MUT_STRONG, 8, 14 },
-    { MUT_CLEVER, 8, 14 },
-    { MUT_AGILE, 8,  14 },
-    { MUT_GREEN_SCALES, 2, 3 },
-    { MUT_BLACK_SCALES, 1, 3 },
-    { MUT_GREY_SCALES, 2, 3 },
-    { MUT_BONEY_PLATES, 1, 3 },
-    { MUT_REPULSION_FIELD, 1, 3 },
-    { MUT_POISON_RESISTANCE, 4, 1 },
+static mutation_def mutation_defs[] = {
+    { MUT_TOUGH_SKIN, 10, 3, false },
+    { MUT_STRONG, 8, 14, false },
+    { MUT_CLEVER, 8, 14, false },
+    { MUT_AGILE, 8,  14, false },
+    { MUT_GREEN_SCALES, 2, 3, false },
+    { MUT_BLACK_SCALES, 1, 3, false },
+    { MUT_GREY_SCALES, 2, 3, false },
+    { MUT_BONEY_PLATES, 1, 3, false },
+    { MUT_REPULSION_FIELD, 1, 3, false },
+    { MUT_POISON_RESISTANCE, 4, 1, false },
 // 10
-    { MUT_CARNIVOROUS, 5, 3 },
-    { MUT_HERBIVOROUS, 5, 3 },
-    { MUT_HEAT_RESISTANCE, 4, 3 },
-    { MUT_COLD_RESISTANCE, 4, 3 },
-    { MUT_SHOCK_RESISTANCE, 2, 1 },
-    { MUT_REGENERATION, 3, 3 },
-    { MUT_FAST_METABOLISM, 10, 3 },
-    { MUT_SLOW_METABOLISM, 7, 3 },
-    { MUT_WEAK, 10,  14 },
-    { MUT_DOPEY, 10, 14 },
+    { MUT_CARNIVOROUS, 5, 3, false },
+    { MUT_HERBIVOROUS, 5, 3, true },
+    { MUT_HEAT_RESISTANCE, 4, 3, false },
+    { MUT_COLD_RESISTANCE, 4, 3, false },
+    { MUT_SHOCK_RESISTANCE, 2, 1, false },
+    { MUT_REGENERATION, 3, 3, false },
+    { MUT_FAST_METABOLISM, 10, 3, true },
+    { MUT_SLOW_METABOLISM, 7, 3, false },
+    { MUT_WEAK, 10,  14, true },
+    { MUT_DOPEY, 10, 14, true },
 // 20
-    { MUT_CLUMSY, 10, 14 },
-    { MUT_TELEPORT_CONTROL, 2, 1 },
-    { MUT_TELEPORT, 3, 3 },
-    { MUT_MAGIC_RESISTANCE, 5, 3 },
-    { MUT_FAST, 1, 3 },
-    { MUT_ACUTE_VISION, 2, 1 },
-    { MUT_DEFORMED, 8, 3 },
-    { MUT_TELEPORT_AT_WILL, 2, 3 },
-    { MUT_SPIT_POISON, 8, 3 },
-    { MUT_MAPPING, 3, 3 },
+    { MUT_CLUMSY, 10, 14, true },
+    { MUT_TELEPORT_CONTROL, 2, 1, false },
+    { MUT_TELEPORT, 3, 3, true },
+    { MUT_MAGIC_RESISTANCE, 5, 3, false },
+    { MUT_FAST, 1, 3, false },
+    { MUT_ACUTE_VISION, 2, 1, false },
+    { MUT_DEFORMED, 8, 3, true },
+    { MUT_TELEPORT_AT_WILL, 2, 3, false },
+    { MUT_SPIT_POISON, 8, 3, false },
+    { MUT_MAPPING, 3, 3, false },
 // 30
-    { MUT_BREATHE_FLAMES, 4, 3 },
-    { MUT_BLINK, 3, 3 },
-    { MUT_HORNS, 7, 3 },
-    { MUT_STRONG_STIFF, 10, 3 },
-    { MUT_FLEXIBLE_WEAK, 10, 3 },
-    { MUT_LOST, 6, 3 },
-    { MUT_CLARITY, 6, 1 },
-    { MUT_BERSERK, 7, 3 },
-    { MUT_DETERIORATION, 10, 3 },
-    { MUT_BLURRY_VISION, 10, 3 },
+    { MUT_BREATHE_FLAMES, 4, 3, false },
+    { MUT_BLINK, 3, 3, false },
+    { MUT_HORNS, 7, 3, false },
+    { MUT_STRONG_STIFF, 10, 3, false },
+    { MUT_FLEXIBLE_WEAK, 10, 3, false },
+    { MUT_LOST, 6, 3, true },
+    { MUT_CLARITY, 6, 1, false },
+    { MUT_BERSERK, 7, 3, true },
+    { MUT_DETERIORATION, 10, 3, true },
+    { MUT_BLURRY_VISION, 10, 3, true },
 // 40
-    { MUT_MUTATION_RESISTANCE, 4, 3 },
-    { MUT_FRAIL, 10, 3 },
-    { MUT_ROBUST, 5, 3 },
+    { MUT_MUTATION_RESISTANCE, 4, 3, false },
+    { MUT_FRAIL, 10, 3, true },
+    { MUT_ROBUST, 5, 3, false },
 /* Some demonic powers start here: */
-    { MUT_TORMENT_RESISTANCE, 0, 1 },
-    { MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3 },
-    { MUT_SUMMON_MINOR_DEMONS, 0, 1 },
-    { MUT_SUMMON_DEMONS, 0, 1 },
-    { MUT_HURL_HELLFIRE, 0, 1 },
-    { MUT_CALL_TORMENT, 0, 1 },
-    { MUT_RAISE_DEAD, 0, 1 },
+    { MUT_TORMENT_RESISTANCE, 0, 1, false },
+    { MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3, false },
+    { MUT_SUMMON_MINOR_DEMONS, 0, 1, false },
+    { MUT_SUMMON_DEMONS, 0, 1, false },
+    { MUT_HURL_HELLFIRE, 0, 1, false },
+    { MUT_CALL_TORMENT, 0, 1, false },
+    { MUT_RAISE_DEAD, 0, 1, false },
 // 50
-    { MUT_CONTROL_DEMONS, 0, 1 },
-    { MUT_PANDEMONIUM, 0, 1 },
-    { MUT_DEATH_STRENGTH, 0, 1 },
-    { MUT_CHANNEL_HELL, 0, 1 },
-    { MUT_DRAIN_LIFE, 0, 1 },
-    { MUT_THROW_FLAMES, 0, 1 },
-    { MUT_THROW_FROST, 0, 1 },
-    { MUT_SMITE, 0, 1 },
-    { MUT_CLAWS, 2, 3 },
-    { MUT_HOOVES, 1, 1 },
+    { MUT_CONTROL_DEMONS, 0, 1, false },
+    { MUT_PANDEMONIUM, 0, 1, false },
+    { MUT_DEATH_STRENGTH, 0, 1, false },
+    { MUT_CHANNEL_HELL, 0, 1, false },
+    { MUT_DRAIN_LIFE, 0, 1, false },
+    { MUT_THROW_FLAMES, 0, 1, false },
+    { MUT_THROW_FROST, 0, 1, false },
+    { MUT_SMITE, 0, 1, false },
+    { MUT_CLAWS, 2, 3, false },
+    { MUT_HOOVES, 1, 1, false },
 // 60
-    { MUT_FANGS, 1, 3 },
-    { MUT_BREATHE_POISON, 0, 1 },
-    { MUT_STINGER, 0, 3 },
-    { MUT_BIG_WINGS, 0, 3 },
-    { MUT_BLUE_MARKS, 0, 3 },
-    { MUT_GREEN_MARKS, 0, 3 },
+    { MUT_FANGS, 1, 3, false },
+    { MUT_BREATHE_POISON, 0, 1, false },
+    { MUT_STINGER, 0, 3, false },
+    { MUT_BIG_WINGS, 0, 1, false },
+    { MUT_BLUE_MARKS, 0, 3, false },
+    { MUT_GREEN_MARKS, 0, 3, false },
 
     // Four placeholders:
-    { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
-    { RANDOM_MUTATION, 0, 3 },
+    { RANDOM_MUTATION, 0, 3, false },
+    { RANDOM_MUTATION, 0, 3, false },
+    { RANDOM_MUTATION, 0, 3, false },
+    { RANDOM_MUTATION, 0, 3, false },
 // 70
-    { MUT_RED_SCALES, 2, 3 },
-    { MUT_NACREOUS_SCALES, 1, 3 },
-    { MUT_GREY2_SCALES, 2, 3 },
-    { MUT_METALLIC_SCALES, 1, 3 },
-    { MUT_BLACK2_SCALES, 2, 3 },
-    { MUT_WHITE_SCALES, 2, 3 },
-    { MUT_YELLOW_SCALES, 2, 3 },
-    { MUT_BROWN_SCALES, 2, 3 },
-    { MUT_BLUE_SCALES, 2, 3 },
-    { MUT_PURPLE_SCALES, 2, 3 },
+    { MUT_RED_SCALES, 2, 3, false },
+    { MUT_NACREOUS_SCALES, 1, 3, false },
+    { MUT_GREY2_SCALES, 2, 3, false },
+    { MUT_METALLIC_SCALES, 1, 3, false },
+    { MUT_BLACK2_SCALES, 2, 3, false },
+    { MUT_WHITE_SCALES, 2, 3, false },
+    { MUT_YELLOW_SCALES, 2, 3, false },
+    { MUT_BROWN_SCALES, 2, 3, false },
+    { MUT_BLUE_SCALES, 2, 3, false },
+    { MUT_PURPLE_SCALES, 2, 3, false },
 // 80
-    { MUT_SPECKLED_SCALES, 2, 3 },
-    { MUT_ORANGE_SCALES, 2, 3 },
-    { MUT_INDIGO_SCALES, 2, 3 },
-    { MUT_RED2_SCALES, 1, 3 },
-    { MUT_IRIDESCENT_SCALES, 1, 3 },
-    { MUT_PATTERNED_SCALES, 1, 3 },
+    { MUT_SPECKLED_SCALES, 2, 3, false },
+    { MUT_ORANGE_SCALES, 2, 3, false },
+    { MUT_INDIGO_SCALES, 2, 3, false },
+    { MUT_RED2_SCALES, 1, 3, false },
+    { MUT_IRIDESCENT_SCALES, 1, 3, false },
+    { MUT_PATTERNED_SCALES, 1, 3, false },
 };
 
 #ifdef DEBUG_DIAGNOSTICS
-
 void sanity_check_mutation_defs()
 {
     ASSERT(ARRAYSIZE(mutation_defs) == NUM_MUTATIONS);
@@ -929,8 +928,13 @@ void sanity_check_mutation_defs()
                || mdef.mutation == RANDOM_MUTATION);
     }
 }
-
 #endif
+
+void fixup_mutations()
+{
+    if (player_genus(GENPC_DRACONIAN))
+        mutation_defs[MUT_BIG_WINGS].rarity = 1;
+}
 
 formatted_string describe_mutations()
 {
@@ -1322,14 +1326,73 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
-static bool accept_mutation( mutation_type mutat )
+static bool accept_mutation( mutation_type mutat, bool ignore_rarity = false )
 {
     if ( you.mutation[mutat] >= mutation_defs[mutat].levels )
-        return false;
+        return (false);
+
+    if ( ignore_rarity )
+        return (true);
     
     const int rarity = mutation_defs[mutat].rarity + you.demon_pow[mutat];
     // low rarity means unlikely to choose it
     return (rarity > random2(10));
+}
+
+static mutation_type get_random_xom_mutation()
+{
+    mutation_type mutat = NUM_MUTATIONS;
+    do
+    {
+        mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
+
+        if (one_chance_in(1000))
+            return (NUM_MUTATIONS);
+        if (one_chance_in(5))
+        {
+            switch (random2(8))
+            {
+            case 0: mutat = MUT_WEAK; break;
+            case 1: mutat = MUT_DOPEY; break;
+            case 2: mutat = MUT_CLUMSY; break;
+            case 3: mutat = MUT_DEFORMED; break;
+            case 4: mutat = MUT_LOST; break;
+            case 5: mutat = MUT_DETERIORATION; break;
+            case 6: mutat = MUT_BLURRY_VISION; break;
+            case 7: mutat = MUT_FRAIL; break;
+            }
+        }
+    }
+    while ( !accept_mutation(mutat) );
+    
+    return (mutat);
+}
+
+static mutation_type get_random_mutation(bool prefer_good,
+                                         int preferred_multiplier)
+{
+    int cweight = 0;
+    mutation_type chosen = NUM_MUTATIONS;
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (!mutation_defs[i].rarity)
+            continue;
+
+        const mutation_type curr = static_cast<mutation_type>(i);
+        if (!accept_mutation(curr, true))
+            continue;
+        
+        const bool weighted = mutation_defs[i].bad != prefer_good;
+        int weight = mutation_defs[i].rarity;
+        if (weighted)
+            weight = weight * preferred_multiplier / 100;
+
+        cweight += weight;
+
+        if (random2(cweight) < weight)
+            chosen = curr;
+    }
+    return (chosen);
 }
 
 bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
@@ -1407,28 +1470,13 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
-        do
-        {
-            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-
-            if (one_chance_in(1000))
-                return false;
-            if (one_chance_in(5))
-            {
-                switch (random2(8))
-                {
-                case 0: mutat = MUT_WEAK; break;
-                case 1: mutat = MUT_DOPEY; break;
-                case 2: mutat = MUT_CLUMSY; break;
-                case 3: mutat = MUT_DEFORMED; break;
-                case 4: mutat = MUT_LOST; break;
-                case 5: mutat = MUT_DETERIORATION; break;
-                case 6: mutat = MUT_BLURRY_VISION; break;
-                case 7: mutat = MUT_FRAIL; break;
-                }
-            }
-        }
-        while ( !accept_mutation(mutat) );
+        if ((mutat = get_random_xom_mutation()) == NUM_MUTATIONS)
+            return (false);
+    }
+    else if (which_mutation == RANDOM_GOOD_MUTATION)
+    {
+        if ((mutat = get_random_mutation(true, 500)) == NUM_MUTATIONS)
+            return (false);
     }
     else if (you.mutation[mutat] >= 3 &&
              mutat != MUT_STRONG && mutat != MUT_CLEVER &&

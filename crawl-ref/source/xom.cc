@@ -493,8 +493,8 @@ static bool xom_is_good(int sever)
                     
             god_speaks(GOD_XOM,
                        (temp_rand == 0) ? "\"Serve the mortal, my child!\"" :
-                       (temp_rand == 1) ? "Xom grants you a demonic assistant."
-                       : "Xom opens a gate.");
+                       (temp_rand == 1) ? "\"Serve the toy, my child!\"" :
+                       "Xom opens a gate.");
             done = true;
         }
     }
@@ -542,7 +542,7 @@ static bool xom_is_good(int sever)
         int j = random2(4);
         while (i < j)
         {
-            if (mutate(RANDOM_MUTATION, failMsg, true))
+            if (mutate(RANDOM_GOOD_MUTATION, failMsg, true))
                 done = true;
             else
                 failMsg = false;
@@ -557,8 +557,8 @@ static bool xom_is_good(int sever)
         {
             temp_rand = random2(3);
             god_speaks(GOD_XOM,
-                       (temp_rand == 0) ? "\"Serve the toy, my child!\"" :
-                       (temp_rand == 1) ? "Xom grants you a demonic servitor."
+                       (temp_rand == 0) ? "Xom grants you a demonic assistant."
+                       : (temp_rand == 1) ? "Xom grants you a demonic servitor."
                        : "Xom opens a gate.");
             done = true;
         }
@@ -618,8 +618,7 @@ static bool xom_is_bad(int sever)
                        (temp_rand == 2) ? "Xom's power almost touches on you for a moment."
                        : "You almost hear Xom's maniacal laughter.");
                 
-            miscast_effect( SPTYP_RANDOM, 0, 0, 0, 
-                            "the mischievity of Xom" );
+            miscast_effect( SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom" );
                 
             done = true;
         }
