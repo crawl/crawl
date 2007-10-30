@@ -962,7 +962,7 @@ static mutation_def mutation_defs[] = {
     { MUT_BREATHE_POISON, 0, 1, false }, // Naga only
     { MUT_STINGER, 0, 3, false },        // Naga and Draconian only
 // 65
-    { MUT_BIG_WINGS, 0, 3, false },      // Draconian only
+    { MUT_BIG_WINGS, 0, 1, false },      // Draconian only
     { MUT_BLUE_MARKS, 0, 3, false },     // used by evil gods to mark followers
     { MUT_GREEN_MARKS, 0, 3, false },
 
