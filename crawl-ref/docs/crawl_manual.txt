@@ -2187,6 +2187,9 @@ Stashes:
                         a seach for 'Trog' etc. works. If all items are
                         stashed (the default), then a string like 'D:13'
                         will list all known items on that level.
+                        'D:1}' will search for items on level 1 only,
+                        as opposed to 'D:1', which will also list items
+                        on D:10 through D:19.
                         Once the list of all found places is displayed,
                         you can cause auto-travel to go there (press the
                         associated letter) or you can examine the items
