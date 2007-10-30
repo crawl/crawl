@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <algorithm>
 #include <memory>
 
 #include "AppHdr.h"
@@ -985,9 +986,9 @@ void scorefile_entry::init()
     final_hp = you.hp;
     final_max_hp = you.hp_max;
     final_max_max_hp = you.hp_max + player_rotted();
-    str = you.strength;
-    intel = you.intel;
-    dex = you.dex;
+    str = std::max(you.strength - stat_modifier(STAT_STRENGTH), 1);
+    intel = std::max(you.intel - stat_modifier(STAT_INTELLIGENCE), 1);
+    dex = std::max(you.dex - stat_modifier(STAT_DEXTERITY), 1);
 
     god = you.religion;
     if (you.religion != GOD_NO_GOD)
