@@ -3455,9 +3455,9 @@ void describe_item( item_def &item, bool allow_inscribe )
             gotoxy(1, wherey());
             textcolor(LIGHTGREY);
             cprintf("Select a spell to read its description.");
-            if (!describe_spells(item))
-                break;
-            continue;
+            if (describe_spells(item))
+                continue;
+            return;
         }
         break;
     }
@@ -3471,7 +3471,8 @@ void describe_item( item_def &item, bool allow_inscribe )
     else if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
     {
         gotoxy(1, wherey() + 2);
-        formatted_string::parse_string("<cyan>Do you wish to inscribe this item? ").display();
+        formatted_string::parse_string(
+            "<cyan>Do you wish to inscribe this item? ").display();
 
         if (toupper(getch()) == 'Y')
         {
@@ -3485,7 +3486,6 @@ void describe_item( item_def &item, bool allow_inscribe )
     }
     else if (getch() == 0)
         getch();
-
 }
 
 
