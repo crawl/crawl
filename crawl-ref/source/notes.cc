@@ -217,7 +217,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
     std::ostringstream result;
 
     if ( when )
-        result << "| " << std::setw(5) << turn << " ";
+        result << std::setw(6) << turn << " ";
 
     if ( where )
     {
