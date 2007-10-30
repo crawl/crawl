@@ -35,6 +35,35 @@
 #include "view.h"
 #include "xom.h"
 
+static bool place_feature_near( const coord_def &centre,
+                                int radius,
+                                dungeon_feature_type candidate,
+                                dungeon_feature_type replacement,
+                                int tries )
+{
+    const int radius2 = radius * radius + 1;
+    for (int i = 0; i < tries; ++i)
+    {
+        const coord_def &cp =
+            centre + coord_def(random_range(-radius, radius),
+                               random_range(-radius, radius));
+        if (cp == centre || (cp - centre).abs() > radius2 || !in_bounds(cp))
+            continue;
+
+        if (grd(cp) == candidate)
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Placing %s at (%d,%d)",
+                 dungeon_feature_name(replacement),
+                 cp.x, cp.y);
+#endif
+            grd(cp) = replacement;
+            return (true);
+        }
+    }
+    return (false);
+}
+
 // public for abyss generation
 void generate_abyss(void)
 {
@@ -61,9 +90,9 @@ void generate_abyss(void)
 
     grd[45][35] = DNGN_FLOOR;
     if ( one_chance_in(5) )
-        grd[46][35] = DNGN_ALTAR_LUGONU;
-}                               // end generate_abyss()
-
+        place_feature_near( coord_def(45, 35), LOS_RADIUS,
+                            DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+}
 
 static void generate_area(int gx1, int gy1, int gx2, int gy2)
 {
@@ -506,7 +535,8 @@ void abyss_teleport( bool new_area )
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     if ( one_chance_in(5) )
-        grd[you.x_pos + 1][you.y_pos] = DNGN_ALTAR_LUGONU;
+        place_feature_near( you.pos(), LOS_RADIUS,
+                            DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
 
     place_transiting_monsters();
 }
