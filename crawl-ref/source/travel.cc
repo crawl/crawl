@@ -351,11 +351,12 @@ void set_exclude(const coord_def &p, int radius)
 
 static bool is_monster_blocked(int x, int y)
 {
-    const int mon = mgrd[x][y];
-    return (mon != NON_MONSTER
-            && player_monster_visible(&menv[mon])
-            && mons_is_stationary(&menv[mon])
-            && mons_was_seen(&menv[mon]));
+    const monsters *mons = monster_at(coord_def(x, y));
+    return (mons
+            && player_monster_visible(mons)
+            && mons_is_stationary(mons)
+            && mons_was_seen(mons)
+            && (!mons_is_mimic(mons->type) || mons_is_known_mimic(mons)));
 }
 
 /*
