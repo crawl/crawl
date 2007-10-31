@@ -3303,7 +3303,6 @@ static item_make_species_type give_weapon(monsters *mon, int level,
     case MONS_TIAMAT:
     {
         item.base_type = OBJ_WEAPONS;
-
         const int temp_rand = random2(120);
         item.sub_type = ((temp_rand > 109) ? WPN_LONG_SWORD :   // 8.33%
                              (temp_rand >  99) ? WPN_SHORT_SWORD :  // 8.33%
@@ -3671,6 +3670,10 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         break;
     }
     }                           // end "switch(mon->type)"
+    
+    // Nagas don't get racial stuff.
+    if (mons_genus(mon->type) == MONS_NAGA)
+        item_race = MAKE_ITEM_NO_RACE;
 
     // only happens if something in above switch doesn't set it {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
@@ -4023,7 +4026,7 @@ void give_armour(monsters *mon, int level)
 
     default:
         return;
-    }                           // end of switch(menv [mid].type)
+    }
 
     const object_class_type xitc = mitm[bp].base_type;
     const int xitt = mitm[bp].sub_type;

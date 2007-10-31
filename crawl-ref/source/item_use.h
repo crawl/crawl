@@ -20,6 +20,12 @@
 #include "externs.h"
 #include "enum.h"
 
+enum enchant_stat_type
+{
+    ENCHANT_TO_HIT,
+    ENCHANT_TO_DAM
+};
+
 enum fire_type
 {
     FIRE_NONE     = 0x0000,
@@ -156,7 +162,7 @@ void use_randart(item_def &item);
 
 bool puton_item(int slot, bool prompt_finger = true);
 
-bool enchant_weapon( int which_stat, bool quiet = false );
+bool enchant_weapon( enchant_stat_type which_stat, bool quiet = false );
 
 bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0,
               dist *target = NULL);

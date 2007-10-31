@@ -1078,12 +1078,6 @@ enum enchant_retval
     ERV_INCREASED
 };
 
-enum enchant_stat_type
-{
-    ENCHANT_TO_HIT,
-    ENCHANT_TO_DAM
-};
-
 enum equipment_type
 {
     EQ_NONE = -1,

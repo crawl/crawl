@@ -3351,7 +3351,7 @@ static bool affix_weapon_enchantment()
     return (success);
 }
 
-bool enchant_weapon( int which_stat, bool quiet )
+bool enchant_weapon( enchant_stat_type which_stat, bool quiet )
 {
     const int wpn = you.equip[ EQ_WEAPON ];
     bool affected = true;
@@ -3846,7 +3846,6 @@ void read_scroll(void)
     case SCR_ENCHANT_WEAPON_III:
         if (you.equip[ EQ_WEAPON ] != -1) 
         {
-
             // Successfully affixing the enchantment will print
             // its own message.
             if (!affix_weapon_enchantment())
