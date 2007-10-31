@@ -951,13 +951,10 @@ bool recall(char type_recalled)
     return (success);
 }                               // end recall()
 
-int portal(void)
+// Restricted to main dungeon for historical reasons, probably for
+// balance: otherwise you have an instant teleport from anywhere.
+int portal()
 {
-    char dir_sign = 0;
-    unsigned char keyi;
-    int target_level = 0;
-    int old_level = you.your_level;
-
     if (!player_in_branch( BRANCH_MAIN_DUNGEON ))
     {
         mpr("This spell doesn't work here.");
@@ -968,84 +965,70 @@ int portal(void)
         mpr("You must find a clear area in which to cast this spell.");
         return (-1);
     }
-    else
+    else if (you.char_direction == GDT_ASCENDING)
     {
-        // the first query {dlb}:
-        mpr("Which direction ('<' for up, '>' for down, 'x' to quit)?", MSGCH_PROMPT);
-
-        for (;;)
-        {
-            keyi = get_ch();
-
-            if (keyi == '<')
-            {
-                if (you.your_level == 0)
-                    mpr("You can't go any further upwards with this spell.");
-                else
-                {
-                    dir_sign = -1;
-                    break;
-                }
-            }
-
-            if (keyi == '>')
-            {
-                if (you.your_level == 35)
-                    mpr("You can't go any further downwards with this spell.");
-                else
-                {
-                    dir_sign = 1;
-                    break;
-                }
-            }
-
-            if (keyi == 'x')
-            {
-                canned_msg(MSG_OK);
-                return (-1);         // an early return {dlb}
-            }
-        }
-
-        // the second query {dlb}:
-        mpr("How many levels (1 - 9, 'x' to quit)?", MSGCH_PROMPT);
-
-        for (;;)
-        {
-            keyi = get_ch();
-
-            if (keyi == 'x')
-            {
-                canned_msg(MSG_OK);
-                return (-1);         // another early return {dlb}
-            }
-
-            if (!(keyi < '1' || keyi > '9'))
-            {
-                target_level = you.your_level + ((keyi - '0') * dir_sign);
-                break;
-            }
-        }
-
-        // actual handling begins here {dlb}:
-        if (player_in_branch( BRANCH_MAIN_DUNGEON ))
-        {
-            if (target_level < 0)
-                target_level = 0;
-            else if (target_level > 26)
-                target_level = 26;
-        }
-
-        mpr( "You fall through a mystic portal, and materialise at the "
-             "foot of a staircase." );
-        more();
-
-        you.your_level = target_level - 1;
-
-        down_stairs( old_level, DNGN_STONE_STAIRS_DOWN_I );
+        // be evil if you've got the Orb
+        mpr("An empty arch forms before you, then disappears.");
+        return 1;
     }
 
+    mpr("Which direction ('<' for up, '>' for down, 'x' to quit)?",
+        MSGCH_PROMPT);
+
+    int dir_sign = 0;
+    while (dir_sign == 0)
+    {
+        const int keyin = getch();
+        switch ( keyin )
+        {
+        case '<':
+            if (you.your_level == 0)
+                mpr("You can't go any further upwards with this spell.");
+            else
+                dir_sign = -1;
+            break;
+
+        case '>':
+            if (you.your_level + 1 == your_branch().depth)
+                mpr("You can't go any further downwards with this spell.");
+            else
+                dir_sign = 1;
+            break;
+
+        case 'x':
+            canned_msg(MSG_OK);
+            return (-1);
+
+        default:
+            break;
+        }
+    }
+
+    mpr("How many levels (1 - 9, 'x' to quit)?", MSGCH_PROMPT);
+
+    int amount = 0;
+    while (amount == 0)
+    {
+        const int keyin = getch();
+        if ( isdigit(keyin) )
+            amount = (keyin - '0') * dir_sign;
+        else if (keyin == 'x')
+        {
+            canned_msg(MSG_OK);
+            return (-1);
+        }
+    }
+
+    mpr( "You fall through a mystic portal, and materialise at the "
+         "foot of a staircase." );
+    more();
+
+    const int old_level = you.your_level;
+    you.your_level = std::max(0, std::min(26, you.your_level + amount)) - 1;
+    down_stairs( old_level, DNGN_STONE_STAIRS_DOWN_I );
+
     return (1);
-}                               // end portal()
+}
 
 bool cast_death_channel(int power)
 {
