@@ -1185,7 +1185,8 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 }
                 else
                 {
-                    description += "It inflicts extra damage upon your enemies. ";
+                    description += "It inflicts extra damage upon "
+                        "your enemies. ";
                 }
                 break;
             case SPWPN_FLAME:
@@ -1212,7 +1213,8 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                     "extra damage on living creatures. ";
                 break;
             case SPWPN_DISTORTION:
-                description += "It warps and distorts space around it. ";
+                description += "It warps and distorts space around it. "
+                    "Merely wielding or unwielding it can be highly risky.";
                 break;
             case SPWPN_REACHING:
                 description += "It can be evoked to extend its reach. ";
