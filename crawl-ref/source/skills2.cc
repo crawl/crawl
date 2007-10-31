@@ -20,6 +20,8 @@
 #include "AppHdr.h"
 #include "skills2.h"
 
+#include <algorithm>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -2018,10 +2020,10 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         species = you.species;
 
     if (str == -1)
-        str = you.strength;
+        str = std::max(you.strength - stat_modifier(STAT_STRENGTH), 1);
 
     if (dex == -1)
-        dex = you.dex;
+        dex = std::max(you.dex - stat_modifier(STAT_DEXTERITY), 1);
 
     if (god == -1)
         god = you.religion;
