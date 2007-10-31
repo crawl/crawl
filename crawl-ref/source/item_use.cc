@@ -1820,7 +1820,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         case SK_SLINGS:
         {
             // Slings are really easy to learn because they're not
-            // really all that good, and its harder to get ammo anyways.
+            // really all that good, and it's harder to get ammo anyways.
             exercise(SK_SLINGS, 1 + random2avg(3, 2));
 
             // Sling bullets are designed for slinging and easier to aim.
@@ -1986,10 +1986,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
          * ammo of fire and weapons of frost don't work together,
          * and vice versa */
 
-        // ID check
+        // ID check. Can't ID off teleported projectiles, uh, because
+        // it's too weird. Also it messes up the messages.
         if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
         {
-            if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
+            if ( !teleport &&
+                 !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
                  random2(100) < shoot_skill )
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
@@ -1998,7 +2000,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                      you.inv[throw_2].name(DESC_NOCAP_A).c_str());
             }
         }
-        else if (random2(100) < shoot_skill)
+        else if (!teleport && random2(100) < shoot_skill)
         {
             item_def& weapon = you.inv[you.equip[EQ_WEAPON]];
             set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
@@ -2140,7 +2142,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exercise(SK_THROWING, 1);
         
         // ID check
-        if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
+        if ( !teleport &&
+             !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
              random2(100) < you.skills[SK_THROWING] )
         {                
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
