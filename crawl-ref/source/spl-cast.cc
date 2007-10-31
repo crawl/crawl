@@ -3583,15 +3583,6 @@ const char* spell_hunger_string( spell_type spell )
         return "Extreme";
 }
 
-std::string spell_power_string(spell_type spell)
-{
-    const int numbars = spell_power_bars(spell);
-    if ( numbars < 0 )
-        return "N/A";
-    else
-        return std::string(numbars, '#');
-}
-
 int spell_power_colour(spell_type spell)
 {
     const int powercap = spell_power_cap(spell);
@@ -3607,13 +3598,10 @@ int spell_power_colour(spell_type spell)
     return GREEN;
 }
 
-int spell_power_bars( spell_type spell )
+static int power_to_barcount( int power )
 {
-    const int powercap = spell_power_cap(spell);
-    if ( powercap == 0 )
+    if ( power == -1 )
         return -1;
-    const int power = std::min(calc_spell_power(spell, true), powercap);
-
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
     int result = 0;
     for ( unsigned int i = 0; i < ARRAYSIZE(breakpoints); ++i )
@@ -3621,5 +3609,25 @@ int spell_power_bars( spell_type spell )
         if ( power > breakpoints[i] )
             ++result;
     }
-    return result + 1;
+    return result + 1;   
+}
+
+int spell_power_bars( spell_type spell )
+{
+    const int cap = spell_power_cap(spell);
+    if ( cap == 0 )
+        return -1;
+    const int power = std::min(calc_spell_power(spell, true), cap);
+    return power_to_barcount(power);
+}
+
+std::string spell_power_string(spell_type spell)
+{
+    const int numbars = spell_power_bars(spell);
+    const int capbars = power_to_barcount(spell_power_cap(spell));
+    ASSERT( numbars <= capbars );
+    if ( numbars < 0 )
+        return "N/A";
+    else
+        return std::string(numbars, '#') + std::string(capbars - numbars, '.');
 }
