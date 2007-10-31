@@ -2745,7 +2745,7 @@ void cast_twist(int pow)
     return;
 }                               // end cast_twist()
 
-bool cast_portaled_projectile(int pow, bolt& beam)
+bool cast_portal_projectile(int pow, bolt& beam)
 {
     if ( pow > 50 )
         pow = 50;

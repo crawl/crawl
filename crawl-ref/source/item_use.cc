@@ -2241,7 +2241,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
 
-    // Add in bonus (only from Portaled Projectile for now)
+    // Add in bonus (only from Portal Projectile for now)
     if (acc_bonus != DEBUG_COOKIE)
         pbolt.hit += acc_bonus;
 

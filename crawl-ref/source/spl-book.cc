@@ -161,7 +161,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 11 - Book of Spatial Translocations
     {SPELL_APPORTATION,
-     SPELL_PORTALED_PROJECTILE,
+     SPELL_PORTAL_PROJECTILE,
      SPELL_BLINK,
      SPELL_RECALL,
      SPELL_TELEPORT_OTHER,

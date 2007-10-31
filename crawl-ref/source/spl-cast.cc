@@ -882,7 +882,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
-        if (spell == SPELL_PORTALED_PROJECTILE)
+        if (spell == SPELL_PORTAL_PROJECTILE)
         {
             const int idx = get_fire_item_index();
             if ( idx == ENDOFPACK )
@@ -1881,8 +1881,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
-    case SPELL_PORTALED_PROJECTILE:
-        if ( !cast_portaled_projectile(powc, beam) )
+    case SPELL_PORTAL_PROJECTILE:
+        if ( !cast_portal_projectile(powc, beam) )
             return SPRET_ABORT;
         break;
 

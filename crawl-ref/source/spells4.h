@@ -62,6 +62,6 @@ void cast_shuggoth_seed(int powc);
 void make_shuggoth(int x, int y, int hp);
 
 int cast_semi_controlled_blink(int pow);
-bool cast_portaled_projectile(int pow, bolt& beam);
+bool cast_portal_projectile(int pow, bolt& beam);
 
 #endif

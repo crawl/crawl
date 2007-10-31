@@ -2483,7 +2483,7 @@ enum spell_type
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_CHAIN_LIGHTNING,
     SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_PORTALED_PROJECTILE,
+    SPELL_PORTAL_PROJECTILE,
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,             // 205

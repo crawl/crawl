@@ -471,7 +471,7 @@ Portal
 
 This spell creates a gate allowing long-distance travel in relatively ordinary environments (i.e., the Dungeon only). The portal lasts long enough for the caster and nearby creatures to enter. Casters are never taken past the level limits of the current area. 
 %%%%
-Portaled Projectile
+Portal Projectile
 
 This spell teleports a fired or thrown missile directly to its target, greatly increasing its accuracy (but not damage).
 %%%%
