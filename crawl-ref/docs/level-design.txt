@@ -11,6 +11,7 @@ Contents:  A. Introduction
            H. Lua reference
            I. Feature names
            J. Map statistics
+           K. Portal vaults
 
 A.   Introduction
 -----------------
@@ -1280,3 +1281,56 @@ Will generate 10 dungeons. If you merely want statistics on the
 probabilities of the levels, use:
 
 crawl -mapstat 1
+
+
+K.   Portal Vaults
+------------------
+
+Portal vaults are vaults accessed by portals in the dungeon (bazaars
+are a special case of portal vaults). You can create custom portal
+vaults as follows:
+
+Define a vault to hold the portal itself:
+
+# Bare-bones portal vault entry
+NAME: portal_generic_entry
+TAGS: allow_dup
+ORIENT: float
+MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
+                                dst = "generic_portal" }
+KFEAT: O = enter_portal_vault
+MAP
+O
+ENDMAP
+
+Portal entries must contain a portal vault entry (enter_portal_vault).
+This feature must always have a marker that provides the portal with a
+description ("A portal to places unknown") and a destination
+("generic_portal").
+
+This will produce a portal, but attempting to use it will trigger an
+ASSERT since there's no map for the destination. So we create a
+destination map like so:
+
+NAME: portal_generic_generic
+# Tag must match dst value of portal in entry.
+TAGS: generic_portal allow_dup
+ORIENT: encompass
+MONS: ancient lich
+KFEAT: > = exit_portal_vault
+MAP
+xxxxxxxxxxx
+x111111111x
+x1A111111>x
+x111111111x
+xxxxxxxxxxx
+ENDMAP
+
+Note that the entry point into the map will be a stone arch. You must
+provide an exit to the dungeon explicitly (KFEAT: > =
+exit_portal_vault) or the player will not be able to leave.
+
+Stairs will not work right in portal vaults, do not use them.
+
+You can use multiple maps with the destination tag (generic_portal),
+and the dungeon builder will pick one at random.
