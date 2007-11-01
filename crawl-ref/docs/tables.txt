@@ -8,10 +8,10 @@ is good at which tasks) can be obtained in two other, less sophisticated ways:
 - look which combinations of race and class are possible.
 
 If you consider figuring out such things yourself to be fun, stop reading now.
-Otherwise, just go ahead. A lower a value, the better the aptitude. 100 is the
-Human standard. Please note that many things effect how quick a character will
-actually learn a skill. Thus the numbers below are good enough for comparisons
-among races, but not necessarily among skills.
+Otherwise, just go ahead. The lower a value, the better the aptitude. 100 is 
+the Human standard. Please note that many things affect how quick a character 
+will actually learn a skill. Thus the numbers below are good enough for 
+comparisons among races, but not necessarily among skills.
 
 The abbreviations used for the skills are:
 
@@ -26,7 +26,7 @@ T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
                              Stv - Staves                Trm - Transmigration
 Inv - Invocations            U C - Unarmed Combat        Div - Divination
 Evo - Evocations
-                             Ran - Ranged Combat         Fir - Fire Magic
+                             Thr - Ranged Combat         Fir - Fire Magic
                              Slg - Slings                Ice - Ice Magic
 Exp - Experience             Bws - Bows                  Air - Air Magic
                              Crb - Crossbows             Ear - Earth Magic
@@ -71,12 +71,12 @@ Merfolk         160  60  90  70 100 120   100 100                 120
                 Arm Ddg Sth Stb Shd T&D   Inv Evo                 Exp
 
 
-                Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
+                Fgt SBl LBl Axs M&F Pla Stv U C   Thr Slg Bws Crb Drt
 ---------------------------------------------------------------------
 Human           100 100 100 100 100 100 100 100   100 100 100 100 100
 High Elf        100  70  70 130 150 150 100 130    80 140  60 100  90
 Grey Elf        140  90  95 140 160 160 100 130    80 130  70 100  90
-Deep Elf        150 100 105 150 165 165 100 130    80 135  74  75  75
+Deep Elf        150 100 105 150 165 165 100 130    80 135  75  75  75
 Sludge Elf       80 110 110 130 140 140 100  80    70 100 100 100 100
 Mountain Dwarf   70  80  90  65  70 110 120 100   120 120 150  90 120
 Halfling        120  60 100 120 150 160 130 140    60  50  70  90  50
@@ -106,7 +106,7 @@ Ghoul            80 110 110 110 110 110 110  80   130 130 130 130 130
 Kenku           100  75  75  75  75  75  75  80    90 100  80  80  90
 Merfolk          80  70  90 140 150  50 130  90   100 150 140 140 100
 ---------------------------------------------------------------------
-                Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
+                Fgt SBl LBl Axs M&F Pla Stv U C   Thr Slg Bws Crb Drt
 
 
                 Spc Coj Enc Sum Nec Trl Trm Div   Fir Ice Air Ear Poi
