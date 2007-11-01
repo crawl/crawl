@@ -931,7 +931,10 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                     "Could not pick up %s here, shall I ignore %s? ",
                     tried_pickup == 1? "an item" : "some items",
                     tried_pickup == 1? "it" : "them");
-            if (yesno(prompt.c_str(), true, 'y', true, false))
+            // Make Escape => 'n' and stop run.
+            explicit_keymap map;
+            map[ESCAPE] = 'n';
+            if (yesno(prompt.c_str(), true, 'y', true, false, false, &map))
             {
                 mark_items_non_pickup_at(you.pos());
                 // Don't stop explore.

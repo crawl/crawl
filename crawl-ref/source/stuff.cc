@@ -725,7 +725,8 @@ void canned_msg(canned_message_type which_message)
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
 bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
-            bool interrupt_delays, bool noprompt )
+            bool interrupt_delays, bool noprompt,
+            const explicit_keymap *map )
 {
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
@@ -736,6 +737,9 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             mpr(str, MSGCH_PROMPT);
 
         int tmp = getchm(KC_CONFIRM);
+
+        if (map && map->find(tmp) != map->end())
+            tmp = map->find(tmp)->second;
 
         if ((tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n') 
                 && safeanswer)
