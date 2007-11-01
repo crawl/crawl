@@ -165,8 +165,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_BLINK,
      SPELL_RECALL,
      SPELL_TELEPORT_OTHER,
-     SPELL_TELEPORT_SELF,
      SPELL_CONTROL_TELEPORT,
+     SPELL_TELEPORT_SELF,
      SPELL_NO_SPELL,
      },
     // 12 - Book of Enchantments (fourth one)
