@@ -603,8 +603,8 @@ const char *lose_mutation[][3] = {
 
     {"You feel weaker.", "You feel weaker.", "You feel weaker."},
 
-    {"You feel less intelligent.", "You feel less intelligent",
-     "You feel less intelligent"},
+    {"You feel less intelligent.", "You feel less intelligent.",
+     "You feel less intelligent."},
 
     {"You feel clumsy.", "You feel clumsy.", "You feel clumsy."},
 
@@ -1975,6 +1975,8 @@ bool delete_mutation(mutation_type which_mutation, bool force)
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
         modify_stat(STAT_DEXTERITY, 1, true);
+        mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
+        break;
 
     case MUT_CLAWS:
         mpr((you.species == SP_TROLL ? troll_claw_lose
