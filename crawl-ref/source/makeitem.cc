@@ -1230,11 +1230,19 @@ int items( int allow_uniques,       // not just true-false,
         switch (item_race)
         {
         case MAKE_ITEM_ELVEN:
-            set_equip_race( mitm[p], ISFLAG_ELVEN );
+            if (mitm[p].base_type != OBJ_WEAPONS
+                || weapon_skill(mitm[p]) != SK_MACES_FLAILS)
+            {
+                set_equip_race( mitm[p], ISFLAG_ELVEN );
+            }
             break;
 
         case MAKE_ITEM_DWARVEN:
-            set_equip_race( mitm[p], ISFLAG_DWARVEN );
+            if (mitm[p].base_type != OBJ_WEAPONS
+                || weapon_skill(mitm[p]) != SK_POLEARMS)
+            {
+                set_equip_race( mitm[p], ISFLAG_DWARVEN );
+            }
             break;
 
         case MAKE_ITEM_ORCISH:

@@ -899,7 +899,7 @@ static bool confirm_pray_sacrifice()
     if (Options.stash_tracking == STM_EXPLICIT
         && is_stash(you.x_pos, you.y_pos))
     {
-        mpr("You can't sacrifice explictly marked stashes.");
+        mpr("You can't sacrifice explicitly marked stashes.");
         return false;
     }
 
@@ -2245,7 +2245,7 @@ static bool trog_retribution()
         // A collection of physical effects that might be better
         // suited to Trog than wild fire magic... messages could
         // be better here... something more along the lines of apathy
-        // or loss of rage to go with the anti-berzerk effect-- bwr
+        // or loss of rage to go with the anti-berserk effect-- bwr
         switch (random2(6))
         {
         case 0:
