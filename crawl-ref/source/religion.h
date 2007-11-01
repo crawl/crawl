@@ -52,4 +52,7 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
+bool is_evil_god(god_type god);
+bool is_good_god(god_type god);
+
 #endif

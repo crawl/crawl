@@ -359,7 +359,7 @@ void inc_penance(int god, int val);
 void inc_penance(int val);
 static bool followers_abandon_you(void); // Beogh
 
-static bool is_evil_god(god_type god)
+bool is_evil_god(god_type god)
 {
     return
         god == GOD_KIKUBAAQUDGHA ||
@@ -370,7 +370,7 @@ static bool is_evil_god(god_type god)
         god == GOD_LUGONU;
 }
 
-static bool is_good_god(god_type god)
+bool is_good_god(god_type god)
 {
     return
         god == GOD_SHINING_ONE ||

@@ -717,6 +717,12 @@ LUARET1(you_race, string,
         species_name(you.species, you.experience_level).c_str())
 LUARET1(you_class, string, get_class_name(you.char_class))
 LUARET1(you_god, string, god_name(you.religion))
+LUARET1(you_good_god, boolean,
+        lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))
+        : is_good_god(you.religion))
+LUARET1(you_evil_god, boolean,
+        lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
+        : is_evil_god(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, string, hunger_level())
@@ -797,6 +803,8 @@ static const struct luaL_reg you_lib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "god"         , you_god },
+    { "good_god"    , you_good_god },
+    { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "hunger"      , you_hunger },
@@ -805,7 +813,6 @@ static const struct luaL_reg you_lib[] =
     { "dexterity"   , you_dexterity },
     { "xl"          , you_exp },
     { "exp"         , you_exp_points },
-
     { "res_poison"  , you_res_poison },
     { "res_fire"    , you_res_fire   },
     { "res_cold"    , you_res_cold   },
