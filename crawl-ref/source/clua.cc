@@ -731,6 +731,9 @@ LUARET2(you_intelligence, number, you.intel, you.max_intel)
 LUARET2(you_dexterity, number, you.dex, you.max_dex)
 LUARET1(you_exp, number, you.experience_level)
 LUARET1(you_exp_points, number, you.experience)
+LUARET1(you_skill, number,
+        lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
+        : 0)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -811,6 +814,7 @@ static const struct luaL_reg you_lib[] =
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
+    { "skill"       , you_skill },
     { "xl"          , you_exp },
     { "exp"         , you_exp_points },
     { "res_poison"  , you_res_poison },
