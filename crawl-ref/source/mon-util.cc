@@ -2765,14 +2765,19 @@ void monsters::equip_armour(item_def &item, int near)
         mprf("%s wears %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A).c_str());
 
-    ac += property( item, PARM_AC );
+    const equipment_type eq = get_armour_slot(item);
+    if (eq != EQ_SHIELD)
+    {
+        ac += property( item, PARM_AC );
 
-    const int armour_plus = item.plus;
-    ASSERT(abs(armour_plus) < 20);
-    if (abs(armour_plus) < 20) 
-        ac += armour_plus;
+        const int armour_plus = item.plus;
+        ASSERT(abs(armour_plus) < 20);
+        if (abs(armour_plus) < 20)
+            ac += armour_plus;
+    }
+
+    // Shields can affect evasion.
     ev += property( item, PARM_EVASION ) / 2;
-        
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
 }
@@ -2842,14 +2847,18 @@ void monsters::unequip_armour(item_def &item, int near)
         mprf("%s takes off %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A).c_str());
 
-    ac -= property( item, PARM_AC );
+    const equipment_type eq = get_armour_slot(item);
+    if (eq != EQ_SHIELD)
+    {
+        ac -= property( item, PARM_AC );
 
-    const int armour_plus = item.plus;
-    ASSERT(abs(armour_plus) < 20);
-    if (abs(armour_plus) < 20) 
-        ac -= armour_plus;
+        const int armour_plus = item.plus;
+        ASSERT(abs(armour_plus) < 20);
+        if (abs(armour_plus) < 20) 
+            ac -= armour_plus;
+    }
+    
     ev -= property( item, PARM_EVASION ) / 2;
-        
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
 }
@@ -3107,6 +3116,17 @@ bool monsters::wants_armour(const item_def &item) const
     return (!mslot_item(MSLOT_ARMOUR));
 }
 
+static mon_inv_type equip_slot_to_mslot(equipment_type eq)
+{
+    switch (eq)
+    {
+    case EQ_WEAPON: return MSLOT_WEAPON;
+    case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
+    case EQ_SHIELD: return MSLOT_SHIELD;
+    default: return (NUM_MONSTER_SLOTS);
+    }
+}
+
 bool monsters::pickup_armour(item_def &item, int near, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -3114,21 +3134,24 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!force && !wants_armour(item))
         return (false);
 
-    // XXX: Monsters can only equip body armour (as of 0.3).
-    if (get_armour_slot(item) != EQ_BODY_ARMOUR)
+    const equipment_type eq = get_armour_slot(item);
+    // XXX: Monsters can only equip body armour and shields (as of 0.4).
+    // They can still be forced to wear stuff - this is needed for bardings.
+    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
         return (false);
 
+    const mon_inv_type mslot = equip_slot_to_mslot(eq);
     // XXX: Very simplistic armour evaluation for the moment.
-    if (const item_def *existing_armour = slot_item(EQ_BODY_ARMOUR))
+    if (const item_def *existing_armour = slot_item(eq))
     {
         if (!force && existing_armour->armour_rating() >= item.armour_rating())
             return (false);
 
-        if (!drop_item(MSLOT_ARMOUR, near))
+        if (!drop_item(mslot, near))
             return (false);
     }
 
-    return pickup(item, MSLOT_ARMOUR, near);
+    return pickup(item, mslot, near);
 }
 
 bool monsters::pickup_weapon(item_def &item, int near, bool force)
@@ -3302,16 +3325,6 @@ void monsters::wield_melee_weapon(int near)
     }
 }
 
-static mon_inv_type equip_slot_to_mslot(equipment_type eq)
-{
-    switch (eq)
-    {
-    case EQ_WEAPON: return MSLOT_WEAPON;
-    case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
-    default: return (NUM_MONSTER_SLOTS);
-    }
-}
-
 item_def *monsters::slot_item(equipment_type eq)
 {
     return mslot_item(equip_slot_to_mslot(eq));
@@ -3325,7 +3338,7 @@ item_def *monsters::mslot_item(mon_inv_type mslot) const
 
 item_def *monsters::shield()
 {
-    return (NULL);
+    return (mslot_item(MSLOT_SHIELD));
 }
 
 std::string monsters::name(description_level_type desc) const
@@ -3465,12 +3478,11 @@ bool monsters::caught() const
 
 int monsters::shield_bonus() const
 {
-    // XXX: Monsters don't actually get shields yet.
     const item_def *shld = const_cast<monsters*>(this)->shield();
     if (shld)
     {
         const int shld_c = property(*shld, PARM_AC);
-        return (random2(shld_c + random2(hit_dice / 2)) / 2);
+        return (random2(1 + shld_c) + random2(hit_dice / 2));
     }
     return (-100);
 }

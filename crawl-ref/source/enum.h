@@ -1825,6 +1825,7 @@ enum mon_inv_type           // (int) menv[].inv[]
                             // for monsters that can use two weapons.
     MSLOT_MISSILE,
     MSLOT_ARMOUR,
+    MSLOT_SHIELD,
     MSLOT_MISCELLANY,
     MSLOT_POTION,
     MSLOT_WAND,

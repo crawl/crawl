@@ -3222,12 +3222,12 @@ static item_make_species_type give_weapon(monsters *mon, int level,
 
         const int temp_rand = random2(100);
         item.sub_type = ((temp_rand > 79) ? WPN_LONG_SWORD :    // 20%
-                             (temp_rand > 59) ? WPN_SHORT_SWORD :   // 20%
-                             (temp_rand > 45) ? WPN_SCIMITAR :      // 14%
-                             (temp_rand > 31) ? WPN_MACE :          // 14%
-                             (temp_rand > 18) ? WPN_BOW :           // 13%
-                             (temp_rand >  5) ? WPN_HAND_CROSSBOW   // 13%
-                                              : WPN_LONGBOW);       //  6%
+                         (temp_rand > 59) ? WPN_SHORT_SWORD :   // 20%
+                         (temp_rand > 45) ? WPN_SCIMITAR :      // 14%
+                         (temp_rand > 31) ? WPN_MACE :          // 14%
+                         (temp_rand > 18) ? WPN_BOW :           // 13%
+                         (temp_rand >  5) ? WPN_HAND_CROSSBOW   // 13%
+                         : WPN_LONGBOW);       //  6%
         break;
     }
 
@@ -3830,6 +3830,78 @@ static void give_ammo(monsters *mon, int level,
     }
 }
 
+static bool make_item_for_monster(
+    monsters *mons,
+    object_class_type base,
+    int subtype,
+    int level,
+    item_make_species_type race = MAKE_ITEM_NO_RACE,
+    int allow_uniques = 0)
+{
+    const int bp = get_item_slot();
+    if (bp == NON_ITEM)
+        return (false);
+
+    const int thing_created =
+        items( allow_uniques, base, subtype, true, level, race );
+
+    if (thing_created == NON_ITEM)
+        return (false);
+
+    give_monster_item(mons, thing_created);
+    return (true);
+}
+
+void give_shield(monsters *mon, int level)
+{
+    switch (mon->type)
+    {
+    case MONS_DAEVA:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
+                              level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+        break;
+        
+    case MONS_DEEP_ELF_SOLDIER:
+    case MONS_DEEP_ELF_FIGHTER:
+        if (one_chance_in(5))
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                                  level, MAKE_ITEM_ELVEN);
+        break;
+    case MONS_NAGA_WARRIOR:
+    case MONS_VAULT_GUARD:
+        if (one_chance_in(3))
+            make_item_for_monster(mon, OBJ_ARMOUR,
+                                  one_chance_in(3)? ARM_LARGE_SHIELD
+                                  : ARM_SHIELD,
+                                  level, MAKE_ITEM_NO_RACE);
+        break;
+    case MONS_DRACONIAN_KNIGHT:
+        if (coinflip())
+            make_item_for_monster(mon, OBJ_ARMOUR,
+                                  coinflip()? ARM_LARGE_SHIELD : ARM_SHIELD,
+                                  level, MAKE_ITEM_NO_RACE);
+        break;
+    case MONS_DEEP_ELF_KNIGHT:
+        if (coinflip())
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                                  level, MAKE_ITEM_ELVEN);
+        break;
+    case MONS_NORRIS:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                              level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+        break;
+    case MONS_NORBERT:
+    case MONS_LOUISE:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
+                              level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+        break;
+    case MONS_DONALD:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
+                              level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+        break;
+    }
+}
+
 void give_armour(monsters *mon, int level)
 {
     const int bp = get_item_slot();
@@ -4071,6 +4143,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     
     give_ammo(mons, level_number, item_race);
     give_armour(mons, 1 + level_number / 2);
+    give_shield(mons, 1 + level_number / 2);
 }                               // end give_item()
 
 jewellery_type get_random_amulet_type()

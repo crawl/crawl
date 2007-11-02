@@ -3129,14 +3129,14 @@ static int affect_player( bolt &beam )
 #endif
                     if (hit < block)
                     {
-                        you.shield_blocks++;
                         mprf( "You block the %s.", beam.name.c_str() );
-                        exercise( SK_SHIELDS, exer + 1 );
+                        you.shield_block_succeeded();
                         return (BEAM_STOP);
                     }
 
                     // some training just for the "attempt"
-                    exercise( SK_SHIELDS, exer );
+                    if (coinflip())
+                        exercise( SK_SHIELDS, exer );
                 }
 
                 if (player_light_armour(true) && !beam.aimed_at_feet
@@ -3876,6 +3876,26 @@ static int affect_monster(bolt &beam, monsters *mon)
                         << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
         }
         return (0);
+    }
+
+    // The monster may block the beam.
+    if (!engulfs && beam_is_blockable(beam))
+    {
+        const int shield_block = mon->shield_bonus();
+        if (shield_block > 0)
+        {
+            const int hit = random2( beam.hit * 130 / 100
+                                     + mon->shield_block_penalty() );
+            if (hit < shield_block && mons_near(mon)
+                && player_monster_visible(mon))
+            {
+                mprf("%s blocks the %s.",
+                     mon->name(DESC_CAP_THE).c_str(),
+                     beam.name.c_str());
+                mon->shield_block_succeeded();
+                return (BEAM_STOP);
+            }
+        }
     }
 
     update_hurt_or_helped(beam, mon);

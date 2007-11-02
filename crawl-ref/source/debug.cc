@@ -1448,8 +1448,8 @@ void stethoscope(int mwh)
           (menv[i].foe == MHITNOT)            ? "none" :
           (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
           : menv[menv[i].foe].name(DESC_PLAIN, true).c_str()),
-         menv[i].foe, 
-         menv[i].foe_memory,          
+         menv[i].foe,
+         menv[i].foe_memory,
          menv[i].target_x, menv[i].target_y );
 
     // print resistances

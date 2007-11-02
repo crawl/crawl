@@ -545,9 +545,16 @@ bool melee_attack::player_attack()
         if (Options.tutorial_left)
             Options.tut_melee_counter++;        
 
-        // This actually does more than calculate damage - it also sets up
-        // messages, etc.
-        player_calc_hit_damage();
+        const bool shield_blocked = attack_shield_blocked(true);
+
+        if (shield_blocked)
+            damage_done = 0;
+        else
+        {
+            // This actually does more than calculate damage - it also sets up
+            // messages, etc.
+            player_calc_hit_damage();
+        }
 
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH && mons_species(def->type) == MONS_ORC
@@ -564,7 +571,7 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0 || !defender_visible)
             player_announce_hit();
-        else if (damage_done <= 0)
+        else if (!shield_blocked && damage_done <= 0)
             no_damage_message =
                 make_stringf("You %s %s.",
                              attack_verb.c_str(),
@@ -584,6 +591,10 @@ bool melee_attack::player_attack()
         }
 
         player_sustain_passive_damage();
+
+        // At this point, pretend we didn't hit at all.
+        if (shield_blocked)
+            did_hit = false;
     }
     else
         player_warn_miss();
@@ -854,6 +865,8 @@ bool melee_attack::player_aux_unarmed()
         did_hit = false;
         if (to_hit >= def->ev || one_chance_in(30))
         {
+            if (attack_shield_blocked(true))
+                continue;
             if (player_apply_aux_unarmed())
                 return (true);
         }
@@ -2865,8 +2878,8 @@ bool melee_attack::attack_shield_blocked(bool verbose)
         pro_block /= 3;
     
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Pro-block: %d, Con-block: %d",
-         pro_block, con_block);
+    mprf(MSGCH_DIAGNOSTICS, "Defender: %s, Pro-block: %d, Con-block: %d",
+         def_name(DESC_PLAIN).c_str(), pro_block, con_block);
 #endif
 
     if (pro_block >= con_block)
