@@ -2674,7 +2674,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
 
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
     {
-        for (int screen_x = 0; screen_x < num_cols - 1; screen_x++)
+        for (int screen_x = 0; screen_x < num_cols; screen_x++)
         {
             screen_buffer_t colour = DARKGREY;
 
@@ -2720,7 +2720,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
             bufcount2 += 2;
         }
     }
-    puttext(1, top, num_cols - 1, top + num_lines - 1, buffer2);
+    puttext(1, top, num_cols, top + num_lines - 1, buffer2);
 }
 
 static void reset_travel_colours(std::vector<coord_def> &features)

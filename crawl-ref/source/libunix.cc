@@ -616,6 +616,11 @@ int cset_adjust(int raw)
 
 void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 {
+    const bool will_scroll = (x2 == get_number_of_cols());
+
+    if (will_scroll)
+        scrollok(stdscr, FALSE);
+    
     for (int y = y1; y <= y2; ++y)
     {
         gotoxy(x1, y);
@@ -629,6 +634,9 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
     }
     set_altcharset(false);
     update_screen();
+
+    if (will_scroll)
+        scrollok(stdscr, TRUE);
 }
 
 // These next four are front functions so that we can reduce 
