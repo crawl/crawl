@@ -1183,6 +1183,9 @@ void map_def::reinit()
 {
     items.clear();
     keyspecs.clear();
+    level_flags.clear();
+    branch_flags.clear();
+    
     welcome_messages.clear();
 
     rock_colour = floor_colour = BLACK;
@@ -2523,6 +2526,11 @@ std::string map_marker_spec::describe() const
 map_flags::map_flags()
     : flags_set(0), flags_unset(0)
 {
+}
+
+void map_flags::clear()
+{
+    flags_set = flags_unset = 0;
 }
 
 typedef std::map<std::string, unsigned long> flag_map;

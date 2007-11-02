@@ -485,6 +485,7 @@ struct map_flags
     unsigned long flags_set, flags_unset; 
 
     map_flags();
+    void clear();
 
     static map_flags parse(const std::string flag_list[],
                            const std::string &s) throw(std::string);
@@ -555,6 +556,31 @@ struct map_file_place
     }
 };
 
+/////////////////////////////////////////////////////////////////////////////
+// map_def: map definitions for maps loaded from .des files.
+// 
+// Please read this before changing map_def.
+// 
+// When adding Lua-visible fields to map_def, note that there are two
+// kinds of fields:
+// 
+// * Fields that determine placement of the map, or are unchanging,
+//   such as "place", "depths" (determine placement), or "name" (does
+//   not change between different evaluations of the map). Such fields
+//   must be reset to their default values in map_def::init() if they
+//   determine placement, or just initialised in the constructor if
+//   they will not change.
+//   
+// * Fields that do not determine placement and may change between
+//   different uses of the map (such as "mons", "items",
+//   "level_flags", etc.). Such fields must be reset to their default
+//   values in map_def::reinit(), which is called before the map is
+//   used.
+//
+// If you do not do this, maps will not work correctly, and will break
+// in obscure, hard-to-find ways. The level-compiler will not (cannot)
+// warn you.
+// 
 class map_def
 {
 public:

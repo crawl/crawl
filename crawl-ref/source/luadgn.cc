@@ -443,7 +443,8 @@ static int dgn_lflags(lua_State *ls)
 {
     MAP(ls, 1, map);
 
-    try {
+    try
+    {
         map->level_flags = map_flags::parse(level_flag_names,
                                             luaL_checkstring(ls, 2));
     }
