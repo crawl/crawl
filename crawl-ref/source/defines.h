@@ -57,6 +57,11 @@
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
 #define NON_MONSTER (MAX_MONSTERS + 1)
 
+// (MNG) -- for a reason! see usage {dlb}:
+#define MHITNOT (MAX_MONSTERS + 1)
+// (MNG + 1) -- for a reason! see usage {dlb}:
+#define MHITYOU (MAX_MONSTERS + 2)
+
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
@@ -207,11 +212,6 @@ const int LABYRINTH_BORDER = 12;
 #define grd    env.grid
 #define mgrd   env.mgrid
 #define igrd   env.igrid
-
-// (MNG) -- for a reason! see usage {dlb}:
-#define MHITNOT 201
-// (MNG + 1) -- for a reason! see usage {dlb}:
-#define MHITYOU 202
 
 // colors, such pretty colors ...
 #ifndef DOS

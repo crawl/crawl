@@ -1419,8 +1419,6 @@ std::string status_mut_abilities()
         text += "bonded with blade, ";
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
-    if ( you.duration[DUR_SLOW] )
-        move_cost *= 2;
 
     text +=   (move_cost <   8) ? "very quick, " :
               (move_cost <  10) ? "quick, " :

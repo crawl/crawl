@@ -1612,6 +1612,9 @@ int player_speed(void)
 {
     int ps = 10;
 
+    if (you.duration[DUR_SLOW])
+        ps *= 2;
+    
     if (you.duration[DUR_HASTE])
         ps /= 2;
 
@@ -3541,8 +3544,6 @@ void display_char_status()
     }
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
-    if ( you.duration[DUR_SLOW] )
-        move_cost *= 2;
 
     const bool water  = player_in_water();
     const bool swim   = player_is_swimming();

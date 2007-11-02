@@ -1054,15 +1054,16 @@ static bool ball_of_energy(void)
     }
 
     return (ret);
-}                               // end ball_of_energy()
+}
 
 static bool ball_of_fixation(void)
 {
     mpr("You gaze into the crystal ball.");
     mpr("You are mesmerised by a rainbow of scintillating colours!");
 
-    you.duration[DUR_PARALYSIS] = 100;
-    you.duration[DUR_SLOW] = 100;
+    const int duration = random_range(15, 40);
+    you.duration[DUR_PARALYSIS] = duration;
+    you.duration[DUR_SLOW] = duration;
 
     return (true);
-}                               // end ball_of_fixation()
+}

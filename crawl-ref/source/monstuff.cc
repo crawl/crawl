@@ -3921,9 +3921,6 @@ static void monster_add_energy(monsters *monster)
         energy_gained = 1;
 
     monster->speed_increment += energy_gained;
-
-    if (you.duration[DUR_SLOW] > 0)
-        monster->speed_increment += energy_gained;
 }
 
 // Do natural regeneration for monster.
@@ -4016,8 +4013,6 @@ static void handle_monster_move(int i, monsters *monster)
     // Apply monster enchantments once for every normal-speed
     // player turn.
     monster->ench_countdown -= you.time_taken;
-    if (you.duration[DUR_SLOW] > 0)
-        monster->ench_countdown -= you.time_taken;
     while (monster->ench_countdown < 0)
     {
         monster->ench_countdown += 10;
