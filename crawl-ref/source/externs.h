@@ -513,7 +513,7 @@ public:
 
   bool just_autoprayed;         // autopray just kicked in
     
-  unsigned char prev_targ;
+  unsigned short prev_targ;
   coord_def     prev_grd_targ;
   char your_name[kNameLen];
 
@@ -603,7 +603,7 @@ public:
   char spell_no;
   game_direction_type char_direction;
 
-  unsigned char pet_target;
+  unsigned short pet_target;
 
   int your_level; // offset by one (-1 == 0, 0 == 1, etc.) for display
 

@@ -777,7 +777,7 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.rotting);
     marshallByte(th,you.symbol);
     marshallByte(th,you.colour);
-    marshallByte(th,you.pet_target);
+    marshallShort(th,you.pet_target);
 
     marshallByte(th,you.max_level);
     marshallByte(th,you.where_are_you);
@@ -1121,7 +1121,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.rotting = unmarshallByte(th);
     you.symbol = unmarshallByte(th);
     you.colour = unmarshallByte(th);
-    you.pet_target = unmarshallByte(th);
+    you.pet_target = unmarshallShort(th);
 
     you.max_level = unmarshallByte(th);
     you.where_are_you = static_cast<branch_type>( unmarshallByte(th) );
