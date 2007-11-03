@@ -5,8 +5,8 @@
 require 'fileutils'
 require 'zip/zipfilesystem'
 
-SVN_BASE_URL    = 'https://svn.sourceforge.net/svnroot/crawl-ref/'
-SVN_BRANCH      = 'branches/stone_soup-0.2'
+SVN_BASE_URL    = 'https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/'
+SVN_BRANCH      = 'branches/stone_soup-0.3'
 SVN_URL         = SVN_BASE_URL + SVN_BRANCH + '/crawl-ref'
 
 # If empty, nothing is done. Useful to sync svk mirrors.
@@ -96,9 +96,10 @@ def path_prefix(prefix)
 end
 
 def clean_objects
-  [ '.', 'rel', 'dbg', 'util' ].each do |dir|
+  [ '.', 'rel', 'dbg', 'util', 'util/lua/src', 'util/sqlite' ].each do |dir|
     if File.directory? dir
       FileUtils.rm( Dir[dir + '/*.o'], :force => true )
+      FileUtils.rm( Dir[dir + '/*.a'], :force => true )
     end
   end
 end
@@ -154,9 +155,11 @@ def build_dos
   setup_dosmake_env
 
   puts "\nBuilding stone_soup (ndebug) for #{release_version} DOS"
-  system( %{ #{DOSMAKE} -f makefile.dos DOYACC=y "EXTRA_FLAGS=-O2 } +
-         %{-DCLUA_BINDINGS -DREGEX_PCRE" } +
-         %{"LIB=-static -llua -lpcre"} ) or
+  ENV['LIB'] = "-static -Lutil\\lua\\src -llua -lpcre -Lutil\\sqlite -lsql3"
+  ENV['EXTRA_FLAGS'] = "-O2 -DCLUA_BINDINGS -DREGEX_PCRE -DDEBUG -DWIZARD"
+
+  puts %{ #{DOSMAKE} -e -f makefile.dos DOYACC=y }
+  system( %{ #{DOSMAKE} -e -f makefile.dos DOYACC=y } ) or
             raise "#{DOSMAKE} failed: #$?"
 
   upx CRAWL_DOS_PATH
@@ -167,20 +170,21 @@ def build_win32
   
   puts "\nBuilding stone_soup (non-debug) for #{release_version} release!"
   system( %{#{W32MAKE} -f makefile.mgw DOYACC=y "EXTRA_FLAGS=-O2 } +
-         %{-DCLUA_BINDINGS -DREGEX_PCRE" } +
-         %{"LIB=-lwinmm -static -llua -lpcre"} ) or
+         %{-DCLUA_BINDINGS -DREGEX_PCRE -DDEBUG -DWIZARD" } +
+         %{"LIB=-lwinmm -static -Lutil/lua/src -llua -lpcre -Lutil/sqlite -lsqlite3"} ) or
             raise "#{W32MAKE} failed: #$?"
 
   clean_w32build_area
 
-  puts "\nBuilding stone_soup (debug) for #{release_version}!"
-  system( %{#{W32MAKE} -f makefile.mgw debug DEBUG_CRAWL=y "EXTRA_FLAGS=-O2 } +
-         %{-DCLUA_BINDINGS -DREGEX_PCRE -DFULLDEBUG -DWIZARD" } +
-         %{"LIB=-lwinmm -static -llua -lpcre" } +
-         %{DOYACC=y} ) or
-            raise "#{W32MAKE} failed: #$?"
+  #puts "\nBuilding stone_soup (debug) for #{release_version}!"
+  #system( %{#{W32MAKE} -f makefile.mgw debug DEBUG_CRAWL=y "EXTRA_FLAGS=-O2 } +
+  #       %{-DCLUA_BINDINGS -DREGEX_PCRE -DFULLDEBUG -DWIZARD" } +
+  #       %{"LIB=-lwinmm -static -llua -lpcre" } +
+  #       %{DOYACC=y} ) or
+  #          raise "#{W32MAKE} failed: #$?"
 
-  upx CRAWL_NDB_PATH, CRAWL_DBG_PATH
+  #upx CRAWL_NDB_PATH, CRAWL_DBG_PATH
+  upx CRAWL_NDB_PATH
 end
 
 def upx(*files)
@@ -214,8 +218,9 @@ def makezip(path, name, exe)
     zip.add( Dir['docs/*'].find_all { |f| not File.directory?(f) },
             :keep_paths => true )
 
-    zip.add( Dir['source/lua/*'], :prefix => 'lua' )
-    zip.add( Dir['source/dat/*'], :prefix => 'dat' )
+    [ 'lua', 'dat', 'dat/clua', 'dat/descript' ].each do |dir|
+      zip.add( Dir['source/' + dir + '/*'], :prefix => dir )
+    end
   end
 end
 
@@ -226,7 +231,7 @@ def package
   FileUtils.rm( Dir[ File.join(PACKAGE_PATH, '*.zip') ] )
 
   [ [ "stone_soup-#{release_version}-win32", CRAWL_NDB_PATH ],
-    [ "stone_soup-#{release_version}-win32-debug", CRAWL_DBG_PATH ],
+    # [ "stone_soup-#{release_version}-win32-debug", CRAWL_DBG_PATH ],
     [ "ss#{release_version.tr '.', ''}dos", CRAWL_DOS_PATH ]
   ].
     each do |pkg, exe|
