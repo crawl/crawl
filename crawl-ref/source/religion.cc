@@ -804,12 +804,13 @@ void pray()
     // almost all prayers take time
     you.turn_is_over = true;
 
-    const bool was_praying = you.duration[DUR_PRAYER];
-    if (you.duration[DUR_PRAYER])
+    const bool was_praying = !!you.duration[DUR_PRAYER];
+    if (was_praying)
     {
-        mpr("Stop praying? ('y' ends prayer, 'r' will renew prayer)", MSGCH_PROMPT);
+        mpr("Stop praying? ('y' ends prayer, 'r' will renew prayer)",
+            MSGCH_PROMPT);
 
-        int tmp = get_ch();
+        const int tmp = getch();
 
         if ( tmp == 'y' || tmp == 'Y')
         {
@@ -820,6 +821,7 @@ void pray()
 
         if ( tmp != 'r' && tmp != 'R')
         {
+            you.turn_is_over = false;
             mesclr();
             return;
         }
@@ -830,6 +832,7 @@ void pray()
     {
         if (you.flight_mode() == FL_LEVITATE)
         {
+            you.turn_is_over = false;
             mpr("You are floating high above the altar.");
             return;
         }
@@ -842,6 +845,7 @@ void pray()
         {
             if (you.species == SP_DEMIGOD)
             {
+                you.turn_is_over = false;
                 mpr("Sorry, a being of your status cannot worship here.");
                 return;
             }
@@ -870,7 +874,10 @@ void pray()
     // they don't want to lose
     if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD &&
          !confirm_pray_sacrifice() )
+    {
+        you.turn_is_over = false;
         return;
+    }
 
     mprf(MSGCH_PRAY, "You offer a prayer to %s.", god_name(you.religion));
 

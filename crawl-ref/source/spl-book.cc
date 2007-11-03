@@ -164,8 +164,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_BLINK,
      SPELL_RECALL,
      SPELL_TELEPORT_OTHER,
-     SPELL_TELEPORT_SELF,
      SPELL_CONTROL_TELEPORT,
+     SPELL_TELEPORT_SELF,
      SPELL_NO_SPELL,
      },
     // 12 - Book of Enchantments (fourth one)
@@ -428,11 +428,11 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 36 - Book of Control
-    {SPELL_ENSLAVEMENT,
+    {SPELL_CONTROL_TELEPORT,
+     SPELL_ENSLAVEMENT,
      SPELL_TAME_BEASTS,
      SPELL_MASS_CONFUSION,
      SPELL_CONTROL_UNDEAD,
-     SPELL_CONTROL_TELEPORT,
      SPELL_MASS_SLEEP,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
