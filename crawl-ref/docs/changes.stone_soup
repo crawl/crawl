@@ -1,3 +1,13 @@
+Stone Soup 0.3.1 (20071103)
+---------------------------
+* Fixed crash when targeting with show_beam = yes.
+* Fixed Orb of Zot being generated in random vault.
+* Fixed buggy handling of some mutations.
+* Fixed penance message sequence.
+* Fixed turn-loss when canceling prayer request.
+* Fixed -morgue option not creating the morgue directory.
+
+
 Stone Soup 0.3.0 (20071031)
 ---------------------------
 
