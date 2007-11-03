@@ -5553,7 +5553,6 @@ static void mons_in_cloud(monsters *monster)
         hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
 
-    // what of armour of poison resistance here? {dlb}
     case CLOUD_POISON:
         simple_monster_message(monster, " is engulfed in a cloud of poison!");
 

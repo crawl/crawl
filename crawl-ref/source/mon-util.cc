@@ -4422,8 +4422,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
         
         // the enchantment doubles as the durability of a net
         // the more corroded it gets, the more easily it will break
-        int hold = mitm[net].plus; // this will usually be negative
-        int mon_size = body_size(PSIZE_BODY);
+        const int hold = mitm[net].plus; // this will usually be negative
+        const int mon_size = body_size(PSIZE_BODY);
             
         // smaller monsters can escape more quickly
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
@@ -4561,13 +4561,11 @@ void monsters::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_SUBMERGED); // forced to surface
         else if (hit_points <= max_hit_points / 2)
             break;
-        else if (((type == MONS_ELECTRICAL_EEL
-                   || type == MONS_LAVA_SNAKE)
-                  && (random2(1000) < 20
-                      || (mons_near(this) 
-                          && hit_points == max_hit_points
-                          && !one_chance_in(10))))
-                 || random2(2000) < 10
+        else if (((type == MONS_ELECTRICAL_EEL || type == MONS_LAVA_SNAKE)
+                  && (one_chance_in(50) || (mons_near(this) 
+                                            && hit_points == max_hit_points
+                                            && !one_chance_in(10))))
+                 || one_chance_in(200)
                  || (mons_near(this)
                      && hit_points == max_hit_points
                      && !one_chance_in(5)))
@@ -4578,7 +4576,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     }
     case ENCH_POISON:
     {
-        int poisonval = me.degree;
+        const int poisonval = me.degree;
         int dam = (poisonval >= 4) ? 1 : 0;
 
         if (coinflip())
@@ -4610,8 +4608,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     }
     case ENCH_ROT:
     {
-        if (hit_points > 1 
-                 && random2(1000) < 333)
+        if (hit_points > 1 && one_chance_in(3))
         {
             hurt_monster(this, 1);
             if (hit_points < max_hit_points && coinflip())
@@ -4658,11 +4655,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_GLOWING_SHAPESHIFTER:     // this ench never runs out
         // number of actions is fine for shapeshifters
-        if (type == MONS_GLOWING_SHAPESHIFTER 
-            || random2(1000) < 250)
-        {
+        if (type == MONS_GLOWING_SHAPESHIFTER || one_chance_in(4))
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
-        }
         break;
 
     case ENCH_SHAPESHIFTER:     // this ench never runs out

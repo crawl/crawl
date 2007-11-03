@@ -1974,7 +1974,7 @@ static void trowel_card(int power, deck_rarity_type rarity)
     }
 
     if ( !done_stuff )
-        mpr("Nothing appears to happen.");
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return;
 }
