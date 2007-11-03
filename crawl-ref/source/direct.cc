@@ -424,6 +424,8 @@ void direction(dist& moves, targeting_type restricts,
     moves.dx = moves.dy = 0;
     moves.tx = you.x_pos;
     moves.ty = you.y_pos;
+
+    // If we show the beam on startup, we have to initialise it.
     if ( show_beam )
         find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
 
@@ -592,7 +594,8 @@ void direction(dist& moves, targeting_type restricts,
             {
                 if (!needs_path)
                 {
-                    mprf(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
+                    mprf(MSGCH_EXAMINE_FILTER,
+                         "This spell doesn't need a beam path.");
                     break;
                 }
                 
@@ -614,8 +617,8 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_ALTAR:
         case CMD_TARGET_FIND_UPSTAIR:
         case CMD_TARGET_FIND_DOWNSTAIR:
-            int thing_to_find;
-            thing_to_find = targeting_cmd_to_feature(key_command);
+        {
+            const int thing_to_find = targeting_cmd_to_feature(key_command);
             if (find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
                                     find_feature, thing_to_find, true,
                                     Options.target_los_first ?
@@ -630,6 +633,7 @@ void direction(dist& moves, targeting_type restricts,
                     flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
+        }
 
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
@@ -654,7 +658,8 @@ void direction(dist& moves, targeting_type restricts,
                 if (!mons_near(montarget) ||
                     !player_monster_visible( montarget ))
                 {
-                    mpr("You can't see that creature any more.", MSGCH_EXAMINE_FILTER);
+                    mpr("You can't see that creature any more.",
+                        MSGCH_EXAMINE_FILTER);
                 }
                 else
                 {
@@ -664,7 +669,16 @@ void direction(dist& moves, targeting_type restricts,
                     moves.tx = montarget->x;
                     moves.ty = montarget->y;
                     if ( !just_looking )
+                    {
+                        // We have to turn off show_beam, because
+                        // when jumping to a previous target we don't
+                        // care about the beam; otherwise Bad Things
+                        // will happen because the ray is invalid,
+                        // and we don't get a chance to update it before
+                        // breaking from the loop.
+                        show_beam = false;
                         loop_done = true;
+                    }
                 }
                 break;
             }
@@ -831,9 +845,9 @@ void direction(dist& moves, targeting_type restricts,
 
         // We'll go on looping. Redraw whatever is necessary.
 
-        // Tried to step out of bounds
         if ( !in_viewport_bounds(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
         {
+            // Tried to step out of bounds
             moves.tx = old_tx;
             moves.ty = old_ty;
         }
