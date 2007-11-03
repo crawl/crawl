@@ -37,6 +37,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "stuff.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -498,8 +499,8 @@ static void finish_delay(const delay_queue_item &delay)
 
         unwear_armour( delay.parm1 );
 
-        you.redraw_armour_class = 1;
-        you.redraw_evasion = 1;
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
         break;
     }
     case DELAY_EAT:
@@ -594,6 +595,7 @@ static void finish_delay(const delay_queue_item &delay)
         {
             mpr("You stop butchering the corpse.");
         }
+        stashes.update_stash(); // Stash-track the generated item(s)
         break;
     }
 

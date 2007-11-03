@@ -93,14 +93,14 @@ static const char *xom_generic_beneficence[] =
 const char *describe_xom_favour()
 {
     return (you.piety > 160) ? "A beloved toy of Xom." : 
-        (you.piety > 145) ? "A favorite toy of Xom." : 
+        (you.piety > 145) ? "A favourite toy of Xom." : 
         (you.piety > 130) ? "A very special toy of Xom." : 
         (you.piety > 115) ? "A special toy of Xom." : 
         (you.piety > 100) ? "A toy of Xom." : 
         (you.piety >  85) ? "A plaything of Xom." : 
         (you.piety >  70) ? "A special plaything of Xom." : 
         (you.piety >  55) ? "A very special plaything of Xom." : 
-        (you.piety >  40) ? "A favorite plaything of Xom." : 
+        (you.piety >  40) ? "A favourite plaything of Xom." : 
                             "A beloved plaything of Xom.";
 }
 

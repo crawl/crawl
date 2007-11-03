@@ -379,9 +379,7 @@ void dec_penance(god_type god, int val)
 
             // bonuses now once more effective
             if ( god == GOD_BEOGH && you.religion == GOD_BEOGH)
-            {
-                 you.redraw_armour_class = 1;
-            }
+                 you.redraw_armour_class = true;
         }
         else
             you.penance[god] -= val;
@@ -2408,16 +2406,9 @@ void divine_retribution( god_type god )
     if (god == you.religion && is_good_god(god) )
         return;
 
-    // Just the thought of retribution (getting this far) mollifies
-    // the god by at least a point... the punishment might reduce
-    // penance further.
-    dec_penance( god, 1 + random2(3) );
-
-    bool do_more = true;
-    
+    bool do_more = true;   
     switch (god)
     {
-
     // One in ten chance that Xom might do something good...
     case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
     case GOD_SHINING_ONE:   do_more = tso_retribution(); break;
@@ -2458,6 +2449,10 @@ void divine_retribution( god_type god )
             }
         }
     }
+
+    // Just the thought of retribution mollifies the god by at least a
+    // point...the punishment might have reduced penance further.
+    dec_penance( god, 1 + random2(3) );
 }
 
 // upon excommunication, (now ex) Beogh adepts lose their orcish followers
