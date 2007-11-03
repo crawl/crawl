@@ -334,7 +334,7 @@ ENDMAP
 # This is probably a get-off-the-level vault. -LP
 #
 NAME: aerie
-DEPTH: 12-26
+DEPTH: D:12-26
 MONS: insubstantial wisp, ball lightning, vapour, air elemental
 TAGS: no_monster_gen
 SUBST: .:..w
