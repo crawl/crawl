@@ -1122,7 +1122,6 @@ const char *hunger_level(void)
 static std::string morgue_directory()
 {
     std::string dir =
-        !SysEnv.morgue_dir.empty() ? SysEnv.morgue_dir :
         !Options.morgue_dir.empty()? Options.morgue_dir :
         !SysEnv.crawl_dir.empty()  ? SysEnv.crawl_dir : "";
 

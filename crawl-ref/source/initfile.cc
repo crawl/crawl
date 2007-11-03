@@ -1309,6 +1309,9 @@ void game_options::fixup_options()
     if (!check_dir("Save directory", save_dir))
         end(1);
 
+    if (!SysEnv.morgue_dir.empty())
+        morgue_dir = SysEnv.morgue_dir;
+
     if (!check_dir("Morgue directory", morgue_dir))
         end(1);
 }
