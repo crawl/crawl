@@ -630,7 +630,6 @@ void game_options::reset_options()
     pickup_dropped         = false;
     pickup_thrown          = true;
 
-    travel_colour          = true;
     travel_delay           = 20;
     travel_stair_cost      = 500;
 

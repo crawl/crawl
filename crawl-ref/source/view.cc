@@ -2581,7 +2581,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
             {
                 colour = colour_code_map(c.x, c.y,
                                          Options.item_colour, 
-                                         travel_mode && Options.travel_colour);
+                                         travel_mode);
 
                 buffer2[bufcount2 + 1] = colour;
                 buffer2[bufcount2] = env.map(c).glyph();

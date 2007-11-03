@@ -122,7 +122,6 @@ stab_brand = hi:blue
 
 ##### 4-g	Travel and Exploration #################
 #
-# travel_colour = false
 # travel_delay = 20
 # travel_avoid_terrain = shallow water
 #
