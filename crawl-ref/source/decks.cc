@@ -2007,6 +2007,7 @@ static void curse_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
 
+    mpr("You feel a malignant aura surround you.");
     if ( power_level >= 2 )
     {
         // curse (almost) everything + decay

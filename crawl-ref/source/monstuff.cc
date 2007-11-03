@@ -88,7 +88,7 @@ static bool immobile_monster[MAX_MONSTERS];
 #define FAR_AWAY    1000000         // used in monster_move()
 
 // This function creates an artificial item to represent a mimic's appearance.
-// Eventually, mimics could be redone to be more like Dancing wepaons...
+// Eventually, mimics could be redone to be more like dancing weapons...
 // there'd only be one type and it would look like the item it carries. -- bwr
 void get_mimic_item( const monsters *mimic, item_def &item )
 {
@@ -118,7 +118,10 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
         if (prop < 20)
         {
-            item.flags |= ISFLAG_RANDART;
+            make_item_randart(item);
+            // Override special - this could cause a "bad" (no-properties)
+            // randart, but we only need the name anyway. We have to
+            // do this in order to get a consistent name for the mimic item.
             item.special = ((mimic->x << 8 + mimic->y) & RANDART_SEED_MASK);
         }
         else if (prop < 50)
@@ -146,7 +149,8 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
         if (prop < 20)
         {
-            item.flags |= ISFLAG_RANDART;
+            make_item_randart(item);
+            // See comment above for randart weapon mimics.
             item.special = ((mimic->x << 8 + mimic->y) & RANDART_SEED_MASK);
         }
         else if (prop < 40)
