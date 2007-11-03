@@ -1587,7 +1587,6 @@ public:
 
     int         stash_tracking; // How stashes are tracked
 
-    bool        travel_colour;  // Colour levelmap using travel information?
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
     int         tc_exclude_circle; // Colour for squares in the exclusion radius
