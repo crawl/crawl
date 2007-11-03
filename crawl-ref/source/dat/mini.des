@@ -652,6 +652,8 @@ KITEM: A = gold / nothing
 KITEM: B = gold / nothing
 KITEM: C = gold / nothing
 KITEM: D = gold / nothing
+KFEAT: B = .
+KFEAT: D = .
 MAP
 ............
 .xxxxxxxxxx.

@@ -229,6 +229,7 @@ KMONS:   P = orange crystal statue
 KFEAT:   P = floor
 KMONS:   k = giant eyeball
 KITEM:   k = potion of experience / any good_item
+KFEAT:   k = .
 SHUFFLE: rstu, RST
 SUBST:   r==, s=x, t=x, u=x, R==, S=x, T=x
 MAP
@@ -922,6 +923,8 @@ KMONS:   z = killer bee
 KMONS:   Z = bumblebee
 KITEM:   z = royal jelly / honeycomb w:20 / nothing w:120
 KITEM:   Z = royal jelly / honeycomb w:20 / nothing w:120
+KFEAT:   Z = .
+KFEAT:   z = .
 : if crawl.random2(3) == 0 then
 KMONS:   ! = orc / orc warrior / orc knight / nothing w:30
 KMONS:   & = orc warlord / orc knight / nothing w:20
@@ -932,6 +935,8 @@ KMONS:   & = yaktaur captain / nothing
 KMONS:   ! = naga / nothing
 KMONS:   & = naga warrior / greater naga
 : end
+KFEAT:   & = .
+KFEAT:   ! = .
 SUBST:   * = * % % $ $ f
 SUBST:   ; = 9 0
 SUBST:   !=%$, &=*%

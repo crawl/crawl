@@ -2094,6 +2094,7 @@ SHUFFLE: {[(
 MONS: plant
 SUBST: . = .:140 d
 KITEM: d : apple/apricot/pear/apricot/orange/banana/strawberry/lemon
+KFEAT: d = .
 MAP
   .....
  .......

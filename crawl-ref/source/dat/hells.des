@@ -343,7 +343,6 @@ MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1d / e0% / f9* / g8|
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
-KITEM:   d = any
 SUBST:   ' = w .
 
 MAP

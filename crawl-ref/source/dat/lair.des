@@ -413,12 +413,12 @@ DEPTH:   Shoal
 ORIENT:  float
 SHUFFLE: AB@
 SUBST:   A : x, B : x
-SUBST:   D = .:30 W
 KFEAT:   E = w:20 . / x / w:50 W / w:30 w / ~
 KFEAT:   F = w:150 w / w:70 W / ~ / . / x
 KFEAT:   G = x / . / w / W
 KFEAT:   H = . / W
-KMONS:   D = Plant / w:200 nothing
+KMONS:   D = plant / w:200 nothing
+KFEAT:   D = w:30 . / W
 KMONS:   E = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:1 electrical eel / w:1000 nothing
 KMONS:   F = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
 KMONS:   H = swamp drake / swamp dragon / hydra / w:20 nothing
