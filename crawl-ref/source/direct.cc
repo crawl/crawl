@@ -287,6 +287,8 @@ void direction(dist& moves, targeting_type restricts,
     moves.dx = moves.dy = 0;
     moves.tx = you.x_pos;
     moves.ty = you.y_pos;
+    if ( show_beam )
+        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -667,7 +669,8 @@ void direction(dist& moves, targeting_type restricts,
             }
             else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
-                mpr("Sorry, you can't target what you can't see.", MSGCH_EXAMINE_FILTER);
+                mpr("Sorry, you can't target what you can't see.",
+                    MSGCH_EXAMINE_FILTER);
             }
             // Ask for confirmation if we're quitting for some odd reason
             else if ( moves.isValid || moves.isCancel ||
@@ -675,8 +678,7 @@ void direction(dist& moves, targeting_type restricts,
             {
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later)
-                moves.choseRay = show_beam;
-                moves.ray = ray;
+                moves.choseRay = false;
                 break;
             }
         }
