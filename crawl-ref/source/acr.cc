@@ -1835,8 +1835,19 @@ void process_command( command_type cmd )
         }
         else if (you.attribute[ATTR_HELD])
         {
-           mpr("You cannot shoot anything while held in a net!");
-           break;
+           const item_def *weapon = you.weapon();
+           if (!weapon || !is_range_weapon(*weapon))
+           {
+               mpr("You cannot throw anything while held in a net!");
+               break;
+           }
+           else if (weapon->sub_type != WPN_BLOWGUN)
+           {
+               mprf("You cannot shoot with your %s while held in a net!",
+                    weapon->name(DESC_BASENAME).c_str());
+               break;
+           }
+           // else shooting is possible
         }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
@@ -3621,6 +3632,10 @@ void drift_player(int move_x, int move_y)
 {
     int drift_dir = -1;
     int okay_dirs = 0;
+
+    // don't drift if held in a net
+    if (you.attribute[ATTR_HELD])
+        return;
 
     for (int i = 0; i < 8; i++)
     {

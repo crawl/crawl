@@ -1192,6 +1192,20 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     if (!is_valid_item(item))
         return (false);
     
+    if (you.attribute[ATTR_HELD])
+    {
+        if (item.base_type == OBJ_MISSILES)
+        {
+            const item_def *weapon = you.weapon();
+            if (weapon && weapon->sub_type == WPN_BLOWGUN
+                && item.launched_by(*weapon))
+            {
+                return (true);
+            }
+        }
+        return (false);
+    }
+
     if (item.base_type == OBJ_MISSILES)
     {
         if ((fire_type & FIRE_DART) && item.sub_type == MI_DART)
@@ -1498,6 +1512,18 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         speed_base = speed_base * speed_adjust / 100;
         speed_min =  speed_min  * speed_adjust / 100;
     }
+    
+    // do the same when trying to shoot while held in a net
+    if (you.attribute[ATTR_HELD]) // only for blowguns
+    {
+        int speed_adjust = 105; // analogous to buckler and one-handed weapon
+        speed_adjust -= ((speed_adjust - 100) * 5 / 10)
+                            * you.skills[SK_THROWING] / 27;
+
+        // also reduce the speed cap.
+        speed_base = speed_base * speed_adjust / 100;
+        speed_min =  speed_min  * speed_adjust / 100;
+    }
 
     int speed = speed_base - 4 * shoot_skill * speed_stat / 250;
     if (speed < speed_min)
@@ -1767,6 +1793,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     baseHit += 1;
                 }
             }
+        }
+        
+        // lower accuracy if held in a net (needs testing)
+        if (you.attribute[ATTR_HELD])
+        {
+            baseHit--;
         }
 
         // for all launched weapons, maximum effective specific skill
