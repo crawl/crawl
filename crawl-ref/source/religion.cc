@@ -1804,7 +1804,8 @@ bool ely_destroy_weapons()
         const int next = mitm[i].link;  // in case we can't get it later.
 
         if (mitm[i].base_type != OBJ_WEAPONS
-            && mitm[i].base_type != OBJ_MISSILES)
+            && mitm[i].base_type != OBJ_MISSILES
+            || item_is_stationary(mitm[i])) // held in a net
         {
             i = next;
             continue;

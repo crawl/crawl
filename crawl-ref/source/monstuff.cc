@@ -46,6 +46,7 @@
 #include "Kills.h"
 #include "makeitem.h"
 #include "message.h"
+#include "misc.h"
 #include "monplace.h"
 #include "monspeak.h"
 #include "mon-pick.h"
@@ -3472,6 +3473,14 @@ static bool mons_announce_cast(monsters *monster, bool nearby,
     return (true);
 }
 
+static bool enemies_around(const monsters *monster)
+{
+    if (mons_friendly(monster))
+        return (!mons_near(monster) || !i_feel_safe());
+    else
+        return (mons_near(monster));
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -3522,9 +3531,9 @@ static bool handle_spell( monsters *monster, bolt & beem )
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass = monster->spells;
 
-        // forces the casting of dig when player not visible - this is EVIL!
-        if (!monsterNearby)
+        if (!enemies_around(monster))
         {
+            // forces the casting of dig when player not visible - this is EVIL!
             if (hspell_pass[4] == SPELL_DIG && monster->behaviour == BEH_SEEK)
             {
                 spell_cast = SPELL_DIG;
@@ -3553,15 +3562,15 @@ static bool handle_spell( monsters *monster, bolt & beem )
                     finalAnswer = true;
                 }
             }
-            else if (monster->foe == MHITYOU)
+            else if (monster->foe == MHITYOU && !monsterNearby)
             {
                 return (false);
             }
         }
 
         // monsters caught in a net try to get away
-        // this is only urgent if you are around
-        if (!finalAnswer && monsterNearby && mons_is_caught(monster)
+        // this is only urgent if enemies are around
+        if (!finalAnswer && enemies_around(monster) && mons_is_caught(monster)
             && one_chance_in(4))
         {
             for (int i = 0; i < 6; i++)
@@ -3599,6 +3608,13 @@ static bool handle_spell( monsters *monster, bolt & beem )
 
         if (!finalAnswer)
         {
+            // if nothing found by now, safe friendlies will rarely cast
+            if (mons_friendly(monster) && !enemies_around(monster)
+                && !one_chance_in(8))
+            {
+                return (false);
+            }
+            
             // should monster not have selected dig by now, it never will:
             if (hspell_pass[4] == SPELL_DIG)
                 hspell_pass[4] = SPELL_NO_SPELL;
@@ -4831,7 +4847,30 @@ static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
         return (false);
+        
+    // permanent intelligent friendlies will try to avoid traps
+    // the player knows about (this could be annoying in a corridor)
+    if (grd[monster->x][monster->y] != DNGN_UNDISCOVERED_TRAP
+        && trap_category(trap.type) != DNGN_TRAP_MAGICAL // magic doesn't matter
+        && intelligent_ally(monster))
+    {
+        const int x = monster->x;
+        const int y = monster->y;
+        // test for corridor-like environment (simple hack)
+        if (!(grd[x-1][y] < DNGN_MINMOVE && grd[x+1][y] < DNGN_MINMOVE
+              || grd[x][y-1] < DNGN_MINMOVE && grd[x][y+1] < DNGN_MINMOVE))
+        {
+            return (monster->hit_points == monster->max_hit_points);
+        }
+    }
 
+    // friendlies will try not to be parted from you
+    if (intelligent_ally(monster) && trap.type == TRAP_TELEPORT
+        && mons_near(monster))
+    {
+        return (false);
+    }
+    
     // Healthy monsters don't mind a little pain. XXX: Smart humanoids
     // with low hp should probably not try to go through high-damage
     // traps.

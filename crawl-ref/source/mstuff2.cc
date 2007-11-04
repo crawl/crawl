@@ -90,7 +90,7 @@ void mons_trap(struct monsters *monster)
     }
 
     //
-    // Trap damage to monsters is not a function of level, beacuse they
+    // Trap damage to monsters is not a function of level, because they
     // are fairly stupid and tend to have fewer hp than players -- this
     // choice prevents traps from easily killing large monsters fairly
     // deep within the dungeon.
@@ -177,7 +177,8 @@ void mons_trap(struct monsters *monster)
     // resulting in an "early return" from this f(x) for
     // some - otherwise, blade *always* revealed: {dlb}
     case TRAP_BLADE:
-        if (one_chance_in(5))
+        if (one_chance_in(5)
+            || trapKnown && intelligent_ally(monster) && coinflip())
         {
             if (trapKnown)
             {
@@ -186,7 +187,9 @@ void mons_trap(struct monsters *monster)
             }
             return;             // early return {dlb}
         }
-        else if (random2(monster->ev) > 8)
+        
+        if (random2(monster->ev) > 8
+            || trapKnown && intelligent_ally(monster) && random2(monster->ev) > 8)
         {
             if (monsterNearby && !simple_monster_message(monster,
                                            " avoids a huge, swinging blade."))
@@ -222,7 +225,8 @@ void mons_trap(struct monsters *monster)
 
     case TRAP_NET:
     {
-        if (one_chance_in(3))
+        if (one_chance_in(3)
+            || trapKnown && intelligent_ally(monster) && coinflip())
         {
             if (trapKnown)
             {
@@ -232,7 +236,8 @@ void mons_trap(struct monsters *monster)
             return;
         }
         
-        if (random2(monster->ev) > 8)
+        if (random2(monster->ev) > 8
+            || trapKnown && intelligent_ally(monster) && random2(monster->ev) > 8)
         {
             if (monsterNearby && !simple_monster_message(monster,
                                  " nimbly jumps out of the way of a falling net."))
@@ -332,7 +337,8 @@ void mons_trap(struct monsters *monster)
             return;
         }
 
-        if (!monster->will_trigger_shaft())
+        if (!monster->will_trigger_shaft()
+            || trapKnown && intelligent_ally(monster))
         {
             if (trapKnown && !monster->airborne())
                 simple_monster_message(monster,

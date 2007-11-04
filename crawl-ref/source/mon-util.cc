@@ -1685,6 +1685,13 @@ mon_intel_type mons_intel(int mc)
     return (smc->intel);
 }
 
+bool intelligent_ally(const monsters *monster)
+{
+    return (monster->attitude == ATT_FRIENDLY
+            && mons_intel(monster->type) >= I_NORMAL);
+}
+
+
 int mons_power(int mc)
 {
     // for now, just return monster hit dice.
@@ -5165,7 +5172,7 @@ int mon_enchant::calc_duration(const monsters *mons,
         cturn = std::max(100 / modded_speed(mons, 5), 3);
         break;
     case ENCH_HELD:
-        cturn = 90 / mod_speed(25, mons->speed);
+        cturn = 120 / mod_speed(25, mons->speed);
         break;
     case ENCH_POISON:
         cturn = 1000 * deg / mod_speed(125, mons->speed);
@@ -5360,7 +5367,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                           sound_list[mons_shouts(monster->type)]);
 
     // The proper possessive for a word ending in an "s" is to
-    // put an appostraphe after the "s": "Chris" -> "Chris'",
+    // put an apostrophe after the "s": "Chris" -> "Chris'",
     // not "Chris" -> "Chris's".  Stupid English language...
     msg = replace_all(msg, "s's", "s'");
 
