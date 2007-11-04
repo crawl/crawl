@@ -222,6 +222,13 @@ static card_type choose_one_card(const item_def& item, bool message)
 
     card_type chosen = (*pdeck)[random2(pdeck->size())];
 
+    // Cut the probability of Damnation on common decks...
+    // too much of a killer otherwise.
+    if ( chosen == CARD_DAMNATION &&
+         pdeck != &deck_of_punishment &&
+         deck_rarity(item) == DECK_RARITY_COMMON )
+        chosen = (*pdeck)[random2(pdeck->size())];
+
     // High Evocations gives you another shot (but not at being punished...)
     if (pdeck != &deck_of_punishment && chosen == CARD_BLANK &&
         you.skills[SK_EVOCATIONS] > random2(30))
