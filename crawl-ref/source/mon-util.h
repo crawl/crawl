@@ -410,6 +410,8 @@ bool mons_is_summoned(const monsters *m);
  * *********************************************************************** */
 mon_intel_type mons_intel(int mclass);
 
+bool intelligent_ally(const monsters *mon);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - fight - monstuff
