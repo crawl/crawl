@@ -1062,7 +1062,12 @@ std::string level_description_string()
         return "- a Labyrinth";
 
     if (you.level_type == LEVEL_PORTAL_VAULT)
-        return "- a Portal Chamber";
+    {
+         if (you.level_type_name == "bazaar")
+             return "- a Bazaar";
+             
+         return "- a Portal Chamber";
+    }
 
     // level_type == LEVEL_DUNGEON
     char buf[200];
