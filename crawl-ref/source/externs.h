@@ -712,8 +712,8 @@ public:
     size_type transform_size(int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
-    item_def *slot_item(equipment_type eq);
     const item_def *slot_item(equipment_type eq) const;
+    item_def *slot_item(equipment_type eq);
 
     // actor
     int id() const;
