@@ -718,6 +718,7 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("sc", "%ld", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
     fields->add_field("killer", death_source_desc().c_str());
+    fields->add_field("dam", "%d", damage);
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
