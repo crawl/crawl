@@ -186,7 +186,7 @@ Strength:     Affects the amount of damage you do in combat, as well as
 
 Intelligence: Affects how well you can cast spells as well as how much
 ------------- nutrition spellcasting takes. Your ability to use some 
-              magical items is also influence by your intelligence.
+              magical items is also influenced by your intelligence.
 
 Dexterity:    Affects your accuracy in combat, your ability to dodge
 ----------    attacks aimed at you, your general effectiveness with 
