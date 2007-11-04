@@ -677,6 +677,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
                 return;
             }
             beogh_convert_orc(monster, orc_hit);
+	    stop_running();
         }
     }
     else if (is_orc
