@@ -87,6 +87,9 @@ std::string place_name( unsigned short place, bool long_name,
         case LEVEL_LABYRINTH:
             return ( long_name ? "a Labyrinth" : "Lab" );
         case LEVEL_PORTAL_VAULT:
+            if ( you.level_type_name == "bazaar" )
+                return ( long_name ? "a Bazaar" : "Bazaar" );
+
             return ( long_name ? "a Portal Chamber" : "Port" );
         default:
             return ( long_name ? "Buggy Badlands" : "Bug" );

@@ -3772,7 +3772,7 @@ void read_scroll(void)
         torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
 
         // is only naughty if you know you're doing it
-        if (!item_type_known(scroll))
+        if (item_type_known(scroll))
             did_god_conduct(DID_UNHOLY, 10);
         break;
 

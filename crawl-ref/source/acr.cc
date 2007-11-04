@@ -3760,7 +3760,8 @@ static void move_player(int move_x, int move_y)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
-        move_player_to_grid(targ_x, targ_y, true, false, swap);
+        if (!move_player_to_grid(targ_x, targ_y, true, false, swap))
+            return;
 
         if (you.mutation[MUT_DRIFTING]
             && (random2(100) <= you.mutation[MUT_DRIFTING] * 5) )
