@@ -646,9 +646,11 @@ static int damage_or_escape_net(int hold)
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
         damage += 2;
-    else if (you.mutation[MUT_CLAWS])
+    else if (you.has_usable_claws())
     {
-        if (you.mutation[MUT_CLAWS] == 1)
+        if (you.species == SP_TROLL || you.species == SP_GHOUL)
+            damage += 2;
+        else if (you.mutation[MUT_CLAWS] == 1)
             damage += coinflip();
         else
             damage += you.mutation[MUT_CLAWS] - 1;
