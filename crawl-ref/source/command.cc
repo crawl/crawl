@@ -75,6 +75,10 @@ static const char *features[] = {
     "Lua user scripts",
 #endif
 
+#ifdef WIZARD
+    "Wizard mode",
+#endif
+    
 #if defined(REGEX_POSIX)
     "POSIX regexps",
 #elif defined(REGEX_PCRE)
