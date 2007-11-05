@@ -2094,6 +2094,7 @@ SHUFFLE: {[(
 MONS: plant
 SUBST: . = .:140 d
 KITEM: d : apple/apricot/pear/apricot/orange/banana/strawberry/lemon
+KFEAT: d = .
 MAP
   .....
  .......
@@ -3103,24 +3104,30 @@ ENDMAP
 
 NAME: david_entry_070
 TAGS: entry
-MONS: w:30 nothing / worm 
-MONS: w:30 nothing / ooze / weight:2 jelly
-MONS: w:30 nothing / jackal / rat
+MONS: w:30 nothing / giant cockroach / w:2 worm
+MONS: w:30 nothing / ooze 
+MONS: w:20 nothing / jackal / rat
+MONS: w:30 nothing / ooze / weight:2 jelly / giant cockroach / worm w:2 / jackal w:5 / rat w:5
 
 # There is a very slight chance that a jelly or an intelligent monster 
 # (hobgoblin) might spawn inside the cage. This is okay; added an exit.
 
-FLAGS: no_rotate
-ORIENT: float
-SUBST: ?=Gx, ===++
+FLAGS:   no_rotate
+CHANCE:  1
+ORIENT:  float
+SHUFFLE: abcde / klmno
+SUBST:   k=A, l=B, m=C, n=D, o=E
+SUBST:   a=Gx, b=Gx, c=Gx, d=Gx, e=Gx
+SUBST:   A:Gx, B:Gx, C:Gx, D:Gx, E:Gx
+SUBST:   ===++
 SHUFFLE: xc, 123
 MAP
 .................
 .xxxxxxxxxxxxxxx.
-.x1231321332212x.
-.x2312132211323x.
-.x3123213123132x.
-.x?????G+G?????x.
+.x4441321331444x.
+.x4312132211324x.
+.x4123213123134x.
+.xABCDEG+Gedcbax.
 .x.............x.
 .=T....xxx....T=.
 .x.....({[.....x.
@@ -3485,7 +3492,8 @@ NAME: matt_entry_004
 TAGS: entry
 ORIENT: float
 SHUFFLE: {[(
-SUBST: ':.x':40, '=x.
+SUBST: ' : . x ':40
+SUBST: '=x.
 MAP
 xxxxxxx@xxxxxxxxxxxxx@xxxxxxx
 x....x..'.x.................x
