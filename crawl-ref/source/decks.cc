@@ -1222,7 +1222,7 @@ static void genie_card(int power, deck_rarity_type rarity)
 {
     if ( coinflip() )
     {
-        mpr("A genie takes forms and thunders: "
+        mpr("A genie takes form and thunders: "
             "\"Choose your reward, mortal!\"");
         more();
         acquirement( OBJ_RANDOM, AQ_CARD_GENIE );
