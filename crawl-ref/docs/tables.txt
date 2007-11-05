@@ -18,15 +18,15 @@ The abbreviations used for the skills are:
 General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
 --------------------------   -----------------------     ----------------------
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
-Ddg - Dodging                SBl - Short Blades          Coj - Conjuration
+Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
 Sth - Stealth                LBl - Long Blades           Enc - Enchantments
 Stb - Stabbing               Axs - Axes                  Sum - Summonings
 Shd - Shields                M&F - Maces & Flails        Nec - Necromancy
 T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
                              Stv - Staves                Trm - Transmigration
-Inv - Invocations            U C - Unarmed Combat        Div - Divination
+Inv - Invocations            U C - Unarmed Combat        Div - Divinations
 Evo - Evocations
-                             Thr - Ranged Combat         Fir - Fire Magic
+                             Thr - Throwing              Fir - Fire Magic
                              Slg - Slings                Ice - Ice Magic
 Exp - Experience             Bws - Bows                  Air - Air Magic
                              Crb - Crossbows             Ear - Earth Magic
