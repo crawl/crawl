@@ -3165,7 +3165,7 @@ void offer_items()
         const int value = item_value( item, true );
 
 
-        if (!god_likes_item(you.religion, item))
+        if (item_is_stationary(item) || !god_likes_item(you.religion, item))
         {
             i = next;
             continue;
