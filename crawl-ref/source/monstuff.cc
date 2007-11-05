@@ -1352,7 +1352,7 @@ static bool habitat_okay( const monsters *monster, int targ )
 
 // This doesn't really swap places, it just sets the monster's
 // position equal to the player (the player has to be moved afterwards).
-// It also has a slight problem with the fact the if the player is
+// It also has a slight problem with the fact that if the player is
 // levitating over an inhospitable habitat for the monster the monster
 // will be put in a place it normally couldn't go (this could be a
 // feature because it prevents insta-killing).  In order to prevent
@@ -1373,6 +1373,12 @@ bool swap_places(monsters *monster)
     int loc_y = you.y_pos;
 
     const int mgrid = grd[monster->x][monster->y];
+    
+    if (monster->has_ench(ENCH_HELD))
+    {
+        simple_monster_message(monster, " is held in a net!");
+        return (false);
+    }
 
     const bool mon_dest_okay = habitat_okay( monster, grd[loc_x][loc_y] );
     const bool you_dest_okay =
