@@ -1999,7 +1999,7 @@ bool gives_ability( const item_def &item )
        }
        case OBJ_JEWELLERY:
        {
-          if (item.sub_type < NUM_RINGS)
+          if ( !jewellery_is_amulet(item))
           {
               // unworn ring
               item_def *lring = you.slot_item(EQ_LEFT_RING);

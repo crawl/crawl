@@ -766,7 +766,7 @@ unsigned int item_value( item_def item, bool ident )
             valued += 20;
         }
 
-        if (item_cursed( item ))
+        if (item_known_cursed(item))
         {
             valued *= 6;
             valued /= 10;
@@ -1018,7 +1018,7 @@ unsigned int item_value( item_def item, bool ident )
             valued += 20;
         }
 
-        if (item_cursed( item ))
+        if (item_known_cursed(item))
         {
             valued *= 6;
             valued /= 10;
@@ -1272,7 +1272,7 @@ unsigned int item_value( item_def item, bool ident )
         break;
 
     case OBJ_JEWELLERY:
-        if (item_cursed( item ))
+        if (item_known_cursed(item))
             valued -= 10;
 
         if ( !item_type_known(item) )
