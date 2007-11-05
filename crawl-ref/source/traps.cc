@@ -621,11 +621,18 @@ static int damage_or_escape_net(int hold)
 {
     // Spriggan: little (+2)
     // Halfling, Kobold, Gnome: small (+1)
+    // Human, Elf, ...: medium (0)
     // Ogre, Troll, Centaur, Naga: large (-1)
     // transformations: spider, bat: tiny (+3); ice beast: large (-1)
     int escape = SIZE_MEDIUM - you.body_size(PSIZE_BODY);
     
     int damage = -escape;
+
+    if (escape == 0) // middle-sized creatures are at a disadvantage
+    {
+        escape += coinflip();
+        damage -= coinflip();
+    }
 
     // your weapon may damage the net, max. bonus of 2
     if (you.equip[EQ_WEAPON] != -1)
@@ -640,8 +647,13 @@ static int damage_or_escape_net(int hold)
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
         damage += 2;
     else if (you.mutation[MUT_CLAWS])
-        damage += random2(you.mutation[MUT_CLAWS]);
-        
+    {
+        if (you.mutation[MUT_CLAWS] == 1)
+            damage += coinflip();
+        else
+            damage += you.mutation[MUT_CLAWS] - 1;
+    }
+    
     // Berserkers get a fighting bonus
     if (you.duration[DUR_BERSERKER])
         damage += 2;
@@ -650,7 +662,7 @@ static int damage_or_escape_net(int hold)
     if (hold < 0)
     {
         escape += random2(-hold/2) + 1;
-        damage += random2(-hold/3 + 1); // ... and easier to destroy
+        damage += random2(-hold/3) + 1; // ... and easier to destroy
     }
         
     // check stats
@@ -698,10 +710,11 @@ void free_self_from_net()
         return;
     }
 
-    int do_what = damage_or_escape_net(mitm[net].plus);
+    int hold = mitm[net].plus;
+    int do_what = damage_or_escape_net(hold);
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "net.plus: %d, ATTR_HELD: %d, do_what: %d",
-         mitm[net].plus, you.attribute[ATTR_HELD], do_what);
+         hold, you.attribute[ATTR_HELD], do_what);
 #endif
 
     if (do_what <= 0) // you try to destroy the net
@@ -710,19 +723,21 @@ void free_self_from_net()
         bool can_slice = you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
                          || you.equip[EQ_WEAPON] != -1
                             && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
-                         
-        int damage = 1;
-        damage += random2(-do_what);
-        
+
+        int damage = -do_what;
+        if (damage < 1)
+            damage = 1;
+            
         if (you.duration[DUR_BERSERKER])
             damage *= 2;
 
         if (damage > 5)
             damage = 5;
                     
-        mitm[net].plus -= damage;
+        hold -= damage;
+        mitm[net].plus = hold;
 
-        if (mitm[net].plus < -7)
+        if (hold < -7)
         {
             mprf("You %s the net and break free!",
                  can_slice ? (damage >= 4? "slice" : "cut") :
@@ -744,13 +759,18 @@ void free_self_from_net()
 
         // occasionally decrease duration a bit
         // (this is so switching from damage to escape does not hurt as much)
-        if (you.attribute[ATTR_HELD] > 1 && one_chance_in(3))
+        if (you.attribute[ATTR_HELD] > 1 && coinflip())
+        {
             you.attribute[ATTR_HELD]--;
+            
+            if (you.attribute[ATTR_HELD] > 1 && hold < -random2(5))
+                you.attribute[ATTR_HELD]--;
+        }
    }
    else // you try to escape (takes at least 3 turns, and at most 10)
    {
-        int escape = random2(do_what);
-        
+        int escape = do_what;
+
         if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
             escape++;
             
