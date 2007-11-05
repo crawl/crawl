@@ -2407,21 +2407,16 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     // doesn't get destroyed by throwing
     if (item->sub_type == MI_THROWING_NET)
     {
-        copy_item_to_grid( *item, x, y, 1 );
-        
-        // nobody there
-        if ((you.x_pos != x || you.y_pos != y) && mgrd[x][y] == NON_MONSTER)
-            return;
-            
-        // player or monster on position but hasn't been caught
-        if (you.x_pos == x && you.y_pos == y && !you.attribute[ATTR_HELD]
-            || mgrd[x][y] != NON_MONSTER && !mons_is_caught(&menv[mgrd[x][y]]))
+        // player or monster on position is caught in net
+        if (you.x_pos == x && you.y_pos == y && you.attribute[ATTR_HELD]
+            || mgrd[x][y] != NON_MONSTER && mons_is_caught(&menv[mgrd[x][y]]))
         {
-            return;
+            // if no trapping net found mark this one
+            if (get_trapping_net(x,y, true) == NON_ITEM)
+                set_item_stationary(*item);
         }
         
-        // somebody on square who HAS been caught, maybe by this net?
-        mark_net_trapping(x,y);
+        copy_item_to_grid( *item, x, y, 1 );
         return;
     }
 
