@@ -128,7 +128,7 @@ struct dgn_region
     bool fully_contains(const coord_def &p) const
     {
         return (p.x > pos.x && p.x < pos.x + size.x - 1
-                && p.y >= pos.y && p.y < pos.y + size.y - 1);
+                && p.y > pos.y && p.y < pos.y + size.y - 1);
     }
     
     bool overlaps(const dgn_region &other) const;

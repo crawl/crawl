@@ -1282,7 +1282,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
             }
             else if (god != GOD_NO_GOD)
             {
-                // Not exactly the same as the religon screen, but
+                // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
                 snprintf( scratch, INFO_SIZE, "Was %s of %s%s",
                           (piety >  160) ? "the Champion" :
