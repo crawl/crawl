@@ -3113,7 +3113,6 @@ MONS: w:30 nothing / ooze / weight:2 jelly / giant cockroach / worm w:2 / jackal
 # (hobgoblin) might spawn inside the cage. This is okay; added an exit.
 
 FLAGS:   no_rotate
-CHANCE:  1
 ORIENT:  float
 SHUFFLE: abcde / klmno
 SUBST:   k=A, l=B, m=C, n=D, o=E
