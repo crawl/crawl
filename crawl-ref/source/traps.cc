@@ -631,7 +631,7 @@ static int damage_or_escape_net(int hold)
     if (escape == 0) // middle-sized creatures are at a disadvantage
     {
         escape += coinflip();
-        damage -= coinflip();
+        damage += coinflip();
     }
 
     // your weapon may damage the net, max. bonus of 2
