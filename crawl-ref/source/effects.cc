@@ -1299,7 +1299,6 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 bool acquirement(object_class_type class_wanted, int agent)
 {
     int thing_created = 0;
-    int unique = 1;
 
     while (class_wanted == OBJ_RANDOM)
     {
@@ -1336,7 +1335,7 @@ bool acquirement(object_class_type class_wanted, int agent)
     {
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
-            unique = 1;
+            int unique = 1;
             int type_wanted = find_acquirement_subtype(class_wanted, unique);
             
             // clobber class_wanted for vampires
@@ -1344,7 +1343,7 @@ bool acquirement(object_class_type class_wanted, int agent)
                 class_wanted = OBJ_POTIONS;
 
             // BCR - unique is now used for food quantity.
-            thing_created = items( unique, class_wanted, type_wanted, true, 
+            thing_created = items( 1, class_wanted, type_wanted, true, 
                                    MAKE_GOOD_ITEM, 250 );
 
             if (thing_created == NON_ITEM)

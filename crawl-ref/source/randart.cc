@@ -955,7 +955,7 @@ void randart_wpn_properties( const item_def &item,
 
     if (is_unrandom_artefact( item ))
     {
-        struct unrandart_entry *unrand = seekunrandart( item );
+        const unrandart_entry *unrand = seekunrandart( item );
 
         for (int i = 0; i < RA_PROPERTIES; i++)
             proprt[i] = unrand->prpty[i];
@@ -1701,19 +1701,23 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype)
 // Returns true if successful.
 bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
 {
-    bool  force = true;  // we force any one asked for specifically
+    bool force = true;  // we force any one asked for specifically
 
     if (!which)
     {
         // using old behaviour... try only once. -- bwr
         force = false;  
 
-        which = SPWPN_SINGING_SWORD + random2(12);
-        if (which >= SPWPN_SWORD_OF_CEREBOV)
-            which += 3; // skip over Cerebov's, Dispater's, and Asmodeus' weapons
+        do {
+            which = SPWPN_SINGING_SWORD +
+                random2(SPWPN_STAFF_OF_WUCAD_MU - SPWPN_SINGING_SWORD + 1);
+        } while ( which == SPWPN_SWORD_OF_CEREBOV ||
+                  which == SPWPN_STAFF_OF_DISPATER ||
+                  which == SPWPN_SCEPTRE_OF_ASMODEUS );
     }
 
-    int status = get_unique_item_status( OBJ_WEAPONS, which );
+    const unique_item_status_type status =
+        get_unique_item_status( OBJ_WEAPONS, which );
 
     if ((status == UNIQ_EXISTS 
             || (in_abyss && status == UNIQ_NOT_EXISTS)
@@ -2044,7 +2048,6 @@ bool make_item_randart( item_def &item )
     return (true);
 }
 
-// void make_item_unrandart( int x, int ura_item )
 bool make_item_unrandart( item_def &item, int unrand_index )
 {
     if (!item.props.exists( KNOWN_PROPS_KEY ))
@@ -2077,10 +2080,9 @@ const char *unrandart_descrip( char which_descrip, const item_def &item )
 {
 /* Eventually it would be great to have randomly generated descriptions for
    randarts. */
-    struct unrandart_entry *unrand = seekunrandart( item );
+    const unrandart_entry *unrand = seekunrandart( item );
 
     return ((which_descrip == 0) ? unrand->spec_descrip1 :
             (which_descrip == 1) ? unrand->spec_descrip2 :
             (which_descrip == 2) ? unrand->spec_descrip3 : "Unknown.");
-
-}                               // end unrandart_descrip()
+}
