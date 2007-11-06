@@ -106,7 +106,7 @@ A svelte fighter-mage, wearing a gold-rimmed monocle.
 %%%%
 Geryon
 
-A huge and slithery arch-demon, guarding the gates of Hell.
+A huge, winged arch-demon, guardian of the gates of Hell.
 %%%%
 Gloorx Vloq
 
@@ -116,7 +116,7 @@ greater naga
 
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
 
-It looks strong and agressive.
+It looks strong and aggressive.
 %%%%
 Green Death
 
@@ -202,7 +202,7 @@ A huge and glowing purple creature, created by the Orb to defend itself.
 %%%%
 pandemonium lord
 
-Powerful demons inhabitting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
+Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
 %%%%
 Pit Fiend
 
