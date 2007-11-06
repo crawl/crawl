@@ -50,7 +50,7 @@ Detailed instructions for playing Crawl follow. To simplify this
 manual, we assume that you use the standard distribution and that
 you've not changed the default options. If you don't want to read the
 whole manual and would prefer a short summary of the important points,
-look at the quick-start guide (quickstart.txt) and learn as you play.
+look at the quick-start guide (readme.txt) and learn as you play.
 
 You can also read these documents while playing Crawl, by hitting ? at
 the help menu.
@@ -442,7 +442,7 @@ several additional activities like Dodging or Stabbing. See Appendix 3
 for a detailed description of all skills present in Crawl. The ease 
 with which a character learns a skill depends solely on race. These 
 aptitudes are hinted at in the list of species (see Appendix 1). For the
-curious, the full table can be checked in aptitudes.txt (also from the
+curious, the full table can be checked in tables.txt (also from the
 help game during play). It is not necessary to bother with the numbers
 in order to win!
 
@@ -790,15 +790,17 @@ You can press '"' to quickly check what jewellery you're wearing.
 There are a number of types of magical staves. Some enhance your general
 spellcasting ability, while some greatly increase the power of a certain
 class of spells (and possibly reduce your effectiveness with others).
+They can even be used in hand-to-hand combat, nearly as effectively as
+quarterstaves.
 
-Some are spell staves (called 'rods' in the game), and hold spells which
-you can cast without having to memorise them first and without consuming
-food. You must wield a rod like a weapon in order to gain from its 
-power, and magical staves are as effective as +0 quarterstaves in 
-combat. Rods can be invoked with the 'E' command while you are wielding
-them. They have a pool of magical energy which regenerates rather 
-quickly when you are wielding it (drawing from your own Magic), or at a
-much slower rate when it just sits in your backpack.
+Spell staves (called "rods" in the game) are a totally different kind of
+items. They hold spells which you can cast without having to memorise
+them first and without consuming food. You must wield a rod like a
+weapon in order to gain from its power. Rods can be invoked with the 'E'
+command while you are wielding them. They have a pool of magical energy
+which regenerates rather quickly when you are wielding it (drawing from
+your own Magic), or at a much slower rate when it just sits in your
+backpack. Unlike other staves, rods are unsuited for physical combat.
 
 +: Books:
 ---------
@@ -874,7 +876,7 @@ Spells are stored in books, which you will occasionally find in the
 dungeon. You can read books with 'r' to check what spells they contain; 
 doing so will allow you to read the individual spells' desriptions. In
 order to try to memorise a certain spell, use the 'M' command. 
-Memorising can take a while and, for high-level spells, by hazardous.
+Memorising can take a while and, for high-level spells, be hazardous.
 
 Each spell has a Level. A spell's level denotes the amount of skill
 required to use it and indicates how powerful it may be. You can only
@@ -911,7 +913,7 @@ contain; when not fully charged, they regenerate magic points from their
 holder's pool (this happens much more quickly if the rod is wielded.) 
 You can spend scrolls of recharging on rods in order to increase the 
 maximal size of their magical reservoir. The effectiveness of your rod's
-spells are gouverned by your Evocations skill.
+spells are governed by your Evocations skill.
 
 Be careful of magic-using enemies! Some of them can use magic just as 
 well as you, if not better, and often use it intelligently.
@@ -924,7 +926,7 @@ I.                      TARGETING
 When throwing something, or zapping certain wands, or casting spells, 
 you are asked for a direction. There are several ways to tell Crawl 
 which monster to target. (The following list assumes the option setting
- default_target = true which is default.)
+default_target = true which is default.)
 You can press '?' when asked for a direction; this will bring up a help
 screen.
  - The cursor will target on the monster which is closest to your
@@ -1603,7 +1605,7 @@ Demonspawn advance quite slowly in experience and learn most skills at
 about the same rate as do Demigods. However, they are a little better 
 at fighting and much better at conjurations, summonings, necromancy and
 invocations. Note that unlike Demigods, they can take on gods, although
-only evil powers.
+not all of them.
 
 Kenku:
 ------
@@ -1675,20 +1677,20 @@ The Gladiator is trained to fight in the ring, and so is an expert in
 the art of fighting but is not so good at anything else. In fact,
 Gladiators are pretty terrible at anything except bashing monsters
 with heavy things. They start with a nasty weapon, a small shield,
-leather armour, and a javelin.
+leather armour, and some nets.
 
 Berserkers:
 -----------
 Berserkers are hardy warriors who worship Trog the Wrathful, from whom
 they get the power to go berserk (as well as a number of other powers 
 should they prove worthy) but who forbids the use of spell magic. They
-enter the dungeon with an axe and a set of leather armour.
+enter the dungeon with an axe, some spears, and a set of leather armour.
 
 Hunters:
 --------
 The Hunter is a type of fighter who specialises in missile weapons. A 
-Hunter starts with a bow and some arrows, as well as a hunting knife 
-and a set of leathers.
+Hunter starts with a ranged weapon and some ammunition, as well as a
+hunting knife and a set of leathers.
 
 Monks:
 ------
@@ -1986,7 +1988,7 @@ Stabbing:
 ---------
 Lets you make a very powerful first strike against a sleeping/resting
 monster who hasn't noticed you yet. This is most effective with a 
-dagger, slightly less effective with a short sword, and less useful
+dagger, slightly less effective with other short blades, and less useful
 (although by no means of negligible effect) with any other weapon.
 
 Shields:
