@@ -1087,11 +1087,18 @@ bool undead_cannot_memorise(spell_type spell, char being)
         switch (spell)
         {
         //case SPELL_REGENERATION:
+        case SPELL_AIR_WALK:
+        case SPELL_ALTER_SELF:
+        case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_CURE_POISON_II:
         case SPELL_DEATHS_DOOR:
+        case SPELL_DRAGON_FORM:
+        case SPELL_ICE_FORM:
         case SPELL_NECROMUTATION:
         case SPELL_RESIST_POISON:
+        case SPELL_SPIDER_FORM:
+        case SPELL_STATUE_FORM:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
         case SPELL_BERSERKER_RAGE:
