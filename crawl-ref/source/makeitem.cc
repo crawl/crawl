@@ -803,7 +803,7 @@ void item_colour( item_def &item )
                 break;
                 
             case RUNE_SHOALS:
-                item.colour = BLUE;             // liquid
+                item.colour = BLUE;             // barnacled
 
             // These two are hardly unique, but since colour isn't used for 
             // stacking, so we don't have to worry to much about this. -- bwr
