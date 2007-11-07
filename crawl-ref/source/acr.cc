@@ -1003,8 +1003,7 @@ static void input()
 
     fire_monster_alerts();
 
-    if (Options.tut_just_triggered)
-        Options.tut_just_triggered = false;
+    Options.tut_just_triggered = false;
 
     if ( i_feel_safe() )
     {
@@ -2429,6 +2428,7 @@ static void world_reacts()
     {
         handle_time(200 + (you.time_taken - you.synch_time));
         you.synch_time = 200;
+        check_banished();
     }
     else
     {
@@ -2459,29 +2459,6 @@ static void world_reacts()
         }
     }
 
-    //jmf: added silence messages
-    // [jpeg] Commenting out until we add other sources of Silence
-    // than the player casting the spell (messages handled elsewhere)
-/*
-    bool its_quiet = silenced(you.x_pos, you.y_pos);
-
-    if (you.attribute[ATTR_WAS_SILENCED] != its_quiet)
-    {
-        if (its_quiet)
-        {
-            if (!one_chance_in(30))
-                mpr("You are enveloped in profound silence.", MSGCH_WARN);
-            else
-                mpr("The dungeon seems quiet ... too quiet!", MSGCH_WARN);
-        }
-        else
-        {
-            mpr("Your hearing returns.", MSGCH_RECOVERY);
-        }
-
-        you.attribute[ATTR_WAS_SILENCED] = its_quiet;
-    }
-*/
     viewwindow(true, false);
 
     if (you.duration[DUR_PARALYSIS] > 0 && any_messages())

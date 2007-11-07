@@ -1945,7 +1945,6 @@ static bool send_abyss(const char *cause)
 {
     if (you.level_type != LEVEL_ABYSS)
     {
-        mpr("You are cast into the Abyss!");
         you.banish(cause? cause : "");
         return (true);
     }
