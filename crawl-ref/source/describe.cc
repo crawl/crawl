@@ -1065,11 +1065,13 @@ static std::string describe_weapon( const item_def &item, bool verbose)
     {
         description += "$Damage rating: ";
         append_value(description, property( item, PWPN_DAMAGE ), false);
+        description += "   ";
 
-        description += "$Accuracy rating: ";
+        description += "Accuracy rating: ";
         append_value(description, property( item, PWPN_HIT ), true);
+        description += "    ";
 
-        description += "$Base attack delay: ";
+        description += "Base attack delay: ";
         append_value(description, property( item, PWPN_SPEED ) * 10, false);
         description += "%";
     }
@@ -1222,42 +1224,36 @@ static std::string describe_weapon( const item_def &item, bool verbose)
         const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
 
         if (str_weight >= 8)
-            description += "$This weapon is best used by the strong.";
+            description += "$This weapon is best used by the strong. ";
         else if (str_weight > 5)
-            description += "$This weapon is better for the strong.";
+            description += "$This weapon is better for the strong. ";
         else if (str_weight <= 2)
-            description += "$This weapon is best used by the dexterous.";
+            description += "$This weapon is best used by the dexterous. ";
         else if (str_weight < 5)
-            description += "$This weapon is better for the dexterous.";
+            description += "$This weapon is better for the dexterous. ";
+#else
+        description += "$";
 #endif
 
         switch (hands_reqd(item, player_size()))
         {
         case HANDS_ONE:
-            description += "$It is a one handed weapon.";
+            description += " It is a one handed weapon.";
             break;
         case HANDS_HALF:
-            description += "$It can be used with one hand, or more "
+            description += " It can be used with one hand, or more "
                     "effectively with two (i.e. when not using a shield).";
             break;
         case HANDS_TWO:
-            description += "$It is a two handed weapon.";
+            description += " It is a two handed weapon.";
             break;
-        default:
-            description += "$It is a buggy weapon.";
+        case HANDS_DOUBLE:
+            description += " It is a buggy weapon.";
             break;
         }
         
-        switch(item.sub_type)
-        {
-        case WPN_DEMON_BLADE:
-        case WPN_DEMON_WHIP:
-        case WPN_DEMON_TRIDENT:
+        if ( is_demonic(item) )
             description += "$Demonspawn are more deadly with it.";
-            break;
-        default:
-            break;
-        }
     }
 
     if (!is_random_artefact( item ))
