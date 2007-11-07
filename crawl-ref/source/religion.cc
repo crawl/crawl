@@ -219,9 +219,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Nemelex
     { "peek at the first card of a deck",
       "draw cards from decks in your inventory",
-      "draw cards with careful consideration",
+      "choose one out of three cards",
       "",
-      "stack decks" },
+      "order the the top five cards of a deck, forfeiting the rest" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
       "call upon Elyvilon for purification",
@@ -305,9 +305,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Nemelex
     { "peek at the first card of a deck",
       "draw cards from decks in your inventory",
-      "draw cards with careful consideration",
+      "choose one out of three cards",
       "",
-      "stack decks" },
+      "order decks" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
       "call upon Elyvilon for purification",
