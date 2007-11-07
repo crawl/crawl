@@ -809,7 +809,7 @@ void pray()
         mpr("Stop praying? ('y' ends prayer, 'r' will renew prayer)",
             MSGCH_PROMPT);
 
-        const int tmp = getch_with_command_macros();
+        const int tmp = getchm(KC_CONFIRM);
 
         if ( tmp == 'y' || tmp == 'Y')
         {
