@@ -181,10 +181,7 @@ static std::string spell_extra_description(spell_type spell)
     desc << std::setw(30) << spell_title(spell);
 
     // spell power, hunger level, level
-    const char* colstr = colour_to_str(spell_power_colour(spell));
-    desc << '<' << colstr << '>'
-         << std::setw(30) << spell_power_string(spell)
-         << "</" << colstr << '>'
+    desc << std::setw(30) << spell_power_string(spell)
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
