@@ -250,94 +250,93 @@ void special_wielded()
     return;
 }                               // end special_wielded()
 
-static void reaching_weapon_attack(void)
+static bool reaching_weapon_attack(const item_def& wpn)
 {
-    struct dist beam;
-    int x_distance, y_distance;
-    int x_middle, y_middle;
-    int skill;
+    dist beam;
 
     mpr("Attack whom?", MSGCH_PROMPT);
 
     direction(beam, DIR_TARGET, TARG_ENEMY);
+
     if (!beam.isValid)
-        return;
+        return false;
 
     if (beam.isMe)
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return;
+        return false;
     }
 
-    x_distance = abs(beam.tx - you.x_pos);
-    y_distance = abs(beam.ty - you.y_pos);
+    const int x_distance = abs(beam.tx - you.x_pos);
+    const int y_distance = abs(beam.ty - you.y_pos);
 
     if (x_distance > 2 || y_distance > 2)
+    {
         mpr("Your weapon cannot reach that far!");
+        return false;
+    }
     else if (mgrd[beam.tx][beam.ty] == NON_MONSTER)
     {
+        // Must return true, otherwise you get a free discovery
+        // of invisible monsters. Maybe we shouldn't do practice
+        // here to prevent scumming...but that would just encourage
+        // finding popcorn monsters.
         mpr("You attack empty space.");
+        return true;
     }
-    else
+
+    /* BCR - Added a check for monsters in the way.  Only checks cardinal
+     *       directions.  Knight moves are ignored.  Assume the weapon
+     *       slips between the squares.
+     */
+
+    // if we're attacking more than a space away
+    if ((x_distance > 1) || (y_distance > 1))
     {
-        /* BCR - Added a check for monsters in the way.  Only checks cardinal
-         *       directions.  Knight moves are ignored.  Assume the weapon
-         *       slips between the squares.
-         */
+        const int x_middle = MAX(beam.tx, you.x_pos) - (x_distance / 2);
+        const int y_middle = MAX(beam.ty, you.y_pos) - (y_distance / 2);
 
-        // if we're attacking more than a space away
-        if ((x_distance > 1) || (y_distance > 1))
+        // if either the x or the y is the same, we should check for
+        // a monster:
+        if (((beam.tx == you.x_pos) || (beam.ty == you.y_pos))
+            && (mgrd[x_middle][y_middle] != NON_MONSTER))
         {
-            x_middle = MAX(beam.tx, you.x_pos) - (x_distance / 2);
-            y_middle = MAX(beam.ty, you.y_pos) - (y_distance / 2);
+            const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
 
-            // if either the x or the y is the same, we should check for
-            // a monster:
-            if (((beam.tx == you.x_pos) || (beam.ty == you.y_pos))
-                    && (mgrd[x_middle][y_middle] != NON_MONSTER))
-            {
-                skill = weapon_skill( you.inv[you.equip[EQ_WEAPON]].base_type,
-                                      you.inv[you.equip[EQ_WEAPON]].sub_type );
-
-                if ((5 + (3 * skill)) > random2(100))
-                {
-                    mpr("You reach to attack!");
-                    you_attack(mgrd[beam.tx][beam.ty], false);
-                }
-                else
-                {
-                    mpr("You could not reach far enough!");
-                    you_attack(mgrd[x_middle][y_middle], false);
-                }
-            }
-            else
+            if ((5 + (3 * skill)) > random2(100))
             {
                 mpr("You reach to attack!");
                 you_attack(mgrd[beam.tx][beam.ty], false);
             }
+            else
+            {
+                mpr("You could not reach far enough!");
+                you_attack(mgrd[x_middle][y_middle], false);
+            }
         }
         else
         {
+            mpr("You reach to attack!");
             you_attack(mgrd[beam.tx][beam.ty], false);
         }
     }
+    else
+        you_attack(mgrd[beam.tx][beam.ty], false);
 
-    return;
+    return true;
 }                               // end reaching_weapon_attack()
 
 // returns true if item successfully evoked.
 bool evoke_wielded( void )
 {
-    char opened_gates = 0;
-    unsigned char spell_casted = random2(21);
-    int count_x, count_y;
+    int spell_casted;
     int temp_rand = 0;      // for probability determination {dlb}
     int power = 0;
 
     int pract = 0;
     bool did_work = false;  // used for default "nothing happens" message
 
-    int wield = you.equip[EQ_WEAPON];
+    const int wield = you.equip[EQ_WEAPON];
 
     if (you.duration[DUR_BERSERKER])
     {
@@ -361,15 +360,18 @@ bool evoke_wielded( void )
     switch (wpn.base_type)
     {
     case OBJ_WEAPONS:
-        if (get_weapon_brand( wpn ) == SPWPN_REACHING
-            && enough_mp(1, false))
+        if (get_weapon_brand(wpn) == SPWPN_REACHING && enough_mp(1, false))
         {
-            // needed a cost to prevent evocation training abuse -- bwr
-            dec_mp(1);
-            make_hungry( 50, false );  
-            reaching_weapon_attack();
-            pract = (one_chance_in(5) ? 1 : 0);
-            did_work = true;
+            if ( reaching_weapon_attack(wpn) )
+            {
+                // needed a cost to prevent evocation training abuse -- bwr
+                dec_mp(1);
+                make_hungry( 50, false );  
+                pract = (one_chance_in(5) ? 1 : 0);
+                did_work = true;
+            }
+            else
+                return false;
         }
         else if (is_fixed_artefact( wpn ))
         {
@@ -594,11 +596,12 @@ bool evoke_wielded( void )
             // Note: This assumes that the Vestibule has not been changed.
             if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
             {
+                int opened_gates = 0;
                 mpr("You produce a weird and mournful sound.");
 
-                for (count_x = 0; count_x < GXM; count_x++)
+                for (int count_x = 0; count_x < GXM; count_x++)
                 {
-                    for (count_y = 0; count_y < GYM; count_y++)
+                    for (int count_y = 0; count_y < GYM; count_y++)
                     {
                         if (grd[count_x][count_y] == DNGN_STONE_ARCH)
                         {
