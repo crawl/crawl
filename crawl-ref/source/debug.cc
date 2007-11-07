@@ -716,7 +716,7 @@ static void rune_from_specs(const char* _specs, item_def &item)
 "[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy   [f] silver",
             MSGCH_PROMPT);
         mpr(
-"[g] serpentine [h] elven    [i] golden   [j] decaying [k] liquid  [l] demonic",
+"[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
             MSGCH_PROMPT);
         mpr(
 "[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark    [r] buggy",

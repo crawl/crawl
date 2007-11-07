@@ -789,7 +789,7 @@ void item_colour( item_def &item )
                 item.colour = EC_DECAY;
                 break;
                 
-            case RUNE_SHOALS:                   // liquid
+            case RUNE_SHOALS:                   // barnacled
                 item.colour = EC_WATER;
                 break;
 
