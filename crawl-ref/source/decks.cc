@@ -1567,14 +1567,11 @@ static void metamorphosis_card(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     transformation_type trans;
     if ( power_level >= 2 )
-        trans = (coinflip() ? TRAN_DRAGON : TRAN_LICH);
+        trans = coinflip() ? TRAN_DRAGON : TRAN_LICH;
     else if ( power_level == 1 )
-    {
-        trans = (one_chance_in(3) ? TRAN_STATUE :
-                 (coinflip() ? TRAN_ICE_BEAST : TRAN_BLADE_HANDS));
-    }
+        trans = coinflip() ? TRAN_STATUE : TRAN_BLADE_HANDS;
     else
-        trans = (coinflip() ? TRAN_SPIDER : TRAN_BAT);
+        trans = coinflip() ? TRAN_SPIDER : TRAN_ICE_BEAST;
     transform(random2(power/4), trans);
 }
 
