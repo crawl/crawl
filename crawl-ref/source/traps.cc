@@ -628,12 +628,6 @@ static int damage_or_escape_net(int hold)
     
     int damage = -escape;
 
-    if (escape == 0) // middle-sized creatures are at a disadvantage
-    {
-        escape += coinflip();
-        damage += coinflip();
-    }
-
     // your weapon may damage the net, max. bonus of 2
     if (you.equip[EQ_WEAPON] != -1)
     {
@@ -660,13 +654,6 @@ static int damage_or_escape_net(int hold)
     if (you.duration[DUR_BERSERKER])
         damage += 2;
 
-    // damaged nets are easier to slip out of
-    if (hold < 0)
-    {
-        escape += random2(-hold/2) + 1;
-        damage += random2(-hold/3) + 1; // ... and easier to destroy
-    }
-        
     // check stats
     if (you.strength > random2(18))
         damage++;
@@ -681,7 +668,7 @@ static int damage_or_escape_net(int hold)
         damage++;
         escape++;
     }
-    
+
     // confusion makes the whole thing somewhat harder
     // (less so for trying to escape)
     if (you.duration[DUR_CONF])
@@ -692,10 +679,20 @@ static int damage_or_escape_net(int hold)
             damage -= 2;
     }
     
+    // damaged nets are easier to destroy
+    if (hold < 0)
+    {
+        damage += random2(-hold/3 + 1); 
+        
+        // ... and easier to slip out of (but only if escape looks feasible)
+        if (you.attribute[ATTR_HELD] < 5 || escape >= damage)
+            escape += random2(-hold/2) + 1;
+    }
+
     // if undecided, choose damaging approach (it's quicker)
     if (damage >= escape)
         return (-damage); // negate value
-        
+
     return (escape);
 }
 
@@ -727,11 +724,16 @@ void free_self_from_net()
                             && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
 
         int damage = -do_what;
+        
         if (damage < 1)
             damage = 1;
-            
+
         if (you.duration[DUR_BERSERKER])
             damage *= 2;
+
+        // medium sized characters are at disadvantage and sometimes get a bonus
+        if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
+            damage += coinflip();
 
         if (damage > 5)
             damage = 5;
@@ -776,9 +778,11 @@ void free_self_from_net()
         if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
             escape++;
             
-        if (escape < 1)
-            escape = 1;
-        else if (escape > 4)
+        // medium sized characters are at disadvantage and sometimes get a bonus
+        if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
+            escape += coinflip();
+
+        if (escape > 4)
             escape = 4;
             
         if (escape >= you.attribute[ATTR_HELD])
