@@ -48,6 +48,7 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -808,7 +809,7 @@ void pray()
         mpr("Stop praying? ('y' ends prayer, 'r' will renew prayer)",
             MSGCH_PROMPT);
 
-        const int tmp = getch();
+        const int tmp = getch_with_command_macros();
 
         if ( tmp == 'y' || tmp == 'Y')
         {
