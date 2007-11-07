@@ -1387,12 +1387,7 @@ std::string item_def::name_aux( description_level_type desc,
 
     case OBJ_MISCELLANY:
         if ( item_typ == MISC_RUNE_OF_ZOT )
-        {
-            buff << rune_type_name(it_plus) << " rune";
-
-            if (know_type)
-                buff << " of Zot";
-        }
+            buff << rune_type_name(it_plus) << " rune of Zot";
         else
         {
             if ( is_deck(*this) )
