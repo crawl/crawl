@@ -534,8 +534,13 @@ unsigned long full_ident_mask( const item_def& item )
     case OBJ_FOOD:
         flagset = 0;
         break;
-    case OBJ_BOOKS:
     case OBJ_MISCELLANY:
+        if ( item.sub_type == MISC_RUNE_OF_ZOT )
+            flagset = 0;
+        else
+            flagset = ISFLAG_KNOW_TYPE;
+        break;
+    case OBJ_BOOKS:
     case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
