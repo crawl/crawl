@@ -1224,31 +1224,30 @@ static std::string describe_weapon( const item_def &item, bool verbose)
         const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
 
         if (str_weight >= 8)
-            description += "$This weapon is best used by the strong. ";
+            description += "$This weapon is best used by the strong.";
         else if (str_weight > 5)
-            description += "$This weapon is better for the strong. ";
+            description += "$This weapon is better for the strong.";
         else if (str_weight <= 2)
-            description += "$This weapon is best used by the dexterous. ";
+            description += "$This weapon is best used by the dexterous.";
         else if (str_weight < 5)
-            description += "$This weapon is better for the dexterous. ";
-#else
-        description += "$";
+            description += "$This weapon is better for the dexterous.";
 #endif
+        description += "$";
 
         switch (hands_reqd(item, player_size()))
         {
         case HANDS_ONE:
-            description += " It is a one handed weapon.";
+            description += "It is a one handed weapon.";
             break;
         case HANDS_HALF:
-            description += " It can be used with one hand, or more "
+            description += "It can be used with one hand, or more "
                     "effectively with two (i.e. when not using a shield).";
             break;
         case HANDS_TWO:
-            description += " It is a two handed weapon.";
+            description += "It is a two handed weapon.";
             break;
         case HANDS_DOUBLE:
-            description += " It is a buggy weapon.";
+            description += "It is a buggy weapon.";
             break;
         }
         
