@@ -4011,6 +4011,13 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             mprf("%s merges itself into the air.",
                  name(DESC_CAP_A, true).c_str() );
         break;
+        
+    case ENCH_CHARM:
+        behaviour = BEH_SEEK;
+        target_x = you.x_pos;
+        target_y = you.y_pos;
+        foe = MHITYOU;
+        break;
 
     default:
         break;

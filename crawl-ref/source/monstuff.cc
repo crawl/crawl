@@ -2095,7 +2095,13 @@ static void handle_behaviour(monsters *mon)
             // we can jump back to WANDER if the foe
             // isn't present.
 
-            if (proxFoe)
+            if (isFriendly)
+            {
+                // Special-cased below so that it will flee *towards* you
+                mon->target_x = you.x_pos;
+                mon->target_y = you.y_pos;
+            }
+            else if (proxFoe)
             {
                 // try to flee _from_ the correct position
                 mon->target_x = foe_x;
@@ -2239,7 +2245,9 @@ static void handle_movement(monsters *monster)
     mmov_x = (dx > 0) ? 1 : ((dx < 0) ? -1 : 0);
     mmov_y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
 
-    if (monster->behaviour == BEH_FLEE)
+    if (monster->behaviour == BEH_FLEE &&
+        (!isFriendly || monster->target_x != you.x_pos ||
+         monster->target_y != you.y_pos))
     {
         mmov_x *= -1;
         mmov_y *= -1;
