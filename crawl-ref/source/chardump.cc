@@ -1144,7 +1144,7 @@ static void dump_map(const char* fname)
     if ( !fp )
         return;
 
-    int min_x = GXM, max_x = 0, min_y = GYM, max_y = 0;
+    int min_x = GXM-1, max_x = 0, min_y = GYM-1, max_y = 0;
 
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
