@@ -1561,6 +1561,10 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return false;
     }
 
+    // Saprovorous can't be randomly acquired
+    if (mutat == MUT_SAPROVOROUS)
+        return false;
+
     if (you.mutation[mutat] > 13 && !force_mutation)
         return false;
 
