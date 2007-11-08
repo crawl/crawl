@@ -326,11 +326,91 @@ static bool reaching_weapon_attack(const item_def& wpn)
     return true;
 }                               // end reaching_weapon_attack()
 
-// returns true if item successfully evoked.
-bool evoke_wielded( void )
+static bool evoke_horn_of_geryon()
 {
-    int spell_casted;
-    int temp_rand = 0;      // for probability determination {dlb}
+    // Note: This assumes that the Vestibule has not been changed.
+    bool rc = false;
+
+    if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
+    {
+        mpr("You produce a weird and mournful sound.");
+
+        for (int count_x = 0; count_x < GXM; count_x++)
+        {
+            for (int count_y = 0; count_y < GYM; count_y++)
+            {
+                if (grd[count_x][count_y] == DNGN_STONE_ARCH)
+                {
+                    rc = true;
+
+                    map_marker *marker =
+                        env.markers.find(coord_def(count_x, count_y),
+                                         MAT_FEATURE);
+
+                    if (marker)
+                    {
+                        map_feature_marker *featm =
+                            dynamic_cast<map_feature_marker*>(marker);
+                        grd[count_x][count_y] = featm->feat;
+                        env.markers.remove(marker);
+                    }
+                }
+            }
+        }
+
+        if (rc)
+            mpr("Your way has been unbarred.");
+    }
+    else
+    {
+        mpr("You produce a hideous howling noise!");
+        create_monster( MONS_BEAST, 4, BEH_HOSTILE, you.x_pos, you.y_pos,
+                        MHITYOU, 250, false, false, false, true );
+    }
+    return rc;
+}
+
+static bool evoke_sceptre_of_asmodeus()
+{
+    bool rc = true;
+    if ( one_chance_in(21) )
+        rc = false;
+    else if (one_chance_in(2))
+    {
+        // summon devils, maybe a Fiend
+        const monster_type mtype = (one_chance_in(4) ? MONS_FIEND :
+                                    summon_any_demon(DEMON_COMMON));
+        const bool good_summon = (create_monster( mtype, 6, BEH_HOSTILE,
+                                                  you.x_pos, you.y_pos, 
+                                                  MHITYOU, 250) != -1);
+
+        if (good_summon)
+        {
+            if (mtype == MONS_FIEND)
+                mpr("\"Your arrogance condemns you, mortal!\"");
+            else
+                mpr("The Sceptre summons one of its servants.");
+        }
+        else
+            mpr("The air shimmers briefly.");
+    }
+    else
+    {
+        // Cast a destructive spell
+        const spell_type spl = static_cast<spell_type>(
+            random_choose_weighted( 114, SPELL_BOLT_OF_FIRE,
+                                    57,  SPELL_LIGHTNING_BOLT,
+                                    57,  SPELL_BOLT_OF_DRAINING,
+                                    12,  SPELL_HELLFIRE,
+                                    0 ));
+        your_spells( spl, you.skills[SK_EVOCATIONS] * 8, false );
+    }
+    return true;
+}
+
+// returns true if item successfully evoked.
+bool evoke_wielded()
+{
     int power = 0;
 
     int pract = 0;
@@ -396,56 +476,13 @@ bool evoke_wielded( void )
                 did_work = true;
                 break;
 
-            // let me count the number of ways spell_casted is
-            // used here ... one .. two .. three ... >CRUNCH<
-            // three licks to get to the center of a ... {dlb}
             case SPWPN_SCEPTRE_OF_ASMODEUS:
-                spell_casted = random2(21);
-
-                if (spell_casted == 0)
-                    break;
-
-                make_hungry( 200, false );
-                pract = 1;
-
-                if (spell_casted < 2)   // summon devils, maybe a Fiend
+                if ( evoke_sceptre_of_asmodeus() )
                 {
-
-                    spell_casted = (one_chance_in(4) ? MONS_FIEND
-                                                 : MONS_HELLION + random2(10));
-
-                    bool good_summon = (create_monster( spell_casted, 
-                                            6, BEH_HOSTILE,
-                                            you.x_pos, you.y_pos, 
-                                            MHITYOU, 250) != -1);
-
-                    if (good_summon)
-                    {
-                        if (spell_casted == MONS_FIEND)
-                            mpr("\"Your arrogance condemns you, mortal!\"");
-                        else
-                            mpr("The Sceptre summons one of its servants.");
-                    }
-
+                    make_hungry(200, false);
                     did_work = true;
-                    break;
+                    pract = 1;
                 }
-
-                temp_rand = random2(240);
-
-                if (temp_rand > 125)
-                    spell_casted = SPELL_BOLT_OF_FIRE;      // 114 in 240
-                else if (temp_rand > 68)
-                    spell_casted = SPELL_LIGHTNING_BOLT;    //  57 in 240
-                else if (temp_rand > 11)
-                    spell_casted = SPELL_BOLT_OF_DRAINING;  //  57 in 240
-                else
-                    spell_casted = SPELL_HELLFIRE;          //  12 in 240
-
-                power = you.skills[SK_EVOCATIONS] * 8;
-                your_spells( static_cast<spell_type>(spell_casted),
-                             power, false );
-                did_work = true;
                 break;
 
             case SPWPN_STAFF_OF_OLGREB:
@@ -593,52 +630,8 @@ bool evoke_wielded( void )
             break;
 
         case MISC_HORN_OF_GERYON:
-            // Note: This assumes that the Vestibule has not been changed.
-            if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
-            {
-                int opened_gates = 0;
-                mpr("You produce a weird and mournful sound.");
-
-                for (int count_x = 0; count_x < GXM; count_x++)
-                {
-                    for (int count_y = 0; count_y < GYM; count_y++)
-                    {
-                        if (grd[count_x][count_y] == DNGN_STONE_ARCH)
-                        {
-                            opened_gates++;
-
-                            map_marker *marker =
-                                env.markers.find(coord_def(count_x, count_y),
-                                                 MAT_FEATURE);
-
-                            if (marker)
-                            {
-                                map_feature_marker *featm =
-                                    dynamic_cast<map_feature_marker*>(marker);
-                                grd[count_x][count_y] = featm->feat;
-                                env.markers.remove(marker);
-                            }
-                        }
-                    }
-                }
-
-                if (opened_gates)
-                {
-                    mpr("Your way has been unbarred.");
-                    pract = 1;
-                }
-            }
-            else
-            {
-                mpr("You produce a hideous howling noise!");
-                int midx = create_monster( MONS_BEAST, 4,
-                                           BEH_HOSTILE, you.x_pos, you.y_pos,
-                                           MHITYOU, 250 );
-                // avoid scumming; also prevents it from showing up on notes
-                if ( midx != -1 )
-                    menv[midx].flags |= MF_CREATED_FRIENDLY;
-                // no practice
-            }
+            if ( evoke_horn_of_geryon() )
+                pract = 1;
             break;
 
         case MISC_BOX_OF_BEASTS:

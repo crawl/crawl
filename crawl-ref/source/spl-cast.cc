@@ -893,7 +893,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         else if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
 
-        bool needs_path =
+        const bool needs_path =
              !(testbits(flags, SPFLAG_GRID) || testbits(flags, SPFLAG_TARGET));
              
         if ( !spell_direction( spd, beam, dir, targ, needs_path, prompt ) )
