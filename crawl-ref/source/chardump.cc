@@ -1131,6 +1131,37 @@ static std::string morgue_directory()
     return (dir);
 }
 
+static void dump_map(const char* fname)
+{
+    FILE* fp = fopen(fname, "w");
+    if ( !fp )
+        return;
+
+    int min_x = GXM, max_x = 0, min_y = GYM, max_y = 0;
+
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
+            if (env.map[i][j].known())
+            {
+                if ( i > max_x )
+                    max_x = i;
+                if ( i < min_x )
+                    min_x = i;
+                if ( j > max_y )
+                    max_y = j;
+                if ( j < min_y )
+                    min_y = j;
+            }
+    
+    for ( int y = min_y; y < max_y; ++y )
+    {
+        for ( int x = min_x; x < max_x; ++x )
+            fputc( env.map[x][y].glyph(), fp );
+        fputc('\n', fp);
+    }
+    fclose(fp);
+}
+
 static bool write_dump(
         const std::string &fname,
         dump_params &par)
@@ -1145,6 +1176,9 @@ static bool write_dump(
     stash_file_name = file_name;
     stash_file_name += ".lst";
     stashes.dump(stash_file_name.c_str(), par.full_id);
+
+    std::string map_file_name = file_name + ".map";
+    dump_map(map_file_name.c_str());
 
     file_name += ".txt";
     FILE *handle = fopen(file_name.c_str(), "w");
