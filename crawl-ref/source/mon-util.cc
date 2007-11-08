@@ -3783,6 +3783,13 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
             speed /= 2;
         break;
 
+    case ENCH_CHARM:
+        behaviour = BEH_SEEK;
+        target_x = you.x_pos;
+        target_y = you.y_pos;
+        foe = MHITYOU;
+        break;
+
     default:
         break;
     }
