@@ -557,6 +557,8 @@ void direction(dist& moves, targeting_type restricts,
                 moves.ty = you.y_pos + moves.dy;
                 moves.isValid = true;
                 moves.isTarget = false;
+                show_beam = false;
+                moves.choseRay = false;
                 loop_done = true;
             }
             else
