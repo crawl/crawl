@@ -2246,8 +2246,8 @@ static void handle_movement(monsters *monster)
     mmov_y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
 
     if (monster->behaviour == BEH_FLEE &&
-        (!isFriendly || monster->target_x != you.x_pos ||
-         monster->target_y != you.y_pos))
+        (!mons_friendly(monster) ||
+         monster->target_x != you.x_pos || monster->target_y != you.y_pos))
     {
         mmov_x *= -1;
         mmov_y *= -1;

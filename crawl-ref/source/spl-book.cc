@@ -201,8 +201,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 15 - Book of Death
     {SPELL_CORPSE_ROT,
-     SPELL_BONE_SHARDS,
      SPELL_LETHAL_INFUSION,
+     SPELL_BONE_SHARDS,
      SPELL_AGONY,
      SPELL_BOLT_OF_DRAINING,
      SPELL_NO_SPELL,
@@ -441,8 +441,8 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     // 37 - Book of Morphology
     {SPELL_FRAGMENTATION,
      SPELL_POLYMORPH_OTHER,
-     SPELL_ALTER_SELF,
      SPELL_CIGOTUVIS_DEGENERATION,
+     SPELL_ALTER_SELF,
      // SPELL_IGNITE_POISON,    // moved to Fire which was a bit slim -- bwr
      SPELL_SHATTER,
      // SPELL_AIR_WALK,
