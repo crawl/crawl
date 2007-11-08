@@ -1133,6 +1133,13 @@ static std::string morgue_directory()
 
 static void dump_map(const char* fname)
 {
+    // Duplicate the screenshot() trick.
+    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
+    char_table_bk = Options.char_table;
+
+    init_char_table(CSET_ASCII);
+    init_feature_table();
+
     FILE* fp = fopen(fname, "w");
     if ( !fp )
         return;
@@ -1153,13 +1160,17 @@ static void dump_map(const char* fname)
                     min_y = j;
             }
     
-    for ( int y = min_y; y < max_y; ++y )
+    for ( int y = min_y; y <= max_y; ++y )
     {
-        for ( int x = min_x; x < max_x; ++x )
+        for ( int x = min_x; x <= max_x; ++x )
             fputc( env.map[x][y].glyph(), fp );
         fputc('\n', fp);
     }
     fclose(fp);
+
+    // Restore char and feature tables
+    Options.char_table = char_table_bk;
+    init_feature_table();
 }
 
 static bool write_dump(
