@@ -130,6 +130,13 @@ static DWORD crawlColorData[16] =
 
 void writeChar(char c)
 {
+    if ( c == '\t' )
+    {
+        for ( int i = 0; i < 8; ++i )
+            writeChar(' ');
+        return;
+    }
+
     bool noop = true;
     PCHAR_INFO pci;
 
