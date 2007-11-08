@@ -878,6 +878,86 @@ static long calc_seed( const item_def &item )
     return (item.special & RANDART_SEED_MASK);
 }
 
+static int randart_add_one_property( const item_def &item,
+                                     randart_properties_t &proprt )
+{
+    // This function assumes that no properties have been added to this
+    // randart yet.
+
+    const object_class_type cl = item.base_type;
+    const int ty = item.sub_type;
+
+    // 0 - ac, 1 - ev, 2 - str, 3 - int, 4 - dex
+    int prop;
+    int skip = -1;
+
+    // Determine if we need to skip any of the above.
+    if (cl == OBJ_ARMOUR || cl == OBJ_JEWELLERY && ty == RING_PROTECTION)
+        skip = 0;
+    else if (cl == OBJ_JEWELLERY && ty == RING_EVASION)
+        skip = 1;
+    else if (cl == OBJ_JEWELLERY && ty == RING_STRENGTH)
+        skip = 2;
+    else if (cl == OBJ_JEWELLERY && ty == RING_INTELLIGENCE)
+        skip = 3;
+    else if (cl == OBJ_JEWELLERY && ty == RING_DEXTERITY)
+        skip = 4;
+
+    // Pick a random enchantment, taking into account the skipped index.
+    if (skip >= 0)
+    {
+        prop = random2(4);
+        if (prop >= skip)
+            prop++;
+    }
+    else
+    {
+        prop = random2(5);
+    }
+
+    bool negench = one_chance_in(4);
+
+    switch(prop)
+    {
+    default:
+    case 0:
+        if (negench)
+            proprt[RAP_AC] -= 1 + random2(3) + random2(3) + random2(3);
+        else
+            proprt[RAP_AC] = 1 + random2(3) + random2(3) + random2(3);
+        break;
+    case 1:
+        if (negench)
+            proprt[RAP_EVASION] -= 1 + random2(3) + random2(3) + random2(3);
+        else
+            proprt[RAP_EVASION] = 1 + random2(3) + random2(3) + random2(3);
+        break;
+    case 2:
+        if (negench)
+            proprt[RAP_STRENGTH] -= 1 + random2(3) + random2(3) 
+                + random2(3);
+        else
+            proprt[RAP_STRENGTH] = 1 + random2(3) + random2(2);
+        break;
+    case 3:
+        if (negench)
+            proprt[RAP_INTELLIGENCE] -= 1 + random2(3) + random2(3)
+                + random2(3);
+        else
+            proprt[RAP_INTELLIGENCE] = 1 + random2(3) + random2(2);
+        break;
+    case 4:
+        if (negench)
+            proprt[RAP_DEXTERITY] -= 1 + random2(3) + random2(3)
+                + random2(3);
+        else
+            proprt[RAP_DEXTERITY] = 1 + random2(3) + random2(2);
+        break;
+    }
+
+    return negench ? 0 : 1;
+}
+
 void randart_wpn_properties( const item_def &item, 
                              randart_properties_t &proprt )
 {
@@ -1342,6 +1422,9 @@ void randart_wpn_properties( const item_def &item,
             power_level--;
         }
     }
+
+    if (randart_wpn_num_props(proprt) == 0)
+        power_level += randart_add_one_property(item, proprt);
 
     if ((power_level < 2 && one_chance_in(5)) || one_chance_in(30))
         proprt[RAP_CURSED] = 1;
