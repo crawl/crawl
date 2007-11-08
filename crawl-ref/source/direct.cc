@@ -1563,7 +1563,10 @@ static bool interesting_feature(dungeon_feature_type feat)
 std::string feature_description(int mx, int my, description_level_type dtype,
                                 bool add_stop)
 {
-    const dungeon_feature_type grid = grd[mx][my];
+    dungeon_feature_type grid = grd[mx][my];
+    if ( grid == DNGN_SECRET_DOOR )
+        grid = grid_secret_door_appearance(mx, my);
+
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
@@ -1578,20 +1581,6 @@ std::string feature_description(int mx, int my, description_level_type dtype,
         return (feature_do_grammar(
                     dtype, add_stop, false,
                     marker_feature_description(coord_def(mx, my))));
-    case DNGN_SECRET_DOOR:
-    {
-        // If we have neighbouring walls, try to look like them.
-        // Arguably we should go by our own colour, but well...
-        for ( int dx = -1; dx <= 1; ++dx )
-            for ( int dy = -1; dy <= 1; ++dy )
-            {
-                const dungeon_feature_type neighbour = grd[mx+dx][my+dy];
-                if ( grid_is_wall(neighbour) )
-                    return feature_description(neighbour, NUM_TRAPS,
-                                               dtype, add_stop);
-            }
-        return (feature_description(grid, NUM_TRAPS, dtype, add_stop));
-    }
     default:
         return (feature_description(grid, NUM_TRAPS, dtype, add_stop));
     }

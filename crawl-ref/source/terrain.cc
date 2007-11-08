@@ -226,9 +226,9 @@ bool grid_is_branch_stairs( dungeon_feature_type grid )
             || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
 }
 
-int grid_secret_door_appearance( int gx, int gy )
+dungeon_feature_type grid_secret_door_appearance( int gx, int gy )
 {
-    int ret = DNGN_FLOOR;
+    dungeon_feature_type ret = DNGN_FLOOR;
 
     for (int dx = -1; dx <= 1; dx++)
     {
