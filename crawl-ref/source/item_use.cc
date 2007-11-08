@@ -1202,8 +1202,7 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
 static bool fire_item_okay(const item_def &item, unsigned flags)
 {
     return (fire_item_matches(item, flags)
-            && !(you.equip[EQ_WEAPON] == item.link && item_cursed(item))
-            && check_warning_inscriptions(item, OPER_FIRE));
+            && !(you.equip[EQ_WEAPON] == item.link && item_cursed(item)));
 }
 
 static int find_fire_item_matching(unsigned fire_type, int start,
@@ -1384,8 +1383,6 @@ static bool choose_fire_target(dist &target, int &item)
 
 void shoot_thing(void)
 {
-    struct bolt beam;  // passed in by reference, but never used here
-
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -1403,9 +1400,11 @@ void shoot_thing(void)
     }
 
     dist target;
+    bolt beam;
     if (choose_fire_target(target, item))
-        throw_it( beam, item, false, 0, &target );
-}                               // end shoot_thing()
+        if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
+            throw_it( beam, item, false, 0, &target );
+}
 
 // Returns delay multiplier numerator (denominator should be 100) for the
 // launcher with the currently equipped shield.
