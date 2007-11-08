@@ -308,12 +308,12 @@ const char *mutation_descrip[][3] = {
      "Your thick and shaggy fur keeps you warm."},
      
     {"You have an increased reservoir of magic (+10 percent mp).",
-     "You have an strongly increased reservoir of magic (+20 percent mp).",
+     "You have a strongly increased reservoir of magic (+20 percent mp).",
      "You have an extremely increased reservoir of magic (+30 percent mp)."},
 
     {"Your magical capacity is low (-10 percent mp).",
      "Your magical capacity is very low (-20 percent mp).",
-     "Your magical capacity is extremy low (-30 percent mp)."},
+     "Your magical capacity is extremely low (-30 percent mp)."},
 
     {"You occasionally fall asleep.",
      "You sometimes fall asleep.",

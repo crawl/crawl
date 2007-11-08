@@ -793,8 +793,8 @@ void item_colour( item_def &item )
                 item.colour = EC_WATER;
                 break;
 
-            // This one is hardly unique, but since colour isn't used for 
-            // stacking, so we don't have to worry to much about this. -- bwr
+            // This one is hardly unique, but colour isn't used for 
+            // stacking, so we don't have to worry too much about this. -- bwr
             case RUNE_DEMONIC:             // random pandemonium demonlords
             {
                 element_type types[] =
