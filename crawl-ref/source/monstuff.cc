@@ -4853,8 +4853,17 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
     }
 }
 
-static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
+static bool mon_can_move_to_pos(const monsters *monster, const int count_x,
+                                const int count_y, bool just_check = false);
+
+// Check whether a given trap (described by trap position) can be
+// regarded as safe. Takes in account monster intelligence and allegiance.
+// (just_check is used for intelligent friendlies trying to avoid traps.)
+static bool is_trap_safe(const monsters *monster, const int trap_x,
+                         const int trap_y, bool just_check = false)
 {
+    const trap_struct &trap = env.trap[trap_at_xy(trap_x,trap_y)];
+    
     // Dumb monsters don't care at all.
     if (mons_intel(monster->type) == I_PLANT)
         return (true);
@@ -4863,18 +4872,44 @@ static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
         return (false);
         
     // permanent intelligent friendlies will try to avoid traps
-    // the player knows about (this could be annoying in a corridor)
-    if (grd[monster->x][monster->y] != DNGN_UNDISCOVERED_TRAP
+    // the player knows about (we're assuming s/he warned them about them)
+    if (grd[trap_x][trap_y] != DNGN_UNDISCOVERED_TRAP
         && trap_category(trap.type) != DNGN_TRAP_MAGICAL // magic doesn't matter
         && intelligent_ally(monster))
     {
-        const int x = monster->x;
-        const int y = monster->y;
-        // test for corridor-like environment (simple hack)
-        if (!(grd[x-1][y] < DNGN_MINMOVE && grd[x+1][y] < DNGN_MINMOVE
-              || grd[x][y-1] < DNGN_MINMOVE && grd[x][y+1] < DNGN_MINMOVE))
+        if (just_check)
+            return false; // square is blocked
+        else
         {
-            return (monster->hit_points == monster->max_hit_points);
+            // test for corridor-like environment
+            const int x = trap_x - monster->x;
+            const int y = trap_y - monster->y;
+            
+            // The question is whether the monster (m) can easily reach its
+            // presumable destination (x) without stepping on the trap. Traps
+            // in corridors do not allow this. See e.g
+            //  #x#        ##
+            //  #^#   or  m^x
+            //   m         ##
+            //
+            // The same problem occurs if paths are blocked by monsters,
+            // hostile terrain or other traps rather than walls.
+            // What we do is check whether the squares with the relative
+            // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
+            // (relative to the _current_ monster position rather than the
+            // trap one) form a corridor-like environment. If they don't
+            // the trap square is marked as "unsafe", otherwise the decision
+            // will be made according to later tests (monster hp, trap type, ...)
+            // If a monster still gets stuck in a corridor it will usually be
+            // because it has less than half its maximum hp
+            
+            if ((mon_can_move_to_pos(monster, x-1, y, true)
+                   || mon_can_move_to_pos(monster, x+1,y, true))
+                && (mon_can_move_to_pos(monster, x,y-1, true)
+                    || mon_can_move_to_pos(monster, x,y+1, true)))
+            {
+                return (false);
+            }
         }
     }
 
@@ -4929,11 +4964,217 @@ static void mons_open_door(monsters* monster, const coord_def &pos)
     monster->speed_increment -= entry->energy_usage.move;
 }
 
+// Check whether a monster can move to given square (described by its relative
+// coordinates to the current monster position). just_check is true only for
+// calls from is_trap_safe when checking the surrounding squares of a trap.
+bool mon_can_move_to_pos(const monsters *monster, const int count_x,
+                         const int count_y, bool just_check)
+{
+    const int targ_x = monster->x + count_x;
+    const int targ_y = monster->y + count_y;
+    
+    // bounds check - don't consider moving out of grid!
+    if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
+        return false;
+
+    dungeon_feature_type target_grid = grd[targ_x][targ_y];
+
+    const int habitat = monster_habitat( monster->type );
+
+    // effectively slows down monster movement across water.
+    // Fire elementals can't cross at all.
+    bool no_water = false;
+    if (monster->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
+        //okmove = DNGN_WATER_STUCK;
+        no_water = true;
+
+    const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
+    const int targ_cloud_type =
+        targ_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+                                     : env.cloud[targ_cloud_num].type;
+
+    const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
+    const int curr_cloud_type =
+        curr_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+                                     : env.cloud[curr_cloud_num].type;
+
+    if (monster->type == MONS_BORING_BEETLE
+        && (target_grid == DNGN_ROCK_WALL
+            || target_grid == DNGN_CLEAR_ROCK_WALL))
+    {
+        // don't burrow out of bounds
+        if (targ_x <= 7 || targ_x >= (GXM - 8)
+            || targ_y <= 7 || targ_y >= (GYM - 8))
+        {
+            return false;
+        }
+
+        // don't burrow at an angle (legacy behaviour)
+        if (count_x != 0 && count_y != 0)
+        {
+            return false;
+        }
+    }
+    else if (!monster->can_pass_through(target_grid)
+             || (no_water && target_grid >= DNGN_DEEP_WATER
+                 && target_grid <= DNGN_WATER_STUCK))
+    {
+        return false;
+    }
+    else if (!habitat_okay( monster, target_grid ))
+    {
+        return false;
+    }
+
+    if (monster->type == MONS_WANDERING_MUSHROOM
+        && see_grid(targ_x, targ_y))
+    {
+        return false;
+    }
+
+    // Water elementals avoid fire and heat
+    if (monster->type == MONS_WATER_ELEMENTAL
+        && (target_grid == DNGN_LAVA
+            || targ_cloud_type == CLOUD_FIRE
+            || targ_cloud_type == CLOUD_STEAM))
+    {
+        return false;
+    }
+
+    // Fire elementals avoid water and cold
+    if (monster->type == MONS_FIRE_ELEMENTAL
+        && (target_grid == DNGN_DEEP_WATER
+            || target_grid == DNGN_SHALLOW_WATER
+            || target_grid == DNGN_BLUE_FOUNTAIN
+            || targ_cloud_type == CLOUD_COLD))
+    {
+        return false;
+    }
+
+    // Submerged water creatures avoid the shallows where
+    // they would be forced to surface. -- bwr
+    // [dshaligram] Monsters now prefer to head for deep water only if
+    // they're low on hitpoints. No point in hiding if they want a
+    // fight.
+    if (habitat == DNGN_DEEP_WATER
+        && (targ_x != you.x_pos || targ_y != you.y_pos)
+        && target_grid != DNGN_DEEP_WATER
+        && grd[monster->x][monster->y] == DNGN_DEEP_WATER
+        && monster->hit_points < (monster->max_hit_points * 3) / 4)
+    {
+        return false;
+    }
+    
+    // smacking the player is always a good move if we're
+    // hostile (even if we're heading somewhere else)
+    // also friendlies want to keep close to the player
+    // so it's okay as well
+
+    // smacking another monster is good, if the monsters
+    // are aligned differently
+    if (mgrd[targ_x][targ_y] != NON_MONSTER)
+    {
+        if (just_check)
+        {
+            if (targ_x == monster->x && targ_y == monster->y)
+                return true;
+                
+            return false; // blocks square
+        }
+
+        const int thismonster = monster_index(monster),
+                  targmonster = mgrd[targ_x][targ_y];
+        if (mons_aligned(thismonster, targmonster)
+            && targmonster != MHITNOT
+            && targmonster != MHITYOU
+            && !mons_can_displace(monster, &menv[targmonster]))
+        {
+            return false;
+        }
+    }
+
+    // wandering through a trap is OK if we're pretty healthy,
+    // really stupid, or immune to the trap
+    const int which_trap = trap_at_xy(targ_x,targ_y);
+    if (which_trap >= 0 && !is_trap_safe(monster, targ_x, targ_y, just_check))
+    {
+        return false;
+    }
+
+    if (targ_cloud_num != EMPTY_CLOUD)
+    {
+        if (curr_cloud_num != EMPTY_CLOUD
+            && targ_cloud_type == curr_cloud_type)
+        {
+            return true;
+        }
+
+        switch (targ_cloud_type)
+        {
+            case CLOUD_FIRE:
+                if (mons_res_fire(monster) > 0)
+                    return true;
+
+                if (monster->hit_points >= 15 + random2avg(46, 5))
+                    return true;
+                break;
+
+            case CLOUD_STINK:
+                if (mons_res_poison(monster) > 0)
+                    return true;
+                if (1 + random2(5) < monster->hit_dice)
+                    return true;
+                if (monster->hit_points >= random2avg(19, 2))
+                    return true;
+                break;
+
+            case CLOUD_COLD:
+                if (mons_res_cold(monster) > 0)
+                    return true;
+
+                if (monster->hit_points >= 15 + random2avg(46, 5))
+                    return true;
+                break;
+
+            case CLOUD_POISON:
+                if (mons_res_poison(monster) > 0)
+                    return true;
+
+                if (monster->hit_points >= random2avg(37, 4))
+                    return true;
+                break;
+
+            // this isn't harmful, but dumb critters might think so.
+            case CLOUD_GREY_SMOKE:
+                if (mons_intel(monster->type) > I_ANIMAL || coinflip())
+                    return true;
+
+                if (mons_res_fire(monster) > 0)
+                    return true;
+
+                if (monster->hit_points >= random2avg(19, 2))
+                    return true;
+                break;
+                
+            default:
+                return true;   // harmless clouds
+        }
+
+        // if we get here, the cloud is potentially harmful.
+        // exceedingly dumb creatures will still wander in.
+        if (mons_intel(monster->type) != I_PLANT)
+            return false;
+    }
+    
+    // if we end up here the monster can safely move
+    return true;
+}
+
 static bool monster_move(monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
     int count_x, count_y, count;
-    int okmove = DNGN_SHALLOW_WATER;
+    int okmove = DNGN_SHALLOW_WATER; // what does this actually do?
 
     const int habitat = monster_habitat( monster->type ); 
     bool deep_water_available = false;
@@ -4968,7 +5209,7 @@ static bool monster_move(monsters *monster)
         {
             coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
             if (in_bounds(newpos)
-                && (monster_habitat(monster->type) == DNGN_FLOOR
+                && (habitat == DNGN_FLOOR
                     || monster_habitable_grid(monster, grd(newpos))))
             {
                 return do_move_monster(monster, mmov_x, mmov_y);
@@ -4981,13 +5222,6 @@ static bool monster_move(monsters *monster)
     if (mmov_x == 0 && mmov_y == 0)
         return false;
 
-    // effectively slows down monster movement across water.
-    // Fire elementals can't cross at all.
-    bool no_water = false;
-    if (monster->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
-        //okmove = DNGN_WATER_STUCK;
-        no_water = true;
-
     if (mons_flies(monster) > 0 
         || habitat != DNGN_FLOOR
         || mons_class_flag( monster->type, M_AMPHIBIOUS ))
@@ -4999,204 +5233,26 @@ static bool monster_move(monsters *monster)
     {
         for (count_y = 0; count_y < 3; count_y++)
         {
-            good_move[count_x][count_y] = true;
-            
-            const int targ_x = monster->x + count_x - 1;
-            const int targ_y = monster->y + count_y - 1;
-            // [ds] Bounds check was after grd[targ_x][targ_y] which would
-            // trigger an ASSERT. Moved it up.
+             const int targ_x = monster->x + count_x - 1;
+             const int targ_y = monster->y + count_y - 1;
 
-            // bounds check - don't consider moving out of grid!
-            if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
+             // [ds] Bounds check was after grd[targ_x][targ_y] which would
+             // trigger an ASSERT. Moved it up.
 
-            dungeon_feature_type target_grid = grd[targ_x][targ_y];
+             // bounds check - don't consider moving out of grid!
+             if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
+             {
+                 good_move[count_x][count_y] = false;
+                 continue;
+             }
+             dungeon_feature_type target_grid = grd[targ_x][targ_y];
 
-            const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
-            const int targ_cloud_type = 
-                targ_cloud_num == EMPTY_CLOUD? CLOUD_NONE
-                                             : env.cloud[targ_cloud_num].type;
+             if (target_grid == DNGN_DEEP_WATER)
+                 deep_water_available = true;
 
-            const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
-            const int curr_cloud_type =
-                curr_cloud_num == EMPTY_CLOUD? CLOUD_NONE
-                                             : env.cloud[curr_cloud_num].type;
-
-            if (target_grid == DNGN_DEEP_WATER)
-                deep_water_available = true;
-
-            if (monster->type == MONS_BORING_BEETLE
-                && (target_grid == DNGN_ROCK_WALL
-                    || target_grid == DNGN_CLEAR_ROCK_WALL))
-            {
-                // don't burrow out of bounds
-                if (targ_x <= 7 || targ_x >= (GXM - 8)
-                    || targ_y <= 7 || targ_y >= (GYM - 8))
-                {
-                    good_move[count_x][count_y] = false;
-                    continue;
-                }
-
-                // don't burrow at an angle (legacy behaviour)
-                if (count_x != 1 && count_y != 1)
-                {
-                    good_move[count_x][count_y] = false;
-                    continue;
-                }
-            } 
-            else if (!monster->can_pass_through(target_grid)
-                     || (no_water && target_grid >= DNGN_DEEP_WATER
-                         && target_grid <= DNGN_WATER_STUCK))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-            else if (!habitat_okay( monster, target_grid ))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            if (monster->type == MONS_WANDERING_MUSHROOM
-                && see_grid(targ_x, targ_y))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            // Water elementals avoid fire and heat
-            if (monster->type == MONS_WATER_ELEMENTAL
-                && (target_grid == DNGN_LAVA
-                    || targ_cloud_type == CLOUD_FIRE 
-                    || targ_cloud_type == CLOUD_STEAM))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            // Fire elementals avoid water and cold 
-            if (monster->type == MONS_FIRE_ELEMENTAL
-                && (target_grid == DNGN_DEEP_WATER
-                    || target_grid == DNGN_SHALLOW_WATER
-                    || target_grid == DNGN_BLUE_FOUNTAIN
-                    || targ_cloud_type == CLOUD_COLD))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            // Submerged water creatures avoid the shallows where
-            // they would be forced to surface. -- bwr
-            // [dshaligram] Monsters now prefer to head for deep water only if
-            // they're low on hitpoints. No point in hiding if they want a
-            // fight.
-            if (habitat == DNGN_DEEP_WATER
-                && (targ_x != you.x_pos || targ_y != you.y_pos)
-                && target_grid != DNGN_DEEP_WATER
-                && grd[monster->x][monster->y] == DNGN_DEEP_WATER
-                && monster->hit_points < (monster->max_hit_points * 3) / 4)
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            // smacking the player is always a good move if
-            // we're hostile (even if we're heading somewhere
-            // else)
-
-            // smacking another monster is good, if the monsters
-            // are aligned differently
-            if (mgrd[targ_x][targ_y] != NON_MONSTER)
-            {
-                const int thismonster = monster_index(monster),
-                          targmonster = mgrd[targ_x][targ_y];
-                if (mons_aligned(thismonster, targmonster)
-                        && targmonster != MHITNOT
-                        && targmonster != MHITYOU
-                        && !mons_can_displace(monster, &menv[targmonster]))
-                {
-                    good_move[count_x][count_y] = false;
-                    continue;
-                }
-            }
-
-            // wandering through a trap is OK if we're pretty healthy,
-            // really stupid, or immune to the trap
-            const int which_trap = trap_at_xy(targ_x,targ_y);
-            if (which_trap >= 0 &&
-                 !is_trap_safe(monster, env.trap[which_trap]))
-            {
-                good_move[count_x][count_y] = false;
-                continue;
-            }
-
-            if (targ_cloud_num != EMPTY_CLOUD)
-            {
-                if (curr_cloud_num != EMPTY_CLOUD
-                    && targ_cloud_type == curr_cloud_type)
-                {
-                    continue;
-                }
-
-                switch (targ_cloud_type)
-                {
-                case CLOUD_FIRE:
-                    if (mons_res_fire(monster) > 0)
-                        continue;
-
-                    if (monster->hit_points >= 15 + random2avg(46, 5))
-                        continue;
-                    break;
-
-                case CLOUD_STINK:
-                    if (mons_res_poison(monster) > 0)
-                        continue;
-                    if (1 + random2(5) < monster->hit_dice)
-                        continue;
-                    if (monster->hit_points >= random2avg(19, 2))
-                        continue;
-                    break;
-
-                case CLOUD_COLD:
-                    if (mons_res_cold(monster) > 0)
-                        continue;
-
-                    if (monster->hit_points >= 15 + random2avg(46, 5))
-                        continue;
-                    break;
-
-                case CLOUD_POISON:
-                    if (mons_res_poison(monster) > 0)
-                        continue;
-
-                    if (monster->hit_points >= random2avg(37, 4))
-                        continue;
-                    break;
-
-                // this isn't harmful, but dumb critters might think so.
-                case CLOUD_GREY_SMOKE:
-                    if (mons_intel(monster->type) > I_ANIMAL || coinflip())
-                        continue;
-
-                    if (mons_res_fire(monster) > 0)
-                        continue;
-
-                    if (monster->hit_points >= random2avg(19, 2))
-                        continue;
-                    break;
-
-                default:
-                    continue;   // harmless clouds
-                }
-
-                // if we get here, the cloud is potentially harmful.
-                // exceedingly dumb creatures will still wander in.
-                if (mons_intel(monster->type) != I_PLANT)
-                    good_move[count_x][count_y] = false;
-            }
+             const monsters* mons = dynamic_cast<const monsters*>(monster);
+             good_move[count_x][count_y] =
+                 mon_can_move_to_pos(mons, count_x-1, count_y-1);
         }
     } // now we know where we _can_ move.
 
