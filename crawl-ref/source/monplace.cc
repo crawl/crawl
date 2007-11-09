@@ -645,10 +645,11 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     // (5) for each band monster, loop call to place_monster_aux().
     for(i = 1; i < band_size; i++)
     {
-        id = place_monster_aux( band_monsters[i], behaviour, target, px, py,
-                                lev_mons, extra, false, dur);
-        if (id != -1 && id != NON_MONSTER)
-            menv[id].flags |= MF_BAND_MEMBER;
+        const int band_id =
+            place_monster_aux( band_monsters[i], behaviour, target, px, py,
+                               lev_mons, extra, false, dur);
+        if (band_id != -1 && band_id != NON_MONSTER)
+            menv[band_id].flags |= MF_BAND_MEMBER;
     }
 
     // placement of first monster, at least, was a success.
