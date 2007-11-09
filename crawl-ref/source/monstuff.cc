@@ -4853,29 +4853,125 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
     }
 }
 
+// returns true for monsters that obviously (to the player) feel
+// "thematically at home" in a branch
+// currently used for native monsters recognizing traps
+static bool is_native_in_branch(const monsters *monster, const branch_type branch)
+{
+    switch (branch)
+    {
+        case BRANCH_ELVEN_HALLS:
+            if (mons_species(monster->type) == MONS_ELF)
+                return true;
+            return false;
+
+        case BRANCH_ORCISH_MINES:
+            if (mons_species(monster->type) == MONS_ORC)
+                return true;
+            return false;
+
+        case BRANCH_SLIME_PITS:
+            if (mons_species(monster->type) == MONS_JELLY)
+                return true;
+            return false;
+
+        case BRANCH_SNAKE_PIT:
+            if (mons_species(monster->type) == MONS_NAGA
+                || mons_species(monster->type) == MONS_SNAKE)
+            {
+                return true;
+            }
+            return false;
+
+        case BRANCH_HALL_OF_ZOT:
+            if (mons_species(monster->type) == MONS_DRACONIAN)
+                return true;
+            return false;
+
+        case BRANCH_TOMB:
+            if (mons_species(monster->type) == MONS_MUMMY)
+                return true;
+            return false;
+
+        case BRANCH_HIVE:
+            if (monster->type == MONS_KILLER_BEE
+                || monster->type == MONS_KILLER_BEE_LARVA)
+            {
+                return true;
+            }
+            return false;
+
+        case BRANCH_HALL_OF_BLADES:
+            if (monster->type == MONS_DANCING_WEAPON)
+                return true;
+            return false;
+
+        default:
+            return false;
+    }
+}
+
+// randomize potential damage
+static int estimated_trap_damage(trap_type trap)
+{
+    switch (trap) 
+    {
+        case TRAP_BLADE:
+           return (10 + random2(30));
+        case TRAP_DART:
+           return (random2(4));
+        case TRAP_ARROW:
+           return (random2(7));
+        case TRAP_SPEAR:
+           return (random2(10));
+        case TRAP_BOLT:
+           return (random2(13));
+        case TRAP_AXE:
+           return (random2(15));
+        default:
+           return (0);
+    }
+}
+
 static bool mon_can_move_to_pos(const monsters *monster, const int count_x,
                                 const int count_y, bool just_check = false);
 
 // Check whether a given trap (described by trap position) can be
 // regarded as safe. Takes in account monster intelligence and allegiance.
-// (just_check is used for intelligent friendlies trying to avoid traps.)
+// (just_check is used for intelligent monsters trying to avoid traps.)
 static bool is_trap_safe(const monsters *monster, const int trap_x,
                          const int trap_y, bool just_check = false)
 {
-    const trap_struct &trap = env.trap[trap_at_xy(trap_x,trap_y)];
+    const int intel = mons_intel(monster->type);
     
     // Dumb monsters don't care at all.
-    if (mons_intel(monster->type) == I_PLANT)
+    if (intel == I_PLANT)
         return (true);
+        
+    const trap_struct &trap = env.trap[trap_at_xy(trap_x,trap_y)];
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
         return (false);
         
-    // permanent intelligent friendlies will try to avoid traps
-    // the player knows about (we're assuming s/he warned them about them)
-    if (grd[trap_x][trap_y] != DNGN_UNDISCOVERED_TRAP
-        && trap_category(trap.type) != DNGN_TRAP_MAGICAL // magic doesn't matter
-        && intelligent_ally(monster))
+    // Monsters are not afraid of non-mechanical traps. XXX: If we add
+    // any non-mechanical traps that can damage monsters, must add
+    // check here.
+    const bool mechanical = trap_category(trap.type) == DNGN_TRAP_MECHANICAL;
+
+    const bool player_knows_trap = (grd[trap_x][trap_y] != DNGN_UNDISCOVERED_TRAP);
+
+    // Smarter trap handling for intelligent monsters
+    // * monsters native to a branch can be assumed to know the trap
+    //   locations and thus be able to avoid them
+    // * permanent friendlies can be assumed to have been warned by the
+    //   player about all traps s/he knows about
+    // * very intelligent monsters can be assumed to have a high T&D skill
+    //   (or have memorized part of the dungeon layout ;) )
+    if (intel >= I_NORMAL && mechanical
+        && (is_native_in_branch(monster, you.where_are_you)
+            || monster->attitude == ATT_FRIENDLY
+               && player_knows_trap
+            || intel >= I_HIGH && one_chance_in(3)))
     {
         if (just_check)
             return false; // square is blocked
@@ -4915,22 +5011,19 @@ static bool is_trap_safe(const monsters *monster, const int trap_x,
 
     // friendlies will try not to be parted from you
     if (intelligent_ally(monster) && trap.type == TRAP_TELEPORT
-        && mons_near(monster))
+        && player_knows_trap && mons_near(monster))
     {
         return (false);
     }
-    
-    // Healthy monsters don't mind a little pain. XXX: Smart humanoids
-    // with low hp should probably not try to go through high-damage
-    // traps.
-    if (monster->hit_points >= monster->max_hit_points / 2)
+      
+    // Healthy monsters don't mind a little pain.
+    if (mechanical && monster->hit_points >= monster->max_hit_points / 2
+        && (intel == I_ANIMAL
+            || monster->hit_points > estimated_trap_damage(trap.type)))
+    {
         return (true);
-
-    // Monsters are not afraid of non-mechanical traps. XXX: If we add
-    // any non-mechanical traps that can damage monsters, must add
-    // check here.
-    const bool mechanical = trap_category(trap.type) == DNGN_TRAP_MECHANICAL;
-
+    }
+    
     // Friendly monsters don't enjoy Zot trap perks, handle accordingly.
     if (mons_friendly(monster))
         return (mechanical? mons_flies(monster) : trap.type != TRAP_ZOT);
