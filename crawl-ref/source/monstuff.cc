@@ -5284,7 +5284,8 @@ static void mons_in_cloud(monsters *monster)
         return;
     }
 
-    switch (env.cloud[wc].type)
+    const cloud_struct &cloud(env.cloud[wc]);
+    switch (cloud.type)
     {
     case CLOUD_DEBUGGING:
         end(1, false, "Fatal error: monster steps on nonexistent cloud!");
@@ -5319,6 +5320,9 @@ static void mons_in_cloud(monsters *monster)
             return;
 
         beam.flavour = BEAM_CONFUSION;
+        beam.thrower = cloud.beam_thrower();
+        if (cloud.whose == KC_FRIENDLY)
+            beam.beam_source = ANON_FRIENDLY_MONSTER;
 
         if (1 + random2(27) >= monster->hit_dice)
             mons_ench_f2(monster, beam);
@@ -5348,7 +5352,7 @@ static void mons_in_cloud(monsters *monster)
         if (mons_res_poison(monster) > 0)
             return;
 
-        poison_monster(monster, env.cloud[wc].whose);
+        poison_monster(monster, cloud.whose);
         // If the monster got poisoned, wake it up.
         wake = true;
 
@@ -5371,7 +5375,7 @@ static void mons_in_cloud(monsters *monster)
         if (mons_res_fire(monster) > 0)
             return;
 
-        const int steam_base_damage = steam_cloud_damage(env.cloud[wc]);
+        const int steam_base_damage = steam_cloud_damage(cloud);
         hurted += (random2avg(steam_base_damage, 2) * 10) / speed;
 
         if (mons_res_fire(monster) < 0)
@@ -5388,7 +5392,7 @@ static void mons_in_cloud(monsters *monster)
                 || monster->type == MONS_DEATH_DRAKE)
             return;
 
-        poison_monster(monster, env.cloud[wc].whose);
+        poison_monster(monster, cloud.whose);
 
         if (monster->max_hit_points > 4 && coinflip())
             monster->max_hit_points--;
@@ -5426,7 +5430,7 @@ static void mons_in_cloud(monsters *monster)
 
         if (monster->hit_points < 1)
         {
-            mon_enchant death_ench( ENCH_NONE, 0, env.cloud[wc].whose );
+            mon_enchant death_ench( ENCH_NONE, 0, cloud.whose );
             monster_die(monster, death_ench.killer(), death_ench.kill_agent());
         }
     }

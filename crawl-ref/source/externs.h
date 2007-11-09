@@ -1124,6 +1124,8 @@ struct cloud_struct
     cloud_type    type;
     int           decay;
     kill_category whose;
+
+    killer_type beam_thrower() const;
 };
 
 struct shop_struct

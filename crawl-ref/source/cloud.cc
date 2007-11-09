@@ -297,3 +297,11 @@ cloud_type random_smoke_type()
     }
     return CLOUD_DEBUGGING;
 }
+
+////////////////////////////////////////////////////////////////////////
+// cloud_struct
+
+killer_type cloud_struct::beam_thrower() const
+{
+    return (whose == KC_YOU? KILL_YOU_MISSILE : KILL_MON_MISSILE);
+}

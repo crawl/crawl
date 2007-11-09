@@ -1439,7 +1439,7 @@ bolt mons_spells( int spell_cast, int power )
     beam.ench_power = -1;
     beam.type = -1;
     beam.flavour = -1;
-    beam.thrower = -1;
+    beam.thrower = KILL_MISC;
     beam.is_beam = false;
     beam.is_explosion = false;
 

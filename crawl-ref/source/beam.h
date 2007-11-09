@@ -131,7 +131,7 @@ struct bolt
     int         ench_power, hit;
     int         target_x, target_y;    // intended target
     coord_def   pos;                   // actual position
-    char        thrower;               // what kind of thing threw this?
+    killer_type thrower;               // what kind of thing threw this?
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
     std::string name;
