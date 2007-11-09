@@ -1492,8 +1492,8 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
     return rc;
 }
 
-static void generate_weapon_item(item_def& item, int force_type,
-                                 bool allow_uniques, int item_level,
+static void generate_weapon_item(item_def& item, bool allow_uniques,
+                                 int force_type, int item_level,
                                  int item_race)
 {
     // Determine weapon type.
