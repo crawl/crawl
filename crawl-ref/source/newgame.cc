@@ -3455,7 +3455,7 @@ bool give_items_skills()
             else if (you.species == SP_TROLL)
                 newgame_clear_item(0);
         }
-        else if (you.is_undead)
+        else if (you.is_undead || player_genus(GENPC_DRACONIAN))
         {
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
             if (you.species == SP_VAMPIRE && coinflip())
