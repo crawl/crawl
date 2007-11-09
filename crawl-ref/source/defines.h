@@ -134,7 +134,7 @@ const int LABYRINTH_BORDER = 12;
 #define MAX_RANDOM_SHOPS  5
 
 // Can be passed to monster_die to indicate that a friendly did the killing.
-#define ANON_FRIENDLY_MONSTER   -1
+#define ANON_FRIENDLY_MONSTER   -1999
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500

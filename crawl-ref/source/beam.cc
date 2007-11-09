@@ -139,6 +139,8 @@ static kill_category whose_kill(const bolt &beam)
         return (KC_YOU);
     else if (MON_KILL(beam.thrower))
     {
+        if (beam.beam_source == ANON_FRIENDLY_MONSTER)
+            return (KC_FRIENDLY);
         if (beam.beam_source >= 0 && beam.beam_source < MAX_MONSTERS)
         {
             const monsters *mons = &menv[beam.beam_source];

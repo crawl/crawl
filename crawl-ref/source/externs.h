@@ -1187,6 +1187,8 @@ struct cloud_struct
     int           decay;
     unsigned char spread_rate;
     kill_category whose;
+
+    killer_type beam_thrower() const;
 };
 
 struct shop_struct
