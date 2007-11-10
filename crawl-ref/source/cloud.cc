@@ -30,7 +30,7 @@ static unsigned char actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
-        return 20;
+        return 22;
     default:
         return 0;
     }
@@ -110,7 +110,10 @@ static void dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
     cloud.decay -= dissipate;
 
     if (random2(100) < cloud.spread_rate)
+    {
+        cloud.spread_rate -= div_rand_round(cloud.spread_rate, 10);
         cloud.decay -= spread_cloud(cloud);
+    }
 
     // check for total dissipation and handle accordingly:
     if (cloud.decay < 1)
