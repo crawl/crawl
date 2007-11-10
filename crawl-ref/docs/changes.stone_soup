@@ -1,3 +1,15 @@
+Stone Soup 0.3.2 (20071110)
+---------------------------
+* Fixed tiles crash when visiting shops in the stash-tracker's ^F listings.
+* Reduced frequency of the Damnation card in common decks.
+* Removed Batform from the Metamorphosis card.
+* Fixed two broken entry vaults.
+* Nets are easier to escape from / destroy, and more effective when used by
+  the player.
+* Beogh converts are better behaved, with less message spam.
+* Fixed spell power display for clarity.
+
+
 Stone Soup 0.3.1 (20071103)
 ---------------------------
 * Fixed crash when targeting with show_beam = yes.
