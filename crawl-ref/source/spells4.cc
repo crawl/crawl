@@ -65,13 +65,9 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
     NUM_DEBRIS
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
-// static int make_a_random_cloud(int x, int y, int pow, int ctype);
 static int make_a_rot_cloud(int x, int y, int pow, cloud_type ctype);
 static int quadrant_blink(int x, int y, int pow, int garbage);
 
-//void cast_animate_golem(int pow); // see actual function for reasoning {dlb}
-//void cast_detect_magic(int pow);  //jmf: as above...
-//void cast_eringyas_surprising_bouquet(int powc);
 void do_monster_rot(int mon);
 
 //jmf: FIXME: put somewhere else (misc.cc?)
@@ -116,43 +112,6 @@ std::string your_hand( bool plural )
 
     return result;
 }
-
-// I need to make some debris for metal, crystal and stone.
-// They could go in OBJ_MISSILES, but I think I'd rather move
-// MI_LARGE_ROCK into OBJ_DEBRIS and code giants to throw any
-// OBJ_DEBRIS they get their meaty mits on.
-static void place_debris(int x, int y, int debris_type)
-{
-#ifdef USE_DEBRIS_CODE
-    switch (debris_type)
-    {
-    // hate to say this, but the first parameter only allows specific quantity
-    // for *food* and nothing else -- and I would hate to see that parameter
-    // (force_unique) abused any more than it already has been ... {dlb}:
-    case DEBRIS_STONE:
-        large = items( random2(3), OBJ_MISSILES, MI_LARGE_ROCK, true, 1, 250 );
-        small = items( 3 + random2(6) + random2(6) + random2(6),
-                       OBJ_MISSILES, MI_STONE, true, 1, 250 );
-        break;
-    case DEBRIS_METAL:
-    case DEBRIS_WOOD:
-    case DEBRIS_CRYSTAL:
-        break;
-    }
-
-    if (small != NON_ITEM)
-        move_item_to_grid( &small, x, y );
-
-    if (large != NON_ITEM)
-        move_item_to_grid( &large, x, y );
-
-#else
-    UNUSED( x );
-    UNUSED( y );
-    UNUSED( debris_type );
-    return;
-#endif
-}                               // end place_debris()
 
 // just to avoid typing this over and over
 // now returns true if monster died -- bwr
@@ -322,8 +281,7 @@ static int shatter_walls(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    int  chance = 0;
-    int  stuff = 0;
+    int chance = 0;
 
     // if not in-bounds then we can't really shatter it -- bwr
     if (x <= 5 || x >= GXM - 5 || y <= 5 || y >= GYM - 5)
@@ -335,7 +293,6 @@ static int shatter_walls(int x, int y, int pow, int garbage)
         if (see_grid(x, y))
             mpr("A secret door shatters!");
         grd[x][y] = DNGN_FLOOR;
-        stuff = DEBRIS_WOOD;
         chance = 100;
         break;
 
@@ -344,49 +301,42 @@ static int shatter_walls(int x, int y, int pow, int garbage)
         if (see_grid(x, y))
             mpr("A door shatters!");
         grd[x][y] = DNGN_FLOOR;
-        stuff = DEBRIS_WOOD;
         chance = 100;
         break;
 
     case DNGN_METAL_WALL:
-        stuff = DEBRIS_METAL;
         chance = pow / 10;
         break;
 
     case DNGN_ORCISH_IDOL:
     case DNGN_GRANITE_STATUE:
         chance = 50;
-        stuff = DEBRIS_STONE;
         break;
 
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_STONE_WALL:
         chance = pow / 6;
-        stuff = DEBRIS_STONE;
         break;
 
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_ROCK_WALL:
         chance = pow / 4;
-        stuff = DEBRIS_ROCK;
         break;
 
     case DNGN_GREEN_CRYSTAL_WALL:
         chance = 50;
-        stuff = DEBRIS_CRYSTAL;
         break;
 
     default:
         break;
     }
 
-    if (stuff && random2(100) < chance)
+    if (random2(100) < chance)
     {
         if (!silenced( x, y ))
             noisy( 30, x, y );
 
         grd[x][y] = DNGN_FLOOR;
-        place_debris(x, y, stuff);
         return (1);
     }
 
@@ -451,14 +401,16 @@ void cast_forescry(int pow)
 {
     if (!you.duration[DUR_FORESCRY])
         mpr("You begin to receive glimpses of the immediate future...");
+    else
+        mpr("Your vision of the future intensifies.");
 
     you.duration[DUR_FORESCRY] += 5 + random2(pow);
 
     if (you.duration[DUR_FORESCRY] > 30)
         you.duration[DUR_FORESCRY] = 30;
 
-    you.redraw_evasion = 1;
-}                               // end cast_forescry()
+    you.redraw_evasion = true;
+}
 
 void cast_see_invisible(int pow)
 {
@@ -472,113 +424,7 @@ void cast_see_invisible(int pow)
 
     if (you.duration[DUR_SEE_INVISIBLE] > 100)
         you.duration[DUR_SEE_INVISIBLE] = 100;
-}                               // end cast_see_invisible()
-
-#if 0
-// FIXME: This would be kinda cool if implemented right.
-//        The idea is that, like detect_secret_doors, the spell gathers all
-//        sorts of information about a thing and then tells the caster a few
-//        cryptic hints. So for a (+3,+5) Mace of Flaming, one might detect
-//        "enchantment and heat", but for a cursed ring of hunger, one might
-//        detect "enchantment and ice" (since it gives you a 'deathly cold'
-//        feeling when you put it on) or "necromancy" (since it's evil).
-//        A weapon of Divine Wrath and a randart that makes you angry might
-//        both give similar messages. The key would be to not tell more than
-//        hints about whether an item is benign or cursed, but give info
-//        on how strong its enchantment is (and therefore how valuable it
-//        probably is).
-static void cast_detect_magic(int pow)
-{
-    struct dist bmove;
-    int x, y;
-    int monster = 0, item = 0, next;    //int max;
-    FixedVector < int, NUM_SPELL_TYPES > found;
-    int strong = 0;             // int curse = 0;
-
-    for (next = 0; next < NUM_SPELL_TYPES; next++)
-    {
-        found[next] = 0;
-    }
-
-    mpr("Which direction?", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_ANY, true );
-
-    if (!bmove.isValid)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
-    }
-
-    if (bmove.dx == 0 && bmove.dy == 0)
-    {
-        mpr("You detect a divination in progress.");
-        return;
-    }
-
-    x = you.x_pos + bmove.dx;
-    y = you.y_pos + bmove.dy;
-
-    monster = mgrd[x][y];
-    if (monster == NON_MONSTER)
-        goto do_items;
-    else
-        goto all_done;
-
-  do_items:
-    item = igrd[x][y];
-
-    if (item == NON_ITEM)
-        goto all_done;
-
-    while (item != NON_ITEM)
-    {
-        next = mitm[item].link;
-        if (is_dumpable_artefact(mitm[item].base_type,
-                                 mitm[item].sub_type,
-                                 mitm[item].plus,
-                                 mitm[item].plus2,
-                                 mitm[item].special, 0, 0))
-        {
-            strong++;
-            //FIXME: do checks for randart properties
-        }
-        else
-        {
-            switch (mitm[item].base_type)
-            {
-            case OBJ_WEAPONS:
-                found[SPTYP_ENCHANTMENT] += (mitm[item].plus > 50);
-                found[SPTYP_ENCHANTMENT] += (mitm[item].plus2 > 50);
-                break;
-
-            case OBJ_MISSILES:
-                found[SPTYP_ENCHANTMENT] += (mitm[item].plus > 50);
-                found[SPTYP_ENCHANTMENT] += (mitm[item].plus2 > 50);
-                break;
-
-            case OBJ_ARMOUR:
-                found[SPTYP_ENCHANTMENT] += mitm[item].plus;
-            }
-        }
-    }
-
-  all_done:
-    if (monster)
-    {
-        mpr("You detect a morphogenic field, such as a monster might have.");
-    }
-    if (strong)
-    {
-        mpr("You detect very strong enchantments.");
-        return;
-    }
-    else
-    {
-        //FIXME:
-    }
-    return;
 }
-#endif
 
 // The description idea was okay, but this spell just isn't that exciting.
 // So I'm converting it to the more practical expose secret doors. -- bwr
@@ -753,16 +599,6 @@ void cast_sticks_to_snakes(int pow)
         create_monster(mon, dur, behaviour, you.x_pos, you.y_pos, MHITYOU, 250,
                        false, false, false, true);
     }
-
-#ifdef USE_DEBRIS_CODE
-    if (you.inv[ weapon ].base_type == OBJ_DEBRIS
-        && (you.inv[ weapon ].sub_type == DEBRIS_WOOD))
-    {
-        // this is how you get multiple big snakes
-        how_many = 1;
-        mpr("FIXME: implement OBJ_DEBRIS conversion! (spells4.cc)");
-    }
-#endif // USE_DEBRIS_CODE
 
     if (how_many > you.inv[you.equip[EQ_WEAPON]].quantity)
         how_many = you.inv[you.equip[EQ_WEAPON]].quantity;
@@ -1246,26 +1082,6 @@ void cast_silence(int pow)
     }
 }                               // end cast_silence()
 
-
-/* ******************************************************************
-// no hooks for this anywhere {dlb}:
-
-void cast_animate_golem(int pow)
-{
-  // must have more than 20 max_hitpoints
-
-  // must be wielding a Scroll of Paper (for chem)
-
-  // must be standing on a pile of <foo> (for foo in: wood, metal, rock, stone)
-
-  // Will cost you 5-10% of max_hitpoints, or 20 + some, whichever is more
-  mpr("You imbue the inanimate form with a portion of your life force.");
-
-  naughty(NAUGHTY_CREATED_LIFE, 10);
-}
-
-****************************************************************** */
-
 static int discharge_monsters( int x, int y, int pow, int garbage )
 {
     UNUSED( garbage );
@@ -1577,53 +1393,6 @@ int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
 
     return 1;
 }                               // end make_a_normal_cloud()
-
-#if 0
-
-static int make_a_random_cloud(int x, int y, int pow, int ctype)
-{
-    if (ctype == CLOUD_NONE)
-        ctype = CLOUD_BLACK_SMOKE;
-
-    unsigned char cloud_material;
-
-    switch (random2(9))
-    {
-    case 0:
-        cloud_material = CLOUD_FIRE;
-        break;
-    case 1:
-        cloud_material = CLOUD_STINK;
-        break;
-    case 2:
-        cloud_material = CLOUD_COLD;
-        break;
-    case 3:
-        cloud_material = CLOUD_POISON;
-        break;
-    case 4:
-        cloud_material = CLOUD_BLUE_SMOKE;
-        break;
-    case 5:
-        cloud_material = CLOUD_STEAM;
-        break;
-    case 6:
-        cloud_material = CLOUD_PURP_SMOKE;
-        break;
-    default:
-        cloud_material = ctype;
-        break;
-    }
-
-    // that last bit is equivalent to "random2(pow/4) + random2(pow/4)
-    // + random2(pow/4)" {dlb}
-    // can you see the pattern? {dlb}
-    place_cloud(cloud_material, x, y, 3 + random2avg(3 * (pow / 4) - 2, 3));
-
-    return 1;
-}                               // end make_a_random_cloud()
-
-#endif
 
 static int passwall(int x, int y, int pow, int garbage)
 {
@@ -2698,9 +2467,6 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         // if damage dice are zero we assume that nothing happened at all.
         canned_msg(MSG_SPELL_FIZZLES);
     }
-
-    if (debris)
-        place_debris(beam.tx, beam.ty, debris);
 }                               // end cast_fragmentation()
 
 void cast_twist(int pow)
@@ -2790,8 +2556,8 @@ bool cast_portal_projectile(int pow, bolt& beam)
 
 void cast_far_strike(int pow)
 {
-    struct dist targ;
-    struct bolt tmp;    // used, but ignored
+    dist targ;
+    bolt tmp;    // used, but ignored
 
     // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
@@ -2799,8 +2565,7 @@ void cast_far_strike(int pow)
         return;
 
     // Get the target monster...
-    if (mgrd[targ.tx][targ.ty] == NON_MONSTER
-        || targ.isMe)
+    if (mgrd[targ.tx][targ.ty] == NON_MONSTER || targ.isMe)
     {
         mpr("There is no monster there!");
         return;
@@ -2813,29 +2578,26 @@ void cast_far_strike(int pow)
     }
 
     //  Start with weapon base damage...
-    const int weapon = you.equip[ EQ_WEAPON ];
 
     int damage = 3;     // default unarmed damage
     int speed  = 10;    // default unarmed time
 
-    if (weapon != -1)   // if not unarmed
+    if (you.weapon())   // if not unarmed
     {
+        const item_def& wpn(*you.weapon());
         // look up the damage base
-        if (you.inv[ weapon ].base_type == OBJ_WEAPONS)
+        if (wpn.base_type == OBJ_WEAPONS)
         {
-            damage = property( you.inv[ weapon ], PWPN_DAMAGE );
-            speed = property( you.inv[ weapon ], PWPN_SPEED );
+            damage = property( wpn, PWPN_DAMAGE );
+            speed = property( wpn, PWPN_SPEED );
 
-            if (get_weapon_brand( you.inv[ weapon ] ) == SPWPN_SPEED)
-            {
-                speed *= 5;
-                speed /= 10;
-            }
+            if (get_weapon_brand(wpn) == SPWPN_SPEED)
+                speed /= 2;
         }
-        else if (item_is_staff( you.inv[ weapon ] ))
+        else if (item_is_staff(wpn))
         {
-            damage = property( you.inv[ weapon ], PWPN_DAMAGE );
-            speed = property( you.inv[ weapon ], PWPN_SPEED );
+            damage = property(wpn, PWPN_DAMAGE );
+            speed = property(wpn, PWPN_SPEED );
         }
     }
 
@@ -2876,20 +2638,11 @@ void cast_far_strike(int pow)
     damage *= dammod;
     damage /= 78;
 
-    struct monsters *monster = &menv[ mgrd[targ.tx][targ.ty] ];
+    monsters *monster = &menv[ mgrd[targ.tx][targ.ty] ];
 
     // apply monster's AC
     if (monster->ac > 0)
         damage -= random2( 1 + monster->ac );
-
-#if 0
-    // Removing damage limiter since it's categorized at level 4 right now.
-
-    // Force transmitted is limited by skill...
-    const int limit = (you.skills[SK_TRANSLOCATIONS] + 1) / 2 + 3;
-    if (damage > limit)
-        damage = limit;
-#endif
 
     // Roll the damage...
     damage = 1 + random2( damage );
@@ -2915,7 +2668,7 @@ void cast_far_strike(int pow)
 
 int cast_apportation(int pow)
 {
-    struct dist beam;
+    dist beam;
 
     mpr("Pull items from where?");
 
@@ -3027,7 +2780,7 @@ int cast_apportation(int pow)
             && mitm[item].sub_type == MI_THROWING_NET
             && item_is_stationary(mitm[item]))
         {
-           int mon = mgrd[ beam.tx ][ beam.ty ];
+           const int mon = mgrd[ beam.tx ][ beam.ty ];
            remove_item_stationary(mitm[item]);
            
            if (mon != NON_MONSTER)
@@ -3042,37 +2795,24 @@ int cast_apportation(int pow)
 
 void cast_sandblast(int pow, bolt &beam)
 {
-    bool big = true;
+    bool big = false;
 
-    // this type of power manipulation should be done with the others,
-    // currently over in it_use2.cc (ack) -- bwr
-    // int hurt = 2 + random2(5) + random2(4) + random2(pow) / 20;
-
-    big = false;
-
-    if (you.equip[EQ_WEAPON] != -1)
+    if (you.weapon())
     {
-        int wep = you.equip[EQ_WEAPON];
-        if (you.inv[wep].base_type == OBJ_MISSILES
-           && (you.inv[wep].sub_type == MI_STONE
-               || you.inv[wep].sub_type == MI_LARGE_ROCK))
-           big = true;
+        const item_def& wpn(*you.weapon());
+        big = (wpn.base_type == OBJ_MISSILES)
+            && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK);
     }
 
     if (big)
-    {
         dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
-        zapping(ZAP_SANDBLAST, pow, beam);
-    }
-    else
-    {
-        zapping(ZAP_SMALL_SANDBLAST, pow, beam);
-    }
-}                               // end cast_sandblast()
+
+    zapping(big ? ZAP_SANDBLAST : ZAP_SMALL_SANDBLAST, pow, beam);
+}
 
 void cast_condensation_shield(int pow)
 {
-    if (you.equip[EQ_SHIELD] != -1 || you.duration[DUR_FIRE_SHIELD])
+    if (you.shield() || you.duration[DUR_FIRE_SHIELD])
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
@@ -3084,7 +2824,7 @@ void cast_condensation_shield(int pow)
         else
         {
             mpr("A crackling disc of dense vapour forms in the air!");
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
 
             you.duration[DUR_CONDENSATION_SHIELD] = 10 + roll_dice(2, pow / 5);
         }
