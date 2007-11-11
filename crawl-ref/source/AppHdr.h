@@ -364,11 +364,6 @@
 // Use new system for weighting str and dex based on weapon type, -- bwr
 #define USE_NEW_COMBAT_STATS
 
-// Use this is you want the occasional spellcaster or ranger type wanderer
-// to show up... comment it if you find these types silly or too powerful,
-// or just want fighter type wanderers.
-// #define USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
-
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 

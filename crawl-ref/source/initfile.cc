@@ -2454,7 +2454,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
             // format: tag:string:colour
             // FIXME: arrange so that you can use ':' inside a pattern
-            std::vector<std::string> subseg = split_string(":", seg[i]);
+            std::vector<std::string> subseg = split_string(":", seg[i], false);
             std::string tagname, patname, colname;
             if ( subseg.size() < 2 )
                 continue;

@@ -115,11 +115,6 @@ static void jobs_stat_init(job_type which_job);
 static void openingScreen(void);
 static void species_stat_init(species_type which_species);
 
-#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
-static void give_random_wand( int slot );
-static void give_random_scroll( int slot );
-#endif
-
 static void give_random_potion( int slot );
 static void give_random_secondary_armour( int slot );
 static bool give_wanderer_weapon( int slot, int wpn_skill );
@@ -1576,7 +1571,7 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
             cprintf(EOL "Which book? ");
             textcolor( LIGHTGREY );
 
-            keyin = get_ch();
+            keyin = getch();
  
             if (keyin == CK_BKSP || keyin == ' ')
                 return false;
@@ -1612,12 +1607,11 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
 }
     
 
-static const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
-    WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
-
-static bool choose_weapon( void )
+static bool choose_weapon()
 {
-    unsigned char keyin = 0;
+    const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
+                                      WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
+    int keyin = 0;
     int num_choices = 4;
 
     if (you.char_class == JOB_GLADIATOR || you.species == SP_MERFOLK)
@@ -1672,7 +1666,7 @@ static bool choose_weapon( void )
             cprintf(EOL "Which weapon? ");
             textcolor( LIGHTGREY );
 
-            keyin = get_ch();
+            keyin = getch();
 
             if (keyin == CK_BKSP || keyin == ' ')
                 return false;
@@ -2319,46 +2313,6 @@ static bool validate_player_name(bool verbose)
     return (true);
 }                               // end validate_player_name()
 
-#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
-static void give_random_scroll( int slot )
-{
-    you.inv[ slot ].quantity = 1;
-    you.inv[ slot ].base_type = OBJ_SCROLLS;
-    you.inv[ slot ].plus = 0;
-    you.inv[ slot ].special = 0;
-
-    switch (random2(8))
-    {
-    case 0:
-        you.inv[ slot ].sub_type = SCR_DETECT_CURSE;
-        break;
-
-    case 1:
-        you.inv[ slot ].sub_type = SCR_IDENTIFY;
-        break;
-
-    case 2:
-    case 3:
-        you.inv[ slot ].sub_type = SCR_BLINKING;
-        break;
-
-    case 4:
-        you.inv[ slot ].sub_type = SCR_FEAR;
-        break;
-
-    case 5:
-        you.inv[ slot ].sub_type = SCR_SUMMONING;
-        break;
-
-    case 6:
-    case 7:
-    default:
-        you.inv[ slot ].sub_type = SCR_TELEPORTATION;
-        break;
-    }
-}
-#endif
-
 static void give_random_potion( int slot )
 {
     // If you can't quaff, you don't care
@@ -2396,36 +2350,6 @@ static void give_random_potion( int slot )
         break;
     }
 }
-
-#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
-static void give_random_wand( int slot )
-{
-    you.inv[ slot ].quantity = 1;
-    you.inv[ slot ].base_type = OBJ_WANDS;
-    you.inv[ slot ].special = 0;
-    you.inv[ slot ].plus2 = 0;
-
-    switch (random2(4))
-    {
-    case 0:
-        you.inv[ slot ].sub_type = WAND_SLOWING;
-        you.inv[ slot ].plus = 7 + random2(5);
-        break;
-    case 1:
-        you.inv[ slot ].sub_type = WAND_PARALYSIS;
-        you.inv[ slot ].plus = 5 + random2(4);
-        break;
-    case 2:
-        you.inv[ slot ].sub_type = coinflip() ? WAND_FROST : WAND_FLAME;
-        you.inv[ slot ].plus = 6 + random2(4);
-        break;
-    case 3:
-        you.inv[ slot ].sub_type = WAND_TELEPORTATION;
-        you.inv[ slot ].plus = 3 + random2(4);
-        break;
-    }
-}
-#endif
 
 static void give_random_secondary_armour( int slot )
 {
@@ -2583,25 +2507,23 @@ static void newgame_clear_item(int slot)
 //
 static void create_wanderer( void )
 {
-    const int util_skills[] =
+    const skill_type util_skills[] =
         { SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
-    const int num_util_skills = sizeof(util_skills) / sizeof(int);
 
     // Long swords is missing to increase its rarity because we
     // can't give out a long sword to a starting character (they're
     // all too good)... Staves is also removed because it's not
     // one of the fighter options.-- bwr
-    const int fight_util_skills[] =
+    const skill_type fight_util_skills[] =
         { SK_FIGHTING, SK_SHORT_BLADES, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS,
           SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
-    const int num_fight_util_skills = sizeof(fight_util_skills) / sizeof(int);
 
-    const int not_rare_skills[] =
+    const skill_type not_rare_skills[] =
         { SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
           SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS,
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
@@ -2610,9 +2532,8 @@ static void create_wanderer( void )
           SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
-    const int num_not_rare_skills = sizeof(not_rare_skills) / sizeof(int);
 
-    const int all_skills[] =
+    const skill_type all_skills[] =
         { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMIGRATION,
           SK_DIVINATIONS, SK_POISON_MAGIC,
           SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
@@ -2623,30 +2544,29 @@ static void create_wanderer( void )
           SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
-    const int num_all_skills = sizeof(all_skills) / sizeof(int);
 
-    int skill;
+    skill_type skill;
 
     for (int i = 0; i < 2; i++)
     {
         do
         {
-            skill = random2( num_util_skills );
+            skill = RANDOM_ELEMENT(util_skills);
         }
-        while (you.skills[ util_skills[ skill ]] >= 2);
+        while (you.skills[skill] >= 2);
 
-        you.skills[ util_skills[ skill ]] += 1;
+        you.skills[skill]++;
     }
 
     for (int i = 0; i < 3; i++)
     {
         do
         {
-            skill = random2( num_fight_util_skills );
+            skill = RANDOM_ELEMENT(fight_util_skills);
         }
-        while (you.skills[ fight_util_skills[ skill ]] >= 2);
+        while (you.skills[skill] >= 2);
 
-        you.skills[ fight_util_skills[ skill ]] += 1;
+        you.skills[skill]++;
     }
 
     // Spell skills are possible past this point, but we won't
@@ -2655,55 +2575,51 @@ static void create_wanderer( void )
     {
         do
         {
-            skill = random2( num_not_rare_skills );
+            skill = RANDOM_ELEMENT(not_rare_skills);
         }
-        while (you.skills[ not_rare_skills[ skill ]] >= 2
-                || (not_rare_skills[ skill ] >= SK_SPELLCASTING
-                    && you.skills[ not_rare_skills[ skill ]]));
+        while (you.skills[skill] >= 2
+               || (skill >= SK_SPELLCASTING && you.skills[skill] > 0));
 
-        you.skills[ not_rare_skills[ skill ]] += 1;
+        you.skills[skill]++;
     }
 
     for (int i = 0; i < 2; i++)
     {
         do
         {
-            skill = random2( num_all_skills );
+            skill = RANDOM_ELEMENT(all_skills);
         }
-        while (you.skills[all_skills[ skill ]] >= 2
-                || (all_skills[ skill ] >= SK_SPELLCASTING
-                    && you.skills[ all_skills[ skill ]]));
+        while (you.skills[skill] >= 2
+               || (skill >= SK_SPELLCASTING && you.skills[skill] > 0));
 
-        you.skills[ all_skills[ skill ]] += 1;
+        you.skills[skill]++;
     }
 
     // Demigods can't use invocations so we'll swap it for something else
     if (you.species == SP_DEMIGOD && you.skills[ SK_INVOCATIONS ])
     {
-        you.skills[ SK_INVOCATIONS ] = 0;
-
         do
         {
-            skill = random2( num_all_skills );
+            skill = RANDOM_ELEMENT(all_skills);
         }
-        while (skill == SK_INVOCATIONS && you.skills[all_skills[ skill ]]);
+        while (you.skills[skill] > 0);
 
-        you.skills[ skill ] = 1;
+        you.skills[skill] = you.skills[SK_INVOCATIONS];
+        you.skills[SK_INVOCATIONS] = 0;
     }
     
     // ogres and draconians cannot wear armour
     if ((you.species == SP_OGRE_MAGE || player_genus(GENPC_DRACONIAN))
         && you.skills[ SK_ARMOUR ])
     {
-        you.skills[ SK_ARMOUR ] = 0;
-
         do
         {
-            skill = random2( num_all_skills );
+            skill = RANDOM_ELEMENT(all_skills);
         }
-        while (skill == SK_ARMOUR && you.skills[all_skills[ skill ]]);
+        while (you.skills[skill] > 0);
 
-        you.skills[ skill ] = 1;
+        you.skills[skill] = you.skills[SK_ARMOUR];
+        you.skills[SK_ARMOUR] = 0;
     }
 
     int wpn_skill = SK_FIGHTING;  // preferred weapon type
@@ -2779,127 +2695,6 @@ static void create_wanderer( void )
         if (give_wanderer_weapon( 0, wpn_skill ))
             you.inv[3].quantity = 0;
     }
-#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
-    else if (you.skills[ SK_SPELLCASTING ])
-    {
-        // Spellcaster style wanderer
-
-        // Could only have learned spells in common schools...
-        const int school_list[5] =
-            { SK_CONJURATIONS,
-              SK_ENCHANTMENTS, SK_ENCHANTMENTS,
-              SK_TRANSLOCATIONS, SK_NECROMANCY };
-
-        //jmf: Two of those spells are gone due to their munchkinicity.
-        //     crush() and arc() are like having good melee capability.
-        //     Therefore giving them to "harder" class makes less-than-
-        //     zero sense, and they're now gone.
-        const int spell_list[5] =
-           { SPELL_MAGIC_DART,
-             SPELL_CONFUSING_TOUCH, SPELL_BACKLIGHT,
-             SPELL_APPORTATION, SPELL_ANIMATE_SKELETON };
-
-        // Choose one of the schools we have at random.
-        int school = SK_SPELLCASTING;
-        int num_schools = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (you.skills[ school_list[ i ]])
-            {
-                num_schools++;
-                if (one_chance_in( num_schools ))
-                    school = i;
-            }
-        }
-
-        // Magic dart is quite a good spell, so if the player only has
-        // spellcasting and conjurations, we sometimes hold off... and
-        // treat them like an unskilled spellcaster.
-        if (school == SK_SPELLCASTING
-            || (num_schools == 1 && school == SK_CONJURATIONS && coinflip()))
-        {
-            // Not much melee potential and no common spell school,
-            // we'll give the player a dagger.
-            you.inv[0].sub_type = WPN_DAGGER;
-
-            // ... and a random scroll
-            give_random_scroll(4);
-
-            // ... and knowledge of another
-            give_random_scroll(5);
-            you.inv[5].quantity = 0;
-
-            // ... and a wand.
-            give_random_wand(6);
-        }
-        else
-        {
-            // Give them an appropriate spell
-            add_spell_to_memory( spell_list[ school ] );
-        }
-    }
-    else if (you.skills[ SK_THROWING ] && one_chance_in(3)) // these are rare
-    {
-        // Ranger style wanderer
-        // Rare since starting with a throwing weapon is very good
-
-        // Create a default launcher template, but the
-        // quantity may be reset to 0 if we don't want one -- bwr
-        // throwing weapons are lowered to -1 to make them
-        // not as good as the one's hunters get, ammo is
-        // also much smaller -- bwr
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, 1, -1, -1);
-
-        // Create default ammo template (darts) (armour is slot 2)
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
-                          10 + roll_dice( 2, 6 ));
-
-        if (you.skills[ SK_SLINGS ])
-        {
-            // slingers get some extra ammo
-            you.inv[4].quantity += random2avg(20,5);
-            you.inv[4].sub_type = MI_STONE;
-            you.inv[1].sub_type = WPN_SLING;
-            you.inv[1].plus = 0;               // slings aren't so good
-            you.inv[1].plus2 = 0;              // so we'll make them +0
-
-            you.inv[3].quantity = 0;           // remove potion
-            you.inv[3].base_type = 0;          // forget potion
-            you.inv[3].sub_type = 0;
-        }
-        else if (you.skills[ SK_BOWS ])
-        {
-            you.inv[4].sub_type = MI_ARROW;
-            you.inv[1].sub_type = WPN_BOW;
-
-            you.inv[3].quantity = 0;            // remove potion
-            you.inv[3].base_type = 0;           // forget potion
-            you.inv[3].sub_type = 0;
-            // lower throwing skill (useless with arrows anyway)
-            you.skills[SK_THROWING]--;
-        }
-        else if (you.skills[ SK_CROSSBOWS ])
-        {
-            // Hand crossbows want the darts.
-            you.inv[1].sub_type = WPN_HAND_CROSSBOW;
-
-            you.inv[3].quantity = 0;            // remove potion
-            you.inv[3].base_type = 0;           // forget potion
-            you.inv[3].sub_type = 0;
-            // lower throwing skill
-            you.skills[SK_THROWING]--;
-        }
-        else
-        {
-            // little extra poisoned darts for throwers
-            you.inv[4].quantity += random2avg(10,5);
-            set_item_ego_type( you.inv[4], OBJ_MISSILES, SPMSL_POISONED );
-
-            you.inv[0].sub_type = WPN_DAGGER;   // up knife to dagger
-            you.inv[1].quantity = 0;            // remove bow
-        }
-    }
-#endif
     else
     {
         // Generic wanderer
@@ -2913,62 +2708,37 @@ static void create_wanderer( void )
 
 static job_type letter_to_class(int keyn)
 {
-    if (keyn == 'a')
-        return JOB_FIGHTER;
-    else if (keyn == 'b')
-        return JOB_WIZARD;
-    else if (keyn == 'c')
-        return JOB_PRIEST;
-    else if (keyn == 'd')
-        return JOB_THIEF;
-    else if (keyn == 'e')
-        return JOB_GLADIATOR;
-    else if (keyn == 'f')
-        return JOB_NECROMANCER;
-    else if (keyn == 'g')
-        return JOB_PALADIN;
-    else if (keyn == 'h')
-        return JOB_ASSASSIN;
-    else if (keyn == 'i')
-        return JOB_BERSERKER;
-    else if (keyn == 'j')
-        return JOB_HUNTER;
-    else if (keyn == 'k')
-        return JOB_CONJURER;
-    else if (keyn == 'l')
-        return JOB_ENCHANTER;
-    else if (keyn == 'm')
-        return JOB_FIRE_ELEMENTALIST;
-    else if (keyn == 'n')
-        return JOB_ICE_ELEMENTALIST;
-    else if (keyn == 'o')
-        return JOB_SUMMONER;
-    else if (keyn == 'p')
-        return JOB_AIR_ELEMENTALIST;
-    else if (keyn == 'q')
-        return JOB_EARTH_ELEMENTALIST;
-    else if (keyn == 'r')
-        return JOB_CRUSADER;
-    else if (keyn == 's')
-        return JOB_DEATH_KNIGHT;
-    else if (keyn == 't')
-        return JOB_VENOM_MAGE;
-    else if (keyn == 'u')
-        return JOB_CHAOS_KNIGHT;
-    else if (keyn == 'v')
-        return JOB_TRANSMUTER;
-    else if (keyn == 'w')
-        return JOB_HEALER;
-    else if (keyn == 'y')
-        return JOB_REAVER;
-    else if (keyn == 'z')
-        return JOB_STALKER;
-    else if (keyn == 'A')
-        return JOB_MONK;
-    else if (keyn == 'B')
-        return JOB_WARPER;
-    else if (keyn == 'C')
-        return JOB_WANDERER;
+    switch ( keyn )
+    {
+    case 'a': return JOB_FIGHTER;
+    case 'b': return JOB_WIZARD;
+    case 'c': return JOB_PRIEST;
+    case 'd': return JOB_THIEF;
+    case 'e': return JOB_GLADIATOR;
+    case 'f': return JOB_NECROMANCER;
+    case 'g': return JOB_PALADIN;
+    case 'h': return JOB_ASSASSIN;
+    case 'i': return JOB_BERSERKER;
+    case 'j': return JOB_HUNTER;
+    case 'k': return JOB_CONJURER;
+    case 'l': return JOB_ENCHANTER;
+    case 'm': return JOB_FIRE_ELEMENTALIST;
+    case 'n': return JOB_ICE_ELEMENTALIST;
+    case 'o': return JOB_SUMMONER;
+    case 'p': return JOB_AIR_ELEMENTALIST;
+    case 'q': return JOB_EARTH_ELEMENTALIST;
+    case 'r': return JOB_CRUSADER;
+    case 's': return JOB_DEATH_KNIGHT;
+    case 't': return JOB_VENOM_MAGE;
+    case 'u': return JOB_CHAOS_KNIGHT;
+    case 'v': return JOB_TRANSMUTER;
+    case 'w': return JOB_HEALER;
+    case 'y': return JOB_REAVER;
+    case 'z': return JOB_STALKER;
+    case 'A': return JOB_MONK;
+    case 'B': return JOB_WARPER;
+    case 'C': return JOB_WANDERER;
+    }
     return JOB_UNKNOWN;
 }
 
@@ -3058,8 +2828,7 @@ spec_query:
         cprintf("  (Press T to enter a tutorial.)");
         cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be:");
-        cprintf("  (Press ? for more information)"); 
+        cprintf("You can be:  (Press ? for more information)");
         cprintf(EOL EOL);
 
         textcolor( LIGHTGREY );
