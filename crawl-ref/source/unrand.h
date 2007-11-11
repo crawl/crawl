@@ -1114,7 +1114,7 @@
     "blowgun of the Assassin", "tiny blowgun",
         OBJ_WEAPONS, WPN_BLOWGUN, +6, +6, WHITE,
     {
-        SPWPN_VENOM, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0,       // turn invisible
         0, 0, 0, 0, 0,
