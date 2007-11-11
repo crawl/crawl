@@ -4061,7 +4061,7 @@ bool items_give_ability(const int slot, randart_prop_type abil)
 
     // none of the equipped items possesses this ability
     return (false);
-}                               // end scan_randarts()
+}                               // end items_give_ability()
 
 /* Checks each equip slot for a randart, and adds up all of those with
    a given property. Slow if any randarts are worn, so avoid where possible. */

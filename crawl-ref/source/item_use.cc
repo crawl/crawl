@@ -236,7 +236,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         {
             if (you.equip[EQ_WEAPON] != -1)
             {
-                unwield_item(show_weff_messages);
+                if (!unwield_item(show_weff_messages))
+                    return (false);
+                    
                 canned_msg( MSG_EMPTY_HANDED );
 
                 you.turn_is_over = true;
@@ -260,9 +262,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(&you.inv[item_slot], true))
         return (false);
 
+    if (!safe_to_remove_or_wear(you.inv[item_slot], false))
+        return (false);
+
     // Go ahead and wield the weapon.
-    if (you.equip[EQ_WEAPON] != -1)
-        unwield_item(show_weff_messages);
+    if (you.equip[EQ_WEAPON] != -1 && !unwield_item(show_weff_messages))
+        return (false);
 
     you.equip[EQ_WEAPON] = item_slot;
 
@@ -724,7 +729,8 @@ void wear_armour(void)
     if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
 
-    do_wear_armour( armour_wear_2, false );
+    if (safe_to_remove_or_wear(you.inv[armour_wear_2], false))
+        do_wear_armour( armour_wear_2, false );
 }
 
 static int armour_equip_delay(const item_def &item)
@@ -1019,6 +1025,9 @@ bool do_wear_armour( int item, bool quiet )
             return (false);
     }
 
+    if (!safe_to_remove_or_wear(you.inv[item], false))
+        return (false);
+
     you.turn_is_over = true;
 
     int delay = armour_equip_delay( you.inv[item] );
@@ -1051,6 +1060,9 @@ bool takeoff_armour(int item)
             }
         }
     }
+
+    if (!safe_to_remove_or_wear(you.inv[item], true))
+        return (false);
 
     bool removedCloak = false;
     int cloak = -1;
@@ -2560,6 +2572,77 @@ static int prompt_ring_to_remove(int new_ring)
     return (you.equip[eqslot]);
 }
 
+// Checks whether a to-be-worn or to-be-removed item affects
+// character stats and whether wearing/removing it could be fatal.
+// If so, warns the player.
+bool safe_to_remove_or_wear(const item_def &item, bool remove)
+{
+    int prop_str = 0;
+    int prop_dex = 0;
+    int prop_int = 0;
+
+    // don't warn when putting on an unknown item
+    if (item.base_type == OBJ_JEWELLERY && item_ident( item, ISFLAG_KNOW_PLUSES ))
+    {
+        switch (item.sub_type)
+        {
+        case RING_STRENGTH:
+            if (item.plus != 0)
+                prop_str = item.plus;
+            break;
+        case RING_DEXTERITY:
+            if (item.plus != 0)
+                prop_dex = item.plus;
+            break;
+        case RING_INTELLIGENCE:
+            if (item.plus != 0)
+                prop_int = item.plus;
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (is_random_artefact( item ))
+    {
+        prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
+        prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
+        prop_dex += randart_known_wpn_property(item, RAP_DEXTERITY);
+    }
+
+    if (remove)
+    {
+        std::string prompt = item.base_type == OBJ_WEAPONS ? "Unwield" : "Remov";
+                    prompt += "ing this item could be fatal. ";
+                    prompt += item.base_type == OBJ_WEAPONS ? "Unwield" : "Remove";
+                    prompt += " anyway? ";
+
+        if ((prop_str >= you.strength || prop_int >= you.intel ||
+             prop_dex >= you.dex)
+            && !yesno(prompt.c_str(), false, 'n'))
+        {
+            return (false);
+        }
+    }
+    else // put on
+    {
+        std::string prompt = item.base_type == OBJ_WEAPONS ? "Wield" : "Wear";
+                    prompt += "ing this item could be fatal. ";
+                    prompt += item.base_type == OBJ_WEAPONS ? "Wield" : "Put on";
+                    prompt += " anyway? ";
+                    
+        if ((-prop_str >= you.strength || -prop_int >= you.intel ||
+             -prop_dex >= you.dex)
+            && !yesno(prompt.c_str(), false, 'n'))
+        {
+            return (false);
+        }
+    }
+
+
+    return (true);
+}
+
 // Assumptions:
 // you.inv[ring_slot] is a valid ring.
 // EQ_LEFT_RING and EQ_RIGHT_RING are both occupied, and ring_slot is not
@@ -2578,7 +2661,10 @@ static bool swap_rings(int ring_slot)
 
     if (!remove_ring(unwanted, false))
         return (false);
-
+        
+    if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
+        return (false);
+        
     start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
 
     return (true);
@@ -2628,12 +2714,18 @@ bool puton_item(int item_slot, bool prompt_finger)
             !remove_ring( you.equip[EQ_AMULET], true ))
             return false;
 
+        if (!safe_to_remove_or_wear(you.inv[item_slot], false))
+            return (false);
+            
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
         // Assume it's going to succeed.
         return (true);
     }
 
+    if (!safe_to_remove_or_wear(you.inv[item_slot], false))
+        return (false);
+        
     // First ring goes on left hand if we're choosing automatically.
     int hand_used = 0;
 
@@ -2900,8 +2992,12 @@ bool remove_ring(int slot, bool announce)
         set_ident_flags( you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE );
         return (false);
     }
-
+    
     ring_wear_2 = you.equip[hand_used];
+
+    if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
+        return (false);
+
     you.equip[hand_used] = -1;
 
     jewellery_remove_effects(you.inv[ring_wear_2]);

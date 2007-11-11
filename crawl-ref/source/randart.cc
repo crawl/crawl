@@ -1523,6 +1523,20 @@ int randart_wpn_property( const item_def &item, randart_prop_type prop )
     return randart_wpn_property( item, prop, known );
 }
 
+int randart_known_wpn_property( const item_def &item, randart_prop_type prop )
+{
+    randart_properties_t  proprt;
+    randart_known_props_t known;
+
+    randart_wpn_properties( item, proprt, known );
+
+    if (known[prop])
+        return ( proprt[prop] );
+    else
+        return (0);
+}
+
+
 int randart_wpn_num_props( const item_def &item )
 {
     randart_properties_t proprt;

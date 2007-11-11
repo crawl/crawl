@@ -27,6 +27,7 @@
 #include "beam.h"
 #include "effects.h"
 #include "food.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "misc.h"
@@ -365,12 +366,15 @@ bool potion_effect( potion_type pot_eff, int pow )
     return (effect);
 }                               // end potion_effect()
 
-void unwield_item(bool showMsgs)
+bool unwield_item(bool showMsgs)
 {
     const int unw = you.equip[EQ_WEAPON];
     if ( unw == -1 )
-        return;
+        return (false);
     
+    if (!safe_to_remove_or_wear(you.inv[unw], true))
+        return (false);
+
     you.equip[EQ_WEAPON] = -1;
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
@@ -413,7 +417,7 @@ void unwield_item(bool showMsgs)
                 break;
             }
 
-            return;
+            return (true);
         }
 
         const int brand = get_weapon_brand( item );
@@ -498,7 +502,7 @@ void unwield_item(bool showMsgs)
         mpr("You fell your mana capacity decrease.");
     }
 
-    return;
+    return (true);
 }                               // end unwield_item()
 
 // This does *not* call ev_mod!

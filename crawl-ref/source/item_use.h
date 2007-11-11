@@ -67,6 +67,8 @@ void drink(void);
 
 bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
+bool safe_to_remove_or_wear(const item_def &item, bool remove);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
