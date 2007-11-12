@@ -14,6 +14,14 @@
 
 #include "externs.h"
 
+enum fog_machine_type
+{
+    FM_GEYSER,
+    FM_SPREAD,
+    FM_BROWNIAN,
+    NUM_FOG_MACHINE_TYPES
+};
+
 cloud_type random_smoke_type();
 
 void delete_cloud( int cloud );
@@ -28,5 +36,8 @@ void manage_clouds(void);
 
 bool is_opaque_cloud(unsigned char cloud_idx);
 int steam_cloud_damage(const cloud_struct &cloud);
+
+void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
+                       int x, int y, int size, int power);
 
 #endif

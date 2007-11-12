@@ -161,14 +161,24 @@ map_lua_marker::map_lua_marker()
 {
 }
 
-map_lua_marker::map_lua_marker(const std::string &s, const std::string &)
+map_lua_marker::map_lua_marker(const std::string &s, const std::string &,
+                               bool mapdef_marker)
     : map_marker(MAT_LUA_MARKER, coord_def()), initialised(false)
 {
     lua_stack_cleaner clean(dlua);
-    if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
-        mprf(MSGCH_WARN, "lua_marker load error: %s", dlua.error.c_str());
-    if (!dlua.callfn("dgn_run_map", 1, 1))
-        mprf(MSGCH_WARN, "lua_marker exec error: %s", dlua.error.c_str());
+    if (mapdef_marker)
+    {
+        if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
+            mprf(MSGCH_WARN, "lua_marker load error: %s", dlua.error.c_str());
+        if (!dlua.callfn("dgn_run_map", 1, 1))
+            mprf(MSGCH_WARN, "lua_marker exec error: %s", dlua.error.c_str());
+    }
+    else
+    {
+        if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
+            mprf(MSGCH_WARN, "lua_marker_mapless exec error: %s",
+                 dlua.error.c_str());
+    }
     check_register_table();
 }
 
@@ -369,11 +379,20 @@ std::string map_lua_marker::property(const std::string &pname) const
 map_marker *map_lua_marker::parse(
     const std::string &s, const std::string &ctx) throw (std::string)
 {
-    if (s.find("lua:") != 0)
+    std::string raw           = s;
+    bool        mapdef_marker = true;
+
+    if (s.find("lua:") == 0)
+        strip_tag(raw, "lua:", true);
+    else if (s.find("lua_mapless:") == 0)
+    {
+        strip_tag(raw, "lua_mapless:", true);
+        mapdef_marker = false;
+    }
+    else
         return (NULL);
-    std::string raw = s;
-    strip_tag(raw, "lua:", true);
-    map_lua_marker *mark = new map_lua_marker(raw, ctx);
+
+    map_lua_marker *mark = new map_lua_marker(raw, ctx, mapdef_marker);
     if (!mark->initialised)
     {
         delete mark;

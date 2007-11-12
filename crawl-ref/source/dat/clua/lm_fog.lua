@@ -161,3 +161,24 @@ end
 function fog_machine(pars)
   return FogMachine:new(pars)
 end
+
+function fog_machine_geyser(cloud_type, size, power)
+  return FogMachine:new {
+    cloud_type = cloud_type, pow_max = power, size = size,
+    delay_min = power , delay_max = power * 2
+  }
+end
+
+function fog_machine_spread(cloud_type, size, power)
+  return FogMachine:new {
+    cloud_type = cloud_type, pow_max = power, spread_rate = size,
+    size = 1, delay_min = 5, delay_max = 15
+  }
+end
+
+function fog_machine_brownian(cloud_type, size, power)
+  return FogMachine:new {
+    cloud_type = cloud_type, size = 1, pow_max = power,
+    walk_dist = size, delay_min = 1, delay_max = power / size
+  }
+end

@@ -16,6 +16,8 @@
 #include "externs.h"
 
 #include "cloud.h"
+#include "mapmark.h"
+#include "misc.h"
 #include "stuff.h"
 #include "terrain.h"
 
@@ -304,6 +306,42 @@ cloud_type random_smoke_type()
     }
     return CLOUD_DEBUGGING;
 }
+
+void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
+                       int x, int y, int size, int power)
+{
+    const char* fog_types[] = {
+        "geyser",
+        "spread",
+        "brownian"
+    };
+
+    try
+    {
+        char buf [160];
+        sprintf(buf, "lua_mapless:fog_machine_%s(\"%s\", %d, %d)",
+                fog_types[fm_type], cloud_name(cl_type).c_str(),
+                size, power);
+
+        map_marker *mark = map_lua_marker::parse_marker(buf, "");
+
+        if (mark == NULL)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Unable to parse fog machine from '%s'",
+                 buf);
+            return;
+        }
+
+        mark->pos = coord_def(x, y);
+        env.markers.add(mark);
+    }
+    catch (const std::string &err)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Error while making fog machine: %s",
+             err.c_str());
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // cloud_struct
