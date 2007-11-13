@@ -553,6 +553,7 @@ unsigned long full_ident_mask( const item_def& item )
     switch ( item.base_type )
     {
     case OBJ_FOOD:
+    case OBJ_CORPSES:
         flagset = 0;
         break;
     case OBJ_MISCELLANY:
