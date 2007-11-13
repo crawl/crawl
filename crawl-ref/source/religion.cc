@@ -596,10 +596,15 @@ static void show_pure_deck_chances()
 
 static void give_nemelex_gift()
 {
-    if (random2(MAX_PIETY) <= you.piety
-        && one_chance_in(3)
-        && !you.attribute[ATTR_CARD_COUNTDOWN]
-        && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    if ( grid_destroys_items(grd[you.x_pos][you.y_pos]) )
+        return;
+    
+    // Nemelex will give at least one gift early.
+    if ((you.num_gifts[GOD_NEMELEX_XOBEH] == 0
+         && random2(piety_breakpoint(1)) < you.piety) ||
+        (random2(MAX_PIETY) <= you.piety
+         && one_chance_in(3)
+         && !you.attribute[ATTR_CARD_COUNTDOWN]))
     {
         misc_item_type gift_type;
         if ( random2(MAX_PIETY) <= you.piety )
@@ -3245,9 +3250,11 @@ void offer_items()
             //    60: 50.0%
             //    70: 58.0%
             //    80: 63.0%
-            if ((item.base_type == OBJ_CORPSES && coinflip())
-                // Nemelex piety gain is fairly fast.
-                || random2(value) >= random2(60))
+            if ((item.base_type == OBJ_CORPSES &&
+                 one_chance_in(2+you.piety/50))
+                // Nemelex piety gain is fairly fast...at least
+                // when you have low piety.
+                || value/2 >= random2(30 + you.piety/2))
             {
                 gain_piety(1);
                 gained_piety = true;

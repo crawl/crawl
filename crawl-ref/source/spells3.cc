@@ -687,11 +687,6 @@ bool entomb(int powc)
         DNGN_FLOOR_SPECIAL
     };
 
-    if ( powc > 98 )
-        powc = 98;
-    if ( powc < 30 )
-        powc = 30;
-
     for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
     {
         for (int sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)

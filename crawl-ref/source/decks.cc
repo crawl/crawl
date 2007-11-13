@@ -2120,9 +2120,9 @@ static int card_power(deck_rarity_type rarity)
 
     result += you.skills[SK_EVOCATIONS] * 9;
     if ( rarity == DECK_RARITY_RARE )
-        result += random2(result / 2);
+        result += 150;
     if ( rarity == DECK_RARITY_LEGENDARY )
-        result += random2(result);
+        result += 300;
 
     return result;
 }

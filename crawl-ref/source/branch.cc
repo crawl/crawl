@@ -13,7 +13,7 @@
 
 Branch& your_branch()
 {
-    return branches[static_cast<int>(you.where_are_you)];
+    return branches[you.where_are_you];
 }
 
 branch_type str_to_branch(const std::string &branch, branch_type err)
@@ -35,8 +35,8 @@ bool set_branch_flags(unsigned long flags, bool silent,
     bool could_control = allow_control_teleport(true);
     bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = branches[static_cast<int>(branch)].branch_flags;
-    branches[static_cast<int>(branch)].branch_flags |= flags;
+    unsigned long old_flags = branches[branch].branch_flags;
+    branches[branch].branch_flags |= flags;
 
     bool can_control = allow_control_teleport(true);
     bool can_map     = player_in_mappable_area();
@@ -56,7 +56,7 @@ bool set_branch_flags(unsigned long flags, bool silent,
             "remembering where you've been.", MSGCH_WARN);
     }
 
-    return (old_flags != branches[static_cast<int>(branch)].branch_flags);
+    return (old_flags != branches[branch].branch_flags);
 }
 
 bool unset_branch_flags(unsigned long flags, bool silent,
@@ -65,14 +65,14 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     if (branch == NUM_BRANCHES)
         branch = you.where_are_you;
 
-    bool could_control = allow_control_teleport(true);
-    bool could_map     = player_in_mappable_area();
+    const bool could_control = allow_control_teleport(true);
+    const bool could_map     = player_in_mappable_area();
 
-    unsigned long old_flags = branches[static_cast<int>(branch)].branch_flags;
-    branches[static_cast<int>(branch)].branch_flags &= ~flags;
+    unsigned long old_flags = branches[branch].branch_flags;
+    branches[branch].branch_flags &= ~flags;
 
-    bool can_control = allow_control_teleport(true);
-    bool can_map     = player_in_mappable_area();
+    const bool can_control = allow_control_teleport(true);
+    const bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
         && you.skills[SK_TRANSLOCATIONS] > 0
@@ -80,8 +80,7 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
-        mpr("You sense the disappearence of a powerful magical force "
-            "which warped space.", MSGCH_RECOVERY);
+        mpr("Space seems to straighten in your vicinity.", MSGCH_RECOVERY);
     }
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
@@ -89,11 +88,10 @@ bool unset_branch_flags(unsigned long flags, bool silent,
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
-        mpr("You sense the disappearence the force that prevented you "
-            "from remembering where you've been.", MSGCH_RECOVERY);
+        mpr("An oppressive force seems to lift.", MSGCH_RECOVERY);
     }
 
-    return (old_flags != branches[static_cast<int>(branch)].branch_flags);
+    return (old_flags != branches[branch].branch_flags);
 }
 
 unsigned long get_branch_flags(branch_type branch)
@@ -106,7 +104,7 @@ unsigned long get_branch_flags(branch_type branch)
         branch = you.where_are_you;
     }
 
-    return branches[static_cast<int>(branch)].branch_flags;
+    return branches[branch].branch_flags;
 }
 
 Branch branches[] = {
