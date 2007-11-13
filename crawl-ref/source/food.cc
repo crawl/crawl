@@ -193,9 +193,8 @@ static bool find_butchering_implement( bool fallback )
     return (you.equip[EQ_WEAPON] != old_weapon);
 }
 
-bool butchery(void)
+bool butchery()
 {
-    bool wpn_switch = false;
     bool new_cursed = false;
     int old_weapon = you.equip[EQ_WEAPON];
     int old_gloves = you.equip[EQ_GLOVES];
@@ -243,30 +242,59 @@ bool butchery(void)
         return (false);
     }
 
-    bool canceled_butcher = false;
-    bool found_nonzero_corpses = false;
-    for (int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
-         objl = mitm[objl].link)
+    // First determine how many things there are to butcher.
+    int num_corpses = 0;
+    int corpse_id = -1;
+    for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
-        if ( (mitm[objl].base_type != OBJ_CORPSES) ||
-             (mitm[objl].sub_type != CORPSE_BODY) )
-            continue;
-
-        found_nonzero_corpses = true;
-        
-        // offer the possibility of butchering
-        snprintf(info, INFO_SIZE, "Butcher %s?",
-                 mitm[objl].name(DESC_NOCAP_A).c_str());
-        const int answer = yesnoquit( info, true, 'n', false );
-        if ( answer == -1 )
+        if (mitm[o].base_type == OBJ_CORPSES &&
+            mitm[o].sub_type == CORPSE_BODY)
         {
-            canceled_butcher = true;
-            break;
+            corpse_id = o;
+            num_corpses++;
         }
-        if ( answer == 0 )
-            continue;
+    }
 
+    bool canceled_butcher = false;
+
+    // Now pick what you want to butcher. This is only a problem
+    // if there are several corpses on the square.
+    if ( num_corpses == 0 )
+    {
+        mpr("There isn't anything to dissect here.");
+        return false;
+    }
+    else if ( num_corpses > 1 )
+    {
+        for (int o=igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
+        {
+            if ( (mitm[o].base_type != OBJ_CORPSES) ||
+                 (mitm[o].sub_type != CORPSE_BODY) )
+                continue;
+            
+            // offer the possibility of butchering
+            std::string prompt = "Butcher " + mitm[o].name(DESC_NOCAP_A);
+            prompt += '?';
+            const int answer = yesnoquit( prompt.c_str(), true, 'n', false );
+            if ( answer == 1 )
+            {
+                corpse_id = o;
+                break;
+            }
+            else if ( answer == -1 )
+            {
+                canceled_butcher = true;
+                corpse_id = -1;
+                break;
+            }
+        }
+    }
+    
+    // Do the actual butchery, if we found a good corpse.
+    if ( corpse_id != -1 )
+    {
         bool removed_gloves = false;
+        bool wpn_switch = false;
         
         if ( Options.easy_butcher && !can_butcher )
         {
@@ -319,35 +347,35 @@ bool butchery(void)
 
         if ( can_butcher )
         {
-            bool rotten = (mitm[objl].special < 100);
+            bool rotten = (mitm[corpse_id].special < 100);
             if (you.duration[DUR_PRAYER] && !rotten &&
                 god_likes_butchery(you.religion))
             {
-                offer_corpse(objl);
-                destroy_item(objl);
+                offer_corpse(corpse_id);
+                destroy_item(corpse_id);
             }
             else
             {
                 if (you.duration[DUR_PRAYER] && rotten
                     && god_likes_butchery(you.religion) )
                 {
-                    if (coinflip())
-                        simple_god_message(" refuses to accept that mouldy "
-                                             "sacrifice!", you.religion);
-                    else
-                        simple_god_message(" demands fresh blood!", you.religion);
+                    simple_god_message(coinflip() ?
+                                       " refuses to accept that mouldy "
+                                       "sacrifice!" :
+                                       " demands fresh blood!", you.religion);
                 }
                 
                 // If we didn't switch weapons, we get in one turn of butchery;
                 // otherwise the work has to happen in the delay.
                 if (!wpn_switch && !removed_gloves)
-                    ++mitm[objl].plus2;
+                    ++mitm[corpse_id].plus2;
                 
-                int work_req = 4 - mitm[objl].plus2;
+                int work_req = 4 - mitm[corpse_id].plus2;
                 if (work_req < 0)
                     work_req = 0;
 
-                start_delay(DELAY_BUTCHER, work_req, objl, mitm[objl].special);
+                start_delay(DELAY_BUTCHER, work_req, corpse_id,
+                            mitm[corpse_id].special);
 
                 if (you.duration[DUR_PRAYER]
                     && god_hates_butchery(you.religion))
@@ -372,14 +400,8 @@ bool butchery(void)
     if (canceled_butcher)
         canned_msg(MSG_OK);
     else
-        mprf("There isn't anything %sto dissect here.",
-             found_nonzero_corpses? "else " : "");
+        mpr("There isn't anything else to dissect here.");
 
-    if (!new_cursed && wpn_switch) // should never happen
-    {
-        weapon_switch( old_weapon );
-    }
-    
     return false;
 }                               // end butchery()
 
