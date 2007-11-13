@@ -12,6 +12,8 @@
 
 #include "enum.h"
 
+struct fog_machine_data;
+
 enum branch_flag_type
 {
     BFLAG_NONE = 0,
@@ -41,8 +43,12 @@ struct Branch
     bool has_uniques;
     char floor_colour;          // Zot needs special handling
     char rock_colour;
-    int (*mons_rarity_function)(int);
-    int (*mons_level_function)(int);
+    int       (*mons_rarity_function)(int);
+    int       (*mons_level_function)(int);
+    int       (*num_traps_function)(int);
+    trap_type (*rand_trap_function)(int);
+    int       (*num_fogs_function)(int);
+    void      (*rand_fog_function)(int,fog_machine_data&);
     int altar_chance;           // in percent
     int travel_shortcut;        // which key to press for travel
     bool any_upstair_exits;     // any upstair exits the branch (Hell branches)

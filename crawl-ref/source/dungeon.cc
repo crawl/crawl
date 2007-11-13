@@ -34,6 +34,7 @@
 #include "AppHdr.h"
 #include "abyss.h"
 #include "branch.h"
+#include "cloud.h"
 #include "defines.h"
 #include "enum.h"
 #include "externs.h"
@@ -137,6 +138,7 @@ static void place_minivaults(const std::string &tag = "",
                              int fewest = -1, int most = -1,
                              bool force = false);
 static void place_traps( int level_number );
+static void place_fog_machines( int level_number );
 static void prepare_swamp();
 static void prepare_shoals( int level_number );
 static void prepare_water( int level_number );
@@ -982,8 +984,8 @@ static void build_dungeon_level(int level_number, int level_type)
     if (dgn_level_vetoed)
         return;
     
-    if (!player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
-        place_traps(level_number);
+    place_traps(level_number);
+    place_fog_machines(level_number);
     
     // place items
     builder_items(level_number, level_type, num_items_wanted(level_number));
@@ -2057,53 +2059,13 @@ static void builder_extras( int level_number, int level_type )
     } 
 }
 
-// Also checks you.where_are_you!
-static trap_type random_trap_for_level(int level_number)
-{
-    trap_type type = TRAP_DART;
-
-    if ((random2(1 + level_number) > 1) && one_chance_in(4))
-        type = TRAP_NEEDLE;
-    if (random2(1 + level_number) > 3)
-        type = TRAP_SPEAR;
-    if (random2(1 + level_number) > 5)
-        type = TRAP_AXE;
-
-    // Note we're boosting arrow trap numbers by moving it
-    // down the list, and making spear and axe traps rarer.
-    if (type == TRAP_DART?
-        random2(1 + level_number) > 2
-        : one_chance_in(7))
-        type = TRAP_ARROW;
-        
-    if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
-        type = TRAP_NET;
-
-    if (random2(1 + level_number) > 7)
-        type = TRAP_BOLT;
-    if (random2(1 + level_number) > 11)
-        type = TRAP_BLADE;
-
-    if ((random2(1 + level_number) > 14 && one_chance_in(3))
-        || (player_in_branch( BRANCH_HALL_OF_ZOT ) && coinflip()))
-    {
-        type = TRAP_ZOT;
-    }
-
-    if (one_chance_in(50) && is_valid_shaft_level())
-        type = TRAP_SHAFT;
-    if (one_chance_in(20))
-        type = TRAP_TELEPORT;
-    if (one_chance_in(40))
-        type = TRAP_ALARM;
-
-    return (type);
-}
-
 static void place_traps(int level_number)
 {
     int i;
-    int num_traps = random2avg(9, 2);
+    int num_traps = num_traps_for_place(level_number);
+
+    ASSERT(num_traps >= 0);
+    ASSERT(num_traps <= MAX_TRAPS);
 
     for (i = 0; i < num_traps; i++)
     {
@@ -2120,10 +2082,48 @@ static void place_traps(int level_number)
         while (grd[env.trap[i].x][env.trap[i].y] != DNGN_FLOOR
                && --tries > 0);
 
+        if (tries <= 0)
+            break;
+
         trap_type &trap_type = env.trap[i].type;
-        trap_type = random_trap_for_level(level_number);
+        trap_type = random_trap_for_place(level_number);
 
         grd[env.trap[i].x][env.trap[i].y] = DNGN_UNDISCOVERED_TRAP;
+    }                           // end "for i"
+}                               // end place_traps()
+
+static void place_fog_machines(int level_number)
+{
+    int i;
+    int num_fogs = num_fogs_for_place(level_number);
+
+    ASSERT(num_fogs >= 0);
+
+    for (i = 0; i < num_fogs; i++)
+    {
+        fog_machine_data data = random_fog_for_place(level_number);
+
+        if (!valid_fog_machine_data(data))
+        {
+            mpr("Invalid fog machine data, bailing.", MSGCH_DIAGNOSTICS);
+            return;
+        }
+
+        int tries = 200;
+        int x, y;
+        dungeon_feature_type feat;
+        do
+        {
+            x = random2(GXM);
+            y = random2(GYM);
+            feat = grd[x][y];
+        }
+        while (feat <= DNGN_MAXWALL && --tries > 0);
+
+        if (tries <= 0)
+            break;
+
+        place_fog_machine(data, x, y);
     }                           // end "for i"
 }                               // end place_traps()
 
@@ -4265,7 +4265,7 @@ static int vault_grid( vault_placement &place,
         else if (f.trap >= 0)
         {
             const trap_type trap =
-                f.trap == TRAP_INDEPTH? random_trap_for_level(level_number)
+                f.trap == TRAP_INDEPTH? random_trap_for_place(level_number)
                 : static_cast<trap_type>(f.trap);
             
             place_specific_trap(vx, vy, trap);
@@ -4341,7 +4341,7 @@ static int vault_grid( vault_placement &place,
         place_specific_trap(vx, vy, TRAP_RANDOM);
         break;
     case '~':
-        place_specific_trap(vx, vy, random_trap_for_level(level_number));
+        place_specific_trap(vx, vy, random_trap_for_place(level_number));
         break;
     }
 

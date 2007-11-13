@@ -15,9 +15,11 @@
 #include "AppHdr.h"
 #include "externs.h"
 
+#include "branch.h"
 #include "cloud.h"
 #include "mapmark.h"
 #include "misc.h"
+#include "place.h"
 #include "stuff.h"
 #include "terrain.h"
 
@@ -310,6 +312,12 @@ cloud_type random_smoke_type()
 void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
                        int x, int y, int size, int power)
 {
+    ASSERT(fm_type >= FM_GEYSER && fm_type < NUM_FOG_MACHINE_TYPES);
+    ASSERT(cl_type > CLOUD_NONE && (cl_type < CLOUD_RANDOM
+                                    || cl_type == CLOUD_DEBUGGING));
+    ASSERT(size  >= 1);
+    ASSERT(power >= 1);
+
     const char* fog_types[] = {
         "geyser",
         "spread",
@@ -342,6 +350,159 @@ void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
     }
 }
 
+void place_fog_machine(fog_machine_data data, int x, int y)
+{
+    place_fog_machine(data.fm_type, data.cl_type, x, y, data.size,
+                      data.power);
+}
+
+bool valid_fog_machine_data(fog_machine_data data)
+{
+    if (data.fm_type < FM_GEYSER ||  data.fm_type >= NUM_FOG_MACHINE_TYPES)
+        return false;
+
+    if (data.cl_type <= CLOUD_NONE || (data.cl_type >= CLOUD_RANDOM
+                                       && data.cl_type != CLOUD_DEBUGGING))
+        return false;
+
+    if (data.size < 1 || data.power < 1)
+        return false;
+
+    return true;
+}
+
+int num_fogs_for_place(int level_number, const level_id &place)
+{
+    if (level_number == -1)
+    {
+        switch(place.level_type)
+        {
+        case LEVEL_DUNGEON:
+            level_number = absdungeon_depth(place.branch, place.depth);
+            break;
+        case LEVEL_ABYSS:
+            level_number = 51;
+            break;
+        case LEVEL_PANDEMONIUM:
+            level_number = 52;
+            break;
+        default:
+            level_number = you.your_level;
+        }
+    }
+
+    switch(place.level_type)
+    {
+    case LEVEL_DUNGEON:
+    {
+        Branch &branch = branches[place.branch];
+        ASSERT((branch.num_fogs_function == NULL
+                && branch.rand_fog_function == NULL)
+               || (branch.num_fogs_function != NULL
+                   && branch.rand_fog_function != NULL));
+
+        if (branch.num_fogs_function == NULL)
+            return 0;
+
+        return branch.num_fogs_function(level_number);
+    }
+    case LEVEL_ABYSS:
+        return fogs_abyss_number(level_number);
+    case LEVEL_PANDEMONIUM:
+        return fogs_pan_number(level_number);
+    case LEVEL_LABYRINTH:
+        return fogs_lab_number(level_number);
+    default:
+        return 0;
+    }
+
+    return 0;
+}
+
+fog_machine_data random_fog_for_place(int level_number, const level_id &place)
+{
+    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
+
+    if (level_number == -1)
+    {
+        switch(place.level_type)
+        {
+        case LEVEL_DUNGEON:
+            level_number = absdungeon_depth(place.branch, place.depth);
+            break;
+        case LEVEL_ABYSS:
+            level_number = 51;
+            break;
+        case LEVEL_PANDEMONIUM:
+            level_number = 52;
+            break;
+        default:
+            level_number = you.your_level;
+        }
+    }
+
+    switch(place.level_type)
+    {
+    case LEVEL_DUNGEON:
+    {
+        Branch &branch = branches[place.branch];
+        ASSERT(branch.num_fogs_function != NULL
+                && branch.rand_fog_function != NULL);
+        fog_machine_data data;
+
+        branch.rand_fog_function(level_number, data);
+        return data;
+    }
+    case LEVEL_ABYSS:
+        return fogs_abyss_type(level_number);
+    case LEVEL_PANDEMONIUM:
+        return fogs_pan_type(level_number);
+    case LEVEL_LABYRINTH:
+        return fogs_lab_type(level_number);
+    default:
+        ASSERT(false);
+        return data;
+    }
+
+    ASSERT(false);
+    return data;
+}
+
+int fogs_pan_number(int level_number)
+{
+    return 0;
+}
+
+fog_machine_data fogs_pan_type(int level_number)
+{
+    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
+
+    return data;
+}
+
+int fogs_abyss_number(int level_number)
+{
+    return 0;
+}
+
+fog_machine_data fogs_abyss_type(int level_number)
+{
+    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
+
+    return data;
+}
+
+int fogs_lab_number(int level_number)
+{
+    return 0;
+}
+
+fog_machine_data fogs_lab_type(int level_number)
+{
+    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
+
+    return data;
+}
 
 ////////////////////////////////////////////////////////////////////////
 // cloud_struct

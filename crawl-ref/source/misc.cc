@@ -1494,33 +1494,6 @@ bool go_berserk(bool intentional)
     return true;
 }                               // end go_berserk()
 
-bool is_valid_shaft_level()
-{
-    if (you.level_type != LEVEL_DUNGEON)
-        return (false);
-
-    // Don't generate shafts in branches where teleport control
-    // is prevented.  Prevents player from going down levels without
-    // reaching stairs, and also keeps player from getting stuck
-    // on lower levels with the innability to use teleport control to
-    // get back up.
-    if (testbits(get_branch_flags(), LFLAG_NO_TELE_CONTROL))
-    {
-        return (false);
-    }
-
-    int depth = subdungeon_depth(you.where_are_you, you.your_level);
-
-    // When generating levels, don't place a shaft on the level
-    // immediately above the bottom of a branch if that branch is
-    // significantly more dangerous than normal.
-    int min_delta = 1;
-    if (env.turns_on_level == -1 && your_branch().dangerous_bottom_level)
-        min_delta = 2;
-
-    return ((your_branch().depth - depth) >= min_delta);
-}
-
 bool is_damaging_cloud(cloud_type type)
 {
     switch (type)

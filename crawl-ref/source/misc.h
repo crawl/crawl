@@ -123,7 +123,4 @@ bool scramble(void);
 bool interrupt_cmd_repeat( activity_interrupt_type ai, 
                            const activity_interrupt_data &at );
 
-//////////////////////////////////////////////////////////////////////
-bool is_valid_shaft_level();
-
 #endif

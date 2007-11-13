@@ -16,6 +16,7 @@
 #include "traps.h"
 
 #include "beam.h"
+#include "branch.h"
 #include "direct.h"
 #include "it_use2.h"
 #include "items.h"
@@ -25,6 +26,7 @@
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
+#include "place.h"
 #include "player.h"
 #include "randart.h"
 #include "skills.h"
@@ -925,3 +927,195 @@ trap_type trap_type_at_xy(int x, int y)
     return (idx == -1? NUM_TRAPS : env.trap[idx].type);
 }
 
+bool is_valid_shaft_level(const level_id &place)
+{
+    if (place.level_type != LEVEL_DUNGEON)
+        return (false);
+
+    // Don't generate shafts in branches where teleport control
+    // is prevented.  Prevents player from going down levels without
+    // reaching stairs, and also keeps player from getting stuck
+    // on lower levels with the innability to use teleport control to
+    // get back up.
+    if (testbits(get_branch_flags(place.branch), LFLAG_NO_TELE_CONTROL))
+    {
+        return (false);
+    }
+
+    const Branch &branch = branches[place.branch];
+
+    // When generating levels, don't place a shaft on the level
+    // immediately above the bottom of a branch if that branch is
+    // significantly more dangerous than normal.
+    int min_delta = 1;
+    if (env.turns_on_level == -1 && branch.dangerous_bottom_level)
+        min_delta = 2;
+
+    return ((branch.depth - place.depth) >= min_delta);
+}
+
+static int num_traps_default(int level_number, const level_id &place)
+{
+    return random2avg(9, 2);
+}
+
+int num_traps_for_place(int level_number, const level_id &place)
+{
+    if (level_number == -1)
+    {
+        switch(place.level_type)
+        {
+        case LEVEL_DUNGEON:
+            level_number = absdungeon_depth(place.branch, place.depth);
+            break;
+        case LEVEL_ABYSS:
+            level_number = 51;
+            break;
+        case LEVEL_PANDEMONIUM:
+            level_number = 52;
+            break;
+        default:
+            level_number = you.your_level;
+        }
+    }
+
+    switch(place.level_type)
+    {
+    case LEVEL_DUNGEON:
+        if (branches[place.branch].num_traps_function != NULL)
+            return branches[place.branch].num_traps_function(level_number);
+        else
+            return num_traps_default(level_number, place);
+    case LEVEL_ABYSS:
+        return traps_abyss_number(level_number);
+    case LEVEL_PANDEMONIUM:
+        return traps_pan_number(level_number);
+    case LEVEL_LABYRINTH:
+    case LEVEL_PORTAL_VAULT:
+        ASSERT(false);
+        break;
+    default:
+        return 0;
+    }
+
+    return 0;
+}
+
+static trap_type random_trap_default(int level_number, const level_id &place)
+{
+    trap_type type = TRAP_DART;
+
+    if ((random2(1 + level_number) > 1) && one_chance_in(4))
+        type = TRAP_NEEDLE;
+    if (random2(1 + level_number) > 3)
+        type = TRAP_SPEAR;
+    if (random2(1 + level_number) > 5)
+        type = TRAP_AXE;
+
+    // Note we're boosting arrow trap numbers by moving it
+    // down the list, and making spear and axe traps rarer.
+    if (type == TRAP_DART?
+        random2(1 + level_number) > 2
+        : one_chance_in(7))
+        type = TRAP_ARROW;
+        
+    if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
+        type = TRAP_NET;
+
+    if (random2(1 + level_number) > 7)
+        type = TRAP_BOLT;
+    if (random2(1 + level_number) > 11)
+        type = TRAP_BLADE;
+
+    if ((random2(1 + level_number) > 14 && one_chance_in(3))
+        || (place.branch == BRANCH_HALL_OF_ZOT &&
+            place.level_type == LEVEL_DUNGEON && coinflip()))
+    {
+        type = TRAP_ZOT;
+    }
+
+    if (one_chance_in(50) && is_valid_shaft_level(place))
+        type = TRAP_SHAFT;
+    if (one_chance_in(20))
+        type = TRAP_TELEPORT;
+    if (one_chance_in(40))
+        type = TRAP_ALARM;
+
+    return (type);
+}
+
+trap_type random_trap_for_place(int level_number, const level_id &place)
+{
+    if (level_number == -1)
+    {
+        switch(place.level_type)
+        {
+        case LEVEL_DUNGEON:
+            level_number = absdungeon_depth(place.branch, place.depth);
+            break;
+        case LEVEL_ABYSS:
+            level_number = 51;
+            break;
+        case LEVEL_PANDEMONIUM:
+            level_number = 52;
+            break;
+        default:
+            level_number = you.your_level;
+        }
+    }
+
+    switch(place.level_type)
+    {
+    case LEVEL_DUNGEON:
+        if (branches[place.branch].rand_trap_function != NULL)
+            return branches[place.branch].rand_trap_function(level_number);
+        else
+            return random_trap_default(level_number, place);
+    case LEVEL_ABYSS:
+        return traps_abyss_type(level_number);
+    case LEVEL_PANDEMONIUM:
+        return traps_pan_type(level_number);
+    case LEVEL_LABYRINTH:
+    case LEVEL_PORTAL_VAULT:
+        ASSERT(false);
+        break;
+    default:
+        return random_trap_default(level_number, place);
+    }
+    return NUM_TRAPS;
+}
+
+int traps_zero_number(int level_number)
+{
+    return 0;
+}
+
+int traps_pan_number(int level_number)
+{
+    return num_traps_default(level_number, level_id(LEVEL_PANDEMONIUM));
+}
+
+trap_type traps_pan_type(int level_number)
+{
+    return random_trap_default(level_number, level_id(LEVEL_PANDEMONIUM));
+}
+
+int traps_abyss_number(int level_number)
+{
+    return num_traps_default(level_number, level_id(LEVEL_ABYSS));
+}
+
+trap_type traps_abyss_type(int level_number)
+{
+    return random_trap_default(level_number, level_id(LEVEL_ABYSS));
+}
+
+int traps_lab_number(int level_number)
+{
+    return num_traps_default(level_number, level_id(LEVEL_LABYRINTH));
+}
+
+trap_type traps_lab_type(int level_number)
+{
+    return random_trap_default(level_number, level_id(LEVEL_LABYRINTH));
+}
