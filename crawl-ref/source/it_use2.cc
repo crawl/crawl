@@ -308,30 +308,20 @@ bool potion_effect( potion_type pot_eff, int pow )
   case POT_BLOOD:
         if (you.species == SP_VAMPIRE)
         {
-            int temp_rand = random2(9);
-            strcpy(info, (temp_rand == 0) ? "human" :
-                         (temp_rand == 1) ? "rat" :
-                         (temp_rand == 2) ? "goblin" :
-                         (temp_rand == 3) ? "elf" :
-                         (temp_rand == 4) ? "goat" :
-                         (temp_rand == 5) ? "sheep" :
-                         (temp_rand == 6) ? "gnoll" :
-                         (temp_rand == 7) ? "sheep"
-                                          : "yak");
-                                          
-           mprf("Yummy - fresh %s blood!", info);
-
-           lessen_hunger(1000, true);
-           mpr("You feel better.");
-           inc_hp(1 + random2(10), false);
+            const char* names[] = { "human", "rat", "goblin",
+                                    "elf", "goat", "sheep",
+                                    "sheep", "gnoll", "yak" };
+            
+            mprf("Yummy - fresh %s blood!", RANDOM_ELEMENT(names));            
+            lessen_hunger(1000, true);
+            mpr("You feel better.");
+            inc_hp(1 + random2(10), false);
         }
         else
         {
-            bool likes_blood = (you.omnivorous()
-                                || you.mutation[MUT_CARNIVOROUS]);
-
-            if (likes_blood)
+            if (you.omnivorous() || you.mutation[MUT_CARNIVOROUS])
             {
+                // Likes it
                 mpr("This tastes like blood.");
                 lessen_hunger(200, true);
             }
@@ -508,8 +498,8 @@ bool unwield_item(bool showMsgs)
 // This does *not* call ev_mod!
 void unwear_armour(char unw)
 {
-    you.redraw_armour_class = 1;
-    you.redraw_evasion = 1;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 
     item_def &item(you.inv[unw]);
 

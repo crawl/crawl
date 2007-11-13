@@ -3876,7 +3876,8 @@ void read_scroll(void)
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud( one_chance_in(10) ? CLOUD_MIASMA : random_smoke_type(),
+        big_cloud( one_chance_in(20) ? CLOUD_POISON :
+                   (one_chance_in(19) ? CLOUD_STEAM : random_smoke_type()),
                    KC_YOU, you.x_pos, you.y_pos, 50, 8 + random2(8));
         break;
 
