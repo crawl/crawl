@@ -14,6 +14,8 @@
 #include "AppHdr.h"
 #include "food.h"
 
+#include <sstream>
+
 #include <string.h>
 // required for abs() {dlb}:
 #include <stdlib.h>
@@ -505,8 +507,11 @@ bool eat_food(bool run_hook)
 
     if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
     {
-        if (eat_from_floor())
-            return (true);
+        const int res = eat_from_floor();
+        if ( res == 1 )
+            return true;
+        if ( res == -1 )
+            return false;
     }
 
     return (prompt_eat_from_inventory());
@@ -728,10 +733,11 @@ void eat_floor_item(int item_link)
     dec_mitm_item_quantity( item_link, 1 );
 }
 
-bool eat_from_floor(void)
+// return -1 for cancel, 1 for eaten, 0 for not eaten
+int eat_from_floor()
 {
     if (you.flight_mode() == FL_LEVITATE)
-        return (false);
+        return 0;
 
     bool need_more = false;
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
@@ -745,37 +751,21 @@ bool eat_from_floor(void)
             (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY))
             continue;
 
-        mprf( MSGCH_PROMPT,
-              "%s %s%s?", you.species == SP_VAMPIRE ? "Drink blood from" : "Eat",
-              (item.quantity > 1) ? "one of " : "",
-              item.name(DESC_NOCAP_A).c_str() );
-
-        // If we're prompting now, we don't need a -more- when
-        // breaking out, because the prompt serves as a -more-. Of
-        // course, the prompt can re-set need_more to true.
-        need_more = false;
-
-        unsigned char keyin = tolower( getch() );
-
-        if (keyin == 0)
+        std::ostringstream prompt;
+        prompt << (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat")
+               << ' ' << ((item.quantity > 1) ? "one of " : "")
+               << item.name(DESC_NOCAP_A) << '?';
+        const int ans = yesnoquit( prompt.str().c_str(), true, 0, false );
+        if ( ans == -1 )        // quit
+            return -1;
+        else if ( ans == 1 )
         {
-            getch();
-            keyin = 0;
-        }
-
-        if (keyin == 'q')
-            return (false);
-
-        if (keyin == 'y')
-        {
-            if (!can_ingest( item.base_type, item.sub_type, false ))
+            if (can_ingest(item.base_type, item.sub_type, false))
             {
-                need_more = true;
-                continue;
+                eat_floor_item(o);
+                return 1;
             }
-
-            eat_floor_item(o);
-            return (true);
+            need_more = true;
         }
     }
 
@@ -1578,7 +1568,7 @@ static bool vampire_consume_corpse(int mons_type, int mass,
     else if (wearing_amulet(AMU_THE_GOURMAND))
     {
         food_value = mass/3 + random2(you.experience_level * 5);
-        mpr("Slurps.");
+        mpr("Slurp.");
         did_god_conduct(DID_DRINK_BLOOD, 8);
     }
     else

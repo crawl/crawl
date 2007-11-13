@@ -1510,10 +1510,14 @@ static int food_do_eat(lua_State *ls)
 
 static int food_prompt_floor(lua_State *ls)
 {
-    bool eaten = false;
-    if (!you.turn_is_over && (eaten = eat_from_floor()))
-        burden_change();
-    lua_pushboolean(ls, eaten);
+    int eaten = 0;
+    if (!you.turn_is_over)
+    {
+        eaten = eat_from_floor();
+        if ( eaten == 1 )
+            burden_change();
+    }
+    lua_pushboolean(ls, (eaten != 0));
     return (1);
 }
 

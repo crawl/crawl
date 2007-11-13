@@ -14,6 +14,7 @@
  */
 
 #include "AppHdr.h"
+#include "cio.h"
 #include "database.h"
 #include "direct.h"
 #include "message.h"
@@ -776,7 +777,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
 
         int tmp = getchm(KC_CONFIRM);
 
-        if ( tmp == ESCAPE || tmp == 'q' || tmp == 'Q' )
+        if ( tmp == CK_ESCAPE || tmp == 'q' || tmp == 'Q' )
             return -1;
         
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
@@ -797,7 +798,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
         else if (tmp == 'Y')
             return 1;
         else
-            mpr("[Y]es or [N]o only, please.");
+            mpr("[Y]es, [N]o or [Q]uit only, please.");
     }
 }    
 
