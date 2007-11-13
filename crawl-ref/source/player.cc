@@ -408,6 +408,86 @@ bool player_genus(genus_type which_genus, species_type species)
     return (false);
 }                               // end player_genus()
 
+bool is_player_same_species(const int mon)
+{
+    switch (you.species)
+    {
+        case SP_HUMAN:
+            if (mons_species(mon) == MONS_HUMAN)
+                return (true);
+            return (false);
+        case SP_CENTAUR:
+            if (mons_species(mon) == MONS_CENTAUR)
+                return (true);
+            return (false);
+        case SP_OGRE:
+        case SP_OGRE_MAGE:
+            if (mons_species(mon) == MONS_OGRE)
+                return (true);
+            return (false);
+        case SP_TROLL:
+            if (mons_species(mon) == MONS_TROLL)
+                return (true);
+            return (false);
+        case SP_MUMMY:
+            if (mons_species(mon) == MONS_MUMMY)
+                return (true);
+            return (false);
+        case SP_VAMPIRE:
+            if (mons_species(mon) == MONS_VAMPIRE)
+                return (true);
+            return (false);
+        case SP_MINOTAUR:
+            if (mons_species(mon) == MONS_MINOTAUR)
+                return (true);
+            return (false);
+        case SP_NAGA:
+            if (mons_species(mon) == MONS_NAGA)
+                return (true);
+            return (false);
+        case SP_HILL_ORC:
+            if (mons_species(mon) == MONS_ORC)
+                return (true);
+            return (false);
+        case SP_MERFOLK:
+            if (mons_species(mon) == MONS_MERFOLK
+                || mons_species(mon) == MONS_MERMAID)
+            {
+                return (true);
+            }
+            return (false);
+
+        case SP_GREY_ELF:
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+            if (mons_species(mon) == MONS_ELF)
+                return (true);
+            return (false);
+
+        case SP_RED_DRACONIAN:
+        case SP_WHITE_DRACONIAN:
+        case SP_GREEN_DRACONIAN:
+        case SP_GOLDEN_DRACONIAN:
+        case SP_GREY_DRACONIAN:
+        case SP_BLACK_DRACONIAN:
+        case SP_PURPLE_DRACONIAN:
+        case SP_MOTTLED_DRACONIAN:
+        case SP_PALE_DRACONIAN:
+            if (mons_species(mon) == MONS_DRACONIAN)
+                return (true);
+            return (false);
+
+        case SP_KOBOLD:
+            if (mons_species(mon) == MONS_KOBOLD)
+                return (true);
+            return (false);
+        default: // no monster equivalent
+            return (false);
+
+    }
+}
+
 // checks whether the player's current species can
 // use (usually wear) a given piece of equipment
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
@@ -5670,7 +5750,7 @@ void player::attacking(actor *other)
     {
         const monsters *mons = dynamic_cast<monsters*>(other);
         if (mons_friendly(mons))
-            did_god_conduct(DID_ATTACK_FRIEND, 5, mons);
+            did_god_conduct(DID_ATTACK_FRIEND, 5, true, mons);
         else
             pet_target = monster_index(mons);
     }

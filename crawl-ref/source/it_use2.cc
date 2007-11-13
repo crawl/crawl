@@ -47,7 +47,7 @@
 bool potion_effect( potion_type pot_eff, int pow )
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
-
+    bool was_known = item_type_known(OBJ_POTIONS, (int) pot_eff);
     int new_value = 0;
 
     if (pow > 150)
@@ -120,7 +120,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (you.duration[DUR_MIGHT] > 80)
             you.duration[DUR_MIGHT] = 80;
 
-        did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
+        did_god_conduct( DID_STIMULANTS, 4 + random2(4), was_known );
         break;
     }
 
@@ -335,7 +335,7 @@ bool potion_effect( potion_type pot_eff, int pow )
                 xom_is_stimulated(32);
             }
         }
-        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3));
+        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         break;
 
     case POT_RESISTANCE:

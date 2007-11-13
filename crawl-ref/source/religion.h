@@ -27,7 +27,7 @@ int piety_breakpoint(int i);
 const char *god_name(god_type which_god, bool long_name = false); //mv
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
-bool did_god_conduct(conduct_type thing_done, int pgain,
+bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const actor *victim = NULL);
 void excommunication(void);
 void gain_piety(int pgn);

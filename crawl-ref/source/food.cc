@@ -55,7 +55,7 @@
 #include "xom.h"
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
-static void  eat_chunk( int chunk_effect );
+static void  eat_chunk( int chunk_effect, bool cannibal );
 static void  eating(unsigned char item_class, int item_type);
 static void  describe_food_change(int hunger_increment);
 static bool  food_change(bool suppress_message);
@@ -670,13 +670,14 @@ void eat_from_inventory(int which_inventory_slot)
         // this is a bit easier to read... most compilers should
         // handle this the same -- bwr
         const int mons_type = you.inv[ which_inventory_slot ].plus;
+        const bool cannibal = is_player_same_species(mons_type);
         const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten = (you.inv[which_inventory_slot].special < 100);
 
         if (!prompt_eat_chunk(you.inv[which_inventory_slot], rotten))
             return;
 
-        eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
+        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal );
     }
     else
     {
@@ -718,10 +719,11 @@ void eat_floor_item(int item_link)
     else if (mitm[item_link].sub_type == FOOD_CHUNK)
     {
         const int chunk_type = mons_corpse_effect( mitm[item_link].plus );
+        const bool cannibal = is_player_same_species( mitm[item_link].plus );
         const bool rotten = (mitm[item_link].special < 100);
         if (!prompt_eat_chunk(mitm[item_link], rotten))
             return;
-        eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
+        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal );
     }
     else
     {
@@ -854,7 +856,7 @@ static void say_chunk_flavour(bool likes_chunks)
 
 // never called directly - chunk_effect values must pass
 // through food::determine_chunk_effect() first {dlb}:
-static void eat_chunk( int chunk_effect )
+static void eat_chunk( int chunk_effect, bool cannibal )
 {
 
     bool likes_chunks = (you.omnivorous() ||
@@ -936,6 +938,9 @@ static void eat_chunk( int chunk_effect )
     }
     }
 
+    if (cannibal)
+        did_god_conduct( DID_CANNIBALISM, 10 );
+        
     if (do_eat)
     {
         start_delay( DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition );

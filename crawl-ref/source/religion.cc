@@ -1205,7 +1205,8 @@ void god_speaks( god_type god, const char *mesg )
 
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
-bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
+bool did_god_conduct( conduct_type thing_done, int level, bool known,
+                      const actor *victim )
 {
     bool ret = false;
     int piety_change = 0;
@@ -1221,10 +1222,21 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
     case DID_DRINK_BLOOD:
         switch (you.religion)
         {
-        case GOD_ZIN:
         case GOD_SHINING_ONE:
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
+            penance = level;
+            // deliberate fall-through
+        case GOD_ZIN:
         case GOD_ELYVILON:
-            // no penance as this can happen accidentally
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
             piety_change = -2*level;
             ret = true;
             break;
@@ -1233,7 +1245,22 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
         }
         break;
 
-    // If you make some god like these acts, modify did_god_conduct call 
+    case DID_CANNIBALISM:
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_ELYVILON:
+            piety_change = -level;
+            penance = level;
+            ret = true;
+            break;
+        default:
+            break;
+        }
+        break;
+
+    // If you make some god like these acts, modify did_god_conduct call
     // in beam.cc with god_likes_necromancy check or something similar
     case DID_NECROMANCY:
     case DID_UNHOLY:
@@ -1243,8 +1270,13 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
             piety_change = -level;
-            penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
+            penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
             ret = true;
             break;
         default:
@@ -1656,13 +1688,12 @@ bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
           "Necromancy", "Unholy", "Attack Holy", "Attack Friend",
           "Friend Died", "Stab", "Poison", "Field Sacrifice",
           "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
-          "Kill Wizard",
-          "Kill Priest", "Kill Angel", "Undead Slave Kill Living", 
-          "Servant Kill Living", "Servant Kill Undead", 
-          "Servant Kill Demon", "Servant Kill Natural Evil", 
-          "Servant Kill Angel",
+          "Kill Wizard", "Kill Priest", "Kill Angel", "Undead Slave Kill Living",
+          "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
+          "Servant Kill Natural Evil", "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
-          "Cards", "Stimulants", "Drink Blood", "Eat Meat", "Create Life" 
+          "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
+          "Create Life"
         };
 
         ASSERT(ARRAYSIZE(conducts) == NUM_CONDUCTS);

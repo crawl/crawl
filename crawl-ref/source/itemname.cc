@@ -1605,6 +1605,15 @@ bool item_type_known( const item_def& item )
         return false;
 }
 
+bool item_type_known(const object_class_type base_type, const int sub_type)
+{
+    const item_type_id_type idt = objtype_to_idtype(base_type);
+    if ( idt != NUM_IDTYPE && sub_type < 50  )
+        return ( type_ids[idt][sub_type] == ID_KNOWN_TYPE );
+    else
+        return false;
+}
+
 bool item_type_tried( const item_def& item )
 {
     if ( item_type_known(item) )

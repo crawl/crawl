@@ -632,6 +632,7 @@ enum conduct_type
     DID_CARDS,
     DID_STIMULANTS,                     // unused
     DID_DRINK_BLOOD,
+    DID_CANNIBALISM,
     DID_EAT_MEAT,                       // unused
     DID_CREATED_LIFE,                   // unused
 

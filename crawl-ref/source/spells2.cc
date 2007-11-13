@@ -1,6 +1,7 @@
 /*
  *  File:       spells2.cc
  *  Summary:    Implementations of some additional spells.
+ *              Mostly Necromancy and Summoning.
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
@@ -1138,7 +1139,7 @@ char burn_freeze(int pow, char flavour)
     {
         if (mons_friendly( monster ))
         {
-            did_god_conduct( DID_ATTACK_FRIEND, 5, monster );
+            did_god_conduct( DID_ATTACK_FRIEND, 5, true, monster );
         }
         
         if (mons_holiness( monster ) == MH_HOLY)

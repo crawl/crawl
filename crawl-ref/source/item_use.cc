@@ -3451,8 +3451,8 @@ static bool affix_weapon_enchantment()
         success = false;
 
         // is only naughty if you know you're doing it
-        if (get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE)
-            did_god_conduct(DID_UNHOLY, 10);
+        did_god_conduct(DID_UNHOLY, 10,
+            get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE);
 
         break;
 
@@ -3900,8 +3900,7 @@ void read_scroll(void)
         torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
 
         // is only naughty if you know you're doing it
-        if (item_type_known(scroll))
-            did_god_conduct(DID_UNHOLY, 10);
+        did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
         break;
 
     case SCR_IMMOLATION:

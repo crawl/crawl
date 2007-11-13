@@ -713,7 +713,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // no piety loss if god gifts killed by other monsters
             if (mons_friendly(monster) && !testbits(monster->flags,MF_GOD_GIFT))
                 did_god_conduct(DID_FRIEND_DIES, 1 + (monster->hit_dice / 2),
-                                monster);
+                                true, monster);
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being being done_good kills.

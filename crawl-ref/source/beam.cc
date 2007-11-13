@@ -1670,8 +1670,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             simple_monster_message(monster, " is drained.");
             pbolt.obvious_effect = true;
 
-            if (YOU_KILL(pbolt.thrower) && pbolt.effect_known)
-                did_god_conduct(DID_NECROMANCY, 2 + random2(3));
+            if (YOU_KILL(pbolt.thrower))
+                did_god_conduct(DID_NECROMANCY, 2 + random2(3), pbolt.effect_known);
 
             if (one_chance_in(5))
             {
@@ -3675,10 +3675,10 @@ static int affect_monster(bolt &beam, monsters *mon)
             if (YOU_KILL( beam.thrower ))
             {
                 if (mons_friendly( mon ))
-                    did_god_conduct( DID_ATTACK_FRIEND, 5, mon );
+                    did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
 
                 if (mons_holiness( mon ) == MH_HOLY)
-                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
+                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
 
                 if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
                     && mon->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
@@ -3831,10 +3831,10 @@ static int affect_monster(bolt &beam, monsters *mon)
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
             if (mons_friendly(mon))
-                did_god_conduct( DID_ATTACK_FRIEND, 5, mon );
+                did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
 
             if (mons_holiness( mon ) == MH_HOLY)
-                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
+                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
