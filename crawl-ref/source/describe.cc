@@ -152,19 +152,10 @@ void print_description( const std::string &d )
     }
 }
 
-//---------------------------------------------------------------
-//
-// randart_descrip
-//
-// Appends the various powers of a random artefact to the description
-// string.
-//
-//---------------------------------------------------------------
-static void randart_descrip( std::string &description, const item_def &item )
+static std::string randart_descrip( const item_def &item )
 {
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
-
-    unsigned int old_length = description.length();
+    std::string description;
 
     randart_properties_t  proprt;
     randart_known_props_t known;
@@ -343,12 +334,12 @@ static void randart_descrip( std::string &description, const item_def &item )
     if (known_proprt( RAP_MUTAGENIC ))
     {
         if (proprt[ RAP_MUTAGENIC ] > 3)
-            description += "$It glows with mutagenic radiation.";
+            description += "$It glows with mutagenic radiation. ";
         else if (proprt[ RAP_MUTAGENIC ])
-            description += "$It emits mutagenic radiation.";
+            description += "$It emits mutagenic radiation. ";
     }
 
-    if (old_length != description.length())
+    if (!description.empty())
         description += "$";
 
     if (is_unrandom_artefact( item ))
@@ -360,6 +351,8 @@ static void randart_descrip( std::string &description, const item_def &item )
             description += "$";
         }
     }
+
+    return description;
 #undef known_proprt
 }
 
@@ -1216,27 +1209,24 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 break;
             case SPWPN_DISTORTION:
                 description += "It warps and distorts space around it. "
-                    "Merely wielding or unwielding it can be highly risky.";
+                    "Merely wielding or unwielding it can be highly risky. ";
                 break;
             case SPWPN_REACHING:
                 description += "It can be evoked to extend its reach. ";
                 break;
             case SPWPN_RETURNING:
-                description += "It is enchanted to return to its owner "
-                               "when thrown.";
+                description += "A skilled user can throw it in such a way "
+                    "that it will return to its owner. ";
                 break;
             }
         }
 
         if (is_random_artefact( item ))
         {
-            unsigned int old_length = description.length();
-            randart_descrip( description, item );
+            description += randart_descrip( item );
 
-            if (description.length() == old_length)
-                description += "$";
-            else if (!item_ident( item, ISFLAG_KNOW_PROPERTIES )
-                     && item_type_known(item))
+            if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
+                && item_type_known(item))
             {
                 description += "$This weapon may have some hidden properties.$";
             }
@@ -1254,19 +1244,16 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
     if (verbose && !is_range_weapon(item))
     {
-#ifdef USE_NEW_COMBAT_STATS
-        const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
+        const int str_weight = weapon_str_weight(item.base_type, item.sub_type);
 
         if (str_weight >= 8)
-            description += "$This weapon is best used by the strong.";
+            description += "$This weapon is best used by the strong.$";
         else if (str_weight > 5)
-            description += "$This weapon is better for the strong.";
+            description += "$This weapon is better for the strong.$";
         else if (str_weight <= 2)
-            description += "$This weapon is best used by the dexterous.";
+            description += "$This weapon is best used by the dexterous.$";
         else if (str_weight < 5)
-            description += "$This weapon is better for the dexterous.";
-#endif
-        description += "$";
+            description += "$This weapon is better for the dexterous.$";
 
         switch (hands_reqd(item, player_size()))
         {
@@ -1829,12 +1816,9 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
     if (is_random_artefact( item ))
     {
-        randart_descrip( description, item );
-        if (!item_ident( item, ISFLAG_KNOW_PROPERTIES )
-            && item_type_known(item))
-        {
+        description += randart_descrip( item );
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
             description += "$This armour may have some hidden properties.$";
-        }
     }
     else 
     {
@@ -2791,11 +2775,10 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     // randart properties
     if (is_random_artefact( item ))
     {
-        randart_descrip( description, item );
-        if (!item_ident( item, ISFLAG_KNOW_PROPERTIES )
-            && item_type_known(item))
+        description += randart_descrip(item);
+        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
         {
-            if (item.sub_type >= AMU_RAGE)
+            if (jewellery_is_amulet(item))
                 description += "$This amulet may have hidden properties.$";
             else
                 description += "$This ring may have hidden properties.$";
@@ -2803,9 +2786,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     }
 
     if (item_known_cursed( item ))
-    {
         description += "$It has a curse placed upon it.";
-    }
 
     return (description);
 }                               // end describe_jewellery()

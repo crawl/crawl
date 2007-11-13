@@ -50,7 +50,7 @@ std::string randart_jewellery_name( const item_def &item );
 /* ***********************************************************************
  * called from: describe
  * *********************************************************************** */
-const char *unrandart_descrip( char which_descrip, const item_def &item );
+const char *unrandart_descrip( int which_descrip, const item_def &item );
 
 bool does_unrandart_exist(int whun);
 

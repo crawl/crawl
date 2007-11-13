@@ -2173,7 +2173,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     return (true);
 }                               // end make_item_unrandart()
 
-const char *unrandart_descrip( char which_descrip, const item_def &item )
+const char *unrandart_descrip( int which_descrip, const item_def &item )
 {
 /* Eventually it would be great to have randomly generated descriptions for
    randarts. */
