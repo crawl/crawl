@@ -1441,7 +1441,7 @@ std::string item_def::name_aux( description_level_type desc,
         {
             buff << book_secondary_string(this->special / 10)
                  << book_primary_string(this->special % 10)
-                 << "book";
+                 << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
         else if (item_typ == BOOK_MANUAL)
             buff << "manual of " << skill_name(it_plus);

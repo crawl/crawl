@@ -796,15 +796,10 @@ static bool disc_of_storms(void)
     return (ret);
 }                               // end disc_of_storms()
 
-void tome_of_power(char sc_read_2)
+void tome_of_power(int slot)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-
     int powc = 5 + you.skills[SK_EVOCATIONS] 
                  + roll_dice( 5, you.skills[SK_EVOCATIONS] ); 
-
-    spell_type spell_casted = SPELL_NO_SPELL;
-    struct bolt beam;
 
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << std::endl;
@@ -814,7 +809,7 @@ void tome_of_power(char sc_read_2)
     if (!yesno("Read it?"))
         return;
 
-    set_ident_flags( you.inv[sc_read_2], ISFLAG_IDENT_MASK );
+    set_ident_flags( you.inv[slot], ISFLAG_KNOW_TYPE );
 
     if (you.mutation[MUT_BLURRY_VISION] > 0
         && random2(4) < you.mutation[MUT_BLURRY_VISION])
@@ -826,46 +821,35 @@ void tome_of_power(char sc_read_2)
     mpr("You find yourself reciting the magical words!");
     exercise( SK_EVOCATIONS, 1 ); 
 
-    temp_rand = random2(50) + random2( you.skills[SK_EVOCATIONS] / 3 ); 
-
-    switch (random2(50))
+    if ( random2(50) < 7 )
     {
-    case 0:
-    case 3:
-    case 4:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
         mpr("A cloud of weird smoke pours from the book's pages!");
         big_cloud( random_smoke_type(), KC_YOU,
                    you.x_pos, you.y_pos, 20, 10 + random2(8) );
         xom_is_stimulated(16);
-        return;
-    case 1:
-    case 14:
+    }
+    else if ( random2(43) < 2 )
+    {
         mpr("A cloud of choking fumes pours from the book's pages!");
         big_cloud(CLOUD_POISON, KC_YOU,
                   you.x_pos, you.y_pos, 20, 7 + random2(5));
         xom_is_stimulated(64);
-        return;
-
-    case 2:
-    case 13:
+    }
+    else if ( random2(41) < 2 )
+    {
         mpr("A cloud of freezing gas pours from the book's pages!");
         big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20, 8 + random2(5));
         xom_is_stimulated(64);
-        return;
-
-    case 5:
-    case 11:
-    case 12:
+    }
+    else if ( random2(39) < 3 )
+    {
         if (one_chance_in(5))
         {
             mpr("The book disappears in a mighty explosion!");
-            dec_inv_item_quantity( sc_read_2, 1 );
+            dec_inv_item_quantity( slot, 1 );
         }
 
+        bolt beam;
         beam.type = SYM_BURST;
         beam.damage = dice_def( 3, 15 );
         // unsure about this    // BEAM_EXPLOSION instead? [dlb]
@@ -877,16 +861,16 @@ void tome_of_power(char sc_read_2)
         // your explosion, (not someone else's explosion)
         beam.beam_source = NON_MONSTER;
         beam.thrower = KILL_YOU;
-        beam.aux_source = "an exploding Tome of Power";
+        beam.aux_source = "an exploding tome of Destruction";
         beam.ex_size = 2;
         beam.is_tracer = false;
         beam.is_explosion = true;
 
         explosion(beam);
         xom_is_stimulated(255);
-        return;
-
-    case 10:
+    }
+    else if (one_chance_in(36))
+    {
         if (create_monster( MONS_ABOMINATION_SMALL, 6, BEH_HOSTILE,
                             you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
         {
@@ -894,65 +878,62 @@ void tome_of_power(char sc_read_2)
             mpr("It doesn't look too friendly.");
         }
         xom_is_stimulated(255);
-        return;
     }
+    else
+    {
+        viewwindow(1, false);
 
-    viewwindow(1, false);
+        int temp_rand = random2(23) + random2(you.skills[SK_EVOCATIONS] / 3);
+        
+        if (temp_rand > 25)
+            temp_rand = 25;
 
-    temp_rand = random2(23) + random2( you.skills[SK_EVOCATIONS] / 3 );
+        const spell_type spell_casted =
+            ((temp_rand > 24) ? SPELL_LEHUDIBS_CRYSTAL_SPEAR :
+             (temp_rand > 21) ? SPELL_BOLT_OF_FIRE :
+             (temp_rand > 18) ? SPELL_BOLT_OF_COLD :
+             (temp_rand > 16) ? SPELL_LIGHTNING_BOLT :
+             (temp_rand > 10) ? SPELL_FIREBALL :
+             (temp_rand >  9) ? SPELL_VENOM_BOLT :
+             (temp_rand >  8) ? SPELL_BOLT_OF_DRAINING :
+             (temp_rand >  7) ? SPELL_BOLT_OF_INACCURACY :
+             (temp_rand >  6) ? SPELL_STICKY_FLAME :
+             (temp_rand >  5) ? SPELL_TELEPORT_SELF :
+             (temp_rand >  4) ? SPELL_CIGOTUVIS_DEGENERATION :
+             (temp_rand >  3) ? SPELL_POLYMORPH_OTHER :
+             (temp_rand >  2) ? SPELL_MEPHITIC_CLOUD :
+             (temp_rand >  1) ? SPELL_THROW_FLAME :
+             (temp_rand >  0) ? SPELL_THROW_FROST
+                              : SPELL_MAGIC_DART);
 
-    if (temp_rand > 25)
-        temp_rand = 25;
+        your_spells( spell_casted, powc, false );
+    }
+}
 
-    spell_casted = ((temp_rand > 19) ? SPELL_FIREBALL :
-                    (temp_rand > 16) ? SPELL_BOLT_OF_FIRE :
-                    (temp_rand > 13) ? SPELL_BOLT_OF_COLD :
-                    (temp_rand > 11) ? SPELL_LIGHTNING_BOLT :
-                    (temp_rand > 10) ? SPELL_LEHUDIBS_CRYSTAL_SPEAR :
-                    (temp_rand >  9) ? SPELL_VENOM_BOLT :
-                    (temp_rand >  8) ? SPELL_BOLT_OF_DRAINING :
-                    (temp_rand >  7) ? SPELL_BOLT_OF_INACCURACY :
-                    (temp_rand >  6) ? SPELL_STICKY_FLAME :
-                    (temp_rand >  5) ? SPELL_TELEPORT_SELF :
-                    (temp_rand >  4) ? SPELL_CIGOTUVIS_DEGENERATION :
-                    (temp_rand >  3) ? SPELL_POLYMORPH_OTHER :
-                    (temp_rand >  2) ? SPELL_MEPHITIC_CLOUD :
-                    (temp_rand >  1) ? SPELL_THROW_FLAME :
-                    (temp_rand >  0) ? SPELL_THROW_FROST
-                                     : SPELL_MAGIC_DART);
-
-    your_spells( spell_casted, powc, false );
-}                               // end tome_of_power()
-
-void skill_manual(char sc_read_2)
+void skill_manual(int slot)
 {
-    set_ident_flags( you.inv[sc_read_2], ISFLAG_IDENT_MASK );
-
-    const int skill = you.inv[sc_read_2].plus;
-
-    const char* skname = skill_name(skill);
-    mprf("This is a manual of %s!", skname);
-
+    // Removed confirmation request because you know it's
+    // a manual in advance.
     you.turn_is_over = true;
+    item_def& manual(you.inv[slot]);
+    set_ident_flags( manual, ISFLAG_KNOW_TYPE );
+    const int skill = manual.plus;
 
-    if (!yesno("Read it?"))
-        return;
-
-    mprf("You read about %s.", skname);
+    mprf("You read about %s.", skill_name(skill));
 
     exercise(skill, 500);
 
     if (one_chance_in(10))
     {
-        mpr("The book crumbles into dust.");
-        dec_inv_item_quantity( sc_read_2, 1 );
+        mpr("The manual crumbles into dust.");
+        dec_inv_item_quantity( slot, 1 );
     }
     else
     {
-        mpr("The book looks somewhat more worn.");
+        mpr("The manual looks somewhat more worn.");
     }
     xom_is_stimulated(14);
-}                               // end skill_manual()
+}
 
 static bool box_of_beasts()
 {

@@ -3672,20 +3672,17 @@ static bool enchant_armour( void )
 
 static void handle_read_book( int item_slot )
 {
-    int spell, spell_index;
+    item_def& book(you.inv[item_slot]);
 
-    if (you.inv[item_slot].sub_type == BOOK_DESTRUCTION)
+    if (book.sub_type == BOOK_DESTRUCTION)
     {
         if (silenced(you.x_pos, you.y_pos))
-        {
             mpr("This book does not work if you cannot read it aloud!");
-            return;
-        }
-
-        tome_of_power(item_slot);
+        else
+            tome_of_power(item_slot);
         return;
     }
-    else if (you.inv[item_slot].sub_type == BOOK_MANUAL)
+    else if (book.sub_type == BOOK_MANUAL)
     {
         skill_manual(item_slot);
         return;
@@ -3694,25 +3691,23 @@ static void handle_read_book( int item_slot )
     while (true)
     {
         // Spellbook
-        spell = read_book( you.inv[item_slot], RBOOK_READ_SPELL );
+        const int ltr = read_book( book, RBOOK_READ_SPELL );
 
-        if (spell < 'a' || spell > 'h')     //jmf: was 'g', but 8=h
+        if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
             mesclr( true );
             return;
         }
 
-        spell_index = letter_to_index( spell );
-
-        const spell_type nthing =
-            which_spell_in_book(you.inv[item_slot].sub_type, spell_index);
-        if (nthing == SPELL_NO_SPELL)
+        const spell_type spell = which_spell_in_book(book.sub_type,
+                                                     letter_to_index(ltr));
+        if (spell == SPELL_NO_SPELL)
         {
             mesclr( true );
             return;
         }
 
-        describe_spell( nthing );
+        describe_spell( spell );
     }
 }
 

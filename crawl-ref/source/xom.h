@@ -25,7 +25,7 @@ enum xom_message_type
 void xom_is_stimulated(int maxinterestingness,
                        xom_message_type message_type = XM_NORMAL,
                        bool force_message = false);
-void xom_is_stimulated(int maxinterestingness, std::string message,
+void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message = false);
 bool xom_is_nice();
 void xom_acts(bool niceness, int sever);

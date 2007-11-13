@@ -195,7 +195,7 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
                        force_message);
 }
 
-void xom_is_stimulated(int maxinterestingness, std::string message,
+void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message)
 {
     const char* message_array[6];
