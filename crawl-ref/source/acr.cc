@@ -3691,7 +3691,8 @@ static void move_player(int move_x, int move_y)
 
     // cannot move away from mermaid but you CAN fight neighbouring squares
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF]
-        && (targ_monst == NON_MONSTER || mons_is_submerged(&menv[targ_monst])))
+        && (targ_monst == NON_MONSTER || mons_friendly(&menv[targ_monst])
+            || mons_is_submerged(&menv[targ_monst])))
     {   
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {
