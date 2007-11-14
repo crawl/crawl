@@ -731,7 +731,7 @@ their claws, so do not need a cutting device. Also Trolls, Orcs,
 Ogres, and Kobolds care less (in different degrees) about the quality
 of the corpse. Ogres, Trolls and Kobolds are happy to eat raw meat at
 any time. This does not apply to the more civilised (and more
-pretentious) Ogre Mages.
+pretentious) Ogre-Mages.
 
 ? Magical Scrolls:
 ------------------
@@ -1453,7 +1453,7 @@ at moving unnoticed.
 Every now and then, a naga can spit poison; the range, accuracy and
 damage of this poison increases with the naga's experience level.
 
-Ogres and Ogre Mages:
+Ogres and Ogre-Mages:
 ---------------------
 Genealogists would call these species Common Ogres and Sapient Ogres rather, 
 yet the folklore labels stuck somehow. These two are genuinely different 
@@ -1469,12 +1469,12 @@ Because of their large size they can only wear loose robes, cloaks and
 animal skins. Although ogres can eat almost anything, their size also 
 means that they need to do so more frequently than smaller folk.
 
-Ogre Mages are slightly smaller and nimbler than their Common 
+Ogre-Mages are slightly smaller and nimbler than their Common 
 counterparts and grow a bit slower. They are unique among the beefier 
 species in their ability to use magic, especially enchantments. Still, 
 they also perform well in all types of melee combat, with a slight 
 disadvantage at short blades. While they perform better than Ogres in all 
-more civilised aspects of life, Ogre Mages have lost the ability to 
+more civilised aspects of life, Ogre-Mages have lost the ability to 
 digest raw meat when not hungry.
 
 Most often, small bands of Common Ogres raid the countryside or
