@@ -154,6 +154,7 @@ stab_brand = hi:blue
 # lowercase_invocations = false
 # easy_open = false
 # easy_butcher = false
+# always_confirm_butcher = true
 # easy_unequip = false
 # easy_confirm = (none | safe | all)
 # easy_quit_item_prompts = false

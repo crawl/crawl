@@ -50,8 +50,9 @@ The contents of this text are:
                 stash_tracking, stash_filter
 4-i     Command Enhancements.
                 auto_list, lowercase_invocations, easy_open, easy_butcher, 
-                easy_unequip, easy_confirm, easy_quit_item_prompts, 
-                easy_exit_menu, default_autoprayer, sort_menus
+                always_confirm_butcher, easy_unequip, easy_confirm,
+                easy_quit_item_prompts, easy_exit_menu, default_autoprayer,
+                sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, always_greet,
                 terse_hand, delay_message_clear, menu_colour,
@@ -745,6 +746,11 @@ easy_butcher = true
         If true, auto-switch to an appropriate uncursed weapon for butchery.
         For such tools any special messages are ignored. If false, you have to
         wield the tool manually.
+
+always_confirm_butcher = false
+        If true, always request confirmation before butchering. If false,
+        butchering will proceed automatically if there is exactly one
+        corpse on the square.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it. 

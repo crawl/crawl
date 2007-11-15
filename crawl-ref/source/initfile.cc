@@ -604,6 +604,7 @@ void game_options::reset_options()
     easy_open              = true;
     easy_unequip           = true;
     easy_butcher           = true;
+    always_confirm_butcher = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;
@@ -1683,6 +1684,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // automatic knife switching
         easy_butcher = read_bool( field, easy_butcher );
+    }
+    else if (key == "always_confirm_butcher")
+    {
+        always_confirm_butcher = read_bool( field, always_confirm_butcher );
     }
     else if (key == "lua_file" && runscript)
     {

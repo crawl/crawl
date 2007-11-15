@@ -111,7 +111,7 @@ bool test_melee_hit(int to_hit, int ev)
 
     if (to_hit >= AUTOMATIC_HIT)
         return (true);
-    else if (random2(1000) < 10 * MIN_HIT_MISS_PERCENTAGE)
+    else if (random2(100) < MIN_HIT_MISS_PERCENTAGE)
         margin = (coinflip() ? 1 : -1) * AUTOMATIC_HIT;
     else
     {
@@ -123,12 +123,11 @@ bool test_melee_hit(int to_hit, int ev)
     float miss;
 
     if (to_hit < ev)
-        miss = 100.0 - static_cast<float>( MIN_HIT_MISS_PERCENTAGE ) / 2.0;
+        miss = 100.0 - MIN_HIT_MISS_PERCENTAGE / 2.0;
     else
     {
-        miss = static_cast<float>( MIN_HIT_MISS_PERCENTAGE ) / 2.0
-              + static_cast<float>( (100 - MIN_HIT_MISS_PERCENTAGE) * ev ) 
-                  / static_cast<float>( to_hit );
+        miss = MIN_HIT_MISS_PERCENTAGE / 2.0 + 
+            ((100.0 - MIN_HIT_MISS_PERCENTAGE) * ev) / to_hit;
     }
 
     mprf( MSGCH_DIAGNOSTICS,

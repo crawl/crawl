@@ -1514,6 +1514,7 @@ public:
     bool        easy_open;      // open doors with movement
     bool        easy_unequip;   // allow auto-removing of armour / jewelry
     bool        easy_butcher;   // open doors with movement
+    bool        always_confirm_butcher;    // even if only one corpse
     bool        increasing_skill_progress; // skills go from 0-10 or 10-0
     bool        confirm_self_target; // require confirmation before selftarget
     bool        default_target;  // start targeting on a real target

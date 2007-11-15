@@ -2533,7 +2533,6 @@ static void generate_jewellery_item(item_def& item, bool allow_uniques,
         item.sub_type = (one_chance_in(4) ? get_random_amulet_type() :
                          get_random_ring_type());
 
-
     // everything begins as uncursed, unenchanted jewellery {dlb}:
     item.plus = 0;
     item.plus2 = 0;

@@ -2083,6 +2083,7 @@ static option_handler handlers[] =
     { "easy_armour", &Options.easy_unequip, option_hboolean },
     { "easy_unequip", &Options.easy_unequip, option_hboolean },
     { "easy_butcher", &Options.easy_butcher, option_hboolean },
+    { "always_confirm_butcher", &Options.always_confirm_butcher, option_hboolean },
     { "terse_hand", &Options.terse_hand, option_hboolean },
     { "increasing_skill_progress", &Options.increasing_skill_progress, option_hboolean },
     { "confirm_self_target", &Options.confirm_self_target, option_hboolean },

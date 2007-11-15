@@ -264,8 +264,9 @@ bool butchery()
         mpr("There isn't anything to dissect here.");
         return false;
     }
-    else if ( num_corpses > 1 )
+    else if ( num_corpses > 1 || Options.always_confirm_butcher )
     {
+        corpse_id = -1;
         for (int o=igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
         {
             if ( (mitm[o].base_type != OBJ_CORPSES) ||
@@ -273,8 +274,7 @@ bool butchery()
                 continue;
             
             // offer the possibility of butchering
-            std::string prompt = "Butcher " + mitm[o].name(DESC_NOCAP_A);
-            prompt += '?';
+            std::string prompt = "Butcher " + mitm[o].name(DESC_NOCAP_A) + '?';
             const int answer = yesnoquit( prompt.c_str(), true, 'n', false );
             if ( answer == 1 )
             {
