@@ -2323,12 +2323,6 @@ static void check_banished()
 
 static void world_reacts()
 {
-    if (Options.stash_tracking)
-        stashes.update_visible_stashes(
-            Options.stash_tracking == STM_ALL? 
-            StashTracker::ST_AGGRESSIVE :
-            StashTracker::ST_PASSIVE);
-
     if (you.num_turns != -1)
     {
         you.num_turns++;
@@ -2415,6 +2409,12 @@ static void world_reacts()
 
     viewwindow(true, true);
 
+    if (Options.stash_tracking)
+        stashes.update_visible_stashes(
+            Options.stash_tracking == STM_ALL? 
+            StashTracker::ST_AGGRESSIVE :
+            StashTracker::ST_PASSIVE);
+    
     handle_monsters();
     check_banished();
 

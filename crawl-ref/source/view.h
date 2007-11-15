@@ -189,6 +189,7 @@ inline bool see_grid(const coord_def &p) { return see_grid(p.x, p.y); }
 
 std::string screenshot(bool fullscreen = false);
 
+dungeon_char_type get_feature_dchar( dungeon_feature_type feat );
 unsigned get_sightmap_char(int feature);
 unsigned get_magicmap_char(int feature);
 
