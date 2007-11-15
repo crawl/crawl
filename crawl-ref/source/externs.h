@@ -1381,6 +1381,7 @@ struct message_colour_mapping
 
 struct feature_def
 {
+    dungeon_char_type   dchar;
     unsigned            symbol;          // symbol used for seen terrain
     unsigned            magic_symbol;    // symbol used for magic-mapped terrain
     unsigned short      colour;          // normal in LoS colour

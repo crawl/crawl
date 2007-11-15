@@ -203,6 +203,7 @@ bool trans_wall_blocking( int grx, int gry );
 
 std::string screenshot(bool fullscreen = false);
 
+dungeon_char_type get_feature_dchar( dungeon_feature_type feat );
 unsigned get_sightmap_char(int feature);
 unsigned get_magicmap_char(int feature);
 

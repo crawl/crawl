@@ -1167,49 +1167,44 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 // returns 1 if the point is near unoccupied stairs
 // returns 2 if the point is near player-occupied stairs
 
-int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx, branch_type &branch)
+int near_stairs(const coord_def &p, int max_dist,
+                dungeon_char_type &stair_type,
+                branch_type &branch)
 {
-    int i,j;
-
-    for(i=-max_dist; i<=max_dist; i++)
+    coord_def inc;
+    for (inc.x = -max_dist; inc.x <= max_dist; inc.x++)
     {
-        for(j=-max_dist; j<=max_dist; j++)
+        for(inc.y = -max_dist; inc.y <= max_dist; inc.y++)
         {
-            int x = px + i;
-            int y = py + j;
+            const coord_def np(p + inc);
 
-            if (x<0 || x>=GXM || y<0 || y>=GYM)
+            if (!in_bounds(np))
                 continue;
 
-            // very simple check
-            if (grd[x][y] >= DNGN_STONE_STAIRS_DOWN_I
-                && grd[x][y] <= DNGN_RETURN_FROM_SWAMP
-                && grd[x][y] != DNGN_ENTER_SHOP)        // silly
+            const dungeon_feature_type feat = grd(np);
+            if (is_stair(feat))
             {
                 // shouldn't happen for escape hatches
-                if (grd[x][y] == DNGN_ROCK_STAIRS_DOWN
-                    || grd[x][y] == DNGN_ROCK_STAIRS_UP)
-                {
+                if (grid_is_rock_stair(feat))
                     continue;
-                }
 
-                stair_gfx = get_sightmap_char(grd[x][y]);
+                stair_type = get_feature_dchar(feat);
                 
                 // is it a branch stair?
-                for ( i = 0; i < NUM_BRANCHES; ++i )
+                for (int i = 0; i < NUM_BRANCHES; ++i)
                 {
-                     if (branches[i].entry_stairs == grd[x][y])
+                     if (branches[i].entry_stairs == feat)
                      {
                          branch = branches[i].id;
                          break;
                      }
-                     else if (branches[i].exit_stairs == grd[x][y])
+                     else if (branches[i].exit_stairs == feat)
                      {
                          branch = branches[i].parent_branch;
                          break;
                      }
                 }
-                return ((x == you.x_pos && y == you.y_pos) ? 2 : 1);
+                return (np == you.pos()? 2 : 1);
             }
         }
     }

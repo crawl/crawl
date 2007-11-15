@@ -235,8 +235,11 @@ monster_type pick_random_monster(const level_id &place,
                                  int power,
                                  int &lev_mons)
 {
-    monster_type mon_type = MONS_PROGRAM_BUG;
+    if (place.level_type == LEVEL_LABYRINTH)
+        return (MONS_PROGRAM_BUG);
     
+    monster_type mon_type = MONS_PROGRAM_BUG;
+
     lev_mons = power;
 
     if (place.branch == BRANCH_MAIN_DUNGEON
@@ -355,7 +358,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
     int lev_mons = power;               // final 'power'
     int i;
     
-    unsigned char stair_gfx = 0;
+    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
     int tries = 0;
     int pval = 0;
     level_id place = level_id::current();
@@ -398,7 +401,8 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
 
                 // check whether there's a stair
                 // and whether it leads to another branch
-                pval = near_stairs(px, py, 1, stair_gfx, place.branch);
+                pval = near_stairs(coord_def(px, py), 1,
+                                   stair_type, place.branch);
 
                 // no monsters spawned in the Temple
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
@@ -414,9 +418,9 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
             }
             else
             {
-                if ( stair_gfx == '>' ) // deeper level
+                if ( stair_type == DCHAR_STAIRS_DOWN ) // deeper level
                     lev_mons++;
-                else if (stair_gfx == '<') // higher level
+                else if (stair_type == DCHAR_STAIRS_UP) // higher level
                 {
                     // monsters don't come from outside the dungeon
                     if (lev_mons <= 0)
@@ -427,7 +431,6 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                     else
                         lev_mons--;
                 }
-
             }
         } // end proximity check
 
@@ -437,7 +440,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         {
             // now pick a monster of the given branch and level
             mon_type = pick_random_monster(place, lev_mons,
-                                       lev_mons);
+                                           lev_mons);
 
             if (mon_type == MONS_PROGRAM_BUG)
                 return (false);
@@ -611,7 +614,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         if (shoved)
         {
             msg += " shoves you out of the ";
-            if (stair_gfx == '>' || stair_gfx == '<')
+            if (stair_type != DCHAR_ARCH)
                 msg += "stairwell!";
             else
                 msg += "gateway!";
@@ -619,9 +622,9 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         }
         else if (!msg.empty())
         {
-            if ( stair_gfx == '>' )
+            if (stair_type == DCHAR_STAIRS_DOWN)
                 msg += " comes up the stairs.";
-            else if (stair_gfx == '<')
+            else if (stair_type == DCHAR_STAIRS_UP)
                 msg += " comes down the stairs.";
             else
                 msg += " comes through the gate.";
