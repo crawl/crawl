@@ -737,19 +737,16 @@ void cast_deaths_door(int pow)
     return;
 }
 
-// can't use beam variables here, because of monster_die and the puffs of smoke
 void abjuration(int pow)
 {
-    struct monsters *monster = 0;       // NULL {dlb}
-
     mpr("Send 'em back where they came from!");
 
     // Scale power into something comparable to summon lifetime.
     const int abjdur = pow * 12;
 
-    for (int ab = 0; ab < MAX_MONSTERS; ab++)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        monster = &menv[ab];
+        monsters* const monster = &menv[i];
 
         if (monster->type == -1 || !mons_near(monster))
             continue;

@@ -99,7 +99,7 @@ static card_type a_deck_of_enchantments[] = {
 DEFVEC(deck_of_enchantments);
 
 static card_type a_deck_of_summoning[] = {
-    CARD_SUMMON_ANIMAL, CARD_SUMMON_DEMON, CARD_SUMMON_WEAPON
+    CARD_CRUSADE, CARD_SUMMON_ANIMAL, CARD_SUMMON_DEMON, CARD_SUMMON_WEAPON
 };
 
 DEFVEC(deck_of_summoning);
@@ -238,6 +238,7 @@ const char* card_name(card_type card)
     case CARD_MAP: return "the Map";
     case CARD_BANSHEE: return "the Banshee";
     case CARD_WILD_MAGIC: return "Wild Magic";
+    case CARD_CRUSADE: return "the Crusade";
     case CARD_SUMMON_ANIMAL: return "the Herd";
     case CARD_SUMMON_DEMON: return "the Pentagram";
     case CARD_SUMMON_WEAPON: return "the Dance";
@@ -2026,6 +2027,39 @@ static void curse_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void crusade_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    if ( power_level >= 1 )
+    {
+        // A chance to convert opponents.
+        for ( int i = 0; i < MAX_MONSTERS; ++i )
+        {
+            monsters* const monster = &menv[i];
+            if (monster->type == -1 || !mons_near(monster) ||
+                mons_friendly(monster) ||
+                mons_holiness(monster) != MH_NATURAL ||
+                mons_is_unique(monster->type) ||
+                mons_immune_magic(monster))
+                continue;
+
+            // Note that this bypasses the magic resistance
+            // (though not immunity) check. Specifically,
+            // you can convert Killer Klowns this way.
+            // Might be too good.
+            if ( monster->hit_dice * 35 < random2(power) )
+            {
+                simple_monster_message(monster, " is converted.");
+                if ( one_chance_in(5 - power_level) )
+                    monster->attitude = ATT_FRIENDLY;
+                else
+                    monster->add_ench(ENCH_CHARM);
+            }
+        }
+    }
+    abjuration(power/4);
+}
+
 static void summon_demon_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -2184,6 +2218,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TOMB:             entomb(power); break;
     case CARD_WRAITH:           drain_exp(false); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
+    case CARD_CRUSADE:          crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
     case CARD_SUMMON_ANIMAL:    summon_animals(random2(power/3)); break;
     case CARD_SUMMON_ANY:       summon_any_monster(power, rarity); break;

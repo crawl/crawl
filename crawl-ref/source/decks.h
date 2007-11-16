@@ -83,7 +83,8 @@ enum card_type
     CARD_HELM,                  // defense
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills
-    
+
+    CARD_CRUSADE,
     CARD_SUMMON_ANIMAL,
     CARD_SUMMON_DEMON,
     CARD_SUMMON_WEAPON,
