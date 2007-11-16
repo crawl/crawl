@@ -556,7 +556,7 @@ static void sdump_screenshot(dump_params &par)
 static void sdump_notes(dump_params &par)
 {
     std::string &text(par.text);
-    if ( note_list.size() == 0 || Options.use_notes == false )
+    if ( note_list.empty() )
         return;
 
     text += "\nNotes\nTurn   | Place   | Note\n";

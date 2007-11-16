@@ -2218,8 +2218,7 @@ void set_god_ability_slots( void )
     {
         if ( god_abilities[you.religion][i] != ABIL_NON_ABILITY )
         {
-            set_god_ability_helper(god_abilities[you.religion][i],
-                                   (Options.lowercase_invocations ? 'a' : 'A') + num);
+            set_god_ability_helper(god_abilities[you.religion][i], 'a' + num);
             ++num;
         }
     }
@@ -2238,10 +2237,8 @@ static int find_ability_slot( ability_type which_ability )
 
     // no requested slot, find new one and make it preferred.
 
-    // skip over a-e if player prefers them for invocations
-    const int startpoint = (Options.lowercase_invocations ? 5 : 0);
-
-    for (int slot = startpoint; slot < 52; slot++)
+    // skip over a-e (invocations)
+    for (int slot = 5; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
@@ -2250,8 +2247,8 @@ static int find_ability_slot( ability_type which_ability )
         }
     }
 
-    // if we skipped over a-e to reserve them, try them now
-    for (int slot = startpoint - 1; slot >= 0; slot--)
+    // if we can't find anything else, try a-e
+    for (int slot = 4; slot >= 0; slot--)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {

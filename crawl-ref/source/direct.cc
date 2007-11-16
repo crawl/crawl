@@ -332,7 +332,7 @@ static void direction_again(dist& moves, targeting_type restricts,
         moves.ty   = you.y_pos;
 
         // Discard 'Y' player gave to yesno()
-        if (mode == TARG_ENEMY && Options.confirm_self_target)
+        if (mode == TARG_ENEMY)
             getchm();
     }
     else
@@ -822,7 +822,7 @@ void direction(dist& moves, targeting_type restricts,
             // Conceivably we might want to confirm on TARG_ANY too.
             if ( moves.isTarget &&
                  moves.tx == you.x_pos && moves.ty == you.y_pos &&
-                 mode == TARG_ENEMY && Options.confirm_self_target &&
+                 mode == TARG_ENEMY &&
                  !yesno("Really target yourself?", false, 'n'))
             {
                 mesclr();

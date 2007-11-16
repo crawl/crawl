@@ -177,6 +177,12 @@ static void setup_cmd_repeat();
 static void do_prev_cmd_again();
 static void update_replay_state();
 
+static void show_commandline_options_help();
+static void wanderer_startup_message();
+static void god_greeting_message( bool game_start );
+static void take_starting_note();
+static void startup_tutorial();
+
 #ifdef DGL_SIMPLE_MESSAGING
 static void read_messages();
 #endif
@@ -193,27 +199,8 @@ int main( int argc, char *argv[] )
     // parse command line args -- look only for initfile & crawl_dir entries
     if (!parse_args(argc, argv, true))
     {
-        // print help
-        puts("Command line options:");
-        puts("  -name <string>   character name");
-        puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
-        puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
-        puts("  -pizza <string>  crawl pizza");
-        puts("  -plain           don't use IBM extended characters");
-        puts("  -dir <path>      crawl directory");
-        puts("  -rc <file>       init file name");
-        puts("  -morgue <dir>    directory to save character dumps");
-        puts("  -macro <dir>     directory to save/find macro.txt");
-        puts("");
-        puts("Command line options override init file options, which override");
-        puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
-        puts("");
-        puts("Highscore list options: (Can now be redirected to more, etc)");
-        puts("  -scores [N]            highscore list");
-        puts("  -tscores [N]           terse highscore list");
-        puts("  -vscores [N]           verbose highscore list");
-        puts("  -scorefile <filename>  scorefile to report on");
-        exit(1);
+        show_commandline_options_help();
+        return 1;
     }
 
     // Init monsters up front - needed to handle the mon_glyph option right.
@@ -228,7 +215,7 @@ int main( int argc, char *argv[] )
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
     {
         hiscores_print_all( Options.sc_entries, Options.sc_format );
-        exit(0);
+        return 0;
     }
     else
     {
@@ -241,136 +228,165 @@ int main( int argc, char *argv[] )
 
     // override some options for tutorial
     init_tutorial_options();
-    if (game_start || Options.always_greet)
-    {
-        msg::stream << "Welcome, " << you.your_name << " the "
-                    << species_name( you.species,you.experience_level )
-                    << " " << you.class_name << "."
-                    << std::endl;
 
-        // Activate markers only after the welcome message, so the
-        // player can see any resulting messages.
-        env.markers.activate_all();
+    msg::stream << "Welcome, " << you.your_name << " the "
+                << species_name( you.species,you.experience_level )
+                << " " << you.class_name << "."
+                << std::endl;
 
-        // Starting messages can go here as this should only happen
-        // at the start of a new game -- bwr
-        // This message isn't appropriate for Options.always_greet
-        if (you.char_class == JOB_WANDERER && game_start)
-        {
-            int skill_levels = 0;
-            for (int i = 0; i <= NUM_SKILLS; i++)
-                skill_levels += you.skills[ i ];
+    // Activate markers only after the welcome message, so the
+    // player can see any resulting messages.
+    env.markers.activate_all();
 
-            if (skill_levels <= 2)
-            {
-                // Demigods and Demonspawn wanderers stand to not be
-                // able to see any of their skills at the start of
-                // the game (one or two skills should be easily guessed
-                // from starting equipment)... Anyways, we'll give the
-                // player a message to warn them (and give a reason why). -- bwr
-                mpr("You wake up in a daze, and can't recall much.");
-            }
-        }
+    if (game_start && you.char_class == JOB_WANDERER)
+        wanderer_startup_message();
 
-        // These need some work -- should make sure that the god's
-        // name is metioned, else the message might be confusing.
-        switch (you.religion)
-        {
-        case GOD_ZIN:
-            simple_god_message( " says: Spread the light, my child." );
-            break;
-        case GOD_SHINING_ONE:
-            simple_god_message( " says: Smite the infidels!" );
-            break;
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_YREDELEMNUL:
-        case GOD_NEMELEX_XOBEH:
-            simple_god_message( " says: Welcome..." );
-            break;
-        case GOD_XOM:
-            if (game_start)
-                simple_god_message( " says: A new plaything!" );
-            break;
-        case GOD_VEHUMET:
-            god_speaks( you.religion, "Let it end in hellfire!");
-            break;
-        case GOD_OKAWARU:
-            simple_god_message(" says: Welcome, disciple.");
-            break;
-        case GOD_MAKHLEB:
-            god_speaks( you.religion, "Blood and souls for Makhleb!" );
-            break;
-        case GOD_SIF_MUNA:
-            simple_god_message( " whispers: I know many secrets...");
-            break;
-        case GOD_TROG:
-            simple_god_message( " says: Kill them all!" );
-            break;
-        case GOD_ELYVILON:
-            simple_god_message( " says: Go forth and aid the weak!" );
-            break;
-        case GOD_LUGONU:
-            simple_god_message( " says: Spread carnage and corruption!");
-            break;
-        case GOD_BEOGH:
-            simple_god_message(
-                " says: Drown the unbelievers in a sea of blood!");
-            break;
-        default:
-            break;
-        }
+    god_greeting_message( game_start );
 
-        // warn player about their weapon, if unsuitable
-        wield_warning(false);
-    }
+    // warn player about their weapon, if unsuitable
+    wield_warning(false);
 
     if ( game_start )   
-    {    
+    {
         if (Options.tutorial_left)
-        {
-            // don't allow triggering at game start 
-            Options.tut_just_triggered = true;
-            // print stats and everything
-            prep_input();
-            msg::streams(MSGCH_TUTORIAL)
-                << "Press any key to start the tutorial intro, "
-                "or Escape to skip it."
-                << std::endl;
-            const int ch = c_getch();
-
-            if (ch != ESCAPE)
-                tut_starting_screen();
-        }
-
-        std::ostringstream notestr;
-        notestr << you.your_name << ", the "
-                << species_name(you.species,you.experience_level) << " "
-                << you.class_name
-                << ", began the quest for the Orb.";
-        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
-
-        notestr.str("");
-        notestr.clear();
-
-        notestr << "HP: " << you.hp << "/" << you.hp_max
-                << " MP: " << you.magic_points << "/" << you.max_magic_points;
-        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
-                       notestr.str().c_str()));
+            startup_tutorial();
+        take_starting_note();
     }
 
     while (true)
-    {
         input();
-    }
 
     // Should never reach this stage, right?
-
 #ifdef UNIX
     unixcurses_shutdown();
 #endif
 
     return 0;
 }                               // end main()
+
+static void show_commandline_options_help()
+{
+    puts("Command line options:");
+    puts("  -name <string>   character name");
+    puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
+    puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
+    puts("  -pizza <string>  crawl pizza");
+    puts("  -plain           don't use IBM extended characters");
+    puts("  -dir <path>      crawl directory");
+    puts("  -rc <file>       init file name");
+    puts("  -morgue <dir>    directory to save character dumps");
+    puts("  -macro <dir>     directory to save/find macro.txt");
+    puts("");
+    puts("Command line options override init file options, which override");
+    puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
+    puts("");
+    puts("Highscore list options: (Can now be redirected to more, etc)");
+    puts("  -scores [N]            highscore list");
+    puts("  -tscores [N]           terse highscore list");
+    puts("  -vscores [N]           verbose highscore list");
+    puts("  -scorefile <filename>  scorefile to report on");
+}
+
+static void wanderer_startup_message()
+{
+    int skill_levels = 0;
+    for (int i = 0; i < NUM_SKILLS; i++)
+        skill_levels += you.skills[ i ];
+    
+    if (skill_levels <= 2)
+    {
+        // Demigods and Demonspawn wanderers stand to not be
+        // able to see any of their skills at the start of
+        // the game (one or two skills should be easily guessed
+        // from starting equipment)... Anyways, we'll give the
+        // player a message to warn them (and give a reason why). -- bwr
+        mpr("You wake up in a daze, and can't recall much.");
+    }
+}
+
+static void god_greeting_message( bool game_start )
+{
+    switch (you.religion)
+    {
+    case GOD_ZIN:
+        simple_god_message( " says: Spread the light, my child." );
+        break;
+    case GOD_SHINING_ONE:
+        simple_god_message( " says: Smite the infidels!" );
+        break;
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_YREDELEMNUL:
+    case GOD_NEMELEX_XOBEH:
+        simple_god_message( " says: Welcome..." );
+        break;
+    case GOD_XOM:
+        if (game_start)
+            simple_god_message( " says: A new plaything!" );
+        break;
+    case GOD_VEHUMET:
+        god_speaks( you.religion, "Let it end in hellfire!");
+        break;
+    case GOD_OKAWARU:
+        simple_god_message(" says: Welcome, disciple.");
+        break;
+    case GOD_MAKHLEB:
+        god_speaks( you.religion, "Blood and souls for Makhleb!" );
+        break;
+    case GOD_SIF_MUNA:
+        simple_god_message( " whispers: I know many secrets...");
+        break;
+    case GOD_TROG:
+        simple_god_message( " says: Kill them all!" );
+        break;
+    case GOD_ELYVILON:
+        simple_god_message( " says: Go forth and aid the weak!" );
+        break;
+    case GOD_LUGONU:
+        simple_god_message( " says: Spread carnage and corruption!");
+        break;
+    case GOD_BEOGH:
+        simple_god_message(
+            " says: Drown the unbelievers in a sea of blood!");
+        break;
+    case GOD_NO_GOD:
+    case NUM_GODS:
+    case GOD_RANDOM:
+        break;
+    }
+}
+
+static void take_starting_note()
+{
+    std::ostringstream notestr;
+    notestr << you.your_name << ", the "
+            << species_name(you.species,you.experience_level) << " "
+            << you.class_name
+            << ", began the quest for the Orb.";
+    take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+
+    notestr.str("");
+    notestr.clear();
+
+    notestr << "HP: " << you.hp << "/" << you.hp_max
+            << " MP: " << you.magic_points << "/" << you.max_magic_points;
+    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
+                   notestr.str().c_str()));
+}
+
+static void startup_tutorial()
+{
+    // don't allow triggering at game start 
+    Options.tut_just_triggered = true;
+    // print stats and everything
+    prep_input();
+    msg::streams(MSGCH_TUTORIAL)
+        << "Press any key to start the tutorial intro, or Escape to skip it."
+        << std::endl;
+    const int ch = c_getch();
+
+    if (ch != ESCAPE)
+        tut_starting_screen();
+}
 
 #ifdef WIZARD
 static void handle_wizard_command( void )

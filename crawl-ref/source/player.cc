@@ -3208,7 +3208,10 @@ void level_change(bool skip_ability_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 5)
-                    mpr("You have gained the ability to fly.", MSGCH_INTRINSIC_GAIN);
+                {
+                    mpr("You have gained the ability to fly.",
+                        MSGCH_INTRINSIC_GAIN);
+                }
                 else if (you.experience_level == 15)
                 {
                     mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
@@ -3242,7 +3245,6 @@ void level_change(bool skip_ability_increase)
         if (you.magic_points < 0)
             you.magic_points = 0;
 
-        if (Options.use_notes)
         {
             unwind_var<int> hpmax(you.hp_max);
             unwind_var<int> hp(you.hp);
@@ -3258,6 +3260,7 @@ void level_change(bool skip_ability_increase)
                     you.hp, you.hp_max, you.magic_points, you.max_magic_points);
             take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
         }
+
         // recalculate for game
         calc_hp();
         calc_mp();

@@ -1170,7 +1170,7 @@ static void paranoid_option_disable( activity_interrupt_type ai,
                 restart.push_back("Ctrl+V");
             }
 
-            if (Options.autopickup_on && Options.safe_autopickup)
+            if (Options.autopickup_on)
             {
                 deactivatees.push_back("autopickup");
                 Options.autopickup_on = false;

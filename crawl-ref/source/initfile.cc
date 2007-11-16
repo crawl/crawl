@@ -600,7 +600,6 @@ void game_options::reset_options()
     colour_map             = true;
     clean_map              = false;
     show_uncursed          = true;
-    always_greet           = true;
     easy_open              = true;
     easy_unequip           = true;
     easy_butcher           = true;
@@ -609,21 +608,15 @@ void game_options::reset_options()
     easy_quit_item_prompts = true;
     hp_warning             = 10;
     magic_point_warning    = 0;
-    confirm_self_target    = true;
     default_target         = true;
-    safe_autopickup        = true;
     autopickup_no_burden   = false;
     
-    use_notes              = true;
     user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = false;
     note_all_spells        = false;
     note_hp_percent        = 5;
     ood_interesting        = 8;
-
-    terse_hand             = true;
-    increasing_skill_progress = true;
 
     // [ds] Grumble grumble.
     auto_list              = true;
@@ -683,7 +676,6 @@ void game_options::reset_options()
     explore_item_greed     = 10;
     explore_greedy         = false;
     
-    safe_zero_exp          = true;
     target_zero_exp        = false;
     target_wrap            = true;
     target_oos             = true;
@@ -702,8 +694,6 @@ void game_options::reset_options()
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
     flush_input[ FLUSH_ON_MESSAGE ]     = false;
     flush_input[ FLUSH_LUA ]            = true;
-
-    lowercase_invocations  = true; 
 
     fire_items_start       = 2;           // start at slot 'c'
 
@@ -1821,11 +1811,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // here as well.
         heap_brand = curses_attribute(field);
     }
-    else if (key == "always_greet")
-    {
-        // show greeting when reloading game
-        always_greet = read_bool( field, always_greet );
-    }
     else if (key == "weapon")
     {
         // choose this weapon for classes that get choice
@@ -1980,19 +1965,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         auto_list = read_bool( field, auto_list );
     }
-    else if (key == "confirm_self_target")
-    {
-        confirm_self_target = read_bool( field, confirm_self_target );
-    }
     else if (key == "default_target")
     {
         default_target = read_bool( field, default_target );
         if (default_target)
             target_unshifted_dirs = false;
-    }
-    else if (key == "safe_autopickup")
-    {
-        safe_autopickup = read_bool( field, safe_autopickup );
     }
     else if (key == "autopickup_no_burden")
     {
@@ -2067,10 +2044,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
     }    
-    else if (key == "use_notes")
-    {
-        use_notes = read_bool( field, use_notes );
-    }
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
@@ -2087,14 +2060,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "delay_message_clear")
     {
         delay_message_clear = read_bool( field, delay_message_clear );
-    }
-    else if (key == "terse_hand")
-    {
-        terse_hand = read_bool( field, terse_hand );
-    }
-    else if (key == "increasing_skill_progress")
-    {
-        increasing_skill_progress = read_bool( field, increasing_skill_progress );
     }
     else if (key == "flush")
     {
@@ -2118,11 +2083,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             flush_input[FLUSH_LUA] 
                 = read_bool(field, flush_input[FLUSH_LUA]);
         }
-    }
-    else if (key == "lowercase_invocations")
-    {
-        lowercase_invocations 
-                = read_bool(field, lowercase_invocations);
     }
     else if (key == "wiz_mode")
     {
@@ -2571,10 +2531,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "level_map_title")
     {
         level_map_title = read_bool(field, level_map_title);
-    }
-    else if (key == "safe_zero_exp")
-    {
-        safe_zero_exp = read_bool(field, safe_zero_exp);
     }
     else if (key == "target_zero_exp")
     {

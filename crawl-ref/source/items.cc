@@ -2954,13 +2954,13 @@ bool can_autopickup()
         return (false);
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
-            && you.duration[DUR_TRANSFORMATION] > 0)
+        && you.duration[DUR_TRANSFORMATION] > 0)
         return (false);
 
     if (you.flight_mode() == FL_LEVITATE)
         return (false);
 
-    if ( Options.safe_autopickup && !i_feel_safe() )
+    if ( !i_feel_safe() )
         return (false);
 
     return (true);

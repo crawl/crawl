@@ -319,10 +319,9 @@ void print_stats(void)
         clear_to_end_of_line();
         gotoxy(xcol, 13);
 
-        if (you.equip[EQ_WEAPON] != -1)
+        if (you.weapon())
         {
-
-            const item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
+            const item_def& wpn = *you.weapon();
             textcolor(wpn.colour);
 
             const std::string prefix = menu_colour_item_prefix(wpn);
@@ -330,9 +329,7 @@ void print_stats(void)
             if (prefcol != -1)
                 textcolor(prefcol);
 
-            cprintf("%s",
-                    wpn.name(DESC_INVENTORY,
-                             Options.terse_hand).substr(0,38).c_str());
+            cprintf("%s", wpn.name(DESC_INVENTORY, true).substr(0,38).c_str());
             textcolor(LIGHTGREY);
         }
         else

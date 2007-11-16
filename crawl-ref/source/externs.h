@@ -1510,20 +1510,15 @@ public:
     bool        colour_map;     // add colour to the map
     bool        clean_map;      // remove unseen clouds/monsters
     bool        show_uncursed;  // label known uncursed items as "uncursed"
-    bool        always_greet;   // display greeting message when reloading
     bool        easy_open;      // open doors with movement
     bool        easy_unequip;   // allow auto-removing of armour / jewelry
     bool        easy_butcher;   // open doors with movement
     bool        always_confirm_butcher;    // even if only one corpse
-    bool        increasing_skill_progress; // skills go from 0-10 or 10-0
-    bool        confirm_self_target; // require confirmation before selftarget
     bool        default_target;  // start targeting on a real target
-    bool        safe_autopickup; // don't autopickup when monsters visible
     bool        autopickup_no_burden; // don't autopickup if it changes burden
     bool        note_all_skill_levels; // take note for all skill levels (1-27)
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
-    bool        use_notes;      // take (and dump) notes
     std::string user_note_prefix; // Prefix for user notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
@@ -1542,7 +1537,6 @@ public:
     int         magic_point_warning;    // percentage mp for danger warning
     char        race;           // preselected race
     char        cls;            // preselected class
-    bool        terse_hand;     // use terse description for wielded item
     bool        delay_message_clear; // avoid clearing messages each turn
     unsigned    friend_brand;   // Attribute for branding friendly monsters
     bool        no_dark_brand;  // Attribute for branding friendly monsters
@@ -1555,7 +1549,6 @@ public:
     bool        auto_list;      // automatically jump to appropriate item lists
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
-    bool        lowercase_invocations;          // prefer lowercase invocations
 
     char_set_type  char_set;
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
@@ -1646,7 +1639,6 @@ public:
     std::vector<std::string> dump_order;
 
     bool        level_map_title;    // Show title in level map
-    bool        safe_zero_exp; // If true, you feel safe around 0xp monsters
     bool        target_zero_exp;    // If true, targeting targets zero-exp
                                     // monsters.
     bool        target_wrap;        // Wrap around from last to first target

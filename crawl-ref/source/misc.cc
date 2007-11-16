@@ -1544,8 +1544,7 @@ std::string cloud_name(cloud_type type)
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
     bool is_safe = mons_friendly(mon) ||
-        (Options.safe_zero_exp &&
-         mons_class_flag( mon->type, M_NO_EXP_GAIN ));
+        mons_class_flag(mon->type, M_NO_EXP_GAIN);
 
 #ifdef CLUA_BINDINGS
     bool moving = ((!you.delay_queue.empty() &&

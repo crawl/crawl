@@ -1444,8 +1444,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
               mons_level(monster->type) < 99 &&
               !(monster->type >= MONS_EARTH_ELEMENTAL &&
                 monster->type <= MONS_AIR_ELEMENTAL)
-              && (!Options.safe_zero_exp ||
-                  !mons_class_flag( monster->type, M_NO_EXP_GAIN )))
+              && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
         interesting = true;
 
     if ( interesting )

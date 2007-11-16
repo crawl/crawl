@@ -19,13 +19,11 @@ The contents of this text are:
 4-  Interface. 
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                safe_autopickup, autopickup_no_burden, safe_zero_exp,
-                pickup_thrown, pickup_dropped, assign_item_slot,
-                drop_mode, pickup_mode, drop_filter
+                autopickup_no_burden, pickup_thrown, pickup_dropped,
+                assign_item_slot, drop_mode, pickup_mode, drop_filter
 4-b     Targeting. 
                 target_zero_exp, target_oos, target_los_first,
-                confirm_self_target, default_target,
-                target_unshifted_dirs
+                default_target, target_unshifted_dirs
 4-c     Passive Sightings (Detection and Remembrance).
                 detected_monster_colour, detected_item_colour, 
                 remembered_monster_colour, colour_map, clean_map
@@ -49,15 +47,13 @@ The contents of this text are:
 4-h     Stashes.
                 stash_tracking, stash_filter
 4-i     Command Enhancements.
-                auto_list, lowercase_invocations, easy_open, easy_butcher, 
-                always_confirm_butcher, easy_unequip, easy_confirm,
-                easy_quit_item_prompts, easy_exit_menu, default_autoprayer,
-                sort_menus
+                auto_list, easy_open, easy_butcher, always_confirm_butcher,
+                easy_unequip, easy_confirm, easy_quit_item_prompts,
+                easy_exit_menu, default_autoprayer, sort_menus
 4-j     Message and Display Improvements.
-                hp_warning, mp_warning, hp_colour, mp_colour, always_greet,
-                terse_hand, delay_message_clear, menu_colour,
-                menu_colour_prefix_id, menu_colour_prefix_class
-                message_colour, increasing_skill_progress,
+                hp_warning, mp_warning, hp_colour, mp_colour,
+                delay_message_clear, menu_colour, menu_colour_prefix_id,
+                menu_colour_prefix_class, message_colour,
                 show_inventory_weights, show_turns, show_beam,
                 item_stack_summary_minimum
 4-k     Missiles.
@@ -78,7 +74,7 @@ The contents of this text are:
                 kill_map, dump_kill_places, dump_item_origins, 
                 dump_item_origin_price, dump_message_count, dump_order
 5-b     Notes.
-                use_notes, note_items, ood_interesting, note_hp_percent, 
+                note_items, ood_interesting, note_hp_percent, 
                 note_skill_levels, note_skill_max, note_monsters, 
                 note_messages, note_all_spells
 6-  Miscellaneous.
@@ -311,26 +307,16 @@ default_autopickup = true
         When set to false, the game starts with autopickup turned off. You can
         still toggle autopickup in-game with Ctrl-A.
 
-safe_autopickup = true
-        When set, autopickup will not operate if there are visible unfriendly
-        monsters (or statues.) If safe_zero_exp is set (the default), zero-XP
-        monsters are considered friendly. 
-
 autopickup_no_burden = false
         When set, autopickup will not pick up items which would increase
         your burden status (from unencumbered to burdened, or from encumbered
         to overloaded.)
 
-safe_zero_exp = true
-        If set, presence of only zero experience monsters (like plants) will
-        cause autopickups, even if safe_autopickup=true is set. This option 
-        also settles whether autoprayer considers such monsters risky.
-
 pickup_thrown = true
         pickup_thrown=true causes autopickup to pick up thrown/fired missiles,
-        which can make life much easier for hunter types. If you use this, be
-        aware that autopickup uses a turn - use Ctrl-A to turn it off while
-        you're fighting, or use safe_autopickup=true.
+        which can make life much easier for hunter types. Be aware that
+        autopickup uses a turn, though it won't trigger if you can see
+        monsters.
 
 pickup_dropped = false
         pickup_dropped lets autopickup affect objects you've dropped. Set to 
@@ -404,11 +390,6 @@ target_los_first = true
         When cycling through items/features with the 'x' look-around command, 
         setting target_los_first to true will force the cursor to squares in 
         line-of-sight before going to squares outside LOS.
-
-confirm_self_target = true
-        Setting this to true will make Crawl ask for confirmation whenever
-        selecting the character as the target of a non-friendly-targeted spell 
-        (i.e., something other than haste, healing or invisibility.)
 
 default_target = true
         If set to true (the default), targeting will start on either
@@ -733,11 +714,6 @@ auto_list = true
         won't get to see the prompts. This option does not apply to spell
         casting... Conjurers would probably find that really annoying. 
 
-lowercase_invocations = true
-        Set this option to true if you prefer to have invocations on 'a'-'e' 
-        instead of the older 'A'-'E'. Note that you can change the letters of
-        invocations (and other abilites) with the '=' command.
-
 easy_open = true
         Open doors by moving on to them. Highly convenient. Note that travel 
         and exploration will automatically open doors depending on this option.
@@ -919,19 +895,10 @@ hp_colour = lightgrey, 50:yellow, 25:red
 mp_colour = lightgrey, 50:yellow, 25:red
         mp_colour does to MP what hp_colour does to HP.
 
-terse_hand = true
-        Set this to false to have the "in hand" description on the main screen 
-        the same as the inventory. The default setting of true will give the 
-        newer more terse description that should fit the limited space better. 
-
 delay_message_clear = false
         Setting this option to true will delay the clearing of messages until
         the message space is full (default is false which results in clearing
         between player actions).
-
-always_greet = true
-        always_greet will give the race/class and god messages everytime the 
-        game is started. 
 
 menu_colour = <match>:<colour>:<regex>
         This prints a line (of the inventory, a menu, or the discoveries
@@ -1011,13 +978,6 @@ message_colour = <colour>:[<channel>:]<regex>
           message_colour = lightred:god:xom
         If you don't want to see a message at all, you can mute it:
           message_colour = mute:You start resting
-
-increasing_skill_progress = true
-        This affects the appearance of the skills screen ('m'). With the 
-        default true, the progress for getting new levels is shown with
-        increasing percentiles, so that immediately after level up it will
-        read (0%). With false, you get the old behaviour which counts backwards
-        from 10.
 
 show_inventory_weights = false
         When this is set to true, inventory listings will mention the
@@ -1236,9 +1196,7 @@ dump_order += kills
 
 Crawl can automatically log certain events during play. You can read these in 
 the dump or morgue files. Below are options for tweaking this behaviour.
-
-use_notes = true
-        Set to true to get note-taking. The following events are logged:
+The following events are logged:
         - Gaining or losing a level
         - Entering a dungeon level for the first time
         - Memorizing a spell of higher level than any learned before
@@ -1253,7 +1211,7 @@ use_notes = true
         - Gaining or losing mutations
         - Reaching significant levels in a skill (see below)
 	- Dying
-        You can use the command ':' for manually adding notes.
+You can use the command ':' for manually adding notes.
 
 user_note_prefix = <string>
         Prefixes manually added notes with the given string, to make

@@ -67,9 +67,7 @@ lua_file = lua/pickup.lua
 #	
 # autopickup = $?!+"/%
 # default_autopickup = false
-# safe_autopickup = false
 # autopickup_no_burden = true
-# safe_zero_exp = false
 # pickup_thrown = false
 # pickup_dropped = true
 # assign_item_slot = backward
@@ -86,7 +84,6 @@ lua_file = lua/pickup.lua
 # target_zero_exp = true
 # target_oos = false
 # target_los_first = false
-# confirm_self_target = false
 # default_target = false
 # target_unshifted_dirs = true
 
@@ -151,7 +148,6 @@ stab_brand = hi:blue
 ##### 4-i	Command Enhancements ##################
 #
 # auto_list = false
-# lowercase_invocations = false
 # easy_open = false
 # easy_butcher = false
 # always_confirm_butcher = true
@@ -169,10 +165,7 @@ stab_brand = hi:blue
 
 # hp_colour = lightgrey, 50:yellow, 25:red
 # mp_colour = lightgrey, 50:yellow, 25:red
-# terse_hand = false
 # delay_message_clear = true
-# always_greet = false
-# increasing_skill_progress = false
 # show_inventory_weights = true
 # show_turns = true
 # show_beam = true
@@ -244,7 +237,6 @@ message_colour = lightcyan:LOW MAGIC WARNING
 
 ##### 5-b	Notes #################################
 #
-# use_notes = false
 # user_note_prefix=@@@
 # note_items = rod,book,rune
 # ood_interesting = 8
