@@ -2413,7 +2413,7 @@ bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
     switch (mclass)
     {
     case MONS_ROCK_WORM:
-        return (grid >= DNGN_ROCK_WALL && grid <= DNGN_CLEAR_PERMAROCK_WALL);
+        return (!grid_is_solid(grid) || grid_is_rock(grid));
     }
 
     return !grid_is_solid(grid);

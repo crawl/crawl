@@ -1759,6 +1759,11 @@ void behaviour_event( monsters *mon, int event, int src,
 // 1. Evalutates current AI state
 // 2. Sets monster targetx,y based on current foe
 //
+// XXX: Monsters of I_NORMAL or above should select a new target
+// if their current target is another monser which is sitting in
+// a wall and is immune to most attacks while in a wall
+// (M_WALL_SHIELDED), unless the monster has a spell or special/nearby
+// ability which isn't affected by M_WALL_SHIELDED.
 //---------------------------------------------------------------
 static void handle_behaviour(monsters *mon)
 {
@@ -2094,6 +2099,13 @@ static void handle_behaviour(monsters *mon)
             // 'CORNERED' event, at which point
             // we can jump back to WANDER if the foe
             // isn't present.
+
+            // XXX: If a monster can move through solid grids then it
+            // should preferentially flee towards the nearest solid grid
+            // it can move through.  If it has M_WALL_SHIELDED is will
+            // be (mostly) safe as soon as it enters the wall, and even
+            // if it doesn't once it moves again it will be on the other
+            // side of the wall and likely beyond the reach of the player.
 
             if (isFriendly)
             {

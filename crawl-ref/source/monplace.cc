@@ -105,15 +105,16 @@ bool monster_habitable_grid(int monster_class, int actual_grid, int flies,
                 && (actual_grid == DNGN_LAVA 
                     || actual_grid == DNGN_DEEP_WATER))
 
-            // Amphibious critters are happy in the water.
+            // Amphibious critters are happy in water or on land.
             || (mons_class_flag(monster_class, M_AMPHIBIOUS)
-                && grid_compatible(DNGN_DEEP_WATER, actual_grid))
+                && ((preferred_habitat == DNGN_FLOOR
+                    && grid_compatible(DNGN_DEEP_WATER, actual_grid))
+                    || (preferred_habitat == DNGN_DEEP_WATER
+                        && grid_compatible(DNGN_FLOOR, actual_grid))))
 
-            // And water elementals are native to the water but happy on land
+            // Rock worms are native to walls but are happy on the floor
             // as well.
-            || ((monster_class == MONS_WATER_ELEMENTAL
-                  || monster_class == MONS_MERFOLK
-                  || monster_class == MONS_MERMAID)
+            || (monster_class == MONS_ROCK_WORM
                 && grid_compatible(DNGN_FLOOR, actual_grid)));
 }
 

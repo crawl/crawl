@@ -116,6 +116,8 @@ enum mons_class_flags
 
     M_ARCHER            = (1<<23),        // gets various archery boosts
 
+    M_WALL_SHIELDED     = (1<<24),        // Shielded from attacks if in wall
+
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
 
     M_NO_SKELETON       = (1<<29),        // boneless corpses

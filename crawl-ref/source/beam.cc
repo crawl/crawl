@@ -1240,6 +1240,32 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
  */
 
 
+// Affect monster in wall unless it can shield itself using the wall
+// (M_WALL_SHIELDED).  The wall will always shield the monster if the
+// beam bounces off the wall, and a monster can't use a metal wall to
+// shield itself from electricty.
+static bool affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
+{
+    UNUSED(item);
+
+    int mid = mgrd[tx][ty];
+
+    if (mid == NON_MONSTER)
+        return false;
+
+    if (pbolt.is_enchant
+        || (!pbolt.is_explosion && !pbolt.is_big_cloud
+            && (grd[tx][ty] != DNGN_METAL_WALL
+                || !pbolt.flavour != BEAM_ELECTRICITY)))
+    {
+        monsters *mons = &menv[mid];
+        if (!mons_class_flag(mons->type, M_WALL_SHIELDED))
+            return true;
+    }
+
+    return false;
+}
+
 /*
  * Beam pseudo code:
  *
@@ -1350,6 +1376,12 @@ void fire_beam( bolt &pbolt, item_def *item )
                 // should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
+                {
+                    pbolt.is_tracer  = false;
+                    rangeRemaining  -= affect(pbolt, tx, ty);
+                    pbolt.is_tracer  = true;
+                }
+                else
                     rangeRemaining -= affect(pbolt, tx, ty);
 
                 // if it's still a wall, quit.
@@ -1358,9 +1390,13 @@ void fire_beam( bolt &pbolt, item_def *item )
             }
             else
             {
-                // BEGIN bounce case
+                // BEGIN bounce case.  Bouncing protects any monster
+                // in the wall.
                 if (!isBouncy(pbolt, grd[tx][ty]))
                 {
+                    // Affect any monster that might be in the wall.
+                    rangeRemaining -= affect(pbolt, tx, ty);
+
                     do
                         ray.regress();
                     while (grid_is_solid(grd(ray.pos())));
@@ -2491,10 +2527,28 @@ int affect(bolt &beam, int x, int y)
         {
             rangeUsed += affect_wall(beam, x, y);
         }
-        // if it's still a wall, quit - we can't do anything else to
-        // a wall.  Otherwise effects (like clouds, etc) are still possible.
+        // if it's still a wall, quit - we can't do anything else to a
+        // wall (but we still might be able to do something to any
+        // monster inside the wall).  Otherwise effects (like clouds,
+        // etc) are still possible.
         if (grid_is_solid(grd[x][y]))
+        {
+            int mid = mgrd[x][y];
+            if (mid != NON_MONSTER)
+            {
+                monsters *mon = &menv[mid];
+                if (affect_mon_in_wall(beam, NULL, x, y))
+                    rangeUsed += affect_monster( beam, mon );
+                else if (you.can_see(mon))
+                {
+                    mprf("The %s protects %s from harm.",
+                         raw_feature_description(grd(mon->pos())).c_str(),
+                         mon->name(DESC_NOCAP_THE).c_str());
+                }
+            }
+
             return (rangeUsed);
+        }
     }
 
     // grd[x][y] will NOT be a wall for the remainder of this function.

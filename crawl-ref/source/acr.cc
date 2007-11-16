@@ -3223,7 +3223,6 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
         if (mon != NON_MONSTER && player_can_hit_monster(&menv[mon]))
         {
-
             if (mons_is_caught(&menv[mon]))
             {
 
@@ -3737,6 +3736,11 @@ static void move_player(int move_x, int move_y)
         }
         else // attack!
         {
+            // XXX: Moving into a normal wall does nothing and uses no
+            // turns or energy, but moving into a wall which contains
+            // an invisible monster attacks the monster, thus allowing
+            // the player to figure out which adjacent wall an invis
+            // monster is in "for free".
             you_attack( targ_monst, true );
             you.turn_is_over = true;
 
@@ -3772,9 +3776,9 @@ static void move_player(int move_x, int move_y)
     }
 
     // BCR - Easy doors single move
-    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
+    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open && !attacking)
         open_door(move_x, move_y, false);
-    else if (!targ_pass)
+    else if (!targ_pass && !attacking)
     {
         stop_running();
 

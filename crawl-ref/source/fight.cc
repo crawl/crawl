@@ -505,6 +505,50 @@ bool melee_attack::attack()
             xom_is_stimulated(128);
     }
 
+    // Defending monster protects itself from attacks using the
+    // wall it's in.
+    if (defender->atype() == ACT_MONSTER && grid_is_solid(def->pos())
+        && mons_class_flag(def->type, M_WALL_SHIELDED))
+    {
+        std::string feat_name = raw_feature_description(grd(def->pos()));
+
+        if (attacker->atype() == ACT_PLAYER)
+        {
+            player_apply_attack_delay();
+
+            if (you.can_see(def))
+            {
+                mprf("The %s protects %s from harm.",
+                     feat_name.c_str(),
+                     def->name(DESC_NOCAP_THE).c_str());
+            }
+            else
+            {
+                mprf("You hit the %s.",
+                     feat_name.c_str());
+            }
+        }
+        else if (you.can_see(atk))
+        {
+            // Make sure the monster uses up some energy, even though
+            // it didn't actually land a blow.
+            monsterentry *entry   = get_monster_data(atk->type);
+            atk->speed_increment -= entry->energy_usage.attack;
+
+            if (!mons_near(def))
+                simple_monster_message(atk, " hits something");
+            else if (!you.can_see(atk))
+                mprf("%s hits the %s.", def->name(DESC_CAP_THE).c_str(),
+                     feat_name.c_str());
+            else
+                mprf("%s tries to hit the %s, but is blocked by the %s.",
+                     atk->name(DESC_CAP_THE).c_str(),
+                     def->name(DESC_NOCAP_THE).c_str(),
+                     feat_name.c_str());
+        }
+        return (true);
+    }
+
     // Allow god to get offended, etc.
     attacker->attacking(defender);
 
