@@ -1467,7 +1467,7 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
     // this gives a slight challenge to the player as they ascend the
     // dungeon with the Orb
     if (you.char_direction == GDT_ASCENDING && mon_type == RANDOM_MONSTER
-        && you.level_type == LEVEL_DUNGEON)
+        && you.level_type == LEVEL_DUNGEON && !summoned)
     {
         mon_type = pick_zot_exit_defender();
         permit_bands = true;
