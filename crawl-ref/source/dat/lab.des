@@ -74,7 +74,7 @@ MONS: minotaur
 MAP
 ........
 .bbbbbb.
-.=..1<b.
+.+..1<b.
 .bbbbbb.
 ........
 ENDMAP
@@ -96,28 +96,6 @@ MAP
 .cccccccc.c.
 ..........c.
 .cccccccccc.
-............
-ENDMAP
-
-#############################################################################
-# Hidden exit, and trapped loot
-NAME: labyrinth_hidden_loot
-TAGS: minotaur generate_loot allow_dup
-MONS: minotaur
-NSUBST: d = 1 / %
-SUBST: c : cvv
-MAP
-............
-.cccccccccc.
-.cxxxxdxxxc.
-.cxxxx=xxxc.
-.cxx..U.xxc.
-.cd=U...xxc.
-.cxx...U=dc.
-.cxx.<..xxc.
-.cxxxx+xxxc.
-.cxxxx.xxxc.
-.ccccc+cccc.
 ............
 ENDMAP
 
@@ -179,7 +157,7 @@ ENDMAP
 #############################################################################
 # Another trapped exit - most evil again! 
 NAME: labyrinth_trapped_2
-TAGS: lab allow_dup generate_loot
+TAGS: minotaur allow_dup generate_loot
 ITEM: potion of porridge
 SHUFFLE: XYZ
 SHUFFLE: GH, LM, fghijklmn, FHIJKLN
