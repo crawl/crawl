@@ -1449,7 +1449,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return (false);
     }
 
-    if (which_mutation == RANDOM_MUTATION)
+    if (which_mutation == RANDOM_MUTATION
+        || which_mutation == RANDOM_XOM_MUTATION)
     {
         if ( random2(15) < how_mutated() )
         {
@@ -1458,15 +1459,16 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             else
                 return (delete_mutation(RANDOM_MUTATION));
         }
-        else
+    }
+
+    if (which_mutation == RANDOM_MUTATION)
+    {
+        do
         {
-            do
-            {
-                mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-                if (one_chance_in(1000))
-                    return false;
-            } while ( !accept_mutation(mutat) );
-        }
+            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
+            if (one_chance_in(1000))
+                return false;
+        } while ( !accept_mutation(mutat) );
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
