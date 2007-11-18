@@ -1376,12 +1376,6 @@ void fire_beam( bolt &pbolt, item_def *item )
                 // should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
-                {
-                    pbolt.is_tracer  = false;
-                    rangeRemaining  -= affect(pbolt, tx, ty);
-                    pbolt.is_tracer  = true;
-                }
-                else
                     rangeRemaining -= affect(pbolt, tx, ty);
 
                 // if it's still a wall, quit.
