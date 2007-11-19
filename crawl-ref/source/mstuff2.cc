@@ -38,6 +38,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
+#include "randart.h"
 #include "spells2.h"
 #include "spells4.h"
 #include "spl-cast.h"
@@ -1423,8 +1424,13 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         viewwindow(true, false);
         fire_beam(pbolt, NULL);
         msg::stream << "The weapon returns to "
-                    << monster->name(DESC_NOCAP_THE)
+                    << (player_monster_visible(monster)?
+                        monster->name(DESC_NOCAP_THE) : "where it came from")
                     << "!" << std::endl;
+        
+        // Player saw the item return
+        if (!is_artefact(mitm[hand_used]))
+            set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
     }
 
     if ( !really_returns )

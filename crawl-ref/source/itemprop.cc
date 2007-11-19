@@ -491,8 +491,7 @@ void remove_item_stationary( item_def &item )
 
 bool item_is_stationary( const item_def &item )
 {
-    return (you.attribute[ATTR_HELD]
-            && item.base_type == OBJ_MISSILES
+    return (item.base_type == OBJ_MISSILES
             && item.sub_type == MI_THROWING_NET
             && item.plus2);
 }
