@@ -4159,7 +4159,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             break;
         }
         
-        int net = get_trapping_net(x,y);
+        int net = get_trapping_net(x,y,true);
 
         if (net == NON_ITEM) // really shouldn't happen!
         {
