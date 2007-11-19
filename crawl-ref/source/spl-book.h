@@ -48,7 +48,7 @@ int read_book( item_def &item, read_book_action_type action );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool player_can_memorise(item_def &book);
+bool player_can_memorise(const item_def &book);
 bool learn_spell(void);
 
 spell_type which_spell_in_book(int sbook_type, int spl);

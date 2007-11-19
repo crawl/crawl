@@ -345,7 +345,11 @@ static void place_monster_corpse(const monsters *monster)
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
     if (see_grid(monster->x, monster->y))
-        tutorial_dissection_reminder();
+    {
+        tutorial_dissection_reminder(
+            mons_corpse_effect(monster->type) != CE_POISONOUS
+             || player_res_poison() > 0 );
+    }
 }                               // end place_monster_corpse()
 
 static void tutorial_inspect_kill()

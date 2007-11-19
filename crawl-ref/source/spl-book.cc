@@ -1141,7 +1141,7 @@ bool undead_cannot_memorise(spell_type spell, char being)
     return false;
 }                               // end undead_cannot_memorise()
 
-bool player_can_memorise(item_def &book)
+bool player_can_memorise(const item_def &book)
 {
     if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
         return false;
