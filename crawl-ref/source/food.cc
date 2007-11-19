@@ -167,6 +167,7 @@ static bool find_butchering_implement( bool fallback )
             && item_known_uncursed(you.inv[i])
             && item_type_known(you.inv[i])
             && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
+            && !has_warning_inscription(you.inv[i], OPER_WIELD) // don't even ask
             && can_wield( &you.inv[i] ))
         {
             mpr("Switching to a butchering implement.");

@@ -720,13 +720,13 @@ void tutorial_finished()
 }
 
 // occasionally remind religious characters of sacrifices
-void tutorial_dissection_reminder()
+void tutorial_dissection_reminder(bool healthy)
 {
     if (Options.tut_just_triggered || !Options.tutorial_left)
         return;
 
     // when hungry, give appropriate message or at least don't suggest sacrifice
-    if (you.hunger_state < HS_SATIATED)
+    if (you.hunger_state < HS_SATIATED && healthy)
     {
         learned_something_new(TUT_MAKE_CHUNKS);
         return;
@@ -740,7 +740,7 @@ void tutorial_dissection_reminder()
     else if (one_chance_in(8))
     {
         std::string text;
-        text += "If you don't need to eat it, consider <w>D<magenta>issecting "
+        text += "If you don't want to eat it, consider <w>D<magenta>issecting "
                 "this corpse under <w>p<magenta>rayer as a sacrifice to ";
         text += god_name(you.religion);
         text += ". Whenever you <w>v<magenta>iew a corpse while in tutorial mode "
@@ -975,19 +975,18 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "spells via <w>M<magenta> and cast a memorised spell with "
                   "<w>Z<magenta>.";
           
-          if (!you.skills[SK_SPELLCASTING])
-          {
-              text << "\nHowever, first you will have to get accustomed to "
-                      "spellcasting by reading lots of scrolls.";
-          }
           if (you.religion == GOD_TROG)
           {
-               more();
-               text << "\n\nAs a worshipper of "
+               text << "\nAs a worshipper of "
                     << god_name(GOD_TROG)
                     << ", though, you might instead wish to burn those tomes of "
                        "hated magic by using the corresponding "
                        "<w>a<magenta>bility.";
+          }
+          else if (!you.skills[SK_SPELLCASTING])
+          {
+              text << "\nHowever, first you will have to get accustomed to "
+                      "spellcasting by reading lots of scrolls.";
           }
           text << "\nDuring the tutorial you can reread this information at "
                   "any time by <w>v<magenta>iewing the item in question.";
@@ -1228,18 +1227,22 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           text << "Corpses can be spoiled or inedible, making you sick. "
                   "Also, some monsters' flesh is less palatable than others'. "
                   "While sick, your hitpoints won't regenerate and sometimes "
-                  "an attribute may decrease. It wears off with time (wait with "
-                  "<w>5<magenta>) or you can quaff a potion of healing. "
-                  "Also you can always press <w>@<magenta> to see your current "
-                  "status. ";
+                  "an attribute may decrease. It wears off with time (";
+                  
+          if (!i_feel_safe())
+              text << "find a quiet corner and ";
+          text << "wait with <w>5<magenta>) or you could quaff a potion of "
+                  "healing. ";
           break;
           
       case TUT_YOU_POISON:
           learned_something_new(TUT_YOU_ENCHANTED);
-          text << "Poison will slowly reduce your hp. It wears off with time "
-                  "(wait with <w>5<magenta>) or you could quaff a potion of "
-                  "healing. Also you can always press <w>@<magenta> to see your "
-                  "current status. ";
+          text << "Poison will slowly reduce your hp. It wears off with time (";
+          
+          if (!i_feel_safe())
+              text << "find a quiet corner and ";
+          text << "wait with <w>5<magenta>) or you could quaff a potion of "
+                  "healing. ";
           break;
           
       case TUT_YOU_CURSED:
@@ -1256,6 +1259,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "latter, all you need to do is <w>D<magenta>issect a corpse "
                   "with a sharp implement. Your starting weapon will do nicely. "
                   "Try to dine on chunks in order to save permanent food.";
+                  
+          if (Options.tutorial_type == TUT_BERSERK_CHAR)
+              text << "\nNote that you cannot Berserk while hungry.";
           break;
           
       case TUT_YOU_STARVING:
@@ -1263,6 +1269,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "<w>e<magenta>at something quickly, or you'll die. The safest "
                   "way to deal with this is to simply eat something from your "
                   "inventory rather than wait for a monster to leave a corpse.";
+
+          if (Options.tutorial_type == TUT_MAGIC_CHAR)
+              text << "\nNote that you cannot cast spells while starving.";
           break;
           
       case TUT_MULTI_PICKUP:
@@ -1519,7 +1528,7 @@ static std::string tut_abilities()
            "activation, especially by the untrained, is likely to fail.");
 }
 
-static std::string tut_throw_stuff(item_def &item)
+static std::string tut_throw_stuff(const item_def &item)
 {
     std::string result;
     
@@ -1536,7 +1545,7 @@ static std::string tut_throw_stuff(item_def &item)
     return (result);
 }
 
-void tutorial_describe_item(item_def &item)
+void tutorial_describe_item(const item_def &item)
 {
     std::ostringstream ostr;
     ostr << "<magenta>";
@@ -1924,6 +1933,7 @@ void tutorial_describe_item(item_def &item)
             return;
     }
 
+    ostr << "</magenta>";
     std::string broken = ostr.str();
     linebreak_string2(broken, get_tutorial_cols());
     gotoxy(1, wherey() + 2);

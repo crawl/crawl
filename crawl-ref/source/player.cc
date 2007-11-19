@@ -445,8 +445,8 @@ bool you_can_wear(int eq, bool special_armour)
    if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
        return false;
 
-   if (you.species == SP_MINOTAUR && eq == EQ_HELMET)
-       return false;
+   if (you.mutation[MUT_HORNS] && eq == EQ_HELMET)
+       return (special_armour);
 
    if (you.species == SP_GHOUL && eq == EQ_GLOVES)
        return false;

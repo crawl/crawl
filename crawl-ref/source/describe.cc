@@ -3365,6 +3365,8 @@ static void show_item_description(const item_def &item)
 
     const std::string description = get_item_description( item, 1 );
     print_description(description);
+    if (Options.tutorial_left)
+        tutorial_describe_item(item);
 
     if (item.has_spells())
     {
@@ -3423,13 +3425,9 @@ void describe_item( item_def &item, bool allow_inscribe )
         break;
     }
     
-    if (Options.tutorial_left)
-    {
-        tutorial_describe_item(item);
-        getch();
-    }
     // Don't ask during tutorial, or if there aren't enough rows left
-    else if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
+    if (!Options.tutorial_left && allow_inscribe
+        && wherey() <= get_number_of_lines() - 3)
     {
         gotoxy(1, wherey() + 2);
         formatted_string::parse_string(

@@ -31,7 +31,7 @@ void tut_starting_screen();
 void tutorial_death_screen(void);
 void tutorial_finished(void);
 
-void tutorial_dissection_reminder(void);
+void tutorial_dissection_reminder(bool healthy);
 void tutorial_healing_reminder(void);
 
 void taken_new_item(unsigned char item_type);
@@ -41,7 +41,7 @@ void learned_something_new(tutorial_event_type seen_what, int x=0, int y=0);
 formatted_string tut_abilities_info();
 
 // additional information for tutorial players
-void tutorial_describe_item(item_def &item);
+void tutorial_describe_item(const item_def &item);
 bool tutorial_feat_interesting(dungeon_feature_type feat);
 void tutorial_describe_feature(dungeon_feature_type feat);
 bool tutorial_monster_interesting(const monsters *mons);
