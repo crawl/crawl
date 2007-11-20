@@ -170,12 +170,12 @@ chaos_knight = (Xom | Makhleb | random)
 
 death_knight = (necromancy | Yredelemnul | random)
 
-priest       = (Zin | Yredelemnul | random)
+priest       = (Zin | Yredelemnul | Beogh | random)
         The above three make in advance the additional choices for 
-        Chaos Knights, Death Knights, and Priests.
+        Chaos Knights, Death Knights, and Priests (Beogh for HO only).
 
 race = (Human |...| Merfolk | random)
-        The usual abbreviations (Hu, El, HE, etc.) work.
+        The usual abbreviations (Hu, HE, etc.) work.
 
 class = (Fighter |...| Wanderer | random)
         Here again the abbreviations (Fi, Wi, Pr, etc.) can be used.
@@ -189,15 +189,15 @@ random_pick = false
 2-  File System.
 ================
 
-crawl_dir= <path>
+crawl_dir = <path>
         Directory for reading macro.txt and init.txt, and dumping characters.
         It should end with the path delimiter.
 
-morgue_dir = <path>
+morgue_dir = morgue
         Directory where morgue dumps (morgue*.txt and morgue*.lst) files are
         written.
 
-save_dir = <path>
+save_dir = saves
         Directory where saves and bones are stored. This option may be ignored
         depending on the settings used to compile Crawl, but should be
         honoured for the official Crawl binaries.
@@ -352,9 +352,10 @@ drop_mode = (multi | single)
         multiple items to be dropped. (You can also switch to multidrop from
         the classic drop menu using the '@' key).
 
-        Multidrop can be very convenient, but be aware that every item dropped
-        takes one turn. (This is different from picking up.) When selecting
-        multidrops, the top right corner shows the estimated number of turns.
+        Multidrop is the default and can be very convenient, but be aware that 
+	every item dropped takes one turn. (This is different from picking up.) 
+	When selecting multidrops, the top right corner shows the estimated 
+	number of turns.
 
         The order in which items get dropped is from top to bottom in the 
         inventory listing, but equipped items will be dropped last, and may be 
@@ -437,13 +438,11 @@ target_unshifted_dirs = false
 4-c     Passive Sightings (via detection and remembrance).
 -----------------------------------------------------------
 
-detected_monster_colour = darkgrey
-        Monsters found by detect creatures will be coloured this colour; e.g.
-          detected_monster_colour = lightred
+detected_monster_colour = lightred
+        Monsters found by detect creatures will be coloured this colour.
 
-detected_item_colour = darkgrey
-        Items found by detect items will be given this colour, for example
-          detected_item_colour = green
+detected_item_colour = green
+        Items found by detect items will be given this colour.
 
 colour_map = true
         Colours out of sight map features on the playing screen.
@@ -473,9 +472,8 @@ See part Technical (6-) for dos_use_background_intensity under Windows and DOS.
 
 By default, no brands are active apart from stair_item_brand.
 
-heap_brand = none
-        Brand heaps of items (more than one item or stack). For example
-          heap_brand = reverse
+heap_brand = reverse
+        Brand heaps of items (more than one item or stack).
 
 friend_brand = none
         Brand friends in some way. This is very helpful for summoners. E.g.
@@ -684,13 +682,15 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         possible. Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
 
-tc_reachable = blue
-tc_dangerous = cyan
-tc_excluded = lightmagenta
+tc_reachable      = blue
+tc_dangerous      = cyan
+tc_disconnected   = darkgrey
+tc_excluded       = lightmagenta
 tc_exclude_circle = red
-        The above four settle the colouring of the level map ('X'). They are
+        The above five settle the colouring of the level map ('X'). They are
         reachable: all squares safely reachable (without leaving the level)
         dangerous: squares which are only connected to you via traps, etc.
+	disconnected: squares which cannot be reached without leaving the level
         excluded: the colour for the centre of travel exclusions (Ctrl-X)
         excluded_circle: the colour for travel exclusions apart from centre 
 
@@ -721,6 +721,16 @@ stash_tracking = (all | explicit | dropped)
         something becomes a stash, and the game keeps track of all such 
         squares. You can still use Ctrl-S and Ctrl-E as above.
 
+stash_filter = <list of numbers>
+        This option allows filtering certain classes of items when searching
+	stashes. For example,
+	     stash_filter = 14, 4:21
+	filters corpses (14) as well as food of the subtype chunks (4:21).
+
+annotate_item_class = false
+        This only works if stash.lua has been sourced already in init.txt.
+	If set to true, automatically annotates items with their object class
+	(e.g. weapon or wand) for stash searching.
 
 4-i     Command Enhancements.
 -----------------------------
@@ -1029,23 +1039,23 @@ item_stack_summary_minimum = 5
 fire_items_start = c
         Sets the first inventory item to consider. Default is c.
 
-fire_order = launcher, dart / stone / dagger, spear, handaxe, club
-        The list should be on one line of items, with commas between items.
-        Items that appear first get higher priority.
+fire_order  = launcher, return, 
+fire_order += javelin / dart / stone / rock / spear / net / handaxe
+        Controls the order of items autoselected for firing. Items should
+	be separated by commas and items that appear first get higher priority.
+	You can use multiple fire_order lines - all lines but the first must
+	use fire_order +=
 
         Items in any position may be slash-separated to indicate that these
-        are of equal priority. In the example, darts, stones and daggers are
-        at the same priority, so the first item in your inventory that is
-        one of these will be picked for firing.
+        are of equal priority. If this is the case, the first item in your 
+	inventory that fits one of these will be picked for firing.
         
         'launcher' refers to firing the appropriate missile for the wielded 
         weapon (ie crossbow, bow, sling, blowgun). You'll almost certainly 
         want it first, as it'll be ignored when you're not wielding a ranged 
-        weapon. The default is
-        
-          fire_order = launcher, javelin / dart / stone / spear          
+        weapon. 'return' refers to (identified) weapons of returning.
 
-<See also pickup_thrown in A.4a.>
+(See also pickup_thrown in 4-a.)
 
 4-l     Message Channels.
 -------------------------
@@ -1191,7 +1201,7 @@ dump_item_origins = artifacts, rods
         If you don't want any items to be annotated, set dump_item_origins to 
         none, and set dump_item_origin_price to -1.
 
-dump_item_origin_price = 100
+dump_item_origin_price = -1
         Item origins are dumped if the price of the item is greater than or 
         equal to this amount. Set this to -1 to prevent selection by price.
 
@@ -1224,7 +1234,7 @@ use_notes = true
         - Memorizing a spell of higher level than any learned before
         - Becoming a worshipper of a god
         - Abandoning a god
-	- Being put under penance and being forgiven
+        - Being put under penance and being forgiven
         - Receiving a gift from a god (except Xom)
         - Being able to invoke a godly power for the first time
         - Identifying items (see below)
@@ -1232,7 +1242,7 @@ use_notes = true
         - Reaching critical HP levels (see below)
         - Gaining or losing mutations
         - Reaching significant levels in a skill (see below)
-	- Dying
+        - Dying
         You can use the command ':' for manually adding notes.
 
 user_note_prefix = <string>
@@ -1525,3 +1535,11 @@ autopickup = $?+"/
 : else
 autopickup = $?+"/!%
 : end
+
+  or
+
+: if you.race() == "Hill Orc" then
+priest = Beogh
+: else
+priest = Yredelemnul
+:end

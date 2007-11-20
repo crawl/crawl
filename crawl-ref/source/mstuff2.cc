@@ -1365,7 +1365,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
                     << "!" << std::endl;
         
         // Player saw the item return
-        if (!is_artefact(mitm[hand_used]))
+        if (!is_artefact(item))
             set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
     }
 

@@ -1187,6 +1187,11 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     else if (item.base_type == OBJ_WEAPONS
              && is_throwable(item, you.body_size()))
     {
+        if ((fire_type & FIRE_RETURNING) && item.special == SPWPN_RETURNING
+             && item_ident(item, ISFLAG_KNOW_TYPE))
+        {
+            return (true);
+        }
         if ((fire_type & FIRE_DAGGER) && item.sub_type == WPN_DAGGER)
             return (true);
         if ((fire_type & FIRE_SPEAR) && item.sub_type == WPN_SPEAR)
@@ -2258,6 +2263,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;
+                    
+        // Player saw the item return
+        if (!is_artefact(you.inv[throw_2]))
+            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
     }
     else
         dec_inv_item_quantity( throw_2, 1 );

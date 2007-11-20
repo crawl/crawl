@@ -34,19 +34,19 @@
 ##### 1- Starting Screen ############################################
 #
 # name = Delilah
-# remember_name = true
+# remember_name = false
 # weapon = (random | short sword | hand axe | spear | mace | trident)
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)
-# priest       = (Zin | Yredelemnul | random)
-# race = (Human |...| Merfolk | random)
-# class = (Fighter |...| Wanderer | random)
+# priest = (Zin | Yredelemnul | Beogh | random)
+# race   = (Human |...| Merfolk | random)
+# class  = (Fighter |...| Wanderer | random)
 # random_pick = true
 
 ##### 2-  File System ###############################################
 #
 # crawl_dir= <path>
-# morgue_dir = morgues
+# morgue_dir = morgue
 # save_dir = saves
 # sound = <regex>:<path to sound file>
 
@@ -92,19 +92,19 @@ lua_file = lua/pickup.lua
 
 ##### 4-c	Passive Sightings #####################
 #
-detected_monster_colour = lightred
-detected_item_colour = green
+# detected_monster_colour = lightred
+# detected_item_colour = green
 # colour_map = false
 # clean_map = true
 
 ##### 4-d	Branding ##############################
 #
-heap_brand = reverse
 friend_brand = hi:green
 stab_brand = hi:blue
 # may_stab_brand = hi:yellow
+# heap_brand = reverse
 # stair_item_brand = reverse
-# trap_item_brand = reverse
+# trap_item_brand = none
 
 ##### 4-e	Level Map Functions ###################
 #
@@ -128,9 +128,10 @@ stab_brand = hi:blue
 # explore_greedy = true
 # explore_stop = items,stairs,shops,altars,gates
 
-# tc_reachable = blue
-# tc_dangerous = cyan
-# tc_excluded = lightmagenta
+# tc_reachable      = blue
+# tc_dangerous      = cyan
+# tc_disconnected   = darkgrey
+# tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
 # The following options are not default. Uncommenting activates them.
@@ -147,6 +148,7 @@ stab_brand = hi:blue
 #
 # stash_tracking = (all | explicit | dropped)
 # stash_filter = 14, 4:21
+# annotate_item_class = true
 
 ##### 4-i	Command Enhancements ##################
 #
@@ -212,7 +214,8 @@ message_colour = lightcyan:LOW MAGIC WARNING
 ##### 4-k	Firing Commands #######################
 #
 # fire_items_start = c
-# fire_order = launcher, dart / stone / javelin, dagger, spear, handaxe, club
+# fire_order  = launcher, return, dart / stone / javelin, 
+# fire_order += dagger, spear, handaxe, club
 
 ##### 4-l	Channels ##############################
 #
@@ -235,7 +238,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
-# dump_item_origin_price = 100
+# dump_item_origin_price = -1
 # dump_message_count = 7
 # dump_order  = header,hiscore,stats,misc,notes,inventory,turns_by_place,
 # dump_order += skills,spells,overview,mutations,messages,screenshot
@@ -246,10 +249,13 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # use_notes = false
 # user_note_prefix=@@@
 # note_items = rod,book,rune
+# note_monsters = orb of fire
 # ood_interesting = 8
 # note_hp_percent = 5
 # note_skill_levels = 1,5,10,15,27
-# note_skill_max = true
+# note_all_skill_levels = true
+# note_skill_max  = true
+# note_all_spells = true
 
 # The following takes a note whenever the Abyss is left: 
 # note_messages = You pass through the gate 
@@ -265,7 +271,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # colour.lightcyan = cyan
 # colour.yellow    = brown
 #
-# use_ascii = ascii
+# char_set = ascii
 # wiz_mode = no
 #
 # classic_item_colours = true
@@ -278,7 +284,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 ##### 6-b	DOS and Windows #######################
 #
 # dos_use_background_intensity = true
-
+# background = black
 
 ##### 6-c   Unix ##################################
 #
