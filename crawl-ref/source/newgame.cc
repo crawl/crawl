@@ -3238,7 +3238,8 @@ bool give_items_skills()
             if (you.species == SP_VAMPIRE && coinflip())
                 you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
         }
-        else if (you.species == SP_KOBOLD)
+        else if (you.species == SP_HALFLING || you.species == SP_KOBOLD ||
+                 you.species == SP_GNOME)
         {
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                               ARM_LEATHER_ARMOUR);
@@ -3265,7 +3266,8 @@ bool give_items_skills()
         if (you.species != SP_TROLL)
             weap_skill = 2;
 
-        if (you.species == SP_KOBOLD)
+        if (you.species == SP_HALFLING || you.species == SP_KOBOLD ||
+            you.species == SP_GNOME)
         {
             you.skills[SK_THROWING] = 1;
             you.skills[SK_DARTS] = 1;
