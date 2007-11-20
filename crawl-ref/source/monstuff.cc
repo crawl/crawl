@@ -4968,7 +4968,11 @@ static bool is_trap_safe(const monsters *monster, const int trap_x,
     const trap_struct &trap = env.trap[trap_at_xy(trap_x,trap_y)];
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
+    {
+        if (mons_is_fleeing(monster) && intel >= I_NORMAL)
+            return (true);
         return (false);
+    }
         
     // Monsters are not afraid of non-mechanical traps. XXX: If we add
     // any non-mechanical traps that can damage monsters, must add

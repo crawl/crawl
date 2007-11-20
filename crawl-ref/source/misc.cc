@@ -871,7 +871,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             return;
         }
         shaft_level = absdungeon_depth(shaft_dest.branch,
-                                          shaft_dest.depth);
+                                       shaft_dest.depth);
 
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");

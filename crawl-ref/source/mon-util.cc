@@ -4972,13 +4972,11 @@ void monsters::apply_location_effects()
     }
 }
 
+// returns true if the trap should be revealed to the player
 bool monsters::do_shaft()
 {
     if (!is_valid_shaft_level())
         return (false);
-
-    bool nearby  = mons_near(this);
-    bool vis     = player_monster_visible(this);
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
@@ -5001,15 +4999,15 @@ bool monsters::do_shaft()
 
         if (airborne() || total_weight() == 0)
         {
-            if (nearby)
+            if (mons_near(this))
             {
-                if (vis)
+                if (player_monster_visible(this))
                     mprf("A shaft briefly opens up underneath %s!",
                          name(DESC_NOCAP_THE).c_str());
                 else
                     mpr("A shaft briefly opens up in the floor!");
             }
-            return (true);
+            return (false);
         }
     }
 
@@ -5019,21 +5017,15 @@ bool monsters::do_shaft()
         return (false);
 
     set_transit(lev);
-
-    if (nearby)
-    {
-        if (vis)
-            mprf("%s falls through a shaft!",
-                 name(DESC_CAP_THE).c_str());
-        else
-            mpr("A shaft briefly opens up in the floor!");
-    }
+    bool reveal = false;
+    if (simple_monster_message(this, " falls through a shaft!"))
+        reveal = true;;
 
     // Monster is no longer on this level
     destroy_inventory();
     monster_cleanup(this);
 
-    return true;
+    return (reveal);
 }
 
 void monsters::put_to_sleep(int)

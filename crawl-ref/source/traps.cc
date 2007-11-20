@@ -420,7 +420,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         // Paranoia
         if (!is_valid_shaft_level())
         {
-            if (trap_known);
+            if (trap_known)
                 mpr("The shaft disappears in a puff of logic!");
 
             grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
@@ -931,6 +931,13 @@ bool is_valid_shaft_level(const level_id &place)
 {
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
+
+    // disallow shafts on the first two levels
+    if (place.branch == BRANCH_MAIN_DUNGEON
+        && you.your_level < 2)
+    {
+        return (false);
+    }
 
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without

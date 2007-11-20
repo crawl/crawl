@@ -1025,6 +1025,7 @@ void end_game( struct scorefile_entry &se )
     }
 
     invent( -1, true );
+    textcolor( LIGHTGREY );
     clrscr();
 
     if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))

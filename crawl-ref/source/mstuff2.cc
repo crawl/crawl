@@ -326,7 +326,6 @@ void mons_trap(struct monsters *monster)
         break;
 
     case TRAP_SHAFT:
-    {
         // Paranoia
         if (!is_valid_shaft_level())
         {
@@ -344,13 +343,12 @@ void mons_trap(struct monsters *monster)
             if (trapKnown && !monster->airborne())
                 simple_monster_message(monster,
                                         " doesn't fall through the shaft.");
-
             return;
         }
 
-        revealTrap = monster->do_shaft();
+        if (monster->do_shaft())
+            revealTrap = true;
         break;
-    }
 
     default:
         break;
@@ -412,7 +410,8 @@ void mons_trap(struct monsters *monster)
     // reveal undiscovered traps, where appropriate: {dlb}
     if (monsterNearby && !trapKnown && revealTrap)
     {
-        grd[monster->x][monster->y] = trap_category(env.trap[which_trap].type);
+        grd[env.trap[which_trap].x][env.trap[which_trap].y] 
+                     = trap_category(env.trap[which_trap].type);
     }
 
     // apply damage and handle death, where appropriate: {dlb}

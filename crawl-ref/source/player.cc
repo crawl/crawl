@@ -155,11 +155,15 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 return (false);
             }
         } // unknown trap
-        else if (new_grid == DNGN_TRAP_MAGICAL)
+        else if (new_grid == DNGN_TRAP_MAGICAL
+                 || new_grid == DNGN_TRAP_NATURAL)
         {
-            std::string prompt = "Really step onto that "; // preposition?
+            std::string prompt = "Really step ";
+                        prompt += (trap_type_at_xy(x,y) == TRAP_ALARM ?
+                                   "onto" : "into");
+                        prompt += " that ";
             prompt += feature_description(new_grid, trap_type_at_xy(x,y),
-                                          DESC_PLAIN, false);
+                                          DESC_BASENAME, false);
             prompt += '?';
             
             // Zot traps require capital confirmation
@@ -5158,7 +5162,7 @@ level_id actor::shaft_dest() const
     if (lev.depth == curr_depth)
         return lev;
 
-    // Only shafts on the level immediately above a dangeorus branch
+    // Only shafts on the level immediately above a dangerous branch
     // bottom will take you to that dangerous bottom, and shafts can't
     // be created during level generation time.
     if (your_branch().dangerous_bottom_level

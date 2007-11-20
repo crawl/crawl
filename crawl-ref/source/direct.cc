@@ -1514,7 +1514,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
         case TRAP_NEEDLE:
             return ("needle trap");
         case TRAP_SHAFT:
-            return ("shaft trap");
+            return ("shaft");
         default:
             error_message_to_player();
             return ("undefined trap");
