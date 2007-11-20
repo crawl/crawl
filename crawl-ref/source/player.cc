@@ -433,6 +433,10 @@ bool is_player_same_species(const int mon)
             if (mons_species(mon) == MONS_MUMMY)
                 return (true);
             return (false);
+        case SP_GHOUL:
+            if (mons_species(mon) == MONS_GHOUL)
+                return (true);
+            return (false);
         case SP_VAMPIRE:
             if (mons_species(mon) == MONS_VAMPIRE)
                 return (true);
