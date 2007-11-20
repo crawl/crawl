@@ -243,6 +243,8 @@ const char *mutation_descrip[][3] = {
     {"You can summon demons to your aid.", "", ""},
     {"You can hurl blasts of hellfire.", "", ""},
     {"You can call on the torments of Hell.", "", ""},
+
+    /* Not summoners/necromancers/worshippers of Yredelemnul */
     {"You can raise the dead to walk for you.", "", ""},
 // 50
     {"You can control demons.", "", ""},
@@ -2215,7 +2217,9 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.skills[SK_SUMMONINGS] < 3 && you.skills[SK_NECROMANCY] < 3
+            // Yredelemnulites have the raise dead invocation
+            if (you.religion != GOD_YREDELEMNUL &&
+                you.skills[SK_SUMMONINGS] < 3 && you.skills[SK_NECROMANCY] < 3
                 && one_chance_in(10))
             {
                 whichm = MUT_RAISE_DEAD;
