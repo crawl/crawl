@@ -324,7 +324,7 @@ static void god_greeting_message( bool game_start )
             simple_god_message( " says: A new plaything!" );
         break;
     case GOD_VEHUMET:
-        god_speaks( you.religion, "Let it end in hellfire!");
+        simple_god_message(" says: Let it end in hellfire!");
         break;
     case GOD_OKAWARU:
         simple_god_message(" says: Welcome, disciple.");
