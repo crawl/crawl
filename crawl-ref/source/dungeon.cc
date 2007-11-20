@@ -3991,9 +3991,13 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
             stair_exist[sty] = 0;
     }
 
+    // Don't create any new up stairs on dungeon level 1.
+    bool no_up_stairs = player_branch_depth() == 1 && 
+        you.level_type == LEVEL_DUNGEON;
+
     for (int j = 0; j < (coinflip()? 4 : 3); j++)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < (no_up_stairs ? 1 : 2); i++)
         {
             const dungeon_feature_type stair =
                 static_cast<dungeon_feature_type>(
