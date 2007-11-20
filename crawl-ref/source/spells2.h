@@ -155,7 +155,7 @@ void summon_animals(int pow);
  * *********************************************************************** */
 void summon_small_mammals(int pow);
 
-void summon_berserker();
+bool summon_berserker(int pow, bool god_gift);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

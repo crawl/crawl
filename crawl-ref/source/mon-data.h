@@ -43,7 +43,7 @@
                        holy wrath weapons
                 natural - baseline monster type
                 undead - immunity from draining, pain, torment; extra
-                         damage from hoyl wrath/disruption; affected by
+                         damage from holy wrath/disruption; affected by
                          repel undead and holy word
                 demonic - similar to undead, but holy wrath does even
                           more damage and disruption and repel undead

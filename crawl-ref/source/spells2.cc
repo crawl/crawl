@@ -1480,12 +1480,13 @@ void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
                     false, false, false, true);
 }                               // end summon_ice_beast_etc()
 
-// Trog sends some fighting buddies for his followers
-void summon_berserker()
+// Trog sends some fighting buddies for his followers (or enemies if
+// god_gift is false)
+bool summon_berserker(int pow, bool god_gift)
 {
-    beh_type beha = BEH_GOD_GIFT;
-    int pow = you.piety + random2(you.piety/4) - random2(you.piety/4);
+    beh_type beha = (god_gift) ? BEH_GOD_GIFT : BEH_HOSTILE;
     int numsc = std::min(2 + (random2(pow) / 4), 6);
+    bool success = false;
 
     monster_type mon = MONS_TROLL;
     
@@ -1540,6 +1541,8 @@ void summon_berserker()
     
     if (mons != -1)
     {
+        success = true;
+
         monsters *summon = &menv[mons];
         summon->go_berserk(false);
         mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
@@ -1553,6 +1556,8 @@ void summon_berserker()
         summon->update_ench(berserk);
         summon->update_ench(abj);
     }
+
+    return success;
 }   // end summon_berserker()
 
 bool summon_swarm( int pow, bool unfriendly, bool god_gift )

@@ -633,7 +633,7 @@ void drain_exp(bool announce_full)
         return;
     }
 
-    if (protection >= 3 || you.is_undead)
+    if (protection >= 3)
     {
         if ( announce_full )
             mpr("You fully resist.");

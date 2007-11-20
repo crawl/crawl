@@ -1114,7 +1114,7 @@ static int xom_check_card(item_def &deck, card_type card,
     switch (card)
     {
     case CARD_XOM:
-        // Handled elswehre
+        // Handled elsewhere
         amusement = 0;
         break;
 

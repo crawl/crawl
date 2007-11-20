@@ -245,6 +245,8 @@ const char *mutation_descrip[][3] = {
     {"You can summon demons to your aid.", "", ""},
     {"You can hurl blasts of hellfire.", "", ""},
     {"You can call on the torments of Hell.", "", ""},
+
+    /* Not summoners/necromancers/worshippers of Yredelemnul */
     {"You can raise the dead to walk for you.", "", ""},
 // 50
     {"You can control demons.", "", ""},
@@ -2218,7 +2220,8 @@ void demonspawn(void)
             }
 
             // Makhlebites have the summonings invocation
-            if ((you.religion != GOD_MAKHLEB || you.piety < 100) &&
+            if ((you.religion != GOD_MAKHLEB ||
+                you.piety < piety_breakpoint(3)) &&
                 you.skills[SK_SUMMONINGS] < 5 && one_chance_in(3))
             {                       // good summoners don't get summon demon
                 whichm = MUT_SUMMON_DEMONS;
@@ -2294,8 +2297,11 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.skills[SK_SUMMONINGS] < 3 && you.skills[SK_NECROMANCY] < 3
-                && one_chance_in(10))
+            // Yredelemnulites have the raise dead invocation
+            if ((you.religion != GOD_YREDELEMNUL ||
+                you.piety < piety_breakpoint(3)) &&
+                you.skills[SK_SUMMONINGS] < 3 &&
+                you.skills[SK_NECROMANCY] < 3 && one_chance_in(10))
             {
                 whichm = MUT_RAISE_DEAD;
                 howm = 1;
