@@ -14,6 +14,7 @@
 #define STATE_H
 
 #include "enum.h"
+#include <vector>
 
 struct god_act_state
 {
@@ -65,6 +66,8 @@ struct game_state
     int             prev_repetition_turn;
     bool            cmd_repeat_started_unsafe;
 
+    std::vector<std::string> startup_errors;
+    
     std::vector<std::string> input_line_strs;
     unsigned int             input_line_curr;
 
@@ -80,6 +83,9 @@ protected:
 public:
     game_state();
 
+    void add_startup_error(const std::string &error);
+    void show_startup_errors();
+    
     bool is_replaying_keys() const;
 
     bool is_repeating_cmd() const;

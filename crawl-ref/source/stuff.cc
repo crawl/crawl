@@ -444,9 +444,11 @@ void cio_init()
     crawl_view.init_geometry();
 
     if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
-        end(1, false,
-            "Unicode glyphs are not available, please change your "
-            "char_set option");
+    {
+        crawl_state.add_startup_error(
+            "Unicode glyphs are not available, falling back to ASCII.");
+        Options.char_set = CSET_ASCII;
+    }
 }
 
 void cio_cleanup()

@@ -40,6 +40,28 @@ game_state::game_state()
     reset_cmd_again();
 }
 
+void game_state::add_startup_error(const std::string &err)
+{
+    startup_errors.push_back(err);
+}
+
+void game_state::show_startup_errors()
+{
+    formatted_scroller error_menu;
+    error_menu.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP
+                         | MF_EASY_EXIT);
+    error_menu.set_more(
+        formatted_string::parse_string(
+                           "<cyan>[ + : Page down.   - : Page up."
+                           "                    Esc or Enter to continue.]"));
+    error_menu.set_title(
+        new MenuEntry("Warning: Crawl encountered errors during startup:",
+                      MEL_TITLE));
+    for (int i = 0, size = startup_errors.size(); i < size; ++i)
+        error_menu.add_entry(new MenuEntry(startup_errors[i]));
+    error_menu.show();
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // Repeating commands and doing the previous command over again.
 
