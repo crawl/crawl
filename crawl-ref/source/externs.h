@@ -1757,7 +1757,7 @@ private:
                                 const std::string &interrupt_names,
                                 bool append_interrupts,
                                 bool remove_interrupts);
-    void set_fire_order(const std::string &full);
+    void set_fire_order(const std::string &full, bool add);
     void add_fire_order_slot(const std::string &s);
     void set_menu_sort(std::string field);
     void new_dump_fields(const std::string &text, bool add = true);

@@ -673,7 +673,7 @@ void request_autopickup(bool do_pickup)
     will_autopickup = do_pickup;
 }
 
-// 2 - artifact, 1 - glowing/runed, 0 - mundane
+// 2 - artefact, 1 - glowing/runed, 0 - mundane
 static int item_name_specialness(const item_def& item)
 {
     // All jewellery is worth looking at.

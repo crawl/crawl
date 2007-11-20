@@ -275,6 +275,8 @@ static fire_type str_to_fire_types( const std::string &str )
         return (FIRE_JAVELIN);
     else if (str == "net")
         return (FIRE_NET);
+    else if (str == "return" || str == "returning")
+        return (FIRE_RETURNING);
 
     return (FIRE_NONE);
 }
@@ -642,7 +644,7 @@ void game_options::reset_options()
     item_colour            = true;
 
     // [ds] Default to jazzy colours.
-    detected_item_colour   = LIGHTGREEN;
+    detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
 
     classic_item_colours   = false;
@@ -698,8 +700,9 @@ void game_options::reset_options()
     fire_items_start       = 2;           // start at slot 'c'
 
     // Clear fire_order and set up the defaults.
-    set_fire_order("launcher, "
-                   "javelin / dart / stone / rock / spear / net / handaxe");
+    set_fire_order("launcher, return, "
+                   "javelin / dart / stone / rock / spear / net / handaxe",
+                   false);
 
     item_stack_summary_minimum = 5;
 
@@ -717,16 +720,16 @@ void game_options::reset_options()
     sc_format              = -1;
 
     friend_brand     = CHATTR_NORMAL;
-    heap_brand       = CHATTR_NORMAL;
     stab_brand       = CHATTR_NORMAL;
     may_stab_brand   = CHATTR_NORMAL;
+    heap_brand       = CHATTR_REVERSE;
     stair_item_brand = CHATTR_REVERSE;
     trap_item_brand  = CHATTR_NORMAL;
 
     no_dark_brand    = true;
 
 #ifdef WIZARD
-    wiz_mode      = WIZ_NO;
+    wiz_mode         = WIZ_NO;
 #endif
 
     // map each colour to itself as default
@@ -821,9 +824,10 @@ static unsigned read_symbol(std::string s)
     return (strtoul(s.c_str(), &tail, base));
 }
 
-void game_options::set_fire_order(const std::string &s)
+void game_options::set_fire_order(const std::string &s, bool add)
 {
-    fire_order.clear();
+    if (!add)
+        fire_order.clear();
     std::vector<std::string> slots = split_string(",", s);
     for (int i = 0, size = slots.size(); i < size; ++i)
         add_fire_order_slot(slots[i]);
@@ -1866,7 +1870,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fire_order")
     {
-        set_fire_order(field);
+        set_fire_order(field, plus_equal);
     }
     else if (key == "random_pick")
     {

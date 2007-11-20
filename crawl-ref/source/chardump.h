@@ -8,7 +8,7 @@
  *  Change History (most recent first):
  *
  *               <1>     4/20/99        JDJ             Reformatted, uses string objects, split out
- *                                                                      7 functions from dump_char, dumps artifact info.
+ *                                                      7 functions from dump_char, dumps artefact info.
  */
 
 

@@ -1864,7 +1864,7 @@ bool forget_inventory(bool quiet)
                 break;
             }
         }
-        // Non-jewellery artifacts can easily be re-identified by
+        // Non-jewellery artefacts can easily be re-identified by
         // equipping them.
         else if (item.base_type != OBJ_JEWELLERY)
             unset_ident_flags(item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
