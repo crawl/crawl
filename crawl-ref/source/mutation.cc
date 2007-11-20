@@ -2298,8 +2298,7 @@ void demonspawn(void)
             }
 
             // Yredelemnulites have the raise dead invocation
-            if ((you.religion != GOD_YREDELEMNUL ||
-                you.piety < piety_breakpoint(3)) &&
+            if (you.religion != GOD_YREDELEMNUL &&
                 you.skills[SK_SUMMONINGS] < 3 &&
                 you.skills[SK_NECROMANCY] < 3 && one_chance_in(10))
             {
