@@ -895,6 +895,130 @@ static void fixup_branch_stairs()
     }
 }
 
+static void fixup_duplicate_stairs()
+{
+    // This function ensures that there is no more than one of each up and down
+    // stone stairs I, II, and III.  More than three stairs will result in
+    // turning additional stairs into rock stairs (with an attempt to keep
+    // level connectivity).
+
+    const unsigned int max_stairs = 20;
+    FixedVector<coord_def, max_stairs> up_stairs;
+    FixedVector<coord_def, max_stairs> down_stairs;
+    unsigned int num_up_stairs = 0;
+    unsigned int num_down_stairs = 0;
+
+    for (int x = 1; x < GXM; x++)
+    {
+        for (int y = 1; y < GYM; y++)
+        {
+            const coord_def c(x,y);
+            if (grd(c) >= DNGN_STONE_STAIRS_DOWN_I && 
+                grd(c) <= DNGN_STONE_STAIRS_DOWN_III &&
+                num_down_stairs < max_stairs)
+            {
+                down_stairs[num_down_stairs++] = c;
+            }
+            else if (grd(c) >= DNGN_STONE_STAIRS_UP_I &&
+                grd(c) <= DNGN_STONE_STAIRS_UP_III &&
+                num_up_stairs < max_stairs)
+            {
+                up_stairs[num_up_stairs++] = c;
+            }
+        }
+    }
+
+    for (unsigned int i = 0; i < 2; i++)
+    {
+        FixedVector<coord_def, max_stairs>& stair_list = (i == 0) ?
+            up_stairs : down_stairs;
+
+        unsigned int num_stairs;
+        dungeon_feature_type base;
+        dungeon_feature_type replace;
+        if (i == 0)
+        {
+            num_stairs = num_up_stairs;
+            replace = DNGN_ROCK_STAIRS_UP;
+            base = DNGN_STONE_STAIRS_UP_I;
+        }
+        else
+        {
+            num_stairs = num_down_stairs;
+            replace = DNGN_ROCK_STAIRS_DOWN;
+            base = DNGN_STONE_STAIRS_DOWN_I;
+        }
+
+        if (num_stairs > 3)
+        {
+            // Find pairwise stairs that are connected and turn one of them
+            // into a rock stairs of the appropriate type.
+            for (unsigned int s1 = 0; s1 < num_stairs; s1++)
+            {
+                if (num_stairs <= 3)
+                    break;
+
+                for (unsigned int s2 = s1 + 1; s2 < num_stairs; s2++)
+                {
+                    if (num_stairs <= 3)
+                        break;
+
+                    flood_find<feature_grid, coord_predicate> ff(env.grid,
+                        in_bounds);
+
+                    ff.add_feat(grd(stair_list[s2]));
+
+                    // Ensure we're not searching for the feature at s1.
+                    dungeon_feature_type save = grd(stair_list[s1]);
+                    grd(stair_list[s1]) = DNGN_FLOOR;
+
+                    coord_def where = ff.find_first_from(stair_list[s1],
+                        dgn_map_mask);
+                    if (where.x)
+                    {
+                        grd(stair_list[s2]) = replace;
+                        num_stairs--;
+                        stair_list[s2] = stair_list[num_stairs];
+                        s2--;
+                    }
+
+                    grd(stair_list[s1]) = save;
+                }
+            }
+
+            // If that doesn't work, remove random stairs.
+            while (num_stairs > 3)
+            {
+                int remove = random2(num_stairs);
+                grd(stair_list[remove]) = replace;
+
+                stair_list[remove] = stair_list[--num_stairs];
+            }
+        }
+
+        ASSERT(num_stairs <= 3);
+
+        if (num_stairs <= 1)
+            continue;
+
+        // At this point, up_stairs and down_stairs contain no more than
+        // three stairs.  Ensure that they are unique.
+        for (int s = 0; s < (num_stairs == 3 ? 4 : 1); s++)
+        {
+            int s1 = s % num_stairs;
+            int s2 = (s1 + 1) % num_stairs;
+            ASSERT(grd(stair_list[s2]) >= base && 
+                grd(stair_list[s2]) <= base + 3);
+
+            if (grd(stair_list[s1]) == grd(stair_list[s2]))
+            {
+                grd(stair_list[s2]) = (dungeon_feature_type)(base + 
+                    (grd(stair_list[s2])-base+1) % 3);
+            }
+        }
+    }
+}
+
 static void dgn_verify_connectivity(unsigned nvaults)
 {
     // After placing vaults, make sure parts of the level have not been
@@ -1012,6 +1136,8 @@ static void build_dungeon_level(int level_number, int level_type)
     // Translate stairs for pandemonium levels:
     if (level_type == LEVEL_PANDEMONIUM)
         fixup_pandemonium_stairs();
+
+    fixup_duplicate_stairs();
 }                               // end builder()
 
 
