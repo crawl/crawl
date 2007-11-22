@@ -76,6 +76,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 #define HIT_WEAK 7
 #define HIT_MED 18
@@ -110,7 +111,7 @@ bool test_melee_hit(int to_hit, int ev)
 
     if (to_hit >= AUTOMATIC_HIT)
         return (true);
-    else if (random2(1000) < 10 * MIN_HIT_MISS_PERCENTAGE)
+    else if (random2(100) < MIN_HIT_MISS_PERCENTAGE)
         margin = (coinflip() ? 1 : -1) * AUTOMATIC_HIT;
     else
     {
@@ -122,12 +123,11 @@ bool test_melee_hit(int to_hit, int ev)
     float miss;
 
     if (to_hit < ev)
-        miss = 100.0 - static_cast<float>( MIN_HIT_MISS_PERCENTAGE ) / 2.0;
+        miss = 100.0 - MIN_HIT_MISS_PERCENTAGE / 2.0;
     else
     {
-        miss = static_cast<float>( MIN_HIT_MISS_PERCENTAGE ) / 2.0
-              + static_cast<float>( (100 - MIN_HIT_MISS_PERCENTAGE) * ev ) 
-                  / static_cast<float>( to_hit );
+        miss = MIN_HIT_MISS_PERCENTAGE / 2.0 + 
+            ((100.0 - MIN_HIT_MISS_PERCENTAGE) * ev) / to_hit;
     }
 
     mprf( MSGCH_DIAGNOSTICS,
@@ -175,7 +175,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     int your_to_hit;
 
     your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
-        + you.skills[SK_FIGHTING] / 5;
+                  + you.skills[SK_FIGHTING] / 5;
     
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
@@ -475,10 +475,78 @@ bool melee_attack::attack()
     identify_mimic(atk);
     identify_mimic(def);
 
+    // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
     {
-        xom_is_stimulated(14); // Xom thinks that is funny.
+        if (attacker->atype() == ACT_MONSTER)
+        {
+            // Make sure the monster uses up some energy, even though
+            // it didn't actually attack.
+            monsterentry *entry   = get_monster_data(atk->type);
+            atk->speed_increment -= entry->energy_usage.attack;
+        }
+
+        // ... and thinks fumbling when trying to hit yourself is just
+        // hilarious.
+        if (attacker == defender)
+            xom_is_stimulated(255);
+        else
+            xom_is_stimulated(14);
         return (false);
+    }
+    // Non-fumbled self-attacks due to confusion are still pretty
+    // funny, though.
+    else if (attacker == defender && attacker->confused())
+    {
+        // And is still hilarious if it's the player.
+        if (attacker->atype() == ACT_PLAYER)
+            xom_is_stimulated(255);
+        else
+            xom_is_stimulated(128);
+    }
+
+    // Defending monster protects itself from attacks using the
+    // wall it's in.
+    if (defender->atype() == ACT_MONSTER && grid_is_solid(def->pos())
+        && mons_class_flag(def->type, M_WALL_SHIELDED))
+    {
+        std::string feat_name = raw_feature_description(grd(def->pos()));
+
+        if (attacker->atype() == ACT_PLAYER)
+        {
+            player_apply_attack_delay();
+
+            if (you.can_see(def))
+            {
+                mprf("The %s protects %s from harm.",
+                     feat_name.c_str(),
+                     def->name(DESC_NOCAP_THE).c_str());
+            }
+            else
+            {
+                mprf("You hit the %s.",
+                     feat_name.c_str());
+            }
+        }
+        else if (you.can_see(atk))
+        {
+            // Make sure the monster uses up some energy, even though
+            // it didn't actually land a blow.
+            monsterentry *entry   = get_monster_data(atk->type);
+            atk->speed_increment -= entry->energy_usage.attack;
+
+            if (!mons_near(def))
+                simple_monster_message(atk, " hits something");
+            else if (!you.can_see(atk))
+                mprf("%s hits the %s.", def->name(DESC_CAP_THE).c_str(),
+                     feat_name.c_str());
+            else
+                mprf("%s tries to hit the %s, but is blocked by the %s.",
+                     atk->name(DESC_CAP_THE).c_str(),
+                     def->name(DESC_NOCAP_THE).c_str(),
+                     feat_name.c_str());
+        }
+        return (true);
     }
 
     // Allow god to get offended, etc.
@@ -520,9 +588,16 @@ bool melee_attack::player_attack()
         if (Options.tutorial_left)
             Options.tut_melee_counter++;        
 
-        // This actually does more than calculate damage - it also sets up
-        // messages, etc.
-        player_calc_hit_damage();
+        const bool shield_blocked = attack_shield_blocked(true);
+
+        if (shield_blocked)
+            damage_done = 0;
+        else
+        {
+            // This actually does more than calculate damage - it also sets up
+            // messages, etc.
+            player_calc_hit_damage();
+        }
 
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH && mons_species(def->type) == MONS_ORC
@@ -539,7 +614,7 @@ bool melee_attack::player_attack()
 
         if (damage_done > 0 || !defender_visible)
             player_announce_hit();
-        else if (damage_done <= 0)
+        else if (!shield_blocked && damage_done <= 0)
             no_damage_message =
                 make_stringf("You %s %s.",
                              attack_verb.c_str(),
@@ -559,6 +634,10 @@ bool melee_attack::player_attack()
         }
 
         player_sustain_passive_damage();
+
+        // At this point, pretend we didn't hit at all.
+        if (shield_blocked)
+            did_hit = false;
     }
     else
         player_warn_miss();
@@ -632,7 +711,7 @@ bool melee_attack::player_aux_unarmed()
         {
             if (uattack != UNAT_KICK)        //jmf: hooves mutation
             {
-                if (you.species != SP_KENKU && !you.mutation[MUT_HOOVES]
+                if (!you.mutation[MUT_HOOVES] && !you.mutation[MUT_TALONS]
                     || coinflip())
                 {
                     continue;
@@ -649,8 +728,7 @@ bool melee_attack::player_aux_unarmed()
             }
 
             // Kenku have large taloned feet that do good damage.
-            const bool clawed_kick =
-                you.species == SP_KENKU && !you.mutation[MUT_HOOVES];
+            const bool clawed_kick = you.mutation[MUT_TALONS];
 
             if (clawed_kick)
             {
@@ -830,6 +908,8 @@ bool melee_attack::player_aux_unarmed()
         did_hit = false;
         if (to_hit >= def->ev || one_chance_in(30))
         {
+            if (attack_shield_blocked(true))
+                continue;
             if (player_apply_aux_unarmed())
                 return (true);
         }
@@ -1460,12 +1540,8 @@ void melee_attack::player_exercise_combat_skills()
     }
 }
 
-// Returns true if the combat round should end here.
-bool melee_attack::player_monattk_hit_effects(bool mondied)
+void melee_attack::player_check_weapon_effects()
 {
-    if (mons_holiness(def) == MH_HOLY)
-        did_god_conduct(mondied? DID_KILL_ANGEL : DID_ATTACK_HOLY, 1);
-
     if (spwld == SPWLD_TORMENT && coinflip())
     {
         torment(TORMENT_SPWLD, you.x_pos, you.y_pos);
@@ -1475,11 +1551,63 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     if (spwld == SPWLD_ZONGULDROK || spwld == SPWLD_CURSE)
         did_god_conduct(DID_NECROMANCY, 3);
 
-    if (weapon
-        && weapon->base_type == OBJ_WEAPONS
-        && is_demonic( *weapon ))
+    if (weapon)
     {
-        did_god_conduct(DID_UNHOLY, 1);
+        if (weapon->base_type == OBJ_WEAPONS
+            && is_demonic( *weapon ))
+        {
+            did_god_conduct(DID_UNHOLY, 1);
+        }
+
+        if (is_fixed_artefact(*weapon))
+        {
+            switch (weapon->special)
+            {
+            case SPWPN_SCEPTRE_OF_ASMODEUS:
+            case SPWPN_STAFF_OF_DISPATER:
+            case SPWPN_SWORD_OF_CEREBOV:
+                did_god_conduct(DID_UNHOLY, 3);
+                break;
+            default:
+                break;
+            }
+        }
+    }    
+}
+
+// Returns true if the combat round should end here.
+bool melee_attack::player_monattk_hit_effects(bool mondied)
+{
+    if (mons_holiness(def) == MH_HOLY)
+        did_god_conduct(mondied? DID_KILL_ANGEL : DID_ATTACK_HOLY, 1);
+
+    player_check_weapon_effects();
+
+    // Vampiric effects for the killing blow.
+    if (mondied && damage_brand == SPWPN_VAMPIRICISM)
+    {
+        if (defender->holiness() == MH_NATURAL
+            && damage_done > 0
+            && you.hp < you.hp_max
+            && !one_chance_in(5))
+        {
+            mpr("You feel better.");
+
+            // more than if not killed
+            const int heal = 1 + random2(damage_done);
+
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Vampiric healing: damage %d, healed %d",
+                 damage_done, heal);
+#endif
+            inc_hp(heal, false);
+
+            if (you.hunger_state != HS_ENGORGED)
+                lessen_hunger(30 + random2avg(59, 2), true);
+
+            did_god_conduct(DID_NECROMANCY, 2);
+        }
     }
 
     // Vampiric effects for the killing blow.
@@ -2820,8 +2948,8 @@ bool melee_attack::attack_shield_blocked(bool verbose)
         pro_block /= 3;
     
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Pro-block: %d, Con-block: %d",
-         pro_block, con_block);
+    mprf(MSGCH_DIAGNOSTICS, "Defender: %s, Pro-block: %d, Con-block: %d",
+         def_name(DESC_PLAIN).c_str(), pro_block, con_block);
 #endif
 
     if (pro_block >= con_block)
@@ -2893,6 +3021,17 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     if (water_attack)
         damage *= 2;
 
+    // If the defender is asleep, the attacker gets a stab.
+    if (defender && defender->asleep())
+    {
+        damage = damage * 5 / 2;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Stab damage vs %s: %d",
+             defender->name(DESC_PLAIN).c_str(),
+             damage);
+#endif
+    }
+
     return (mons_apply_defender_ac(damage, damage_max));
 }
 
@@ -2952,8 +3091,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 
 std::string melee_attack::mons_weapon_desc()
 {
-    if (!player_monster_visible(atk))
-        return("");
+    if (!you.can_see(attacker))
+        return ("");
+
     if (weapon && attacker->id() != MONS_DANCING_WEAPON)
     {
         std::string result = "";
@@ -3137,7 +3277,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         {
             defender->poison( attacker, roll_dice(1,3) );
             if (one_chance_in(4))
-                defender->drain_stat( STAT_STRENGTH, 1 );
+                defender->drain_stat( STAT_STRENGTH, 1, attacker );
         }
         break;
 
@@ -3229,7 +3369,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
             && defender->res_negative_energy() < random2(4))
         {
-            defender->drain_stat(STAT_STRENGTH, 1);
+            defender->drain_stat(STAT_STRENGTH, 1, attacker);
         }
         break;
 
@@ -3237,7 +3377,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
             && defender->res_negative_energy() < random2(4))
         {
-            defender->drain_stat(STAT_DEXTERITY, 1);
+            defender->drain_stat(STAT_DEXTERITY, 1, attacker);
         }
         break;
 
@@ -3331,7 +3471,7 @@ void melee_attack::mons_perform_attack_rounds()
 
     // Melee combat, tell attacker to wield its melee weapon.
     atk->wield_melee_weapon();
-    
+
     for (attack_number = 0; attack_number < nrounds; ++attack_number)
     {
         // Monster went away?
@@ -3344,7 +3484,17 @@ void melee_attack::mons_perform_attack_rounds()
         
         const mon_attack_def attk = mons_attack_spec(atk, attack_number);
         if (attk.type == AT_NONE)
+        {
+            if (attack_number == 0)
+            {
+                // Make sure the monster uses up some energy, even
+                // though it didn't actually attack.
+                monsterentry *entry   = get_monster_data(atk->type);
+                atk->speed_increment -= entry->energy_usage.attack;
+            }
+
             break;
+        }
 
         if (attk.type == AT_SHOOT)
             continue;
@@ -3537,8 +3687,16 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
                                     int which_attack)
 {
-    // Monsters lose energy only for the first two weapon attacks; subsequent
-    // hits are free.
+    monsterentry *entry = get_monster_data(attacker->type);
+    char         atk_speed = entry->energy_usage.attack;
+
+    // Initial attack causes energy to be used for all attacks.  No
+    // additional energy is used for unarmed attacks.
+    if (which_attack == 0)
+        attacker->speed_increment -= atk_speed;
+
+    // Monsters lose additional energy only for the first two weapon
+    // attacks; subsequent hits are free.
     if (which_attack > 1)
         return;
     
@@ -3547,21 +3705,26 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     {
         // only get one third penalty/bonus for second weapons.
         if (which_attack > 0)
-            wpn_speed = (20 + wpn_speed) / 3;
+            wpn_speed = div_rand_round( (2 * atk_speed + wpn_speed), 3 );
 
-        attacker->speed_increment -= (wpn_speed - 10) / 2;
+        int delta = div_rand_round( (wpn_speed - 10 + (atk_speed - 10)), 2 );
+
+        if (delta > 0)
+            attacker->speed_increment -= delta;
     }
 }
 
-void monster_attack(int monster_attacking)
+bool monster_attack(int monster_attacking)
 {
     monsters *attacker = &menv[monster_attacking];
     
     if (mons_friendly(attacker) && !mons_is_confused(attacker))
-        return;
+        return false;
 
     melee_attack attk(attacker, &you);
     attk.attack();
+
+    return true;
 }                               // end monster_attack()
 
 bool monsters_fight(int monster_attacking, int monster_attacked)
@@ -3600,7 +3763,7 @@ int weapon_str_weight( object_class_type wpn_class, int wpn_type )
     // - Short Blades are the best for the dexterous... although they
     //   are very limited in damage potential
     // - Long Swords are better for the dexterous, the two-handed
-    //   swords are a 50/50 spit; bastard swords are in between.
+    //   swords are a 50/50 split; bastard swords are in between.
     // - Staves: didn't want to punish the mages who want to use
     //   these... made it a 50/50 split after the 2-hnd bonus
     // - Polearms: Spears and tridents are the only ones that can
@@ -3708,12 +3871,10 @@ static inline int calc_stat_to_dam_base( void )
 
 static void stab_message( struct monsters *defender, int stab_bonus )
 {
-    int r = random2(6);     // for randomness
-
     switch(stab_bonus)
     {
     case 3:     // big melee, monster surrounded/not paying attention
-        if (r<3)
+        if (coinflip())
         {
             mprf( "You strike %s from a blind spot!",
                   defender->name(DESC_NOCAP_THE).c_str() );
@@ -3725,7 +3886,7 @@ static void stab_message( struct monsters *defender, int stab_bonus )
         }
         break;
     case 2:     // confused/fleeing
-        if (r<4)
+        if ( !one_chance_in(3) )
         {
             mprf( "You catch %s completely off-guard!",
                   defender->name(DESC_NOCAP_THE).c_str() );
@@ -3741,5 +3902,5 @@ static void stab_message( struct monsters *defender, int stab_bonus )
               defender->name(DESC_CAP_THE).c_str(),
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
         break;
-    } // end switch
+    }
 }

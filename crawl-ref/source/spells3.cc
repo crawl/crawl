@@ -43,7 +43,6 @@
 #include "place.h"
 #include "player.h"
 #include "randart.h"
-#include "religion.h"
 #include "spells1.h"
 #include "spells4.h"
 #include "spl-cast.h"
@@ -51,8 +50,7 @@
 #include "stuff.h"
 #include "traps.h"
 #include "view.h"
-
-static bool monster_on_level(int monster);
+#include "xom.h"
 
 bool cast_selective_amnesia(bool force)
 {
@@ -489,31 +487,6 @@ void dancing_weapon(int pow, bool force_hostile)
     burden_change();
 }                               // end dancing_weapon()
 
-static bool monster_on_level(int monster)
-{
-    for (int i = 0; i < MAX_MONSTERS; i++)
-    {
-        if (menv[i].type == monster)
-            return true;
-    }
-
-    return false;
-}                               // end monster_on_level()
-
-// XXX: Relies on RUNE_xxx == BRANCH_xxx. See rune_type in enum.h.
-static bool player_has_rune(branch_type branch)
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (is_valid_item( you.inv[i] )
-            && you.inv[i].base_type == OBJ_MISCELLANY
-            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT
-            && you.inv[i].plus == branch)
-        {
-            return (true);
-        }
-    return (false);
-}
-
 //
 // This function returns true if the player can use controlled
 // teleport here.
@@ -522,58 +495,10 @@ bool allow_control_teleport( bool silent )
 {
     bool ret = true;
 
-    if (you.level_type == LEVEL_ABYSS || you.level_type == LEVEL_LABYRINTH)
-        ret = false;
-    else
+    if (testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
+        || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL))
     {
-        switch (you.where_are_you)
-        {
-        case BRANCH_TOMB:
-            ret = player_has_rune(you.where_are_you);
-            break;
-
-        case BRANCH_COCYTUS:
-        case BRANCH_DIS:
-        case BRANCH_TARTARUS:
-        case BRANCH_GEHENNA:
-            if (player_branch_depth() == branches[you.where_are_you].depth)
-                ret = player_has_rune(you.where_are_you);
-            break;
-            
-        case BRANCH_SLIME_PITS:
-            // Cannot teleport into the slime pit vaults until
-            // royal jelly is gone.
-            if (monster_on_level(MONS_ROYAL_JELLY))
-                ret = false;
-            break;
-
-        case BRANCH_ELVEN_HALLS:
-            // Cannot raid the elven halls vaults until fountain drained
-            if (player_branch_depth() == branches[BRANCH_ELVEN_HALLS].depth)
-            {
-                for (int x = 5; x < GXM - 5; x++) 
-                {
-                    for (int y = 5; y < GYM - 5; y++) 
-                    {
-                        if (grd[x][y] == DNGN_SPARKLING_FOUNTAIN)
-                            ret = false;
-                    }
-                }
-            }
-            break;
-
-        case BRANCH_HALL_OF_ZOT:
-            // Cannot control teleport until the Orb is picked up
-            if (player_branch_depth() == branches[BRANCH_HALL_OF_ZOT].depth
-                && you.char_direction != GDT_ASCENDING)
-            {
-                ret = false;
-            }
-            break;
-
-        default:
-            break;
-        }
+        ret = false;
     }
 
     // Tell the player why if they have teleport control.
@@ -637,10 +562,7 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
         return true;
     }
 
-    FixedVector < int, 2 > plox;
-
-    plox[0] = 1;
-    plox[1] = 0;
+    coord_def pos(1, 0);
 
     if (is_controlled)
     {
@@ -648,25 +570,24 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
         mpr("Expect minor deviation.");
         more();
 
-        show_map(plox, false);
+        show_map(pos, false);
 
         redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", plox[0], plox[1] );
+        mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
 
-        plox[0] += random2(3) - 1;
-        plox[1] += random2(3) - 1;
+        pos.x += random2(3) - 1;
+        pos.y += random2(3) - 1;
 
         if (one_chance_in(4))
         {
-            plox[0] += random2(3) - 1;
-            plox[1] += random2(3) - 1;
+            pos.x += random2(3) - 1;
+            pos.y += random2(3) - 1;
         }
 
-        if (plox[0] < 6 || plox[1] < 6 || plox[0] > (GXM - 5)
-                || plox[1] > (GYM - 5))
+        if (!in_bounds(pos))
         {
             mpr("Nearby solid objects disrupt your rematerialisation!");
             is_controlled = false;
@@ -674,16 +595,16 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "Scattered target square (%d,%d)", plox[0], plox[1] );
+             "Scattered target square (%d,%d)", pos.x, pos.y );
 #endif
 
         if (is_controlled)
         {
             // no longer held in net
-            if (plox[0] != you.x_pos || plox[1] != you.y_pos)
+            if (pos.x != you.x_pos || pos.y != you.y_pos)
                 clear_trapping_net();
 
-            you.moveto(plox[0], plox[1]);
+            you.moveto(pos.x, pos.y);
 
             if ((grd[you.x_pos][you.y_pos] != DNGN_FLOOR
                     && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
@@ -706,8 +627,8 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 
         do
         {
-            newx = 5 + random2( GXM - 10 );
-            newy = 5 + random2( GYM - 10 );
+            newx = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+            newy = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
         }
         while ((grd[newx][newy] != DNGN_FLOOR
                 && grd[newx][newy] != DNGN_SHALLOW_WATER)
@@ -738,27 +659,33 @@ static bool teleport_player( bool allow_control, bool new_abyss_area )
 void you_teleport_now( bool allow_control, bool new_abyss_area )
 {
     const bool randtele = teleport_player(allow_control, new_abyss_area);
+
     // Xom is amused by uncontrolled teleports that land you in a
-    // dangerous place.
-    if (randtele && player_in_a_dangerous_place())
+    // dangerous place, unless the player is in the Abyss and
+    // teleported to escape from all the monsters chasing him/her,
+    // since in that case the new dangerous area is almost certainly
+    // *less* dangerous than the old dangerous area.
+    if (randtele && player_in_a_dangerous_place()
+        && you.level_type != LEVEL_ABYSS)
+    {
         xom_is_stimulated(255);
+    }
 }
 
 bool entomb(int powc)
 {
+    // power guidelines:
+    // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
+    // up to 300 or so with godly assistance or end-level, and 1200
+    // as more or less the theoretical maximum.
     int number_built = 0;
 
     const dungeon_feature_type safe_to_overwrite[] = {
         DNGN_FLOOR, DNGN_SHALLOW_WATER, DNGN_OPEN_DOOR,
-        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_III,
+        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_NATURAL,
         DNGN_UNDISCOVERED_TRAP,
         DNGN_FLOOR_SPECIAL
     };
-
-    if ( powc > 95 )
-        powc = 95;
-    if ( powc < 25 )
-        powc = 25;
 
     for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
     {
@@ -771,7 +698,7 @@ bool entomb(int powc)
                 continue;
             }
 
-            if ( random2(100) > powc )
+            if ( one_chance_in(powc/5) )
                 continue;
 
             bool proceed = false;
@@ -842,7 +769,29 @@ bool entomb(int powc)
     }
 
     if (number_built > 0)
+    {
         mpr("Walls emerge from the floor!");
+
+        for (int i = you.beheld_by.size() - 1; i >= 0; i--)
+        {
+            const monsters* mon = &menv[you.beheld_by[i]];
+            const coord_def pos = mon->pos();
+            int walls = num_feats_between(you.x_pos, you.y_pos,
+                                          pos.x, pos.y, DNGN_UNSEEN,
+                                          DNGN_MAXWALL);
+
+            if (walls > 0)
+            {
+                update_beholders(mon, true);
+                if (you.beheld_by.empty())
+                {
+                    you.duration[DUR_BEHELD] = 0;
+                    break;
+                }
+                continue;
+            }
+        }
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -879,29 +828,24 @@ void cast_poison_ammo(void)
 bool project_noise(void)
 {
     bool success = false;
-    FixedVector < int, 2 > plox;
 
-    plox[0] = 1;
-    plox[1] = 0;
+    coord_def pos(1, 0);
 
     mpr( "Choose the noise's source (press '.' or delete to select)." );
     more();
-    show_map(plox, false);
+    show_map(pos, false);
 
     redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", plox[0], plox[1] );
+    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
 
-    if (!silenced( plox[0], plox[1] ))
+    if (!silenced( pos.x, pos.y ))
     {
-        // player can use this spell to "sound out" the dungeon -- bwr
-        if (plox[0] > 1 && plox[0] < (GXM - 2) 
-            && plox[1] > 1 && plox[1] < (GYM - 2)
-            && !grid_is_solid(grd[ plox[0] ][ plox[1] ]))
+        if (in_bounds(pos) && !grid_is_solid(grd(pos)))
         {
-            noisy( 30, plox[0], plox[1] );
+            noisy( 30, pos.x, pos.y );
             success = true;
         }
 
@@ -909,7 +853,7 @@ bool project_noise(void)
         {
             if (success)
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (see_grid( plox[0], plox[1] ) ? "distant " : "") );
+                     (!see_grid( pos.x, pos.y ) ? "distant " : "") );
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");
         }
@@ -1002,13 +946,10 @@ bool recall(char type_recalled)
     return (success);
 }                               // end recall()
 
-int portal(void)
+// Restricted to main dungeon for historical reasons, probably for
+// balance: otherwise you have an instant teleport from anywhere.
+int portal()
 {
-    char dir_sign = 0;
-    unsigned char keyi;
-    int target_level = 0;
-    int old_level = you.your_level;
-
     if (!player_in_branch( BRANCH_MAIN_DUNGEON ))
     {
         mpr("This spell doesn't work here.");
@@ -1019,84 +960,70 @@ int portal(void)
         mpr("You must find a clear area in which to cast this spell.");
         return (-1);
     }
-    else
+    else if (you.char_direction == GDT_ASCENDING)
     {
-        // the first query {dlb}:
-        mpr("Which direction ('<' for up, '>' for down, 'x' to quit)?", MSGCH_PROMPT);
-
-        for (;;)
-        {
-            keyi = get_ch();
-
-            if (keyi == '<')
-            {
-                if (you.your_level == 0)
-                    mpr("You can't go any further upwards with this spell.");
-                else
-                {
-                    dir_sign = -1;
-                    break;
-                }
-            }
-
-            if (keyi == '>')
-            {
-                if (you.your_level == 35)
-                    mpr("You can't go any further downwards with this spell.");
-                else
-                {
-                    dir_sign = 1;
-                    break;
-                }
-            }
-
-            if (keyi == 'x')
-            {
-                canned_msg(MSG_OK);
-                return (-1);         // an early return {dlb}
-            }
-        }
-
-        // the second query {dlb}:
-        mpr("How many levels (1 - 9, 'x' to quit)?", MSGCH_PROMPT);
-
-        for (;;)
-        {
-            keyi = get_ch();
-
-            if (keyi == 'x')
-            {
-                canned_msg(MSG_OK);
-                return (-1);         // another early return {dlb}
-            }
-
-            if (!(keyi < '1' || keyi > '9'))
-            {
-                target_level = you.your_level + ((keyi - '0') * dir_sign);
-                break;
-            }
-        }
-
-        // actual handling begins here {dlb}:
-        if (player_in_branch( BRANCH_MAIN_DUNGEON ))
-        {
-            if (target_level < 0)
-                target_level = 0;
-            else if (target_level > 26)
-                target_level = 26;
-        }
-
-        mpr( "You fall through a mystic portal, and materialise at the "
-             "foot of a staircase." );
-        more();
-
-        you.your_level = target_level - 1;
-
-        down_stairs( old_level, DNGN_STONE_STAIRS_DOWN_I );
+        // be evil if you've got the Orb
+        mpr("An empty arch forms before you, then disappears.");
+        return 1;
     }
 
+    mpr("Which direction ('<' for up, '>' for down, 'x' to quit)?",
+        MSGCH_PROMPT);
+
+    int dir_sign = 0;
+    while (dir_sign == 0)
+    {
+        const int keyin = getch();
+        switch ( keyin )
+        {
+        case '<':
+            if (you.your_level == 0)
+                mpr("You can't go any further upwards with this spell.");
+            else
+                dir_sign = -1;
+            break;
+
+        case '>':
+            if (you.your_level + 1 == your_branch().depth)
+                mpr("You can't go any further downwards with this spell.");
+            else
+                dir_sign = 1;
+            break;
+
+        case 'x':
+            canned_msg(MSG_OK);
+            return (-1);
+
+        default:
+            break;
+        }
+    }
+
+    mpr("How many levels (1 - 9, 'x' to quit)?", MSGCH_PROMPT);
+
+    int amount = 0;
+    while (amount == 0)
+    {
+        const int keyin = getch();
+        if ( isdigit(keyin) )
+            amount = (keyin - '0') * dir_sign;
+        else if (keyin == 'x')
+        {
+            canned_msg(MSG_OK);
+            return (-1);
+        }
+    }
+
+    mpr( "You fall through a mystic portal, and materialise at the "
+         "foot of a staircase." );
+    more();
+
+    const int old_level = you.your_level;
+    you.your_level = std::max(0, std::min(26, you.your_level + amount)) - 1;
+    down_stairs( old_level, DNGN_STONE_STAIRS_DOWN_I );
+
     return (1);
-}                               // end portal()
+}
 
 bool cast_death_channel(int power)
 {

@@ -118,7 +118,7 @@ template <typename Z>
 void Matrix<Z>::init(const Z &initial)
 {
     for (int i = 0; i < size; ++i)
-        data[i] = initial;
+        data[i] = initial;    
 }
 
 #endif    // FIXARY_H

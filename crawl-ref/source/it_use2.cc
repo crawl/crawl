@@ -27,6 +27,7 @@
 #include "beam.h"
 #include "effects.h"
 #include "food.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "misc.h"
@@ -40,12 +41,13 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
+#include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
 bool potion_effect( potion_type pot_eff, int pow )
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
-
+    bool was_known = item_type_known(OBJ_POTIONS, (int) pot_eff);
     int new_value = 0;
 
     if (pow > 150)
@@ -109,7 +111,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         if ( were_mighty )
             contaminate_player(1);
         else
-            modify_stat(STAT_STRENGTH, 5, true);
+            modify_stat(STAT_STRENGTH, 5, true, "");
 
         // conceivable max gain of +184 {dlb}
         you.duration[DUR_MIGHT] += 35 + random2(pow);
@@ -118,7 +120,7 @@ bool potion_effect( potion_type pot_eff, int pow )
         if (you.duration[DUR_MIGHT] > 80)
             you.duration[DUR_MIGHT] = 80;
 
-        did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
+        did_god_conduct( DID_STIMULANTS, 4 + random2(4), was_known );
         break;
     }
 
@@ -216,7 +218,8 @@ bool potion_effect( potion_type pot_eff, int pow )
     case POT_DEGENERATION:
         if ( pow == 40 )
             mpr("There was something very wrong with that liquid!");
-        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2)))
+        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
+                      "drinking a potion of degeneration"))
             xom_is_stimulated(64);
         break;
 
@@ -305,31 +308,20 @@ bool potion_effect( potion_type pot_eff, int pow )
   case POT_BLOOD:
         if (you.species == SP_VAMPIRE)
         {
-            int temp_rand = random2(9);
-            strcpy(info, (temp_rand == 0) ? "human" :
-                         (temp_rand == 1) ? "rat" :
-                         (temp_rand == 2) ? "goblin" :
-                         (temp_rand == 3) ? "elf" :
-                         (temp_rand == 4) ? "goat" :
-                         (temp_rand == 5) ? "sheep" :
-                         (temp_rand == 6) ? "gnoll" :
-                         (temp_rand == 7) ? "sheep"
-                                          : "yak");
-                                          
-           mprf("Yummy - fresh %s blood!", info);
-
-           lessen_hunger(1000, true);
-           mpr("You feel better.");
-           inc_hp(1 + random2(10), false);
+            const char* names[] = { "human", "rat", "goblin",
+                                    "elf", "goat", "sheep",
+                                    "sheep", "gnoll", "yak" };
+            
+            mprf("Yummy - fresh %s blood!", RANDOM_ELEMENT(names));            
+            lessen_hunger(1000, true);
+            mpr("You feel better.");
+            inc_hp(1 + random2(10), false);
         }
         else
         {
-            bool likes_blood = (you.species == SP_OGRE
-                                || you.species == SP_TROLL
-                                || you.mutation[MUT_CARNIVOROUS]);
-
-            if (likes_blood)
+            if (you.omnivorous() || you.mutation[MUT_CARNIVOROUS])
             {
+                // Likes it
                 mpr("This tastes like blood.");
                 lessen_hunger(200, true);
             }
@@ -343,7 +335,7 @@ bool potion_effect( potion_type pot_eff, int pow )
                 xom_is_stimulated(32);
             }
         }
-        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3));
+        did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         break;
 
     case POT_RESISTANCE:
@@ -364,12 +356,15 @@ bool potion_effect( potion_type pot_eff, int pow )
     return (effect);
 }                               // end potion_effect()
 
-void unwield_item(bool showMsgs)
+bool unwield_item(bool showMsgs)
 {
     const int unw = you.equip[EQ_WEAPON];
     if ( unw == -1 )
-        return;
+        return (false);
     
+    if (!safe_to_remove_or_wear(you.inv[unw], true))
+        return (false);
+
     you.equip[EQ_WEAPON] = -1;
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
@@ -412,7 +407,7 @@ void unwield_item(bool showMsgs)
                 break;
             }
 
-            return;
+            return (true);
         }
 
         const int brand = get_weapon_brand( item );
@@ -474,7 +469,7 @@ void unwield_item(bool showMsgs)
 
                 // int effect = 9 - random2avg( you.skills[SK_TRANSLOCATIONS] * 2, 2 );
                 miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
-                                "a distortion effect" );
+                                "distortion unwield" );
                 break;
 
                 // when more are added here, *must* duplicate unwielding
@@ -492,18 +487,23 @@ void unwield_item(bool showMsgs)
     }
 
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
+    {
         calc_mp();
+        mpr("You fell your mana capacity decrease.");
+    }
 
-    return;
+    return (true);
 }                               // end unwield_item()
 
 // This does *not* call ev_mod!
 void unwear_armour(char unw)
 {
-    you.redraw_armour_class = 1;
-    you.redraw_evasion = 1;
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 
-    switch (get_armour_ego_type( you.inv[unw] ))
+    item_def &item(you.inv[unw]);
+
+    switch (get_armour_ego_type( item ))
     {
     case SPARM_RUNNING:
         mpr("You feel rather sluggish.");
@@ -533,15 +533,15 @@ void unwear_armour(char unw)
         break;
 
     case SPARM_STRENGTH:
-        modify_stat(STAT_STRENGTH, -3, false);
+        modify_stat(STAT_STRENGTH, -3, false, item, true);
         break;
 
     case SPARM_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -3, false);
+        modify_stat(STAT_DEXTERITY, -3, false, item, true);
         break;
 
     case SPARM_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -3, false);
+        modify_stat(STAT_INTELLIGENCE, -3, false, item, true);
         break;
 
     case SPARM_PONDEROUSNESS:
@@ -598,35 +598,47 @@ void unuse_randart(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
-    const bool ident = fully_identified(item);
-
     randart_properties_t proprt;
-    randart_wpn_properties( item, proprt );
+    randart_known_props_t known;
+    randart_wpn_properties( item, proprt, known );
 
     if (proprt[RAP_AC])
     {
-        you.redraw_armour_class = 1;
-        if (!ident)
+        you.redraw_armour_class = true;
+        if (!known[RAP_AC])
         {
             mprf("You feel less %s.",
-            proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
+                 proprt[RAP_AC] > 0? "well-protected" : "vulnerable");
         }
     }
 
     if (proprt[RAP_EVASION])
     {
-        you.redraw_evasion = 1;
-        if (!ident)
+        you.redraw_evasion = true;
+        if (!known[RAP_EVASION])
         {
             mprf("You feel less %s.",
                  proprt[RAP_EVASION] > 0? "nimble" : "awkward");
         }
     }
 
+    if (proprt[RAP_MAGICAL_POWER])
+    {
+        you.redraw_magic_points = true;
+        if (!known[RAP_MAGICAL_POWER])
+        {
+            mprf("You feel your mana capacity %s.",
+                 proprt[RAP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
+        }
+    }
+
     // modify ability scores, always output messages
-    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false );
-    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false );
-    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    false );
+    modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false, item,
+                 true);
+    modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false, item,
+                 true);
+    modify_stat( STAT_DEXTERITY,    -proprt[RAP_DEXTERITY],    false, item,
+                 true);
 
     if (proprt[RAP_NOISES] != 0)
         you.special_wield = SPWLD_NONE;

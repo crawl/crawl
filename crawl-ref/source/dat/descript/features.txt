@@ -85,6 +85,9 @@ A magical trap
 A mechanical trap
 
 %%%%
+A natural trap
+
+%%%%
 A metal wall
 
 A wall of bluish-grey metal.
@@ -217,7 +220,16 @@ A stone staircase leading up
 %%%%
 A stone wall
 
-A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls.
+A harder obstacle than rock walls.  Only the mightiest magic can shatter stone walls.
+%%%%
+A translucent rock wall
+
+An unnaturally hard translucent rock wall
+%%%%
+A translucent stone wall
+
+A harder obstacle than rock walls.  Only the mightiest magic can shatter stone walls.  It has been imbued with arcane magics which render it translucent.
+
 %%%%
 A trap
 

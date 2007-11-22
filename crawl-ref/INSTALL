@@ -50,15 +50,8 @@ Stone Soup 0.3 includes Lua 5.1.2 in its source tree. Crawl uses Lua
 for dungeon generation. In addition, Crawl has a (rudimentary) Lua
 interface for users to run scripts which can do things such as
 conditionalise parts of the .crawlrc/init.txt. Such user Lua scripts
-are enabled by default on DOS and Windows, but can be turned off by
-editing your makefile and removing -DCLUA_BINDINGS from the compiler
-flags.
-
-User scripts are not enabled by default on Unix since the stock
-makefile installs Crawl setgid, and the Lua scripting interface has
-not been audited for setgid security. See the full section on Lua for
-more details. For non-privileged installs, you can enable Lua user
-scripts as described in the build instructions.
+are enabled by default, but can be turned off by removing
+-DCLUA_BINDINGS from your makefile.
 
 Unicode support needs libncursesw and its header files; these are
 usually available in your operating system's package-management
@@ -368,7 +361,4 @@ not UTF-8, you can force it to UTF-8 on most systems by doing "export
 LC_ALL=en_US.UTF-8" or the equivalent, depending on your language
 locale and what shell you're using.
 
-If you're playing Crawl on a remote machine, the remote Crawl should be
-built with Unicode support, it needs to have a UTF-8 locale installed,
-*and* your local terminal (where you're running telnet/ssh) needs to be
 able to decode UTF-8.

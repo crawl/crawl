@@ -34,6 +34,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "debug.h"
 #include "delay.h"
@@ -68,10 +69,12 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "stash.h"
+#include "state.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
@@ -156,6 +159,8 @@ static bool item_ok_to_clean(int item)
 // unsuccessful cleanup (should be exceedingly rare!)
 int cull_items(void)
 {
+    crawl_state.cancel_cmd_repeat();
+
     // XXX: Not the prettiest of messages, but the player 
     // deserves to know whenever this kicks in. -- bwr
     mpr( "Too many items on level, removing some.", MSGCH_WARN );
@@ -259,8 +264,15 @@ bool dec_inv_item_quantity( int obj, int amount )
 
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity = 0;
+        you.inv[obj].props.clear();
 
         ret = true;
+
+        // If we're repeating a command, the repetitions used up the
+        // item stack being repeated on, so stop rather than move onto
+        // the next stack.
+        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_again();
     }
     else
     {
@@ -278,8 +290,19 @@ bool dec_inv_item_quantity( int obj, int amount )
 bool dec_mitm_item_quantity( int obj, int amount )
 {
     if (mitm[obj].quantity <= amount)
+        amount = mitm[obj].quantity;
+
+    if (player_in_branch(BRANCH_HALL_OF_ZOT) && is_rune(mitm[obj]))
+        you.attribute[ATTR_RUNES_IN_ZOT] -= amount;
+
+    if (mitm[obj].quantity == amount)
     {
         destroy_item( obj );
+        // If we're repeating a command, the repetitions used up the
+        // item stack being repeated on, so stop rather than move onto
+        // the next stack.
+        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_again();
         return (true);
     }
 
@@ -299,6 +322,9 @@ void inc_inv_item_quantity( int obj, int amount )
 
 void inc_mitm_item_quantity( int obj, int amount )
 {
+    if (player_in_branch(BRANCH_HALL_OF_ZOT) && is_rune(mitm[obj]))
+        you.attribute[ATTR_RUNES_IN_ZOT] += amount;
+
     mitm[obj].quantity += amount;
 }
 
@@ -437,6 +463,7 @@ void unlink_item( int dest )
     mitm[dest].x = 0;
     mitm[dest].y = 0;
     mitm[dest].link = NON_ITEM;
+    mitm[dest].props.clear();
 
     // Look through all items for links to this item.
     for (c = 0; c < MAX_ITEMS; c++)
@@ -506,7 +533,53 @@ void destroy_item( int dest, bool never_created )
     mitm[dest].clear();
 }
 
-void destroy_item_stack( int x, int y )
+static void handle_gone_item(const item_def &item)
+{
+    if (you.level_type == LEVEL_ABYSS
+        && place_type(item.orig_place) == LEVEL_ABYSS
+        && !(item.flags & ISFLAG_BEEN_IN_INV))
+    {   
+        if (item.base_type == OBJ_ORBS)
+            set_unique_item_status(OBJ_ORBS, item.sub_type, 
+                                   UNIQ_LOST_IN_ABYSS);
+        else if (is_fixed_artefact(item))
+            set_unique_item_status(OBJ_WEAPONS, item.special, 
+                                   UNIQ_LOST_IN_ABYSS);
+    }
+
+    if (is_rune(item))
+    {
+        if ((item.flags & ISFLAG_BEEN_IN_INV))
+        {
+            if (is_unique_rune(item))
+                you.attribute[ATTR_UNIQUE_RUNES] -= item.quantity;
+            else if (item.plus == RUNE_ABYSSAL)
+                you.attribute[ATTR_ABYSSAL_RUNES] -= item.quantity;
+            else
+                you.attribute[ATTR_DEMONIC_RUNES] -= item.quantity;
+        }
+
+        if (player_in_branch(BRANCH_HALL_OF_ZOT)
+            && item.x != -1 && item.y != -1)
+        {
+            you.attribute[ATTR_RUNES_IN_ZOT] -= item.quantity;
+        }
+    }
+}
+
+void item_was_lost(const item_def &item)
+{
+    handle_gone_item( item );
+    xom_check_lost_item( item );
+}
+
+void item_was_destroyed(const item_def &item, int cause)
+{
+    handle_gone_item( item );
+    xom_check_destroyed_item( item, cause );
+}
+
+void lose_item_stack( int x, int y )
 {
     int o = igrd[x][y];
 
@@ -518,19 +591,34 @@ void destroy_item_stack( int x, int y )
 
         if (is_valid_item( mitm[o] ))
         {
-            if (mitm[o].base_type == OBJ_ORBS)
-            {   
-                set_unique_item_status( OBJ_ORBS, mitm[o].sub_type,
-                                        UNIQ_LOST_IN_ABYSS );
-            }
-            else if (is_fixed_artefact( mitm[o] ))
-            {   
-                set_unique_item_status( OBJ_WEAPONS, mitm[o].special, 
-                                        UNIQ_LOST_IN_ABYSS );
-            }
+            item_was_lost(mitm[o]);
 
             mitm[o].base_type = OBJ_UNASSIGNED;
             mitm[o].quantity = 0;
+            mitm[o].props.clear();
+        }
+
+        o = next;
+    }
+}
+
+void destroy_item_stack( int x, int y, int cause )
+{
+    int o = igrd[x][y];
+
+    igrd[x][y] = NON_ITEM;
+
+    while (o != NON_ITEM)
+    {
+        int next = mitm[o].link;
+
+        if (is_valid_item( mitm[o] ))
+        {
+            item_was_destroyed(mitm[o], cause);
+
+            mitm[o].base_type = OBJ_UNASSIGNED;
+            mitm[o].quantity = 0;
+            mitm[o].props.clear();
         }
 
         o = next;
@@ -626,12 +714,16 @@ static int item_name_specialness(const item_def& item)
     std::string itname = item.name(DESC_PLAIN, false, false, false);
     lowercase(itname);
     
+    // FIXME Maybe we should replace this with a test of ISFLAG_COSMETIC_MASK?
     const bool item_runed = itname.find("runed ") != std::string::npos;
     const bool heav_runed = itname.find("heavily ") != std::string::npos;
     const bool item_glows = itname.find("glowing") != std::string::npos;
 
-    if ( item_glows || (item_runed && !heav_runed) )
+    if ( item_glows || (item_runed && !heav_runed) ||
+         get_equip_desc(item) == ISFLAG_EMBROIDERED_SHINY )
+    {
         return 1;
+    }
 
     // You can tell artefacts, because they'll have a description which
     // rules out anything else.
@@ -943,8 +1035,16 @@ static std::string origin_place_desc(const item_def &item)
 
 bool is_rune(const item_def &item)
 {
-    return (item.base_type == OBJ_MISCELLANY &&
-            item.sub_type == MISC_RUNE_OF_ZOT);
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT);
+}
+
+bool is_unique_rune(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT
+            && item.plus != RUNE_DEMONIC
+            && item.plus != RUNE_ABYSSAL);
 }
 
 bool origin_describable(const item_def &item)
@@ -1213,10 +1313,11 @@ bool items_stack( const item_def &item1, const item_def &item2,
         return false;
 
     // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
-    // and note flags
+    // and note flags. Also, whether item was in inventory before.
 #define NON_IDENT_FLAGS ~(ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK | \
                           ISFLAG_DROPPED | ISFLAG_THROWN | \
-                          ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)
+                          ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | \
+                          ISFLAG_BEEN_IN_INV)
     if ((item1.flags & NON_IDENT_FLAGS) !=
         (item2.flags & NON_IDENT_FLAGS))
     {
@@ -1314,6 +1415,25 @@ int find_free_slot(const item_def &i)
 #undef slotisfree
 }
 
+static void got_item(item_def& item, int quant)
+{
+    if (!is_rune(item))
+        return;
+
+    // Picking up the rune for the first time.
+    if (!(item.flags & ISFLAG_BEEN_IN_INV))
+    {
+        if (is_unique_rune(item))
+            you.attribute[ATTR_UNIQUE_RUNES] += quant;
+        else if (item.plus == RUNE_ABYSSAL)
+            you.attribute[ATTR_ABYSSAL_RUNES] += quant;
+        else
+            you.attribute[ATTR_DEMONIC_RUNES] += quant;
+    }
+
+    item.flags |= ISFLAG_BEEN_IN_INV;
+}
+
 // Returns quantity of items moved into player's inventory and -1 if 
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
@@ -1390,6 +1510,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 dec_mitm_item_quantity( obj, quant_got );
                 burden_change();
 
+                got_item(mitm[obj], quant_got);
+
                 if (!quiet)
                     mpr( you.inv[m].name(DESC_INVENTORY).c_str() );
 
@@ -1414,6 +1536,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         // Something is terribly wrong
         return (-1);
     }
+
+    coord_def pos(mitm[obj].x, mitm[obj].y);
+    dungeon_events.fire_position_event(
+        dgn_event(DET_ITEM_PICKUP, pos, 0, obj, -1), pos);
 
     item_def &item = you.inv[freeslot];
     // copy item
@@ -1450,7 +1576,13 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         if (!quiet)
             mpr("Now all you have to do is get back out of the dungeon!");
         you.char_direction = GDT_ASCENDING;
+        xom_is_stimulated(255, XM_INTRIGUED);
     }
+
+    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
+        unset_branch_flags(BFLAG_HAS_ORB);
+
+    got_item(item, item.quantity);
 
     you.turn_is_over = true;
 
@@ -1528,6 +1660,17 @@ bool move_item_to_grid( int *const obj, int x, int y )
     // link item to top of list.
     mitm[*obj].link = igrd[x][y];
     igrd[x][y] = *obj;
+
+    if (is_rune(mitm[*obj]))
+    {
+        if (player_in_branch(BRANCH_HALL_OF_ZOT))
+            you.attribute[ATTR_RUNES_IN_ZOT] += mitm[*obj].quantity;
+    }
+    else if (mitm[*obj].base_type == OBJ_ORBS
+             && you.level_type == LEVEL_DUNGEON)
+    {
+        set_branch_flags(BFLAG_HAS_ORB);
+    }
 
     return (true);
 }
@@ -1703,6 +1846,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     {
         if( !silenced(you.pos()) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+
+        item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
     }
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         stashes.add_stash();
@@ -2355,7 +2500,7 @@ void handle_time( long time_delta )
         if (one_chance_in(30))
         {
             mpr("Your disease is taking its toll.", MSGCH_WARN);
-            lose_stat(STAT_RANDOM, 1);
+            lose_stat(STAT_RANDOM, 1, false, "disease");
         }
     }
 
@@ -2363,7 +2508,7 @@ void handle_time( long time_delta )
     if (you.mutation[MUT_DETERIORATION]
         && random2(200) <= you.mutation[MUT_DETERIORATION] * 5 - 2)
     {
-        lose_stat(STAT_RANDOM, 1);
+        lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
     }
 
     int added_contamination = 0;
@@ -2526,10 +2671,16 @@ void handle_time( long time_delta )
     // jmf: moved huge thing to religion.cc
     handle_god_time();
 
-    // If the player has the lost mutation forget portions of the map
-    if (you.mutation[MUT_LOST] && !wearing_amulet(AMU_CLARITY) &&
-        (random2(100) <= you.mutation[MUT_LOST] * 5) )
-        forget_map(5 + random2(you.mutation[MUT_LOST] * 10));
+    if (you.mutation[MUT_SCREAM]
+        && (random2(100) <= 2 + you.mutation[MUT_SCREAM] * 3) )
+    {
+        yell(true);
+    }
+    else if (you.mutation[MUT_SLEEPINESS]
+             && random2(100) < you.mutation[MUT_SLEEPINESS] * 5)
+    {
+        you.put_to_sleep();
+    }
 
     // Update all of the corpses and food chunks on the floor
     update_corpses(time_delta);
@@ -2601,42 +2752,43 @@ void handle_time( long time_delta )
     //mv: messages when chunks/corpses become rotten
     if (new_rotting_item)
     {
-        switch (you.species)
-        {
         // XXX: should probably still notice?
-        case SP_MUMMY: // no smell 
-        case SP_TROLL: // stupid, living in mess - doesn't care about it
-            break;
+        // Races that can't smell don't care, and trolls are stupid and
+        // don't care.
+        if (player_can_smell() && you.species != SP_TROLL)
+        {
+            switch (you.mutation[MUT_SAPROVOROUS])
+            {
+            // level 1 and level 2 saprovores aren't so touchy
+            case 1:
+            case 2:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "You smell rotting flesh." :
+                      (temp_rand == 6) ? "You smell decay."
+                                       : "There is something rotten in your inventory."),
+                    MSGCH_ROTTEN_MEAT );
+                break;
 
-        case SP_GHOUL: //likes it
-            temp_rand = random2(8);
-            mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
-                  (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                   : "Wow! There is something tasty in your inventory."),
-                MSGCH_ROTTEN_MEAT );
-            break;
+            // level 3 saprovores like it
+            case 3:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
+                      (temp_rand == 6) ? "You smell decay. Yum-yum."
+                                       : "Wow! There is something tasty in your inventory."),
+                    MSGCH_ROTTEN_MEAT );
+                break;
 
-        case SP_KOBOLD: //mv: IMO these race aren't so "touchy"
-        case SP_OGRE:
-        case SP_MINOTAUR:
-        case SP_HILL_ORC:
-            temp_rand = random2(8);
-            mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "You smell rotting flesh." :
-                  (temp_rand == 6) ? "You smell decay."
-                                   : "There is something rotten in your inventory."),
-                MSGCH_ROTTEN_MEAT );
-            break;
-
-        default:
-            temp_rand = random2(8);
-            mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                  (temp_rand == 6) ? "You smell decay. Yuck!"
-                                   : "Ugh! There is something really disgusting in your inventory."), 
-                MSGCH_ROTTEN_MEAT );
-            break;
+            default:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
+                      (temp_rand == 6) ? "You smell decay. Yuck!"
+                                       : "Ugh! There is something really disgusting in your inventory."), 
+                    MSGCH_ROTTEN_MEAT );
+                break;
+            }
         }
         learned_something_new(TUT_ROTTEN_FOOD);
     }
@@ -2802,13 +2954,13 @@ bool can_autopickup()
         return (false);
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
-            && you.duration[DUR_TRANSFORMATION] > 0)
+        && you.duration[DUR_TRANSFORMATION] > 0)
         return (false);
 
     if (you.flight_mode() == FL_LEVITATE)
         return (false);
 
-    if ( Options.safe_autopickup && !i_feel_safe() )
+    if ( !i_feel_safe() )
         return (false);
 
     return (true);
@@ -3022,6 +3174,30 @@ item_def find_item_type(object_class_type base_type, std::string name)
     return (item);
 }
 
+bool item_is_equipped(const item_def &item)
+{
+    if (item.x != -1 || item.y != -1)
+        return (false);
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        if (you.equip[i] == EQ_NONE)
+            continue;
+
+        item_def& eq(you.inv[you.equip[i]]);
+
+        if (!is_valid_item(eq))
+            continue;
+
+        if (eq.slot == item.slot)
+            return (true);
+        else if (&eq == &item)
+            return (true);
+    }
+
+    return (false);
+}
+
 ////////////////////////////////////////////////////////////////////////
 // item_def functions.
 
@@ -3051,6 +3227,33 @@ bool item_def::launched_by(const item_def &launcher) const
         return (false);
     const missile_type mt = fires_ammo_type(launcher);
     return (sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET));
+}
+
+int item_def::zap() const
+{
+    if (base_type != OBJ_WANDS)
+        return ZAP_DEBUGGING_RAY;
+
+    zap_type result;
+    switch (sub_type)
+    {
+    case WAND_ENSLAVEMENT:    result = ZAP_ENSLAVEMENT;     break;
+    case WAND_DRAINING:       result = ZAP_NEGATIVE_ENERGY; break;
+    case WAND_DISINTEGRATION: result = ZAP_DISINTEGRATION;  break;
+
+    case WAND_RANDOM_EFFECTS:
+        result = static_cast<zap_type>(random2(16));
+        if ( one_chance_in(20) )
+            result = ZAP_NEGATIVE_ENERGY;
+        if ( one_chance_in(17) )
+            result = ZAP_ENSLAVEMENT;
+        break;
+
+    default:
+        result = static_cast<zap_type>(sub_type);
+        break;
+    }
+    return result;
 }
 
 int item_def::index() const

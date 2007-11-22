@@ -132,6 +132,13 @@ inline std::string lowercase_first(std::string s)
     return (s);
 }
 
+inline std::string uppercase_first(std::string s)
+{
+    if (s.length())
+        s[0] = toupper(s[0]);
+    return (s);
+}
+
 template <typename Z>
 std::string comma_separated_line(Z start, Z end,
                                  const std::string &andc = " and ",

@@ -36,6 +36,7 @@
 
 #include "externs.h"
 
+#include "branch.h"
 #include "command.h"
 #include "cio.h"
 #include "cloud.h"
@@ -43,6 +44,7 @@
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "format.h"
@@ -65,6 +67,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "xom.h"
 
 // These are hidden from the rest of the world... use the functions
 // below to get information about the map grid.
@@ -218,6 +221,8 @@ bool is_terrain_changed( int x, int y )
 void set_terrain_changed( int x, int y )
 {
     env.map[x][y].flags |= MAP_CHANGED_FLAG;
+
+    dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
 }
 
 void set_terrain_mapped( int x, int y )
@@ -621,12 +626,18 @@ int get_mons_colour(const monsters *mons)
     {
         col |= COLFLAG_MAYSTAB;
     }
-    else if (Options.heap_brand != CHATTR_NORMAL
-             && mons_is_stationary(mons)
-             && in_bounds(mons->x, mons->y)
-             && igrd[mons->x][mons->y] != NON_ITEM)
+    else if (mons_is_stationary(mons))
     {
-        col |= COLFLAG_ITEM_HEAP;
+        if (Options.stair_item_brand != CHATTR_NORMAL
+            && grid_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
+        {
+            col |= COLFLAG_STAIR_ITEM;
+        }
+        else if (Options.heap_brand != CHATTR_NORMAL
+                 && igrd(mons->pos()) != NON_ITEM)
+        {
+            col |= COLFLAG_ITEM_HEAP;
+        }
     }
 
     // Backlit monsters are fuzzy and override brands.
@@ -682,7 +693,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
                 return;
             }
             beogh_convert_orc(monster, orc_hit);
-	    stop_running();
+            stop_running();
         }
     }
     else if (is_orc
@@ -707,6 +718,28 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
                 << std::endl;
         }
     }
+}
+
+static void handle_seen_interrupt(monsters* monster)
+{
+    activity_interrupt_data aid(monster);
+    if (monster->seen_context != "")
+        aid.context = monster->seen_context;
+    else if (testbits(monster->flags, MF_WAS_IN_VIEW))
+        aid.context = "already seen";
+    else
+        aid.context = "newly seen";
+
+    if (!mons_is_safe( static_cast<const monsters*>(monster) )
+        && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
+        && !mons_is_mimic( monster->type ))
+    {
+        interrupt_activity( AI_SEE_MONSTER, aid );
+    }
+    seen_monster( monster );
+
+    // Monster was viewed this turn
+    monster->flags |= MF_WAS_IN_VIEW;
 }
 
 void handle_monster_shouts(monsters* monster, bool force)
@@ -876,6 +909,19 @@ void handle_monster_shouts(monsters* monster, bool force)
         else if (param == "SOUND")
             channel = MSGCH_SOUND;
 
+        // Monster must come up from being submerged if it wants to
+        // shout.
+        if (mons_is_submerged(monster))
+        {
+            monster->del_ench(ENCH_SUBMERGED);
+            if (you.can_see(monster))
+            {
+                monster->seen_context = "bursts forth shouting";
+                // Give interrupt message before shout message.
+                handle_seen_interrupt(monster);
+            }
+        }
+
         msg::streams(channel) << msg << std::endl;
     }
 
@@ -956,6 +1002,8 @@ void monster_grid(bool do_updates)
 
 void fire_monster_alerts()
 {
+    int num_hostile = 0;
+
     for (int s = 0; s < MAX_MONSTERS; s++)
     {
         monsters *monster = &menv[s];
@@ -966,22 +1014,10 @@ void fire_monster_alerts()
                  || mons_was_seen_this_turn(monster))
                 && !mons_is_submerged( monster ))
             {
-                activity_interrupt_data aid(monster);
-                if (testbits(monster->flags, MF_WAS_IN_VIEW))
-                    aid.context = "already seen";
-                else
-                    aid.context = "newly seen";
+                handle_seen_interrupt(monster);
 
-                if (!mons_is_safe( static_cast<const monsters*>(monster) )
-                    && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
-                    && !mons_is_mimic( monster->type ))
-                {
-                    interrupt_activity( AI_SEE_MONSTER, aid );
-                }
-                seen_monster( monster );
-
-                // Monster was viewed this turn
-                monster->flags |= MF_WAS_IN_VIEW;
+                if (mons_attitude(monster) == ATT_HOSTILE)
+                    num_hostile++;
             }
             else
             {
@@ -994,6 +1030,22 @@ void fire_monster_alerts()
             // Monster was not viewed this turn
             monster->flags &= ~MF_WAS_IN_VIEW;
         }
+        monster->seen_context = "";
+    }
+
+    // Xom thinks it's hilarious the way the player picks up an ever
+    // growing entourage of monsters while running through the Abyss.
+    // To approximate this, if the number of hostile monsters in view
+    // is greater than it ever was for this particular trip to the
+    // Abyss, Xom is stimulated in proprotion to the number of
+    // hostile monsters.  Thus if the entourage doesn't grow, then
+    // Xom becomes bored.
+    if (you.level_type == LEVEL_ABYSS
+        && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
+    {
+        you.attribute[ATTR_ABYSS_ENTOURAGE] = num_hostile;
+
+        xom_is_stimulated(16 * num_hostile);
     }
 
     monsters_seen_this_turn.clear();
@@ -1267,12 +1319,24 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 
     const int dist = loudness * loudness;
 
+    const int player_distance =
+        distance( you.x_pos, you.y_pos, nois_x, nois_y );
     // message the player
-    if (distance( you.x_pos, you.y_pos, nois_x, nois_y ) <= dist
-        && player_can_hear( nois_x, nois_y ))
+    if (player_distance <= dist && player_can_hear( nois_x, nois_y ))
     {
         if (msg)
             mpr( msg, MSGCH_SOUND );
+
+        you.check_awaken(dist - player_distance);
+
+        if (loudness >= 20 && you.duration[DUR_BEHELD])
+        {
+            mprf("For a moment, you cannot hear the mermaid%s!",
+                 you.beheld_by.size() == 1? "" : "s");
+            mpr("You break out of your daze!", MSGCH_DURATION);
+            you.duration[DUR_BEHELD] = 0;
+            you.beheld_by.clear();
+        }
 
         ret = true;
     }
@@ -1962,7 +2026,7 @@ static bool superior_ray(int shortest, int imbalance,
 
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir,
-               bool find_shortest )
+               bool find_shortest, bool ignore_solid )
 {
     int cellray, inray;
     const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
@@ -2004,7 +2068,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 {
                     const int xi = signx * ray_coord_x[inray + cur_offset];
                     const int yi = signy * ray_coord_y[inray + cur_offset];
-                    if (inray < cellray
+                    if (inray < cellray && !ignore_solid
                         && grid_is_solid(grd[sourcex + xi][sourcey + yi]))
                     {
                         blocked = true;
@@ -2122,6 +2186,48 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     return false;
 }
 
+// Count the number of matching features between two points along
+// a beam-like path; the path will pass through solid features.
+// By default, it exludes enpoints from the count.
+int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
+                      dungeon_feature_type min_feat,
+                      dungeon_feature_type max_feat,
+                      bool exclude_endpoints)
+{
+    ray_def ray;
+    int     count    = 0;
+    int     max_dist = grid_distance(sourcex, sourcey, targetx, targety);
+
+    ray.fullray_idx = -1; // to quiet valgrind
+    find_ray( sourcex, sourcey, targetx, targety, true, ray, 0, true, true );
+
+    if (exclude_endpoints && ray.x() == sourcex && ray.y() == sourcey)
+    {
+        ray.advance(true);
+        max_dist--;
+    }
+
+    int dist = 0;
+    while (dist++ <= max_dist)
+    {
+        dungeon_feature_type feat = grd[ray.x()][ray.y()];
+
+        if (feat >= min_feat && feat <= max_feat)
+            count++;
+
+        if (ray.x() == targetx && ray.y() == targety)
+        {
+            if (exclude_endpoints && feat >= min_feat && feat <= max_feat)
+                count--;
+
+            break;
+        }
+        ray.advance(true);
+    }
+
+    return count;
+}
+
 // The rule behind LOS is:
 // Two cells can see each other if there is any line from some point
 // of the first to some point of the second ("generous" LOS.)
@@ -2160,7 +2266,8 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
-             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p)
+             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p,
+             bool clear_walls_block)
 {
     raycast();
     // go quadrant by quadrant
@@ -2197,7 +2304,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                     continue;
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy]) )
+                if ( grid_is_opaque(gr[realx][realy])
+                     || (clear_walls_block && grid_is_wall(gr[realx][realy])))
                 {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
@@ -2404,7 +2512,7 @@ bool is_feature(int feature, int x, int y)
         {
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
-        case DNGN_TRAP_III:
+        case DNGN_TRAP_NATURAL:
             return true;
         default:
             return false;
@@ -2572,13 +2680,13 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
 
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
     {
-        for (int screen_x = 0; screen_x < num_cols - 1; screen_x++)
+        for (int screen_x = 0; screen_x < num_cols; screen_x++)
         {
             screen_buffer_t colour = DARKGREY;
 
             coord_def c(start_x + screen_x, start_y + screen_y);
 
-            if (!in_bounds(c))
+            if (!map_bounds(c))
             {
                 buffer2[bufcount2 + 1] = DARKGREY;
                 buffer2[bufcount2] = 0;
@@ -2618,7 +2726,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
             bufcount2 += 2;
         }
     }
-    puttext(1, top, num_cols - 1, top + num_lines - 1, buffer2);
+    puttext(1, top, num_cols, top + num_lines - 1, buffer2);
 }
 
 static void reset_travel_colours(std::vector<coord_def> &features)
@@ -2634,7 +2742,7 @@ static void reset_travel_colours(std::vector<coord_def> &features)
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
-void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
+void show_map( coord_def &spec_place, bool travel_mode )
 {
     cursor_control ccon(!Options.use_fake_cursor);
     int i, j;
@@ -2743,6 +2851,9 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             break;
 
         case CONTROL('F'):
+            forget_map(100, true);
+            break;
+            
         case CONTROL('W'):
             travel_cache.add_waypoint(start_x + curs_x - 1,
                                       start_y + curs_y - 1);
@@ -2939,8 +3050,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             
             if (cme.left_clicked() && in_bounds(grdp))
             {
-                spec_place[0] = grdp.x;
-                spec_place[1] = grdp.y;
+                spec_place = grdp;
                 map_alive     = false;
             }
             else if (cme.scroll_up())
@@ -2974,12 +3084,23 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             }
             else
             {
-                spec_place[0] = x;
-                spec_place[1] = y;
+                spec_place = coord_def(x, y);
                 map_alive = false;
                 break;
             }
         }
+
+#ifdef WIZARD
+        case 'T':
+        {
+            if (!you.wizard)
+                break;
+            you.moveto(start_x + curs_x - 1, start_y + curs_y - 1);
+            map_alive = false;
+            break;
+        }
+#endif
+
         default:
             move_x = 0;
             move_y = 0;
@@ -3054,8 +3175,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force)
 {
     if (!force &&
-        ((you.level_type == LEVEL_ABYSS) ||
-         (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)))
+        (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
+         || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
     {
         if (!suppress_msg)
             mpr("You feel momentarily disoriented.");
@@ -3201,6 +3322,33 @@ bool see_grid( int grx, int gry )
     return (false);
 }  // end see_grid() 
 
+// answers the question: "Would a grid be within character's line of sight,
+// even if all translucent/clear walls were made opaque?"
+bool see_grid_no_trans( int grx, int gry )
+{
+    // rare case: can player see self?  (of course!)
+    if (grx == you.x_pos && gry == you.y_pos)
+        return (true);
+
+    // check no_trans_show array
+    if (grid_distance( grx, gry, you.x_pos, you.y_pos ) < 9)
+    {
+        const int ex = grx - you.x_pos + 9;
+        const int ey = gry - you.y_pos + 9;
+
+        if (env.no_trans_show[ex][ey])
+            return (true);
+    }
+
+    return (false);
+}
+
+// Is the grid visible, but a translucent wall is in the way?
+bool trans_wall_blocking( int grx, int gry )
+{
+    return see_grid(grx, gry) && !see_grid_no_trans(grx, gry);
+}
+
 static const unsigned table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
 {
     // CSET_ASCII
@@ -3325,6 +3473,15 @@ void init_feature_table( void )
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             break;
 
+        case DNGN_CLEAR_ROCK_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+        case DNGN_CLEAR_PERMAROCK_WALL:
+            Feature[i].dchar = DCHAR_WALL;
+            Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            Feature[i].colour = LIGHTCYAN;
+            break;
+
+
         case DNGN_OPEN_DOOR:
             Feature[i].dchar = DCHAR_DOOR_OPEN;
             Feature[i].colour = LIGHTGREY;
@@ -3424,10 +3581,10 @@ void init_feature_table( void )
             Feature[i].map_colour = MAGENTA;
             break;
 
-        case DNGN_TRAP_III:
-            Feature[i].colour = LIGHTGREY;
+        case DNGN_TRAP_NATURAL:
+            Feature[i].colour = BROWN;
             Feature[i].dchar = DCHAR_TRAP;
-            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].map_colour = BROWN;
             break;
 
         case DNGN_UNDISCOVERED_TRAP:
@@ -4080,6 +4237,10 @@ void viewwindow(bool draw_it, bool do_updates)
 
     losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
 
+    // What would be visible, if all of the translucent walls were
+    // made opaque.
+    losight( env.no_trans_show, grd, you.x_pos, you.y_pos, true );
+
     env.show_col.init(LIGHTGREY);
     Show_Backup.init(0);
 
@@ -4092,7 +4253,8 @@ void viewwindow(bool draw_it, bool do_updates)
         cursor_control cs(false);
 
         const bool map = player_in_mappable_area();
-        const bool draw = !you.running || Options.travel_delay > -1;
+        const bool draw =
+            (!you.running || Options.travel_delay > -1) && !you.asleep();
         int bufcount = 0;
 
         int flash_colour = you.flash_colour;

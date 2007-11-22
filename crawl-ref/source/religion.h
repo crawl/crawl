@@ -16,6 +16,8 @@
 
 #include "enum.h"
 
+#define MAX_PIETY 200
+
 class actor;
 class monsters;
 
@@ -25,7 +27,7 @@ int piety_breakpoint(int i);
 const char *god_name(god_type which_god, bool long_name = false); //mv
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
-bool did_god_conduct(conduct_type thing_done, int pgain,
+bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const actor *victim = NULL);
 void excommunication(void);
 void gain_piety(int pgn);
@@ -41,12 +43,8 @@ int piety_rank(int piety = -1);
 void offer_items();
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
+bool god_protects_from_harm(god_type god);
 void divine_retribution(god_type god);
-
-bool xom_is_nice();
-void xom_is_stimulated(int maxinterestingness);
-void xom_acts(bool niceness, int sever);
-const char *describe_xom_favour();
 
 bool beogh_water_walk();
 void beogh_idol_revenge();
@@ -55,10 +53,7 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
-
-inline void xom_acts(int sever)
-{
-    xom_acts(xom_is_nice(), sever);
-}
+bool is_evil_god(god_type god);
+bool is_good_god(god_type god);
 
 #endif

@@ -1,0 +1,153 @@
+###########################################################################
+# Small areas with translucent rock (glass) columns which you can duck
+# behind, but still see the monster you're ducking from (and they can
+# still see you
+NAME:  glass_columns_a
+DEPTH:
+MAP
+.....
+.m.m.
+.....
+.m.m.
+.....
+ENDMAP
+
+NAME:  glass_columns_b
+DEPTH:
+MAP
+.......
+.m.m.m.
+.......
+.m.m.m.
+.......
+.m.m.m.
+.......
+ENDMAP
+
+NAME:  glass_columns_c
+DEPTH:
+MAP
+.........
+.m.m.m.m.
+.........
+.m.m.m.m.
+.........
+.m.m.m.m.
+.........
+.m.m.m.m.
+.........
+ENDMAP
+
+##########################################################
+# A feature encased in glass, for flavour.
+NAME:  feat_on_display
+DEPTH:
+SUBST: ? = TUl
+TAGS:  no_monster_gen no_item_gen
+MAP
+.....
+.mmm.
+.m?m.
+.mmm.
+.....
+ENDMAP
+
+#######################################################################
+# An item encased in glass.  If the player wants it, it can be dug out.
+NAME:  item_on_display_a
+DEPTH:
+TAGS:  no_monster_gen no_item_gen
+MAP
+.....
+.mmm.
+.m%m.
+.mmm.
+.....
+ENDMAP
+
+#####################################################################
+# A good item encased in *permanent* glass.  If the player wants it,
+# teleport control will be needed.
+NAME:  item_on_display_b
+DEPTH:
+TAGS:  no_monster_gen no_item_gen
+MAP
+.....
+.ooo.
+.o*o.
+.ooo.
+.....
+ENDMAP
+
+#####################################################################
+# An average monster in a cage of glass; can get out if it has the
+# ability to dig or blink like a blink-frog.  Also, the player can
+# dig it out.
+NAME:  caged_monster_a
+DEPTH: D, Elf, Snake, Vault
+MAP
+.....
+.mmm.
+.m0m.
+.mmm.
+.....
+ENDMAP
+
+############################################################################ 
+# Entry vaults using translucent (glass) walls
+
+# A spiral made entirely of glass
+
+NAME:    glass_entry_001
+TAGS:    entry
+ORIENT:  float
+SHUFFLE: {[(<
+SUBST:   < = .
+MAP
+mmmmmmmmmmmmmmmmmm
+m................m
+m.mmmmmmmmmmmmmm.m
+m.m............m.m
+m.m.mmmmmmmmmm.m.m
+m.m.m........m.m.m
+m.m.m.mmmmmm.m.m.m
+m.m.m.m....m.m.m.m
+m.m.m.m.mm.m.m.m.m
+m.m.m.m{[m.m.m.m.m
+m.m.m.m(<m.m.m.m.m
+m.m.m.mmmm.m.m.m.m
+m.m.m......m.m.m.m
+m.m.mmmmmmmm.m.m.m
+m.m..........m.m.m
+m.mmmmmmmmmmmm.m.m
+m..............m.m
+mmmmmmmmmmmmmmmm@m
+ENDMAP
+
+# A spiral made of rock, with lots of "windows".
+
+NAME: glass_entry_002
+TAGS: entry
+ORIENT: float
+SHUFFLE: {[(<
+SUBST: < = .
+MAP
+mxmxmxmxmxmxxmxxmx
+x................m
+m.xmxmxmxmxmxmxm.x
+x.m............x.m
+m.x.mxmxmxmxmx.m.x
+x.m.x........m.x.m
+m.x.m.xmxmxx.x.m.x
+x.m.x.m....x.m.x.m
+m.x.m.x.mx.m.x.m.x
+x.m.x.m{[m.x.m.x.m
+m.x.m.x(<x.m.x.m.x
+x.m.x.xmxx.x.m.x.m
+m.x.m......m.x.m.x
+x.m.xxmxmxmx.m.x.m
+m.x..........x.m.x
+x.xmxmxmxmxmxm.x.m
+m..............m.x
+xxmxmxmxmxmxmxmx@m
+ENDMAP

@@ -1,6 +1,7 @@
 /*
  *  File:       spells1.cc
  *  Summary:    Implementations of some additional spells.
+ *              Mostly Translocations.
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
@@ -45,6 +46,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -61,19 +63,33 @@ static bool abyss_blocks_teleport(bool cblink)
     return (cblink? one_chance_in(3) : !one_chance_in(3));
 }
 
-int blink(int pow, bool high_level_controlled_blink)
+// If wizard_blink is set, all restriction are ignored (except for
+// a monster being at the target spot), and the player gains no
+// contamination.
+int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 {
     dist beam;
 
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return(1);
+    }
+
     // yes, there is a logic to this ordering {dlb}:
-    if (scan_randarts(RAP_PREVENT_TELEPORTATION))
+    if (scan_randarts(RAP_PREVENT_TELEPORTATION) && !wizard_blink)
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS
-             && abyss_blocks_teleport(high_level_controlled_blink))
+             && abyss_blocks_teleport(high_level_controlled_blink)
+             && !wizard_blink)
+    {
         mpr("The power of the Abyss keeps you in your place!");
-    else if (you.duration[DUR_CONF])
+    }
+    else if (you.duration[DUR_CONF] && !wizard_blink)
         random_blink(false);
-    else if (!allow_control_teleport(true))
+    else if (!allow_control_teleport(true) && !wizard_blink)
     {
         mpr("A powerful magic interferes with your control of the blink.");
         if (high_level_controlled_blink)
@@ -85,11 +101,13 @@ int blink(int pow, bool high_level_controlled_blink)
         // query for location {dlb}:
         for (;;)
         {
-            direction(beam, DIR_TARGET, TARG_ANY, false, false, "Blink to where?");
+            direction(beam, DIR_TARGET, TARG_ANY, false, false,
+                      "Blink to where?");
 
             if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
             {
-                if (!yesno("Are you sure you want to cancel this blink?",
+                if (!wizard_blink &&
+                    !yesno("Are you sure you want to cancel this blink?",
                            false, 'n'))
                 {
                     mesclr();
@@ -99,14 +117,29 @@ int blink(int pow, bool high_level_controlled_blink)
                 return (-1);         // early return {dlb}
             }
 
-            if (see_grid(beam.tx, beam.ty))
+            // Wizard blink can move past translucent walls.
+            if (see_grid_no_trans(beam.tx, beam.ty))
                 break;
+            else if (trans_wall_blocking( beam.tx, beam.ty ))
+            {
+                // Wizard blink can move past translucent walls.
+                if (wizard_blink)
+                    break;
+
+                mesclr();
+                mpr("You can't blink through translucent walls.");
+            }
             else
             {
                 mesclr();
-                mpr("You can't blink there!");
+                mpr("You can only blink to visible locations.");
             }
         }
+
+        // Allow wizard blink to send player into walls, in case
+        // the user wants to alter that grid to something else.
+        if (grid_is_solid(grd[beam.tx][beam.ty]) && wizard_blink)
+            grd[beam.tx][beam.ty] = DNGN_FLOOR;
 
         if (grid_is_solid(grd[beam.tx][beam.ty])
             || mgrd[beam.tx][beam.ty] != NON_MONSTER)
@@ -114,7 +147,7 @@ int blink(int pow, bool high_level_controlled_blink)
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
         }
-        else if (you.level_type == LEVEL_ABYSS)
+        else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
         {
             abyss_teleport( false );
             you.pet_target = MHITNOT;
@@ -127,15 +160,19 @@ int blink(int pow, bool high_level_controlled_blink)
             move_player_to_grid(beam.tx, beam.ty, false, true, true);
 
             // controlling teleport contaminates the player -- bwr
-            contaminate_player( 1 );
+            if (!wizard_blink)
+                contaminate_player( 1 );
         }
 
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && !wizard_blink)
         {
             you.duration[DUR_CONDENSATION_SHIELD] = 0;
             you.redraw_armour_class = 1;
         }
     }
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
 
     return (1);
 }                               // end blink()
@@ -152,7 +189,10 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     {
         mpr("The power of the Abyss keeps you in your place!");
     }
-    else if (!random_near_space(you.x_pos, you.y_pos, tx, ty))
+    // First try to find a random square not adjacent to the player,
+    // then one adjacent if that fails.
+    else if (!random_near_space(you.x_pos, you.y_pos, tx, ty)
+             && !random_near_space(you.x_pos, you.y_pos, tx, ty, true))
     {
         mpr("You feel jittery for a moment.");
     }
@@ -353,7 +393,7 @@ void cast_chain_lightning( int powc )
         else if (!see_source && see_targ)
             mpr( "The lightning arc suddenly appears!" );
 
-        if (!see_targ)
+        if (!see_grid_no_trans( tx, ty ))
         {
             // It's no longer in the caster's LOS and influence.
             powc = powc / 2 + 1;
@@ -452,7 +492,12 @@ bool conjure_flame(int pow)
             return false;
         }
 
-        if (!see_grid(spelld.tx, spelld.ty))
+        if (trans_wall_blocking(spelld.tx, spelld.ty))
+        {
+            mpr("A translucent wall is in the way.");
+            return false;
+        }
+        else if (!see_grid(spelld.tx, spelld.ty))
         {
             mpr("You can't see that place!");
             continue;
@@ -525,10 +570,10 @@ int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 }                               // end cast_big_c()
 
 void big_cloud(cloud_type cl_type, kill_category whose,
-               int cl_x, int cl_y, int pow, int size)
+               int cl_x, int cl_y, int pow, int size, int spread_rate)
 {
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
-                     cl_type, whose);
+                     cl_type, whose, spread_rate);
 }                               // end big_cloud()
 
 static int healing_spell( int healed )
@@ -692,19 +737,16 @@ void cast_deaths_door(int pow)
     return;
 }
 
-// can't use beam variables here, because of monster_die and the puffs of smoke
 void abjuration(int pow)
 {
-    struct monsters *monster = 0;       // NULL {dlb}
-
     mpr("Send 'em back where they came from!");
 
     // Scale power into something comparable to summon lifetime.
     const int abjdur = pow * 12;
 
-    for (int ab = 0; ab < MAX_MONSTERS; ab++)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        monster = &menv[ab];
+        monsters* const monster = &menv[i];
 
         if (monster->type == -1 || !mons_near(monster))
             continue;

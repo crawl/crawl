@@ -56,6 +56,13 @@ bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
             || (!generation 
                     && actual_grid == DNGN_SHALLOW_WATER);
 
+    if (grid_wanted >= DNGN_ROCK_WALL
+        && grid_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
+    {
+        return (actual_grid >= DNGN_ROCK_WALL &&
+                actual_grid <= DNGN_CLEAR_PERMAROCK_WALL);
+    }
+
     return (grid_wanted == actual_grid
             || (grid_wanted == DNGN_DEEP_WATER
                 && (actual_grid == DNGN_SHALLOW_WATER
@@ -98,13 +105,16 @@ bool monster_habitable_grid(int monster_class, int actual_grid, int flies,
                 && (actual_grid == DNGN_LAVA 
                     || actual_grid == DNGN_DEEP_WATER))
 
-            // Amphibious critters are happy in the water.
+            // Amphibious critters are happy in water or on land.
             || (mons_class_flag(monster_class, M_AMPHIBIOUS)
-                && grid_compatible(DNGN_DEEP_WATER, actual_grid))
+                && ((preferred_habitat == DNGN_FLOOR
+                    && grid_compatible(DNGN_DEEP_WATER, actual_grid))
+                    || (preferred_habitat == DNGN_DEEP_WATER
+                        && grid_compatible(DNGN_FLOOR, actual_grid))))
 
-            // And water elementals are native to the water but happy on land
+            // Rock worms are native to walls but are happy on the floor
             // as well.
-            || (monster_class == MONS_WATER_ELEMENTAL
+            || (monster_class == MONS_ROCK_WORM
                 && grid_compatible(DNGN_FLOOR, actual_grid)));
 }
 
@@ -113,6 +123,8 @@ bool monster_can_submerge(int monster_class, int grid)
 {
     switch (monster_class)
     {
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_GIANT_GOLDFISH:
     case MONS_ELECTRICAL_EEL:
@@ -229,6 +241,8 @@ monster_type pick_random_monster(const level_id &place,
     
     monster_type mon_type = MONS_PROGRAM_BUG;
 
+    monster_type mon_type = MONS_PROGRAM_BUG;
+
     lev_mons = power;
 
     if (place.branch == BRANCH_MAIN_DUNGEON
@@ -319,6 +333,24 @@ monster_type pick_random_monster(const level_id &place,
     return (mon_type);
 }
 
+static bool can_place_on_trap(int mon_type, trap_type trap)
+{
+    if (trap == TRAP_TELEPORT)
+        return (false);
+
+    if (trap == TRAP_SHAFT)
+    {
+        if (mon_type == RANDOM_MONSTER)
+            return (false);
+
+        return (mons_class_flag(mon_type, M_FLIES)
+                || mons_class_flag(mon_type, M_LEVITATE)
+                || get_monster_data(mon_type)->size == SIZE_TINY);
+    }
+
+    return (true);
+}
+
 bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                    int target, bool summoned, int px, int py, bool allow_bands,
                    proximity_type proximity, int extra, int dur,
@@ -366,7 +398,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 int trap = trap_at_xy(px, py);
                 if (trap >= 0)
                 {
-                    if (env.trap[trap].type == TRAP_TELEPORT)
+                    if (!can_place_on_trap(mon_type, env.trap[trap].type))
                        continue;
                 }
 
@@ -501,7 +533,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
             int trap = trap_at_xy(px, py);
             if (trap >= 0)
             {
-                if (env.trap[trap].type == TRAP_TELEPORT)
+                if (!can_place_on_trap(mon_type, env.trap[trap].type))
                     continue;
             }
 
@@ -651,6 +683,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     menv[id].inv.init(NON_ITEM);
     // scrap monster enchantments
     menv[id].enchantments.clear();
+    menv[id].ench_countdown = 0;
 
     // setup habitat and placement
     if (first_band_member)
@@ -679,7 +712,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
             // (how do they get there?)
             int trap = trap_at_xy(fx, fy);
             if (trap >= 0)
-                if (env.trap[trap].type == TRAP_TELEPORT)
+                if (!can_place_on_trap(mon_type, env.trap[trap].type))
                     continue;
 
             // cool.. passes all tests
@@ -1413,8 +1446,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
               mons_level(monster->type) < 99 &&
               !(monster->type >= MONS_EARTH_ELEMENTAL &&
                 monster->type <= MONS_AIR_ELEMENTAL)
-              && (!Options.safe_zero_exp ||
-                  !mons_class_flag( monster->type, M_NO_EXP_GAIN )))
+              && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
         interesting = true;
 
     if ( interesting )
@@ -1583,11 +1615,12 @@ bool player_angers_monster(monsters *creation)
 
 int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands,
-                    bool force_place, bool force_behaviour )
+                    bool force_place, bool force_behaviour,
+                    bool player_made )
 {
     int summd = -1;
     coord_def pos = find_newmons_square(cls, cr_x, cr_y);
-    if (force_place && !grid_is_solid(grd[cr_x][cr_y])
+    if (force_place && mons_class_can_pass(cls, grd[cr_x][cr_y])
         && mgrd[cr_x][cr_y] == NON_MONSTER)
     {
         pos.x = cr_x;
@@ -1615,6 +1648,11 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
         // dur should always be ENCH_ABJ_xx
         if (dur >= 1 && dur <= 6)
             creation->add_ench( mon_enchant(ENCH_ABJ, dur) );
+
+        // player summons do not give XP or other bonuses
+        // (you can still train skills on them though)
+        if ( player_made )
+            creation->flags |= MF_CREATED_FRIENDLY;
 
         // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
         // alert summoned being to player's presence
@@ -1678,8 +1716,9 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
             if (mgrd[tx][ty] != NON_MONSTER)
                 continue;
 
-            // players won't summon out of LOS
-            if (!see_grid(tx, ty) && playerSummon)
+            // players won't summon out of LOS, or past transparent
+            // walls.
+            if (!see_grid_no_trans(tx, ty) && playerSummon)
                 continue;
 
             if (grd[tx][ty] == spc_wanted)

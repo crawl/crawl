@@ -31,11 +31,7 @@ function chunk_maybe_safe(chunk)
     local race = you.race()
 
     if rot then
-        return race == "Ghoul"
-            or race == "Kobold"
-            or race == "Troll"
-            or race == "Hill Orc"
-            or race == "Ogre"
+        return you.saprovorous() > 0
     end
 
     return true

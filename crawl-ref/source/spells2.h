@@ -14,6 +14,7 @@
 #define SPELLS2_H
 
 #include "enum.h"
+#include "itemprop.h"  // from brand_type
 
 struct dist;
 
@@ -21,7 +22,7 @@ struct dist;
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-bool brand_weapon(int which_brand, int power);
+bool brand_weapon(brand_type which_brand, int power);
 
 
 // last updated 24may2000 {dlb}
@@ -154,7 +155,7 @@ void summon_animals(int pow);
  * *********************************************************************** */
 void summon_small_mammals(int pow);
 
-void summon_berserker();
+bool summon_berserker(int pow, bool god_gift);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

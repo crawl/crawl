@@ -3,7 +3,7 @@
  *  Summary:    Functions for DOS support.
  *  Written by: Darshan Shaligram
  *
- *  Added for Crawl Reference by $Author: nlanza $ on $Date: 2006-09-26T03:22:57.300929Z $
+ *  Added for Crawl Reference by $Author$ on $Date$
  */
 
 // Every .cc must include AppHdr or bad things happen.

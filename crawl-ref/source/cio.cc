@@ -2,7 +2,7 @@
  *  File:       cio.cc
  *  Summary:    Platform-independent console IO functions.
  *
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-14T18:14:26.828542Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"
@@ -108,6 +108,19 @@ void get_input_line( char *const buff, int len )
 {
     buff[0] = 0;         // just in case
 
+    if (crawl_state.is_replaying_keys())
+    {
+        ASSERT(crawl_state.input_line_curr <
+               crawl_state.input_line_strs.size());
+
+        unsigned int curr = crawl_state.input_line_curr++;
+        std::string &line = crawl_state.input_line_strs[curr];
+
+        strcpy(buff, line.c_str());
+
+        return;
+    }
+
 #if defined(UNIX)
     get_input_line_from_curses( buff, len ); // implemented in libunix.cc
 #elif defined(WIN32CONSOLE)
@@ -137,6 +150,8 @@ void get_input_line( char *const buff, int len )
         else
             break;
     }
+
+    crawl_state.input_line_strs.push_back(buff);
 }
 
 // Hacky wrapper around getch() that returns CK_ codes for keys

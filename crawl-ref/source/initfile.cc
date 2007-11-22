@@ -101,7 +101,8 @@ int str_to_colour( const std::string &str, int default_colour,
         "holy", "dark", "death", "necro", "unholy", "vehumet",
         "beogh", "crystal", "blood", "smoke", "slime", "jewel",
         "elven", "dwarven", "orcish", "gila", "floor", "rock",
-        "stone", "mist", "shimmer_blue", "random"
+        "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
+        "iron", "bone", "random"
     };
 
     ASSERT(ARRAYSIZE(element_cols) == (EC_RANDOM - EC_FIRE) + 1);
@@ -371,12 +372,14 @@ static unsigned curses_attribute(const std::string &field)
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
         if (colour == -1)
-            fprintf(stderr, "Bad highlight string -- %s\n", field.c_str());
+            crawl_state.add_startup_error(
+                make_stringf("Bad highlight string -- %s\n", field.c_str()));
         else
             return CHATTR_HILITE | (colour << 8);          
     }
     else if (field != "none")
-        fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
+        crawl_state.add_startup_error(
+            make_stringf( "Bad colour -- %s\n", field.c_str() ) );
     return CHATTR_NORMAL;
 }
 
@@ -466,7 +469,8 @@ void game_options::set_activity_interrupt(
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
         {
-            fprintf(stderr, "Unknown delay: %s\n", delay_name.c_str());
+            crawl_state.add_startup_error(
+                make_stringf("Unknown delay: %s\n", delay_name.c_str()));
             return;
         }
         
@@ -483,8 +487,9 @@ void game_options::set_activity_interrupt(
     activity_interrupt_type ai = get_activity_interrupt(interrupt);
     if (ai == NUM_AINTERRUPTS)
     {
-        fprintf(stderr, "Delay interrupt name \"%s\" not recognised.\n",
-                interrupt.c_str());
+        crawl_state.add_startup_error(
+            make_stringf("Delay interrupt name \"%s\" not recognised.\n",
+                         interrupt.c_str()));
         return;
     }
 
@@ -499,7 +504,8 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     const delay_type delay = get_delay(activity_name);
     if (delay == NUM_DELAYS)
     {
-        fprintf(stderr, "Unknown delay: %s\n", activity_name.c_str());
+        crawl_state.add_startup_error(
+            make_stringf("Unknown delay: %s\n", activity_name.c_str()));
         return;
     }
 
@@ -597,33 +603,30 @@ void game_options::reset_options()
                    (1L <<  7) | // jewellery
                    (1L <<  3) | // wands
                    (1L <<  4)); // food
+
+    suppress_startup_errors = false;
+    
     show_inventory_weights = false;
     colour_map             = true;
     clean_map              = false;
     show_uncursed          = true;
-    always_greet           = true;
     easy_open              = true;
     easy_unequip           = true;
     easy_butcher           = true;
+    always_confirm_butcher = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;
     magic_point_warning    = 0;
-    confirm_self_target    = true;
     default_target         = true;
-    safe_autopickup        = true;
     autopickup_no_burden   = false;
     
-    use_notes              = true;
     user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = false;
     note_all_spells        = false;
     note_hp_percent        = 5;
     ood_interesting        = 8;
-
-    terse_hand             = true;
-    increasing_skill_progress = true;
 
     // [ds] Grumble grumble.
     auto_list              = true;
@@ -683,7 +686,6 @@ void game_options::reset_options()
     explore_item_greed     = 10;
     explore_greedy         = false;
     
-    safe_zero_exp          = true;
     target_zero_exp        = false;
     target_wrap            = true;
     target_oos             = true;
@@ -702,8 +704,6 @@ void game_options::reset_options()
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
     flush_input[ FLUSH_ON_MESSAGE ]     = false;
     flush_input[ FLUSH_LUA ]            = true;
-
-    lowercase_invocations  = true; 
 
     fire_items_start       = 2;           // start at slot 'c'
 
@@ -1643,6 +1643,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // should weights be shown on inventory items?
         show_inventory_weights = read_bool( field, show_inventory_weights );
     }
+    else if (key == "suppress_startup_errors")
+    {
+        suppress_startup_errors = read_bool( field, suppress_startup_errors );
+    }
     else if (key == "clean_map")
     {
         // removes monsters/clouds from map
@@ -1686,6 +1690,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // automatic knife switching
         easy_butcher = read_bool( field, easy_butcher );
+    }
+    else if (key == "always_confirm_butcher")
+    {
+        always_confirm_butcher = read_bool( field, always_confirm_butcher );
     }
     else if (key == "lua_file" && runscript)
     {
@@ -1818,11 +1826,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // See friend_brand option upstairs. no_dark_brand applies
         // here as well.
         heap_brand = curses_attribute(field);
-    }
-    else if (key == "always_greet")
-    {
-        // show greeting when reloading game
-        always_greet = read_bool( field, always_greet );
     }
     else if (key == "weapon")
     {
@@ -1978,19 +1981,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         auto_list = read_bool( field, auto_list );
     }
-    else if (key == "confirm_self_target")
-    {
-        confirm_self_target = read_bool( field, confirm_self_target );
-    }
     else if (key == "default_target")
     {
         default_target = read_bool( field, default_target );
         if (default_target)
             target_unshifted_dirs = false;
-    }
-    else if (key == "safe_autopickup")
-    {
-        safe_autopickup = read_bool( field, safe_autopickup );
     }
     else if (key == "autopickup_no_burden")
     {
@@ -2065,10 +2060,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
     }    
-    else if (key == "use_notes")
-    {
-        use_notes = read_bool( field, use_notes );
-    }
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
@@ -2085,14 +2076,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "delay_message_clear")
     {
         delay_message_clear = read_bool( field, delay_message_clear );
-    }
-    else if (key == "terse_hand")
-    {
-        terse_hand = read_bool( field, terse_hand );
-    }
-    else if (key == "increasing_skill_progress")
-    {
-        increasing_skill_progress = read_bool( field, increasing_skill_progress );
     }
     else if (key == "flush")
     {
@@ -2117,11 +2100,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 = read_bool(field, flush_input[FLUSH_LUA]);
         }
     }
-    else if (key == "lowercase_invocations")
-    {
-        lowercase_invocations 
-                = read_bool(field, lowercase_invocations);
-    }
     else if (key == "wiz_mode")
     {
         // wiz_mode is recognized as a legal key in all compiles -- bwr
@@ -2133,7 +2111,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "yes")
             wiz_mode = WIZ_YES;
         else
-            fprintf(stderr, "Unknown wiz_mode option: %s\n", field.c_str());
+            crawl_state.add_startup_error(
+                make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
 #endif
     }
     else if (key == "ban_pickup")
@@ -2184,7 +2163,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if ( insplit.size() == 0 || insplit.size() > 2 ||
                  (insplit.size() == 1 && i != 0) )
             {
-                fprintf(stderr, "Bad hp_colour string: %s\n", field.c_str());
+                crawl_state.add_startup_error(
+                    make_stringf("Bad hp_colour string: %s\n", field.c_str()));
                 break;
             }
 
@@ -2207,7 +2187,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if ( insplit.size() == 0 || insplit.size() > 2 ||
                  (insplit.size() == 1 && i != 0) )
             {
-                fprintf(stderr, "Bad mp_colour string: %s\n", field.c_str());
+                crawl_state.add_startup_error(
+                    make_stringf("Bad mp_colour string: %s\n", field.c_str()));
                 break;
             }
 
@@ -2228,8 +2209,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 note_skill_levels.push_back(num);
             else
             {
-                fprintf(stderr, "Bad skill level to note -- %s\n",
-                        thesplit[i].c_str());
+                crawl_state.add_startup_error(
+                    make_stringf("Bad skill level to note -- %s\n",
+                                 thesplit[i].c_str()));
                 continue;
             }
         }
@@ -2455,16 +2437,31 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         std::vector<std::string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            const std::string &sub = seg[i];
-            std::string::size_type cpos = sub.find(":", 0);
-            if (cpos != std::string::npos)
+            // format: tag:string:colour
+            // FIXME: arrange so that you can use ':' inside a pattern
+            std::vector<std::string> subseg = split_string(":", seg[i], false);
+            std::string tagname, patname, colname;
+            if ( subseg.size() < 2 )
+                continue;
+            if ( subseg.size() >= 3 )
             {
-                colour_mapping mapping;
-                mapping.pattern = sub.substr(cpos + 1);
-                mapping.colour  = str_to_colour(sub.substr(0, cpos));
-                if (mapping.colour != -1)
-                    menu_colour_mappings.push_back(mapping);
+                tagname = subseg[0];
+                colname = subseg[1];
+                patname = subseg[2];
             }
+            else
+            {
+                colname = subseg[0];
+                patname = subseg[1];
+            }
+
+            colour_mapping mapping;
+            mapping.tag = tagname;
+            mapping.pattern = patname;
+            mapping.colour = str_to_colour(colname);
+
+            if (mapping.colour != -1)
+                menu_colour_mappings.push_back(mapping);
         }
     }
     else if (key == "menu_colour_prefix_class" ||
@@ -2554,10 +2551,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "level_map_title")
     {
         level_map_title = read_bool(field, level_map_title);
-    }
-    else if (key == "safe_zero_exp")
-    {
-        safe_zero_exp = read_bool(field, safe_zero_exp);
     }
     else if (key == "target_zero_exp")
     {

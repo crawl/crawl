@@ -82,6 +82,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -331,7 +332,11 @@ void cast_spec_spell(void)
     if (spell == -1)
         canned_msg( MSG_OK );
     else
-        your_spells( static_cast<spell_type>(spell), 0, false );
+        if (your_spells( static_cast<spell_type>(spell), 0, false )
+            == SPRET_ABORT)
+        {
+            crawl_state.cancel_cmd_repeat();
+        }
 }
 #endif
 
@@ -345,17 +350,28 @@ void cast_spec_spell(void)
 void cast_spec_spell_name(void)
 {
     char specs[80];
+
     mpr( "Cast which spell by name? ", MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
-    
+
+    if (specs[0] == '\0')
+    {
+        canned_msg( MSG_OK );
+        crawl_state.cancel_cmd_repeat();
+        return;
+    }
+
     spell_type type = spell_by_name(specs, true);
     if (type == SPELL_NO_SPELL)
     {
         mpr((one_chance_in(20)) ? "Maybe you should go back to WIZARD school."
-                                : "I couldn't find that spell.");
+            : "I couldn't find that spell.");
+        crawl_state.cancel_cmd_repeat();
         return;
     }
-    your_spells(type, 0, false);
+
+    if (your_spells(type, 0, false) == SPRET_ABORT)
+        crawl_state.cancel_cmd_repeat();
 }
 #endif
 
@@ -430,7 +446,7 @@ void create_spec_monster_name(int x, int y)
     // Need to set a name for the player ghost
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
-        unsigned char mid  = mgrd[x][y];
+        unsigned short mid  = mgrd[x][y];
 
         if (mid >= MAX_MONSTERS || menv[mid].type != MONS_PLAYER_GHOST)
         {
@@ -668,6 +684,244 @@ void debug_list_monsters()
 #endif
 
 #ifdef WIZARD
+
+static void rune_from_specs(const char* _specs, item_def &item)
+{
+    char specs[80];
+    char obj_name[ ITEMNAME_SIZE ];
+
+    item.sub_type = MISC_RUNE_OF_ZOT;
+
+    if (strstr(_specs, "rune of zot"))
+        strncpy(specs, _specs, strlen(_specs) - strlen(" of zot"));
+    else
+        strcpy(specs, _specs);
+
+    if (strlen(specs) > 4)
+    {
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        {
+            item.plus = i;
+
+            strcpy(obj_name, item.name(DESC_PLAIN).c_str());
+
+            if (strstr(strlwr(obj_name), specs))
+                return;
+        }
+    }
+
+    while (true)
+    {
+        mpr(
+"[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy   [f] silver",
+            MSGCH_PROMPT);
+        mpr(
+"[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
+            MSGCH_PROMPT);
+        mpr(
+"[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark    [r] buggy",
+            MSGCH_PROMPT);
+        mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
+
+        int keyin = tolower( get_ch() );
+
+        if (keyin == ESCAPE  || keyin == ' ' 
+            || keyin == '\r' || keyin == '\n')
+        {
+            canned_msg( MSG_OK );
+            item.base_type = OBJ_UNASSIGNED;
+            return;
+        }
+
+        if (keyin < 'a' || keyin > 'r')
+            continue;
+
+        rune_type types[] = {
+            RUNE_DIS,
+            RUNE_GEHENNA,
+            RUNE_COCYTUS,
+            RUNE_TARTARUS,
+            RUNE_SLIME_PITS,
+            RUNE_VAULTS,
+            RUNE_SNAKE_PIT,
+            RUNE_ELVEN_HALLS,
+            RUNE_TOMB,
+            RUNE_SWAMP,
+            RUNE_SHOALS,
+
+            RUNE_DEMONIC,
+            RUNE_ABYSSAL,
+
+            RUNE_MNOLEG,
+            RUNE_LOM_LOBON,
+            RUNE_CEREBOV,
+            RUNE_GLOORX_VLOQ,
+            NUM_RUNE_TYPES
+        };
+
+        item.plus = static_cast<int>(types[keyin - 'a']);
+
+        return;
+    }
+}
+
+static void deck_from_specs(const char* _specs, item_def &item)
+{
+    std::string specs    = _specs;
+    std::string type_str = "";
+
+    trim_string(specs);
+
+    if (specs.find(" of ") != std::string::npos)
+    {
+        type_str = specs.substr(specs.find(" of ") + 4);
+
+        if (type_str.find("card") != std::string::npos
+            || type_str.find("deck") != std::string::npos)
+        {
+            type_str = "";
+        }
+
+        trim_string(type_str);
+    }
+
+    misc_item_type types[] = {
+        MISC_DECK_OF_ESCAPE,
+        MISC_DECK_OF_DESTRUCTION,
+        MISC_DECK_OF_DUNGEONS,
+        MISC_DECK_OF_SUMMONING,
+        MISC_DECK_OF_WONDERS,
+        MISC_DECK_OF_PUNISHMENT,
+        MISC_DECK_OF_WAR,
+        MISC_DECK_OF_CHANGES,
+        MISC_DECK_OF_DEFENSE,
+        NUM_MISCELLANY
+    };
+
+    item.special  = DECK_RARITY_COMMON;
+    item.sub_type = NUM_MISCELLANY;
+
+    if (type_str != "")
+    {
+        for (int i = 0; types[i] != NUM_MISCELLANY; i++)
+        {
+            item.sub_type = types[i];
+            item.plus     = 1;
+            init_deck(item);
+            // Remove "plain " from front
+            std::string name = item.name(DESC_PLAIN).substr(6);
+            item.props.clear();
+            
+            if (name.find(type_str) != std::string::npos)
+                break;
+        }
+    }
+
+    if (item.sub_type == NUM_MISCELLANY)
+    {
+        while (true)
+        {
+            mpr(
+"[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders",
+                MSGCH_PROMPT);
+            mpr(
+"[f] punishment [g] war         [h] changes  [i] defense",
+                MSGCH_PROMPT);
+            mpr("Which deck (ESC to exit)? ");
+
+            int keyin = tolower( get_ch() );
+
+            if (keyin == ESCAPE  || keyin == ' ' 
+                || keyin == '\r' || keyin == '\n')
+            {
+                canned_msg( MSG_OK );
+                item.base_type = OBJ_UNASSIGNED;
+                return;
+            }
+
+            if (keyin < 'a' || keyin > 'i')
+                continue;
+
+            item.sub_type = types[keyin - 'a'];
+            break;
+        }
+    }
+
+    const char* rarities[] = {
+        "plain",
+        "ornate",
+        "legendary",
+        NULL
+    };
+
+    int rarity_val = -1;
+
+    for (int i = 0; rarities[i] != NULL; i++)
+        if (specs.find(rarities[i]) != std::string::npos)
+        {
+            rarity_val = i;
+            break;
+        }
+
+    if (rarity_val == -1)
+    {
+        while (true)
+        {
+            mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
+                MSGCH_PROMPT);
+
+            int keyin = tolower( get_ch() );
+
+            if (keyin == ESCAPE  || keyin == ' ' 
+                || keyin == '\r' || keyin == '\n')
+            {
+                canned_msg( MSG_OK );
+                item.base_type = OBJ_UNASSIGNED;
+                return;
+            }
+
+            switch (keyin)
+            {
+            case 'p': keyin = 'a'; break;
+            case 'o': keyin = 'b'; break;
+            case 'l': keyin = 'c'; break;
+            }
+
+            if (keyin < 'a' || keyin > 'c')
+                continue;
+
+            rarity_val = keyin - 'a';
+            break;
+        }
+    }
+
+    int              base   = static_cast<int>(DECK_RARITY_COMMON);
+    deck_rarity_type rarity =
+        static_cast<deck_rarity_type>(base + rarity_val);
+    item.special = rarity;
+
+    int num = debug_prompt_for_int("How many cards? ", false);
+
+    if (num <= 0)
+    {
+        canned_msg( MSG_OK );
+        item.base_type = OBJ_UNASSIGNED;
+        return;
+    }
+
+    item.plus = num; 
+
+    init_deck(item);
+}
+
+static void rune_or_deck_from_specs(const char* specs, item_def &item)
+{
+    if (strstr(specs, "rune"))
+        rune_from_specs(specs, item);
+    else if (strstr(specs, "deck"))
+        deck_from_specs(specs, item);
+}
+
 //---------------------------------------------------------------
 //
 // create_spec_object
@@ -812,6 +1066,11 @@ void create_spec_object()
         mpr( "What type of item? ", MSGCH_PROMPT );
         get_input_line( specs, sizeof( specs ) );
 
+        std::string temp = specs;
+        trim_string(temp);
+        lowercase(temp);
+        strcpy(specs, temp.c_str());
+
         if (specs[0] == '\0')
         {
             canned_msg( MSG_OK );
@@ -830,7 +1089,19 @@ void create_spec_object()
         mitm[thing_created].quantity  = 1;
         set_ident_flags( mitm[thing_created], ISFLAG_IDENT_MASK );
 
-        if (class_wanted == OBJ_ARMOUR) 
+        if (class_wanted == OBJ_MISCELLANY)
+        {
+            // Leaves object unmodified if it wasn't a rune or deck
+            rune_or_deck_from_specs(specs, mitm[thing_created]);
+
+            if (mitm[thing_created].base_type == OBJ_UNASSIGNED)
+            {
+                // Rune or deck creation canceled, clean up item
+                destroy_item(thing_created);
+                return;
+            }
+        }
+        else if (class_wanted == OBJ_ARMOUR) 
         {
             if (strstr( "naga barding", specs ))
             {
@@ -867,7 +1138,7 @@ void create_spec_object()
                 mitm[thing_created].sub_type = i;
                 strcpy(obj_name,mitm[thing_created].name(DESC_PLAIN).c_str());
 
-                ptr = strstr( strlwr(obj_name), strlwr(specs) );
+                ptr = strstr( strlwr(obj_name), specs );
                 if (ptr != NULL)
                 {
                     // earliest match is the winner
@@ -961,8 +1232,8 @@ void create_spec_object()
             break;
 
         case OBJ_MISCELLANY:
-            // Runes to "demonic", decks have 50 cards, ignored elsewhere?
-            mitm[thing_created].plus = 50;
+            if (!is_rune(mitm[thing_created]) && !is_deck(mitm[thing_created]))
+                mitm[thing_created].plus = 50;
             break;
 
         case OBJ_FOOD:
@@ -976,7 +1247,9 @@ void create_spec_object()
         }
     }
 
-    item_colour( mitm[thing_created] );
+    // Deck colour (which control rarity) already set
+    if (!is_deck(mitm[thing_created]))
+        item_colour( mitm[thing_created] );
 
     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
@@ -1063,7 +1336,7 @@ void tweak_object(void)
             return;
 
         char *end;
-        int   new_value = strtol( specs, &end, 10 );
+        int   new_value = strtol( specs, &end, 0 );
 
         if (new_value == 0 && end == specs)
             return;
@@ -1175,8 +1448,8 @@ void stethoscope(int mwh)
           (menv[i].foe == MHITNOT)            ? "none" :
           (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
           : menv[menv[i].foe].name(DESC_PLAIN, true).c_str()),
-         menv[i].foe, 
-         menv[i].foe_memory,          
+         menv[i].foe,
+         menv[i].foe_memory,
          menv[i].target_x, menv[i].target_y );
 
     // print resistances
@@ -1221,6 +1494,8 @@ static void dump_item( const char *name, int num, const item_def &item )
          get_ident_type( item.base_type, item.sub_type ) );
 
     mprf("    x: %d; y: %d; link: %d", item.x, item.y, item.link );
+
+    crawl_state.cancel_cmd_repeat();
 }
 
 //---------------------------------------------------------------
@@ -1507,43 +1782,224 @@ void debug_set_all_skills(void)
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
+
+static const char *mutation_type_names[] = {
+    "tough skin",
+    "strong",
+    "clever",
+    "agile",
+    "green scales",
+    "black scales",
+    "grey scales",
+    "boney plates",
+    "repulsion field",
+    "poison resistance",
+    "carnivorous",
+    "herbivorous",
+    "heat resistance",
+    "cold resistance",
+    "shock resistance",
+    "regeneration",
+    "fast metabolism",
+    "slow metabolism",
+    "weak",
+    "dopey",
+    "clumsy",
+    "teleport control",
+    "teleport",
+    "magic resistance",
+    "fast",
+    "acute vision",
+    "deformed",
+    "teleport at will",
+    "spit poison",
+    "mapping",
+    "breathe flames",
+    "blink",
+    "horns",
+    "strong stiff",
+    "flexible weak",
+    "scream",
+    "clarity",
+    "berserk",
+    "deterioration",
+    "blurry vision",
+    "mutation resistance",
+    "frail",
+    "robust",
+    "torment resistance",
+    "negative energy resistance",
+    "summon minor demons",
+    "summon demons",
+    "hurl hellfire",
+    "call torment",
+    "raise dead",
+    "control demons",
+    "pandemonium",
+    "death strength",
+    "channel hell",
+    "drain life",
+    "throw flames",
+    "throw frost",
+    "smite",
+    "claws",
+    "fangs",
+    "hooves",
+    "talons",
+    "paws",
+    "breathe poison",
+    "stinger",
+    "big wings",
+    "blue marks",
+    "green marks",
+    "drifting",
+    "saprovorous",
+    "shaggy fur",
+    "high mp",
+    "low mp",
+    "sleepiness",
+    "",
+    // from here on scales
+    "red scales",
+    "nacreous scales",
+    "grey2 scales",
+    "metallic scales",
+    "black2 scales",
+    "white scales",
+    "yellow scales",
+    "brown scales",
+    "blue scales",
+    "purple scales",
+    "speckled scales",
+    "orange scales",
+    "indigo scales",
+    "red2 scales",
+    "iridescent scales",
+    "patterned scales"
+};
+
 bool debug_add_mutation(void)
 {
     bool success = false;
     char specs[80];
 
+    if ((sizeof(mutation_type_names) / sizeof(char*)) != NUM_MUTATIONS)
+    {
+        mprf("Mutation name list has %d entries, but there are %d "
+             "mutations total; update mutation_type_names in debug.cc "
+             "to reflect current list.",
+             (sizeof(mutation_type_names) / sizeof(char*)),
+             (int) NUM_MUTATIONS);
+        crawl_state.cancel_cmd_repeat();
+        return (false);
+    }
+
+    if (you.mutation[MUT_MUTATION_RESISTANCE] > 0 &&
+        !crawl_state.is_replaying_keys())
+    {
+        const char* msg;
+
+        if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
+            msg = "You are immune to mutations, remove immunity?";
+        else
+            msg = "You are resistant to mutations, remove resistance?";
+
+        if (yesno(msg))
+        {
+            you.mutation[MUT_MUTATION_RESISTANCE] = 0;
+            crawl_state.cancel_cmd_repeat();
+        }
+    }
+
+    bool force = yesno("Force mutation to happen?");
+
+    if (you.mutation[MUT_MUTATION_RESISTANCE] == 3 && !force)
+    {
+        mpr("Can't mutate when immune to mutations without forcing it.");
+        crawl_state.cancel_cmd_repeat();
+        return (false);
+    }
+
     // Yeah, the gaining message isn't too good for this... but
     // there isn't an array of simple mutation names. -- bwr
-    mpr( "Which mutation (by message when getting mutation)? ", MSGCH_PROMPT );
+    mpr( "Which mutation ('any' for any, 'xom' for xom mutation)? ",
+         MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
     
     if (specs[0] == '\0')
         return (false);
 
+    if (strcasecmp(specs, "any") == 0)
+    {
+        int old_resist = you.mutation[MUT_MUTATION_RESISTANCE];
+
+        success = mutate(RANDOM_MUTATION, true, force);
+
+        if (old_resist < you.mutation[MUT_MUTATION_RESISTANCE] && !force)
+            crawl_state.cancel_cmd_repeat("Your mutation resistance has "
+                                          "increased.");
+        return (success);
+    }
+
+    if (strcasecmp(specs, "xom") == 0)
+        return mutate(RANDOM_XOM_MUTATION, true, force);
+
+    std::vector<int> partial_matches;
     mutation_type mutation = NUM_MUTATIONS;
 
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        char mut_name[80];
-        const mutation_type m = static_cast<mutation_type>(i);
-        strncpy( mut_name, mutation_name( m, 1 ), sizeof( mut_name ) );
-
-        char *ptr = strstr( strlwr(mut_name), strlwr(specs) );
-        if (ptr != NULL)
+        if (strcasecmp(specs, mutation_type_names[i]) == 0)
         {
-            // we take the first mutation that matches
-            mutation = m;
+            mutation = (mutation_type) i;
             break;
         }
+
+        if (strstr(mutation_type_names[i] , strlwr(specs) ))
+            partial_matches.push_back(i);
+    }
+
+    // If only one matching mutation, use that.
+    if (mutation == NUM_MUTATIONS)
+    {
+        if (partial_matches.size() == 1)
+            mutation = (mutation_type) partial_matches[0];
     }
 
     if (mutation == NUM_MUTATIONS)
-        mpr("I can't warp you that way!");
+    {
+        crawl_state.cancel_cmd_repeat();
+
+        if (partial_matches.size() == 0)
+            mpr("No matching mutation names.");
+        else
+        {
+            std::vector<std::string> matches;
+
+            for (unsigned int i = 0, size = partial_matches.size();
+                 i < size; i++)
+            {
+                matches.push_back(mutation_type_names[partial_matches[i]]);
+            }
+            std::string prefix = "No exact match for mutation '" +
+                std::string(specs) +  "', possible matches are: ";
+
+            // Use mpr_comma_separated_list() because the list
+            // might be *LONG*.
+            mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                     MSGCH_DIAGNOSTICS);
+        }
+
+        return (false);
+    }
     else
     {
-        mprf("Found: %s", mutation_name( mutation, 1 ) );
+        mprf("Found #%d: %s (\"%s\")", (int) mutation,
+             mutation_type_names[mutation], mutation_name( mutation, 1 ) );
 
-        const int levels = debug_prompt_for_int( "How many levels? ", false );
+        const int levels =
+            debug_prompt_for_int( "How many levels to increase or decrease? ",
+                                  false );
 
         if (levels == 0)
         {
@@ -1554,7 +2010,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < levels; i++)
             {
-                if (mutate( mutation ))
+                if (mutate( mutation, true, force ))
                     success = true;
             }
         }
@@ -1562,7 +2018,7 @@ bool debug_add_mutation(void)
         {
             for (int i = 0; i < -levels; i++)
             {
-                if (delete_mutation( mutation ))
+                if (delete_mutation( mutation, force ))
                     success = true;
             }
         }
@@ -2336,12 +2792,17 @@ void debug_card()
         mpr("Unknown card.");
         return;
     }
-    
+
+    std::string wanted = buf;
+    lowercase(wanted);
+
     bool found_card = false;
     for ( int i = 0; i < NUM_CARDS; ++i )
     {
         const card_type c = static_cast<card_type>(i);
-        if ( strstr(card_name(c), buf) != NULL )
+        std::string card = card_name(c);
+        lowercase(card);
+        if ( card.find(wanted) != std::string::npos )
         {
             card_effect(c, DECK_RARITY_LEGENDARY);
             found_card = true;
@@ -2463,14 +2924,42 @@ void debug_place_map()
     debug_load_map_by_name(what);
 }
 
-void debug_dismiss_all_monsters()
+void debug_dismiss_all_monsters(bool force_all)
 {
-    // Genocide... "unsummon" all the monsters from the level.
+    char buf[80];
+    if (!force_all)
+    {
+        mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
+        bool validline = !cancelable_get_line(buf, sizeof buf, 80);
+
+        if (!validline)
+        {
+            canned_msg( MSG_OK );
+            return;
+        }
+    }
+
+    // Dismiss all
+    if (buf[0] == '\0' || force_all)
+    {
+        // Genocide... "unsummon" all the monsters from the level.
+        for (int mon = 0; mon < MAX_MONSTERS; mon++)
+        {
+            monsters *monster = &menv[mon];
+
+            if (monster->alive())
+                monster_die(monster, KILL_DISMISSED, 0);
+        }
+        return;
+    }
+
+    // Dismiss by regex
+    text_pattern tpat(buf);
     for (int mon = 0; mon < MAX_MONSTERS; mon++)
     {
         monsters *monster = &menv[mon];
 
-        if (monster->alive())
+        if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN)))
             monster_die(monster, KILL_DISMISSED, 0);
     }
 }
@@ -2523,7 +3012,7 @@ static void debug_destroy_doors()
 // f) Counts number of turns needed to explore the level.
 void debug_test_explore()
 {
-    debug_dismiss_all_monsters();
+    debug_dismiss_all_monsters(true);
     debug_kill_traps();
     forget_map(100);
 

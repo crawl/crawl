@@ -186,7 +186,7 @@ Strength:     Affects the amount of damage you do in combat, as well as
 
 Intelligence: Affects how well you can cast spells as well as how much
 ------------- nutrition spellcasting takes. Your ability to use some 
-              magical items is also influence by your intelligence.
+              magical items is also influenced by your intelligence.
 
 Dexterity:    Affects your accuracy in combat, your ability to dodge
 ----------    attacks aimed at you, your general effectiveness with 
@@ -2160,6 +2160,11 @@ Other game-playing commands:
         Ctrl-A          Toggle autopickup. Note that encounters with 
                         invisible monsters always turns autopickup off.
                         You need to switch it on with Ctrl-A afterwards.
+        Ctrl-V          Toggle autoprayer. Note that encounters with 
+                        invisible monsters always turns autopickup off.
+                        You need to switch it on with Ctrl-V afterwards.
+        `               Re-do previous command
+        0               Repeat next command a given number of times
 
 Non-game playing commands:
         ?               The help menu.
@@ -2170,8 +2175,11 @@ Non-game playing commands:
         #               Dump character to file (name.txt).
         :               Add note to dump file (see option take_notes).
         ?:              Read the notes in-game.
+        ?/              Describe a monster, spell or feature.  You can
+                        enter a partial name or a regex instead of the
+                        full name.
         ~               Add or save macros and key mappings.
-        =               Reassign inventory/spell/abilities letters. 
+        =               Reassign inventory/spell/abilities letters.
 
 Stashes:
         Ctrl-F          Find. This searches in stashes and shops, you 
@@ -2181,6 +2189,9 @@ Stashes:
                         a seach for 'Trog' etc. works. If all items are
                         stashed (the default), then a string like 'D:13'
                         will list all known items on that level.
+                        'D:1}' will search for items on level 1 only,
+                        as opposed to 'D:1', which will also list items
+                        on D:10 through D:19.
                         Once the list of all found places is displayed,
                         you can cause auto-travel to go there (press the
                         associated letter) or you can examine the items
@@ -2217,6 +2228,7 @@ level_map_title option to get rid of that.
         /               Cycles backward through stashes.
         Ctrl-C          Clear level and main maps (from temporarily 
                         seen monsters, clouds etc.).
+	Ctrl-F          Forget level map.
 
 Waypoints can be set on the level map. You can travel to waypoints 
 using Ctrl-G. Check the option show_waypoints. The commands are

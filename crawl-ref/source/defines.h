@@ -51,11 +51,16 @@
 #define MAX_GHOSTS   10
 
 // max size of monter array {dlb}:
-#define MAX_MONSTERS 200
+#define MAX_MONSTERS     350
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
 #define NON_MONSTER (MAX_MONSTERS + 1)
+
+// (MNG) -- for a reason! see usage {dlb}:
+#define MHITNOT (MAX_MONSTERS + 1)
+// (MNG + 1) -- for a reason! see usage {dlb}:
+#define MHITYOU (MAX_MONSTERS + 2)
 
 #define MAX_SUBTYPES    50
 
@@ -82,7 +87,9 @@
 
 // This is the border that must be left around the map. I'm not sure why it's
 // necessary, beyond hysterical raisins.
-#define MAPGEN_BORDER           6
+const int MAPGEN_BORDER    = 2;
+
+const int LABYRINTH_BORDER = 12;
 
 // Now some defines about the actual play area:
 // Note: these boundaries are exclusive for the zone the player can move/dig,
@@ -206,11 +213,6 @@
 #define mgrd   env.mgrid
 #define igrd   env.igrid
 
-// (MNG) -- for a reason! see usage {dlb}:
-#define MHITNOT 201
-// (MNG + 1) -- for a reason! see usage {dlb}:
-#define MHITYOU 202
-
 // colors, such pretty colors ...
 #ifndef DOS
     #define BLACK 0
@@ -298,5 +300,6 @@
 #define KEY_MACRO_MORE_PROTECT -10
 #define KEY_MACRO_DISABLE_MORE -1
 #define KEY_MACRO_ENABLE_MORE  -2
+#define KEY_REPEAT_KEYS        -3
 
 #endif

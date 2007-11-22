@@ -146,13 +146,33 @@ void mons_trap(struct monsters *monster)
     case TRAP_TELEPORT:
         monster_teleport(monster, true);
         break;
-    // amnesia traps do not affect monsters (yet) and
-    // only monsters of normal+ IQ will direct a msg
-    // to the player - also, *never* revealed: {dlb}
-    case TRAP_AMNESIA:
-        if (mons_intel(monster->type) > I_ANIMAL)
-            simple_monster_message(monster,
-                                   " seems momentarily disoriented.");
+    // alarm traps aren't set off by hostile monsters, because that would
+    // be way too nasty for the player.
+    case TRAP_ALARM:
+        if (!mons_friendly(monster) || silenced(monster->x, monster->y))
+        {
+            if (trapKnown && you.can_see(monster) 
+                && !silenced(you.x_pos, you.y_pos))
+            {
+                mpr("The alarm trap makes no noise.");
+            }
+            return;
+        }
+
+        noisy(12, monster->x, monster->y);
+
+        if (!silenced(you.x_pos, you.y_pos))
+        {
+            if (monsterNearby)
+            {
+                mpr("You hear a blaring wail!", MSGCH_SOUND);
+                if (you.can_see(monster))
+                    revealTrap = true;
+            }
+            else
+                mpr("You hear a distant blaring wail!", MSGCH_SOUND);
+        }
+
         break;
     // blade traps sometimes fail to trigger altogether,
     // resulting in an "early return" from this f(x) for
@@ -305,6 +325,31 @@ void mons_trap(struct monsters *monster)
         damage_taken = 0;      // just to be certain {dlb}
         break;
 
+    case TRAP_SHAFT:
+        // Paranoia
+        if (!is_valid_shaft_level())
+        {
+            if (trapKnown && monsterNearby)
+                mpr("The shaft disappears in a puff of logic!");
+
+            grd[env.trap[which_trap].x][env.trap[which_trap].y] = DNGN_FLOOR;
+            env.trap[which_trap].type = TRAP_UNASSIGNED;
+            return;
+        }
+
+        if (!monster->will_trigger_shaft()
+            || trapKnown && intelligent_ally(monster))
+        {
+            if (trapKnown && !monster->airborne())
+                simple_monster_message(monster,
+                                        " doesn't fall through the shaft.");
+            return;
+        }
+
+        if (monster->do_shaft())
+            revealTrap = true;
+        break;
+
     default:
         break;
     }
@@ -365,7 +410,8 @@ void mons_trap(struct monsters *monster)
     // reveal undiscovered traps, where appropriate: {dlb}
     if (monsterNearby && !trapKnown && revealTrap)
     {
-        grd[monster->x][monster->y] = trap_category(env.trap[which_trap].type);
+        grd[env.trap[which_trap].x][env.trap[which_trap].y] 
+                     = trap_category(env.trap[which_trap].type);
     }
 
     // apply damage and handle death, where appropriate: {dlb}
@@ -1059,6 +1105,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
 
+    const monsterentry *entry       = get_monster_data(monster->type);
+    const int          throw_energy = entry->energy_usage.missile;
+    monster->speed_increment       -= throw_energy;
+
     item_def item = mitm[hand_used];  // copy changed for venom launchers 
     item.quantity = 1;
 
@@ -1255,11 +1305,24 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             pbolt.type = SYM_ZAP;
         }
 
-        // Note: we already have 10 energy taken off.  -- bwr
+        // Note: we already have throw_energy taken off.  -- bwr
+        int speed_delta = 0;
         if (lnchType == WPN_CROSSBOW)
-            monster->speed_increment += ((bow_brand == SPWPN_SPEED) ? 4 : -2);
+        {
+            if (bow_brand == SPWPN_SPEED)
+                // Speed crossbows take 50% less time to use than
+                // ordinary crossbows.
+                speed_delta = div_rand_round(throw_energy * 2, 5);
+            else
+                // Ordinary crossbows take 20% more time to use
+                // than ordinary bows.
+                speed_delta = -div_rand_round(throw_energy, 5);
+        }
         else if (bow_brand == SPWPN_SPEED)
-            monster->speed_increment += 5;
+            // Speed bows take 50% time to use than ordinary bows.
+            speed_delta = div_rand_round(throw_energy, 2);
+
+        monster->speed_increment += speed_delta;
     }
 
     // monster intelligence bonus
@@ -1545,6 +1608,16 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 9;
         beam.type = 0;
         beam.flavour = BEAM_CONFUSION;
+        beam.thrower = KILL_MON_MISSILE;
+        beam.is_beam = true;
+        break;
+
+    case SPELL_SLEEP:
+        beam.name = "0";
+        beam.range = 5;
+        beam.rangeMax = 9;
+        beam.type = 0;
+        beam.flavour = BEAM_SLEEP;
         beam.thrower = KILL_MON_MISSILE;
         beam.is_beam = true;
         break;

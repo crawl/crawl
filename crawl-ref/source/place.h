@@ -25,6 +25,8 @@ unsigned short get_packed_place( branch_type branch, int subdepth,
 
 int place_branch(unsigned short place);
 int place_depth(unsigned short place);
+int place_type(unsigned short place);
+
 std::string short_place_name(unsigned short place);
 std::string short_place_name(level_id id);
 std::string place_name( unsigned short place, bool long_name = false,

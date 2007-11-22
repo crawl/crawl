@@ -40,6 +40,7 @@
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 
 #define SPELLBOOK_SIZE 8
@@ -160,7 +161,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 11 - Book of Spatial Translocations
     {SPELL_APPORTATION,
-     SPELL_PORTALED_PROJECTILE,
+     SPELL_PORTAL_PROJECTILE,
      SPELL_BLINK,
      SPELL_RECALL,
      SPELL_TELEPORT_OTHER,
@@ -1485,12 +1486,14 @@ int staff_spell( int staff )
     if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food))
     {
         mpr("You don't have the energy to cast that spell.");
+        crawl_state.zero_turns_taken();
         return (-1);
     }
     
     if (istaff.plus < mana)
     {
         mpr("The rod doesn't have enough magic points.");
+        crawl_state.zero_turns_taken();
         // Don't lose a turn for trying to evoke without enough MP - that's
         // needlessly cruel for an honest error.
         return (-1);
@@ -1499,6 +1502,7 @@ int staff_spell( int staff )
     if (you.experience_level < diff)
     {
         mprf("You need to be at least level %d to use that.", diff);
+        crawl_state.zero_turns_taken();
         return (-1);
     }
 
@@ -1511,7 +1515,10 @@ int staff_spell( int staff )
     }
     // All checks passed, we can cast the spell    
     else if (your_spells(spell, powc, false) == SPRET_ABORT)
+    {
+        crawl_state.zero_turns_taken();
         return (-1);
+    }
 
     make_hungry( food, true );
     istaff.plus -= mana;

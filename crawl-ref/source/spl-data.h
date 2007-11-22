@@ -2160,14 +2160,14 @@
 },
 
 {
-    SPELL_PORTALED_PROJECTILE, "Portaled Projectile",
-        SPTYP_TRANSLOCATION,
-        SPFLAG_TARGET,
-        2,
-        50,
-        NULL,
-        false,
-        false
+    SPELL_PORTAL_PROJECTILE, "Portal Projectile",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_TARGET,
+    2,
+    50,
+    NULL,
+    false,
+    false
 },
 
 {

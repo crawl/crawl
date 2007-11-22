@@ -216,10 +216,13 @@ static void termio_init()
 
     tcsetattr(0, TCSAFLUSH, &game_term);
 
+    crawl_state.unicode_ok = false;
 #ifdef UNICODE_GLYPHS
-    if ((crawl_state.unicode_ok = !!setlocale(LC_ALL, UNICODE_LOCALE)))
+    if (setlocale(LC_ALL, UNICODE_LOCALE)
+        && !strcmp(nl_langinfo(CODESET), "UTF-8"))
     {
-        crawl_state.glyph2strfn = unix_glyph2string;
+        crawl_state.unicode_ok       = true;
+        crawl_state.glyph2strfn      = unix_glyph2string;
         crawl_state.multibyte_strlen = unix_multibyte_strlen;
     }
 #endif
@@ -616,6 +619,11 @@ int cset_adjust(int raw)
 
 void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 {
+    const bool will_scroll = (x2 == get_number_of_cols());
+
+    if (will_scroll)
+        scrollok(stdscr, FALSE);
+    
     for (int y = y1; y <= y2; ++y)
     {
         gotoxy(x1, y);
@@ -629,6 +637,9 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
     }
     set_altcharset(false);
     update_screen();
+
+    if (will_scroll)
+        scrollok(stdscr, TRUE);
 }
 
 // These next four are front functions so that we can reduce 

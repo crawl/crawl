@@ -43,20 +43,24 @@
 #include "clua.h"
 #include "cloud.h"
 #include "delay.h"
+#include "direct.h"
 #include "dgnevent.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "format.h"
 #include "hiscores.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
+#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
@@ -65,6 +69,7 @@
 #include "skills2.h"
 #include "spells3.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -72,6 +77,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 // void place_chunks(int mcls, unsigned char rot_status, unsigned char chx,
 //                   unsigned char chy, unsigned char ch_col)
@@ -166,7 +172,8 @@ void search_around( bool only_adjacent )
     {
         for ( int sry=you.y_pos - max_dist; sry<=you.y_pos + max_dist; ++sry )
         {
-            if ( see_grid(srx,sry) ) // must have LOS
+            // must have LOS, with no translucent walls in the way.
+            if ( see_grid_no_trans(srx,sry) )
             {
                 // maybe we want distance() instead of grid_distance()?
                 int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);
@@ -463,7 +470,57 @@ static void leaving_level_now()
     you.level_type_name = newtype;
 }
 
-void up_stairs(dungeon_feature_type force_stair)
+static void set_entry_cause(entry_cause_type default_cause,
+                            level_area_type old_level_type)
+{
+    ASSERT(default_cause != NUM_ENTRY_CAUSE_TYPES);
+
+    if (!(old_level_type != you.level_type
+          || you.entry_cause == EC_UNKNOWN))
+    {
+        return;
+    }
+
+    if (crawl_state.is_god_acting())
+    {
+        if (crawl_state.is_god_retribution())
+            you.entry_cause = EC_GOD_RETRIUBTION;
+        else
+            you.entry_cause = EC_GOD_ACT;
+
+        you.entry_cause_god = crawl_state.which_god_acting();
+    }
+    else if (default_cause != EC_UNKNOWN)
+    {
+        you.entry_cause     = default_cause;
+        you.entry_cause_god = GOD_NO_GOD;
+    }
+    else
+    {
+        you.entry_cause     = EC_SELF_EXPLICIT;
+        you.entry_cause_god = GOD_NO_GOD;
+    }
+}
+
+static int runes_in_pack()
+{
+    int num_runes = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item( you.inv[i] )
+            && you.inv[i].base_type == OBJ_MISCELLANY
+            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
+        {
+            num_runes += you.inv[i].quantity;
+        }
+    }
+
+    return num_runes;
+}
+
+void up_stairs(dungeon_feature_type force_stair,
+               entry_cause_type entry_cause)
 {
     dungeon_feature_type stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
@@ -484,6 +541,31 @@ void up_stairs(dungeon_feature_type force_stair)
         else
             mpr("You can't go up here.");
         return;
+    }
+
+    level_id  old_level_id    = level_id::current();
+    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
+
+    // Does the next level have a warning annotation?
+    coord_def pos(you.x_pos, you.y_pos);
+    level_id  next_level_id = level_id::get_next_level_id(pos);
+
+    crawl_state.level_annotation_shown = false;
+
+    if (level_annotation_has("WARN", next_level_id)
+        && next_level_id != level_id::current()
+        && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
+    {
+        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PROMPT);
+
+        if (!yesno("Enter next level anyways?", true, 0, true, false))
+        {
+            interrupt_activity( AI_FORCE_INTERRUPT );
+            return;
+        }
+
+        crawl_state.level_annotation_shown = true;
     }
 
     // Since the overloaded message set turn_is_over, I'm assuming that
@@ -526,9 +608,6 @@ void up_stairs(dungeon_feature_type force_stair)
     // Interlevel travel data:
     const bool collect_travel_data = can_travel_interlevel();
 
-    level_id  old_level_id    = level_id::current();
-    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
-    int stair_x = you.x_pos, stair_y = you.y_pos;
     if (collect_travel_data)
         old_level_info.update();
 
@@ -558,8 +637,10 @@ void up_stairs(dungeon_feature_type force_stair)
         ouch(INSTANT_DEATH, 0, KILLED_BY_LEAVING);
     }
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ  = MHITNOT;
     you.pet_target = MHITNOT;
+
+    you.prev_grd_targ = coord_def(0, 0);
 
     if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
@@ -612,6 +693,9 @@ void up_stairs(dungeon_feature_type force_stair)
 
     load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
 
+    set_entry_cause(entry_cause, old_level_type);
+    entry_cause = you.entry_cause;
+
     you.turn_is_over = true;
 
     save_game_state();
@@ -619,6 +703,21 @@ void up_stairs(dungeon_feature_type force_stair)
     new_level();
 
     viewwindow(1, true);
+
+    // Left Zot without enough runes to get back in (probably because
+    // of dropping some runes within Zot), but need to get back in Zot
+    // to get the Orb?  Zom finds that funny.
+    if (stair_find == DNGN_RETURN_FROM_ZOT
+        && branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB)
+    {
+        int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
+            + you.attribute[ATTR_DEMONIC_RUNES]
+            + you.attribute[ATTR_ABYSSAL_RUNES]
+            - you.attribute[ATTR_RUNES_IN_ZOT];
+
+        if (runes_avail < NUMBER_OF_RUNES_NEEDED)
+            xom_is_stimulated(255, "Xom snickers loudly.", true);
+    }
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
@@ -637,6 +736,8 @@ void up_stairs(dungeon_feature_type force_stair)
             LevelInfo &new_level_info = 
                         travel_cache.get_level_info(new_level_id);
             new_level_info.update();
+
+            int stair_x = you.x_pos, stair_y = you.y_pos;
 
             // First we update the old level's stair.
             level_pos lp;
@@ -662,7 +763,7 @@ void up_stairs(dungeon_feature_type force_stair)
                 guess = true;
             }
 
-            old_level_info.update_stair(stair_x, stair_y, lp, guess);
+            old_level_info.update_stair(you.x_pos, you.y_pos, lp, guess);
 
             // We *guess* that going up a staircase lands us on a downstair,
             // and that we can descend that downstair and get back to where we
@@ -682,7 +783,8 @@ void up_stairs(dungeon_feature_type force_stair)
     }
 }                               // end up_stairs()
 
-void down_stairs( int old_level, dungeon_feature_type force_stair )
+void down_stairs( int old_level, dungeon_feature_type force_stair,
+                  entry_cause_type entry_cause )
 {
     int i;
     const level_area_type      old_level_type = you.level_type;
@@ -690,6 +792,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
     branch_type old_where = you.where_are_you;
+
+    bool shaft = ((!force_stair
+                   && trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT)
+                  || force_stair == DNGN_TRAP_NATURAL);
+    level_id shaft_dest;
+    int      shaft_level = -1;
 
 #ifdef SHUT_LABYRINTH
     if (stair_find == DNGN_ENTER_LABYRINTH)
@@ -701,7 +809,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 #endif
 
     // probably still need this check here (teleportation) -- bwr
-    if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS)
+    if (grid_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -730,6 +838,45 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         return;
     }
 
+    if (shaft)
+    {
+        bool known_trap = (grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP
+                           && !force_stair);
+
+        if (!known_trap && !force_stair)
+        {
+            mpr("You can't go down here!");
+            return;
+        }
+
+        if (you.flight_mode() == FL_LEVITATE && !force_stair)
+        {
+            if (known_trap)
+                mpr("You can't fall through a shaft while levitating.");
+            return;
+        }
+
+        if (!is_valid_shaft_level())
+        {
+            if (known_trap)
+                mpr("Strange, the shaft doesn't seem to lead anywhere.");
+            return;
+        }
+
+        shaft_dest = you.shaft_dest();
+        if (shaft_dest == level_id::current())
+        {
+            if (known_trap)
+                mpr("Strange, the shaft doesn't seem to lead anywhere.");
+            return;
+        }
+        shaft_level = absdungeon_depth(shaft_dest.branch,
+                                       shaft_dest.depth);
+
+        if (you.flight_mode() != FL_FLY || force_stair)
+            mpr("You fall through a shaft!");
+    }
+
     // All checks are done, the player is on the move now.
 
     // Fire level-leaving trigger.
@@ -756,24 +903,14 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     if (stair_find == DNGN_ENTER_ZOT)
     {
-        int num_runes = 0;
-
-        for (i = 0; i < ENDOFPACK; i++)
-        {
-            if (is_valid_item( you.inv[i] )
-                && you.inv[i].base_type == OBJ_MISCELLANY
-                && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
-            {
-                num_runes += you.inv[i].quantity;
-            }
-        }
+        int num_runes = runes_in_pack();
 
         if (num_runes < NUMBER_OF_RUNES_NEEDED)
         {
             switch (NUMBER_OF_RUNES_NEEDED)
             {
             case 1:
-                mpr("You need a Rune to enter this place.");
+                mpr("You need one more Rune to enter this place.");
                 break;
 
             default:
@@ -782,6 +919,28 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
             }
             return;
         }
+    }
+
+    // Does the next level have a warning annotation?
+    coord_def pos = you.pos();
+    level_id  next_level_id = level_id::get_next_level_id(pos);
+
+    crawl_state.level_annotation_shown = false;
+
+    if (level_annotation_has("WARN", next_level_id)
+        && next_level_id != level_id::current()
+        && next_level_id.level_type == LEVEL_DUNGEON && !force_stair)
+    {
+        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
+        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PROMPT);
+
+        if (!yesno("Enter next level anyways?", true, 0, true, false))
+        {
+            interrupt_activity( AI_FORCE_INTERRUPT );
+            return;
+        }
+
+        crawl_state.level_annotation_shown = true;
     }
 
     // Interlevel travel data:
@@ -804,8 +963,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         you.level_type = LEVEL_DUNGEON;
     }
 
-    you.prev_targ = MHITNOT;
+    you.prev_targ  = MHITNOT;
     you.pet_target = MHITNOT;
+
+    you.prev_grd_targ = coord_def(0, 0);
 
     if (stair_find == DNGN_ENTER_HELL)
     {
@@ -864,7 +1025,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
     {
         mpr("You pass through the gate.");
-        more();
+        if (!(you.wizard && crawl_state.is_replaying_keys()))
+            more();
     }
 
     if (old_level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
@@ -885,7 +1047,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
               KILLED_BY_FALLING_DOWN_STAIRS );
     }
 
-    if (you.level_type == LEVEL_DUNGEON)
+    if (shaft)
+    {
+        you.your_level    = shaft_level;
+        you.where_are_you = shaft_dest.branch;
+    }
+    else if (you.level_type == LEVEL_DUNGEON)
         you.your_level++;
 
     dungeon_feature_type stair_taken = stair_find;
@@ -895,6 +1062,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     if (you.level_type == LEVEL_PANDEMONIUM)
         stair_taken = DNGN_TRANSIT_PANDEMONIUM;
+
+    if (shaft)
+        stair_taken = DNGN_ROCK_STAIRS_DOWN;
 
     switch (you.level_type)
     {
@@ -919,11 +1089,18 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
         break;
 
     default:
-        climb_message(stair_find, false, old_level_type);
+        if (shaft)
+        {
+            if (you.flight_mode() == FL_FLY && !force_stair)
+                mpr("You dive down through the shaft.");
+        }
+        else
+            climb_message(stair_find, false, old_level_type);
         break;
     }
 
-    exit_stair_message(stair_find, false);
+    if (!shaft)
+        exit_stair_message(stair_find, false);
 
     if (entered_branch)
     {
@@ -946,14 +1123,74 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
     const bool newlevel =
         load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
              old_level, old_where);
-    
+
+    set_entry_cause(entry_cause, old_level_type);
+    entry_cause = you.entry_cause;
+
     if (newlevel)
-        xom_is_stimulated(49);
+    {
+        switch(you.level_type)
+        {
+        case LEVEL_DUNGEON:
+            xom_is_stimulated(49);
+            break;
+
+        case LEVEL_PORTAL_VAULT:
+            // Portal vaults aren't as interesting.
+            xom_is_stimulated(25);
+            break;
+
+        case LEVEL_LABYRINTH:
+            // Finding the way out of a labyrinth interests Xom.
+            xom_is_stimulated(98);
+            break;
+
+        case LEVEL_ABYSS:
+        case LEVEL_PANDEMONIUM:
+        {
+            // Paranoia
+            if (old_level_type == you.level_type)
+                break;
+
+            PlaceInfo &place_info = you.get_place_info();
+
+            // Entering voluntarily only stimulates Xom if you've never
+            // been there before
+            if ((place_info.num_visits == 1 && place_info.levels_seen == 1)
+                || entry_cause != EC_SELF_EXPLICIT)
+            {
+                if (crawl_state.is_god_acting())
+                    xom_is_stimulated(255);
+                else if (entry_cause == EC_SELF_EXPLICIT)
+                {
+                    // Entering Pandemonium or the Abyss for the first
+                    // time *voluntarily* stimulates Xom much more than
+                    // entering a normal dungeon level for the first time.
+                    xom_is_stimulated(128, XM_INTRIGUED);
+                }
+                else if (entry_cause == EC_SELF_RISKY)
+                    xom_is_stimulated(128);
+                else
+                    xom_is_stimulated(255);
+            }
+
+            break;
+        }
+
+        default:
+            ASSERT(false);
+        }
+    }
 
     unsigned char pc = 0;
     unsigned char pt = random2avg(28, 3);
 
-    if (level_type_exits_up(you.level_type))
+    if (shaft)
+    {
+        you.your_level    = shaft_level;
+        you.where_are_you = shaft_dest.branch;
+    }
+    else if (level_type_exits_up(you.level_type))
         you.your_level++;
     else if (level_type_exits_down(you.level_type)
              && !level_type_exits_down(old_level_type))
@@ -1006,6 +1243,13 @@ void down_stairs( int old_level, dungeon_feature_type force_stair )
 
     new_level();
 
+    // clear list of beholding monsters
+    if (you.duration[DUR_BEHELD])
+    {
+        you.beheld_by.clear();
+        you.duration[DUR_BEHELD] = 0;
+    }
+    
     viewwindow(1, true);
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
@@ -1097,8 +1341,6 @@ void new_level(void)
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     cprintf("%s", level_description_string().c_str());
 
-    dgn_set_floor_colours();
-    
     clear_to_end_of_line();
 #ifdef DGL_WHEREIS
     whereis_record();
@@ -1241,7 +1483,7 @@ bool go_berserk(bool intentional)
     deflate_hp(you.hp_max, false);
 
     if (!you.duration[DUR_MIGHT])
-        modify_stat( STAT_STRENGTH, 5, true );
+        modify_stat( STAT_STRENGTH, 5, true, "going berserk" );
 
     you.duration[DUR_MIGHT] += you.duration[DUR_BERSERKER];
     haste_player( you.duration[DUR_BERSERKER] );
@@ -1302,8 +1544,7 @@ std::string cloud_name(cloud_type type)
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
     bool is_safe = mons_friendly(mon) ||
-        (Options.safe_zero_exp &&
-         mons_class_flag( mon->type, M_NO_EXP_GAIN ));
+        mons_class_flag(mon->type, M_NO_EXP_GAIN);
 
 #ifdef CLUA_BINDINGS
     bool moving = ((!you.delay_queue.empty() &&
@@ -1355,11 +1596,10 @@ bool i_feel_safe(bool announce, bool want_move)
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            /* if you can see a nonfriendly monster then you feel
-               unsafe */
+            // if you can see a nonfriendly monster then you feel unsafe
             if ( see_grid(x,y) )
             {
-                const unsigned char targ_monst = mgrd[x][y];
+                const unsigned short targ_monst = mgrd[x][y];
                 if ( targ_monst != NON_MONSTER )
                 {
                     const monsters *mon = &menv[targ_monst];
@@ -1630,4 +1870,3 @@ int speed_to_duration(int speed)
     
     return div_rand_round(100, speed);
 }
-

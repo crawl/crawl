@@ -46,6 +46,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "shopping.h"
+#include "state.h"
 #include "stuff.h"
 #include "spells4.h"
 #include "stash.h"
@@ -234,6 +235,135 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
     putch(glych);
 }
 
+// We handle targeting for repeating commands and re-doing the
+// previous command differently (i.e., not just letting the keys
+// stuffed into the macro buffer replay as-is) because if the player
+// targeted a monster using the movement keys and the monster then
+// moved between repititions, then simply replaying the keys in the
+// buffer will target an empty square.
+static void direction_again(dist& moves, targeting_type restricts,
+                            targ_mode_type mode, bool just_looking,
+                            const char *prompt, targeting_behaviour *beh)
+{
+    moves.isValid       = false;
+    moves.isTarget      = false;
+    moves.isMe          = false;
+    moves.isCancel      = false;
+    moves.isEndpoint    = false;
+    moves.choseRay      = false;
+
+    if (you.prev_targ == MHITNOT && you.prev_grd_targ == coord_def(0, 0))
+    {
+        moves.isCancel = true;
+        crawl_state.cancel_cmd_repeat();
+        return;
+    }
+
+    int targ_types = 0;
+    if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
+        targ_types++;
+    if (you.prev_targ == MHITYOU)
+        targ_types++;
+    if (you.prev_grd_targ != coord_def(0, 0))
+        targ_types++;
+    ASSERT(targ_types == 1);
+
+    // Discard keys until we get to a set-target command
+    command_type key_command = CMD_NO_CMD;
+
+    while (crawl_state.is_replaying_keys())
+    {
+        key_command = beh->get_command();
+
+        if (key_command == CMD_TARGET_PREV_TARGET
+            || key_command == CMD_TARGET_SELECT_ENDPOINT
+            || key_command == CMD_TARGET_SELECT
+            || key_command == CMD_TARGET_MAYBE_PREV_TARGET)
+        {
+            break;
+        }
+    }
+
+    if (!crawl_state.is_replaying_keys())
+    {
+        moves.isCancel = true;
+
+        mpr("Ran out of keys.");
+
+        return;
+    }
+
+    if (key_command == CMD_TARGET_SELECT_ENDPOINT)
+        moves.isEndpoint = true;
+
+    if (you.prev_grd_targ != coord_def(0, 0))
+    {
+        if (!see_grid(you.prev_grd_targ))
+        {
+            moves.isCancel = true;
+
+            crawl_state.cancel_cmd_repeat("You can no longer see the dungeon "
+                                          "square you previously targeted.");
+            return;
+        }
+        else if (you.prev_grd_targ.x == you.x_pos
+                 && you.prev_grd_targ.y == you.y_pos)
+        {
+            moves.isCancel = true;
+
+            crawl_state.cancel_cmd_repeat("You are now standing on your "
+                                          "previously targeted dungeon "
+                                          "square.");
+            return;
+        }
+
+        moves.tx = you.prev_grd_targ.x;
+        moves.ty = you.prev_grd_targ.y;
+
+        ray_def ray;
+        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
+                 0, true);
+        moves.ray = ray;
+    }
+    else if (you.prev_targ == MHITYOU)
+    {
+        moves.isMe = true;
+        moves.tx   = you.x_pos;
+        moves.ty   = you.y_pos;
+
+        // Discard 'Y' player gave to yesno()
+        if (mode == TARG_ENEMY)
+            getchm();
+    }
+    else
+    {
+        const monsters *montarget = &menv[you.prev_targ];
+                
+        if (!mons_near(montarget) ||
+            !player_monster_visible( montarget ))
+        {
+            moves.isCancel = true;
+
+            crawl_state.cancel_cmd_repeat("Your target is gone.");
+
+            return;
+        }
+
+        moves.tx = montarget->x;
+        moves.ty = montarget->y;
+
+        ray_def ray;
+        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
+                 0, true);
+        moves.ray = ray;
+    }
+
+    moves.isValid  = true;
+    moves.isTarget = true;
+
+    return;
+}
+
 //---------------------------------------------------------------
 //
 // direction
@@ -264,7 +394,14 @@ void direction(dist& moves, targeting_type restricts,
         beh = &stock_behaviour;
 
     beh->just_looking = just_looking;
-    
+
+    if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
+    {
+        direction_again(moves, restricts, mode, just_looking,
+                        prompt, beh);
+        return;
+    }
+
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
 
@@ -287,6 +424,10 @@ void direction(dist& moves, targeting_type restricts,
     moves.dx = moves.dy = 0;
     moves.tx = you.x_pos;
     moves.ty = you.y_pos;
+    if ( show_beam )
+        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
+
+    // If we show the beam on startup, we have to initialise it.
     if ( show_beam )
         find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
 
@@ -418,6 +559,8 @@ void direction(dist& moves, targeting_type restricts,
                 moves.ty = you.y_pos + moves.dy;
                 moves.isValid = true;
                 moves.isTarget = false;
+                show_beam = false;
+                moves.choseRay = false;
                 loop_done = true;
             }
             else
@@ -455,7 +598,8 @@ void direction(dist& moves, targeting_type restricts,
             {
                 if (!needs_path)
                 {
-                    mprf(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
+                    mprf(MSGCH_EXAMINE_FILTER,
+                         "This spell doesn't need a beam path.");
                     break;
                 }
                 
@@ -477,8 +621,8 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_ALTAR:
         case CMD_TARGET_FIND_UPSTAIR:
         case CMD_TARGET_FIND_DOWNSTAIR:
-            int thing_to_find;
-            thing_to_find = targeting_cmd_to_feature(key_command);
+        {
+            const int thing_to_find = targeting_cmd_to_feature(key_command);
             if (find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
                                     find_feature, thing_to_find, true,
                                     Options.target_los_first ?
@@ -493,6 +637,7 @@ void direction(dist& moves, targeting_type restricts,
                     flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
+        }
 
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
@@ -517,7 +662,8 @@ void direction(dist& moves, targeting_type restricts,
                 if (!mons_near(montarget) ||
                     !player_monster_visible( montarget ))
                 {
-                    mpr("You can't see that creature any more.", MSGCH_EXAMINE_FILTER);
+                    mpr("You can't see that creature any more.",
+                        MSGCH_EXAMINE_FILTER);
                 }
                 else
                 {
@@ -527,7 +673,16 @@ void direction(dist& moves, targeting_type restricts,
                     moves.tx = montarget->x;
                     moves.ty = montarget->y;
                     if ( !just_looking )
+                    {
+                        // We have to turn off show_beam, because
+                        // when jumping to a previous target we don't
+                        // care about the beam; otherwise Bad Things
+                        // will happen because the ray is invalid,
+                        // and we don't get a chance to update it before
+                        // breaking from the loop.
+                        show_beam = false;
                         loop_done = true;
+                    }
                 }
                 break;
             }
@@ -539,10 +694,18 @@ void direction(dist& moves, targeting_type restricts,
             moves.isValid = true;
             moves.isTarget = true;
             loop_done = true;
+
+            you.prev_grd_targ = coord_def(0, 0);
+ 
             // maybe we should except just_looking here?
             mid = mgrd[moves.tx][moves.ty];
+
             if ( mid != NON_MONSTER )
                 you.prev_targ = mid;
+            else if (moves.tx == you.x_pos && moves.ty == you.y_pos)
+                you.prev_targ = MHITYOU;
+            else
+                you.prev_grd_targ = coord_def(moves.tx, moves.ty);
             break;
 
         case CMD_TARGET_OBJ_CYCLE_BACK:
@@ -661,7 +824,7 @@ void direction(dist& moves, targeting_type restricts,
             // Conceivably we might want to confirm on TARG_ANY too.
             if ( moves.isTarget &&
                  moves.tx == you.x_pos && moves.ty == you.y_pos &&
-                 mode == TARG_ENEMY && Options.confirm_self_target &&
+                 mode == TARG_ENEMY &&
                  !yesno("Really target yourself?", false, 'n'))
             {
                 mesclr();
@@ -685,9 +848,9 @@ void direction(dist& moves, targeting_type restricts,
 
         // We'll go on looping. Redraw whatever is necessary.
 
-        // Tried to step out of bounds
         if ( !in_viewport_bounds(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
         {
+            // Tried to step out of bounds
             moves.tx = old_tx;
             moves.ty = old_ty;
         }
@@ -1339,8 +1502,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("axe trap");
         case TRAP_TELEPORT:
             return ("teleportation trap");
-        case TRAP_AMNESIA:
-            return ("amnesia trap");
+        case TRAP_ALARM:
+            return ("alarm trap");
         case TRAP_BLADE:
             return ("blade trap");
         case TRAP_BOLT:
@@ -1351,6 +1514,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
             return ("Zot trap");
         case TRAP_NEEDLE:
             return ("needle trap");
+        case TRAP_SHAFT:
+            return ("shaft");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -1375,6 +1540,12 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("metal wall");
     case DNGN_GREEN_CRYSTAL_WALL:
         return ("wall of green crystal");
+    case DNGN_CLEAR_ROCK_WALL:
+        return ("translucent rock wall");
+    case DNGN_CLEAR_STONE_WALL:
+        return ("translucent stone wall");
+    case DNGN_CLEAR_PERMAROCK_WALL:
+        return ("translucent unnaturally hard rock wall");    
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
         {
@@ -1415,8 +1586,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("mechanical trap");
     case DNGN_TRAP_MAGICAL:
         return ("magical trap");
-    case DNGN_TRAP_III:
-        return ("trap");
+    case DNGN_TRAP_NATURAL:
+        return ("natural trap");
     case DNGN_ENTER_SHOP:
         return ("shop");
     case DNGN_ENTER_LABYRINTH:
@@ -1571,7 +1742,7 @@ std::string feature_description(int mx, int my, description_level_type dtype,
     {
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
-    case DNGN_TRAP_III:
+    case DNGN_TRAP_NATURAL:
         return (feature_description(grid, trap_type_at_xy(mx, my), 
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:
@@ -1642,9 +1813,11 @@ static std::string describe_monster_weapon(const monsters *mons)
     const item_def *alt = mons->mslot_item(MSLOT_ALT_WEAPON);
 
     if (weap)
-        name1 = weap->name(DESC_NOCAP_A);
+        name1 = weap->name(DESC_NOCAP_A, false, false, true,
+                           false, ISFLAG_KNOW_CURSE);
     if (alt && (!weap || mons_wields_two_weapons(mons)))
-        name2 = alt->name(DESC_NOCAP_A);
+        name2 = alt->name(DESC_NOCAP_A, false, false, true,
+                          false, ISFLAG_KNOW_CURSE);
 
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
@@ -1653,7 +1826,8 @@ static std::string describe_monster_weapon(const monsters *mons)
     {
         item_def dup = *weap;
         ++dup.quantity;
-        name1 = dup.name(DESC_NOCAP_A, false, false, true, true);
+        name1 = dup.name(DESC_NOCAP_A, false, false, true, true,
+                         ISFLAG_KNOW_CURSE);
         name2.clear();
     }
 
@@ -1694,6 +1868,9 @@ static void describe_monster(const monsters *mon)
     std::string text = get_monster_desc(mon);
     text += ".";
     print_formatted_paragraph(text, get_number_of_cols());
+
+    if (player_beheld_by(mon))
+        mpr("You are beheld by her song.", MSGCH_EXAMINE);
 
     if (mon->type == MONS_HYDRA)
     {
@@ -1958,7 +2135,9 @@ targeting_behaviour::~targeting_behaviour()
 
 int targeting_behaviour::get_key()
 {
-    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+    if (!crawl_state.is_replaying_keys())
+        flush_input_buffer(FLUSH_BEFORE_COMMAND);
+
     return unmangle_direction_keys(
         getchm(KC_TARGETING), KC_TARGETING, false, false);
 }

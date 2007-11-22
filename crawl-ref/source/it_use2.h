@@ -69,6 +69,6 @@ void unwear_armour(char unw);
 /* ***********************************************************************
  * called from: decks - it_use3 - item_use - items - spells3 - transfor
  * *********************************************************************** */
-void unwield_item(bool showMsgs = true);
+bool unwield_item(bool showMsgs = true);
 
 #endif

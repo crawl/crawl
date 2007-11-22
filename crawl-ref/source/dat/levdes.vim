@@ -51,10 +51,23 @@ syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desNsubstDec,desSubstA
 
 syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
 
-syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT: ITEM: KFEAT: KMONS: KITEM: COLOUR:
-syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float no_hmirror no_vmirror no_rotate entry pan no_pool_fixup no_monster_gen generate_awake mini_float no_item_gen
+syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT: ITEM: KFEAT: KMONS: KITEM: COLOUR: KMASK: MARKER: LFLAGS: BFLAGS: ROCKCOL: FLOORCOL:
+syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
+syn keyword desOrientation no_hmirror no_vmirror no_rotate
+syn keyword desOrientation entry pan lab bazaar allow_dup dummy mini_float minotaur
+syn keyword desOrientation no_pool_fixup no_monster_gen generate_awake no_item_gen no_tele_control not_mappable no_magic_map no_secret_doors generate_loot
+syn keyword desOrientation Temple Orc Elf Lair Swamp Shoal Slime Snake Hive Vault Blade Crypt Tomb Hell Dis Geh Coc Tar
+syn keyword desOrientation D: contained
 
 syn match desComment "^\s*#.*$"
+
+syn match desEntry "\<\w*_entry\>"
+" 'transparent' is a Vim syntax keyword??? 
+syn match desTransparent "transparent"
+syn match desRange "\d*-\d*"
+syn match desNumber "\s\d*"
+syn match desWeight "w:\d*"
+syn match desSlash "/"
 
 syn keyword desMapBookend MAP ENDMAP contained
 syn match desMapFloor /\./ contained
@@ -102,8 +115,15 @@ hi link desLuaBlockEnd Statement
 hi link desComment    Comment
 hi link desMap        String
 hi link desSubstArg   String
-hi link desSubstSep   Type
+hi link desRange      String
+hi link desEntry      Type
+hi link desNumber     String
+hi link desWeight     String
+hi link desSlash      Comment
+
+hi link desSubstSep    Type
 hi link desOrientation Type
+hi link desTransparent Type
 
 hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown
 hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green

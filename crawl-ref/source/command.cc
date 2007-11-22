@@ -26,7 +26,10 @@
 #include "abl-show.h"
 #include "chardump.h"
 #include "cio.h"
+#include "database.h"
+#include "describe.h"
 #include "files.h"
+#include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
 #include "item_use.h"
@@ -34,6 +37,8 @@
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-pick.h"
+#include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
 #include "spl-cast.h"
@@ -70,6 +75,10 @@ static const char *features[] = {
     "Lua user scripts",
 #endif
 
+#ifdef WIZARD
+    "Wizard mode",
+#endif
+    
 #if defined(REGEX_POSIX)
     "POSIX regexps",
 #elif defined(REGEX_PCRE)
@@ -380,7 +389,8 @@ void list_armour()
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(),
-                                 menu_colour_item_prefix(you.inv[armour_id]));
+                                 menu_colour_item_prefix(you.inv[armour_id]),
+                                 "equip");
         }
         else if (!you_can_wear(i,true))
             estr << "    (unavailable)";
@@ -392,7 +402,7 @@ void list_armour()
             estr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str());
+            colour = menu_colour(estr.str(), "", "equip");
 
         mpr( estr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
@@ -421,7 +431,7 @@ void list_jewellery(void)
             jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
             std::string
                 prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(jstr.str(), prefix);
+            colour = menu_colour(jstr.str(), prefix, "equip");
         }
         else if (!you_tran_can_wear(i))
             jstr << "    (currently unavailable)";
@@ -429,7 +439,7 @@ void list_jewellery(void)
             jstr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(jstr.str());
+            colour = menu_colour(jstr.str(), "", "equip");
 
         mpr( jstr.str().c_str(), MSGCH_EQUIPMENT, colour);
     }
@@ -450,7 +460,8 @@ void list_weapons(void)
     {
         wstring += you.inv[weapon_id].name(DESC_INVENTORY_EQUIP);
         colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[weapon_id]));
+                             menu_colour_item_prefix(you.inv[weapon_id]),
+                             "equip");
     }
     else
     {
@@ -460,7 +471,7 @@ void list_weapons(void)
             wstring += "    (currently unavailable)";
         else
             wstring += "    empty hands";
-        colour = menu_colour(wstring);
+        colour = menu_colour(wstring, "", "equip");
     }
 
     mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
@@ -486,13 +497,14 @@ void list_weapons(void)
         {
             wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
             colour = menu_colour(wstring,
-                                 menu_colour_item_prefix(you.inv[i]));
+                                 menu_colour_item_prefix(you.inv[i]),
+                                 "equip");
         }
         else
             wstring += "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(wstring);
+            colour = menu_colour(wstring, "", "equip");
 
         mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
     }
@@ -509,11 +521,12 @@ void list_weapons(void)
     {
         wstring += you.inv[item].name(DESC_INVENTORY_EQUIP);
         colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[item]));
+                             menu_colour_item_prefix(you.inv[item]),
+                             "equip");
     }
 
     if (colour == MSGCOL_BLACK)
-        colour = menu_colour(wstring);
+        colour = menu_colour(wstring, "", "equip");
 
     mpr( wstring.c_str(), MSGCH_EQUIPMENT, colour );
 }                               // end list_weapons()
@@ -548,7 +561,8 @@ static const char *level_map_help =
     "<w>Ctrl-X</w> : set travel eXclusion\n"
     "<w>Ctrl-E</w> : Erase all travel exclusions\n"
     "<w>Ctrl-W</w> : set Waypoint\n"
-    "<w>Ctrl-C</w> : Clear level and main maps\n";
+    "<w>Ctrl-C</w> : Clear level and main maps\n"
+    "<w>Ctrl-F</w> : Forget level map\n";
 
 static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
@@ -679,6 +693,434 @@ help_file help_files[] = {
     { NULL, 0, false }
 };
 
+static std::string list_commands_err = "";
+
+
+static bool compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
+{
+    monster_type *a = static_cast<monster_type*>( entry_a->data );
+    monster_type *b = static_cast<monster_type*>( entry_b->data );
+
+    if (*a == *b)
+        return false;
+
+    std::string a_name = mons_type_name(*a, DESC_PLAIN);
+    std::string b_name = mons_type_name(*b, DESC_PLAIN);
+    return (lowercase(a_name) < lowercase(b_name));
+}
+
+// Compare monsters by location-independant level, or by hitdice if
+// levels are equal, or by name if both level and hitdice are equal.
+static bool compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
+{
+    monster_type *a = static_cast<monster_type*>( entry_a->data );
+    monster_type *b = static_cast<monster_type*>( entry_b->data );
+
+    if (*a == *b)
+        return false;
+
+    int a_toughness = mons_global_level(*a);
+    int b_toughness = mons_global_level(*b);
+
+    if (a_toughness == b_toughness)
+    {
+        a_toughness = mons_type_hit_dice(*a);
+        b_toughness = mons_type_hit_dice(*b);
+    }
+
+    if (a_toughness == b_toughness)
+    {
+        std::string a_name = mons_type_name(*a, DESC_PLAIN);
+        std::string b_name = mons_type_name(*b, DESC_PLAIN);
+        return ( lowercase(a_name) < lowercase(b_name));
+    }
+
+    return (a_toughness < b_toughness);
+}
+
+class DescMenu : public Menu
+{
+public:
+    DescMenu( int _flags, bool _show_mon )
+        : Menu(_flags), sort_alpha(true), showing_monsters(_show_mon)
+        {
+            set_highlighter(NULL);
+
+            set_prompt();
+        }
+
+    bool sort_alpha;
+    bool showing_monsters;
+
+    void set_prompt()
+        {
+            std::string prompt = "Describe which? ";
+
+            if (showing_monsters)
+            {
+                if (sort_alpha)
+                    prompt += "(CTRL-S to sort by monster toughness)";
+                else
+                    prompt += "(CTRL-S to sort by name)";
+            }
+            set_title(new MenuEntry(prompt, MEL_TITLE));
+        }
+
+    void sort()
+        {
+            if (!showing_monsters)
+                return;
+
+            if (sort_alpha)
+                std::sort(items.begin(), items.end(), compare_mon_names);
+            else
+                std::sort(items.begin(), items.end(), compare_mon_toughness);
+
+            for (unsigned int i = 0, size = items.size(); i < size; i++)
+            {
+                const char letter = index_to_letter(i);
+
+                items[i]->hotkeys.clear();
+                items[i]->add_hotkey(letter);
+            }
+        }
+
+    void toggle_sorting()
+        {
+            if (!showing_monsters)
+                return;
+
+            sort_alpha = !sort_alpha;
+
+            sort();
+            set_prompt();
+        }
+};
+
+static std::vector<std::string> get_desc_keys(std::string regex,
+                                              db_find_filter filter)
+{
+    std::vector<std::string> key_matches = getLongDescKeysByRegex(regex,
+                                                                  filter);
+
+    if (key_matches.size() == 1)
+        return (key_matches);
+    else if (key_matches.size() > 52)
+        return (key_matches);
+
+    std::vector<std::string> body_matches = getLongDescBodiesByRegex(regex,
+                                                                     filter);
+
+    if (key_matches.size() == 0 && body_matches.size() == 0)
+        return (key_matches);
+    else if (key_matches.size() == 0 && body_matches.size() == 1)
+        return (body_matches);
+
+    // Merge key_matches and body_matches, discarding duplicates.
+    std::vector<std::string> tmp = key_matches;
+    tmp.insert(tmp.end(), body_matches.begin(), body_matches.end());
+    std::sort(tmp.begin(), tmp.end());
+    std::vector<std::string> all_matches;
+    for (unsigned int i = 0, size = tmp.size(); i < size; i++)
+        if (i == 0 || all_matches[all_matches.size() - 1] != tmp[i])
+        {
+            all_matches.push_back(tmp[i]);
+        }
+
+    return (all_matches);
+}
+
+static std::vector<std::string> get_monster_keys(unsigned char showchar)
+{
+    std::vector<std::string> mon_keys;
+
+    for (int i = 0; i < NUM_MONSTERS; i++)
+    {
+        if (i == MONS_PROGRAM_BUG || mons_global_level(i) == 0)
+            continue;
+
+        monsterentry *me = get_monster_data(i);
+
+        if (me == NULL || me->name == NULL || me->name[0] == '\0')
+            continue;
+
+        if (me->mc != i)
+            continue;
+
+        if (getLongDescription(me->name) == "")
+            continue;
+
+        if (me->showchar == showchar)
+            mon_keys.push_back(me->name);
+    }
+
+    return (mon_keys);
+}
+
+static bool monster_filter(std::string key, std::string body)
+{
+    int mon_num = get_monster_by_name(key.c_str(), true);
+    return (mon_num == MONS_PROGRAM_BUG || mons_global_level(mon_num) == 0);
+}
+
+static bool spell_filter(std::string key, std::string body)
+{
+    return (spell_by_name(key) == SPELL_NO_SPELL);
+}
+
+static bool feature_filter(std::string key, std::string body)
+{
+    return (spell_by_name(key) != SPELL_NO_SPELL
+            || get_monster_by_name(key.c_str(), true) != MONS_PROGRAM_BUG);
+}
+
+static bool do_description(std::string key)
+{
+    std::string desc = getLongDescription(key);
+
+    monster_type mon_num = get_monster_by_name(key, true);
+    if (mon_num != MONS_PROGRAM_BUG)
+    {
+        if (mons_genus(mon_num) == MONS_DRACONIAN)
+        {
+            monsters mon;
+
+            mon.type = mon_num;
+
+            switch (mon_num)
+            {
+            case MONS_BLACK_DRACONIAN:
+            case MONS_MOTTLED_DRACONIAN:
+            case MONS_YELLOW_DRACONIAN:
+            case MONS_GREEN_DRACONIAN:
+            case MONS_PURPLE_DRACONIAN:
+            case MONS_RED_DRACONIAN:
+            case MONS_WHITE_DRACONIAN:
+            case MONS_PALE_DRACONIAN:
+                mon.number = mon_num;
+                break;
+            default:
+                mon.number = 0;
+                break;
+            }
+
+            describe_monsters(mon);
+            return (false);
+        }
+
+        std::string symbol = "";
+        symbol += get_monster_data(mon_num)->showchar;
+        if (isupper(symbol[0]))
+            symbol = "cap-" + symbol;
+
+        std::string symbol_prefix = "__";
+        symbol_prefix += symbol;
+        symbol_prefix += "_prefix";
+        desc = getLongDescription(symbol_prefix) + desc;
+
+        std::string symbol_suffix = "__";
+        symbol_suffix += symbol;
+        symbol_suffix += "_suffix";
+        desc += getLongDescription(symbol_suffix);
+    }
+
+    key = uppercase_first(key);
+    key += "$$";
+
+    clrscr();
+    print_description(key + desc);
+
+    return (true);
+}
+
+static bool find_description()
+{
+    clrscr();
+    viewwindow(true, false);
+
+    mpr("Describe a (M)onster, (S)pell or (F)eature? ", MSGCH_PROMPT);
+
+    int ch = toupper(getch());
+    std::string    type;
+    std::string    extra;
+    db_find_filter filter;
+
+    switch(ch)
+    {
+    case 'M':
+        type   = "monster";
+        extra  = "  Enter a single letter to list monsters displayed by "
+            "that symbol.";
+        filter = monster_filter;
+        break;
+    case 'S':
+        type   = "spell";
+        filter = spell_filter;
+        break;
+    case 'F':
+        type   = "feature";
+        filter = feature_filter;
+        break;
+    default:
+        list_commands_err = "Okay, then.";
+        return (false);
+    }
+
+    mprf(MSGCH_PROMPT,
+         "Describe a %s; partial names and regexps are fine.%s",
+         type.c_str(), extra.c_str());
+    mpr("Describe what? ", MSGCH_PROMPT);
+    char buf[80];
+    if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    {
+        list_commands_err = "Okay, then.";
+        return (false);
+    }
+
+    std::string regex = trimmed_string(buf);
+
+    if (regex == "")
+    {
+        list_commands_err = "Description must contain at least one non-space.";
+        return (false);
+    }
+
+    bool doing_mons    = (ch == 'M');
+    bool by_mon_symbol = (doing_mons && regex.size() == 1);
+
+    // Try to get an exact match first.
+    if (!by_mon_symbol && !(*filter)(regex, ""))
+    {
+        // Try to get an exact match first.
+        std::string desc = getLongDescription(regex);
+
+        if (desc != "")
+        {
+            return do_description(regex);
+        }
+    }
+
+    std::vector<std::string> key_list;
+
+    if (by_mon_symbol)
+        key_list = get_monster_keys(regex[0]);
+    else
+        key_list = get_desc_keys(regex, filter);
+
+    if (key_list.size() == 0)
+    {
+        if (by_mon_symbol)
+        {
+            list_commands_err  = "No monsters with symbol '";
+            list_commands_err += regex;
+            list_commands_err += "'";
+        }
+        else
+        {
+            list_commands_err  = "No matching ";
+            list_commands_err += type;
+            list_commands_err += "s";
+        }
+        return (false);
+    }
+    else if (key_list.size() > 52)
+    {
+        if (by_mon_symbol)
+        {
+            list_commands_err  = "Too many monsters with symbol '";
+            list_commands_err += regex;
+            list_commands_err += "' to display";
+        }
+        else
+        {
+            std::ostringstream os;
+            os << "Too many matching " << type << "s (" << key_list.size()
+               << ") to display.";
+            list_commands_err = os.str();
+        }
+        return (false);
+    }
+    else if (key_list.size() == 1)
+    {
+        return do_description(key_list[0]);
+    }
+
+    std::sort(key_list.begin(), key_list.end());
+
+    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                       MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
+                       doing_mons);
+    desc_menu.set_tag("description");
+    std::list<monster_type> monster_types;
+    for (unsigned int i = 0, size = key_list.size(); i < size; i++)
+    {
+        const char  letter = index_to_letter(i);
+        std::string str    = uppercase_first(key_list[i]);
+
+        MenuEntry *me = new MenuEntry(uppercase_first(key_list[i]),
+                                      MEL_ITEM, 1, letter);
+
+        if (doing_mons)
+        {
+            monster_type  mon    = get_monster_by_name(str, true);
+            unsigned char colour = mons_class_colour(mon);
+
+            monster_types.push_back(mon);
+
+            if (colour == BLACK)
+                colour = LIGHTGREY;
+
+            std::string prefix = "(<";
+            prefix += colour_to_str(colour);
+            prefix += ">";
+            prefix += stringize_glyph(mons_char(mon));
+            prefix += "</";
+            prefix += colour_to_str(colour);
+            prefix += ">) ";
+
+            me->text = prefix + str;
+            me->data = &*monster_types.rbegin();
+        }
+        else
+            me->data = (void*) &key_list[i];
+
+        desc_menu.add_entry(me);
+    }
+
+    desc_menu.sort();
+
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = desc_menu.show();
+        redraw_screen();
+        if ( sel.empty() )
+        {
+            if (doing_mons && desc_menu.getkey() == CONTROL('S'))
+                desc_menu.toggle_sorting();
+            else
+                return (false);
+        }
+        else
+        {
+            ASSERT(sel.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() == 1);
+
+            std::string key;
+
+            if (doing_mons)
+                key = mons_type_name(*(monster_type*) sel[0]->data, DESC_PLAIN);
+            else
+                key = *((std::string*) sel[0]->data);
+
+            if (do_description(key))
+                if ( getch() == 0 )
+                    getch();
+        }
+    }
+
+    return (false);
+}
+
 static int keyhelp_keyfilter(int ch)
 {
     switch (ch)
@@ -690,10 +1132,17 @@ static int keyhelp_keyfilter(int ch)
             display_notes();
             return -1;
         }
-        // fall through
-    default:
-        return ch;
+        break;
+
+    case '/':
+        if (find_description())
+            if ( getch() == 0 )
+                getch();
+
+        viewwindow(true, false);
+        return -1;
     }
+    return ch;
 }
 
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
@@ -707,6 +1156,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     if (easy_exit)
         flags |= MF_EASY_EXIT;
     cmd_help.set_flags(flags, false);
+    cmd_help.set_tag("help");
     
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
@@ -733,6 +1183,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>~</w>: Macros help\n"
             "<w>!</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
+            "<w>/</w>: Lookup description\n"
             "<w>Home</w>: This screen\n",
             true, true, cmdhelp_textfilter);
 
@@ -842,11 +1293,15 @@ void show_interlevel_travel_depth_help()
     show_specific_help( interlevel_travel_depth_help );
 }
 
-void list_commands(bool wizard, int hotkey)
+void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
 {
     if (wizard)
     {
         list_wizard_commands();
+
+        if (do_redraw_screen)
+            redraw_screen();
+
         return;
     }
 
@@ -1007,6 +1462,8 @@ void list_commands(bool wizard, int hotkey)
             "<w>p</w> : Pray\n"
             "<w>Z</w> : cast a spell\n"
             "<w>!</w> : shout or command allies\n"
+            "<w>`</w> : re-do previous command\n"
+            "<w>0</w> : repeat next command # of times\n"
             " \n",
             true, true, cmdhelp_textfilter);
 
@@ -1017,6 +1474,7 @@ void list_commands(bool wizard, int hotkey)
             "<w>Ctrl-P</w> : show Previous messages\n"
             "<w>Ctrl-R</w> : Redraw screen\n"
             "<w>Ctrl-C</w> : Clear main and level maps\n"
+            "<w>Ctrl-I</w> : annotate the dungeon level\n"
             "<w>#</w> : dump character to file\n"
             "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
             "<w>~</w> : add macro\n"
@@ -1056,7 +1514,17 @@ void list_commands(bool wizard, int hotkey)
             "stashes, and <w>Ctrl-E</w> to erase them.\n",
             true, true, cmdhelp_textfilter);
     
+    list_commands_err = "";
     show_keyhelp_menu(cols.formatted_lines(), true, false, hotkey);
+
+    if (do_redraw_screen)
+    {
+        clrscr();
+        redraw_screen();
+    }
+
+    if (list_commands_err != "")
+        mpr(list_commands_err.c_str());
 }
 
 void list_tutorial_help()
@@ -1145,9 +1613,11 @@ static void list_wizard_commands()
     cols.add_formatted(0,
                        "a      : acquirement\n"
                        "A      : set all skills to level\n"
+                       "Ctrl-A : generate new Abyss area\n"
                        "b      : controlled blink\n"
                        "B      : banish yourself to the Abyss\n"
                        "c      : card effect\n"
+                       "C      : (un)curse item\n"
                        "g      : add a skill\n"
                        "G      : banish all monsters\n"
                        "Ctrl-G : save ghost (bones file)\n"
@@ -1165,11 +1635,11 @@ static void list_wizard_commands()
                        "r      : change character's species\n"
                        "s      : gain 20000 skill points\n"
                        "S      : set skill to level\n"
-                       "t      : tweak object properties\n"
-                       "T      : make a trap\n",
+                       "t      : tweak object properties\n",
                        true, true);
 
     cols.add_formatted(1, 
+                       "T      : make a trap\n"
                        "v      : show gold value of an item\n"
                        "x      : gain an experience level\n"
                        "Ctrl-X : change experience level\n"

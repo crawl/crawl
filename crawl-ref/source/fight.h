@@ -54,7 +54,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void monster_attack(int monster_attacking);
+bool monster_attack(int monster_attacking);
 
 
 // last updated: 08jun2000 {dlb}
@@ -242,6 +242,7 @@ private:
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();
+    void player_check_weapon_effects();
 };
 
 #endif

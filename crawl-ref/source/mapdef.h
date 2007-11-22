@@ -480,6 +480,18 @@ struct feature_slot
     feature_spec get_feat(int default_glyph);
 };
 
+struct map_flags
+{
+    unsigned long flags_set, flags_unset; 
+
+    map_flags();
+    void clear();
+
+    static map_flags parse(const std::string flag_list[],
+                           const std::string &s) throw(std::string);
+};
+
+
 struct keyed_mapspec
 {
 public:
@@ -488,6 +500,7 @@ public:
     feature_slot feat;
     item_list    item;
     mons_list    mons;
+    map_flags    map_mask;
 
 public:
     keyed_mapspec();
@@ -495,10 +508,12 @@ public:
     std::string set_feat(const std::string &s, bool fix);
     std::string set_mons(const std::string &s, bool fix);
     std::string set_item(const std::string &s, bool fix);
+    std::string set_mask(const std::string &s, bool garbage);
 
     feature_spec get_feat();
-    mons_list &get_monsters();
-    item_list &get_items();
+    mons_list   &get_monsters();
+    item_list   &get_items();
+    map_flags   &get_mask();
 
 private:
     std::string err;
@@ -541,6 +556,31 @@ struct map_file_place
     }
 };
 
+/////////////////////////////////////////////////////////////////////////////
+// map_def: map definitions for maps loaded from .des files.
+// 
+// Please read this before changing map_def.
+// 
+// When adding Lua-visible fields to map_def, note that there are two
+// kinds of fields:
+// 
+// * Fields that determine placement of the map, or are unchanging,
+//   such as "place", "depths" (determine placement), or "name" (does
+//   not change between different evaluations of the map). Such fields
+//   must be reset to their default values in map_def::init() if they
+//   determine placement, or just initialised in the constructor if
+//   they will not change.
+//   
+// * Fields that do not determine placement and may change between
+//   different uses of the map (such as "mons", "items",
+//   "level_flags", etc.). Such fields must be reset to their default
+//   values in map_def::reinit(), which is called before the map is
+//   used.
+//
+// If you do not do this, maps will not work correctly, and will break
+// in obscure, hard-to-find ways. The level-compiler will not (cannot)
+// warn you.
+// 
 class map_def
 {
 public:
@@ -558,6 +598,8 @@ public:
     mons_list       mons;
     item_list       items;
 
+    map_flags       level_flags, branch_flags;
+
     keyed_specs     keyspecs;
 
     dlua_chunk      prelude, main, validate, veto;
@@ -565,6 +607,8 @@ public:
     map_file_place  place_loaded_from;
 
     map_def         *original;
+
+    unsigned char   rock_colour, floor_colour;
 
 private:
     // This map has been loaded from an index, and not fully realised.
@@ -617,6 +661,7 @@ public:
     bool is_usable_in(const level_id &lid) const;
     
     keyed_mapspec *mapspec_for_key(int key);
+    const keyed_mapspec *mapspec_for_key(int key) const;
 
     bool has_depth() const;
     void add_depth(const level_range &depth);
@@ -626,6 +671,7 @@ public:
     std::string add_key_item(const std::string &s);
     std::string add_key_mons(const std::string &s);
     std::string add_key_feat(const std::string &s);
+    std::string add_key_mask(const std::string &s);
     
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;

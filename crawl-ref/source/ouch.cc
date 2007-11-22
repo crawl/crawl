@@ -77,6 +77,7 @@
 #include "stuff.h"
 #include "tutorial.h"
 #include "view.h"
+#include "xom.h"
 
 
 static void end_game( scorefile_entry &se );
@@ -588,7 +589,11 @@ void lose_level()
     // because you.experience is unsigned long, if it's going to be -ve
     // must die straightaway.
     if (you.experience_level == 1)
+    {
         ouch( -9999, 0, KILLED_BY_DRAINING );
+        // Return in case death was canceled via wizard mode
+        return;
+    }
 
     you.experience = exp_needed( you.experience_level + 1 ) - 1;
     you.experience_level--;
@@ -628,7 +633,7 @@ void drain_exp(bool announce_full)
         return;
     }
 
-    if (protection >= 3 || you.is_undead)
+    if (protection >= 3)
     {
         if ( announce_full )
             mpr("You fully resist.");
@@ -636,7 +641,11 @@ void drain_exp(bool announce_full)
     }
 
     if (you.experience == 0)
+    {
         ouch(-9999, 0, KILLED_BY_DRAINING);
+        // Return in case death was escaped via wizard mode;
+        return;
+    }
 
     if (you.experience_level == 1)
     {
@@ -683,18 +692,37 @@ static void xom_checks_damage(kill_method_type death_type,
     //if (you.hp <= dam)
     //    xom_is_stimulated(32);
 
-    if ((death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
-        || death_source < 0 || death_source >= MAX_MONSTERS)
+    if (death_type == KILLED_BY_TARGETTING)
+    {
+        // Xom thinks the player hurting him/herself is funny.
+        xom_is_stimulated(255 * dam / (dam + you.hp));
+        return;
+    }
+    else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS)
+    {
+        // Xom thinks falling down the stairs is hilarious
+        xom_is_stimulated(255);
+        return;
+    }
+    else if ((death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
+             || death_source < 0 || death_source >= MAX_MONSTERS)
     {
         return ;
     }
-    
+
     int amusementvalue = 1;
 
     const monsters *monster = &menv[death_source];
 
     if (!monster->alive())
         return;
+
+    if (mons_attitude(monster) == ATT_FRIENDLY)
+    {
+        // Xom thinks collateral damage is funny
+        xom_is_stimulated(255 * dam / (dam + you.hp));
+        return;
+    }
 
     int leveldif = monster->hit_dice - you.experience_level;
 
@@ -738,6 +766,9 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );
 
+    if (dam > 0)
+        you.check_awaken(500);
+    
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
         && death_type != KILLED_BY_WATER)
     {
@@ -754,23 +785,17 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
     if (dam > -9000)            // that is, a "death" caused by hp loss {dlb}
     {
-        switch (you.religion)
+        if (god_protects_from_harm(you.religion))
         {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-        case GOD_YREDELEMNUL:
-            if (dam >= you.hp && you.duration[DUR_PRAYER]
-                && random2(you.piety) >= 30)
+            if (dam >= you.hp
+                && (one_chance_in(10) || you.piety > random2(1000)))
             {
                 simple_god_message( " protects you from harm!" );
                 return;
             }
-            break;
-        default:
-            break;
         }
 
+        dec_hp( dam, true );
 
         dec_hp( dam, true );
 
@@ -789,6 +814,25 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
             xom_checks_damage(death_type, dam, death_source);
 
+            // for note taking
+            std::string damage_desc = "";
+            if (!see_source)
+            {
+                snprintf(info, INFO_SIZE, "something (%d)", dam);
+                damage_desc = info;
+            }
+            else
+            {
+                damage_desc = scorefile_entry(dam, death_source,
+                                              death_type, aux, true)
+                              .death_description(scorefile_entry::DDV_TERSE);
+            }
+
+            take_note(
+                Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
+                
+            return;
+        } // else hp <= 0
             // for note taking
             std::string damage_desc = "";
             if (!see_source)
@@ -994,6 +1038,7 @@ void end_game( struct scorefile_entry &se )
     }
 
     invent( -1, true );
+    textcolor( LIGHTGREY );
     clrscr();
 
     if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))

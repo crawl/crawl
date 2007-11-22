@@ -2,7 +2,7 @@
  *  File:       dgnevent.h
  *  Summary:    General dungeon events.
  *  
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-07-20T11:40:25.964128Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *  
  */
 
@@ -15,15 +15,19 @@
 // Keep event names in luadgn.cc in sync.
 enum dgn_event_type
 {
-    DET_NONE           = 0x0000,
+    DET_NONE            = 0x0000,
     
-    DET_TURN_ELAPSED   = 0x0001,
-    DET_MONSTER_MOVED  = 0x0002,
-    DET_PLAYER_MOVED   = 0x0004,
-    DET_LEAVING_LEVEL  = 0x0008,
-    DET_ENTERING_LEVEL = 0x0010,
-    DET_PLAYER_IN_LOS  = 0x0020,   // Player just entered LOS.
-    DET_PLAYER_CLIMBS  = 0x0040    // Player climbing stairs.
+    DET_TURN_ELAPSED    = 0x0001,
+    DET_MONSTER_MOVED   = 0x0002,
+    DET_PLAYER_MOVED    = 0x0004,
+    DET_LEAVING_LEVEL   = 0x0008,
+    DET_ENTERING_LEVEL  = 0x0010,
+    DET_ENTERED_LEVEL   = 0x0020,
+    DET_PLAYER_IN_LOS   = 0x0040,   // Player just entered LOS.
+    DET_PLAYER_CLIMBS   = 0x0080,   // Player climbing stairs.
+    DET_MONSTER_DIED    = 0x0100,
+    DET_ITEM_PICKUP     = 0x0200,
+    DET_FEAT_CHANGE     = 0x0400
 };
 
 class dgn_event
@@ -32,11 +36,12 @@ public:
     dgn_event_type type;
     coord_def      place;
     int            elapsed_ticks;
+    long           arg1, arg2;
 
 public:
     dgn_event(dgn_event_type t, const coord_def &p = coord_def(),
-              int ticks = you.time_taken)
-        : type(t), place(p), elapsed_ticks(ticks)
+              int ticks = you.time_taken, long a1 = 0, long a2 = 0)
+        : type(t), place(p), elapsed_ticks(ticks), arg1(a1), arg2(a2)
     {
     }
 };
@@ -88,6 +93,7 @@ public:
     void move_listeners(const coord_def &from, const coord_def &to);
     
     void fire_position_event(dgn_event_type et, const coord_def &pos);
+    void fire_position_event(const dgn_event &e, const coord_def &pos);
     void fire_event(dgn_event_type et);
     void fire_event(const dgn_event &e);
 

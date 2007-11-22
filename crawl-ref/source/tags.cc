@@ -98,6 +98,7 @@ extern std::map<branch_type, level_id> stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
 extern std::map<level_pos, portal_type> portals_present;
+extern std::map<level_id, std::string> level_annotations;
 
 // temp file pairs used for file level cleanup
 FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
@@ -129,8 +130,6 @@ static void marshallGhost(tagHeader &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost( tagHeader &th );
 static void marshall_monster(tagHeader &th, const monsters &m);
 static void unmarshall_monster(tagHeader &th, monsters &m);
-static void marshall_item(tagHeader &th, const item_def &item);
-static void unmarshall_item(tagHeader &th, item_def &item);
 
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
@@ -425,6 +424,12 @@ void marshallString(struct tagHeader &th, const std::string &data, int maxSize)
     th.offset += len;
 }
 
+// To pass to marsahllMap
+static void marshall_string(struct tagHeader &th, const std::string &data)
+{
+    marshallString(th, data);
+}
+
 // string -- unmarshall length & string data
 int unmarshallCString(struct tagHeader &th, char *data, int maxSize)
 {
@@ -456,6 +461,12 @@ std::string unmarshallString(tagHeader &th, int maxSize)
     const std::string res(buffer, slen);
     delete [] buffer;
     return (res);
+}
+
+// To pass to unmarshallMap
+static std::string unmarshall_string(struct tagHeader &th)
+{
+    return unmarshallString(th);
 }
 
 // boolean (to avoid system-dependant bool implementations)
@@ -768,7 +779,7 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.rotting);
     marshallByte(th,you.symbol);
     marshallByte(th,you.colour);
-    marshallByte(th,you.pet_target);
+    marshallShort(th,you.pet_target);
 
     marshallByte(th,you.max_level);
     marshallByte(th,you.where_are_you);
@@ -779,6 +790,8 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.berserk_penalty);
     marshallByte(th,you.level_type);
     marshallString(th, you.level_type_name);
+    marshallByte(th,you.entry_cause);
+    marshallByte(th,you.entry_cause_god);
     marshallByte(th,you.synch_time);
     marshallByte(th,you.disease);
     marshallByte(th,you.species);
@@ -917,6 +930,11 @@ static void tag_construct_you(struct tagHeader &th)
 
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
+    
+    // list of currently beholding monsters (usually empty)
+    marshallByte(th, you.beheld_by.size());
+    for (unsigned int k = 0; k < you.beheld_by.size(); k++)
+         marshallByte(th, you.beheld_by[k]);
 }
 
 static void tag_construct_you_items(struct tagHeader &th)
@@ -926,19 +944,7 @@ static void tag_construct_you_items(struct tagHeader &th)
     // how many inventory slots?
     marshallByte(th, ENDOFPACK);
     for (i = 0; i < ENDOFPACK; ++i)
-    {
-        marshallByte(th,you.inv[i].base_type);
-        marshallByte(th,you.inv[i].sub_type);
-        marshallShort(th,you.inv[i].plus);
-        marshallLong(th,you.inv[i].special);
-        marshallByte(th,you.inv[i].colour);
-        marshallLong(th,you.inv[i].flags);
-        marshallShort(th,you.inv[i].quantity);
-        marshallShort(th,you.inv[i].plus2);
-        marshallShort(th, you.inv[i].orig_place);
-        marshallShort(th, you.inv[i].orig_monnum);
-        marshallString(th, you.inv[i].inscription.c_str(), 80);
-    }
+        marshallItem(th, you.inv[i]);
 
     marshallByte(th, you.quiver);
 
@@ -1021,7 +1027,10 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
     // how many branches?
     marshallByte(th, NUM_BRANCHES);
     for (j = 0; j < NUM_BRANCHES; ++j)
+    {
         marshallLong(th, branches[j].startdepth);
+        marshallLong(th, branches[j].branch_flags);
+    }
 
     marshallShort(th, MAX_LEVELS);
     for (i = 0; i < MAX_LEVELS; ++i)
@@ -1036,6 +1045,8 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
                 marshall_level_pos, marshall_as_long<god_type>);
     marshallMap(th, portals_present,
                 marshall_level_pos, marshall_as_long<portal_type>);
+    marshallMap(th, level_annotations,
+                marshall_level_id, marshall_string);
 
     marshallPlaceInfo(th, you.global_info);
     std::vector<PlaceInfo> list = you.get_all_place_info();
@@ -1055,14 +1066,14 @@ static void marshall_follower(tagHeader &th, const follower &f)
 {
     marshall_monster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        marshall_item(th, f.items[i]);    
+        marshallItem(th, f.items[i]);    
 }
 
 static void unmarshall_follower(tagHeader &th, follower &f)
 {
     unmarshall_monster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-        unmarshall_item(th, f.items[i]);
+        unmarshallItem(th, f.items[i]);
 }
 
 static void marshall_follower_list(tagHeader &th, const m_transit_list &mlist)
@@ -1112,7 +1123,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.rotting = unmarshallByte(th);
     you.symbol = unmarshallByte(th);
     you.colour = unmarshallByte(th);
-    you.pet_target = unmarshallByte(th);
+    you.pet_target = unmarshallShort(th);
 
     you.max_level = unmarshallByte(th);
     you.where_are_you = static_cast<branch_type>( unmarshallByte(th) );
@@ -1123,6 +1134,8 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.berserk_penalty = unmarshallByte(th);
     you.level_type = static_cast<level_area_type>( unmarshallByte(th) );
     you.level_type_name = unmarshallString(th);
+    you.entry_cause = static_cast<entry_cause_type>( unmarshallByte(th) );
+    you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
     you.synch_time = unmarshallByte(th);
     you.disease = unmarshallByte(th);
     you.species = static_cast<species_type>(unmarshallByte(th));
@@ -1257,6 +1270,11 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
 
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
+    
+    // list of currently beholding monsters (usually empty)
+    count_c = unmarshallByte(th);
+    for (i = 0; i < count_c; i++)
+         you.beheld_by.push_back(unmarshallByte(th));
 }
 
 static void tag_read_you_items(struct tagHeader &th, char minorVersion)
@@ -1268,26 +1286,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     // how many inventory slots?
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
-    {
-        you.inv[i].base_type =
-            static_cast<object_class_type>(unmarshallByte(th));
-        you.inv[i].sub_type = (unsigned char) unmarshallByte(th);
-        you.inv[i].plus = unmarshallShort(th);
-        you.inv[i].special = unmarshallLong(th);
-        you.inv[i].colour = (unsigned char) unmarshallByte(th);
-        you.inv[i].flags = (unsigned long) unmarshallLong(th);
-        you.inv[i].quantity = unmarshallShort(th);
-        you.inv[i].plus2 = unmarshallShort(th);       
-        you.inv[i].orig_place  = unmarshallShort(th);
-        you.inv[i].orig_monnum = unmarshallShort(th);
-        you.inv[i].inscription = unmarshallString(th, 80);
-
-        // these never need to be saved for items in the inventory -- bwr
-        you.inv[i].x = -1;
-        you.inv[i].y = -1;
-        you.inv[i].link = i;
-        you.inv[i].slot = index_to_letter(i);
-    }
+        unmarshallItem(th, you.inv[i]);
 
     you.quiver = unmarshallByte(th);
 
@@ -1409,7 +1408,10 @@ static void tag_read_you_dungeon(struct tagHeader &th)
     // how many branches?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        branches[j].startdepth = unmarshallLong(th);
+    {
+        branches[j].startdepth   = unmarshallLong(th);
+        branches[j].branch_flags = (unsigned long) unmarshallLong(th);
+    }
 
     count_s = unmarshallShort(th);
     for (i = 0; i < count_s; ++i)
@@ -1427,6 +1429,8 @@ static void tag_read_you_dungeon(struct tagHeader &th)
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
     unmarshallMap(th, portals_present,
                   unmarshall_level_pos, unmarshall_long_as<portal_type>);
+    unmarshallMap(th, level_annotations,
+                  unmarshall_level_id, unmarshall_string);
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
     ASSERT(place_info.is_global());
@@ -1471,6 +1475,11 @@ static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
 
 static void tag_construct_level(struct tagHeader &th)
 {
+    marshallByte(th, env.floor_colour);
+    marshallByte(th, env.rock_colour);
+
+    marshallLong(th, env.level_flags);
+
     marshallFloat(th, (float)you.elapsed_time);
 
     // map grids
@@ -1489,7 +1498,7 @@ static void tag_construct_level(struct tagHeader &th)
             marshallShort(th, env.map[count_x][count_y].object);
             marshallShort(th, env.map[count_x][count_y].colour);            
             marshallShort(th, env.map[count_x][count_y].flags);
-            marshallByte(th, env.cgrid[count_x][count_y]);
+            marshallShort(th, env.cgrid[count_x][count_y]);
         }
     }
 
@@ -1505,6 +1514,7 @@ static void tag_construct_level(struct tagHeader &th)
         marshallByte(th, env.cloud[i].y);
         marshallByte(th, env.cloud[i].type);
         marshallShort(th, env.cloud[i].decay);
+        marshallByte(th,  (char) env.cloud[i].spread_rate);
         marshallShort(th, env.cloud[i].whose);
     }
 
@@ -1525,7 +1535,7 @@ static void tag_construct_level(struct tagHeader &th)
     env.markers.write(th);
 }
 
-static void marshall_item(tagHeader &th, const item_def &item)
+void marshallItem(tagHeader &th, const item_def &item)
 {
     marshallByte(th, item.base_type);
     marshallByte(th, item.sub_type);
@@ -1540,16 +1550,21 @@ static void marshall_item(tagHeader &th, const item_def &item)
     marshallLong(th, item.flags);
 
     marshallShort(th, item.link);                //  unused
-    marshallShort(th, igrd[item.x][item.y]);  //  unused
+    if (item.x == -1 && item.y == -1)
+        marshallShort(th, -1); // unused
+    else
+        marshallShort(th, igrd[item.x][item.y]);  //  unused
 
     marshallByte(th, item.slot);
 
     marshallShort(th, item.orig_place);
     marshallShort(th, item.orig_monnum);
     marshallString(th, item.inscription.c_str(), 80);
+
+    item.props.write(th);
 }
 
-static void unmarshall_item(tagHeader &th, item_def &item)
+void unmarshallItem(tagHeader &th, item_def &item)
 {
     item.base_type = static_cast<object_class_type>(unmarshallByte(th));
     item.sub_type = (unsigned char) unmarshallByte(th);
@@ -1575,6 +1590,9 @@ static void unmarshall_item(tagHeader &th, item_def &item)
     item.orig_place  = unmarshallShort(th);
     item.orig_monnum = unmarshallShort(th);        
     item.inscription = unmarshallString(th, 80);
+
+    item.props.clear();
+    item.props.read(th);
 }
 
 static void tag_construct_level_items(struct tagHeader &th)
@@ -1591,7 +1609,7 @@ static void tag_construct_level_items(struct tagHeader &th)
     // how many items?
     marshallShort(th, MAX_ITEMS);
     for (int i = 0; i < MAX_ITEMS; ++i)
-        marshall_item(th, mitm[i]);
+        marshallItem(th, mitm[i]);
 }
 
 static void marshall_mon_enchant(tagHeader &th, const mon_enchant &me)
@@ -1635,6 +1653,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     {
         marshall_mon_enchant(th, i->second);
     }
+    marshallByte(th, m.ench_countdown);
 
     marshallShort(th, m.type);
     marshallShort(th, m.hit_points);
@@ -1691,6 +1710,11 @@ void tag_construct_level_attitude(struct tagHeader &th)
 
 static void tag_read_level( struct tagHeader &th, char minorVersion )
 {
+    env.floor_colour = unmarshallByte(th);
+    env.rock_colour  = unmarshallByte(th);
+
+    env.level_flags = (unsigned long) unmarshallLong(th);
+
     env.elapsed_time = unmarshallFloat(th);
     // map grids
     // how many X?
@@ -1713,7 +1737,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
             env.map[i][j].flags  = unmarshallShort(th);
 
             mgrd[i][j] = NON_MONSTER;
-            env.cgrid[i][j] = (unsigned char) unmarshallByte(th);
+            env.cgrid[i][j] = (unsigned short) unmarshallShort(th);
         }
     }
 
@@ -1730,6 +1754,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         env.cloud[i].y = unmarshallByte(th);
         env.cloud[i].type = static_cast<cloud_type>(unmarshallByte(th));
         env.cloud[i].decay = unmarshallShort(th);
+        env.cloud[i].spread_rate = (unsigned char) unmarshallByte(th);
         env.cloud[i].whose = static_cast<kill_category>(unmarshallShort(th));
     }
 
@@ -1767,7 +1792,7 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
     // how many items?
     const int item_count = unmarshallShort(th);
     for (int i = 0; i < item_count; ++i)
-        unmarshall_item(th, mitm[i]);
+        unmarshallItem(th, mitm[i]);
 }
 
 static void unmarshall_monster(tagHeader &th, monsters &m)
@@ -1784,6 +1809,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.target_x = unmarshallByte(th);
     m.target_y = unmarshallByte(th);
     m.flags = unmarshallLong(th);
+    m.experience = static_cast<unsigned long>(unmarshallLong(th));
 
     if (tag_minor_version >= 2)
         m.experience = static_cast<unsigned long>(unmarshallLong(th));
@@ -1797,6 +1823,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
         mon_enchant me = unmarshall_mon_enchant(th);
         m.enchantments[me.ench] = me;
     }
+    m.ench_countdown = unmarshallByte(th);
 
     m.type = unmarshallShort(th);
     m.hit_points = unmarshallShort(th);

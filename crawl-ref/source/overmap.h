@@ -21,4 +21,16 @@ void display_overmap();
 bool unnotice_feature(const level_pos &pos);
 std::string overview_description_string();
 
+///////////////////////////////////////////////////////////
+void set_level_annotation(std::string str,
+                          level_id li = level_id::current());
+void clear_level_annotation(level_id li = level_id::current());
+
+std::string get_level_annotation(level_id li = level_id::current());
+
+bool level_annotation_has(std::string str,
+                          level_id li = level_id::current());
+
+void annotate_level();
+
 #endif

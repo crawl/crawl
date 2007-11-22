@@ -20,7 +20,7 @@ end
 function OneWayStair:event(marker, ev)
   if ev:type() == dgn.dgn_event_type('player_climb') then
     local x, y = ev:pos()
-    dgn.terrain_changed(x, y, 'floor', false)
+    dgn.terrain_changed(x, y, self.props.floor or 'floor', false)
     dgn.remove_listener(marker, ev:pos())
     dgn.remove_marker(marker)
   end

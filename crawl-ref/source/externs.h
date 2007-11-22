@@ -23,6 +23,7 @@
 #include <set>
 #include <memory>
 #include <cstdlib>
+#include <deque>
 
 #include <time.h>
 
@@ -31,6 +32,7 @@
 #include "FixAry.h"
 #include "libutil.h"
 #include "mpr.h"
+#include "store.h"
 
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
@@ -62,6 +64,7 @@ const int kPathLen = 256;
 class item_def;
 class melee_attack;
 class coord_def;
+class level_id;
 
 class actor
 {
@@ -80,9 +83,15 @@ public:
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
+
+    virtual bool can_pass_through(const dungeon_feature_type grid) const = 0;
+    virtual bool can_pass_through(const int x, const int y) const = 0;
+    virtual bool can_pass_through(const coord_def &c) const = 0;
     
     virtual size_type body_size(int psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
+    virtual int       body_weight() const = 0;
+    virtual int       total_weight() const = 0;
     
     virtual int       damage_type(int which_attack = -1) = 0;
     virtual int       damage_brand(int which_attack = -1) = 0;
@@ -125,7 +134,9 @@ public:
     virtual void confuse(int strength) = 0;
     virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
-    virtual void drain_stat(int stat, int amount) { }
+    virtual void drain_stat(int stat, int amount, actor* attacker) { }
+    virtual void put_to_sleep(int power = 0) { };
+    virtual void check_awaken(int disturbance) = 0;
 
     virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
@@ -185,6 +196,10 @@ public:
     {
         return (true);
     }
+
+    virtual bool     will_trigger_shaft() const;
+    virtual level_id shaft_dest() const;
+    virtual bool     do_shaft() = 0;
 };
 
 struct coord_def
@@ -326,6 +341,7 @@ struct delay_queue_item
     int         duration;
     int         parm1;
     int         parm2;
+    bool        started;
 };
 
 
@@ -350,6 +366,8 @@ struct item_def
 
     std::string inscription;
 
+    CrawlHashTable props;
+
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
                  special(0L), colour(0), flags(0L), quantity(0),
@@ -361,10 +379,14 @@ public:
     std::string name(description_level_type descrip,
                      bool terse = false, bool ident = false,
                      bool with_inscription = true,
-                     bool quantity_in_words = false) const;
+                     bool quantity_in_words = false,
+                     unsigned long ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
     int  book_number() const;
+    int zap() const; // what kind of beam it shoots (if wand).
+                     // XXX should really return zap_type!
+    
 
     // Returns index in mitm array. Results are undefined if this item is
     // not in the array!
@@ -380,7 +402,8 @@ public:
     }
 private:
     std::string name_aux( description_level_type desc,
-                          bool terse, bool ident ) const;
+                          bool terse, bool ident,
+                          unsigned long ignore_flags ) const;
 };
 
 class runrest
@@ -475,18 +498,23 @@ typedef std::vector<delay_queue_item> delay_queue_type;
 
 class KillMaster;
 
+
+
 class player : public actor
 {
 public:
   bool turn_is_over; // flag signaling that player has performed a timed action
-
+  
   // If true, player is headed to the Abyss.
   bool banished;
   std::string banished_by;
 
+  std::vector<int> beheld_by; // monsters beholding player
+
   bool just_autoprayed;         // autopray just kicked in
     
-  unsigned char prev_targ;
+  unsigned short prev_targ;
+  coord_def     prev_grd_targ;
   char your_name[kNameLen];
 
   species_type species;
@@ -575,7 +603,7 @@ public:
   char spell_no;
   game_direction_type char_direction;
 
-  unsigned char pet_target;
+  unsigned short pet_target;
 
   int your_level; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
@@ -618,6 +646,9 @@ public:
 
   level_area_type level_type;
   std::string level_type_name;
+
+  entry_cause_type entry_cause;
+  god_type         entry_cause_god;
 
   branch_type where_are_you;
 
@@ -726,11 +757,16 @@ public:
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
+    bool      can_pass_through(const dungeon_feature_type grid) const;
+    bool      can_pass_through(const int x, const int y) const;
+    bool      can_pass_through(const coord_def &c) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    int       body_weight() const;
+    int       total_weight() const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
-    bool      has_claws() const;
-    bool      has_usable_claws() const;
+    int       has_claws(bool allow_tran = true) const;
+    bool      has_usable_claws(bool allow_tran = true) const;
     item_def *weapon(int which_attack = -1);
     item_def *shield();
 
@@ -749,7 +785,7 @@ public:
     void banish(const std::string &who = "");
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
-    void drain_stat(int stat, int amount);
+    void drain_stat(int stat, int amount, actor* attacker);
 
     void expose_to_element(beam_type element, int strength = 0);
     void god_conduct(conduct_type thing_done, int level);
@@ -776,14 +812,24 @@ public:
     int res_elec() const;
     int res_poison() const;
     int res_negative_energy() const;
+    bool confusable() const;
+    bool slowable() const;
 
-    bool is_levitating() const;    
+    bool omnivorous() const;
+
     flight_type flight_mode() const;
 
     bool paralysed() const;
     bool confused() const;
     bool caught() const;
     bool backlit() const;
+
+    bool asleep() const;
+    void put_to_sleep(int power = 0);
+    void awake();
+    void check_awaken(int disturbance);
+
+    bool cannot_act() const;
 
     bool can_throw_rocks() const;
 
@@ -814,6 +860,8 @@ public:
     // modify the player object.
     std::vector<PlaceInfo> get_all_place_info(bool visited_only = false,
                                               bool dungeon_only = false) const;
+
+    bool do_shaft();
 };
 
 extern player you;
@@ -841,7 +889,6 @@ public:
 };
 
 class ghost_demon;
-class level_id;
 
 class mon_enchant
 {
@@ -913,6 +960,7 @@ public:
     mon_attitude_type attitude;
     beh_type behaviour;
     unsigned int foe;
+    char ench_countdown;
     mon_enchant_list enchantments;
     unsigned long flags;               // bitfield of boolean flags
 
@@ -926,6 +974,9 @@ public:
     god_type god;                      // Usually GOD_NO_GOD.
 
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
+
+    std::string seen_context;          // Non-standard context for
+                                       // AI_SEE_MONSTER
 
 public:
     void init_experience();
@@ -984,7 +1035,12 @@ public:
     bool      submerged() const;
     bool      can_drown() const;
     bool      floundering() const;
+    bool      can_pass_through(const dungeon_feature_type grid) const;
+    bool      can_pass_through(const int x, const int y) const;
+    bool      can_pass_through(const coord_def &c) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    int       body_weight() const;
+    int       total_weight() const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
 
@@ -1046,8 +1102,8 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    bool is_levitating() const;
     flight_type flight_mode() const;
+    bool is_levitating() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const ;
@@ -1075,6 +1131,9 @@ public:
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
 
+    void put_to_sleep(int power = 0);
+    void check_awaken(int disturbance);
+
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
     
@@ -1091,6 +1150,8 @@ public:
     std::string describe_enchantments() const;
 
     static int base_speed(int mcls);
+
+    bool do_shaft();
 
 private:
     void init_with(const monsters &mons);
@@ -1123,6 +1184,7 @@ struct cloud_struct
     int           y;
     cloud_type    type;
     int           decay;
+    unsigned char spread_rate;
     kill_category whose;
 
     killer_type beam_thrower() const;
@@ -1178,6 +1240,8 @@ public:
     map_marker *find(map_marker_type type);
     void move(const coord_def &from, const coord_def &to);
     std::vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
+    std::vector<map_marker*> get_all(const std::string &key,
+                                     const std::string &val = "");
     std::vector<map_marker*> get_markers_at(const coord_def &c);
     std::string property_at(const coord_def &c, map_marker_type type,
                             const std::string &key);
@@ -1208,9 +1272,9 @@ public:
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
 
     feature_grid                             grid;  // terrain grid
-    FixedArray< unsigned char, GXM, GYM >    mgrid; // monster grid
+    FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
-    FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid
+    FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
 
     FixedArray< map_cell, GXM, GYM >        map;    // discovered terrain
@@ -1219,6 +1283,11 @@ public:
                                              show;      // view window char 
     FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
                                              show_col;  // view window colour
+
+    // What would be visible, if all of the translucent wall were
+    // made opaque.
+    FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+                                             no_trans_show;
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     unsigned char cloud_no;
@@ -1233,6 +1302,10 @@ public:
 
     // Number of turns the player has spent on this level.
     int turns_on_level;
+
+    // Flags for things like preventing teleport control; see
+    // level_flag_type in enum.h
+    unsigned long level_flags;
 };
 
 extern struct crawl_environment env;
@@ -1294,6 +1367,7 @@ struct sound_mapping
 
 struct colour_mapping
 {
+    std::string tag;
     text_pattern pattern;
     int colour;
 };
@@ -1401,6 +1475,8 @@ public:
     bool        messaging;      // Check for messages.
 #endif
 
+    bool        suppress_startup_errors;
+
     bool        mouse_input;
     
     int         view_max_width;
@@ -1435,19 +1511,15 @@ public:
     bool        colour_map;     // add colour to the map
     bool        clean_map;      // remove unseen clouds/monsters
     bool        show_uncursed;  // label known uncursed items as "uncursed"
-    bool        always_greet;   // display greeting message when reloading
     bool        easy_open;      // open doors with movement
     bool        easy_unequip;   // allow auto-removing of armour / jewelry
     bool        easy_butcher;   // open doors with movement
-    bool        increasing_skill_progress; // skills go from 0-10 or 10-0
-    bool        confirm_self_target; // require confirmation before selftarget
+    bool        always_confirm_butcher;    // even if only one corpse
     bool        default_target;  // start targeting on a real target
-    bool        safe_autopickup; // don't autopickup when monsters visible
     bool        autopickup_no_burden; // don't autopickup if it changes burden
     bool        note_all_skill_levels; // take note for all skill levels (1-27)
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
-    bool        use_notes;      // take (and dump) notes
     std::string user_note_prefix; // Prefix for user notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
@@ -1466,7 +1538,6 @@ public:
     int         magic_point_warning;    // percentage mp for danger warning
     char        race;           // preselected race
     char        cls;            // preselected class
-    bool        terse_hand;     // use terse description for wielded item
     bool        delay_message_clear; // avoid clearing messages each turn
     unsigned    friend_brand;   // Attribute for branding friendly monsters
     bool        no_dark_brand;  // Attribute for branding friendly monsters
@@ -1479,7 +1550,6 @@ public:
     bool        auto_list;      // automatically jump to appropriate item lists
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
-    bool        lowercase_invocations;          // prefer lowercase invocations
 
     char_set_type  char_set;
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
@@ -1570,7 +1640,6 @@ public:
     std::vector<std::string> dump_order;
 
     bool        level_map_title;    // Show title in level map
-    bool        safe_zero_exp; // If true, you feel safe around 0xp monsters
     bool        target_zero_exp;    // If true, targeting targets zero-exp
                                     // monsters.
     bool        target_wrap;        // Wrap around from last to first target

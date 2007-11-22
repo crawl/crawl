@@ -2,7 +2,7 @@
  *  File:       cio.h
  *  Summary:    System independent console IO functions 
  *
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-06-14T18:14:26.828542Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef CIO_H

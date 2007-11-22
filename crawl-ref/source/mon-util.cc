@@ -294,7 +294,8 @@ bool mons_class_flag(int mc, int bf)
     return ((me->bitfields & bf) != 0);
 }                               // end mons_class_flag()
 
-static int scan_mon_inv_randarts( const monsters *mon, int ra_prop )
+static int scan_mon_inv_randarts( const monsters *mon,
+                                  randart_prop_type ra_prop)
 {
     int ret = 0;
 
@@ -367,6 +368,17 @@ bool mons_class_is_stationary(int type)
 bool mons_is_stationary(const monsters *mons)
 {
     return (mons_class_is_stationary(mons->type));
+}
+
+bool mons_class_is_confusable(int mc)
+{
+    return (smc->resist_magic < MAG_IMMUNE
+            && mons_intel(mc) > I_PLANT);
+}
+
+bool mons_class_is_slowable(int mc)
+{
+    return (smc->resist_magic < MAG_IMMUNE);
 }
 
 // returns whether a monster is non-solid
@@ -476,6 +488,11 @@ bool mons_is_humanoid( int mc )
     case '@':   // adventuring humans
     case 'T':   // trolls
         return (true);
+
+    case 'm':   // merfolk
+        if (mc == MONS_MERFOLK || mc == MONS_MERMAID)
+            return (true);
+        return (false);
 
     case 'g':   // goblines, hobgoblins, gnolls, boggarts -- but not gargoyles
         if (mc != MONS_GARGOYLE
@@ -1479,6 +1496,7 @@ void define_monster(monsters &mons)
 
     // reset monster enchantments
     mons.enchantments.clear();
+    mons.ench_countdown = 0;
 }                               // end define_monster()
 
 static std::string str_monam(const monsters& mon, description_level_type desc,
@@ -1962,6 +1980,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     bool ret = false;
     int intel, est_magic_resist, power, diff;
 
+    const actor *foe = mon->get_foe();
     // Eventually, we'll probably want to be able to have monsters 
     // learn which of their elemental bolts were resisted and have those 
     // handled here as well. -- bwr
@@ -1969,11 +1988,10 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     {
     case SPELL_BACKLIGHT:
     {
-        const actor *foe = mon->get_foe();
-        ret = !foe || foe->backlit() || foe->invisible();
+        ret = !foe || foe->backlit();
         break;
     }
-        
+
     case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
             ret = true;
@@ -2021,6 +2039,10 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_BANISHMENT:
     case SPELL_DISINTEGRATE:
     case SPELL_PARALYSE:
+    case SPELL_SLEEP:
+        if (monspell == SPELL_SLEEP && (!foe || foe->asleep()))
+            return (true);
+        
         // occasionally we don't estimate... just fire and see:
         if (one_chance_in(5))
             return (false);
@@ -2039,9 +2061,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             if (mon->foe == MHITYOU)
                 est_magic_resist = player_res_magic();
             else
-            {
                 est_magic_resist = mons_resist_magic(&menv[mon->foe]);
-            }
 
             // now randomize (normal intels less accurate than high):
             if (intel == I_NORMAL)
@@ -2166,6 +2186,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
             case MONS_EROLCHA:
             case MONS_ERICA:
             case MONS_TIAMAT:
+            case MONS_MERMAID:
                 gender = GENDER_FEMALE;
                 break;
             default:
@@ -2307,7 +2328,7 @@ monsters::monsters()
       target_x(0), target_y(0), inv(), spells(), attitude(ATT_HOSTILE),
       behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
       experience(0), number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
-      ghost()
+      ghost(), seen_context("")
 {
 }
 
@@ -2383,6 +2404,36 @@ bool monsters::floundering() const
             && !mons_flies(this));
 }
 
+bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
+{
+    // Permanent walls can't be passed through.
+    if (grid == DNGN_CLEAR_PERMAROCK_WALL || grid == DNGN_PERMAROCK_WALL)
+        return false;
+
+    switch (mclass)
+    {
+    case MONS_ROCK_WORM:
+        return (!grid_is_solid(grid) || grid_is_rock(grid));
+    }
+
+    return !grid_is_solid(grid);
+}
+
+bool monsters::can_pass_through(const dungeon_feature_type grid) const
+{
+    return mons_class_can_pass(type, grid);
+}
+
+bool monsters::can_pass_through(const int _x, const int _y) const
+{
+    return can_pass_through(grd[_x][_y]);
+}
+
+bool monsters::can_pass_through(const coord_def &c) const
+{
+    return can_pass_through(grd(c));
+}
+
 bool monsters::can_drown() const
 {
     // Mummies can fall apart in water; ghouls and demons can drown in
@@ -2397,6 +2448,145 @@ size_type monsters::body_size(int /* psize */, bool /* base */) const
 {
     const monsterentry *e = get_monster_data(type);
     return (e? e->size : SIZE_MEDIUM);
+}
+
+int monsters::body_weight() const
+{
+    int mclass = type;
+
+    switch(mclass)
+    {
+    case MONS_SPECTRAL_THING:
+    case MONS_SPECTRAL_WARRIOR:
+    case MONS_ELECTRIC_GOLEM:
+    case MONS_RAKSHASA_FAKE:
+        return 0;
+
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
+        mclass = number;
+        break;
+    default:
+        break;
+    }
+
+    int weight = mons_weight(mclass);
+
+    // Water elementals are "insubstantial", but still have weight.
+    if (weight == 0 && type == MONS_WATER_ELEMENTAL)
+        weight = 1500;
+
+    // weight == 0 in the monster entry indicates "no corpse".  Can't
+    // use CE_NOCORPSE, because the corpse-effect field is used for
+    // corpseless monsters to indicate what happens if their blood
+    // is sucked.  Grrrr.
+    if (weight == 0 && !mons_is_insubstantial(type))
+    {
+        const monsterentry *entry = get_monster_data(mclass);
+        switch(entry->size)
+        {
+        case SIZE_TINY:
+            weight = 150;
+            break;
+        case SIZE_LITTLE:
+            weight = 300;
+            break;
+        case SIZE_SMALL:
+            weight = 425;
+            break;
+        case SIZE_MEDIUM:
+            weight = 550;
+            break;
+        case SIZE_LARGE:
+            weight = 1300;
+            break;
+        case SIZE_BIG:
+            weight = 1500;
+            break;
+        case SIZE_GIANT:
+            weight = 1800;
+            break;
+        case SIZE_HUGE:
+            weight = 2200;
+            break;
+        default:
+            mpr("ERROR: invalid monster body weight");
+            perror("monsters::body_weight(): invalid monster body weight");
+            end(0);
+        }
+
+        switch(mclass)
+        {
+        case MONS_IRON_DEVIL:
+            weight += 550;
+            break;
+
+        case MONS_STONE_GOLEM:
+        case MONS_EARTH_ELEMENTAL:
+        case MONS_CRYSTAL_GOLEM:
+            weight *= 2;
+            break;
+
+        case MONS_IRON_DRAGON:
+        case MONS_IRON_GOLEM:
+            weight *= 3;
+            break;
+
+        case MONS_QUICKSILVER_DRAGON:
+        case MONS_SILVER_STATUE:
+            weight *= 4;
+            break;
+
+        case MONS_WOOD_GOLEM:
+            weight *= 2;
+            weight /= 3;
+            break;
+
+        case MONS_FLYING_SKULL:
+        case MONS_CURSE_SKULL:
+        case MONS_SKELETAL_DRAGON:
+        case MONS_SKELETAL_WARRIOR:
+            weight /= 2;
+            break;
+
+        case MONS_SHADOW_FIEND:
+        case MONS_SHADOW_IMP:
+        case MONS_SHADOW_DEMON:
+            weight /= 3;
+            break;
+        }
+
+        switch(monster_symbols[mclass].glyph)
+        {
+        case 'L':
+            weight /= 2;
+            break;
+
+        case 'p':
+            weight = 0;
+            break;
+        }
+    }
+
+    if (type == MONS_SKELETON_SMALL || type == MONS_SKELETON_LARGE)
+        weight /= 2;
+
+    return (weight);
+}
+
+int monsters::total_weight() const
+{
+    int burden = 0;
+
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        if (inv[i] != NON_ITEM)
+            burden += item_mass(mitm[inv[i]]) * mitm[inv[i]].quantity;
+
+    return (body_weight() + burden);
 }
 
 int monsters::damage_type(int which_attack)
@@ -2523,7 +2713,8 @@ void monsters::equip_weapon(item_def &item, int near)
 {
     if (need_message(near))
         mprf("%s wields %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A).c_str());
+             item.name(DESC_NOCAP_A, false, false, true,
+                       false, ISFLAG_CURSED).c_str());
 
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
@@ -2581,14 +2772,19 @@ void monsters::equip_armour(item_def &item, int near)
         mprf("%s wears %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A).c_str());
 
-    ac += property( item, PARM_AC );
+    const equipment_type eq = get_armour_slot(item);
+    if (eq != EQ_SHIELD)
+    {
+        ac += property( item, PARM_AC );
 
-    const int armour_plus = item.plus;
-    ASSERT(abs(armour_plus) < 20);
-    if (abs(armour_plus) < 20) 
-        ac += armour_plus;
+        const int armour_plus = item.plus;
+        ASSERT(abs(armour_plus) < 20);
+        if (abs(armour_plus) < 20)
+            ac += armour_plus;
+    }
+
+    // Shields can affect evasion.
     ev += property( item, PARM_EVASION ) / 2;
-        
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
 }
@@ -2612,7 +2808,8 @@ void monsters::unequip_weapon(item_def &item, int near)
 {
     if (need_message(near))
         mprf("%s unwields %s.", name(DESC_CAP_THE).c_str(),
-             item.name(DESC_NOCAP_A).c_str());
+             item.name(DESC_NOCAP_A, false, false, true,
+                       false, ISFLAG_CURSED).c_str());
 
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
@@ -2657,14 +2854,18 @@ void monsters::unequip_armour(item_def &item, int near)
         mprf("%s takes off %s.", name(DESC_CAP_THE).c_str(),
              item.name(DESC_NOCAP_A).c_str());
 
-    ac -= property( item, PARM_AC );
+    const equipment_type eq = get_armour_slot(item);
+    if (eq != EQ_SHIELD)
+    {
+        ac -= property( item, PARM_AC );
 
-    const int armour_plus = item.plus;
-    ASSERT(abs(armour_plus) < 20);
-    if (abs(armour_plus) < 20) 
-        ac -= armour_plus;
+        const int armour_plus = item.plus;
+        ASSERT(abs(armour_plus) < 20);
+        if (abs(armour_plus) < 20) 
+            ac -= armour_plus;
+    }
+    
     ev -= property( item, PARM_EVASION ) / 2;
-        
     if (ev < 1)
         ev = 1;   // This *shouldn't* happen.
 }
@@ -2699,8 +2900,11 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
 
 void monsters::lose_pickup_energy()
 {
-    if (speed_increment > 25 && speed < speed_increment)
-        speed_increment -= speed;
+    monsterentry* entry = get_monster_data(type);
+    int           delta = speed * entry->energy_usage.pickup_percent / 100;
+
+    if (speed_increment > 25 && delta < speed_increment)
+        speed_increment -= delta;
 }
 
 void monsters::pickup_message(const item_def &item, int near)
@@ -2718,6 +2922,11 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
     {
         if (items_stack(item, mitm[inv[slot]], force_merge))
         {
+            dungeon_events.fire_position_event(
+                dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
+                          monster_index(this)),
+                pos());
+
             pickup_message(item, near);
             inc_mitm_item_quantity( inv[slot], item.quantity );
             destroy_item(item.index());
@@ -2727,6 +2936,11 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
         }
         return (false);
     }
+
+    dungeon_events.fire_position_event(
+        dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
+                  monster_index(this)),
+        pos());
     
     const int index = item.index();
     unlink_item(index);
@@ -2909,6 +3123,17 @@ bool monsters::wants_armour(const item_def &item) const
     return (!mslot_item(MSLOT_ARMOUR));
 }
 
+static mon_inv_type equip_slot_to_mslot(equipment_type eq)
+{
+    switch (eq)
+    {
+    case EQ_WEAPON: return MSLOT_WEAPON;
+    case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
+    case EQ_SHIELD: return MSLOT_SHIELD;
+    default: return (NUM_MONSTER_SLOTS);
+    }
+}
+
 bool monsters::pickup_armour(item_def &item, int near, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -2916,21 +3141,27 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     if (!force && !wants_armour(item))
         return (false);
 
-    // XXX: Monsters can only equip body armour (as of 0.3).
-    if (get_armour_slot(item) != EQ_BODY_ARMOUR)
+    const equipment_type eq = get_armour_slot(item);
+    // XXX: Monsters can only equip body armour and shields (as of 0.4).
+    // They can still be forced to wear stuff - this is needed for bardings.
+    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
         return (false);
 
+    const mon_inv_type mslot = equip_slot_to_mslot(eq);
+    if (mslot == NUM_MONSTER_SLOTS)
+        return false;
+
     // XXX: Very simplistic armour evaluation for the moment.
-    if (const item_def *existing_armour = slot_item(EQ_BODY_ARMOUR))
+    if (const item_def *existing_armour = slot_item(eq))
     {
         if (!force && existing_armour->armour_rating() >= item.armour_rating())
             return (false);
 
-        if (!drop_item(MSLOT_ARMOUR, near))
+        if (!drop_item(mslot, near))
             return (false);
     }
 
-    return pickup(item, MSLOT_ARMOUR, near);
+    return pickup(item, mslot, near);
 }
 
 bool monsters::pickup_weapon(item_def &item, int near, bool force)
@@ -3087,7 +3318,10 @@ void monsters::swap_weapons(int near)
 
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)
-        speed_increment -= 2;
+    {
+        monsterentry *entry = get_monster_data(type);
+        speed_increment -= div_rand_round(entry->energy_usage.attack, 5);
+    }
 }
 
 void monsters::wield_melee_weapon(int near)
@@ -3098,16 +3332,6 @@ void monsters::wield_melee_weapon(int near)
         const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
         if (alt && (!weap || !is_range_weapon(*alt)))
             swap_weapons(near);
-    }
-}
-
-static mon_inv_type equip_slot_to_mslot(equipment_type eq)
-{
-    switch (eq)
-    {
-    case EQ_WEAPON: return MSLOT_WEAPON;
-    case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
-    default: return (NUM_MONSTER_SLOTS);
     }
 }
 
@@ -3124,7 +3348,7 @@ item_def *monsters::mslot_item(mon_inv_type mslot) const
 
 item_def *monsters::shield()
 {
-    return (NULL);
+    return (mslot_item(MSLOT_SHIELD));
 }
 
 std::string monsters::name(description_level_type desc) const
@@ -3171,9 +3395,7 @@ bool monsters::fumbles_attack(bool verbose)
     {
         if (verbose)
         {
-            const bool player_can_see =
-                mons_near(this) && player_monster_visible(this);
-            if (player_can_see)
+            if (you.can_see(this))
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
@@ -3266,12 +3488,11 @@ bool monsters::caught() const
 
 int monsters::shield_bonus() const
 {
-    // XXX: Monsters don't actually get shields yet.
     const item_def *shld = const_cast<monsters*>(this)->shield();
     if (shld)
     {
         const int shld_c = property(*shld, PARM_AC);
-        return (random2(shld_c + random2(hit_dice / 2)) / 2);
+        return (random2(1 + shld_c) + random2(hit_dice / 2));
     }
     return (-100);
 }
@@ -3349,6 +3570,7 @@ flight_type monsters::flight_mode() const
 
 bool monsters::is_levitating() const
 {
+    // Checking class flags is not enough - see mons_flies.
     return (flight_mode() == FL_LEVITATE);
 }
 
@@ -3507,6 +3729,7 @@ void monsters::ghost_init()
 
     inv.init(NON_ITEM);
     enchantments.clear();
+    ench_countdown = 0;
 
     find_place_to_live();
 }
@@ -3611,6 +3834,7 @@ void monsters::reset()
     destroy_inventory();
     
     enchantments.clear();
+    ench_countdown = 0;
     inv.init(NON_ITEM);
 
     flags = 0;
@@ -3759,7 +3983,7 @@ bool monsters::add_ench(const mon_enchant &ench)
     return (true);
 }
 
-void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
+void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 {
     // check for slow/haste
     switch (ench.ench)
@@ -3774,6 +3998,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
+
         break;
 
     case ENCH_SLOW:
@@ -3781,8 +4006,15 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
+
         break;
 
+    case ENCH_SUBMERGED:
+        if (type == MONS_AIR_ELEMENTAL && mons_near(this) && !quiet)
+            mprf("%s merges itself into the air.",
+                 name(DESC_CAP_A, true).c_str() );
+        break;
+        
     case ENCH_CHARM:
         behaviour = BEH_SEEK;
         target_x = you.x_pos;
@@ -3821,6 +4053,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
+
         break;
 
     case ENCH_SLOW:
@@ -3828,6 +4061,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
+
         break;
 
     case ENCH_PARALYSIS:
@@ -3927,6 +4161,36 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer berserk.");
 
         monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
+        break;
+
+    case ENCH_SUBMERGED:
+        if (you.can_see(this))
+        {
+            if (!mons_is_safe( static_cast<const monsters*>(this))
+                && is_run_delay(current_delay_action()))
+            {
+                // Already set somewhere else.
+                if (seen_context != "")
+                    return;
+
+                if (type == MONS_AIR_ELEMENTAL)
+                    seen_context = "thin air";
+                else if (monster_habitable_grid(this, DNGN_FLOOR))
+                    seen_context = "bursts forth";
+                else
+                    seen_context = "surfaces";
+            }
+            else if (!quiet)
+                if (type == MONS_AIR_ELEMENTAL)
+                    mprf("%s forms itself from the air!",
+                         name(DESC_CAP_A, true).c_str() );
+        }
+        else if (mons_near(this) && monster_habitable_grid(this, DNGN_FLOOR))
+        {
+            mpr("Something invisble bursts forth from the water.");
+            interrupt_activity( AI_FORCE_INTERRUPT );
+        }
+
         break;
 
     default:
@@ -4067,18 +4331,20 @@ std::string monsters::describe_enchantments() const
     return (oss.str());
 }
 
-// used to adjust time durations in handle_enchantment() for monster speed
+// used to adjust time durations in calc_duration() for monster speed
 static inline int mod_speed( int val, int speed )
 {
     if (!speed)
-        speed = you.time_taken;
+        speed = 10;
     const int modded = (speed ? (val * 10) / speed : val);
     return (modded? modded : 1);
 }
 
 bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 {
-    const int spd = speed == 0? you.time_taken : speed;
+    // Faster monsters can wiggle out of the net more quickly.
+    const int spd = (me.ench == ENCH_HELD) ? speed :
+                                             10;
     const int actdur = speed_to_duration(spd);
     if (lose_ench_duration(me, actdur))
         return (true);
@@ -4113,7 +4379,7 @@ bool monsters::decay_enchantment(const mon_enchant &me, bool decay_degree)
 
 void monsters::apply_enchantment(const mon_enchant &me)
 {
-    const int spd = speed == 0? you.time_taken : speed;
+    const int spd = 10;
     switch (me.ench)
     {
     case ENCH_BERSERK:
@@ -4173,8 +4439,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
         
         // the enchantment doubles as the durability of a net
         // the more corroded it gets, the more easily it will break
-        int hold = mitm[net].plus; // this will usually be negative
-        int mon_size = body_size(PSIZE_BODY);
+        const int hold = mitm[net].plus; // this will usually be negative
+        const int mon_size = body_size(PSIZE_BODY);
             
         // smaller monsters can escape more quickly
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
@@ -4244,7 +4510,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // berserking doubles damage dealt
             if (has_ench(ENCH_BERSERK))
                 damage *= 2;
-                
+
+            // Faster monsters can damage the net more often per
+            // time period.
+            if (speed != 0)
+                damage = div_rand_round(damage * speed, spd);
+
             mitm[net].plus -= damage;
             
             if (mitm[net].plus < -7)
@@ -4307,13 +4578,11 @@ void monsters::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_SUBMERGED); // forced to surface
         else if (hit_points <= max_hit_points / 2)
             break;
-        else if (((type == MONS_ELECTRICAL_EEL
-                   || type == MONS_LAVA_SNAKE)
-                  && (random2(1000) < mod_speed( 20, spd )
-                      || (mons_near(this) 
-                          && hit_points == max_hit_points
-                          && !one_chance_in(10))))
-                 || random2(2000) < mod_speed(10, spd)
+        else if (((type == MONS_ELECTRICAL_EEL || type == MONS_LAVA_SNAKE)
+                  && (one_chance_in(50) || (mons_near(this) 
+                                            && hit_points == max_hit_points
+                                            && !one_chance_in(10))))
+                 || one_chance_in(200)
                  || (mons_near(this)
                      && hit_points == max_hit_points
                      && !one_chance_in(5)))
@@ -4324,7 +4593,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     }
     case ENCH_POISON:
     {
-        int poisonval = me.degree;
+        const int poisonval = me.degree;
         int dam = (poisonval >= 4) ? 1 : 0;
 
         if (coinflip())
@@ -4332,12 +4601,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (mons_res_poison(this) < 0)
             dam += roll_dice( 2, poisonval ) - 1;
-
-        // We adjust damage for monster speed (since this is applied 
-        // only when the monster moves), and we handle the factional
-        // part as well (so that speed 30 creatures will take damage).
-        dam *= 10;
-        dam = (dam / spd) + ((random2(spd) < (dam % spd)) ? 1 : 0);
 
         if (dam > 0)
         {
@@ -4362,8 +4625,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     }
     case ENCH_ROT:
     {
-        if (hit_points > 1 
-                 && random2(1000) < mod_speed( 333, spd ))
+        if (hit_points > 1 && one_chance_in(3))
         {
             hurt_monster(this, 1);
             if (hit_points < max_hit_points && coinflip())
@@ -4381,12 +4643,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (mons_res_fire( this ) < 0)
             dam += roll_dice( 2, 5 ) - 1;
-
-        // We adjust damage for monster speed (since this is applied 
-        // only when the monster moves), and we handle the factional
-        // part as well (so that speed 30 creatures will take damage).
-        dam *= 10;
-        dam = (dam / spd) + ((random2(spd) < (dam % spd)) ? 1 : 0);
 
         if (dam > 0)
         {
@@ -4416,16 +4672,13 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_GLOWING_SHAPESHIFTER:     // this ench never runs out
         // number of actions is fine for shapeshifters
-        if (type == MONS_GLOWING_SHAPESHIFTER 
-            || random2(1000) < mod_speed( 250, spd ))
-        {
+        if (type == MONS_GLOWING_SHAPESHIFTER || one_chance_in(4))
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
-        }
         break;
 
     case ENCH_SHAPESHIFTER:     // this ench never runs out
         if (type == MONS_SHAPESHIFTER 
-            || random2(1000) < mod_speed( 1000 / ((15 * hit_dice) / 5), spd ))
+            || random2(1000) < ( 1000 / ((15 * hit_dice) / 5)))
         {
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
         }
@@ -4666,10 +4919,11 @@ bool monsters::can_see(const actor *target) const
     int       tx  = mon->x;
     int       ty  = mon->y;
 
-    // Assume we can see any monster within LOS radius. This is inaccurate,
-    // but can be followed up with a tracer if essential. Trunk does full
-    // (expensive) ray tracing up front to figure this out.
-    return (distance(x, y, tx, ty) <= LOS_RADIUS * LOS_RADIUS);
+    if (distance(x, y, tx, ty) > LOS_RADIUS * LOS_RADIUS)
+        return false;
+
+    // Ignoring clouds for now.
+    return (num_feats_between(x, y, tx, ty, DNGN_UNSEEN, DNGN_MAXOPAQUE) == 0);
 }
 
 void monsters::mutate()
@@ -4713,6 +4967,82 @@ void monsters::apply_location_effects()
 
     if (alive())
         mons_check_pool(this);
+
+    if (alive() && has_ench(ENCH_SUBMERGED)
+        && !monster_can_submerge(type, grd[x][y]))
+    {
+        del_ench(ENCH_SUBMERGED);
+    }
+}
+
+// returns true if the trap should be revealed to the player
+bool monsters::do_shaft()
+{
+    if (!is_valid_shaft_level())
+        return (false);
+
+    // Handle instances of do_shaft() being invoked magically when
+    // the monster isn't standing over a shaft.
+    if (trap_type_at_xy(x, y) != TRAP_SHAFT)
+    {
+        switch(grd[x][y])
+        {
+        case DNGN_FLOOR:
+        case DNGN_OPEN_DOOR:
+        case DNGN_TRAP_MECHANICAL:
+        case DNGN_TRAP_MAGICAL:
+        case DNGN_TRAP_NATURAL:
+        case DNGN_UNDISCOVERED_TRAP:
+        case DNGN_ENTER_SHOP:
+            break;
+
+        default:
+            return (false);
+        }
+
+        if (airborne() || total_weight() == 0)
+        {
+            if (mons_near(this))
+            {
+                if (player_monster_visible(this))
+                    mprf("A shaft briefly opens up underneath %s!",
+                         name(DESC_NOCAP_THE).c_str());
+                else
+                    mpr("A shaft briefly opens up in the floor!");
+            }
+            return (false);
+        }
+    }
+
+    level_id lev = shaft_dest();
+
+    if (lev == level_id::current())
+        return (false);
+
+    set_transit(lev);
+    bool reveal = false;
+    if (simple_monster_message(this, " falls through a shaft!"))
+        reveal = true;;
+
+    // Monster is no longer on this level
+    destroy_inventory();
+    monster_cleanup(this);
+
+    return (reveal);
+}
+
+void monsters::put_to_sleep(int)
+{
+    if (has_ench(ENCH_BERSERK))
+        return;
+    behaviour = BEH_SLEEP;
+    add_ench(ENCH_SLEEPY);
+    add_ench(ENCH_SLEEP_WARY);
+}
+
+void monsters::check_awaken(int)
+{
+    // XXX
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -100,6 +100,28 @@ MAP
 ENDMAP
 
 #############################################################################
+# Hidden exit, and trapped loot
+NAME: labyrinth_hidden_loot
+TAGS: minotaur generate_loot allow_dup
+MONS: minotaur
+NSUBST: d = 1 / %
+SUBST: c : cvv
+MAP
+............
+.cccccccccc.
+.cxxxxdxxxc.
+.cxxxx=xxxc.
+.cxx..U.xxc.
+.cd=U...xxc.
+.cxx...U=dc.
+.cxx.<..xxc.
+.cxxxx+xxxc.
+.cxxxx.xxxc.
+.ccccc+cccc.
+............
+ENDMAP
+
+#############################################################################
 # Mini labyrinth exit
 NAME: labyrinth_mini_lab
 TAGS: minotaur generate_loot allow_dup
@@ -157,7 +179,7 @@ ENDMAP
 #############################################################################
 # Another trapped exit - most evil again! 
 NAME: labyrinth_trapped_2
-TAGS: minotaur allow_dup generate_loot
+TAGS: lab allow_dup generate_loot
 ITEM: potion of porridge
 SHUFFLE: XYZ
 SHUFFLE: GH, LM, fghijklmn, FHIJKLN
