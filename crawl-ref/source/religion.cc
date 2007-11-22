@@ -3478,6 +3478,12 @@ bool god_hates_butchery(god_type god)
     return (god == GOD_ELYVILON);
 }
 
+bool god_protects_from_harm(god_type god)
+{
+    return (god == GOD_ZIN || god == GOD_SHINING_ONE ||
+            god == GOD_ELYVILON || god == GOD_YREDELEMNUL);
+}
+
 void offer_corpse(int corpse)
 {
     // We always give the "good" (piety-gain) message when doing

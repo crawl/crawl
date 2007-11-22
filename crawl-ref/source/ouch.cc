@@ -785,23 +785,15 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
     if (dam > -9000)            // that is, a "death" caused by hp loss {dlb}
     {
-        switch (you.religion)
+        if (god_protects_from_harm(you.religion))
         {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-        case GOD_YREDELEMNUL:
             if (dam >= you.hp
                 && (one_chance_in(10) || you.piety > random2(1000)))
             {
                 simple_god_message( " protects you from harm!" );
                 return;
             }
-            break;
-        default:
-            break;
         }
-
 
         dec_hp( dam, true );
 

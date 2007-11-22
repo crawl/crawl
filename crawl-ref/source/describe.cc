@@ -4281,32 +4281,31 @@ void describe_god( god_type which_god, bool give_title )
         cprintf(EOL EOL "Granted powers:                                                          (Cost)" EOL);
         textcolor(colour);
 
-        // mv: these gods protects you during your prayer (not mentioning XOM)
-        // chance for doing so is (random2(you.piety) >= 30)
+        // mv: some gods can protect you from harm
+        // The chance for doing so is:
+        //     one_chance_in(10) || you.piety > random2(1000)
         // Note that it's not depending on penance.
         // Btw. I'm not sure how to explain such divine protection
         // because god isn't really protecting player - he only sometimes
         // saves his life (probably it shouldn't be displayed at all).
-        // What about this ?
+        // What about this?
         bool have_any = false;
-        if ((which_god == GOD_ZIN
-                || which_god == GOD_SHINING_ONE
-                || which_god == GOD_ELYVILON
-                || which_god == GOD_YREDELEMNUL)
-            && you.piety >= 30)
+
+        if (god_protects_from_harm(which_god))
         {
             have_any = true;
-            cprintf( "%s %s watches over you during prayer." EOL,
-                     god_name(which_god),
-                     (you.piety >= 150) ? "carefully":   // > 4/5
-                     (you.piety >=  90) ? "often" :      // > 2/3
-                                          "sometimes");  // less than 2:3
+            cprintf( "%s %s watches over you." EOL, god_name(which_god),
+                     (you.piety >= 150) ? "carefully":
+                     (you.piety >=  90) ? "often" :
+                     (you.piety >=  30) ? "sometimes" :
+                                          "occasionally");
+        }
 
-            if (which_god == GOD_ZIN)
-            {
-                cprintf("Praying to %s will provide sustenance if starving."
-                        EOL, god_name(which_god));
-            }
+        if (which_god == GOD_ZIN && you.piety >= 30)
+        {
+            have_any = true;
+            cprintf("Praying to %s will provide sustenance if starving."
+                    EOL, god_name(which_god));
         }
 
         if (which_god == GOD_TROG)
