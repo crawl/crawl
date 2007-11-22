@@ -1672,7 +1672,7 @@ void behaviour_event( monsters *mon, int event, int src,
         // will turn monster against <src>, unless they
         // are BOTH friendly and stupid, or else fleeing anyway.
         // Hitting someone over the head, of course,
-        //  always triggers this code.
+        // always triggers this code.
         if ( event == ME_WHACK ||
              ((isFriendly != sourceFriendly || isSmart) &&
               (mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC)))
@@ -1718,7 +1718,7 @@ void behaviour_event( monsters *mon, int event, int src,
         // if player is invisible.
         setTarget = true;
         if (see_grid(mon->x, mon->y))
-           learned_something_new(TUT_FLEEING_MONSTER);
+            learned_something_new(TUT_FLEEING_MONSTER);
         break;
 
     case ME_CORNERED:

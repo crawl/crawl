@@ -1299,13 +1299,14 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-            if (!known)
+            if (!known && thing_done != DID_ATTACK_HOLY)
             {
                 simple_god_message(" did not appreciate that!");
                 break;
             }
             piety_change = -level;
-            penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
+            if (known)
+                penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
             ret = true;
             break;
         default:
@@ -1336,7 +1337,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
                 (victim && mons_species(victim->id()) == MONS_ORC))
             {
                 piety_change = -level;
-                penance = level * 3;
+                if (known)
+                    penance = level * 3;
                 ret = true;
             }
             break;

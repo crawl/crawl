@@ -3925,6 +3925,9 @@ void read_scroll(void)
         beam.ex_size = 2;
         beam.is_explosion = true;
 
+        if (!alreadyknown)
+            beam.effect_known = false;
+
         explosion(beam);
         break;
 
