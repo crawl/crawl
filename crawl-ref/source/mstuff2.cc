@@ -688,7 +688,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                                 monster->x, monster->y, monster->foe, 250 );
             }
         }
-        break;
+        return;
 
     case SPELL_CANTRIP:
     {
