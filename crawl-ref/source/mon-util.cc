@@ -3148,6 +3148,9 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         return (false);
 
     const mon_inv_type mslot = equip_slot_to_mslot(eq);
+    if (mslot == NUM_MONSTER_SLOTS)
+        return false;
+
     // XXX: Very simplistic armour evaluation for the moment.
     if (const item_def *existing_armour = slot_item(eq))
     {
