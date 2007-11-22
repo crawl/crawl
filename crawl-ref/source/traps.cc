@@ -644,12 +644,11 @@ static int damage_or_escape_net(int hold)
         damage += 2;
     else if (you.has_usable_claws())
     {
-        if (you.species == SP_TROLL || you.species == SP_GHOUL)
-            damage += 2;
-        else if (you.mutation[MUT_CLAWS] == 1)
+        int level = you.has_claws();
+        if (level == 1)
             damage += coinflip();
         else
-            damage += you.mutation[MUT_CLAWS] - 1;
+            damage += level - 1;
     }
     
     // Berserkers get a fighting bonus

@@ -6115,23 +6115,28 @@ void player::slow_down(int str)
     ::slow_player( str );
 }
 
-bool player::has_claws() const
+int player::has_claws() const
 {
     // these transformations bring claws with them
     if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
         || attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
     {
-        return true;
+        return 3;
+    }
+
+    // transformations other than these will override claws
+    if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+        && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+        && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+    {
+        return 0;
     }
 
     // these are the only other sources for claws
-    if (species != SP_TROLL && species != SP_GHOUL && !mutation[MUT_CLAWS])
-        return false;
-
-    // transformations other than these will override claws
-    return ( attribute[ATTR_TRANSFORMATION] == TRAN_NONE
-             || attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
-             || attribute[ATTR_TRANSFORMATION] == TRAN_LICH );
+    if (species == SP_TROLL || species == SP_GHOUL)
+        return 3;
+    else
+        return mutation[MUT_CLAWS];
 }
 
 bool player::has_usable_claws() const
