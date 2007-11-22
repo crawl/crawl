@@ -777,7 +777,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_GLOVES)
     {
-        if (you.has_claws() >= 3)
+        if (you.has_claws(false) >= 3)
         {
             if (verbose)
                 mpr( "You can't wear gloves with your huge claws!" );

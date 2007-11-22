@@ -1179,7 +1179,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_GLOVES:
-            if (you.mutation[MUT_CLAWS] >= 3)
+            if (you.has_claws(false) >= 3)
             {
                 if (!quiet)
                     mpr( "You can't wear gloves with your huge claws!" );

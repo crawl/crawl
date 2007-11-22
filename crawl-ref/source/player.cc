@@ -566,7 +566,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
    // not a transformation, but also temporary -> check first
    if (check_mutation)
    {
-       if (you.mutation[MUT_CLAWS] >= 3 && eq == EQ_GLOVES)
+       if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
            return false;
 
        if (eq == EQ_BOOTS
@@ -6115,21 +6115,24 @@ void player::slow_down(int str)
     ::slow_player( str );
 }
 
-int player::has_claws() const
+int player::has_claws(bool allow_tran) const
 {
-    // these transformations bring claws with them
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-        || attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
+    if (allow_tran)
     {
-        return 3;
-    }
+        // these transformations bring claws with them
+        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+            || attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
+        {
+            return 3;
+        }
 
-    // transformations other than these will override claws
-    if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
-        && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
-        && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
-    {
-        return 0;
+        // transformations other than these will override claws
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_STATUE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
+            return 0;
+        }
     }
 
     // these are the only other sources for claws
@@ -6139,9 +6142,9 @@ int player::has_claws() const
         return mutation[MUT_CLAWS];
 }
 
-bool player::has_usable_claws() const
+bool player::has_usable_claws(bool allow_tran) const
 {
-    return (equip[EQ_GLOVES] == -1 && has_claws());
+    return (equip[EQ_GLOVES] == -1 && has_claws(allow_tran));
 }
 
 god_type player::deity() const

@@ -623,7 +623,7 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     if (use_which == EQ_BOOTS && !player_has_feet())
         return (false);
 
-    if (use_which == EQ_GLOVES && you.mutation[MUT_CLAWS] >= 3)
+    if (use_which == EQ_GLOVES && you.has_claws(false) >= 3)
         return (false);
 
     if (!ignore_temporary)

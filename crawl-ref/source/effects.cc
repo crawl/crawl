@@ -862,7 +862,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 
         // mutation specific problems (horns allow caps)
         if (type_wanted == ARM_BOOTS && !player_has_feet()
-            || you.mutation[MUT_CLAWS] >= 3 && type_wanted == ARM_GLOVES)
+            || you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES)
         {
             type_wanted = OBJ_RANDOM;
         }
