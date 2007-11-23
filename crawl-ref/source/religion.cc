@@ -2126,9 +2126,9 @@ static bool tso_retribution()
     {
         if (!player_under_penance() && you.piety > random2(400))
         {
-            god_speaks(you.religion,
-                       "Mortal, I have averted the wrath of "
-                       "the Shining One... this time.");
+            snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
+                           "of %s... this time.", god_name(god));
+            god_speaks(you.religion, info);
         }
         else
         {
@@ -2398,7 +2398,7 @@ static bool beogh_retribution()
         if (!player_under_penance() && you.piety > random2(400))
         {
             snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                     "of %s... this time.", god_name(god));
+                           "of %s... this time.", god_name(god));
             god_speaks(you.religion, info);
         }
         else
@@ -2781,9 +2781,8 @@ bool followers_abandon_you()
 
     if (reconvert) // maybe all of them invisible
     {
-        std::string mesg = god_name(GOD_BEOGH);
-        mesg += " booms out: \"Who do you think you are?\"";
-        god_speaks(GOD_BEOGH, mesg.c_str());
+        simple_god_message("'s voice booms out, \"Who do you think you "
+                           "are?\"", GOD_BEOGH);
 
         if (num_reconvert > 0)
         {
