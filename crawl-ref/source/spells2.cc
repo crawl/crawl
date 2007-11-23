@@ -400,8 +400,8 @@ int animate_a_corpse( int axps, int ayps, beh_type corps_beh, int corps_hit,
     return rc;
 }                               // end animate_a_corpse()
 
-int raise_corpse( int corps, int corx, int cory, 
-                  beh_type corps_beh, int corps_hit, int actual )
+static int raise_corpse( int corps, int corx, int cory,
+                         beh_type corps_beh, int corps_hit, int actual )
 {
     int returnVal = 1;
 
