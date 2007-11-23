@@ -12,8 +12,8 @@ cloud.o \
 command.o \
 database.o \
 debug.o \
-decks.o \
 delay.o \
+decks.o \
 describe.o \
 dgnevent.o \
 direct.o \
@@ -74,9 +74,7 @@ spl-book.o \
 spl-cast.o \
 spl-util.o \
 sqldbm.o \
-state.o \
 stash.o \
-store.o \
 stuff.o \
 tags.o \
 terrain.o \

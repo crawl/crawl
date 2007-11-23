@@ -48,7 +48,6 @@ static int search_order_conj[] = {
     SPELL_STING,
     SPELL_SHOCK,
     SPELL_MAGIC_DART,
-    SPELL_SLEEP,
     SPELL_BACKLIGHT,
     SPELL_NO_SPELL,                        // end search
 };

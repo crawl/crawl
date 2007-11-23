@@ -931,10 +931,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                     "Could not pick up %s here, shall I ignore %s? ",
                     tried_pickup == 1? "an item" : "some items",
                     tried_pickup == 1? "it" : "them");
-            // Make Escape => 'n' and stop run.
-            explicit_keymap map;
-            map[ESCAPE] = 'n';
-            if (yesno(prompt.c_str(), true, 'y', true, false, false, &map))
+            if (yesno(prompt.c_str(), true, 'y', true, false))
             {
                 mark_items_non_pickup_at(you.pos());
                 // Don't stop explore.
@@ -3899,7 +3896,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
     es_flags |= ES_ITEM;
 }
 
-// Expensive O(n^2) duplicate search, but we can live with that.
+// Expensive O(n2) duplicate search, but we can live with that.
 template <class citer> bool explore_discoveries::has_duplicates(
     citer begin, citer end) const
 {

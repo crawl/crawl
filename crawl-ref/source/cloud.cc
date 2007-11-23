@@ -15,33 +15,26 @@
 #include "AppHdr.h"
 #include "externs.h"
 
-#include "branch.h"
 #include "cloud.h"
-#include "mapmark.h"
-#include "misc.h"
-#include "place.h"
 #include "stuff.h"
 #include "terrain.h"
 
 // Returns true if this cloud spreads out as it dissipates.
-static unsigned char actual_spread_rate(cloud_type type, int spread_rate)
+static bool cloud_spreads(const cloud_struct &cloud)
 {
-    if (spread_rate >= 0)
-        return (unsigned char) spread_rate;
-
-    switch (type)
+    switch (cloud.type)
     {
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
-        return 22;
+        return (true);
     default:
-        return 0;
+        return (false);
     }
 }
 
 static void new_cloud( int cloud, cloud_type type, int x, int y, int decay,
-                       kill_category whose, unsigned char spread_rate )
+                       kill_category whose )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
 
@@ -50,13 +43,12 @@ static void new_cloud( int cloud, cloud_type type, int x, int y, int decay,
     env.cloud[ cloud ].x = x;
     env.cloud[ cloud ].y = y;
     env.cloud[ cloud ].whose = whose;
-    env.cloud[ cloud ].spread_rate = spread_rate;
     env.cgrid[ x ][ y ] = cloud;
     env.cloud_no++;
 }
 
 static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
-                            kill_category whose, int spread_rate)
+                            kill_category whose)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -66,7 +58,7 @@ static void place_new_cloud(cloud_type cltype, int x, int y, int decay,
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
         {
-            new_cloud( ci, cltype, x, y, decay, whose, spread_rate );
+            new_cloud( ci, cltype, x, y, decay, whose );
             break;
         }
     }
@@ -98,8 +90,7 @@ static int spread_cloud(const cloud_struct &cloud)
             if (newdecay >= cloud.decay)
                 newdecay = cloud.decay - 1;
 
-            place_new_cloud( cloud.type, x, y, newdecay, cloud.whose,
-                             cloud.spread_rate );
+            place_new_cloud( cloud.type, x, y, newdecay, cloud.whose );
 
             extra_decay += 8;
         }
@@ -113,11 +104,8 @@ static void dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
     // apply calculated rate to the actual cloud:
     cloud.decay -= dissipate;
 
-    if (random2(100) < cloud.spread_rate)
-    {
-        cloud.spread_rate -= div_rand_round(cloud.spread_rate, 10);
+    if (cloud_spreads(cloud) && cloud.decay > 10 && one_chance_in(5))
         cloud.decay -= spread_cloud(cloud);
-    }
 
     // check for total dissipation and handle accordingly:
     if (cloud.decay < 1)
@@ -149,6 +137,10 @@ void manage_clouds(void)
             dissipate *= 4;
         }
 
+        // double the amount when slowed - must be applied last(!):
+        if (you.duration[DUR_SLOW])
+            dissipate *= 2;
+
         dissipate_cloud( cc, env.cloud[cc], dissipate );
     }
 
@@ -167,7 +159,6 @@ void delete_cloud( int cloud )
         env.cloud[ cloud ].x = 0;
         env.cloud[ cloud ].y = 0;
         env.cloud[ cloud ].whose = KC_OTHER;
-        env.cloud[ cloud ].spread_rate = 0;
         env.cgrid[ cloud_x ][ cloud_y ] = EMPTY_CLOUD;
         env.cloud_no--;
     }
@@ -192,12 +183,12 @@ void move_cloud( int cloud, int new_x, int new_y )
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
-                        kill_category whose, int spread_rate )
+                        kill_category whose )
 {
     if (!in_bounds(x, y) || env.cgrid[x][y] != EMPTY_CLOUD)
         return;
 
-    place_cloud( cl_type, x, y, lifetime, whose, spread_rate );
+    place_cloud( cl_type, x, y, lifetime, whose );
 }
 
 int steam_cloud_damage(const cloud_struct &cloud)
@@ -217,7 +208,7 @@ int steam_cloud_damage(const cloud_struct &cloud)
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, int ctarget_x,
                  int ctarget_y, int cl_range,
-                 kill_category whose, int _spread_rate)
+                 kill_category whose)
 {
     int cl_new = -1;
 
@@ -242,8 +233,6 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
             return;
         }
     }
-
-    unsigned char spread_rate = actual_spread_rate( cl_type, _spread_rate );
 
     // too many clouds
     if (env.cloud_no >= MAX_CLOUDS) 
@@ -272,7 +261,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
     // create new cloud
     if (cl_new != -1)
         new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10,
-                   whose, spread_rate );
+                   whose );
     else
     {
         // find slot for cloud
@@ -281,7 +270,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
                 new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10,
-                           whose, spread_rate );
+                           whose );
                 break;
             }
         }
@@ -307,199 +296,6 @@ cloud_type random_smoke_type()
     case 2: return CLOUD_PURP_SMOKE;
     }
     return CLOUD_DEBUGGING;
-}
-
-void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
-                       int x, int y, int size, int power)
-{
-    ASSERT(fm_type >= FM_GEYSER && fm_type < NUM_FOG_MACHINE_TYPES);
-    ASSERT(cl_type > CLOUD_NONE && (cl_type < CLOUD_RANDOM
-                                    || cl_type == CLOUD_DEBUGGING));
-    ASSERT(size  >= 1);
-    ASSERT(power >= 1);
-
-    const char* fog_types[] = {
-        "geyser",
-        "spread",
-        "brownian"
-    };
-
-    try
-    {
-        char buf [160];
-        sprintf(buf, "lua_mapless:fog_machine_%s(\"%s\", %d, %d)",
-                fog_types[fm_type], cloud_name(cl_type).c_str(),
-                size, power);
-
-        map_marker *mark = map_lua_marker::parse_marker(buf, "");
-
-        if (mark == NULL)
-        {
-            mprf(MSGCH_DIAGNOSTICS, "Unable to parse fog machine from '%s'",
-                 buf);
-            return;
-        }
-
-        mark->pos = coord_def(x, y);
-        env.markers.add(mark);
-    }
-    catch (const std::string &err)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Error while making fog machine: %s",
-             err.c_str());
-    }
-}
-
-void place_fog_machine(fog_machine_data data, int x, int y)
-{
-    place_fog_machine(data.fm_type, data.cl_type, x, y, data.size,
-                      data.power);
-}
-
-bool valid_fog_machine_data(fog_machine_data data)
-{
-    if (data.fm_type < FM_GEYSER ||  data.fm_type >= NUM_FOG_MACHINE_TYPES)
-        return false;
-
-    if (data.cl_type <= CLOUD_NONE || (data.cl_type >= CLOUD_RANDOM
-                                       && data.cl_type != CLOUD_DEBUGGING))
-        return false;
-
-    if (data.size < 1 || data.power < 1)
-        return false;
-
-    return true;
-}
-
-int num_fogs_for_place(int level_number, const level_id &place)
-{
-    if (level_number == -1)
-    {
-        switch(place.level_type)
-        {
-        case LEVEL_DUNGEON:
-            level_number = absdungeon_depth(place.branch, place.depth);
-            break;
-        case LEVEL_ABYSS:
-            level_number = 51;
-            break;
-        case LEVEL_PANDEMONIUM:
-            level_number = 52;
-            break;
-        default:
-            level_number = you.your_level;
-        }
-    }
-
-    switch(place.level_type)
-    {
-    case LEVEL_DUNGEON:
-    {
-        Branch &branch = branches[place.branch];
-        ASSERT((branch.num_fogs_function == NULL
-                && branch.rand_fog_function == NULL)
-               || (branch.num_fogs_function != NULL
-                   && branch.rand_fog_function != NULL));
-
-        if (branch.num_fogs_function == NULL)
-            return 0;
-
-        return branch.num_fogs_function(level_number);
-    }
-    case LEVEL_ABYSS:
-        return fogs_abyss_number(level_number);
-    case LEVEL_PANDEMONIUM:
-        return fogs_pan_number(level_number);
-    case LEVEL_LABYRINTH:
-        return fogs_lab_number(level_number);
-    default:
-        return 0;
-    }
-
-    return 0;
-}
-
-fog_machine_data random_fog_for_place(int level_number, const level_id &place)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    if (level_number == -1)
-    {
-        switch(place.level_type)
-        {
-        case LEVEL_DUNGEON:
-            level_number = absdungeon_depth(place.branch, place.depth);
-            break;
-        case LEVEL_ABYSS:
-            level_number = 51;
-            break;
-        case LEVEL_PANDEMONIUM:
-            level_number = 52;
-            break;
-        default:
-            level_number = you.your_level;
-        }
-    }
-
-    switch(place.level_type)
-    {
-    case LEVEL_DUNGEON:
-    {
-        Branch &branch = branches[place.branch];
-        ASSERT(branch.num_fogs_function != NULL
-                && branch.rand_fog_function != NULL);
-        branch.rand_fog_function(level_number, data);
-        return data;
-    }
-    case LEVEL_ABYSS:
-        return fogs_abyss_type(level_number);
-    case LEVEL_PANDEMONIUM:
-        return fogs_pan_type(level_number);
-    case LEVEL_LABYRINTH:
-        return fogs_lab_type(level_number);
-    default:
-        ASSERT(false);
-        return data;
-    }
-
-    ASSERT(false);
-    return data;
-}
-
-int fogs_pan_number(int level_number)
-{
-    return 0;
-}
-
-fog_machine_data fogs_pan_type(int level_number)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    return data;
-}
-
-int fogs_abyss_number(int level_number)
-{
-    return 0;
-}
-
-fog_machine_data fogs_abyss_type(int level_number)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    return data;
-}
-
-int fogs_lab_number(int level_number)
-{
-    return 0;
-}
-
-fog_machine_data fogs_lab_type(int level_number)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    return data;
 }
 
 ////////////////////////////////////////////////////////////////////////

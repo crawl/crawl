@@ -17,8 +17,12 @@
 ---------------------------------------------------------------------------
 
 function sc_safechunk(rot, race, mon)
+    if race == "Ghoul" then
+        return true
+    end
+
     if rot then
-        if you.saprovorous() < 2 then
+        if race ~= "Kobold" and race ~= "Troll" then
             return false
         end
     end
@@ -28,7 +32,7 @@ function sc_safechunk(rot, race, mon)
     end
 
     if sc_hcl[mon] or sc_mut[mon] then
-        return race == "Ghoul"
+        return false
     end
 
     -- Only contaminated and clean chunks remain, in theory. We'll accept

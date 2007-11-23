@@ -1898,7 +1898,7 @@ weapon_sings
 
 @The_weapon@ merrily whistles a melody.
 
-In a hysterical voice, @the_weapon@ strikes up a march.
+In a hysteric voice, @the_weapon@ strikes up a march.
 
 @The_weapon@ sings @several@ chords at once.
 
@@ -1912,7 +1912,7 @@ In a hysterical voice, @the_weapon@ strikes up a march.
 
 @The_weapon@ strikes up a @dance@.
 
-@The_weapon@ intones @an_aria_or_fugue@.
+@The_weapon@ intonates @an_aria_or_fugue@.
 
 @The_weapon@ @nearly_or_clearly@ @hits_or_misses@ the concert pitch.
 

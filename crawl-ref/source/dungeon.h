@@ -299,10 +299,11 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
 bool builder(int level_number, int level_type);
 
+int bazaar_floor_colour(int curr_level);
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
 void dgn_set_colours_from_monsters();
-void dgn_set_grid_colour_at(const coord_def &c, int colour);
+void dgn_set_floor_colours();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(int map, bool generating_level, bool clobber,
@@ -323,11 +324,5 @@ class mons_spec;
 bool dgn_place_monster(const mons_spec &mspec,
                        int monster_level, int vx, int vy,
                        bool generate_awake);
-
-bool set_level_flags(unsigned long flags, bool silent = false);
-bool unset_level_flags(unsigned long flags, bool silent = false);
-
-void dgn_set_lt_callback(std::string level_type_name,
-                         std::string callback_name);
 
 #endif

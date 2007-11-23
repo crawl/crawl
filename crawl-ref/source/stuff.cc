@@ -14,7 +14,6 @@
  */
 
 #include "AppHdr.h"
-#include "cio.h"
 #include "database.h"
 #include "direct.h"
 #include "message.h"
@@ -444,11 +443,9 @@ void cio_init()
     crawl_view.init_geometry();
 
     if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
-    {
-        crawl_state.add_startup_error(
-            "Unicode glyphs are not available, falling back to ASCII.");
-        Options.char_set = CSET_ASCII;
-    }
+        end(1, false,
+            "Unicode glyphs are not available, please change your "
+            "char_set option");
 }
 
 void cio_cleanup()
@@ -688,34 +685,27 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_TOO_BERSERK:
         mpr("You are too berserk!");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_PRESENT_FORM:
         mpr("You can't do that in your present form.");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_NOTHING_CARRIED:
         mpr("You aren't carrying anything.");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_CANNOT_DO_YET:
         mpr("You can't do that yet.");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_OK:
         mpr("Okay, then.");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_UNTHINKING_ACT:
         mpr("Why would you want to do that?");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_SPELL_FIZZLES:
         mpr("The spell fizzles.");
         break;
     case MSG_HUH:
         mpr("Huh?");
-        crawl_state.cancel_cmd_repeat();
         break;
     case MSG_EMPTY_HANDED:
         mpr("You are now empty-handed.");
@@ -728,21 +718,16 @@ void canned_msg(canned_message_type which_message)
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
 bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
-            bool interrupt_delays, bool noprompt,
-            const explicit_keymap *map )
+            bool interrupt_delays, bool noprompt )
 {
-    if (interrupt_delays && !crawl_state.is_repeating_cmd())
+    if (interrupt_delays)
         interrupt_activity( AI_FORCE_INTERRUPT );
-
     for (;;)
     {
         if ( !noprompt )
             mpr(str, MSGCH_PROMPT);
 
         int tmp = getchm(KC_CONFIRM);
-
-        if (map && map->find(tmp) != map->end())
-            tmp = map->find(tmp)->second;
 
         if ((tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n') 
                 && safeanswer)
@@ -770,16 +755,14 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
 // like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
 int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
 {
-    if (!crawl_state.is_repeating_cmd())
-        interrupt_activity( AI_FORCE_INTERRUPT );
-
+    interrupt_activity( AI_FORCE_INTERRUPT );
     while (1)
     {
         mpr(str, MSGCH_PROMPT);
 
         int tmp = getchm(KC_CONFIRM);
 
-        if ( tmp == CK_ESCAPE || tmp == 'q' || tmp == 'Q' )
+        if ( tmp == ESCAPE || tmp == 'q' || tmp == 'Q' )
             return -1;
         
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
@@ -800,7 +783,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
         else if (tmp == 'Y')
             return 1;
         else
-            mpr("[Y]es, [N]o or [Q]uit only, please.");
+            mpr("[Y]es or [N]o only, please.");
     }
 }    
 
@@ -1011,7 +994,7 @@ int element_colour( int element, bool no_random )
         break;
 
     case EC_DARK:
-        ret = (tmp_rand < 80) ? DARKGREY : LIGHTGREY;
+        ret = DARKGREY;
         break;
 
     case EC_HOLY:
@@ -1102,28 +1085,6 @@ int element_colour( int element, bool no_random )
 
     case EC_SHIMMER_BLUE:
         ret = random_choose_weighted(80, BLUE, 20, LIGHTBLUE, 5, CYAN, 0);
-        break;
-
-    case EC_DECAY:
-        ret = (tmp_rand < 60) ? BROWN : GREEN;
-        break;
-
-    case EC_SILVER:
-        ret = (tmp_rand < 90) ? LIGHTGREY : WHITE;
-        break;
-
-    case EC_GOLD:
-        ret = (tmp_rand < 60) ? YELLOW : BROWN;
-        break;
-
-    case EC_IRON:
-        ret = (tmp_rand < 40) ? CYAN :
-              (tmp_rand < 80) ? LIGHTGREY :
-                                DARKGREY;
-        break;
-
-    case EC_BONE:
-        ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
         break;
 
     case EC_RANDOM:

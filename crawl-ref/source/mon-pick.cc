@@ -17,7 +17,6 @@
 #include "externs.h"
 #include "branch.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "place.h"
 
 // NB - When adding new branches or levels above 50, you must
@@ -34,134 +33,6 @@ int mons_level(int mcls, const level_id &place)
         monster_level = branches[place.branch].mons_level_function(mcls);
 
     return monster_level;
-}
-
-typedef int (*mons_level_function)(int);
-
-struct global_level_info
-{
-    mons_level_function level_func;
-    branch_type         branch;
-    int                 avg_depth;
-};
-
-static int mons_misc_level(int mcls)
-{
-    switch(mons_char(mcls))
-    {
-    case '&':
-        return 35;
-        
-    case '1':
-        return 30;
-
-    case '2':
-        return 25;
-
-    case '3':
-        return 20;
-
-    case '4':
-        return 15;
-
-    case '5':
-        return 10;
-    }        
-
-    if (mons_is_unique(mcls))
-        return (mons_type_hit_dice(mcls) * 14 / 10 + 1);
-
-    switch(mcls)
-    {
-    case MONS_HUMAN:
-    case MONS_ELF:
-        return 1;
-
-    case MONS_BIG_FISH:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_JELLYFISH:
-        return 8;
-
-    case MONS_ANT_LARVA:
-        return 10;
-
-    case MONS_ELECTRICAL_EEL:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_LAVA_WORM:
-    case MONS_SALAMANDER:
-    case MONS_HOG:
-        return 14;
-
-    case MONS_FIRE_VORTEX:
-        return 18;
-
-    case MONS_MINOTAUR:
-    case MONS_BALL_LIGHTNING:
-    case MONS_ORANGE_STATUE:
-    case MONS_SILVER_STATUE:
-    case MONS_ICE_STATUE:
-    case MONS_SPATIAL_VORTEX:
-    case MONS_MOLTEN_GARGOYLE:
-    case MONS_WATER_ELEMENTAL:
-        return 20;
-
-    case MONS_METAL_GARGOYLE:
-    case MONS_VAULT_GUARD:
-        return 24;
-
-    case MONS_QUEEN_ANT:
-        return 25;
-
-    case MONS_ANGEL:
-        return 27;
-
-    case MONS_DAEVA:
-        return 28;
-    }
-
-    return 0;
-}
-
-static global_level_info g_lev_infos[] = {
-    {mons_standard_level, BRANCH_MAIN_DUNGEON,  1},
-    {mons_misc_level,     BRANCH_MAIN_DUNGEON,  1},
-    {mons_mineorc_level,  BRANCH_ORCISH_MINES,  8},
-    {mons_lair_level,     BRANCH_LAIR,         10},
-    {mons_hallelf_level,  BRANCH_ELVEN_HALLS,  11},
-    {mons_swamp_level,    BRANCH_SWAMP,        14},
-    {mons_shoals_level,   BRANCH_SHOALS,       14},
-    {mons_pitsnake_level, BRANCH_SNAKE_PIT,    15},
-    {mons_pitslime_level, BRANCH_SLIME_PITS,   16},
-    {mons_crypt_level,    BRANCH_CRYPT,        19},
-    {mons_tomb_level,     BRANCH_TOMB,         21},
-    {mons_hallzot_level,  BRANCH_HALL_OF_ZOT,  27},
-    {mons_dis_level,      BRANCH_DIS,          29},
-    {mons_gehenna_level,  BRANCH_GEHENNA,      29},
-    {mons_cocytus_level,  BRANCH_COCYTUS,      29},
-    {mons_tartarus_level, BRANCH_TARTARUS,     29},
-
-    {NULL,                NUM_BRANCHES,         0}
-};
-
-int mons_global_level(int mcls)
-{
-    for (int i = 0; g_lev_infos[i].level_func != NULL; i++)
-    {
-        int level     = (*g_lev_infos[i].level_func)(mcls);
-        int rel_level = level - absdungeon_depth(g_lev_infos[i].branch, 1);
-
-        if (g_lev_infos[i].branch == BRANCH_HALL_OF_ZOT)
-            rel_level++;
-
-        if (level >= 1 && level < 99 && rel_level != 0)
-        {
-            level = rel_level + g_lev_infos[i].avg_depth - 1;
-            return (level);
-        }
-    }
-
-    return (0);
 }
 
 // higher values returned means the monster is "more common"
@@ -1552,9 +1423,6 @@ int mons_pitslime_level(int mcls)
         mlev += 5;
         break;
 
-    case MONS_ROYAL_JELLY:
-        mlev += 6;
-
     default:
         mlev += 0;
         break;
@@ -1657,7 +1525,6 @@ int mons_crypt_level(int mcls)
     case MONS_REAPER:
     case MONS_ANCIENT_LICH:
     case MONS_LICH:
-    case MONS_CURSE_SKULL:
         mlev += 5;
         break;
 
@@ -1969,10 +1836,6 @@ int mons_tomb_level(int mcls)
         mlev += 3;
         break;
 
-    case MONS_GREATER_MUMMY:
-        mlev += 4;
-        break;
-
     default:
         mlev += 99;
     }
@@ -2029,8 +1892,6 @@ int mons_shoals_level(int mcls)
     case MONS_GIANT_BAT:
         break;
 
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
     case MONS_CENTAUR:
     case MONS_ETTIN:
     case MONS_SHEEP:
@@ -2071,11 +1932,7 @@ int mons_shoals_rare(int mcls)
 
     case MONS_ETTIN:
     case MONS_SHEEP:
-    case MONS_MERFOLK:
         return 50;
-
-    case MONS_MERMAID:
-        return 40;
 
     case MONS_HIPPOGRIFF:
     case MONS_GIANT_BAT:
@@ -2117,9 +1974,6 @@ int mons_swamp_level(int mcls)
     case MONS_RAT:
     case MONS_SWAMP_DRAKE:
     case MONS_WORM:
-    case MONS_SWAMP_WORM:
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
         mlev++;
         break;
 
@@ -2197,7 +2051,6 @@ int mons_swamp_rare(int mcls)
         return 61;
 
     case MONS_SLIME_CREATURE:
-    case MONS_MERFOLK:
         return 54;
 
     case MONS_SNAKE:
@@ -2225,7 +2078,6 @@ int mons_swamp_rare(int mcls)
     case MONS_KOMODO_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
-    case MONS_MERMAID:
         return 15;
 
     case MONS_PHANTOM:
@@ -2288,7 +2140,6 @@ int mons_hallzot_level(int mcls)
     case MONS_SKELETAL_DRAGON:
     case MONS_STORM_DRAGON:
     case MONS_CURSE_TOE:
-    case MONS_ORB_GUARDIAN:
         mlev += 5;
         break;
     case MONS_DEATH_COB:
@@ -2675,12 +2526,6 @@ int mons_standard_level(int mcls)
     case MONS_TITAN:
         return 30;
 
-    case MONS_DEEP_ELF_BLADEMASTER:
-    case MONS_DEEP_ELF_MASTER_ARCHER:
-        return 33;
-
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_ELECTRICAL_EEL:
     case MONS_GIANT_GOLDFISH:
@@ -2703,8 +2548,6 @@ int mons_standard_rare(int mcls)
     {
 // "another lava thing" has no stats!  (GDL)
 //    case MONS_ANOTHER_LAVA_THING:
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_ELECTRICAL_EEL:
     case MONS_GIANT_GOLDFISH:

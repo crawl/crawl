@@ -6,7 +6,6 @@
 #ifdef USE_SQLITE_DBM
 
 #include <sys/types.h>
-#include <memory>
 
 #if defined(DOS) || defined(WIN32CONSOLE)
 #define SQLITE_INT64_TYPE int
@@ -56,10 +55,6 @@ public:
     
     int open(const std::string &db = "");
     void close();
-    
-    std::auto_ptr<std::string> firstkey();
-    std::auto_ptr<std::string> nextkey();
-    
     std::string query(const std::string &key);
     int insert(const std::string &key, const std::string &value);
 
@@ -71,7 +66,6 @@ private:
     int finalise_query(sqlite3_stmt **query);
     int prepare_query(sqlite3_stmt **query, const char *sql);
     int init_query();
-    int init_iterator();
     int init_insert();
     int init_schema();
     int ec(int err);
@@ -80,7 +74,6 @@ private:
     sqlite3      *db;
     sqlite3_stmt *s_insert;
     sqlite3_stmt *s_query;
-    sqlite3_stmt *s_iterator;
     std::string  dbfile;
 };
 
@@ -88,8 +81,6 @@ SQL_DBM  *dbm_open(const char *filename, int open_mode, int permissions);
 int   dbm_close(SQL_DBM *db);
 
 sql_datum dbm_fetch(SQL_DBM *db, const sql_datum &key);
-sql_datum dbm_firstkey(SQL_DBM *db);
-sql_datum dbm_nextkey(SQL_DBM *db);
 int dbm_store(SQL_DBM *db, const sql_datum &key,
               const sql_datum &value, int overwrite);
 

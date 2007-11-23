@@ -27,8 +27,6 @@
 #include "itemprop.h"
 #include "stuff.h"
 
-#define KNOWN_PROPS_KEY "randart_known_props"
-
 /*
    The initial generation of a randart is very simple - it occurs
    in dungeon.cc and consists of giving it a few random things - plus & plus2
@@ -834,8 +832,7 @@ bool is_fixed_artefact( const item_def &item )
     return (false);
 }
 
-unique_item_status_type get_unique_item_status( object_class_type base_type,
-                                                int art )
+unique_item_status_type get_unique_item_status( int base_type, int art )
 {
     // Note: for weapons "art" is in item.special,
     //       for orbs it's the sub_type.
@@ -856,7 +853,7 @@ unique_item_status_type get_unique_item_status( object_class_type base_type,
     return (UNIQ_NOT_EXISTS);
 }
 
-void set_unique_item_status( object_class_type base_type, int art,
+void set_unique_item_status( int base_type, int art,
                              unique_item_status_type status )
 {
     // Note: for weapons "art" is in item.special,
@@ -879,49 +876,6 @@ void set_unique_item_status( object_class_type base_type, int art,
 static long calc_seed( const item_def &item )
 {
     return (item.special & RANDART_SEED_MASK);
-}
-
-void randart_desc_properties( const item_def &item, 
-                              randart_properties_t &proprt,
-                              randart_known_props_t &known )
-{
-    randart_wpn_properties( item, proprt, known);
-
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
-        return;
-
-    if (item.base_type != OBJ_JEWELLERY)
-        return;
-
-    randart_prop_type fake_rap  = RAP_NUM_PROPERTIES;
-    int               fake_plus = 1;
-
-    switch (item.sub_type)
-    {
-    case RING_INVISIBILITY:
-        fake_rap = RAP_INVISIBLE;
-        break;
-
-    case RING_TELEPORTATION:
-        fake_rap = RAP_CAUSE_TELEPORTATION;
-        break;
-
-    case RING_MAGICAL_POWER:
-        fake_rap  = RAP_MAGICAL_POWER;
-        fake_plus = 9;
-        break;
-
-    case RING_LEVITATION:
-        fake_rap = RAP_LEVITATE;
-        break;
-
-    case AMU_RAGE:
-        fake_rap = RAP_BERSERK;
-        break;
-    }    
-
-    if (fake_rap != RAP_NUM_PROPERTIES)
-        proprt[fake_rap] += fake_plus;
 }
 
 static int randart_add_one_property( const item_def &item,
@@ -1005,28 +959,9 @@ static int randart_add_one_property( const item_def &item,
 }
 
 void randart_wpn_properties( const item_def &item, 
-                             randart_properties_t &proprt,
-                             randart_known_props_t &known)
+                             randart_properties_t &proprt )
 {
     ASSERT( is_random_artefact( item ) ); 
-    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
-    const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT( _val.get_type() == SV_VEC );
-    const CrawlVector &known_vec = _val.get_vector();
-    ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == RA_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
-
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
-    {
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
-            known[i] = (bool) true;
-    }
-    else
-    {
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
-            known[i] = known_vec[i];
-    }
 
     const object_class_type aclass = item.base_type;
     const int atype  = item.sub_type;
@@ -1035,7 +970,7 @@ void randart_wpn_properties( const item_def &item,
 
     if (is_unrandom_artefact( item ))
     {
-        const unrandart_entry *unrand = seekunrandart( item );
+        struct unrandart_entry *unrand = seekunrandart( item );
 
         for (int i = 0; i < RA_PROPERTIES; i++)
             proprt[i] = unrand->prpty[i];
@@ -1495,47 +1430,14 @@ void randart_wpn_properties( const item_def &item,
         proprt[RAP_CURSED] = 1;
 }
 
-void randart_wpn_properties( const item_def &item, 
-                             randart_properties_t &proprt )
+int randart_wpn_property( const item_def &item, int prop )
 {
-    randart_known_props_t known;
+    randart_properties_t proprt;
 
-    randart_wpn_properties(item, proprt, known);
+    randart_wpn_properties( item, proprt );
+
+    return (proprt[prop]);
 }
-
-int randart_wpn_property( const item_def &item, randart_prop_type prop,
-                          bool &_known )
-{
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-
-    randart_wpn_properties( item, proprt, known );
-
-    _known = known[prop];
-
-    return ( proprt[prop] );
-}
-
-int randart_wpn_property( const item_def &item, randart_prop_type prop )
-{
-    bool known;
-
-    return randart_wpn_property( item, prop, known );
-}
-
-int randart_known_wpn_property( const item_def &item, randart_prop_type prop )
-{
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-
-    randart_wpn_properties( item, proprt, known );
-
-    if (known[prop])
-        return ( proprt[prop] );
-    else
-        return (0);
-}
-
 
 int randart_wpn_num_props( const item_def &item )
 {
@@ -1554,30 +1456,6 @@ int randart_wpn_num_props( const randart_properties_t &proprt )
             num++;
 
     return num;
-}
-
-void randart_wpn_learn_prop( item_def &item, randart_prop_type prop )
-{
-    ASSERT( is_random_artefact( item ) ); 
-    ASSERT( item.props.exists( KNOWN_PROPS_KEY ) );
-    CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
-    ASSERT( _val.get_type() == SV_VEC );
-    CrawlVector &known_vec = _val.get_vector();
-    ASSERT( known_vec.get_type()     == SV_BOOL );
-    ASSERT( known_vec.size()         == RA_PROPERTIES);
-    ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
-
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
-        return;
-    else
-        known_vec[prop] = (bool) true;
-}
-
-bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
-{
-    bool known;
-    randart_wpn_property( item, prop, known );
-    return known;
 }
 
 std::string randart_name( const item_def &item )
@@ -1798,23 +1676,19 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype)
 // Returns true if successful.
 bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
 {
-    bool force = true;  // we force any one asked for specifically
+    bool  force = true;  // we force any one asked for specifically
 
     if (!which)
     {
         // using old behaviour... try only once. -- bwr
         force = false;  
 
-        do {
-            which = SPWPN_SINGING_SWORD +
-                random2(SPWPN_STAFF_OF_WUCAD_MU - SPWPN_SINGING_SWORD + 1);
-        } while ( which == SPWPN_SWORD_OF_CEREBOV ||
-                  which == SPWPN_STAFF_OF_DISPATER ||
-                  which == SPWPN_SCEPTRE_OF_ASMODEUS );
+        which = SPWPN_SINGING_SWORD + random2(12);
+        if (which >= SPWPN_SWORD_OF_CEREBOV)
+            which += 3; // skip over Cerebov's, Dispater's, and Asmodeus' weapons
     }
 
-    const unique_item_status_type status =
-        get_unique_item_status( OBJ_WEAPONS, which );
+    int status = get_unique_item_status( OBJ_WEAPONS, which );
 
     if ((status == UNIQ_EXISTS 
             || (in_abyss && status == UNIQ_NOT_EXISTS)
@@ -1962,6 +1836,14 @@ static bool randart_is_redundant( const item_def &item,
 
     switch (item.sub_type)
     {
+    case RING_SUSTAIN_ABILITIES:
+    case RING_SUSTENANCE:
+    case RING_REGENERATION:
+    case RING_TELEPORT_CONTROL:
+    case RING_WIZARDRY:
+    case RING_MAGICAL_POWER:
+        break;
+
     case RING_PROTECTION:
         provides = RAP_AC;
         break;
@@ -2018,10 +1900,6 @@ static bool randart_is_redundant( const item_def &item,
         provides = RAP_INTELLIGENCE;
         break;
 
-    case RING_MAGICAL_POWER:
-        provides = RAP_MAGICAL_POWER;
-        break;
-
     case RING_LEVITATION:
         provides = RAP_LEVITATE;
         break;
@@ -2040,6 +1918,16 @@ static bool randart_is_redundant( const item_def &item,
 
     case AMU_INACCURACY:
         provides = RAP_ACCURACY;
+        break;
+
+    case AMU_RESIST_SLOW:
+    case AMU_CLARITY:
+    case AMU_WARDING:
+    case AMU_RESIST_CORROSION:
+    case AMU_THE_GOURMAND:
+    case AMU_CONSERVATION:
+    case AMU_CONTROLLED_FLIGHT:
+    case AMU_RESIST_MUTATION:
         break;
     }
 
@@ -2068,6 +1956,25 @@ static bool randart_is_conflicting( const item_def &item,
 
     switch (item.sub_type)
     {
+    case RING_REGENERATION:
+    case RING_PROTECTION:
+    case RING_PROTECTION_FROM_FIRE:
+    case RING_POISON_RESISTANCE:
+    case RING_PROTECTION_FROM_COLD:
+    case RING_STRENGTH:
+    case RING_SLAYING:
+    case RING_SEE_INVISIBLE:
+    case RING_INVISIBILITY:
+    case RING_HUNGER:
+    case RING_EVASION:
+    case RING_SUSTAIN_ABILITIES:
+    case RING_DEXTERITY:
+    case RING_INTELLIGENCE:
+    case RING_LEVITATION:
+    case RING_LIFE_PROTECTION:
+    case RING_PROTECTION_FROM_MAGIC:
+        break;
+
     case RING_SUSTENANCE:
         conflicts = RAP_METABOLISM;
         break;
@@ -2090,6 +1997,16 @@ static bool randart_is_conflicting( const item_def &item,
 
     case AMU_RAGE:
         conflicts = RAP_STEALTH;
+        break;
+
+    case AMU_RESIST_SLOW:
+    case AMU_CLARITY:
+    case AMU_WARDING:
+    case AMU_RESIST_CORROSION:
+    case AMU_THE_GOURMAND:
+    case AMU_CONSERVATION:
+    case AMU_CONTROLLED_FLIGHT:
+    case AMU_INACCURACY:
         break;
     }        
 
@@ -2123,19 +2040,6 @@ bool make_item_randart( item_def &item )
         return (false);
     }
 
-    if (item.flags & ISFLAG_RANDART)
-        return (true);
-
-    if (item.flags & ISFLAG_UNRANDART)
-        return (false);
-
-    ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
-    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
-    CrawlVector &known = item.props[KNOWN_PROPS_KEY];
-    known.set_max_size(RA_PROPERTIES);
-    for (vec_size i = 0; i < RA_PROPERTIES; i++)
-        known[i] = (bool) false;
-
     item.flags |= ISFLAG_RANDART;
     do
     {
@@ -2145,17 +2049,9 @@ bool make_item_randart( item_def &item )
     return (true);
 }
 
+// void make_item_unrandart( int x, int ura_item )
 bool make_item_unrandart( item_def &item, int unrand_index )
 {
-    if (!item.props.exists( KNOWN_PROPS_KEY ))
-    {
-        item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
-        CrawlVector &known = item.props[KNOWN_PROPS_KEY];
-        known.set_max_size(RA_PROPERTIES);
-        for (vec_size i = 0; i < RA_PROPERTIES; i++)
-            known[i] = (bool) false;
-    }
-
     item.base_type = unranddata[unrand_index].ura_cl;
     item.sub_type  = unranddata[unrand_index].ura_ty;
     item.plus      = unranddata[unrand_index].ura_pl;
@@ -2173,13 +2069,14 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     return (true);
 }                               // end make_item_unrandart()
 
-const char *unrandart_descrip( int which_descrip, const item_def &item )
+const char *unrandart_descrip( char which_descrip, const item_def &item )
 {
 /* Eventually it would be great to have randomly generated descriptions for
    randarts. */
-    const unrandart_entry *unrand = seekunrandart( item );
+    struct unrandart_entry *unrand = seekunrandart( item );
 
     return ((which_descrip == 0) ? unrand->spec_descrip1 :
             (which_descrip == 1) ? unrand->spec_descrip2 :
             (which_descrip == 2) ? unrand->spec_descrip3 : "Unknown.");
-}
+
+}                               // end unrandart_descrip()

@@ -4,16 +4,12 @@
 
 #include "AppHdr.h"
 #include "branch.h"
-#include "cloud.h"
 #include "externs.h"
 #include "mon-pick.h"
-#include "player.h"
-#include "spells3.h"
-#include "traps.h"
 
 Branch& your_branch()
 {
-    return branches[you.where_are_you];
+    return branches[static_cast<int>(you.where_are_you)];
 }
 
 branch_type str_to_branch(const std::string &branch, branch_type err)
@@ -26,294 +22,190 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
     return (err);
 }
 
-bool set_branch_flags(unsigned long flags, bool silent,
-                      branch_type branch)
-{
-    if (branch == NUM_BRANCHES)
-        branch = you.where_are_you;
-
-    bool could_control = allow_control_teleport(true);
-    bool could_map     = player_in_mappable_area();
-
-    unsigned long old_flags = branches[branch].branch_flags;
-    branches[branch].branch_flags |= flags;
-
-    bool can_control = allow_control_teleport(true);
-    bool can_map     = player_in_mappable_area();
-
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && you.skills[SK_TRANSLOCATIONS] > 0
-        && could_control && !can_control && !silent)
-    {
-        mpr("You sense the appearence of a powerful magical force "
-            "which warps space.", MSGCH_WARN);
-    }
-
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && could_map && !can_map && !silent)
-    {
-        mpr("A powerful force appears that prevents you from "
-            "remembering where you've been.", MSGCH_WARN);
-    }
-
-    return (old_flags != branches[branch].branch_flags);
-}
-
-bool unset_branch_flags(unsigned long flags, bool silent,
-                        branch_type branch)
-{
-    if (branch == NUM_BRANCHES)
-        branch = you.where_are_you;
-
-    const bool could_control = allow_control_teleport(true);
-    const bool could_map     = player_in_mappable_area();
-
-    unsigned long old_flags = branches[branch].branch_flags;
-    branches[branch].branch_flags &= ~flags;
-
-    const bool can_control = allow_control_teleport(true);
-    const bool can_map     = player_in_mappable_area();
-
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && you.skills[SK_TRANSLOCATIONS] > 0
-        && !could_control && can_control && !silent)
-    {
-        // Isn't really a "recovery", but I couldn't think of where
-        // else to send it.
-        mpr("Space seems to straighten in your vicinity.", MSGCH_RECOVERY);
-    }
-
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && !could_map && can_map && !silent)
-    {
-        // Isn't really a "recovery", but I couldn't think of where
-        // else to send it.
-        mpr("An oppressive force seems to lift.", MSGCH_RECOVERY);
-    }
-
-    return (old_flags != branches[branch].branch_flags);
-}
-
-unsigned long get_branch_flags(branch_type branch)
-{
-    if (branch == NUM_BRANCHES)
-    {
-        if (you.level_type != LEVEL_DUNGEON)
-            return (0);
-
-        branch = you.where_are_you;
-    }
-
-    return branches[branch].branch_flags;
-}
-
 Branch branches[] = {
 
-    { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, 27, -1, 0, 0,
+    { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, 27, -1,
       NUM_FEATURES, NUM_FEATURES,  // sentinel values
       "Dungeon", "the Dungeon", "D",
       NULL,
       true, true, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      NULL, NULL, NULL, NULL,
-      8, 'D', false, false },
+      8, 'D', false },
 
-    { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON, 1, 5, 0, 0,
+    { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON, 1, 5,
       DNGN_ENTER_TEMPLE, DNGN_RETURN_FROM_TEMPLE,
       "Temple", "the Ecumenical Temple", "Temple",
       NULL,
       false, false, LIGHTGREY, LIGHTGREY,
       mons_standard_rare, mons_standard_level, 
-      traps_zero_number, NULL, NULL, NULL, // No traps in temple
-      0, 'T', false, false },
+      0, 'T', false },
 
-    { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 4, 6, 0, 0,
+    { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 4, 6,
       DNGN_ENTER_ORCISH_MINES, DNGN_RETURN_FROM_ORCISH_MINES,
       "Orcish Mines", "the Orcish Mines", "Orc",
       NULL,
       true, false, BROWN, BROWN,
       mons_mineorc_rare, mons_mineorc_level,
-      NULL, NULL, NULL, NULL,
-      20, 'O', false, false },
+      20, 'O', false },
 
-    { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 7, 4, 0, 0,
+    { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 7, 4,
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
       "Elven Halls", "the Elven Halls", "Elf",
       NULL,
       true, true, DARKGREY, LIGHTGREY,
       mons_hallelf_rare, mons_hallelf_level,
-      NULL, NULL, NULL, NULL,
-      8, 'E', false, true },
+      8, 'E', false },
 
-    { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 10, 8, 0, 0,
+    { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 10, 8,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
       NULL,
       true, false, GREEN, BROWN,
       mons_lair_rare, mons_lair_level,
-      NULL, NULL, NULL, NULL,
-      5, 'L', false, false },
+      5, 'L', false },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 5, 3, 0, 0,
+    { BRANCH_SWAMP, BRANCH_LAIR, 5, 3,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
       "Swamp", "the Swamp", "Swamp",
       NULL,
       true, true, BROWN, BROWN,
       mons_swamp_rare, mons_swamp_level, 
-      NULL, NULL, NULL, NULL,
-      0, 'S', false, true },
+      0, 'S', false },
     
-    { BRANCH_SHOALS, BRANCH_LAIR, 5, 4, 0, 0,
+    { BRANCH_SHOALS, BRANCH_LAIR, 5, 4,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
       "Shoals", "the Shoals", "Shoal",
       NULL,
       true, true, BROWN, BROWN,
       mons_shoals_rare, mons_shoals_level,
-      NULL, NULL, NULL, NULL,
-      0, 'A', false, true },
+      0, 'A', false },
 
-    { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 4, 0, 0,
+    { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 4,
       DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
       "Slime Pits", "the Pits of Slime", "Slime",
       NULL,
       false, false, GREEN, LIGHTGREEN,
       mons_pitslime_rare, mons_pitslime_level,
-      NULL, NULL, NULL, NULL,
-      5, 'M', false, true },
+      5, 'M', false },
 
-    { BRANCH_SNAKE_PIT, BRANCH_LAIR, 5, 7, 0, 0,
+    { BRANCH_SNAKE_PIT, BRANCH_LAIR, 5, 7,
       DNGN_ENTER_SNAKE_PIT, DNGN_RETURN_FROM_SNAKE_PIT,
       "Snake Pit", "the Snake Pit", "Snake",
       NULL,
       true, true, LIGHTGREEN, YELLOW,
       mons_pitsnake_rare, mons_pitsnake_level,
-      NULL, NULL, NULL, NULL,
-      10, 'P', false, true },
+      10, 'P', false },
 
-    { BRANCH_HIVE, BRANCH_MAIN_DUNGEON, 4, 15, 0, 0,
+    { BRANCH_HIVE, BRANCH_MAIN_DUNGEON, 4, 15,
       DNGN_ENTER_HIVE, DNGN_RETURN_FROM_HIVE,
       "Hive", "the Hive", "Hive",
       "You hear a buzzing sound coming from all directions.",
       false, false, YELLOW, BROWN,
       mons_hive_rare, mons_hive_level, 
-      NULL, NULL, NULL, NULL,
-      0, 'H', false, true },
+      0, 'H', false },
 
-    { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 8, 17, 0, 0,
+    { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 8, 17,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vault",
       NULL,
       true, true, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      NULL, NULL, NULL, NULL,
-      5, 'V', false, true },
+      5, 'V', false },
 
 
-    { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 1, 4, 0, 0,
+    { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 1, 4,
       DNGN_ENTER_HALL_OF_BLADES, DNGN_RETURN_FROM_HALL_OF_BLADES,
       "Hall of Blades", "the Hall of Blades", "Blade",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
       mons_hallblade_rare, mons_hallblade_level, 
-      NULL, NULL, NULL, NULL,
-      0, 'B', false, false },
+      0, 'B', false },
 
-    { BRANCH_CRYPT, BRANCH_VAULTS, 5, 3, 0, 0,
+    { BRANCH_CRYPT, BRANCH_VAULTS, 5, 3,
       DNGN_ENTER_CRYPT, DNGN_RETURN_FROM_CRYPT,
       "Crypt", "the Crypt", "Crypt",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
       mons_crypt_rare, mons_crypt_level,
-      NULL, NULL, NULL, NULL,
-      5, 'C', false, false },
+      5, 'C', false },
 
-    { BRANCH_TOMB, BRANCH_CRYPT, 3, 5, 0, 0,
+    { BRANCH_TOMB, BRANCH_CRYPT, 3, 5,
       DNGN_ENTER_TOMB, DNGN_RETURN_FROM_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
       NULL,
       false, true, YELLOW, LIGHTGREY,
       mons_tomb_rare, mons_tomb_level, 
-      NULL, NULL, NULL, NULL,
-      0, 'G', false, true },
+      0, 'G', false },
 
-    { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 1, -1, 0, 0,
+    { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 1, -1,
       DNGN_ENTER_HELL, NUM_FEATURES, // sentinel
       "Hell", "The Vestibule of Hell", "Hell",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
       mons_standard_rare, mons_standard_level,
-      NULL, NULL, NULL, NULL,
-      0, 'U', false, false },
+      0, 'U', false },
 
-    { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 7, -1,
       DNGN_ENTER_DIS, NUM_FEATURES, // sentinel
       "Dis", "the Iron City of Dis", "Dis",
       NULL,
       false, false, CYAN, CYAN,
       mons_dis_rare, mons_dis_level,
-      NULL, NULL, NULL, NULL,
-      0, 'I', true, true },
+      0, 'I', true },
 
-    { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 7, -1,
       DNGN_ENTER_GEHENNA, NUM_FEATURES, // sentinel
       "Gehenna", "Gehenna", "Geh",
       NULL,
       false, false, DARKGREY, RED,
       mons_gehenna_rare, mons_gehenna_level,
-      NULL, NULL, NULL, NULL,
-      0, 'N', true, true },
+      0, 'N', true },
 
-    { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 7, -1,
       DNGN_ENTER_COCYTUS, NUM_FEATURES, // sentinel
       "Cocytus", "Cocytus", "Coc",
       NULL,
       false, false, LIGHTBLUE, LIGHTCYAN,
       mons_cocytus_rare, mons_cocytus_level,
-      NULL, NULL, NULL, NULL,
-      0, 'X', true, true },
+      0, 'X', true },
 
-    { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 7, -1, 0, 0,
+    { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 7, -1,
       DNGN_ENTER_TARTARUS, NUM_FEATURES, // sentinel
       "Tartarus", "Tartarus", "Tar",
       NULL,
       false, false, DARKGREY, DARKGREY,
       mons_tartarus_rare, mons_tartarus_level,
-      NULL, NULL, NULL, NULL,
-      0, 'Y', true, true },
+      0, 'Y', true },
 
-    { BRANCH_INFERNO, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
+    { BRANCH_INFERNO, BRANCH_MAIN_DUNGEON, -1, -1,
       NUM_FEATURES, NUM_FEATURES,
       NULL, NULL, NULL,
       NULL,
       false, false, BLACK, BLACK,
       NULL, NULL,
-      NULL, NULL, NULL, NULL,
-      0, 'R', false, false },
+      0, 'R', false },
 
-    { BRANCH_THE_PIT, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
+    { BRANCH_THE_PIT, BRANCH_MAIN_DUNGEON, -1, -1,
       NUM_FEATURES, NUM_FEATURES,
       NULL, NULL, NULL,
       NULL,
       false, false, BLACK, BLACK,
       NULL, NULL,
-      NULL, NULL, NULL, NULL,
-      0, '0', false, false },
+      0, '0', false },
 
-    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27, BFLAG_HAS_ORB, 0,
+    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 5, 27,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
       NULL,
       false, true, BLACK, BLACK,
       mons_hallzot_rare, mons_hallzot_level,
-      NULL, NULL, NULL, NULL,
-      1, 'Z', false, true },
+      1, 'Z', false },
 
-    { BRANCH_CAVERNS, BRANCH_MAIN_DUNGEON, -1, -1, 0, 0,
+    { BRANCH_CAVERNS, BRANCH_MAIN_DUNGEON, -1, -1,
       NUM_FEATURES, NUM_FEATURES,
       NULL, NULL, NULL,
       NULL,
       false, false, BLACK, BLACK,
       NULL, NULL,
-      NULL, NULL, NULL, NULL,
-      0, 0, false, false }
+      0, 0, false }
 };

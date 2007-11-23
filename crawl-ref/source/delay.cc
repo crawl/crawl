@@ -38,12 +38,10 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "stash.h"
-#include "state.h"
 #include "stuff.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "xom.h"
 
 extern std::vector<SelItem> items_for_multidrop;
 
@@ -105,24 +103,38 @@ static void clear_pending_delays()
 void start_delay( delay_type type, int turns, int parm1, int parm2 )
 /***********************************************************/
 {
-    ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
-
     delay_queue_item delay;
     
     delay.type = type;
     delay.duration = turns;
     delay.parm1 = parm1;
     delay.parm2 = parm2;
-    delay.started = false;
 
     // Handle zero-turn delays (possible with butchering).
     if (turns == 0)
     {
-        delay.started = true;
         // Don't issue startup message.
         if (push_delay(delay) == 0)
             finish_delay(delay);
         return;
+    }
+
+    switch ( delay.type )
+    {
+    case DELAY_ARMOUR_ON:
+        mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
+        break;
+    case DELAY_ARMOUR_OFF:
+        mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
+        break;
+    case DELAY_MEMORISE:
+        mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
+        break;
+    case DELAY_PASSWALL:
+        mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
+        break;
+    default:
+        break;
     }
     push_delay( delay ); 
 }
@@ -134,8 +146,6 @@ void stop_delay( void )
         return;
 
     delay_queue_item delay = you.delay_queue.front(); 
-
-    ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     const bool butcher_swap_warn =
         delay.type == DELAY_BUTCHER
@@ -295,17 +305,6 @@ bool is_being_butchered(const item_def &item)
     return (false);
 }
 
-// Xom is amused by a potential food source going to waste, and is
-// more amused the hungrier you are.
-static void xom_check_corpse_waste()
-{
-    int food_need = 7000 - you.hunger;
-    if (food_need < 0)
-        food_need = 0;
-
-    xom_is_stimulated(64 + (191 * food_need / 6000));
-}
-
 void handle_delay( void )
 /***********************/
 {
@@ -313,33 +312,6 @@ void handle_delay( void )
         return;
 
     delay_queue_item &delay = you.delay_queue.front();
-
-    if ( !delay.started )
-    {
-        switch ( delay.type )
-        {
-        case DELAY_ARMOUR_ON:
-            mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
-            break;
-        case DELAY_ARMOUR_OFF:
-            mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
-            break;
-        case DELAY_BUTCHER:
-            mpr("You start butchering the corpse.", MSGCH_MULTITURN_ACTION);
-            break;
-        case DELAY_MEMORISE:
-            mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
-            break;
-        case DELAY_PASSWALL:
-            mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
-            break;
-        default:
-            break;
-        }
-        delay.started = true;
-    }
-
-    ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
 
     // Run delays and Lua delays don't have a specific end time.
     if (is_run_delay(delay.type))
@@ -366,41 +338,24 @@ void handle_delay( void )
         // Note that a monster could have raised the corpse and another
         // monster could die and create a corpse with the same ID number...
         // However, it would not be at the player's square like the 
-        // original and that's why we do it this way.
+        // original and that's why we do it this way.  Note that 
+        // we ignore the conversion to skeleton possibility just to 
+        // be nice. -- bwr
         if (is_valid_item( mitm[ delay.parm1 ] )
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
             && mitm[ delay.parm1 ].x == you.x_pos
             && mitm[ delay.parm1 ].y == you.y_pos )
         {
-            if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
+            // special < 100 is the rottenness check
+            if ( (mitm[delay.parm1].special < 100) &&
+                 (delay.parm2 >= 100) )
             {
-                mpr("The corpse rots away into a skeleton!");
-                if (you.mutation[MUT_SAPROVOROUS] == 3)
-                    xom_check_corpse_waste();
-                else
-                    xom_is_stimulated(32);
-                delay.duration = 0;
+                mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+                delay.parm2 = 99; // don't give the message twice
             }
-            else
-            {
-                // special < 100 is the rottenness check
-                if ( (mitm[delay.parm1].special < 100) &&
-                     (delay.parm2 >= 100) )
-                {
-                    mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
-                    delay.parm2 = 99; // don't give the message twice
 
-                    if (you.species != SP_VAMPIRE
-                        && you.is_undead != US_UNDEAD
-                        && you.mutation[MUT_SAPROVOROUS] < 3)
-                    {
-                        xom_check_corpse_waste();
-                    }
-                }
-
-                // mark work done on the corpse in case we stop -- bwr
-                mitm[ delay.parm1 ].plus2++;
-            }
+            // mark work done on the corpse in case we stop -- bwr
+            mitm[ delay.parm1 ].plus2++;
         }
         else
         {
@@ -579,8 +534,6 @@ static void finish_delay(const delay_queue_item &delay)
             {
             case DNGN_ROCK_WALL:
             case DNGN_STONE_WALL:
-            case DNGN_CLEAR_ROCK_WALL:
-            case DNGN_CLEAR_STONE_WALL:
             case DNGN_METAL_WALL:
             case DNGN_GREEN_CRYSTAL_WALL:
             case DNGN_WAX_WALL:
@@ -619,28 +572,10 @@ static void finish_delay(const delay_queue_item &delay)
         const item_def &item = mitm[delay.parm1];
         if (is_valid_item(item) && item.base_type == OBJ_CORPSES)
         {
-
-            if (item.sub_type == CORPSE_SKELETON)
-            {
-                mpr("The corpse rots away into a skeleton just before you "
-                    "finish butchering it!");
-
-                if (you.mutation[MUT_SAPROVOROUS] == 3)
-                    xom_check_corpse_waste();
-                else
-                    xom_is_stimulated(64);
-
-                break;
-            }
-
             mprf("You finish %s the corpse into pieces.",
                  (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
                  "ripping" : "chopping");
 
-            if (is_good_god(you.religion) && is_player_same_species(item.plus))
-                simple_god_message(" expects more respect for your departed "
-                                   "relatives.");
-                                   
             if (you.species == SP_VAMPIRE &&
                 (!god_likes_butchery(you.religion) ||
                  !you.duration[DUR_PRAYER]))
@@ -728,8 +663,7 @@ static void armour_wear_effects(const int item_slot)
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
     mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
-    const equipment_type eq_slot      = get_armour_slot(arm);
-    const bool           known_cursed = item_known_cursed(arm);
+    const equipment_type eq_slot = get_armour_slot(arm);
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -804,15 +738,15 @@ static void armour_wear_effects(const int item_slot)
             break;
 
         case SPARM_STRENGTH:
-            modify_stat(STAT_STRENGTH, 3, false, arm);
+            modify_stat(STAT_STRENGTH, 3, false);
             break;
 
         case SPARM_DEXTERITY:
-            modify_stat(STAT_DEXTERITY, 3, false, arm);
+            modify_stat(STAT_DEXTERITY, 3, false);
             break;
 
         case SPARM_INTELLIGENCE:
-            modify_stat(STAT_INTELLIGENCE, 3, false, arm);
+            modify_stat(STAT_INTELLIGENCE, 3, false);
             break;
 
         case SPARM_PONDEROUSNESS:
@@ -861,16 +795,7 @@ static void armour_wear_effects(const int item_slot)
     {
         mpr( "Oops, that feels deathly cold." );
         learned_something_new(TUT_YOU_CURSED);
-
-        // Cursed cloaks prevent you from removing body armour
-        int cloak_mult = 1;
-        if (get_armour_slot(arm) == EQ_CLOAK)
-            cloak_mult = 2;
-
-        if (known_cursed)
-            xom_is_stimulated(32 * cloak_mult);
-        else
-            xom_is_stimulated(64 * cloak_mult);
+        xom_is_stimulated(128);
     }
 
     if (eq_slot == EQ_SHIELD)
@@ -1077,7 +1002,7 @@ inline static void monster_warning(activity_interrupt_type ai,
         if (!mon->visible())
             return;
 #ifndef DEBUG_DIAGNOSTICS
-        if (at.context == "already seen")
+        if (at.context != "uncharm")
         {
             // Only say "comes into view" if the monster wasn't in view
             // during the previous turn.
@@ -1105,33 +1030,18 @@ inline static void monster_warning(activity_interrupt_type ai,
                      break;
                 }
             }
-        }
-        else
-        {
-            const std::string mweap =
-                get_monster_desc(mon, false, DESC_NONE);
-            std::string text = mon->name(DESC_CAP_A);
-
-            if (at.context == "thin air")
-            {
-                if (mon->type == MONS_AIR_ELEMENTAL)
-                    text += " forms itself from the air.";
-                else
-                    text += " appears from thin air.";
-            }
-            else if (at.context == "surfaces")
-                text += " surfaces.";
-            else if (at.context.find("bursts forth") != std::string::npos)
-                text += " bursts forth from the water.";
             else
-                text += " comes into view.";
-
-            if (!mweap.empty())
-                text += " " + mon->pronoun(PRONOUN_CAP)
-                    + " is" + mweap + ".";
-            print_formatted_paragraph(text,
-                                      get_number_of_cols(),
-                                      MSGCH_WARN);
+            {
+                const std::string mweap =
+                    get_monster_desc(mon, false, DESC_NONE);
+                std::string text = mon->name(DESC_CAP_A) + " comes into view.";
+                if (!mweap.empty())
+                    text += " " + mon->pronoun(PRONOUN_CAP)
+                        + " is" + mweap + ".";
+                print_formatted_paragraph(text,
+                                          get_number_of_cols(),
+                                          MSGCH_WARN);
+            }
         }
 
         if (Options.tutorial_left)
@@ -1170,7 +1080,7 @@ static void paranoid_option_disable( activity_interrupt_type ai,
                 restart.push_back("Ctrl+V");
             }
 
-            if (Options.autopickup_on)
+            if (Options.autopickup_on && Options.safe_autopickup)
             {
                 deactivatees.push_back("autopickup");
                 Options.autopickup_on = false;
@@ -1192,10 +1102,7 @@ bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
 {
     paranoid_option_disable(ai, at);
-
-    if (crawl_state.is_repeating_cmd())
-        return interrupt_cmd_repeat(ai, at);
-
+    
     const int delay = current_delay_action();
     
     if (delay == DELAY_NOT_DELAYED)

@@ -556,7 +556,7 @@ static void sdump_screenshot(dump_params &par)
 static void sdump_notes(dump_params &par)
 {
     std::string &text(par.text);
-    if ( note_list.empty() )
+    if ( note_list.size() == 0 || Options.use_notes == false )
         return;
 
     text += "\nNotes\nTurn   | Place   | Note\n";
@@ -1213,7 +1213,6 @@ static bool write_dump(
 void display_notes()
 {
     Menu scr;
-    scr.set_tag("notes");
     scr.set_title( new MenuEntry("Turn   | Place   | Note"));
     for ( unsigned int i = 0; i < note_list.size(); ++i )
     {
@@ -1246,7 +1245,6 @@ void resists_screen()
     textcolor(LIGHTGREY);
     
     formatted_scroller scr;
-    scr.set_tag("resists");
     for ( unsigned i = 0; i < vfs.size(); ++i )
         scr.add_item_formatted_string(vfs[i]);
 

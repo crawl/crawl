@@ -18,10 +18,6 @@
 
 struct bolt;
 
-class monsters;
-class item_def;
-
-
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - acr - beam - decks - fight - religion - spells
@@ -42,15 +38,7 @@ bool forget_spell(void);
  *              spells2 - spells4
  * *********************************************************************** */
 bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               bool force = false, const std::string cause = "",
-               bool see_source = true);
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               bool force = false, const char* cause = NULL,
-               bool see_source = true);
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               const monsters* cause, bool force = false);
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               const item_def &cause, bool removed, bool force = false);
+               bool force = false);
 
 
 // last updated 12may2000 {dlb}
@@ -92,7 +80,7 @@ void mons_direct_effect(struct bolt &pbolt, int i);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void yell(bool force = false);
+void yell(void);
 
 
 // last updated 12may2000 {dlb}
@@ -103,7 +91,5 @@ void yell(bool force = false);
 void torment( int caster, int tx, int ty );
 
 int torment_monsters(int x, int y, int pow, int caster);
-
-bool forget_inventory(bool quiet = false);
 
 #endif

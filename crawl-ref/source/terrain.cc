@@ -34,7 +34,12 @@
 
 bool grid_is_wall( dungeon_feature_type grid )
 {
-    return (grid >= DNGN_MINWALL && grid <= DNGN_MAXWALL);
+    return (grid == DNGN_ROCK_WALL
+            || grid == DNGN_STONE_WALL
+            || grid == DNGN_METAL_WALL
+            || grid == DNGN_GREEN_CRYSTAL_WALL
+            || grid == DNGN_WAX_WALL
+            || grid == DNGN_PERMAROCK_WALL);
 }
 
 bool grid_is_stone_stair(dungeon_feature_type grid)
@@ -157,7 +162,7 @@ command_type grid_stair_direction(dungeon_feature_type grid)
 
 bool grid_is_opaque( dungeon_feature_type grid )
 {
-    return (grid < DNGN_MINSEE);
+    return (grid < DNGN_MINSEE && grid != DNGN_ORCISH_IDOL);
 }
 
 bool grid_is_solid( dungeon_feature_type grid )
@@ -175,19 +180,10 @@ bool grid_is_solid(const coord_def &c)
     return (grid_is_solid(grd(c)));
 }
 
-bool grid_is_rock( dungeon_feature_type grid )
-{
-    return (grid == DNGN_ORCISH_IDOL
-            || grid == DNGN_GRANITE_STATUE
-            || grid == DNGN_SECRET_DOOR
-            || (grid >= DNGN_ROCK_WALL
-                && grid <= DNGN_CLEAR_PERMAROCK_WALL));
-}
-
 bool grid_is_trap(dungeon_feature_type grid)
 {
     return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
-              || grid == DNGN_TRAP_NATURAL);
+              || grid == DNGN_TRAP_III);
 }
 
 bool grid_is_water( dungeon_feature_type grid )
@@ -387,7 +383,6 @@ static void dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
                 dgn_shift_item(pos, mitm[curr]);
             else
             {
-                item_was_destroyed(mitm[curr]);
                 destroy_item(curr);
                 did_destroy = true;
             }
@@ -408,8 +403,6 @@ static void dgn_check_terrain_monsters(const coord_def &pos)
         else
             mons_check_pool(mons, KILL_MISC, -1);
     }
-
-    set_terrain_changed(pos.x, pos.y);
 }
 
 void dungeon_terrain_changed(const coord_def &pos,

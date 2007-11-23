@@ -41,17 +41,11 @@ bool dgn_event_dispatcher::has_listeners_at(const coord_def &pos) const
 void dgn_event_dispatcher::fire_position_event(
     dgn_event_type event, const coord_def &pos)
 {
-    const dgn_event et(event, pos);
-    fire_position_event(et, pos);
-}
-
-void dgn_event_dispatcher::fire_position_event(
-    const dgn_event &et, const coord_def &pos)
-{
     dgn_square_alarm *alarm = grid_triggers[pos.x][pos.y].get();    
-    if (alarm && (alarm->eventmask & et.type))
+    if (alarm && (alarm->eventmask & event))
     {
         dgn_square_alarm alcopy = *alarm;
+        const dgn_event et(event, pos);
         for (std::list<dgn_event_listener*>::iterator
                  i = alcopy.listeners.begin();
              i != alcopy.listeners.end(); ++i)
@@ -59,7 +53,6 @@ void dgn_event_dispatcher::fire_position_event(
             (*i)->notify_dgn_event(et);
         }
     }
-
 }
 
 void dgn_event_dispatcher::fire_event(const dgn_event &e)

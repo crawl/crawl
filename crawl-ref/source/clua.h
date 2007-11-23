@@ -235,8 +235,6 @@ template <class T> T *clua_new_userdata(
     return static_cast<T*>( udata );
 }
 
-void push_monster(lua_State *ls, monsters *mons);
-
 #define MAP_METATABLE "dgn.mtmap"
 #define DEVENT_METATABLE "dgn.devent"
 #define MAPMARK_METATABLE "dgn.mapmark"

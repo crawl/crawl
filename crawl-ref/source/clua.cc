@@ -379,6 +379,7 @@ void CLua::vfnreturns(const char *format, va_list args)
     lua_pop(ls, nrets);
 }
 
+static void push_monster(lua_State *ls, monsters *mons);
 static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
@@ -717,12 +718,6 @@ LUARET1(you_race, string,
         species_name(you.species, you.experience_level).c_str())
 LUARET1(you_class, string, get_class_name(you.char_class))
 LUARET1(you_god, string, god_name(you.religion))
-LUARET1(you_good_god, boolean,
-        lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))
-        : is_good_god(you.religion))
-LUARET1(you_evil_god, boolean,
-        lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
-        : is_evil_god(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, string, hunger_level())
@@ -731,9 +726,6 @@ LUARET2(you_intelligence, number, you.intel, you.max_intel)
 LUARET2(you_dexterity, number, you.dex, you.max_dex)
 LUARET1(you_exp, number, you.experience_level)
 LUARET1(you_exp_points, number, you.experience)
-LUARET1(you_skill, number,
-        lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
-        : 0)
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -743,7 +735,6 @@ LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
 LUARET1(you_res_slowing, number, wearing_amulet(AMU_RESIST_SLOW, false))
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
-LUARET1(you_saprovorous, number, you.mutation[MUT_SAPROVOROUS])
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
 LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
 LUARET1(you_transform, string, transform_name())
@@ -755,10 +746,9 @@ LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_see_grid, boolean,
         see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
-LUARET1(you_see_grid_no_trans, boolean,
-        see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
-
 // increase by 1 because check happens on old level
+LUARET1(bzr_floor_colour, string,
+        colour_to_str(bazaar_floor_colour(you.your_level + 2)))
 
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
@@ -806,17 +796,15 @@ static const struct luaL_reg you_lib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "god"         , you_god },
-    { "good_god"    , you_good_god },
-    { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "hunger"      , you_hunger },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
-    { "skill"       , you_skill },
     { "xl"          , you_exp },
     { "exp"         , you_exp_points },
+
     { "res_poison"  , you_res_poison },
     { "res_fire"    , you_res_fire   },
     { "res_cold"    , you_res_cold   },
@@ -825,7 +813,6 @@ static const struct luaL_reg you_lib[] =
     { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
     { "res_slowing",  you_res_slowing },
-    { "saprovorous",  you_saprovorous },
     { "gourmand",     you_gourmand },
     { "levitating",   you_levitating },
     { "flying",       you_flying },
@@ -840,9 +827,9 @@ static const struct luaL_reg you_lib[] =
     { "subdepth",     you_subdepth },
     { "absdepth",     you_absdepth },
 
-    { "see_grid",          you_see_grid },
-    { "see_grid_no_trans", you_see_grid_no_trans },
-
+    { "see_grid",     you_see_grid },
+    { "bazaar_floor", bzr_floor_colour },
+    
     { NULL, NULL },
 };
 
@@ -1510,14 +1497,10 @@ static int food_do_eat(lua_State *ls)
 
 static int food_prompt_floor(lua_State *ls)
 {
-    int eaten = 0;
-    if (!you.turn_is_over)
-    {
-        eaten = eat_from_floor();
-        if ( eaten == 1 )
-            burden_change();
-    }
-    lua_pushboolean(ls, (eaten != 0));
+    bool eaten = false;
+    if (!you.turn_is_over && (eaten = eat_from_floor()))
+        burden_change();
+    lua_pushboolean(ls, eaten);
     return (1);
 }
 
@@ -2078,22 +2061,30 @@ static option_handler handlers[] =
     { "colour_map", &Options.colour_map, option_hboolean },
     { "clean_map", &Options.clean_map, option_hboolean },
     { "show_uncursed", &Options.show_uncursed, option_hboolean },
+    { "always_greet", &Options.always_greet, option_hboolean },
     { "easy_open", &Options.easy_open, option_hboolean },
     { "easy_armour", &Options.easy_unequip, option_hboolean },
     { "easy_unequip", &Options.easy_unequip, option_hboolean },
     { "easy_butcher", &Options.easy_butcher, option_hboolean },
-    { "always_confirm_butcher", &Options.always_confirm_butcher, option_hboolean },
+    { "terse_hand", &Options.terse_hand, option_hboolean },
+    { "increasing_skill_progress", &Options.increasing_skill_progress, option_hboolean },
+    { "confirm_self_target", &Options.confirm_self_target, option_hboolean },
     { "default_target", &Options.default_target, option_hboolean },
+    { "safe_autopickup", &Options.safe_autopickup, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
     { "note_skill_max", &Options.note_skill_max, option_hboolean },
+    { "use_notes", &Options.use_notes, option_hboolean },
     { "delay_message_clear", &Options.delay_message_clear, option_hboolean },
     { "no_dark_brand", &Options.no_dark_brand, option_hboolean },
     { "auto_list", &Options.auto_list, option_hboolean },
+    { "lowercase_invocations", &Options.lowercase_invocations, 
+                    option_hboolean },
     { "pickup_thrown", &Options.pickup_thrown, option_hboolean },
     { "pickup_dropped", &Options.pickup_dropped, option_hboolean },
     { "show_waypoints", &Options.show_waypoints, option_hboolean },
     { "item_colour", &Options.item_colour, option_hboolean },
     { "target_zero_exp", &Options.target_zero_exp, option_hboolean },
+    { "safe_zero_exp", &Options.safe_zero_exp, option_hboolean },
     { "target_wrap", &Options.target_wrap, option_hboolean },
     { "easy_exit_menu", &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity, 
@@ -2276,7 +2267,7 @@ static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
     return 0;
 }
 
-void push_monster(lua_State *ls, monsters *mons)
+static void push_monster(lua_State *ls, monsters *mons)
 {
     MonsterWrap *mw = clua_new_userdata< MonsterWrap >(ls, MONS_METATABLE);
     mw->turn = you.num_turns;

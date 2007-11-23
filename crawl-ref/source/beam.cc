@@ -60,7 +60,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
-#include "xom.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -792,7 +791,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         break;
 
     case ZAP_NEGATIVE_ENERGY:                           // cap 150
-        pbolt.name = pbolt.effect_known ? "bolt of negative energy" : "bolt";
+        pbolt.name = "bolt of negative energy";
         pbolt.colour = DARKGREY;
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 ); 
@@ -1240,32 +1239,6 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
  */
 
 
-// Affect monster in wall unless it can shield itself using the wall
-// (M_WALL_SHIELDED).  The wall will always shield the monster if the
-// beam bounces off the wall, and a monster can't use a metal wall to
-// shield itself from electricty.
-static bool affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
-{
-    UNUSED(item);
-
-    int mid = mgrd[tx][ty];
-
-    if (mid == NON_MONSTER)
-        return false;
-
-    if (pbolt.is_enchant
-        || (!pbolt.is_explosion && !pbolt.is_big_cloud
-            && (grd[tx][ty] != DNGN_METAL_WALL
-                || !pbolt.flavour != BEAM_ELECTRICITY)))
-    {
-        monsters *mons = &menv[mid];
-        if (!mons_class_flag(mons->type, M_WALL_SHIELDED))
-            return true;
-    }
-
-    return false;
-}
-
 /*
  * Beam pseudo code:
  *
@@ -1384,13 +1357,9 @@ void fire_beam( bolt &pbolt, item_def *item )
             }
             else
             {
-                // BEGIN bounce case.  Bouncing protects any monster
-                // in the wall.
+                // BEGIN bounce case
                 if (!isBouncy(pbolt, grd[tx][ty]))
                 {
-                    // Affect any monster that might be in the wall.
-                    rangeRemaining -= affect(pbolt, tx, ty);
-
                     do
                         ray.regress();
                     while (grid_is_solid(grd(ray.pos())));
@@ -1536,14 +1505,6 @@ void fire_beam( bolt &pbolt, item_def *item )
     {
         if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect)
             canned_msg(MSG_NOTHING_HAPPENS);
-    }
-
-    if (!pbolt.is_tracer && pbolt.beam_source != NON_MONSTER)
-    {
-        if (pbolt.foe_hurt == 0 && pbolt.fr_hurt > 0)
-            xom_is_stimulated(128);
-        else if (pbolt.foe_helped > 0 && pbolt.fr_helped == 0)
-            xom_is_stimulated(128);
     }
 
     // that's it!
@@ -1701,7 +1662,11 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             pbolt.obvious_effect = true;
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_NECROMANCY, 2 + random2(3), pbolt.effect_known);
+            {
+                // currently no gods who enjoy use of necromancy
+                if (pbolt.effect_known)
+                    did_god_conduct(DID_NECROMANCY, 2 + random2(3));
+            }
 
             if (one_chance_in(5))
             {
@@ -2222,8 +2187,6 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     // init tracer variables
     pbolt.foe_count = pbolt.fr_count = 0;
     pbolt.foe_power = pbolt.fr_power = 0;
-    pbolt.fr_helped = pbolt.fr_hurt  = 0;
-    pbolt.foe_helped = pbolt.foe_hurt = 0;
     pbolt.foe_ratio = 80;        // default - see mons_should_fire()
 
     // foe ratio for summon gtr. demons & undead -- they may be
@@ -2437,8 +2400,6 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
         // Too much message spam otherwise
         if ( YOU_KILL(beam.thrower) && player_can_hear(x, y) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
-
-        item_was_destroyed(*item, beam.beam_source);
         return;
     }
 
@@ -2521,28 +2482,10 @@ int affect(bolt &beam, int x, int y)
         {
             rangeUsed += affect_wall(beam, x, y);
         }
-        // if it's still a wall, quit - we can't do anything else to a
-        // wall (but we still might be able to do something to any
-        // monster inside the wall).  Otherwise effects (like clouds,
-        // etc) are still possible.
+        // if it's still a wall, quit - we can't do anything else to
+        // a wall.  Otherwise effects (like clouds, etc) are still possible.
         if (grid_is_solid(grd[x][y]))
-        {
-            int mid = mgrd[x][y];
-            if (mid != NON_MONSTER)
-            {
-                monsters *mon = &menv[mid];
-                if (affect_mon_in_wall(beam, NULL, x, y))
-                    rangeUsed += affect_monster( beam, mon );
-                else if (you.can_see(mon))
-                {
-                    mprf("The %s protects %s from harm.",
-                         raw_feature_description(grd(mon->pos())).c_str(),
-                         mon->name(DESC_NOCAP_THE).c_str());
-                }
-            }
-
             return (rangeUsed);
-        }
     }
 
     // grd[x][y] will NOT be a wall for the remainder of this function.
@@ -2645,14 +2588,13 @@ static int affect_wall(bolt &beam, int x, int y)
         if (grd[x][y] == DNGN_STONE_WALL
             || grd[x][y] == DNGN_METAL_WALL
             || grd[x][y] == DNGN_PERMAROCK_WALL
-            || grd[x][y] == DNGN_CLEAR_STONE_WALL
-            || grd[x][y] == DNGN_CLEAR_PERMAROCK_WALL
-            || !in_bounds(x, y))
+            || x <= 5 || x >= (GXM - 5)
+            || y <= 5 || y >= (GYM - 5))
         {
             return (0);
         }
 
-        if (grd[x][y] == DNGN_ROCK_WALL || grd[x][y] == DNGN_CLEAR_ROCK_WALL)
+        if (grd[x][y] == DNGN_ROCK_WALL)
         {
             grd[x][y] = DNGN_FLOOR;
 
@@ -2711,9 +2653,8 @@ static int affect_wall(bolt &beam, int x, int y)
     {
         int targ_grid = grd[x][y];
 
-        if ((targ_grid == DNGN_ROCK_WALL || targ_grid == DNGN_WAX_WALL
-             || targ_grid == DNGN_CLEAR_ROCK_WALL)
-            && in_bounds(x, y))
+        if ((targ_grid == DNGN_ROCK_WALL || targ_grid == DNGN_WAX_WALL)
+             && !(x <= 6 || y <= 6 || x >= (GXM - 6) || y >= (GYM - 6)))
         {
             grd[ x ][ y ] = DNGN_FLOOR;
             if (!silenced(you.x_pos, you.y_pos))
@@ -2742,8 +2683,7 @@ static int affect_wall(bolt &beam, int x, int y)
                     mpr("The statue twists and shakes as its substance crumbles away!");
             }
 
-            if (targ_grid == DNGN_ORCISH_IDOL
-                && beam.beam_source == NON_MONSTER)
+            if (targ_grid == DNGN_ORCISH_IDOL)
             {
                 beogh_idol_revenge();
             }
@@ -2978,8 +2918,6 @@ static void affect_items(bolt &beam, int x, int y)
         if (objs_vulnerable != -1 &&
             mitm[igrd[x][y]].base_type == objs_vulnerable)
         {
-            item_was_destroyed(mitm[igrd[x][y]], beam.beam_source);
-
             destroy_item( igrd[ x ][ y ] );
 
             if (objs_vulnerable == OBJ_SCROLLS && see_grid(x,y))
@@ -3171,14 +3109,14 @@ static int affect_player( bolt &beam )
 #endif
                     if (hit < block)
                     {
+                        you.shield_blocks++;
                         mprf( "You block the %s.", beam.name.c_str() );
-                        you.shield_block_succeeded();
+                        exercise( SK_SHIELDS, exer + 1 );
                         return (BEAM_STOP);
                     }
 
                     // some training just for the "attempt"
-                    if (coinflip())
-                        exercise( SK_SHIELDS, exer );
+                    exercise( SK_SHIELDS, exer );
                 }
 
                 if (player_light_armour(true) && !beam.aimed_at_feet
@@ -3203,8 +3141,6 @@ static int affect_player( bolt &beam )
     }
     else
     {
-        bool nasty = true, nice = false;
-
         // BEGIN enchantment beam
         if (beam.flavour != BEAM_HASTE 
             && beam.flavour != BEAM_INVISIBILITY
@@ -3215,12 +3151,6 @@ static int affect_player( bolt &beam )
             && you_resist_magic( beam.ench_power ))
         {
             canned_msg(MSG_YOU_RESIST);
-
-            // You *could* have gotten a free teleportation in the Abyss,
-            // but no, you resisted.
-            if (beam.flavour != BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
-                xom_is_stimulated(255);
-
             return (range_used_on_hit(beam));
         }
 
@@ -3229,10 +3159,6 @@ static int affect_player( bolt &beam )
         // these colors are misapplied - see mons_ench_f2() {dlb}
         switch (beam.flavour)
         {
-        case BEAM_SLEEP:
-            you.put_to_sleep(beam.ench_power);
-            break;
-            
         case BEAM_BACKLIGHT:
             if (!you.duration[DUR_INVIS])
             {
@@ -3263,8 +3189,7 @@ static int affect_player( bolt &beam )
                 you.mutate();
                 beam.obvious_effect = true;
             }
-            else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
-                     == ID_KNOWN_TYPE)
+            else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER) == ID_KNOWN_TYPE)
             {
                 mpr("This is polymorph other only!");
             }
@@ -3283,15 +3208,11 @@ static int affect_player( bolt &beam )
             potion_effect( POT_SPEED, beam.ench_power );
             contaminate_player( 1 );
             beam.obvious_effect = true;
-            nasty = false;
-            nice  = true;
             break;     // haste
 
         case BEAM_HEALING:
             potion_effect( POT_HEAL_WOUNDS, beam.ench_power );
             beam.obvious_effect = true;
-            nasty = false;
-            nice  = true;
             break;     // heal (heal wounds potion eff)
 
         case BEAM_PARALYSIS:
@@ -3308,20 +3229,12 @@ static int affect_player( bolt &beam )
             potion_effect( POT_INVISIBILITY, beam.ench_power );
             contaminate_player( 1 + random2(2) );
             beam.obvious_effect = true;
-            nasty = false;
-            nice  = true;
             break;     // invisibility
 
             // 6 is used by digging
 
         case BEAM_TELEPORT:
             you_teleport();
-
-            // An enemy helping you escape while in the Abyss, or an
-            // enemy stabilizing a teleport that was about to happen.
-            if (beam.attitude == ATT_HOSTILE && you.level_type == LEVEL_ABYSS)
-                xom_is_stimulated(255);
-
             beam.obvious_effect = true;
             break;
 
@@ -3394,33 +3307,6 @@ static int affect_player( bolt &beam )
             break;
         }               // end of switch (beam.colour)
 
-        if (nasty)
-        {
-            if (beam.attitude != ATT_HOSTILE)
-            {
-                beam.fr_hurt++;
-                if (beam.beam_source == NON_MONSTER)
-                    // Beam from player rebounded and hit player
-                    xom_is_stimulated(255);
-                else
-                    // Beam from an ally
-                    xom_is_stimulated(128);
-            }
-            else
-                beam.foe_hurt++;
-        }
-
-        if (nice)
-        {
-            if (beam.attitude != ATT_HOSTILE)
-                beam.fr_helped++;
-            else
-            {
-                beam.foe_helped++;
-                xom_is_stimulated(128);
-            }
-        }
-
         // regardless of affect, we need to know if this is a stopper
         // or not - it seems all of the above are.
         return (range_used_on_hit(beam));
@@ -3470,9 +3356,6 @@ static int affect_player( bolt &beam )
         }
     }
 
-    bool was_affected = false;
-    int  old_hp       = you.hp;
-
     if (hurted < 0)
         hurted = 0;
 
@@ -3481,16 +3364,10 @@ static int affect_player( bolt &beam )
     if (beam.flavour == BEAM_MIASMA && hurted > 0)
     {
         if (player_res_poison() <= 0)
-        {
             poison_player(1);
-            was_affected = true;
-        }
 
         if (one_chance_in( 3 + 2 * player_prot_life() ))
-        {
             potion_effect( POT_SLOWING, 5 );
-            was_affected = true;
-        }
     }
 
     // poisoning
@@ -3503,22 +3380,17 @@ static int affect_player( bolt &beam )
                         && random2(100) < 90 - (3 * player_AC())))
         {
             poison_player( 1 + random2(3) );
-            was_affected = true;
         }
     }
     
     if (beam.name.find("throwing net") != std::string::npos)
-    {
         player_caught_in_net();
-        was_affected = true;
-    }
 
     if (beam.name.find("curare") != std::string::npos)
     {
         if (random2(100) < 90 - (3 * player_AC()))
         {
             curare_hits_player( beam_ouch_agent(beam), 1 + random2(3) );
-            was_affected = true;
         }
     }
 
@@ -3528,10 +3400,7 @@ static int affect_player( bolt &beam )
             || you.experience_level < 6))
     {
         if (!player_equip( EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR ))
-        {
             you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
-            was_affected = true;
-        }
     }
 
     // simple cases for scroll burns
@@ -3556,24 +3425,6 @@ static int affect_player( bolt &beam )
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
 #endif
-
-    if (hurted > 0 || old_hp < you.hp || was_affected)
-    {
-        if (beam.attitude != ATT_HOSTILE)
-        {
-            beam.fr_hurt++;
-
-            // Beam from player rebounded and hit player
-            if (beam.beam_source == NON_MONSTER)
-                xom_is_stimulated(255);
-            // Xom's amusement at the player being damaged is handled
-            // elsewhere.
-            else if (was_affected)
-                xom_is_stimulated(128);
-        }
-        else
-            beam.foe_hurt++;
-    }
 
     beam_ouch( hurted, beam );
 
@@ -3606,31 +3457,6 @@ static int name_to_skill_level(const std::string& name)
         return (you.skills[type] + you.skills[SK_THROWING]);
         
     return (2 * you.skills[type]);
-}
-
-static void update_hurt_or_helped(bolt &beam, monsters *mon)
-{
-    if (beam.attitude != mons_attitude(mon))
-    {
-        if (nasty_beam(mon, beam))
-            beam.foe_hurt++;
-        else if (nice_beam(mon, beam))
-            beam.foe_helped++;
-    }
-    else
-    {
-        if (nasty_beam(mon, beam))
-        {
-            beam.fr_hurt++;
-
-            // Harmful beam from this monster rebounded and hit the monster
-            int midx = (int) monster_index(mon);
-            if (midx == beam.beam_source)
-                xom_is_stimulated(128);
-        }
-        else if (nice_beam(mon, beam))
-            beam.fr_helped++;
-    }
 }
 
 // return amount of range used up by affectation of this monster
@@ -3684,7 +3510,6 @@ static int affect_monster(bolt &beam, monsters *mon)
                         "crumbles away!");
         }
         beam.obvious_effect = true;
-        update_hurt_or_helped(beam, mon);
         mon->hit_points = 0;
         monster_die(mon, beam);
         return (BEAM_STOP);
@@ -3723,10 +3548,10 @@ static int affect_monster(bolt &beam, monsters *mon)
             if (YOU_KILL( beam.thrower ))
             {
                 if (mons_friendly( mon ))
-                    did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
+                    did_god_conduct( DID_ATTACK_FRIEND, 5, mon );
 
                 if (mons_holiness( mon ) == MH_HOLY)
-                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, true, mon );
+                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
 
                 if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
                     && mon->behaviour == BEH_SLEEP && you.species == SP_HILL_ORC
@@ -3768,7 +3593,6 @@ static int affect_monster(bolt &beam, monsters *mon)
                     beam.msg_generated = true;
                 break;
             default:
-                update_hurt_or_helped(beam, mon);
                 break;
             }
         }
@@ -3878,14 +3702,11 @@ static int affect_monster(bolt &beam, monsters *mon)
     {
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
-            const bool okay = beam.aux_source == "reading a scroll of immolation"
-                              && !beam.effect_known;
-            
             if (mons_friendly(mon))
-                did_god_conduct( DID_ATTACK_FRIEND, 5, !okay, mon );
+                did_god_conduct( DID_ATTACK_FRIEND, 5, mon );
 
             if (mons_holiness( mon ) == MH_HOLY)
-                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );
+                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, mon );
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
@@ -3922,28 +3743,6 @@ static int affect_monster(bolt &beam, monsters *mon)
         }
         return (0);
     }
-
-    // The monster may block the beam.
-    if (!engulfs && beam_is_blockable(beam))
-    {
-        const int shield_block = mon->shield_bonus();
-        if (shield_block > 0)
-        {
-            const int hit = random2( beam.hit * 130 / 100
-                                     + mon->shield_block_penalty() );
-            if (hit < shield_block && mons_near(mon)
-                && player_monster_visible(mon))
-            {
-                mprf("%s blocks the %s.",
-                     mon->name(DESC_CAP_THE).c_str(),
-                     beam.name.c_str());
-                mon->shield_block_succeeded();
-                return (BEAM_STOP);
-            }
-        }
-    }
-
-    update_hurt_or_helped(beam, mon);
 
     // the beam hit.
     if (mons_near(mon))
@@ -4274,7 +4073,9 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         if (simple_monster_message(mon, " looks drowsy..."))
             beam.obvious_effect = true;
 
-        mon->put_to_sleep();
+        mon->behaviour = BEH_SLEEP;
+        mon->add_ench(ENCH_SLEEPY);
+        mon->add_ench(ENCH_SLEEP_WARY);
 
         return (MON_AFFECTED);
     }
@@ -4769,7 +4570,7 @@ static void explosion_map( bolt &beam, int x, int y,
     // special case: explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
     // solid cells at the center of the explosion.
-    if (dngn_feat <= DNGN_MAXWALL)
+    if (dngn_feat < DNGN_GREEN_CRYSTAL_WALL || dngn_feat == DNGN_WAX_WALL)
     {
         if (!(x==0 && y==0) && !affects_wall(beam, dngn_feat))
             return;
@@ -4838,18 +4639,6 @@ bool nasty_beam(monsters *mon, bolt &beam)
     return (true);
 }
 
-bool nice_beam( struct monsters *mon, struct bolt &beam )
-{
-    // haste
-    if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING
-        || beam.flavour == BEAM_INVISIBILITY)
-    {
-        return (true);
-    }
-
-    return (false);
-}
-
 ////////////////////////////////////////////////////////////////////////////
 // bolt
 
@@ -4868,8 +4657,7 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                is_thrown(false), target_first(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), obvious_effect(false),
                effect_known(true), fr_count(0), foe_count(0), fr_power(0),
-               foe_power(0), fr_hurt(0), foe_hurt(0), fr_helped(0),
-               foe_helped(0), is_tracer(false), aimed_at_feet(false),
+               foe_power(0), is_tracer(false), aimed_at_feet(false),
                msg_generated(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false)

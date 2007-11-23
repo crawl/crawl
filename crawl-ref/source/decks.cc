@@ -33,7 +33,6 @@
 #include "monstuff.h"
 #include "mutation.h"
 #include "ouch.h"
-#include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "spells1.h"
@@ -42,26 +41,11 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
-#include "xom.h"
-
-// DECK STRUCTURE: deck.plus is the number of cards the deck *started*
-// with, deck.plus2 is the number of cards drawn, deck.special is the
-// deck rarity, deck.props["cards"] holds the list of cards (with the
-// highest index card being the top card, and index 0 being the bottom
-// card), deck.props["card_flags"] holds the flags for each card,
-// deck.props["num_marked"] is the number of marked cards left in the
-// deck, and deck.props["non_brownie_draws"] is the number of
-// non-marked draws you have to make from that deck before earning
-// brownie points from it again.
-//
-// The card type and per-card flags are each stored as unsigned bytes,
-// for a maximum of 256 different kinds of cards and 8 bits of flags.
 
 #define VECFROM(x) (x), (x) + ARRAYSIZE(x)
 #define DEFVEC(Z) static std::vector<card_type> Z(VECFROM(a_##Z))
@@ -99,7 +83,7 @@ static card_type a_deck_of_enchantments[] = {
 DEFVEC(deck_of_enchantments);
 
 static card_type a_deck_of_summoning[] = {
-    CARD_CRUSADE, CARD_SUMMON_ANIMAL, CARD_SUMMON_DEMON, CARD_SUMMON_WEAPON
+    CARD_SUMMON_ANIMAL, CARD_SUMMON_DEMON, CARD_SUMMON_WEAPON
 };
 
 DEFVEC(deck_of_summoning);
@@ -135,84 +119,11 @@ DEFVEC(deck_of_punishment);
 #undef DEFVEC
 #undef VECFROM
 
-static void check_odd_card(unsigned char flags)
-{
-    if ((flags & CFLAG_ODDITY) && !(flags & CFLAG_SEEN))
-        mpr("This card doesn't seem to belong here.");
-}
-
-int cards_in_deck(const item_def &deck)
-{
-    ASSERT(is_deck(deck));
-
-    const CrawlHashTable &props = deck.props;
-    ASSERT(props.exists("cards"));
-
-    return static_cast<unsigned long>(props["cards"].get_vector().size());
-}
-
-static void shuffle_deck(item_def &deck)
-{
-    ASSERT(is_deck(deck));
-
-    CrawlHashTable &props = deck.props;
-    ASSERT(props.exists("cards"));
-
-    CrawlVector &cards = props["cards"];
-    ASSERT(cards.size() > 1);
-
-    CrawlVector &flags = props["card_flags"];
-    ASSERT(flags.size() == cards.size());
-
-    // Don't use std::shuffle(), since we want to apply exactly the
-    // same shuffling to both the cards vector and the flags vector.
-    std::vector<long> pos;
-    for (unsigned long i = 0; i < cards.size(); i++)
-        pos.push_back(random2(cards.size()));
-
-    for (unsigned long i = 0; i < pos.size(); i++)
-    {
-        std::swap(cards[i], cards[pos[i]]);
-        std::swap(flags[i], flags[pos[i]]);
-    }
-}
-
-card_type get_card_and_flags(const item_def& deck, int idx,
-                             unsigned char& _flags)
-{
-    const CrawlHashTable &props = deck.props;
-    const CrawlVector    &cards = props["cards"].get_vector();
-    const CrawlVector    &flags = props["card_flags"].get_vector();
-
-    // negative idx means read from the end
-    if (idx < 0)
-        idx += static_cast<int>(cards.size());
-
-    _flags = (unsigned char) flags[idx].get_byte();
-
-    return static_cast<card_type>(cards[idx].get_byte());
-}
-
-static void set_card_and_flags(item_def& deck, int idx, card_type card,
-                               unsigned char _flags)
-{
-    CrawlHashTable &props = deck.props;
-    CrawlVector    &cards = props["cards"];
-    CrawlVector    &flags = props["card_flags"];
-
-    if (idx == -1)
-        idx = (int) cards.size() - 1;
-
-    cards[idx] = (char) card;
-    flags[idx] = (char) _flags;
-}
-
 const char* card_name(card_type card)
 {
     switch (card)
     {
-    case CARD_BLANK1: return "blank card";
-    case CARD_BLANK2: return "blank card";
+    case CARD_BLANK: return "blank card";
     case CARD_PORTAL: return "the Portal";
     case CARD_WARP: return "the Warp";
     case CARD_SWAP: return "Swap";
@@ -238,7 +149,6 @@ const char* card_name(card_type card)
     case CARD_MAP: return "the Map";
     case CARD_BANSHEE: return "the Banshee";
     case CARD_WILD_MAGIC: return "Wild Magic";
-    case CARD_CRUSADE: return "the Crusade";
     case CARD_SUMMON_ANIMAL: return "the Herd";
     case CARD_SUMMON_DEMON: return "the Pentagram";
     case CARD_SUMMON_WEAPON: return "the Dance";
@@ -264,10 +174,10 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
-static const std::vector<card_type>* random_sub_deck(unsigned char deck_type)
+static card_type choose_one_card(const item_def& item, bool message)
 {
-    const std::vector<card_type> *pdeck = NULL;
-    switch ( deck_type )
+    std::vector<card_type> *pdeck = NULL;
+    switch ( item.sub_type )
     {
     case MISC_DECK_OF_ESCAPE:
         pdeck = (coinflip() ? &deck_of_transport : &deck_of_emergency);
@@ -302,111 +212,29 @@ static const std::vector<card_type>* random_sub_deck(unsigned char deck_type)
     }
 
     ASSERT( pdeck );
-
-    return pdeck;
-}
-
-static card_type random_card(unsigned char deck_type, bool &was_oddity)
-{
-    const std::vector<card_type> *pdeck = random_sub_deck(deck_type);
-
+    
     if ( one_chance_in(100) )
     {
-        pdeck      = &deck_of_oddities;
-        was_oddity = true;
+        if ( message )
+            mpr("This card doesn't seem to belong here.");
+        pdeck = &deck_of_oddities;
     }
 
     card_type chosen = (*pdeck)[random2(pdeck->size())];
 
-    // Paranoia
-    if (chosen < CARD_BLANK1 || chosen >= NUM_CARDS)
-        chosen = NUM_CARDS;
-
-    return chosen;
-}
-
-static card_type random_card(const item_def& item, bool &was_oddity)
-{
-    return random_card(item.sub_type, was_oddity);
-}
-
-static void retry_blank_card(card_type &card, unsigned char deck_type,
-                             unsigned char flags)
-{
-    // BLANK1 == hasn't been retried
-    if (card != CARD_BLANK1)
-        return;
-
-    if (flags & (CFLAG_MARKED | CFLAG_SEEN))
-    {
-        // Can't retry a card which has been seen or marked.
-        card = CARD_BLANK2;
-        return;
-    }
-
-    const std::vector<card_type> *pdeck = random_sub_deck(deck_type);
-
-    if (flags & CFLAG_ODDITY)
-        pdeck = &deck_of_oddities;
+    // Cut the probability of Damnation on common decks...
+    // too much of a killer otherwise.
+    if ( chosen == CARD_DAMNATION &&
+         pdeck != &deck_of_punishment &&
+         deck_rarity(item) == DECK_RARITY_COMMON )
+        chosen = (*pdeck)[random2(pdeck->size())];
 
     // High Evocations gives you another shot (but not at being punished...)
-    if (pdeck != &deck_of_punishment 
-        && you.skills[SK_EVOCATIONS] > random2(30))
-    {
-        card = (*pdeck)[random2(pdeck->size())];
-    }
+    if (pdeck != &deck_of_punishment && chosen == CARD_BLANK &&
+        you.skills[SK_EVOCATIONS] > random2(30))
+        chosen = (*pdeck)[random2(pdeck->size())];
 
-    // BLANK2 == retried and failed
-    if (card == CARD_BLANK1)
-        card = CARD_BLANK2;
-}
-
-static void retry_blank_card(card_type &card, item_def& deck,
-                             unsigned char flags)
-{
-    retry_blank_card(card, deck.sub_type, flags);
-}
-
-static card_type draw_top_card(item_def& deck, bool message,
-                               unsigned char &_flags)
-{
-    CrawlHashTable &props = deck.props;
-    CrawlVector    &cards = props["cards"].get_vector();
-    CrawlVector    &flags = props["card_flags"].get_vector();
-
-    int num_cards = cards.size();
-    int idx       = num_cards - 1;
-
-    ASSERT(num_cards > 0);
-
-    card_type card = get_card_and_flags(deck, idx, _flags);
-    cards.pop_back();
-    flags.pop_back();
-
-    retry_blank_card(card, deck, _flags);
-
-    if (message)
-    {
-        if (_flags & CFLAG_MARKED)
-            mprf("You draw %s.", card_name(card));
-        else
-            mprf("You draw a card... It is %s.", card_name(card));
-
-        check_odd_card(_flags);
-    }
-
-    return card;
-}
-
-static void push_top_card(item_def& deck, card_type card,
-                          unsigned char _flags)
-{
-    CrawlHashTable &props = deck.props;
-    CrawlVector    &cards = props["cards"].get_vector();
-    CrawlVector    &flags = props["card_flags"].get_vector();
-
-    cards.push_back((char) card);
-    flags.push_back((char) _flags);
+    return chosen;
 }
 
 static bool wielding_deck()
@@ -414,234 +242,6 @@ static bool wielding_deck()
     if ( you.equip[EQ_WEAPON] == -1 )
         return false;
     return is_deck(you.inv[you.equip[EQ_WEAPON]]);
-}
-
-static bool check_buggy_deck(item_def& deck)
-{
-    std::ostream& strm = msg::streams(MSGCH_DIAGNOSTICS);
-    if (!is_deck(deck))
-    {
-        crawl_state.zero_turns_taken();
-        strm << "This isn't a deck at all!" << std::endl;
-        return true;
-    }
-
-    CrawlHashTable &props = deck.props;
-
-    if (!props.exists("cards")
-        || props["cards"].get_type() != SV_VEC
-        || props["cards"].get_vector().get_type() != SV_BYTE
-        || cards_in_deck(deck) == 0)
-    {
-        crawl_state.zero_turns_taken();
-
-        if (!props.exists("cards"))
-            strm << "Seems this deck never had any cards in the first place!";
-        else if (props["cards"].get_type() != SV_VEC)
-            strm << "'cards' property isn't a vector.";
-        else
-        {
-            if (props["cards"].get_vector().get_type() != SV_BYTE)
-                strm << "'cards' vector doesn't contain bytes.";
-
-            if (cards_in_deck(deck) == 0)
-            {
-                strm << "Strange, this deck is already empty.";
-
-                int cards_left = 0;
-                if (deck.plus2 >= 0)
-                    cards_left = deck.plus - deck.plus2;
-                else
-                    cards_left = -deck.plus;
-
-                if (cards_left != 0)
-                {
-                    strm << " But there should have been " <<  cards_left
-                         << " cards left.";
-                }
-            }
-        }
-        strm << std::endl
-             << "A swarm of software bugs snatches the deck from you "
-            "and whisks it away."
-             << std::endl;
-
-        if ( deck.link == you.equip[EQ_WEAPON] )
-            unwield_item();
-
-        dec_inv_item_quantity( deck.link, 1 );
-        did_god_conduct(DID_CARDS, 1);
-
-        return true;
-    }
-
-    bool problems = false;
-
-    CrawlVector &cards = props["cards"].get_vector();
-    CrawlVector &flags = props["card_flags"].get_vector();
-
-    unsigned long num_cards = cards.size();
-    unsigned long num_flags = flags.size();
-
-    unsigned int num_buggy     = 0;
-    unsigned int num_marked    = 0;
-
-    for (unsigned long i = 0; i < num_cards; i++)
-    {
-        unsigned char card   = cards[i].get_byte();
-        unsigned char _flags = flags[i].get_byte();
-        if (card >= NUM_CARDS)
-        {
-            cards.erase(i);
-            flags.erase(i);
-            i--;
-            num_cards--;
-            num_buggy++;
-        }
-        else
-        {
-            if (_flags & CFLAG_MARKED)
-                num_marked++;
-        }
-    }
-
-    if (num_buggy > 0)
-    {
-        strm << num_buggy << " buggy cards found in the deck, discarding them."
-             << std::endl;
-
-        deck.plus2 += num_buggy;
-
-        num_cards = cards.size();
-        num_flags = cards.size();
-
-        problems = true;
-    }
-
-    if (num_cards == 0)
-    {
-        crawl_state.zero_turns_taken();
-
-        strm << "Oops, all of the cards seem to be gone." << std::endl
-             << "A swarm of software bugs snatches the deck from you "
-            "and whisks it away." << std::endl;
-
-        if ( deck.link == you.equip[EQ_WEAPON] )
-            unwield_item();
-
-        dec_inv_item_quantity( deck.link, 1 );
-        did_god_conduct(DID_CARDS, 1);
-
-        return true;
-    }
-
-    if (static_cast<long>(num_cards) > deck.plus)
-    {
-        if (deck.plus == 0)
-            strm << "Deck was created with zero cards???" << std::endl;
-        else if (deck.plus < 0)
-            strm << "Deck was created with *negative* cards?!" << std::endl;
-        else
-            strm << "Deck has more cards than it was created with?"
-                 << std::endl;
-
-        deck.plus = num_cards;
-        problems  = true;
-    }
-
-    if (num_cards > num_flags)
-    {
-#ifdef WIZARD
-        strm << (num_cards - num_flags) << " more cards than flags.";
-#else
-        strm << "More cards than flags.";
-#endif
-        strm << std::endl;
-        for (unsigned int i = num_flags + 1; i <= num_cards; i++)
-            flags[i] = static_cast<char>(0);
-
-        problems = true;
-    }
-    else if (num_flags > num_cards)
-    {
-#ifdef WIZARD
-        strm << (num_cards - num_flags) << " more cards than flags.";
-#else
-        strm << "More cards than flags.";
-#endif
-        strm << std::endl;
-
-        for (unsigned int i = num_flags; i > num_cards; i--)
-            flags.erase(i);
-
-        problems = true;
-    }
-
-    if (props["num_marked"].get_byte() > static_cast<char>(num_cards))
-    {
-        strm << "More cards marked than in the deck?" << std::endl;
-        props["num_marked"] = static_cast<char>(num_marked);
-        problems = true;
-    }
-    else if (props["num_marked"].get_byte() != static_cast<char>(num_marked))
-    {
-#ifdef WIZARD
-
-        strm << "Oops, counted " << static_cast<int>(num_marked)
-             << " marked cards, but num_marked is "
-             << (static_cast<int>(props["num_marked"].get_byte()));        
-#else
-        strm << "Oops, book-keeping on marked cards is wrong.";
-#endif
-        strm << std::endl;
-
-        props["num_marked"] = static_cast<char>(num_marked);
-        problems = true;
-    }        
-
-    if (deck.plus2 >= 0)
-    {
-        if (deck.plus != (deck.plus2 + static_cast<long>(num_cards)))
-        {
-#ifdef WIZARD
-            strm << "Have you used " << deck.plus2 << " cards, or "
-                 << (deck.plus - num_cards) << "? Oops.";
-#else
-            strm << "Oops, book-keeping on used cards is wrong.";
-#endif
-            strm << std::endl;
-            deck.plus2 = deck.plus - num_cards;
-            problems = true;
-        }
-    }
-    else
-    {
-        if (-deck.plus2 != static_cast<long>(num_cards))
-        {
-#ifdef WIZARD
-            strm << "There are " << num_cards << " cards left, not "
-                 << (-deck.plus2) << ".  Oops.";
-#else
-            strm << "Oops, book-keeping on cards left is wrong.";
-#endif
-            strm << std::endl;
-            deck.plus2 = -num_cards;
-            problems = true;
-        }
-    }
-
-    if (!problems)
-        return false;
-
-    you.wield_change = true;
-
-    if (!yesno("Problems might not have been completely fixed; "
-               "still use deck?"))
-    {
-        crawl_state.zero_turns_taken();
-        return true;
-    }
-    return false;
 }
 
 // Choose a deck from inventory and return its slot (or -1.)
@@ -673,25 +273,10 @@ bool choose_deck_and_draw()
     const int slot = choose_inventory_deck( "Draw from which deck?" );
 
     if ( slot == -1 )
-    {
-        crawl_state.zero_turns_taken();
         return false;
-    }
 
     evoke_deck(you.inv[slot]);
     return true;
-}
-
-static void deck_peek_ident(item_def& deck)
-{
-    if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))
-    {
-        set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-
-        mprf("This is %s.", deck.name(DESC_NOCAP_A).c_str());
-
-        you.wield_change = true;
-    }
 }
 
 // Peek at a deck (show what the next card will be.)
@@ -701,180 +286,30 @@ bool deck_peek()
     if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
-        crawl_state.zero_turns_taken();
         return false;
     }
-    item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
-
-    if (check_buggy_deck(deck))
-        return false;
-
-    if (deck.props["num_marked"].get_byte() > 0)
+    item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+    if ( item.plus2 != 0 )
     {
-        mpr("You can't peek into a marked deck.");
-        crawl_state.zero_turns_taken();
+        mpr("You already know what the next card will be.");
         return false;
     }
 
-    CrawlVector &cards     = deck.props["cards"];
-    int          num_cards = cards.size();
+    const card_type chosen = choose_one_card(item, false);
 
-    card_type card1, card2, card3;
-    unsigned char flags1, flags2, flags3;
-
-    card1 = get_card_and_flags(deck, 0, flags1);
-    retry_blank_card(card1, deck, flags1);
-
-    if (num_cards == 1)
-    {
-        deck_peek_ident(deck);
-
-        mpr("There's only one card in the deck!");
-
-        set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN | CFLAG_MARKED);
-        deck.props["num_marked"]++;
-        deck.plus2 = -1;
-        you.wield_change = true;
-
-        return true;
-    }
-
-    card2 = get_card_and_flags(deck, 1, flags2);
-    retry_blank_card(card2, deck, flags2);
-
-    if (num_cards == 2)
-    {
-        deck.props["non_brownie_draws"] = (char) 2;
-        deck.plus2 = -2;
-
-        deck_peek_ident(deck);
-
-        mprf("Only two cards in the deck: %s and %s.",
-             card_name(card1), card_name(card2));
-
-        mpr("You shuffle the deck.");
-
-        // If both cards are the same, then you know which card you're
-        // going to draw both times.
-        if (card1 == card2)
-        {
-            flags1 |= CFLAG_MARKED;
-            flags2 |= CFLAG_MARKED;
-            you.wield_change = true;
-            deck.props["num_marked"] = (char) 2;
-        }
-
-        // "Shuffle" the two cards (even if they're the same, since
-        // the flags might differ).
-        if (coinflip())
-        {
-            std::swap(card1, card2);
-            std::swap(flags1, flags2);
-        }
-
-        // After the first of two differing cards is drawn, you know
-        // what the second card is going to be.
-        if (card1 != card2)
-        {
-            flags1 |= CFLAG_MARKED;
-            deck.props["num_marked"]++;
-        }
-
-        set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN);
-        set_card_and_flags(deck, 1, card2, flags2 | CFLAG_SEEN);
-
-        return true;
-    }
-
-    deck_peek_ident(deck);
-
-    card3 = get_card_and_flags(deck, 2, flags3);
-    retry_blank_card(card3, deck, flags3);
-
-    int already_seen = 0;
-    if (flags1 & CFLAG_SEEN)
-        already_seen++;
-    if (flags2 & CFLAG_SEEN)
-        already_seen++;
-    if (flags3 & CFLAG_SEEN)
-        already_seen++;
-
-    if (random2(3) < already_seen)
-        deck.props["non_brownie_draws"]++;
-
-    mprf("You draw three cards from the deck.  They are: %s, %s and %s.",
-         card_name(card1), card_name(card2), card_name(card3));
-
-    set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN);
-    set_card_and_flags(deck, 1, card2, flags2 | CFLAG_SEEN);
-    set_card_and_flags(deck, 2, card3, flags3 | CFLAG_SEEN);
-
-    mpr("You shuffle the cards back into the deck.");
-    shuffle_deck(deck);
-
-    return true;
-}
-
-// Mark a deck: look at the next four cards, mark them, and shuffle
-// them back into the deck without losing any cards.  The player won't
-// know what order they're in, and the if the top card is non-marked
-// then the player won't know what the next card is.
-// Return false if the operation was failed/aborted along the way.
-bool deck_mark()
-{
-    if ( !wielding_deck() )
-    {
-        mpr("You aren't wielding a deck!");
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-    item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
-    if (check_buggy_deck(deck))
-        return false;
-
-    CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
-    {
-        mpr("Deck is already marked.");
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    const int num_cards   = cards_in_deck(deck);
-    const int num_to_mark = (num_cards < 4 ? num_cards : 4);
-
-    if (num_cards == 1)
-        mpr("There's only one card left!");
-    else if (num_cards < 4)
-        mprf("The deck only has %d cards.", num_cards);
-
-    std::vector<std::string> names;
-    for ( int i = 0; i < num_to_mark; ++i )
-    {
-        unsigned char flags;
-        card_type     card = get_card_and_flags(deck, i, flags);
-
-        flags |= CFLAG_SEEN | CFLAG_MARKED;
-        set_card_and_flags(deck, i, card, flags);
-
-        names.push_back(card_name(card));
-    }
-    mpr_comma_separated_list("You draw and mark ", names);
-    props["num_marked"] = (char) num_to_mark;
-
-    if (num_cards == 1)
-        return true;
-
-    if (num_cards < 4)
-    {
-        mprf("You shuffle the deck.");
-        deck.plus2 = -num_cards;
-    }
-    else
-        mprf("You shuffle the cards back into the deck.");
-
-    shuffle_deck(deck);
+    msg::stream << "You see " << card_name(chosen) << '.' << std::endl;
+    item.plus2 = chosen + 1;
     you.wield_change = true;
+
+    // You lose 1d2 cards when peeking.
+    if ( item.plus > 1 )
+    {
+        mpr("Some cards drop out of the deck.");
+        if ( item.plus > 2 && coinflip() )
+            item.plus -= 2;
+        else
+            item.plus -= 1;
+    }
 
     return true;
 }
@@ -891,7 +326,6 @@ static void redraw_stacked_cards(const std::vector<card_type>& draws,
     }
 }
 
-
 // Stack a deck: look at the next five cards, put them back in any
 // order, discard the rest of the deck.
 // Return false if the operation was failed/aborted along the way.
@@ -901,52 +335,23 @@ bool deck_stack()
     if ( !wielding_deck() )
     {
         mpr("You aren't wielding a deck!");
-        crawl_state.zero_turns_taken();
         return false;
     }
-    item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
-    if (check_buggy_deck(deck))
-        return false;
-
-    CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
+    item_def& item(you.inv[you.equip[EQ_WEAPON]]);
+    if ( item.plus2 != 0 )
     {
         mpr("You can't stack a marked deck.");
-        crawl_state.zero_turns_taken();
         return false;
     }
+    const int num_to_stack = (item.plus < 5 ? item.plus : 5);
 
-    const int num_cards    = cards_in_deck(deck);
-    const int num_to_stack = (num_cards < 5 ? num_cards : 5);
+    std::vector<card_type> draws;
+    for ( int i = 0; i < num_to_stack; ++i )
+        draws.push_back(choose_one_card(item, false));
 
-    std::vector<card_type>     draws;
-    std::vector<unsigned char> flags;
-    for ( int i = 0; i < num_cards; ++i )
-    {
-        unsigned char _flags;
-        card_type     card = draw_top_card(deck, false, _flags);
-
-        if (i < num_to_stack)
-        {
-            draws.push_back(card);
-            flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
-        }
-        else
-            ; // Rest of deck is discarded.
-    }
-
-    if ( num_cards == 1 )
+    if ( draws.size() == 1 )
         mpr("There's only one card left!");
-    else if (num_cards < 5)
-        mprf("The deck only has %d cards.", num_to_stack);
-    else if (num_cards == 5)
-        mpr("The deck has exactly five cards.");
-    else 
-        mprf("You draw the first five cards out of %d and discard the rest.",
-             num_cards);
-    more();
-
-    if ( draws.size() > 1 )
+    else
     {
         unsigned int selected = draws.size();
         clrscr();
@@ -956,7 +361,6 @@ bool deck_stack()
                 "then another digit to swap it.");
         gotoxy(1,10);
         cprintf("Press Enter to accept.");
-
         redraw_stacked_cards(draws, selected);
         
         // Hand-hacked implementation, instead of using Menu. Oh well.
@@ -979,7 +383,6 @@ bool deck_stack()
                 if ( selected < draws.size() )
                 {
                     std::swap(draws[selected], draws[new_selected]);
-                    std::swap(flags[selected], flags[new_selected]); 
                     selected = draws.size();
                 }
                 else
@@ -990,16 +393,15 @@ bool deck_stack()
         redraw_screen();
     }
 
-    deck.plus2 = -num_to_stack;
-    for ( unsigned int i = 0; i < draws.size(); ++i )
-        push_top_card(deck, draws[draws.size() - 1 - i],
-                      flags[flags.size() - 1 - i]);
-    
-    props["num_marked"] = static_cast<char>(num_to_stack);
+    item.plus2 = draws[0] + 1;
+    item.special = 0;    
+    for ( unsigned int i = draws.size() - 1; i > 0; --i )
+    {
+        item.special <<= 8;
+        item.special += draws[i] + 1;
+    }
+    item.plus = num_to_stack;   // no more deck after the stack
     you.wield_change = true;
-
-    check_buggy_deck(deck);
-
     return true;
 }
 
@@ -1009,51 +411,35 @@ bool deck_triple_draw()
     const int slot = choose_inventory_deck("Triple draw from which deck?");
     if ( slot == -1 )
     {
-        crawl_state.zero_turns_taken();
         return false;
     }
 
-    item_def& deck(you.inv[slot]);
+    item_def& item(you.inv[slot]);
 
-    if (check_buggy_deck(deck))
-        return false;
-
-    CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
+    if ( item.plus2 != 0 )
     {
         mpr("You can't triple draw from a marked deck.");
-        crawl_state.zero_turns_taken();
         return false;
     }
 
-    const int num_cards = cards_in_deck(deck);
-
-    if (num_cards == 1)
+    if (item.plus == 1)
     {
         // only one card to draw, so just draw it
-        evoke_deck(deck);
+        evoke_deck(item);
         return true;
     }
 
-    const int num_to_draw = (num_cards < 3 ? num_cards : 3);
-    std::vector<card_type>     draws;
-    std::vector<unsigned char> flags;
-
+    const int num_to_draw = (item.plus < 3 ? item.plus : 3);
+    std::vector<card_type> draws;
     for ( int i = 0; i < num_to_draw; ++i )
-    {
-        unsigned char _flags;
-        card_type     card = draw_top_card(deck, false, _flags);
-
-        draws.push_back(card);
-        flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
-    }
+        draws.push_back(choose_one_card(item, false));
 
     mpr("You draw... (choose one card)");
     for ( int i = 0; i < num_to_draw; ++i )
         msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
                                    << card_name(draws[i]) << std::endl;
     int selected = -1;
-    while ( true )
+    while ( 1 )
     {
         const int keyin = tolower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + num_to_draw)
@@ -1065,14 +451,12 @@ bool deck_triple_draw()
             canned_msg(MSG_HUH);
     }
 
-    // Note how many cards were removed from the deck.
-    deck.plus2 += num_to_draw;
-    you.wield_change = true;
+    // Note that card_effect() might cause you to unwield the deck.
+    card_effect(draws[selected], deck_rarity(item));
 
-    // Make deck disappear *before* the card effect, since we
-    // don't want to unwield an empty deck.
-    deck_rarity_type rarity = deck_rarity(deck);
-    if (cards_in_deck(deck) == 0)
+    // remove the cards from the deck
+    item.plus -= num_to_draw;
+    if (item.plus <= 0)
     {
         mpr("The deck of cards disappears in a puff of smoke.");
         if ( slot == you.equip[EQ_WEAPON] )
@@ -1080,67 +464,20 @@ bool deck_triple_draw()
 
         dec_inv_item_quantity( slot, 1 );
     }
-
-    // Note that card_effect() might cause you to unwield the deck.
-    card_effect(draws[selected], rarity, flags[selected], false);
-
+    you.wield_change = true;
     return true;
 }
 
 // This is Nemelex retribution.
 void draw_from_deck_of_punishment()
 {
-    bool      oddity;
-    card_type card = random_card(MISC_DECK_OF_PUNISHMENT, oddity);
-
-    mpr("You draw a card...");
-    card_effect(card, DECK_RARITY_COMMON);
-}
-
-static int xom_check_card(item_def &deck, card_type card,
-                          unsigned char flags)
-{
-    int amusement = 64;
-
-    if (!item_type_known(deck))
-        amusement *= 2;
-    // Expecting one type of card but got another, real funny.
-    else if (flags & CFLAG_ODDITY)
-        amusement = 255;
-
-    if (player_in_a_dangerous_place())
-        amusement *= 2;
-
-    switch (card)
-    {
-    case CARD_XOM:
-        // Handled elsewhere
-        amusement = 0;
-        break;
-
-    case CARD_BLANK1:
-    case CARD_BLANK2:
-        // Boring
-        amusement = 0;
-        break;
-
-    case CARD_DAMNATION:
-        // Nothing happened, boring.
-        if (you.level_type != LEVEL_DUNGEON)
-            amusement = 0;
-        break;
-
-    case CARD_MINEFIELD:
-    case CARD_FAMINE:
-    case CARD_CURSE:
-        // Always hilarious.
-        amusement = 255;
-
-    default:
-        break;
-    }
-
-    return amusement;
+    item_def deck;
+    deck.plus = 10;             // don't let it puff away
+    deck.plus2 = 0;
+    deck.colour = BLACK;        // for rarity
+    deck.base_type = OBJ_MISCELLANY;
+    deck.sub_type = MISC_DECK_OF_PUNISHMENT;
+    evoke_deck(deck);
 }
 
 // In general, if the next cards in a deck are known, they will
@@ -1150,34 +487,50 @@ static int xom_check_card(item_def &deck, card_type card,
 // card could clobber the sign bit in special.
 void evoke_deck( item_def& deck )
 {
-    if (check_buggy_deck(deck))
-        return;
-
     int brownie_points = 0;
+    mpr("You draw a card...");
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
     bool fake_draw = false;
     
-    unsigned char    flags      = 0;
-    card_type        card       = draw_top_card(deck, true, flags);
-    int              amusement  = xom_check_card(deck, card, flags);
-    deck_rarity_type rarity     = deck_rarity(deck);
-    CrawlHashTable  &props      = deck.props;
-    bool             no_brownie = (props["non_brownie_draws"].get_byte() > 0);
+    // If the deck wasn't marked, draw a fair card.
+    if ( deck.plus2 == 0 )
+    {
+        fake_draw =
+            !card_effect( choose_one_card(deck, true), deck_rarity(deck) );
 
-    // Do these before the deck item_def object is gone.
-    if (flags & CFLAG_MARKED)
-        props["num_marked"]--;
-    if (no_brownie)
-        props["non_brownie_draws"]--;
+        if ( deck.sub_type != MISC_DECK_OF_PUNISHMENT )
+        {
+            // Nemelex likes gamblers.
+            brownie_points = 1;
+            if (one_chance_in(3))
+                brownie_points++;
+        }
+    }
+    else
+    {
+        // You can't ID off a marked card
+        allow_id = false;
 
-    deck.plus2++;
+        // draw the marked card
+        fake_draw = !card_effect(static_cast<card_type>(deck.plus2 - 1),
+                                 deck_rarity(deck));
 
-    // Get rid of the deck *before* the card effect because a card
-    // might cause a wielded deck to be swapped out for something else,
-    // in which case we don't want an empty deck to go through the
-    // swapping process.
-    const bool deck_gone = (cards_in_deck(deck) == 0);
-    if ( deck_gone )
+        // If there are more marked cards, shift them up
+        if ( deck.special )
+        {
+            const short next_card = (deck.special & 0xFF);
+            deck.special >>= 8;
+            deck.plus2 = next_card;
+        }
+        else
+        {
+            deck.plus2 = 0;
+        }
+        you.wield_change = true;
+    }
+    deck.plus--;
+    
+    if ( deck.plus == 0 )
     {
         mpr("The deck of cards disappears in a puff of smoke.");
         dec_inv_item_quantity( deck.link, 1 );
@@ -1185,44 +538,17 @@ void evoke_deck( item_def& deck )
         // was marked or stacked.
         brownie_points++;
     }
-
-    const bool fake_draw = !card_effect(card, rarity, flags, false);
-    if ( fake_draw && !deck_gone )
-        props["non_brownie_draws"]++;
-
-    if (!(flags & CFLAG_MARKED))
-    {
-        // Could a Xom worshipper ever get a stacked deck in the first
-        // place?
-        xom_is_stimulated(amusement);
-
-        // Nemelex likes gamblers.
-        if (!no_brownie)
-        {
-            brownie_points = 1;
-            if (one_chance_in(3))
-                brownie_points++;
-        }
-
-        // You can't ID off a marked card
-        allow_id = false;
-    }
-
-    if (!deck_gone && allow_id
-        && (you.skills[SK_EVOCATIONS] > 5 + random2(35)))
+    else if (allow_id && (you.skills[SK_EVOCATIONS] > 5 + random2(35)))
     {
         mpr("Your skill with magical items lets you identify the deck.");
         set_ident_flags( deck, ISFLAG_KNOW_TYPE );
         msg::streams(MSGCH_EQUIPMENT) << deck.name(DESC_INVENTORY)
                                       << std::endl;
+        you.wield_change = true;
     }
 
-    if ( !fake_draw )
+    if (!fake_draw)
         did_god_conduct(DID_CARDS, brownie_points);
-
-    // Always wield change, since the number of cards used/left has
-    // changed.
-    you.wield_change = true;
 }
 
 int get_power_level(int power, deck_rarity_type rarity)
@@ -1468,7 +794,9 @@ static void minefield_card(int power, deck_rarity_type rarity)
 // to target. This is still exploitable by finding popcorn monsters.
 static bool damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
+    extern bool there_are_monsters_nearby();
     bool rc = there_are_monsters_nearby();
+    
     const int power_level = get_power_level(power, rarity);
 
     dist target;
@@ -1543,8 +871,8 @@ static void elixir_card(int power, deck_rarity_type rarity)
         you.hp = you.hp_max;
         you.magic_points = you.max_magic_points;
     }
-    you.redraw_hit_points = true;
-    you.redraw_magic_points = true;
+    you.redraw_hit_points = 1;
+    you.redraw_magic_points = 1;
 }
 
 static void battle_lust_card(int power, deck_rarity_type rarity)
@@ -1660,24 +988,7 @@ static void blade_card(int power, deck_rarity_type rarity)
     }
     else
     {
-        const brand_type brands[] = {
-            SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM, SPWPN_DRAINING,
-            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN, SPWPN_DUMMY_CRUSHING
-        };
-
-        if ( !brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)) )
-        {
-            if ( you.equip[EQ_WEAPON] == -1 )
-            {
-                msg::stream << "Your " << your_hand(true) << " twitch."
-                            << std::endl;
-            }
-            else
-            {
-                msg::stream << "Your weapon vibrates for a moment."
-                            << std::endl;
-            }
-        }
+        brand_weapon(SPWPN_VORPAL, random2(power/4)); // maybe other brands?
     }
 }
 
@@ -1743,45 +1054,9 @@ static void focus_card(int power, deck_rarity_type rarity)
     (*max_statp[worst_stat])--;
     (*base_statp[best_stat])++;
     (*base_statp[worst_stat])--;
-
-    // Did focusing kill the player?
-    kill_method_type kill_types[3] = {
-        KILLED_BY_WEAKNESS,
-        KILLED_BY_CLUMSINESS,
-        KILLED_BY_STUPIDITY
-    };
-
-    std::string cause = "the Focus card";
-
-    if (crawl_state.is_god_acting())
-    {
-        god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution()) {
-            cause  = "the wrath of ";
-            cause += god_name(which_god);
-        }
-        else
-        {
-            if (which_god == GOD_XOM)
-                cause = "the capriciousness of Xom";
-            else
-            {
-                cause = "the 'helpfullness' of ";
-                cause += god_name(which_god);
-            }
-        }
-    }
-                
-    for ( int i = 0; i < 3; ++i )
-        if (*max_statp[i] < 1 || *base_statp[i] < 1)
-            ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
-
-    // The player survived!
     you.redraw_strength = true;
     you.redraw_intelligence = true;
     you.redraw_dexterity = true;
-
-    burden_change();
 }
 
 static void shuffle_card(int power, deck_rarity_type rarity)
@@ -1805,41 +1080,7 @@ static void shuffle_card(int power, deck_rarity_type rarity)
         new_base[perm[i]] = old_base[i] - modifiers[i] + modifiers[perm[i]];
         new_max[perm[i]] = old_max[i] - modifiers[i] + modifiers[perm[i]];
     }
-
-    // Did the shuffling kill the player?
-    kill_method_type kill_types[3] = {
-        KILLED_BY_WEAKNESS,
-        KILLED_BY_CLUMSINESS,
-        KILLED_BY_STUPIDITY
-    };
-
-    std::string cause = "the Shuffle card";
-
-    if (crawl_state.is_god_acting())
-    {
-        god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution()) {
-            cause  = "the wrath of ";
-            cause += god_name(which_god);
-        }
-        else
-        {
-            if (which_god == GOD_XOM)
-                cause = "the capriciousness of Xom";
-            else
-            {
-                cause = "the 'helpfulness' of ";
-                cause += god_name(which_god);
-            }
-        }
-    }
-                
-    for ( int i = 0; i < 3; ++i )
-        if (new_base[i] < 1 || new_max[i] < 1)
-            ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
-
-    // The player survived!
-
+    
     // Sometimes you just long for Python.
     you.strength = new_base[0];
     you.dex = new_base[1];
@@ -1853,15 +1094,13 @@ static void shuffle_card(int power, deck_rarity_type rarity)
     you.redraw_intelligence = true;
     you.redraw_dexterity = true;
     you.redraw_evasion = true;
-
-    burden_change();
 }
 
 static void helix_card(int power, deck_rarity_type rarity)
 {
     mutation_type bad_mutations[] = {
         MUT_FAST_METABOLISM, MUT_WEAK, MUT_DOPEY, MUT_CLUMSY,
-        MUT_TELEPORT, MUT_DEFORMED, MUT_SCREAM, MUT_DETERIORATION,
+        MUT_TELEPORT, MUT_DEFORMED, MUT_LOST, MUT_DETERIORATION,
         MUT_BLURRY_VISION, MUT_FRAIL
     };
 
@@ -1875,8 +1114,6 @@ static void helix_card(int power, deck_rarity_type rarity)
     }
     if ( numfound )
         delete_mutation(which_mut);
-    else
-        mpr("You feel transcendent for a moment.");
 }
 
 static void dowsing_card(int power, deck_rarity_type rarity)
@@ -1973,7 +1210,7 @@ static void trowel_card(int power, deck_rarity_type rarity)
     }
 
     if ( !done_stuff )
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("Nothing appears to happen.");
 
     return;
 }
@@ -2006,7 +1243,6 @@ static void curse_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
 
-    mpr("You feel a malignant aura surround you.");
     if ( power_level >= 2 )
     {
         // curse (almost) everything + decay
@@ -2026,39 +1262,6 @@ static void curse_card(int power, deck_rarity_type rarity)
         if ( coinflip() )
             curse_an_item(false);
     }
-}
-
-static void crusade_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = get_power_level(power, rarity);
-    if ( power_level >= 1 )
-    {
-        // A chance to convert opponents.
-        for ( int i = 0; i < MAX_MONSTERS; ++i )
-        {
-            monsters* const monster = &menv[i];
-            if (monster->type == -1 || !mons_near(monster) ||
-                mons_friendly(monster) ||
-                mons_holiness(monster) != MH_NATURAL ||
-                mons_is_unique(monster->type) ||
-                mons_immune_magic(monster))
-                continue;
-
-            // Note that this bypasses the magic resistance
-            // (though not immunity) check. Specifically,
-            // you can convert Killer Klowns this way.
-            // Might be too good.
-            if ( monster->hit_dice * 35 < random2(power) )
-            {
-                simple_monster_message(monster, " is converted.");
-                if ( one_chance_in(5 - power_level) )
-                    monster->attitude = ATT_FRIENDLY;
-                else
-                    monster->add_ench(ENCH_CHARM);
-            }
-        }
-    }
-    abjuration(power/4);
 }
 
 static void summon_demon_card(int power, deck_rarity_type rarity)
@@ -2128,7 +1331,7 @@ static void summon_dancing_weapon(int power, deck_rarity_type rarity)
                                     friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                                     you.x_pos, you.y_pos,
                                     friendly ? you.pet_target : MHITYOU,
-                                    250, false, false, false, true );
+                                    250 );
     
     // Given the abundance of Nemelex decks, not setting hard reset
     // leaves a trail of weapons behind, most of which just get
@@ -2155,15 +1358,14 @@ static int card_power(deck_rarity_type rarity)
 
     result += you.skills[SK_EVOCATIONS] * 9;
     if ( rarity == DECK_RARITY_RARE )
-        result += 150;
+        result += random2(result / 2);
     if ( rarity == DECK_RARITY_LEGENDARY )
-        result += 300;
+        result += random2(result);
 
     return result;
 }
 
-bool card_effect(card_type which_card, deck_rarity_type rarity,
-                 unsigned char flags, bool tell_card)
+bool card_effect(card_type which_card, deck_rarity_type rarity)
 {
     bool rc = true;
     const int power = card_power(rarity);
@@ -2173,27 +1375,12 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
                                     << std::endl;
 #endif
 
-    if (tell_card)
-        msg::stream << "You have drawn " << card_name( which_card )
-                    << '.' << std::endl;
-
-    if (which_card == CARD_XOM && !crawl_state.is_god_acting())
-    {
-        if (you.religion == GOD_XOM)
-        {
-            // Being a self-centered deity, Xom *always* finds this
-            // maximally hilarious.
-            god_speaks(GOD_XOM, "Xom roars with laughter!");
-            you.gift_timeout = 255;
-        }
-        else if (you.penance[GOD_XOM])
-            god_speaks(GOD_XOM, "Xom laughs nastily.");
-    }
+    msg::stream << "You have drawn " << card_name( which_card )
+                << '.' << std::endl;
 
     switch (which_card)
     {
-    case CARD_BLANK1: break;
-    case CARD_BLANK2: break;
+    case CARD_BLANK: break;
     case CARD_PORTAL:           portal_card(power, rarity); break;
     case CARD_WARP:             warp_card(power, rarity); break;
     case CARD_SWAP:             swap_monster_card(power, rarity); break;
@@ -2216,10 +1403,9 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_GENIE:            genie_card(power, rarity); break;
     case CARD_CURSE:            curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       warpwright_card(power, rarity); break;
-    case CARD_TOMB:             entomb(power); break;
+    case CARD_TOMB:             entomb(power/2); break;
     case CARD_WRAITH:           drain_exp(false); lose_level(); break;
     case CARD_WRATH:            godly_wrath(); break;
-    case CARD_CRUSADE:          crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     summon_demon_card(power, rarity); break;
     case CARD_SUMMON_ANIMAL:    summon_animals(random2(power/3)); break;
     case CARD_SUMMON_ANY:       summon_any_monster(power, rarity); break;
@@ -2254,8 +1440,9 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WILD_MAGIC:
         // yes, high power is bad here
         miscast_effect( SPTYP_RANDOM, random2(power/15) + 5,
-                        random2(power), 0, "a card of wild magic" );
+                        random2(power), 0 );
         break;
+
 
     case CARD_FAMINE:
         if (you.is_undead == US_UNDEAD)
@@ -2276,41 +1463,10 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
     }
 
-    if (you.religion == GOD_XOM
-        && (which_card == CARD_BLANK1 || which_card == CARD_BLANK2 || !rc))
-    {
-        god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
-        xom_acts(abs(you.piety - 100));
-    }
-    
     if (you.religion == GOD_NEMELEX_XOBEH && !rc)
         simple_god_message(" seems disappointed in you.");
-
+    
     return rc;
-}
-
-bool top_card_is_known(const item_def &deck)
-{
-    if (!is_deck(deck))
-        return false;
-
-    unsigned char flags;
-    get_card_and_flags(deck, -1, flags);
-
-    return (flags & CFLAG_MARKED);
-}
-
-card_type top_card(const item_def &deck)
-{
-    if (!is_deck(deck))
-        return NUM_CARDS;
-
-    unsigned char flags;
-    card_type card = get_card_and_flags(deck, -1, flags);
-
-    UNUSED(flags);
-
-    return card;
 }
 
 bool is_deck(const item_def &item)
@@ -2320,79 +1476,17 @@ bool is_deck(const item_def &item)
             item.sub_type <= MISC_DECK_OF_DEFENSE);
 }
 
-bool bad_deck(const item_def &item)
-{
-    if (!is_deck(item))
-        return false;
-
-    return (!item.props.exists("cards")
-            || item.props["cards"].get_type() != SV_VEC
-            || item.props["cards"].get_vector().get_type() != SV_BYTE
-            || cards_in_deck(item) == 0);
-}
-
 deck_rarity_type deck_rarity(const item_def &item)
 {
     ASSERT( is_deck(item) );
-
-    return static_cast<deck_rarity_type>(item.special);
-}
-
-unsigned char deck_rarity_to_color(deck_rarity_type rarity)
-{
-    switch (rarity)
+    switch (item.colour)
     {
-    case DECK_RARITY_COMMON:
-    {
-        const unsigned char colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
-        return RANDOM_ELEMENT(colours);
+    case BLACK: case BLUE: case GREEN: case CYAN: case RED:
+    default:
+        return DECK_RARITY_COMMON;
+    case MAGENTA: case BROWN:
+        return DECK_RARITY_RARE;
+    case LIGHTMAGENTA:
+        return DECK_RARITY_LEGENDARY;
     }
-
-    case DECK_RARITY_RARE:
-        return (coinflip() ? MAGENTA : BROWN);
-
-    case DECK_RARITY_LEGENDARY:
-        return LIGHTMAGENTA;
-    }
-
-    return (WHITE);
-}
-
-void init_deck(item_def &item)
-{
-    CrawlHashTable &props = item.props;
-
-    ASSERT(is_deck(item));
-    ASSERT(!props.exists("cards"));
-    ASSERT(item.plus > 0);
-    ASSERT(item.plus <= 127);
-    ASSERT(item.special >= DECK_RARITY_COMMON
-           && item.special <= DECK_RARITY_LEGENDARY);
-
-    props.set_default_flags(SFLAG_CONST_TYPE);
-
-    props["cards"].new_vector(SV_BYTE).resize(item.plus);
-    props["card_flags"].new_vector(SV_BYTE).resize(item.plus);
-
-    for (int i = 0; i < item.plus; i++)
-    {
-        bool      was_odd = false;
-        card_type card    = random_card(item, was_odd);
-
-        unsigned char flags = 0;
-        if (was_odd)
-            flags = CFLAG_ODDITY;
-
-        set_card_and_flags(item, i, card, flags);
-    }
-
-    ASSERT(cards_in_deck(item) == item.plus);
-
-    props["num_marked"]        = (char) 0;
-    props["non_brownie_draws"] = (char) 0;
-
-    props.assert_validity();
-
-    item.plus2  = 0;
-    item.colour = deck_rarity_to_color((deck_rarity_type) item.special);
 }

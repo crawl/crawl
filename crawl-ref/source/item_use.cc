@@ -36,7 +36,6 @@
 
 #include "beam.h"
 #include "cio.h"
-#include "cloud.h"
 #include "command.h"
 #include "debug.h"
 #include "delay.h"
@@ -62,7 +61,6 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
-#include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -71,12 +69,10 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
-#include "xom.h"
 
 static bool drink_fountain();
 static bool enchant_armour();
@@ -236,9 +232,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         {
             if (you.equip[EQ_WEAPON] != -1)
             {
-                if (!unwield_item(show_weff_messages))
-                    return (false);
-                    
+                unwield_item(show_weff_messages);
                 canned_msg( MSG_EMPTY_HANDED );
 
                 you.turn_is_over = true;
@@ -262,12 +256,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     if (!can_wield(&you.inv[item_slot], true))
         return (false);
 
-    if (!safe_to_remove_or_wear(you.inv[item_slot], false))
-        return (false);
-
     // Go ahead and wield the weapon.
-    if (you.equip[EQ_WEAPON] != -1 && !unwield_item(show_weff_messages))
-        return (false);
+    if (you.equip[EQ_WEAPON] != -1)
+        unwield_item(show_weff_messages);
 
     you.equip[EQ_WEAPON] = item_slot;
 
@@ -409,8 +400,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
 {
     unsigned char i_dam = 0;
 
-    const bool known_cursed = item_known_cursed(you.inv[item_wield_2]);
-
     // and here we finally get to the special effects of wielding {dlb}
     if (you.inv[item_wield_2].base_type == OBJ_MISCELLANY)
     {
@@ -432,7 +421,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
             // inc_max_mp(13);
             calc_mp();
             set_ident_flags( you.inv[item_wield_2], ISFLAG_EQ_WEAPON_MASK );
-            mpr("You feel your mana capacity increase.");
         }
         else
         {
@@ -604,11 +592,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 break;
 
             case SPWPN_DISTORTION:
-                if (!was_known)
-                    xom_is_stimulated(128);
-                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
-                                was_known ? "distortion wield" :
-                                            "unknowing distortion wield");
+                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
                 break;
 
             case SPWPN_SINGING_SWORD:
@@ -660,10 +644,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
         if (item_cursed( you.inv[item_wield_2] ))
         {
             mpr("It sticks to your hand!");
-            if (known_cursed)
-                xom_is_stimulated(32);
-            else
-                xom_is_stimulated(64);
+            xom_is_stimulated(64);
         }
     }
 
@@ -729,8 +710,7 @@ void wear_armour(void)
     if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
 
-    if (safe_to_remove_or_wear(you.inv[armour_wear_2], false))
-        do_wear_armour( armour_wear_2, false );
+    do_wear_armour( armour_wear_2, false );
 }
 
 static int armour_equip_delay(const item_def &item)
@@ -777,7 +757,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_GLOVES)
     {
-        if (you.has_claws(false) >= 3)
+        if (you.species == SP_TROLL || you.species == SP_GHOUL
+            || you.mutation[MUT_CLAWS] >= 3)
         {
             if (verbose)
                 mpr( "You can't wear gloves with your huge claws!" );
@@ -795,20 +776,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (you.mutation[MUT_TALONS])
-        {
-            if (verbose)
-                mpr("Boots don't fit your talons!");
-           return (false);
-        }
-
-        if (you.mutation[MUT_PAWS])
-        {
-            if (verbose)
-                mpr("Boots don't fit your paws!");
-           return (false);
-        }
-        
         if (you.species == SP_NAGA)
         {
             if (verbose)
@@ -1024,9 +991,6 @@ bool do_wear_armour( int item, bool quiet )
             return (false);
     }
 
-    if (!safe_to_remove_or_wear(you.inv[item], false))
-        return (false);
-
     you.turn_is_over = true;
 
     int delay = armour_equip_delay( you.inv[item] );
@@ -1059,9 +1023,6 @@ bool takeoff_armour(int item)
             }
         }
     }
-
-    if (!safe_to_remove_or_wear(you.inv[item], true))
-        return (false);
 
     bool removedCloak = false;
     int cloak = -1;
@@ -1203,20 +1164,6 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
     if (!is_valid_item(item))
         return (false);
     
-    if (you.attribute[ATTR_HELD])
-    {
-        if (item.base_type == OBJ_MISSILES)
-        {
-            const item_def *weapon = you.weapon();
-            if (weapon && weapon->sub_type == WPN_BLOWGUN
-                && item.launched_by(*weapon))
-            {
-                return (true);
-            }
-        }
-        return (false);
-    }
-
     if (item.base_type == OBJ_MISSILES)
     {
         if ((fire_type & FIRE_DART) && item.sub_type == MI_DART)
@@ -1527,18 +1474,6 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         speed_base = speed_base * speed_adjust / 100;
         speed_min =  speed_min  * speed_adjust / 100;
     }
-    
-    // do the same when trying to shoot while held in a net
-    if (you.attribute[ATTR_HELD]) // only for blowguns
-    {
-        int speed_adjust = 105; // analogous to buckler and one-handed weapon
-        speed_adjust -= ((speed_adjust - 100) * 5 / 10)
-                            * you.skills[SK_THROWING] / 27;
-
-        // also reduce the speed cap.
-        speed_base = speed_base * speed_adjust / 100;
-        speed_min =  speed_min  * speed_adjust / 100;
-    }
 
     int speed = speed_base - 4 * shoot_skill * speed_stat / 250;
     if (speed < speed_min)
@@ -1809,12 +1744,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 }
             }
         }
-        
-        // lower accuracy if held in a net (needs testing)
-        if (you.attribute[ATTR_HELD])
-        {
-            baseHit--;
-        }
 
         // for all launched weapons, maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
@@ -2077,15 +2006,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             // elves with elven weapons
             if (get_equip_race(item) == ISFLAG_ELVEN 
-                && player_genus(GENPC_ELVEN))
+                    && player_genus(GENPC_ELVEN))
                 baseHit += 1;
-            if ( (get_equip_race(item) == ISFLAG_DWARVEN
-                  && player_genus(GENPC_DWARVEN)) ||
-                 (get_equip_race(item) == ISFLAG_ORCISH
-                  && you.species == SP_HILL_ORC)) 
-            {
-                baseDam += 1;
-            }
 
             // give an appropriate 'tohit' -
             // hand axes and clubs are -5
@@ -2288,7 +2210,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
 
-    // Add in bonus (only from Portal Projectile for now)
+    // Add in bonus (only from Portaled Projectile for now)
     if (acc_bonus != DEBUG_COOKIE)
         pbolt.hit += acc_bonus;
 
@@ -2363,18 +2285,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
 void jewellery_wear_effects(item_def &item)
 {
-    item_type_id_state_type ident        = ID_TRIED_TYPE;
-    randart_prop_type       fake_rap     = RAP_NUM_PROPERTIES;
-    bool                    learn_pluses = false;
+    item_type_id_state_type ident = ID_TRIED_TYPE;
 
     // Randart jewellery shouldn't auto-ID just because the 
     // base type is known. Somehow the player should still 
     // be told, preferably by message. (jpeg)
-    const bool artefact     = is_random_artefact( item );
-    const bool known_pluses = item_ident( item, ISFLAG_KNOW_PLUSES );
-    const bool known_cursed = item_known_cursed( item );
-    const bool known_bad    = item_type_known( item )
-        && (item_value( item ) <= 2);
+    const bool artefact = is_random_artefact( item );
+    const bool identified = fully_identified( item );
 
     switch (item.sub_type)
     {
@@ -2401,12 +2318,11 @@ void jewellery_wear_effects(item_def &item)
         {
             if (!artefact)
                 ident = ID_KNOWN_TYPE;
-            else if (!known_pluses)
+            else if (!identified)
             {
                 mprf("You feel %s.", item.plus > 0?
                      "well-protected" : "more vulnerable");
             }
-            learn_pluses = true;
         }
         break;
 
@@ -2414,9 +2330,7 @@ void jewellery_wear_effects(item_def &item)
         if (!you.duration[DUR_INVIS])
         {
             mpr("You become transparent for a moment.");
-            if (artefact)
-                fake_rap = RAP_INVISIBLE;
-            else
+            if (!artefact)
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2427,39 +2341,32 @@ void jewellery_wear_effects(item_def &item)
         {
             if (!artefact)
                 ident = ID_KNOWN_TYPE;
-            else if (!known_pluses)
+            else if (!identified)
                 mprf("You feel %s.", item.plus > 0? "nimbler" : "more awkward");
-            learn_pluses = true;
         }
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, item.plus, !artefact, item);
+        modify_stat(STAT_STRENGTH, item.plus, !artefact);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
-        learn_pluses = true;
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, item.plus, !artefact, item);
+        modify_stat(STAT_DEXTERITY, item.plus, !artefact);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
-        learn_pluses = true;
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, item.plus, !artefact, item);
+        modify_stat(STAT_INTELLIGENCE, item.plus, !artefact);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
-        learn_pluses = true;
         break;
 
     case RING_MAGICAL_POWER:
-        mpr("You feel your mana capacity increase.");
         calc_mp();
-        if (artefact)
-            fake_rap = RAP_MAGICAL_POWER;
-        else
+        if (!artefact)
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -2467,9 +2374,7 @@ void jewellery_wear_effects(item_def &item)
         if (!scan_randarts( RAP_LEVITATE ))
         {
             mpr("You feel buoyant.");
-            if (artefact)
-                fake_rap = RAP_LEVITATE;
-            else
+            if (!artefact)
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2478,9 +2383,7 @@ void jewellery_wear_effects(item_def &item)
         if (!scan_randarts( RAP_CAN_TELEPORT ))
         {
             mpr("You feel slightly jumpy.");
-            if (artefact)
-                fake_rap = RAP_CAUSE_TELEPORTATION;
-            else
+            if (!artefact)
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2489,9 +2392,7 @@ void jewellery_wear_effects(item_def &item)
         if (!scan_randarts( RAP_BERSERK ))
         {
             mpr("You feel a brief urge to hack something to bits.");
-            if (artefact)
-                fake_rap = RAP_BERSERK;
-            else
+            if (!artefact)
                 ident = ID_KNOWN_TYPE;
         }
         break;
@@ -2504,33 +2405,19 @@ void jewellery_wear_effects(item_def &item)
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known
     if (artefact)
-    {
         use_randart(item);
-
-        if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
-            set_ident_flags( item, ISFLAG_KNOW_PLUSES );
-
-        if (fake_rap != RAP_NUM_PROPERTIES)
-            randart_wpn_learn_prop( item, fake_rap );
-    }
     else
-    {
         set_ident_type( item.base_type, item.sub_type, ident );
 
-        if (ident == ID_KNOWN_TYPE)
-            set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
-    }
+    if (ident == ID_KNOWN_TYPE)
+        set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
 
     if (item_cursed( item ))
     {
         mprf("Oops, that %s feels deathly cold.", 
                 jewellery_is_amulet(item)? "amulet" : "ring");
         learned_something_new(TUT_YOU_CURSED);
-
-        if (known_cursed || known_bad)
-            xom_is_stimulated(64);
-        else
-            xom_is_stimulated(128);
+        xom_is_stimulated(128);
     }
 
     // cursed or not, we know that since we've put the ring on
@@ -2580,77 +2467,6 @@ static int prompt_ring_to_remove(int new_ring)
     return (you.equip[eqslot]);
 }
 
-// Checks whether a to-be-worn or to-be-removed item affects
-// character stats and whether wearing/removing it could be fatal.
-// If so, warns the player.
-bool safe_to_remove_or_wear(const item_def &item, bool remove)
-{
-    int prop_str = 0;
-    int prop_dex = 0;
-    int prop_int = 0;
-
-    // don't warn when putting on an unknown item
-    if (item.base_type == OBJ_JEWELLERY && item_ident( item, ISFLAG_KNOW_PLUSES ))
-    {
-        switch (item.sub_type)
-        {
-        case RING_STRENGTH:
-            if (item.plus != 0)
-                prop_str = item.plus;
-            break;
-        case RING_DEXTERITY:
-            if (item.plus != 0)
-                prop_dex = item.plus;
-            break;
-        case RING_INTELLIGENCE:
-            if (item.plus != 0)
-                prop_int = item.plus;
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (is_random_artefact( item ))
-    {
-        prop_str += randart_known_wpn_property(item, RAP_STRENGTH);
-        prop_int += randart_known_wpn_property(item, RAP_INTELLIGENCE);
-        prop_dex += randart_known_wpn_property(item, RAP_DEXTERITY);
-    }
-
-    if (remove)
-    {
-        std::string prompt = item.base_type == OBJ_WEAPONS ? "Unwield" : "Remov";
-                    prompt += "ing this item could be fatal. ";
-                    prompt += item.base_type == OBJ_WEAPONS ? "Unwield" : "Remove";
-                    prompt += " anyway? ";
-
-        if ((prop_str >= you.strength || prop_int >= you.intel ||
-             prop_dex >= you.dex)
-            && !yesno(prompt.c_str(), false, 'n'))
-        {
-            return (false);
-        }
-    }
-    else // put on
-    {
-        std::string prompt = item.base_type == OBJ_WEAPONS ? "Wield" : "Wear";
-                    prompt += "ing this item could be fatal. ";
-                    prompt += item.base_type == OBJ_WEAPONS ? "Wield" : "Put on";
-                    prompt += " anyway? ";
-                    
-        if ((-prop_str >= you.strength || -prop_int >= you.intel ||
-             -prop_dex >= you.dex)
-            && !yesno(prompt.c_str(), false, 'n'))
-        {
-            return (false);
-        }
-    }
-
-
-    return (true);
-}
-
 // Assumptions:
 // you.inv[ring_slot] is a valid ring.
 // EQ_LEFT_RING and EQ_RIGHT_RING are both occupied, and ring_slot is not
@@ -2669,10 +2485,7 @@ static bool swap_rings(int ring_slot)
 
     if (!remove_ring(unwanted, false))
         return (false);
-        
-    if (!safe_to_remove_or_wear(you.inv[ring_slot], false))
-        return (false);
-        
+
     start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
 
     return (true);
@@ -2722,18 +2535,12 @@ bool puton_item(int item_slot, bool prompt_finger)
             !remove_ring( you.equip[EQ_AMULET], true ))
             return false;
 
-        if (!safe_to_remove_or_wear(you.inv[item_slot], false))
-            return (false);
-            
         start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
 
         // Assume it's going to succeed.
         return (true);
     }
 
-    if (!safe_to_remove_or_wear(you.inv[item_slot], false))
-        return (false);
-        
     // First ring goes on left hand if we're choosing automatically.
     int hand_used = 0;
 
@@ -2851,15 +2658,15 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, -item.plus, true, item, true);
+        modify_stat(STAT_STRENGTH, -item.plus, true);
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -item.plus, true, item, true);
+        modify_stat(STAT_DEXTERITY, -item.plus, true);
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -item.plus, true, item, true);
+        modify_stat(STAT_INTELLIGENCE, -item.plus, true);
         break;
 
     case RING_INVISIBILITY:
@@ -2875,7 +2682,6 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_MAGICAL_POWER:
-        mpr("You feel your mana capacity decrease.");
         // dec_max_mp(9);
         break;
 
@@ -3000,12 +2806,8 @@ bool remove_ring(int slot, bool announce)
         set_ident_flags( you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE );
         return (false);
     }
-    
+
     ring_wear_2 = you.equip[hand_used];
-
-    if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
-        return (false);
-
     you.equip[hand_used] = -1;
 
     jewellery_remove_effects(you.inv[ring_wear_2]);
@@ -3079,21 +2881,19 @@ void zap_wand(void)
     const bool dangerous = player_in_a_dangerous_place();
     if (alreadyknown)
     {
-        switch ( wand.sub_type )
+        if (wand.sub_type == WAND_TELEPORTATION)
         {
-        case WAND_TELEPORTATION:
             targ_mode = TARG_ANY;
-            break;
-
-        case WAND_HASTING:
-        case WAND_HEALING:
-        case WAND_INVISIBILITY:
+        }
+        else if (wand.sub_type == WAND_HASTING
+                 || wand.sub_type == WAND_HEALING
+                 || wand.sub_type == WAND_INVISIBILITY)
+        {
             targ_mode = TARG_FRIEND;
-            break;
-            
-        default:
+        }
+        else 
+        {
             targ_mode = TARG_ENEMY;
-            break;
         }
     }
 
@@ -3113,10 +2913,28 @@ void zap_wand(void)
         zap_wand.ty = you.y_pos + random2(13) - 6;
     }
 
-    const zap_type type_zapped = static_cast<zap_type>(wand.zap());
-    if (wand.sub_type == WAND_RANDOM_EFFECTS)
+    // blargh! blech! this is just begging to be a problem ...
+    // not to mention work-around after work-around as wands are
+    // added, removed, or altered {dlb}:
+    char type_zapped = wand.sub_type;
+
+    if (type_zapped == WAND_ENSLAVEMENT)
+        type_zapped = ZAP_ENSLAVEMENT;
+
+    if (type_zapped == WAND_DRAINING)
+        type_zapped = ZAP_NEGATIVE_ENERGY;
+
+    if (type_zapped == WAND_DISINTEGRATION)
+        type_zapped = ZAP_DISINTEGRATION;
+
+    if (type_zapped == WAND_RANDOM_EFFECTS)
     {
+        type_zapped = random2(16);
         beam.effect_known = false;
+        if (one_chance_in(20))
+            type_zapped = ZAP_NEGATIVE_ENERGY;
+        if (one_chance_in(17))
+            type_zapped = ZAP_ENSLAVEMENT;
         if (dangerous)
         {
             // Xom loves it when you use a Wand of Random Effects and
@@ -3129,7 +2947,6 @@ void zap_wand(void)
     beam.source_y = you.y_pos;
     beam.set_target(zap_wand);
 
-    // zapping() updates beam
     zapping( static_cast<zap_type>(type_zapped),
              30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
@@ -3158,8 +2975,7 @@ void zap_wand(void)
     {
         if (!item_ident( wand, ISFLAG_KNOW_PLUSES ))
         {
-            mpr("Your skill with magical items lets you calculate "
-                "the power of this device...");
+            mpr("Your skill with magical items lets you calculate the power of this device...");
         }
 
         mprf("This wand has %d charge%s left.",
@@ -3237,7 +3053,7 @@ void drink(void)
             return;
     }
 
-    if (inv_count() == 0)
+    if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
@@ -3373,10 +3189,7 @@ bool drink_fountain()
         if (one_chance_in(10))
             gone_dry = true;
         else if ( random2(50) > 40 ) // no message!
-        {
             grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
-            set_terrain_changed(you.x_pos, you.y_pos);
-        }
     }
 
     if (gone_dry)
@@ -3386,10 +3199,6 @@ bool drink_fountain()
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_I;
         else
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_II;
-
-        set_terrain_changed(you.x_pos, you.y_pos);
-
-        crawl_state.cancel_cmd_repeat();
     }
 
     you.turn_is_over = true;
@@ -3459,8 +3268,8 @@ static bool affix_weapon_enchantment()
         success = false;
 
         // is only naughty if you know you're doing it
-        did_god_conduct(DID_UNHOLY, 10,
-            get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE);
+        if (get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE)
+            did_god_conduct(DID_UNHOLY, 10);
 
         break;
 
@@ -3471,7 +3280,7 @@ static bool affix_weapon_enchantment()
 
         // from unwield_item
         miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, 
-                        "distortion affixation" );
+                        "a distortion effect" );
         success = false;
         break;
 
@@ -3486,7 +3295,7 @@ static bool affix_weapon_enchantment()
     return (success);
 }
 
-bool enchant_weapon( enchant_stat_type which_stat, bool quiet )
+bool enchant_weapon( int which_stat, bool quiet )
 {
     const int wpn = you.equip[ EQ_WEAPON ];
     bool affected = true;
@@ -3680,17 +3489,20 @@ static bool enchant_armour( void )
 
 static void handle_read_book( int item_slot )
 {
-    item_def& book(you.inv[item_slot]);
+    int spell, spell_index;
 
-    if (book.sub_type == BOOK_DESTRUCTION)
+    if (you.inv[item_slot].sub_type == BOOK_DESTRUCTION)
     {
         if (silenced(you.x_pos, you.y_pos))
+        {
             mpr("This book does not work if you cannot read it aloud!");
-        else
-            tome_of_power(item_slot);
+            return;
+        }
+
+        tome_of_power(item_slot);
         return;
     }
-    else if (book.sub_type == BOOK_MANUAL)
+    else if (you.inv[item_slot].sub_type == BOOK_MANUAL)
     {
         skill_manual(item_slot);
         return;
@@ -3699,23 +3511,25 @@ static void handle_read_book( int item_slot )
     while (true)
     {
         // Spellbook
-        const int ltr = read_book( book, RBOOK_READ_SPELL );
+        spell = read_book( you.inv[item_slot], RBOOK_READ_SPELL );
 
-        if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
+        if (spell < 'a' || spell > 'h')     //jmf: was 'g', but 8=h
         {
             mesclr( true );
             return;
         }
 
-        const spell_type spell = which_spell_in_book(book.sub_type,
-                                                     letter_to_index(ltr));
-        if (spell == SPELL_NO_SPELL)
+        spell_index = letter_to_index( spell );
+
+        const spell_type nthing =
+            which_spell_in_book(you.inv[item_slot].sub_type, spell_index);
+        if (nthing == SPELL_NO_SPELL)
         {
             mesclr( true );
             return;
         }
 
-        describe_spell( spell );
+        describe_spell( nthing );
     }
 }
 
@@ -3760,7 +3574,6 @@ void read_scroll(void)
     if (scroll.base_type != OBJ_BOOKS && scroll.base_type != OBJ_SCROLLS)
     {
         mpr("You can't read that!");
-        crawl_state.zero_turns_taken();
         return;
     }
 
@@ -3774,7 +3587,6 @@ void read_scroll(void)
     if (silenced(you.x_pos, you.y_pos))
     {
         mpr("Magic scrolls do not work when you're silenced!");
-        crawl_state.zero_turns_taken();
         return;
     }
 
@@ -3877,11 +3689,10 @@ void read_scroll(void)
         }
         break;
 
-    case SCR_FOG:
-        mpr("The scroll dissolves into smoke.");
-        big_cloud( one_chance_in(20) ? CLOUD_POISON :
-                   (one_chance_in(19) ? CLOUD_STEAM : random_smoke_type()),
-                   KC_YOU, you.x_pos, you.y_pos, 50, 8 + random2(8));
+    case SCR_FORGETFULNESS:
+        mpr("You feel momentarily disoriented.");
+        if (!wearing_amulet(AMU_CLARITY))
+            forget_map(50 + random2(50));
         break;
 
     case SCR_MAGIC_MAPPING:
@@ -3903,7 +3714,8 @@ void read_scroll(void)
         torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
 
         // is only naughty if you know you're doing it
-        did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
+        if (item_type_known(scroll))
+            did_god_conduct(DID_UNHOLY, 10);
         break;
 
     case SCR_IMMOLATION:
@@ -3924,9 +3736,6 @@ void read_scroll(void)
         beam.aux_source = "reading a scroll of immolation";
         beam.ex_size = 2;
         beam.is_explosion = true;
-
-        if (!alreadyknown)
-            beam.effect_known = false;
 
         explosion(beam);
         break;
@@ -3979,6 +3788,7 @@ void read_scroll(void)
     case SCR_ENCHANT_WEAPON_III:
         if (you.equip[ EQ_WEAPON ] != -1) 
         {
+
             // Successfully affixing the enchantment will print
             // its own message.
             if (!affix_weapon_enchantment())
@@ -4088,7 +3898,6 @@ void read_scroll(void)
             do_curse_item( item );
         }
         break;
-
     }                           // end switch
 
     // finally, destroy and identify the scroll
@@ -4134,96 +3943,62 @@ void use_randart(unsigned char item_wield_2)
     use_randart( you.inv[ item_wield_2 ] );
 }
 
-void use_randart(item_def &item)
+void use_randart(const item_def &item)
 {
-#define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
-
     ASSERT( is_random_artefact( item ) );
 
     const bool alreadyknown = item_type_known(item);
     const bool dangerous = player_in_a_dangerous_place();
+    const bool ident = fully_identified(item);
 
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-    randart_wpn_properties( item, proprt, known );
+    randart_properties_t proprt;
+    randart_wpn_properties( item, proprt );
 
-    // Only give property messages for previously unknown properties.
+    // Give messages for stat changes, possibly only if !identified
     if (proprt[RAP_AC])
     {
-        you.redraw_armour_class = true;
-        if (!known[RAP_AC])
+        you.redraw_armour_class = 1;
+        if (!ident)
         {
             mprf("You feel %s.", proprt[RAP_AC] > 0?
                  "well-protected" : "more vulnerable");
-            randart_wpn_learn_prop(item, RAP_AC);
         }
     }
 
     if (proprt[RAP_EVASION])
     {
-        you.redraw_evasion = true;
-        if (!known[RAP_EVASION])
+        you.redraw_evasion = 1;
+        if (!ident)
         {
             mprf("You feel somewhat %s.", proprt[RAP_EVASION] > 0?
                  "nimbler" : "more awkward");
-            randart_wpn_learn_prop(item, RAP_EVASION);
-        }
-    }
-
-    if (proprt[RAP_MAGICAL_POWER])
-    {
-        you.redraw_magic_points = true;
-        if (!known[RAP_MAGICAL_POWER])
-        {
-            mprf("You feel your mana capacity %s.",
-                 proprt[RAP_MAGICAL_POWER] > 0? "increase" : "decrease");
-            randart_wpn_learn_prop(item, RAP_MAGICAL_POWER);
         }
     }
 
     // modify ability scores
     // output result even when identified (because of potential fatality)
-    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false, item );
-    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false, item );
-    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false, item );
+    modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false );
+    modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false );
+    modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false );
 
-    const randart_prop_type stat_props[3] =
-        {RAP_STRENGTH, RAP_INTELLIGENCE, RAP_DEXTERITY};
-
-    for (int i = 0; i < 3; i++)
-        if (unknown_proprt(stat_props[i]))
-            randart_wpn_learn_prop(item, stat_props[i]);
 
     // For evokable stuff, check whether other equipped items yield
-    // the same ability.  If not, and if the ability granted hasn't
-    // already been discovered, give a message.
-    if (unknown_proprt(RAP_LEVITATE)
-        && !items_give_ability(item.link, RAP_LEVITATE))
+    // the same ability. If not, give a message.
+    // Do NOT give all these messages if the randart is identified.
+    if (!ident)
     {
-        mpr("You feel buoyant.");
-        randart_wpn_learn_prop(item, RAP_LEVITATE);
-    }
+        if (proprt[RAP_LEVITATE] && !items_give_ability(item.link, RAP_LEVITATE))
+            mpr("You feel buoyant.");
 
-    if (unknown_proprt(RAP_INVISIBLE) && !you.duration[DUR_INVIS])
-    {
-        mpr("You become transparent for a moment.");
-        randart_wpn_learn_prop(item, RAP_INVISIBLE);
-    }
+        if (proprt[RAP_INVISIBLE] && !you.duration[DUR_INVIS])
+            mpr("You become transparent for a moment.");
 
-    if (unknown_proprt(RAP_CAN_TELEPORT)
-        && !items_give_ability(item.link, RAP_CAN_TELEPORT))
-    {
-        mpr("You feel slightly jumpy.");
-        randart_wpn_learn_prop(item, RAP_CAN_TELEPORT);
-    }
+        if (proprt[RAP_CAN_TELEPORT] && !items_give_ability(item.link, RAP_CAN_TELEPORT))
+            mpr("You feel slightly jumpy.");
 
-    if (unknown_proprt(RAP_BERSERK)
-        && !items_give_ability(item.link, RAP_BERSERK))
-    {
-        mpr("You feel a brief urge to hack something to bits.");
-        randart_wpn_learn_prop(item, RAP_BERSERK);
+        if (proprt[RAP_BERSERK] && !items_give_ability(item.link, RAP_BERSERK))
+            mpr("You feel a brief urge to hack something to bits.");
     }
-
     if (proprt[RAP_NOISES])
         you.special_wield = SPWLD_NOISE;
 
@@ -4233,7 +4008,6 @@ void use_randart(item_def &item)
         // there is a dangerous monster nearby...
         xom_is_stimulated(255);
     }
-#undef unknown_proprt
 }
 
 bool wearing_slot(int inv_slot)

@@ -16,9 +16,6 @@
 
 #include "externs.h"
 
-class monsters;
-class item_def;
-
 enum genus_type
 {
     GENPC_DRACONIAN,                   //    0
@@ -245,8 +242,8 @@ int player_teleport(bool calc_unid = true);
 /* ***********************************************************************
  * called from: ability - acr - items - misc - spells1 - spells3
  * *********************************************************************** */
-bool items_give_ability(const int slot, randart_prop_type abil);
-int scan_randarts(randart_prop_type which_property, bool calc_unid = true);
+bool items_give_ability(const int slot, char abil);
+int scan_randarts(char which_property, bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -263,9 +260,6 @@ int slaying_bonus(char which_affected);
 int player_see_invis(bool calc_unid = true);
 bool player_monster_visible( const monsters *mon );
 
-bool player_beheld_by( const monsters *mon );
-void update_beholders( const monsters *mon, bool force = false);
-void check_beholders();
 
 /* ***********************************************************************
  * called from: acr - decks - it_use2 - ouch
@@ -282,7 +276,7 @@ void display_char_status(void);
 /* ***********************************************************************
  * called from: item_use - items - misc - spells - spells3
  * *********************************************************************** */
-void forget_map(unsigned char chance_forgotten = 100, bool force = false);
+void forget_map(unsigned char chance_forgotten);
 
 
 // last updated 19may2000 {dlb}
@@ -297,14 +291,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
  * called from: acr - it_use2 - item_use - mutation - transfor - player -
  *              misc - stuff
  * *********************************************************************** */
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const std::string& cause, bool see_source = true);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const char* cause, bool see_source = true);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const monsters* cause);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const item_def &cause, bool removed = false);
+void modify_stat(stat_type which_stat, char amount, bool suppress_msg);
 
 
 // last updated 19may2000 {dlb}
@@ -326,10 +313,8 @@ void redraw_skill(const std::string &your_name, const std::string &class_name);
  * *********************************************************************** */
 bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
-bool is_player_same_species( const int mon );
 
 bool you_can_wear( int eq, bool special_armour = false );
-bool player_has_feet(void);
 bool you_tran_can_wear( int eq, bool check_mutation = false );
 
 /* ***********************************************************************

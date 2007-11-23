@@ -123,8 +123,7 @@ int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
  * *********************************************************************** */
 int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y, 
                     int hitting, int zsec, bool permit_bands = false,
-                    bool force_place = false, bool force_behaviour = false,
-                    bool player_made = false );
+                    bool force_place = false, bool force_behaviour = false );
 
 class level_id;
 monster_type pick_random_monster(const level_id &place,

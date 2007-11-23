@@ -48,12 +48,10 @@ struct menu_letter
 struct item_def;
 
 int menu_colour(const std::string &itemtext,
-                const std::string &prefix = "",
-                const std::string &tag = "");
+                const std::string &prefix = "");
 
 struct MenuEntry
 {
-    std::string tag;
     std::string text;
     int quantity, selected_qty;
     int colour;
@@ -110,7 +108,7 @@ struct MenuEntry
 
     virtual int highlight_colour() const
     {
-        return (menu_colour(get_text(), "", tag));
+        return (menu_colour(get_text()));
     }
 
     virtual bool selected() const
@@ -178,7 +176,7 @@ enum MenuFlag
 class Menu
 {
 public:
-    Menu( int flags = MF_MULTISELECT, const std::string& tagname = "" );
+    Menu( int flags = MF_MULTISELECT );
     virtual ~Menu();
 
     // Remove all items from the Menu, leave title intact.
@@ -189,7 +187,6 @@ public:
     void set_flags(int new_flags, bool use_options = true);
     int  get_flags() const        { return flags; }
     virtual bool is_set( int flag ) const;
-    void set_tag(const std::string& t) { tag = t; }
     
     bool draw_title_suffix( const std::string &s, bool titlefirst = true );
     void update_title();
@@ -229,7 +226,6 @@ public:
 protected:
     MenuEntry *title;
     int flags;
-    std::string tag;
     
     int first_entry, y_offset;
     int pagesize, max_pagesize;

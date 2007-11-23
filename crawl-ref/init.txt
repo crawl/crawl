@@ -14,15 +14,15 @@
 # cases (the character's name and specifying files or directories when
 # on a system that has case-sensitive filenames).
 #
-# White space is stripped from the beginning and end of the line, as 
-# well as immediately before and after the '='. If the option allows 
-# multiple comma/semicolon-separated terms (such as 
-# autopickup_exceptions), all whitespace around the separator is also 
-# trimmed. All other whitespace is left intact.
+# White space is stripped from the beginning and end of the line, as well 
+# as immediately before and after the '='. If the option allows multiple
+# comma/semicolon-separated terms (such as autopickup_exceptions), all
+# whitespace around the separator is also trimmed. All other whitespace 
+# is left intact.
 #
 # For descriptions concerning an option consult the file 
 #    crawl_options.txt 
-# in your docs directory. Also note that the ordering of the options
+# in your crawl/doc directory. Also note that the ordering of the options
 # is taken from that file; this is for presentational reasons only.
 #
 # Note that all boolean options (i.e. values of 'true' or 'false') have
@@ -38,16 +38,16 @@
 # weapon = (random | short sword | hand axe | spear | mace | trident)
 # chaos_knight = (Xom | Makhleb | random)
 # death_knight = (necromancy | Yredelemnul | random)
-# priest       = (Zin | Yredelemnul | Beogh | random)
-# race  = (Human |...| Merfolk | random)
-# class = (Fighter |...| Wanderer | random)
+# priest = (Zin | Yredelemnul | Beogh | random)
+# race   = (Human |...| Merfolk | random)
+# class  = (Fighter |...| Wanderer | random)
 # random_pick = true
 
 ##### 2-  File System ###############################################
 #
-# crawl_dir  = <path>
+# crawl_dir= <path>
 # morgue_dir = morgue
-# save_dir   = saves
+# save_dir = saves
 # sound = <regex>:<path to sound file>
 
 ##### 3-  Lua Files #################################################
@@ -66,14 +66,16 @@ lua_file = lua/pickup.lua
 ##### 4-a	Picking up and Dropping ###############
 #	
 # autopickup = $?!+"/%
-# autopickup_exceptions = scrolls? of random uselessness
-# autopickup_exceptions = <deck of cards
-#
 # default_autopickup = false
+# safe_autopickup = false
 # autopickup_no_burden = true
+# safe_zero_exp = false
 # pickup_thrown = false
 # pickup_dropped = true
-# assign_item_slot = (forward | backward)
+# assign_item_slot = backward
+#
+# autopickup_exceptions = scrolls? of random uselessness
+# autopickup_exceptions = <deck of cards
 #
 # drop_mode = (multi | single)
 # pickup_mode = (single | multi | auto:5)
@@ -84,6 +86,7 @@ lua_file = lua/pickup.lua
 # target_zero_exp = true
 # target_oos = false
 # target_los_first = false
+# confirm_self_target = false
 # default_target = false
 # target_unshifted_dirs = true
 
@@ -96,13 +99,12 @@ lua_file = lua/pickup.lua
 
 ##### 4-d	Branding ##############################
 #
-friend_brand     = hi:green
-stab_brand       = hi:blue
-# may_stab_brand   = hi:yellow
-# heap_brand       = reverse
+friend_brand = hi:green
+stab_brand = hi:blue
+# may_stab_brand = hi:yellow
 # heap_brand = reverse
 # stair_item_brand = reverse
-# trap_item_brand  = none
+# trap_item_brand = none
 
 ##### 4-e	Level Map Functions ###################
 #
@@ -113,14 +115,10 @@ stab_brand       = hi:blue
 ##### 4-f	Viewport Options  ###################
 # view_max_width   = 33
 # view_max_height  = 17
-# view_lock_x      = false
-# view_lock_y      = false
 # view_lock        = false
 # center_on_scroll = true
 # symmetric_scroll = false
-# scroll_margin_x  = 2
-# scroll_margin_y  = 2
-# scroll_margin    = 2
+# scroll_margin    = 4
 
 ##### 4-g	Travel and Exploration #################
 #
@@ -128,7 +126,7 @@ stab_brand       = hi:blue
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy = true
-# explore_stop   = items,stairs,shops,altars,gates
+# explore_stop = items,stairs,shops,altars,gates
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -138,8 +136,8 @@ stab_brand       = hi:blue
 
 # The following options are not default. Uncommenting activates them.
 #
-# travel_stop_message = Something appears
-# travel_stop_message = god:wrath finds you
+# stop_travel = Something appears
+# stop_travel = god:wrath finds you
 # runrest_ignore_message = prayer ends
 # runrest_ignore_message = You feel.*sick
 # runrest_ignore_poison = 4:100
@@ -154,57 +152,58 @@ stab_brand       = hi:blue
 
 ##### 4-i	Command Enhancements ##################
 #
-# auto_list    = false
-# easy_open    = false
+# auto_list = false
+# lowercase_invocations = false
+# easy_open = false
+# easy_butcher = false
 # easy_unequip = false
 # easy_confirm = (none | safe | all)
-# easy_butcher = false
-# always_confirm_butcher = true
 # easy_quit_item_prompts = false
-# easy_exit_menu         = false
+# easy_exit_menu = true
 # default_autoprayer = true
 # sort_menus = pickup: true : basename, qualname, curse, qty
 
 ##### 4-j	Messages and Display Enhancements #####
 #
 # hp_warning = 10
-# mp_warning = 0
+# mp_warning = 10
 
 # hp_colour = lightgrey, 50:yellow, 25:red
 # mp_colour = lightgrey, 50:yellow, 25:red
-# delay_message_clear    = true
+# terse_hand = false
+# delay_message_clear = true
+# always_greet = false
+# increasing_skill_progress = false
 # show_inventory_weights = true
 # show_turns = true
-# show_beam  = true
-# item_stack_summary_minimum = 5
+# show_beam = true
+# item_stack_summary_minimum = 500
+# menu_colour_prefix_id    = true
+# menu_colour_prefix_class = true
 
 # Colouring for the inventory
-menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)
-menu_colour = inventory:green:(worn|neck|hand|weapon)\)
-menu_colour = inventory:red: cursed
-menu_colour = inventory:red: rotting
+menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
+menu_colour = green:(worn|neck|hand|weapon)\)
+menu_colour = red: cursed
+menu_colour = red: rotting
 
 # Identified artefacts
-menu_colour = inventory:white:( [-+] the)
+menu_colour = white:( [-+] the)
 
 # These lines will colour ego items; they require that
 # menu_colour_prefix_id and menu_colour_prefix_class be set to true
 
-# menu_colour_prefix_id    = true
-# menu_colour_prefix_class = true
-
-# menu_colour = inventory:green:(^identified armour .* pair of .* of )
-# menu_colour = inventory:lightgrey:(^identified armour .* pair of )
-# menu_colour = inventory:green:(^identified (weapon|armour) .* of )
+# menu_colour = green:(^identified armour .* pair of .* of )
+# menu_colour = lightgrey:(^identified armour .* pair of )
+# menu_colour = green:(^identified (weapon|armour) .* of )
 
 # Colouring for the notes
-menu_colour = notes:white:Reached XP level
+menu_colour = white:Reached XP level
 
 # Message colours
 message_colour = lightcyan:LOW MAGIC WARNING
 
-# These lines will suppress extra feedback messages from 
-# travel/shift-running.
+# These lines will suppress extra feedback messages from travel/shift-running.
 
 # message_colour = mute:warning:comes into view
 # message_colour = mute:You start (searching|resting)
@@ -241,12 +240,13 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
 # dump_item_origin_price = -1
 # dump_message_count = 7
-# dump_order  = header,hiscore,stats,misc,notes,inventory,
-# dump_order += turns_by_place,skills,spells,overview,mutations,
-# dump_order += messages,screenshot,kills_by_place,kills
+# dump_order  = header,hiscore,stats,misc,notes,inventory,turns_by_place,
+# dump_order += skills,spells,overview,mutations,messages,screenshot
+# dump_order += kills_by_place,kills
 
 ##### 5-b	Notes #################################
 #
+# use_notes = false
 # user_note_prefix=@@@
 # note_items = rod,book,rune
 # note_monsters = orb of fire
@@ -260,24 +260,25 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # The following takes a note whenever the Abyss is left: 
 # note_messages = You pass through the gate 
 
-##### 6-  Miscellaneous #############################################
+##### 6-  Miscellaneous #################################################
 #
 ##### 6-a	All OS ################################
 #
 # macro_meta_entry = false
 # mouse_input      = true
-# wiz_mode         = no
-# char_set         = ascii
-#
-# classic_item_colours = true
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown
 #
+# char_set = ascii
+# wiz_mode = no
+#
+# classic_item_colours = true
+#
 # See crawl_options.txt for the options
-# cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any, 
-# feature, mon_glyph
+# char_set, cset_ascii, cset_ibm, cset_dec, cset_unicode,
+# cset_any, feature, mon_glyph
 
 
 ##### 6-b	DOS and Windows #######################

@@ -58,15 +58,14 @@ int cast_healing(int power);
  * called from: beam - it_use3 - spells - spells1
  * *********************************************************************** */
 void big_cloud(cloud_type cl_type, kill_category whose, int cl_x, int cl_y,
-               int pow, int size, int spread_rate = -1);
+               int pow, int size);
 
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: acr (WIZARD only) - item_use - spell
  * *********************************************************************** */
-int blink(int pow, bool high_level_controlled_blink,
-          bool wizard_blink = false);
+int blink(int pow, bool high_level_controlled_blink);
 
 
 /* ***********************************************************************

@@ -12,11 +12,47 @@
 #ifndef RANDART_H
 #define RANDART_H
 
+#include "enum.h"
 #include "externs.h"
+
+enum randart_prop_type
+{
+    RAP_BRAND,                         //    0
+    RAP_AC,
+    RAP_EVASION,
+    RAP_STRENGTH,
+    RAP_INTELLIGENCE,
+    RAP_DEXTERITY,                     //    5
+    RAP_FIRE,
+    RAP_COLD,
+    RAP_ELECTRICITY,
+    RAP_POISON,
+    RAP_NEGATIVE_ENERGY,               //   10
+    RAP_MAGIC,
+    RAP_EYESIGHT,
+    RAP_INVISIBLE,
+    RAP_LEVITATE,
+    RAP_BLINK,                         //   15
+    RAP_CAN_TELEPORT,
+    RAP_BERSERK,
+    RAP_MAPPING,
+    RAP_NOISES,
+    RAP_PREVENT_SPELLCASTING,          //   20
+    RAP_CAUSE_TELEPORTATION,
+    RAP_PREVENT_TELEPORTATION,
+    RAP_ANGRY,
+    RAP_METABOLISM,
+    RAP_MUTAGENIC,                     //   25
+    RAP_ACCURACY,
+    RAP_DAMAGE,
+    RAP_CURSED,
+    RAP_STEALTH,
+    RAP_NUM_PROPERTIES
+};
 
 // used in files.cc, newgame.cc, randart.cc {dlb}
 #define NO_UNRANDARTS 53
-#define RA_PROPERTIES RAP_NUM_PROPERTIES
+#define RA_PROPERTIES 30
 
 // Reserving the upper bits for later expansion/versioning.
 #define RANDART_SEED_MASK  0x00ffffff
@@ -27,9 +63,8 @@ bool is_random_artefact( const item_def &item );
 bool is_unrandom_artefact( const item_def &item );
 bool is_fixed_artefact( const item_def &item );
 
-unique_item_status_type get_unique_item_status( object_class_type base_type,
-                                                int type );
-void set_unique_item_status( object_class_type base_type, int type,
+unique_item_status_type get_unique_item_status( int base_type, int type );
+void set_unique_item_status( int base_type, int type,
                              unique_item_status_type status );
 
 /* ***********************************************************************
@@ -50,7 +85,7 @@ std::string randart_jewellery_name( const item_def &item );
 /* ***********************************************************************
  * called from: describe
  * *********************************************************************** */
-const char *unrandart_descrip( int which_descrip, const item_def &item );
+const char *unrandart_descrip( char which_descrip, const item_def &item );
 
 bool does_unrandart_exist(int whun);
 
@@ -59,35 +94,18 @@ bool does_unrandart_exist(int whun);
  * *********************************************************************** */
 int find_okay_unrandart(unsigned char aclass, unsigned char atype = OBJ_RANDOM);
 
-typedef FixedVector< int, RA_PROPERTIES >  randart_properties_t;
-typedef FixedVector< bool, RA_PROPERTIES > randart_known_props_t;
+typedef FixedVector< int, RA_PROPERTIES > randart_properties_t;
 
 /* ***********************************************************************
  * called from: describe - fight - it_use2 - item_use - player
  * *********************************************************************** */
-void randart_desc_properties( const item_def &item, 
-                              randart_properties_t &proprt,
-                              randart_known_props_t &known );
-
-void randart_wpn_properties( const item_def &item, 
-                             randart_properties_t &proprt,
-                             randart_known_props_t &known );
-
 void randart_wpn_properties( const item_def &item, 
                              randart_properties_t &proprt );
 
-int randart_wpn_property( const item_def &item, randart_prop_type prop,
-                          bool &known );
-
-int randart_wpn_property( const item_def &item, randart_prop_type prop );
-
-int randart_known_wpn_property( const item_def &item, randart_prop_type prop );
+int randart_wpn_property( const item_def &item, int prop );
 
 int randart_wpn_num_props( const item_def &item );
 int randart_wpn_num_props( const randart_properties_t &proprt );
-
-void randart_wpn_learn_prop( item_def &item, randart_prop_type prop );
-bool randart_wpn_known_prop( item_def &item, randart_prop_type prop );
 
 /* ***********************************************************************
  * called from: dungeon

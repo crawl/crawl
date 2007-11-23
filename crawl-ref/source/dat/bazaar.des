@@ -33,32 +33,6 @@ function bazaar_message(e)
   e.welcome("You enter an inter-dimensional bazaar!")
 end
 
-function random_bazaar_colour()
-  local colours = {"blue", "red", "lightblue", "magenta", "green"}
-
-  crawl.mpr("#colours = " .. #colours)
-
-  local ret = colours[crawl.random2(#colours) + 1]
-
-  crawl.mpr("ret = " .. ret)
-
-  return ret
-end
-
-function fixup_bazaar()
-  dgn.fixup_stairs("stone_arch", "exit_portal_vault")
-  dgn.floor_halo("enter_shop", "yellow")
-
-  if (dgn.get_floor_colour() == "black") then
-    dgn.change_floor_colour(random_bazaar_colour())
-  end
-
-  if (dgn.get_rock_colour() == "black") then
-    dgn.change_rock_colour("yellow")
-  end
-end
-
-dgn.set_lt_callback("bazaar", "fixup_bazaar")
 }}
 
 default-depth: D:10-27
@@ -200,10 +174,7 @@ ENDMAP
 # upstair, which will be converted into a stone arch (and on which the player
 # will be placed when entering the bazaar). If there's no upstair, the player
 # will arrive on a random square.
-#
-# You can force a particular colour for the rock walls or floor using
-# ROCKCOL and FLOORCOL directives.
-#
+
 NAME:   bazaar_general_marketplace
 TAGS:   bazaar allow_dup
 FLAGS:  no_rotate
@@ -282,12 +253,10 @@ ITEM:    any jewellery / good_item any jewellery
 ITEM:    any book / good_item any book, any staff 
 SUBST:   d=.d, e=.e, f=.f
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
-: if colour == "red" then
+: if you.bazaar_floor() == "red" then
 SUBST: l = w
 : else
-: if colour == "blue" then
+: if you.bazaar_floor() == "blue" then
 SUBST: w = l
 : end
 : end
@@ -315,12 +284,10 @@ KFEAT:   B = distillery shop
 ITEM:    any wand, ring of levitation
 SHUFFLE: leAB/wdBA
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
-: if colour == "red" then
+: if you.bazaar_floor() == "red" then
 SUBST: l = w
 : else
-: if colour == "blue" then
+: if you.bazaar_floor() == "blue" then
 SUBST: w = l
 : end
 : end
@@ -371,13 +338,11 @@ SUBST:   y=z, r=z, s=z, z=V, Y=Z, R=Z, S=Z
 KFEAT:   Z = stone_arch
 SHUFFLE: lw
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
-: if colour == "red" then
-SUBST: l = w
+: if you.bazaar_floor() == "red" then
+SUBST:   l : wWx
 : else
-: if colour == "blue" then
-SUBST: w = l
+: if you.bazaar_floor() == "blue" then
+SUBST:   w : Wx
 : end
 : end
 #
@@ -414,13 +379,11 @@ KFEAT:   Z = stone_arch
 SUBST:   a=T, z=V
 SHUFFLE: lw
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
-: if colour == "red" then
-SUBST: l = w
+: if you.bazaar_floor() == "red" then
+SUBST:   l : wWx
 : else
-: if colour == "blue" then
-SUBST: w = l
+: if you.bazaar_floor() == "blue" then
+SUBST:   w : Wx
 : end
 : end
 #
@@ -441,6 +404,7 @@ ENDMAP
 #######################################
 # circle bazaar
 #
+
 NAME:    bazaar_circle_1
 CHANCE:  2
 TAGS:    bazaar allow_dup
@@ -741,10 +705,8 @@ KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
 : bazaar_message(_G)
-# special cases for blue floor
-: local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
-: if colour == "blue" then
+# special case for floor
+: if you.bazaar_floor() == "blue" then
 SUBST:   w = W
 : end
 #
@@ -867,12 +829,10 @@ SHUFFLE: zZ
 SUBST:   z = ., Z = w
 SHUFFLE: wl, ABCD
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
-: if colour == "red" then
+: if you.bazaar_floor() == "red" then
 SUBST: l = w
 : else
-: if colour == "blue" then
+: if you.bazaar_floor() == "blue" then
 SUBST: w = l
 : end
 : end

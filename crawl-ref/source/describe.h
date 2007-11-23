@@ -72,8 +72,6 @@ void describe_spell(spell_type spelled);
  * *********************************************************************** */
 std::string ghost_description(const monsters &mons, bool concise = false);
 
-void print_description( const std::string &d );
-
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);
 

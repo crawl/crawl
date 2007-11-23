@@ -63,7 +63,6 @@
 #include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
-#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
@@ -146,7 +145,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
     { ABIL_NEMELEX_PEEK_DECK, ABIL_NEMELEX_DRAW_CARD,
-      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NEMELEX_MARK_DECK,
+      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NON_ABILITY,
       ABIL_NEMELEX_STACK_DECK },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
@@ -278,7 +277,7 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
     { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
-      0, 0, 100, generic_cost::range(5, 6), ABFLAG_NONE },
+      0, 0, 100, generic_cost::fixed(4), ABFLAG_NONE },
 
     // Elyvilon
     { ABIL_ELYVILON_DESTROY_WEAPONS, "Destroy Weapons", 0, 0, 0, 0, ABFLAG_NONE },
@@ -305,7 +304,6 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_PEEK_DECK, "Deck Peek", 3, 0, 0, 1, ABFLAG_INSTANT },
     { ABIL_NEMELEX_DRAW_CARD, "Draw Card", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, ABFLAG_NONE },
-    { ABIL_NEMELEX_MARK_DECK, "Mark Deck", 4, 0, 125, 5, ABFLAG_NONE },
     { ABIL_NEMELEX_STACK_DECK, "Stack Deck", 5, 0, 250, 10, ABFLAG_NONE },
 
     // Beogh
@@ -383,7 +381,7 @@ const std::string make_cost_description( ability_type ability )
         ret << " HP";
     }
 
-    if (abil.food_cost && you.is_undead != US_UNDEAD)
+    if (abil.food_cost && you.species != SP_MUMMY)
     {
         if (!ret.str().empty())
             ret << ", ";
@@ -742,20 +740,14 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 80 - (you.piety / 25) - (4 * you.skills[SK_EVOCATIONS]);
         break;
         
-    case ABIL_NEMELEX_MARK_DECK:
+    case ABIL_NEMELEX_PEEK_DECK:
         invoc = true;
-        failure = 70 - (you.piety * 2 / 45)
-            - (9 * you.skills[SK_EVOCATIONS] / 2);
+        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
-        break;
-
-    case ABIL_NEMELEX_PEEK_DECK:
-        invoc = true;
-        failure = 40 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
     case ABIL_NEMELEX_DRAW_CARD:
@@ -832,7 +824,6 @@ bool activate_ability()
     if ( talents.empty() )
     {
         mpr("Sorry, you're not good enough to have a special ability.");
-        crawl_state.zero_turns_taken();
         return false;
     }
     if ( you.duration[DUR_CONF] )
@@ -841,7 +832,6 @@ bool activate_ability()
         if ( talents.empty() )
         {
             mpr("You're too confused!");
-            crawl_state.zero_turns_taken();
             return false;
         }
     }
@@ -885,7 +875,6 @@ bool activate_ability()
             if ( selected < 0 )
             {
                 mpr("You can't do that.");
-                crawl_state.zero_turns_taken();
                 return (false);
             }
         }
@@ -915,7 +904,6 @@ static bool activate_talent(const talent& tal)
     if (hungerCheck && you.hunger_state <= HS_STARVING)
     {
         mpr("You're too hungry.");
-        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -923,16 +911,10 @@ static bool activate_talent(const talent& tal)
 
     // check that we can afford to pay the costs
     if (!enough_mp( abil.mp_cost, false ))
-    {
-        crawl_state.zero_turns_taken();
         return (false);
-    }
 
     if (!enough_hp( abil.hp_cost, false ))
-    {
-        crawl_state.zero_turns_taken();
         return (false);
-    }
 
     // no turning back now... {dlb}
     if (random2avg(100, 3) < tal.fail)
@@ -1256,7 +1238,7 @@ static bool do_ability(const ability_def& abil)
             return (false);
         }
 
-        banished(DNGN_ENTER_PANDEMONIUM, "self");
+        banished(DNGN_ENTER_PANDEMONIUM);
         break;
 
     case ABIL_CHANNELING:
@@ -1573,9 +1555,7 @@ static bool do_ability(const ability_def& abil)
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
         // Trog abilities don't use or train invocations. 
-        summon_berserker(you.piety +
-                         random2(you.piety/4) - random2(you.piety/4),
-                         true);
+        summon_berserker();
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
@@ -1707,12 +1687,6 @@ static bool do_ability(const ability_def& abil)
         exercise(SK_EVOCATIONS, 2 + random2(2));
         break;
 
-    case ABIL_NEMELEX_MARK_DECK:
-        if ( !deck_mark() )
-            return false;
-        exercise(SK_EVOCATIONS, 4 + random2(4));
-        break;
-
     case ABIL_NEMELEX_STACK_DECK:
         if ( !deck_stack() )
             return false;
@@ -1808,7 +1782,11 @@ static void pay_ability_costs(const ability_def& abil)
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     const int food_cost = abil.food_cost + random2avg(abil.food_cost, 2);
-    const int piety_cost = abil.piety_cost.cost();
+    int piety_cost = abil.piety_cost.cost();
+    
+    if (abil.ability == ABIL_TROG_BROTHERS_IN_ARMS)
+    // increase cost depending on current piety
+        piety_cost += (you.piety-100)/20;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
@@ -1838,7 +1816,7 @@ static void pay_ability_costs(const ability_def& abil)
 
 int choose_ability_menu(const std::vector<talent>& talents)
 {
-    Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, "ability");
+    Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE);
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
         new MenuEntry("  Ability                           "
@@ -2220,7 +2198,8 @@ void set_god_ability_slots( void )
     {
         if ( god_abilities[you.religion][i] != ABIL_NON_ABILITY )
         {
-            set_god_ability_helper(god_abilities[you.religion][i], 'a' + num);
+            set_god_ability_helper(god_abilities[you.religion][i],
+                                   (Options.lowercase_invocations ? 'a' : 'A') + num);
             ++num;
         }
     }
@@ -2239,8 +2218,10 @@ static int find_ability_slot( ability_type which_ability )
 
     // no requested slot, find new one and make it preferred.
 
-    // skip over a-e (invocations)
-    for (int slot = 5; slot < 52; slot++)
+    // skip over a-e if player prefers them for invocations
+    const int startpoint = (Options.lowercase_invocations ? 5 : 0);
+
+    for (int slot = startpoint; slot < 52; slot++)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
@@ -2249,8 +2230,8 @@ static int find_ability_slot( ability_type which_ability )
         }
     }
 
-    // if we can't find anything else, try a-e
-    for (int slot = 4; slot >= 0; slot--)
+    // if we skipped over a-e to reserve them, try them now
+    for (int slot = startpoint - 1; slot >= 0; slot--)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {

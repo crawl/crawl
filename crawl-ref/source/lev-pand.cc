@@ -15,7 +15,6 @@
 
 #include "externs.h"
 
-#include "dungeon.h"
 #include "monplace.h"
 #include "mon-pick.h"
 #include "stuff.h"
@@ -149,10 +148,6 @@ void init_pandemonium(void)
 
     // set at least some specific monsters for the special levels - this
     // can also be used to set some colours
-
-    env.floor_colour = BLACK;
-    env.rock_colour  = BLACK;
-    dgn_set_colours_from_monsters();
 }                               // end init_pandemonium()
 
 void pandemonium_mons(void)

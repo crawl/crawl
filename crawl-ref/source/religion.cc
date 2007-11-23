@@ -74,111 +74,87 @@
 #include "terrain.h"
 #include "tutorial.h"
 #include "view.h"
-#include "xom.h"
-
-#if DEBUG_RELIGION
-#    define DEBUG_DIAGNOSTICS 1
-#    define DEBUG_GIFTS       1
-#    define DEBUG_SACRIFICE   1
-#    define DEBUG_PIETY       1
-#endif
 
 // Item offer messages for the gods:
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
-// First message is if there's no piety gain, second is if piety gain 
-// is one, third message is for piety gain > 1 (currently unused).
-const char *sacrifice[NUM_GODS][3] =
+// First message is if there's no piety gain, second is if there is.
+const char *sacrifice[NUM_GODS][2] =
 {
     // No god
     {
         " & eaten by a bored swarm of bugs.",
-        " & eaten by a swarm of bugs.",
         " & eaten by a ravening swarm of bugs."
     },
     // Zin
     {
-         " barely glow% and disappear%.",
-         " glow% silver and disappear%.",
-         " glow% blindingly silver and disappear%.",
+        " faintly glow% silver and disappear%.",
+        " glow% silver and disappear%.",
     },
     // TSO
     {
-         " faintly glow% and disappear%.",
-         " glow% a golden colour and disappear%.",
-         " glow% a brilliant golden colour and disappear%.",
+        " glow% a golden colour and disappear%.",
+        " glow% a brilliant golden colour and disappear%.",
     },
     // Kikubaaqudgha
     {
-         " slowly rot% away.",
-         " rot% away.",
-         " rot% away in an instant.",
+        " slowly rot% away.",
+        " rot% away in an instant.",
     },
     // Yredelemnul
     {
         " slowly crumble% to dust.",
         " crumble% to dust.",
-        " turn% to dust in an instant.",
     },
     // Xom (no sacrifices)
     {
         " & eaten by a bored bug.",
         " & eaten by a bug.",
-        " & eaten by a greedy bug.",
     },
     // Vehumet
     {
-         " fade% into nothingness.",
-         " burn% into nothingness.",
-         " explode% into nothingness.",
+        " burn% into nothingness.",
+        " explode% into nothingness.",
     },
     // Okawaru
     {
-         " slowly burn% to ash.",
-         " & consumed by flame.",
-         " & consumed in a burst of flame.",
+        " & consumed by flame.",
+        " & consumed in a burst of flame.",
     },
     // Makhleb
     {
-         " disappear% without a sign.",
-         " flare% red and disappear%.",
-         " flare% blood-red and disappear%.",
+        " flare% red and disappear%.",
+        " flare% blood-red and disappear%.",
     },
     // Sif Muna
     {
-         " & gone without a glow.",
-         " glow% faintly for a moment, and & gone.",
-         " glow% for a moment, and & gone.",
+        " glow% very faintly for a moment, and & gone.",
+        " glow% faintly for a moment, and & gone.",
     },
     // Trog
     {
-         " & slowly consumed by flames.",
-         " & consumed in a column of flame.",
-         " & consumed in a roaring column of flame.",
+        " & consumed in a column of flame.",
+        " & consumed in a roaring column of flame.",
     },
     // Nemelex
     {
-         " disappear% without a glow.",
-         " glow% slightly and disappear%.",
-         " glow% with a rainbow of weird colours and disappear%.",
+        " glow% slightly and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
     },
     // Elyvilon
     {
-         " slowly evaporate%.",
-         " evaporate%.",
-         " glow% and evaporate%.",
+        " slowly evaporate%.",
+        " evaporate%.",
     },
     // Lugonu
     {
-         " & disappears into the void.",
-         " & consumed by the void.",
-         " & voraciously consumed by the void.",
+        " & disappears into the void.",
+        " & consumed by the void.",
     },
     // Beogh
     {
-         " slowly crumble% into the ground.",
-         " crumble% into the ground.",
-         " disintegrate% into the ground.",
+        " slowly crumble% into the ground.",
+        " crumble% into the ground.",
     }
 };
 
@@ -242,10 +218,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call in reinforcement",
       "" },
     // Nemelex
-    { "peek at three random cards from a deck",
+    { "peek at the first card of a deck",
       "draw cards from decks in your inventory",
       "choose one out of three cards",
-      "mark decks",
+      "",
       "order the the top five cards of a deck, forfeiting the rest" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
@@ -328,10 +304,10 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call in reinforcement",
       "" },
     // Nemelex
-    { "peek at three random cards from a deck",
+    { "peek at the first card of a deck",
       "draw cards from decks in your inventory",
       "choose one out of three cards",
-      "mark decks",
+      "",
       "order decks" },
     // Elyvilon
     { "call upon Elyvilon for minor healing",
@@ -360,7 +336,7 @@ void inc_penance(int god, int val);
 void inc_penance(int val);
 static bool followers_abandon_you(void); // Beogh
 
-bool is_evil_god(god_type god)
+static bool is_evil_god(god_type god)
 {
     return
         god == GOD_KIKUBAAQUDGHA ||
@@ -371,7 +347,7 @@ bool is_evil_god(god_type god)
         god == GOD_LUGONU;
 }
 
-bool is_good_god(god_type god)
+static bool is_good_god(god_type god)
 {
     return
         god == GOD_SHINING_ONE ||
@@ -396,9 +372,6 @@ void dec_penance(god_type god, int val)
 {
     if (you.penance[god] > 0)
     {
-#if DEBUG_PIETY
-        mprf(MSGCH_DIAGNOSTICS, "Decreasing penance by %d", val);
-#endif
         if (you.penance[god] <= val)
         {
             simple_god_message(" seems mollified.", god);
@@ -449,45 +422,20 @@ static void inc_gift_timeout(int val)
         you.gift_timeout += val;
 }                               // end inc_gift_timeout()
 
-// Only Yredelemnul and Okawaru use this for now
-static monster_type random_servant(god_type god)
+static monster_type random_undead_servant(int religion /* unused */)
 {
     // error trapping {dlb}
     monster_type thing_called = MONS_PROGRAM_BUG;
     int temp_rand = random2(100);
-
-    switch (god)
-    {
-    case GOD_YREDELEMNUL:
-        // undead
-        thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
-                        (temp_rand > 52) ? MONS_WIGHT :             // 12%
-                        (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
-                        (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
-                        (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
-                        (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
-                        (temp_rand > 10) ? MONS_GHOUL :             //  6%
-                        (temp_rand >  4) ? MONS_MUMMY               //  6%
-                                         : MONS_FLAYED_GHOST);      //  5%
-        break;
-    case GOD_OKAWARU:
-        // warriors
-        thing_called = ((temp_rand > 84) ? MONS_ORC_WARRIOR :
-                        (temp_rand > 69) ? MONS_ORC_KNIGHT :
-                        (temp_rand > 59) ? MONS_NAGA_WARRIOR :
-                        (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :
-                        (temp_rand > 39) ? MONS_STONE_GIANT :
-                        (temp_rand > 29) ? MONS_FIRE_GIANT :
-                        (temp_rand > 19) ? MONS_FROST_GIANT :
-                        (temp_rand >  9) ? MONS_CYCLOPS :
-                        (temp_rand >  4) ? MONS_HILL_GIANT
-                                         : MONS_TITAN);
-
-        break;
-    default:
-        break;
-    }
-
+    thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
+                    (temp_rand > 52) ? MONS_WIGHT :             // 12%
+                    (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
+                    (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
+                    (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
+                    (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
+                    (temp_rand > 10) ? MONS_GHOUL :             //  6%
+                    (temp_rand >  4) ? MONS_MUMMY               //  6%
+                                     : MONS_FLAYED_GHOST);      //  5%
     return (thing_called);
 }
 
@@ -539,193 +487,11 @@ static bool need_missile_gift()
             && ammo_count(launcher) < 20 + random2(35));
 }
 
-static void get_pure_deck_weights(int weights[])
-{
-    weights[0] = you.sacrifice_value[OBJ_ARMOUR] + 1;
-    weights[1] = you.sacrifice_value[OBJ_WEAPONS] +
-        you.sacrifice_value[OBJ_STAVES] +
-        you.sacrifice_value[OBJ_MISSILES] + 1;
-    weights[2] = you.sacrifice_value[OBJ_MISCELLANY] +
-        you.sacrifice_value[OBJ_JEWELLERY] +
-        you.sacrifice_value[OBJ_BOOKS] +
-        you.sacrifice_value[OBJ_GOLD];
-    weights[3] = you.sacrifice_value[OBJ_CORPSES] / 2;
-    weights[4] = you.sacrifice_value[OBJ_POTIONS] +
-        you.sacrifice_value[OBJ_SCROLLS] +
-        you.sacrifice_value[OBJ_WANDS] +
-        you.sacrifice_value[OBJ_FOOD];
-}
-
-static void update_sacrifice_weights(int which)
-{
-    switch ( which )
-    {
-    case 0:
-        you.sacrifice_value[OBJ_ARMOUR] /= 5;
-        you.sacrifice_value[OBJ_ARMOUR] *= 4;
-        break;
-    case 1:
-        you.sacrifice_value[OBJ_WEAPONS]  /= 5;
-        you.sacrifice_value[OBJ_STAVES]   /= 5;
-        you.sacrifice_value[OBJ_MISSILES] /= 5;
-        you.sacrifice_value[OBJ_WEAPONS]  *= 4;
-        you.sacrifice_value[OBJ_STAVES]   *= 4;
-        you.sacrifice_value[OBJ_MISSILES] *= 4;
-        break;
-    case 2:
-        you.sacrifice_value[OBJ_MISCELLANY] /= 5;
-        you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
-        you.sacrifice_value[OBJ_BOOKS]      /= 5;
-        you.sacrifice_value[OBJ_GOLD]       /= 5;
-        you.sacrifice_value[OBJ_MISCELLANY] *= 4;
-        you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
-        you.sacrifice_value[OBJ_BOOKS]      *= 4;
-        you.sacrifice_value[OBJ_GOLD]       *= 4;
-    case 3:
-        you.sacrifice_value[OBJ_CORPSES] /= 5;
-        you.sacrifice_value[OBJ_CORPSES] *= 4;
-        break;
-    case 4:
-        you.sacrifice_value[OBJ_POTIONS] /= 5;
-        you.sacrifice_value[OBJ_SCROLLS] /= 5;
-        you.sacrifice_value[OBJ_WANDS]   /= 5;
-        you.sacrifice_value[OBJ_FOOD]    /= 5;
-        you.sacrifice_value[OBJ_POTIONS] *= 4;
-        you.sacrifice_value[OBJ_SCROLLS] *= 4;
-        you.sacrifice_value[OBJ_WANDS]   *= 4;
-        you.sacrifice_value[OBJ_FOOD]    *= 4;
-        break;
-    }
-}
-
-#if DEBUG_GIFTS || DEBUG_CARDS
-static void show_pure_deck_chances()
-{
-    int weights[5];
-
-    get_pure_deck_weights(weights);
-
-    float total = (float) (weights[0] + weights[1] + weights[2] + weights[3] +
-                           weights[4]);
-
-    mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
-         "escape %0.2f%%, destruction %0.2f%%, dungeons %0.2f%%,"
-         "summoning %0.2f%%, wonders %0.2f%%",
-         (float)weights[0] / total * 100.0,
-         (float)weights[1] / total * 100.0,
-         (float)weights[2] / total * 100.0,
-         (float)weights[3] / total * 100.0,
-         (float)weights[4] / total * 100.0);
-}
-#endif
-
-static void give_nemelex_gift()
-{
-    if ( grid_destroys_items(grd[you.x_pos][you.y_pos]) )
-        return;
-    
-    // Nemelex will give at least one gift early.
-    if ((you.num_gifts[GOD_NEMELEX_XOBEH] == 0
-         && random2(piety_breakpoint(1)) < you.piety) ||
-        (random2(MAX_PIETY) <= you.piety
-         && one_chance_in(3)
-         && !you.attribute[ATTR_CARD_COUNTDOWN]))
-    {
-        misc_item_type gift_type;
-        if ( random2(MAX_PIETY) <= you.piety )
-        {
-            // make a pure deck
-            const misc_item_type pure_decks[] = {
-                MISC_DECK_OF_ESCAPE,
-                MISC_DECK_OF_DESTRUCTION,
-                MISC_DECK_OF_DUNGEONS,
-                MISC_DECK_OF_SUMMONING,
-                MISC_DECK_OF_WONDERS
-            };
-            int weights[5];
-            get_pure_deck_weights(weights);
-            const int choice = choose_random_weighted(weights, weights+5);
-            gift_type = pure_decks[choice];
-#if DEBUG_GIFTS || DEBUG_CARDS
-            show_pure_deck_chances();
-#endif
-            update_sacrifice_weights(choice);
-        }
-        else
-        {
-            // make a mixed deck
-            const misc_item_type mixed_decks[] = {
-                MISC_DECK_OF_WAR,
-                MISC_DECK_OF_CHANGES,
-                MISC_DECK_OF_DEFENSE
-            };
-            gift_type = RANDOM_ELEMENT(mixed_decks);
-        }
-
-        int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
-                                   true, 1, MAKE_ITEM_RANDOM_RACE );
-
-        if (thing_created != NON_ITEM)
-        {
-            // Piety|Common  | Rare  |Legendary
-            // --------------------------------
-            //     0:  95.00%,  5.00%,  0.00%
-            //    20:  86.00%, 10.50%,  3.50%
-            //    40:  77.00%, 16.00%,  7.00%
-            //    60:  68.00%, 21.50%, 10.50%
-            //    80:  59.00%, 27.00%, 14.00%
-            //   100:  50.00%, 32.50%, 17.50%
-            //   120:  41.00%, 38.00%, 21.00%
-            //   140:  32.00%, 43.50%, 24.50%
-            //   160:  23.00%, 49.00%, 28.00%
-            //   180:  14.00%, 54.50%, 31.50%
-            //   200:   5.00%, 60.00%, 35.00%
-            int common_weight = 95 - (90 * you.piety / MAX_PIETY);
-            int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
-            int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
-
-            deck_rarity_type rarity = static_cast<deck_rarity_type>(
-                random_choose_weighted(common_weight,
-                                       DECK_RARITY_COMMON,
-                                       rare_weight,
-                                       DECK_RARITY_RARE,
-                                       legend_weight,
-                                       DECK_RARITY_LEGENDARY,
-                                       0));
-
-            item_def &deck(mitm[thing_created]);
-
-            deck.special = rarity;
-            deck.colour  = deck_rarity_to_color(rarity);
-
-            move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-            origin_acquired(deck, you.religion);
-                    
-            simple_god_message(" grants you a gift!");
-            more();
-            canned_msg(MSG_SOMETHING_APPEARS);
-
-            you.attribute[ATTR_CARD_COUNTDOWN] = 10;
-            inc_gift_timeout(5 + random2avg(9, 2));
-            you.num_gifts[you.religion]++;
-            take_note(Note(NOTE_GOD_GIFT, you.religion));
-        }
-    }
-}
-
 static void do_god_gift(bool prayed_for)
 {
-    ASSERT(you.religion != GOD_NO_GOD);
-    
     // Zin worshippers are the only ones that can pray to ask Zin for stuff.
     if (prayed_for != (you.religion == GOD_ZIN))
         return;
-
-    god_acting gdact;
-
-#if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
-    int old_gifts = you.num_gifts[ you.religion ];
-#endif
     
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
@@ -753,7 +519,66 @@ static void do_god_gift(bool prayed_for)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            give_nemelex_gift();
+            if (random2(200) <= you.piety
+                && one_chance_in(3)
+                && !you.attribute[ATTR_CARD_COUNTDOWN]
+                && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
+            {
+                misc_item_type gift_type;
+                if ( random2(200) <= you.piety )
+                {
+                    // make a pure deck
+                    const misc_item_type pure_decks[] = {
+                        MISC_DECK_OF_ESCAPE,
+                        MISC_DECK_OF_DESTRUCTION,
+                        MISC_DECK_OF_DUNGEONS,
+                        MISC_DECK_OF_SUMMONING,
+                        MISC_DECK_OF_WONDERS
+                    };
+                    int weights[5];
+                    // FIXME do something with OBJ_FOOD,
+                    // OBJ_WANDS, OBJ_JEWELLERY, OBJ_BOOKS
+                    // (and maybe OBJ_ORBS...)
+                    weights[0] = you.sacrifice_value[OBJ_SCROLLS] +
+                        you.sacrifice_value[OBJ_ARMOUR] + 1;
+                    weights[1] = you.sacrifice_value[OBJ_WEAPONS] +
+                        you.sacrifice_value[OBJ_STAVES] +
+                        you.sacrifice_value[OBJ_MISSILES] + 1;
+                    weights[2] = you.sacrifice_value[OBJ_MISCELLANY];
+                    weights[3] = you.sacrifice_value[OBJ_CORPSES] * 100;
+                    weights[4] = you.sacrifice_value[OBJ_POTIONS];
+                    gift_type = pure_decks[choose_random_weighted(weights,
+                                                                  weights+5)];
+                }
+                else
+                {
+                    // make a mixed deck
+                    const misc_item_type mixed_decks[] = {
+                        MISC_DECK_OF_WAR,
+                        MISC_DECK_OF_CHANGES,
+                        MISC_DECK_OF_DEFENSE
+                    };
+                    gift_type = RANDOM_ELEMENT(mixed_decks);
+                }
+
+                int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
+                                           true, 1, MAKE_ITEM_RANDOM_RACE );
+
+                if (thing_created != NON_ITEM)
+                {
+                    move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+                    origin_acquired(mitm[thing_created], you.religion);
+                    
+                    simple_god_message(" grants you a gift!");
+                    more();
+                    canned_msg(MSG_SOMETHING_APPEARS);
+
+                    you.attribute[ATTR_CARD_COUNTDOWN] = 10;
+                    inc_gift_timeout(5 + random2avg(9, 2));
+                    you.num_gifts[you.religion]++;
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                }
+            }
             break;
         
         case GOD_OKAWARU:
@@ -807,12 +632,13 @@ static void do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) > 80 && one_chance_in(5))
             {
-                monster_type thing_called = 
-                    random_servant(GOD_YREDELEMNUL);
+                monster_type thing_called =
+                    random_undead_servant(GOD_YREDELEMNUL);
 
-                if (create_monster(thing_called, 0, BEH_FRIENDLY,
-                                   you.x_pos, you.y_pos, you.pet_target,
-                                   MAKE_ITEM_RANDOM_RACE) != -1)
+                if (create_monster( thing_called, 0, BEH_FRIENDLY, 
+                                    you.x_pos, you.y_pos, 
+                                    you.pet_target, MAKE_ITEM_RANDOM_RACE )
+                    != -1)
                 {
                     simple_god_message(" grants you an undead servant!");
                     more();
@@ -911,12 +737,6 @@ static void do_god_gift(bool prayed_for)
             break;
         } 
     }                           // end of gift giving
-
-#if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
-    if (old_gifts < you.num_gifts[ you.religion ])
-        mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
-             you.num_gifts[ you.religion ] );
-#endif
 }
 
 static bool is_risky_sacrifice(const item_def& item)
@@ -1234,8 +1054,7 @@ void god_speaks( god_type god, const char *mesg )
 
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
-bool did_god_conduct( conduct_type thing_done, int level, bool known,
-                      const actor *victim )
+bool did_god_conduct( conduct_type thing_done, int level, const actor *victim )
 {
     bool ret = false;
     int piety_change = 0;
@@ -1244,28 +1063,15 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return (false);
 
-    god_acting gdact;
-
     switch (thing_done)
     {
     case DID_DRINK_BLOOD:
         switch (you.religion)
         {
-        case GOD_SHINING_ONE:
-            if (!known)
-            {
-                simple_god_message(" did not appreciate that!");
-                break;
-            }
-            penance = level;
-            // deliberate fall-through
         case GOD_ZIN:
+        case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-            if (!known)
-            {
-                simple_god_message(" did not appreciate that!");
-                break;
-            }
+            // no penance as this can happen accidentally
             piety_change = -2*level;
             ret = true;
             break;
@@ -1274,22 +1080,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_CANNIBALISM:
-        switch (you.religion)
-        {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-            piety_change = -level;
-            penance = level;
-            ret = true;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    // If you make some god like these acts, modify did_god_conduct call
+    // If you make some god like these acts, modify did_god_conduct call 
     // in beam.cc with god_likes_necromancy check or something similar
     case DID_NECROMANCY:
     case DID_UNHOLY:
@@ -1299,14 +1090,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-            if (!known && thing_done != DID_ATTACK_HOLY)
-            {
-                simple_god_message(" did not appreciate that!");
-                break;
-            }
             piety_change = -level;
-            if (known)
-                penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
+            penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
             ret = true;
             break;
         default:
@@ -1337,8 +1122,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
                 (victim && mons_species(victim->id()) == MONS_ORC))
             {
                 piety_change = -level;
-                if (known)
-                    penance = level * 3;
+                penance = level * 3;
                 ret = true;
             }
             break;
@@ -1643,31 +1427,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         {
             piety_change = level;
             ret = true;
-
-            // For a stacked deck, 0% chance of card countdown decrement
-            // drawing a card which doesn't use up the deck, and 40%
-            // on a card which does.  For a non-stacked deck, an
-            // average 50% of decrement for drawing a card which doesn't
-            // use up the deck, and 80% on a card which does use up the
-            // deck.
-            int chance = 0;
-            switch(level)
-            {
-            case 0: chance = 0;   break;
-            case 1: chance = 40;  break;
-            case 2: chance = 70;  break;
-            default:
-            case 3: chance = 100; break;
-            }
-
-            if (random2(100) < chance && you.attribute[ATTR_CARD_COUNTDOWN])
-            {
-                you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_GIFTS
-                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                     you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-            }
         }
         break;
 
@@ -1719,12 +1478,13 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Necromancy", "Unholy", "Attack Holy", "Attack Friend",
           "Friend Died", "Stab", "Poison", "Field Sacrifice",
           "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
-          "Kill Wizard", "Kill Priest", "Kill Angel", "Undead Slave Kill Living",
-          "Servant Kill Living", "Servant Kill Undead", "Servant Kill Demon",
-          "Servant Kill Natural Evil", "Servant Kill Angel",
+          "Kill Wizard",
+          "Kill Priest", "Kill Angel", "Undead Slave Kill Living", 
+          "Servant Kill Living", "Servant Kill Undead", 
+          "Servant Kill Demon", "Servant Kill Natural Evil", 
+          "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
-          "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
-          "Create Life"
+          "Cards", "Stimulants", "Drink Blood", "Eat Meat", "Create Life" 
         };
 
         ASSERT(ARRAYSIZE(conducts) == NUM_CONDUCTS);
@@ -1742,7 +1502,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 void gain_piety(int pgn)
 {
     // Xom uses piety differently...
-    if (you.religion == GOD_XOM || you.religion == GOD_NO_GOD)
+    if (you.religion == GOD_XOM)
         return;
  
     // check to see if we owe anything first
@@ -1761,22 +1521,13 @@ void gain_piety(int pgn)
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them
         if (!one_chance_in(4))
-        {
-#if DEBUG_PIETY
-            mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
-#endif
             return;
-        }
     }
-
-#if DEBUG_PIETY
-    mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d", pgn);
-#endif
 
     // slow down gain at upper levels of piety
     if (you.religion != GOD_SIF_MUNA)
     {
-        if (you.piety >= MAX_PIETY
+        if (you.piety > 199
             || (you.piety > 150 && one_chance_in(3))
             || (you.piety > 100 && one_chance_in(3)))
         {
@@ -1788,7 +1539,7 @@ void gain_piety(int pgn)
     {
         // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
-        if ((you.piety >= MAX_PIETY) ||
+        if ((you.piety > 199) ||
             (you.piety > 150 && one_chance_in(5)))
         {
             do_god_gift(false);
@@ -1799,8 +1550,6 @@ void gain_piety(int pgn)
     int old_piety = you.piety;
 
     you.piety += pgn;
-    if (you.piety > MAX_PIETY)
-        you.piety = MAX_PIETY;
 
     for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
@@ -1853,24 +1602,11 @@ static bool need_water_walking()
         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
 }
 
-static bool is_evil_weapon(item_def weap)
-{
-    if (weap.base_type != OBJ_WEAPONS)
-        return false;
-
-    return (is_demonic(weap)
-            || weap.special == SPWPN_VAMPIRICISM
-            || weap.special == SPWPN_PAIN
-            || weap.special == SPWPN_DRAINING);
-}
-
 bool ely_destroy_weapons()
 {
     if (you.religion != GOD_ELYVILON)
         return false;
-
-    god_acting gdact;
-
+        
     bool success = false;
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
@@ -1891,8 +1627,7 @@ bool ely_destroy_weapons()
 #endif
 
         bool pgain = false;
-        if (is_evil_weapon(mitm[i])
-            || random2(value) >= random2(250) // artefacts (incl. most randarts)
+        if (random2(value) >= random2(250) // artefacts (incl. most randarts)
             || random2(value) >= random2(100) && one_chance_in(1 + you.piety/50)
             || (mitm[i].base_type == OBJ_WEAPONS
                 && (you.piety < 30 || player_under_penance())))
@@ -1900,18 +1635,7 @@ bool ely_destroy_weapons()
             pgain = true;
             gain_piety(1);
         }
-
-        std::ostream& strm = msg::streams(MSGCH_GOD);
-        strm << mitm[i].name(DESC_CAP_THE);
-
-        if (!pgain)
-            strm << " barely";
-
-        if ( mitm[i].quantity == 1 )
-            strm << " shimmers and breaks into pieces." << std::endl;
-        else
-            strm << " shimmer and break into pieces." << std::endl;
-
+        
         std::ostream& strm = msg::streams(MSGCH_GOD);
         strm << mitm[i].name(DESC_CAP_THE);
         
@@ -1932,6 +1656,7 @@ bool ely_destroy_weapons()
     {
         mpr("There are no weapons here to destroy!");
     }
+
     return success;
 }
 
@@ -1940,8 +1665,6 @@ bool trog_burn_books()
 {
     if (you.religion != GOD_TROG)
         return (false);
-
-    god_acting gdact;
 
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
@@ -2047,16 +1770,13 @@ bool trog_burn_books()
          simple_god_message(" is delighted!", GOD_TROG);
          gain_piety(totalpiety);
     }
+    
     return (true);
 }
 
 void lose_piety(int pgn)
 {
     const int old_piety = you.piety;
-
-#if DEBUG_PIETY
-    mprf(MSGCH_DIAGNOSTICS, "Piety decreasing by %d", pgn);
-#endif
 
     if (you.piety - pgn < 0)
         you.piety = 0;
@@ -2165,10 +1885,9 @@ static bool zin_retribution()
     if (!is_evil_god(you.religion))
         return false;
 
-    bool success = false;
-
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
+        bool success = false;
         const int how_many = 1 + (you.experience_level / 10) + random2(3);
 
         for (int i = 0; i < how_many; i++)
@@ -2185,11 +1904,8 @@ static bool zin_retribution()
     else
     {
         // god_gift == false gives unfriendly
-        success = summon_swarm( you.experience_level * 20, true, false );
-        simple_god_message(success ?
-                           " sends a plague down upon you!" :
-                           "'s plague fails to arrive.",
-                           god);
+        summon_swarm( you.experience_level * 20, true, false );
+        simple_god_message(" sends a plague down upon you!", god);
     }
 
     return false;
@@ -2273,11 +1989,13 @@ static bool yredelemnul_retribution()
 
         for (int i = 0; i < how_many; i++)
         {
-            monster_type punisher = random_servant(GOD_YREDELEMNUL);
+            monster_type punisher =
+                random_undead_servant(GOD_YREDELEMNUL);
 
-            if (create_monster(punisher, 0, BEH_HOSTILE,
-                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+            if (create_monster( punisher, 0, BEH_HOSTILE, 
+                                you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
                 count++;
+
         }
 
         simple_god_message(count > 1? " sends servants to punish you." :
@@ -2303,7 +2021,7 @@ static bool trog_retribution()
     {
         // Would be better if berserking monsters were available,
         // we just send some big bruisers for now.
-        int count = 0;
+        bool success = false;
         int points = 3 + you.experience_level * 3;
 
         while (points > 0)
@@ -2333,12 +2051,13 @@ static bool trog_retribution()
 
             if (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
                                you.y_pos, MHITYOU, 250) != -1)
-                count++;
+                success = true;
         }
-
-        simple_god_message(count > 1 ? " sends monsters to punish you." :
-                           count > 0 ? " sends a monster to punish you." :
-                           " has no time to punish you...now.", god);
+        
+        simple_god_message(success ?
+                           " sends monsters to punish you." :
+                           " has no time to punish you...now.",
+                           god);
     }
     else if ( !one_chance_in(3) )
     {
@@ -2356,8 +2075,7 @@ static bool trog_retribution()
 
         case 1:
         case 2:
-            lose_stat(STAT_STRENGTH, 1 + random2(you.strength / 5), true,
-                      "divine retribution from Trog");
+            lose_stat(STAT_STRENGTH, 1 + random2(you.strength / 5), true);
             break;
 
         case 3:
@@ -2526,7 +2244,18 @@ static bool okawaru_retribution()
 
     for (int i = 0; i < how_many; i++)
     {
-        monster_type punisher = random_servant(GOD_OKAWARU);
+        const int temp_rand = random2(100);
+
+        monster_type punisher = ((temp_rand > 84) ? MONS_ORC_WARRIOR :
+                                 (temp_rand > 69) ? MONS_ORC_KNIGHT :
+                                 (temp_rand > 59) ? MONS_NAGA_WARRIOR :
+                                 (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :
+                                 (temp_rand > 39) ? MONS_STONE_GIANT :
+                                 (temp_rand > 29) ? MONS_FIRE_GIANT :
+                                 (temp_rand > 19) ? MONS_FROST_GIANT :
+                                 (temp_rand >  9) ? MONS_CYCLOPS :
+                                 (temp_rand >  4) ? MONS_HILL_GIANT 
+                                 : MONS_TITAN);
 
         if (create_monster(punisher, 0, BEH_HOSTILE,
                            you.x_pos, you.y_pos, MHITYOU, 250) != -1)
@@ -2553,8 +2282,7 @@ static bool sif_muna_retribution()
     {
     case 0:
     case 1:
-        lose_stat(STAT_INTELLIGENCE, 1 + random2( you.intel / 5 ), true,
-                  "divine retribution from Sif Muna");
+        lose_stat(STAT_INTELLIGENCE, 1 + random2( you.intel / 5 ), true);
         break;
 
     case 2:
@@ -2680,8 +2408,6 @@ void divine_retribution( god_type god )
     if (god == you.religion && is_good_god(god) )
         return;
 
-    god_acting gdact(god, true);
-
     bool do_more = true;   
     switch (god)
     {
@@ -2751,7 +2477,7 @@ bool followers_abandon_you()
     {
         for ( int x = xstart; x < xend; ++x )
         {
-            const unsigned short targ_monst = mgrd[x][y];
+            const unsigned char targ_monst = mgrd[x][y];
             if ( targ_monst != NON_MONSTER )
             {
                 monsters *monster = &menv[targ_monst];
@@ -2821,8 +2547,6 @@ bool followers_abandon_you()
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh
 void beogh_idol_revenge()
 {
-    god_acting gdact(GOD_BEOGH, true);
-
     // Beogh watches his charges closely, but for others doesn't always notice
     if (you.religion == GOD_BEOGH
         || (you.species == SP_HILL_ORC && coinflip())
@@ -2981,7 +2705,6 @@ void beogh_convert_orc(monsters *orc, bool emergency)
 void excommunication(void)
 {
     const god_type old_god = you.religion;
-    god_acting gdact(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
@@ -3137,8 +2860,6 @@ void altar_prayer(void)
     if (you.religion == GOD_XOM)
         return;
 
-    god_acting gdact;
-
     // TSO blesses long swords with holy wrath
     if (you.religion == GOD_SHINING_ONE
         && !you.num_gifts[GOD_SHINING_ONE]
@@ -3237,10 +2958,7 @@ void offer_items()
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
         return;
 
-    god_acting gdact;
-
-    int num_sacced = 0;
-    int i          = igrd[you.x_pos][you.y_pos];
+    int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
         item_def &item(mitm[i]);
@@ -3248,7 +2966,7 @@ void offer_items()
         const int value = item_value( item, true );
 
 
-        if (item_is_stationary(item) || !god_likes_item(you.religion, item))
+        if (item_is_stationary(item) || !god_likes_item(you.religion, mitm[i]))
         {
             i = next;
             continue;
@@ -3256,7 +2974,7 @@ void offer_items()
 
         bool gained_piety = false;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
+#ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
 #endif
         
@@ -3277,49 +2995,22 @@ void offer_items()
                 }
             }
 
+            you.sacrifice_value[mitm[i].base_type] += value;
             if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
             {
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
+#ifdef DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
                      you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
             }
-            // Aproximate piety gain chance.
-            // Value:  %
-            // ---------
-            //    10:  9.0%
-            //    20: 17.5%
-            //    30: 25.5%
-            //    40: 34.0%
-            //    50: 42.5%
-            //    60: 50.0%
-            //    70: 58.0%
-            //    80: 63.0%
-            if ((item.base_type == OBJ_CORPSES &&
-                 one_chance_in(2+you.piety/50))
-                // Nemelex piety gain is fairly fast...at least
-                // when you have low piety.
-                || value/2 >= random2(30 + you.piety/2))
+            if ((mitm[i].base_type == OBJ_CORPSES && coinflip())
+                // Nemelex piety gain is fairly fast.
+                || random2(value) >= random2(60))
             {
                 gain_piety(1);
                 gained_piety = true;
             }
-
-            if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-                // No sacrifice value for chunks of flesh, since food
-                // value goes towards decks of wonder.
-                ; 
-            else if (item.base_type == OBJ_CORPSES)
-            {
-#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
-                mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
-                     item_mass(item));
-#endif
-                you.sacrifice_value[item.base_type] += item_mass(item);
-            }
-            else
-                you.sacrifice_value[item.base_type] += value;
             break;
 
         case GOD_ZIN:
@@ -3356,16 +3047,9 @@ void offer_items()
                                 << sacrifice_message(you.religion, mitm[i],
                                                      gained_piety)
                                 << std::endl;
-        item_was_destroyed(mitm[i]);
         destroy_item(i);
         i = next;
-        num_sacced++;
     }
-
-#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
-    if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
-        show_pure_deck_chances();
-#endif
 }
 
 void god_pitch(god_type which_god)
@@ -3392,7 +3076,6 @@ void god_pitch(god_type which_god)
     if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
     {
         simple_god_message(" is most displeased with you!", which_god);
-        god_acting gdact(GOD_LUGONU, true);
         lugonu_retribution();
         return;
     }
@@ -3489,12 +3172,6 @@ bool god_likes_butchery(god_type god)
 bool god_hates_butchery(god_type god)
 {
     return (god == GOD_ELYVILON);
-}
-
-bool god_protects_from_harm(god_type god)
-{
-    return (god == GOD_ZIN || god == GOD_SHINING_ONE ||
-            god == GOD_ELYVILON || god == GOD_YREDELEMNUL);
 }
 
 void offer_corpse(int corpse)

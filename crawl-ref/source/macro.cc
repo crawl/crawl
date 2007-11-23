@@ -45,15 +45,14 @@
 #include <cstdlib>
 
 #include "cio.h"
-#include "delay.h"
 #include "externs.h"
 #include "message.h"
-#include "state.h"
 #include "stuff.h"
 
 // for trim_string:
 #include "initfile.h"
 
+typedef std::deque<int> keyseq;
 typedef std::deque<int> keybuf;
 typedef std::map<keyseq,keyseq> macromap;
 
@@ -73,8 +72,6 @@ static keybuf Buffer;
 
 #define USERFUNCBASE -10000
 static std::vector<std::string> userfunctions;
-
-static std::vector<key_recorder*> recorders;
 
 inline int userfunc_index(int key)
 {
@@ -409,7 +406,7 @@ static void macro_del( macromap &mapref, keyseq key )
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros. 
  */
-void macro_buf_add( const keyseq &actions, bool reverse) 
+static void macro_buf_add( const keyseq &actions, bool reverse = false ) 
 {
     keyseq act;
     bool need_more_reset = false;
@@ -429,33 +426,14 @@ void macro_buf_add( const keyseq &actions, bool reverse)
 
     Buffer.insert( reverse? Buffer.begin() : Buffer.end(),
                    act.begin(), act.end() );
-
-    if (reverse)
-    {
-        for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-            for (int j = act.size() - 1 ; j >= 0; j--)
-                recorders[i]->add_key(act[j], reverse);
-    }
-    else
-    {
-        for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-            for (int j = 0, size_j = act.size(); j < size_j ; j++)
-                recorders[i]->add_key(act[j]);
-    }
-} 
+}
 
 /*
  * Adds a single keypress into the internal keybuffer.
  */
-void macro_buf_add( int key, bool reverse ) 
+void macro_buf_add( int key ) 
 {
-    if (reverse)
-        Buffer.push_front( key );
-    else
-        Buffer.push_back( key );
-
-    for (int i = 0, size = recorders.size(); i < size; i++)
-        recorders[i]->add_key(key, reverse);
+    Buffer.push_back( key );    
 }
 
 
@@ -513,13 +491,6 @@ static void macro_buf_add_long( keyseq actions,
     }
 }
 
-static int macro_keys_left = -1;
-
-bool is_processing_macro()
-{
-    return (macro_keys_left >= 0);
-}
-
 /*
  * Command macros are only applied from the immediate front of the 
  * buffer, and only when the game is expecting a command.
@@ -535,23 +506,11 @@ static void macro_buf_apply_command_macro( void )
 
         if (result.size() > 0)
         {
-            for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-                recorders[i]->remove_trigger_keys(tmp.size());
-
             // Found macro, remove match from front:
             for (unsigned int i = 0; i < tmp.size(); i++)
-            {
                 Buffer.pop_front();
-                if (macro_keys_left >= 0)
-                    macro_keys_left--;
-            }
-
-            if (macro_keys_left == -1)
-                macro_keys_left = 0;
-            macro_keys_left += result.size();
 
             macro_buf_add(result, true);
-
             break;  
         }
 
@@ -560,27 +519,17 @@ static void macro_buf_apply_command_macro( void )
 }
 
 /*
- * Removes the earliest keypress from the keybuffer, and returns its
+ * Removes the earlies keypress from the keybuffer, and returns its
  * value. If buffer was empty, returns -1;
  */
 static int macro_buf_get( void ) 
 {
     if (Buffer.size() == 0)
-    {
-        // If we're trying to fetch a new keystroke, then the processing
-        // of the previous keystroke is complete.
-        if (macro_keys_left == 0)
-            macro_keys_left = -1;
-
         return (-1);
-    }
 
     int key = Buffer.front();
     Buffer.pop_front();
-
-    if (macro_keys_left >= 0)
-        macro_keys_left--;
-
+    
     return (key);
 }
 
@@ -628,17 +577,8 @@ void macro_save( void )
 static keyseq getch_mul( int (*rgetch)() = NULL ) 
 {
     keyseq keys; 
-    int    a;
+    int a;
     
-    // Something's gone wrong with replaying keys if crawl needs to
-    // get new keys from the user.
-    if (crawl_state.is_replaying_keys())
-    {
-        mpr("(Key replay ran out of keys)");
-        crawl_state.cancel_cmd_repeat();
-        crawl_state.cancel_cmd_again();
-    }
-
     if (!rgetch)
         rgetch = m_getch;
 
@@ -704,26 +644,7 @@ int getch_with_command_macros( void )
  */
 void flush_input_buffer( int reason )
 {
-    ASSERT(reason != FLUSH_KEY_REPLAY_CANCEL ||
-           crawl_state.is_replaying_keys() || crawl_state.cmd_repeat_start);
-
-    ASSERT(reason != FLUSH_ABORT_MACRO || is_processing_macro());
-
-    // Any attempt to flush means that the processing of the previously
-    // fetched keystroke is complete.
-    if (macro_keys_left == 0)
-        macro_keys_left = -1;
-
-    if (crawl_state.is_replaying_keys() && reason != FLUSH_ABORT_MACRO
-        && reason != FLUSH_KEY_REPLAY_CANCEL &&
-        reason != FLUSH_REPLAY_SETUP_FAILURE)
-    {
-        return;
-    }
-
-    if (Options.flush_input[ reason ] || reason == FLUSH_ABORT_MACRO
-        || reason == FLUSH_KEY_REPLAY_CANCEL
-        || reason == FLUSH_REPLAY_SETUP_FAILURE)
+    if (Options.flush_input[ reason ])
     {
         while (!Buffer.empty())
         {
@@ -732,7 +653,6 @@ void flush_input_buffer( int reason )
             if (key == KEY_MACRO_ENABLE_MORE)
                 Options.show_more_prompt = true;
         }
-        macro_keys_left = -1;
     }
 }
 
@@ -902,103 +822,8 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_ENABLE_MORE:
     case KEY_MACRO_DISABLE_MORE:
     case KEY_MACRO_MORE_PROTECT:
-    case KEY_REPEAT_KEYS:
         return (true);
     default:
         return (false);
     }
-}
-
-key_recorder::key_recorder(key_recorder_callback cb, void* cb_data)
-    : paused(false), call_back(cb), call_back_data(cb_data)
-{
-    keys.clear();
-    macro_trigger_keys.clear();
-}
-
-void key_recorder::add_key(int key, bool reverse)
-{
-    if (paused)
-        return;
-
-    if (call_back)
-    {
-        // Don't record key if true
-        if ((*call_back)(this, key, reverse))
-            return;
-    }
-
-    if (reverse)
-        keys.push_front(key);
-    else
-        keys.push_back(key);
-}
-
-void key_recorder::remove_trigger_keys(int num_keys)
-{
-    ASSERT(num_keys >= 1);
-
-    if (paused)
-        return;
-
-    for (int i = 0; i < num_keys; i++)
-    {
-        ASSERT(keys.size() >= 1);
-
-        int key = keys[keys.size() - 1];
-
-        if (call_back)
-        {
-            // Key wasn't recorded in the first place, so no need to remove
-            // it
-            if ((*call_back)(this, key, true))
-                continue;
-        }
-
-        macro_trigger_keys.push_front(key);
-        keys.pop_back();
-    }
-}
-
-void key_recorder::clear()
-{
-    keys.clear();
-    macro_trigger_keys.clear();
-}
-
-void add_key_recorder(key_recorder* recorder)
-{
-    for (int i = 0, size = recorders.size(); i < size; i++)
-        ASSERT(recorders[i] != recorder);
-
-    recorders.push_back(recorder);
-}
-
-void remove_key_recorder(key_recorder* recorder)
-{
-    std::vector<key_recorder*>::iterator i;
-
-    for(i = recorders.begin(); i != recorders.end(); i++)
-        if (*i == recorder)
-        {
-            recorders.erase(i);
-            return;
-        }
-
-    end(1, true, "remove_key_recorder(): recorder not found\n");
-}
-
-// Add macro trigger keys to beginning of the buffer, then expand
-// them.
-void insert_macro_into_buff(const keyseq& keys)
-{
-    for (int i = (int) keys.size() - 1; i >= 0; i--)
-        macro_buf_add(keys[i], true);
-
-    macro_buf_apply_command_macro();
-}
-
-int get_macro_buf_size()
-{
-    return (Buffer.size());
 }

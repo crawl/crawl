@@ -1953,7 +1953,6 @@ bool tutorial_feat_interesting(dungeon_feature_type feat)
        case DNGN_GRANITE_STATUE:
        case DNGN_TRAP_MAGICAL:
        case DNGN_TRAP_MECHANICAL:
-       case DNGN_TRAP_NATURAL:
        case DNGN_STONE_STAIRS_DOWN_I:
        case DNGN_STONE_STAIRS_DOWN_II:
        case DNGN_STONE_STAIRS_DOWN_III:
@@ -1995,12 +1994,6 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "causes the trap to go off, so it can be quite a "
                         "dangerous task.";
             }
-            Options.tutorial_events[TUT_SEEN_TRAP] = 0;
-            break;
-            
-       case DNGN_TRAP_NATURAL: // only shafts for now
-            ostr << "The dungeon contains a number of natural obstacles such "
-                    "as shafts, which lead one or two levels down.";
             Options.tutorial_events[TUT_SEEN_TRAP] = 0;
             break;
             

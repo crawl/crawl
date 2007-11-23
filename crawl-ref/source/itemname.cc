@@ -73,16 +73,14 @@ std::string quant_name( const item_def &item, int quant,
 std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident,
                            bool with_inscription,
-                           bool quantity_words,
-                           unsigned long ignore_flags) const
+                           bool quantity_words) const
 {
     if (descrip == DESC_NONE)
         return ("");
     
     std::ostringstream buff;
 
-    const std::string auxname = this->name_aux(descrip, terse, ident,
-                                               ignore_flags);
+    const std::string auxname = this->name_aux(descrip, terse, ident);
     const bool startvowel = is_vowel(auxname[0]);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
@@ -532,7 +530,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_BLINKING:           return "blinking";
     case SCR_PAPER:              return "paper";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
-    case SCR_FOG:                return "fog";
+    case SCR_FORGETFULNESS:      return "forgetfulness";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_ENCHANT_WEAPON_II:  return "enchant weapon II";
     case SCR_VORPALISE_WEAPON:   return "vorpalise weapon";
@@ -954,8 +952,7 @@ static void output_with_sign(std::ostream& os, int val)
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 std::string item_def::name_aux( description_level_type desc,
-                                bool terse, bool ident,
-                                unsigned long ignore_flags) const
+                                bool terse, bool ident ) const
 {
     // Shortcuts
     const int item_typ = this->sub_type;
@@ -966,19 +963,13 @@ std::string item_def::name_aux( description_level_type desc,
     const bool qualname = desc == DESC_QUALNAME;
     
     const bool know_curse =
-        !basename && !qualname && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
+        !basename && !qualname
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
     
     const bool know_type = ident || item_type_known(*this);
-    const bool __know_pluses =
+    const bool know_pluses =
         !basename && !qualname
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
-
-    const bool know_cosmetic = !__know_pluses && !terse & !basename;
-
-    // So that know_cosmetic won't be affected by ignore_flags
-    const bool know_pluses = __know_pluses
-        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
     bool need_plural = true;
     int brand;
@@ -1030,17 +1021,15 @@ std::string item_def::name_aux( description_level_type desc,
         // Now that we can have "glowing elven" weapons, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (know_cosmetic)
+        if (!know_pluses && !terse && !basename)
         {
             switch (get_equip_desc( *this ))
             {
             case ISFLAG_RUNED:
-                if (!testbits(ignore_flags, ISFLAG_RUNED))
-                    buff << "runed ";
+                buff << "runed ";
                 break;
             case ISFLAG_GLOWING:
-                if (!testbits(ignore_flags, ISFLAG_GLOWING))
-                    buff << "glowing ";
+                buff << "glowing ";
                 break;
             }
         } 
@@ -1137,13 +1126,11 @@ std::string item_def::name_aux( description_level_type desc,
         // Now that we can have "glowing elven" armour, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (know_cosmetic)
+        if (!know_pluses && !terse & !basename)
         {
             switch (get_equip_desc( *this ))
             {
             case ISFLAG_EMBROIDERED_SHINY:
-                if (testbits(ignore_flags, ISFLAG_EMBROIDERED_SHINY))
-                    break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
                 {
@@ -1157,13 +1144,11 @@ std::string item_def::name_aux( description_level_type desc,
                 break;
 
             case ISFLAG_RUNED:
-                if (!testbits(ignore_flags, ISFLAG_RUNED))
-                    buff << "runed ";
+                buff << "runed ";
                 break;
 
             case ISFLAG_GLOWING:
-                if (!testbits(ignore_flags, ISFLAG_GLOWING))
-                    buff << "glowing ";
+                buff << "glowing ";
                 break;
             }
         }
@@ -1397,41 +1382,15 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << "deck of cards";
                     break;
                 }
-                else if (bad_deck(*this))
-                {
-                    buff << "BUGGY deck of cards";
-                    break;
-                }
                 buff << deck_rarity_name(deck_rarity(*this)) << ' ';
             }
             buff << misc_type_name(item_typ, know_type);
-            if ( is_deck(*this)
-                 && (top_card_is_known(*this) || this->plus2 != 0))
+            if ( is_deck(*this) && item_plus2 != 0 )
             {
-                buff << " {";
-                // A marked deck!
-                if (top_card_is_known(*this))
-                    buff << card_name(top_card(*this));
-
-                // How many cards have been drawn, or how many are
-                // left.
-                if (this->plus2 != 0)
-                {
-                    if(top_card_is_known(*this))
-                        buff << ", ";
-
-                    buff << abs(this->plus2) << " card";
-
-                    if (abs(this->plus2) > 1)
-                        buff << "s";
-
-                    if (this->plus2 > 0)
-                        buff << " drawn";
-                    else
-                        buff << " left";
-                }
-
-                buff << "}";
+                // an inscribed deck!
+                buff << " {"
+                     << card_name(static_cast<card_type>(item_plus2 - 1))
+                     << "}";
             }
         }
         break;
@@ -1441,7 +1400,7 @@ std::string item_def::name_aux( description_level_type desc,
         {
             buff << book_secondary_string(this->special / 10)
                  << book_primary_string(this->special % 10)
-                 << (item_typ == BOOK_MANUAL ? "manual" : "book");
+                 << "book";
         }
         else if (item_typ == BOOK_MANUAL)
             buff << "manual of " << skill_name(it_plus);
@@ -1601,15 +1560,6 @@ bool item_type_known( const item_def& item )
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if ( idt != NUM_IDTYPE && item.sub_type < 50  )
         return ( type_ids[idt][item.sub_type] == ID_KNOWN_TYPE );
-    else
-        return false;
-}
-
-bool item_type_known(const object_class_type base_type, const int sub_type)
-{
-    const item_type_id_type idt = objtype_to_idtype(base_type);
-    if ( idt != NUM_IDTYPE && sub_type < 50  )
-        return ( type_ids[idt][sub_type] == ID_KNOWN_TYPE );
     else
         return false;
 }

@@ -156,7 +156,7 @@ void debug_card();
 void debug_set_xl();
 void debug_place_map();
 void debug_test_explore();
-void debug_dismiss_all_monsters(bool force_all = false);
+void debug_dismiss_all_monsters();
 
 class monsters;
 void debug_make_monster_shout(monsters* mon);

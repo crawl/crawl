@@ -36,6 +36,7 @@
 #include "menu.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
@@ -1878,7 +1879,10 @@ static void display_skill_table(bool show_aptitudes)
                 if ( !show_aptitudes )
                 {
                     textcolor(CYAN);
-                    cprintf( " (%2d%%)", (percent_done / 5) * 5 );
+                    if ( !Options.increasing_skill_progress )
+                        cprintf( " (%d)", (100 - percent_done) / 10 );
+                    else
+                        cprintf( " (%2d%%)", (percent_done / 5) * 5 );
                 }
                 else
                 {
@@ -2244,10 +2248,6 @@ int calc_mp(bool real_mp)
     // now applied after scaling so that power items are more useful -- bwr
     if (!real_mp)
         you.max_magic_points += player_magical_power();
-
-    // analogous to ROBUST/FRAIL
-    you.max_magic_points *= (10 + you.mutation[MUT_HIGH_MAGIC] - you.mutation[MUT_LOW_MAGIC]);
-    you.max_magic_points /= 10;
 
     if (you.max_magic_points > 50)
         you.max_magic_points = 50 + ((you.max_magic_points - 50) / 2);

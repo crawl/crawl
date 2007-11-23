@@ -1,21 +1,4 @@
 %%%%
-__cap-N_suffix
-
-$"The insensible son of Pandu sank down till he reached the Naga kingdom.
-Nagas, furnished with fangs containing virulent venom, bit him by
-thousands. The vegetable poison, mingled in the blood of the son of the
-Wind god, was neutralised by the snake-poison. The serpents had bitten
-all over his frame, except his chest, the skin of which was so tough that
-their fangs could not penetrate it.
-"On regaining consciousness, the son of Kunti burst his bands and began
-to press the snakes down under the ground. A remnant fled for life, and
-going to their king Vasuki, represented, 'O king of snakes, a man drowned
-under the water, bound in chords of shrubs; probably he had drunk poison.
-For when he fell amongst us, he was insensible. But when we began to bite
-him, he regained his senses, and bursting his fetters, commenced laying
-at us. May it please Your Majesty to enquire who is.'"
-	-_The Mahabharata, Sambhava Parva, Section CXXVIII
-%%%%
 &
 
 You feel a lump in the pit of your stomach.  
@@ -106,27 +89,15 @@ A svelte fighter-mage, wearing a gold-rimmed monocle.
 %%%%
 Geryon
 
-A huge, winged arch-demon, guardian of the gates of Hell.
+A huge and slithery arch-demon, guarding the gates of Hell.
 %%%%
 Gloorx Vloq
 
 A shadowy figure clothed in profound darkness.
 %%%%
-greater naga
-
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-It looks strong and aggressive.
-%%%%
 Green Death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
-%%%%
-guardian naga
-
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-These nagas are often used as guardians by powerful creatures.
 %%%%
 Harold
 
@@ -199,10 +170,6 @@ A tan, fit and thoroughly evil surfer.
 Orb Guardian
 
 A huge and glowing purple creature, created by the Orb to defend itself.
-%%%%
-pandemonium lord
-
-Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
 %%%%
 Pit Fiend
 
@@ -927,7 +894,7 @@ stuck in its teeth.
 %%%%
 large skeleton
 
-A large skeleton compelled to unlife by the exercise of necromancy.
+A skeleton compelled to unlife by the exercise of necromancy.
 %%%%
 large zombie
 
@@ -967,17 +934,6 @@ A hideous cross-breed, bearing the features of a human and a lion, with great ba
 
 "Ctesias writeth, that in Æthiopia likewise there is a beast which he calleth Mantichora, having three rankes of teeth, which when they meet togither are let in one within another like the teeth of combes: with the face and eares of a man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile armed with a sting like a scorpion: his voice resembleth the noise of a flute and trumpet sounded together: very swift he is, and mans flesh of all others hee most desireth."
 	-Pliny the Elder, _Natural History_, Book 8, Chapter XXI
-%%%%
-merfolk fighter
-
-Half fish, half man, the merfolk are citizens of both water and land, and they'll fiercely protect their chosen territory.
-%%%%
-mermaid
-
-A young woman with a fish tail in place of legs. Mermaids love to sing and charm their audience.
-
-... To the Sirens first shalt thou come, who beguile all men whosoever comes to them. Whoso in ignorance draws near to them and hears the Sirens' voice, he nevermore returns, that his wife and little children may stand at his side rejoicing, but the Sirens beguile him with their clear-toned song, as they sit in a meadow, and about them is a great heap of bones of mouldering men, and round the bones the skin is shrivelling.
-        -Homer, _The Odyssey_, Book XII
 %%%%
 metal gargoyle
 
@@ -1022,18 +978,21 @@ The embalmed and undead corpse of an ancient servant of darkness.
 naga
 
 A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-%%%%
-naga mage
 
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-An eldritch nimbus trails its motions.
-%%%%
-naga warrior
-
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-It bears scars of many past battles.
+"The insensible son of Pandu sank down till he reached the Naga kingdom.
+Nagas, furnished with fangs containing virulent venom, bit him by
+thousands. The vegetable poison, mingled in the blood of the son of the
+Wind god, was neutralised by the snake-poison. The serpents had bitten
+all over his frame, except his chest, the skin of which was so tough that
+their fangs could not penetrate it.
+"On regaining consciousness, the son of Kunti burst his bands and began
+to press the snakes down under the ground. A remnant fled for life, and
+going to their king Vasuki, represented, 'O king of snakes, a man drowned
+under the water, bound in chords of shrubs; probably he had drunk poison.
+For when he fell amongst us, he was insensible. But when we began to bite
+him, he regained his senses, and bursting his fetters, commenced laying
+at us. May it please Your Majesty to enquire who is.'"
+	-_The Mahabharata, Sambhava Parva, Section CXXVIII
 %%%%
 necromancer
 
@@ -1201,10 +1160,6 @@ redback
 
 A vicious black spider with a splash of red on its swollen abdomen. Its mandibles drip with lethal poison.
 %%%%
-rock worm
-
-A large worm which moves through rock as if it were air.
-%%%%
 rock troll
 
 An enormous and very nasty-looking humanoid creature. Its rocky hide seems to heal almost instantaneously from most wounds.
@@ -1291,14 +1246,6 @@ small snake
 
 The lesser dungeon snake.
 %%%%
-small skeleton
-
-A skeleton compelled to unlife by the exercise of necromancy.
-%%%%
-small zombie
-
-A corpse raised to undeath by necromancy.
-%%%%
 smoke demon
 
 A writhing cloud of smoke hanging in the air.
@@ -1371,7 +1318,7 @@ swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
 %%%%
-tentacled monstrosity
+tentacled monster
 
 A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
@@ -1514,4 +1461,8 @@ A giant wasp covered with thick plates of yellow chitinous armour.
 ynoxinul
 
 A demon with shiny metallic scales.
+%%%%
+zombie
+
+A corpse raised to undeath by necromancy.
 %%%%

@@ -47,7 +47,6 @@ enum zap_symbol_type
     SYM_EXPLOSION = '#'
 };
 
-// must match wand subtypes! (see item_def::zap())
 enum zap_type
 {
     ZAP_FLAME,                         //    0
@@ -154,8 +153,6 @@ struct bolt
     bool        effect_known;          // did we _know_ this would happen?
     int         fr_count, foe_count;   // # of times a friend/foe is "hit"
     int         fr_power, foe_power;   // total levels/hit dice affected
-    int         fr_hurt, foe_hurt;     // # of friends/foes actually hurt
-    int         fr_helped, foe_helped; // # of friends/foes actually helped
 
     // INTERNAL use - should not usually be set outside of beam.cc
     bool        is_tracer;       // is this a tracer?
@@ -202,7 +199,7 @@ void fire_beam( struct bolt &pbolt, item_def *item = NULL );
  * called from: beam
  * *********************************************************************** */
 bool nasty_beam( struct monsters *mon, struct bolt &beam );
-bool nice_beam( struct monsters *mon, struct bolt &beam );
+
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

@@ -718,7 +718,6 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("sc", "%ld", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
     fields->add_field("killer", death_source_desc().c_str());
-    fields->add_field("dam", "%d", damage);
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
@@ -847,14 +846,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         mon_num = 0;
         death_source_name[0] = 0;
     }
-
-    if (death_type == KILLED_BY_WEAKNESS
-        || death_type == KILLED_BY_STUPIDITY
-        || death_type == KILLED_BY_CLUMSINESS)
-    {
-        if (auxkilldata == "")
-            auxkilldata = "unknown source";
-    }
 }
 
 void scorefile_entry::reset()
@@ -944,23 +935,11 @@ void scorefile_entry::init()
             if (you.inv[d].base_type == OBJ_MISCELLANY
                 && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
             {
-                num_runes += you.inv[d].quantity;
-
-                // Don't assert in rune_array[] due to buggy runes,
-                // since checks for buggy runes are already done
-                // elsewhere.
-                if (you.inv[d].plus < 0 || you.inv[d].plus >= NUM_RUNE_TYPES)
-                {
-                    mpr("WARNING: Buggy rune in pack!");
-                    // Be nice and assume the buggy rune was originally
-                    // different from any of the other rune types.
-                    num_diff_runes++;
-                    continue;
-                }
-
-                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
                 if (rune_array[ you.inv[d].plus ] == 0)
                     num_diff_runes++;
+
+                num_runes += you.inv[d].quantity;
+                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
             }
         }
     }
@@ -1646,31 +1625,6 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "program bug" : "Nibbled to death by software bugs";
         break;
     }                           // end switch
-
-    switch (death_type)
-    {
-    case KILLED_BY_STUPIDITY:
-    case KILLED_BY_WEAKNESS:
-    case KILLED_BY_CLUMSINESS:
-        if (terse)
-        {
-            desc += " (";
-            desc += auxkilldata;
-            desc += ")";
-        }
-        else
-        {
-            desc += "\n";
-            desc += "             ";
-            desc += "... caused by ";
-            desc += auxkilldata;
-        }
-        break;
-
-    default:
-        break;
-    }
-
 
     if (oneline && desc.length() > 2)
         desc[1] = tolower(desc[1]);

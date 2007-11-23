@@ -17,7 +17,6 @@
 #define STUFF_H
 
 #include "externs.h"
-#include <map>
 
 std::string make_time_string(time_t abs_time, bool terse = false);
 void set_redraw_status( unsigned long flags );
@@ -68,11 +67,9 @@ void redraw_screen();
 
 void canned_msg(canned_message_type which_message);
 
-typedef std::map<int, int> explicit_keymap;
 bool yesno( const char * str, bool safe = true, int safeanswer = 0, 
             bool clear_after = true, bool interrupt_delays = true,
-            bool noprompt = false,
-            const explicit_keymap *map = NULL );
+            bool noprompt = false );
 
 int yesnoquit( const char* str, bool safe = true,
                int safeanswer = 0, bool clear_after = true );

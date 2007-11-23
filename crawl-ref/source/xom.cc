@@ -9,7 +9,6 @@
 #include "AppHdr.h"
 
 #include "beam.h"
-#include "branch.h"
 #include "effects.h"
 #include "it_use2.h"
 #include "items.h"
@@ -22,26 +21,12 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
-#include "randart.h"
 #include "religion.h"
 #include "spells3.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "state.h"
 #include "stuff.h"
 #include "view.h"
-#include "xom.h"
-
-#if DEBUG_RELIGION
-#    define DEBUG_DIAGNOSTICS 1
-#    define DEBUG_GIFTS       1
-#endif
-
-#if DEBUG_XOM
-#    define DEBUG_DIAGNOSTICS 1
-#    define DEBUG_RELIGION    1
-#    define DEBUG_GIFTS       1
-#endif
 
 // Which spell? First I copied all spells from you_spells(), then I
 // filtered some out (especially conjurations). Then I sorted them in
@@ -126,91 +111,31 @@ bool xom_is_nice()
     return (you.gift_timeout > 0 && you.piety > 100) || coinflip();
 }
 
-static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
+void xom_is_stimulated(int maxinterestingness)
 {
-    // XM_NORMAL
-    {
-        "Xom roars with laughter!",
-        "Xom thinks this is hilarious!",
-        "Xom is highly amused!",
-        "Xom is amused.",
-        "Xom is mildly amused.",
-        "Xom is interested."
-    },
-
-    // XM_INTRIGUED
-    {
-        "Xom is fascinated!",
-        "Xom is very intrigued!",
-        "Xom is intrigued!",
-        "Xom is extremely interested.",
-        "Xom is very interested.",
-        "Xom is interested."
-    }
-};
-
-static void _xom_is_stimulated(int maxinterestingness,
-                               const char* message_array[],
-                               bool force_message)
-{
-    if (you.religion != GOD_XOM || maxinterestingness <= 0)
+    if (you.religion != GOD_XOM)
         return;
-
-    // Xom is not stimulated by his own acts, at least not directly.
-    if (crawl_state.which_god_acting() == GOD_XOM)
-        return;
-
     int interestingness = random2(maxinterestingness);
-
-#if DEBUG_RELIGION || DEBUG_GIFTS || DEBUG_XOM
-    mprf(MSGCH_DIAGNOSTICS,
-         "Xom: maxinterestingness = %d, interestingness = %d",
-         maxinterestingness, interestingness);
-#endif
-
+    if (interestingness < 12)
+        return;
     if (interestingness > 255)
         interestingness = 255;
-
-    bool was_stimulated = false;
-    if (interestingness > you.gift_timeout && interestingness >= 12)
+    if (interestingness > you.gift_timeout)
     {
         you.gift_timeout = interestingness;
-        was_stimulated = true;
-    }
-
-    if (was_stimulated || force_message)
         god_speaks(GOD_XOM,
-                   ((interestingness > 200) ? message_array[5] :
-                    (interestingness > 100) ? message_array[4] :
-                    (interestingness > 75) ? message_array[3] :
-                    (interestingness > 50) ? message_array[2] :
-                    (interestingness > 25) ? message_array[1] :
-                    message_array[0]));
-}
-
-void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
-                       bool force_message)
-{
-    _xom_is_stimulated(maxinterestingness, xom_message_arrays[message_type],
-                       force_message);
-}
-
-void xom_is_stimulated(int maxinterestingness, const std::string& message,
-                       bool force_message)
-{
-    const char* message_array[6];
-
-    for (int i = 0; i < 6; i++)
-        message_array[i] = message.c_str();
-
-    _xom_is_stimulated(maxinterestingness, message_array, force_message);
+                   ((interestingness > 200) ? "Xom roars with laughter!" :
+                    (interestingness > 100) ? "Xom thinks this is hilarious!" :
+                    (interestingness > 75) ? "Xom is highly amused!" :
+                    (interestingness > 50) ? "Xom is amused." :
+                    (interestingness > 25) ? "Xom is mildly amused." :
+                    "Xom is interested."));
+    }
 }
 
 void xom_makes_you_cast_random_spell(int sever)
 {
     int spellenum = sever;
-
-    god_acting gdact(GOD_XOM);
 
     const int nxomspells = ARRAYSIZE(xom_spells);
     if (spellenum >= nxomspells)
@@ -220,7 +145,7 @@ void xom_makes_you_cast_random_spell(int sever)
 
     god_speaks(GOD_XOM, "Xom's power flows through you!");
     
-#if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
+#if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "Xom_acts();spell: %d, spellenum: %d", spell, spellenum);
 #endif
@@ -241,8 +166,6 @@ static void xom_make_item(object_class_type base,
         god_speaks(GOD_XOM, failmsg);
         return;
     }
-
-    god_acting gdact(GOD_XOM);
 
     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
     canned_msg(MSG_SOMETHING_APPEARS);
@@ -276,14 +199,11 @@ static object_class_type get_unrelated_wield_class(object_class_type ref)
             (temp_rand == 1) ? OBJ_STAVES :
             OBJ_MISCELLANY;
     }
-
     return (objtype);
 }
 
 static bool xom_annoyance_gift(int power)
 {
-    god_acting gdact(GOD_XOM);
-
     if (coinflip() && player_in_a_dangerous_place())
     {
         const item_def *weapon = you.weapon();
@@ -351,7 +271,6 @@ static bool xom_annoyance_gift(int power)
             return (true);
         }
     }
-
     return (false);
 }
 
@@ -359,7 +278,7 @@ bool xom_gives_item(int power)
 {
     if (xom_annoyance_gift(power))
         return (true);
-
+    
     const item_def *cloak = you.slot_item(EQ_CLOAK);
     if (coinflip() && cloak && cloak->cursed())
     {
@@ -393,8 +312,6 @@ bool xom_gives_item(int power)
             (r == 5) ? OBJ_FOOD :
             (r == 6) ? OBJ_MISCELLANY :
                        OBJ_GOLD;
-
-        god_acting gdact(GOD_XOM);
         acquirement(objtype, GOD_XOM);
     }
     else
@@ -495,7 +412,6 @@ static bool xom_is_good(int sever)
     
     // Okay, now for the nicer stuff (note: these things are not
     // necessarily nice):
-    god_acting gdact(GOD_XOM);
     if (random2(sever) <= 1)
     {
         temp_rand = random2(4);
@@ -615,7 +531,7 @@ static bool xom_is_good(int sever)
                    (temp_rand == 0) ? "\"You need some minor adjustments, mortal!\"" :
                    (temp_rand == 1) ? "\"Let me alter your pitiful body.\"" :
                    (temp_rand == 2) ? "Xom's power touches on you for a moment."
-                   : "You hear Xom's maniacal cackling.");
+                   : "You hear Xom's maniacal chuckling.");
         mpr("Your body is suffused with distortional energy.");
                 
         set_hp(1 + random2(you.hp), false);
@@ -688,9 +604,7 @@ static bool xom_is_bad(int sever)
     bool done = false;
 
     bolt beam;
-
-    god_acting gdact(GOD_XOM);
-
+    
     // begin "Bad Things"
     while (!done)
     {
@@ -733,8 +647,7 @@ static bool xom_is_bad(int sever)
                        (temp_rand == 2) ? "Xom's power touches on you for a moment."
                        : "You hear Xom's maniacal laughter.");
                 
-            lose_stat(STAT_RANDOM, 1 + random2(3), true,
-                      "the capriciousness of Xom" );
+            lose_stat(STAT_RANDOM, 1 + random2(3), true);
                 
             done = true;
         }
@@ -888,37 +801,14 @@ static bool xom_is_bad(int sever)
 
 void xom_acts(bool niceness, int sever)
 {
-#if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
+#if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Xom_acts(%u, %d); piety: %u, interest: %u\n",
          niceness, sever, you.piety, you.gift_timeout);
 #endif
 
-    entry_cause_type old_entry_cause = you.entry_cause;
-
     if (sever < 1)
         sever = 1;
-
-    // Nemelex's deck of punishment drawing the Xom card
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM)
-    {
-        god_type which_god = crawl_state.which_god_acting();
-
-        if (crawl_state.is_god_retribution())
-        {
-            niceness = false;
-            mprf(MSGCH_GOD, which_god,
-                 "%s asks Xom for help in punishing you, and Xom happily "
-                 "agrees.", god_name(which_god));
-        }
-        else
-        {
-            niceness = true;
-            mprf(MSGCH_GOD, which_god,
-                 "%s calls in a favour from Xom.", god_name(which_god));
-        }
-    }
-
+    
     if (niceness && !one_chance_in(5))
     {
         // Good stuff.
@@ -931,107 +821,7 @@ void xom_acts(bool niceness, int sever)
         while (!xom_is_bad(sever))
             ;
     }
-
-    // Nemelex's deck of punishment drawing the Xom card
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM)
-    {
-        if (old_entry_cause != you.entry_cause
-            && you.entry_cause_god == GOD_XOM)
-        {
-            you.entry_cause_god = crawl_state.which_god_acting();
-        }
-    }
     
     if (you.religion == GOD_XOM && coinflip())
         you.piety = 200 - you.piety;
-}
-
-static void xom_check_less_runes(int runes_gones)
-{
-    if (player_in_branch(BRANCH_HALL_OF_ZOT) ||
-        !(branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB))
-    {
-        return;
-    }
-
-    int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
-        + you.attribute[ATTR_DEMONIC_RUNES]
-        + you.attribute[ATTR_ABYSSAL_RUNES]
-        - you.attribute[ATTR_RUNES_IN_ZOT];
-    int was_avail = runes_avail + runes_gones;
-
-    // No longer enough available runes to get into Zot
-    if (was_avail >= NUMBER_OF_RUNES_NEEDED &&
-        runes_avail < NUMBER_OF_RUNES_NEEDED)
-    {
-        xom_is_stimulated(128, "Xom snickers.", true);
-    }
-}
-
-void xom_check_lost_item(const item_def& item)
-{
-    if (item.base_type == OBJ_ORBS)
-        xom_is_stimulated(255, "Xom laughs nastily.", true);
-    else if (is_fixed_artefact(item))
-        xom_is_stimulated(128, "Xom snickers.", true);
-    else if (is_rune(item))
-    {
-        // If you'd dropped it, check if that means you'd dropped your
-        // third rune and now don't have enough to get into Zot.
-        if (item.flags & ISFLAG_BEEN_IN_INV)
-            xom_check_less_runes(item.quantity);
-
-        if (is_unique_rune(item))
-            xom_is_stimulated(255, "Xom snickers loudly.", true);
-        else if (you.entry_cause == EC_SELF_EXPLICIT &&
-                 !(item.flags & ISFLAG_BEEN_IN_INV))
-        {
-            // Player voluntarily entered Pan or the Abyss looking for
-            // runes, yet never found it.
-            if (item.plus == RUNE_ABYSSAL &&
-                you.attribute[ATTR_ABYSSAL_RUNES] == 0)
-            {
-                // Ignore Abyss area shifts.
-                if (you.level_type != LEVEL_ABYSS)
-                    // Abyssal runes are a lot more trouble to find
-                    // than demonic runes, so it gets twice the
-                    // stimulation.
-                    xom_is_stimulated(128, "Xom snickers.", true);
-            }
-            else if (item.plus == RUNE_DEMONIC &&
-                     you.attribute[ATTR_DEMONIC_RUNES] == 0)
-            {
-                xom_is_stimulated(64, "Xom snickers softly.", true);
-            }
-        }
-    }
-}
-
-void xom_check_destroyed_item(const item_def& item, int cause)
-{
-    int amusement = 0;
-
-    if (item.base_type == OBJ_ORBS)
-    {
-        xom_is_stimulated(255, "Xom laughs nastily.", true);
-        return;
-    }
-    else if (is_fixed_artefact(item))
-        xom_is_stimulated(128, "Xom snickers.", true);
-    else if (is_rune(item))
-    {
-        xom_check_less_runes(item.quantity);
-
-        if (is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
-            amusement = 255;
-        else
-            amusement = 64 * item.quantity;
-    }
-
-    xom_is_stimulated(amusement,
-                      amusement > 128 ? "Xom snickers loudly." :
-                      amusement > 64  ? "Xom snickers." :
-                      "Xom snickers softly.",
-                      true);
 }

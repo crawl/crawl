@@ -119,7 +119,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_KNIFE_OF_ACCURACY,
     SPWPN_STAFF_OF_OLGREB,
     SPWPN_VAMPIRES_TOOTH,
-    SPWPN_STAFF_OF_WUCAD_MU            //  195, must be last (see randart.cc)
+    SPWPN_STAFF_OF_WUCAD_MU             //  195
 };
 
 enum corpse_type
@@ -310,7 +310,7 @@ enum scroll_type
     SCR_BLINKING,
     SCR_PAPER,                         //   15
     SCR_MAGIC_MAPPING,
-    SCR_FOG,
+    SCR_FORGETFULNESS,
     SCR_ACQUIREMENT,
     SCR_ENCHANT_WEAPON_II,
     SCR_VORPALISE_WEAPON,              //   20
@@ -339,7 +339,12 @@ enum special_armour_type
     SPARM_RESISTANCE,                  //   15
     SPARM_POSITIVE_ENERGY,
     SPARM_ARCHMAGI,
-    SPARM_PRESERVATION                //   18
+    SPARM_PRESERVATION,                //   18
+    SPARM_RANDART_I = 25, // must remain at 25 for now - how high do they go? {dlb}
+    SPARM_RANDART_II = 26,             //   26
+    SPARM_RANDART_III = 27,            //   27
+    SPARM_RANDART_IV = 28,             //   28
+    SPARM_RANDART_V = 29 //   29 - highest value found thus far {dlb}
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}
@@ -524,8 +529,7 @@ enum vorpal_damage_type
 };
 
 // NOTE:  This order is very special!  Its basically the same as ZAP_*, 
-// and there are bits of the code that still use that fact.
-// See item_def::zap().
+// and there are bits of the code that still use that fact.. see zap_wand().
 enum wand_type                         // mitm[].subtype
 {
     WAND_FLAME,                        //    0

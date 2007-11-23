@@ -121,7 +121,6 @@ enum ability_type
     ABIL_NEMELEX_PEEK_DECK,
     ABIL_NEMELEX_DRAW_CARD,
     ABIL_NEMELEX_TRIPLE_DRAW,
-    ABIL_NEMELEX_MARK_DECK,
     ABIL_NEMELEX_STACK_DECK,
     ABIL_BEOGH_SMITING,
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
@@ -174,12 +173,6 @@ enum attribute_type
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
     ATTR_HELD,                  // caught in a net
-    ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
-                                // sight of the player while in the Abyss.
-    ATTR_UNIQUE_RUNES,
-    ATTR_DEMONIC_RUNES,
-    ATTR_ABYSSAL_RUNES,
-    ATTR_RUNES_IN_ZOT,
     NUM_ATTRIBUTES
 };
 
@@ -359,6 +352,66 @@ enum canned_message_type
     MSG_EMPTY_HANDED
 };
 
+enum card_type
+{
+    CARD_BLANK = 0,
+    CARD_PORTAL,                // "the mover"
+    CARD_WARP,                  // "the jumper"
+    CARD_SWAP,                  // "swap"
+    CARD_VELOCITY,              // "the runner"
+
+    CARD_TOMB,                  // "the wall"
+    CARD_BANSHEE,               // "the scream"
+    CARD_DAMNATION,             // banishment
+    CARD_SOLITUDE,              // dispersal
+    CARD_WARPWRIGHT,            // create teleport trap
+    
+    CARD_VITRIOL,               // acid damage
+    CARD_FLAME,                 // fire damage
+    CARD_FROST,                 // cold damage
+    CARD_VENOM,                 // poison damage
+    CARD_HAMMER,                // pure damage
+    CARD_PAIN,                  // single target, like spell of agony
+    CARD_TORMENT,               // Symbol of Torment
+    
+    CARD_ELIXIR,                // healing
+    CARD_BATTLELUST,            // melee boosts
+    CARD_METAMORPHOSIS,         // transformation
+    CARD_HELM,                  // defense
+    CARD_BLADE,                 // weapon boosts
+    CARD_SHADOW,                // assassin skills
+    
+    CARD_SUMMON_ANIMAL,
+    CARD_SUMMON_DEMON,
+    CARD_SUMMON_WEAPON,
+    CARD_SUMMON_ANY,
+
+    CARD_POTION,
+    CARD_FOCUS,
+    CARD_SHUFFLE,
+
+    CARD_EXPERIENCE,
+    CARD_WILD_MAGIC,
+    CARD_HELIX,                 // remove one *bad* mutation
+
+    CARD_MAP,                   // magic mapping
+    CARD_DOWSING,               // detect SD/traps/items/monsters
+    CARD_SPADE,                 // dig
+    CARD_TROWEL,                // create feature/vault
+    CARD_MINEFIELD,             // plant traps
+
+    CARD_GENIE,                 // acquirement OR rotting/deterioration
+    CARD_BARGAIN,               // shopping discount
+    CARD_WRATH,                 // Godly wrath
+    CARD_WRAITH,                // drain XP
+    CARD_XOM,
+    CARD_FEAST,
+    CARD_FAMINE,
+    CARD_CURSE,                 // Curse your items
+
+    NUM_CARDS
+};
+
 enum char_set_type
 {
     CSET_ASCII,         // flat 7-bit ASCII
@@ -492,8 +545,6 @@ enum command_type
     CMD_MOUSE_MOVE,
     CMD_MOUSE_CLICK,
 
-    CMD_ANNOTATE_LEVEL,
-
     /* overmap commands */
     CMD_MAP_CLEAR_MAP,
     CMD_MAP_ADD_WAYPOINT,
@@ -533,8 +584,6 @@ enum command_type
     CMD_MAP_FIND_STASH,
 
     CMD_MAP_GOTO_TARGET,
-
-    CMD_MAP_WIZARD_TELEPORT,
 
     CMD_MAP_EXIT_MAP,
 
@@ -588,17 +637,8 @@ enum command_type
     CMD_ENABLE_MORE,
     
     // [ds] Silently ignored, requests another round of input.
-    CMD_NEXT_CMD,
+    CMD_NEXT_CMD
 
-    // Repeat previous command
-    CMD_PREV_CMD_AGAIN,
-
-    // Repeat next command a given number of times
-    CMD_REPEAT_CMD,
-
-    // Stick the keyspresses of the command to be repeated into the
-    // input buffer.
-    CMD_REPEAT_KEYS
 };
 
 enum conduct_type
@@ -632,7 +672,6 @@ enum conduct_type
     DID_CARDS,
     DID_STIMULANTS,                     // unused
     DID_DRINK_BLOOD,
-    DID_CANNIBALISM,
     DID_EAT_MEAT,                       // unused
     DID_CREATED_LIFE,                   // unused
 
@@ -723,15 +762,6 @@ enum game_direction_type
     GDT_ASCENDING
 };
 
-enum level_flag_type
-{
-    LFLAG_NONE = 0,
-
-    LFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
-    LFLAG_NOT_MAPPABLE    = (1 << 1), // Level not mappable (like Abyss).
-    LFLAG_NO_MAGIC_MAP    = (1 << 2)  // Level can't be magic mapped.
-};
-
 // NOTE: The order of these is very important to their usage!
 // [dshaligram] If adding/removing from this list, also update view.cc!
 enum dungeon_char_type
@@ -779,45 +809,27 @@ enum dungeon_char_type
 // * Any: edit dat/descript.txt and add a long description if appropriate.
 // * Any: check the grid_* functions in misc.cc and make sure
 //   they return sane values for your new feature.
-// * Any: edit dungeon.cc and add a symbol to map_feature() and
-//        vault_grid() for the feature, if you want vault maps to
-//        be able to use it.  If you do, also update
-//        docs/level-design.txt with the new symbol.
-// * Any: edit luadgn.cc and add the feature's name to the dngn_feature_names
-//        array, if you want vault map Lua code to be able to use the
-//        feature, and/or you want to be able to create the feature
-//        using the "create feature by name" wizard command.
+//
 // Also take note of MINMOVE and MINSEE above.
 //
 enum dungeon_feature_type
 {
     DNGN_UNSEEN,                       //    0
-    DNGN_CLOSED_DOOR,
-    DNGN_SECRET_DOOR,
-    DNGN_WAX_WALL,
-    DNGN_METAL_WALL,
-    DNGN_GREEN_CRYSTAL_WALL,           //    5
     DNGN_ROCK_WALL,
     DNGN_STONE_WALL,
-    DNGN_PERMAROCK_WALL,               //    8 - for undiggable walls
-    DNGN_CLEAR_ROCK_WALL,              //    9 - Transparent
-    DNGN_CLEAR_STONE_WALL,             //   10 - Transparent
-    DNGN_CLEAR_PERMAROCK_WALL,         //   11 - Transparent
-    DNGN_ORCISH_IDOL,                  //   12 - Can see past
-
-    // XXX: lowest/highest grid value which is a wall
-    DNGN_MINWALL = DNGN_WAX_WALL,
-    DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
-
-    // Random wall types for big rooms
-    DNGN_RNDWALL_MIN = DNGN_METAL_WALL,
-    DNGN_RNDWALL_MAX = DNGN_STONE_WALL,
+    DNGN_CLOSED_DOOR,
+    DNGN_METAL_WALL,
+    DNGN_SECRET_DOOR,                  //    5
+    DNGN_GREEN_CRYSTAL_WALL,
+    DNGN_ORCISH_IDOL,
+    DNGN_WAX_WALL,                     //    8
+    DNGN_PERMAROCK_WALL,               //    9 - for undiggable walls
 
     // XXX: highest grid value which is opaque
     DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
-
+    
     // XXX: lowest grid value which can be seen through
-    DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
+    DNGN_MINSEE = 11,
 
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED_1,
@@ -834,12 +846,12 @@ enum dungeon_feature_type
     DNGN_FLOOR,                        //   67
     DNGN_FLOOR_SPECIAL,     // currently only used for colouring bazaars
     DNGN_FLOOR_RESERVED,
-    DNGN_EXIT_HELL,                    //   70
-    DNGN_ENTER_HELL,                   //   71
-    DNGN_OPEN_DOOR,                    //   72
+    DNGN_EXIT_HELL,                    //   68
+    DNGN_ENTER_HELL,                   //   69
+    DNGN_OPEN_DOOR,                    //   70
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
-    DNGN_TRAP_NATURAL,
+    DNGN_TRAP_III,
     DNGN_UNDISCOVERED_TRAP,            //   78
 
     DNGN_ENTER_SHOP = 80,              //   80
@@ -988,7 +1000,6 @@ enum duration_type
     DUR_CONF,
     DUR_PARALYSIS,
     DUR_SLOW,
-    DUR_BEHELD,
     DUR_HASTE,
     DUR_MIGHT,
     DUR_LEVITATION,
@@ -1035,7 +1046,6 @@ enum duration_type
     DUR_SLAYING,
     DUR_STEALTH,
     DUR_MAGIC_SHIELD,
-    DUR_SLEEP,
     NUM_DURATIONS
 };
 
@@ -1079,6 +1089,12 @@ enum enchant_retval
     ERV_INCREASED
 };
 
+enum enchant_stat_type
+{
+    ENCHANT_TO_HIT,
+    ENCHANT_TO_DAM
+};
+
 enum equipment_type
 {
     EQ_NONE = -1,
@@ -1120,10 +1136,6 @@ enum flush_reason_type
     FLUSH_ON_PROMPT,                   // flush on MSGCH_PROMPT messages
     FLUSH_ON_UNSAFE_YES_OR_NO_PROMPT,  // flush when !safe set to yesno()
     FLUSH_LUA,                         // flush when Lua wants to flush
-    FLUSH_KEY_REPLAY_CANCEL,           // flush when key replay is cancelled
-    FLUSH_ABORT_MACRO,                 // something wrong with macro being
-                                       // processed, so stop it
-    FLUSH_REPLAY_SETUP_FAILURE,        // setup for key replay failed
     NUM_FLUSH_REASONS
 };
 
@@ -1235,9 +1247,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_RACIAL_MASK       = 0x07000000,  // mask of racial equipment types
 
     ISFLAG_NOTED_ID          = 0x08000000,
-    ISFLAG_NOTED_GET         = 0x10000000,
-
-    ISFLAG_BEEN_IN_INV       = 0x20000000  // Item has been in inventory
+    ISFLAG_NOTED_GET         = 0x10000000
 };
 
 enum job_type
@@ -1314,19 +1324,6 @@ enum level_area_type                   // you.level_type
     LEVEL_PORTAL_VAULT,
 
     NUM_LEVEL_AREA_TYPES
-};
-
-enum entry_cause_type
-{
-    EC_UNKNOWN,
-    EC_SELF_EXPLICIT,
-    EC_SELF_RISKY,    // i.e., wielding an id'd distorion weapon
-    EC_SELF_ACCIDENT, // i.e., wielding an un-id'd distortion weapon
-    EC_MISCAST,
-    EC_GOD_RETRIUBTION,
-    EC_GOD_ACT, // Xom sending the player somewhere for amusement
-    EC_MONSTER,
-    NUM_ENTRY_CAUSE_TYPES
 };
 
 // Can't change this order without breaking saves.
@@ -1557,8 +1554,6 @@ enum monster_type                      // (int) menv[].type
     MONS_BLACK_BEAR,  // 189
     MONS_SIMULACRUM_SMALL,
     MONS_SIMULACRUM_LARGE,
-    MONS_MERFOLK,
-    MONS_MERMAID,     // 193
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
@@ -1749,9 +1744,6 @@ enum monster_type                      // (int) menv[].type
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
 
-    // Monsters which move through rock:
-    MONS_ROCK_WORM = 440,
-
     // Statuary
     MONS_ORANGE_STATUE,
     MONS_SILVER_STATUE,
@@ -1826,7 +1818,6 @@ enum mon_inv_type           // (int) menv[].inv[]
                             // for monsters that can use two weapons.
     MSLOT_MISSILE,
     MSLOT_ARMOUR,
-    MSLOT_SHIELD,
     MSLOT_MISCELLANY,
     MSLOT_POTION,
     MSLOT_WAND,
@@ -1976,7 +1967,7 @@ enum mutation_type
     MUT_HORNS,
     MUT_STRONG_STIFF,
     MUT_FLEXIBLE_WEAK,
-    MUT_SCREAM,                        //   35
+    MUT_LOST,                          //   35
     MUT_CLARITY,
     MUT_BERSERK,
     MUT_DETERIORATION,
@@ -1998,42 +1989,31 @@ enum mutation_type
     MUT_DRAIN_LIFE,
     MUT_THROW_FLAMES,                  //   55
     MUT_THROW_FROST,
-    MUT_SMITE,
-    MUT_CLAWS,                         
-    MUT_FANGS,      // new in 0.3
-    // hooves, talons, paws can replace feet
-    MUT_HOOVES,                        //   60
-    MUT_TALONS,     // new in 0.4
-    MUT_PAWS,       // new in 0.4
+    MUT_SMITE,                         //   57
+    MUT_CLAWS,                         //jmf: added
+    MUT_HOOVES,                        //jmf: etc.
+    MUT_FANGS,                         // 60
     MUT_BREATHE_POISON,
     MUT_STINGER,
-    MUT_BIG_WINGS,                     //   65
-    MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
-    MUT_GREEN_MARKS,
-    MUT_DRIFTING,   // new in 0.4
-    MUT_SAPROVOROUS,
-    MUT_SHAGGY_FUR, // new in 0.4      --   70
-    MUT_HIGH_MAGIC, // new in 0.4
-    MUT_LOW_MAGIC,  // new in 0.4
-    MUT_SLEEPINESS, // new in 0.4
-    
-    // several types of scales (affect AC and sometimes more)
-    MUT_RED_SCALES = 75,               //   75
+    MUT_BIG_WINGS,
+    MUT_BLUE_MARKS, //   64 - decorative, as in "mark of the devil"
+    MUT_GREEN_MARKS,                   //   65
+    MUT_RED_SCALES = 70,               //   70
     MUT_NACREOUS_SCALES,
     MUT_GREY2_SCALES,
     MUT_METALLIC_SCALES,
     MUT_BLACK2_SCALES,
-    MUT_WHITE_SCALES,                  //   80
+    MUT_WHITE_SCALES,                  //   75
     MUT_YELLOW_SCALES,
     MUT_BROWN_SCALES,
     MUT_BLUE_SCALES,
     MUT_PURPLE_SCALES,
-    MUT_SPECKLED_SCALES,               //   85
+    MUT_SPECKLED_SCALES,               //   80
     MUT_ORANGE_SCALES,
     MUT_INDIGO_SCALES,
     MUT_RED2_SCALES,
     MUT_IRIDESCENT_SCALES,
-    MUT_PATTERNED_SCALES,              //   90
+    MUT_PATTERNED_SCALES,              //   85
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = 100,
@@ -2106,42 +2086,6 @@ enum pronoun_type
     PRONOUN_CAP_POSSESSIVE,             // 2
     PRONOUN_NOCAP_POSSESSIVE,           // 3
     PRONOUN_REFLEXIVE                   // 4 (reflexive is always lowercase)
-};
-
-enum randart_prop_type
-{
-    RAP_BRAND,                         //    0
-    RAP_AC,
-    RAP_EVASION,
-    RAP_STRENGTH,
-    RAP_INTELLIGENCE,
-    RAP_DEXTERITY,                     //    5
-    RAP_FIRE,
-    RAP_COLD,
-    RAP_ELECTRICITY,
-    RAP_POISON,
-    RAP_NEGATIVE_ENERGY,               //   10
-    RAP_MAGIC,
-    RAP_EYESIGHT,
-    RAP_INVISIBLE,
-    RAP_LEVITATE,
-    RAP_BLINK,                         //   15
-    RAP_CAN_TELEPORT,
-    RAP_BERSERK,
-    RAP_MAPPING,
-    RAP_NOISES,
-    RAP_PREVENT_SPELLCASTING,          //   20
-    RAP_CAUSE_TELEPORTATION,
-    RAP_PREVENT_TELEPORTATION,
-    RAP_ANGRY,
-    RAP_METABOLISM,
-    RAP_MUTAGENIC,                     //   25
-    RAP_ACCURACY,
-    RAP_DAMAGE,
-    RAP_CURSED,
-    RAP_STEALTH,
-    RAP_MAGICAL_POWER,                 //   30
-    RAP_NUM_PROPERTIES
 };
 
 enum score_format_type
@@ -2479,7 +2423,7 @@ enum spell_type
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_CHAIN_LIGHTNING,
     SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_PORTAL_PROJECTILE,
+    SPELL_PORTALED_PROJECTILE,
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,             // 205
@@ -2543,13 +2487,12 @@ enum trap_type                         // env.trap_type[]
     TRAP_SPEAR,
     TRAP_AXE,
     TRAP_TELEPORT,
-    TRAP_ALARM,                        //    5
+    TRAP_AMNESIA,                      //    5
     TRAP_BLADE,
     TRAP_BOLT,
     TRAP_NET,
     TRAP_ZOT,
     TRAP_NEEDLE,
-    TRAP_SHAFT,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
     TRAP_INDEPTH = 253,                // Level-appropriate trap.

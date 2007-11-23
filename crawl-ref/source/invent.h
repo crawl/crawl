@@ -89,8 +89,7 @@ public:
     virtual int highlight_colour() const
     {
         return menu_colour(get_text(),
-                           menu_colour_item_prefix( *( (item_def*) item) ),
-                           tag );
+                           menu_colour_item_prefix( *( (item_def*) item) ) );
     }
 
 
@@ -109,7 +108,7 @@ class InvMenu : public Menu
 {
 public:
     InvMenu(int mflags = MF_MULTISELECT) 
-        : Menu(mflags, "inventory"), type(MT_INVLIST), pre_select(NULL),
+        : Menu(mflags), type(MT_INVLIST), pre_select(NULL),
           title_annotate(NULL)
     {
     }

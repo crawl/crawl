@@ -62,8 +62,7 @@ void show_levelmap_help();
 void show_targeting_help();
 void show_interlevel_travel_branch_help();
 void show_interlevel_travel_depth_help();
-void list_commands(bool wizard, int hotkey = 0,
-                   bool do_redraw_screen = false);
+void list_commands(bool wizard, int hotkey = 0);
 void list_tutorial_help(void);
 
 // Actually defined in acr.cc; we may want to move this to command.cc

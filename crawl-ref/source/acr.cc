@@ -136,7 +136,6 @@
 #include "tutorial.h"
 #include "view.h"
 #include "stash.h"
-#include "xom.h"
 
 crawl_environment env;
 player you;
@@ -148,8 +147,6 @@ std::string init_file_location; // externed in newgame.cc
 char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
 int stealth;                    // externed in view.cc
-
-static key_recorder repeat_again_rec;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
 const struct coord_def Compass[8] = 
@@ -173,15 +170,6 @@ static void world_reacts();
 static command_type get_next_cmd();
 static keycode_type get_next_keycode();
 static command_type keycode_to_command( keycode_type key );
-static void setup_cmd_repeat();
-static void do_prev_cmd_again();
-static void update_replay_state();
-
-static void show_commandline_options_help();
-static void wanderer_startup_message();
-static void god_greeting_message( bool game_start );
-static void take_starting_note();
-static void startup_tutorial();
 
 #ifdef DGL_SIMPLE_MESSAGING
 static void read_messages();
@@ -199,8 +187,27 @@ int main( int argc, char *argv[] )
     // parse command line args -- look only for initfile & crawl_dir entries
     if (!parse_args(argc, argv, true))
     {
-        show_commandline_options_help();
-        return 1;
+        // print help
+        puts("Command line options:");
+        puts("  -name <string>   character name");
+        puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
+        puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
+        puts("  -pizza <string>  crawl pizza");
+        puts("  -plain           don't use IBM extended characters");
+        puts("  -dir <path>      crawl directory");
+        puts("  -rc <file>       init file name");
+        puts("  -morgue <dir>    directory to save character dumps");
+        puts("  -macro <dir>     directory to save/find macro.txt");
+        puts("");
+        puts("Command line options override init file options, which override");
+        puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
+        puts("");
+        puts("Highscore list options: (Can now be redirected to more, etc)");
+        puts("  -scores [N]            highscore list");
+        puts("  -tscores [N]           terse highscore list");
+        puts("  -vscores [N]           verbose highscore list");
+        puts("  -scorefile <filename>  scorefile to report on");
+        exit(1);
     }
 
     // Init monsters up front - needed to handle the mon_glyph option right.
@@ -215,7 +222,7 @@ int main( int argc, char *argv[] )
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
     {
         hiscores_print_all( Options.sc_entries, Options.sc_format );
-        return 0;
+        exit(0);
     }
     else
     {
@@ -228,165 +235,136 @@ int main( int argc, char *argv[] )
 
     // override some options for tutorial
     init_tutorial_options();
+    if (game_start || Options.always_greet)
+    {
+        msg::stream << "Welcome, " << you.your_name << " the "
+                    << species_name( you.species,you.experience_level )
+                    << " " << you.class_name << "."
+                    << std::endl;
 
-    msg::stream << "Welcome, " << you.your_name << " the "
-                << species_name( you.species,you.experience_level )
-                << " " << you.class_name << "."
-                << std::endl;
+        // Activate markers only after the welcome message, so the
+        // player can see any resulting messages.
+        env.markers.activate_all();
 
-    // Activate markers only after the welcome message, so the
-    // player can see any resulting messages.
-    env.markers.activate_all();
+        // Starting messages can go here as this should only happen
+        // at the start of a new game -- bwr
+        // This message isn't appropriate for Options.always_greet
+        if (you.char_class == JOB_WANDERER && game_start)
+        {
+            int skill_levels = 0;
+            for (int i = 0; i <= NUM_SKILLS; i++)
+                skill_levels += you.skills[ i ];
 
-    if (game_start && you.char_class == JOB_WANDERER)
-        wanderer_startup_message();
+            if (skill_levels <= 2)
+            {
+                // Demigods and Demonspawn wanderers stand to not be
+                // able to see any of their skills at the start of
+                // the game (one or two skills should be easily guessed
+                // from starting equipment)... Anyways, we'll give the
+                // player a message to warn them (and give a reason why). -- bwr
+                mpr("You wake up in a daze, and can't recall much.");
+            }
+        }
 
-    god_greeting_message( game_start );
+        // These need some work -- should make sure that the god's
+        // name is metioned, else the message might be confusing.
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+            simple_god_message( " says: Spread the light, my child." );
+            break;
+        case GOD_SHINING_ONE:
+            simple_god_message( " says: Smite the infidels!" );
+            break;
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_YREDELEMNUL:
+        case GOD_NEMELEX_XOBEH:
+            simple_god_message( " says: Welcome..." );
+            break;
+        case GOD_XOM:
+            if (game_start)
+                simple_god_message( " says: A new plaything!" );
+            break;
+        case GOD_VEHUMET:
+            god_speaks( you.religion, "Let it end in hellfire!");
+            break;
+        case GOD_OKAWARU:
+            simple_god_message(" says: Welcome, disciple.");
+            break;
+        case GOD_MAKHLEB:
+            god_speaks( you.religion, "Blood and souls for Makhleb!" );
+            break;
+        case GOD_SIF_MUNA:
+            simple_god_message( " whispers: I know many secrets...");
+            break;
+        case GOD_TROG:
+            simple_god_message( " says: Kill them all!" );
+            break;
+        case GOD_ELYVILON:
+            simple_god_message( " says: Go forth and aid the weak!" );
+            break;
+        case GOD_LUGONU:
+            simple_god_message( " says: Spread carnage and corruption!");
+            break;
+        case GOD_BEOGH:
+            simple_god_message(
+                " says: Drown the unbelievers in a sea of blood!");
+            break;
+        default:
+            break;
+        }
 
-    // warn player about their weapon, if unsuitable
-    wield_warning(false);
+        // warn player about their weapon, if unsuitable
+        wield_warning(false);
+    }
 
     if ( game_start )   
-    {
+    {    
         if (Options.tutorial_left)
-            startup_tutorial();
-        take_starting_note();
+        {
+            // don't allow triggering at game start 
+            Options.tut_just_triggered = true;
+            // print stats and everything
+            prep_input();
+            msg::streams(MSGCH_TUTORIAL)
+                << "Press any key to start the tutorial intro, "
+                "or Escape to skip it."
+                << std::endl;
+            const int ch = c_getch();
+
+            if (ch != ESCAPE)
+                tut_starting_screen();
+        }
+
+        std::ostringstream notestr;
+        notestr << you.your_name << ", the "
+                << species_name(you.species,you.experience_level) << " "
+                << you.class_name
+                << ", began the quest for the Orb.";
+        take_note(Note(NOTE_USER_NOTE, 0, 0, notestr.str().c_str()));
+
+        notestr.str("");
+        notestr.clear();
+
+        notestr << "HP: " << you.hp << "/" << you.hp_max
+                << " MP: " << you.magic_points << "/" << you.max_magic_points;
+        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
+                       notestr.str().c_str()));
     }
 
     while (true)
+    {
         input();
+    }
 
     // Should never reach this stage, right?
+
 #ifdef UNIX
     unixcurses_shutdown();
 #endif
 
     return 0;
 }                               // end main()
-
-static void show_commandline_options_help()
-{
-    puts("Command line options:");
-    puts("  -name <string>   character name");
-    puts("  -race <arg>      preselect race (by letter, abbreviation, or name)");
-    puts("  -class <arg>     preselect class (by letter, abbreviation, or name)");
-    puts("  -pizza <string>  crawl pizza");
-    puts("  -plain           don't use IBM extended characters");
-    puts("  -dir <path>      crawl directory");
-    puts("  -rc <file>       init file name");
-    puts("  -morgue <dir>    directory to save character dumps");
-    puts("  -macro <dir>     directory to save/find macro.txt");
-    puts("");
-    puts("Command line options override init file options, which override");
-    puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
-    puts("");
-    puts("Highscore list options: (Can now be redirected to more, etc)");
-    puts("  -scores [N]            highscore list");
-    puts("  -tscores [N]           terse highscore list");
-    puts("  -vscores [N]           verbose highscore list");
-    puts("  -scorefile <filename>  scorefile to report on");
-}
-
-static void wanderer_startup_message()
-{
-    int skill_levels = 0;
-    for (int i = 0; i < NUM_SKILLS; i++)
-        skill_levels += you.skills[ i ];
-    
-    if (skill_levels <= 2)
-    {
-        // Demigods and Demonspawn wanderers stand to not be
-        // able to see any of their skills at the start of
-        // the game (one or two skills should be easily guessed
-        // from starting equipment)... Anyways, we'll give the
-        // player a message to warn them (and give a reason why). -- bwr
-        mpr("You wake up in a daze, and can't recall much.");
-    }
-}
-
-static void god_greeting_message( bool game_start )
-{
-    switch (you.religion)
-    {
-    case GOD_ZIN:
-        simple_god_message( " says: Spread the light, my child." );
-        break;
-    case GOD_SHINING_ONE:
-        simple_god_message( " says: Smite the infidels!" );
-        break;
-    case GOD_KIKUBAAQUDGHA:
-    case GOD_YREDELEMNUL:
-    case GOD_NEMELEX_XOBEH:
-        simple_god_message( " says: Welcome..." );
-        break;
-    case GOD_XOM:
-        if (game_start)
-            simple_god_message( " says: A new plaything!" );
-        break;
-    case GOD_VEHUMET:
-        simple_god_message(" says: Let it end in hellfire!");
-        break;
-    case GOD_OKAWARU:
-        simple_god_message(" says: Welcome, disciple.");
-        break;
-    case GOD_MAKHLEB:
-        god_speaks( you.religion, "Blood and souls for Makhleb!" );
-        break;
-    case GOD_SIF_MUNA:
-        simple_god_message( " whispers: I know many secrets...");
-        break;
-    case GOD_TROG:
-        simple_god_message( " says: Kill them all!" );
-        break;
-    case GOD_ELYVILON:
-        simple_god_message( " says: Go forth and aid the weak!" );
-        break;
-    case GOD_LUGONU:
-        simple_god_message( " says: Spread carnage and corruption!");
-        break;
-    case GOD_BEOGH:
-        simple_god_message(
-            " says: Drown the unbelievers in a sea of blood!");
-        break;
-    case GOD_NO_GOD:
-    case NUM_GODS:
-    case GOD_RANDOM:
-        break;
-    }
-}
-
-static void take_starting_note()
-{
-    std::ostringstream notestr;
-    notestr << you.your_name << ", the "
-            << species_name(you.species,you.experience_level) << " "
-            << you.class_name
-            << ", began the quest for the Orb.";
-    take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
-
-    notestr.str("");
-    notestr.clear();
-
-    notestr << "HP: " << you.hp << "/" << you.hp_max
-            << " MP: " << you.magic_points << "/" << you.max_magic_points;
-    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
-                   notestr.str().c_str()));
-}
-
-static void startup_tutorial()
-{
-    // don't allow triggering at game start 
-    Options.tut_just_triggered = true;
-    // print stats and everything
-    prep_input();
-    msg::streams(MSGCH_TUTORIAL)
-        << "Press any key to start the tutorial intro, or Escape to skip it."
-        << std::endl;
-    const int ch = c_getch();
-
-    if (ch != ESCAPE)
-        tut_starting_screen();
-}
 
 #ifdef WIZARD
 static void handle_wizard_command( void )
@@ -412,53 +390,16 @@ static void handle_wizard_command( void )
 
         you.wizard = true;
         redraw_screen();
-
-        if (crawl_state.cmd_repeat_start)
-        {
-            crawl_state.cancel_cmd_repeat("Can't repeat entering wizard "
-                                          "mode.");
-            return;
-        }
     }
 
     mpr( "Enter Wizard Command (? - help): ", MSGCH_PROMPT );
     wiz_command = getch();
 
-    if (crawl_state.cmd_repeat_start)
-    {
-        // Easiest to list which wizard commands *can* be repeated.
-        switch (wiz_command)
-        {
-        case 'x':
-        case '$':
-        case 'a':
-        case 'c':
-        case 'h':
-        case 'H':
-        case 'm':
-        case 'M':
-        case 'X':
-        case '!':
-        case '[':
-        case ']':
-        case '^':
-        case '%':
-        case 'o':
-        case 'z':
-        case 'Z':
-            break;
-
-        default:
-            crawl_state.cant_cmd_repeat("You cannot repeat that "
-                                        "wizard command.");
-            return;
-        }
-    }
-
     switch (wiz_command)
     { 
     case '?':
-        list_commands(true, 0, true);  // tell it to list wizard commands
+        list_commands(true);        // tell it to list wizard commands
+        redraw_screen();
         break;
 
     case CONTROL('G'):
@@ -608,39 +549,11 @@ static void handle_wizard_command( void )
 
         break;
 
-    case 'C':
-    {
-        // this command isn't very exciting... feel free to replace
-        i = prompt_invent_item( "(Un)curse which item?", MT_INVLIST, -1 );
-        if (i == PROMPT_ABORT)
-        {
-            canned_msg( MSG_OK );
-            break;
-        }
-
-        item_def& item(you.inv[i]);
-
-        if (item_cursed(item))
-            do_uncurse_item(item);
-        else
-            do_curse_item(item);
-
-        break;
-    }
-
     case 'B':
         if (you.level_type != LEVEL_ABYSS)
-            banished( DNGN_ENTER_ABYSS, "wizard command" );
+            banished( DNGN_ENTER_ABYSS );
         else
             down_stairs(you.your_level, DNGN_EXIT_ABYSS);
-        break;
-
-    case CONTROL('A'):
-        if (you.level_type == LEVEL_ABYSS)
-            abyss_teleport(true);
-        else
-            mpr("You can only abyss_teleport() inside the Abyss.");
-
         break;
 
     case 'g':
@@ -661,29 +574,21 @@ static void handle_wizard_command( void )
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         set_hp( abs(you.hp_max), false );
-        set_hunger( 10999, true );
+        set_hunger( 5000 + abs(you.hunger), true );
         break;
 
     case 'H':
         you.rotting = 0;
         you.duration[DUR_POISONING] = 0;
-        if (you.duration[DUR_BEHELD])
-        {
-            you.duration[DUR_BEHELD] = 0;
-            you.beheld_by.clear();
-        }
-        you.duration[DUR_CONF] = 0;
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
-        set_hunger( 10999, true );
+        set_hunger( 12000, true );
         you.redraw_hit_points = 1;
         break;
 
     case 'b':
-        // wizards can always blink, with no restrictions or
-        // magical contamination.
-        blink(1000, true, true);
+        blink(1000, true);        // wizards can always blink
         break;
 
     case '~':
@@ -759,34 +664,23 @@ static void handle_wizard_command( void )
 
     case 'P':
     {
-        mpr( "Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT );
-        if (cancelable_get_line( specs, sizeof( specs ) ))
-        {
-            canned_msg( MSG_OK );
-            break;
-        }
+        mpr( "Destination for portal? ", MSGCH_PROMPT );
+        get_input_line( specs, sizeof( specs ) );
 
         std::string dst = specs;
         dst = trim_string(dst);
-        dst = replace_all(dst, " ", "_");
 
         if (dst == "")
-            dst = "bazaar";
-
-        if (find_map_by_name(dst) == -1 &&
-            random_map_for_tag(dst, false) == -1)
+            canned_msg( MSG_OK );
+        else
         {
-            mprf("No map named '%s' or tagged '%s'.",
-                 dst.c_str(), dst.c_str());
-            break;
+            grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
+            map_wiz_props_marker
+                *marker = new map_wiz_props_marker(you.pos());
+            marker->set_property("dst", dst);
+            marker->set_property("desc", "wizard portal, dest = " + dst);
+            env.markers.add(marker);
         }
-
-        grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
-        map_wiz_props_marker
-            *marker = new map_wiz_props_marker(you.pos());
-        marker->set_property("dst", dst);
-        marker->set_property("desc", "wizard portal, dest = " + dst);
-        env.markers.add(marker);
         break;
     }
 
@@ -915,7 +809,7 @@ static void handle_wizard_command( void )
 
                     // Use mpr_comma_separated_list() because the list
                     // might be *LONG*.
-                    mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                    mpr_comma_separated_list(prefix, matches, ", ", " and ",
                                              MSGCH_DIAGNOSTICS);
                     return;
                 }
@@ -955,19 +849,6 @@ static void handle_wizard_command( void )
         break;
 
     case '{':
-        if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
-            || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
-        {
-            if (!yesno("Force level to be mappable? "))
-            {
-                canned_msg( MSG_OK );
-                return;
-            }
-
-            unset_level_flags(LFLAG_NOT_MAPPABLE | LFLAG_NO_MAGIC_MAP);
-            unset_branch_flags(BFLAG_NOT_MAPPABLE | BFLAG_NO_MAGIC_MAP);
-        }
-
         magic_mapping(1000, 100, true, true);
         break;
 
@@ -1032,7 +913,6 @@ static void handle_wizard_command( void )
         formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
         break;
     }
-    you.turn_is_over = false;
 }
 #endif
 
@@ -1108,161 +988,16 @@ static void recharge_rods()
     }
 }
 
-static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
-{
-    switch(cmd)
-    {
-    // Informational commands
-    case CMD_LOOK_AROUND:
-    case CMD_INSPECT_FLOOR:
-    case CMD_EXAMINE_OBJECT:
-    case CMD_LIST_WEAPONS:
-    case CMD_LIST_ARMOUR:
-    case CMD_LIST_JEWELLERY:
-    case CMD_LIST_EQUIPMENT:
-    case CMD_CHARACTER_DUMP:
-    case CMD_DISPLAY_COMMANDS:
-    case CMD_DISPLAY_INVENTORY:
-    case CMD_DISPLAY_KNOWN_OBJECTS:
-    case CMD_DISPLAY_MUTATIONS:
-    case CMD_DISPLAY_SKILLS:
-    case CMD_DISPLAY_OVERMAP:
-    case CMD_DISPLAY_RELIGION:
-    case CMD_DISPLAY_CHARACTER_STATUS:
-    case CMD_DISPLAY_SPELLS:
-    case CMD_EXPERIENCE_CHECK:
-    case CMD_GET_VERSION:
-    case CMD_RESISTS_SCREEN:
-    case CMD_READ_MESSAGES:
-    case CMD_SEARCH_STASHES:
-        mpr("You can't repeat informational commands.");
-        return false;
-
-    // Multi-turn commands
-    case CMD_PICKUP:
-    case CMD_DROP:
-    case CMD_BUTCHER:
-    case CMD_GO_UPSTAIRS:
-    case CMD_GO_DOWNSTAIRS:
-    case CMD_WIELD_WEAPON:
-    case CMD_WEAPON_SWAP:
-    case CMD_WEAR_JEWELLERY:
-    case CMD_REMOVE_JEWELLERY:
-    case CMD_MEMORISE_SPELL:
-    case CMD_EXPLORE:
-    case CMD_INTERLEVEL_TRAVEL:
-        mpr("You can't repeat multi-turn commands.");
-        return false;
-
-    // Miscellaneous non-repeatable commands.
-    case CMD_TOGGLE_AUTOPICKUP:
-    case CMD_ADJUST_INVENTORY:
-    case CMD_REPLAY_MESSAGES:
-    case CMD_REDRAW_SCREEN:
-    case CMD_MACRO_ADD:
-    case CMD_SAVE_GAME:
-    case CMD_SAVE_GAME_NOW:
-    case CMD_SUSPEND_GAME:
-    case CMD_QUIT:
-    case CMD_DESTROY_ITEM:
-    case CMD_MARK_STASH:
-    case CMD_FORGET_STASH:
-    case CMD_FIX_WAYPOINT:
-    case CMD_CLEAR_MAP:
-    case CMD_INSCRIBE_ITEM:
-    case CMD_TOGGLE_AUTOPRAYER:
-    case CMD_MAKE_NOTE:
-        mpr("You can't repeat that command.");
-        return false;
-
-    case CMD_DISPLAY_MAP:
-        mpr("You can't repeat map commands.");
-        return false;
-
-    case CMD_MOUSE_MOVE:
-    case CMD_MOUSE_CLICK:
-        mpr("You can't repeat mouse clicks or movements.");
-        return false;
-
-    case CMD_REPEAT_CMD:
-        mpr("You can't repeat the repeat command!");
-        return false;
-
-    case CMD_RUN_LEFT:
-    case CMD_RUN_DOWN:
-    case CMD_RUN_UP:
-    case CMD_RUN_RIGHT:
-    case CMD_RUN_UP_LEFT:
-    case CMD_RUN_DOWN_LEFT:
-    case CMD_RUN_UP_RIGHT:
-    case CMD_RUN_DOWN_RIGHT:
-        mpr("Why would you want to repeat a run command?");
-        return false;
-
-    case CMD_PREV_CMD_AGAIN:
-        ASSERT(!is_again);
-        if (crawl_state.prev_cmd == CMD_NO_CMD)
-        {
-            mpr("No previous command to repeat.");
-            return false;
-        }
-
-        return cmd_is_repeatable(crawl_state.prev_cmd, true);
-
-    case CMD_MOVE_NOWHERE:
-    case CMD_REST:
-    case CMD_SEARCH:
-        return i_feel_safe(true);
-
-    case CMD_MOVE_LEFT:
-    case CMD_MOVE_DOWN:
-    case CMD_MOVE_UP:
-    case CMD_MOVE_RIGHT:
-    case CMD_MOVE_UP_LEFT:
-    case CMD_MOVE_DOWN_LEFT:
-    case CMD_MOVE_UP_RIGHT:
-    case CMD_MOVE_DOWN_RIGHT:
-        if (!i_feel_safe())
-            return yesno("Really repeat movement command while monsters "
-                         "are nearby?");
-
-        return true;
-
-    case CMD_NO_CMD:
-        mpr("Unknown command, not repeating.");
-        return false;
-
-    default:
-        return true;
-    }
-
-    return false;
-}
-
 /* used to determine whether to apply the berserk penalty at end
    of round */
 bool apply_berserk_penalty = false;
 
-static void drift_player(int move_x, int move_y);
 /*
- * This function handles the player's input. It's called from main(),
- * from inside an endless loop.
+  This function handles the player's input. It's called from main(), from
+  inside an endless loop.
  */
 static void input()
 {
-    crawl_state.clear_god_acting();
-    check_beholders();
-
-    if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
-        && kbhit())
-    {
-        // User pressed a key, so stop repeating commands and discard
-        // the keypress
-        crawl_state.cancel_cmd_repeat();
-        getchm();
-        return;
-    }
-
     you.turn_is_over = false;
     prep_input();
 
@@ -1306,18 +1041,8 @@ static void input()
             learned_something_new(TUT_RETREAT_CASTER);
     }
  
-    if ( you.cannot_act() )
+    if ( you.duration[DUR_PARALYSIS] )
     {
-        crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
-                                      "repetition.");
-
-        // may sleep walk
-        if (!you.paralysed() && you.mutation[MUT_DRIFTING]
-            && (random2(100) <= you.mutation[MUT_DRIFTING] * 5) )
-        {
-            drift_player(0, 0);
-        }
-        
         world_reacts();
         return;
     }
@@ -1350,12 +1075,7 @@ static void input()
     crawl_state.check_term_size();
     if (crawl_state.terminal_resized)
         handle_terminal_resize();
-
-    repeat_again_rec.paused = (crawl_state.is_replaying_keys()
-                               && !crawl_state.cmd_repeat_start);
-
-    crawl_state.input_line_curr = 0;
-
+    
     {
         // Enable the cursor to read input. The cursor stays on while
         // the command is being processed, so subsidiary prompts
@@ -1369,13 +1089,6 @@ static void input()
 
         crawl_state.waiting_for_command = false;
 
-        if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_REPEAT_CMD
-            && !crawl_state.is_replaying_keys())
-        {
-            crawl_state.prev_cmd = cmd;
-            crawl_state.input_line_strs.clear();
-        }
-
         if (cmd != CMD_MOUSE_MOVE)
             c_input_reset(false);
 
@@ -1385,17 +1098,8 @@ static void input()
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
             process_command( cmd );
 
-        repeat_again_rec.paused = true;
-
         if (cmd != CMD_MOUSE_MOVE)
             c_input_reset(false, true);
-
-        // If the command was CMD_REPEAT_CMD, then the key for the
-        // command to repeat has been placed into the macro buffer,
-        // so return now to let input() be called again while
-        // the keys to repeat are recorded.
-        if (cmd == CMD_REPEAT_CMD)
-            return;
     }
 
     if (need_to_autoinscribe())
@@ -1410,8 +1114,6 @@ static void input()
     }
     else
         viewwindow(true, false);
-
-    update_replay_state();
 
     if (you.num_turns != -1)
     {
@@ -1474,8 +1176,6 @@ static void input()
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
     }
-
-    crawl_state.clear_god_acting();
 }
 
 static bool toggle_flag( bool* flag, const char* flagname )
@@ -1485,25 +1185,10 @@ static bool toggle_flag( bool* flag, const char* flagname )
     return *flag;
 }
 
-static bool stairs_check_beheld()
-{
-    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
-    {
-        mprf("You cannot move away from %s!",
-             menv[you.beheld_by[0]].name(DESC_NOCAP_THE, true).c_str());
-        return true;
-    }
-
-    return false;
-}
-
 static void go_downstairs();
 static void go_upstairs()
 {
     const dungeon_feature_type ygrd = grd(you.pos());
-
-    if (stairs_check_beheld())
-        return;
 
     // Allow both < and > to work for Abyss exits.
     if (ygrd == DNGN_EXIT_ABYSS)
@@ -1543,21 +1228,7 @@ static void go_upstairs()
 
 static void go_downstairs()
 {
-    bool shaft = (trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
-                  && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP);
-
-
-    if (stairs_check_beheld())
-        return;
-
-    if (shaft && you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't fall through a shaft while levitating.");
-        return;
-    }
-
-    if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS
-        && !shaft)
+    if (grid_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS)
     {
         if (grd(you.pos()) == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -1571,18 +1242,10 @@ static void go_downstairs()
         mpr("You're held in a net!");
         return;
     }
-
-    if (shaft)
-    {
-        start_delay( DELAY_DESCENDING_STAIRS, 0, you.your_level );
-    }
-    else
-    {
-        tag_followers();  // only those beside us right now can follow
-        start_delay( DELAY_DESCENDING_STAIRS,
-                     1 + (you.burden_state > BS_UNENCUMBERED),
-                     you.your_level );
-    }
+    tag_followers();  // only those beside us right now can follow
+    start_delay( DELAY_DESCENDING_STAIRS,
+                 1 + (you.burden_state > BS_UNENCUMBERED),
+                 you.your_level );
 }
 
 static void experience_check()
@@ -1629,6 +1292,8 @@ static void experience_check()
 
 void process_command( command_type cmd )
 {
+
+    FixedVector < int, 2 > plox;
     apply_berserk_penalty = true;
 
     switch (cmd)
@@ -1696,51 +1361,6 @@ void process_command( command_type cmd )
         Options.show_more_prompt = true;
         break;
         
-    case CMD_REPEAT_KEYS:
-        ASSERT(crawl_state.is_repeating_cmd());
-
-        if (crawl_state.prev_repetition_turn == you.num_turns
-            && !(crawl_state.repeat_cmd == CMD_WIZARD
-                 || (crawl_state.repeat_cmd == CMD_PREV_CMD_AGAIN
-                     && crawl_state.prev_cmd == CMD_WIZARD)))
-        {
-            // This is a catch-all that shouldn't really happen.
-            // If the command always takes zero turns, then it
-            // should be prevented in cmd_is_repeatable().  If
-            // a command sometimes takes zero turns (because it
-            // can't be done, for instance), then
-            // crawl_state.zero_turns_taken() should be called when
-            // it does take zero turns, to cancel command repetition
-            // before we reach here.
-#ifdef WIZARD
-            crawl_state.cant_cmd_repeat("Can't repeat a command which "
-                                        "takes no turns (unless it's a "
-                                        "wizard command), cancelling ");
-#else
-            crawl_state.cant_cmd_repeat("Can't repeat a command which "
-                                        "takes no turns, cancelling "
-                                        "repetitions.");
-#endif
-            crawl_state.cancel_cmd_repeat();
-            return;
-        }
-
-        crawl_state.cmd_repeat_count++;
-        if (crawl_state.cmd_repeat_count >= crawl_state.cmd_repeat_goal)
-        {
-            crawl_state.cancel_cmd_repeat();
-            return;
-        }
-
-        ASSERT(crawl_state.repeat_cmd_keys.size() > 0);
-        repeat_again_rec.paused = true;
-        macro_buf_add(crawl_state.repeat_cmd_keys);
-        macro_buf_add(KEY_REPEAT_KEYS);
-
-        crawl_state.prev_repetition_turn = you.num_turns;
-
-        break;
-
     case CMD_TOGGLE_AUTOPICKUP:
         toggle_flag( &Options.autopickup_on, "Autopickup");
         break;
@@ -1854,19 +1474,8 @@ void process_command( command_type cmd )
         }
         else if (you.attribute[ATTR_HELD])
         {
-           const item_def *weapon = you.weapon();
-           if (!weapon || !is_range_weapon(*weapon))
-           {
-               mpr("You cannot throw anything while held in a net!");
-               break;
-           }
-           else if (weapon->sub_type != WPN_BLOWGUN)
-           {
-               mprf("You cannot shoot with your %s while held in a net!",
-                    weapon->name(DESC_BASENAME).c_str());
-               break;
-           }
-           // else shooting is possible
+           mpr("You cannot shoot anything while held in a net!");
+           break;
         }
         if (Options.tutorial_left)
             Options.tut_throw_counter++;
@@ -2036,10 +1645,6 @@ void process_command( command_type cmd )
             mesclr();
         break;
 
-    case CMD_ANNOTATE_LEVEL:
-        annotate_level();
-        break;
-
     case CMD_EXPLORE:
         // Start exploring
         start_explore(Options.explore_greedy);
@@ -2055,13 +1660,11 @@ void process_command( command_type cmd )
             break;
         }
 #endif
-        {
-            coord_def pos;
-            show_map(pos, true);
-            redraw_screen();
-            if (pos.x > 0)
-                start_travel(pos.x, pos.y);
-        }
+        plox[0] = 0;
+        show_map(plox, true);
+        redraw_screen();
+        if (plox[0] > 0)
+            start_travel(plox[0], plox[1]);
         break;
 
     case CMD_DISPLAY_KNOWN_OBJECTS:
@@ -2097,12 +1700,10 @@ void process_command( command_type cmd )
 
     case CMD_DISPLAY_COMMANDS:
         if (Options.tutorial_left)
-        {
             list_tutorial_help();
-            redraw_screen();
-        }
         else
-            list_commands(false, 0, true);
+            list_commands(false);
+        redraw_screen();
         break;
 
     case CMD_EXPERIENCE_CHECK:
@@ -2213,14 +1814,6 @@ void process_command( command_type cmd )
         version();
         break;
 
-    case CMD_REPEAT_CMD:
-        setup_cmd_repeat();
-        break;
-
-    case CMD_PREV_CMD_AGAIN:
-        do_prev_cmd_again();
-        break;
-
     case CMD_NO_CMD:
     default:
         if (Options.tutorial_left)
@@ -2290,9 +1883,6 @@ static void decrement_durations()
     // must come before might/haste/berserk
     if (decrement_a_duration(DUR_BUILDING_RAGE))
         go_berserk(false);
-
-    if (decrement_a_duration(DUR_SLEEP))
-        you.awake();
 
     // paradox: it both lasts longer & does more damage overall if you're
     //          moving slower.
@@ -2520,17 +2110,11 @@ static void decrement_durations()
     decrement_a_duration( DUR_SURE_BLADE,
                           "The bond with your blade fades away." );
 
-    if ( decrement_a_duration( DUR_BEHELD, "You break out of your daze.",
-                               -1, 0, NULL, MSGCH_RECOVERY ))
-    {
-        you.beheld_by.clear();
-    }
-
     dec_slow_player();
     dec_haste_player();
 
     if (decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
-        modify_stat(STAT_STRENGTH, -5, true, "might running out");
+        modify_stat(STAT_STRENGTH, -5, true);
 
     if (decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
@@ -2743,12 +2327,10 @@ static void check_banished()
 
 static void world_reacts()
 {
-    crawl_state.clear_god_acting();
-
     if (you.num_turns != -1)
     {
         you.num_turns++;
-        if (env.turns_on_level < INT_MAX)
+        if (env.turns_on_level + 1 > env.turns_on_level)
             env.turns_on_level++;
         update_turn_count();
     }
@@ -2756,12 +2338,10 @@ static void world_reacts()
 
     run_environment_effects();
 
-    if ( !you.cannot_act() && !you.mutation[MUT_BLURRY_VISION] &&
+    if ( !you.duration[DUR_PARALYSIS] && !you.mutation[MUT_BLURRY_VISION] &&
          (you.mutation[MUT_ACUTE_VISION] >= 2 ||
           random2(50) < you.skills[SK_TRAPS_DOORS]) )
-    {
         search_around(false); // check nonadjacent squares too
-    }
 
     stealth = check_stealth();
 
@@ -2867,7 +2447,7 @@ static void world_reacts()
     // food death check:
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
     {
-        if (!you.cannot_act() && one_chance_in(40))
+        if (!you.duration[DUR_PARALYSIS] && one_chance_in(40))
         {
             mpr("You lose consciousness!", MSGCH_FOOD);
             you.duration[DUR_PARALYSIS] += 5 + random2(8);
@@ -2885,7 +2465,7 @@ static void world_reacts()
 
     viewwindow(true, false);
 
-    if (you.cannot_act() && any_messages())
+    if (you.duration[DUR_PARALYSIS] > 0 && any_messages())
         more();
 
     spawn_random_monsters();
@@ -2905,6 +2485,8 @@ static void show_message_line(std::string line)
         std::string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
+        // XXX: Eventually fix mpr so it can do a different colour for
+        // the sender.
         formatted_string fs;
         fs.textcolor(WHITE);
         fs.cprintf("%s: ", sender.c_str());
@@ -3075,7 +2657,6 @@ command_type keycode_to_command( keycode_type key )
     {
     case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
     case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
-    case KEY_REPEAT_KEYS:        return CMD_REPEAT_KEYS;
     case 'b': return CMD_MOVE_DOWN_LEFT;
     case 'h': return CMD_MOVE_LEFT;
     case 'j': return CMD_MOVE_DOWN;
@@ -3156,9 +2737,8 @@ command_type keycode_to_command( keycode_type key )
     case '(': return CMD_LIST_WEAPONS;
     case '\\': return CMD_DISPLAY_KNOWN_OBJECTS;
     case '\'': return CMD_WEAPON_SWAP;
-    case '`': return CMD_PREV_CMD_AGAIN;
 
-    case '0': return CMD_REPEAT_CMD;
+    case '0': return CMD_NO_CMD;
     case '5': return CMD_REST;
 
     case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
@@ -3176,7 +2756,7 @@ command_type keycode_to_command( keycode_type key )
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
     case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
-    case CONTROL('I'): return CMD_ANNOTATE_LEVEL;
+    case CONTROL('I'): return CMD_NO_CMD;
     case CONTROL('M'): return CMD_NO_CMD;
     case CONTROL('O'): return CMD_EXPLORE;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;
@@ -3243,6 +2823,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
         if (mon != NON_MONSTER && player_can_hit_monster(&menv[mon]))
         {
+
             if (mons_is_caught(&menv[mon]))
             {
 
@@ -3267,8 +2848,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
             return;
         }
 
-        if (grd[dx][dy] >= DNGN_TRAP_MECHANICAL
-            && grd[dx][dy] <= DNGN_TRAP_NATURAL)
+        if (grd[dx][dy] >= DNGN_TRAP_MECHANICAL && grd[dx][dy] <= DNGN_TRAP_III)
         {
             if (env.cgrid[dx][dy] != EMPTY_CLOUD)
             {
@@ -3417,6 +2997,7 @@ static void close_door(int door_x, int door_y)
     }
 }                               // end open_door()
 
+
 // initialise whole lot of stuff...
 // returns true if a new character
 static bool initialise(void)
@@ -3564,8 +3145,6 @@ static bool initialise(void)
 
     activate_notes(true);
 
-    add_key_recorder(&repeat_again_rec);
-
     return (newc);
 }
 
@@ -3624,49 +3203,8 @@ static void do_berserk_no_combat_penalty(void)
 }                               // end do_berserk_no_combat_penalty()
 
 
-void drift_player(int move_x, int move_y)
-{
-    int drift_dir = -1;
-    int okay_dirs = 0;
-
-    // don't drift if held in a net
-    if (you.attribute[ATTR_HELD])
-        return;
-
-    for (int i = 0; i < 8; i++)
-    {
-        const coord_def      drift_delta = Compass[i];
-        const coord_def      new_pos     = you.pos() + drift_delta;
-        const unsigned short targ_monst  = mgrd(new_pos);
-
-        if (you.can_pass_through(new_pos)
-            && !is_grid_dangerous(grd(new_pos))
-            && (targ_monst == NON_MONSTER ||
-                mons_is_submerged(&menv[targ_monst])))
-        {
-            if (one_chance_in(++okay_dirs))
-                drift_dir = i;
-        }
-    }
-
-    if (okay_dirs > 0)
-    {
-        const coord_def drift_delta = Compass[drift_dir];
-        const coord_def new_pos     = you.pos() + drift_delta;
-
-        if (drift_delta == coord_def(-move_x, -move_y))
-            mpr("You drift backwards.");
-        else if (drift_delta == coord_def(move_x, move_y))
-            mpr("You drift forwards.");
-        else
-            mpr("You drift.");
-
-        move_player_to_grid(new_pos.x, new_pos.y, true, true, false);
-    }
-}
-
-// Called when the player moves by walking/running. Also calls attack
-// function etc when necessary.
+// Called when the player moves by walking/running. Also calls
+// attack function and trap function etc when necessary.
 static void move_player(int move_x, int move_y)
 {
     bool attacking = false;
@@ -3691,47 +3229,14 @@ static void move_player(int move_x, int move_y)
         const int new_targ_x = you.x_pos + move_x;
         const int new_targ_y = you.y_pos + move_y;
         if (!in_bounds(new_targ_x, new_targ_y)
-            || !you.can_pass_through(new_targ_x, new_targ_y))
+                || grid_is_solid(grd[new_targ_x][new_targ_y]))
         {
             you.turn_is_over = true;
             mpr("Ouch!");
             apply_berserk_penalty = true;
-            crawl_state.cancel_cmd_repeat();
-
             return;
         }
     } // end of if you.duration[DUR_CONF]
-
-    const int targ_x = you.x_pos + move_x;
-    const int targ_y = you.y_pos + move_y;
-    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
-    const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
-    const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
-
-    // cannot move away from mermaid but you CAN fight neighbouring squares
-    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF]
-        && (targ_monst == NON_MONSTER || mons_friendly(&menv[targ_monst])
-            || mons_is_submerged(&menv[targ_monst])))
-    {   
-        for (unsigned int i = 0; i < you.beheld_by.size(); i++)
-        {
-             monsters* mon = &menv[you.beheld_by[i]];
-             coord_def pos = mon->pos();
-             int olddist = distance(you.x_pos, you.y_pos, pos.x, pos.y);
-             int newdist = distance(you.x_pos + move_x, you.y_pos + move_y,
-                                    pos.x, pos.y);
-
-             if (olddist < newdist)
-             {
-                 mprf("You cannot move away from %s!",
-                      mon->name(DESC_NOCAP_THE, true).c_str());
-                      
-                 move_x = 0;
-                 move_y = 0;
-                 return;
-             }
-        }
-    } // end of beholding check
 
     if (you.running.check_stop_running())
     {
@@ -3741,6 +3246,12 @@ static void move_player(int move_x, int move_y)
         you.turn_is_over = false;
         return;
     }
+
+    const int targ_x = you.x_pos + move_x;
+    const int targ_y = you.y_pos + move_y;
+    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
+    const unsigned char targ_monst = mgrd[ targ_x ][ targ_y ];
+    const bool          targ_solid = grid_is_solid(targ_grid);
 
     if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
     {
@@ -3756,11 +3267,6 @@ static void move_player(int move_x, int move_y)
         }
         else // attack!
         {
-            // XXX: Moving into a normal wall does nothing and uses no
-            // turns or energy, but moving into a wall which contains
-            // an invisible monster attacks the monster, thus allowing
-            // the player to figure out which adjacent wall an invis
-            // monster is in "for free".
             you_attack( targ_monst, true );
             you.turn_is_over = true;
 
@@ -3773,18 +3279,12 @@ static void move_player(int move_x, int move_y)
         }
     }
 
-    if (!attacking && targ_pass && moving)
+    if (!attacking && !targ_solid && moving)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
         if (!move_player_to_grid(targ_x, targ_y, true, false, swap))
             return;
-
-        if (you.mutation[MUT_DRIFTING]
-            && (random2(100) <= you.mutation[MUT_DRIFTING] * 5) )
-        {
-            drift_player(move_x, move_y);
-        }
 
         move_x = 0;
         move_y = 0;
@@ -3792,13 +3292,12 @@ static void move_player(int move_x, int move_y)
         you.turn_is_over = true;
         // item_check( false );
         request_autopickup();
-
     }
 
     // BCR - Easy doors single move
-    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open && !attacking)
+    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
         open_door(move_x, move_y, false);
-    else if (!targ_pass && !attacking)
+    else if (targ_solid)
     {
         stop_running();
 
@@ -3806,7 +3305,6 @@ static void move_player(int move_x, int move_y)
         move_y = 0;
 
         you.turn_is_over = 0;
-        crawl_state.cancel_cmd_repeat();
     }
 
     if (you.running == RMODE_START)
@@ -3846,326 +3344,3 @@ static void move_player(int move_x, int move_y)
 
     apply_berserk_penalty = !attacking;
 }                               // end move_player()
-
-
-static int get_num_and_char_keyfun(int &ch)
-{
-    if (ch == CK_BKSP || isdigit(ch) || ch >= 128)
-        return 1;
-
-    return -1;
-}
-
-static int get_num_and_char(const char* prompt, char* buf, int buf_len)
-{
-    if (prompt != NULL)
-        mpr(prompt);
-
-    line_reader reader(buf, buf_len);
-
-    reader.set_keyproc(get_num_and_char_keyfun);
-
-    return reader.read_line(true);
-}
-
-static void setup_cmd_repeat()
-{
-    if (is_processing_macro())
-    {
-        flush_input_buffer(FLUSH_ABORT_MACRO);
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return;
-    }
-
-    ASSERT(!crawl_state.is_repeating_cmd());
-
-    char buf[80];
-
-    // Function ensures that the buffer contains only digits.
-    int ch = get_num_and_char("Number of times to repeat, then command key: ",
-                              buf, 80);
-
-    if (ch == ESCAPE)
-    {
-        // This *might* be part of the trigger for a macro.
-        keyseq trigger;
-        trigger.push_back(ch);
-
-        if (get_macro_buf_size() == 0)
-        {
-            // Was just a single ESCAPE key, so not a macro trigger.
-            canned_msg( MSG_OK );
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-            flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-            return;
-        }
-        ch = getchm();
-        trigger.push_back(ch);
-
-        // Now that we have the entirety of the (possible) macro trigger,
-        // clear out the keypress recorder so that we won't have recorded
-        // the trigger twice.
-        repeat_again_rec.clear();
-
-        insert_macro_into_buff(trigger);
-
-        ch = getchm();
-        if (ch == ESCAPE)
-        {
-            if (get_macro_buf_size() > 0)
-                // User pressed an Alt key which isn't bound to a macro.
-                mpr("That key isn't bound to a macro.");
-            else
-                // Wasn't a macro trigger, just an ordinary escape.
-                canned_msg( MSG_OK );
-
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-            flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-            return;
-        }
-        // *WAS* a macro trigger, keep going.
-    }
-
-    if (strlen(buf) == 0)
-    {
-        mpr("You must enter the number of times for the command to repeat.");
-
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-
-        return;
-    }
-
-    int count = atoi(buf);
-    
-    if (crawl_state.doing_prev_cmd_again)
-        count = crawl_state.prev_cmd_repeat_goal;
-
-    if (count <= 0)
-    {
-        canned_msg( MSG_OK );
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-        return;
-    }
-
-    if (crawl_state.doing_prev_cmd_again)
-    {
-        // If a "do previous command again" caused a command
-        // repetition to be redone, the keys to be repeated are
-        // already in the key rercording buffer, so we just need to
-        // discard all the keys saying how many times the command
-        // should be repeated.
-        do {
-            repeat_again_rec.keys.pop_front();
-        } while (repeat_again_rec.keys[0] != ch);
-
-        repeat_again_rec.keys.pop_front();
-    }
-
-    // User can type space or enter and then the command key, in case
-    // they want to repeat a command bound to a number key.
-    c_input_reset(true);
-    if (ch == ' ' || ch == CK_ENTER)
-    {
-        if (!crawl_state.doing_prev_cmd_again)
-            repeat_again_rec.keys.pop_back();
-
-        mpr("Enter command to be repeated: ");
-        // Enable the cursor to read input. The cursor stays on while
-        // the command is being processed, so subsidiary prompts
-        // shouldn't need to turn it on explicitly.
-        cursor_control con(true);
-
-        crawl_state.waiting_for_command = true;
-
-        ch = get_next_keycode();
-
-        crawl_state.waiting_for_command = false;
-    }
-
-    command_type cmd = keycode_to_command( (keycode_type) ch);
-
-    if (cmd != CMD_MOUSE_MOVE)
-        c_input_reset(false);
-
-    if (!is_processing_macro() && !cmd_is_repeatable(cmd))
-    {
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-        return;
-    }
-
-    if (!crawl_state.doing_prev_cmd_again && cmd != CMD_PREV_CMD_AGAIN)
-        crawl_state.prev_cmd_keys = repeat_again_rec.keys;
-
-    if (is_processing_macro())
-    {
-        // Put back in first key of the expanded macro, which
-        // get_next_keycode() fetched
-        repeat_again_rec.paused = true;
-        macro_buf_add(ch, true);
-
-        // If we're repeating a macro, get rid the keys saying how
-        // many times to repeat, because the way that macros are
-        // repeated means that the number keys will be repeated if
-        // they aren't discarded.
-        keyseq &keys = repeat_again_rec.keys;
-        ch = keys[keys.size() - 1];
-        while (isdigit(ch) || ch == ' ' || ch == CK_ENTER)
-        {
-            keys.pop_back();
-            ASSERT(keys.size() > 0);
-            ch = keys[keys.size() - 1];
-        }
-    }
-
-    repeat_again_rec.paused = false;
-    // Discard the setup for the command repetition, since what's
-    // going to be repeated is yet to be typed, except for the fist
-    // key typed which has to be put back in (unless we're repeating a
-    // macro, in which case everything to be repeated is already in
-    // the macro buffer).
-    if (!is_processing_macro())
-    {
-        repeat_again_rec.clear();
-        macro_buf_add(ch, crawl_state.doing_prev_cmd_again);
-    }
-
-    crawl_state.cmd_repeat_start     = true;
-    crawl_state.cmd_repeat_count     = 0;
-    crawl_state.repeat_cmd           = cmd;
-    crawl_state.cmd_repeat_goal      = count;
-    crawl_state.prev_cmd_repeat_goal = count;
-    crawl_state.prev_repetition_turn = you.num_turns;
-
-    crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
-
-    crawl_state.input_line_strs.clear();
-}
-
-static void do_prev_cmd_again()
-{
-    if (is_processing_macro())
-    {
-        mpr("Can't re-do previous command from within a macro.");
-        flush_input_buffer(FLUSH_ABORT_MACRO);
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return;
-    }
-
-    if (crawl_state.prev_cmd == CMD_NO_CMD)
-    {
-        mpr("No previous command to re-do.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return;
-    }
-
-    ASSERT(!crawl_state.doing_prev_cmd_again
-           || (crawl_state.is_repeating_cmd()
-               && crawl_state.repeat_cmd == CMD_PREV_CMD_AGAIN));
-
-    crawl_state.doing_prev_cmd_again = true;
-    repeat_again_rec.paused          = false;
-
-    if (crawl_state.prev_cmd == CMD_REPEAT_CMD)
-    {
-        crawl_state.cmd_repeat_start     = true;
-        crawl_state.cmd_repeat_count     = 0;
-        crawl_state.cmd_repeat_goal      = crawl_state.prev_cmd_repeat_goal;
-        crawl_state.prev_repetition_turn = you.num_turns;
-    }
-
-    const keyseq &keys = crawl_state.prev_cmd_keys;
-    ASSERT(keys.size() > 0);
-
-    // Insert keys at front of input buffer, rather than at the end,
-    // since if the player holds down the "`" key, then the buffer
-    // might get two "`" in a row, and if the keys to be replayed go after
-    // the second "`" then we get an assertion.
-    macro_buf_add(keys, true);
-
-    bool was_doing_repeats = crawl_state.is_repeating_cmd();
-
-    input();
-
-    // crawl_state.doing_prev_cmd_again can be set to false
-    // while input() does its stuff if something causes
-    // crawl_state.cancel_cmd_again() to be called.
-    while (!was_doing_repeats && crawl_state.is_repeating_cmd()
-           && crawl_state.doing_prev_cmd_again)
-    {
-        input();
-    }
-
-    if (!was_doing_repeats && crawl_state.is_repeating_cmd()
-        && !crawl_state.doing_prev_cmd_again)
-    {
-        crawl_state.cancel_cmd_repeat();
-    }
-
-    crawl_state.doing_prev_cmd_again = false;
-}
-
-static void update_replay_state()
-{
-    if (crawl_state.is_repeating_cmd())
-    {
-        // First repeat is to copy down the keys the user enters,
-        // grab them so we can go on autopilot for the remaining
-        // iterations.
-        if (crawl_state.cmd_repeat_start)
-        {
-            ASSERT(repeat_again_rec.keys.size() > 0);
-
-            crawl_state.cmd_repeat_start = false;
-            crawl_state.repeat_cmd_keys  = repeat_again_rec.keys;
-
-            // Setting up the "previous command key sequence"
-            // for a repeated command is different than normal,
-            // since in addition to all of the keystrokes for
-            // the command, it needs the repeat command plus the
-            // number of repeats at the very beginning of the
-            // sequence.
-            if (!crawl_state.doing_prev_cmd_again)
-            {
-                keyseq &prev = crawl_state.prev_cmd_keys;
-                keyseq &curr = repeat_again_rec.keys;
-
-                if (is_processing_macro())
-                    prev = curr;
-                else
-                {
-                    // Skip first key, because that's command key that's
-                    // being repeated, which crawl_state.prev_cmd_keys
-                    // aleardy contains.
-                    keyseq::iterator begin = curr.begin();
-                    begin++;
-
-                    prev.insert(prev.end(), begin, curr.end());
-                }
-            }
-            
-            repeat_again_rec.paused = true;
-            macro_buf_add(KEY_REPEAT_KEYS);
-        }
-    }
-
-    if (!crawl_state.is_replaying_keys() && !crawl_state.cmd_repeat_start
-        && crawl_state.prev_cmd != CMD_NO_CMD)
-    {
-        if (repeat_again_rec.keys.size() > 0)
-            crawl_state.prev_cmd_keys = repeat_again_rec.keys;
-    }
-
-    if (!is_processing_macro())
-        repeat_again_rec.clear();
-}

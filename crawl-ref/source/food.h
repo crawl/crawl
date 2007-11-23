@@ -88,7 +88,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
 void eat_floor_item(int item_link);
 
-int eat_from_floor();
+bool eat_from_floor(void);
 
 void eat_from_inventory(int which_inventory_slot);
 

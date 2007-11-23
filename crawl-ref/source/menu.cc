@@ -16,13 +16,12 @@
 #include "view.h"
 #include "initfile.h"
 
-Menu::Menu( int _flags, const std::string& tagname )
+Menu::Menu( int _flags )
  :  f_selitem(NULL),
     f_drawitem(NULL),
     f_keyfilter(NULL),
     title(NULL),
     flags(_flags),
-    tag(tagname),
     first_entry(0),
     y_offset(0),
     pagesize(0),
@@ -93,7 +92,6 @@ void Menu::set_title( MenuEntry *e )
 
 void Menu::add_entry( MenuEntry *entry )
 {
-    entry->tag = tag;
     items.push_back( entry );
 }
 
@@ -1030,19 +1028,15 @@ bool slider_menu::line_up()
 // Menu colouring
 //
 
-int menu_colour(const std::string &text, const std::string &prefix,
-                const std::string &tag)
+int menu_colour(const std::string &text, const std::string &prefix)
 {
-    const std::string tmp_text = prefix + text;
+    std::string tmp_text = prefix + text;
 
-    for (unsigned int i = 0; i < Options.menu_colour_mappings.size(); ++i)
+    for (int i = 0, size = Options.menu_colour_mappings.size(); i < size; ++i)
     {
-        const colour_mapping &cm = Options.menu_colour_mappings[i];
-        if ( (cm.tag.empty() || cm.tag == "any" || cm.tag == tag) &&
-             cm.pattern.matches(tmp_text) )
-        {
+        colour_mapping &cm = Options.menu_colour_mappings[i];
+        if (cm.pattern.matches(tmp_text))
             return (cm.colour);
-        }
     }
     return (-1);
 }
@@ -1417,7 +1411,7 @@ bool formatted_scroller::page_up()
 
 bool formatted_scroller::line_down()
 {
-    if (first_entry + pagesize < static_cast<int>(items.size()) &&
+    if (first_entry + pagesize < (int) items.size() &&
         items[first_entry + pagesize]->level != MEL_TITLE )
     {
         ++first_entry;

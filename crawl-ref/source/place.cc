@@ -37,13 +37,6 @@ int place_depth(unsigned short place)
     return lev == 0xFF? -1 : lev;
 }
 
-int place_type(unsigned short place)
-{
-    const unsigned type = (unsigned) ((place >> 8) & 0xFF);
-    const int lev = place & 0xFF;
-    return lev == 0xFF? (int) type : (int) LEVEL_DUNGEON;
-}
-
 unsigned short get_packed_place( branch_type branch, int subdepth,
                                  level_area_type level_type )
 {

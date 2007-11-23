@@ -136,7 +136,6 @@ void writeChar(char c)
             writeChar(' ');
         return;
     }
-
     bool noop = true;
     PCHAR_INFO pci;
 

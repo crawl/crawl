@@ -156,9 +156,13 @@ const int InvEntry::item_freshness() const
         return 0;
 
     int freshness = item->special;
-
-    if (freshness >= 100 || you.mutation[MUT_SAPROVOROUS])
+    
+    if (freshness >= 100 || you.species == SP_TROLL || you.species == SP_KOBOLD 
+                         || you.species == SP_GHOUL || you.species == SP_OGRE
+                         || you.species == SP_HILL_ORC)
+    {
         freshness -= 300;
+    }
 
     // Ensure that chunk freshness is never zero, since zero means
     // that the item isn't a chunk.
@@ -1191,7 +1195,6 @@ int prompt_invent_item( const char *prompt,
             {
                 if (count)
                     *count = items[0].quantity;
-
                 redraw_screen();
                 mesclr( true );
             }

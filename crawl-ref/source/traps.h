@@ -14,7 +14,6 @@
 #define TRAPS_H
 
 #include "enum.h"
-#include "travel.h"
 
 struct dist;
 struct bolt;
@@ -35,7 +34,7 @@ void free_self_from_net(void);
 /* ***********************************************************************
  * called from: acr - misc
  * *********************************************************************** */
-void handle_traps(trap_type trt, int i, bool trap_known);
+void handle_traps(char trt, int i, bool trap_known);
 int get_trapping_net(int x, int y, bool trapped = true);
 void mark_net_trapping(int x, int y);
 void monster_caught_in_net(monsters *mon, bolt &pbolt);
@@ -63,23 +62,5 @@ dungeon_feature_type trap_category(trap_type type);
 
 int trap_at_xy(int x, int y);
 trap_type trap_type_at_xy(int x, int y);
-
-bool is_valid_shaft_level(const level_id &place = level_id::current());
-
-int       num_traps_for_place(int level_number = -1,
-                              const level_id &place = level_id::current());
-trap_type random_trap_for_place(int level_number = -1,
-                                const level_id &place = level_id::current());
-
-int traps_zero_number(int level_number = -1);
-
-int       traps_pan_number(int level_number = -1);
-trap_type traps_pan_type(int level_number = -1);
-
-int       traps_abyss_number(int level_number = -1);
-trap_type traps_abyss_type(int level_number = -1);
-
-int       traps_lab_number(int level_number = -1);
-trap_type traps_lab_type(int level_number = -1);
 
 #endif

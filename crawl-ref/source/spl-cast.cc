@@ -51,11 +51,9 @@
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
-#include "xom.h"
 
 #ifdef DOS
 #include <conio.h>
@@ -202,7 +200,6 @@ int list_spells()
     spell_menu.set_highlighter(NULL);
     spell_menu.set_more(formatted_string("Press '!' to toggle spell view."));
     spell_menu.add_toggle_key('!');
-    spell_menu.set_tag("spell");
 
     for ( int i = 0; i < 52; ++i )
     {
@@ -587,7 +584,6 @@ bool cast_a_spell()
     if (!you.spell_no)
     {
         mpr("You don't know any spells.");
-        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -600,7 +596,6 @@ bool cast_a_spell()
     if (silenced(you.x_pos, you.y_pos))
     {
         mpr("You cannot cast spells when silenced!");
-        crawl_state.zero_turns_taken();
         more();
         return (false);
     }
@@ -633,15 +628,11 @@ bool cast_a_spell()
     }
 
     if (keyin == ESCAPE)
-    {
-        canned_msg( MSG_OK );
         return (false);
-    }
 
     if (!isalpha(keyin))
     {
         mpr("You don't know that spell.");
-        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -650,7 +641,6 @@ bool cast_a_spell()
     if (spell == SPELL_NO_SPELL)
     {
         mpr("You don't know that spell.");
-        crawl_state.zero_turns_taken();
         return (false);
     }
 
@@ -675,10 +665,7 @@ bool cast_a_spell()
     {
         const spret_type cast_result = your_spells( spell );
         if (cast_result == SPRET_ABORT)
-        {
-            crawl_state.zero_turns_taken();
             return (false);
-        }
 
         exercise_spell( spell, true, cast_result == SPRET_SUCCESS );
         did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
@@ -793,19 +780,15 @@ void spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (!spell_is_utility_spell(spell))
         did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell) );
 
-    // Self-banishment gets a special exemption - you're there to spread light
-    if (spell_is_unholy(spell) &&
-        (spell != SPELL_BANISHMENT || !you.banished))
-    {
-        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );
-    }
+    if (spell_is_unholy( spell ))
+        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );        
 
     // Linley says: Condensation Shield needs some disadvantages to keep 
     // it from being a no-brainer... this isn't much, but its a start -- bwr
     if (spell_typematch(spell, SPTYP_FIRE))
         expose_player_to_element(BEAM_FIRE, 0);
 
-    if (spell_typematch(spell, SPTYP_NECROMANCY))
+    if (spell_typematch( spell, SPTYP_NECROMANCY ))
     {
         did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spell) );
 
@@ -879,7 +862,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
-        if (spell == SPELL_PORTAL_PROJECTILE)
+        if (spell == SPELL_PORTALED_PROJECTILE)
         {
             const int idx = get_fire_item_index();
             if ( idx == ENDOFPACK )
@@ -893,7 +876,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         else if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
 
-        const bool needs_path =
+        bool needs_path =
              !(testbits(flags, SPFLAG_GRID) || testbits(flags, SPFLAG_TARGET));
              
         if ( !spell_direction( spd, beam, dir, targ, needs_path, prompt ) )
@@ -1033,7 +1016,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DELAYED_FIREBALL:
-        crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
         // This spell has two main advantages over Fireball:
         //
         // (1) The release is instantaneous, so monsters will not 
@@ -1206,8 +1188,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SELECTIVE_AMNESIA:
-        crawl_state.cant_cmd_repeat("You can't repeat selective amnesia.");
-
         if (!cast_selective_amnesia(false))
             return (SPRET_ABORT);
         break;                  //     Sif Muna power calls with true
@@ -1453,7 +1433,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_TUKIMAS_DANCE:
-        crawl_state.cant_cmd_repeat("You can't repeat dancing weapon.");
         dancing_weapon(powc, false);
         break;
 
@@ -1593,7 +1572,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_ALTER_SELF:
-        crawl_state.cant_cmd_repeat("You can't repeat alter self.");
         if (!enough_hp( you.hp_max / 2, true ))
         {
             mpr( "Your body is in too poor a condition "
@@ -1619,7 +1597,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_PORTAL:
-        crawl_state.cant_cmd_repeat("You can't repeat create portal.");
         if (portal() == -1)
             return (SPRET_ABORT);
         break;
@@ -1869,7 +1846,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_SWAP:
-        crawl_state.cant_cmd_repeat("You can't swap.");
         cast_swap(powc);
         break;
 
@@ -1878,8 +1854,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             return (SPRET_ABORT);
         break;
 
-    case SPELL_PORTAL_PROJECTILE:
-        if ( !cast_portal_projectile(powc, beam) )
+    case SPELL_PORTALED_PROJECTILE:
+        if ( !cast_portaled_projectile(powc, beam) )
             return SPRET_ABORT;
         break;
 
@@ -2566,8 +2542,7 @@ static void miscast_divination(int severity, const char* cause)
         case 0:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life!");
-            else if (lose_stat(STAT_INTELLIGENCE, 1 + random2(3),
-                               false, cause))
+            else if (lose_stat(STAT_INTELLIGENCE, 1 + random2(3)))
                 mpr("You have damaged your brain!");
             else
                 mpr("You have a terrible headache.");
@@ -2595,8 +2570,7 @@ static void miscast_divination(int severity, const char* cause)
         case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
-            else if (lose_stat(STAT_INTELLIGENCE, 3 + random2(3),
-                               false, cause))
+            else if (lose_stat(STAT_INTELLIGENCE, 3 + random2(3)))
                 mpr("You have damaged your brain!");
             else
                 mpr("You have a terrible headache.");
@@ -2751,7 +2725,7 @@ static void miscast_necromancy(int severity, const char* cause)
             }               // otherwise it just flows through...
 
         case 2:
-            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2), false, cause);
+            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
             break;
 
         case 3:
@@ -3446,7 +3420,7 @@ static void miscast_poison(int severity, const char* cause)
             if (player_res_poison())
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
-                lose_stat(STAT_RANDOM, 1, false, cause);
+                lose_stat(STAT_RANDOM, 1);
             break;
         }
         break;
@@ -3473,7 +3447,7 @@ static void miscast_poison(int severity, const char* cause)
             if (player_res_poison())
                 canned_msg(MSG_NOTHING_HAPPENS);               
             else
-                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2), false, cause);
+                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         }
         break;
@@ -3499,9 +3473,6 @@ void miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
     }
-
-    if (cause == NULL || strlen(cause) == 0)
-        cause = "spell miscasting";
 
     sever /= 100;
 

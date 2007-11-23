@@ -37,7 +37,6 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
-#include "xom.h"
 
 
 // XXX: name strings in most of the following are currently unused!
@@ -446,26 +445,6 @@ bool item_known_uncursed( const item_def &item )
 
 void do_curse_item( item_def &item )
 {
-    // Xom is amused by the player's items being cursed, especially
-    // if they're worn/equipped.
-    if (!(item.flags & ISFLAG_CURSED) && item.x == -1 && item.y == -1)
-    {
-        int amusement = 64;
-
-        if (item_is_equipped(item))
-        {
-            amusement *= 2;
-
-            // Cursed cloaks prevent you from removing body armour
-            if (item.base_type == OBJ_ARMOUR
-                && get_armour_slot(item) == EQ_CLOAK)
-            {
-                amusement *= 2;
-            }
-        }
-        xom_is_stimulated(amusement);
-    }
-
     item.flags |= ISFLAG_CURSED;
 }
 
@@ -552,7 +531,6 @@ unsigned long full_ident_mask( const item_def& item )
     switch ( item.base_type )
     {
     case OBJ_FOOD:
-    case OBJ_CORPSES:
         flagset = 0;
         break;
     case OBJ_MISCELLANY:
@@ -1095,22 +1073,6 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 return (false);
             }
 
-            if (you.mutation[MUT_TALONS])
-            {
-                if (!quiet)
-                    mpr("Boots don't fit your talons!");
-
-                return (false);
-            }
-
-            if (you.mutation[MUT_PAWS])
-            {
-                if (!quiet)
-                    mpr("Boots don't fit your paws!");
-
-                return (false);
-            }
-            
             switch (you.species)
             {
             case SP_NAGA:
@@ -1133,6 +1095,16 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 }
                 break;
 
+            case SP_KENKU:
+                if (!quiet)
+                {
+                    if (item.sub_type == ARM_BOOTS)
+                        mpr( "Boots don't fit your feet!" );
+                    else
+                        mpr( "You can't wear barding!" );
+                }
+                return (false);
+
             case SP_MERFOLK:
                 if (player_in_water() && item.sub_type == ARM_BOOTS)
                 {
@@ -1148,6 +1120,14 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 {
                     if (!quiet)
                         mpr( "You can't wear barding!" );
+
+                    return (false);
+                }
+
+                if (you.mutation[MUT_HOOVES])
+                {
+                    if (!quiet)
+                        mpr( "You can't wear boots with hooves!" );
 
                     return (false);
                 }
@@ -1179,7 +1159,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_GLOVES:
-            if (you.has_claws(false) >= 3)
+            if (you.mutation[MUT_CLAWS] >= 3)
             {
                 if (!quiet)
                     mpr( "You can't wear gloves with your huge claws!" );
@@ -2004,7 +1984,7 @@ bool gives_ability( const item_def &item )
        }
        case OBJ_JEWELLERY:
        {
-          if ( !jewellery_is_amulet(item))
+          if (item.sub_type < NUM_RINGS)
           {
               // unworn ring
               item_def *lring = you.slot_item(EQ_LEFT_RING);
@@ -2056,8 +2036,8 @@ bool gives_ability( const item_def &item )
     // check for evokable randart properties
     for (int rap = RAP_INVISIBLE; rap <= RAP_MAPPING; rap++)
     {
-        if (randart_wpn_property( item, static_cast<randart_prop_type>(rap) ))
-            return true;
+       if (randart_wpn_property( item, rap ))
+           return true;
     }
        
     return false;
@@ -2157,11 +2137,11 @@ bool gives_resistance( const item_def &item )
     // check for randart resistances
     for (int rap = RAP_FIRE; rap <= RAP_CAN_TELEPORT; rap++)
     {
-        if (rap == RAP_MAGIC || rap >= RAP_INVISIBLE && rap != RAP_CAN_TELEPORT)
-            continue;
-        
-        if (randart_wpn_property( item, static_cast<randart_prop_type>(rap) ))
-            return true;
+       if (rap == RAP_MAGIC || rap >= RAP_INVISIBLE && rap != RAP_CAN_TELEPORT)
+           continue;
+           
+       if (randart_wpn_property( item, rap ))
+           return true;
     }
 
     return false;

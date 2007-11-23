@@ -116,8 +116,6 @@ enum mons_class_flags
 
     M_ARCHER            = (1<<23),        // gets various archery boosts
 
-    M_WALL_SHIELDED     = (1<<24),        // Shielded from attacks if in wall
-
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
 
     M_NO_SKELETON       = (1<<29),        // boneless corpses
@@ -245,23 +243,6 @@ struct mon_attack_def
     }
 };
 
-// Amount of monster->speed_increment used by different actions; defaults
-// to 10.
-struct mon_energy_usage
-{
-    char move;
-    char swim;
-    char attack;
-    char missile; // Arrows/crossbows/etc
-    char spell;
-    char special;
-    char item;    // Using an item (i.e., drinking a potion)
-
-    // Percent of monster->speed used when picking up an item; defaults
-    // to 100%
-    char pickup_percent; 
-};
-
 struct monsterentry
 {
     short mc;            // monster number
@@ -297,16 +278,17 @@ struct monsterentry
     // hp will be around 135 each time.
     unsigned       hpdice[4];
 
-    char AC;  // armour class
-    char ev; // evasion
+    char AC;             // armour class
+
+    char ev;             // evasion
+
+    char speed, speed_inc;        // duh!
+
     mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;
     zombie_size_type zombie_size;
     shout_type shouts;
     mon_intel_type intel;
-
-    char             speed;        // How quickly speed_increment increases
-    mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
     size_type size;
 };
@@ -599,8 +581,6 @@ bool mons_looks_distracted(const monsters *m);
 bool check_mons_resist_magic( const monsters *monster, int pow );
 
 bool mons_class_is_stationary(int monsclass);
-bool mons_class_is_confusable(int monsclass);
-bool mons_class_is_slowable(int monsclass);
 bool mons_is_stationary(const monsters *mons);
 bool mons_is_insubstantial(int type);
 bool mons_is_submerged( const monsters *mon );
@@ -653,7 +633,5 @@ mon_body_shape get_mon_shape(const int type);
 std::string get_mon_shape_str(const monsters *mon);
 std::string get_mon_shape_str(const int type);
 std::string get_mon_shape_str(const mon_body_shape shape);
-
-bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid);
 
 #endif

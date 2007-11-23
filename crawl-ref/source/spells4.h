@@ -20,8 +20,8 @@ struct bolt;
 
 std::string your_hand(bool plural);
 bool backlight_monsters(int x, int y, int pow, int garbage);
-int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
-                        cloud_type ctype, kill_category);
+int make_a_normal_cloud(int x, int y, int pow, cloud_type ctype,
+                        kill_category);
 int disperse_monsters(int x, int y, int pow, int message);
 
 void cast_bend(int pow);
@@ -62,6 +62,6 @@ void cast_shuggoth_seed(int powc);
 void make_shuggoth(int x, int y, int hp);
 
 int cast_semi_controlled_blink(int pow);
-bool cast_portal_projectile(int pow, bolt& beam);
+bool cast_portaled_projectile(int pow, bolt& beam);
 
 #endif

@@ -78,7 +78,6 @@
 #include "mtransit.h"
 #include "notes.h"
 #include "output.h"
-#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "randart.h"
@@ -91,7 +90,6 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "xom.h"
 
 void save_level(int level_saved, level_area_type lt,
                 branch_type where_were_you);
@@ -866,36 +864,6 @@ static void grab_followers()
     }
 }
 
-// Should be called after grab_followers(), so that items carried by
-// followers won't be considered lost.
-static void do_lost_items(level_area_type old_level_type)
-{
-    if (old_level_type == LEVEL_DUNGEON)
-        return;
-    
-    for (int i = 0; i < MAX_ITEMS; i++)
-    {
-        item_def& item(mitm[i]);
-
-        if (!is_valid_item(item))
-            continue;
-
-        // Item is in player intentory, so it's not lost.
-        if (item.x == -1 && item.y == -1)
-            continue;
-
-        item_was_lost(item);
-    }
-
-    // Clear flags on the followers that didn't make it.
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monsters *mons = &menv[i];
-        if (!mons->alive())
-            continue;
-        mons->flags &= ~MF_TAKING_STAIRS;
-    }
-}
 
 bool load( dungeon_feature_type stair_taken, int load_mode,
            level_area_type old_level_type, char old_level,
@@ -925,8 +893,7 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         }
     }
 
-    you.prev_targ      = MHITNOT;
-    you.prev_grd_targ = coord_def(0, 0);
+    you.prev_targ = MHITNOT;
 
     // We clear twice - on save and on load.
     // Once would be enough...
@@ -945,15 +912,12 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
             save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
     }
 
-    do_lost_items(old_level_type);
-
     // Try to open level savefile.
     FILE *levelFile = fopen(cha_fil.c_str(), "rb");
 
     // GENERATE new level when the file can't be opened:
     if (levelFile == NULL)
     {
-        env.turns_on_level = -1;
         builder( you.your_level, you.level_type );
         just_created_level = true;
 
@@ -1080,19 +1044,6 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
 
     setup_environment_effects();
 
-    // Inform user of level's annotation.
-    if (get_level_annotation().length() > 0
-        && !crawl_state.level_annotation_shown)
-    {
-        char buf[200];
-
-        sprintf(buf, "Level annotation: %s\n",
-                get_level_annotation().c_str() );
-        mpr(buf, MSGCH_PLAIN, YELLOW);
-    }
-
-    crawl_state.level_annotation_shown = false;
-
     if (load_mode != LOAD_RESTART_GAME)
     {
         // Update PlaceInfo entries
@@ -1115,11 +1066,6 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         curr_PlaceInfo.assert_validity();
     }
 
-    if (just_created_level)
-        you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
-
-    dungeon_events.fire_event(DET_ENTERED_LEVEL);
-
     return just_created_level;
 }                               // end load()
 
@@ -1130,8 +1076,7 @@ void save_level(int level_saved, level_area_type old_ltype,
                                          where_were_you, old_ltype,
                                          false );
 
-    you.prev_targ      = MHITNOT;
-    you.prev_grd_targ = coord_def(0, 0);
+    you.prev_targ = MHITNOT;
 
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");
 

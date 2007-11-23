@@ -161,24 +161,14 @@ map_lua_marker::map_lua_marker()
 {
 }
 
-map_lua_marker::map_lua_marker(const std::string &s, const std::string &,
-                               bool mapdef_marker)
+map_lua_marker::map_lua_marker(const std::string &s, const std::string &)
     : map_marker(MAT_LUA_MARKER, coord_def()), initialised(false)
 {
     lua_stack_cleaner clean(dlua);
-    if (mapdef_marker)
-    {
-        if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
-            mprf(MSGCH_WARN, "lua_marker load error: %s", dlua.error.c_str());
-        if (!dlua.callfn("dgn_run_map", 1, 1))
-            mprf(MSGCH_WARN, "lua_marker exec error: %s", dlua.error.c_str());
-    }
-    else
-    {
-        if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
-            mprf(MSGCH_WARN, "lua_marker_mapless exec error: %s",
-                 dlua.error.c_str());
-    }
+    if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
+        mprf(MSGCH_WARN, "lua_marker load error: %s", dlua.error.c_str());
+    if (!dlua.callfn("dgn_run_map", 1, 1))
+        mprf(MSGCH_WARN, "lua_marker exec error: %s", dlua.error.c_str());
     check_register_table();
 }
 
@@ -379,20 +369,11 @@ std::string map_lua_marker::property(const std::string &pname) const
 map_marker *map_lua_marker::parse(
     const std::string &s, const std::string &ctx) throw (std::string)
 {
-    std::string raw           = s;
-    bool        mapdef_marker = true;
-
-    if (s.find("lua:") == 0)
-        strip_tag(raw, "lua:", true);
-    else if (s.find("lua_mapless:") == 0)
-    {
-        strip_tag(raw, "lua_mapless:", true);
-        mapdef_marker = false;
-    }
-    else
+    if (s.find("lua:") != 0)
         return (NULL);
-
-    map_lua_marker *mark = new map_lua_marker(raw, ctx, mapdef_marker);
+    std::string raw = s;
+    strip_tag(raw, "lua:", true);
+    map_lua_marker *mark = new map_lua_marker(raw, ctx);
     if (!mark->initialised)
     {
         delete mark;
@@ -664,24 +645,6 @@ std::vector<map_marker*> map_markers::get_all(map_marker_type mat)
         if (mat == MAT_ANY || i->second->get_type() == mat)
             rmarkers.push_back(i->second);
     }
-    return (rmarkers);    
-}
-
-std::vector<map_marker*> map_markers::get_all(const std::string &key,
-                                              const std::string &val)
-{
-    std::vector<map_marker*> rmarkers;
-
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
-    {
-        map_marker*       marker = i->second;
-        const std::string prop   = marker->property(key);
-
-        if ((val == "" && !prop.empty()) || (val != "" && val == prop))
-            rmarkers.push_back(marker);
-    }
-
     return (rmarkers);    
 }
 

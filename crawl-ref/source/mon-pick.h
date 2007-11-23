@@ -27,7 +27,6 @@ int mons_rarity(int mcls, const level_id &place = level_id::current());
  * *********************************************************************** */
 int mons_level(int mcls, const level_id &place = level_id::current());
 
-int mons_global_level(int mcls);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

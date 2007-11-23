@@ -152,63 +152,6 @@ datum database_fetch(DBM *database, const std::string &key)
     return result;
 }
 
-std::vector<std::string> database_find_keys(DBM *database,
-                                            const std::string &regex,
-                                            bool ignore_case,
-                                            db_find_filter filter)
-{
-    text_pattern             tpat(regex, ignore_case);
-    std::vector<std::string> matches;
-
-    datum dbKey = dbm_firstkey(database);
-
-    while (dbKey.dptr != NULL)
-    {
-        std::string key((const char *)dbKey.dptr, dbKey.dsize);
-
-        if (tpat.matches(key) &&
-            key.find("__") == std::string::npos
-            && (filter == NULL || !(*filter)(key, "")))
-        {
-            matches.push_back(key);
-        }
-
-        dbKey = dbm_nextkey(database);
-    }
-
-    return (matches);
-}
-
-std::vector<std::string> database_find_bodies(DBM *database,
-                                              const std::string &regex,
-                                              bool ignore_case,
-                                              db_find_filter filter)
-{
-    text_pattern             tpat(regex, ignore_case);
-    std::vector<std::string> matches;
-
-    datum dbKey = dbm_firstkey(database);
-
-    while (dbKey.dptr != NULL)
-    {
-        std::string key((const char *)dbKey.dptr, dbKey.dsize);
-
-        datum dbBody = dbm_fetch(database, dbKey);
-        std::string body((const char *)dbBody.dptr, dbBody.dsize);
-
-        if (tpat.matches(body) &&
-            key.find("__") == std::string::npos
-            && (filter == NULL || !(*filter)(key, body)))
-        {
-            matches.push_back(key);
-        }
-
-        dbKey = dbm_nextkey(database);
-    }
-
-    return (matches);
-}
-
 ///////////////////////////////////////////////////////////////////////////
 // Internal DB utility functions
 static void trim_right(std::string &s)
@@ -458,30 +401,6 @@ std::string getLongDescription(const std::string &key)
     
     // Cons up a (C++) string to return.  The caller must release it.
     return std::string((const char *)result.dptr, result.dsize);
-}
-
-std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
-                                                db_find_filter filter)
-{
-    if (!descriptionDB)
-    {
-        std::vector<std::string> empty;
-        return (empty);
-    }
-
-    return database_find_keys(descriptionDB, regex, true, filter);
-}
-
-std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
-                                                  db_find_filter filter)
-{
-    if (!descriptionDB)
-    {
-        std::vector<std::string> empty;
-        return (empty);
-    }
-
-    return database_find_bodies(descriptionDB, regex, true, filter);
 }
 
 static std::vector<std::string> description_txt_paths()

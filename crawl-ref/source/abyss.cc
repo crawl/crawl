@@ -33,7 +33,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
-#include "xom.h"
 
 static bool place_feature_near( const coord_def &centre,
                                 int radius,
@@ -70,10 +69,6 @@ void generate_abyss(void)
     int i, j;                   // loop variables
     int temp_rand;              // probability determination {dlb}
 
-#if DEBUG_ABYSS
-    mpr("generate_abyss().", MSGCH_DIAGNOSTICS);
-#endif
-
     for (i = 5; i < (GXM - 5); i++)
     {
         for (j = 5; j < (GYM - 5); j++)
@@ -96,10 +91,6 @@ void generate_abyss(void)
 
 static void generate_area(int gx1, int gy1, int gx2, int gy2)
 {
-#if DEBUG_ABYSS
-    mpr("generate_area().", MSGCH_DIAGNOSTICS);
-#endif
-
     int items_placed = 0;
     const int thickness = random2(70) + 30;
     int thing_created;
@@ -165,9 +156,6 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                     {
                         thing_created = items(1, OBJ_MISCELLANY, 
                                               MISC_RUNE_OF_ZOT, true, 51, 51);
-#if DEBUG_ABYSS
-                        mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
-#endif
                     }
                     else
                     {
@@ -184,9 +172,6 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
         }
     }
 
-    int exits_wanted  = 0;
-    int altars_wanted = 0;
-
     for (int i = gx1; i <= gx2; i++)
     {
         for (int j = gy1; j <= gy2; j++)
@@ -195,23 +180,9 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                 grd[i][j] = replaced[random2(5)];
 
             if (one_chance_in(7500)) // place an exit
-                exits_wanted++;
-
-            // Don't place exit under items
-            if (exits_wanted > 0 && igrd[i][j] == NON_ITEM)
-            {
                 grd[i][j] = DNGN_EXIT_ABYSS;
-                exits_wanted--;
-#if DEBUG_ABYSS
-                mpr("Placing Abyss exit.", MSGCH_DIAGNOSTICS);
-#endif
-            }
 
             if (one_chance_in(10000)) // place an altar
-                altars_wanted++;
-
-            // Don't place altars under items.
-            if (altars_wanted > 0 && igrd[i][j] == NON_ITEM)
             {
                 do
                 {
@@ -226,106 +197,8 @@ static void generate_area(int gx1, int gy1, int gx2, int gy2)
                 // Lugonu has a flat 50% chance of corrupting the altar
                 if ( coinflip() )
                     grd[i][j] = DNGN_ALTAR_LUGONU;
-
-                altars_wanted--;
-#if DEBUG_ABYSS
-                mpr("Placing altar.", MSGCH_DIAGNOSTICS);
-#endif
             }
         }
-    }
-}
-
-static int abyss_exit_nearness()
-{
-    int nearness = INFINITE_DISTANCE;
-
-    for (int x = you.x_pos - LOS_RADIUS; x < you.x_pos + LOS_RADIUS; x++)
-        for (int y = you.y_pos - LOS_RADIUS; y < you.y_pos + LOS_RADIUS; y++)
-        {
-            if (!in_bounds(x, y))
-                continue;
-
-            // HACK: Why doesn't is_terrain_known() work here?
-            if (grd[x][y] == DNGN_EXIT_ABYSS
-                && get_screen_glyph(x, y) != ' ')
-            {
-                nearness = MIN(nearness,
-                               grid_distance(you.x_pos, you.y_pos,
-                                             x, y));
-            }
-        }
-
-    return (nearness);
-}
-
-static int abyss_rune_nearness()
-{
-    int nearness = INFINITE_DISTANCE;
-
-    for (int x = you.x_pos - LOS_RADIUS; x < you.x_pos + LOS_RADIUS; x++)
-        for (int y = you.y_pos - LOS_RADIUS; y < you.y_pos + LOS_RADIUS; y++)
-        {
-            if (!in_bounds(x, y))
-                continue;
-
-            // HACK: Why doesn't is_terrain_known() work here?
-            if (get_screen_glyph(x, y) != ' ')
-            {
-                int i = igrd[x][y];
-
-                while (i != NON_ITEM)
-                {
-                    item_def& item(mitm[i]);
-                    if (is_rune(item) && item.plus == RUNE_ABYSSAL)
-                        nearness = MIN(nearness,
-                                       grid_distance(you.x_pos, you.y_pos,
-                                                     x, y));
-                    i = item.link;
-                }
-            }
-        }
-
-    return (nearness);
-}
-
-static int exit_was_near;
-static int rune_was_near;
-
-static void xom_check_nearness_setup()
-{
-    exit_was_near = abyss_exit_nearness();
-    rune_was_near = abyss_rune_nearness();
-}
-
-// If the player was almost to the exit when it disppeared, Xom is
-// extremely amused.  He's also extremely amused if the player winds
-// up right next to an exit when there wasn't one there before.  The
-// same applies to Abyssal runes.
-static void xom_check_nearness()
-{
-    // Update known terrain
-    viewwindow(true, false);
-
-    int exit_is_near = abyss_exit_nearness();
-    int rune_is_near = abyss_rune_nearness();
-
-    if ((exit_was_near   <  INFINITE_DISTANCE
-         && exit_is_near == INFINITE_DISTANCE)
-        || (rune_was_near < INFINITE_DISTANCE
-            && rune_is_near == INFINITE_DISTANCE
-            && you.attribute[ATTR_ABYSSAL_RUNES] == 0))
-    {
-        xom_is_stimulated(255, "Xom snickers loudly.", true);
-    }
-
-    if ((rune_was_near   == INFINITE_DISTANCE
-         && rune_is_near <  INFINITE_DISTANCE
-         && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
-        || (exit_was_near == INFINITE_DISTANCE &&
-            exit_is_near  <  INFINITE_DISTANCE))
-    {
-        xom_is_stimulated(255);
     }
 }
 
@@ -340,12 +213,6 @@ static void abyss_lose_monster(monsters &mons)
 void area_shift(void)
 /*******************/
 {
-#if DEBUG_ABYSS
-    mpr("area_shift().", MSGCH_DIAGNOSTICS);
-#endif
-
-    xom_check_nearness_setup();
-
     for (unsigned int i = 0; i < MAX_MONSTERS; i++)
     {
         monsters &m = menv[i];
@@ -370,7 +237,7 @@ void area_shift(void)
             grd[i][j] = DNGN_UNSEEN;
 
             // nuke items
-            lose_item_stack( i, j );
+            destroy_item_stack( i, j );
 
             if (mgrd[i][j] != NON_MONSTER)
                 abyss_lose_monster( menv[ mgrd[i][j] ] );
@@ -429,8 +296,6 @@ void area_shift(void)
 
     generate_area(5, 5, (GXM - 5), (GYM - 5));
 
-    xom_check_nearness();
-
     for (unsigned int mcount = 0; mcount < 15; mcount++)
     {
         mons_place( RANDOM_MONSTER, BEH_HOSTILE, MHITNOT, false, 1, 1, 
@@ -454,8 +319,6 @@ void save_abyss_uniques()
 void abyss_teleport( bool new_area )
 /**********************************/
 {
-    xom_check_nearness_setup();
-
     int x, y, i, j, k;
 
     if (!new_area)
@@ -477,18 +340,10 @@ void abyss_teleport( bool new_area )
 
         if (i < 100)
         {
-#if DEBUG_ABYSS
-            mpr("Non-new area Abyss teleport.", MSGCH_DIAGNOSTICS);
-#endif
             you.moveto(x, y);
-            xom_check_nearness();
             return;
         }
     }
-
-#if DEBUG_ABYSS
-    mpr("New area Abyss teleport.", MSGCH_DIAGNOSTICS);
-#endif
 
     // teleport to a new area of the abyss:
 
@@ -506,7 +361,17 @@ void abyss_teleport( bool new_area )
     {
         if (is_valid_item( mitm[k] ))
         {
-            item_was_lost( mitm[k] );
+            if (mitm[k].base_type == OBJ_ORBS)
+            {
+                set_unique_item_status( OBJ_ORBS, mitm[k].sub_type, 
+                                        UNIQ_LOST_IN_ABYSS );
+            }
+            else if (is_fixed_artefact( mitm[k] ))
+            {
+                set_unique_item_status( OBJ_WEAPONS, mitm[k].special, 
+                                        UNIQ_LOST_IN_ABYSS );
+            }
+
             destroy_item( k );
         }
     }
@@ -530,8 +395,6 @@ void abyss_teleport( bool new_area )
     you.moveto(45, 35);
 
     generate_area( 10, 10, (GXM - 10), (GYM - 10) );
-
-    xom_check_nearness();
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     if ( one_chance_in(5) )

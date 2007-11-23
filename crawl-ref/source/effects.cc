@@ -20,7 +20,6 @@
 #include "externs.h"
 
 #include "beam.h"
-#include "decks.h"
 #include "direct.h"
 #include "food.h"
 #include "hiscores.h"
@@ -41,17 +40,16 @@
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills2.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
-#include "xom.h"
 
 // torment_monsters is called with power 0 because torment is
 // UNRESISTABLE except for being undead or having torment
@@ -155,129 +153,19 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
                        "escaped from the Abyss!" + who_banished(who));
 #endif
 
-    std::string cast_into = "";
-
-    switch(gate_type)
+    if (gate_type == DNGN_ENTER_ABYSS)
     {
-    case DNGN_ENTER_ABYSS:
-        if (you.level_type == LEVEL_ABYSS)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "the Abyss";
-        break;
-
-    case DNGN_EXIT_ABYSS:
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_PANDEMONIUM:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "Pandemonium";
-        break;
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            banished(DNGN_ENTER_PANDEMONIUM, who);
-            return;
-        }
-        break;
-
-    case DNGN_EXIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_LABYRINTH:
-        if (you.level_type == LEVEL_LABYRINTH)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "a Labyrinth";
-        break;
-
-    case DNGN_ENTER_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS: 
-        if (player_in_hell() || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        cast_into = "Hell";
-        break;
-
-    default:
-        mprf(MSGCH_DIAGNOSTICS, "Invalid banished() gateway %d",
-             static_cast<int>(gate_type));
-        ASSERT(false);
-    }
-
-    // Now figure out how we got here.
-    if (crawl_state.is_god_acting())
-    {
-        // down_stairs() will take care of setting things.
-        you.entry_cause = EC_UNKNOWN;
-    }
-    else if (who.find("self") != std::string::npos || who == you.your_name
-             || who == "you" || who == "You")
-    {
-        you.entry_cause = EC_SELF_EXPLICIT;
-    }
-    else if (who.find("distortion") != std::string::npos)
-    {
-        if (who.find("wield") != std::string::npos)
-        {
-            if (who.find("unknowing") != std::string::npos)
-                you.entry_cause = EC_SELF_ACCIDENT;
-            else
-                you.entry_cause = EC_SELF_RISKY;
-        }
-        else if (who.find("affixation") != std::string::npos)
-            you.entry_cause = EC_SELF_ACCIDENT;
-        else if (who.find("branding")  != std::string::npos)
-            you.entry_cause = EC_SELF_RISKY;
-        else
-            you.entry_cause = EC_MONSTER;
-    }
-    else if (who == "drawing a card")
-        you.entry_cause = EC_SELF_RISKY;
-    else if (who.find("miscast") != std::string::npos)
-        you.entry_cause = EC_MISCAST;
-    else if (who == "wizard command")
-        you.entry_cause = EC_SELF_EXPLICIT;
-    else
-        you.entry_cause = EC_MONSTER;
-
-    if (!crawl_state.is_god_acting())
-        you.entry_cause_god = GOD_NO_GOD;
-
-    if (cast_into != "" && you.entry_cause != EC_SELF_EXPLICIT)
-    {
-        const std::string what = "Cast into " + cast_into + who_banished(who);
-        take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
+        const std::string what = "Cast into the Abyss" + who_banished(who);
+        take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
     }
 
     // no longer held in net
     clear_trapping_net();
+    
+    down_stairs(you.your_level, gate_type);  // heh heh
 
-    down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh
+    if (gate_type == DNGN_ENTER_ABYSS || gate_type == DNGN_ENTER_PANDEMONIUM)
+        xom_is_stimulated(255);
 }
 
 bool forget_spell(void)
@@ -310,15 +198,12 @@ bool forget_spell(void)
 // use player::decrease_stats() instead iff:
 // (a) player_sust_abil() should not factor in; and
 // (b) there is no floor to the final stat values {dlb}
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
-               const char *cause, bool see_source)
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
 {
     bool statLowered = false;   // must initialize to false {dlb}
     char *ptr_stat = NULL;
     bool *ptr_redraw = NULL;
     char newValue = 0;          // holds new value, for comparison to old {dlb}
-
-    kill_method_type kill_type = NUM_KILLBY;
 
     // begin outputing message: {dlb}
     std::string msg = "You feel ";
@@ -330,24 +215,21 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     switch (which_stat)
     {
     case STAT_STRENGTH:
-        msg       += "weakened";
-        ptr_stat   = &you.strength;
+        msg += "weakened";
+        ptr_stat = &you.strength;
         ptr_redraw = &you.redraw_strength;
-        kill_type  = KILLED_BY_WEAKNESS;
         break;
 
     case STAT_DEXTERITY:
-        msg       += "clumsy";
-        ptr_stat   = &you.dex;
+        msg += "clumsy";
+        ptr_stat = &you.dex;
         ptr_redraw = &you.redraw_dexterity;
-        kill_type  = KILLED_BY_CLUMSINESS;
         break;
 
     case STAT_INTELLIGENCE:
-        msg       += "dopey";
-        ptr_stat   = &you.intel;
+        msg += "dopey";
+        ptr_stat = &you.intel;
         ptr_redraw = &you.redraw_intelligence;
-        kill_type  = KILLED_BY_STUPIDITY;
         break;
     }
 
@@ -358,6 +240,10 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
 
     // newValue is current value less modifier: {dlb}
     newValue = *ptr_stat - stat_loss;
+
+    // XXX: Death by stat loss is currently handled in the redraw code. -- bwr
+    if (newValue < 0)
+        newValue = 0;
 
     // conceivable that stat was already *at* three
     // or stat_loss zeroed by player_sust_abil(): {dlb}
@@ -387,84 +273,12 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     msg += ".";
     mpr(msg.c_str());
 
-    if (newValue < 1)
-    {
-        if (cause == NULL)
-            ouch(INSTANT_DEATH, 0, kill_type);
-        else
-            ouch(INSTANT_DEATH, 0, kill_type, cause, see_source);
-    }
-
-
     return (statLowered);
 }                               // end lose_stat()
-
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
-               const std::string cause, bool see_source)
-{
-    return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
-}
-
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               const monsters* cause, bool force)
-{
-    if (cause == NULL || invalid_monster(cause))
-        return lose_stat(which_stat, stat_loss, force, NULL, true);
-
-    bool        vis  = mons_near(cause) && player_monster_visible(cause);
-    std::string name = cause->name(DESC_NOCAP_A, true);
-
-    if (cause->has_ench(ENCH_SHAPESHIFTER))
-        name += " (shapeshifter)";
-    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        name += " (glowing shapeshifter)";
-
-    return lose_stat(which_stat, stat_loss, force, name, vis);
-}
-
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               const item_def &cause, bool removed, bool force)
-{
-    std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
-                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    std::string verb;
-
-    switch(cause.base_type)
-    {
-    case OBJ_ARMOUR:
-    case OBJ_JEWELLERY:
-        if (removed)
-            verb = "removing";
-        else
-            verb = "wearing";
-        break;
-
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-        if (removed)
-            verb = "unwielding";
-        else
-            verb = "wielding";
-        break;
-
-    case OBJ_WANDS:   verb = "zapping";  break;
-    case OBJ_FOOD:    verb = "eating";   break;
-    case OBJ_SCROLLS: verb = "reading";  break;
-    case OBJ_POTIONS: verb = "drinking"; break;
-    default:          verb = "using";
-    }
-
-    return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
-}
 
 void direct_effect(struct bolt &pbolt)
 {
     int damage_taken = 0;
-
-    monsters* source = NULL;
-
-    if (pbolt.beam_source != NON_MONSTER)
-        source = &menv[pbolt.beam_source];
 
     switch (pbolt.type)
     {
@@ -494,8 +308,7 @@ void direct_effect(struct bolt &pbolt)
 
     case DMNBM_BRAIN_FEED:
         // lose_stat() must come last {dlb}
-        if (one_chance_in(3) &&
-            lose_stat(STAT_INTELLIGENCE, 1, source))
+        if (one_chance_in(3) && lose_stat(STAT_INTELLIGENCE, 1))
         {
             mpr("Something feeds on your intellect!");
             xom_is_stimulated(50);
@@ -861,8 +674,8 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         type_wanted = (coinflip()) ? OBJ_RANDOM : ARM_SHIELD + random2(5);
 
         // mutation specific problems (horns allow caps)
-        if (type_wanted == ARM_BOOTS && !player_has_feet()
-            || you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES)
+        if ((you.mutation[MUT_HOOVES] && type_wanted == ARM_BOOTS)
+            || (you.mutation[MUT_CLAWS] >= 3 && type_wanted == ARM_GLOVES))
         {
             type_wanted = OBJ_RANDOM;
         }
@@ -901,6 +714,11 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             {
                 type_wanted = ARM_ROBE;  // no heavy armour, see below
             }
+            break;
+
+        case SP_KENKU:
+            if (type_wanted == ARM_BOOTS)
+                type_wanted = OBJ_RANDOM;
             break;
 
         default:
@@ -1299,6 +1117,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
 bool acquirement(object_class_type class_wanted, int agent)
 {
     int thing_created = 0;
+    int unique = 1;
 
     while (class_wanted == OBJ_RANDOM)
     {
@@ -1328,14 +1147,12 @@ bool acquirement(object_class_type class_wanted, int agent)
         if (!silenced(you.pos()))
             mprf(MSGCH_SOUND, 
                  grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
-
-        item_was_destroyed(mitm[igrd[you.x_pos][you.y_pos]], NON_MONSTER);
     }
     else
     {
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
-            int unique = 1;
+            unique = 1;
             int type_wanted = find_acquirement_subtype(class_wanted, unique);
             
             // clobber class_wanted for vampires
@@ -1343,7 +1160,7 @@ bool acquirement(object_class_type class_wanted, int agent)
                 class_wanted = OBJ_POTIONS;
 
             // BCR - unique is now used for food quantity.
-            thing_created = items( 1, class_wanted, type_wanted, true, 
+            thing_created = items( unique, class_wanted, type_wanted, true, 
                                    MAKE_GOOD_ITEM, 250 );
 
             if (thing_created == NON_ITEM)
@@ -1451,7 +1268,6 @@ bool acquirement(object_class_type class_wanted, int agent)
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
-            case SP_VAMPIRE:
                 {
                     int brand = get_weapon_brand( thing );
                     if (brand == SPWPN_HOLY_WRATH 
@@ -1692,58 +1508,29 @@ bool recharge_wand(void)
     return (true);
 }                               // end recharge_wand()
 
-void yell(bool force)
+void yell(void)
 {
     bool targ_prev = false;
     int mons_targd = MHITNOT;
     struct dist targ;
 
+    if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
+    {
+        mpr("You are unable to make a sound!");
+        return;
+    }
+
     const std::string shout_verb = you.shout_verb();
     std::string cap_shout = shout_verb;
     cap_shout[0] = toupper(cap_shout[0]);
 
-    int noise_level = 12; // "shout"
+    int noise_level = 12;
 
     // Tweak volume for different kinds of vocalisation.
     if (shout_verb == "roar")
         noise_level = 18;
     else if (shout_verb == "hiss")
         noise_level = 8;
-    else if (shout_verb == "squeak")
-        noise_level = 4;
-    else if (shout_verb == "__NONE")
-        noise_level = 0;
-    else if (shout_verb == "yell")
-        noise_level = 14;
-    else if (shout_verb == "scream")
-        noise_level = 16;
-
-    if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
-        noise_level = 0;
-
-    if (noise_level == 0)
-    {
-        if (force)
-        {
-            if (shout_verb == "__NONE" || you.paralysed())
-                mprf("You feel a strong urge to %s, but you are unable to make a sound!",
-                     shout_verb == "__NONE" ? "scream" : shout_verb.c_str());
-            else
-                mprf("You feel a %s rip itself from your throat, but you make no sound!",
-                     shout_verb.c_str());
-        }
-        else
-            mpr("You are unable to make a sound!");
-
-        return;
-    }
-
-    if (force)
-    {
-        mprf("A %s rips itself from your throat!", shout_verb.c_str());
-        noisy( noise_level, you.x_pos, you.y_pos );
-        return;
-    }
 
     mpr("What do you say?", MSGCH_PROMPT);
     mprf(" ! - %s", cap_shout.c_str());
@@ -1826,55 +1613,3 @@ void yell(bool force)
     noisy( 10, you.x_pos, you.y_pos );
     mpr("Attack!");
 }                               // end yell()
-
-bool forget_inventory(bool quiet)
-{
-    int items_forgotten = 0;
-    
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        item_def& item(you.inv[i]);
-        if (!is_valid_item(item) || item_is_equipped(item))
-            continue;
-
-        unsigned long orig_flags = item.flags;
-
-        unset_ident_flags(item, ISFLAG_KNOW_CURSE);
-
-        // Don't forget times used or uses left for wands or decks.
-        if (item.base_type != OBJ_WANDS && item.base_type != OBJ_MISCELLANY)
-            unset_ident_flags(item, ISFLAG_KNOW_PLUSES);
-
-        if (!is_artefact(item))
-        {
-            switch (item.base_type)
-            {
-            case OBJ_WEAPONS:
-            case OBJ_ARMOUR:
-            case OBJ_BOOKS:
-            case OBJ_STAVES:
-            case OBJ_MISCELLANY:
-                // Don't forget identity of decks if it the player has
-                // used any of its cards, or knows how many are left.
-                if (!is_deck(item) || item.plus2 == 0)
-                    unset_ident_flags(item, ISFLAG_KNOW_TYPE);
-                break;
-
-            default:
-                break;
-            }
-        }
-        // Non-jewellery artefacts can easily be re-identified by
-        // equipping them.
-        else if (item.base_type != OBJ_JEWELLERY)
-            unset_ident_flags(item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-
-        if (item.flags != orig_flags)
-            items_forgotten++;
-    }
-
-    if (items_forgotten > 0)
-        mpr("Wait, did you forget something?");
-
-    return (items_forgotten > 0);
-}

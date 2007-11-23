@@ -54,7 +54,7 @@
 #include "stuff.h"
 #include "spl-util.h"
 #include "tutorial.h"
-#include "xom.h"
+
 
 // ========================================================================
 //      Internal Functions
@@ -89,7 +89,7 @@ static void append_value( std::string & description, int valu, bool plussed )
 // word and such. The character $ is interpreted as a CR.
 //
 //---------------------------------------------------------------
-void print_description( const std::string &d )
+static void print_description( const std::string &d )
 {
     std::string::size_type nextLine = std::string::npos;
     unsigned int  currentPos = 0;
@@ -152,194 +152,174 @@ void print_description( const std::string &d )
     }
 }
 
-static std::string randart_descrip( const item_def &item )
+//---------------------------------------------------------------
+//
+// randart_descrip
+//
+// Appends the various powers of a random artefact to the description
+// string.
+//
+//---------------------------------------------------------------
+static void randart_descrip( std::string &description, const item_def &item )
 {
-#define known_proprt(prop) (proprt[(prop)] && known[(prop)])
-    std::string description;
+    unsigned int old_length = description.length();
 
-    randart_properties_t  proprt;
-    randart_known_props_t known;
-    randart_desc_properties( item, proprt, known );
+    randart_properties_t proprt;
+    randart_wpn_properties( item, proprt );
 
-    if (known_proprt( RAP_AC ))
+    if (proprt[ RAP_AC ])
     {
         description += "$It affects your AC (";
         append_value(description, proprt[ RAP_AC ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_EVASION ))
+    if (proprt[ RAP_EVASION ])
     {
         description += "$It affects your evasion (";
         append_value(description, proprt[ RAP_EVASION ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_STRENGTH ))
+    if (proprt[ RAP_STRENGTH ])
     {
         description += "$It affects your strength (";
         append_value(description, proprt[ RAP_STRENGTH ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_INTELLIGENCE ))
+    if (proprt[ RAP_INTELLIGENCE ])
     {
         description += "$It affects your intelligence (";
         append_value(description, proprt[ RAP_INTELLIGENCE ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_DEXTERITY ))
+    if (proprt[ RAP_DEXTERITY ])
     {
         description += "$It affects your dexterity (";
         append_value(description, proprt[ RAP_DEXTERITY ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_ACCURACY ))
+    if (proprt[ RAP_ACCURACY ])
     {
         description += "$It affects your accuracy (";
         append_value(description, proprt[ RAP_ACCURACY ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_DAMAGE ))
+    if (proprt[ RAP_DAMAGE ])
     {
         description += "$It affects your damage-dealing abilities (";
         append_value(description, proprt[ RAP_DAMAGE ], true);
         description += ").";
     }
 
-    if (known_proprt( RAP_FIRE ))
-    {
-        if (proprt[ RAP_FIRE ] < -2)
-            description += "$It makes you extremely vulnerable to fire. ";
-        else if (proprt[ RAP_FIRE ] == -2)
-            description += "$It makes you very vulnerable to fire. ";
-        else if (proprt[ RAP_FIRE ] == -1)
-            description += "$It makes you vulnerable to fire. ";
-        else if (proprt[ RAP_FIRE ] == 1)
-            description += "$It protects you from fire. ";
-        else if (proprt[ RAP_FIRE ] == 2)
-            description += "$It greatly protects you from fire. ";
-        else if (proprt[ RAP_FIRE ] > 2)
-            description += "$It renders you almost immune to fire. ";
-    }
+    if (proprt[ RAP_FIRE ] < -2)
+        description += "$It makes you extremely vulnerable to fire. ";
+    else if (proprt[ RAP_FIRE ] == -2)
+        description += "$It makes you very vulnerable to fire. ";
+    else if (proprt[ RAP_FIRE ] == -1)
+        description += "$It makes you vulnerable to fire. ";
+    else if (proprt[ RAP_FIRE ] == 1)
+        description += "$It protects you from fire. ";
+    else if (proprt[ RAP_FIRE ] == 2)
+        description += "$It greatly protects you from fire. ";
+    else if (proprt[ RAP_FIRE ] > 2)
+        description += "$It renders you almost immune to fire. ";
 
-    if (known_proprt( RAP_COLD ))
-    {
-        if (proprt[ RAP_COLD ] < -2)
-            description += "$It makes you extremely vulnerable to cold. ";
-        else if (proprt[ RAP_COLD ] == -2)
-            description += "$It makes you very vulnerable to cold. ";
-        else if (proprt[ RAP_COLD ] == -1)
-            description += "$It makes you vulnerable to cold. ";
-        else if (proprt[ RAP_COLD ] == 1)
-            description += "$It protects you from cold. ";
-        else if (proprt[ RAP_COLD ] == 2)
-            description += "$It greatly protects you from cold. ";
-        else if (proprt[ RAP_COLD ] > 2)
-            description += "$It renders you almost immune to cold. ";
-    }
+    if (proprt[ RAP_COLD ] < -2)
+        description += "$It makes you extremely vulnerable to cold. ";
+    else if (proprt[ RAP_COLD ] == -2)
+        description += "$It makes you very vulnerable to cold. ";
+    else if (proprt[ RAP_COLD ] == -1)
+        description += "$It makes you vulnerable to cold. ";
+    else if (proprt[ RAP_COLD ] == 1)
+        description += "$It protects you from cold. ";
+    else if (proprt[ RAP_COLD ] == 2)
+        description += "$It greatly protects you from cold. ";
+    else if (proprt[ RAP_COLD ] > 2)
+        description += "$It renders you almost immune to cold. ";
 
-    if (known_proprt( RAP_ELECTRICITY ))
+    if (proprt[ RAP_ELECTRICITY ])
         description += "$It insulates you from electricity. ";
 
-    if (known_proprt( RAP_POISON ))
+    if (proprt[ RAP_POISON ])
         description += "$It protects you from poison. ";
 
-    if (known_proprt( RAP_NEGATIVE_ENERGY ))
+    if (proprt[ RAP_NEGATIVE_ENERGY ] == 1)
+        description += "$It partially protects you from negative energy. ";
+    else if (proprt[ RAP_NEGATIVE_ENERGY ] == 2)
+        description += "$It protects you from negative energy. ";
+    else if (proprt[ RAP_NEGATIVE_ENERGY ] > 2)
+        description += "$It renders you almost immune to negative energy. ";
+
+    if (proprt[ RAP_MAGIC ])
+        description += "$It amplifies your intrinsic magic resistance. ";
+
+    if (proprt[ RAP_STEALTH ] < 0)
     {
-        if (proprt[ RAP_NEGATIVE_ENERGY ] == 1)
-            description += "$It partially protects you from negative energy. ";
-        else if (proprt[ RAP_NEGATIVE_ENERGY ] == 2)
-            description += "$It protects you from negative energy. ";
-        else if (proprt[ RAP_NEGATIVE_ENERGY ] > 2)
-            description += "$It renders you almost immune to "
-                "negative energy. ";
+        if (proprt[ RAP_STEALTH ] < -20)
+            description += "$It makes you much less stealthy. ";
+        else
+            description += "$It makes you less stealthy. ";
+    }
+    else if (proprt[ RAP_STEALTH ] > 0)
+    {
+        if (proprt[ RAP_STEALTH ] > 20)
+            description += "$It makes you much more stealthy. ";
+        else
+            description += "$It makes you more stealthy. ";
     }
 
-    if (known_proprt( RAP_MAGIC ))
-        description += "$It increases your resistance to enchantments. ";
-
-    if (known_proprt( RAP_STEALTH ))
-    {
-        if (proprt[ RAP_STEALTH ] < 0)
-        {
-            if (proprt[ RAP_STEALTH ] < -20)
-                description += "$It makes you much less stealthy. ";
-            else
-                description += "$It makes you less stealthy. ";
-        }
-        else if (proprt[ RAP_STEALTH ] > 0)
-        {
-            if (proprt[ RAP_STEALTH ] > 20)
-                description += "$It makes you much more stealthy. ";
-            else
-                description += "$It makes you more stealthy. ";
-        }
-    }
-
-    if (known_proprt( RAP_MAGICAL_POWER ))
-    {
-        description += "$It affects your mana capacity (";
-        append_value(description, proprt[ RAP_MAGICAL_POWER ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_EYESIGHT ))
+    if (proprt[ RAP_EYESIGHT ])
         description += "$It enhances your eyesight. ";
 
-    if (known_proprt( RAP_INVISIBLE ))
+    if (proprt[ RAP_INVISIBLE ])
         description += "$It lets you turn invisible. ";
 
-    if (known_proprt( RAP_LEVITATE ))
+    if (proprt[ RAP_LEVITATE ])
         description += "$It lets you levitate. ";
 
-    if (known_proprt( RAP_BLINK ))
+    if (proprt[ RAP_BLINK ])
         description += "$It lets you blink. ";
 
-    if (known_proprt( RAP_CAN_TELEPORT ))
+    if (proprt[ RAP_CAN_TELEPORT ])
         description += "$It lets you teleport. ";
 
-    if (known_proprt( RAP_BERSERK ))
+    if (proprt[ RAP_BERSERK ])
         description += "$It lets you go berserk. ";
 
-    if (known_proprt( RAP_MAPPING ))
+    if (proprt[ RAP_MAPPING ])
         description += "$It lets you sense your surroundings. ";
 
-    if (known_proprt( RAP_NOISES ))
+    if (proprt[ RAP_NOISES ])
         description += "$It makes noises. ";
 
-    if (known_proprt( RAP_PREVENT_SPELLCASTING ))
+    if (proprt[ RAP_PREVENT_SPELLCASTING ])
         description += "$It prevents spellcasting. ";
 
-    if (known_proprt( RAP_CAUSE_TELEPORTATION ))
+    if (proprt[ RAP_CAUSE_TELEPORTATION ])
         description += "$It causes teleportation. ";
 
-    if (known_proprt( RAP_PREVENT_TELEPORTATION ))
+    if (proprt[ RAP_PREVENT_TELEPORTATION ])
         description += "$It prevents most forms of teleportation. ";
 
-    if (known_proprt( RAP_ANGRY ))
+    if (proprt[ RAP_ANGRY ])
         description += "$It makes you angry. ";
 
-    if (known_proprt( RAP_METABOLISM ))
-    {
-        if (proprt[ RAP_METABOLISM ] >= 3)
-            description += "$It greatly speeds your metabolism. ";
-        else if (proprt[ RAP_METABOLISM ])
-            description += "$It speeds your metabolism. ";
-    }
+    if (proprt[ RAP_METABOLISM ] >= 3)
+        description += "$It greatly speeds your metabolism. ";
+    else if (proprt[ RAP_METABOLISM ])
+        description += "$It speeds your metabolism. ";
 
-    if (known_proprt( RAP_MUTAGENIC ))
-    {
-        if (proprt[ RAP_MUTAGENIC ] > 3)
-            description += "$It glows with mutagenic radiation. ";
-        else if (proprt[ RAP_MUTAGENIC ])
-            description += "$It emits mutagenic radiation. ";
-    }
+    if (proprt[ RAP_MUTAGENIC ] > 3)
+        description += "$It glows with mutagenic radiation.";
+    else if (proprt[ RAP_MUTAGENIC ])
+        description += "$It emits mutagenic radiation.";
 
-    if (!description.empty())
+    if (old_length != description.length())
         description += "$";
 
     if (is_unrandom_artefact( item ))
@@ -351,17 +331,13 @@ static std::string randart_descrip( const item_def &item )
             description += "$";
         }
     }
-
-    return description;
-#undef known_proprt
 }
 
 static const char *trap_names[] =
 {
     "dart", "arrow", "spear", "axe",
-    "teleport", "alarm", "blade",
+    "teleport", "amnesia", "blade",
     "bolt", "net", "zot", "needle",
-    "shaft"
 };
 
 const char *trap_name(trap_type trap)
@@ -381,9 +357,6 @@ int str_to_trap(const std::string &s)
         return (TRAP_RANDOM);
     else if (s == "suitable")
         return (TRAP_INDEPTH);
-    else if (s == "nonteleport" || s == "noteleport" || s == "nontele"
-             || s == "notele")
-        return (TRAP_NONTELEPORT);
 
     for (int i = 0; i < NUM_TRAPS; ++i)
     {
@@ -671,7 +644,7 @@ static std::string describe_demon(const monsters &mons)
         break;
     case 1:
         description += " It smells like rotting flesh";
-        if (you.mutation[MUT_SAPROVOROUS] == 3)
+        if (you.species == SP_GHOUL)
             description += " - yum!";
         else
             description += ".";
@@ -1180,8 +1153,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 }
                 else
                 {
-                    description += "It inflicts extra damage upon "
-                        "your enemies. ";
+                    description += "It inflicts extra damage upon your enemies. ";
                 }
                 break;
             case SPWPN_FLAME:
@@ -1208,25 +1180,29 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                     "extra damage on living creatures. ";
                 break;
             case SPWPN_DISTORTION:
-                description += "It warps and distorts space around it. "
-                    "Merely wielding or unwielding it can be highly risky. ";
+                description += "It warps and distorts space around it. ";
                 break;
             case SPWPN_REACHING:
                 description += "It can be evoked to extend its reach. ";
                 break;
             case SPWPN_RETURNING:
-                description += "A skilled user can throw it in such a way "
-                    "that it will return to its owner. ";
+                description += "It is enchanted to return to its owner "
+                               "when thrown.";
                 break;
             }
         }
 
         if (is_random_artefact( item ))
         {
-            description += randart_descrip( item );
+            if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+            {
+                unsigned int old_length = description.length();
+                randart_descrip( description, item );
 
-            if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
-                && item_type_known(item))
+                if (description.length() == old_length)
+                    description += "$";
+            }
+            else if (item_type_known(item))
             {
                 description += "$This weapon may have some hidden properties.$";
             }
@@ -1244,16 +1220,18 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
     if (verbose && !is_range_weapon(item))
     {
-        const int str_weight = weapon_str_weight(item.base_type, item.sub_type);
+#ifdef USE_NEW_COMBAT_STATS
+        const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
 
         if (str_weight >= 8)
-            description += "$This weapon is best used by the strong.$";
+            description += "$This weapon is best used by the strong.";
         else if (str_weight > 5)
-            description += "$This weapon is better for the strong.$";
+            description += "$This weapon is better for the strong.";
         else if (str_weight <= 2)
-            description += "$This weapon is best used by the dexterous.$";
+            description += "$This weapon is best used by the dexterous.";
         else if (str_weight < 5)
-            description += "$This weapon is better for the dexterous.$";
+            description += "$This weapon is better for the dexterous.";
+#endif
         description += "$";
 
         switch (hands_reqd(item, player_size()))
@@ -1269,7 +1247,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             description += "It is a two handed weapon.";
             break;
         case HANDS_DOUBLE:
-            description += "$It is a buggy weapon.";
+            description += "It is a buggy weapon.";
             break;
         }
         
@@ -1817,8 +1795,9 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
     if (is_random_artefact( item ))
     {
-        description += randart_descrip( item );
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
+        if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+            randart_descrip( description, item );
+        else if (item_type_known(item))
             description += "$This armour may have some hidden properties.$";
     }
     else 
@@ -2177,14 +2156,14 @@ static std::string describe_food( const item_def &item )
             description += "Don't tell me you don't know what that is! ";
             break;
         case FOOD_CHUNK:
-            if (you.mutation[MUT_SAPROVOROUS] < 3)
+            if (you.species != SP_GHOUL)
                 description += "It looks rather unpleasant. ";
 
             if (item.special < 100)
             {
-                if (you.mutation[MUT_SAPROVOROUS] == 3)
+                if (you.species == SP_GHOUL)
                     description += "It looks nice and ripe. ";
-                else if (you.is_undead != US_UNDEAD)
+                else if (you.species != SP_MUMMY)
                 {
                     description += "In fact, it is "
                         "rotting away before your eyes. "
@@ -2398,9 +2377,9 @@ static std::string describe_scroll( const item_def &item )
                 "of one who reads it. ";
             break;
 
-        case SCR_FOG:
-            description += "This scroll surrounds the reader "
-                "with a dense cloud of fog. ";
+        case SCR_FORGETFULNESS:
+            description += "This scroll induces "
+                "an irritating disorientation. ";
             break;
 
         case SCR_ACQUIREMENT:
@@ -2776,10 +2755,11 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     // randart properties
     if (is_random_artefact( item ))
     {
-        description += randart_descrip(item);
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
+        if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+            randart_descrip( description, item );
+        else if (item_type_known(item))
         {
-            if (jewellery_is_amulet(item))
+            if (item.sub_type >= AMU_RAGE)
                 description += "$This amulet may have hidden properties.$";
             else
                 description += "$This ring may have hidden properties.$";
@@ -2787,7 +2767,9 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     }
 
     if (item_known_cursed( item ))
+    {
         description += "$It has a curse placed upon it.";
+    }
 
     return (description);
 }                               // end describe_jewellery()
@@ -2950,10 +2932,6 @@ static std::string describe_staff( const item_def &item )
     return (description);
 }
 
-static bool compare_card_names(card_type a, card_type b)
-{
-    return std::string(card_name(a)) < std::string(card_name(b));
-}
 
 //---------------------------------------------------------------
 //
@@ -3169,47 +3147,16 @@ static std::string describe_misc_item( const item_def &item )
 
     description += "$";
 
-    if ( is_deck(item) )
+    if ( is_deck(item) && item.plus2 != 0 )
     {
-        const int num_cards = cards_in_deck(item);
-        if ( top_card_is_known(item) )
+        description += "$Next card(s): ";
+        description += card_name(static_cast<card_type>(item.plus2 - 1));
+        long spec = item.special;
+        while ( spec )
         {
-            description += "Next card(s): ";
-            for ( int i = 0; i < num_cards; ++i )
-            {
-                unsigned char flags;
-                const card_type card = get_card_and_flags(item, -i-1, flags);
-                if ( flags & CFLAG_MARKED )
-                {
-                    if ( i != 0 )
-                        description += ", ";
-                    description += card_name(card);
-                }
-                else
-                    break;
-            }
-        }
-
-        std::vector<card_type> seen_cards;
-        for ( int i = 0; i < num_cards; ++i )
-        {
-            unsigned char flags;
-            const card_type card = get_card_and_flags(item, -i-1, flags);
-            // This *might* leak a bit of information...oh well.
-            if ( (flags & CFLAG_SEEN) && !(flags & CFLAG_MARKED) )
-                seen_cards.push_back(card);
-        }
-        if ( !seen_cards.empty() )
-        {
-            std::sort(seen_cards.begin(), seen_cards.end(),
-                      compare_card_names);
-            description += "$Seen cards: ";
-            for ( unsigned int i = 0; i < seen_cards.size(); ++i )
-            {
-                if ( i != 0 )
-                    description += ", ";
-                description += card_name(seen_cards[i]);
-            }
+            description += ", ";
+            description += card_name(static_cast<card_type>((spec & 0xFF)-1));
+            spec >>= 8;
         }
         description += "$";
     }
@@ -3613,12 +3560,10 @@ static std::string describe_draconian(const monsters *mon)
     description += "scaled humanoid with wings.";
     
     if (subsp != MONS_DRACONIAN)
-        if (describe_draconian_colour(subsp) != "")
-            description += "  " + describe_draconian_colour(subsp);
+        description += "  " + describe_draconian_colour(subsp);
 
     if (subsp != mon->type)
-        if (describe_draconian_role(mon) != "")
-            description += "  " + describe_draconian_role(mon);
+        description += "  " + describe_draconian_role(mon);
 
     return (description);
 }
@@ -3653,16 +3598,6 @@ void describe_monsters(monsters& mons)
     // -peterb 4/14/07
     description << getLongDescription(mons.name(DESC_PLAIN));
 
-    std::string symbol = "";
-    symbol += get_monster_data(mons.type)->showchar;
-    if (isupper(symbol[0]))
-        symbol = "cap-" + symbol;
-
-    std::string symbol_prefix = "__";
-    symbol_prefix += symbol;
-    symbol_prefix += "_prefix";
-    description << getLongDescription(symbol_prefix);
-
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))
         mons.flags |= MF_KNOWN_MIMIC;
@@ -3686,13 +3621,10 @@ void describe_monsters(monsters& mons)
         break;
 
     case MONS_ROTTING_DEVIL:
-        if (player_can_smell())
-        {
-            if (you.mutation[MUT_SAPROVOROUS] == 3)
-                description << "It smells great!";
-            else
-                description << "It stinks.";
-        }
+        if (you.species == SP_GHOUL)
+            description << "It smells great!";
+        else if (player_can_smell())
+            description << "It stinks.";
         break;
 
     case MONS_SWAMP_DRAKE:
@@ -3705,6 +3637,26 @@ void describe_monsters(monsters& mons)
     case MONS_NAGA_WARRIOR:
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
+        switch (mons.type)
+        {
+        case MONS_GUARDIAN_NAGA:
+            description << getLongDescription("naga")
+                        << "$These nagas are often used as guardians "
+                           "by powerful creatures.$";
+            break;
+        case MONS_GREATER_NAGA:
+            description << getLongDescription("naga")
+                        << "$It looks strong and aggressive.$";
+            break;
+        case MONS_NAGA_MAGE:
+            description << getLongDescription("naga")
+                        << "$An eldritch nimbus trails its motions.$";
+            break;
+        case MONS_NAGA_WARRIOR:
+            description << getLongDescription("naga")
+                        << "$It bears scars of many past battles.$";
+            break;
+        }
         if (you.species == SP_NAGA)
             description << "It is particularly attractive.";
         else
@@ -3770,12 +3722,6 @@ void describe_monsters(monsters& mons)
     default:
         break;
     }
-
-    description << "\n";
-    std::string symbol_suffix = "__";
-    symbol_suffix += symbol;
-    symbol_suffix += "_suffix";
-    description << getLongDescription(symbol_suffix);
 
 #if DEBUG_DIAGNOSTICS
 
@@ -4282,31 +4228,31 @@ void describe_god( god_type which_god, bool give_title )
         cprintf(EOL EOL "Granted powers:                                                          (Cost)" EOL);
         textcolor(colour);
 
-        // mv: some gods can protect you from harm
-        // The chance for doing so is:
-        //     one_chance_in(10) || you.piety > random2(1000)
+        // mv: these gods protects you during your prayer (not mentioning XOM)
+        // chance for doing so is (random2(you.piety) >= 30)
         // Note that it's not depending on penance.
         // Btw. I'm not sure how to explain such divine protection
         // because god isn't really protecting player - he only sometimes
         // saves his life (probably it shouldn't be displayed at all).
-        // What about this?
+        // What about this ?
         bool have_any = false;
-
-        if (god_protects_from_harm(which_god))
+        if ((which_god == GOD_ZIN
+                || which_god == GOD_SHINING_ONE
+                || which_god == GOD_ELYVILON
+                || which_god == GOD_YREDELEMNUL)
+            && you.piety >= 30)
         {
             have_any = true;
-            cprintf( "%s %s watches over you." EOL, god_name(which_god),
-                     (you.piety >= 150) ? "carefully":
-                     (you.piety >=  90) ? "often" :
-                     (you.piety >=  30) ? "sometimes" :
-                                          "occasionally");
-        }
+            cprintf( "%s %s watches over you during prayer." EOL,
+                     god_name(which_god),
+                     (you.piety >= 150) ? "carefully":   // > 4/5
+                     (you.piety >=  90) ? "often" :      // > 2/3
+                                          "sometimes");  // less than 2:3
 
-        if (which_god == GOD_ZIN && you.piety >= 30)
-        {
-            have_any = true;
-            cprintf("Praying to %s will provide sustenance if starving."
-                    EOL, god_name(which_god));
+            if (which_god == GOD_ZIN)
+            {
+                cprintf("Praying to %s will provide sustenance if starving."
+                        EOL, god_name(which_god));
             }
         }
 
