@@ -3317,7 +3317,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
         if (defender->stat_hp() < defender->stat_maxhp())
         {
-            defender->heal(1 + random2(damage_done), coinflip());
+            attacker->heal(1 + random2(damage_done), coinflip());
 
             if (needs_message)
             {
