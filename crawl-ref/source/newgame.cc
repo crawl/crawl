@@ -1566,7 +1566,7 @@ static bool choose_book( item_def& book, int firstbook, int numbooks )
             cprintf(EOL "Which book? ");
             textcolor( LIGHTGREY );
 
-            keyin = get_ch();
+            keyin = c_getch();
  
             if (keyin == CK_BKSP || keyin == ' ')
                 return false;
@@ -1662,7 +1662,7 @@ static bool choose_weapon( void )
             cprintf(EOL "Which weapon? ");
             textcolor( LIGHTGREY );
 
-            keyin = get_ch();
+            keyin = c_getch();
 
             if (keyin == CK_BKSP || keyin == ' ')
                 return false;
@@ -3636,7 +3636,7 @@ bool give_items_skills()
                 }
 
                getkey:
-                keyn = get_ch();
+                keyn = c_getch();
 
                 if ((keyn == '\r' || keyn == '\n')
                      && Options.prev_pr != GOD_NO_GOD)
@@ -4229,7 +4229,7 @@ bool give_items_skills()
             }
 
           getkey1:
-            keyn = get_ch();
+            keyn = c_getch();
 
             if ((keyn == '\r' || keyn == '\n')
                     && Options.prev_dk != DK_NO_SELECTION)
@@ -4352,7 +4352,7 @@ bool give_items_skills()
 
           getkey2:
 
-            keyn = get_ch();
+            keyn = c_getch();
 
             if ((keyn == '\r' || keyn == '\n') 
                     && Options.prev_ck != GOD_NO_GOD)
