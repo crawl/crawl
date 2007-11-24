@@ -867,6 +867,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
     if (mons.length() == 1)
         letter = mons[0] == '_' ? ' ' : mons[0];
     
+    bool found = false;
     for (int i = 0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
@@ -874,8 +875,14 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
             continue;
         
         if (me->showchar == letter || me->name == mons)
+        {
+            found = true;
             add_mon_glyph_override(static_cast<monster_type>(i), mdisp);
+        }
     }
+    if (!found)
+        crawl_state.add_startup_error(
+            make_stringf("Unknown monster: \"%s\"", mons.c_str()));
 }
 
 mon_display game_options::parse_mon_glyph(const std::string &s) const
