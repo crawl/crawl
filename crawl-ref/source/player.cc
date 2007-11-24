@@ -128,7 +128,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     //     return (false);
 
     // if we're walking along, give a chance to avoid trap
-    if (stepped && !force)
+    if (stepped && !force && !you.confused())
     {
         if (new_grid == DNGN_UNDISCOVERED_TRAP)
         {
