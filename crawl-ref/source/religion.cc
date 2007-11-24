@@ -355,8 +355,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 
 
 void altar_prayer(void);
-void dec_penance(int god, int val);
-void inc_penance(int god, int val);
+void dec_penance(god_type god, int val);
+void dec_penance(int val);
+void inc_penance(god_type god, int val);
 void inc_penance(int val);
 static bool followers_abandon_you(void); // Beogh
 
@@ -419,7 +420,7 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }                               // end dec_penance()
 
-void inc_penance(int god, int val)
+void inc_penance(god_type god, int val)
 {
     if (you.penance[god] == 0 && val > 0)
     {
