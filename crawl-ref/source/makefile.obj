@@ -75,6 +75,7 @@ spl-cast.o \
 spl-util.o \
 sqldbm.o \
 stash.o \
+state.o \
 stuff.o \
 tags.o \
 terrain.o \

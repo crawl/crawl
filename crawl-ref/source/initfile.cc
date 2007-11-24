@@ -371,12 +371,14 @@ static unsigned curses_attribute(const std::string &field)
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
         if (colour == -1)
-            fprintf(stderr, "Bad highlight string -- %s\n", field.c_str());
+            crawl_state.add_startup_error(
+                make_stringf("Bad highlight string -- %s\n", field.c_str()));
         else
             return CHATTR_HILITE | (colour << 8);          
     }
     else if (field != "none")
-        fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
+        crawl_state.add_startup_error(
+            make_stringf( "Bad colour -- %s\n", field.c_str() ) );
     return CHATTR_NORMAL;
 }
 
@@ -466,7 +468,8 @@ void game_options::set_activity_interrupt(
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
         {
-            fprintf(stderr, "Unknown delay: %s\n", delay_name.c_str());
+            crawl_state.add_startup_error(
+                make_stringf("Unknown delay: %s\n", delay_name.c_str()));
             return;
         }
         
@@ -483,8 +486,9 @@ void game_options::set_activity_interrupt(
     activity_interrupt_type ai = get_activity_interrupt(interrupt);
     if (ai == NUM_AINTERRUPTS)
     {
-        fprintf(stderr, "Delay interrupt name \"%s\" not recognised.\n",
-                interrupt.c_str());
+        crawl_state.add_startup_error(
+            make_stringf("Delay interrupt name \"%s\" not recognised.\n",
+                         interrupt.c_str()));
         return;
     }
 
@@ -499,7 +503,8 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     const delay_type delay = get_delay(activity_name);
     if (delay == NUM_DELAYS)
     {
-        fprintf(stderr, "Unknown delay: %s\n", activity_name.c_str());
+        crawl_state.add_startup_error(
+            make_stringf("Unknown delay: %s\n", activity_name.c_str()));
         return;
     }
 
@@ -597,6 +602,9 @@ void game_options::reset_options()
                    (1L <<  7) | // jewellery
                    (1L <<  3) | // wands
                    (1L <<  4)); // food
+
+    suppress_startup_errors = false;
+    
     show_inventory_weights = false;
     colour_map             = true;
     clean_map              = false;
@@ -866,7 +874,8 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
     int letter = -1;
     if (mons.length() == 1)
         letter = mons[0] == '_' ? ' ' : mons[0];
-    
+
+    bool found = false;
     for (int i = 0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
@@ -874,8 +883,14 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
             continue;
         
         if (me->showchar == letter || me->name == mons)
+        {
+            found = true;
             add_mon_glyph_override(static_cast<monster_type>(i), mdisp);
+        }
     }
+    if (!found)
+        crawl_state.add_startup_error(
+            make_stringf("Unknown monster: \"%s\"", mons.c_str()));
 }
 
 mon_display game_options::parse_mon_glyph(const std::string &s) const
@@ -1643,6 +1658,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // should weights be shown on inventory items?
         show_inventory_weights = read_bool( field, show_inventory_weights );
     }
+    else if (key == "suppress_startup_errors")
+    {
+        suppress_startup_errors = read_bool( field, suppress_startup_errors );
+    }
     else if (key == "clean_map")
     {
         // removes monsters/clouds from map
@@ -2133,7 +2152,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "yes")
             wiz_mode = WIZ_YES;
         else
-            fprintf(stderr, "Unknown wiz_mode option: %s\n", field.c_str());
+            crawl_state.add_startup_error(
+                make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
 #endif
     }
     else if (key == "ban_pickup")
@@ -2184,7 +2204,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if ( insplit.size() == 0 || insplit.size() > 2 ||
                  (insplit.size() == 1 && i != 0) )
             {
-                fprintf(stderr, "Bad hp_colour string: %s\n", field.c_str());
+                crawl_state.add_startup_error(
+                    make_stringf("Bad hp_colour string: %s\n", field.c_str()));
                 break;
             }
 
@@ -2207,7 +2228,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             if ( insplit.size() == 0 || insplit.size() > 2 ||
                  (insplit.size() == 1 && i != 0) )
             {
-                fprintf(stderr, "Bad mp_colour string: %s\n", field.c_str());
+                crawl_state.add_startup_error(
+                    make_stringf("Bad mp_colour string: %s\n", field.c_str()));
                 break;
             }
 
@@ -2228,8 +2250,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 note_skill_levels.push_back(num);
             else
             {
-                fprintf(stderr, "Bad skill level to note -- %s\n",
-                        thesplit[i].c_str());
+                crawl_state.add_startup_error(
+                    make_stringf("Bad skill level to note -- %s\n",
+                                 thesplit[i].c_str()));
                 continue;
             }
         }

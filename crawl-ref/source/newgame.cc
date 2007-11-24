@@ -93,6 +93,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "tutorial.h"
 #include "version.h"
@@ -714,6 +715,13 @@ bool new_game(void)
     ASSERT(NUM_JOBS < JOB_UNKNOWN);
 
     init_player();
+
+    if (!crawl_state.startup_errors.empty()
+        && !Options.suppress_startup_errors)
+    {
+        crawl_state.show_startup_errors();
+        clrscr();
+    }
 
     if (!Options.player_name.empty())
     {

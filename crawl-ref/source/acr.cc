@@ -2330,7 +2330,7 @@ static void world_reacts()
     if (you.num_turns != -1)
     {
         you.num_turns++;
-        if (env.turns_on_level + 1 > env.turns_on_level)
+        if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
         update_turn_count();
     }

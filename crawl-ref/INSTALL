@@ -368,6 +368,17 @@ not UTF-8, you can force it to UTF-8 on most systems by doing "export
 LC_ALL=en_US.UTF-8" or the equivalent, depending on your language
 locale and what shell you're using.
 
+Crawl tries to use en_US.UTF-8 as its default Unicode locale. If you
+do not have this locale installed, but do have some other UTF-8 locale,
+you can tell Crawl to use your preferred UTF-8 locale by setting
+UNICODE_LOCALE = ${foo}.UTF-8 in makefile.unix, where ${foo} is your
+locale name.
+
+You may not want to embed the locale in Crawl itself, but have Crawl
+use the locale as set in the environment LC_* variables. In such
+cases, you can use UNICODE_LOCALE = . in makefile.unix. Crawl will
+then use the locale as set in your environment.
+
 If you're playing Crawl on a remote machine, the remote Crawl should be
 built with Unicode support, it needs to have a UTF-8 locale installed,
 *and* your local terminal (where you're running telnet/ssh) needs to be

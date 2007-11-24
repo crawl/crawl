@@ -1401,6 +1401,8 @@ public:
     bool        messaging;      // Check for messages.
 #endif
 
+    bool        suppress_startup_errors;
+
     bool        mouse_input;
     
     int         view_max_width;

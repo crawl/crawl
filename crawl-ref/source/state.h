@@ -33,11 +33,14 @@ struct game_state
     
     bool unicode_ok;        // Is unicode support available?
 
+    std::vector<std::string> startup_errors;
+
     std::string (*glyph2strfn)(unsigned glyph);
     int  (*multibyte_strlen)(const std::string &s);
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 
+public:
     game_state() : mouse_enabled(false), waiting_for_command(false),
                    terminal_resized(false), io_inited(false), need_save(false),
                    saving_game(false), updating_scores(false),
@@ -47,6 +50,8 @@ struct game_state
     {
     }
 
+    void add_startup_error(const std::string &error);
+    void show_startup_errors();
     void check_term_size() const
     {
         if (terminal_resize_check)
