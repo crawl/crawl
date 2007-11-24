@@ -2494,7 +2494,8 @@ bool followers_abandon_you()
                         const int hd = monster->hit_dice;
 
                         // during penance followers get a saving throw
-                        if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
+                        if (you.religion == GOD_BEOGH &&
+                            random2((you.piety-you.penance[GOD_BEOGH])/18) +
                             random2(you.skills[SK_INVOCATIONS]-6)
                               > random2(hd) + hd + random2(5))
                         {
