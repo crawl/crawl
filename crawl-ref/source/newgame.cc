@@ -2836,7 +2836,7 @@ spec_query:
         cprintf("  (Press T to enter a tutorial.)");
         cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be:  (Press ? for more information)");
+        cprintf("You can be:  (Press ? for more information, %% for a list of aptitudes)");
         cprintf(EOL EOL);
 
         textcolor( LIGHTGREY );
@@ -2916,6 +2916,11 @@ spec_query:
     if ( keyn == '?' )
     {
         list_commands(false, '1');
+        return choose_race();
+    }
+    else if ( keyn == '%' )
+    {
+        list_commands(false, '%');
         return choose_race();
     }
 
@@ -3036,7 +3041,7 @@ job_query:
 
         cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be: (Press ? for more information)" EOL EOL);
+        cprintf("You can be: (Press ? for more information, %% for a list of aptitudes)" EOL EOL);
         textcolor( LIGHTGREY );
 
         int j = 0;
@@ -3108,6 +3113,11 @@ job_query:
     if ( keyn == '?' )
     {
         list_commands(false, '2');
+        return choose_class();
+    }
+    else if ( keyn == '%' )
+    {
+        list_commands(false, '%');
         return choose_class();
     }
 

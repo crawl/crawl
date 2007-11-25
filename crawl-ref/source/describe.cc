@@ -3402,10 +3402,7 @@ void describe_feature_wide(int x, int y)
     print_description(desc);
     
     if (Options.tutorial_left)
-    {
-        gotoxy(1, wherey() + 2);
         tutorial_describe_feature(grd[x][y]);
-    }
         
     if ( getch() == 0 )
         getch();
@@ -3821,10 +3818,7 @@ void describe_monsters(monsters& mons)
     print_description(description.str());
 
     if (Options.tutorial_left)
-    {
-        gotoxy(1, wherey() + 2);
         tutorial_describe_monster(static_cast<const monsters*>(&mons));
-    }
 
     if (getch() == 0)
         getch();

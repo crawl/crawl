@@ -421,11 +421,11 @@ static formatted_string tutorial_map_intro()
     std::string result;
 
     result = "<magenta>"
-        "What you see here is the typical Crawl screen. The upper left map "
-        "shows your hero as the <white>@<magenta> in the center. The parts "
-        "of the map you remember but cannot currently see will be greyed "
-        "out."
-        "</magenta>" EOL;        
+             "What you see here is the typical Crawl screen. The upper left map "
+             "shows your hero as the <white>@<magenta> in the center. The parts "
+             "of the map you remember but cannot currently see will be greyed "
+             "out."
+             "</magenta>" EOL;
     result += " --more--                               Press <white>Escape</white> to skip the basics";
 
     linebreak_string2(result,get_tutorial_cols());
@@ -499,7 +499,7 @@ static void tutorial_movement_info()
 void tut_starting_screen()
 {
 
-    int x1, x2, y1, y2;
+    int y_pos;
     int MAX_INFO = 4;
 #ifdef TUTORIAL_DEBUG
     MAX_INFO++;
@@ -508,26 +508,16 @@ void tut_starting_screen()
 
     for (int i=0; i<=MAX_INFO; i++)
     {
-        x1 = 1; y1 = 1;
-        x2 = get_tutorial_cols(); y2 = get_number_of_lines();
+        // map window (starts at 1) or message window (starts at 18)
+        y_pos = (i==1 || i==3 ? 18 : 1);
 
-        if (i==1 || i==3)
-        {
-            y1 = 18; // message window
-        }
-        else if (i==2)
-        {
-            x2 = 40; // map window
-            y2 = 18;
-        }
+        gotoxy(1,y_pos);
 
         if (i==0)
             clrscr();
 
-        gotoxy(x1,y1);
-
         if (i==0)
-            tut_starting_info(x2).display();
+            tut_starting_info(get_tutorial_cols()).display();
         else if (i==1)
             tutorial_map_intro().display();
         else if (i==2)
@@ -540,7 +530,7 @@ void tut_starting_screen()
         {
 #ifdef TUTORIAL_DEBUG
             clrscr();
-            gotoxy(x1,y1);
+            gotoxy(1,y_pos);
             tutorial_debug().display();
 #else
             continue;
@@ -1269,7 +1259,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "<w>e<magenta>at something quickly, or you'll die. The safest "
                   "way to deal with this is to simply eat something from your "
                   "inventory rather than wait for a monster to leave a corpse.";
-
+                  
           if (Options.tutorial_type == TUT_MAGIC_CHAR)
               text << "\nNote that you cannot cast spells while starving.";
           break;
@@ -1277,7 +1267,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
       case TUT_MULTI_PICKUP:
           text << "There's a more comfortable way to pick up several items at the "
                   "same time. If you press <w>,<magenta> or <w>g<magenta> twice "
-                  "you can choose items from a menu. This takes less keystrokes "
+                  "you can choose items from a menu. This takes fewer keystrokes "
                   "but has no influence on the number of turns needed. Multi-pickup "
                   "will be interrupted by monsters or other dangerous events.";
           break;
@@ -1330,7 +1320,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SHIFT_RUN:
-          text << "Walking around takes less keystrokes if you press "
+          text << "Walking around takes fewer keystrokes if you press "
                   "<w>Shift-direction<magenta> or <w>/ <w>direction<magenta>. "
                   "That will let you run until a monster comes into sight or "
                   "your character sees something interesting.";
@@ -1971,7 +1961,7 @@ bool tutorial_feat_interesting(dungeon_feature_type feat)
 void tutorial_describe_feature(dungeon_feature_type feat)
 {
     std::ostringstream ostr;
-    ostr << "<magenta>";
+    ostr << "\n<magenta>";
     
     switch (feat)
     {
@@ -2111,8 +2101,12 @@ bool tutorial_monster_interesting(const monsters *mons)
         return true;
         
     // highlighted in some way
-    if (get_mons_colour(mons) != mons->colour)
+    if (mons_friendly(mons) && Options.friend_brand != CHATTR_NORMAL
+        || mons_looks_stabbable(mons) && Options.stab_brand != CHATTR_NORMAL
+        || mons_looks_distracted(mons) && Options.may_stab_brand != CHATTR_NORMAL)
+    {
         return true;
+    }
 
     // monster is (seriously) out of depth
     if (you.level_type == LEVEL_DUNGEON &&
@@ -2126,18 +2120,18 @@ bool tutorial_monster_interesting(const monsters *mons)
 void tutorial_describe_monster(const monsters *mons)
 {
     std::ostringstream ostr;
-    ostr << "<magenta>";
+    ostr << "\n\n<magenta>";
 
     if (mons_is_unique(mons->type))
     {
         ostr << "Did you think you were the only adventurer in the dungeon? "
                 "Well, you thought wrong! These unique adversaries often "
-                "possess skills that normal monster wouldn't, so be careful.";
+                "possess skills that normal monster wouldn't, so be careful.\n\n";
     }
     else if(mons->type == MONS_PLAYER_GHOST)
     {
         ostr << "The ghost of a deceased adventurer, it would like nothing "
-                "better than to send you the same way.";
+                "better than to send you the same way.\n\n";
     }
     else
     {
@@ -2153,7 +2147,7 @@ void tutorial_describe_monster(const monsters *mons)
                 << " dangerous!\n\n";
        }
     }
-    
+
     if (mons->has_ench(ENCH_BERSERK))
         ostr << "A berserking monster is bloodthirsty and fighting madly.\n";
 
@@ -2165,12 +2159,16 @@ void tutorial_describe_monster(const monsters *mons)
     else if (Options.stab_brand != CHATTR_NORMAL
              && mons_looks_stabbable(mons))
     {
-        ostr << "Apparently it has not noticed you - yet.";
+        ostr << "Apparently "
+             << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
+             << " has not noticed you - yet.";
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
              && mons_looks_distracted(mons))
     {
-        ostr << "Apparently it has been distracted by something.";
+        ostr << "Apparently "
+             << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
+             << " has been distracted by something.";
     }
 
     std::string broken = ostr.str();
