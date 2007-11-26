@@ -2273,38 +2273,26 @@ static bool trog_retribution()
     // physical/berserk theme
     if ( coinflip() )
     {
-        // Would be better if berserking monsters were available,
-        // we just send some big bruisers for now.
         int count = 0;
         int points = 3 + you.experience_level * 3;
 
         while (points > 0)
         {
-            monster_type punisher = MONS_PROGRAM_BUG;
+            int cost = random2(8) + 3;
 
+            if (cost > points)
+                cost = points;
+
+            // quick reduction for large values
             if (points > 20 && coinflip())
             {
-                // quick reduction for large values
-                punisher = MONS_DEEP_TROLL;
-                points -= 15;
-                continue;
-            }
-            else
-            {
-                const monster_type punishers[10] = {
-                    MONS_IRON_TROLL, MONS_ROCK_TROLL, MONS_TROLL,
-                    MONS_MINOTAUR, MONS_MINOTAUR, MONS_TWO_HEADED_OGRE, 
-                    MONS_TWO_HEADED_OGRE, MONS_OGRE, MONS_OGRE, MONS_OGRE
-                };
-                const int costs[10] = { 10, 10, 6, 3, 3, 4, 4, 3, 3, 3 };
-                const int idx = random2(10);
-                
-                punisher = punishers[idx];
-                points -= costs[idx];
+                points -= 10;
+                cost = 10;
             }
 
-            if (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
-                               you.y_pos, MHITYOU, 250) != -1)
+            points -= cost;
+
+            if (summon_berserker(cost * 20, false))
                 count++;
         }
 
