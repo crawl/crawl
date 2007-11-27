@@ -2275,42 +2275,36 @@ void update_level( double elapsedTime )
             }
         }
 
-        int pos_x = mon->x, pos_y = mon->y;
-
+        coord_def pos(mon->pos());
         // dirt simple movement:
         for (i = 0; i < moves; i++)
         {
-            int mx = (pos_x > mon->target_x) ? -1 : 
-                     (pos_x < mon->target_x) ?  1 
-                                             :  0;
-
-            int my = (pos_y > mon->target_y) ? -1 : 
-                     (pos_y < mon->target_y) ?  1 
-                                             :  0;
+            coord_def inc(mon->target_pos() - pos);
+            inc = coord_def(sgn(inc.x), sgn(inc.y));
 
             if (mon->behaviour == BEH_FLEE)
-            {
-                mx *= -1;
-                my *= -1;
-            }
+                inc *= -1;
 
-            if (pos_x + mx < 0 || pos_x + mx >= GXM)
-                mx = 0;
+            if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)
+                inc.x = 0;
 
-            if (pos_y + my < 0 || pos_y + my >= GXM)
-                my = 0;
+            if (pos.y + inc.y < 0 || pos.y + inc.y >= GYM)
+                inc.y = 0;
 
-            if (mx == 0 && my == 0)
+            if (inc.origin())
                 break;
 
-            if (grd[pos_x + mx][pos_y + my] < DNGN_FLOOR)
+            const coord_def next(pos + inc);
+            const dungeon_feature_type feat = grd(next);
+            if (grid_is_solid(feat)
+                || mgrd(next) != NON_MONSTER
+                || !monster_habitable_grid(mon, feat))
                 break;
 
-            pos_x += mx;
-            pos_y += my;
+            pos = next;
         }
 
-        if (!shift_monster( mon, pos_x, pos_y ))
+        if (!shift_monster( mon, pos.x, pos.y ))
             shift_monster( mon, mon->x, mon->y );
 
 #if DEBUG_DIAGNOSTICS
@@ -2326,6 +2320,130 @@ void update_level( double elapsedTime )
         delete_cloud( i );
 }
 
+static void hell_effects()
+{
+    int temp_rand = random2(17);
+    spschool_flag_type which_miscast = SPTYP_RANDOM;
+    bool summon_instead = false;
+    monster_type which_beastie = MONS_PROGRAM_BUG;
+
+    mpr((temp_rand == 0)  ? "\"You will not leave this place.\"" :
+        (temp_rand == 1)  ? "\"Die, mortal!\"" :
+        (temp_rand == 2)  ? "\"We do not forgive those who trespass against us!\"" :
+        (temp_rand == 3)  ? "\"Trespassers are not welcome here!\"" :
+        (temp_rand == 4)  ? "\"You do not belong in this place!\"" :
+        (temp_rand == 5)  ? "\"Leave now, before it is too late!\"" :
+        (temp_rand == 6)  ? "\"We have you now!\"" :
+        // plain messages
+        (temp_rand == 7)  ? (player_can_smell()) ? "You smell brimstone." :
+        "Brimstone rains from above." :
+        (temp_rand == 8)  ? "You feel lost and a long, long way from home..." :
+        (temp_rand == 9)  ? "You shiver with fear." :
+        // warning
+        (temp_rand == 10) ? "You feel a terrible foreboding..." :
+        (temp_rand == 11) ? "Something frightening happens." :
+        (temp_rand == 12) ? "You sense an ancient evil watching you..." :
+        (temp_rand == 13) ? "You suddenly feel all small and vulnerable." :
+        (temp_rand == 14) ? "You sense a hostile presence." :
+        // sounds
+        (temp_rand == 15) ? "A gut-wrenching scream fills the air!" :
+        (temp_rand == 16) ? "You hear words spoken in a strange and terrible language..."
+        : "You hear diabolical laughter!",
+        (temp_rand < 7  ? MSGCH_TALK :
+         temp_rand < 10 ? MSGCH_PLAIN :
+         temp_rand < 15 ? MSGCH_WARN
+         : MSGCH_SOUND) );
+
+    temp_rand = random2(27);
+
+    if (temp_rand > 17)     // 9 in 27 odds {dlb}
+    {
+        temp_rand = random2(8);
+
+        if (temp_rand > 3)  // 4 in 8 odds {dlb}
+            which_miscast = SPTYP_NECROMANCY;
+        else if (temp_rand > 1)     // 2 in 8 odds {dlb}
+            which_miscast = SPTYP_SUMMONING;
+        else if (temp_rand > 0)     // 1 in 8 odds {dlb}
+            which_miscast = SPTYP_CONJURATION;
+        else                // 1 in 8 odds {dlb}
+            which_miscast = SPTYP_ENCHANTMENT;
+
+        miscast_effect( which_miscast, 4 + random2(6), random2avg(97, 3),
+                        100, "the effects of Hell" );
+    }
+    else if (temp_rand > 7) // 10 in 27 odds {dlb}
+    {
+        // 60:40 miscast:summon split {dlb}
+        summon_instead = (random2(5) > 2);
+
+        switch (you.where_are_you)
+        {
+        case BRANCH_DIS:
+            if (summon_instead)
+                which_beastie = summon_any_demon(DEMON_GREATER);
+            else
+                which_miscast = SPTYP_EARTH;
+            break;
+        case BRANCH_GEHENNA:
+            if (summon_instead)
+                which_beastie = MONS_FIEND;
+            else
+                which_miscast = SPTYP_FIRE;
+            break;
+        case BRANCH_COCYTUS:
+            if (summon_instead)
+                which_beastie = MONS_ICE_FIEND;
+            else
+                which_miscast = SPTYP_ICE;
+            break;
+        case BRANCH_TARTARUS:
+            if (summon_instead)
+                which_beastie = MONS_SHADOW_FIEND;
+            else
+                which_miscast = SPTYP_NECROMANCY;
+            break;
+        default:        // this is to silence gcc compiler warnings {dlb}
+            if (summon_instead)
+                which_beastie = MONS_FIEND;
+            else
+                which_miscast = SPTYP_NECROMANCY;
+            break;
+        }
+
+        if (summon_instead)
+        {
+            create_monster( which_beastie, 0, BEH_HOSTILE, you.x_pos,
+                            you.y_pos, MHITYOU, 250 );
+        }
+        else
+        {
+            miscast_effect( which_miscast, 4 + random2(6),
+                            random2avg(97, 3), 100, "the effects of Hell" );
+        }
+    }
+
+    // NB: no "else" - 8 in 27 odds that nothing happens through
+    // first chain {dlb}
+    // also note that the following is distinct from and in
+    // addition to the above chain:
+
+    // try to summon at least one and up to five random monsters {dlb}
+    if (one_chance_in(3))
+    {
+        create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE, 
+                        you.x_pos, you.y_pos, MHITYOU, 250 );
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (one_chance_in(3))
+            {
+                create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE,
+                                you.x_pos, you.y_pos, MHITYOU, 250 );
+            }
+        }
+    }
+}
 
 //---------------------------------------------------------------
 //
@@ -2339,137 +2457,12 @@ void handle_time( long time_delta )
 {
     int temp_rand;              // probability determination {dlb}
 
-    // so as not to reduplicate f(x) calls {dlb}
-    unsigned int which_miscast = SPTYP_RANDOM;
-
-    bool summon_instead;        // for branching within a single switch {dlb}
-    int which_beastie = MONS_PROGRAM_BUG;       // error trapping {dlb}
     unsigned char i;            // loop variable {dlb}
     bool new_rotting_item = false; //mv: becomes true when some new item becomes rotting
 
     // BEGIN - Nasty things happen to people who spend too long in Hell:
     if (player_in_hell() && coinflip())
-    {
-        temp_rand = random2(17);
-
-        mpr((temp_rand == 0)  ? "\"You will not leave this place.\"" :
-            (temp_rand == 1)  ? "\"Die, mortal!\"" :
-            (temp_rand == 2)  ? "\"We do not forgive those who trespass against us!\"" :
-            (temp_rand == 3)  ? "\"Trespassers are not welcome here!\"" :
-            (temp_rand == 4)  ? "\"You do not belong in this place!\"" :
-            (temp_rand == 5)  ? "\"Leave now, before it is too late!\"" :
-            (temp_rand == 6)  ? "\"We have you now!\"" :
-            // plain messages
-            (temp_rand == 7)  ? (player_can_smell()) ? "You smell brimstone." :
-                                "Brimstone rains from above." :
-            (temp_rand == 8)  ? "You feel lost and a long, long way from home..." :
-            (temp_rand == 9)  ? "You shiver with fear." :
-            // warning
-            (temp_rand == 10) ? "You feel a terrible foreboding..." :
-            (temp_rand == 11) ? "Something frightening happens." :
-            (temp_rand == 12) ? "You sense an ancient evil watching you..." :
-            (temp_rand == 13) ? "You suddenly feel all small and vulnerable." :
-            (temp_rand == 14) ? "You sense a hostile presence." :
-            // sounds
-            (temp_rand == 15) ? "A gut-wrenching scream fills the air!" :
-            (temp_rand == 16) ? "You hear words spoken in a strange and terrible language..."
-                              : "You hear diabolical laughter!",
-                                (temp_rand < 7  ? MSGCH_TALK :
-                                 temp_rand < 10 ? MSGCH_PLAIN :
-                                 temp_rand < 15 ? MSGCH_WARN
-                                                : MSGCH_SOUND) );
-
-        temp_rand = random2(27);
-
-        if (temp_rand > 17)     // 9 in 27 odds {dlb}
-        {
-            temp_rand = random2(8);
-
-            if (temp_rand > 3)  // 4 in 8 odds {dlb}
-                which_miscast = SPTYP_NECROMANCY;
-            else if (temp_rand > 1)     // 2 in 8 odds {dlb}
-                which_miscast = SPTYP_SUMMONING;
-            else if (temp_rand > 0)     // 1 in 8 odds {dlb}
-                which_miscast = SPTYP_CONJURATION;
-            else                // 1 in 8 odds {dlb}
-                which_miscast = SPTYP_ENCHANTMENT;
-
-            miscast_effect( which_miscast, 4 + random2(6), random2avg(97, 3),
-                            100, "the effects of Hell" );
-        }
-        else if (temp_rand > 7) // 10 in 27 odds {dlb}
-        {
-            // 60:40 miscast:summon split {dlb}
-            summon_instead = (random2(5) > 2);
-
-            switch (you.where_are_you)
-            {
-            case BRANCH_DIS:
-                if (summon_instead)
-                    which_beastie = summon_any_demon(DEMON_GREATER);
-                else
-                    which_miscast = SPTYP_EARTH;
-                break;
-            case BRANCH_GEHENNA:
-                if (summon_instead)
-                    which_beastie = MONS_FIEND;
-                else
-                    which_miscast = SPTYP_FIRE;
-                break;
-            case BRANCH_COCYTUS:
-                if (summon_instead)
-                    which_beastie = MONS_ICE_FIEND;
-                else
-                    which_miscast = SPTYP_ICE;
-                break;
-            case BRANCH_TARTARUS:
-                if (summon_instead)
-                    which_beastie = MONS_SHADOW_FIEND;
-                else
-                    which_miscast = SPTYP_NECROMANCY;
-                break;
-            default:        // this is to silence gcc compiler warnings {dlb}
-                if (summon_instead)
-                    which_beastie = MONS_FIEND;
-                else
-                    which_miscast = SPTYP_NECROMANCY;
-                break;
-            }
-
-            if (summon_instead)
-            {
-                create_monster( which_beastie, 0, BEH_HOSTILE, you.x_pos,
-                                you.y_pos, MHITYOU, 250 );
-            }
-            else
-            {
-                miscast_effect( which_miscast, 4 + random2(6),
-                                random2avg(97, 3), 100, "the effects of Hell" );
-            }
-        }
-
-        // NB: no "else" - 8 in 27 odds that nothing happens through
-        // first chain {dlb}
-        // also note that the following is distinct from and in
-        // addition to the above chain:
-
-        // try to summon at least one and up to five random monsters {dlb}
-        if (one_chance_in(3))
-        {
-            create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE, 
-                            you.x_pos, you.y_pos, MHITYOU, 250 );
-
-            for (i = 0; i < 4; i++)
-            {
-                if (one_chance_in(3))
-                {
-                    create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE,
-                                    you.x_pos, you.y_pos, MHITYOU, 250 );
-                }
-            }
-        }
-    }
-    // END - special Hellish things...
+        hell_effects();
 
     // Adjust the player's stats if s/he's diseased (or recovering).
     if (!you.disease)
