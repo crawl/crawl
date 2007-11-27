@@ -342,7 +342,7 @@ void warn_shield_penalties()
     if (!player_shield())
         return;
 
-    // Warnings are limited to rods and bows at the moment.
+    // Warnings are limited to rods, bows, and quarterstaves at the moment.
     const item_def *weapon = player_weapon();
     if (!weapon)
         return;
@@ -351,6 +351,12 @@ void warn_shield_penalties()
         warn_rod_shield_interference(*weapon);
     else if (is_range_weapon(*weapon))
         warn_launcher_shield_slowdown(*weapon);
+    else if (weapon->base_type == OBJ_WEAPONS
+             && weapon->sub_type == WPN_QUARTERSTAFF)
+    {
+        mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
+             shield_base_name(player_shield()));
+    }
 }
 
 int item_special_wield_effect(const item_def &item)
