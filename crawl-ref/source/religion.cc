@@ -329,7 +329,6 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "walk on water" }
 };
 
-
 void altar_prayer(void);
 void dec_penance(int god, int val);
 void inc_penance(int god, int val);
@@ -1854,24 +1853,7 @@ static bool tso_retribution()
                             god );
     }
     else
-    {
-        if (!player_under_penance() && you.piety > random2(400))
-        {
-            god_speaks(you.religion,
-                       "Mortal, I have averted the wrath of "
-                       "the Shining One... this time.");
-        }
-        else
-        {
-            int divine_hurt = 10 + random2(10);            
-            for (int i = 0; i < 5; i++)
-                divine_hurt += random2( you.experience_level );
-
-            simple_god_message( " smites you!", god );
-            ouch( divine_hurt, 0, KILLED_BY_TSO_SMITING );
-            dec_penance( god, 1 );
-        }
-    }
+        god_smites_you(GOD_SHINING_ONE, KILLED_BY_TSO_SMITING);
 
     return false;
 }
@@ -2123,26 +2105,8 @@ static bool beogh_retribution()
     {
     case 0: // smiting (25%)
     case 1:
-    {
-        if (!player_under_penance() && you.piety > random2(400))
-        {
-            snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                     "of %s... this time.", god_name(god));
-            god_speaks(you.religion, info);
-        }
-        else
-        {
-            int divine_hurt = 10 + random2(10);
-
-            for (int i = 0; i < 5; i++)
-                divine_hurt += random2( you.experience_level );
-
-            simple_god_message( " smites you!", god );
-            ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
-            dec_penance( god, 1 );
-        }
+        god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING);
         break;
-    }
 
     case 2: // send out one or two dancing weapons of orc slaying (12.5%)
     {
@@ -2553,56 +2517,50 @@ void beogh_idol_revenge()
         || (you.species == SP_HILL_ORC && coinflip())
         || one_chance_in(3))
     {
-        if (you.religion != GOD_BEOGH && you.religion != GOD_XOM &&
-            !player_under_penance() && you.piety > random2(400))
-        {
-             snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                            "of %s... this time.", god_name(GOD_BEOGH));
-             god_speaks(you.religion, info);
-        }
-        else
-        {
-             if (you.religion == GOD_BEOGH)
-             {
-                 const char* messages[3] = {
-                     " fumes, \"This is no small sin, orc. Repent!\"",
-                     " whispers, \"You will pay for this transgression.\"",
-                     " rages, \"An eye for an eye...\""
-                 };
-                 simple_god_message(RANDOM_ELEMENT(messages), GOD_BEOGH);
-             }
-             else if (you.species == SP_HILL_ORC)
-             {
-                 const char* messages[2] = {
-                     "Beogh's voice booms out: \"Heretic, die!\"",
-                     "You hear Beogh's thundering voice: \"Suffer, infidel!\""
-                 };
-                 god_speaks(GOD_BEOGH, RANDOM_ELEMENT(messages));
-             }
-             else
-             {
-                 const char* messages[2] = {                
-                   " is not amused about the destruction of his idols.",
-                   " seems highly displeased."
-                 };
-                 simple_god_message(RANDOM_ELEMENT(messages), GOD_BEOGH);
-             }
-
-             int divine_hurt = 10 + random2(10);
-
-             for (int i = 0; i < 5; i++)
-                 divine_hurt += random2( you.experience_level );
-
-             simple_god_message( " smites you!", GOD_BEOGH );
-             ouch( divine_hurt, 0, KILLED_BY_BEOGH_SMITING );
-        }
+        const char* revenge;
 
         if (you.religion == GOD_BEOGH)
         {
-            // comes closest and same result (penance + piety loss)
-            did_god_conduct(DID_ATTACK_FRIEND, 8);
+            const char* messages[3] = {
+                "Beogh fumes, \"This is no small sin, orc. Repent!\"",
+                "Beogh whispers, \"You will pay for this transgression.\"",
+                "Beogh rages, \"An eye for an eye...\""
+            };
+
+            revenge = RANDOM_ELEMENT(messages);
         }
-   }
+        else if (you.species == SP_HILL_ORC)
+        {
+            const char* messages[2] = {
+                "Beogh's voice booms out: \"Heretic, die!\"",
+                "You hear Beogh's thundering voice: \"Suffer, infidel!\""
+            };
+
+            revenge = RANDOM_ELEMENT(messages);
+        }
+        else
+        {
+            const char* messages[2] = {
+                "Beogh is not amused about the destruction of his idols.",
+                "Beogh seems highly displeased."
+            };
+
+            revenge = RANDOM_ELEMENT(messages);
+        }
+
+        god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING, revenge);
+
+        if (you.religion == GOD_BEOGH)
+        {
+            // count this as an attack on a fellow orc; it comes closest
+            // and gives the same result (penance + piety loss)
+            monsters dummy;
+            dummy.type = MONS_ORC;
+
+            did_god_conduct(DID_ATTACK_FRIEND, 8,
+                            static_cast<actor *>(&dummy));
+        }
+    }
 }
 
 static void beogh_orc_emergency_conversion_speech(
@@ -3173,6 +3131,35 @@ bool god_likes_butchery(god_type god)
 bool god_hates_butchery(god_type god)
 {
     return (god == GOD_ELYVILON);
+}
+
+void god_smites_you(god_type god, kill_method_type death_type,
+                    const char *message)
+{
+    // Your god won't protect you from his own smiting, and Xom is too
+    // capricious to protect you from any god's smiting.
+    if (you.religion != god && you.religion != GOD_XOM &&
+        !player_under_penance() && you.piety > random2(400))
+    {
+        snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
+                       "of %s... this time.", god_name(god));
+        god_speaks(you.religion, info);
+    }
+    else
+    {
+        // If there's a message, display it before smiting.
+        if (message)
+            god_speaks(god, message);
+
+        int divine_hurt = 10 + random2(10);
+
+        for (int i = 0; i < 5; i++)
+            divine_hurt += random2( you.experience_level );
+
+        simple_god_message( " smites you!", god );
+        ouch( divine_hurt, 0, death_type );
+        dec_penance( god, 1 );
+    }
 }
 
 void offer_corpse(int corpse)

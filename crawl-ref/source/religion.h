@@ -15,6 +15,7 @@
 #define RELIGION_H
 
 #include "enum.h"
+#include "ouch.h"
 
 class actor;
 class monsters;
@@ -41,6 +42,8 @@ int piety_rank(int piety = -1);
 void offer_items();
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
+void god_smites_you(god_type god, kill_method_type death_type,
+                    const char *message = NULL);
 void divine_retribution(god_type god);
 
 bool xom_is_nice();
