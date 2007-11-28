@@ -2805,8 +2805,13 @@ void beogh_idol_revenge()
 
         if (you.religion == GOD_BEOGH)
         {
-            // comes closest and same result (penance + piety loss)
-            did_god_conduct(DID_ATTACK_FRIEND, 8);
+            // count this as an attack on a fellow orc; it comes closest
+            // and gives the same result (penance + piety loss)
+            monsters dummy;
+            dummy.type = MONS_ORC;
+
+            did_god_conduct(DID_ATTACK_FRIEND, 8, true,
+                            static_cast<actor *>(&dummy));
         }
     }
 }
