@@ -37,7 +37,8 @@ int animate_a_corpse(int axps, int ayps, beh_type corps_beh,
 /* ***********************************************************************
  * called from: ability - it_use3 - monstuff - mstuff2 - spell
  * *********************************************************************** */
-int animate_dead(int power, beh_type corps_beh, int corps_hit, int actual);
+int animate_dead(actor *caster, int power, beh_type corps_beh,
+                 int corps_hit, int actual);
 
 
 // last updated 24may2000 {dlb}

@@ -1430,7 +1430,7 @@ static bool do_ability(const ability_def& abil)
     case ABIL_YRED_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you...");
 
-        animate_dead( 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
+        animate_dead( &you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
                       you.pet_target, 1 );
 
         exercise(SK_INVOCATIONS, 2 + random2(4));

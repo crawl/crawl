@@ -2265,8 +2265,8 @@ int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
 // IMPROVEMENTS:
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
-void losight(FixedArray < unsigned int, 19, 19 > &sh,
-             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p,
+void losight(env_show_grid &sh,
+             feature_grid &gr, int x_p, int y_p,
              bool clear_walls_block)
 {
     raycast();
@@ -3302,51 +3302,40 @@ bool mons_near(const monsters *monster, unsigned int foe)
     return (false);
 }                               // end mons_near()
 
-// answers the question: "Is a grid within character's line of sight?"
-bool see_grid( int grx, int gry )
+bool see_grid( const env_show_grid &show,
+               const coord_def &c,
+               const coord_def &pos )
 {
-    // rare case: can player see self?  (of course!)
-    if (grx == you.x_pos && gry == you.y_pos)
+    if (c == pos)
         return (true);
 
-    // check env.show array
-    if (grid_distance( grx, gry, you.x_pos, you.y_pos ) < 9)
+    const coord_def ip = pos - c;
+    if (ip.rdist() < ENV_SHOW_OFFSET)
     {
-        const int ex = grx - you.x_pos + 9;
-        const int ey = gry - you.y_pos + 9;
-
-        if (env.show[ex][ey])
+        const coord_def sp(ip + coord_def(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET));
+        if (show(sp))
             return (true);
     }
-
-    return (false);
-}  // end see_grid() 
-
-// answers the question: "Would a grid be within character's line of sight,
-// even if all translucent/clear walls were made opaque?"
-bool see_grid_no_trans( int grx, int gry )
-{
-    // rare case: can player see self?  (of course!)
-    if (grx == you.x_pos && gry == you.y_pos)
-        return (true);
-
-    // check no_trans_show array
-    if (grid_distance( grx, gry, you.x_pos, you.y_pos ) < 9)
-    {
-        const int ex = grx - you.x_pos + 9;
-        const int ey = gry - you.y_pos + 9;
-
-        if (env.no_trans_show[ex][ey])
-            return (true);
-    }
-
     return (false);
 }
 
-// Is the grid visible, but a translucent wall is in the way?
-bool trans_wall_blocking( int grx, int gry )
+// answers the question: "Is a grid within character's line of sight?"
+bool see_grid( const coord_def &p )
 {
-    return see_grid(grx, gry) && !see_grid_no_trans(grx, gry);
+    return see_grid(env.show, you.pos(), p);
+}
+
+// answers the question: "Would a grid be within character's line of sight,
+// even if all translucent/clear walls were made opaque?"
+bool see_grid_no_trans( const coord_def &p )
+{
+    return see_grid(env.no_trans_show, you.pos(), p);
+}
+
+// Is the grid visible, but a translucent wall is in the way?
+bool trans_wall_blocking( const coord_def &p )
+{
+    return see_grid(p) && !see_grid_no_trans(p);
 }
 
 static const unsigned table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 

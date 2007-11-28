@@ -1276,6 +1276,8 @@ private:
 };
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
+typedef FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+    env_show_grid;
 
 struct crawl_environment
 {
@@ -1294,15 +1296,15 @@ public:
 
     FixedArray< map_cell, GXM, GYM >        map;    // discovered terrain
 
-    FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-                                             show;      // view window char 
-    FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-                                             show_col;  // view window colour
-
+    // Glyphs of squares that are in LOS.
+    env_show_grid show;
+    
     // What would be visible, if all of the translucent wall were
     // made opaque.
-    FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-                                             no_trans_show;
+    env_show_grid no_trans_show;
+    
+    FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+                                             show_col;  // view window colour
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     unsigned char cloud_no;

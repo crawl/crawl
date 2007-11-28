@@ -3760,7 +3760,8 @@ static bool handle_spell( monsters *monster, bolt & beem )
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it
         if (spell_cast == SPELL_ANIMATE_DEAD
-            && !animate_dead( 100, SAME_ATTITUDE(monster), monster->foe, 0 ))
+            && !animate_dead( monster, 100, SAME_ATTITUDE(monster),
+                              monster->foe, 0 ))
         {
             return (false);
         }

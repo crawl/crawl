@@ -611,7 +611,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     case SPELL_ANIMATE_DEAD:
         // see special handling in monstuff::handle_spell {dlb}
-        animate_dead( 5 + random2(5), SAME_ATTITUDE(monster), monster->foe, 1 );
+        animate_dead( monster, 5 + random2(5), SAME_ATTITUDE(monster),
+                      monster->foe, 1 );
         return;
 
     case SPELL_CALL_IMP: // class 5 demons
