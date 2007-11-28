@@ -213,8 +213,8 @@ void xom_makes_you_cast_random_spell(int sever)
     god_acting gdact(GOD_XOM);
 
     const int nxomspells = ARRAYSIZE(xom_spells);
-    if (spellenum >= nxomspells)
-        spellenum = nxomspells - 1;
+    if (spellenum > nxomspells)
+        spellenum = nxomspells;
     
     const spell_type spell = xom_spells[random2(spellenum)];
 
