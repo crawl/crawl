@@ -1144,9 +1144,7 @@ char burn_freeze(int pow, char flavour)
     if (hurted)
     {
         if (mons_friendly( monster ))
-        {
             did_god_conduct( DID_ATTACK_FRIEND, 5, true, monster );
-        }
         
         if (mons_holiness( monster ) == MH_HOLY)
             did_god_conduct( DID_ATTACK_HOLY, monster->hit_dice );

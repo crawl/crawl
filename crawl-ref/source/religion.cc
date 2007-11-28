@@ -359,6 +359,7 @@ void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
 static bool followers_abandon_you(void); // Beogh
+static void dock_piety(int piety_loss, int penance);
 
 bool is_evil_god(god_type god)
 {
@@ -1325,25 +1326,12 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         break;
 
     case DID_ATTACK_FRIEND:
-        switch (you.religion)
+        if (god_hates_attacking_friend(you.religion, victim))
         {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-        case GOD_OKAWARU:
-        case GOD_BEOGH: // added penance to avoid killings for loot
-                        // deliberately no extra punishment for killing
-            if (you.religion != GOD_BEOGH ||
-                (victim && mons_species(victim->id()) == MONS_ORC))
-            {
-                piety_change = -level;
-                if (known)
-                    penance = level * 3;
-                ret = true;
-            }
-            break;
-        default:
-            break;
+            piety_change = -level;
+            if (known)
+                penance = level * 3;
+            ret = true;
         }
         break;
 
@@ -1412,6 +1400,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_TROG:
         case GOD_BEOGH:
         case GOD_LUGONU:
+            if (god_hates_attacking_friend(you.religion, victim))
+                break;
+            
             simple_god_message(" accepts your kill.");
             ret = true;
             if (random2(level + 18 - you.experience_level / 2) > 5)
@@ -1432,6 +1423,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
         case GOD_LUGONU:
+            if (god_hates_attacking_friend(you.religion, victim))
+                break;
+            
             simple_god_message(" accepts your kill.");
             ret = true;
             // Holy gods are easier to please this way
@@ -1452,6 +1446,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
+            if (god_hates_attacking_friend(you.religion, victim))
+                break;
+            
             simple_god_message(" accepts your kill.");
             ret = true;
             // Holy gods are easier to please this way
@@ -1466,7 +1463,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         break;
 
     case DID_KILL_PRIEST:
-        if (you.religion == GOD_BEOGH)
+        if (you.religion == GOD_BEOGH
+            && !god_hates_attacking_friend(you.religion, victim))
         {
             simple_god_message(" appreciates your killing of a "
                                "heretic priest.");
@@ -1477,7 +1475,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         break;
         
     case DID_KILL_WIZARD:
-        if (you.religion == GOD_TROG) 
+        if (you.religion == GOD_TROG
+            && !god_hates_attacking_friend(you.religion, victim))
         {
             // hooking this up, but is it too good?  
             // enjoy it while you can -- bwr
@@ -1684,31 +1683,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     if (piety_change > 0)
         gain_piety( piety_change );
     else 
-    {
-        const int piety_loss = -piety_change;
-
-        if (piety_loss)
-        {
-            // output guilt message:
-            mprf( "You feel%sguilty.",
-                    (piety_loss == 1) ? " a little " :
-                    (piety_loss <  5) ? " " :
-                    (piety_loss < 10) ? " very "
-                                      : " extremely " );
-
-            lose_piety( piety_loss );
-        }
-
-        if (you.piety < 1)
-            excommunication();
-        else if (penance)       // only if still in religion
-        {
-            god_speaks( you.religion, 
-                        "\"You will pay for your transgression, mortal!\"" );
-
-            inc_penance( penance );
-        }
-    }
+        dock_piety(-piety_change, penance);
 
 #if DEBUG_DIAGNOSTICS
     if (ret)
@@ -1737,6 +1712,42 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
 #endif
 
     return (ret);
+}
+
+static void dock_piety(int piety_loss, int penance)
+{
+    static long last_piety_lecture = -1L;
+    static long last_penance_lecture = -1L;
+    
+    if (piety_loss <= 0 && penance <= 0)
+        return;
+
+    if (piety_loss)
+    {
+        if (last_piety_lecture != you.num_turns)
+        {
+            // output guilt message:
+            mprf( "You feel%sguilty.",
+                  (piety_loss == 1) ? " a little " :
+                  (piety_loss <  5) ? " " :
+                  (piety_loss < 10) ? " very "
+                  : " extremely " );
+        }
+
+        last_piety_lecture = you.num_turns;
+        lose_piety( piety_loss );
+    }
+
+    if (you.piety < 1)
+        excommunication();
+    else if (penance)       // only if still in religion
+    {
+        if (last_penance_lecture != you.num_turns)
+            god_speaks( you.religion, 
+                        "\"You will pay for your transgression, mortal!\"" );
+        last_penance_lecture = you.num_turns;
+        inc_penance( penance );
+    }
 }
 
 void gain_piety(int pgn)
@@ -3129,6 +3140,27 @@ void altar_prayer(void)
     offer_items();
 }                               // end altar_prayer()
 
+bool god_hates_attacking_friend(god_type god, const actor *fr)
+{
+    if (!fr || fr->kill_alignment() != KC_FRIENDLY)
+        return (false);
+    
+    switch (god)
+    {
+    case GOD_ZIN:
+    case GOD_SHINING_ONE:
+    case GOD_ELYVILON:
+    case GOD_OKAWARU:
+        return (true);
+        
+    case GOD_BEOGH: // added penance to avoid killings for loot
+        return (fr && mons_species(fr->id()) == MONS_ORC);
+
+    default:
+        return (false);
+    }
+}
+
 static bool god_likes_items(god_type god)
 {
     switch (god)
@@ -3708,4 +3740,38 @@ bool tso_stab_safe_monster(const actor *act)
 {
     const mon_holy_type holy = act->holiness();
     return (holy != MH_NATURAL && holy != MH_HOLY);
+}
+
+/////////////////////////////////////////////////////////////////////
+// god_conduct_trigger
+
+god_conduct_trigger::god_conduct_trigger(
+    conduct_type c, int pg, bool kn, const monsters *vict)
+  : conduct(c), pgain(pg), known(kn), enabled(true), victim(NULL)
+{
+    if (vict)
+    {
+        victim.reset(new monsters);
+        *(victim.get()) = *vict;
+    }
+}
+
+void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
+                              const monsters *vict)
+{
+    conduct = c;
+    pgain = pg;
+    known = kn;
+    victim.reset(NULL);
+    if (vict)
+    {
+        victim.reset(new monsters);
+        *victim.get() = *vict;
+    }
+}
+
+god_conduct_trigger::~god_conduct_trigger()
+{
+    if (enabled && conduct != NUM_CONDUCTS)
+        did_god_conduct(conduct, pgain, known, victim.get());
 }

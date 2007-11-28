@@ -16,6 +16,7 @@
 
 #include "enum.h"
 #include "ouch.h"
+#include "externs.h"
 
 #define MAX_PIETY 200
 
@@ -28,8 +29,10 @@ int piety_breakpoint(int i);
 const char *god_name(god_type which_god, bool long_name = false); //mv
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
+
 bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const actor *victim = NULL);
+
 void excommunication(void);
 void gain_piety(int pgn);
 void god_speaks(god_type god, const char *mesg );
@@ -56,7 +59,31 @@ bool ely_destroy_weapons();
 bool trog_burn_books();
 bool tso_stab_safe_monster(const actor *act);
 
+bool god_hates_attacking_friend(god_type god, const actor *fr);
+
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
+
+// Calls did_god_conduct when the object goes out of scope.
+struct god_conduct_trigger
+{
+    conduct_type conduct;
+    int pgain;
+    bool known;
+    bool enabled;
+    std::auto_ptr<monsters> victim;
+
+    god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
+                        int pg = 0,
+                        bool kn = true,
+                        const monsters *vict = NULL);
+
+    void set(conduct_type c = NUM_CONDUCTS,
+             int pg = 0,
+             bool kn = true,
+             const monsters *vict = NULL);
+
+    ~god_conduct_trigger();
+};
 
 #endif

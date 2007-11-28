@@ -3874,18 +3874,22 @@ static int affect_monster(bolt &beam, monsters *mon)
     // elementals on their side - the elementals won't give a sh*t,
     // after all)
 
+    god_conduct_trigger conduct;
+    conduct.enabled = false;
+    
     if (nasty_beam(mon, beam))
     {
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
-            const bool okay = beam.aux_source == "reading a scroll of immolation"
+            const bool okay =
+                beam.aux_source == "reading a scroll of immolation"
                               && !beam.effect_known;
-            
+
             if (mons_friendly(mon))
-                did_god_conduct( DID_ATTACK_FRIEND, 5, !okay, mon );
+                conduct.set( DID_ATTACK_FRIEND, 5, !okay, mon );
 
             if (mons_holiness( mon ) == MH_HOLY)
-                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );
+                conduct.set( DID_ATTACK_HOLY, mon->hit_dice, !okay, mon );
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
@@ -3945,6 +3949,8 @@ static int affect_monster(bolt &beam, monsters *mon)
 
     update_hurt_or_helped(beam, mon);
 
+    conduct.enabled = true;
+    
     // the beam hit.
     if (mons_near(mon))
     {

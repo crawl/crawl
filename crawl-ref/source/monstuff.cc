@@ -640,32 +640,33 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             {
                 if (mons_holiness(monster) == MH_NATURAL)
                     did_god_conduct(DID_KILL_LIVING,
-                                    monster->hit_dice);
+                                    monster->hit_dice, true, monster);
 
                 if (mons_holiness(monster) == MH_UNDEAD)
                     did_god_conduct(DID_KILL_UNDEAD,
-                                    monster->hit_dice);
+                                    monster->hit_dice, true, monster);
 
                 if (mons_holiness(monster) == MH_DEMONIC)
                     did_god_conduct(DID_KILL_DEMON,
-                                    monster->hit_dice);
+                                    monster->hit_dice, true, monster);
 
                 if (mons_class_flag(monster->type, M_EVIL))
                     did_god_conduct(DID_KILL_NATURAL_EVIL,
-                                    monster->hit_dice);
+                                    monster->hit_dice, true, monster);
 
                 // jmf: Trog hates wizards
                 if (mons_is_magic_user(monster))
                     did_god_conduct(DID_KILL_WIZARD,
-                                    monster->hit_dice);
+                                    monster->hit_dice, true, monster);
 
                 // Beogh hates priests of other gods.
                 if (mons_class_flag(monster->type, M_PRIEST))
                     did_god_conduct(DID_KILL_PRIEST,
-                                    monster->hit_dice);
+                                    monster->hit_dice, true, monster);
 
                 if (mons_holiness(monster) == MH_HOLY)
-                    did_god_conduct(DID_KILL_ANGEL, monster->hit_dice);
+                    did_god_conduct(DID_KILL_ANGEL, monster->hit_dice,
+                                    true, monster);
             }
 
             // Divine health and mp restoration doesn't happen when killing
