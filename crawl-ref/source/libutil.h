@@ -21,25 +21,6 @@
 #include <vector>
 #include <map>
 
-// A collection of named things that can be stacked. The collection merges
-// things that should be merged (by name) and outputs a comma-separated list
-// with the preferred description type.
-class named_thing_collection
-{
-public:
-    named_thing_collection();
-    void add_thing(const std::string &name);
-    std::string describe(description_level_type desc,
-                         const char **plural_qualifiers = NULL,
-                         const char **no_qualifier_suffix = NULL) const;
-    size_t size() const;
-    bool   empty() const;
-private:
-    typedef std::map<std::string, int> name_count_map;
-    name_count_map names;
-    size_t nnames;
-};
-
 extern const char *standard_plural_qualifiers[];
 
 // Applies a description type to a name, but does not pluralise! You

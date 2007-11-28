@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
 
 #include "externs.h"
 
@@ -816,6 +817,59 @@ void holy_word(int pow, bool silent)
     }                           // end "for tu"
 }                               // end holy_word()
 
+typedef std::pair<const monsters*,int> counted_monster;
+typedef std::vector<counted_monster> counted_monster_list;
+static void record_monster_by_name(counted_monster_list &list,
+                                   const monsters *mons)
+{
+    const std::string name = mons->name(DESC_PLAIN);
+    for (counted_monster_list::iterator i = list.begin(); i != list.end(); ++i)
+    {
+        if (i->first->name(DESC_PLAIN) == name)
+        {
+            i->second++;
+            return;
+        }
+    }
+    list.push_back( counted_monster(mons, 1) );
+}
+
+static int monster_count(const counted_monster_list &list)
+{
+    int nmons = 0;
+    for (counted_monster_list::const_iterator i = list.begin();
+         i != list.end(); ++i)
+    {
+        nmons += i->second;
+    }
+    return (nmons);
+}
+
+static std::string describe_monsters(const counted_monster_list &list)
+{
+    std::ostringstream out;
+
+    description_level_type desc = DESC_CAP_THE;
+    for (counted_monster_list::const_iterator i = list.begin();
+         i != list.end(); desc = DESC_NOCAP_THE)
+    {
+        const counted_monster &cm(*i);
+        if (i != list.begin())
+        {
+            ++i;
+            out << (i == list.end()? " and " : ", ");
+        }
+        else
+            ++i;
+
+        const std::string name =
+            cm.second > 1? pluralise(cm.first->name(desc))
+            : cm.first->name(desc);
+        out << name;
+    }
+    return (out.str());
+}
+
 // poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to)
@@ -841,7 +895,7 @@ void cast_toxic_radiance(void)
         poison_player(2);
     }
 
-    named_thing_collection affected_monsters;
+    counted_monster_list affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
     for (int toxy = 0; toxy < MAX_MONSTERS; toxy++)
     {
@@ -862,7 +916,7 @@ void cast_toxic_radiance(void)
                     affected = true;
 
                 if (affected)
-                    affected_monsters.add_thing(monster->name(DESC_PLAIN));
+                    record_monster_by_name(affected_monsters, monster);
             }
             else if (player_see_invis())
             {
@@ -877,8 +931,8 @@ void cast_toxic_radiance(void)
     {
         const std::string message =
             make_stringf("%s %s poisoned.",
-                         affected_monsters.describe(DESC_CAP_THE).c_str(),
-                         affected_monsters.size() == 1? "is" : "are");
+                         describe_monsters(affected_monsters).c_str(),
+                         monster_count(affected_monsters) == 1? "is" : "are");
         if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
