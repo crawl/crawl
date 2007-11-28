@@ -2965,7 +2965,8 @@ static bool handle_reaching(monsters *monster)
         if (monster->foe == MHITYOU)
         {
             // this check isn't redundant -- player may be invisible.
-            if (monster->target_x == you.x_pos && monster->target_y == you.y_pos)
+            if (monster->target_pos() == you.pos()
+                && see_grid_no_trans(monster->pos()))
             {
                 int dx = abs(monster->x - you.x_pos);
                 int dy = abs(monster->y - you.y_pos);

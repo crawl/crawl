@@ -275,6 +275,11 @@ static bool reaching_weapon_attack(const item_def& wpn)
         mpr("Your weapon cannot reach that far!");
         return false;
     }
+    else if (!see_grid_no_trans(beam.tx, beam.ty))
+    {
+        mpr("There's a wall in the way.");
+        return (false);
+    }
     else if (mgrd[beam.tx][beam.ty] == NON_MONSTER)
     {
         // Must return true, otherwise you get a free discovery
