@@ -1715,6 +1715,9 @@ bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
             if (tx == you.x_pos && ty == you.y_pos)
                 continue;
 
+            if ( !in_bounds(tx,ty) )
+                continue;
+
             if (mgrd[tx][ty] != NON_MONSTER)
                 continue;
 
