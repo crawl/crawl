@@ -80,7 +80,7 @@ DEFVEC(deck_of_emergency);
 
 static card_type a_deck_of_destruction[] = {
     CARD_VITRIOL, CARD_FLAME, CARD_FROST, CARD_VENOM, CARD_HAMMER,
-    CARD_PAIN, CARD_TORMENT
+    CARD_SPARK, CARD_PAIN, CARD_TORMENT
 };
 
 DEFVEC(deck_of_destruction);
@@ -251,6 +251,7 @@ const char* card_name(card_type card)
     case CARD_FLAME: return "Flame";
     case CARD_FROST: return "Frost";
     case CARD_VENOM: return "Venom";
+    case CARD_SPARK: return "the Spark";
     case CARD_HAMMER: return "the Hammer";
     case CARD_PAIN: return "Pain";
     case CARD_TORMENT: return "Torment";
@@ -1463,6 +1464,52 @@ static void minefield_card(int power, deck_rarity_type rarity)
     }
 }
 
+static int drain_monsters(int x, int y, int pow, int garbage)
+{
+    UNUSED( garbage );
+    if ( coord_def(x,y) == you.pos() )
+        drain_exp();
+    else
+    {
+        const int mnstr = mgrd[x][y];
+        if (mnstr == NON_MONSTER)
+            return 0;
+
+        monsters& mon = menv[mnstr];
+
+        if (mons_res_negative_energy(&mon) > 0)
+            simple_monster_message(&mon, " is unaffected.");
+        else
+        {
+            simple_monster_message(&mon, " is drained.");
+
+            if (random2(20) < pow/60)
+            {
+                mon.hit_dice--;
+                mon.experience = 0;
+            }
+
+            mon.max_hit_points -= 2 + random2(pow/50);
+            mon.hit_points -= 2 + random2(50);
+
+            if (mon.hit_points >= mon.max_hit_points)
+                mon.hit_points = mon.max_hit_points;
+
+            if (mon.hit_dice < 1)
+                mon.hit_points = 0;
+
+            if ( mon.hit_points <= 0 )
+                monster_die( &mon, KILL_YOU, 0 );
+        }
+    }
+    return 1;
+}
+
+static void mass_drain(int pow)
+{
+    apply_area_visible(drain_monsters, pow);
+}
+
 // Return true if it was a "genuine" draw, i.e., there was a monster
 // to target. This is still exploitable by finding popcorn monsters.
 static bool damaging_card(card_type card, int power, deck_rarity_type rarity)
@@ -1479,6 +1526,9 @@ static bool damaging_card(card_type card, int power, deck_rarity_type rarity)
                                      ZAP_CRYSTAL_SPEAR };
     const zap_type venomzaps[3] = { ZAP_STING, ZAP_VENOM_BOLT,
                                     ZAP_POISON_ARROW };
+    const zap_type sparkzaps[3] = { ZAP_ELECTRICITY, ZAP_LIGHTNING,
+                                    ZAP_ORB_OF_ELECTRICITY };
+    const zap_type painzaps[2] = { ZAP_AGONY, ZAP_NEGATIVE_ENERGY };
 
     switch ( card )
     {
@@ -1502,8 +1552,18 @@ static bool damaging_card(card_type card, int power, deck_rarity_type rarity)
         ztype = venomzaps[power_level];
         break;
 
+    case CARD_SPARK:
+        ztype = sparkzaps[power_level];
+        break;
+
     case CARD_PAIN:
-        ztype = ZAP_AGONY;
+        if ( power_level == 2 )
+        {
+            mass_drain(power);
+            return true;
+        }
+        else
+            ztype = painzaps[power_level];
         break;
 
     default:
@@ -2237,7 +2297,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_VITRIOL: case CARD_FLAME: case CARD_FROST: case CARD_HAMMER:
-    case CARD_PAIN:
+    case CARD_SPARK:   case CARD_PAIN: 
         rc = damaging_card(which_card, power, rarity);
         break;
 

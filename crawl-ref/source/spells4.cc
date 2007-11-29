@@ -693,25 +693,30 @@ void cast_conjure_ball_lightning( int pow )
 static int sleep_monsters(int x, int y, int pow, int garbage)
 {
     UNUSED( garbage );
-    int mnstr = mgrd[x][y];
+    const int mnstr = mgrd[x][y];
 
-    if (mnstr == NON_MONSTER)                                   return 0;
-    if (mons_holiness(&menv[mnstr]) != MH_NATURAL)        return 0;
-    if (check_mons_resist_magic( &menv[mnstr], pow ))           return 0;
+    if (mnstr == NON_MONSTER)
+        return 0;
 
-    // Why shouldn't we be able to sleep friendly monsters? -- bwr
-    // if (mons_friendly( &menv[mnstr] ))                          return 0;
+    monsters& mon = menv[mnstr];
+
+    if (mons_holiness(&mon) != MH_NATURAL)
+        return 0;
+    if (check_mons_resist_magic( &mon, pow ))
+        return 0;
+
+    // works on friendlies too, so no check for that
 
     //jmf: now that sleep == hibernation:
-    if (mons_res_cold( &menv[mnstr] ) > 0 && coinflip())
+    if (mons_res_cold( &mon ) > 0 && coinflip())
         return 0;
-    if (menv[mnstr].has_ench(ENCH_SLEEP_WARY))
+    if (mon.has_ench(ENCH_SLEEP_WARY))
         return 0;
 
-    menv[mnstr].put_to_sleep();
+    mon.put_to_sleep();
 
-    if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
-        menv[mnstr].add_ench(ENCH_SLOW);
+    if (mons_class_flag( mon.type, M_COLD_BLOOD ) && coinflip())
+        mon.add_ench(ENCH_SLOW);
 
     return 1;
 }                               // end sleep_monsters()
