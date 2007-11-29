@@ -3825,9 +3825,7 @@ bool give_items_skills()
 
         case JOB_EARTH_ELEMENTALIST:
             newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE,
-                              random2avg(12, 2) + 6);
+            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, 20);
             
             if (you.species == SP_GNOME)
             {
