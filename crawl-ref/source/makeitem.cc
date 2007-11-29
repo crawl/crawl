@@ -970,13 +970,11 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
     switch (item_race)
     {
     case MAKE_ITEM_ELVEN:
-        if (weapon_skill(item) != SK_MACES_FLAILS)
-            rc = ISFLAG_ELVEN;
+        rc = ISFLAG_ELVEN;
         break;
 
     case MAKE_ITEM_DWARVEN:
-        if (weapon_skill(item) != SK_POLEARMS)
-            rc = ISFLAG_DWARVEN;
+        rc = ISFLAG_DWARVEN;
         break;
 
     case MAKE_ITEM_ORCISH:
@@ -1624,7 +1622,8 @@ static item_status_flag_type determine_missile_race(const item_def& item,
 
     case MAKE_ITEM_RANDOM_RACE:
         // Elves don't make bolts
-        if ((item.sub_type == MI_ARROW || item.sub_type == MI_DART)
+        if ((item.sub_type == MI_ARROW
+             || item.sub_type == MI_DART)
             && one_chance_in(4))
         {
             rc = ISFLAG_ELVEN;
@@ -1638,14 +1637,16 @@ static item_status_flag_type determine_missile_race(const item_def& item,
         {
             rc = ISFLAG_ORCISH;
         }
-        
-        // Dwarves don't make arrows (or needles, see below)
-        if ((item.sub_type == MI_DART || item.sub_type == MI_BOLT)
+
+        // Dwarves don't make arrows
+        if ((item.sub_type == MI_DART
+             || item.sub_type == MI_BOLT)
             && one_chance_in(6))
         {
             rc = ISFLAG_DWARVEN;
         }
 
+        // Dwarves don't make needles
         if (item.sub_type == MI_NEEDLE)
         {
             if (one_chance_in(10))

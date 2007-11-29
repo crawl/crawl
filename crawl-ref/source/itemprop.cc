@@ -640,7 +640,7 @@ void set_equip_race( item_def &item, unsigned long flags )
 
     case OBJ_ARMOUR:
         // not hides, dragon armour, crystal plate, or barding
-        if (item.sub_type >= ARM_DRAGON_HIDE 
+        if (item.sub_type >= ARM_DRAGON_HIDE
             && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR
             && item.sub_type != ARM_CENTAUR_BARDING
             && item.sub_type != ARM_NAGA_BARDING)
@@ -664,27 +664,32 @@ void set_equip_race( item_def &item, unsigned long flags )
     // check that item is appropriate for racial type
     switch (flags)
     {
-    case ISFLAG_ELVEN: 
-        if (item.base_type == OBJ_ARMOUR 
-            && (item.sub_type == ARM_SPLINT_MAIL
-                || item.sub_type == ARM_BANDED_MAIL
-                || item.sub_type == ARM_PLATE_MAIL))
-        {
-            return;
-        }
-        break;
-            
-    case ISFLAG_DWARVEN: 
-        if (item.base_type == OBJ_ARMOUR 
-            && (item.sub_type == ARM_ROBE
-                || item.sub_type == ARM_LEATHER_ARMOUR
-                || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR))
+    case ISFLAG_ELVEN:
+        if ((item.base_type == OBJ_WEAPONS
+            && weapon_skill(item) == SK_MACES_FLAILS)
+                || (item.base_type == OBJ_ARMOUR
+                    && (item.sub_type == ARM_SPLINT_MAIL
+                        || item.sub_type == ARM_BANDED_MAIL
+                        || item.sub_type == ARM_PLATE_MAIL)))
         {
             return;
         }
         break;
 
-    case ISFLAG_ORCISH: 
+    case ISFLAG_DWARVEN:
+        if ((item.base_type == OBJ_WEAPONS
+            && weapon_skill(item) == SK_POLEARMS)
+                || (item.base_type == OBJ_ARMOUR
+                    && (item.sub_type == ARM_ROBE
+                        || item.sub_type == ARM_LEATHER_ARMOUR
+                        || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)))
+        {
+            return;
+        }
+        break;
+
+    case ISFLAG_ORCISH:
+
     default:
         break;
     }
