@@ -973,27 +973,6 @@ void pray()
     you.turn_is_over = true;
 
     const bool was_praying = !!you.duration[DUR_PRAYER];
-    if (was_praying)
-    {
-        mpr("Stop praying? ('y' ends prayer, 'r' will renew prayer)",
-            MSGCH_PROMPT);
-
-        const int tmp = getchm(KC_CONFIRM);
-
-        if ( tmp == 'y' || tmp == 'Y')
-        {
-             mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
-             you.duration[DUR_PRAYER] = 0;
-             return;
-        }
-
-        if ( tmp != 'r' && tmp != 'R')
-        {
-            you.turn_is_over = false;
-            mesclr();
-            return;
-        }
-    }
 
     const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
     if (altar_god != GOD_NO_GOD)
@@ -1047,7 +1026,8 @@ void pray()
         return;
     }
 
-    mprf(MSGCH_PRAY, "You offer a prayer to %s.", god_name(you.religion));
+    mprf(MSGCH_PRAY, "You %s prayer to %s.",
+         was_praying ? "renew your" : "offer a", god_name(you.religion));
 
     // ...otherwise, they offer what they're standing on
     if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD )
