@@ -162,7 +162,7 @@
 
 {
     MONS_ETTIN, 'C', BROWN, "ettin",
-    M_WARM_BLOOD | M_EVIL,
+    M_WARM_BLOOD | M_EVIL | M_TWOWEAPON,
     MR_NO_FLAGS,
     0, 10, MONS_HILL_GIANT, MONS_ETTIN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 18}, {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK },
@@ -461,7 +461,7 @@
 // that they wield two weapons... I'm raising their xp modifier. -- bwr
 {
     MONS_TWO_HEADED_OGRE, 'O', LIGHTRED, "two-headed ogre",
-    M_WARM_BLOOD | M_EVIL,
+    M_WARM_BLOOD | M_EVIL | M_TWOWEAPON,
     MR_NO_FLAGS,
     1500, 15, MONS_OGRE, MONS_TWO_HEADED_OGRE, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK },
@@ -2544,7 +2544,7 @@
 
 {
     MONS_DEEP_ELF_BLADEMASTER, 'e', LIGHTCYAN, "deep elf blademaster",
-    M_WARM_BLOOD | M_FIGHTER,
+    M_WARM_BLOOD | M_FIGHTER | M_TWOWEAPON,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK },

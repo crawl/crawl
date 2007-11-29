@@ -118,6 +118,8 @@ enum mons_class_flags
 
     M_WALL_SHIELDED     = (1<<24),        // Shielded from attacks if in wall
 
+    M_TWOWEAPON         = (1<<25),        // wields two weapons at once
+
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
 
     M_NO_SKELETON       = (1<<29),        // boneless corpses

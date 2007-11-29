@@ -1727,8 +1727,7 @@ bool mons_aligned(int m1, int m2)
 
 bool mons_wields_two_weapons(monster_type m)
 {
-    return (m == MONS_TWO_HEADED_OGRE || m == MONS_ETTIN
-            || m == MONS_DEEP_ELF_BLADEMASTER);
+    return mons_class_flag(m, M_TWOWEAPON);
 }
 
 bool mons_wields_two_weapons(const monsters *m)
