@@ -633,35 +633,23 @@ static void give_nemelex_gift()
          && !you.attribute[ATTR_CARD_COUNTDOWN]))
     {
         misc_item_type gift_type;
-        if ( random2(MAX_PIETY) <= you.piety )
-        {
-            // make a pure deck
-            const misc_item_type pure_decks[] = {
-                MISC_DECK_OF_ESCAPE,
-                MISC_DECK_OF_DESTRUCTION,
-                MISC_DECK_OF_DUNGEONS,
-                MISC_DECK_OF_SUMMONING,
-                MISC_DECK_OF_WONDERS
-            };
-            int weights[5];
-            get_pure_deck_weights(weights);
-            const int choice = choose_random_weighted(weights, weights+5);
-            gift_type = pure_decks[choice];
+
+        // make a pure deck
+        const misc_item_type pure_decks[] = {
+            MISC_DECK_OF_ESCAPE,
+            MISC_DECK_OF_DESTRUCTION,
+            MISC_DECK_OF_DUNGEONS,
+            MISC_DECK_OF_SUMMONING,
+            MISC_DECK_OF_WONDERS
+        };
+        int weights[5];
+        get_pure_deck_weights(weights);
+        const int choice = choose_random_weighted(weights, weights+5);
+        gift_type = pure_decks[choice];
 #if DEBUG_GIFTS || DEBUG_CARDS
-            show_pure_deck_chances();
+        show_pure_deck_chances();
 #endif
-            update_sacrifice_weights(choice);
-        }
-        else
-        {
-            // make a mixed deck
-            const misc_item_type mixed_decks[] = {
-                MISC_DECK_OF_WAR,
-                MISC_DECK_OF_CHANGES,
-                MISC_DECK_OF_DEFENSE
-            };
-            gift_type = RANDOM_ELEMENT(mixed_decks);
-        }
+        update_sacrifice_weights(choice);
 
         int thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
                                    true, 1, MAKE_ITEM_RANDOM_RACE );
