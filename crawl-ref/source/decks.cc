@@ -112,7 +112,7 @@ static card_type a_deck_of_wonders[] = {
 DEFVEC(deck_of_wonders);
 
 static card_type a_deck_of_dungeons[] = {
-    CARD_MAP, CARD_DOWSING, CARD_SPADE, CARD_TROWEL, CARD_MINEFIELD
+    CARD_GLASS, CARD_MAP, CARD_DOWSING, CARD_SPADE, CARD_TROWEL, CARD_MINEFIELD
 };
 
 DEFVEC(deck_of_dungeons);
@@ -235,6 +235,7 @@ const char* card_name(card_type card)
     case CARD_MINEFIELD: return "the Minefield";
     case CARD_GENIE: return "the Genie";
     case CARD_TOMB: return "the Tomb";
+    case CARD_GLASS: return "Vitrification";
     case CARD_MAP: return "the Map";
     case CARD_BANSHEE: return "the Banshee";
     case CARD_WILD_MAGIC: return "Wild Magic";
@@ -1938,6 +1939,36 @@ static void helix_card(int power, deck_rarity_type rarity)
         mpr("You feel transcendent for a moment.");
 }
 
+static void glass_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    int radius2;
+    if ( power_level == 2 )
+        radius2 = 1000000;
+    else
+    {
+        radius2 = random2(power/40) + 2;
+        radius2 *= radius2;
+    }
+
+    for ( int x = X_BOUND_1; x <= X_BOUND_2; ++x )
+    {
+        for ( int y = Y_BOUND_1; y <= Y_BOUND_2; ++y )
+        {
+            if ( distance(x,y,you.x_pos,you.y_pos) < radius2 )
+            {
+                if ( grd[x][y] == DNGN_ROCK_WALL )
+                    grd[x][y] = DNGN_CLEAR_ROCK_WALL;
+                else if ( grd[x][y] == DNGN_STONE_WALL )
+                    grd[x][y] = DNGN_CLEAR_STONE_WALL;
+                else if ( grd[x][y] == DNGN_PERMAROCK_WALL )
+                    grd[x][y] = DNGN_CLEAR_PERMAROCK_WALL;
+            }
+        }
+    }
+            
+}
+
 static void dowsing_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -2289,6 +2320,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SHUFFLE:          shuffle_card(power, rarity); break;
     case CARD_EXPERIENCE:       potion_effect(POT_EXPERIENCE, power/4); break;
     case CARD_HELIX:            helix_card(power, rarity); break;
+    case CARD_GLASS:            glass_card(power, rarity); break;
     case CARD_DOWSING:          dowsing_card(power, rarity); break;
     case CARD_MINEFIELD:        minefield_card(power, rarity); break;
     case CARD_GENIE:            genie_card(power, rarity); break;

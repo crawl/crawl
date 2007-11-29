@@ -99,6 +99,7 @@ enum card_type
     CARD_WILD_MAGIC,
     CARD_HELIX,                 // remove one *bad* mutation
 
+    CARD_GLASS,                 // make walls transparent
     CARD_MAP,                   // magic mapping
     CARD_DOWSING,               // detect SD/traps/items/monsters
     CARD_SPADE,                 // dig
