@@ -56,8 +56,6 @@ enum card_flags_type
 
 enum card_type
 {
-    CARD_BLANK1 = 0,            // non-retried
-    CARD_BLANK2,                // retried and failed
     CARD_PORTAL,                // "the mover"
     CARD_WARP,                  // "the jumper"
     CARD_SWAP,                  // "swap"

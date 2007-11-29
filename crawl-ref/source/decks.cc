@@ -63,78 +63,113 @@
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
 
-#define VECFROM(x) (x), (x) + ARRAYSIZE(x)
-#define DEFVEC(Z) static std::vector<card_type> Z(VECFROM(a_##Z))
-
-static card_type a_deck_of_transport[] = {
-    CARD_PORTAL, CARD_WARP, CARD_SWAP, CARD_VELOCITY
+struct card_with_weights
+{
+    card_type card;
+    int weight[3];
 };
 
-DEFVEC(deck_of_transport);
+typedef card_with_weights deck_archetype;
 
-static card_type a_deck_of_emergency[] = {
-    CARD_TOMB, CARD_BANSHEE, CARD_DAMNATION, CARD_SOLITUDE, CARD_WARPWRIGHT
+#define END_OF_DECK {NUM_CARDS, {0,0,0}}
+
+const deck_archetype deck_of_transport[] = {
+    { CARD_PORTAL,   {5, 5, 5} },
+    { CARD_WARP,     {5, 5, 5} },
+    { CARD_SWAP,     {5, 5, 5} },
+    { CARD_VELOCITY, {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_emergency);
-
-static card_type a_deck_of_destruction[] = {
-    CARD_VITRIOL, CARD_FLAME, CARD_FROST, CARD_VENOM, CARD_HAMMER,
-    CARD_SPARK, CARD_PAIN, CARD_TORMENT
+const deck_archetype deck_of_emergency[] = {
+    { CARD_TOMB,       {5, 5, 5} },
+    { CARD_BANSHEE,    {5, 5, 5} },
+    { CARD_DAMNATION,  {0, 1, 2} },
+    { CARD_SOLITUDE,   {5, 5, 5} },
+    { CARD_WARPWRIGHT, {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_destruction);
-
-static card_type a_deck_of_battle[] = {
-    CARD_ELIXIR, CARD_BATTLELUST, CARD_METAMORPHOSIS,
-    CARD_HELM, CARD_BLADE, CARD_SHADOW
+const deck_archetype deck_of_destruction[] = {
+    { CARD_VITRIOL, {5, 5, 5} },
+    { CARD_FLAME,   {5, 5, 5} },
+    { CARD_FROST,   {5, 5, 5} },
+    { CARD_VENOM,   {5, 5, 5} },
+    { CARD_HAMMER,  {5, 5, 5} },
+    { CARD_SPARK,   {5, 5, 5} },
+    { CARD_PAIN,    {5, 5, 5} },
+    { CARD_TORMENT, {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_battle);
-
-static card_type a_deck_of_enchantments[] = {
-    CARD_ELIXIR
+const deck_archetype deck_of_battle[] = {
+    { CARD_ELIXIR,        {5, 5, 5} },
+    { CARD_BATTLELUST,    {5, 5, 5} },
+    { CARD_METAMORPHOSIS, {5, 5, 5} },
+    { CARD_HELM,          {5, 5, 5} },
+    { CARD_BLADE,         {5, 5, 5} },
+    { CARD_SHADOW,        {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_enchantments);
-
-static card_type a_deck_of_summoning[] = {
-    CARD_CRUSADE, CARD_SUMMON_ANIMAL, CARD_SUMMON_DEMON, CARD_SUMMON_WEAPON,
-    CARD_SUMMON_SKELETON
+const deck_archetype deck_of_enchantments[] = {
+    { CARD_ELIXIR, {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_summoning);
-
-static card_type a_deck_of_wonders[] = {
-    CARD_POTION, CARD_FOCUS, CARD_SHUFFLE,
-    CARD_EXPERIENCE, CARD_WILD_MAGIC, CARD_HELIX
+const deck_archetype deck_of_summoning[] = {
+    { CARD_CRUSADE,         {5, 5, 5} },
+    { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
+    { CARD_SUMMON_DEMON,    {5, 5, 5} },
+    { CARD_SUMMON_WEAPON,   {5, 5, 5} },
+    { CARD_SUMMON_SKELETON, {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_wonders);
-
-static card_type a_deck_of_dungeons[] = {
-    CARD_GLASS, CARD_MAP, CARD_DOWSING, CARD_SPADE, CARD_TROWEL, CARD_MINEFIELD
+const deck_archetype deck_of_wonders[] = {
+    { CARD_POTION,     {5, 5, 5} },
+    { CARD_FOCUS,      {1, 1, 2} },
+    { CARD_SHUFFLE,    {5, 5, 5} },
+    { CARD_EXPERIENCE, {5, 5, 5} },
+    { CARD_WILD_MAGIC, {5, 5, 5} },
+    { CARD_HELIX,      {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_dungeons);
-
-static card_type a_deck_of_oddities[] = {
-    CARD_GENIE, CARD_BARGAIN, CARD_WRATH, CARD_XOM,
-    CARD_FEAST, CARD_FAMINE, CARD_CURSE
+const deck_archetype deck_of_dungeons[] = {
+    { CARD_GLASS,     {5, 5, 5} },
+    { CARD_MAP,       {5, 5, 5} },
+    { CARD_DOWSING,   {5, 5, 5} },
+    { CARD_SPADE,     {5, 5, 5} },
+    { CARD_TROWEL,    {5, 5, 5} },
+    { CARD_MINEFIELD, {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_oddities);
-
-static card_type a_deck_of_punishment[] = {
-    CARD_WRAITH, CARD_WILD_MAGIC, CARD_WRATH,
-    CARD_XOM, CARD_FAMINE, CARD_CURSE, CARD_TOMB,
-    CARD_DAMNATION, CARD_PORTAL, CARD_MINEFIELD
+const deck_archetype deck_of_oddities[] = {
+    { CARD_GENIE,   {5, 5, 5} },
+    { CARD_BARGAIN, {5, 5, 5} },
+    { CARD_WRATH,   {5, 5, 5} },
+    { CARD_XOM,     {5, 5, 5} },
+    { CARD_FEAST,   {5, 5, 5} },
+    { CARD_FAMINE,  {5, 5, 5} },
+    { CARD_CURSE,   {5, 5, 5} },
+    END_OF_DECK
 };
 
-DEFVEC(deck_of_punishment);
-
-#undef DEFVEC
-#undef VECFROM
+const deck_archetype deck_of_punishment[] = {
+    { CARD_WRAITH,     {5, 5, 5} },
+    { CARD_WILD_MAGIC, {5, 5, 5} },
+    { CARD_WRATH,      {5, 5, 5} },
+    { CARD_XOM,        {5, 5, 5} },
+    { CARD_FAMINE,     {5, 5, 5} },
+    { CARD_CURSE,      {5, 5, 5} },
+    { CARD_TOMB,       {5, 5, 5} },
+    { CARD_DAMNATION,  {5, 5, 5} },
+    { CARD_PORTAL,     {5, 5, 5} },
+    { CARD_MINEFIELD,  {5, 5, 5} },
+    END_OF_DECK
+};
 
 static void check_odd_card(unsigned char flags)
 {
@@ -212,8 +247,6 @@ const char* card_name(card_type card)
 {
     switch (card)
     {
-    case CARD_BLANK1: return "blank card";
-    case CARD_BLANK2: return "blank card";
     case CARD_PORTAL: return "the Portal";
     case CARD_WARP: return "the Warp";
     case CARD_SWAP: return "Swap";
@@ -268,40 +301,40 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
-static const std::vector<card_type>* random_sub_deck(unsigned char deck_type)
+static const deck_archetype* random_sub_deck(unsigned char deck_type)
 {
-    const std::vector<card_type> *pdeck = NULL;
+    const deck_archetype *pdeck = NULL;
     switch ( deck_type )
     {
     case MISC_DECK_OF_ESCAPE:
-        pdeck = (coinflip() ? &deck_of_transport : &deck_of_emergency);
+        pdeck = (coinflip() ? deck_of_transport : deck_of_emergency);
         break;
-    case MISC_DECK_OF_DESTRUCTION: pdeck = &deck_of_destruction; break;
-    case MISC_DECK_OF_DUNGEONS:    pdeck = &deck_of_dungeons;    break;
-    case MISC_DECK_OF_SUMMONING:   pdeck = &deck_of_summoning;   break;
-    case MISC_DECK_OF_WONDERS:     pdeck = &deck_of_wonders;     break;
-    case MISC_DECK_OF_PUNISHMENT:  pdeck = &deck_of_punishment;  break;
+    case MISC_DECK_OF_DESTRUCTION: pdeck = deck_of_destruction; break;
+    case MISC_DECK_OF_DUNGEONS:    pdeck = deck_of_dungeons;    break;
+    case MISC_DECK_OF_SUMMONING:   pdeck = deck_of_summoning;   break;
+    case MISC_DECK_OF_WONDERS:     pdeck = deck_of_wonders;     break;
+    case MISC_DECK_OF_PUNISHMENT:  pdeck = deck_of_punishment;  break;
     case MISC_DECK_OF_WAR:
         switch ( random2(6) )
         {
-        case 0: pdeck = &deck_of_destruction;  break;
-        case 1: pdeck = &deck_of_enchantments; break;
-        case 2: pdeck = &deck_of_battle;       break;
-        case 3: pdeck = &deck_of_summoning;    break;
-        case 4: pdeck = &deck_of_transport;    break;
-        case 5: pdeck = &deck_of_emergency;    break;
+        case 0: pdeck = deck_of_destruction;  break;
+        case 1: pdeck = deck_of_enchantments; break;
+        case 2: pdeck = deck_of_battle;       break;
+        case 3: pdeck = deck_of_summoning;    break;
+        case 4: pdeck = deck_of_transport;    break;
+        case 5: pdeck = deck_of_emergency;    break;
         }
         break;
     case MISC_DECK_OF_CHANGES:
         switch ( random2(3) )
         {
-        case 0: pdeck = &deck_of_battle;       break;
-        case 1: pdeck = &deck_of_dungeons;     break;
-        case 2: pdeck = &deck_of_wonders;      break;
+        case 0: pdeck = deck_of_battle;       break;
+        case 1: pdeck = deck_of_dungeons;     break;
+        case 2: pdeck = deck_of_wonders;      break;
         }
         break;
     case MISC_DECK_OF_DEFENSE:
-        pdeck = (coinflip() ? &deck_of_emergency : &deck_of_battle);
+        pdeck = (coinflip() ? deck_of_emergency : deck_of_battle);
         break;
     }
 
@@ -310,65 +343,46 @@ static const std::vector<card_type>* random_sub_deck(unsigned char deck_type)
     return pdeck;
 }
 
-static card_type random_card(unsigned char deck_type, bool &was_oddity)
+static card_type choose_from_archetype(const deck_archetype* pdeck,
+                                       deck_rarity_type rarity)
 {
-    const std::vector<card_type> *pdeck = random_sub_deck(deck_type);
+    // We assume here that common == 0, rare == 1, legendary == 2.
+
+    // FIXME: We should use one of the various choose_random_weighted
+    // functions here, probably with an iterator, instead of
+    // duplicating the implementation.
+
+    int totalweight = 0;
+    int i = 0;
+    card_type result = NUM_CARDS;
+    while ( pdeck[i].card != NUM_CARDS )
+    {
+        const card_with_weights& cww = pdeck[i];        
+        totalweight += cww.weight[rarity];
+        if ( random2(totalweight) < cww.weight[rarity] )
+            result = cww.card;
+        ++i;
+    }
+    return result;
+}
+
+static card_type random_card(unsigned char deck_type, deck_rarity_type rarity,
+                             bool &was_oddity)
+{
+    const deck_archetype *pdeck = random_sub_deck(deck_type);
 
     if ( one_chance_in(100) )
     {
-        pdeck      = &deck_of_oddities;
+        pdeck      = deck_of_oddities;
         was_oddity = true;
     }
 
-    card_type chosen = (*pdeck)[random2(pdeck->size())];
-
-    // Paranoia
-    if (chosen < CARD_BLANK1 || chosen >= NUM_CARDS)
-        chosen = NUM_CARDS;
-
-    return chosen;
+    return choose_from_archetype(pdeck, rarity);
 }
 
 static card_type random_card(const item_def& item, bool &was_oddity)
 {
-    return random_card(item.sub_type, was_oddity);
-}
-
-static void retry_blank_card(card_type &card, unsigned char deck_type,
-                             unsigned char flags)
-{
-    // BLANK1 == hasn't been retried
-    if (card != CARD_BLANK1)
-        return;
-
-    if (flags & (CFLAG_MARKED | CFLAG_SEEN))
-    {
-        // Can't retry a card which has been seen or marked.
-        card = CARD_BLANK2;
-        return;
-    }
-
-    const std::vector<card_type> *pdeck = random_sub_deck(deck_type);
-
-    if (flags & CFLAG_ODDITY)
-        pdeck = &deck_of_oddities;
-
-    // High Evocations gives you another shot (but not at being punished...)
-    if (pdeck != &deck_of_punishment 
-        && you.skills[SK_EVOCATIONS] > random2(30))
-    {
-        card = (*pdeck)[random2(pdeck->size())];
-    }
-
-    // BLANK2 == retried and failed
-    if (card == CARD_BLANK1)
-        card = CARD_BLANK2;
-}
-
-static void retry_blank_card(card_type &card, item_def& deck,
-                             unsigned char flags)
-{
-    retry_blank_card(card, deck.sub_type, flags);
+    return random_card(item.sub_type, deck_rarity(item), was_oddity);
 }
 
 static card_type draw_top_card(item_def& deck, bool message,
@@ -386,8 +400,6 @@ static card_type draw_top_card(item_def& deck, bool message,
     card_type card = get_card_and_flags(deck, idx, _flags);
     cards.pop_back();
     flags.pop_back();
-
-    retry_blank_card(card, deck, _flags);
 
     if (message)
     {
@@ -727,7 +739,6 @@ bool deck_peek()
     unsigned char flags1, flags2, flags3;
 
     card1 = get_card_and_flags(deck, 0, flags1);
-    retry_blank_card(card1, deck, flags1);
 
     if (num_cards == 1)
     {
@@ -744,7 +755,6 @@ bool deck_peek()
     }
 
     card2 = get_card_and_flags(deck, 1, flags2);
-    retry_blank_card(card2, deck, flags2);
 
     if (num_cards == 2)
     {
@@ -793,7 +803,6 @@ bool deck_peek()
     deck_peek_ident(deck);
 
     card3 = get_card_and_flags(deck, 2, flags3);
-    retry_blank_card(card3, deck, flags3);
 
     int already_seen = 0;
     if (flags1 & CFLAG_SEEN)
@@ -1094,8 +1103,9 @@ bool deck_triple_draw()
 // This is Nemelex retribution.
 void draw_from_deck_of_punishment()
 {
-    bool      oddity;
-    card_type card = random_card(MISC_DECK_OF_PUNISHMENT, oddity);
+    bool oddity;
+    card_type card = random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON,
+                                 oddity);
 
     mpr("You draw a card...");
     card_effect(card, DECK_RARITY_COMMON);
@@ -1119,12 +1129,6 @@ static int xom_check_card(item_def &deck, card_type card,
     {
     case CARD_XOM:
         // Handled elsewhere
-        amusement = 0;
-        break;
-
-    case CARD_BLANK1:
-    case CARD_BLANK2:
-        // Boring
         amusement = 0;
         break;
 
@@ -2318,8 +2322,6 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 
     switch (which_card)
     {
-    case CARD_BLANK1: break;
-    case CARD_BLANK2: break;
     case CARD_PORTAL:           portal_card(power, rarity); break;
     case CARD_WARP:             warp_card(power, rarity); break;
     case CARD_SWAP:             swap_monster_card(power, rarity); break;
@@ -2404,8 +2406,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
     }
 
-    if (you.religion == GOD_XOM
-        && (which_card == CARD_BLANK1 || which_card == CARD_BLANK2 || !rc))
+    if (you.religion == GOD_XOM && !rc)
     {
         god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
         xom_acts(abs(you.piety - 100));
