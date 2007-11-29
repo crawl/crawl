@@ -1985,22 +1985,41 @@ static void trowel_card(int power, deck_rarity_type rarity)
     {
         if (coinflip())
         {
-            // Create a random bad statue
-            // This could be really bad, because it's placed adjacent
+            // Create a random bad statue and a friendly, timed golem.
+            // This could be really bad, because they're placed adjacent
             // to you...
+            int num_made = 0;
+
             const monster_type statues[] = {
                 MONS_ORANGE_STATUE, MONS_SILVER_STATUE, MONS_ICE_STATUE
             };
-            const monster_type mons = RANDOM_ELEMENT(statues);
-            if ( create_monster(mons, 0, BEH_HOSTILE, you.x_pos, you.y_pos,
-                                MHITYOU, 250) != -1 )
+
+            if ( create_monster(RANDOM_ELEMENT(statues), 0, BEH_HOSTILE,
+                                you.x_pos, you.y_pos, MHITYOU, 250) != -1 )
             {
                 mpr("A menacing statue appears!");
-                done_stuff = true;
+                num_made++;
             }
+
+            const monster_type golems[] = {
+                MONS_CLAY_GOLEM, MONS_WOOD_GOLEM, MONS_STONE_GOLEM,
+                MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
+            };
+
+            if ( create_monster(RANDOM_ELEMENT(golems), 5, BEH_FRIENDLY,
+                                you.x_pos, you.y_pos, MHITYOU, 250) != -1 )
+            {
+                mpr("You construct a golem!");
+                num_made++;
+            }
+
+            if ( num_made == 2 )
+                mpr("The constructs glare at each other.");
+            done_stuff = (num_made > 0);
         }
         else
         {
+            // Do-nothing (effectively): create a cosmetic feature
             coord_def pos = pick_adjacent_free_square(you.x_pos, you.y_pos);
             if ( pos.x >= 0 && pos.y >= 0 )
             {
