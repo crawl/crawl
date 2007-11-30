@@ -1991,8 +1991,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
             pbolt.name = item.name(DESC_PLAIN);
         }
-        
-        // Note that bow_brand is known since the bow is equiped.
+
+        // Note that bow_brand is known since the bow is equipped.
         if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
         {
@@ -2115,7 +2115,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             if ( (get_equip_race(item) == ISFLAG_DWARVEN
                   && player_genus(GENPC_DWARVEN)) ||
                  (get_equip_race(item) == ISFLAG_ORCISH
-                  && you.species == SP_HILL_ORC)) 
+                  && you.species == SP_HILL_ORC))
             {
                 baseDam += 1;
             }
