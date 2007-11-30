@@ -1050,6 +1050,8 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
             break;
 
         case WPN_SCIMITAR:
+            if (one_chance_in(5))
+                rc = ISFLAG_ELVEN;
             if (coinflip())
                 rc = ISFLAG_ORCISH;
             break;

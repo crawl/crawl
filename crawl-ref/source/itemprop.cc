@@ -670,8 +670,11 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (weapon_skill(item) == SK_MACES_FLAILS)
+            if (weapon_skill(item) == SK_MACES_FLAILS
+                || weapon_skill(item) == SK_AXES)
+            {
                 return;
+            }
             break;
         case OBJ_ARMOUR:
             if (item.sub_type == ARM_SPLINT_MAIL
