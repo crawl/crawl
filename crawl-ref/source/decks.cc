@@ -2287,13 +2287,49 @@ static void summon_dancing_weapon(int power, deck_rarity_type rarity)
                                     you.x_pos, you.y_pos,
                                     friendly ? you.pet_target : MHITYOU,
                                     250, false, false, false, true );
-    
+   
     // Given the abundance of Nemelex decks, not setting hard reset
     // leaves a trail of weapons behind, most of which just get
     // offered to Nemelex again, adding an unnecessary source of
     // piety.
     if (mon != -1)
+    {
+        // Override the weapon
+        ASSERT( menv[mon].weapon() != NULL );
+        item_def& wpn(*menv[mon].weapon());
+        
+        // FIXME Mega-hack (breaks encapsulation too)
+        wpn.flags &= ~ISFLAG_RACIAL_MASK;
+
+        if ( power_level == 0 )
+        {
+            // Wimpy, negative-enchantment weapon
+            wpn.plus  = -random2(4);
+            wpn.plus2 = -random2(4);
+            wpn.sub_type = (coinflip() ? WPN_DAGGER : WPN_CLUB );
+            set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+        }
+        else if ( power_level == 1 )
+        {
+            // This is getting good...
+            wpn.plus  = random2(4) - 1;
+            wpn.plus2 = random2(4) - 1;
+            wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_HAND_AXE);
+            if ( coinflip() )
+                set_item_ego_type(wpn, OBJ_WEAPONS,
+                                  coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
+        }
+        else if ( power_level == 2 )
+        {
+            // Rare and powerful
+            wpn.plus  = random2(4) + 2;
+            wpn.plus2 = random2(4) + 2;
+            wpn.sub_type = (coinflip() ? WPN_KATANA : WPN_EXECUTIONERS_AXE);
+            set_item_ego_type(wpn, OBJ_WEAPONS,
+                              coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
+        }
         menv[mon].flags |= MF_HARD_RESET;
+    }
 }
 
 static void summon_skeleton(int power, deck_rarity_type rarity)
