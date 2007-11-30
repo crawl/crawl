@@ -1153,10 +1153,12 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << "embroidered ";
                 }
                 else if (item_typ != ARM_LEATHER_ARMOUR 
-                        && item_typ != ARM_ANIMAL_SKIN)
+                         && item_typ != ARM_ANIMAL_SKIN)
                 {
                     buff << "shiny ";
                 }
+                else
+                    buff << "tattooed ";
                 break;
 
             case ISFLAG_RUNED:
