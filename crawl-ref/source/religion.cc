@@ -3169,6 +3169,32 @@ static bool god_likes_item(god_type god, const item_def& item)
     }
 }
 
+static int leading_sacrifice_group()
+{
+    int weights[5];
+    get_pure_deck_weights(weights);
+    int best_i = -1, maxweight = -1;
+    for ( int i = 0; i < 5; ++i )
+    {
+        if ( best_i == -1 || weights[i] > maxweight )
+        {
+            maxweight = weights[i];
+            best_i = i;
+        }
+    }
+    return best_i;
+}
+
+static void give_sac_group_feedback(int which)
+{
+    ASSERT( which >= 0 && which < 5 );
+    const char* names[] = {
+        "Escape", "Destruction", "Dungeons", "Summoning", "Wonder"
+    };
+    mprf(MSGCH_GOD, "A symbol of %s coalesces before you, then vanishes.",
+         names[which]);
+}
+
 void offer_items()
 {
     if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
@@ -3178,12 +3204,14 @@ void offer_items()
 
     int num_sacced = 0;
     int i          = igrd[you.x_pos][you.y_pos];
+
+    const int old_leading = leading_sacrifice_group();
+
     while (i != NON_ITEM)
     {
         item_def &item(mitm[i]);
         const int next  = item.link;  // in case we can't get it later.
         const int value = item_value( item, true );
-
 
         if (item_is_stationary(item) || !god_likes_item(you.religion, item))
         {
@@ -3203,9 +3231,8 @@ void offer_items()
             if ( is_risky_sacrifice(item) ||
                  item.inscription.find("=p") != std::string::npos)
             {
-                std::string msg = "Really sacrifice ";
-                msg += item.name(DESC_NOCAP_A);
-                msg += "?";
+                const std::string msg =
+                    "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
 
                 if (!yesno(msg.c_str()))
                 {
@@ -3222,17 +3249,6 @@ void offer_items()
                      you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
             }
-            // Aproximate piety gain chance.
-            // Value:  %
-            // ---------
-            //    10:  9.0%
-            //    20: 17.5%
-            //    30: 25.5%
-            //    40: 34.0%
-            //    50: 42.5%
-            //    60: 50.0%
-            //    70: 58.0%
-            //    80: 63.0%
             if ((item.base_type == OBJ_CORPSES &&
                  one_chance_in(2+you.piety/50))
                 // Nemelex piety gain is fairly fast...at least
@@ -3298,6 +3314,13 @@ void offer_items()
         i = next;
         num_sacced++;
     }
+
+    if ( num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH )
+    {
+        const int new_leading = leading_sacrifice_group();
+        if ( old_leading != new_leading || one_chance_in(50) )
+            give_sac_group_feedback(new_leading);
+    }    
 
 #if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
     if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
