@@ -2072,7 +2072,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                      !one_chance_in(1 + skill_bump(SK_THROWING)));
         baseHit = 0;
 
-        // since darts/rocks are missiles, they only use inv_plus
+        // missiles only use inv_plus
         if (wepClass == OBJ_MISSILES)
             ammoDamBonus = ammoHitBonus;
 
