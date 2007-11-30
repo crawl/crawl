@@ -2588,13 +2588,13 @@ static void generate_misc_item(item_def& item, int force_type, int item_race)
             // never randomly generated
             ((item.sub_type == MISC_RUNE_OF_ZOT)
              || (item.sub_type == MISC_HORN_OF_GERYON)
-             || (item.sub_type == MISC_DECK_OF_PUNISHMENT)
              // pure decks are rare in the dungeon
              || ((item.sub_type == MISC_DECK_OF_ESCAPE ||
                   item.sub_type == MISC_DECK_OF_DESTRUCTION ||
                   item.sub_type == MISC_DECK_OF_DUNGEONS ||
                   item.sub_type == MISC_DECK_OF_SUMMONING ||
-                  item.sub_type == MISC_DECK_OF_WONDERS) &&
+                  item.sub_type == MISC_DECK_OF_WONDERS ||
+                  item.sub_type == MISC_DECK_OF_PUNISHMENT) &&
                  !one_chance_in(5)));
 
         // filling those silly empty boxes -- bwr
@@ -3602,8 +3602,7 @@ static void give_ammo(monsters *mon, int level,
         if (xitt == MI_STONE && one_chance_in(15))
             xitt = MI_SLING_BULLET;
 
-        const int thing_created =
-            items( 0, xitc, xitt, true, level, item_race );
+        const int thing_created = items(0, xitc, xitt, true, level, item_race);
         if (thing_created == NON_ITEM)
             return;
 
