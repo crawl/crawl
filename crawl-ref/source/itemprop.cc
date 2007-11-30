@@ -667,26 +667,50 @@ void set_equip_race( item_def &item, unsigned long flags )
     switch (flags)
     {
     case ISFLAG_ELVEN:
-        if ((item.base_type == OBJ_WEAPONS
-            && weapon_skill(item) == SK_MACES_FLAILS)
-                || (item.base_type == OBJ_ARMOUR
-                    && (item.sub_type == ARM_SPLINT_MAIL
-                        || item.sub_type == ARM_BANDED_MAIL
-                        || item.sub_type == ARM_PLATE_MAIL)))
+        switch (item.base_type)
         {
-            return;
+        case OBJ_WEAPONS:
+            if (weapon_skill(item) == SK_MACES_FLAILS)
+                return;
+            break;
+        case OBJ_ARMOUR:
+            if (item.sub_type == ARM_SPLINT_MAIL
+                || item.sub_type == ARM_BANDED_MAIL
+                || item.sub_type == ARM_PLATE_MAIL)
+            {
+                return;
+            }
+            break;
+        case OBJ_MISSILES:
+            if (item.sub_type == MI_BOLT)
+                return;
+            break;
+        default:
+            break;
         }
         break;
 
     case ISFLAG_DWARVEN:
-        if ((item.base_type == OBJ_WEAPONS
-            && weapon_skill(item) == SK_POLEARMS)
-                || (item.base_type == OBJ_ARMOUR
-                    && (item.sub_type == ARM_ROBE
-                        || item.sub_type == ARM_LEATHER_ARMOUR
-                        || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)))
+        switch (item.base_type)
         {
-            return;
+        case OBJ_WEAPONS:
+            if (weapon_skill(item) == SK_POLEARMS)
+                return;
+            break;
+        case OBJ_ARMOUR:
+            if (item.sub_type == ARM_ROBE
+                || item.sub_type == ARM_LEATHER_ARMOUR
+                || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)
+            {
+                return;
+            }
+            break;
+        case OBJ_MISSILES:
+            if (item.sub_type == MI_ARROW)
+                return;
+            break;
+        default:
+            break;
         }
         break;
 
