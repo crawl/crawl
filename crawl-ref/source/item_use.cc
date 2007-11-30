@@ -2405,7 +2405,7 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_PROTECTION:
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
         if (item.plus != 0)
         {
             if (!artefact)
@@ -2443,21 +2443,21 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, item.plus, !artefact, item);
+        modify_stat(STAT_STRENGTH, item.plus, false, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         learn_pluses = true;
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, item.plus, !artefact, item);
+        modify_stat(STAT_DEXTERITY, item.plus, false, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         learn_pluses = true;
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, item.plus, !artefact, item);
+        modify_stat(STAT_INTELLIGENCE, item.plus, false, item);
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         learn_pluses = true;
@@ -2860,15 +2860,15 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, -item.plus, true, item, true);
+        modify_stat(STAT_STRENGTH, -item.plus, false, item, true);
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -item.plus, true, item, true);
+        modify_stat(STAT_DEXTERITY, -item.plus, false, item, true);
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -item.plus, true, item, true);
+        modify_stat(STAT_INTELLIGENCE, -item.plus, false, item, true);
         break;
 
     case RING_INVISIBILITY:
