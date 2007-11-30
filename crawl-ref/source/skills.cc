@@ -389,7 +389,7 @@ static int exercise2( int exsk )
     if (you.exp_available < 0)
         you.exp_available = 0;
 
-    you.redraw_experience = 1;
+    you.redraw_experience = true;
 
 /*
     New (LH): debugging bit: when you exercise a skill, displays the skill
@@ -457,7 +457,7 @@ static int exercise2( int exsk )
                 || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
                 || you.duration[ DUR_TRANSFORMATION ] > 0)
         {
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
         }
 
         const unsigned char best = best_skill( SK_FIGHTING, 

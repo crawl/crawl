@@ -36,6 +36,7 @@
 #include "output.h"
 #include "player.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
@@ -133,6 +134,7 @@ const deck_archetype deck_of_wonders[] = {
     { CARD_EXPERIENCE, {5, 5, 5} },
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_HELIX,      {5, 5, 5} },
+    { CARD_SAGE,       {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -264,6 +266,7 @@ const char* card_name(card_type card)
     case CARD_SHUFFLE: return "Shuffle";
     case CARD_EXPERIENCE: return "Experience";
     case CARD_HELIX: return "the Helix";
+    case CARD_SAGE: return "the Sage";
     case CARD_DOWSING: return "Dowsing";
     case CARD_TROWEL: return "the Trowel";
     case CARD_MINEFIELD: return "the Minefield";
@@ -1945,6 +1948,46 @@ static void helix_card(int power, deck_rarity_type rarity)
         mpr("You feel transcendent for a moment.");
 }
 
+static void sage_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    int c;                      // how much to weight your skills
+    if ( power_level == 0 )
+        c = 0;
+    else if ( power_level == 1 )
+        c = random2(10) + 1;
+    else
+        c = 10;
+    
+    // FIXME: yet another reproduction of random_choose_weighted
+    // Ah for Python:
+    // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
+    int totalweight = 0;
+    int result = -1;
+    for (int i = 0; i < NUM_SKILLS; ++i )
+    {
+        if ( you.skills[i] < MAX_SKILL_LEVEL )
+        {
+            const int curweight = 1 + you.skills[i] * (40-you.skills[i]) * c;
+            totalweight += curweight;
+            if ( random2(totalweight) < curweight )
+                result = i;
+        }
+    }
+
+    if ( result == -1 )
+    {
+        mpr("You feel omnipotent."); // all skills maxed
+    }
+    else
+    {
+        you.duration[DUR_SAGE] = random2(1800) + 200;
+        you.sage_bonus_skill = static_cast<skill_type>(result);
+        you.sage_bonus_degree = power / 25;
+        mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
+    }
+}
+
 static void glass_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -2339,6 +2382,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SHUFFLE:          shuffle_card(power, rarity); break;
     case CARD_EXPERIENCE:       potion_effect(POT_EXPERIENCE, power/4); break;
     case CARD_HELIX:            helix_card(power, rarity); break;
+    case CARD_SAGE:             sage_card(power, rarity); break;
     case CARD_GLASS:            glass_card(power, rarity); break;
     case CARD_DOWSING:          dowsing_card(power, rarity); break;
     case CARD_MINEFIELD:        minefield_card(power, rarity); break;

@@ -638,6 +638,10 @@ public:
   FixedVector<bool, 50>  practise_skill;
   FixedVector<unsigned int, 50>   skill_points;
   FixedVector<unsigned char, 50>  skill_order;
+
+  skill_type sage_bonus_skill;  // if Sage is in effect, which skill it affects
+  int sage_bonus_degree;        // how much bonus XP to give in that skill
+
   int  skill_cost_level;
   int  total_skill_points;
   int  exp_available;

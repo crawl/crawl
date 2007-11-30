@@ -96,6 +96,7 @@ enum card_type
 
     CARD_EXPERIENCE,
     CARD_WILD_MAGIC,
+    CARD_SAGE,                  // skill training
     CARD_HELIX,                 // remove one *bad* mutation
 
     CARD_GLASS,                 // make walls transparent

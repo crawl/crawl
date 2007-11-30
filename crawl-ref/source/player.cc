@@ -2656,8 +2656,8 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
         exp_gained = div_rand_round( exp_gained, 4 );
 
-    unsigned long old_exp   = you.experience;
-    int           old_avail = you.exp_available;
+    const unsigned long old_exp   = you.experience;
+    const int           old_avail = you.exp_available;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d", exp_gained );
@@ -2668,12 +2668,23 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     else
         you.experience += exp_gained;
 
+    if (you.duration[DUR_SAGE])
+    {
+        // Bonus skill training from Sage.
+        you.exp_available =
+            (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
+        exercise(you.sage_bonus_skill, 20);
+        you.exp_available = old_avail;
+        exp_gained /= 2;
+    }
+
     if (you.exp_available + exp_gained > 20000)
         you.exp_available = 20000;
     else
         you.exp_available += exp_gained;
 
     level_change();
+
     // increase tutorial time-out now that it's actually
     // become useful for a longer time
     if (Options.tutorial_left && you.experience_level == 7)
@@ -3481,6 +3492,9 @@ void display_char_status()
         mpr("You are burdened.");
     else if (you.burden_state == BS_OVERLOADED)
         mpr("You are overloaded with stuff.");
+
+    if (you.duration[DUR_SAGE])
+        mprf("You are studying %s.", skill_name(you.sage_bonus_skill));
 
     if (you.duration[DUR_BREATH_WEAPON])
         mpr( "You are short of breath." );

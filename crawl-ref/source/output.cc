@@ -485,7 +485,7 @@ void print_stats(void)
             }
             else
             {
-                dur_colour( BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm) );
+                dur_colour(BLUE, (you.duration[DUR_LEVITATION] <= 10 && !perm));
                 cprintf( "Lev " );
             }
         }
@@ -506,16 +506,22 @@ void print_stats(void)
         // In that case, it should be probably be GREEN, and we'd have
         // to check to see if the player does have a breath weapon. -- bwr
         if (you.duration[DUR_BREATH_WEAPON] &&
-            wherex() < get_number_of_cols() - 4)
+            wherex() < get_number_of_cols() - 5)
         {
             textcolor( YELLOW );  // no warning
-            cprintf( "BWpn" );
+            cprintf( "BWpn " );
         }
         
-        if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 4)
+        if (you.duration[DUR_BARGAIN] && wherex() < get_number_of_cols() - 5)
         {
             dur_colour( BLUE, (you.duration[DUR_BARGAIN] <= 15) );
-            cprintf( "Brgn" );
+            cprintf( "Brgn " );
+        }
+
+        if (you.duration[DUR_SAGE] && wherex() < get_number_of_cols() - 5)
+        {
+            dur_colour( BLUE, (you.duration[DUR_SAGE] <= 15) );
+            cprintf( "Sage " );
         }
 
         textcolor( LIGHTGREY );
@@ -1385,6 +1391,13 @@ std::string status_mut_abilities()
         text += "deadly, ";
 
     // DUR_STEALTHY handled in stealth printout
+
+    if (you.duration[DUR_SAGE])
+    {
+        text += "studying ";
+        text += skill_name(you.sage_bonus_skill);
+        text += ", ";
+    }
 
     if (you.duration[DUR_MAGIC_SHIELD])
         text += "shielded, ";

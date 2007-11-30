@@ -142,6 +142,8 @@ const int LABYRINTH_BORDER = 12;
 // Yes, I know we have 32-bit ints now.
 #define DEBUG_COOKIE            32767
 
+#define MAX_SKILL_LEVEL 27
+
 #define MIN_HIT_MISS_PERCENTAGE  5
 
 // grids that monsters can see

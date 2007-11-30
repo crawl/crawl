@@ -2499,6 +2499,7 @@ static void decrement_durations()
                          6, coinflip(),
                          "Your unholy channel is weakening.");
 
+    decrement_a_duration(DUR_SAGE, "You feel less studious.");
     decrement_a_duration(DUR_STEALTH, "You feel less stealthy.");
     decrement_a_duration(DUR_RESIST_FIRE, "Your fire resistance expires.");
     decrement_a_duration(DUR_RESIST_COLD, "Your cold resistance expires.");
