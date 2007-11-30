@@ -2962,7 +2962,6 @@ bool can_autopickup()
 static void do_autopickup()
 {
     //David Loewenstern 6/99
-    int result, o, next;
     int n_did_pickup = 0;
     int n_tried_pickup = 0;
 
@@ -2974,11 +2973,11 @@ static void do_autopickup()
         return;
     }
     
-    o = igrd[you.x_pos][you.y_pos];
+    int o = igrd[you.x_pos][you.y_pos];
 
     while (o != NON_ITEM)
     {
-        next = mitm[o].link;
+        const int next = mitm[o].link;
 
         if (item_needs_autopickup(mitm[o]))
         {
@@ -3008,7 +3007,7 @@ static void do_autopickup()
             const unsigned long iflags(mitm[o].flags);
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
-            result = move_item_to_player(o, num_to_take);
+            const int result = move_item_to_player(o, num_to_take);
 
             if (result == 0 || result == -1)
             {

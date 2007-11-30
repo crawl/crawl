@@ -1145,7 +1145,10 @@ std::string item_def::name_aux( description_level_type desc,
                 if (testbits(ignore_flags, ISFLAG_EMBROIDERED_SHINY))
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
-                    || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
+                    || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
+                    || (item_typ == ARM_HELMET &&
+                        (get_helmet_type( *this ) == THELM_CAP ||
+                         get_helmet_type( *this ) == THELM_WIZARD_HAT)))
                 {
                     buff << "embroidered ";
                 }
