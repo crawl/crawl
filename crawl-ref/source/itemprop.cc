@@ -650,7 +650,9 @@ void set_equip_race( item_def &item, unsigned long flags )
         break;
 
     case OBJ_MISSILES:
-        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK
+        if (item.sub_type == MI_STONE
+            || item.sub_type == MI_LARGE_ROCK
+            || item.sub_type == MI_SLING_BULLET
             || item.sub_type == MI_THROWING_NET)
         {
             return;

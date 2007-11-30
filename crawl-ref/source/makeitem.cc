@@ -1621,7 +1621,7 @@ static item_status_flag_type determine_missile_race(const item_def& item,
         break;
 
     case MAKE_ITEM_RANDOM_RACE:
-        // Elves don't make bolts
+        // Elves don't make bolts, sling bullets, or throwing nets
         if ((item.sub_type == MI_ARROW
              || item.sub_type == MI_DART)
             && one_chance_in(4))
@@ -1629,7 +1629,7 @@ static item_status_flag_type determine_missile_race(const item_def& item,
             rc = ISFLAG_ELVEN;
         }
 
-        // Orcs make everything
+        // Orcs don't make sling bullets or throwing nets
         if ((item.sub_type == MI_ARROW
              || item.sub_type == MI_BOLT
              || item.sub_type == MI_DART)
@@ -1638,7 +1638,7 @@ static item_status_flag_type determine_missile_race(const item_def& item,
             rc = ISFLAG_ORCISH;
         }
 
-        // Dwarves don't make arrows
+        // Dwarves don't make arrows, sling bullets, or throwing nets
         if ((item.sub_type == MI_DART
              || item.sub_type == MI_BOLT)
             && one_chance_in(6))
