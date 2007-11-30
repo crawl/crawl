@@ -251,7 +251,8 @@ static void in_a_shop( int shopidx )
             item_def& item = mitm[stock[ft]];
             const unsigned long old_flags = item.flags;
             if ( id_stock )
-                item.flags |= ISFLAG_IDENT_MASK;
+                item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID |
+                               ISFLAG_NOTED_GET);
             describe_item(item);
             if ( id_stock )
                 item.flags = old_flags;
