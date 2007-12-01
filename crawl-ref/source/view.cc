@@ -1030,14 +1030,14 @@ void fire_monster_alerts()
             // Monster was not viewed this turn
             monster->flags &= ~MF_WAS_IN_VIEW;
         }
-        monster->seen_context = "";
+        monster->seen_context.clear();
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
     // growing entourage of monsters while running through the Abyss.
     // To approximate this, if the number of hostile monsters in view
     // is greater than it ever was for this particular trip to the
-    // Abyss, Xom is stimulated in proprotion to the number of
+    // Abyss, Xom is stimulated in proportion to the number of
     // hostile monsters.  Thus if the entourage doesn't grow, then
     // Xom becomes bored.
     if (you.level_type == LEVEL_ABYSS

@@ -90,14 +90,12 @@ static bool will_autoinscribe = false;
 // sure item coordinates are correct to the stack they're in. -- bwr
 void fix_item_coordinates(void)
 {
-    int x,y,i;
-
     // nails all items to the ground (i.e. sets x,y)
-    for (x = 0; x < GXM; x++)
+    for (int x = 0; x < GXM; x++)
     {
-        for (y = 0; y < GYM; y++)
+        for (int y = 0; y < GYM; y++)
         {
-            i = igrd[x][y];
+            int i = igrd[x][y];
 
             while (i != NON_ITEM)
             {
@@ -112,19 +110,13 @@ void fix_item_coordinates(void)
 // This function uses the items coordinates to relink all the igrd lists.
 void link_items(void)
 {
-    int i,j;
-
     // first, initialise igrd array
-    for (i = 0; i < GXM; i++)
-    {
-        for (j = 0; j < GYM; j++)
-            igrd[i][j] = NON_ITEM;
-    }
+    igrd.init(NON_ITEM);
 
     // link all items on the grid, plus shop inventory,
     // DON'T link the huge pile of monster items at (0,0)
 
-    for (i = 0; i < MAX_ITEMS; i++)
+    for (int i = 0; i < MAX_ITEMS; i++)
     {
         if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
         {
@@ -141,7 +133,7 @@ void link_items(void)
 
 static bool item_ok_to_clean(int item)
 {
-    // 5. never clean food or Orbs
+    // never clean food or Orbs
     if (mitm[item].base_type == OBJ_FOOD || mitm[item].base_type == OBJ_ORBS)
         return false;
 
@@ -176,14 +168,13 @@ int cull_items(void)
        9. unrandarts are 'destroyed', but may be generated again
     */
 
-    int x,y, item, next;
     int first_cleaned = NON_ITEM;
 
     // 2. avoid shops by avoiding (0,5..9)
     // 3. avoid monster inventory by iterating over the dungeon grid
-    for (x = 5; x < GXM; x++)
+    for (int x = 5; x < GXM; x++)
     {
-        for (y = 5; y < GYM; y++)
+        for (int y = 5; y < GYM; y++)
         {
             // 1. not near player!
             if (x > you.x_pos - 9 && x < you.x_pos + 9
@@ -192,8 +183,10 @@ int cull_items(void)
                 continue;
             }
 
+            int next;
+
             // iterate through the grids list of items: 
-            for (item = igrd[x][y]; item != NON_ITEM; item = next)
+            for (int item = igrd[x][y]; item != NON_ITEM; item = next)
             {
                 next = mitm[item].link; // in case we can't get it later.
 

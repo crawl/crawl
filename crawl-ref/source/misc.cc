@@ -903,7 +903,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (stair_find == DNGN_ENTER_ZOT)
     {
-        int num_runes = runes_in_pack();
+        const int num_runes = runes_in_pack();
 
         if (num_runes < NUMBER_OF_RUNES_NEEDED)
         {
@@ -1030,8 +1030,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     if (old_level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
-        mprf("Welcome back to %s!",
-             branches[you.where_are_you].longname);
+        mprf("Welcome back to %s!", branches[you.where_are_you].longname);
 
     if (!player_is_airborne()
         && you.duration[DUR_CONF] 

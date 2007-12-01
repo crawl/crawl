@@ -888,13 +888,16 @@ static void do_lost_items(level_area_type old_level_type)
     }
 }
 
-bool load( dungeon_feature_type stair_taken, int load_mode,
+bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
            level_area_type old_level_type, char old_level,
-           branch_type where_were_you2 )
+           branch_type old_branch )
 {
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
     unwind_bool ylev(you.entering_level, true, false);
+
+    const bool make_changes =
+        (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR);
     
     bool just_created_level = false;
 
@@ -921,7 +924,7 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
 
     // We clear twice - on save and on load.
     // Once would be enough...
-    if (load_mode != LOAD_RESTART_GAME)
+    if (make_changes)
         clear_clouds();
 
     // Lose all listeners.
@@ -933,10 +936,11 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         grab_followers();
 
         if (old_level_type == LEVEL_DUNGEON)
-            save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
+            save_level( old_level, LEVEL_DUNGEON, old_branch );
     }
 
-    do_lost_items(old_level_type);
+    if ( make_changes )
+        do_lost_items(old_level_type);
 
     // Try to open level savefile.
     FILE *levelFile = fopen(cha_fil.c_str(), "rb");
@@ -944,6 +948,7 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     // GENERATE new level when the file can't be opened:
     if (levelFile == NULL)
     {
+        ASSERT( load_mode != LOAD_VISITOR );
         env.turns_on_level = -1;
         builder( you.your_level, you.level_type );
         just_created_level = true;
@@ -996,20 +1001,18 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
         clear_env_map();
 
     // Here's the second cloud clearing, on load (see above)
-    if (load_mode != LOAD_RESTART_GAME)
-        clear_clouds();
-
-    if (load_mode != LOAD_RESTART_GAME)
+    if ( make_changes )
     {
+        clear_clouds();
         if (you.level_type != LEVEL_ABYSS)
-            place_player_on_stair(where_were_you2, stair_taken);
+            place_player_on_stair(old_branch, stair_taken);
         else
             you.moveto(45, 35);
     }
     crawl_view.set_player_at(you.pos(), true);
 
     // This should fix the "monster occuring under the player" bug?
-    if (mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
+    if (make_changes && mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true, true);
 
     // actually "move" the followers if applicable
@@ -1027,7 +1030,9 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
 
     sanity_test_monster_inventory();
 
-    dungeon_events.fire_event(DET_ENTERING_LEVEL);
+    if (load_mode != LOAD_VISITOR)
+        dungeon_events.fire_event(DET_ENTERING_LEVEL);
+
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
@@ -1067,24 +1072,24 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     }
 
     // Save the created/updated level out to disk:
-    save_level( you.your_level, you.level_type, you.where_are_you );
+    if ( make_changes )
+        save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
 
     // Inform user of level's annotation.
-    if (get_level_annotation().length() > 0
+    if (load_mode != LOAD_VISITOR
+        && !get_level_annotation().empty()
         && !crawl_state.level_annotation_shown)
     {
-        char buf[200];
-
-        sprintf(buf, "Level annotation: %s\n",
-                get_level_annotation().c_str() );
-        mpr(buf, MSGCH_PLAIN, YELLOW);
+        mprf(MSGCH_PLAIN, YELLOW, "Level annotation: %s",
+             get_level_annotation().c_str());
     }
 
-    crawl_state.level_annotation_shown = false;
+    if (load_mode != LOAD_VISITOR)
+        crawl_state.level_annotation_shown = false;
 
-    if (load_mode != LOAD_RESTART_GAME)
+    if ( make_changes )
     {
         // Update PlaceInfo entries
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
@@ -1092,7 +1097,7 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
 
         if (load_mode == LOAD_START_GAME ||
             (load_mode == LOAD_ENTER_LEVEL &&
-             (where_were_you2 != you.where_are_you ||
+             (old_branch != you.where_are_you ||
               old_level_type != you.level_type)))
             delta.num_visits++;
 
@@ -1109,7 +1114,8 @@ bool load( dungeon_feature_type stair_taken, int load_mode,
     if (just_created_level)
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
 
-    dungeon_events.fire_event(DET_ENTERED_LEVEL);
+    if ( load_mode != LOAD_VISITOR )
+        dungeon_events.fire_event(DET_ENTERED_LEVEL);
 
     return just_created_level;
 }                               // end load()
@@ -1399,6 +1405,63 @@ void restore_game(void)
         load_tutorial(tutorf);
         fclose(tutorf);
     }
+}
+
+void apply_to_all_dungeons(void (*applicator)())
+{
+    const branch_type original_branch = you.where_are_you;
+    const int original_level = you.your_level;
+    const level_area_type original_type = you.level_type;
+
+    branch_type last_visited_branch = original_branch;
+    int last_visited_level = original_level;
+    const coord_def old_pos(you.pos());
+
+    // Apply to current level, then save it out.
+    applicator();
+    save_level(original_level, original_type, original_branch);
+
+    you.level_type = LEVEL_DUNGEON;
+
+    for ( int i = 0; i < MAX_LEVELS; ++i )
+    {
+        for ( int j = 0; j < NUM_BRANCHES; ++j )
+        {
+            if ( tmp_file_pairs[i][j] )
+            {
+                you.your_level = i;
+                you.where_are_you = static_cast<branch_type>(j);
+
+                // Don't apply to the original level - already done up top.
+                if ( original_type == you.level_type &&
+                     original_level == you.your_level &&
+                     original_branch == you.where_are_you )
+                    continue;
+
+                // Load the dungeon level...
+                load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+                      LEVEL_DUNGEON, last_visited_level,
+                      last_visited_branch );
+
+                // Modify it...
+                applicator();
+
+                // And save it back.
+                save_level(you.your_level, LEVEL_DUNGEON, you.where_are_you);
+
+                last_visited_branch = you.where_are_you;
+                last_visited_level = you.your_level;
+            }
+        }
+    }
+
+    // Reload the original level.
+    you.where_are_you = original_branch;
+    you.your_level = original_level;
+    you.level_type = original_type;
+
+    load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+          original_type, original_level, original_branch );
 }
 
 static bool determine_version( FILE *restoreFile, 

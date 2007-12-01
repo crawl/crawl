@@ -22,9 +22,10 @@
 
 enum load_mode_type
 {
-    LOAD_START_GAME,
-    LOAD_RESTART_GAME,
-    LOAD_ENTER_LEVEL
+    LOAD_START_GAME,            // game has just begun
+    LOAD_RESTART_GAME,          // loaded savefile
+    LOAD_ENTER_LEVEL,           // entered a level for the first time
+    LOAD_VISITOR                // Visitor pattern to see all levels
 };
 
 // referenced in files - newgame - ouch - overmap:
@@ -61,7 +62,7 @@ void check_newer(const std::string &target,
                  void (*action)());
 
 
-bool load( dungeon_feature_type stair_taken, int load_mode,
+bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
            level_area_type old_level_type, char old_level,
            branch_type where_were_you2 );
 
@@ -80,6 +81,7 @@ void save_game_state();
  * *********************************************************************** */
 void restore_game(void);
 
+void apply_to_all_dungeons(void (*applicator)());
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
