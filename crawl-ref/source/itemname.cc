@@ -1158,7 +1158,7 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << "shiny ";
                 }
                 else
-                    buff << "tattooed ";
+                    buff << "dyed ";
                 break;
 
             case ISFLAG_RUNED:
