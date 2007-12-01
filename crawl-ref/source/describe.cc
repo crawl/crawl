@@ -4276,23 +4276,27 @@ void describe_god( god_type which_god, bool give_title )
         textcolor(colour);
 
         // mv: some gods can protect you from harm
-        // The chance for doing so is:
-        //     one_chance_in(10) || you.piety > random2(1000)
-        // Note that it's not depending on penance.
-        // Btw. I'm not sure how to explain such divine protection
-        // because god isn't really protecting player - he only sometimes
-        // saves his life (probably it shouldn't be displayed at all).
+        // I'm not sure how to explain such divine protection because
+        // god isn't really protecting player - he only sometimes saves
+        // his life (probably it shouldn't be displayed at all).
         // What about this?
         bool have_any = false;
 
-        if (god_protects_from_harm(which_god))
+        if (harm_protection_type hpt =
+                god_protects_from_harm(which_god, false))
         {
+            const char *how = (you.piety >= 150)  ? "carefully" :
+                              (you.piety >=  90)  ? "often" :
+                              (you.piety >=  30)  ? "sometimes" :
+                                                    "occasionally";
+            const char *when =
+                (hpt == HPT_PRAYING)              ? " during prayer" :
+                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer" :
+                                                    "";
+
             have_any = true;
-            cprintf( "%s %s watches over you." EOL, god_name(which_god),
-                     (you.piety >= 150) ? "carefully":
-                     (you.piety >=  90) ? "often" :
-                     (you.piety >=  30) ? "sometimes" :
-                                          "occasionally");
+            cprintf( "%s %s watches over you%s." EOL, god_name(which_god),
+                     how, when );
         }
 
         if (which_god == GOD_ZIN && you.piety >= 30)

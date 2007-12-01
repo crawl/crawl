@@ -787,14 +787,8 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     {
         if (dam >= you.hp && god_protects_from_harm(you.religion))
         {
-            if ((you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
-                 && (one_chance_in(10) || you.piety > random2(1000))
-	        || (you.religion == GOD_ELYVILON || you.religion == GOD_YREDELEMNUL)
-	         && you.duration[DUR_PRAYER] && random2(you.piety) >= 30)
-            {
-                simple_god_message( " protects you from harm!" );
-                return;
-            }
+            simple_god_message( " protects you from harm!" );
+            return;
         }
 
         dec_hp( dam, true );

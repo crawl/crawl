@@ -23,6 +23,15 @@
 class actor;
 class monsters;
 
+enum harm_protection_type
+{
+    HPT_NONE = 0,
+    HPT_PRAYING,
+    HPT_ANYTIME,
+    HPT_PRAYING_PLUS_ANYTIME,
+    NUM_HPTS
+};
+
 bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);
@@ -47,7 +56,7 @@ int piety_rank(int piety = -1);
 void offer_items();
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
-bool god_protects_from_harm(god_type god);
+harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 void god_smites_you(god_type god, kill_method_type death_type,
                     const char *message = NULL);
 void divine_retribution(god_type god);
