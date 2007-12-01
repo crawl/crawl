@@ -2701,7 +2701,7 @@ void level_change(bool skip_ability_increase)
 {
     // necessary for the time being, as level_change() is called
     // directly sometimes {dlb}
-    you.redraw_experience = 1;
+    you.redraw_experience = true;
 
     while (you.experience_level < 27
             && you.experience > exp_needed(you.experience_level + 2))

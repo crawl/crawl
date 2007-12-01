@@ -690,7 +690,8 @@ void scorefile_entry::set_base_xlog_fields() const
 
     // Don't write No God to save some space.
     if (god != -1)
-        fields->add_field("god", "%s", god == GOD_NO_GOD? "" : god_name(god));
+        fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
+                          god_name(god).c_str());
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
@@ -1292,7 +1293,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                           (piety >=  50) ? "a Believer" :
                           (piety >=  30) ? "a Follower" 
                                             : "an Initiate",
-                          god_name( god ), 
+                          god_name(god).c_str(), 
                           (penance > 0) ? " (penitent)." : "." );
 
                 desc += scratch;

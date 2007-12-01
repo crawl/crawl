@@ -66,10 +66,9 @@ god_type str_to_god(std::string god)
         return (GOD_RANDOM);
     
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
-    {
         if (lowercase_string(god_name(static_cast<god_type>(i))) == god)
             return (static_cast<god_type>(i));
-    }
+
     return (GOD_NO_GOD);
 }
 

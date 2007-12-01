@@ -3936,7 +3936,7 @@ static bool print_god_abil_desc( int god, int numpower )
 
 static std::string describe_favour_generic(god_type which_god)
 {
-    std::string godname = god_name(which_god);
+    const std::string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
         (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
         (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
@@ -3980,8 +3980,8 @@ static std::string religion_help( god_type god )
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
-            result += "You can pray at an altar to ask "
-                + std::string(god_name(god)) + " to bless a ";
+            result += "You can pray at an altar to ask " + god_name(god)
+                + " to bless a ";
             result += (god == GOD_ZIN ? "mace" : "long sword");
             result += ".";
         }
@@ -3991,8 +3991,8 @@ static std::string religion_help( god_type god )
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
-            result += "You can pray at an altar to ask "
-                + std::string(god_name(god)) + " to bless your weapon." EOL;
+            result += "You can pray at an altar to ask " + god_name(god)
+                + " to bless your weapon." EOL;
         } // fall through
            
     case GOD_OKAWARU:
@@ -4046,7 +4046,7 @@ void describe_god( god_type which_god, bool give_title )
     //mv: print god's name and title - if you can think up better titles
     //I have nothing against
     textcolor(colour);
-    cprintf( "%s", god_name(which_god,true)); //print long god's name
+    cprintf( "%s", god_name(which_god, true).c_str()); //print long god's name
     cprintf (EOL EOL);
 
     //mv: print god's description
@@ -4265,7 +4265,7 @@ void describe_god( god_type which_god, bool give_title )
                  (you.penance[which_god] >   0) ? "%s is ready to forgive your sins." :
                  (you.worshipped[which_god])    ? "%s is ambivalent towards you." 
                                                 : "%s is neutral towards you.",
-                 god_name(which_god) );
+                 god_name(which_god).c_str() );
     } 
     else
     {
@@ -4296,28 +4296,28 @@ void describe_god( god_type which_god, bool give_title )
                                                     "";
 
             have_any = true;
-            cprintf( "%s %s watches over you%s." EOL, god_name(which_god),
-                     how, when );
+            cprintf( "%s %s watches over you%s." EOL,
+                     god_name(which_god).c_str(), how, when );
         }
 
         if (which_god == GOD_ZIN && you.piety >= 30)
         {
             have_any = true;
             cprintf("Praying to %s will provide sustenance if starving."
-                    EOL, god_name(which_god));
+                    EOL, god_name(which_god).c_str());
         }
 
         if (which_god == GOD_TROG)
         {
             have_any = true;
             cprintf("You can call upon %s to burn books in your surroundings."
-                    EOL, god_name(which_god));
+                    EOL, god_name(which_god).c_str());
         }
         else if (which_god == GOD_ELYVILON)
         {
             have_any = true;
             cprintf("You can call upon %s to destroy weapons "
-                    "lying on the ground." EOL, god_name(which_god));
+                    "lying on the ground." EOL, god_name(which_god).c_str());
         }
 
         // mv: No abilities (except divine protection) under penance

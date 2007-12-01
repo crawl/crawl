@@ -2045,16 +2045,14 @@ void debug_get_religion(void)
     if (specs[0] == '\0')
         return;
 
+    strlwr(specs);
+
     god_type god = GOD_NO_GOD;
 
     for (int i = 1; i < NUM_GODS; i++)
     {
         const god_type gi = static_cast<god_type>(i);
-        char name[80];
-        strncpy(name, god_name(gi), sizeof(name));
-
-        char *ptr = strstr( strlwr(name), strlwr(specs) );
-        if (ptr != NULL)
+        if ( lowercase_string(god_name(gi)).find(specs) != std::string::npos)
         {
             god = gi;
             break;

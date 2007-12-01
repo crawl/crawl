@@ -1087,13 +1087,12 @@ std::string origin_desc(const item_def &item)
                 desc += "You drew the Genie ";
                 break;
             case AQ_WIZMODE:
-                desc += "Your wizardly powers created " 
-                            + article_it(item) + " ";
+                desc += "Your wizardly powers created "+article_it(item)+" ";
                 break;
             default:
                 if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
-                    desc += std::string(god_name(static_cast<god_type>(iorig))) 
-                            + " gifted " + article_it(item) + " to you ";
+                    desc += god_name(static_cast<god_type>(iorig))
+                        + " gifted " + article_it(item) + " to you ";
                 else
                     // Bug really.
                     desc += "You stumbled upon " + article_it(item) + " ";

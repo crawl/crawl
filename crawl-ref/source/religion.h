@@ -35,7 +35,7 @@ enum harm_protection_type
 bool is_priest_god(god_type god);
 void simple_god_message( const char *event, god_type which_deity = GOD_NO_GOD );
 int piety_breakpoint(int i);
-const char *god_name(god_type which_god, bool long_name = false); //mv
+std::string god_name(god_type which_god, bool long_name = false);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 

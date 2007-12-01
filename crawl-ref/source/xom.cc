@@ -905,13 +905,13 @@ void xom_acts(bool niceness, int sever)
             niceness = false;
             mprf(MSGCH_GOD, which_god,
                  "%s asks Xom for help in punishing you, and Xom happily "
-                 "agrees.", god_name(which_god));
+                 "agrees.", god_name(which_god).c_str());
         }
         else
         {
             niceness = true;
-            mprf(MSGCH_GOD, which_god,
-                 "%s calls in a favour from Xom.", god_name(which_god));
+            mprf(MSGCH_GOD, which_god, "%s calls in a favour from Xom.",
+                 god_name(which_god).c_str());
         }
     }
 

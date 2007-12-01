@@ -941,8 +941,7 @@ static bool confirm_pray_sacrifice()
 
 std::string god_prayer_reaction()
 {
-    std::string result;
-    result += god_name(you.religion);
+    std::string result = god_name(you.religion);
     if (!crawl_state.need_save && crawl_state.updating_scores)
         result += " was ";
     else
@@ -1027,7 +1026,8 @@ void pray()
     }
 
     mprf(MSGCH_PRAY, "You %s prayer to %s.",
-         was_praying ? "renew your" : "offer a", god_name(you.religion));
+         was_praying ? "renew your" : "offer a",
+         god_name(you.religion).c_str());
 
     // ...otherwise, they offer what they're standing on
     if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD )
@@ -1060,141 +1060,52 @@ void pray()
 
 }                               // end pray()
 
-const char *god_name( god_type which_god, bool long_name ) // mv - rewritten
+std::string god_name( god_type which_god, bool long_name )
 {
-    static char godname_buff[80];
-
     switch (which_god)
     {
-    case GOD_NO_GOD:
-        sprintf(godname_buff, "No God");
-        break;
-    case GOD_RANDOM:
-        sprintf(godname_buff, "random");
-        break;
-    case GOD_ZIN:
-        sprintf(godname_buff, "Zin%s", long_name ? " the Law-Giver" : "");
-        break;
-    case GOD_SHINING_ONE:
-        strcpy(godname_buff, "The Shining One");
-        break;
-    case GOD_KIKUBAAQUDGHA:
-        strcpy(godname_buff, "Kikubaaqudgha");
-        break;
+    case GOD_NO_GOD: return "No God";
+    case GOD_RANDOM: return "random";
+    case GOD_ZIN: return (long_name ? "Zin the Law-Giver" : "Zin");
+    case GOD_SHINING_ONE: return "The Shining One";
+    case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
     case GOD_YREDELEMNUL:
-        sprintf(godname_buff, "Yredelemnul%s", long_name ? " the Dark" : "");
-        break;
-    case GOD_XOM:
-        strcpy(godname_buff, "Xom");
-        if (long_name) 
-        {
-            strcat(godname_buff, " ");
-            switch(random2(30))
-            {
-            default:
-                strcat(godname_buff, "of Chaos"); 
-                break;
-            case 1:
-                strcat(godname_buff, "the Random");
-                if (coinflip())
-                    strcat(godname_buff, coinflip()?"master":" Number God");
-                break;
-            case 2:
-                strcat(godname_buff, "the Tricky"); 
-                break;
-            case 3:
-                sprintf( godname_buff, "Xom the %sredictable", coinflip() ? "Less-P" 
-                                                                    : "Unp" );
-                break;
-            case 4:
-                strcat(godname_buff, "of Many Doors"); 
-                break;
-            case 5:
-                strcat(godname_buff, "the Capricious"); 
-                break;
-            case 6:
-                strcat(godname_buff, "of ");
-                strcat(godname_buff, coinflip() ? "Bloodstained" : "Enforced");
-                strcat(godname_buff, " Whimsey");
-                break;
-            case 7:
-                strcat(godname_buff, "\"What was your username?\" *clickity-click*");
-                break;
-            case 8:
-                strcat(godname_buff, "of Bone-Dry Humour"); 
-                break;
-            case 9:
-                strcat(godname_buff, "of ");
-                strcat(godname_buff, coinflip() ? "Malevolent" : "Malicious");
-                strcat(godname_buff, " Giggling");
-                break;
-            case 10:
-                strcat(godname_buff, "the Psycho");
-                strcat(godname_buff, coinflip() ? "tic" : "path");
-                break;
-            case 11:
-                strcat(godname_buff, "of ");
-                switch(random2(5)) 
-                {
-                case 0: strcat(godname_buff, "Gnomic"); break;
-                case 1: strcat(godname_buff, "Ineffable"); break;
-                case 2: strcat(godname_buff, "Fickle"); break;
-                case 3: strcat(godname_buff, "Swiftly Tilting"); break;
-                case 4: strcat(godname_buff, "Unknown"); break;
-                }
-                strcat(godname_buff, " Intent");
-                if (coinflip()) 
-                    strcat(godname_buff, "ion");
-                break;
-            case 12:
-                sprintf(godname_buff, "The Xom-Meister");
-                if (coinflip())
-                    strcat(godname_buff, ", Xom-a-lom-a-ding-dong");
-                else if (coinflip())
-                    strcat(godname_buff, ", Xom-o-Rama");
-                else if (coinflip())
-                    strcat(godname_buff, ", Xom-Xom-bo-Bom, Banana-Fana-fo-Fom");
-                break;
-            case 13:
-                strcat(godname_buff, "the Begetter of ");
-                strcat(godname_buff, coinflip() ? "Turbulence" : "Discontinuities");
-                break;
-            }
-        }
-        break;
-    case GOD_VEHUMET:
-        strcpy(godname_buff, "Vehumet");
-        break;
-    case GOD_OKAWARU:
-        sprintf(godname_buff, "%sOkawaru", long_name ? "Warmaster " : "");
-        break;
-    case GOD_MAKHLEB:
-        sprintf(godname_buff, "Makhleb%s", long_name ? " the Destroyer" : "");
-        break;
+        return (long_name ? "Yredelemnul the Dark" : "Yredelemnul");
+    case GOD_VEHUMET: return "Vehumet";
+    case GOD_OKAWARU: return (long_name ? "Warmaster Okawaru" : "Okawaru");
+    case GOD_MAKHLEB: return (long_name ? "Makhleb the Destroyer" : "Makhleb");
     case GOD_SIF_MUNA:
-        sprintf(godname_buff, "Sif Muna%s", long_name ? " the Loreminder" : "");
-        break;
-    case GOD_TROG:
-        sprintf(godname_buff, "Trog%s", long_name ? " the Wrathful" : "");
-        break;
-    case GOD_NEMELEX_XOBEH:
-        strcpy(godname_buff, "Nemelex Xobeh");
-        break;
-    case GOD_ELYVILON:
-        sprintf(godname_buff, "Elyvilon%s", long_name ? " the Healer" : "");
-        break;
-    case GOD_LUGONU:
-        sprintf(godname_buff, "Lugonu%s", long_name? " the Unformed" : "");
-        break;
-    case GOD_BEOGH:
-        sprintf(godname_buff, "Beogh%s", long_name? " the Brigand" : "");
-        break;
-    default:
-        sprintf(godname_buff, "The Buggy One (%d)", which_god);
-    }
+        return (long_name ? "Sif Muna the Loreminder" : "Sif Muna");
+    case GOD_TROG: return (long_name ? "Trog the Wrathful" : "Trog");
+    case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
+    case GOD_ELYVILON: return (long_name ? "Elyvilon the Healer" : "Elyvilon");
+    case GOD_LUGONU: return (long_name ? "Lugonu the Unformed" : "Lugonu");
+    case GOD_BEOGH: return (long_name ? "Beogh the Brigand" : "Beogh");
 
-    return (godname_buff);
-}                               // end god_name()
+    case GOD_XOM:
+        if (!long_name)
+            return "Xom";
+        else
+        {
+            const char* xom_names[] = {
+                "Xom the Random", "Xom the Random Number God",
+                "Xom the Tricky", "Xom the Less-Predictable",
+                "Xom the Unpredictable", "Xom of Many Doors",
+                "Xom the Capricious", "Xom of Bloodstained Whimsey",
+                "Xom of Enforced Whimsey", "Xom of Bone-Dry Humour",
+                "Xom of Malevolent Giggling", "Xom of Malicious Giggling",
+                "Xom the Psychotic", "Xom the Psychopath",
+                "Xom of Gnomic Intent", "Xom the Fickle",
+                "Xom of Unknown Intention", "The Xom-Meister",
+                "Xom the Begetter of Turbulence"
+            };
+            return (one_chance_in(3) ? RANDOM_ELEMENT(xom_names)
+                    : "Xom of Chaos");
+        }
+    case NUM_GODS: return "Buggy";
+    }
+    return "";
+}
 
 void god_speaks( god_type god, const char *mesg )
 {
@@ -2968,9 +2879,12 @@ void excommunication(void)
         divine_retribution( old_god );
         break;
 
-    // these like to haunt players for a bit more than the standard
-    case GOD_NEMELEX_XOBEH:
     case GOD_SIF_MUNA:
+        inc_penance( old_god, 50 );
+        break;
+
+    case GOD_NEMELEX_XOBEH:
+        nemelex_shuffle_decks();
         inc_penance( old_god, 50 );
         break;
 
@@ -3333,7 +3247,7 @@ void god_pitch(god_type which_god)
     mprf("You %s the altar of %s.",
          you.species == SP_NAGA ? "coil in front of"
                                 : "kneel at",
-         god_name(which_god));
+         god_name(which_god).c_str());
     more();
 
     // Note: using worship we could make some gods not allow followers to
@@ -3493,7 +3407,7 @@ void god_smites_you(god_type god, kill_method_type death_type,
         !player_under_penance() && you.piety > random2(400))
     {
         snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                       "of %s... this time.", god_name(god));
+                 "of %s... this time.", god_name(god).c_str());
         god_speaks(you.religion, info);
     }
     else
@@ -3687,14 +3601,12 @@ void handle_god_time(void)
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    char buff[ INFO_SIZE ];
-
     if (which_deity == GOD_NO_GOD)
         which_deity = you.religion;
 
-    snprintf( buff, sizeof(buff), "%s%s", god_name( which_deity ), event );
-
-    god_speaks( which_deity, buff );
+    std::string msg = god_name(which_deity);
+    msg += event;
+    god_speaks( which_deity, msg.c_str() );
 }
 
 int god_colour( god_type god ) //mv - added

@@ -20,6 +20,7 @@
 #include "cio.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "files.h"
 #include "food.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -197,7 +198,6 @@ static void shuffle_deck(item_def &deck)
     ASSERT(props.exists("cards"));
 
     CrawlVector &cards = props["cards"];
-    ASSERT(cards.size() > 1);
 
     CrawlVector &flags = props["card_flags"];
     ASSERT(flags.size() == cards.size());
@@ -1966,6 +1966,9 @@ static void sage_card(int power, deck_rarity_type rarity)
     int result = -1;
     for (int i = 0; i < NUM_SKILLS; ++i )
     {
+        if ( skill_name(i) == NULL )
+            continue;
+
         if ( you.skills[i] < MAX_SKILL_LEVEL )
         {
             const int curweight = 1 + you.skills[i] * (40-you.skills[i]) * c;
@@ -2604,4 +2607,73 @@ void init_deck(item_def &item)
 
     item.plus2  = 0;
     item.colour = deck_rarity_to_color((deck_rarity_type) item.special);
+}
+
+static void unmark_deck(item_def& deck)
+{
+    if ( !is_deck(deck) )
+        return;
+
+    CrawlHashTable &props = deck.props;
+    if ( !props.exists("card_flags") )
+        return;
+
+    CrawlVector &flags = props["card_flags"];
+
+    for ( unsigned int i = 0; i < flags.size(); ++i )
+        flags[i] =
+            static_cast<char>((static_cast<char>(flags[i]) & ~CFLAG_MARKED));
+
+    // We'll be mean and leave non_brownie_draws as-is.
+    props["num_marked"] = static_cast<char>(0);
+}
+
+static void unmark_and_shuffle_deck(item_def& deck)
+{
+    if ( is_deck(deck) )
+    {
+        unmark_deck(deck);
+        shuffle_deck(deck);
+    }   
+}
+
+static void shuffle_all_decks_on_level()
+{
+    for ( int i = 0; i < MAX_ITEMS; ++i )
+    {
+        item_def& item(mitm[i]);
+        if ( is_valid_item(item) && is_deck(item) )
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on level %d, branch %d",
+                 item.name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+            unmark_and_shuffle_deck(item);
+        }
+    }
+}
+
+static void shuffle_inventory_decks()
+{
+    for ( int i = 0; i < ENDOFPACK; ++i )
+    {
+        item_def& item(you.inv[i]);
+        if ( is_valid_item(item) && is_deck(item) )
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Shuffling in inventory: %s",
+                 item.name(DESC_PLAIN).c_str());
+#endif
+            unmark_and_shuffle_deck(item);
+        }
+    }
+}
+
+void nemelex_shuffle_decks()
+{
+    apply_to_all_dungeons(shuffle_all_decks_on_level);
+    shuffle_inventory_decks();
+    god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex chuckle.");
 }
