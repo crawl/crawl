@@ -3999,30 +3999,6 @@ unsigned long exp_needed(int lev)
 
     unsigned long level = 0;
 
-#if 0
-    case  1: level = 1;
-    case  2: level = 10;
-    case  3: level = 35;
-    case  4: level = 70;
-    case  5: level = 120;
-    case  6: level = 250;
-    case  7: level = 510;
-    case  8: level = 900;
-    case  9: level = 1700;
-    case 10: level = 3500;
-    case 11: level = 8000;
-    case 12: level = 20000;
-
-    default:                    //return 14000 * (lev - 11);
-        level = 20000 * (lev - 11) + ((lev - 11) * (lev - 11) * (lev - 11)) * 130;
-        break;
-#endif
-
-    // This is a better behaved function than the above.  The above looks 
-    // really ugly when you consider the second derivative, its not smooth
-    // and has a horrible bump at level 12 followed by comparitively easy
-    // teen levels.  This tries to sort out those issues.
-    //
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
     // Section 2: levels  6-13, second derivative is exponential/doubling.
@@ -4088,7 +4064,7 @@ unsigned long exp_needed(int lev)
         if (lev < 13)
         {
             lev -= 4;
-            level = 10 + 10 * lev + 30 * (2 << lev);
+            level = 10 + 10 * lev + (60 << lev);
         }
         else 
         {

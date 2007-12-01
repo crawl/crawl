@@ -1926,6 +1926,40 @@ static void shuffle_card(int power, deck_rarity_type rarity)
     burden_change();
 }
 
+static void experience_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+
+    if ( you.experience_level < 27 )
+    {
+        mpr("You feel more experienced.");
+        const unsigned long xp_cap = 1 + exp_needed(2 + you.experience_level);
+
+        // power_level 2 means automatic level gain
+        if ( power_level == 2 )
+            you.experience = xp_cap;
+        else
+        {
+            // Likely to give a level gain (power of ~500 is reasonable
+            // at high levels even for non-Nemelexites, so 50,000 XP.)
+            // But not guaranteed.
+            // Overrides archmagi effect, like potions of experience.
+            you.experience += power * 100;
+            if ( you.experience > xp_cap )
+                you.experience = xp_cap;
+        }
+    }
+    else
+        mpr("You feel knowledgeable.");
+
+    // Put some free XP into pool; power_level 2 means fill pool
+    you.exp_available += power * 50;
+    if ( power_level >= 2 || you.exp_available > 20000)
+        you.exp_available = 20000;
+
+    level_change();
+}
+
 static void helix_card(int power, deck_rarity_type rarity)
 {
     mutation_type bad_mutations[] = {
@@ -2419,7 +2453,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_POTION:           potion_card(power, rarity); break;
     case CARD_FOCUS:            focus_card(power, rarity); break;
     case CARD_SHUFFLE:          shuffle_card(power, rarity); break;
-    case CARD_EXPERIENCE:       potion_effect(POT_EXPERIENCE, power/4); break;
+    case CARD_EXPERIENCE:       experience_card(power, rarity); break;
     case CARD_HELIX:            helix_card(power, rarity); break;
     case CARD_SAGE:             sage_card(power, rarity); break;
     case CARD_GLASS:            glass_card(power, rarity); break;
