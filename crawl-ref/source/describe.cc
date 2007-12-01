@@ -1393,7 +1393,8 @@ static std::string describe_ammo( const item_def &item )
         description += "A crossbow bolt. ";
         break;
     case MI_DART:
-        description += "A small throwing weapon. ";
+        description += "A small throwing weapon. "
+            "It can also be fired from a hand crossbow.";
         break;
     case MI_LARGE_ROCK:
         description += "A rock, used by giants as a missile. ";
