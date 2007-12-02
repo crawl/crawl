@@ -1315,7 +1315,7 @@ bool monster_blink(monsters *monster)
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects();
-    
+
     return (true);
 }                               // end monster_blink()
 
@@ -2570,6 +2570,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         {
             simple_monster_message(monster, " blinks.");
             monster_blink(monster);
+            used = true;
         }
         break;
 
