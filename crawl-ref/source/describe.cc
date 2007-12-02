@@ -3171,6 +3171,19 @@ static std::string describe_misc_item( const item_def &item )
 
     if ( is_deck(item) )
     {
+        const std::vector<card_type> drawn_cards = get_drawn_cards(item);
+        if ( !drawn_cards.empty() )
+        {
+            description += "Drawn card(s): ";
+            for ( unsigned int i = 0; i < drawn_cards.size(); ++i )
+            {
+                if ( i != 0 )
+                    description += ", ";
+                description += card_name(drawn_cards[i]);
+            }
+            description += "$";
+        }
+
         const int num_cards = cards_in_deck(item);
         if ( top_card_is_known(item) )
         {
@@ -3188,6 +3201,7 @@ static std::string describe_misc_item( const item_def &item )
                 else
                     break;
             }
+            description += "$";
         }
 
         std::vector<card_type> seen_cards;
@@ -3203,15 +3217,15 @@ static std::string describe_misc_item( const item_def &item )
         {
             std::sort(seen_cards.begin(), seen_cards.end(),
                       compare_card_names);
-            description += "$Seen cards: ";
+            description += "Seen card(s): ";
             for ( unsigned int i = 0; i < seen_cards.size(); ++i )
             {
                 if ( i != 0 )
                     description += ", ";
                 description += card_name(seen_cards[i]);
             }
+            description += "$";
         }
-        description += "$";
     }
 
     return (description);

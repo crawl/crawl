@@ -56,11 +56,13 @@
 // with, deck.plus2 is the number of cards drawn, deck.special is the
 // deck rarity, deck.props["cards"] holds the list of cards (with the
 // highest index card being the top card, and index 0 being the bottom
-// card), deck.props["card_flags"] holds the flags for each card,
-// deck.props["num_marked"] is the number of marked cards left in the
-// deck, and deck.props["non_brownie_draws"] is the number of
-// non-marked draws you have to make from that deck before earning
-// brownie points from it again.
+// card), deck.props["drawn_cards"] holds the list of drawn cards
+// (with index 0 being the first drawn), deck.props["card_flags"]
+// holds the flags for each card, deck.props["num_marked"] is the
+// number of marked cards left in the deck, and
+// deck.props["non_brownie_draws"] is the number of non-marked draws
+// you have to make from that deck before earning brownie points from
+// it again.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
@@ -240,7 +242,7 @@ static void set_card_and_flags(item_def& deck, int idx, card_type card,
     CrawlVector    &flags = props["card_flags"];
 
     if (idx == -1)
-        idx = (int) cards.size() - 1;
+        idx = static_cast<int>(cards.size()) - 1;
 
     cards[idx] = (char) card;
     flags[idx] = (char) _flags;
@@ -435,6 +437,30 @@ static bool wielding_deck()
     if ( you.equip[EQ_WEAPON] == -1 )
         return false;
     return is_deck(you.inv[you.equip[EQ_WEAPON]]);
+}
+
+static void remember_drawn_card(item_def& deck, card_type card)
+{
+    ASSERT( is_deck(deck) );
+    CrawlHashTable &props = deck.props;
+    CrawlVector &drawn = props["drawn_cards"].get_vector();
+    drawn.push_back( static_cast<char>(card) );
+}
+
+const std::vector<card_type> get_drawn_cards(const item_def& deck)
+{
+    std::vector<card_type> result;
+    if ( is_deck(deck) )
+    {
+        const CrawlHashTable &props = deck.props;
+        const CrawlVector &drawn = props["drawn_cards"].get_vector();
+        for ( unsigned int i = 0; i < drawn.size(); ++i )
+        {
+            const char tmp = drawn[i];
+            result.push_back(static_cast<card_type>(tmp));
+        }
+    }
+    return result;
 }
 
 static bool check_buggy_deck(item_def& deck)
@@ -1085,6 +1111,8 @@ bool deck_triple_draw()
 
     // Note how many cards were removed from the deck.
     deck.plus2 += num_to_draw;
+    for ( int i = 0; i < num_to_draw; ++i )
+        remember_drawn_card(deck, draws[i]);
     you.wield_change = true;
 
     // Make deck disappear *before* the card effect, since we
@@ -1156,11 +1184,6 @@ static int xom_check_card(item_def &deck, card_type card,
     return amusement;
 }
 
-// In general, if the next cards in a deck are known, they will
-// be stored in plus2 (the next card) and special (up to 4 cards
-// after that, bitpacked.)
-// Hidden assumption: no more than 126 cards, otherwise the 5th
-// card could clobber the sign bit in special.
 void evoke_deck( item_def& deck )
 {
     if (check_buggy_deck(deck))
@@ -1183,6 +1206,7 @@ void evoke_deck( item_def& deck )
         props["non_brownie_draws"]--;
 
     deck.plus2++;
+    remember_drawn_card(deck, card);
 
     // Get rid of the deck *before* the card effect because a card
     // might cause a wielded deck to be swapped out for something else,
@@ -2646,6 +2670,7 @@ void init_deck(item_def &item)
 
     props["cards"].new_vector(SV_BYTE).resize(item.plus);
     props["card_flags"].new_vector(SV_BYTE).resize(item.plus);
+    props["cards_drawn"].new_vector(SV_BYTE);
 
     for (int i = 0; i < item.plus; i++)
     {

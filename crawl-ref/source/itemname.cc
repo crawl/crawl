@@ -1425,15 +1425,12 @@ std::string item_def::name_aux( description_level_type desc,
                     if(top_card_is_known(*this))
                         buff << ", ";
 
-                    buff << abs(this->plus2) << " card";
-
-                    if (abs(this->plus2) > 1)
-                        buff << "s";
-
                     if (this->plus2 > 0)
-                        buff << " drawn";
+                        buff << "drawn: ";
                     else
-                        buff << " left";
+                        buff << "left: ";
+
+                    buff << abs(this->plus2);
                 }
 
                 buff << "}";

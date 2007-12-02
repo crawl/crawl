@@ -146,4 +146,6 @@ int cards_in_deck(const item_def &deck);
 card_type get_card_and_flags(const item_def& deck, int idx,
                              unsigned char& _flags);
 
+const std::vector<card_type> get_drawn_cards(const item_def& deck);
+
 #endif
