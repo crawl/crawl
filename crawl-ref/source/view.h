@@ -165,6 +165,7 @@ void set_envmap_col( int x, int y, int colour );
 
 bool is_envmap_detected_item(int x, int y);
 bool is_envmap_detected_mons(int x, int y);
+bool is_envmap_item(int x, int y);
 void set_terrain_mapped( int x, int y );
 void set_terrain_seen( int x, int y );
 void set_terrain_changed( int x, int y );

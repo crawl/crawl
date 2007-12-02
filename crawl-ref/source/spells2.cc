@@ -111,10 +111,11 @@ unsigned char detect_items( int pow )
     {
         for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
         {
-            if (i < 5 || j < 5 || i > (GXM - 5) || j > (GYM - 5))
+            if (!in_bounds(i, j))
                 continue;
 
-            if (igrd[i][j] != NON_ITEM)
+            if (igrd[i][j] != NON_ITEM
+                && (!get_envmap_obj(i, j) || !is_envmap_item(i, j)))
             {
                 set_envmap_obj(i, j, DNGN_ITEM_DETECTED);
                 set_envmap_detected_item(i, j);
