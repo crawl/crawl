@@ -1,3 +1,21 @@
+Stone Soup 0.3.3 (20071202)
+---------------------------
+* Fixed crash when draconian callers try to summon drakes.
+* Fixed crash when shadow creatures is cast in a labyrinth.
+* Fixed crash when monster blinks onto trap and is killed by the trap.
+* Fixed vampires boosting the player's maxhp.
+* Fixed bad monster selection when shadow creatures is cast post-orb-pickup.
+* Fixed buggy Xom mutations.
+* Fixed nets not trapping monsters correctly.
+* Fixed monsters being able to get past plants on level load.
+* Fixed out-of-sight monsters raising dead in the player's line-of-sight.
+* Returning weapons auto-id on use by monsters.
+* Autobutcher respects !w inscriptions.
+* Horns mutation changes helmet slot description to "restricted".
+* Reintroduced Beogh penance for destroying orcish idols.
+* Tutorial fixes.
+* Errors in .crawlrc are reported at startup.
+
 Stone Soup 0.3.2 (20071110)
 ---------------------------
 * Fixed tiles crash when visiting shops in the stash-tracker's ^F listings.
