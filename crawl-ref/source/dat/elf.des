@@ -215,10 +215,10 @@ SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
 SUBST:   l=lw 
 SHUFFLE: lw
-SHUFFLE: uU / yY / zZ
-SUBST:   U=@, u=., Y=c, y=c
-SHUFFLE: zZ / uU
-SUBST:   U=@, u=., Z=c, z=c
+SHUFFLE: nN / yY / zZ
+SUBST:   N=@, n=., Y=c, y=c
+SHUFFLE: zZ / nN
+SUBST:   N=@, n=., Z=c, z=c
 KMONS:   $ = weight:115 nothing / deep elf annihilator 
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
@@ -250,7 +250,7 @@ cccccccccccclcccccccccccc
 ccccccccccclllccccccccccc
 cccccccccc..c..cccccccccc
 Yyyyyyyyyy.ccc.zzzzzzzzzZ
-xxxxxxxxxxUucuUxxxxxxxxxx
+xxxxxxxxxxNncnNxxxxxxxxxx
 ENDMAP
 
 
