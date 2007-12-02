@@ -1296,7 +1296,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_ANIMATE_DEAD:
         mpr("You call on the dead to walk for you.");
-        animate_dead(powc + 1, BEH_FRIENDLY, you.pet_target, 1);
+        animate_dead(&you, powc + 1, BEH_FRIENDLY, you.pet_target, 1);
         break;
 
     case SPELL_PAIN:

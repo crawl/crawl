@@ -1211,6 +1211,8 @@ private:
 };
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
+typedef FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
+    env_show_grid;
 
 struct crawl_environment
 {
@@ -1229,8 +1231,9 @@ public:
 
     FixedArray< map_cell, GXM, GYM >        map;    // discovered terrain
 
-    FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-                                             show;      // view window char 
+    // Glyphs of squares that are in LOS.
+    env_show_grid show;
+    
     FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
                                              show_col;  // view window colour
 

@@ -2159,8 +2159,8 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // IMPROVEMENTS:
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
-void losight(FixedArray < unsigned int, 19, 19 > &sh,
-             FixedArray < dungeon_feature_type, 80, 70 > &gr, int x_p, int y_p)
+void losight(env_show_grid &sh,
+             feature_grid &gr, int x_p, int y_p)
 {
     raycast();
     // go quadrant by quadrant
@@ -3181,25 +3181,28 @@ bool mons_near(const monsters *monster, unsigned int foe)
     return (false);
 }                               // end mons_near()
 
-// answers the question: "Is a grid within character's line of sight?"
-bool see_grid( int grx, int gry )
+bool see_grid( const env_show_grid &show,
+               const coord_def &c,
+               const coord_def &pos )
 {
-    // rare case: can player see self?  (of course!)
-    if (grx == you.x_pos && gry == you.y_pos)
+    if (c == pos)
         return (true);
 
-    // check env.show array
-    if (grid_distance( grx, gry, you.x_pos, you.y_pos ) < 9)
+    const coord_def ip = pos - c;
+    if (ip.rdist() < ENV_SHOW_OFFSET)
     {
-        const int ex = grx - you.x_pos + 9;
-        const int ey = gry - you.y_pos + 9;
-
-        if (env.show[ex][ey])
+        const coord_def sp(ip + coord_def(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET));
+        if (show(sp))
             return (true);
     }
-
     return (false);
-}  // end see_grid() 
+}
+
+// answers the question: "Is a grid within character's line of sight?"
+bool see_grid( const coord_def &p )
+{
+    return see_grid(env.show, you.pos(), p);
+}
 
 static const unsigned table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
 {

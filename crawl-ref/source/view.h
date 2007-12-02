@@ -94,8 +94,7 @@ void find_features(const std::vector<coord_def>& features,
 /* ***********************************************************************
  * called from: direct - monstufff - view
  * *********************************************************************** */
-void losight(FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>& sh,
-             FixedArray<dungeon_feature_type, GXM, GYM>& gr,
+void losight(env_show_grid &sh, feature_grid &gr,
              int x_p, int y_p);
 
 
@@ -184,8 +183,15 @@ void add_feature_override(const std::string &text);
 void clear_cset_overrides();
 void add_cset_override(char_set_type set, const std::string &overrides);
 
-bool see_grid( int grx, int gry );
-inline bool see_grid(const coord_def &p) { return see_grid(p.x, p.y); }
+bool see_grid( const env_show_grid &show,
+               const coord_def &c,
+               const coord_def &pos );
+bool see_grid(const coord_def &p);
+
+inline bool see_grid( int grx, int gry )
+{
+    return see_grid(coord_def(grx, gry));
+}
 
 std::string screenshot(bool fullscreen = false);
 

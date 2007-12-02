@@ -295,17 +295,17 @@ int corpse_rot(int power)
     return 0;
 }                               // end corpse_rot()
 
-int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
+int animate_dead( actor *caster, int power, beh_type corps_beh,
+                  int corps_hit, int actual )
 {
     UNUSED( power );
+    static env_show_grid losgrid;
 
-    int adx = 0;
-    int ady = 0;
-
-    int minx = you.x_pos - 6;
-    int maxx = you.x_pos + 7;
-    int miny = you.y_pos - 6;
-    int maxy = you.y_pos + 7;
+    const coord_def c(caster->pos());
+    int minx = c.x - 6;
+    int maxx = c.x + 7;
+    int miny = c.y - 6;
+    int maxy = c.y + 7;
     int xinc = 1;
     int yinc = 1;
 
@@ -313,27 +313,33 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
 
     if (coinflip())
     {
-        minx = you.x_pos + 6;
-        maxx = you.x_pos - 7;
+        minx = c.x + 6;
+        maxx = c.x - 7;
         xinc = -1;
     }
 
     if (coinflip())
     {
-        miny = you.y_pos + 6;
-        maxy = you.y_pos - 7;
+        miny = c.y + 6;
+        maxy = c.y - 7;
         yinc = -1;
     }
 
-    for (adx = minx; adx != maxx; adx += xinc)
+    if (caster != &you)
+        losight(losgrid, grd, c.x, c.y);
+
+    env_show_grid &los(caster == &you? env.show : losgrid);
+
+    coord_def a;
+    for (a.x = minx; a.x != maxx; a.x += xinc)
     {
-        for (ady = miny; ady != maxy; ady += yinc)
+        for (a.y = miny; a.y != maxy; a.y += yinc)
         {
-            if (see_grid(adx, ady))
+            if (in_bounds(a) && see_grid(los, c, a))
             {
-                if (igrd[adx][ady] != NON_ITEM)
+                if (igrd(a) != NON_ITEM)
                 {
-                    int objl = igrd[adx][ady];
+                    int objl = igrd(a);
                     int hrg = 0;
 
                     // This searches all the items on the ground for a corpse
@@ -342,7 +348,7 @@ int animate_dead( int power, beh_type corps_beh, int corps_hit, int actual )
                         if (is_animatable_corpse(mitm[objl])
                             && !is_being_butchered(mitm[objl]))
                         {
-                            number_raised += raise_corpse(objl, adx, ady,
+                            number_raised += raise_corpse(objl, a.x, a.y,
                                                 corps_beh, corps_hit, actual);
                             break;
                         }

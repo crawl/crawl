@@ -197,7 +197,7 @@ void special_wielded()
     case SPWLD_ZONGULDROK:
         if (one_chance_in(5))
         {
-            animate_dead( 1 + random2(3), BEH_HOSTILE, MHITYOU, 1 );
+            animate_dead( &you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 1 );
             did_god_conduct( DID_NECROMANCY, 1 );
         }
         break;
