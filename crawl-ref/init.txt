@@ -136,8 +136,8 @@ stab_brand = hi:blue
 
 # The following options are not default. Uncommenting activates them.
 #
-# stop_travel = Something appears
-# stop_travel = god:wrath finds you
+# travel_stop_message = Something appears
+# travel_stop_message = god:wrath finds you
 # runrest_ignore_message = prayer ends
 # runrest_ignore_message = You feel.*sick
 # runrest_ignore_poison = 4:100

@@ -47,7 +47,6 @@
 
 #ifdef __MINGW32__
 #include <io.h>
-#include <sys/types.h>
 #endif
 
 #include <sys/types.h>
@@ -90,6 +89,12 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+
+#ifndef HAVE_STAT
+#if defined(UNIX) || defined(__MINGW32__) || defined(DOS)
+#define HAVE_STAT
+#endif
+#endif
 
 void save_level(int level_saved, level_area_type lt,
                 branch_type where_were_you);
@@ -286,11 +291,17 @@ void check_newer(const std::string &target,
 
 static bool file_exists(const std::string &name)
 {
+#ifdef HAVE_STAT
+    struct stat st;
+    const int err = ::stat(name.c_str(), &st);
+    return (!err);
+#else
     FILE *f = fopen(name.c_str(), "r");
     const bool exists = !!f;
     if (f)
         fclose(f);
     return (exists);
+#endif
 }
 
 // Low-tech existence check.
@@ -367,8 +378,11 @@ std::string datafile_path(std::string basename,
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
         std::string("docs") + FILE_SEPARATOR,
+#ifndef DATA_DIR_PATH
         std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
+        std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR,
+#endif
         std::string(".") + FILE_SEPARATOR,
         "",
     };

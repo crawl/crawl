@@ -723,9 +723,9 @@ stash_tracking = (all | explicit | dropped)
 
 stash_filter = <list of numbers>
         This option allows filtering certain classes of items when searching
-	stashes. For example,
+        stashes. For example,
 	     stash_filter = 14, 4:21
-	filters corpses (14) as well as food of the subtype chunks (4:21).
+        filters corpses (14) as well as food of the subtype chunks (4:21).
 
 annotate_item_class = false
         This only works if stash.lua has been sourced already in init.txt.
