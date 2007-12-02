@@ -3910,7 +3910,7 @@ void init_feature_table( void )
             break;
 
         case DNGN_ITEM_DETECTED:
-            Feature[i].magic_symbol = Options.char_table[ DCHAR_ITEM_DETECTED ];
+            Feature[i].dchar = DCHAR_ITEM_DETECTED;
             break;
 
         case DNGN_ITEM_ORB:
