@@ -1,6 +1,6 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20071030 for Dungeon Crawl Stone Soup 0.3.)
+(Last updated on 20071202 for Dungeon Crawl Stone Soup 0.3.3.)
 
 Building Dungeon Crawl Stone Soup
 ---------------------------------
@@ -71,7 +71,9 @@ MAKEFILE=makefile.mgw to build with MinGW for Windows (# is used for
 comments in makefiles).
 
 Consult the operating-system specific sections for detailed
-information on building Crawl.
+information on building Crawl. When you're done building Crawl, look
+at the section "Data files" for important information on what files
+Crawl needs as it starts up.
 
 
 Building on Unix (Linux, *BSD, Solaris, etc.)
@@ -209,7 +211,7 @@ binary will run on 9x), or build a DOS binary.
 * cd to the the Crawl source directory.
 
 * Build Crawl by running
-        mingw32-make MAKEFILE=makefile.mgw
+        mingw32-make MAKEFILE=makefile.mgw install
 
 * If you want regular expression support, you can edit AppHdr.h and
   uncomment this line:
@@ -218,11 +220,11 @@ binary will run on 9x), or build a DOS binary.
   - find the one in the Windows-specific section. Also see the section
   below on obtaining the pcre library to link against.
 
-* If you have flex and bison, edit makefile.mgw and set DOYACC := y.
-
 * If you enabled REGEX_PCRE, add -lpcre to the LIB line in makefile.mgw as:
    LIB = -lpcre -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
   and build Crawl to include regex support.
+
+* If you have flex and bison, edit makefile.mgw and set DOYACC := y.
 
 * When you're done, you should have crawl.exe under a "rel"
   subdirectory.
@@ -272,6 +274,41 @@ Building for DOS (djgpp)
   then build Crawl.
 
 * When the build is done, crawl.exe should be in the source directory.
+
+*****************************************************************************
+Data files
+----------
+
+Crawl looks for several data files when starting up. They include:
+
+* Special level and vault layout (dat/*.des) files.
+* Core Lua code (dat/clua/*.lua).
+* Descriptions for monsters and game features (dat/descript/*.txt).
+* Monster dialogue files (dat/*.txt).
+
+All these files are in the source tree under source/dat.
+
+Crawl will also look for documentation files when players invoke the
+help system. These files are available under the docs directory.
+
+Your built Crawl binary must be able to find these files, or it will
+not start.
+
+If Crawl is built without an explicit DATA_DIR_PATH (this is the most
+common setup), it will search for its data files under the current
+directory, and if it can't find them there, one level above the
+current directory. In short, it uses these search paths: ., ./dat,
+./docs, .., ../dat, ../docs.
+
+If Crawl is built with an explicit DATA_DIR_PATH (for multiuser
+installs on Unix), it will look for its startup files strictly under
+that directory: $DIR, $DIR/dat, $DIR/docs.
+
+As Crawl loads its startup files, it will convert them to a binary
+format (so that future startups will be faster) and store these binary
+files in the saves directory. These binary files (with extensions .db,
+.dsc, .idx, .lk) can be safely deleted as long as there is no running
+Crawl, and they will be regenerated the next time Crawl starts.
 
 *****************************************************************************
 
