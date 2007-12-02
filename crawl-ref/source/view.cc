@@ -4051,6 +4051,10 @@ void view_update_at(const coord_def &pos)
     gotoxy(vp.x, vp.y);
     textattr(flash_colour? real_colour(flash_colour) : colour);
     putwch(ch);
+
+    // Force colour back to normal, else clrscr() will flood screen
+    // with this colour on DOS.
+    textattr(LIGHTGREY);
 }
 
 bool view_update()

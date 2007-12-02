@@ -9,6 +9,7 @@ Stone Soup 0.3.3 (20071202)
 * Fixed nets not trapping monsters correctly.
 * Fixed monsters being able to get past plants on level load.
 * Fixed out-of-sight monsters raising dead in the player's line-of-sight.
+* Fixed brand colours flooding screen in DOS.
 * Returning weapons auto-id on use by monsters.
 * Autobutcher respects !w inscriptions.
 * Horns mutation changes helmet slot description to "restricted".
