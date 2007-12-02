@@ -1192,12 +1192,39 @@ void evoke_deck( item_def& deck )
     int brownie_points = 0;
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
 
-    unsigned char    flags      = 0;
-    card_type        card       = draw_top_card(deck, true, flags);
-    int              amusement  = xom_check_card(deck, card, flags);
-    deck_rarity_type rarity     = deck_rarity(deck);
-    CrawlHashTable  &props      = deck.props;
-    bool             no_brownie = (props["non_brownie_draws"].get_byte() > 0);
+    const deck_rarity_type rarity = deck_rarity(deck);
+    CrawlHashTable &props = deck.props;
+
+    unsigned char flags = 0;
+    card_type card = draw_top_card(deck, true, flags);
+
+    // Passive Nemelex retribution: sometimes a card gets swapped out.
+    // More likely to happen with marked decks.
+    if ( you.penance[GOD_NEMELEX_XOBEH] )
+    {
+        int c = 1;
+        if ( (flags & (CFLAG_MARKED | CFLAG_SEEN)) ||
+             props["num_marked"].get_byte() > 0 )
+        {
+            c = 3;
+        }
+        if ( random2(3000) < c * you.penance[GOD_NEMELEX_XOBEH] )
+        {
+            card_type old_card = card;
+            card = choose_from_archetype(deck_of_punishment, rarity);
+            if ( card != old_card )
+            {
+                simple_god_message(" seems to have exchanged this card "
+                                   "behind your back!", GOD_NEMELEX_XOBEH);
+                mprf("It's actually %s.", card_name(card));
+                you.penance[GOD_NEMELEX_XOBEH] -=
+                    random2(you.penance[GOD_NEMELEX_XOBEH] / 10);
+            }
+        }
+    }
+
+    const int amusement = xom_check_card(deck, card, flags);
+    const bool no_brownie = (props["non_brownie_draws"].get_byte() > 0);
 
     // Do these before the deck item_def object is gone.
     if (flags & CFLAG_MARKED)
@@ -2670,7 +2697,7 @@ void init_deck(item_def &item)
 
     props["cards"].new_vector(SV_BYTE).resize(item.plus);
     props["card_flags"].new_vector(SV_BYTE).resize(item.plus);
-    props["cards_drawn"].new_vector(SV_BYTE);
+    props["drawn_cards"].new_vector(SV_BYTE);
 
     for (int i = 0; i < item.plus; i++)
     {

@@ -2889,7 +2889,7 @@ void excommunication(void)
 
     case GOD_NEMELEX_XOBEH:
         nemelex_shuffle_decks();
-        inc_penance( old_god, 50 );
+        inc_penance( old_god, 150 ); // Nemelex penance is special
         break;
 
     case GOD_LUGONU:
@@ -3483,7 +3483,10 @@ void handle_god_time(void)
 
         for (int i = GOD_NO_GOD; i < NUM_GODS; i++)
         {
-            if (you.penance[i])
+            // Nemelex penance is special: it's only "active"
+            // when penance > 100, else it's passive.
+            if (you.penance[i] && (i != GOD_NEMELEX_XOBEH ||
+                                   you.penance[i] > 100))
             {
                 count++;
                 if (one_chance_in(count))
