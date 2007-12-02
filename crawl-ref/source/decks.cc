@@ -124,6 +124,7 @@ const deck_archetype deck_of_summoning[] = {
     { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
     { CARD_SUMMON_DEMON,    {5, 5, 5} },
     { CARD_SUMMON_WEAPON,   {5, 5, 5} },
+    { CARD_SUMMON_FLYING,   {5, 5, 5} },
     { CARD_SUMMON_SKELETON, {5, 5, 5} },
     END_OF_DECK
 };
@@ -280,6 +281,7 @@ const char* card_name(card_type card)
     case CARD_SUMMON_ANIMAL: return "the Herd";
     case CARD_SUMMON_DEMON: return "the Pentagram";
     case CARD_SUMMON_WEAPON: return "the Dance";
+    case CARD_SUMMON_FLYING: return "Foxfire";
     case CARD_SUMMON_SKELETON: return "the Bones";
     case CARD_SUMMON_ANY: return "Summoning";
     case CARD_XOM: return "Xom";
@@ -2369,6 +2371,30 @@ static void summon_dancing_weapon(int power, deck_rarity_type rarity)
     }
 }
 
+static void summon_flying(int power, deck_rarity_type rarity)
+{
+    const int power_level = get_power_level(power, rarity);
+    const bool friendly = (power_level > 0 || !one_chance_in(4));
+
+    const monster_type flytypes[] = {
+        MONS_BUTTERFLY, MONS_BUMBLEBEE, MONS_INSUBSTANTIAL_WISP,
+        MONS_VAPOUR, MONS_YELLOW_WASP, MONS_RED_WASP
+    };
+
+    // Choose what kind of monster.
+    // Be nice and don't summon friendly invisibles.
+    monster_type result = MONS_PROGRAM_BUG;
+    do {
+        result = flytypes[random2(4) + power_level];
+    } while ( friendly && mons_class_flag(result, M_INVIS) &&
+              !player_see_invis() );
+
+    for ( int i = 0; i < power_level * 5 + 2; ++i )
+        create_monster(result, std::min(power/50, 6),
+                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                       you.x_pos, you.y_pos, MHITYOU, 250);
+}
+
 static void summon_skeleton(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -2380,7 +2406,7 @@ static void summon_skeleton(int power, deck_rarity_type rarity)
     const int mon = create_monster(skeltypes[power_level], std::min(power/50,6),
                                    friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                                    you.x_pos, you.y_pos, MHITYOU, 250 );
-    if ( mon != -1 )
+    if ( mon != -1 )            // don't want skeletal warriors dropping stuff
         menv[mon].flags |= MF_HARD_RESET;
 }
 
@@ -2470,6 +2496,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_ANIMAL:    summon_animals(random2(power/3)); break;
     case CARD_SUMMON_ANY:       summon_any_monster(power, rarity); break;
     case CARD_SUMMON_WEAPON:    summon_dancing_weapon(power, rarity); break;
+    case CARD_SUMMON_FLYING:    summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  summon_skeleton(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
     case CARD_TROWEL:           trowel_card(power, rarity); break;

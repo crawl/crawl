@@ -87,6 +87,7 @@ enum card_type
     CARD_SUMMON_ANIMAL,
     CARD_SUMMON_DEMON,
     CARD_SUMMON_WEAPON,
+    CARD_SUMMON_FLYING,         // wisps and butterflies
     CARD_SUMMON_SKELETON,
     CARD_SUMMON_ANY,
 
