@@ -917,7 +917,7 @@ void run_macro(const char *macroname)
 #endif
 }
 
-// Returns true if the delay should be interrupted, false if the user function
+// Returns 1 if the delay should be interrupted, 0 if the user function
 // had no opinion on the matter, -1 if the delay should not be interrupted.
 static int userdef_interrupt_activity( const delay_queue_item &idelay,
                                         activity_interrupt_type ai, 

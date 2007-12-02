@@ -36,6 +36,7 @@
 
 #include "cio.h"
 #include "cloud.h"
+#include "delay.h"
 #include "effects.h"
 #include "enum.h"
 #include "it_use2.h"
@@ -3051,6 +3052,11 @@ static int affect_player( bolt &beam )
         }
         return (range_used_on_hit(beam));
     }
+
+    // Trigger an interrupt, so travel will stop on misses
+    // which generate smoke.
+    if (!YOU_KILL(beam.thrower))
+        interrupt_activity(AI_MONSTER_ATTACKS);
 
     // BEGIN real beam code
     beam.msg_generated = true;
