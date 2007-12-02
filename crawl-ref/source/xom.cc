@@ -622,15 +622,12 @@ static bool xom_is_good(int sever)
         deflate_hp(you.hp_max / 2, true);
                 
         bool failMsg = true;
-        int i = 0;
-        int j = random2(4);
-        while (i < j)
+        for (int i = random2(4); i >= 0; --i)
         {
             if (mutate(RANDOM_GOOD_MUTATION, failMsg, true))
                 done = true;
             else
                 failMsg = false;
-            i++;
         }
     }
     else if (random2(sever) <= 9)
@@ -767,7 +764,7 @@ static bool xom_is_bad(int sever)
             deflate_hp(you.hp_max / 2, true);
                 
             bool failMsg = true;
-            for (int i = 0; i < random2(4)+1; i++)
+            for (int i = random2(4); i >= 0; --i)
             {
                 if (mutate(RANDOM_XOM_MUTATION, failMsg, true))
                     done = true;
