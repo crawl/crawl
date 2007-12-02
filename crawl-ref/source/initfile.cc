@@ -1602,8 +1602,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 autopickups |= (1L << j);
             else
             {
-                fprintf( stderr, "Bad object type '%c' for autopickup.\n",
-                         type );
+                crawl_state.add_startup_error(
+                    make_stringf("Bad object type '%c' for autopickup.\n",
+                                 type));
             }
         }
     }
