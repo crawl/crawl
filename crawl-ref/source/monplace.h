@@ -136,7 +136,8 @@ bool player_angers_monster(monsters *mon);
 /* ***********************************************************************
  * called from: misc - monplace - spells3
  * *********************************************************************** */
-bool empty_surrounds( int emx, int emy, unsigned char spc_wanted, int radius,
+bool empty_surrounds( int emx, int emy, dungeon_feature_type spc_wanted,
+                      int radius,
                       bool allow_centre, FixedVector<char, 2>& empty );
 
 
@@ -169,10 +170,14 @@ monster_type rand_dragon( dragon_class_type type );
 void mark_interesting_monst(struct monsters* monster,
                             beh_type behaviour = BEH_SLEEP);
 
-bool grid_compatible(int grid_wanted, int actual_grid, bool generation = false);
-bool monster_habitable_grid(int monster_class, int actual_grid, 
+bool grid_compatible(dungeon_feature_type grid_wanted,
+                     dungeon_feature_type actual_grid,
+                     bool generation = false);
+bool monster_habitable_grid(int monster_class,
+                            dungeon_feature_type actual_grid, 
                             int flies = -1, bool paralysed = false);
-bool monster_habitable_grid(const monsters *m, int actual_grid);
+bool monster_habitable_grid(const monsters *m,
+                            dungeon_feature_type actual_grid);
 bool monster_can_submerge(int monster_class, int grid);
 coord_def find_newmons_square(int mons_class, int x, int y);
 

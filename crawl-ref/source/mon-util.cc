@@ -112,7 +112,7 @@ habitat_type grid2habitat(int grid)
     }
 }
 
-int habitat2grid(habitat_type ht)
+dungeon_feature_type habitat2grid(habitat_type ht)
 {
     switch (ht)
     {
@@ -132,7 +132,7 @@ static void initialize_randmons()
 {
     for (int i = 0; i < NUM_HABITATS; ++i)
     {
-        int grid = habitat2grid( habitat_type(i) );
+        const dungeon_feature_type grid = habitat2grid( habitat_type(i) );
 
         for (int m = 0; m < NUM_MONSTERS; ++m)
         {
@@ -2359,6 +2359,11 @@ void monsters::init_with(const monsters &mon)
 coord_def monsters::pos() const
 {
     return coord_def(x, y);
+}
+
+coord_def monsters::target_pos() const
+{
+    return coord_def(target_x, target_y);
 }
 
 bool monsters::swimming() const

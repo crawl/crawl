@@ -1044,7 +1044,7 @@ void alert_nearby_monsters(void)
 
 static bool valid_morph( monsters *monster, int new_mclass )
 {
-    unsigned char current_tile = grd[monster->x][monster->y];
+    const dungeon_feature_type current_tile = grd[monster->x][monster->y];
 
     // morph targets are _always_ "base" classes, not derived ones.
     new_mclass = mons_species(new_mclass);
@@ -1349,7 +1349,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
     return (tries < 150);
 }                               // end random_near_space()
 
-static bool habitat_okay( const monsters *monster, int targ )
+static bool habitat_okay( const monsters *monster, dungeon_feature_type targ )
 {
     return (monster_habitable_grid(monster, targ));
 }
@@ -4526,7 +4526,7 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
     if (mons->airborne())
         return;
     
-    int grid = grd(mons->pos());
+    dungeon_feature_type grid = grd(mons->pos());
     if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
         && !monster_habitable_grid(mons, grid))
     {
@@ -5704,7 +5704,7 @@ bool shift_monster( monsters *mon, int x, int y )
             tx = x + i;
             ty = y + j;
 
-            if (tx < 5 || tx > GXM - 5 || ty < 5 || ty > GXM - 5)
+            if (!in_bounds(tx, ty))
                 continue;
 
             // won't drop on anything but vanilla floor right now
@@ -5717,8 +5717,7 @@ bool shift_monster( monsters *mon, int x, int y )
             if (tx == you.x_pos && ty == you.y_pos)
                 continue;
 
-            count++;
-            if (one_chance_in(count))
+            if (one_chance_in(++count))
             {
                 nx = tx;
                 ny = ty;

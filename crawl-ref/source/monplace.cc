@@ -47,7 +47,8 @@ static int place_monster_aux(int mon_type, beh_type behaviour, int target,
 
 // Returns whether actual_grid is compatible with grid_wanted for monster 
 // movement (or for monster generation, if generation is true).
-bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
+bool grid_compatible(dungeon_feature_type grid_wanted,
+                     dungeon_feature_type actual_grid, bool generation)
 {
     // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
     // device to slow down fiery monsters flying over water.
@@ -66,7 +67,7 @@ bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
-bool monster_habitable_grid(const monsters *m, int actual_grid)
+bool monster_habitable_grid(const monsters *m, dungeon_feature_type actual_grid)
 {
     return (monster_habitable_grid(m->type, actual_grid, mons_flies(m),
                                    m->paralysed()));
@@ -86,10 +87,13 @@ inline static bool mons_airborne(int mcls, int flies, bool paralysed)
 // one check, so we no longer care if a water elemental springs into existence
 // on dry land, because they're supposed to be able to move onto dry land 
 // anyway.
-bool monster_habitable_grid(int monster_class, int actual_grid, int flies,
+bool monster_habitable_grid(int monster_class,
+                            dungeon_feature_type actual_grid,
+                            int flies,
                             bool paralysed)
 {
-    const int preferred_habitat = monster_habitat(monster_class);
+    const dungeon_feature_type preferred_habitat =
+        monster_habitat(monster_class);
     return (grid_compatible(preferred_habitat, actual_grid)
             // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
             // only have to check for the additional valid grids of deep
@@ -457,7 +461,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         // a) not occupied
         // b) compatible
         // c) in the 'correct' proximity to the player
-        unsigned char grid_wanted = monster_habitat(mon_type);
+        dungeon_feature_type grid_wanted = monster_habitat(mon_type);
         while(true)
         {
             // handled above, won't change anymore
@@ -635,7 +639,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
                               bool first_band_member, int dur )
 {
     int id, i;
-    unsigned char grid_wanted;
+    dungeon_feature_type grid_wanted = DNGN_UNSEEN;
     int fx=0, fy=0;     // final x,y
 
     // gotta be able to pick an ID
@@ -1542,7 +1546,7 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    int spcw = ((mons_class == RANDOM_MONSTER)? DNGN_FLOOR 
+    dungeon_feature_type spcw = ((mons_class == RANDOM_MONSTER)? DNGN_FLOOR 
                                               : monster_habitat( mons_class ));
 
     // Might be better if we chose a space and tried to match the monster
@@ -1649,7 +1653,7 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
 }                               // end create_monster()
 
 
-bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
+bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
                      int radius, bool allow_centre, 
                      FixedVector < char, 2 > &empty)
 {

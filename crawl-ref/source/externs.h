@@ -256,6 +256,13 @@ struct coord_def
         y /= div;
         return (*this);
     }
+
+    const coord_def &operator *= (int mul)
+    {
+        x *= mul;
+        y *= mul;
+        return (*this);
+    }
     
     coord_def operator + (const coord_def &other) const
     {
@@ -287,6 +294,12 @@ struct coord_def
         return (copy /= div);
     }
 
+    coord_def operator * (int mul) const
+    {
+        coord_def copy = *this;
+        return (copy *= mul);
+    }
+    
     int abs() const
     {
         return (x * x + y * y);
@@ -980,6 +993,7 @@ public:
     god_type  deity() const;
     bool      alive() const;
     coord_def pos() const;
+    coord_def target_pos() const;
     bool      swimming() const;
     bool      submerged() const;
     bool      can_drown() const;
