@@ -1717,7 +1717,7 @@ void gain_piety(int pgn)
     if (you.religion == GOD_BEOGH)
     {
         // every piety level change also affects AC from orcish gear
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
     }    
 
     if ( you.piety > 160 && old_piety <= 160 &&
@@ -1743,7 +1743,7 @@ static bool need_water_walking()
         grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
 }
 
-static bool is_evil_weapon(item_def weap)
+static bool is_evil_weapon(const item_def& weap)
 {
     if (weap.base_type != OBJ_WEAPONS)
         return false;
@@ -1783,7 +1783,8 @@ bool ely_destroy_weapons()
         bool pgain = false;
         if (is_evil_weapon(mitm[i])
             || random2(value) >= random2(250) // artefacts (incl. most randarts)
-            || random2(value) >= random2(100) && one_chance_in(1 + you.piety/50)
+            || (random2(value) >= random2(100)
+                && one_chance_in(1 + you.piety/50))
             || (mitm[i].base_type == OBJ_WEAPONS
                 && (you.piety < 30 || player_under_penance())))
         {
@@ -1808,9 +1809,8 @@ bool ely_destroy_weapons()
     }
 
     if (!success)
-    {
         mpr("There are no weapons here to destroy!");
-    }
+
     return success;
 }
 
@@ -1863,7 +1863,7 @@ bool trog_burn_books()
              i = igrd[xpos][ypos];
              while (i != NON_ITEM)
              {
-                 const int next = mitm[i].link;  // in case we can't get it later.
+                 const int next = mitm[i].link; // in case we can't get it later.
 
                  if (mitm[i].base_type != OBJ_BOOKS
                      || mitm[i].sub_type == BOOK_MANUAL)
@@ -2292,6 +2292,10 @@ static bool beogh_retribution()
             // hand item information over to monster
             if (mons != -1)
             {
+                // destroy the old weapon
+                // arguably we should use destroy_item() here
+                mitm[menv[mons].inv[MSLOT_WEAPON]].clear();
+
                 menv[mons].inv[MSLOT_WEAPON] = slot;
                 num_created++;
 
@@ -2319,7 +2323,7 @@ static bool beogh_retribution()
         // else fall through
     default: // send orcs after you (3/8 to 5/8)
     {
-        int points = you.experience_level + 3
+        const int points = you.experience_level + 3
             + random2(you.experience_level * 3);
 
         monster_type punisher;
