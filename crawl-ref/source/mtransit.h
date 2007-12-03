@@ -29,13 +29,20 @@ struct follower
 typedef std::list<follower> m_transit_list;
 typedef std::map<level_id, m_transit_list> monsters_in_transit;
 
+typedef std::list<item_def> i_transit_list;
+typedef std::map<level_id, i_transit_list> items_in_transit;
+
 extern monsters_in_transit the_lost_ones;
+extern items_in_transit    transiting_items;
 
 m_transit_list *get_transit_list(const level_id &where);
 void add_monster_to_transit(const level_id &dest, const monsters &m);
+void add_item_to_transit(const level_id &dest, const item_def &i);
 
 // Places (some of the) monsters eligible to be placed on this level.
 void place_transiting_monsters();
 void place_followers();
+
+void place_transiting_items();
 
 #endif

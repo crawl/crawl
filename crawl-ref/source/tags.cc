@@ -106,10 +106,12 @@ static void tag_construct_you(struct tagHeader &th);
 static void tag_construct_you_items(struct tagHeader &th);
 static void tag_construct_you_dungeon(struct tagHeader &th);
 static void tag_construct_lost_monsters(tagHeader &th);
+static void tag_construct_lost_items(tagHeader &th);
 static void tag_read_you(struct tagHeader &th, char minorVersion);
 static void tag_read_you_items(struct tagHeader &th, char minorVersion);
 static void tag_read_you_dungeon(struct tagHeader &th);
 static void tag_read_lost_monsters(tagHeader &th, int minorVersion);
+static void tag_read_lost_items(tagHeader &th, int minorVersion);
 
 static void tag_construct_level(struct tagHeader &th);
 static void tag_construct_level_items(struct tagHeader &th);
@@ -586,6 +588,7 @@ void tag_construct(struct tagHeader &th, int tagID)
             break;
         case TAG_LOST_MONSTERS:
             tag_construct_lost_monsters(th);
+            tag_construct_lost_items(th);
             break;
         default:
             // I don't know how to make that!
@@ -687,6 +690,7 @@ int tag_read(FILE *fp, char minorVersion)
             break;
         case TAG_LOST_MONSTERS:
             tag_read_lost_monsters(th, minorVersion);
+            tag_read_lost_items(th, minorVersion);
             break;
         default:
             // I don't know how to read that!
@@ -1085,6 +1089,17 @@ static void marshall_follower_list(tagHeader &th, const m_transit_list &mlist)
     }
 }
 
+static void marshall_item_list(tagHeader &th, const i_transit_list &ilist)
+{
+    marshallShort( th, ilist.size() );
+    
+    for (i_transit_list::const_iterator ii = ilist.begin();
+         ii != ilist.end(); ++ii)
+    {
+        marshallItem( th, *ii );
+    }
+}
+
 static m_transit_list unmarshall_follower_list(tagHeader &th)
 {
     m_transit_list mlist;
@@ -1101,10 +1116,32 @@ static m_transit_list unmarshall_follower_list(tagHeader &th)
     return (mlist);
 }
 
+static i_transit_list unmarshall_item_list(tagHeader &th)
+{
+    i_transit_list ilist;
+    
+    const int size = unmarshallShort(th);
+
+    for (int i = 0; i < size; ++i)
+    {
+        item_def item;
+        unmarshallItem(th, item);
+        ilist.push_back(item);
+    }
+
+    return (ilist);
+}
+
 static void tag_construct_lost_monsters(tagHeader &th)
 {
     marshallMap( th, the_lost_ones, marshall_level_id,
                  marshall_follower_list );
+}
+
+static void tag_construct_lost_items(tagHeader &th)
+{
+    marshallMap( th, transiting_items, marshall_level_id,
+                 marshall_item_list );
 }
 
 static void tag_read_you(struct tagHeader &th, char minorVersion)
@@ -1465,6 +1502,14 @@ static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
     
     unmarshallMap(th, the_lost_ones,
                   unmarshall_level_id, unmarshall_follower_list);
+}
+
+static void tag_read_lost_items(tagHeader &th, int minorVersion)
+{
+    transiting_items.clear();
+    
+    unmarshallMap(th, transiting_items,
+                  unmarshall_level_id, unmarshall_item_list);
 }
 
 // ------------------------------- level tags ---------------------------- //

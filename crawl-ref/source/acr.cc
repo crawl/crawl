@@ -2742,6 +2742,21 @@ static void check_banished()
    at some point.
 */
 
+static void check_shafts()
+{
+    for (int i = 0; i < MAX_TRAPS; i++)
+    {
+        trap_struct &trap = env.trap[i];
+
+        if (trap.type != TRAP_SHAFT)
+            continue;
+
+        ASSERT(in_bounds(trap.x, trap.y));
+
+        handle_items_on_shaft(trap.x, trap.y, true);
+    }
+}
+
 static void world_reacts()
 {
     crawl_state.clear_god_acting();
@@ -2755,6 +2770,8 @@ static void world_reacts()
         update_turn_count();
     }
     check_banished();
+
+    check_shafts();
 
     run_environment_effects();
 

@@ -5144,31 +5144,7 @@ bool actor::will_trigger_shaft() const
 
 level_id actor::shaft_dest() const
 {
-    if (you.level_type != LEVEL_DUNGEON)
-        return level_id::current();
-
-    level_id lev        = level_id::current();
-    int      curr_depth = subdungeon_depth(you.where_are_you, you.your_level);
-
-    lev.depth += ((pos().x + pos().y) % 3) + 1;
-
-    if (lev.depth > your_branch().depth)
-        lev.depth = your_branch().depth;
-
-    if (lev.depth == curr_depth)
-        return lev;
-
-    // Only shafts on the level immediately above a dangerous branch
-    // bottom will take you to that dangerous bottom, and shafts can't
-    // be created during level generation time.
-    if (your_branch().dangerous_bottom_level
-        && lev.depth == your_branch().depth
-        && (your_branch().depth - curr_depth) > 1)
-    {
-        lev.depth--;
-    }
-
-    return lev;
+    return generic_shaft_dest(pos());
 }
 
 bool actor::airborne() const
@@ -6521,6 +6497,7 @@ bool player::do_shaft()
         if (airborne() || total_weight() == 0)
         {
             mpr("A shaft briefly opens up underneath you!");
+            handle_items_on_shaft(you.x_pos, you.y_pos, false);
             return (true);
         }
 

@@ -439,6 +439,7 @@ void area_shift(void)
 
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
+    place_transiting_items();
 }
 
 void save_abyss_uniques()
@@ -539,6 +540,7 @@ void abyss_teleport( bool new_area )
                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
 
     place_transiting_monsters();
+    place_transiting_items();
 }
 
 //////////////////////////////////////////////////////////////////////////////

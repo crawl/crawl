@@ -1092,6 +1092,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         {
             if (you.flight_mode() == FL_FLY && !force_stair)
                 mpr("You dive down through the shaft.");
+            handle_items_on_shaft(you.x_pos, you.y_pos, false);
         }
         else
             climb_message(stair_find, false, old_level_type);

@@ -7343,11 +7343,11 @@ inline static bool dgn_square_travel_ok(const coord_def &c)
 }
 
 // Fill travel_point_distance out from all stone stairs on the level.
-static coord_def dgn_find_closest_to_stone_stairs()
+static coord_def dgn_find_closest_to_stone_stairs(coord_def base_pos)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     init_travel_terrain_check(false);
-    nearest_point np(you.pos());
+    nearest_point np(base_pos);
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
             if (!travel_point_distance[x][y] && grid_is_stone_stair(grd[x][y]))
@@ -7377,7 +7377,7 @@ static coord_def dgn_find_labyrinth_entry_point()
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                bool find_closest)
+                                coord_def base_pos, bool find_closest)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -7390,7 +7390,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     if (stair_to_find == DNGN_ROCK_STAIRS_UP
         || stair_to_find == DNGN_ROCK_STAIRS_DOWN)
     {
-        const coord_def pos(dgn_find_closest_to_stone_stairs());
+        const coord_def pos(dgn_find_closest_to_stone_stairs(base_pos));
         if (in_bounds(pos))
             return (pos);
     }
@@ -7423,8 +7423,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     }
 
     // scan around the player's position first
-    int basex = you.x_pos;
-    int basey = you.y_pos;
+    int basex = base_pos.x;
+    int basey = base_pos.y;
 
     // check for illegal starting point
     if ( !in_bounds(basex, basey) )

@@ -5014,6 +5014,8 @@ bool monsters::do_shaft()
                 else
                     mpr("A shaft briefly opens up in the floor!");
             }
+
+            handle_items_on_shaft(this->x, this->y, false);
             return (false);
         }
     }
@@ -5027,6 +5029,8 @@ bool monsters::do_shaft()
     bool reveal = false;
     if (simple_monster_message(this, " falls through a shaft!"))
         reveal = true;;
+
+    handle_items_on_shaft(this->x, this->y, false);
 
     // Monster is no longer on this level
     destroy_inventory();

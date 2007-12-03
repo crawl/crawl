@@ -7,20 +7,25 @@
  */
 
 #include "AppHdr.h"
-
 #include "mtransit.h"
+
+#include "dungeon.h"
 #include "items.h"
+#include "monplace.h"
 #include "mon-util.h"
+#include "monstuff.h"
+#include "randart.h"
 #include "stuff.h"
 
 #define MAX_LOST 100
 
 monsters_in_transit the_lost_ones;
+items_in_transit    transiting_items;
 
 static void level_place_lost_monsters(m_transit_list &m);
 static void level_place_followers(m_transit_list &m);
 
-static void cull_lost(m_transit_list &mlist, int how_many)
+static void cull_lost_mons(m_transit_list &mlist, int how_many)
 {
     // First pass, drop non-uniques.
     for (m_transit_list::iterator i = mlist.begin(); i != mlist.end(); )
@@ -41,6 +46,53 @@ static void cull_lost(m_transit_list &mlist, int how_many)
         mlist.erase( mlist.begin() );
 }
 
+static void cull_lost_items(i_transit_list &ilist, int how_many)
+{
+    // First pass, drop non-artifacts.
+    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
+    {
+        i_transit_list::iterator finger = i++;
+        if (!is_artefact(*finger))
+        {
+            ilist.erase(finger);
+
+            if (--how_many <= MAX_LOST)
+                return;
+        }
+    }
+
+    // Second pass, drop randarts.
+    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
+    {
+        i_transit_list::iterator finger = i++;
+        if (is_random_artefact(*finger))
+        {
+            ilist.erase(finger);
+
+            if (--how_many <= MAX_LOST)
+                return;
+        }
+    }
+
+    // Third pass, drop unrandarts.
+    for (i_transit_list::iterator i = ilist.begin(); i != ilist.end(); )
+    {
+        i_transit_list::iterator finger = i++;
+        if (is_unrandom_artefact(*finger))
+        {
+            ilist.erase(finger);
+
+            if (--how_many <= MAX_LOST)
+                return;
+        }
+    }
+
+    // If we're still over the limit (unlikely), just lose
+    // the old ones.
+    while (how_many-- > MAX_LOST && !ilist.empty())
+        ilist.erase( ilist.begin() );
+}
+
 m_transit_list *get_transit_list(const level_id &lid)
 {
     monsters_in_transit::iterator i = the_lost_ones.find(lid);
@@ -59,7 +111,7 @@ void add_monster_to_transit(const level_id &lid, const monsters &m)
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
-        cull_lost(mlist, how_many);
+        cull_lost_mons(mlist, how_many);
 }
 
 void place_lost_ones(void (*placefn)(m_transit_list &ml))
@@ -100,8 +152,9 @@ static void level_place_lost_monsters(m_transit_list &m)
     {
         m_transit_list::iterator mon = i++;
 
-        // Transiting monsters have a 50% chance of being placed.
-        if (coinflip())
+        // Monsters transiting to the Abyss have a 50% chance of being
+        // placed, otherwise a 100% chance.
+        if (you.level_type == LEVEL_ABYSS && coinflip())
             continue;
 
         if (place_lost_monster(*mon))
@@ -118,6 +171,55 @@ static void level_place_followers(m_transit_list &m)
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
             m.erase(mon);
     }
+}
+
+void add_item_to_transit(const level_id &lid, const item_def &i)
+{
+    i_transit_list &ilist = transiting_items[lid];
+    ilist.push_back(i);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Item in transit: %s",
+         i.name(DESC_PLAIN).c_str());
+#endif
+
+    const int how_many = ilist.size();
+    if (how_many > MAX_LOST)
+        cull_lost_items(ilist, how_many);
+}
+
+void place_transiting_items()
+{
+    level_id c = level_id::current();
+
+    items_in_transit::iterator i = transiting_items.find(c);
+    if (i == transiting_items.end())
+        return;
+
+    i_transit_list &ilist = i->second;
+    i_transit_list keep;
+    i_transit_list::iterator item;
+
+    for (item = ilist.begin(); item != ilist.end(); item++)
+    {
+        coord_def pos(item->x, item->y);
+
+        if (!in_bounds(pos))
+        {
+            pos.x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
+            pos.y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
+        }
+           
+        const coord_def where_to_go =
+            dgn_find_nearby_stair(DNGN_ROCK_STAIRS_DOWN, pos, true);
+
+        // List of items we couldn't place
+        if (!copy_item_to_grid(*item, where_to_go.x, where_to_go.y))
+            keep.push_back(*item);
+    }
+
+    // Only unplaceable items are kept in list.
+    ilist = keep;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,12 +243,40 @@ bool follower::place(bool near_player)
 {
     for (int i = 0; i < MAX_MONSTERS - 5; ++i)
     {
+        // Find first empty slot in menv and copy monster into it.
         monsters &m = menv[i];
         if (m.alive())
             continue;
-
         m = mons;
-        if (m.find_place_to_live(near_player))
+
+        bool placed = false;
+
+        // In certain instances (currently, falling through a shaft)
+        // try to place monster a close as possible to its previous
+        // <x,y> coordinates.
+        if (!near_player && you.level_type == LEVEL_DUNGEON
+            && in_bounds(m.pos()))
+        {
+            const coord_def where_to_go =
+                dgn_find_nearby_stair(DNGN_ROCK_STAIRS_DOWN,
+                                      m.pos(), true);
+
+            if (monster_habitable_grid(&m, grd(where_to_go)))
+            {
+                if (where_to_go == you.pos())
+                    near_player = true;
+                else
+                {
+                    mgrd[where_to_go.x][where_to_go.y] = monster_index(&m);
+                    placed = true;
+                }
+            }
+        }
+
+        if (!placed)
+            placed = m.find_place_to_live(near_player);
+
+        if (placed)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Placed follower: %s",

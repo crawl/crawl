@@ -64,7 +64,9 @@ dungeon_feature_type trap_category(trap_type type);
 int trap_at_xy(int x, int y);
 trap_type trap_type_at_xy(int x, int y);
 
-bool is_valid_shaft_level(const level_id &place = level_id::current());
+bool     is_valid_shaft_level(const level_id &place = level_id::current());
+level_id generic_shaft_dest(coord_def pos);
+void     handle_items_on_shaft(int x, int y, bool open_shaft);
 
 int       num_traps_for_place(int level_number = -1,
                               const level_id &place = level_id::current());

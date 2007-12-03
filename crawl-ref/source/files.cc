@@ -758,7 +758,7 @@ static void place_player_on_stair(branch_type old_branch,
     
     const coord_def where_to_go =
         dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
-                              find_first);
+                              you.pos(), find_first);
     you.moveto(where_to_go);
 }
 
@@ -1037,7 +1037,10 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
+    {
         place_transiting_monsters();
+        place_transiting_items();
+    }
 
     redraw_all();
 

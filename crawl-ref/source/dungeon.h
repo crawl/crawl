@@ -316,7 +316,7 @@ void place_spec_shop(int level_number, int shop_x, int shop_y,
                      int force_s_type, bool representative = false);
 bool unforbidden(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                bool find_closest);
+                                coord_def base_pos, bool find_closest);
 
 class mons_spec;
 bool dgn_place_monster(const mons_spec &mspec,

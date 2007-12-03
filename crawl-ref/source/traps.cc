@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "monstuff.h"
+#include "mtransit.h"
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
@@ -958,6 +959,89 @@ bool is_valid_shaft_level(const level_id &place)
         min_delta = 2;
 
     return ((branch.depth - place.depth) >= min_delta);
+}
+
+level_id generic_shaft_dest(level_pos lpos)
+{
+    level_id  lid = lpos.id;
+    coord_def pos = lpos.pos;
+
+    if (lid.level_type != LEVEL_DUNGEON)
+        return lid;
+
+    int      curr_depth = lid.depth;
+    Branch   &branch    = branches[lid.branch];
+
+    lid.depth += ((pos.x + pos.y) % 3) + 1;
+
+    if (lid.depth > branch.depth)
+        lid.depth = branch.depth;
+
+    if (lid.depth == curr_depth)
+        return lid;
+
+    // Only shafts on the level immediately above a dangerous branch
+    // bottom will take you to that dangerous bottom, and shafts can't
+    // be created during level generation time.
+    if (branch.dangerous_bottom_level
+        && lid.depth == branch.depth
+        && (branch.depth - curr_depth) > 1)
+    {
+        lid.depth--;
+    }
+
+    return lid;
+}
+
+level_id generic_shaft_dest(coord_def pos)
+{
+    return generic_shaft_dest(level_pos(level_id::current(), pos));
+}
+
+void handle_items_on_shaft(int x, int y, bool open_shaft)
+{
+    if (!is_valid_shaft_level())
+        return;
+
+    coord_def pos(x, y);
+    level_id  dest = generic_shaft_dest(pos);
+
+    if (dest == level_id::current())
+        return;
+
+    int o = igrd(pos);
+
+    if (o == NON_ITEM)
+        return;
+
+    igrd(pos) = NON_ITEM;
+
+    if (is_terrain_seen(pos) && open_shaft)
+    {
+        mpr("A shaft opens up in the floor!");
+        grd(pos) = DNGN_TRAP_NATURAL;
+    }
+
+    while (o != NON_ITEM)
+    {
+        int next = mitm[o].link;
+
+        if (is_valid_item( mitm[o] ))
+        {
+            if (is_terrain_seen(pos))
+            {
+                mprf("%s falls through the shaft.",
+                     mitm[o].name(DESC_INVENTORY).c_str());
+            }
+            add_item_to_transit(dest, mitm[o]);
+
+            mitm[o].base_type = OBJ_UNASSIGNED;
+            mitm[o].quantity = 0;
+            mitm[o].props.clear();
+        }
+
+        o = next;
+    }
 }
 
 static int num_traps_default(int level_number, const level_id &place)
