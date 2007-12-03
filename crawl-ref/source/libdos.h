@@ -1,6 +1,8 @@
 #ifndef __LIBDOS_H__
 #define __LIBDOS_H__
 
+#include <conio.h>
+
 typedef unsigned char screen_buffer_t;
 
 void init_libdos();
@@ -24,5 +26,11 @@ inline void update_screen()
 }
 
 void putwch(unsigned c);
+
+inline void put_colour_ch(int colour, unsigned ch)
+{
+    textattr(colour);
+    putwch(ch);
+}
 
 #endif

@@ -600,7 +600,7 @@ int window(int x1, int y1, int x2, int y2)
 // textcolour and drawing a character and call set_altcharset(false)
 // after you're done drawing.
 //
-int cset_adjust(int raw)
+unsigned cset_adjust(unsigned raw)
 {
     if (Options.char_set != CSET_ASCII && Options.char_set != CSET_UNICODE)
     {
@@ -615,6 +615,13 @@ int cset_adjust(int raw)
         }
     }
     return (raw);
+}
+
+void put_colour_ch(int colour, unsigned ch)
+{
+    ch = cset_adjust(ch);
+    textattr(colour);
+    putwch(ch);
 }
 
 void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
@@ -635,7 +642,6 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
             buf += 2;
         }
     }
-    set_altcharset(false);
     update_screen();
 
     if (will_scroll)
@@ -649,6 +655,7 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
+    set_altcharset(false);
     refresh();
 }
 
