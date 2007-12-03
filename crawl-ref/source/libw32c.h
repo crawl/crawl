@@ -54,4 +54,10 @@ void enable_smart_cursor(bool cursor);
 bool is_smart_cursor_enabled();
 void set_mouse_enabled(bool enabled);
 
+inline void put_colour_ch(int colour, unsigned ch)
+{
+    textattr(colour);
+    putwch(ch);
+}
+
 #endif

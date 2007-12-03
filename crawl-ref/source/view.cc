@@ -4047,10 +4047,9 @@ void view_update_at(const coord_def &pos)
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = viewmap_flash_colour();
-    
+
     gotoxy(vp.x, vp.y);
-    textattr(flash_colour? real_colour(flash_colour) : colour);
-    putwch(ch);
+    put_colour_ch(flash_colour? real_colour(flash_colour) : colour, ch);
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.

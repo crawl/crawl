@@ -25,4 +25,10 @@ inline void update_screen()
 
 void putwch(unsigned c);
 
+inline void put_colour_ch(int colour, unsigned ch)
+{
+    textattr(colour);
+    putwch(ch);
+}
+
 #endif
