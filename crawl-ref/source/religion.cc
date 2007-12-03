@@ -796,7 +796,7 @@ static void do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) > 80 && one_chance_in(5))
             {
-                monster_type thing_called = 
+                monster_type thing_called =
                     random_servant(GOD_YREDELEMNUL);
 
                 if (create_monster(thing_called, 0, BEH_FRIENDLY,
@@ -2664,11 +2664,11 @@ void beogh_idol_revenge()
         || (you.species == SP_HILL_ORC && coinflip())
         || one_chance_in(3))
     {
-        const char* revenge;
+        const char *revenge;
 
         if (you.religion == GOD_BEOGH)
         {
-            const char* messages[3] = {
+            const char *messages[3] = {
                 "Beogh fumes, \"This is no small sin, orc. Repent!\"",
                 "Beogh whispers, \"You will pay for this transgression.\"",
                 "Beogh rages, \"An eye for an eye...\""
@@ -2678,7 +2678,7 @@ void beogh_idol_revenge()
         }
         else if (you.species == SP_HILL_ORC)
         {
-            const char* messages[2] = {
+            const char *messages[2] = {
                 "Beogh's voice booms out: \"Heretic, die!\"",
                 "You hear Beogh's thundering voice: \"Suffer, infidel!\""
             };
@@ -2687,7 +2687,7 @@ void beogh_idol_revenge()
         }
         else
         {
-            const char* messages[2] = {
+            const char *messages[2] = {
                 "Beogh is not amused about the destruction of his idols.",
                 "Beogh seems highly displeased."
             };

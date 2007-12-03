@@ -206,7 +206,7 @@ static void termio_init()
     def_term.c_cc[VINTR] = (char) 3;        // ctrl-C
     game_term.c_cc[VINTR] = (char) 3;       // ctrl-C
 
-    // Lets recover some control sequences
+    // Let's recover some control sequences
     game_term.c_cc[VSTART] = (char) -1;     // ctrl-Q
     game_term.c_cc[VSTOP] = (char) -1;      // ctrl-S
     game_term.c_cc[VSUSP] = (char) -1;      // ctrl-Y

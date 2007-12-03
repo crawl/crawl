@@ -1758,7 +1758,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)
     {
-        const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];        
+        const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];
         const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
         bool poisoned = (ammo_brand == SPMSL_POISONED);
@@ -1797,7 +1797,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // fix ammo damage bonus, since missiles only use inv_plus
         ammoDamBonus = ammoHitBonus;
 
-        // check for matches;  dwarven,elven,orcish
+        // check for matches; dwarven, elven, orcish
         if (!get_equip_race(you.inv[you.equip[EQ_WEAPON]]) == 0)
         {
             if (get_equip_race( you.inv[you.equip[EQ_WEAPON]] ) 
@@ -2082,7 +2082,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 && (wepType == MI_STONE || wepType == MI_LARGE_ROCK)))
         {
             // elves with elven weapons
-            if (get_equip_race(item) == ISFLAG_ELVEN 
+            if (get_equip_race(item) == ISFLAG_ELVEN
                 && player_genus(GENPC_ELVEN))
                 baseHit += 1;
 
