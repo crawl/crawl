@@ -49,7 +49,6 @@ void unixcurses_startup(void);
 void textbackground(int bg);
 void textcolor(int col);
 void textattr(int col);
-int cset_adjust(int raw);
 
 void set_altcharset(bool alt_on);
 bool get_altcharset();
