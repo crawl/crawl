@@ -1442,8 +1442,10 @@ static std::string describe_ammo( const item_def &item )
         break;
     }
 
-    switch ( get_equip_race(item) )
+    if ( has_launcher(item) )
     {
+        switch ( get_equip_race(item) )
+        {
         case ISFLAG_DWARVEN:
             description +=
                 "$It is more effective in conjunction with dwarven launchers.";
@@ -1456,6 +1458,25 @@ static std::string describe_ammo( const item_def &item )
             description +=
                 "$It is more effective in conjunction with orcish launchers.";
             break;
+        }
+    }
+    else
+    {
+        switch ( get_equip_race(item) )
+        {
+        case ISFLAG_DWARVEN:
+            description +=
+                "$It is most deadly when thrown by dwarves.";
+            break;
+        case ISFLAG_ELVEN:
+            description +=
+                "$It is most deadly when thrown by elves.";
+            break;
+        case ISFLAG_ORCISH:
+            description +=
+                "$It is most deadly when thrown by orcs.";
+            break;
+        }
     }
 
     if (item.special != 0 && item_type_known(item))

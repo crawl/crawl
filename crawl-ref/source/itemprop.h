@@ -672,8 +672,9 @@ missile_type  fires_ammo_type( const item_def &item );
 missile_type fires_ammo_type( weapon_type wtype );
 const char *  ammo_name( const item_def &bow );
 const char *  ammo_name( missile_type mtyp );
+bool          has_launcher( const item_def &wpn );
 bool          is_throwable( const item_def &wpn,
-                            size_type bodysize = SIZE_MEDIUM ); 
+                            size_type bodysize = SIZE_MEDIUM );
 launch_retval is_launched(actor *actor, const item_def *launcher,
                          const item_def &missile);
 

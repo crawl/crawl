@@ -2079,7 +2079,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // all weapons that use 'throwing' go here..
         if (wepClass == OBJ_WEAPONS
             || (wepClass == OBJ_MISSILES
-                && (wepType == MI_STONE || wepType == MI_LARGE_ROCK)))
+                && (wepType == MI_STONE || wepType == MI_LARGE_ROCK
+                    || wepType == MI_JAVELIN)))
         {
             // elves with elven weapons
             if (get_equip_race(item) == ISFLAG_ELVEN
@@ -2103,6 +2104,17 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         break;
                     default:
                         baseHit -= 5;
+                        break;
+                }
+            }
+            else if (wepClass == OBJ_MISSILES)
+            {
+                switch (wepType)
+                {
+                    case MI_JAVELIN:
+                        baseHit += 1;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -2152,8 +2164,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
             case MI_JAVELIN:
                 // Javelins use throwing skill.
-                baseHit = 1;
-                baseDam = property( item, PWPN_DAMAGE );
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skills[SK_THROWING] * 3 / 5;
 

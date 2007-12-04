@@ -709,8 +709,11 @@ void set_equip_race( item_def &item, unsigned long flags )
             }
             break;
         case OBJ_MISSILES:
-            if (item.sub_type == MI_ARROW)
+            if (item.sub_type == MI_ARROW
+                || item.sub_type == MI_JAVELIN)
+            {
                 return;
+            }
             break;
         default:
             break;
@@ -1855,7 +1858,15 @@ const char * ammo_name( const item_def &bow )
 {
     ASSERT( is_range_weapon( bow ) );
     return ammo_name(fires_ammo_type( bow ));
-} 
+}
+
+// returns true if item has an associated launcher
+bool has_launcher( const item_def &wpn )
+{
+    return (wpn.sub_type != MI_LARGE_ROCK &&
+            wpn.sub_type != MI_JAVELIN &&
+            wpn.sub_type != MI_THROWING_NET);
+}
 
 // returns true if item can be reasonably thrown without a launcher
 bool is_throwable( const item_def &wpn, size_type bodysize  )
