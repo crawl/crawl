@@ -631,7 +631,7 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
         gotoxy(x1, y);
         for (int x = x1; x <= x2; ++x)
         {
-            const screen_buffer_t ch = cset_adjust(static_cast<unsigned>(*buf));
+            const screen_buffer_t ch = cset_adjust(*buf);
             textattr( buf[1] );
             putwch( ch );
             buf += 2;
