@@ -105,8 +105,6 @@ unsigned char detect_items( int pow )
     unsigned char items_found = 0;
     const int     map_radius = 8 + random2(8) + pow;
 
-    mpr("You detect items!");
-
     for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
     {
         for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
@@ -117,6 +115,8 @@ unsigned char detect_items( int pow )
             if (igrd[i][j] != NON_ITEM
                 && (!get_envmap_obj(i, j) || !is_envmap_item(i, j)))
             {
+                items_found++;
+
                 set_envmap_obj(i, j, DNGN_ITEM_DETECTED);
                 set_envmap_detected_item(i, j);
             }
@@ -144,15 +144,16 @@ static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
+static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
         int fuzz_chance, int fuzz_radius)
 {
+    bool found_good = false;
+
     if (fuzz_radius && fuzz_chance > random2(100))
     {
         const int fuzz_diam = 2 * fuzz_radius + 1;
 
         int gx, gy;
-        bool found_good = false;
         for (int itry = 0; itry < 5; ++itry)
         {
             gx = gridx + random2(fuzz_diam) - fuzz_radius;
@@ -175,6 +176,8 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
 
     set_envmap_obj(gridx, gridy, mon->type + DNGN_START_OF_MONSTERS);
     set_envmap_detected_mons(gridx, gridy);
+
+    return found_good;
 }
 
 unsigned char detect_creatures( int pow )
@@ -192,8 +195,6 @@ unsigned char detect_creatures( int pow )
     // fuzz is harder to analyse by averaging.
     clear_map(false);
 
-    mpr("You detect creatures!");
-
     for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
     {
         for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
@@ -204,7 +205,11 @@ unsigned char detect_creatures( int pow )
             if (mgrd[i][j] != NON_MONSTER)
             {
                 struct monsters *mon = &menv[ mgrd[i][j] ];
-                mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
+                if (mark_detected_creature(i, j, mon, fuzz_chance,
+                                           fuzz_radius))
+                {
+                    creatures_found++;
+                }
 
                 // Assuming that highly intelligent spellcasters can
                 // detect scrying. -- bwr

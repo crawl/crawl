@@ -1275,7 +1275,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     case SPELL_DETECT_TRAPS:
         mprf("You detect %s",
-             (detect_traps(powc) > 0) ? "some traps!" : "nothing.");
+             (detect_traps(powc) > 0) ? "traps!" : "nothing.");
         break;
 
     case SPELL_BLINK:
@@ -1347,7 +1347,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DETECT_ITEMS:
-        detect_items(powc);
+        mprf("You detect %s",
+             (detect_items(powc) > 0) ? "items!" : "nothing.");
         break;
 
     case SPELL_BORGNJORS_REVIVIFICATION:
@@ -1569,7 +1570,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_DETECT_CREATURES:
-        detect_creatures(powc);
+        mprf("You detect %s",
+             (detect_creatures(powc) > 0) ? "creatures!" : "nothing.");
         break;
 
     case SPELL_CURE_POISON_II:  // poison magic version of cure poison
