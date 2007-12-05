@@ -3426,7 +3426,7 @@ void monsters::attacking(actor * /* other */)
 
 void monsters::go_berserk(bool /* intentional */)
 {
-    if (holiness() != MH_NATURAL || has_ench(ENCH_FATIGUE))
+    if ( !this->can_go_berserk() )
         return;
 
     if (has_ench(ENCH_SLOW))
