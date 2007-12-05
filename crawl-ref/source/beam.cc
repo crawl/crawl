@@ -2813,10 +2813,6 @@ static int affect_place_clouds(bolt &beam, int x, int y)
         place_cloud( CLOUD_COLD, x, y, 2 + random2(5), whose_kill(beam) );
     }
 
-    // ORB OF ENERGY
-    if (beam.name == "orb of energy")
-        place_cloud( CLOUD_PURP_SMOKE, x, y, random2(5) + 1, whose_kill(beam) );
-
     // GREAT BLAST OF COLD
     if (beam.name == "great blast of cold")
         place_cloud( CLOUD_COLD, x, y, random2(5) + 3, whose_kill(beam) );
@@ -2831,13 +2827,6 @@ static int affect_place_clouds(bolt &beam, int x, int y)
     if (beam.flavour == BEAM_MIASMA)
     {
         place_cloud( CLOUD_MIASMA, x, y, random2(5) + 2, whose_kill(beam) );
-    }
-
-    // STICKY FLAME
-    if (beam.name == "sticky flame")
-    {
-        place_cloud( CLOUD_BLACK_SMOKE, x, y, random2(4) + 2,
-                     whose_kill(beam) );
     }
 
     // POISON GAS
