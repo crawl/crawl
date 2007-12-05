@@ -24,6 +24,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "branch.h"
 #include "chardump.h"
 #include "cio.h"
 #include "database.h"
@@ -41,6 +42,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -746,6 +748,9 @@ public:
         {
             set_highlighter(NULL);
 
+            if (_show_mon)
+                toggle_sorting();
+
             set_prompt();
         }
 
@@ -857,6 +862,39 @@ static std::vector<std::string> get_monster_keys(unsigned char showchar)
     return (mon_keys);
 }
 
+static std::vector<std::string> get_god_keys()
+{
+    std::vector<std::string> names;
+
+    for (int i = ((int) GOD_NO_GOD) + 1; i < NUM_GODS; i++)
+    {
+        god_type which_god = static_cast<god_type>(i);
+
+        names.push_back(god_name(which_god));
+    }
+
+    return names;
+}
+
+static std::vector<std::string> get_branch_keys()
+{
+    std::vector<std::string> names;
+
+    for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; i++)
+    {
+        branch_type which_branch = static_cast<branch_type>(i);
+        Branch     &branch       = branches[which_branch];
+
+        // Skip unimplemented branches
+        if (branch.depth < 1 || branch.shortname == NULL)
+            continue;
+
+        names.push_back(branch.shortname);
+    }
+
+    return names;
+}
+
 static bool monster_filter(std::string key, std::string body)
 {
     int mon_num = get_monster_by_name(key.c_str(), true);
@@ -938,20 +976,28 @@ static bool find_description()
     clrscr();
     viewwindow(true, false);
 
-    mpr("Describe a (M)onster, (S)pell or (F)eature? ", MSGCH_PROMPT);
+    mpr("Describe a (M)onster, (S)pell, (F)eature, (G)od "
+        "or (B)ranch?", MSGCH_PROMPT);
 
     int ch = toupper(getch());
     std::string    type;
     std::string    extra;
     db_find_filter filter;
+    bool           want_regex = true;
+    bool           want_sort  = true;
+
+    bool doing_mons     = false;
+    bool doing_gods     = false;
+    bool doing_branches = false;
 
     switch(ch)
     {
     case 'M':
-        type   = "monster";
-        extra  = "  Enter a single letter to list monsters displayed by "
+        type       = "monster";
+        extra      = "  Enter a single letter to list monsters displayed by "
             "that symbol.";
-        filter = monster_filter;
+        filter     = monster_filter;
+        doing_mons = true;
         break;
     case 'S':
         type   = "spell";
@@ -961,35 +1007,58 @@ static bool find_description()
         type   = "feature";
         filter = feature_filter;
         break;
+    case 'G':
+        type       = "god";
+        filter     = NULL;
+        want_regex = false;
+        doing_gods = true;
+        break;
+    case 'B':
+        type           = "branch";
+        filter         = NULL;
+        want_regex     = false;
+        want_sort      = false;
+        doing_branches = true;
+        
+        break;
+
     default:
         list_commands_err = "Okay, then.";
         return (false);
     }
 
-    mprf(MSGCH_PROMPT,
-         "Describe a %s; partial names and regexps are fine.%s",
-         type.c_str(), extra.c_str());
-    mpr("Describe what? ", MSGCH_PROMPT);
-    char buf[80];
-    if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    std::string regex = "";
+
+    if (want_regex)
     {
-        list_commands_err = "Okay, then.";
-        return (false);
+        mprf(MSGCH_PROMPT,
+             "Describe a %s; partial names and regexps are fine.%s",
+             type.c_str(), extra.c_str());
+        mpr("Describe what? ", MSGCH_PROMPT);
+        char buf[80];
+        if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+        {
+            list_commands_err = "Okay, then.";
+            return (false);
+        }
+
+        regex = trimmed_string(buf);
+
+        if (regex == "")
+        {
+            list_commands_err = "Description must contain at least "
+                "one non-space.";
+            return (false);
+        }
     }
 
-    std::string regex = trimmed_string(buf);
-
-    if (regex == "")
-    {
-        list_commands_err = "Description must contain at least one non-space.";
-        return (false);
-    }
-
-    bool doing_mons    = (ch == 'M');
     bool by_mon_symbol = (doing_mons && regex.size() == 1);
 
+    if (by_mon_symbol)
+        want_regex = false;
+
     // Try to get an exact match first.
-    if (!by_mon_symbol && !(*filter)(regex, ""))
+    if (want_regex && !(*filter)(regex, ""))
     {
         // Try to get an exact match first.
         std::string desc = getLongDescription(regex);
@@ -1004,6 +1073,10 @@ static bool find_description()
 
     if (by_mon_symbol)
         key_list = get_monster_keys(regex[0]);
+    else if (doing_gods)
+        key_list = get_god_keys();
+    else if (doing_branches)
+        key_list = get_branch_keys();
     else
         key_list = get_desc_keys(regex, filter);
 
@@ -1045,7 +1118,8 @@ static bool find_description()
         return do_description(key_list[0]);
     }
 
-    std::sort(key_list.begin(), key_list.end());
+    if (want_sort)
+        std::sort(key_list.begin(), key_list.end());
 
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
