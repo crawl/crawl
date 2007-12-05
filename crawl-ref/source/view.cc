@@ -750,7 +750,7 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     // Get it once, since monster might be S_RANDOM, in which case
     // mons_shouts() will return a different value every time.
-    shout_type type = mons_shouts(monster->type);
+    const shout_type type = mons_shouts(monster->type);
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.

@@ -961,7 +961,7 @@ static int randart_add_one_property( const item_def &item,
         prop = random2(5);
     }
 
-    bool negench = one_chance_in(4);
+    const bool negench = one_chance_in(4);
 
     switch(prop)
     {
@@ -1029,7 +1029,7 @@ void randart_wpn_properties( const item_def &item,
     }
 
     const object_class_type aclass = item.base_type;
-    const int atype  = item.sub_type;
+    const int atype = item.sub_type;
 
     int power_level = 0;
 

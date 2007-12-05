@@ -1867,7 +1867,7 @@ static void focus_card(int power, deck_rarity_type rarity)
     (*base_statp[worst_stat])--;
 
     // Did focusing kill the player?
-    kill_method_type kill_types[3] = {
+    const kill_method_type kill_types[3] = {
         KILLED_BY_WEAKNESS,
         KILLED_BY_CLUMSINESS,
         KILLED_BY_STUPIDITY
@@ -1878,19 +1878,14 @@ static void focus_card(int power, deck_rarity_type rarity)
     if (crawl_state.is_god_acting())
     {
         god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution()) {
-            cause  = "the wrath of ";
-            cause += god_name(which_god);
-        }
+        if (crawl_state.is_god_retribution())
+            cause = "the wrath of " + god_name(which_god);
         else
         {
             if (which_god == GOD_XOM)
                 cause = "the capriciousness of Xom";
             else
-            {
-                cause = "the 'helpfullness' of ";
-                cause += god_name(which_god);
-            }
+                cause = "the 'helpfullness' of " + god_name(which_god);
         }
     }
                 
@@ -1940,19 +1935,14 @@ static void shuffle_card(int power, deck_rarity_type rarity)
     if (crawl_state.is_god_acting())
     {
         god_type which_god = crawl_state.which_god_acting();
-        if (crawl_state.is_god_retribution()) {
-            cause  = "the wrath of ";
-            cause += god_name(which_god);
-        }
+        if (crawl_state.is_god_retribution())
+            cause  = "the wrath of " + god_name(which_god);
         else
         {
             if (which_god == GOD_XOM)
                 cause = "the capriciousness of Xom";
             else
-            {
-                cause = "the 'helpfulness' of ";
-                cause += god_name(which_god);
-            }
+                cause = "the 'helpfulness' of " + god_name(which_god);
         }
     }
                 

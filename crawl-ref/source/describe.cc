@@ -152,9 +152,88 @@ void print_description( const std::string &d )
     }
 }
 
+#define known_proprt(prop) (proprt[(prop)] && known[(prop)])
+
+struct property_descriptors
+{
+    const char* name;
+    randart_prop_type prop;
+    int spell_out;              // 0: "+3", 1: "+++", 2: value doesn't matter
+};
+
+static std::string randart_auto_inscription( const item_def& item )
+{
+    randart_properties_t  proprt;
+    randart_known_props_t known;
+    randart_desc_properties( item, proprt, known );
+    
+    std::vector<std::string> propnames;
+
+    const property_descriptors propdescs[] = {
+        { "AC",  RAP_AC, 0 },
+        { "EV",  RAP_EVASION, 0 },
+        { "Str", RAP_STRENGTH, 0 },
+        { "Dex", RAP_DEXTERITY, 0 },
+        { "Int", RAP_INTELLIGENCE, 0 },
+        { "Acc", RAP_ACCURACY, 0 },
+        { "Dam", RAP_DAMAGE, 0 },
+        { "RF",  RAP_FIRE, 1 },
+        { "RC",  RAP_COLD, 1 },
+        { "RE",  RAP_ELECTRICITY, 1 },
+        { "RP",  RAP_POISON, 1 },
+        { "RN",  RAP_NEGATIVE_ENERGY, 1 },
+        { "MP",  RAP_MAGICAL_POWER, 1 },
+        { "MR",  RAP_MAGIC, 2 },
+        { "SInv", RAP_EYESIGHT, 2 },
+        { "Stl", RAP_STEALTH, 2 },
+
+        { "Ang", RAP_BERSERK, 2 },
+        { "Noi", RAP_NOISES, 2 },
+        { "-Spl", RAP_PREVENT_SPELLCASTING, 2 },
+        { "-Tp", RAP_PREVENT_TELEPORTATION, 2 },
+        { "+Tp", RAP_CAUSE_TELEPORTATION, 2 },
+        { "Hun", RAP_METABOLISM, 1 },
+        { "Mut", RAP_MUTAGENIC, 2 },
+
+        { "Inv", RAP_INVISIBLE, 2 },
+        { "Lev", RAP_LEVITATE, 2 },
+        { "Blk", RAP_BLINK, 2 },
+        { "?Tp", RAP_CAN_TELEPORT, 2 },
+        { "Map", RAP_MAPPING, 2 },        
+    };
+
+    for ( unsigned i = 0; i < ARRAYSIZE(propdescs); ++i )
+    {
+        if (known_proprt(propdescs[i].prop))
+        {
+            const int val = proprt[propdescs[i].prop];
+            std::ostringstream work;
+            switch ( propdescs[i].spell_out )
+            {
+            case 0:
+                work << std::ios::showpos << val << ' ' << propdescs[i].name;
+                break;
+            case 1:
+            {
+                const int sval = std::min(std::abs(val), 3);
+                work << std::string(sval, (val > 0 ? '+' : '-'))
+                     << propdescs[i].name;
+                break;
+            }
+            case 2:
+                work << propdescs[i].name;
+                break;
+            }
+            propnames.push_back(work.str());
+        }   
+    }
+    return comma_separated_line(propnames.begin(), propnames.end(),
+                                ", ", ", ");
+    
+}
+
 static std::string randart_descrip( const item_def &item )
 {
-#define known_proprt(prop) (proprt[(prop)] && known[(prop)])
     std::string description;
 
     randart_properties_t  proprt;
@@ -3515,18 +3594,37 @@ void describe_item( item_def &item, bool allow_inscribe )
         && wherey() <= get_number_of_lines() - 3)
     {
         gotoxy(1, wherey() + 2);
-        formatted_string::parse_string(
-            "<cyan>Do you wish to inscribe this item? ").display();
 
-        if (toupper(getch()) == 'Y')
+        // OK, technically inefficient to call randart_auto_inscription
+        // when we don't need to.
+        const bool allow_autoinscribe =
+            is_random_artefact(item) &&
+            item_ident(item, ISFLAG_KNOW_PROPERTIES) &&
+            (item.inscription != randart_auto_inscription(item));
+
+        if ( allow_autoinscribe )
+        {
+            formatted_string::parse_string(
+                "<cyan>Do you wish to inscribe this item? "
+                "('a' to autoinscribe) ").display();
+        }
+        else
+        {
+            formatted_string::parse_string(
+                "<cyan>Do you wish to inscribe this item? ").display();
+        }
+
+        const int keyin = getch();
+
+        if (toupper(keyin) == 'Y')
         {
             char buf[79];
             cprintf("\nInscribe with what? ");
             if (!cancelable_get_line(buf, sizeof buf))
-            {
-                item.inscription = std::string(buf);
-            }
+                item.inscription = buf;
         }
+        else if (toupper(keyin) == 'A' && allow_autoinscribe)
+            item.inscription += randart_auto_inscription(item);
     }
     else if (getch() == 0)
         getch();

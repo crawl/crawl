@@ -47,7 +47,7 @@
 */
 
 // Note:  Even though %s could be used with most of these, remember that
-// the character's race will be listed on the next line.  Its only really
+// the character's race will be listed on the next line.  It's only really
 // intended for cases where things might be really awkward without it. -- bwr
 
 const char *skills[50][6] =
@@ -1784,6 +1784,12 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
+static bool player_knows_aptitudes()
+{
+    return !player_genus(GENPC_DRACONIAN) || you.max_level >= 7;
+
+}
+
 static void display_skill_table(bool show_aptitudes)
 {
     menu_letter lcount = 'a';
@@ -1854,9 +1860,9 @@ static void display_skill_table(bool show_aptitudes)
 #endif
 
             cprintf( " %c %-14s Skill %2d",
-                     (you.skills[x] == 0)         ? ' ' : 
-                     (you.practise_skill[x] == 0) ? '-' : '+',
-                     skills[x][0], you.skills[x] );
+                     (you.skills[x] == 0)    ? ' ' : 
+                     (you.practise_skill[x]) ? '+' : '-',
+                     skill_name(x), you.skills[x] );
 
 #if DEBUG_DIAGNOSTICS
             cprintf( " %5d", you.skill_points[x] );
@@ -1868,7 +1874,9 @@ static void display_skill_table(bool show_aptitudes)
                 const int prev_needed = skill_exp_needed(you.skills[x] + 1);
                 int spec_abil = species_skills(x, you.species);
 
-                int percent_done = ((you.skill_points[x] - (prev_needed * spec_abil) / 100) * 100) / (((needed - prev_needed) * spec_abil) / 100);
+                int percent_done = ((you.skill_points[x] -
+                                     (prev_needed * spec_abil) / 100) * 100) /
+                    (((needed - prev_needed) * spec_abil) / 100);
 
                 if ( percent_done == 100 )
                     --percent_done;
@@ -1925,7 +1933,7 @@ static void display_skill_table(bool show_aptitudes)
         textcolor(LIGHTGREY);
         cprintf("Press the letter of a skill to choose "
                 "whether you want to practise it.");
-        if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
+        if (player_knows_aptitudes())
         {
             gotoxy(1, bottom_line);
             formatted_string::parse_string("Press '!' to toggle between "
@@ -1944,40 +1952,34 @@ void show_skills()
     {
         display_skill_table(show_aptitudes);
 
-        const int get_thing = getch();
-        if (get_thing == '!' && (!player_genus(GENPC_DRACONIAN) ||
-                                 you.max_level >= 7))
+        const int keyin = getch();
+        if (keyin == '!' && player_knows_aptitudes())
         {
             show_aptitudes = !show_aptitudes;
             continue;
         }
-        
-        if ((get_thing >= 'a' && get_thing <= 'z')
-            || (get_thing >= 'A' && get_thing <= 'Z'))
-        {
-            menu_letter lcount = 'a';       // toggle skill practise
 
-            int x;
-            for (int i = 0; i < ndisplayed_skills; i++)
-            {
-                x = skill_display_order[i];
-                if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
-                    continue;
-                
-                if (you.skills[x] == 0)
-                    continue;
+        if ( !isalpha(keyin) )
+            break;
+
+        menu_letter lcount = 'a';       // toggle skill practise
+        
+        for (int i = 0; i < ndisplayed_skills; i++)
+        {
+            const skill_type x = skill_display_order[i];
+            if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
+                continue;
             
-                if (get_thing == lcount)
-                {
-                    you.practise_skill[x] = !you.practise_skill[x];
-                    break;
-                }
-                
-                ++lcount;
-            }
-            continue;
+            if (you.skills[x] == 0)
+                continue;
+            
+            if (keyin == lcount)
+            {
+                you.practise_skill[x] = !you.practise_skill[x];
+                break;
+            }            
+            ++lcount;
         }
-        break;
     }
 }
 
@@ -1999,11 +2001,6 @@ int str_to_skill(const std::string &skill)
 std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
                          int species, int str, int dex, int god )
 {
-    unsigned char skill_rank;
-    const char *tempstr = NULL;
-
-    static char title_buff[80]; 
-
     // paranoia
     if (best_skill == SK_UNUSED_1 
         || (best_skill > SK_UNARMED_COMBAT && best_skill < SK_SPELLCASTING)
@@ -2026,11 +2023,13 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
     // translate skill level into skill ranking {dlb}:
     // increment rank by one to "skip" skill name in array {dlb}:
-    skill_rank = ((skill_lev <= 7)  ? 1 :
-                  (skill_lev <= 14) ? 2 : 
-                  (skill_lev <= 20) ? 3 :
-                  (skill_lev <= 26) ? 4 
-                   /* level 27 */   : 5);
+    const int skill_rank = ((skill_lev <= 7)  ? 1 :
+                            (skill_lev <= 14) ? 2 : 
+                            (skill_lev <= 20) ? 3 :
+                            (skill_lev <= 26) ? 4 
+                            /* level 27 */    : 5);
+
+    std::string result;
 
     if (best_skill < NUM_SKILLS)
     {
@@ -2040,42 +2039,36 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         switch (best_skill)
         {
         case SK_UNARMED_COMBAT:
-            tempstr = (dex >= str) ? martial_arts_titles[skill_rank]
-                                   : skills[best_skill][skill_rank];
+            result = (dex >= str) ? martial_arts_titles[skill_rank]
+                                  : skills[best_skill][skill_rank];
 
             break;
 
         case SK_INVOCATIONS:
             if (god == GOD_NO_GOD)
-                tempstr = "Godless";
+                result = "Godless";
             else 
-                tempstr = skills[best_skill][skill_rank];
+                result = skills[best_skill][skill_rank];
             break;
 
         default:
-            tempstr = skills[best_skill][skill_rank];
+            result = skills[best_skill][skill_rank];
             break;
         }
     }
-    
-    const char *const ptr = strchr( tempstr, '%' );    
-    const bool species_found = (ptr != NULL);
-
-    if (species_found)
+                      
+    const std::string::size_type where = result.find("%s");
+    if ( where != std::string::npos )
     {
-        // need species name
-        snprintf( title_buff, sizeof(title_buff), tempstr, 
-                  species_name(static_cast<species_type>(species), 0, true, 
-                               (ptr == tempstr
-                                && best_skill != SK_NECROMANCY)).c_str() );
-                  // The above code only capitalises start-of-string racenames
-        tempstr = title_buff;
+        const bool need_cap = (where == 0 && best_skill != SK_NECROMANCY);
+        const std::string sp = species_name(static_cast<species_type>(species),
+                                            0, true, need_cap);
+        result.replace(where, 2, sp);
     }
+    return result.empty() ? std::string("Invalid Title") : result;
+}
 
-    return ((tempstr == NULL) ? "Invalid Title" : tempstr);
-}                               // end skill_title()
-
-std::string player_title( void )
+std::string player_title()
 {
     const unsigned char best = best_skill( SK_FIGHTING, (NUM_SKILLS - 1), 99 );
     return (skill_title( best, you.skills[ best ] ));
@@ -2246,7 +2239,8 @@ int calc_mp(bool real_mp)
         you.max_magic_points += player_magical_power();
 
     // analogous to ROBUST/FRAIL
-    you.max_magic_points *= (10 + you.mutation[MUT_HIGH_MAGIC] - you.mutation[MUT_LOW_MAGIC]);
+    you.max_magic_points *=
+        (10 + you.mutation[MUT_HIGH_MAGIC] - you.mutation[MUT_LOW_MAGIC]);
     you.max_magic_points /= 10;
 
     if (you.max_magic_points > 50)
@@ -2269,40 +2263,22 @@ unsigned int skill_exp_needed(int lev)
     lev--;
     switch (lev)
     {
-    case 0:
-        return 0;               // old:   0
-    case 1:
-        return 200;             // old:  20
-    case 2:
-        return 300;             // old:  30
-    case 3:
-        return 500;             // old:  50
-    case 4:
-        return 750;             // old:  75
-    case 5:
-        return 1050;            // old: 105
-    case 6:
-        return 1350;            // old: 145
-    case 7:
-        return 1700;            // old: 200
-    case 8:
-        return 2100;            // old: 275
-    case 9:
-        return 2550;            // old: 355
-    case 10:
-        return 3150;            // old: 440
-    case 11:
-        return 3750;            // old: 560
-    case 12:
-        return 4400;            // old: 680
-    case 13:
-        return 5250;            // old: 850
-    default:
-        return 6200 + 1800 * (lev - 14);
-        // old: 1100 + 300 * (lev - 14)
-        // older: 1200 * (lev - 11) + ((lev - 11) * (lev - 11));// * (lev - 11))
+    case 0:  return 0;
+    case 1:  return 200;
+    case 2:  return 300;
+    case 3:  return 500;
+    case 4:  return 750;
+    case 5:  return 1050;
+    case 6:  return 1350;
+    case 7:  return 1700;
+    case 8:  return 2100;
+    case 9:  return 2550;
+    case 10: return 3150;
+    case 11: return 3750;
+    case 12: return 4400;
+    case 13: return 5250;
+    default: return 6200 + 1800 * (lev - 14);
     }
-
     return 0;
 }
 
@@ -2312,92 +2288,41 @@ int species_skills(int skill, species_type species)
     return spec_skills[species - 1][skill];
 }
 
-// new: inform player if they need more throwing skill (GDL)
 void wield_warning(bool newWeapon)
 {
-    // hold weapon name
-    char wepstr[ITEMNAME_SIZE];
-
     // early out - no weapon
-    if (you.equip[EQ_WEAPON] == -1)
+    if (!you.weapon())
          return;
 
-    if (newWeapon)
-        strcpy(wepstr, "this ");
+    const item_def& wep = *you.weapon();
+
+    // early out - don't warn for non-weapons or launchers
+    if (wep.base_type != OBJ_WEAPONS || is_range_weapon(wep))
+        return;
+
+    // don't warn if the weapon is OK, of course
+    if ( effective_stat_bonus() > -4 )
+        return;
+
+    std::string msg = (newWeapon ? "this " : "your ") + wep.name(DESC_BASENAME);
+    const char* mstr = msg.c_str();
+
+    if (you.strength < you.dex)
+    {
+        if (you.strength < 11)
+            mprf(MSGCH_WARN, "You have %strouble swinging %s.",
+                 (you.strength < 7) ? "" : "a little ", mstr);
+        else
+            mprf(MSGCH_WARN, "You'd be more effective with "
+                 "%s if you were stronger.", mstr);
+    }
     else
-        strcpy(wepstr, "your ");
-
-    const item_def& wep = you.inv[you.equip[EQ_WEAPON]];
-
-    // early out - don't warn for non-weapons
-    if (wep.base_type != OBJ_WEAPONS)
-        return;
-
-    // put the standard wep name in.
-    strcat(wepstr, item_base_name(wep).c_str());
-
-    // only warn about str/dex for non-launcher weapons
-    if (!is_range_weapon( wep ))
     {
-#ifdef USE_NEW_COMBAT_STATS
-        const int stat_bonus = effective_stat_bonus();
-
-        if (stat_bonus <= -4)
-        {
-            if (you.strength < you.dex)
-            {
-                if (you.strength < 11)
-                    mprf(MSGCH_WARN, "You have %strouble swinging %s.",
-                        (you.strength < 7)?"":"a little ", wepstr);
-                else
-                    mprf(MSGCH_WARN, "You'd be more effective with "
-                        "%s if you were stronger.", wepstr);
-            }
-            else
-            {
-                if (you.dex < 11)
-                    mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
-                         wepstr, (you.dex < 7) ? "fairly" : "a little" );
-                else
-                    mprf(MSGCH_WARN, "You'd be more effective with "
-                        "%s if you were nimbler.", wepstr );
-            }
-        }
-#endif
-        return;
+        if (you.dex < 11)
+            mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
+                 mstr, (you.dex < 7) ? "fairly" : "a little" );
+        else
+            mprf(MSGCH_WARN, "You'd be more effective with "
+                 "%s if you were nimbler.", mstr);
     }
-
-    // [dshaligram] No more annoying throwing skill warnings.
-#ifdef OBSOLETE_THROW_SKILL_WARNING
-    // must be a launcher
-    int effSkill = you.skills[SK_THROWING] * 2 + 1;
-    int shoot_skill = 0;
-
-    switch (wepType)
-    {
-        case WPN_SLING:
-            shoot_skill = you.skills[SK_SLINGS];
-            break;
-        case WPN_BOW:
-            shoot_skill = you.skills[SK_BOWS];
-            break;
-        case WPN_CROSSBOW:
-        case WPN_HAND_CROSSBOW:
-            shoot_skill = you.skills[SK_CROSSBOWS];
-            break;
-        case WPN_BLOWGUN:
-            shoot_skill = you.skills[SK_DARTS];
-            break;
-        default:
-            shoot_skill = 0;
-            break;
-    }
-
-    if (shoot_skill > effSkill)
-    {
-        mprf(MSGCH_WARN,
-             "Your low throwing skill limits the effectiveness of %s.",
-             wepstr);
-    }
-#endif
 }
