@@ -1558,21 +1558,24 @@ static std::string describe_ammo( const item_def &item )
         }
     }
 
-    if (item.special != 0 && item_type_known(item))
+    if (item.special && item_type_known(item))
     {
         switch (item.special)
         {
-        case 1:
+        case SPMSL_FLAME:
             description += "$When fired from an appropriate launcher, "
                 "it turns into a bolt of flame. ";
             break;
-        case 2:
+        case SPMSL_ICE:
             description += "$When fired from an appropriate launcher, "
                 "it turns into a bolt of ice. ";
             break;
-        case 3:
-        case 4:
+        case SPMSL_POISONED:
+        case SPMSL_POISONED_II:
             description += "$It is coated with poison. ";
+            break;
+        case SPMSL_CURARE:
+            description += "$It is tipped with asphyxiating poison. ";
             break;
         }
     }
