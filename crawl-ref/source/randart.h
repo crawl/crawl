@@ -67,7 +67,8 @@ typedef FixedVector< bool, RA_PROPERTIES > randart_known_props_t;
  * *********************************************************************** */
 void randart_desc_properties( const item_def &item, 
                               randart_properties_t &proprt,
-                              randart_known_props_t &known );
+                              randart_known_props_t &known,
+                              bool force_fake_props = false);
 
 void randart_wpn_properties( const item_def &item, 
                              randart_properties_t &proprt,

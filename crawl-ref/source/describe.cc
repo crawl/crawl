@@ -161,11 +161,11 @@ struct property_descriptors
     int spell_out;              // 0: "+3", 1: "+++", 2: value doesn't matter
 };
 
-static std::string randart_auto_inscription( const item_def& item )
+static std::vector<std::string> randart_propnames( const item_def& item )
 {
     randart_properties_t  proprt;
     randart_known_props_t known;
-    randart_desc_properties( item, proprt, known );
+    randart_desc_properties( item, proprt, known, true );
     
     std::vector<std::string> propnames;
 
@@ -182,7 +182,7 @@ static std::string randart_auto_inscription( const item_def& item )
         { "RE",  RAP_ELECTRICITY, 1 },
         { "RP",  RAP_POISON, 1 },
         { "RN",  RAP_NEGATIVE_ENERGY, 1 },
-        { "MP",  RAP_MAGICAL_POWER, 1 },
+        { "MP",  RAP_MAGICAL_POWER, 0 },
         { "MR",  RAP_MAGIC, 2 },
         { "SInv", RAP_EYESIGHT, 2 },
         { "Stl", RAP_STEALTH, 2 },
@@ -202,6 +202,80 @@ static std::string randart_auto_inscription( const item_def& item )
         { "Map", RAP_MAPPING, 2 },        
     };
 
+    // For randart jewellry, note the base jewelery type if it's not
+    // covered by randart_desc_properties()
+    if (item.base_type == OBJ_JEWELLERY
+        && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    {
+        std::string type = "";
+
+        switch(item.sub_type)
+        {
+        case RING_REGENERATION:
+            type = "Regen";
+            break;
+
+        case RING_SUSTAIN_ABILITIES:
+            type = "SustAbil";
+            break;
+
+        case RING_SUSTENANCE:
+            type = "Susten";
+            break;
+
+        case RING_WIZARDRY:
+            type = "Wiz";
+            break;
+
+        case RING_FIRE:
+            type = "F-Mag";
+            break;
+
+        case RING_ICE:
+            type = "I-Mag";
+            break;
+
+        case RING_TELEPORT_CONTROL:
+            type = "T-Cont";
+            break;
+
+        case AMU_RESIST_SLOW:
+            type = "RSlow";
+            break;
+
+        case AMU_CLARITY:
+            type = "Clar";
+            break;
+
+        case AMU_WARDING:
+            type = "Ward";
+            break;
+
+        case AMU_RESIST_CORROSION:
+            type = "RAcid";
+            break;
+
+        case AMU_THE_GOURMAND:
+            type = "Gourm";
+            break;
+
+        case AMU_CONSERVATION:
+            type = "Conserv";
+            break;
+
+        case AMU_CONTROLLED_FLIGHT:
+            type = "C-Fly";
+            break;
+
+        case AMU_RESIST_MUTATION:
+            type = "RMut";
+            break;
+        }
+        if (type != "")
+            propnames.push_back(type);
+    }
+
+
     for ( unsigned i = 0; i < ARRAYSIZE(propdescs); ++i )
     {
         if (known_proprt(propdescs[i].prop))
@@ -211,7 +285,7 @@ static std::string randart_auto_inscription( const item_def& item )
             switch ( propdescs[i].spell_out )
             {
             case 0:
-                work << std::ios::showpos << val << ' ' << propdescs[i].name;
+                work << val << ' ' << propdescs[i].name;
                 break;
             case 1:
             {
@@ -227,10 +301,38 @@ static std::string randart_auto_inscription( const item_def& item )
             propnames.push_back(work.str());
         }   
     }
+
+    return propnames;
+}
+
+static std::string randart_auto_inscription( const item_def& item )
+{
+    std::vector<std::string> propnames = randart_propnames(item);
+
     return comma_separated_line(propnames.begin(), propnames.end(),
                                 ", ", ", ");
-    
 }
+
+// Remove randart auto-inscription.  Do it once for each property
+// string, rather than the return value of randart_auto_inscription(),
+// in case more information about the randart has been learned since
+// the last auto-inscription.
+static void trim_randart_inscrip( item_def& item )
+{
+    std::vector<std::string> propnames = randart_propnames(item);
+
+    for (unsigned int i = 0, size = propnames.size(); i < size; i++)
+    {
+        std::string prop = propnames[i] + ",";
+        item.inscription = replace_all(item.inscription, prop, "");
+
+        prop = propnames[i];
+        item.inscription = replace_all(item.inscription, prop, "");
+    }
+
+    trim_string(item.inscription);
+}
+
 
 static std::string randart_descrip( const item_def &item )
 {
@@ -3602,8 +3704,9 @@ void describe_item( item_def &item, bool allow_inscribe )
         // when we don't need to.
         const bool allow_autoinscribe =
             is_random_artefact(item) &&
-            item_ident(item, ISFLAG_KNOW_PROPERTIES) &&
-            (item.inscription != randart_auto_inscription(item));
+            (randart_auto_inscription(item) != "") &&
+            (item.inscription.find(randart_auto_inscription(item))
+             == std::string::npos);
 
         if ( allow_autoinscribe )
         {
@@ -3627,7 +3730,14 @@ void describe_item( item_def &item, bool allow_inscribe )
                 item.inscription = buf;
         }
         else if (toupper(keyin) == 'A' && allow_autoinscribe)
+        {
+            // Remove previous randart inscription
+            trim_randart_inscrip(item);
+
+            if (item.inscription != "")
+                item.inscription += " ";
             item.inscription += randart_auto_inscription(item);
+        }
     }
     else if (getch() == 0)
         getch();

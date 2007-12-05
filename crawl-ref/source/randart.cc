@@ -883,11 +883,12 @@ static long calc_seed( const item_def &item )
 
 void randart_desc_properties( const item_def &item, 
                               randart_properties_t &proprt,
-                              randart_known_props_t &known )
+                              randart_known_props_t &known,
+                              bool force_fake_props)
 {
     randart_wpn_properties( item, proprt, known);
 
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+    if ( !force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
         return;
 
     if (item.base_type != OBJ_JEWELLERY)
@@ -896,6 +897,11 @@ void randart_desc_properties( const item_def &item,
     randart_prop_type fake_rap  = RAP_NUM_PROPERTIES;
     int               fake_plus = 1;
 
+    // The base jewelery type is one whose property is revealed by
+    // wearing it, but whose property isn't revealed by having
+    // ISFLAG_KNOW_PLUSES set.  For a randart with a base type of, for
+    // example, a ring of strength, wearing it sets
+    // ISFLAG_KNOW_PLUSES, which reveals the ring's strength plus.
     switch (item.sub_type)
     {
     case RING_INVISIBILITY:
@@ -921,7 +927,122 @@ void randart_desc_properties( const item_def &item,
     }    
 
     if (fake_rap != RAP_NUM_PROPERTIES)
+    {
         proprt[fake_rap] += fake_plus;
+
+        if (item_ident( item, ISFLAG_KNOW_PROPERTIES )
+            || item_ident( item, ISFLAG_KNOW_TYPE ))
+        {
+            known[fake_rap] = true;
+        }
+
+        return;
+    }
+
+    if (!force_fake_props)
+        return;
+
+    // For auto-inscribing randart jewellry, force_fake_props folds as
+    // much info about the base type as possible into the randarts
+    // property struct.
+
+    randart_prop_type fake_rap2  = RAP_NUM_PROPERTIES;
+    int               fake_plus2 = 1;
+
+    switch (item.sub_type)
+    {
+    case RING_PROTECTION:
+        fake_rap  = RAP_AC;
+        fake_plus = item.plus;
+        break;
+
+    case RING_PROTECTION_FROM_FIRE:
+        fake_rap = RAP_FIRE;
+        break;
+
+    case RING_POISON_RESISTANCE:
+        fake_rap = RAP_POISON;
+        break;
+
+    case RING_PROTECTION_FROM_COLD:
+        fake_rap = RAP_COLD;
+        break;
+
+    case RING_STRENGTH:
+        fake_rap = RAP_STRENGTH;
+        break;
+
+    case RING_SLAYING:
+        fake_rap   = RAP_ACCURACY;
+        fake_plus  = item.plus;
+        fake_rap2  = RAP_DAMAGE;
+        fake_plus2 = item.plus2;
+        break;
+
+    case RING_SEE_INVISIBLE:
+        fake_rap = RAP_EYESIGHT;
+        break;
+
+    case RING_HUNGER:
+        fake_rap = RAP_METABOLISM;
+        break;
+
+    case RING_EVASION:
+        fake_rap  = RAP_EVASION;
+        fake_plus = item.plus;
+        break;
+
+    case RING_DEXTERITY:
+        fake_rap  = RAP_DEXTERITY;
+        fake_plus = item.plus;
+        break;
+
+    case RING_INTELLIGENCE:
+        fake_rap  = RAP_INTELLIGENCE;
+        fake_plus = item.plus;
+        break;
+
+    case RING_LIFE_PROTECTION:
+        fake_rap = RAP_NEGATIVE_ENERGY;
+        break;
+
+    case RING_PROTECTION_FROM_MAGIC:
+        fake_rap = RAP_MAGIC;
+        break;
+
+    case RING_FIRE:
+        fake_rap   = RAP_FIRE;
+        fake_rap2  = RAP_COLD;
+        fake_plus2 = -1;
+        break;
+
+    case RING_ICE:
+        fake_rap   = RAP_COLD;
+        fake_rap2  = RAP_FIRE;
+        fake_plus2 = -1;
+        break;
+
+    case AMU_INACCURACY:
+        fake_rap  = RAP_ACCURACY;
+        fake_plus = -5;
+        break;
+    }
+
+    if (fake_rap != RAP_NUM_PROPERTIES)
+        proprt[fake_rap] += fake_plus;
+
+    if (fake_rap2 != RAP_NUM_PROPERTIES)
+        proprt[fake_rap2] += fake_plus2;
+
+    if (item_ident( item, ISFLAG_KNOW_PROPERTIES )
+        || item_ident( item, ISFLAG_KNOW_TYPE ))
+    {
+        if (fake_rap != RAP_NUM_PROPERTIES && proprt[fake_rap] != 0)
+            known[fake_rap] = true;
+
+        if (fake_rap2 != RAP_NUM_PROPERTIES && proprt[fake_rap2] != 0)
+            known[fake_rap2] = true;
+    }
 }
 
 static int randart_add_one_property( const item_def &item,
