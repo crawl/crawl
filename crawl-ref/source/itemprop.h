@@ -352,7 +352,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_CURARE                       //    5
 };
 
-enum special_ring_type // jewellery mitm[].special values 
+enum special_ring_type // jewellery mitm[].special values
 {
     SPRING_RANDART = 200,
     SPRING_UNRANDART = 201

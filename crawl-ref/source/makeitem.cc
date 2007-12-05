@@ -1679,12 +1679,12 @@ static special_missile_type determine_missile_brand(const item_def& item,
     // All needles are either poison or curare.
     if (item.sub_type == MI_NEEDLE)
         rc = got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
-    else        
+    else
     {
         const int temp_rand =
             (force_good ? random2(150) : random2(2000 - 55 * item_level));
 
-        if ( temp_rand < 60 )
+        if (temp_rand < 60)
             rc = SPMSL_FLAME;
         else if (temp_rand < 120)
             rc = SPMSL_ICE;
@@ -1701,13 +1701,14 @@ static special_missile_type determine_missile_brand(const item_def& item,
 
     // Un-poison sling bullets; unbrand javelins and throwing nets.
     if ((item.sub_type == MI_SLING_BULLET && rc == SPMSL_POISONED)
-        || item.sub_type == MI_JAVELIN || item.sub_type == MI_THROWING_NET)
+         || item.sub_type == MI_JAVELIN || item.sub_type == MI_THROWING_NET)
     {
         rc = SPMSL_NORMAL;
     }
+
     return rc;
 }
-                          
+
 static void generate_missile_item(item_def& item, int force_type,
                                   int item_level, int item_race)
 {

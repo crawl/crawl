@@ -196,7 +196,7 @@ static void ench_animation( int flavour, const monsters *mon, bool force )
                      (flavour == BEAM_POLYMORPH)     ? EC_MUTAGENIC :
                      (flavour == BEAM_TELEPORT
                           || flavour == BEAM_BANISH
-                          || flavour == BEAM_BLINK)  ? EC_WARP 
+                          || flavour == BEAM_BLINK)  ? EC_WARP
                                                      : EC_ENCHANT;
     zap_animation( element_colour( elem ), mon, force );
 }
@@ -1519,7 +1519,7 @@ void fire_beam( bolt &pbolt, item_def *item )
         beam_drop_object( pbolt, item, tx, ty );
 
     // check for explosion.  NOTE that for tracers, we have to make a copy
-    // of target co'ords and then reset after calling this -- tracers should
+    // of target co-ords and then reset after calling this -- tracers should
     // never change any non-tracers fields in the beam structure. -- GDL
     int ox = pbolt.target_x;
     int oy = pbolt.target_y;
@@ -2557,7 +2557,7 @@ int affect(bolt &beam, int x, int y)
     {
         // Done this way so that poison blasts affect the target once (via
         // place_cloud) and explosion spells only affect the target once
-        // (during the explosion phase, not an initial hit during the 
+        // (during the explosion phase, not an initial hit during the
         // beam phase).
         if (!beam.is_big_cloud
             && (!beam.is_explosion || beam.in_explosion_phase))
@@ -3231,7 +3231,7 @@ static int affect_player( bolt &beam )
         }
 
         ench_animation( beam.flavour );
-        
+
         // these colors are misapplied - see mons_ench_f2() {dlb}
         switch (beam.flavour)
         {
@@ -4850,7 +4850,7 @@ bool nasty_beam(monsters *mon, bolt &beam)
     return (true);
 }
 
-bool nice_beam( struct monsters *mon, struct bolt &beam )
+bool nice_beam( monsters *mon, bolt &beam )
 {
     // haste
     if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING

@@ -897,7 +897,7 @@ void randart_desc_properties( const item_def &item,
     randart_prop_type fake_rap  = RAP_NUM_PROPERTIES;
     int               fake_plus = 1;
 
-    // The base jewelery type is one whose property is revealed by
+    // The base jewellery type is one whose property is revealed by
     // wearing it, but whose property isn't revealed by having
     // ISFLAG_KNOW_PLUSES set.  For a randart with a base type of, for
     // example, a ring of strength, wearing it sets
@@ -924,7 +924,7 @@ void randart_desc_properties( const item_def &item,
     case AMU_RAGE:
         fake_rap = RAP_BERSERK;
         break;
-    }    
+    }
 
     if (fake_rap != RAP_NUM_PROPERTIES)
     {

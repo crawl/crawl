@@ -2346,8 +2346,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        // Dropping item copy, since the launched item might be different
-        // (e.g. venom blowgun)
+        // Dropping item copy, since the launched item might be different.
         fire_beam(pbolt, returning ? NULL : &item);
     }
 
