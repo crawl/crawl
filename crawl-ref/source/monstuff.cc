@@ -1556,6 +1556,8 @@ bool swap_places(monsters *monster)
         // Might not be ideal, but it's better that insta-killing
         // the monster... maybe try for a short blinki instead? -- bwr
         simple_monster_message( monster, " resists." );
+        // FIXME: AI_HIT_MONSTER isn't ideal.
+        interrupt_activity( AI_HIT_MONSTER, monster );
     }
 
     return (swap);

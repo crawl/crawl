@@ -483,7 +483,7 @@ void init_travel_terrain_check(bool check_race_equip)
     if (check_race_equip)
     {
         // Swimmers get deep water.
-        signed char water = player_likes_water()? TRAVERSABLE : IMPASSABLE;
+        signed char water = player_likes_water(true)? TRAVERSABLE : IMPASSABLE;
     
         // If the player has overridden deep water already, we'll respect that.
         set_pass_feature(DNGN_DEEP_WATER, water);

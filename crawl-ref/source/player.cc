@@ -352,9 +352,9 @@ bool player_in_water(void)
     return (you.in_water());
 }
 
-bool player_likes_water(void)
+bool player_likes_water(bool permanently)
 {
-     return (player_can_swim() || beogh_water_walk());
+    return (player_can_swim() || (!permanently && beogh_water_walk()));
 }
 
 bool player_is_swimming(void)

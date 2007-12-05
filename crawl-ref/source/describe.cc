@@ -254,7 +254,7 @@ static std::vector<std::string> randart_propnames( const item_def& item )
             switch ( propdescs[i].spell_out )
             {
             case 0:
-                work << val << ' ' << propdescs[i].name;
+                work << std::showpos << val << propdescs[i].name;
                 break;
             case 1:
             {
