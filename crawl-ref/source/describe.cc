@@ -152,6 +152,30 @@ void print_description( const std::string &d )
     }
 }
 
+const char* jewellery_base_ability_string(int subtype)
+{
+    switch(subtype)
+    {
+    case RING_REGENERATION:      return "Regen";
+    case RING_SUSTAIN_ABILITIES: return "SustAbil";
+    case RING_SUSTENANCE:        return "-Hun";
+    case RING_WIZARDRY:          return "Wiz";
+    case RING_FIRE:              return "F-Mag";
+    case RING_ICE:               return "I-Mag";
+    case RING_TELEPORT_CONTROL:  return "TC";
+    case AMU_RESIST_SLOW:        return "RSlow";
+    case AMU_CLARITY:            return "Clar";
+    case AMU_WARDING:            return "Ward";
+    case AMU_RESIST_CORROSION:   return "RA";
+    case AMU_THE_GOURMAND:       return "Gourm";
+    case AMU_CONSERVATION:       return "Csrv";
+    case AMU_CONTROLLED_FLIGHT:  return "CFly";
+    case AMU_RESIST_MUTATION:    return "RMut";
+    }
+    return "";
+}
+
+
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
 
 struct property_descriptors
@@ -170,111 +194,56 @@ static std::vector<std::string> randart_propnames( const item_def& item )
     std::vector<std::string> propnames;
 
     const property_descriptors propdescs[] = {
-        { "AC",  RAP_AC, 0 },
-        { "EV",  RAP_EVASION, 0 },
-        { "Str", RAP_STRENGTH, 0 },
-        { "Dex", RAP_DEXTERITY, 0 },
-        { "Int", RAP_INTELLIGENCE, 0 },
-        { "Acc", RAP_ACCURACY, 0 },
-        { "Dam", RAP_DAMAGE, 0 },
-        { "RF",  RAP_FIRE, 1 },
-        { "RC",  RAP_COLD, 1 },
-        { "RE",  RAP_ELECTRICITY, 1 },
-        { "RP",  RAP_POISON, 1 },
-        { "RN",  RAP_NEGATIVE_ENERGY, 1 },
-        { "MP",  RAP_MAGICAL_POWER, 0 },
-        { "MR",  RAP_MAGIC, 2 },
-        { "SInv", RAP_EYESIGHT, 2 },
-        { "Stl", RAP_STEALTH, 2 },
 
-        { "Ang", RAP_BERSERK, 2 },
-        { "Noi", RAP_NOISES, 2 },
-        { "-Spl", RAP_PREVENT_SPELLCASTING, 2 },
-        { "-Tp", RAP_PREVENT_TELEPORTATION, 2 },
-        { "+Tp", RAP_CAUSE_TELEPORTATION, 2 },
-        { "Hun", RAP_METABOLISM, 1 },
-        { "Mut", RAP_MUTAGENIC, 2 },
+        // Positive, quantative attributes
+        { "AC",   RAP_AC,                    0 },
+        { "EV",   RAP_EVASION,               0 },
+        { "Str",  RAP_STRENGTH,              0 },
+        { "Dex",  RAP_DEXTERITY,             0 },
+        { "Int",  RAP_INTELLIGENCE,          0 },
+        { "Acc",  RAP_ACCURACY,              0 },
+        { "Dam",  RAP_DAMAGE,                0 },
 
-        { "Inv", RAP_INVISIBLE, 2 },
-        { "Lev", RAP_LEVITATE, 2 },
-        { "Blk", RAP_BLINK, 2 },
-        { "?Tp", RAP_CAN_TELEPORT, 2 },
-        { "Map", RAP_MAPPING, 2 },        
+        // Resists
+        { "RF",   RAP_FIRE,                  1 },
+        { "RC",   RAP_COLD,                  1 },
+        { "RE",   RAP_ELECTRICITY,           1 },
+        { "RP",   RAP_POISON,                1 },
+        { "RN",   RAP_NEGATIVE_ENERGY,       1 },
+        { "MR",   RAP_MAGIC,                 2 },
+
+        // Positive, qualitative attributes
+        { "MP",   RAP_MAGICAL_POWER,         0 },
+        { "SInv", RAP_EYESIGHT,              2 },
+        { "Stl",  RAP_STEALTH,               2 },
+
+        // (Generally) negative attributes
+        { "Ang",  RAP_BERSERK,               2 },
+        { "Noi",  RAP_NOISES,                2 },
+        { "-Spl", RAP_PREVENT_SPELLCASTING,  2 },
+        { "-Tp",  RAP_PREVENT_TELEPORTATION, 2 },
+        { "+Tp",  RAP_CAUSE_TELEPORTATION,   2 },
+        { "Hun",  RAP_METABOLISM,            1 },
+        { "Mut",  RAP_MUTAGENIC,             2 },
+
+        // Evokable abilities
+        { "Inv",  RAP_INVISIBLE,             2 },
+        { "Lev",  RAP_LEVITATE,              2 },
+        { "Blk",  RAP_BLINK,                 2 },
+        { "?Tp",  RAP_CAN_TELEPORT,          2 },
+        { "Map",  RAP_MAPPING,               2 }
+
     };
 
-    // For randart jewellry, note the base jewelery type if it's not
+    // For randart jewellery, note the base jewellery type if it's not
     // covered by randart_desc_properties()
     if (item.base_type == OBJ_JEWELLERY
-        && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+        && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
-        std::string type = "";
-
-        switch(item.sub_type)
-        {
-        case RING_REGENERATION:
-            type = "Regen";
-            break;
-
-        case RING_SUSTAIN_ABILITIES:
-            type = "SustAbil";
-            break;
-
-        case RING_SUSTENANCE:
-            type = "Susten";
-            break;
-
-        case RING_WIZARDRY:
-            type = "Wiz";
-            break;
-
-        case RING_FIRE:
-            type = "F-Mag";
-            break;
-
-        case RING_ICE:
-            type = "I-Mag";
-            break;
-
-        case RING_TELEPORT_CONTROL:
-            type = "T-Cont";
-            break;
-
-        case AMU_RESIST_SLOW:
-            type = "RSlow";
-            break;
-
-        case AMU_CLARITY:
-            type = "Clar";
-            break;
-
-        case AMU_WARDING:
-            type = "Ward";
-            break;
-
-        case AMU_RESIST_CORROSION:
-            type = "RAcid";
-            break;
-
-        case AMU_THE_GOURMAND:
-            type = "Gourm";
-            break;
-
-        case AMU_CONSERVATION:
-            type = "Conserv";
-            break;
-
-        case AMU_CONTROLLED_FLIGHT:
-            type = "C-Fly";
-            break;
-
-        case AMU_RESIST_MUTATION:
-            type = "RMut";
-            break;
-        }
-        if (type != "")
+        const std::string type = jewellery_base_ability_string(item.sub_type);
+        if ( !type.empty() )
             propnames.push_back(type);
     }
-
 
     for ( unsigned i = 0; i < ARRAYSIZE(propdescs); ++i )
     {
@@ -307,7 +276,7 @@ static std::vector<std::string> randart_propnames( const item_def& item )
 
 static std::string randart_auto_inscription( const item_def& item )
 {
-    std::vector<std::string> propnames = randart_propnames(item);
+    const std::vector<std::string> propnames = randart_propnames(item);
 
     return comma_separated_line(propnames.begin(), propnames.end(),
                                 ", ", ", ");
@@ -329,10 +298,8 @@ static void trim_randart_inscrip( item_def& item )
         prop = propnames[i];
         item.inscription = replace_all(item.inscription, prop, "");
     }
-
     trim_string(item.inscription);
 }
-
 
 static std::string randart_descrip( const item_def &item )
 {
@@ -3700,13 +3667,17 @@ void describe_item( item_def &item, bool allow_inscribe )
     {
         gotoxy(1, wherey() + 2);
 
-        // OK, technically inefficient to call randart_auto_inscription
-        // when we don't need to.
+        std::string ainscrip;
+
+        if (is_random_artefact(item))
+            ainscrip = randart_auto_inscription(item);
+
+        // Only allow autoinscription if we don't have all the text
+        // already.
         const bool allow_autoinscribe =
-            is_random_artefact(item) &&
-            (randart_auto_inscription(item) != "") &&
-            (item.inscription.find(randart_auto_inscription(item))
-             == std::string::npos);
+            is_random_artefact(item)
+            && !ainscrip.empty()
+            && item.inscription.find(ainscrip) == std::string::npos;
 
         if ( allow_autoinscribe )
         {
@@ -3734,9 +3705,10 @@ void describe_item( item_def &item, bool allow_inscribe )
             // Remove previous randart inscription
             trim_randart_inscrip(item);
 
-            if (item.inscription != "")
+            if (!item.inscription.empty())
                 item.inscription += " ";
-            item.inscription += randart_auto_inscription(item);
+
+            item.inscription += ainscrip;
         }
     }
     else if (getch() == 0)

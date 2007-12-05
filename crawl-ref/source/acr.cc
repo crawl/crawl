@@ -568,7 +568,8 @@ static void handle_wizard_command( void )
         }
 
         // create all fixed artefacts
-        for (tmp = SPWPN_SINGING_SWORD; tmp <= SPWPN_STAFF_OF_WUCAD_MU; tmp++) 
+        for (tmp = SPWPN_START_FIXEDARTS;
+             tmp < SPWPN_START_NOGEN_FIXEDARTS; tmp++)
         {
             int islot = get_item_slot();
             if (islot == NON_ITEM)
@@ -581,6 +582,9 @@ static void handle_wizard_command( void )
                 set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
 
                 move_item_to_grid( &islot, you.x_pos, you.y_pos );
+
+                msg::streams(MSGCH_DIAGNOSTICS) <<
+                    "Made " << mitm[islot].name(DESC_NOCAP_A) << std::endl;
             }
         }
 

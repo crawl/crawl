@@ -106,6 +106,6 @@ void set_unrandart_exist(int whun, bool is_exist);
 /* ***********************************************************************
  * called from: items
  * *********************************************************************** */
-int find_unrandart_index(int item_index);
+int find_unrandart_index(const item_def& artefact);
 
 #endif

@@ -102,24 +102,29 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 
     // everything above this point is a special artefact wield:
-    SPWPN_SINGING_SWORD = 181,          //  181
+    SPWPN_START_FIXEDARTS = 181,
+
+    SPWPN_SINGING_SWORD = SPWPN_START_FIXEDARTS,
     SPWPN_WRATH_OF_TROG,
     SPWPN_SCYTHE_OF_CURSES,
     SPWPN_MACE_OF_VARIABILITY,
-    SPWPN_GLAIVE_OF_PRUNE,              //  185
+    SPWPN_GLAIVE_OF_PRUNE,
     SPWPN_SCEPTRE_OF_TORMENT,
     SPWPN_SWORD_OF_ZONGULDROK,
-
-    // these three are not generated randomly {dlb}
-    SPWPN_SWORD_OF_CEREBOV,
-    SPWPN_STAFF_OF_DISPATER,
-    SPWPN_SCEPTRE_OF_ASMODEUS,          //  190
-
     SPWPN_SWORD_OF_POWER,
     SPWPN_KNIFE_OF_ACCURACY,
     SPWPN_STAFF_OF_OLGREB,
     SPWPN_VAMPIRES_TOOTH,
-    SPWPN_STAFF_OF_WUCAD_MU            //  195, must be last (see randart.cc)
+    SPWPN_STAFF_OF_WUCAD_MU,
+
+    // these three are not generated randomly {dlb}
+    SPWPN_START_NOGEN_FIXEDARTS,
+
+    SPWPN_SWORD_OF_CEREBOV = SPWPN_START_NOGEN_FIXEDARTS,
+    SPWPN_STAFF_OF_DISPATER,
+    SPWPN_SCEPTRE_OF_ASMODEUS,
+
+    SPWPN_END_FIXEDARTS = SPWPN_SCEPTRE_OF_ASMODEUS
 };
 
 enum corpse_type

@@ -333,7 +333,7 @@ static bool dgn_shift_item(const coord_def &pos, item_def &item)
     return (false);
 }
 
-static bool is_critical_feature(dungeon_feature_type feat)
+bool is_critical_feature(dungeon_feature_type feat)
 {
     return (grid_stair_direction(feat) != CMD_NO_CMD
             || grid_altar_god(feat) != GOD_NO_GOD);

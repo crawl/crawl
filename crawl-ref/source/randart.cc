@@ -792,7 +792,7 @@ static unrandart_entry unranddata[] = {
 
 static FixedVector < bool, NO_UNRANDARTS > unrandart_exist;
 
-static struct unrandart_entry *seekunrandart( const item_def &item );
+static unrandart_entry *seekunrandart( const item_def &item );
 
 void set_unrandart_exist(int whun, bool is_exist)
 {
@@ -821,12 +821,12 @@ bool is_unrandom_artefact( const item_def &item )
     return (item.flags & ISFLAG_UNRANDART);
 }
 
-// returns true if item is one of the origional fixed artefacts
+// returns true if item is one of the original fixed artefacts
 bool is_fixed_artefact( const item_def &item )
 {
     if (!is_random_artefact( item )
         && item.base_type == OBJ_WEAPONS 
-        && item.special >= SPWPN_SINGING_SWORD)
+        && item.special >= SPWPN_START_FIXEDARTS)
     {
         return (true);
     }
@@ -837,42 +837,22 @@ bool is_fixed_artefact( const item_def &item )
 unique_item_status_type get_unique_item_status( object_class_type base_type,
                                                 int art )
 {
-    // Note: for weapons "art" is in item.special,
-    //       for orbs it's the sub_type.
-    if (base_type == OBJ_WEAPONS)
+    if (base_type == OBJ_WEAPONS
+        && art >= SPWPN_START_FIXEDARTS && art < SPWPN_START_NOGEN_FIXEDARTS)
     {
-        if (art >= SPWPN_SINGING_SWORD && art <= SPWPN_SWORD_OF_ZONGULDROK)
-            return (you.unique_items[ art - SPWPN_SINGING_SWORD ]);
-        else if (art >= SPWPN_SWORD_OF_POWER && art <= SPWPN_STAFF_OF_WUCAD_MU)
-            return (you.unique_items[ art - SPWPN_SWORD_OF_POWER + 24 ]);
+        return (you.unique_items[art - SPWPN_START_FIXEDARTS]);
     }
-    else if (base_type == OBJ_ORBS)
-    {
-        if (art >= 4 && art <= 19)
-            return (you.unique_items[ art + 3 ]);
-
-    }
-
-    return (UNIQ_NOT_EXISTS);
+    else
+        return (UNIQ_NOT_EXISTS);
 }
 
 void set_unique_item_status( object_class_type base_type, int art,
                              unique_item_status_type status )
 {
-    // Note: for weapons "art" is in item.special,
-    //       for orbs it's the sub_type.
-    if (base_type == OBJ_WEAPONS)
+    if (base_type == OBJ_WEAPONS
+        && art >= SPWPN_START_FIXEDARTS && art < SPWPN_START_NOGEN_FIXEDARTS)
     {
-        if (art >= SPWPN_SINGING_SWORD && art <= SPWPN_SWORD_OF_ZONGULDROK)
-            you.unique_items[ art - SPWPN_SINGING_SWORD ] = status;
-        else if (art >= SPWPN_SWORD_OF_POWER && art <= SPWPN_STAFF_OF_WUCAD_MU)
-            you.unique_items[ art - SPWPN_SWORD_OF_POWER + 24 ] = status;
-    }
-    else if (base_type == OBJ_ORBS)
-    {
-        if (art >= 4 && art <= 19)
-            you.unique_items[ art + 3 ] = status;
-
+        you.unique_items[art - SPWPN_START_FIXEDARTS] = status;
     }
 }
 
@@ -1059,7 +1039,7 @@ static int randart_add_one_property( const item_def &item,
     int skip = -1;
 
     // Determine if we need to skip any of the above.
-    if (cl == OBJ_ARMOUR || cl == OBJ_JEWELLERY && ty == RING_PROTECTION)
+    if (cl == OBJ_ARMOUR || (cl == OBJ_JEWELLERY && ty == RING_PROTECTION))
         skip = 0;
     else if (cl == OBJ_JEWELLERY && ty == RING_EVASION)
         skip = 1;
@@ -1707,7 +1687,7 @@ std::string randart_name( const item_def &item )
 
     if (is_unrandom_artefact( item ))
     {
-        const struct unrandart_entry *unrand = seekunrandart( item );
+        const unrandart_entry *unrand = seekunrandart( item );
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
@@ -1757,7 +1737,7 @@ std::string randart_armour_name( const item_def &item )
 
     if (is_unrandom_artefact( item ))
     {
-        const struct unrandart_entry *unrand = seekunrandart( item );
+        const unrandart_entry *unrand = seekunrandart( item );
         return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
@@ -1807,10 +1787,8 @@ std::string randart_jewellery_name( const item_def &item )
 
     if (is_unrandom_artefact( item ))
     {
-        struct unrandart_entry *unrand = seekunrandart( item );
-
-        return (item_type_known(item) ? unrand->name
-                                      : unrand->unid_name);
+        const unrandart_entry *unrand = seekunrandart( item );
+        return (item_type_known(item) ? unrand->name : unrand->unid_name);
     }
 
     const long seed = calc_seed( item );
@@ -1855,83 +1833,65 @@ std::string randart_jewellery_name( const item_def &item )
     return result;
 }
 
-static struct unrandart_entry *seekunrandart( const item_def &item )
+int find_unrandart_index(const item_def& artefact)
 {
-    int x = 0;
-
-    while (x < NO_UNRANDARTS)
+    for (int i=0; i < NO_UNRANDARTS; i++)
     {
-        if (unranddata[x].ura_cl == item.base_type 
-            && unranddata[x].ura_ty == item.sub_type
-            && unranddata[x].ura_pl == item.plus 
-            && unranddata[x].ura_pl2 == item.plus2
-            && unranddata[x].ura_col == item.colour)
+        const unrandart_entry& candidate = unranddata[i];
+        if (candidate.ura_cl == artefact.base_type
+            && candidate.ura_ty == artefact.sub_type
+            && candidate.ura_pl == artefact.plus
+            && candidate.ura_pl2 == artefact.plus2
+            && candidate.ura_col == artefact.colour)
         {
-            return (&unranddata[x]);
-        }
-
-        x++;
-    }
-
-    return (&unranddata[0]);  // Dummy object
-}                               // end seekunrandart()
-
-int find_unrandart_index(int item_number)
-{
-    int x;
-
-    for(x=0; x < NO_UNRANDARTS; x++)
-    {
-        if (unranddata[x].ura_cl == mitm[item_number].base_type
-            && unranddata[x].ura_ty == mitm[item_number].sub_type
-            && unranddata[x].ura_pl == mitm[item_number].plus
-            && unranddata[x].ura_pl2 == mitm[item_number].plus2)
-        {
-            return (x);
+            return i;
         }
     }
 
     return (-1);
 }
 
+static unrandart_entry *seekunrandart( const item_def &item )
+{
+    const int idx = find_unrandart_index(item);
+    if ( idx == -1 )
+        return &unranddata[0];  // dummy unrandart
+    else
+        return &unranddata[idx];
+}
+
 int find_okay_unrandart(unsigned char aclass, unsigned char atype)
 {
-    int x, count;
     int ret = -1;
 
-    for (x = 0, count = 0; x < NO_UNRANDARTS; x++)
+    // Pick randomly among not-yet-existing unrandarts with the proper
+    // base_type and sub_type.
+    for (int i = 0, count = 0; i < NO_UNRANDARTS; i++)
     {
-        if (unranddata[x].ura_cl == aclass 
-            && !does_unrandart_exist(x)
-            && (atype == OBJ_RANDOM || unranddata[x].ura_ty == atype))
+        if (unranddata[i].ura_cl == aclass 
+            && !does_unrandart_exist(i)
+            && (atype == OBJ_RANDOM || unranddata[i].ura_ty == atype))
         {
             count++;
 
             if (one_chance_in(count))
-                ret = x;
+                ret = i;
         }
     }
 
     return (ret);
-}                               // end find_okay_unrandart()
+}
 
 // which == 0 (default) gives random fixed artefact.
 // Returns true if successful.
 bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
 {
-    bool force = true;  // we force any one asked for specifically
+    const bool force = (which != 0);
 
-    if (!which)
+    if (!force)
     {
-        // using old behaviour... try only once. -- bwr
-        force = false;  
-
-        do {
-            which = SPWPN_SINGING_SWORD +
-                random2(SPWPN_STAFF_OF_WUCAD_MU - SPWPN_SINGING_SWORD + 1);
-        } while ( which == SPWPN_SWORD_OF_CEREBOV ||
-                  which == SPWPN_STAFF_OF_DISPATER ||
-                  which == SPWPN_SCEPTRE_OF_ASMODEUS );
+        which = SPWPN_START_FIXEDARTS +
+            random2(SPWPN_START_NOGEN_FIXEDARTS - SPWPN_START_FIXEDARTS);
     }
 
     const unique_item_status_type status =

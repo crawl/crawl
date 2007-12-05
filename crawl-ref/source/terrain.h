@@ -55,4 +55,6 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool preserve_features = false,
                              bool preserve_items = false);
 
+bool is_critical_feature(dungeon_feature_type feat);
+
 #endif

@@ -192,17 +192,18 @@ int cull_items(void)
 
                 if (item_ok_to_clean(item) && random2(100) < 15)
                 {
-                    if (is_fixed_artefact( mitm[item] ))
+                    const item_def& obj(mitm[item]);
+                    if (is_fixed_artefact(obj))
                     {
                         // 7. move uniques to abyss
-                        set_unique_item_status( OBJ_WEAPONS, mitm[item].special,
+                        set_unique_item_status( OBJ_WEAPONS, obj.special,
                                                 UNIQ_LOST_IN_ABYSS );
                     }
-                    else if (is_unrandom_artefact( mitm[item] ))
+                    else if (is_unrandom_artefact(obj))
                     {
                         // 9. unmark unrandart
-                        int z = find_unrandart_index(item);
-                        if (z >= 0)
+                        const int z = find_unrandart_index(obj);
+                        if (z != -1)
                             set_unrandart_exist(z, false);
                     }
 
@@ -509,21 +510,25 @@ void destroy_item( int dest, bool never_created )
 
     unlink_item( dest );
 
+    item_def& item(mitm[dest]);
+
     if (never_created)
     {
-        if (is_fixed_artefact(mitm[dest]))
-            set_unique_item_status( mitm[dest].base_type, mitm[dest].special,
-                                    UNIQ_NOT_EXISTS );
-        else if (is_unrandom_artefact(mitm[dest]))
+        if (is_fixed_artefact(item))
         {
-            const int unrand = find_unrandart_index(dest);
+            set_unique_item_status(item.base_type, item.special,
+                                   UNIQ_NOT_EXISTS);
+        }
+        else if (is_unrandom_artefact(item))
+        {
+            const int unrand = find_unrandart_index(item);
             if (unrand != -1)
                 set_unrandart_exist( unrand, false );
         }
     }
 
     // paranoia, shouldn't be needed
-    mitm[dest].clear();
+    item.clear();
 }
 
 static void handle_gone_item(const item_def &item)

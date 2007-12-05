@@ -2119,8 +2119,15 @@ static void dowsing_card(int power, deck_rarity_type rarity)
         detect_creatures( random2(power/4) );
 }
 
-static void trowel_card(int power, deck_rarity_type rarity)
+static bool trowel_card(int power, deck_rarity_type rarity)
 {
+    // Early exit: don't clobber important features
+    if (is_critical_feature(grd[you.x_pos][you.y_pos]))
+    {
+        mpr("The dungeon trembles momentarily.");
+        return false;
+    }
+
     const int power_level = get_power_level(power, rarity);
     bool done_stuff = false;
     if ( power_level >= 2 )
@@ -2213,7 +2220,7 @@ static void trowel_card(int power, deck_rarity_type rarity)
     if ( !done_stuff )
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return;
+    return done_stuff;
 }
 
 static void genie_card(int power, deck_rarity_type rarity)
@@ -2540,7 +2547,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_FLYING:    summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  summon_skeleton(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
-    case CARD_TROWEL:           trowel_card(power, rarity); break;
+    case CARD_TROWEL:      rc = trowel_card(power, rarity); break;
     case CARD_SPADE: your_spells(SPELL_DIG, random2(power/4), false); break;
     case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
     case CARD_TORMENT: torment(TORMENT_CARDS, you.x_pos, you.y_pos); break;
