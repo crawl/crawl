@@ -938,7 +938,7 @@ static void recap_feat_keys(std::vector<std::string> &keys)
     }
 }
 
-static bool do_description(std::string key)
+static bool do_description(std::string key, std::string footer = "")
 {
     std::string desc = getLongDescription(key);
 
@@ -994,11 +994,24 @@ static bool do_description(std::string key)
     clrscr();
     print_description(key + desc);
 
+    if (footer != "")
+    {
+        const int numcols = get_number_of_cols();
+        int num_lines = linebreak_string2(footer, numcols);
+        num_lines++;
+
+        gotoxy(1, get_number_of_lines() - num_lines);
+
+        cprintf(footer.c_str());
+    }
+
     return (true);
 }
 
-static bool find_description()
+static bool find_description(bool &again)
 {
+    again = true;
+
     clrscr();
     viewwindow(true, false);
 
@@ -1061,6 +1074,7 @@ static bool find_description()
 
     default:
         list_commands_err = "Okay, then.";
+        again = false;
         return (false);
     }
 
@@ -1095,16 +1109,14 @@ static bool find_description()
     if (by_mon_symbol)
         want_regex = false;
 
-    // Try to get an exact match first.
+    bool exact_match = false;
     if (want_regex && !(*filter)(regex, ""))
     {
         // Try to get an exact match first.
         std::string desc = getLongDescription(regex);
 
         if (desc != "")
-        {
-            return do_description(regex);
-        }
+            exact_match = true;
     }
 
     std::vector<std::string> key_list;
@@ -1165,6 +1177,22 @@ static bool find_description()
     else if (key_list.size() == 1)
     {
         return do_description(key_list[0]);
+    }
+
+    if (exact_match)
+    {
+        std::string footer = "This entry is an exact match for '";
+        footer += regex;
+        footer += "'.  To see non-exact matches, press space.";
+
+        if (!do_description(regex, footer))
+        {
+            DEBUGSTR("do_description() returned false for exact_match");
+            return (false);
+        }
+
+        if (getch() != ' ')
+            return (false);
     }
 
     if (want_sort)
@@ -1258,12 +1286,20 @@ static int keyhelp_keyfilter(int ch)
         break;
 
     case '/':
-        if (find_description())
-            if ( getch() == 0 )
-                getch();
+    {
+        bool again = false;
+        do {
+            if (find_description(again))
+                if ( getch() == 0 )
+                    getch();
+            if (again)
+                mesclr(true);
+        } while(again);
 
         viewwindow(true, false);
+
         return -1;
+    }
     }
     return ch;
 }
