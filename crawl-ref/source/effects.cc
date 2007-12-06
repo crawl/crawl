@@ -861,8 +861,8 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         type_wanted = (coinflip()) ? OBJ_RANDOM : ARM_SHIELD + random2(5);
 
         // mutation specific problems (horns allow caps)
-        if (type_wanted == ARM_BOOTS && !player_has_feet()
-            || you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES)
+        if ((type_wanted == ARM_BOOTS && !player_has_feet())
+            || (you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES))
         {
             type_wanted = OBJ_RANDOM;
         }
@@ -1396,10 +1396,6 @@ bool acquirement(object_class_type class_wanted, int agent)
         // easier to read this way
         item_def& thing(mitm[thing_created]);
 
-        // give some more gold
-        if ( class_wanted == OBJ_GOLD )
-            thing.quantity += 150;
-    
         // remove curse flag from item
         do_uncurse_item( thing );
 

@@ -984,7 +984,11 @@ std::string item_def::name_aux( description_level_type desc,
         !basename && !qualname && !dbname
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
 
-    const bool know_brand = ident && !basename && !qualname && !dbname;
+    const bool know_brand =
+        !basename && !qualname && !dbname
+        && !testbits(ignore_flags, ISFLAG_KNOW_PROPERTIES)
+        && (ident || item_ident(*this, ISFLAG_KNOW_PROPERTIES));
+
     const bool know_ego   = know_brand;
 
     const bool know_cosmetic = !__know_pluses && !terse & !basename

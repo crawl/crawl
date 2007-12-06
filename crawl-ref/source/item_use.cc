@@ -606,7 +606,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             switch (i_dam)
             {
             case SPWPN_PROTECTION:
-                you.redraw_armour_class = 1;
+                you.redraw_armour_class = true;
                 break;
 
             case SPWPN_DISTORTION:
