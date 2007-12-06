@@ -757,6 +757,7 @@ LUARET1(you_see_grid, boolean,
         see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
 LUARET1(you_see_grid_no_trans, boolean,
         see_grid_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(you_can_smell, boolean, player_can_smell())
 
 // increase by 1 because check happens on old level
 
@@ -842,6 +843,7 @@ static const struct luaL_reg you_lib[] =
 
     { "see_grid",          you_see_grid },
     { "see_grid_no_trans", you_see_grid_no_trans },
+    { "can_smell",         you_can_smell },
 
     { NULL, NULL },
 };

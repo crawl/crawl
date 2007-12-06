@@ -1374,7 +1374,17 @@ A small shield.
 %%%%
 large shield
 
-Like a normal shield, only larger.
+Like a normal shield, only larger. {{
+if string.find(you.race(), "Ogre")
+   or string.find(you.race(), "Draconian")
+   or you.race() == "Troll"
+then
+    return "It looks like it would fit you well."
+else
+    return "It is very cumbersome to wear, and slows the rate at " ..
+           "which you may attack. "
+end
+}}
 %%%%
 dragon hide
 
@@ -1466,10 +1476,17 @@ animal skin
 
 The skins of several animals.
 %%%%
+# Produces "The slimy skin" if you can't smell and "The slimy, smelly
+# skin" if you can smell.
 swamp dragon hide
 
-The slimy skin of a swamp-dwelling dragon. I suppose you could wear it
-if you really wanted to.
+The slimy{{
+if you.can_smell() then
+    return ", smelly"
+else
+    return ""
+end
+}} skin of a swamp-dwelling dragon. I suppose you could wear it if you really wanted to.
 %%%%
 swamp dragon armour
 

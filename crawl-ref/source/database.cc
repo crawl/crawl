@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <fstream>
+
+#include "clua.h"
 #include "database.h"
 #include "files.h"
 #include "libutil.h"
@@ -211,6 +213,42 @@ std::vector<std::string> database_find_bodies(DBM *database,
 
 ///////////////////////////////////////////////////////////////////////////
 // Internal DB utility functions
+static void execute_embedded_lua(std::string &str)
+{
+    // Execute any lua code found between "{{" and "}}".  The lua code
+    // is expected to return a string, with which the lua code and braces
+    // will be replaced.
+    std::string::size_type pos = str.find("{{");
+    while (pos != std::string::npos)
+    {
+        std::string::size_type end = str.find("}}", pos + 2);
+        if (end == std::string::npos)
+        {
+            mpr("Unbalanced {{, bailing.", MSGCH_DIAGNOSTICS);
+            break;
+        }
+
+        std::string lua_full = str.substr(pos, end - pos + 2);
+        std::string lua      = str.substr(pos + 2, end - pos - 2);
+
+        if (clua.execstring(lua.c_str(), "db_embedded_lua", 1))
+        {
+            std::string err = "{{" + clua.error;
+            err += "}}";
+            str.replace(pos, lua_full.length(), err);
+
+            return;
+        }
+
+        std::string result;
+        clua.fnreturns(">s", &result);
+
+        str.replace(pos, lua_full.length(), result);
+
+        pos = str.find("{{", pos + result.length());
+    } // while (pos != std::string::npos)
+}
+
 static void trim_right(std::string &s)
 {
     s.erase(s.find_last_not_of(" \r\t\n") + 1);
@@ -457,7 +495,10 @@ std::string getLongDescription(const std::string &key)
     datum result = database_fetch(descriptionDB, canonical_key);
     
     // Cons up a (C++) string to return.  The caller must release it.
-    return std::string((const char *)result.dptr, result.dsize);
+    std::string str((const char *)result.dptr, result.dsize);
+
+    execute_embedded_lua(str);
+    return (str);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,

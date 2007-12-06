@@ -1860,14 +1860,11 @@ std::string get_item_description( const item_def &item, bool verbose,
             description << db_desc;
 
         if (item.base_type == OBJ_WANDS
-            || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-            || (item.base_type == OBJ_ARMOUR &&
-                item.sub_type == ARM_LARGE_SHIELD))
+            || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK))
         {
             // Get rid of newline at end of description, so that
-            // either the wand "no charges left", the meat chunk
-            // "unpleasent", or the large shield "cumbersome"
-            // description can follow on the same line.
+            // either the wand "no charges left" or the meat chunk
+            // "unpleasent" description can follow on the same line.
             description.seekp(description.tellp() - (std::streamoff)1);
             description << " ";
         }
@@ -1886,21 +1883,6 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_ARMOUR:
-        if (item.sub_type == ARM_LARGE_SHIELD)
-        {
-            if (you.species == SP_TROLL || you.species == SP_OGRE
-                || you.species == SP_OGRE_MAGE
-                || player_genus(GENPC_DRACONIAN))
-            {
-                description << "It looks like it would fit you well. ";
-            }
-            else
-            {
-                description << "It is very cumbersome to wear, and "
-                    "slows the rate at which you may attack. ";
-            }
-        }
-
         description << describe_armour( item, verbose );
         break;
 
