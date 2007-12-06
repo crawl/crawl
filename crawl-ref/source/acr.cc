@@ -3491,6 +3491,11 @@ static bool initialise(void)
 
     // Initialise internal databases.
     databaseSystemInit();
+
+    init_feat_desc_cache();
+    init_mon_name_cache();
+    init_spell_name_cache();
+    init_item_name_cache();
     
     cio_init();
 

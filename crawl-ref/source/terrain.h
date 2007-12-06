@@ -57,4 +57,6 @@ void dungeon_terrain_changed(const coord_def &pos,
 
 bool is_critical_feature(dungeon_feature_type feat);
 
+void                 init_feat_desc_cache();
+dungeon_feature_type feat_by_desc(std::string desc);
 #endif

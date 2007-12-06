@@ -16,6 +16,7 @@
 #include "terrain.h"
 
 #include "dgnevent.h"
+#include "direct.h"
 #include "itemprop.h"
 #include "items.h"
 #include "message.h"
@@ -554,3 +555,33 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
     return (false);
 }                               // end fall_into_a_pool()
 
+typedef std::map<std::string, dungeon_feature_type> feat_desc_map;
+static feat_desc_map feat_desc_cache;
+
+void init_feat_desc_cache()
+{
+    for (int i = 0; i < NUM_FEATURES; i++)
+    {
+        dungeon_feature_type grid = static_cast<dungeon_feature_type>(i);
+        std::string          desc = feature_description(grid);
+
+        lowercase(desc);
+        if (feat_desc_cache.find(desc) == feat_desc_cache.end())
+            feat_desc_cache[desc] = grid;
+    }
+}
+
+dungeon_feature_type feat_by_desc(std::string desc)
+{
+    lowercase(desc);
+
+    if (desc[desc.size() - 1] != '.')
+        desc += ".";
+
+    feat_desc_map::iterator i = feat_desc_cache.find(desc);
+
+    if (i != feat_desc_cache.end())
+        return (i->second);
+
+    return (DNGN_UNSEEN);
+}

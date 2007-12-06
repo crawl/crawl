@@ -491,6 +491,7 @@ static std::vector<std::string> description_txt_paths()
 
     txt_file_names.push_back("features");
     txt_file_names.push_back("items");
+    txt_file_names.push_back("unident");
     txt_file_names.push_back("monsters");
     txt_file_names.push_back("spells");
     txt_file_names.push_back("gods");

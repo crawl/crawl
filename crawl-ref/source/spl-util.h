@@ -64,6 +64,7 @@ struct spell_desc
 //* * called from: acr
 void init_spell_descs(void);
 
+void       init_spell_name_cache();
 spell_type spell_by_name(std::string name, bool partial_match = false);
 
 int get_spell_slot_by_letter( char letter );

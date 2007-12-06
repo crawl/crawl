@@ -16,6 +16,12 @@
 
 #include "externs.h"
 
+struct item_types_pair
+{
+    object_class_type base_type;
+    unsigned char     sub_type;
+};
+
 enum item_type_id_type
 {
     IDTYPE_WANDS = 0,
@@ -118,5 +124,10 @@ void set_ident_type( object_class_type basetype, int subtype,
  * called from: command - itemname - invent.h
  * *********************************************************************** */
 const std::string menu_colour_item_prefix(const item_def &item);
+
+void            init_item_name_cache();
+item_types_pair item_types_by_name(std::string name);
+
+std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
 
 #endif

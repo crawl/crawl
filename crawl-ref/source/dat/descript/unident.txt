@@ -1,0 +1,79 @@
+%%%%
+rod
+
+A stick imbued with magical properties.
+%%%%
+staff
+
+A stick imbued with magical properties.
+%%%%
+buggy staff
+
+An OBJ_STAVES which is neither a rod nor a staff; please file a bug
+report.
+%%%%
+book
+
+A book of magic spells. Beware, for some of the more powerful
+grimoires are not to be toyed with.
+%%%%
+potion
+
+A small bottle of liquid.
+%%%%
+wand
+
+A stick. Maybe it's magical.
+%%%%
+amulet
+
+A piece of jewellery.
+%%%%
+ring
+
+A piece of jewellery.
+%%%%
+scroll
+
+A scroll of paper covered in magical writing.
+%%%%
+deck of cards
+
+A deck of cards.
+%%%%
+crystal ball
+
+A sphere of clear crystal.
+%%%%
+small ebony casket
+
+A small black box. I wonder what's inside?
+%%%%
+gauzy fan
+
+A fan.
+%%%%
+blazing lamp
+
+A lamp.
+%%%%
+bone lantern
+
+A strange lantern made out of ancient bones.
+%%%%
+silver horn
+
+A strange lantern made out of ancient bones.
+%%%%
+grey disc
+
+A grey disc.
+%%%%
+nondescript stone
+
+A lump of rock.
+%%%%
+sealed bronze flask
+
+A heavy bronze flask, warm to the touch.
+%%%%

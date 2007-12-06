@@ -33,13 +33,19 @@
 #include "it_use2.h"
 #include "itemprop.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "randart.h"
 #include "skills2.h"
+#include "state.h"
 #include "stuff.h"
 #include "view.h"
 #include "items.h"
+
+
+#include "describe.h"
+
 
 id_arr type_ids;
 
@@ -99,7 +105,7 @@ std::string item_def::name(description_level_type descrip,
             descrip = DESC_CAP_A;
     }
 
-    if (terse)
+    if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
     if (this->base_type == OBJ_ORBS
@@ -148,7 +154,8 @@ std::string item_def::name(description_level_type descrip,
             break;
         }
 
-        if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME)
+        if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
+            && descrip != DESC_DBNAME)
         {
             if (quantity_words)
                 buff << number_in_words(this->quantity) << " ";
@@ -962,25 +969,32 @@ std::string item_def::name_aux( description_level_type desc,
     const int it_plus = this->plus;
     const int item_plus2 = this->plus2;
 
-    const bool basename = desc == DESC_BASENAME;
+    const bool know_type = ident || item_type_known(*this);
+
+    const bool dbname   = desc == DESC_DBNAME;
+    const bool basename = (desc == DESC_BASENAME || (dbname && !know_type));
     const bool qualname = desc == DESC_QUALNAME;
     
     const bool know_curse =
-        !basename && !qualname && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
+        !basename && !qualname && !dbname
+        && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
     
-    const bool know_type = ident || item_type_known(*this);
     const bool __know_pluses =
-        !basename && !qualname
+        !basename && !qualname && !dbname
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
 
-    const bool know_cosmetic = !__know_pluses && !terse & !basename;
+    const bool know_brand = ident && !basename && !qualname && !dbname;
+    const bool know_ego   = know_brand;
+
+    const bool know_cosmetic = !__know_pluses && !terse & !basename
+        && !qualname && !dbname;
 
     // So that know_cosmetic won't be affected by ignore_flags
     const bool know_pluses = __know_pluses
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
-    bool need_plural = true;
+    const bool need_plural = !basename && !dbname;
     int brand;
 
     std::ostringstream buff;
@@ -1015,13 +1029,13 @@ std::string item_def::name_aux( description_level_type desc,
             buff << " ";
         }
 
-        if (is_random_artefact( *this ))
+        if (is_random_artefact( *this ) && !dbname)
         {
             buff << randart_name(*this);
             break;
         }
 
-        if (is_fixed_artefact( *this ))
+        if (is_fixed_artefact( *this ) && !dbname)
         {
             buff << fixed_artefact_name( *this, know_type );
             break;
@@ -1045,31 +1059,28 @@ std::string item_def::name_aux( description_level_type desc,
             }
         } 
 
-        if (!basename)
-        {
+        if (!basename && !dbname)
             // always give racial type (it does have game effects)
             buff << racial_description_string(*this, terse);
 
-            if (know_type && !terse &&
+        if (know_brand && !terse &&
                 (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
+        {
                 buff << "vampiric ";
         }
         buff << item_base_name(*this);
             
-        if (!basename)
-        {
-            if ( know_type )
-                buff << weapon_brand_name(*this, terse);
+        if (know_brand)
+            buff << weapon_brand_name(*this, terse);
 
-            if (know_curse && item_cursed(*this) && terse)
-                buff << " (curse)";
-        }
+        if (know_curse && item_cursed(*this) && terse)
+            buff << " (curse)";
         break;
 
     case OBJ_MISSILES:
         brand = get_ammo_brand( *this );
 
-        if (!basename)
+        if (know_brand)
         {
             if (brand == SPMSL_POISONED)
                 buff << ((terse) ? "poison " : "poisoned ");
@@ -1089,7 +1100,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (know_type && !basename)
+        if (know_brand)
         {
             switch (brand)
             {
@@ -1128,7 +1139,7 @@ std::string item_def::name_aux( description_level_type desc,
             buff << "pair of ";
 
         // When asking for the base item name, randartism is ignored.
-        if (is_random_artefact( *this ) && !basename)
+        if (is_random_artefact( *this ) && !basename && !dbname)
         {
             buff << randart_armour_name(*this);
             break;
@@ -1173,19 +1184,40 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
 
-        if (!basename)
+        if (!basename && !dbname)
         {
             // always give racial description (has game effects)
             buff << racial_description_string(*this, terse);
         }
 
+        if (!basename && !dbname && sub_type == ARM_HELMET)
+        {
+            if (get_helmet_type(*this) == THELM_HELM ||
+                get_helmet_type(*this) == THELM_HELMET) 
+            {
+                const short dhelm = get_helmet_desc( *this );
+                
+                buff << 
+                    (
+                        (dhelm == THELM_DESC_PLAIN)    ? "" :
+                        (dhelm == THELM_DESC_WINGED)   ? "winged " :
+                        (dhelm == THELM_DESC_HORNED)   ? "horned " :
+                        (dhelm == THELM_DESC_CRESTED)  ? "crested " :
+                        (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
+                        (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
+                        (dhelm == THELM_DESC_VISORED)  ? "visored " :
+                        (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
+                                                       : "buggy ");
+            }
+        }
+
         buff << item_base_name(*this);
 
-        if (!basename)
+        if (know_ego)
         {
             const special_armour_type sparm = get_armour_ego_type( *this );
 
-            if (know_type && sparm != SPARM_NORMAL)
+            if (sparm != SPARM_NORMAL)
             {
                 if ( !terse )
                     buff << " of ";
@@ -1193,7 +1225,7 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
 
-        if (know_curse && item_cursed(*this) && terse && !basename)
+        if (know_curse && item_cursed(*this) && terse)
             buff << " (curse)";
         break;
 
@@ -1291,12 +1323,17 @@ std::string item_def::name_aux( description_level_type desc,
         case FOOD_CHEESE: buff << "cheese"; break;
         case FOOD_SAUSAGE: buff << "sausage"; break;
         case FOOD_CHUNK:
-            if (this->special < 100)
-                buff << "rotting ";
+            if (!basename && !dbname)
+            {
+                if (this->special < 100)
+                    buff << "rotting ";
 
-            buff << "chunk of "
-                 << mons_type_name(it_plus, DESC_PLAIN)
-                 << " flesh";
+                buff << "chunk of "
+                     << mons_type_name(it_plus, DESC_PLAIN)
+                     << " flesh";
+            }
+            else
+                buff << "chunk of flesh";
             break;
         }
 
@@ -1351,7 +1388,7 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
 
-        if (is_random_artefact( *this ))
+        if (is_random_artefact( *this ) && !dbname)
         {
             buff << randart_jewellery_name(*this);
             break;
@@ -1359,7 +1396,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (know_type)
         {
-            if (know_pluses && ring_has_pluses(*this) && !basename && !qualname)
+            if (know_pluses && ring_has_pluses(*this))
             {
                 output_with_sign(buff, it_plus);
 
@@ -1392,7 +1429,11 @@ std::string item_def::name_aux( description_level_type desc,
 
     case OBJ_MISCELLANY:
         if ( item_typ == MISC_RUNE_OF_ZOT )
-            buff << rune_type_name(it_plus) << " rune of Zot";
+        {
+            if (!dbname)
+                buff << rune_type_name(it_plus) << " ";
+            buff << "rune of Zot";
+        }
         else
         {
             if ( is_deck(*this) )
@@ -1407,10 +1448,11 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << "BUGGY deck of cards";
                     break;
                 }
-                buff << deck_rarity_name(deck_rarity(*this)) << ' ';
+                if (!dbname)
+                    buff << deck_rarity_name(deck_rarity(*this)) << ' ';
             }
             buff << misc_type_name(item_typ, know_type);
-            if ( is_deck(*this)
+            if ( is_deck(*this) && !dbname
                  && (top_card_is_known(*this) || this->plus2 != 0))
             {
                 buff << " {";
@@ -1439,14 +1481,21 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_BOOKS:
-        if (!know_type)
+        if (basename)
+            buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
+        else if (!know_type)
         {
             buff << book_secondary_string(this->special / 10)
                  << book_primary_string(this->special % 10)
                  << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
         else if (item_typ == BOOK_MANUAL)
-            buff << "manual of " << skill_name(it_plus);
+        {
+            if (dbname)
+                buff << "manual";
+            else
+                buff << "manual of " << skill_name(it_plus);
+        }
         else if (item_typ == BOOK_NECRONOMICON)
             buff << "Necronomicon";
         else if (item_typ == BOOK_DESTRUCTION)
@@ -1472,7 +1521,7 @@ std::string item_def::name_aux( description_level_type desc,
             buff << (item_is_rod( *this ) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
 
-            if (item_is_rod(*this) && !basename)
+            if (item_is_rod(*this) && !basename && !qualname && !dbname)
             {
                 buff << " (" << (this->plus / ROD_CHARGE_MULT)
                      << "/" << (this->plus2 / ROD_CHARGE_MULT)
@@ -1496,12 +1545,13 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_CORPSES:
-        if (item_typ == CORPSE_BODY && this->special < 100)
+        if (item_typ == CORPSE_BODY && this->special < 100 && !dbname)
         {
             buff << "rotting ";
         }
         {
-            buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
+            if (!dbname)
+                buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
             if (item_typ == CORPSE_BODY)
                 buff << "corpse";
             else if (item_typ == CORPSE_SKELETON)
@@ -1520,7 +1570,7 @@ std::string item_def::name_aux( description_level_type desc,
         buff.str( pluralise(buff.str()) );
 
     // Disambiguation
-    if (!terse && !basename && know_type)
+    if (!terse && !basename && !dbname && know_type)
     {
         switch (this->base_type)
         {
@@ -2092,3 +2142,147 @@ const std::string menu_colour_item_prefix(const item_def &item)
     return str;
 }
 
+typedef std::map<std::string, item_types_pair> item_names_map;
+static item_names_map item_names_cache;
+
+typedef std::map<unsigned, std::vector<std::string> > item_names_by_glyph_map;
+static item_names_by_glyph_map item_names_by_glyph_cache;
+
+void init_item_name_cache()
+{
+    const int sub_type_limits[] = {
+        NUM_WEAPONS,
+        NUM_MISSILES,
+        NUM_ARMOURS,
+        NUM_WANDS,
+        NUM_FOODS,
+        0, // Unknown I
+        NUM_SCROLLS,
+        NUM_JEWELLERY,
+        NUM_POTIONS,
+        0, // Unknown II
+        NUM_BOOKS,
+        NUM_STAVES,
+        1, // Orbs
+        NUM_MISCELLANY,
+        0, // Corpses
+        1, // Gold
+        -1
+    };
+
+    for (int i = 0; sub_type_limits[i] != -1; i++)
+    {
+        object_class_type base_type = static_cast<object_class_type>(i);
+        unsigned char     num_sub_types = (unsigned char) sub_type_limits[i];
+
+        for (unsigned char sub_type = 0; sub_type < num_sub_types; sub_type++)
+        {
+            int o = items(0, base_type, sub_type, true, 1,
+                          MAKE_ITEM_NO_RACE);
+
+            if (o == NON_ITEM)
+                continue;
+
+            item_def       &item(mitm[o]);
+            item_types_pair pair = {base_type, sub_type};
+
+            // Make sure item isn't an artifact
+            item.flags  &= ~ISFLAG_ARTEFACT_MASK;
+            item.special = 0;
+
+            std::string    name = item.name(DESC_DBNAME, true, true);
+            unsigned       glyph;
+            unsigned short colour;
+            get_item_glyph(&item, &glyph, &colour);
+            destroy_item(o);
+            lowercase(name);
+
+            if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
+                continue;
+//            else if (base_type == OBJ_MISSILES && name == "eggplant")
+//                continue;
+            else if (item.base_type == OBJ_ARMOUR
+                     && get_armour_slot( item ) == EQ_HELMET)
+            {
+                // Why do we handle helmets this way?
+                continue;
+            }
+            else if (name.find("buggy") != std::string::npos)
+            {
+                crawl_state.add_startup_error("Bad name for item name "
+                                              " cache: " + name);
+                continue;
+            }
+
+            if (item_names_cache.find(name) == item_names_cache.end())
+            {
+                item_names_cache[name] = pair;
+                item_names_by_glyph_cache[glyph].push_back(name);
+            }
+        }
+    }
+
+    ASSERT(item_names_cache.size() > 0);
+
+    int o = items(0, OBJ_ARMOUR, ARM_HELMET, true, 1,
+                  MAKE_ITEM_NO_RACE);
+
+    if (o == NON_ITEM)
+    {
+        crawl_state.add_startup_error("Couldn't cache helmet names.");
+        return;
+    }
+
+    item_def &item(mitm[o]);
+
+    // Make sure item isn't an artifact
+    item.flags  &= ~ISFLAG_ARTEFACT_MASK;
+    item.special = 0;
+
+    // Now handle the helmets
+    for (int i = 0; i < THELM_NUM_TYPES; i++)
+    {
+        set_helmet_type(item, i);
+
+        item_types_pair pair = {item.base_type, item.sub_type};
+
+        std::string    name = item.name(DESC_DBNAME, true, true);
+        unsigned       glyph;
+        unsigned short colour;
+        get_item_glyph(&item, &glyph, &colour);
+        lowercase(name);
+
+        if (item_names_cache.find(name) == item_names_cache.end())
+        {
+            item_names_cache[name] = pair;
+            item_names_by_glyph_cache[glyph].push_back(name);
+        }
+    }
+    destroy_item(o);
+}
+
+item_types_pair item_types_by_name(std::string name)
+{
+    lowercase(name);
+
+    item_names_map::iterator i = item_names_cache.find(name);
+
+    if (i != item_names_cache.end())
+        return (i->second);
+
+    item_types_pair err = {OBJ_UNASSIGNED, 0};
+
+    return (err);
+}
+
+std::vector<std::string> item_name_list_for_glyph(unsigned glyph)
+{
+    item_names_by_glyph_map::iterator i;
+    i = item_names_by_glyph_cache.find(glyph);
+
+    if (i != item_names_by_glyph_cache.end())
+        return (i->second);
+
+    std::vector<std::string> empty;
+    return empty;
+}

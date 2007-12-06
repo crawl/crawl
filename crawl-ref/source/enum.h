@@ -712,6 +712,8 @@ enum description_level_type
     DESC_BASENAME,                     // Base name of item subtype
     DESC_QUALNAME,                     // Name without articles, quantities,
                                        // enchantments.
+    DESC_DBNAME,                       // Name with which to look up item
+                                       // description in the db.
 
     DESC_NONE
 };

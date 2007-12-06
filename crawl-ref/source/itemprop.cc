@@ -766,10 +766,8 @@ void set_helmet_type( item_def &item, short type )
     // make sure we have the right sub_type (to get properties correctly)
     if (type == THELM_HELMET || type == THELM_HELM)
         item.sub_type = ARM_HELMET;
-
-    // [dshaligram] FIXME: This is for when we import caps
-    // else
-    //    item.sub_type = ARM_CAP;
+    else
+        item.sub_type = ARM_CAP;
 
     item.plus2 &= ~THELM_TYPE_MASK; 
     item.plus2 |= type;
@@ -2437,30 +2435,14 @@ std::string item_base_name(const item_def &item)
     case OBJ_MISSILES:
         return Missile_prop[Missile_index[item.sub_type]].name;
     case OBJ_ARMOUR:
-        if ( item.sub_type != ARM_HELMET )
+        if ( item.sub_type != ARM_HELMET && item.sub_type != ARM_CAP )
         {
             return Armour_prop[Armour_index[item.sub_type]].name;
         }
         else
         {
             std::string result;
-            if (get_helmet_type(item) == THELM_HELM ||
-                get_helmet_type(item) == THELM_HELMET) 
-            {
-                const short dhelm = get_helmet_desc( item );
-                
-                result +=
-                    (dhelm == THELM_DESC_PLAIN)    ? "" :
-                    (dhelm == THELM_DESC_WINGED)   ? "winged " :
-                    (dhelm == THELM_DESC_HORNED)   ? "horned " :
-                    (dhelm == THELM_DESC_CRESTED)  ? "crested " :
-                    (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
-                    (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
-                    (dhelm == THELM_DESC_VISORED)  ? "visored " :
-                    (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
-                                                   : "buggy ";
-            }
-            
+
             const short helm_type = get_helmet_type( item );
             if (helm_type == THELM_HELM)
                 result += "helm";

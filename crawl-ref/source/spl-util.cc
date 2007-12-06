@@ -76,12 +76,38 @@ void init_spell_descs(void)
         spell_list[spelldata[i].id] = i;
 }                               // end init_spell_descs()
 
+typedef std::map<std::string, spell_type> spell_name_map;
+static spell_name_map spell_name_cache;
+
+void init_spell_name_cache()
+{
+    for (int i = 0; i < NUM_SPELLS; i++)
+    {
+        spell_type type = static_cast<spell_type>(i);
+        const char *sptitle = spell_title(type);
+        if (!sptitle)
+            continue;
+
+        const std::string spell_name = lowercase_string(sptitle);
+        spell_name_cache[spell_name] = type;
+    }
+}
+
 spell_type spell_by_name(std::string name, bool partial_match)
 {
     if (name.empty())
         return (SPELL_NO_SPELL);
-
     lowercase(name);
+
+    if (!partial_match)
+    {
+        spell_name_map::iterator i = spell_name_cache.find(name);
+
+        if (i != spell_name_cache.end())
+            return (i->second);
+
+        return (SPELL_NO_SPELL);
+    }
 
     int spellmatch = -1;
     for (int i = 0; i < NUM_SPELLS; i++)
@@ -92,10 +118,8 @@ spell_type spell_by_name(std::string name, bool partial_match)
             continue;
 
         const std::string spell_name = lowercase_string(sptitle);
-        if (name == spell_name)
-            return (type);
 
-        if (partial_match && spell_name.find(name) != std::string::npos)
+        if (spell_name.find(name) != std::string::npos)
             spellmatch = i;
     }
 

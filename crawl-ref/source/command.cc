@@ -47,6 +47,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "transfor.h"
 #include "version.h"
 #include "view.h"
@@ -906,10 +907,35 @@ static bool spell_filter(std::string key, std::string body)
     return (spell_by_name(key) == SPELL_NO_SPELL);
 }
 
+static bool item_filter(std::string key, std::string body)
+{
+    return (item_types_by_name(key).base_type == OBJ_UNASSIGNED);
+}
+
 static bool feature_filter(std::string key, std::string body)
 {
-    return (spell_by_name(key) != SPELL_NO_SPELL
-            || get_monster_by_name(key.c_str(), true) != MONS_PROGRAM_BUG);
+    return (feat_by_desc(key) == DNGN_UNSEEN);
+}
+
+typedef void (*db_keys_recap)(std::vector<std::string>&);
+
+static void recap_mon_keys(std::vector<std::string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        monster_type type = get_monster_by_name(keys[i], true);
+        keys[i] = mons_type_name(type, DESC_PLAIN);
+    }
+}
+
+static void recap_feat_keys(std::vector<std::string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        dungeon_feature_type type = feat_by_desc(keys[i]);
+        keys[i] = feature_description(type);
+        //fprintf(stderr, "%s\n", keys[i].c_str());
+    }
 }
 
 static bool do_description(std::string key)
@@ -976,17 +1002,19 @@ static bool find_description()
     clrscr();
     viewwindow(true, false);
 
-    mpr("Describe a (M)onster, (S)pell, (F)eature, (G)od "
+    mpr("Describe a (M)onster, (S)pell, (I)tem, (F)eature, (G)od "
         "or (B)ranch?", MSGCH_PROMPT);
 
     int ch = toupper(getch());
     std::string    type;
     std::string    extra;
-    db_find_filter filter;
+    db_find_filter filter     = NULL;
+    db_keys_recap  recap      = NULL;
     bool           want_regex = true;
     bool           want_sort  = true;
 
     bool doing_mons     = false;
+    bool doing_items    = false;
     bool doing_gods     = false;
     bool doing_branches = false;
 
@@ -997,15 +1025,24 @@ static bool find_description()
         extra      = "  Enter a single letter to list monsters displayed by "
             "that symbol.";
         filter     = monster_filter;
+        recap      = recap_mon_keys;
         doing_mons = true;
         break;
     case 'S':
         type   = "spell";
         filter = spell_filter;
         break;
+    case 'I':
+        type        = "item";
+        extra      = "  Enter a single letter to list items displayed by "
+            "that symbol.";
+        filter      = item_filter;
+        doing_items = true;
+        break;
     case 'F':
         type   = "feature";
         filter = feature_filter;
+        recap  = recap_feat_keys;
         break;
     case 'G':
         type       = "god";
@@ -1052,7 +1089,8 @@ static bool find_description()
         }
     }
 
-    bool by_mon_symbol = (doing_mons && regex.size() == 1);
+    bool by_mon_symbol  = (doing_mons  && regex.size() == 1);
+    bool by_item_symbol = (doing_items && regex.size() == 1);
 
     if (by_mon_symbol)
         want_regex = false;
@@ -1073,6 +1111,8 @@ static bool find_description()
 
     if (by_mon_symbol)
         key_list = get_monster_keys(regex[0]);
+    else if (by_item_symbol)
+        key_list = item_name_list_for_glyph(regex[0]);
     else if (doing_gods)
         key_list = get_god_keys();
     else if (doing_branches)
@@ -1080,11 +1120,20 @@ static bool find_description()
     else
         key_list = get_desc_keys(regex, filter);
 
+    if (recap != NULL)
+        (*recap)(key_list);
+
     if (key_list.size() == 0)
     {
         if (by_mon_symbol)
         {
             list_commands_err  = "No monsters with symbol '";
+            list_commands_err += regex;
+            list_commands_err += "'";
+        }
+        else if (by_item_symbol)
+        {
+            list_commands_err  = "No items with symbol '";
             list_commands_err += regex;
             list_commands_err += "'";
         }

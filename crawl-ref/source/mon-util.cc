@@ -162,9 +162,36 @@ monster_type random_monster_at_grid(int grid)
                  : valid_mons[ random2(valid_mons.size()) ];
 }
 
+typedef std::map<std::string, unsigned> mon_name_map;
+static mon_name_map mon_name_cache;
+
+void init_mon_name_cache()
+{
+    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    {
+        std::string name = mondata[i].name;
+        lowercase(name);
+
+        const int          mtype = mondata[i].mc;
+        const monster_type mon   = monster_type(mtype);
+
+        mon_name_cache[name] = mon;
+    }
+}
+
 monster_type get_monster_by_name(std::string name, bool exact)
 {
     lowercase(name);
+
+    if (exact)
+    {
+        mon_name_map::iterator i = mon_name_cache.find(name);
+
+        if (i != mon_name_cache.end())
+            return static_cast<monster_type>(i->second);
+
+        return MONS_PROGRAM_BUG;
+    }
 
     monster_type mon = MONS_PROGRAM_BUG;
     for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
@@ -173,14 +200,6 @@ monster_type get_monster_by_name(std::string name, bool exact)
         lowercase(candidate);
 
         const int mtype = mondata[i].mc;
-
-        if (exact)
-        {
-            if (name == candidate)
-                return monster_type(mtype);
-
-            continue;
-        }
 
         const std::string::size_type match = candidate.find(name);
         if (match == std::string::npos)
