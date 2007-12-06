@@ -1,57 +1,7 @@
 %%%%
-rod
-
-A stick imbued with magical properties.
-%%%%
-staff
-
-A stick imbued with magical properties.
-%%%%
-buggy staff
-
-An OBJ_STAVES which is neither a rod nor a staff; please file a bug
-report.
-%%%%
-book
-
-A book of magic spells. Beware, for some of the more powerful
-grimoires are not to be toyed with.
-%%%%
-potion
-
-A small bottle of liquid.
-%%%%
-wand
-
-A stick. Maybe it's magical.
-%%%%
 amulet
 
 A piece of jewellery.
-%%%%
-ring
-
-A piece of jewellery.
-%%%%
-scroll
-
-A scroll of paper covered in magical writing.
-%%%%
-deck of cards
-
-A deck of cards.
-%%%%
-crystal ball
-
-A sphere of clear crystal.
-%%%%
-small ebony casket
-
-A small black box. I wonder what's inside?
-%%%%
-gauzy fan
-
-A fan.
 %%%%
 blazing lamp
 
@@ -61,9 +11,22 @@ bone lantern
 
 A strange lantern made out of ancient bones.
 %%%%
-silver horn
+book
 
-A strange lantern made out of ancient bones.
+A book of magic spells. Beware, for some of the more powerful
+grimoires are not to be toyed with.
+%%%%
+crystal ball
+
+A sphere of clear crystal.
+%%%%
+deck of cards
+
+A deck of cards.
+%%%%
+gauzy fan
+
+A fan.
 %%%%
 grey disc
 
@@ -73,7 +36,39 @@ nondescript stone
 
 A lump of rock.
 %%%%
+potion
+
+A small bottle of liquid.
+%%%%
+ring
+
+A piece of jewellery.
+%%%%
+rod
+
+A stick imbued with magical properties.
+%%%%
+scroll
+
+A scroll of paper covered in magical writing.
+%%%%
 sealed bronze flask
 
 A heavy bronze flask, warm to the touch.
+%%%%
+silver horn
+
+A strange lantern made out of ancient bones.
+%%%%
+small ebony casket
+
+A small black box. I wonder what's inside?
+%%%%
+staff
+
+A stick imbued with magical properties.
+%%%%
+wand
+
+A stick. Maybe it's magical.
 %%%%
