@@ -986,8 +986,8 @@ std::string item_def::name_aux( description_level_type desc,
 
     const bool know_brand =
         !basename && !qualname && !dbname
-        && !testbits(ignore_flags, ISFLAG_KNOW_PROPERTIES)
-        && (ident || item_ident(*this, ISFLAG_KNOW_PROPERTIES));
+        && !testbits(ignore_flags, ISFLAG_KNOW_TYPE)
+        && (ident || item_ident(*this, ISFLAG_KNOW_TYPE));
 
     const bool know_ego   = know_brand;
 
