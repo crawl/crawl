@@ -1699,9 +1699,12 @@ static special_missile_type determine_missile_brand(const item_def& item,
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    // Un-poison sling bullets; unbrand javelins and throwing nets.
+    // Un-poison sling bullets; un-flame and un-ice javelins; unbrand
+    // throwing nets.
     if ((item.sub_type == MI_SLING_BULLET && rc == SPMSL_POISONED)
-         || item.sub_type == MI_JAVELIN || item.sub_type == MI_THROWING_NET)
+         || (item.sub_type == MI_JAVELIN
+             && (rc == SPMSL_FLAME || rc == SPMSL_ICE))
+         || item.sub_type == MI_THROWING_NET)
     {
         rc = SPMSL_NORMAL;
     }
