@@ -640,7 +640,7 @@ static keyseq getch_mul( int (*rgetch)() = NULL )
     }
 
     if (!rgetch)
-        rgetch = m_getch;
+        rgetch = c_getch;
 
     keys.push_back( a = rgetch() );
     
