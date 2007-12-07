@@ -259,7 +259,15 @@ void CrawlStoreValue::unset(bool force)
     flags |= SFLAG_UNSET;
 }
 
-// Only needed to do some assertion checking.
+#define COPY_PTR(ptr_type) \
+    { \
+        ptr_type *ptr = static_cast<ptr_type*>(val.ptr); \
+        if (ptr != NULL) \
+            delete ptr; \
+        ptr = static_cast<ptr_type*>(other.val.ptr); \
+        val.ptr = (void*) new ptr_type (*ptr);  \
+    }
+
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
 {
     ASSERT(other.type >= SV_NONE && other.type < NUM_STORE_VAL_TYPES);
@@ -267,7 +275,6 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
 
     // NOTE: We don't bother checking SFLAG_CONST_VAL, since the
     // asignment operator is used when swapping two elements.
-
     if (!(flags & SFLAG_UNSET))
     {
         if (flags & SFLAG_CONST_TYPE)
@@ -276,7 +283,44 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
 
     type  = other.type;
     flags = other.flags;
-    val   = other.val;
+
+    switch(type)
+    {
+    case SV_NONE:
+        break;
+
+    case SV_BOOL:
+    case SV_BYTE:
+    case SV_SHORT:
+    case SV_LONG:
+    case SV_FLOAT:
+        val = other.val;
+        break;
+
+    case SV_STR:
+        COPY_PTR(std::string);
+        break;
+
+    case SV_COORD:
+        COPY_PTR(coord_def);
+        break;
+
+    case SV_ITEM:
+        COPY_PTR(item_def);
+        break;
+
+    case SV_HASH:
+        COPY_PTR(CrawlHashTable);
+        break;
+
+    case SV_VEC:
+        COPY_PTR(CrawlVector);
+        break;
+
+    case NUM_STORE_VAL_TYPES:
+        DEBUGSTR("CrawlStoreValue has type NUM_STORE_VAL_TYPES");
+        break;
+    }
 
     return (*this);
 }
