@@ -1208,7 +1208,7 @@ static bool fire_item_matches(const item_def &item, unsigned fire_type)
 {
     if (!is_valid_item(item))
         return (false);
-    
+
     if (you.attribute[ATTR_HELD])
     {
         if (item.base_type == OBJ_MISSILES)
@@ -2183,7 +2183,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 baseDam = 0;
                 exDamBonus = 0;
                 ammoDamBonus = 0;
-                
+
                 // but accuracy is important for this one
                 baseHit = 1;
                 exHitBonus += (skill_bump(SK_THROWING) * 7 / 2);
@@ -2356,10 +2356,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.setup_retrace();
         viewwindow(true, false);
         fire_beam(pbolt, NULL);
-        
+
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;
-                    
+
         // Player saw the item return
         if (!is_artefact(you.inv[throw_2]))
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);

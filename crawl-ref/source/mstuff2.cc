@@ -1110,7 +1110,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     const int          throw_energy = entry->energy_usage.missile;
     monster->speed_increment       -= throw_energy;
 
-    item_def item = mitm[hand_used];  // copy changed for venom launchers 
+    // Dropping item copy, since the launched item might be different.
+    item_def item = mitm[hand_used];
     item.quantity = 1;
 
     pbolt.range = 9;
@@ -1427,7 +1428,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
                     << (player_monster_visible(monster)?
                         monster->name(DESC_NOCAP_THE) : "where it came from")
                     << "!" << std::endl;
-        
+
         // Player saw the item return
         if (!is_artefact(item))
             set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);

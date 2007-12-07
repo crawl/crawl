@@ -1864,7 +1864,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         {
             // Get rid of newline at end of description, so that
             // either the wand "no charges left" or the meat chunk
-            // "unpleasent" description can follow on the same line.
+            // "unpleasant" description can follow on the same line.
             description.seekp(description.tellp() - (std::streamoff)1);
             description << " ";
         }

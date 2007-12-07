@@ -2490,7 +2490,7 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
              && (item->base_type != OBJ_MISSILES || coinflip()))
     {
         copy_item_to_grid( *item, x, y, 1 );
-    }                           // if (thing_throw == 2) ...
+    }
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
