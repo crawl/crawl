@@ -1841,7 +1841,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     {
         std::string db_name = item.name(DESC_DBNAME, true, false, false);
         std::string db_desc = getLongDescription(db_name);
-        
+
         if (db_desc == "")
         {
             if (item_type_known(item))

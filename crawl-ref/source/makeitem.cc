@@ -1749,7 +1749,7 @@ static void generate_missile_item(item_def& item, int force_type,
     // reduced quantity if special
     if (item.sub_type == MI_JAVELIN || get_ammo_brand( item ) == SPMSL_CURARE)
         item.quantity = random_range(2, 8);
-    else if (get_ammo_brand( item ) != SPMSL_NORMAL )
+    else if (get_ammo_brand( item ) != SPMSL_NORMAL)
         item.quantity = 1+random2(9) + random2(12) + random2(12);
     else
         item.quantity = 1+random2(9) + random2(12) + random2(12) + random2(15);
