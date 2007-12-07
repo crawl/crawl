@@ -3460,6 +3460,7 @@ static bool initialise(void)
     init_monster_symbols();
     init_properties();
     init_spell_descs();        // this needs to be way up top {dlb}
+    init_mon_name_cache();
 
     msg::initialise_mpr_streams();
 
@@ -3493,7 +3494,6 @@ static bool initialise(void)
     databaseSystemInit();
 
     init_feat_desc_cache();
-    init_mon_name_cache();
     init_spell_name_cache();
     init_item_name_cache();
     

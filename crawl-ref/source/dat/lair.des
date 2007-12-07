@@ -317,7 +317,6 @@ SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 CHANCE: 3
-PLACE: Lair:3
 COLOUR: . = green:20 / brown:15 / none
 MAP
    ....
