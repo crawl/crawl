@@ -2198,13 +2198,11 @@ void init_item_name_cache()
             unsigned       glyph;
             unsigned short colour;
             get_item_glyph(&item, &glyph, &colour);
-            destroy_item(o);
+            destroy_item(o, true);
             lowercase(name);
 
             if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
                 continue;
-//            else if (base_type == OBJ_MISSILES && name == "eggplant")
-//                continue;
             else if (item.base_type == OBJ_ARMOUR
                      && get_armour_slot( item ) == EQ_HELMET)
             {
@@ -2262,7 +2260,7 @@ void init_item_name_cache()
             item_names_by_glyph_cache[glyph].push_back(name);
         }
     }
-    destroy_item(o);
+    destroy_item(o, true);
 }
 
 item_types_pair item_types_by_name(std::string name)

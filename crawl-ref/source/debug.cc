@@ -44,6 +44,7 @@
 #include "describe.h"
 #include "direct.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -1645,6 +1646,161 @@ void debug_item_scan( void )
                   i, monster.x, monster.y );
         }   
     }
+}
+#endif
+
+//---------------------------------------------------------------
+//
+// debug_item_statistics
+//
+//---------------------------------------------------------------
+#ifdef WIZARD
+void debug_acquirement_stats(FILE *ostat)
+{
+    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    {
+        mpr("You must stand on a square which doesn't destroy items "
+            "in order to do this.");
+        return;
+    }
+
+    int p = get_item_slot(11);
+    if (p == NON_ITEM)
+    {
+        mpr("Too many items on level.");
+        return;
+    }
+    mitm[p].base_type = OBJ_UNASSIGNED;
+
+    mpr( "[a] Weapons [b] Armours [c] Jewellery      [d] Books" );
+    mpr( "[e] Staves  [f] Food    [g] Miscellaneous" );
+    mpr("What kind of item would you like to get stats on? ", MSGCH_PROMPT);
+
+    object_class_type type;
+    const int keyin = tolower( get_ch() );
+    switch ( keyin )
+    {
+    case 'a': type = OBJ_WEAPONS;    break;
+    case 'b': type = OBJ_ARMOUR;     break;
+    case 'c': type = OBJ_JEWELLERY;  break;
+    case 'd': type = OBJ_BOOKS;      break;
+    case 'e': type = OBJ_STAVES;     break;
+    case 'f': type = OBJ_FOOD;       break;
+    case 'g': type = OBJ_MISCELLANY; break;
+    default:
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    const int num_itrs = debug_prompt_for_int("How many iterations? ", true);
+
+    if (num_itrs == 0)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    int last_percent = 0;
+    int acq_calls    = 0;
+    int total_quant  = 0;
+
+    int subtype_quants[256];
+    memset(subtype_quants, 0, sizeof(subtype_quants));
+
+    for (int i = 0; i < num_itrs; i++)
+    {
+        if (kbhit())
+        {
+            mpr("Stopping early due to keyboard input.");
+            break;
+        }
+
+        int item_index = NON_ITEM;
+
+        if (!acquirement(type, AQ_WIZMODE, true, &item_index)
+            || item_index == NON_ITEM 
+            || !is_valid_item(mitm[item_index]))
+        {
+            mpr("Acquirement failed, stopping early.");
+            break;
+        }
+
+        item_def &item(mitm[item_index]);
+
+        acq_calls++;
+        total_quant += item.quantity;
+        subtype_quants[item.sub_type] += item.quantity;
+
+        destroy_item(item_index, true);
+
+        int curr_percent = acq_calls * 100 / num_itrs;
+        if (curr_percent > last_percent)
+        {
+            mesclr();
+            mprf("%2d%% done.", curr_percent);
+            last_percent = curr_percent;
+        }
+    }
+
+    if (total_quant == 0 || acq_calls == 0)
+    {
+        mpr("No items generated.");
+        return;
+    }
+
+    fprintf(ostat, "acquirement called %d times, total quantity = %d\n\n",
+            acq_calls, total_quant);
+
+    item_def item;
+    item.quantity  = 1;
+    item.base_type = type;
+
+    int max_width = 0;
+    for (int i = 0; i < 256; i++)
+    {
+        if (subtype_quants[i] == 0)
+            continue;
+
+        item.sub_type = i;
+
+        std::string name = item.name(DESC_DBNAME, true, true);
+
+        max_width = std::max(max_width, (int) name.length());
+    }
+
+    char format_str[80];
+    sprintf(format_str, "%%%ds: %%6.2f\n", max_width);
+
+    for (int i = 0; i < 256; i++)
+    {
+        if (subtype_quants[i] == 0)
+            continue;
+
+        item.sub_type = i;
+
+        std::string name = item.name(DESC_DBNAME, true, true);
+
+        fprintf(ostat, format_str, name.c_str(),
+                (float) subtype_quants[i] * 100.0 / (float) total_quant);
+    }
+    fprintf(ostat, "----------------------\n");
+}
+
+void debug_item_statistics( void )
+{
+    FILE *ostat = fopen("items.stat", "a");
+
+    if (!ostat)
+    {
+#ifndef DOS
+        mprf("Can't write items.stat: %s", strerror(errno));
+#endif
+        return;
+    }
+
+    debug_acquirement_stats(ostat);
+
+    fclose(ostat);
 }
 #endif
 

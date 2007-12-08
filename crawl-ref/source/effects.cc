@@ -923,6 +923,19 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             type_wanted = OBJ_RANDOM;
         }
 
+        // Do this here, before acquirement()'s call to can_wear_armour(),
+        // so that caps will be just as common as helmets for those
+        // that can't wear helmets.
+        if (type_wanted == ARM_HELMET
+            && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
+                || player_genus(GENPC_DRACONIAN)
+                || you.species == SP_KENKU
+                || you.species == SP_SPRIGGAN
+                || you.mutation[MUT_HORNS]))
+        {
+            type_wanted = ARM_CAP;
+        }
+
         // Now we'll randomly pick a body armour (light only in the
         // case of ARM_ROBE).  Unlike before, now we're only giving
         // out the finished products here, never the hides.  -- bwr
@@ -1312,12 +1325,19 @@ static int find_acquirement_subtype(object_class_type class_wanted,
     return (type_wanted);
 }
 
-bool acquirement(object_class_type class_wanted, int agent)
+bool acquirement(object_class_type class_wanted, int agent,
+                 bool quiet, int* item_index)
 {
-    int thing_created = 0;
+    int thing_created = NON_ITEM;
+
+    if (item_index == NULL)
+        item_index = &thing_created;
+
+    *item_index = NON_ITEM;
 
     while (class_wanted == OBJ_RANDOM)
     {
+        ASSERT(!quiet);
         mesclr();
         mpr( "[a] Weapon  [b] Armour  [c] Jewellery      [d] Book" );
         mpr( "[e] Staff   [f] Food    [g] Miscellaneous  [h] Gold" );
@@ -1341,11 +1361,12 @@ bool acquirement(object_class_type class_wanted, int agent)
     if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
         // how sad (and stupid)
-        if (!silenced(you.pos()))
+        if (!silenced(you.pos()) && !quiet)
             mprf(MSGCH_SOUND, 
                  grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
 
         item_was_destroyed(mitm[igrd[you.x_pos][you.y_pos]], NON_MONSTER);
+        *item_index = NON_ITEM;
     }
     else
     {
@@ -1404,7 +1425,9 @@ bool acquirement(object_class_type class_wanted, int agent)
 
         if (thing_created == NON_ITEM)
         {
-            mpr("The demon of the infinite void smiles upon you.");
+            if (!quiet)
+                mpr("The demon of the infinite void smiles upon you.");
+            *item_index = NON_ITEM;
             return (false);
         }
 
@@ -1553,35 +1576,6 @@ bool acquirement(object_class_type class_wanted, int agent)
                     thing.plus2 = std::max(static_cast<int>(thing.plus2), 0);
             }
         }
-        else if (thing.base_type == OBJ_ARMOUR
-                 && !is_fixed_artefact( thing )
-                 && !is_unrandom_artefact( thing ))
-        {
-            // HACK: make unwearable hats and boots wearable
-            // Note: messing with fixed artefacts is probably very bad.
-            switch (thing.sub_type)
-            {
-            case ARM_HELMET:
-                if ((get_helmet_type(thing) == THELM_HELM
-                        || get_helmet_type(thing) == THELM_HELMET)
-                    && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
-                        || player_genus(GENPC_DRACONIAN)
-                        || you.species == SP_KENKU
-                        || you.species == SP_SPRIGGAN
-                        || you.mutation[MUT_HORNS]))
-                {
-                    // turn it into a cap or wizard hat
-                    set_helmet_type(thing, 
-                                    coinflip() ? THELM_CAP : THELM_WIZARD_HAT);
-
-                    thing.colour = random_colour();
-                }
-                break;
-
-            default:
-                break;
-            }
-        }
 
         move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
@@ -1590,9 +1584,11 @@ bool acquirement(object_class_type class_wanted, int agent)
         // but we're checking it anyways. -- bwr
         if (thing_created != NON_ITEM)
         {
-            canned_msg(MSG_SOMETHING_APPEARS);
+            if (!quiet)
+                canned_msg(MSG_SOMETHING_APPEARS);
             origin_acquired(mitm[thing_created], agent);
         }
+        *item_index = thing_created;
     }
 
     // Well, the item may have fallen in the drink, but the intent is 

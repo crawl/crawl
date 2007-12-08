@@ -1785,6 +1785,7 @@ static void list_wizard_commands()
                        "Ctrl-F : combat stats (monster vs PC)\n"
                        "h/H    : heal yourself (super-Heal)\n"
                        "i/I    : identify/unidentify inventory\n"
+                       "Ctrl-I : item generation stats\n"
                        "l      : make entrance to labyrinth\n"
                        "L      : place a vault by name\n"
                        "m/M    : create monster by number/name\n"
@@ -1793,11 +1794,11 @@ static void list_wizard_commands()
                        "P      : make a portal (i.e., bazaars)\n"
                        "r      : change character's species\n"
                        "s      : gain 20000 skill points\n"
-                       "S      : set skill to level\n"
-                       "t      : tweak object properties\n",
+                       "S      : set skill to level\n",
                        true, true);
 
     cols.add_formatted(1, 
+                       "t      : tweak object properties\n"
                        "T      : make a trap\n"
                        "v      : show gold value of an item\n"
                        "x      : gain an experience level\n"

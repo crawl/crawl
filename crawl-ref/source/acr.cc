@@ -859,6 +859,10 @@ static void handle_wizard_command( void )
         }
         break;
 
+    case CONTROL('I'):
+        debug_item_statistics();
+        break;
+
     case 'X':
         xom_acts(abs(you.piety - 100));
         break;
