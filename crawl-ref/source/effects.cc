@@ -665,7 +665,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
 }                               // end random_uselessness()
 
 static int find_acquirement_subtype(object_class_type class_wanted,
-                                    int &unique)
+                                    int &quantity)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
     
@@ -709,7 +709,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             // but it's easier to just give them a potion of blood
             // class type is set elsewhere
             type_wanted = POT_BLOOD;
-            unique = 2 + random2(4);
+            quantity = 2 + random2(4);
         }
         else 
         {
@@ -732,13 +732,12 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             }
         }
 
-        // quantity is handled by unique for food
-        unique = 3 + random2(5);
+        quantity = 3 + random2(5);
 
         // giving more of the lower food value items
         if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
         {
-            unique += random2avg(10, 2);
+            quantity += random2avg(10, 2);
         }
     }
     else if (class_wanted == OBJ_WEAPONS)
@@ -860,13 +859,6 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         // OBJ_RANDOM is body armour and handled below
         type_wanted = (coinflip()) ? OBJ_RANDOM : ARM_SHIELD + random2(5);
 
-        // mutation specific problems (horns allow caps)
-        if ((type_wanted == ARM_BOOTS && !player_has_feet())
-            || (you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES))
-        {
-            type_wanted = OBJ_RANDOM;
-        }
-
         // some species specific fitting problems
         switch (you.species)
         {
@@ -886,7 +878,9 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         case SP_UNK1_DRACONIAN:
         case SP_BASE_DRACONIAN:
         case SP_SPRIGGAN:
-            if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS)
+            if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS
+                || type_wanted == ARM_CENTAUR_BARDING
+                || type_wanted == ARM_NAGA_BARDING)
             {
                 type_wanted = ARM_ROBE;  // no heavy armour
             }
@@ -903,8 +897,30 @@ static int find_acquirement_subtype(object_class_type class_wanted,
             }
             break;
 
-        default:
+        case SP_NAGA:
+            if (type_wanted == ARM_BOOTS || type_wanted == ARM_CENTAUR_BARDING)
+                type_wanted = ARM_NAGA_BARDING;
             break;
+
+        case SP_CENTAUR:
+            if (type_wanted == ARM_BOOTS || type_wanted == ARM_NAGA_BARDING)
+                type_wanted = ARM_CENTAUR_BARDING;
+            break;
+
+        default:
+            if (type_wanted == ARM_CENTAUR_BARDING 
+                || type_wanted == ARM_NAGA_BARDING)
+            {
+                type_wanted = ARM_BOOTS;
+            }
+            break;
+        }
+
+        // mutation specific problems (horns allow caps)
+        if ((type_wanted == ARM_BOOTS && !player_has_feet())
+            || (you.has_claws(false) >= 3 && type_wanted == ARM_GLOVES))
+        {
+            type_wanted = OBJ_RANDOM;
         }
 
         // Now we'll randomly pick a body armour (light only in the
@@ -1333,16 +1349,15 @@ bool acquirement(object_class_type class_wanted, int agent)
     }
     else
     {
+        int quant = 1;
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
-            int unique = 1;
-            int type_wanted = find_acquirement_subtype(class_wanted, unique);
+            int type_wanted = find_acquirement_subtype(class_wanted, quant);
             
             // clobber class_wanted for vampires
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
                 class_wanted = OBJ_POTIONS;
 
-            // BCR - unique is now used for food quantity.
             thing_created = items( 1, class_wanted, type_wanted, true, 
                                    MAKE_GOOD_ITEM, 250 );
 
@@ -1396,6 +1411,12 @@ bool acquirement(object_class_type class_wanted, int agent)
         // easier to read this way
         item_def& thing(mitm[thing_created]);
 
+        // give some more gold
+        if ( class_wanted == OBJ_GOLD )
+            thing.quantity += 150;
+        else if (quant > 1)
+            thing.quantity = quant;
+    
         // remove curse flag from item
         do_uncurse_item( thing );
 
@@ -1554,37 +1575,6 @@ bool acquirement(object_class_type class_wanted, int agent)
                                     coinflip() ? THELM_CAP : THELM_WIZARD_HAT);
 
                     thing.colour = random_colour();
-                }
-                break;
-
-            case ARM_BOOTS:
-                if (you.species == SP_NAGA)
-                    thing.sub_type = ARM_NAGA_BARDING;
-                else if (you.species == SP_CENTAUR)
-                    thing.sub_type = ARM_CENTAUR_BARDING;
-
-                // fix illegal barding ego types caused by above hack
-                if (thing.sub_type != ARM_BOOTS &&
-                    get_armour_ego_type(thing) == SPARM_RUNNING)
-                {
-                    set_item_ego_type( thing, OBJ_ARMOUR, SPARM_NORMAL );
-                }
-                break;
-
-            case ARM_NAGA_BARDING:
-            case ARM_CENTAUR_BARDING:
-                // make barding appropriate
-                if (you.species == SP_NAGA )
-                    thing.sub_type = ARM_NAGA_BARDING;
-                else if ( you.species == SP_CENTAUR )
-                    thing.sub_type = ARM_CENTAUR_BARDING;
-                else
-                {
-                    thing.sub_type = ARM_BOOTS;
-                    // Fix illegal ego types
-                    if (get_armour_ego_type(thing) == SPARM_COLD_RESISTANCE ||
-                        get_armour_ego_type(thing) == SPARM_FIRE_RESISTANCE)
-                        set_item_ego_type(thing, OBJ_ARMOUR, SPARM_NORMAL);
                 }
                 break;
 
