@@ -1694,6 +1694,10 @@ static special_missile_type determine_missile_brand(const item_def& item,
             rc = SPMSL_NORMAL;
     }
 
+    // Javelins can be returning.
+    if (item.sub_type == MI_JAVELIN && one_chance_in(25))
+        rc = SPMSL_RETURNING;
+
     // orcish ammo gets poisoned a lot more often -- in the original
     // code it was poisoned every time!?
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
@@ -1747,8 +1751,12 @@ static void generate_missile_item(item_def& item, int force_type,
                        determine_missile_brand(item, item_level) );
 
     // reduced quantity if special
-    if (item.sub_type == MI_JAVELIN || get_ammo_brand( item ) == SPMSL_CURARE)
+    if (item.sub_type == MI_JAVELIN ||
+        get_ammo_brand( item ) == SPMSL_CURARE ||
+        get_ammo_brand( item ) == SPMSL_RETURNING)
+    {
         item.quantity = random_range(2, 8);
+    }
     else if (get_ammo_brand( item ) != SPMSL_NORMAL)
         item.quantity = 1+random2(9) + random2(12) + random2(12);
     else
