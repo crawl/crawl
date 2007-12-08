@@ -354,7 +354,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_ICE,                         //    2
     SPMSL_POISONED,                    //    3
     SPMSL_POISONED_II,                 //    4 - unused
-    SPMSL_CURARE                       //    5
+    SPMSL_CURARE,                      //    5
+    SPMSL_RETURNING                    //    6
 };
 
 enum special_ring_type // jewellery mitm[].special values

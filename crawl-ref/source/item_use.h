@@ -170,6 +170,8 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet = false );
 bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0,
               dist *target = NULL);
 
+bool thrown_object_destroyed( item_def *item, int x, int y, bool returning );
+
 void inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher,
                              const item_def *shield);

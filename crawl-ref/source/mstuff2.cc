@@ -1085,7 +1085,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // XXX: ugly hack, but avoids adding dynamic allocation to this code
     char throw_buff[ ITEMNAME_SIZE ];
 
-    bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING);
+    bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING ||
+                      get_ammo_brand(mitm[hand_used]) == SPMSL_RETURNING);
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -1418,6 +1419,14 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     fire_beam( pbolt, really_returns ? NULL : &item );
 
+    // The item can be destroyed before returning.
+    if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target_x,
+                                                       pbolt.target_y, true,
+                                                       pbolt.beam_source))
+    {
+        really_returns = false;
+    }
+
     if ( really_returns )
     {
         // Fire beam in reverse
@@ -1440,6 +1449,31 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     return (true);
 }                               // end mons_throw()
+
+bool mons_thrown_object_destroyed( item_def *item, int x, int y,
+                                   bool returning, int midx )
+{
+    ASSERT( item != NULL );
+
+    bool destroyed = ((item->base_type != OBJ_MISSILES ||
+                       item->sub_type != MI_THROWING_NET) && coinflip());
+    bool hostile_grid = grid_destroys_items(grd[x][y]);
+
+    // Non-returning items thrown into item-destroying grids are always
+    // destroyed.  Returning items are only destroyed if they would have
+    // been randomly destroyed anyway.
+    if (returning && !destroyed)
+        hostile_grid = false;
+
+    if (hostile_grid)
+    {
+        // No destruction sound here.  Too much message spam otherwise.
+        item_was_destroyed(*item, midx);
+        destroyed = true;
+    }
+
+    return destroyed;
+}
 
 // should really do something about mons_hit, but can't be bothered
 void spore_goes_pop(struct monsters *monster)

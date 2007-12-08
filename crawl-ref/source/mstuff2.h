@@ -65,6 +65,9 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast);
  * *********************************************************************** */
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used);
 
+bool mons_thrown_object_destroyed( item_def *item, int x, int y,
+                                   bool returning, int midx );
+
 // last updated 07jan2001 (gdl)
 /* ***********************************************************************
  * called from: monstuff

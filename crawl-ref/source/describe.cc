@@ -1399,6 +1399,10 @@ static std::string describe_ammo( const item_def &item )
         case SPMSL_CURARE:
             description += "$It is tipped with asphyxiating poison. ";
             break;
+        case SPMSL_RETURNING:
+            description += "$A skilled user can throw it in such a way "
+                "that it will return to its owner. ";
+            break;
         }
     }
 

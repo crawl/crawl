@@ -1118,6 +1118,9 @@ std::string item_def::name_aux( description_level_type desc,
             case SPMSL_POISONED:
             case SPMSL_CURARE:
                 break;
+            case SPMSL_RETURNING:
+                buff << ((terse) ? " (return)" : " of returning");
+                break;
             default:
                 buff << " (buggy)";
             }

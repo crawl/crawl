@@ -2068,8 +2068,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // CALCULATIONS FOR THROWN WEAPONS
     if (projected == LRET_THROWN)
     {
-        returning = (get_weapon_brand(item) == SPWPN_RETURNING && !teleport &&
-                     !one_chance_in(1 + skill_bump(SK_THROWING)));
+        returning = ((get_weapon_brand(item) == SPWPN_RETURNING ||
+                      get_ammo_brand(item) == SPMSL_RETURNING) &&
+                          !teleport &&
+                          !one_chance_in(1 + skill_bump(SK_THROWING)));
         baseHit = 0;
 
         // missiles only use inv_plus
@@ -2348,6 +2350,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         // Dropping item copy, since the launched item might be different.
         fire_beam(pbolt, returning ? NULL : &item);
+
+        // The item can be destroyed before returning.
+        if (returning && thrown_object_destroyed(&item, pbolt.target_x,
+                                                 pbolt.target_y, true))
+        {
+            returning = false;
+        }
     }
 
     if ( returning )
@@ -2378,6 +2387,59 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     return (hit);
 }                               // end throw_it()
+
+bool thrown_object_destroyed( item_def *item, int x, int y, bool returning )
+{
+    ASSERT( item != NULL );
+
+    int chance = 0;
+    bool destroyed = false;
+    bool hostile_grid = false;
+
+    if (item->base_type == OBJ_MISSILES)
+    {
+        // [dshaligram] Removed influence of Throwing on ammo preservation.
+        // The effect is nigh impossible to perceive.
+        switch (item->sub_type)
+        {
+        case MI_NEEDLE:
+            chance = (get_ammo_brand(*item) == SPMSL_CURARE ? 3 : 6);
+            break;
+        case MI_SLING_BULLET:
+        case MI_STONE:  chance = 4; break;
+        case MI_DART:   chance = 3; break;
+        case MI_ARROW:  chance = 4; break;
+        case MI_BOLT:   chance = 4; break;
+        case MI_JAVELIN: chance = 10; break;
+        case MI_THROWING_NET: break; // doesn't get destroyed by throwing
+
+        case MI_LARGE_ROCK:
+        default:
+            chance = 25;
+            break;
+        }
+    }
+
+    destroyed = (chance == 0) ? false : one_chance_in(chance);
+    hostile_grid = grid_destroys_items(grd[x][y]);
+
+    // Non-returning items thrown into item-destroying grids are always
+    // destroyed.  Returning items are only destroyed if they would have
+    // been randomly destroyed anyway.
+    if (returning && !destroyed)
+        hostile_grid = false;
+
+    if (hostile_grid)
+    {
+        if (player_can_hear(x, y))
+            mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
+
+        item_was_destroyed(*item, NON_MONSTER);
+        destroyed = true;
+    }
+
+    return destroyed;
+}
 
 void jewellery_wear_effects(item_def &item)
 {

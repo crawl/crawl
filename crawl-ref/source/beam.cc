@@ -39,6 +39,7 @@
 #include "delay.h"
 #include "effects.h"
 #include "enum.h"
+#include "item_use.h"
 #include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
@@ -2433,62 +2434,25 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
         return;
 
-    if ( grid_destroys_items(grd[x][y]) )
+    if ((YOU_KILL(beam.thrower) &&
+             !thrown_object_destroyed(item, x, y, false)) ||
+        (MON_KILL(beam.thrower) &&
+             !mons_thrown_object_destroyed(item, x, y, false,
+                                           beam.beam_source)))
     {
-        // Too much message spam otherwise
-        if ( YOU_KILL(beam.thrower) && player_can_hear(x, y) )
-            mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
-
-        item_was_destroyed(*item, beam.beam_source);
-        return;
-    }
-
-    // doesn't get destroyed by throwing
-    if (item->sub_type == MI_THROWING_NET)
-    {
-        // player or monster on position is caught in net
-        if (you.x_pos == x && you.y_pos == y && you.attribute[ATTR_HELD]
-            || mgrd[x][y] != NON_MONSTER && mons_is_caught(&menv[mgrd[x][y]]))
+        if (item->sub_type == MI_THROWING_NET)
         {
-            // if no trapping net found mark this one
-            if (get_trapping_net(x,y, true) == NON_ITEM)
-                set_item_stationary(*item);
-        }
-        
-        copy_item_to_grid( *item, x, y, 1 );
-        return;
-    }
-
-    if (YOU_KILL(beam.thrower)) // you threw it
-    {
-        int chance;
-
-        // [dshaligram] Removed influence of Throwing on ammo preservation.
-        // The effect is nigh impossible to perceive.
-        switch (item->sub_type)
-        {
-        case MI_NEEDLE:
-            chance = (get_ammo_brand(*item) == SPMSL_CURARE? 3 : 6);
-            break;
-        case MI_SLING_BULLET:
-        case MI_STONE:  chance = 4; break;
-        case MI_DART:   chance = 3; break;
-        case MI_ARROW:  chance = 4; break;
-        case MI_BOLT:   chance = 4; break;
-        case MI_JAVELIN: chance = 10; break;
-
-        case MI_LARGE_ROCK:
-        default:
-            chance = 25;
-            break;
+            // player or monster on position is caught in net
+            if (you.x_pos == x && you.y_pos == y && you.attribute[ATTR_HELD]
+                || mgrd[x][y] != NON_MONSTER &&
+                    mons_is_caught(&menv[mgrd[x][y]]))
+            {
+                // if no trapping net found mark this one
+                if (get_trapping_net(x,y, true) == NON_ITEM)
+                    set_item_stationary(*item);
+            }
         }
 
-        if (item->base_type != OBJ_MISSILES || !one_chance_in(chance))
-            copy_item_to_grid( *item, x, y, 1 );
-    }
-    else if (MON_KILL(beam.thrower)
-             && (item->base_type != OBJ_MISSILES || coinflip()))
-    {
         copy_item_to_grid( *item, x, y, 1 );
     }
 }
