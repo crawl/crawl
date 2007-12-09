@@ -2706,6 +2706,26 @@ void level_change(bool skip_ability_increase)
     while (you.experience_level < 27
             && you.experience > exp_needed(you.experience_level + 2))
     {
+        bool skip_more = false;
+
+        if (!skip_ability_increase)
+        {
+            if (crawl_state.is_replaying_keys() 
+                || crawl_state.is_repeating_cmd())
+            {
+                crawl_state.cancel_cmd_repeat();
+                crawl_state.cancel_cmd_again();
+            }
+
+            if (is_processing_macro())
+                flush_input_buffer(FLUSH_ABORT_MACRO);
+        }
+        else if (crawl_state.is_replaying_keys()
+                 || crawl_state.is_repeating_cmd() || is_processing_macro())
+        {
+            skip_more = true;
+        }
+
         int hp_adjust = 0;
         int mp_adjust = 0;
 
@@ -2715,7 +2735,8 @@ void level_change(bool skip_ability_increase)
         {
             mprf(MSGCH_INTRINSIC_GAIN,
                  "Welcome back to level %d!", you.experience_level );
-            more();
+            if (!skip_more)
+                more();
 
             // Gain back the hp and mp we lose in lose_level().  -- bwr
             inc_hp( 4, true );
@@ -2725,7 +2746,8 @@ void level_change(bool skip_ability_increase)
         {
             mprf(MSGCH_INTRINSIC_GAIN, "You are now a level %d %s!",
                  you.experience_level, you.class_name );
-            more();
+            if (!skip_more)
+                more();
 
             int brek = 0;
 
