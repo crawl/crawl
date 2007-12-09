@@ -1306,10 +1306,7 @@ void restore_game(void)
     char minorVersion = 0;
 
     if (!determine_version(charf, majorVersion, minorVersion))
-    {
-        perror("\nSavefile appears to be invalid.\n");
-        end(-1);
-    }
+        end(-1, false, "\nSavefile appears to be invalid.\n");
 
     restore_version(charf, majorVersion, minorVersion);
 
