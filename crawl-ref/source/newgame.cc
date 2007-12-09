@@ -3439,6 +3439,11 @@ bool give_items_skills()
             newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
             if (you.species == SP_VAMPIRE && coinflip())
                 you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
+            if (player_genus(GENPC_DRACONIAN) || you.species == SP_MUMMY)
+                newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+
+            if (player_genus(GENPC_DRACONIAN) && !choose_weapon())
+                return (false);
         }
         else if (you.species == SP_KOBOLD)
         {
