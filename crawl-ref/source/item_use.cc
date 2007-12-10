@@ -179,8 +179,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 {
-    int item_slot = 0;
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -198,26 +196,31 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         you.duration[DUR_SURE_BLADE] = 0;
     }
 
+    int item_slot = 0;          // default is 'a'
+
     if (auto_wield)
     {
-        if (you.equip[EQ_WEAPON] == 0)  // ie. weapon is currently 'a'
-            item_slot = 1;
-        else
-            item_slot = 0;
-        if (slot != -1) item_slot = slot;
+        if ( item_slot == you.equip[EQ_WEAPON] )
+            item_slot = 1;      // backup is 'b'
+
+        if (slot != -1)         // allow external override
+            item_slot = slot;
     }
 
-    bool force_unwield = 
-                you.inv[item_slot].base_type != OBJ_WEAPONS
-                   && you.inv[item_slot].base_type != OBJ_MISSILES
-                   && you.inv[item_slot].base_type != OBJ_STAVES;
+    // If the swap slot has a bad (but valid) item in it,
+    // the swap will be to bare hands.
+    const bool good_swap = 
+        you.inv[item_slot].base_type == OBJ_WEAPONS
+        || you.inv[item_slot].base_type == OBJ_STAVES
+        || (you.inv[item_slot].base_type == OBJ_MISCELLANY
+            && you.inv[item_slot].sub_type != MISC_RUNE_OF_ZOT);
 
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
-    if (!auto_wield || !is_valid_item(you.inv[item_slot]) || force_unwield)
+    if (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap)
     {
         if (!auto_wield)
             item_slot = prompt_invent_item(
