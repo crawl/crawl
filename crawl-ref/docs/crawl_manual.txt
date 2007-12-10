@@ -565,7 +565,7 @@ There are several general keys for item management:
 
 Item usage:
 -----------
-You pick items up with the 'g'et or ',' (comma) command, and drop them 
+You pick up items with the 'g'et or ',' (comma) command, and drop them 
 with the 'd'rop command. When you are given a prompt like "drop which 
 item?", if you type a number before the letter of the item, you will 
 drop that quantity of the item (similarly when picking up). Note that 
@@ -729,7 +729,7 @@ switch to an uncursed butchering tool when you type 'D', and will also
 switch back to your previous weapon unless you get interrupted while
 butchering your food.
 
-Some classes are less fastidious about their food: Trolls can use
+Some species are less fastidious about their food: Trolls can use
 their claws, so do not need a cutting device. Also Trolls, Orcs,
 Ogres, and Kobolds care less (in different degrees) about the quality
 of the corpse. Ogres, Trolls and Kobolds are happy to eat raw meat at
@@ -854,6 +854,25 @@ does even a bit better whenever using armour or weapons of his own kind.
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a 
 character of these species might find a Centaur or Naga barding.
 
+Artefacts:
+----------
+Weapons, armour and jewellery items can be artefacts. These come in two 
+flavours: predefined artefacts ('fixedarts'), and randomly created ones
+('randarts'). Artefacts will always carry unusual names, for example 
+"golden sword" or "shimmering scale mail". Also, artefacts cannot 
+be modified in any way, including enchantments. 
+Apart from that, otherwise mundane items can get one special property.
+These are called 'ego items', and examples are: boots of running, a weapon
+of flaming, a helmet of see invisible, and so on. Note that such items 
+can be modified, and thus are subject to corrosion and enchanting scrolls. 
+All ego items are noted with special adjectives but not all items noted in 
+this way need have a special property (they often have some enchantment, 
+though):
+ weapons: glowing, runed;
+ metal armours: shiny;
+ leather armours, animal skins: dyed;
+ other armours: runed, embroidered.
+
 
 ------------------------------------------------------------------------
 H.                      SPELLCASTING
@@ -897,10 +916,14 @@ uppercase letters to spells. Some spells, for example most damage
 dealing ones, require a target. See the next section I. for details on
 how to target.
 
+Most spells have caps on their effects: no matter how intelligent and 
+proficient you are, there is a limit for the damage you can achieve
+with Magic Darts.
+
 High level spells are difficult to cast, and you may miscast them every
 once in a while (resulting in a waste of magic and possibly dangerous 
 side-effects). Your chance of failing to cast a spell properly depends 
-on your skills, your intelligence, the level of the spell. and whether 
+on your skills, your intelligence, the level of the spell, and whether 
 you are wearing heavy armour. Failing to cast a spell exercises your 
 spell skills, but not by as much as casting it successfully.
 
@@ -1546,8 +1569,8 @@ on the part of the player.
       invoking things than most other draconians.
 
   Pale Draconians are slightly biased towards fire magic, and have no 
-      restrictions otherwise. They breathe steam and have, like their 
-      Purple cousins, a slight advantage at Evocations.
+      restrictions otherwise. They breathe steam and, like their 
+      Purple cousins, have a slight advantage at Evocations.
 
 Centaurs:
 ---------
@@ -1566,7 +1589,7 @@ Demigods:
 Demigods are mortals (humans, orcs, or elves, for example) with some
 divine or angelic ancestry, however distant; they can be created by a
 number of processes including magical experiments and the time-honoured
-practise of interplanar miscegenation.
+practice of interplanar miscegenation.
 
 Demigods look more or less like members of their mortal part's race, but
 have excellent attributes (str, int, dex) and are extremely robust; they 
@@ -1763,7 +1786,7 @@ Priests:
 Priests serve either Zin, the ancient and revered God of Law, or the
 rather less pleasant Death-God Yredelemnul. Hill Orcs may choose to
 follow the Orc god Beogh instead. Although priests enter the dungeon 
-with a mace (as well as a priestly robe and a few healing  potions), 
+with a mace (as well as a priestly robe and a few healing potions), 
 this is purely the result of an archaic tradition, the reason for which 
 has been lost in the mists of time; Priests are not in any way 
 restricted in their choice of weapon skills.
@@ -1940,7 +1963,7 @@ Spellcasting is the basic skill for magic use, and affects your
 reserves of magical energy (MP) in the same way that Fighting affects 
 your hit points. Every time you increase the spellcasting skill you gain
 some magic points and spell levels. Spellcasting is a very difficult 
-skill to learn, and requires a large amount of practise and experience.
+skill to learn, and requires a large amount of practice and experience.
 
 Only those characters with at least one magic skill at level one or 
 above can learn magical spells. If your character has no magic skills,
@@ -1978,7 +2001,8 @@ Evasion modifier. Usually, all armours with EV penalty of 0 or -1 are
 considered light. All others are considered heavy except for Elven 
 armour (which is light). Walking and fighting in heavy armour will train
 the Armour skill. If the Armour skill is high enough to offset the
-EV penalty, even a heavy armour will train Dodging.
+EV penalty, even a heavy armour will train Dodging. Also, Armour skill
+helps mitigating the bad effects of heavy armour on spellcasting.
 
 Dodging:
 --------
@@ -2225,7 +2249,7 @@ level_map_title option to get rid of that.
         +               Scroll level map down
         Direction       Move cursor.
   Shift-Direction       Move cursor in bigger steps (check the option 
-  or / Direction        level_map_cursor_step).
+   or / Direction       level_map_cursor_step).
         .               Travel to cursor (also Enter, Del and , and ;)   
                         (if the cursor is on the character, move cursor
                         to last travel destination instead).
@@ -2285,7 +2309,7 @@ work, with the exception of Space (which fires).
         Esc or x        Stop targeting.
         ?               Special help screen.
         . or Enter      Fire at cursor direction (also Del and Space).
-        !               Fire at cursor position, and stops there with 
+        !               Fire at cursor position, and stop there with 
                         slightly reduced impact. This can be useful to 
                         avoid damaging pets, or to attack submerged 
                         water creatures. 
@@ -2306,7 +2330,7 @@ work, with the exception of Space (which fires).
                         when wielding a bow, Ctrl-N and Ctrl-P will 
                         cycle through all stacks of arrows in your 
                         inventory.
-     Shift-Direction    Fire straight in that direction. You can go 
+  Shift-Direction       Fire straight in that direction. You can go 
                         back to the old targeting mode (allowing 
                         straight firing by pressing just the direction 
                         key) using the option target_unshifted_dirs.
