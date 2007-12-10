@@ -697,8 +697,11 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (weapon_skill(item) == SK_POLEARMS)
+            if (weapon_skill(item) == SK_POLEARMS
+                || item.sub_type == WPN_BLOWGUN)
+            {
                 return;
+            }
             break;
         case OBJ_ARMOUR:
             if (item.sub_type == ARM_ROBE
@@ -709,7 +712,8 @@ void set_equip_race( item_def &item, unsigned long flags )
             }
             break;
         case OBJ_MISSILES:
-            if (item.sub_type == MI_ARROW
+            if (item.sub_type == MI_NEEDLE
+                || item.sub_type == MI_ARROW
                 || item.sub_type == MI_JAVELIN)
             {
                 return;

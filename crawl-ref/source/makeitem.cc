@@ -1850,23 +1850,25 @@ static item_status_flag_type determine_armour_race(const item_def& item,
         rc = ISFLAG_ELVEN;
         break;
 
-    case MAKE_ITEM_DWARVEN: 
+    case MAKE_ITEM_DWARVEN:
         rc = ISFLAG_DWARVEN;
         break;
 
-    case MAKE_ITEM_ORCISH: 
+    case MAKE_ITEM_ORCISH:
         rc = ISFLAG_ORCISH;
         break;
-        
+
     case MAKE_ITEM_RANDOM_RACE:
         if ( coinflip() )
             break;
-          
+
         switch (item.sub_type)
         {
         case ARM_SHIELD:
         case ARM_BUCKLER:
-        case ARM_LARGE_SHIELD:            
+        case ARM_LARGE_SHIELD:
+            if (one_chance_in(4))
+                rc = ISFLAG_ORCISH;
             if (one_chance_in(4))
                 rc = ISFLAG_ELVEN;
             if (one_chance_in(3))
@@ -1887,8 +1889,6 @@ static item_status_flag_type determine_armour_race(const item_def& item,
                 rc = ISFLAG_ELVEN;
             break;
 
-        case ARM_NAGA_BARDING:
-        case ARM_CENTAUR_BARDING:
         case ARM_BOOTS:
             if (one_chance_in(4))
                 rc = ISFLAG_ORCISH;
@@ -1916,6 +1916,8 @@ static item_status_flag_type determine_armour_race(const item_def& item,
             break;
 
         case ARM_ROBE:
+            if (one_chance_in(6))
+                rc = ISFLAG_ORCISH;
             if (one_chance_in(4))
                 rc = ISFLAG_ELVEN;
             break;
