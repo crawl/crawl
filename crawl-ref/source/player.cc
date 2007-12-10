@@ -1214,7 +1214,8 @@ bool player_control_teleport(bool calc_unid) {
 
 int player_res_torment(bool)
 {
-    return (you.mutation[MUT_TORMENT_RESISTANCE]);
+    return (you.mutation[MUT_TORMENT_RESISTANCE] ||
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
 }
 
 // funny that no races are susceptible to poisons {dlb}
