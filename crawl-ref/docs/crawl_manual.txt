@@ -2002,7 +2002,7 @@ considered light. All others are considered heavy except for Elven
 armour (which is light). Walking and fighting in heavy armour will train
 the Armour skill. If the Armour skill is high enough to offset the
 EV penalty, even a heavy armour will train Dodging. Also, Armour skill
-helps mitigating the bad effects of heavy armour on spellcasting.
+helps mitigate the bad effects of heavy armour on spellcasting.
 
 Dodging:
 --------
