@@ -3067,28 +3067,6 @@ static bool find_subtype_by_name(item_def &item,
     item.quantity  = 1;
     set_ident_flags( item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES );
 
-    if (base_type == OBJ_ARMOUR) 
-    {
-        if (name.find("wizard's hat") != std::string::npos)
-        {
-            item.sub_type = ARM_HELMET;
-            item.plus2 = THELM_WIZARD_HAT;
-        }
-        else if (name == "cap") // Don't search - too many possible collisions
-        {
-            item.sub_type = ARM_HELMET;
-            item.plus2 = THELM_CAP;
-        }
-        else if (name == "helm")  // Don't search.
-        {
-            item.sub_type = ARM_HELMET;
-            item.plus2 = THELM_HELM;
-        }
-    }
-
-    if (item.sub_type != OBJ_RANDOM)
-        return (true);
-
     int type_wanted = -1;
 
     for (int i = 0; i < ntypes; i++)

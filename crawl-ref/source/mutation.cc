@@ -1804,8 +1804,8 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
             mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
             if (you.equip[EQ_HELMET] != -1 &&
-                (get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_CAP ||
-                 get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_WIZARD_HAT))
+                (you.inv[you.equip[EQ_HELMET]].sub_type == ARM_CAP ||
+                 you.inv[you.equip[EQ_HELMET]].sub_type == ARM_WIZARD_HAT))
             {
                 break;          // horns don't push caps/wizard hats off
             }

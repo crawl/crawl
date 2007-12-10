@@ -1693,9 +1693,7 @@ void tutorial_describe_item(const item_def &item)
                         "and innate abilities.)";
                 wearable = false;
             }
-            else if (you.species == SP_MINOTAUR && item.sub_type == ARM_HELMET
-                     && get_helmet_type(item) != THELM_CAP
-                     && get_helmet_type(item) != THELM_WIZARD_HAT)
+            else if (you.species == SP_MINOTAUR && is_hard_helmet(item))
             {
                 ostr << "As a Minotaur you cannot wear helmets. "
                         "(Type <w>A<magenta> to see a list of your mutations "

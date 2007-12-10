@@ -845,9 +845,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         // it fits
         return (true);
     }
-    else if (sub_type == ARM_HELMET
-             && (get_helmet_type(item) == THELM_CAP
-                 || get_helmet_type(item) == THELM_WIZARD_HAT))
+    else if (sub_type == ARM_CAP || sub_type == ARM_WIZARD_HAT)
     {
         // caps & wiz hats always fit
         return (true);
@@ -881,9 +879,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             || (sub_type >= ARM_GLOVES
                 && sub_type <= ARM_BUCKLER)
             || sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || (sub_type == ARM_HELMET
-                && (get_helmet_type(item) == THELM_HELM
-                    || get_helmet_type(item) == THELM_HELMET)))
+            || is_hard_helmet(item))
         {
             if (verbose)
                mpr("This armour doesn't fit on your body.");
@@ -902,9 +898,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             || sub_type == ARM_SHIELD
             || sub_type == ARM_LARGE_SHIELD
             || sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || (sub_type == ARM_HELMET
-                && (get_helmet_type(item) == THELM_HELM
-                    || get_helmet_type(item) == THELM_HELMET)))
+            || is_hard_helmet(item))
         {
             if (verbose)
                mpr("This armour doesn't fit on your body.");

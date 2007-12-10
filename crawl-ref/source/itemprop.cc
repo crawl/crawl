@@ -126,7 +126,13 @@ static armour_def Armour_prop[NUM_ARMOURS] =
 
     { ARM_HELMET,               "helmet",                 1,  0,   80, 
         false, EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
+    { ARM_HELM,                 "helm",                   1,  0,   80, 
+        false, EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
+
     { ARM_CAP,                  "cap",                    0,  0,   40, 
+        true,  EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
+
+    { ARM_WIZARD_HAT,           "wizard hat",             0,  0,   40, 
         true,  EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
 
     // Note that barding size is compared against torso so it currently
@@ -745,81 +751,45 @@ void set_equip_desc( item_def &item, unsigned long flags )
 //
 // These functions handle the description and subtypes for helmets/caps
 //
-short get_helmet_type( const item_def &item )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR 
-            && get_armour_slot( item ) == EQ_HELMET );
-
-    return (item.plus2 & THELM_TYPE_MASK);
-}
-
 short get_helmet_desc( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_ARMOUR 
             && get_armour_slot( item ) == EQ_HELMET );
 
-    return (item.plus2 & THELM_DESC_MASK);
+    return item.plus2;
 }
 
-void set_helmet_type( item_def &item, short type )
+void set_helmet_desc( item_def &item, helmet_desc_type type )
 {
-    ASSERT( (type & ~THELM_TYPE_MASK) == 0 );
-    ASSERT( item.base_type == OBJ_ARMOUR 
-            && get_armour_slot( item ) == EQ_HELMET );
+    ASSERT( is_helmet(item) );
 
-    // make sure we have the right sub_type (to get properties correctly)
-    if (type == THELM_HELMET || type == THELM_HELM)
-        item.sub_type = ARM_HELMET;
-    else
-        item.sub_type = ARM_CAP;
-
-    item.plus2 &= ~THELM_TYPE_MASK; 
-    item.plus2 |= type;
-}
-
-void set_helmet_desc( item_def &item, short type )
-{
-    ASSERT( (type & ~THELM_DESC_MASK) == 0 );
-    ASSERT( item.base_type == OBJ_ARMOUR 
-            && get_armour_slot( item ) == EQ_HELMET );
-
-    const int helmtype = get_helmet_type(item);
-    if ((helmtype == THELM_CAP || helmtype == THELM_WIZARD_HAT) 
-            && type > THELM_DESC_PLUMED)
+    if ((item.sub_type == ARM_CAP || item.sub_type == ARM_WIZARD_HAT)
+        && type > THELM_DESC_PLUMED)
         type = THELM_DESC_PLAIN;
 
-    item.plus2 &= ~THELM_DESC_MASK; 
-    item.plus2 |= type;
+    item.plus2 = type;
+}
+
+bool is_helmet(const item_def& item)
+{
+    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
 }
 
 bool is_hard_helmet(const item_def &item)
 {
     return (item.base_type == OBJ_ARMOUR
-            && item.sub_type == ARM_HELMET
-            && (get_helmet_type(item) == THELM_HELM
-                || get_helmet_type(item) == THELM_HELMET));
+            && (item.sub_type == ARM_HELMET ||
+                item.sub_type == ARM_HELM));
 }
 
 void set_helmet_random_desc( item_def &item )
 {
-    ASSERT( item.base_type == OBJ_ARMOUR 
-            && get_armour_slot( item ) == EQ_HELMET );
-
-    item.plus2 &= ~THELM_DESC_MASK; 
+    ASSERT( is_helmet(item) );
 
     if (is_hard_helmet(item))
-        item.plus2 |= (random2(8) << 8);
+        item.plus2 = random2(THELM_NUM_DESCS);
     else 
-        item.plus2 |= (random2(5) << 8);
-
-}
-
-bool is_helmet_type( const item_def &item, short val )
-{
-    if (item.base_type != OBJ_ARMOUR || get_armour_slot( item ) != EQ_HELMET)
-        return (false);
-
-    return (get_helmet_type( item ) == val);
+        item.plus2 = random2(THELM_DESC_MAX_SOFT + 1);
 }
 
 // 
@@ -1002,21 +972,14 @@ bool armour_not_shiny( const item_def &item )
     case ARM_BOOTS:
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
-    case ARM_CAP:
     case ARM_LEATHER_ARMOUR:
     case ARM_STUDDED_LEATHER_ARMOUR:
     case ARM_ANIMAL_SKIN:
     case ARM_TROLL_HIDE:
     case ARM_TROLL_LEATHER_ARMOUR:
+    case ARM_CAP:
+    case ARM_WIZARD_HAT:
         return (true);
-
-    case ARM_HELMET:
-    {
-        const int helmtype = get_helmet_type(item);
-        return (helmtype == THELM_CAP || helmtype == THELM_WIZARD_HAT);
-    }
-    default:
-        break;
     }
 
     return (false);
@@ -1195,9 +1158,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_HELMET:
-            if (item.sub_type == ARM_CAP
-                    || get_helmet_type(item) == THELM_CAP
-                    || get_helmet_type(item) == THELM_WIZARD_HAT)
+            if (item.sub_type == ARM_CAP || item.sub_type == ARM_WIZARD_HAT)
                 break;
 
             if (you.species == SP_KENKU)
@@ -2337,10 +2298,13 @@ size_type item_size( const item_def &item )
         {
         case ARM_GLOVES:       
         case ARM_HELMET:
+        case ARM_HELM:
         case ARM_CAP:
+        case ARM_WIZARD_HAT:
         case ARM_BOOTS:
         case ARM_BUCKLER:
             // tiny armour
+            size = SIZE_TINY;
             break;
 
         case ARM_SHIELD:
@@ -2411,9 +2375,7 @@ bool is_colourful_item( const item_def &item )
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
-        && (item.sub_type == ARM_SHIELD
-            || item.sub_type == ARM_BUCKLER
-            || item.sub_type == ARM_LARGE_SHIELD);
+        && get_armour_slot(item) == EQ_SHIELD;
 }
 
 // Returns true if the given item cannot be wielded with the given shield.
@@ -2439,26 +2401,7 @@ std::string item_base_name(const item_def &item)
     case OBJ_MISSILES:
         return Missile_prop[Missile_index[item.sub_type]].name;
     case OBJ_ARMOUR:
-        if ( item.sub_type != ARM_HELMET && item.sub_type != ARM_CAP )
-        {
-            return Armour_prop[Armour_index[item.sub_type]].name;
-        }
-        else
-        {
-            std::string result;
-
-            const short helm_type = get_helmet_type( item );
-            if (helm_type == THELM_HELM)
-                result += "helm";
-            else if (helm_type == THELM_CAP)
-                result += "cap";
-            else if (helm_type == THELM_WIZARD_HAT)
-                result += "wizard's hat";
-            else 
-                result += "helmet";
-            
-            return result;
-        }
+        return Armour_prop[Armour_index[item.sub_type]].name;
     default:
         return "";
     }

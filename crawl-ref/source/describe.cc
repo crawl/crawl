@@ -1423,33 +1423,17 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
     description.reserve(200);
 
-    if (verbose 
-            && item.sub_type != ARM_SHIELD 
-            && item.sub_type != ARM_BUCKLER
-            && item.sub_type != ARM_LARGE_SHIELD)
+    if (verbose
+        && item.sub_type != ARM_SHIELD 
+        && item.sub_type != ARM_BUCKLER
+        && item.sub_type != ARM_LARGE_SHIELD)
     {
         description += "$Armour rating: ";
-
-        if (item.sub_type == ARM_HELMET 
-            && (get_helmet_type( item ) == THELM_CAP 
-                || get_helmet_type( item ) == THELM_WIZARD_HAT))
-        {
-            // caps and wizard hats don't have a base AC
-            append_value(description, 0, false);
-        }
-        else if (item.sub_type == ARM_NAGA_BARDING 
-                || item.sub_type == ARM_CENTAUR_BARDING)
-        {
-            // Barding has AC value 4.
-            append_value(description, 4, false);
-        }
-        else
-        {
-            append_value(description, property( item, PARM_AC ), false);
-        }
+        append_value(description, property( item, PARM_AC ), false);
 
         description += "$Evasion modifier: ";
         append_value(description, property( item, PARM_EVASION ), true);
+
         description += "$";
     }
 

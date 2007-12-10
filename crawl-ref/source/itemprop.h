@@ -16,42 +16,44 @@
 
 enum armour_type
 {
-    ARM_ROBE,                          //    0
+    ARM_ROBE,
     ARM_LEATHER_ARMOUR,
     ARM_RING_MAIL,
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
-    ARM_SPLINT_MAIL,                   //    5
+    ARM_SPLINT_MAIL,
     ARM_BANDED_MAIL,
     ARM_PLATE_MAIL,
     ARM_SHIELD,
     ARM_CLOAK,
-    ARM_HELMET,                        //   10
+    ARM_HELMET,
+    ARM_HELM,
+    ARM_CAP,
+    ARM_WIZARD_HAT,
     ARM_GLOVES,
     ARM_BOOTS,
     ARM_BUCKLER,
     ARM_LARGE_SHIELD,
-    ARM_DRAGON_HIDE,                   //   15
+    ARM_DRAGON_HIDE,
     ARM_TROLL_HIDE,
     ARM_CRYSTAL_PLATE_MAIL,
     ARM_DRAGON_ARMOUR,
     ARM_TROLL_LEATHER_ARMOUR,
-    ARM_ICE_DRAGON_HIDE,               //   20
+    ARM_ICE_DRAGON_HIDE,
     ARM_ICE_DRAGON_ARMOUR,
     ARM_STEAM_DRAGON_HIDE,
     ARM_STEAM_DRAGON_ARMOUR,
     ARM_MOTTLED_DRAGON_HIDE,
-    ARM_MOTTLED_DRAGON_ARMOUR,         //   25
+    ARM_MOTTLED_DRAGON_ARMOUR,
     ARM_STORM_DRAGON_HIDE,
     ARM_STORM_DRAGON_ARMOUR,
     ARM_GOLD_DRAGON_HIDE,
     ARM_GOLD_DRAGON_ARMOUR,
-    ARM_ANIMAL_SKIN,                   //   30
+    ARM_ANIMAL_SKIN,
     ARM_SWAMP_DRAGON_HIDE,
     ARM_SWAMP_DRAGON_ARMOUR,
     ARM_STUDDED_LEATHER_ARMOUR,
-    ARM_CAP,
-    ARM_CENTAUR_BARDING,               //   35
+    ARM_CENTAUR_BARDING,
     ARM_NAGA_BARDING,
     
     NUM_ARMOURS
@@ -142,27 +144,18 @@ enum hands_reqd_type
     HANDS_DOUBLE        // not a level, marks double ended weapons (== half)
 };
 
-enum helmet_type
+enum helmet_desc_type
 {
-    THELM_HELMET        = 0x0000,
-    THELM_HELM          = 0x0001,
-    THELM_CAP           = 0x0002,
-    THELM_WIZARD_HAT    = 0x0003,
-    THELM_NUM_TYPES     = 4,
-
-    THELM_SPECIAL       = 0x0004,  // type used only for artefacts (mask, hat)
-    THELM_TYPE_MASK     = 0x00ff,
-
-    THELM_DESC_PLAIN    = 0x0000,
-    THELM_DESC_WINGED   = 0x0100,
-    THELM_DESC_HORNED   = 0x0200,
-    THELM_DESC_CRESTED  = 0x0300,
-    THELM_DESC_PLUMED   = 0x0400,
-    THELM_DESC_SPIKED   = 0x0500,
-    THELM_DESC_VISORED  = 0x0600,
-    THELM_DESC_JEWELLED = 0x0700,
-
-    THELM_DESC_MASK     = 0xff00
+    THELM_DESC_PLAIN    = 0,
+    THELM_DESC_WINGED,
+    THELM_DESC_HORNED,
+    THELM_DESC_CRESTED,
+    THELM_DESC_PLUMED,
+    THELM_DESC_MAX_SOFT = THELM_DESC_PLUMED,
+    THELM_DESC_SPIKED,
+    THELM_DESC_VISORED,
+    THELM_DESC_JEWELLED,
+    THELM_NUM_DESCS
 };
 
 enum jewellery_type
@@ -594,14 +587,13 @@ unsigned long get_equip_race( const item_def &item );
 unsigned long get_equip_desc( const item_def &item );
 
 // helmet functions:
-void  set_helmet_type( item_def &item, short flags );
 void  set_helmet_desc( item_def &item, short flags );
 void  set_helmet_random_desc( item_def &item );
 
-short get_helmet_type( const item_def &item );
 short get_helmet_desc( const item_def &item );
 
-bool  is_helmet_type( const item_def &item, short val );
+bool  is_helmet( const item_def& item );
+bool  is_hard_helmet( const item_def& item );
 
 // ego items:
 bool set_item_ego_type( item_def &item, int item_type, int ego_type ); 

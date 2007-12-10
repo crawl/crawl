@@ -257,18 +257,13 @@ static int newwave_armour_colour(const item_def &item)
         item_colour = RED;
         break;
       case ARM_CAP:
+      case ARM_WIZARD_HAT:
         item_colour = MAGENTA;
         break;
       case ARM_HELMET:
-        if (get_helmet_type(item) == THELM_CAP
-            || get_helmet_type(item) == THELM_WIZARD_HAT)
-        {
-            item_colour = MAGENTA;
-        }
-        else
-            item_colour = DARKGREY;
+      case ARM_HELM:
+        item_colour = DARKGREY;
         break;
-
       case ARM_BOOTS:
         item_colour = BLUE;
         break;
@@ -305,20 +300,13 @@ static int classic_armour_colour(const item_def &item)
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
     case ARM_CAP:
+    case ARM_WIZARD_HAT:
         item_colour = random_colour();
         break;
-
+    case ARM_HELM:
     case ARM_HELMET:
-        // caps and wizard's hats are random coloured
-        if (get_helmet_type(item) == THELM_CAP
-            || get_helmet_type(item) == THELM_WIZARD_HAT)
-        {
-            item_colour = random_colour();
-        } 
-        else
-            item_colour = LIGHTCYAN;
+        item_colour = LIGHTCYAN;
         break;
-
     case ARM_BOOTS: // maybe more interesting boot colours?
     case ARM_GLOVES:
     case ARM_LEATHER_ARMOUR:
@@ -1828,18 +1816,6 @@ static bool try_make_armour_artefact(item_def& item, int force_type,
     return false;
 }
 
-static void determine_helmet_types(item_def& item)
-{
-    set_helmet_type( item, THELM_HELMET );
-    set_helmet_desc( item, THELM_DESC_PLAIN );
-
-    if (one_chance_in(3))
-        set_helmet_type( item, random2( THELM_NUM_TYPES ) );
-
-    if (one_chance_in(3))
-        set_helmet_random_desc( item );
-}
-
 static item_status_flag_type determine_armour_race(const item_def& item,
                                                    int item_race)
 {
@@ -1894,21 +1870,18 @@ static item_status_flag_type determine_armour_race(const item_def& item,
                 rc = ISFLAG_DWARVEN;
             break;
 
+        case ARM_CAP:
+        case ARM_WIZARD_HAT:
+            if (one_chance_in(6))
+                rc = ISFLAG_ELVEN;
+            break;
+
+        case ARM_HELM:
         case ARM_HELMET:
-            if (get_helmet_type(item) == THELM_CAP
-                || get_helmet_type(item) == THELM_WIZARD_HAT)
-            {
-                if (one_chance_in(6))
-                    rc = ISFLAG_ELVEN;
-            }
-            else
-            {
-                // helms and helmets
-                if (one_chance_in(8))
-                    rc = ISFLAG_ORCISH;
-                if (one_chance_in(6))
-                    rc = ISFLAG_DWARVEN;
-            }
+            if (one_chance_in(8))
+                rc = ISFLAG_ORCISH;
+            if (one_chance_in(6))
+                rc = ISFLAG_DWARVEN;
             break;
 
         case ARM_ROBE:
@@ -1969,14 +1942,16 @@ static special_armour_type determine_armour_ego(const item_def& item,
         break;
     }
 
+    case ARM_WIZARD_HAT:
+        if ( coinflip() )      
+            rc = (one_chance_in(3) ?
+                  SPARM_MAGIC_RESISTANCE : SPARM_INTELLIGENCE);
+        break;
+
     case ARM_HELMET:
-        if (get_helmet_type(item) == THELM_WIZARD_HAT && coinflip())
-        {
-            rc = one_chance_in(3) ?
-                SPARM_MAGIC_RESISTANCE : SPARM_INTELLIGENCE;
-        }
-        else
-            rc = coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
+    case ARM_HELM:
+    case ARM_CAP:
+        rc = coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
         break;
 
     case ARM_GLOVES:
@@ -2049,8 +2024,8 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
     if (allow_uniques && try_make_armour_artefact(item, force_type, item_level))
         return;
 
-    if (item.sub_type == ARM_HELMET)
-        determine_helmet_types(item);
+    if ( is_helmet(item) && one_chance_in(3) )
+        set_helmet_random_desc(item);
 
     if (item_race == MAKE_ITEM_RANDOM_RACE && item.sub_type == ARM_BOOTS)
     {
@@ -2068,8 +2043,7 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
 
-    if (force_good || (item.sub_type == ARM_HELMET 
-                       && get_helmet_type(item) == THELM_WIZARD_HAT)
+    if (force_good || item.sub_type == ARM_WIZARD_HAT
         || 50 + item_level >= random2(250))
     {
         // Make a good item...
@@ -4068,13 +4042,14 @@ armour_type get_random_armour_type(int item_level)
     }
 
     if (random2(60) <= item_level + 10)
-        armtype = random2(8);
+        armtype = random2(ARM_SHIELD); // body armour of some kind
 
     if (10 + item_level >= random2(400) && one_chance_in(20))
-        armtype = ARM_DRAGON_HIDE + random2(7);
+        armtype = ARM_DRAGON_HIDE + random2(7); // (ice) dragon/troll/crystal
 
     if (10 + item_level >= random2(500) && one_chance_in(20))
     {
+        // other dragon hides/armour or animal skin
         armtype = ARM_STEAM_DRAGON_HIDE + random2(11);
 
         if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
@@ -4085,6 +4060,11 @@ armour_type get_random_armour_type(int item_level)
     if (one_chance_in(5))
     {
         armtype = ARM_SHIELD + random2(5);
+        if ( armtype > ARM_HELMET )
+            armtype += 3;
+
+        if ( armtype == ARM_HELMET && one_chance_in(3) )
+            armtype = ARM_HELMET + random2(4);
 
         if (armtype == ARM_SHIELD)                 // 33.3%
         {

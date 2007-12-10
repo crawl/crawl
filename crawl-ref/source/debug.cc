@@ -1102,32 +1102,6 @@ void create_spec_object()
                 return;
             }
         }
-        else if (class_wanted == OBJ_ARMOUR) 
-        {
-            if (strstr( "naga barding", specs ))
-            {
-                mitm[thing_created].sub_type = ARM_NAGA_BARDING;
-            }
-            else if (strstr( "centaur barding", specs ))
-            {
-                mitm[thing_created].sub_type = ARM_CENTAUR_BARDING;
-            }
-            else if (strstr( "wizard's hat", specs ))
-            {
-                mitm[thing_created].sub_type = ARM_HELMET;
-                mitm[thing_created].plus2 = THELM_WIZARD_HAT;
-            }
-            else if (strstr( "cap", specs ))
-            {
-                mitm[thing_created].sub_type = ARM_HELMET;
-                mitm[thing_created].plus2 = THELM_CAP;
-            }
-            else if (strstr( "helm", specs ))
-            {
-                mitm[thing_created].sub_type = ARM_HELMET;
-                mitm[thing_created].plus2 = THELM_HELM;
-            }
-        }
 
         if (!mitm[thing_created].sub_type)
         {
@@ -1621,7 +1595,6 @@ void debug_item_scan( void )
             || (mitm[i].base_type == OBJ_ARMOUR
                 && (abs(mitm[i].plus) > 25 
                     || (!is_random_artefact( mitm[i] )
-                        && mitm[i].sub_type != ARM_HELMET 
                         && mitm[i].special >= 30))))
         {
             mpr( "Bad plus or special value:", MSGCH_WARN );

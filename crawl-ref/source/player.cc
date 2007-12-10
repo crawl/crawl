@@ -1739,28 +1739,20 @@ int player_AC(void)
 
     for (i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
     {
-        const int item = you.equip[i]; 
-
-        if (item == -1 || i == EQ_SHIELD)
+        if ( i == EQ_SHIELD )
             continue;
 
-        AC += you.inv[ item ].plus * 100;
-
-        // Note that helms and boots have a sub-sub classing system
-        // which uses "plus2"... since not all members have the same
-        // AC value, we use special cases. -- bwr
-        if (i == EQ_HELMET 
-            && (get_helmet_type(you.inv[ item ]) == THELM_CAP
-                || get_helmet_type(you.inv[ item ]) == THELM_WIZARD_HAT
-                || get_helmet_type(you.inv[ item ]) == THELM_SPECIAL))
-        {
+        if ( you.equip[i] == -1 )
             continue;
-        }
+
+        const item_def& item = you.inv[you.equip[i]];
+
+        AC += item.plus * 100;
 
         // additional *half*-levels of armour skill.
         int racial_bonus = 0;
-        const unsigned long armour_race = get_equip_race( you.inv[ item ] );
-        const int ac_value = property( you.inv[ item ], PARM_AC ) * 100;
+        const unsigned long armour_race = get_equip_race(item);
+        const int ac_value = property(item, PARM_AC ) * 100;
 
         // Dwarven armour is universally good -- bwr
         if (armour_race == ISFLAG_DWARVEN)

@@ -1618,11 +1618,6 @@ void unmarshallItem(tagHeader &th, item_def &item)
     item.y = unmarshallShort(th);
     item.flags = (unsigned long) unmarshallLong(th);
         
-    // [dshaligram] FIXME, remove this kludge when ARM_CAP is fully
-    // integrated.
-    if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_CAP)
-        item.sub_type = ARM_HELMET;
-
     unmarshallShort(th);  // mitm[].link -- unused
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
 

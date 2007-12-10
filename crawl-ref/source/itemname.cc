@@ -1164,9 +1164,7 @@ std::string item_def::name_aux( description_level_type desc,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || (item_typ == ARM_HELMET &&
-                        (get_helmet_type( *this ) == THELM_CAP ||
-                         get_helmet_type( *this ) == THELM_WIZARD_HAT)))
+                    || (item_typ == ARM_CAP || item_typ == ARM_WIZARD_HAT))
                 {
                     buff << "embroidered ";
                 }
@@ -1197,25 +1195,21 @@ std::string item_def::name_aux( description_level_type desc,
             buff << racial_description_string(*this, terse);
         }
 
-        if (!basename && !dbname && sub_type == ARM_HELMET)
+        if (!basename && !dbname && is_hard_helmet(*this))
         {
-            if (get_helmet_type(*this) == THELM_HELM ||
-                get_helmet_type(*this) == THELM_HELMET) 
-            {
-                const short dhelm = get_helmet_desc( *this );
-                
-                buff << 
-                    (
-                        (dhelm == THELM_DESC_PLAIN)    ? "" :
-                        (dhelm == THELM_DESC_WINGED)   ? "winged " :
-                        (dhelm == THELM_DESC_HORNED)   ? "horned " :
-                        (dhelm == THELM_DESC_CRESTED)  ? "crested " :
-                        (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
-                        (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
-                        (dhelm == THELM_DESC_VISORED)  ? "visored " :
-                        (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
-                                                       : "buggy ");
-            }
+            const short dhelm = get_helmet_desc( *this );
+            
+            buff << 
+                (
+                    (dhelm == THELM_DESC_PLAIN)    ? "" :
+                    (dhelm == THELM_DESC_WINGED)   ? "winged " :
+                    (dhelm == THELM_DESC_HORNED)   ? "horned " :
+                    (dhelm == THELM_DESC_CRESTED)  ? "crested " :
+                    (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
+                    (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
+                    (dhelm == THELM_DESC_VISORED)  ? "visored " :
+                    (dhelm == THELM_DESC_JEWELLED) ? "jewelled "
+                                                   : "buggy ");
         }
 
         buff << item_base_name(*this);
@@ -2206,12 +2200,6 @@ void init_item_name_cache()
 
             if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
                 continue;
-            else if (item.base_type == OBJ_ARMOUR
-                     && get_armour_slot( item ) == EQ_HELMET)
-            {
-                // Why do we handle helmets this way?
-                continue;
-            }
             else if (name.find("buggy") != std::string::npos)
             {
                 crawl_state.add_startup_error("Bad name for item name "
@@ -2228,42 +2216,6 @@ void init_item_name_cache()
     }
 
     ASSERT(item_names_cache.size() > 0);
-
-    int o = items(0, OBJ_ARMOUR, ARM_HELMET, true, 1,
-                  MAKE_ITEM_NO_RACE);
-
-    if (o == NON_ITEM)
-    {
-        crawl_state.add_startup_error("Couldn't cache helmet names.");
-        return;
-    }
-
-    item_def &item(mitm[o]);
-
-    // Make sure item isn't an artifact
-    item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-    item.special = 0;
-
-    // Now handle the helmets
-    for (int i = 0; i < THELM_NUM_TYPES; i++)
-    {
-        set_helmet_type(item, i);
-
-        item_types_pair pair = {item.base_type, item.sub_type};
-
-        std::string    name = item.name(DESC_DBNAME, true, true);
-        unsigned       glyph;
-        unsigned short colour;
-        get_item_glyph(&item, &glyph, &colour);
-        lowercase(name);
-
-        if (item_names_cache.find(name) == item_names_cache.end())
-        {
-            item_names_cache[name] = pair;
-            item_names_by_glyph_cache[glyph].push_back(name);
-        }
-    }
-    destroy_item(o, true);
 }
 
 item_types_pair item_types_by_name(std::string name)

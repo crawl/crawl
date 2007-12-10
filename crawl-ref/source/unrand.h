@@ -339,7 +339,7 @@
 /* 11 */
 {
     "crown of Dyrovepreva", "jewelled bronze crown",
-        OBJ_ARMOUR, ARM_HELMET, +3, THELM_SPECIAL, BROWN,
+        OBJ_ARMOUR, ARM_HELMET, +3, 0, BROWN,
     {
         0, 0, 0, 0, 2, 0,       // int
         0, 0, 1, 0, 0, 0,       // res elec
@@ -893,7 +893,7 @@
 /* 41 */
 {
     "mask of the Dragon", "blue mask",
-        OBJ_ARMOUR, ARM_HELMET, +0, THELM_SPECIAL, BLUE,
+        OBJ_ARMOUR, ARM_CAP, +0, 0, BLUE,
     {
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 40,      // res magic
@@ -1057,7 +1057,7 @@
 /* 50 */
 {
     "hat of the Alchemist", "dirty hat",
-        OBJ_ARMOUR, ARM_HELMET, +2, THELM_WIZARD_HAT, MAGENTA,
+        OBJ_ARMOUR, ARM_WIZARD_HAT, +2, 0, MAGENTA,
     {
         0, 0, 0, 0, 0, 0,
         1, 1, 1, 0, 0, 30,      // res fire, cold, elec, magic
