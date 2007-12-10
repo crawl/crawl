@@ -264,7 +264,7 @@ static int newwave_armour_colour(const item_def &item)
             || get_helmet_type(item) == THELM_WIZARD_HAT)
         {
             item_colour = MAGENTA;
-        } 
+        }
         else
             item_colour = DARKGREY;
         break;
@@ -1885,10 +1885,6 @@ static item_status_flag_type determine_armour_race(const item_def& item,
             break;
 
         case ARM_GLOVES:
-            if (one_chance_in(4))
-                rc = ISFLAG_ELVEN;
-            break;
-
         case ARM_BOOTS:
             if (one_chance_in(4))
                 rc = ISFLAG_ORCISH;
