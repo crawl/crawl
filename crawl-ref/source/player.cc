@@ -1288,7 +1288,7 @@ int player_res_electricity(bool calc_unid)
         re += 1;
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
-        re += 2;  // mutliple levels currently meaningless
+        re += 2;  // multiple levels currently meaningless
 
     if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] > 0)
         re = 3;
@@ -1324,7 +1324,8 @@ bool player_control_teleport(bool calc_unid) {
 
 int player_res_torment(bool)
 {
-    return (you.mutation[MUT_TORMENT_RESISTANCE]);
+    return (you.mutation[MUT_TORMENT_RESISTANCE] ||
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
 }
 
 // funny that no races are susceptible to poisons {dlb}
