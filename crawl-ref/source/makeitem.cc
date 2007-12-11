@@ -1891,6 +1891,7 @@ static item_status_flag_type determine_armour_race(const item_def& item,
                 rc = ISFLAG_ELVEN;
             break;
 
+        case ARM_LEATHER_ARMOUR:
         case ARM_RING_MAIL:
         case ARM_SCALE_MAIL:
         case ARM_CHAIN_MAIL:
