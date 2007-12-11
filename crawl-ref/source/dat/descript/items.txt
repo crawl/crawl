@@ -1484,7 +1484,7 @@ whip
 
 A whip.
 %%%%
-wizard's hat
+wizard hat
 
 A conical cloth hat.
 %%%%
