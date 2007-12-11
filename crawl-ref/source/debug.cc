@@ -1628,7 +1628,7 @@ void debug_item_scan( void )
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void debug_acquirement_stats(FILE *ostat)
+static void debug_acquirement_stats(FILE *ostat)
 {
     if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
@@ -1645,9 +1645,11 @@ void debug_acquirement_stats(FILE *ostat)
     }
     mitm[p].base_type = OBJ_UNASSIGNED;
 
+    mesclr();
     mpr( "[a] Weapons [b] Armours [c] Jewellery      [d] Books" );
     mpr( "[e] Staves  [f] Food    [g] Miscellaneous" );
-    mpr("What kind of item would you like to get stats on? ", MSGCH_PROMPT);
+    mpr("What kind of item would you like to get acquirement stats on? ",
+        MSGCH_PROMPT);
 
     object_class_type type;
     const int keyin = tolower( get_ch() );
@@ -1676,6 +1678,8 @@ void debug_acquirement_stats(FILE *ostat)
     int last_percent = 0;
     int acq_calls    = 0;
     int total_quant  = 0;
+    int max_plus     = -127;
+    int total_plus   = 0;
 
     int subtype_quants[256];
     memset(subtype_quants, 0, sizeof(subtype_quants));
@@ -1684,6 +1688,7 @@ void debug_acquirement_stats(FILE *ostat)
     {
         if (kbhit())
         {
+            getch();
             mpr("Stopping early due to keyboard input.");
             break;
         }
@@ -1704,6 +1709,9 @@ void debug_acquirement_stats(FILE *ostat)
         total_quant += item.quantity;
         subtype_quants[item.sub_type] += item.quantity;
 
+        max_plus    = std::max(max_plus, item.plus + item.plus2);
+        total_plus += item.plus + item.plus2;
+
         destroy_item(item_index, true);
 
         int curr_percent = acq_calls * 100 / num_itrs;
@@ -1723,6 +1731,19 @@ void debug_acquirement_stats(FILE *ostat)
 
     fprintf(ostat, "acquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
+
+    if (type == OBJ_WEAPONS)
+    {
+        fprintf(ostat, "Maximum combined pluses: %d\n", max_plus);
+        fprintf(ostat, "Average combined pluses: %5.2f\n\n",
+                (float) total_plus / (float) acq_calls);
+    }
+    else if (type == OBJ_ARMOUR)
+    {
+        fprintf(ostat, "Maximum plus: %d\n", max_plus);
+        fprintf(ostat, "Average plus: %5.2f\n\n",
+                (float) total_plus / (float) acq_calls);
+    }
 
     item_def item;
     item.quantity  = 1;
@@ -1759,6 +1780,227 @@ void debug_acquirement_stats(FILE *ostat)
     fprintf(ostat, "----------------------\n");
 }
 
+static void debug_rap_stats(FILE *ostat)
+{
+    int i = prompt_invent_item(
+                "Generate ranandart stats on which item?", MT_INVLIST, -1 );
+
+    if (i == PROMPT_ABORT)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    // A copy of the item, rather than a reference to the inventory item,
+    // so we can fiddle with the item at will.
+    item_def item(you.inv[i]);
+
+    // Start off with a non-artefact item.
+    item.flags  &= ~ISFLAG_ARTEFACT_MASK;
+    item.special = 0;
+    item.props.clear();
+
+    if (!make_item_randart(item))
+    {
+        mpr("Can't make a randart out of that type of item.");
+        return;
+    }
+
+    // -1 = always bad, 1 = always good, 0 = depends on value
+    const int good_or_bad[] = {
+         1, //RAP_BRAND
+         0, //RAP_AC
+         0, //RAP_EVASION
+         0, //RAP_STRENGTH
+         0, //RAP_INTELLIGENCE
+         0, //RAP_DEXTERITY
+         0, //RAP_FIRE
+         0, //RAP_COLD
+         1, //RAP_ELECTRICITY
+         1, //RAP_POISON
+         1, //RAP_NEGATIVE_ENERGY
+         1, //RAP_MAGIC
+         1, //RAP_EYESIGHT
+         1, //RAP_INVISIBLE
+         1, //RAP_LEVITATE
+         1, //RAP_BLINK
+         1, //RAP_CAN_TELEPORT
+         1, //RAP_BERSERK
+         1, //RAP_MAPPING
+        -1, //RAP_NOISES
+        -1, //RAP_PREVENT_SPELLCASTING
+        -1, //RAP_CAUSE_TELEPORTATION
+        -1, //RAP_PREVENT_TELEPORTATION
+        -1, //RAP_ANGRY
+        -1, //RAP_METABOLISM
+        -1, //RAP_MUTAGENIC
+         0, //RAP_ACCURACY
+         0, //RAP_DAMAGE
+        -1, //RAP_CURSED
+         0, //RAP_STEALTH
+         0  //RAP_MAGICAL_POWER
+    };        
+
+    // No bounds checking to speed things up a bit.
+    int all_props[RAP_NUM_PROPERTIES];
+    int good_props[RAP_NUM_PROPERTIES];
+    int bad_props[RAP_NUM_PROPERTIES];
+    for (i = 0; i < RAP_NUM_PROPERTIES; i++)
+    {
+        all_props[i] = 0;
+        good_props[i] = 0;
+        bad_props[i] = 0;
+    }
+
+    int max_props         = 0, total_props         = 0;
+    int max_good_props    = 0, total_good_props    = 0;
+    int max_bad_props     = 0, total_bad_props     = 0;
+    int max_balance_props = 0, total_balance_props = 0;
+
+    int num_randarts = 0, bad_randarts = 0;
+
+    randart_properties_t proprt;
+
+    for (i = 0; i < RANDART_SEED_MASK; i++)
+    {
+        if (kbhit())
+        {
+            getch();
+            mpr("Stopping early due to keyboard input.");
+            break;
+        }
+
+        item.special = i;
+
+        // Generate proprt once and hand it off to randart_is_bad(),
+        // so that randart_is_bad() doesn't generate it a second time.
+        randart_wpn_properties( item, proprt );
+        if (randart_is_bad(item, proprt))
+        {
+            bad_randarts++;
+            continue;
+        }
+
+        num_randarts++;
+        proprt[RAP_CURSED] = 0;
+
+        int num_props = 0, num_good_props = 0, num_bad_props = 0;
+        for (int j = 0; j < RAP_NUM_PROPERTIES; j++)
+        {
+            const int val = proprt[j];
+            if(val)
+            {
+                num_props++;
+                all_props[j]++;
+                switch(good_or_bad[j])
+                {
+                case -1:
+                    num_bad_props++;
+                    break;
+                case 1:
+                    num_good_props++;
+                    break;
+                case 0:
+                    if (val > 0)
+                    {
+                        good_props[j]++;
+                        num_good_props++;
+                    }
+                    else
+                    {
+                        bad_props[j]++;
+                        num_bad_props++;
+                    }
+                }
+            }
+        }
+
+        int balance = num_good_props - num_bad_props;
+
+        max_props         = std::max(max_props, num_props);
+        max_good_props    = std::max(max_good_props, num_good_props);
+        max_bad_props     = std::max(max_bad_props, num_bad_props);
+        max_balance_props = std::max(max_balance_props, balance);
+
+        total_props         += num_props;
+        total_good_props    += num_good_props;
+        total_bad_props     += num_bad_props;
+        total_balance_props += balance;
+
+        if (i % 16777 == 0)
+        {
+            mesclr();
+            float curr_percent = (float) i * 1000.0
+                / (float) RANDART_SEED_MASK;
+            mprf("%4.1f%% done.", curr_percent / 10.0);
+        }
+
+    }
+
+    fprintf(ostat, "Randarts generated: %d valid, %d invalid\n\n",
+            num_randarts, bad_randarts);
+
+    fprintf(ostat, "max # of props = %d, avg # = %5.2f\n",
+            max_props, (float) total_props / (float) num_randarts);
+    fprintf(ostat, "max # of good props = %d, avg # = %5.2f\n",
+            max_good_props, (float) total_good_props / (float) num_randarts);
+    fprintf(ostat, "max # of bad props = %d, avg # = %5.2f\n",
+            max_bad_props, (float) total_bad_props / (float) num_randarts);
+    fprintf(ostat, "max (good - bad) props = %d, avg # = %5.2f\n\n",
+            max_balance_props,
+            (float) total_balance_props / (float) num_randarts);
+
+    const char* rap_names[] = {
+        "RAP_BRAND",
+        "RAP_AC",
+        "RAP_EVASION",
+        "RAP_STRENGTH",
+        "RAP_INTELLIGENCE",
+        "RAP_DEXTERITY",
+        "RAP_FIRE",
+        "RAP_COLD",
+        "RAP_ELECTRICITY",
+        "RAP_POISON",
+        "RAP_NEGATIVE_ENERGY",
+        "RAP_MAGIC",
+        "RAP_EYESIGHT",
+        "RAP_INVISIBLE",
+        "RAP_LEVITATE",
+        "RAP_BLINK",
+        "RAP_CAN_TELEPORT",
+        "RAP_BERSERK",
+        "RAP_MAPPING",
+        "RAP_NOISES",
+        "RAP_PREVENT_SPELLCASTING",
+        "RAP_CAUSE_TELEPORTATION",
+        "RAP_PREVENT_TELEPORTATION",
+        "RAP_ANGRY",
+        "RAP_METABOLISM",
+        "RAP_MUTAGENIC",
+        "RAP_ACCURACY",
+        "RAP_DAMAGE",
+        "RAP_CURSED",
+        "RAP_STEALTH",
+        "RAP_MAGICAL_POWER"
+    };
+
+    fprintf(ostat, "                            All    Good   Bad\n");
+    fprintf(ostat, "                           --------------------\n");
+
+    for (i = 0; i < RAP_NUM_PROPERTIES; i++)
+    {
+        if (all_props[i] == 0)
+            continue;
+
+        fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", rap_names[i],
+                (float) all_props[i] * 100.0 / (float) num_randarts,
+                (float) good_props[i] * 100.0 / (float) num_randarts,
+                (float) bad_props[i] * 100.0 / (float) num_randarts);
+    }
+
+    fprintf(ostat, "\n-----------------------------------------\n\n");
+}
+
 void debug_item_statistics( void )
 {
     FILE *ostat = fopen("items.stat", "a");
@@ -1771,7 +2013,17 @@ void debug_item_statistics( void )
         return;
     }
 
-    debug_acquirement_stats(ostat);
+    mpr( "Generate stats for: [a] aquirement [b] randart properties");
+
+    const int keyin = tolower( get_ch() );
+    switch ( keyin )
+    {
+    case 'a': debug_acquirement_stats(ostat); break;
+    case 'b': debug_rap_stats(ostat);
+    default:
+        canned_msg( MSG_OK );
+        break;
+    }
 
     fclose(ostat);
 }

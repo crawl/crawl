@@ -1190,7 +1190,7 @@ void randart_wpn_properties( const item_def &item,
             proprt[RAP_BRAND] = SPWPN_NORMAL;
         }
 
-        // is this happens, things might get broken -- bwr
+        // if this happens, things might get broken -- bwr
         if (proprt[RAP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)
             proprt[RAP_BRAND] = SPWPN_NORMAL;
 
@@ -2183,16 +2183,21 @@ static bool randart_is_conflicting( const item_def &item,
     return false;
 }
 
-static bool randart_is_bad( const item_def &item )
+bool randart_is_bad( const item_def &item, randart_properties_t &proprt )
 {
-    randart_properties_t proprt;
-    randart_wpn_properties( item, proprt );
-
     if (randart_wpn_num_props( proprt ) == 0)
         return true;
 
     return ( randart_is_redundant( item, proprt ) || 
              randart_is_conflicting( item, proprt ) );
+}
+
+bool randart_is_bad( const item_def &item )
+{
+    randart_properties_t proprt;
+    randart_wpn_properties( item, proprt );
+
+    return randart_is_bad( item, proprt);
 }
 
 bool make_item_randart( item_def &item )

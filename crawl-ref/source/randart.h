@@ -99,6 +99,12 @@ bool make_item_randart( item_def &item );
 bool make_item_unrandart( item_def &item, int unrand_index );
 
 /* ***********************************************************************
+ * called from: randart - debug
+ * *********************************************************************** */
+bool randart_is_bad( const item_def &item );
+bool randart_is_bad( const item_def &item, randart_properties_t &proprt );
+
+/* ***********************************************************************
  * called from: files - newgame
  * *********************************************************************** */
 void set_unrandart_exist(int whun, bool is_exist);
