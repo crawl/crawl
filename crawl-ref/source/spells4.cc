@@ -439,7 +439,7 @@ void cast_detect_secret_doors(int pow)
             if (x < 5 || x > GXM - 5 || y < 5 || y > GYM - 5)
                 continue;
 
-            if (!see_grid(x, y)) 
+            if (!see_grid(x, y))
                 continue;
 
             if (grd[x][y] == DNGN_SECRET_DOOR && random2(pow) > random2(15))
@@ -451,12 +451,9 @@ void cast_detect_secret_doors(int pow)
     }
 
     if (found)
-    {
         redraw_screen();
 
-        mprf("You detect %s secret door%s.", 
-             (found > 1) ? "some" : "a", (found > 1) ? "s" : "" );
-    }
+    mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }                               // end cast_detect_secret_doors()
 
 void cast_summon_butterflies(int pow)
