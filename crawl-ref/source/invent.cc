@@ -698,8 +698,8 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
         menu.set_type(mtype);
         menu.set_title(title);
         menu.load_items(items);
-        menu.set_flags(noselect ? MF_NOSELECT :
-                       MF_MULTISELECT | MF_ALLOW_FILTER);
+        menu.set_flags(noselect ? MF_NOSELECT | MF_SHOW_PAGENUMBERS :
+                       MF_MULTISELECT | MF_ALLOW_FILTER | MF_SHOW_PAGENUMBERS);
         menu.show();
         selected = menu.get_selitems();
     }

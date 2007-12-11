@@ -165,6 +165,7 @@ enum MenuFlag
     MF_ALLOW_FILTER     = 0x0080,   // Control-F will ask for regex and
                                     // select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0100,   // Parse index for formatted-string
+    MF_SHOW_PAGENUMBERS = 0x0200,   // Show "(page X of Y)" when appropriate
     MF_EASY_EXIT        = 0x1000
 };
 

@@ -604,6 +604,18 @@ void Menu::write_title()
 {
     textattr( item_colour(-1, title) );
     cprintf("%s", title->get_text().c_str());
+    if ( flags & MF_SHOW_PAGENUMBERS )
+    {
+        // The total number of pages is well defined, but the current
+        // page a bit less so. To make sense, we hack it so that your
+        // current page is based on the first line you're seeing, *unless*
+        // you're seeing the last item.
+        int numpages = items.empty() ? 1 : ((items.size()-1) / pagesize + 1);
+        int curpage = first_entry / pagesize + 1;
+        if ( in_page(items.size() - 1) )
+            curpage = numpages;
+        cprintf(" (page %d of %d)", curpage, numpages);
+    }
 
     const int x = wherex(), y = wherey();
     cprintf("%-*s", get_number_of_cols() - x, "");
