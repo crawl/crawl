@@ -711,7 +711,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             }
             break;
         case OBJ_ARMOUR:
-            if (!is_hard_helmet(item)
+            if ((is_helmet(item) && !is_hard_helmet(item))
                 || item.sub_type == ARM_ROBE
                 || item.sub_type == ARM_LEATHER_ARMOUR
                 || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)
@@ -736,7 +736,7 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_ARMOUR:
-            if (!is_hard_helmet(item))
+            if ((is_helmet(item) && !is_hard_helmet(item))
                 return;
             break;
         default:
