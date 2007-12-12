@@ -848,9 +848,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         // it fits
         return (true);
     }
-    else if (sub_type == ARM_CAP || sub_type == ARM_WIZARD_HAT)
+    else if (slot == EQ_HELMET && !is_hard_helmet( item ))
     {
-        // caps & wiz hats always fit
+        // soft helmets (caps and wizard hats) always fit
         return (true);
     }
     else if (!can_equip( slot, ignore_temporary ))

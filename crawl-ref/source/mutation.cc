@@ -1799,21 +1799,21 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
 
         break;
 
-    case MUT_HORNS:             // horns force your helmet off
+    case MUT_HORNS:
         {
             mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
+            // horns force hard helmets off
             if (you.equip[EQ_HELMET] != -1 &&
-                (you.inv[you.equip[EQ_HELMET]].sub_type == ARM_CAP ||
-                 you.inv[you.equip[EQ_HELMET]].sub_type == ARM_WIZARD_HAT))
+                !is_hard_helmet( you.inv[you.equip[EQ_HELMET]] ))
             {
-                break;          // horns don't push caps/wizard hats off
+                break;
             }
 
             remove_one_equip(EQ_HELMET);
         }
         break;
-        
+
     case MUT_STRONG_STIFF:
         if (you.mutation[MUT_FLEXIBLE_WEAK] > 0)
         {

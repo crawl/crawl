@@ -1944,7 +1944,7 @@ static special_armour_type determine_armour_ego(const item_def& item,
     }
 
     case ARM_WIZARD_HAT:
-        if ( coinflip() )      
+        if ( coinflip() )
             rc = (one_chance_in(3) ?
                   SPARM_MAGIC_RESISTANCE : SPARM_INTELLIGENCE);
         break;

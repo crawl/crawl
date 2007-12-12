@@ -711,7 +711,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             }
             break;
         case OBJ_ARMOUR:
-            if ((is_helmet(item) && !is_hard_helmet(item))
+            if ((get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
                 || item.sub_type == ARM_ROBE
                 || item.sub_type == ARM_LEATHER_ARMOUR
                 || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)
@@ -736,7 +736,7 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_ARMOUR:
-            if (is_helmet(item) && !is_hard_helmet(item))
+            if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
                 return;
             break;
         default:
@@ -764,7 +764,7 @@ void set_equip_desc( item_def &item, unsigned long flags )
 //
 short get_helmet_desc( const item_def &item )
 {
-    ASSERT( item.base_type == OBJ_ARMOUR 
+    ASSERT( item.base_type == OBJ_ARMOUR
             && get_armour_slot( item ) == EQ_HELMET );
 
     return item.plus2;
@@ -774,8 +774,7 @@ void set_helmet_desc( item_def &item, helmet_desc_type type )
 {
     ASSERT( is_helmet(item) );
 
-    if ((item.sub_type == ARM_CAP || item.sub_type == ARM_WIZARD_HAT)
-        && type > THELM_DESC_PLUMED)
+    if (!is_hard_helmet(item) && type > THELM_DESC_MAX_SOFT)
         type = THELM_DESC_PLAIN;
 
     item.plus2 = type;
@@ -1169,7 +1168,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_HELMET:
-            if (item.sub_type == ARM_CAP || item.sub_type == ARM_WIZARD_HAT)
+            if (!is_hard_helmet(item))
                 break;
 
             if (you.species == SP_KENKU)
@@ -2307,7 +2306,7 @@ size_type item_size( const item_def &item )
         size = SIZE_MEDIUM;
         switch (item.sub_type)
         {
-        case ARM_GLOVES:       
+        case ARM_GLOVES:
         case ARM_HELMET:
         case ARM_HELM:
         case ARM_CAP:

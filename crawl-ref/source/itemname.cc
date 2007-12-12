@@ -1045,7 +1045,7 @@ std::string item_def::name_aux( description_level_type desc,
             break;
         }
 
-        // Now that we can have "glowing elven" weapons, it's 
+        // Now that we can have "glowing elven" weapons, it's
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
         if (know_cosmetic)
@@ -1152,7 +1152,7 @@ std::string item_def::name_aux( description_level_type desc,
             break;
         }
 
-        // Now that we can have "glowing elven" armour, it's 
+        // Now that we can have "glowing elven" armour, it's
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
         if (know_cosmetic)
@@ -1164,11 +1164,12 @@ std::string item_def::name_aux( description_level_type desc,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || (item_typ == ARM_CAP || item_typ == ARM_WIZARD_HAT))
+                    || (get_armour_slot( *this ) == EQ_HELMET &&
+                        !is_hard_helmet( *this )))
                 {
                     buff << "embroidered ";
                 }
-                else if (item_typ != ARM_LEATHER_ARMOUR 
+                else if (item_typ != ARM_LEATHER_ARMOUR
                          && item_typ != ARM_ANIMAL_SKIN)
                 {
                     buff << "shiny ";
@@ -1372,8 +1373,8 @@ std::string item_def::name_aux( description_level_type desc,
             break;
         }
 
-        // not using {tried} here because there are some confusing 
-        // issues to work out with how we want to handle jewellery 
+        // not using {tried} here because there are some confusing
+        // issues to work out with how we want to handle jewellery
         // artefacts and base type id. -- bwr
         if (know_curse)
         {
