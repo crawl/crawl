@@ -1456,7 +1456,7 @@ void StashTracker::search_stashes()
     if (results.size() > SEARCH_SPAM_THRESHOLD)
     {
         mpr("Too many matches; use a more specific search.", MSGCH_PLAIN);
-        return ;
+        return;
     }
 
     display_search_results(results);

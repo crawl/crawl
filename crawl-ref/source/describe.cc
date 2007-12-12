@@ -26,6 +26,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <numeric>
 
 #ifdef DOS
 #include <conio.h>
@@ -178,7 +179,7 @@ const char* jewellery_base_ability_string(int subtype)
 
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
 
-struct property_descriptors
+struct property_annotators
 {
     const char* name;
     randart_prop_type prop;
@@ -193,7 +194,7 @@ static std::vector<std::string> randart_propnames( const item_def& item )
     
     std::vector<std::string> propnames;
 
-    const property_descriptors propdescs[] = {
+    const property_annotators propanns[] = {
 
         // Positive, quantative attributes
         { "AC",   RAP_AC,                    0 },
@@ -245,26 +246,26 @@ static std::vector<std::string> randart_propnames( const item_def& item )
             propnames.push_back(type);
     }
 
-    for ( unsigned i = 0; i < ARRAYSIZE(propdescs); ++i )
+    for ( unsigned i = 0; i < ARRAYSIZE(propanns); ++i )
     {
-        if (known_proprt(propdescs[i].prop))
+        if (known_proprt(propanns[i].prop))
         {
-            const int val = proprt[propdescs[i].prop];
+            const int val = proprt[propanns[i].prop];
             std::ostringstream work;
-            switch ( propdescs[i].spell_out )
+            switch ( propanns[i].spell_out )
             {
             case 0:
-                work << std::showpos << val << propdescs[i].name;
+                work << std::showpos << val << propanns[i].name;
                 break;
             case 1:
             {
                 const int sval = std::min(std::abs(val), 3);
                 work << std::string(sval, (val > 0 ? '+' : '-'))
-                     << propdescs[i].name;
+                     << propanns[i].name;
                 break;
             }
             case 2:
-                work << propdescs[i].name;
+                work << propanns[i].name;
                 break;
             }
             propnames.push_back(work.str());
@@ -290,16 +291,20 @@ static void trim_randart_inscrip( item_def& item )
 {
     std::vector<std::string> propnames = randart_propnames(item);
 
-    for (unsigned int i = 0, size = propnames.size(); i < size; i++)
+    for (unsigned int i = 0; i < propnames.size(); i++)
     {
-        std::string prop = propnames[i] + ",";
-        item.inscription = replace_all(item.inscription, prop, "");
-
-        prop = propnames[i];
-        item.inscription = replace_all(item.inscription, prop, "");
+        item.inscription = replace_all(item.inscription, propnames[i]+",", "");
+        item.inscription = replace_all(item.inscription, propnames[i],     "");
     }
     trim_string(item.inscription);
 }
+
+struct property_descriptor
+{
+    randart_prop_type property;
+    const char* desc;           // If it contains %d, will be replaced by value
+    bool is_graded_resist;
+};
 
 static std::string randart_descrip( const item_def &item )
 {
@@ -309,182 +314,96 @@ static std::string randart_descrip( const item_def &item )
     randart_known_props_t known;
     randart_desc_properties( item, proprt, known );
 
-    if (known_proprt( RAP_AC ))
+    const property_descriptor propdescs[] = {
+        { RAP_AC, "It affects your AC (%d).", false },
+        { RAP_EVASION, "It affects your evasion (%d).", false},
+        { RAP_STRENGTH, "It affects your strength (%d).", false},
+        { RAP_INTELLIGENCE, "It affects your intelligence (%d).", false},
+        { RAP_DEXTERITY, "It affects your dexterity (%d).", false},
+        { RAP_ACCURACY, "It affects your accuracy (%d).", false},
+        { RAP_DAMAGE, "It affects your damage-dealing abilities (%d).", false},
+        { RAP_FIRE, "fire", true},
+        { RAP_COLD, "cold", true},
+        { RAP_ELECTRICITY, "It insulates you from electricity.", false},
+        { RAP_POISON, "It protects you from poison.", false},
+        { RAP_NEGATIVE_ENERGY, "negative energy", true},
+        { RAP_MAGIC, "It increases your resistance to enchantments.", false},
+        { RAP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
+        { RAP_EYESIGHT, "It enhances your eyesight.", false},
+        { RAP_INVISIBLE, "It lets you turn invisible.", false},
+        { RAP_LEVITATE, "It lets you levitate.", false},
+        { RAP_BLINK, "It lets you blink.", false},
+        { RAP_CAN_TELEPORT, "It lets you teleport.", false},
+        { RAP_BERSERK, "It lets you go berserk.", false},
+        { RAP_MAPPING, "It lets you sense your surroundings.", false},
+        { RAP_NOISES, "It makes noises.", false},
+        { RAP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
+        { RAP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
+        { RAP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
+          false},
+        { RAP_ANGRY, "It makes you angry.", false}
+    };
+
+    for ( unsigned i = 0; i < ARRAYSIZE(propdescs); ++i )
     {
-        description += "$It affects your AC (";
-        append_value(description, proprt[ RAP_AC ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_EVASION ))
-    {
-        description += "$It affects your evasion (";
-        append_value(description, proprt[ RAP_EVASION ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_STRENGTH ))
-    {
-        description += "$It affects your strength (";
-        append_value(description, proprt[ RAP_STRENGTH ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_INTELLIGENCE ))
-    {
-        description += "$It affects your intelligence (";
-        append_value(description, proprt[ RAP_INTELLIGENCE ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_DEXTERITY ))
-    {
-        description += "$It affects your dexterity (";
-        append_value(description, proprt[ RAP_DEXTERITY ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_ACCURACY ))
-    {
-        description += "$It affects your accuracy (";
-        append_value(description, proprt[ RAP_ACCURACY ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_DAMAGE ))
-    {
-        description += "$It affects your damage-dealing abilities (";
-        append_value(description, proprt[ RAP_DAMAGE ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_FIRE ))
-    {
-        if (proprt[ RAP_FIRE ] < -2)
-            description += "$It makes you extremely vulnerable to fire. ";
-        else if (proprt[ RAP_FIRE ] == -2)
-            description += "$It makes you very vulnerable to fire. ";
-        else if (proprt[ RAP_FIRE ] == -1)
-            description += "$It makes you vulnerable to fire. ";
-        else if (proprt[ RAP_FIRE ] == 1)
-            description += "$It protects you from fire. ";
-        else if (proprt[ RAP_FIRE ] == 2)
-            description += "$It greatly protects you from fire. ";
-        else if (proprt[ RAP_FIRE ] > 2)
-            description += "$It renders you almost immune to fire. ";
-    }
-
-    if (known_proprt( RAP_COLD ))
-    {
-        if (proprt[ RAP_COLD ] < -2)
-            description += "$It makes you extremely vulnerable to cold. ";
-        else if (proprt[ RAP_COLD ] == -2)
-            description += "$It makes you very vulnerable to cold. ";
-        else if (proprt[ RAP_COLD ] == -1)
-            description += "$It makes you vulnerable to cold. ";
-        else if (proprt[ RAP_COLD ] == 1)
-            description += "$It protects you from cold. ";
-        else if (proprt[ RAP_COLD ] == 2)
-            description += "$It greatly protects you from cold. ";
-        else if (proprt[ RAP_COLD ] > 2)
-            description += "$It renders you almost immune to cold. ";
-    }
-
-    if (known_proprt( RAP_ELECTRICITY ))
-        description += "$It insulates you from electricity. ";
-
-    if (known_proprt( RAP_POISON ))
-        description += "$It protects you from poison. ";
-
-    if (known_proprt( RAP_NEGATIVE_ENERGY ))
-    {
-        if (proprt[ RAP_NEGATIVE_ENERGY ] == 1)
-            description += "$It partially protects you from negative energy. ";
-        else if (proprt[ RAP_NEGATIVE_ENERGY ] == 2)
-            description += "$It protects you from negative energy. ";
-        else if (proprt[ RAP_NEGATIVE_ENERGY ] > 2)
-            description += "$It renders you almost immune to "
-                "negative energy. ";
-    }
-
-    if (known_proprt( RAP_MAGIC ))
-        description += "$It increases your resistance to enchantments. ";
-
-    if (known_proprt( RAP_STEALTH ))
-    {
-        if (proprt[ RAP_STEALTH ] < 0)
+        if ( known_proprt(propdescs[i].property))
         {
-            if (proprt[ RAP_STEALTH ] < -20)
-                description += "$It makes you much less stealthy. ";
-            else
-                description += "$It makes you less stealthy. ";
-        }
-        else if (proprt[ RAP_STEALTH ] > 0)
-        {
-            if (proprt[ RAP_STEALTH ] > 20)
-                description += "$It makes you much more stealthy. ";
-            else
-                description += "$It makes you more stealthy. ";
+            std::string sdesc = propdescs[i].desc;
+
+            // FIXME Not the nicest hack.
+            char buf[80];
+            snprintf(buf, sizeof buf, "%+d", proprt[propdescs[i].property]);
+            sdesc = replace_all(sdesc, "%d", buf);
+
+            if ( propdescs[i].is_graded_resist )
+            {
+                int idx = proprt[propdescs[i].property] + 3;
+                if ( idx < 0 )
+                    idx = 0;
+                if ( idx > 6 )
+                    idx = 6;
+                const char* prefixes[] = {
+                    "It makes you extremely vulnerable to ",
+                    "It makes you very vulnerable to ",
+                    "It makes you vulnerable to ",
+                    "Buggy descriptor!",
+                    "It protects you from ",
+                    "It greatly protects you from ",
+                    "It renders you almost immune to "
+                };
+                sdesc = prefixes[idx] + sdesc + '.';
+            }
+
+            description += '$';
+            description += sdesc;
         }
     }
 
-    if (known_proprt( RAP_MAGICAL_POWER ))
-    {
-        description += "$It affects your mana capacity (";
-        append_value(description, proprt[ RAP_MAGICAL_POWER ], true);
-        description += ").";
-    }
-
-    if (known_proprt( RAP_EYESIGHT ))
-        description += "$It enhances your eyesight. ";
-
-    if (known_proprt( RAP_INVISIBLE ))
-        description += "$It lets you turn invisible. ";
-
-    if (known_proprt( RAP_LEVITATE ))
-        description += "$It lets you levitate. ";
-
-    if (known_proprt( RAP_BLINK ))
-        description += "$It lets you blink. ";
-
-    if (known_proprt( RAP_CAN_TELEPORT ))
-        description += "$It lets you teleport. ";
-
-    if (known_proprt( RAP_BERSERK ))
-        description += "$It lets you go berserk. ";
-
-    if (known_proprt( RAP_MAPPING ))
-        description += "$It lets you sense your surroundings. ";
-
-    if (known_proprt( RAP_NOISES ))
-        description += "$It makes noises. ";
-
-    if (known_proprt( RAP_PREVENT_SPELLCASTING ))
-        description += "$It prevents spellcasting. ";
-
-    if (known_proprt( RAP_CAUSE_TELEPORTATION ))
-        description += "$It causes teleportation. ";
-
-    if (known_proprt( RAP_PREVENT_TELEPORTATION ))
-        description += "$It prevents most forms of teleportation. ";
-
-    if (known_proprt( RAP_ANGRY ))
-        description += "$It makes you angry. ";
-
+    // Some special cases which don't fit into the above.
     if (known_proprt( RAP_METABOLISM ))
     {
         if (proprt[ RAP_METABOLISM ] >= 3)
-            description += "$It greatly speeds your metabolism. ";
+            description += "$It greatly speeds your metabolism.";
         else if (proprt[ RAP_METABOLISM ])
             description += "$It speeds your metabolism. ";
+    }
+
+    if (known_proprt( RAP_STEALTH ))
+    {
+        const int stval = proprt[RAP_STEALTH];
+        char buf[80];
+        snprintf(buf, sizeof buf, "$It makes you %s%s stealthy.",
+                 (stval < -20 || stval > 20) ? "much " : "",
+                 (stval < 0) ? "less" : "more");
+        description += buf;
     }
 
     if (known_proprt( RAP_MUTAGENIC ))
     {
         if (proprt[ RAP_MUTAGENIC ] > 3)
-            description += "$It glows with mutagenic radiation. ";
-        else if (proprt[ RAP_MUTAGENIC ])
-            description += "$It emits mutagenic radiation. ";
+            description += "$It glows with mutagenic radiation.";
+        else
+            description += "$It emits mutagenic radiation.";
     }
 
     if (!description.empty())
@@ -493,7 +412,7 @@ static std::string randart_descrip( const item_def &item )
     if (is_unrandom_artefact( item ))
     {
         const char *desc = unrandart_descrip( 0, item );
-        if (strlen( desc ) > 0)
+        if (desc[0] != 0)
         {
             description += desc;
             description += "$";
@@ -501,8 +420,8 @@ static std::string randart_descrip( const item_def &item )
     }
 
     return description;
-#undef known_proprt
 }
+#undef known_proprt
 
 static const char *trap_names[] =
 {
@@ -553,339 +472,166 @@ static std::string describe_demon(const monsters &mons)
 {
     ASSERT(mons.ghost.get());
     
-    long globby = 0;
     const ghost_demon &ghost = *mons.ghost;
     
-    for (unsigned i = 0; i < ghost.name.length(); i++)
-        globby += ghost.name[i];
-
-    globby *= ghost.name.length();
+    const long seed =
+        std::accumulate(ghost.name.begin(), ghost.name.end(), 0L) *
+        ghost.name.length();
 
     rng_save_excursion exc;
-    seed_rng( globby );
+    seed_rng( seed );
 
-    std::string description = "A powerful demon, ";
+    const char* body_descs[] = {
+        " huge, barrel-shaped ",
+        " wispy, insubstantial ",
+        " spindly ",
+        " skeletal ",
+        " horribly deformed ",
+        " spiny ",
+        " waif-like ",
+        " scaly ",
+        " sickeningly deformed ",
+        " bruised and bleeding ",
+        " sickly ",
+        " mass of writhing tentacles for a ",
+        " mass of ropey tendrils for a ",
+        " tree trunk-like ",
+        " hairy ",
+        " furry ",
+        " fuzzy ",
+        "n obese ",
+        " fat ",
+        " slimy ",
+        " wrinkled ",
+        " metallic ",
+        " glassy ",
+        " crystalline ",
+        " muscular ",
+        "n icky ",
+        " swollen ",
+        " lumpy ",
+        "n armoured ",
+        " carapaced ",
+        " slender "
+    };
 
-    description += ghost.name;
-    description += " has a";
+    const char* wing_names[] = {
+        " with small insectoid wings",
+        " with large insectoid wings",
+        " with moth-like wings",
+        " with butterfly wings",
+        " with huge, bat-like wings",
+        " with fleshy wings",
+        " with small, bat-like wings",
+        " with hairy wings",
+        " with great feathered wings",
+        " with shiny metal wings"
+    };
 
-    switch (random2(31))
-    {
-    case 0:
-        description += " huge, barrel-shaped ";
-        break;
-    case 1:
-        description += " wispy, insubstantial ";
-        break;
-    case 2:
-        description += " spindly ";
-        break;
-    case 3:
-        description += " skeletal ";
-        break;
-    case 4:
-        description += " horribly deformed ";
-        break;
-    case 5:
-        description += " spiny ";
-        break;
-    case 6:
-        description += " waif-like ";
-        break;
-    case 7:
-        description += " scaly ";
-        break;
-    case 8:
-        description += " sickeningly deformed ";
-        break;
-    case 9:
-        description += " bruised and bleeding ";
-        break;
-    case 10:
-        description += " sickly ";
-        break;
-    case 11:
-        description += " mass of writhing tentacles for a ";
-        break;
-    case 12:
-        description += " mass of ropey tendrils for a ";
-        break;
-    case 13:
-        description += " tree trunk-like ";
-        break;
-    case 14:
-        description += " hairy ";
-        break;
-    case 15:
-        description += " furry ";
-        break;
-    case 16:
-        description += " fuzzy ";
-        break;
-    case 17:
-        description += "n obese ";
-        break;
-    case 18:
-        description += " fat ";
-        break;
-    case 19:
-        description += " slimy ";
-        break;
-    case 20:
-        description += " wrinkled ";
-        break;
-    case 21:
-        description += " metallic ";
-        break;
-    case 22:
-        description += " glassy ";
-        break;
-    case 23:
-        description += " crystalline ";
-        break;
-    case 24:
-        description += " muscular ";
-        break;
-    case 25:
-        description += "n icky ";
-        break;
-    case 26:
-        description += " swollen ";
-        break;
-    case 27:
-        description += " lumpy ";
-        break;
-    case 28:
-        description += "n armoured ";
-        break;
-    case 29:
-        description += " carapaced ";
-        break;
-    case 30:
-        description += " slender ";
-        break;
-    }
+    const char* lev_names[] = {
+        " which hovers in mid-air",
+        " with sacs of gas hanging from its back"
+    };
 
-    description += "body";
+    const char* nonfly_names[] = {
+        " covered in tiny crawling spiders",
+        " covered in tiny crawling insects",
+        " and the head of a crocodile",
+        " and the head of a hippopotamus",
+        " and a cruel curved beak for a mouth",
+        " and a straight sharp beak for a mouth",
+        " and no head at all",
+        " and a hideous tangle of tentacles for a mouth",
+        " and an elephantine trunk",
+        " and an evil-looking proboscis",
+        " and dozens of eyes",
+        " and two ugly heads",
+        " and a long serpentine tail",
+        " and a pair of huge tusks growing from its jaw",
+        " and a single huge eye, in the centre of its forehead",
+        " and spikes of black metal for teeth",
+        " and a disc-shaped sucker for a head",
+        " and huge, flapping ears",
+        " and a huge, toothy maw in the centre of its chest",
+        " and a giant snail shell on its back",
+        " and a dozen heads",
+        " and the head of a jackal",
+        " and the head of a baboon",
+        " and a huge, slobbery tongue",
+        " which is covered in oozing lacerations",
+        " and the head of a frog",
+        " and the head of a yak",
+        " and eyes out on stalks",
+    };
 
+    const char* misc_descs[] = {
+        " It seethes with hatred of the living.",
+        " Tiny orange flames dance around it.",
+        " Tiny purple flames dance around it.",
+        " It is surrounded by a weird haze.",
+        " It glows with a malevolent light.",
+        " It looks incredibly angry.",
+        " It oozes with slime.",
+        " It dribbles constantly.",
+        " Mould grows all over it.",
+        " It looks diseased.",
+        " It looks as frightened of you as you are of it.",
+        " It moves in a series of hideous convulsions.",
+        " It moves with an unearthly grace.",
+        " It hungers for your soul!",
+        " It leaves a glistening oily trail.",
+        " It shimmers before your eyes.",
+        " It is surrounded by a brilliant glow.",
+        " It radiates an aura of extreme power.",
+    };
+
+    std::ostringstream description;
+    description << "A powerful demon, " << ghost.name << " has a"
+                << RANDOM_ELEMENT(body_descs) << "body";
     
     switch (ghost.values[GVAL_DEMONLORD_FLY])
     {
-    case 1: // proper flight
-        switch (random2(10))
-        {
-        case 0:
-            description += " with small insectoid wings";
-            break;
-        case 1:
-            description += " with large insectoid wings";
-            break;
-        case 2:
-            description += " with moth-like wings";
-            break;
-        case 3:
-            description += " with butterfly wings";
-            break;
-        case 4:
-            description += " with huge, bat-like wings";
-            break;
-        case 5:
-            description += " with fleshy wings";
-            break;
-        case 6:
-            description += " with small, bat-like wings";
-            break;
-        case 7:
-            description += " with hairy wings";
-            break;
-        case 8:
-            description += " with great feathered wings";
-            break;
-        case 9:
-            description += " with shiny metal wings";
-            break;
-        default:
-            break;
-        }
+    case 1:
+        description << RANDOM_ELEMENT(wing_names);
         break;
 
     case 2: // levitation
-        if (coinflip())
-            description += " which hovers in mid-air";
-        else
-            description += " with sacs of gas hanging from its back";
+        description << RANDOM_ELEMENT(lev_names);
         break;
 
     default:  // does not fly
-        switch (random2(40))
-        {
-        default:
-            break;
-        case 12:
-            description += " covered in tiny crawling spiders";
-            break;
-        case 13:
-            description += " covered in tiny crawling insects";
-            break;
-        case 14:
-            description += " and the head of a crocodile";
-            break;
-        case 15:
-            description += " and the head of a hippopotamus";
-            break;
-        case 16:
-            description += " and a cruel curved beak for a mouth";
-            break;
-        case 17:
-            description += " and a straight sharp beak for a mouth";
-            break;
-        case 18:
-            description += " and no head at all";
-            break;
-        case 19:
-            description += " and a hideous tangle of tentacles for a mouth";
-            break;
-        case 20:
-            description += " and an elephantine trunk";
-            break;
-        case 21:
-            description += " and an evil-looking proboscis";
-            break;
-        case 22:
-            description += " and dozens of eyes";
-            break;
-        case 23:
-            description += " and two ugly heads";
-            break;
-        case 24:
-            description += " and a long serpentine tail";
-            break;
-        case 25:
-            description += " and a pair of huge tusks growing from its jaw";
-            break;
-        case 26:
-            description +=
-                " and a single huge eye, in the centre of its forehead";
-            break;
-        case 27:
-            description += " and spikes of black metal for teeth";
-            break;
-        case 28:
-            description += " and a disc-shaped sucker for a head";
-            break;
-        case 29:
-            description += " and huge, flapping ears";
-            break;
-        case 30:
-            description += " and a huge, toothy maw in the centre of its chest";
-            break;
-        case 31:
-            description += " and a giant snail shell on its back";
-            break;
-        case 32:
-            description += " and a dozen heads";
-            break;
-        case 33:
-            description += " and the head of a jackal";
-            break;
-        case 34:
-            description += " and the head of a baboon";
-            break;
-        case 35:
-            description += " and a huge, slobbery tongue";
-            break;
-        case 36:
-            description += " which is covered in oozing lacerations";
-            break;
-        case 37:
-            description += " and the head of a frog";
-            break;
-        case 38:
-            description += " and the head of a yak";
-            break;
-        case 39:
-            description += " and eyes out on stalks";
-            break;
-        }
+        if ( !one_chance_in(4) )
+            description << RANDOM_ELEMENT(nonfly_names);
         break;
     }
 
-    description += ".";
+    description << ".";
 
-    switch (random2(40) + (player_can_smell() ? 0 : 3))
+    if ( random2(40) < 3 )
     {
-    case 0:
-        description += " It stinks of brimstone.";
-        break;
-    case 1:
-        description += " It smells like rotting flesh";
-        if (you.mutation[MUT_SAPROVOROUS] == 3)
-            description += " - yum!";
-        else
-            description += ".";
-        break;
-    case 2:
-        description += " It is surrounded by a sickening stench.";
-        break;
-    case 3:
-        description += " It seethes with hatred of the living.";
-        break;
-    case 4:
-        description += " Tiny orange flames dance around it.";
-        break;
-    case 5:
-        description += " Tiny purple flames dance around it.";
-        break;
-    case 6:
-        description += " It is surrounded by a weird haze.";
-        break;
-    case 7:
-        description += " It glows with a malevolent light.";
-        break;
-    case 8:
-        description += " It looks incredibly angry.";
-        break;
-    case 9:
-        description += " It oozes with slime.";
-        break;
-    case 10:
-        description += " It dribbles constantly.";
-        break;
-    case 11:
-        description += " Mould grows all over it.";
-        break;
-    case 12:
-        description += " It looks diseased.";
-        break;
-    case 13:
-        description += " It looks as frightened of you as you are of it.";
-        break;
-    case 14:
-        description += " It moves in a series of hideous convulsions.";
-        break;
-    case 15:
-        description += " It moves with an unearthly grace.";
-        break;
-    case 16:
-        description += " It hungers for your soul!";
-        break;
-    case 17:
-        description += " It leaves a glistening oily trail.";
-        break;
-    case 18:
-        description += " It shimmers before your eyes.";
-        break;
-    case 19:
-        description += " It is surrounded by a brilliant glow.";
-        break;
-    case 20:
-        description += " It radiates an aura of extreme power.";
-        break;
-    default:
-        break;
+        if ( player_can_smell() )
+        {
+            switch ( random2(3) )
+            {
+            case 0:
+                description << " It stinks of brimstone.";
+                break;
+            case 1:
+                description << " It is surrounded by a sickening stench.";
+                break;
+            case 2:
+                description << " It smells like rotting flesh"
+                            << (you.mutation[MUT_SAPROVOROUS] == 3 ?
+                                " - yum!" : ".");
+                break;
+            }
+        }
     }
-    return description;
-}                               // end describe_demon()
+    else if (coinflip())
+        description << RANDOM_ELEMENT(misc_descs);
+
+    return description.str();
+}
 
 
 //---------------------------------------------------------------
@@ -1438,9 +1184,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
     }
 
     const int ego = get_armour_ego_type( item );
-    if (ego != SPARM_NORMAL 
-        && item_type_known(item) 
-        && verbose)
+    if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
     {
         description += "$";
 
@@ -1499,13 +1243,13 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
         // these two are robes only:
         case SPARM_POSITIVE_ENERGY:
-            description += "It partially protects its wearer from "
+            description += "It protects its wearer from "
                 "the effects of negative energy. ";
             break;
         case SPARM_ARCHMAGI:
             description += "It greatly increases the power of its "
                 "wearer's magical spells, but is only "
-                "intended for those who have " "very little left to learn. ";
+                "intended for those who have very little left to learn. ";
             break;
 
         case SPARM_PRESERVATION:
