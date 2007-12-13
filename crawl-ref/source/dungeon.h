@@ -319,7 +319,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
 
 class mons_spec;
-bool dgn_place_monster(const mons_spec &mspec,
+bool dgn_place_monster(mons_spec &mspec,
                        int monster_level, int vx, int vy,
                        bool generate_awake);
 

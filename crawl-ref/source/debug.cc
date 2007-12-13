@@ -1,4 +1,4 @@
-/*
+ /*
  *  File:       debug.cc
  *  Summary:    Debug and wizard related functions.
  *  Written by: Linley Henzell and Jesse Jones
@@ -427,7 +427,7 @@ void create_spec_monster_name(int x, int y)
     if (y == -1)
         y = you.y_pos;
 
-    const mons_spec mspec = mlist.get_monster(0);
+    mons_spec mspec = mlist.get_monster(0);
     if (!force_place && mspec.mid != -1)
     {
         coord_def place = find_newmons_square(mspec.mid, x, y);

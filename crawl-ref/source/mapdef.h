@@ -325,6 +325,69 @@ private:
     bool solid_checked;
 };
 
+enum item_spec_type
+{
+    ISPEC_GOOD   = -2,
+    ISPEC_SUPERB = -3
+};
+
+struct item_spec
+{
+    int genweight;
+    
+    object_class_type base_type;
+    int sub_type;
+    int ego;
+    int allow_uniques;
+    int level;
+    int race;
+    int qty;
+
+    item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
+        ego(0), allow_uniques(1), level(-1), race(MAKE_ITEM_RANDOM_RACE),
+        qty(0)
+    {
+    }
+};
+typedef std::vector<item_spec> item_spec_list;
+
+class item_list
+{
+public:
+    item_list() : items() { }
+
+    void clear();
+
+    item_spec get_item(int index);
+    size_t size() const { return items.size(); }
+
+    std::string add_item(const std::string &spec, bool fix = false);
+    std::string set_item(int index, const std::string &spec);
+
+private:
+    struct item_spec_slot
+    {
+        item_spec_list ilist;
+        bool fix_slot;
+
+        item_spec_slot() : ilist(), fix_slot(false)
+        {
+        }
+    };
+    
+private:
+    item_spec item_by_specifier(const std::string &spec);
+    item_spec_slot parse_item_spec(std::string spec);
+    item_spec parse_single_spec(std::string s);
+    void parse_raw_name(std::string name, item_spec &spec);
+    void parse_random_by_class(std::string c, item_spec &spec);
+    item_spec pick_item(item_spec_slot &slot);
+
+private:
+    std::vector<item_spec_slot> items;
+    std::string error;
+};
+
 struct mons_spec
 {
     int  mid;
@@ -335,11 +398,13 @@ struct mons_spec
     bool generate_awake;
     int colour;
 
+    item_list items;
+
     mons_spec(int id = RANDOM_MONSTER, int num = 250,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false)
         : mid(id), monnum(num), genweight(gw), mlevel(ml), fix_mons(_fixmons),
-        generate_awake(awaken), colour(BLACK)
+        generate_awake(awaken), colour(BLACK), items()
     {
     }
 };
@@ -391,67 +456,6 @@ private:
 
 private:
     std::vector< mons_spec_slot > mons;
-    std::string error;
-};
-
-enum item_spec_type
-{
-    ISPEC_GOOD   = -2,
-    ISPEC_SUPERB = -3
-};
-
-struct item_spec
-{
-    int genweight;
-    
-    object_class_type base_type;
-    int sub_type;
-    int allow_uniques;
-    int level;
-    int race;
-    int qty;
-
-    item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
-        allow_uniques(1), level(-1), race(MAKE_ITEM_RANDOM_RACE), qty(0)
-    {
-    }
-};
-typedef std::vector<item_spec> item_spec_list;
-
-class item_list
-{
-public:
-    item_list() : items() { }
-
-    void clear();
-
-    item_spec get_item(int index);
-    size_t size() const { return items.size(); }
-
-    std::string add_item(const std::string &spec, bool fix = false);
-    std::string set_item(int index, const std::string &spec);
-
-private:
-    struct item_spec_slot
-    {
-        item_spec_list ilist;
-        bool fix_slot;
-
-        item_spec_slot() : ilist(), fix_slot(false)
-        {
-        }
-    };
-    
-private:
-    item_spec item_by_specifier(const std::string &spec);
-    item_spec_slot parse_item_spec(std::string spec);
-    item_spec parse_single_spec(std::string s);
-    void parse_raw_name(std::string name, item_spec &spec);
-    void parse_random_by_class(std::string c, item_spec &spec);
-    item_spec pick_item(item_spec_slot &slot);
-
-private:
-    std::vector<item_spec_slot> items;
     std::string error;
 };
 

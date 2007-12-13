@@ -4173,7 +4173,7 @@ static void dgn_place_item_explicit(const item_spec &spec,
 
     const int item_made =
         items( spec.allow_uniques, spec.base_type, spec.sub_type, true, 
-               level, spec.race );
+               level, spec.race, 0, spec.ego );
     
     if (item_made != NON_ITEM && item_made != -1)
     {
@@ -4212,7 +4212,99 @@ static void dgn_place_item_explicit(int index, int x, int y,
     dgn_place_item_explicit(spec, x, y, level);
 }
 
-bool dgn_place_monster(const mons_spec &mspec,
+static void dgn_give_mon_spec_items(mons_spec &mspec,
+                                    const int mindex,
+                                    const int mid,
+                                    const int monster_level)
+{
+    monsters &mon(menv[mindex]);
+
+    unwind_var<int> save_speedinc(mon.speed_increment);
+
+    // Get rid of existing equipment.
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        if (mon.inv[i] != NON_ITEM)
+        {
+            item_def &item(mitm[mon.inv[i]]);
+            mon.unequip(item, i, 0, true);
+            destroy_item(mon.inv[i], true);
+            mon.inv[i] = NON_ITEM;
+        }
+    }
+
+    item_make_species_type racial = MAKE_ITEM_RANDOM_RACE;
+
+    if (mons_genus(mid) == MONS_ORC)
+        racial = MAKE_ITEM_ORCISH;
+    else if (mons_genus(mid) == MONS_ELF)
+        racial = MAKE_ITEM_ELVEN;
+
+    item_list &list = mspec.items;
+
+    const int size = list.size();
+    for (int i = 0; i < size; ++i)
+    {
+        item_spec spec = list.get_item(i);
+
+        if (spec.base_type == OBJ_UNASSIGNED)
+            continue;
+
+        // Don't give monster a randart, and don't radnomly give
+        // monster an ego item.
+        if (spec.base_type == OBJ_ARMOUR || spec.base_type == OBJ_WEAPONS
+            || spec.base_type == OBJ_MISSILES)
+        {
+            spec.allow_uniques = 0;
+            if (spec.ego == 0)
+                spec.ego = SP_FORBID_EGO;
+        }
+
+        // Gives orcs and elves appropriate racial gear, unless
+        // otherwise specified.
+        if (spec.race == MAKE_ITEM_RANDOM_RACE)
+        {
+            // But don't automatically give elves elven boots or
+            // elven cloaks.
+            if (racial != MAKE_ITEM_ELVEN || spec.base_type != OBJ_ARMOUR
+                || (spec.sub_type != ARM_CLOAK
+                    && spec.sub_type != ARM_BOOTS))
+            {
+                spec.race = racial;
+            }
+        }
+
+        int item_level = monster_level;
+
+        if (spec.level >= 0)
+            item_level = spec.level;
+        else
+        {
+            switch(spec.level)
+            {
+            case ISPEC_GOOD:
+                item_level = 5 + item_level * 2;
+                break;
+            case ISPEC_SUPERB:
+                item_level = MAKE_GOOD_ITEM;
+                break;
+            }
+        }
+
+        const int item_made =
+            items( spec.allow_uniques, spec.base_type, spec.sub_type, true,
+                   item_level, spec.race, 0, spec.ego );
+
+        if (item_made != NON_ITEM && item_made != -1)
+        {
+            item_def &item(mitm[item_made]);
+            mon.pickup_item(item, 0, true);
+        }
+    }
+}
+                                    
+
+bool dgn_place_monster(mons_spec &mspec,
                        int monster_level, int vx, int vy,
                        bool generate_awake)
 {
@@ -4248,10 +4340,13 @@ bool dgn_place_monster(const mons_spec &mspec,
                            m_generate_awake? BEH_WANDER : BEH_SLEEP,
                            MHITNOT, true, vx, vy, false,
                            PROX_ANYWHERE, mspec.monnum);
-        if (placed && mindex != -1 && mindex != NON_MONSTER
-            && mspec.colour != BLACK)
+        if (placed && mindex != -1 && mindex != NON_MONSTER)
         {
-            menv[mindex].colour = mspec.colour;
+            if (mspec.colour != BLACK)
+                menv[mindex].colour = mspec.colour;
+
+            if (mspec.items.size() > 0)
+                dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
         }
         return (placed);
     }
@@ -4260,7 +4355,7 @@ bool dgn_place_monster(const mons_spec &mspec,
 
 static bool dgn_place_monster(
     const vault_placement &place,
-    const mons_spec &mspec,
+    mons_spec &mspec,
     int monster_level,
     int vx, int vy)
 {
@@ -4278,8 +4373,8 @@ static bool dgn_place_one_monster(
 {
     for (int i = 0, size = mons.size(); i < size; ++i)
     {
-        if (dgn_place_monster(place, mons.get_monster(i),
-                               monster_level, vx, vy))
+        mons_spec spec = mons.get_monster(i);
+        if (dgn_place_monster(place, spec, monster_level, vx, vy))
         {
             return (true);
         }

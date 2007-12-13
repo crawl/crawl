@@ -1905,16 +1905,50 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
     for (int i = 0, ssize = specs.size(); i < ssize; ++i)
     {
         std::string s = specs[i];
+        std::vector<std::string> parts = split_string(";", s);
+        std::string mon_str = parts[0];
+
         mons_spec mspec;
 
-        mspec.genweight = find_weight(s);
+        if (parts.size() > 2)
+        {
+            error = make_stringf("Too many semi-colons for '%s' spec.",
+                                 mon_str.c_str());
+            return (slot);
+        }
+        else if (parts.size() == 2)
+        {
+            // TODO: Allow for a "fix_slot" type tag which will cause
+            // all monsters generated from this spec to have the
+            // exact same equipment.
+            std::string items_str = parts[1];
+            items_str = replace_all(items_str, "|", "/");
+
+            std::vector<std::string> segs = split_string(".", items_str);
+
+            if (segs.size() > NUM_MONSTER_SLOTS)
+            {
+                error = make_stringf("More items than monster item slots "
+                                     "for '%s'.", mon_str.c_str());
+                return (slot);
+            }
+
+            for (int j = 0, isize = segs.size(); j < isize; ++j)
+            {
+                error = mspec.items.add_item(segs[j], false);
+                if (!error.empty())
+                    return (slot);
+            }
+        }
+
+        mspec.genweight = find_weight(mon_str);
         if (mspec.genweight == TAG_UNFOUND || mspec.genweight <= 0)
             mspec.genweight = 10;
 
-        mspec.fix_mons = strip_tag(s, "fix_mons");
-        mspec.generate_awake = strip_tag(s, "generate_awake");
+        mspec.fix_mons = strip_tag(mon_str, "fix_mons");
+        mspec.generate_awake = strip_tag(mon_str, "generate_awake");
 
-        std::string colour = strip_tag_prefix(s, "col:");
+        std::string colour = strip_tag_prefix(mon_str, "col:");
         if (!colour.empty())
         {
             mspec.colour = str_to_colour(colour, BLACK);
@@ -1926,27 +1960,44 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
         }
 
-        trim_string(s);
+        trim_string(mon_str);
 
-        if (s == "8")
+        if (mon_str == "8")
             mspec.mlevel = -8;
-        else if (s == "9")
+        else if (mon_str == "9")
             mspec.mlevel = -9;
-        else if (check_mimic(s, &mspec.mid, &mspec.fix_mons))
+        else if (check_mimic(mon_str, &mspec.mid, &mspec.fix_mons))
             ;
-        else if (s != "0")
+        else if (mon_str != "0")
         {
-            const mons_spec nspec = mons_by_name(s);
+            const mons_spec nspec = mons_by_name(mon_str);
 
             if (nspec.mid == MONS_PROGRAM_BUG)
             {
-                error = make_stringf("unrecognised monster \"%s\"", s.c_str());
+                error = make_stringf("unrecognised monster \"%s\"",
+                                     mon_str.c_str());
                 return (slot);
             }
 
             mspec.mid = nspec.mid;
             mspec.monnum = nspec.monnum;
         }
+
+        if (mspec.items.size() > 0)
+        {
+            if (mspec.mid == RANDOM_MONSTER)
+            {
+                error = "Can't give spec items to a random monster.";
+                return (slot);
+            };
+
+            if (mons_itemuse(mspec.mid) < MONUSE_STARTING_EQUIPMENT)
+            {
+                error = make_stringf("Monster '%s' can't use items.",
+                                     mon_str.c_str());
+            }
+        }
+
         slot.mlist.push_back(mspec);
     }
 
@@ -2143,7 +2194,7 @@ item_spec item_list::pick_item(item_spec_slot &slot)
     
     return (spec);
 }
-    
+
 item_spec item_list::get_item(int index)
 {
     if (index < 0 || index >= (int) items.size())
@@ -2189,6 +2240,115 @@ std::string item_list::set_item(int index, const std::string &spec)
     return (error);    
 }
 
+// TODO: More checking for innapropriate combinations, like the holy
+// wrath brand on a demonic weapon or the running ego on a helmet.
+static int str_to_ego(item_spec &spec, std::string ego_str)
+{
+    const char* armour_egos[] = {
+        "running",
+        "fire_resistance",
+        "cold_resistance",
+        "poison_resistance",
+        "see_invisible",
+        "darkness",
+        "strength",
+        "dexterity",
+        "intelligence",
+        "ponderousness",
+        "levitation",
+        "magic_resistance",
+        "protection",
+        "stealth",
+        "resistance",
+        "positive_energy",
+        "archmagi",
+        "preservation",
+        NULL
+    };
+
+    const char* weapon_brands[] = {
+        "flaming",
+        "freezing",
+        "holy_wrath",
+        "electrocution",
+        "orc_slaying",
+        "venom",
+        "protection",
+        "draining",
+        "speed",
+        "vorpal",
+        "flame",
+        "frost",
+        "vampiricism",
+        "disruption",
+        "pain",
+        "distortion",
+        "reaching",
+        "returning",
+        "confuse",
+        NULL
+    };
+
+    const char* missile_brands[] = {
+        "flame",
+        "ice",
+        "poisoned",
+        "poisoned_ii",
+        "curare",
+        "returning",
+        NULL
+    };
+
+    const char** name_lists[3] = {armour_egos, weapon_brands, missile_brands};
+
+    int armour_order[3]  = {0, 1, 2};
+    int weapon_order[3]  = {1, 0, 2};
+    int missile_order[3] = {2, 0, 1};
+
+    int *order;
+
+    switch(spec.base_type)
+    {
+    case OBJ_ARMOUR:
+        order = armour_order;
+        break;
+
+    case OBJ_WEAPONS:
+        order = weapon_order;
+        break;
+
+    case OBJ_MISSILES:
+        order = missile_order;
+        break;
+
+    default:
+        DEBUGSTR("Bad base_type for ego'd item.");
+        return 0;
+    }
+
+    const char** allowed = name_lists[order[0]];
+
+    for (int i = 0; allowed[i] != NULL; i++)
+    {
+        if (ego_str == allowed[i])
+            return (i + 1);
+    }
+
+    // Incompatible or non-existant ego type
+    for (int i = 1; i <= 2; i++)
+    {
+        const char** list = name_lists[order[i]];
+
+        for (int j = 0; list[j] != NULL; j++)
+            if (ego_str == list[j])
+                // Ego incompatible with base type.
+                return (-1);
+    }
+
+    // Non-existant ego
+    return 0;
+}
+
 item_spec item_list::parse_single_spec(std::string s)
 {
     item_spec result;
@@ -2210,6 +2370,25 @@ item_spec item_list::parse_single_spec(std::string s)
     if (qty != TAG_UNFOUND)
         result.qty = qty;
 
+    std::string ego_str  = strip_tag_prefix(s, "ego:");
+    std::string race_str = strip_tag_prefix(s, "race:");
+    lowercase(ego_str);
+    lowercase(race_str);
+
+    if (race_str == "elven")
+        result.race = MAKE_ITEM_ELVEN;
+    else if (race_str == "dwarven")
+        result.race = MAKE_ITEM_DWARVEN;
+    else if (race_str == "orcish")
+        result.race = MAKE_ITEM_ORCISH;
+    else if (race_str == "none" || race_str == "no_race")
+        result.race = MAKE_ITEM_NO_RACE;
+    else if (!race_str.empty())
+    {
+        error = make_stringf("Bad race: %s", race_str.c_str());
+        return (result);
+    }
+
     if (strip_tag(s, "good_item"))
         result.level = MAKE_GOOD_ITEM;
     else
@@ -2218,7 +2397,10 @@ item_spec item_list::parse_single_spec(std::string s)
         if (number != TAG_UNFOUND)
         {
             if (number <= 0)
+            {
                 error = make_stringf("Bad item level: %d", number);
+                return (result);
+            }
 
             result.level = number;
         }
@@ -2234,13 +2416,19 @@ item_spec item_list::parse_single_spec(std::string s)
         if (uniq != TAG_UNFOUND)
         {
             if (uniq <= 0)
+            {
                 error = make_stringf("Bad uniq level: %d", uniq);
+                return (result);
+            }
             result.allow_uniques = uniq;
         }
     }
 
     // Clean up after any tag brain damage.
     trim_string(s);
+
+    if (!ego_str.empty())
+        error = "Can't set an ego for random items.";
     
     // Completely random?
     if (s == "random" || s == "any" || s == "%")
@@ -2258,6 +2446,9 @@ item_spec item_list::parse_single_spec(std::string s)
     }
     else if (s == "$" || s == "gold")
     {
+        if (!ego_str.empty())
+            error = "Can't set an ego for gold.";
+
         result.base_type = OBJ_GOLD;
         result.sub_type = OBJ_RANDOM;
         return (result);
@@ -2265,6 +2456,7 @@ item_spec item_list::parse_single_spec(std::string s)
 
     if (s == "nothing")
     {
+        error.clear();
         result.base_type = OBJ_UNASSIGNED;
         return (result);
     }
@@ -2283,7 +2475,41 @@ item_spec item_list::parse_single_spec(std::string s)
     }
 
     // Check for actual item names.
+    error.clear();
     parse_raw_name(s, result);
+
+    if (!error.empty() || ego_str.empty())
+        return (result);
+
+    if (result.base_type != OBJ_WEAPONS
+        && result.base_type != OBJ_MISSILES
+        && result.base_type != OBJ_ARMOUR)
+    {
+        error = "An ego can only be applied to a weapon, missile or "
+            "armour.";
+        return (result);
+    }
+
+    if (ego_str == "none")
+    {
+        result.ego = -1;
+        return (result);
+    }
+
+    const int ego = str_to_ego(result, ego_str);
+
+    if (ego == 0)
+    {
+        error = make_stringf("No such ego as: %s", ego_str.c_str());
+        return (result);
+    }
+    else if (ego == -1)
+    {
+        error = make_stringf("Ego '%s' is incompatible with item '%s'.",
+                             ego_str.c_str(), s.c_str());
+        return (result);
+    }
+    result.ego = ego;
 
     return (result);
 }

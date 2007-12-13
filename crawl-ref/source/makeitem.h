@@ -23,7 +23,7 @@ enum item_make_species_type
 
 int items( int allow_uniques, object_class_type force_class, int force_type, 
            bool dont_place, int item_level, int item_race,
-           unsigned mapmask = 0 );
+           unsigned mapmask = 0, int force_ego = 0 );
 
 void item_colour( item_def &item );
 void init_rod_mp(item_def &item);

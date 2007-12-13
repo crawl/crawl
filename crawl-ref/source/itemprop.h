@@ -73,8 +73,12 @@ enum boot_type          // used in pluses2
     NUM_BOOT_TYPES
 };
 
+const int SP_FORBID_EGO   = -1;
+const int SP_FORBID_BRAND = -1;
+
 enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 {
+    SPWPN_FORBID_BRAND = -1,           //   -1
     SPWPN_NORMAL,                      //    0
     SPWPN_FLAMING,
     SPWPN_FREEZING,
@@ -319,6 +323,7 @@ enum scroll_type
 
 enum special_armour_type
 {
+    SPARM_FORBID_EGO = -1,             //   -1
     SPARM_NORMAL,                      //    0
     SPARM_RUNNING,
     SPARM_FIRE_RESISTANCE,
@@ -342,6 +347,7 @@ enum special_armour_type
 
 enum special_missile_type // to separate from weapons in general {dlb}
 {
+    SPMSL_FORBID_BRAND = -1,           //   -1
     SPMSL_NORMAL,                      //    0
     SPMSL_FLAME,                       //    1
     SPMSL_ICE,                         //    2

@@ -1143,6 +1143,10 @@ static void weapon_add_racial_modifiers(item_def& item)
 
 static brand_type determine_weapon_brand(const item_def& item, int item_level)
 {
+    // Forced ego.
+    if (item.special != 0)
+        return static_cast<brand_type>(item.special);
+
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
     const int tries = force_good ? 5 : 1;
     brand_type rc = SPWPN_NORMAL;
@@ -1498,6 +1502,11 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
 
     // Artefacts handled, let's make a normal item.
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
+    const bool forced_ego = item.special > 0;
+    const bool no_brand   = item.special == SPWPN_FORBID_BRAND;
+
+    if (no_brand)
+        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
 
     // If it's forced to be a good item, upgrade the worst weapons.
     if (force_good
@@ -1509,14 +1518,13 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
 
     item.plus = 0;
     item.plus2 = 0;
-    item.special = SPWPN_NORMAL;
 
     set_equip_race(item, determine_weapon_race(item, item_race));
 
     // if we allow acquirement-type items to be orcish, then
     // there's a good chance that we'll just strip them of
     // their ego type at the bottom of this function. -- bwr
-    if (force_good && get_equip_race( item ) == ISFLAG_ORCISH)
+    if (force_good && !forced_ego && get_equip_race( item ) == ISFLAG_ORCISH)
         set_equip_race( item, ISFLAG_NO_RACE );
 
     // Demonic items can't be racial.
@@ -1525,15 +1533,17 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
 
     weapon_add_racial_modifiers(item);
 
-    if ((force_good || is_demonic(item) || random2(200) <= 50 + item_level)
+    if ((force_good || is_demonic(item) || forced_ego
+         || random2(200) <= 50 + item_level)
         // nobody would bother enchanting a club
         && item.sub_type != WPN_CLUB
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB)
     {
         // Make a better item (possibly ego)
-        set_item_ego_type(item, OBJ_WEAPONS,
-                          determine_weapon_brand(item, item_level));
+        if (!no_brand)
+            set_item_ego_type(item, OBJ_WEAPONS,
+                              determine_weapon_brand(item, item_level));
 
         // if acquired item still not ego... enchant it up a bit.
         if (force_good && item.special == SPWPN_NORMAL)
@@ -1574,13 +1584,14 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
         }
     }
 
-    if (get_equip_race(item) == ISFLAG_ORCISH)
+    if (get_equip_race(item) == ISFLAG_ORCISH
+        && !(item_race == MAKE_ITEM_ORCISH && forced_ego))
     {
         // no holy wrath or slay orc and 1/2 the time no-ego
         const int brand = get_weapon_brand( item );
         if (brand == SPWPN_HOLY_WRATH
             || brand == SPWPN_ORC_SLAYING
-            || (brand != SPWPN_NORMAL && coinflip()))
+            || (brand != SPWPN_NORMAL && !forced_ego && coinflip()))
         {
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
         }
@@ -1655,6 +1666,10 @@ static item_status_flag_type determine_missile_race(const item_def& item,
 static special_missile_type determine_missile_brand(const item_def& item,
                                                     int item_level)
 {
+    // Forced ego.
+    if (item.special != 0)
+        return static_cast<special_missile_type>(item.special);
+
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
     special_missile_type rc = SPMSL_NORMAL;
     // note that needles can only be poisoned
@@ -1707,8 +1722,11 @@ static special_missile_type determine_missile_brand(const item_def& item,
 static void generate_missile_item(item_def& item, int force_type,
                                   int item_level, int item_race)
 {
+    const bool no_brand = item.special == SPMSL_FORBID_BRAND;
+    if (no_brand)
+        item.special = SPMSL_NORMAL;
+
     item.plus = 0;
-    item.special = SPMSL_NORMAL;
 
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1735,8 +1753,9 @@ static void generate_missile_item(item_def& item, int force_type,
     }
 
     set_equip_race(item, determine_missile_race(item, item_race));
-    set_item_ego_type( item, OBJ_MISSILES,
-                       determine_missile_brand(item, item_level) );
+    if (!no_brand)
+        set_item_ego_type( item, OBJ_MISSILES,
+                           determine_missile_brand(item, item_level) );
 
     // reduced quantity if special
     if (item.sub_type == MI_JAVELIN ||
@@ -1915,6 +1934,9 @@ static item_status_flag_type determine_armour_race(const item_def& item,
 static special_armour_type determine_armour_ego(const item_def& item,
                                                 int force_type, int item_level)
 {
+    if (item.special != 0)
+        return static_cast<special_armour_type>(item.special);
+
     special_armour_type rc = SPARM_NORMAL;
     switch (item.sub_type)
     {
@@ -2043,8 +2065,13 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
         item.plus++;
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
+    const bool forced_ego = item.special > 0;
+    const bool no_ego     = item.special == SPARM_FORBID_EGO;
 
-    if (force_good || item.sub_type == ARM_WIZARD_HAT
+    if (no_ego)
+        item.special = SPARM_NORMAL;
+
+    if (force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
         || 50 + item_level >= random2(250))
     {
         // Make a good item...
@@ -2053,8 +2080,8 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
         if (item.sub_type <= ARM_PLATE_MAIL && 20 + item_level >= random2(300))
             item.plus += random2(3);
 
-        if (30 + item_level >= random2(350)
-            && (force_good
+        if (!no_ego && (30 + item_level >= random2(350))
+            && (force_good || forced_ego
                 || (!get_equip_race(item) == ISFLAG_ORCISH
                     || (item.sub_type <= ARM_PLATE_MAIL && coinflip()))))
         {
@@ -2102,7 +2129,8 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
         && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR)
     {
         set_equip_race( item, ISFLAG_NO_RACE );
-        set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
+        if (!forced_ego)
+            set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
     }
 }
 
@@ -2615,9 +2643,18 @@ int items( int allow_uniques,       // not just true-false,
            int item_level,          // level of the item, can differ from global
            int item_race,           // weapon / armour racial categories
                                     // item_race also gives type of rune!
-           unsigned mapmask) 
+           unsigned mapmask,
+           int force_ego)           // desired ego/brand
 {
-    const bool force_good = (item_level == MAKE_GOOD_ITEM);
+    // TODO: Allow a combination of force_ego > 0 and
+    // force_type == OBJ_RANDOM, so that (for example) you could have
+    // force_class = OBJ_WEAPON, force_type = OBJ_RANDOM and
+    // force_ego = SPWPN_VORPAL, and a random weapon of a type
+    // appropriate for the vorpal brand will be chosen.
+    ASSERT(force_ego <= 0 ||
+           ((force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
+             || force_class == OBJ_MISSILES)
+            && force_type != OBJ_RANDOM));
 
     // find an empty slot for the item (with culling if required)
     int p = get_item_slot(10);
@@ -2625,6 +2662,12 @@ int items( int allow_uniques,       // not just true-false,
         return (NON_ITEM);
 
     item_def& item(mitm[p]);
+
+    const bool force_good = (item_level == MAKE_GOOD_ITEM);
+
+    if (force_ego > 0)
+        allow_uniques = false;
+    item.special = force_ego;
 
     // cap item_level unless an acquirement-level item {dlb}:
     if (item_level > 50 && !force_good)
