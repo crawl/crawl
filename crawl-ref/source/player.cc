@@ -395,12 +395,11 @@ bool player_genus(genus_type which_genus, species_type species)
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
-    case SP_ELF:
         return (which_genus == GENPC_ELVEN);
 
     case SP_MOUNTAIN_DWARF:
         return (which_genus == GENPC_DWARVEN);
-        
+
     case SP_OGRE:
     case SP_OGRE_MAGE:
         return (which_genus == GENPC_OGRE);

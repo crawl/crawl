@@ -526,23 +526,25 @@ static void racialise_starting_equipment()
             if ((you.inv[i].base_type == OBJ_ARMOUR ||
                  you.inv[i].base_type == OBJ_WEAPONS ||
                  you.inv[i].base_type == OBJ_MISSILES)
-                && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE )
+                && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
             {
+                int speci = (player_genus(GENPC_ELVEN))   ? 1 :
+                            (player_genus(GENPC_DWARVEN)) ? 2 :
+                            (you.species == SP_HILL_ORC)  ? 3 :
+                                                            0;
+
                 // now add appropriate species type mod
-                switch (you.species)
+                switch (speci)
                 {
-                case SP_HIGH_ELF:
-                case SP_GREY_ELF:
-                case SP_DEEP_ELF:
-                case SP_SLUDGE_ELF:
+                case 1:
                     set_equip_race( you.inv[i], ISFLAG_ELVEN );
                     break;
 
-                case SP_MOUNTAIN_DWARF:
+                case 2:
                     set_equip_race( you.inv[i], ISFLAG_DWARVEN );
                     break;
 
-                case SP_HILL_ORC:
+                case 3:
                     set_equip_race( you.inv[i], ISFLAG_ORCISH );
                     break;
 
@@ -3301,7 +3303,7 @@ bool give_items_skills()
 
             // Elven armour is light, we need to know this up front.
             racialise_starting_equipment();
-            
+
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
             if (you.species != SP_VAMPIRE)
