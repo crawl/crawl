@@ -134,7 +134,7 @@ const deck_archetype deck_of_summoning[] = {
 const deck_archetype deck_of_wonders[] = {
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 2} },
-    { CARD_SHUFFLE,    {5, 5, 5} },
+    { CARD_SHUFFLE,    {0, 1, 2} },
     { CARD_EXPERIENCE, {5, 5, 5} },
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_HELIX,      {5, 5, 5} },
