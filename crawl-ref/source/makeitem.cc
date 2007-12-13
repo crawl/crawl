@@ -979,6 +979,13 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
                 rc = ISFLAG_ORCISH;
             break;
 
+        case WPN_WHIP:
+            if (one_chance_in(4))
+                rc = ISFLAG_ORCISH;
+            if (one_chance_in(4))
+                rc = ISFLAG_ELVEN;
+            break;
+
         case WPN_MACE:
         case WPN_FLAIL:
         case WPN_SPIKED_FLAIL:
