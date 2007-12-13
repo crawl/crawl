@@ -677,7 +677,8 @@ void set_equip_race( item_def &item, unsigned long flags )
         {
         case OBJ_WEAPONS:
             if (weapon_skill(item) == SK_MACES_FLAILS
-                || weapon_skill(item) == SK_AXES)
+                || weapon_skill(item) == SK_AXES
+                || item.sub_type == WPN_CROSSBOW)
             {
                 return;
             }
@@ -705,7 +706,9 @@ void set_equip_race( item_def &item, unsigned long flags )
         {
         case OBJ_WEAPONS:
             if (weapon_skill(item) == SK_POLEARMS
-                || item.sub_type == WPN_BLOWGUN)
+                || item.sub_type == WPN_BLOWGUN
+                || item.sub_type == WPN_BOW
+                || item.sub_type == WPN_HAND_CROSSBOW)
             {
                 return;
             }
@@ -735,6 +738,10 @@ void set_equip_race( item_def &item, unsigned long flags )
     case ISFLAG_ORCISH:
         switch (item.base_type)
         {
+        case OBJ_WEAPONS:
+            if (item.sub_type == WPN_HAND_CROSSBOW)
+                return;
+            break;
         case OBJ_ARMOUR:
             if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
                 return;

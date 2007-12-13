@@ -1127,11 +1127,11 @@ static void weapon_add_racial_modifiers(item_def& item)
         if (coinflip())
             item.plus2++;
         break;
-        
+
     case ISFLAG_ELVEN:
         item.plus += random2(3);
         break;
-            
+
     case ISFLAG_DWARVEN:
         if (coinflip())
             item.plus++;
@@ -1513,8 +1513,8 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
 
     set_equip_race(item, determine_weapon_race(item, item_race));
 
-    // if we allow acquirement-type items to be orcish, then 
-    // there's a good chance that we'll just strip them of 
+    // if we allow acquirement-type items to be orcish, then
+    // there's a good chance that we'll just strip them of
     // their ego type at the bottom of this function. -- bwr
     if (force_good && get_equip_race( item ) == ISFLAG_ORCISH)
         set_equip_race( item, ISFLAG_NO_RACE );
