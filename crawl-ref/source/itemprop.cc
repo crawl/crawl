@@ -716,6 +716,7 @@ void set_equip_race( item_def &item, unsigned long flags )
                 || (weapon_skill(item) == SK_LONG_SWORDS
                     && item.sub_type != WPN_FALCHION)
                 || item.sub_type == WPN_QUICK_BLADE
+                || item.sub_type == WPN_WHIP
                 || item.sub_type == WPN_BLOWGUN
                 || item.sub_type == WPN_BOW
                 || item.sub_type == WPN_LONGBOW
