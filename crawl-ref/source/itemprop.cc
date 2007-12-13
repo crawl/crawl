@@ -228,7 +228,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
         DAMV_STABBING | DAM_SLICE, 10 },
-    { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,  50,  0, 
+    { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,  50,  0,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_STABBING | DAM_SLICE, 2 },
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,  80,  2,
@@ -635,6 +635,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             || item.sub_type == WPN_LAJATANG
             || item.sub_type == WPN_SLING
             || item.sub_type == WPN_KNIFE
+            || item.sub_type == WPN_WHIP
             || item.sub_type == WPN_QUARTERSTAFF
             || item.sub_type == WPN_DEMON_BLADE
             || item.sub_type == WPN_DEMON_WHIP
@@ -678,6 +679,13 @@ void set_equip_race( item_def &item, unsigned long flags )
         case OBJ_WEAPONS:
             if (weapon_skill(item) == SK_MACES_FLAILS
                 || weapon_skill(item) == SK_AXES
+                || (weapon_skill(item) == SK_POLEARMS
+                    && item.sub_type != WPN_SPEAR
+                    && item.sub_type != WPN_TRIDENT)
+                || (weapon_skill(item) == SK_LONG_SWORDS
+                    && item.sub_type != WPN_FALCHION
+                    && item.sub_type != WPN_LONG_SWORD
+                    && item.sub_type != WPN_SCIMITAR)
                 || item.sub_type == WPN_CROSSBOW)
             {
                 return;
@@ -706,8 +714,12 @@ void set_equip_race( item_def &item, unsigned long flags )
         {
         case OBJ_WEAPONS:
             if (weapon_skill(item) == SK_POLEARMS
+                || (weapon_skill(item) == SK_LONG_SWORDS
+                    && item.sub_type != WPN_FALCHION)
+                || item.sub_type == WPN_QUICK_BLADE
                 || item.sub_type == WPN_BLOWGUN
                 || item.sub_type == WPN_BOW
+                || item.sub_type == WPN_LONGBOW
                 || item.sub_type == WPN_HAND_CROSSBOW)
             {
                 return;
@@ -739,7 +751,14 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (item.sub_type == WPN_HAND_CROSSBOW)
+            if ((weapon_skill(item) == SK_LONG_SWORDS
+                    && item.sub_type != WPN_FALCHION
+                    && item.sub_type != WPN_LONG_SWORD
+                    && item.sub_type != WPN_SCIMITAR
+                    && item.sub_type != WPN_GREAT_SWORD)
+                || item.sub_type == WPN_QUICK_BLADE
+                || item.sub_type == WPN_LONGBOW
+                || item.sub_type == WPN_HAND_CROSSBOW)
                 return;
             break;
         case OBJ_ARMOUR:
@@ -1422,7 +1441,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
 
         // adjust handedness for size only for non-whip melee weapons
         if (!is_range_weapon( item )
-            && item.sub_type != WPN_WHIP 
+            && item.sub_type != WPN_WHIP
             && item.sub_type != WPN_DEMON_WHIP)
         {
             fit = cmp_weapon_size( item, size );
@@ -1595,15 +1614,15 @@ skill_type range_skill( object_class_type wclass, int wtype )
 }                               // end weapon_skill()
 
 
-// Calculate the bonus to melee EV for using "wpn", with "skill" and "dex" 
+// Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
 // to protect a body of size "body".
-int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex, 
+int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
                      bool hide_hidden )
 {
     ASSERT( wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES );
 
-    int ret = 0; 
-   
+    int ret = 0;
+
     // Note: ret currently measured in halves (see skill factor)
     if (wpn.sub_type == WPN_WHIP || wpn.sub_type == WPN_DEMON_WHIP)
         ret = 3 + (dex / 5);
