@@ -469,7 +469,7 @@ ITEM:     (list of items, separated by comma)
              wand, food, scroll, jewelry, potion, book, staff, orb,
              misc, carrion. All of these are usable in map definitions,
              apart from "orb" and "carrion".
-          * "race:race_name", where "race_name" is "elvish", "dwarven"
+          * "race:race_name", where "race_name" is "elven", "dwarven"
              or "orcish"; it can also be "none" or "no_race" to prevent
              the item from being randomly being made racial.  Has no effect
              if the item can't take that kind of racial setting.
