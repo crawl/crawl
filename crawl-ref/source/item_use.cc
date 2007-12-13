@@ -766,11 +766,11 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
         return (false);
     }
-    
+
     bool can_wear = true;
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
-    
+
     if (sub_type == ARM_NAGA_BARDING)
         can_wear = (you.species == SP_NAGA);
 
@@ -817,7 +817,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("Boots don't fit your paws!");
            return (false);
         }
-        
+
         if (you.species == SP_NAGA)
         {
             if (verbose)
@@ -848,10 +848,20 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         // it fits
         return (true);
     }
-    else if (slot == EQ_HELMET && !is_hard_helmet( item ))
+    else if (slot == EQ_HELMET)
     {
         // soft helmets (caps and wizard hats) always fit
-        return (true);
+        if (!is_hard_helmet( item ))
+            return (true);
+
+        if (you.species == SP_KENKU
+            && (ignore_temporary || !player_is_shapechanged()))
+        {
+            if (verbose)
+               mpr("That helmet does not fit your head!");
+
+            return (false);
+        }
     }
     else if (!can_equip( slot, ignore_temporary ))
     {

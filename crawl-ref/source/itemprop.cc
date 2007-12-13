@@ -1122,7 +1122,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
 
                 return (false);
             }
-            
+
             switch (you.species)
             {
             case SP_NAGA:
