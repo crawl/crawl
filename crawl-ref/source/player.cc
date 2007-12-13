@@ -3247,14 +3247,7 @@ void level_change(bool skip_ability_increase)
                         MSGCH_INTRINSIC_GAIN);
                 }
                 else if (you.experience_level == 15)
-                {
                     mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
-                    if (you.duration[DUR_LEVITATION])
-                    {
-                        you.duration[DUR_LEVITATION] = 100;
-                        you.duration[DUR_CONTROLLED_FLIGHT] = 100;
-                    }
-                }
                 break;
 
             case SP_MERFOLK:
@@ -3669,7 +3662,7 @@ void display_char_status()
     const bool swim   = player_is_swimming();
 
     const bool lev    = player_is_airborne();
-    const bool fly    = (lev && you.duration[DUR_CONTROLLED_FLIGHT]);
+    const bool fly    = (you.flight_mode() == FL_FLY);
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
 
     mprf( "Your %s speed is %s%s%s.",
@@ -5986,6 +5979,24 @@ flight_type player::flight_mode() const
                 ? FL_FLY : FL_LEVITATE);
     else
         return (FL_NONE);
+}
+
+bool player::permanent_levitation() const
+{
+    return airborne() &&
+        (permanent_flight() ||
+         // Boots of levitation keep you with DUR_LEVITATION >= 2 at
+         // all times. This is so that you can evoke stop-levitation
+         // in order to actually cancel levitation (by setting
+         // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
+         (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ) &&
+          you.duration[DUR_LEVITATION] > 1));
+}
+
+bool player::permanent_flight() const
+{
+    return airborne() &&
+        (you.species == SP_KENKU && you.experience_level >= 15);
 }
 
 bool player::light_flight() const

@@ -675,13 +675,10 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (player_is_airborne())
-    {
-        if (you.duration[DUR_CONTROLLED_FLIGHT])
-            mpr("You fly upwards.");
-        else
-            mpr("You float upwards... And bob straight up to the ceiling!");
-    }
+    if (you.flight_mode() == FL_FLY)
+        mpr("You fly upwards.");
+    else if (you.flight_mode() == FL_LEVITATE)
+        mpr("You float upwards... And bob straight up to the ceiling!");
     else
         climb_message(stair_find, true, old_level_type);
 

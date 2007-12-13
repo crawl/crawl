@@ -2613,34 +2613,26 @@ static void decrement_durations()
     if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
         mpr("You are no longer glowing.", MSGCH_DURATION);
     
-    if (you.duration[DUR_LEVITATION] > 1)
+
+    if (!you.permanent_levitation())
     {
-        if (you.species != SP_KENKU || you.experience_level < 15)
-            you.duration[DUR_LEVITATION]--;
-
-        if (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ))
-            you.duration[DUR_LEVITATION] = 2;
-
-        if (you.duration[DUR_LEVITATION] == 10)
+        if ( decrement_a_duration(DUR_LEVITATION,
+                                  "You float gracefully downwards.",
+                                  10, random2(6),
+                                  "You are starting to lose your buoyancy!") )
         {
-            mpr("You are starting to lose your buoyancy!", MSGCH_DURATION);
-            you.duration[DUR_LEVITATION] -= random2(6);
-
-            if (you.duration[DUR_CONTROLLED_FLIGHT] > 0)
-                you.duration[DUR_CONTROLLED_FLIGHT] = you.duration[DUR_LEVITATION];
+            burden_change();
+            // Landing kills controlled flight.
+            you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+            // re-enter the terrain:
+            move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
         }
     }
-    else if (you.duration[DUR_LEVITATION] == 1)
-    {
-        mpr("You float gracefully downwards.", MSGCH_DURATION);
-        you.duration[DUR_LEVITATION] = 0;
-        burden_change();
-        you.duration[DUR_CONTROLLED_FLIGHT] = 0;
 
-        // re-enter the terrain:
-        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
-    }
-
+    if (!you.permanent_flight())
+        if ( decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne() )
+            mpr("You lose control over your flight.", MSGCH_DURATION);
+            
     if (you.rotting > 0)
     {
         // XXX: Mummies have an ability (albeit an expensive one) that 

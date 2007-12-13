@@ -1184,11 +1184,7 @@ static bool do_ability(const ability_def& abil)
         cast_fly( you.experience_level * 4 );
 
         if (you.experience_level > 14)
-        {
             mpr("You feel very comfortable in the air.");
-            you.duration[DUR_LEVITATION] = 100;
-            you.duration[DUR_CONTROLLED_FLIGHT] = 100;
-        }
         break;
     
     // Fly (Draconians, or anything else with wings)
@@ -1978,7 +1974,7 @@ std::vector<talent> your_talents( bool check_confused )
         add_talent(talents, ABIL_TRAN_BAT, check_confused );
     }
     
-    if (!you.duration[DUR_CONTROLLED_FLIGHT] && !player_is_airborne())
+    if (!player_is_airborne())
     {
         // kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked)

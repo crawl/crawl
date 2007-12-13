@@ -473,9 +473,7 @@ void print_stats(void)
 
         if (player_is_airborne())
         {
-            bool perm = (you.species == SP_KENKU && you.experience_level >= 15)
-                        || (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ))
-                        || (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
+            const bool perm = you.permanent_flight();
 
             if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))
             {

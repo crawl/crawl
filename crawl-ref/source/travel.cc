@@ -461,13 +461,6 @@ static bool is_safe_move(int x, int y)
     return (!is_damaging_cloud(ctype));
 }
 
-static bool player_is_permalevitating()
-{
-    return you.duration[DUR_LEVITATION] > 1 &&
-            ((you.species == SP_KENKU && you.experience_level >= 15)
-             || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ));
-}
-
 static void set_pass_feature(unsigned char grid, signed char pass)
 {
     if (traversable_terrain[(unsigned) grid] != FORBIDDEN)
@@ -489,7 +482,7 @@ void init_travel_terrain_check(bool check_race_equip)
         set_pass_feature(DNGN_DEEP_WATER, water);
 
         // Permanently levitating players can cross most hostile terrain.
-        signed char trav = player_is_permalevitating()? 
+        const signed char trav = you.permanent_levitation() ?
             TRAVERSABLE : IMPASSABLE;
 
         if (water != TRAVERSABLE)

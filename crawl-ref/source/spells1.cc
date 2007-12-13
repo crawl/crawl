@@ -785,13 +785,13 @@ void antimagic()
         DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
         DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE
     };
-        
-    if (you.duration[DUR_LEVITATION] > 2 && you.duration[DUR_LEVITATION] < 100)
+    
+    if (!you.permanent_levitation() && you.duration[DUR_LEVITATION] > 2)
         you.duration[DUR_LEVITATION] = 2;
 
-    if (you.duration[DUR_CONTROLLED_FLIGHT] < 100 &&
-        you.duration[DUR_CONTROLLED_FLIGHT] > 1) // don't mess with permaflight
+    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
         you.duration[DUR_CONTROLLED_FLIGHT] = 1;
+
     for ( unsigned int i = 0; i < ARRAYSIZE(dur_list); ++i )
         if ( you.duration[dur_list[i]] > 1 )
             you.duration[dur_list[i]] = 1;
@@ -1046,7 +1046,7 @@ void cast_swiftness(int power)
 
 void cast_fly(int power)
 {
-    int dur_change = 25 + random2(power) + random2(power);
+    const int dur_change = 25 + random2(power) + random2(power);
 
     const bool was_levitating = player_is_airborne();
 
