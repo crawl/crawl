@@ -676,7 +676,8 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if (weapon_skill(item) == SK_MACES_FLAILS
+            if ((weapon_skill(item) == SK_MACES_FLAILS
+                    && item.sub_type != WPN_WHIP)
                 || weapon_skill(item) == SK_AXES
                 || (weapon_skill(item) == SK_POLEARMS
                     && item.sub_type != WPN_SPEAR
