@@ -922,7 +922,7 @@ void randart_desc_properties( const item_def &item,
     if (!force_fake_props)
         return;
 
-    // For auto-inscribing randart jewellry, force_fake_props folds as
+    // For auto-inscribing randart jewellery, force_fake_props folds as
     // much info about the base type as possible into the randarts
     // property struct.
 
@@ -2025,7 +2025,7 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
     item.special = which;
     item.quantity = 1;
 
-    // Items originally generated in the abyss and not found will be 
+    // Items originally generated in the abyss and not found will be
     // shifted to "lost in abyss", and will only be found there. -- bwr
     set_unique_item_status( OBJ_WEAPONS, which, UNIQ_EXISTS );
 
