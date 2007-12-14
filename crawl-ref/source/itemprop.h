@@ -464,7 +464,7 @@ enum weapon_type
     WPN_BLESSED_BLADE,                 //   44
     WPN_LONGBOW,
     WPN_LAJATANG,
-    WPN_LOCHABER_AXE,
+    WPN_BARDICHE,
 
     NUM_WEAPONS,                       //   48 - must be last regular member {dlb}
 

@@ -674,9 +674,9 @@ lemon
 
 A yellow fruit.
 %%%%
-lochaber axe
+bardiche
 
-An enormous combination of a pike and a battle axe.
+A long pole with an enormous cleaving blade on one end.
 %%%%
 long sword
 

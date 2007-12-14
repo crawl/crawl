@@ -147,7 +147,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
                 || weapon->sub_type == WPN_DIRE_FLAIL
                 || weapon->sub_type == WPN_BATTLEAXE
                 || weapon->sub_type == WPN_EXECUTIONERS_AXE
-                || weapon->sub_type == WPN_LOCHABER_AXE
+                || weapon->sub_type == WPN_BARDICHE
                 || weapon->sub_type == WPN_HALBERD
                 || weapon->sub_type == WPN_GLAIVE
                 || weapon->sub_type == WPN_GIANT_CLUB

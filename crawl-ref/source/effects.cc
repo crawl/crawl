@@ -1547,7 +1547,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 case WPN_HALBERD:
                 case WPN_GLAIVE:
                 case WPN_SCYTHE:
-                case WPN_LOCHABER_AXE:
+                case WPN_BARDICHE:
                     thing.sub_type = 
                             (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
                     break;

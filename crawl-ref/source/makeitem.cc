@@ -1072,7 +1072,7 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
         case WPN_HALBERD:
         case WPN_GLAIVE:
         case WPN_EXECUTIONERS_AXE:
-        case WPN_LOCHABER_AXE:
+        case WPN_BARDICHE:
             if (one_chance_in(5))
                 rc = ISFLAG_ORCISH;
             break;
@@ -1367,7 +1367,7 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
         case WPN_GLAIVE:
         case WPN_SCYTHE:
         case WPN_TRIDENT:
-        case WPN_LOCHABER_AXE:
+        case WPN_BARDICHE:
             if (one_chance_in(30))
                 rc = SPWPN_HOLY_WRATH;
 
@@ -3260,7 +3260,7 @@ static item_make_species_type give_weapon(monsters *mon, int level,
                              (temp_rand >  8) ? WPN_WAR_AXE :       // 16%
                              (temp_rand >  5) ? WPN_GREAT_MACE :    // 12%
                              (temp_rand >  3) ? WPN_DIRE_FLAIL :    //  8%
-                             (temp_rand >  2) ? WPN_LOCHABER_AXE :  //  4%
+                             (temp_rand >  2) ? WPN_BARDICHE :      //  4%
                              (temp_rand >  1) ? WPN_GLAIVE :        //  4%
                              (temp_rand >  0) ? WPN_BROAD_AXE       //  4%
                                               : WPN_HALBERD);       //  4%

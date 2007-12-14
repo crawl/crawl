@@ -612,7 +612,7 @@ unsigned int item_value( item_def item, bool ident )
             break;
 
         case WPN_DIRE_FLAIL:
-        case WPN_LOCHABER_AXE:
+        case WPN_BARDICHE:
             valued += 90;
             break;
 

@@ -303,7 +303,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
-    { WPN_LOCHABER_AXE,      "lochaber axe",       18, -6, 20, 200,  8,
+    { WPN_BARDICHE,          "bardiche",           18, -6, 20, 200,  8,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 2 },
 
@@ -1345,7 +1345,7 @@ int weapon_rarity( int w_type )
 
     case WPN_GIANT_CLUB:
     case WPN_GIANT_SPIKED_CLUB:
-    case WPN_LOCHABER_AXE:
+    case WPN_BARDICHE:
         return (1);
 
     case WPN_DOUBLE_SWORD:
