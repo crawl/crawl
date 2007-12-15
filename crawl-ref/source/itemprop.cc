@@ -640,7 +640,8 @@ void set_equip_race( item_def &item, unsigned long flags )
             || item.sub_type == WPN_SCYTHE
             || item.sub_type == WPN_DEMON_BLADE
             || item.sub_type == WPN_DEMON_WHIP
-            || item.sub_type == WPN_DEMON_TRIDENT)
+            || item.sub_type == WPN_DEMON_TRIDENT
+            || item.sub_type == WPN_BLESSED_BLADE)
         {
             return;
         }
