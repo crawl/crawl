@@ -314,7 +314,7 @@ book of wizardry
 A book of magic spells. Beware, for some of the more powerful
 grimoires are not to be toyed with.
 %%%%
-boots
+pair of boots
 
 A pair of boots.
 %%%%
@@ -540,7 +540,7 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-gloves
+pair of gloves
 
 A pair of gloves.
 %%%%

@@ -1099,7 +1099,7 @@ std::string item_def::name_aux( description_level_type desc,
             buff << ' ';
         }
 
-        if (!basename)
+        if (!basename && !dbname)
             buff << racial_description_string(*this, terse);
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
