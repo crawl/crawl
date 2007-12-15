@@ -1528,16 +1528,13 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
     if (force_good && !forced_ego && get_equip_race( item ) == ISFLAG_ORCISH)
         set_equip_race( item, ISFLAG_NO_RACE );
 
-    // Demonic items can't be racial.
-    if ( is_demonic(item) )
-        set_equip_race( item, ISFLAG_NO_RACE );
-
     weapon_add_racial_modifiers(item);
 
     if ((force_good || is_demonic(item) || forced_ego
          || random2(200) <= 50 + item_level)
         // nobody would bother enchanting a club
         && item.sub_type != WPN_CLUB
+        && item.sub_type != WPN_ANCUS
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB)
     {
@@ -2129,7 +2126,6 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
     if (item.sub_type >= ARM_DRAGON_HIDE
         && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR)
     {
-        set_equip_race( item, ISFLAG_NO_RACE );
         if (!forced_ego)
             set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
     }
@@ -2831,6 +2827,7 @@ static bool weapon_is_visibly_special(const item_def &item)
                 && (get_equip_race(item)? one_chance_in(7)
                     : one_chance_in(3))))
         && item.sub_type != WPN_CLUB
+        && item.sub_type != WPN_ANCUS
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB
         && get_equip_desc(item) == ISFLAG_NO_DESC;
