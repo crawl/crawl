@@ -632,6 +632,7 @@ void set_equip_race( item_def &item, unsigned long flags )
         if (item.sub_type == WPN_GIANT_CLUB
             || item.sub_type == WPN_GIANT_SPIKED_CLUB
             || item.sub_type == WPN_ANCUS
+            || item.sub_type == WPN_EVENINGSTAR
             || item.sub_type == WPN_KATANA
             || item.sub_type == WPN_LAJATANG
             || item.sub_type == WPN_SLING

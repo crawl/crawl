@@ -1082,13 +1082,6 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
                 rc = ISFLAG_ELVEN;
             break;
 
-        case WPN_KATANA:
-        case WPN_LAJATANG:
-        case WPN_KNIFE:
-        case WPN_SLING:
-            rc = ISFLAG_NO_RACE;
-            break;
-
         case WPN_BOW:
             if (one_chance_in(6))
                 rc = ISFLAG_ORCISH;
@@ -1097,7 +1090,8 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
             break;
 
         case WPN_LONGBOW:
-            rc = one_chance_in(3) ? ISFLAG_ELVEN : ISFLAG_NO_RACE;
+            if (one_chance_in(3))
+                rc = ISFLAG_ELVEN;
             break;
 
         case WPN_CROSSBOW:
