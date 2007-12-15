@@ -1537,9 +1537,8 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
 
     if ((force_good || is_demonic(item) || forced_ego
          || random2(200) <= 50 + item_level)
-        // nobody would bother enchanting a club
+        // nobody would bother enchanting a mundane club
         && item.sub_type != WPN_CLUB
-        && item.sub_type != WPN_ANCUS
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB)
     {
@@ -2831,8 +2830,8 @@ static bool weapon_is_visibly_special(const item_def &item)
             || ((item.plus || item.plus2)
                 && (get_equip_race(item)? one_chance_in(7)
                     : one_chance_in(3))))
+        // nobody would bother enchanting a mundane club
         && item.sub_type != WPN_CLUB
-        && item.sub_type != WPN_ANCUS
         && item.sub_type != WPN_GIANT_CLUB
         && item.sub_type != WPN_GIANT_SPIKED_CLUB
         && get_equip_desc(item) == ISFLAG_NO_DESC;
