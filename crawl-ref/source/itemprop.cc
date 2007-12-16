@@ -67,8 +67,6 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3, -1,  150, 
         true,  EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_STUDDED_LEATHER_ARMOUR,"studded leather armour",4, -1,  180, 
-        true,  EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
 
     { ARM_RING_MAIL,            "ring mail",              4, -2,  250, 
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
@@ -733,8 +731,7 @@ void set_equip_race( item_def &item, unsigned long flags )
         case OBJ_ARMOUR:
             if ((get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
                 || item.sub_type == ARM_ROBE
-                || item.sub_type == ARM_LEATHER_ARMOUR
-                || item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)
+                || item.sub_type == ARM_LEATHER_ARMOUR)
             {
                 return;
             }
@@ -1014,7 +1011,6 @@ bool armour_not_shiny( const item_def &item )
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
     case ARM_LEATHER_ARMOUR:
-    case ARM_STUDDED_LEATHER_ARMOUR:
     case ARM_ANIMAL_SKIN:
     case ARM_TROLL_HIDE:
     case ARM_TROLL_LEATHER_ARMOUR:

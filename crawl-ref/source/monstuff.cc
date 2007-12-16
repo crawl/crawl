@@ -140,11 +140,6 @@ void get_mimic_item( const monsters *mimic, item_def &item )
     case MONS_ARMOUR_MIMIC:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = (59 * mimic->x + 79 * mimic->y) % NUM_ARMOURS;
-        // FIXME: Remove fudges once these armours are completely implemented.
-        if (item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)
-            item.sub_type = ARM_CRYSTAL_PLATE_MAIL;
-        else if (item.sub_type == ARM_CAP)
-            item.sub_type = ARM_MOTTLED_DRAGON_ARMOUR;
 
         prop %= 100;
 
