@@ -1005,6 +1005,13 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
                 rc = ISFLAG_DWARVEN;
             break;
 
+        case WPN_EVENINGSTAR:
+            if (one_chance_in(5))
+                rc = ISFLAG_ORCISH;
+            if (one_chance_in(5))
+                rc = ISFLAG_DWARVEN;
+            break;
+
         case WPN_ANCUS:
             if (one_chance_in(4))
                 rc = ISFLAG_ORCISH;
@@ -1076,10 +1083,16 @@ static item_status_flag_type determine_weapon_race(const item_def& item,
 
         case WPN_HALBERD:
         case WPN_GLAIVE:
-        case WPN_EXECUTIONERS_AXE:
         case WPN_BARDICHE:
             if (one_chance_in(5))
                 rc = ISFLAG_ORCISH;
+            break;
+
+        case WPN_EXECUTIONERS_AXE:
+            if (one_chance_in(5))
+                rc = ISFLAG_ORCISH;
+            if (one_chance_in(4))
+                rc = ISFLAG_DWARVEN;
             break;
 
         case WPN_QUICK_BLADE:
