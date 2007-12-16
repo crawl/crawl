@@ -44,6 +44,17 @@ struct tagHeader
 {
     short tagID;
     long offset;
+
+    // File handle for direct file writes.
+    FILE *file;
+
+    tagHeader() : tagID(0), offset(0L), file(NULL) { }
+    tagHeader(FILE *f) : tagID(0), offset(0L), file(f) { }
+    unsigned char readByte();
+    void writeByte(unsigned char byte);
+    void write(const void *data, size_t size);
+    void read(void *data, size_t size);
+    void advance(int skip);
 };
 
 // last updated 22jan2001 {gdl}
@@ -64,12 +75,12 @@ int read2(FILE * file, char *buffer, unsigned int count);
 /* ***********************************************************************
  * called from: files tags
  * *********************************************************************** */
-void marshallByte(struct tagHeader &th, char data);
-void marshallShort(struct tagHeader &th, short data);
-void marshallLong(struct tagHeader &th, long data);
-void marshallFloat(struct tagHeader &th, float data);
-void marshallBoolean(struct tagHeader &th, bool data);
-void marshallString(struct tagHeader &th, const std::string &data,
+void marshallByte(tagHeader &th, char data);
+void marshallShort(tagHeader &th, short data);
+void marshallLong(tagHeader &th, long data);
+void marshallFloat(tagHeader &th, float data);
+void marshallBoolean(tagHeader &th, bool data);
+void marshallString(tagHeader &th, const std::string &data,
                     int maxSize = 0);
 void marshallCoord(tagHeader &th, const coord_def &c);
 void marshallItem(tagHeader &th, const item_def &item);
@@ -78,12 +89,12 @@ void marshallItem(tagHeader &th, const item_def &item);
 /* ***********************************************************************
  * called from: tags files
  * *********************************************************************** */
-char unmarshallByte(struct tagHeader &th);
-short unmarshallShort(struct tagHeader &th);
-long unmarshallLong(struct tagHeader &th);
-float unmarshallFloat(struct tagHeader &th);
-bool unmarshallBoolean(struct tagHeader &th);
-int unmarshallCString(struct tagHeader &th, char *data, int maxSize);
+char unmarshallByte(tagHeader &th);
+short unmarshallShort(tagHeader &th);
+long unmarshallLong(tagHeader &th);
+float unmarshallFloat(tagHeader &th);
+bool unmarshallBoolean(tagHeader &th);
+int unmarshallCString(tagHeader &th, char *data, int maxSize);
 std::string unmarshallString(tagHeader &th, int maxSize = 1000);
 void unmarshallCoord(tagHeader &th, coord_def &c);
 void unmarshallItem(tagHeader &th, item_def &item);
@@ -102,14 +113,14 @@ void tag_init(long largest_tag = 100000);
 /* ***********************************************************************
  * called from: files
  * *********************************************************************** */
-void tag_construct(struct tagHeader &th, int i);
+void tag_construct(tagHeader &th, int i);
 
 
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************
  * called from: files
  * *********************************************************************** */
-void tag_write(struct tagHeader &th, FILE *saveFile);
+void tag_write(tagHeader &th, FILE *saveFile);
 
 
 // last updated 22jan2001 {gdl}

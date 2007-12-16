@@ -265,7 +265,7 @@ public:
     store_flags    set_default_flags(store_flags flags);
     store_flags    unset_default_flags(store_flags flags);
     store_val_type get_type() const;
-    bool           exists(const std::string key) const;
+    bool           exists(const std::string &key) const;
     void           assert_validity() const;
 
     // NOTE: If the const versions of get_value() or [] are given a

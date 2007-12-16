@@ -135,34 +135,14 @@ static void fully_identify_item(item_def *item)
 
 static void save_item(FILE *file, const item_def &item)
 {
-    writeByte(file, item.base_type);
-    writeByte(file, item.sub_type);
-    writeShort(file, item.plus);
-    writeShort(file, item.plus2);
-    writeLong(file, item.special);
-    writeShort(file, item.quantity);
-    writeByte(file, item.colour);
-    writeLong(file, item.flags);
-    
-    writeShort(file, item.orig_place);
-    writeShort(file, item.orig_monnum);
-    writeString(file, item.inscription.c_str(), 80);
+    tagHeader th(file);
+    marshallItem(th, item);
 }
 
 static void load_item(FILE *file, item_def &item)
 {
-    item.base_type  = static_cast<object_class_type>(readByte(file));
-    item.sub_type   = readByte(file);
-    item.plus       = readShort(file);
-    item.plus2      = readShort(file);
-    item.special    = readLong(file);
-    item.quantity   = readShort(file);
-    item.colour     = readByte(file);
-    item.flags      = readLong(file);
-
-    item.orig_place = readShort(file);
-    item.orig_monnum = readShort(file);
-    item.inscription = readString(file);
+    tagHeader th(file);
+    unmarshallItem(th, item);
 }
 
 bool Stash::aggressive_verify = true;

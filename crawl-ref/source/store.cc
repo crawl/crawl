@@ -1110,7 +1110,7 @@ store_val_type CrawlHashTable::get_type() const
     return type;
 }
 
-bool CrawlHashTable::exists(const std::string key) const
+bool CrawlHashTable::exists(const std::string &key) const
 {
     assert_validity();
     hash_map_type::const_iterator i = hash_map.find(key);

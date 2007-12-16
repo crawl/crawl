@@ -102,29 +102,29 @@ extern std::map<level_id, std::string> level_annotations;
 FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
 
 // static helpers
-static void tag_construct_you(struct tagHeader &th);
-static void tag_construct_you_items(struct tagHeader &th);
-static void tag_construct_you_dungeon(struct tagHeader &th);
+static void tag_construct_you(tagHeader &th);
+static void tag_construct_you_items(tagHeader &th);
+static void tag_construct_you_dungeon(tagHeader &th);
 static void tag_construct_lost_monsters(tagHeader &th);
 static void tag_construct_lost_items(tagHeader &th);
-static void tag_read_you(struct tagHeader &th, char minorVersion);
-static void tag_read_you_items(struct tagHeader &th, char minorVersion);
-static void tag_read_you_dungeon(struct tagHeader &th);
+static void tag_read_you(tagHeader &th, char minorVersion);
+static void tag_read_you_items(tagHeader &th, char minorVersion);
+static void tag_read_you_dungeon(tagHeader &th);
 static void tag_read_lost_monsters(tagHeader &th, int minorVersion);
 static void tag_read_lost_items(tagHeader &th, int minorVersion);
 
-static void tag_construct_level(struct tagHeader &th);
-static void tag_construct_level_items(struct tagHeader &th);
-static void tag_construct_level_monsters(struct tagHeader &th);
-static void tag_construct_level_attitude(struct tagHeader &th);
-static void tag_read_level(struct tagHeader &th, char minorVersion);
-static void tag_read_level_items(struct tagHeader &th, char minorVersion);
-static void tag_read_level_monsters(struct tagHeader &th, char minorVersion);
-static void tag_read_level_attitude(struct tagHeader &th);
+static void tag_construct_level(tagHeader &th);
+static void tag_construct_level_items(tagHeader &th);
+static void tag_construct_level_monsters(tagHeader &th);
+static void tag_construct_level_attitude(tagHeader &th);
+static void tag_read_level(tagHeader &th, char minorVersion);
+static void tag_read_level_items(tagHeader &th, char minorVersion);
+static void tag_read_level_monsters(tagHeader &th, char minorVersion);
+static void tag_read_level_attitude(tagHeader &th);
 static void tag_missing_level_attitude();
 
-static void tag_construct_ghost(struct tagHeader &th);
-static void tag_read_ghost(struct tagHeader &th, char minorVersion);
+static void tag_construct_ghost(tagHeader &th);
+static void tag_read_ghost(tagHeader &th, char minorVersion);
 
 static void marshallGhost(tagHeader &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost( tagHeader &th );
@@ -132,11 +132,62 @@ static void marshall_monster(tagHeader &th, const monsters &m);
 static void unmarshall_monster(tagHeader &th, monsters &m);
 
 template<typename T, typename T_iter, typename T_marshal>
-static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
+static void marshall_iterator(tagHeader &th, T_iter beg, T_iter end,
                               T_marshal marshal);
 template<typename T>
-static void unmarshall_vector(struct tagHeader& th, std::vector<T>& vec,
-                              T (*T_unmarshall)(struct tagHeader&));
+static void unmarshall_vector(tagHeader& th, std::vector<T>& vec,
+                              T (*T_unmarshall)(tagHeader&));
+
+//////////////////////////////////////////////////////////////////////
+// tagHeader
+
+unsigned char tagHeader::readByte()
+{
+    if (file)
+        return static_cast<unsigned char>(fgetc(file));
+    else
+        return tagBuffer[offset++];
+}
+
+void tagHeader::writeByte(unsigned char ch)
+{
+    if (file)
+        fputc(ch, file);
+    else
+        tagBuffer[offset++] = ch;
+}
+
+void tagHeader::write(const void *data, size_t size)
+{
+    if (file)
+        fwrite(data, 1, size, file);
+    else
+    {
+        memcpy(tagBuffer + offset, data, size);
+        offset += size;
+    }
+}
+
+void tagHeader::read(void *data, size_t size)
+{
+    if (file)
+        fread(data, 1, size, file);
+    else
+    {
+        memcpy(data, tagBuffer + offset, size);
+        offset += size;
+    }
+}
+
+void tagHeader::advance(int skip)
+{
+    if (file)
+        fseek(file, skip, SEEK_CUR);
+    else
+        offset += skip;
+}
+
+//////////////////////////////////////////////////////////////////////
 
 // provide a wrapper for file writing, just in case.
 int write2(FILE * file, const char *buffer, unsigned int count)
@@ -150,84 +201,71 @@ int read2(FILE * file, char *buffer, unsigned int count)
     return fread(buffer, 1, count, file);
 }
 
-void marshallByte(struct tagHeader &th, char data)
+void marshallByte(tagHeader &th, char data)
 {
-    tagBuffer[th.offset] = data;
-    th.offset += 1;
+    th.writeByte(data);
 }
 
-char unmarshallByte(struct tagHeader &th)
+char unmarshallByte(tagHeader &th)
 {
-    char data = tagBuffer[th.offset];
-    th.offset += 1;
-    return data;
+    return th.readByte();
 }
 
 // marshall 2 byte short in network order
-void marshallShort(struct tagHeader &th, short data)
+void marshallShort(tagHeader &th, short data)
 {
-    char b2 = (char)(data & 0x00FF);
-    char b1 = (char)((data & 0xFF00) >> 8);
-
-    tagBuffer[th.offset] = b1;
-    tagBuffer[th.offset + 1] = b2;
-
-    th.offset += 2;
+    const char b2 = (char)(data & 0x00FF);
+    const char b1 = (char)((data & 0xFF00) >> 8);
+    th.writeByte(b1);
+    th.writeByte(b2);
 }
 
 // unmarshall 2 byte short in network order
-short unmarshallShort(struct tagHeader &th)
+short unmarshallShort(tagHeader &th)
 {
-    short b1 = tagBuffer[th.offset];
-    short b2 = tagBuffer[th.offset + 1];
-
+    short b1 = th.readByte();
+    short b2 = th.readByte();
     short data = (b1 << 8) | (b2 & 0x00FF);
-
-    th.offset += 2;
     return data;
 }
 
 // marshall 4 byte int in network order
-void marshallLong(struct tagHeader &th, long data)
+void marshallLong(tagHeader &th, long data)
 {
     char b4 = (char) (data & 0x000000FF);
     char b3 = (char)((data & 0x0000FF00) >> 8);
     char b2 = (char)((data & 0x00FF0000) >> 16);
     char b1 = (char)((data & 0xFF000000) >> 24);
 
-    tagBuffer[th.offset] = b1;
-    tagBuffer[th.offset + 1] = b2;
-    tagBuffer[th.offset + 2] = b3;
-    tagBuffer[th.offset + 3] = b4;
-
-    th.offset += 4;
+    th.writeByte(b1);
+    th.writeByte(b2);
+    th.writeByte(b3);
+    th.writeByte(b4);
 }
 
 // unmarshall 4 byte int in network order
-long unmarshallLong(struct tagHeader &th)
+long unmarshallLong(tagHeader &th)
 {
-    long b1 = tagBuffer[th.offset];
-    long b2 = tagBuffer[th.offset + 1];
-    long b3 = tagBuffer[th.offset + 2];
-    long b4 = tagBuffer[th.offset + 3];
+    long b1 = th.readByte();
+    long b2 = th.readByte();
+    long b3 = th.readByte();
+    long b4 = th.readByte();
 
     long data = (b1 << 24) | ((b2 & 0x000000FF) << 16);
     data |= ((b3 & 0x000000FF) << 8) | (b4 & 0x000000FF);
-
-    th.offset += 4;
     return data;
 }
 
 template<typename T>
-void marshall_as_long(struct tagHeader& th, const T& t)
+void marshall_as_long(tagHeader& th, const T& t)
 {
     marshallLong( th, static_cast<long>(t) );
 }
 
 template<typename key, typename value>
-void marshallMap(struct tagHeader &th, const std::map<key,value>& data,
-                 void (*key_marshall)(struct tagHeader&, const key&),
-                 void (*value_marshall)(struct tagHeader&, const value&))
+void marshallMap(tagHeader &th, const std::map<key,value>& data,
+                 void (*key_marshall)(tagHeader&, const key&),
+                 void (*value_marshall)(tagHeader&, const value&))
 {
     marshallLong( th, data.size() );
     typename std::map<key,value>::const_iterator ci;
@@ -239,7 +277,7 @@ void marshallMap(struct tagHeader &th, const std::map<key,value>& data,
 }
 
 template<typename T_iter, typename T_marshall_t>
-static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
+static void marshall_iterator(tagHeader &th, T_iter beg, T_iter end,
                               T_marshall_t T_marshall)
 {
     marshallLong(th, std::distance(beg, end));
@@ -251,8 +289,8 @@ static void marshall_iterator(struct tagHeader &th, T_iter beg, T_iter end,
 }
 
 template<typename T>
-static void unmarshall_vector(struct tagHeader& th, std::vector<T>& vec,
-                              T (*T_unmarshall)(struct tagHeader&))
+static void unmarshall_vector(tagHeader& th, std::vector<T>& vec,
+                              T (*T_unmarshall)(tagHeader&))
 {
     vec.clear();
     const long num_to_read = unmarshallLong(th);
@@ -277,7 +315,7 @@ void marshall_level_id( tagHeader& th, const level_id& id )
     marshallByte(th, id.level_type);
 }
 
-void marshall_level_pos( struct tagHeader& th, const level_pos& lpos )
+void marshall_level_pos( tagHeader& th, const level_pos& lpos )
 {
     marshallLong(th, lpos.pos.x);
     marshallLong(th, lpos.pos.y);
@@ -285,7 +323,7 @@ void marshall_level_pos( struct tagHeader& th, const level_pos& lpos )
 }
 
 template<typename key, typename value, typename map>
-void unmarshallMap(struct tagHeader& th, map& data,
+void unmarshallMap(tagHeader& th, map& data,
                    key   (*key_unmarshall)  (tagHeader&),
                    value (*value_unmarshall)(tagHeader&) )
 {
@@ -300,7 +338,7 @@ void unmarshallMap(struct tagHeader& th, map& data,
 }
 
 template<typename T>
-T unmarshall_long_as( struct tagHeader& th )
+T unmarshall_long_as( tagHeader& th )
 {
     return static_cast<T>(unmarshallLong(th));
 }
@@ -314,7 +352,7 @@ level_id unmarshall_level_id( tagHeader& th )
     return (id);
 }
 
-level_pos unmarshall_level_pos( struct tagHeader& th )
+level_pos unmarshall_level_pos( tagHeader& th )
 {
     level_pos lpos;
     lpos.pos.x = unmarshallLong(th);
@@ -394,7 +432,7 @@ union float_marshall_kludge
 };
 
 // single precision float -- marshall in network order.
-void marshallFloat(struct tagHeader &th, float data)
+void marshallFloat(tagHeader &th, float data)
 {
     float_marshall_kludge k;
     k.f_num = data;
@@ -402,7 +440,7 @@ void marshallFloat(struct tagHeader &th, float data)
 }
 
 // single precision float -- unmarshall in network order.
-float unmarshallFloat(struct tagHeader &th)
+float unmarshallFloat(tagHeader &th)
 {
     float_marshall_kludge k;
     k.l_num = unmarshallLong(th);
@@ -410,7 +448,7 @@ float unmarshallFloat(struct tagHeader &th)
 }
 
 // string -- marshall length & string data
-void marshallString(struct tagHeader &th, const std::string &data, int maxSize)
+void marshallString(tagHeader &th, const std::string &data, int maxSize)
 {
     // allow for very long strings (well, up to 32K).
     int len = data.length();
@@ -420,18 +458,17 @@ void marshallString(struct tagHeader &th, const std::string &data, int maxSize)
 
     // put in the actual string -- we'll null terminate on
     // unmarshall.
-    memcpy(&tagBuffer[th.offset], data.c_str(), len);
-    th.offset += len;
+    th.write(data.c_str(), len);
 }
 
 // To pass to marsahllMap
-static void marshall_string(struct tagHeader &th, const std::string &data)
+static void marshall_string(tagHeader &th, const std::string &data)
 {
     marshallString(th, data);
 }
 
 // string -- unmarshall length & string data
-int unmarshallCString(struct tagHeader &th, char *data, int maxSize)
+int unmarshallCString(tagHeader &th, char *data, int maxSize)
 {
     // get length
     short len = unmarshallShort(th);
@@ -441,11 +478,10 @@ int unmarshallCString(struct tagHeader &th, char *data, int maxSize)
         copylen = maxSize - 1;
 
     // read the actual string and null terminate
-    memcpy(data, &tagBuffer[th.offset], copylen);
+    th.read(data, copylen);
     data[copylen] = 0;
 
-    th.offset += len;
-
+    th.advance(len - copylen);
     return (copylen);
 }
 
@@ -455,7 +491,7 @@ std::string unmarshallString(tagHeader &th, int maxSize)
         return ("");    
     char *buffer = new char [maxSize];
     if (!buffer)
-        return ("");    
+        return ("");
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
     const std::string res(buffer, slen);
@@ -464,33 +500,32 @@ std::string unmarshallString(tagHeader &th, int maxSize)
 }
 
 // To pass to unmarshallMap
-static std::string unmarshall_string(struct tagHeader &th)
+static std::string unmarshall_string(tagHeader &th)
 {
     return unmarshallString(th);
 }
 
 // boolean (to avoid system-dependant bool implementations)
-void marshallBoolean(struct tagHeader &th, bool data)
+void marshallBoolean(tagHeader &th, bool data)
 {
     char charRep = 0;       // for false
     if (data)
         charRep = 1;
 
-    tagBuffer[th.offset] = charRep;
-    th.offset += 1;
+    th.writeByte(charRep);
 }
 
 // boolean (to avoid system-dependant bool implementations)
-bool unmarshallBoolean(struct tagHeader &th)
+bool unmarshallBoolean(tagHeader &th)
 {
     bool data;
+    const char read = th.readByte();
 
-    if (tagBuffer[th.offset] == 1)
+    if (read == 1)
         data = true;
     else
         data = false;
 
-    th.offset += 1;
     return data;
 }
 
@@ -555,7 +590,7 @@ void tag_init(long largest_tag)
     tagBuffer = (char *)malloc(largest_tag);
 }
 
-void tag_construct(struct tagHeader &th, int tagID)
+void tag_construct(tagHeader &th, int tagID)
 {
     th.offset = 0;
     th.tagID = tagID;
@@ -596,7 +631,7 @@ void tag_construct(struct tagHeader &th, int tagID)
     }
 }
 
-void tag_write(struct tagHeader &th, FILE *saveFile)
+void tag_write(tagHeader &th, FILE *saveFile)
 {
     const int tagHdrSize = 6;
     int tagSize=0;
@@ -641,7 +676,7 @@ void tag_write(struct tagHeader &th, FILE *saveFile)
 int tag_read(FILE *fp, char minorVersion)
 {
     const int tagHdrSize = 6;
-    struct tagHeader hdr, th;
+    tagHeader hdr, th;
     th.offset = 0;
 
     // read tag header
@@ -770,7 +805,7 @@ void tag_set_expected(char tags[], int fileType)
 // be restored even if a later version increases these constants.
 
 // --------------------------- player tags (foo.sav) -------------------- //
-static void tag_construct_you(struct tagHeader &th)
+static void tag_construct_you(tagHeader &th)
 {
     int i,j;
 
@@ -939,7 +974,7 @@ static void tag_construct_you(struct tagHeader &th)
          marshallByte(th, you.beheld_by[k]);
 }
 
-static void tag_construct_you_items(struct tagHeader &th)
+static void tag_construct_you_items(tagHeader &th)
 {
     int i,j;
 
@@ -988,7 +1023,7 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallBoolean(th, does_unrandart_exist(j));
 }
 
-static void marshallPlaceInfo(struct tagHeader &th, PlaceInfo place_info)
+static void marshallPlaceInfo(tagHeader &th, PlaceInfo place_info)
 {
     marshallLong(th, place_info.level_type);
     marshallLong(th, place_info.branch);
@@ -1017,7 +1052,7 @@ static void marshallPlaceInfo(struct tagHeader &th, PlaceInfo place_info)
     marshallFloat(th, place_info.elapsed_other);
 }
 
-static void tag_construct_you_dungeon(struct tagHeader &th)
+static void tag_construct_you_dungeon(tagHeader &th)
 {
     int i,j;
 
@@ -1144,7 +1179,7 @@ static void tag_construct_lost_items(tagHeader &th)
                  marshall_item_list );
 }
 
-static void tag_read_you(struct tagHeader &th, char minorVersion)
+static void tag_read_you(tagHeader &th, char minorVersion)
 {
     char buff[20];      // For birth date
     int i,j;
@@ -1312,7 +1347,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
          you.beheld_by.push_back(unmarshallByte(th));
 }
 
-static void tag_read_you_items(struct tagHeader &th, char minorVersion)
+static void tag_read_you_items(tagHeader &th, char minorVersion)
 {
     int i,j;
     char count_c, count_c2;
@@ -1388,7 +1423,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
         set_unrandart_exist(j, false);
 }
 
-static PlaceInfo unmarshallPlaceInfo(struct tagHeader &th)
+static PlaceInfo unmarshallPlaceInfo(tagHeader &th)
 {
     PlaceInfo place_info;
 
@@ -1421,7 +1456,7 @@ static PlaceInfo unmarshallPlaceInfo(struct tagHeader &th)
     return place_info;
 }
 
-static void tag_read_you_dungeon(struct tagHeader &th)
+static void tag_read_you_dungeon(tagHeader &th)
 {
     int   i,j;
     int   count_c;
@@ -1514,7 +1549,7 @@ static void tag_read_lost_items(tagHeader &th, int minorVersion)
 
 // ------------------------------- level tags ---------------------------- //
 
-static void tag_construct_level(struct tagHeader &th)
+static void tag_construct_level(tagHeader &th)
 {
     marshallByte(th, env.floor_colour);
     marshallByte(th, env.rock_colour);
@@ -1631,7 +1666,7 @@ void unmarshallItem(tagHeader &th, item_def &item)
     item.props.read(th);
 }
 
-static void tag_construct_level_items(struct tagHeader &th)
+static void tag_construct_level_items(tagHeader &th)
 {
     // how many traps?
     marshallShort(th, MAX_TRAPS);
@@ -1713,7 +1748,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     }
 }
 
-static void tag_construct_level_monsters(struct tagHeader &th)
+static void tag_construct_level_monsters(tagHeader &th)
 {
     // how many mons_alloc?
     marshallByte(th, 20);
@@ -1729,7 +1764,7 @@ static void tag_construct_level_monsters(struct tagHeader &th)
         marshall_monster(th, menv[i]);
 }
 
-void tag_construct_level_attitude(struct tagHeader &th)
+void tag_construct_level_attitude(tagHeader &th)
 {
     int i;
 
@@ -1744,7 +1779,7 @@ void tag_construct_level_attitude(struct tagHeader &th)
 }
 
 
-static void tag_read_level( struct tagHeader &th, char minorVersion )
+static void tag_read_level( tagHeader &th, char minorVersion )
 {
     env.floor_colour = unmarshallByte(th);
     env.rock_colour  = unmarshallByte(th);
@@ -1812,7 +1847,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
     env.markers.read(th);
 }
 
-static void tag_read_level_items(struct tagHeader &th, char minorVersion)
+static void tag_read_level_items(tagHeader &th, char minorVersion)
 {
     // how many traps?
     const int trap_count = unmarshallShort(th);
@@ -1877,7 +1912,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.check_speed();
 }
 
-static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
+static void tag_read_level_monsters(tagHeader &th, char minorVersion)
 {
     int i;
     int count, icount;
@@ -1902,7 +1937,7 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
     }
 }
 
-void tag_read_level_attitude(struct tagHeader &th)
+void tag_read_level_attitude(tagHeader &th)
 {
     int i, count;
 
@@ -1981,7 +2016,7 @@ static void marshallGhost(tagHeader &th, const ghost_demon &ghost)
         marshallShort( th, ghost.values[i] );
 }
 
-static void tag_construct_ghost(struct tagHeader &th)
+static void tag_construct_ghost(tagHeader &th)
 {
     // How many ghosts?
     marshallShort(th, ghosts.size());
@@ -2008,7 +2043,7 @@ static ghost_demon unmarshallGhost( tagHeader &th )
     return (ghost);
 }
 
-static void tag_read_ghost(struct tagHeader &th, char minorVersion)
+static void tag_read_ghost(tagHeader &th, char minorVersion)
 {
     int nghosts = unmarshallShort(th);
 
