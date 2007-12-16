@@ -664,6 +664,15 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     return;
 }                               // end random_uselessness()
 
+static armour_type random_nonbody_armour_type()
+{
+    const armour_type at =
+        static_cast<armour_type>( 
+            random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
+                          ARM_GLOVES, ARM_BOOTS, -1));
+    return (at);
+}
+
 static int find_acquirement_subtype(object_class_type class_wanted,
                                     int &quantity)
 {
@@ -857,7 +866,8 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         // one type of item for most of them. -- bwr
         //
         // OBJ_RANDOM is body armour and handled below
-        type_wanted = (coinflip()) ? OBJ_RANDOM : ARM_SHIELD + random2(5);
+        type_wanted = (coinflip())? OBJ_RANDOM :
+            static_cast<int>(random_nonbody_armour_type());
 
         // some species specific fitting problems
         switch (you.species)
@@ -933,7 +943,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
                 || you.species == SP_SPRIGGAN
                 || you.mutation[MUT_HORNS]))
         {
-            type_wanted = ARM_CAP;
+            type_wanted = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
         }
 
         // Now we'll randomly pick a body armour (light only in the

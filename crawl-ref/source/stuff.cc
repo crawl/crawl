@@ -271,6 +271,8 @@ int random_range(int low, int high, int nrolls)
     return (sum / nrolls);
 }
 
+// Chooses one of the numbers passed in at random. The list of numbers
+// must be terminated with -1.
 int random_choose(int first, ...)
 {
     va_list args;
