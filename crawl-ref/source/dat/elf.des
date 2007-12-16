@@ -105,6 +105,9 @@ SHUFFLE: 23, 45
 KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator 
 KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
 KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
 SUBST:   v = v .:2
 SUBST:   v : xvb
 SUBST:   | = | *:2 
@@ -167,6 +170,9 @@ SUBST:   4=4., 2=2., 5=5., 3=3.
 KMONS:   $ = weight:115 nothing / deep elf annihilator 
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
 SUBST:   | = | *:2 
 SUBST:   * = * |:3
 KMONS:   A = deep elf master archer
@@ -222,10 +228,15 @@ SUBST:   N=@, n=., Z=c, z=c
 KMONS:   $ = weight:115 nothing / deep elf annihilator 
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
 SUBST:   | = | *:2 
 SUBST:   * = * |:3
 KITEM:   6 = |
 KITEM:   7 = |
+KFEAT:   6 = 6
+KFEAT:   7 = 7
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc

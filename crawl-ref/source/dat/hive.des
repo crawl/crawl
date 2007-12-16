@@ -151,6 +151,7 @@ MONS:    firedrake / w:5 nothing
 SHUFFLE: UVTXYZ, lL4/lL4/lL4/wW5
 SUBST:   l=.l, L=l, w=.w, W=w, U==, V=a, T=a, X=a, Y=a, Z=a, '=.a
 KMONS:   l = firedrake / w:200 nothing
+KFEAT:   l = l
 ORIENT:  float
 MAP
 ..................

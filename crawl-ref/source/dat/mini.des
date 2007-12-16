@@ -311,6 +311,7 @@ TAGS: no_pool_fixup uniq_water_maze_lemuel
 DEPTH: 5-27
 SHUFFLE: abcd, efgh, ijkl, mnop
 KMONS: * = fungus
+KFEAT: * = *
 SUBST: a = =, b = x, c = x, d = x
 SUBST: e = =, f = x, g = x, h = x
 SUBST: i = =, j = x, k = x, l = x
@@ -1049,6 +1050,8 @@ DEPTH: 13-26, !Orc, !Lair, !Swamp, !Shoal
 SUBST: Y = 89
 KITEM: 8 = % / * / w:1 |
 KITEM: 9 = % / * / w:1 |
+KFEAT: 8 = 8
+KFEAT: 9 = 9
 KFEAT: X = teleport trap
 KFEAT: Z : teleport trap / w:30 x
 SHUFFLE: xcvb

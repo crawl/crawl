@@ -262,6 +262,7 @@ MONS:    rat/grey rat/w:6 green rat/w:3 orange rat/w:20 giant bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
+KFEAT:   > = >
 KFEAT:   ; = altar_yredelemnul/altar_kikubaaqudgha
 SHUFFLE: defg
 SHUFFLE: *s/!?

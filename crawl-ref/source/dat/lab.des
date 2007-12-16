@@ -130,6 +130,7 @@ SUBST: d = c, e = ., f = c.
 SUBST: g = c, h = .
 SUBST: k = <, l = ., m = ., i = ., j = .
 KMONS: < = minotaur
+KFEAT: < = <
 SUBST: c : vvc
 
 validate {{ return has_exit_from_glyph('<') }}
