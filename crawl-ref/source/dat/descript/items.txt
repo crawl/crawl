@@ -92,6 +92,10 @@ banded mail
 
 A suit made of bands of metal.
 %%%%
+bardiche
+
+A long pole with an enormous, cleaving blade on one end.
+%%%%
 battleaxe
 
 A large axe with a double-headed blade.
@@ -313,10 +317,6 @@ book of wizardry
 
 A book of magic spells. Beware, for some of the more powerful
 grimoires are not to be toyed with.
-%%%%
-pair of boots
-
-A pair of boots.
 %%%%
 bottled efreet
 
@@ -540,10 +540,6 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-pair of gloves
-
-A pair of gloves.
-%%%%
 gold dragon armour
 
 A magical armour made from the golden scales of a golden dragon. It is
@@ -674,10 +670,6 @@ lemon
 
 A yellow fruit.
 %%%%
-bardiche
-
-A long pole with an enormous, cleaving blade on one end.
-%%%%
 long sword
 
 A sword with a long, slashing blade.
@@ -748,6 +740,14 @@ orb of zot
 
 Once you have escaped to the surface with this invaluable artefact,
 your quest is complete.
+%%%%
+pair of boots
+
+A pair of boots.
+%%%%
+pair of gloves
+
+A pair of gloves.
 %%%%
 pear
 
