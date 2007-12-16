@@ -430,7 +430,7 @@ bool unset_level_flags(unsigned long flags, bool silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
-        mpr("You sense the disappearence of a powerful magical force "
+        mpr("You sense the disappearance of a powerful magical force "
             "which warped space.", MSGCH_RECOVERY);
     }
 
@@ -438,7 +438,7 @@ bool unset_level_flags(unsigned long flags, bool silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
-        mpr("You sense the disappearence the force that prevented you "
+        mpr("You sense the disappearance of the force that prevented you "
             "from remembering where you've been.", MSGCH_RECOVERY);
     }
 
