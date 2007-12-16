@@ -676,7 +676,7 @@ A yellow fruit.
 %%%%
 bardiche
 
-A long pole with an enormous cleaving blade on one end.
+A long pole with an enormous, cleaving blade on one end.
 %%%%
 long sword
 
