@@ -2996,13 +2996,6 @@ static item_make_species_type give_weapon(monsters *mon, int level,
                                  (temp_rand > 0) ? WPN_SHORT_SWORD  // 40%
                                                  : WPN_CLUB);       // 20%
         }
-        else if (random2(5) < 2)        // give darts
-        {
-            item_race = MAKE_ITEM_NO_RACE;
-            item.base_type = OBJ_MISSILES;
-            item.sub_type = MI_DART;
-            iquan = 1 + random2(5);
-        }
         else
             return (item_race);
         break;
@@ -3666,6 +3659,17 @@ static void give_ammo(monsters *mon, int level,
         int qty = 0;
         switch (mon->type)
         {
+        case MONS_KOBOLD:
+        case MONS_BIG_KOBOLD:
+            if (random2(5) < 2)
+            {
+                item_race = MAKE_ITEM_NO_RACE;
+                weap_class = OBJ_MISSILES;
+                weap_type = MI_DART;
+                qty = 1 + random2(5);
+            }
+            break;
+
         case MONS_ORC_WARRIOR:
             if (one_chance_in(
                     you.where_are_you == BRANCH_ORCISH_MINES? 9 : 20))
