@@ -867,13 +867,11 @@ bool trap_item(object_class_type base_type, char sub_type,
 
     // give appropriate racial flag for Orcish Mines and Elven Halls
     // should we ever allow properties of dungeon features, we could use that
-    if ( item.sub_type != MI_THROWING_NET )
-    {
-        if (you.where_are_you == BRANCH_ORCISH_MINES)
-            set_equip_race( item, ISFLAG_ORCISH );
-        else if (you.where_are_you == BRANCH_ELVEN_HALLS)
-            set_equip_race( item, ISFLAG_ELVEN );
-    }
+    if (you.where_are_you == BRANCH_ORCISH_MINES)
+        set_equip_race( item, ISFLAG_ORCISH );
+    else if (you.where_are_you == BRANCH_ELVEN_HALLS)
+        set_equip_race( item, ISFLAG_ELVEN );
+
     return (!copy_item_to_grid( item, beam_x, beam_y, 1 ));
 }                               // end trap_item()
 
