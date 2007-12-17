@@ -3352,21 +3352,11 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         break;
 
     case MONS_MERFOLK:
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_WEAPONS;
-        // 1/3 each for trident, spears and javelins
         if (one_chance_in(3))
+        {
+            item_race = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_TRIDENT;
-        else if (coinflip())
-        {
-            item.sub_type = WPN_SPEAR;
-            iquan = 1 + random2(3);
-        }
-        else
-        {
-            item.base_type = OBJ_MISSILES;
-            item.sub_type = MI_JAVELIN;
-            iquan = 3 + random2(6);
         }
         break;
 
@@ -3704,10 +3694,27 @@ static void give_ammo(monsters *mon, int level,
             qty = random_range(4, 7);
             break;
 
+        case MONS_MERFOLK:
+            if (!one_chance_in(3))
+            {
+                item_race = MAKE_ITEM_NO_RACE;
+                if (coinflip())
+                {
+                    weap_type = WPN_SPEAR;
+                    qty = 1 + random2(3);
+                }
+                else
+                {
+                    weap_class = OBJ_MISSILES;
+                    weap_type = MI_JAVELIN;
+                    qty = 3 + random2(6);
+                }
+            }
+            // fall through
+
         case MONS_DRACONIAN_KNIGHT:
         case MONS_GNOLL:
         case MONS_HILL_GIANT:
-        case MONS_MERFOLK:
             if (!one_chance_in(20))
                 break;
             // fall through
@@ -3717,7 +3724,6 @@ static void give_ammo(monsters *mon, int level,
             weap_type = MI_THROWING_NET;
             qty = coinflip() + 1;
             break;
-
         }
 
         if (weap_type == -1)
