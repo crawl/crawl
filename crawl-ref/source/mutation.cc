@@ -966,6 +966,7 @@ static mutation_def mutation_defs[] = {
     { MUT_HIGH_MAGIC, 1, 3, false },
     { MUT_LOW_MAGIC, 9, 3, true },
     { MUT_SLEEPINESS, 3, 3, true },
+    { RANDOM_MUTATION, 0, 3, false },    
     { RANDOM_MUTATION, 0, 3, false },
 
 // 75 -- scales of various colours and effects
