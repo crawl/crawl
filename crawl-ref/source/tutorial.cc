@@ -738,6 +738,9 @@ void tutorial_dissection_reminder(bool healthy)
 
         print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
         Options.tut_just_triggered = true;
+        
+        if (is_resting())
+            stop_running();
     }
 }
 
@@ -776,6 +779,9 @@ void tutorial_healing_reminder()
             }
             print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
             Options.tut_just_triggered = 1;
+            
+            if (is_resting())
+                stop_running();
         }
         Options.tut_last_healed = you.num_turns;
     }
@@ -1460,6 +1466,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         print_formatted_paragraph(s, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
 
+    if (is_resting())
+        stop_running();
+        
     Options.tut_just_triggered = true;
     Options.tutorial_events[seen_what] = 0;
     Options.tutorial_left--;
