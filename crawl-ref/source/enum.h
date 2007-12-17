@@ -2013,10 +2013,9 @@ enum mutation_type
     MUT_BIG_WINGS,                     //   65
     MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
     MUT_GREEN_MARKS,
-    MUT_DRIFTING,   // new in 0.4
     MUT_SAPROVOROUS,
-    MUT_SHAGGY_FUR, // new in 0.4      --   70
-    MUT_HIGH_MAGIC, // new in 0.4
+    MUT_SHAGGY_FUR, // new in 0.4
+    MUT_HIGH_MAGIC, // new in 0.4      --   70
     MUT_LOW_MAGIC,  // new in 0.4
     MUT_SLEEPINESS, // new in 0.4
     

@@ -297,18 +297,14 @@ const char *mutation_descrip[][3] = {
      "There are several green sigils on your chest and abdomen.",
      "Your chest, abdomen and neck are covered in intricate, arcane green writing."},
 
-    {"You occasionally drift when moving.",
-     "You sometimes drift when moving.",
-     "You frequently drift when moving."},
-
     {"You can tolerate rotten meat.", "You can eat rotten meat.",
      "You thrive on rotten meat."},    
 
-    // 70
     {"You are covered in fur.",
      "You are covered in thick fur.",
      "Your thick and shaggy fur keeps you warm."},
      
+    // 70
     {"You have an increased reservoir of magic (+10 percent mp).",
      "You have a strongly increased reservoir of magic (+20 percent mp).",
      "You have an extremely increased reservoir of magic (+30 percent mp)."},
@@ -321,6 +317,7 @@ const char *mutation_descrip[][3] = {
      "You sometimes fall asleep.",
      "You frequently fall asleep."},
     
+    {"", "", ""},
     {"", "", ""},
 
     // 75
@@ -567,18 +564,14 @@ const char *gain_mutation[][3] = {
     {"Your chest itches.", "Your chest and abdomen itch.",
      "Your chest, abdomen and neck itch."},
 
-    {"Your movements feel uncertain.",
-     "Your movements feel even more uncertain.",
-     "Your movements feel even more uncertain."},
-
     // saprovorous: can never be gained or lost, only started with    
     {"", "", ""},
     
-    // 70
     {"Fur sprouts all over your body.",
      "Your fur grows into a thick mane.",
      "Your thick fur grows shaggy and warm."},
 
+    // 70
     {"You feel more energetic.", "You feel more energetic.",
      "You feel more energetic."},
      
@@ -587,6 +580,7 @@ const char *gain_mutation[][3] = {
 
     {"You feel a bit tired.", "You feel drowsy.", "You feel really drowsy."},
     
+    {"", "", ""},
     {"", "", ""},
 
     // 75
@@ -803,18 +797,14 @@ const char *lose_mutation[][3] = {
     {"", "", ""},
     {"", "", ""},
     
-    {"Your movements feel completely certain again.",
-     "Your movements feel more certain.",
-     "Your movements feel more certain."},
-
     // saprovorous: can never be gained or lost, only started with
     {"", "", ""},
 
-    // 70
     {"You shed all your fur.",
      "Your thick fur recedes somewhat.",
      "Your shaggy fur recedes somewhat."},
 
+    // 70
     {"You feel less energetic.", "You feel less energetic.",
      "You feel less energetic."},
 
@@ -823,6 +813,7 @@ const char *lose_mutation[][3] = {
 
     {"You feel wide awake.", "You feel more awake.", "You feel more awake."},
     
+    {"", "", ""},
     {"", "", ""},
     
     // 75
@@ -968,11 +959,10 @@ static mutation_def mutation_defs[] = {
     { MUT_BLUE_MARKS, 0, 3, false },     // used by evil gods to mark followers
     { MUT_GREEN_MARKS, 0, 3, false },
 
-    { MUT_DRIFTING, 2, 3, true },
     { MUT_SAPROVOROUS, 0, 3, false },    // species-dependent innate mutation
 
-// 70
     { MUT_SHAGGY_FUR, 2, 3, false },
+// 70
     { MUT_HIGH_MAGIC, 1, 3, false },
     { MUT_LOW_MAGIC, 9, 3, true },
     { MUT_SLEEPINESS, 3, 3, true },
@@ -1392,7 +1382,6 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BIG_WINGS:
     case MUT_BLUE_MARKS:
     case MUT_GREEN_MARKS:
-    case MUT_DRIFTING:
         amusement *= 2; // funny!
         break;
 

@@ -1968,13 +1968,6 @@ std::string status_mut_abilities()
                 text += info;
                 have_any = true;
                 break;
-            case MUT_DRIFTING:
-                if (have_any)
-                    text += ", ";
-                snprintf(info, INFO_SIZE, "drifting %d", level);
-                text += info;
-                have_any = true;
-                break;
             case MUT_SLEEPINESS:
                 if (have_any)
                     text += ", ";

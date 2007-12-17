@@ -2233,13 +2233,14 @@ static const char *mutation_type_names[] = {
     "big wings",
     "blue marks",
     "green marks",
-    "drifting",
     "saprovorous",
     "shaggy fur",
     "high mp",
     "low mp",
     "sleepiness",
     "",
+    "",
+
     // from here on scales
     "red scales",
     "nacreous scales",
