@@ -552,6 +552,9 @@ public:
   int x_pos;
   int y_pos;
 
+  int prev_move_x;
+  int prev_move_y;
+
   int hunger;
   FixedVector<char, NUM_EQUIP> equip;
 
@@ -740,6 +743,9 @@ public:
     // changing x_pos and y_pos directly.
     void moveto(int x, int y);
     void moveto(const coord_def &c);
+
+    coord_def prev_move() const;
+    void reset_prev_move();
     
     bool in_water() const;
     bool can_swim() const;
@@ -1643,6 +1649,9 @@ public:
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
+
+    // Some experimental improvments to explore
+    bool        explore_improved;
     
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;

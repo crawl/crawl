@@ -850,7 +850,57 @@ static int find_explore_status(const travel_pathfind &tp)
 static void explore_find_target_square()
 {
     travel_pathfind tp;
-    tp.set_floodseed(coord_def(you.x_pos, you.y_pos), true);
+    coord_def       seed = you.pos();
+
+    // "Improved" explore: keep moving in a line along the same
+    // direction as the previous move, stop if we hit a barrier or
+    // something that would slow us down, and use *that* as the
+    // floodout seed.  This is meant to:
+    //
+    // 1) Prevent explore from sticking its head in a room and then
+    //    backing out even though the room has unexplored corners
+    //    because there are unexplored squares closer than the corners.
+    //
+    // 2) Similarly, prevent the bevahior of going a little bit down
+    //    a long, straight corridor only to back out of it because
+    //    the nearest unexplored square in that corridor is
+    //    LOS_RADIUS + 1 squares away, which is further away than
+    //    another unexplored square which is in the opposite direction.
+    // 
+    // 3) Prevent the annoying zig-zag when exploring open spaces.
+    //
+    // We stop at squres that would slow us down so that we won't slog
+    // across a bunch of shallow water just for the sake of going in
+    // a straight line.
+    //
+    // Not yet used with greedy explore because I can't figure out
+    // how to combined it with greediness in a way that won't display
+    // weird or uninuitive behavior.
+    if (you.running != RMODE_EXPLORE_GREEDY && Options.explore_improved
+        && (you.prev_move_x || you.prev_move_y))
+    {
+        coord_def prev_move_delta = you.prev_move();
+
+        dungeon_feature_type feature;
+        do {
+            seed += prev_move_delta;
+            feature = grd(seed);
+        } while (is_travelsafe_square(seed.x, seed.y)
+                 && is_traversable(feature)
+                 && feature_traverse_cost(feature) == 1);
+
+        seed -= prev_move_delta;
+
+        // Has moving along the straight line found an unexplored
+        // square?  If so, just use that square as the target.
+        if (!is_terrain_seen(seed + prev_move_delta) && seed != you.pos())
+        {
+            you.running.x = seed.x;
+            you.running.y = seed.y;
+            return;
+        }
+    }
+    tp.set_floodseed(seed, true);
 
     coord_def whereto =
         tp.pathfind( static_cast<run_mode_type>(you.running.runmode) );

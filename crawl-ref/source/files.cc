@@ -909,6 +909,10 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.transit_stair, stair_taken, DNGN_UNSEEN);
     unwind_bool ylev(you.entering_level, true, false);
 
+    // Going up/down stairs, going through a portal, or being banished
+    // means the previous x/y movement direction is no longer valid.
+    you.reset_prev_move();
+
     const bool make_changes =
         (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR);
     

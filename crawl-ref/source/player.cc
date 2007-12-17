@@ -5271,6 +5271,9 @@ void player::init()
     x_pos = 0;
     y_pos = 0;
 
+    prev_move_x = 0;
+    prev_move_y = 0;
+
     running.clear();
     travel_x = 0;
     travel_y = 0;
@@ -6227,7 +6230,21 @@ void player::moveto(const coord_def &c)
     crawl_view.set_player_at(c);
 
     if (real_move)
+    {
+        you.reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
+    }
+}
+
+coord_def player::prev_move() const
+{
+    return coord_def(prev_move_x, prev_move_y);
+}
+
+void player::reset_prev_move()
+{
+    prev_move_x = 0;
+    prev_move_y = 0;
 }
 
 bool player::asleep() const

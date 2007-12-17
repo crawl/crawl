@@ -3661,6 +3661,7 @@ static void move_player(int move_x, int move_y)
         {
             move_x = random2(3) - 1;
             move_y = random2(3) - 1;
+            you.reset_prev_move();
         }
 
         const int new_targ_x = you.x_pos + move_x;
@@ -3755,6 +3756,9 @@ static void move_player(int move_x, int move_y)
         if (!move_player_to_grid(targ_x, targ_y, true, false, swap))
             return;
 
+        you.prev_move_x = move_x;
+        you.prev_move_y = move_y;
+
         move_x = 0;
         move_y = 0;
 
@@ -3766,7 +3770,11 @@ static void move_player(int move_x, int move_y)
 
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open && !attacking)
+    {
         open_door(move_x, move_y, false);
+        you.prev_move_x = move_x;
+        you.prev_move_y = move_y;
+    }
     else if (!targ_pass && !attacking)
     {
         stop_running();

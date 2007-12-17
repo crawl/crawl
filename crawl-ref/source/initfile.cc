@@ -684,6 +684,8 @@ void game_options::reset_options()
 
     explore_item_greed     = 10;
     explore_greedy         = false;
+
+    explore_improved       = false;
     
     target_zero_exp        = false;
     target_wrap            = true;
@@ -2411,6 +2413,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "explore_greedy")
     {
         explore_greedy = read_bool(field, explore_greedy);
+    }
+    else if (key == "explore_improved")
+    {
+        explore_improved = read_bool(field, explore_improved);
     }
     else if (key == "stash_tracking")
     {

@@ -40,11 +40,11 @@ The contents of this text are:
                 scroll_margin
 4-g     Travel and Exploration. 
                 travel_delay, travel_avoid_terrain,
-                explore_greedy, explore_stop, tc_reachable,
+                explore_greedy, explore_stop, explore_improved, tc_reachable,
                 tc_dangerous, tc_excluded, tc_exclude_circle,
-                travel_stop_message, runrest_ignore_message,                    
+                travel_stop_message, runrest_ignore_message,
                 runrest_ignore_poison, runrest_ignore_monster,
-                trapwalk_safe_hp 
+                trapwalk_safe_hp
 4-h     Stashes.
                 stash_tracking, stash_filter
 4-i     Command Enhancements.
@@ -630,6 +630,11 @@ explore_stop = items,stairs,shops,altars,gates
         explore. Multiple explore_stop lines are *not* cumulative! The 
         last explore_stop line will override all previous explore_stop 
         lines. 
+
+explore_improved = false
+        If set to true explore will used an expiremental improved algorithm
+        which is meant to reduce backtracking and zig-zagging.  Currently
+        only works with non-greedy explore.
 
 tc_reachable      = blue
 tc_dangerous      = cyan
