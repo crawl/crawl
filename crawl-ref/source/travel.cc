@@ -861,7 +861,7 @@ static void explore_find_target_square()
     //    backing out even though the room has unexplored corners
     //    because there are unexplored squares closer than the corners.
     //
-    // 2) Similarly, prevent the bevahior of going a little bit down
+    // 2) Similarly, prevent the behavior of going a little bit down
     //    a long, straight corridor only to back out of it because
     //    the nearest unexplored square in that corridor is
     //    LOS_RADIUS + 1 squares away, which is further away than
@@ -869,13 +869,13 @@ static void explore_find_target_square()
     // 
     // 3) Prevent the annoying zig-zag when exploring open spaces.
     //
-    // We stop at squres that would slow us down so that we won't slog
+    // We stop at squares that would slow us down so that we won't slog
     // across a bunch of shallow water just for the sake of going in
     // a straight line.
     //
     // Not yet used with greedy explore because I can't figure out
     // how to combined it with greediness in a way that won't display
-    // weird or uninuitive behavior.
+    // weird or unintuitive behavior.
     if (you.running != RMODE_EXPLORE_GREEDY && Options.explore_improved
         && (you.prev_move_x || you.prev_move_y))
     {
