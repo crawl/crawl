@@ -134,7 +134,6 @@ ENDMAP
 # Trapped exits - this is evil!
 NAME:    labyrinth_trapped
 TAGS:    minotaur generate_loot allow_dup
-SHUFFLE: dD/eE/fF
 MONS:    minotaur
 NSUBST:  g = . / c
 NSUBST:  D = . / D
