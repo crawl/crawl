@@ -632,9 +632,12 @@ explore_stop = items,stairs,shops,altars,gates
         lines. 
 
 explore_improved = false
-        If set to true explore will used an expiremental improved algorithm
-        which is meant to reduce backtracking and zig-zagging.  Currently
-        only works with non-greedy explore.
+        If set to true explore will attempt to reduce zig-zagging during
+        auto-explore.  In most circumstances this will increase the
+        number of turns spent to auto-explore an entire level by
+        less than 1% (with a 2% increase the maximum), but with
+        a 7% to 13% increase in the Shoals and in city-type levels
+        such as those found in the Vaults.
 
 tc_reachable      = blue
 tc_dangerous      = cyan

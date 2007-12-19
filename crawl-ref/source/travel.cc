@@ -847,60 +847,35 @@ static int find_explore_status(const travel_pathfind &tp)
     return (explore_status);
 }
 
+static int prev_travel_moves[2] = {-1, -1};
+static int prev_travel_index    = 0;
+
+static struct coord_def prev_explore_target = coord_def(-30000, -30000);
+
+static int anti_zigzag_dir = -1;
+
+static void reset_zigzag_info()
+{
+    prev_explore_target = coord_def(-30000, -30000);
+
+    prev_travel_moves[0] = -1;
+    prev_travel_moves[1] = -1;
+    prev_travel_index    =  0;
+    anti_zigzag_dir      = -1;
+}
+
+static void set_target_square(const coord_def &target)
+{
+    you.running.x = target.x;
+    you.running.y = target.y;
+
+    prev_explore_target = target;
+}
+
 static void explore_find_target_square()
 {
     travel_pathfind tp;
-    coord_def       seed = you.pos();
-
-    // "Improved" explore: keep moving in a line along the same
-    // direction as the previous move, stop if we hit a barrier or
-    // something that would slow us down, and use *that* as the
-    // floodout seed.  This is meant to:
-    //
-    // 1) Prevent explore from sticking its head in a room and then
-    //    backing out even though the room has unexplored corners
-    //    because there are unexplored squares closer than the corners.
-    //
-    // 2) Similarly, prevent the behavior of going a little bit down
-    //    a long, straight corridor only to back out of it because
-    //    the nearest unexplored square in that corridor is
-    //    LOS_RADIUS + 1 squares away, which is further away than
-    //    another unexplored square which is in the opposite direction.
-    // 
-    // 3) Prevent the annoying zig-zag when exploring open spaces.
-    //
-    // We stop at squares that would slow us down so that we won't slog
-    // across a bunch of shallow water just for the sake of going in
-    // a straight line.
-    //
-    // Not yet used with greedy explore because I can't figure out
-    // how to combined it with greediness in a way that won't display
-    // weird or unintuitive behavior.
-    if (you.running != RMODE_EXPLORE_GREEDY && Options.explore_improved
-        && (you.prev_move_x || you.prev_move_y))
-    {
-        coord_def prev_move_delta = you.prev_move();
-
-        dungeon_feature_type feature;
-        do {
-            seed += prev_move_delta;
-            feature = grd(seed);
-        } while (is_travelsafe_square(seed.x, seed.y)
-                 && is_traversable(feature)
-                 && feature_traverse_cost(feature) == 1);
-
-        seed -= prev_move_delta;
-
-        // Has moving along the straight line found an unexplored
-        // square?  If so, just use that square as the target.
-        if (!is_terrain_seen(seed + prev_move_delta) && seed != you.pos())
-        {
-            you.running.x = seed.x;
-            you.running.y = seed.y;
-            return;
-        }
-    }
-    tp.set_floodseed(seed, true);
+    tp.set_floodseed(you.pos(), true);
 
     coord_def whereto =
         tp.pathfind( static_cast<run_mode_type>(you.running.runmode) );
@@ -915,8 +890,63 @@ static void explore_find_target_square()
 
     if (whereto.x || whereto.y)
     {
-        you.running.x = whereto.x;
-        you.running.y = whereto.y;
+        // Anti-zigzag turned off, or found a greedy target so we
+        // don't need anti-zigzaging.
+        if (!Options.explore_improved || whereto != tp.unexplored_square())
+        {
+            set_target_square(whereto);
+            reset_zigzag_info();
+            return;
+        }
+
+        // If the two previous travel moves are perpendicular to each
+        // other and the two previous explore targets are close to each
+        // other, then we're probably zigzaging.
+        if (prev_travel_moves[0] != -1
+            && prev_travel_moves[1] != -1
+            && (abs(prev_travel_moves[1] - prev_travel_moves[0]) % 4) == 2
+            && grid_distance(prev_explore_target.x, prev_explore_target.y,
+                             whereto.x, whereto.y) <= (LOS_RADIUS + 1))
+        {
+            // Try moving along the line that bisects the right angle.
+            if (abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
+                anti_zigzag_dir = 0;
+            else
+                anti_zigzag_dir = std::min(prev_travel_moves[0],
+                                           prev_travel_moves[1]) + 1;
+
+        }
+
+        // anti_zigzag_dir might have just been set, or might have
+        // persisted from the previous call to
+        // explore_find_target_square().
+        if (anti_zigzag_dir != -1)
+        {
+            coord_def target = you.pos();
+            coord_def delta  = Compass[anti_zigzag_dir];
+
+            dungeon_feature_type feature;
+            do {
+                target += delta;
+                feature = grd(target);
+            } while (is_travelsafe_square(target.x, target.y)
+                     && is_traversable(feature)
+                     && feature_traverse_cost(feature) == 1);
+
+            target -= delta;
+
+            // Has moving along the straight line found an unexplored
+            // square?
+            if (!is_terrain_seen(target + delta) && target != you.pos())
+            {
+                set_target_square(target);
+                return;
+            }
+            else
+                anti_zigzag_dir = -1;
+        }
+
+        set_target_square(whereto);
     }
     else
     {
@@ -959,7 +989,10 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             you.running == RMODE_EXPLORE_GREEDY?
             ES_GREEDY_PICKUP : ES_PICKUP;
         if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
+        {
             stop_delay();
+            reset_zigzag_info();
+        }
     }
     
     // Greedy explore has no good way to deal with an item that we can't
@@ -986,6 +1019,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
         }
         explore_stopped_pos = you.pos();
         stop_delay();
+        reset_zigzag_info();
     }
 }
 
@@ -1081,6 +1115,18 @@ command_type travel()
         // Get the next step to make. If the travel command can't find a route,
         // we turn off travel (find_travel_pos does that automatically).
         find_travel_pos(you.x_pos, you.y_pos, move_x, move_y);
+
+        if (you.running < 0 && (*move_x || *move_y))
+        {
+            const int delta_to_dir[9] = {
+                7,  0, 1,
+                6, -1, 2,
+                5,  4, 3
+            };
+            prev_travel_moves[prev_travel_index] =
+                delta_to_dir[(*move_x + 1) + 3 * (*move_y + 1)];
+            prev_travel_index = !prev_travel_index;
+        }
 
         if ((*move_x || *move_y) && you.running == RMODE_EXPLORE_GREEDY)
         {
@@ -3773,6 +3819,8 @@ void runrest::stop()
 
     if (need_redraw)
         viewwindow(true, false);
+
+    reset_zigzag_info();
 }
 
 bool runrest::is_rest() const
@@ -3797,6 +3845,8 @@ void runrest::clear()
     runmode = RMODE_NOT_RUNNING;
     x = y = 0;
     mp = hp = 0;
+
+    reset_zigzag_info();
 }
 
 void runrest::check_hp()
