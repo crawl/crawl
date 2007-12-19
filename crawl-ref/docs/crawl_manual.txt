@@ -2377,13 +2377,16 @@ native flying ability is not noted, and neither is the effect of a ring
 of regeneration. Here is a list of these, as some are abbreviations or 
 may not be obvious:
 
-General enchantments: satiation, velocity, encumbrance, poison
+General enchantments:
 ---------------------
 Hungry          Most races can eat chunks of corpses only if hungry.
-Starving        You should really eat something: death is not far away.
+Very Hungry     You are even hungrier than usual.
+Near Starving   You are in desperate need of food.
+Starving        You should really eat something; death is not far away.
 Full            You have eaten a lot.
+Very Full       You have eaten almost all you can for now.
 Engorged        You can't eat any more for now.
-Sick            You are sick (usually from bad food). Hit points don't
+Sick            You are sick, usually from bad food. Hit points don't
                 regenerate until cured (wait it out or quaff a potion of
                 healing). Occassionally a primary attribute might drop.
 Pois            You are poisoned and continually lose hit points. There
@@ -2400,18 +2403,17 @@ Overloaded      You carry too much to do anything sensible. Drop stuff!
 Conf            You are confused. Actions may not work properly.
 Fast            All of your actions are twice as fast (this can cause 
                 magic contamination).
-Swift           You move at a somewhat higher speed. (This only means
-                movement speed.)
+Swift           You move at a somewhat higher speed. This only means
+                movement speed.
 Slow            All actions are slowed. Note: ending berserking will slow.
-Paralyse        You are unable to move. Beware of wasps!
 
 Special enchantments:
 ---------------------
 BWpn            Some characters have a breath weapon (like Nagas or 
                 experienced Draconians), which will show "BWpn" when used. 
                 Further breaths have to wait until this disappears.
-Invis           You are invisible (this can cause glowing, if used too  
-                much).
+Invis           You are invisible. This can cause glowing, if used too  
+                much.
 Holy            You repel undead.
 Lev             You levitate, i.e. hover a few inches above the ground. 
                 While enough to cross water and lava, movement is not 
@@ -2424,16 +2426,18 @@ Fly             You fly, gaining the benefits of levitation with none of
                 controlled flight.
 Held            You are held in a net: you cannot move freely and instead 
                 only try to fight your way out of the net.
+Bhld            You are beheld: you cannot move away from the monster(s) 
+                beholding you.
 Fire            You are plagued with sticky fire. It will time out.
 Regen           You regenerate: health points will increase at an 
                 unnaturally fast rate. This is only shown for temporary 
                 regeneration.
-Glow            You glow from mutagenic radiations: you can mutate 
-                anytime soon - usually with bad outcome.
-RMsl            You repel missiles, i.e. there's a good chance to evade
+Glow            You glow from mutagenic radiation: you can mutate 
+                anytime soon - usually with a bad outcome.
+RMsl            You repel missiles, i.e. there's a good chance to evade 
                 them.
 DMsl            You deflect missiles, i.e. there's a great chance to 
-                evade them. Still, this is not a bulletproof protection.
+                evade them. Still, this protection is not bulletproof.
 Rot             This is a very harmful, necromantic ailment. You will 
                 lose maximum health points over time. Only potions of 
                 healing restore these. The rotting itself is cured 
