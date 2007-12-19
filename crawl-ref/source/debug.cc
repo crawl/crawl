@@ -3367,6 +3367,18 @@ static int debug_time_explore()
         you.num_turns++;
     }
 
+    // Elapsed time might not match up if explore had to go through
+    // shallow water.
+    PlaceInfo& pi = you.get_place_info();
+    pi.elapsed_total = (pi.elapsed_explore + pi.elapsed_travel +
+                        pi.elapsed_interlevel + pi.elapsed_resting +
+                        pi.elapsed_other);
+
+    PlaceInfo& pi2 = you.global_info;
+    pi2.elapsed_total = (pi2.elapsed_explore + pi2.elapsed_travel +
+                         pi2.elapsed_interlevel + pi2.elapsed_resting +
+                         pi2.elapsed_other);
+
     return (you.num_turns - start);
 }
 
