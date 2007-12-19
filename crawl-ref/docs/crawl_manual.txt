@@ -823,12 +823,11 @@ cause your free experience to go straight into that skill.
 
 { Miscellaneous:
 ----------------
-These are items which don't fall into any other category. You can use
-many of them by wielding and 'E'voking them. You can also use some other
-special items (such as some weapons) by invoking them in this way. 
-Runes, a particular item in this category, have no function whatsoever 
-except to open the endgame. You must collect at least three in order to
-enter the Realm of Zot.
+These are items which don't fall into any other category. You can use 
+many of them, as well as some special weapons, by wielding and 'E'voking 
+them. Runes, a particular item in this category, have no function 
+whatsoever except to open the endgame. You must collect at least three 
+in order to enter the Realm of Zot.
 
 Racial Items:
 -------------
@@ -1057,7 +1056,7 @@ magical energy. More often than not, the mutations caused by magical
 radiations express harmfully.
 
 Furthermore, certain corpses are mutagenic, and there are traps with 
-mutation effects. There are some spells invoking mutations.
+mutation effects. There are some spells that cause mutations.
 
 It is much more difficult to get rid of bad mutations. A lucky mutation 
 attempt can actually remove mutations. However, the only sure-fire way 
@@ -1312,8 +1311,8 @@ uncomfortable, and make the finest, lightest armours to be found
 anywhere. Elves are particularly good at using elven weapons.
 
 Due to their fey natures, all elves are good at using enchantments and 
-air elemental magic, and most are poor at invoking the powers of earth 
-and death (necromancy).
+air elemental magic, and most are poor at using the powers of earth and 
+death (necromancy).
 
   High Elves:
   -----------
@@ -1414,7 +1413,7 @@ reserves of magical energy. Their forte is brute-force fighting, and
 they are skilled at using most hand weapons (with the exception of short 
 blades, at which they are only fair), although they are not particularly 
 good at using missile weapons. They prefer to use their own weapons. 
-Orcs are poor at using most types of magic with the exception of 
+Orcs are poor at using most types of magic, with the exception of 
 conjurations, necromancy, and the elemental magic of earth, fire, and 
 ice. They advance as quickly as humans.
 
@@ -1433,9 +1432,10 @@ levels as quickly as humans.
 
 The Undead:
 -----------
-As creatures brought back from beyond the grave, they are naturally 
-immune to poisons, negative energy and torment, have little warmth 
-left to be affected by cold, and are not susceptible to mutations.
+As creatures brought back from beyond the grave, the undead are 
+naturally immune to poisons, negative energy and torment; have little 
+warmth left to be affected by cold; and are not susceptible to 
+mutations.
 
 There are two types of undead available to players: Mummies and Ghouls.
 
@@ -1566,7 +1566,7 @@ on the part of the player.
 
   Purple Draconians are highly adapted to all spellcasting in general, 
       and to Enchantments in particular. They are a bit better at 
-      invoking things than most other draconians.
+      evoking things than most other draconians.
 
   Pale Draconians are slightly biased towards fire magic, and have no 
       restrictions otherwise. They breathe steam and, like their 
