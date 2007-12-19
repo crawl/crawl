@@ -931,8 +931,7 @@ void scorefile_entry::init()
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
         rune_array[i] = 0;
 
-    const bool calc_item_values =
-        (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING);
+    const bool calc_item_values = death_type == KILLED_BY_WINNING;
     
     // Calculate value of pack and runes when character leaves dungeon
     for (int d = 0; d < ENDOFPACK; d++)
