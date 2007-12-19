@@ -3403,6 +3403,9 @@ void debug_test_explore()
 
     const int explore_turns = debug_time_explore();
 
+    // Return to starting point.
+    you.moveto(where);
+
     mprf("Explore took %d turns.", explore_turns);
 }
 
