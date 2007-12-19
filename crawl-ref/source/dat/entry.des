@@ -2586,7 +2586,7 @@ NAME: david_entry_057_a_altar
 TAGS: entry
 ORIENT: float
 SHUFFLE: {[AB
-MONS: gnoll / orc priest, large zombie / giant beetle
+MONS: gnoll
 SUBST: A=., B=.
 CHANCE: 3
 MAP
@@ -2594,7 +2594,7 @@ MAP
 ..............[
 ..xxxxxxxxxxxxx
 A.xcccccccccccx
-..xcclllc.2..cx
+..xcclllc....cx
 ..xcllllc....cx
 ..xcl...c1...cx
 ..==l>C.x....cx
@@ -2610,14 +2610,14 @@ TAGS: entry
 ORIENT: float
 SHUFFLE: {[AB
 SUBST: A=., B=.
-MONS: gnoll / orc priest, large zombie / giant beetle
+MONS: gnoll
 CHANCE: 3
 MAP
 @...B.........@
 ..............[
 ..xxxx=xxxxxxxx
 ..xccc=cccccccx
-..xcclllc.2..cx
+..xcclllc....cx
 ..xcllllc....cx
 ..xcl...c1...cx
 .Axcl>C.x....cx
@@ -2633,14 +2633,14 @@ TAGS: entry
 ORIENT: float
 SHUFFLE: {[AB
 SUBST: A=., B=.
-MONS: gnoll / orc priest, large zombie / giant beetle
+MONS: gnoll
 CHANCE: 2
 MAP
 @.....B.......@
 ..............[
 ..xxxxxxxxxxxxx
 ..xcccccccccccx
-..xcclllc.2..cx
+..xcclllc....cx
 ..xcllllc....cx
 .Axcl...c1...cx
 ..xcl.C.=....cx
@@ -2656,14 +2656,14 @@ TAGS: entry
 ORIENT: float
 SHUFFLE: {[AB
 SUBST: A=., B=.
-MONS: gnoll / orc priest, large zombie / giant beetle
+MONS: gnoll
 CHANCE: 2
 MAP
 @......A......@
 ..............[
 ..xxxxxxxxxxxxx
 ..xcccccccccccx
-..xcclllc.2..cx
+..xcclllc....cx
 B.xcllllc....cx
 ..xcl...c1...cx
 ..xcl>T.x....cx
@@ -3141,7 +3141,7 @@ ENDMAP
 NAME:    david_entry_071
 TAGS:    entry 
 ORIENT:  float
-MONS:    goblin, kobold, orc priest
+MONS:    goblin, kobold
 ITEM:    needle, dart, stone
 SHUFFLE: ABCD
 SUBST:   A=@, B=@xx, C=@xxxx, D=x
@@ -3150,7 +3150,7 @@ MAP
     xxxxx...........xxxxx    
    xxx...xxxxx+xxxxx...xxx   
   xx..xxxxxlllllllxxxxx..xx  
- xx.xxxxxlll..3..lllxxxxx.xx 
+ xx.xxxxxlll.....lllxxxxx.xx 
 xx.xxxxxx...........xxxxxx.xx
 xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
 xx.xxxxxxxxx.....xxxxxxxxx.xx
