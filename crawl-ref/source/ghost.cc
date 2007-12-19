@@ -156,7 +156,7 @@ void ghost_demon::init_random_demon()
     {
         do {
             values[ GVAL_BRAND ] = random2(17);
-            /* some brands inappropriate (eg holy wrath) */
+            /* some brands inappropriate (e.g. holy wrath) */
         } while (values[ GVAL_BRAND ] == SPWPN_HOLY_WRATH 
                  || (values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
                      && you.mons_species() != MONS_ORC)
