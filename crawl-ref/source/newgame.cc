@@ -3377,19 +3377,9 @@ bool give_items_skills()
             
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
-        you.skills[SK_SHIELDS] = 1;
-        you.skills[SK_STAVES] = 1;
         you.skills[SK_INVOCATIONS] = 4;
+        you.skills[ weapon_skill(you.inv[0]) ] = 2;
         
-        if (you.species == SP_KOBOLD || you.species == SP_HALFLING)
-        {
-            you.skills[SK_SHORT_BLADES] = 1;
-            you.skills[SK_STAVES] = 2;
-        }
-        else
-            you.skills[SK_MACES_FLAILS] = 2;
-
-
         // set gods
         if (you.species == SP_MUMMY || you.species == SP_DEMONSPAWN)
         {
