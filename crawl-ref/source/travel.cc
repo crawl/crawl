@@ -850,14 +850,10 @@ static int find_explore_status(const travel_pathfind &tp)
 static int prev_travel_moves[2] = {-1, -1};
 static int prev_travel_index    = 0;
 
-static struct coord_def prev_explore_target = coord_def(-30000, -30000);
-
 static int anti_zigzag_dir = -1;
 
 static void reset_zigzag_info()
 {
-    prev_explore_target = coord_def(-30000, -30000);
-
     prev_travel_moves[0] = -1;
     prev_travel_moves[1] = -1;
     prev_travel_index    =  0;
@@ -868,8 +864,6 @@ static void set_target_square(const coord_def &target)
 {
     you.running.x = target.x;
     you.running.y = target.y;
-
-    prev_explore_target = target;
 }
 
 static void explore_find_target_square()
@@ -900,13 +894,10 @@ static void explore_find_target_square()
         }
 
         // If the two previous travel moves are perpendicular to each
-        // other and the two previous explore targets are close to each
-        // other, then we're probably zigzaging.
+        // other.
         if (prev_travel_moves[0] != -1
             && prev_travel_moves[1] != -1
-            && (abs(prev_travel_moves[1] - prev_travel_moves[0]) % 4) == 2
-            && grid_distance(prev_explore_target.x, prev_explore_target.y,
-                             whereto.x, whereto.y) <= (LOS_RADIUS + 1))
+            && (abs(prev_travel_moves[1] - prev_travel_moves[0]) % 4) == 2)
         {
             // Try moving along the line that bisects the right angle.
             if (abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
@@ -939,11 +930,19 @@ static void explore_find_target_square()
             // square?
             if (!is_terrain_seen(target + delta) && target != you.pos())
             {
-                set_target_square(target);
-                return;
+                // Auto-explore is only zigzagging if the prefered
+                // target (whereto) and the anti-zigzag target are
+                // close together.
+                if (grid_distance(target.x, target.y,
+                                  whereto.x, whereto.y) <= 5
+                    && (distance(target.x, target.y,
+                                 whereto.x, whereto.y) <= 34))
+                {
+                    set_target_square(target);
+                    return;
+                }
             }
-            else
-                anti_zigzag_dir = -1;
+            anti_zigzag_dir = -1;
         }
 
         set_target_square(whereto);

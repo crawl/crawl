@@ -633,11 +633,10 @@ explore_stop = items,stairs,shops,altars,gates
 
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
-        auto-explore.  In most circumstances this will increase the
-        number of turns spent to auto-explore an entire level by
-        less than 1% (with a 2% increase the maximum), but with
-        a 7% to 13% increase in the Shoals and in city-type levels
-        such as those found in the Vaults.
+        auto-explore.  On average it increases the number of turns taken
+        by about 0.9%, sometimes actually speeding it up slightly and
+        sometimes increasing the turns taken by up to 5%, with
+        pathological cases causing a 50% increase.
 
 tc_reachable      = blue
 tc_dangerous      = cyan
