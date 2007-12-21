@@ -806,7 +806,9 @@ void cast_poison_ammo(void)
         || you.inv[ammo].base_type != OBJ_MISSILES
         || get_ammo_brand( you.inv[ammo] ) != SPMSL_NORMAL
         || you.inv[ammo].sub_type == MI_STONE
-        || you.inv[ammo].sub_type == MI_LARGE_ROCK)
+        || you.inv[ammo].sub_type == MI_SLING_BULLET
+        || you.inv[ammo].sub_type == MI_LARGE_ROCK
+        || you.inv[ammo].sub_type == MI_THROWING_NET)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
