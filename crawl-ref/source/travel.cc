@@ -928,15 +928,17 @@ static void explore_find_target_square()
 
             // Has moving along the straight line found an unexplored
             // square?
-            if (!is_terrain_seen(target + delta) && target != you.pos())
+            if (!is_terrain_seen(target + delta) && target != you.pos()
+                && target != whereto)
             {
                 // Auto-explore is only zigzagging if the prefered
                 // target (whereto) and the anti-zigzag target are
                 // close together.
                 if (grid_distance(target.x, target.y,
                                   whereto.x, whereto.y) <= 5
-                    && (distance(target.x, target.y,
-                                 whereto.x, whereto.y) <= 34))
+                    && distance(target.x, target.y,
+                                whereto.x, whereto.y) <= 34)
+                    //&& t_dist - w_dist <= 14)
                 {
                     set_target_square(target);
                     return;

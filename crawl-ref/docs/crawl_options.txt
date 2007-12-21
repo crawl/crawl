@@ -636,7 +636,7 @@ explore_improved = false
         auto-explore.  On average it increases the number of turns taken
         by about 0.9%, sometimes actually speeding it up slightly and
         sometimes increasing the turns taken by up to 5%, with
-        pathological cases causing a 50% increase.
+        pathological cases causing a 20% increase.
 
 tc_reachable      = blue
 tc_dangerous      = cyan
