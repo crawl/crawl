@@ -894,18 +894,22 @@ static void explore_find_target_square()
         }
 
         // If the two previous travel moves are perpendicular to each
-        // other.
+        // other...
         if (prev_travel_moves[0] != -1
             && prev_travel_moves[1] != -1
             && (abs(prev_travel_moves[1] - prev_travel_moves[0]) % 4) == 2)
         {
+            ASSERT(anti_zigzag_dir == -1);
+
             // Try moving along the line that bisects the right angle.
-            if (abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
-                anti_zigzag_dir = 0;
+            if ((abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
+                && (prev_travel_moves[0] + prev_travel_moves[1] == 8))
+            {
+                    anti_zigzag_dir = 0;
+            }
             else
                 anti_zigzag_dir = std::min(prev_travel_moves[0],
                                            prev_travel_moves[1]) + 1;
-
         }
 
         // anti_zigzag_dir might have just been set, or might have
@@ -938,7 +942,6 @@ static void explore_find_target_square()
                                   whereto.x, whereto.y) <= 5
                     && distance(target.x, target.y,
                                 whereto.x, whereto.y) <= 34)
-                    //&& t_dist - w_dist <= 14)
                 {
                     set_target_square(target);
                     return;
