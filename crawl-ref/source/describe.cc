@@ -1024,46 +1024,14 @@ static std::string describe_ammo( const item_def &item )
 
     description.reserve(64);
 
-    switch (item.sub_type)
+    if (item.sub_type == MI_THROWING_NET && (item.plus > 1 || item.plus < 0))
     {
-    case MI_STONE:
-        description += "A stone. It can be thrown by hand "
-            "or fired with a sling. ";
-        break;
-    case MI_ARROW:
-        description += "An arrow, to be shot with a bow. ";
-        break;
-    case MI_NEEDLE:
-        description += "A needle. It can be fired with a blowgun. ";
-        break;
-    case MI_BOLT:
-        description += "A crossbow bolt. ";
-        break;
-    case MI_DART:
-        description += "A small throwing weapon. "
-            "It can also be fired from a hand crossbow.";
-        break;
-    case MI_LARGE_ROCK:
-        description += "A rock, used by giants as a missile. ";
-        break;
-    case MI_SLING_BULLET:
-        description += "A small heavy projectile made of lead. "
-            "It can be fired from a sling.";
-        break;
-    case MI_JAVELIN:
-        description += "A long, light polearm that can be thrown by hand. ";
-        if (!is_throwable(item, you.body_size()))
-            description += "Unfortunately, it is too long and awkward "
-                           "for you to use.";
-        break;
-    case MI_THROWING_NET:
-        description += "A throwing net as used by gladiators. ";
-        if (!is_throwable(item, you.body_size()))
-            description += "Unfortunately, it is too large and awkward "
-                           "for you to use. ";
-        if (item.plus < 0)
+        std::string how;
+
+        if (item.plus > 1)
+            how = "brand-new";
+        else if (item.plus < 0)
         {
-            std::string how;
             if (item.plus > -3)
                 how = "a little worn";
             else if (item.plus > -5)
@@ -1072,21 +1040,11 @@ static std::string describe_ammo( const item_def &item )
                 how = "damaged";
             else
                 how = "heavily frayed";
-
-            description += "It looks ";
-            description += how;
-            description += ".";
         }
-        else if (item.plus > 1)
-            description += "The net looks brand-new!";
-        break;
-    case MI_NONE:   // was eggplant
-        description += "A purple vegetable. "
-            "The presence of this object in the game indicates a bug. ";
-        break;
-    default:
-        DEBUGSTR("Unknown ammo type");
-        break;
+
+        description += "It looks ";
+        description += how;
+        description += ".";
     }
 
     if ( has_launcher(item) )

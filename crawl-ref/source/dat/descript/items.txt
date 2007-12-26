@@ -615,7 +615,17 @@ wanted to.
 %%%%
 javelin
 
-A long, light polearm that can be thrown by hand.
+A long, light polearm that can be thrown by hand. {{
+if you.race() == "Halfling"
+   or you.race() == "Gnome"
+   or you.race() == "Kobold"
+   or you.race() == "Spriggan"
+then
+    return "Unfortunately, it is too long and awkward for you to use."
+else
+    return ""
+end
+}}
 %%%%
 katana
 
@@ -658,7 +668,7 @@ then
     return "It looks like it would fit you well."
 else
     return "It is very cumbersome to wear, and slows the rate at " ..
-           "which you may attack. "
+           "which you may attack."
 end
 }}
 %%%%
@@ -1364,7 +1374,17 @@ end
 %%%%
 throwing net
 
-A throwing net as used by gladiators.
+A throwing net as used by gladiators. {{
+if you.race() == "Halfling"
+   or you.race() == "Gnome"
+   or you.race() == "Kobold"
+   or you.race() == "Spriggan"
+then
+    return "Unfortunately, it is too large and awkward for you to use."
+else
+    return ""
+end
+}}
 %%%%
 tome of destruction
 
