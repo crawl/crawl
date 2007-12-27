@@ -125,30 +125,31 @@ ENDMAP
 # Mini labyrinth exit
 NAME: labyrinth_mini_lab
 TAGS: minotaur generate_loot allow_dup
-SHUFFLE: def, gh, ij, klm
-SUBST: d = c, e = ., f = c.
-SUBST: g = c, h = .
-SUBST: k = <, l = ., m = ., i = ., j = .
+SHUFFLE: def, ghi, klm
+SUBST: d : c, e : ., f : c
+SUBST: g : c, h : ., i : c
+SUBST: k = <, l = ., m = .
 KMONS: < = minotaur
 KFEAT: < = <
 SUBST: c : vvc
 
+# should not be necessary
 validate {{ return has_exit_from_glyph('<') }}
 
 MAP
 ...............
 .ccccccccccccc.
-.cmekjl......c.
-.c.c.chcccccgc.
-.c.c.....i...c.
-.c.ccccc.c.cfc.
-.c.....c.c.c.c.
-.ccicc.c.c.c.c.
-.c...c.c.c.c.c.
-.c.c.c.c.c.c.c.
-.c.c.c.c.c.c.c.
-.c.c.c.c.c.c.c.
-.c.c.d.g.j.c.c.
+.cm....k....lc.
+.cgcecccccccdc.
+.c.c.........c.
+.c.cccfc.cSccc.
+.c.....c.c...c.
+.ccecc.c.c.cfc.
+.c...c.c.cicfc.
+.c.c.c.c.f.cfc.
+.c.c.c.c.c.cfc.
+.c.c.cdchc.cfc.
+.c.c.......cfc.
 .cdcccecccccfc.
 ...............
 ENDMAP
@@ -187,8 +188,8 @@ KFEAT: f = teleport trap
 KFEAT: n = teleport trap
 KFEAT: F = teleport trap
 KFEAT: N = teleport trap
-SUBST: g=., h=., i=., j=., k=., l=., n=.
-SUBST: G=., H=., I=., J=., K=., L=., N=.
+SUBST: g=., h=., i=., j=., k=., l=., m=.
+SUBST: G=., H=., I=., J=., K=., L=., M=.
 SUBST: Y=*, Z=*
 KFEAT: X = <
 KMONS: X = minotaur
@@ -276,14 +277,26 @@ ENDMAP
 
 ############################################################################
 # Teaser: inaccessible loot
-NAME: labyrinth_statues
+NAME: labyrinth_glass_1
 TAGS: lab allow_dup
 MAP
 ......
-.GGGG.
-.G||G.
-.G||G.
-.GGGG.
+.mmmm.
+.m%%m.
+.m%%m.
+.mmmm.
+......
+ENDMAP
+
+NAME: labyrinth_glass_2
+TAGS: lab allow_dup
+CHANCE: 1
+MAP
+......
+.nnnn.
+.n||n.
+.n||n.
+.nnnn.
 ......
 ENDMAP
 

@@ -182,12 +182,17 @@ ENDMAP
 # Vaults:8 last level of the vaults -- dungeon.cc will change all these 'x's
 ##############################################################################
 #
+# This map traditionally allows controlled teleports. Even with the now 
+# random placement of the rune, this seems fine: two of the spots are
+# awkward to reach via teleport, and there is now always a monster on the 
+# rune.
+#
 NAME:    vaults_vault
 PLACE:   Vault:8
 ORIENT:  encompass
 #
 # the rune's spot, occassionally put nasty on the rune
-KMONS:   O = 8 / 9 / w:80 nothing
+KMONS:   O = 8 / 9
 KFEAT:   O = O
 NSUBST:  O = O / o
 KITEM:   o = any good_item
@@ -217,18 +222,9 @@ SUBST:   Y = Y ., Z = Z .
 SUBST:   Y = 9:30 8:10 .:40
 SUBST:   Z = 9:10 8:30 .:40
 #
-# general loot and additional features
-SUBST:   / : / .:3
-SUBST:   / = 8 9 ^ * | .:50
+# general loot
 SUBST:   | = | *:2
 SUBST:   * = * |:2
-SHUFFLE: klmnpqst
-SUBST:   k : ^ x =:3 .:40
-SUBST:   l : ^ x =:3 .:40
-SUBST:   m : ^ x =:3 .:80
-SUBST:   n : ^ x =:3 .:80
-SUBST:   o=., p=., q=., s=.
-KFEAT:   T = teleport trap / Zot trap
 #
 MONS: vault guard
 #
@@ -241,9 +237,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxT?/.............m.............................l............/?Txxxxxxxxx
-xxxxxxxxx??/.............m.............................l............/??xxxxxxxxx
-xxxxxxxxx//xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx//xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
 xxxxxxxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
 xxxxxxxxx..x.xxxxxxxxxxx..xxxxxxxxJxIx....xxxxx.................xxxxx..xxxxxxxxx
 xxxxxxxxx..x.x'.'.'.'.'x..x........x.x....xxx...........-.........xxx..xxxxxxxxx
@@ -257,7 +253,7 @@ xxxxxxxxx..x.N.'.'.'.'.xxxxxxxxxxxxx.x....xx..-.x....xxxxx....x....xx..xxxxxxxxx
 xxxxxxxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Vx$$$xx...x.-..xx..xxxxxxxxx
 xxxxxxxxx..x...........G99xxxxxxxxDx.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
 xxxxxxxxx..x.xxxxxxxxxFx99x........x.x....xx.-..x..x$$*O*$$x-.x....xx..xxxxxxxxx
-xxxxxxxxxnnx.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xxkkxxxxxxxxx
+xxxxxxxxx..x.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xV...x..-.xx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Uxx....xx..xxxxxxxxx
 xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......x.........x......xx..xxxxxxxxx
@@ -280,7 +276,7 @@ xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxxxxxxx
 xxxxxxxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxxxxxxx
 xxxxxxxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....a...Y..Z..Y..Y..Z..Y..Y...x..xxxxxxxxx
 xxxxxxxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....a.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxxxxxxx
-xxxxxxxxxttxx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.xssxxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.x..xxxxxxxxx
 xxxxxxxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxxxxxxx
 xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxxxxxxx
 xxxxxxxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxxxxxxx
@@ -293,9 +289,9 @@ xxxxxxxxx..x.x!x.x.x.x.x.x.x!x.x.x.x.x....x..Z..Z..Y..Z....Z..??????x..xxxxxxxxx
 xxxxxxxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Y..Z..Z...Z..??????x..xxxxxxxxx
 xxxxxxxxx..x.x.x.x.x.x_x.x.x.x.x.x.x.x....x??..Y..Z..Z..Z..Z..??????x..xxxxxxxxx
 xxxxxxxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Ox..xxxxxxxxx
-xxxxxxxxx//xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx//xxxxxxxxx
-xxxxxxxxx??/.............p.............................q............/??xxxxxxxxx
-xxxxxxxxxT?/.............p.............................q............/?Txxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
