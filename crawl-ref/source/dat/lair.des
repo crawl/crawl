@@ -261,7 +261,7 @@ DEPTH: Lair
 SUBST: .= d .:150 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-CHANCE: 2
+CHANCE: 1
 COLOUR: . = green:20 / brown:15 / none
 MAP
 .....................
@@ -288,7 +288,7 @@ DEPTH: Lair
 SUBST: .= d .:140 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-CHANCE: 2
+CHANCE: 1
 COLOUR: . = green:20 / brown:15 / none
 MAP
        .......
@@ -316,7 +316,7 @@ DEPTH: Lair
 SUBST: .= d .:50 1:8 2:4
 MONS: plant, butterfly
 ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-CHANCE: 3
+CHANCE: 4
 COLOUR: . = green:20 / brown:15 / none
 MAP
    ....
@@ -335,7 +335,7 @@ DEPTH: Lair
 SUBST: .= d .:50 1:8 2:4 
 MONS: plant, butterfly
 ITEM: strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 / strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-CHANCE: 3
+CHANCE: 4
 COLOUR: . = green:20 / brown:15 / none
 MAP
    ..

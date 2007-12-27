@@ -55,7 +55,7 @@ ENDMAP
 #######################################################################
 # An item encased in glass.  If the player wants it, it can be dug out.
 NAME:  item_on_display_a
-DEPTH:
+CHANCE: 9
 TAGS:  no_monster_gen no_item_gen
 MAP
 .....
@@ -66,10 +66,10 @@ MAP
 ENDMAP
 
 #####################################################################
-# A good item encased in *permanent* glass.  If the player wants it,
-# teleport control will be needed.
+# A good item encased in transparent stone or (rarely) permanent glass.
 NAME:  item_on_display_b
-DEPTH:
+CHANCE: 1
+SUBST: o : n o:1
 TAGS:  no_monster_gen no_item_gen
 MAP
 .....

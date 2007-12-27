@@ -158,7 +158,7 @@ ENDMAP
 
 #############################################################################
 # Oklob assault
-#
+# statistically, three oklobs
 NAME:    oklob_1
 DEPTH:   D:16-27, Lair:4-
 TAGS:    allow_dup
@@ -309,24 +309,23 @@ ENDMAP
 NAME: water_boxes_lemuel
 TAGS: no_pool_fixup uniq_water_maze_lemuel
 DEPTH: 5-27
-SHUFFLE: abcd, efgh, ijkl, mnop
 KMONS: * = fungus
 KFEAT: * = *
-SUBST: a = =, b = x, c = x, d = x
-SUBST: e = =, f = x, g = x, h = x
-SUBST: i = =, j = x, k = x, l = x
-SUBST: m = =, n = x, o = x, p = x
+NSUBST: a = 1:= / *:x
+NSUBST: b = 1:= / *:x
+NSUBST: c = 1:= / *:x
+NSUBST: d = 1:= / *:x
 MAP
   wwwwwwww
  wwwwwwwwww
-wwxaxwwxexww
-wwb*cwwf*gww
-wwxdxwwxhxww
+wwxaxwwxbxww
+wwa*awwb*bww
+wwxaxwwxbxww
 wwwwwwwwwwww
 wwwwwwwwwwww
-wwxixwwxmxww
-wwj*kwwn*oww
-wwxlxwwxpxww
+wwxdxwwxcxww
+wwd*dwwc*cww
+wwxdxwwxcxww
  wwwwwwwwww
   wwwwwwww
 ENDMAP

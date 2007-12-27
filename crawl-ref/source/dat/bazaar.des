@@ -168,7 +168,6 @@ TAGS:    bzr_entry allow_dup
 ORIENT:  float
 FLAGS:   no_rotate
 MONS:    plant
-#SUBST:   w = W w
 SHUFFLE: XY
 SUBST:   a = W .
 SUBST:   X : T 1
@@ -199,6 +198,10 @@ ENDMAP
 # You can force a particular colour for the rock walls or floor using
 # ROCKCOL and FLOORCOL directives.
 #
+
+########################################
+# General marketplace
+# 4 random shops
 NAME:   bazaar_general_marketplace
 TAGS:   bazaar allow_dup
 FLAGS:  no_rotate
@@ -223,6 +226,9 @@ xxxxxxx>xxxxxxx
 xxxxxxxxxxxxxxx
 ENDMAP
 
+########################################
+# Outfitter
+# 3 weapon/armour shops, potentially antique
 NAME:    bazaar_outfitter
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
@@ -248,6 +254,7 @@ ENDMAP
 
 ########################################
 # Another simple one (jpeg)
+# 4 random shops
 NAME:    bazaar_oval
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
@@ -265,7 +272,9 @@ xxxB.....Bxxx
 xxxxxxxxxxxxx
 ENDMAP
 
-
+########################################
+# Mystics
+# 2 shops
 NAME:    bazaar_mystics
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
@@ -300,6 +309,9 @@ xxxxxxxxxxxxxwwwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+########################################
+# Wands
+# 2 wand shops, 2 jewellery shops
 NAME:    bazaar_wands
 TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
@@ -347,7 +359,7 @@ ENDMAP
 
 ########################################
 # bazaars in a row
-#
+# ~4 shops
 NAME:    bazaar_row
 TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
@@ -392,7 +404,7 @@ ENDMAP
 
 ########################################
 # bazaars in a row v2
-#
+# ~4.5 shops
 NAME:    bazaar_row_2
 TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
@@ -435,7 +447,7 @@ ENDMAP
 
 #######################################
 # circle bazaar
-#
+# 5 shops
 NAME:    bazaar_circle_1
 CHANCE:  2
 TAGS:    bazaar allow_dup
@@ -678,7 +690,7 @@ ENDMAP
 
 #######################################
 # bazaar in honeycomb form (jpeg)
-#
+# 4 shops
 NAME:    bazaar_honeycomb
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
@@ -719,6 +731,7 @@ ENDMAP
 
 ##########################################
 # bazaar lakeside with goldfish (jpeg)
+# 5 shops
 NAME:    bazaar_lake
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
@@ -785,7 +798,7 @@ ENDMAP
 
 ##########################################
 # Bazaars in cross form (jpeg)
-#
+# 2.25 shops
 NAME:    bazaar_cross1
 TAGS:    bazaar allow_dup
 CHANCE:  5
@@ -793,8 +806,8 @@ FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = <, B = >
-KFEAT:   C = any shop / jewellery shop / wand shop
-KFEAT:   D = any shop / book shop / scroll shop
+KFEAT:   C = jewellery shop / wand shop
+KFEAT:   D = antique armour shop / book shop
 : bazaar_message(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -825,9 +838,9 @@ FLAGS:   no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = T E, B = >
-KFEAT:   C = any shop / antique weapon shop / distillery shop
-KFEAT:   D = any shop / antique armour shop
-KFEAT:   E = general shop
+KFEAT:   C = antique weapon shop
+KFEAT:   D = antique armour shop
+KFEAT:   E = general shop / distillery shop
 : bazaar_message(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -853,7 +866,7 @@ ENDMAP
 
 ###################################
 # strange pattern (jpeg) 
-#
+# 4 shops
 NAME:    bazaar_ribbon
 TAGS:    bazaar allow_dup
 FLAGS:   no_rotate
@@ -900,8 +913,8 @@ ENDMAP
 
 
 #######################################
-# Five bazaars in nine rooms (jpeg)
-#
+# Nine rooms (jpeg)
+# 5 shops
 NAME:    bazaar_ninerooms1
 TAGS:    bazaar allow_dup
 CHANCE:  2
@@ -1096,7 +1109,7 @@ ENDMAP
 
 #############################################
 # some more bazaars based on triangles (jpeg)
-
+# 4.4 shops
 NAME:    bazaar_triangles
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
@@ -1104,7 +1117,7 @@ CHANCE:  1
 FLAGS:   no_rotate
 SHUFFLE: ACD
 SUBST:   A = <
-KFEAT:   B = any shop
+KFEAT:   B = any shop / antique armour shop / jewellery shop
 SUBST:   C = >
 SUBST:   D = T
 : bazaar_message(_G)
@@ -1172,7 +1185,7 @@ xxA.......................Axx
 xxxxxxxxxxxxx...xxxxxxxxxxxxx
 xxxxxxxxxxxxx...xxxxxxxxxxxxx
 xxxxxxxxxxxx.....xxxxxxxxxxxx 
-xxxxxxxxxxx...A...xxxxxxxxxxx
+xxxxxxxxxxx...C...xxxxxxxxxxx
 xxxxxxxxxxxx.....xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
