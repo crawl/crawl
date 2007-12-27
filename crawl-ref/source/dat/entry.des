@@ -170,6 +170,8 @@ xxxxx.........xxxxx
 xxxxx....@....xxxxx  
 ENDMAP
 
+# Notes: chances are high that there is a shallow water path. Even if 
+# there is none, you can always see the door on the other side.
 NAME: lemuel_005_c
 TAGS: entry no_monster_gen
 ORIENT: float
@@ -497,8 +499,6 @@ NAME: david_entry_002
 TAGS: entry
 FLAGS: no_rotate
 ORIENT: float
-SUBST: . : ?.
-SUBST: ? = .:1000 % ~
 SUBST: ' = .x
 MAP
                xxxxx
@@ -2594,10 +2594,10 @@ MAP
 ..............[
 ..xxxxxxxxxxxxx
 A.xcccccccccccx
-..xcclllc....cx
+..xcclllc..1.cx
 ..xcllllc....cx
 ..xcl...c1...cx
-..==l>C.x....cx
+..==l>C.x...1cx
 ..xcl...c....cx
 ..xcllllc....cx
 ..xcclllc...]cx
@@ -2618,9 +2618,9 @@ MAP
 ..xxxx=xxxxxxxx
 ..xccc=cccccccx
 ..xcclllc....cx
-..xcllllc....cx
+..xcllllc..1.cx
 ..xcl...c1...cx
-.Axcl>C.x....cx
+.Axcl>C.x.1..cx
 ..xcl...c....cx
 ..xcllllc....cx
 ..xcclllc...]cx
@@ -2640,10 +2640,10 @@ MAP
 ..............[
 ..xxxxxxxxxxxxx
 ..xcccccccccccx
-..xcclllc....cx
-..xcllllc....cx
-.Axcl...c1...cx
-..xcl.C.=....cx
+..xcclllc...1cx
+..xcllllc..1.cx
+.Axcl...c1..1cx
+..xcl.C.=1...cx
 ..xcl...c....cx
 ..xcllllc....cx
 ..xcclllc...]cx
@@ -2665,7 +2665,7 @@ MAP
 ..xcccccccccccx
 ..xcclllc....cx
 B.xcllllc....cx
-..xcl...c1...cx
+..xcl...c1.1.cx
 ..xcl>T.x....cx
 ..xcl...c....cx
 ..xcllllc....cx
@@ -3114,10 +3114,10 @@ MONS: w:30 nothing / ooze / weight:2 jelly / giant cockroach / worm w:2 / jackal
 
 FLAGS:   no_rotate
 ORIENT:  float
-SHUFFLE: abcde / klmno
-SUBST:   k=A, l=B, m=C, n=D, o=E
-SUBST:   a=Gx, b=Gx, c=Gx, d=Gx, e=Gx
-SUBST:   A:Gx, B:Gx, C:Gx, D:Gx, E:Gx
+SHUFFLE: abcde / fghij
+SUBST:   f=A, g=B, h=C, i=D, j=E
+SUBST:   a=mx, b=mx, c=mx, d=mx, e=mx
+SUBST:   A:mx, B:mx, C:mx, D:mx, E:mx
 SUBST:   ===++
 SHUFFLE: xc, 123
 MAP
@@ -3126,7 +3126,7 @@ MAP
 .x4441321331444x.
 .x4312132211324x.
 .x4123213123134x.
-.xABCDEG+Gedcbax.
+.xABCDEm+medcbax.
 .x.............x.
 .=T....xxx....T=.
 .x.....({[.....x.
@@ -3137,34 +3137,41 @@ ENDMAP
 
 ##############################################################################
 # Morbid curiosity
-
+# Monsters are easier. Made it harder for them to get out. The single orc 
+# can pack a punch, though. His window is secret, so autoexploring won't 
+# notice, except for characters with starting Traps and Doors skill, who 
+# will then bring Stealth and Evasion as well.
 NAME:    david_entry_071
 TAGS:    entry 
+FLAGS:   no_rotate
 ORIENT:  float
-MONS:    goblin, kobold
-ITEM:    needle, dart, stone
+MONS:    goblin ; stone
+MONS:    hobgoblin ; stone
+MONS:    orc ; crossbow . bolt . mace
 SHUFFLE: ABCD
+NSUBST:  X = 1:= / *:x
+NSUBST:  Y = 1:+ / *:x
 SUBST:   A=@, B=@xx, C=@xxxx, D=x
 MAP
      xxxxxxxxxBxxxxxxxxx     
     xxxxx...........xxxxx    
-   xxx...xxxxx+xxxxx...xxx   
+   xxx...xxxxx=xxxxx...xxx   
   xx..xxxxxlllllllxxxxx..xx  
  xx.xxxxxlll.....lllxxxxx.xx 
-xx.xxxxxx...........xxxxxx.xx
+xx.xxxxxx3..........xxxxxx.xx
 xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
-xx.xxxxxxxxx.....xxxxxxxxx.xx
-x.xx...xxx..G.G.G..xxx..lxx.x
-x.x....xx...........xx1fllx.x
-x.x....x.............x...lx.x
-A.+...........{....G.=..1l+.C
-x.x....x.............x...lx.x
+xx.xxxxxxxxxGXGXGxxxxxxxxx.xx
+x.xx...xxx.........xxx..lxx.x
+x.x....xx...........xx1.llx.x
+x.x....x............Yx...lx.x
+A.+...........{.....G+..1l+.C
+x.x....x............Yx...lx.x
 x.x....xx...........xx..llx.x
-x.xx...xxx...G.G...xxx..lxx.x
-xx.xxxxxxxxx.....xxxxxxxxxx.x
+x.xx...xxx.........xxx..lxx.x
+xx.xxxxxxxxxxG=Gxxxxxxxxxxx.x
 xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
-xx.xxxxxx2d....2..e2xxxxxx.xx
-xxx.xxxxxlll2....lllxxxxx.xx 
+xx.xxxxxx...........xxxxxx.xx
+xxx.xxxxxlll2..2.lllxxxxx.xx 
  xxx..xxxxxlllllllxxxxx..xx  
    xxx...xxxxx+xxxxx...xxx   
     xxxxx...........xxxxx    
@@ -4011,9 +4018,9 @@ xxxxxxxx@xxxxxxxx
 xxxxxx.G.G.xxxxxx
 xxx.G.......G.xxx
 x...............x
-x.G..GGGGGGG..G.x
-x....G12345G....x
-x.G..GGGGGGG..G.x
+x.G..mmmmmmm..G.x
+x....m12345m....x
+x.G..mmmmmmm..G.x
 x...............x
 xxx.............x
 xxxxxxxxxxxx....x

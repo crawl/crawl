@@ -106,22 +106,19 @@ ENDMAP
 #
 NAME: temple_secret_doors
 TAGS: temple_entry
+FLAGS: no_rotate
 ORIENT: float
 SUBST: ? : ?:40 T:30 U, ? = T:30 U
-NSUBST: X = + / *: c:1 =
+NSUBST: X = 1:= / *=nnn=
 MAP
 cccccc@cccccc
 cccccc.cccccc
 cccccc.cccccc
-cccccc.cccccc
-cccccc.cccccc
-ccccccXcccccc
-ccccc?.?ccccc
+ccccnnXnncccc
+ccccn?.?ncccc
 @...X.O.X...@
-ccccc?.?ccccc
-ccccccXcccccc
-cccccc.cccccc
-cccccc.cccccc
+ccccn?.?ncccc
+ccccnnXnncccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc@cccccc
@@ -202,10 +199,10 @@ MAP
 x.......'''''!!!!!!!!!???!!!!!!!!!'''''.........
 x........'''''!!!!!!!!!?!!!!!!!!!'''''..........
 xx._......'''''!!!!!!!!!!!!!!!!!'''''...........
-xxxx3......'''''''!!!!!!!!!!!'''''''............
-xxxxx3......''''''''!!!!!!!''''''''.............
-xxxx13_........'''''''!!!'''''''................
-xxxxxx3_..........'''''''''''...................
+xxxxm......'''''''!!!!!!!!!!!'''''''............
+xxxxxm......''''''''!!!!!!!''''''''.............
+xxxx1m_........'''''''!!!'''''''................
+xxxxxxm_..........'''''''''''...................
 xxxxxxxxxx...........'''''......................
 xxxxxxxxxxxx....................................
 ENDMAP
