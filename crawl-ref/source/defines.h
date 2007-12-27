@@ -89,7 +89,7 @@
 // necessary, beyond hysterical raisins.
 const int MAPGEN_BORDER    = 2;
 
-const int LABYRINTH_BORDER = 12;
+const int LABYRINTH_BORDER = 4;
 
 // Now some defines about the actual play area:
 // Note: these boundaries are exclusive for the zone the player can move/dig,

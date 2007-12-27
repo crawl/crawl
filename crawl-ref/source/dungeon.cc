@@ -6072,59 +6072,6 @@ static void init_minivault_placement(int vault, vault_placement &place)
     vault_main(vgrid, place, vault);
 }
 
-static void labyrinth_dimension_adjust(int delta, int &ds, int &dw)
-{
-    if (delta > LABYRINTH_BORDER / 2)
-        delta = LABYRINTH_BORDER / 2;
-
-    if (delta)
-    {
-        if (delta & 1)
-            ++delta;
-
-        ds -= delta;
-        dw += delta * 2;
-    }
-}
-
-static void safe_set_feature(const coord_def &c, dungeon_feature_type feat)
-{
-    if (in_bounds(c))
-        grd(c) = feat;
-}
-
-static void pad_region(const dgn_region &reg, int pad_depth,
-                       dungeon_feature_type feat)
-{
-    const coord_def pstart = reg.pos - pad_depth;
-    const coord_def pend   = reg.pos + reg.size + pad_depth;
-    const coord_def end    = reg.pos + reg.size - 1;
-
-    for (int y = pstart.y; y < pend.y; ++y)
-    {
-        for (int x = 1; x <= pad_depth; ++x)
-        {
-            const coord_def c1(x + end.x, y);
-            safe_set_feature(c1, feat);
-
-            const coord_def c2(reg.pos.x - x, y);
-            safe_set_feature(c2, feat);
-        }
-    }
-
-    for (int x = end.x; x >= reg.pos.x; --x)
-    {
-        for (int y = 1; y <= pad_depth; ++y)
-        {
-            const coord_def c1(x, y + end.y);
-            safe_set_feature(c1, feat);
-
-            const coord_def c2(x, reg.pos.y - y);
-            safe_set_feature(c2, feat);
-        }
-    }
-}
-
 static void change_walls_from_centre(const dgn_region &region,
                                      const coord_def &centre,
                                      bool  rectangular,
@@ -6274,14 +6221,7 @@ static void labyrinth_level(int level_number)
     int vault = random_map_for_tag("minotaur", true, false);
     vault_placement place;
     if (vault != -1)
-    {
         init_minivault_placement(vault, place);
-
-        int ex = place.size.x / 4, ey = place.size.y / 4;
-
-        labyrinth_dimension_adjust(ex, lab.pos.x, lab.size.x);
-        labyrinth_dimension_adjust(ey, lab.pos.y, lab.size.y);
-    }
     
     coord_def end;
     labyrinth_build_maze(end, lab);
@@ -6312,8 +6252,6 @@ static void labyrinth_level(int level_number)
         }
         place.pos  = rplace.pos;
         place.size = rplace.size;
-
-        pad_region(dgn_region(place.pos, place.size), 1, DNGN_FLOOR);
     }
     
     if (vault != -1)
