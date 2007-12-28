@@ -37,6 +37,7 @@ end
 
 -- run no longer automatically implies rest as of 0.1.3.
 chk_interrupt_activity.rest = chk_interrupt_activity.run
+chk_interrupt_activity.travel = chk_interrupt_activity.run
 
 function rr_handle_message(cause, extra)
     local ch, mess = rr_split_channel(cause)
