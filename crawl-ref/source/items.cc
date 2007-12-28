@@ -2546,12 +2546,12 @@ void handle_time( long time_delta )
         // sufficiently used to beta 26's unkindness that we can use a lower
         // roll.)
         if (you.magic_contamination >= 5
-            && random2(50) <= you.magic_contamination)
+            && random2(25) <= you.magic_contamination)
         {
             mpr("Your body shudders with the violent release of wild energies!", MSGCH_WARN);
 
             // for particularly violent releases, make a little boom
-            if (you.magic_contamination > 25 && one_chance_in(3))
+            if (you.magic_contamination >= 10 && coinflip())
             {
                 struct bolt boom;
                 boom.type = SYM_BURST;
@@ -2559,7 +2559,14 @@ void handle_time( long time_delta )
                 boom.flavour = BEAM_RANDOM;
                 boom.target_x = you.x_pos;
                 boom.target_y = you.y_pos;
-                boom.damage = dice_def( 3, (you.magic_contamination / 2) );
+                // Undead enjoy extra contamination explosion damage because
+                // the magical contamination has a harder time dissipating
+                // through non-living flesh. :-)
+                boom.damage =
+                    dice_def( 3,
+                              you.magic_contamination
+                              * (you.is_undead? 4 : 2)
+                              / 4 );
                 boom.thrower = KILL_MISC;
                 boom.aux_source = "a magical explosion";
                 boom.beam_source = NON_MONSTER;
