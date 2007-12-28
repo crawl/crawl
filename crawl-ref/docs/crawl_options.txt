@@ -624,12 +624,18 @@ explore_greedy = false
         temporarily unable to pick up items (from uncontrolled 
         levitation, for instance).
 
-explore_stop = items,stairs,shops,altars,gates
-        Explore will stop for one of these conditions. Whatever you set 
-        this option to, anything that stops travel will also stop 
-        explore. Multiple explore_stop lines are *not* cumulative! The 
-        last explore_stop line will override all previous explore_stop 
-        lines. 
+explore_stop = items,greedy_items,stairs,shops,altars,gates
+        Explore will stop for one of these conditions. Whatever you
+        set this option to, anything that stops travel will also stop
+        explore. Multiple explore_stop lines are cumulative if you use
+        explore_stop += options, otherwise the last explore_stop =
+        options line will override all previous explore_stop lines.
+
+        If you include greedy_items in your explore_stop, greedy
+        explore will stop and announce items that are eligible for
+        autopickup (greedy explore otherwise announces only items that
+        are not eligible for autopickup, since autopickup will produce
+        its own message and stop greedy explore anyway).
 
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
