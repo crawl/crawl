@@ -1060,7 +1060,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     pbolt.rangeMax = 13;
     pbolt.damage = dice_def( 3, (monster->hit_dice * 2) );
     pbolt.damage.size = scaling * pbolt.damage.size / 100;
-    pbolt.type = SYM_ZAP;
+    pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
     pbolt.hit = 30;
     pbolt.beam_source = monster_index(monster);
     pbolt.thrower = KILL_MON;
@@ -1073,7 +1073,7 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
     pbolt.rangeMax = 9;
     pbolt.beam_source = monster_index(monster);
 
-    pbolt.type = SYM_MISSILE;
+    pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.flavour = BEAM_MISSILE;
     pbolt.thrower = KILL_MON_MISSILE;
     pbolt.aux_source.clear();
@@ -1118,7 +1118,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     pbolt.range = 9;
     pbolt.beam_source = monster_index(monster);
 
-    pbolt.type = SYM_MISSILE;
+    pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.colour = item.colour;
     pbolt.flavour = BEAM_MISSILE;
     pbolt.thrower = KILL_MON_MISSILE;
@@ -1287,7 +1287,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
             pbolt.name += "flame";
             pbolt.colour = RED;
-            pbolt.type = SYM_ZAP;
+            pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         }
 
         // WEAPON or AMMO of FROST
@@ -1305,7 +1305,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
             pbolt.name += "frost";
             pbolt.colour = WHITE;
-            pbolt.type = SYM_ZAP;
+            pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         }
 
         // Note: we already have throw_energy taken off.  -- bwr
@@ -1487,7 +1487,7 @@ void spore_goes_pop(struct monsters *monster)
     beam.is_tracer = false;
     beam.is_explosion = true;
     beam.beam_source = monster_index(monster);
-    beam.type = SYM_BURST;
+    beam.type = dchar_glyph(DCHAR_FIRED_BURST);
     beam.target_x = monster->x;
     beam.target_y = monster->y;
     beam.thrower = KILL_MON;    // someone else's explosion
@@ -1557,7 +1557,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 4 + (power / 100) );
         beam.hit = AUTOMATIC_HIT;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;
         beam.is_beam = false;
@@ -1575,7 +1575,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.damage = dice_def( 3, 5 + (power / 40) );
 
         beam.hit = 25 + power / 40;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_FIRE;
         beam.is_beam = false;
@@ -1592,7 +1592,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.damage = dice_def( 3, 5 + (power / 40) );
 
         beam.hit = 25 + power / 40;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_COLD;
         beam.is_beam = false;
@@ -1674,7 +1674,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 6 + power / 13 );
         beam.colour = LIGHTGREEN;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
         beam.hit = 19 + power / 20;
@@ -1685,7 +1685,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.name = "poison arrow";
         beam.damage = dice_def( 3, 7 + power / 12 );
         beam.colour = LIGHTGREEN;
-        beam.type = SYM_MISSILE;
+        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON_ARROW;
         beam.hit = 20 + power / 25;
@@ -1698,7 +1698,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 8 + power / 11 );
         beam.colour = RED;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_LAVA;
         beam.hit = 17 + power / 25;
@@ -1711,7 +1711,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 8 + power / 11 );
         beam.colour = RED;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_FIRE;
         beam.hit = 17 + power / 25;
@@ -1724,7 +1724,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 8 + power / 11 );
         beam.colour = WHITE;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_ICE;
         beam.hit     = 17 + power / 25;
@@ -1737,7 +1737,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 8 + power / 11 );
         beam.colour = WHITE;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_COLD;
         beam.hit = 17 + power / 25;
@@ -1750,7 +1750,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 12;
         beam.damage = dice_def( 2, 9 + power / 11 );
         beam.colour = WHITE;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_COLD;
         beam.hit = 17 + power / 25;
@@ -1764,7 +1764,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 1, 8 + (power / 20) );
         beam.colour = LIGHTCYAN;
-        beam.type   = SYM_ZAP;
+        beam.type   = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_ELECTRICITY;
         beam.hit = 17 + power / 20;
@@ -1777,7 +1777,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 10 + power / 17 );
         beam.colour = LIGHTCYAN;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_ELECTRICITY;
         beam.hit = 16 + power / 40;
@@ -1801,7 +1801,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 7 + power / 10 );
         beam.hit = 40;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_FIRE;  // why not BEAM_FIRE? {dlb}
         beam.is_beam = false;
@@ -1849,7 +1849,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 16 + power / 10 );
         beam.colour = WHITE;
-        beam.type = SYM_MISSILE;
+        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_MMISSILE;
         beam.hit = 22 + power / 20;
@@ -1872,7 +1872,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 6 + power / 13 );
         beam.colour = DARKGREY;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_NEG;
         beam.hit = 16 + power / 35;
@@ -1888,7 +1888,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 7 + (power / 14) );
         beam.hit = 20 + (power / 20);
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;
         beam.is_beam = false;
@@ -1903,7 +1903,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 7 + (power / 15) );
         beam.hit = 20 + power / 20;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_STEAM;
         beam.is_beam = false;
@@ -1934,7 +1934,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 3 + power / 50 );
         beam.hit = 18 + power / 15;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_FIRE;
         beam.is_beam = false;
@@ -1946,7 +1946,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 3 + power / 25 );
         beam.colour = LIGHTGREEN;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
         beam.hit = 18 + power / 25;
@@ -1961,7 +1961,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 23;
         beam.damage = dice_def( 3, 20 );
         beam.hit = 15 + power / 30;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_NUKE;     // a magical missile which destroys walls
         beam.is_beam = true;
@@ -1974,7 +1974,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 12;
         beam.damage = dice_def( 1, 6 + power / 25 );
         beam.hit = 60;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_POISON;
         beam.is_beam = false;
@@ -1987,7 +1987,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 8;
         beam.damage = dice_def( 3, 8 + (power / 9) );
         beam.hit = 20 + (power / 25);
-        beam.type = SYM_MISSILE;
+        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;   // similarly unresisted thing
         beam.is_beam = false;
@@ -2000,7 +2000,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 12;
         beam.damage = dice_def( 3, 5 + (power / 10) );
         beam.hit = 14 + power / 35;
-        beam.type = SYM_MISSILE;
+        beam.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;   // similarly unresisted thing
         beam.is_beam = false;
@@ -2013,7 +2013,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 10;
         beam.damage = dice_def( 1, 4 + power / 10 );
         beam.hit = 16 + power / 20;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_POISON;
         beam.is_beam = false;
@@ -2038,7 +2038,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 2 + power / 25 );
         beam.colour = GREEN;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
         beam.hit = 14 + power / 30;
@@ -2050,7 +2050,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.name = "foul vapour";
         beam.damage = dice_def( 3, 5 + power / 24 );
         beam.colour = DARKGREY;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_MIASMA;
         beam.hit = 17 + power / 20;
@@ -2066,7 +2066,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 23;
         beam.damage = dice_def( 3, 25 );
         beam.hit = 16 + power / 25;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;
         beam.is_beam = false;
@@ -2080,7 +2080,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 25 );
         beam.hit = 24;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_HELLFIRE;
         beam.is_beam = true;
@@ -2093,7 +2093,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.rangeMax = 16;
         beam.damage = dice_def( 3, 20 + power / 20 );
         beam.colour = CYAN;
-        beam.type = SYM_ZAP;
+        beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_FRAG;
         beam.hit = 19 + power / 30;

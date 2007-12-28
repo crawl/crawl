@@ -180,9 +180,8 @@ void zap_animation( int colour, const monsters *mon, bool force )
     if (in_los_bounds(drawx, drawy))
     {
         view_update();
-        textcolor( colour );
         gotoxy( drawx, drawy );
-        putch( SYM_ZAP );
+        put_colour_ch( colour, dchar_glyph( DCHAR_FIRED_ZAP ) );
         update_screen();
         delay(50);
     }
@@ -535,7 +534,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 1, 5 );                // dam: 5
         pbolt.hit = 8 + power / 10;                     // 25: 10
-        pbolt.type = SYM_SPACE; 
+        pbolt.type = dchar_glyph(DCHAR_SPACE); 
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
         break;
@@ -546,7 +545,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = random2(5) + 8;
         pbolt.damage = dice_def( 1, 3 + power / 5 );    // 25: 1d8
         pbolt.hit = AUTOMATIC_HIT;                      // hits always
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
         break;
@@ -557,7 +556,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 1, 3 + power / 5 );    // 25: 1d8
         pbolt.hit = 8 + power / 5;                      // 25: 13
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_POISON;                    // extra damage
 
         pbolt.obvious_effect = true;
@@ -569,7 +568,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 6 + random2(8);                   // extended in beam
         pbolt.damage = dice_def( 1, 3 + random2(power) / 2 ); // 25: 1d11
         pbolt.hit = 8 + power / 7;                      // 25: 11
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ELECTRICITY;               // beams & reflects
 
         pbolt.obvious_effect = true;
@@ -603,7 +602,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 1, 8 + power / 4 );    // 25: 1d14
         pbolt.hit = 7 + power / 6;                      // 25: 11
-        pbolt.type = SYM_BOLT;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
         pbolt.flavour = BEAM_FIRE;
 
         pbolt.obvious_effect = true;
@@ -622,7 +621,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = (random2(power) > random2(30)) ? 2 : 1;
         pbolt.damage = dice_def( 1, 8 + power / 4 );    // 25: 1d14
         pbolt.hit = 8 + power / 5;                      // 25: 13
-        pbolt.type = SYM_BOLT;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
         pbolt.flavour = BEAM_FRAG;                      // extra AC resist
 
         pbolt.obvious_effect = true;
@@ -638,7 +637,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 2, 4 + power / 3 );    // 25: 2d12
         pbolt.hit = 13 + power / 10;                    // 25: 15
-        pbolt.type = SYM_BOLT;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
         pbolt.flavour = BEAM_FRAG;                      // extra AC resist
 
         pbolt.obvious_effect = true;
@@ -655,7 +654,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         // level of 100 (for 3d20).
         pbolt.damage = dice_def( 3, 2 + (power / 250) );
         pbolt.hit = 8 + (power / 100);                   // max hit: 53
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_MAGIC;                      // unresisted
 
         pbolt.obvious_effect = true;
@@ -668,7 +667,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 2, 4 + power / 10 );   // 25: 2d6  50: 2d9
         pbolt.hit = 8 + power / 10;                     // 25: 10   50: 13
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FIRE;
 
         pbolt.obvious_effect = true;
@@ -680,7 +679,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 2, 4 + power / 10 );   // 25: 2d6  50: 2d9
         pbolt.hit = 8 + power / 10;                     // 50: 10   50: 13
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_COLD;
 
         pbolt.obvious_effect = true;
@@ -692,7 +691,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 2, 5 + power / 7 );    // 25: 2d8  50: 2d12
         pbolt.hit = 8 + power / 10;                     // 25: 10    50: 13
-        pbolt.type = SYM_MISSILE;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         pbolt.flavour = BEAM_MMISSILE;                  // irresistible
 
         pbolt.obvious_effect = true;
@@ -704,7 +703,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = dice_def( 2, 3 + power / 12 );   // 50: 2d7  100: 2d11
         pbolt.hit = 11 + power / 10;                    // 50: 16   100: 21
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FIRE;
 
         pbolt.obvious_effect = true;
@@ -716,7 +715,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = calc_dice( 2, 15 + (power * 2) / 5 ); 
         pbolt.hit = 10 + power / 7;                     // 50: 17   100: 24 
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
 
         pbolt.obvious_effect = true;
@@ -728,7 +727,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = calc_dice( 3, 10 + power / 2 );
         pbolt.hit = 9 + power / 12;                     // 50: 13   100: 17
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ICE;                       // half resistable
         break;
 
@@ -747,7 +746,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 5 + random2(4);
         pbolt.damage = calc_dice( 4, 10 + (power * 3) / 5 );
         pbolt.hit = 8 + power / 25;                     // 50: 10   100: 14
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_LAVA;
 
         pbolt.obvious_effect = true;
@@ -760,7 +759,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FIRE;
 
         pbolt.obvious_effect = true;
@@ -773,7 +772,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit = 10 + power / 25;                    // 50: 12   100: 14
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_COLD;
 
         pbolt.obvious_effect = true;
@@ -786,7 +785,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(10);
         pbolt.damage = calc_dice( 4, 15 + power / 2 );
         pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_POISON;                    // extra damage
 
         pbolt.obvious_effect = true;
@@ -799,7 +798,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 4, 15 + (power * 3) / 5 ); 
         pbolt.hit = 8 + power / 20;                     // 50: 10   100: 13
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_NEG;                       // drains levels
 
         pbolt.is_beam = true;
@@ -811,7 +810,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 5 + random2(5);
         pbolt.damage = calc_dice( 9, 15 + (power * 3) / 4 );
         pbolt.hit = 7 + power / 15;                     // 50: 10   100: 13
-        pbolt.type = SYM_MISSILE;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
         break;
@@ -822,7 +821,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = calc_dice( 4, 15 + power );
         pbolt.hit = 5 + power / 10;                     // 50: 10  100: 15
-        pbolt.type = SYM_MISSILE;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         pbolt.flavour = BEAM_POISON_ARROW;              // extra damage
         pbolt.obvious_effect = true;
         break;
@@ -845,7 +844,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(10);                  // extended in beam
         pbolt.damage = calc_dice( 1, 10 + (power * 3) / 5 );
         pbolt.hit = 7 + random2(power) / 20;            // 50: 7-9  100: 7-12
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ELECTRICITY;               // beams & reflects
 
         pbolt.obvious_effect = true;
@@ -858,7 +857,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 8 + random2(5);
         pbolt.damage = calc_dice( 3, 10 + power / 2 );
         pbolt.hit = 40;                                 // hit: 40
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FIRE;                 // fire
         pbolt.is_explosion = true;
         break;
@@ -870,7 +869,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.damage = calc_dice( 1, 15 + (power * 4) / 5 );
         pbolt.damage.num = 0;                    // only does explosion damage
         pbolt.hit = 40;                                 // hit: 40
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ELECTRICITY;
         pbolt.is_explosion = true;
         break;
@@ -881,7 +880,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 9 + random2(7);
         pbolt.damage = calc_dice( 3, 30 + (power * 3) / 4 );
         pbolt.hit = 20;                                 // hit: 20
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FRAG;                      // extra AC resist
         pbolt.is_explosion = true;
         break;
@@ -892,7 +891,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7;
         pbolt.damage = calc_dice( 3, 20 + (power * 2) / 3 );
         pbolt.hit = 150;
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_HOLY;
 
         pbolt.obvious_effect = true;
@@ -905,7 +904,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 6 + random2(4);
         pbolt.damage = calc_dice( 10, 23 + power );
         pbolt.hit = 10 + power / 15;                    // 50: 13   100: 16
-        pbolt.type = SYM_MISSILE;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
 
         pbolt.obvious_effect = true;
@@ -917,7 +916,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 3, 10 + (power * 3) / 4 );
         pbolt.hit = 20 + power / 10;                    // 50: 25   100: 30
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_HELLFIRE;
 
         pbolt.obvious_effect = true;
@@ -932,7 +931,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.damage.num = 0;                    // only does explosion damage
         pbolt.hit = 20 + power / 10;                    // 50: 25   100: 30
         pbolt.ench_power = power;                       // used for radius
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ICE;                       // half resisted
         pbolt.is_explosion = true;
         break;
@@ -943,7 +942,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = calc_dice( 12, 40 + (power * 3) / 2 );
         pbolt.hit = 1;
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ENERGY;                    // unresisted
 
         pbolt.obvious_effect = true;
@@ -961,7 +960,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 1, 4 + power / 2 );    // max dam: 25
         pbolt.hit = 5 + random2( 1 + power / 3 );       // max hit: 19
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_POISON;
         pbolt.obvious_effect = true;
         break;
@@ -977,7 +976,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 3, 4 + power / 3 );    // max dam: 60
         pbolt.hit = 8 + random2( 1 + power / 3 );       // max hit: 25
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FIRE;
 
         pbolt.obvious_effect = true;
@@ -995,7 +994,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 3, 4 + power / 3 );    // max dam: 39
         pbolt.hit = 8 + random2( 1 + power / 3 );
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_COLD;
 
         pbolt.obvious_effect = true;
@@ -1013,7 +1012,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 3, 3 + power / 3 );    // max dam: 36
         pbolt.hit = 5 + random2( 1 + power / 3 );
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_ACID;
 
         pbolt.obvious_effect = true;
@@ -1031,7 +1030,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 3, 2 + power / 6 );    // max dam: 18
         pbolt.hit = 6 + random2( 1 + power / 3 );
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_POISON;
 
         pbolt.obvious_effect = true;
@@ -1056,7 +1055,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 3, 3 + power / 3 );    // max dam: 36
         pbolt.hit = 5 + random2( 1 + power / 3 );
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
 
         pbolt.obvious_effect = true;
@@ -1074,7 +1073,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
 
         pbolt.damage = dice_def( 3, 4 + power / 5 );    // max dam: 27
         pbolt.hit = 10 + random2( 1 + power / 5 );
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_STEAM;
 
         pbolt.obvious_effect = true;
@@ -1206,7 +1205,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = dice_def( 1500, 1 );             // dam: 1500
         pbolt.hit = 1500;                               // hit: 1500
-        pbolt.type = SYM_DEBUG;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_DEBUG);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
 
         pbolt.obvious_effect = true;
@@ -1218,7 +1217,7 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.range = 7 + random2(10);
         pbolt.damage = dice_def( 1, 0 );
         pbolt.hit = 60;
-        pbolt.type = SYM_DEBUG;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_DEBUG);
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
 
         pbolt.obvious_effect = true;
@@ -1485,13 +1484,10 @@ void fire_beam( bolt &pbolt, item_def *item )
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
-                if (pbolt.colour == BLACK)
-                    textcolor(random_colour());
-                else
-                    textcolor(pbolt.colour);
-
                 gotoxy(drawx, drawy);
-                putch(pbolt.type);
+                put_colour_ch(
+                    pbolt.colour == BLACK? random_colour() : pbolt.colour,
+                    pbolt.type );
 
                 // get curses to update the screen so we can see the beam
                 update_screen();
@@ -4356,7 +4352,7 @@ static void explosion1(bolt &pbolt)
         seeMsg = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion.";
 
-        pbolt.type = SYM_BURST;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_HELLFIRE;
     }
 
@@ -4365,7 +4361,7 @@ static void explosion1(bolt &pbolt)
         seeMsg = "The flame explodes!";
         hearMsg = "You feel a deep, resonant explosion.";
 
-        pbolt.type = SYM_BURST;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_HOLY;
         ex_size = 2;
     }
@@ -4375,7 +4371,7 @@ static void explosion1(bolt &pbolt)
         seeMsg = "The fireball explodes!";
         hearMsg = "You hear an explosion.";
 
-        pbolt.type = SYM_BURST;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_FIRE;
         ex_size = 1;
     }
@@ -4385,7 +4381,7 @@ static void explosion1(bolt &pbolt)
         seeMsg = "The orb of electricity explodes!";
         hearMsg = "You hear a clap of thunder!";
 
-        pbolt.type = SYM_BURST;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_BURST);
         pbolt.flavour = BEAM_ELECTRICITY;
         pbolt.colour = LIGHTCYAN;
         pbolt.damage.num = 1;
@@ -4404,7 +4400,7 @@ static void explosion1(bolt &pbolt)
         hearMsg = "You hear an explosion!";
 
         pbolt.name = "blast of shrapnel";
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour = BEAM_FRAG;     // sets it from pure damage to shrapnel (which is absorbed extra by armour)
     }
 
@@ -4415,7 +4411,7 @@ static void explosion1(bolt &pbolt)
 
         pbolt.name = "ice storm";
         pbolt.damage.num = 6;
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.colour = WHITE;
         ex_size = 2 + (random2( pbolt.ench_power ) > 75);
     }
@@ -4703,13 +4699,10 @@ static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
-                if (beam.colour == BLACK)
-                    textcolor(random_colour());
-                else
-                    textcolor(beam.colour);
-
                 gotoxy(drawx, drawy);
-                putch('#');
+                put_colour_ch(
+                    beam.colour == BLACK ? random_colour() : beam.colour,
+                    dchar_glyph( DCHAR_EXPLOSION ) );
             }
         }
     }
@@ -4824,7 +4817,8 @@ bool nice_beam( monsters *mon, bolt &beam )
 // 
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
-bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
+bolt::bolt() : range(0), rangeMax(0), type('*'),
+               colour(BLACK),
                flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
                ench_power(0), hit(0), target_x(0), target_y(0), pos(),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),

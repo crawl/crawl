@@ -2049,7 +2049,7 @@ static void miscast_conjuration(int severity, const char* cause)
             break;
         case 1:
             mpr("You are caught in a violent explosion!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 12 );
             beam.flavour = BEAM_MISSILE; // unsure about this
             // BEAM_EXPLOSION instead? {dlb}
@@ -2080,7 +2080,7 @@ static void miscast_conjuration(int severity, const char* cause)
             break;
         case 1:
             mpr("There is a sudden explosion of magical energy!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 20 );
             beam.flavour = BEAM_MISSILE; // unsure about this
             // BEAM_EXPLOSION instead? {dlb}
@@ -2968,7 +2968,7 @@ static void miscast_fire(int severity, const char* cause)
 
         case 1:
             mpr("You are caught in a fiery explosion!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 14 );
             beam.flavour = BEAM_FIRE;
             beam.target_x = you.x_pos;
@@ -3000,7 +3000,7 @@ static void miscast_fire(int severity, const char* cause)
             break;
         case 1:
             mpr("There is a sudden and violent explosion of flames!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 20 );
             beam.flavour = BEAM_FIRE;
             beam.target_x = you.x_pos;
@@ -3102,7 +3102,7 @@ static void miscast_ice(int severity, const char* cause)
 
         case 1:
             mpr("You are caught in an explosion of ice and frost!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 11 );
             beam.flavour = BEAM_COLD;
             beam.target_x = you.x_pos;
@@ -3220,7 +3220,7 @@ static void miscast_earth(int severity, const char* cause)
         {
         case 0:
             mpr("You are caught in an explosion of flying shrapnel!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 15 );
             beam.flavour = BEAM_FRAG;
             beam.target_x = you.x_pos;
@@ -3332,7 +3332,7 @@ static void miscast_air(int severity, const char* cause)
         {
         case 0:
             mpr("You are caught in an explosion of electrical discharges!");
-            beam.type = SYM_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 8 );
             beam.flavour = BEAM_ELECTRICITY;
             beam.target_x = you.x_pos;

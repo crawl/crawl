@@ -2554,7 +2554,7 @@ void handle_time( long time_delta )
             if (you.magic_contamination >= 10 && coinflip())
             {
                 struct bolt boom;
-                boom.type = SYM_BURST;
+                boom.type = dchar_glyph(DCHAR_FIRED_BURST);
                 boom.colour = BLACK;
                 boom.flavour = BEAM_RANDOM;
                 boom.target_x = you.x_pos;

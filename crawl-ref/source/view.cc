@@ -3338,30 +3338,36 @@ bool trans_wall_blocking( const coord_def &p )
     return see_grid(p) && !see_grid_no_trans(p);
 }
 
-static const unsigned table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
+static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
 {
     // CSET_ASCII
     {
-        '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall, stairs up
-        '_', '\\', '}', '{', '8', '~', '~',            // altar, item detect
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
-        ':', '|', '}', '%', '$', '"', '#',             // book, cloud
+        '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
+        '_', '\\', '}', '{', '8', '~', '~',            // altar .. item detect
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
+        ':', '|', '}', '%', '$', '"', '#',             // book .. cloud
+        ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 
     // CSET_IBM - this is ANSI 437
     {
-        177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall, stairs up
-        220, 239, 244, 247, '8', '~', '~',             // altar, item detect
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
-        '+', '\\', '}', '%', '$', '"', '#',            // book, cloud
+        177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall .. stairs up
+        220, 239, 244, 247, '8', '~', '~',             // altar .. item detect
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
+        '+', '\\', '}', '%', '$', '"', '#',            // book .. cloud
+        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 
     // CSET_DEC - remember: 224-255 are mapped to shifted 96-127
     {
-        225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall, stairs up
-        251, 182, 167, 187, '8', 171, 168,             // altar, item detect
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
-        '+', '\\', '}', '%', '$', '"', '#',            // book, cloud
+        225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
+        251, 182, 167, 187, '8', 171, 168,             // altar .. item detect
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
+        '+', '\\', '}', '%', '$', '"', '#',            // book .. cloud
+        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 
     // CSET_UNICODE
@@ -3370,6 +3376,8 @@ static const unsigned table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '_', 0x2229, 0x2320, 0x2248, '8', '~', '~',
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
         '+', '|', '}', '%', '$', '"', '#',
+        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 };
 
@@ -3400,8 +3408,13 @@ void init_char_table( char_set_type set )
         if (Options.cset_override[set][i])
             Options.char_table[i] = Options.cset_override[set][i];
         else
-            Options.char_table[i] = table[set][i];
+            Options.char_table[i] = dchar_table[set][i];
     }
+}
+
+unsigned dchar_glyph(dungeon_char_type dchar)
+{
+    return (Options.char_table[dchar]);
 }
 
 void apply_feature_overrides()

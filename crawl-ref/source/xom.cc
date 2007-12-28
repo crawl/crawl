@@ -652,7 +652,7 @@ static bool xom_is_good(int sever)
         mpr("The area is suffused with divine lightning!");
                 
         beam.beam_source = NON_MONSTER;
-        beam.type = SYM_BURST;
+        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage = dice_def( 3, 30 );
         beam.flavour = BEAM_ELECTRICITY;
         beam.target_x = you.x_pos;

@@ -26,27 +26,6 @@ enum demon_beam_type
     DMNBM_MUTATION
 };
 
-// beam[].type - note that this (and its variants) also accepts values
-// from other enums - confusing {dlb}
-enum zap_symbol_type
-{
-    SYM_SPACE = ' ',                   //   32
-    SYM_FLASK = '!',                   //   33
-    SYM_BOLT = '#',                    //   35
-    SYM_CHUNK = '%',                   //   37
-    SYM_OBJECT = '(',                  //   40 - actually used for books, but... {dlb}
-    SYM_WEAPON = ')',                  //   41
-    SYM_ZAP = '*',                     //   42
-    SYM_BURST = '+',                   //   43
-    SYM_STICK = '/',                   //   47
-    SYM_TRINKET = '=',                 //   61
-    SYM_SCROLL = '?',                  //   63
-    SYM_DEBUG = 'X',                   //   88
-    SYM_ARMOUR = '[',                  //   91
-    SYM_MISSILE = '`',                 //   96
-    SYM_EXPLOSION = '#'
-};
-
 // must match wand subtypes! (see item_def::zap())
 enum zap_type
 {
@@ -124,7 +103,7 @@ struct bolt
     // INPUT parameters set by caller
     int         range;                 // minimum range
     int         rangeMax;              // maximum range
-    int         type;                  // missile gfx
+    unsigned    type;                  // missile gfx
     int         colour;
     int         flavour;
     int         source_x, source_y;    // beam origin

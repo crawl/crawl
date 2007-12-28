@@ -244,7 +244,7 @@ int cast_fire_storm(int powc, bolt &beam)
 {
     beam.ex_size = 2 + (random2(powc) > 75);
     beam.flavour = BEAM_LAVA;
-    beam.type = SYM_ZAP;
+    beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour = RED;
     beam.beam_source = MHITYOU;
     beam.thrower = KILL_YOU_MISSILE;
@@ -279,7 +279,7 @@ void cast_chain_lightning( int powc )
     beam.range = 8;
     beam.rangeMax = 8;
     beam.hit = AUTOMATIC_HIT;
-    beam.type = SYM_ZAP;
+    beam.type = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.flavour = BEAM_ELECTRICITY;
     beam.obvious_effect = true;
     beam.is_beam = false;            // since we want to stop at our target
@@ -548,7 +548,7 @@ int stinking_cloud( int pow, bolt &beem )
     beem.rangeMax = 6;
     beem.damage = dice_def( 1, 0 );
     beem.hit = 20;
-    beem.type = SYM_ZAP;
+    beem.type = dchar_glyph(DCHAR_FIRED_ZAP);
     beem.flavour = BEAM_MMISSILE;
     beem.ench_power = pow;
     beem.beam_source = MHITYOU;

@@ -473,7 +473,7 @@ void direct_effect(struct bolt &pbolt)
         pbolt.ex_size = 1;
         pbolt.flavour = BEAM_HELLFIRE;
         pbolt.is_explosion = true;
-        pbolt.type = SYM_ZAP;
+        pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.colour = RED;
         pbolt.thrower = KILL_MON_MISSILE;
         pbolt.aux_source.clear();

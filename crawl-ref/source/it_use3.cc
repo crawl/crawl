@@ -852,7 +852,7 @@ void tome_of_power(int slot)
         }
 
         bolt beam;
-        beam.type = SYM_BURST;
+        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage = dice_def( 3, 15 );
         // unsure about this    // BEAM_EXPLOSION instead? [dlb]
         beam.flavour = BEAM_FIRE;

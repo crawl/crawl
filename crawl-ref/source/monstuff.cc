@@ -2529,7 +2529,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         beem.rangeMax = 13;
         beem.damage = dice_def( 3, 10 );
         beem.colour = RED;
-        beem.type = SYM_ZAP;
+        beem.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour = BEAM_LAVA;
         beem.hit = 20;
         beem.beam_source = monster_index(monster);
@@ -2562,7 +2562,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         beem.name = "bolt of electricity";
         beem.damage = dice_def( 3, 6 );
         beem.colour = LIGHTCYAN;
-        beem.type = SYM_ZAP;
+        beem.type = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour = BEAM_ELECTRICITY;
         beem.hit = 50;
         beem.beam_source = monster_index(monster);
@@ -2689,7 +2689,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         beem.hit = 14;
         beem.damage = dice_def( 2, 10 );
         beem.beam_source = monster_index(monster);
-        beem.type = SYM_MISSILE;
+        beem.type = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour = LIGHTGREY;
         beem.flavour = BEAM_MISSILE;
         beem.thrower = KILL_MON;
@@ -5673,7 +5673,7 @@ forget_it:
 static void setup_plant_spit(monsters *monster, bolt &pbolt)
 {
     pbolt.name = "acid";
-    pbolt.type = SYM_ZAP;
+    pbolt.type = dchar_glyph(DCHAR_FIRED_ZAP);
     pbolt.range = 9;
     pbolt.rangeMax = 9;
     pbolt.colour = YELLOW;

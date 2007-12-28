@@ -1701,24 +1701,25 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.flavour = BEAM_MISSILE;
     // pbolt.range is set below
 
+    dungeon_char_type zapsym = DCHAR_SPACE;
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:    pbolt.type = SYM_WEAPON;  break;
-    case OBJ_MISSILES:   pbolt.type = SYM_MISSILE; break;
-    case OBJ_ARMOUR:     pbolt.type = SYM_ARMOUR;  break;
-    case OBJ_WANDS:      pbolt.type = SYM_STICK;   break;
-    case OBJ_FOOD:       pbolt.type = SYM_CHUNK;   break;
-    case OBJ_UNKNOWN_I:  pbolt.type = SYM_BURST;   break;
-    case OBJ_SCROLLS:    pbolt.type = SYM_SCROLL;  break;
-    case OBJ_JEWELLERY:  pbolt.type = SYM_TRINKET; break;
-    case OBJ_POTIONS:    pbolt.type = SYM_FLASK;   break;
-    case OBJ_UNKNOWN_II: pbolt.type = SYM_ZAP;     break;
-    case OBJ_BOOKS:      pbolt.type = SYM_OBJECT;  break;
-        // this does not seem right, but value was 11 {dlb}
-        // notice how the .type does not match the class -- hmmm... {dlb}
-    case OBJ_STAVES:      pbolt.type = SYM_STICK;  break;
+    case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
+    case OBJ_MISSILES:   zapsym = DCHAR_FIRED_MISSILE; break;
+    case OBJ_ARMOUR:     zapsym = DCHAR_FIRED_ARMOUR;  break;
+    case OBJ_WANDS:      zapsym = DCHAR_FIRED_STICK;   break;
+    case OBJ_FOOD:       zapsym = DCHAR_FIRED_CHUNK;   break;
+    case OBJ_UNKNOWN_I:  zapsym = DCHAR_FIRED_BURST;   break;
+    case OBJ_SCROLLS:    zapsym = DCHAR_FIRED_SCROLL;  break;
+    case OBJ_JEWELLERY:  zapsym = DCHAR_FIRED_TRINKET; break;
+    case OBJ_POTIONS:    zapsym = DCHAR_FIRED_FLASK;   break;
+    case OBJ_UNKNOWN_II: zapsym = DCHAR_FIRED_ZAP;     break;
+    case OBJ_BOOKS:      zapsym = DCHAR_FIRED_BOOK;    break;
+    case OBJ_STAVES:     zapsym = DCHAR_FIRED_STICK;   break;
     default: break;
     }
+
+    pbolt.type = dchar_glyph(zapsym);
 
     pbolt.source_x = you.x_pos;
     pbolt.source_y = you.y_pos;
@@ -2022,7 +2023,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             pbolt.name += "flame";
             pbolt.colour = RED;
-            pbolt.type = SYM_BOLT;
+            pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
 
@@ -2042,7 +2043,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             pbolt.name += "frost";
             pbolt.colour = WHITE;
-            pbolt.type = SYM_BOLT;
+            pbolt.type = dchar_glyph(DCHAR_FIRED_BOLT);
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
         }
@@ -3515,7 +3516,7 @@ static bool affix_weapon_enchantment()
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
 
-        beam.type = SYM_BURST;
+        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage = dice_def( 3, 10 );
         beam.flavour = 2;
         beam.target_x = you.x_pos;
@@ -4006,7 +4007,7 @@ void read_scroll(void)
         // we do this here to prevent it from blowing itself up
         dec_inv_item_quantity( item_slot, 1 );
 
-        beam.type = SYM_BURST;
+        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage = dice_def( 3, 10 );
         // unsure about this    // BEAM_EXPLOSION instead? {dlb}
         beam.flavour = BEAM_FIRE;

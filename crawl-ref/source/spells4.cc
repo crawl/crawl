@@ -1721,7 +1721,7 @@ void cast_evaporate(int pow)
     beem.colour = you.inv[potion].colour;
     beem.range = 9;
     beem.rangeMax = 9;
-    beem.type = SYM_FLASK;
+    beem.type = dchar_glyph(DCHAR_FIRED_FLASK);
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU_MISSILE;
     beem.aux_source.clear();

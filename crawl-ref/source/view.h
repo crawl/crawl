@@ -215,6 +215,7 @@ inline bool trans_wall_blocking(int x, int y)
 std::string screenshot(bool fullscreen = false);
 
 dungeon_char_type get_feature_dchar( dungeon_feature_type feat );
+unsigned dchar_glyph(dungeon_char_type dchar);
 unsigned get_sightmap_char(int feature);
 unsigned get_magicmap_char(int feature);
 
