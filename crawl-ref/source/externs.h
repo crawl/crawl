@@ -1485,7 +1485,8 @@ public:
     void reset_options();
 
     void read_option_line(const std::string &s, bool runscripts = false);
-    void read_options(InitLineInput &, bool runscripts);
+    void read_options(InitLineInput &, bool runscripts,
+                      bool clear_aliases = true);
 
 public:
     // View options
