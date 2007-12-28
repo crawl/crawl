@@ -512,10 +512,6 @@ bool you_can_wear(int eq, bool special_armour)
        return true;
    }
 
-   // these can wear everything
-   if (player_genus(GENPC_ELVEN))
-       return true;
-
    // anyone can wear caps/hats and robes and at least one of buckler/shield
    if (special_armour
        && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR || eq == EQ_SHIELD))
