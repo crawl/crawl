@@ -389,7 +389,7 @@ static void initialise_branch_depths()
     branches[BRANCH_ELVEN_HALLS].startdepth = random_range(3, 4);
     branches[BRANCH_LAIR].startdepth = random_range(8, 13);
     branches[BRANCH_HIVE].startdepth = random_range(11, 16);
-    branches[BRANCH_SLIME_PITS].startdepth = random_range(3, 9);
+    branches[BRANCH_SLIME_PITS].startdepth = random_range(8, 10);
     if ( coinflip() )
     {
         branches[BRANCH_SWAMP].startdepth = random_range(2, 7);
