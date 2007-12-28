@@ -1369,6 +1369,8 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_STAIR;
         else if (c == "altar" || c == "altars")
             conditions |= ES_ALTAR;
+        else if (c == "greedy_item" || c == "greedy_items")
+            conditions |= ES_GREEDY_ITEM;
     }
     return (conditions);
 }

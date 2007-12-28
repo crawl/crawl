@@ -3988,8 +3988,12 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
         if (!current_level)
             current_level = stashes.find_current_level();
 
-        if (current_level && is_greed_inducing_square(current_level, pos))
+        if (current_level
+            && !(Options.explore_stop & ES_GREEDY_ITEM)
+            && is_greed_inducing_square(current_level, pos))
+        {
             return;
+        }
     }
 
     add_item(i);

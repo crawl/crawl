@@ -1473,16 +1473,25 @@ void shoot_thing(void)
 
     if (item == ENDOFPACK)
     {
-        mpr("No suitable missiles.");
+        unwind_var<int> festart(Options.fire_items_start, 0);
+        if ((item = get_fire_item_index()) == ENDOFPACK)
+            mpr("No suitable missiles.");
+        else
+            mprf("No suitable missiles (fire_items_start = '%c', "
+                 "ignoring item on '%c').",
+                 index_to_letter(festart.original_value()),
+                 index_to_letter(item));
         flush_input_buffer( FLUSH_ON_FAILURE );
         return;
     }
 
     dist target;
     bolt beam;
-    if (choose_fire_target(target, item))
-        if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
-            throw_it( beam, item, false, 0, &target );
+    if (choose_fire_target(target, item)
+        && check_warning_inscriptions(you.inv[item], OPER_FIRE))
+    {
+        throw_it( beam, item, false, 0, &target );
+    }
 }
 
 // Returns delay multiplier numerator (denominator should be 100) for the

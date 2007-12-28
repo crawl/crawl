@@ -167,6 +167,17 @@ public:
     {
         val = oldval;
     }
+
+    T value() const
+    {
+        return val;
+    }
+
+    T original_value() const
+    {
+        return oldval;
+    }
+    
 private:
     T &val;
     T oldval;
