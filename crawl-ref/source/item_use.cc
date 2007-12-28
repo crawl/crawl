@@ -3956,9 +3956,12 @@ void read_scroll(void)
         break;
 
     case SCR_FEAR:
-        if (!mass_enchantment(ENCH_FEAR, 1000, MHITYOU))
-            id_the_scroll = false;
+    {
+        int fear_influenced = 0;
+        mass_enchantment(ENCH_FEAR, 1000, MHITYOU, NULL, &fear_influenced);
+        id_the_scroll = fear_influenced;
         break;
+    }
 
     case SCR_NOISE:
         mpr("You hear a loud clanging noise!");
