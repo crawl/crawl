@@ -1049,6 +1049,12 @@ int mons_res_cold( const monsters *mon )
     return (u);
 }                               // end mons_res_cold()
 
+int mons_res_miasma( const monsters *mon )
+{
+    return (mons_holiness(mon) != MH_NATURAL 
+            || mon->type == MONS_DEATH_DRAKE ? 3 : 0);
+}
+
 int mons_res_negative_energy( const monsters *mon )
 {
     int mc = mon->type;

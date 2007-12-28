@@ -5229,53 +5229,57 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
 
         switch (targ_cloud_type)
         {
-            case CLOUD_FIRE:
-                if (mons_res_fire(monster) > 0)
-                    return true;
+        case CLOUD_MIASMA:
+            // Even the dumbest monsters will avoid miasma if they can.
+            return (mons_res_miasma(monster) > 0);
+            
+        case CLOUD_FIRE:
+            if (mons_res_fire(monster) > 0)
+                return true;
 
-                if (monster->hit_points >= 15 + random2avg(46, 5))
-                    return true;
-                break;
+            if (monster->hit_points >= 15 + random2avg(46, 5))
+                return true;
+            break;
 
-            case CLOUD_STINK:
-                if (mons_res_poison(monster) > 0)
-                    return true;
-                if (1 + random2(5) < monster->hit_dice)
-                    return true;
-                if (monster->hit_points >= random2avg(19, 2))
-                    return true;
-                break;
+        case CLOUD_STINK:
+            if (mons_res_poison(monster) > 0)
+                return true;
+            if (1 + random2(5) < monster->hit_dice)
+                return true;
+            if (monster->hit_points >= random2avg(19, 2))
+                return true;
+            break;
 
-            case CLOUD_COLD:
-                if (mons_res_cold(monster) > 0)
-                    return true;
+        case CLOUD_COLD:
+            if (mons_res_cold(monster) > 0)
+                return true;
 
-                if (monster->hit_points >= 15 + random2avg(46, 5))
-                    return true;
-                break;
+            if (monster->hit_points >= 15 + random2avg(46, 5))
+                return true;
+            break;
 
-            case CLOUD_POISON:
-                if (mons_res_poison(monster) > 0)
-                    return true;
+        case CLOUD_POISON:
+            if (mons_res_poison(monster) > 0)
+                return true;
 
-                if (monster->hit_points >= random2avg(37, 4))
-                    return true;
-                break;
+            if (monster->hit_points >= random2avg(37, 4))
+                return true;
+            break;
 
             // this isn't harmful, but dumb critters might think so.
-            case CLOUD_GREY_SMOKE:
-                if (mons_intel(monster->type) > I_ANIMAL || coinflip())
-                    return true;
+        case CLOUD_GREY_SMOKE:
+            if (mons_intel(monster->type) > I_ANIMAL || coinflip())
+                return true;
 
-                if (mons_res_fire(monster) > 0)
-                    return true;
+            if (mons_res_fire(monster) > 0)
+                return true;
 
-                if (monster->hit_points >= random2avg(19, 2))
-                    return true;
-                break;
+            if (monster->hit_points >= random2avg(19, 2))
+                return true;
+            break;
                 
-            default:
-                return true;   // harmless clouds
+        default:
+            return true;   // harmless clouds
         }
 
         // if we get here, the cloud is potentially harmful.
@@ -5830,8 +5834,7 @@ static void mons_in_cloud(monsters *monster)
     case CLOUD_MIASMA:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
-        if (mons_holiness(monster) != MH_NATURAL 
-                || monster->type == MONS_DEATH_DRAKE)
+        if (mons_res_miasma(monster) > 0)
             return;
 
         poison_monster(monster, cloud.whose);
