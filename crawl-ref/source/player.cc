@@ -2536,17 +2536,7 @@ int burden_change(void)
         if (you.inv[bu].quantity < 1)
             continue;
 
-        if (you.inv[bu].base_type == OBJ_CORPSES)
-        {
-            if (you.inv[bu].sub_type == CORPSE_BODY)
-                you.burden += mons_weight(you.inv[bu].plus);
-            else if (you.inv[bu].sub_type == CORPSE_SKELETON)
-                you.burden += mons_weight(you.inv[bu].plus) / 2;
-        }
-        else
-        {
-            you.burden += item_mass( you.inv[bu] ) * you.inv[bu].quantity;
-        }
+        you.burden += item_mass( you.inv[bu] ) * you.inv[bu].quantity;
     }
 
     you.burden_state = BS_UNENCUMBERED;

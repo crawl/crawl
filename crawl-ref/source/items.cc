@@ -500,17 +500,10 @@ void unlink_item( int dest )
 #endif
 }                               // end unlink_item()
 
-void destroy_item( int dest, bool never_created )
+void destroy_item( item_def &item, bool never_created )
 {
-    // Don't destroy non-items, but this function may be called upon 
-    // to remove items reduced to zero quantity, so we allow "invalid"
-    // objects in.
-    if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
+    if (!is_valid_item( item ))
         return;
-
-    unlink_item( dest );
-
-    item_def& item(mitm[dest]);
 
     if (never_created)
     {
@@ -529,6 +522,18 @@ void destroy_item( int dest, bool never_created )
 
     // paranoia, shouldn't be needed
     item.clear();
+}
+
+void destroy_item( int dest, bool never_created )
+{
+    // Don't destroy non-items, but this function may be called upon 
+    // to remove items reduced to zero quantity, so we allow "invalid"
+    // objects in.
+    if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
+        return;
+
+    unlink_item( dest );
+    destroy_item( mitm[dest], never_created );
 }
 
 static void handle_gone_item(const item_def &item)
@@ -2442,6 +2447,122 @@ static void hell_effects()
     }
 }
 
+static void rot_inventory_food(long time_delta)
+{
+    // Update all of the corpses and food chunks in the player's
+    // inventory {should be moved elsewhere - dlb}
+
+    bool burden_changed_by_rot = false;
+    bool new_rotting_item = false;
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].quantity < 1)
+            continue;
+
+        if (you.inv[i].base_type != OBJ_CORPSES && you.inv[i].base_type != OBJ_FOOD)
+            continue;
+
+        if (you.inv[i].base_type == OBJ_CORPSES
+            && you.inv[i].sub_type > CORPSE_SKELETON)
+        {
+            continue;
+        }
+
+        if (you.inv[i].base_type == OBJ_FOOD && you.inv[i].sub_type != FOOD_CHUNK)
+            continue;
+
+        if ((time_delta / 20) >= you.inv[i].special)
+        {
+            if (you.inv[i].base_type == OBJ_FOOD)
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item();
+
+                destroy_item(you.inv[i]);
+                burden_changed_by_rot = true;
+                continue;
+            }
+
+            if (you.inv[i].sub_type == CORPSE_SKELETON)
+                continue;       // carried skeletons are not destroyed
+
+            if (!mons_skeleton( you.inv[i].plus ))
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item();
+
+                destroy_item(you.inv[i]);
+                burden_changed_by_rot = true;
+                continue;
+            }
+
+            you.inv[i].sub_type = CORPSE_SKELETON;
+            you.inv[i].special = 0;
+            you.inv[i].colour = LIGHTGREY;
+            you.wield_change = true;
+            burden_changed_by_rot = true;
+            continue;
+        }
+
+        you.inv[i].special -= (time_delta / 20);
+
+        if (you.inv[i].special < 100 && (you.inv[i].special + (time_delta / 20)>=100))
+        {
+            new_rotting_item = true; 
+        }
+    }
+
+    //mv: messages when chunks/corpses become rotten
+    if (new_rotting_item)
+    {
+        // XXX: should probably still notice?
+        // Races that can't smell don't care, and trolls are stupid and
+        // don't care.
+        if (player_can_smell() && you.species != SP_TROLL)
+        {
+            int temp_rand = 0; // Grr.
+            switch (you.mutation[MUT_SAPROVOROUS])
+            {
+            // level 1 and level 2 saprovores aren't so touchy
+            case 1:
+            case 2:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "You smell rotting flesh." :
+                      (temp_rand == 6) ? "You smell decay."
+                                       : "There is something rotten in your inventory."),
+                    MSGCH_ROTTEN_MEAT );
+                break;
+
+            // level 3 saprovores like it
+            case 3:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
+                      (temp_rand == 6) ? "You smell decay. Yum-yum."
+                                       : "Wow! There is something tasty in your inventory."),
+                    MSGCH_ROTTEN_MEAT );
+                break;
+
+            default:
+                temp_rand = random2(8);
+                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
+                      (temp_rand == 6) ? "You smell decay. Yuck!"
+                                       : "Ugh! There is something really disgusting in your inventory."), 
+                    MSGCH_ROTTEN_MEAT );
+                break;
+            }
+        }
+        learned_something_new(TUT_ROTTEN_FOOD);
+    }
+    if (burden_changed_by_rot)
+    {
+        mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
+        burden_change();
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_time
@@ -2452,11 +2573,6 @@ static void hell_effects()
 //---------------------------------------------------------------
 void handle_time( long time_delta )
 {
-    int temp_rand;              // probability determination {dlb}
-
-    unsigned char i;            // loop variable {dlb}
-    bool new_rotting_item = false; //mv: becomes true when some new item becomes rotting
-
     // BEGIN - Nasty things happen to people who spend too long in Hell:
     if (player_in_hell() && coinflip())
         hell_effects();
@@ -2682,113 +2798,7 @@ void handle_time( long time_delta )
     // Update all of the corpses and food chunks on the floor
     update_corpses(time_delta);
 
-    // Update all of the corpses and food chunks in the player's
-    // inventory {should be moved elsewhere - dlb}
-
-
-    for (i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].quantity < 1)
-            continue;
-
-        if (you.inv[i].base_type != OBJ_CORPSES && you.inv[i].base_type != OBJ_FOOD)
-            continue;
-
-        if (you.inv[i].base_type == OBJ_CORPSES
-            && you.inv[i].sub_type > CORPSE_SKELETON)
-        {
-            continue;
-        }
-
-        if (you.inv[i].base_type == OBJ_FOOD && you.inv[i].sub_type != FOOD_CHUNK)
-            continue;
-
-        if ((time_delta / 20) >= you.inv[i].special)
-        {
-            if (you.inv[i].base_type == OBJ_FOOD)
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                mpr("Your equipment suddenly weighs less.", MSGCH_ROTTEN_MEAT);
-                // FIXME should replace with a destroy_item call
-                you.inv[i].quantity = 0;
-                burden_change();
-                continue;
-            }
-
-            if (you.inv[i].sub_type == CORPSE_SKELETON)
-                continue;       // carried skeletons are not destroyed
-
-            if (!mons_skeleton( you.inv[i].plus ))
-            {
-                if (you.equip[EQ_WEAPON] == i)
-                    unwield_item();
-
-                // FIXME should replace with a destroy_item call
-                you.inv[i].quantity = 0;
-                burden_change();
-                continue;
-            }
-
-            you.inv[i].sub_type = 1;
-            you.inv[i].special = 0;
-            you.inv[i].colour = LIGHTGREY;
-            you.wield_change = true;
-            continue;
-        }
-
-        you.inv[i].special -= (time_delta / 20);
-
-        if (you.inv[i].special < 100 && (you.inv[i].special + (time_delta / 20)>=100))
-        {
-            new_rotting_item = true; 
-        }
-    }
-
-    //mv: messages when chunks/corpses become rotten
-    if (new_rotting_item)
-    {
-        // XXX: should probably still notice?
-        // Races that can't smell don't care, and trolls are stupid and
-        // don't care.
-        if (player_can_smell() && you.species != SP_TROLL)
-        {
-            switch (you.mutation[MUT_SAPROVOROUS])
-            {
-            // level 1 and level 2 saprovores aren't so touchy
-            case 1:
-            case 2:
-                temp_rand = random2(8);
-                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "You smell rotting flesh." :
-                      (temp_rand == 6) ? "You smell decay."
-                                       : "There is something rotten in your inventory."),
-                    MSGCH_ROTTEN_MEAT );
-                break;
-
-            // level 3 saprovores like it
-            case 3:
-                temp_rand = random2(8);
-                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
-                      (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                       : "Wow! There is something tasty in your inventory."),
-                    MSGCH_ROTTEN_MEAT );
-                break;
-
-            default:
-                temp_rand = random2(8);
-                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                      (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                      (temp_rand == 6) ? "You smell decay. Yuck!"
-                                       : "Ugh! There is something really disgusting in your inventory."), 
-                    MSGCH_ROTTEN_MEAT );
-                break;
-            }
-        }
-        learned_something_new(TUT_ROTTEN_FOOD);
-    }
+    rot_inventory_food(time_delta);
 
     // exercise armour *xor* stealth skill: {dlb}
     if (!player_light_armour(true))
