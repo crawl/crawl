@@ -854,6 +854,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (!is_hard_helmet( item ))
             return (true);
 
+        if (you.mutation[MUT_HORNS])
+        {
+            if (verbose)
+                mpr("You can't wear that with your horns!");
+
+            return (false);
+        }
+
         if (you.species == SP_KENKU
             && (ignore_temporary || !player_is_shapechanged()))
         {
