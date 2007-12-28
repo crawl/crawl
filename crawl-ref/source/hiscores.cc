@@ -216,16 +216,9 @@ static void hiscores_print_entry(const scorefile_entry &se,
     std::string entry;
     // format the entry
     if (format == SCORE_TERSE)
-    {
         entry = hiscores_format_single( se );
-        // truncate if we want short format
-        if (entry.length() > 80)
-            entry = entry.substr(0, 80);
-    }
     else
-    {
         entry = hiscores_format_single_long( se, (format == SCORE_VERBOSE) );
-    }
 
     entry += EOL;
     pf("%s", entry.c_str());
