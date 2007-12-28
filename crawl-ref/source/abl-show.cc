@@ -1514,7 +1514,7 @@ static bool do_ability(const ability_def& abil)
 
             // make a divine lightning bolt...
             beam.beam_source = NON_MONSTER;
-            beam.type = DCHAR_FIRED_BURST;
+            beam.type = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage = dice_def( 3, 30 );
             beam.flavour = BEAM_ELECTRICITY;
             beam.target_x = you.x_pos;
