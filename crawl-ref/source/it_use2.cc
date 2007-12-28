@@ -344,8 +344,9 @@ bool potion_effect( potion_type pot_eff, int pow )
         you.duration[DUR_RESIST_COLD]   += random2(pow) + 10;
         you.duration[DUR_RESIST_POISON] += random2(pow) + 10;
         you.duration[DUR_INSULATION]    += random2(pow) + 10;
-        // one contamination point for each resist
-        contaminate_player(4);
+        // Just one point of contamination. These potions are really rare,
+        // and contamination is nastier.
+        contaminate_player(1);
         break;
 
     case NUM_POTIONS:
