@@ -449,10 +449,7 @@ bool evoke_wielded()
         {
             if ( reaching_weapon_attack(wpn) )
             {
-                // needed a cost to prevent evocation training abuse -- bwr
-                dec_mp(1);
-                make_hungry( 50, false );  
-                pract = (one_chance_in(5) ? 1 : 0);
+                pract = 0;
                 did_work = true;
             }
             else
