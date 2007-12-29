@@ -308,7 +308,7 @@ static bool reaching_weapon_attack(const item_def& wpn)
         {
             const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
 
-            if ((5 + (3 * skill)) > random2(100))
+            if ((5 + (3 * skill)) > random2(40))
             {
                 mpr("You reach to attack!");
                 you_attack(mgrd[beam.tx][beam.ty], false);
@@ -316,7 +316,7 @@ static bool reaching_weapon_attack(const item_def& wpn)
             else
             {
                 mpr("You could not reach far enough!");
-                you_attack(mgrd[x_middle][y_middle], false);
+                return true;
             }
         }
         else
@@ -445,7 +445,7 @@ bool evoke_wielded()
     switch (wpn.base_type)
     {
     case OBJ_WEAPONS:
-        if (get_weapon_brand(wpn) == SPWPN_REACHING && enough_mp(1, false))
+        if (get_weapon_brand(wpn) == SPWPN_REACHING)
         {
             if ( reaching_weapon_attack(wpn) )
             {
