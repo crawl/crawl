@@ -706,11 +706,12 @@ void game_options::reset_options()
     flush_input[ FLUSH_ON_MESSAGE ]     = false;
     flush_input[ FLUSH_LUA ]            = true;
 
-    fire_items_start       = 2;           // start at slot 'c'
+    fire_items_start       = 0;           // start at slot 'a'
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
-                   "javelin / dart / stone / rock / spear / net / handaxe",
+                   "javelin / dart / stone / rock /"
+                   " spear / net / handaxe / dagger",
                    false);
 
     item_stack_summary_minimum = 5;
