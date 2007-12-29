@@ -621,12 +621,18 @@ int get_mons_colour(const monsters *mons)
     {
         col |= COLFLAG_MAYSTAB;
     }
-    else if (Options.heap_brand != CHATTR_NORMAL
-             && mons_is_stationary(mons)
-             && in_bounds(mons->x, mons->y)
-             && igrd[mons->x][mons->y] != NON_ITEM)
+    else if (mons_is_stationary(mons))
     {
-        col |= COLFLAG_ITEM_HEAP;
+        if (Options.stair_item_brand != CHATTR_NORMAL
+            && grid_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
+        {
+            col |= COLFLAG_STAIR_ITEM;
+        }
+        else if (Options.heap_brand != CHATTR_NORMAL
+                 && igrd(mons->pos()) != NON_ITEM)
+        {
+            col |= COLFLAG_ITEM_HEAP;
+        }
     }
 
     // Backlit monsters are fuzzy and override brands.
