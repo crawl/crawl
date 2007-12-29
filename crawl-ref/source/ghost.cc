@@ -84,6 +84,7 @@ static int search_order_misc[] = {
 /* 0 */
     SPELL_AGONY,
     SPELL_BANISHMENT,
+    SPELL_FREEZING_CLOUD,    
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
