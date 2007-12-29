@@ -742,12 +742,12 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                          || (!anon && testbits( menv[i].flags, MF_GOD_GIFT )))
                 {
                     // Yes, we are splitting undead pets from the others
-                    // as a way to focus Necomancy vs Summoning (ignoring
+                    // as a way to focus Necromancy vs Summoning (ignoring
                     // Summon Wraith here)... at least we're being nice and
-                    // putting the natural creature Summons together with 
-                    // the Demon ones.  Note that Vehumet gets a free 
+                    // putting the natural creature Summons together with
+                    // the Demon ones.  Note that Vehumet gets a free
                     // pass here since those followers are assumed to
-                    // come from Summoning spells...  the others are 
+                    // come from Summoning spells...  the others are
                     // from invocations (Zin, TSO, Makh, Kiku). -- bwr
 
                     if (targ_holy == MH_NATURAL)
