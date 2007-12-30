@@ -14,7 +14,7 @@
  *                                    some clean-up of init_player()
  *     <13>      1/10/2000      BCR   Made ogre berserkers get club
  *                                    skill, Trolls get unarmed skill
- *                                    Halflings can be assasins and
+ *                                    Halflings can be assassins and
  *                                    warpers
  *     <12>      12/4/99        jmf   Gave Paladins more armour skill + a
  *                                    long sword (to compensate for
@@ -2685,7 +2685,9 @@ static void create_wanderer( void )
         }
         else if (you.skills[SK_SHIELDS] && wpn_skill != SK_STAVES)
         {
-            newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
+            newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR,
+                (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE_MAGE) ?
+                    ARM_SHIELD : ARM_BUCKLER);
             you.inv[3].quantity = 0;            // remove potion
         }
         else
