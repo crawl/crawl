@@ -2989,6 +2989,7 @@ static void do_autopickup()
     
     int o = igrd[you.x_pos][you.y_pos];
 
+    std::string pickup_warning;
     while (o != NON_ITEM)
     {
         const int next = mitm[o].link;
@@ -3027,18 +3028,20 @@ static void do_autopickup()
             {
                 n_tried_pickup++;
                 if (result == 0)
-                    mpr("You can't carry any more.");
+                    pickup_warning = "You can't carry any more.";
                 else
-                    mpr("Your pack is full.");
+                    pickup_warning = "Your pack is full.";
                 mitm[o].flags = iflags;
-                break;
             }
-
-            n_did_pickup++;
+            else
+                n_did_pickup++;
         }
 
         o = next;
     }
+
+    if (!pickup_warning.empty())
+        mpr(pickup_warning.c_str());
 
     if (n_did_pickup)
         you.turn_is_over = true;
