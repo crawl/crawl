@@ -821,7 +821,13 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
             if (!monster->needs_transit())
+            {
+                // A banished monster that doesn't go on the transit list
+                // loses all items.
+                if (!mons_is_summoned(monster))
+                    monster->destroy_inventory();
                 break;
+            }
 
             // Monster goes to the Abyss.
             monster->flags |= MF_BANISHED;
