@@ -5093,9 +5093,8 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
         return false;
 
-    dungeon_feature_type target_grid = grd[targ_x][targ_y];
-
-    const int habitat = monster_habitat( monster->type );
+    const dungeon_feature_type target_grid = grd[targ_x][targ_y];
+    const dungeon_feature_type habitat = monster_habitat( monster->type );
 
     // effectively slows down monster movement across water.
     // Fire elementals can't cross at all.

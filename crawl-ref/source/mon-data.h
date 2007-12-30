@@ -3886,7 +3886,7 @@
 
 {
     MONS_SWAMP_WORM, 'w', BROWN, "swamp worm",
-    M_AMPHIBIOUS,
+    M_NO_FLAGS,
     MR_NO_FLAGS,
     0, 10, MONS_WORM, MONS_SWAMP_WORM, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
