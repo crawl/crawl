@@ -1586,6 +1586,11 @@ bool i_feel_safe(bool announce, bool want_move)
             return (false);
         }
     }
+    
+    // no monster will attack you inside a sanctuary,
+    // so presence of monsters won't matter
+    if (is_sanctuary(you.x_pos, you.y_pos))
+        return (true);
 
     std::vector<const monsters *> mons;
     /* monster check */

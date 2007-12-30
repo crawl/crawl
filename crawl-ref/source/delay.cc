@@ -637,7 +637,10 @@ static void finish_delay(const delay_queue_item &delay)
                  (you.has_usable_claws() || you.mutation[MUT_FANGS] == 3) ?
                  "ripping" : "chopping");
 
-            if (is_good_god(you.religion) && is_player_same_species(item.plus))
+            if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
+                simple_god_message(" demands a ceremonial burial for a corpse "
+                                   "like this!");
+            else if (is_good_god(you.religion) && is_player_same_species(item.plus))
                 simple_god_message(" expects more respect for your departed "
                                    "relatives.");
                                    
@@ -1211,6 +1214,11 @@ bool interrupt_activity( activity_interrupt_type ai,
 
     if (should_stop_activity(item, ai, at))
     {
+        // no monster will attack you inside a sanctuary,
+        // so presence of monsters won't matter
+        if (is_sanctuary(you.x_pos, you.y_pos))
+            return (false);
+
         monster_warning(ai, at, item.type);
         stop_delay();
         return (true);

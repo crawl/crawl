@@ -302,7 +302,9 @@ bool potion_effect( potion_type pot_eff, int pow )
         mpr("You feel extremely strange.");
         for (int i = 0; i < 3; i++)
             mutate(RANDOM_MUTATION, false);
-        did_god_conduct(DID_STIMULANTS, 4 + random2(4));
+            
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
+        did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
         
   case POT_BLOOD:

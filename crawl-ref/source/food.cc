@@ -55,7 +55,7 @@
 #include "xom.h"
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
-static void  eat_chunk( int chunk_effect, bool cannibal );
+static void  eat_chunk( int chunk_effect, bool cannibal, int mon_intel = 0);
 static void  eating(unsigned char item_class, int item_type);
 static void  describe_food_change(int hunger_increment);
 static bool  food_change(bool suppress_message);
@@ -622,7 +622,6 @@ static bool food_change(bool suppress_message)
     return (state_changed);
 }                               // end food_change()
 
-
 // food_increment is positive for eating, negative for hungering
 static void describe_food_change(int food_increment)
 {
@@ -694,13 +693,14 @@ void eat_from_inventory(int which_inventory_slot)
         // handle this the same -- bwr
         const int mons_type = you.inv[ which_inventory_slot ].plus;
         const bool cannibal = is_player_same_species(mons_type);
+        const int intel = mons_intel(mons_type) - I_ANIMAL;
         const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten = (you.inv[which_inventory_slot].special < 100);
 
         if (!prompt_eat_chunk(you.inv[which_inventory_slot], rotten))
             return;
 
-        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal );
+        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal, intel );
     }
     else
     {
@@ -742,11 +742,12 @@ void eat_floor_item(int item_link)
     else if (mitm[item_link].sub_type == FOOD_CHUNK)
     {
         const int chunk_type = mons_corpse_effect( mitm[item_link].plus );
+        const int intel = mons_intel( mitm[item_link].plus ) - I_ANIMAL;
         const bool cannibal = is_player_same_species( mitm[item_link].plus );
         const bool rotten = (mitm[item_link].special < 100);
         if (!prompt_eat_chunk(mitm[item_link], rotten))
             return;
-        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal );
+        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal, intel );
     }
     else
     {
@@ -879,7 +880,7 @@ static void say_chunk_flavour(bool likes_chunks)
 
 // never called directly - chunk_effect values must pass
 // through food::determine_chunk_effect() first {dlb}:
-static void eat_chunk( int chunk_effect, bool cannibal )
+static void eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 {
 
     bool likes_chunks = (you.omnivorous() ||
@@ -901,12 +902,14 @@ static void eat_chunk( int chunk_effect, bool cannibal )
     case CE_MUTAGEN_RANDOM:
         mpr("This meat tastes really weird.");
         mutate(RANDOM_MUTATION);
+        did_god_conduct( DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
         break;
 
     case CE_MUTAGEN_BAD:
         mpr("This meat tastes *really* weird.");
         give_bad_mutation();
+        did_god_conduct( DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(random2(200));
         break;
 
@@ -963,6 +966,8 @@ static void eat_chunk( int chunk_effect, bool cannibal )
 
     if (cannibal)
         did_god_conduct( DID_CANNIBALISM, 10 );
+    else if (mon_intel > 0)
+        did_god_conduct( DID_EAT_SOULED_BEING, mon_intel);
         
     if (do_eat)
     {

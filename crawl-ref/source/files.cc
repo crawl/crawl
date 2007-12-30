@@ -977,6 +977,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             load_ghost();
         }
         env.turns_on_level = 0;
+        env.sanctuary_x    = -1;
+        env.sanctuary_y    = -1;
+        env.sanctuary_time = 0;
     }
     else
     {
@@ -1148,7 +1151,7 @@ void save_level(int level_saved, level_area_type old_ltype,
                                          where_were_you, old_ltype,
                                          false );
 
-    you.prev_targ      = MHITNOT;
+    you.prev_targ     = MHITNOT;
     you.prev_grd_targ = coord_def(0, 0);
 
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");

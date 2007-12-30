@@ -110,8 +110,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Zin
-    { ABIL_ZIN_REPEL_UNDEAD, ABIL_ZIN_HEALING, ABIL_ZIN_PESTILENCE,
-      ABIL_ZIN_HOLY_WORD, ABIL_ZIN_SUMMON_GUARDIAN },
+    { ABIL_NON_ABILITY, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
+      ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
     { ABIL_TSO_REPEL_UNDEAD, ABIL_TSO_SMITING, ABIL_TSO_ANNIHILATE_UNDEAD,
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DAEVA },
@@ -232,11 +232,10 @@ static const ability_def Ability_List[] =
 
     // INVOCATIONS:
     // Zin
-    { ABIL_ZIN_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_ZIN_HEALING, "Minor Healing", 2, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_ZIN_PESTILENCE, "Pestilence", 3, 0, 100, 2, ABFLAG_NONE },
-    { ABIL_ZIN_HOLY_WORD, "Holy Word", 6, 0, 150, 3, ABFLAG_NONE },
-    { ABIL_ZIN_SUMMON_GUARDIAN, "Summon Guardian", 7, 0, 150, 4, ABFLAG_NONE },
+    { ABIL_ZIN_SMITING, "Smiting",
+      3, 0, 50, generic_cost::fixed(2), ABFLAG_NONE },
+    { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 3, ABFLAG_NONE },
+    { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 10, ABFLAG_NONE },
 
     // The Shining One
     { ABIL_TSO_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },
@@ -637,7 +636,6 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 20 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
 
-    case ABIL_ZIN_REPEL_UNDEAD:
     case ABIL_TSO_REPEL_UNDEAD:
     case ABIL_KIKU_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
@@ -680,7 +678,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
 
-    case ABIL_ZIN_HEALING:
+    case ABIL_ZIN_SMITING:
     case ABIL_TSO_SMITING:
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -704,7 +702,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
-    case ABIL_ZIN_PESTILENCE:
+    case ABIL_ZIN_REVITALISATION:
     case ABIL_TSO_ANNIHILATE_UNDEAD:
     case ABIL_LUGONU_BANISH:
         invoc = true;
@@ -717,7 +715,6 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
-    case ABIL_ZIN_HOLY_WORD:
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_ELYVILON_RESTORATION:
     case ABIL_YRED_CONTROL_UNDEAD:
@@ -728,7 +725,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
-    case ABIL_ZIN_SUMMON_GUARDIAN:
+    case ABIL_ZIN_SANCTUARY:
     case ABIL_TSO_SUMMON_DAEVA:
     case ABIL_KIKU_INVOKE_DEATH:
     case ABIL_ELYVILON_GREATER_HEALING:
@@ -1314,7 +1311,6 @@ static bool do_ability(const ability_def& abil)
         break;
 
     // INVOCATIONS:
-    case ABIL_ZIN_REPEL_UNDEAD:
     case ABIL_TSO_REPEL_UNDEAD:
         turn_undead(you.piety);
 
@@ -1330,13 +1326,8 @@ static bool do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1);
         break;
 
-    case ABIL_ZIN_HEALING:
-        if (!cast_healing( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
-            break;
-
-        exercise(SK_INVOCATIONS, 1 + random2(3));
-        break;
-
+// no longer in use, maybe keep for other cases (or remove!)
+/*
     case ABIL_ZIN_PESTILENCE:
         mpr( "You call forth a swarm of pestilential beasts!" );
 
@@ -1355,7 +1346,19 @@ static bool do_ability(const ability_def& abil)
         summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_ANGEL, true);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
+*/
 
+    case ABIL_ZIN_REVITALISATION:
+        if (cast_revitalisation( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
+            exercise(SK_INVOCATIONS, 1 + random2(3));
+        break;
+
+    case ABIL_ZIN_SANCTUARY:
+        if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))
+            exercise(SK_INVOCATIONS, 5 + random2(8));
+        break;
+
+    case ABIL_ZIN_SMITING:
     case ABIL_TSO_SMITING:
         if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
                          false ) == SPRET_ABORT)

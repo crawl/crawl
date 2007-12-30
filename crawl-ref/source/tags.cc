@@ -1574,6 +1574,7 @@ static void tag_construct_level(tagHeader &th)
             marshallShort(th, env.map[count_x][count_y].object);
             marshallShort(th, env.map[count_x][count_y].colour);            
             marshallShort(th, env.map[count_x][count_y].flags);
+            marshallShort(th, env.map[count_x][count_y].property);
             marshallShort(th, env.cgrid[count_x][count_y]);
         }
     }
@@ -1607,6 +1608,10 @@ static void tag_construct_level(tagHeader &th)
         marshallByte(th, env.shop[i].type);
         marshallByte(th, env.shop[i].level);
     }
+
+    marshallByte(th, env.sanctuary_x);
+    marshallByte(th, env.sanctuary_y);
+    marshallByte(th, env.sanctuary_time);
 
     env.markers.write(th);
 }
@@ -1806,6 +1811,7 @@ static void tag_read_level( tagHeader &th, char minorVersion )
             env.map[i][j].object = unmarshallShort(th);
             env.map[i][j].colour = unmarshallShort(th);
             env.map[i][j].flags  = unmarshallShort(th);
+            env.map[i][j].property = unmarshallShort(th);
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = (unsigned short) unmarshallShort(th);
@@ -1843,6 +1849,10 @@ static void tag_read_level( tagHeader &th, char minorVersion )
         env.shop[i].type = static_cast<shop_type>(unmarshallByte(th));
         env.shop[i].level = unmarshallByte(th);
     }
+
+    env.sanctuary_x    = unmarshallByte(th);
+    env.sanctuary_y    = unmarshallByte(th);
+    env.sanctuary_time = unmarshallByte(th);
 
     env.markers.read(th);
 }

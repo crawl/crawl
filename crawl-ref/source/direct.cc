@@ -2035,6 +2035,10 @@ static void describe_cell(int mx, int my)
   // removing warning
   look_clouds:
 #endif
+
+    if (is_sanctuary(mx, my))
+        mpr("This square lies inside a sanctuary.");
+
     if (env.cgrid[mx][my] != EMPTY_CLOUD)
     {
         const int cloud_inspected = env.cgrid[mx][my];

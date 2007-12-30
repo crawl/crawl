@@ -2749,6 +2749,16 @@ static void check_shafts()
     }
 }
 
+static void check_sanctuary()
+{
+    if (env.sanctuary_time <= 0)
+        return;
+        
+    env.sanctuary_time--;
+    if (env.sanctuary_time == 0)
+        remove_sanctuary();
+}
+
 static void world_reacts()
 {
     crawl_state.clear_god_acting();
@@ -2764,6 +2774,8 @@ static void world_reacts()
     check_banished();
 
     check_shafts();
+    
+    check_sanctuary();
 
     run_environment_effects();
 
@@ -3684,10 +3696,17 @@ static void move_player(int move_x, int move_y)
     const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
     const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
 
+    // you can swap places with a friendly monster if you're not confused
+    // or if both of you are inside a sanctuary
+    const bool can_swap_places = targ_monst != NON_MONSTER
+                                 && (mons_friendly(&menv[targ_monst])
+                                       && !you.duration[DUR_CONF]
+                                     || is_sanctuary(you.x_pos, you.y_pos)
+                                        && is_sanctuary(targ_x, targ_y));
+
     // cannot move away from mermaid but you CAN fight neighbouring squares
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF]
-        && (targ_monst == NON_MONSTER || mons_friendly(&menv[targ_monst])
-            || mons_is_submerged(&menv[targ_monst])))
+        && (!can_swap_places || mons_is_submerged(&menv[targ_monst])))
     {   
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {
@@ -3722,8 +3741,7 @@ static void move_player(int move_x, int move_y)
     {
         struct monsters *mon = &menv[targ_monst];
 
-        // you can swap places with a friendly monster if you're not confused
-        if (mons_friendly( mon ) && !you.duration[DUR_CONF])
+        if (can_swap_places)
         {
             if (swap_places( mon ))
                 swap = true;
@@ -3732,6 +3750,17 @@ static void move_player(int move_x, int move_y)
         }
         else // attack!
         {
+            if (is_sanctuary(you.x_pos, you.y_pos)
+                || is_sanctuary(mon->x, mon->y))
+            {
+                snprintf(info, INFO_SIZE,
+                         "Really attack %s, despite your sanctuary? ",
+                         mon->name(DESC_NOCAP_THE).c_str());
+                         
+                if (!yesno(info, true, 'n'))
+                    return;
+            }
+
             // XXX: Moving into a normal wall does nothing and uses no
             // turns or energy, but moving into a wall which contains
             // an invisible monster attacks the monster, thus allowing

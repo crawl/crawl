@@ -187,11 +187,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // no god
     { "", "", "", "", "" },
     // Zin
-    { "repel the undead",
-      "call upon Zin for minor healing",
-      "call down a plague",
-      "utter a Holy Word",      
-      "summon a guardian angel" },
+    { "",
+      "smite your foes",
+      "call upon Zin for revitalisation",
+      "",
+      "call upon Zin to create a Sanctuary" },
     // TSO
     { "repel the undead",
       "smite your foes",
@@ -272,11 +272,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // no god
     { "", "", "", "", "" },
     // Zin
-    { "repel the undead",
-      "call upon Zin for minor healing",
-      "call down a plague",
-      "utter a Holy Word",      
-      "summon a guardian angel" },
+    { "",
+      "smite your foes",
+      "call upon Zin for revitalisation",
+      "",
+      "call upon Zin to create a Sanctuary" },
     // TSO
     { "repel the undead",
       "smite your foes",
@@ -1549,6 +1549,28 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_DELIBERATE_MUTATING:
+        if (you.religion == GOD_ZIN)
+        {
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
+            piety_change = -level;
+            ret = true;
+        }
+        break;
+
+    case DID_EAT_SOULED_BEING:
+        if (you.religion == GOD_ZIN)
+        {
+            piety_change = -level;
+            penance = level * 5;
+            ret = true;
+        }
+        break;
+
     case DID_STIMULANTS:                        // unused
     case DID_EAT_MEAT:                          // unused
     case DID_CREATED_LIFE:                      // unused
@@ -1578,7 +1600,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
           "Servant Kill Natural Evil", "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
           "Cards", "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
-          "Create Life"
+          "Eat Souled Beings", "Create Life", "Deliberate Mutation"
         };
 
         ASSERT(ARRAYSIZE(conducts) == NUM_CONDUCTS);
@@ -1721,8 +1743,8 @@ void gain_piety(int pgn)
     }    
 
     if ( you.piety > 160 && old_piety <= 160 &&
-         (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN ||
-          you.religion == GOD_LUGONU) && you.num_gifts[you.religion] == 0 )
+         (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+          && you.num_gifts[you.religion] == 0 )
         simple_god_message( " will now bless your weapon at an altar...once.");
 
     do_god_gift(false);
@@ -1948,8 +1970,8 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160 &&
-            (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN ||
-             you.religion == GOD_LUGONU) && you.num_gifts[you.religion] == 0)
+            (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+             && you.num_gifts[you.religion] == 0)
             simple_god_message(" is no longer ready to bless your weapon.");
 
         for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
@@ -2027,33 +2049,70 @@ static bool zin_retribution()
     if (!is_evil_god(you.religion))
         return false;
 
-    bool success = false;
+    int punishment = random2(8);
+    
+    // if little mutated, do something else instead
+    if (punishment < 2 && count_mutations() <= random2(3))
+        punishment = random2(6)+2;
 
-    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    switch(random2(8))
     {
-        const int how_many = 1 + (you.experience_level / 10) + random2(3);
-
-        for (int i = 0; i < how_many; i++)
-            if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
-                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+    case 0: // remove good mutations (25%)
+    case 1:
+    {
+       simple_god_message(" draws some chaos from your body!", god);
+       bool success = false;
+       for (int i = 0; i < 7; i++)
+            if (random2(10) > i
+                && delete_mutation(RANDOM_MUTATION, true, true))
+            {
                 success = true;
-
-        simple_god_message( success ?
-                            " sends the divine host to punish you "
-                            "for your evil ways!" :
-                            "'s divine host fails to appear.",
-                            god);
+            }
+              
+       if (success && !count_mutations())
+           simple_god_message(" rids your body of chaos!");
+           
+       break;
     }
-    else
-    {
-        // god_gift == false gives unfriendly
-        success = summon_swarm( you.experience_level * 20, true, false );
-        simple_god_message(success ?
-                           " sends a plague down upon you!" :
-                           "'s plague fails to arrive.",
-                           god);
-    }
+    case 2:
+    case 3:
+    case 4: // summon angels or bugs (pestilence), 3/8
+       if (random2(you.experience_level) > 7 && !one_chance_in(5))
+       {
+           const int how_many = 1 + (you.experience_level / 10) + random2(3);
+           bool success = false;
 
+           for (int i = 0; i < how_many; i++)
+              if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
+                                 you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                  success = true;
+
+           simple_god_message( success ?
+                              " sends the divine host to punish you "
+                              "for your evil ways!" :
+                              "'s divine host fails to appear.",
+                              god);
+       }
+       else
+       {
+          // god_gift == false gives unfriendly
+          bool success = summon_swarm( you.experience_level * 20, true, false );
+          simple_god_message(success ?
+                             " sends a plague down upon you!" :
+                             "'s plague fails to arrive.",
+                             god);
+       }
+       break;
+    case 5:
+    case 6: // famine, 25%
+       simple_god_message(" sends a famine down upon you!", god);
+       make_hungry( you.hunger/2, false );
+       break;
+    case 7: // noisiness, 12.5%
+       simple_god_message(" booms out: \"Return to the light! REPENT!\"", god);
+       noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
+       break;
+    }
     return false;
 }
 
@@ -2904,6 +2963,10 @@ void excommunication(void)
     case GOD_ELYVILON:  // never seeks revenge
         break;
 
+    case GOD_ZIN:
+        if (env.sanctuary_time)
+            remove_sanctuary();
+        // deliberate fall-through
     default:
         inc_penance( old_god, 25 );
         break;
@@ -2991,24 +3054,6 @@ void altar_prayer(void)
                 if (you.inv[wpn].sub_type == WPN_DEMON_BLADE)
                     you.inv[wpn].sub_type = WPN_BLESSED_BLADE;
             }
-        }
-    }
-
-    // Zin blesses maces with disruption
-    if (you.religion == GOD_ZIN
-        && !you.num_gifts[GOD_ZIN]
-        && !player_under_penance()
-        && you.piety > 160)
-    {
-        const int wpn = get_player_wielded_weapon();
-
-        if (wpn != -1 
-            && (you.inv[wpn].base_type == OBJ_WEAPONS
-                && (you.inv[wpn].sub_type == WPN_MACE
-                    || you.inv[wpn].sub_type == WPN_GREAT_MACE))
-            && get_weapon_brand( you.inv[wpn] ) != SPWPN_DISRUPTION)
-        {
-            bless_weapon( GOD_ZIN, SPWPN_DISRUPTION, WHITE );
         }
     }
 
@@ -3543,7 +3588,7 @@ void handle_god_time(void)
             break;
         }
 
-        case GOD_ZIN:           // These gods like long-standing worshippers
+        // These gods like long-standing worshippers
         case GOD_ELYVILON:
             if (need_free_piety() && one_chance_in(20))
                 gain_piety(1);
@@ -3551,6 +3596,11 @@ void handle_god_time(void)
 
         case GOD_SHINING_ONE:
             if (need_free_piety() && one_chance_in(15))
+                gain_piety(1);
+            break;
+
+        case GOD_ZIN:
+            if (need_free_piety() && one_chance_in(12))
                 gain_piety(1);
             break;
 

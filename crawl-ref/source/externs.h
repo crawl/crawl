@@ -1253,9 +1253,10 @@ struct map_cell
     short object;           // The object: monster, item, feature, or cloud.
     unsigned short flags;   // Flags describing the mappedness of this square.
     unsigned short colour;
+    unsigned short property;
 
-    map_cell() : object(0), flags(0), colour(0) { }
-    void clear() { flags = object = colour = 0; }
+    map_cell() : object(0), flags(0), colour(0), property(0) { }
+    void clear() { flags = object = colour = property = 0; }
 
     unsigned glyph() const;
     bool known() const;
@@ -1319,7 +1320,7 @@ public:
     FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
 
-    FixedArray< map_cell, GXM, GYM >        map;    // discovered terrain
+    FixedArray< map_cell, GXM, GYM >         map;    // discovered terrain
 
     // Glyphs of squares that are in LOS.
     env_show_grid show;
@@ -1348,6 +1349,10 @@ public:
     // Flags for things like preventing teleport control; see
     // level_flag_type in enum.h
     unsigned long level_flags;
+
+    int sanctuary_x;
+    int sanctuary_y;
+    int sanctuary_time;
 };
 
 extern struct crawl_environment env;

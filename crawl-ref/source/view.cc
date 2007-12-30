@@ -182,6 +182,16 @@ void set_envmap_col( int x, int y, int colour )
     env.map[x][y].colour = colour;
 }
 
+void set_envmap_prop( int x, int y, int prop )
+{
+    env.map[x][y].property = prop;
+}
+
+bool is_sanctuary( int x, int y)
+{
+    return (env.map[x][y].property != FPROP_NONE);
+}
+
 bool is_envmap_item(int x, int y)
 {
     return (get_viewobj_flags(env.map[x][y].object) & MC_ITEM);
@@ -350,6 +360,22 @@ static void get_symbol( int x, int y,
         {
             const int colmask = *colour & COLFLAG_MASK;
 
+            if (object < NUM_REAL_FEATURES
+                && is_sanctuary(x,y) && object >= DNGN_MINMOVE)
+            {
+                if (env.map[x][y].property == FPROP_SANCTUARY_1)
+                    *colour = YELLOW | colmask;
+                else if (env.map[x][y].property == FPROP_SANCTUARY_2)
+                {
+                    if (!one_chance_in(3))
+                        *colour = WHITE | colmask;
+                    else if (one_chance_in(3))
+                        *colour = LIGHTCYAN | colmask;
+                    else
+                        *colour = LIGHTGRAY | colmask;
+                }
+            }
+            else
             if (object < NUM_REAL_FEATURES && env.grid_colours[x][y])
             {
                 *colour = env.grid_colours[x][y] | colmask;

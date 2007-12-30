@@ -1393,6 +1393,35 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
+static bool is_good_mutation( mutation_type which_mutation )
+{
+    switch (which_mutation)
+    {
+    case MUT_TOUGH_SKIN:
+    case MUT_STRONG:
+    case MUT_CLEVER:
+    case MUT_AGILE:
+    case MUT_POISON_RESISTANCE:
+    case MUT_TELEPORT_CONTROL:
+    case MUT_MAGIC_RESISTANCE:
+    case MUT_TELEPORT_AT_WILL:
+    case MUT_MAPPING:
+    case MUT_CLARITY:
+    case MUT_MUTATION_RESISTANCE:
+    case MUT_FAST:
+    case MUT_BLINK:
+    case MUT_BREATHE_FLAMES:
+    case MUT_SPIT_POISON:
+    case MUT_BREATHE_POISON:
+    case MUT_STINGER:
+    case MUT_FANGS:
+        return true;
+        
+    default:
+        return false;
+    }
+}
+
 static bool accept_mutation( mutation_type mutat, bool ignore_rarity = false )
 {
     if ( you.mutation[mutat] >= mutation_defs[mutat].levels )
@@ -1497,23 +1526,18 @@ bool mutate(mutation_type which_mutation, bool failMsg, bool force_mutation,
         return (false);
     }
 
-    if (wearing_amulet(AMU_RESIST_MUTATION)
-        && !force_mutation && !one_chance_in(10))
+    if (!force_mutation)
     {
-        if (failMsg)
-            mpr("You feel odd for a moment.", MSGCH_MUTATION);
+        if (wearing_amulet(AMU_RESIST_MUTATION) && !one_chance_in(10)
+            || you.religion == GOD_ZIN && you.piety > random2(200)
+            || you.mutation[MUT_MUTATION_RESISTANCE] == 3
+            || you.mutation[MUT_MUTATION_RESISTANCE] && !one_chance_in(3))
+        {
+            if (failMsg)
+                mpr("You feel odd for a moment.", MSGCH_MUTATION);
 
-        return (false);
-    }
-
-    if (you.mutation[MUT_MUTATION_RESISTANCE]
-        && !force_mutation
-        && (you.mutation[MUT_MUTATION_RESISTANCE] == 3 || !one_chance_in(3)))
-    {
-        if (failMsg)
-            mpr("You feel odd for a moment.", MSGCH_MUTATION);
-
-        return (false);
+            return (false);
+        }
     }
 
     if (which_mutation == RANDOM_MUTATION
@@ -1952,7 +1976,18 @@ int how_mutated(void)
     return (j);
 }                               // end how_mutated()
 
-bool delete_mutation(mutation_type which_mutation, bool force)
+int count_mutations()
+{
+    int count = 0;
+
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+        if (you.mutation[i] && you.demon_pow[i] < you.mutation[i])
+            count++;
+            
+    return count;
+}
+
+bool delete_mutation(mutation_type which_mutation, bool force, bool good)
 {
     mutation_type mutat = which_mutation;
     int i;
@@ -1979,7 +2014,8 @@ bool delete_mutation(mutation_type which_mutation, bool force)
                 && (mutat != MUT_WEAK && mutat != MUT_DOPEY
                     && mutat != MUT_CLUMSY))
                || random2(10) >= mutation_defs[mutat].rarity
-               || you.demon_pow[mutat] >= you.mutation[mutat]);
+               || you.demon_pow[mutat] >= you.mutation[mutat]
+               || good && (!is_good_mutation(mutat) || one_chance_in(10)));
     }
 
     if (you.mutation[mutat] == 0)

@@ -3645,7 +3645,13 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     // check if the player is fighting with something unsuitable
     wielded_weapon_check(attk.weapon);
 
-    return attk.attack();
+    bool attack = attk.attack();
+    if (attack && (is_sanctuary(you.x_pos, you.y_pos)
+                   || is_sanctuary(defender->x, defender->y)))
+    {
+        remove_sanctuary(true);
+    }
+    return attack;
 }
 
 // Lose attack energy for attacking with a weapon. The monster has already lost

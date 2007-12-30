@@ -653,6 +653,15 @@ int cast_healing( int pow )
     return (healing_spell( pow + roll_dice( 2, pow ) - 2 )); 
 }
 
+int cast_revitalisation( int pow )
+{
+    // first increase MP by 5 or to maximum, whichever is lower
+    inc_mp(5, false);
+
+    // then cast healing (as in Minor Healing)
+    return cast_healing(pow);
+}
+
 bool cast_revivification(int power)
 {
     int loopy = 0;              // general purpose loop variable {dlb}

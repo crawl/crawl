@@ -3547,6 +3547,8 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         item.colour = RED;  // forced by force_item above {dlb}
         break;
     }
+    
+    default: break;
     }                           // end "switch(mon->type)"
     
     // Nagas don't get racial stuff.
@@ -3798,6 +3800,8 @@ void give_shield(monsters *mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
         break;
+        
+    default: break;
     }
 }
 

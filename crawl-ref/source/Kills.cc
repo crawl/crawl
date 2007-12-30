@@ -608,6 +608,7 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;
+        default: break;
     }
     if (modifier != M_NORMAL) monnum = mon->number;
 

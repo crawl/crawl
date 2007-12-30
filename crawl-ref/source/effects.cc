@@ -2405,6 +2405,14 @@ void update_level( double elapsedTime )
 #endif
 
     update_corpses( elapsedTime );
+     
+    if (env.sanctuary_time)
+    {
+        if (turns >= env.sanctuary_time)
+            remove_sanctuary();
+        else
+          env.sanctuary_time -= turns;
+    }
 
     dungeon_events.fire_event(
         dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));

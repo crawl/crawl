@@ -75,11 +75,9 @@ enum ability_type
     ABIL_END_TRANSFORMATION,           //   55
     
     // Divine abilities
-    ABIL_ZIN_REPEL_UNDEAD = 110,       //  110
-    ABIL_ZIN_HEALING,
-    ABIL_ZIN_PESTILENCE,
-    ABIL_ZIN_HOLY_WORD,
-    ABIL_ZIN_SUMMON_GUARDIAN,          //  114
+    ABIL_ZIN_SMITING = 110,            //  110
+    ABIL_ZIN_REVITALISATION,
+    ABIL_ZIN_SANCTUARY,
     ABIL_TSO_REPEL_UNDEAD = 120,       //  120
     ABIL_TSO_SMITING,
     ABIL_TSO_ANNIHILATE_UNDEAD,
@@ -634,7 +632,9 @@ enum conduct_type
     DID_DRINK_BLOOD,
     DID_CANNIBALISM,
     DID_EAT_MEAT,                       // unused
+    DID_EAT_SOULED_BEING,  // Zin
     DID_CREATED_LIFE,                   // unused
+    DID_DELIBERATE_MUTATING,
 
     NUM_CONDUCTS
 };
@@ -999,6 +999,13 @@ enum dungeon_feature_type
 
     DNGN_RANDOM,
     DNGN_START_OF_MONSTERS = 297  // don't go past here! see view.cc
+};
+
+enum floor_property_type
+{
+    FPROP_NONE,          // 0
+    FPROP_SANCTUARY_1,
+    FPROP_SANCTUARY_2
 };
 
 enum duration_type

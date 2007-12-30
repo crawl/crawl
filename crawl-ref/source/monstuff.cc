@@ -2254,6 +2254,22 @@ static void handle_movement(monsters *monster)
 {
     int dx, dy;
 
+    // monsters will try to flee out of a sanctuary
+    if (is_sanctuary(monster->x, monster->y) && !mons_friendly(monster)
+        && !mons_is_fleeing(monster)
+        && monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+    {
+        behaviour_event(monster, ME_SCARE, MHITNOT, monster->x, monster->y);
+    }
+    else if (mons_is_fleeing(monster) && env.sanctuary_x != -1
+             && !is_sanctuary(monster->x, monster->y)
+             && monster->target_x == env.sanctuary_x
+             && monster->target_y == env.sanctuary_y)
+    {   // once outside there's a chance they'll regain their courage
+        if (random2(5) > 2)
+            monster->del_ench(ENCH_FEAR);
+    }
+    
     // some calculations
     if (monster->type == MONS_BORING_BEETLE && monster->foe == MHITYOU)
     {
@@ -2436,6 +2452,8 @@ static void handle_nearby_ability(monsters *monster)
         if (monster->ghost->values[ GVAL_DEMONLORD_CYCLE_COLOUR ])
             monster->colour = random_colour();
         break;
+        
+    default: break;
     }
 }                               // end handle_nearby_ability()
 
@@ -2467,14 +2485,27 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
     {
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
+        if (is_sanctuary(monster->x, monster->y))
+            break;
+            
         used = orc_battle_cry(monster);
         break;
         
     case MONS_ORANGE_STATUE:
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
         used = orange_statue_effects(monster);
         break;
 
     case MONS_SILVER_STATUE:
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
         used = silver_statue_effects(monster);
         break;
 
@@ -2487,6 +2518,9 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
+        if (is_sanctuary(monster->x, monster->y))
+            break;
+        
         for (int i = 0; i < MAX_MONSTERS; i++)
         {
             monsters *targ = &menv[i];
@@ -2525,6 +2559,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
 
         if (!mons_player_visible( monster ))
             break;
+            
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
 
         if (coinflip())
             break;
@@ -2561,6 +2601,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         if (!mons_player_visible( monster ))
             break;
 
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
+
         if (coinflip())
             break;
 
@@ -2596,6 +2642,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
+
         if (one_chance_in(3))
             used = plant_spit(monster, beem);
 
@@ -2613,6 +2665,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
     case MONS_FIEND:
         if (monster->has_ench(ENCH_CONFUSION))
             break;
+
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
 
         // friendly fiends won't use torment, preferring hellfire
         // (right now there is no way a monster can predict how
@@ -2677,6 +2735,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
+
         if (!mons_near(monster))
             break;
 
@@ -2730,6 +2794,12 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
 
         if (monster->has_ench(ENCH_CONFUSION))
             break;
+
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y))
+        {
+            break;
+        }
 
         if ((monster->type != MONS_HELL_HOUND && random2(13) < 3)
             || one_chance_in(10))
@@ -3695,6 +3765,11 @@ static bool handle_spell( monsters *monster, bolt & beem )
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL 
                                                    : hspell_pass[5]);
                 }
+                else if (is_sanctuary(you.x_pos, you.y_pos)
+                         || is_sanctuary(monster->x, monster->y))
+                {
+                    return (false);
+                }
                 else
                 {
                     // Randomly picking one of the non-emergency spells:
@@ -3719,9 +3794,14 @@ static bool handle_spell( monsters *monster, bolt & beem )
                 {
                     // all direct-effect/summoning/self-enchantments/etc
                     spellOK = true;
-
-                    if (ms_direct_nasty(spell_cast)
-                        && mons_aligned(monster_index(monster), monster->foe))
+                    
+                    if (is_sanctuary(you.x_pos, you.y_pos)
+                        || is_sanctuary(monster->x, monster->y))
+                    {
+                        spellOK = false;
+                    }
+                    else if (ms_direct_nasty(spell_cast)
+                             && mons_aligned(monster_index(monster), monster->foe))
                     {
                         spellOK = false;
                     }
@@ -3747,7 +3827,15 @@ static bool handle_spell( monsters *monster, bolt & beem )
 
                 // if not okay, then maybe we'll cast a defensive spell
                 if (!spellOK)
-                    spell_cast = (coinflip() ? hspell_pass[2] : SPELL_NO_SPELL);
+                {
+                    if (is_sanctuary(you.x_pos, you.y_pos)
+                        || is_sanctuary(monster->x, monster->y))
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                    }
+                    else
+                        spell_cast = (coinflip() ? hspell_pass[2] : SPELL_NO_SPELL);
+                }
 
                 if (spell_cast != SPELL_NO_SPELL)
                     break;
@@ -3759,7 +3847,9 @@ static bool handle_spell( monsters *monster, bolt & beem )
         if (draco_breath != SPELL_NO_SPELL 
                 && (spell_cast == SPELL_NO_SPELL 
                     || (!is_emergency_spell(hspell_pass, spell_cast)
-                        && one_chance_in(4))))
+                        && one_chance_in(4)))
+            && !is_sanctuary(you.x_pos, you.y_pos)
+            && !is_sanctuary(monster->x, monster->y))
         {
             spell_cast = draco_breath;
             finalAnswer = true;
@@ -3918,12 +4008,18 @@ static bool handle_throw(monsters *monster, bolt & beem)
     if (mon_item == NON_ITEM || !is_valid_item(mitm[mon_item]))
         return (false);
 
+    if (is_sanctuary(monster->x, monster->y)
+        || is_sanctuary(beem.target_x, beem.target_y))
+    {
+        return (false);
+    }
+
     // throwing a net at a target that is already caught would be
     // completely useless, so bail out
     if (mitm[mon_item].base_type == OBJ_MISSILES
         && mitm[mon_item].sub_type == MI_THROWING_NET
         && (beem.target_x == you.x_pos && beem.target_y == you.y_pos
-            && you.caught()))
+        && you.caught()))
     {
         return (false);
     }
@@ -4279,6 +4375,7 @@ static void handle_monster_move(int i, monsters *monster)
                  }
 
                  if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
+                     && !is_sanctuary(monster->x, monster->y)
                      && (mmov_x != 0 || mmov_y != 0))
                  {
                      monsters_fight(
@@ -5101,6 +5198,21 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     // bounds check - don't consider moving out of grid!
     if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
         return false;
+        
+    // hostile monsters won't enter sanctuaries
+    if (!mons_friendly(monster)
+        && is_sanctuary(targ_x, targ_y)
+        && !is_sanctuary(monster->x, monster->y))
+    {
+        return (false);
+    }
+    // inside a sanctuary don't attack anything!
+    if (is_sanctuary(monster->x, monster->y)
+        && (targ_x == you.x_pos && targ_y == you.y_pos
+            || mgrd[targ_x][targ_y] != NON_MONSTER))
+    {
+        return (false);
+    }
 
     const dungeon_feature_type target_grid = grd[targ_x][targ_y];
     const dungeon_feature_type habitat = monster_habitat( monster->type );
@@ -5358,7 +5470,6 @@ static bool monster_move(monsters *monster)
     }
 
     for (count_x = 0; count_x < 3; count_x++)
-    {
         for (count_y = 0; count_y < 3; count_y++)
         {
              const int targ_x = monster->x + count_x - 1;
@@ -5381,8 +5492,7 @@ static bool monster_move(monsters *monster)
              const monsters* mons = dynamic_cast<const monsters*>(monster);
              good_move[count_x][count_y] =
                  mon_can_move_to_pos(mons, count_x-1, count_y-1);
-        }
-    } // now we know where we _can_ move.
+        } // now we know where we _can_ move.
 
     const coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
     // normal/smart monsters know about secret doors (they _live_ in the

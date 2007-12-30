@@ -1622,6 +1622,7 @@ static std::string str_monam(const monsters& mon, description_level_type desc,
         case MONS_WHITE_DRACONIAN:   result += "white ";   break;
         case MONS_PALE_DRACONIAN:    result += "pale ";    break;
         }
+    default:
         break;
     }
 
@@ -1637,6 +1638,7 @@ static std::string str_monam(const monsters& mon, description_level_type desc,
         result += " skeleton"; break;
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
         result += " simulacrum"; break;
+    default: break;
     }
 
     // Vowel fix: Change 'a orc' to 'an orc'
@@ -4102,8 +4104,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FEAR:
+        snprintf( info, INFO_SIZE, " seems to regain %s courage.",
+                  mons_pronoun(static_cast<monster_type>(this->type),
+                               PRONOUN_NOCAP_POSSESSIVE));
+                  
         if (!quiet)
-            simple_monster_message(this, " seems to regain its courage.");
+            simple_monster_message(this, info);
 
         // reevaluate behaviour
         behaviour_event(this, ME_EVAL);

@@ -3692,6 +3692,12 @@ static int affect_monster(bolt &beam, monsters *mon)
         {
             if (YOU_KILL( beam.thrower ))
             {
+                if (is_sanctuary(mon->x, mon->y)
+                    || is_sanctuary(you.x_pos, you.y_pos))
+                {
+                    remove_sanctuary(true);
+                }
+
                 if (mons_friendly( mon ))
                     did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
 
@@ -3855,6 +3861,12 @@ static int affect_monster(bolt &beam, monsters *mon)
                 beam.aux_source == "reading a scroll of immolation"
                               && !beam.effect_known;
 
+            if (is_sanctuary(mon->x, mon->y)
+                || is_sanctuary(you.x_pos, you.y_pos))
+            {
+                remove_sanctuary(true);
+            }
+            
             if (mons_friendly(mon))
                 conduct.set( DID_ATTACK_FRIEND, 5, !okay, mon );
 

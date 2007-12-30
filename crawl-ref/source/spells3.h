@@ -63,7 +63,8 @@ bool cast_selective_amnesia(bool force);
  * called from: ability - spell
  * *********************************************************************** */
 int cast_smiting(int power, dist &);
-
+bool remove_sanctuary(bool did_attack = false);
+bool cast_sanctuary(int power);
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************

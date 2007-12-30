@@ -43,7 +43,9 @@
 #include "place.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "spells1.h"
+#include "spells2.h" // holy word
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -797,6 +799,127 @@ bool entomb(int powc)
 
     return (number_built > 0);
 }                               // end entomb()
+
+bool remove_sanctuary(bool did_attack)
+{
+    if (env.sanctuary_time)
+        env.sanctuary_time = 0;
+    
+    if (env.sanctuary_x < 0 || env.sanctuary_y < 0)
+        return false;
+
+    const int radius = 5;
+    bool seen_change = false;
+    for (int x=-radius; x<=radius; x++)
+       for (int y=-radius; y<=radius; y++)
+       {
+          int posx = env.sanctuary_x + x;
+          int posy = env.sanctuary_y + y;
+
+          if (posx <= 0 || posx > GXM || posy <= 0 || posy > GYM)
+              continue;
+
+          if (is_sanctuary(posx, posy))
+          {
+              env.map[posx][posy].property = FPROP_NONE;
+              if (see_grid(coord_def(posx,posy)))
+                  seen_change = true;
+          }
+       }
+
+//  do not reset so as to allow monsters to see if their fleeing source
+//  used to be the centre of a sanctuary
+//    env.sanctuary_x = env.sanctuary_y = -1;
+
+    if (did_attack)
+    {
+        if (seen_change)
+            simple_god_message(" revokes the gift of sanctuary.", GOD_ZIN);
+        did_god_conduct(DID_FRIEND_DIES, 3);
+    }
+    else if (seen_change)
+    {
+        mpr("The air around you flickers and hums.");
+        if (is_resting())
+            stop_running();
+    }
+
+    return true;
+}
+
+bool cast_sanctuary(const int power)
+{
+    // first get rid of old sanctuary
+    remove_sanctuary();
+
+    if (!silenced(you.x_pos, you.y_pos))
+        mpr("You hear a choir sing!");
+    else
+        mpr("You are suddenly bathed in radiance!");
+
+    you.flash_colour = WHITE;
+    viewwindow( true, false );
+    holy_word( 100, true );
+    delay(1000);
+
+    env.sanctuary_x = you.x_pos;
+    env.sanctuary_y = you.y_pos;
+    env.sanctuary_time = 15;
+
+    const int radius = 5;
+    const int pattern = random2(4);
+    int count = 0;
+    int monster = -1;
+    
+    for (int x=-radius; x<=radius; x++)
+         for (int y=-radius; y<=radius; y++)
+         {
+              int posx = you.x_pos + x;
+              int posy = you.y_pos + y;
+
+              if (posx <= 0 || posx > GXM || posy <= 0 || posy > GYM)
+                  continue;
+
+              int dist = distance(posx, posy, you.x_pos, you.y_pos);
+              if (dist > radius*radius)
+                  continue;
+
+              // scare all hostile monsters inside sanctuary
+              if (mgrd[posx][posy] != NON_MONSTER)
+              {
+                  monster = mgrd[posx][posy];
+                  monsters *mon = &menv[monster];
+                  
+                  if (!mons_friendly(mon)
+                      && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                  {
+                      behaviour_event(mon, ME_SCARE, MHITYOU);
+                      count++;
+                  }
+              }
+                  
+              // forming patterns
+              if (pattern == 0
+                    && (x == 0 || y == 0 || x == y || x == -y)
+                  || pattern == 1
+                    && (dist >= (radius-1)*(radius-1) && dist <= radius*radius)
+                  || pattern == 2
+                    && (x%2 == 0 || y%2 == 0)
+                  || pattern == 3
+                    && (abs(x)+abs(y) < 5 && x != y && x != -y))
+              {
+                  env.map[posx][posy].property = FPROP_SANCTUARY_1;
+              }
+              else
+                  env.map[posx][posy].property = FPROP_SANCTUARY_2;
+         }
+         if (count == 1)
+             simple_monster_message(&menv[monster], " turns to flee the light!");
+         else if (count > 0)
+             mpr("The monsters scatter in all directions!");
+         
+    return (true);
+}
 
 void cast_poison_ammo(void)
 {

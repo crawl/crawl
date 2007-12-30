@@ -1872,8 +1872,9 @@ static std::string describe_draconian_role(const monsters *mon)
         return "It looks unnaturally strong and dangerous with its fists.";
     case MONS_DRACONIAN_KNIGHT:
         return "It wields a deadly weapon with menacing efficiency.";
+    default:
+        return ("");
     }
-    return ("");
 }
 
 static std::string describe_draconian_colour(int species)

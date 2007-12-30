@@ -52,6 +52,7 @@ char cast_lesser_healing(void);
  * called from: ability - spell
  * *********************************************************************** */
 int cast_healing(int power);
+int cast_revitalisation(int power);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

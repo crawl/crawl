@@ -50,8 +50,11 @@ formatted_string describe_mutations();
 /* ***********************************************************************
  * called from: decks - it_use2 - mutation - spells
  * *********************************************************************** */
-bool delete_mutation(mutation_type which_mutation, bool force = false);
+bool delete_mutation(mutation_type which_mutation, bool force = false,
+                     bool good = false);
 
+// used by Zin (religion.cc)
+int count_mutations(void);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
