@@ -4186,7 +4186,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         add_ench( mon_enchant(ENCH_ABJ) );
  
         // just for flavour
-        if (this->flags & MF_GOD_GIFT && this->has_ench(ENCH_BERSERK))
+        if ((this->flags & MF_GOD_GIFT) && this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
 
         monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
@@ -4724,6 +4724,20 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     default:
         break;
+    }
+}
+
+void monsters::mark_summoned(int longevity, bool mark_items)
+{
+    add_ench( mon_enchant(ENCH_ABJ, longevity) );
+    if (mark_items)
+    {
+        for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        {
+            const int item = inv[i];
+            if (item != NON_ITEM)
+                mitm[item].flags |= ISFLAG_SUMMONED;
+        }
     }
 }
 

@@ -1269,6 +1269,8 @@ void zap_los_monsters()
             mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
                  mon->name(DESC_PLAIN, true).c_str() );
 #endif
+            // Mark as summoned so its items will also be discarded.
+            mon->mark_summoned(1, true);
             monster_die(mon, KILL_DISMISSED, 0);
         }
     }

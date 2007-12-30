@@ -1698,11 +1698,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_SHADOW_CREATURES:
     {
         mpr( "Wisps of shadow whirl around you..." );
-        const int which_mons =
-            create_monster( RANDOM_MONSTER, 2, BEH_FRIENDLY, 
-                            you.x_pos, you.y_pos, you.pet_target, 250 );
-        if (which_mons != -1 && which_mons != NON_MONSTER)
-            menv[which_mons].flags |= MF_HARD_RESET;
+        create_monster( RANDOM_MONSTER, 2, BEH_FRIENDLY, 
+                        you.x_pos, you.y_pos, you.pet_target, 250 );
         break;
     }
     //jmf: new spells 19mar2000

@@ -258,28 +258,26 @@ bool curse_an_item( bool decay_potions )
 static void monster_drop_ething(monsters *monster, 
                                 bool mark_item_origins = false)
 {
-    /* drop weapons & missiles last (ie on top) so others pick up */
-    int i;                  // loop variable {dlb}
+    const bool hostile_grid = grid_destroys_items(grd(monster->pos()));
+    const int midx = (int) monster_index(monster);
+
     bool destroyed = false;
-    bool hostile_grid = false;
 
-    if ( grid_destroys_items(grd[monster->x][monster->y]) ) {
-        hostile_grid = true;
-    }
-
-    int midx = (int) monster_index(monster);
-
-    for (i = MSLOT_GOLD; i >= MSLOT_WEAPON; i--)
+    /* drop weapons & missiles last (ie on top) so others pick up */
+    for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; i--)
     {
         int item = monster->inv[i];
 
         if (item != NON_ITEM)
         {
-            if (hostile_grid)
+            const bool summoned_item =
+                testbits(mitm[item].flags, ISFLAG_SUMMONED);
+            if (hostile_grid || summoned_item)
             {
                 item_was_destroyed(mitm[item], midx);
-                destroyed = true;
                 destroy_item( item );
+                if (!summoned_item)
+                    destroyed = true;
             }
             else
             {
@@ -294,11 +292,10 @@ static void monster_drop_ething(monsters *monster,
         }
     }
 
-    if (destroyed) {
+    if (destroyed)
         mprf(MSGCH_SOUND,
-             grid_item_destruction_message(grd[monster->x][monster->y]));
-    }
-}                               // end monster_drop_ething()
+             grid_item_destruction_message(grd(monster->pos())));
+}
 
 static void place_monster_corpse(const monsters *monster)
 {
@@ -494,7 +491,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
-    bool drop_items = !monster->has_ench(ENCH_ABJ) && !hard_reset;
+    const bool drop_items = !hard_reset;
 
 #ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
@@ -605,8 +602,6 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             place_cloud( random_smoke_type(),
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
-        else
-            drop_items = true;
     }
     else
     {
@@ -823,16 +818,21 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
 
-            if (monster->needs_transit())
-            {
-                monster->flags |= MF_BANISHED;
-                monster->set_transit( level_id(LEVEL_ABYSS) );
-                in_transit = true;
-            }
+            // KILL_RESET monsters no longer lose their whole inventory, only
+            // items they were generated with.
+            if (!monster->needs_transit())
+                break;
 
-            // fall-through
+            // Monster goes to the Abyss.
+            monster->flags |= MF_BANISHED;
+            monster->set_transit( level_id(LEVEL_ABYSS) );
+            in_transit = true;
+            monster->destroy_inventory();
+            break;
 
         case KILL_DISMISSED:
+            break;
+            
         default:
             monster->destroy_inventory();
             break;

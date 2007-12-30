@@ -1257,7 +1257,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_NOTED_ID          = 0x08000000,
     ISFLAG_NOTED_GET         = 0x10000000,
 
-    ISFLAG_BEEN_IN_INV       = 0x20000000  // Item has been in inventory
+    ISFLAG_BEEN_IN_INV       = 0x20000000, // Item has been in inventory
+    ISFLAG_SUMMONED          = 0x40000000  // Item generated on a summon
 };
 
 enum job_type

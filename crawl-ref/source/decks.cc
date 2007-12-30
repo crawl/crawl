@@ -2451,11 +2451,9 @@ static void summon_skeleton(int power, deck_rarity_type rarity)
         MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_SKELETAL_DRAGON
     };
 
-    const int mon = create_monster(skeltypes[power_level], std::min(power/50,6),
-                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                                   you.x_pos, you.y_pos, MHITYOU, 250 );
-    if ( mon != -1 )            // don't want skeletal warriors dropping stuff
-        menv[mon].flags |= MF_HARD_RESET;
+    create_monster(skeltypes[power_level], std::min(power/50,6),
+                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                   you.x_pos, you.y_pos, MHITYOU, 250 );
 }
 
 static int card_power(deck_rarity_type rarity)

@@ -834,7 +834,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
 
     // dur should always be 1-6 for monsters that can be abjured.
     if (dur >= 1 && dur <= 6)
-        menv[id].add_ench( mon_enchant(ENCH_ABJ, dur) );
+        menv[id].mark_summoned( dur, true );
 
     menv[id].foe = target;
 
@@ -1645,11 +1645,11 @@ int create_monster( int cls, int dur, beh_type beha, int cr_x, int cr_y,
     }
     else
     {
-        struct monsters *const creation = &menv[summd];
+        monsters *const creation = &menv[summd];
 
         // dur should always be ENCH_ABJ_xx
         if (dur >= 1 && dur <= 6)
-            creation->add_ench( mon_enchant(ENCH_ABJ, dur) );
+            creation->mark_summoned( dur, true );
 
         // player summons do not give XP or other bonuses
         // (you can still train skills on them though)
