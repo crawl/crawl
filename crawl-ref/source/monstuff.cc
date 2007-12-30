@@ -76,7 +76,7 @@ static void set_nearest_monster_foe(monsters *monster);
 static void mons_in_cloud(monsters *monster);
 static bool monster_move(monsters *monster);
 static bool plant_spit(monsters *monster, bolt &pbolt);
-static int map_wand_to_mspell(int wand_type);
+static spell_type map_wand_to_mspell(int wand_type);
 
 // [dshaligram] Doesn't need to be extern.
 static int mmov_x, mmov_y;
@@ -3127,8 +3127,8 @@ static bool handle_wand(monsters *monster, bolt &beem)
         item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
 
         // map wand type to monster spell type
-        int mzap = map_wand_to_mspell(wand.sub_type);
-        if (mzap == 0)
+        const spell_type mzap = map_wand_to_mspell(wand.sub_type);
+        if (mzap == SPELL_NO_SPELL)
             return (false);
 
         // set up the beam
@@ -3163,8 +3163,13 @@ static bool handle_wand(monsters *monster, bolt &beem)
         const int wand_type = wand.sub_type;
         switch (wand_type)
         {
+        case WAND_DISINTEGRATION:
+            // Dial down damage from wands of disintegration, since
+            // disintegration beams can do large amounts of damage.
+            beem.damage.size = beem.damage.size * 2 / 3;
+            break;
+            
             // these have been deemed "too tricky" at this time {dlb}:
-        case WAND_POLYMORPH_OTHER:
         case WAND_ENSLAVEMENT:
         case WAND_DIGGING:
         case WAND_RANDOM_EFFECTS:
@@ -6041,60 +6046,45 @@ bool heal_monster(monsters * patient, int health_boost,
     return (true);
 }                               // end heal_monster()
 
-static int map_wand_to_mspell(int wand_type)
+static spell_type map_wand_to_mspell(int wand_type)
 {
-    int mzap = 0;
-
     switch (wand_type)
     {
-        case WAND_FLAME:
-            mzap = SPELL_THROW_FLAME;
-            break;
-        case WAND_FROST:
-            mzap = SPELL_THROW_FROST;
-            break;
-        case WAND_SLOWING:
-            mzap = SPELL_SLOW;
-            break;
-        case WAND_HASTING:
-            mzap = SPELL_HASTE;
-            break;
-        case WAND_MAGIC_DARTS:
-            mzap = SPELL_MAGIC_DART;
-            break;
-        case WAND_HEALING:
-            mzap = SPELL_LESSER_HEALING;
-            break;
-        case WAND_PARALYSIS:
-            mzap = SPELL_PARALYSE;
-            break;
-        case WAND_FIRE:
-            mzap = SPELL_BOLT_OF_FIRE;
-            break;
-        case WAND_COLD:
-            mzap = SPELL_BOLT_OF_COLD;
-            break;
-        case WAND_CONFUSION:
-            mzap = SPELL_CONFUSE;
-            break;
-        case WAND_INVISIBILITY:
-            mzap = SPELL_INVISIBILITY;
-            break;
-        case WAND_TELEPORTATION:
-            mzap = SPELL_TELEPORT_OTHER;
-            break;
-        case WAND_LIGHTNING:
-            mzap = SPELL_LIGHTNING_BOLT;
-            break;
-        case WAND_DRAINING:
-            mzap = SPELL_BOLT_OF_DRAINING;
-            break;
-        default:
-            mzap = 0;
-            break;
+    case WAND_FLAME:
+        return SPELL_THROW_FLAME;
+    case WAND_FROST:
+        return SPELL_THROW_FROST;
+    case WAND_SLOWING:
+        return SPELL_SLOW;
+    case WAND_HASTING:
+        return SPELL_HASTE;
+    case WAND_MAGIC_DARTS:
+        return SPELL_MAGIC_DART;
+    case WAND_HEALING:
+        return SPELL_LESSER_HEALING;
+    case WAND_PARALYSIS:
+        return SPELL_PARALYSE;
+    case WAND_FIRE:
+        return SPELL_BOLT_OF_FIRE;
+    case WAND_COLD:
+        return SPELL_BOLT_OF_COLD;
+    case WAND_CONFUSION:
+        return SPELL_CONFUSE;
+    case WAND_INVISIBILITY:
+        return SPELL_INVISIBILITY;
+    case WAND_TELEPORTATION:
+        return SPELL_TELEPORT_OTHER;
+    case WAND_LIGHTNING:
+        return SPELL_LIGHTNING_BOLT;
+    case WAND_DRAINING:
+        return SPELL_BOLT_OF_DRAINING;
+    case WAND_DISINTEGRATION:
+        return SPELL_DISINTEGRATE;
+    case WAND_POLYMORPH_OTHER:
+        return SPELL_POLYMORPH_OTHER;
+    default:
+        return SPELL_NO_SPELL;
     }
-
-    return (mzap);
 }
 
 void seen_monster(monsters *monster)
