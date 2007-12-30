@@ -2303,9 +2303,12 @@ void losight(env_show_grid &sh,
                 if (realx < 0 || realx > 79 || realy < 0 || realy > 69)
                     continue;
 
+                dungeon_feature_type dfeat = gr[realx][realy];
+                if (dfeat == DNGN_SECRET_DOOR)
+                    dfeat = grid_secret_door_appearance(realx, realy);
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy])
-                     || (clear_walls_block && grid_is_wall(gr[realx][realy])))
+                if ( grid_is_opaque(dfeat)
+                     || (clear_walls_block && grid_is_wall(dfeat)))
                 {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
