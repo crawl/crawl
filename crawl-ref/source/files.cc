@@ -62,6 +62,7 @@
 #include "debug.h"
 #include "direct.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"

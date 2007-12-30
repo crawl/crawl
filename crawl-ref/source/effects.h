@@ -107,4 +107,8 @@ int torment_monsters(int x, int y, int pow, int caster);
 
 bool forget_inventory(bool quiet = false);
 
+void update_corpses(double elapsedTime);
+void update_level(double elapsedTime);
+void handle_time( long time_delta );
+
 #endif

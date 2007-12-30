@@ -3352,7 +3352,7 @@ static int affect_player( bolt &beam )
             mpr("You are blasted!");
 
             if (beam.aux_source.empty())
-                beam.aux_source = "disintegration bolt";
+                beam.aux_source = "a disintegration bolt";
 
             beam_ouch( roll_dice( beam.damage ), beam );
             beam.obvious_effect = true;

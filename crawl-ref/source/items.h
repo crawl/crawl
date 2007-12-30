@@ -115,21 +115,6 @@ bool move_top_item( int src_x, int src_y, int dest_x, int dest_y );
  * *********************************************************************** */
 void drop(void);
 
-
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
- * called from: files - items
- * *********************************************************************** */
-void update_corpses(double elapsedTime);
-void update_level(double elapsedTime);
-
-
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void handle_time( long time_delta );
-
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
  * called from: command food item_use shopping spl-book transfor
