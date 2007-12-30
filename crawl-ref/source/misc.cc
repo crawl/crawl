@@ -574,7 +574,7 @@ void up_stairs(dungeon_feature_type force_stair,
     if (!player_is_airborne()
         && you.duration[DUR_CONF] 
         && (stair_find >= DNGN_STONE_STAIRS_UP_I 
-            && stair_find <= DNGN_ROCK_STAIRS_UP)
+            && stair_find <= DNGN_STONE_STAIRS_UP_III)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall back down the stairs.");
@@ -1032,7 +1032,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (!player_is_airborne()
         && you.duration[DUR_CONF] 
         && (stair_find >= DNGN_STONE_STAIRS_DOWN_I 
-            && stair_find <= DNGN_ROCK_STAIRS_DOWN)
+            && stair_find <= DNGN_STONE_STAIRS_DOWN_III)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall down the stairs.");
