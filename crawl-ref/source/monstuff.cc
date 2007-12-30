@@ -494,6 +494,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
+    bool drop_items = !monster->has_ench(ENCH_ABJ) && !hard_reset;
 
 #ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
@@ -604,6 +605,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             place_cloud( random_smoke_type(),
                          monster->x, monster->y, 1 + random2(3),
                          monster->kill_alignment() );
+        else
+            drop_items = true;
     }
     else
     {
@@ -946,7 +949,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                   monster_index(monster), killer));
 
     const coord_def mwhere = monster->pos();
-    if (!hard_reset)
+    if (drop_items)
         monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
     monster_cleanup(monster);
 
