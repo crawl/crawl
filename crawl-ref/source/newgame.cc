@@ -2746,7 +2746,9 @@ static void create_wanderer( void )
         }
         else if (you.skills[SK_SHIELDS] && wpn_skill != SK_STAVES)
         {
-            newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
+            newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR,
+                (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE_MAGE) ?
+                    ARM_SHIELD : ARM_BUCKLER);
             you.inv[3].quantity = 0;            // remove potion
         }
         else
