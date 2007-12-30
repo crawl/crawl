@@ -275,7 +275,7 @@ struct monsterentry
     unsigned long resists;
 
     short weight;
-    // experience is calculated like this:
+    // [Obsolete] Experience used to be calculated like this:
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
     //     ^^^^^^ see below at hpdice
     //   Note that this may make draining attacks less attractive (LRH)

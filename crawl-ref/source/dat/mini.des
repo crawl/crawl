@@ -1,4 +1,4 @@
-###############################################################################
+##############################################################################
 # mini.des: This is the place where minivaults should go. These are defined
 #           without any ORIENT line. Vaults with ORIENT lines are stored in
 #           either float.des or large.des.
@@ -389,23 +389,6 @@ xxx@I@xxx
 ENDMAP
 
 ##############################################################################
-# Defended altar
-#
-NAME:    david_defended_altar
-DEPTH:   D:7-20, Orc, Elf, Snake
-SHUFFLE: 1ID/2TC
-TAGS:    allow_dup
-MONS:    orc priest, deep elf priest / w:30 nothing
-KFEAT:   D = altar_beogh / w:2 altar_okawaru / w:2 altar_makhleb
-MAP
-ccccc...
-c1..c...
-c1D.+.I@
-c1..c...
-ccccc...
-ENDMAP
-
-##############################################################################
 
 NAME: minivault_1
 TAGS: allow_dup
@@ -422,44 +405,6 @@ MAP
 .xx...x..xx.
 ..xxx=xxxx..
 ............
-ENDMAP
-
-###################################
-
-NAME: minivault_2
-TAGS: allow_dup
-SHUFFLE: cvxx
-MAP
-...........
-.xxxx.xxxx.
-.xx.....xx.
-.x.......x.
-.x.......x.
-.....C.....
-.x.......x.
-.x.......x.
-.xx.....xx.
-.xxxx.xxxx.
-...........
-ENDMAP
-
-###################################
-#
-NAME: minitemple
-TAGS: allow_dup
-# More common than the others.
-CHANCE: 20
-MAP
-cccccccccc
-cccccccccc
-cBcBcBcBcc
-G.c.c.c.Bc
-@.......Bc
-@.......Bc
-G.c.c.c.Bc
-cBcBcBcBcc
-cccccccccc
-cccccccccc
 ENDMAP
 
 ###################################
@@ -938,6 +883,27 @@ MAP
 .3.......33.
 ENDMAP
 
+##############################
+# Worms!
+#
+NAME: worms_lemuel
+DEPTH: D:6-15, Lair, Swamp, Hive, Snake
+FLAGS: no_rotate
+SUBST: W = W:20 w
+KFEAT: 1 = W
+KMONS: 1 = w:20 worm / swamp worm / w:5 brain worm
+MAP
+   WWWWWWW
+ WWWWWWWWWWW
+WWWxxxxxxxWWW
+WWWx11111xWWW
+WWWx11111+WWW
+WWWx11111xWWW
+WWWxxxxxxxWWW
+ WWWWWWWWWWW
+   WWWWWWW
+ENDMAP
+
 ###################################
 # Solitary fountain
 #
@@ -973,48 +939,6 @@ MAP
 .x...xwwx...x.
 ..xxxw..wxxx..
 ..............
-ENDMAP
-
-###################################
-# jmf: Multi-god temple thing
-#
-NAME: multi_god_temple
-SHUFFLE: abc
-SUBST: a:=, b:x, c:x
-DEPTH: 14-
-MAP
-............
-.axxxxxxxxa.
-.x9......9x.
-.bT......Tb.
-.x..C..C..x.
-.cT......Tc.
-.xxxxxxxxxx.
-.xxx$$$$xxx.
-.xx8....8xx.
-..xx....xx..
-...xG..Gx...
-............
-ENDMAP
-
-###################################
-# jmf: Another multi-god temple thing
-#
-NAME: multi_god_temple2
-DEPTH: 14-
-MAP
-............
-..vvvvvvvv..
-.vv......vv.
-.v..x..x..v.
-.v.Cx..xC.v.
-.v..x..x..v.
-.vT8x..x8Tv.
-.vvvx==xvvv.
-...Gx99xG...
-...+*99*+...
-...GxxxxG...
-............
 ENDMAP
 
 ###################################
@@ -1204,11 +1128,11 @@ SUBST:   ! = %:90 *:30 |:10
 ITEM:    wand of digging/wand of disintegration/ring of teleportation/stone of earth elementals
 MAP
 ...........
-.vvGvvvGvv.
+.vvnvvvnvv.
 .vAAABAAAv.
 .xxxxxxxxx.
 .v???d???v.
-.vvGvvvGvv.
+.vvnvvvnvv.
 .....@.....
 ENDMAP
 
@@ -1469,7 +1393,6 @@ xxxxxx
 ENDMAP
 
 NAME:    doghouse_v4
-
 TAGS:    mini_float
 DEPTH:   4-8
 SHUFFLE: ?1T

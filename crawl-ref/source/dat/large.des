@@ -121,6 +121,43 @@ xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+##########################
+# Ogre Cave, by Lemuel
+#
+NAME:    lemuel_ogre_cave
+ORIENT:  float
+DEPTH:   D:9-15, Orc
+TAGS:    no_pool_fixup
+MONS:    ogre, two-headed ogre, ogre-mage / Erolcha, plant / fungus
+MONS:    ogre zombie, two-headed ogre zombie
+SHUFFLE: WX/ZY , 12/12/67
+SUBST:   W:ww. , X:. , Z:x , Y:+.=
+SHUFFLE: *5/WW
+SUBST:   *=. , W=wW , !:$.
+SUBST:   5 = 5 6 = ^:5 I:5 F:5
+MAP
+              xxxxx
+          xxxxxx12xx
+         xx*..x.122xx
+ xxxxxxxxx5xxx...11xx
+xxWxxxxxxx*xxxxx....xx
+xxWWxxxxxx.xxxxxx**xxxx
+xWWWxxxxxx.xxxxxxx**xxxxx
+WWWW**xxxxx.xxxxxxx5xxxxxxxx
+xWWWW..xxxxx.xxxxxx.xccccccx
+xxWW....1xxx.xxxxx.xxc$$$$cx
+@..X...111..xxxxxx.xxc$$$$cx
+xxWWW...11xxxxxxx.xxxc!!!!cx
+xWWW....*xxxxxxx*..xxc+ccccx
+xxWWW..**xxxxxx*....x..xxxxx
+ xxWWWW*xxxxxxx*.11.Y.xx
+  xxWWWWWxxxxxxx1221xxx
+  xxxxWWWWxxxxxxx23xx
+  xxxxxWWxxxxxxxxx|xx
+  xxWWWWxxxxxxxxxxxx
+  WWWWxxx
+ENDMAP
+
 ################################################################################
 #
 # Steading of the Giant Chief

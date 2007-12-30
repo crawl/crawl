@@ -140,16 +140,16 @@ MAP
 ...............
 .ccccccccccccc.
 .cm....k....lc.
-.cgcecccccccdc.
+.cgceccccdccfc.
 .c.c.........c.
-.c.cccfc.cSccc.
+.c.cccfc.ccccc.
 .c.....c.c...c.
-.ccecc.c.c.cfc.
-.c...c.c.cicfc.
+.ccecc.c.h.cfc.
+.c...c.c.iicfc.
 .c.c.c.c.f.cfc.
-.c.c.c.c.c.cfc.
+.c.c.g.c.c.cfc.
 .c.c.cdchc.cfc.
-.c.c.......cfc.
+.c.c.......gfc.
 .cdcccecccccfc.
 ...............
 ENDMAP
@@ -159,8 +159,8 @@ ENDMAP
 NAME:    labyrinth_trapped
 TAGS:    minotaur generate_loot allow_dup
 MONS:    minotaur
-NSUBST:  g = . / c
-NSUBST:  D = . / D
+NSUBST:  g = 1:. / *:c
+NSUBST:  D = 1:. / *:D
 KFEAT:   d = axe trap / dart trap / needle trap / blade trap
 KFEAT:   D = teleport trap
 SUBST:   c : vvc
@@ -235,6 +235,7 @@ ENDMAP
 # Labyrinth furniture
 NAME: lab_block
 TAGS: lab allow_dup
+SHUFFLE: vcx
 MAP
 .....
 .xxx.
@@ -279,6 +280,7 @@ ENDMAP
 # Teaser: inaccessible loot
 NAME: labyrinth_glass_1
 TAGS: lab allow_dup
+SUBST: % = %*
 MAP
 ......
 .mmmm.
@@ -321,6 +323,7 @@ NAME: labyrinth_baited_teleportation_trap
 TAGS: lab allow_dup
 KFEAT: Y = teleport trap
 KITEM: Y = any good_item
+SHUFFLE: cxv
 CHANCE: 1
 MAP
 .....

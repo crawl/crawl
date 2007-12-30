@@ -169,6 +169,46 @@ xxxxxxxxxxx3$$xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+####################################
+# An old-fashioned vault, by Lemuel
+#
+NAME: traditional_vault_lemuel
+DEPTH: D:12-27, Vault
+ORIENT: float
+SUBST: 8 = 9 8
+SUBST: 9 = 9 0
+SUBST: 0 = 0 .
+KFEAT: $ = ^
+KITEM: $ = gold
+MAP
+........................
+wwwwwwwwwwwwwwwwwwwwwwww
+wcccccccccc==ccccccccccw
+wc$..................$cw
+wc.........99.........cw
+wc..cccccccccccccccc..cw
+wc0.c$....9999....$c.0cw
+wc..c.....9999.....c..cw
+wc..c..cccc++cccc..c..cw
+wc..c..c$......$c..c..cw
+wc..c..c...99...c..c..cw
+wc..c..c..cccc..c..c..cw
+wc00c..c..c||c..c..c00cw
+wc00c..c..c||c..c..c00cw
+wc..c..c..c++c..c..c..cw
+wc..c..c..9889..c..c..cw
+wc..c..c$.9889.$c..c..cw
+wc..c..cccccccccc..c..cw
+wc..c......99......c..cw
+wc0.c$............$c.0cw
+wc..ccccccc++ccccccc..cw
+wc.........00.........cw
+wc$........00........$cw
+wccccccccccccccccccccccw
+wwwwwwwwwwwwwwwwwwwwwwww
+........................
+ENDMAP
+
 #############################################################################
 # Insect pit (Lemuel)
 #

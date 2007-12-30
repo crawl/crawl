@@ -5,7 +5,46 @@
 ##############################################################################
 # Crypt minivaults
 
-##############################################################################
+########################
+# Dead fish
+# As of 0.3.2 the fish zombies can't move, they're basically just decorative
+NAME: lemuel_dead_fish_pool
+DEPTH: Crypt:*
+# Lemuel also had Cocytus:*
+TAGS: no_pool_fixup
+SUBST: . : .w
+SUBST: 1 = w:50 1
+KFEAT: 1 = w
+KMONS: 1 = big fish zombie / giant goldfish zombie
+MAP
+...wwwww...
+..ww111ww..
+.ww11111ww.
+ww1111111ww
+w111111111w
+w111111111w
+ww1111111ww
+.ww11111ww.
+..ww111ww..
+...wwwww...
+ENDMAP
+
+###########################################################
+# tombs in the wall
+NAME:  tombwall_bobbens
+TAGS:  allow_dup
+DEPTH: Crypt
+MONS:  w:5 small zombie/large zombie/w:1 large abomination/w:1 small abomination/w:1 skeletal warrior/w:1 necrophage/w:1 ghoul/w:1 rotting hulk/w:5 small skeleton/large skeleton/w:3 nothing
+MAP
+ccccccccccccccccccccccc
+ccc1c1c1c1c1c1c1c1c1ccc
+ccc+c+c+c+c+c+c+c+c+ccc
+.......................
+.......................
+.......................
+ENDMAP
+
+###########################################################
 #	small crypt building
 NAME:   minicrypt_bobbens
 TAGS:   mini_float allow_dup
@@ -27,7 +66,7 @@ c2+.....+2c
 cccc+c+cccc
 ENDMAP
 
-############################################################################
+###########################################################
 # death oozes - they're sort of like garden slugs
 NAME:   minigarden_bobbens
 TAGS:   allow_dup
@@ -51,10 +90,10 @@ MAP
 ..........
 ENDMAP
 
-############################################################################
+##############################################################################
 # Tomb entries
 
-############################################################################
+###########################################################
 #	simple entrance
 NAME:   tomb_entry_simple_bobbens
 ORIENT: float
@@ -81,7 +120,74 @@ c1.....1c
 cccc.cccc
 ENDMAP
 
-############################################################################
+###########################################################
+# small pyramid leading to the bigger one
+NAME:   tomb_entry_pyramid_bobbens
+ORIENT: float
+TAGS:   tomb_entry no_monster_gen
+MONS:   sphinx
+MONS:   w:1 mummy / w:9 guardian mummy
+MONS:   mummy priest
+SUBST:  ' = ~ .:50
+MAP
+........................
+........................
+..cccccccccccccccccccc..
+..cccccccccccccccccccc..
+..cc....2...........cc..
+..cc..............2.cc..
+..cc....cccccccccc''cc..
+..cc....c''''''''c''cc..
+..cc....c''ccccc'c''cc..
+..cc....c''cO'3''c''cc..
+..cc....c''ccccccc''cc..
+..cc.2..c''2''''''''cc..
+..cc....c'''''''''''cc..
+..cc....cccccccccccccc..
+..cc................cc..
+..cc....2......2....cc..
+..cc...ccc++++ccc...cc..
+..cc...cc......cc...cc..
+..cc.2.cc.G..G.cc.2.cc..
+..cc.V.cc......cc.V.cc..
+..cc...cc......cc...cc..
+..ccccccc.G..G.ccccccc..
+..ccccccc......ccccccc..
+........................
+.......1........1.......
+........................
+........................
+ENDMAP
+
+###########################################################
+# sphere entry
+NAME:   tomb_entry_sphere_bobbens
+ORIENT: float
+TAGS:   tomb_entry no_monster_gen no_rotate
+MONS:   w:1 mummy / w:9 guardian mummy
+MONS:   sphinx
+MONS:   mummy priest
+MAP
+          ccccc
+       cccc.1.cccc
+     ccc.........ccc
+    cc......c......cc
+   cc....ccccccc....cc
+   c....cc.1.1.ccc..1c
+..cccc...........cc..cc
+.1c..cc...........c3O.c
+..+..2ccccc.F.ccccccccc
+.1c...c...............c
+..cc..cc.............cc
+   c...ccc.1..1.cc...c
+   cc....cccccccc...cc
+    cc......c......cc
+     ccc.........ccc
+       cccc.1.cccc
+          ccccc
+ENDMAP
+
+###########################################################
 # forgotten tomb entrance
 NAME:   tomb_entry_forgotten_bobbens
 ORIENT: float
@@ -101,7 +207,7 @@ cpp..
 c...      
 ENDMAP
 
-############################################################################
+###########################################################
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
 TAGS:   tomb_entry no_monster_gen no_item_gen
@@ -127,7 +233,11 @@ cc.....ccc1.....c
       ccccccc    
 ENDMAP
 
-############################################################################
+
+##############################################################################
+# Crypt ends
+
+###########################################################
 #	churchlike map with customizeable monster sets
 #
 NAME:   church_of_pain_bobbens
@@ -237,8 +347,8 @@ xxxxccc+cccxxxc7+.............+7=$*cccc+cccxxxx
 ENDMAP
 
 
-############################################################################
-#	gigantic sort of aquatic base, pretty good looking :)
+###########################################################
+#	gigantic sort of aquatic base
 #
 NAME:   cryptofortress_bobbens
 ORIENT: encompass
@@ -275,6 +385,8 @@ KMONS:  h = titan zombie/dragon zombie/golden dragon zombie
 COLOUR: = = red
 COLOUR: r = red
 SUBST:  r = v
+# emergency exits; most are closed
+NSUBST: ? = 3:= / *:v
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
@@ -284,13 +396,13 @@ vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r||||||r.........vAAAAAAwwwwwwwwv
-vwwwwwwvvvvvvvvv......rr=rr****rr=rr......vvvvvvvvvwwwwwwv
+vwwwwwwvvvv?vvvv......rr=rr****rr=rr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwwwv....H..v.....rrrr|r$$$$r|rrrr.....v.......vwwwwwwv
+vwwwwww?....H..v.....rrrr|r$$$$r|rrrr.....v.......?wwwwwwv
 vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
-vwwwwwwv....H..v......L...r$$$$r...L......v....H..vwwwwwwv
+vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
 vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
-vwwwwwwv...v...vv....rr.rrrU..Urrr.rr....vvv+v....vwwwwwwv
+vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
 vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
 vwwwwwwv...v..V.$vvv...rr........rr...vvvM+.....vvvwwwwwwv
@@ -299,11 +411,11 @@ vwwwwwwv...vvvvvvv..vv....rr..rr....vv..vM+.....vvvwwwwwwv
 vwwwwwwv...vvv...v...vv............vv...vvv.....+Mvwwwwwwv
 vwwwwwwv...vv....+....vv..........vv....+....N..vvvwwwwwwv
 vwwwwwwv...vNz...v.....vv........vv.....vvv.....+Mvwwwwwwv
-vwwwwwwv...v.M...v....G.vv......vvI.....vM+.....vvvwwwwwwv
+vwwwwww?...v.M...v....G.vv......vvI.....vM+.....vvvwwwwwwv
 vwwwwwwv...v....vv....vvvvvvvvvvvvvv....vvv.....+Mvwwwwwwv
-vwwwwwAv.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
+vwwwwwA?.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
 vwwwwwAv......vv....vv..............vv....vvMv..+Mvwwwwwwv
-vwwwwAAv.....vv....vv................vv....vvv..vvvwwwwwwv
+vwwwwAA?.....vv....vv................vv....vvv..vvvwwwwwwv
 vwwwAAAv.....v....vv.......N..N.......vv....vv..+Mvwwwwwwv
 vwvvvvvvvvvvvvv+vvvvv+vv.Mzz..zzM.vv+vvvvv+vvvvvvvvvvvvvwv
 vwvv.........v..I.v....v..........v....v.........v..%*vvwv

@@ -3,9 +3,74 @@
 ###############################################################################
 
 ##############################################################################
-# Entry vaults
+# Zaba's entry vaults
 ##############################################################################
-# Lemuel's entry vaults.
+
+NAME: entry_zaba_1
+TAGS: entry no_monster_gen no_item_gen
+FLAGS: no_rotate
+ORIENT: float
+SUBST: T = TV, ? = wW
+MAP
+xxx@xxx@xxx@xxx
+x.............x
+x.G.T.T.T.T.G.x
+x.............x
+xw?W?wwWww?W?wx
+xwwW?wwWww?Wwwx
+xwwWWwwWwwWWwwx
+xww?WwwWwwW?wwx
+xwwwW?wWw?Wwwwx
+xwwwWWwWwWWwwwx
+xwww?WwWwW?wwwx
+xwwwwWwWwWwwwwx
+xwwwwWWWWWwwwwx
+xwwww?WWW?wwwwx
+xwww?WWWWW?wwwx
+xww?WW...WW?wwx
+xw?WW.({[.WW?wx
+xww?WW...WW?wwx
+xwww?WWWWW?wwwx
+xwwww?????wwwwx
+xwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# Zaba's second entry vault ever
+
+NAME: entry_zaba_2
+TAGS: entry
+ORIENT: float
+SHUFFLE: ([{>
+SUBST: ?:???!,  ?=?., ?=!, !:cx, ===cc+
+MAP
+.................@.................
+.cccccc...cccccc...cccccc...cccccc.
+.c....c...c....c...c....c...c....c.
+.c.(..c...c.{..c...c..[.c...c..>.c.
+.c....cc=cc....cc=cc....cc=cc....c.
+.cc+ccc...cc+ccc...ccc+cc...ccc+cc.
+..!...+...+....+...+....+...+...!..
+..!!??!???!????!?.?!????!???!??!!..
+ ..!?.??.???.????.????.???.??.?!..
+  .!!?..??..???.....???..??..?!!.
+  @.!??...???...???...???...??!.@
+   .!!???....????.????....???!!.
+   ..!!????....??.??....????!!..
+    ..!!?????....?....?????!!..
+     ..!!!??????...??????!!!..
+      ...!!!???..?..???!!!...
+        ..!!!!???.???!!!!..
+         ...!!!!!+!!!!!... 
+           ......@......
+ENDMAP
+
+
+##############################################################################
+# Lemuel's entry vaults
+##############################################################################
 
 NAME: lemuel_entry_001
 TAGS: entry
@@ -3981,7 +4046,7 @@ CHANCE:  5
 ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / potion of water / w:30 nothing
 SHUFFLE: ({[ , AB
-SUBST:   A : x , B = = +:20 .:30, X = x=
+SUBST:   A : x , B = +., X = x=
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm 
 MAP
 xxxxxxxxx@xxxxxxx

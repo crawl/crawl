@@ -101,20 +101,20 @@ NSPACE [^\ \t\r\n]
 
 <MAPDEF>[ ]*\r?\n       ;
 
-<LUA>\s*\}\}[ \t]*$     { BEGIN(INITIAL); }
-<LUA>[^\r\n]+\}\}[ \t]*$ {
+<LUA>\s*\}\}[ \t\r]*$    { BEGIN(INITIAL); }
+<LUA>[^\r\n]+\}\}[ \t\r]*$ {
                             settext(true, 2);
                             BEGIN(INITIAL);
                             return LUA_LINE;
                         }
 <LUA>[^\r\n]+           {
-                            settext();
+                            settext(true);
                             return LUA_LINE;
                         }
 <LUA>\r?\n              ;
 
-<LUA_ONELINER>[^\r\n]+$ {
-                            settext();
+<LUA_ONELINER>[^\r\n]+\r?$ {
+                            settext(true);
                             return LUA_LINE;
                         }
 <LUA_ONELINER>\r?\n     { BEGIN(INITIAL); }
@@ -159,21 +159,21 @@ NSPACE [^\ \t\r\n]
 
 <ARGUMENT>\r?\n     { BEGIN(INITIAL); }
 
-<TOEOL>.*\\[ \t]*$  {
+<TOEOL>.*\\[ \t\r]*$ {
                         settext(true, 1);
                         return STRING;
                     }
 
 <TOEOL>.+$          {
                         BEGIN(INITIAL);
-                        settext();
+                        settext(true);
                         return STRING;
                     }
 <TOEOL>\r?\n        ;
 
 ^[ \t]*#.*          ;
 
-^\s*MAP[ \t]*$      { BEGIN(MAPDEF); }
+^\s*MAP[ \t\r]*$    { BEGIN(MAPDEF); }
 
 ^[ \t]*:                  { BEGIN(LUA_ONELINER); return MAIN; }
 
@@ -221,6 +221,7 @@ KMASK:              { BEGIN(ARGUMENT); return KMASK; }
 
 [\ \t]+             ;
 \r?\n               ;
+\r                  ;
 .                   return CHARACTER;
 
 %%

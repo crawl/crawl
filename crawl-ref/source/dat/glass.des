@@ -66,16 +66,15 @@ MAP
 ENDMAP
 
 #####################################################################
-# A good item encased in transparent stone or (rarely) permanent glass.
+# A good item encased in transparent stone.
 NAME:  item_on_display_b
 CHANCE: 1
-SUBST: o : n o:1
 TAGS:  no_monster_gen no_item_gen
 MAP
 .....
-.ooo.
-.o*o.
-.ooo.
+.nnn.
+.n*n.
+.nnn.
 .....
 ENDMAP
 
