@@ -1107,9 +1107,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
 
-    const monsterentry *entry       = get_monster_data(monster->type);
-    const int          throw_energy = entry->energy_usage.missile;
-    monster->speed_increment       -= throw_energy;
+    monster->lose_energy(EUT_MISSILE);
+    const int throw_energy = monster->action_energy(EUT_MISSILE);
 
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[hand_used];

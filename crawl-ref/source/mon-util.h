@@ -261,7 +261,7 @@ struct mon_energy_usage
 
     // Percent of monster->speed used when picking up an item; defaults
     // to 100%
-    char pickup_percent; 
+    char pickup_percent;
 };
 
 struct monsterentry

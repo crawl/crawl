@@ -2841,10 +2841,7 @@ static bool handle_special_ability(monsters *monster, bolt & beem)
     }
 
     if (used)
-    {
-        monsterentry *entry = get_monster_data(monster->type);
-        monster->speed_increment -= entry->energy_usage.special;
-    }
+        monster->lose_energy(EUT_SPECIAL);
 
     return (used);
 }                               // end handle_special_ability()
@@ -2948,8 +2945,7 @@ static bool handle_potion(monsters *monster, bolt & beem)
             if (ident != ID_UNKNOWN_TYPE && was_visible)
                 set_ident_type(OBJ_POTIONS, potion_type, ident);
 
-            monsterentry *entry = get_monster_data(monster->type);
-            monster->speed_increment -= entry->energy_usage.item;
+            monster->lose_energy(EUT_ITEM);
         }
 
         return (imbibed);
@@ -3092,8 +3088,7 @@ static bool handle_scroll(monsters *monster)
             if (ident != ID_UNKNOWN_TYPE && was_visible)
                 set_ident_type(OBJ_SCROLLS, scroll_type, ident);
 
-            monsterentry *entry = get_monster_data(monster->type);
-            monster->speed_increment -= entry->energy_usage.item;
+            monster->lose_energy(EUT_ITEM);
         }
 
         return read;
@@ -3264,8 +3259,7 @@ static bool handle_wand(monsters *monster, bolt &beem)
                     wand.plus2++;
             }
 
-            monsterentry *entry = get_monster_data(monster->type);
-            monster->speed_increment -= entry->energy_usage.item;
+            monster->lose_energy(EUT_ITEM);
 
             return (true);
         }
@@ -3787,8 +3781,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
                 simple_monster_message(monster, " blinks!");
                 monster_blink(monster);
 
-                monsterentry *entry = get_monster_data(monster->type);
-                monster->speed_increment -= entry->energy_usage.spell;
+                monster->lose_energy(EUT_SPELL);
             }
             else
                 return (false);
@@ -3798,8 +3791,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
             mons_cast(monster, beem, spell_cast);
             mmov_x = 0;
             mmov_y = 0;
-            monsterentry *entry = get_monster_data(monster->type);
-            monster->speed_increment -= entry->energy_usage.spell;
+            monster->lose_energy(EUT_SPELL);
         }
     } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
 
@@ -4025,15 +4017,11 @@ static void monster_regenerate(monsters *monster)
 
 static void swim_or_move_energy(monsters *mon)
 {
-    monsterentry        *entry = get_monster_data(mon->type);
-    dungeon_feature_type feat  = grd[mon->x][mon->y];
-    if (feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
-        && !mon->airborne())
-    {
-        mon->speed_increment -= entry->energy_usage.swim;
-    }
-    else
-        mon->speed_increment -= entry->energy_usage.move;
+    const dungeon_feature_type feat = grd[mon->x][mon->y];
+    // FIXME: Replace check with mons_is_swimming()?
+    mon->lose_energy(
+        feat >= DNGN_LAVA && feat <= DNGN_SHALLOW_WATER
+        && !mon->airborne() ? EUT_SWIM : EUT_MOVE );
 }
 
 #if DEBUG
@@ -4119,6 +4107,8 @@ static void handle_monster_move(int i, monsters *monster)
     monster->check_speed();
 
     monsterentry* entry = get_monster_data(monster->type);
+    if (!entry)
+        return;
 
     int old_energy      = INT_MAX;
     int non_move_energy = std::min(entry->energy_usage.move,
@@ -5087,8 +5077,7 @@ static void mons_open_door(monsters* monster, const coord_def &pos)
         }
     }
 
-    monsterentry *entry = get_monster_data(monster->type);
-    monster->speed_increment -= entry->energy_usage.move;
+    monster->lose_energy(EUT_MOVE);
 }
 
 // Check whether a monster can move to given square (described by its relative

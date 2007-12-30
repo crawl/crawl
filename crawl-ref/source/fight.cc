@@ -478,13 +478,9 @@ bool melee_attack::attack()
     // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
     {
-        if (attacker->atype() == ACT_MONSTER)
-        {
-            // Make sure the monster uses up some energy, even though
-            // it didn't actually attack.
-            monsterentry *entry   = get_monster_data(atk->type);
-            atk->speed_increment -= entry->energy_usage.attack;
-        }
+        // Make sure the monster uses up some energy, even though
+        // it didn't actually attack.
+        attacker->lose_energy(EUT_ATTACK);
 
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
@@ -532,8 +528,7 @@ bool melee_attack::attack()
         {
             // Make sure the monster uses up some energy, even though
             // it didn't actually land a blow.
-            monsterentry *entry   = get_monster_data(atk->type);
-            atk->speed_increment -= entry->energy_usage.attack;
+            attacker->lose_energy(EUT_ATTACK);
 
             if (!mons_near(def))
                 simple_monster_message(atk, " hits something");
@@ -3459,13 +3454,10 @@ void melee_attack::mons_perform_attack_rounds()
         const mon_attack_def attk = mons_attack_spec(atk, attack_number);
         if (attk.type == AT_NONE)
         {
+            // Make sure the monster uses up some energy, even
+            // though it didn't actually attack.
             if (attack_number == 0)
-            {
-                // Make sure the monster uses up some energy, even
-                // though it didn't actually attack.
-                monsterentry *entry   = get_monster_data(atk->type);
-                atk->speed_increment -= entry->energy_usage.attack;
-            }
+                atk->lose_energy(EUT_ATTACK);
 
             break;
         }
@@ -3661,13 +3653,10 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
                                     int which_attack)
 {
-    monsterentry *entry = get_monster_data(attacker->type);
-    char         atk_speed = entry->energy_usage.attack;
-
     // Initial attack causes energy to be used for all attacks.  No
     // additional energy is used for unarmed attacks.
     if (which_attack == 0)
-        attacker->speed_increment -= atk_speed;
+        attacker->lose_energy(EUT_ATTACK);
 
     // Monsters lose additional energy only for the first two weapon
     // attacks; subsequent hits are free.
@@ -3677,12 +3666,12 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     // speed adjustment for weapon using monsters
     if (wpn_speed > 0)
     {
+        const int atk_speed = attacker->action_energy(EUT_ATTACK);
         // only get one third penalty/bonus for second weapons.
         if (which_attack > 0)
             wpn_speed = div_rand_round( (2 * atk_speed + wpn_speed), 3 );
 
         int delta = div_rand_round( (wpn_speed - 10 + (atk_speed - 10)), 2 );
-
         if (delta > 0)
             attacker->speed_increment -= delta;
     }

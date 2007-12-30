@@ -103,6 +103,12 @@ public:
     virtual void make_hungry(int nutrition, bool silent = true)
     {
     }
+
+    // Need not be implemented for the player - player action costs
+    // are explicitly calculated.
+    virtual void lose_energy(energy_use_type)
+    {
+    }
     
     virtual std::string name(description_level_type type) const = 0;
     virtual std::string pronoun(pronoun_type which_pronoun) const = 0;
@@ -960,6 +966,8 @@ private:
 
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
+struct monsterentry;
+
 class monsters : public actor
 {
 public:
@@ -1027,6 +1035,7 @@ public:
     bool del_ench(enchant_type ench, bool quiet = false);
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev);
+    void lose_energy(energy_use_type et);
 
     void scale_hp(int num, int den);
     void gain_exp(int xp);
@@ -1178,6 +1187,7 @@ public:
 
     std::string describe_enchantments() const;
 
+    int action_energy(energy_use_type et) const;    
     static int base_speed(int mcls);
 
     bool do_shaft();
@@ -1204,7 +1214,8 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-    bool has_spell_of_type(unsigned) const;    
+    bool has_spell_of_type(unsigned) const;
+    const monsterentry *find_monsterentry() const;
 };
 
 struct cloud_struct

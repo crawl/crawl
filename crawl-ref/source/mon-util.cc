@@ -2929,11 +2929,12 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
 
 void monsters::lose_pickup_energy()
 {
-    monsterentry* entry = get_monster_data(type);
-    int           delta = speed * entry->energy_usage.pickup_percent / 100;
-
-    if (speed_increment > 25 && delta < speed_increment)
-        speed_increment -= delta;
+    if (const monsterentry* entry = find_monsterentry())
+    {
+        const int delta = speed * entry->energy_usage.pickup_percent / 100;
+        if (speed_increment > 25 && delta < speed_increment)
+            speed_increment -= delta;
+    }
 }
 
 void monsters::pickup_message(const item_def &item, int near)
@@ -3348,8 +3349,8 @@ void monsters::swap_weapons(int near)
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)
     {
-        monsterentry *entry = get_monster_data(type);
-        speed_increment -= div_rand_round(entry->energy_usage.attack, 5);
+        if (const monsterentry *entry = find_monsterentry())
+            speed_increment -= div_rand_round(entry->energy_usage.attack, 5);
     }
 }
 
@@ -5090,6 +5091,37 @@ void monsters::put_to_sleep(int)
 void monsters::check_awaken(int)
 {
     // XXX
+}
+
+const monsterentry *monsters::find_monsterentry() const
+{
+    return (type == -1 || type == MONS_PROGRAM_BUG) ? NULL
+        : get_monster_data(type);
+}
+
+int monsters::action_energy(energy_use_type et) const
+{
+    if (const monsterentry *me = find_monsterentry())
+    {
+        const mon_energy_usage &mu = me->energy_usage;
+        switch (et)
+        {
+        case EUT_MOVE:    return mu.move;
+        case EUT_SWIM:    return mu.swim;
+        case EUT_MISSILE: return mu.missile;
+        case EUT_ITEM:    return mu.item;
+        case EUT_SPECIAL: return mu.special;
+        case EUT_SPELL:   return mu.spell;
+        case EUT_ATTACK:  return mu.attack;
+        case EUT_PICKUP:  return mu.pickup_percent;
+        }
+    }
+    return 10;
+}
+
+void monsters::lose_energy(energy_use_type et)
+{
+    speed_increment -= action_energy(et);
 }
 
 /////////////////////////////////////////////////////////////////////////
