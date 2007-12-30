@@ -789,15 +789,13 @@ easy_open = true
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it. 
 
-easy_confirm = (none | safe | all)
+easy_confirm = (none | safe)
         Make confirmation questions easier to answer:
            none = force capitals on Y/N questions
            safe = force only on questions that will end game (default)
-           all  = never force capitals
         WARNING TO KEYPAD USERS: The number 7 is mapped to the letter 
         'y', which can result in accidentally answering yes to 
-        questions; it is suggested that you use a value of 'none' or 
-        'safe'
+        questions.
 
 easy_butcher = true
         If true, auto-switch to an appropriate uncursed weapon for 

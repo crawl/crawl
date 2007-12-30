@@ -1678,8 +1678,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             easy_confirm = CONFIRM_NONE_EASY;
         else if (field == "safe")
             easy_confirm = CONFIRM_SAFE_EASY;
-        else if (field == "all")
-            easy_confirm = CONFIRM_ALL_EASY;
     }
     else if (key == "easy_quit_item_lists"
             || key == "easy_quit_item_prompts")
