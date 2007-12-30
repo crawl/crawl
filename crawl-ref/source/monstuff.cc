@@ -3175,6 +3175,13 @@ static bool handle_wand(monsters *monster, bolt &beem)
         case WAND_RANDOM_EFFECTS:
             return (false);
 
+        case WAND_POLYMORPH_OTHER:
+            // Monsters can be very trigger happy with wands, reduce this
+            // for polymorph.
+            if (!one_chance_in(5))
+                return false;
+            break;
+
         // these are wands that monsters will aim at themselves {dlb}:
         case WAND_HASTING:
             if (!monster->has_ench(ENCH_HASTE))
