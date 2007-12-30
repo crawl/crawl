@@ -25,7 +25,7 @@
 #include "stuff.h"
 #include "view.h"
 
-static bool weapon_is_visibly_special(const item_def &item);
+static void item_set_appearance(item_def &item);
 
 static bool got_curare_roll(const int item_level)
 {
@@ -1612,10 +1612,6 @@ static void generate_weapon_item(item_def& item, bool allow_uniques,
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
         }
     }
-
-    if (weapon_is_visibly_special(item))
-        set_equip_desc( item, (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED) );
-
     // All done!
 }
 
@@ -2119,18 +2115,6 @@ static void generate_armour_item(item_def& item, bool allow_uniques,
             item.plus -= random2(3);
 
         set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
-    }
-
-    // if not given a racial type, and special, give shiny/runed/etc desc.
-    if (get_equip_desc(item) == ISFLAG_NO_DESC
-        && (get_armour_ego_type( item ) != SPARM_NORMAL
-            || (item.plus != 0 && !one_chance_in(3))))
-    {
-        const item_status_flag_type descs[] = {
-            ISFLAG_GLOWING, ISFLAG_RUNED, ISFLAG_EMBROIDERED_SHINY
-        };
-
-        set_equip_desc( item, RANDOM_ELEMENT(descs) );
     }
 
     // Make sure you don't get a hide from acquirement (since that
@@ -2790,6 +2774,9 @@ int items( int allow_uniques,       // not just true-false,
     // Colour the item
     item_colour( item );
 
+    // Set brand appearance.
+    item_set_appearance( item );
+
     if (dont_place)
     {
         item.x = 0;
@@ -3445,17 +3432,11 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         if (one_chance_in(7))
             item.sub_type = WPN_DEMON_WHIP;
 
-        int temp_rand = random2(3);
-        set_equip_desc( item, (temp_rand == 1) ? ISFLAG_GLOWING :
-                                  (temp_rand == 2) ? ISFLAG_RUNED 
-                                                   : ISFLAG_NO_DESC );
-
         if (one_chance_in(3))
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
         else if (one_chance_in(3))
         {
-            temp_rand = random2(5);
-
+            const int temp_rand = random2(5);
             set_item_ego_type( item, OBJ_WEAPONS, 
                                 ((temp_rand == 0) ? SPWPN_DRAINING :
                                  (temp_rand == 1) ? SPWPN_VORPAL :
@@ -3603,15 +3584,18 @@ static item_make_species_type give_weapon(monsters *mon, int level,
     if (thing_created == NON_ITEM)
         return (item_race);
 
-    const item_def &i = mitm[thing_created];
+    item_def &i = mitm[thing_created];
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
         destroy_item(thing_created);
         return (item_race);
     }
+
+    if (force_item)
+        item_set_appearance(i);
     
     if (iquan > 1 && !force_item)
-        mitm[thing_created].quantity = iquan;
+        i.quantity = iquan;
         
     give_monster_item(mon, thing_created, force_item);
     
@@ -4146,4 +4130,37 @@ armour_type get_random_armour_type(int item_level)
     }
 
     return static_cast<armour_type>(armtype);
+}
+
+// Sets item appearance to match brands, if any.
+static void item_set_appearance(item_def &item)
+{
+    if (get_equip_desc(item) != ISFLAG_NO_DESC)
+        return;
+    
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        if (weapon_is_visibly_special(item))
+            set_equip_desc( item,
+                            (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED) );
+        break;
+        
+    case OBJ_ARMOUR:
+        // if not given a racial type, and special, give shiny/runed/etc desc.
+        if (get_armour_ego_type( item ) != SPARM_NORMAL
+            || (item.plus != 0 && !one_chance_in(3)))
+        {
+            const item_status_flag_type descs[] =
+            {
+                ISFLAG_GLOWING, ISFLAG_RUNED, ISFLAG_EMBROIDERED_SHINY
+            };
+            
+            set_equip_desc( item, RANDOM_ELEMENT(descs) );
+        }
+        break;
+
+    default:
+        break;
+    }
 }
