@@ -2055,7 +2055,7 @@ static bool zin_retribution()
     if (punishment < 2 && count_mutations() <= random2(3))
         punishment = random2(6)+2;
 
-    switch(random2(8))
+    switch(punishment)
     {
     case 0: // remove good mutations (25%)
     case 1:
