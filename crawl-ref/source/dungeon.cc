@@ -765,7 +765,7 @@ static void build_layout_skeleton(int level_number, int level_type,
 
     if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
     {
-        // do 'normal' building.  Well, except for the swamp.
+        // do 'normal' building.  Well, except for the swamp and shoals.
         if (!player_in_branch(BRANCH_SWAMP) &&
             !player_in_branch(BRANCH_SHOALS))
             skip_build = builder_normal(level_number, level_type, sr);
@@ -1074,7 +1074,7 @@ static void build_dungeon_level(int level_number, int level_type)
     // stairs must exist by this point. Some items and monsters
     // already exist.
 
-    // time to make the swamp {dlb}:
+    // time to make the swamp or shoals {dlb}:
     if (player_in_branch( BRANCH_SWAMP ))
         prepare_swamp();
     else if (player_in_branch(BRANCH_SHOALS))
