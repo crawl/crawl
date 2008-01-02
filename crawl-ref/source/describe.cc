@@ -2384,11 +2384,11 @@ void describe_god( god_type which_god, bool give_title )
 
         // mv: if your piety is high enough you get title
         // based on your god
-        if (you.piety > 160) 
-        { 
-            cprintf(
-                "%s", (which_god == GOD_SHINING_ONE) ? "Champion of Law" :
-                (which_god == GOD_ZIN) ? "Divine Warrior" :
+        if (you.piety > 160)
+        {
+            cprintf("%s",
+                (which_god == GOD_ZIN) ? "Champion of Law" :
+                (which_god == GOD_SHINING_ONE) ? "Divine Warrior" :
                 (which_god == GOD_ELYVILON) ? "Champion of Light" :
                 (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
                 (which_god == GOD_YREDELEMNUL) ? "Master of Eternal Death" :
@@ -2400,7 +2400,7 @@ void describe_god( god_type which_god, bool give_title )
                 (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
                 (which_god == GOD_LUGONU) ? "Agent of Entropy" :
                 (which_god == GOD_BEOGH) ? "Messiah" :
-                (which_god == GOD_XOM) ? "Teddy Bear" : 
+                (which_god == GOD_XOM) ? "Teddy Bear" :
                 "Bogy the Lord of the Bugs");
         }
         else
