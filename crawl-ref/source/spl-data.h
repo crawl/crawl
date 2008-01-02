@@ -575,7 +575,7 @@
 
 {
     SPELL_SMITING, "Smiting",
-     SPTYP_HOLY,
+     SPTYP_NONE,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
      200,

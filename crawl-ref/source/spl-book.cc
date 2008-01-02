@@ -751,10 +751,10 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         int colour = DARKGREY;
         if (action == RBOOK_USE_STAFF)
         {
-            if (you.experience_level >= level_diff 
-                && (book.base_type == OBJ_BOOKS?
-                        you.magic_points >= level_diff
-                      : book.plus >= level_diff * ROD_CHARGE_MULT))
+            if (book.base_type == OBJ_BOOKS?
+                you.experience_level >= level_diff
+                && you.magic_points >= level_diff
+                : book.plus >= level_diff * ROD_CHARGE_MULT)
             {
                 colour = LIGHTGREY;
             }
@@ -1496,13 +1496,6 @@ int staff_spell( int staff )
         crawl_state.zero_turns_taken();
         // Don't lose a turn for trying to evoke without enough MP - that's
         // needlessly cruel for an honest error.
-        return (-1);
-    }
-
-    if (you.experience_level < diff)
-    {
-        mprf("You need to be at least level %d to use that.", diff);
-        crawl_state.zero_turns_taken();
         return (-1);
     }
 

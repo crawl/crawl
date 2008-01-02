@@ -1041,9 +1041,7 @@ surroundings to them.
 %%%%
 rod of smiting
 
-This rod allows its wielder to smite foes from afar. The wielder must
-be at least level four to safely use this ability, which drains four
-charges.
+This rod allows its wielder to smite foes from afar.
 %%%%
 rod of striking
 
