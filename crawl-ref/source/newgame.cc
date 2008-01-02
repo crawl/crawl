@@ -3138,8 +3138,9 @@ job_query:
 
         return false;
     }
-
-    if ((you.char_class = letter_to_class(keyn)) == JOB_UNKNOWN) 
+    
+    job_type chosen_job = JOB_UNKNOWN;
+    if ((chosen_job = letter_to_class(keyn)) == JOB_UNKNOWN) 
     {
         if (keyn == '*')
         {
@@ -3162,7 +3163,7 @@ job_query:
                 }
             }
             ASSERT( job != JOB_UNKNOWN );
-            you.char_class = job;
+            chosen_job = job;
 
             ng_cls = '*';
         }
@@ -3201,7 +3202,7 @@ job_query:
     }
 
     if (you.species != SP_UNKNOWN
-        && !class_allowed(you.species, you.char_class))
+        && !class_allowed(you.species, chosen_job))
     {
         if (Options.cls != 0)
         {
@@ -3214,6 +3215,7 @@ job_query:
     if (ng_cls != '*')
         ng_cls = keyn;
 
+    you.char_class = chosen_job;
     return you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN;
 }
 
