@@ -74,7 +74,8 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
-bool monster_habitable_grid(const monsters *m, dungeon_feature_type actual_grid)
+bool monster_habitable_grid(const monsters *m,
+                            dungeon_feature_type actual_grid)
 {
     return (monster_habitable_grid(m->type, actual_grid, mons_flies(m),
                                    m->paralysed()));
@@ -84,7 +85,7 @@ inline static bool mons_airborne(int mcls, int flies, bool paralysed)
 {
     if (flies == -1)
         flies = mons_class_flies(mcls);
-    return (paralysed? flies == 2 : flies != 0);
+    return (paralysed ? flies == FL_LEVITATE : flies != FL_NONE);
 }
 
 // Can monsters of class monster_class live happily on actual_grid? Use flies
@@ -92,7 +93,7 @@ inline static bool mons_airborne(int mcls, int flies, bool paralysed)
 //
 // [dshaligram] We're trying to harmonise the checks from various places into
 // one check, so we no longer care if a water elemental springs into existence
-// on dry land, because they're supposed to be able to move onto dry land 
+// on dry land, because they're supposed to be able to move onto dry land
 // anyway.
 bool monster_habitable_grid(int monster_class,
                             dungeon_feature_type actual_grid,
@@ -106,7 +107,7 @@ bool monster_habitable_grid(int monster_class,
             // only have to check for the additional valid grids of deep
             // water and lava.
             || (mons_airborne(monster_class, flies, paralysed)
-                && (actual_grid == DNGN_LAVA 
+                && (actual_grid == DNGN_LAVA
                     || actual_grid == DNGN_DEEP_WATER))
 
             // Amphibious critters are happy in water or on land.

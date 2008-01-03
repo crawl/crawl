@@ -103,7 +103,7 @@
 
 // monster 250: The Thing That Should Not Be(tm)
 // do not remove, or seekmonster will crash on unknown mc request
-// it is also a good prototype for new monstersst
+// it is also a good prototype for new monsters
 {
     MONS_PROGRAM_BUG, 'B', LIGHTRED, "program bug",
     M_NO_EXP_GAIN,
@@ -1643,8 +1643,8 @@
     9, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_BIG
 },
 
-// these are named more explicitly when they attack, also when you use 'x'
-//  to examine them.
+// These are named more explicitly when they attack, also when you use 'x'
+// to examine them.
 {
     MONS_DANCING_WEAPON, '(', BLACK, "dancing weapon",
     M_FIGHTER | M_LEVITATE,

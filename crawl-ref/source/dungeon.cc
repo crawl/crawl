@@ -7051,13 +7051,13 @@ void define_zombie( int mid, int ztype, int cs, int power )
         case MONS_ZOMBIE_SMALL:
         case MONS_SIMULACRUM_SMALL:
         case MONS_SKELETON_SMALL:
-            zombie_size = 1;
+            zombie_size = Z_SMALL;
             break;
 
         case MONS_ZOMBIE_LARGE:
         case MONS_SIMULACRUM_LARGE:
         case MONS_SKELETON_LARGE:
-            zombie_size = 2;
+            zombie_size = Z_BIG;
             break;
 
         case MONS_SPECTRAL_THING:
@@ -7125,7 +7125,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
             }
 
             // size must match, but you can make a spectral thing out of anything.
-            if (mons_zombie_size(cls) != zombie_size && zombie_size >= 0)
+            if (mons_zombie_size(cls) != zombie_size && zombie_size != -1)
                 continue;
 
             // hack -- non-dungeon zombies are always made out of nastier
@@ -7139,7 +7139,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
             level  = mons_level( cls ) - 4;
             diff   = level - power;
 
-            chance = (ignore_rarity) ? 100 
+            chance = (ignore_rarity) ? 100
                                      : mons_rarity(cls) - (diff * diff) / 2;
 
             if (power > level - relax && power < level + relax
@@ -7188,11 +7188,10 @@ void define_zombie( int mid, int ztype, int cs, int power )
         menv[mid].speed = 3;
 
     menv[mid].speed_increment = 70;
-    menv[mid].number = mons_sec2;
 
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
     {
-        menv[mid].type = ((mons_zombie_size(menv[mid].number) == 2)
+        menv[mid].type = ((mons_zombie_size(menv[mid].number) == Z_BIG)
                                     ? MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
     }
     else if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
@@ -7210,15 +7209,15 @@ void define_zombie( int mid, int ztype, int cs, int power )
         if (menv[mid].ev < 0)
             menv[mid].ev = 0;
 
-        menv[mid].type = ((mons_zombie_size( menv[mid].number ) == 2)
+        menv[mid].type = ((mons_zombie_size( menv[mid].number ) == Z_BIG)
                             ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
     }
     else if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
     {
-        // Simulacrum aren't tough, but you can create piles of them. -- bwr 
+        // Simulacrum aren't tough, but you can create piles of them. -- bwr
         menv[mid].hit_points = hit_points( menv[mid].hit_dice, 1, 4 );
         menv[mid].max_hit_points = menv[mid].hit_points;
-        menv[mid].type = ((mons_zombie_size( menv[mid].number ) == 2)
+        menv[mid].type = ((mons_zombie_size( menv[mid].number ) == Z_BIG)
                             ? MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
     }
     else if (cs == MONS_SPECTRAL_THING)

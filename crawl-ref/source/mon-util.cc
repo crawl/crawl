@@ -634,7 +634,7 @@ bool mons_see_invis(const monsters *mon)
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (mon->ghost->values[ GVAL_SEE_INVIS ]);
-    else if (((get_monster_data(mon->type))->bitfields & M_SEE_INVIS) != 0)
+    else if (mons_class_flag(mon->type, M_SEE_INVIS))
         return (true);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
         return (true);
@@ -1107,44 +1107,41 @@ bool mons_has_lifeforce( const monsters *mon )
              // && !mon->has_ench(ENCH_PETRIFY));
 }
 
-int mons_skeleton(int mc)
+bool mons_skeleton(int mc)
 {
-    if (mons_zombie_size(mc) == 0
-        || mons_weight(mc) == 0 || ((smc->bitfields & M_NO_SKELETON) != 0))
+    if (mons_zombie_size(mc) == Z_NOZOMBIE
+        || mons_weight(mc) == 0 || (mons_class_flag(mc, M_NO_SKELETON)))
     {
-        return (0);
+        return false;
     }
 
-    return (1);
+    return true;
 }                               // end mons_skeleton()
 
 flight_type mons_class_flies(int mc)
 {
-    int f = smc->bitfields;
-
-    if (f & M_FLIES)
+    if (mons_class_flag(mc, M_FLIES))
         return (FL_FLY);
 
-    if (f & M_LEVITATE)
+    if (mons_class_flag(mc, M_LEVITATE))
         return (FL_LEVITATE);
 
     return (FL_NONE);
 }
 
-flight_type mons_flies( const monsters *mon )
+flight_type mons_flies(const monsters *mon)
 {
     if (mon->type == MONS_PANDEMONIUM_DEMON
         && mon->ghost->values[ GVAL_DEMONLORD_FLY ])
     {
         return (FL_FLY);
     }
-    
+
     const flight_type ret = mons_class_flies( mon->type );
     return (ret ? ret
             : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
             : FL_NONE);
 }                               // end mons_flies()
-
 
 // this nice routine we keep in exactly the way it was
 int hit_points(int hit_dice, int min_hp, int rand_hp)
@@ -1160,7 +1157,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
     return (hrolled);
 }                               // end hit_points()
 
-// This function returns the standard number of hit dice for a type 
+// This function returns the standard number of hit dice for a type
 // of monster, not a pacticular monsters current hit dice. -- bwr
 int mons_type_hit_dice( int type )
 {

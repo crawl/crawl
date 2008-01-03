@@ -1501,7 +1501,7 @@ bool swap_places(monsters *monster)
 
     bool swap = mon_dest_okay;
 
-    // chose an appropiate habitat square at random around the target.
+    // Choose an appropriate habitat square at random around the target.
     if (!swap)
     {
         int num_found = 0;
@@ -5457,12 +5457,12 @@ static bool monster_move(monsters *monster)
         }
         return false;
     }
-    
+
     // let's not even bother with this if mmov_x and mmov_y are zero.
     if (mmov_x == 0 && mmov_y == 0)
         return false;
 
-    if (mons_flies(monster) > 0 
+    if (mons_flies(monster) != FL_NONE
         || habitat != DNGN_FLOOR
         || mons_class_flag( monster->type, M_AMPHIBIOUS ))
     {
@@ -5553,7 +5553,7 @@ static bool monster_move(monsters *monster)
         && deep_water_available
         && grd[monster->x][monster->y] != DNGN_DEEP_WATER
         && grd[monster->x + mmov_x][monster->y + mmov_y] != DNGN_DEEP_WATER
-        && (monster->x + mmov_x != you.x_pos 
+        && (monster->x + mmov_x != you.x_pos
             || monster->y + mmov_y != you.y_pos)
         && (one_chance_in(3)
             || monster->hit_points <= (monster->max_hit_points * 3) / 4))

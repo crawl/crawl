@@ -174,11 +174,12 @@ void mark_interesting_monst(struct monsters* monster,
 bool grid_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid,
                      bool generation = false);
-bool monster_habitable_grid(int monster_class,
-                            dungeon_feature_type actual_grid, 
-                            int flies = -1, bool paralysed = false);
 bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid);
+bool monster_habitable_grid(int monster_class,
+                            dungeon_feature_type actual_grid,
+                            int flies = -1,
+                            bool paralysed = false);
 bool monster_can_submerge(int monster_class, int grid);
 coord_def find_newmons_square(int mons_class, int x, int y);
 

@@ -154,7 +154,7 @@ enum mon_itemuse_type
     MONUSE_EATS_ITEMS,
     MONUSE_OPEN_DOORS,
     MONUSE_STARTING_EQUIPMENT,
-    MONUSE_WEAPONS_ARMOUR, 
+    MONUSE_WEAPONS_ARMOUR,
     MONUSE_MAGIC_ITEMS
 };
 
@@ -223,7 +223,7 @@ enum shout_type
 
 enum zombie_size_type
 {
-    Z_NOZOMBIE,
+    Z_NOZOMBIE = 0,
     Z_SMALL,
     Z_BIG
 };
@@ -326,13 +326,13 @@ monsters *monster_at(const coord_def &pos);
 
 // this is the old moname()
 std::string mons_type_name(int type, description_level_type desc );
-                  
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
  * *********************************************************************** */
-flight_type mons_class_flies( int mc );
-flight_type mons_flies( const monsters *mon );
+flight_type mons_class_flies(int mc);
+flight_type mons_flies(const monsters *mon);
 
 
 // last updated XXmay2000 {dlb}
@@ -428,7 +428,8 @@ bool mons_is_summoned(const monsters *m);
 /* ***********************************************************************
  * called from: monstuff - spells4 - view
  * *********************************************************************** */
-mon_intel_type mons_intel(int mclass);
+mon_intel_type mons_intel(int mc);
+
 
 bool intelligent_ally(const monsters *mon);
 
@@ -468,7 +469,7 @@ bool mons_res_asphyx( const monsters *mon );
 /* ***********************************************************************
  * called from: dungeon - items - spells2 - spells4
  * *********************************************************************** */
-int mons_skeleton(int mcls);
+bool mons_skeleton(int mc);
 
 
 // last updated 12may2000 {dlb}
@@ -490,7 +491,7 @@ int mons_speed(int mclass);
 /* ***********************************************************************
  * called from: dungeon - mon-util - spells2
  * *********************************************************************** */
-int mons_zombie_size(int mclass);
+int mons_zombie_size(int mc);
 
 
 // last updated 12may2000 {dlb}
