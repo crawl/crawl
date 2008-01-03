@@ -2604,6 +2604,31 @@ static void decrement_durations()
 
     if (you.duration[DUR_BACKLIGHT] > 0 && !--you.duration[DUR_BACKLIGHT] && !you.backlit())
         mpr("You are no longer glowing.", MSGCH_DURATION);
+
+    // Leak piety from the piety pool (currently Zin only) into actual piety.
+    // Note that changes of religious status without corresponding actions
+    // (killing monsters, offering items, ...) might be confusing for characters
+    // of other religions.
+    // For now, though, keep information about what happened hidden.
+    if (you.duration[DUR_PIETY_POOL] && one_chance_in(20))
+    {
+        you.duration[DUR_PIETY_POOL]--; // decrease even if piety at maximum
+        if (you.piety < 200)
+        {
+#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
+            mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
+#endif
+            you.piety++;
+        }
+#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
+        else
+            mpr("Piety already at maximum and fails to increase "
+                "from piety pool.", MSGCH_DIAGNOSTICS);
+            
+        if (!you.duration[DUR_PIETY_POOL])
+            mpr("Piety pool is now empty.", MSGCH_DIAGNOSTICS);
+#endif
+    }
     
 
     if (!you.permanent_levitation())
@@ -2754,9 +2779,7 @@ static void check_sanctuary()
     if (env.sanctuary_time <= 0)
         return;
         
-    env.sanctuary_time--;
-    if (env.sanctuary_time == 0)
-        remove_sanctuary();
+    decrease_sanctuary_radius();
 }
 
 static void world_reacts()

@@ -1034,6 +1034,7 @@ enum duration_type
     DUR_ICY_ARMOUR,
     DUR_REPEL_MISSILES,
     DUR_PRAYER,
+    DUR_PIETY_POOL,             // distribute piety over time
     DUR_REGENERATION,
     DUR_SWIFTNESS,
     DUR_STONEMAIL,

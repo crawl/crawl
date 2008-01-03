@@ -175,7 +175,7 @@ static void init_traps()
     {
         int x = env.trap[i].x,
             y = env.trap[i].y;
-        if (x > 0 && x < GXM && y > 0 && y < GYM)
+        if (inside_level_bounds(x,y))
             curr_traps[x][y] = i;
     }
     traps_inited = true;

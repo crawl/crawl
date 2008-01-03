@@ -1350,8 +1350,7 @@ public:
     // level_flag_type in enum.h
     unsigned long level_flags;
 
-    int sanctuary_x;
-    int sanctuary_y;
+    coord_def sanctuary_pos;
     int sanctuary_time;
 };
 

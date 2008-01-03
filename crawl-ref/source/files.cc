@@ -937,7 +937,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
     }
 
-    you.prev_targ      = MHITNOT;
+    you.prev_targ     = MHITNOT;
     you.prev_grd_targ = coord_def(0, 0);
 
     // We clear twice - on save and on load.
@@ -977,8 +977,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             load_ghost();
         }
         env.turns_on_level = 0;
-        env.sanctuary_x    = -1;
-        env.sanctuary_y    = -1;
+        // sanctuary
+        env.sanctuary_pos  = coord_def(-1, -1);
         env.sanctuary_time = 0;
     }
     else

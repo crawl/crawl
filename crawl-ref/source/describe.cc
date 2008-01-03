@@ -2295,14 +2295,16 @@ static std::string religion_help( god_type god )
     switch(god)
     {
     case GOD_ZIN:
+        result += "Pray at one of " + god_name(god)
+               +  "'s altars to part with your money.";
+        break;
+        
     case GOD_SHINING_ONE:
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to ask " + god_name(god)
-                + " to bless a ";
-            result += (god == GOD_ZIN ? "mace" : "long sword");
-            result += ".";
+                   +  " to bless a long sword.";
         }
         break;
 
@@ -2311,7 +2313,7 @@ static std::string religion_help( god_type god )
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to ask " + god_name(god)
-                + " to bless your weapon." EOL;
+                   +  " to bless your weapon." EOL;
         } // fall through
            
     case GOD_OKAWARU:
@@ -2324,8 +2326,8 @@ static std::string religion_help( god_type god )
 
     case GOD_NEMELEX_XOBEH:
         result += "You can pray to sacrifice all items on your square. "
-             "Inscribe items with !p, !* or =p to avoid sacrificing "
-             "them accidentally.";
+                  "Inscribe items with !p, !* or =p to avoid sacrificing "
+                  "them accidentally.";
         break;
 
     case GOD_VEHUMET:

@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <cmath>
 
 #ifdef DOS
 #include <dos.h>
@@ -1220,8 +1221,7 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         case GOD_ELYVILON:
             penance = level;    // healer god cares more about this
             // fall through
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
+        case GOD_ZIN: // in contrast to TSO, who doesn't mind martyrs
         case GOD_OKAWARU:
             piety_change = -level;
             ret = true;
@@ -2070,7 +2070,11 @@ static bool zin_retribution()
             }
               
        if (success && !count_mutations())
+       {
            simple_god_message(" rids your body of chaos!");
+           // lower penance a bit more for being particularly successful
+           dec_penance(god, 1);
+       }
            
        break;
     }
@@ -2112,7 +2116,7 @@ static bool zin_retribution()
        simple_god_message(" booms out: \"Return to the light! REPENT!\"", god);
        noisy( 25, you.x_pos, you.y_pos ); // same as scroll of noise
        break;
-    }
+    } // plus Smiting?
     return false;
 }
 
@@ -2876,6 +2880,7 @@ void excommunication(void)
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
     you.duration[DUR_PRAYER] = 0;
+    you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.religion = GOD_NO_GOD;
     you.piety = 0;
     redraw_skill( you.your_name, player_title() );
@@ -3127,6 +3132,9 @@ static bool god_likes_item(god_type god, const item_def& item)
     case GOD_NEMELEX_XOBEH:
         return !is_deck(item);
 
+    case GOD_ZIN:
+        return item.base_type == OBJ_GOLD;
+
     default:
         return true;
     }
@@ -3164,6 +3172,47 @@ void offer_items()
         return;
 
     god_acting gdact;
+
+    // donate gold to gain piety distributed over time
+    if (you.religion == GOD_ZIN)
+    {
+        if (!you.gold)
+        {
+            mpr("You don't have anything to sacrifice.");
+            return;
+        }
+
+        if (!yesno("Do you wish to part with all of your money? ", true, 'n'))
+            return;
+
+        int donation_value = (int) (you.gold/200 * log(you.gold));
+#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
+        mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
+             "increase of piety by %d.", you.gold, donation_value);
+#endif
+        you.gold = 0;
+        you.redraw_gold = true;
+
+        if (donation_value < 1)
+        {
+            simple_god_message(" finds your generosity lacking.");
+            return;
+        }
+        else if (donation_value <= 5) // $100 or more
+            simple_god_message(" is satisfied with your donation.");
+        else if (donation_value <= 20) // about $400 or more
+            simple_god_message(" is pleased about your sacrifice.");
+        else if (donation_value <= 50) // about $1500 or more
+            simple_god_message(" is impressed by your generosity.");
+        else // about $3000 or more
+            simple_god_message(" is deeply moved by your generosity.");
+
+        you.duration[DUR_PIETY_POOL] += donation_value;
+        if (you.duration[DUR_PIETY_POOL] > 500)
+            you.duration[DUR_PIETY_POOL] = 500;
+            
+        return; // doesn't accept anything else for sacrifice
+    }
 
     int num_sacced = 0;
     int i          = igrd[you.x_pos][you.y_pos];
@@ -3238,7 +3287,6 @@ void offer_items()
                 you.sacrifice_value[item.base_type] += value;
             break;
 
-        case GOD_ZIN:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
             if (mitm[i].base_type == OBJ_CORPSES 

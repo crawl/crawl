@@ -157,6 +157,8 @@ const feature_def &get_feature_def(dungeon_feature_type feat);
 
 void set_envmap_obj( int x, int y, int object );
 unsigned get_envmap_char(int x, int y);
+bool inside_level_bounds(int x, int y);
+bool inside_level_bounds(coord_def &p);
 int get_envmap_obj(int x, int y);
 void set_envmap_detected_item(int x, int y, bool detected = true);
 void set_envmap_detected_mons(int x, int y, bool detected = true);

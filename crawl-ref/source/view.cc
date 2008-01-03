@@ -129,6 +129,17 @@ bool map_cell::seen() const
     return (object && (flags & MAP_SEEN_FLAG));
 }
 
+bool inside_level_bounds(int x, int y)
+{
+    return (x > 0 && x < GXM && y > 0 && y < GYM);
+}
+
+bool inside_level_bounds(coord_def &p)
+{
+    return (inside_level_bounds(p.x, p.y));
+}
+
+
 inline unsigned get_envmap_char(int x, int y)
 {
     return env.map[x][y].glyph();
@@ -367,12 +378,12 @@ static void get_symbol( int x, int y,
                     *colour = YELLOW | colmask;
                 else if (env.map[x][y].property == FPROP_SANCTUARY_2)
                 {
-                    if (!one_chance_in(3))
-                        *colour = WHITE | colmask;
-                    else if (one_chance_in(3))
-                        *colour = LIGHTCYAN | colmask;
+                    if (!one_chance_in(4))
+                        *colour = WHITE | colmask;     // 3/4
+                    else if (!one_chance_in(3))
+                        *colour = LIGHTCYAN | colmask; // 1/6
                     else
-                        *colour = LIGHTGRAY | colmask;
+                        *colour = LIGHTGRAY | colmask; // 1/12
                 }
             }
             else

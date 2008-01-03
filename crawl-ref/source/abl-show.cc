@@ -235,7 +235,7 @@ static const ability_def Ability_List[] =
     { ABIL_ZIN_SMITING, "Smiting",
       3, 0, 50, generic_cost::fixed(2), ABFLAG_NONE },
     { ABIL_ZIN_REVITALISATION, "Revitalisation", 0, 0, 100, 3, ABFLAG_NONE },
-    { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 10, ABFLAG_NONE },
+    { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
 
     // The Shining One
     { ABIL_TSO_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },

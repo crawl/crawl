@@ -805,7 +805,7 @@ bool remove_sanctuary(bool did_attack)
     if (env.sanctuary_time)
         env.sanctuary_time = 0;
     
-    if (env.sanctuary_x < 0 || env.sanctuary_y < 0)
+    if (!inside_level_bounds(env.sanctuary_pos))
         return false;
 
     const int radius = 5;
@@ -813,8 +813,8 @@ bool remove_sanctuary(bool did_attack)
     for (int x=-radius; x<=radius; x++)
        for (int y=-radius; y<=radius; y++)
        {
-          int posx = env.sanctuary_x + x;
-          int posy = env.sanctuary_y + y;
+          int posx = env.sanctuary_pos.x + x;
+          int posy = env.sanctuary_pos.y + y;
 
           if (posx <= 0 || posx > GXM || posy <= 0 || posy > GYM)
               continue;
@@ -829,7 +829,7 @@ bool remove_sanctuary(bool did_attack)
 
 //  do not reset so as to allow monsters to see if their fleeing source
 //  used to be the centre of a sanctuary
-//    env.sanctuary_x = env.sanctuary_y = -1;
+//    env.sanctuary_pos.x = env.sanctuary_pos.y = -1;
 
     if (did_attack)
     {
@@ -837,22 +837,58 @@ bool remove_sanctuary(bool did_attack)
             simple_god_message(" revokes the gift of sanctuary.", GOD_ZIN);
         did_god_conduct(DID_FRIEND_DIES, 3);
     }
-    else if (seen_change)
-    {
-        mpr("The air around you flickers and hums.");
-        if (is_resting())
-            stop_running();
-    }
+
+    if (is_resting())
+        stop_running();
 
     return true;
 }
 
+// For the last (radius) counter turns the sanctuary will slowly shrink
+void decrease_sanctuary_radius()
+{
+    if (one_chance_in(3)) // 33% chance of not decreasing
+        return;
+        
+    int radius = 5;
+    
+    int size = --env.sanctuary_time;
+    if (size >= radius)
+        return;
+        
+    radius = size+1;
+    for (int x=-radius; x<=radius; x++)
+         for (int y=-radius; y<=radius; y++)
+         {
+              int posx = env.sanctuary_pos.x + x;
+              int posy = env.sanctuary_pos.y + y;
+
+              if (!inside_level_bounds(posx,posy))
+                  continue;
+
+              int dist = distance(posx, posy, env.sanctuary_pos.x, env.sanctuary_pos.y);
+              
+              // if necessary overwrite sanctuary property
+              if (dist > size*size)
+                  env.map[posx][posy].property = FPROP_NONE;
+         }
+
+    // special case for time-out of sanctuary
+    if (!size)
+    {
+        env.map[env.sanctuary_pos.x][env.sanctuary_pos.y].property = FPROP_NONE;
+        if (see_grid(coord_def(env.sanctuary_pos.x,env.sanctuary_pos.y)))
+            mpr("The sanctuary disappears.");
+    }
+}
+
+// maybe disallow recasting while previous sanctuary in effect...
 bool cast_sanctuary(const int power)
 {
     // first get rid of old sanctuary
     remove_sanctuary();
 
-    if (!silenced(you.x_pos, you.y_pos))
+    if (!silenced(you.x_pos, you.y_pos)) // how did you manage that?
         mpr("You hear a choir sing!");
     else
         mpr("You are suddenly bathed in radiance!");
@@ -862,10 +898,12 @@ bool cast_sanctuary(const int power)
     holy_word( 100, true );
     delay(1000);
 
-    env.sanctuary_x = you.x_pos;
-    env.sanctuary_y = you.y_pos;
-    env.sanctuary_time = 15;
+    env.sanctuary_pos.x = you.x_pos;
+    env.sanctuary_pos.y = you.y_pos;
+    env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS]/2;
 
+    // radius could also be influenced by Inv 
+    // and would then have to be stored globally
     const int radius = 5;
     const int pattern = random2(4);
     int count = 0;
@@ -877,7 +915,7 @@ bool cast_sanctuary(const int power)
               int posx = you.x_pos + x;
               int posy = you.y_pos + y;
 
-              if (posx <= 0 || posx > GXM || posy <= 0 || posy > GYM)
+              if (!inside_level_bounds(posx, posy))
                   continue;
 
               int dist = distance(posx, posy, you.x_pos, you.y_pos);

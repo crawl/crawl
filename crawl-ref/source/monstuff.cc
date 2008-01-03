@@ -2261,10 +2261,9 @@ static void handle_movement(monsters *monster)
     {
         behaviour_event(monster, ME_SCARE, MHITNOT, monster->x, monster->y);
     }
-    else if (mons_is_fleeing(monster) && env.sanctuary_x != -1
-             && !is_sanctuary(monster->x, monster->y)
-             && monster->target_x == env.sanctuary_x
-             && monster->target_y == env.sanctuary_y)
+    else if (mons_is_fleeing(monster) && inside_level_bounds(env.sanctuary_pos)
+             && monster->target_x == env.sanctuary_pos.x
+             && monster->target_y == env.sanctuary_pos.y)
     {   // once outside there's a chance they'll regain their courage
         if (random2(5) > 2)
             monster->del_ench(ENCH_FEAR);
@@ -2294,6 +2293,17 @@ static void handle_movement(monsters *monster)
         mmov_y *= -1;
     }
 
+    // don't allow monsters to enter a sanctuary
+    // or attack you inside a sanctuary even if it's right next to them
+    if (is_sanctuary(monster->x + mmov_x, monster->y + mmov_y)
+        && (!is_sanctuary(monster->x, monster->y)
+            || monster->x + mmov_x == you.x_pos
+               && monster->y + mmov_y == you.y_pos))
+    {
+        mmov_x = 0;
+        mmov_y = 0;
+    }
+
     // bounds check: don't let fleeing monsters try to run
     // off the map
     if (monster->target_x + mmov_x < 0 || monster->target_x + mmov_x >= GXM)
@@ -2302,7 +2312,7 @@ static void handle_movement(monsters *monster)
     if (monster->target_y + mmov_y < 0 || monster->target_y + mmov_y >= GYM)
         mmov_y = 0;
 
-    // now quit if we're can't move
+    // now quit if we can't move
     if (mmov_x == 0 && mmov_y == 0)
         return;
 
@@ -5206,7 +5216,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     const int targ_y = monster->y + count_y;
     
     // bounds check - don't consider moving out of grid!
-    if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
+    if (!inside_level_bounds(targ_x, targ_y))
         return false;
         
     // hostile monsters won't enter sanctuaries
