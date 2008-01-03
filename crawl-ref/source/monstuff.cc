@@ -5020,8 +5020,8 @@ static bool is_native_in_branch(const monsters *monster, const branch_type branc
             return false;
 
         case BRANCH_HIVE:
-            if (monster->type == MONS_KILLER_BEE
-                || monster->type == MONS_KILLER_BEE_LARVA)
+            if (mons_species(monster->type) == MONS_KILLER_BEE
+                || mons_species(monster->type) == MONS_KILLER_BEE_LARVA)
             {
                 return true;
             }
