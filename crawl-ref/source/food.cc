@@ -239,7 +239,7 @@ bool butchery()
     // The old code did it the other way.
     if ( !can_butcher && you.duration[DUR_BERSERKER] )
     {
-        mpr ("You are too berserk to search for a butchering knife!");
+        mpr ("You are too berserk to search for a butchering tool!");
         return (false);
     }
 

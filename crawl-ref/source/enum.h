@@ -1391,7 +1391,7 @@ enum menu_type
     MT_PICKUP
 };
 
-enum mon_holy_type // matches (char) H_foo in mon-util.h, see: monster_holiness()
+enum mon_holy_type
 {
     MH_HOLY,                           //    0 - was -1
     MH_NATURAL,                        //    1 - was 0

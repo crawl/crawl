@@ -3457,14 +3457,14 @@ void monsters::go_berserk(bool /* intentional */)
 
     if (has_ench(ENCH_SLOW))
     {
-        del_ench(ENCH_SLOW);
+        del_ench(ENCH_SLOW, true); // give no additional message
         simple_monster_message(
             this,
             make_stringf(" shakes off %s lethargy.",
                          name(DESC_NOCAP_YOUR).c_str()).c_str());
     }
     del_ench(ENCH_HASTE);
-    del_ench(ENCH_FATIGUE);
+    del_ench(ENCH_FATIGUE, true); // give no additional message
 
     const int duration = 16 + random2avg(13, 2);
     add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
@@ -4087,6 +4087,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SLOW:
+        if (!quiet)
+            simple_monster_message(this, " is no longer moving slowly.");
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
         else
@@ -4431,7 +4433,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(me))
         {
             simple_monster_message(this, " looks more energetic.");
-            del_ench(ENCH_SLOW);
+            del_ench(ENCH_SLOW, true);
         }
         break;
 

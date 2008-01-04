@@ -14,7 +14,6 @@
    by Wladimir van der Laan ($pellbinder).
  */
 
-
 /* ******************************************************************
 
    (see "mon-util.h" for the gory details)
@@ -26,40 +25,47 @@
     - row 1: monster id, display character, display colour, name
     - row 2: monster flags
     - row 3: monster resistance flags
-    - row 4: mass, experience modifier, charclass, holiness, resist magic
+    - row 4: mass, experience modifier, genus, species, holiness, resist magic
     - row 5: damage for each of four attacks
     - row 6: hit dice, described by four parameters
     - row 7: AC, evasion, sec(spell), corpse_thingy, zombie size,
               shouts, intel
     - row 8: habitat, speed, energy_usage, gmon_use class, body size
 
+
  - Some further explanations:
 
     - colour: if BLACK, monster uses value of mons_sec
     - name: if an empty string, name generated automagically (see moname)
-    - mass: if zero, the monster never leaves a corpse
-    - charclass: base monster "type" for a classed monsters
-    - holiness: holy - irritates some gods when killed, immunity from
-                       holy wrath weapons
-                natural - baseline monster type
-                undead - immunity from draining, pain, torment; extra
-                         damage from holy wrath/disruption; affected by
-                         repel undead and holy word
-                demonic - similar to undead, but holy wrath does even
-                          more damage and disruption and repel undead
-                          effects are ignored -- *no* automatic hellfire
-                          resistance
+    - mass: if zero, the monster never leaves a corpse (also corpse_thingy)
+    - genus: base monster "type" for a classed monsters (i.e. jackal as hound)
+    - species: corpse type of monster (i.e. orc for orc wizard)
+    - holiness: 
+       MH_HOLY       - irritates some gods when killed, immunity from
+                        holy wrath weapons
+       MH_NATURAL    - baseline monster type
+       MH_UNDEAD     - immunity from draining, pain, torment; extra
+                        damage from holy wrath/disruption; affected by
+                        repel undead and holy word
+       MH_DEMONIC    - similar to undead, but holy wrath does even more
+                        damage and disruption and repel undead effects
+                        are ignored -- *no* automatic hellfire resistance
+       MH_NONLIVING  - golems and other constructs
+       MH_PLANT      - plants
 
-
-   exp_mod
+   exp_mod: see give_adjusted_experience() in monstuff.cc
    - the experience given for killing this monster is calculated something
    like this:
    experience = hp_max * HD * HD * exp_mod / 10
    I think.
+   
+   Actually it is
+    experience = (16 + maxhp) * HD * HD * exp_mod * (100 + diff) * speed
+                 / 100000
+    with a minimum of 1, and maximum 15000 (jpeg)
 
-
-   resist_magic
-   - If -3, = 3 (5?) * hit dice
+   resist_magic: see mons_resist_magic() in mon-util.cc
+   - If -x calculate (-x * hit dice * 4/3), else simply x
 
    damage [4]
    - up to 4 different attacks
@@ -69,17 +75,30 @@
 
    corpse_thingy
    - err, bad name. Describes effects of eating corpses.
+     CE_NOCORPSE,        leaves no corpse (mass == 0)
+     CE_CLEAN,           can be healthily eaten by non-Ghoul characters
+     CE_CONTAMINATED,    occasionally causes sickness
+     CE_POISONOUS,       hazardous to characters without poison resistance
+     CE_HCL,             causes rotting
+     CE_MUTAGEN_RANDOM,  mutagenous
+     CE_MUTAGEN_GOOD,  // may be worth implementing {dlb}
+     CE_MUTAGEN_BAD,   // may be worth implementing {dlb}
+     CE_RANDOM,        // not used, but may be worth implementing {dlb}
+     CE_ROTTEN           always causes sickness (good for Ghouls)
 
    zombie_size
-   - 0 = no zombie possibly, 1 = small zombie (z), 2 = large zombie (Z)
+     Z_NOZOMBIE
+     Z_SMALL    (z)
+     Z_BIG      (Z)
 
    shouts
    - various things monsters can do upon seeing you
 
    intel explanation:
-   - How smart it is. So far, differences here have little effects except
-   for monster's chance of seeing you if stealthy, and really stupid monsters
-   will walk through clouds
+   - How smart it is: I_PLANT < I_ANIMAL < I_NORMAL < I_HIGH.
+   So far, differences here have little effects except for monster's chance
+   of seeing you if stealthy and rudimentary trap handling;
+   really stupid monsters will walk through clouds
 
    speed
    - Increases the store of energy that the monster uses for doing things.
@@ -91,10 +110,22 @@
    use 10 energy units.
 
    gmon_use explanation:
-     0 = uses nothing 
-     1 = opens doors 
-     2 = gets and can use its starting equipment
-     3 = can use weapons/armour
+     MONUSE_NOTHING,
+     MONUSE_EATS_ITEMS,
+     MONUSE_OPEN_DOORS,
+     MONUSE_STARTING_EQUIPMENT,
+     MONUSE_WEAPONS_ARMOUR,
+     MONUSE_MAGIC_ITEMS
+     
+   size:
+     SIZE_TINY,              // rat/bat
+     SIZE_LITTLE,            // spriggan
+     SIZE_SMALL,             // halfling/kobold/gnome
+     SIZE_MEDIUM,            // human/elf/dwarf
+     SIZE_LARGE,             // troll/ogre/centaur/naga
+     SIZE_BIG,               // large quadrupeds
+     SIZE_GIANT,             // giant
+     SIZE_HUGE,              // dragon
 
  */
 
@@ -352,7 +383,7 @@
     600, 10, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
-    3, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
+    3, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_ANIMAL,
     HT_LAND, 10, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_MEDIUM
 },
 
@@ -1179,7 +1210,7 @@
     750, 10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 5, 0 },
-    4, 8, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_BIG, S_SHOUT, I_NORMAL, 
+    4, 8, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_BIG, S_SHOUT, I_ANIMAL,
     HT_LAND, 8, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_LARGE
 },
 
