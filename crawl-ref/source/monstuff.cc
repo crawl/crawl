@@ -4996,7 +4996,7 @@ static bool is_native_in_branch(const monsters *monster, const branch_type branc
             return false;
 
         case BRANCH_SHOALS:
-            if (monster->type == MONS_CYCLOPS
+            if (mons_species(monster->type) == MONS_CYCLOPS
                 || mons_species(monster->type) == MONS_MERFOLK
                 || mons_species(monster->type) == MONS_MERMAID)
             {
