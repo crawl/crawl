@@ -86,21 +86,20 @@ static int mons_exp_mod(int mclass);
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
-habitat_type grid2habitat(int grid)
+habitat_type grid2habitat(dungeon_feature_type grid)
 {
+    if (grid_is_watery(grid))
+        return (HT_WATER);
+
     switch (grid)
     {
-    case DNGN_DEEP_WATER:
-        return (HT_DEEP_WATER);
-    case DNGN_SHALLOW_WATER:
-        return (HT_SHALLOW_WATER);
     case DNGN_LAVA:
         return (HT_LAVA);
     case DNGN_ROCK_WALL:
         return (HT_ROCK_WALL);
     case DNGN_FLOOR:
     default:
-        return (HT_NORMAL);
+        return (HT_LAND);
     }
 }
 
@@ -108,15 +107,13 @@ dungeon_feature_type habitat2grid(habitat_type ht)
 {
     switch (ht)
     {
-    case HT_DEEP_WATER:
+    case HT_WATER:
         return (DNGN_DEEP_WATER);
-    case HT_SHALLOW_WATER:
-        return (DNGN_SHALLOW_WATER);
     case HT_LAVA:
         return (DNGN_LAVA);
     case HT_ROCK_WALL:
         return (DNGN_ROCK_WALL);
-    case HT_NORMAL:
+    case HT_LAND:
     default:
         return (DNGN_FLOOR);
     }
@@ -144,7 +141,7 @@ monster_type random_monster_at_grid(int x, int y)
     return (random_monster_at_grid(grd[x][y]));
 }
 
-monster_type random_monster_at_grid(int grid)
+monster_type random_monster_at_grid(dungeon_feature_type grid)
 {
     if (!initialized_randmons)
         initialize_randmons();
@@ -2417,7 +2414,7 @@ coord_def monsters::target_pos() const
 bool monsters::swimming() const
 {
     const dungeon_feature_type grid = grd[x][y];
-    return (grid_is_watery(grid) && mons_habitat(type) == HT_DEEP_WATER);
+    return (grid_is_watery(grid) && mons_habitat(type) == HT_WATER);
 }
 
 bool monsters::submerged() const
@@ -2431,7 +2428,7 @@ bool monsters::floundering() const
     return (grid_is_water(grid)
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.
-            && mons_habitat(type) != HT_DEEP_WATER
+            && mons_habitat(type) != HT_WATER
             && !mons_amphibious(type)
             && !mons_flies(this));
 }

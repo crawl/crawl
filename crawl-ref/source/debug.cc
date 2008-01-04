@@ -1409,11 +1409,10 @@ void stethoscope(int mwh)
 
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)",
-         ((hab == HT_DEEP_WATER)              ? "deep water" :
-          (hab == HT_SHALLOW_WATER)           ? "shallow water" :
+         ((hab == HT_WATER)                   ? "water" :
           (hab == HT_LAVA)                    ? "lava" :
           (hab == HT_ROCK_WALL)               ? "rock wall" :
-          (hab == HT_FLOOR)                   ? "floor" :
+          (hab == HT_LAND)                    ? "floor" :
                                               : "unknown"),
          ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :
           (menv[i].behaviour == BEH_WANDER)   ? "wander" :

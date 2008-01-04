@@ -128,7 +128,7 @@ bool monster_can_submerge(int monster_class, int grid)
 {
     const habitat_type habitat = mons_habitat(monster_class);
 
-    if (habitat == HT_DEEP_WATER &&
+    if (habitat == HT_WATER &&
            (grid == DNGN_DEEP_WATER || grid == DNGN_BLUE_FOUNTAIN))
     {
         return true;

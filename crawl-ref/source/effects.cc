@@ -2449,8 +2449,8 @@ void update_level( double elapsedTime )
         if (turns >= 10)
             mon->timeout_enchantments( turns / 10 );
 
-        // Don't move water, lava, or stationary monsters around
-        if (mons_habitat( mon->type ) != HT_NORMAL
+        // Don't move non-land or stationary monsters around
+        if (mons_habitat( mon->type ) != HT_LAND
             || mons_is_stationary( mon ))
         {
             continue;

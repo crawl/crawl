@@ -4323,21 +4323,21 @@ bool dgn_place_monster(mons_spec &mspec,
             else if (mlev == -9)
                 monster_level += 5;
         }
-        
+
         if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
         {
             if (mons_is_unique(mid) && you.unique_creatures[mid])
                 return (false);
-            
+
             const habitat_type habitat = mons_habitat(mid);
-            if (habitat != HT_NORMAL)
+            if (habitat != HT_LAND)
                 grd[vx][vy] = habitat2grid(habitat);
         }
 
         int mindex = NON_MONSTER;
         const bool placed =
             place_monster( mindex, mid, monster_level,
-                           m_generate_awake? BEH_WANDER : BEH_SLEEP,
+                           m_generate_awake ? BEH_WANDER : BEH_SLEEP,
                            MHITNOT, true, vx, vy, false,
                            PROX_ANYWHERE, mspec.monnum);
         if (placed && mindex != -1 && mindex != NON_MONSTER)

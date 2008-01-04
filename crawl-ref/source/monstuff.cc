@@ -4088,8 +4088,8 @@ static void monster_regenerate(monsters *monster)
     if (monster->has_ench(ENCH_SICK))
         return;
 
-    // Water/lava creatures out of their element cannot regenerate.
-    if (mons_habitat(monster->type) != HT_NORMAL
+    // Non-land creatures out of their element cannot regenerate.
+    if (mons_habitat(monster->type) != HT_LAND
         && !monster_habitable_grid(monster, grd(monster->pos())))
     {
         return;
@@ -5300,7 +5300,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     // [dshaligram] Monsters now prefer to head for deep water only if
     // they're low on hitpoints. No point in hiding if they want a
     // fight.
-    if (habitat == HT_DEEP_WATER
+    if (habitat == HT_WATER
         && (targ_x != you.x_pos || targ_y != you.y_pos)
         && target_grid != DNGN_DEEP_WATER
         && grd[monster->x][monster->y] == DNGN_DEEP_WATER
@@ -5308,7 +5308,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     {
         return false;
     }
-    
+
     // smacking the player is always a good move if we're
     // hostile (even if we're heading somewhere else)
     // also friendlies want to keep close to the player
@@ -5457,7 +5457,7 @@ static bool monster_move(monsters *monster)
         {
             coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
             if (in_bounds(newpos)
-                && (habitat == HT_NORMAL
+                && (habitat == HT_LAND
                     || monster_habitable_grid(monster, grd(newpos))))
             {
                 return do_move_monster(monster, mmov_x, mmov_y);
@@ -5471,7 +5471,7 @@ static bool monster_move(monsters *monster)
         return false;
 
     if (mons_flies(monster) != FL_NONE
-        || habitat != HT_NORMAL
+        || habitat != HT_LAND
         || mons_amphibious(monster->type))
     {
         okmove = DNGN_MINMOVE;
@@ -5557,7 +5557,7 @@ static bool monster_move(monsters *monster)
     // water creatures have a preference for water they can hide in -- bwr
     // [ds] Weakened the powerful attraction to deep water if the monster
     // is in good health.
-    if (habitat == HT_DEEP_WATER
+    if (habitat == HT_WATER
         && deep_water_available
         && grd[monster->x][monster->y] != DNGN_DEEP_WATER
         && grd[monster->x + mmov_x][monster->y + mmov_y] != DNGN_DEEP_WATER

@@ -150,9 +150,8 @@ enum mon_intel_type             // Must be in increasing intelligence order
 enum habitat_type
 {
     // Flying monsters will appear in all categories except rock walls
-    HT_NORMAL,          // Normal critters
-    HT_SHALLOW_WATER,   // Union of normal + water
-    HT_DEEP_WATER,      // Water critters
+    HT_LAND = 0,        // Normal critters
+    HT_WATER,           // Water critters
     HT_LAVA,            // Lava critters
     HT_ROCK_WALL,       // Rock wall critters
 
@@ -326,7 +325,7 @@ struct monsterentry
     size_type size;
 };
 
-habitat_type grid2habitat(int grid);
+habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(int p_monsterid);
@@ -636,7 +635,7 @@ bool monster_senior(const monsters *first, const monsters *second);
 monster_type draco_subspecies( const monsters *mon );
 
 monster_type random_monster_at_grid(int x, int y);
-monster_type random_monster_at_grid(int grid);
+monster_type random_monster_at_grid(dungeon_feature_type grid);
 
 void         init_mon_name_cache();
 monster_type get_monster_by_name(std::string name, bool exact = false);
