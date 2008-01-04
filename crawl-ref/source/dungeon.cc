@@ -4329,9 +4329,9 @@ bool dgn_place_monster(mons_spec &mspec,
             if (mons_is_unique(mid) && you.unique_creatures[mid])
                 return (false);
             
-            const dungeon_feature_type habitat = monster_habitat(mid);
-            if (habitat != DNGN_FLOOR)
-                grd[vx][vy] = habitat;
+            const habitat_type habitat = mons_habitat(mid);
+            if (habitat != HT_NORMAL)
+                grd[vx][vy] = habitat2grid(habitat);
         }
 
         int mindex = NON_MONSTER;

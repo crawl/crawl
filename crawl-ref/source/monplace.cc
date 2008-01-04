@@ -101,7 +101,7 @@ bool monster_habitable_grid(int monster_class,
                             bool paralysed)
 {
     const dungeon_feature_type preferred_habitat =
-        monster_habitat(monster_class);
+        habitat2grid( mons_habitat(monster_class) );
     return (grid_compatible(preferred_habitat, actual_grid)
             // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
             // only have to check for the additional valid grids of deep
@@ -111,42 +111,35 @@ bool monster_habitable_grid(int monster_class,
                     || actual_grid == DNGN_DEEP_WATER))
 
             // Amphibious critters are happy in water or on land.
-            || (mons_class_flag(monster_class, M_AMPHIBIOUS)
+            || (mons_amphibious(monster_class)
                 && ((preferred_habitat == DNGN_FLOOR
                     && grid_compatible(DNGN_DEEP_WATER, actual_grid))
                     || (preferred_habitat == DNGN_DEEP_WATER
                         && grid_compatible(DNGN_FLOOR, actual_grid))))
 
-            // Rock worms are native to walls but are happy on the floor
-            // as well.
-            || (monster_class == MONS_ROCK_WORM
+            // Rock wall critters are native to walls but are happy on
+            // the floor as well.
+            || (preferred_habitat == DNGN_ROCK_WALL
                 && grid_compatible(DNGN_FLOOR, actual_grid)));
 }
 
 // Returns true if the monster can submerge in the given grid
 bool monster_can_submerge(int monster_class, int grid)
 {
-    switch (monster_class)
+    const habitat_type habitat = mons_habitat(monster_class);
+
+    if (habitat == HT_DEEP_WATER &&
+           (grid == DNGN_DEEP_WATER || grid == DNGN_BLUE_FOUNTAIN))
     {
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
-    case MONS_BIG_FISH:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_ELECTRICAL_EEL:
-    case MONS_JELLYFISH:
-    case MONS_WATER_ELEMENTAL:
-    case MONS_SWAMP_WORM:
-        return (grid == DNGN_DEEP_WATER || grid == DNGN_BLUE_FOUNTAIN);
-
-    case MONS_LAVA_WORM:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_SALAMANDER:
-        return (grid == DNGN_LAVA);
-
-    default:
-        return (false);
+        return true;
     }
+
+    if (habitat == HT_LAVA && grid == DNGN_LAVA)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 static bool need_super_ood(int lev_mons)
@@ -492,7 +485,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         // a) not occupied
         // b) compatible
         // c) in the 'correct' proximity to the player
-        dungeon_feature_type grid_wanted = monster_habitat(mon_type);
+        dungeon_feature_type grid_wanted = habitat2grid( mons_habitat(mon_type) );
         while(true)
         {
             // handled above, won't change anymore
@@ -696,7 +689,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     }
     else
     {
-        grid_wanted = monster_habitat(mon_type);
+        grid_wanted = habitat2grid( mons_habitat(mon_type) );
 
         // we'll try 1000 times for a good spot
         for (i = 0; i < 1000; i++)
@@ -1577,8 +1570,8 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    dungeon_feature_type spcw = ((mons_class == RANDOM_MONSTER)? DNGN_FLOOR 
-                                              : monster_habitat( mons_class ));
+    dungeon_feature_type spcw = ((mons_class == RANDOM_MONSTER) ? DNGN_FLOOR
+                                              : habitat2grid( mons_habitat(mons_class) ));
 
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square

@@ -147,6 +147,18 @@ enum mon_intel_type             // Must be in increasing intelligence order
     I_HIGH
 };
 
+enum habitat_type
+{
+    // Flying monsters will appear in all categories except rock walls
+    HT_NORMAL,          // Normal critters
+    HT_SHALLOW_WATER,   // Union of normal + water
+    HT_DEEP_WATER,      // Water critters
+    HT_LAVA,            // Lava critters
+    HT_ROCK_WALL,       // Rock wall critters
+
+    NUM_HABITATS
+};
+
 // order of these is important:
 enum mon_itemuse_type
 {
@@ -306,12 +318,16 @@ struct monsterentry
     zombie_size_type zombie_size;
     shout_type shouts;
     mon_intel_type intel;
+    habitat_type habitat;
 
     char             speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
     size_type size;
 };
+
+habitat_type grid2habitat(int grid);
+dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(int p_monsterid);
 
@@ -334,6 +350,7 @@ std::string mons_type_name(int type, description_level_type desc );
 flight_type mons_class_flies(int mc);
 flight_type mons_flies(const monsters *mon);
 
+bool mons_amphibious(int mc);
 
 // last updated XXmay2000 {dlb}
 /* ***********************************************************************
@@ -430,6 +447,7 @@ bool mons_is_summoned(const monsters *m);
  * *********************************************************************** */
 mon_intel_type mons_intel(int mc);
 
+habitat_type mons_habitat(int mc);
 
 bool intelligent_ally(const monsters *mon);
 

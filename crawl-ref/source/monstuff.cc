@@ -2386,6 +2386,30 @@ static void handle_nearby_ability(monsters *monster)
             mons_speaks(monster);
     }
 
+    if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
+        && ( !player_beheld_by(monster) // no submerging if player entranced
+             && (one_chance_in(5)
+                 || ((grid_distance( monster->x, monster->y,
+                                     you.x_pos, you.y_pos ) > 1
+                      // FIXME This is better expressed as a
+                      // function such as
+                      // monster_has_ranged_attack:
+                      && monster->type != MONS_ELECTRICAL_EEL
+                      && monster->type != MONS_LAVA_SNAKE
+                      && (monster->type != MONS_MERMAID
+                          || you.species == SP_MERFOLK)
+                      // Don't submerge if we just unsubmerged for
+                      // the sake of shouting.
+                      && monster->seen_context != "bursts forth shouting"
+                      && !one_chance_in(20)) ))
+            || monster->hit_points <= monster->max_hit_points / 2)
+        || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
+    {
+        monster->add_ench(ENCH_SUBMERGED);
+        update_beholders(monster);
+        return;
+    }
+
     switch (monster->type)
     {
     case MONS_SPATIAL_VORTEX:
@@ -2414,42 +2438,6 @@ static void handle_nearby_ability(monsters *monster)
             dec_mp(5 + random2avg(13, 3));
 
             heal_monster(monster, 10, true); // heh heh {dlb}
-        }
-        break;
-
-    case MONS_LAVA_WORM:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_SALAMANDER:
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
-    case MONS_BIG_FISH:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_ELECTRICAL_EEL:
-    case MONS_JELLYFISH:
-    case MONS_WATER_ELEMENTAL:
-    case MONS_SWAMP_WORM:
-        if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
-            && ( !player_beheld_by(monster) // no submerging if player entranced
-                 && (one_chance_in(5)
-                     || ((grid_distance( monster->x, monster->y,
-                                         you.x_pos, you.y_pos ) > 1
-                          // FIXME This is better expressed as a
-                          // function such as
-                          // monster_has_ranged_attack:
-                          && monster->type != MONS_ELECTRICAL_EEL
-                          && monster->type != MONS_LAVA_SNAKE
-                          && (monster->type != MONS_MERMAID
-                              || you.species == SP_MERFOLK)
-                          // Don't submerge if we just unsubmerged for
-                          // the sake of shouting.
-                          && monster->seen_context != "bursts forth shouting"
-                          && !one_chance_in(20)) ))
-                || monster->hit_points <= monster->max_hit_points / 2)
-            || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
-        {
-            monster->add_ench(ENCH_SUBMERGED);
-            update_beholders(monster);
         }
         break;
 
@@ -4101,7 +4089,7 @@ static void monster_regenerate(monsters *monster)
         return;
 
     // Water/lava creatures out of their element cannot regenerate.
-    if (monster_habitat(monster->type) != DNGN_FLOOR
+    if (mons_habitat(monster->type) != HT_NORMAL
         && !monster_habitable_grid(monster, grd(monster->pos())))
     {
         return;
@@ -5235,7 +5223,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     }
 
     const dungeon_feature_type target_grid = grd[targ_x][targ_y];
-    const dungeon_feature_type habitat = monster_habitat( monster->type );
+    const habitat_type habitat = mons_habitat(monster->type);
 
     // effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
@@ -5312,7 +5300,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     // [dshaligram] Monsters now prefer to head for deep water only if
     // they're low on hitpoints. No point in hiding if they want a
     // fight.
-    if (habitat == DNGN_DEEP_WATER
+    if (habitat == HT_DEEP_WATER
         && (targ_x != you.x_pos || targ_y != you.y_pos)
         && target_grid != DNGN_DEEP_WATER
         && grd[monster->x][monster->y] == DNGN_DEEP_WATER
@@ -5436,7 +5424,7 @@ static bool monster_move(monsters *monster)
     int count_x, count_y, count;
     int okmove = DNGN_SHALLOW_WATER; // what does this actually do?
 
-    const int habitat = monster_habitat( monster->type ); 
+    const habitat_type habitat = mons_habitat(monster->type);
     bool deep_water_available = false;
 
     // Berserking monsters make a lot of racket
@@ -5469,7 +5457,7 @@ static bool monster_move(monsters *monster)
         {
             coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
             if (in_bounds(newpos)
-                && (habitat == DNGN_FLOOR
+                && (habitat == HT_NORMAL
                     || monster_habitable_grid(monster, grd(newpos))))
             {
                 return do_move_monster(monster, mmov_x, mmov_y);
@@ -5483,8 +5471,8 @@ static bool monster_move(monsters *monster)
         return false;
 
     if (mons_flies(monster) != FL_NONE
-        || habitat != DNGN_FLOOR
-        || mons_class_flag( monster->type, M_AMPHIBIOUS ))
+        || habitat != HT_NORMAL
+        || mons_amphibious(monster->type))
     {
         okmove = DNGN_MINMOVE;
     }
@@ -5569,7 +5557,7 @@ static bool monster_move(monsters *monster)
     // water creatures have a preference for water they can hide in -- bwr
     // [ds] Weakened the powerful attraction to deep water if the monster
     // is in good health.
-    if (habitat == DNGN_DEEP_WATER 
+    if (habitat == HT_DEEP_WATER
         && deep_water_available
         && grd[monster->x][monster->y] != DNGN_DEEP_WATER
         && grd[monster->x + mmov_x][monster->y + mmov_y] != DNGN_DEEP_WATER
@@ -6016,35 +6004,6 @@ static void mons_in_cloud(monsters *monster)
         }
     }
 }                               // end mons_in_cloud()
-
-dungeon_feature_type monster_habitat(int which_class)
-{
-    switch (which_class)
-    {
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
-    case MONS_BIG_FISH:
-    case MONS_GIANT_GOLDFISH:
-    case MONS_ELECTRICAL_EEL:
-    case MONS_JELLYFISH:
-    case MONS_SWAMP_WORM:
-    case MONS_WATER_ELEMENTAL:
-        return (DNGN_DEEP_WATER); // no shallow water (only) monsters? {dlb}
-        // must remain DEEP_WATER for now, else breaks code {dlb}
-
-    case MONS_LAVA_WORM:
-    case MONS_LAVA_FISH:
-    case MONS_LAVA_SNAKE:
-    case MONS_SALAMANDER:
-        return (DNGN_LAVA);
-
-    case MONS_ROCK_WORM:
-        return (DNGN_ROCK_WALL);
-
-    default:
-        return (DNGN_FLOOR);      // closest match to terra firma {dlb}
-    }
-}                               // end monster_habitat()
 
 bool monster_descriptor(int which_class, unsigned char which_descriptor)
 {

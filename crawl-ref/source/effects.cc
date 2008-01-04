@@ -2450,7 +2450,7 @@ void update_level( double elapsedTime )
             mon->timeout_enchantments( turns / 10 );
 
         // Don't move water, lava, or stationary monsters around
-        if (monster_habitat( mon->type ) != DNGN_FLOOR
+        if (mons_habitat( mon->type ) != HT_NORMAL
             || mons_is_stationary( mon ))
         {
             continue;

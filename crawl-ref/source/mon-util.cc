@@ -66,17 +66,6 @@ mon_display monster_symbols[NUM_MONSTERS];
 // really important extern -- screen redraws suck w/o it {dlb}
 FixedVector < unsigned short, 1000 > mcolour;
 
-enum habitat_type
-{
-    // Flying monsters will appear in all categories
-    HT_NORMAL,          // Normal critters
-    HT_SHALLOW_WATER,   // Union of normal + water
-    HT_DEEP_WATER,      // Water critters
-    HT_LAVA,            // Lava critters
-
-    NUM_HABITATS
-};
-
 static bool initialized_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
@@ -107,6 +96,9 @@ habitat_type grid2habitat(int grid)
         return (HT_SHALLOW_WATER);
     case DNGN_LAVA:
         return (HT_LAVA);
+    case DNGN_ROCK_WALL:
+        return (HT_ROCK_WALL);
+    case DNGN_FLOOR:
     default:
         return (HT_NORMAL);
     }
@@ -122,6 +114,8 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return (DNGN_SHALLOW_WATER);
     case HT_LAVA:
         return (DNGN_LAVA);
+    case HT_ROCK_WALL:
+        return (DNGN_ROCK_WALL);
     case HT_NORMAL:
     default:
         return (DNGN_FLOOR);
@@ -1143,6 +1137,11 @@ flight_type mons_flies(const monsters *mon)
             : FL_NONE);
 }                               // end mons_flies()
 
+bool mons_amphibious(int mc)
+{
+    return mons_class_flag(mc, M_AMPHIBIOUS);
+}
+
 // this nice routine we keep in exactly the way it was
 int hit_points(int hit_dice, int min_hp, int rand_hp)
 {
@@ -1707,6 +1706,11 @@ int mons_speed(int mc)
 mon_intel_type mons_intel(int mc)
 {
     return (smc->intel);
+}
+
+habitat_type mons_habitat(int mc)
+{
+    return (smc->habitat);
 }
 
 bool intelligent_ally(const monsters *monster)
@@ -2413,7 +2417,7 @@ coord_def monsters::target_pos() const
 bool monsters::swimming() const
 {
     const dungeon_feature_type grid = grd[x][y];
-    return (grid_is_watery(grid) && monster_habitat(type) == DNGN_DEEP_WATER);
+    return (grid_is_watery(grid) && mons_habitat(type) == HT_DEEP_WATER);
 }
 
 bool monsters::submerged() const
@@ -2427,8 +2431,8 @@ bool monsters::floundering() const
     return (grid_is_water(grid)
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.
-            && monster_habitat(type) != DNGN_DEEP_WATER
-            && !mons_class_flag(type, M_AMPHIBIOUS)
+            && mons_habitat(type) != HT_DEEP_WATER
+            && !mons_amphibious(type)
             && !mons_flies(this));
 }
 

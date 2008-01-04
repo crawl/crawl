@@ -1404,24 +1404,27 @@ void stethoscope(int mwh)
          menv[i].number, menv[i].flags );
 
     // print behaviour information
-    
-    const int hab = monster_habitat( menv[i].type );
+
+    const habitat_type hab = mons_habitat( menv[i].type );
 
     mprf(MSGCH_DIAGNOSTICS,
-         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)", 
-         ((hab == DNGN_DEEP_WATER)            ? "water" :
-          (hab == DNGN_LAVA)                  ? "lava" 
-                                              : "floor"),
+         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)",
+         ((hab == HT_DEEP_WATER)              ? "deep water" :
+          (hab == HT_SHALLOW_WATER)           ? "shallow water" :
+          (hab == HT_LAVA)                    ? "lava" :
+          (hab == HT_ROCK_WALL)               ? "rock wall" :
+          (hab == HT_FLOOR)                   ? "floor" :
+                                              : "unknown"),
          ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :
           (menv[i].behaviour == BEH_WANDER)   ? "wander" :
           (menv[i].behaviour == BEH_SEEK)     ? "seek" :
           (menv[i].behaviour == BEH_FLEE)     ? "flee" :
-          (menv[i].behaviour == BEH_CORNERED) ? "cornered" 
-                                              : "unknown"), 
+          (menv[i].behaviour == BEH_CORNERED) ? "cornered"
+                                              : "unknown"),
          menv[i].behaviour,
          ((menv[i].foe == MHITYOU)            ? "you" :
           (menv[i].foe == MHITNOT)            ? "none" :
-          (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
+          (menv[menv[i].foe].type == -1)      ? "unassigned monster"
           : menv[menv[i].foe].name(DESC_PLAIN, true).c_str()),
          menv[i].foe,
          menv[i].foe_memory,

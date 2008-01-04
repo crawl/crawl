@@ -144,13 +144,6 @@ void handle_monsters(void);
 
 
 /* ***********************************************************************
- * called from: acr - bang - beam - direct - dungeon - fight - files -
- *              monplace - mstuff2 - spells3 - view
- * *********************************************************************** */
-dungeon_feature_type monster_habitat(int which_class);
-
-
-/* ***********************************************************************
  * called from: misc
  * *********************************************************************** */
 bool monster_descriptor(int which_class, unsigned char which_descriptor);
