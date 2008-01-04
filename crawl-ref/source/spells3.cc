@@ -847,11 +847,12 @@ bool remove_sanctuary(bool did_attack)
 // For the last (radius) counter turns the sanctuary will slowly shrink
 void decrease_sanctuary_radius()
 {
-    if (one_chance_in(3)) // 33% chance of not decreasing
+    int radius = 5;
+
+    // for the last (radius-1) turns 33% chance of not decreasing
+    if (env.sanctuary_time < radius && one_chance_in(3))
         return;
         
-    int radius = 5;
-    
     int size = --env.sanctuary_time;
     if (size >= radius)
         return;

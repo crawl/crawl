@@ -2262,6 +2262,7 @@ static void handle_movement(monsters *monster)
         behaviour_event(monster, ME_SCARE, MHITNOT, monster->x, monster->y);
     }
     else if (mons_is_fleeing(monster) && inside_level_bounds(env.sanctuary_pos)
+             && !is_sanctuary(monster->x, monster->y)
              && monster->target_x == env.sanctuary_pos.x
              && monster->target_y == env.sanctuary_pos.y)
     {   // once outside there's a chance they'll regain their courage

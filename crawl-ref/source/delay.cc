@@ -638,8 +638,8 @@ static void finish_delay(const delay_queue_item &delay)
                  "ripping" : "chopping");
 
             if (you.religion == GOD_ZIN && mons_intel(item.plus) >= I_NORMAL)
-                simple_god_message(" demands a ceremonial burial for a corpse "
-                                   "like this!");
+                simple_god_message(" expects more respect for this departed "
+                                   "soul.");
             else if (is_good_god(you.religion) && is_player_same_species(item.plus))
                 simple_god_message(" expects more respect for your departed "
                                    "relatives.");

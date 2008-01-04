@@ -370,7 +370,8 @@ bool is_evil_god(god_type god)
         god == GOD_YREDELEMNUL ||
         god == GOD_VEHUMET ||
         god == GOD_BEOGH ||
-        god == GOD_LUGONU;
+        god == GOD_LUGONU ||
+        god == GOD_XOM;
 }
 
 bool is_good_god(god_type god)

@@ -930,6 +930,14 @@ static bool activate_talent(const talent& tal)
         crawl_state.zero_turns_taken();
         return (false);
     }
+    
+    if (tal.which == ABIL_ZIN_SANCTUARY && env.sanctuary_time)
+    {
+        mpr("There's already a sanctuary in place on this level.");
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+
 
     // no turning back now... {dlb}
     if (random2avg(100, 3) < tal.fail)
