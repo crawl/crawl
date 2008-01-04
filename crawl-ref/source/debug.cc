@@ -1411,7 +1411,7 @@ void stethoscope(int mwh)
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)",
          ((hab == HT_WATER)                   ? "water" :
           (hab == HT_LAVA)                    ? "lava" :
-          (hab == HT_ROCK_WALL)               ? "rock wall" :
+          (hab == HT_ROCK)                    ? "rock" :
           (hab == HT_LAND)                    ? "floor"
                                               : "unknown"),
          ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :

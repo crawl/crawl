@@ -91,12 +91,13 @@ habitat_type grid2habitat(dungeon_feature_type grid)
     if (grid_is_watery(grid))
         return (HT_WATER);
 
+    if (grid_is_rock(grid) && !grid_is_permarock(grid))
+        return (HT_ROCK);
+
     switch (grid)
     {
     case DNGN_LAVA:
         return (HT_LAVA);
-    case DNGN_ROCK_WALL:
-        return (HT_ROCK_WALL);
     case DNGN_FLOOR:
     default:
         return (HT_LAND);
@@ -111,7 +112,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return (DNGN_DEEP_WATER);
     case HT_LAVA:
         return (DNGN_LAVA);
-    case HT_ROCK_WALL:
+    case HT_ROCK:
         return (DNGN_ROCK_WALL);
     case HT_LAND:
     default:
@@ -2435,14 +2436,11 @@ bool monsters::floundering() const
 
 bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
 {
-    // Permanent walls can't be passed through.
-    if (grid == DNGN_CLEAR_PERMAROCK_WALL || grid == DNGN_PERMAROCK_WALL)
-        return false;
-
-    switch (mclass)
+    if (mons_habitat(mclass) == HT_ROCK)
     {
-    case MONS_ROCK_WORM:
-        return (!grid_is_solid(grid) || grid_is_rock(grid));
+        // Permanent walls can't be passed through.
+        return (!grid_is_solid(grid) ||
+                   (grid_is_rock(grid) && !grid_is_permarock(grid)));
     }
 
     return !grid_is_solid(grid);

@@ -153,7 +153,7 @@ enum habitat_type
     HT_LAND = 0,        // Land critters
     HT_WATER,           // Water critters
     HT_LAVA,            // Lava critters
-    HT_ROCK_WALL,       // Rock wall critters
+    HT_ROCK,            // Rock critters
 
     NUM_HABITATS
 };

@@ -176,13 +176,18 @@ bool grid_is_solid(const coord_def &c)
     return (grid_is_solid(grd(c)));
 }
 
-bool grid_is_rock( dungeon_feature_type grid )
+bool grid_is_rock(dungeon_feature_type grid)
 {
     return (grid == DNGN_ORCISH_IDOL
             || grid == DNGN_GRANITE_STATUE
             || grid == DNGN_SECRET_DOOR
             || (grid >= DNGN_ROCK_WALL
                 && grid <= DNGN_CLEAR_PERMAROCK_WALL));
+}
+
+bool grid_is_permarock(dungeon_feature_type grid)
+{
+    return (grid == DNGN_PERMAROCK_WALL || grid == DNGN_CLEAR_PERMAROCK_WALL);
 }
 
 bool grid_is_trap(dungeon_feature_type grid)

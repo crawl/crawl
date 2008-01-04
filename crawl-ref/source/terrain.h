@@ -31,6 +31,7 @@ bool grid_is_solid(dungeon_feature_type grid);
 bool grid_is_solid(int x, int y);
 bool grid_is_solid(const coord_def &c);
 bool grid_is_rock(dungeon_feature_type grid);
+bool grid_is_permarock(dungeon_feature_type grid);
 bool grid_is_stone_stair(dungeon_feature_type grid);
 bool grid_is_rock_stair(dungeon_feature_type grid);
 bool grid_is_trap(dungeon_feature_type grid);
