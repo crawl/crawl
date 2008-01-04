@@ -365,19 +365,19 @@ mon_holy_type mons_class_holiness(int mc)
     return (smc->holiness);
 }                               // end mons_holiness()
 
-bool mons_class_is_stationary(int type)
+bool mons_class_is_stationary(int mc)
 {
-    return (type == MONS_OKLOB_PLANT
-                || type == MONS_PLANT
-                || type == MONS_FUNGUS
-                || type == MONS_CURSE_SKULL
-                || mons_is_statue(type)
-                || mons_is_mimic(type));
+    return (mc == MONS_OKLOB_PLANT
+                || mc == MONS_PLANT
+                || mc == MONS_FUNGUS
+                || mc == MONS_CURSE_SKULL
+                || mons_is_statue(mc)
+                || mons_is_mimic(mc));
 }
 
-bool mons_is_stationary(const monsters *mons)
+bool mons_is_stationary(const monsters *mon)
 {
-    return (mons_class_is_stationary(mons->type));
+    return (mons_class_is_stationary(mon->type));
 }
 
 bool mons_class_is_confusable(int mc)
@@ -393,47 +393,47 @@ bool mons_class_is_slowable(int mc)
 
 // returns whether a monster is non-solid
 // and thus can't be affected by some traps
-bool mons_is_insubstantial(int type)
+bool mons_is_insubstantial(int mc)
 {
-     switch(type)
-     {
-       // vortices
-       case MONS_FIRE_VORTEX:
-       case MONS_SPATIAL_VORTEX:
-       // elementals
-       case MONS_FIRE_ELEMENTAL:
-       case MONS_AIR_ELEMENTAL:
-       case MONS_WATER_ELEMENTAL:
-       // vapours
-       case MONS_INSUBSTANTIAL_WISP:
-       case MONS_VAPOUR:
-       // ghosts and some undead
-       case MONS_PLAYER_GHOST:
-       case MONS_HUNGRY_GHOST:
-       case MONS_SHADOW:
-       case MONS_SMOKE_DEMON:
-       case MONS_SHADOW_WRAITH:
-       // others
-       case MONS_BALL_LIGHTNING:
-       case MONS_GIANT_SPORE:
-       case MONS_ORB_OF_FIRE:
-           return true;
-       default:
-           return false;
-     }
+    switch (mc)
+    {
+    // vortices
+    case MONS_FIRE_VORTEX:
+    case MONS_SPATIAL_VORTEX:
+    // elementals
+    case MONS_FIRE_ELEMENTAL:
+    case MONS_AIR_ELEMENTAL:
+    case MONS_WATER_ELEMENTAL:
+    // vapours
+    case MONS_INSUBSTANTIAL_WISP:
+    case MONS_VAPOUR:
+    // ghosts and some undead
+    case MONS_PLAYER_GHOST:
+    case MONS_HUNGRY_GHOST:
+    case MONS_SHADOW:
+    case MONS_SMOKE_DEMON:
+    case MONS_SHADOW_WRAITH:
+    // others
+    case MONS_BALL_LIGHTNING:
+    case MONS_GIANT_SPORE:
+    case MONS_ORB_OF_FIRE:
+        return true;
+    default:
+        return false;
+    }
 }
 
-bool mons_behaviour_perceptible(const monsters *mons)
+bool mons_behaviour_perceptible(const monsters *mon)
 {
-    return (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            && !mons_is_mimic(mons->type)
-            && !mons_is_statue(mons->type)    
-            && mons->type != MONS_OKLOB_PLANT);
+    return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            && !mons_is_mimic(mon->type)
+            && !mons_is_statue(mon->type)
+            && mon->type != MONS_OKLOB_PLANT);
 }
 
-bool mons_is_icy(const monsters *mons)
+bool mons_is_icy(const monsters *mon)
 {
-    return (mons_is_icy(mons->type));
+    return (mons_is_icy(mon->type));
 }
 
 bool mons_is_icy(int mtype)
@@ -444,15 +444,15 @@ bool mons_is_icy(int mtype)
             || mtype == MONS_ICE_STATUE);
 }
 
-bool invalid_monster(const monsters *mons)
+bool invalid_monster(const monsters *mon)
 {
-    return (!mons || mons->type == -1);
+    return (!mon || mon->type == -1);
 }
 
 bool invalid_monster_class(int mclass)
 {
-    return (mclass < 0 
-            || mclass >= NUM_MONSTERS 
+    return (mclass < 0
+            || mclass >= NUM_MONSTERS
             || mon_entry[mclass] == -1
             || mon_entry[mclass] == MONS_PROGRAM_BUG);
 }

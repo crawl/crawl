@@ -596,7 +596,7 @@ bool mons_friendly(const monsters *m);
 bool mons_neutral(const monsters *m);
 mon_attitude_type mons_attitude(const monsters *m);
 
-bool mons_behaviour_perceptible(const monsters *mons);
+bool mons_behaviour_perceptible(const monsters *mon);
 bool mons_is_confused(const monsters *m);
 bool mons_is_caught(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
@@ -606,7 +606,7 @@ bool mons_was_seen(const monsters *m);
 bool mons_is_known_mimic(const monsters *m);
 bool mons_is_evil( const monsters *mon );
 bool mons_is_unholy( const monsters *mon );
-bool mons_is_icy(const monsters *mons);
+bool mons_is_icy(const monsters *mon);
 bool mons_is_icy(int mtype);
 bool mons_has_lifeforce( const monsters *mon );
 monster_type mons_genus( int mc );
@@ -618,14 +618,14 @@ bool mons_looks_distracted(const monsters *m);
 
 bool check_mons_resist_magic( const monsters *monster, int pow );
 
-bool mons_class_is_stationary(int monsclass);
-bool mons_class_is_confusable(int monsclass);
-bool mons_class_is_slowable(int monsclass);
-bool mons_is_stationary(const monsters *mons);
-bool mons_is_insubstantial(int type);
+bool mons_class_is_stationary(int mc);
+bool mons_class_is_confusable(int mc);
+bool mons_class_is_slowable(int mc);
+bool mons_is_stationary(const monsters *mon);
+bool mons_is_insubstantial(int mc);
 bool mons_is_submerged( const monsters *mon );
 
-bool invalid_monster(const monsters *mons);
+bool invalid_monster(const monsters *mon);
 bool invalid_monster_class(int mclass);
 
 bool monster_shover(const monsters *m);
