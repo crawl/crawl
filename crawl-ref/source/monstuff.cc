@@ -1195,7 +1195,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     if (!valid_morph( monster, targetc ))
-        return simple_monster_message(monster, "looks momentarily different.");
+        return simple_monster_message(monster, " looks momentarily different.");
 
     // If old monster is visible to the player, and is interesting,
     // then note why the interesting monster went away.

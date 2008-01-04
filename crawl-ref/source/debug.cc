@@ -1412,7 +1412,7 @@ void stethoscope(int mwh)
          ((hab == HT_WATER)                   ? "water" :
           (hab == HT_LAVA)                    ? "lava" :
           (hab == HT_ROCK_WALL)               ? "rock wall" :
-          (hab == HT_LAND)                    ? "floor" :
+          (hab == HT_LAND)                    ? "floor"
                                               : "unknown"),
          ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :
           (menv[i].behaviour == BEH_WANDER)   ? "wander" :
