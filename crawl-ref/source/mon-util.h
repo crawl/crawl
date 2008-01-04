@@ -150,7 +150,7 @@ enum mon_intel_type             // Must be in increasing intelligence order
 enum habitat_type
 {
     // Flying monsters will appear in all categories except rock walls
-    HT_LAND = 0,        // Normal critters
+    HT_LAND = 0,        // Land critters
     HT_WATER,           // Water critters
     HT_LAVA,            // Lava critters
     HT_ROCK_WALL,       // Rock wall critters
