@@ -1773,7 +1773,7 @@ void behaviour_event( monsters *mon, int event, int src,
 // 2. Sets monster targetx,y based on current foe
 //
 // XXX: Monsters of I_NORMAL or above should select a new target
-// if their current target is another monser which is sitting in
+// if their current target is another monster which is sitting in
 // a wall and is immune to most attacks while in a wall
 // (M_WALL_SHIELDED), unless the monster has a spell or special/nearby
 // ability which isn't affected by M_WALL_SHIELDED.
