@@ -234,6 +234,7 @@ message_colour = lightcyan:LOW MAGIC WARNING
 ##### 4-t	Tile related Options ##################
 
 show_items = !?/%=([)X}+\_.
+# title_screen = false
 
 ##### 5-  Dump File #################################################
 #

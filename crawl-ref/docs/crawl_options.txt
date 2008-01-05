@@ -1222,10 +1222,13 @@ flush.message = false
 4-o     Tiles Options
 ---------------------
 show_items = <glyphs>
-        This options controls the order and presence of items in the tiles
+        This option controls the order and presence of items in the tiles
         inventory.  By default, its value is !?/%=([)X}+\_.  The underscore
         represents empty slots.
 
+title_screen = true
+        When this is set to true, the graphical title screen will be
+        displayed.
 
 5-  Character Dump.
 ===================

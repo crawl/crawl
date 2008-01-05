@@ -38,10 +38,14 @@ map.htm
 
 ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
 
-TILEBMP = \
+GENERATEDBMP = \
 tile.bmp \
 player.bmp \
 wall2d.bmp
+
+TILEBMP = \
+$(GENERATEDBMP) \
+title.bmp
 
 TILEPNG = $(TILEBMP:.bmp=.png)
 
@@ -116,6 +120,6 @@ clean:
 #pushd $(B2PSRC) && $(MAKE) -f makefile.mgw clean && popd
 
 distclean: clean
-	$(DELETE) $(TILEBMP)
+	$(DELETE) $(GENERATEDBMP)
 	$(DELETE) $(TILEPNG)
 	$(DELETE) $(HEADERS)

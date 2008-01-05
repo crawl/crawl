@@ -95,6 +95,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "tiles.h"
 #include "tutorial.h"
 #include "version.h"
 #include "view.h"
@@ -2060,10 +2061,15 @@ static void give_basic_spells(job_type which_job)
 // eventually, this should be something more grand {dlb}
 static void openingScreen(void)
 {
+#ifdef USE_TILE
+    if (Options.title_screen)
+        TileDrawTitle();
+#endif
+
     std::string msg =
         "<yellow>Hello, welcome to " CRAWL " " VERSION "!</yellow>" EOL
         "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-        "2002-2007 Crawl DevTeam" EOL
+        "2002-2008 Crawl DevTeam" EOL
         "Please consult crawl_manual.txt for instructions and legal details."
         "</brown>" EOL;
 

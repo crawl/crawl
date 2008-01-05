@@ -748,6 +748,7 @@ void game_options::reset_options()
 
 #ifdef USE_TILE
     show_items[0] = '0';
+    title_screen = true;
 #endif
 
 #ifdef WIN32TILES
@@ -2618,14 +2619,18 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
 #ifdef USE_TILE
-    else if (key == "show_items" )
+    else if (key == "show_items")
     {
         strncpy(show_items, field.c_str(), 18);
+    }
+    else if (key == "title_screen")
+    {
+        title_screen = read_bool(field, title_screen);
     }
 #endif
 
 #ifdef WIN32TILES
-    else if (key == "use_dos_char" )
+    else if (key == "use_dos_char")
     {
         use_dos_char = read_bool( field, use_dos_char );
     }

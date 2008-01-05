@@ -2692,15 +2692,26 @@ int TileMcacheFind(int mon_tile, int equ_tile, int draco)
 
 void TileDrawTitle()
 {
-    int winx, winy, tx, ty, x, y;
     img_type TitleImg = ImgLoadFileSimple("title");
-    img_type pBuf = region_tile->backbuf;
-    if (!TitleImg || !pBuf) return;
+    if (!TitleImg)
+        return;
 
-    tx  = ImgWidth(TitleImg);
-    ty  = ImgHeight(TitleImg);
-    winx = ImgWidth(pBuf);
-    winy = ImgHeight(pBuf);
+    // We don't need an entirely separate region for the title, so
+    // just resize the tile region to fit the screen temporarily.
+    int old_mx = region_tile->mx;
+    int old_my = region_tile->my;
+    int old_dx = region_tile->dx;
+    int old_dy = region_tile->dy;
+    int winx = win_main->wx;
+    int winy = win_main->wy;
+    region_tile->resize(winx, winy, 1, 1);
+    region_tile->resize_backbuf();
+    img_type pBuf = region_tile->backbuf;
+
+    int tx  = ImgWidth(TitleImg);
+    int ty  = ImgHeight(TitleImg);
+
+    int x, y;
 
     if (tx > winx)
     {
@@ -2726,6 +2737,12 @@ void TileDrawTitle()
     region_tile->make_active();
     region_tile->redraw();
     ImgDestroy(TitleImg);
+
+    getch();
+    clrscr();
+
+    region_tile->resize(old_mx, old_my, old_dx, old_dy);
+    region_tile->resize_backbuf();
 }
 
 static void TilePutch(int c, img_type Dest, int dx, int dy)

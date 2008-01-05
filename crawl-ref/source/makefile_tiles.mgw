@@ -76,7 +76,8 @@ tilep-cmt.h
 TILEFILES = \
 tile.bmp \
 player.bmp \
-wall2d.bmp
+wall2d.bmp \
+title.bmp
 DESTTILEFILES = $(TILEFILES:%=dat\tiles\\%)
 
 ifeq ($(LEX),)

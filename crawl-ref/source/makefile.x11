@@ -145,7 +145,8 @@ tilep-cmt.h
 TILEFILES = \
 	tile.png \
 	player.png \
-	wall2d.png
+	wall2d.png \
+	title.png
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 EXTRA_DEPENDS += $(TILEHEADERS) $(DESTTILEFILES)

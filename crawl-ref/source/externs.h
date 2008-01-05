@@ -1757,6 +1757,7 @@ public:
     
 #ifdef USE_TILE
     char        show_items[20];
+    bool        title_screen;
 #endif
 #ifdef WIN32TILES
     bool        use_dos_char;
