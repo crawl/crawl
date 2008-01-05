@@ -150,7 +150,7 @@ void turn_corpse_into_chunks( item_def &item )
             break;
         }
 
-        move_item_to_grid( &o, item.x, item.y ); 
+        move_item_to_grid( &o, item.x, item.y );
     }
 }                               // end place_chunks()
 
@@ -181,10 +181,10 @@ void search_around( bool only_adjacent )
                 // don't exclude own square; may be levitating
                 if (dist == 0)
                     ++dist;
-                
+
                 // making this harsher by removing the old +1
                 int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
-                
+
                 if (grd[srx][sry] == DNGN_SECRET_DOOR &&
                     random2(17) <= effective)
                 {
@@ -197,7 +197,7 @@ void search_around( bool only_adjacent )
                     random2(17) <= effective)
                 {
                     i = trap_at_xy(srx, sry);
-                    
+
                     if (i != -1)
                     {
                         grd[srx][sry] = trap_category(env.trap[i].type);

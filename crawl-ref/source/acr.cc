@@ -2797,14 +2797,13 @@ static void world_reacts()
     check_banished();
 
     check_shafts();
-    
+
     check_sanctuary();
 
     run_environment_effects();
 
     if ( !you.cannot_act() && !you.mutation[MUT_BLURRY_VISION] &&
-         (you.mutation[MUT_ACUTE_VISION] >= 2 ||
-          random2(50) < you.skills[SK_TRAPS_DOORS]) )
+         random2(50) < you.skills[SK_TRAPS_DOORS] )
     {
         search_around(false); // check nonadjacent squares too
     }
@@ -2820,10 +2819,10 @@ static void world_reacts()
         special_wielded();
 
     if (one_chance_in(10))
-    {   
+    {
         // this is instantaneous
         if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
-            you_teleport_now( true ); 
+            you_teleport_now( true );
         else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
             you_teleport_now( false, true ); // to new area of the Abyss
     }
