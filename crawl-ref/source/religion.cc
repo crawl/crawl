@@ -384,15 +384,10 @@ bool is_good_god(god_type god)
 
 bool is_priest_god(god_type god)
 {
-    switch (god)
-    {
-    case GOD_ZIN:
-    case GOD_YREDELEMNUL:
-    case GOD_BEOGH:
-        return (true);
-    default:
-        return (false);
-    }
+    return
+        god == GOD_ZIN ||
+        god == GOD_YREDELEMNUL ||
+        god == GOD_BEOGH;
 }
 
 void dec_penance(god_type god, int val)
@@ -1297,7 +1292,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_KILL_UNDEAD:
         switch (you.religion)
         {
-        case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
         case GOD_VEHUMET:
@@ -1319,10 +1313,9 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
-    case DID_KILL_DEMON:  
+    case DID_KILL_DEMON:
         switch (you.religion)
         {
-        case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
