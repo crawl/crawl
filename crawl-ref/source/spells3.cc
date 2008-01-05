@@ -886,9 +886,6 @@ void decrease_sanctuary_radius()
 // maybe disallow recasting while previous sanctuary in effect...
 bool cast_sanctuary(const int power)
 {
-    // first get rid of old sanctuary
-    remove_sanctuary();
-
     if (!silenced(you.x_pos, you.y_pos)) // how did you manage that?
         mpr("You hear a choir sing!");
     else
@@ -938,19 +935,21 @@ bool cast_sanctuary(const int power)
               }
                   
               // forming patterns
-              if (pattern == 0
+              if (pattern == 0    // outward rays
                     && (x == 0 || y == 0 || x == y || x == -y)
-                  || pattern == 1
-                    && (dist >= (radius-1)*(radius-1) && dist <= radius*radius)
-                  || pattern == 2
+                  || pattern == 1 // circles
+                    && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
+                        || dist >= (radius/2-1)*(radius/2-1)
+                           && dist <= radius*radius/4)
+                  || pattern == 2 // latticed
                     && (x%2 == 0 || y%2 == 0)
-                  || pattern == 3
+                  || pattern == 3 // cross-like
                     && (abs(x)+abs(y) < 5 && x != y && x != -y))
               {
-                  env.map[posx][posy].property = FPROP_SANCTUARY_1;
+                  env.map[posx][posy].property = FPROP_SANCTUARY_1; // yellow
               }
               else
-                  env.map[posx][posy].property = FPROP_SANCTUARY_2;
+                  env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
          }
          if (count == 1)
              simple_monster_message(&menv[monster], " turns to flee the light!");
