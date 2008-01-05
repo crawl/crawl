@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "AppHdr.h"
+#include "branch.h"
 #include "describe.h"
 #include "direct.h"
 #include "dungeon.h"
@@ -12,6 +13,7 @@
 #include "guic.h"
 #include "itemprop.h"
 #include "it_use2.h"
+#include "place.h"
 #include "stuff.h"
 #include "tiles.h"
 #include "tilecount-w2d.h"
@@ -970,56 +972,63 @@ void WallIdx(int &wall, int &floor, int &special)
 
     if (you.level_type == LEVEL_PANDEMONIUM)
     {
-        switch (mcolour[env.mons_alloc[8]])
+        switch (env.rock_colour)
         {
         case BLUE:
         case LIGHTBLUE:
             wall = IDX_WALL_ZOT_BLUE;
             floor = IDX_FLOOR_ZOT_BLUE;
-            return;
+            break;
 
         case RED:
         case LIGHTRED:
             wall = IDX_WALL_ZOT_RED;
             floor = IDX_FLOOR_ZOT_RED;
-            return;
+            break;
 
         case MAGENTA:
         case LIGHTMAGENTA:
             wall = IDX_WALL_ZOT_MAGENTA;
             floor = IDX_FLOOR_ZOT_MAGENTA;
-            return;
+            break;
 
         case GREEN:
         case LIGHTGREEN:
             wall = IDX_WALL_ZOT_GREEN;
             floor = IDX_FLOOR_ZOT_GREEN;
-            return;
+            break;
 
         case CYAN:
         case LIGHTCYAN:
             wall = IDX_WALL_ZOT_CYAN;
             floor = IDX_FLOOR_ZOT_CYAN;
-            return;
+            break;
 
         case BROWN:
         case YELLOW:
             wall = IDX_WALL_ZOT_YELLOW;
             floor = IDX_FLOOR_ZOT_YELLOW;
-            return;
+            break;
 
         case BLACK:
         case WHITE:
         default:
             wall = IDX_WALL_ZOT_GRAY;
             floor = IDX_FLOOR_ZOT_GRAY;
-            return;
+            break;
         }
+
+        if (one_chance_in(3))
+            wall = IDX_WALL_FLESH;
+        if (one_chance_in(3))
+            floor = IDX_FLOOR_NERVES;
+
+        return;
     }
     else if (you.level_type == LEVEL_ABYSS)
     {
         wall = IDX_WALL_UNDEAD;
-        floor = IDX_FLOOR_UNDEAD;
+        floor = IDX_FLOOR_NERVES;
         return;
     }
     else if (you.level_type == LEVEL_LABYRINTH)
@@ -1048,7 +1057,7 @@ void WallIdx(int &wall, int &floor, int &special)
                     // Reds often have lava, which looks ridiculous
                     // next to grass or dirt, so we'll use existing
                     // floor and wall tiles here.
-                    wall = IDX_WALL_ZOT_RED;
+                    wall = IDX_WALL_PEBBLE_RED;
                     floor = IDX_FLOOR_VAULT;
                     special = IDX_FLOOR_BAZAAR_VAULT_SPECIAL;
                     return;
@@ -1079,6 +1088,9 @@ void WallIdx(int &wall, int &floor, int &special)
             }
         }
     }
+
+    int depth = player_branch_depth();
+    int branch_depth = your_branch().depth;
     
     switch (you.where_are_you)
     {
@@ -1097,9 +1109,13 @@ void WallIdx(int &wall, int &floor, int &special)
             floor = IDX_FLOOR_VAULT;
             return;
 
+        case BRANCH_ECUMENICAL_TEMPLE:
+            wall = IDX_WALL_VINES;
+            floor = IDX_FLOOR_VINES;
+            return;
+
         case BRANCH_ELVEN_HALLS:
         case BRANCH_HALL_OF_BLADES:
-        case BRANCH_ECUMENICAL_TEMPLE:
             wall = IDX_WALL_HALL;
             floor = IDX_FLOOR_HALL;
             return;
@@ -1122,10 +1138,8 @@ void WallIdx(int &wall, int &floor, int &special)
             return;
 
         case BRANCH_GEHENNA:
-        case BRANCH_INFERNO:
-        case BRANCH_THE_PIT:
             wall = IDX_WALL_ZOT_RED;
-            floor = IDX_FLOOR_ZOT_RED;
+            floor = IDX_FLOOR_ROUGH_RED;
             return;
 
         case BRANCH_COCYTUS:
@@ -1159,13 +1173,11 @@ void WallIdx(int &wall, int &floor, int &special)
             return;
 
         case BRANCH_SHOALS:
-            wall = IDX_WALL_SWAMP;
-            floor = IDX_FLOOR_SWAMP;
-            return;
-
-        case BRANCH_CAVERNS:
-            wall = IDX_WALL_ORC;
-            floor = IDX_FLOOR_ORC;
+            if (depth == branch_depth)
+                wall = IDX_WALL_VINES;
+            else
+                wall = IDX_WALL_YELLOW_ROCK;
+            floor = IDX_FLOOR_SAND_STONE;
             return;
 
         case BRANCH_HALL_OF_ZOT:
@@ -1197,6 +1209,9 @@ void WallIdx(int &wall, int &floor, int &special)
                     return;
             }
 
+        case BRANCH_INFERNO:
+        case BRANCH_THE_PIT:
+        case BRANCH_CAVERNS:
         case NUM_BRANCHES:
             break;
 

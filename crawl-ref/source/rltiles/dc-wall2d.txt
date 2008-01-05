@@ -181,6 +181,58 @@ floor/tomb1
 floor/tomb2
 floor/tomb3
 
+wall/wall_flesh0 WALL_FLESH
+wall/wall_flesh1
+wall/wall_flesh2
+wall/wall_flesh3
+wall/wall_flesh4
+wall/wall_flesh5
+wall/wall_flesh6
+
+floor/floor_nerves0 FLOOR_NERVES
+floor/floor_nerves1
+floor/floor_nerves2
+floor/floor_nerves3
+floor/floor_nerves4
+floor/floor_nerves5
+floor/floor_nerves6
+
+wall/wall_vines0 WALL_VINES
+wall/wall_vines1
+wall/wall_vines2
+wall/wall_vines3
+wall/wall_vines4
+wall/wall_vines5
+wall/wall_vines6
+
+floor/floor_vines0 FLOOR_VINES
+floor/floor_vines1
+floor/floor_vines2
+floor/floor_vines3
+floor/floor_vines4
+floor/floor_vines5
+floor/floor_vines6
+
+wall/pebble_red0 WALL_PEBBLE_RED
+wall/pebble_red1
+wall/pebble_red2
+wall/pebble_red3
+
+floor/rough_red0 FLOOR_ROUGH_RED
+floor/rough_red1
+floor/rough_red2
+floor/rough_red3
+
+floor/floor_sand_stone0 FLOOR_SAND_STONE
+floor/floor_sand_stone1
+floor/floor_sand_stone2
+floor/floor_sand_stone3 
+
+wall/wall_yellow_rock0 WALL_YELLOW_ROCK
+wall/wall_yellow_rock1
+wall/wall_yellow_rock2
+wall/wall_yellow_rock3
+
 wall/brick_gray0 WALL_BAZAAR_GRAY
 wall/brick_gray1
 wall/brick_gray2

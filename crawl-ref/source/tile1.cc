@@ -1626,6 +1626,13 @@ void finalize_tile(short unsigned int *tile, unsigned char wflag,
     {
         (*tile) = get_wall_tile_idx() + wall_flv;
     }
+    else if (orig == TILE_DNGN_SHALLOW_WATER ||
+        orig == TILE_DNGN_DEEP_WATER ||
+        orig == TILE_DNGN_LAVA)
+    {
+        // These types always have four flavors...
+        (*tile) = orig + (floor_flv % 4);
+    }
 
     (*tile) |= flag;
 }

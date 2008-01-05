@@ -689,12 +689,17 @@ void up_stairs(dungeon_feature_type force_stair,
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
 
-    load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
+    const bool newlevel =
+        load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
 
     set_entry_cause(entry_cause, old_level_type);
     entry_cause = you.entry_cause;
 
     you.turn_is_over = true;
+
+#ifdef USE_TILE
+    TileNewLevel(newlevel);
+#endif // USE_TILE
 
     save_game_state();
 
@@ -1195,15 +1200,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         you.your_level--;
     
 
-#ifdef USE_TILE
-    // init micromap
-    GmapInit(false); // do not erase tile backup data
-    TileLoadWall(false);
-    tile_clear_buf();
-    if (newlevel)
-        tile_init_flavor();
-#endif // USE_TILE
-
     switch (you.level_type)
     {
     case LEVEL_ABYSS:
@@ -1244,6 +1240,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     default:
         break;
     }
+
+#ifdef USE_TILE
+    TileNewLevel(newlevel);
+#endif
 
     you.turn_is_over = true;
 
