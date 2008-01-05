@@ -6,13 +6,13 @@ mkdir -p WIZARD
 pushd NORMAL ; ln -sf ../source/rltiles . ; ln -sf ../source/util . ; ln -sf ../source/*.h ../source/*.cc ../source/makefile* . ; popd
 pushd WIZARD ; ln -sf ../source/rltiles . ; ln -sf ../source/util . ; ln -sf ../source/*.h ../source/*.cc ../source/makefile* . ; popd
 
-if [ -L tiles ]; then
+if [ -d tiles ]; then
 	true
 else
 	ln -sf source/rltiles tiles
 fi
 
-if [ -L dat ]; then
+if [ -d dat ]; then
 	true
 else
 	ln -sf source/dat dat
