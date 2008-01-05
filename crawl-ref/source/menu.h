@@ -46,6 +46,7 @@ struct menu_letter
 };
 
 struct item_def;
+class Menu;
 
 int menu_colour(const std::string &itemtext,
                 const std::string &prefix = "",
@@ -217,6 +218,9 @@ public:
     std::vector<MenuEntry *> selected_entries() const;
 
     size_t item_count() const    { return items.size(); }
+
+    // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
+    int get_entry_index( const MenuEntry *e ) const;
 
 public:
     typedef std::string (*selitem_tfn)( const std::vector<MenuEntry*> *sel );

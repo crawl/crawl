@@ -67,6 +67,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "stash.h"
+#include "tiles.h"
 #include "state.h"
 #include "terrain.h"
 #include "transfor.h"

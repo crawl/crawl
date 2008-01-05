@@ -73,6 +73,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "tiles.h"
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
@@ -220,7 +221,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
-    if (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap)
+    if (item_slot != PROMPT_GOT_SPECIAL &&
+        (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap))
     {
         if (!auto_wield)
             item_slot = prompt_invent_item(
@@ -731,11 +733,13 @@ static bool cloak_is_being_removed( void )
 // wear_armour
 //
 //---------------------------------------------------------------
-void wear_armour(void)
+void wear_armour( int slot )
 {
     int armour_wear_2 = 0;
 
-    if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
+    if (slot != -1)
+        armour_wear_2 = slot;
+    else if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
 
     if (safe_to_remove_or_wear(you.inv[armour_wear_2], false))
@@ -1175,7 +1179,7 @@ bool takeoff_armour(int item)
     return true;
 }                               // end takeoff_armour()
 
-void throw_anything(void)
+void throw_anything( int slot )
 {
     struct bolt beam;
     int throw_slot;
@@ -1191,7 +1195,10 @@ void throw_anything(void)
         return;
     }
 
-    throw_slot = prompt_invent_item( "Throw which item? (* to show all)",
+    if (slot != -1)
+        throw_slot = slot;
+    else
+        throw_slot = prompt_invent_item( "Throw which item? (* to show all)",
                                      MT_INVLIST,
                                      OBJ_MISSILES, true, true, true, 0, NULL,
                                      OPER_THROW );
@@ -3121,7 +3128,7 @@ bool remove_ring(int slot, bool announce)
     return (true);
 }                               // end remove_ring()
 
-void zap_wand(void)
+void zap_wand( int slot )
 {
     bolt beam;
     dist zap_wand;
@@ -3145,7 +3152,10 @@ void zap_wand(void)
         return;
     }
 
-    item_slot = prompt_invent_item( "Zap which item?",
+    if (slot != -1)
+        item_slot = slot;
+    else
+        item_slot = prompt_invent_item( "Zap which item?",
                                     MT_INVLIST,
                                     OBJ_WANDS,
                                     true, true, true, 0, NULL,
@@ -3325,7 +3335,7 @@ void inscribe_item()
     }
 }
 
-void drink(void)
+void drink( int slot )
 {
     int item_slot;
 
@@ -3335,11 +3345,14 @@ void drink(void)
         return;
     }
 
-    if (grd[you.x_pos][you.y_pos] == DNGN_BLUE_FOUNTAIN
-        || grd[you.x_pos][you.y_pos] == DNGN_SPARKLING_FOUNTAIN)
+    if (slot == -1)
     {
-        if (drink_fountain())
-            return;
+        if (grd[you.x_pos][you.y_pos] == DNGN_BLUE_FOUNTAIN
+            || grd[you.x_pos][you.y_pos] == DNGN_SPARKLING_FOUNTAIN)
+        {
+            if (drink_fountain())
+                return;
+        }
     }
 
     if (inv_count() == 0)
@@ -3360,7 +3373,10 @@ void drink(void)
        return;
     }
        
-    item_slot = prompt_invent_item( "Drink which item?",
+    if (slot != -1)
+        item_slot = slot;
+    else
+        item_slot = prompt_invent_item( "Drink which item?",
                                     MT_INVLIST, OBJ_POTIONS,
                                     true, true, true, 0, NULL,
                                     OPER_QUAFF );
@@ -3824,7 +3840,7 @@ static void handle_read_book( int item_slot )
     }
 }
 
-void read_scroll(void)
+void read_scroll( int slot )
 {
     int affected = 0;
     int i;
@@ -3847,7 +3863,9 @@ void read_scroll(void)
         return;
     }
 
-    int item_slot = prompt_invent_item(
+    int item_slot = (slot != -1) ?
+        slot :
+        prompt_invent_item(
                         "Read which item?", 
                         MT_INVLIST, 
                         OBJ_SCROLLS, 
@@ -4351,3 +4369,146 @@ bool wearing_slot(int inv_slot)
             return true;
     return false;
 }
+
+#ifdef USE_TILE
+// Interactive menu for item drop/use
+void use_item(int idx, InvAction act)
+{
+    if (act == INV_PICKUP)
+    {
+         pickup_single_item(idx, mitm[idx].quantity);
+         return;
+    }
+    else if (act == INV_DROP)
+    {
+#ifdef USE_TILE
+        TileMoveInvCursor(-1);
+#endif
+        drop_item(idx, you.inv[idx].quantity);
+        return;
+    }
+    else if (act != INV_USE)
+    {
+        return;
+    }
+
+    // Equipped?
+    bool equipped = false;
+    for (unsigned int i=0; i< NUM_EQUIP;i++)
+    {
+        if (you.equip[i] == idx)
+        {
+            equipped = true;
+            break;
+        }
+    }
+
+#ifdef USE_TILE
+    TileMoveInvCursor(-1);
+#endif
+
+    // Special case for folks who are wielding something
+    // that they shouldn't be wielding.
+    if (you.equip[EQ_WEAPON] == idx)
+    {
+        if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+            return;
+
+        wield_weapon(true, PROMPT_GOT_SPECIAL);
+        return;
+    }
+
+    // Use it
+    switch (you.inv[idx].base_type)
+    {
+        case OBJ_WEAPONS:
+        case OBJ_STAVES:
+            if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+                return;
+            if (equipped)
+                wield_weapon(true, PROMPT_GOT_SPECIAL);
+            else
+                wield_weapon(true, idx);
+            return;
+
+        case OBJ_MISCELLANY:
+            if (equipped)
+            {
+                if (!check_warning_inscriptions(you.inv[idx], OPER_EVOKE))
+                    return;
+                evoke_wielded();
+            }
+            else
+            {
+                if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+                    return;
+                wield_weapon(true, idx);
+            }
+            return;
+
+        case OBJ_MISSILES:
+            if (!check_warning_inscriptions(you.inv[idx], OPER_THROW))
+                return;
+            throw_anything(idx);
+            return;
+
+        case OBJ_ARMOUR:
+            if (equipped)
+            {
+                if (!check_warning_inscriptions(you.inv[idx], OPER_TAKEOFF))
+                    return;
+                takeoff_armour(idx);
+            }
+            else
+            {
+                if (!check_warning_inscriptions(you.inv[idx], OPER_WEAR))
+                    return;
+                wear_armour(idx);
+            }
+            return;
+
+        case OBJ_WANDS:
+            if (!check_warning_inscriptions(you.inv[idx], OPER_ZAP))
+                return;
+            zap_wand(idx);
+            return;
+
+        case OBJ_FOOD:
+            if (!check_warning_inscriptions(you.inv[idx], OPER_EAT))
+                return;
+            eat_food(false, idx);
+            return;
+
+        case OBJ_SCROLLS:
+        case OBJ_BOOKS:
+            if (!check_warning_inscriptions(you.inv[idx], OPER_READ))
+                return;
+            read_scroll(idx);
+            return;
+
+        case OBJ_JEWELLERY:
+            if (equipped)
+            {
+                if (!check_warning_inscriptions(you.inv[idx], OPER_REMOVE))
+                    return;
+                remove_ring(idx);
+            }
+            else
+            {
+                if (!check_warning_inscriptions(you.inv[idx], OPER_PUTON))
+                    return;
+                puton_ring(idx, false);
+            }
+            return;
+
+        case OBJ_POTIONS:
+            if (!check_warning_inscriptions(you.inv[idx], OPER_QUAFF))
+                return;
+            drink(idx);
+            return;
+
+        default:
+            return;
+    }
+}
+#endif

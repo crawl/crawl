@@ -855,7 +855,7 @@ void textbackground(int col)
 }
 
 
-int gotoxy(int x, int y)
+int gotoxy_sys(int x, int y)
 {
     return (move(y - 1, x - 1));
 }

@@ -104,8 +104,10 @@
     #define FILE_SEPARATOR '/'
 
     #define CHARACTER_SET           0
+#ifndef USE_TILE
     #define USE_ASCII_CHARACTERS
     #define USE_CURSES
+#endif
     #define EOL "\n"
 
     // Unix builds use curses/ncurses, which supports colour.
@@ -178,8 +180,10 @@
 
     #include <dos.h>
 
-#elif defined(WIN32CONSOLE)
-    #include "libw32c.h"
+#elif defined(WIN32CONSOLE) || defined(WIN32TILES)
+    #if defined(WIN32CONSOLE)
+        #include "libw32c.h"
+    #endif
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         get_console_string(X,Y)
@@ -196,6 +200,10 @@
     // #define REGEX_PCRE
 #else
     #error Missing platform #define or unsupported compiler.
+#endif
+
+#ifdef USE_TILE
+    #include "libgui.h"
 #endif
 
 // =========================================================================

@@ -28,6 +28,7 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_GHOST,                          // ghost
     TAG_LEVEL_ATTITUDE,                 // monster attitudes
     TAG_LOST_MONSTERS,                  // monsters in transit
+    TAG_LEVEL_TILES,
     NUM_TAGS
 };
 

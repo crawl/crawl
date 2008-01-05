@@ -63,6 +63,7 @@
 #include "stuff.h"
 #include "spells4.h"
 #include "stash.h"
+#include "tiles.h"
 #include "state.h"
 #include "terrain.h"
 #include "travel.h"
@@ -181,11 +182,20 @@ void set_envmap_glyph(int x, int y, int object, int col)
     map_cell &c = env.map[x][y];
     c.object = object;
     c.colour = col;
+#ifdef USE_TILE
+    int glyph = env.map[x][y].glyph();
+    GmapUpdate(x,y,glyph);
+#endif
 }
 
 void set_envmap_obj( int x, int y, int obj )
 {
     env.map[x][y].object = obj;
+#ifdef USE_TILE
+    int glyph = env.map[x][y].glyph();
+    if (glyph)
+        GmapUpdate(x,y,glyph);
+#endif
 }
 
 void set_envmap_col( int x, int y, int colour )
@@ -254,6 +264,11 @@ void set_terrain_mapped( int x, int y )
 
 void set_terrain_seen( int x, int y )
 {
+#ifdef USE_TILE
+    env.map[x][y].flags &= ~(MAP_DETECTED_ITEM);
+    env.map[x][y].flags &= ~(MAP_DETECTED_MONSTER);
+#endif
+
     env.map[x][y].flags &= (~MAP_CHANGED_FLAG);
     env.map[x][y].flags |= MAP_SEEN_FLAG;
 }
@@ -268,7 +283,7 @@ bool is_notable_terrain(dungeon_feature_type ftype)
     return (Feature[ftype].is_notable());
 }
 
-#if defined(WIN32CONSOLE) || defined(DOS)
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
 static unsigned colflag2brand(int colflag)
 {
     switch (colflag)
@@ -302,7 +317,7 @@ unsigned real_colour(unsigned raw_colour)
     if (is_element_colour( raw_colour ))
         raw_colour = colflags | element_colour( raw_colour );
 
-#if defined(WIN32CONSOLE) || defined(DOS)
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
     if (colflags)
     {
         unsigned brand = colflag2brand(colflags);
@@ -470,7 +485,7 @@ static char get_travel_colour( int x, int y )
                                         Options.tc_disconnected;
 }
             
-#if defined(WIN32CONSOLE) || defined(DOS)
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(USE_TILE)
 static unsigned short dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)
@@ -638,6 +653,14 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             set_envmap_obj(x, y, is_terrain_known(x, y)? grd[x][y] : 0);
             set_envmap_detected_mons(x, y, false);
             set_envmap_detected_item(x, y, false);
+
+#ifdef USE_TILE
+            set_envmap_obj(x, y, is_terrain_known(x, y)? grd[x][y] : 0);
+            env.tile_bk_fg[x][y] = 0;
+            env.tile_bk_bg[x][y] = is_terrain_known(x, y) ?
+                tile_idx_unseen_terrain(x, y, grd[x][y]) : 
+                tileidx_feature(DNGN_UNSEEN);
+#endif
         }
     }
 }
@@ -998,6 +1021,7 @@ inline static bool update_monster_grid(const monsters *monster)
 
     env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
     env.show_col[ex][ey] = get_mons_colour( monster );
+
     return (true);
 }
 
@@ -1022,6 +1046,10 @@ void monster_grid(bool do_updates)
 
             if (!update_monster_grid(monster))
                 continue;
+
+#ifdef USE_TILE
+            tile_place_monster(monster->x, monster->y, s, true);
+#endif
             
             if (player_monster_visible(monster)
                 && !mons_is_submerged(monster)
@@ -1215,6 +1243,14 @@ inline static void update_item_grid(const coord_def &gp, const coord_def &ep)
             ecol |= COLFLAG_ITEM_HEAP;
         env.show(ep) = get_item_dngn_code( eitem );
     }
+
+#ifdef USE_TILE
+    int idx = igrd(gp);
+    if (is_stair(grid))
+        tile_place_item_marker(ep.x, ep.y, idx);
+    else
+        tile_place_item(ep.x, ep.y, idx);
+#endif
 }
 
 void item_grid()
@@ -1318,6 +1354,11 @@ inline static void update_cloud_grid(int cloudno)
     set_show_backup(ex, ey);
     env.show[ex][ey] = DNGN_CLOUD;
     env.show_col[ex][ey] = which_colour;    
+
+#ifdef USE_TILE
+    tile_place_cloud(ex, ey, env.cloud[cloudno].type, 
+        env.cloud[cloudno].decay);
+#endif
 }
 
 void cloud_grid(void)
@@ -2402,28 +2443,26 @@ void draw_border(void)
     clrscr();
     redraw_skill( you.your_name, player_title() );
 
-    const int xcol = crawl_view.hudp.x;
-    
-    gotoxy(xcol, 2);
+    gotoxy(1, 2, GOTO_STAT);
     cprintf( "%s %s",
              species_name( you.species, you.experience_level ).c_str(),
              (you.wizard ? "*WIZARD*" : "" ) );
 
-    gotoxy(xcol,  3); cprintf("HP:");
-    gotoxy(xcol,  4); cprintf("Magic:");
-    gotoxy(xcol,  5); cprintf("AC:");
-    gotoxy(xcol,  6); cprintf("EV:");
-    gotoxy(xcol,  7); cprintf("Str:");
-    gotoxy(xcol,  8); cprintf("Int:");
-    gotoxy(xcol,  9); cprintf("Dex:");
-    gotoxy(xcol, 10); cprintf("Gold:");
+    gotoxy(1,  3, GOTO_STAT); cprintf("HP:");
+    gotoxy(1,  4, GOTO_STAT); cprintf("Magic:");
+    gotoxy(1,  5, GOTO_STAT); cprintf("AC:");
+    gotoxy(1,  6, GOTO_STAT); cprintf("EV:");
+    gotoxy(1,  7, GOTO_STAT); cprintf("Str:");
+    gotoxy(1,  8, GOTO_STAT); cprintf("Int:");
+    gotoxy(1,  9, GOTO_STAT); cprintf("Dex:");
+    gotoxy(1, 10, GOTO_STAT); cprintf("Gold:");
     if (Options.show_turns)
     {
-        gotoxy(xcol + 15, 10);
+        gotoxy(1 + 15, 10, GOTO_STAT);
         cprintf("Turn:");
     }
-    gotoxy(xcol, 11); cprintf("Experience:");
-    gotoxy(xcol, 12); cprintf("Level");
+    gotoxy(1, 11, GOTO_STAT); cprintf("Experience:");
+    gotoxy(1, 12, GOTO_STAT); cprintf("Level");
 }                               // end draw_border()
 
 // Determines if the given feature is present at (x, y) in _grid_ coordinates.
@@ -2683,6 +2722,7 @@ static int get_number_of_lines_levelmap()
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
 }
 
+#ifndef USE_TILE
 static void draw_level_map(int start_x, int start_y, bool travel_mode)
 {
     int bufcount2 = 0;
@@ -2768,6 +2808,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
     }
     puttext(1, top, num_cols, top + num_lines - 1, buffer2);
 }
+#endif // USE_TILE
 
 static void reset_travel_colours(std::vector<coord_def> &features)
 {
@@ -2862,7 +2903,9 @@ void show_map( coord_def &spec_place, bool travel_mode )
     bool map_alive  = true;
     bool redraw_map = true;
 
+#ifndef USE_TILE
     clrscr();
+#endif
     textcolor(DARKGREY);
 
     while (map_alive)
@@ -2870,14 +2913,31 @@ void show_map( coord_def &spec_place, bool travel_mode )
         start_y = screen_y - half_screen;
 
         if (redraw_map)
+        {
+#ifdef USE_TILE
+            // Note: Tile versions just center on the current cursor
+            // location.  It silently ignores everything else going
+            // on in this function.  --Enne
+            unsigned int cx = start_x + curs_x - 1;
+            unsigned int cy = start_y + curs_y - 1;
+            TileDrawMap(cx, cy);
+            GmapDisplay(cx, cy);
+        }
+#else
             draw_level_map(start_x, start_y, travel_mode);
-
-        redraw_map = true;
+        }
         cursorxy(curs_x, curs_y + top - 1);
+#endif
+        redraw_map = true;
 
         c_input_reset(true);
         getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
                                         false, false);
+#ifdef USE_TILE
+        if (getty == CK_MOUSE_B4) getty = '-';
+        if (getty == CK_MOUSE_B5) getty = '+';
+#endif
+
         c_input_reset(false);
 
         switch (getty)
@@ -3259,6 +3319,16 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (is_terrain_changed(i, j))
                 clear_envmap_grid(i, j);
 
+#ifdef USE_TILE
+            if (!wizard_map && is_terrain_known(i,j))
+            {
+                // can't use set_envmap_obj because that
+                // will overwrite the gmap.
+                env.tile_bk_bg[i][j] =
+                    tile_idx_unseen_terrain(i, j, grd[i][j]);
+            }
+#endif
+
             if (!wizard_map && is_terrain_known(i, j))
                 continue;
 
@@ -3306,6 +3376,11 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             }
         }
     }
+#ifdef USE_TILE
+    GmapInit(true); // re-draw tile backup
+    tile_clear_buf();
+#endif
+
     return true;
 }                               // end magic_mapping()
 
@@ -4244,12 +4319,14 @@ void view_update_at(const coord_def &pos)
     if (flash_colour == BLACK)
         flash_colour = viewmap_flash_colour();
 
+#ifndef USE_TILE
     gotoxy(vp.x, vp.y);
     put_colour_ch(flash_colour? real_colour(flash_colour) : colour, ch);
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
     textattr(LIGHTGREY);
+#endif
 }
 
 bool view_update()
@@ -4276,6 +4353,10 @@ bool view_update()
 //---------------------------------------------------------------
 void viewwindow(bool draw_it, bool do_updates)
 {
+#ifdef USE_TILE
+    std::vector<unsigned short> tileb( 
+        crawl_view.viewsz.y * crawl_view.viewsz.x * 2);
+#endif
     screen_buffer_t *buffy(crawl_view.vbuf);
     
     int count_x, count_y;
@@ -4286,12 +4367,21 @@ void viewwindow(bool draw_it, bool do_updates)
     // made opaque.
     losight( env.no_trans_show, grd, you.x_pos, you.y_pos, true );
 
+#ifdef USE_TILE
+    tile_draw_floor();
+    TileMcacheUnlock();
+#endif
+
     env.show_col.init(LIGHTGREY);
     Show_Backup.init(0);
 
     item_grid();                // must be done before cloud and monster
     cloud_grid();
     monster_grid( do_updates );
+
+#ifdef USE_TILE
+    tile_draw_rays(true);
+#endif
 
     if (draw_it)
     {
@@ -4342,6 +4432,10 @@ void viewwindow(bool draw_it, bool do_updates)
                     // off the map
                     buffy[bufcount] = 0;
                     buffy[bufcount + 1] = DARKGREY;
+#ifdef USE_TILE
+                    tileb[bufcount] = 0;
+                    tileb[bufcount+1] = tileidx_unseen(' ', gc);
+#endif
                 }
                 else if (!crawl_view.in_grid_los(gc))
                 {
@@ -4352,6 +4446,18 @@ void viewwindow(bool draw_it, bool do_updates)
                     if (Options.colour_map)
                         buffy[bufcount + 1] = 
                             colour_code_map(gc.x, gc.y, Options.item_colour);
+
+#ifdef USE_TILE
+                    unsigned short bg = env.tile_bk_bg[gc.x][gc.y];
+                    unsigned short fg = env.tile_bk_fg[gc.x][gc.y];
+                    if (bg == 0 && fg == 0)
+                    {
+                        bg = tileidx_unseen(get_envmap_char(gc.x,gc.y), gc);
+                        env.tile_bk_bg[gc.x][gc.y] = bg;
+                    }
+                    tileb[bufcount] = fg;
+                    tileb[bufcount+1] = bg | tile_unseen_flag(gc);
+#endif
                 }
                 else if (gc == you.pos())
                 {
@@ -4367,6 +4473,17 @@ void viewwindow(bool draw_it, bool do_updates)
                         set_envmap_detected_mons(gc.x, gc.y, false);
                         set_envmap_detected_item(gc.x, gc.y, false);
                     }
+#ifdef USE_TILE
+                    if (map)
+                    {
+                        env.tile_bk_bg[gc.x][gc.y] = 
+                            env.tile_bg[ep.x-1][ep.y-1];
+                    }
+
+                    tileb[bufcount] = env.tile_fg[ep.x-1][ep.y-1] =
+                        tileidx_player(you.char_class);
+                    tileb[bufcount+1] = env.tile_bg[ep.x-1][ep.y-1];
+#endif
 
                     // player overrides everything in cell
                     buffy[bufcount] = you.symbol;
@@ -4393,6 +4510,10 @@ void viewwindow(bool draw_it, bool do_updates)
 
                     buffy[bufcount] = ch;
                     buffy[bufcount + 1] = colour;
+#ifdef USE_TILE
+                    tileb[bufcount]= env.tile_fg[ep.x-1][ep.y-1];
+                    tileb[bufcount+1]= env.tile_bg[ep.x-1][ep.y-1];
+#endif
 
                     if (map)
                     {
@@ -4404,10 +4525,28 @@ void viewwindow(bool draw_it, bool do_updates)
                         if (buffy[bufcount] != 0)
                         {
                             // ... map that we've seen this
-                            set_envmap_glyph( gc.x, gc.y, object, colour );
                             set_terrain_seen( gc.x, gc.y );
+                            set_envmap_glyph( gc.x, gc.y, object, colour );
                             set_envmap_detected_mons(gc.x, gc.y, false);
                             set_envmap_detected_item(gc.x, gc.y, false);
+#ifdef USE_TILE
+                            // We remove any references to mcache when
+                            // writing to the background.
+                            if (Options.clean_map)
+                            {
+                                env.tile_bk_fg[gc.x][gc.y] =
+                                    get_clean_map_idx(
+                                    env.tile_fg[ep.x-1][ep.y-1]);
+                            }
+                            else
+                            {
+                                env.tile_bk_fg[gc.x][gc.y] =
+                                    get_base_idx_from_mcache(
+                                    env.tile_fg[ep.x-1][ep.y-1]);
+                            }
+                            env.tile_bk_bg[gc.x][gc.y] =
+                                env.tile_bg[ep.x-1][ep.y-1];
+#endif
                         }
 
                         // Check if we're looking to clean_map...
@@ -4451,6 +4590,24 @@ void viewwindow(bool draw_it, bool do_updates)
                                 buffy[bufcount + 1] = 
                                     colour_code_map(gc.x, gc.y,
                                                     Options.item_colour);
+#ifdef USE_TILE
+                            if(env.tile_bk_fg[gc.x][gc.y] != 0
+                                || env.tile_bk_bg[gc.x][gc.y] != 0)
+                            {
+                                tileb[bufcount] =
+                                    env.tile_bk_fg[gc.x][gc.y];
+                                tileb[bufcount + 1] =
+                                    env.tile_bk_bg[gc.x][gc.y] 
+                                    | tile_unseen_flag(gc);
+                            }
+                            else
+                            {
+                                tileb[bufcount] = 0;
+                                tileb[bufcount + 1] =
+                                    tileidx_unseen(
+                                    get_envmap_char( gc.x, gc.y ), gc);
+                            }
+#endif
                         }
                     }
                 }
@@ -4472,11 +4629,16 @@ void viewwindow(bool draw_it, bool do_updates)
         // avoiding unneeded draws when running
         if (draw)
         {
+#ifdef USE_TILE
+            tile_draw_dungeon(&tileb[0]);
+            GmapDisplay(you.x_pos, you.y_pos);
+#else
             you.last_view_update = you.num_turns;
             puttext(crawl_view.viewp.x, crawl_view.viewp.y,
                     crawl_view.viewp.x + crawl_view.viewsz.x - 1,
                     crawl_view.viewp.y + crawl_view.viewsz.y - 1,
                     buffy);
+#endif
         }
     }
 }                               // end viewwindow()
@@ -4583,10 +4745,12 @@ void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def( get_number_of_cols(), get_number_of_lines() );
 
+#ifndef USE_TILE
     // If the terminal is too small, exit with an error.
     if ((termsz.x < 80 || termsz.y < 24) && !crawl_state.need_save)
         end(1, false, "Terminal too small (%d,%d), need at least (80,24)",
             termsz.x, termsz.y);
+#endif
 
     int freeheight = termsz.y - message_min_lines;
 
@@ -4631,8 +4795,13 @@ void crawl_view_geometry::init_geometry()
         hudp.x += hudmarg > hud_increase_max? hud_increase_max : hudmarg;
     }
 
+#ifdef USE_TILE
+    // libgui may redefine these based on its own settings
+    gui_init_view_params(termsz, viewsz, msgp, msgsz, hudp, hudsz);
+#endif
+
     viewhalfsz = viewsz / 2;
-    
+
     init_view();
 }
 

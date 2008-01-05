@@ -231,6 +231,10 @@ message_colour = lightcyan:LOW MAGIC WARNING
 # flush.command = true
 # flush.message = true
 
+##### 4-t	Tile related Options ##################
+
+show_items = !?/%=([)X}+\_.
+
 ##### 5-  Dump File #################################################
 #
 ##### 5-a	Items and Kill List ###################

@@ -53,7 +53,9 @@
 #endif
 
 #ifdef UNIX
+#ifndef USE_TILE
 #include "libunix.h"
+#endif
 #endif
 
 #include "branch.h"
@@ -431,7 +433,9 @@ void cio_init()
 {
     crawl_state.io_inited = true;
 
-#ifdef UNIX
+#if defined(USE_TILE)
+    libgui_init();
+#elif defined(UNIX)
     unixcurses_startup();
 #endif
 
@@ -457,8 +461,10 @@ void cio_cleanup()
 {
     if (!crawl_state.io_inited)
         return;
-    
-#ifdef UNIX
+
+#if defined(USE_TILE)
+    libgui_shutdown();
+#elif defined(UNIX)
     unixcurses_shutdown();
 #endif
 

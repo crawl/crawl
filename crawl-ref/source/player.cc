@@ -70,6 +70,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "tiles.h"
 #include "xom.h"
 
 std::string pronoun_you(description_level_type desc)
@@ -255,6 +256,17 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
     // move the player to location
     you.moveto(x, y);
+
+#ifdef USE_TILE
+    // We could check for this above, but we need to do this post-move
+    // to force the merfolk tile to be out of water.
+    if ((!grid_is_water(new_grid) && grid_is_water(old_grid) ||
+        grid_is_water(new_grid) && !grid_is_water(old_grid))
+        && you.species == SP_MERFOLK)
+    {
+        TilePlayerRefresh();
+    }
+#endif
 
     viewwindow( true, false );
 
@@ -2626,6 +2638,10 @@ void forget_map(unsigned char chance_forgotten, bool force)
              }
         }
     }
+#ifdef USE_TILE
+    GmapInit(false);
+    tile_clear_buf();
+#endif
 } // end forget_map()
 
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
@@ -2979,6 +2995,9 @@ void level_change(bool skip_ability_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level == 7)
                 {
+#ifdef USE_TILE
+                    TilePlayerRefresh();
+#endif
                     switch (you.species)
                     {
                     case SP_RED_DRACONIAN:
@@ -3746,7 +3765,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
         title = trimmed_name + ", " + class_name;
     }
 
-    gotoxy(crawl_view.hudp.x, 1);
+    gotoxy(1, 1, GOTO_STAT);
 
     textcolor( LIGHTGREY );
     cprintf( "%-41s", title.c_str() );

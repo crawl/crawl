@@ -1,0 +1,256 @@
+### dungeon crawl monster corpses
+
+%sdir dc-mon
+
+%corpse 1
+%subst large_mimic
+%back dc-misc/blood_red
+glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER /* @ */
+hell_knight CORPSE_HELL_KNIGHT /* @ */
+human CORPSE_HUMAN /* @ */
+necromancer CORPSE_NECROMANCER /* @ */
+shapeshifter CORPSE_SHAPESHIFTER /* @ */
+wizard CORPSE_WIZARD /* @ */
+
+%back dc-misc/blood_green
+boring_beetle CORPSE_BORING_BEETLE /* B */
+boulder_beetle CORPSE_BOULDER_BEETLE /* B */
+giant_beetle CORPSE_GIANT_BEETLE /* B */
+
+%back dc-misc/blood_red
+cyclops CORPSE_CYCLOPS /* C */
+fire_giant CORPSE_FIRE_GIANT /* C */
+frost_giant CORPSE_FROST_GIANT /* C */
+hill_giant CORPSE_HILL_GIANT /* C */
+stone_giant CORPSE_STONE_GIANT /* C */
+titan CORPSE_TITAN /* C */
+
+dragon CORPSE_DRAGON /* D */
+golden_dragon CORPSE_GOLDEN_DRAGON /* D */
+hydra5 CORPSE_HYDRA /* D */
+ice_dragon CORPSE_ICE_DRAGON /* D */
+shadow_dragon CORPSE_SHADOW_DRAGON /* D */
+storm_dragon CORPSE_STORM_DRAGON /* D */
+swamp_dragon CORPSE_SWAMP_DRAGON /* D */
+wyvern CORPSE_WYVERN /* D */
+
+blink_frog CORPSE_BLINK_FROG /* F */
+giant_brown_frog CORPSE_GIANT_BROWN_FROG /* F */
+giant_frog CORPSE_GIANT_FROG /* F */
+spiny_frog CORPSE_SPINY_FROG /* F */
+
+eye_of_draining CORPSE_EYE_OF_DRAINING /* G */
+giant_eyeball CORPSE_GIANT_EYEBALL /* G */
+giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN /* G */
+great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES /* G */
+
+griffon CORPSE_GRIFFON /* H */
+hippogriff CORPSE_HIPPOGRIFF /* H */
+
+giant_amoeba CORPSE_GIANT_AMOEBA /* J */
+
+%back dc-misc/blood_green
+kobold CORPSE_KOBOLD /* K */
+
+%back dc-misc/blood_red
+greater_naga0 CORPSE_GREATER_NAGA /* N */
+guardian_naga CORPSE_GUARDIAN_NAGA /* N */
+naga0 CORPSE_NAGA /* N */
+###naga_mage CORPSE_NAGA_MAGE /* N */
+###naga_warrior CORPSE_NAGA_WARRIOR /* N */
+
+ogre CORPSE_OGRE /* O */
+two_headed_ogre CORPSE_TWO_HEADED_OGRE /* O */
+
+%back dc-misc/blood_green
+queen_ant CORPSE_QUEEN_ANT /* Q */
+queen_bee CORPSE_QUEEN_BEE /* Q */
+
+%back dc-misc/blood_red
+black_snake CORPSE_BLACK_SNAKE /* S */
+brown_snake CORPSE_BROWN_SNAKE /* S */
+grey_snake CORPSE_GREY_SNAKE /* S */
+small_snake CORPSE_SMALL_SNAKE /* S */
+snake CORPSE_SNAKE /* S */
+yellow_snake CORPSE_YELLOW_SNAKE /* S */
+
+deep_troll CORPSE_DEEP_TROLL /* T */
+iron_troll CORPSE_IRON_TROLL /* T */
+rock_troll CORPSE_ROCK_TROLL /* T */
+troll CORPSE_TROLL /* T */
+
+bear CORPSE_BEAR /* U */
+black_bear CORPSE_BLACK_BEAR /* U */
+grizzly_bear CORPSE_GRIZZLY_BEAR /* U */
+polar_bear CORPSE_POLAR_BEAR /* U */
+
+death_yak CORPSE_DEATH_YAK /* Y */
+sheep CORPSE_SHEEP /* Y */
+yak CORPSE_YAK /* Y */
+
+%back dc-misc/blood_green
+giant_ant CORPSE_GIANT_ANT /* a */
+giant_cockroach CORPSE_GIANT_COCKROACH /* a */
+soldier_ant CORPSE_SOLDIER_ANT /* a */
+
+butterfly CORPSE_BUTTERFLY /* b */
+%back dc-misc/blood_red
+giant_bat CORPSE_GIANT_BAT /* b */
+
+centaur CORPSE_CENTAUR /* c */
+###centaur_warrior CORPSE_CENTAUR_WARRIOR /* c */
+yaktaur CORPSE_YAKTAUR /* c */
+###yaktaur_captain CORPSE_YAKTAUR_CAPTAIN /* c */
+
+firedrake CORPSE_FIREDRAKE /* d */
+lindwurm CORPSE_LINDWURM /* d */
+mottled_dragon CORPSE_MOTTLED_DRAGON /* d */
+steam_dragon CORPSE_STEAM_DRAGON /* d */
+swamp_drake CORPSE_SWAMP_DRAKE /* d */
+death_drake CORPSE_DEATH_DRAKE /* d */
+
+##deep_elf_annihilator CORPSE_DEEP_ELF_ANNIHILATOR /* e */
+##deep_elf_conjurer CORPSE_DEEP_ELF_CONJURER /* e */
+##deep_elf_death_mage CORPSE_DEEP_ELF_DEATH_MAGE /* e */
+##deep_elf_demonologist CORPSE_DEEP_ELF_DEMONOLOGIST /* e */
+##deep_elf_fighter CORPSE_DEEP_ELF_FIGHTER /* e */
+##deep_elf_high_priest CORPSE_DEEP_ELF_HIGH_PRIEST /* e */
+##deep_elf_knight CORPSE_DEEP_ELF_KNIGHT /* e */
+##deep_elf_mage CORPSE_DEEP_ELF_MAGE /* e */
+##deep_elf_priest CORPSE_DEEP_ELF_PRIEST /* e */
+##deep_elf_soldier CORPSE_DEEP_ELF_SOLDIER /* e */
+##deep_elf_sorcerer CORPSE_DEEP_ELF_SORCERER /* e */
+##deep_elf_summoner CORPSE_DEEP_ELF_SUMMONER /* e */
+elf CORPSE_ELF /* e */
+
+gnoll0 CORPSE_GNOLL /* g */
+goblin0 CORPSE_GOBLIN /* g */
+hobgoblin0 CORPSE_HOBGOBLIN /* g */
+
+hog CORPSE_HOG /* h */
+hound CORPSE_HOUND /* h */
+warg CORPSE_WARG /* h */
+war_dog CORPSE_WAR_DOG /* h */
+wolf CORPSE_WOLF /* h */
+
+jackal CORPSE_JACKAL /* j */
+
+%back dc-misc/blood_green
+bumblebee CORPSE_BUMBLEBEE /* k */
+killer_bee CORPSE_KILLER_BEE /* k */
+
+%back dc-misc/blood_red
+giant_gecko CORPSE_GIANT_GECKO /* l */
+giant_iguana CORPSE_GIANT_IGUANA /* l */
+giant_lizard CORPSE_GIANT_LIZARD /* l */
+giant_newt CORPSE_GIANT_NEWT /* l */
+gila_monster CORPSE_GILA_MONSTER /* l */
+komodo_dragon CORPSE_KOMODO_DRAGON /* l */
+
+%back dc-misc/blood_green
+elephant_slug CORPSE_ELEPHANT_SLUG /* m */
+giant_slug CORPSE_GIANT_SLUG /* m */
+giant_snail CORPSE_GIANT_SNAIL /* m */
+manticore CORPSE_MANTICORE /* m */
+%back dc-misc/blood_red
+minotaur CORPSE_MINOTAUR /* m */
+
+%back dc-misc/blood_green
+ghoul CORPSE_GHOUL /* n */
+necrophage CORPSE_NECROPHAGE /* n */
+
+%back dc-misc/blood_red
+orc0 CORPSE_ORC /* o */
+###orc_high_priest CORPSE_ORC_HIGH_PRIEST /* o */
+###orc_priest CORPSE_ORC_PRIEST /* o */
+###orc_sorcerer CORPSE_ORC_SORCERER /* o */
+###orc_warlord CORPSE_ORC_WARLORD /* o */
+
+green_rat CORPSE_GREEN_RAT /* r */
+grey_rat CORPSE_GREY_RAT /* r */
+orange_rat CORPSE_ORANGE_RAT /* r */
+quokka CORPSE_QUOKKA /* r */
+rat CORPSE_RAT /* r */
+
+%back dc-misc/blood_green
+giant_centipede CORPSE_GIANT_CENTIPEDE /* s */
+giant_mite CORPSE_GIANT_MITE /* s */
+redback CORPSE_REDBACK /* s */
+scorpion CORPSE_SCORPION /* s */
+wolf_spider CORPSE_WOLF_SPIDER /* s */
+
+ugly_thing CORPSE_UGLY_THING /* u */
+very_ugly_thing CORPSE_VERY_UGLY_THING /* u */
+
+killer_bee_larva CORPSE_ANT_LARVA /* w */
+brain_worm CORPSE_BRAIN_WORM /* w */
+killer_bee_larva CORPSE_KILLER_BEE_LARVA /* w */
+spiny_worm CORPSE_SPINY_WORM /* w */
+worm CORPSE_WORM /* w */
+
+giant_blowfly CORPSE_GIANT_BLOWFLY /* y */
+giant_mosquito CORPSE_GIANT_MOSQUITO /* y */
+red_wasp CORPSE_RED_WASP /* y */
+yellow_wasp CORPSE_YELLOW_WASP /* y */
+
+%sdir player
+%start
+%compose drcwing/drcwing_black
+%compose base/draconian_black_m
+%compose drchead/drchead_black
+%finish CORPSE_DRACONIAN_BLACK
+
+%start
+%compose drcwing/drcwing_brown
+%compose base/draconian_f
+%compose drchead/drchead_brown
+%finish CORPSE_DRACONIAN_BROWN
+
+%start
+%compose drcwing/drcwing_green
+%compose base/draconian_green_m
+%compose drchead/drchead_green
+%finish CORPSE_DRACONIAN_GREEN
+
+%start
+%compose drcwing/drcwing_grey
+%compose base/draconian_gray_f
+%compose drchead/drchead_grey
+%finish CORPSE_DRACONIAN_GREY
+
+%start
+%compose drcwing/drcwing_mottled
+%compose base/draconian_mottled_m
+%compose drchead/drchead_mottled
+%finish CORPSE_DRACONIAN_MOTTLED
+
+%start
+%compose drcwing/drcwing_pale
+%compose base/draconian_pale_f
+%compose drchead/drchead_pale
+%finish CORPSE_DRACONIAN_PALE
+
+%start
+%compose drcwing/drcwing_purple
+%compose base/draconian_purple_m
+%compose drchead/drchead_purple
+%finish CORPSE_DRACONIAN_PURPLE
+
+%start
+%compose drcwing/drcwing_red
+%compose base/draconian_red_f
+%compose drchead/drchead_red
+%finish CORPSE_DRACONIAN_RED
+
+%start
+%compose drcwing/drcwing_white
+%compose base/draconian_white_m
+%compose drchead/drchead_white
+%finish CORPSE_DRACONIAN_WHITE
+
+%start
+%compose drcwing/drcwing_yellow
+%compose base/draconian_gold_f
+%compose drchead/drchead_yellow
+%finish CORPSE_DRACONIAN_YELLOW
+

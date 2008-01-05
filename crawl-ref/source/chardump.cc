@@ -1240,6 +1240,10 @@ void display_notes()
 
 void resists_screen()
 {
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_MORE);
+#endif
+
     std::vector<formatted_string> vfs = get_full_detail(false);
     clrscr();
     gotoxy(1,1);

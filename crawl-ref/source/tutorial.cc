@@ -41,8 +41,12 @@ static job_type get_tutorial_job(unsigned int type);
 
 static int get_tutorial_cols()
 {
+#ifdef USE_TILE
+    return crawl_view.msgsz.x;
+#else
     int ncols = get_number_of_cols();
     return (ncols > 80? 80 : ncols);
+#endif
 }
 
 void save_tutorial( FILE* fp )

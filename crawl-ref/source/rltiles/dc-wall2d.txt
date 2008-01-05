@@ -1,0 +1,289 @@
+%enumprefix W2D_
+%tiledef tiledef-w2d.h
+%tilecount tilecount-w2d.h
+%width 16
+%back none
+%name wall2d
+
+%sdir dc-dngn
+
+wall/brick_brown0 WALL_NORMAL
+wall/brick_brown1
+wall/brick_brown2
+wall/brick_brown3
+floor/pebble_gray0 FLOOR_NORMAL
+floor/pebble_gray1
+floor/pebble_gray2
+floor/pebble_gray3
+floor/pebble_gray4
+
+wall/relief0 WALL_HALL
+wall/relief1
+wall/relief2
+wall/relief3
+floor/mesh0 FLOOR_HALL
+floor/mesh1
+floor/mesh2
+floor/mesh3
+
+wall/hive0 WALL_HIVE
+wall/hive1
+wall/hive2
+wall/hive3
+floor/hive0 FLOOR_HIVE
+floor/hive1
+floor/hive2
+floor/hive3
+
+wall/ice0 WALL_ICE
+wall/ice1
+wall/ice2
+wall/ice3
+floor/ice0 FLOOR_ICE
+floor/ice1
+floor/ice2
+floor/ice3
+
+wall/lair0 WALL_LAIR
+wall/lair1
+wall/lair2
+wall/lair3
+floor/lair0 FLOOR_LAIR
+floor/lair1
+floor/lair2
+floor/lair3
+
+## orcs don't have their own floor or walls yet...
+wall/lair0 WALL_ORC
+wall/lair1
+wall/lair2
+wall/lair3
+floor/hive0 FLOOR_ORC
+floor/hive1
+floor/hive2
+floor/hive3
+
+wall/slime0 WALL_SLIME
+wall/slime1
+wall/slime2
+wall/slime3
+floor/bog_green0 FLOOR_SLIME
+floor/bog_green1
+floor/bog_green2
+floor/bog_green3
+
+wall/snake0 WALL_SNAKE
+wall/snake1
+wall/snake2
+wall/snake3
+floor/snake0 FLOOR_SNAKE
+floor/snake1
+floor/snake2
+floor/snake3
+
+## swamp also doesn't have any unique walls...
+wall/lair0 WALL_SWAMP
+wall/lair1
+wall/lair2
+wall/lair3
+floor/swamp0 FLOOR_SWAMP
+floor/swamp1
+floor/swamp2
+floor/swamp3
+
+wall/tomb0 WALL_TOMB
+wall/tomb1
+wall/tomb2
+wall/tomb3
+floor/tomb0 FLOOR_TOMB
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/undead0 WALL_UNDEAD
+wall/undead1
+wall/undead2
+wall/undead3
+floor/tomb0 FLOOR_UNDEAD
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/vault0 WALL_VAULT
+wall/vault1
+wall/vault2
+wall/vault3
+floor/rect_gray0 FLOOR_VAULT
+floor/rect_gray1
+floor/rect_gray2
+floor/rect_gray3
+
+wall/zot_blue0 WALL_ZOT_BLUE
+wall/zot_blue1
+wall/zot_blue2
+wall/zot_blue3
+floor/tomb0 FLOOR_ZOT_BLUE
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/zot_cyan0 WALL_ZOT_CYAN
+wall/zot_cyan1
+wall/zot_cyan2
+wall/zot_cyan3
+floor/tomb0 FLOOR_ZOT_CYAN
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/zot_gray0 WALL_ZOT_GRAY
+wall/zot_gray1
+wall/zot_gray2
+wall/zot_gray3
+floor/tomb0 FLOOR_ZOT_GRAY
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/zot_green0 WALL_ZOT_GREEN
+wall/zot_green1
+wall/zot_green2
+wall/zot_green3
+floor/tomb0 FLOOR_ZOT_GREEN
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/zot_magenta0 WALL_ZOT_MAGENTA
+wall/zot_magenta1
+wall/zot_magenta2
+wall/zot_magenta3
+floor/tomb0 FLOOR_ZOT_MAGENTA
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/zot_red0 WALL_ZOT_RED
+wall/zot_red1
+wall/zot_red2
+wall/zot_red3
+floor/tomb0 FLOOR_ZOT_RED
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/zot_yellow0 WALL_ZOT_YELLOW
+wall/zot_yellow1
+wall/zot_yellow2
+wall/zot_yellow3
+floor/tomb0 FLOOR_ZOT_YELLOW
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+wall/brick_gray0 WALL_BAZAAR_GRAY
+wall/brick_gray1
+wall/brick_gray2
+wall/brick_gray3
+
+wall/stone_gray0 WALL_BAZAAR_STONE
+wall/stone_gray1
+wall/stone_gray2
+wall/stone_gray3
+
+floor/grass0 FLOOR_BAZAAR_GRASS
+floor/grass1
+floor/grass2
+
+floor/grass_n FLOOR_BAZAAR_GRASS1_SPECIAL
+floor/grass_ne 
+floor/grass_e
+floor/grass_se
+floor/grass_s
+floor/grass_sw
+floor/grass_w
+floor/grass_nw
+floor/grass_full
+
+%start
+%compose floor/grass0
+%compose floor/pedestal_n
+%finish FLOOR_BAZAAR_GRASS2_SPECIAL
+%start
+%compose floor/grass1
+%compose floor/pedestal_ne
+%finish
+%start
+%compose floor/grass2
+%compose floor/pedestal_e
+%finish
+%start
+%compose floor/grass1
+%compose floor/pedestal_se
+%finish
+%start
+%compose floor/grass0
+%compose floor/pedestal_s
+%finish
+%start
+%compose floor/grass1
+%compose floor/pedestal_sw
+%finish
+%start
+%compose floor/grass2
+%compose floor/pedestal_w
+%finish
+%start
+%compose floor/grass0
+%compose floor/pedestal_nw
+%finish
+floor/pedestal_full
+
+%start
+%compose floor/rect_gray0
+%compose floor/pedestal_n
+%finish FLOOR_BAZAAR_VAULT_SPECIAL
+%start
+%compose floor/rect_gray1
+%compose floor/pedestal_ne
+%finish
+%start
+%compose floor/rect_gray2
+%compose floor/pedestal_e
+%finish
+%start
+%compose floor/rect_gray3
+%compose floor/pedestal_se
+%finish
+%start
+%compose floor/rect_gray2
+%compose floor/pedestal_s
+%finish
+%start
+%compose floor/rect_gray1
+%compose floor/pedestal_sw
+%finish
+%start
+%compose floor/rect_gray0
+%compose floor/pedestal_w
+%finish
+%start
+%compose floor/rect_gray3
+%compose floor/pedestal_nw
+%finish
+floor/pedestal_full
+
+floor/dirt0 FLOOR_BAZAAR_DIRT
+floor/dirt1
+floor/dirt2
+
+floor/dirt_n FLOOR_BAZAAR_DIRT_SPECIAL
+floor/dirt_ne 
+floor/dirt_e
+floor/dirt_se
+floor/dirt_s
+floor/dirt_sw
+floor/dirt_w
+floor/dirt_nw
+floor/dirt_full
+

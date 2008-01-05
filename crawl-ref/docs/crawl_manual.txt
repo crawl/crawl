@@ -2237,6 +2237,15 @@ Stashes:
         Ctrl-E          Erase stash (ignores the square from stash 
                         tracking if using 'stash_tracking = explicit').
 
+Tiles:
+        -               Edit player doll.  This makes it possible to change
+                        the appearance of the player and to override the
+                        defaults, which are to mimic the current player's
+                        equipment and any species defaults.  These options
+                        are saved into the dolls.txt file.
+        Ctrl-Q          Modify screen size preferences.  These changes
+                        are saved into the wininit.txt file.
+
 Level map ('X')
 ---------------
 The level map (brought up by 'X' in the main screen) uses the whole 

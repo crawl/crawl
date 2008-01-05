@@ -758,6 +758,10 @@ void more(void)
             message_out(crawl_view.msgsz.y - 1,
                         LIGHTGREY, "--more--", 2, false);
 
+#ifdef USE_TILE
+        mouse_control mc(MOUSE_MODE_MORE);
+#endif
+
         do
             keypress = getch();
         while (keypress != ' ' && keypress != '\r' && keypress != '\n');
@@ -808,7 +812,7 @@ std::string get_last_messages(int mcount)
 void replay_messages(void)
 {
     int            win_start_line = 0;
-    unsigned char  keyin;
+    int            keyin;
 
     bool           full_buffer = true;
     int            num_msgs = NUM_STORED_MESSAGES;
@@ -844,7 +848,7 @@ void replay_messages(void)
     {
         clrscr();
 
-        gotoxy(1, 1);
+        gotoxy(1, 1, GOTO_CRT);
 
         for (int i = 0; i < num_lines - 2; i++)
         {
@@ -880,7 +884,7 @@ void replay_messages(void)
                         break;
                     case FSOP_TEXT:
                         textcolor( colour );
-                        gotoxy(curcol, wherey());
+                        gotoxy(curcol, wherey(), GOTO_CRT);
                         cprintf(fs.ops[j].text.c_str());
                         curcol += multibyte_strlen(fs.ops[j].text);
                         break;
@@ -923,13 +927,18 @@ void replay_messages(void)
         cprintf( "<< Lines %d-%d of %d (Up: k<-8, Down: j>+2) >>",
                  rel_start, rel_end, num_msgs );
                  
-        keyin = get_ch();
+        keyin = getch();
 
         if ((full_buffer && NUM_STORED_MESSAGES > num_lines - 2)
             || (!full_buffer && Next_Message > num_lines - 2))
         {
             int new_line;
             int end_mark;
+
+#ifdef USE_TILE
+            if (keyin == CK_MOUSE_B4) keyin = '8';
+            if (keyin == CK_MOUSE_B5) keyin = '2';
+#endif
 
             if (keyin == 'k' || keyin == '8' || keyin == '-' || keyin == '<')
             {

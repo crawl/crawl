@@ -70,6 +70,8 @@ The contents of this text are:
                 autoinscribe
 4-n     Macro related Options.
                 flush.failure, flush.command, flush.message
+4-o     Tiles Options.
+                show_items
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins, 
@@ -1216,6 +1218,13 @@ flush.message = false
            failure -- when spells/abilities get miscast 
            command -- whenever the game is about to get the next command
            message -- whenever the game outputs a non-mute message 
+
+4-o     Tiles Options
+---------------------
+show_items = <glyphs>
+        This options controls the order and presence of items in the tiles
+        inventory.  By default, its value is !?/%=([)X}+\_.  The underscore
+        represents empty slots.
 
 
 5-  Character Dump.

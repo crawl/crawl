@@ -654,7 +654,11 @@ void game_options::reset_options()
     detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
 
+#ifdef USE_TILE
+    classic_item_colours   = true;
+#else
     classic_item_colours   = false;
+#endif
 
     easy_exit_menu         = true;
 #ifdef DOS
@@ -740,6 +744,14 @@ void game_options::reset_options()
 
 #ifdef WIZARD
     wiz_mode         = WIZ_NO;
+#endif
+
+#ifdef USE_TILE
+    show_items[0] = '0';
+#endif
+
+#ifdef WIN32TILES
+    use_dos_char = true;
 #endif
 
     // map each colour to itself as default
@@ -1613,6 +1625,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         player_name = field;
     }
 #endif
+#ifndef USE_TILE
     else if (key == "char_set" || key == "ascii_display")
     {
         bool valid = true;
@@ -1642,6 +1655,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
+#endif
     else if (key == "default_autopickup")
     {
         // should autopickup default to on or off?
@@ -2602,6 +2616,21 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             pickup_mode = read_bool_or_number(field, pickup_mode, "auto:");
     }
+
+#ifdef USE_TILE
+    else if (key == "show_items" )
+    {
+        strncpy(show_items, field.c_str(), 18);
+    }
+#endif
+
+#ifdef WIN32TILES
+    else if (key == "use_dos_char" )
+    {
+        use_dos_char = read_bool( field, use_dos_char );
+    }
+#endif
+
     // Catch-all else, copies option into map
     else if (runscript)
     {

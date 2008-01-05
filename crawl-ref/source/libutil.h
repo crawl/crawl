@@ -150,6 +150,10 @@ void usleep( unsigned long time );
 int snprintf( char *str, size_t size, const char *format, ... );
 #endif
 
+#ifndef USE_TILE
+void gotoxy(int x, int y, int region = GOTO_CRT);
+#endif
+
 template <typename T>
 class unwind_var
 {

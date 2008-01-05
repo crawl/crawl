@@ -53,7 +53,7 @@ bool butchery(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool eat_food(bool run_hook = true);
+bool eat_food(bool run_hook = true, int slot = -1);
 
 
 // last updated 19jun2000 {dlb}
@@ -92,7 +92,7 @@ int eat_from_floor();
 
 void eat_from_inventory(int which_inventory_slot);
 
-bool prompt_eat_from_inventory(void);
+bool prompt_eat_from_inventory(int slot = -1);
 
 void chunk_nutrition_message(int nutrition);
 

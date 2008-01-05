@@ -87,6 +87,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
+#include "tiles.h"
 #include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -1090,7 +1091,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (timeval > 0)
         {
             you.time_taken = timeval;
+#ifndef USE_TILE
             viewwindow(true, false);
+#endif
             handle_monsters();
         }
     }
@@ -1354,6 +1357,10 @@ void load_ghost(void)
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
         
+#ifdef USE_TILE
+        TileGhostInit(ghosts[0]);
+#endif
+
         ghosts.erase(ghosts.begin());        
     }
 }

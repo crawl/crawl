@@ -1,0 +1,161 @@
+%sdir dc-dngn
+
+blank BLANK
+dngn_unseen DNGN_UNSEEN
+
+floor/pebble_gray0 DNGN_FLOOR
+floor/pebble_gray1
+floor/pebble_gray2
+floor/pebble_gray3
+floor/pebble_gray3
+floor/pebble_gray3
+floor/pebble_gray3
+floor/pebble_gray3 DNGN_FLOOR_SPECIAL
+wall/brick_brown0 DNGN_ROCK_WALL_OFS
+wall/brick_brown1
+wall/brick_brown2
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+wall/brick_brown3
+
+floor/lava0 DNGN_LAVA
+floor/lava1
+floor/lava2
+floor/lava3
+dngn_deep_water DNGN_DEEP_WATER
+dngn_deep_water
+dngn_deep_water
+dngn_deep_water
+dngn_shallow_water DNGN_SHALLOW_WATER
+dngn_shallow_water
+dngn_shallow_water
+dngn_shallow_water
+
+wall/stone2_gray0 DNGN_STONE_WALL
+wall/stone2_gray1
+wall/stone2_gray2
+wall/stone2_gray3
+dngn_metal_wall DNGN_METAL_WALL
+dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL
+dngn_wax_wall DNGN_WAX_WALL
+
+#dngn_rock_wall_00 DNGN_ROCK_WALL_OFS
+#dngn_rock_wall_01 IGNORE_COMMENT
+#dngn_rock_wall_02 IGNORE_COMMENT
+#dngn_rock_wall_03 IGNORE_COMMENT
+#dngn_rock_wall_04 IGNORE_COMMENT
+#dngn_rock_wall_05 IGNORE_COMMENT
+#dngn_rock_wall_06 IGNORE_COMMENT
+#dngn_rock_wall_07 IGNORE_COMMENT
+#dngn_rock_wall_08 IGNORE_COMMENT
+#dngn_rock_wall_09 IGNORE_COMMENT
+#dngn_rock_wall_10 IGNORE_COMMENT
+#dngn_rock_wall_11 IGNORE_COMMENT
+#dngn_rock_wall_12 IGNORE_COMMENT
+#dngn_rock_wall_13 IGNORE_COMMENT
+#dngn_rock_wall_14 IGNORE_COMMENT
+#dngn_rock_wall_15 IGNORE_COMMENT
+#dngn_stone_wall DNGN_STONE_WALL
+
+dngn_closed_door DNGN_CLOSED_DOOR
+dngn_open_door DNGN_OPEN_DOOR
+###dc/wal8 DNGN_SECRET_DOOR
+dngn_orcish_idol DNGN_ORCISH_IDOL
+dngn_silver_statue DNGN_SILVER_STATUE
+dngn_granite_statue DNGN_GRANITE_STATUE
+dngn_orange_crystal_statue DNGN_ORANGE_CRYSTAL_STATUE
+dngn_ice_statue DNGN_ICE_STATUE
+
+###dc/wal1 DNGN_PERMAROCK_WALL
+###dc/wal1 DNGN_LAST_SOLID_TILE
+
+dngn_enter_hell DNGN_ENTER_HELL
+dngn_branch_stairs DNGN_BRANCH_STAIRS
+dngn_trap_mechanical DNGN_TRAP_MECHANICAL
+dngn_trap_magical DNGN_TRAP_MAGICAL
+dngn_trap_iii DNGN_TRAP_III
+###847 DNGN_UNDISCOVERED_TRAP
+stone_stairs_down DNGN_STONE_STAIRS_DOWN
+#nh-dngn/staircase_down DNGN_STONE_STAIRS_DOWN_II
+#nh-dngn/staircase_down DNGN_STONE_STAIRS_DOWN_III
+rock_stairs_down DNGN_ROCK_STAIRS_DOWN
+stone_stairs_up DNGN_STONE_STAIRS_UP
+#nh-dngn/staircase_up DNGN_STONE_STAIRS_UP_II
+#nh-dngn/staircase_up DNGN_STONE_STAIRS_UP_III
+rock_stairs_up DNGN_ROCK_STAIRS_UP
+
+dngn_enter_shop DNGN_ENTER_SHOP
+dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
+dngn_enter_dis DNGN_ENTER_DIS
+dngn_enter_gehenna DNGN_ENTER_GEHENNA
+dngn_enter_cocytus DNGN_ENTER_COCYTUS
+dngn_enter_tartarus DNGN_ENTER_TARTARUS
+
+dngn_enter_abyss DNGN_ENTER_ABYSS
+dngn_exit DNGN_EXIT_ABYSS
+
+dngn_stone_arch DNGN_STONE_ARCH
+dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
+dngn_exit DNGN_EXIT_PANDEMONIUM
+dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
+####846 DNGN_BUILDER_SPECIAL_WALL
+####846 DNGN_BUILDER_SPECIAL_FLOOR
+dngn_enter DNGN_ENTER
+#851 DNGN_ENTER_ORCISH_MINES
+#851 DNGN_ENTER_HIVE
+#851 DNGN_ENTER_LAIR
+#851 DNGN_ENTER_SLIME_PITS
+#851 DNGN_ENTER_VAULTS
+#851 DNGN_ENTER_CRYPT
+#851 DNGN_ENTER_HALL_OF_BLADES
+#851 DNGN_ENTER_ZOT
+#851 DNGN_ENTER_TEMPLE
+#851 DNGN_ENTER_SNAKE_PIT
+#851 DNGN_ENTER_ELVEN_HALLS
+#851 DNGN_ENTER_TOMB
+#851 DNGN_ENTER_SWAMP
+dngn_return DNGN_RETURN
+#850 DNGN_RETURN_FROM_ORCISH_MINES
+#850 DNGN_RETURN_FROM_HIVE
+#850 DNGN_RETURN_FROM_LAIR
+#850 DNGN_RETURN_FROM_SLIME_PITS
+#850 DNGN_RETURN_FROM_VAULTS
+#850 DNGN_RETURN_FROM_CRYPT
+#850 DNGN_RETURN_FROM_HALL_OF_BLADES
+#850 DNGN_RETURN_FROM_ZOT
+#850 DNGN_RETURN_FROM_TEMPLE
+#850 DNGN_RETURN_FROM_SNAKE_PIT
+#850 DNGN_RETURN_FROM_ELVEN_HALLS
+#850 DNGN_RETURN_FROM_TOMB
+#850 DNGN_RETURN_FROM_SWAMP
+dngn_altar_zin DNGN_ALTAR_ZIN
+dngn_altar_shining_one DNGN_ALTAR_SHINING_ONE
+dngn_altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
+dngn_altar_yredelemnul DNGN_ALTAR_YREDELEMNUL
+dngn_altar_xom DNGN_ALTAR_XOM
+dngn_altar_vehumet DNGN_ALTAR_VEHUMET
+dngn_altar_okawaru DNGN_ALTAR_OKAWARU
+dngn_altar_makhleb DNGN_ALTAR_MAKHLEB
+dngn_altar_sif_muna DNGN_ALTAR_SIF_MUNA
+dngn_altar_trog DNGN_ALTAR_TROG
+dngn_altar_nemelex_xobeh DNGN_ALTAR_NEMELEX_XOBEH
+dngn_altar_elyvilon DNGN_ALTAR_ELYVILON
+dngn_altar_lugonu DNGN_ALTAR_LUGONU
+dngn_altar_beogh DNGN_ALTAR_BEOGH
+dngn_blue_fountain DNGN_BLUE_FOUNTAIN
+dngn_dry_fountain DNGN_DRY_FOUNTAIN
+dngn_sparkling_fountain DNGN_SPARKLING_FOUNTAIN
+#858 DNGN_DRY_FOUNTAIN_II
+#858 DNGN_DRY_FOUNTAIN_III
+#858 DNGN_DRY_FOUNTAIN_IV
+#858 DNGN_DRY_FOUNTAIN_V
+#858 DNGN_DRY_FOUNTAIN_VI
+#858 DNGN_DRY_FOUNTAIN_VII
+#858 DNGN_DRY_FOUNTAIN_VIII
+#858 DNGN_PERMADRY_FOUNTAIN 

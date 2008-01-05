@@ -86,6 +86,7 @@
 #include "skills2.h"
 #include "stuff.h"
 #include "tags.h"
+#include "tiles.h"
 #include "travel.h"
 
 // THE BIG IMPORTANT TAG CONSTRUCTION/PARSE BUFFER
@@ -117,11 +118,14 @@ static void tag_construct_level(tagHeader &th);
 static void tag_construct_level_items(tagHeader &th);
 static void tag_construct_level_monsters(tagHeader &th);
 static void tag_construct_level_attitude(tagHeader &th);
+static void tag_construct_level_tiles(struct tagHeader &th);
 static void tag_read_level(tagHeader &th, char minorVersion);
 static void tag_read_level_items(tagHeader &th, char minorVersion);
 static void tag_read_level_monsters(tagHeader &th, char minorVersion);
 static void tag_read_level_attitude(tagHeader &th);
 static void tag_missing_level_attitude();
+static void tag_read_level_tiles(struct tagHeader &th);
+static void tag_missing_level_tiles();
 
 static void tag_construct_ghost(tagHeader &th);
 static void tag_read_ghost(tagHeader &th, char minorVersion);
@@ -615,6 +619,9 @@ void tag_construct(tagHeader &th, int tagID)
         case TAG_LEVEL_MONSTERS:
             tag_construct_level_monsters(th);
             break;
+        case TAG_LEVEL_TILES:
+            tag_construct_level_tiles(th);
+            break;
         case TAG_LEVEL_ATTITUDE:
             tag_construct_level_attitude(th);
             break;
@@ -720,6 +727,9 @@ int tag_read(FILE *fp, char minorVersion)
         case TAG_LEVEL_ATTITUDE:
             tag_read_level_attitude(th);
             break;
+        case TAG_LEVEL_TILES:
+            tag_read_level_tiles(th);
+            break;
         case TAG_GHOST:
             tag_read_ghost(th, minorVersion);
             break;
@@ -755,6 +765,9 @@ void tag_missing(int tag, char minorVersion)
         case TAG_LEVEL_ATTITUDE:
             tag_missing_level_attitude();
             break;
+        case TAG_LEVEL_TILES:
+            tag_missing_level_tiles();
+            break;
         default:
             perror("Tag %d is missing;  file is likely corrupt.");
             end(-1);
@@ -785,10 +798,15 @@ void tag_set_expected(char tags[], int fileType)
             case TAGTYPE_LEVEL:
                 if (i >= TAG_LEVEL && i <= TAG_LEVEL_ATTITUDE && i != TAG_GHOST)
                     tags[i] = 1;
+#ifdef USE_TILE
+                if (i == TAG_LEVEL_TILES)
+                    tags[i] = 1;
+#endif
                 break;
             case TAGTYPE_GHOST:
                 if (i == TAG_GHOST)
                     tags[i] = 1;
+                break;
             default:
                 // I don't know what kind of file that is!
                 break;
@@ -1782,6 +1800,101 @@ void tag_construct_level_attitude(tagHeader &th)
     }
 }
 
+void tag_construct_level_tiles(struct tagHeader &th)
+{
+#ifdef USE_TILE
+    unsigned short rle_count = 0; // for run-length encoding
+    unsigned short tile = 0;
+    unsigned short last_tile = 0;
+
+    // Ver
+    marshallShort(th, 71); // tile routine subversion
+    // map grids
+    // how many X?
+    marshallShort(th, GXM);
+    // how many Y?
+    marshallShort(th, GYM);
+
+    tile = env.tile_bk_bg[0][0];
+    //  bg first
+    for (int count_x = 0; count_x < GXM; count_x++)
+    {
+        for (int count_y = 0; count_y < GYM; count_y++)
+        {
+            last_tile = tile;
+            tile = env.tile_bk_bg[count_x][count_y];
+
+            if (tile == last_tile)
+            {
+                rle_count++;
+                if (rle_count == 0x100)
+                {
+                    marshallShort(th, last_tile);
+                    marshallByte(th, (char)0xFF);
+                    rle_count = 1;
+                }
+            }
+            else
+            {
+                marshallShort(th, last_tile);
+                // Note: the unsigned char tile count gets streamed
+                // as a signed char here.  It gets read back into
+                // an unsigned char in the read function.
+                marshallByte(th, rle_count);
+                rle_count = 1;
+            }
+        }
+    }
+    marshallShort(th, tile);
+    marshallByte(th, rle_count);
+
+    // fg 
+    tile = env.tile_bk_fg[0][0];
+    rle_count = 0;
+    for (int count_x = 0; count_x < GXM; count_x++)
+    {
+        for (int count_y = 0; count_y < GYM; count_y++)
+        {
+            last_tile = tile;
+            tile = env.tile_bk_fg[count_x][count_y];
+
+            if (tile == last_tile)
+            {
+                rle_count++;
+                if (rle_count == 0x100)
+                {
+                    marshallShort(th, last_tile);
+                    marshallByte(th, (char)0xFF);
+                    rle_count = 1;
+                }
+            }
+            else
+            {
+                marshallShort(th, last_tile);
+                marshallByte(th, rle_count);
+                rle_count = 1;
+            }
+        }
+    }
+    marshallShort(th, tile);
+    marshallByte(th, rle_count);
+
+    // flavor
+    for (int count_x = 0; count_x < GXM; count_x++)
+    {
+        for (int count_y = 0; count_y < GYM; count_y++)
+        {
+            marshallByte(th, env.tile_flavor[count_x][count_y].wall);
+            marshallByte(th, env.tile_flavor[count_x][count_y].floor);
+            marshallByte(th, env.tile_flavor[count_x][count_y].special);
+        }
+    }
+
+    GmapInit(false);
+    TileLoadWall(false);
+    tile_clear_buf();
+#endif
+}
 
 static void tag_read_level( tagHeader &th, char minorVersion )
 {
@@ -2010,6 +2123,90 @@ void tag_missing_level_attitude()
     }
 }
 
+void tag_read_level_tiles(struct tagHeader &th)
+{
+#ifdef USE_TILE
+    for (int i = 0; i < GXM; i++)
+    {
+        for (int j = 0; j < GYM; j++)
+        {
+            env.tile_bk_bg[i][j] = 0;
+            env.tile_bk_fg[i][j] = 0;
+        }
+    }
+
+    unsigned char rle_count = 0;
+    unsigned short tile = 0;
+
+    int ver = unmarshallShort(th);
+    if (ver == 0) return;
+
+    // map grids
+    // how many X?
+    const int gx = unmarshallShort(th);
+    // how many Y?
+    const int gy = unmarshallShort(th);
+
+    // BG first
+    for (int i = 0; i < gx; i++)
+    {
+        for (int j = 0; j < gy; j++)
+        {
+            if (rle_count == 0)
+            {
+                tile = unmarshallShort(th);
+                rle_count = unmarshallByte(th);
+            }
+            env.tile_bk_bg[i][j] = tile;
+            rle_count--;
+        }
+    }
+
+    // FG
+    rle_count = 0;
+    for (int i = 0; i < gx; i++)
+    {
+        for (int j = 0; j < gy; j++)
+        {
+            if (rle_count == 0)
+            {
+                tile = unmarshallShort(th);
+                rle_count = unmarshallByte(th);
+            }
+            env.tile_bk_fg[i][j] = tile;
+            rle_count--;
+        }
+    }
+
+    // flavor
+    for (int x = 0; x < gx; x++)
+    {
+        for (int y = 0; y < gy; y++)
+        {
+            env.tile_flavor[x][y].wall = unmarshallByte(th);
+            env.tile_flavor[x][y].floor = unmarshallByte(th);
+            env.tile_flavor[x][y].special = unmarshallByte(th);
+        }
+    }
+#endif
+}
+
+static void tag_missing_level_tiles()
+{
+#ifdef USE_TILE
+    int i;
+    int j;
+
+    for (i = 0; i < GXM; i++)
+    {
+        for (j = 0; j < GYM; j++)
+        {
+            env.tile_bk_bg[i][j] = 0;
+            env.tile_bk_fg[i][j] = 0;
+        }
+    }
+#endif
+}
 
 // ------------------------------- ghost tags ---------------------------- //
 

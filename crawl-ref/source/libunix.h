@@ -1,6 +1,8 @@
 #ifndef LIBUNIX_H
 #define LIBUNIX_H
 
+#ifndef USE_TILE
+
 // Some replacement routines missing in gcc
 
 #ifndef O_BINARY
@@ -25,7 +27,7 @@ int get_number_of_cols();
 int getch_ck(void);
 int clrscr(void);
 int cprintf(const char *format,...);
-int gotoxy(int x, int y);
+int gotoxy_sys(int x, int y);
 void fakecursorxy(int x, int y);
 int itoa(int value, char *strptr, int radix);
 int kbhit(void);
@@ -73,4 +75,5 @@ extern "C"
 #endif
 
 
+#endif
 #endif

@@ -71,6 +71,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "tiles.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"
@@ -1193,6 +1194,16 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
              && !level_type_exits_down(old_level_type))
         you.your_level--;
     
+
+#ifdef USE_TILE
+    // init micromap
+    GmapInit(false); // do not erase tile backup data
+    TileLoadWall(false);
+    tile_clear_buf();
+    if (newlevel)
+        tile_init_flavor();
+#endif // USE_TILE
+
     switch (you.level_type)
     {
     case LEVEL_ABYSS:
@@ -1329,7 +1340,7 @@ void new_level(void)
 {
     textcolor(LIGHTGREY);
 
-    gotoxy(crawl_view.hudp.x + 6, 12);
+    gotoxy(7, 12, GOTO_STAT);
 
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );

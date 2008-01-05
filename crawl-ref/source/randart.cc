@@ -1859,6 +1859,11 @@ static unrandart_entry *seekunrandart( const item_def &item )
         return &unranddata[idx];
 }
 
+int find_unrandart_index(int item_number)
+{
+    return find_unrandart_index(mitm[item_number]);
+}
+
 int find_okay_unrandart(unsigned char aclass, unsigned char atype)
 {
     int ret = -1;

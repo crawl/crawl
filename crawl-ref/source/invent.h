@@ -152,6 +152,7 @@ protected:
     void sort_menu(std::vector<InvEntry*> &items,
                    const menu_sort_condition *cond);
     const menu_sort_condition *find_menu_sort_condition() const;
+    virtual void draw_stock_item(int index, const MenuEntry *me) const;
 
 protected:
     menu_type type;

@@ -1,0 +1,598 @@
+#####OBJ_WEAPONS
+#####ARTIFACTS
+%sdir item/weapon
+spwpn_singing_sword SPWPN_SINGING_SWORD /* This blessed weapon loves nothing more than to sing to its owner, whether they want it to or not. 
+spwpn_wrath_of_trog SPWPN_WRATH_OF_TROG /* This was the favourite weapon of the old god Trog, before he lost it one day.   It induces a bloodthirsty berserker rage in anyone who uses it to strike another.
+spwpn_scythe_of_curses SPWPN_SCYTHE_OF_CURSES /* This weapon carries a terrible and highly irritating curse.
+spwpn_mace_of_variability SPWPN_MACE_OF_VARIABILITY /* It is rather unreliable.
+spwpn_glaive_of_prune SPWPN_GLAIVE_OF_PRUNE /* It is the creation of a mad god, and carries a curse which transforms anyone possessing it into a prune. Fortunately, the curse works very slowly, and one can use it briefly with no consequences worse than slightly purple skin and a few wrinkles.
+spwpn_sceptre_of_torment SPWPN_SCEPTRE_OF_TORMENT /* This truly accursed weapon is an instrument of Hell.
+spwpn_sword_of_zonguldrok SPWPN_SWORD_OF_ZONGULDROK /* This dreadful weapon is used at the user's peril.
+spwpn_sword_of_cerebov SPWPN_SWORD_OF_CEREBOV /* Eerie flames cover its twisted blade. 
+spwpn_staff_of_dispater SPWPN_STAFF_OF_DISPATER /* This legendary item can unleash the fury of Hell.
+spwpn_sceptre_of_asmodeus SPWPN_SCEPTRE_OF_ASMODEUS /* It carries some of the powers of the arch-fiend Asmodeus.
+spwpn_sword_of_power SPWPN_SWORD_OF_POWER /* It rewards the powerful with power and the meek with weakness.
+spwpn_knife_of_accuracy SPWPN_KNIFE_OF_ACCURACY /* It is almost unerringly accurate.
+spwpn_staff_of_olgreb SPWPN_STAFF_OF_OLGREB /* It was the magical weapon wielded by the mighty wizard Olgreb before he met his fate somewhere within these dungeons. It grants its wielder resistance to the effects of poison and increases their ability to use venomous magic, and carries magical powers which can be evoked.
+spwpn_vampires_tooth SPWPN_VAMPIRES_TOOTH /* It is lethally vampiric.
+quarterstaff SPWPN_STAFF_OF_WUCAD_MU /* Its power varies in proportion to its wielder's intelligence.   Using it can be a bit risky.
+
+##### Unrandom artifacts
+%include dc-urand.txt
+
+#####NORMAL
+%sdir item/weapon
+%rim 1
+##Blunt
+club WPN_CLUB/* D5H4S12 A heavy piece of wood.
+mace WPN_MACE/* D8H3S14 A long handle with a heavy lump on one end.
+mace2 WPN_MACE2
+mace_large WPN_GREAT_MACE/* D16H-3S18 A large and heavy mace.
+mace_large2 WPN_GREAT_MACE2
+flail WPN_FLAIL
+flail2 WPN_FLAIL2
+spiked_flail WPN_SPIKED_FLAIL
+spiked_flail2 WPN_SPIKED_FLAIL2
+great_flail WPN_GREAT_FLAIL
+great_flail2 WPN_GREAT_FLAIL2
+morningstar WPN_MORNINGSTAR
+morningstar2 WPN_MORNINGSTAR2
+eveningstar WPN_EVENINGSTAR
+eveningstar2 WPN_EVENINGSTAR2
+hammer WPN_HAMMER
+hammer2 WPN_HAMMER2
+ancus WPN_ANCUS/* D9H1S14 A large and vicious toothed club.
+bullwhip WPN_WHIP/* D3H1S14 A whip.
+demon_whip WPN_DEMON_WHIP/* D10H1S14 A terrible weapon, woven in the depths of the inferno.
+giant_club WPN_GIANT_CLUB/* D15H-5S16 A giant lump of wood, shaped for an ogre's hands.
+giant_spiked_club WPN_GIANT_SPIKED_CLUB/* D18H-6S17 A giant lump of wood with sharp spikes at one end.
+
+##Edged
+knife WPN_KNIFE/* D2H0S11 A simple survival knife. Designed more for utility than combat, it looks quite capable of butchering a corpse.
+
+dagger WPN_DAGGER/* D3H6S11 A long knife or a very short sword, which can be held or thrown.
+orcish_dagger WPN_DAGGER_ORC
+elven_dagger WPN_DAGGER_ELF
+
+short_sword WPN_SHORT_SWORD/* D6H5S12 A sword with a short, slashing blade.
+short_sword2 WPN_SHORT_SWORD_1
+orcish_short_sword WPN_SHORT_SWORD_ORC
+elven_short_sword WPN_SHORT_SWORD_ELF
+
+long_sword2 WPN_LONG_SWORD/* D10H3S14 A sword with a long, slashing blade.
+%rim 0
+long_sword3 WPN_LONG_SWORD_1
+%rim 1
+orcish_long_sword WPN_LONG_SWORD_ORC
+
+greatsword WPN_GREAT_SWORD/* D16H-1S17 A sword with a very long, heavy blade and a long handle.
+greatsword2 WPN_GREAT_SWORD_1
+orcish_great_sword WPN_GREAT_SWORD_ORC
+
+falchion WPN_FALCHION/* D8H2S13 A sword with a broad slashing blade.
+scimitar WPN_SCIMITAR/* D11H1S14 A long sword with a curved blade.
+scimitar2 WPN_SCIMITAR2
+
+silver_saber WPN_SABRE/* D7H4S12 A sword with a medium length slashing blade.
+sabre2 WPN_SABRE_1
+
+quickblade WPN_QUICK_BLADE/* D5H6S7 A small and magically quick sword.
+
+#tsurugi WPN_KATANA
+katana2 WPN_KATANA/* D13H4S13 A very rare and extremely effective imported weapon, featuring a long single-edged blade.
+katana3 WPN_KATANA_1
+
+double_sword WPN_DOUBLE_SWORD/* D15H3S16 A magical weapon with two razor-sharp blades.
+triple_sword WPN_TRIPLE_SWORD/* D19H-1S19 A magical weapon with three great razor-sharp blades.
+demon_blade WPN_DEMON_BLADE/* D13H2S15 A terrible weapon, forged in the fires of Hell.
+
+##Axe
+hand_axe WPN_HAND_AXE/* D7H2S13 An small axe designed for either hand combat or throwing.
+war_axe WPN_WAR_AXE/* D11H0S16 An axe intended for hand to hand combat. 
+battle_axe2 WPN_BROAD_AXE/* D14H1S17 An axe with a large blade.
+broad_axe2
+battle_axe WPN_BATTLEAXE/* D17H-2S18 A large axe with a double-headed blade.
+battle_axe3 WPN_BATTLEAXE_1
+executioner_axe WPN_EXECUTIONERS_AXE /* D20H-4S20 A huge axe.
+executioner_axe2 WPN_EXECUTIONERS_AXE_1
+
+##Ranged
+blowgun WPN_BLOWGUN /* D1H0S10 A long, light tube, open at both ends.  Doing very little damage,  its main use is to fire poisoned needles from afar.  It makes very little noise.
+blowgun2 WPN_BLOWGUN1
+sling WPN_SLING /* D1H-1S11 A piece of cloth and leather for launching stones, which do a small amount of damage on impact.
+bow WPN_BOW /* D2H-3S11 A curved piece of wood and string, for shooting arrows. It does good damage in combat, and a skilled user can use it to great effect.
+bow2 WPN_BOW1
+crossbow WPN_CROSSBOW /* D2H-1S15 A piece of machinery used for firing bolts, which takes some time to load and fire. It does very good damage in combat.
+crossbow2 WPN_CROSSBOW1
+hand_crossbow WPN_HAND_CROSSBOW /* D1H-1S15 A small crossbow, for firing darts.
+hand_crossbow2 WPN_HAND_CROSSBOW1
+
+##Pole
+quarterstaff WPN_QUARTERSTAFF /* D7H6S12 A sturdy wooden pole.
+
+elven_spear WPN_SPEAR /* D5H3S13 A long stick with a pointy blade on one end, to be held or thrown.
+spear2 WPN_SPEAR2
+trident WPN_TRIDENT /* D9H-2S17 A hafted weapon with three points at one end. 
+trident2 WPN_TRIDENT2
+halberd WPN_HALBERD /* D13H-3S19 A long pole with a spiked axe head on one end.
+halberd2 WPN_HALBERD2
+scythe WPN_SCYTHE /* D14H-4S22 A farm implement, usually unsuited to combat.
+scythe2 WPN_SCYTHE2
+glaive WPN_GLAIVE /* D15H-3S18 A pole with a large, heavy blade on one end.
+glaive2 WPN_GLAIVE2
+orcish_glaive WPN_GLAIVE_ORC
+
+demon_trident WPN_DEMON_TRIDENT /* D15H-2S17 A terrible weapon, molded by fire and brimstone.
+
+# SS new weapons
+%rim 0
+blessed_blade WPN_BLESSED_BLADE
+%rim 1
+longbow WPN_LONGBOW
+lajatang WPN_LAJATANG
+lochaber_axe WPN_LOCHABER_AXE
+
+######OBJ_MISSILES
+item/gem/stone MI_STONE /* D2H4 A stone.
+effect/stone0 MI_STONE0
+sling_bullet MI_SLING_BULLET
+effect/sling_bullet0 MI_SLING_BULLET0
+ya MI_ARROW /* D2H6 An arrow.
+effect/arrow0 MI_ARROW0
+effect/arrow1 MI_ARROW1
+effect/arrow2 MI_ARROW2
+effect/arrow3 MI_ARROW3
+effect/arrow4 MI_ARROW4
+effect/arrow5 MI_ARROW5
+effect/arrow6 MI_ARROW6
+effect/arrow7 MI_ARROW7
+
+crossbow_bolt MI_BOLT /* D2H8 A crossbow bolt.
+effect/bolt0 MI_BOLT0
+effect/bolt1 MI_BOLT1
+effect/bolt2 MI_BOLT2
+effect/bolt3 MI_BOLT3
+effect/bolt4 MI_BOLT4
+effect/bolt5 MI_BOLT5
+effect/bolt6 MI_BOLT6
+effect/bolt7 MI_BOLT7
+
+dart MI_DART /* D2H4 A small throwing weapon.
+dart-p MI_DART_P
+effect/dart0 MI_DART0
+effect/dart1 MI_DART1
+effect/dart2 MI_DART2
+effect/dart3 MI_DART3
+effect/dart4 MI_DART4
+effect/dart5 MI_DART5
+effect/dart6 MI_DART6
+effect/dart7 MI_DART7
+
+needle MI_NEEDLE /* D0H1 A needle.
+needle-p MI_NEEDLE_P
+effect/needle0 MI_NEEDLE0
+effect/needle1 MI_NEEDLE1
+effect/needle2 MI_NEEDLE2
+effect/needle3 MI_NEEDLE3
+effect/needle4 MI_NEEDLE4
+effect/needle5 MI_NEEDLE5
+effect/needle6 MI_NEEDLE6
+effect/needle7 MI_NEEDLE7
+
+javelin MI_JAVELIN
+effect/javelin0 MI_JAVELIN0
+effect/javelin1 MI_JAVELIN1
+effect/javelin2 MI_JAVELIN2
+effect/javelin3 MI_JAVELIN3
+effect/javelin4 MI_JAVELIN4
+effect/javelin5 MI_JAVELIN5
+effect/javelin6 MI_JAVELIN6
+effect/javelin7 MI_JAVELIN7
+
+throwing_net MI_THROWING_NET
+effect/throwing_net0 MI_THROWING_NET0
+effect/throwing_net1 MI_THROWING_NET1
+effect/throwing_net2 MI_THROWING_NET2
+effect/throwing_net3 MI_THROWING_NET3
+effect/throwing_net4 MI_THROWING_NET4
+effect/throwing_net5 MI_THROWING_NET5
+effect/throwing_net6 MI_THROWING_NET6
+effect/throwing_net7 MI_THROWING_NET7
+effect/net_trap TRAP_NET
+
+item/gem/rock MI_LARGE_ROCK /* D20H10 A rock, used by giants as a missile.
+effect/rock0 MI_LARGE_ROCK0
+######OBJ_ARMOUR
+%sdir item/armor
+robe ARM_ROBE /* A1E0 A cloth robe.
+robe2 ARM_ROBE_1
+robe3 ARM_ROBE_2
+
+leather_armor2 ARM_LEATHER_ARMOUR /* A2E-1 A suit made of hardened leather.
+breast_plate2 ARM_LEATHER_ARMOUR_1
+leather_armor4 ARM_LEATHER_ARMOUR_2
+orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
+elven_leather_armor ARM_LEATHER_ARMOUR_ELF
+
+ring_mail ARM_RING_MAIL /* A4E-2 A leather suit covered in little rings.
+ring_mail2 ARM_RING_MAIL_1
+orcish_ringmail ARM_RING_MAIL_ORC
+elven_ringmail ARM_RING_MAIL_ELF
+dwarven_ringmail ARM_RING_MAIL_DWA
+
+scale_mail ARM_SCALE_MAIL /* A5E-2 A leather suit covered in little metal plates.
+scale_mail2 ARM_SCALE_MAIL_2
+elven_scalemail ARM_SCALE_MAIL_ELF
+
+chain_mail1 ARM_CHAIN_MAIL /* A6E-3 A suit made of interlocking metal rings.
+chain_mail2 ARM_CHAIN_MAIL_1
+chain_mail3 ARM_CHAIN_MAIL_ELF
+orcish_chain_mail ARM_CHAIN_MAIL_ORC
+
+splint_mail ARM_SPLINT_MAIL /* A8E-5 A suit made of splints of metal.
+banded_mail ARM_BANDED_MAIL /* A7E-4 A suit made of bands of metal.
+
+plate_mail2 ARM_PLATE_MAIL /* A9E-5 A suit of mail and large plates of metal.
+orcish_platemail ARM_PLATE_MAIL_ORC
+
+crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL /* A16E-8
+
+animal_skin ARM_ANIMAL_SKIN /* A1E0 The skins of several animals.
+animal_skin2 ARM_ANIMAL_SKIN_1
+
+troll_hide ARM_TROLL_HIDE /* A1E-1 The stiff and knobbly hide of a troll. I suppose you could wear it if you really wanted to.
+troll_leather_armour ARM_TROLL_LEATHER_ARMOUR /* A3E-1 A magical armour, made from the stiff and knobbly skin of a common troll. It magically regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
+green_dragon_scales ARM_DRAGON_HIDE /* A2E-2 The scaly skin of a dragon. I suppose you could wear it if you really wanted to.
+green_dragon_scale_mail ARM_DRAGON_ARMOUR /* A8E-2 A magical armour, made from the scales of a fire-breathing dragon. It provides great protection from the effects of fire, but renders its wearer more susceptible to the effects of cold.
+ice_dragon_hide ARM_ICE_DRAGON_HIDE /* A2E-2 The scaly skin of a dragon. I suppose you could wear it if you really wanted to.
+ice_dragon_armour ARM_ICE_DRAGON_ARMOUR /* A9E-2 A magical armour, made from the scales of a cold-breathing dragon. It provides great protection from the effects of cold, but renders its wearer more susceptible to the effects of fire and heat. 
+silver_dragon_scales ARM_STEAM_DRAGON_HIDE /* A0E0 The soft and supple scaley skin of a steam dragon. I suppose you could wear it if you really wanted to. 
+silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR /* A3E0 A magical armour, made from the scales of a steam-breathing dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is extremely light and as supple as cloth.
+mottled_dragon_hide ARM_MOTTLED_DRAGON_HIDE /* A1E-1 The weirdly-patterned scaley skin of a mottled dragon. I suppose you could wear it if you really wanted to.
+mpttled_dragon_armour ARM_MOTTLED_DRAGON_ARMOUR /* A5E-1 A magical armour made from the scales of a mottled dragon. Although unlike the armour made from the scales of some larger dragons it does not provide its wearer with much in the way of special magical protection, it is as light and relatively uncumbersome as leather armour.
+blue_dragon_scales ARM_STORM_DRAGON_HIDE /* A2E-5 The hide of a storm dragon, covered in extremely hard blue scales. I suppose you could wear it if you really wanted to.
+blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR /* A10E-5 A magical armour made from the scales of a lightning-breathing dragon. It is heavier than most dragon scale armours, but gives its wearer great resistance to electrical discharges.
+gold_dragon_hide ARM_GOLD_DRAGON_HIDE /* A2E-10 The extremely tough and heavy skin of a golden dragon, covered in shimmering golden scales. I suppose you could wear it if you really wanted to.
+gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR /* A13E-10 A magical armour made from the golden scales of a golden dragon. It is extremely heavy and cumbersome, but confers resistances to fire, cold, and poison on its wearer. 
+swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE /* A1E-2 The slimy skin of a swamp-dwelling dragon. I suppose you could wear it if you really wanted to.
+swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR /* A7E-2 A magical armour made from the scales of a swamp dragon. It confers resistance to poison on its wearer.
+
+naga_barding ARM_NAGA_BARDING
+centaur_barding ARM_CENTAUR_BARDING
+
+elven_shield ARM_SHIELD /* A0E0 A piece of metal, to be strapped on one's arm. It is cumbersome to wear, and slightly slows the rate at which you may attack.
+shield_kite2 ARM_SHIELD_1
+shield_round2 ARM_SHIELD_2
+
+#dwarvish_roundshield ARM_BUCKLER
+small_shield ARM_BUCKLER /* A small shield.
+small_shield2 ARM_BUCKLER_1
+
+large_shield ARM_LARGE_SHIELD /* Like a normal shield, only larger. It is very cumbersome to wear, and slows the rate at which you may attack.
+shield_large2 ARM_LARGE_SHIELD_1
+shield_kite3 ARM_LARGE_SHIELD_2
+
+leather_cloak ARM_CLOAK /* A1E0 A cloth cloak.
+cloak2 ARM_CLOAK_1
+cloak3 ARM_CLOAK_2
+cloak4 ARM_CLOAK_3
+
+#####ARM_HELMET
+elven_leather_helm THELM_CAP /* A cloth or leather cap.
+wizard_hat THELM_WIZARD_HAT /* A conical cloth hat.
+wizard_hat2 THELM_WIZARD_HAT_1
+
+visored_helmet THELM_HELM /* A1E0 A piece of metal headgear.
+etched_helmet THELM_HELM_1
+helm3 THELM_HELM_2
+helm_visor1 THELM_HELM_3
+
+###### GLOVES
+glove1 ARM_GLOVES /* A1E0 A pair of gloves.
+glove3 ARM_GLOVES_1
+glove5 ARM_GLOVES_2
+gauntlet2 ARM_GLOVES_3
+
+###### BOOTS
+boots_brown1 ARM_BOOTS /* A1E0 A pair of sturdy boots.
+jackboots ARM_BOOTS_1
+boots_stripe1 ARM_BOOTS_2
+boots_green2 ARM_BOOTS_3
+
+###########OBJ_WANDS
+%sdir item/wand
+gem_iron WAND_OFFSET /*iron*/
+gem_brass
+gem_bone
+gem_wood
+gem_copper
+gem_gold
+gem_silver
+gem_bronze
+gem_ivory
+gem_glass
+gem_lead
+gem_plastic
+
+%sdir item/wand
+%back i-label
+
+i-flame WAND_FLAME
+i-frost WAND_FROST
+i-slowing WAND_SLOWING
+i-hasting WAND_HASTING
+i-magic_darts WAND_MAGIC_DARTS
+i-healing WAND_HEALING
+i-paralysis WAND_PARALYSIS
+i-fire WAND_FIRE
+i-cold WAND_COLD
+i-confusion WAND_CONFUSION
+i-invisibility WAND_INVISIBILITY
+i-digging WAND_DIGGING
+i-fireball WAND_FIREBALL
+i-teleportation WAND_TELEPORTATION
+i-lightning WAND_LIGHTNING
+i-polymorph_other WAND_POLYMORPH_OTHER
+i-enslavement WAND_ENSLAVEMENT
+i-draining WAND_DRAINING
+i-random_effects WAND_RANDOM_EFFECTS
+i-disintegration WAND_DISINTEGRATION
+
+%back none
+#################OBJ_FOOD
+%sdir item/food
+tripe_ration FOOD_MEAT_RATION
+bread_ration FOOD_BREAD_RATION
+pear FOOD_PEAR
+apple FOOD_APPLE
+choko FOOD_CHOKO
+honeycomb FOOD_HONEYCOMB
+lump_of_royal_jelly FOOD_ROYAL_JELLY
+snozzcumber FOOD_SNOZZCUMBER
+pizza FOOD_PIZZA
+apricot FOOD_APRICOT
+orange FOOD_ORANGE
+banana FOOD_BANANA
+strawberry FOOD_STRAWBERRY
+rambutan FOOD_RAMBUTAN
+lemon FOOD_LEMON
+grape FOOD_GRAPE
+sultana FOOD_SULTANA
+lychee FOOD_LYCHEE
+beef_jerky FOOD_BEEF_JERKY
+cheese FOOD_CHEESE
+sausage FOOD_SAUSAGE
+corpse FOOD_CHUNK
+corpse_rotten FOOD_CHUNK_ROTTEN
+bone FOOD_BONE
+#################OBJ_UNKNOWN_I
+##################OBJ_SCROLLS
+%sdir item/scroll
+kernod_wel SCROLL
+
+%back kernod_wel
+%sdir item/scroll
+i-identify SCR_IDENTIFY
+i-teleportation SCR_TELEPORTATION
+i-fear SCR_FEAR
+i-noise SCR_NOISE
+i-remove_curse SCR_REMOVE_CURSE
+i-detect_curse SCR_DETECT_CURSE
+i-summoning SCR_SUMMONING
+i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
+i-enchant_armour SCR_ENCHANT_ARMOUR
+i-torment SCR_TORMENT
+i-random_uselessness SCR_RANDOM_USELESSNESS
+i-curse_weapon SCR_CURSE_WEAPON
+i-curse_armour SCR_CURSE_ARMOUR
+i-immolation SCR_IMMOLATION
+i-blinking SCR_BLINKING
+item/scroll/blank_paper SCR_PAPER
+i-magic_mapping SCR_MAGIC_MAPPING
+i-foregetfulness SCR_FORGETFULNESS
+i-acquirement SCR_ACQUIREMENT
+i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
+i-vorpalize-weapon SCR_VORPALISE_WEAPON
+i-recharging SCR_RECHARGING
+i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+%back none
+
+##################OBJ_JEWELLERY
+############ring
+%sdir item/ring
+wooden RING_NORMAL_OFFSET /*wood*/
+silver
+gold
+iron
+steel
+bronze
+brass
+copper
+granite
+ivory
+clay
+tiger_eye
+jade
+glass
+###########random
+agate RING_RANDOM_OFFSET
+clay
+diamond
+emerald
+gold_green
+gold_red
+opal
+pearl
+coral
+gold_blue
+plain_red
+plain_yellow
+plain_black
+bronze
+moonstone
+
+###amulets
+%sdir item/amulet
+crystal_white AMU_NORMAL_OFFSET /*zirconium*/
+stone3_blue
+face1_gold
+stone3_green
+stone2_red
+eye_magenta
+face2
+penta_orange
+celtic_red
+cameo_blue
+bone_gray
+cylinder_gray
+ring_green
+ring_cyan
+###random
+crystal_green AMU_RANDOM_OFFSET
+cameo_orange
+celtic_blue
+eye_cyan
+penta_green
+ring_red
+stone1_cyan
+stone1_pink
+stone2_green
+stone3_magenta
+celtic_yellow
+stone1_green
+stone2_blue
+crystal_red
+eye_green
+
+####################OBJ_POTIONS
+%sdir item/potion
+clear POTION_OFFSET /*clear*/
+brilliant_blue
+black
+silver
+cyan
+magenta
+orange
+dark
+ruby
+yellow
+emerald
+brown
+pink
+white
+
+%sdir item/potion
+%back i-label
+%rim 0
+i-heal POT_HEALING
+i-heal-wounds POT_HEAL_WOUNDS
+i-speed POT_SPEED
+i-might POT_MIGHT
+i-gain-strength POT_GAIN_STRENGTH
+i-gain-dexterity POT_GAIN_DEXTERITY
+i-gain-intelligence POT_GAIN_INTELLIGENCE
+i-levitation POT_LEVITATION
+i-poison POT_POISON
+i-slowing POT_SLOWING
+i-paralysis POT_PARALYSIS
+i-confusion POT_CONFUSION
+i-invisibility POT_INVISIBILITY
+i-porridge POT_PORRIDGE
+i-degeneration POT_DEGENERATION
+i-decay POT_DECAY
+i-water POT_WATER
+i-experience POT_EXPERIENCE
+i-magic POT_MAGIC
+i-restore-abilities POT_RESTORE_ABILITIES
+i-strong-poison POT_STRONG_POISON
+i-berserk-rage POT_BERSERK_RAGE
+i-cure-mutation POT_CURE_MUTATION
+i-mutation POT_MUTATION
+i-blood POT_BLOOD
+i-resistance POT_RESISTANCE
+%back none
+%rim 1
+
+####################OBJ_UNKNOWN_II
+#####################OBJ_BOOKS
+###0paperback / hardback 16
+%sdir item/book
+book_of_the_dead BOOK_PAPER_OFFSET
+dark_blue
+dark_green
+cyan
+red
+purple
+tan
+light_gray
+dark_gray
+light_blue
+light_green
+turquoise
+pink
+magenta
+yellow
+white
+##########leather 8
+parchment BOOK_LEATHER_OFFSET
+leather
+tan
+plaid
+light_brown
+light_brown
+dark_brown
+dark_brown
+###########3metal 8
+bronze BOOK_METAL_OFFSET
+copper
+silver
+gold
+glittering
+metal_blue
+metal_cyan
+metal_green
+############4papi 1
+cloth BOOK_PAPYRUS
+#####################OBJ_STAVES
+%sdir item/wand
+staff00 STAFF_OFFSET /*curved*/
+staff01
+staff02
+staff03
+staff04
+staff05
+staff06
+staff07
+staff08
+staff09
+
+#OBJ_ORBS
+%sdir item/misc
+misc_orb ORB
+
+#OBJ_MISCELLANY
+misc_bottle MISC_BOTTLED_EFREET
+misc_crystal MISC_CRYSTAL_BALL_OF_SEEING
+misc_fan MISC_AIR_ELEMENTAL_FAN
+misc_lamp MISC_LAMP_OF_FIRE
+misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
+misc_lantern MISC_LANTERN_OF_SHADOWS
+misc_horn MISC_HORN_OF_GERYON
+misc_box MISC_BOX_OF_BEASTS
+misc_deck MISC_DECK_OF_WONDERS
+misc_deck MISC_DECK_OF_SUMMONINGS
+misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
+misc_box MISC_EMPTY_EBONY_CASKET
+misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
+misc_disc MISC_DISC_OF_STORMS
+misc_rune MISC_RUNE_OF_ZOT
+misc_deck MISC_DECK_OF_TRICKS
+misc_deck MISC_DECK_OF_POWER
+misc_altar MISC_PORTABLE_ALTAR_OF_NEMELEX
+
+#OBJ_CORPSES
+
+#OBJ_GOLD
+%sdir item/gem
+gold_piece GOLD
+#OBJ_GEMSTONES

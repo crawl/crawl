@@ -25,7 +25,7 @@ bool is_cursor_enabled();
 
 void clrscr(void);
 void clear_to_end_of_line();
-void gotoxy(int x, int y);
+void gotoxy_sys(int x, int y);
 void textcolor(int c);
 void textattr(int c);
 void cprintf( const char *format, ... );

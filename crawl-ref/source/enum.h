@@ -581,6 +581,15 @@ enum command_type
     CMD_TARGET_WIZARD_GIVE_ITEM,
     CMD_TARGET_HELP,
 
+#ifdef USE_TILE
+    CMD_TARGET_MOUSE_MOVE,
+    CMD_TARGET_MOUSE_SELECT,
+    CMD_EDIT_PREFS,
+    CMD_EDIT_PLAYER_TILE,
+    CMD_USE_ITEM,
+    CMD_VIEW_ITEM,
+#endif
+
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,
     CMD_ENABLE_MORE,

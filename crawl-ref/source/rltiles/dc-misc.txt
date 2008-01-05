@@ -1,0 +1,167 @@
+%sdir effect
+#### Magic Bolts
+%back none
+bolt01 SYM_BOLT_OFS
+bolt02
+bolt03
+bolt04
+bolt05
+bolt06
+bolt07
+bolt08
+#########CLOUDS
+cloud_fire0 CLOUD_FIRE_0
+cloud_fire1 CLOUD_FIRE_1
+cloud_fire2 CLOUD_FIRE_2
+cloud_cold0 CLOUD_COLD_0
+cloud_cold1 CLOUD_COLD_1
+cloud_cold2 CLOUD_COLD_2
+cloud_poison0 CLOUD_POISON_0
+cloud_poison1 CLOUD_POISON_1
+cloud_poison2 CLOUD_POISON_2
+cloud_black_smoke CLOUD_BLACK_SMOKE
+cloud_blue_smoke CLOUD_BLUE_SMOKE
+cloud_grey_smoke CLOUD_GREY_SMOKE
+cloud_miasma CLOUD_MIASMA
+cloud_purp_smoke CLOUD_PURP_SMOKE
+
+#########MAP
+%sdir dc-misc
+%corpse 0
+%back none
+%mesh 0
+unseen_weapon UNSEEN_WEAPON
+unseen_monster UNSEEN_MONSTER
+unseen_armour UNSEEN_ARMOUR
+unseen_item UNSEEN_ITEM
+%corpse 1
+%back dc-misc/blood_red
+unseen_monster UNSEEN_CORPSE
+%corpse 0
+%back none
+dc-dngn/dngn_altar UNSEEN_ALTAR
+dc-dngn/dngn_entrance UNSEEN_ENTRANCE
+
+%back none
+#mask_deep_water MASK_DEEP_WATER
+#mask_shallow_water MASK_SHALLOW_WATER
+#mask_lava MASK_LAVA
+sink_mask SINK_MASK
+cursor CURSOR
+cursor_red CURSOR2
+cursor_green CURSOR3
+heart HEART
+may_stab_brand MAY_STAB_BRAND
+stab_brand STAB_BRAND
+unseen PLAYER
+%mesh 1
+blank MESH
+%mesh 0
+magicmap MAGIC_MAP_MESH
+ray RAY_MESH
+txt1 TEXT_PARTS_J
+txt2 TEXT_DOLLS_J
+txt3 TEXT_PARTS_E
+txt4 TEXT_DOLLS_E
+something_under SOMETHING_UNDER
+error ERROR
+
+char20 CHAR00
+char28
+char30
+char38
+char40
+char48
+char50
+char58
+char60
+char68
+char70
+char78
+
+slot ITEM_SLOT
+slot_eq ITEM_SLOT_EQUIP
+slot_cursed ITEM_SLOT_CURSED
+slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
+
+%back unseen
+dc-misc/unseen_monster MCACHE_START
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster
+dc-misc/unseen_monster MCACHE_END

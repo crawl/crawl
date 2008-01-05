@@ -120,9 +120,15 @@ const int LABYRINTH_BORDER = 4;
 #define ENV_SHOW_OFFSET (LOS_RADIUS + 1)
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
+#ifdef USE_TILE
+#define VIEW_BASE_WIDTH (tile_dngn_x)
+#define VIEW_MIN_WIDTH (tile_dngn_x)
+#define VIEW_MIN_HEIGHT (tile_dngn_y)
+#else
 #define VIEW_BASE_WIDTH 33
 #define VIEW_MIN_WIDTH  17
 #define VIEW_MIN_HEIGHT 17
+#endif
 
 // max traps per level
 #define MAX_TRAPS 100
@@ -303,5 +309,27 @@ const int LABYRINTH_BORDER = 4;
 #define KEY_MACRO_DISABLE_MORE -1
 #define KEY_MACRO_ENABLE_MORE  -2
 #define KEY_REPEAT_KEYS        -3
+
+// gotoxy regions
+enum GotoRegion
+{
+    GOTO_CRT,  // cprintf > crt
+    GOTO_MSG,  // cprintf > message
+    GOTO_STAT, // cprintf > character status
+    GOTO_DNGN, // cprintf > dungeon screen
+    GOTO_LAST  // cprintf > last active region or CRT, if none
+};
+
+// Mouse modes (for tiles)
+enum MouseMode
+{
+     MOUSE_MODE_NORMAL,
+     MOUSE_MODE_COMMAND,
+     MOUSE_MODE_TARGET,
+     MOUSE_MODE_TARGET_DIR,
+     MOUSE_MODE_MORE,
+     MOUSE_MODE_MACRO
+};
+
 
 #endif

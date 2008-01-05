@@ -44,6 +44,8 @@
 #include "menu.h"
 #include "randart.h"
 
+#include "tiles.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
 
@@ -348,6 +350,36 @@ void InvMenu::load_inv_items(int item_selector,
     {
         set_title("");
     }
+}
+
+void InvMenu::draw_stock_item(int index, const MenuEntry *me) const
+{
+#ifdef USE_TILE
+    const InvEntry *ie = dynamic_cast<const InvEntry*>(me);
+    if (ie && me->quantity > 0)
+    {
+        int draw_quantity = ie->quantity > 1 ? ie->quantity : -1;
+        bool is_item_on_floor = true;
+        bool is_item_tried = false;
+        char c = 0;
+        int idx = -1;
+        if (ie->item)
+        {
+            is_item_on_floor = ie->item->x != -1;
+            is_item_tried = item_type_tried(*ie->item);
+            c = ie->hotkeys.size() > 0 ? ie->hotkeys[0] : 0;
+            idx = (is_item_on_floor ? ie->item->index() :
+                letter_to_index(c));
+        }
+
+        TileDrawOneItem(REGION_INV2, get_entry_index(ie), c,
+            idx, tileidx_item(*ie->item), draw_quantity,
+            is_item_on_floor, ie->selected(), ie->is_item_equipped(),
+            is_item_tried, ie->is_item_cursed());
+    }
+#endif
+
+    Menu::draw_stock_item(index, me);
 }
 
 template <std::string (*proc)(const InvEntry *a)>

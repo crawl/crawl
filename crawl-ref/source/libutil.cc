@@ -13,6 +13,7 @@
 
 #include "AppHdr.h"
 #include "defines.h"
+#include "direct.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "externs.h"
@@ -24,7 +25,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#ifdef WIN32CONSOLE
+#if defined(WIN32CONSOLE) || defined(WIN32TILES)
     #include <windows.h>
 
     #ifdef WINMM_PLAY_SOUNDS
@@ -567,6 +568,24 @@ int snprintf( char *str, size_t size, const char *format, ... )
 
 #endif
 
+#ifndef USE_TILE
+void gotoxy(int x, int y, int region)
+{
+    switch(region)
+    {
+    case GOTO_STAT:
+        gotoxy_sys(x + crawl_view.hudp.x - 1, y + crawl_view.hudp.y - 1);
+        break;
+    case GOTO_MSG:
+        gotoxy_sys(x + crawl_view.msgp.x - 1, y + crawl_view.msgp.y - 1);
+        break;
+    case GOTO_CRT:
+    default:
+        gotoxy_sys(x, y);
+        break;
+    }
+}
+#endif
 ///////////////////////////////////////////////////////////////////////
 // Pattern matching
 

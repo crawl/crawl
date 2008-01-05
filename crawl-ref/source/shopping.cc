@@ -172,6 +172,10 @@ static void in_a_shop( int shopidx )
 
     cursor_control coff(false);
 
+#ifdef USE_TILE
+    clrscr();
+#endif
+
     const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
     shop_print(hello.c_str(), 20);
 
@@ -306,14 +310,14 @@ bool shoptype_identifies_stock(shop_type type)
 
 static void shop_print( const char *shoppy, int sh_lines )
 {
-    gotoxy(1, sh_lines);
+    gotoxy(1, sh_lines, GOTO_CRT);
     cprintf("%s", shoppy);
     clear_to_end_of_line();
 }
 
 static void more3()
 {
-    gotoxy(70, 20);
+    gotoxy(70, 20, GOTO_CRT);
     cprintf("-more-");
     get_ch();
     return;

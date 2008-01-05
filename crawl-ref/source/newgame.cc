@@ -2268,6 +2268,11 @@ static void enter_player_name(bool blankOK)
             if (!read_player_name(name, kNameLen, existing_chars, char_menu))
                 end(0);
 
+#ifdef USE_TILE
+            clrscr();
+            gotoxy(1, 1);
+#endif
+
             // Laboriously trim the damn thing.
             std::string read_name = name;
             trim_string(read_name);
@@ -2280,7 +2285,7 @@ static void enter_player_name(bool blankOK)
 
 static bool validate_player_name(bool verbose)
 {
-#if defined(DOS) || defined(WIN32CONSOLE)
+#if defined(DOS) || defined(WIN32CONSOLE) || defined(WIN32TILES)
     // quick check for CON -- blows up real good under DOS/Windows
     if (stricmp(you.your_name, "con") == 0
         || stricmp(you.your_name, "nul") == 0

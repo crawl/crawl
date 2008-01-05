@@ -1,0 +1,54 @@
+#-----------------------------
+#  bmp2png.exe & png2bmp.exe
+#  makefile for DJGPP V.2
+#-----------------------------
+
+srcdir	= .
+VPATH	= $(srcdir)
+
+ZINC	= $(srcdir)/../zlib
+PINC	= $(srcdir)/../libpng
+ZLIB	= $(srcdir)/../zlib
+PLIB	= $(srcdir)/../libpng
+
+CC	= gcc
+LD	= gcc
+CFLAGS	= -O2 -Wall -mcpu=pentium -march=i386 -DPNG_USER_CONFIG \
+	  -I$(PINC) -I$(ZINC) $(COPT)
+LDFLAGS	= -s -L$(PLIB) -L$(ZLIB) $(LOPT)
+
+LIBS	= -lpng -lz -lm
+B2POBJ	= bmp2png.o common.o
+P2BOBJ	= png2bmp.o common.o
+B2PMAP	= -Wl,-Map,bmp2png.map
+P2BMAP	= -Wl,-Map,png2bmp.map
+
+
+all : bmp2png.exe png2bmp.exe
+
+bmp2png.exe : $(B2POBJ)
+	$(LD) $(LDFLAGS) $(B2PMAP) -o $@ $(B2POBJ) $(LIBS)
+
+png2bmp.exe : $(P2BOBJ)
+	$(LD) $(LDFLAGS) $(P2BMAP) -o $@ $(P2BOBJ) $(LIBS)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $<
+
+%.s : %.c
+	$(CC) $(CFLAGS) -S -fverbose-asm $<
+
+%.lst : %.s
+	$(CC) -Wa,-a=$@ -c -o NUL $<
+
+clean : mostlyclean
+	if exist *.exe del *.exe
+	if exist *.map del *.map
+
+mostlyclean :
+	if exist *.o   del *.o
+
+bmp2png.o : bmp2png.c common.h bmphed.h
+png2bmp.o : png2bmp.c common.h bmphed.h
+common.o  : common.c  common.h
+

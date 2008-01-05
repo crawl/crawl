@@ -1,0 +1,121 @@
+##########################################################################
+# makefile.unix
+#
+# This is a makefile to build all the rltiles files needed for Dungeon
+# Crawl - Stone Soup.
+#
+# - Enne (enne.walker@gmail.com)
+#
+
+SRC = tool/
+B2PSRC = bmp2png/
+B2P = bmp2png
+B2PTOOL = $(B2PSRC)$(B2P)
+
+CC = cc
+DELETE = rm -f
+
+OBJECTS = \
+$(SRC)bm.o \
+$(SRC)dcpl.o \
+$(SRC)dctile.o
+
+TOOLS = \
+dcpl \
+dctile
+
+EXTRATOOLS = \
+dcreverse
+
+HEADERS = \
+tiledef.h \
+tiledef-p.h \
+tilep-cmt.h \
+tiledef-w2d.h \
+tilecount-w2d.h \
+map.htm
+
+ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
+
+TILEBMP = \
+tile.bmp \
+player.bmp \
+wall2d.bmp
+
+TILEPNG = $(TILEBMP:.bmp=.png)
+
+##########################################################################
+# Top-level
+#
+
+all: tools tiles
+
+tools: $(TOOLS)
+
+tiles: $(TILEBMP) $(TILEPNG)
+
+##########################################################################
+# Tools
+#
+# Note: dcreverse is not built by default.  It does the opposite
+# of dctile.  It takes a bitmap with lots of tiles, specifies regions,
+# and cuts them out into smaller pieces.  It's useful only for when somebody
+# updates the tiles directly and then doesn't give you the source files.
+# Not that I'm bitter.
+#
+
+depend: $(OBJECTS:.o=.c)
+	@for i in $^; do \
+		$(CC) -c $$i
+
+dcpl: $(SRC)dcpl.o $(SRC)bm.o
+	$(CC) $(SRC)dcpl.o $(SRC)bm.o -o dcpl
+
+dctile: $(SRC)dctile.o $(SRC)bm.o
+	$(CC) $(SRC)dctile.o $(SRC)bm.o -o dctile
+
+dcreverse: $(SRC)dcreverse.o $(SRC)bm.o
+	$(CC) $(SRC)dcreverse.o $(SRC)bm.o -o dcreverse
+
+##########################################################################
+# Bitmaps
+#
+
+# NOTE: the dependencies here aren't fantastic.  In an ideal world,
+# there would be another tool elf that could read an input text file
+# and then output the .bmp and .txt dependencies for it.  It's kind
+# of a low priority though, as tiles will be rebuilt infrequently.
+
+tile.bmp: dc-2d.txt dctile
+	./dctile dc-2d.txt
+
+player.bmp: dc-pl.txt dcpl
+	./dcpl dc-pl.txt
+
+wall2d.bmp: dc-wall2d.txt dctile
+	./dctile dc-wall2d.txt
+
+##########################################################################
+# PNG Conversion
+#
+
+$(B2PTOOL):
+	cd $(B2PSRC) && make -f makefile.lin $(B2P) && cd ..
+
+%.png: %.bmp $(B2PTOOL)
+	$(DELETE) $@
+	$(B2PTOOL) -Q $<
+
+##########################################################################
+# Cleaning...
+#
+
+clean:
+	$(DELETE) $(OBJECTS)
+	$(DELETE) $(ALLTOOLS)
+	cd $(B2PSRC) && make -f makefile.lin clean && cd ..
+
+distclean: clean
+	$(DELETE) $(TILEBMP)
+	$(DELETE) $(TILEPNG)
+	$(DELETE) $(HEADERS)

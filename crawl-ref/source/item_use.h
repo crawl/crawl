@@ -64,7 +64,7 @@ bool takeoff_armour(int index);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void drink(void);
+void drink(int slot = -1);
 
 bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
@@ -88,7 +88,7 @@ bool puton_ring(int slot = -1, bool prompt_finger = true);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void read_scroll(void);
+void read_scroll(int slot = -1);
 
 
 // last updated 12may2000 {dlb}
@@ -111,14 +111,14 @@ void shoot_thing(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void throw_anything(void);
+void throw_anything(int slot = -1);
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void wear_armour( void );
+void wear_armour( int slot = -1 );
 
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 
@@ -147,7 +147,7 @@ bool wield_weapon(bool auto_wield, int slot = -1, bool show_we_messages = true);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void zap_wand(void);
+void zap_wand(int slot = -1);
 
 
 // last updated 15jan2001 {gdl}
@@ -183,5 +183,12 @@ void warn_shield_penalties();
 int item_special_wield_effect(const item_def &item);
 
 bool wearing_slot(int inv_slot);
+
+#ifdef USE_TILE
+/* ***********************************************************************
+ *  * called from: acr
+ *   * *********************************************************************** */
+void use_item(int idx, InvAction act);
+#endif
 
 #endif

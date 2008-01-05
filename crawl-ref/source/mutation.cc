@@ -27,7 +27,7 @@
 #include <conio.h>
 #endif
 
-#ifdef UNIX
+#if defined(UNIX) && !defined(USE_TILE)
 #include "libunix.h"
 #endif
 

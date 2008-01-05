@@ -452,7 +452,7 @@ static bool userdef_eat_food()
 #endif
 }
 
-bool prompt_eat_from_inventory(void)
+bool prompt_eat_from_inventory(int slot)
 {
     if (inv_count() < 1)
     {
@@ -460,7 +460,7 @@ bool prompt_eat_from_inventory(void)
         return (false);
     }
 
-    int which_inventory_slot = 
+    int which_inventory_slot = (slot != -1)? slot:
             prompt_invent_item(
                     "Eat which item?",
                     MT_INVLIST,
@@ -505,7 +505,7 @@ bool prompt_eat_from_inventory(void)
 }
 
 // [ds] Returns true if something was eaten
-bool eat_food(bool run_hook)
+bool eat_food(bool run_hook, int slot)
 {
     if (you.is_undead == US_UNDEAD)
     {
@@ -528,7 +528,7 @@ bool eat_food(bool run_hook)
         return (false);
     }
 
-    if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
+    if (igrd[you.x_pos][you.y_pos] != NON_ITEM && slot == -1)
     {
         const int res = eat_from_floor();
         if ( res == 1 )
@@ -537,7 +537,7 @@ bool eat_food(bool run_hook)
             return false;
     }
 
-    return (prompt_eat_from_inventory());
+    return (prompt_eat_from_inventory(slot));
 }                               // end eat_food()
 
 /*

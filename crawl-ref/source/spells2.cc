@@ -49,6 +49,7 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "stuff.h"
+#include "tiles.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -119,6 +120,11 @@ unsigned char detect_items( int pow )
 
                 set_envmap_obj(i, j, DNGN_ITEM_DETECTED);
                 set_envmap_detected_item(i, j);
+#ifdef USE_TILE
+                // Don't replace previously seen items with an unseen one.
+                if (!is_terrain_seen(i,j))
+                    tile_place_tile_bk(i, j, TILE_UNSEEN_ITEM);
+#endif
             }
         }
     }
@@ -147,6 +153,11 @@ static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
         int fuzz_chance, int fuzz_radius)
 {
+#ifdef USE_TILE
+    // Get monster index pre-fuzz
+    int idx = mgrd[gridx][gridy];
+#endif
+
     bool found_good = false;
 
     if (fuzz_radius && fuzz_chance > random2(100))
@@ -176,6 +187,10 @@ static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
 
     set_envmap_obj(gridx, gridy, mon->type + DNGN_START_OF_MONSTERS);
     set_envmap_detected_mons(gridx, gridy);
+
+#ifdef USE_TILE
+    tile_place_monster(gridx, gridy, idx, false);
+#endif
 
     return found_good;
 }

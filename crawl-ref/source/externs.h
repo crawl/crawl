@@ -34,6 +34,15 @@
 #include "mpr.h"
 #include "store.h"
 
+#ifdef USE_TILE
+struct TileFlavor
+{
+    char floor;
+    char wall;
+    char special;
+};
+#endif
+
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
 #define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
@@ -1332,6 +1341,16 @@ public:
     FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
                                              show_col;  // view window colour
 
+#ifdef USE_TILE
+    // indexed by grid coords
+    FixedArray<unsigned short,GXM, GYM> tile_bk_fg; // tile fg
+    FixedArray<unsigned short,GXM, GYM> tile_bk_bg; // tile bg
+    FixedArray<TileFlavor, GXM, GYM> tile_flavor;
+    // indexed by (show-1) coords
+    FixedArray<unsigned short,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;
+    FixedArray<unsigned short,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_bg;
+#endif
+
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     unsigned char cloud_no;
 
@@ -1735,6 +1754,13 @@ public:
     std::string fsim_mons;
     std::vector<std::string> fsim_kit;
 #endif  // WIZARD
+    
+#ifdef USE_TILE
+    char        show_items[20];
+#endif
+#ifdef WIN32TILES
+    bool        use_dos_char;
+#endif
     
     typedef std::map<std::string, std::string> opt_map;
     opt_map     named_options;          // All options not caught above are

@@ -50,6 +50,7 @@
 #include "stuff.h"
 #include "spells4.h"
 #include "stash.h"
+#include "tiles.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -113,6 +114,10 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
     moves.isMe          = false;
     moves.isCancel      = false;
     moves.dx = moves.dy = 0;
+
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_TARGET_DIR);
+#endif
 
     beh->compass        = true;
 
@@ -219,6 +224,9 @@ static const char *target_mode_help_text(int mode)
 static void draw_ray_glyph(const coord_def &pos, int colour,
                            int glych, int mcol)
 {
+#ifdef USE_TILE
+    tile_place_ray(pos);
+#else
     int mid = mgrd(pos);
     if (mid != NON_MONSTER)
     {
@@ -230,9 +238,10 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
         }
     }
     const coord_def vp = grid2view(pos);
-    gotoxy(vp.x, vp.y);
+    gotoxy(vp.x, vp.y, GOTO_DNGN);
     textcolor( real_colour(colour) );
     putch(glych);
+#endif
 }
 
 // We handle targeting for repeating commands and re-doing the
@@ -487,7 +496,35 @@ void direction(dist& moves, targeting_type restricts,
                 key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
         }
         else
+        {
+#ifdef USE_TILE
+            mouse_control mc(MOUSE_MODE_TARGET);
+#endif
             key_command = beh->get_command();
+        }
+
+#ifdef USE_TILE
+        // if a mouse command, update location to mouse position...
+        if ( key_command == CMD_TARGET_MOUSE_MOVE || 
+            key_command == CMD_TARGET_MOUSE_SELECT )
+        {
+            coord_def gc;
+            if (gui_get_mouse_grid_pos(gc))
+            {
+                moves.tx = gc.x;
+                moves.ty = gc.y;
+
+                if ( key_command == CMD_TARGET_MOUSE_SELECT )
+                {
+                    key_command = CMD_TARGET_SELECT;
+                }
+            }
+            else
+            {
+                key_command = CMD_NO_CMD;
+            }
+        }
+#endif
 
         if (target_unshifted && moves.tx == you.x_pos && moves.ty == you.y_pos
             && restricts != DIR_TARGET)
@@ -879,9 +916,16 @@ void direction(dist& moves, targeting_type restricts,
             terse_describe_square(moves.target());
         }
 
+#ifdef USE_TILE
+        // tiles always need a beam redraw if show_beam is true (and if valid...)
+        if (show_beam && find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+            true, ray, 0, true) || need_beam_redraw )
+        {
+#else
         if ( need_beam_redraw )
         {
             viewwindow(true, false);
+#endif
             if ( show_beam &&
                  in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) &&
                  moves.target() != you.pos() )
@@ -902,7 +946,15 @@ void direction(dist& moves, targeting_type restricts,
                     raycopy.advance_through(moves.target());
                 }
                 textcolor(LIGHTGREY);
+#ifdef USE_TILE
+                draw_ray_glyph(moves.target(), MAGENTA, '*',
+                    MAGENTA | COLFLAG_REVERSE);
             }
+            viewwindow(true, false);
+#else
+            }
+#endif
+
         }
         skip_iter = false;      // only skip one iteration at most
     }
@@ -2138,6 +2190,10 @@ targeting_behaviour::~targeting_behaviour()
 
 int targeting_behaviour::get_key()
 {
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_TARGET_DIR);
+#endif
+
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
@@ -2153,7 +2209,12 @@ command_type targeting_behaviour::get_command(int key)
     switch ( key )
     {
     case ESCAPE: case 'x': return CMD_TARGET_CANCEL;
-        
+
+#ifdef USE_TILE
+    case CK_MOUSE_MOVE: return CMD_TARGET_MOUSE_MOVE;
+    case CK_MOUSE_CLICK: return CMD_TARGET_MOUSE_SELECT;
+#endif
+ 
 #ifdef WIZARD
     case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
     case 's': return CMD_TARGET_WIZARD_MAKE_SHOUT;

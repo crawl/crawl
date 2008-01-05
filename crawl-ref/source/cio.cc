@@ -121,7 +121,9 @@ void get_input_line( char *const buff, int len )
         return;
     }
 
-#if defined(UNIX)
+#if defined(USE_TILE)
+    get_input_line_gui( buff, len );
+#elif defined(UNIX)
     get_input_line_from_curses( buff, len ); // implemented in libunix.cc
 #elif defined(WIN32CONSOLE)
     getstr( buff, len );
@@ -169,13 +171,15 @@ int c_getch()
 // cursoring over darkgray or black causes problems.
 void cursorxy(int x, int y)
 {
-#ifdef UNIX
+#if defined(USE_TILE)
+    tile_place_cursor(x-1, y-1, true);
+#elif defined(UNIX) && !defined(USE_TILE)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
     else
-        gotoxy(x, y);
+        gotoxy(x, y, GOTO_DNGN);
 #else
-    gotoxy(x, y);
+    gotoxy(x, y, GOTO_DNGN);
 #endif
 }
 
@@ -317,7 +321,7 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start_x + ncx - 1) % wrapcol + 1;
     int y = start_y + (start_x + ncx - 1) / wrapcol;
-    ::gotoxy(x, y);
+    ::gotoxy(x, y, GOTO_LAST);
 }
 
 int line_reader::read_line(bool clear_previous)

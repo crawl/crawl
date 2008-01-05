@@ -97,6 +97,10 @@ static const char *features[] = {
 #ifdef UNICODE_GLYPHS
     "Unicode glyphs",
 #endif
+
+#ifdef USE_TILE
+    "Tile support",
+#endif
 };
 
 void version(void)

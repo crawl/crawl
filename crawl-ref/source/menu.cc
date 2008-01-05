@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "player.h"
+#include "tiles.h"
 #include "tutorial.h"
 #include "view.h"
 #include "initfile.h"
@@ -128,8 +129,11 @@ void Menu::do_menu()
     alive = true;
     while (alive)
     {
+#ifdef USE_TILE
+        TileRedrawInv(REGION_INV2);
+#endif
         int keyin = getchm(c_getch);
-        
+
         if (!process_key( keyin ))
             return;
     }
@@ -522,6 +526,20 @@ void Menu::select_index( int index, int qty )
     }
 }
 
+int Menu::get_entry_index( const MenuEntry *e ) const
+{
+    int index = 0;
+    for (unsigned int i = first_entry; i < items.size(); i++)
+    {
+        if (items[i] == e)
+            return index;
+        if (items[i]->quantity != 0)
+            index++;
+    }
+
+    return -1;
+}
+
 void Menu::draw_menu()
 {
     clrscr();
@@ -542,6 +560,10 @@ void Menu::draw_menu()
         gotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
         more.display();
     }
+
+#ifdef USE_TILE
+    TileRedrawInv(REGION_INV2);
+#endif
 }
 
 void Menu::update_title()
@@ -871,7 +893,7 @@ int slider_menu::item_colour(int index, const MenuEntry *me) const
     int colour = Menu::item_colour(index, me);
     if (index == selected && selected != -1)
     {
-#if defined(WIN32CONSOLE) || defined(DOS)
+#if defined(WIN32CONSOLE) || defined(DOS) || defined (USE_TILE)
         colour = dos_brand(colour, CHATTR_REVERSE);
 #else
         colour |= COLFLAG_REVERSE;
@@ -1475,9 +1497,15 @@ bool formatted_scroller::process_key( int keyin )
     case CK_ESCAPE:
         return false;
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
+#ifdef USE_TILE
+    case CK_MOUSE_B5:
+#endif
         repaint = page_down();
         break;
     case '-': case CK_PGUP: case '<': case ';':
+#ifdef USE_TILE
+    case CK_MOUSE_B4:
+#endif
         repaint = page_up();
         break;
     case CK_UP:

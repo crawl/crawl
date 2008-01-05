@@ -1,0 +1,242 @@
+# -*- Makefile -*- for Dungeon Crawl (Win32, MinGW)
+
+# makefile.obj includes a list of object files needed to build Crawl.
+include makefile.obj
+
+ifeq ($(DEBUG_CRAWL),)
+OPATH := rel
+else
+OPATH := dbg
+endif
+
+# need .exe so make will find the right file
+APPNAME = $(OPATH)\crawl.exe
+CXX = g++
+DELETE = del
+COPY = copy
+OS_TYPE = WIN32TILES
+
+INSTALLDIR := $(OPATH)
+
+# If you don't have flex or bison, set DOYACC to N or empty.
+DOYACC := n
+
+LEX  := flex
+YACC := bison -y
+
+ifeq ($(LUASRC),)
+LUASRC := util\lua\src
+endif
+
+LUALIB = lua
+LUALIBA = lib$(LUALIB).a
+
+SQLSRC := util\sqlite
+SQLLIB := sqlite3
+SQLIBA   := lib$(SQLLIB).a
+FSQLLIBA := $(SQLLIB)\$(SQLIBA)
+
+LIB = -static -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
+
+CFWARN := -Wall -Wwrite-strings \
+			-Werror \
+		    -pedantic
+#			-Wshadow
+
+CFOTHERS := -fsigned-char \
+		-fstrict-aliasing \
+		-pedantic \
+		-D$(OS_TYPE) $(EXTRA_FLAGS) \
+		-DWINMM_PLAY_SOUNDS -DCLUA_BINDINGS \
+		-DUSE_TILE -DWINVER=0x0400 -D_WIN32_IE=0x0400
+#		-DREGEX_PCRE
+
+CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+YCFLAGS  := $(INCLUDES) $(CFOTHERS)
+
+OBJECTS := $(OBJECTS) libgui.o tile1.o tile2.o libwt.o guic.o guic-win.o
+
+LDFLAGS = 
+
+UTIL = util/
+
+YTABC  := levcomp.tab.c
+YTABH  := levcomp.tab.h
+
+RLTILES = rltiles
+
+TILEHEADERS = \
+tiledef.h \
+tiledef-p.h \
+tiledef-w2d.h \
+tilecount-w2d.h \
+tilep-cmt.h
+
+TILEFILES = \
+tile.bmp \
+player.bmp \
+wall2d.bmp
+DESTTILEFILES = $(TILEFILES:%=dat\tiles\\%)
+
+ifeq ($(LEX),)
+DOYACC :=
+endif
+
+ifeq ($(YACC),)
+DOYACC :=
+endif
+
+# Do the levcomp stuff first because that's the most likely to fail.
+OBJECTS      := levcomp.tab.o levcomp.lex.o \
+		$(OBJECTS)
+
+OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
+
+GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(TILEHEADERS) $(DESTTILEFILES) $(OBJECTS)
+
+##########################################################################
+
+all:            $(APPNAME)
+
+prepare:
+		if not exist $(OPATH) mkdir $(OPATH)
+
+DEPENDENCY_MKF := makefile.dep
+-include $(DEPENDENCY_MKF)
+
+##########################################################################
+# The level compiler
+#
+ifeq ($(DOYACC),y)
+
+# [ds] A plague on the broken copy command on Windoze.
+prebuildyacc:	$(UTIL)levcomp.lex.cc $(UTIL)levcomp.tab.cc	$(UTIL)levcomp.tab.h
+		$(subst /,\,for %%f in ($^) do $(COPY) %%f prebuilt)
+
+$(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
+		$(subst /,\, cd $(UTIL)) && $(YACC) -d -b levcomp levcomp.ypp
+		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp.tab.cc
+
+$(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp
+		$(subst /,\, cd $(UTIL) && $(LEX) -olevcomp.lex.cc levcomp.lpp)
+
+else
+
+$(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
+		$(subst /,\,$(COPY) prebuilt/*.h $(UTIL))
+		$(subst /,\,$(COPY) $< $@)
+
+$(UTIL)levcomp.lex.cc: prebuilt/levcomp.lex.cc
+		$(subst /,\,$(COPY) $< $@)
+
+endif
+
+##########################################################################
+# RLTiles
+#
+
+ORIGTILEHEADERS = $(TILEHEADERS:%=$(RLTILES)\\%)
+ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)\\%)
+
+$(ORIGTILEHEADERS): makerltiles
+
+makerltiles:
+	pushd $(RLTILES) && $(MAKE) -f makefile.mgw all && popd
+
+$(TILEHEADERS): $(ORIGTILEHEADERS)
+	copy /y $(RLTILES)\$@ .
+
+$(ORIGTILEFILES): makerltiles
+
+dat\tiles\\%.bmp: rltiles\\%.bmp
+	mkdir dat\tiles 2>nul || echo "" >nul
+	$(COPY) $< $@
+
+clean-rltiles:
+	pushd $(RLTILES) && $(MAKE) -f makefile.mgw distclean && popd
+	$(DELETE) $(TILEHEADERS)
+
+##########################################################################
+
+
+##########################################################################
+
+install:        $(APPNAME)
+ifneq ($(OPATH),$(INSTALLDIR))
+		$(COPY) $(APPNAME) ${INSTALLDIR}
+endif
+		mkdir $(INSTALLDIR)\dat 2>nul || echo "" >nul
+		mkdir $(INSTALLDIR)\dat\clua 2>null || echo "">nul
+		copy /y dat\*.des $(INSTALLDIR)\dat
+		copy /y dat\*.txt $(INSTALLDIR)\dat
+		copy /y dat\clua\*.lua $(INSTALLDIR)\dat\clua
+		copy /y ..\init.txt $(INSTALLDIR)
+		mkdir $(INSTALLDIR)\dat\tiles 2>nul || echo "" > nul
+		copy /y dat\tiles\*.bmp $(INSTALLDIR)\dat\tiles
+
+clean:
+		$(DELETE) $(OPATH)\*.o
+		$(subst /,\,$(DELETE) $(UTIL)*.o)
+		$(subst /,\,$(DELETE) $(UTIL)*.exe)
+		$(subst /,\,$(DELETE) $(UTIL)*.lex.cc)
+		$(subst /,\,$(DELETE) $(UTIL)*.tab.cc)
+		$(subst /,\,$(DELETE) $(UTIL)*.tab.h)
+		$(subst /,\,$(DELETE) $(UTIL)*.tab.c)
+		$(subst /,\,$(DELETE) *.ixx)
+
+clean-lua:
+	    cd $(LUASRC) && $(MAKE) clean_win
+
+clean-sql:
+	    cd $(SQLSRC) && $(MAKE) "RM_F=del /f" clean
+
+distclean: clean clean-lua clean-sql clean-rltiles
+		$(DELETE) $(OPATH)\*.o 
+		$(DELETE) *.o
+		$(DELETE) bones.*
+		$(DELETE) $(OPATH)\bones.*
+		$(DELETE) morgue.txt
+		$(DELETE) $(OPATH)\morgue.txt
+		$(DELETE) scores 
+		$(DELETE) $(OPATH)\scores 
+		$(DELETE) crawl.exe
+		$(DELETE) $(subst /,\,$(APPNAME))
+		$(DELETE) *.sav
+		$(DELETE) $(OPATH)\*.sav
+		$(DELETE) core
+		$(DELETE) $(OPATH)\core
+		$(DELETE) *.0*
+		$(DELETE) $(OPATH)\*.0*
+		$(DELETE) *.lab
+		$(DELETE) $(OPATH)\*.lab
+
+$(APPNAME):	$(GAME_DEPENDS)
+		${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+		strip $(APPNAME)
+
+debug:		$(GAME_DEPENDS)
+		${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+profile:	$(GAME_DEPENDS)
+		${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+$(OPATH)/%.o: %.cc
+		${CXX} ${CFLAGS} -o $@ -c $< 
+
+$(OPATH)/%.o: $(UTIL)%.cc
+		$(CXX) $(YCFLAGS) -o $@ -c $<
+
+#############################################################################
+# Build Lua
+
+$(LUASRC)\$(LUALIBA):
+	@echo Building Lua...
+	@cd $(LUASRC) && $(MAKE) crawl_mingw
+
+#############################################################################
+# Build SQLite
+
+$(FSQLLIBA):
+	@echo Building SQLite
+	cd $(SQLSRC) && $(MAKE)

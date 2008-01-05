@@ -184,6 +184,16 @@ enum KEYS
 
     // Mouse codes.
     CK_MOUSE_MOVE  = 10001,
+#ifdef USE_TILE
+    CK_MOUSE_DONE,
+    CK_MOUSE_B1,
+    CK_MOUSE_B2,
+    CK_MOUSE_B3,
+    CK_MOUSE_B4,
+    CK_MOUSE_B5,
+    CK_MOUSE_B1ITEM,
+    CK_MOUSE_B2ITEM,
+#endif
     CK_MOUSE_CLICK
 };
 

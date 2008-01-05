@@ -1,0 +1,52 @@
+#--------------------------------
+#  bmp2png.exe & png2bmp.exe
+#  makefile for Borland C++ 5.5
+#--------------------------------
+
+!ifndef srcdir
+srcdir	= .
+!endif
+.path.c = $(srcdir)
+.path.h = $(srcdir)
+
+ZINC	= $(srcdir)/../zlib
+PINC	= $(srcdir)/../libpng
+ZLIB	= $(srcdir)/../zlib
+PLIB	= $(srcdir)/../libpng
+
+CC	= bcc32
+LD	= bcc32
+CFLAGS	= $(MODEL) -q -d -O2 -OS -Oi -Oc -DPNG_USER_CONFIG -I$(PINC) \
+	  -I$(ZINC) $(COPT)
+LDFLAGS	= $(MODEL) -q -WC -L$(PLIB) -L$(ZLIB) $(LOPT)
+
+LIBS	= libpng.lib zlib.lib noeh32.lib
+B2POBJ	= bmp2png.obj common.obj
+P2BOBJ	= png2bmp.obj common.obj
+
+
+all : bmp2png.exe png2bmp.exe
+
+bmp2png.exe : $(B2POBJ)
+	$(LD) $(LDFLAGS) -e$@ $(B2POBJ) $(LIBS)
+
+png2bmp.exe : $(P2BOBJ)
+	$(LD) $(LDFLAGS) -e$@ $(P2BOBJ) $(LIBS)
+
+.c.obj :
+	$(CC) $(CFLAGS) -c $*.c
+
+.c.asm :
+	$(CC) $(CFLAGS) -S $*.c
+
+clean : mostlyclean
+	if exist *.exe del *.exe
+
+mostlyclean :
+	if exist *.obj del *.obj
+	if exist *.tds del *.tds
+
+bmp2png.obj : bmp2png.c common.h bmphed.h
+png2bmp.obj : png2bmp.c common.h bmphed.h
+common.obj  : common.c  common.h
+

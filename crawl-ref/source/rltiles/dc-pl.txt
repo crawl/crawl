@@ -1,0 +1,853 @@
+%width 20
+%back none
+%name player
+
+%rim 1
+
+###BASE
+%parts_ctg BASE
+%parts_wx 32
+%parts_wy 32
+%parts_ox 0
+%parts_oy 0
+%sdir player/base
+human_f HUMAN
+human_m
+elf_f ELF
+elf_m
+deep_elf_f DEEP_ELF
+deep_elf_m
+dwarf_f DWARF
+dwarf_m
+halfling_f HALFLING
+halfling_m
+orc_f ORC
+orc_m
+kobold_f KOBOLD
+kobold_m
+mummy_f MUMMY
+mummy_m
+naga_f NAGA
+naga_m
+gnome_f GNOME
+gnome_m
+ogre_f OGRE
+ogre_m
+troll_f TROLL
+troll_m
+ogre_mage_f OGRE_MAGE
+ogre_mage_m
+draconian_f DRACONIAN
+draconian_m
+draconian_black_f DRACONIAN_BLACK
+draconian_black_m
+draconian_gold_f DRACONIAN_GOLD
+draconian_gold_m
+draconian_gray_f DRACONIAN_GRAY
+draconian_gray_m
+draconian_green_f DRACONIAN_GREEN
+draconian_green_m
+draconian_mottled_f DRACONIAN_MOTTLED
+draconian_mottled_m
+draconian_pale_f DRACONIAN_PALE
+draconian_pale_m
+draconian_purple_f DRACONIAN_PURPLE
+draconian_purple_m
+draconian_red_f DRACONIAN_RED
+draconian_red_m
+draconian_white_f DRACONIAN_WHITE
+draconian_white_m
+
+centaur_f CENTAUR
+centaur_m
+demigod_f DEMIGOD
+demigod_m
+spriggan_f SPRIGGAN
+spriggan_m
+minotaur_f MINOTAUR
+minotaur_m
+demonspawn_f DEMONSPAWN
+demonspawn_m
+ghoul_f GHOUL
+ghoul_m
+kenku_f KENKU
+kenku_m
+merfolk_f MERFOLK
+merfolk_m
+merfolk_water_f MERFOLK_WATER
+merfolk_water_m
+vampire_f VAMPIRE
+vampire_m
+%end
+
+###SHADOW
+%parts_ctg SHADOW
+%parts_wx 32
+%parts_wy 32
+%parts_ox 0
+%parts_oy 0
+%rim 0
+shadow
+%rim 1
+%sdir player/barding
+naga_barding NAGA_BARDING
+centaur_barding CENTAUR_BARDING
+%end
+
+###Cloak
+%parts_ctg CLOAK
+%parts_wx 32
+%parts_wy 32
+%parts_ox 0
+%parts_oy 0
+%sdir player/cloak
+red RED
+blue BLUE
+magenta MAGENTA
+yellow YELLOW
+black BLACK
+gray GRAY
+brown LBROWN
+green GREEN
+cyan CYAN
+white WHITE
+%end
+
+###Boots
+%parts_ctg BOOTS
+%parts_wx 16
+%parts_wy 16
+%parts_ox 8
+%parts_oy 16
+%sdir player/boot
+
+short_red SHORT_RED
+short_purple SHORT_PURPLE
+short_brown SHORT_BROWN
+short_brown2 SHORT_BROWN2
+pj PJ
+middle_brown MIDDLE_BROWN
+middle_gray MIDDLE_GRAY
+middle_ybrown MIDDLE_YBROWN
+middle_brown2 MIDDLE_BROWN2
+middle_brown3 MIDDLE_BROWN3
+middle_gold MIDDLE_GOLD
+middle_green MIDDLE_GREEN
+middle_purple MIDDLE_PURPLE
+long_red LONG_RED
+long_white LONG_WHITE
+blue_gold BLUE_GOLD
+mesh_red MESH_RED
+mesh_black MESH_BLACK
+mesh_white MESH_WHITE
+mesh_blue MESH_BLUE
+hooves HOOVES
+%end
+
+### Body armour
+%parts_ctg LEG
+%parts_wx 16
+%parts_wy 16
+%parts_ox 8
+%parts_oy 16
+%sdir player/leg
+
+bikini_red BIKINI_RED
+loincloth_red LOINCLOTH_RED
+belt_redbrown BELT_REDBROWN
+belt_gray BELT_GRAY
+pants_orange PANTS_ORANGE
+pants_short_gray PANTS_SHORT_GRAY
+garter
+pj PJ
+
+pants_black PANTS_BLACK
+pants_blue PANTS_BLUE
+pants_darkgreen PANTS_DARKGREEN
+pants_brown PANTS_BROWN
+pants_short_darkbrown PANTS_SHORT_DARKBROWN
+pants_short_brown PANTS_SHORT_BROWN
+pants_short_brown3 PANTS_SHORT_BROWN3
+trouser_green
+pants_l_white
+long_red
+chunli
+pants_red
+
+leg_armor00 METAL_RED
+leg_armor01 METAL_SILVER
+leg_armor03 METAL_GRAY
+leg_armor05 METAL_GREEN
+leg_armor04 LEGCHAIN_GRAY
+leg_armor02 LEGCHAIN_SILVER
+
+skirt_blue SKIRT_OFS
+skirt_green SKIRT_GREEN
+skirt_white SKIRT_WHITE
+skirt_red
+skirt_white2
+
+metal_gray LOWARM1
+metal_green LOWARM2
+pants16 LOWARM3
+%end
+
+### Leg armour
+%parts_ctg BODY
+%parts_wx 16
+%parts_wy 32
+%parts_ox 8
+%parts_oy 0
+%sdir player/body
+
+robe_blue ROBE_BLUE
+robe_black ROBE_BLACK
+robe_white ROBE_WHITE
+robe_red ROBE_RED
+robe_purple ROBE_MAGENTA
+robe_green ROBE_GREEN
+robe_yellow ROBE_YELLOW
+robe_brown ROBE_BROWN
+robe_cyan ROBE_CYAN
+robe_rainbow ROBE_RAINBOW
+gandalf_g GANDALF_G
+saruman SARUMAN
+robe_black_hood ROBE_BLACK_HOOD
+monk_blue MONK_BLUE
+monk_black MONK_BLACK
+dress_green DRESS_GREEN
+robe_black_gold ROBE_BLACK_GOLD
+robe_white2 ROBE_WHITE2
+robe_red2 ROBE_RED2
+robe_white_red ROBE_WHITE_RED
+robe_white_green ROBE_WHITE_GREEN
+robe_blue_white ROBE_BLUE_WHITE
+robe_red_gold ROBE_RED_GOLD
+robe_black_red ROBE_BLACK_RED
+robe_blue_green ROBE_BLUE_GREEN
+robe_red3 ROBE_RED3
+robe_brown2 ROBE_BROWN2
+robe_green_gold ROBE_GREEN_GOLD
+robe_brown3 ROBE_BROWN3
+robe_gray2 ROBE_GRAY2
+dress_white DRESS_WHITE
+arwen ARWEN
+skirt_onep_grey SKIRT_ONEP_GREY
+bloody BLOODY
+leather_short LEATHER_SHORT
+china_red2 CHINA_RED2
+
+animal_skin ANIMAL_SKIN
+zhor ZHOR
+neck NECK
+belt1 BELT1
+belt2 BELT2
+susp_black SUSP_BLACK
+shoulder_pad SHOULDER_PAD
+mesh_black MESH_BLACK
+mesh_red MESH_RED
+leather_jacket LEATHER_JACKET
+shirt_white1 SHIRT_WHITE1
+shirt_white2 SHIRT_WHITE2
+shirt_white3 SHIRT_WHITE3
+shirt_blue SHIRT_BLUE
+bikini_red BIKINI_RED
+shirt_hawaii SHIRT_HAWAII
+china_red CHINA_RED
+leather_red LEATHER_RED
+chunli CHUNLI
+shirt_white_yellow SHIRT_WHITE_YELLOW
+shirt_check SHIRT_CHECK
+jessica JESSICA
+
+slit_black SLIT_BLACK
+leather_armour LEATHER_ARMOUR
+leather_green LEATHER_GREEN
+shirt_black SHIRT_BLACK
+shirt_black_and_cloth SHIRT_BLACK_AND_CLOTH
+shirt_black3 SHIRT_BLACK3
+leather2 LEATHER2
+coat_red COAT_RED
+coat_black COAT_BLACK
+
+leather_armour2 LEATHER_ARMOUR2
+leather_armour3 LEATHER_ARMOUR3
+shirt_vest SHIRT_VEST
+karate KARATE
+karate2 KARATE2
+leather_heavy LEATHER_HEAVY
+troll_hide TROLL_HIDE
+green_chain GREEN_CHAIN
+metal_blue METAL_BLUE
+green_susp GREEN_SUSP
+jacket2 JACKET2
+jacket3 JACKET3
+leather_stud LEATHER_STUD
+jacket_stud JACKET_STUD
+chainmail CHAINMAIL2
+half_plate HALF_PLATE
+half_plate2 HALF_PLATE2
+half_plate3 HALF_PLATE3
+breast_black BREAST_BLACK
+vest_red VEST_RED
+vest_red2 VEST_RED2
+bplate_green BPLATE_GREEN
+bplate_metal1 BPLATE_METAL1
+banded BANDED2
+banded2 SPLINT
+armor_blue_gold
+ringmail RINGMAIL
+chainmail3 CHAINMAIL
+plate_and_cloth PLATE_AND_CLOTH
+plate_and_cloth2 PLATE_AND_CLOTH2
+scalemail SCALEMAIL2
+scalemail2 SCALEMAIL
+leather_metal BANDED
+plate PLATE2
+plate2 PLATE
+plate_black PLATE_BLACK
+crystal_plate CRYSTAL_PLATE
+armor_mummy ARMOR_MUMMY
+
+##cloth_u_sail SAILOR
+dragonsc_green DRAGONSC_GREEN
+dragonsc_white DRAGONSC_WHITE
+dragonsc_magenta DRAGONSC_MAGENTA
+dragonsc_cyan DRAGONSC_CYAN
+dragonsc_brown DRAGONSC_BROWN
+dragonsc_blue DRAGONSC_BLUE
+dragonsc_gold DRAGONSC_GOLD
+dragonarm_green DRAGONARM_GREEN
+dragonarm_white DRAGONARM_WHITE
+dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_cyan DRAGONARM_CYAN
+dragonarm_brown DRAGONARM_BROWN
+dragonarm_blue DRAGONARM_BLUE
+dragonarm_gold DRAGONARM_GOLD
+
+aragorn ARAGORN
+aragorn2 ARAGORN2
+boromir BOROMIR
+frodo FRODO
+gimli GIMLI
+legolas LEGOLAS
+merry MERRY
+pipin PIPIN
+gil-galad
+isildur
+pj PJ
+sam SAM
+vanhel1
+
+edison EDISON
+lears_chain_mail LEARS_CHAIN_MAIL
+robe_of_night ROBE_OF_NIGHT
+%end
+
+
+### Arms
+%parts_ctg ARM
+%parts_wx 32
+%parts_wy 16
+%parts_ox 0
+%parts_oy 8
+%sdir player/arm
+glove_red GLOVE_RED
+glove_gray GLOVE_GRAY
+glove_white GLOVE_WHITE
+glove_blue GLOVE_BLUE
+glove_black GLOVE_BLACK
+glove_orange GLOVE_ORANGE
+glove_brown GLOVE_BROWN
+glove_black2 GLOVE_BLACK2
+glove_grayfist GLOVE_GRAYFIST
+glove_purple GLOVE_PURPLE
+glove_wrist_purple GLOVE_WRIST_PURPLE
+glove_chunli GLOVE_CHUNLI
+gauntlet_blue GAUNTLET_BLUE
+glove_gold GLOVE_GOLD
+glove_short_yellow GLOVE_SHORT_YELLOW
+glove_short_red GLOVE_SHORT_RED
+glove_short_white GLOVE_SHORT_WHITE
+glove_short_green GLOVE_SHORT_GREEN
+glove_short_blue GLOVE_SHORT_BLUE
+glove_short_gray GLOVE_SHORT_GRAY
+claws CLAWS
+%end
+
+# Hand 1
+%parts_ctg HAND1
+%parts_wx 16
+%parts_wy 32
+%parts_ox 0
+%parts_oy 0
+%sdir player/hand1
+
+# blades
+dagger DAGGER
+dagger_slant DAGGER_SLANT
+short_sword SHORT_SWORD
+short_sword_slant SHORT_SWORD_SLANT
+short_sword2 SHORT_SWORD2
+sword_thief SWORD_THIEF
+long_sword LONG_SWORD
+long_sword_slant LONG_SWORD_SLANT
+blessed_blade BLESSED_BLADE
+great_sword GREAT_SWORD
+great_sword_slant GREAT_SWORD_SLANT
+katana KATANA
+katana_slant KATANA_SLANT
+scimitar SCIMITAR
+falchion FALCHION
+double_sword DOUBLE_SWORD
+triple_sword TRIPLE_SWORD
+sword2 SWORD2
+sword_tri SWORD_TRI
+broadsword BROADSWORD
+black_sword BLACK_SWORD
+sword_black SWORD_BLACK
+sword_twist SWORD_TWIST
+knife KNIFE
+sword_seven SWORD_SEVEN
+heavy_sword HEAVY_SWORD
+sabre SABRE
+sword3 SWORD3
+sword_breaker SWORD_BREAKER
+sword_jag SWORD_JAG
+###Artifacts
+bloodbane BLOODBANE
+chilly_death CHILLY_DEATH
+doom_knight DOOM_KNIGHT
+flaming_death FLAMING_DEATH
+leech LEECH
+morg MORG
+plutonium_sword PLUTONIUM_SWORD
+jihad JIHAD
+singing_sword SINGING_SWORD
+zonguldrok ZONGULDROK
+
+## blunt
+club CLUB
+club_slant CLUB_SLANT
+club2 CLUB2
+club3 CLUB3
+stick STICK
+giant_club GIANT_CLUB
+giant_club_slant GIANT_CLUB_SLANT
+giant_club_spike GIANT_CLUB_SPIKE
+giant_club_spike_slant GIANT_CLUB_SPIKE_SLANT
+whip WHIP
+sceptre SCEPTRE
+mace MACE2
+mace3 MACE
+mace2 GREAT_MACE
+mace_ruby MACE_RUBY
+morningstar MORNINGSTAR2
+morningstar2 MORNINGSTAR
+eveningstar EVENINGSTAR
+large_mace LARGE_MACE
+black_whip BLACK_WHIP
+hammer3 HAMMER
+hammer HAMMER1
+hammer2 HAMMER2
+frail_stick FRAIL_STICK
+frail_ball FRAIL
+frail_spike SPIKED_FRAIL
+frail_stick_slant GREAT_FRAIL
+frail_ball2 FRAIL_BALL2
+frail_balls FRAIL_BALLS
+frail_ball3 FRAIL_BALL3
+frail_ball4 FRAIL_BALL4
+nunchaku NUNCHAKU
+mace_of_variability MACE_OF_VARIABILITY
+
+## polearms
+spear1 SPEAR
+spear2 SPEAR2
+spear3 SPEAR3
+spear4 SPEAR4
+spear5 SPEAR5
+hook HOOK
+halberd HALBERD
+pick_axe PICK_AXE
+trident TRIDENT
+trident_demon DEMON_TRIDENT
+trident_elec TRIDENT_ELEC
+trident2 TRIDENT2
+trident3 TRIDENT3
+lance LANCE
+lance2 LANCE2
+scythe SCYTHE
+scythe_slant SCYTHE_SLANT
+pike PIKE
+quarterstaff1 QUARTERSTAFF1
+quarterstaff2 QUARTERSTAFF2
+quarterstaff3 QUARTERSTAFF3
+quarterstaff4 QUARTERSTAFF4
+sickle SICKLE
+glaive GLAIVE
+glaive2 GLAIVE2
+glaive3 GLAIVE3
+d_glaive D_GLAIVE
+pole_forked POLE_FORKED
+fork2 FORK2
+glaive_of_prune GLAIVE_OF_PRUNE
+voodoo VOODOO
+finisher FINISHER
+
+## staves
+staff_skull STAFF_SKULL
+
+staff_mage STAFF_MAGE
+staff_mage2 STAFF_MAGE2
+great_staff GREAT_STAFF
+staff_evil STAFF_EVIL
+staff_ring_blue STAFF_RING_BLUE
+staff_mummy STAFF_MUMMY
+staff_fork STAFF_FORK
+staff_ruby STAFF_RUBY
+staff_large STAFF_LARGE
+elemental_staff ELEMENTAL_STAFF
+asmodeus ASMODEUS
+dispater DISPATER
+olgreb OLGREB
+
+## axes
+axe_small AXE_SMALL
+hand_axe HAND_AXE
+war_axe WAR_AXE
+great_axe BROAD_AXE
+axe BATTLEAXE
+axe_executioner EXECUTIONERS_AXE
+axe_double AXE_DOUBLE
+axe_blood AXE_BLOOD
+axe_short AXE_SHORT
+axe_trog AXE_TROG
+arga ARGA
+
+## launchers
+sling SLING
+bow BOW
+bow2 BOW2
+bow3 BOW3
+great_bow GREAT_BOW
+bow_blue BOW_BLUE
+crossbow CROSSBOW
+crossbow2 CROSSBOW2
+crossbow3 CROSSBOW3
+crossbow4 CROSSBOW4
+blowgun BLOWGUN
+punk PUNK
+sniper SNIPER
+crossbow_fire FIERY_DEVIL
+krishna KRISHNA
+
+##missiles
+dirt DIRT
+
+## misc
+bone_lantern BONE_LANTERN
+fan FAN
+bottle BOTTLE
+box BOX
+crystal CRYSTAL
+deck DECK
+disc DISC
+horn HORN
+lantern LANTERN
+orb ORB
+stone STONE
+
+fire_red FIRE_RED
+fire_blue FIRE_BLUE
+skull SKULL
+head HEAD
+fire_green FIRE_GREEN
+fire_cyan FIRE_CYAN
+fire_white FIRE_WHITE
+light_blue LIGHT_BLUE
+light_red LIGHT_RED
+light_yellow LIGHT_YELLOW
+spark SPARK
+fire_dark FIRE_DARK
+fire_white2 FIRE_WHITE2
+
+## lotr
+aragorn ARAGORN
+arwen ARWEN
+boromir BOROMIR
+frodo FRODO
+gandalf GANDALF
+gimli GIMLI
+legolas LEGOLAS
+saruman SARUMAN
+
+bladehands BLADEHAND
+%end
+
+### Hand 2
+%parts_ctg HAND2
+%parts_wx 16
+%parts_wy 32
+%parts_ox 16
+%parts_oy 0
+%sdir player/hand2
+
+shield_round_small SHIELD_ROUND_SMALL
+shield_round_small2 SHIELD_ROUND_SMALL2
+bullseye BULLSEYE
+
+shield_middle_round SHIELD_MIDDLE_ROUND
+shield_skull SHIELD_SKULL
+shield_round_white SHIELD_ROUND_WHITE
+boromir BOROMIR
+shield_round1 SHIELD_ROUND1
+shield_round2 SHIELD_ROUND2
+shield_round3 SHIELD_ROUND3
+shield_round4 SHIELD_ROUND4
+shield_round5 SHIELD_ROUND5
+shield_round6 SHIELD_ROUND6
+shield_round7 SHIELD_ROUND7
+
+shield_knight_blue SHIELD_KNIGHT_BLUE
+shield_knight_gray SHIELD_KNIGHT_GRAY
+shield_knight_rw SHIELD_KNIGHT_RW
+shield_middle_unicorn SHIELD_MIDDLE_UNICORN
+shield_kite1 SHIELD_KITE1
+shield_kite2 SHIELD_KITE2
+shield_kite3 SHIELD_KITE3
+shield_kite4 SHIELD_KITE4
+
+shield_long_red SHIELD_LONG_RED
+shield_middle_gray SHIELD_MIDDLE_GRAY
+shield_diamond_yellow SHIELD_DIAMOND_YELLOW
+shield_middle_brown SHIELD_MIDDLE_BROWN
+shield_middle_black SHIELD_MIDDLE_BLACK
+shield_middle_cyan SHIELD_MIDDLE_CYAN
+shield_middle_ethn SHIELD_MIDDLE_ETHN
+shield_long_cross SHIELD_LONG_CROSS
+shield_shaman SHIELD_SHAMAN
+shield_of_resistance SHIELD_OF_RESISTANCE
+gil-galad
+
+book_black BOOK_BLACK
+book_blue BOOK_BLUE
+book_red BOOK_RED
+book_magenta BOOK_MAGENTA
+book_green BOOK_GREEN
+book_cyan BOOK_CYAN
+book_yellow BOOK_YELLOW
+book_white BOOK_WHITE
+book_sky BOOK_SKY
+book_blue_dim BOOK_BLUE_DIM
+book_cyan_dim BOOK_CYAN_DIM
+book_green_dim BOOK_GREEN_DIM
+book_magenta_dim BOOK_MAGENTA_DIM
+book_red_dim BOOK_RED_DIM
+book_yellow_dim BOOK_YELLOW_DIM
+
+fire_green FIRE_GREEN
+fire_cyan FIRE_CYAN
+fire_white FIRE_WHITE
+light_blue LIGHT_BLUE
+light_red LIGHT_RED
+light_yellow LIGHT_YELLOW
+spark SPARK
+fire_dark FIRE_DARK
+fire_white2 FIRE_WHITE2
+lantern LANTERN
+torch TORCH
+pj PJ
+torsh2 TORCH2
+
+bladehands BLADEHAND
+dagger DAGGER
+sabre SABRE
+short_sword_slant SHORT_SWORD_SLANT
+%end
+
+###Hair
+%parts_ctg HAIR
+%parts_wx 16
+%parts_wy 16
+%parts_ox 8
+%parts_oy 0
+%sdir player/hair
+short_black SHORT_BLACK
+short_red SHORT_RED
+short_yellow SHORT_YELLOW
+short_white SHORT_WHITE
+long_black LONG_BLACK
+long_red LONG_RED
+long_yellow LONG_YELLOW
+long_white LONG_WHITE
+fem_black FEM_BLACK
+fem_red FEM_RED
+fem_yellow FEM_YELLOW
+fem_white FEM_WHITE
+elf_black ELF_BLACK
+elf_red ELF_RED
+elf_yellow ELF_YELLOW
+elf_white ELF_WHITE
+aragorn ARAGORN
+arwen ARWEN
+boromir BOROMIR
+frodo FRODO
+legolas LEGOLAS
+merry MERRY
+pj PJ
+sam SAM
+pigtail_red PIGTAIL_RED
+brown1 BROWN1
+brown2 BROWN2
+%end
+
+###Beard
+%parts_ctg BEARD
+%parts_wx 16
+%parts_wy 16
+%parts_ox 8
+%parts_oy 0
+%sdir player/beard
+
+short_black SHORT_BLACK
+short_red SHORT_RED
+short_yellow SHORT_YELLOW
+short_white SHORT_WHITE
+long_black LONG_BLACK
+long_red LONG_RED
+long_yellow LONG_YELLOW
+long_white LONG_WHITE
+pj PJ
+%end
+
+###Helms
+%parts_ctg HELM
+%parts_wx 16
+%parts_wy 16
+%parts_ox 8
+%parts_oy 0
+%sdir player/head
+
+cone_blue HAT_OFS
+cone_red CORN_RED
+straw STRAW
+wizard_blue WIZARD_BLUE
+cap_blue CAP_BLUE
+bandana_ybrown BANDANA_YBROWN
+hat_black HAT_BLACK
+gandalf GANDALF
+crown_gold
+cap_black1
+clown1
+feather_green FEATHER_GREEN
+feather_red FEATHER_RED
+feather_blue FEATHER_BLUE
+feather_yellow FEATHER_YELLOW
+feather_white FEATHER_WHITE
+band_white
+band_red
+band_yellow
+band_blue
+band_magenta
+taiso_blue
+taiso_magenta
+taiso_yellow
+taiso_red
+taiso_white
+dyrovepreva DYROVEPREVA
+wizard_purple WIZARD_PURPLE
+wizard_bluegreen WIZARD_BLUEGREEN
+wizard_darkgreen WIZARD_DARKGREEN
+wizard_brown WIZARD_BROWN
+wizard_blackgold WIZARD_BLACKGOLD
+wizard_blackred WIZARD_BLACKRED
+wizard_red WIZARD_RED
+wizard_white WIZARD_WHITE
+turban_white TURBAN_WHITE
+turban_brown TURBAN_BROWN
+turban_purple TURBAN_PURPLE
+
+horns1 HORNS1
+horns2 HORNS2
+horns3 HORNS3
+
+iron1 HELM_OFS
+helm_red HELM_RED
+horned HELM_HORNED
+helm_gimli HELM_GIMLI
+helm_green HELM_GREEN
+cheek_red
+iron_red IRON_RED
+blue_horn_gold BLUE_HORN_GOLD
+hood_white WHITE
+
+yellow_wing YELLOW_WING
+brown_gold BROWN_GOLD
+black_horn BLACK_HORN
+full_gold FULL_GOLD
+chain CHAIN
+
+black_horn2 FHELM_OFS
+full_black FHELM_BLACK
+horn_gray FHELM_HORN_GRAY
+iron2 FHELM_GRAY
+iron3 FHELM_GRAY2
+fhelm_gray3 FHELM_GRAY3
+fhelm_horn_yellow FHELM_HORN_YELLOW
+fhelm_horn2 FHELM_HORN2
+horn_evil FHELM_EVIL
+helm_plume FHELM_PLUME
+mummy FHELM_MUMMY
+isildur FHELM_ISILDUR
+art_dragonhelm ART_DRAGONHELM
+
+healer FHELM_HEALER
+hood_gray HOOD_GRAY
+hood_red HOOD_RED
+hood_green2 HOOD_GREEN2
+hood_cyan HOOD_CYAN
+hood_orange HOOD_ORANGE
+hood_red2 HOOD_RED2
+hood_black2 HOOD_BLACK2
+hood_white2 HOOD_WHITE2
+hood_ybrown HOOD_YBROWN
+hood_green HOOD_GREEN
+ninja_black MASK_NINJA_BLACK
+%end
+
+%parts_ctg DRCWING
+%parts_wx 32
+%parts_wy 16
+%parts_ox 0
+%parts_oy 0
+%sdir player/drcwing
+drcwing_brown BROWN
+drcwing_black BLACK
+drcwing_yellow YELLOW
+drcwing_grey GREY
+drcwing_green GREEN
+drcwing_mottled MOTTLED
+drcwing_pale PALE
+drcwing_purple PURPLE
+drcwing_red RED
+drcwing_white WHITE
+%end
+
+%parts_ctg DRCHEAD
+%parts_wx 16
+%parts_wy 16
+%parts_ox 8
+%parts_oy 0
+%sdir player/drchead
+drchead_brown BROWN
+drchead_black BLACK
+drchead_yellow YELLOW
+drchead_grey GREY
+drchead_green GREEN
+drchead_mottled MOTTLED
+drchead_pale PALE
+drchead_purple PURPLE
+drchead_red RED
+drchead_white WHITE
+%end

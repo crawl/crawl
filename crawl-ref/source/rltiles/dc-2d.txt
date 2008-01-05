@@ -1,0 +1,32 @@
+%tiledef tiledef.h
+%width 30
+%back none
+#%htmlfile tile.htm
+#%tilelist tile.txt
+#%htmlbody
+%name tile
+
+## Dungeon features
+%include dc-dngn.txt
+
+## Set black rim
+## Items
+%include dc-item.txt
+## Monsters
+%include dc-mon.txt
+## Clear black rim
+%rim 0
+
+## Corpse
+%back dc/blood
+%corpse 1
+%include dc-co.txt
+%back none
+%corpse 0
+
+####PLAYER 
+####include dc-jobs.txt
+
+#### Effects, etc.
+%include dc-misc.txt
+

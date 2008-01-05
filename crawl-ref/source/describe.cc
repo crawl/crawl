@@ -1687,7 +1687,11 @@ void describe_feature_wide(int x, int y)
 
     clrscr();
     print_description(desc);
-    
+
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_MORE);
+#endif
+
     if (Options.tutorial_left)
         tutorial_describe_feature(grd[x][y]);
         
@@ -1847,6 +1851,10 @@ void describe_spell(spell_type spelled)
 
     clrscr();
     print_description(description);
+
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_MORE);
+#endif
 
     if (getch() == 0)
         getch();
@@ -2136,6 +2144,10 @@ void describe_monsters(monsters& mons)
 
     clrscr();
     print_description(description.str());
+
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_MORE);
+#endif
 
     if (Options.tutorial_left)
         tutorial_describe_monster(static_cast<const monsters*>(&mons));
@@ -2553,14 +2565,18 @@ void describe_god( god_type which_god, bool give_title )
     if ( which_god == you.religion )
     {
         if (you.religion == GOD_ZIN)
-            gotoxy(1, get_number_of_lines() - 1);
+            gotoxy(1, get_number_of_lines() - 1, GOTO_MSG);
         else
-            gotoxy(1, get_number_of_lines() - 2);
+            gotoxy(1, get_number_of_lines() - 2, GOTO_MSG);
         
         textcolor(LIGHTGRAY);
         cprintf(get_linebreak_string(religion_help(which_god),
                                      numcols).c_str());
     }
+
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_MORE);
+#endif
 
     get_ch();
 }

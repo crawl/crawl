@@ -138,6 +138,8 @@
 #include "stash.h"
 #include "xom.h"
 
+#include "tiles.h"
+
 crawl_environment env;
 player you;
 system_environment SysEnv;
@@ -191,7 +193,11 @@ static void read_messages();
    It all starts here. Some initialisations are run first, then straight to
    new_game and then input.
 */
+#ifdef WIN32TILES
+int old_main( int argc, char *argv[] )
+#else
 int main( int argc, char *argv[] )
+#endif
 {
     // Load in the system environment variables
     get_system_environment();
@@ -257,7 +263,9 @@ int main( int argc, char *argv[] )
         input();
 
     // Should never reach this stage, right?
-#ifdef UNIX
+#if defined(USE_TILE)
+    libgui_shutdown();
+#elif defined(UNIX)
     unixcurses_shutdown();
 #endif
 
@@ -1360,7 +1368,11 @@ static void input()
         // Enable the cursor to read input. The cursor stays on while
         // the command is being processed, so subsidiary prompts
         // shouldn't need to turn it on explicitly.
+#ifdef USE_TILE
+        cursor_control con(false);
+#else
         cursor_control con(true);
+#endif
 
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
@@ -1633,6 +1645,39 @@ void process_command( command_type cmd )
 
     switch (cmd)
     {
+#ifdef USE_TILE
+    case CMD_EDIT_PREFS:
+        edit_prefs();
+        break;
+
+    case CMD_USE_ITEM:
+        {
+            int idx;
+            InvAction act;
+            gui_get_mouse_inv(idx, act);
+            use_item(idx, act);
+        }
+        break;
+
+    case CMD_VIEW_ITEM:
+        {
+            int idx;
+            InvAction act;
+            gui_get_mouse_inv(idx, act);
+
+            if (idx < 0)
+                describe_item(mitm[-idx]);
+            else
+                describe_item(you.inv[idx]);
+            redraw_screen();
+        }
+        break;
+
+    case CMD_EDIT_PLAYER_TILE:
+        TilePlayerEdit();
+        break;
+#endif // USE_TILE
+
     case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
     case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
     case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
@@ -2088,9 +2133,11 @@ void process_command( command_type cmd )
         // because we want to have CTRL-Y available...
         // and unfortunately they tend to be stuck together. 
         clrscr();
+#ifndef USE_TILE
         unixcurses_shutdown();
         kill(0, SIGTSTP);
         unixcurses_startup();
+#endif
         redraw_screen();
         break;
 #endif
@@ -3118,6 +3165,13 @@ command_type keycode_to_command( keycode_type key )
 {
     switch ( key )
     {
+#ifdef USE_TILE
+    case '-': return CMD_EDIT_PLAYER_TILE;
+    case CK_MOUSE_DONE: return CMD_NEXT_CMD;
+    case CK_MOUSE_B1ITEM: return CMD_USE_ITEM;
+    case CK_MOUSE_B2ITEM: return CMD_VIEW_ITEM;
+#endif // USE_TILE
+
     case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
     case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
     case KEY_REPEAT_KEYS:        return CMD_REPEAT_KEYS;
@@ -3225,7 +3279,11 @@ command_type keycode_to_command( keycode_type key )
     case CONTROL('M'): return CMD_NO_CMD;
     case CONTROL('O'): return CMD_EXPLORE;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;
+#ifdef USE_TILE
+    case CONTROL('Q'): return CMD_EDIT_PREFS;
+#else
     case CONTROL('Q'): return CMD_NO_CMD;
+#endif
     case CONTROL('R'): return CMD_REDRAW_SCREEN;
     case CONTROL('S'): return CMD_MARK_STASH;
     case CONTROL('V'): return CMD_TOGGLE_AUTOPRAYER;
@@ -3244,7 +3302,18 @@ keycode_type get_next_keycode()
     keycode_type keyin;
 
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
+
+#ifdef USE_TILE
+    tile_draw_inv(-1, REGION_INV1);
+#ifdef USE_X11
+    update_screen();
+#endif
+    mouse_set_mode(MOUSE_MODE_COMMAND);
     keyin = unmangle_direction_keys(getch_with_command_macros());
+    mouse_set_mode(MOUSE_MODE_NORMAL);
+#else // !USE_TILE
+    keyin = unmangle_direction_keys(getch_with_command_macros());
+#endif
 
     if (!is_synthetic_key(keyin))
         mesclr();
@@ -3561,6 +3630,12 @@ static bool initialise(void)
 #if DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz
     you.wizard = true;
+#endif
+
+#ifdef USE_TILE
+    TilePlayerInit();
+    TileInitItems();
+    TileNewLevel(true);
 #endif
 
     init_properties();

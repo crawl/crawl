@@ -86,6 +86,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tiles.h"
 #include "traps.h"
 #include "travel.h"
 #include "version.h"
@@ -641,7 +642,11 @@ static void wizard_go_to_level(const level_pos &pos)
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.your_level    = abs_depth;
 
-    load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
+    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
+        old_level, old_where);
+#ifdef USE_TILE
+    TileNewLevel(newlevel);
+#endif
     save_game_state();
     new_level();
     viewwindow(1, true);

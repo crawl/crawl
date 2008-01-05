@@ -64,6 +64,8 @@
 #include "view.h"
 #include "xom.h"
 
+#include "tiles.h"
+
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 #define MON_RESIST      0           // monster resisted
@@ -179,9 +181,14 @@ void zap_animation( int colour, const monsters *mon, bool force )
 
     if (in_los_bounds(drawx, drawy))
     {
+#ifdef USE_TILE
+        TileDrawBolt(drawx-1, drawy-1, tileidx_zap(colour));
+#else
         view_update();
-        gotoxy( drawx, drawy );
+        gotoxy( drawx, drawy , GOTO_DNGN );
         put_colour_ch( colour, dchar_glyph( DCHAR_FIRED_ZAP ) );
+#endif
+
         update_screen();
         delay(50);
     }
@@ -1301,6 +1308,17 @@ void fire_beam( bolt &pbolt, item_def *item )
 
     beam_message_cache.clear();
 
+#ifdef USE_TILE
+    int tile_beam = -1;
+
+    if (item)
+    {
+        tile_beam = tileidx_item_throw(*item,
+            pbolt.target_x-pbolt.source_x,
+            pbolt.target_y-pbolt.source_y);
+    }
+#endif
+
 #if DEBUG_DIAGNOSTICS
     if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
     {
@@ -1481,6 +1499,18 @@ void fire_beam( bolt &pbolt, item_def *item )
             // draw new position
             int drawx = grid2viewX(tx);
             int drawy = grid2viewY(ty);
+
+#ifdef USE_TILE
+            if (tile_beam == -1)
+                tile_beam = tileidx_bolt(pbolt);
+            if (tile_beam != -1 && in_los_bounds(drawx, drawy) &&
+                (tx != you.x_pos || ty != you.y_pos))
+            {
+                TileDrawBolt(drawx-1, drawy-1, tile_beam);
+                delay(15);
+            }
+            else
+#endif
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
@@ -4723,14 +4753,19 @@ static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
 
         if (see_grid(realx, realy) || (realx == you.x_pos && realy == you.y_pos))
         {
+#ifdef USE_TILE
+            if (in_los_bounds(drawx, drawy))
+                TileDrawBolt(drawx-1, drawy-1, tileidx_bolt(beam));
+#else
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
-                gotoxy(drawx, drawy);
+                gotoxy(drawx, drawy, GOTO_DNGN);
                 put_colour_ch(
                     beam.colour == BLACK ? random_colour() : beam.colour,
                     dchar_glyph( DCHAR_EXPLOSION ) );
             }
+#endif
         }
     }
 }

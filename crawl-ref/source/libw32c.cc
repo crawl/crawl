@@ -501,7 +501,7 @@ void clrscr(void)
     gotoxy(1,1);
 }
 
-void gotoxy(int x, int y)
+void gotoxy_sys(int x, int y)
 {
     // always flush on goto
     bFlush();
