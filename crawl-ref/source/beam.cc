@@ -1248,10 +1248,10 @@ static void zappy( zap_type z_type, int power, bolt &pbolt )
  */
 
 
-// Affect monster in wall unless it can shield itself using the wall
-// (M_WALL_SHIELDED).  The wall will always shield the monster if the
-// beam bounces off the wall, and a monster can't use a metal wall to
-// shield itself from electricity.
+// Affect monster in wall unless it can shield itself using the wall.
+// The wall will always shield the monster if the beam bounces off the
+// wall, and a monster can't use a metal wall to shield itself from
+// electricity.
 static bool affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
 {
     UNUSED(item);
@@ -1267,7 +1267,7 @@ static bool affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
                 || !pbolt.flavour != BEAM_ELECTRICITY)))
     {
         monsters *mon = &menv[mid];
-        if (!mons_class_flag(mon->type, M_WALL_SHIELDED))
+        if (!mons_is_wall_shielded(mon->type))
             return true;
     }
 

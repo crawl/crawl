@@ -357,7 +357,7 @@ mon_holy_type mons_holiness(const monsters *mon)
 {
     if (mons_your_abomination(mon))
         return (MH_UNDEAD);
-        
+
     return (mons_class_holiness(mon->type));
 }
 
@@ -392,36 +392,16 @@ bool mons_class_is_slowable(int mc)
     return (smc->resist_magic < MAG_IMMUNE);
 }
 
+bool mons_is_wall_shielded(int mc)
+{
+    return (mons_habitat(mc) == HT_ROCK);
+}
+
 // returns whether a monster is non-solid
 // and thus can't be affected by some traps
 bool mons_is_insubstantial(int mc)
 {
-    switch (mc)
-    {
-    // vortices
-    case MONS_FIRE_VORTEX:
-    case MONS_SPATIAL_VORTEX:
-    // elementals
-    case MONS_FIRE_ELEMENTAL:
-    case MONS_AIR_ELEMENTAL:
-    case MONS_WATER_ELEMENTAL:
-    // vapours
-    case MONS_INSUBSTANTIAL_WISP:
-    case MONS_VAPOUR:
-    // ghosts and some undead
-    case MONS_PLAYER_GHOST:
-    case MONS_HUNGRY_GHOST:
-    case MONS_SHADOW:
-    case MONS_SMOKE_DEMON:
-    case MONS_SHADOW_WRAITH:
-    // others
-    case MONS_BALL_LIGHTNING:
-    case MONS_GIANT_SPORE:
-    case MONS_ORB_OF_FIRE:
-        return true;
-    default:
-        return false;
-    }
+    return mons_class_flag(mc, M_INSUBSTANTIAL);
 }
 
 bool mons_behaviour_perceptible(const monsters *mon)
@@ -2436,7 +2416,7 @@ bool monsters::floundering() const
 
 bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
 {
-    if (mons_habitat(mclass) == HT_ROCK)
+    if (mons_is_wall_shielded(mclass))
     {
         // Permanent walls can't be passed through.
         return (!grid_is_solid(grid) ||

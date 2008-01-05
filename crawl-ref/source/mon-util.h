@@ -116,7 +116,7 @@ enum mons_class_flags
 
     M_ARCHER            = (1<<23),        // gets various archery boosts
 
-    M_WALL_SHIELDED     = (1<<24),        // Shielded from attacks if in wall
+    M_INSUBSTANTIAL     = (1<<24),        // is insubstantial
 
     M_TWOWEAPON         = (1<<25),        // wields two weapons at once
 
@@ -622,6 +622,7 @@ bool mons_class_is_stationary(int mc);
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_is_stationary(const monsters *mon);
+bool mons_is_wall_shielded(int mc);
 bool mons_is_insubstantial(int mc);
 bool mons_is_submerged( const monsters *mon );
 

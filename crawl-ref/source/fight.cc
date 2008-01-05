@@ -504,7 +504,7 @@ bool melee_attack::attack()
     // Defending monster protects itself from attacks using the
     // wall it's in.
     if (defender->atype() == ACT_MONSTER && grid_is_solid(def->pos())
-        && mons_class_flag(def->type, M_WALL_SHIELDED))
+        && mons_is_wall_shielded(def->type))
     {
         std::string feat_name = raw_feature_description(grd(def->pos()));
 

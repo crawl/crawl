@@ -1774,9 +1774,9 @@ void behaviour_event( monsters *mon, int event, int src,
 //
 // XXX: Monsters of I_NORMAL or above should select a new target
 // if their current target is another monster which is sitting in
-// a wall and is immune to most attacks while in a wall
-// (M_WALL_SHIELDED), unless the monster has a spell or special/nearby
-// ability which isn't affected by M_WALL_SHIELDED.
+// a wall and is immune to most attacks while in a wall, unless
+// the monster has a spell or special/nearby ability which isn't
+// affected by the wall.
 //---------------------------------------------------------------
 static void handle_behaviour(monsters *mon)
 {
@@ -2113,12 +2113,12 @@ static void handle_behaviour(monsters *mon)
             // we can jump back to WANDER if the foe
             // isn't present.
 
-            // XXX: If a monster can move through solid grids then it
+            // XXX: If a monster can move through solid grids, then it
             // should preferentially flee towards the nearest solid grid
-            // it can move through.  If it has M_WALL_SHIELDED is will
-            // be (mostly) safe as soon as it enters the wall, and even
-            // if it doesn't once it moves again it will be on the other
-            // side of the wall and likely beyond the reach of the player.
+            // it can move through.  It will be (mostly) safe as soon as
+            // it enters the wall, and even if it isn't, once it moves
+            // again it will be on the other side of the wall and likely
+            // beyond the reach of the player.
 
             if (isFriendly)
             {
