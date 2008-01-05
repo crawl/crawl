@@ -17,6 +17,7 @@
 #endif
 
 #include "guic.h"
+#include "version.h"
 
 static Display *display;
 static int screen;
@@ -243,14 +244,16 @@ void WinClass::create(char *name)
     if (!win)
     {
         win = XCreateSimpleWindow(display, RootWindow(display,screen),
-        10,10, wx, wy, 0,
-        BlackPixel(display,screen), BlackPixel(display,screen));
+            10,10, wx, wy, 0,
+            BlackPixel(display,screen), BlackPixel(display,screen));
 
         XMapWindow(display, win);
         XSelectInput(display, win, ExposureMask | KeyPressMask
             | ButtonPressMask | ButtonReleaseMask | PointerMotionMask |
             LeaveWindowMask | EnterWindowMask | StructureNotifyMask );
         move(ox, oy);
+
+        XStoreName(display, win, CRAWL VERSION);
     }
     else
         resize(0,0);
@@ -782,7 +785,7 @@ bool GuicInit(Display **d, int *s)
 {
     int  i;
     setlocale(LC_ALL, "");
-    display= XOpenDisplay("");
+    display = XOpenDisplay("");
     if (!display)
     {
         fprintf(stderr,"Cannot open display\n");
@@ -877,8 +880,6 @@ unsigned long create_pixel(unsigned int red, unsigned int green,
 ** modeled after giftopnm by David Koblas and
 ** with lots of bits pasted from libpng.txt by Guy Eric Schalnat
 */
-
-#define VERSION "2.37.1 (3 July 1998)"
 
 #include "png.h"
 
