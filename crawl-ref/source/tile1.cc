@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "AppHdr.h"
+#include "decks.h"
 #include "direct.h"
 #include "externs.h"
 #include "food.h"
@@ -1053,37 +1054,86 @@ int tileidx_corpse(int mon)
   return ch;
 }
 
-int tileidx_misc(int type)
+int tileidx_misc(const item_def &item)
 {
-  int ch = TILE_ERROR;
-  switch(type)
-  {
-    case MISC_BOTTLED_EFREET: ch = TILE_MISC_BOTTLED_EFREET; break;
-    case MISC_CRYSTAL_BALL_OF_SEEING: ch = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
-    case MISC_AIR_ELEMENTAL_FAN: ch = TILE_MISC_AIR_ELEMENTAL_FAN; break;
-    case MISC_LAMP_OF_FIRE: ch = TILE_MISC_LAMP_OF_FIRE; break;
-    case MISC_STONE_OF_EARTH_ELEMENTALS: ch = TILE_MISC_STONE_OF_EARTH_ELEMENTALS; break;
-    case MISC_LANTERN_OF_SHADOWS: ch = TILE_MISC_LANTERN_OF_SHADOWS; break;
-    case MISC_HORN_OF_GERYON: ch = TILE_MISC_HORN_OF_GERYON; break;
-    case MISC_BOX_OF_BEASTS: ch = TILE_MISC_BOX_OF_BEASTS; break;
-    case MISC_CRYSTAL_BALL_OF_ENERGY: ch = TILE_MISC_CRYSTAL_BALL_OF_ENERGY; break;
-    case MISC_EMPTY_EBONY_CASKET: ch = TILE_MISC_EMPTY_EBONY_CASKET; break;
-    case MISC_CRYSTAL_BALL_OF_FIXATION: ch = TILE_MISC_CRYSTAL_BALL_OF_FIXATION; break;
-    case MISC_DISC_OF_STORMS: ch = TILE_MISC_DISC_OF_STORMS; break;
+    int ch;
+    switch(item.sub_type)
+    {
+    case MISC_BOTTLED_EFREET:
+        ch = TILE_MISC_BOTTLED_EFREET;
+        break;
+    case MISC_CRYSTAL_BALL_OF_SEEING:
+        ch = TILE_MISC_CRYSTAL_BALL_OF_SEEING;
+        break;
+    case MISC_AIR_ELEMENTAL_FAN:
+        ch = TILE_MISC_AIR_ELEMENTAL_FAN;
+        break;
+    case MISC_LAMP_OF_FIRE:
+        ch = TILE_MISC_LAMP_OF_FIRE;
+        break;
+    case MISC_STONE_OF_EARTH_ELEMENTALS:
+        ch = TILE_MISC_STONE_OF_EARTH_ELEMENTALS;
+        break;
+    case MISC_LANTERN_OF_SHADOWS:
+        ch = TILE_MISC_LANTERN_OF_SHADOWS;
+        break;
+    case MISC_HORN_OF_GERYON:
+        ch = TILE_MISC_HORN_OF_GERYON;
+        break;
+    case MISC_BOX_OF_BEASTS:
+        ch = TILE_MISC_BOX_OF_BEASTS;
+        break;
+    case MISC_CRYSTAL_BALL_OF_ENERGY:
+        ch = TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
+        break;
+    case MISC_EMPTY_EBONY_CASKET:
+        ch = TILE_MISC_EMPTY_EBONY_CASKET;
+        break;
+    case MISC_CRYSTAL_BALL_OF_FIXATION:
+        ch = TILE_MISC_CRYSTAL_BALL_OF_FIXATION;
+        break;
+    case MISC_DISC_OF_STORMS:
+        ch = TILE_MISC_DISC_OF_STORMS;
+        break;
 
-    case MISC_DECK_OF_ESCAPE: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_DESTRUCTION: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_DUNGEONS: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_SUMMONING: ch = TILE_MISC_DECK_OF_SUMMONINGS; break;
-    case MISC_DECK_OF_WONDERS: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_PUNISHMENT: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_WAR: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_CHANGES: ch = TILE_MISC_DECK_OF_WONDERS; break;
-    case MISC_DECK_OF_DEFENSE: ch = TILE_MISC_DECK_OF_WONDERS; break;
+    case MISC_DECK_OF_ESCAPE:
+    case MISC_DECK_OF_DESTRUCTION:
+    case MISC_DECK_OF_DUNGEONS:
+    case MISC_DECK_OF_SUMMONING:
+    case MISC_DECK_OF_WONDERS:
+    case MISC_DECK_OF_PUNISHMENT:
+    case MISC_DECK_OF_WAR:
+    case MISC_DECK_OF_CHANGES:
+    case MISC_DECK_OF_DEFENSE:
+        switch (item.special)
+        {
+        case DECK_RARITY_LEGENDARY:
+            ch = TILE_MISC_DECK_LEGENDARY;
+            break;
+        case DECK_RARITY_RARE:
+            ch = TILE_MISC_DECK_RARE;
+            break;
+        case DECK_RARITY_COMMON:
+        default:
+            ch = TILE_MISC_DECK;
+            break;
+        }
+        if (item.flags & ISFLAG_KNOW_TYPE)
+        {
+            // NOTE: order of tiles must be identical to order of decks.
+            int offset = item.sub_type - MISC_DECK_OF_ESCAPE + 1;
+            ch += offset;
+        }
+        break;
 
-    case MISC_RUNE_OF_ZOT: ch = TILE_MISC_RUNE_OF_ZOT; break;
-  }
-  return ch;
+    case MISC_RUNE_OF_ZOT:
+        ch = TILE_MISC_RUNE_OF_ZOT;
+        break;
+    default:
+        ch = TILE_ERROR;
+        break;
+    }
+    return ch;
 }
 
 /*****************************************************/
@@ -1098,112 +1148,99 @@ int tileidx_item(const item_def &item)
 
     switch (clas)
     {
-	case OBJ_WEAPONS:
-        if(is_fixed_artefact(item))
+    case OBJ_WEAPONS:
+        if (is_fixed_artefact(item))
             return tileidx_fixed_artifact(special); 
-        else
-        if (is_unrandom_artefact( item ))
+        else if (is_unrandom_artefact( item ))
             return tileidx_unrand_artifact(find_unrandart_index(item));
         else
             return tileidx_weapon(item);
-	break;
 
 	case OBJ_MISSILES:
-	return tileidx_missile(item);
-	break;
+        return tileidx_missile(item);
 
-        case OBJ_ARMOUR:
+    case OBJ_ARMOUR:
         if (is_unrandom_artefact( item ))
             return tileidx_unrand_artifact(find_unrandart_index(item));
         else
             return tileidx_armour(item);
-	break;
 
-        case OBJ_WANDS:
-#if 1 //ID Item
+    case OBJ_WANDS:
         if (id[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE ))
              return TILE_WAND_FLAME + type;
         else
-#endif
              return TILE_WAND_OFFSET + special % 12;
-	break;
 
 	case OBJ_FOOD:
-	return tileidx_food(item);
-	break;
+        return tileidx_food(item);
 
-        case OBJ_SCROLLS:
-#if 1 //ID Item
+    case OBJ_SCROLLS:
         if (id[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE ))
              return TILE_SCR_IDENTIFY + type;
-#endif
         return TILE_SCROLL;
-	break;
 
-        case OBJ_GOLD:
-	return TILE_GOLD;
-	break;
+    case OBJ_GOLD:
+        return TILE_GOLD;
 
-        case OBJ_JEWELLERY:
+    case OBJ_JEWELLERY:
 
         if (type < AMU_RAGE)
-        { // rings
-           if(is_random_artefact( item ))
-	       return TILE_RING_RANDOM_OFFSET + color - 1;
-           else 
-	       return TILE_RING_NORMAL_OFFSET + special % 13;
-        } else { // amu
-        if (is_unrandom_artefact( item ))
-            return tileidx_unrand_artifact(find_unrandart_index(item));
-        else
-           if(is_random_artefact( item ))
-               return TILE_AMU_RANDOM_OFFSET + color - 1;
-           else
-               return TILE_AMU_NORMAL_OFFSET + special % 13;
+        {
+            if(is_random_artefact( item ))
+                return TILE_RING_RANDOM_OFFSET + color - 1;
+            else 
+                return TILE_RING_NORMAL_OFFSET + special % 13;
+        } else {
+            if (is_unrandom_artefact( item ))
+                return tileidx_unrand_artifact(find_unrandart_index(item));
+            else if(is_random_artefact( item ))
+                return TILE_AMU_RANDOM_OFFSET + color - 1;
+            else
+                return TILE_AMU_NORMAL_OFFSET + special % 13;
         } 
-	break;
 
-        case OBJ_POTIONS:
+    case OBJ_POTIONS:
         if (id[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE ))
-         return TILE_POT_HEALING + type;
-         else
-         return TILE_POTION_OFFSET + special % 14;
-	 break;
+        {
+            return TILE_POT_HEALING + type;
+        }
+        else
+        {
+            return TILE_POTION_OFFSET + special % 14;
+        }
 
-        case OBJ_BOOKS:
+    case OBJ_BOOKS:
         type= special % 10;
-        if(type<2) return TILE_BOOK_PAPER_OFFSET + color;
-        if(type==2) return TILE_BOOK_LEATHER_OFFSET + special/10;
-        if(type==3) return TILE_BOOK_METAL_OFFSET + special/10;
-        if(type==4) return TILE_BOOK_PAPYRUS;
-	break;
+        if(type<2)
+            return TILE_BOOK_PAPER_OFFSET + color;
+        if(type==2)
+            return TILE_BOOK_LEATHER_OFFSET + special/10;
+        if(type==3)
+            return TILE_BOOK_METAL_OFFSET + special/10;
+        if(type==4)
+            return TILE_BOOK_PAPYRUS;
 
-        case OBJ_STAVES:
-	return TILE_STAFF_OFFSET + special % 10;
-	break;
+    case OBJ_STAVES:
+        return TILE_STAFF_OFFSET + special % 10;
 
-        case OBJ_CORPSES:
+    case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             return TILE_FOOD_BONE;
         else
             return tileidx_corpse(item.plus);
-	break;
 
-        case OBJ_ORBS:
-	return TILE_ORB;
-	break;
+    case OBJ_ORBS:
+        return TILE_ORB;
 
-        case OBJ_MISCELLANY:
-	return tileidx_misc(type);
-	break;
+    case OBJ_MISCELLANY:
+        return tileidx_misc(item);
 
-        default:
-	break;
+    default:
+        return TILE_ERROR;
     }
-    return TILE_ERROR;
 }
 
 /*

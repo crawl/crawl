@@ -95,7 +95,7 @@ void cp_floor(){
 #define TILEX 32
 #define TILEY 32
 
-void make_rim(){
+void make_rim(unsigned char buf[3][TILEX*TILEY]){
     static unsigned char dflag[TILEX][TILEY];
     int x,y,c,dd[3],ad;
     int n0,n1,n2;
@@ -109,7 +109,7 @@ void make_rim(){
         for(x=0;x<TILEX;x++){
           dflag[x][y]=1;
           ad=ADR(x,y);
-          for(c=0;c<3;c++)dd[c]=dbuf[c][ad];
+          for(c=0;c<3;c++)dd[c]=buf[c][ad];
           if( (dd[0]==bkg[0])&&(dd[1]==bkg[1])&& (dd[2]==bkg[2])) dflag[x][y]=0;
           if( (dd[0]==0)&&(dd[1]==0)&& (dd[2]==0)) dflag[x][y]=2;
         }
@@ -144,7 +144,7 @@ void make_rim(){
                 }
                 // n1 = tiles adjacent but not diagonal that are tile pixels
                 if(n1!=0 )
-                    dbuf[0][x+y*32]=dbuf[1][x+y*32]=dbuf[2][x+y*32]=0x10;
+                    buf[0][x+y*32]=buf[1][x+y*32]=buf[2][x+y*32]=0x10;
             }
         }
     }
@@ -252,7 +252,7 @@ dbuf[2][ADR(xx,yy)]=0;
 
 }
 #endif
-if(rim==1)make_rim();
+if(rim==1)make_rim(dbuf);
 }
 
 
@@ -442,20 +442,33 @@ void process_config(char *fname)
         // compose an image onto the current buffer
         if (getname(tmp,"compose",st))
         {
+            unsigned char tempbuf[3][TILEX * TILEY];
+
             if(load_pxxx(st)){
                 printf("no file pxxx/%s.bmp or %s/%s.bmp\n",st,sdir,st);
                 getchar();
                 exit(1);
             }
+
+            // Copy into a temporary buffer so that we can use the rim func.
+            for(i=0;i<TILEX*TILEY;i++)
+            {
+                tempbuf[0][i] = tbuf[0][i];
+                tempbuf[1][i] = tbuf[1][i];
+                tempbuf[2][i] = tbuf[2][i];
+            }
+            if (rim == 1)
+                make_rim(tempbuf);
+
             for(i=0;i<32*32;i++)
             {
-                if (tbuf[0][i] != bkg[0] ||
-                    tbuf[1][i] != bkg[1] ||
-                    tbuf[2][i] != bkg[2])
+                if (tempbuf[0][i] != bkg[0] ||
+                    tempbuf[1][i] != bkg[1] ||
+                    tempbuf[2][i] != bkg[2])
                 {
-                    cbuf[0][i] = tbuf[0][i];
-                    cbuf[1][i] = tbuf[1][i];
-                    cbuf[2][i] = tbuf[2][i];
+                    cbuf[0][i] = tempbuf[0][i];
+                    cbuf[1][i] = tempbuf[1][i];
+                    cbuf[2][i] = tempbuf[2][i];
                 }
             }
             continue;
@@ -487,7 +500,14 @@ void process_config(char *fname)
                 tbuf[1][i] = cbuf[1][i];
                 tbuf[2][i] = cbuf[2][i];
             }
+
+            // Rim has already been applied during composing, so turn it off
+            // temporarily.
+            int storerim = rim;
+            rim = 0;
             cp_monst_32();
+            rim = storerim;
+
             bflush();
         }
         else
