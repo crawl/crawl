@@ -56,9 +56,7 @@ static void register_tile_mask(int tile, int region, int *cp,
     char *ms, bool smalltile = false);
 static void tcache_compose_normal(int ix, int *fg, int *bg);
 
-#if 1 // TILE_MON_EQUIP
 static void mcache_init();
-#endif
 
 //Internal variables
 
@@ -117,12 +115,6 @@ int get_floor_special_tile_idx()
 /******** Cache buffer for transparency operation *****/
 static int tcache_kind;
 
-#if 1  // ISO
-#define TCACHE_KIND_ISO 2
-#define TCACHE0_ISO 0
-#define TCACHE1_ISO 1
-#endif
-
 #define TCACHE_KIND_NORMAL 1
 #define TCACHE0_NORMAL 0
 
@@ -153,22 +145,6 @@ static tile_cache **tcache;
 // [kind][x*y]
 static int **screen_tcach_idx;
 
-#if 1 //ISO
-/*
- screen grid arrangement. (x,y,kind)
- (0,0,B) (1,0,A) (2,0,B)
- (0,0,A) (1,0,B) (2,0,A) ...
- (0,1,B) (1,1,A) (2,1,B)
- (0,1,A) (1,1,B) (2,1,A)
-       ....
-*/
-const int tcache_wx_iso[TCACHE_KIND_ISO] = {TILE_X_EX_ISO/2, TILE_X_EX_ISO/2};
-const int tcache_wy_iso[TCACHE_KIND_ISO] = {TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4};
-const int tcache_ox_iso[TCACHE_KIND_ISO] = {0,0};
-const int tcache_oy_iso[TCACHE_KIND_ISO] = {0,TILE_Y_EX_ISO/4};
-const int tcache_nlayer_iso[TCACHE_KIND_ISO] = {4,4};
-#endif
-
 const int tcache_wx_normal[TCACHE_KIND_NORMAL] = {TILE_X};
 const int tcache_wy_normal[TCACHE_KIND_NORMAL] = {TILE_Y};
 const int tcache_ox_normal[TCACHE_KIND_NORMAL] = {0};
@@ -187,68 +163,6 @@ unsigned char tile_flag[TILE_TOTAL2];
 
 #define tile_check_blank(tile,region) \
     if( (tile_flag[tile & TILE_FLAG_MASK]&(region))==0) (tile) &= ~TILE_FLAG_MASK;
-
-#if 1 //ISO
-#define TREGION_A_ISO 0
-#define TREGION_B_ISO 1
-#define TREGION_C_ISO 2
-#define TREGION_D_ISO 3
-#define TREGION_E_ISO 4
-#define TREGION_F_ISO 5
-#define TREGION_G_ISO 6
-#define TREGION_H_ISO 7
-/*
-<-64->
- AAEE |
- BBFF 64
- CCGG |
- DDHH |
-*/
-
-const int region_sx_iso[8]=
-    {0, 0, 0, 0,
-    TILE_X_EX_ISO/2, TILE_X_EX_ISO/2, TILE_X_EX_ISO/2, TILE_X_EX_ISO/2};
-const int region_sy_iso[8]=
-    {0, TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/2, (TILE_Y_EX_ISO*3)/4,
-     0, TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/2, (TILE_Y_EX_ISO*3)/4};
-const int region_wx_iso[8]=
-    {TILE_X_EX_ISO/2, TILE_X_EX_ISO/2, TILE_X_EX_ISO/2, TILE_X_EX_ISO/2,
-     TILE_X_EX_ISO/2, TILE_X_EX_ISO/2, TILE_X_EX_ISO/2, TILE_X_EX_ISO/2};
-const int region_wy_iso[8]=
-    {TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4,
-     TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4, TILE_Y_EX_ISO/4};
-
-/* 32x32 �̏ꍇ  �^�C����(sx,sy)����wx*wy �̗̈��� ox,oy ���炵�ăR�s�[ */
-
-#ifdef ISO48
-//�傫��BMP��48x48 �̏ꍇ
-const int region_sx_small_iso[8]=
-    {0, 0, 0, 0,
-     TILE_X/2, TILE_X/2, TILE_X/2, TILE_X/2};
-const int region_sy_small_iso[8]=
-    {0, 2, 14, 26, 0, 2, 14, 26};
-const int region_wx_small_iso[8]=
-    {16,16,16,16, 16,16,16,16};
-const int region_wy_small_iso[8]=
-    {2, 12, 12, 6, 2, 12, 12, 6};
-const int region_ox_small_iso[8]=
-    {8,8,8, 8, 0, 0, 0, 0};
-const int region_oy_small_iso[8]=
-    {14,0,0,0, 14,0,0,0};
-#else
-//�傫��BMP��64x64 �̏ꍇ
-const int region_sx_small_iso[8]=
-    {0, 0, 0, 0,
-     TILE_X/2, TILE_X/2, TILE_X/2, TILE_X/2};
-const int region_sy_small_iso[8]=
-    {0, 0, 8,24, 0, 0, 8,24};
-const int region_wx_small_iso[8]={0,16,16,16, 0,16,16,16};
-const int region_wy_small_iso[8]={0, 8,16, 8, 0, 8,16, 8};
-const int region_ox_small_iso[8]={16,16,16, 16, 0, 0, 0, 0};
-const int region_oy_small_iso[8]={0,8,0,0,0,8,0,0};
-#endif
-
-#endif // ISO
 
 #define TREGION_0_NORMAL 0
 const int region_sx_normal[1]={0};
@@ -391,9 +305,9 @@ void TileInit()
     for(k=0;k<tcache_kind;k++)
     {
         screen_tcach_idx[k]= (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
-	tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
-	for(x=0;x<tile_xmax * tile_ymax;x++)
-	    screen_tcach_idx[k][x] = -1;
+        tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
+        for(x=0;x<tile_xmax * tile_ymax;x++)
+        screen_tcach_idx[k][x] = -1;
     }
 
     sink_mask = (char *)malloc(TILE_X*TILE_Y);
@@ -411,9 +325,7 @@ void TileInit()
 
     force_redraw_tile = false;
 
-#if 1 // TILE_MON_EQUIP
     mcache_init();
-#endif
 
     for(x=0; x<MAX_ITEMLIST;x++)
     {
@@ -430,10 +342,10 @@ void TileResizeScreen(int x0, int y0)
 
     for(k=0;k<tcache_kind;k++)
     {
-	free(screen_tcach_idx[k]);
+        free(screen_tcach_idx[k]);
         screen_tcach_idx[k]= (int *)malloc(sizeof(int)* tile_xmax * tile_ymax);
 
-	free(tcache[k]);
+        free(tcache[k]);
         tcache[k] = (tile_cache *)malloc(sizeof(tile_cache)*max_tcache);
 
         for(x=0;x<tile_xmax * tile_ymax;x++)
@@ -680,7 +592,7 @@ void tcache_overlay_player(img_type img, int dx, int dy,
 
 /** overlay a tile onto an exsisting image with transpalency operation */
 void register_tile_mask(int tile, int region, int *copy,
-	char *mask, bool smalltile)
+    char *mask, bool smalltile)
 {
     int x0, y0, x, y;
     int sx= region_sx_normal[region];
@@ -924,7 +836,7 @@ void StoreDungeonView(short unsigned int *tileb)
     int count = 0;
 
     if (tileb == NULL)
-	tileb = tb_bk;
+        tileb = tb_bk;
 
     for(y=0;y<tile_dngn_y;y++){
     for(x=0;x<tile_dngn_x;x++){
@@ -1625,7 +1537,7 @@ static void load_doll_data(const char *fn, dolls_data *dolls, int max,
         {
             if (strncmp(fbuf, "NUM=", 4) == 0)
             {
-		sscanf(fbuf, "NUM=%d",&cur0);
+                sscanf(fbuf, "NUM=%d",&cur0);
                 if ( (cur0 < 0)||(cur0 > 10) )
                     cur0 = 0;
             }
