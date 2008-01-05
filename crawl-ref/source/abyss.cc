@@ -31,6 +31,7 @@
 #include "randart.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tiles.h"
 #include "traps.h"
 #include "view.h"
 #include "xom.h"
@@ -746,6 +747,20 @@ static void corrupt_square(const crawl_environment &oenv, const coord_def &c)
         env.grid_colours(c) = oenv.rock_colour;
     else if (feat == DNGN_FLOOR)
         env.grid_colours(c) = oenv.floor_colour;
+
+#ifdef USE_TILE
+    // Modify tile flavor to use corrupted tiles.
+    if (feat == DNGN_ROCK_WALL)
+    {
+        env.tile_flavor[c.x][c.y].wall =
+            TILE_DNGN_WALL_CORRUPT - get_wall_tile_idx() + random2(4);
+    }
+    else if (feat == DNGN_FLOOR)
+    {
+        env.tile_flavor[c.x][c.y].floor =
+            TILE_DNGN_FLOOR_CORRUPT - get_floor_tile_idx() + random2(4);
+    }
+#endif
 }
 
 static void corrupt_level_features(const crawl_environment &oenv)

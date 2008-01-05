@@ -3,6 +3,8 @@
 blank BLANK
 dngn_unseen DNGN_UNSEEN
 
+# Do not separate basic floors and rock walls.  They get overwritten by
+# branch-specific floors and walls and will overwrite anything in between.
 floor/pebble_gray0 DNGN_FLOOR
 floor/pebble_gray1
 floor/pebble_gray2
@@ -23,6 +25,15 @@ wall/brick_brown3
 wall/brick_brown3
 wall/brick_brown3
 wall/brick_brown3
+
+floor/floor_nerves0 DNGN_FLOOR_CORRUPT
+floor/floor_nerves1
+floor/floor_nerves2
+floor/floor_nerves3
+wall/undead0 DNGN_WALL_CORRUPT
+wall/undead1
+wall/undead2
+wall/undead3
 
 floor/lava0 DNGN_LAVA
 floor/lava1
