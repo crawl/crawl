@@ -553,19 +553,8 @@ static bool food_change(bool suppress_message)
     char newstate = HS_ENGORGED;
     bool state_changed = false;
 
-    // this case shouldn't actually happen:
-    if (you.is_undead == US_UNDEAD)
-        you.hunger = 6000;
-
-    // take care of ghouls - they can never be 'full'
-    if (you.species == SP_GHOUL && you.hunger > 6999) 
-        you.hunger = 6999;
-
-    // vampires can never be engorged or starve to death
-    if (you.species == SP_VAMPIRE && you.hunger <= 700)
-        you.hunger = 701;
-    if (you.species == SP_VAMPIRE && you.hunger > 10999)
-        you.hunger = 10999;
+    you.hunger = std::max(you_min_hunger(), you.hunger);
+    you.hunger = std::min(you_max_hunger(), you.hunger);
 
     // get new hunger state
     if (you.hunger <= 1000)
@@ -1647,3 +1636,33 @@ static void heal_from_food(int hp_amt, int mp_amt, bool unrot,
     calc_hp();
     calc_mp();
 } // end heal_from_food()
+
+int you_max_hunger()
+{
+    // this case shouldn't actually happen:
+    if (you.is_undead == US_UNDEAD)
+        return 6000;
+
+    // take care of ghouls - they can never be 'full'
+    if (you.species == SP_GHOUL)
+        return 6999;
+
+    // vampires can never be engorged
+    if (you.species == SP_VAMPIRE)
+        return 10999;
+
+    return 40000;
+}
+
+int you_min_hunger()
+{
+    // this case shouldn't actually happen:
+    if (you.is_undead == US_UNDEAD)
+        return 6000;
+
+    // vampires can never starve to death
+    if (you.species == SP_VAMPIRE)
+        return 701;
+
+    return 0;
+}

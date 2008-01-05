@@ -96,4 +96,7 @@ bool prompt_eat_from_inventory(int slot = -1);
 
 void chunk_nutrition_message(int nutrition);
 
+int you_max_hunger();
+int you_min_hunger();
+
 #endif
