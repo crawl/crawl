@@ -16,7 +16,7 @@ CXX = g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
-EXTRA_INCLUDES = -DUSE_X11 -DUSE_TILE
+EXTRA_INCLUDES = -DUSE_X11 -DUSE_TILE -DCLUA_BINDINGS
 
 # Change this to y if you want to use Unicode glyphs in the map, and you have
 # libncursesw available.

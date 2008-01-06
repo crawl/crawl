@@ -20,25 +20,10 @@
 #include "tiledef-p.h"
 #include "view.h"
 
-#ifdef TILEP_DEBUG
-#include "tilep-cmt.h"
-#endif
-
-/* external */
-extern short get_helmet_type( const item_def &item );
-extern bool player_is_airborne(void);
-extern bool item_cursed( const item_def &item );
-extern bool item_ident( const item_def &item, unsigned long flags );
-
 // tile index cache to reduce tileidx() calls
 static FixedArray < unsigned short, GXM, GYM > tile_dngn;
 // // gv backup
 static FixedArray < unsigned char, GXM, GYM > gv_now;
-static FixedArray < unsigned char, GXM, GYM > wall_flag;
-#define WFLAG_L 1
-#define WFLAG_U 2
-#define WFLAG_D 4
-#define WFLAG_R 8
 
 void TileNewLevel(bool first_time)
 {
@@ -1156,7 +1141,7 @@ int tileidx_item(const item_def &item)
         else
             return tileidx_weapon(item);
 
-	case OBJ_MISSILES:
+    case OBJ_MISSILES:
         return tileidx_missile(item);
 
     case OBJ_ARMOUR:
@@ -1172,7 +1157,7 @@ int tileidx_item(const item_def &item)
         else
              return TILE_WAND_OFFSET + special % 12;
 
-	case OBJ_FOOD:
+    case OBJ_FOOD:
         return tileidx_food(item);
 
     case OBJ_SCROLLS:
@@ -1259,21 +1244,14 @@ static int tile_bolt_dir(int dx, int dy)
     int ax = abs(dx);
     int ay = abs(dy);
 
-    if ( 5*ay < 2*ax )
-    {
-	return (dx > 0)? 2:6;
-    }
-    else if ( 5*ax < 2*ay)
-    {
-        return ( dy > 0 )? 4:0;
-    }
-    else 
-    {
-        if (dx>0)
-	    return (dy>0)? 3:1;
-	else
-	    return (dy>0)? 5:7;
-    }
+    if (5*ay < 2*ax)
+        return (dx > 0) ? 2 : 6;
+    else if (5*ax < 2*ay)
+        return (dy > 0) ? 4 : 0;
+    else if (dx>0)
+        return (dy>0) ? 3 : 1;
+    else
+        return (dy>0) ? 5: 7;
 }
 
 int tileidx_item_throw(const item_def &item, int dx, int dy)
@@ -1533,7 +1511,7 @@ int tileidx_player(int job){
     }
 
     if (player_is_airborne())
-	ch |= TILE_FLAG_FLYING;
+        ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])
         ch |= TILE_FLAG_NET;
@@ -1550,7 +1528,9 @@ int tileidx_unseen(int ch, const coord_def& gc)
 
     if ( (ch>='@' && ch<='Z') || (ch>='a' && ch<='z') || ch=='&'
         || (ch>='1' && ch<='5') || ch == ';')
+    {
         return TILE_UNSEEN_MONSTER | tile_unseen_flag(gc);
+    }
 
     switch (ch)
     {
@@ -1560,13 +1540,12 @@ int tileidx_unseen(int ch, const coord_def& gc)
         case 176:
         case 177: res = TILE_DNGN_ROCK_WALL_OFS; break;
 
-	case 130:
+        case 130:
         case ',':
         case '.':
         case 249:
         case 250: res = TILE_DNGN_FLOOR; break;
 
-	// old;
         case 137: res = TILE_DNGN_WAX_WALL; break;
         case 138: res = TILE_DNGN_STONE_WALL; break;
         case 139: res = TILE_DNGN_METAL_WALL; break;
@@ -1665,7 +1644,8 @@ void finalize_tile(short unsigned int *tile, unsigned char wflag,
     }
     else if (orig == TILE_DNGN_SHALLOW_WATER ||
         orig == TILE_DNGN_DEEP_WATER ||
-        orig == TILE_DNGN_LAVA)
+        orig == TILE_DNGN_LAVA ||
+        orig == TILE_DNGN_STONE_WALL)
     {
         // These types always have four flavors...
         (*tile) = orig + (floor_flv % 4);
@@ -2202,10 +2182,10 @@ void tilep_scan_parts(char *fbuf, int *parts)
     {
         int idx;
         ccount = 0;
-	int p = parts_saved[i];
+        int p = parts_saved[i];
 
         while ( (fbuf[gcount] != ':') && (fbuf[gcount] != '\n')
-		&& (ccount<4) && (gcount<48) )
+            && (ccount<4) && (gcount<48) )
         {
             ibuf[ccount] = fbuf[gcount];
             ccount ++;
@@ -2242,7 +2222,7 @@ void tilep_print_parts(char *fbuf, int *parts)
     char *ptr = fbuf;
     for(i = 0; parts_saved[i] != -1; i++)
     {
-	int p = parts_saved[i];
+        int p = parts_saved[i];
         if (p == TILEP_PART_BASE) // 0:female  1:male
         {
             sprintf(ptr, "%03d", parts[p]%2);
@@ -3137,33 +3117,8 @@ void tile_clear_buf()
     {
         for (int x = 0; x < GXM; x++)
         {
-            unsigned char this_is_wall = 128;
             gv_now[x][y]=0;
             tile_dngn[x][y]=TILE_DNGN_UNSEEN;
-            if (env.map[x][y].glyph() != 0)
-            {
-                int g = grd[x][y];
-                if (g >= DNGN_ORCISH_IDOL && g != DNGN_OPEN_DOOR)
-                    this_is_wall = 0;
-            }
-
-            wall_flag[x][y] = this_is_wall;
-        }
-    }
-
-    for (int y = 0; y < GYM; y++)
-    {
-        for (int x = 0; x < GXM; x++)
-        {
-            unsigned char w = wall_flag[x][y]&0x80;
-            if (w)
-            {
-                if (x != 0)     wall_flag[x-1][y] |= WFLAG_R;
-                if (x != GXM-1) wall_flag[x+1][y] |= WFLAG_L;
-                if (y != 0)     wall_flag[x][y-1] |= WFLAG_D;
-                if (y != GYM-1) wall_flag[x][y+1] |= WFLAG_U;
-            }
-            wall_flag[x][y] &= 0xf;
         }
     }
 }
@@ -3190,31 +3145,6 @@ void tile_draw_floor()
 
                     tile_dngn[gc.x][gc.y] = tileidx_feature(object);
                     gv_now[gc.x][gc.y] = object;
-
-                    unsigned char wall = 0xff;
-                    if (object >= DNGN_ORCISH_IDOL && object != DNGN_OPEN_DOOR)
-                        wall = 0;
-
-                    if (gc.x != 0)
-                    {
-                        wall_flag[gc.x-1][gc.y] = (wall_flag[gc.x-1][gc.y] & 
-                            (~WFLAG_R)) | (wall & WFLAG_R);
-                    }
-                    if (gc.x != GXM-1)
-                    {
-                        wall_flag[gc.x+1][gc.y] = (wall_flag[gc.x+1][gc.y] & 
-                            (~WFLAG_L)) | (wall & WFLAG_L);
-                    }
-                    if (gc.y != 0)
-                    {
-                        wall_flag[gc.x][gc.y-1] = (wall_flag[gc.x][gc.y-1] & 
-                            (~WFLAG_D)) | (wall & WFLAG_D);
-                    }
-                    if (gc.y != GYM-1)
-                    {
-                        wall_flag[gc.x][gc.y+1] = (wall_flag[gc.x][gc.y+1] & 
-                            (~WFLAG_U)) | (wall & WFLAG_U);
-                    }
                 }
                 bg = tile_dngn[gc.x][gc.y];
             }
@@ -3277,14 +3207,16 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
     int mon_wep = menv[idx].inv[MSLOT_WEAPON];
 
     if (menv[idx].type >=  MONS_DRACONIAN && 
-	    menv[idx].type <= MONS_DRACONIAN_SCORCHER)
+        menv[idx].type <= MONS_DRACONIAN_SCORCHER)
     {
-	int race = draco_subspecies(&menv[idx]);
-	int cls = menv[idx].type;
-	int eq = 0;
-	if (mon_wep != NON_ITEM &&
-		(cls == race || cls == MONS_DRACONIAN_KNIGHT))
+        int race = draco_subspecies(&menv[idx]);
+        int cls = menv[idx].type;
+        int eq = 0;
+        if (mon_wep != NON_ITEM &&
+            (cls == race || cls == MONS_DRACONIAN_KNIGHT))
+        {
             eq = tilep_equ_weapon(mitm[mon_wep]);
+        }
         t = flag | TileMcacheFind(cls, eq, race);
     }
     else if (mon_wep != NON_ITEM)
@@ -3431,7 +3363,6 @@ void tile_finish_dngn(short unsigned int *tileb, int cx, int cy)
             char special_flv = 0;
             if (map_bounds( gx, gy ))
             {
-                wall = wall_flag[gx][gy];
                 wall_flv = env.tile_flavor[gx][gy].wall;
                 floor_flv = env.tile_flavor[gx][gy].floor;
                 special_flv = env.tile_flavor[gx][gy].special;
