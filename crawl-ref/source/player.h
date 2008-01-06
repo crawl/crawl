@@ -434,7 +434,7 @@ void dec_disease_player();
 
 bool rot_player( int amount );
 
-bool player_has_spell( int spell );
+bool player_has_spell( spell_type spell );
 size_type player_size( int psize = PSIZE_TORSO, bool base = false );
 
 bool player_weapon_wielded();

@@ -777,7 +777,7 @@ public:
 
     kill_category kill_alignment() const;
 
-    bool has_spell(int spell) const;
+    bool has_spell(spell_type spell) const;
 
     size_type transform_size(int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;

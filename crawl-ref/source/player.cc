@@ -3955,7 +3955,7 @@ bool player_is_airborne(void)
     return you.airborne();
 }
 
-bool player_has_spell( int spell )
+bool player_has_spell( spell_type spell )
 {
     return you.has_spell(spell);
 }
@@ -5428,7 +5428,7 @@ bool player::submerged() const
     return (false);
 }
 
-bool player::has_spell(int spell) const
+bool player::has_spell(spell_type spell) const
 {
     for (int i = 0; i < 25; i++)
     {

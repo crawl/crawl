@@ -25,7 +25,7 @@ std::vector<ghost_demon> ghosts;
    Order for looking for conjurations for the 1st & 2nd spell slots,
    when finding spells to be remembered by a player's ghost:
  */
-static int search_order_conj[] = {
+static spell_type search_order_conj[] = {
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_BOLT_OF_DRAINING,
     SPELL_AGONY,
@@ -56,7 +56,7 @@ static int search_order_conj[] = {
 /*
    Order for looking for summonings and self-enchants for the 3rd spell slot:
  */
-static int search_order_third[] = {
+static spell_type search_order_third[] = {
 /* 0 */
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
@@ -80,7 +80,7 @@ static int search_order_third[] = {
    go through conjs.
    Note: Dig must be in misc2 (5th) position to work.
  */
-static int search_order_misc[] = {
+static spell_type search_order_misc[] = {
 /* 0 */
     SPELL_AGONY,
     SPELL_BANISHMENT,
