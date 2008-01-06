@@ -469,6 +469,22 @@ static bool monster_avoided_death(monsters *monster, killer_type killer, int i)
     return (false);
 }
 
+bool is_mons_evil_demonic_or_undead(monsters *mons)
+{
+    return (mons_holiness(mons) == MH_UNDEAD
+            || mons_holiness(mons) == MH_DEMONIC
+            || mons_is_evil(mons));
+}
+
+static bool is_mons_mutator_or_rotter(monsters *mons)
+{
+    if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
+        return true;
+        
+    const int attk_flavour = mons_attack_spec(mons, 0).flavour;
+    return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
+}
+
 void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 {
     if (monster->type == -1)
@@ -640,8 +656,15 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     did_god_conduct(DID_KILL_DEMON,
                                     monster->hit_dice, true, monster);
 
-                if (mons_class_flag(monster->type, M_EVIL))
+                if (mons_class_flag(monster->type, M_EVIL)
+                    && mons_holiness(monster) == MH_NATURAL)
+                {
                     did_god_conduct(DID_KILL_NATURAL_EVIL,
+                                    monster->hit_dice, true, monster);
+                }
+
+                if (is_mons_mutator_or_rotter(monster))
+                    did_god_conduct(DID_KILL_MUTATOR_OR_ROTTER,
                                     monster->hit_dice, true, monster);
 
                 // jmf: Trog hates wizards
@@ -663,7 +686,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             // born-friendly monsters. The mutation still applies, however.
             if (you.mutation[MUT_DEATH_STRENGTH]
                 || (!created_friendly
-                    && you.religion == GOD_MAKHLEB
+                    && (you.religion == GOD_MAKHLEB
+                        || you.religion == GOD_SHINING_ONE
+                           && is_mons_evil_demonic_or_undead(monster))
                     && (!player_under_penance() && random2(you.piety) >= 30)))
             {
                 if (you.hp < you.hp_max)
@@ -675,7 +700,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
 
             if (!created_friendly 
-                && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET)
+                && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET
+                    || you.religion == GOD_SHINING_ONE
+                       && is_mons_evil_demonic_or_undead(monster))
                 && (!player_under_penance() && random2(you.piety) >= 30))
             {
                 if (you.magic_points < you.max_magic_points)
@@ -788,6 +815,20 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     {
                         mpr("You feel your power returning.");
                         inc_mp( 1 + random2(monster->hit_dice / 2), false );
+                    }
+                }
+
+                if (you.religion == GOD_SHINING_ONE
+                    && is_mons_evil_demonic_or_undead(monster)
+                    && (!player_under_penance() && random2(you.piety) >= 30))
+                {
+                    monsters *mon = &menv[i];
+                    if (mon->hit_points < mon->max_hit_points)
+                    {
+                        simple_monster_message(mon, " looks healthier.");
+                        mon->hit_points += 1 + random2(monster->hit_dice / 4);
+                        if (mon->hit_points >  mon->max_hit_points)
+                            mon->hit_points = mon->max_hit_points;
                     }
                 }
             }

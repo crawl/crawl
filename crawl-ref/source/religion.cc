@@ -1335,6 +1335,32 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_KILL_NATURAL_EVIL:
+        if (you.religion == GOD_SHINING_ONE)
+        {
+            if (god_hates_attacking_friend(you.religion, victim))
+                break;
+
+            simple_god_message(" accepts your kill.");
+            ret = true;
+            if (random2(level + 18) > 3)
+                piety_change = 1;
+        }
+        break;
+
+    case DID_KILL_MUTATOR_OR_ROTTER:
+        if (you.religion == GOD_ZIN)
+        {
+            if (god_hates_attacking_friend(you.religion, victim))
+                break;
+
+            simple_god_message(" appreciates the killing of a spawn of chaos.");
+            ret = true;
+            if (random2(level + 18) > 3)
+                piety_change = 1;
+        }
+        break;
+
     case DID_KILL_PRIEST:
         if (you.religion == GOD_BEOGH
             && !god_hates_attacking_friend(you.religion, victim))
@@ -1437,7 +1463,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_UNDEAD_KILLED_BY_SERVANT:
         switch (you.religion)
         {
-        case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
@@ -1456,7 +1481,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_DEMON_KILLED_BY_SERVANT: 
         switch (you.religion)
         {
-        case GOD_ZIN:
         case GOD_SHINING_ONE:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
@@ -1466,6 +1490,17 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
             break;
         default:
             break;
+        }
+        break;
+
+    case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
+        if (you.religion == GOD_SHINING_ONE)
+        {
+            simple_god_message(" accepts your collateral kill.");
+            ret = true;
+            
+            if (random2(level + 10) > 5)
+                piety_change = 1;
         }
         break;
 
@@ -1568,8 +1603,6 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
     case DID_STIMULANTS:                        // unused
     case DID_EAT_MEAT:                          // unused
     case DID_CREATED_LIFE:                      // unused
-    case DID_KILL_NATURAL_EVIL:                 // unused
-    case DID_NATURAL_EVIL_KILLED_BY_SERVANT:    // unused
     case DID_SPELL_NONUTILITY:                  // unused
     case NUM_CONDUCTS:
         break;

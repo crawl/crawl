@@ -70,7 +70,8 @@
                                     // from remaining range
 #define MON_RESIST      0           // monster resisted
 #define MON_UNAFFECTED  1           // monster unaffected
-#define MON_AFFECTED    2           // monster was unaffected
+#define MON_AFFECTED    2           // monster was affected
+#define MON_OTHER       3           // monster unaffected, but for other reasons
 
 static int spreadx[] = { 0, 0, 1, -1 };
 static int spready[] = { -1, 1, 0, 0 };
@@ -2112,6 +2113,13 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
         return (MON_AFFECTED);
     }
     case BEAM_CHARM:             /* 9 = charm */
+        if (you.religion == GOD_SHINING_ONE
+            && is_mons_evil_demonic_or_undead(monster))
+        {
+            simple_monster_message(monster, " is repulsed!");
+            return (MON_OTHER);
+        }
+
         if (monster->add_ench(ENCH_CHARM))
         {
             // put in an exception for fungi, plants and other things you won't
@@ -4182,8 +4190,14 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         if (check_mons_resist_magic( mon, beam.ench_power ))
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
-        simple_monster_message(mon, " is enslaved.");
         beam.obvious_effect = true;
+        if (you.religion == GOD_SHINING_ONE)
+        {
+            simple_monster_message(mon, " is repulsed!");
+            return (MON_OTHER);
+        }
+
+        simple_monster_message(mon, " is enslaved.");
 
         // wow, permanent enslaving
         mon->attitude = ATT_FRIENDLY;
@@ -4208,8 +4222,14 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         if (mons_friendly(mon))
             return (MON_UNAFFECTED);
         
-        simple_monster_message(mon, " is enslaved.");
         beam.obvious_effect = true;
+        if (you.religion == GOD_SHINING_ONE)
+        {
+            simple_monster_message(mon, " is repulsed!");
+            return (MON_OTHER);
+        }
+
+        simple_monster_message(mon, " is enslaved.");
 
         // wow, permanent enslaving
         if (one_chance_in(2 + mon->hit_dice / 4))

@@ -2657,7 +2657,7 @@ static void decrement_durations()
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.
     // For now, though, keep information about what happened hidden.
-    if (you.duration[DUR_PIETY_POOL] && one_chance_in(20))
+    if (you.duration[DUR_PIETY_POOL] && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--; // decrease even if piety at maximum
         if (you.piety < 200)
