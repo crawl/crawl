@@ -1597,7 +1597,7 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     case SPELL_ALTER_SELF:
         // trying is already enough, even if it fails
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-        
+
         crawl_state.cant_cmd_repeat("You can't repeat alter self.");
         if (!enough_hp( you.hp_max / 2, true ))
         {

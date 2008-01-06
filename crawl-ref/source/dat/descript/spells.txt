@@ -113,7 +113,7 @@ This spell releases a massive electrical discharge that arcs from target to targ
 %%%%
 Cigotuvi's Degeneration
 
-This spell mutates one creature into a pulsating mass of flesh. 
+This spell transforms one creature into a pulsating mass of flesh. 
 %%%%
 Condensation Shield
 
