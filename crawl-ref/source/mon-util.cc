@@ -3464,6 +3464,16 @@ int monsters::holy_aura() const
     return ((type == MONS_DAEVA || type == MONS_ANGEL)? hit_dice : 0);
 }
 
+bool monsters::has_spell(spell_type spell) const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+        if (spells[i] == spell)
+            return (true);
+    }
+    return (false);
+}
+
 bool monsters::visible() const
 {
     return (mons_near(this) && player_monster_visible(this));

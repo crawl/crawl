@@ -212,6 +212,8 @@ public:
         return (true);
     }
 
+    virtual bool has_spell(spell_type spell) const = 0;
+
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
     virtual bool     do_shaft() = 0;
@@ -1163,6 +1165,8 @@ public:
     bool backlit() const;
 
     int holy_aura() const;
+
+    bool has_spell(spell_type spell) const;
 
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;

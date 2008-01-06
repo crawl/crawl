@@ -480,7 +480,10 @@ static bool is_mons_mutator_or_rotter(monsters *mons)
 {
     if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
         return true;
-        
+
+    if (mons->has_spell(SPELL_POLYMORPH_OTHER))
+        return true;
+
     const int attk_flavour = mons_attack_spec(mons, 0).flavour;
     return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
 }
