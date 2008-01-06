@@ -646,6 +646,8 @@ static void wizard_go_to_level(const level_pos &pos)
         old_level, old_where);
 #ifdef USE_TILE
     TileNewLevel(newlevel);
+#else
+    UNUSED(newlevel);
 #endif
     save_game_state();
     new_level();
