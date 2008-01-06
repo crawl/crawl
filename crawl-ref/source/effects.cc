@@ -2449,6 +2449,10 @@ void update_level( double elapsedTime )
         if (turns >= 10)
             mon->timeout_enchantments( turns / 10 );
 
+        // Summoned monsters might have disappeared
+        if (mon->type == -1)
+            continue;
+
         // Don't move non-land or stationary monsters around
         if (mons_habitat( mon->type ) != HT_LAND
             || mons_is_stationary( mon ))
