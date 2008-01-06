@@ -1354,7 +1354,8 @@ bool did_god_conduct( conduct_type thing_done, int level, bool known,
             if (god_hates_attacking_friend(you.religion, victim))
                 break;
 
-            simple_god_message(" appreciates the killing of a spawn of chaos.");
+            simple_god_message(" appreciates your killing of a "
+                               "spawn of chaos.");
             ret = true;
             if (random2(level + 18) > 3)
                 piety_change = 1;
