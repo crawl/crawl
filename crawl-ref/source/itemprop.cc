@@ -1732,8 +1732,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
     if ((!check_id || item_type_known( item )) 
         && ((item.base_type == OBJ_WEAPONS 
                 && item.sub_type == WPN_BLESSED_BLADE)
-            || brand == SPWPN_HOLY_WRATH 
-            || brand == SPWPN_DISRUPTION)
+            || brand == SPWPN_HOLY_WRATH)
         && (you.is_undead || you.species == SP_DEMONSPAWN))
     {
         if (!quiet)

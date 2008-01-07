@@ -1511,8 +1511,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             case SP_VAMPIRE:
                 {
                     int brand = get_weapon_brand( thing );
-                    if (brand == SPWPN_HOLY_WRATH 
-                            || brand == SPWPN_DISRUPTION)
+                    if (brand == SPWPN_HOLY_WRATH)
                     {
                         if (!is_random_artefact( thing ))
                         {
@@ -1522,8 +1521,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                         else
                         {
                             // keep resetting seed until it's good:
-                            for (; brand == SPWPN_HOLY_WRATH 
-                                      || brand == SPWPN_DISRUPTION; 
+                            for (; brand == SPWPN_HOLY_WRATH; 
                                   brand = get_weapon_brand(thing))
                             {
                                 make_item_randart( thing );    

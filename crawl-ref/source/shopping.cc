@@ -667,7 +667,6 @@ unsigned int item_value( item_def item, bool ident )
                 valued *= 60;
                 break;
 
-            case SPWPN_DISRUPTION:
             case SPWPN_FLAME:
             case SPWPN_FROST:
             case SPWPN_HOLY_WRATH:
@@ -688,6 +687,7 @@ unsigned int item_value( item_def item, bool ident )
 
             case SPWPN_FLAMING:
             case SPWPN_FREEZING:
+            case SPWPN_DRAGON_SLAYING:
                 valued *= 25;
                 break;
 

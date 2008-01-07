@@ -2756,9 +2756,6 @@ void monsters::equip_weapon(item_def &item, int near)
         case SPWPN_FROST:
             mpr("It is covered in frost.");
             break;
-        case SPWPN_DISRUPTION:
-            mpr("You sense a holy aura.");
-            break;
         case SPWPN_RETURNING:
             mpr("It wiggles slightly.");
             break;
@@ -3112,8 +3109,6 @@ bool monsters::wants_weapon(const item_def &weap) const
 
     const int brand = get_weapon_brand(weap);
     const int holy = holiness();
-    if (brand == SPWPN_DISRUPTION && holy == MH_UNDEAD)
-        return (false);
 
     if (brand == SPWPN_HOLY_WRATH
         && (holy == MH_DEMONIC || holy == MH_UNDEAD))

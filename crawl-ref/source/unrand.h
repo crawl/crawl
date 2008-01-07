@@ -1023,7 +1023,7 @@
     "mace \"Undeadhunter\"", "steel mace",
         OBJ_WEAPONS, WPN_MACE, +4, +6, LIGHTGRAY,
     {
-        SPWPN_DISRUPTION, 0, 0, 0, 0, 0,
+        SPWPN_HOLY_WRATH, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 1, 0,       // life prot
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,

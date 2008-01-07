@@ -1908,6 +1908,21 @@ bool melee_attack::apply_damage_brand()
         }
         break;
 
+    case SPWPN_DRAGON_SLAYING:
+        if (mons_genus(defender->mons_species()) == MONS_DRAGON
+            || mons_genus(defender->mons_species()) == MONS_DRACONIAN)
+        {
+            special_damage = 1 + random2(damage_done);
+            if (defender_visible)
+                special_damage_message =
+                    make_stringf(
+                        "%s %s%s",
+                        defender->name(DESC_CAP_THE).c_str(),
+                        defender->conj_verb("convulse").c_str(),
+                        special_attack_punctuation().c_str());
+        }
+        break;
+
     case SPWPN_VENOM:
     case SPWPN_STAFF_OF_OLGREB:
         if (!one_chance_in(4))
@@ -2031,21 +2046,6 @@ bool melee_attack::apply_damage_brand()
         }
         break;
 
-    case SPWPN_DISRUPTION:
-        if (defender->holiness() == MH_UNDEAD && !one_chance_in(3))
-        {
-            if (defender_visible)
-                special_damage_message =
-                    defender->atype() == ACT_MONSTER?
-                    make_stringf("%s %s.",
-                                 defender->name(DESC_CAP_THE).c_str(),
-                                 defender->conj_verb("shudder").c_str())
-                    : ("You are blasted by holy energy!");
-            
-            special_damage += random2avg((1 + (damage_done * 3)), 3);
-        }
-        break;
-        
     case SPWPN_PAIN:
         if (defender->res_negative_energy() <= 0
             && random2(8) <= attacker->skill(SK_NECROMANCY))

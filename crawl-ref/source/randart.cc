@@ -1168,7 +1168,13 @@ void randart_wpn_properties( const item_def &item,
             proprt[RAP_BRAND] = SPWPN_FLAMING + random2(2);
 
         if (one_chance_in(6))
-            proprt[RAP_BRAND] = SPWPN_ORC_SLAYING + random2(4);
+            proprt[RAP_BRAND] = SPWPN_ORC_SLAYING + random2(5);
+
+        if (proprt[RAP_BRAND] == SPWPN_DRAGON_SLAYING
+            && weapon_skill(item) != SK_POLEARMS)
+        {
+            proprt[RAP_BRAND] = 0;      /* missile wpns */
+        }
 
         if (one_chance_in(6))
             proprt[RAP_BRAND] = SPWPN_VORPAL;
@@ -1181,13 +1187,6 @@ void randart_wpn_properties( const item_def &item,
 
         if (proprt[RAP_BRAND] == SPWPN_PROTECTION)
             proprt[RAP_BRAND] = 0;      /* no protection */
-
-        if (proprt[RAP_BRAND] == SPWPN_DISRUPTION
-            && !(atype == WPN_MACE || atype == WPN_GREAT_MACE
-                || atype == WPN_HAMMER))
-        {
-            proprt[RAP_BRAND] = SPWPN_NORMAL;
-        }
 
         // if this happens, things might get broken -- bwr
         if (proprt[RAP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)

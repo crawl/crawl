@@ -161,11 +161,11 @@ void ghost_demon::init_random_demon()
         } while (values[ GVAL_BRAND ] == SPWPN_HOLY_WRATH 
                  || (values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
                      && you.mons_species() != MONS_ORC)
+                 || (values[ GVAL_BRAND ] == SPWPN_DRAGON_SLAYING
+                     && you.mons_species() != MONS_DRACONIAN)
                  || values[ GVAL_BRAND ] == SPWPN_PROTECTION 
                  || values[ GVAL_BRAND ] == SPWPN_FLAME 
-                 || values[ GVAL_BRAND ] == SPWPN_FROST 
-                 || (values[ GVAL_BRAND ] == SPWPN_DISRUPTION
-                     && you.holiness() != MH_UNDEAD));
+                 || values[ GVAL_BRAND ] == SPWPN_FROST);
     }
 
     // is demon a spellcaster?
@@ -175,7 +175,7 @@ void ghost_demon::init_random_demon()
 
     // does demon fly? (0 = no, 1 = fly, 2 = levitate)
     values[GVAL_DEMONLORD_FLY] = (one_chance_in(3) ? 0 : 
-                                        one_chance_in(5) ? 2 : 1);
+                                  one_chance_in(5) ? 2 : 1);
 
     // vacant <ghost best skill level>:
     values[GVAL_DEMONLORD_UNUSED] = 0;

@@ -1195,12 +1195,6 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
             // **** intentional fall through here ****
         case WPN_MACE:
         case WPN_GREAT_MACE:
-            if ((item.sub_type == WPN_MACE || item.sub_type == WPN_GREAT_MACE)
-                && one_chance_in(4))
-            {
-                rc = SPWPN_DISRUPTION;
-            }
-            // **** intentional fall through here ****
         case WPN_FLAIL:
         case WPN_SPIKED_FLAIL:
         case WPN_DIRE_FLAIL:
@@ -1414,6 +1408,9 @@ static brand_type determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(6))
                 rc = SPWPN_VENOM;
+                
+            if (one_chance_in(5))
+                rc = SPWPN_DRAGON_SLAYING;
 
             if (one_chance_in(3))
                 rc = SPWPN_REACHING;
@@ -2852,13 +2849,8 @@ static void give_monster_item(
 
     const mon_holy_type mholy = mons_holiness(mon);
     
-    if (get_weapon_brand(mthing) == SPWPN_DISRUPTION
-        && mholy == MH_UNDEAD)
-    {
-        set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
-    }
-    else if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH
-             && (mholy == MH_UNDEAD || mholy == MH_DEMONIC))
+    if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH
+        && (mholy == MH_UNDEAD || mholy == MH_DEMONIC))
     {
         set_item_ego_type( mthing, OBJ_WEAPONS, SPWPN_NORMAL );
     }

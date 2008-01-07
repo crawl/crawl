@@ -164,7 +164,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
             && (!is_fixed_artefact( *weapon )
                 && (weap_brand == SPWPN_HOLY_WRATH 
-                    || weap_brand == SPWPN_DISRUPTION
                     || (weapon->base_type == OBJ_WEAPONS
                          && weapon->sub_type == WPN_BLESSED_BLADE))))
     {
@@ -513,6 +512,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                             : "You feel a sudden desire to kill orcs!");
                     break;
 
+                case SPWPN_DRAGON_SLAYING:
+                    mpr(player_genus(GENPC_DRACONIAN)
+                            ? "You feel a sudden desire to commit suicide."
+                            : "You feel a sudden desire to slay dragons!");
+                    break;
+                    
                 case SPWPN_VENOM:
                     mpr("It begins to drip with poison!");
                     break;
@@ -542,10 +547,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
                         mpr("You feel a strange hunger.");
                     else
                         mpr("You feel strangely empty.");
-                    break;
-
-                case SPWPN_DISRUPTION:
-                    mpr("You sense a holy aura.");
                     break;
 
                 case SPWPN_RETURNING:
@@ -616,10 +617,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
             case SPWPN_DISTORTION:
                 if (!was_known)
-                    xom_is_stimulated(128);
-                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
-                                was_known ? "distortion wield" :
-                                            "unknowing distortion wield");
+                    xom_is_stimulated(32);
                 break;
 
             case SPWPN_SINGING_SWORD:

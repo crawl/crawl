@@ -792,6 +792,10 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 description += "It is especially effective against "
                     "all of orcish descent. ";
                 break;
+            case SPWPN_DRAGON_SLAYING:
+                description += "It is especially effective against "
+                    "all kinds of dragons. ";
+                break;
             case SPWPN_VENOM:
                 if (is_range_weapon(item))
                     description += "It poisons the unbranded ammo it fires. ";
@@ -844,11 +848,6 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                     "but heals its wielder somewhat when "
                     "it strikes a living foe. ";
                 break;
-            case SPWPN_DISRUPTION:
-                description += "It is a weapon blessed by Zin, "
-                    "and can inflict up to fourfold damage "
-                    "when used against the undead. ";
-                break;
             case SPWPN_PAIN:
                 description += "In the hands of one skilled in "
                     "necromantic magic it inflicts "
@@ -856,7 +855,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 break;
             case SPWPN_DISTORTION:
                 description += "It warps and distorts space around it. "
-                    "Merely wielding or unwielding it can be highly risky. ";
+                    "Unwielding it can cause banishment or high damage. ";
                 break;
             case SPWPN_REACHING:
                 description += "It can be evoked to extend its reach. ";

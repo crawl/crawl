@@ -84,15 +84,15 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_HOLY_WRATH,
     SPWPN_ELECTROCUTION,
     SPWPN_ORC_SLAYING,                 //    5
+    SPWPN_DRAGON_SLAYING,
     SPWPN_VENOM,
     SPWPN_PROTECTION,
     SPWPN_DRAINING,
-    SPWPN_SPEED,
-    SPWPN_VORPAL,                      //   10
+    SPWPN_SPEED,                       //   10
+    SPWPN_VORPAL,
     SPWPN_FLAME,
     SPWPN_FROST,
     SPWPN_VAMPIRICISM,
-    SPWPN_DISRUPTION,
     SPWPN_PAIN,                        //   15
     SPWPN_DISTORTION,
     SPWPN_REACHING,                    //   17
