@@ -689,8 +689,11 @@ void up_stairs(dungeon_feature_type force_stair,
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
 
+#ifdef USE_TILE
     const bool newlevel =
-        load(stair_taken, LOAD_ENTER_LEVEL, old_level_type, old_level, old_where);
+#endif
+        load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
+             old_level, old_where);
 
     set_entry_cause(entry_cause, old_level_type);
     entry_cause = you.entry_cause;

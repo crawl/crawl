@@ -42,6 +42,100 @@ MAP
 .
 ENDMAP
 
+###########################################################################
+# Small areas with translucent rock (glass) columns which you can duck
+# behind, but still see the monster you're ducking from (and they can
+# still see you
+NAME:  glass_columns_a
+DEPTH:
+MAP
+.....
+.m.m.
+.....
+.m.m.
+.....
+ENDMAP
+
+NAME:  glass_columns_b
+DEPTH:
+MAP
+.......
+.m.m.m.
+.......
+.m.m.m.
+.......
+.m.m.m.
+.......
+ENDMAP
+
+NAME:  glass_columns_c
+DEPTH:
+MAP
+.........
+.m.m.m.m.
+.........
+.m.m.m.m.
+.........
+.m.m.m.m.
+.........
+.m.m.m.m.
+.........
+ENDMAP
+
+##########################################################
+# A feature encased in glass, for flavour.
+NAME:  feat_on_display
+DEPTH:
+SUBST: ? = TUl
+TAGS:  no_monster_gen no_item_gen
+MAP
+.....
+.mmm.
+.m?m.
+.mmm.
+.....
+ENDMAP
+
+#######################################################################
+# An item encased in glass.  If the player wants it, it can be dug out.
+NAME:  item_on_display_a
+CHANCE: 9
+TAGS:  no_monster_gen no_item_gen
+MAP
+.....
+.mmm.
+.m%m.
+.mmm.
+.....
+ENDMAP
+
+#####################################################################
+# A good item encased in transparent stone.
+NAME:  item_on_display_b
+CHANCE: 1
+TAGS:  no_monster_gen no_item_gen
+MAP
+.....
+.nnn.
+.n*n.
+.nnn.
+.....
+ENDMAP
+
+#####################################################################
+# An average monster in a cage of glass; can get out if it has the
+# ability to dig or blink like a blink-frog.  Also, the player can
+# dig it out.
+NAME:  caged_monster_a
+DEPTH: D, Elf, Snake, Vault
+MAP
+.....
+.mmm.
+.m0m.
+.mmm.
+.....
+ENDMAP
+
 ###################################
 # pond with fungi
 #
@@ -998,10 +1092,19 @@ ENDMAP
 #
 # Intentionally moved this deeper because explore will gladly run into the
 # room, and being hit by multiple mimics is un-fun.
+# Slight tweak by having a fraction (unknown to the player) of items be 
+# real. (dp)
 #
 NAME: fake_naga_vault
 DEPTH: 15-26, !Orc, !Lair, !Swamp, !Shoal
 MONS: mimic, guardian naga
+ITEM: any good_item
+: local b = crawl.random2(10)
+: if b > 7 then
+SUBST: 1 = 1d
+: elseif b > 1 then
+SUBST: 1 = 111d
+: end
 MAP
 ...........
 .xxxxxxxxx.

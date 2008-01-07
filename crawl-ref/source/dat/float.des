@@ -340,14 +340,15 @@ ENDMAP
 
 #############################################################################
 # Oklob gauntlet
-#
+# average of 2.5 oklobs, and at most 5 of them
 NAME:    oklob_2
 DEPTH:   D:18-27, Lair, Elf
 MONS:    plant, oklob plant
 ORIENT:  float
 SHUFFLE: ]})yY / defzZ
-SUBST:   '=12w, "=ww.
-SUBST:   d=|*, e=|*, f=|*, y=., Y=@, z=x, Z=x
+NSUBST:  ' = 5:2 *:1 
+SUBST:   1=1w, 2=2w, "=ww.
+SUBST:   d=|*, e=|*, f=|*, y=+, Y=@, z=x, Z=x
 SHUFFLE: xxxc
 MAP
 yyyyyyYyyyyyy
