@@ -1066,6 +1066,17 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     pbolt.beam_source = monster_index(monster);
     pbolt.thrower = KILL_MON;
     pbolt.is_beam = true;
+    
+    // accuracy is halved if you're wielding a weapon of dragon slaying
+    // (which makes the dragon/draconian avoid looking at you)
+    if ((mons_genus(monster->type) == MONS_DRAGON
+           || mons_genus(monster->type) == MONS_DRACONIAN)
+        && you.equip[EQ_WEAPON]
+        && get_weapon_brand(you.inv[you.equip[EQ_WEAPON]])
+            == SPWPN_DRAGON_SLAYING)
+    {
+        pbolt.hit /= 2;
+    }
 }                               // end setup_dragon();
 
 void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)

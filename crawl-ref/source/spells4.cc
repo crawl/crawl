@@ -1680,42 +1680,20 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
     return (true);
 }                               // end backlight_monsters()
 
-void cast_evaporate(int pow)
+bool cast_evaporate(int pow, bolt& beem, int potion)
 {
     // experimenting with allowing the potion to be thrown... we're
     // still making it have to be "in hands" at this point. -- bwr
     struct dist spelld;
-    struct bolt beem;
-
-    const int potion =
-        prompt_invent_item( "Throw which potion?", MT_INVLIST, OBJ_POTIONS );
 
     if (potion == -1)
-    {
-        msg::stream << "Wisps of steam play over your " << your_hand(true)
-                    << '.' << std::endl;
-        return;
-    } 
+        return (false);
     else if (you.inv[potion].base_type != OBJ_POTIONS)
     {
         mpr( "This spell works only on potions!" );
         canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        return (false);
     }
-
-    message_current_target();
-    direction( spelld, DIR_NONE, TARG_ENEMY );
-
-    if (!spelld.isValid)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
-    }
-
-    beem.set_target(spelld);
-
-    beem.source_x = you.x_pos;
-    beem.source_y = you.y_pos;
 
     beem.name = "potion";
     beem.colour = you.inv[potion].colour;
@@ -1812,7 +1790,7 @@ void cast_evaporate(int pow)
     // both old and new code use up a potion:
     dec_inv_item_quantity( potion, 1 );
 
-    return;
+    return (true);
 }                               // end cast_evaporate()
 
 // The intent of this spell isn't to produce helpful potions 

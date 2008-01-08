@@ -1989,7 +1989,7 @@
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
-     SPFLAG_NONE,
+     SPFLAG_DIR_OR_TARGET,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      NULL,

@@ -30,6 +30,7 @@
 #include "food.h"
 #include "format.h"
 #include "initfile.h"
+#include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
@@ -864,12 +865,15 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
 
     const int flags = get_spell_flags(spell);
 
+    int potion = -1;
+
     // XXX: This handles only some of the cases where spells need targeting...
     // there are others that do their own that will be missed by this
     // (and thus will not properly ESC without cost because of it). 
     // Hopefully, those will eventually be fixed. -- bwr
     if (flags & SPFLAG_TARGETING_MASK)
     {
+        mpr("targeting mask is true");
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
@@ -889,6 +893,20 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
             }
             mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
                                you.inv[idx].name(DESC_NOCAP_YOUR).c_str());
+        }
+        else if (spell == SPELL_EVAPORATE)
+        {
+            potion = prompt_invent_item( "Throw which potion?",
+                                         MT_INVLIST, OBJ_POTIONS );
+            if (potion == -1)
+                return (SPRET_ABORT);
+            else if (you.inv[potion].base_type != OBJ_POTIONS)
+            {
+                mpr( "This spell works only on potions!" );
+                return (SPRET_ABORT);
+            }
+            mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
+                               you.inv[potion].name(DESC_NOCAP_YOUR).c_str());
         }
         else if (dir == DIR_DIR)
             mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
@@ -1813,7 +1831,8 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_EVAPORATE:
-        cast_evaporate(powc);
+        if ( !cast_evaporate(powc, beam, potion) )
+            return SPRET_ABORT;
         break;
 
     case SPELL_FULSOME_DISTILLATION:
