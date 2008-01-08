@@ -227,6 +227,10 @@ floor/floor_sand_stone0 FLOOR_SAND_STONE
 floor/floor_sand_stone1
 floor/floor_sand_stone2
 floor/floor_sand_stone3 
+floor/floor_sand_stone4 
+floor/floor_sand_stone5 
+floor/floor_sand_stone6 
+floor/floor_sand_stone7 
 
 wall/wall_yellow_rock0 WALL_YELLOW_ROCK
 wall/wall_yellow_rock1
