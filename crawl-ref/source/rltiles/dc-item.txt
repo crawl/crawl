@@ -257,8 +257,14 @@ gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR /* A13E-10 A magical armour made from 
 swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE /* A1E-2 The slimy skin of a swamp-dwelling dragon. I suppose you could wear it if you really wanted to.
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR /* A7E-2 A magical armour made from the scales of a swamp dragon. It confers resistance to poison on its wearer.
 
-naga_barding ARM_NAGA_BARDING
-centaur_barding ARM_CENTAUR_BARDING
+naga_barding_blue ARM_NAGA_BARDING
+naga_barding_metal
+naga_barding_magenta
+naga_barding_red
+centaur_barding_blue ARM_CENTAUR_BARDING
+centaur_barding_metal
+centaur_barding_magenta
+centaur_barding_red
 
 elven_shield ARM_SHIELD /* A0E0 A piece of metal, to be strapped on one's arm. It is cumbersome to wear, and slightly slows the rate at which you may attack.
 shield_kite2 ARM_SHIELD_1

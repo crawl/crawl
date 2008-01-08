@@ -10,12 +10,7 @@
 #include <X11/keysymdef.h>
 #include <X11/Xmd.h>
 
-#if DEBUG
-#define ASSERT(p)       {if (!(p)) printf( __FILE__, __LINE__);}
-#else
-#define ASSERT(p)       ((void) 0)
-#endif
-
+#include "debug.h"
 #include "guic.h"
 #include "version.h"
 

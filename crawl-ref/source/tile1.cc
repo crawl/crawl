@@ -747,99 +747,144 @@ int tileidx_missile(const item_def &item)
 
 int tileidx_armour(const item_def &item)
 {
-  int ch = TILE_ERROR;
-  int race = item.flags & ISFLAG_RACIAL_MASK;
-  int type=item.sub_type;
-  int etype = get_etype(item);
+    int ch = TILE_ERROR;
+    int race = item.flags & ISFLAG_RACIAL_MASK;
+    int type = item.sub_type;
+    int etype = get_etype(item);
 
-  static const int etable[5][5] = {
-    {0, 0, 0, 0, 0}, // No ego tile
-    {0, 1, 1, 1, 1}, // One ego tile
-    {0, 1, 1, 1, 2}, // Two ego tile
-    {0, 1, 1, 2, 3},
-    {0, 1, 2, 3, 4}
-  };
+    static const int etable[5][5] = {
+        {0, 0, 0, 0, 0}, // No ego tile
+        {0, 1, 1, 1, 1}, // One ego tile
+        {0, 1, 1, 1, 2}, // Two ego tile
+        {0, 1, 1, 2, 3},
+        {0, 1, 2, 3, 4}
+    };
 
-  switch(type)
-  {
+    switch(type)
+    {
     case ARM_ROBE: 
-      ch= TILE_ARM_ROBE + etable[2][etype];
-      break;
+        ch = TILE_ARM_ROBE + etable[2][etype];
+        break;
     case ARM_LEATHER_ARMOUR:
-      ch=TILE_ARM_LEATHER_ARMOUR  + etable[2][etype];
-      if (race == ISFLAG_ORCISH) ch = TILE_ARM_LEATHER_ARMOUR_ORC;
-      if (race == ISFLAG_ELVEN ) ch = TILE_ARM_LEATHER_ARMOUR_ELF;
-      break;
+        ch = TILE_ARM_LEATHER_ARMOUR  + etable[2][etype];
+        if (race == ISFLAG_ORCISH) ch = TILE_ARM_LEATHER_ARMOUR_ORC;
+        if (race == ISFLAG_ELVEN ) ch = TILE_ARM_LEATHER_ARMOUR_ELF;
+        break;
     case ARM_RING_MAIL:
-      ch=TILE_ARM_RING_MAIL + etable[1][etype];
-      if (race == ISFLAG_ORCISH) ch = TILE_ARM_RING_MAIL_ORC;
-      if (race == ISFLAG_ELVEN ) ch = TILE_ARM_RING_MAIL_ELF;
-      if (race == ISFLAG_DWARVEN ) ch = TILE_ARM_RING_MAIL_DWA;
-      break;
+        ch = TILE_ARM_RING_MAIL + etable[1][etype];
+        if (race == ISFLAG_ORCISH) ch = TILE_ARM_RING_MAIL_ORC;
+        if (race == ISFLAG_ELVEN ) ch = TILE_ARM_RING_MAIL_ELF;
+        if (race == ISFLAG_DWARVEN ) ch = TILE_ARM_RING_MAIL_DWA;
+        break;
     case ARM_SCALE_MAIL:
-      ch=TILE_ARM_SCALE_MAIL + etable[1][etype];
-      if (race == ISFLAG_ELVEN ) ch = TILE_ARM_SCALE_MAIL_ELF;
-      break;
+        ch = TILE_ARM_SCALE_MAIL + etable[1][etype];
+        if (race == ISFLAG_ELVEN ) ch = TILE_ARM_SCALE_MAIL_ELF;
+        break;
     case ARM_CHAIN_MAIL:
-      ch=TILE_ARM_CHAIN_MAIL + etable[1][etype];
-      if (race == ISFLAG_ELVEN) ch = TILE_ARM_CHAIN_MAIL_ELF;
-      if (race == ISFLAG_ORCISH) ch = TILE_ARM_CHAIN_MAIL_ORC;
-      break;
-    case ARM_SPLINT_MAIL: ch=TILE_ARM_SPLINT_MAIL; break;
-    case ARM_BANDED_MAIL: ch=TILE_ARM_BANDED_MAIL; break;
+        ch = TILE_ARM_CHAIN_MAIL + etable[1][etype];
+        if (race == ISFLAG_ELVEN) ch = TILE_ARM_CHAIN_MAIL_ELF;
+        if (race == ISFLAG_ORCISH) ch = TILE_ARM_CHAIN_MAIL_ORC;
+        break;
+    case ARM_SPLINT_MAIL:
+        ch = TILE_ARM_SPLINT_MAIL;
+        break;
+    case ARM_BANDED_MAIL:
+        ch = TILE_ARM_BANDED_MAIL;
+        break;
     case ARM_PLATE_MAIL:
-      ch=TILE_ARM_PLATE_MAIL;
-      if (race == ISFLAG_ORCISH) ch = TILE_ARM_PLATE_MAIL_ORC;
-      break;
-
-    case ARM_CRYSTAL_PLATE_MAIL: ch=TILE_ARM_CRYSTAL_PLATE_MAIL; break;
-
-    case ARM_SHIELD: ch=TILE_ARM_SHIELD  + etable[2][etype]; break;
-
+        ch = TILE_ARM_PLATE_MAIL;
+        if (race == ISFLAG_ORCISH) ch = TILE_ARM_PLATE_MAIL_ORC;
+        break;
+    case ARM_CRYSTAL_PLATE_MAIL:
+        ch = TILE_ARM_CRYSTAL_PLATE_MAIL;
+        break;
+    case ARM_SHIELD:
+        ch = TILE_ARM_SHIELD  + etable[2][etype];
+        break;
     case ARM_CLOAK: 
-      ch=TILE_ARM_CLOAK + etable[3][etype];
-      break;
-
+        ch = TILE_ARM_CLOAK + etable[3][etype];
+        break;
     case ARM_WIZARD_HAT:
-      ch=TILE_THELM_WIZARD_HAT + etable[1][etype]; break;
+        ch = TILE_THELM_WIZARD_HAT + etable[1][etype];
+        break;
     case ARM_CAP:
-      ch=TILE_THELM_CAP; break;
+        ch = TILE_THELM_CAP;
+        break;
     case ARM_HELMET:
-      ch=TILE_THELM_HELM  + etable[3][etype]; break;
+        ch = TILE_THELM_HELM  + etable[3][etype];
+        break;
     case ARM_GLOVES:
-      ch=TILE_ARM_GLOVES  + etable[3][etype];
-      break;
+        ch = TILE_ARM_GLOVES  + etable[3][etype];
+        break;
     case ARM_BOOTS: 
-      ch=TILE_ARM_BOOTS + etable[3][etype];
-      break;
+        ch = TILE_ARM_BOOTS + etable[3][etype];
+        break;
     case ARM_BUCKLER: 
-      ch=TILE_ARM_BUCKLER + etable[1][etype]; 
-      break;
+        ch = TILE_ARM_BUCKLER + etable[1][etype]; 
+        break;
     case ARM_LARGE_SHIELD:
-      ch=TILE_ARM_LARGE_SHIELD + etable[2][etype];
-      break;
-    case ARM_CENTAUR_BARDING: ch=TILE_ARM_CENTAUR_BARDING; break;
-    case ARM_NAGA_BARDING: ch=TILE_ARM_NAGA_BARDING; break;
+        ch = TILE_ARM_LARGE_SHIELD + etable[2][etype];
+        break;
+    case ARM_CENTAUR_BARDING:
+        ch = TILE_ARM_CENTAUR_BARDING + etable[3][etype];
+        break;
+    case ARM_NAGA_BARDING:
+        ch = TILE_ARM_NAGA_BARDING + etable[3][etype];
+        break;
+    case ARM_ANIMAL_SKIN:
+        ch = TILE_ARM_ANIMAL_SKIN + etable[1][etype];
+        break;
+    case ARM_TROLL_HIDE: 
+        ch = TILE_ARM_TROLL_HIDE;
+        break;
+    case ARM_TROLL_LEATHER_ARMOUR:
+        ch = TILE_ARM_TROLL_LEATHER_ARMOUR;
+        break;
+    case ARM_DRAGON_HIDE:
+        ch = TILE_ARM_DRAGON_HIDE;
+        break;
+    case ARM_DRAGON_ARMOUR:
+        ch = TILE_ARM_DRAGON_ARMOUR;
+        break;
+    case ARM_ICE_DRAGON_HIDE:
+        ch = TILE_ARM_ICE_DRAGON_HIDE;
+        break;
+    case ARM_ICE_DRAGON_ARMOUR:
+        ch = TILE_ARM_ICE_DRAGON_ARMOUR;
+        break;
+    case ARM_STEAM_DRAGON_HIDE:
+        ch = TILE_ARM_STEAM_DRAGON_HIDE;
+        break;
+    case ARM_STEAM_DRAGON_ARMOUR:
+        ch = TILE_ARM_STEAM_DRAGON_ARMOUR;
+        break;
+    case ARM_MOTTLED_DRAGON_HIDE:
+        ch = TILE_ARM_MOTTLED_DRAGON_HIDE;
+        break;
+    case ARM_MOTTLED_DRAGON_ARMOUR:
+        ch = TILE_ARM_MOTTLED_DRAGON_ARMOUR;
+        break;
+    case ARM_STORM_DRAGON_HIDE:
+        ch = TILE_ARM_STORM_DRAGON_HIDE;
+        break;
+    case ARM_STORM_DRAGON_ARMOUR:
+        ch = TILE_ARM_STORM_DRAGON_ARMOUR;
+        break;
+    case ARM_GOLD_DRAGON_HIDE:
+        ch = TILE_ARM_GOLD_DRAGON_HIDE;
+        break;
+    case ARM_GOLD_DRAGON_ARMOUR:
+        ch = TILE_ARM_GOLD_DRAGON_ARMOUR;
+        break;
+    case ARM_SWAMP_DRAGON_HIDE:
+        ch = TILE_ARM_SWAMP_DRAGON_HIDE;
+        break;
+    case ARM_SWAMP_DRAGON_ARMOUR:
+        ch = TILE_ARM_SWAMP_DRAGON_ARMOUR;
+        break;
+    }
 
-    case ARM_ANIMAL_SKIN: ch=TILE_ARM_ANIMAL_SKIN + etable[1][etype]; break;
-    case ARM_TROLL_HIDE: ch=TILE_ARM_TROLL_HIDE; break;
-    case ARM_TROLL_LEATHER_ARMOUR: ch=TILE_ARM_TROLL_LEATHER_ARMOUR; break;
-    case ARM_DRAGON_HIDE: ch=TILE_ARM_DRAGON_HIDE; break;
-    case ARM_DRAGON_ARMOUR: ch=TILE_ARM_DRAGON_ARMOUR; break;
-    case ARM_ICE_DRAGON_HIDE: ch=TILE_ARM_ICE_DRAGON_HIDE; break;
-    case ARM_ICE_DRAGON_ARMOUR: ch=TILE_ARM_ICE_DRAGON_ARMOUR; break;
-    case ARM_STEAM_DRAGON_HIDE: ch=TILE_ARM_STEAM_DRAGON_HIDE; break;
-    case ARM_STEAM_DRAGON_ARMOUR: ch=TILE_ARM_STEAM_DRAGON_ARMOUR; break;
-    case ARM_MOTTLED_DRAGON_HIDE: ch=TILE_ARM_MOTTLED_DRAGON_HIDE; break;
-    case ARM_MOTTLED_DRAGON_ARMOUR: ch=TILE_ARM_MOTTLED_DRAGON_ARMOUR; break;
-    case ARM_STORM_DRAGON_HIDE: ch=TILE_ARM_STORM_DRAGON_HIDE; break;
-    case ARM_STORM_DRAGON_ARMOUR: ch=TILE_ARM_STORM_DRAGON_ARMOUR; break;
-    case ARM_GOLD_DRAGON_HIDE: ch=TILE_ARM_GOLD_DRAGON_HIDE; break;
-    case ARM_GOLD_DRAGON_ARMOUR: ch=TILE_ARM_GOLD_DRAGON_ARMOUR; break;
-    case ARM_SWAMP_DRAGON_HIDE: ch=TILE_ARM_SWAMP_DRAGON_HIDE; break;
-    case ARM_SWAMP_DRAGON_ARMOUR: ch=TILE_ARM_SWAMP_DRAGON_ARMOUR; break;
-  }
-  return ch;
+    return ch;
 }
 
 int tileidx_food(const item_def &item)
@@ -2765,10 +2810,12 @@ int tilep_equ_boots(const item_def &item)
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
+    int etype = get_etype(item);
+
     if (item.sub_type == ARM_NAGA_BARDING)
-        return TILEP_BOOTS_NAGA_BARDING;
+        return TILEP_BOOTS_NAGA_BARDING + std::min(etype, 3);
     if (item.sub_type == ARM_CENTAUR_BARDING)
-        return TILEP_BOOTS_CENTAUR_BARDING;
+        return TILEP_BOOTS_CENTAUR_BARDING + std::min(etype, 3);
 
     if (item.sub_type != ARM_BOOTS)
         return 0;
@@ -2783,7 +2830,6 @@ int tilep_equ_boots(const item_def &item)
         }
     }
 
-    int etype = get_etype(item);
     switch (etype)
     {
         default:
