@@ -2344,6 +2344,9 @@ int player_shield_class(void)   //jmf: changes for new spell
         base_shield += you.inv[ shield ].plus;
     }
 
+    if (you.duration[DUR_DIVINE_SHIELD])
+        base_shield += you.attribute[ATTR_DIVINE_SHIELD];
+
     return (base_shield);
 }                               // end player_shield_class()
 

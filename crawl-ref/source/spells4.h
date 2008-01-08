@@ -26,6 +26,7 @@ int disperse_monsters(int x, int y, int pow, int message);
 
 void cast_bend(int pow);
 void cast_condensation_shield(int pow);
+void cast_divine_shield(void);
 void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
 bool cast_evaporate(int pow, bolt& beem, int potion);

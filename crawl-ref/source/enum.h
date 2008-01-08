@@ -79,7 +79,7 @@ enum ability_type
     ABIL_ZIN_REVITALISATION,
     ABIL_ZIN_SANCTUARY,
     ABIL_TSO_REPEL_UNDEAD = 120,       //  120
-    ABIL_TSO_SMITING,
+    ABIL_TSO_DIVINE_SHIELD,
     ABIL_TSO_ANNIHILATE_UNDEAD,
     ABIL_TSO_CLEANSING_FLAME,
     ABIL_TSO_SUMMON_DAEVA,             //  124
@@ -174,6 +174,7 @@ enum attribute_type
     ATTR_HELD,                  // caught in a net
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
+    ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
     ATTR_UNIQUE_RUNES,
     ATTR_DEMONIC_RUNES,
     ATTR_ABYSSAL_RUNES,
@@ -1045,6 +1046,7 @@ enum duration_type
     DUR_REPEL_MISSILES,
     DUR_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
+    DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
     DUR_SWIFTNESS,
     DUR_STONEMAIL,

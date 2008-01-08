@@ -44,6 +44,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills.h"
 #include "spells1.h"
 #include "spells4.h"
@@ -2815,6 +2816,35 @@ void cast_condensation_shield(int pow)
 
     return;
 }                               // end cast_condensation_shield()
+
+// shield bonus = attribute for duration turns, then decreasing by 1
+//                every two out of three turns
+// overall shield duration = duration + attribute
+// recasting simply resets those two values (to better values, presumably)
+void cast_divine_shield()
+{
+    if (!you.duration[DUR_DIVINE_SHIELD])
+    {
+        you.redraw_armour_class = true;
+        if (you.shield() || you.duration[DUR_FIRE_SHIELD]
+            || you.duration[DUR_CONDENSATION_SHIELD])
+        {
+            mprf("Your shield is strengthened by %s's divine power.",
+                 god_name(you.religion).c_str());
+        }
+        else
+            mpr("A divine shield forms around you!");
+    }
+    
+    // duration of complete shield bonus up to 18 turns
+    you.duration[DUR_DIVINE_SHIELD]
+       = 5 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*2)/6;
+
+    // shield bonus up to 8
+    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
+        
+    return;
+}
 
 static int quadrant_blink(int x, int y, int pow, int garbage)
 {

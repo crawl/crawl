@@ -195,7 +195,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Zin to create a Sanctuary" },
     // TSO
     { "repel the undead",
-      "smite your foes",
+      "call upon The Shining One for a divine shield",
       "dispel the undead",
       "hurl blasts of cleansing flame",
       "summon a divine warrior" },
@@ -280,7 +280,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Zin to create a Sanctuary" },
     // TSO
     { "repel the undead",
-      "smite your foes",
+      "call upon The Shining One for a divine shield",
       "dispel the undead",
       "hurl blasts of cleansing flame",
       "summon a divine warrior" },
@@ -426,6 +426,13 @@ void inc_penance(god_type god, int val)
         // orcish bonuses don't apply under penance
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
+        else if (god == GOD_SHINING_ONE && you.duration[DUR_DIVINE_SHIELD])
+        {   // nor does TSO's divine shield
+            mpr("Your divine shield disappears!");
+            you.duration[DUR_DIVINE_SHIELD] = 0;
+            you.attribute[ATTR_DIVINE_SHIELD] = 0;
+            you.redraw_armour_class = true;
+        }
     }
     
     if (you.penance[god] + val > 200)
@@ -2993,6 +3000,17 @@ void excommunication(void)
         break;
 
     case GOD_ELYVILON:  // never seeks revenge
+        break;
+        
+    case GOD_SHINING_ONE:
+        if (you.duration[DUR_DIVINE_SHIELD])
+        {
+            mpr("Your divine shield disappears!");
+            you.duration[DUR_DIVINE_SHIELD] = 0;
+            you.attribute[ATTR_DIVINE_SHIELD] = 0;
+            you.redraw_armour_class = true;
+        }
+        inc_penance( old_god, 50 );
         break;
 
     case GOD_ZIN:

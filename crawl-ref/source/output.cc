@@ -308,9 +308,11 @@ void print_stats(void)
 
         gotoxy(11, 5, GOTO_STAT);
 
-        if (you.duration[DUR_CONDENSATION_SHIELD])      //jmf: added 24mar2000
+        if (you.duration[DUR_CONDENSATION_SHIELD]
+            || you.duration[DUR_DIVINE_SHIELD])
+        {
             textcolor( LIGHTBLUE );  // no end of effect warning
-
+        }
         cprintf( "(%d) ", player_shield_class() );
         textcolor( LIGHTGREY );
 

@@ -113,7 +113,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_ZIN_SMITING, ABIL_ZIN_REVITALISATION,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
-    { ABIL_TSO_REPEL_UNDEAD, ABIL_TSO_SMITING, ABIL_TSO_ANNIHILATE_UNDEAD,
+    { ABIL_TSO_REPEL_UNDEAD, ABIL_TSO_DIVINE_SHIELD, ABIL_TSO_ANNIHILATE_UNDEAD,
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DAEVA },
     // Kikubaaqudgha
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
@@ -239,8 +239,7 @@ static const ability_def Ability_List[] =
 
     // The Shining One
     { ABIL_TSO_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_TSO_SMITING, "Smiting",
-      3, 0, 50, generic_cost::fixed(2), ABFLAG_NONE },
+    { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_ANNIHILATE_UNDEAD, "Annihilate Undead", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
     { ABIL_TSO_SUMMON_DAEVA, "Summon Daeva", 8, 0, 150, 4, ABFLAG_NONE },
@@ -679,7 +678,7 @@ static talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_ZIN_SMITING:
-    case ABIL_TSO_SMITING:
+    case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_BEOGH_SMITING:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
@@ -1319,19 +1318,21 @@ static bool do_ability(const ability_def& abil)
         break;
 
     // INVOCATIONS:
-    case ABIL_TSO_REPEL_UNDEAD:
-        turn_undead(you.piety);
+    case ABIL_ZIN_SMITING:
+        if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
+                         false ) == SPRET_ABORT)
+            return (false);
+        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
+        break;
 
-        if (!you.duration[DUR_REPEL_UNDEAD])
-            mpr( "You feel a holy aura protecting you." );
+    case ABIL_ZIN_REVITALISATION:
+        if (cast_revitalisation( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
+            exercise(SK_INVOCATIONS, 1 + random2(3));
+        break;
 
-        you.duration[DUR_REPEL_UNDEAD] += 8 
-                                + roll_dice(2, 2 * you.skills[SK_INVOCATIONS]);
-
-        if (you.duration[ DUR_REPEL_UNDEAD ] > 50)
-            you.duration[ DUR_REPEL_UNDEAD ] = 50;
-
-        exercise(SK_INVOCATIONS, 1);
+    case ABIL_ZIN_SANCTUARY:
+        if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))
+            exercise(SK_INVOCATIONS, 5 + random2(8));
         break;
 
 // no longer in use, maybe keep for other cases (or remove!)
@@ -1356,21 +1357,23 @@ static bool do_ability(const ability_def& abil)
         break;
 */
 
-    case ABIL_ZIN_REVITALISATION:
-        if (cast_revitalisation( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
-            exercise(SK_INVOCATIONS, 1 + random2(3));
+    case ABIL_TSO_REPEL_UNDEAD:
+        turn_undead(you.piety);
+
+        if (!you.duration[DUR_REPEL_UNDEAD])
+            mpr( "You feel a holy aura protecting you." );
+
+        you.duration[DUR_REPEL_UNDEAD] += 8
+                                + roll_dice(2, 2 * you.skills[SK_INVOCATIONS]);
+
+        if (you.duration[ DUR_REPEL_UNDEAD ] > 50)
+            you.duration[ DUR_REPEL_UNDEAD ] = 50;
+
+        exercise(SK_INVOCATIONS, 1);
         break;
 
-    case ABIL_ZIN_SANCTUARY:
-        if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))
-            exercise(SK_INVOCATIONS, 5 + random2(8));
-        break;
-
-    case ABIL_ZIN_SMITING:
-    case ABIL_TSO_SMITING:
-        if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
-                         false ) == SPRET_ABORT)
-            return (false);
+    case ABIL_TSO_DIVINE_SHIELD:
+        cast_divine_shield();
         exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 

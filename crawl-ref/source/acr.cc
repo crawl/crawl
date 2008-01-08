@@ -2410,6 +2410,25 @@ static void decrement_durations()
         you.duration[DUR_PRAYER] = 0;
     }
 
+    if (you.duration[DUR_DIVINE_SHIELD])
+    {
+        if (you.duration[DUR_DIVINE_SHIELD] > 1)
+        {
+            if (--you.duration[DUR_DIVINE_SHIELD] == 1)
+                mpr("Your divine shield starts to fade.");
+        }
+        
+        if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
+        {
+            you.redraw_armour_class = true;
+            if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
+            {
+                you.duration[DUR_DIVINE_SHIELD] = 0;
+                mpr("Your divine shield fades completely.");
+            }
+        }
+    }
+    
     //jmf: more flexible weapon branding code
     if (you.duration[DUR_WEAPON_BRAND] > 1)
         you.duration[DUR_WEAPON_BRAND]--;
