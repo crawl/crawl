@@ -65,6 +65,9 @@ txt3 TEXT_PARTS_E
 txt4 TEXT_DOLLS_E
 something_under SOMETHING_UNDER
 error ERROR
+%rim 1
+todo TODO
+%rim 0
 
 char20 CHAR00
 char28

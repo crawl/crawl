@@ -34,8 +34,6 @@ void TileNewLevel(bool first_time)
         tile_init_flavor();
 }
 
-const int TILE_TODO = TILE_ERROR;
-
 /**** tile index routines ****/
 
 int tile_unseen_flag(const coord_def& gc)
@@ -55,416 +53,754 @@ int tile_unseen_flag(const coord_def& gc)
     }
 }
 
-int tileidx_monster(int mon_idx)
+int tileidx_monster_base(int mon_idx)
 {
-  int ch = TILE_ERROR;
-  int mons = menv[mon_idx].type;
+    int mons = menv[mon_idx].type;
 
-  switch(mons)
-  {
-  case MONS_GIANT_ANT: ch=TILE_MONS_GIANT_ANT; break;
-  case MONS_GIANT_BAT: ch=TILE_MONS_GIANT_BAT; break;
-  case MONS_CENTAUR: ch=TILE_MONS_CENTAUR; break;
-  case MONS_RED_DEVIL: ch=TILE_MONS_RED_DEVIL; break;
-  case MONS_ETTIN: ch=TILE_MONS_ETTIN; break;
-  case MONS_FUNGUS: ch=TILE_MONS_FUNGUS; break;
-  case MONS_GOBLIN: ch=TILE_MONS_GOBLIN; break;
-  case MONS_HOUND: ch=TILE_MONS_HOUND; break;
-  case MONS_IMP: ch=TILE_MONS_IMP; break;
-  case MONS_JACKAL: ch=TILE_MONS_JACKAL; break;
-  case MONS_KILLER_BEE: ch=TILE_MONS_KILLER_BEE; break;
-  case MONS_KILLER_BEE_LARVA: ch=TILE_MONS_KILLER_BEE_LARVA; break;
-  case MONS_MANTICORE: ch=TILE_MONS_MANTICORE; break;
-  case MONS_NECROPHAGE: ch=TILE_MONS_NECROPHAGE; break;
-  case MONS_ORC: ch=TILE_MONS_ORC; break;
-  case MONS_PHANTOM: ch=TILE_MONS_PHANTOM; break;
-  case MONS_QUASIT: ch=TILE_MONS_QUASIT; break;
-  case MONS_RAT: ch=TILE_MONS_RAT; break;
-  case MONS_SCORPION: ch=TILE_MONS_SCORPION; break;
-  case MONS_UGLY_THING : ch=TILE_MONS_UGLY_THING ; break;
-  case MONS_FIRE_VORTEX: ch=TILE_MONS_FIRE_VORTEX; break;
-  case MONS_WORM: ch=TILE_MONS_WORM; break;
-  case MONS_ABOMINATION_SMALL: ch=TILE_MONS_ABOMINATION_SMALL; break;
-  case MONS_YELLOW_WASP: ch=TILE_MONS_YELLOW_WASP; break;
-  case MONS_ZOMBIE_SMALL: ch=TILE_MONS_ZOMBIE_SMALL; break;
-  case MONS_ANGEL: ch=TILE_MONS_ANGEL; break;
-  case MONS_GIANT_BEETLE: ch=TILE_MONS_GIANT_BEETLE; break;
-  case MONS_CYCLOPS: ch=TILE_MONS_CYCLOPS; break;
-  case MONS_DRAGON: ch=TILE_MONS_DRAGON; break;
-  case MONS_TWO_HEADED_OGRE: ch=TILE_MONS_TWO_HEADED_OGRE; break;
-  case MONS_FIEND: ch=TILE_MONS_FIEND; break;
-  case MONS_GIANT_SPORE: ch=TILE_MONS_GIANT_SPORE; break;
-  case MONS_HOBGOBLIN: ch=TILE_MONS_HOBGOBLIN; break;
-  case MONS_ICE_BEAST: ch=TILE_MONS_ICE_BEAST; break;
-  case MONS_JELLY: ch=TILE_MONS_JELLY; break;
-  case MONS_KOBOLD: ch=TILE_MONS_KOBOLD; break;
-  case MONS_LICH: ch=TILE_MONS_LICH; break;
-  case MONS_MUMMY: ch=TILE_MONS_MUMMY; break;
-  case MONS_GUARDIAN_NAGA: ch=TILE_MONS_GUARDIAN_NAGA; break;
-  case MONS_OGRE: ch=TILE_MONS_OGRE; break;
-  case MONS_PLANT: ch=TILE_MONS_PLANT; break;
-  case MONS_QUEEN_BEE: ch=TILE_MONS_QUEEN_BEE; break;
-  case MONS_RAKSHASA: ch=TILE_MONS_RAKSHASA; break;
-  case MONS_SNAKE: ch=TILE_MONS_SNAKE; break;
-  case MONS_TROLL: ch=TILE_MONS_TROLL; break;
-  case MONS_UNSEEN_HORROR: ch=TILE_MONS_UNSEEN_HORROR; break;
-  case MONS_VAMPIRE: ch=TILE_MONS_VAMPIRE; break;
-  case MONS_WRAITH: ch=TILE_MONS_WRAITH; break;
+    switch(mons)
+    {
+    case MONS_GIANT_ANT:
+        return TILE_MONS_GIANT_ANT;
+    case MONS_GIANT_BAT:
+        return TILE_MONS_GIANT_BAT;
+    case MONS_CENTAUR:
+        return TILE_MONS_CENTAUR;
+    case MONS_RED_DEVIL:
+        return TILE_MONS_RED_DEVIL;
+    case MONS_ETTIN:
+        return TILE_MONS_ETTIN;
+    case MONS_FUNGUS:
+        return TILE_MONS_FUNGUS;
+    case MONS_GOBLIN:
+        return TILE_MONS_GOBLIN;
+    case MONS_HOUND:
+        return TILE_MONS_HOUND;
+    case MONS_IMP:
+        return TILE_MONS_IMP;
+    case MONS_JACKAL:
+        return TILE_MONS_JACKAL;
+    case MONS_KILLER_BEE:
+        return TILE_MONS_KILLER_BEE;
+    case MONS_KILLER_BEE_LARVA:
+        return TILE_MONS_KILLER_BEE_LARVA;
+    case MONS_MANTICORE:
+        return TILE_MONS_MANTICORE;
+    case MONS_NECROPHAGE:
+        return TILE_MONS_NECROPHAGE;
+    case MONS_ORC:
+        return TILE_MONS_ORC;
+    case MONS_PHANTOM:
+        return TILE_MONS_PHANTOM;
+    case MONS_QUASIT:
+        return TILE_MONS_QUASIT;
+    case MONS_RAT:
+        return TILE_MONS_RAT;
+    case MONS_SCORPION:
+        return TILE_MONS_SCORPION;
+    case MONS_UGLY_THING :
+        return TILE_MONS_UGLY_THING ;
+    case MONS_FIRE_VORTEX:
+        return TILE_MONS_FIRE_VORTEX;
+    case MONS_WORM:
+        return TILE_MONS_WORM;
+    case MONS_ABOMINATION_SMALL:
+        return TILE_MONS_ABOMINATION_SMALL;
+    case MONS_YELLOW_WASP:
+        return TILE_MONS_YELLOW_WASP;
+    case MONS_ZOMBIE_SMALL:
+        return TILE_MONS_ZOMBIE_SMALL;
+    case MONS_ANGEL:
+        return TILE_MONS_ANGEL;
+    case MONS_GIANT_BEETLE:
+        return TILE_MONS_GIANT_BEETLE;
+    case MONS_CYCLOPS:
+        return TILE_MONS_CYCLOPS;
+    case MONS_DRAGON:
+        return TILE_MONS_DRAGON;
+    case MONS_TWO_HEADED_OGRE:
+        return TILE_MONS_TWO_HEADED_OGRE;
+    case MONS_FIEND:
+        return TILE_MONS_FIEND;
+    case MONS_GIANT_SPORE:
+        return TILE_MONS_GIANT_SPORE;
+    case MONS_HOBGOBLIN:
+        return TILE_MONS_HOBGOBLIN;
+    case MONS_ICE_BEAST:
+        return TILE_MONS_ICE_BEAST;
+    case MONS_JELLY:
+        return TILE_MONS_JELLY;
+    case MONS_KOBOLD:
+        return TILE_MONS_KOBOLD;
+    case MONS_LICH:
+        return TILE_MONS_LICH;
+    case MONS_MUMMY:
+        return TILE_MONS_MUMMY;
+    case MONS_GUARDIAN_NAGA:
+        return TILE_MONS_GUARDIAN_NAGA;
+    case MONS_OGRE:
+        return TILE_MONS_OGRE;
+    case MONS_PLANT:
+        return TILE_MONS_PLANT;
+    case MONS_QUEEN_BEE:
+        return TILE_MONS_QUEEN_BEE;
+    case MONS_RAKSHASA:
+        return TILE_MONS_RAKSHASA;
+    case MONS_SNAKE:
+        return TILE_MONS_SNAKE;
+    case MONS_TROLL:
+        return TILE_MONS_TROLL;
+    case MONS_UNSEEN_HORROR:
+        return TILE_MONS_UNSEEN_HORROR;
+    case MONS_VAMPIRE:
+        return TILE_MONS_VAMPIRE;
+    case MONS_WRAITH:
+        return TILE_MONS_WRAITH;
 
-  case MONS_ABOMINATION_LARGE: 
-  {
-      // 7 different colours
-      struct monsters *mon = &menv[mon_idx];
-      ch = TILE_MONS_ABOMINATION_LARGE + ((mon->colour)%7);
-      break;
-  }
+    case MONS_ABOMINATION_LARGE:
+    {
+        // 7 different colours
+        struct monsters *mon = &menv[mon_idx];
+        return TILE_MONS_ABOMINATION_LARGE + ((mon->colour)%7);
+    }
 
-  case MONS_YAK: ch=TILE_MONS_YAK; break;
-  case MONS_ZOMBIE_LARGE: ch=TILE_MONS_ZOMBIE_LARGE; break;
-  case MONS_ORC_WARRIOR: ch=TILE_MONS_ORC_WARRIOR; break;
-  case MONS_KOBOLD_DEMONOLOGIST: ch=TILE_MONS_KOBOLD_DEMONOLOGIST; break;
-  case MONS_ORC_WIZARD: ch=TILE_MONS_ORC_WIZARD; break;
-  case MONS_ORC_KNIGHT: ch=TILE_MONS_ORC_KNIGHT; break;
-  case MONS_WYVERN: ch=TILE_MONS_WYVERN; break;
-  case MONS_BIG_KOBOLD: ch=TILE_MONS_BIG_KOBOLD; break;
-  case MONS_GIANT_EYEBALL: ch=TILE_MONS_GIANT_EYEBALL; break;
-  case MONS_WIGHT: ch=TILE_MONS_WIGHT; break;
-  case MONS_OKLOB_PLANT: ch=TILE_MONS_OKLOB_PLANT; break;
-  case MONS_WOLF_SPIDER: ch=TILE_MONS_WOLF_SPIDER; break;
-  case MONS_SHADOW: ch=TILE_MONS_SHADOW; break;
-  case MONS_HUNGRY_GHOST: ch=TILE_MONS_HUNGRY_GHOST; break;
-  case MONS_EYE_OF_DRAINING: ch=TILE_MONS_EYE_OF_DRAINING; break;
+    case MONS_YAK:
+        return TILE_MONS_YAK;
+    case MONS_ZOMBIE_LARGE:
+        return TILE_MONS_ZOMBIE_LARGE;
+    case MONS_ORC_WARRIOR:
+        return TILE_MONS_ORC_WARRIOR;
+    case MONS_KOBOLD_DEMONOLOGIST:
+        return TILE_MONS_KOBOLD_DEMONOLOGIST;
+    case MONS_ORC_WIZARD:
+        return TILE_MONS_ORC_WIZARD;
+    case MONS_ORC_KNIGHT:
+        return TILE_MONS_ORC_KNIGHT;
+    case MONS_WYVERN:
+        return TILE_MONS_WYVERN;
+    case MONS_BIG_KOBOLD:
+        return TILE_MONS_BIG_KOBOLD;
+    case MONS_GIANT_EYEBALL:
+        return TILE_MONS_GIANT_EYEBALL;
+    case MONS_WIGHT:
+        return TILE_MONS_WIGHT;
+    case MONS_OKLOB_PLANT:
+        return TILE_MONS_OKLOB_PLANT;
+    case MONS_WOLF_SPIDER:
+        return TILE_MONS_WOLF_SPIDER;
+    case MONS_SHADOW:
+        return TILE_MONS_SHADOW;
+    case MONS_HUNGRY_GHOST:
+        return TILE_MONS_HUNGRY_GHOST;
+    case MONS_EYE_OF_DRAINING:
+        return TILE_MONS_EYE_OF_DRAINING;
 
-  case MONS_BUTTERFLY: 
-  {
-      // 7 different colours
-      struct monsters *mon = &menv[mon_idx];
-      ch = TILE_MONS_BUTTERFLY + ((mon->colour)%7);
-      break;
-  }
+    case MONS_BUTTERFLY:
+    {
+        // 7 different colours
+        struct monsters *mon = &menv[mon_idx];
+        return TILE_MONS_BUTTERFLY + ((mon->colour)%7);
+    }
 
-  case MONS_WANDERING_MUSHROOM: ch=TILE_MONS_WANDERING_MUSHROOM; break;
-  case MONS_EFREET: ch=TILE_MONS_EFREET; break;
-  case MONS_BRAIN_WORM: ch=TILE_MONS_BRAIN_WORM; break;
-  case MONS_GIANT_ORANGE_BRAIN: ch=TILE_MONS_GIANT_ORANGE_BRAIN; break;
-  case MONS_BOULDER_BEETLE: ch=TILE_MONS_BOULDER_BEETLE; break;
-  case MONS_FLYING_SKULL: ch=TILE_MONS_FLYING_SKULL; break;
-  case MONS_HELL_HOUND: ch=TILE_MONS_HELL_HOUND; break;
-  case MONS_MINOTAUR: ch=TILE_MONS_MINOTAUR; break;
-  case MONS_ICE_DRAGON: ch=TILE_MONS_ICE_DRAGON; break;
-  case MONS_SLIME_CREATURE: ch=TILE_MONS_SLIME_CREATURE; break;
-  case MONS_FREEZING_WRAITH: ch=TILE_MONS_FREEZING_WRAITH; break;
-  case MONS_RAKSHASA_FAKE: ch=TILE_MONS_RAKSHASA_FAKE; break;
-  case MONS_GREAT_ORB_OF_EYES: ch=TILE_MONS_GREAT_ORB_OF_EYES; break;
-  case MONS_HELLION: ch=TILE_MONS_HELLION; break;
-  case MONS_ROTTING_DEVIL: ch=TILE_MONS_ROTTING_DEVIL; break;
-  case MONS_TORMENTOR: ch=TILE_MONS_TORMENTOR; break;
-  case MONS_REAPER: ch=TILE_MONS_REAPER; break;
-  case MONS_SOUL_EATER: ch=TILE_MONS_SOUL_EATER; break;
-  case MONS_HAIRY_DEVIL: ch=TILE_MONS_HAIRY_DEVIL; break;
-  case MONS_ICE_DEVIL: ch=TILE_MONS_ICE_DEVIL; break;
-  case MONS_BLUE_DEVIL: ch=TILE_MONS_BLUE_DEVIL; break;
-  case MONS_BEAST: ch=TILE_MONS_BEAST; break;
-  case MONS_IRON_DEVIL: ch=TILE_MONS_IRON_DEVIL; break;
-  case MONS_GLOWING_SHAPESHIFTER: ch=TILE_MONS_GLOWING_SHAPESHIFTER; break;
-  case MONS_SHAPESHIFTER: ch=TILE_MONS_SHAPESHIFTER; break;
-  case MONS_GIANT_MITE: ch=TILE_MONS_GIANT_MITE; break;
-  case MONS_STEAM_DRAGON: ch=TILE_MONS_STEAM_DRAGON; break;
-  case MONS_VERY_UGLY_THING: ch=TILE_MONS_VERY_UGLY_THING; break;
-  case MONS_ORC_SORCERER: ch=TILE_MONS_ORC_SORCERER; break;
-  case MONS_HIPPOGRIFF: ch=TILE_MONS_HIPPOGRIFF; break;
-  case MONS_GRIFFON: ch=TILE_MONS_GRIFFON; break;
+    case MONS_WANDERING_MUSHROOM:
+        return TILE_MONS_WANDERING_MUSHROOM;
+    case MONS_EFREET:
+        return TILE_MONS_EFREET;
+    case MONS_BRAIN_WORM:
+        return TILE_MONS_BRAIN_WORM;
+    case MONS_GIANT_ORANGE_BRAIN:
+        return TILE_MONS_GIANT_ORANGE_BRAIN;
+    case MONS_BOULDER_BEETLE:
+        return TILE_MONS_BOULDER_BEETLE;
+    case MONS_FLYING_SKULL:
+        return TILE_MONS_FLYING_SKULL;
+    case MONS_HELL_HOUND:
+        return TILE_MONS_HELL_HOUND;
+    case MONS_MINOTAUR:
+        return TILE_MONS_MINOTAUR;
+    case MONS_ICE_DRAGON:
+        return TILE_MONS_ICE_DRAGON;
+    case MONS_SLIME_CREATURE:
+        return TILE_MONS_SLIME_CREATURE;
+    case MONS_FREEZING_WRAITH:
+        return TILE_MONS_FREEZING_WRAITH;
+    case MONS_RAKSHASA_FAKE:
+        return TILE_MONS_RAKSHASA_FAKE;
+    case MONS_GREAT_ORB_OF_EYES:
+        return TILE_MONS_GREAT_ORB_OF_EYES;
+    case MONS_HELLION:
+        return TILE_MONS_HELLION;
+    case MONS_ROTTING_DEVIL:
+        return TILE_MONS_ROTTING_DEVIL;
+    case MONS_TORMENTOR:
+        return TILE_MONS_TORMENTOR;
+    case MONS_REAPER:
+        return TILE_MONS_REAPER;
+    case MONS_SOUL_EATER:
+        return TILE_MONS_SOUL_EATER;
+    case MONS_HAIRY_DEVIL:
+        return TILE_MONS_HAIRY_DEVIL;
+    case MONS_ICE_DEVIL:
+        return TILE_MONS_ICE_DEVIL;
+    case MONS_BLUE_DEVIL:
+        return TILE_MONS_BLUE_DEVIL;
+    case MONS_BEAST:
+        return TILE_MONS_BEAST;
+    case MONS_IRON_DEVIL:
+        return TILE_MONS_IRON_DEVIL;
+    case MONS_GLOWING_SHAPESHIFTER:
+        return TILE_MONS_GLOWING_SHAPESHIFTER;
+    case MONS_SHAPESHIFTER:
+        return TILE_MONS_SHAPESHIFTER;
+    case MONS_GIANT_MITE:
+        return TILE_MONS_GIANT_MITE;
+    case MONS_STEAM_DRAGON:
+        return TILE_MONS_STEAM_DRAGON;
+    case MONS_VERY_UGLY_THING:
+        return TILE_MONS_VERY_UGLY_THING;
+    case MONS_ORC_SORCERER:
+        return TILE_MONS_ORC_SORCERER;
+    case MONS_HIPPOGRIFF:
+        return TILE_MONS_HIPPOGRIFF;
+    case MONS_GRIFFON:
+        return TILE_MONS_GRIFFON;
 
-  case MONS_HYDRA: 
-  {
+    case MONS_HYDRA:
+    {
       // Number of heads
       struct monsters *mon = &menv[mon_idx];
       int  heads = mon->number;
       if (heads > 7) heads = 7;
-      ch = TILE_MONS_HYDRA + heads - 1;
-      break;
-  }
+      return TILE_MONS_HYDRA + heads - 1;
+    }
 
-  case MONS_SKELETON_SMALL: ch=TILE_MONS_SKELETON_SMALL; break;
-  case MONS_SKELETON_LARGE: ch=TILE_MONS_SKELETON_LARGE; break;
-  case MONS_HELL_KNIGHT: ch=TILE_MONS_HELL_KNIGHT; break;
-  case MONS_NECROMANCER: ch=TILE_MONS_NECROMANCER; break;
-  case MONS_WIZARD: ch=TILE_MONS_WIZARD; break;
-  case MONS_ORC_PRIEST: ch=TILE_MONS_ORC_PRIEST; break;
-  case MONS_ORC_HIGH_PRIEST: ch=TILE_MONS_ORC_HIGH_PRIEST; break;
-  case MONS_HUMAN: ch=TILE_MONS_HUMAN; break;
-  case MONS_GNOLL: ch=TILE_MONS_GNOLL; break;
-  case MONS_CLAY_GOLEM: ch=TILE_MONS_CLAY_GOLEM; break;
-  case MONS_WOOD_GOLEM: ch=TILE_MONS_WOOD_GOLEM; break;
-  case MONS_STONE_GOLEM: ch=TILE_MONS_STONE_GOLEM; break;
-  case MONS_IRON_GOLEM: ch=TILE_MONS_IRON_GOLEM; break;
-  case MONS_CRYSTAL_GOLEM: ch=TILE_MONS_CRYSTAL_GOLEM; break;
-  case MONS_TOENAIL_GOLEM: ch=TILE_MONS_TOENAIL_GOLEM; break;
-  case MONS_MOTTLED_DRAGON: ch=TILE_MONS_MOTTLED_DRAGON; break;
-  case MONS_EARTH_ELEMENTAL: ch=TILE_MONS_EARTH_ELEMENTAL; break;
-  case MONS_FIRE_ELEMENTAL: ch=TILE_MONS_FIRE_ELEMENTAL; break;
-  case MONS_AIR_ELEMENTAL: ch=TILE_MONS_AIR_ELEMENTAL; break;
-  case MONS_ICE_FIEND: ch=TILE_MONS_ICE_FIEND; break;
-  case MONS_SHADOW_FIEND: ch=TILE_MONS_SHADOW_FIEND; break;
-  case MONS_BROWN_SNAKE: ch=TILE_MONS_BROWN_SNAKE; break;
-  case MONS_GIANT_LIZARD: ch=TILE_MONS_GIANT_LIZARD; break;
-  case MONS_SPECTRAL_WARRIOR: ch=TILE_MONS_SPECTRAL_WARRIOR; break;
-  case MONS_PULSATING_LUMP: ch=TILE_MONS_PULSATING_LUMP; break;
-  case MONS_STORM_DRAGON: ch=TILE_MONS_STORM_DRAGON; break;
-  case MONS_YAKTAUR: ch=TILE_MONS_YAKTAUR; break;
-  case MONS_DEATH_YAK: ch=TILE_MONS_DEATH_YAK; break;
-  case MONS_ROCK_TROLL: ch=TILE_MONS_ROCK_TROLL; break;
-  case MONS_STONE_GIANT: ch=TILE_MONS_STONE_GIANT; break;
-  case MONS_FLAYED_GHOST: ch=TILE_MONS_FLAYED_GHOST; break;
-  case MONS_BUMBLEBEE: ch=TILE_MONS_BUMBLEBEE; break;
-  case MONS_REDBACK: ch=TILE_MONS_REDBACK; break;
-  case MONS_INSUBSTANTIAL_WISP: ch=TILE_MONS_INSUBSTANTIAL_WISP; break;
-  case MONS_VAPOUR: ch=TILE_MONS_VAPOUR; break;
-  case MONS_OGRE_MAGE: ch=TILE_MONS_OGRE_MAGE; break;
-  case MONS_SPINY_WORM: ch=TILE_MONS_SPINY_WORM; break;
+    case MONS_SKELETON_SMALL:
+        return TILE_MONS_SKELETON_SMALL;
+    case MONS_SKELETON_LARGE:
+        return TILE_MONS_SKELETON_LARGE;
+    case MONS_HELL_KNIGHT:
+        return TILE_MONS_HELL_KNIGHT;
+    case MONS_NECROMANCER:
+        return TILE_MONS_NECROMANCER;
+    case MONS_WIZARD:
+        return TILE_MONS_WIZARD;
+    case MONS_ORC_PRIEST:
+        return TILE_MONS_ORC_PRIEST;
+    case MONS_ORC_HIGH_PRIEST:
+        return TILE_MONS_ORC_HIGH_PRIEST;
+    case MONS_HUMAN:
+        return TILE_MONS_HUMAN;
+    case MONS_GNOLL:
+        return TILE_MONS_GNOLL;
+    case MONS_CLAY_GOLEM:
+        return TILE_MONS_CLAY_GOLEM;
+    case MONS_WOOD_GOLEM:
+        return TILE_MONS_WOOD_GOLEM;
+    case MONS_STONE_GOLEM:
+        return TILE_MONS_STONE_GOLEM;
+    case MONS_IRON_GOLEM:
+        return TILE_MONS_IRON_GOLEM;
+    case MONS_CRYSTAL_GOLEM:
+        return TILE_MONS_CRYSTAL_GOLEM;
+    case MONS_TOENAIL_GOLEM:
+        return TILE_MONS_TOENAIL_GOLEM;
+    case MONS_MOTTLED_DRAGON:
+        return TILE_MONS_MOTTLED_DRAGON;
+    case MONS_EARTH_ELEMENTAL:
+        return TILE_MONS_EARTH_ELEMENTAL;
+    case MONS_FIRE_ELEMENTAL:
+        return TILE_MONS_FIRE_ELEMENTAL;
+    case MONS_AIR_ELEMENTAL:
+        return TILE_MONS_AIR_ELEMENTAL;
+    case MONS_ICE_FIEND:
+        return TILE_MONS_ICE_FIEND;
+    case MONS_SHADOW_FIEND:
+        return TILE_MONS_SHADOW_FIEND;
+    case MONS_BROWN_SNAKE:
+        return TILE_MONS_BROWN_SNAKE;
+    case MONS_GIANT_LIZARD:
+        return TILE_MONS_GIANT_LIZARD;
+    case MONS_SPECTRAL_WARRIOR:
+        return TILE_MONS_SPECTRAL_WARRIOR;
+    case MONS_PULSATING_LUMP:
+        return TILE_MONS_PULSATING_LUMP;
+    case MONS_STORM_DRAGON:
+        return TILE_MONS_STORM_DRAGON;
+    case MONS_YAKTAUR:
+        return TILE_MONS_YAKTAUR;
+    case MONS_DEATH_YAK:
+        return TILE_MONS_DEATH_YAK;
+    case MONS_ROCK_TROLL:
+        return TILE_MONS_ROCK_TROLL;
+    case MONS_STONE_GIANT:
+        return TILE_MONS_STONE_GIANT;
+    case MONS_FLAYED_GHOST:
+        return TILE_MONS_FLAYED_GHOST;
+    case MONS_BUMBLEBEE:
+        return TILE_MONS_BUMBLEBEE;
+    case MONS_REDBACK:
+        return TILE_MONS_REDBACK;
+    case MONS_INSUBSTANTIAL_WISP:
+        return TILE_MONS_INSUBSTANTIAL_WISP;
+    case MONS_VAPOUR:
+        return TILE_MONS_VAPOUR;
+    case MONS_OGRE_MAGE:
+        return TILE_MONS_OGRE_MAGE;
+    case MONS_SPINY_WORM:
+        return TILE_MONS_SPINY_WORM;
 
-  case MONS_DANCING_WEAPON: 
-  {
-      // Use item tile
-      item_def item = mitm[menv[mon_idx].inv[MSLOT_WEAPON]];
-      ch = tileidx_item(item);
-      break;
-  }
+    case MONS_DANCING_WEAPON:
+    {
+        // Use item tile
+        item_def item = mitm[menv[mon_idx].inv[MSLOT_WEAPON]];
+        return tileidx_item(item);
+    }
 
-  case MONS_TITAN: ch=TILE_MONS_TITAN; break;
-  case MONS_GOLDEN_DRAGON: ch=TILE_MONS_GOLDEN_DRAGON; break;
-  case MONS_ELF: ch=TILE_MONS_ELF; break;
-  case MONS_LINDWURM: ch=TILE_MONS_LINDWURM; break;
-  case MONS_ELEPHANT_SLUG: ch=TILE_MONS_ELEPHANT_SLUG; break;
-  case MONS_WAR_DOG: ch=TILE_MONS_WAR_DOG; break;
-  case MONS_GREY_RAT: ch=TILE_MONS_GREY_RAT; break;
-  case MONS_GREEN_RAT: ch=TILE_MONS_GREEN_RAT; break;
-  case MONS_ORANGE_RAT: ch=TILE_MONS_ORANGE_RAT; break;
-  case MONS_BLACK_SNAKE: ch=TILE_MONS_BLACK_SNAKE; break;
-  case MONS_SHEEP: ch=TILE_MONS_SHEEP; break;
-  case MONS_GHOUL: ch=TILE_MONS_GHOUL; break;
-  case MONS_HOG: ch=TILE_MONS_HOG; break;
-  case MONS_GIANT_MOSQUITO: ch=TILE_MONS_GIANT_MOSQUITO; break;
-  case MONS_GIANT_CENTIPEDE: ch=TILE_MONS_GIANT_CENTIPEDE; break;
-  case MONS_IRON_TROLL: ch=TILE_MONS_IRON_TROLL; break;
-  case MONS_NAGA: ch=TILE_MONS_NAGA; break;
-  case MONS_FIRE_GIANT: ch=TILE_MONS_FIRE_GIANT; break;
-  case MONS_FROST_GIANT: ch=TILE_MONS_FROST_GIANT; break;
-  case MONS_FIREDRAKE: ch=TILE_MONS_FIREDRAKE; break;
-  case MONS_SHADOW_DRAGON: ch=TILE_MONS_SHADOW_DRAGON; break;
-  case MONS_YELLOW_SNAKE: ch=TILE_MONS_YELLOW_SNAKE; break;
-  case MONS_GREY_SNAKE: ch=TILE_MONS_GREY_SNAKE; break;
-  case MONS_DEEP_TROLL: ch=TILE_MONS_DEEP_TROLL; break;
-  case MONS_GIANT_BLOWFLY: ch=TILE_MONS_GIANT_BLOWFLY; break;
-  case MONS_RED_WASP: ch=TILE_MONS_RED_WASP; break;
-  case MONS_SWAMP_DRAGON: ch=TILE_MONS_SWAMP_DRAGON; break;
-  case MONS_SWAMP_DRAKE: ch=TILE_MONS_SWAMP_DRAKE; break;
-  case MONS_SOLDIER_ANT: ch=TILE_MONS_SOLDIER_ANT; break;
-  case MONS_HILL_GIANT: ch=TILE_MONS_HILL_GIANT; break;
-  case MONS_QUEEN_ANT: ch=TILE_MONS_QUEEN_ANT; break;
-  case MONS_ANT_LARVA: ch=TILE_MONS_ANT_LARVA; break;
-  case MONS_GIANT_FROG: ch=TILE_MONS_GIANT_FROG; break;
-  case MONS_GIANT_BROWN_FROG: ch=TILE_MONS_GIANT_BROWN_FROG; break;
-  case MONS_SPINY_FROG: ch=TILE_MONS_SPINY_FROG; break;
-  case MONS_BLINK_FROG: ch=TILE_MONS_BLINK_FROG; break;
-  case MONS_GIANT_COCKROACH: ch=TILE_MONS_GIANT_COCKROACH; break;
-  case MONS_SMALL_SNAKE: ch=TILE_MONS_SMALL_SNAKE; break;
-  case MONS_SHUGGOTH: ch=TILE_TODO; break;
-  case MONS_WOLF: ch=TILE_MONS_WOLF; break;
-  case MONS_WARG: ch=TILE_MONS_WARG; break;
-  case MONS_BEAR: ch=TILE_MONS_BEAR; break;
-  case MONS_GRIZZLY_BEAR: ch=TILE_MONS_GRIZZLY_BEAR; break;
-  case MONS_POLAR_BEAR: ch=TILE_MONS_POLAR_BEAR; break;
-  case MONS_BLACK_BEAR: ch=TILE_MONS_BLACK_BEAR; break;
-  case MONS_SIMULACRUM_SMALL: ch=TILE_MONS_SIMULACRUM_SMALL; break;
-  case MONS_SIMULACRUM_LARGE: ch=TILE_MONS_SIMULACRUM_LARGE; break;
-  case MONS_WHITE_IMP: ch=TILE_MONS_WHITE_IMP; break;
-  case MONS_LEMURE: ch=TILE_MONS_LEMURE; break;
-  case MONS_UFETUBUS: ch=TILE_MONS_UFETUBUS; break;
-  case MONS_MANES: ch=TILE_MONS_MANES; break;
-  case MONS_MIDGE: ch=TILE_MONS_MIDGE; break;
-  case MONS_NEQOXEC: ch=TILE_MONS_NEQOXEC; break;
-  case MONS_ORANGE_DEMON: ch=TILE_MONS_ORANGE_DEMON; break;
-  case MONS_HELLWING: ch=TILE_MONS_HELLWING; break;
-  case MONS_SMOKE_DEMON: ch=TILE_MONS_SMOKE_DEMON; break;
-  case MONS_YNOXINUL: ch=TILE_MONS_YNOXINUL; break;
-  case MONS_EXECUTIONER: ch=TILE_MONS_EXECUTIONER; break;
-  case MONS_GREEN_DEATH: ch=TILE_MONS_GREEN_DEATH; break;
-  case MONS_BLUE_DEATH: ch=TILE_MONS_BLUE_DEATH; break;
-  case MONS_BALRUG: ch=TILE_MONS_BALRUG; break;
-  case MONS_CACODEMON: ch=TILE_MONS_CACODEMON; break;
-  case MONS_DEMONIC_CRAWLER: ch=TILE_MONS_DEMONIC_CRAWLER; break;
-  case MONS_SUN_DEMON: ch=TILE_MONS_SUN_DEMON; break;
-  case MONS_SHADOW_IMP: ch=TILE_MONS_SHADOW_IMP; break;
-  case MONS_SHADOW_DEMON: ch=TILE_MONS_SHADOW_DEMON; break;
-  case MONS_LOROCYPROCA: ch=TILE_MONS_LOROCYPROCA; break;
-  case MONS_SHADOW_WRAITH: ch=TILE_MONS_SHADOW_WRAITH; break;
-  case MONS_GIANT_AMOEBA: ch=TILE_MONS_GIANT_AMOEBA; break;
-  case MONS_GIANT_SLUG: ch=TILE_MONS_GIANT_SLUG; break;
-  case MONS_GIANT_SNAIL: ch=TILE_MONS_GIANT_SNAIL; break;
-  case MONS_SPATIAL_VORTEX: ch=TILE_MONS_SPATIAL_VORTEX; break;
-  case MONS_PIT_FIEND: ch=TILE_MONS_PIT_FIEND; break;
-  case MONS_BORING_BEETLE: ch=TILE_MONS_BORING_BEETLE; break;
-  case MONS_GARGOYLE: ch=TILE_MONS_GARGOYLE; break;
-  case MONS_METAL_GARGOYLE: ch=TILE_MONS_METAL_GARGOYLE; break;
-  case MONS_MOLTEN_GARGOYLE: ch=TILE_MONS_MOLTEN_GARGOYLE; break;
-  case MONS_PROGRAM_BUG: ch=TILE_MONS_PROGRAM_BUG; break;
-  case MONS_MNOLEG: ch=TILE_MONS_MNOLEG; break;
-  case MONS_LOM_LOBON: ch=TILE_MONS_LOM_LOBON; break;
-  case MONS_CEREBOV: ch=TILE_MONS_CEREBOV; break;
-  case MONS_GLOORX_VLOQ: ch=TILE_MONS_GLOORX_VLOQ; break;
-  case MONS_MOLLUSC_LORD: ch=TILE_TODO; break;
-  case MONS_NAGA_MAGE: ch=TILE_MONS_NAGA_MAGE; break;
-  case MONS_NAGA_WARRIOR: ch=TILE_MONS_NAGA_WARRIOR; break;
-  case MONS_ORC_WARLORD: ch=TILE_MONS_ORC_WARLORD; break;
-  case MONS_DEEP_ELF_SOLDIER: ch=TILE_MONS_DEEP_ELF_SOLDIER; break;
-  case MONS_DEEP_ELF_FIGHTER: ch=TILE_MONS_DEEP_ELF_FIGHTER; break;
-  case MONS_DEEP_ELF_KNIGHT: ch=TILE_MONS_DEEP_ELF_KNIGHT; break;
-  case MONS_DEEP_ELF_MAGE: ch=TILE_MONS_DEEP_ELF_MAGE; break;
-  case MONS_DEEP_ELF_SUMMONER: ch=TILE_MONS_DEEP_ELF_SUMMONER; break;
-  case MONS_DEEP_ELF_CONJURER: ch=TILE_MONS_DEEP_ELF_CONJURER; break;
-  case MONS_DEEP_ELF_PRIEST: ch=TILE_MONS_DEEP_ELF_PRIEST; break;
-  case MONS_DEEP_ELF_HIGH_PRIEST: ch=TILE_MONS_DEEP_ELF_HIGH_PRIEST; break;
-  case MONS_DEEP_ELF_DEMONOLOGIST: ch=TILE_MONS_DEEP_ELF_DEMONOLOGIST; break;
-  case MONS_DEEP_ELF_ANNIHILATOR: ch=TILE_MONS_DEEP_ELF_ANNIHILATOR; break;
-  case MONS_DEEP_ELF_SORCERER: ch=TILE_MONS_DEEP_ELF_SORCERER; break;
-  case MONS_DEEP_ELF_DEATH_MAGE: ch=TILE_MONS_DEEP_ELF_DEATH_MAGE; break;
-  case MONS_BROWN_OOZE: ch=TILE_MONS_BROWN_OOZE; break;
-  case MONS_AZURE_JELLY: ch=TILE_MONS_AZURE_JELLY; break;
-  case MONS_DEATH_OOZE: ch=TILE_MONS_DEATH_OOZE; break;
-  case MONS_ACID_BLOB: ch=TILE_MONS_ACID_BLOB; break;
-  case MONS_ROYAL_JELLY: ch=TILE_MONS_ROYAL_JELLY; break;
-  case MONS_TERENCE: ch=TILE_MONS_TERENCE; break;
-  case MONS_JESSICA: ch=TILE_MONS_JESSICA; break;
-  case MONS_IJYB: ch=TILE_MONS_IJYB; break;
-  case MONS_SIGMUND: ch=TILE_MONS_SIGMUND; break;
-  case MONS_BLORK_THE_ORC: ch=TILE_MONS_BLORK_THE_ORC; break;
-  case MONS_EDMUND: ch=TILE_MONS_EDMUND; break;
-  case MONS_PSYCHE: ch=TILE_MONS_PSYCHE; break;
-  case MONS_EROLCHA: ch=TILE_MONS_EROLCHA; break;
-  case MONS_DONALD: ch=TILE_MONS_DONALD; break;
-  case MONS_URUG: ch=TILE_MONS_URUG; break;
-  case MONS_MICHAEL: ch=TILE_MONS_MICHAEL; break;
-  case MONS_JOSEPH: ch=TILE_MONS_JOSEPH; break;
-  case MONS_SNORG: ch=TILE_MONS_SNORG; break;
-  case MONS_ERICA: ch=TILE_MONS_ERICA; break;
-  case MONS_JOSEPHINE: ch=TILE_MONS_JOSEPHINE; break;
-  case MONS_HAROLD: ch=TILE_MONS_HAROLD; break;
-  case MONS_NORBERT: ch=TILE_MONS_NORBERT; break;
-  case MONS_JOZEF: ch=TILE_MONS_JOZEF; break;
-  case MONS_AGNES: ch=TILE_MONS_AGNES; break;
-  case MONS_MAUD: ch=TILE_MONS_MAUD; break;
-  case MONS_LOUISE: ch=TILE_MONS_LOUISE; break;
-  case MONS_FRANCIS: ch=TILE_MONS_FRANCIS; break;
-  case MONS_FRANCES: ch=TILE_MONS_FRANCES; break;
-  case MONS_RUPERT: ch=TILE_MONS_RUPERT; break;
-  case MONS_WAYNE: ch=TILE_MONS_WAYNE; break;
-  case MONS_DUANE: ch=TILE_MONS_DUANE; break;
-  case MONS_XTAHUA: ch=TILE_MONS_XTAHUA; break;
-  case MONS_NORRIS: ch=TILE_MONS_NORRIS; break;
-  case MONS_FREDERICK: ch=TILE_MONS_FREDERICK; break;
-  case MONS_MARGERY: ch=TILE_MONS_MARGERY; break;
-  case MONS_POLYPHEMUS: ch=TILE_MONS_POLYPHEMUS; break;
-  case MONS_BORIS: ch=TILE_MONS_BORIS; break;
-  // Draconians handled above
-  case MONS_MURRAY: ch=TILE_MONS_MURRAY; break;
-  case MONS_TIAMAT: ch=TILE_MONS_TIAMAT; break;
-  case MONS_DEEP_ELF_BLADEMASTER: ch=TILE_MONS_DEEP_ELF_BLADEMASTER; break;
-  case MONS_DEEP_ELF_MASTER_ARCHER: ch=TILE_MONS_DEEP_ELF_MASTER_ARCHER; break;
+    case MONS_TITAN:
+        return TILE_MONS_TITAN;
+    case MONS_GOLDEN_DRAGON:
+        return TILE_MONS_GOLDEN_DRAGON;
+    case MONS_ELF:
+        return TILE_MONS_ELF;
+    case MONS_LINDWURM:
+        return TILE_MONS_LINDWURM;
+    case MONS_ELEPHANT_SLUG:
+        return TILE_MONS_ELEPHANT_SLUG;
+    case MONS_WAR_DOG:
+        return TILE_MONS_WAR_DOG;
+    case MONS_GREY_RAT:
+        return TILE_MONS_GREY_RAT;
+    case MONS_GREEN_RAT:
+        return TILE_MONS_GREEN_RAT;
+    case MONS_ORANGE_RAT:
+        return TILE_MONS_ORANGE_RAT;
+    case MONS_BLACK_SNAKE:
+        return TILE_MONS_BLACK_SNAKE;
+    case MONS_SHEEP:
+        return TILE_MONS_SHEEP;
+    case MONS_GHOUL:
+        return TILE_MONS_GHOUL;
+    case MONS_HOG:
+        return TILE_MONS_HOG;
+    case MONS_GIANT_MOSQUITO:
+        return TILE_MONS_GIANT_MOSQUITO;
+    case MONS_GIANT_CENTIPEDE:
+        return TILE_MONS_GIANT_CENTIPEDE;
+    case MONS_IRON_TROLL:
+        return TILE_MONS_IRON_TROLL;
+    case MONS_NAGA:
+        return TILE_MONS_NAGA;
+    case MONS_FIRE_GIANT:
+        return TILE_MONS_FIRE_GIANT;
+    case MONS_FROST_GIANT:
+        return TILE_MONS_FROST_GIANT;
+    case MONS_FIREDRAKE:
+        return TILE_MONS_FIREDRAKE;
+    case MONS_SHADOW_DRAGON:
+        return TILE_MONS_SHADOW_DRAGON;
+    case MONS_YELLOW_SNAKE:
+        return TILE_MONS_YELLOW_SNAKE;
+    case MONS_GREY_SNAKE:
+        return TILE_MONS_GREY_SNAKE;
+    case MONS_DEEP_TROLL:
+        return TILE_MONS_DEEP_TROLL;
+    case MONS_GIANT_BLOWFLY:
+        return TILE_MONS_GIANT_BLOWFLY;
+    case MONS_RED_WASP:
+        return TILE_MONS_RED_WASP;
+    case MONS_SWAMP_DRAGON:
+        return TILE_MONS_SWAMP_DRAGON;
+    case MONS_SWAMP_DRAKE:
+        return TILE_MONS_SWAMP_DRAKE;
+    case MONS_SOLDIER_ANT:
+        return TILE_MONS_SOLDIER_ANT;
+    case MONS_HILL_GIANT:
+        return TILE_MONS_HILL_GIANT;
+    case MONS_QUEEN_ANT:
+        return TILE_MONS_QUEEN_ANT;
+    case MONS_ANT_LARVA:
+        return TILE_MONS_ANT_LARVA;
+    case MONS_GIANT_FROG:
+        return TILE_MONS_GIANT_FROG;
+    case MONS_GIANT_BROWN_FROG:
+        return TILE_MONS_GIANT_BROWN_FROG;
+    case MONS_SPINY_FROG:
+        return TILE_MONS_SPINY_FROG;
+    case MONS_BLINK_FROG:
+        return TILE_MONS_BLINK_FROG;
+    case MONS_GIANT_COCKROACH:
+        return TILE_MONS_GIANT_COCKROACH;
+    case MONS_SMALL_SNAKE:
+        return TILE_MONS_SMALL_SNAKE;
+    case MONS_SHUGGOTH:
+        return TILE_TODO;
+    case MONS_WOLF:
+        return TILE_MONS_WOLF;
+    case MONS_WARG:
+        return TILE_MONS_WARG;
+    case MONS_BEAR:
+        return TILE_MONS_BEAR;
+    case MONS_GRIZZLY_BEAR:
+        return TILE_MONS_GRIZZLY_BEAR;
+    case MONS_POLAR_BEAR:
+        return TILE_MONS_POLAR_BEAR;
+    case MONS_BLACK_BEAR:
+        return TILE_MONS_BLACK_BEAR;
+    case MONS_SIMULACRUM_SMALL:
+        return TILE_MONS_SIMULACRUM_SMALL;
+    case MONS_SIMULACRUM_LARGE:
+        return TILE_MONS_SIMULACRUM_LARGE;
+    case MONS_WHITE_IMP:
+        return TILE_MONS_WHITE_IMP;
+    case MONS_LEMURE:
+        return TILE_MONS_LEMURE;
+    case MONS_UFETUBUS:
+        return TILE_MONS_UFETUBUS;
+    case MONS_MANES:
+        return TILE_MONS_MANES;
+    case MONS_MIDGE:
+        return TILE_MONS_MIDGE;
+    case MONS_NEQOXEC:
+        return TILE_MONS_NEQOXEC;
+    case MONS_ORANGE_DEMON:
+        return TILE_MONS_ORANGE_DEMON;
+    case MONS_HELLWING:
+        return TILE_MONS_HELLWING;
+    case MONS_SMOKE_DEMON:
+        return TILE_MONS_SMOKE_DEMON;
+    case MONS_YNOXINUL:
+        return TILE_MONS_YNOXINUL;
+    case MONS_EXECUTIONER:
+        return TILE_MONS_EXECUTIONER;
+    case MONS_GREEN_DEATH:
+        return TILE_MONS_GREEN_DEATH;
+    case MONS_BLUE_DEATH:
+        return TILE_MONS_BLUE_DEATH;
+    case MONS_BALRUG:
+        return TILE_MONS_BALRUG;
+    case MONS_CACODEMON:
+        return TILE_MONS_CACODEMON;
+    case MONS_DEMONIC_CRAWLER:
+        return TILE_MONS_DEMONIC_CRAWLER;
+    case MONS_SUN_DEMON:
+        return TILE_MONS_SUN_DEMON;
+    case MONS_SHADOW_IMP:
+        return TILE_MONS_SHADOW_IMP;
+    case MONS_SHADOW_DEMON:
+        return TILE_MONS_SHADOW_DEMON;
+    case MONS_LOROCYPROCA:
+        return TILE_MONS_LOROCYPROCA;
+    case MONS_SHADOW_WRAITH:
+        return TILE_MONS_SHADOW_WRAITH;
+    case MONS_GIANT_AMOEBA:
+        return TILE_MONS_GIANT_AMOEBA;
+    case MONS_GIANT_SLUG:
+        return TILE_MONS_GIANT_SLUG;
+    case MONS_GIANT_SNAIL:
+        return TILE_MONS_GIANT_SNAIL;
+    case MONS_SPATIAL_VORTEX:
+        return TILE_MONS_SPATIAL_VORTEX;
+    case MONS_PIT_FIEND:
+        return TILE_MONS_PIT_FIEND;
+    case MONS_BORING_BEETLE:
+        return TILE_MONS_BORING_BEETLE;
+    case MONS_GARGOYLE:
+        return TILE_MONS_GARGOYLE;
+    case MONS_METAL_GARGOYLE:
+        return TILE_MONS_METAL_GARGOYLE;
+    case MONS_MOLTEN_GARGOYLE:
+        return TILE_MONS_MOLTEN_GARGOYLE;
+    case MONS_PROGRAM_BUG:
+        return TILE_MONS_PROGRAM_BUG;
+    case MONS_MNOLEG:
+        return TILE_MONS_MNOLEG;
+    case MONS_LOM_LOBON:
+        return TILE_MONS_LOM_LOBON;
+    case MONS_CEREBOV:
+        return TILE_MONS_CEREBOV;
+    case MONS_GLOORX_VLOQ:
+        return TILE_MONS_GLOORX_VLOQ;
+    case MONS_MOLLUSC_LORD:
+        return TILE_TODO;
+    case MONS_NAGA_MAGE:
+        return TILE_MONS_NAGA_MAGE;
+    case MONS_NAGA_WARRIOR:
+        return TILE_MONS_NAGA_WARRIOR;
+    case MONS_ORC_WARLORD:
+        return TILE_MONS_ORC_WARLORD;
+    case MONS_DEEP_ELF_SOLDIER:
+        return TILE_MONS_DEEP_ELF_SOLDIER;
+    case MONS_DEEP_ELF_FIGHTER:
+        return TILE_MONS_DEEP_ELF_FIGHTER;
+    case MONS_DEEP_ELF_KNIGHT:
+        return TILE_MONS_DEEP_ELF_KNIGHT;
+    case MONS_DEEP_ELF_MAGE:
+        return TILE_MONS_DEEP_ELF_MAGE;
+    case MONS_DEEP_ELF_SUMMONER:
+        return TILE_MONS_DEEP_ELF_SUMMONER;
+    case MONS_DEEP_ELF_CONJURER:
+        return TILE_MONS_DEEP_ELF_CONJURER;
+    case MONS_DEEP_ELF_PRIEST:
+        return TILE_MONS_DEEP_ELF_PRIEST;
+    case MONS_DEEP_ELF_HIGH_PRIEST:
+        return TILE_MONS_DEEP_ELF_HIGH_PRIEST;
+    case MONS_DEEP_ELF_DEMONOLOGIST:
+        return TILE_MONS_DEEP_ELF_DEMONOLOGIST;
+    case MONS_DEEP_ELF_ANNIHILATOR:
+        return TILE_MONS_DEEP_ELF_ANNIHILATOR;
+    case MONS_DEEP_ELF_SORCERER:
+        return TILE_MONS_DEEP_ELF_SORCERER;
+    case MONS_DEEP_ELF_DEATH_MAGE:
+        return TILE_MONS_DEEP_ELF_DEATH_MAGE;
+    case MONS_BROWN_OOZE:
+        return TILE_MONS_BROWN_OOZE;
+    case MONS_AZURE_JELLY:
+        return TILE_MONS_AZURE_JELLY;
+    case MONS_DEATH_OOZE:
+        return TILE_MONS_DEATH_OOZE;
+    case MONS_ACID_BLOB:
+        return TILE_MONS_ACID_BLOB;
+    case MONS_ROYAL_JELLY:
+        return TILE_MONS_ROYAL_JELLY;
+    case MONS_TERENCE:
+        return TILE_MONS_TERENCE;
+    case MONS_JESSICA:
+        return TILE_MONS_JESSICA;
+    case MONS_IJYB:
+        return TILE_MONS_IJYB;
+    case MONS_SIGMUND:
+        return TILE_MONS_SIGMUND;
+    case MONS_BLORK_THE_ORC:
+        return TILE_MONS_BLORK_THE_ORC;
+    case MONS_EDMUND:
+        return TILE_MONS_EDMUND;
+    case MONS_PSYCHE:
+        return TILE_MONS_PSYCHE;
+    case MONS_EROLCHA:
+        return TILE_MONS_EROLCHA;
+    case MONS_DONALD:
+        return TILE_MONS_DONALD;
+    case MONS_URUG:
+        return TILE_MONS_URUG;
+    case MONS_MICHAEL:
+        return TILE_MONS_MICHAEL;
+    case MONS_JOSEPH:
+        return TILE_MONS_JOSEPH;
+    case MONS_SNORG:
+        return TILE_MONS_SNORG;
+    case MONS_ERICA:
+        return TILE_MONS_ERICA;
+    case MONS_JOSEPHINE:
+        return TILE_MONS_JOSEPHINE;
+    case MONS_HAROLD:
+        return TILE_MONS_HAROLD;
+    case MONS_NORBERT:
+        return TILE_MONS_NORBERT;
+    case MONS_JOZEF:
+        return TILE_MONS_JOZEF;
+    case MONS_AGNES:
+        return TILE_MONS_AGNES;
+    case MONS_MAUD:
+        return TILE_MONS_MAUD;
+    case MONS_LOUISE:
+        return TILE_MONS_LOUISE;
+    case MONS_FRANCIS:
+        return TILE_MONS_FRANCIS;
+    case MONS_FRANCES:
+        return TILE_MONS_FRANCES;
+    case MONS_RUPERT:
+        return TILE_MONS_RUPERT;
+    case MONS_WAYNE:
+        return TILE_MONS_WAYNE;
+    case MONS_DUANE:
+        return TILE_MONS_DUANE;
+    case MONS_XTAHUA:
+        return TILE_MONS_XTAHUA;
+    case MONS_NORRIS:
+        return TILE_MONS_NORRIS;
+    case MONS_FREDERICK:
+        return TILE_MONS_FREDERICK;
+    case MONS_MARGERY:
+        return TILE_MONS_MARGERY;
+    case MONS_POLYPHEMUS:
+        return TILE_MONS_POLYPHEMUS;
+    case MONS_BORIS:
+        return TILE_MONS_BORIS;
+    // Draconians handled above
+    case MONS_MURRAY:
+        return TILE_MONS_MURRAY;
+    case MONS_TIAMAT:
+        return TILE_MONS_TIAMAT;
+    case MONS_DEEP_ELF_BLADEMASTER:
+        return TILE_MONS_DEEP_ELF_BLADEMASTER;
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+        return TILE_MONS_DEEP_ELF_MASTER_ARCHER;
 
-  case MONS_GERYON: ch=TILE_MONS_GERYON; break;
-  case MONS_DISPATER: ch=TILE_MONS_DISPATER; break;
-  case MONS_ASMODEUS: ch=TILE_MONS_ASMODEUS; break;
-  case MONS_ANTAEUS: ch=TILE_MONS_ANTAEUS; break;
-  case MONS_ERESHKIGAL: ch=TILE_MONS_ERESHKIGAL; break;
+    case MONS_GERYON:
+        return TILE_MONS_GERYON;
+    case MONS_DISPATER:
+        return TILE_MONS_DISPATER;
+    case MONS_ASMODEUS:
+        return TILE_MONS_ASMODEUS;
+    case MONS_ANTAEUS:
+        return TILE_MONS_ANTAEUS;
+    case MONS_ERESHKIGAL:
+        return TILE_MONS_ERESHKIGAL;
 
-  case MONS_ANCIENT_LICH: ch=TILE_MONS_ANCIENT_LICH; break;
-  case MONS_OOZE: ch=TILE_MONS_OOZE; break;
-  case MONS_VAULT_GUARD: ch=TILE_MONS_VAULT_GUARD; break;
-  case MONS_CURSE_SKULL: ch=TILE_MONS_CURSE_SKULL; break;
-  case MONS_VAMPIRE_KNIGHT: ch=TILE_MONS_VAMPIRE_KNIGHT; break;
-  case MONS_VAMPIRE_MAGE: ch=TILE_MONS_VAMPIRE_MAGE; break;
-  case MONS_SHINING_EYE: ch=TILE_MONS_SHINING_EYE; break;
-  case MONS_ORB_GUARDIAN: ch=TILE_MONS_ORB_GUARDIAN; break;
-  case MONS_DAEVA: ch=TILE_MONS_DAEVA; break;
-  case MONS_SPECTRAL_THING: ch=TILE_MONS_SPECTRAL_THING; break;
-  case MONS_GREATER_NAGA: ch=TILE_MONS_GREATER_NAGA; break;
-  case MONS_SKELETAL_DRAGON: ch=TILE_MONS_SKELETAL_DRAGON; break;
-  case MONS_TENTACLED_MONSTROSITY: ch=TILE_MONS_TENTACLED_MONSTROSITY; break;
-  case MONS_SPHINX: ch=TILE_MONS_SPHINX; break;
-  case MONS_ROTTING_HULK: ch=TILE_MONS_ROTTING_HULK; break;
-  case MONS_GUARDIAN_MUMMY: ch=TILE_MONS_GUARDIAN_MUMMY; break;
-  case MONS_GREATER_MUMMY: ch=TILE_MONS_GREATER_MUMMY; break;
-  case MONS_MUMMY_PRIEST: ch=TILE_MONS_MUMMY_PRIEST; break;
-  case MONS_CENTAUR_WARRIOR: ch=TILE_MONS_CENTAUR_WARRIOR; break;
-  case MONS_YAKTAUR_CAPTAIN: ch=TILE_MONS_YAKTAUR_CAPTAIN; break;
-  case MONS_KILLER_KLOWN: ch=TILE_MONS_KILLER_KLOWN; break;
-  case MONS_ELECTRIC_GOLEM: ch=TILE_MONS_ELECTRIC_GOLEM; break;
-  case MONS_BALL_LIGHTNING: ch=TILE_MONS_BALL_LIGHTNING; break;
-  case MONS_ORB_OF_FIRE: ch=TILE_MONS_ORB_OF_FIRE; break;
-  case MONS_QUOKKA: ch=TILE_MONS_QUOKKA; break;
-  case MONS_EYE_OF_DEVASTATION: ch=TILE_MONS_EYE_OF_DEVASTATION; break;
-  case MONS_MOTH_OF_WRATH: ch=TILE_MONS_MOTH_OF_WRATH; break;
-  case MONS_DEATH_COB: ch=TILE_MONS_DEATH_COB; break;
-  case MONS_CURSE_TOE: ch=TILE_MONS_CURSE_TOE; break;
-//  case MONS_GOLD_MIMIC: ch=TILE_MONS_GOLD_MIMIC; break;
+    case MONS_ANCIENT_LICH:
+        return TILE_MONS_ANCIENT_LICH;
+    case MONS_OOZE:
+        return TILE_MONS_OOZE;
+    case MONS_VAULT_GUARD:
+        return TILE_MONS_VAULT_GUARD;
+    case MONS_CURSE_SKULL:
+        return TILE_MONS_CURSE_SKULL;
+    case MONS_VAMPIRE_KNIGHT:
+        return TILE_MONS_VAMPIRE_KNIGHT;
+    case MONS_VAMPIRE_MAGE:
+        return TILE_MONS_VAMPIRE_MAGE;
+    case MONS_SHINING_EYE:
+        return TILE_MONS_SHINING_EYE;
+    case MONS_ORB_GUARDIAN:
+        return TILE_MONS_ORB_GUARDIAN;
+    case MONS_DAEVA:
+        return TILE_MONS_DAEVA;
+    case MONS_SPECTRAL_THING:
+        return TILE_MONS_SPECTRAL_THING;
+    case MONS_GREATER_NAGA:
+        return TILE_MONS_GREATER_NAGA;
+    case MONS_SKELETAL_DRAGON:
+        return TILE_MONS_SKELETAL_DRAGON;
+    case MONS_TENTACLED_MONSTROSITY:
+        return TILE_MONS_TENTACLED_MONSTROSITY;
+    case MONS_SPHINX:
+        return TILE_MONS_SPHINX;
+    case MONS_ROTTING_HULK:
+        return TILE_MONS_ROTTING_HULK;
+    case MONS_GUARDIAN_MUMMY:
+        return TILE_MONS_GUARDIAN_MUMMY;
+    case MONS_GREATER_MUMMY:
+        return TILE_MONS_GREATER_MUMMY;
+    case MONS_MUMMY_PRIEST:
+        return TILE_MONS_MUMMY_PRIEST;
+    case MONS_CENTAUR_WARRIOR:
+        return TILE_MONS_CENTAUR_WARRIOR;
+    case MONS_YAKTAUR_CAPTAIN:
+        return TILE_MONS_YAKTAUR_CAPTAIN;
+    case MONS_KILLER_KLOWN:
+        return TILE_MONS_KILLER_KLOWN;
+    case MONS_ELECTRIC_GOLEM:
+        return TILE_MONS_ELECTRIC_GOLEM;
+    case MONS_BALL_LIGHTNING:
+        return TILE_MONS_BALL_LIGHTNING;
+    case MONS_ORB_OF_FIRE:
+        return TILE_MONS_ORB_OF_FIRE;
+    case MONS_QUOKKA:
+        return TILE_MONS_QUOKKA;
+    case MONS_EYE_OF_DEVASTATION:
+        return TILE_MONS_EYE_OF_DEVASTATION;
+    case MONS_MOTH_OF_WRATH:
+        return TILE_MONS_MOTH_OF_WRATH;
+    case MONS_DEATH_COB:
+        return TILE_MONS_DEATH_COB;
+    case MONS_CURSE_TOE:
+        return TILE_MONS_CURSE_TOE;
 
-  case MONS_GOLD_MIMIC:
-  case MONS_WEAPON_MIMIC:
-  case MONS_ARMOUR_MIMIC:
-  case MONS_SCROLL_MIMIC:
-  case MONS_POTION_MIMIC:
-  {
+    case MONS_GOLD_MIMIC:
+    case MONS_WEAPON_MIMIC:
+    case MONS_ARMOUR_MIMIC:
+    case MONS_SCROLL_MIMIC:
+    case MONS_POTION_MIMIC:
+    {
       // Use item tile
       item_def  item;
       struct monsters *mon = &menv[mon_idx];
       get_mimic_item( mon, item );
-      ch = tileidx_item(item);
-      break;
-  }
+      return tileidx_item(item);
+    }
 
-  case MONS_HELL_HOG: ch=TILE_MONS_HELL_HOG; break;
-  case MONS_SERPENT_OF_HELL: ch=TILE_MONS_SERPENT_OF_HELL; break;
-  case MONS_BOGGART: ch=TILE_MONS_BOGGART; break;
-  case MONS_QUICKSILVER_DRAGON: ch=TILE_MONS_QUICKSILVER_DRAGON; break;
-  case MONS_IRON_DRAGON: ch=TILE_MONS_IRON_DRAGON; break;
-  case MONS_SKELETAL_WARRIOR: ch=TILE_MONS_SKELETAL_WARRIOR; break;
-  case MONS_PLAYER_GHOST: ch=TILE_MONS_PLAYER_GHOST; break;
-  case MONS_PANDEMONIUM_DEMON: ch=TILE_MONS_PANDEMONIUM_DEMON; break;
-  case MONS_GIANT_NEWT: ch=TILE_MONS_GIANT_NEWT; break;
-  case MONS_GIANT_GECKO: ch=TILE_MONS_GIANT_GECKO; break;
-  case MONS_GIANT_IGUANA: ch=TILE_MONS_GIANT_IGUANA; break;
-  case MONS_GILA_MONSTER: ch=TILE_MONS_GILA_MONSTER; break;
-  case MONS_KOMODO_DRAGON: ch=TILE_MONS_KOMODO_DRAGON; break;
-  case MONS_LAVA_WORM: ch=TILE_MONS_LAVA_WORM; break;
-  case MONS_LAVA_FISH: ch=TILE_MONS_LAVA_FISH; break;
-  case MONS_LAVA_SNAKE: ch=TILE_MONS_LAVA_SNAKE; break;
-  case MONS_SALAMANDER: ch=TILE_MONS_SALAMANDER; break;
-  case MONS_BIG_FISH: ch=TILE_MONS_BIG_FISH; break;
-  case MONS_GIANT_GOLDFISH: ch=TILE_MONS_GIANT_GOLDFISH; break;
-  case MONS_ELECTRICAL_EEL: ch=TILE_MONS_ELECTRICAL_EEL; break;
-  case MONS_JELLYFISH: ch=TILE_MONS_JELLYFISH; break;
-  case MONS_WATER_ELEMENTAL: ch=TILE_MONS_WATER_ELEMENTAL; break;
-  case MONS_SWAMP_WORM: ch=TILE_MONS_SWAMP_WORM; break;
-  case MONS_ORANGE_STATUE: ch = TILE_DNGN_ORANGE_CRYSTAL_STATUE; break;
-  case MONS_SILVER_STATUE: ch = TILE_DNGN_SILVER_STATUE; break;
-  case MONS_ICE_STATUE: ch = TILE_DNGN_ICE_STATUE; break;
-  case MONS_DEATH_DRAKE: ch=TILE_MONS_DEATH_DRAKE; break;
+    case MONS_HELL_HOG:
+        return TILE_MONS_HELL_HOG;
+    case MONS_SERPENT_OF_HELL:
+        return TILE_MONS_SERPENT_OF_HELL;
+    case MONS_BOGGART:
+        return TILE_MONS_BOGGART;
+    case MONS_QUICKSILVER_DRAGON:
+        return TILE_MONS_QUICKSILVER_DRAGON;
+    case MONS_IRON_DRAGON:
+        return TILE_MONS_IRON_DRAGON;
+    case MONS_SKELETAL_WARRIOR:
+        return TILE_MONS_SKELETAL_WARRIOR;
+    case MONS_PLAYER_GHOST:
+        return TILE_MONS_PLAYER_GHOST;
+    case MONS_PANDEMONIUM_DEMON:
+        return TILE_MONS_PANDEMONIUM_DEMON;
+    case MONS_GIANT_NEWT:
+        return TILE_MONS_GIANT_NEWT;
+    case MONS_GIANT_GECKO:
+        return TILE_MONS_GIANT_GECKO;
+    case MONS_GIANT_IGUANA:
+        return TILE_MONS_GIANT_IGUANA;
+    case MONS_GILA_MONSTER:
+        return TILE_MONS_GILA_MONSTER;
+    case MONS_KOMODO_DRAGON:
+        return TILE_MONS_KOMODO_DRAGON;
+    case MONS_LAVA_WORM:
+        return TILE_MONS_LAVA_WORM;
+    case MONS_LAVA_FISH:
+        return TILE_MONS_LAVA_FISH;
+    case MONS_LAVA_SNAKE:
+        return TILE_MONS_LAVA_SNAKE;
+    case MONS_SALAMANDER:
+        return TILE_MONS_SALAMANDER;
+    case MONS_BIG_FISH:
+        return TILE_MONS_BIG_FISH;
+    case MONS_GIANT_GOLDFISH:
+        return TILE_MONS_GIANT_GOLDFISH;
+    case MONS_ELECTRICAL_EEL:
+        return TILE_MONS_ELECTRICAL_EEL;
+    case MONS_JELLYFISH:
+        return TILE_MONS_JELLYFISH;
+    case MONS_WATER_ELEMENTAL:
+        return TILE_MONS_WATER_ELEMENTAL;
+    case MONS_SWAMP_WORM:
+        return TILE_MONS_SWAMP_WORM;
+    case MONS_ROCK_WORM:
+        return TILE_TODO;
+    case MONS_ORANGE_STATUE:
+        return TILE_DNGN_ORANGE_CRYSTAL_STATUE;
+    case MONS_SILVER_STATUE:
+        return TILE_DNGN_SILVER_STATUE;
+    case MONS_ICE_STATUE:
+        return TILE_DNGN_ICE_STATUE;
+    case MONS_DEATH_DRAKE:
+        return TILE_MONS_DEATH_DRAKE;
+    case MONS_MERFOLK:
+        return TILE_TODO;
+    case MONS_MERMAID:
+        return TILE_TODO;
+    }
+
+    return TILE_ERROR;
 }
-    if(mons_flies(&menv[mon_idx])) ch |= TILE_FLAG_FLYING;
-    if(menv[mon_idx].has_ench(ENCH_HELD)) ch |= TILE_FLAG_NET;
+
+int tileidx_monster(int mon_idx)
+{
+    int ch = tileidx_monster_base(mon_idx);
+
+    if(mons_flies(&menv[mon_idx]))
+        ch |= TILE_FLAG_FLYING;
+    if(menv[mon_idx].has_ench(ENCH_HELD))
+        ch |= TILE_FLAG_NET;
 
     if(mons_friendly(&menv[mon_idx]))
     {
         ch |= TILE_FLAG_PET;
     }
-    else if (Options.stab_brand != CHATTR_NORMAL && 
-        mons_looks_stabbable(&menv[mon_idx]))
+    else if (mons_looks_stabbable(&menv[mon_idx]))
     {
         ch |= TILE_FLAG_STAB;
     }
-    else if (Options.may_stab_brand != CHATTR_NORMAL && 
-        mons_looks_distracted(&menv[mon_idx]))
+    else if (mons_looks_distracted(&menv[mon_idx]))
     {
         ch |= TILE_FLAG_MAY_STAB;
     }
@@ -1368,6 +1704,10 @@ int tileidx_feature(int object){
     case DNGN_SECRET_DOOR:
         ch=TILE_DNGN_ROCK_WALL_OFS; break;
 
+    case DNGN_CLEAR_ROCK_WALL: ch=TILE_TODO; break;
+    case DNGN_CLEAR_STONE_WALL: ch=TILE_TODO; break;
+    case DNGN_CLEAR_PERMAROCK_WALL: ch=TILE_TODO; break;
+
     case DNGN_STONE_WALL: ch=TILE_DNGN_STONE_WALL; break;
     case DNGN_CLOSED_DOOR: ch=TILE_DNGN_CLOSED_DOOR; break;
     case DNGN_METAL_WALL: ch=TILE_DNGN_METAL_WALL; break;
@@ -1393,7 +1733,7 @@ int tileidx_feature(int object){
     //  case DNGN_BRANCH_STAIRS: ch=TILE_DNGN_BRANCH_STAIRS; break;
     case DNGN_TRAP_MECHANICAL: ch=TILE_DNGN_TRAP_MECHANICAL; break;
     case DNGN_TRAP_MAGICAL: ch=TILE_DNGN_TRAP_MAGICAL; break;
-//    case DNGN_TRAP_III: ch=TILE_DNGN_TRAP_III; break;
+    case DNGN_TRAP_NATURAL: ch=TILE_TODO; break;
     case DNGN_ENTER_SHOP: ch=TILE_DNGN_ENTER_SHOP; break;
     case DNGN_ENTER_LABYRINTH: ch=TILE_DNGN_ENTER_LABYRINTH; break;
     case DNGN_STONE_STAIRS_DOWN_I: 
