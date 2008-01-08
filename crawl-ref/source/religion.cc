@@ -2667,12 +2667,11 @@ bool followers_abandon_you()
     if ( ystart < 0 ) ystart = 0;
     if ( xend >= GXM ) xend = GXM;
     if ( ystart >= GYM ) yend = GYM;
-     
+
     bool reconvert = false;
     int num_reconvert = 0;
     int num_followers = 0;
 
-    std::vector<const monsters *> mons;
     // monster check
     for ( int y = ystart; y < yend; ++y )
     {
@@ -2687,7 +2686,7 @@ bool followers_abandon_you()
                      && (monster->flags & MF_CONVERT_ATTEMPT))
                 {
                     num_followers++;
-                     
+
                     if (mons_player_visible(monster)
                         && !mons_is_confused(monster)
                         && !mons_is_paralysed(monster))
@@ -2738,7 +2737,7 @@ bool followers_abandon_you()
             }
 
             chan << std::endl;
-            
+
             return true;
         }
     }
