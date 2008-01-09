@@ -5951,10 +5951,6 @@ static void mons_in_cloud(monsters *monster)
     {
         // couldn't be bothered coding for armour of res fire
 
-        // what of whether it is wearing steam dragon armour? {dlb}
-        if (monster->type == MONS_STEAM_DRAGON)
-            return;
-
         simple_monster_message(monster, " is engulfed in steam!");
 
         const int steam_base_damage = steam_cloud_damage(cloud);

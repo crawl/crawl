@@ -302,11 +302,19 @@ struct mon_resist_def
     short bludgeon;
 
     mon_resist_def();
-    mon_resist_def(int flags, short level = 1);
+    mon_resist_def(int flags, short level = -100);
 
     mon_resist_def operator | (const mon_resist_def &other) const;
     const mon_resist_def &operator |= (const mon_resist_def &other);
+
+private:
+    short get_default_res_level(int resist, short level) const;
 };
+
+inline mon_resist_def operator | (int a, const mon_resist_def &b)
+{
+    return (mon_resist_def(a) | b);
+}
 
 typedef mon_resist_def mrd;
 

@@ -931,7 +931,7 @@ int mons_res_steam( const monsters *mon )
     int res = get_mons_resists(mon).steam;
     if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 3;
-    return (res + mons_res_fire(mon) / 2); 
+    return (res + mons_res_fire(mon) / 2);
 }
 
 int mons_res_fire( const monsters *mon )
@@ -5727,6 +5727,22 @@ mon_resist_def::mon_resist_def()
 {
 }
 
+short mon_resist_def::get_default_res_level(int resist, short level) const
+{
+    if (level != -100)
+        return level;
+    switch (resist)
+    {
+    case MR_RES_STEAM:
+    case MR_RES_ACID:
+        return 3;
+    case MR_RES_ELEC:
+        return 2;
+    default:
+        return 1;
+    }
+}
+
 mon_resist_def::mon_resist_def(int flags, short level)
     : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
       asphyx(0), acid(0), sticky_flame(false), pierce(0),
@@ -5734,27 +5750,28 @@ mon_resist_def::mon_resist_def(int flags, short level)
 {
     for (int i = 0; i < 32; ++i)
     {
+        const short nl = get_default_res_level(1 << i, level);
         switch (flags & (1 << i))
         {
         case MR_RES_STEAM:   steam = 3; break; 
-        case MR_RES_ELEC:    elec = level; break;
-        case MR_RES_POISON:  poison = level; break;
-        case MR_RES_FIRE:    fire = level; break;
-        case MR_RES_HELLFIRE: hellfire = level; break;
-        case MR_RES_COLD:    cold = level; break;
-        case MR_RES_ASPHYX:  asphyx = level; break;
-        case MR_RES_ACID:    acid = level; break;
-        case MR_VUL_ELEC:    elec = -level; break;
-        case MR_VUL_POISON:  poison = -level; break;
-        case MR_VUL_FIRE:    fire = -level; break;
-        case MR_VUL_COLD:    cold = -level; break;
+        case MR_RES_ELEC:    elec = nl; break;
+        case MR_RES_POISON:  poison = nl; break;
+        case MR_RES_FIRE:    fire = nl; break;
+        case MR_RES_HELLFIRE: hellfire = nl; break;
+        case MR_RES_COLD:    cold = nl; break;
+        case MR_RES_ASPHYX:  asphyx = nl; break;
+        case MR_RES_ACID:    acid = nl; break;
+        case MR_VUL_ELEC:    elec = -nl; break;
+        case MR_VUL_POISON:  poison = -nl; break;
+        case MR_VUL_FIRE:    fire = -nl; break;
+        case MR_VUL_COLD:    cold = -nl; break;
         
-        case MR_RES_PIERCE:  pierce = level; break;
-        case MR_RES_SLICE:   slice = level; break;
-        case MR_RES_BLUDGEON: bludgeon = level; break;
-        case MR_VUL_PIERCE:  pierce = -level; break;
-        case MR_VUL_SLICE:   slice = -level; break;
-        case MR_VUL_BLUDGEON: bludgeon = -level; break;
+        case MR_RES_PIERCE:  pierce = nl; break;
+        case MR_RES_SLICE:   slice = nl; break;
+        case MR_RES_BLUDGEON: bludgeon = nl; break;
+        case MR_VUL_PIERCE:  pierce = -nl; break;
+        case MR_VUL_SLICE:   slice = -nl; break;
+        case MR_VUL_BLUDGEON: bludgeon = -nl; break;
 
         case MR_RES_STICKY_FLAME: sticky_flame = true; break;
 

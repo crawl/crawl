@@ -116,7 +116,7 @@ int check_your_resists(int hurted, int flavour)
         else if (resist < 0)
         {
             // We could use a superior message.
-            mpr("It burns terribly!");
+            mpr("It scalds you terribly!");
             hurted = hurted * 15 / 10;
         }
         break;

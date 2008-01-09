@@ -1599,10 +1599,14 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        hurted = resist_adjust_damage(monster,
-                                      monster->res_fire(),
-                                      hurted,
-                                      true);
+        hurted =
+            resist_adjust_damage(
+                monster,
+                pbolt.flavour == BEAM_FIRE
+                ? monster->res_fire()
+                : monster->res_steam(),
+                hurted,
+                true);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1623,7 +1627,14 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             else
             {
                 if (doFlavouredEffects)
-                    simple_monster_message(monster, " is burned terribly!");
+                {
+                    if (pbolt.flavour == BEAM_FIRE)
+                        simple_monster_message(monster,
+                                               " is burned terribly!");
+                    else
+                        simple_monster_message(monster,
+                                               " is scalded terribly!");
+                }
             }
         }
         break;
