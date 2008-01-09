@@ -42,6 +42,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "effects.h"
+#include "files.h"
 #include "food.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -359,7 +360,7 @@ void dec_penance(god_type god, int val);
 void dec_penance(int val);
 void inc_penance(god_type god, int val);
 void inc_penance(int val);
-static bool followers_abandon_you(void); // Beogh
+static bool beogh_followers_abandon_you(void);
 static void dock_piety(int piety_loss, int penance);
 
 bool is_evil_god(god_type god)
@@ -2417,7 +2418,7 @@ static bool beogh_retribution()
     }
     case 4: // 25%, relatively harmless
     case 5: // in effect, only for penance
-        if (you.religion == GOD_BEOGH && followers_abandon_you())
+        if (you.religion == GOD_BEOGH && beogh_followers_abandon_you())
             break;
         // else fall through
     default: // send orcs after you (3/8 to 5/8)
@@ -2666,59 +2667,89 @@ void divine_retribution( god_type god )
     dec_penance( god, 1 + random2(3) );
 }
 
-// upon excommunication, (now ex) Beogh adepts lose their orcish followers
-bool followers_abandon_you()
+static void orcish_followers_on_level_abandon_you()
 {
-    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-    int yend = you.y_pos + 9, xend = you.x_pos + 9;
-    if ( xstart < 0 ) xstart = 0;
-    if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM;
-    if ( ystart >= GYM ) yend = GYM;
+    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    {
+        monsters *monster = &menv[i];
+        if (monster->type != -1
+            && mons_species(monster->type) == MONS_ORC
+            && monster->attitude == ATT_FRIENDLY
+            && (monster->flags & MF_CONVERT_ATTEMPT))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Abandoning: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
 
+            monster->attitude = ATT_HOSTILE;
+            monster->behaviour = BEH_HOSTILE;
+            // for now CREATED_FRIENDLY stays
+        }
+    }
+}
+
+// Upon excommunication, ex-Beoghites lose all their orcish followers.
+// When under penance, Beoghites can lose all orcish followers in sight,
+// subject to a few limitations.
+static bool beogh_followers_abandon_you()
+{
     bool reconvert = false;
     int num_reconvert = 0;
     int num_followers = 0;
 
-    // monster check
-    for ( int y = ystart; y < yend; ++y )
+    if (you.religion != GOD_BEOGH)
+        apply_to_all_dungeons(orcish_followers_on_level_abandon_you);
+    else
     {
-        for ( int x = xstart; x < xend; ++x )
+        int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+        int yend = you.y_pos + 9, xend = you.x_pos + 9;
+        if ( xstart < 0 ) xstart = 0;
+        if ( ystart < 0 ) ystart = 0;
+        if ( xend >= GXM ) xend = GXM;
+        if ( ystart >= GYM ) yend = GYM;
+
+        // monster check
+        for ( int y = ystart; y < yend; ++y )
         {
-            const unsigned short targ_monst = mgrd[x][y];
-            if ( targ_monst != NON_MONSTER )
+            for ( int x = xstart; x < xend; ++x )
             {
-                monsters *monster = &menv[targ_monst];
-                if ( mons_species(monster->type) == MONS_ORC
-                     && monster->attitude == ATT_FRIENDLY
-                     && (monster->flags & MF_CONVERT_ATTEMPT))
+                const unsigned short targ_monst = mgrd[x][y];
+                if ( targ_monst != NON_MONSTER )
                 {
-                    num_followers++;
-
-                    if (mons_player_visible(monster)
-                        && !mons_is_confused(monster)
-                        && !mons_is_paralysed(monster))
+                    monsters *monster = &menv[targ_monst];
+                    if (mons_species(monster->type) == MONS_ORC
+                        && monster->attitude == ATT_FRIENDLY
+                        && (monster->flags & MF_CONVERT_ATTEMPT))
                     {
-                        const int hd = monster->hit_dice;
+                        num_followers++;
 
-                        // during penance followers get a saving throw
-                        if (you.religion == GOD_BEOGH &&
-                            random2((you.piety-you.penance[GOD_BEOGH])/18) +
-                            random2(you.skills[SK_INVOCATIONS]-6)
-                              > random2(hd) + hd + random2(5))
+                        if (mons_player_visible(monster)
+                            && !mons_is_confused(monster)
+                            && !mons_is_paralysed(monster)
+                            && !mons_is_caught(monster))
                         {
-                           continue;
-                        }
+                            const int hd = monster->hit_dice;
 
-                        monster->attitude = ATT_HOSTILE;
-                        monster->behaviour = BEH_HOSTILE;
-                        // for now CREATED_FRIENDLY stays
+                            // during penance followers get a saving throw
+                            if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
+                                random2(you.skills[SK_INVOCATIONS]-6)
+                                  > random2(hd) + hd + random2(5))
+                            {
+                                continue;
+                            }
 
-                        if (player_monster_visible(monster))
-                        {
-                            num_reconvert++; // only visible ones
+                            monster->attitude = ATT_HOSTILE;
+                            monster->behaviour = BEH_HOSTILE;
+                            // for now CREATED_FRIENDLY stays
+
+                            if (player_monster_visible(monster))
+                                num_reconvert++; // only visible ones
+
+                            reconvert = true;
                         }
-                        reconvert = true;
                     }
                 }
             }
@@ -2730,9 +2761,12 @@ bool followers_abandon_you()
         simple_god_message("'s voice booms out, \"Who do you think you "
                            "are?\"", GOD_BEOGH);
 
-        if (num_reconvert > 0)
+        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+
+        if (you.religion != GOD_BEOGH)
+            chan << "All of your followers decide to abandon you.";
+        else if (num_reconvert > 0)
         {
-            std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
             if (num_reconvert == 1 && num_followers > 1)
                 chan << "One of your followers decides to abandon you.";
             else
@@ -2743,16 +2777,17 @@ bool followers_abandon_you()
                     chan << "Some of your";
                 chan << " followers decide to abandon you.";
             }
-
-            chan << std::endl;
-
-            return true;
         }
+
+        chan << std::endl;
+
+        return true;
     }
+
     return false;
 }
 
-// Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh
+// Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
 void beogh_idol_revenge()
 {
     god_acting gdact(GOD_BEOGH, true);
@@ -2970,7 +3005,7 @@ void excommunication(void)
 
     case GOD_BEOGH:
         simple_god_message( " does not appreciate desertion!", old_god );
-        followers_abandon_you(); // check if friendly orcs around -> hostile
+        beogh_followers_abandon_you(); // friendly orcs around turn hostile
 
         // You might have lost water walking at a bad time...
         if ( need_water_walking() )
