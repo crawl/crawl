@@ -15,6 +15,7 @@
 
 #include "branch.h"
 #include "externs.h"
+#include "ghost.h"
 #include "lev-pand.h"
 #include "makeitem.h"
 #include "monstuff.h"
@@ -77,7 +78,9 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
 bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid)
 {
-    return (monster_habitable_grid(m->type, actual_grid, mons_flies(m),
+    // Zombified monsters enjoy the same habitat as their original.
+    const int type = mons_is_zombified(m)? mons_zombie_base(m) : m->type;
+    return (monster_habitable_grid(type, actual_grid, mons_flies(m),
                                    m->paralysed()));
 }
 
@@ -101,7 +104,7 @@ bool monster_habitable_grid(int monster_class,
                             bool paralysed)
 {
     const dungeon_feature_type preferred_habitat =
-        habitat2grid( mons_habitat(monster_class) );
+        habitat2grid( mons_habitat_by_type(monster_class) );
     return (grid_compatible(preferred_habitat, actual_grid)
             // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
             // only have to check for the additional valid grids of deep
@@ -124,22 +127,20 @@ bool monster_habitable_grid(int monster_class,
 }
 
 // Returns true if the monster can submerge in the given grid
-bool monster_can_submerge(int monster_class, int grid)
+bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 {
-    const habitat_type habitat = mons_habitat(monster_class);
-
-    if (habitat == HT_WATER &&
-           (grid == DNGN_DEEP_WATER || grid == DNGN_BLUE_FOUNTAIN))
+    switch (mons_habitat(mons))
     {
-        return true;
-    }
+    case HT_WATER:
+        // Monsters can submerge in shallow water - this is intentional.
+        return grid_is_watery(grid);
 
-    if (habitat == HT_LAVA && grid == DNGN_LAVA)
-    {
-        return true;
-    }
+    case HT_LAVA:
+        return (grid == DNGN_LAVA);
 
-    return false;
+    default:
+        return false;
+    }
 }
 
 static bool need_super_ood(int lev_mons)
@@ -485,7 +486,8 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
         // a) not occupied
         // b) compatible
         // c) in the 'correct' proximity to the player
-        dungeon_feature_type grid_wanted = habitat2grid( mons_habitat(mon_type) );
+        dungeon_feature_type grid_wanted =
+            habitat2grid( mons_habitat_by_type(mon_type) );
         while(true)
         {
             // handled above, won't change anymore
@@ -689,7 +691,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     }
     else
     {
-        grid_wanted = habitat2grid( mons_habitat(mon_type) );
+        grid_wanted = habitat2grid( mons_habitat_by_type(mon_type) );
 
         // we'll try 1000 times for a good spot
         for (i = 0; i < 1000; i++)
@@ -773,7 +775,7 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
         menv[id].flags |= MF_BATTY;
     }
 
-    if (monster_can_submerge(mon_type, grd[fx][fy])
+    if (monster_can_submerge(&menv[id], grd[fx][fy])
             && !one_chance_in(5))
         menv[id].add_ench(ENCH_SUBMERGED);
     
@@ -1570,8 +1572,9 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    dungeon_feature_type spcw = ((mons_class == RANDOM_MONSTER) ? DNGN_FLOOR
-                                              : habitat2grid( mons_habitat(mons_class) ));
+    dungeon_feature_type spcw =
+        ((mons_class == RANDOM_MONSTER) ? DNGN_FLOOR
+         : habitat2grid( mons_habitat_by_type(mons_class) ));
 
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square

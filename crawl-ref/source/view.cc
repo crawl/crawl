@@ -48,6 +48,7 @@
 #include "direct.h"
 #include "dungeon.h"
 #include "format.h"
+#include "ghost.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "luadgn.h"
@@ -912,7 +913,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     else if (monster->type == MONS_PLAYER_GHOST)
     {
         const ghost_demon &ghost = *(monster->ghost);
-        std::string ghost_class = get_class_name(ghost.values[GVAL_CLASS]);
+        std::string ghost_class = get_class_name(ghost.job);
 
         key = ghost_class + " player ghost";
 

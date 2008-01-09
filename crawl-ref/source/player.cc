@@ -5152,6 +5152,12 @@ actor::~actor()
 {
 }
 
+bool actor::has_equipped(equipment_type eq, int sub_type) const
+{
+    const item_def *item = slot_item(eq);
+    return (item && item->sub_type == sub_type);
+}
+
 bool actor::will_trigger_shaft() const
 {
     return (!airborne() && total_weight() > 0 && is_valid_shaft_level());
@@ -5674,11 +5680,6 @@ item_def *player::slot_item(equipment_type eq)
     return (item == -1? NULL : &inv[item]);
 }
 
-const item_def *player::slot_item(equipment_type eq) const
-{
-    return const_cast<player*>(this)->slot_item(eq);
-}
-
 // Returns the item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */)
 {
@@ -5716,6 +5717,11 @@ std::string player::conj_verb(const std::string &verb) const
 int player::id() const
 {
     return (-1);
+}
+
+int player::get_experience_level() const
+{
+    return (experience_level);
 }
 
 bool player::alive() const
@@ -5939,6 +5945,11 @@ mon_holy_type player::holiness() const
 int player::res_fire() const
 {
     return (player_res_fire());
+}
+
+int player::res_steam() const
+{
+    return (player_res_steam());
 }
 
 int player::res_cold() const

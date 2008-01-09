@@ -38,6 +38,7 @@
 #include "describe.h"
 #include "dgnevent.h"
 #include "fight.h"
+#include "ghost.h"
 #include "hiscores.h"
 #include "it_use2.h"
 #include "itemname.h"
@@ -1885,7 +1886,7 @@ static void handle_behaviour(monsters *mon)
         mon->foe = you.pet_target;
     }
 
-    // instead berserkers attack nearest monsters
+    // instead berserkers attack nearest monsters.
     if (mon->has_ench(ENCH_BERSERK)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
@@ -2431,7 +2432,7 @@ static void handle_nearby_ability(monsters *monster)
             mons_speaks(monster);
     }
 
-    if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
+    if (monster_can_submerge(monster, grd[monster->x][monster->y])
         && ( !player_beheld_by(monster) // no submerging if player entranced
              && (one_chance_in(5)
                  || ((grid_distance( monster->x, monster->y,
@@ -2492,7 +2493,7 @@ static void handle_nearby_ability(monsters *monster)
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        if (monster->ghost->values[ GVAL_DEMONLORD_CYCLE_COLOUR ])
+        if (monster->ghost->cycle_colours)
             monster->colour = random_colour();
         break;
         
@@ -3676,7 +3677,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
         return (false);
     }
     else if (monster->type == MONS_PANDEMONIUM_DEMON 
-            && !monster->ghost->values[ GVAL_DEMONLORD_SPELLCASTER ])
+            && !monster->ghost->spellcaster)
     {
         return (false);
     }
@@ -4134,7 +4135,7 @@ static void monster_regenerate(monsters *monster)
         return;
 
     // Non-land creatures out of their element cannot regenerate.
-    if (mons_habitat(monster->type) != HT_LAND
+    if (mons_habitat(monster) != HT_LAND
         && !monster_habitable_grid(monster, grd(monster->pos())))
     {
         return;
@@ -4324,7 +4325,7 @@ static void handle_monster_move(int i, monsters *monster)
         handle_behaviour(monster);
         
         // submerging monsters will hide from clouds
-        if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
+        if (monster_can_submerge(monster, grd[monster->x][monster->y])
             && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             monster->add_ench(ENCH_SUBMERGED);
@@ -4988,7 +4989,7 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
                  mons->name(DESC_CAP_THE).c_str(),
                  (grid == DNGN_LAVA ? "lava" : "water"));
 
-        if (grid == DNGN_LAVA && mons_res_fire(mons) > 0)
+        if (grid == DNGN_LAVA && mons_res_fire(mons) >= 2)
             grid = DNGN_DEEP_WATER;
 
         // Even fire resistant monsters perish in lava, but undead can survive
@@ -5025,68 +5026,45 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
 // returns true for monsters that obviously (to the player) feel
 // "thematically at home" in a branch
 // currently used for native monsters recognizing traps
-static bool is_native_in_branch(const monsters *monster, const branch_type branch)
+static bool is_native_in_branch(const monsters *monster,
+                                const branch_type branch)
 {
     switch (branch)
     {
-        case BRANCH_ELVEN_HALLS:
-            if (mons_species(monster->type) == MONS_ELF)
-                return true;
-            return false;
+    case BRANCH_ELVEN_HALLS:
+        return (mons_species(monster->type) == MONS_ELF);
 
-        case BRANCH_ORCISH_MINES:
-            if (mons_species(monster->type) == MONS_ORC)
-                return true;
-            return false;
+    case BRANCH_ORCISH_MINES:
+        return (mons_species(monster->type) == MONS_ORC);
 
-        case BRANCH_SHOALS:
-            if (mons_species(monster->type) == MONS_CYCLOPS
+    case BRANCH_SHOALS:
+        return (mons_species(monster->type) == MONS_CYCLOPS
                 || mons_species(monster->type) == MONS_MERFOLK
-                || mons_species(monster->type) == MONS_MERMAID)
-            {
-                return true;
-            }
-            return false;
+                || mons_species(monster->type) == MONS_MERMAID);
 
-        case BRANCH_SLIME_PITS:
-            if (mons_species(monster->type) == MONS_JELLY)
-                return true;
-            return false;
+    case BRANCH_SLIME_PITS:
+        return (mons_species(monster->type) == MONS_JELLY);
 
-        case BRANCH_SNAKE_PIT:
-            if (mons_species(monster->type) == MONS_NAGA
-                || mons_species(monster->type) == MONS_SNAKE)
-            {
-                return true;
-            }
-            return false;
+    case BRANCH_SNAKE_PIT:
+        return (mons_species(monster->type) == MONS_NAGA
+                || mons_species(monster->type) == MONS_SNAKE);
 
-        case BRANCH_HALL_OF_ZOT:
-            if (mons_species(monster->type) == MONS_DRACONIAN)
-                return true;
-            return false;
+    case BRANCH_HALL_OF_ZOT:
+        return (mons_species(monster->type) == MONS_DRACONIAN);
 
-        case BRANCH_TOMB:
-            if (mons_species(monster->type) == MONS_MUMMY)
-                return true;
-            return false;
+    case BRANCH_TOMB:
+        return (mons_species(monster->type) == MONS_MUMMY);
 
-        case BRANCH_HIVE:
-            if (monster->type == MONS_KILLER_BEE_LARVA
+    case BRANCH_HIVE:
+        return (monster->type == MONS_KILLER_BEE_LARVA
                 || monster->type == MONS_KILLER_BEE
-                || monster->type == MONS_QUEEN_BEE)
-            {
-                return true;
-            }
-            return false;
+                || monster->type == MONS_QUEEN_BEE);
 
-        case BRANCH_HALL_OF_BLADES:
-            if (monster->type == MONS_DANCING_WEAPON)
-                return true;
-            return false;
+    case BRANCH_HALL_OF_BLADES:
+        return (monster->type == MONS_DANCING_WEAPON);
 
-        default:
-            return false;
+    default:
+        return false;
     }
 }
 
@@ -5268,7 +5246,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
     }
 
     const dungeon_feature_type target_grid = grd[targ_x][targ_y];
-    const habitat_type habitat = mons_habitat(monster->type);
+    const habitat_type habitat = mons_habitat(monster);
 
     // effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
@@ -5405,7 +5383,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
             return (mons_res_miasma(monster) > 0);
             
         case CLOUD_FIRE:
-            if (mons_res_fire(monster) > 0)
+            if (mons_res_fire(monster) > 1)
                 return true;
 
             if (monster->hit_points >= 15 + random2avg(46, 5))
@@ -5422,7 +5400,7 @@ bool mon_can_move_to_pos(const monsters *monster, const int count_x,
             break;
 
         case CLOUD_COLD:
-            if (mons_res_cold(monster) > 0)
+            if (mons_res_cold(monster) > 1)
                 return true;
 
             if (monster->hit_points >= 15 + random2avg(46, 5))
@@ -5469,7 +5447,7 @@ static bool monster_move(monsters *monster)
     int count_x, count_y, count;
     int okmove = DNGN_SHALLOW_WATER; // what does this actually do?
 
-    const habitat_type habitat = mons_habitat(monster->type);
+    const habitat_type habitat = mons_habitat(monster);
     bool deep_water_available = false;
 
     // Berserking monsters make a lot of racket
@@ -5917,15 +5895,11 @@ static void mons_in_cloud(monsters *monster)
 
         simple_monster_message(monster, " is engulfed in flame!");
 
-        if (mons_res_fire(monster) > 0)
-            return;
+        hurted +=
+            resist_adjust_damage( monster,
+                                  monster->res_fire(),
+                                  ((random2avg(16, 3) + 6) * 10) / speed );
 
-        hurted += ((random2avg(16, 3) + 6) * 10) / speed;
-
-        if (mons_res_fire(monster) < 0)
-            hurted += (random2(15) * 10) / speed;
-
-        // remember that the above is in addition to the other you.damage.
         hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
 
@@ -5949,15 +5923,11 @@ static void mons_in_cloud(monsters *monster)
     case CLOUD_COLD:
         simple_monster_message(monster, " is engulfed in freezing vapours!");
 
-        if (mons_res_cold(monster) > 0)
-            return;
+        hurted +=
+            resist_adjust_damage( monster,
+                                  monster->res_cold(),
+                                  ((6 + random2avg(16, 3)) * 10) / speed );
 
-        hurted += ((6 + random2avg(16, 3)) * 10) / speed;
-
-        if (mons_res_cold(monster) < 0)
-            hurted += (random2(15) * 10) / speed;
-
-        // remember that the above is in addition to the other damage.
         hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
 
@@ -5987,14 +5957,12 @@ static void mons_in_cloud(monsters *monster)
 
         simple_monster_message(monster, " is engulfed in steam!");
 
-        if (mons_res_fire(monster) > 0)
-            return;
-
         const int steam_base_damage = steam_cloud_damage(cloud);
-        hurted += (random2avg(steam_base_damage, 2) * 10) / speed;
-
-        if (mons_res_fire(monster) < 0)
-            hurted += (random2(steam_base_damage / 2 + 1) * 10) / speed;
+        hurted +=
+            resist_adjust_damage(
+                monster,
+                monster->res_steam(),
+                (random2avg(steam_base_damage, 2) * 10) / speed);
 
         hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}

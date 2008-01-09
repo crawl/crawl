@@ -746,7 +746,7 @@ void more(void)
 
     if (Options.show_more_prompt && !suppress_messages)
     {
-        char keypress = 0;
+        int keypress = 0;
 
         if (Options.tutorial_left)
             message_out(crawl_view.msgsz.y - 1,
@@ -764,7 +764,8 @@ void more(void)
 
         do
             keypress = getch();
-        while (keypress != ' ' && keypress != '\r' && keypress != '\n');
+        while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+               && keypress != -1);
     }
     mesclr(true);
 }                               // end more()

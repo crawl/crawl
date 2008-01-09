@@ -63,6 +63,7 @@
 #include "direct.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "ghost.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -106,6 +107,8 @@ void save_level(int level_saved, level_area_type lt,
 #define GHOST_MINOR_VERSION 1
 #define LEVEL_MINOR_VERSION 1
 #define YOU_MINOR_VERSION   1
+
+const short GHOST_SIGNATURE = static_cast<short>( 0xDC55 );
 
 static void redraw_all(void)
 {
@@ -601,8 +604,41 @@ std::string make_filename( const char *prefix, int level, branch_type where,
                                  isGhost );
 }
 
+static void write_version( FILE *dataFile, int majorVersion, int minorVersion,
+                           bool extended_version )
+{
+    // write version
+    tagHeader versionTag;
+    versionTag.offset = 0;
+    versionTag.tagID = TAG_VERSION;
+
+    marshallByte(versionTag, majorVersion);
+    marshallByte(versionTag, minorVersion);
+
+    // extended_version just pads the version out to four 32-bit words.
+    // This makes the bones file compatible with Hearse with no extra
+    // munging needed.
+    if (extended_version)
+    {
+        // Use a single signature 16-bit word to indicate that this is
+        // Stone Soup and to disambiguate this (unmunged) bones file
+        // from the munged bones files offered by the old Crawl-aware
+        // hearse.pl. Crawl-aware hearse.pl will prefix the bones file
+        // with the first 16-bits of the Crawl version, and the following
+        // 7 16-bit words set to 0.
+        marshallShort(versionTag, GHOST_SIGNATURE);
+        
+        // Write the three remaining 32-bit words of padding.
+        for (int i = 0; i < 3; ++i)
+            marshallLong(versionTag, 0);
+    }
+
+    tag_write(versionTag, dataFile);
+}
+
 static void write_tagged_file( FILE *dataFile, char majorVersion,
-                               char minorVersion, int fileType )
+                               char minorVersion, int fileType,
+                               bool extended_version = false )
 {
     struct tagHeader th;
 
@@ -610,13 +646,7 @@ static void write_tagged_file( FILE *dataFile, char majorVersion,
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
-    // write version
-    struct tagHeader versionTag;
-    versionTag.offset = 0;
-    versionTag.tagID = TAG_VERSION;
-    marshallByte(versionTag, majorVersion);
-    marshallByte(versionTag, minorVersion);
-    tag_write(versionTag, dataFile);
+    write_version( dataFile, majorVersion, minorVersion, extended_version );
 
     // all other tags
     for(int i=1; i<NUM_TAGS; i++)
@@ -1606,21 +1636,23 @@ static bool determine_ghost_version( FILE *ghostFile,
     if (read2(ghostFile, buf, 2) != 2)
         return false;               // empty file?
 
-    // check for pre-v4 -- simply started right in with ghost name.
-    if (isprint(buf[0]) && buf[0] > 4)
-    {
-        majorVersion = 0;
-        minorVersion = 0;
-        rewind(ghostFile);
-        return true;
-    }
-
     // otherwise, read version and validate.
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == SAVE_MAJOR_VERSION)
-        return true;
+    // check for the DCSS ghost signature.
+    if (readShort(ghostFile) != GHOST_SIGNATURE)
+        return (false);
+
+    if (majorVersion == SAVE_MAJOR_VERSION
+        && minorVersion <= GHOST_MINOR_VERSION)
+    {
+        // Discard three more 32-bit words of padding.
+        for (int i = 0; i < 3; ++i)
+            readLong(ghostFile);
+        
+        return !feof(ghostFile);
+    }
 
     return false;   // if its not SAVE_MAJOR_VERSION, no idea!
 }
@@ -1669,7 +1701,8 @@ void save_ghost( bool force )
     }
 
     write_tagged_file( gfile, SAVE_MAJOR_VERSION,
-                       GHOST_MINOR_VERSION, TAGTYPE_GHOST );
+                       GHOST_MINOR_VERSION, TAGTYPE_GHOST,
+                       true );
 
     lk_close(gfile, "wb", cha_fil);
 

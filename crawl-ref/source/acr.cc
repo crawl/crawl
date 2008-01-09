@@ -974,7 +974,7 @@ static void handle_wizard_command( void )
         if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
             || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
         {
-            if (!yesno("Force level to be mappable? "))
+            if (!yesno("Force level to be mappable? ", true, 'n'))
             {
                 canned_msg( MSG_OK );
                 return;
@@ -1069,7 +1069,7 @@ static bool recharge_rod( item_def &rod, bool wielded )
     const int charge = rod.plus / ROD_CHARGE_MULT;
 
     int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
-            
+
     rate *= (10 + skill_bump( SK_EVOCATIONS ));
     rate = div_rand_round( rate, 100 );
 
@@ -1240,7 +1240,7 @@ static bool cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_DOWN_RIGHT:
         if (!i_feel_safe())
             return yesno("Really repeat movement command while monsters "
-                         "are nearby?");
+                         "are nearby?", false, 'n');
 
         return true;
 

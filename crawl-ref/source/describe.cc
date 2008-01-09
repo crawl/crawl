@@ -40,6 +40,7 @@
 #include "decks.h"
 #include "fight.h"
 #include "food.h"
+#include "ghost.h"
 #include "it_use2.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -589,17 +590,17 @@ static std::string describe_demon(const monsters &mons)
     description << "A powerful demon, " << ghost.name << " has a"
                 << RANDOM_ELEMENT(body_descs) << "body";
     
-    switch (ghost.values[GVAL_DEMONLORD_FLY])
+    switch (ghost.fly)
     {
-    case 1:
+    case FL_FLY:
         description << RANDOM_ELEMENT(wing_names);
         break;
 
-    case 2: // levitation
+    case FL_LEVITATE:
         description << RANDOM_ELEMENT(lev_names);
         break;
 
-    default:  // does not fly
+    case FL_NONE:  // does not fly
         if ( !one_chance_in(4) )
             description << RANDOM_ELEMENT(nonfly_names);
         break;
@@ -2171,8 +2172,7 @@ std::string ghost_description(const monsters &mons, bool concise)
 
     const ghost_demon &ghost = *(mons.ghost);
 
-    const species_type gspecies =
-        static_cast<species_type>(ghost.values[GVAL_SPECIES]);
+    const species_type gspecies = ghost.species;
 
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact 
@@ -2207,28 +2207,28 @@ std::string ghost_description(const monsters &mons, bool concise)
     }
 
     gstr << ghost.name << " the "
-         << skill_title( ghost.values[GVAL_BEST_SKILL], 
-                         ghost.values[GVAL_SKILL_LEVEL],
+         << skill_title( ghost.best_skill,
+                         ghost.best_skill_level,
                          gspecies,
                          str, dex, GOD_NO_GOD )
          << ", a"
-         << ((ghost.values[GVAL_EXP_LEVEL] <  4) ? " weakling" :
-             (ghost.values[GVAL_EXP_LEVEL] <  7) ? "n average" :
-             (ghost.values[GVAL_EXP_LEVEL] < 11) ? "n experienced" :
-             (ghost.values[GVAL_EXP_LEVEL] < 16) ? " powerful" :
-             (ghost.values[GVAL_EXP_LEVEL] < 22) ? " mighty" :
-             (ghost.values[GVAL_EXP_LEVEL] < 26) ? " great" :
-             (ghost.values[GVAL_EXP_LEVEL] < 27) ? "n awesomely powerful"
-                                                 : " legendary")
+         << ((ghost.xl <  4) ? " weakling" :
+             (ghost.xl <  7) ? "n average" :
+             (ghost.xl < 11) ? "n experienced" :
+             (ghost.xl < 16) ? " powerful" :
+             (ghost.xl < 22) ? " mighty" :
+             (ghost.xl < 26) ? " great" :
+             (ghost.xl < 27) ? "n awesomely powerful"
+                             : " legendary")
          << " ";
     if ( concise )
         gstr << get_species_abbrev(gspecies)
-             << get_class_abbrev(ghost.values[GVAL_CLASS]);
+             << get_class_abbrev(ghost.job);
     else
         gstr << species_name(gspecies,
-                             ghost.values[GVAL_EXP_LEVEL])
+                             ghost.xl)
              << " "
-             << get_class_name(ghost.values[GVAL_CLASS]);
+             << get_class_name(ghost.job);
 
     return gstr.str();
 }

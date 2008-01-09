@@ -1180,39 +1180,6 @@ enum flush_reason_type
     NUM_FLUSH_REASONS
 };
 
-enum ghost_value_type
-{
-    GVAL_MAX_HP,        // 0
-    GVAL_EV,
-    GVAL_AC,
-    GVAL_SEE_INVIS,
-    GVAL_RES_FIRE,
-    GVAL_RES_COLD,      // 5
-    GVAL_RES_ELEC,
-    GVAL_DAMAGE,
-    GVAL_BRAND,
-    GVAL_SPECIES,
-    GVAL_BEST_SKILL,    // 10
-    GVAL_SKILL_LEVEL,
-    GVAL_EXP_LEVEL,
-    GVAL_CLASS,
-    GVAL_SPELL_1,       // 14
-    GVAL_SPELL_2,
-    GVAL_SPELL_3,
-    GVAL_SPELL_4,
-    GVAL_SPELL_5,
-    GVAL_SPELL_6,       // 19
-    GVAL_SPEED,
-    NUM_GHOST_VALUES,   // should always be last value
-
-    // these values are for demonlords, which override the above:
-    GVAL_DEMONLORD_SPELLCASTER = 9,
-    GVAL_DEMONLORD_FLY,                 // 10
-    GVAL_DEMONLORD_UNUSED,              // 11
-    GVAL_DEMONLORD_HIT_DICE,            // 12
-    GVAL_DEMONLORD_CYCLE_COLOUR         // 13
-};
-
 // The order of this enum must match the order of DNGN_ALTAR_FOO.
 enum god_type
 {

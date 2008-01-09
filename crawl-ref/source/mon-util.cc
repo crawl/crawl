@@ -34,6 +34,8 @@
 #include "debug.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "fight.h"
+#include "ghost.h"
 #include "insult.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -256,14 +258,18 @@ void init_monster_symbols()
     }
 }
 
-unsigned long get_mons_class_resists(int mc)
+const mon_resist_def &get_mons_class_resists(int mc)
 {
-    return (smc->resists);
+    const monsterentry *me = get_monster_data(mc);
+    return (me? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
-unsigned long get_mons_resists(const monsters *mon)
+mon_resist_def get_mons_resists(const monsters *mon)
 {
-    unsigned long resists = get_mons_class_resists(mon->type);
+    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
+        return (mon->ghost->resists);
+    
+    mon_resist_def resists = get_mons_class_resists(mon->type);
     if ((mons_genus(mon->type) == MONS_DRACONIAN &&
          mon->type != MONS_DRACONIAN) ||
         mon->type == MONS_TIAMAT)
@@ -288,11 +294,6 @@ int mons_piety(const monsters *mon)
 
     // We're open to fine-tuning.
     return (mon->hit_dice * 14);
-}
-
-unsigned long mons_resist(const monsters *mon, unsigned long flags)
-{
-    return (get_mons_resists(mon) & flags);
 }
 
 bool mons_class_flag(int mc, int bf)
@@ -394,7 +395,7 @@ bool mons_class_is_slowable(int mc)
 
 bool mons_is_wall_shielded(int mc)
 {
-    return (mons_habitat(mc) == HT_ROCK);
+    return (mons_habitat_by_type(mc) == HT_ROCK);
 }
 
 // returns whether a monster is non-solid
@@ -605,7 +606,7 @@ bool mons_sense_invis(const monsters *mon)
 bool mons_see_invis(const monsters *mon)
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
-        return (mon->ghost->values[ GVAL_SEE_INVIS ]);
+        return (mon->ghost->see_invis);
     else if (mons_class_flag(mon->type, M_SEE_INVIS))
         return (true);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
@@ -739,7 +740,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
     {
         if (attk_number == 0)
-            return mon_attack_def::attk(mons->ghost->values[GVAL_DAMAGE]);
+            return mon_attack_def::attk(mons->ghost->damage);
         else
             return mon_attack_def::attk(0, AT_NONE);
     }
@@ -852,14 +853,10 @@ int mons_res_elec( const monsters *mon )
 {
     int mc = mon->type;
 
-    if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return (mon->ghost->values[ GVAL_RES_ELEC ]);
-
     /* this is a variable, not a player_xx() function, so can be above 1 */
     int u = 0;
 
-    if (mons_resist(mon, MR_RES_ELEC))
-        u++;
+    u += get_mons_resists(mon).elec;
 
     // don't bother checking equipment if the monster can't use it
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -885,26 +882,19 @@ bool mons_res_asphyx( const monsters *mon )
                 || holiness == MH_DEMONIC
                 || holiness == MH_NONLIVING
                 || holiness == MH_PLANT
-                || mons_resist(mon, MR_RES_ASPHYX));
+                || get_mons_resists(mon).asphyx > 0);
 }
 
 int mons_res_acid( const monsters *mon )
 {
-    const unsigned long f = get_mons_resists(mon);
-    return ((f & MR_RES_ACID) != 0);
+    return get_mons_resists(mon).acid;
 }
 
 int mons_res_poison( const monsters *mon )
 {
     int mc = mon->type;
 
-    unsigned long u = 0, f = get_mons_resists(mon);
-
-    if (f & MR_RES_POISON)
-        u++;
-
-    if (f & MR_VUL_POISON)
-        u--;
+    int u = get_mons_resists(mon).poison;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -930,26 +920,27 @@ int mons_res_poison( const monsters *mon )
     return (u);
 }                               // end mons_res_poison()
 
+bool mons_res_sticky_flame( const monsters *mon )
+{
+    return (get_mons_resists(mon).sticky_flame
+            || mon->has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR));
+}
+
+int mons_res_steam( const monsters *mon )
+{
+    int res = get_mons_resists(mon).steam;
+    if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+        res += 3;
+    return (res + mons_res_fire(mon) / 2); 
+}
+
 int mons_res_fire( const monsters *mon )
 {
     int mc = mon->type;
 
-    if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return (mon->ghost->values[ GVAL_RES_FIRE ]);
-
-    int u = 0, f = get_mons_resists(mon);
-
-    // no Big Prize (tm) here either if you set all three flags. It's a pity uh?
-    //
-    // Note that natural monster resistance is two levels, this is duplicate
-    // the fact that having this flag used to be a lot better than armour
-    // for monsters (it used to make them immune in a lot of cases) -- bwr
-    if (f & MR_RES_HELLFIRE)
-        u += 3;
-    else if (f & MR_RES_FIRE)
-        u += 2;
-    else if (f & MR_VUL_FIRE)
-        u--;
+    const mon_resist_def res = get_mons_resists(mon);
+    
+    int u = std::min(res.fire + res.hellfire * 3, 3);
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -982,18 +973,7 @@ int mons_res_cold( const monsters *mon )
 {
     int mc = mon->type;
 
-    if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return (mon->ghost->values[ GVAL_RES_COLD ]);
-
-    int u = 0, f = get_mons_resists(mon);
-
-    // Note that natural monster resistance is two levels, this is duplicate
-    // the fact that having this flag used to be a lot better than armour
-    // for monsters (it used to make them immune in a lot of cases) -- bwr
-    if (f & MR_RES_COLD)
-        u += 2;
-    else if (f & MR_VUL_COLD)
-        u--;
+    int u = get_mons_resists(mon).cold;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -1104,9 +1084,9 @@ flight_type mons_class_flies(int mc)
 flight_type mons_flies(const monsters *mon)
 {
     if (mon->type == MONS_PANDEMONIUM_DEMON
-        && mon->ghost->values[ GVAL_DEMONLORD_FLY ])
+        && mon->ghost->fly)
     {
-        return (FL_FLY);
+        return (mon->ghost->fly);
     }
 
     const flight_type ret = mons_class_flies( mon->type );
@@ -1686,9 +1666,16 @@ mon_intel_type mons_intel(int mc)
     return (smc->intel);
 }
 
-habitat_type mons_habitat(int mc)
+habitat_type mons_habitat_by_type(int mc)
 {
-    return (smc->habitat);
+    const monsterentry *me = get_monster_data(mc);
+    return (me? me->habitat : HT_LAND);
+}
+
+habitat_type mons_habitat(const monsters *m)
+{
+    return mons_habitat_by_type(
+        mons_is_zombified(m)? mons_zombie_base(m) : m->type );
 }
 
 bool intelligent_ally(const monsters *monster)
@@ -1761,7 +1748,7 @@ int mons_offhand_weapon_index(const monsters *m)
 int mons_base_damage_brand(const monsters *m)
 {
     if (m->type == MONS_PLAYER_GHOST || m->type == MONS_PANDEMONIUM_DEMON)
-        return m->ghost->values[ GVAL_BRAND ];
+        return m->ghost->brand;
 
     return (SPWPN_NORMAL);
 }
@@ -1986,6 +1973,15 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     int intel, est_magic_resist, power, diff;
 
     const actor *foe = mon->get_foe();
+
+    // Keep friendly summoners from spamming summons constantly.
+    if (mons_friendly(mon)
+        && (!foe || foe == &you)
+        && spell_typematch(monspell, SPTYP_SUMMONING))
+    {
+        return (true);
+    }
+    
     // Eventually, we'll probably want to be able to have monsters 
     // learn which of their elemental bolts were resisted and have those 
     // handled here as well. -- bwr
@@ -2337,6 +2333,11 @@ monsters::monsters()
 {
 }
 
+// Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
+monsters::~monsters()
+{
+}
+
 monsters::monsters(const monsters &mon)
 {
     init_with(mon);
@@ -2395,7 +2396,7 @@ coord_def monsters::target_pos() const
 bool monsters::swimming() const
 {
     const dungeon_feature_type grid = grd[x][y];
-    return (grid_is_watery(grid) && mons_habitat(type) == HT_WATER);
+    return (grid_is_watery(grid) && mons_habitat(this) == HT_WATER);
 }
 
 bool monsters::submerged() const
@@ -2409,7 +2410,7 @@ bool monsters::floundering() const
     return (grid_is_water(grid)
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.
-            && mons_habitat(type) != HT_WATER
+            && mons_habitat(this) != HT_WATER
             && !mons_amphibious(type)
             && !mons_flies(this));
 }
@@ -2692,6 +2693,10 @@ bool monsters::can_use_missile(const item_def &item) const
     // Prevent monsters that have conjurations / summonings from
     // grabbing missiles.
     if (has_spell_of_type(SPTYP_CONJURATION | SPTYP_SUMMONING))
+        return (false);
+
+    // Blademasters don't want to throw stuff.
+    if (type == MONS_DEEP_ELF_BLADEMASTER)
         return (false);
     
     if (item.base_type == OBJ_WEAPONS)
@@ -3392,6 +3397,11 @@ int monsters::id() const
     return (type);
 }
 
+int monsters::get_experience_level() const
+{
+    return (hit_dice);
+}
+
 bool monsters::fumbles_attack(bool verbose)
 {
     if (floundering() && one_chance_in(4))
@@ -3434,7 +3444,7 @@ void monsters::go_berserk(bool /* intentional */)
         simple_monster_message(
             this,
             make_stringf(" shakes off %s lethargy.",
-                         name(DESC_NOCAP_YOUR).c_str()).c_str());
+                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_HASTE);
     del_ench(ENCH_FATIGUE, true); // give no additional message
@@ -3554,6 +3564,11 @@ mon_holy_type monsters::holiness() const
 int monsters::res_fire() const
 {
     return (mons_res_fire(this));
+}
+
+int monsters::res_steam() const
+{
+    return (mons_res_steam(this));
 }
 
 int monsters::res_cold() const
@@ -3707,12 +3722,12 @@ void monsters::set_ghost(const ghost_demon &g)
 
 void monsters::pandemon_init()
 {
-    hit_dice = ghost->values[ GVAL_DEMONLORD_HIT_DICE ];
-    hit_points = ghost->values[ GVAL_MAX_HP ];
-    max_hit_points = ghost->values[ GVAL_MAX_HP ];
-    ac = ghost->values[ GVAL_AC ];
-    ev = ghost->values[ GVAL_EV ];
-    speed = (one_chance_in(3) ? 10 : 6 + roll_dice(2, 9));
+    hit_dice = ghost->xl;
+    hit_points = ghost->max_hp;
+    max_hit_points = ghost->max_hp;
+    ac = ghost->ac;
+    ev = ghost->ev;
+    speed = (one_chance_in(3) ? 10 : 8 + roll_dice(2, 9));
     speed_increment = 70;
     if (you.char_direction == GDT_ASCENDING && you.level_type == LEVEL_DUNGEON)
         colour = LIGHTRED;
@@ -3724,12 +3739,12 @@ void monsters::pandemon_init()
 void monsters::ghost_init()
 {
     type = MONS_PLAYER_GHOST;
-    hit_dice = ghost->values[ GVAL_EXP_LEVEL ];
-    hit_points = ghost->values[ GVAL_MAX_HP ];
-    max_hit_points = ghost->values[ GVAL_MAX_HP ];
-    ac = ghost->values[ GVAL_AC];
-    ev = ghost->values[ GVAL_EV ];
-    speed = ghost->values[ GVAL_SPEED ];
+    hit_dice = ghost->xl;
+    hit_points = ghost->max_hp;
+    max_hit_points = ghost->max_hp;
+    ac = ghost->ac;
+    ev = ghost->ev;
+    speed = ghost->speed;
     speed_increment = 70;
     attitude = ATT_HOSTILE;
     behaviour = BEH_WANDER;
@@ -3896,16 +3911,7 @@ void monsters::load_spells(mon_spellbook_type book)
 #endif
 
     if (book == MST_GHOST)
-    {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        {
-            spells[i] =
-                static_cast<spell_type>( ghost->values[ GVAL_SPELL_1 + i ] );
-#if DEBUG_DIAGNOSTICS
-            mprf( MSGCH_DIAGNOSTICS, "spell #%d: %d", i, spells[i] );
-#endif
-        }
-    }
+        spells = ghost->spells;
     else 
     {
         for (unsigned int i = 0; i < ARRAYSIZE(mspell_list); ++i)
@@ -3918,6 +3924,11 @@ void monsters::load_spells(mon_spellbook_type book)
             }
         }
     }
+#if DEBUG_DIAGNOSTICS
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        mprf( MSGCH_DIAGNOSTICS, "Spell #%d: %d (%s)",
+              i, spells[i], spell_title(spells[i]) );
+#endif
 }
 
 bool monsters::has_ench(enchant_type ench) const
@@ -4588,12 +4599,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
         }
 
         // Now we handle the others:
-        int grid = grd[x][y];
+        const dungeon_feature_type grid = grd[x][y];
 
         // Badly injured monsters prefer to stay submerged...
         // electrical eels and lava snakes have ranged attacks
         // and are more likely to surface.  -- bwr
-        if (!monster_can_submerge(type, grid))
+        if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
         else if (hit_points <= max_hit_points / 2)
             break;
@@ -4658,10 +4669,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
     // assumption: mons_res_fire has already been checked
     case ENCH_STICKY_FLAME:
     {
-        int dam = roll_dice( 2, 4 ) - 1;
-
-        if (mons_res_fire( this ) < 0)
-            dam += roll_dice( 2, 5 ) - 1;
+        int dam =
+            resist_adjust_damage(this, res_fire(), roll_dice( 2, 4 ) - 1);
 
         if (dam > 0)
         {
@@ -5002,7 +5011,7 @@ void monsters::apply_location_effects()
         mons_check_pool(this);
 
     if (alive() && has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(type, grd[x][y]))
+        && !monster_can_submerge(this, grd[x][y]))
     {
         del_ench(ENCH_SUBMERGED);
     }
@@ -5430,7 +5439,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     if (mons_shouts(monster->type) >= NUM_SHOUTS)
     {
         mpr("Invalid @says@ type.", MSGCH_DIAGNOSTICS);
-        msg = replace_all(msg, "@says@", "bugilly says");
+        msg = replace_all(msg, "@says@", "buggily says");
     }
     else
         msg = replace_all(msg, "@says@",
@@ -5448,7 +5457,7 @@ static mon_body_shape get_ghost_shape(const monsters *mon)
 {
     const ghost_demon &ghost = *(mon->ghost);
 
-    switch(ghost.values[GVAL_SPECIES])
+    switch (ghost.species)
     {
     case SP_NAGA:
         return (MON_SHAPE_NAGA);
@@ -5472,9 +5481,10 @@ static mon_body_shape get_ghost_shape(const monsters *mon)
     case SP_UNK1_DRACONIAN:
     case SP_BASE_DRACONIAN:
         return (MON_SHAPE_HUMANOID_TAILED);
-    }
 
-    return (MON_SHAPE_HUMANOID);
+    default:
+        return (MON_SHAPE_HUMANOID);
+    }
 }
 
 mon_body_shape get_mon_shape(const monsters *mon)
@@ -5705,4 +5715,72 @@ std::string get_mon_shape_str(const mon_body_shape shape)
     };
 
     return (shape_names[shape]);
+}
+
+/////////////////////////////////////////////////////////////////////////
+// mon_resist_def
+
+mon_resist_def::mon_resist_def()
+    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
+      asphyx(0), acid(0), sticky_flame(false), pierce(0),
+      slice(0), bludgeon(0)
+{
+}
+
+mon_resist_def::mon_resist_def(int flags, short level)
+    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0),
+      asphyx(0), acid(0), sticky_flame(false), pierce(0),
+      slice(0), bludgeon(0)
+{
+    for (int i = 0; i < 32; ++i)
+    {
+        switch (flags & (1 << i))
+        {
+        case MR_RES_STEAM:   steam = 3; break; 
+        case MR_RES_ELEC:    elec = level; break;
+        case MR_RES_POISON:  poison = level; break;
+        case MR_RES_FIRE:    fire = level; break;
+        case MR_RES_HELLFIRE: hellfire = level; break;
+        case MR_RES_COLD:    cold = level; break;
+        case MR_RES_ASPHYX:  asphyx = level; break;
+        case MR_RES_ACID:    acid = level; break;
+        case MR_VUL_ELEC:    elec = -level; break;
+        case MR_VUL_POISON:  poison = -level; break;
+        case MR_VUL_FIRE:    fire = -level; break;
+        case MR_VUL_COLD:    cold = -level; break;
+        
+        case MR_RES_PIERCE:  pierce = level; break;
+        case MR_RES_SLICE:   slice = level; break;
+        case MR_RES_BLUDGEON: bludgeon = level; break;
+        case MR_VUL_PIERCE:  pierce = -level; break;
+        case MR_VUL_SLICE:   slice = -level; break;
+        case MR_VUL_BLUDGEON: bludgeon = -level; break;
+
+        case MR_RES_STICKY_FLAME: sticky_flame = true; break;
+
+        default: break;
+        }
+    }
+}
+
+const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
+{
+    elec += o.elec;
+    poison += o.poison;
+    fire += o.fire;
+    cold += o.cold;
+    hellfire += o.hellfire;
+    asphyx += o.asphyx;
+    acid += o.acid;
+    pierce += o.pierce;
+    slice += o.slice;
+    bludgeon += o.bludgeon;
+    sticky_flame = sticky_flame || o.sticky_flame;
+    return (*this);
+}
+
+mon_resist_def mon_resist_def::operator | (const mon_resist_def &o) const
+{
+    mon_resist_def c(*this);
+    return (c |= o);
 }

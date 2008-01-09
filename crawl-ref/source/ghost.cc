@@ -8,6 +8,8 @@
 
 #include "AppHdr.h"
 
+#include "ghost.h"
+
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -98,7 +100,7 @@ static spell_type search_order_misc[] = {
 
 /* Last slot (emergency) can only be teleport self or blink. */
 
-ghost_demon::ghost_demon() : name(), values()
+ghost_demon::ghost_demon()
 {
     reset();
 }
@@ -106,8 +108,22 @@ ghost_demon::ghost_demon() : name(), values()
 void ghost_demon::reset()
 {
     name.clear();
-    values.init(0);
-    values[GVAL_SPEED] = 10;
+    species = SP_UNKNOWN;
+    job = JOB_UNKNOWN;
+    best_skill = SK_FIGHTING;
+    best_skill_level = 0;
+    xl = 0;
+    max_hp = 0;
+    ev = 0;
+    ac = 0;
+    damage = 0;
+    speed = 10;
+    see_invis = false;
+    brand = SPWPN_NORMAL;
+    resists = mon_resist_def();
+    spellcaster = false;
+    cycle_colours = false;
+    fly = FL_NONE;
 }
 
 void ghost_demon::init_random_demon()
@@ -115,172 +131,166 @@ void ghost_demon::init_random_demon()
     name = make_name(random_int(), false);
 
     // hp - could be defined below (as could ev, AC etc). Oh well, too late:
-    values[ GVAL_MAX_HP ] = 100 + roll_dice( 3, 50 );
+    max_hp = 100 + roll_dice( 3, 50 );
 
-    values[ GVAL_EV ] = 5 + random2(20);
-    values[ GVAL_AC ] = 5 + random2(20);
+    ev = 5 + random2(20);
+    ac = 5 + random2(20);
 
-    values[ GVAL_SEE_INVIS ] = (one_chance_in(10) ? 0 : 1);
+    see_invis = !one_chance_in(10);
 
     if (!one_chance_in(3))
-        values[ GVAL_RES_FIRE ] = (coinflip() ? 2 : 3);
+        resists.fire = random_range(1, 2);
     else
     {
-        values[ GVAL_RES_FIRE ] = 0;    /* res_fire */
+        resists.fire = 0;    /* res_fire */
 
         if (one_chance_in(10))
-            values[ GVAL_RES_FIRE ] = -1;
+            resists.fire = -1;
     }
 
     if (!one_chance_in(3))
-        values[ GVAL_RES_COLD ] = 2;
+        resists.cold = random_range(1, 2);
     else
     {
-        values[ GVAL_RES_COLD ] = 0;    /* res_cold */
-
+        resists.cold = 0;
         if (one_chance_in(10))
-            values[ GVAL_RES_COLD ] = -1;
+            resists.cold = -1;
     }
 
     // demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
-    values[ GVAL_RES_ELEC ] = !one_chance_in(3);
+    resists.elec = one_chance_in(3);
 
     // HTH damage:
-    values[ GVAL_DAMAGE ] = 20 + roll_dice( 2, 20 );
+    damage = 20 + roll_dice( 2, 20 );
 
     // special attack type (uses weapon brand code):
-    values[ GVAL_BRAND ] = SPWPN_NORMAL;
+    brand = SPWPN_NORMAL;
 
     if (!one_chance_in(3))
     {
         do {
-            values[ GVAL_BRAND ] = random2(17);
+            brand = static_cast<brand_type>( random2(MAX_PAN_LORD_BRANDS) );
             /* some brands inappropriate (e.g. holy wrath) */
-        } while (values[ GVAL_BRAND ] == SPWPN_HOLY_WRATH 
-                 || (values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
+        } while (brand == SPWPN_HOLY_WRATH 
+                 || (brand == SPWPN_ORC_SLAYING
                      && you.mons_species() != MONS_ORC)
-                 || (values[ GVAL_BRAND ] == SPWPN_DRAGON_SLAYING
+                 || (brand == SPWPN_DRAGON_SLAYING
                      && you.mons_species() != MONS_DRACONIAN)
-                 || values[ GVAL_BRAND ] == SPWPN_PROTECTION 
-                 || values[ GVAL_BRAND ] == SPWPN_FLAME 
-                 || values[ GVAL_BRAND ] == SPWPN_FROST);
+                 || brand == SPWPN_PROTECTION 
+                 || brand == SPWPN_FLAME 
+                 || brand == SPWPN_FROST);
     }
 
     // is demon a spellcaster?
     // upped from one_chance_in(3)... spellcasters are more interesting
     // and I expect named demons to typically have a trick or two -- bwr
-    values[GVAL_DEMONLORD_SPELLCASTER] = !one_chance_in(10);
+    spellcaster = !one_chance_in(10);
 
-    // does demon fly? (0 = no, 1 = fly, 2 = levitate)
-    values[GVAL_DEMONLORD_FLY] = (one_chance_in(3) ? 0 : 
-                                  one_chance_in(5) ? 2 : 1);
-
-    // vacant <ghost best skill level>:
-    values[GVAL_DEMONLORD_UNUSED] = 0;
-
+    // does demon fly?
+    fly = (one_chance_in(3)? FL_NONE :
+           one_chance_in(5)? FL_LEVITATE : FL_FLY);
+    
     // hit dice:
-    values[GVAL_DEMONLORD_HIT_DICE] = 10 + roll_dice(2, 10);
+    xl = 10 + roll_dice(2, 10);
 
     // does demon cycle colours?
-    values[GVAL_DEMONLORD_CYCLE_COLOUR] = (one_chance_in(10) ? 1 : 0);
+    cycle_colours = one_chance_in(10);
 
-    for (int i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
-        values[i] = SPELL_NO_SPELL;
+    spells.init(SPELL_NO_SPELL);
 
     /* This bit uses the list of player spells to find appropriate spells
        for the demon, then converts those spells to the monster spell indices.
        Some special monster-only spells are at the end. */
-    if (values[ GVAL_DEMONLORD_SPELLCASTER ] == 1)
+    if (spellcaster)
     {       
         if (coinflip())
-            values[GVAL_SPELL_1] = RANDOM_ELEMENT(search_order_conj);
+            spells[0] = RANDOM_ELEMENT(search_order_conj);
 
         // Might duplicate the first spell, but that isn't a problem.
         if (coinflip())
-            values[GVAL_SPELL_2] = RANDOM_ELEMENT(search_order_conj);
+            spells[1] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
-            values[GVAL_SPELL_3] = RANDOM_ELEMENT(search_order_third);
+            spells[2] = RANDOM_ELEMENT(search_order_third);
 
         if (coinflip())
         {
-            values[GVAL_SPELL_4] = RANDOM_ELEMENT(search_order_misc);
-            if ( values[GVAL_SPELL_4] == SPELL_DIG )
-                values[GVAL_SPELL_4] = SPELL_NO_SPELL;
+            spells[3] = RANDOM_ELEMENT(search_order_misc);
+            if ( spells[3] == SPELL_DIG )
+                spells[3] = SPELL_NO_SPELL;
         } 
 
         if (coinflip())
-            values[GVAL_SPELL_5] = RANDOM_ELEMENT(search_order_misc);
-
+            spells[4] = RANDOM_ELEMENT(search_order_misc);
 
         if (coinflip())
-            values[ GVAL_SPELL_6 ] = SPELL_BLINK;
+            spells[5] = SPELL_BLINK;
         if (coinflip())
-            values[ GVAL_SPELL_6 ] = SPELL_TELEPORT_SELF;
+            spells[5] = SPELL_TELEPORT_SELF;
 
         /* Converts the player spell indices to monster spell ones */
-        for (int i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
-            values[i] = translate_spell( values[i] );
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            spells[i] = translate_spell( spells[i] );
 
         /* give demon a chance for some monster-only spells: */
         /* and demon-summoning should be fairly common: */
         if (one_chance_in(25))
-            values[GVAL_SPELL_1] = SPELL_HELLFIRE_BURST;
+            spells[0] = SPELL_HELLFIRE_BURST;
         if (one_chance_in(25))
-            values[GVAL_SPELL_1] = SPELL_METAL_SPLINTERS;
+            spells[0] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))
-            values[GVAL_SPELL_1] = SPELL_ENERGY_BOLT;  /* eye of devas */
+            spells[0] = SPELL_ENERGY_BOLT;  /* eye of devas */
 
         if (one_chance_in(25))
-            values[GVAL_SPELL_2] = SPELL_STEAM_BALL;
+            spells[1] = SPELL_STEAM_BALL;
         if (one_chance_in(25))
-            values[GVAL_SPELL_2] = SPELL_ISKENDERUNS_MYSTIC_BLAST;
+            spells[1] = SPELL_ISKENDERUNS_MYSTIC_BLAST;
         if (one_chance_in(25))
-            values[GVAL_SPELL_2] = SPELL_HELLFIRE;
+            spells[1] = SPELL_HELLFIRE;
 
         if (one_chance_in(25))
-            values[GVAL_SPELL_3] = SPELL_SMITING;
+            spells[2] = SPELL_SMITING;
         if (one_chance_in(25))
-            values[GVAL_SPELL_3] = SPELL_HELLFIRE_BURST;
+            spells[2] = SPELL_HELLFIRE_BURST;
         if (one_chance_in(12))
-            values[GVAL_SPELL_3] = SPELL_SUMMON_GREATER_DEMON;
+            spells[2] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(12))
-            values[GVAL_SPELL_3] = SPELL_SUMMON_DEMON;
+            spells[2] = SPELL_SUMMON_DEMON;
 
         if (one_chance_in(20))
-            values[GVAL_SPELL_4] = SPELL_SUMMON_GREATER_DEMON;
+            spells[3] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))
-            values[GVAL_SPELL_4] = SPELL_SUMMON_DEMON;
+            spells[3] = SPELL_SUMMON_DEMON;
 
         /* at least they can summon demons */
-        if (values[GVAL_SPELL_4] == SPELL_NO_SPELL)
-            values[GVAL_SPELL_4] = SPELL_SUMMON_DEMON;
+        if (spells[3] == SPELL_NO_SPELL)
+            spells[3] = SPELL_SUMMON_DEMON;
 
         if (one_chance_in(15))
-            values[GVAL_SPELL_5] = SPELL_DIG;
+            spells[4] = SPELL_DIG;
     }
 }
 
 void ghost_demon::init_player_ghost()
 {
     name = you.your_name;
-    values[ GVAL_MAX_HP ]    = ((you.hp_max >= 400) ? 400 : you.hp_max);
-    values[ GVAL_EV ]        = player_evasion();
-    values[ GVAL_AC ]        = player_AC();
+    max_hp = ((you.hp_max >= 400) ? 400 : you.hp_max);
+    ev     = player_evasion();
+    ac     = player_AC();
 
-    if (values[GVAL_EV] > 40)
-        values[GVAL_EV] = 40;
-    
-    values[ GVAL_SEE_INVIS ] = player_see_invis();
-    values[ GVAL_RES_FIRE ]  = player_res_fire();
-    values[ GVAL_RES_COLD ]  = player_res_cold();
-    values[ GVAL_RES_ELEC ]  = player_res_electricity();
-    values[ GVAL_SPEED ]     = player_ghost_base_movement_speed();
+    if (ev > 60)
+        ev = 60;
+
+    see_invis = player_see_invis();
+    resists.fire = player_res_fire();
+    resists.cold = player_res_cold();
+    resists.elec = player_res_electricity();
+    speed = player_ghost_base_movement_speed();
 
     int d = 4;
-    int e = 0;
+    int e = SPWPN_NORMAL;
     const int wpn = you.equip[EQ_WEAPON];
 
     if (wpn != -1)
@@ -320,19 +330,18 @@ void ghost_demon::init_player_ghost()
     if (d > 50)
         d = 50;
 
-    values[ GVAL_DAMAGE ] = d;
-    values[ GVAL_BRAND ]  = e;
-    values[ GVAL_SPECIES ] = you.species;
-    values[ GVAL_BEST_SKILL ] = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
-    values[ GVAL_SKILL_LEVEL ] =
-        you.skills[best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99)];
-    values[ GVAL_EXP_LEVEL ] = you.experience_level;
-    values[ GVAL_CLASS ] = you.char_class;
+    damage = d;
+    brand  = static_cast<brand_type>( e );
+    species = you.species;
+    best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
+    best_skill_level = you.skills[best_skill];
+    xl = you.experience_level;
+    job = you.char_class;
 
     add_spells();
 }
 
-static int search_first_list(int ignore_spell)
+static spell_type search_first_list(int ignore_spell)
 {
     for (unsigned i = 0;
          i < sizeof(search_order_conj) / sizeof(*search_order_conj); i++)
@@ -350,7 +359,7 @@ static int search_first_list(int ignore_spell)
     return SPELL_NO_SPELL;
 }                               // end search_first_list()
 
-static int search_second_list(int ignore_spell)
+static spell_type search_second_list(int ignore_spell)
 {
     for (unsigned i = 0;
          i < sizeof(search_order_third) / sizeof(*search_order_third); i++)
@@ -368,7 +377,7 @@ static int search_second_list(int ignore_spell)
     return SPELL_NO_SPELL;
 }                               // end search_second_list()
 
-static int search_third_list(int ignore_spell)
+static spell_type search_third_list(int ignore_spell)
 {
     for (unsigned i = 0;
          i < sizeof(search_order_misc) / sizeof(*search_order_misc); i++)
@@ -394,44 +403,43 @@ void ghost_demon::add_spells( )
 {
     int i = 0;
 
-    for (i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
-        values[i] = SPELL_NO_SPELL;
+    spells.init(SPELL_NO_SPELL);
 
-    values[ GVAL_SPELL_1 ] = search_first_list(SPELL_NO_SPELL);
-    values[ GVAL_SPELL_2 ] = search_first_list(values[GVAL_SPELL_1]);
-    values[ GVAL_SPELL_3 ] = search_second_list(SPELL_NO_SPELL);
-    values[ GVAL_SPELL_4 ] = search_third_list(SPELL_DIG);
+    spells[ 0 ] = search_first_list(SPELL_NO_SPELL);
+    spells[ 1 ] = search_first_list(spells[0]);
+    spells[ 2 ] = search_second_list(SPELL_NO_SPELL);
+    spells[ 3 ] = search_third_list(SPELL_DIG);
 
-    if (values[ GVAL_SPELL_4 ] == SPELL_NO_SPELL)
-        values[ GVAL_SPELL_4 ] = search_first_list(SPELL_NO_SPELL);
+    if (spells[ 3 ] == SPELL_NO_SPELL)
+        spells[ 3 ] = search_first_list(SPELL_NO_SPELL);
 
-    values[ GVAL_SPELL_5 ] = search_third_list(values[GVAL_SPELL_4]);
+    spells[ 4 ] = search_third_list(spells[3]);
 
-    if (values[ GVAL_SPELL_5 ] == SPELL_NO_SPELL)
-        values[ GVAL_SPELL_5 ] = search_first_list(values[GVAL_SPELL_4]);
+    if (spells[ 4 ] == SPELL_NO_SPELL)
+        spells[ 4 ] = search_first_list(spells[3]);
 
     if (player_has_spell( SPELL_DIG ))
-        values[ GVAL_SPELL_5 ] = SPELL_DIG;
+        spells[ 4 ] = SPELL_DIG;
 
     /* Looks for blink/tport for emergency slot */
     if (player_has_spell( SPELL_CONTROLLED_BLINK ) 
         || player_has_spell( SPELL_BLINK ))
     {
-        values[ GVAL_SPELL_6 ] = SPELL_CONTROLLED_BLINK;
+        spells[ 5 ] = SPELL_CONTROLLED_BLINK;
     }
 
     if (player_has_spell( SPELL_TELEPORT_SELF ))
-        values[ GVAL_SPELL_6 ] = SPELL_TELEPORT_SELF;
+        spells[ 5 ] = SPELL_TELEPORT_SELF;
 
-    for (i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
-        values[i] = translate_spell( values[i] );
+    for (i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        spells[i] = translate_spell( spells[i] );
 }                               // end add_spells()
 
 /*
    When passed the number for a player spell, returns the equivalent monster
    spell. Returns SPELL_NO_SPELL on failure (no equiv).
  */
-int ghost_demon::translate_spell(int spel) const
+spell_type ghost_demon::translate_spell(spell_type spel) const
 {
     switch (spel)
     {

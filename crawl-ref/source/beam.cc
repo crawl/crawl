@@ -39,6 +39,7 @@
 #include "delay.h"
 #include "effects.h"
 #include "enum.h"
+#include "fight.h"
 #include "item_use.h"
 #include "it_use2.h"
 #include "items.h"
@@ -1591,28 +1592,28 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     // if we're not doing flavored effects, must be preliminary
     // damage check only;  do not print messages or apply any side
     // effects!
-    int resist;
+    int resist = 0;
+    int original = hurted;
 
     switch (pbolt.flavour)
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        resist = mons_res_fire(monster);
-        if (resist > 1)
+        hurted = resist_adjust_damage(monster,
+                                      monster->res_fire(),
+                                      hurted,
+                                      true);
+        if (!hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
-
-            hurted = 0;
         }
-        else if (resist == 1)
+        else if (original > hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " resists.");
-
-            hurted /= 3;
         }
-        else if (resist < 0)
+        else if (original < hurted)
         {
             if (mons_is_icy(monster))
             {
@@ -1624,75 +1625,70 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " is burned terribly!");
             }
-
-            hurted *= 15;
-            hurted /= 10;
         }
         break;
 
-
     case BEAM_COLD:
-        resist = mons_res_cold(monster);
-        if (resist > 1)
+        hurted = resist_adjust_damage(monster, monster->res_cold(),
+                                      hurted, true);
+        if (!hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
-
-            hurted = 0;
         }
-        else if (resist == 1)
+        else if (original > hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " resists.");
-
-            hurted /= 3;
         }
-        else if (resist < 0)
+        else if (original < hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " is frozen!");
-
-            hurted *= 15;
-            hurted /= 10;
         }
         break;
 
     case BEAM_ELECTRICITY:
-        if (mons_res_elec(monster) > 0)
+        hurted = resist_adjust_damage(monster, monster->res_elec(),
+                                      hurted, true);
+        if (!hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
-
-            hurted = 0;
         }
         break;
 
     case BEAM_ACID:
-        if (mons_res_acid(monster))
+        hurted = resist_adjust_damage(monster, mons_res_acid(monster),
+                                      hurted, true);
+        if (!hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
-
-            hurted = 0;
         }
         break;
 
     case BEAM_POISON:
-        if (mons_res_poison(monster) > 0)
+    {
+        int res = mons_res_poison(monster);
+        hurted = resist_adjust_damage(monster, res, hurted, true);
+        if (!hurted)
         {
             if (doFlavouredEffects)
                 simple_monster_message( monster, " appears unharmed." );
-
-            hurted = 0;
         }
-        else if (doFlavouredEffects && !one_chance_in(3))
+        else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
         {
             poison_monster( monster, whose_kill(pbolt) );
         }
         break;
+    }
 
     case BEAM_POISON_ARROW:
-        if (mons_res_poison(monster) > 0)
+        hurted = resist_adjust_damage(monster,
+                                      std::min(mons_res_poison(monster), 1),
+                                      hurted);
+        if (hurted < original)
         {
             if (doFlavouredEffects)
             {
@@ -1703,8 +1699,6 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                 if (mons_has_lifeforce(monster))
                     poison_monster( monster, whose_kill(pbolt), 2, true );
             }
-
-            hurted /= 2;
         }
         else if (doFlavouredEffects)
         {
@@ -1730,7 +1724,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
             pbolt.obvious_effect = true;
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_NECROMANCY, 2 + random2(3), pbolt.effect_known);
+                did_god_conduct(DID_NECROMANCY, 2 + random2(3),
+                                pbolt.effect_known);
 
             if (one_chance_in(5))
             {
@@ -2237,12 +2232,12 @@ void sticky_flame_monster( int mn, kill_category who, int levels )
     if (!monster->alive())
         return;
 
-    if (mons_res_fire(monster) > 0)
+    if (mons_res_sticky_flame(monster))
         return;
 
     if (monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who)))
         simple_monster_message(monster, " is covered in liquid fire!");
-}                               // end sticky_flame_monster
+}
 
 /*
  * Used by monsters in "planning" which spell to cast. Fires off a "tracer"

@@ -26,6 +26,7 @@
 #include "database.h"
 #include "debug.h"
 #include "fight.h"
+#include "ghost.h"
 #include "insult.h"
 #include "itemname.h"
 #include "message.h"
@@ -127,7 +128,7 @@ static std::string player_ghost_speak_str(const monsters *monster,
                                      const std::vector<std::string> prefixes)
 {
     const ghost_demon &ghost = *(monster->ghost);
-    std::string ghost_class = get_class_name(ghost.values[GVAL_CLASS]);
+    std::string ghost_class = get_class_name(ghost.job);
 
     std::string prefix = "";
     for (int i = 0, size = prefixes.size(); i < size; i++)

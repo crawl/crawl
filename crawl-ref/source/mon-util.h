@@ -201,7 +201,11 @@ enum mon_resist_flags
 
     MR_VUL_PIERCE        = (1<<14),
     MR_VUL_SLICE         = (1<<15),
-    MR_VUL_BLUDGEON      = (1<<16)
+    MR_VUL_BLUDGEON      = (1<<16),
+
+    // immune to stickiness of sticky flame.
+    MR_RES_STICKY_FLAME  = (1 << 17),
+    MR_RES_STEAM         = (1 << 18)
 };
 
 enum shout_type
@@ -275,6 +279,37 @@ struct mon_energy_usage
     char pickup_percent;
 };
 
+struct mon_resist_def
+{
+    // All values are actually saved as single-bytes, so practical
+    // range is -128 - 127, and the game only distinguishes values in
+    // the range -1 to 3.
+    
+    short elec;
+    short poison;
+    short fire;
+    short steam;
+    short cold;
+    short hellfire;
+    short asphyx;
+    short acid;
+
+    bool sticky_flame;
+
+    // Physical damage resists (currently unused)
+    short pierce;
+    short slice;
+    short bludgeon;
+
+    mon_resist_def();
+    mon_resist_def(int flags, short level = 1);
+
+    mon_resist_def operator | (const mon_resist_def &other) const;
+    const mon_resist_def &operator |= (const mon_resist_def &other);
+};
+
+typedef mon_resist_def mrd;
+
 struct monsterentry
 {
     short mc;            // monster number
@@ -283,7 +318,7 @@ struct monsterentry
     const char *name;
 
     unsigned long bitfields;
-    unsigned long resists;
+    mon_resist_def resists;
 
     short weight;
     // [Obsolete] Experience used to be calculated like this:
@@ -446,35 +481,18 @@ bool mons_is_summoned(const monsters *m);
  * *********************************************************************** */
 mon_intel_type mons_intel(int mc);
 
-habitat_type mons_habitat(int mc);
+// Use mons_habitat(const monster *) wherever possible since the other
+// variant does not handle zombies correctly.
+habitat_type mons_habitat(const monsters *m);
+habitat_type mons_habitat_by_type(int mc);
 
 bool intelligent_ally(const monsters *mon);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - fight - monstuff
- * *********************************************************************** */
+bool mons_res_sticky_flame( const monsters *mon );
 int mons_res_cold( const monsters *mon );
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - fight - spells4
- * *********************************************************************** */
 int mons_res_elec( const monsters *mon );
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - fight - monstuff
- * *********************************************************************** */
 int mons_res_fire( const monsters *mon );
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - monstuff - spells4
- * *********************************************************************** */
+int mons_res_steam( const monsters *mon );
 int mons_res_poison( const monsters *mon );
 int mons_res_acid( const monsters *mon );
 int mons_res_negative_energy( const monsters *mon );
@@ -509,7 +527,8 @@ int mons_speed(int mclass);
  * called from: dungeon - mon-util - spells2
  * *********************************************************************** */
 int mons_zombie_size(int mc);
-
+int mons_zombie_base(const monsters *monster);
+bool mons_is_zombified(const monsters *monster);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

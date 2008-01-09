@@ -180,7 +180,7 @@ bool monster_habitable_grid(int monster_class,
                             dungeon_feature_type actual_grid,
                             int flies = -1,
                             bool paralysed = false);
-bool monster_can_submerge(int monster_class, int grid);
+bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid);
 coord_def find_newmons_square(int mons_class, int x, int y);
 
 void spawn_random_monsters();

@@ -1689,6 +1689,18 @@ bool recharge_wand(void)
     return (true);
 }                               // end recharge_wand()
 
+// Sets foe target of friendly monsters.
+static void set_friendly_foes()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *mon(&menv[i]);
+        if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
+            continue;
+        mon->foe = you.pet_target;
+    }
+}
+
 void yell(bool force)
 {
     bool targ_prev = false;
@@ -1723,10 +1735,12 @@ void yell(bool force)
         if (force)
         {
             if (shout_verb == "__NONE" || you.paralysed())
-                mprf("You feel a strong urge to %s, but you are unable to make a sound!",
+                mprf("You feel a strong urge to %s, but "
+                     "you are unable to make a sound!",
                      shout_verb == "__NONE" ? "scream" : shout_verb.c_str());
             else
-                mprf("You feel a %s rip itself from your throat, but you make no sound!",
+                mprf("You feel a %s rip itself from your throat, "
+                     "but you make no sound!",
                      shout_verb.c_str());
         }
         else
@@ -1751,9 +1765,9 @@ void yell(bool force)
 
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
-            struct monsters *target = &menv[you.prev_targ];
-
-            if (mons_near(target) && player_monster_visible(target))
+            monsters *target = &menv[you.prev_targ];
+            if (target->alive() && mons_near(target)
+                && player_monster_visible(target))
             {
                 mpr(" p - Order allies to attack your previous target");
                 targ_prev = true;
@@ -1818,7 +1832,11 @@ void yell(bool force)
         return;
     }
 
-    you.pet_target = mons_targd;
+    if (mons_targd != MHITNOT)
+    {
+        you.pet_target = mons_targd;
+        set_friendly_foes();
+    }
 
     noisy( 10, you.x_pos, you.y_pos );
     mpr("Attack!");
@@ -2452,7 +2470,7 @@ void update_level( double elapsedTime )
             continue;
 
         // Don't move non-land or stationary monsters around
-        if (mons_habitat( mon->type ) != HT_LAND
+        if (mons_habitat( mon ) != HT_LAND
             || mons_is_stationary( mon ))
         {
             continue;

@@ -20,14 +20,12 @@ TAGS: allow_dup
 CHANCE: 20
 MAP
 cccccccccc
-cccccccccc
 cBcBcBcBcc
 G.c.c.c.Bc
 @.......Bc
 @.......Bc
 G.c.c.c.Bc
 cBcBcBcBcc
-cccccccccc
 cccccccccc
 ENDMAP
 
@@ -124,15 +122,15 @@ TAGS: no_monster_gen
 TAGS: no_monster_gen no_pool_fixup
 : end
 MAP
-  .........   
- ...wwwww...  
-..wwwwwwwww.. 
-.wwwwwwwwwww..
-wwwwwwwwwwwww.
-wwwwwwCwwwwww.
-wwwwwwwwwwwww.
-.wwwwwwwwwww..
-..wwwwwwwww..
+   .........   
+  ...wwwww...  
+ ..wwwwwwwww.. 
+..wwwwwwwwwww..
+.wwwwwwwwwwwww.
+.wwwwwwCwwwwww.
+.wwwwwwwwwwwww.
+..wwwwwwwwwww..
+ .wwwwwwwww..
  ...wwwww... 
    ........  
 ENDMAP
@@ -228,14 +226,19 @@ MAP
 ENDMAP
 
 NAME: lemuel_statue_altar
-DEPTH: 2-18, !Lair, !Hive, !Slime
+
+# Increased depth from 2-18 because getting a hostile statue can
+# instakill a low-level character.
+
+DEPTH: 10-18, !Lair, !Hive, !Slime
+
 MAP
 .....
 .cFc.
 .c.c.
 .c.c.
 .c.c.
-.c.c.
+.c>c.
 .cCc.
 .ccc.
 .....
@@ -249,7 +252,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxx
 ...................x
 c...c...c...c...c..x
-..................Cx
+@.................Cx
 c...c...c...c...c..x
 ...................x
 xxxxxxxxxxxxxxxxxxxx
@@ -281,20 +284,25 @@ ENDMAP
 ######################################
 
 NAME: lemuel_angel_altar
-DEPTH: 2-18, !Lair, !Orc, !Hive, !Slime
+
+# Moved deeper since being teleported next to the Angel will be a
+# quick death at shallow levels.
+
+DEPTH: 9-18, !Lair, !Orc, !Hive, !Slime
 MONS: angel
 KFEAT: C = altar_elyvilon / altar_zin / altar_shining_one
 MAP
    .....
   ..xmx..  
- ..xx.xx.. 
+ ..xx>xx.. 
 ..xxx.xxx..
 .xxxx1xxxx.
-.m...C...m.
+.m>..C..>m.
 .xxxx.xxxx.
 ..xxx.xxx..
- ..xx.xx.. 
-  ..xmx..  
+ ..xx>xx.. 
+  ..xmx..
+   .....
 ENDMAP
 
 NAME: lemuel_hellish_altar
@@ -340,13 +348,13 @@ ENDMAP
 
 NAME: lemuel_blue_sif_altar
 DEPTH: 2-18, !Lair, !Hive, !Slime, !Orc
-TAGS: no_monster_gen
+TAGS: no_monster_gen mini_float
 COLOUR: . = blue
 KFEAT: C = altar_sif_muna
 MAP
 xxxxxxxxxxxxxx
 ...........xxx
-...........+Cx
+@..........+Cx
 ...........xxx
 xxxxxxxxxxxxxx
 ENDMAP
@@ -361,7 +369,7 @@ MAP
 xxxxxxxxxxxxxxxx
 xxxx11111111xxxx
 xxxxwwwwwwwwxxxx
-..............Cx
+@.............Cx
 xxxxwwwwwwwwxxxx
 xxxx11111111xxxx
 xxxxxxxxxxxxxxxx

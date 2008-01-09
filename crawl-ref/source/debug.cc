@@ -48,6 +48,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "ghost.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #include "initfile.h"
@@ -469,7 +470,6 @@ void create_spec_monster_name(int x, int y)
         ghost_demon ghost;
 
         ghost.name = "John Doe";
-        ghost.values.init(0);
 
         char class_str[80];
         mpr( "Make player ghost which class? ", MSGCH_PROMPT );
@@ -485,7 +485,7 @@ void create_spec_monster_name(int x, int y)
             mpr("No such class, making it a Fighter.");
             class_id = JOB_FIGHTER;
         }
-        ghost.values[GVAL_CLASS] = class_id;
+        ghost.job = static_cast<job_type>(class_id);
 
         mon.set_ghost(ghost);
 
@@ -1412,7 +1412,7 @@ void stethoscope(int mwh)
 
     // print behaviour information
 
-    const habitat_type hab = mons_habitat( menv[i].type );
+    const habitat_type hab = mons_habitat( &menv[i] );
 
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)",
@@ -1453,8 +1453,8 @@ void stethoscope(int mwh)
         ASSERT(menv[i].ghost.get());
         const ghost_demon &ghost = *menv[i].ghost;
         mprf( MSGCH_DIAGNOSTICS,
-              "Ghost damage: %d; brand: %d", 
-              ghost.values[ GVAL_DAMAGE ], ghost.values[ GVAL_BRAND ] );
+              "Ghost damage: %d; brand: %d",
+              ghost.damage, ghost.brand );
     }
 }                               // end stethoscope()
 #endif
@@ -2295,14 +2295,14 @@ bool debug_add_mutation(void)
         else
             msg = "You are resistant to mutations, remove resistance?";
 
-        if (yesno(msg))
+        if (yesno(msg, true, 'n'))
         {
             you.mutation[MUT_MUTATION_RESISTANCE] = 0;
             crawl_state.cancel_cmd_repeat();
         }
     }
 
-    bool force = yesno("Force mutation to happen?");
+    bool force = yesno("Force mutation to happen?", true, 'n');
 
     if (you.mutation[MUT_MUTATION_RESISTANCE] == 3 && !force)
     {
@@ -3262,7 +3262,7 @@ static void debug_load_map_by_name(std::string name)
             std::string prompt = "Only match is '";
             prompt += matches[0];
             prompt += "', use that?";
-            if (!yesno(prompt.c_str()))
+            if (!yesno(prompt.c_str(), true, 'y'))
                 return;
 
             map = find_map_by_name(matches[0]);

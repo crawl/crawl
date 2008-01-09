@@ -1654,17 +1654,16 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     return (false);
 }
 
-int melee_attack::resist_adjust_damage(int res, int rawdamage)
+int resist_adjust_damage(actor *defender, int res, int rawdamage,
+                         bool ranged)
 {
+    if (defender->atype() == ACT_MONSTER && res >= 3)
+        return (0);
+    
     if (res > 0)
-    {
-        if (defender->atype() == ACT_MONSTER)
-            rawdamage = 0;
-        else
-            rawdamage /= 1 + res * res;
-    }
+        rawdamage /= 1 + res * res;
     else if (res < 0)
-        rawdamage *= 2;
+        rawdamage = rawdamage * (ranged? 15 : 20) / 10;
 
     if (rawdamage < 0)
         rawdamage = 0;
@@ -1676,7 +1675,8 @@ void melee_attack::calc_elemental_brand_damage(
     int res,
     const char *verb)
 {
-    special_damage = resist_adjust_damage(res, random2(damage_done) / 2 + 1);
+    special_damage =
+        resist_adjust_damage(defender, res, random2(damage_done) / 2 + 1);
 
     if (special_damage > 0 && verb && needs_message)
     {
@@ -2075,28 +2075,32 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_CONFUSE:
     {
-        // FIXME: Generalise.
-        if (defender->atype() != ACT_MONSTER || attacker->atype() != ACT_PLAYER)
-            break;
-        
         emit_nodmg_hit_message();
 
         // FIXME Currently Confusing Touch is the *only* way to get
         // here. Generalise.
         const int hdcheck =
             (defender->holiness() == MH_NATURAL? random2(30) : random2(22));
-        if (hdcheck >= def->hit_dice)
+        if (hdcheck >= defender->get_experience_level())
         {
             // declaring these just to pass to the enchant function
             bolt beam_temp;
-            beam_temp.thrower = KILL_YOU;
-            beam_temp.flavour = BEAM_CONFUSION;        
+            beam_temp.thrower =
+                attacker->atype() == ACT_PLAYER? KILL_YOU : KILL_MON;
+            beam_temp.flavour = BEAM_CONFUSION;
+            beam_temp.beam_source =
+                attacker->atype() == ACT_PLAYER? MHITYOU
+                : monster_index(atk);
             mons_ench_f2( def, beam_temp );
         }
-        you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5);
+
+        if (attacker->atype() == ACT_PLAYER)
+        {
+            you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5);
         
-        if (you.duration[DUR_CONFUSING_TOUCH] < 1)
-            you.duration[DUR_CONFUSING_TOUCH] = 1;
+            if (you.duration[DUR_CONFUSING_TOUCH] < 1)
+                you.duration[DUR_CONFUSING_TOUCH] = 1;
+        }
         break;
     }
     }
@@ -2231,7 +2235,6 @@ void melee_attack::player_apply_staff_damage()
         return;
 
     const int staff_cost = 2;
-    
     if (you.magic_points < staff_cost
         || random2(15) > you.skills[SK_EVOCATIONS])
     {
@@ -2244,10 +2247,10 @@ void melee_attack::player_apply_staff_damage()
         if (damage_done + you.skills[SK_AIR_MAGIC] <= random2(20))
             break;
 
-        if (mons_res_elec(def))
-            break;
-
-        special_damage = player_staff_damage(SK_AIR_MAGIC);
+        special_damage =
+            resist_adjust_damage(defender,
+                                 defender->res_elec(),
+                                 player_staff_damage(SK_AIR_MAGIC));
                 
         if (special_damage)
             special_damage_message =
@@ -2257,13 +2260,10 @@ void melee_attack::player_apply_staff_damage()
         break;
 
     case STAFF_COLD:
-        if (mons_res_cold(def) > 0)
-            break;
-
-        special_damage = player_staff_damage(SK_ICE_MAGIC);
-
-        if (mons_res_cold(def) < 0)
-            special_damage += player_staff_damage(SK_ICE_MAGIC);
+        special_damage =
+            resist_adjust_damage(defender,
+                                 defender->res_cold(),
+                                 player_staff_damage(SK_ICE_MAGIC));
 
         if (special_damage)
         {
@@ -2287,13 +2287,10 @@ void melee_attack::player_apply_staff_damage()
         break;
 
     case STAFF_FIRE:
-        if (mons_res_fire(def) > 0)
-            break;
-
-        special_damage = player_staff_damage(SK_FIRE_MAGIC);
-
-        if (mons_res_fire(def) < 0)
-            special_damage += player_staff_damage(SK_FIRE_MAGIC);
+        special_damage =
+            resist_adjust_damage(defender,
+                                 defender->res_fire(),
+                                 player_staff_damage(SK_FIRE_MAGIC));
 
         if (special_damage)
         {
@@ -2357,8 +2354,6 @@ void melee_attack::player_apply_staff_damage()
 
     if (special_damage > 0)
     {
-        dec_mp(staff_cost);
-
         if (!item_type_known(*weapon))
         {
             set_ident_flags( *weapon, ISFLAG_KNOW_TYPE );
@@ -3279,7 +3274,8 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             atk->hit_points = -10;
 
         special_damage =
-            resist_adjust_damage(defender->res_fire(),
+            resist_adjust_damage(defender,
+                                 defender->res_fire(),
                                  atk->hit_dice + random2(atk->hit_dice));
         if (needs_message && special_damage)
             mprf("%s %s engulfed in flames%s",
@@ -3292,7 +3288,8 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_COLD:
         special_damage =
-            resist_adjust_damage(defender->res_cold(),
+            resist_adjust_damage(defender,
+                                 defender->res_cold(),
                                  atk->hit_dice + random2( 2 * atk->hit_dice ));
         if (needs_message && special_damage)
             mprf("%s %s %s!",
@@ -3304,6 +3301,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_ELEC:
         special_damage =
             resist_adjust_damage(
+                defender,
                 defender->res_elec(),
                 atk->hit_dice + random2( atk->hit_dice / 2 ));
 

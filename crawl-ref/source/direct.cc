@@ -872,7 +872,7 @@ void direction(dist& moves, targeting_type restricts,
             }
             // Ask for confirmation if we're quitting for some odd reason
             else if ( moves.isValid || moves.isCancel ||
-                      yesno("Are you sure you want to fizzle?") )
+                      yesno("Are you sure you want to fizzle?", false, 'n') )
             {
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later)

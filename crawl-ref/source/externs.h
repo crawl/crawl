@@ -93,6 +93,8 @@ public:
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
 
+    virtual int       get_experience_level() const = 0;
+
     virtual bool can_pass_through(const dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(const int x, const int y) const = 0;
     virtual bool can_pass_through(const coord_def &c) const = 0;
@@ -107,6 +109,11 @@ public:
     virtual item_def *weapon(int which_attack = -1) = 0;
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq) = 0;
+    virtual const item_def *slot_item(equipment_type eq) const
+    {
+        return const_cast<actor*>(this)->slot_item(eq);
+    }
+    virtual bool has_equipped(equipment_type eq, int sub_type) const;
 
     virtual int hunger_level() const { return HS_ENGORGED; }
     virtual void make_hungry(int nutrition, bool silent = true)
@@ -175,6 +182,7 @@ public:
     
     virtual mon_holy_type holiness() const = 0;
     virtual int res_fire() const = 0;
+    virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
     virtual int res_poison() const = 0;
@@ -784,16 +792,16 @@ public:
     size_type transform_size(int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
-    const item_def *slot_item(equipment_type eq) const;
     item_def *slot_item(equipment_type eq);
 
     // actor
     int id() const;
+    int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
 
     god_type  deity() const;
     bool      alive() const;
-    
+
     coord_def pos() const;
     bool      swimming() const;
     bool      submerged() const;
@@ -849,6 +857,7 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
+    int res_steam() const;
     int res_cold() const;
     int res_elec() const;
     int res_poison() const;
@@ -984,6 +993,7 @@ class monsters : public actor
 public:
     monsters();
     monsters(const monsters &other);
+    ~monsters();
 
     monsters &operator = (const monsters &other);
 
@@ -1076,6 +1086,7 @@ public:
     
     // actor interface
     int id() const;
+    int       get_experience_level() const;    
     god_type  deity() const;
     bool      alive() const;
     coord_def pos() const;
@@ -1146,6 +1157,7 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
+    int res_steam() const;    
     int res_cold() const;
     int res_elec() const;
     int res_poison() const;
@@ -1378,34 +1390,6 @@ public:
 };
 
 extern struct crawl_environment env;
-
-struct ghost_demon
-{
-public:
-    std::string name;
-    FixedVector< short, NUM_GHOST_VALUES > values;
-
-public:
-    ghost_demon();
-    void reset();
-    void init_random_demon();
-    void init_player_ghost();
-
-public:
-    static std::vector<ghost_demon> find_ghosts();
-
-private:
-    static int n_extra_ghosts();
-    static void find_extra_ghosts(std::vector<ghost_demon> &ghosts, int n);
-    static void find_transiting_ghosts(std::vector<ghost_demon> &gs, int n);
-    static void announce_ghost(const ghost_demon &g);
-    
-private:
-    void add_spells();
-    int  translate_spell(int playerspell) const;
-};
-
-extern std::vector<ghost_demon> ghosts;
 
 struct message_filter
 {

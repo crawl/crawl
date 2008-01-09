@@ -923,11 +923,18 @@ static std::string morgue_name(time_t when_crawl_got_even)
 #endif // SHORT_FILE_NAMES
 }
 
-void end_game( struct scorefile_entry &se )
+void end_game( scorefile_entry &se )
 {
-    int i;
     bool dead = true;
 
+    if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
+    {
+        mpr("Char dump unsuccessful! Sorry about that.");
+        if (!crawl_state.seen_hups)
+            more();
+        clrscr();
+    }
+    
     if (se.death_type == KILLED_BY_LEAVING  ||
         se.death_type == KILLED_BY_QUITTING ||
         se.death_type == KILLED_BY_WINNING)
@@ -975,7 +982,7 @@ void end_game( struct scorefile_entry &se )
 
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
 
-    for ( i = 0; i < num_suffixes; ++i ) {
+    for (int i = 0; i < num_suffixes; ++i) {
         std::string tmpname = basename + suffixes[i];
         unlink( tmpname.c_str() );
     }
@@ -1000,10 +1007,10 @@ void end_game( struct scorefile_entry &se )
     if (!crawl_state.seen_hups)
         more();
 
-    for (i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; i++)
         set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
 
-    for (i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].base_type != 0)
         {
@@ -1015,14 +1022,6 @@ void end_game( struct scorefile_entry &se )
     invent( -1, true );
     textcolor( LIGHTGREY );
     clrscr();
-
-    if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
-    {
-        mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
-        clrscr();
-    }
 
     clrscr();
     cprintf( "Goodbye, %s.", you.your_name );

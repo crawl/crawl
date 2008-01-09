@@ -75,6 +75,7 @@
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
+#include "ghost.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "mapmark.h"
@@ -132,6 +133,13 @@ static void tag_read_ghost(tagHeader &th, char minorVersion);
 
 static void marshallGhost(tagHeader &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost( tagHeader &th );
+
+static void marshallResists(tagHeader &, const mon_resist_def &);
+static void unmarshallResists(tagHeader &, mon_resist_def &);
+
+static void marshallSpells(tagHeader &, const monster_spells &);
+static void unmarshallSpells(tagHeader &, monster_spells &);
+
 static void marshall_monster(tagHeader &th, const monsters &m);
 static void unmarshall_monster(tagHeader &th, monsters &m);
 
@@ -1757,9 +1765,7 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
         marshallShort(th, m.inv[j]);
 
-    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        marshallShort(th, m.spells[j]);
-
+    marshallSpells(th, m.spells);
     marshallByte(th, m.god);
 
     if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
@@ -2022,8 +2028,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
         m.inv[j] = unmarshallShort(th);
 
-    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        m.spells[j] = static_cast<spell_type>( unmarshallShort(th) );
+    unmarshallSpells(th, m.spells);
 
     m.god = (god_type) unmarshallByte(th);
 
@@ -2210,15 +2215,104 @@ static void tag_missing_level_tiles()
 
 // ------------------------------- ghost tags ---------------------------- //
 
+static void marshallResists(tagHeader &th, const mon_resist_def &res)
+{
+    marshallByte(th, res.elec);
+    marshallByte(th, res.poison);
+    marshallByte(th, res.fire);
+    marshallByte(th, res.steam);
+    marshallByte(th, res.cold);
+    marshallByte(th, res.hellfire);
+    marshallByte(th, res.asphyx);
+    marshallByte(th, res.acid);
+    marshallByte(th, res.sticky_flame);
+    marshallByte(th, res.pierce);
+    marshallByte(th, res.slice);
+    marshallByte(th, res.bludgeon);
+}
+
+static void unmarshallResists(tagHeader &th, mon_resist_def &res)
+{
+    res.elec = unmarshallByte(th);
+    res.poison = unmarshallByte(th);
+    res.fire = unmarshallByte(th);
+    res.steam = unmarshallByte(th);
+    res.cold = unmarshallByte(th);
+    res.hellfire = unmarshallByte(th);
+    res.asphyx = unmarshallByte(th);
+    res.acid = unmarshallByte(th);
+    res.sticky_flame = unmarshallByte(th);
+    res.pierce = unmarshallByte(th);
+    res.slice = unmarshallByte(th);
+    res.bludgeon = unmarshallByte(th);
+}
+
+static void marshallSpells(tagHeader &th, const monster_spells &spells)
+{
+    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        marshallShort(th, spells[j]);
+}
+
+static void unmarshallSpells(tagHeader &th, monster_spells &spells)
+{
+    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        spells[j] = static_cast<spell_type>( unmarshallShort(th) );
+}
+
 static void marshallGhost(tagHeader &th, const ghost_demon &ghost)
 {
     marshallString(th, ghost.name.c_str(), 20);
 
-    // how many ghost values?
-    marshallByte(th, NUM_GHOST_VALUES);
+    marshallShort(th, ghost.species);
+    marshallShort(th, ghost.job);
+    marshallShort(th, ghost.best_skill);
+    marshallShort(th, ghost.best_skill_level);
+    marshallShort(th, ghost.xl);
+    marshallShort(th, ghost.max_hp);
+    marshallShort(th, ghost.ev);
+    marshallShort(th, ghost.ac);
+    marshallShort(th, ghost.damage);
+    marshallShort(th, ghost.speed);
+    marshallByte(th, ghost.see_invis);
+    marshallShort(th, ghost.brand);
 
-    for (int i = 0; i < NUM_GHOST_VALUES; i++)
-        marshallShort( th, ghost.values[i] );
+    marshallResists(th, ghost.resists);
+
+    marshallByte(th, ghost.spellcaster);
+    marshallByte(th, ghost.cycle_colours);
+    marshallShort(th, ghost.fly);
+
+    marshallSpells(th, ghost.spells);
+}
+
+static ghost_demon unmarshallGhost( tagHeader &th )
+{
+    ghost_demon ghost;
+    
+    ghost.name = unmarshallString(th, 20);
+
+    ghost.species = static_cast<species_type>( unmarshallShort(th) );
+    ghost.job = static_cast<job_type>( unmarshallShort(th) );
+    ghost.best_skill = static_cast<skill_type>( unmarshallShort(th) );
+    ghost.best_skill_level = unmarshallShort(th);
+    ghost.xl = unmarshallShort(th);
+    ghost.max_hp = unmarshallShort(th);
+    ghost.ev = unmarshallShort(th);
+    ghost.ac = unmarshallShort(th);
+    ghost.damage = unmarshallShort(th);
+    ghost.speed = unmarshallShort(th);
+    ghost.see_invis = unmarshallByte(th);
+    ghost.brand = static_cast<brand_type>( unmarshallShort(th) );
+
+    unmarshallResists(th, ghost.resists);
+
+    ghost.spellcaster = unmarshallByte(th);
+    ghost.cycle_colours = unmarshallByte(th);
+    ghost.fly = static_cast<flight_type>( unmarshallShort(th) );
+
+    unmarshallSpells(th, ghost.spells);
+    
+    return (ghost);
 }
 
 static void tag_construct_ghost(tagHeader &th)
@@ -2228,24 +2322,6 @@ static void tag_construct_ghost(tagHeader &th)
 
     for (int i = 0, size = ghosts.size(); i < size; ++i)
         marshallGhost(th, ghosts[i]);
-}
-
-static ghost_demon unmarshallGhost( tagHeader &th )
-{
-    ghost_demon ghost;
-    
-    ghost.name = unmarshallString(th, 20);
-
-    // how many ghost values?
-    int count_c = unmarshallByte(th);
-
-    if (count_c > NUM_GHOST_VALUES)
-        count_c = NUM_GHOST_VALUES;
-    
-    for (int i = 0; i < count_c; i++)
-        ghost.values[i] = unmarshallShort(th);
-
-    return (ghost);
 }
 
 static void tag_read_ghost(tagHeader &th, char minorVersion)

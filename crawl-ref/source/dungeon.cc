@@ -3384,13 +3384,9 @@ static bool build_minivaults(int level_number, int force_vault,
                              bool building_level, bool clobber,
                              bool make_no_exits, const coord_def &where)
 {
-    // for some weird reason can't put a vault on level 1, because monster equip
-    // isn't generated.
     int altar_count = 0;
 
     FixedVector < object_class_type, 7 > acq_item_class;
-    // hack - passing chars through '...' promotes them to ints, which
-    // barfs under gcc in fixvec.h.  So don't.
     acq_item_class[0] = OBJ_WEAPONS;
     acq_item_class[1] = OBJ_ARMOUR;
     acq_item_class[2] = OBJ_WEAPONS;
@@ -4329,7 +4325,7 @@ bool dgn_place_monster(mons_spec &mspec,
             if (mons_is_unique(mid) && you.unique_creatures[mid])
                 return (false);
 
-            const habitat_type habitat = mons_habitat(mid);
+            const habitat_type habitat = mons_habitat_by_type(mid);
             if (habitat != HT_LAND)
                 grd[vx][vy] = habitat2grid(habitat);
         }

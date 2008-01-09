@@ -290,7 +290,10 @@ static int raw_m_getch()
     }
 #endif
     default:
-        return (c);
+        // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
+        // but the alternative is to explicitly check for -1 everywhere where
+        // we might otherwise spin in a tight keyboard input loop.
+        return (c == -1? ESCAPE : c);
     }
 }
 
@@ -301,7 +304,7 @@ int m_getch()
         c = raw_m_getch();
     while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
            && !crawl_state.mouse_enabled);
-
+    
     return (c);
 }
 

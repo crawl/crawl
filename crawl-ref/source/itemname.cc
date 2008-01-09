@@ -987,7 +987,7 @@ std::string item_def::name_aux( description_level_type desc,
     const bool know_brand =
         !basename && !qualname && !dbname
         && !testbits(ignore_flags, ISFLAG_KNOW_TYPE)
-        && (ident || item_ident(*this, ISFLAG_KNOW_TYPE));
+        && (ident || item_type_known(*this));
 
     const bool know_ego   = know_brand;
 
@@ -1068,9 +1068,9 @@ std::string item_def::name_aux( description_level_type desc,
             buff << racial_description_string(*this, terse);
 
         if (know_brand && !terse &&
-                (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
+            (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
         {
-                buff << "vampiric ";
+            buff << "vampiric ";
         }
         buff << item_base_name(*this);
             
@@ -1649,8 +1649,16 @@ bool item_type_known( const item_def& item )
 
     // Artefacts have different descriptions from other items,
     // so we can't use general item knowledge for them.
-    if ( is_artefact(item) )
+    if (is_artefact(item))
         return false;
+
+    // Poisoned missiles are always identified.
+    if (item.base_type == OBJ_MISSILES)
+    {
+        int ammo_brand = get_ammo_brand(item);
+        if (ammo_brand == SPMSL_POISONED || ammo_brand == SPMSL_CURARE)
+            return (true);
+    }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if ( idt != NUM_IDTYPE && item.sub_type < 50  )
