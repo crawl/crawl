@@ -981,7 +981,11 @@ void cast_poison_ammo(void)
     {
         mprf("%s %s covered in a thin film of poison.", old_desc,
              (you.inv[ammo].quantity == 1) ? "is" : "are");
-        you.wield_change = true;
+             
+        if (ammo == you.equip[EQ_WEAPON])
+            you.wield_change = true;
+        else if (ammo == you.quiver)
+            you.quiver_change = true;
     }
     else
     {

@@ -469,8 +469,10 @@ void do_curse_item( item_def &item )
         }
         xom_is_stimulated(amusement);
     }
-
+    
     item.flags |= ISFLAG_CURSED;
+    
+    you.quiver_change = true; // potentially affected
 }
 
 void do_uncurse_item( item_def &item )

@@ -603,6 +603,7 @@ public:
   char hunger_state;
 
   bool wield_change;          // redraw weapon
+  bool quiver_change;         // redraw quiver
   bool received_weapon_warning;
 
   unsigned long redraw_status_flags;

@@ -52,7 +52,6 @@ bool remove_equipment(std::set<equipment_type> removed)
     {
         unwield_item();
         canned_msg(MSG_EMPTY_HANDED);
-        you.wield_change = true;
     }
 
     // Remove items in order (std::set is a sorted container)

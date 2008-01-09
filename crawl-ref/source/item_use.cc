@@ -288,6 +288,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     you.time_taken /= 2;
 
     you.wield_change = true;
+    you.quiver_change = true;
     you.turn_is_over = true;
 
     return (true);
@@ -1459,7 +1460,10 @@ static bool choose_fire_target(dist &target, int &item)
     {
         item = beh.item;
         if (you.inv[beh.item].quantity > 1)
+        {
             you.quiver = beh.item;
+            you.quiver_change = true;
+        }
     }
 
     return (true);

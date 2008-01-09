@@ -823,6 +823,7 @@ static void handle_wizard_command( void )
             }
         }
         you.wield_change = true;
+        you.quiver_change = true;
         break;
 
     case 'I':
@@ -838,6 +839,7 @@ static void handle_wizard_command( void )
             }
         }
         you.wield_change = true;
+        you.quiver_change = true;
 
         // Forget things that nearby monsters are carrying, as well
         // (for use with the "give monster an item" wizard targetting
@@ -3669,6 +3671,7 @@ static bool initialise(void)
     you.redraw_experience = true;
     you.redraw_gold = true;
     you.wield_change = true;
+    you.quiver_change = true;
 
     you.start_time = time( NULL );      // start timer on session
 

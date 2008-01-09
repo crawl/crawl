@@ -240,6 +240,9 @@ bool dec_inv_item_quantity( int obj, int amount )
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
+    if (you.quiver == obj)
+        you.quiver_change = true;
+
     if (you.inv[obj].quantity <= amount)
     {
         for (int i = 0; i < NUM_EQUIP; i++) 
@@ -308,6 +311,9 @@ void inc_inv_item_quantity( int obj, int amount )
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
+        
+    if (you.quiver == obj)
+        you.quiver_change = true;
 
     you.inv[obj].quantity += amount;
     burden_change();
@@ -1559,6 +1565,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
     item.quantity = quant_got;
     dec_mitm_item_quantity( obj, quant_got );
+    you.quiver_change = true;
     burden_change();
 
     if (!quiet)

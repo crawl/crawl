@@ -31,6 +31,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "menu.h"
 #include "message.h"
 #include "ouch.h"
@@ -392,6 +393,32 @@ void print_stats(void)
         you.wield_change = false;
     }
 
+    if (you.quiver_change)
+    {
+        gotoxy(1, 14, GOTO_STAT);
+        clear_to_end_of_line();
+        gotoxy(1, 14, GOTO_STAT);
+
+        you.quiver = get_fire_item_index();
+
+        if (you.quiver == ENDOFPACK)
+            cprintf("Nothing quivered");
+        else
+        {
+            const item_def& quiver = you.inv[you.quiver];
+            textcolor(quiver.colour);
+
+            const std::string prefix = menu_colour_item_prefix(quiver);
+            const int prefcol = menu_colour(quiver.name(DESC_INVENTORY), prefix);
+            if (prefcol != -1)
+                textcolor(prefcol);
+
+            cprintf("%s", quiver.name(DESC_INVENTORY, true).substr(0,38).c_str());
+            textcolor(LIGHTGREY);
+        }
+        you.quiver_change = false;
+    }
+    
     // The colour scheme for these flags is currently:
     //
     // - yellow, "orange", red      for bad conditions
@@ -402,9 +429,9 @@ void print_stats(void)
 
     if (you.redraw_status_flags & REDRAW_LINE_1_MASK)
     {
-        gotoxy(1, 14, GOTO_STAT);
+        gotoxy(1, 15, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 14, GOTO_STAT);
+        gotoxy(1, 15, GOTO_STAT);
 
         switch (you.burden_state)
         {

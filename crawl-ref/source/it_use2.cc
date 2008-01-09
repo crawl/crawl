@@ -371,6 +371,7 @@ bool unwield_item(bool showMsgs)
     you.equip[EQ_WEAPON] = -1;
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
+    you.quiver_change = true;
 
     item_def &item(you.inv[unw]);
 
@@ -492,7 +493,7 @@ bool unwield_item(bool showMsgs)
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
     {
         calc_mp();
-        mpr("You fell your mana capacity decrease.");
+        mpr("You feel your mana capacity decrease.");
     }
 
     return (true);
