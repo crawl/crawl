@@ -2701,7 +2701,10 @@ static bool beogh_followers_abandon_you()
     int num_followers = 0;
 
     if (you.religion != GOD_BEOGH)
+    {
         apply_to_all_dungeons(orcish_followers_on_level_abandon_you);
+        reconvert = true;
+    }
     else
     {
         int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
