@@ -500,9 +500,9 @@ void print_stats(void)
 
     if (you.redraw_status_flags & REDRAW_LINE_2_MASK)
     {
-        gotoxy(1, 15, GOTO_STAT);
+        gotoxy(1, 16, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 15, GOTO_STAT);
+        gotoxy(1, 16, GOTO_STAT);
         // Max length of this line = 8 * 5 - 1 = 39
 
         if (you.duration[DUR_PRAYER])
@@ -597,9 +597,9 @@ void print_stats(void)
 
     if (you.redraw_status_flags & REDRAW_LINE_3_MASK)
     {
-        gotoxy(1, 16, GOTO_STAT);
+        gotoxy(1, 17, GOTO_STAT);
         clear_to_end_of_line();
-        gotoxy(1, 16, GOTO_STAT);
+        gotoxy(1, 17, GOTO_STAT);
         // Max length of this line = 7 * 5 + 3 - 1 = 37
 
         // Note the usage of bad_ench_colour() correspond to levels that
@@ -685,7 +685,7 @@ void print_stats(void)
 
 #if DEBUG_DIAGNOSTICS
     // debug mode GPS
-    gotoxy(1, 17, GOTO_STAT);
+    gotoxy(1, 18, GOTO_STAT);
     cprintf( "Position (%2d,%2d)", you.x_pos, you.y_pos );
 #endif
 
