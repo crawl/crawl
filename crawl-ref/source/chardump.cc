@@ -394,17 +394,17 @@ static void sdump_turns_by_place(dump_params &par)
     std::vector<PlaceInfo> all_visited =
         you.get_all_place_info(true);
 
-    text += 
+    text +=
 "Table legend:\n"
 " A = Turns spent in this place as a percentage of turns spent in the\n"
 "     entire game.\n"
-" B = Non-inter-level travel turns spent in this place as a perecentage of\n"
+" B = Non-inter-level travel turns spent in this place as a percentage of\n"
 "     non-inter-level travel turns spent in the entire game.\n"
-" C = Inter-level travel turns spent in this place as a perecentage  of\n"
+" C = Inter-level travel turns spent in this place as a percentage of\n"
 "     turns spent in this place.\n"
 " D = Turns resting spent in this place as a percentage of non-inter-level\n"
 "     travel turns spent in this place.\n"
-" E = Turns spent auto-exloring this place as a percentage of\n"
+" E = Turns spent auto-exploring this place as a percentage of\n"
 "     non-inter-level travel turns spent in this place.\n"
 " F = Non-inter-level travel turns spent in this place divided by the\n"
 "     number of levels of this place that you've seen.\n\n";
