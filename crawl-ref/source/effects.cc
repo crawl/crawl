@@ -2681,6 +2681,20 @@ void update_corpses(double elapsedTime)
                                 grd[cx][cy] =
                                     static_cast<dungeon_feature_type>(
                                         grd[cx][cy] - 1);
+                                        
+                            // clean bloody floor
+                            if (is_bloodcovered(cx,cy))
+                                env.map[cx][cy].property = FPROP_NONE;
+                            // chance of cleaning adjacent squares
+                            for (int k=-1; k<=1; k++)
+                            {
+                                 for (int l=-1; l<=1; l++)
+                                      if (is_bloodcovered(cx+k,cy+l)
+                                          && one_chance_in(5))
+                                      {
+                                          env.map[cx+k][cy+l].property = FPROP_NONE;
+                                      }
+                            }
                         }
                     }
                 }

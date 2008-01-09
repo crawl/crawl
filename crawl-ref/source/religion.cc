@@ -3091,9 +3091,18 @@ static bool bless_weapon( int god, int brand, int colour )
         mprf( MSGCH_GOD, "Your weapon shines brightly!" );
         simple_god_message( " booms: Use this gift wisely!" );
 
-        if ( god != GOD_LUGONU )
+        if ( god == GOD_SHINING_ONE )
+        {
             holy_word( 100, true );
-
+            // un-bloodify surrounding squares
+            for (int i=-3;i<=3;i++)
+                for (int j=-3;j<=3;j++)
+                {
+                     if (is_bloodcovered(you.x_pos+i, you.y_pos+j))
+                         env.map[you.x_pos+i][you.y_pos+j].property = FPROP_NONE;
+                }
+        }
+        
         delay(1000);
 
         return (true);

@@ -219,6 +219,9 @@ void mons_trap(struct monsters *monster)
 
             if (damage_taken < 0)
                 damage_taken = 0;
+
+            bleed_onto_floor(monster->x, monster->y, monster->type,
+                             damage_taken, true);
         }
 
         revealTrap = true;

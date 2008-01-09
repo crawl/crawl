@@ -1016,7 +1016,8 @@ enum floor_property_type
 {
     FPROP_NONE,          // 0
     FPROP_SANCTUARY_1,
-    FPROP_SANCTUARY_2
+    FPROP_SANCTUARY_2,
+    FPROP_BLOODY // bloody floor and sanctuary are exclusive, so that's okay
 };
 
 enum duration_type

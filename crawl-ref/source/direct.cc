@@ -2148,6 +2148,9 @@ static void describe_cell(int mx, int my)
     if (Options.tutorial_left && tutorial_feat_interesting(grd[mx][my]))
     {
         feature_desc += " (Press <w>v<lightgray> for more information.)";
+        if (is_bloodcovered(mx, my))
+          feature_desc += EOL "It is spattered with blood.";
+
         print_formatted_paragraph(feature_desc, get_number_of_cols());
     }
     else
@@ -2157,9 +2160,16 @@ static void describe_cell(int mx, int my)
         if (interesting_feature(feat))
             feature_desc += " (Press 'v' for more information.)";
 
+        bool bloody = false;
+        if (is_bloodcovered(mx, my))
+        {
+            feature_desc += EOL "It is spattered with blood.";
+            bloody = true;
+        }
+
         // Suppress "Floor." if there's something on that square that we've
         // already described.
-        if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL)
+        if ((feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL) && !bloody
             && (monster_described || item_described || cloud_described))
             return;
         

@@ -166,6 +166,7 @@ void set_envmap_col( int x, int y, int colour, int flags );
 void set_envmap_col( int x, int y, int colour );
 void set_envmap_prop( int x, int y, int prop );
 bool is_sanctuary( int x, int y );
+bool is_bloodcovered( int x, int y );
 
 bool is_envmap_detected_item(int x, int y);
 bool is_envmap_detected_mons(int x, int y);

@@ -84,11 +84,15 @@
 //                   unsigned char chy, unsigned char ch_col)
 void turn_corpse_into_chunks( item_def &item )
 {
-    const int mons_class = item.plus; 
-    const int max_chunks = mons_weight( mons_class ) / 150;
-
     ASSERT( item.base_type == OBJ_CORPSES );
 
+    const int mons_class = item.plus;
+    const int max_chunks = mons_weight( mons_class ) / 150;
+
+    // only fresh corpses bleed enough to colour the ground
+    if (item.special >= 100)
+        bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
+    
     item.base_type = OBJ_FOOD;
     item.sub_type = FOOD_CHUNK;
     item.quantity = 1 + random2( max_chunks );
@@ -154,6 +158,98 @@ void turn_corpse_into_chunks( item_def &item )
         move_item_to_grid( &o, item.x, item.y );
     }
 }                               // end place_chunks()
+
+// checks whether the player or a monster is capable of bleeding
+static bool victim_can_bleed(int montype)
+{
+    if (montype == -1) // player
+    {
+        if (you.is_undead && (you.species != SP_VAMPIRE
+                              || you.hunger_state >= HS_FULL))
+        {
+            return (false);
+        }
+
+        int tran = you.attribute[ATTR_TRANSFORMATION];
+        if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
+            || tran == TRAN_AIR || tran == TRAN_LICH
+            || tran == TRAN_SPIDER) // monster spiders don't bleed either
+        {
+            return (false);
+        }
+        return (true);
+    }
+    
+    // now check monsters
+    return (mons_class_flag(montype, M_COLD_BLOOD)
+            || mons_class_flag(montype, M_WARM_BLOOD));
+}
+
+static bool allow_bleeding_on_square(int x, int y)
+{
+    // no bleeding onto sanctuary ground, please
+    // also not necessary if already covered in blood
+    if (env.map[x][y].property != FPROP_NONE)
+        return (false);
+
+    // no spattering into lava or water
+    if (grd[x][y] >= DNGN_LAVA && grd[x][y] < DNGN_FLOOR)
+        return (false);
+
+    // the good gods like to keep their altars pristine
+    if (is_good_god(grid_altar_god(grd[x][y])))
+        return (false);
+            
+    return (true);
+}
+
+static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false)
+{
+    if (amount < 1)
+        return;
+
+    if (!spatter && !allow_bleeding_on_square(x,y))
+        return;
+
+    if (amount > random2(20))
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "might bleed now; square: (%d, %d); amount = %d",
+             x, y, amount);
+#endif
+        if (allow_bleeding_on_square(x,y))
+            env.map[x][y].property = FPROP_BLOODY;
+
+        if (spatter)
+        {
+            // smaller chance of spattering surrounding squares
+            for (int i=-1;i<=1;i++)
+                for (int j=-1;j<=1;j++)
+                {
+                     if (i == 0 && j == 0) // current square
+                         continue;
+                         
+                     // spattering onto walls etc. less likely
+                     if (grd[x+i][y+j] < DNGN_MINMOVE && one_chance_in(3))
+                         continue;
+
+                     maybe_bloodify_square(x+i, y+j, amount/10);
+                }
+        }
+    }
+}
+
+// currently flavour only: colour ground (and possibly adjacent squares) red
+// "damage" depends on damage taken (or hitpoints, if damage higher),
+// or, for sacrifices, on the number of chunks possible to get out of a corpse
+void bleed_onto_floor(int x, int y, int montype, int damage, bool spatter)
+{
+    if (!victim_can_bleed(montype))
+        return;
+
+    maybe_bloodify_square(x, y, damage, spatter);
+}
 
 void search_around( bool only_adjacent )
 {

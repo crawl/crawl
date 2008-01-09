@@ -71,6 +71,7 @@ void trackers_init_new_level(bool transit);
  * *********************************************************************** */
 void turn_corpse_into_chunks( item_def &item );
 
+void bleed_onto_floor(int x, int y, int mon, int damage, bool spatter = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

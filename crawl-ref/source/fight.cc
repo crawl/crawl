@@ -605,6 +605,15 @@ bool melee_attack::player_attack()
         // always upset monster regardless of damage
         behaviour_event(def, ME_WHACK, MHITYOU);
 
+        if (damage_done > 0)
+        {
+            int blood = damage_done;
+            if (blood > defender->stat_hp())
+                blood = defender->stat_hp();
+
+            bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
+        }
+
         player_hurt_monster();
 
         if (damage_done > 0 || !defender_visible)
@@ -2139,11 +2148,17 @@ bool melee_attack::chop_hydra_head( int dam,
         if (def->number < 1)
         {
             if (defender_visible)
+            {
                 mprf( "%s %s %s's last head off!",
                       atk_name(DESC_CAP_THE).c_str(),
                       attacker->conj_verb(verb).c_str(),
                       def_name(DESC_NOCAP_THE).c_str() );
+            }
 
+            coord_def pos = defender->pos();
+            bleed_onto_floor(pos.x, pos.y, defender->id(),
+                             def->hit_points, true);
+                             
             defender->hurt(attacker, def->hit_points);
         }
         else
@@ -3520,10 +3535,22 @@ void melee_attack::mons_perform_attack_rounds()
             mons_announce_hit(attk);
             check_defender_train_armour();
 
+            int type = -1; // player
+            if (defender->atype() == ACT_MONSTER)
+                type = defender->id();
+
+            int damage = damage_done;
+            if (damage > defender->stat_hp())
+                damage = defender->stat_hp();
+                
+            bleed_onto_floor(pos.x, pos.y, type, damage, true);
+
             if (decapitate_hydra(damage_done,
                                  attacker->damage_type(attack_number)))
+            {
                 continue;
-
+            }
+            
             special_damage = 0;
             special_damage_message.clear();
 

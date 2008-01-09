@@ -353,6 +353,10 @@ bool butchery()
                 god_likes_butchery(you.religion))
             {
                 offer_corpse(corpse_id);
+                // ritual sacrifice can also bloodify the ground
+                const int mons_class = mitm[corpse_id].plus;
+                const int max_chunks = mons_weight( mons_class ) / 150;
+                bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
                 destroy_item(corpse_id);
             }
             else

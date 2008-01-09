@@ -208,9 +208,15 @@ void set_envmap_prop( int x, int y, int prop )
     env.map[x][y].property = prop;
 }
 
-bool is_sanctuary( int x, int y)
+bool is_sanctuary(int x, int y)
 {
-    return (env.map[x][y].property != FPROP_NONE);
+    return (env.map[x][y].property == FPROP_SANCTUARY_1
+            || env.map[x][y].property == FPROP_SANCTUARY_2);
+}
+
+bool is_bloodcovered(int x, int y)
+{
+    return (env.map[x][y].property == FPROP_BLOODY);
 }
 
 bool is_envmap_item(int x, int y)
@@ -368,6 +374,17 @@ static int view_emphasised_colour(int x, int y, dungeon_feature_type feat,
     return (oldcolour);
 }
 
+static bool show_bloodcovered(int x, int y)
+{
+    if (!is_bloodcovered(x,y))
+        return (false);
+
+    dungeon_feature_type grid = grd[x][y];
+
+    return (grid_altar_god(grid) == GOD_NO_GOD && !grid_is_trap(grid)
+            && !grid_is_portal(grid) && grid != DNGN_ENTER_SHOP);
+}
+
 static void get_symbol( int x, int y,
                         int object, unsigned *ch, 
                         unsigned short *colour,
@@ -401,8 +418,11 @@ static void get_symbol( int x, int y,
                         *colour = LIGHTGRAY | colmask; // 1/12
                 }
             }
-            else
-            if (object < NUM_REAL_FEATURES && env.grid_colours[x][y])
+            else if (object < NUM_REAL_FEATURES && show_bloodcovered(x,y))
+            {
+                *colour = RED | colmask;
+            }
+            else if (object < NUM_REAL_FEATURES && env.grid_colours[x][y])
             {
                 *colour = env.grid_colours[x][y] | colmask;
             }

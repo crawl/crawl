@@ -384,8 +384,10 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         else
         {
             mpr("A huge blade swings out and slices into you!");
-            ouch( (you.your_level * 2) + random2avg(29, 2)
-                    - random2(1 + player_AC()), 0, KILLED_BY_TRAP, " blade" );
+            int damage = (you.your_level * 2) + random2avg(29, 2)
+                          - random2(1 + player_AC());
+            ouch( damage, 0, KILLED_BY_TRAP, " blade" );
+            bleed_onto_floor(you.x_pos, you.y_pos, -1, damage, true);
         }
         break;
 

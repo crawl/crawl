@@ -2669,6 +2669,10 @@ static int affect_wall(bolt &beam, int x, int y)
         if (grd[x][y] == DNGN_ROCK_WALL || grd[x][y] == DNGN_CLEAR_ROCK_WALL)
         {
             grd[x][y] = DNGN_FLOOR;
+            
+            // blood does not transfer onto floor
+            if (is_bloodcovered(x,y))
+                env.map[x][y].property = FPROP_NONE;
 
             if (!beam.msg_generated)
             {
@@ -2741,6 +2745,10 @@ static int affect_wall(bolt &beam, int x, int y)
                 || targ_grid == DNGN_GRANITE_STATUE)
         {
             grd[x][y] = DNGN_FLOOR;
+
+            // blood does not transfer onto floor
+            if (is_bloodcovered(x,y))
+                env.map[x][y].property = FPROP_NONE;
 
             if (!silenced(you.x_pos, you.y_pos))
             {
