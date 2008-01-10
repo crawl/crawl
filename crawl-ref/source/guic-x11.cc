@@ -765,8 +765,8 @@ void  TileRegionClass::fillrect(int left, int top, int right, int bottom,
 
     ASSERT(left>=0);
     ASSERT(top>=0);
-    ASSERT(right<mx);
-    ASSERT(bottom<my);
+    ASSERT(right<mx*dx);
+    ASSERT(bottom<my*dy);
 
     for (x=left; x<=right; x++){
     for (y=top; y<= bottom; y++){

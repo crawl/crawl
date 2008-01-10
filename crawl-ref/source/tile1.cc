@@ -2235,6 +2235,10 @@ void tilep_race_default(int race, int gender, int level, int *parts)
             break;
         case SP_VAMPIRE:
             result = TILEP_BASE_VAMPIRE;
+            if (gender==TILEP_GENDER_MALE)
+                hair = TILEP_HAIR_ARAGORN;
+            else
+                hair = TILEP_HAIR_ARWEN;
             break;
         default:
             result = TILEP_BASE_HUMAN;

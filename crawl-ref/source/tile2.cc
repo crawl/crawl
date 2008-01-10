@@ -10,6 +10,7 @@
 #include "direct.h"
 #include "dungeon.h"
 #include "files.h"
+#include "ghost.h"
 #include "guic.h"
 #include "itemprop.h"
 #include "it_use2.h"
@@ -2110,7 +2111,7 @@ void TileGhostInit(struct ghost_demon &ghost)
 {
     dolls_data doll;
     int x, y;
-    unsigned int pseudo_rand = ghost.values[GVAL_MAX_HP]*54321*54321;
+    unsigned int pseudo_rand = ghost.max_hp*54321*54321;
     char mask[TILE_X*TILE_Y];
     int g_gender = (pseudo_rand >>8)&1;
 
@@ -2123,9 +2124,9 @@ void TileGhostInit(struct ghost_demon &ghost)
         doll.parts[x] = 0;
         current_parts[x] = 0;
     }
-    tilep_race_default(ghost.values[GVAL_SPECIES], g_gender,
-        ghost.values[GVAL_EXP_LEVEL], doll.parts);
-    tilep_job_default (ghost.values[GVAL_CLASS], g_gender,  doll.parts);
+    tilep_race_default(ghost.species, g_gender,
+        ghost.xl, doll.parts);
+    tilep_job_default (ghost.job, g_gender,  doll.parts);
 
     for(x = TILEP_PART_CLOAK; x < TILEP_PARTS_TOTAL; x++)
     {
@@ -2136,7 +2137,7 @@ void TileGhostInit(struct ghost_demon &ghost)
             if (x == TILEP_PART_BODY)
             {
                 int p = 0;
-                int ac = ghost.values[GVAL_AC];
+                int ac = ghost.ac;
                 ac *= (5 + (pseudo_rand/11) % 11);
                 ac /= 10;
 
@@ -2156,8 +2157,8 @@ void TileGhostInit(struct ghost_demon &ghost)
         }
     }
 
-    int sk = ghost.values[GVAL_BEST_SKILL];
-    int dam = ghost.values[GVAL_DAMAGE];
+    int sk = ghost.best_skill;
+    int dam = ghost.damage;
     int p = 0;
 
     dam *= (5 + pseudo_rand % 11);

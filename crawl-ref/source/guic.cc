@@ -518,34 +518,7 @@ void TextRegionClass::scroll()
 
 void TextRegionClass::adjust_region(int *x1, int *x2, int y)
 {
-#ifdef JP
-    if (dos_char)
-    {
-        *x2 = *x2 + 1;
-        return;
-    }
-
-    int nx1 = 0;
-    int nx2 = mx;
-    unsigned char *ptr = &cbuf[y * mx];
-    int x = 0;
-
-    while (x<mx)
-    {
-        if(x<=*x1) nx1=x;
-        if(x>*x2)
-        {
-            nx2=x;
-            break;
-        }
-        if (ptr[x] & 0x80) x+=2;
-        else x++;
-    }
-    *x1 = nx1;
-    *x2 = nx2;
-#else
     *x2 = *x2 + 1;
-#endif
 }
 
 void TextRegionClass::addstr(char *buffer)
@@ -605,14 +578,6 @@ void TextRegionClass::addstr_aux(char *buffer, int len)
 
     adjust_region(&head, &tail, y);
 
-#ifdef JP
-    // prevent half displayed kanji
-    cbuf[adrs+head] = ' ';
-    abuf[adrs+head] = text_col;
-    cbuf[adrs+tail-1] = ' ';
-    abuf[adrs+tail-1] = text_col;
-#endif
-
     for (i=0; i < len && x + i < mx;i++)
     {
         cbuf[adrs+x+i]=buffer[i];
@@ -650,14 +615,7 @@ void TextRegionClass::redraw(int x1, int y1, int x2, int y2)
                 draw_string(head, y, &c[head], x-head, oldcol);
                 head = x;
             }
-#ifdef JP
-            if ( ((c[x] & 0x80) == 0x80) && (dos_char == false))
-                x+=2;
-            else
-                x++;
-#else
             x++;
-#endif
         }
     }
 
