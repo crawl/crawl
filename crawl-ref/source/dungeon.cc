@@ -4114,8 +4114,8 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     }
 
     // Don't create any new up stairs on dungeon level 1.
-    bool no_up_stairs = player_branch_depth() == 1 && 
-        you.level_type == LEVEL_DUNGEON;
+    const bool no_up_stairs =
+        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1);
 
     for (int j = 0; j < (coinflip()? 4 : 3); j++)
     {

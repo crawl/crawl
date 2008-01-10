@@ -1533,7 +1533,7 @@ ENDMAP
 
 NAME:   small_chamber_a
 TAGS:   mini_float allow_dup
-DEPTH:  4-27
+DEPTH:  D:4-27
 MAP
  xxxxxxx
 xx.....xx
@@ -1545,7 +1545,7 @@ ENDMAP
 
 NAME:   small_chamber_b
 TAGS:   mini_float allow_dup
-DEPTH:  8-27, Elf, Snake, Vault, Crypt
+DEPTH:  D:8-27, Elf, Snake, Vault, Crypt
 MAP
 xxxxxxxxx
 xxG...Gxx
@@ -1559,7 +1559,7 @@ ENDMAP
 
 NAME:   tiny_chamber_a
 TAGS:   mini_float allow_dup
-DEPTH:  2-27, Elf, Snake, Vault, Crypt
+DEPTH:  D:2-27, Elf, Snake, Vault, Crypt
 MAP
 xxxxx
 x...x
