@@ -578,9 +578,9 @@ void libgui_init()
 
 #if DEBUG_DIAGNOSTICS
     // one more line for debug GPS
-    region_stat = new TextRegionClass(40, 17, 0, 0);
+    region_stat = new TextRegionClass(crawl_view.hudsz.x, crawl_view.hudsz.y + 1, 0, 0);
 #else
-    region_stat = new TextRegionClass(40, 16, 0, 0);
+    region_stat = new TextRegionClass(crawl_view.hudsz.x, crawl_view.hudsz.y, 0, 0);
 #endif
     region_stat->id = REGION_STAT;
     region_msg = new TextRegionClass(msg_x, msg_y, 0, 0);

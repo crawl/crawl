@@ -3,7 +3,8 @@
  *   see guic-*.cc for  system dependent implementations
  */
 
-// Class defines
+#include "AppHdr.h"
+#include "debug.h"
 #include "guic.h"
 
 #ifdef WIN32TILES
@@ -76,9 +77,7 @@ const int term_colors[MAX_TERM_COL][3]=
     {255, 255,  82}, // YELLOW
     {255, 255, 255}  // WHITE
 };
-/*------------------------------------------*/
 
-// ������
 WinClass::WinClass()
 {
     // Minimum;
@@ -90,7 +89,6 @@ WinClass::WinClass()
     SysInit();
 }
 
-// �I�� 
 WinClass::~WinClass()
 {
     SysDeinit();
@@ -115,7 +113,7 @@ void WinClass::placeRegion(RegionClass *r, int layer0,
 
     r->sx = x;
     r->sy = y;
-    
+
     r->ox = r->sx + margin_left;
     r->oy = r->sy + margin_top;
     r->wx = r->dx * r->mx + margin_left + margin_right;
@@ -195,21 +193,6 @@ void WinClass::resize(int wx0, int wy0)
     resize(); // system dependent
 }
 
-/*------------------------------------------*/
-
-/* �������̏���
- *  0 (�e�N���X�̏����A����)
- *  1 �@�틤�ʏ���
- *  2 �@���ˑ�����
- *
- * �I�������̏���
- *  1 �@���ˑ�����
- *  2 �@�틤�ʏ���
- * (3) (�e�N���X�̏����A����)
- */
-
-
-//������
 RegionClass::RegionClass()
 {
     flag = false;
@@ -222,12 +205,11 @@ RegionClass::RegionClass()
     id = 0;
 }
 
-//�I������
 RegionClass::~RegionClass()
 {
     SysDeinit();
-    // �o�b�N�o�b�t�@����
-    if (backbuf != NULL) ImgDestroy(backbuf);
+    if (backbuf != NULL)
+        ImgDestroy(backbuf);
 }
 
 void TextRegionClass::resize(int x, int y)
@@ -246,7 +228,6 @@ void TextRegionClass::resize(int x, int y)
     my = y;
 }
 
-// ������
 TextRegionClass::TextRegionClass(int x, int y, int cx, int cy)
 {
     cbuf = NULL;
@@ -257,11 +238,9 @@ TextRegionClass::TextRegionClass(int x, int y, int cx, int cy)
     cx_ofs = cx;
     cy_ofs = cy;
 
-    //�@���ˑ�����
     SysInit(x, y, cx, cy);
 }
 
-//�I������
 TextRegionClass::~TextRegionClass()
 {
     SysDeinit();
@@ -269,7 +248,6 @@ TextRegionClass::~TextRegionClass()
     free(abuf);
 }
 
-//������
 TileRegionClass::TileRegionClass(int mx0, int my0, int dx0, int dy0)
 {
     // Unit size
@@ -280,11 +258,9 @@ TileRegionClass::TileRegionClass(int mx0, int my0, int dx0, int dy0)
     my = my0;
     force_redraw = false;
 
-    //�@���ˑ�����
     SysInit(mx0, my0, dx0, dy0);
 }
 
-//�I������ 
 TileRegionClass::~TileRegionClass()
 {
     SysDeinit();
@@ -298,7 +274,6 @@ void TileRegionClass::resize(int mx0, int my0, int dx0, int dy0)
     if (dy0 != 0) dy = dy0;
 }
 
-// ������
 MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, bool iso)
 {
     int i;
@@ -318,11 +293,9 @@ MapRegionClass::MapRegionClass(int x, int y, int o_x, int o_y, bool iso)
     y_margin = o_y;
     force_redraw = false;
 
-    //�@���ˑ�����
     SysInit(x, y, o_x, o_y);
 }
 
-//�I������
 MapRegionClass::~MapRegionClass()
 {
     SysDeinit();
@@ -514,6 +487,11 @@ void TextRegionClass::scroll()
         abuf[idx] = 0;
     }
     redraw(0, 0, mx-1, my-1);
+
+    if (print_y > 0)
+        print_y -= 1;
+    if (cursor_y > 0)
+        cursor_y -= 1;
 }
 
 void TextRegionClass::adjust_region(int *x1, int *x2, int y)
@@ -555,10 +533,7 @@ void TextRegionClass::addstr(char *buffer)
                 j=0;
 
                 if(print_y - cy_ofs == my)
-                {
-                        scroll();
-                        print_y--;
-                }
+                    scroll();
             }
         }
     }
@@ -574,7 +549,8 @@ void TextRegionClass::addstr_aux(char *buffer, int len)
     int head = x;
     int tail = x + len - 1;
 
-    if(!flag)return;
+    if(!flag)
+        return;
 
     adjust_region(&head, &tail, y);
 
@@ -590,7 +566,8 @@ void TextRegionClass::addstr_aux(char *buffer, int len)
 void TextRegionClass::redraw(int x1, int y1, int x2, int y2)
 {
     int x, y;
-    if(!flag)return;
+    if(!flag)
+        return;
 
     for(y=y1;y<=y2;y++)
     {
@@ -633,11 +610,13 @@ void TextRegionClass::clear_to_end_of_line()
     int col = text_col;
     int adrs = cy * mx;
 
-    if(!flag)return;
+    if(!flag)
+        return;
 
+    ASSERT(adrs + mx - 1 < mx * my);
     for(i=cx; i<mx; i++){
-        cbuf[adrs+i]=' ';
-        abuf[adrs+i]=col;
+        cbuf[adrs+i] = ' ';
+        abuf[adrs+i] = col;
     }
     redraw(cx, cy, mx-1, cy);
 }
@@ -722,10 +701,3 @@ void TextRegionClass::_setcursortype(int curstype)
         cursor_region = text_mode;
     }
 }
-
-#if 0
-int  TextRegionClass::get_number_of_lines()
-{
-    return (text_mode->cx_ofs + text_mode->my);
-}
-#endif
