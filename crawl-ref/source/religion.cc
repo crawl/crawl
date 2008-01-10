@@ -3143,7 +3143,7 @@ void altar_prayer(void)
         const int wpn = get_player_wielded_weapon();
 
         if (wpn != -1 
-            && weapon_skill( you.inv[wpn] ) == SK_LONG_SWORDS
+            && weapon_skill( you.inv[wpn] ) == SK_LONG_BLADES
             && get_weapon_brand( you.inv[wpn] ) != SPWPN_HOLY_WRATH)
         {
             if (bless_weapon( GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW ))

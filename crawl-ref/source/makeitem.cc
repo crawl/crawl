@@ -95,7 +95,7 @@ static int newwave_weapon_colour(const item_def &item)
         case SK_SHORT_BLADES:
             item_colour = CYAN;
             break;
-        case SK_LONG_SWORDS:
+        case SK_LONG_BLADES:
             item_colour = LIGHTCYAN;
             break;
         case SK_AXES:

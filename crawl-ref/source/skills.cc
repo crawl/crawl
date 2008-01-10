@@ -193,9 +193,9 @@ static int exercise2( int exsk )
     if (exsk < SK_ARMOUR)
     {
         /* blades to blades */
-        if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_SWORDS)
+        if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_BLADES)
             && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
-                || you.skills[SK_LONG_SWORDS] > you.skills[exsk]))
+                || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
         {
             bonus += random2(3);
         }

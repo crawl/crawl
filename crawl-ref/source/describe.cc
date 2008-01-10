@@ -963,50 +963,13 @@ static std::string describe_weapon( const item_def &item, bool verbose)
     {
         description += "$It falls into the";
 
-        switch (item.sub_type)
-        {
-        case WPN_SLING:
-            description += " 'slings' category. ";
-            break;
-        case WPN_BOW:
-        case WPN_LONGBOW:
-            description += " 'bows' category. ";
-            break;
-        case WPN_HAND_CROSSBOW:
-        case WPN_CROSSBOW:
-            description += " 'crossbows' category. ";
-            break;
-        case WPN_BLOWGUN:
-            description += " 'darts' category. ";
-            break;
-        default:
-            // Melee weapons
-            switch (weapon_skill(item.base_type, item.sub_type))
-            {
-            case SK_SHORT_BLADES:
-                description += " 'short blades' category. ";
-                break;
-            case SK_LONG_SWORDS:
-                description += " 'long swords' category. ";
-                break;
-            case SK_AXES:
-                description += " 'axes' category. ";
-                break;
-            case SK_MACES_FLAILS:
-                description += " 'maces and flails' category. ";
-                break;
-            case SK_POLEARMS:
-                description += " 'polearms' category. ";
-                break;
-            case SK_STAVES:
-                description += " 'staves' category. ";
-                break;
-            default:
-                description += " 'bug' category. ";
-                DEBUGSTR("Unknown weapon type");
-                break;
-            }
-        }
+        const skill_type skill =
+            is_range_weapon(item)? range_skill(item) : weapon_skill(item);
+
+        description +=
+            make_stringf(" '%s' category. ",
+                         skill == SK_FIGHTING? "buggy"
+                         : skill_name(skill));
     }
 
     return (description);

@@ -131,7 +131,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_HUMAN (1)
      100,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -174,7 +174,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_HIGH_ELF (3)
      100,                       // SK_FIGHTING
      70,                        // SK_SHORT_BLADES
-     70,                        // SK_LONG_SWORDS
+     70,                        // SK_LONG_BLADES
      115,                       // SK_UNUSED_1
      130,                       // SK_AXES
      150,                       // SK_MACES_FLAILS
@@ -217,7 +217,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_GREY_ELF (4)
      140,                       // SK_FIGHTING
      90,                        // SK_SHORT_BLADES
-     95,                        // SK_LONG_SWORDS
+     95,                        // SK_LONG_BLADES
      120,                       // SK_UNUSED_1
      140,                       // SK_AXES
      160,                       // SK_MACES_FLAILS
@@ -260,7 +260,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_DEEP_ELF (5)
      150,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     105,                       // SK_LONG_SWORDS
+     105,                       // SK_LONG_BLADES
      120,                       // SK_UNUSED_1
      150,                       // SK_AXES
      165,                       // SK_MACES_FLAILS
@@ -303,7 +303,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_SLUDGE_ELF (6)
      80,                        // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
-     110,                       // SK_LONG_SWORDS
+     110,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      130,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
@@ -346,7 +346,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_MOUNTAIN_DWARF (8)
      70,                        // SK_FIGHTING
      80,                        // SK_SHORT_BLADES
-     90,                        // SK_LONG_SWORDS
+     90,                        // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      65,                        // SK_AXES
      70,                        // SK_MACES_FLAILS
@@ -389,7 +389,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_HALFLING (9)
      120,                       // SK_FIGHTING
      60,                        // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      130,                       // SK_UNUSED_1
      120,                       // SK_AXES
      150,                       // SK_MACES_FLAILS
@@ -432,7 +432,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_HILL_ORC (10)
      70,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     80,                        // SK_LONG_SWORDS
+     80,                        // SK_LONG_BLADES
      70,                        // SK_UNUSED_1
      70,                        // SK_AXES
      80,                        // SK_MACES_FLAILS
@@ -475,7 +475,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_KOBOLD (11)
      80,                        // SK_FIGHTING
      60,                        // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      120,                       // SK_UNUSED_1
      110,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
@@ -518,7 +518,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_MUMMY (12)
      100,                       // SK_FIGHTING
      140,                       // SK_SHORT_BLADES
-     140,                       // SK_LONG_SWORDS
+     140,                       // SK_LONG_BLADES
      140,                       // SK_UNUSED_1
      140,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
@@ -561,7 +561,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_NAGA (13)
      100,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -604,7 +604,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_GNOME (14)
      100,                       // SK_FIGHTING
      75,                        // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      130,                       // SK_UNUSED_1
      100,                       // SK_AXES
      130,                       // SK_MACES_FLAILS
@@ -647,7 +647,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_OGRE (15)
      100,                       // SK_FIGHTING
      140,                       // SK_SHORT_BLADES
-     120,                       // SK_LONG_SWORDS
+     120,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -690,7 +690,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_TROLL (16)
      140,                       // SK_FIGHTING
      150,                       // SK_SHORT_BLADES
-     150,                       // SK_LONG_SWORDS
+     150,                       // SK_LONG_BLADES
      150,                       // SK_UNUSED_1
      150,                       // SK_AXES
      130,                       // SK_MACES_FLAILS
@@ -733,7 +733,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_OGRE_MAGE (17)
      100,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -776,7 +776,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_RED_DRACONIAN (18)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -819,7 +819,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_WHITE_DRACONIAN (19)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -862,7 +862,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_GREEN_DRACONIAN (20)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -905,7 +905,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_YELLOW_DRACONIAN (21)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -948,7 +948,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_GREY_DRACONIAN (22)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -991,7 +991,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_BLACK_DRACONIAN (23)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1034,7 +1034,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_PURPLE_DRACONIAN (24)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1077,7 +1077,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_MOTTLED_DRACONIAN (25)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1120,7 +1120,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_PALE_DRACONIAN (26)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1163,7 +1163,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_UNK0_DRACONIAN (27)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1206,7 +1206,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_UNK1_DRACONIAN (28)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1249,7 +1249,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_BASE_DRACONIAN (29)
      90,                        // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_SWORDS
+     100,                       // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
@@ -1292,7 +1292,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_CENTAUR (30)
      100,                       // SK_FIGHTING
      120,                       // SK_SHORT_BLADES
-     110,                       // SK_LONG_SWORDS
+     110,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
@@ -1335,7 +1335,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_DEMIGOD (31)
      110,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
-     110,                       // SK_LONG_SWORDS
+     110,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
@@ -1378,7 +1378,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_SPRIGGAN (32)
      150,                       // SK_FIGHTING
      90,                        // SK_SHORT_BLADES
-     140,                       // SK_LONG_SWORDS
+     140,                       // SK_LONG_BLADES
      160,                       // SK_UNUSED_1
      150,                       // SK_AXES
      160,                       // SK_MACES_FLAILS
@@ -1421,7 +1421,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_MINOTAUR (33)
      70,                        // SK_FIGHTING
      70,                        // SK_SHORT_BLADES
-     70,                        // SK_LONG_SWORDS
+     70,                        // SK_LONG_BLADES
      70,                        // SK_UNUSED_1
      70,                        // SK_AXES
      70,                        // SK_MACES_FLAILS
@@ -1464,7 +1464,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_DEMONSPAWN (34)
      100,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
-     110,                       // SK_LONG_SWORDS
+     110,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
@@ -1507,7 +1507,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_GHOUL (35)
      80,                        // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
-     110,                       // SK_LONG_SWORDS
+     110,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
@@ -1550,7 +1550,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_KENKU (36)
      100,                       // SK_FIGHTING
      75,                        // SK_SHORT_BLADES
-     75,                        // SK_LONG_SWORDS
+     75,                        // SK_LONG_BLADES
      75,                        // SK_UNUSED_1
      75,                        // SK_AXES
      75,                        // SK_MACES_FLAILS
@@ -1593,7 +1593,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_MERFOLK (37)
      80,                        // SK_FIGHTING
      70,                        // SK_SHORT_BLADES
-     90,                        // SK_LONG_SWORDS
+     90,                        // SK_LONG_BLADES
      100,                       // SK_UNUSED_1
      140,                       // SK_AXES
      150,                       // SK_MACES_FLAILS
@@ -1636,7 +1636,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {                           // SP_VAMPIRE (38)
      110,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
-     110,                       // SK_LONG_SWORDS
+     110,                       // SK_LONG_BLADES
      110,                       // SK_UNUSED_1
      110,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
@@ -1691,7 +1691,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {
          90,               // SK_FIGHTING
         100,               // SK_SHORT_BLADES
-        100,               // SK_LONG_SWORDS
+        100,               // SK_LONG_BLADES
         100,               // SK_UNUSED_1
         100,               // SK_AXES
         100,               // SK_MACES_FLAILS
@@ -1758,7 +1758,7 @@ JOB_PALADIN:
 
 static const skill_type skill_display_order[] =
 {
-    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
+    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
     SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
 
     SK_BLANK_LINE,

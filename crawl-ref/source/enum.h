@@ -2214,7 +2214,7 @@ enum skill_type
 {
     SK_FIGHTING,                       //    0
     SK_SHORT_BLADES,
-    SK_LONG_SWORDS,
+    SK_LONG_BLADES,
     SK_UNUSED_1,                       // SK_GREAT_SWORDS - now unused
     SK_AXES,
     SK_MACES_FLAILS,                   //    5

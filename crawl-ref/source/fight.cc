@@ -1283,7 +1283,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         damage += bonus;
     }
     // fall through
-    case SK_LONG_SWORDS:
+    case SK_LONG_BLADES:
         damage *= 10 + you.skills[SK_STABBING] /
             (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 1));
         damage /= 10;
@@ -3772,7 +3772,7 @@ int weapon_str_weight( object_class_type wpn_class, int wpn_type )
     switch (wpn_skill)
     {
     case SK_SHORT_BLADES:     ret = 2; break;
-    case SK_LONG_SWORDS:      ret = 3; break;
+    case SK_LONG_BLADES:      ret = 3; break;
     case SK_STAVES:           ret = 3; break;   // == 5 after 2-hand bonus
     case SK_POLEARMS:         ret = 3; break;   // most are +2 for 2-hands
     case SK_AXES:             ret = 6; break;

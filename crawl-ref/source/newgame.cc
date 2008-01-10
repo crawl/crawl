@@ -2445,7 +2445,7 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
         ret = true;
         break;
 
-    case SK_LONG_SWORDS:
+    case SK_LONG_BLADES:
     default:
         // all long swords are too good for a starting character...
         // especially this class where we have to be careful about
@@ -2540,7 +2540,7 @@ static void create_wanderer( void )
         { SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
           SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS,
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
-          SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
+          SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
           SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
@@ -2552,7 +2552,7 @@ static void create_wanderer( void )
           SK_SLINGS, SK_BOWS, SK_CROSSBOWS,
           SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS,
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
-          SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
+          SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
           SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
@@ -3577,7 +3577,7 @@ bool give_items_skills()
         you.skills[SK_DODGING] = 1;
         you.skills[(coinflip()? SK_ARMOUR : SK_DODGING)]++;
         you.skills[SK_SHIELDS] = 2;
-        you.skills[SK_LONG_SWORDS] = 3;
+        you.skills[SK_LONG_BLADES] = 3;
         you.skills[SK_INVOCATIONS] = 2;
         break;
 

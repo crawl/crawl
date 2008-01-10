@@ -2194,7 +2194,7 @@ void TileGhostInit(struct ghost_demon &ghost)
         doll.parts[TILEP_PART_HAND1] = p;
     }
     else
-    if (sk == SK_LONG_SWORDS)
+    if (sk == SK_LONG_BLADES)
     {
         if (dam>25) p = TILEP_HAND1_GREAT_SWORD_SLANT;
         else

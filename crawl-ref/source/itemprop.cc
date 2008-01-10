@@ -238,31 +238,31 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Long swords
     { WPN_FALCHION,          "falchion",            8,  2, 13, 170,  4,
-        SK_LONG_SWORDS,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },  // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,        "long sword",         10, 1, 14, 160,  3,
-        SK_LONG_SWORDS,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
     { WPN_SCIMITAR,          "scimitar",           11, -1, 14, 170,  3,
-        SK_LONG_SWORDS,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
     { WPN_KATANA,            "katana",             13, 2, 13, 160,  3,
-        SK_LONG_SWORDS,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
     { WPN_DEMON_BLADE,       "demon blade",        13, -1, 15, 200,  4,
-        SK_LONG_SWORDS,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_BLADE,     "blessed blade",      14, 0, 14, 200,  4,
-        SK_LONG_SWORDS,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_DOUBLE_SWORD,      "double sword",       15, -2, 16, 220,  5,
-        SK_LONG_SWORDS,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
     { WPN_GREAT_SWORD,       "great sword",        16, -3, 17, 250,  6,
-        SK_LONG_SWORDS,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
     { WPN_TRIPLE_SWORD,      "triple sword",       19, -4, 19, 260,  6,
-        SK_LONG_SWORDS,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Axes
@@ -684,7 +684,7 @@ void set_equip_race( item_def &item, unsigned long flags )
                 || (weapon_skill(item) == SK_POLEARMS
                     && item.sub_type != WPN_SPEAR
                     && item.sub_type != WPN_TRIDENT)
-                || (weapon_skill(item) == SK_LONG_SWORDS
+                || (weapon_skill(item) == SK_LONG_BLADES
                     && item.sub_type != WPN_FALCHION
                     && item.sub_type != WPN_LONG_SWORD
                     && item.sub_type != WPN_SCIMITAR)
@@ -716,7 +716,7 @@ void set_equip_race( item_def &item, unsigned long flags )
         {
         case OBJ_WEAPONS:
             if (weapon_skill(item) == SK_POLEARMS
-                || (weapon_skill(item) == SK_LONG_SWORDS
+                || (weapon_skill(item) == SK_LONG_BLADES
                     && item.sub_type != WPN_FALCHION)
                 || item.sub_type == WPN_QUICK_BLADE
                 || item.sub_type == WPN_CLUB
@@ -755,7 +755,7 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if ((weapon_skill(item) == SK_LONG_SWORDS
+            if ((weapon_skill(item) == SK_LONG_BLADES
                     && item.sub_type != WPN_FALCHION
                     && item.sub_type != WPN_LONG_SWORD
                     && item.sub_type != WPN_SCIMITAR
