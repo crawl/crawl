@@ -10,6 +10,7 @@
 #include <X11/keysymdef.h>
 #include <X11/Xmd.h>
 
+#include "AppHdr.h"
 #include "debug.h"
 #include "guic.h"
 #include "version.h"
