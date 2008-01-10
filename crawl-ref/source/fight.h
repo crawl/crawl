@@ -36,8 +36,8 @@ struct mon_attack_def;
  * *********************************************************************** */
 int effective_stat_bonus( int wepType = -1 );
 
-int resist_adjust_damage(actor *defender, int res, int rawdamage,
-                         bool ranged = false);
+int resist_adjust_damage(actor *defender, beam_type flavour,
+                         int res, int rawdamage, bool ranged = false);
 
 // added Sept 18, 2000 -- bwr
 /* ***********************************************************************
@@ -166,7 +166,9 @@ private:
 
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
-    void calc_elemental_brand_damage(int res, const char *verb);
+    void calc_elemental_brand_damage(beam_type flavour,
+                                     int res,
+                                     const char *verb);
     int fire_res_apply_cerebov_downgrade(int res);
     void drain_defender();
     void drain_player();

@@ -56,6 +56,7 @@
 #include "chardump.h"
 #include "delay.h"
 #include "files.h"
+#include "fight.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "itemname.h"
@@ -85,9 +86,10 @@ static void item_corrode( int itco );
 
 
 /* NOTE: DOES NOT check for hellfire!!! */
-int check_your_resists(int hurted, int flavour)
+int check_your_resists(int hurted, beam_type flavour)
 {
     int resist;
+    int original = hurted;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "checking resistance: flavour=%d", flavour );
@@ -107,44 +109,36 @@ int check_your_resists(int hurted, int flavour)
     switch (flavour)
     {
     case BEAM_STEAM:
-        resist = player_res_steam();
-        if (resist > 0)
-        {
+        hurted = resist_adjust_damage(&you, flavour,
+                                      player_res_steam(), hurted, true);
+        if (hurted < original)
             canned_msg(MSG_YOU_RESIST);
-            hurted /= (1 + (resist * resist));
-        }
-        else if (resist < 0)
-        {
-            // We could use a superior message.
+        else if (hurted > original)
             mpr("It scalds you terribly!");
-            hurted = hurted * 15 / 10;
-        }
         break;
 
     case BEAM_FIRE:
-        resist = player_res_fire();
-        if (resist > 0)
-        {
+        hurted = resist_adjust_damage(&you, flavour,
+                                      player_res_fire(), hurted, true);
+        if (hurted < original)
             canned_msg(MSG_YOU_RESIST);
-            hurted /= (1 + (resist * resist));
-        }
-        else if (resist < 0)
+        else if (hurted > original)
         {
             mpr("It burns terribly!");
             xom_is_stimulated(200);
-            hurted *= 15;
-            hurted /= 10;
         }
         break;
 
     case BEAM_COLD:
+        hurted = resist_adjust_damage(&you, flavour,
+                                      player_res_fire(), hurted, true);
         resist = player_res_cold();
-        if (resist > 0)
+        if (hurted < original)
         {
             canned_msg(MSG_YOU_RESIST);
             hurted /= (1 + (resist * resist));
         }
-        else if (resist < 0)
+        else if (hurted > original)
         {
             mpr("You feel a terrible chill!");
             xom_is_stimulated(200);
@@ -154,30 +148,24 @@ int check_your_resists(int hurted, int flavour)
         break;
 
     case BEAM_ELECTRICITY:
-        resist = player_res_electricity();
-        if (resist >= 3)
-        {
-            canned_msg(MSG_YOU_RESIST);
-            hurted = 0;
-        }
-        else if (resist > 0)
-        {
-            canned_msg(MSG_YOU_RESIST);
-            hurted /= 3;
-        }
-        break;
+        hurted = resist_adjust_damage(&you, flavour,
+                                      player_res_electricity(),
+                                      hurted, true);
 
+        if (hurted < original) 
+            canned_msg(MSG_YOU_RESIST);
+        break;
 
     case BEAM_POISON:
         resist = player_res_poison();
 
-        if (!resist)
+        if (resist <= 0)
             poison_player( coinflip() ? 2 : 1 );
-        else
-        {
+
+        hurted = resist_adjust_damage(&you, flavour, resist,
+                                      hurted, true);
+        if (resist > 0)
             canned_msg(MSG_YOU_RESIST);
-            hurted /= 3;
-        }
         break;
 
     case BEAM_POISON_ARROW:
@@ -187,59 +175,47 @@ int check_your_resists(int hurted, int flavour)
         resist = player_res_poison();
 
         if (!resist)
-            poison_player( 6 + random2(3), true );
-        else
-        {
-            mpr("You partially resist.");
-            hurted /= 2;
+            poison_player( 4 + random2(3), true );
+        else if (!you.is_undead)
+            poison_player( 2 + random2(3), true ); 
 
-            if (!you.is_undead)
-                poison_player( 2 + random2(3), true ); 
-        }
+        hurted = resist_adjust_damage(&you, flavour, resist, hurted);
+        if (hurted < original)
+            mpr("You partially resist.");
         break;
 
     case BEAM_NEG:
         resist = player_prot_life();
 
         if (resist > 0)
-        {
             hurted -= (resist * hurted) / 3;
-        }
 
         drain_exp();
         break;
 
     case BEAM_ICE:
-        resist = player_res_cold();
+        hurted = resist_adjust_damage(&you, flavour, player_res_cold(),
+                                      hurted, true);
 
-        if (resist > 0)
-        {
+        if (hurted < original)
             mpr("You partially resist.");
-            hurted /= 2;
-        }
-        else if (resist < 0)
+        else if (hurted > original)
         {
             mpr("You feel a painful chill!");
             xom_is_stimulated(200);
-            hurted *= 13;
-            hurted /= 10;
         }
         break;
 
     case BEAM_LAVA:
-        resist = player_res_fire();
+        hurted = resist_adjust_damage(&you, flavour, player_res_fire(),
+                                      hurted, true);
 
-        if (resist > 1)
-        {
+        if (hurted < original)
             mpr("You partially resist.");
-            hurted /= (1 + resist);
-        }
-        else if (resist < 0)
+        else if (hurted > original)
         {
             mpr("It burns terribly!");
             xom_is_stimulated(200);
-            hurted *= 15;
-            hurted /= 10;
         }
         break;
 
@@ -265,6 +241,9 @@ int check_your_resists(int hurted, int flavour)
             canned_msg( MSG_YOU_RESIST );
             hurted = 0;
         }
+        break;
+
+    default:
         break;
     }                           /* end switch */
 

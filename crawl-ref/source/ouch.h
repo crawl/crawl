@@ -65,7 +65,7 @@ enum kill_method_type
 /* ***********************************************************************
  * called from: bang - beam - effects - spells
  * *********************************************************************** */
-int check_your_resists(int hurted, int flavour);
+int check_your_resists(int hurted, beam_type flavour);
 
 
 // last updated 12may2000 {dlb}

@@ -5897,6 +5897,7 @@ static void mons_in_cloud(monsters *monster)
 
         hurted +=
             resist_adjust_damage( monster,
+                                  BEAM_FIRE,
                                   monster->res_fire(),
                                   ((random2avg(16, 3) + 6) * 10) / speed );
 
@@ -5925,6 +5926,7 @@ static void mons_in_cloud(monsters *monster)
 
         hurted +=
             resist_adjust_damage( monster,
+                                  BEAM_COLD,
                                   monster->res_cold(),
                                   ((6 + random2avg(16, 3)) * 10) / speed );
 
@@ -5957,6 +5959,7 @@ static void mons_in_cloud(monsters *monster)
         hurted +=
             resist_adjust_damage(
                 monster,
+                BEAM_STEAM,
                 monster->res_steam(),
                 (random2avg(steam_base_damage, 2) * 10) / speed);
 

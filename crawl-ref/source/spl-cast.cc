@@ -2983,7 +2983,7 @@ static void miscast_fire(int severity, const char* cause)
         case 0:
             mpr("You are blasted with fire.");
 
-            ouch( check_your_resists( 5 + random2avg(29, 2), 2 ), 0,
+            ouch( check_your_resists( 5 + random2avg(29, 2), BEAM_FIRE ), 0,
                   KILLED_BY_WILD_MAGIC, cause );
 
             expose_player_to_element(BEAM_FIRE, 5);
@@ -3016,7 +3016,7 @@ static void miscast_fire(int severity, const char* cause)
         case 0:
             mpr("You are blasted with searing flames!");
 
-            ouch( check_your_resists( 9 + random2avg(33, 2), 2 ), 0,
+            ouch( check_your_resists( 9 + random2avg(33, 2), BEAM_FIRE ), 0,
                   KILLED_BY_WILD_MAGIC, cause );
 
             expose_player_to_element(BEAM_FIRE, 10);
@@ -3117,7 +3117,7 @@ static void miscast_ice(int severity, const char* cause)
         case 0:
             mpr("Heat is drained from your body.");
 
-            ouch(check_your_resists(5 + random2(6) + random2(7), 3), 0,
+            ouch(check_your_resists(5 + random2(6) + random2(7), BEAM_COLD), 0,
                  KILLED_BY_WILD_MAGIC, cause);
 
             expose_player_to_element(BEAM_COLD, 4);
@@ -3151,7 +3151,7 @@ static void miscast_ice(int severity, const char* cause)
         case 0:
             mpr("You are blasted with ice!");
 
-            ouch(check_your_resists(9 + random2avg(23, 2), 3), 0,
+            ouch(check_your_resists(9 + random2avg(23, 2), BEAM_ICE), 0,
                  KILLED_BY_WILD_MAGIC, cause);
 
             expose_player_to_element(BEAM_COLD, 9);
@@ -3338,7 +3338,7 @@ static void miscast_air(int severity, const char* cause)
         {
         case 0:
             mpr("Electricity courses through your body.");
-            ouch(check_your_resists(4 + random2avg(9, 2), 5), 0,
+            ouch(check_your_resists(4 + random2avg(9, 2), BEAM_ELECTRICITY), 0,
                  KILLED_BY_WILD_MAGIC, cause);
             break;
         case 1:

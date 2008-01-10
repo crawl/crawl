@@ -184,31 +184,33 @@ enum attribute_type
 
 enum beam_type                  // beam[].flavour
 {
-    BEAM_MISSILE,                 //    0
-    BEAM_MMISSILE,                //    1 - and similarly unresistable things
+    BEAM_NONE,                    //    0
+    
+    BEAM_MISSILE,
+    BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
     BEAM_MAGIC,
-    BEAM_ELECTRICITY,             //    5
+    BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
     BEAM_MIASMA,
-    // BEAM_EXPLOSION,            //   10 - use is_explosion, and BEAM of flavour
-    BEAM_SPORE = 11,
+
+    BEAM_SPORE,
     BEAM_POISON_ARROW,
     BEAM_HELLFIRE,
     BEAM_NAPALM,
-    BEAM_STEAM,                   //   15
+    BEAM_STEAM,
     BEAM_HELLFROST,
     BEAM_ENERGY,
-    BEAM_HOLY,                    //   18 - aka beam of cleansing, golden flame
+    BEAM_HOLY,                    //   aka beam of cleansing, golden flame
     BEAM_FRAG,
-    BEAM_LAVA,                    //   20
+    BEAM_LAVA,
     BEAM_BACKLIGHT,
     BEAM_SLEEP,
-    BEAM_ICE,                     //   23
-    BEAM_NUKE = 27,               //   27
+    BEAM_ICE,
+    BEAM_NUKE,
     BEAM_RANDOM,                  //   currently translates into FIRE..ACID
 
     // These used to be handled in the colour field:

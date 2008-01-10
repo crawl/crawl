@@ -1155,7 +1155,7 @@ int vampiric_drain(int pow, const dist &vmove)
 }                               // end vampiric_drain()
 
 // Note: this function is currently only used for Freeze. -- bwr
-char burn_freeze(int pow, char flavour)
+char burn_freeze(int pow, beam_type flavour)
 {
     int mgr = NON_MONSTER;
     struct monsters *monster = 0;       // NULL {dlb}

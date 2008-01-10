@@ -45,7 +45,7 @@ int animate_dead(actor *caster, int power, beh_type corps_beh,
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-char burn_freeze(int pow, char b_f);
+char burn_freeze(int pow, beam_type b_f);
 
 
 // last updated 24may2000 {dlb}

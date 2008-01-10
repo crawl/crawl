@@ -4671,7 +4671,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_STICKY_FLAME:
     {
         int dam =
-            resist_adjust_damage(this, res_fire(), roll_dice( 2, 4 ) - 1);
+            resist_adjust_damage(this, BEAM_FIRE, res_fire(),
+                                 roll_dice( 2, 4 ) - 1);
 
         if (dam > 0)
         {

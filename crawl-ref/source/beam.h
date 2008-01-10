@@ -105,7 +105,7 @@ struct bolt
     int         rangeMax;              // maximum range
     unsigned    type;                  // missile gfx
     int         colour;
-    int         flavour;
+    beam_type   flavour;
     int         source_x, source_y;    // beam origin
     dice_def    damage;
     int         ench_power, hit;

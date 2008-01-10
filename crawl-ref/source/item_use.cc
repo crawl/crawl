@@ -3545,7 +3545,7 @@ static bool affix_weapon_enchantment()
 
         beam.type = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage = dice_def( 3, 10 );
-        beam.flavour = 2;
+        beam.flavour = BEAM_FIRE;
         beam.target_x = you.x_pos;
         beam.target_y = you.y_pos;
         beam.name = "fiery explosion";

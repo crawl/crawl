@@ -1654,29 +1654,81 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     return (false);
 }
 
-int resist_adjust_damage(actor *defender, int res, int rawdamage,
-                         bool ranged)
+static bool is_boolean_resist(beam_type flavour)
 {
-    if (defender->atype() == ACT_MONSTER && res >= 3)
-        return (0);
+    switch (flavour)
+    {
+    case BEAM_ELECTRICITY:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+// Gets the percentage of the total damage of this damage flavour that can
+// be resisted.
+static inline int get_resistible_fraction(beam_type flavour)
+{
+    switch (flavour)
+    {
+    case BEAM_LAVA:
+    case BEAM_ICE:
+        return (50);
+
+    case BEAM_POISON_ARROW:
+        return (40);
+
+    default:
+        return (100);
+    }
+}
+
+// Adjusts damage for elemntal resists, electricity and poison.
+//
+// FIXME: Does not (yet) handle life draining, player acid damage
+// (does handle monster acid damage), miasma, and other exotic
+// attacks.
+// 
+// beam_type is just use to determine the damage flavour, it does not
+// necessarily imply that the attack is a beam attack.
+int resist_adjust_damage(actor *defender, beam_type flavour,
+                         int res, int rawdamage, bool ranged)
+{
+    if (!res)
+        return (rawdamage);
+    
+    const bool monster = defender->atype() == ACT_MONSTER;
+    
+    // Check if this is a resist that pretends to be boolean for
+    // damage purposes - only electricity at the moment, raw poison
+    // damage uses the normal formula.
+    int res_base = is_boolean_resist(flavour)? 2 : 1;
+    const int resistible_fraction = get_resistible_fraction(flavour);
+
+    int resistible = rawdamage * resistible_fraction / 100;
+    const int irresistible = rawdamage - resistible;
     
     if (res > 0)
-        rawdamage /= 1 + res * res;
+    {
+        if (monster && res >= 3)
+            resistible = 0;
+        else
+            resistible /= res_base + res * res;
+    }
     else if (res < 0)
-        rawdamage = rawdamage * (ranged? 15 : 20) / 10;
+        resistible = resistible * (ranged? 15 : 20) / 10;
 
-    if (rawdamage < 0)
-        rawdamage = 0;
-
-    return (rawdamage);
+    return std::max(resistible + irresistible, 0);
 }
 
 void melee_attack::calc_elemental_brand_damage(
+    beam_type flavour,
     int res,
     const char *verb)
 {
     special_damage =
-        resist_adjust_damage(defender, res, random2(damage_done) / 2 + 1);
+        resist_adjust_damage(defender, flavour, res,
+                             random2(damage_done) / 2 + 1);
 
     if (special_damage > 0 && verb && needs_message)
     {
@@ -1854,12 +1906,13 @@ bool melee_attack::apply_damage_brand()
     {
     case SPWPN_FLAMING:
         res = fire_res_apply_cerebov_downgrade( defender->res_fire() );
-        calc_elemental_brand_damage(res, defender->is_icy()? "melt" : "burn");
+        calc_elemental_brand_damage(
+            BEAM_FIRE, res, defender->is_icy()? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
         break;
 
     case SPWPN_FREEZING:
-        calc_elemental_brand_damage(defender->res_cold(), "freeze");
+        calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze");
         defender->expose_to_element(BEAM_COLD);
         break;
 
@@ -2246,6 +2299,7 @@ void melee_attack::player_apply_staff_damage()
 
         special_damage =
             resist_adjust_damage(defender,
+                                 BEAM_ELECTRICITY,
                                  defender->res_elec(),
                                  player_staff_damage(SK_AIR_MAGIC));
                 
@@ -2259,6 +2313,7 @@ void melee_attack::player_apply_staff_damage()
     case STAFF_COLD:
         special_damage =
             resist_adjust_damage(defender,
+                                 BEAM_COLD,
                                  defender->res_cold(),
                                  player_staff_damage(SK_ICE_MAGIC));
 
@@ -2286,6 +2341,7 @@ void melee_attack::player_apply_staff_damage()
     case STAFF_FIRE:
         special_damage =
             resist_adjust_damage(defender,
+                                 BEAM_FIRE,
                                  defender->res_fire(),
                                  player_staff_damage(SK_FIRE_MAGIC));
 
@@ -3272,6 +3328,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
         special_damage =
             resist_adjust_damage(defender,
+                                 BEAM_FIRE,
                                  defender->res_fire(),
                                  atk->hit_dice + random2(atk->hit_dice));
         if (needs_message && special_damage)
@@ -3286,6 +3343,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_COLD:
         special_damage =
             resist_adjust_damage(defender,
+                                 BEAM_COLD,
                                  defender->res_cold(),
                                  atk->hit_dice + random2( 2 * atk->hit_dice ));
         if (needs_message && special_damage)
@@ -3299,6 +3357,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         special_damage =
             resist_adjust_damage(
                 defender,
+                BEAM_ELECTRICITY,
                 defender->res_elec(),
                 atk->hit_dice + random2( atk->hit_dice / 2 ));
 

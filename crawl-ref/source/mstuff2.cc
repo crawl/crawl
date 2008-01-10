@@ -1557,7 +1557,7 @@ bolt mons_spells( int spell_cast, int power )
     beam.damage = dice_def( 1, 0 );
     beam.ench_power = -1;
     beam.type = 0;
-    beam.flavour = -1;
+    beam.flavour = BEAM_NONE;
     beam.thrower = KILL_MISC;
     beam.is_beam = false;
     beam.is_explosion = false;

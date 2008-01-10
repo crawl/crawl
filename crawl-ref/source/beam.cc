@@ -1465,7 +1465,9 @@ void fire_beam( bolt &pbolt, item_def *item )
             if (pbolt.flavour == BEAM_RANDOM)
             {
                 random_beam = true;
-                pbolt.flavour = BEAM_FIRE + random2(7);
+                pbolt.flavour =
+                    static_cast<beam_type>(
+                        random_range(BEAM_FIRE, BEAM_ACID) );
             }
 
             if (!pbolt.affects_nothing)
@@ -1602,6 +1604,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         hurted =
             resist_adjust_damage(
                 monster,
+                pbolt.flavour,
                 pbolt.flavour == BEAM_FIRE
                 ? monster->res_fire()
                 : monster->res_steam(),
@@ -1640,7 +1643,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(monster, monster->res_cold(),
+        hurted = resist_adjust_damage(monster, pbolt.flavour,
+                                      monster->res_cold(),
                                       hurted, true);
         if (!hurted)
         {
@@ -1660,7 +1664,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(monster, monster->res_elec(),
+        hurted = resist_adjust_damage(monster, pbolt.flavour,
+                                      monster->res_elec(),
                                       hurted, true);
         if (!hurted)
         {
@@ -1670,7 +1675,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         break;
 
     case BEAM_ACID:
-        hurted = resist_adjust_damage(monster, mons_res_acid(monster),
+        hurted = resist_adjust_damage(monster, pbolt.flavour,
+                                      mons_res_acid(monster),
                                       hurted, true);
         if (!hurted)
         {
@@ -1682,7 +1688,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     case BEAM_POISON:
     {
         int res = mons_res_poison(monster);
-        hurted = resist_adjust_damage(monster, res, hurted, true);
+        hurted = resist_adjust_damage(monster, pbolt.flavour, res,
+                                      hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1696,8 +1703,8 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     }
 
     case BEAM_POISON_ARROW:
-        hurted = resist_adjust_damage(monster,
-                                      std::min(mons_res_poison(monster), 1),
+        hurted = resist_adjust_damage(monster, pbolt.flavour,
+                                      mons_res_poison(monster),
                                       hurted);
         if (hurted < original)
         {
@@ -1801,36 +1808,31 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
     case BEAM_ICE:
         /* ice - about 50% of damage is cold, other 50% is impact and
            can't be resisted (except by AC, of course) */
-        resist = mons_res_cold(monster);
-        if (resist > 0)
+        hurted = resist_adjust_damage(monster, pbolt.flavour,
+                                      monster->res_cold(), hurted,
+                                      true);
+        if (hurted < original)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
         }
-        else if (resist < 0)
+        else if (hurted > original)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " is frozen!");
-
-            hurted *= 13;
-            hurted /= 10;
         }
         break;
-    }                           /* end of switch */
 
-    if (pbolt.flavour == BEAM_LAVA)    //jmf: lava != hellfire
-    {
-        resist = mons_res_fire(monster);
-        if (resist > 0)
+    case BEAM_LAVA:
+        hurted = resist_adjust_damage(monster, pbolt.flavour,
+                                      monster->res_fire(), hurted, true);
+        
+        if (hurted < original)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " partially resists.");
-
-            hurted /= 2;
         }
-        else if (resist < 0)
+        else if (hurted > original)
         {
             if (mons_is_icy(monster))
             {
@@ -1842,12 +1844,13 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " is burned terribly!");
             }
-
-            hurted *= 12;
-            hurted /= 10;
         }
-    }
-    else if (pbolt.name == "hellfire")
+        break;
+    default:
+        break;
+    }                           /* end of switch */
+
+    if (pbolt.name == "hellfire")
     {
         resist = mons_res_fire(monster);
         if (resist > 2)
@@ -2971,7 +2974,7 @@ static void affect_place_explosion_clouds(bolt &beam, int x, int y)
 
 static void affect_items(bolt &beam, int x, int y)
 {
-    char objs_vulnerable = -1;
+    object_class_type objs_vulnerable = OBJ_UNASSIGNED;
 
     switch (beam.flavour)
     {
@@ -2985,6 +2988,8 @@ static void affect_items(bolt &beam, int x, int y)
     case BEAM_SPORE:
         objs_vulnerable = OBJ_FOOD;
         break;
+    default:
+        break;
     }
 
     if (beam.name == "hellfire")
@@ -2992,7 +2997,7 @@ static void affect_items(bolt &beam, int x, int y)
 
     if (igrd[x][y] != NON_ITEM)
     {
-        if (objs_vulnerable != -1 &&
+        if (objs_vulnerable != OBJ_UNASSIGNED &&
             mitm[igrd[x][y]].base_type == objs_vulnerable)
         {
             item_was_destroyed(mitm[igrd[x][y]], beam.beam_source);
@@ -4762,7 +4767,9 @@ static void explosion_cell(bolt &beam, int x, int y, bool drawOnly)
         if (beam.flavour == BEAM_RANDOM)
         {
             random_beam = true;
-            beam.flavour = BEAM_FIRE + random2(7);
+            beam.flavour =
+                static_cast<beam_type>(
+                    random_range(BEAM_FIRE, BEAM_ACID) );
         }
 
         affect(beam, realx, realy);
