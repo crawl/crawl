@@ -1867,9 +1867,6 @@ bool melee_attack::apply_damage_brand()
         switch (defender->holiness())
         {
         case MH_UNDEAD:
-            special_damage = 1 + random2(damage_done);
-            break;
-            
         case MH_DEMONIC:
             special_damage = 1 + (random2(damage_done * 15) / 10);
             break;
