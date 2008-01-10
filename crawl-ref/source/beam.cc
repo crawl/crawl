@@ -4141,6 +4141,9 @@ static int affect_monster_enchantment(bolt &beam, monsters *mon)
         if (monster_polymorph(mon, RANDOM_MONSTER))
             beam.obvious_effect = true;
 
+        if (YOU_KILL(beam.thrower))
+            did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3), beam.effect_known);
+
         return (MON_AFFECTED);
     }
 

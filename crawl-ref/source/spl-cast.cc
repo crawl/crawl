@@ -1120,6 +1120,9 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
         break;
 
     case SPELL_POLYMORPH_OTHER:
+        // trying is already enough, even if it fails
+        did_god_conduct(DID_DELIBERATE_MUTATING, 10);
+
         zapping(ZAP_POLYMORPH_OTHER, powc, beam);
         break;
 
