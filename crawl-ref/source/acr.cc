@@ -3778,6 +3778,7 @@ static void move_player(int move_x, int move_y)
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
+    monsters *beholder = NULL;  // beholding monster preventing movement
 
     if (you.attribute[ATTR_HELD])
     {
@@ -3817,15 +3818,14 @@ static void move_player(int move_x, int move_y)
 
     // you can swap places with a friendly monster if you're not confused
     // or if both of you are inside a sanctuary
-    const bool can_swap_places = targ_monst != NON_MONSTER
+    bool can_swap_places = targ_monst != NON_MONSTER
                                  && (mons_friendly(&menv[targ_monst])
                                        && !you.duration[DUR_CONF]
                                      || is_sanctuary(you.x_pos, you.y_pos)
                                         && is_sanctuary(targ_x, targ_y));
 
     // cannot move away from mermaid but you CAN fight neighbouring squares
-    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF]
-        && (!can_swap_places || mons_is_submerged(&menv[targ_monst])))
+    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
     {   
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {
@@ -3837,12 +3837,8 @@ static void move_player(int move_x, int move_y)
 
              if (olddist < newdist)
              {
-                 mprf("You cannot move away from %s!",
-                      mon->name(DESC_NOCAP_THE, true).c_str());
-                      
-                 move_x = 0;
-                 move_y = 0;
-                 return;
+                 beholder = mon;
+                 break;
              }
         }
     } // end of beholding check
@@ -3860,14 +3856,14 @@ static void move_player(int move_x, int move_y)
     {
         struct monsters *mon = &menv[targ_monst];
 
-        if (can_swap_places)
+        if (can_swap_places && !beholder)
         {
             if (swap_places( mon ))
                 swap = true;
             else
                 moving = false;
         }
-        else // attack!
+        else if (!can_swap_places) // attack!
         {
             if (is_sanctuary(you.x_pos, you.y_pos)
                 || is_sanctuary(mon->x, mon->y))
@@ -3897,7 +3893,7 @@ static void move_player(int move_x, int move_y)
         }
     }
 
-    if (!attacking && targ_pass && moving)
+    if (!attacking && targ_pass && moving && !beholder)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
@@ -3932,6 +3928,15 @@ static void move_player(int move_x, int move_y)
 
         you.turn_is_over = 0;
         crawl_state.cancel_cmd_repeat();
+    }
+    else if (beholder)
+    {
+        mprf("You cannot move away from %s!",
+            beholder->name(DESC_NOCAP_THE, true).c_str());
+
+        move_x = 0;
+        move_y = 0;
+        return;
     }
 
     if (you.running == RMODE_START)
