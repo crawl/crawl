@@ -254,3 +254,7 @@ yellow_wasp CORPSE_YELLOW_WASP /* y */
 %compose drchead/drchead_yellow
 %finish CORPSE_DRACONIAN_YELLOW
 
+%sdir dc-mon
+%back dc-misc/blood_red
+mermaid_water CORPSE_MERMAID
+merfolk_fighter_water CORPSE_MERFOLK_FIGHTER

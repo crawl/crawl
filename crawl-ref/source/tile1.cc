@@ -55,9 +55,11 @@ int tile_unseen_flag(const coord_def& gc)
 
 int tileidx_monster_base(int mon_idx)
 {
-    int mons = menv[mon_idx].type;
+    const monsters* mon = &menv[mon_idx];
+    int grid = grd[mon->x][mon->y];
+    bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
 
-    switch(mons)
+    switch (mon->type)
     {
     case MONS_GIANT_ANT:
         return TILE_MONS_GIANT_ANT;
@@ -155,14 +157,8 @@ int tileidx_monster_base(int mon_idx)
         return TILE_MONS_VAMPIRE;
     case MONS_WRAITH:
         return TILE_MONS_WRAITH;
-
     case MONS_ABOMINATION_LARGE:
-    {
-        // 7 different colours
-        struct monsters *mon = &menv[mon_idx];
         return TILE_MONS_ABOMINATION_LARGE + ((mon->colour)%7);
-    }
-
     case MONS_YAK:
         return TILE_MONS_YAK;
     case MONS_ZOMBIE_LARGE:
@@ -193,14 +189,8 @@ int tileidx_monster_base(int mon_idx)
         return TILE_MONS_HUNGRY_GHOST;
     case MONS_EYE_OF_DRAINING:
         return TILE_MONS_EYE_OF_DRAINING;
-
     case MONS_BUTTERFLY:
-    {
-        // 7 different colours
-        struct monsters *mon = &menv[mon_idx];
         return TILE_MONS_BUTTERFLY + ((mon->colour)%7);
-    }
-
     case MONS_WANDERING_MUSHROOM:
         return TILE_MONS_WANDERING_MUSHROOM;
     case MONS_EFREET:
@@ -267,7 +257,6 @@ int tileidx_monster_base(int mon_idx)
     case MONS_HYDRA:
     {
       // Number of heads
-      struct monsters *mon = &menv[mon_idx];
       int  heads = mon->number;
       if (heads > 7) heads = 7;
       return TILE_MONS_HYDRA + heads - 1;
@@ -713,7 +702,6 @@ int tileidx_monster_base(int mon_idx)
     {
       // Use item tile
       item_def  item;
-      struct monsters *mon = &menv[mon_idx];
       get_mimic_item( mon, item );
       return tileidx_item(item);
     }
@@ -775,9 +763,15 @@ int tileidx_monster_base(int mon_idx)
     case MONS_DEATH_DRAKE:
         return TILE_MONS_DEATH_DRAKE;
     case MONS_MERFOLK:
-        return TILE_TODO;
+        if (in_water)
+            return TILE_MONS_MERFOLK_FIGHTER_WATER;
+        else
+            return TILE_MONS_MERFOLK_FIGHTER;
     case MONS_MERMAID:
-        return TILE_TODO;
+        if (in_water)
+            return TILE_MONS_MERMAID_WATER;
+        else
+            return TILE_MONS_MERMAID;
     }
 
     return TILE_ERROR;
@@ -1416,6 +1410,8 @@ int tileidx_corpse(int mon)
   case MONS_WHITE_DRACONIAN: ch=TILE_CORPSE_DRACONIAN_WHITE; break;
 
   case MONS_DEATH_DRAKE: ch=TILE_CORPSE_DEATH_DRAKE; break;
+  case MONS_MERMAID: ch=TILE_CORPSE_MERMAID; break;
+  case MONS_MERFOLK: ch=TILE_CORPSE_MERFOLK_FIGHTER; break;
   }
   return ch;
 }
@@ -3686,6 +3682,10 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
             case TILE_MONS_VAMPIRE_KNIGHT:
 
             case TILE_MONS_SKELETAL_WARRIOR:
+            case TILE_MONS_MERMAID:
+            case TILE_MONS_MERMAID_WATER:
+            case TILE_MONS_MERFOLK_FIGHTER:
+            case TILE_MONS_MERFOLK_FIGHTER_WATER:
 
             if (eq != 0 )
                 t = flag | TileMcacheFind(t0, eq);

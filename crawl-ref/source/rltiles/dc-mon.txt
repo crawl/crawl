@@ -492,3 +492,8 @@ murray MONS_MURRAY
 
 water_elemental MONS_WATER_ELEMENTAL /*'{'*/
 ####nh-mon0/m/large_mimic MONS_MOLLUSC_LORD
+
+merfolk_fighter MONS_MERFOLK_FIGHTER
+merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
+mermaid MONS_MERMAID
+mermaid_water MONS_MERMAID_WATER
