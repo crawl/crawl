@@ -1690,7 +1690,7 @@ int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
         int res = mons_res_poison(monster);
         hurted = resist_adjust_damage(monster, pbolt.flavour, res,
                                       hurted, true);
-        if (!hurted)
+        if (!hurted && res > 0)
         {
             if (doFlavouredEffects)
                 simple_monster_message( monster, " appears unharmed." );
