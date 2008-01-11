@@ -1646,6 +1646,25 @@ static int dex_adjust_thrown_tohit(int hit)
     return stat_adjust(hit, you.dex, 13, 160, 90);
 }
 
+static void identify_floor_missiles_matching(item_def mitem, int idflags)
+{
+    mitem.flags &= ~idflags;
+    int item = NON_ITEM;
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            item = igrd[x][y];
+            while (item != NON_ITEM)
+            {
+                item_def &i(mitm[item]);
+                item = i.link;
+
+                if ((i.flags & ISFLAG_THROWN) && items_stack(i, mitem))
+                    i.flags |= idflags;
+            }
+        }
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
@@ -2083,6 +2102,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+                identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
                 mprf("You are firing %s.",
                      you.inv[throw_2].name(DESC_NOCAP_A).c_str());
             }
@@ -2250,6 +2270,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {                
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+            identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
             mprf("You are throwing %s.",
                  you.inv[throw_2].name(DESC_NOCAP_A).c_str());
         }
