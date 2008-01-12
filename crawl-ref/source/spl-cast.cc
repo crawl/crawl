@@ -873,7 +873,6 @@ spret_type your_spells( spell_type spell, int powc, bool allow_fail )
     // Hopefully, those will eventually be fixed. -- bwr
     if (flags & SPFLAG_TARGETING_MASK)
     {
-        mpr("targeting mask is true");
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
