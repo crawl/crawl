@@ -32,13 +32,13 @@ typedef XImage *img_type;
 // struct for DIB info
 typedef struct dib_pack
 {
-    LPBITMAPINFO       pDib     ;    //タイルDIBのヘッダ+パレットへのポインタ
-    HBITMAP            hDib     ;    //タイルをDIBとして保持
-    HDC                hDC      ;    //タイルのデバインコンテキストハンドル
-    LPBYTE             pDibBits ;    //DIBの先頭バイトへのポインタ
-    LPBYTE             pDibZero ;    //DIBの(0,0)点のバイトへのポインタ
-    int                Width    ;    //DIBの幅
-    int                Height   ;    //DIBの高さ
+    LPBITMAPINFO       pDib     ;
+    HBITMAP            hDib     ;
+    HDC                hDC      ;
+    LPBYTE             pDibBits ;
+    LPBYTE             pDibZero ;
+    int                Width    ;
+    int                Height   ;
 } dib_pack;
 typedef dib_pack *img_type;
 #define ImgWidth(img) (img->Width)
@@ -93,8 +93,6 @@ class WinClass
     std::vector<class RegionClass *> regions;
     std::vector<int> layers;
 
-    // 同一ウィンドウでダンジョン/インベントリなど同じ場所で
-    // 表示を切り替える場合に使用
     int active_layer;
 
     // Pointer to the window
@@ -235,37 +233,25 @@ class RegionClass
     bool is_active();
     void make_active();
 
-    //以下はテキスト/マップ/タイル等の派生クラスで挙動を変える
 
     //Sys indep
-    //マウス位置をダンジョン位置に変換、範囲内なら true を返す
     // convert mouse point into logical position
     virtual bool mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy);
 
-    //矩形領域座標を region 内座標に
     virtual bool convert_redraw_rect(int x1, int y1, int x2, int y2, 
                       int *rx1, int *ry1, int *rx2, int *ry2);
 
-    //Sys dep
-    // exposure 時などの再描画
     virtual void redraw(int x1, int y1, int x2, int y2);
     virtual void redraw();
     void sys_flush();
 
-    //低レベル描画  カーソル等用
-    // TileRegionClass 等では 画面だけでなくバックバッファ内部イメージにも描画
-    //長方形を塗りつぶす
     virtual void fillrect(int left, int right, int top, int bottom, int color);
-    //長方形を描く
     virtual void framerect(int left, int right, int top, int bottom, int color);
 
-    // Sys dep
-    // 黒で塗る
     virtual void clear();
 };
 
 
-// 派生
 class TextRegionClass :public RegionClass
 {
     public:
@@ -333,9 +319,7 @@ class TileRegionClass :public RegionClass
     bool force_redraw;
 
     void DrawPanel(int left, int top, int width, int height);
-    //バックバッファで長方形を塗りつぶす
     void fillrect(int left, int right, int top, int bottom, int color);
-    //バックバッファで長方形を描く
     void framerect(int left, int right, int top, int bottom, int color);
 
     bool mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy);
@@ -355,14 +339,11 @@ class TileRegionClass :public RegionClass
 #endif
     void resize_backbuf();
 
-    // 初期化
     TileRegionClass(int mx0, int my0, int dx0, int dy0);
 
-    // 機種依存追加処理
     void SysInit(int mx0, int my0, int dx0, int dy0);
     void SysDeinit();
 
-    //終了処理 
     ~TileRegionClass();
 };
 
@@ -389,14 +370,11 @@ class MapRegionClass  :public RegionClass
     void set_col(int col, int x, int y);
     int get_col(int x, int y);
 
-    // 初期化
     MapRegionClass(int x, int y, int o_x, int o_y, bool iso);
 
-    // 機種依存追加処理
     void SysInit(int x, int y, int o_x, int o_y);
     void SysDeinit();
 
-    //終了処理
     ~MapRegionClass();
 };
 

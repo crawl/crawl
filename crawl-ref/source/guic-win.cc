@@ -1,9 +1,7 @@
-// Windows ヘッダー ファイル:
 #include <windows.h>
 #include <commdlg.h>
 #include <commctrl.h>
 
-// C ランタイム ヘッダー ファイル
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -34,7 +32,7 @@ bool GuicInit(HINSTANCE h, int nCmd)
 
     for (i=0; i< MAX_TERM_COL; i++)
     {
-	int *c = (int *)&term_colors[i];
+    int *c = (int *)&term_colors[i];
         term_pix[i] =PALETTERGB( c[0], c[1], c[2] );
     }
     return true;
@@ -115,8 +113,8 @@ void RegionClass::init_font(const char *name, int height)
 
     if (!ftmp)
     {
-	if (font) return;
-	exit(1);
+    if (font) return;
+    exit(1);
     }
     font = ftmp;
 
@@ -166,28 +164,25 @@ void RegionClass::set_std_palette(RGBQUAD *pPal)
     int i;
     for(i=0;i<256;i++)
     {
-	std_palette[i].rgbRed   = pPal[i].rgbRed  ;
-	std_palette[i].rgbGreen = pPal[i].rgbGreen;
-	std_palette[i].rgbBlue  = pPal[i].rgbBlue ;
+    std_palette[i].rgbRed   = pPal[i].rgbRed  ;
+    std_palette[i].rgbGreen = pPal[i].rgbGreen;
+    std_palette[i].rgbBlue  = pPal[i].rgbBlue ;
 
         if ( (pPal[i].rgbRed   == 0)
            &&(pPal[i].rgbGreen == 0)
            &&(pPal[i].rgbBlue  == 0) )
             pix_black = i;
 
-        //白(255, 255, 255)の番号を格納
         if ( (pPal[i].rgbRed   == 255)
            &&(pPal[i].rgbGreen == 255)
            &&(pPal[i].rgbBlue  == 255) )
             pix_white = i;
 
-        //マゼンタ(255, 0, 255)の番号を格納
         if ( (pPal[i].rgbRed   == 255)
            &&(pPal[i].rgbGreen == 0  )
            &&(pPal[i].rgbBlue  == 255) )
             pix_magenta = i;
 
-        //縁の色(1, 1, 1)の番号を格納
         if ( (pPal[i].rgbRed   == 1)
            &&(pPal[i].rgbGreen == 1)
            &&(pPal[i].rgbBlue  == 1) )
@@ -246,9 +241,9 @@ void RegionClass::init_backbuf(RGBQUAD *pPal, int ncolor)
         {
             HDC hdc1 = GetDC(0);
             HDC hdc2 = GetDC(win->hWnd);
-	    // alloc a region of the window
+        // alloc a region of the window
             backbuf->hDib = CreateDIBSection(hdc1, backbuf->pDib,
-		    DIB_RGB_COLORS, (VOID **)&(backbuf->pDibBits), NULL, 0);
+                DIB_RGB_COLORS, (VOID **)&(backbuf->pDibBits), NULL, 0);
             backbuf->hDC = CreateCompatibleDC(hdc2);
             SelectObject(backbuf->hDC, backbuf->hDib);
             ReleaseDC(win->hWnd, hdc2);
@@ -256,7 +251,7 @@ void RegionClass::init_backbuf(RGBQUAD *pPal, int ncolor)
         }
     }
     backbuf->pDibZero = (backbuf->pDibBits) 
-	+ (backbuf->Height -1) * backbuf->Width;
+    + (backbuf->Height -1) * backbuf->Width;
 }
 
 void RegionClass::resize_backbuf()
@@ -277,14 +272,14 @@ void RegionClass::resize_backbuf()
     HDC hdc2 = GetDC(win->hWnd);
     // alloc a region of the window
     backbuf->hDib = CreateDIBSection(hdc1, backbuf->pDib,
-	    DIB_RGB_COLORS, (VOID **)&(backbuf->pDibBits), NULL, 0);
+        DIB_RGB_COLORS, (VOID **)&(backbuf->pDibBits), NULL, 0);
     backbuf->hDC = CreateCompatibleDC(hdc2);
     SelectObject(backbuf->hDC, backbuf->hDib);
     ReleaseDC(win->hWnd, hdc2);
     ReleaseDC(0, hdc1);
 
     backbuf->pDibZero = (backbuf->pDibBits) 
-	+ (backbuf->Height -1) * backbuf->Width;
+    + (backbuf->Height -1) * backbuf->Width;
 
     for (i = 0; i< mx*dx*my*dy; i++)
         *(backbuf->pDibBits + i) = pix_black;
@@ -320,17 +315,16 @@ void TileRegionClass::init_backbuf(RGBQUAD *pPal)
 
 void MapRegionClass::init_backbuf()
 {
-//ミニマップ用パレットの作成
     BYTE black = 0;
     RGBQUAD scol[MAX_MAP_COL];
     int i;
 
     for (i=0; i< MAX_MAP_COL;i++)
     {
-	scol[i].rgbBlue  = map_colors[i][2];
-	scol[i].rgbGreen = map_colors[i][1];
-	scol[i].rgbRed   = map_colors[i][0];
-	scol[i].rgbReserved = 0;
+    scol[i].rgbBlue  = map_colors[i][2];
+    scol[i].rgbGreen = map_colors[i][1];
+    scol[i].rgbRed   = map_colors[i][0];
+    scol[i].rgbReserved = 0;
     }
 
     // just resize
@@ -341,7 +335,6 @@ void MapRegionClass::init_backbuf()
 
     for (i = 0; i < MAX_MAP_COL; i++)
     {
-        //黒(0, 0, 0)の番号を格納
         if ( (backbuf->pDib->bmiColors[i].rgbRed   == 0)
            &&(backbuf->pDib->bmiColors[i].rgbGreen == 0)
            &&(backbuf->pDib->bmiColors[i].rgbBlue  == 0) )
@@ -349,7 +342,7 @@ void MapRegionClass::init_backbuf()
     }
 
     for (i = 0; i< mx*dx*my*dy; i++)
-       *(backbuf->pDibBits + i) = black; //黒で埋める。
+       *(backbuf->pDibBits + i) = black;
 }
 
 // defined to object, not to class
@@ -366,7 +359,7 @@ void TextRegionClass::draw_string(int x, int y, unsigned char *buf,
     SetBkColor(hdc, term_pix[col>>4]);
     SetTextColor(hdc, term_pix[col&0x0f]);
     ExtTextOut(hdc, rc.left, rc.top,  ETO_CLIPPED, &rc,
-	    (char *)buf, len, NULL);
+        (char *)buf, len, NULL);
     ReleaseDC(win->hWnd, hdc);
 }
 
@@ -557,9 +550,9 @@ void WinClass::resize()
                        false, 0);
 
     SetWindowPos(hWnd, 0, ox, oy,
-	    rc.right - rc.left,
-	    rc.bottom - rc.top,
-	    SWP_NOMOVE);
+        rc.right - rc.left,
+        rc.bottom - rc.top,
+        SWP_NOMOVE);
     UpdateWindow( hWnd );
 }
 
@@ -594,7 +587,6 @@ void MapRegionClass::draw_data(unsigned char *buf){
     if(!flag)return;
 
     LPBYTE ppix ,dpix;
-    // 外側、内側の x, y ループでのアドレス増分
     int inc_x, inc_y, inc_x0, inc_y0;
     int bufx = mx * dx;
     int bufy = my * dy;
@@ -619,15 +611,15 @@ void MapRegionClass::draw_data(unsigned char *buf){
     inc_y0 = - dx2 * inc_x0 + BUF_IDX(0, 0, 0, 1);
 
     // Draw gauge
-	// erase old
+    // erase old
     for (j = 0; j < dy*2; j++)
-	{
-	    *(pDibBit0 + BUF_IDX(px, 0, dx/2, j)) = MAP_BLACK;
-	}
+    {
+        *(pDibBit0 + BUF_IDX(px, 0, dx/2, j)) = MAP_BLACK;
+    }
     for (j = 0; j < dx*2; j++)
-	{
-	    *(pDibBit0 + BUF_IDX(0, py, j, dy/2)) = MAP_BLACK;
-	}
+    {
+        *(pDibBit0 + BUF_IDX(0, py, j, dy/2)) = MAP_BLACK;
+    }
 
     dpix  = ppix;
     for (j = 0; j < my2; j++)
@@ -659,15 +651,15 @@ void MapRegionClass::draw_data(unsigned char *buf){
         ppix += inc_y;
     }
 
-	// draw gauge
+    // draw gauge
     for (j = 0; j < dy*2; j++)
-	{
-	    *(pDibBit0 + BUF_IDX(px, 0, dx/2, j)) = MAP_WHITE;
-	}
+    {
+        *(pDibBit0 + BUF_IDX(px, 0, dx/2, j)) = MAP_WHITE;
+    }
     for (j = 0; j < dx*2; j++)
-	{
-	    *(pDibBit0 + BUF_IDX(0, py, j, dy/2)) = MAP_WHITE;
-	}
+    {
+        *(pDibBit0 + BUF_IDX(0, py, j, dy/2)) = MAP_WHITE;
+    }
 
     redraw();
     force_redraw = false;
@@ -715,7 +707,6 @@ void ImgDestroy(img_type img)
 {
     if (!img) return;
 
-    //if (img->pDibBits) GlobalFree(img->pDibBits);
     if (img->pDib) GlobalFree(img->pDib);
     if (img->hDC)  DeleteDC  (img->hDC);
     if (img->hDib) DeleteObject(img->hDib);
@@ -763,7 +754,6 @@ img_type ImgLoadFile(const char *name)
         return NULL;
     }
 
-     //DIB作成
     img->hDib = CreateDIBSection(hdc1, img->pDib, DIB_RGB_COLORS,
                                 (VOID **)&(img->pDibBits), NULL,0);
     if (img->hDib == NULL)
@@ -774,12 +764,9 @@ img_type ImgLoadFile(const char *name)
     }
 
 
-    //画像のビット列のサイズ
     BitsSize = bmHead.bfSize-bmHead.bfOffBits;
-    //ビット配列をポイント
     SetFilePointer(fh, bmHead.bfOffBits, NULL, FILE_BEGIN);
 
-    //読み込み
     if (!ReadFile(fh, img->pDibBits, BitsSize, &dummy, NULL))
     {
         GlobalFree(img->hDib);
@@ -788,9 +775,8 @@ img_type ImgLoadFile(const char *name)
         return NULL;
     }
 
-    CloseHandle(fh); //ファイルを閉じる
+    CloseHandle(fh);
 
-    //参照用の構造体に格納
     img->Width    = img->pDib->bmiHeader.biWidth ;
     img->Height   = img->pDib->bmiHeader.biHeight;
     img->pDibZero = img->pDibBits + (img->Height - 1) * img->Width;

@@ -2697,17 +2697,20 @@ void TileDrawTitle()
     if (!TitleImg)
         return;
 
-    // We don't need an entirely separate region for the title, so
-    // just resize the tile region to fit the screen temporarily.
-    int old_mx = region_tile->mx;
-    int old_my = region_tile->my;
-    int old_dx = region_tile->dx;
-    int old_dy = region_tile->dy;
     int winx = win_main->wx;
     int winy = win_main->wy;
-    region_tile->resize(winx, winy, 1, 1);
-    region_tile->resize_backbuf();
-    img_type pBuf = region_tile->backbuf;
+
+    TileRegionClass title(winx, winy, 1, 1);
+    title.win = win_main;
+    title.sx = 0;
+    title.sy = 0;
+    title.ex = winx;
+    title.ey = winy;
+    title.wx = winx;
+    title.wy = winy;
+    title.init_backbuf();
+    title.flag = true;
+    img_type pBuf = title.backbuf;
 
     int tx  = ImgWidth(TitleImg);
     int ty  = ImgHeight(TitleImg);
@@ -2735,15 +2738,12 @@ void TileDrawTitle()
     }
 
     ImgCopy(TitleImg, 0, 0, tx, ty, pBuf, x, y, 1);
-    region_tile->make_active();
-    region_tile->redraw();
+    title.make_active();
+    title.redraw();
     ImgDestroy(TitleImg);
 
     getch();
     clrscr();
-
-    region_tile->resize(old_mx, old_my, old_dx, old_dy);
-    region_tile->resize_backbuf();
 }
 
 static void TilePutch(int c, img_type Dest, int dx, int dy)
