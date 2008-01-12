@@ -683,7 +683,8 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
-    if (you.burden_state == BS_OVERLOADED)
+    if (you.burden_state == BS_OVERLOADED
+        && !grid_is_rock_stair(stair_find))
     {
         mpr("You are carrying too much to climb upwards.");
         you.turn_is_over = true;
@@ -808,7 +809,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     // Left Zot without enough runes to get back in (probably because
     // of dropping some runes within Zot), but need to get back in Zot
-    // to get the Orb?  Zom finds that funny.
+    // to get the Orb?  Xom finds that funny.
     if (stair_find == DNGN_RETURN_FROM_ZOT
         && branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB)
     {
@@ -1136,8 +1137,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (!player_is_airborne()
         && you.duration[DUR_CONF] 
-        && (stair_find >= DNGN_STONE_STAIRS_DOWN_I 
-            && stair_find <= DNGN_STONE_STAIRS_DOWN_III)
+        && !grid_is_rock_stair(stair_find)
         && random2(100) > you.dex)
     {
         mpr("In your confused state, you trip and fall down the stairs.");
