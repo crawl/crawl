@@ -73,9 +73,13 @@ ifeq ($(YACC),)
 DOYACC :=
 endif
 
+RESOURCE := $(UTIL)crawl.rc
+RESOURCEOBJ := crawlres.o
+WINDRES := windres.exe
+
 # Do the levcomp stuff first because that's the most likely to fail.
 OBJECTS      := levcomp.tab.o levcomp.lex.o \
-		$(OBJECTS)
+		$(OBJECTS) $(RESOURCEOBJ)
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
@@ -198,3 +202,10 @@ $(LUASRC)\$(LUALIBA):
 $(FSQLLIBA):
 	@echo Building SQLite
 	cd $(SQLSRC) && $(MAKE)
+
+##########################################################################
+# Resources
+#
+
+$(OPATH)/$(RESOURCEOBJ): $(RESOURCE)
+	$(WINDRES) $< $@
