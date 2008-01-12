@@ -1226,20 +1226,22 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
                 if (display_actions)
                 {
-                    desc += EOL "[L-Click] ";
                     int type = you.inv[ix].base_type;
+                    if (type != OBJ_CORPSES || you.species == SP_VAMPIRE)
+                        desc += EOL "[L-Click] ";
 
                     if (itemlist_iflag[cx] & TILEI_FLAG_EQUIP)
                         type += 18;
 
                     switch (type)
                     {
-                    case OBJ_JEWELLERY + 18:
-                        desc += "*(R)emove";
-                        break;
                     case OBJ_WEAPONS:
                     case OBJ_STAVES:
                         desc += "*(w)ield";
+                        break;
+                    case OBJ_WEAPONS + 18:
+                    case OBJ_STAVES + 18:
+                        desc += "unwield";
                         break;
                     case OBJ_MISSILES:
                         desc += "*(t)hrow";
@@ -1248,14 +1250,34 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         desc += "*(z)ap";
                         break;
                     case OBJ_SCROLLS:
-                    case OBJ_BOOKS:
                         desc += "*(r)ead";
+                        break;
+                    case OBJ_BOOKS:
+                        desc += "*(M)emorize";
                         break;
                     case OBJ_JEWELLERY:
                         desc += "*(P)ut on";
                         break;
+                    case OBJ_JEWELLERY + 18:
+                        desc += "*(R)emove";
+                        break;
                     case OBJ_POTIONS:
                         desc += "*(q)uaff";
+                        break;
+                    case OBJ_ARMOUR:
+                        desc += "*(W)ear";
+                        break;
+                    case OBJ_ARMOUR + 18:
+                        desc += "*(T)ake off";
+                        break;
+                    case OBJ_FOOD:
+                        desc += "*(e)at";
+                        break;
+                    case OBJ_CORPSES:
+                        if (you.species == SP_VAMPIRE)
+                            desc += "drink blood";
+                        else // no action possible
+                            desc += EOL;
                         break;
                     default:
                         desc += "*Use it";
@@ -1473,19 +1495,10 @@ static int handle_mouse_button(int mx, int my, int button,
             // otherwise return trigger key
             if (!in_los_bounds(cx+1,cy+1))
                 return CK_MOUSE_B2;
-            const coord_def ep = view2show(coord_def(cx, cy));
-            if (env.show(ep) == 0)
-                return trig;
 
-            int mid = mgrd[cx][cy];
-            if (mid == NON_MONSTER || !player_monster_visible( &menv[mid] ))
-            {
-                return trig;
-            }
-
-            describe_monsters( menv[ mid ] );
-            redraw_screen();
-            mesclr( true );
+            const int gx = view2gridX(cx) + 1;
+            const int gy = view2gridY(cy) + 1;
+            full_describe_square(coord_def(gx,gy));
             return CK_MOUSE_DONE;
         }
 

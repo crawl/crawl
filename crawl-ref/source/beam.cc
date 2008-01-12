@@ -3755,7 +3755,7 @@ static int affect_monster(bolt &beam, monsters *mon)
                     remove_sanctuary(true);
                 }
 
-                if (mons_friendly( mon ))
+                if (mons_friendly( mon ) && beam.flavour != BEAM_CHARM)
                     did_god_conduct( DID_ATTACK_FRIEND, 5, true, mon );
                     
                 if (mons_holiness( mon ) == MH_HOLY)

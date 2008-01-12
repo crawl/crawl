@@ -954,20 +954,21 @@ bool is_valid_spell_in_book( int splbook, int spell )
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
 }
 
-static bool which_spellbook( int &book, int &spell )
+static int which_spellbook( void )
 {
+    int book = -1;
     const int avail_levels = player_spell_levels();
 
     // Knowing delayed fireball will allow Fireball to be learned for free -bwr
     if (avail_levels < 1 && !player_has_spell(SPELL_DELAYED_FIREBALL))
     {
         mpr("You can't memorise any more spells yet.");
-        return (false);
+        return (-1);
     }
     else if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        return (false);
+        return (-1);
     }
 
     mprf("You can memorise %d more level%s of spells.",
@@ -978,26 +979,23 @@ static bool which_spellbook( int &book, int &spell )
     if (book == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
-        return (false);
+        return (-1);
     }
 
     if (you.inv[book].base_type != OBJ_BOOKS
         || you.inv[book].sub_type == BOOK_MANUAL)
     {
         mpr("That isn't a spellbook!");
-        return (false);
+        return (-1);
     }
 
     if (you.inv[book].sub_type == BOOK_DESTRUCTION)
     {
         tome_of_power( book );
-        return (false);
+        return (-1);
     }
 
-    spell = read_book( you.inv[book], RBOOK_MEMORISE );
-    clrscr();
-
-    return (true);
+    return (book);
 }                               // end which_spellbook()
 
 // Returns false if the player cannot read/memorize from the book,
@@ -1178,11 +1176,10 @@ bool player_can_memorise(const item_def &book)
     return false;
 }
                          
-bool learn_spell(void)
+bool learn_spell(int book)
 {
     int chance = 0;
     int levels_needed = 0;
-    int book, spell;
     int index;
 
     int i;
@@ -1212,8 +1209,14 @@ bool learn_spell(void)
         return (false);
     }
 
-    if (!which_spellbook( book, spell ))
+    if (book < 0)
+        book = which_spellbook();
+        
+    if (book < 0) // still -1?
         return (false);
+
+    int spell = read_book( you.inv[book], RBOOK_MEMORISE );
+    clrscr();
 
     mesclr(true);
     redraw_screen();

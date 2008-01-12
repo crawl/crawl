@@ -209,8 +209,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     // If the swap slot has a bad (but valid) item in it,
     // the swap will be to bare hands.
-    const bool good_swap = 
-        you.inv[item_slot].base_type == OBJ_WEAPONS
+    const bool good_swap = item_slot == PROMPT_GOT_SPECIAL
+        || you.inv[item_slot].base_type == OBJ_WEAPONS
         || you.inv[item_slot].base_type == OBJ_STAVES
         || (you.inv[item_slot].base_type == OBJ_MISCELLANY
             && you.inv[item_slot].sub_type != MISC_RUNE_OF_ZOT);
@@ -230,31 +230,30 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
                             true, true, true, '-', NULL, OPER_WIELD);
         else
             item_slot = PROMPT_GOT_SPECIAL;
+    }
 
-        if (item_slot == PROMPT_ABORT)
+    if (item_slot == PROMPT_ABORT)
+    {
+        canned_msg( MSG_OK );
+        return (false);
+    }
+    else if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
+    {
+        if (you.equip[EQ_WEAPON] != -1)
         {
-            canned_msg( MSG_OK );
-            return (false);
-        }
-        else if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
-        {
-            if (you.equip[EQ_WEAPON] != -1)
-            {
-                if (!unwield_item(show_weff_messages))
-                    return (false);
+            if (!unwield_item(show_weff_messages))
+                return (false);
                     
-                canned_msg( MSG_EMPTY_HANDED );
+            canned_msg( MSG_EMPTY_HANDED );
 
-                you.turn_is_over = true;
-                you.time_taken *= 3;
-                you.time_taken /= 10;
-            }
-            else
-            {
-                mpr( "You are already empty-handed." );
-            }
-            return (true);
+            you.turn_is_over = true;
+            you.time_taken *= 3;
+            you.time_taken /= 10;
         }
+        else
+            mpr( "You are already empty-handed." );
+
+        return (true);
     }
 
     if (item_slot == you.equip[EQ_WEAPON])
@@ -4396,7 +4395,7 @@ bool wearing_slot(int inv_slot)
 
 #ifdef USE_TILE
 // Interactive menu for item drop/use
-void use_item(int idx, InvAction act)
+void tile_use_item(int idx, InvAction act)
 {
     if (act == INV_PICKUP)
     {
@@ -4405,9 +4404,7 @@ void use_item(int idx, InvAction act)
     }
     else if (act == INV_DROP)
     {
-#ifdef USE_TILE
         TileMoveInvCursor(-1);
-#endif
         drop_item(idx, you.inv[idx].quantity);
         return;
     }
@@ -4427,9 +4424,7 @@ void use_item(int idx, InvAction act)
         }
     }
 
-#ifdef USE_TILE
     TileMoveInvCursor(-1);
-#endif
 
     // Special case for folks who are wielding something
     // that they shouldn't be wielding.
@@ -4497,14 +4492,21 @@ void use_item(int idx, InvAction act)
             zap_wand(idx);
             return;
 
+        case OBJ_CORPSES:
+            if (you.species != SP_VAMPIRE)
+                break;
+            // intentional fall-through for Vampires
         case OBJ_FOOD:
             if (!check_warning_inscriptions(you.inv[idx], OPER_EAT))
                 return;
             eat_food(false, idx);
             return;
 
-        case OBJ_SCROLLS:
         case OBJ_BOOKS:
+            learn_spell(idx);
+            return;
+            
+        case OBJ_SCROLLS:
             if (!check_warning_inscriptions(you.inv[idx], OPER_READ))
                 return;
             read_scroll(idx);

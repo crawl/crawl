@@ -1657,7 +1657,7 @@ void process_command( command_type cmd )
             int idx;
             InvAction act;
             gui_get_mouse_inv(idx, act);
-            use_item(idx, act);
+            tile_use_item(idx, act);
         }
         break;
 

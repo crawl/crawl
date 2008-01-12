@@ -188,7 +188,7 @@ bool wearing_slot(int inv_slot);
 /* ***********************************************************************
  *  * called from: acr
  *   * *********************************************************************** */
-void use_item(int idx, InvAction act);
+void tile_use_item(int idx, InvAction act);
 #endif
 
 #endif

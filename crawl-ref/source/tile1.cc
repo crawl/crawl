@@ -3976,8 +3976,11 @@ void finish_inven_data(int n, int *tiles, int *num, int *idx, int *iflag)
         if (q==1) q = -1;
 
         if (type == OBJ_WANDS && 
-              (itm->flags & ISFLAG_KNOW_PLUSES )!= 0)
+              ((itm->flags & ISFLAG_KNOW_PLUSES )!= 0
+               || itm->plus2 == ZAPCOUNT_EMPTY))
+        {
             q = itm->plus;
+        }
 
         tiles[i] = tileidx_item(*itm);
         num[i] = q;
