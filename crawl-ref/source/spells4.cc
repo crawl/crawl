@@ -2140,8 +2140,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     const int grid = grd[beam.tx][beam.ty];
     const int mon  = mgrd[beam.tx][beam.ty];
 
-    const bool okay_to_dest = ((beam.tx > 5 && beam.tx < GXM - 5)
-                                && (beam.ty > 5 && beam.ty < GYM - 5));
+    const bool okay_to_dest = in_bounds(beam.target());
 
     if (mon != NON_MONSTER)
     {
