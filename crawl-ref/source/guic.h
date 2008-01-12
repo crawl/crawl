@@ -104,14 +104,11 @@ class WinClass
     somewindowtype win;
 #endif
 
-    // 初期化
     WinClass();
 
-    // 機種依存追加処理
     void SysInit();
     void SysDeinit();
 
-    // 終了
     ~WinClass();
 
     // fillout with black: Sys dep
@@ -141,6 +138,8 @@ class WinClass
                       int x, int y,
 		      int margin_top = 0, int margin_left = 0,
                       int margin_bottom = 0, int margin_right = 0);
+
+    void removeRegion(class RegionClass *r);
 
     // fillout a rectangle
     void fillrect(int left, int right, int top, int bottom, int color);
@@ -185,7 +184,6 @@ class RegionClass
 
     // pointer to internal backup image buffer
     // used for redraw and supplessing flicker
-    // Win では タイルとマップ、 X11 ではタイルで使用
     img_type backbuf;
 #ifdef WIN32TILES
     static void set_std_palette(RGBQUAD *pPal);

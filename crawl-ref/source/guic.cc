@@ -160,6 +160,26 @@ void WinClass::placeRegion(RegionClass *r, int layer0,
 
 }
 
+void WinClass::removeRegion(RegionClass *r)
+{
+    for (unsigned int i = 0; i < regions.size(); i++)
+    {
+        if (regions[i] == r)
+        {
+            for (unsigned int j = i + 1; j < regions.size(); j++)
+            {
+                regions[j-1] = regions[j];
+                layers[j-1] = layers[j];
+            }
+
+            regions.pop_back();
+            layers.pop_back();
+
+            return;
+        }
+    }
+}
+
 void WinClass::redraw(int x1, int y1, int x2, int y2)
 {
     std::vector <RegionClass *>::iterator r;

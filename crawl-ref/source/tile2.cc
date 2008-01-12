@@ -2701,15 +2701,8 @@ void TileDrawTitle()
     int winy = win_main->wy;
 
     TileRegionClass title(winx, winy, 1, 1);
-    title.win = win_main;
-    title.sx = 0;
-    title.sy = 0;
-    title.ex = winx;
-    title.ey = winy;
-    title.wx = winx;
-    title.wy = winy;
+    win_main->placeRegion(&title, 0, 0, 0, 0, 0, 0, 0);
     title.init_backbuf();
-    title.flag = true;
     img_type pBuf = title.backbuf;
 
     int tx  = ImgWidth(TitleImg);
@@ -2744,6 +2737,8 @@ void TileDrawTitle()
 
     getch();
     clrscr();
+
+    win_main->removeRegion(&title);
 }
 
 static void TilePutch(int c, img_type Dest, int dx, int dy)
