@@ -1249,11 +1249,17 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     case OBJ_WANDS:
                         desc += "*(z)ap";
                         break;
+                    case OBJ_BOOKS:
+                        if (item_type_known(you.inv[ix])
+                            && you.inv[ix].sub_type != BOOK_MANUAL
+                            && you.inv[ix].sub_type != BOOK_DESTRUCTION)
+                        {
+                            desc += "*(M)emorize";
+                            break;
+                        }
+                        // else fall-through
                     case OBJ_SCROLLS:
                         desc += "*(r)ead";
-                        break;
-                    case OBJ_BOOKS:
-                        desc += "*(M)emorize";
                         break;
                     case OBJ_JEWELLERY:
                         desc += "*(P)ut on";

@@ -4503,6 +4503,13 @@ void tile_use_item(int idx, InvAction act)
             return;
 
         case OBJ_BOOKS:
+            if (you.inv[idx].sub_type == BOOK_MANUAL
+                || you.inv[idx].sub_type == BOOK_DESTRUCTION)
+            {
+                handle_read_book(idx);
+                return;
+            }
+            // else it's a spellbook
             learn_spell(idx);
             return;
             
