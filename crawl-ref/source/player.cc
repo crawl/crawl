@@ -5874,6 +5874,10 @@ int player::shield_bonus() const
     const int shield_class = player_shield_class();
     if (!shield_class)
         return (-100);
+
+    // Note that 0 is not quite no-blocking.
+    if (incapacitated())
+        return (0);
     
     int stat = 0;
     if (const item_def *sh = const_cast<player*>(this)->shield())
