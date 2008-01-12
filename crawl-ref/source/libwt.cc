@@ -1,4 +1,5 @@
-// Windows ヘッダー ファイル:
+#define _WIN32_WINNT 0x0501
+
 #include <windows.h>
 #include <windowsx.h>
 #include <commdlg.h>
@@ -14,9 +15,11 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <fcntl.h>
 
 #include "AppHdr.h"
 #include "cio.h"
+#include "debug.h"
 #include "externs.h"
 #include "files.h" 
 #include "guic.h"
@@ -24,7 +27,6 @@
 #include "state.h"
 #include "tiles.h"
 
-// acr.cc
 extern int old_main(int argc, char *argv[]);
 
 extern WinClass *win_main;
@@ -72,46 +74,40 @@ void libgui_shutdown_sys();
 void update_tip_text(const char *tip);
 
 void GetNextEvent(int *etype, int *key, bool *shift, bool *ctrl,
-	    int *x1, int *y1, int *x2, int *y2);
+        int *x1, int *y1, int *x2, int *y2);
 void TileInitWin();
 void delay(unsigned long ms);
 int kbhit();
 
 /***************************/
-#ifdef USE_TILE
 void TileInitWin()
 {
     int i;
 
-    //透明色を黒に入れ替える
     TileImg->pDib->bmiColors[pix_transparent].rgbRed   = 0;
     TileImg->pDib->bmiColors[pix_transparent].rgbGreen = 0;
     TileImg->pDib->bmiColors[pix_transparent].rgbBlue  = 0;
 
     RegionClass::set_std_palette(&TileImg->pDib->bmiColors[0]);
 
-    //バックバッファ用パレットの作成
-    WORD chcol; //グレイスケール計算用
+    WORD chcol;
     lpPalettes[0] = (LPBYTE) (&TileImg->pDib->bmiColors[0]);
-    lpPalettes[1] = (LPBYTE)GlobalAlloc(GPTR, 256 * sizeof(RGBQUAD) ); //バーサークパレットを入れる為のメモリ確保
-    lpPalettes[2] = (LPBYTE)GlobalAlloc(GPTR, 256 * sizeof(RGBQUAD) ); //シャドウパレットを入れる為のメモリ確保
+    lpPalettes[1] = (LPBYTE)GlobalAlloc(GPTR, 256 * sizeof(RGBQUAD) );
+    lpPalettes[2] = (LPBYTE)GlobalAlloc(GPTR, 256 * sizeof(RGBQUAD) );
     for (i = 0; i < 256; i++)
     {
-        //バーサーク用パレット
         chcol = (TileImg->pDib->bmiColors[i].rgbRed  * 30
               + TileImg->pDib->bmiColors[i].rgbGreen * 59
               + TileImg->pDib->bmiColors[i].rgbBlue  * 11)/100;
-	LPBYTE ptr = lpPalettes[1] + i * sizeof(RGBQUAD);
+    LPBYTE ptr = lpPalettes[1] + i * sizeof(RGBQUAD);
         ptr[2] = (BYTE)chcol;
         ptr[0] = (BYTE)( (chcol +1)/6 );
         ptr[1] = (BYTE)( (chcol +1)/6 );
 
-	ptr = lpPalettes[2] + i * sizeof(RGBQUAD);
-        //シャドウ用パレット
+    ptr = lpPalettes[2] + i * sizeof(RGBQUAD);
         ptr[2] = ptr[0] = ptr[1] = (BYTE)chcol;
     }
 }
-#endif
 
 void update_tip_text(const char *tip)
 {
@@ -130,15 +126,13 @@ bool libgui_init_sys( )
 
 void libgui_shutdown_sys()
 {
-#ifdef USE_TILE
-    GlobalFree(lpPalettes[1]);   //バーサーク用パレット メモリ解放
-    GlobalFree(lpPalettes[2]);  //シャドウ用パレット   メモリ解放
-#endif
+    GlobalFree(lpPalettes[1]);
+    GlobalFree(lpPalettes[2]);
     DestroyWindow( pWin );
 }
 
 void GetNextEvent(int *etype, int *key, bool *sh, bool *ct,
-	    int *x1, int *y1, int *x2, int *y2)
+        int *x1, int *y1, int *x2, int *y2)
 {
     MSG msg;
 
@@ -169,9 +163,8 @@ void ev_push(struct ev_data *e)
         ev_tail = 0;
 }
 
-//FAR PASCAL
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine, int       nCmdShow )
+    LPSTR lpCmdLine, int nCmdShow )
 {
     MSG msg;
 
@@ -179,9 +172,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     GuicInit(hInstance, nCmdShow);
 
-    // after handing the controll to the main code,
-    // libgui_init , libgui_init_sys will be called
-    old_main(0, NULL);
+    // Redirect output to the console
+    AttachConsole(ATTACH_PARENT_PROCESS);
+    freopen("CONOUT$", "wb", stdout);
+    freopen("CONOUT$", "wb", stderr);
+
+    // I'll be damned if I have to parse lpCmdLine myself...
+    int argc;
+    LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    char **argv = new char*[argc];
+    int args_len = wcslen(GetCommandLineW()) + argc;
+    char *args = new char[args_len];
+
+    char *ptr = args;
+    for (int i = 0; i < argc; i++)
+    {
+        wsprintfA(ptr, "%S", wargv[i]);
+        argv[i] = ptr;
+        ptr += strlen(argv[i]) + 1;
+    }
+    ASSERT(ptr <= args + args_len);
+
+    old_main(argc, argv);
+
+    delete args;
+    delete argv;
+
+    FreeConsole();
 
     return msg.wParam;
 }
@@ -221,9 +238,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     // For keypad
     const unsigned char ck_table[9]=
     {
-	CK_END,  CK_DOWN,   CK_PGDN,
-	CK_LEFT, CK_INSERT, CK_RIGHT,
-	CK_HOME, CK_UP,     CK_PGUP
+        CK_END,  CK_DOWN,   CK_PGDN,
+        CK_LEFT, CK_INSERT, CK_RIGHT,
+        CK_HOME, CK_UP,     CK_PGUP
     };
 
     switch( message )
@@ -232,9 +249,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             pWin = hWnd;
 
-        // TOOLTIP テキストの設定
-        // Example taken from
-        // http://black.sakura.ne.jp/~third/system/winapi/common10.html
+            // Example taken from
+            // http://black.sakura.ne.jp/~third/system/winapi/common10.html
             InitCommonControls();
             hTool = CreateWindowEx( 0 , TOOLTIPS_CLASS ,
                     NULL , TTS_ALWAYSTIP ,
@@ -243,17 +259,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     hWnd , NULL , ((LPCREATESTRUCT)(lParam))->hInstance ,
                     NULL
             );
-        GetClientRect(hWnd , &tiTip.rect);
+            GetClientRect(hWnd , &tiTip.rect);
 
-        tiTip.cbSize = sizeof (TOOLINFO);
-        tiTip.uFlags = TTF_SUBCLASS;
+            tiTip.cbSize = sizeof (TOOLINFO);
+            tiTip.uFlags = TTF_SUBCLASS;
             tiTip.hwnd = hWnd;
             tiTip.lpszText = (char *)
-		"This text will tell you" EOL
-		" what you are pointing";
+                "This text will tell you" EOL
+                " what you are pointing";
             SendMessage(hTool, TTM_ADDTOOL , 0 , (LPARAM)&tiTip);
-	    // Allow line wrap
-	    SendMessage(hTool, TTM_SETMAXTIPWIDTH, 0, DF_TOOLTIP_WIDTH);
+            // Allow line wrap
+            SendMessage(hTool, TTM_SETMAXTIPWIDTH, 0, DF_TOOLTIP_WIDTH);
             return 0;
         }
 
@@ -261,7 +277,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN:
         {
-	    ev.type = EV_BUTTON;
+            ev.type = EV_BUTTON;
             ev.x1 = LOWORD(lParam);
             ev.y1 = HIWORD(lParam);
             ev.key = 1;
@@ -269,42 +285,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ev.ct = ((GetKeyState(VK_CONTROL) & 0x80)!=0)? true:false;
             if (message == WM_RBUTTONDOWN) ev.key = 2;
             if (message == WM_MBUTTONDOWN) ev.key = 3;
-	    ev_push(&ev);
+            ev_push(&ev);
             return 0;
         }
 
         case WM_RBUTTONUP:
-        //case WM_LBUTTONDOWN:
-	{
-	    ev.type = EV_UNBUTTON;
+        {
+            ev.type = EV_UNBUTTON;
             ev.x1 = LOWORD(lParam);
             ev.y1 = HIWORD(lParam);
             ev.key = 1;
             if (message == WM_RBUTTONUP) ev.key = 2;
             if (message == WM_MBUTTONUP) ev.key = 3;
-	    ev_push(&ev);
+            ev_push(&ev);
             return 0;
-	}
+        }
 
         case WM_MOUSEWHEEL:
         {
             int z = (short)HIWORD(wParam);
             ev.x1 = LOWORD(lParam) - clix;
             ev.y1 = HIWORD(lParam) - cliy;
-	    ev.type = EV_BUTTON;
+        ev.type = EV_BUTTON;
             ev.sh = ((GetKeyState(VK_SHIFT) & 0x80)!=0)? true:false;
             ev.ct = ((GetKeyState(VK_CONTROL) & 0x80)!=0)? true:false;
             ev.key = (z>0)? 4:5;
-	    ev_push(&ev);
+        ev_push(&ev);
             return 0;
         }
 
         case WM_MOUSEMOVE:
         {
-	    ev.type = EV_MOVE;
+        ev.type = EV_MOVE;
             ev.x1 = LOWORD(lParam);
             ev.y1 = HIWORD(lParam);
-	    ev_push(&ev);
+        ev_push(&ev);
             return 0;
         }
 
@@ -312,17 +327,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             int ch=(int)wParam;
             int result = 0;
-	    int dir = 0;
+        int dir = 0;
             bool fs = ((GetKeyState(VK_SHIFT)  & 0x80)!=0)? true:false;
             bool fc = ((GetKeyState(VK_CONTROL)& 0x80)!=0)? true:false;
             bool fa = ((GetKeyState(VK_MENU)   & 0x80)!=0)? true:false;
 
-	    if (ch >= VK_NUMPAD1 && ch <= VK_NUMPAD9)
-	    {
-		skip_key = true;
-		dir = ch - VK_NUMPAD0;
-	    }
-	    else
+        if (ch >= VK_NUMPAD1 && ch <= VK_NUMPAD9)
+        {
+        skip_key = true;
+        dir = ch - VK_NUMPAD0;
+        }
+        else
             if ((VK_PRIOR <= ch && ch <=VK_DOWN) || (ch == VK_CLEAR) )
             {
                 switch(ch)
@@ -337,84 +352,75 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     case VK_END:   dir = 1; break;
                     case VK_CLEAR: dir = 5; break;
                 }
-	    }
+        }
 
             if (dir != 0)
             {
-		ch = ck_table[dir-1];
+        ch = ck_table[dir-1];
                 if (fc)
-		    ch += CK_CTRL_UP - CK_UP;
+            ch += CK_CTRL_UP - CK_UP;
                 if (fs)
-		    ch += CK_SHIFT_UP - CK_UP;
+            ch += CK_SHIFT_UP - CK_UP;
 
                 if (fa) ch |= 2048;
                 ev.key = ch;
-	        ev.type = EV_KEYIN;
-	        ev_push(&ev);
+            ev.type = EV_KEYIN;
+            ev_push(&ev);
                 return 0;
-            } // dir!=0
+            }
+        else if ( ch >= VK_PAUSE
+        && !(ch >= VK_CAPITAL && ch <= VK_SPACE)
+        && ch !=VK_PROCESSKEY
+        && ch != VK_NUMLOCK
+        && !(ch >=VK_LSHIFT && ch<= VK_RMENU)
+        && !(ch >= 0x30 && ch<= 0x39)
+        && !(ch >= 0x41 && ch<= 0x5a)
+        && !(ch >= 0xa6 && ch<= 0xe4)
+           )
+            {
+                result = 300+ch;
+            }
 
-	    else
-	    if ( ch >= VK_PAUSE
-		&& !(ch >= VK_CAPITAL && ch <= VK_SPACE)
-		&& ch !=VK_PROCESSKEY
-		&& ch != VK_NUMLOCK
-		&& !(ch >=VK_LSHIFT && ch<= VK_RMENU)
-		&& !(ch >= 0x30 && ch<= 0x39)
-		&& !(ch >= 0x41 && ch<= 0x5a)
-		&& !(ch >= 0xa6 && ch<= 0xe4)
-	       ) result = 300+ch;
+            if (result)
+            {
+                if (fs) result |= 512;
+                if (fc) result |= 1024;
+                if (fa) result |= 2048;
+                ev.key = result;
+                ev.type = EV_KEYIN;
+                ev_push(&ev);
+            }
 
-        if (result)
-        {
-            if (fs) result |= 512;
-            if (fc) result |= 1024;
-            if (fa) result |= 2048;
-	    ev.key = result;
-	    ev.type = EV_KEYIN;
-	    ev_push(&ev);
-        }
-
-        return 0;
+            return 0;
         }
 
         case WM_CHAR:
         {
-	    if (skip_key)
-	    {
-		skip_key = false;
-		return 0;
-	    }
+        if (skip_key)
+        {
+        skip_key = false;
+        return 0;
+        }
             ev.key = (int)wParam;
-	    ev.type = EV_KEYIN;
-	    ev_push(&ev);
+        ev.type = EV_KEYIN;
+        ev_push(&ev);
             return 0;
         }
 
         case WM_PAINT:
         {
             hdc = BeginPaint(hWnd, &ps);
-            /*
-            int x1 = ps.rcPaint.left;
-            int x2 = ps.rcPaint.right;
-            int y1 = ps.rcPaint.top;
-            int y2 = ps.rcPaint.bottom;
-
-            int dx = xwin.dx;
-            int dy = xwin.dy;
-            */
             win_main->redraw();
             EndPaint(hWnd, &ps);
-            //ValidateRect(hWnd, NULL);
             return 0;
         }
 
-	case WM_MOVE:
-	{
-	    clix = LOWORD(lParam);
-	    cliy = HIWORD(lParam);
-	    return 0;
-	}
+    case WM_MOVE:
+    {
+        clix = LOWORD(lParam);
+        cliy = HIWORD(lParam);
+        return 0;
+    }
 
         case WM_COMMAND:
         {
@@ -435,7 +441,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 {
                     save_game(true);
                 }
-		libgui_shutdown();
+        libgui_shutdown();
             }
             break;
         case WM_DESTROY:
@@ -460,7 +466,7 @@ void TileDrawDungeonAux(){
 
     if (new_palette != palette)
     {
-	palette = new_palette;
+    palette = new_palette;
         SetDIBColorTable(pBuf->hDC, 0, 256, (RGBQUAD *)lpPalettes[palette]);
     }
 }
@@ -476,7 +482,7 @@ bool windows_change_font(char *font_name, int *font_size, bool dos)
     cf.nSizeMin = 8;
     cf.nSizeMax = 24;
     cf.Flags = CF_SCREENFONTS | CF_FIXEDPITCHONLY | CF_NOVERTFONTS
-	       | CF_INITTOLOGFONTSTRUCT | CF_LIMITSIZE | CF_FORCEFONTEXIST;
+        | CF_INITTOLOGFONTSTRUCT | CF_LIMITSIZE | CF_FORCEFONTEXIST;
 
     LOGFONT lf;
     strcpy(lf.lfFaceName, font_name);
@@ -499,7 +505,7 @@ bool windows_change_font(char *font_name, int *font_size, bool dos)
     {
         *font_size = (cf.iPointSize / 10);
         strcpy(font_name, lf.lfFaceName);
-	return true;
+    return true;
     }
     return false;
 }
@@ -528,8 +534,7 @@ int kbhit()
     MSG msg;
 
     if (PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_NOREMOVE)
-        || PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE)
-     /* || PeekMessage(&msg, NULL, WM_MOUSEMOVE, WM_MOUSEMOVE, PM_NOREMOVE)*/ )
+        || PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE))
         return 1;
     else
         return 0;
