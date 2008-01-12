@@ -2062,7 +2062,8 @@ static bool tso_retribution()
         
         for (int i = 0; i < how_many; i++)
             if (create_monster( MONS_DAEVA, 0, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                                you.x_pos, you.y_pos, MHITYOU,
+                                MONS_PROGRAM_BUG ) != -1)
                 success = true;
 
         simple_god_message( success ?
@@ -2125,7 +2126,8 @@ static bool zin_retribution()
 
            for (int i = 0; i < how_many; i++)
               if (create_monster(MONS_ANGEL, 0, BEH_HOSTILE,
-                                 you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                                 you.x_pos, you.y_pos, MHITYOU,
+                                 MONS_PROGRAM_BUG) != -1)
                   success = true;
 
            simple_god_message( success ?
@@ -2166,7 +2168,7 @@ static bool makhleb_retribution()
     {
         const bool success = create_monster(MONS_EXECUTIONER + random2(5), 0,
                                             BEH_HOSTILE, you.x_pos, you.y_pos,
-                                            MHITYOU, 250) != -1;
+                                            MHITYOU, MONS_PROGRAM_BUG) != -1;
         simple_god_message(success ?
                            " sends a greater servant after you!" :
                            "'s greater servant is unavoidably detained.",
@@ -2179,7 +2181,8 @@ static bool makhleb_retribution()
 
         for (int i = 0; i < how_many; i++)
             if (create_monster(MONS_NEQOXEC + random2(5), 0, BEH_HOSTILE,
-                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                               you.x_pos, you.y_pos, MHITYOU,
+                               MONS_PROGRAM_BUG) != -1)
                 success = true;
 
         simple_god_message(success ?
@@ -2203,7 +2206,7 @@ static bool kikubaaqudgha_retribution()
 
         for (int i = 0; i < how_many; i++)
             if (create_monster(MONS_REAPER, 0, BEH_HOSTILE, you.x_pos,
-                               you.y_pos, MHITYOU, 250) != -1)
+                               you.y_pos, MHITYOU, MONS_PROGRAM_BUG) != -1)
                 success = true;
 
         if (success)
@@ -2238,7 +2241,8 @@ static bool yredelemnul_retribution()
             monster_type punisher = random_servant(GOD_YREDELEMNUL);
 
             if (create_monster(punisher, 0, BEH_HOSTILE,
-                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                               you.x_pos, you.y_pos, MHITYOU,
+                               MONS_PROGRAM_BUG) != -1)
                 count++;
         }
 
@@ -2387,7 +2391,8 @@ static bool beogh_retribution()
 
             // now create monster
             int mons = create_monster( MONS_DANCING_WEAPON, 0, BEH_HOSTILE,
-                                       you.x_pos, you.y_pos, MHITYOU, 250 );
+                                       you.x_pos, you.y_pos, MHITYOU,
+                                       MONS_PROGRAM_BUG );
                                        
             // hand item information over to monster
             if (mons != -1)
@@ -2439,8 +2444,10 @@ static bool beogh_retribution()
         else
             punisher = MONS_ORC;
 
-        bool success = (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
-                                       you.y_pos, MHITYOU, 250, true) != -1);
+        bool success =
+            (create_monster(punisher, 0, BEH_HOSTILE, you.x_pos,
+                            you.y_pos, MHITYOU,
+                            MONS_PROGRAM_BUG, true) != -1);
 
         simple_god_message(success ?
                            " sends forth an army of orcs." :
@@ -2465,7 +2472,8 @@ static bool okawaru_retribution()
         monster_type punisher = random_servant(GOD_OKAWARU);
 
         if (create_monster(punisher, 0, BEH_HOSTILE,
-                           you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                           you.x_pos, you.y_pos, MHITYOU,
+                           MONS_PROGRAM_BUG) != -1)
             success = true;
     }
 
@@ -2554,7 +2562,7 @@ static bool lugonu_retribution()
     {
         if (create_monster(MONS_GREEN_DEATH + random2(3), 0,
                            BEH_HOSTILE, you.x_pos, you.y_pos,
-                           MHITYOU, 250) != -1)
+                           MHITYOU, MONS_PROGRAM_BUG) != -1)
         {
             simple_god_message(" sends a demon after you!", god);
         }
@@ -2571,7 +2579,8 @@ static bool lugonu_retribution()
         for (int loopy = 0; loopy < how_many; loopy++)
         {
             if (create_monster(MONS_NEQOXEC + random2(5), 0, BEH_HOSTILE,
-                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+                               you.x_pos, you.y_pos, MHITYOU,
+                               MONS_PROGRAM_BUG) != -1)
             {
                 success = true;
             }

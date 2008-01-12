@@ -393,7 +393,8 @@ void create_spec_monster(void)
         canned_msg( MSG_OK );
     else
         create_monster( mon, 0, BEH_SLEEP, 
-                you.x_pos, you.y_pos, MHITNOT, 250, true );
+                        you.x_pos, you.y_pos, MHITNOT, MONS_PROGRAM_BUG,
+                        true );
 }                               // end create_spec_monster()
 #endif
 
@@ -2475,7 +2476,7 @@ static int create_fsim_monster(int mtype, int hp)
 {
     const int mi = 
         create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos, 
-                        MHITNOT, 250 );
+                        MHITNOT, MONS_PROGRAM_BUG );
 
     if (mi == -1)
         return (mi);

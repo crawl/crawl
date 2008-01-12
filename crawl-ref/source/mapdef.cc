@@ -1974,7 +1974,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 
             if (nspec.mid == MONS_PROGRAM_BUG)
             {
-                error = make_stringf("unrecognised monster \"%s\"",
+                error = make_stringf("unknown monster: \"%s\"",
                                      mon_str.c_str());
                 return (slot);
             }
@@ -2092,11 +2092,89 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
 {
     int nheads = atoi(name.c_str());
     if (nheads < 1)
-        nheads = 250; // Choose randomly, doesn't mean a 250-headed hydra.
+        nheads = MONS_PROGRAM_BUG;  // What can I say? :P
     else if (nheads > 19)
         nheads = 19;
 
     return mons_spec(MONS_HYDRA, nheads);
+}
+
+// Handle draconians specified as:
+// Exactly as in mon-data.h:
+//    yellow draconian or draconian knight - the monster specified.
+//
+// Others:
+//    any draconian => any random draconain
+//    any base draconian => any unspecialised coloured draconian.
+//    any nonbase draconian => any specialised coloured draconian.
+//    any <colour> draconian => any draconian of the colour.
+//    any nonbase <colour> draconian => any specialised drac of the colour.
+//    
+mons_spec mons_list::drac_monspec(std::string name) const
+{
+    mons_spec spec;
+    
+    spec.mid = get_monster_by_name(name, true);
+
+    // Check if it's a simple drac name, we're done.
+    if (spec.mid != MONS_PROGRAM_BUG)
+        return (spec);
+
+    spec.mid = RANDOM_DRACONIAN;
+
+    // Request for any draconian?
+    if (starts_with(name, "any "))
+        // Strip "any "
+        name = name.substr(4);
+
+    if (starts_with(name, "base "))
+    {
+        // Base dracs need no further work.
+        return (RANDOM_BASE_DRACONIAN);
+    }
+    else if (starts_with(name, "nonbase "))
+    {
+        spec.mid = RANDOM_NONBASE_DRACONIAN;
+        name = name.substr(8);
+    }
+
+    trim_string(name);
+
+    // Match "any draconian"
+    if (name == "draconian")
+        return (spec);
+
+    // Check for recognition again to match any (nonbase) <colour> draconian.
+    const monster_type colour = get_monster_by_name(name, true);
+    if (colour != MONS_PROGRAM_BUG)
+    {
+        spec.monnum = colour;
+        return (spec);
+    }
+
+    // Only legal possibility left is <colour> boss drac.
+    std::string::size_type wordend = name.find(' ');
+    if (wordend == std::string::npos)
+        return (MONS_PROGRAM_BUG);
+
+    std::string scolour = name.substr(0, wordend);
+    if ((spec.monnum = draconian_colour_by_name(scolour)) == MONS_PROGRAM_BUG)
+        return (MONS_PROGRAM_BUG);
+
+    name = trimmed_string(name.substr(wordend + 1));
+    spec.mid = get_monster_by_name(name, true);
+
+    // We should have a non-base draconian here.
+    if (spec.mid == MONS_PROGRAM_BUG
+        || mons_genus(spec.mid) != MONS_DRACONIAN
+        || spec.mid == MONS_DRACONIAN
+        || (spec.mid >= MONS_BLACK_DRACONIAN
+            && spec.mid <= MONS_PALE_DRACONIAN))
+    {
+        return (MONS_PROGRAM_BUG);
+    }
+
+    return (spec);
 }
 
 mons_spec mons_list::mons_by_name(std::string name) const
@@ -2104,6 +2182,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
     lowercase(name);
 
     name = replace_all_of( name, "_", " " );
+    name = replace_all( name, "random", "any" );
 
     if (name == "nothing")
         return (-1);
@@ -2112,22 +2191,19 @@ mons_spec mons_list::mons_by_name(std::string name) const
     if (name == "pandemonium demon")
         return (MONS_PANDEMONIUM_DEMON);
 
-    if (name == "random" || name == "random monster")
+    if (name == "any" || name == "any monster")
         return (RANDOM_MONSTER);
 
-    if (name == "any demon" || name == "demon" || name == "random demon")
+    if (name == "any demon")
         return (-100 - DEMON_RANDOM);
 
-    if (name == "any lesser demon" 
-            || name == "lesser demon" || name == "random lesser demon")
+    if (name == "any lesser demon" || name == "lesser demon")
         return (-100 - DEMON_LESSER);
 
-    if (name == "any common demon" 
-            || name == "common demon" || name == "random common demon")
+    if (name == "any common demon" || name == "common demon")
         return (-100 - DEMON_COMMON);
 
-    if (name == "any greater demon" 
-            || name == "greater demon" || name == "random greater demon")
+    if (name == "any greater demon" || name == "greater demon")
         return (-100 - DEMON_GREATER);
 
     if (name == "small zombie")
@@ -2162,6 +2238,9 @@ mons_spec mons_list::mons_by_name(std::string name) const
     if (spec.mid != MONS_PROGRAM_BUG)
         return (spec);
 
+    if (name.find("draconian") != std::string::npos)
+        return drac_monspec(name);
+    
     return (get_monster_by_name(name, true));
 }
 

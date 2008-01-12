@@ -961,6 +961,7 @@ ENDMAP
 NAME:    swamp_alternative
 PLACE:   Swamp:5
 TAGS:    no_pool_fixup
+FLAGS:   no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, firedrake
 ITEM:    nothing

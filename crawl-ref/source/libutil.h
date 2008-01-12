@@ -94,6 +94,18 @@ typedef bool (*p_match)(void *compiled_pattern, const char *text, int length);
 std::string & trim_string( std::string &str );
 std::string trimmed_string( std::string s );
 
+inline bool starts_with(const std::string &s, const std::string &prefix)
+{
+    return (s.rfind(prefix, 0) != std::string::npos);
+}
+
+inline bool ends_with(const std::string &s, const std::string &suffix)
+{
+    if (s.length() < suffix.length())
+        return false;
+    return (s.find(suffix, s.length() - suffix.length()) != std::string::npos);
+}
+
 // Splits string 's' on the separator 'sep'. If trim == true, trims each
 // segment. If accept_empties == true, accepts empty segments. If nsplits >= 0,
 // splits on the first nsplits occurrences of the separator, and stores the

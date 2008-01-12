@@ -226,7 +226,8 @@ void special_wielded()
         {
             did_god_conduct( DID_NECROMANCY, 1 );
             create_monster( MONS_SHADOW, 2, BEH_FRIENDLY,
-                            you.x_pos, you.y_pos, you.pet_target, 250 );
+                            you.x_pos, you.y_pos, you.pet_target,
+                            MONS_PROGRAM_BUG );
         }
 
         show_green = DARKGREY;
@@ -370,7 +371,7 @@ static bool evoke_horn_of_geryon()
     {
         mpr("You produce a hideous howling noise!");
         create_monster( MONS_BEAST, 4, BEH_HOSTILE, you.x_pos, you.y_pos,
-                        MHITYOU, 250, false, false, false, true );
+                        MHITYOU, MONS_PROGRAM_BUG, false, false, false, true );
     }
     return rc;
 }
@@ -385,9 +386,10 @@ static bool evoke_sceptre_of_asmodeus()
         // summon devils, maybe a Fiend
         const monster_type mtype = (one_chance_in(4) ? MONS_FIEND :
                                     summon_any_demon(DEMON_COMMON));
-        const bool good_summon = (create_monster( mtype, 6, BEH_HOSTILE,
-                                                  you.x_pos, you.y_pos, 
-                                                  MHITYOU, 250) != -1);
+        const bool good_summon =
+            (create_monster( mtype, 6, BEH_HOSTILE,
+                             you.x_pos, you.y_pos, 
+                             MHITYOU, MONS_PROGRAM_BUG) != -1);
 
         if (good_summon)
         {
@@ -690,7 +692,8 @@ static bool efreet_flask(void)
     mpr("You open the flask...");
 
     const int efreet = create_monster( MONS_EFREET, 0, behaviour, 
-                                       you.x_pos, you.y_pos, MHITYOU, 250,
+                                       you.x_pos, you.y_pos, MHITYOU,
+                                       MONS_PROGRAM_BUG,
                                        false, false, true );
     if (efreet != -1)
     {
@@ -874,7 +877,8 @@ void tome_of_power(int slot)
     else if (one_chance_in(36))
     {
         if (create_monster( MONS_ABOMINATION_SMALL, 6, BEH_HOSTILE,
-                            you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
+                            you.x_pos, you.y_pos, MHITYOU,
+                            MONS_PROGRAM_BUG ) != -1)
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
@@ -966,7 +970,8 @@ static bool box_of_beasts()
                         ? BEH_HOSTILE : BEH_FRIENDLY);
 
         if (create_monster( beasty, 2 + random2(4), beh,
-                            you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
+                            you.x_pos, you.y_pos, MHITYOU,
+                            MONS_PROGRAM_BUG ) != -1)
         {
             mpr("...and something leaps out!");
             xom_is_stimulated(14);

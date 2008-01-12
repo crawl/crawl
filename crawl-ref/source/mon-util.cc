@@ -1318,7 +1318,7 @@ void define_monster(monsters &mons)
         ac = 3 + random2(7);
         ev = 7 + random2(6);
 
-        if (monnumber == 250)
+        if (monnumber == MONS_PROGRAM_BUG) // ??
             col = random_colour();
         break;
 
@@ -1335,7 +1335,7 @@ void define_monster(monsters &mons)
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
 
-        if (monnumber == 250)
+        if (monnumber == MONS_PROGRAM_BUG)
             col = random_colour();
         break;
 
@@ -1415,8 +1415,7 @@ void define_monster(monsters &mons)
         // apart from that, anything goes.
         do
             monnumber = MONS_BLACK_DRACONIAN + random2(8);
-        while (monnumber == MONS_WHITE_DRACONIAN
-                && mcls == MONS_DRACONIAN_SCORCHER);
+        while (drac_colour_incompatible(mcls, monnumber));
         break;
     }
     case MONS_DRACONIAN_KNIGHT:
@@ -1456,9 +1455,6 @@ void define_monster(monsters &mons)
     hp += m->hpdice[3];
     hp_max = hp;
 
-    if (monnumber == 250)
-        monnumber = m->sec;
-
     // so let it be written, so let it be done
     mons.hit_dice = hd;
     mons.hit_points = hp;
@@ -1467,7 +1463,10 @@ void define_monster(monsters &mons)
     mons.ev = ev;
     mons.speed = speed;
     mons.speed_increment = 70;
-    mons.number = monnumber;
+
+    if (mons.number == MONS_PROGRAM_BUG)
+        mons.number = monnumber;
+    
     mons.flags = 0L;
     mons.experience = 0L;
     mons.colour = col;
@@ -1478,6 +1477,30 @@ void define_monster(monsters &mons)
     mons.enchantments.clear();
     mons.ench_countdown = 0;
 }                               // end define_monster()
+
+static const char *drac_colour_names[] = {
+    "black", "mottled", "yellow", "green", "purple",
+    "red", "white", "pale"
+};
+
+std::string draconian_colour_name(monster_type mtype)
+{
+    ASSERT(ARRAYSIZE(drac_colour_names) ==
+           MONS_PALE_DRACONIAN - MONS_DRACONIAN);
+    if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
+        return "buggy";
+    return (drac_colour_names[mtype - MONS_BLACK_DRACONIAN]);
+}
+
+monster_type draconian_colour_by_name(const std::string &name)
+{
+    ASSERT(ARRAYSIZE(drac_colour_names) ==
+           MONS_PALE_DRACONIAN - MONS_DRACONIAN);
+    for (unsigned i = 0; i < ARRAYSIZE(drac_colour_names); ++i)
+        if (name == drac_colour_names[i])
+            return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
+    return (MONS_PROGRAM_BUG);
+}
 
 static std::string str_monam(const monsters& mon, description_level_type desc,
                              bool force_seen)
@@ -1565,18 +1588,11 @@ static std::string str_monam(const monsters& mon, description_level_type desc,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
-        switch (mon.number)
-        {
-        default: break;
-        case MONS_BLACK_DRACONIAN:   result += "black ";   break;
-        case MONS_MOTTLED_DRACONIAN: result += "mottled "; break;
-        case MONS_YELLOW_DRACONIAN:  result += "yellow ";  break;
-        case MONS_GREEN_DRACONIAN:   result += "green ";   break;
-        case MONS_PURPLE_DRACONIAN:  result += "purple ";  break;
-        case MONS_RED_DRACONIAN:     result += "red ";     break;
-        case MONS_WHITE_DRACONIAN:   result += "white ";   break;
-        case MONS_PALE_DRACONIAN:    result += "pale ";    break;
-        }
+        result +=
+            draconian_colour_name(
+                static_cast<monster_type>( mon.number ) ) + " ";
+        break;
+        
     default:
         break;
     }
@@ -1642,7 +1658,9 @@ std::string mons_type_name(int type, description_level_type desc )
 // see mons_init for initialization of mon_entry array.
 monsterentry *get_monster_data(int p_monsterid)
 {
-    const int me = p_monsterid != -1? mon_entry[p_monsterid] : -1;
+    const int me =
+        p_monsterid != -1 && p_monsterid < NUM_MONSTERS?
+        mon_entry[p_monsterid] : -1;
 
     if (me >= 0)                // PARANOIA
         return (&mondata[me]);
@@ -3753,7 +3771,7 @@ void monsters::ghost_init()
     foe = MHITNOT;
     foe_memory = 0;
     colour = mons_class_colour(MONS_PLAYER_GHOST);
-    number = 250;
+    number = MONS_PROGRAM_BUG;
     load_spells(MST_GHOST);
 
     inv.init(NON_ITEM);

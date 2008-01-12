@@ -558,7 +558,8 @@ static bool xom_is_good(int sever)
         for (int i = 0; i < numdemons; i++)
         {
             create_monster(xom_random_demon(sever), 3, BEH_GOD_GIFT,
-                           you.x_pos, you.y_pos, you.pet_target, 250 );
+                           you.x_pos, you.y_pos, you.pet_target,
+                           MONS_PROGRAM_BUG);
         }
                 
         done = true;
@@ -571,7 +572,8 @@ static bool xom_is_good(int sever)
     else if (random2(sever) <= 5)
     {
         if (create_monster(xom_random_demon(sever), 6, BEH_GOD_GIFT,
-                           you.x_pos, you.y_pos, you.pet_target, 250) != -1)
+                           you.x_pos, you.y_pos, you.pet_target,
+                           MONS_PROGRAM_BUG) != -1)
         {
             temp_rand = random2(3);
                     
@@ -634,7 +636,8 @@ static bool xom_is_good(int sever)
     {
         if (create_monster( xom_random_demon(sever, one_chance_in(8)),
                             0, BEH_GOD_GIFT,
-                            you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
+                            you.x_pos, you.y_pos, you.pet_target,
+                            MONS_PROGRAM_BUG ) != -1)
         {
             temp_rand = random2(3);
             god_speaks(GOD_XOM,
@@ -840,7 +843,7 @@ static bool xom_is_bad(int sever)
                     create_monster(
                         xom_random_punishment_demon(sever),
                         4, BEH_HOSTILE, you.x_pos, you.y_pos,
-                        MHITNOT, 250);
+                        MHITNOT, MONS_PROGRAM_BUG);
                 }
             }
                 

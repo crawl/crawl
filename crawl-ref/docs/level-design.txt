@@ -346,10 +346,7 @@ PLACE:    Used to specify certain special levels. Existing special levels are:
 
           PLACE can be used with random vaults and minivaults for testing them.
 
-TAGS:     allow_dup, generate_awake, mini_float, no_item_gen, no_monster_gen,
-          no_pool_fixup, orc_entry, uniq_BAR
-
-          Tags go an a TAGS: line and are space-separated. Valid tags are:
+TAGS:     Tags go an a TAGS: line and are space-separated. Valid tags are:
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
              the dungeon builder that the vault can be reused.
@@ -383,14 +380,14 @@ TAGS:     allow_dup, generate_awake, mini_float, no_item_gen, no_monster_gen,
              the map eligible for said pan lord's lair.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
-
-FLAGS:    no_rotate, no_hmirror, no_vmirror
-          Flags go on a FLAGS: line and are space-separated. Valid flags are:
           * "no_rotate":  Normally, the dungeon builder can, at its whim,
              rotate your vault. This flag tells it, "hey, don't do that to my
              vault!"
           * "no_hmirror": Like no_rotate, but for horizontal mirroring.
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
+
+          Pre-0.3 Crawl distinguished between TAGS and FLAGS. 0.3 and
+          newer Crawls treat TAGS and FLAGS as synonyms.
 
 LFLAGS:   Persistent, changeable per-level flags which affect game
           behavior (FLAGS just controls how the vault is placed); should

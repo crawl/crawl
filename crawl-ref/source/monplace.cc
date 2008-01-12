@@ -348,34 +348,41 @@ static bool can_place_on_trap(int mon_type, trap_type trap)
     return (true);
 }
 
-bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
-                   int target, bool summoned, int px, int py, bool allow_bands,
-                   proximity_type proximity, int extra, int dur,
-                   unsigned mmask)
+bool drac_colour_incompatible(int drac, int colour)
 {
-    int band_size = 0;
-    int band_monsters[BIG_BAND];        // band monster types
-    int lev_mons = power;               // final 'power'
-    int i;
-    
-    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
-    int tries = 0;
-    int pval = 0;
-    level_id place = level_id::current();
+    return (drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN);
+}
 
-    // set initial id to -1  (unsuccessful create)
-    id = -1;
-
-    // (1) early out (summoned to occupied grid)
-    if (summoned && mgrd[px][py] != NON_MONSTER)
-        return (false);
-
+static int resolve_monster_type(int mon_type, proximity_type proximity,
+                                int num, int px, int py, unsigned mmask,
+                                dungeon_char_type *stair_type,
+                                int *lev_mons)
+{
+    if (mon_type == RANDOM_DRACONIAN)
+    {
+        // Pick any random drac, constrained by colour if requested.
+        do
+            mon_type =
+                random_range(MONS_BLACK_DRACONIAN, MONS_DRACONIAN_SCORCHER);
+        while (num != MONS_PROGRAM_BUG
+               && mon_type != num
+               && (mons_species(mon_type) == mon_type
+                   || drac_colour_incompatible(mon_type, num)));
+    }
+    else if (mon_type == RANDOM_BASE_DRACONIAN)
+        mon_type = random_range(MONS_BLACK_DRACONIAN, MONS_PALE_DRACONIAN);
+    else if (mon_type == RANDOM_NONBASE_DRACONIAN)
+        mon_type = random_range(MONS_DRACONIAN_CALLER, MONS_DRACONIAN_SCORCHER);
+            
     // (2) take care of random monsters
     if (mon_type == RANDOM_MONSTER)
     {
+        level_id place = level_id::current();
         // respect destination level for staircases
         if (proximity == PROX_NEAR_STAIRS)
         {
+            int tries = 0;
+            int pval = 0;
             while(++tries <= 320)
             {
                 px = 5 + random2(GXM - 10);
@@ -402,7 +409,7 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
                 // check whether there's a stair
                 // and whether it leads to another branch
                 pval = near_stairs(coord_def(px, py), 1,
-                                   stair_type, place.branch);
+                                   *stair_type, place.branch);
 
                 // no monsters spawned in the Temple
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
@@ -418,34 +425,61 @@ bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
             }
             else
             {
-                if ( stair_type == DCHAR_STAIRS_DOWN ) // deeper level
-                    lev_mons++;
-                else if (stair_type == DCHAR_STAIRS_UP) // higher level
+                if ( *stair_type == DCHAR_STAIRS_DOWN ) // deeper level
+                    ++*lev_mons;
+                else if (*stair_type == DCHAR_STAIRS_UP) // higher level
                 {
                     // monsters don't come from outside the dungeon
-                    if (lev_mons <= 0)
+                    if (*lev_mons <= 0)
                     {
                         proximity = PROX_AWAY_FROM_PLAYER;
                         // in that case lev_mons stays as it is
                     }
                     else
-                        lev_mons--;
+                        --*lev_mons;
                 }
             }
         } // end proximity check
 
-        if (branches[place.branch].id == BRANCH_HALL_OF_BLADES)
+        if (place.branch == BRANCH_HALL_OF_BLADES)
             mon_type = MONS_DANCING_WEAPON;
         else
         {
             // now pick a monster of the given branch and level
-            mon_type = pick_random_monster(place, lev_mons,
-                                           lev_mons);
-
-            if (mon_type == MONS_PROGRAM_BUG)
-                return (false);
+            mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
         }
     }
+    return (mon_type);
+}
+
+bool place_monster(int &id, int mon_type, int power, beh_type behaviour,
+                   int target, bool summoned, int px, int py, bool allow_bands,
+                   proximity_type proximity, int extra, int dur,
+                   unsigned mmask)
+{
+    int band_size = 0;
+    int band_monsters[BIG_BAND];        // band monster types
+    int lev_mons = power;               // final 'power'
+    int i;
+    
+    int tries = 0;
+    int pval = 0;
+    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
+
+    // set initial id to -1  (unsuccessful create)
+    id = -1;
+
+    // (1) early out (summoned to occupied grid)
+    if (summoned && mgrd[px][py] != NON_MONSTER)
+        return (false);
+
+    mon_type =
+        resolve_monster_type(mon_type, proximity, extra,
+                             px, py, mmask, &stair_type,
+                             &lev_mons);
+
+    if (mon_type == MONS_PROGRAM_BUG || mon_type == -1)
+        return (false);
 
     // (3) decide on banding (good lord!)
     band_size = 1;
@@ -724,7 +758,8 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
 
     // now, actually create the monster (wheeee!)
     menv[id].type = mon_type;
-    menv[id].number = 250;
+
+    menv[id].number = extra;
 
     menv[id].x = fx;
     menv[id].y = fy;
@@ -753,9 +788,6 @@ static int place_monster_aux( int mon_type, beh_type behaviour, int target,
     // in the dungeon at the same time.  -- bwr
     if (mons_is_unique(mon_type))
         you.unique_creatures[mon_type] = true;
-
-    if (extra != 250)
-        menv[id].number = extra;
 
     if (mons_class_flag(mon_type, M_INVIS))
         menv[id].add_ench(ENCH_INVIS);

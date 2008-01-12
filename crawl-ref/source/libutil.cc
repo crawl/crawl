@@ -174,13 +174,6 @@ std::string lowercase_string(std::string s)
     return (s);
 }
 
-bool ends_with(const std::string &s, const std::string &suffix)
-{
-    if (s.length() < suffix.length())
-        return false;
-    return (s.substr(s.length() - suffix.length()) == suffix);
-}
-
 int ends_with(const std::string &s, const char *suffixes[])
 {
     if (!suffixes)

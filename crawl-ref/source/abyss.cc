@@ -598,7 +598,7 @@ static bool spawn_corrupted_servant_near(const coord_def &pos)
             one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4)?
             BEH_HOSTILE : BEH_NEUTRAL;
         const int mid =
-            create_monster( mons, 5, beh, p.x, p.y, MHITNOT, 250 );
+            create_monster( mons, 5, beh, p.x, p.y, MHITNOT, MONS_PROGRAM_BUG );
 
         return (mid != -1);
     }

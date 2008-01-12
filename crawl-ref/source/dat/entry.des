@@ -1596,7 +1596,7 @@ ENDMAP
 # the snail
 
 NAME: david_023_snail
-TAGS: entry no_monster_gen
+TAGS: entry no_monster_gen no_rotate
 ORIENT: float
 MAP
          xxxxxxxxxxxxxxxxx

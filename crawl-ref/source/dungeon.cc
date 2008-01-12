@@ -2683,7 +2683,7 @@ static int place_uniques(int level_number, char level_type)
         // note: unique_creatures 40 + used by unique demons
         if (place_monster( not_used, which_unique, level_number, 
                            BEH_SLEEP, MHITNOT, false, 1, 1, true,
-                           PROX_ANYWHERE, 250, 0, MMT_NO_MONS ))
+                           PROX_ANYWHERE, MONS_PROGRAM_BUG, 0, MMT_NO_MONS ))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Placed %s",
@@ -2704,7 +2704,8 @@ static int place_monster_vector(std::vector<int> montypes,
     {
         if (place_monster( not_used, montypes[random2(montypes.size())],
                            level_number, BEH_SLEEP, MHITNOT, 
-                           false, 1, 1, true, PROX_ANYWHERE, 250, 0,
+                           false, 1, 1, true, PROX_ANYWHERE,
+                           MONS_PROGRAM_BUG, 0,
                            MMT_NO_MONS ))
         {
             ++result;
@@ -2783,8 +2784,8 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
 
     for (int i = 0; i < mon_wanted; i++)
         place_monster( not_used, RANDOM_MONSTER, level_number, BEH_SLEEP,
-                       MHITNOT, false, 1, 1, true, PROX_ANYWHERE, 250, 0,
-                       MMT_NO_MONS );
+                       MHITNOT, false, 1, 1, true, PROX_ANYWHERE,
+                       MONS_PROGRAM_BUG, 0, MMT_NO_MONS );
 
     place_uniques(level_number, level_type);
 
@@ -7068,7 +7069,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
     }
 
     // that is, random creature from which to fashion undead
-    if (ztype == 250)
+    if (ztype == MONS_PROGRAM_BUG)
     {
         // how OOD this zombie can be.
         int relax = 5;

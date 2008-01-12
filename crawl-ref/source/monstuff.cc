@@ -1291,7 +1291,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     /* deal with mons_sec */
     monster->type = targetc;
-    monster->number = 250;
+    monster->number = MONS_PROGRAM_BUG;
 
     mon_enchant abj = monster->get_ench(ENCH_ABJ);
     mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
@@ -3184,7 +3184,7 @@ static bool handle_scroll(monsters *monster)
                 simple_monster_message(monster, " reads a scroll.");
                 create_monster( MONS_ABOMINATION_SMALL, 2,
                                 SAME_ATTITUDE(monster), monster->x, monster->y,
-                                monster->foe, 250 );
+                                monster->foe, MONS_PROGRAM_BUG );
                 read  = true;
                 ident = ID_KNOWN_TYPE;
             }

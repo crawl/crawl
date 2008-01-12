@@ -489,7 +489,7 @@ static void do_high_level_summon(monsters *monster, bool monsterNearby,
             continue;
         create_monster( which_mons, duration,
                         SAME_ATTITUDE(monster), monster->x, monster->y,
-                        monster->foe, 250 );
+                        monster->foe, MONS_PROGRAM_BUG );
     }
 }
 
@@ -569,7 +569,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             }
 
             create_monster( mons, 5, SAME_ATTITUDE(monster), 
-                            monster->x, monster->y, monster->foe, 250 );
+                            monster->x, monster->y, monster->foe,
+                            MONS_PROGRAM_BUG );
         }
         return;
 
@@ -582,7 +583,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( RANDOM_MONSTER, 5, SAME_ATTITUDE(monster),
-                            monster->x, monster->y, monster->foe, 250 );
+                            monster->x, monster->y, monster->foe,
+                            MONS_PROGRAM_BUG );
         }
         return;
 
@@ -593,7 +595,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster( MONS_RAKSHASA_FAKE, 3, 
                             SAME_ATTITUDE(monster), monster->x, monster->y, 
-                            monster->foe, 250 );
+                            monster->foe, MONS_PROGRAM_BUG );
         }
         return;
 
@@ -608,7 +610,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster( summon_any_demon(DEMON_COMMON), duration,
                             SAME_ATTITUDE(monster), monster->x, monster->y, 
-                            monster->foe, 250 );
+                            monster->foe, MONS_PROGRAM_BUG );
         }
         return;
 
@@ -626,7 +628,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster( summon_any_demon(DEMON_LESSER), duration,
                             SAME_ATTITUDE(monster), monster->x, monster->y, 
-                            monster->foe, 250 );
+                            monster->foe, MONS_PROGRAM_BUG );
         }
         return;
 
@@ -638,18 +640,21 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( MONS_UFETUBUS, duration, SAME_ATTITUDE(monster),
-                            monster->x, monster->y, monster->foe, 250 );
+                            monster->x, monster->y, monster->foe,
+                            MONS_PROGRAM_BUG );
         }
         return;
 
     case SPELL_SUMMON_BEAST:       // Geryon
         create_monster( MONS_BEAST, 4, SAME_ATTITUDE(monster),
-                        monster->x, monster->y, monster->foe, 250 );
+                        monster->x, monster->y, monster->foe,
+                        MONS_PROGRAM_BUG );
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
         create_monster( MONS_ICE_BEAST, 5, SAME_ATTITUDE(monster),
-                        monster->x, monster->y, monster->foe, 250 );
+                        monster->x, monster->y, monster->foe,
+                        MONS_PROGRAM_BUG );
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
@@ -664,7 +669,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                     SAME_ATTITUDE(monster),
                     monster->x, monster->y,
                     monster->foe,
-                    250);
+                    MONS_PROGRAM_BUG);
         return;
 
     case SPELL_SUMMON_WRAITHS:
@@ -703,7 +708,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster( summon_any_demon(DEMON_GREATER), duration,
                             SAME_ATTITUDE(monster), monster->x, monster->y, 
-                            monster->foe, 250 );
+                            monster->foe, MONS_PROGRAM_BUG );
         }
         return;
 
@@ -735,7 +740,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             {
                 create_monster( monsters[i], duration,
                                 SAME_ATTITUDE(monster), 
-                                monster->x, monster->y, monster->foe, 250 );
+                                monster->x, monster->y, monster->foe,
+                                MONS_PROGRAM_BUG );
             }
         }
         return;
@@ -1070,17 +1076,25 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     pbolt.thrower = KILL_MON;
     pbolt.is_beam = true;
     
-    // accuracy is halved if you're wielding a weapon of dragon slaying
-    // (which makes the dragon/draconian avoid looking at you)
+    // accuracy is halved if the dragon is attacking a target that's
+    // wielding a weapon of dragon slaying (which makes the
+    // dragon/draconian avoid looking at the foe).
+    // 
+    // [ds] FIXME: This effect seems too strong. Perhaps use 75% of
+    // original to-hit instead of 50%.
     if ((mons_genus(monster->type) == MONS_DRAGON
-           || mons_genus(monster->type) == MONS_DRACONIAN)
-        && you.equip[EQ_WEAPON]
-        && get_weapon_brand(you.inv[you.equip[EQ_WEAPON]])
-            == SPWPN_DRAGON_SLAYING)
+         || mons_genus(monster->type) == MONS_DRACONIAN))
     {
-        pbolt.hit /= 2;
+        if (actor *foe = monster->get_foe())
+        {
+            if (const item_def *weapon = foe->weapon())
+            {
+                if (get_weapon_brand(*weapon) == SPWPN_DRAGON_SLAYING)
+                    pbolt.hit /= 2;
+            }
+        }
     }
-}                               // end setup_dragon();
+}
 
 void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 {
@@ -2247,7 +2261,7 @@ bool silver_statue_effects(monsters *mons)
                                                      : DEMON_LESSER)),
                                  5, BEH_HOSTILE,
                                  you.x_pos, you.y_pos,
-                                 MHITYOU, 250 );
+                                 MHITYOU, MONS_PROGRAM_BUG );
         return (true);
     }
     return (false);

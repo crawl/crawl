@@ -1677,15 +1677,20 @@ enum monster_type                      // (int) menv[].type
 // BCR - end second batch of uniques.
 
     MONS_DRACONIAN,
-    MONS_BLACK_DRACONIAN,
+
+    // If adding more drac colours, sync up colour names in
+    // mon-util.cc.
+    MONS_BLACK_DRACONIAN,               // Should always be first colour.
     MONS_MOTTLED_DRACONIAN,
     MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,               // 315
     MONS_PURPLE_DRACONIAN,
     MONS_RED_DRACONIAN,
     MONS_WHITE_DRACONIAN,
-    MONS_PALE_DRACONIAN,
-    MONS_DRACONIAN_CALLER,              // 320
+    MONS_PALE_DRACONIAN,                // Should always be last colour.
+
+    // Sync up with monplace.cc's draconian selection if adding more.
+    MONS_DRACONIAN_CALLER,
     MONS_DRACONIAN_MONK, 
     MONS_DRACONIAN_ZEALOT,
     MONS_DRACONIAN_SHIFTER,
@@ -1780,8 +1785,18 @@ enum monster_type                      // (int) menv[].type
     MONS_SILVER_STATUE,
     MONS_ICE_STATUE,
 
-    NUM_MONSTERS,                      // used for polymorph 
+    NUM_MONSTERS,                      // used for polymorph
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
+
+    // A random draconian, either base coloured drac or specialised.
+    RANDOM_DRACONIAN,
+    
+    // Any random base draconian colour.
+    RANDOM_BASE_DRACONIAN,
+
+    // Any random specialised draconian, such as a draconian knight.
+    RANDOM_NONBASE_DRACONIAN,
+    
     WANDERING_MONSTER = 2500 // only used in monster placement routines - forced limit checks {dlb}
 
 };

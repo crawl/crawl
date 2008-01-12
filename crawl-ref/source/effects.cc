@@ -1990,7 +1990,7 @@ static void hell_effects()
         if (summon_instead)
         {
             create_monster( which_beastie, 0, BEH_HOSTILE, you.x_pos,
-                            you.y_pos, MHITYOU, 250 );
+                            you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
         }
         else
         {
@@ -2008,14 +2008,15 @@ static void hell_effects()
     if (one_chance_in(3))
     {
         create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE, 
-                        you.x_pos, you.y_pos, MHITYOU, 250 );
+                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG );
 
         for (int i = 0; i < 4; i++)
         {
             if (one_chance_in(3))
             {
                 create_monster( RANDOM_MONSTER, 0, BEH_HOSTILE,
-                                you.x_pos, you.y_pos, MHITYOU, 250 );
+                                you.x_pos, you.y_pos, MHITYOU,
+                                MONS_PROGRAM_BUG );
             }
         }
     }

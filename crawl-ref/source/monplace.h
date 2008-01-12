@@ -112,7 +112,8 @@ enum proximity_type   // proximity to player to create monster
  * *********************************************************************** */
 int mons_place( int mon_type, beh_type behaviour, int target, bool summoned,
                 int px, int py, int level_type = LEVEL_DUNGEON, 
-                proximity_type proximity = PROX_ANYWHERE, int extra = 250,
+                proximity_type proximity = PROX_ANYWHERE,
+                int extra = MONS_PROGRAM_BUG,
                 int dur = 0, bool permit_bands = false );
 
 // last updated 12may2000 {dlb}
@@ -160,10 +161,12 @@ monster_type summon_any_demon( demon_class_type demon_class );
  * *********************************************************************** */
 bool place_monster( int &id, int mon_type, int power, beh_type behaviour,
                     int target, bool summoned, int px, int py, bool allow_bands,
-                    proximity_type proximity = PROX_ANYWHERE, int extra = 250,
-                    int dur = 0, unsigned mmask = 0 );
+                    proximity_type proximity = PROX_ANYWHERE,
+                    int extra = MONS_PROGRAM_BUG, int dur = 0,
+                    unsigned mmask = 0 );
 
 monster_type rand_dragon( dragon_class_type type );
+bool drac_colour_incompatible(int drac, int colour);
 
 /* ***********************************************************************
  * called from: monplace monstuff

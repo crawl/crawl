@@ -1,9 +1,10 @@
 ##############################################################################
-# hells.des: vestibule entries, vestibule, all hell end levels
+# hells.des: vestibule entries, vestibule,
+#            hell vaults, hell end levels
 ##############################################################################
 
 ##############################################################################
-# Hell-themed random maps
+# Vestibule entries
 ##############################################################################
 
 default-depth: D:12-26
@@ -108,9 +109,101 @@ MAP
 ..................??..........
 ENDMAP
 
-#############################################################################
+
+##############################################################################
+# Hell vaults
+##############################################################################
+
+##############################################################################
+# lemuel_hellion_isle
+ 
+NAME: lemuel_hellion_isle
+DEPTH: Geh:*
+MONS: hellion, Fiend
+SUBST: L = l.
+SUBST: 1 = .:2 l:2 1
+MAP
+      lL
+     llL
+    LlLLL
+   LLllLL
+llLLLlllLLL
+LllllllllllLL
+LLLlll11lllllLL
+ LLLll111llllL
+  LLlll121llLL
+  Lllll111lLL
+  LLllll1llL
+   LllllllL
+   LLLlllL
+    LLllL
+     LlL
+     LlL
+ENDMAP
+
+##############################################################################
+# lemuel_mystery_crypt
+
+NAME:   lemuel_mystery_crypt
+DEPTH:  Dis:*
+MONS:   mummy / mummy priest / greater mummy, lich
+NSUBST: 1:1=} / *=1
+NSUBST: 1:1=) / *=1
+NSUBST: 1:1=] / *=1
+SUBST:  = : =+
+SUBST:  }=}>, )=)>, ]=]>
+# occasionally (12.5%), all downstairs are in this vault
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+xxFxxxx1.x1x.1xxx2..=1x
+xx.xxxxx.x.x.xxxx...xxx
+xx.xx1.x.x.x.x.1x...=1x
+xx.xxx=x=x=x=x=xx...xxx
+x...+...........+...=1x
++...+.....F.....+.F.xxx
+x...+...........+...=1x
+xx.xxx=x=x=x=x=xx...xxx
+xx.xx1.x.x.x.x.1x...=1x
+xx.xxxxx.x.x.xxxx...xxx
+xxFxxxx1.x1x.1xxx2..=1x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# lemuel_nasty_pond
+
+NAME:   lemuel_nasty_pond
+DEPTH:  Tar:*
+TAGS:   no_pool_fixup
+FLAGS:  no_rotate
+MONS:   plant, oklob plant, death ooze, rotting devil, blue death / green death
+SUBST:  W:w.
+SUBST:  Z:w.
+SUBST:  w = w .:1
+SUBST:  . = .:15 1:1 w:1
+SUBST:  1 = 1 2:2
+COLOUR: . = none / green w:2
+COLOUR: w = green / lightgreen
+MAP
+     ...WWWW3....
+   .3..WWWWW....3...
+ ....WWWwwW...3....3.
+..Z.WWwwwwww3.....3...
+3.ZZWwwwwwwwwww3......
+.ZZZ..wwwww5wwwwww3...
+..3Z..44wwwwwww33.....
+.3ZZZ..44wwwwww3..3...
+.ZZZZZ.44wwwww........
+ ..ZZZZZ4wwww.3......
+   3ZZZZwwwww....3.
+     .ZZwww3.....
+ENDMAP
+
+##############################################################################
 # Vestibule of Hell and Geryon
-#
+##############################################################################
+
 NAME: vestibule_of_hell
 PLACE: Hell
 ORIENT: encompass
@@ -119,9 +212,7 @@ MARKER: G=feat:enter_gehenna
 MARKER: C=feat:enter_cocytus
 MARKER: T=feat:enter_tartarus
 SUBST: D=A, G=A, C=A, T=A
-
 MONS: Geryon
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -150,21 +241,21 @@ xxxxxxxxxxxxx.....................................................xxxxxxxxxxxxxx
 xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
 xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
 xxxxxxxxxxx.........................................................xxxxxxxxxxxx
-xxxxxxxxxxx............................{............................xxxxxxxxxxxx
-xxxxxxxxxxx.........................................................xxxxxxxxxxxx
-xxxxxxxxxx...l.l.....................................................xxxxxxxxxxx
-xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
-xxxxxxxxxx.l.l.l.l.l.................................................xxxxxxxxxxx
-xxxxxxxxx.l.l.l.l.l...................................................xxxxxxxxxx
-xxxxxxxxxl.l.l.l.l.l..................................................xxxxxxxxxx
-xxxxxxxxx.l.l.l.G.l.l.................}1].............................=Txxxxxxxx
-xxxxxxxxxl.l.l.l.l.l.l.................)..............................xxxxxxxxxx
-xxxxxxxxx.l.l.l.l.l.l.................................................xxxxxxxxxx
-xxxxxxxxxx.l.l.l.l.l.l...............................................xxxxxxxxxxx
-xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
-xxxxxxxxxx.....l.l...................................................xxxxxxxxxxx
-xxxxxxxxxxx......................[...........(......................xxxxxxxxxxxx
-xxxxxxxxxxx.........................................................xxxxxxxxxxxx
+xxxxxxxxxxx............................{......................cccc..xxxxxxxxxxxx
+xxxxxxxxxxx...................................................ccccccccxxxxxxxxxx
+xxxxxxxxxx...l.l..............................................cccc...cxxxxxxxxxx
+xxxxxxxxxx..l.l.l.l.............................................c....cxxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l............................................c....cxxxxxxxxxx
+xxxxxxxxx.l.l.l.l.l.............................................c...ccccxxxxxxxx
+xxxxxxxxxl.l.l.l.l.l............................................+...c..ccxxxxxxx
+xxxxxxxxx.l.l.l.G.l.l.................}1].......................+...+.T.cxxxxxxx
+xxxxxxxxxl.l.l.l.l.l.l.................)........................+...c..ccxxxxxxx
+xxxxxxxxx.l.l.l.l.l.l...........................................c...ccccxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l.l..........................................c....cxxxxxxxxxx
+xxxxxxxxxx..l.l.l.l.............................................c....cxxxxxxxxxx
+xxxxxxxxxx.....l.l............................................cccc...cxxxxxxxxxx
+xxxxxxxxxxx......................[...........(................ccccccccxxxxxxxxxx
+xxxxxxxxxxx...................................................cccc..xxxxxxxxxxxx
 xxxxxxxxxxx.........................................................xxxxxxxxxxxx
 xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
 xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
@@ -195,15 +286,17 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-#############################################################################
+
+##############################################################################
 # Dispater's castle - rest of level filled up with plan_4 (irregular city)
-#
+##############################################################################
 
 NAME: castle_dis
 PLACE: Dis:7
 TAGS: dis
 ORIENT: north
-
+MONS: Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
+MONS: random, random
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -243,17 +336,16 @@ xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
 xxxxxxxxv............................{.[.(.............................vxxxxxxxx
 ENDMAP
 
-MONS: Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
-MONS: random, random
 
-#############################################################################
-# Asmodeus 
-#
+##############################################################################
+# Asmodeus
+##############################################################################
 
 NAME: asmodeus
 PLACE: Geh:7
 ORIENT: encompass
-
+MONS: Asmodeus, Fiend, Balrug, molten gargoyle
+MONS: Serpent of Hell, random, random
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -327,12 +419,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: Asmodeus, Fiend, Balrug, molten gargoyle
-MONS: Serpent of Hell, random, random
 
-############################################################################
+##############################################################################
 # Antaeus; bottom of Cocytus. David's Improved Demon Lairs, episode I.
-#
+##############################################################################
 # To do: this level has much shorter distances to travel, hence should
 #        come up with harder resistance.
 
@@ -345,7 +435,6 @@ SHUFFLE: O1d / e0% / f9* / g8|
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
 KITEM:   d = any
 SUBST:   ' = w .
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -421,6 +510,7 @@ ENDMAP
 
 ##############################################################################
 # Old Antaeus level
+##############################################################################
 
 NAME:    antaeus_in_days_of_yore
 PLACE:   Coc:7
@@ -428,7 +518,6 @@ ORIENT:  encompass
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
 MONS: Antaeus, Ice Fiend, ice dragon, Ice Fiend
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -505,14 +594,13 @@ ENDMAP
 
 ##############################################################################
 # Ereshkigal (Tartarus)
-#
+##############################################################################
 
 NAME: ereshkigal
 PLACE: Tar:7
 ORIENT: encompass
 MONS: Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS: small skeleton, Shadow Fiend
-
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -585,6 +673,3 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
-
-

@@ -467,7 +467,7 @@ void cast_summon_butterflies(int pow)
     for (int scount = 1; scount < num; scount++)
     {
         create_monster( MONS_BUTTERFLY, 3, BEH_FRIENDLY,
-                        you.x_pos, you.y_pos, MHITYOU, 250,
+                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG,
                         false, false, false, true );
     }
 }
@@ -506,7 +506,7 @@ void cast_summon_large_mammal(int pow)
     }
 
     create_monster( mon, 3, BEH_FRIENDLY, you.x_pos, you.y_pos, 
-                    you.pet_target, 250,
+                    you.pet_target, MONS_PROGRAM_BUG,
                     false, false, false, true );
 }
 
@@ -548,7 +548,7 @@ void cast_sticks_to_snakes(int pow)
             }
 
             if (create_monster( mon, dur, behaviour, you.x_pos, you.y_pos, 
-                                MHITYOU, 250,
+                                MHITYOU, MONS_PROGRAM_BUG,
                                 false, false, false, true ) != -1)
             {
                 how_many++;
@@ -594,8 +594,8 @@ void cast_sticks_to_snakes(int pow)
         if (pow > 20 && one_chance_in(3))
             mon = MONS_BROWN_SNAKE;
 
-        create_monster(mon, dur, behaviour, you.x_pos, you.y_pos, MHITYOU, 250,
-                       false, false, false, true);
+        create_monster(mon, dur, behaviour, you.x_pos, you.y_pos, MHITYOU,
+                       MONS_PROGRAM_BUG, false, false, false, true);
     }
 
     if (how_many > you.inv[you.equip[EQ_WEAPON]].quantity)
@@ -628,7 +628,7 @@ void cast_summon_dragon(int pow)
 
     if (create_monster( MONS_DRAGON, 3,
                         (happy ? BEH_FRIENDLY : BEH_HOSTILE),
-                        you.x_pos, you.y_pos, MHITYOU, 250,
+                        you.x_pos, you.y_pos, MHITYOU, MONS_PROGRAM_BUG,
                         false, false, false, true) != -1)
     {
         mprf("A dragon appears.%s",
@@ -673,7 +673,7 @@ void cast_conjure_ball_lightning( int pow )
                               true, tx, ty );
 
         // int mon = create_monster( MONS_BALL_LIGHTNING, 0, BEH_FRIENDLY, 
-        //                           tx, ty, MHITNOT, 250 );
+        //                           tx, ty, MHITNOT, MONS_PROGRAM_BUG );
 
         if (mon != -1)
         {
@@ -1954,7 +1954,7 @@ void cast_fulsome_distillation( int powc )
 void make_shuggoth(int x, int y, int hp)
 {
     int mon = create_monster( MONS_SHUGGOTH, 100 + random2avg(58, 3),
-                              BEH_HOSTILE, x, y, MHITNOT, 250,
+                              BEH_HOSTILE, x, y, MHITNOT, MONS_PROGRAM_BUG,
                               false, false, false, true );
 
     if (mon != -1)
