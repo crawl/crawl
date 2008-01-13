@@ -56,7 +56,7 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour,
                 delay_message_clear, message_colour,
                 show_inventory_weights, show_turns, show_beam,
-                item_stack_summary_minimum, menu_colour, 
+                item_stack_summary_minimum, list_rotten, menu_colour, 
                 menu_colour_prefix_id, menu_colour_prefix_class
 4-k     Missiles.
                 fire_items_start, fire_order
@@ -998,6 +998,14 @@ item_stack_summary_minimum = 5
         Known artefacts will be coloured in yellow; glowing or runed
         items will be in white, unless you already know that they are
         not ego items.
+
+list_rotten = false
+        Setting this to true will print a list of inventory slots for
+	all corpses and chunks that have become rotten along with the
+	rotting message, in the form of 
+	  "You smell something rotten. (slots f and m)"
+        Additionally, this option will make a default message appear
+	for Trolls, as well.
 
 menu_colour = <match>:<colour>:<regex>
         This prints a line (of the inventory, a menu, or the discoveries

@@ -1567,15 +1567,16 @@ public:
     bool        clean_map;      // remove unseen clouds/monsters
     bool        show_uncursed;  // label known uncursed items as "uncursed"
     bool        easy_open;      // open doors with movement
-    bool        easy_unequip;   // allow auto-removing of armour / jewelry
-    bool        easy_butcher;   // open doors with movement
+    bool        easy_unequip;   // allow auto-removing of armour / jewellery
+    bool        easy_butcher;   // autoswap to butchering tool
     bool        always_confirm_butcher;    // even if only one corpse
-    bool        default_target;  // start targeting on a real target
+    bool        list_rotten;    // list slots for rotting corpses/chunks
+    bool        default_target; // start targeting on a real target
     bool        autopickup_no_burden; // don't autopickup if it changes burden
     bool        note_all_skill_levels; // take note for all skill levels (1-27)
-    bool        note_skill_max; // take note when skills reach new max
+    bool        note_skill_max;  // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
-    std::string user_note_prefix; // Prefix for user notes
+    std::string user_note_prefix;// Prefix for user notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
     int         easy_confirm;   // make yesno() confirming easier

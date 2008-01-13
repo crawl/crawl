@@ -3583,7 +3583,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
     {
         return;
     }
-
+    
     const coord_def gc(gx, gy);
     const coord_def ep = view2show(grid2view(gc));
 
@@ -3592,8 +3592,25 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
     int flag = t & (~TILE_FLAG_MASK);
     int mon_wep = menv[idx].inv[MSLOT_WEAPON];
 
-    if (menv[idx].type >=  MONS_DRACONIAN && 
-        menv[idx].type <= MONS_DRACONIAN_SCORCHER)
+    if (menv[idx].type >= MONS_GOLD_MIMIC &&
+        menv[idx].type <= MONS_POTION_MIMIC)
+    {
+        const monsters *mon = &menv[idx];
+        if (!mons_is_known_mimic(mon))
+        {
+            item_def item;
+            get_mimic_item( mon, item );
+            if (item_needs_autopickup(item))
+            {
+                if (foreground)
+                    env.tile_bg[ep.x-1][ep.y-1] |= TILE_FLAG_CURSOR3;
+                else
+                    env.tile_bk_bg[gx][gy] |= TILE_FLAG_CURSOR3;
+            }
+        }
+    }
+    else if (menv[idx].type >=  MONS_DRACONIAN &&
+             menv[idx].type <= MONS_DRACONIAN_SCORCHER)
     {
         int race = draco_subspecies(&menv[idx]);
         int cls = menv[idx].type;

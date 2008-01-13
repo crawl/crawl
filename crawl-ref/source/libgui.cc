@@ -23,6 +23,7 @@
 #include "direct.h"
 #include "files.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "externs.h"
 #include "guic.h"
@@ -1072,10 +1073,11 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     for (r = w->regions.begin();r != w->regions.end();r++)
     {
         if (! (*r)->is_active()) continue;
-        if( (*r)->mouse_pos(mx, my, cx, cy))
+        
+        if ( (*r)->mouse_pos(mx, my, cx, cy))
         {
             id = (*r)->id;
-        mx0 = (*r)->mx;
+            mx0 = (*r)->mx;
             break;
         }
     }
@@ -1084,9 +1086,9 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
     y = *cy;
 
 /********************************************/
-    if(id == REGION_TDNGN)
+    if (id == REGION_TDNGN)
     {
-    x--;
+        x--;
         if (!in_viewport_bounds(x+1,y+1)) return REGION_NONE;
     }
 
@@ -1098,8 +1100,8 @@ int convert_cursor_pos(int mx, int my, int *cx, int *cy)
 
     if (id == REGION_INV1 || id == REGION_INV2)
     {
-    x = x + y * mx0;
-    y = 0;
+        x = x + y * mx0;
+        y = 0;
     }
 
     if (id == REGION_DNGN)
@@ -1152,6 +1154,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     }
     else
         mode = convert_cursor_pos(mouse_x, mouse_y, &cx, &cy);
+        
     if (oldcx == cx && oldcy == cy && oldmode == mode) return 0;
 
     // erase old cursor
@@ -1227,66 +1230,83 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                 if (display_actions)
                 {
                     int type = you.inv[ix].base_type;
-                    if (type != OBJ_CORPSES || you.species == SP_VAMPIRE)
-                        desc += EOL "[L-Click] ";
-
-                    if (itemlist_iflag[cx] & TILEI_FLAG_EQUIP)
-                        type += 18;
-
-                    switch (type)
+                    desc += EOL;
+                    
+                    if (type != OBJ_CORPSES
+                        || you.species == SP_VAMPIRE
+                           && you.inv[ix].sub_type != CORPSE_SKELETON
+                           && you.inv[ix].special >= 100)
                     {
-                    case OBJ_WEAPONS:
-                    case OBJ_STAVES:
-                        desc += "*(w)ield";
-                        break;
-                    case OBJ_WEAPONS + 18:
-                    case OBJ_STAVES + 18:
-                        desc += "unwield";
-                        break;
-                    case OBJ_MISSILES:
-                        desc += "*(t)hrow";
-                        break;
-                    case OBJ_WANDS:
-                        desc += "*(z)ap";
-                        break;
-                    case OBJ_BOOKS:
-                        if (item_type_known(you.inv[ix])
-                            && you.inv[ix].sub_type != BOOK_MANUAL
-                            && you.inv[ix].sub_type != BOOK_DESTRUCTION)
+                        desc += "[L-Click] ";
+
+                        if (itemlist_iflag[cx] & TILEI_FLAG_EQUIP)
                         {
-                            desc += "*(M)emorize";
-                            break;
+                            if (you.equip[EQ_WEAPON] == ix)
+                            {
+                                if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
+                                    || type == OBJ_WEAPONS || type == OBJ_STAVES)
+                                {
+                                    type = OBJ_WEAPONS + 18;
+                                }
+                            }
+                            else
+                                type += 18;
                         }
-                        // else fall-through
-                    case OBJ_SCROLLS:
-                        desc += "*(r)ead";
-                        break;
-                    case OBJ_JEWELLERY:
-                        desc += "*(P)ut on";
-                        break;
-                    case OBJ_JEWELLERY + 18:
-                        desc += "*(R)emove";
-                        break;
-                    case OBJ_POTIONS:
-                        desc += "*(q)uaff";
-                        break;
-                    case OBJ_ARMOUR:
-                        desc += "*(W)ear";
-                        break;
-                    case OBJ_ARMOUR + 18:
-                        desc += "*(T)ake off";
-                        break;
-                    case OBJ_FOOD:
-                        desc += "*(e)at";
-                        break;
-                    case OBJ_CORPSES:
-                        if (you.species == SP_VAMPIRE)
-                            desc += "drink blood";
-                        else // no action possible
-                            desc += EOL;
-                        break;
-                    default:
-                        desc += "*Use it";
+
+                        switch (type)
+                        {
+                        // first equipable categories
+                        case OBJ_WEAPONS:
+                        case OBJ_STAVES:
+                            desc += "*(w)ield";
+                            break;
+                        case OBJ_WEAPONS + 18:
+                        case OBJ_STAVES + 18:
+                            desc += "unwield";
+                            break;
+                        case OBJ_ARMOUR:
+                            desc += "*(W)ear";
+                            break;
+                        case OBJ_ARMOUR + 18:
+                            desc += "*(T)ake off";
+                            break;
+                        case OBJ_JEWELLERY:
+                            desc += "*(P)ut on";
+                            break;
+                        case OBJ_JEWELLERY + 18:
+                            desc += "*(R)emove";
+                            break;
+                        case OBJ_MISSILES:
+                            desc += "*(t)hrow";
+                            break;
+                        case OBJ_WANDS:
+                            desc += "*(z)ap";
+                            break;
+                        case OBJ_BOOKS:
+                            if (item_type_known(you.inv[ix])
+                                && you.inv[ix].sub_type != BOOK_MANUAL
+                                && you.inv[ix].sub_type != BOOK_DESTRUCTION)
+                            {
+                                desc += "*(M)emorize";
+                                break;
+                            }
+                            // else fall-through
+                        case OBJ_SCROLLS:
+                            desc += "*(r)ead";
+                            break;
+                        case OBJ_POTIONS:
+                            desc += "*(q)uaff";
+                            break;
+                        case OBJ_FOOD:
+                            desc += "*(e)at";
+                            break;
+                        case OBJ_CORPSES:
+                            if (you.species == SP_VAMPIRE)
+                                desc += "drink blood";
+                            break;
+                        default:
+                            desc += "*Use it";
+                        }
                     }
 
                     desc += EOL "[R-Click] Info";

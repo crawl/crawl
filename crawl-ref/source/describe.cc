@@ -2477,9 +2477,15 @@ void describe_god( god_type which_god, bool give_title )
         if (harm_protection_type hpt =
                 god_protects_from_harm(which_god, false))
         {
-            const char *how = (you.piety >= 150)  ? "carefully" :
-                              (you.piety >=  90)  ? "often" :
-                              (you.piety >=  30)  ? "sometimes" :
+            int prayer_prot = 0;
+            if (you.religion == GOD_ELYVILON && you.piety > 30)
+                prayer_prot = 100 - 3000/you.piety;
+
+            int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
+    
+            const char *how = (prot_chance >= 85) ? "carefully" :
+                              (prot_chance >= 55) ? "often" :
+                              (prot_chance >= 25) ? "sometimes" :
                                                     "occasionally";
             const char *when =
                 (hpt == HPT_PRAYING)              ? " during prayer" :
@@ -2491,14 +2497,22 @@ void describe_god( god_type which_god, bool give_title )
                      god_name(which_god).c_str(), how, when );
         }
 
-        if (which_god == GOD_ZIN && you.piety >= 30)
+        if (which_god == GOD_ZIN)
         {
             have_any = true;
-            cprintf("Praying to %s will provide sustenance if starving."
-                    EOL, god_name(which_god).c_str());
-        }
+            if (you.piety >= 30)
+                cprintf("Praying to %s will provide sustenance if starving."
+                            EOL, god_name(which_god).c_str());
 
-        if (which_god == GOD_TROG)
+            const char *how = (you.piety >= 150) ? "carefully" : // res mut. 3
+                              (you.piety >= 100) ? "often" :
+                              (you.piety >=  50) ? "sometimes" :
+                                                   "occasionally";
+                                                   
+            cprintf("%s %s shields you from mutagenic effects." EOL,
+                    god_name(which_god).c_str(), how);
+        }
+        else if (which_god == GOD_TROG)
         {
             have_any = true;
             cprintf("You can call upon %s to burn books in your surroundings."

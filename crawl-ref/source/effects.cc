@@ -1912,7 +1912,7 @@ static void hell_effects()
         (temp_rand == 6)  ? "\"We have you now!\"" :
         // plain messages
         (temp_rand == 7)  ? (player_can_smell()) ? "You smell brimstone." :
-        "Brimstone rains from above." :
+                            "Brimstone rains from above." :
         (temp_rand == 8)  ? "You feel lost and a long, long way from home..." :
         (temp_rand == 9)  ? "You shiver with fear." :
         // warning
@@ -2028,7 +2028,7 @@ static void rot_inventory_food(long time_delta)
     // inventory {should be moved elsewhere - dlb}
 
     bool burden_changed_by_rot = false;
-    bool new_rotting_item = false;
+    std::vector<char> rotten_items;
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].quantity < 1)
@@ -2083,14 +2083,15 @@ static void rot_inventory_food(long time_delta)
 
         if (you.inv[i].special < 100 && (you.inv[i].special + (time_delta / 20)>=100))
         {
-            new_rotting_item = true; 
+            rotten_items.push_back(index_to_letter( i ));
         }
     }
 
     //mv: messages when chunks/corpses become rotten
-    if (new_rotting_item)
+    if (!rotten_items.empty())
     {
-        // XXX: should probably still notice?
+        std::string msg = "";
+        
         // Races that can't smell don't care, and trolls are stupid and
         // don't care.
         if (player_can_smell() && you.species != SP_TROLL)
@@ -2102,33 +2103,44 @@ static void rot_inventory_food(long time_delta)
             case 1:
             case 2:
                 temp_rand = random2(8);
-                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                msg = (temp_rand  < 5) ? "You smell something rotten." :
                       (temp_rand == 5) ? "You smell rotting flesh." :
                       (temp_rand == 6) ? "You smell decay."
-                                       : "There is something rotten in your inventory."),
-                    MSGCH_ROTTEN_MEAT );
+                                       : "There is something rotten in your inventory.";
                 break;
 
             // level 3 saprovores like it
             case 3:
                 temp_rand = random2(8);
-                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                msg = (temp_rand  < 5) ? "You smell something rotten." :
                       (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
                       (temp_rand == 6) ? "You smell decay. Yum-yum."
-                                       : "Wow! There is something tasty in your inventory."),
-                    MSGCH_ROTTEN_MEAT );
+                                       : "Wow! There is something tasty in your inventory.";
                 break;
 
             default:
                 temp_rand = random2(8);
-                mpr( ((temp_rand  < 5) ? "You smell something rotten." :
+                msg = (temp_rand  < 5) ? "You smell something rotten." :
                       (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
                       (temp_rand == 6) ? "You smell decay. Yuck!"
-                                       : "Ugh! There is something really disgusting in your inventory."), 
-                    MSGCH_ROTTEN_MEAT );
+                                       : "Ugh! There is something really disgusting in your inventory.";
                 break;
             }
         }
+        else if (Options.list_rotten)
+            msg = "Something in your inventory has become rotten.";
+            
+        if (Options.list_rotten)
+        {
+            mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
+                 msg.c_str(),
+                 rotten_items.size() > 1 ? "s" : "",
+                 comma_separated_line(rotten_items.begin(),
+                                      rotten_items.end()).c_str());
+        }
+        else if (!msg.empty())
+            mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
+            
         learned_something_new(TUT_ROTTEN_FOOD);
     }
     if (burden_changed_by_rot)

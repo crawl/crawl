@@ -4415,11 +4415,14 @@ void tile_use_item(int idx, InvAction act)
 
     // Equipped?
     bool equipped = false;
+    bool equipped_weapon = false;
     for (unsigned int i=0; i< NUM_EQUIP;i++)
     {
         if (you.equip[i] == idx)
         {
             equipped = true;
+            if (i == EQ_WEAPON)
+                equipped_weapon = true;
             break;
         }
     }
@@ -4428,7 +4431,11 @@ void tile_use_item(int idx, InvAction act)
 
     // Special case for folks who are wielding something
     // that they shouldn't be wielding.
-    if (you.equip[EQ_WEAPON] == idx)
+    // Note that this is only a problem for equipables
+    // (otherwise it would only waste a turn)
+    if (you.equip[EQ_WEAPON] == idx
+        && (you.inv[idx].base_type == OBJ_ARMOUR
+            || you.inv[idx].base_type == OBJ_JEWELLERY))
     {
         if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
             return;
@@ -4436,6 +4443,7 @@ void tile_use_item(int idx, InvAction act)
         wield_weapon(true, PROMPT_GOT_SPECIAL);
         return;
     }
+
 
     // Use it
     switch (you.inv[idx].base_type)
@@ -4472,7 +4480,7 @@ void tile_use_item(int idx, InvAction act)
             return;
 
         case OBJ_ARMOUR:
-            if (equipped)
+            if (equipped && !equipped_weapon)
             {
                 if (!check_warning_inscriptions(you.inv[idx], OPER_TAKEOFF))
                     return;
@@ -4493,8 +4501,12 @@ void tile_use_item(int idx, InvAction act)
             return;
 
         case OBJ_CORPSES:
-            if (you.species != SP_VAMPIRE)
+            if (you.species != SP_VAMPIRE
+                || you.inv[idx].sub_type == CORPSE_SKELETON
+                || you.inv[idx].special < 100)
+            {
                 break;
+            }
             // intentional fall-through for Vampires
         case OBJ_FOOD:
             if (!check_warning_inscriptions(you.inv[idx], OPER_EAT))
@@ -4520,7 +4532,7 @@ void tile_use_item(int idx, InvAction act)
             return;
 
         case OBJ_JEWELLERY:
-            if (equipped)
+            if (equipped && !equipped_weapon)
             {
                 if (!check_warning_inscriptions(you.inv[idx], OPER_REMOVE))
                     return;

@@ -613,6 +613,7 @@ void game_options::reset_options()
     easy_unequip           = true;
     easy_butcher           = true;
     always_confirm_butcher = false;
+    list_rotten            = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;

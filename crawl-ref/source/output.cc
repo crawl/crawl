@@ -517,6 +517,12 @@ void print_stats(void)
             cprintf( "Holy " );
         }
 
+        if (you.duration[DUR_TELEPORT])
+        {
+            textcolor( LIGHTBLUE );
+            cprintf( "Tele " );
+        }
+
         if (you.duration[DUR_DEFLECT_MISSILES])
         {
 
@@ -1195,7 +1201,7 @@ void print_overview_screen()
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
-                      || you.religion == GOD_ZIN && you.piety >= 180
+                      || you.religion == GOD_ZIN && you.piety >= 150
                       || you.mutation[MUT_MUTATION_RESISTANCE] == 3;
 
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
