@@ -3046,7 +3046,7 @@ static void miscast_fire(int severity, const char* cause)
             break;
 
         case 2:
-            mpr("You are covered in liquid fire!");
+            mpr("You are covered in liquid flames!");
             you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
             break;
         }

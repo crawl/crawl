@@ -3634,7 +3634,7 @@ void display_char_status()
         // I apologize in advance for the horrendous ugliness about to
         // transpire.  Avert your eyes!
         mprf("Your flesh is rotting%s",
-             (you.rotting > 15) ? " before your eyes!" :
+             (you.rotting > 15) ? " before your eyes." :
              (you.rotting > 8)  ? " away quickly." :
              (you.rotting > 4)  ? " badly." :
              ((you.species == SP_GHOUL && you.rotting) ?

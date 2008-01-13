@@ -2250,7 +2250,7 @@ void sticky_flame_monster( int mn, kill_category who, int levels )
         return;
 
     if (monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who)))
-        simple_monster_message(monster, " is covered in liquid fire!");
+        simple_monster_message(monster, " is covered in liquid flames!");
 }
 
 /*
