@@ -2424,6 +2424,7 @@ BWpn            Some characters have a breath weapon (like Nagas or
 Invis           You are invisible. This can cause glowing, if used too  
                 much.
 Holy            You repel undead.
+Tele            You are about to teleport, i.e. feeling "unstable".
 Lev             You levitate, i.e. hover a few inches above the ground. 
                 While enough to cross water and lava, movement is not 
                 completely controlled. It will usually time out. 
