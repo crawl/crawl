@@ -30,7 +30,7 @@ The contents of this text are:
                 remembered_monster_colour, colour_map, clean_map
 4-d     Branding (Item and Monster Highlighting).
                 friend_brand, stab_brand, may_stab_brand,
-                heap_brand, stair_item_brand, trap_item_brand
+                heap_brand, feature_item_brand, trap_item_brand
 4-e     Level Map Functions.
                 level_map_cursor_step, level_map_title, item_colour
 4-f     Viewport Display Options.
@@ -478,7 +478,7 @@ See part Technical (6-) for dos_use_background_intensity under Windows
 and DOS.
 
 By default, only two of the item brands are active (and set to reverse):
-   heap_brand, stair_item_brand
+   heap_brand, feature_item_brand
 They can be deactivated by setting them to "none".
 
 friend_brand = none
@@ -506,10 +506,11 @@ may_stab_brand = none
 heap_brand = reverse
         Brand heaps of items (more than one item or stack).
 
-stair_item_brand = reverse
-        Brands stairs that would otherwise be hidden by items. If you
-        use this brand, the items on the square are hidden by the stair
-        symbol (<, >, or portal) and the stair symbol is branded.
+feature_item_brand = reverse
+        Brands features (stairs, shops, altars) that would otherwise be 
+	hidden by items. If you use this brand, the items on the square 
+	are hidden by the feature symbol and the feature symbol is 
+	branded.
 
 trap_item_brand = none
         Brands traps that would otherwise be hidden by items. If you 

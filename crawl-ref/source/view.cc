@@ -304,7 +304,7 @@ static unsigned colflag2brand(int colflag)
     case COLFLAG_MAYSTAB:
         return (Options.may_stab_brand);
     case COLFLAG_STAIR_ITEM:
-        return (Options.stair_item_brand);
+        return (Options.feature_item_brand);
     case COLFLAG_TRAP_ITEM:
         return (Options.trap_item_brand);
     default:
@@ -631,8 +631,10 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     if (feature_colour != DARKGREY)
         tc = feature_colour;
 
-    if (Options.stair_item_brand
-        && is_stair(grid_value) && igrd[x][y] != NON_ITEM)
+    if (Options.feature_item_brand
+        && (is_stair(grid_value) || grid_altar_god(grid_value) != GOD_NO_GOD
+            || grid_value == DNGN_ENTER_SHOP || grid_is_portal(grid_value))
+        && igrd[x][y] != NON_ITEM)
     {
         tc |= COLFLAG_STAIR_ITEM;
     }
@@ -709,7 +711,7 @@ int get_mons_colour(const monsters *mons)
     }
     else if (mons_is_stationary(mons))
     {
-        if (Options.stair_item_brand != CHATTR_NORMAL
+        if (Options.feature_item_brand != CHATTR_NORMAL
             && grid_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
         {
             col |= COLFLAG_STAIR_ITEM;
@@ -1253,7 +1255,7 @@ inline static void update_item_grid(const coord_def &gp, const coord_def &ep)
     unsigned short &ecol = env.show_col(ep);
 
     const dungeon_feature_type grid = grd(gp);
-    if (Options.stair_item_brand && is_stair(grid))
+    if (Options.feature_item_brand && is_stair(grid))
         ecol |= COLFLAG_STAIR_ITEM;
     else if (Options.trap_item_brand && grid_is_trap(grid))
         ecol |= COLFLAG_TRAP_ITEM;

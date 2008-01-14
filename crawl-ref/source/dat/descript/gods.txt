@@ -13,23 +13,24 @@ Buggy (It's a bug if you ever see this.)
 %%%%
 Zin
 
-Zin is an ancient and revered God, dedicated to the establishment of 
-order and the destruction of the forces of chaos and night. Valued
-worshippers can gain sustenance in times of need and a variety of
-powers useful in the fight against chaos, but are required to remain
-pure of body and soul, in particular abstain from the consumption of
-corpses of intelligent beings, and the use of necromancy and mutating
-substances. Zin values selflessness and appreciates long-standing 
-faith.
+Zin is an ancient and revered God, dedicated to the establishment of
+order. Worshippers are required to remain pure of body and soul, in 
+particular to abstain from the consumption of corpses of intelligent 
+beings, and the use of necromancy and deliberate mutations. They can 
+gain a variety of powers useful against chaos, including a divine 
+refuge. Zin values selflessness and appreciates long-standing faith.
+Zin is a good god, and does not mind switching to another good god.
 %%%%
 The Shining One
 
-The Shining One is a powerful crusading deity, allied with Zin in the
-fight against evil. Followers may be granted blessings on their
-weapons and the ability to summarily dispense the wrath of heaven, but
-must never use any form of evil magic and should fight honourably. The
-Shining One appreciates long-standing persistence in the endless
-crusade, as well as the dedicated destruction of unholy creatures.
+The Shining One is a powerful crusading deity. Followers may be 
+granted blessings on their weapons and the ability to summarily 
+dispense the wrath of heaven, but must never use any form of evil 
+magic and should fight honourably. The Shining One appreciates 
+long-standing persistence in the endless crusade, as well as the 
+dedicated destruction of unholy creatures. 
+The Shining One is a good god, and does not mind switching to another 
+good god.
 %%%%
 Kikubaaqudgha
 
@@ -107,6 +108,7 @@ Elyvilon the Healer is worshipped by the healers (among others), who
 gain their healing powers by long worship and devotion. Although
 Elyvilon prefers a creed of pacifism, those who crusade against evil
 are not excluded. Elyvilon appreciates the destruction of weapons.
+Elyvilon is a good god, and does not mind switching to another good god.
 %%%%
 Lugonu
 

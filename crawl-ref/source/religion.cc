@@ -3276,8 +3276,14 @@ static void give_sac_group_feedback(int which)
 
 void offer_items()
 {
-    if (you.religion == GOD_NO_GOD || !god_likes_items(you.religion))
+    if (you.religion == GOD_NO_GOD)
         return;
+
+    if (!god_likes_items(you.religion))
+    {
+        simple_god_message(" doesn't care about such mundane gifts.", you.religion);
+        return;
+    }
 
     god_acting gdact;
 
@@ -3306,14 +3312,25 @@ void offer_items()
             simple_god_message(" finds your generosity lacking.");
             return;
         }
-        else if (donation_value <= 5) // $100 or more
-            simple_god_message(" is satisfied with your donation.");
-        else if (donation_value <= 20) // about $400 or more
-            simple_god_message(" is pleased about your sacrifice.");
-        else if (donation_value <= 50) // about $1500 or more
-            simple_god_message(" is impressed by your generosity.");
-        else // about $3000 or more
-            simple_god_message(" is deeply moved by your generosity.");
+
+        int estimated_piety = you.piety + donation_value;
+        std::string result = god_name(GOD_ZIN) + " will soon be ";
+        
+        result +=
+            (estimated_piety > 130) ? "exalted by your worship" :
+            (estimated_piety > 100) ? "extremely pleased with you" :
+            (estimated_piety >  70) ? "greatly pleased with you" :
+            (estimated_piety >  40) ? "most pleased with you" :
+            (estimated_piety >  20) ? "pleased with you" :
+            (estimated_piety >   5) ? "noncommittal"
+                                    : "displeased";
+                                    
+        if (donation_value >= 30 && you.piety <= 170)
+            result += "!";
+        else
+            result += ".";
+            
+        mpr(result.c_str());
 
         you.duration[DUR_PIETY_POOL] += donation_value;
         if (you.duration[DUR_PIETY_POOL] > 500)
@@ -3442,12 +3459,19 @@ void offer_items()
         const int new_leading = leading_sacrifice_group();
         if ( old_leading != new_leading || one_chance_in(50) )
             give_sac_group_feedback(new_leading);
-    }    
-
+            
 #if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
-    if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
         show_pure_deck_chances();
 #endif
+    }
+    else if (!num_sacced) // explanatory messages if nothing sacrificed
+    {
+        if (you.religion == GOD_KIKUBAAQUDGHA || you.religion == GOD_TROG)
+            simple_god_message(" only cares about primal sacrifices!", you.religion);
+        else if (you.religion == GOD_NEMELEX_XOBEH)
+            simple_god_message(" expects you to use your decks, not offer them!", you.religion);
+        // everyone else was handled above (Zin!) or likes everything
+    }
 }
 
 void god_pitch(god_type which_god)

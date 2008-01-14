@@ -1657,11 +1657,11 @@ public:
     unsigned    detected_monster_colour;    // Colour of detected monsters
     unsigned    detected_item_colour;       // Colour of detected items
 
-    unsigned    heap_brand;       // Highlight heaps of items
-    unsigned    stab_brand;       // Highlight monsters that are stabbable
-    unsigned    may_stab_brand;   // Highlight potential stab candidates
-    unsigned    stair_item_brand; // Highlight stairs covered by items.
-    unsigned    trap_item_brand;  // Highlight traps covered by items.
+    unsigned    heap_brand;         // Highlight heaps of items
+    unsigned    stab_brand;         // Highlight monsters that are stabbable
+    unsigned    may_stab_brand;     // Highlight potential stab candidates
+    unsigned    feature_item_brand; // Highlight features covered by items.
+    unsigned    trap_item_brand;    // Highlight traps covered by items.
 
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information

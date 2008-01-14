@@ -100,7 +100,7 @@ friend_brand     = hi:green
 stab_brand       = hi:blue
 # may_stab_brand   = hi:yellow
 # heap_brand       = reverse
-# stair_item_brand = reverse
+# feature_item_brand = reverse
 # trap_item_brand  = none
 
 ##### 4-e	Level Map Functions ###################
@@ -202,6 +202,8 @@ menu_colour = notes:white:Reached XP level
 
 # Message colours
 message_colour = lightcyan:LOW MAGIC WARNING
+# for weapons of returning not returning to your pack
+message_colour = yellow:fails to return
 
 # These lines will suppress extra feedback messages from 
 # travel/shift-running.

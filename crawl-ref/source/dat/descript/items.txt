@@ -1112,7 +1112,8 @@ your possessions.
 %%%%
 scroll of enchant armour
 
-This scroll places an enchantment on a piece of armour.
+This scroll places an enchantment on a piece of armour. It can also 
+be used to enchant the hides of certain exotic creatures.
 %%%%
 scroll of enchant weapon i
 

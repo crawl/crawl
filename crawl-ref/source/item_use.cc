@@ -1686,7 +1686,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
     int effSkill = 0;           // effective launcher skill
     int dice_mult = 100;
-    bool returning = false;     // item will return to pack
+    bool returning = false;     // item can return to pack
+    bool did_return = false;    // returning item actually does return to pack
     int slayDam = 0;
 
     if (!teleport)
@@ -2122,9 +2123,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (projected == LRET_THROWN)
     {
         returning = ((get_weapon_brand(item) == SPWPN_RETURNING ||
-                      get_ammo_brand(item) == SPMSL_RETURNING) &&
-                          !teleport &&
-                          !one_chance_in(1 + skill_bump(SK_THROWING)));
+                      get_ammo_brand(item) == SPMSL_RETURNING) && !teleport);
+                      
+        if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
+            did_return = true;
+            
         baseHit = 0;
 
         // missiles only use inv_plus
@@ -2403,17 +2406,17 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     else
     {
         // Dropping item copy, since the launched item might be different.
-        fire_beam(pbolt, returning ? NULL : &item);
+        fire_beam(pbolt, did_return? NULL : &item);
 
         // The item can be destroyed before returning.
         if (returning && thrown_object_destroyed(&item, pbolt.target_x,
                                                  pbolt.target_y, true))
         {
-            returning = false;
+            did_return = false;
         }
     }
 
-    if ( returning )
+    if ( did_return )
     {
         // Fire beam in reverse
         pbolt.setup_retrace();
@@ -2428,7 +2431,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
     }
     else
+    {
+        if (returning) // should have returned but didn't
+            msg::stream << item.name(DESC_CAP_THE)
+                        << " fails to return to your pack!" << std::endl;
+
         dec_inv_item_quantity( throw_2, 1 );
+    }
 
     // throwing and blowguns are silent
     if (projected == LRET_LAUNCHED && lnchType != WPN_BLOWGUN)
