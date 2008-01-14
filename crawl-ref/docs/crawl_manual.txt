@@ -1292,7 +1292,7 @@ radically player-friendly and customisable.
 1.                      LIST OF CHARACTER SPECIES
 ------------------------------------------------------------------------
 
-Human:
+Humans:
 ------
 Humans tend to be hardworking and industrious, and learn new things
 quickly. The human race is the most versatile of all the species
@@ -1398,7 +1398,7 @@ They are quite small, and share many characteristics with halflings
 slowly in experience levels. They are okay at most skills, but
 excellent at earth elemental magic and very poor at air magic.
 
-Occasionally they can use their empathy with the earth to sense their
+Occasionally, they can use their empathy with the earth to sense their
 surroundings; this ability increases in power as they gain experience 
 levels.
 
@@ -1465,7 +1465,7 @@ There are two types of undead available to players: Mummies and Ghouls.
   fighters and, due to their contact with the grave, can use ice, earth
   and death magic without too many difficulties.
 
-Naga:
+Nagas:
 -----
 Nagas are a hybrid race: humanoid from the waist up with a large snake
 tail instead of legs.
