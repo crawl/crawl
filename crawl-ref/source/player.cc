@@ -5752,6 +5752,33 @@ bool player::cannot_fight() const
     return (false);
 }
 
+// If you have a randart equipped that has the RAP_ANGRY property
+// there's a 1/20 chance of it becoming activated whenever you
+// attack a monster. (Same as the berserk mutation at level 1.)
+// The probabilites for actually going berserk are cumulative!
+static bool equipment_make_berserk()
+{
+    for (int eq = EQ_WEAPON; eq < NUM_EQUIP; eq++)
+    {
+         const item_def *item = you.slot_item((equipment_type) eq);
+         if (!item)
+             continue;
+             
+         if (!is_random_artefact(*item))
+             continue;
+
+         if (one_chance_in(20)
+             && randart_wpn_property(*item,
+                  static_cast<randart_prop_type>(RAP_ANGRY)))
+         {
+             return (true);
+         }
+    }
+
+    // nothing found
+    return (false);
+}
+
 void player::attacking(actor *other)
 {
     if (other && other->atype() == ACT_MONSTER)
@@ -5764,7 +5791,8 @@ void player::attacking(actor *other)
     }
 
     if (mutation[MUT_BERSERK] &&
-        (random2(100) < (mutation[MUT_BERSERK] * 10) - 5))
+        (random2(100) < (mutation[MUT_BERSERK] * 10) - 5)
+        || equipment_make_berserk())
     {
         go_berserk(false);
     }

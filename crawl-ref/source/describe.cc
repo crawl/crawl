@@ -47,6 +47,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
@@ -1919,8 +1920,17 @@ static std::string describe_draconian(const monsters *mon)
 //---------------------------------------------------------------
 void describe_monsters(monsters& mons)
 {
+    // for undetected mimics describe mimicked item instead
+    if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
+    {
+        item_def item;
+        const monsters *mon = &mons;
+        get_mimic_item( mon, item );
+        describe_item(item);
+        return;
+    }
+    
     std::ostringstream description;
-
     description << mons.name(DESC_CAP_A) << "$$";
     
     // Note: Nearly all of the "long" descriptions have moved to 
@@ -1938,7 +1948,11 @@ void describe_monsters(monsters& mons)
     // than what we have today.
     //
     // -peterb 4/14/07
-    description << getLongDescription(mons.name(DESC_PLAIN));
+
+    if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
+        description << getLongDescription("mimic");
+    else
+        description << getLongDescription(mons.name(DESC_PLAIN));
 
     std::string symbol = "";
     symbol += get_monster_data(mons.type)->showchar;
@@ -1950,10 +1964,7 @@ void describe_monsters(monsters& mons)
     symbol_prefix += "_prefix";
     description << getLongDescription(symbol_prefix);
 
-    // Now that the player has examined it, he knows it's a mimic.
-    if (mons_is_mimic(mons.type))
-        mons.flags |= MF_KNOWN_MIMIC;
-
+    
     switch (mons.type)
     {
     case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:

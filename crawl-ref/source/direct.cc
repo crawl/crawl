@@ -2108,7 +2108,7 @@ static void describe_cell(int mx, int my)
     {
         // If a mimic is on this square, we pretend it's the first item -- bwr
         if (mimic_item)
-            mpr("There is something else lying underneath.",MSGCH_FLOOR_ITEMS);
+            mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
         else
         {
             if (mitm[ targ_item ].base_type == OBJ_GOLD)

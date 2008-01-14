@@ -418,6 +418,21 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }                               // end dec_penance()
 
+bool beogh_water_walk()
+{
+    return
+        you.religion == GOD_BEOGH &&
+        !player_under_penance() &&
+        you.piety >= piety_breakpoint(4);
+}
+
+static bool need_water_walking()
+{
+    return
+        !player_is_airborne() && you.species != SP_MERFOLK &&
+        grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
+}
+
 void inc_penance(god_type god, int val)
 {
     if (you.penance[god] == 0 && val > 0)
@@ -440,6 +455,12 @@ void inc_penance(god_type god, int val)
         you.penance[god] = 200;
     else
         you.penance[god] += val;
+        
+    if ( god == GOD_BEOGH && need_water_walking() && !beogh_water_walk())
+    {
+         fall_into_a_pool( you.x_pos, you.y_pos, true,
+                           grd[you.x_pos][you.y_pos] );
+    }
 }                               // end inc_penance()
 
 void inc_penance(int val)
@@ -1785,21 +1806,6 @@ void gain_piety(int pgn)
         simple_god_message( " will now bless your weapon at an altar...once.");
 
     do_god_gift(false);
-}
-
-bool beogh_water_walk()
-{
-    return
-        you.religion == GOD_BEOGH &&
-        !player_under_penance() &&
-        you.piety >= piety_breakpoint(4);
-}
-
-static bool need_water_walking()
-{
-    return
-        !player_is_airborne() && you.species != SP_MERFOLK &&
-        grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER;
 }
 
 static bool is_evil_weapon(const item_def& weap)
@@ -3319,6 +3325,9 @@ void offer_items()
     int num_sacced = 0;
     int i          = igrd[you.x_pos][you.y_pos];
 
+    if (i == NON_ITEM) // nothing to sacrifice
+        return;
+
     const int old_leading = leading_sacrifice_group();
 
     while (i != NON_ITEM)
@@ -3333,6 +3342,19 @@ void offer_items()
             continue;
         }
 
+        if ( is_risky_sacrifice(item) ||
+             item.inscription.find("=p") != std::string::npos)
+        {
+            const std::string msg =
+                  "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
+
+            if (!yesno(msg.c_str()))
+            {
+                i = next;
+                continue;
+            }
+        }
+
         bool gained_piety = false;
 
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
@@ -3342,19 +3364,6 @@ void offer_items()
         switch (you.religion)
         {
         case GOD_NEMELEX_XOBEH:
-            if ( is_risky_sacrifice(item) ||
-                 item.inscription.find("=p") != std::string::npos)
-            {
-                const std::string msg =
-                    "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
-
-                if (!yesno(msg.c_str()))
-                {
-                    i = next;
-                    continue;
-                }
-            }
-
             if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
             {
                 you.attribute[ATTR_CARD_COUNTDOWN]--;

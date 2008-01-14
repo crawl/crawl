@@ -3592,8 +3592,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
     int flag = t & (~TILE_FLAG_MASK);
     int mon_wep = menv[idx].inv[MSLOT_WEAPON];
 
-    if (menv[idx].type >= MONS_GOLD_MIMIC &&
-        menv[idx].type <= MONS_POTION_MIMIC)
+    if (mons_is_mimic(menv[idx].type))
     {
         const monsters *mon = &menv[idx];
         if (!mons_is_known_mimic(mon))
