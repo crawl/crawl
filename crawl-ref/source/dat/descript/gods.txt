@@ -94,19 +94,20 @@ spell magic.
 %%%%
 Nemelex Xobeh
 
-Nemelex is a strange and unpredictable trickster God, whose powers can
-be invoked through the magical packs of cards which Nemelex paints in
-the ichor of demons. Followers receive occasional gifts, and should
-use these as much as possible. Offerings of any type of item are also
-appreciated. The Trickster may provide certain ways to improve one's
-chances at cards, but prefers those who trust to luck.
+
+Nemelex is a strange and unpredictable trickster God, whose powers can 
+be invoked through the magical packs of cards painted in the ichor of 
+demons. Followers are expected to sedulously sacrifice valuable items, 
+the type of which will influence the gifts. Followers are also advised 
+to trust in the cards and use them as much as possible. However, over 
+time, the Trickster provides certain ways to adjust the fortune.
 %%%%
 Elyvilon
 
 Elyvilon the Healer is worshipped by the healers (among others), who
 gain their healing powers by long worship and devotion. Although
 Elyvilon prefers a creed of pacifism, those who crusade against evil
-are not excluded. Elyvilon appreciates the destruction of weapons.
+are not excluded. The Healer appreciates the destruction of weapons.
 Elyvilon is a good god, and does not mind switching to another good god.
 %%%%
 Lugonu
