@@ -3168,7 +3168,7 @@ void level_change(bool skip_ability_increase)
                 if (!(you.experience_level % 4))
                 {
                     modify_stat( (coinflip() ? STAT_DEXTERITY
-                                              : STAT_STRENGTH), 1, false,
+                                             : STAT_STRENGTH), 1, false,
                                  "level gain");
                 }
                 break;

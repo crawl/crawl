@@ -1956,7 +1956,7 @@ bool melee_attack::apply_damage_brand()
     case SPWPN_ORC_SLAYING:
         if (defender->mons_species() == MONS_ORC)
         {
-            special_damage = 1 + random2(damage_done);
+            special_damage = 1 + random2(3*damage_done/2);
             if (defender_visible)
                 special_damage_message =
                     make_stringf(
@@ -1971,7 +1971,7 @@ bool melee_attack::apply_damage_brand()
         if (mons_genus(defender->mons_species()) == MONS_DRAGON
             || mons_genus(defender->mons_species()) == MONS_DRACONIAN)
         {
-            special_damage = 1 + random2(damage_done);
+            special_damage = 1 + random2(3*damage_done/2);
             if (defender_visible)
                 special_damage_message =
                     make_stringf(
