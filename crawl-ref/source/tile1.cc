@@ -25,6 +25,17 @@ static FixedArray < unsigned short, GXM, GYM > tile_dngn;
 // // gv backup
 static FixedArray < unsigned char, GXM, GYM > gv_now;
 
+bool is_bazaar()
+{
+    return (you.level_type == LEVEL_PORTAL_VAULT && 
+        you.level_type_name == "bazaar");
+}
+
+unsigned short get_bazaar_special_colour()
+{
+    return YELLOW;
+}
+
 void TileNewLevel(bool first_time)
 {
     GmapInit(false);
@@ -1993,7 +2004,7 @@ int tileidx_zap(int color)
 // Plus modify wall tile index depending on
 //  1: floor/wall flavor in 2D mode
 //  2: connectivity in 3D mode
-void finalize_tile(short unsigned int *tile, unsigned char wflag,
+void finalize_tile(short unsigned int *tile, bool is_special,
     char wall_flv, char floor_flv, char special_flv)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
@@ -2008,7 +2019,7 @@ void finalize_tile(short unsigned int *tile, unsigned char wflag,
     // If there are special tiles for this level, then use them.
     // Otherwise, we'll fall through to the next case and replace
     // special tiles with normal floor.
-    if (orig == TILE_DNGN_FLOOR_SPECIAL && 
+    if (orig == TILE_DNGN_FLOOR && is_special &&
         get_num_floor_special_flavors() > 0)
     {
         (*tile) = get_floor_special_tile_idx() + special_flv;
@@ -3270,6 +3281,9 @@ int jitter(SpecialIdx i)
 
 void tile_init_flavor()
 {
+    const bool bazaar = is_bazaar();
+    const unsigned short baz_col = get_bazaar_special_colour();
+
     for (int x = 0; x < GXM; x++)
     {
         for (int y = 0; y < GYM; y++)
@@ -3282,26 +3296,36 @@ void tile_init_flavor()
             env.tile_flavor[x][y].floor = floor_flavor;
             env.tile_flavor[x][y].wall = wall_flavor;
 
-            if (grd[x][y] == DNGN_FLOOR_SPECIAL)
+            if (bazaar && env.grid_colours[x][y] == baz_col &&
+                grd[x][y] == DNGN_FLOOR)
             {
                 int left_grd = (x > 0) ? grd[x-1][y] : DNGN_ROCK_WALL;
                 int right_grd = (x < GXM - 1) ? grd[x+1][y] : DNGN_ROCK_WALL;
                 int up_grd = (y > 0) ? grd[x][y-1] : DNGN_ROCK_WALL;
                 int down_grd = (y < GYM - 1) ? grd[x][y+1] : DNGN_ROCK_WALL;
+                unsigned short left_col = (x > 0) ? 
+                    env.grid_colours[x-1][y] : BLACK;
+                unsigned short right_col = (x < GXM - 1) ? 
+                    env.grid_colours[x+1][y] : BLACK;
+                unsigned short up_col = (y > 0) ?
+                    env.grid_colours[x][y-1] : BLACK;
+                unsigned short down_col = (y < GYM - 1) ?
+                    env.grid_colours[x][y+1] : BLACK;
 
                 // The special tiles contains part floor and part special, so
                 // if there are adjacent floor or special tiles, we should
                 // do our best to "connect" them appropriately.  If there are
                 // are other tiles there (walls, doors, whatever...) then it
                 // doesn't matter.
-                bool l_nrm = left_grd == DNGN_FLOOR;
-                bool r_nrm = right_grd == DNGN_FLOOR;
-                bool u_nrm = up_grd == DNGN_FLOOR;
-                bool d_nrm = down_grd == DNGN_FLOOR;
-                bool l_spc = left_grd == DNGN_FLOOR_SPECIAL;
-                bool r_spc = right_grd == DNGN_FLOOR_SPECIAL;
-                bool u_spc = up_grd == DNGN_FLOOR_SPECIAL;
-                bool d_spc = down_grd == DNGN_FLOOR_SPECIAL;
+                bool l_nrm = left_grd == DNGN_FLOOR && left_col != baz_col;
+                bool r_nrm = right_grd == DNGN_FLOOR && right_col != baz_col;
+                bool u_nrm = up_grd == DNGN_FLOOR && up_col != baz_col;
+                bool d_nrm = down_grd == DNGN_FLOOR && down_col != baz_col;
+
+                bool l_spc = left_grd == DNGN_FLOOR && left_col == baz_col;
+                bool r_spc = right_grd == DNGN_FLOOR && right_col == baz_col;
+                bool u_spc = up_grd == DNGN_FLOOR && up_col == baz_col;
+                bool d_spc = down_grd == DNGN_FLOOR && down_col == baz_col;
 
                 if (l_nrm && r_nrm || u_nrm && d_nrm)
                 {
@@ -3436,6 +3460,9 @@ void tile_init_flavor()
         }
     }
 
+    if (!bazaar)
+        return;
+
     // Second pass for clean up.  The only bad part about the above
     // algorithm is that it could turn a block of floor like this:
     //
@@ -3457,8 +3484,9 @@ void tile_init_flavor()
     {
         for (int y = 0; y < GYM - 1; y++)
         {
-            if (grd[x][y] != DNGN_FLOOR_SPECIAL)
+            if (grd[x][y] != DNGN_FLOOR || env.grid_colours[x][y] != baz_col)
                 continue;
+
             if (env.tile_flavor[x][y].special != SPECIAL_N &&
                 env.tile_flavor[x][y].special != SPECIAL_S &&
                 env.tile_flavor[x][y].special != SPECIAL_E &&
@@ -3756,26 +3784,33 @@ void tile_finish_dngn(short unsigned int *tileb, int cx, int cy)
     int x, y;
     int count = 0;
 
+    const bool bazaar = is_bazaar();
+    const unsigned short baz_col = get_bazaar_special_colour();
+
     for (y=0; y < crawl_view.viewsz.y; y++)
     {
         for (x=0; x < crawl_view.viewsz.x; x++)
         {
-            const int gx = view2gridX(x);
-            const int gy = view2gridY(y);
-            int wall = 0;
+            // View coords are not centered on you, but on (cx,cy)
+            const int gx = view2gridX(x + 1) + cx - you.x_pos;
+            const int gy = view2gridY(y + 1) + cy - you.y_pos;
 
             char wall_flv = 0;
             char floor_flv = 0;
             char special_flv = 0;
+            bool is_special = false;
             if (map_bounds( gx, gy ))
             {
                 wall_flv = env.tile_flavor[gx][gy].wall;
                 floor_flv = env.tile_flavor[gx][gy].floor;
                 special_flv = env.tile_flavor[gx][gy].special;
+                is_special = 
+                    (bazaar && env.grid_colours[gx][gy] == baz_col);
             }
-            finalize_tile(&tileb[count], wall, 
+
+            finalize_tile(&tileb[count], is_special, 
                 wall_flv, floor_flv, special_flv);
-            finalize_tile(&tileb[count+1], wall,
+            finalize_tile(&tileb[count+1], is_special,
                 wall_flv, floor_flv, special_flv);
             count += 2;
         }
