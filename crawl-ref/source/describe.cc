@@ -2552,10 +2552,10 @@ void describe_god( god_type which_god, bool give_title )
     if ( which_god == you.religion )
     {
         if (you.religion == GOD_ZIN)
-            gotoxy(1, get_number_of_lines() - 1, GOTO_MSG);
+            gotoxy(1, get_number_of_lines(), GOTO_CRT);
         else
-            gotoxy(1, get_number_of_lines() - 2, GOTO_MSG);
-        
+            gotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
+
         textcolor(LIGHTGRAY);
         cprintf(get_linebreak_string(religion_help(which_god),
                                      numcols).c_str());
