@@ -2551,7 +2551,7 @@ void describe_god( god_type which_god, bool give_title )
     // only give this additional information for worshippers
     if ( which_god == you.religion )
     {
-        if (you.religion == GOD_ZIN)
+        if (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
             gotoxy(1, get_number_of_lines(), GOTO_CRT);
         else
             gotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
