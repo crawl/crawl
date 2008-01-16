@@ -1895,10 +1895,6 @@ void tag_construct_level_tiles(struct tagHeader &th)
             marshallByte(th, env.tile_flavor[count_x][count_y].special);
         }
     }
-
-    GmapInit(false);
-    TileLoadWall(false);
-    tile_clear_buf();
 #endif
 }
 
