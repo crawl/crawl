@@ -1969,7 +1969,9 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_DRAGON_SLAYING:
         if (mons_genus(defender->mons_species()) == MONS_DRAGON
-            || mons_genus(defender->mons_species()) == MONS_DRACONIAN)
+            || mons_genus(defender->mons_species()) == MONS_DRACONIAN
+            || defender->atype() == ACT_PLAYER
+               && you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
         {
             special_damage = 1 + random2(3*damage_done/2);
             if (defender_visible)

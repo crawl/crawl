@@ -3625,6 +3625,15 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
         const monsters *mon = &menv[idx];
         if (!mons_is_known_mimic(mon))
         {
+            // if necessary add item brand
+            if (igrd[gx][gy] != NON_ITEM)
+            {
+                if (foreground)
+                    t |= TILE_FLAG_S_UNDER;
+                else
+                    t0 |= TILE_FLAG_S_UNDER;
+            }
+
             item_def item;
             get_mimic_item( mon, item );
             if (item_needs_autopickup(item))
@@ -3634,6 +3643,17 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
                 else
                     env.tile_bk_bg[gx][gy] |= TILE_FLAG_CURSOR3;
             }
+        }
+    }
+    else if (menv[idx].holiness() == MH_PLANT)
+    {
+        // if necessary add item brand
+        if (igrd[gx][gy] != NON_ITEM)
+        {
+            if (foreground)
+                t |= TILE_FLAG_S_UNDER;
+            else
+                t0 |= TILE_FLAG_S_UNDER;
         }
     }
     else if (menv[idx].type >=  MONS_DRACONIAN &&

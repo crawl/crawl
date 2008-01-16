@@ -404,7 +404,13 @@ static void give_adjusted_experience(monsters *monster, killer_type killer,
     if (created_friendly)
         ; // No experience if monster was created friendly
     else if (YOU_KILL(killer))
+    {
+        int old_lev = you.experience_level;
         gain_exp( experience, exp_gain, avail_gain );
+        // Give a message for monsters dying out of sight
+        if (exp_gain > 0 && !mons_near(monster) && you.experience_level == old_lev)
+            mpr("You feel a bit more experienced.");
+    }
     else if (pet_kill)
         gain_exp( experience / 2 + 1, exp_gain, avail_gain );
 
@@ -969,7 +975,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 if (monster->type == MONS_SIMULACRUM_SMALL
                     || monster->type == MONS_SIMULACRUM_LARGE)
                 {
-                    simple_monster_message( monster, " vaporises!" );
+                    simple_monster_message( monster, " vapourises!" );
 
                     place_cloud( CLOUD_COLD, monster->x, monster->y,
                                  1 + random2(3), monster->kill_alignment() );

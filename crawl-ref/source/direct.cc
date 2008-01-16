@@ -1469,7 +1469,9 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.x_pos, you.y_pos, DESC_NOCAP_A, false);
+    feat = feature_description(you.x_pos, you.y_pos,
+                               is_bloodcovered(you.x_pos, you.y_pos),
+                               DESC_NOCAP_A, false);
     if (feat.empty())
         return;
 
@@ -1528,11 +1530,14 @@ static std::string feature_do_grammar(description_level_type dtype,
 }
 
 std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap,
+                                trap_type trap, bool bloody,
                                 description_level_type dtype,
                                 bool add_stop)
 {
     std::string desc = raw_feature_description(grid, trap);
+    if (bloody)
+        desc += ", spattered with blood";
+
     return feature_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
 }
 
@@ -1782,8 +1787,8 @@ static bool interesting_feature(dungeon_feature_type feat)
 }
 #endif
 
-std::string feature_description(int mx, int my, description_level_type dtype,
-                                bool add_stop)
+std::string feature_description(int mx, int my, bool bloody,
+                                description_level_type dtype, bool add_stop)
 {
     dungeon_feature_type grid = grd[mx][my];
     if ( grid == DNGN_SECRET_DOOR )
@@ -1794,7 +1799,7 @@ std::string feature_description(int mx, int my, description_level_type dtype,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return (feature_description(grid, trap_type_at_xy(mx, my), 
+        return (feature_description(grid, trap_type_at_xy(mx, my), bloody,
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:
         return (shop_name(mx, my, add_stop));
@@ -1804,7 +1809,7 @@ std::string feature_description(int mx, int my, description_level_type dtype,
                     dtype, add_stop, false,
                     marker_feature_description(coord_def(mx, my))));
     default:
-        return (feature_description(grid, NUM_TRAPS, dtype, add_stop));
+        return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop));
     }
 }
 
@@ -2124,7 +2129,11 @@ static void describe_cell(int mx, int my)
         item_described = true;
     }
 
-    std::string feature_desc = feature_description(mx, my);
+    bool bloody = false;
+    if (is_bloodcovered(mx, my))
+        bloody = true;
+
+    std::string feature_desc = feature_description(mx, my, bloody);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
     if (map_marker *mark = env.markers.find(coord_def(mx, my), MAT_ANY))
@@ -2148,8 +2157,6 @@ static void describe_cell(int mx, int my)
     if (Options.tutorial_left && tutorial_feat_interesting(grd[mx][my]))
     {
         feature_desc += " (Press <w>v<lightgray> for more information.)";
-        if (is_bloodcovered(mx, my))
-          feature_desc += EOL "It is spattered with blood.";
 
         print_formatted_paragraph(feature_desc, get_number_of_cols());
     }
@@ -2159,13 +2166,6 @@ static void describe_cell(int mx, int my)
         
         if (interesting_feature(feat))
             feature_desc += " (Press 'v' for more information.)";
-
-        bool bloody = false;
-        if (is_bloodcovered(mx, my))
-        {
-            feature_desc += EOL "It is spattered with blood.";
-            bloody = true;
-        }
 
         // Suppress "Floor." if there's something on that square that we've
         // already described.

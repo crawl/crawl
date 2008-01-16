@@ -1275,7 +1275,7 @@ static int dgn_feature_desc(lua_State *ls)
         description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
     const std::string s =
-        feature_description(feat, NUM_TRAPS, dtype, need_stop);
+        feature_description(feat, NUM_TRAPS, false, dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return (1);
 }
@@ -1288,7 +1288,7 @@ static int dgn_feature_desc_at(lua_State *ls)
         description_type_by_name(lua_tostring(ls, 3));
     const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
     const std::string s =
-        feature_description(luaL_checkint(ls, 1), luaL_checkint(ls, 2),
+        feature_description(luaL_checkint(ls, 1), luaL_checkint(ls, 2), false,
                             dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return (1);

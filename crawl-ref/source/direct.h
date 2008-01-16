@@ -168,13 +168,13 @@ std::string get_monster_desc(const monsters *mon,
 
 int dos_direction_unmunge(int doskey);
 
-std::string feature_description(int mx, int my,
+std::string feature_description(int mx, int my, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true);
 std::string raw_feature_description(dungeon_feature_type grid,
                                     trap_type tr = NUM_TRAPS);
-std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap = NUM_TRAPS,
+std::string feature_description(dungeon_feature_type grid, 
+                                trap_type trap = NUM_TRAPS, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true);
 

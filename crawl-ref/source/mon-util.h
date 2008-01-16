@@ -176,7 +176,7 @@ enum mon_resist_flags
 
     // resistances 
     // Notes: 
-    // - negative energy is mostly handled via mons_has_life_force()
+    // - negative energy is mostly handled via mons_res_negative_energy()
     // - acid is handled mostly by genus (jellies) plus non-living
     // - asphyx-resistance replaces hellfrost resistance.
     MR_RES_ELEC          = (1<< 0),

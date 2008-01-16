@@ -164,7 +164,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                                    "onto" : "into");
                         prompt += " that ";
             prompt += feature_description(new_grid, trap_type_at_xy(x,y),
-                                          DESC_BASENAME, false);
+                                          false, DESC_BASENAME, false);
             prompt += '?';
             
             // Zot traps require capital confirmation
@@ -6067,6 +6067,9 @@ bool player::travelling_light() const
 
 int player::mons_species() const
 {
+    if (player_genus(GENPC_DRACONIAN))
+        return (MONS_DRACONIAN);
+        
     switch (species)
     {
     case SP_HILL_ORC:
@@ -6074,6 +6077,7 @@ int player::mons_species() const
     case SP_HIGH_ELF: case SP_GREY_ELF:
     case SP_DEEP_ELF: case SP_SLUDGE_ELF:
         return (MONS_ELF);
+        
     default:
         return (MONS_HUMAN);
     }
