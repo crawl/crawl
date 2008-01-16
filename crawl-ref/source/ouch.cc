@@ -604,14 +604,6 @@ void drain_exp(bool announce_full)
 {
     int protection = player_prot_life();
 
-    if (you.duration[DUR_PRAYER]
-        && you.religion == GOD_SHINING_ONE
-        && random2(150) < you.piety)
-    {
-        simple_god_message(" protects your life force!");
-        return;
-    }
-
     if (protection >= 3)
     {
         if ( announce_full )

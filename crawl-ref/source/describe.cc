@@ -2520,9 +2520,22 @@ void describe_god( god_type which_god, bool give_title )
                               (you.piety >= 100) ? "often" :
                               (you.piety >=  50) ? "sometimes" :
                                                    "occasionally";
-                                                   
+
             cprintf("%s %s shields you from mutagenic effects." EOL,
                     god_name(which_god).c_str(), how);
+        }
+        else if (which_god == GOD_SHINING_ONE)
+        {
+            have_any = true;
+            if (you.piety >= 50)
+            {
+                const char *how = (you.piety >= 150) ? "carefully" : // l.p. 3
+                                  (you.piety >= 100) ? "often" :
+                                                       "sometimes";
+
+                cprintf("%s %s protects your life force." EOL,
+                        god_name(which_god).c_str(), how);
+            }
         }
         else if (which_god == GOD_TROG)
         {

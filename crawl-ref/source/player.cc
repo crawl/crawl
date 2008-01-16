@@ -1600,6 +1600,12 @@ int player_prot_life(bool calc_unid)
     // undead/demonic power
     pl += you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE];
 
+    // TSO's protection
+    if (you.religion == GOD_SHINING_ONE)
+    {
+        pl += you.piety / 50;
+    }
+
     if (pl > 3)
         pl = 3;
 
