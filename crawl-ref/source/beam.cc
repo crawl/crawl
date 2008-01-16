@@ -1300,7 +1300,7 @@ static bool affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
  */
 
 
-void fire_beam( bolt &pbolt, item_def *item )
+void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 {
     bool beamTerminate;     // has beam been 'stopped' by something?
     int &tx(pbolt.pos.x), &ty(pbolt.pos.y);     // test(new) x,y - integer
@@ -1546,8 +1546,11 @@ void fire_beam( bolt &pbolt, item_def *item )
     // the beam has finished, and terminated at tx, ty
 
     // leave an object, if applicable
-    if (item)
+    if (drop_item && item)
+    {
         beam_drop_object( pbolt, item, tx, ty );
+    }
+    ASSERT(!drop_item || item);
 
     // check for explosion.  NOTE that for tracers, we have to make a copy
     // of target co-ords and then reset after calling this -- tracers should

@@ -174,7 +174,8 @@ bool test_beam_hit(int attack, int defence);
 /* ***********************************************************************
  * called from: bang - it_use2 - monstuff - mstuff2
  * *********************************************************************** */
-void fire_beam( struct bolt &pbolt, item_def *item = NULL );
+void fire_beam( struct bolt &pbolt, item_def *item = NULL,
+    bool drop_item = false );
 
 // last updated 19apr2001 {gdl}
 /* ***********************************************************************

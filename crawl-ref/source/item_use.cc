@@ -2406,7 +2406,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     else
     {
         // Dropping item copy, since the launched item might be different.
-        fire_beam(pbolt, did_return? NULL : &item);
+        fire_beam(pbolt, &item, !did_return);
 
         // The item can be destroyed before returning.
         if (returning && thrown_object_destroyed(&item, pbolt.target_x,
@@ -2421,7 +2421,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Fire beam in reverse
         pbolt.setup_retrace();
         viewwindow(true, false);
-        fire_beam(pbolt, NULL);
+        fire_beam(pbolt, &item, false);
 
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;
