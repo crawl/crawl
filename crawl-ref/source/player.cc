@@ -5334,6 +5334,7 @@ void player::init()
     total_skill_points = 0;
 
     attribute.init(0);
+    quiver.init(0);
     sacrifice_value.init(0);
 
     for (int i = 0; i < ENDOFPACK; i++)
@@ -5351,8 +5352,6 @@ void player::init()
         inv[i].y = -1;
         inv[i].link = i;
     }
-
-    quiver = -1;
 
     duration.init(0);
 

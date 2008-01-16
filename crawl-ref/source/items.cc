@@ -240,7 +240,7 @@ bool dec_inv_item_quantity( int obj, int amount )
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
-    if (you.quiver == obj)
+    if (you.quiver[get_quiver_type()] == obj)
         you.quiver_change = true;
 
     if (you.inv[obj].quantity <= amount)
@@ -312,7 +312,7 @@ void inc_inv_item_quantity( int obj, int amount )
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
         
-    if (you.quiver == obj)
+    if (you.quiver[get_quiver_type()] == obj)
         you.quiver_change = true;
 
     you.inv[obj].quantity += amount;

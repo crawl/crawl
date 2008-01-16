@@ -934,6 +934,11 @@ static void tag_construct_you(tagHeader &th)
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallByte(th,you.attribute[j]);
 
+    // remembered quiver items
+    marshallByte(th, NUM_QUIVER);
+    for (j = 0; j < NUM_QUIVER; ++j)
+        marshallByte(th,you.quiver[j]);
+
     // sacrifice values
     marshallByte(th, NUM_OBJECT_CLASSES);
     for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
@@ -1008,8 +1013,6 @@ static void tag_construct_you_items(tagHeader &th)
     marshallByte(th, ENDOFPACK);
     for (i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
-
-    marshallByte(th, you.quiver);
 
     // item descrip for each type & subtype
     // how many types?
@@ -1320,6 +1323,11 @@ static void tag_read_you(tagHeader &th, char minorVersion)
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallByte(th);
 
+    // how many quiver types?
+    count_c = unmarshallByte(th);
+    for (j = 0; j < count_c; ++j)
+        you.quiver[j] = unmarshallByte(th);
+
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
         you.sacrifice_value[j] = unmarshallLong(th);
@@ -1383,8 +1391,6 @@ static void tag_read_you_items(tagHeader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
         unmarshallItem(th, you.inv[i]);
-
-    you.quiver = unmarshallByte(th);
 
     // item descrip for each type & subtype
     // how many types?

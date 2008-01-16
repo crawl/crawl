@@ -2579,7 +2579,10 @@ static void decrement_durations()
 
     decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
     decrement_a_duration(DUR_CONF, "You feel less confused.");
-    decrement_a_duration(DUR_PARALYSIS, "You can move again.");
+    
+    if (decrement_a_duration(DUR_PARALYSIS, "You can move again."))
+        you.redraw_evasion = true;
+        
     decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
 
     decrement_a_duration( DUR_CONFUSING_TOUCH,

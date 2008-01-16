@@ -165,6 +165,13 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         you.wield_change = true;
         you.quiver_change = true;
     }
+    if (!you.quiver_change)
+    {
+        int quiver = you.quiver[get_quiver_type()];
+        if (to_slot == quiver || from_slot == quiver)
+            you.quiver_change = true;
+    }
+
 }
 
 static void adjust_item(void)

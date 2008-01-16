@@ -399,13 +399,13 @@ void print_stats(void)
         clear_to_end_of_line();
         gotoxy(1, 14, GOTO_STAT);
 
-        you.quiver = get_fire_item_index();
+        int q = you.quiver[get_quiver_type()] = get_fire_item_index();
 
-        if (you.quiver == ENDOFPACK)
+        if (q == ENDOFPACK)
             cprintf("Nothing quivered");
         else
         {
-            const item_def& quiver = you.inv[you.quiver];
+            const item_def& quiver = you.inv[q];
             textcolor(quiver.colour);
 
             const std::string prefix = menu_colour_item_prefix(quiver);

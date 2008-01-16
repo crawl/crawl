@@ -113,6 +113,7 @@ void shoot_thing(void);
  * *********************************************************************** */
 void throw_anything(int slot = -1);
 
+quiver_type get_quiver_type(void);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

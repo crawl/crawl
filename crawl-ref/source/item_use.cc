@@ -1290,12 +1290,42 @@ static bool fire_item_okay(const item_def &item, unsigned flags)
             && you.equip[EQ_WEAPON] != item.link);
 }
 
+quiver_type get_quiver_type()
+{
+    const int wielded = you.equip[EQ_WEAPON];
+    if (wielded == -1)
+        return (QUIVER_THROW);
+
+    item_def &weapon = you.inv[wielded];
+
+    if (weapon.base_type != OBJ_WEAPONS)
+        return (QUIVER_THROW);
+
+    switch (weapon.sub_type)
+    {
+        case WPN_BLOWGUN:
+            return (QUIVER_BLOWGUN);
+        case WPN_SLING:
+            return (QUIVER_SLING);
+        case WPN_BOW:
+        case WPN_LONGBOW:
+            return (QUIVER_BOW);
+        case WPN_CROSSBOW:
+            return (QUIVER_CROSSBOW);
+        case WPN_HAND_CROSSBOW:
+            return (QUIVER_HAND_CROSSBOW);
+        default:
+            return (QUIVER_THROW);
+    }
+
+}
+
 static int find_fire_item_matching(unsigned fire_type, int start,
                                    bool forward, bool check_quiver)
 {
     if (check_quiver)
     {
-        const int q = you.quiver;
+        const int q = you.quiver[get_quiver_type()];
         if (q >= 0 && q < ENDOFPACK && fire_item_okay(you.inv[q], fire_type))
             return (q);
     }
@@ -1461,7 +1491,7 @@ static bool choose_fire_target(dist &target, int &item)
         item = beh.item;
         if (you.inv[beh.item].quantity > 1)
         {
-            you.quiver = beh.item;
+            you.quiver[get_quiver_type()] = beh.item;
             you.quiver_change = true;
         }
     }

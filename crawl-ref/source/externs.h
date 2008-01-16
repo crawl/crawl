@@ -637,7 +637,6 @@ public:
   char shield_blocks;         // number of shield blocks since last action
 
   FixedVector< item_def, ENDOFPACK > inv;
-  int quiver;                 // default item for (f)ire.
 
   int burden;
   burden_state_type burden_state;
@@ -657,6 +656,7 @@ public:
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<unsigned char, NUM_ATTRIBUTES> attribute;
+  FixedVector<unsigned char, NUM_QUIVER> quiver; // default items for quiver
   FixedVector<long, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;

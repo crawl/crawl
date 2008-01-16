@@ -33,6 +33,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "it_use2.h"
 #include "message.h"
 #include "misc.h"
@@ -984,7 +985,7 @@ void cast_poison_ammo(void)
              
         if (ammo == you.equip[EQ_WEAPON])
             you.wield_change = true;
-        else if (ammo == you.quiver)
+        else if (ammo == you.quiver[get_quiver_type()])
             you.quiver_change = true;
     }
     else
