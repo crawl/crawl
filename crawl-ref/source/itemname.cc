@@ -1327,7 +1327,7 @@ std::string item_def::name_aux( description_level_type desc,
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (this->special < 100)
+                if (food_is_rotten(*this))
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1547,20 +1547,18 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_CORPSES:
-        if (item_typ == CORPSE_BODY && this->special < 100 && !dbname)
-        {
+        if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
-        }
-        {
-            if (!dbname)
-                buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
-            if (item_typ == CORPSE_BODY)
-                buff << "corpse";
-            else if (item_typ == CORPSE_SKELETON)
-                buff << "skeleton";
-            else
-                buff << "corpse bug";
-        }
+
+        if (!dbname)
+            buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
+
+        if (item_typ == CORPSE_BODY)
+            buff << "corpse";
+        else if (item_typ == CORPSE_SKELETON)
+            buff << "skeleton";
+        else
+            buff << "corpse bug";
         break;
 
     default:

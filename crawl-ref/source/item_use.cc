@@ -4513,7 +4513,7 @@ void tile_use_item(int idx, InvAction act)
         case OBJ_CORPSES:
             if (you.species != SP_VAMPIRE
                 || you.inv[idx].sub_type == CORPSE_SKELETON
-                || you.inv[idx].special < 100)
+                || food_is_rotten(you.inv[idx]))
             {
                 break;
             }

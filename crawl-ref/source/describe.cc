@@ -1553,7 +1553,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             if (you.mutation[MUT_SAPROVOROUS] < 3)
                 description << "It looks rather unpleasant. ";
 
-            if (item.special < 100)
+            if (food_is_rotten(item))
             {
                 if (you.mutation[MUT_SAPROVOROUS] == 3)
                     description << "It looks nice and ripe. ";

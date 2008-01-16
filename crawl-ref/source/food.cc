@@ -28,6 +28,7 @@
 
 #include "externs.h"
 
+#include "cio.h"
 #include "clua.h"
 #include "debug.h"
 #include "delay.h"
@@ -257,7 +258,7 @@ bool butchery()
     }
 
     bool canceled_butcher = false;
-
+    
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     if ( num_corpses == 0 )
@@ -275,25 +276,46 @@ bool butchery()
                 continue;
             
             // offer the possibility of butchering
-            std::string prompt = "Butcher " + mitm[o].name(DESC_NOCAP_A) + '?';
-            const int answer = yesnoquit( prompt.c_str(), true, 'n', false );
-            if ( answer == 1 )
+            mprf("Butcher %s? [y/n/q/D]", mitm[o].name(DESC_NOCAP_A).c_str());
+            // possible results:
+            // 0 - cancel all butchery (quit)
+            // 1 - say no to this butchery, continue prompting
+            // 2 - OK this butchery
+            // Yes, this is a hack because it's too annoying to adapt
+            // yesnoquit() to this purpose.
+            int result = 100;
+            while (result == 100)
             {
-                corpse_id = o;
-                break;
+                const int keyin = getchm(KC_CONFIRM);
+                if (keyin == CK_ESCAPE || keyin == 'q' || keyin == 'Q')
+                    result = 0;
+                if (keyin == ' ' || keyin == '\r' || keyin == '\n' ||
+                    keyin == 'n' || keyin == 'N')
+                    result = 1;
+                if (keyin == 'y' || keyin == 'Y' || keyin == 'd' ||
+                    keyin == 'D')
+                    result = 2;
             }
-            else if ( answer == -1 )
+
+            if ( result == 0 )
             {
                 canceled_butcher = true;
                 corpse_id = -1;
                 break;
             }
+            else if ( result == 2 )
+            {
+                corpse_id = o;
+                break;
+            }
         }
     }
-    
+   
     // Do the actual butchery, if we found a good corpse.
     if ( corpse_id != -1 )
     {
+        const bool can_sac = you.duration[DUR_PRAYER]
+            && god_likes_butchery(you.religion);
         bool removed_gloves = false;
         bool wpn_switch = false;
         
@@ -311,23 +333,24 @@ bool butchery()
                 takeoff_armour(old_gloves);
                 barehand_butcher = true;
             }
-            const int wpn = you.equip[EQ_WEAPON];
             if ( wpn_switch )
             {
                 new_cursed =
-                    (wpn != -1) &&
-                    (you.inv[wpn].base_type == OBJ_WEAPONS) &&
-                    item_cursed( you.inv[wpn]);
+                    (you.weapon() != NULL) &&
+                    (you.weapon()->base_type == OBJ_WEAPONS) &&
+                    item_cursed( *you.weapon() );
             }
             
-            // note that if wpn == -1 the user selected '-' when
+            // note that if barehanded then the user selected '-' when
             // switching weapons
             
-            if (!barehand_butcher &&
-                (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn])))
+            if (!barehand_butcher && (!wpn_switch ||
+                                      you.weapon() == NULL ||
+                                      !can_cut_meat(*you.weapon())))
             {
                 // still can't butcher. Early out
-                if ( wpn == -1 ) {
+                if ( you.weapon() == NULL )
+                {
                     if (you.equip[EQ_GLOVES] == -1)
                         mpr("What, with your bare hands?");
                     else
@@ -345,24 +368,15 @@ bool butchery()
             // switched to a good butchering knife
             can_butcher = true;
         }
-
+        
         if ( can_butcher )
         {
-            bool rotten = (mitm[corpse_id].special < 100);
-            if (you.duration[DUR_PRAYER] && !rotten &&
-                god_likes_butchery(you.religion))
-            {
+            const bool rotten = food_is_rotten(mitm[corpse_id]);
+            if (can_sac && !rotten)
                 offer_corpse(corpse_id);
-                // ritual sacrifice can also bloodify the ground
-                const int mons_class = mitm[corpse_id].plus;
-                const int max_chunks = mons_weight( mons_class ) / 150;
-                bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
-                destroy_item(corpse_id);
-            }
             else
             {
-                if (you.duration[DUR_PRAYER] && rotten
-                    && god_likes_butchery(you.religion) )
+                if (can_sac && rotten)
                 {
                     simple_god_message(coinflip() ?
                                        " refuses to accept that mouldy "
@@ -654,15 +668,16 @@ static bool prompt_eat_chunk(const item_def &item, bool rotten)
     return (true);
 }
 
+// should really be merged into function below -- FIXME
 void eat_from_inventory(int which_inventory_slot)
 {
-    if (you.inv[which_inventory_slot].base_type == OBJ_CORPSES
-        && you.inv[which_inventory_slot].sub_type == CORPSE_BODY)
+    item_def& food(you.inv[which_inventory_slot]);
+    if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
-        const int mons_type = you.inv[ which_inventory_slot ].plus;
+        const int mons_type = food.plus;
         const int chunk_type = mons_corpse_effect( mons_type );
-        const bool rotten = (you.inv[which_inventory_slot].special < 100);
-        const int mass = item_mass( you.inv[which_inventory_slot] );
+        const bool rotten = food_is_rotten(food);
+        const int mass = item_mass( food );
 
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
@@ -673,46 +688,41 @@ void eat_from_inventory(int which_inventory_slot)
         }
         else
         {
-            you.inv[which_inventory_slot].sub_type = CORPSE_SKELETON;
-            you.inv[which_inventory_slot].special = 90;
-            you.inv[which_inventory_slot].colour = LIGHTGREY;
+            food.sub_type = CORPSE_SKELETON;
+            food.special = 90;
+            food.colour = LIGHTGREY;
         }
         // dec_inv_item_quantity( which_inventory_slot, 1 );
         return;
     }
-    else if (you.inv[which_inventory_slot].sub_type == FOOD_CHUNK)
+    else if (food.sub_type == FOOD_CHUNK)
     {
-        // this is a bit easier to read... most compilers should
-        // handle this the same -- bwr
-        const int mons_type = you.inv[ which_inventory_slot ].plus;
+        const int mons_type = food.plus;
         const bool cannibal = is_player_same_species(mons_type);
         const int intel = mons_intel(mons_type) - I_ANIMAL;
         const int chunk_type = mons_corpse_effect( mons_type );
-        const bool rotten = (you.inv[which_inventory_slot].special < 100);
+        const bool rotten = food_is_rotten(food);
 
-        if (!prompt_eat_chunk(you.inv[which_inventory_slot], rotten))
+        if (!prompt_eat_chunk(food, rotten))
             return;
 
-        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal, intel );
+        eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);
     }
     else
-    {
-        eating( you.inv[which_inventory_slot].base_type,
-                you.inv[which_inventory_slot].sub_type );
-    }
+        eating( food.base_type, food.sub_type );
 
     dec_inv_item_quantity( which_inventory_slot, 1 );
 }                               // end eat_from_inventory()
 
 void eat_floor_item(int item_link)
 {
-    if (mitm[item_link].base_type == OBJ_CORPSES
-        && mitm[item_link].sub_type == CORPSE_BODY)
+    item_def& food(mitm[item_link]);
+    if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
-        const int mons_type = mitm[item_link].plus;
+        const int mons_type = food.plus;
         const int chunk_type = mons_corpse_effect( mons_type );
-        const bool rotten = (mitm[item_link].special < 100);
-        const int mass = item_mass( mitm[item_link] );
+        const bool rotten = food_is_rotten(food);
+        const int mass = item_mass( food );
 
         if (!vampire_consume_corpse(mons_type, mass, chunk_type, rotten))
             return;
@@ -723,29 +733,27 @@ void eat_floor_item(int item_link)
         }
         else
         {
-            mitm[item_link].sub_type = CORPSE_SKELETON;
-            mitm[item_link].special = 90;
-            mitm[item_link].colour = LIGHTGREY;
+            food.sub_type = CORPSE_SKELETON;
+            food.special = 90;
+            food.colour = LIGHTGREY;
         }
         // dec_mitm_item_quantity( item_link, 1 );
 
         you.turn_is_over = 1;
         return;
     }
-    else if (mitm[item_link].sub_type == FOOD_CHUNK)
+    else if (food.sub_type == FOOD_CHUNK)
     {
-        const int chunk_type = mons_corpse_effect( mitm[item_link].plus );
-        const int intel = mons_intel( mitm[item_link].plus ) - I_ANIMAL;
-        const bool cannibal = is_player_same_species( mitm[item_link].plus );
-        const bool rotten = (mitm[item_link].special < 100);
-        if (!prompt_eat_chunk(mitm[item_link], rotten))
+        const int chunk_type = mons_corpse_effect( food.plus );
+        const int intel = mons_intel( food.plus ) - I_ANIMAL;
+        const bool cannibal = is_player_same_species( food.plus );
+        const bool rotten = food_is_rotten(food);
+        if (!prompt_eat_chunk(food, rotten))
             return;
-        eat_chunk( determine_chunk_effect( chunk_type, rotten ), cannibal, intel );
+        eat_chunk(determine_chunk_effect(chunk_type, rotten), cannibal, intel);
     }
     else
-    {
-        eating( mitm[item_link].base_type, mitm[item_link].sub_type );
-    }
+        eating( food.base_type, food.sub_type );
 
     you.turn_is_over = true;
 

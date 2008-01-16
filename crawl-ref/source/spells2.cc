@@ -490,7 +490,7 @@ void cast_twisted(int power, beh_type corps_beh, int corps_hit)
             total_mass += mons_weight( mitm[objl].plus );
 
             num_corpses++;
-            if (mitm[objl].special < 100)
+            if (food_is_rotten(mitm[objl]))
                 rotted++;
 
             destroy_item( objl );

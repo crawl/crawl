@@ -1975,6 +1975,14 @@ bool can_cut_meat( const item_def &item )
     return (does_damage_type( item, DAM_SLICE ));
 }
 
+bool food_is_rotten( const item_def &item )
+{
+    return (item.special < 100) && ((item.base_type == OBJ_CORPSES &&
+                                     item.sub_type == CORPSE_BODY) ||
+                                    (item.base_type == OBJ_FOOD &&
+                                     item.sub_type == FOOD_CHUNK));
+}
+
 // returns true if item counts as a tool for tool size comparisons and msgs
 bool is_tool( const item_def &item )
 {

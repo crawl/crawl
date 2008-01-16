@@ -697,6 +697,7 @@ bool food_is_veg( const item_def &item );
 int  food_value( const item_def &item );
 int  food_turns( const item_def &item );
 bool can_cut_meat( const item_def &item );
+bool food_is_rotten( const item_def &item );
 
 // generic item property functions:
 bool is_tool( const item_def &item );

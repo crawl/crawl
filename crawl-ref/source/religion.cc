@@ -3675,7 +3675,13 @@ void offer_corpse(int corpse)
          sacrifice_message(you.religion, mitm[corpse], true).c_str());
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
-}                               // end offer_corpse()
+
+    // ritual sacrifice can also bloodify the ground
+    const int mons_class = mitm[corpse].plus;
+    const int max_chunks = mons_weight( mons_class ) / 150;
+    bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
+    destroy_item(corpse);
+}
 
 // Returns true if the player can use the good gods' passive piety gain.
 static bool need_free_piety()

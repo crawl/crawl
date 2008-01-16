@@ -1609,7 +1609,7 @@ static int food_rotting(lua_State *ls)
     bool rotting = false;
     if (item && item->base_type == OBJ_FOOD && item->sub_type == FOOD_CHUNK)
     {
-        rotting = item->special < 100;
+        rotting = food_is_rotten(*item);
     }
     lua_pushboolean(ls, rotting);
     return (1);

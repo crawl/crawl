@@ -1836,7 +1836,7 @@ void cast_fulsome_distillation( int powc )
         return;
     }
 
-    const bool rotten = (mitm[corpse].special < 100);
+    const bool rotten = food_is_rotten(mitm[corpse]);
     const bool big_monster = (mons_type_hit_dice( mitm[corpse].plus ) >= 5);
     const bool power_up = (rotten && big_monster);
 

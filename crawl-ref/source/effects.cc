@@ -2081,7 +2081,8 @@ static void rot_inventory_food(long time_delta)
 
         you.inv[i].special -= (time_delta / 20);
 
-        if (you.inv[i].special < 100 && (you.inv[i].special + (time_delta / 20)>=100))
+        if (you.inv[i].special < 100 &&
+            (you.inv[i].special + (time_delta / 20) >=100 ))
         {
             rotten_items.push_back(index_to_letter( i ));
         }

@@ -1762,10 +1762,10 @@ void tutorial_describe_item(const item_def &item)
             {
                 ostr << "Note that most species refuse to eat raw meat unless "
                         "really hungry. ";
-                if (item.special < 100)
+                if (food_is_rotten(item))
                 {
-                    ostr << "Even fewer can safely digest rotten meat, and you're "
-                            "probably not part of this group.";
+                    ostr << "Even fewer can safely digest rotten meat, and "
+                            "you're probably not part of that group.";
                 }
             }
             Options.tutorial_events[TUT_SEEN_FOOD] = 0;
@@ -1890,7 +1890,7 @@ void tutorial_describe_item(const item_def &item)
             }
 
             ostr << ". ";
-            if (item.special < 100)
+            if (food_is_rotten(item))
                 ostr << "Rotten corpses won't be of any use to you, though, so "
                         "you might just as well <w>d<magenta>rop this.";
             Options.tutorial_events[TUT_SEEN_CARRION] = 0;

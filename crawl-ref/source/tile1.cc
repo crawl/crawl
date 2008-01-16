@@ -1258,7 +1258,7 @@ int tileidx_food(const item_def &item)
 
     case FOOD_CHUNK: 
         ch=TILE_FOOD_CHUNK; 
-        if (item.special < 100) ch = TILE_FOOD_CHUNK_ROTTEN;
+        if (food_is_rotten(item)) ch = TILE_FOOD_CHUNK_ROTTEN;
         break;
     }
 
