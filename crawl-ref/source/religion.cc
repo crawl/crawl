@@ -3287,7 +3287,8 @@ void offer_items()
     if (you.religion == GOD_NO_GOD)
         return;
 
-    if (!god_likes_items(you.religion))
+    if (!god_likes_items(you.religion) &&
+        igrd[you.x_pos][you.y_pos] != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.", you.religion);
         return;
