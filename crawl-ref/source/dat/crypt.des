@@ -460,7 +460,7 @@ ENDMAP
 #
 NAME:   david_glass_crypt
 ORIENT: float
-TAGS:   entry monster_gen no_item_gen no_rotate
+TAGS:   no_item_gen no_rotate
 PLACE:  Crypt:5
 MONS:   lich / ancient lich
 MONS:   skeletal dragon / curse skull / curse toe
