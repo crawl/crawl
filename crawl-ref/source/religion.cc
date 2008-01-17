@@ -3287,8 +3287,9 @@ void offer_items()
     if (you.religion == GOD_NO_GOD)
         return;
 
-    if (!god_likes_items(you.religion) &&
-        igrd[you.x_pos][you.y_pos] != NON_ITEM)
+    int i = igrd[you.x_pos][you.y_pos];
+
+    if (!god_likes_items(you.religion) && i != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.", you.religion);
         return;
@@ -3348,11 +3349,10 @@ void offer_items()
         return; // doesn't accept anything else for sacrifice
     }
 
-    int num_sacced = 0;
-    int i          = igrd[you.x_pos][you.y_pos];
-
     if (i == NON_ITEM) // nothing to sacrifice
         return;
+
+    int num_sacced = 0;
 
     const int old_leading = leading_sacrifice_group();
 
