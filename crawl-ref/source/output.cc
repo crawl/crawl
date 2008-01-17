@@ -105,34 +105,64 @@ void update_turn_count()
 }
 
 #ifdef USE_TILE
-void draw_hp_bar(int hp, int maxhp)
+int draw_colour_bar(int val, int max_val, int old_val, int old_disp,
+    int ox, int oy, unsigned short default_colour,
+    unsigned short change_colour, unsigned short empty_colour)
+
 {
-#define HPBAR_OX 20
-#define HPBAR_OY 3
-#define HPBAR_WIDTH (40-HPBAR_OX)
+    const int width = crawl_view.hudsz.x - ox - 1;
 
-    static int oldhp = 0;
-    static int oldhx = 0;
-    int cx;
-    int hx = HPBAR_WIDTH * hp / maxhp;
+    int disp = width * val / max_val;
 
-    gotoxy(HPBAR_OX, HPBAR_OY, GOTO_STAT);
+    gotoxy(ox, oy, GOTO_STAT);
 
-    for (cx=0;cx<HPBAR_WIDTH;cx++)
+    for (int cx=0; cx < width; cx++)
     {
-        textcolor(BLACK + DARKGRAY*16);
+        textcolor(BLACK + empty_colour * 16);
 
-        if (cx<hx)
-            textcolor(BLACK + GREEN*16);
-        else if (oldhp>hp && oldhx>hx && cx<oldhx && cx>=hx)
-            textcolor(BLACK + RED*16);
+        if (cx < disp)
+            textcolor(BLACK + default_colour * 16);
+        else if (old_val > val && old_disp > disp && cx < old_disp && cx >= val)
+            textcolor(BLACK + change_colour * 16);
 
         putch(' ');
     }
 
     textcolor(LIGHTGREY);
-    oldhp=hp;
-    oldhx=hx;
+
+    return disp;
+}
+
+void draw_mp_bar(int val, int max_val)
+{
+    const int ox = 20;
+    const int oy = 4;
+    const unsigned short default_colour = BLUE;
+    const unsigned short change = LIGHTBLUE;
+    const unsigned short empty = DARKGRAY;
+
+    static int old_val = 0;
+    static int old_disp = 0;
+
+    old_disp = draw_colour_bar(val, max_val, old_val, old_disp, ox, oy, 
+        default_colour, change, empty);
+    old_val = val;
+}
+
+void draw_hp_bar(int val, int max_val)
+{
+    const int ox = 20;
+    const int oy = 3;
+    const unsigned short default_colour = GREEN;
+    const unsigned short change = RED;
+    const unsigned short empty = DARKGRAY;
+
+    static int old_val = 0;
+    static int old_disp = 0;
+
+    old_disp = draw_colour_bar(val, max_val, old_val, old_disp, ox, oy, 
+        default_colour, change, empty);
+    old_val = val;
 }
 #endif
 
@@ -211,6 +241,10 @@ void print_stats(void)
 
         clear_to_end_of_line();
         you.redraw_magic_points = 0;
+
+#ifdef USE_TILE
+        draw_mp_bar(you.magic_points, you.max_magic_points);
+#endif
     }
 
     if (you.redraw_strength)
