@@ -37,6 +37,7 @@
 #include "invent.h"
 #include "makeitem.h"
 #include "message.h"
+#include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -445,7 +446,7 @@ void cast_detect_secret_doors(int pow)
 
             if (grd[x][y] == DNGN_SECRET_DOOR && random2(pow) > random2(15))
             {
-                grd[x][y] = DNGN_CLOSED_DOOR;
+                reveal_secret_door(x, y);
                 found++;
             }
         }

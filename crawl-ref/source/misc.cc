@@ -285,7 +285,7 @@ void search_around( bool only_adjacent )
                 if (grd[srx][sry] == DNGN_SECRET_DOOR &&
                     random2(17) <= effective)
                 {
-                    grd[srx][sry] = DNGN_CLOSED_DOOR;
+                    reveal_secret_door(srx, sry);
                     mpr("You found a secret door!");
                     exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
                 }
@@ -1981,4 +1981,13 @@ int speed_to_duration(int speed)
         speed = 100;
     
     return div_rand_round(100, speed);
+}
+
+void reveal_secret_door(int x, int y)
+{
+    ASSERT(grd[x][y] == DNGN_SECRET_DOOR);
+
+    dungeon_feature_type door = grid_secret_door_appearance(x, y);
+    grd[x][y] = grid_is_opaque(door) ?
+        DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
 }
