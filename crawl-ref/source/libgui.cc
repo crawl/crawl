@@ -1183,8 +1183,9 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
         toggle_telescope = false;
     }
 
-    bool valid_tip_region = (mode == REGION_MAP || mode == REGION_DNGN ||
-        mode == REGION_INV1 || mode == REGION_INV2 || mode == REGION_MSG);
+    bool valid_tip_region = (mode == REGION_MAP || mode == REGION_DNGN
+                             || mode == REGION_INV1 || mode == REGION_INV2
+                             || mode == REGION_MSG || mode == REGION_STAT);
 
     if (valid_tip_region && mode != oldmode)
     {
@@ -1343,6 +1344,9 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
     if (mode==REGION_TDNGN || mode==REGION_DNGN)
     {
+        if (mode == oldmode && oldcx == DCX && oldcy == DCY)
+            update_tip_text("");
+            
         oldcx = cx;
         oldcy = cy;
         oldmode = mode;
@@ -1355,9 +1359,34 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
             gotoxy(cx+2, cy+1, GOTO_DNGN);
         }
 
-        int gx = view2gridX(cx) + 1;
-        int gy = view2gridY(cy) + 1;
+        const int gx = view2gridX(cx) + 1;
+        const int gy = view2gridY(cy) + 1;
+
         tip_grid(gx, gy);
+
+        // mouse-over info on player
+        if (cx == DCX && cy == DCY)
+        {
+            std::string desc  = you.your_name;
+                        desc += " (";
+                        desc += get_species_abbrev(you.species);
+                        desc += get_class_abbrev(you.char_class);
+                        desc += ")" EOL;
+
+            desc += EOL "[L-Click] *Search 1 turn(s)";
+
+            if (grid_stair_direction( grd[gx][gy] ) != CMD_NO_CMD)
+                desc += EOL "[Shift-L-Click] use stairs (</>)";
+
+            // character overview
+            desc += EOL "[R-Click] Overview(%)";
+
+            // Religion
+            if (you.religion != GOD_NO_GOD)
+                desc += EOL "[Shift-R-Click] Religion (^)";
+
+            update_tip_text(desc.c_str());
+        }
 
         return 0;
     }
@@ -1382,8 +1411,18 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
     if (mode == REGION_MSG && mouse_mode == MOUSE_MODE_COMMAND)
     {
-        if (oldmode !=  REGION_MSG)
+        if (oldmode != REGION_MSG)
             update_tip_text("[L-Click] Browse message history");
+        oldmode = mode;
+        oldcx = cx;
+        oldcy = cy;
+        return 0;
+    }
+    
+    if (mode == REGION_STAT && mouse_mode == MOUSE_MODE_COMMAND)
+    {
+        if (oldmode != REGION_STAT)
+            update_tip_text("[L-Click] Rest/Search for a while");
         oldmode = mode;
         oldcx = cx;
         oldcy = cy;
@@ -1505,14 +1544,46 @@ static int handle_mouse_button(int mx, int my, int button,
         return CONTROL('P');
     }
 
+    if (mode == REGION_STAT && mouse_mode == MOUSE_MODE_COMMAND)
+    {
+        return '5';
+    }
+
     if((mouse_mode==MOUSE_MODE_COMMAND || mouse_mode == MOUSE_MODE_MACRO) &&
         (mode == REGION_DNGN || mode == REGION_TDNGN))
     {
+        if (button == 1 && cx == DCX && cy == DCY)
+        {
+            // spend one turn resting/searching
+            if (!shift)
+                return 's';
+
+            // else attempt to use stairs on square
+            const int gx = view2gridX(cx) + 1;
+            const int gy = view2gridY(cy) + 1;
+            switch (grid_stair_direction( grd[gx][gy] ))
+            {
+                case CMD_GO_DOWNSTAIRS:
+                    return ('>');
+                case CMD_GO_UPSTAIRS:
+                    return ('<');
+                default:
+                    break;
+            }
+        }
+
         if (button == 2)
         {
-            // describe yourself (char info)
-            if (cx == DCX && cy == DCY) return '%';
+            // describe yourself
+            if (cx == DCX && cy == DCY)
+            {
+                if (!shift)
+                    return '%'; // character overview
 
+                if (you.religion != GOD_NO_GOD)
+                    return '^'; // religion screen
+            }
+            
             // trigger
             if (mouse_mode == MOUSE_MODE_MACRO)
                 return trig;
