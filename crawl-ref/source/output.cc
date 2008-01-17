@@ -110,9 +110,14 @@ int draw_colour_bar(int val, int max_val, int old_val, int old_disp,
     unsigned short change_colour, unsigned short empty_colour)
 
 {
+    if (max_val <= 0)
+    {
+        return -1;
+    }
+
     const int width = crawl_view.hudsz.x - ox - 1;
 
-    int disp = (max_val == 0) ? 0 : width * val / max_val;
+    int disp = width * val / max_val;
 
     gotoxy(ox, oy, GOTO_STAT);
 
