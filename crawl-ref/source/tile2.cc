@@ -2825,22 +2825,23 @@ void TileDrawOneItem(int region, int i, char key, int idx,
 
         const int offset_amount = TILE_X/4;
         int offset = 0;
+        int help = num;
 
-        int c100 = num/100;
-        num -= c100*100;
+        int c100 = help/100;
+        help -= c100*100;
         if (c100)
         {
-            TilePutch('0'+ c100, r->backbuf, dx+offset, dy);
+            TilePutch('0' + c100, r->backbuf, dx+offset, dy);
             offset += offset_amount;
         }
-        int c10 = num/10;
+        int c10 = help/10;
         if (c10 || c100)
         {
-            TilePutch('0'+ c10, r->backbuf, dx+offset, dy);
+            TilePutch('0' + c10, r->backbuf, dx+offset, dy);
             offset += offset_amount;
         }
-        int c1 = num % 10;
-        TilePutch('0'+ c1, r->backbuf, dx+offset, dy);
+        int c1 = help % 10;
+        TilePutch('0' + c1, r->backbuf, dx+offset, dy);
     }
 
     // '?' mark
@@ -2890,13 +2891,13 @@ void TileDrawInvData(int n, int flag, int *tiles, int *num, int *idx,
         if (i==MAX_ITEMLIST) break;
 
         int tile0 = (i>=n) ? -1 : tiles[i];
-        int idx0 = (i>=n) ? -1 : idx[i];
-        char key = (iflags[i]&TILEI_FLAG_FLOOR) ? 0 : index_to_letter(idx[i]);
+        int idx0  = (i>=n) ? -1 : idx[i];
+        char key  = (iflags[i]&TILEI_FLAG_FLOOR) ? 0 : index_to_letter(idx[i]);
 
         if ( flag == itemlist_flag
              && tile0  == itemlist[i]
              && num[i] == itemlist_num[i]
-             && key   == itemlist_key[i]
+             && key    == itemlist_key[i]
              && idx0   == itemlist_idx[i]
              && iflags[i] == itemlist_iflag[i]
              && !force_redraw_inv
@@ -2925,7 +2926,7 @@ void TileDrawInvCursor(int ix, bool flag)
         (itemlist_flag == REGION_INV1) ? region_item:region_item2;
 
     int tile0 = itemlist[ix];
-    int num0 = itemlist_num[ix];
+    int num0  = itemlist_num[ix];
 
     if (flag)
         itemlist_iflag[ix] |= TILEI_FLAG_CURSOR;

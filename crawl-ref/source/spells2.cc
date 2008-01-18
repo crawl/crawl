@@ -189,7 +189,7 @@ static bool mark_detected_creature(int gridx, int gridy, const monsters *mon,
     set_envmap_detected_mons(gridx, gridy);
 
 #ifdef USE_TILE
-    tile_place_monster(gridx, gridy, idx, false);
+    tile_place_monster(gridx, gridy, idx, false, true);
 #endif
 
     return found_good;

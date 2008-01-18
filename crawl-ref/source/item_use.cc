@@ -4484,60 +4484,51 @@ void tile_use_item(int idx, InvAction act)
         return;
     }
 
-
     // Use it
-    switch (you.inv[idx].base_type)
+    const int type = you.inv[idx].base_type;
+    switch (type)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
-            if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
-                return;
-            if (equipped)
-                wield_weapon(true, PROMPT_GOT_SPECIAL);
-            else
-                wield_weapon(true, idx);
-            return;
-
         case OBJ_MISCELLANY:
-            if (equipped)
+            // wield any unwielded item of these types
+            if (!equipped)
             {
-                if (!check_warning_inscriptions(you.inv[idx], OPER_EVOKE))
-                    return;
-                evoke_wielded();
-            }
-            else
-            {
-                if (!check_warning_inscriptions(you.inv[idx], OPER_WIELD))
-                    return;
-                wield_weapon(true, idx);
-            }
-            return;
-
-        case OBJ_MISSILES:
-            if (!check_warning_inscriptions(you.inv[idx], OPER_THROW))
+                if (check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+                    wield_weapon(true, idx);
                 return;
-            throw_anything(idx);
+            }
+            // evoke misc. items and known rods
+            if (type == OBJ_MISCELLANY
+                ||item_is_rod(you.inv[idx]) && item_type_known(you.inv[idx]))
+            {
+                if (check_warning_inscriptions(you.inv[idx], OPER_EVOKE))
+                    evoke_wielded();
+                return;
+            }
+            // unwield unknown rods, other staves or weapons
+            if (check_warning_inscriptions(you.inv[idx], OPER_WIELD))
+                wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+            return;
+            
+        case OBJ_MISSILES:
+            if (check_warning_inscriptions(you.inv[idx], OPER_THROW))
+                throw_anything(idx);
             return;
 
         case OBJ_ARMOUR:
             if (equipped && !equipped_weapon)
             {
-                if (!check_warning_inscriptions(you.inv[idx], OPER_TAKEOFF))
-                    return;
-                takeoff_armour(idx);
+                if (check_warning_inscriptions(you.inv[idx], OPER_TAKEOFF))
+                    takeoff_armour(idx);
             }
-            else
-            {
-                if (!check_warning_inscriptions(you.inv[idx], OPER_WEAR))
-                    return;
+            else if (check_warning_inscriptions(you.inv[idx], OPER_WEAR))
                 wear_armour(idx);
-            }
             return;
 
         case OBJ_WANDS:
-            if (!check_warning_inscriptions(you.inv[idx], OPER_ZAP))
-                return;
-            zap_wand(idx);
+            if (check_warning_inscriptions(you.inv[idx], OPER_ZAP))
+                zap_wand(idx);
             return;
 
         case OBJ_CORPSES:
@@ -4549,47 +4540,39 @@ void tile_use_item(int idx, InvAction act)
             }
             // intentional fall-through for Vampires
         case OBJ_FOOD:
-            if (!check_warning_inscriptions(you.inv[idx], OPER_EAT))
-                return;
-            eat_food(false, idx);
+            if (check_warning_inscriptions(you.inv[idx], OPER_EAT))
+                eat_food(false, idx);
             return;
 
         case OBJ_BOOKS:
             if (you.inv[idx].sub_type == BOOK_MANUAL
                 || you.inv[idx].sub_type == BOOK_DESTRUCTION)
             {
-                handle_read_book(idx);
-                return;
-            }
-            // else it's a spellbook
-            learn_spell(idx);
+                if (check_warning_inscriptions(you.inv[idx], OPER_READ))
+                    handle_read_book(idx);
+            } // else it's a spellbook
+            else if (check_warning_inscriptions(you.inv[idx], OPER_MEMORISE))
+                learn_spell(idx);
             return;
             
         case OBJ_SCROLLS:
-            if (!check_warning_inscriptions(you.inv[idx], OPER_READ))
-                return;
-            read_scroll(idx);
+            if (check_warning_inscriptions(you.inv[idx], OPER_READ))
+                read_scroll(idx);
             return;
 
         case OBJ_JEWELLERY:
             if (equipped && !equipped_weapon)
             {
-                if (!check_warning_inscriptions(you.inv[idx], OPER_REMOVE))
-                    return;
-                remove_ring(idx);
+                if (check_warning_inscriptions(you.inv[idx], OPER_REMOVE))
+                    remove_ring(idx);
             }
-            else
-            {
-                if (!check_warning_inscriptions(you.inv[idx], OPER_PUTON))
-                    return;
+            else if (check_warning_inscriptions(you.inv[idx], OPER_PUTON))
                 puton_ring(idx, false);
-            }
             return;
 
         case OBJ_POTIONS:
-            if (!check_warning_inscriptions(you.inv[idx], OPER_QUAFF))
-                return;
-            drink(idx);
+            if (check_warning_inscriptions(you.inv[idx], OPER_QUAFF))
+                drink(idx);
             return;
 
         default:

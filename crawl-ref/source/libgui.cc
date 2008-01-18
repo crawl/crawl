@@ -28,6 +28,7 @@
 #include "externs.h"
 #include "guic.h"
 #include "message.h"
+#include "mon-util.h"
 #include "player.h"
 #include "stash.h"
 #include "state.h"
@@ -323,25 +324,33 @@ int tile_idx_unseen_terrain(int x, int y, int what)
 void GmapUpdate(int x, int y, int what, bool upd_tile)
 {
     int c;
-    const coord_def gc(x,y);
-    unsigned int feature = grd(gc);
-
-    unsigned int grid_symbol;
-    unsigned short grid_color;
-    get_item_symbol(feature, &grid_symbol, &grid_color);
-
-    switch (what)
+    
+    if (x == you.x_pos && y == you.y_pos)
+        c = MAP_WHITE; // player position always in white
+    else if (mgrd[x][y] != NON_MONSTER && mons_friendly(&menv[mgrd[x][y]])
+             && upd_tile)
+        c = MAP_LTRED; // friendly monsters subtly different from hostiles
+    else
     {
-    // In some cases (like smoke), update the gmap with the ground color
-    // instead.  This keeps it prettier in the case of lava + smoke.
-    case '#':
-        c = gmap_col[grid_symbol & 0xff];
-        break;
-    default:
-        c = gmap_col[what & 0xff];
-        break;
-    }
+        const coord_def gc(x,y);
+        unsigned int feature = grd(gc);
 
+        unsigned int grid_symbol;
+        unsigned short grid_color;
+        get_item_symbol(feature, &grid_symbol, &grid_color);
+
+        switch (what)
+        {
+        // In some cases (like smoke), update the gmap with the ground color
+        // instead.  This keeps it prettier in the case of lava + smoke.
+        case '#':
+            c = gmap_col[grid_symbol & 0xff];
+            break;
+        default:
+            c = gmap_col[what & 0xff];
+            break;
+        }
+    }
     int oldc = gmap_data[x][y];
     gmap_data[x][y] = c;
 
@@ -373,13 +382,15 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         return;
     }
 
-    if (x < gmap_min_x)  gmap_min_x = x;
-    else
-    if (x > gmap_max_x)  gmap_max_x = x;
+    if (x < gmap_min_x)
+        gmap_min_x = x;
+    else if (x > gmap_max_x)
+        gmap_max_x = x;
 
-    if (y < gmap_min_y)  gmap_min_y = y;
-    else
-    if (y > gmap_max_y)  gmap_max_y = y;
+    if (y < gmap_min_y)
+        gmap_min_y = y;
+    else if (y > gmap_max_y)
+        gmap_max_y = y;
 }
 
 void GmapInit(bool upd_tile)
@@ -431,7 +442,7 @@ void GmapDisplay(int linex, int liney)
     {
         ox += linex - gmap_min_x;
         oy += liney - gmap_min_y;
-        buf2[ ox + oy * GXM] = MAP_WHITE;
+        buf2[ ox + oy * GXM] = MAP_WHITE; // highlight centre of the map
     }
 
     region_map->flag = true;
@@ -1242,7 +1253,10 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
                         if (itemlist_iflag[cx] & TILEI_FLAG_EQUIP)
                         {
-                            if (you.equip[EQ_WEAPON] == ix)
+                            if (you.equip[EQ_WEAPON] == ix
+                                && type != OBJ_MISCELLANY
+                                && (!item_is_rod(you.inv[ix])
+                                    || !item_type_known(you.inv[ix])))
                             {
                                 if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
                                     || type == OBJ_WEAPONS || type == OBJ_STAVES)
@@ -1259,11 +1273,22 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         // first equipable categories
                         case OBJ_WEAPONS:
                         case OBJ_STAVES:
+                        case OBJ_MISCELLANY:
                             desc += "*(w)ield";
                             break;
                         case OBJ_WEAPONS + 18:
-                        case OBJ_STAVES + 18:
                             desc += "unwield";
+                            break;
+                        case OBJ_MISCELLANY + 18:
+                            if (you.inv[ix].sub_type >= MISC_DECK_OF_ESCAPE
+                                && you.inv[ix].sub_type <= MISC_DECK_OF_DEFENSE)
+                            {
+                                desc += "draw a card";
+                                break;
+                            }
+                            // else fall-through
+                        case OBJ_STAVES + 18: // rods - other staves handled above
+                            desc += "*(E)voke";
                             break;
                         case OBJ_ARMOUR:
                             desc += "*(W)ear";

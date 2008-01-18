@@ -64,13 +64,17 @@ int tile_unseen_flag(const coord_def& gc)
     }
 }
 
-int tileidx_monster_base(int mon_idx)
+int tileidx_monster_base(int mon_idx, bool detected)
 {
     const monsters* mon = &menv[mon_idx];
     int grid = grd[mon->x][mon->y];
     bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
+    
+    int type = mon->type;
+    if (detected)
+        type = mons_genus(type);
 
-    switch (mon->type)
+    switch (type)
     {
     case MONS_GIANT_ANT:
         return TILE_MONS_GIANT_ANT;
@@ -788,9 +792,9 @@ int tileidx_monster_base(int mon_idx)
     return TILE_ERROR;
 }
 
-int tileidx_monster(int mon_idx)
+int tileidx_monster(int mon_idx, bool detected)
 {
-    int ch = tileidx_monster_base(mon_idx);
+    int ch = tileidx_monster_base(mon_idx, detected);
 
     if(mons_flies(&menv[mon_idx]))
         ch |= TILE_FLAG_FLYING;
@@ -3605,7 +3609,7 @@ void tile_place_item_marker(int x, int y, int idx)
 }
 
 // Called from monster_grid() in view.cc
-void tile_place_monster(int gx, int gy, int idx, bool foreground)
+void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 {
     if (idx == NON_MONSTER)
     {
@@ -3615,7 +3619,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground)
     const coord_def gc(gx, gy);
     const coord_def ep = view2show(grid2view(gc));
 
-    int t = tileidx_monster(idx);
+    int t = tileidx_monster(idx, detected);
     int t0 = t & TILE_FLAG_MASK;
     int flag = t & (~TILE_FLAG_MASK);
     int mon_wep = menv[idx].inv[MSLOT_WEAPON];
