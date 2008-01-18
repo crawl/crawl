@@ -91,13 +91,13 @@ enum ScreenRegion
 {
     REGION_NONE,
     REGION_CRT,
-    REGION_STAT,
-    REGION_MSG,
-    REGION_MAP,
+    REGION_STAT,  // stat area
+    REGION_MSG,   // message area
+    REGION_MAP,   // overview map area
     REGION_DNGN,
     REGION_TDNGN,
-    REGION_INV1,
-    REGION_INV2,
+    REGION_INV1,  // items in inventory
+    REGION_INV2,  // items in inventory?
     REGION_XMAP,
     REGION_TIP,
     NUM_REGIONS

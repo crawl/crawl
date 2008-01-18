@@ -30,6 +30,9 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tiles.h"
+#endif
 #include "view.h"
 
 static species_type get_tutorial_species(unsigned int type);
@@ -420,6 +423,7 @@ static formatted_string tutorial_debug()
 }
 #endif // debug
 
+#ifndef USE_TILE
 static formatted_string tutorial_map_intro()
 {
     std::string result;
@@ -486,6 +490,7 @@ static formatted_string tutorial_message_intro()
     linebreak_string2(result,get_tutorial_cols());
     return formatted_string::parse_block(result, false);
 }
+#endif
 
 static void tutorial_movement_info()
 {
@@ -502,8 +507,9 @@ static void tutorial_movement_info()
 // copied from display_mutations and adapted
 void tut_starting_screen()
 {
-
+#ifndef USE_TILE
     int y_pos;
+#endif
     int MAX_INFO = 4;
 #ifdef TUTORIAL_DEBUG
     MAX_INFO++;
@@ -512,29 +518,37 @@ void tut_starting_screen()
 
     for (int i=0; i<=MAX_INFO; i++)
     {
+#ifndef USE_TILE
         // map window (starts at 1) or message window (starts at 18)
         y_pos = (i==1 || i==3 ? 18 : 1);
 
         gotoxy(1,y_pos);
-
+#endif
         if (i==0)
             clrscr();
 
         if (i==0)
             tut_starting_info(get_tutorial_cols()).display();
+#ifdef USE_TILE
+        else if (i > 0 && i < 4)
+            continue;
+#else
         else if (i==1)
             tutorial_map_intro().display();
         else if (i==2)
             tutorial_stats_intro().display();
         else if (i==3)
             tutorial_message_intro().display();
+#endif
         else if (i==4)
             tutorial_movement_info();
         else
         {
 #ifdef TUTORIAL_DEBUG
             clrscr();
+ #ifndef USE_TILE
             gotoxy(1,y_pos);
+ #endif
             tutorial_debug().display();
 #else
             continue;
@@ -836,6 +850,7 @@ void taken_new_item(unsigned char item_type)
     }
 }
 
+#ifndef USE_TILE
 static std::string colour_to_tag(int col, bool closed = false)
 {
     std::string tag = "<";
@@ -846,6 +861,7 @@ static std::string colour_to_tag(int col, bool closed = false)
     
     return tag;
 }
+#endif
 
 void tutorial_first_monster(const monsters &mon)
 {
@@ -861,23 +877,31 @@ void tutorial_first_monster(const monsters &mon)
         viewwindow(true, false);
     }
     
+    std::string text = "<magenta>That ";
+#ifndef USE_TILE
     unsigned ch;
     unsigned short col;
     get_mons_glyph(&mon, &ch, &col);
 
-    std::string text = "<magenta>That ";
     text += colour_to_tag(col);
     text += ch;
     text += "<magenta> is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r<magenta>, <w>g<magenta>, "
-            "<lightgray>b<magenta> or <brown>K<magenta>. You can gain information "
-            "about it by pressing <w>x<magenta> and moving the cursor on the "
-            "monster."
+            "<lightgray>b<magenta> or <brown>K<magenta>. "
+#else
+    // need to highlight monster
+    text += "monster is a ";
+    text += mon.name(DESC_PLAIN).c_str();
+    text += ". Examples for typical early monsters are: rat, "
+            "giant newt, kobold and goblin. "
+#endif
+            "You can gain information about it by pressing <w>x<magenta> and "
+            "moving the cursor on the monster."
             "\nTo attack this monster with your wielded weapon, just move into "
             "it.";
             
     print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
-
+    
     if (Options.tutorial_type == TUT_RANGER_CHAR)
     {
         text =  "However, as a hunter you will want to deal with it using your "
@@ -907,21 +931,25 @@ void tutorial_first_item(const item_def &item)
         return;
     }
 
-    unsigned ch;
-    unsigned short col;
-    get_item_glyph(&item, &ch, &col);
-
-    if (ch == ' ') // happens if monster standing on dropped corpse or item
+    // happens if monster standing on dropped corpse or item
+    if (mgrd[item.x][item.y] != NON_MONSTER)
        return;
 
     std::string text = "<magenta>That ";
+#ifndef USE_TILE
     text += colour_to_tag(col);
     text += ch;
-    text += "<magenta> is an item. If you move there and press <w>g<magenta> or "
-            "<w>,<magenta> you will pick it up. Generally, items are shown by "
-            "non-letter symbols like <w>%?!\"=()[<magenta>. Once it is in your "
-            "inventory, you can drop it again with <w>d<magenta>. Several types "
-            "of objects will usually be picked up automatically."
+    text += "<magenta>";
+#endif
+    text += "is an item. If you move there and press <w>g<magenta> or "
+            "<w>,<magenta> you will pick it up. "
+#ifndef USE_TILE
+            "Generally, items are shown by "
+            "non-letter symbols like <w>%?!\"=()[<magenta>. "
+#endif
+            "Once it is in your inventory, you can drop it again with "
+            "<w>d<magenta>. Several types of objects will usually be picked up "
+            "automatically."
             "\nAny time you <w>v<magenta>iew an item, you can read about its "
             "properties and description.";
     print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
@@ -943,34 +971,48 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         return;
 
     std::ostringstream text;
-    unsigned ch;
-    unsigned short colour;
+#ifndef USE_TILE
     const int ex = x - you.x_pos + 9;
     const int ey = y - you.y_pos + 9;
+    unsigned ch;
+    unsigned short colour;
     int object;
-
+#endif
     switch(seen_what)
     {
       case TUT_SEEN_POTION:          
-          text << "You have picked up your first potion ('<w>!<magenta>'). "
-                  "Use <w>q<magenta> to drink (quaff) it.";
+          text << "You have picked up your first potion"
+#ifndef USE_TILE
+                  " ('<w>!<magenta>')"
+#endif
+                  ". Use <w>q<magenta> to drink (quaff) it.";
           break;
           
       case TUT_SEEN_SCROLL:
-          text << "You have picked up your first scroll ('<w>?<magenta>'). "
-                  "Type <w>r<magenta> to read it.";
+          text << "You have picked up your first scroll"
+#ifndef USE_TILE
+                  " ('<w>?<magenta>')"
+#endif
+                  ". Type <w>r<magenta> to read it.";
           break;
           
       case TUT_SEEN_WAND:
-          text << "You have picked up your first wand ('<w>/<magenta>'). "
-                  "Type <w>z<magenta> to zap it.";
+          text << "You have picked up your first wand"
+#ifndef USE_TILE
+                  " ('<w>/<magenta>')"
+#endif
+                  ". Type <w>z<magenta> to zap it.";
           break;
           
       case TUT_SEEN_SPBOOK:
+          text << "You have picked up a book "
+#ifndef USE_TILE
+                  "('<w>";
           get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
-          text << "You have picked up a book ('<w>"
-               << static_cast<char>(ch)
-               << "'<magenta>) that you can read by typing <w>r<magenta>. "
+          text << static_cast<char>(ch)
+               << "'<magenta>) "
+#endif
+               << "that you can read by typing <w>r<magenta>. "
                   "If it's a spellbook you'll then be able to memorise "
                   "spells via <w>M<magenta> and cast a memorised spell with "
                   "<w>Z<magenta>.";
@@ -993,7 +1035,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SEEN_WEAPON:
-          text << "This is the first weapon ('<w>(<magenta>') you've picked up. "
+          text << "This is the first weapon "
+#ifndef USE_TILE
+                  "('<w>(<magenta>') "
+#endif
+                  "you've picked up. "
                   "Use <w>w<magenta> to wield it, but be aware that this weapon "
                   "might train a different skill from your current one. You can "
                   "view the weapon's properties with <w>v<magenta>.";
@@ -1031,10 +1077,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SEEN_ARMOUR:
-          text << "This is the first piece of armour ('<w>[<magenta>') you've "
-                  "picked up. Use <w>W<magenta> to wear it and <w>T<magenta> to "
-                  "take it off again. You can view its properties with "
-                  "<w>v<magenta>.";
+          text << "This is the first piece of armour "
+#ifndef USE_TILE
+                  "('<w>[<magenta>') "
+#endif
+                  "you've picked up. Use <w>W<magenta> to wear it and "
+                  "<w>T<magenta> to take it off again. You can view its "
+                  "properties with <w>v<magenta>.";
 
           if (you.species == SP_CENTAUR || you.species == SP_MINOTAUR)
           {
@@ -1052,15 +1101,22 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SEEN_FOOD:
-          text << "You have picked up some food ('<w>%<magenta>'). You can eat it "
-                  "by typing <w>e<magenta>.";
+          text << "You have picked up some food"
+#ifndef USE_TILE
+                  " ('<w>%<magenta>')"
+#endif
+                  ". You can eat it by typing <w>e<magenta>.";
           break;
           
       case TUT_SEEN_CARRION:
-          text << "You have picked up a corpse ('<w>%<magenta>'). When a corpse "
-                  "is lying on the ground, you can <w>D<magenta>issect with a "
-                  "sharp implement. Once hungry you can <w>e<magenta>at the "
-                  "resulting chunks (though they may not be healthy).";
+          text << "You have picked up a corpse"
+#ifndef USE_TILE
+                  " ('<w>%<magenta>')"
+#endif
+                  ". When a corpse is lying on the ground, you can "
+                  "<w>D<magenta>issect with a sharp implement. Once hungry you "
+                  "can <w>e<magenta>at the resulting chunks (though they may "
+                  "not be healthy).";
                   
           if (god_likes_butchery(you.religion))
           {
@@ -1074,11 +1130,17 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SEEN_JEWELLERY:
-          text << "You have picked up a a piece of jewellery, either a ring "
-                  "('<w>=<magenta>') or an amulet ('<w>\"<magenta>'). Type "
-                  "<w>P<magenta> to put it on and <w>R<magenta> to remove it. You "
-                  "can view it with <w>v<magenta> although often magic is "
-                  "necessary to reveal its true nature.";
+          text << "You have picked up a a piece of jewellery, either a ring"
+#ifndef USE_TILE
+               << " ('<w>=<magenta>')"
+#endif
+               << " or an amulet"
+#ifndef USE_TILE
+               << " ('<w>\"<magenta>')"
+#endif
+               << ". Type <w>P<magenta> to put it on and <w>R<magenta> to remove "
+                  "it. You can view it with <w>v<magenta> although often magic "
+                  "is necessary to reveal its true nature.";
           break;
           
       case TUT_SEEN_MISC:
@@ -1088,11 +1150,14 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SEEN_STAFF:
+          text << "You have picked up a magic staff or a rod"
+#ifndef USE_TILE
+                  ", both of which are represented by '<w>";
           get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
-          text << "You have picked up a magic staff or a rod, both of which are "
-                  "represented by '<w>"
-               << static_cast<char>(ch)
-               << "<magenta>'. Both must be <w>w<magenta>ielded to be of use. "
+          text << static_cast<char>(ch)
+               << "<magenta>'"
+#endif
+                  ". Both must be <w>w<magenta>ielded to be of use. "
                   "Magicians use staves to increase their power in certain spell "
                   "schools. By contrast, a rod allows the casting of certain "
                   "spells even without magic knowledge simply by "
@@ -1106,12 +1171,16 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (you.num_turns < 1)
               return;
 
+          text << "These ";
+#ifndef USE_TILE
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
 
-          text << "The " << colour_to_tag(colour) << static_cast<char>(ch)
-               << "<magenta> are some downstairs. You can enter the next (deeper) "
+          text << colour_to_tag(colour) << static_cast<char>(ch)
+               << "<magenta> ";
+#endif
+          text << "are some downstairs. You can enter the next (deeper) "
                   "level by following them down (<w>><magenta>). To get back to "
                   "this level again, press <w><<<magenta> while standing on the "
                   "upstairs.";
@@ -1122,55 +1191,71 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (you.num_turns < 1)
               return;
 
+          text << "These ";
+#ifndef USE_TILE
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
-          
-          text << "These " << colour_to_tag(colour) << static_cast<char>(ch);
+
+          text << colour_to_tag(colour) << static_cast<char>(ch);
           if (ch == '<')
                text << "<";
-          text << "<magenta> are some kind of escape hatch. You can use them to "
+          text << "<magenta> ";
+#endif
+          text << "are some kind of escape hatch. You can use them to "
                   "quickly leave a level with <w><<<magenta> and <w>><magenta>, "
                   "respectively, but will usually be unable to return right away.";
           break;
           
       case TUT_SEEN_TRAP:
+          text << "Oops... you just triggered a trap. An unwary adventurer will "
+                  "occasionally stumble into one of these nasty constructions ";
+#ifndef USE_TILE
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
           if (ch == ' ' || colour == BLACK)
               colour = LIGHTCYAN;
 
-          text << "Oops... you just triggered a trap. An unwary adventurer will "
-                  "occasionally stumble into one of these nasty constructions "
-                  "depicted by " << colour_to_tag(colour) << "^<magenta>. They "
-                  "can do physical damage (with darts or needles, for example) "
-                  "or have other, more magical effects, like teleportation.";
+          text << "depicted by " << colour_to_tag(colour) << "^<magenta>"
+#endif
+          text << ". They can do physical damage (with darts or needles, for "
+                  "example) or have other, more magical effects, like "
+                  "teleportation.";
           break;
           
       case TUT_SEEN_ALTAR:
+          text << "That ";
+#ifndef USE_TILE
           object = env.show[ex][ey];
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
-          
-          text << "The " << colour_to_tag(colour) << static_cast<char>(ch)
-               << "<magenta> is an altar. You can get information about it by pressing "
+
+          text << colour_to_tag(colour) << static_cast<char>(ch) << "<magenta> ";
+#endif
+          text << "is an altar. You can get information about it by pressing "
                   "<w>p<magenta> while standing on the square. Before taking up "
                   "the responding faith you'll be asked for confirmation.";
           break;
           
       case TUT_SEEN_SHOP:
-          text << "The <yellow>" << stringize_glyph(get_screen_glyph(x,y))
-               << "<magenta> is a shop. You can enter it by typing "
-                  "<w><<<magenta>.";
+          text << "That "
+#ifndef USE_TILE
+                  "<yellow>" << stringize_glyph(get_screen_glyph(x,y))
+               << "<magenta> "
+#endif
+                  "is a shop. You can enter it by typing <w><<<magenta>.";
           break;
           
       case TUT_SEEN_DOOR:
           if (you.num_turns < 1)
               return;
 
-          text << "The <w>" << stringize_glyph(get_screen_glyph(x,y))
-               << "<magenta> is a closed door. You can open it by walking into it. "
+          text << "That "
+#ifndef USE_TILE
+                  "<w>" << stringize_glyph(get_screen_glyph(x,y)) << "<magenta> "
+#endif
+                  "is a closed door. You can open it by walking into it. "
                   "Sometimes it is useful to close a door. Do so by pressing "
                   "<w>c<magenta>, followed by the direction.";
           break;

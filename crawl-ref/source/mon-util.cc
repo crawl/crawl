@@ -3744,7 +3744,9 @@ void monsters::slow_down(int strength)
 
 void monsters::set_ghost(const ghost_demon &g)
 {
+#ifdef USE_TILE
     TileGhostInit(g);
+#endif    
     ghost.reset( new ghost_demon(g) );
 }
 
