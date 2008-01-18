@@ -17,8 +17,6 @@ int tileidx_zap(int color);
 int tile_idx_unseen_terrain(int x, int y, int what);
 int tile_unseen_flag(const coord_def& gc);
 
-#define simple_iso_tile(x) (x)
-
 // Player tile related
 void tilep_race_default(int race, int gender, int level, int *parts);
 void tilep_job_default(int job, int gender, int *parts);
@@ -66,6 +64,9 @@ int get_wall_tile_idx();
 int get_floor_tile_idx();
 int get_floor_special_tile_idx();
 void tile_init_flavor();
+
+void tile_set_force_redraw_tiles(bool redraw);
+void tile_set_force_redraw_inv(bool redraw);
 
 /**************************************/
 /* tile2.cc  image manipulation       */
@@ -120,7 +121,6 @@ void TileInitItems();
 // load wall tiles
 void TileLoadWall(bool wizard);
 
-//�^�C�g��
 void TileDrawTitle();
 
 // monster+weapon tile
@@ -130,26 +130,29 @@ int get_base_idx_from_mcache(int tile_idx);
 int get_clean_map_idx(int tile_idx);
 
 /* Flags for drawing routines */
-// MAY_STAB, FLAG_STAB, and FLAG_PET are mutually exclusive
-#define TILE_FLAG_MAY_STAB 0xC000 // May stab brand is always fg
-#define TILE_FLAG_STAB    0x8000 // Stab brand is always fg
-#define TILE_FLAG_PET     0x4000 //pet is always fg
+enum tile_flags
+{
+    // Foreground flags
+    TILE_FLAG_S_UNDER   = 0x00000800,
+    TILE_FLAG_FLYING    = 0x00001000,
+    TILE_FLAG_NET       = 0x00002000,
+    TILE_FLAG_PET       = 0x00004000,
+    TILE_FLAG_STAB      = 0x00008000,
+    TILE_FLAG_MAY_STAB  = 0x0000C000,
 
-#define TILE_FLAG_NET     0x2000 //nets are always in fg
-#define TILE_FLAG_FLYING  0x1000 //flying object is always fg
-#define TILE_FLAG_S_UNDER 0x800 //fg
+    // Background flags
+    TILE_FLAG_RAY       = 0x00000800,
+    TILE_FLAG_MM_UNSEEN = 0x00001000,
+    TILE_FLAG_UNSEEN    = 0x00002000,
+    TILE_FLAG_CURSOR0   = 0x00000000,
+    TILE_FLAG_CURSOR1   = 0x00008000,
+    TILE_FLAG_CURSOR2   = 0x00004000,
+    TILE_FLAG_CURSOR3   = 0x0000C000,
+    TILE_FLAG_CURSOR    = 0x0000C000,
 
-#define TILE_FLAG_CURSOR  0xc000 //cursor is always bg
-#define TILE_FLAG_CURSOR1 0x8000 //cursor is always bg
-#define TILE_FLAG_CURSOR2 0x4000 //cursor is always bg
-#define TILE_FLAG_CURSOR3 0xc000 //cursor is always bg
-#define TILE_FLAG_CURSOR0 0x0000 //cursor is always bg
-
-#define TILE_FLAG_UNSEEN 0x2000 //unseen flag is set to bg
-#define TILE_FLAG_MM_UNSEEN 0x1000
-#define TILE_FLAG_RAY    0x800
-
-#define TILE_FLAG_MASK   0x07ff
+    // General
+    TILE_FLAG_MASK      = 0x000007FF
+};
 
 
 #define TILEI_FLAG_SELECT 0x100

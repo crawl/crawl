@@ -116,90 +116,91 @@ int my_getenv_int(const char *envname, int def)
     return atoi(rstr);
 }
 
-#if 0
-void libgui_load_prefs(struct pref_data *pref, int nprefs)
-{
-    int i;
-    strcpy(font_name, my_getenv("CRAWL_X11_FONT", 
-		"-alias-fixed-bold-r-normal--16-*"));
-    strcpy(font_name, my_getenv("CRAWL_X11_FONT", "9x15"));
-    *crt_x = my_getenv_int("CRAWL_X11_CRTX",80);
-    *crt_y = my_getenv_int("CRAWL_X11_CRTY",25);
-    *msg_x = my_getenv_int("CRAWL_X11_MSGX",80);
-    *msg_y = my_getenv_int("CRAWL_X11_MSGY",8);
-    *map_x = my_getenv_int("CRAWL_X11_MAPX",3);
-    *map_y = my_getenv_int("CRAWL_X11_MAPY",3);
-    *dngn_x = my_getenv_int("CRAWL_X11_DNGNX",17);
-    *dngn_y = my_getenv_int("CRAWL_X11_DNGNY",17);
-}
-
-void libgui_save_prefs()
-{
-}
-#endif
-
 extern WinClass *win_main;
 extern TextRegionClass *region_tip;
+extern TextRegionClass *region_crt;
 void update_tip_text(const char *tip)
 {
-    static char newtip[512];
-    static char oldtip[512];
-    char tbuf[35];
+    const unsigned int tip_size = 512;
+    static char old_tip[tip_size];
+    char new_tip[tip_size];
 
-    strncpy(newtip, tip, 500);
-    char* pc = strchr(newtip, '\n');
-    if (pc)
-        *pc = 0;
-
-    if (strncmp(oldtip, newtip, 500)==0)
+    if (strncmp(old_tip, tip, tip_size) == 0)
         return;
-    strncpy(oldtip, newtip, 500);
 
-    strncpy(tbuf,tip,34);
-    tbuf[34]=0;
+    const bool is_main_screen = (win_main->active_layer == 0);
+    const unsigned int height = is_main_screen ? region_tip->my : 1;
+    const unsigned int width = is_main_screen ? region_tip->mx : region_crt->mx;
 
-    if (win_main->active_layer == 0)
+    strncpy(new_tip, tip, tip_size);
+    strncpy(old_tip, new_tip, tip_size);
+
+    if (is_main_screen)
     {
-        // avoid overruns...
-        if ((int)strlen(newtip) > region_tip->mx)
+        region_tip->clear();
+    }
+
+    char *next_tip = new_tip;
+    for (unsigned int i = 0; next_tip && i < height; i++)
+    {
+        char *this_tip = next_tip;
+
+        // find end of line
+        char *pc = strchr(next_tip, '\n');
+        if (pc)
+        {
+            *pc = 0;
+            next_tip = pc + 1;
+        }
+        else
+        {
+            next_tip = 0;
+        }
+
+        if (strlen(this_tip) > width)
         {
             // try to remove inscriptions
-            char *ins = strchr(newtip, '{');
-            if (ins && ins[-1] == ' ') ins--;
-            if (ins && (ins - newtip <= region_tip->mx))
+            char *ins = strchr(this_tip, '{');
+            if (ins && ins[-1] == ' ')
+                ins--;
+            if (ins && (ins - this_tip <= (int)width))
             {
                 *ins = 0;
             }
             else
             {
                 // try to remove state, e.g. "(worn)"
-                char *state = strchr(newtip, '(');
-                if (state && state[-1] == ' ') state--;
-                if (state && (state - newtip <= region_tip->mx))
+                char *state = strchr(this_tip, '(');
+                if (state && state[-1] == ' ')
+                    state--;
+                if (state && (state - this_tip <= (int)width))
                 {
                     *state = 0;
                 }
                 else
                 {
                     // if nothing else...
-                    newtip[region_tip->mx] = 0;
-                    newtip[region_tip->mx-1] = '.';
-                    newtip[region_tip->mx-2] = '.';
+                    this_tip[width] = 0;
+                    this_tip[width-1] = '.';
+                    this_tip[width-2] = '.';
                 }
             }
         }
 
-        region_tip->clear();
-        region_tip->gotoxy(1,1);
-        region_tip->addstr(newtip);
-        region_tip->make_active();
-    }
-    else
-    {
-        textattr( WHITE );
-        gotoxy(1, get_number_of_lines() + 1);
-        cprintf("%s", oldtip);
-        clear_to_end_of_line();
+        if (is_main_screen)
+        {
+            region_tip->gotoxy(1, 1 + i);
+            region_tip->addstr(this_tip);
+            region_tip->make_active();
+        }
+        else
+        {
+            ASSERT(i == 0);
+            textattr(WHITE);
+            gotoxy(1, get_number_of_lines() + 1);
+            cprintf("%s", this_tip);
+            clear_to_end_of_line();
+        }
     }
 }
 

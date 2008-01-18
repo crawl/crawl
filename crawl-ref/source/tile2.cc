@@ -54,7 +54,6 @@ static img_type DollCacheImg;
 static void tile_draw_grid(int kind, int xx, int yy);
 static void clear_tcache();
 static void init_tcache();
-static void init_tileflag();
 static void register_tile_mask(int tile, int region, int *cp,
     char *ms, bool smalltile = false);
 static void tcache_compose_normal(int ix, int *fg, int *bg);
@@ -63,8 +62,19 @@ static void mcache_init();
 
 //Internal variables
 
-bool force_redraw_tile;
-bool force_redraw_inv = false;
+static bool force_redraw_tile = false;
+static bool force_redraw_inv = false;
+
+void tile_set_force_redraw_tiles(bool redraw)
+{
+    force_redraw_tile = redraw;
+}
+
+void tile_set_force_redraw_inv(bool redraw)
+{
+    force_redraw_inv = redraw;
+}
+
 static unsigned short int t1buf[TILE_DAT_XMAX+2][TILE_DAT_YMAX+2],
                           t2buf[TILE_DAT_XMAX+2][TILE_DAT_YMAX+2];
 static short unsigned int tb_bk[TILE_DAT_YMAX*TILE_DAT_XMAX*2];
@@ -154,19 +164,6 @@ const int tcache_ox_normal[TCACHE_KIND_NORMAL] = {0};
 const int tcache_oy_normal[TCACHE_KIND_NORMAL] = {0};
 const int tcache_nlayer_normal[TCACHE_KIND_NORMAL] = {1};
 
-unsigned char tile_flag[TILE_TOTAL2];
-#define TFLAG_A 0x80
-#define TFLAG_B 0x40
-#define TFLAG_C 0x20
-#define TFLAG_D 0x10
-#define TFLAG_F 0x08
-#define TFLAG_G 0x04
-#define TFLAG_H 0x02
-#define TFLAG_I 0x01
-
-#define tile_check_blank(tile,region) \
-    if( (tile_flag[tile & TILE_FLAG_MASK]&(region))==0) (tile) &= ~TILE_FLAG_MASK;
-
 #define TREGION_0_NORMAL 0
 const int region_sx_normal[1]={0};
 const int region_sy_normal[1]={0};
@@ -175,11 +172,6 @@ const int region_wy_normal[1]={TILE_Y};
 
 // ISO mode sink mask
 static char *sink_mask;
-
-/* BG tile priority */
-static unsigned char tile_prio[TILE_TOTAL2];
-#define PRIO_WALL 10
-#define tile_is_wall(tile) (tile_prio[(tile)&TILE_FLAG_MASK]==PRIO_WALL)
 
 /********* Image manipulation subroutines ****************/
 img_type ImgLoadFileSimple(const char *name)
@@ -315,7 +307,6 @@ void TileInit()
 
     sink_mask = (char *)malloc(TILE_X*TILE_Y);
 
-    init_tileflag();
     init_tcache();
 
     DollCacheImg = ImgCreateSimple(TILE_X, TILE_Y);
@@ -323,7 +314,7 @@ void TileInit()
     for(x=0;x<TILE_DAT_XMAX+2;x++){
     for(y=0;y<TILE_DAT_YMAX+2;y++){
         t1buf[x][y]=0;
-        t2buf[x][y]=simple_iso_tile(TILE_DNGN_UNSEEN)|TILE_FLAG_UNSEEN;
+        t2buf[x][y]=TILE_DNGN_UNSEEN|TILE_FLAG_UNSEEN;
     }}
 
     force_redraw_tile = false;
@@ -360,45 +351,6 @@ void TileResizeScreen(int x0, int y0)
     crawl_view.viewsz.x = tile_xmax;
     crawl_view.viewsz.y = tile_ymax;
     crawl_view.vbuf.size(crawl_view.viewsz);
-}
-
-/*** Investigate a region of specific tile whether it contains any
-     picture, or it is blank ***/
-int init_tileflag_aux(int tile, int xs, int ys, int wx, int wy){
-    int x,y, sx,sy;
-    img_type src=TileImg;
-
-    ASSERT(tile<TILE_TOTAL2);
-
-    sx = tile % TILE_PER_ROW;
-    sx *= TILE_X;
-    sy = tile / TILE_PER_ROW;
-    sy *= TILE_Y;
-
-    for(x=xs;x<xs+wx;x++){
-    for(y=ys;y<ys+wy;y++){
-        if(!ImgIsTransparentAt(src, sx+x, sy+y))
-            return 1;
-    }}
-    return 0;
-}
-
-void init_tileflag(){
-    int tile, flag;
-
-    for(tile=0;tile<TILE_TOTAL2;tile++){
-        flag = 0;
-        tile_flag[tile]=flag;
-        tile_prio[tile]=0;
-    }
-
-    for(tile=0;tile<4;tile++)
-    {
-        tile_prio[simple_iso_tile(TILE_DNGN_LAVA)+tile]=2;
-        tile_prio[simple_iso_tile(TILE_DNGN_SHALLOW_WATER)+tile]=2;
-        tile_prio[simple_iso_tile(TILE_DNGN_DEEP_WATER)+tile]=3;
-    }
-
 }
 
 void clear_tcache(){
@@ -707,7 +659,7 @@ void redraw_spx_tcache(int tile)
 void get_bbg(int bg, int *new_bg, int *bbg)
 {
     int bg0 = bg & TILE_FLAG_MASK;
-    *bbg=simple_iso_tile(TILE_DNGN_FLOOR);
+    *bbg=TILE_DNGN_FLOOR;
     *new_bg= bg0;
 
     if(bg0 == TILE_DNGN_UNSEEN ||
@@ -726,24 +678,13 @@ int sink_mask_tile(int bg, int fg)
 {
     int bg0 = bg & TILE_FLAG_MASK;
 
-    if (fg == 0 || (fg & TILE_FLAG_FLYING)!=0) return 0;
-/*
-    if ( bg0 == simple_iso_tile(TILE_DNGN_SHALLOW_WATER))
-        return TILE_MASK_SHALLOW_WATER;
-    if ( bg0 == simple_iso_tile(TILE_DNGN_DEEP_WATER))
-        return TILE_MASK_DEEP_WATER;
-    if ( bg0 >= simple_iso_tile(TILE_DNGN_LAVA) &&
-         bg0 <= simple_iso_tile(TILE_DNGN_LAVA)+3)
-        return TILE_MASK_LAVA;
-*/
-    if ( bg0 >= simple_iso_tile(TILE_DNGN_LAVA) &&
-         bg0 <= simple_iso_tile(TILE_DNGN_SHALLOW_WATER) + 3)
+    if (fg == 0 || (fg & TILE_FLAG_FLYING) != 0)
+        return 0;
+
+    if ( bg0 >= TILE_DNGN_LAVA &&
+         bg0 <= TILE_DNGN_SHALLOW_WATER + 3)
     {
-        int result = TILE_SINK_MASK;//simple_iso_tile(TILE_SINK_MASK);
-        if ((fg & TILE_FLAG_MASK) >= TILE_NORMAL)
-            result = simple_iso_tile(TILE_SINK_MASK);
-        //if ((fg & TILE_FLAG_MASK) >= TILE_NORMAL) result++;
-        return result;
+        return TILE_SINK_MASK;
     }
 
     return 0;
@@ -876,7 +817,8 @@ void LoadDungeonView(short unsigned int *tileb)
 void TileDrawDungeon(short unsigned int *tileb)
 {
     int x, y, kind;
-    if(!TileImg)return;
+    if(!TileImg)
+        return;
 
     LoadDungeonView(tileb);
 
@@ -2061,7 +2003,7 @@ void TilePlayerEdit()
     for(x=0;x<TILE_DAT_XMAX+2;x++){
     for(y=0;y<TILE_DAT_YMAX+2;y++){
         t1buf[x][y]=0;
-    t2buf[x][y]=simple_iso_tile(TILE_DNGN_UNSEEN)|TILE_FLAG_UNSEEN;
+    t2buf[x][y]=TILE_DNGN_UNSEEN|TILE_FLAG_UNSEEN;
     }}
 
     for(k=0;k<tcache_kind;k++)
@@ -2285,9 +2227,6 @@ void TileInitItems()
         ImgCopyFromTileImg(tile1, DollCacheImg, 0, 0, 0);
         ImgCopyToTileImg  (tile1, DollCacheImg, 0, 0, 1);
     }
-
-    //Hack: call it again
-    init_tileflag();
 }
 
 // Monster weapon tile

@@ -9,9 +9,6 @@
  *
  */
 
-#define deblog(x)  {FILE *ddfp=fopen("log.txt","a");fprintf(ddfp,x);fprintf(ddfp,"\n");fclose(ddfp);}
-#define deblog2(x,y)  {FILE *ddfp=fopen("log.txt","a");fprintf(ddfp,"%s %d\n",x,y);fclose(ddfp);}
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,9 +74,6 @@ TileRegionClass *region_item2 = NULL;
 img_type TileImg, TileIsoImg;
 img_type PlayerImg;
 img_type WallImg;
-
-extern bool force_redraw_tile;
-extern bool force_redraw_inv;
 
 // for item use gui
 #define MAX_ITEMLIST 60
@@ -620,7 +614,8 @@ void libgui_init()
     }
 
 #elif defined(USE_X11)
-    region_tip = new TextRegionClass(region_stat->mx, 1, 0, 0);
+    const unsigned int region_tip_height = 3;
+    region_tip = new TextRegionClass(region_stat->mx, region_tip_height, 0, 0);
     region_tip->id = REGION_TIP;
 
     region_crt->init_font(font_name);
@@ -996,14 +991,14 @@ void edit_prefs()
         if (upd_dngn)
         {
             region_tile -> resize_backbuf();
-            force_redraw_tile = true;
+            tile_set_force_redraw_tiles(true);
             TileResizeScreen(dngn_x, dngn_y);
         }
         if (region_item)
             region_item->resize_backbuf();
         if (region_item2)
             region_item2->resize_backbuf();
-        force_redraw_inv = true;
+        tile_set_force_redraw_inv(true);
         tile_draw_inv(-1, REGION_INV1);
 
         region_map->force_redraw = true;
@@ -1237,7 +1232,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                 }
                 desc += mitm[ix].name(DESC_NOCAP_A);
                 if (display_actions)
-                    desc += EOL "[L-Click] *Pickup(g)";
+                    desc += EOL "[L-Click] Pick up (g)";
             }
             else
             {
@@ -1278,69 +1273,69 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         case OBJ_WEAPONS:
                         case OBJ_STAVES:
                         case OBJ_MISCELLANY:
-                            desc += "*(w)ield";
+                            desc += "Wield (w)";
                             break;
                         case OBJ_WEAPONS + 18:
-                            desc += "unwield";
+                            desc += "Unwield";
                             break;
                         case OBJ_MISCELLANY + 18:
                             if (you.inv[ix].sub_type >= MISC_DECK_OF_ESCAPE
                                 && you.inv[ix].sub_type <= MISC_DECK_OF_DEFENSE)
                             {
-                                desc += "draw a card";
+                                desc += "Draw a card (E)";
                                 break;
                             }
                             // else fall-through
                         case OBJ_STAVES + 18: // rods - other staves handled above
-                            desc += "*(E)voke";
+                            desc += "Evoke (E)";
                             break;
                         case OBJ_ARMOUR:
-                            desc += "*(W)ear";
+                            desc += "Wear (W)";
                             break;
                         case OBJ_ARMOUR + 18:
-                            desc += "*(T)ake off";
+                            desc += "Take off (T)";
                             break;
                         case OBJ_JEWELLERY:
-                            desc += "*(P)ut on";
+                            desc += "Put on (P)";
                             break;
                         case OBJ_JEWELLERY + 18:
-                            desc += "*(R)emove";
+                            desc += "Remove (R)";
                             break;
                         case OBJ_MISSILES:
-                            desc += "*(t)hrow";
+                            desc += "Throw (t)";
                             break;
                         case OBJ_WANDS:
-                            desc += "*(z)ap";
+                            desc += "Zap (z)";
                             break;
                         case OBJ_BOOKS:
                             if (item_type_known(you.inv[ix])
                                 && you.inv[ix].sub_type != BOOK_MANUAL
                                 && you.inv[ix].sub_type != BOOK_DESTRUCTION)
                             {
-                                desc += "*(M)emorize";
+                                desc += "Memorize (M)";
                                 break;
                             }
                             // else fall-through
                         case OBJ_SCROLLS:
-                            desc += "*(r)ead";
+                            desc += "Read (r)";
                             break;
                         case OBJ_POTIONS:
-                            desc += "*(q)uaff";
+                            desc += "Quaff (q)";
                             break;
                         case OBJ_FOOD:
-                            desc += "*(e)at";
+                            desc += "Eat (e)";
                             break;
                         case OBJ_CORPSES:
                             if (you.species == SP_VAMPIRE)
-                                desc += "drink blood";
+                                desc += "Drink blood (e)";
                             break;
                         default:
-                            desc += "*Use it";
+                            desc += "Use";
                         }
                     }
 
                     desc += EOL "[R-Click] Info";
-                    desc += EOL "[Shift-L-Click] *(d)rop";
+                    desc += EOL "[Shift-L-Click] Drop (d)";
                 }
             }
             update_tip_text(desc.c_str());
@@ -1402,13 +1397,13 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         desc += get_class_abbrev(you.char_class);
                         desc += ")" EOL;
 
-            desc += EOL "[L-Click] *Search 1 turn(s)";
+            desc += EOL "[L-Click] Search 1 turn";
 
             if (grid_stair_direction( grd[gx][gy] ) != CMD_NO_CMD)
                 desc += EOL "[Shift-L-Click] use stairs (</>)";
 
             // character overview
-            desc += EOL "[R-Click] Overview(%)";
+            desc += EOL "[R-Click] Overview (%)";
 
             // Religion
             if (you.religion != GOD_NO_GOD)
@@ -1451,7 +1446,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     if (mode == REGION_STAT && mouse_mode == MOUSE_MODE_COMMAND)
     {
         if (oldmode != REGION_STAT)
-            update_tip_text("[L-Click] Rest/Search for a while");
+            update_tip_text("[L-Click] Rest / Search for a while");
         oldmode = mode;
         oldcx = cx;
         oldcy = cy;
@@ -1460,6 +1455,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
 
     return 0;
 }
+
 static int handle_mouse_button(int mx, int my, int button,
     bool shift, bool ctrl)
 {
