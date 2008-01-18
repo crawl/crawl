@@ -596,6 +596,10 @@ misc_deck MISC_DECK
 %finish
 %start
 %compose misc_deck
+%compose i-deck_dungeons
+%finish
+%start
+%compose misc_deck
 %compose i-deck_summoning
 %finish
 %start
@@ -629,6 +633,10 @@ misc_deck_rare MISC_DECK_RARE
 %finish
 %start
 %compose misc_deck_rare
+%compose i-deck_dungeons
+%finish
+%start
+%compose misc_deck_rare
 %compose i-deck_summoning
 %finish
 %start
@@ -659,6 +667,10 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %start
 %compose misc_deck_legendary
 %compose i-deck_destruction
+%finish
+%start
+%compose misc_deck_legendary
+%compose i-deck_dungeons
 %finish
 %start
 %compose misc_deck_legendary
