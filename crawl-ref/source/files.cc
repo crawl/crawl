@@ -1386,10 +1386,6 @@ void load_ghost(void)
 
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
-        
-#ifdef USE_TILE
-        TileGhostInit(ghosts[0]);
-#endif
 
         ghosts.erase(ghosts.begin());        
     }

@@ -109,7 +109,7 @@ void TilePlayerEdit();
 // init player tile
 void TilePlayerInit();
 // init ghost tile
-void TileGhostInit(struct ghost_demon &gs);
+void TileGhostInit(const struct ghost_demon &gs);
 // init pandem demon tile (only in iso mode)
 void TilePandemInit(struct ghost_demon &gs);
 // edit pandem tile (debug)

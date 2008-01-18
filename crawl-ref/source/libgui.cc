@@ -452,6 +452,9 @@ void GmapDisplay(int linex, int liney)
 /* initialize routines */
 static void do_layout()
 {
+    // buffer between map region and stat region
+    const int map_stat_buffer = 5;
+
 #define LAYER_NML 0
 #define LAYER_CRT 1
 #define LAYER_XMAP 2
@@ -469,7 +472,8 @@ static void do_layout()
     win_main->placeRegion(region_msg, LAYER_NML, region_tile, PLACE_BOTTOM,
         tm, tm, tm, tm);
 
-    int sx = std::max(region_msg->ex + region_msg->dx, region_tile->ex);
+    int sx = std::max(region_msg->ex + region_msg->dx, region_tile->ex) +
+        map_stat_buffer;
     int sy = 0;
     win_main->placeRegion(region_stat, LAYER_NML, sx, sy);
 

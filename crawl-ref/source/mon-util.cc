@@ -51,6 +51,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tiles.h"
 #include "traps.h"
 #include "view.h"
 
@@ -3743,6 +3744,7 @@ void monsters::slow_down(int strength)
 
 void monsters::set_ghost(const ghost_demon &g)
 {
+    TileGhostInit(g);
     ghost.reset( new ghost_demon(g) );
 }
 

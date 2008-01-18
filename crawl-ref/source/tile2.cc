@@ -2107,7 +2107,7 @@ void TilePlayerInit()
 
 }
 
-void TileGhostInit(struct ghost_demon &ghost)
+void TileGhostInit(const struct ghost_demon &ghost)
 {
     dolls_data doll;
     int x, y;
