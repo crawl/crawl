@@ -4377,7 +4377,7 @@ bool view_update()
 void viewwindow(bool draw_it, bool do_updates)
 {
 #ifdef USE_TILE
-    std::vector<unsigned short> tileb( 
+    std::vector<unsigned int> tileb( 
         crawl_view.viewsz.y * crawl_view.viewsz.x * 2);
 #endif
     screen_buffer_t *buffy(crawl_view.vbuf);

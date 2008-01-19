@@ -72,6 +72,7 @@ bool is_resting( void );
 bool can_travel_interlevel();
 bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
+bool is_excluded(const coord_def &p);
 
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);

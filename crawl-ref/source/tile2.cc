@@ -75,9 +75,9 @@ void tile_set_force_redraw_inv(bool redraw)
     force_redraw_inv = redraw;
 }
 
-static unsigned short int t1buf[TILE_DAT_XMAX+2][TILE_DAT_YMAX+2],
+static unsigned int t1buf[TILE_DAT_XMAX+2][TILE_DAT_YMAX+2],
                           t2buf[TILE_DAT_XMAX+2][TILE_DAT_YMAX+2];
-static short unsigned int tb_bk[TILE_DAT_YMAX*TILE_DAT_XMAX*2];
+static unsigned int tb_bk[TILE_DAT_YMAX*TILE_DAT_XMAX*2];
 
 #define MAX_ITEMLIST 200
 int itemlist[MAX_ITEMLIST];
@@ -424,44 +424,32 @@ void lift_tcache(int ix, int kind, int hash){
 // If not found, compose and cache it
 static int tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
 {
-    unsigned int id[4];
-    int i;
     int hash = 0; // Don't use hash
-    int kind_n_hash = kind*tc_hash + hash;
-    int nlayer = tcache_nlayer_normal[kind];
+    int kind_n_hash = kind * tc_hash + hash;
+
     tile_cache *tc = tcache[kind];
     tile_cache *tc0 = &tc[tcache_head[kind_n_hash]];
-#if DEBUG
-    int search_count =0;
-#endif
 
     *is_new=0;
-
-    for(i=0;i<nlayer;i++) id[i]= (fg[i]<<16)+bg[i]+1;
 
     while(1){
         tile_cache *next = tc0->next;
 
-        if(tc0->id[0] == id[0]) break;
+        if ((int)tc0->id[0] == fg[0] && (int)tc0->id[1] == bg[0])
+            break;
 
-        if(tc0->id[0]==0 || next == NULL)
+        if ((int)tc0->id[0] == 0 || next == NULL)
         {
-        //end of used cache
+            //end of used cache
             *is_new = 1;
             tcache_compose_normal(tc0->idx, fg, bg);
-            for(i=0;i<nlayer;i++) tc0->id[i] = id[i];
+            tc0->id[0] = fg[0];
+            tc0->id[1] = bg[0];
             break;
         }
         tc0 = next;
-#if DEBUG
-        search_count++;
-#endif
     }
     lift_tcache(tc0->idx, kind, hash);
-
-#if DEBUG
-//DEBUGLOG("%d\n",search_count);
-#endif
 
     return tc0->idx;
 }
@@ -469,18 +457,18 @@ static int tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
 
 /*** overlay a tile onto an exsisting image with transpalency operation */
 void tcache_overlay(img_type img, int idx,
-                     int tile, int region, int *copy, char *mask)
+    int tile, int region, int *copy, char *mask, unsigned int shift_left = 0)
 {
 
     int x0, y0;
-    int sx= region_sx_normal[region];
-    int sy= region_sy_normal[region];
-    int wx= region_wx_normal[region];
-    int wy= region_wy_normal[region];
-    int ox=0;
-    int oy=0;
+    int sx = region_sx_normal[region] + shift_left;
+    int sy = region_sy_normal[region];
+    int wx = region_wx_normal[region] - shift_left;
+    int wy = region_wy_normal[region];
+    int ox = 0;
+    int oy = 0;
     img_type src = TileImg;
-    int uy=wy;
+    int uy = wy;
 
     tile &= TILE_FLAG_MASK;
 
@@ -489,26 +477,27 @@ void tcache_overlay(img_type img, int idx,
 
     if (mask != NULL)
     {
-        if(*copy ==2)
+        if (*copy ==2)
+        {
             ImgCopyMaskedH(src, x0 + sx, y0 + sy, wx, wy,
-                          img, ox, oy + idx*uy, mask);
+                img, ox, oy + idx*uy, mask);
+        }
         else
+        {
             ImgCopyMasked(src, x0 + sx, y0 + sy, wx, wy,
-                          img, ox, oy + idx*uy, mask);
-    *copy = 0;
-        return;
+                img, ox, oy + idx*uy, mask);
+        }
     }
     // Hack: hilite rim color
-    else if(*copy ==2)
+    else if (*copy ==2)
     {
-        *copy=0;
         ImgCopyH(src, x0 + sx, y0 + sy, wx, wy,
-                      img, ox, oy + idx*uy, *copy);
-        return;
-    } else
+            img, ox, oy + idx*uy, *copy);
+    }
+    else
     {
         ImgCopy(src, x0 + sx, y0 + sy, wx, wy,
-                      img, ox, oy + idx*uy, *copy);
+            img, ox, oy + idx*uy, *copy);
     }
     *copy = 0;
 }
@@ -691,71 +680,116 @@ int sink_mask_tile(int bg, int fg)
 }
 
 //normal
-void tcache_compose_normal(int ix, int *fg, int *bg){
+void tcache_compose_normal(int ix, int *fg, int *bg)
+{
     int bbg;
     int new_bg;
-    int c=1;
-    int fg0=fg[0];
-    int bg0=bg[0];
+    int c = 1;
+    int fg0 = fg[0];
+    int bg0 = bg[0];
     int sink;
     img_type tc_img = tcache_image[TCACHE0_NORMAL];
 
     get_bbg(bg0, &new_bg, &bbg);
 
-    if(bbg) tcache_overlay(tc_img, ix, bbg, TREGION_0_NORMAL, &c, NULL);
-    if(new_bg) tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
+    if (bbg)
+        tcache_overlay(tc_img, ix, bbg, TREGION_0_NORMAL, &c, NULL);
+    if(new_bg)
+        tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
 
-    //Tile cursor
-    if(bg0&TILE_FLAG_CURSOR)
+    // Tile cursor
+    if (bg0 & TILE_FLAG_CURSOR)
     {
-       int type = ((bg0&TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
+       int type = ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
             TILE_CURSOR : TILE_CURSOR2;
 
-       if ((bg0&TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3) type = TILE_CURSOR3;
+       if ((bg0 & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
+           type = TILE_CURSOR3;
 
        tcache_overlay(tc_img, ix, type, TREGION_0_NORMAL, &c, NULL);
 
-       if (type != TILE_CURSOR3) c = 2;// Hilite
+       if (type != TILE_CURSOR3)
+           c = 2;
+    }
+
+    // Apply the travel exclusion under the foreground if the cell is
+    // visible.  It will be applied later if the cell is unseen.
+    if ((bg0 & TILE_FLAG_TRAVEL_EX) && !(bg0 & TILE_FLAG_UNSEEN))
+    {
+        tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c, 
+            NULL);
     }
 
     if (bg0 & TILE_FLAG_RAY)
         tcache_overlay(tc_img, ix, TILE_RAY_MESH, TREGION_0_NORMAL, &c, NULL);
 
-    if(fg0)
+    if (fg0)
     {
         sink = sink_mask_tile(bg0, fg0);
         if (sink)
         {
-            int flag=2;
+            int flag = 2;
             register_tile_mask(sink, TREGION_0_NORMAL, &flag, sink_mask);
             tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, sink_mask);
         }
         else
+        {
             tcache_overlay(tc_img, ix, fg0, TREGION_0_NORMAL, &c, NULL);
+        }
     }
 
     if (fg0 & TILE_FLAG_NET)
         tcache_overlay(tc_img, ix, TILE_TRAP_NET, TREGION_0_NORMAL, &c, NULL);
 
-    if(fg0 & TILE_FLAG_S_UNDER)
+    if (fg0 & TILE_FLAG_S_UNDER)
+    {
         tcache_overlay(tc_img, ix, TILE_SOMETHING_UNDER,
-                        TREGION_0_NORMAL, &c, NULL);
+            TREGION_0_NORMAL, &c, NULL);
+    }
 
-    //Pet mark
-    if((fg0&TILE_FLAG_MAY_STAB) == TILE_FLAG_PET)
-         tcache_overlay(tc_img, ix, TILE_HEART, TREGION_0_NORMAL, &c, NULL);
-
-    if((fg0&TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
+    // Pet mark
+    int status_shift = 0;
+    if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_PET)
+    {
+        tcache_overlay(tc_img, ix, TILE_HEART, TREGION_0_NORMAL, &c, NULL);
+        status_shift += 10;
+    }
+    else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
+    {
         tcache_overlay(tc_img, ix, TILE_STAB_BRAND, TREGION_0_NORMAL, &c, NULL);
-    else if((fg0&TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
+        status_shift += 8;
+    }
+    else if ((fg0 & TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
+    {
         tcache_overlay(tc_img, ix, TILE_MAY_STAB_BRAND, TREGION_0_NORMAL, &c,
             NULL);
+        status_shift += 5;
+    }
 
-    if(bg0&TILE_FLAG_UNSEEN)
+    if (fg0 & TILE_FLAG_POISON)
+    {
+        tcache_overlay(tc_img, ix, TILE_POISON, TREGION_0_NORMAL, &c, NULL,
+            status_shift);
+        status_shift += 5;
+    }
+
+    if (bg0 & TILE_FLAG_UNSEEN)
+    {
         tcache_overlay(tc_img, ix, TILE_MESH, TREGION_0_NORMAL, &c, NULL);
+    }
 
-    if(bg0&TILE_FLAG_MM_UNSEEN)
-        tcache_overlay(tc_img, ix, TILE_MAGIC_MAP_MESH, TREGION_0_NORMAL, &c, NULL);
+    if (bg0 & TILE_FLAG_MM_UNSEEN)
+    {
+        tcache_overlay(tc_img, ix, TILE_MAGIC_MAP_MESH, TREGION_0_NORMAL, &c, 
+            NULL);
+    }
+
+    if ((bg0 & TILE_FLAG_TRAVEL_EX) && (bg0 & TILE_FLAG_UNSEEN))
+    {
+        tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c, 
+            NULL);
+    }
+
 }
 
 // Tile cursor
@@ -774,7 +808,7 @@ void TileDrawBolt(int x, int y, int fg){
     update_single_grid(x, y);
 }
 
-void StoreDungeonView(short unsigned int *tileb)
+void StoreDungeonView(unsigned int *tileb)
 {
     int x, y;
     int count = 0;
@@ -791,7 +825,7 @@ void StoreDungeonView(short unsigned int *tileb)
     }}
 }
 
-void LoadDungeonView(short unsigned int *tileb)
+void LoadDungeonView(unsigned int *tileb)
 {
     int x, y;
     int count = 0;
@@ -814,7 +848,7 @@ void LoadDungeonView(short unsigned int *tileb)
 }
 
 //Draw the tile screen once and for all
-void TileDrawDungeon(short unsigned int *tileb)
+void TileDrawDungeon(unsigned int *tileb)
 {
     int x, y, kind;
     if(!TileImg)
@@ -843,7 +877,7 @@ void TileDrawDungeon(short unsigned int *tileb)
 
 void TileDrawFarDungeon(int cx, int cy)
 {
-    short unsigned int tb[TILE_DAT_YMAX*TILE_DAT_XMAX*2];
+    unsigned int tb[TILE_DAT_YMAX*TILE_DAT_XMAX*2];
 
     int count = 0;
     for(int y=0; y<tile_dngn_y; y++)

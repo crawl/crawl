@@ -1360,12 +1360,12 @@ public:
 
 #ifdef USE_TILE
     // indexed by grid coords
-    FixedArray<unsigned short,GXM, GYM> tile_bk_fg; // tile fg
-    FixedArray<unsigned short,GXM, GYM> tile_bk_bg; // tile bg
+    FixedArray<unsigned int,GXM, GYM> tile_bk_fg; // tile fg
+    FixedArray<unsigned int,GXM, GYM> tile_bk_bg; // tile bg
     FixedArray<TileFlavor, GXM, GYM> tile_flavor;
     // indexed by (show-1) coords
-    FixedArray<unsigned short,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;
-    FixedArray<unsigned short,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_bg;
+    FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;
+    FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_bg;
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list

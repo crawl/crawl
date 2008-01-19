@@ -18,11 +18,12 @@
 #include "terrain.h"
 #include "tiles.h"
 #include "tiledef-p.h"
+#include "travel.h"
 #include "view.h"
 
 // tile index cache to reduce tileidx() calls
-static FixedArray < unsigned short, GXM, GYM > tile_dngn;
-// // gv backup
+static FixedArray < unsigned int, GXM, GYM > tile_dngn;
+// gv backup
 static FixedArray < unsigned char, GXM, GYM > gv_now;
 
 bool is_bazaar()
@@ -795,24 +796,28 @@ int tileidx_monster_base(int mon_idx, bool detected)
 int tileidx_monster(int mon_idx, bool detected)
 {
     int ch = tileidx_monster_base(mon_idx, detected);
+    const monsters* mons = &menv[mon_idx];
 
-    if(mons_flies(&menv[mon_idx]))
+    if (mons_flies(mons))
         ch |= TILE_FLAG_FLYING;
-    if(menv[mon_idx].has_ench(ENCH_HELD))
+    if (mons->has_ench(ENCH_HELD))
         ch |= TILE_FLAG_NET;
+    if (mons->has_ench(ENCH_POISON))
+        ch |= TILE_FLAG_POISON;
 
-    if(mons_friendly(&menv[mon_idx]))
+    if (mons_friendly(mons))
     {
         ch |= TILE_FLAG_PET;
     }
-    else if (mons_looks_stabbable(&menv[mon_idx]))
+    else if (mons_looks_stabbable(mons))
     {
         ch |= TILE_FLAG_STAB;
     }
-    else if (mons_looks_distracted(&menv[mon_idx]))
+    else if (mons_looks_distracted(mons))
     {
         ch |= TILE_FLAG_MAY_STAB;
     }
+
     return ch;
 }
 
@@ -2008,7 +2013,7 @@ int tileidx_zap(int color)
 // Plus modify wall tile index depending on
 //  1: floor/wall flavor in 2D mode
 //  2: connectivity in 3D mode
-void finalize_tile(short unsigned int *tile, bool is_special,
+void finalize_tile(unsigned int *tile, bool is_special,
     char wall_flv, char floor_flv, char special_flv)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
@@ -3803,7 +3808,7 @@ void tile_draw_rays(bool resetCount)
         tileRayCount = 0;
 }
 
-void tile_finish_dngn(short unsigned int *tileb, int cx, int cy)
+void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 {
     int x, y;
     int count = 0;
@@ -3836,12 +3841,19 @@ void tile_finish_dngn(short unsigned int *tileb, int cx, int cy)
                 wall_flv, floor_flv, special_flv);
             finalize_tile(&tileb[count+1], is_special,
                 wall_flv, floor_flv, special_flv);
+
+            const coord_def gc(gx, gy);
+            if (is_excluded(gc))
+            {
+                tileb[count+1] |= TILE_FLAG_TRAVEL_EX;
+            }
+
             count += 2;
         }
     }
 }
 
-void tile_draw_dungeon(short unsigned int *tileb)
+void tile_draw_dungeon(unsigned int *tileb)
 {
     tile_finish_dngn(tileb, you.x_pos, you.y_pos);
     TileDrawDungeon(tileb);    

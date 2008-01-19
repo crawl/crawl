@@ -49,8 +49,8 @@ void tile_place_ray(const coord_def& gc);
 void tile_draw_rays(bool resetCount);
 void tile_clear_buf();
 
-void tile_finish_dngn(short unsigned int *tileb, int cx, int cy);
-void tile_draw_dungeon(short unsigned int *tileb);
+void tile_finish_dngn(unsigned int *tileb, int cx, int cy);
+void tile_draw_dungeon(unsigned int *tileb);
 
 // Tile Inventry display
 void tile_draw_inv(int item_type = -1, int flag = -1);
@@ -81,13 +81,13 @@ int TileDrawCursor(int x, int y, int flag);
 // display bolts
 void TileDrawBolt(int x, int y, int fg);
 // display dungeon: tileb = { fg(0,0),bg(0,0),fg(1,0),bg(1,0), ..
-void TileDrawDungeon(short unsigned int *tileb);
+void TileDrawDungeon(unsigned int *tileb);
 // display memorized dungeon
 void TileDrawFarDungeon(int cx, int cy);
 // display map centered on grid coords
 void TileDrawMap(int gx, int gy);
-void LoadDungeonView(short unsigned int *tileb);
-void StoreDungeonView(short unsigned int *tileb);
+void LoadDungeonView(unsigned int *tileb);
+void StoreDungeonView(unsigned int *tileb);
 
 void TileNewLevel(bool first_time);
 
@@ -139,6 +139,7 @@ enum tile_flags
     TILE_FLAG_PET       = 0x00004000,
     TILE_FLAG_STAB      = 0x00008000,
     TILE_FLAG_MAY_STAB  = 0x0000C000,
+    TILE_FLAG_POISON    = 0x00010000,
 
     // Background flags
     TILE_FLAG_RAY       = 0x00000800,
@@ -149,6 +150,9 @@ enum tile_flags
     TILE_FLAG_CURSOR2   = 0x00004000,
     TILE_FLAG_CURSOR3   = 0x0000C000,
     TILE_FLAG_CURSOR    = 0x0000C000,
+    TILE_FLAG_BLOOD     = 0x00010000,
+    TILE_FLAG_NEW_STAIR = 0x00020000,
+    TILE_FLAG_TRAVEL_EX = 0x00040000,
 
     // General
     TILE_FLAG_MASK      = 0x000007FF

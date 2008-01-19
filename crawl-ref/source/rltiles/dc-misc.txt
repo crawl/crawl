@@ -50,7 +50,10 @@ sink_mask SINK_MASK
 cursor CURSOR
 cursor_red CURSOR2
 cursor_green CURSOR3
+%rim 1
 heart HEART
+poison POISON
+%rim 0
 may_stab_brand MAY_STAB_BRAND
 stab_brand STAB_BRAND
 unseen PLAYER
@@ -65,6 +68,7 @@ txt3 TEXT_PARTS_E
 txt4 TEXT_DOLLS_E
 something_under SOMETHING_UNDER
 error ERROR
+travel_exclusion TRAVEL_EXCLUSION
 %rim 1
 todo TODO
 %rim 0

@@ -249,7 +249,7 @@ void WinClass::create(char *name)
             LeaveWindowMask | EnterWindowMask | StructureNotifyMask );
         move(ox, oy);
 
-        XStoreName(display, win, CRAWL VERSION);
+        XStoreName(display, win, CRAWL " " VERSION);
     }
     else
         resize(0,0);
