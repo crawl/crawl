@@ -29,7 +29,7 @@ static FixedArray < unsigned char, GXM, GYM > gv_now;
 bool is_bazaar()
 {
     return (you.level_type == LEVEL_PORTAL_VAULT && 
-        you.level_type_name == "bazaar");
+            you.level_type_name == "bazaar");
 }
 
 unsigned short get_bazaar_special_colour()
@@ -53,9 +53,9 @@ int tile_unseen_flag(const coord_def& gc)
     if (!map_bounds(gc))
         return TILE_FLAG_UNSEEN;
     else if (is_terrain_known(gc.x,gc.y)
-        && !is_terrain_seen(gc.x,gc.y)
-        || is_envmap_detected_item(gc.x,gc.y)
-        || is_envmap_detected_mons(gc.x,gc.y))
+                && !is_terrain_seen(gc.x,gc.y)
+             || is_envmap_detected_item(gc.x,gc.y)
+             || is_envmap_detected_mons(gc.x,gc.y))
     {
         return TILE_FLAG_MM_UNSEEN;
     }

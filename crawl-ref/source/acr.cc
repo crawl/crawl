@@ -2104,8 +2104,18 @@ void process_command( command_type cmd )
 #endif
         {
             coord_def pos;
+#ifdef USE_TILE
+            std::string str = "Move the cursor to view the level map, or "
+                              "type <w>?</w> for a list of commands.";
+            print_formatted_paragraph(str, get_number_of_cols());
+#endif
+
             show_map(pos, true);
             redraw_screen();
+            
+#ifdef USE_TILE
+            mpr("Returning to the game...");
+#endif
             if (pos.x > 0)
                 start_travel(pos.x, pos.y);
         }

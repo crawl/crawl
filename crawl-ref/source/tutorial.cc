@@ -863,6 +863,16 @@ static std::string colour_to_tag(int col, bool closed = false)
 }
 #endif
 
+static bool mons_is_highlighted(const monsters *mons)
+{
+    return (mons_friendly(mons)
+                && Options.friend_brand != CHATTR_NORMAL
+            || mons_looks_stabbable(mons)
+                && Options.stab_brand != CHATTR_NORMAL
+            || mons_looks_distracted(mons)
+                && Options.may_stab_brand != CHATTR_NORMAL);
+}
+
 void tutorial_first_monster(const monsters &mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
@@ -871,7 +881,7 @@ void tutorial_first_monster(const monsters &mon)
     // crude hack:
     // if the first monster is sleeping wake it
     // (highlighting is an unnecessary complication)
-    if (get_mons_colour(&mon) != (&mon)->colour)
+    if (mons_is_highlighted(&mon))
     {
         noisy(1, mon.x, mon.y);
         viewwindow(true, false);
@@ -890,6 +900,9 @@ void tutorial_first_monster(const monsters &mon)
             "<lightgray>b<magenta> or <brown>K<magenta>. "
 #else
     // need to highlight monster
+    const coord_def ep = grid2view(coord_def(mon.x, mon.y));
+    tile_place_cursor(ep.x-1,ep.y-1,true);
+    
     text += "monster is a ";
     text += mon.name(DESC_PLAIN).c_str();
     text += ". Examples for typical early monsters are: rat, "
@@ -937,9 +950,17 @@ void tutorial_first_item(const item_def &item)
 
     std::string text = "<magenta>That ";
 #ifndef USE_TILE
+    unsigned ch;
+    unsigned short col;
+    get_item_glyph(&item, &ch, &col);
+
     text += colour_to_tag(col);
     text += ch;
     text += "<magenta>";
+#else
+    // highlight item
+    const coord_def ep = grid2view(coord_def(item.x, item.y));
+    tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
     text += "is an item. If you move there and press <w>g<magenta> or "
             "<w>,<magenta> you will pick it up. "
@@ -971,13 +992,17 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         return;
 
     std::ostringstream text;
+
 #ifndef USE_TILE
     const int ex = x - you.x_pos + 9;
     const int ey = y - you.y_pos + 9;
     unsigned ch;
     unsigned short colour;
     int object;
+#else
+    const coord_def ep = grid2view(coord_def(x,y));
 #endif
+
     switch(seen_what)
     {
       case TUT_SEEN_POTION:          
@@ -1179,6 +1204,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
           text << colour_to_tag(colour) << static_cast<char>(ch)
                << "<magenta> ";
+#else
+          tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
           text << "are some downstairs. You can enter the next (deeper) "
                   "level by following them down (<w>><magenta>). To get back to "
@@ -1201,6 +1228,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (ch == '<')
                text << "<";
           text << "<magenta> ";
+#else
+          tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
           text << "are some kind of escape hatch. You can use them to "
                   "quickly leave a level with <w><<<magenta> and <w>><magenta>, "
@@ -1217,7 +1246,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (ch == ' ' || colour == BLACK)
               colour = LIGHTCYAN;
 
-          text << "depicted by " << colour_to_tag(colour) << "^<magenta>"
+          text << "depicted by " << colour_to_tag(colour) << "^<magenta>";
 #endif
           text << ". They can do physical damage (with darts or needles, for "
                   "example) or have other, more magical effects, like "
@@ -1232,6 +1261,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           get_item_symbol( object, &ch, &colour );
 
           text << colour_to_tag(colour) << static_cast<char>(ch) << "<magenta> ";
+#else
+          tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
           text << "is an altar. You can get information about it by pressing "
                   "<w>p<magenta> while standing on the square. Before taking up "
@@ -1239,6 +1270,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_SEEN_SHOP:
+#ifdef USE_TILES
+          tile_place_cursor(ep.x-1,ep.y-1,true);
+#endif
           text << "That "
 #ifndef USE_TILE
                   "<yellow>" << stringize_glyph(get_screen_glyph(x,y))
@@ -1251,6 +1285,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           if (you.num_turns < 1)
               return;
 
+#ifdef USE_TILES
+          tile_place_cursor(ep.x-1,ep.y-1,true);
+#endif
           text << "That "
 #ifndef USE_TILE
                   "<w>" << stringize_glyph(get_screen_glyph(x,y)) << "<magenta> "
@@ -1536,6 +1573,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
           
       case TUT_MONSTER_BRAND:
+#ifdef USE_TILE
+          tile_place_cursor(ep.x-1,ep.y-1,true);
+#endif
           text << "That monster looks a bit unusual. You might wish to examine "
                   "it a bit more closely by pressing <w>x<magenta> and moving "
                   "the cursor onto its square.";
@@ -2197,12 +2237,8 @@ bool tutorial_monster_interesting(const monsters *mons)
         return true;
         
     // highlighted in some way
-    if (mons_friendly(mons) && Options.friend_brand != CHATTR_NORMAL
-        || mons_looks_stabbable(mons) && Options.stab_brand != CHATTR_NORMAL
-        || mons_looks_distracted(mons) && Options.may_stab_brand != CHATTR_NORMAL)
-    {
+    if (mons_is_highlighted(mons))
         return true;
-    }
 
     // monster is (seriously) out of depth
     if (you.level_type == LEVEL_DUNGEON &&
@@ -2247,6 +2283,7 @@ void tutorial_describe_monster(const monsters *mons)
     if (mons->has_ench(ENCH_BERSERK))
         ostr << "A berserking monster is bloodthirsty and fighting madly.\n";
 
+    // monster is highlighted
     if (mons_friendly(mons))
     {
         ostr << "Friendly monsters will follow you around and attempt to aid "

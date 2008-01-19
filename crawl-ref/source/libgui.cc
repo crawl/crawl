@@ -323,7 +323,9 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         c = MAP_WHITE; // player position always in white
     else if (mgrd[x][y] != NON_MONSTER && mons_friendly(&menv[mgrd[x][y]])
              && upd_tile)
+    {
         c = MAP_LTRED; // friendly monsters subtly different from hostiles
+    }
     else
     {
         const coord_def gc(x,y);
@@ -423,11 +425,10 @@ void GmapDisplay(int linex, int liney)
 
     for (y = gmap_min_y; y <= gmap_max_y; y++)
     {
-        for (x = gmap_min_x; x <= gmap_max_x; x++)
+        for (x = gmap_min_x; x <= gmap_max_x; x++, count++)
         {
             if ( (count>=0)&&(count<GXM*GYM) )
                 buf2[count] = gmap_data[x][y];
-            count += 1;
         }
         count += GXM - (gmap_max_x - gmap_min_x + 1);
     }

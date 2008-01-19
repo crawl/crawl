@@ -127,7 +127,7 @@ void put_colour_ch(int colour, unsigned ch);
 void writeWChar(unsigned char *ch);
 
 void puttext(int x, int y, int lx, int ly, unsigned char *buf, 
-               bool mono = false, int where = 0);
+             bool mono = false, int where = 0);
 void ViewTextFile(const char *name);
 
 #define textattr(x) textcolor(x)
@@ -156,7 +156,7 @@ int getch_ck();
 #define EV_UNBUTTON 4
 
 #define _NORMALCURSOR 1
-#define _NOCURSOR 0
+#define _NOCURSOR     0
 
 #define textcolor_cake(col) textcolor((col)<<4 | (col))
 
