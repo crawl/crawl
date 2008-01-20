@@ -48,6 +48,11 @@ void update_message_status();
 
 void update_turn_count();
 
+#ifdef USE_TILE
+void draw_hp_bar(int val, int max_val);
+void draw_mp_bar(int val, int max_val);
+#endif
+
 void print_stats(void);
 
 std::vector<formatted_string> get_full_detail(bool calc_unid, long score = -1);

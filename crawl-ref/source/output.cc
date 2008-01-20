@@ -40,8 +40,10 @@
 #include "skills2.h"
 #include "stuff.h"
 #include "transfor.h"
-
-#include "tiles.h"
+#ifdef USE_TILE
+ #include "tiles.h"
+ #include "travel.h"
+#endif
 
 static int bad_ench_colour( int lvl, int orange, int red )
 {
@@ -114,9 +116,13 @@ int draw_colour_bar(int val, int max_val, int old_val, int old_disp,
     {
         return -1;
     }
+    
+    // Don't redraw colour bars during running/resting
+    // *unless* we'll stop doing so after that
+    if (you.running > 1 && val != max_val)
+        return -1;
 
     const int width = crawl_view.hudsz.x - ox - 1;
-
     int disp = width * val / max_val;
 
     gotoxy(ox, oy, GOTO_STAT);
@@ -144,9 +150,9 @@ void draw_mp_bar(int val, int max_val)
     const int oy = 4;
     const unsigned short default_colour = BLUE;
     const unsigned short change = LIGHTBLUE;
-    const unsigned short empty = DARKGRAY;
+    const unsigned short empty  = DARKGRAY;
 
-    static int old_val = 0;
+    static int old_val  = 0;
     static int old_disp = 0;
 
     old_disp = draw_colour_bar(val, max_val, old_val, old_disp, ox, oy, 
@@ -160,14 +166,25 @@ void draw_hp_bar(int val, int max_val)
     const int oy = 3;
     const unsigned short default_colour = GREEN;
     const unsigned short change = RED;
-    const unsigned short empty = DARKGRAY;
+    const unsigned short empty  = DARKGRAY;
 
-    static int old_val = 0;
+    static int old_val  = 0;
     static int old_disp = 0;
 
     old_disp = draw_colour_bar(val, max_val, old_val, old_disp, ox, oy, 
         default_colour, change, empty);
     old_val = val;
+}
+
+static int count_digits(int val)
+{
+    if (val > 999)
+        return 4;
+    else if (val > 99)
+        return 3;
+    else if (val > 9)
+        return 2;
+    return 1;
 }
 #endif
 
@@ -213,11 +230,17 @@ void print_stats(void)
         if (max_max_hp != you.hp_max)
             cprintf( " (%d)", max_max_hp );
 
-        clear_to_end_of_line();
         you.redraw_hit_points = 0;
 
 #ifdef USE_TILE
+        int col = count_digits(you.hp)+count_digits(you.hp_max) + 1;
+        if (max_max_hp != you.hp_max)
+            col += count_digits(max_max_hp) + 3;
+        for (int i = 15-col; i > 0; i--)
+             cprintf(" ");
         draw_hp_bar(you.hp, you.hp_max);
+#else
+        clear_to_end_of_line();
 #endif
     }
 
@@ -244,11 +267,16 @@ void print_stats(void)
         textcolor(LIGHTGREY);
         cprintf("/%d", you.max_magic_points );
 
-        clear_to_end_of_line();
         you.redraw_magic_points = 0;
 
 #ifdef USE_TILE
+        int col = count_digits(you.magic_points) +
+                  count_digits(you.max_magic_points) + 1;
+        for (int i = 12-col; i > 0; i--)
+             cprintf(" ");
         draw_mp_bar(you.magic_points, you.max_magic_points);
+#else
+        clear_to_end_of_line();
 #endif
     }
 
