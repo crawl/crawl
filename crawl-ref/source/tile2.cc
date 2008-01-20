@@ -438,7 +438,7 @@ static int tcache_find_id_normal(int kind, int *fg, int *bg, int *is_new)
         if ((int)tc0->id[0] == fg[0] && (int)tc0->id[1] == bg[0])
             break;
 
-        if ((int)tc0->id[0] == 0 || next == NULL)
+        if (next == NULL)
         {
             //end of used cache
             *is_new = 1;
@@ -701,6 +701,9 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
     if (new_bg)
         tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
 
+    if ((bg0 & TILE_FLAG_SANCTUARY) && !(bg0 & TILE_FLAG_UNSEEN))
+        tcache_overlay(tc_img, ix, TILE_SANCTUARY, TREGION_0_NORMAL, &c, NULL);
+
     // Tile cursor
     if (bg0 & TILE_FLAG_CURSOR)
     {
@@ -793,7 +796,6 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
         tcache_overlay(tc_img, ix, TILE_TRAVEL_EXCLUSION, TREGION_0_NORMAL, &c, 
             NULL);
     }
-
 }
 
 // Tile cursor

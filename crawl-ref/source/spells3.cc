@@ -896,7 +896,9 @@ bool cast_sanctuary(const int power)
     you.flash_colour = WHITE;
     viewwindow( true, false );
     holy_word( 100, true );
+#ifndef USE_TILE
     delay(1000);
+#endif
 
     env.sanctuary_pos.x = you.x_pos;
     env.sanctuary_pos.y = you.y_pos;

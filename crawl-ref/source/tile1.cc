@@ -1712,8 +1712,6 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
 
 int tileidx_feature(int object)
 {
-    int ch = TILE_ERROR;
-
     switch (object)
     {
     case DNGN_UNSEEN:
@@ -3879,17 +3877,22 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             finalize_tile(&tileb[count+1], is_special,
                 wall_flv, floor_flv, special_flv);
 
+            const coord_def gc(gx, gy);
+            if (is_excluded(gc))
+            {
+                tileb[count+1] |= TILE_FLAG_TRAVEL_EX;
+            }
+
             if (in_bounds)
             {
-                const coord_def gc(gx, gy);
-                if (is_excluded(gc))
-                {
-                    tileb[count+1] |= TILE_FLAG_TRAVEL_EX;
-                }
-
                 if (is_bloodcovered(gx, gy))
                 {
                     tileb[count+1] |= TILE_FLAG_BLOOD;
+                }
+
+                if (is_sanctuary(gx, gy))
+                {
+                    tileb[count+1] |= TILE_FLAG_SANCTUARY;
                 }
             }
 

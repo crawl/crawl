@@ -25,6 +25,8 @@ cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_miasma CLOUD_MIASMA
 cloud_purp_smoke CLOUD_PURP_SMOKE
 
+sanctuary SANCTUARY
+
 #########MAP
 %sdir dc-misc
 %corpse 0
