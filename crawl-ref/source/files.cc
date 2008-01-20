@@ -1498,7 +1498,8 @@ bool apply_to_all_dungeons(bool (*applicator)())
                       last_visited_branch );
 
                 // Modify it...
-                applicator();
+                if ( applicator() )
+                    success = true;
 
                 // And save it back.
                 save_level(you.your_level, LEVEL_DUNGEON, you.where_are_you);
