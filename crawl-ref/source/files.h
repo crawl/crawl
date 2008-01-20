@@ -81,7 +81,7 @@ void save_game_state();
  * *********************************************************************** */
 void restore_game(void);
 
-void apply_to_all_dungeons(void (*applicator)());
+bool apply_to_all_dungeons(bool (*applicator)());
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

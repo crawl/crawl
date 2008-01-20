@@ -2746,11 +2746,13 @@ static void unmark_and_shuffle_deck(item_def& deck)
     {
         unmark_deck(deck);
         shuffle_deck(deck);
-    }   
+    }
 }
 
-static void shuffle_all_decks_on_level()
+static bool shuffle_all_decks_on_level()
 {
+    bool success = false;
+
     for ( int i = 0; i < MAX_ITEMS; ++i )
     {
         item_def& item(mitm[i]);
@@ -2763,12 +2765,18 @@ static void shuffle_all_decks_on_level()
                  static_cast<int>(you.where_are_you));
 #endif
             unmark_and_shuffle_deck(item);
+
+            success = true;
         }
     }
+
+    return success;
 }
 
-static void shuffle_inventory_decks()
+static bool shuffle_inventory_decks()
 {
+    bool success = false;
+
     for ( int i = 0; i < ENDOFPACK; ++i )
     {
         item_def& item(you.inv[i]);
@@ -2779,13 +2787,24 @@ static void shuffle_inventory_decks()
                  item.name(DESC_PLAIN).c_str());
 #endif
             unmark_and_shuffle_deck(item);
+
+            success = true;
         }
     }
+
+    return success;
 }
 
 void nemelex_shuffle_decks()
 {
-    apply_to_all_dungeons(shuffle_all_decks_on_level);
-    shuffle_inventory_decks();
-    god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex chuckle.");
+    bool success = false;
+
+    if (apply_to_all_dungeons(shuffle_all_decks_on_level))
+        success = true;
+
+    if (shuffle_inventory_decks())
+        success = true;
+
+    if (success)
+        god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex chuckle.");
 }

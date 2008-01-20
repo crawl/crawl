@@ -2690,8 +2690,10 @@ void divine_retribution( god_type god )
     dec_penance( god, 1 + random2(3) );
 }
 
-static void orcish_followers_on_level_abandon_you()
+static bool orcish_followers_on_level_abandon_you()
 {
+    bool success = false;
+
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
@@ -2710,8 +2712,12 @@ static void orcish_followers_on_level_abandon_you()
             monster->attitude = ATT_HOSTILE;
             monster->behaviour = BEH_HOSTILE;
             // for now CREATED_FRIENDLY stays
+
+            success = true;
         }
     }
+
+    return success;
 }
 
 // Upon excommunication, ex-Beoghites lose all their orcish followers.
@@ -2725,8 +2731,8 @@ static bool beogh_followers_abandon_you()
 
     if (you.religion != GOD_BEOGH)
     {
-        apply_to_all_dungeons(orcish_followers_on_level_abandon_you);
-        reconvert = true;
+        reconvert =
+            apply_to_all_dungeons(orcish_followers_on_level_abandon_you);
     }
     else
     {

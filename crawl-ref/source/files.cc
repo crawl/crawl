@@ -1461,7 +1461,7 @@ void restore_game(void)
     }
 }
 
-void apply_to_all_dungeons(void (*applicator)())
+bool apply_to_all_dungeons(bool (*applicator)())
 {
     const branch_type original_branch = you.where_are_you;
     const int original_level = you.your_level;
@@ -1472,7 +1472,7 @@ void apply_to_all_dungeons(void (*applicator)())
     const coord_def old_pos(you.pos());
 
     // Apply to current level, then save it out.
-    applicator();
+    bool success = applicator();
     save_level(original_level, original_type, original_branch);
 
     you.level_type = LEVEL_DUNGEON;
@@ -1516,6 +1516,8 @@ void apply_to_all_dungeons(void (*applicator)())
 
     load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
           original_type, original_level, original_branch );
+
+    return success;
 }
 
 static bool determine_version( FILE *restoreFile, 
