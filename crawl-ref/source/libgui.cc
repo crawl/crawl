@@ -58,16 +58,16 @@ extern void TileInitWin();
 // Main window
 WinClass *win_main;
 // Regions
-TextRegionClass *region_crt = NULL;
-MapRegionClass  *region_map = NULL;
-TileRegionClass *region_tile = NULL;
-TextRegionClass *region_stat = NULL;
-TextRegionClass *region_msg = NULL;
-TextRegionClass *region_dngn = NULL;
-TextRegionClass *region_xmap = NULL;
-TextRegionClass *region_tip = NULL;
+TextRegionClass *region_crt   = NULL;
+MapRegionClass  *region_map   = NULL;
+TileRegionClass *region_tile  = NULL;
+TextRegionClass *region_stat  = NULL;
+TextRegionClass *region_msg   = NULL;
+TextRegionClass *region_dngn  = NULL;
+TextRegionClass *region_xmap  = NULL;
+TextRegionClass *region_tip   = NULL;
 
-TileRegionClass *region_item = NULL;
+TileRegionClass *region_item  = NULL;
 TileRegionClass *region_item2 = NULL;
 
 // Raw tile images

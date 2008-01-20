@@ -94,10 +94,10 @@ void TileNewLevel(bool first_time);
 
 // display inventry
 void TileDrawInvData(int n, int flag, int *tiles, int *num,
-	int *idx, int *iflags);
+                     int *idx, int *iflags);
 void TileDrawOneItem(int region, int i, char key, int idx,
-    int tile, int num, bool floor,
-    bool select, bool equip, bool tried, bool cursed);
+                     int tile, int num, bool floor,
+                     bool select, bool equip, bool tried, bool cursed);
 void TileRedrawInv(int region);
 void TileClearInv(int region);
 void TileMoveInvCursor(int ix);
@@ -166,13 +166,13 @@ enum tile_flags
 #define TILEI_FLAG_CURSE  0x1000
 #define TILEI_FLAG_CURSOR 0x2000
 
-#define TILEP_GENDER_MALE 0
+#define TILEP_SHOW_EQUIP  0x1000
+
+#define TILEP_GENDER_MALE   0
 #define TILEP_GENDER_FEMALE 1
 
 #define TILEP_M_DEFAULT   0
 #define TILEP_M_LOADING   1
-
-#define TILEP_SHOW_EQUIP 0x1000
 
 enum TilePlayerFlagCut
 {
