@@ -187,7 +187,18 @@ int check_your_resists(int hurted, beam_type flavour)
     case BEAM_NEG:
         resist = player_prot_life();
 
-        if (resist > 0)
+        // TSO's protection
+        if (you.religion == GOD_SHINING_ONE && you.piety > resist * 50)
+        {
+            int unhurted = (you.piety * hurted) / 150;
+
+            if (unhurted > hurted)
+                unhurted = hurted;
+
+            if (unhurted > 0)
+                hurted -= unhurted;
+        }
+        else if (resist > 0)
             hurted -= (resist * hurted) / 3;
 
         drain_exp();
@@ -630,7 +641,21 @@ void drain_exp(bool announce_full)
 
     exp_drained /= 100;
 
-    if (protection > 0)
+    // TSO's protection
+    if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
+    {
+        unsigned long undrained = (you.piety * exp_drained) / 150;
+
+        if (undrained > exp_drained)
+            undrained = exp_drained;
+
+        if (undrained > 0)
+        {
+            simple_god_message(" protects your life force!");
+            exp_drained -= undrained;
+        }
+    }
+    else if (protection > 0)
     {
         mpr("You partially resist.");
         exp_drained -= (protection * exp_drained) / 3;
