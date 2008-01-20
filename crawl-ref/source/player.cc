@@ -3975,9 +3975,8 @@ static int species_exp_mod(species_type species)
         return 14;
     else if (player_genus(GENPC_DWARVEN, species))
         return 13;
+    switch (species)
     {
-        switch (species)
-        {
         case SP_HUMAN:
         case SP_HALFLING:
         case SP_HILL_ORC:
@@ -4010,7 +4009,6 @@ static int species_exp_mod(species_type species)
             return 16;
         default:
             return 0;
-        }
     }
 }                               // end species_exp_mod()
 
