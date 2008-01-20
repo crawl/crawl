@@ -346,7 +346,11 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
             c = gmap_col[what & 0xff];
             break;
         }
+
+        if ((c == MAP_LTGREY || c == MAP_BROWN) && is_excluded( coord_def(x,y) ))
+            c = MAP_DKCYAN;
     }
+    
     int oldc = gmap_data[x][y];
     gmap_data[x][y] = c;
 

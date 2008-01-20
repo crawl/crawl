@@ -33,6 +33,9 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tiles.h"
+#endif
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -236,6 +239,21 @@ bool is_exclude_root(const coord_def &p)
     return (find_exclude_root(p));
 }
 
+#ifdef USE_TILE
+// update Gmap for squares surrounding exclude centre
+static void tile_exclude_gmap_update(const coord_def p)
+{
+    for (int x = -8; x < 8; x++)
+       for (int y = -8; y < 8; y++)
+       {
+           int px = p.x+x, py = p.y+y;
+           if (in_bounds(coord_def(px,py)))
+               GmapUpdate(px, py, env.map[px][py].glyph(), true);
+       }
+    GmapDisplay(p.x,p.y);
+}
+#endif
+
 const char *run_mode_name(int runmode)
 {
     return runmode == RMODE_TRAVEL?         "travel" :
@@ -266,9 +284,12 @@ void clear_excludes()
     // Sanity checks
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         return;
-
+#ifdef USE_TILE
+    for (int i = curr_excludes.size()-1; i >= 0; i--)
+         toggle_exclude(curr_excludes[i].pos);
+#else
     curr_excludes.clear();
-
+#endif
     if (can_travel_interlevel())
     {
         LevelInfo &li = travel_cache.get_level_info(level_id::current());
@@ -303,6 +324,10 @@ void toggle_exclude(const coord_def &p)
         set_exclude(p, 0);
     else
         set_exclude(p, LOS_RADIUS);
+
+#ifdef USE_TILE
+    tile_exclude_gmap_update(p);
+#endif
 }
 
 void set_exclude(const coord_def &p, int radius)
