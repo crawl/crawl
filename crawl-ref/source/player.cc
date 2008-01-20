@@ -681,7 +681,7 @@ int get_player_wielded_weapon()
     return (player_weapon_wielded()? get_player_wielded_item() : -1);
 }
 
-// Looks in equipment "slot" to see if there is an equiped "sub_type".
+// Looks in equipment "slot" to see if there is an equipped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
 int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 {
@@ -776,7 +776,7 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 }
 
 
-// Looks in equipment "slot" to see if equiped item has "special" ego-type
+// Looks in equipment "slot" to see if equipped item has "special" ego-type
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
