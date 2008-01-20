@@ -694,7 +694,11 @@ void tcache_compose_normal(int ix, int *fg, int *bg)
 
     if (bbg)
         tcache_overlay(tc_img, ix, bbg, TREGION_0_NORMAL, &c, NULL);
-    if(new_bg)
+
+    if (bg0 & TILE_FLAG_BLOOD)
+        tcache_overlay(tc_img, ix, TILE_BLOOD0, TREGION_0_NORMAL, &c, NULL);
+
+    if (new_bg)
         tcache_overlay(tc_img, ix, new_bg, TREGION_0_NORMAL, &c, NULL);
 
     // Tile cursor

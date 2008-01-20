@@ -497,3 +497,4 @@ merfolk_fighter MONS_MERFOLK_FIGHTER
 merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
 mermaid MONS_MERMAID
 mermaid_water MONS_MERMAID_WATER
+rock_worm MONS_ROCK_WORM

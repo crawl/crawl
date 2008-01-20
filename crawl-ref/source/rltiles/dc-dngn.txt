@@ -55,6 +55,7 @@ wall/stone2_gray3
 dngn_metal_wall DNGN_METAL_WALL
 dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL
 dngn_wax_wall DNGN_WAX_WALL
+dngn_transparent_wall DNGN_TRANSPARENT_WALL
 
 #dngn_rock_wall_00 DNGN_ROCK_WALL_OFS
 #dngn_rock_wall_01 IGNORE_COMMENT

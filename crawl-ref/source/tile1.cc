@@ -769,7 +769,7 @@ int tileidx_monster_base(int mon_idx, bool detected)
     case MONS_SWAMP_WORM:
         return TILE_MONS_SWAMP_WORM;
     case MONS_ROCK_WORM:
-        return TILE_TODO;
+        return TILE_MONS_ROCK_WORM;
     case MONS_ORANGE_STATUE:
         return TILE_DNGN_ORANGE_CRYSTAL_STATUE;
     case MONS_SILVER_STATUE:
@@ -1710,71 +1710,94 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
     return tileidx_item(item);
 }
 
-int tileidx_feature(int object){
+int tileidx_feature(int object)
+{
     int ch = TILE_ERROR;
+
     switch (object)
     {
-    case DNGN_UNSEEN: ch=TILE_DNGN_UNSEEN; break;
+    case DNGN_UNSEEN:
+        return TILE_DNGN_UNSEEN;
     case DNGN_ROCK_WALL:
     case DNGN_PERMAROCK_WALL:
     case DNGN_SECRET_DOOR:
-        ch=TILE_DNGN_ROCK_WALL_OFS; break;
-
-    case DNGN_CLEAR_ROCK_WALL: ch=TILE_TODO; break;
-    case DNGN_CLEAR_STONE_WALL: ch=TILE_TODO; break;
-    case DNGN_CLEAR_PERMAROCK_WALL: ch=TILE_TODO; break;
-
-    case DNGN_STONE_WALL: ch=TILE_DNGN_STONE_WALL; break;
-    case DNGN_CLOSED_DOOR: ch=TILE_DNGN_CLOSED_DOOR; break;
-    case DNGN_METAL_WALL: ch=TILE_DNGN_METAL_WALL; break;
-    case DNGN_GREEN_CRYSTAL_WALL: ch=TILE_DNGN_GREEN_CRYSTAL_WALL; break;
-    case DNGN_ORCISH_IDOL: ch=TILE_DNGN_ORCISH_IDOL; break;
-    case DNGN_WAX_WALL: ch=TILE_DNGN_WAX_WALL; break;
-    //case DNGN_LAST_SOLID_CH: ch=TILE_DNGN_LAST_SOLID_CH; break;
-    case DNGN_GRANITE_STATUE: ch=TILE_DNGN_GRANITE_STATUE; break;
-    //  case DNGN_STATUE_39: ch=TILE_DNGN_STATUE_39; break;
-    case DNGN_LAVA: ch=TILE_DNGN_LAVA; break;
-    case DNGN_DEEP_WATER: ch=TILE_DNGN_DEEP_WATER; break;
-    case DNGN_SHALLOW_WATER: ch=TILE_DNGN_SHALLOW_WATER; break;
-    //  case DNGN_WATER_STUCK: ch=TILE_DNGN_WATER_STUCK; break;
-
+        return TILE_DNGN_ROCK_WALL_OFS;
+    case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_CLEAR_STONE_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
+        return TILE_DNGN_TRANSPARENT_WALL;
+    case DNGN_STONE_WALL:
+        return TILE_DNGN_STONE_WALL;
+    case DNGN_CLOSED_DOOR:
+        return TILE_DNGN_CLOSED_DOOR;
+    case DNGN_METAL_WALL:
+        return TILE_DNGN_METAL_WALL;
+    case DNGN_GREEN_CRYSTAL_WALL:
+        return TILE_DNGN_GREEN_CRYSTAL_WALL;
+    case DNGN_ORCISH_IDOL:
+        return TILE_DNGN_ORCISH_IDOL;
+    case DNGN_WAX_WALL:
+        return TILE_DNGN_WAX_WALL;
+    case DNGN_GRANITE_STATUE:
+        return TILE_DNGN_GRANITE_STATUE;
+    case DNGN_LAVA:
+        return TILE_DNGN_LAVA;
+    case DNGN_DEEP_WATER:
+        return TILE_DNGN_DEEP_WATER;
+    case DNGN_SHALLOW_WATER:
+        return TILE_DNGN_SHALLOW_WATER;
     case DNGN_FLOOR: 
     case DNGN_UNDISCOVERED_TRAP:
-        ch=TILE_DNGN_FLOOR; break;
+       return TILE_DNGN_FLOOR;
     case DNGN_FLOOR_SPECIAL:
-        ch=TILE_DNGN_FLOOR_SPECIAL; break;
-
-    case DNGN_ENTER_HELL: ch=TILE_DNGN_ENTER_HELL; break;
-    case DNGN_OPEN_DOOR: ch=TILE_DNGN_OPEN_DOOR; break;
-    //  case DNGN_BRANCH_STAIRS: ch=TILE_DNGN_BRANCH_STAIRS; break;
-    case DNGN_TRAP_MECHANICAL: ch=TILE_DNGN_TRAP_MECHANICAL; break;
-    case DNGN_TRAP_MAGICAL: ch=TILE_DNGN_TRAP_MAGICAL; break;
-    case DNGN_TRAP_NATURAL: ch=TILE_TODO; break;
-    case DNGN_ENTER_SHOP: ch=TILE_DNGN_ENTER_SHOP; break;
-    case DNGN_ENTER_LABYRINTH: ch=TILE_DNGN_ENTER_LABYRINTH; break;
+       return TILE_DNGN_FLOOR_SPECIAL;
+    case DNGN_ENTER_HELL:
+        return TILE_DNGN_ENTER_HELL;
+    case DNGN_OPEN_DOOR:
+        return TILE_DNGN_OPEN_DOOR;
+    case DNGN_TRAP_MECHANICAL:
+        return TILE_DNGN_TRAP_MECHANICAL;
+    case DNGN_TRAP_MAGICAL:
+        return TILE_DNGN_TRAP_MAGICAL;
+    case DNGN_TRAP_NATURAL:
+        return TILE_TODO;
+    case DNGN_ENTER_SHOP:
+        return TILE_DNGN_ENTER_SHOP;
+    case DNGN_ENTER_LABYRINTH:
+        return TILE_DNGN_ENTER_LABYRINTH;
     case DNGN_STONE_STAIRS_DOWN_I: 
     case DNGN_STONE_STAIRS_DOWN_II: 
-    case DNGN_STONE_STAIRS_DOWN_III: ch=TILE_DNGN_STONE_STAIRS_DOWN; break;
-    case DNGN_ROCK_STAIRS_DOWN: ch=TILE_DNGN_ROCK_STAIRS_DOWN; break;
+    case DNGN_STONE_STAIRS_DOWN_III:
+        return TILE_DNGN_STONE_STAIRS_DOWN;
+    case DNGN_ROCK_STAIRS_DOWN:
+        return TILE_DNGN_ROCK_STAIRS_DOWN;
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III: ch=TILE_DNGN_STONE_STAIRS_UP; break;
-    case DNGN_ROCK_STAIRS_UP: ch=TILE_DNGN_ROCK_STAIRS_UP; break;
-    case DNGN_ENTER_DIS: ch=TILE_DNGN_ENTER_DIS; break;
-    case DNGN_ENTER_GEHENNA: ch=TILE_DNGN_ENTER_GEHENNA; break;
-    case DNGN_ENTER_COCYTUS: ch=TILE_DNGN_ENTER_COCYTUS; break;
-    case DNGN_ENTER_TARTARUS: ch=TILE_DNGN_ENTER_TARTARUS; break;
-    case DNGN_ENTER_ABYSS: ch=TILE_DNGN_ENTER_ABYSS; break;
+    case DNGN_STONE_STAIRS_UP_III:
+        return TILE_DNGN_STONE_STAIRS_UP;
+    case DNGN_ROCK_STAIRS_UP:
+        return TILE_DNGN_ROCK_STAIRS_UP;
+    case DNGN_ENTER_DIS:
+        return TILE_DNGN_ENTER_DIS;
+    case DNGN_ENTER_GEHENNA:
+        return TILE_DNGN_ENTER_GEHENNA;
+    case DNGN_ENTER_COCYTUS:
+        return TILE_DNGN_ENTER_COCYTUS;
+    case DNGN_ENTER_TARTARUS:
+        return TILE_DNGN_ENTER_TARTARUS;
+    case DNGN_ENTER_ABYSS:
+        return TILE_DNGN_ENTER_ABYSS;
     case DNGN_EXIT_ABYSS:
     case DNGN_EXIT_HELL:
-        ch=TILE_DNGN_EXIT_ABYSS; break;
-    case DNGN_STONE_ARCH: ch=TILE_DNGN_STONE_ARCH; break;
-    case DNGN_ENTER_PANDEMONIUM: ch=TILE_DNGN_ENTER_PANDEMONIUM; break;
-    case DNGN_EXIT_PANDEMONIUM: ch=TILE_DNGN_EXIT_PANDEMONIUM; break;
-    case DNGN_TRANSIT_PANDEMONIUM: ch=TILE_DNGN_TRANSIT_PANDEMONIUM; break;
-    // case DNGN_BUILDER_SPECIAL_WALL: ch=TILE_DNGN_BUILDER_SPECIAL_WALL; break;
-    // case DNGN_BUILDER_SPECIAL_FLOOR: ch=TILE_DNGN_BUILDER_SPECIAL_FLOOR; break;
-
+       return TILE_DNGN_EXIT_ABYSS;
+    case DNGN_STONE_ARCH:
+        return TILE_DNGN_STONE_ARCH;
+    case DNGN_ENTER_PANDEMONIUM:
+        return TILE_DNGN_ENTER_PANDEMONIUM;
+    case DNGN_EXIT_PANDEMONIUM:
+        return TILE_DNGN_EXIT_PANDEMONIUM;
+    case DNGN_TRANSIT_PANDEMONIUM:
+        return TILE_DNGN_TRANSIT_PANDEMONIUM;
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
@@ -1792,8 +1815,7 @@ int tileidx_feature(int object){
     case DNGN_ENTER_RESERVED_2:
     case DNGN_ENTER_RESERVED_3:
     case DNGN_ENTER_RESERVED_4:
-        ch=TILE_DNGN_ENTER; break;
-
+       return TILE_DNGN_ENTER;
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -1811,28 +1833,40 @@ int tileidx_feature(int object){
     case DNGN_RETURN_RESERVED_2:
     case DNGN_RETURN_RESERVED_3:
     case DNGN_RETURN_RESERVED_4:
-        ch=TILE_DNGN_RETURN; break;
-
+       return TILE_DNGN_RETURN;
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
-        ch=TILE_DNGN_TRANSIT_PANDEMONIUM; break;
-
-    case DNGN_ALTAR_ZIN: ch=TILE_DNGN_ALTAR_ZIN; break;
-    case DNGN_ALTAR_SHINING_ONE: ch=TILE_DNGN_ALTAR_SHINING_ONE; break;
-    case DNGN_ALTAR_KIKUBAAQUDGHA: ch=TILE_DNGN_ALTAR_KIKUBAAQUDGHA; break;
-    case DNGN_ALTAR_YREDELEMNUL: ch=TILE_DNGN_ALTAR_YREDELEMNUL; break;
-    case DNGN_ALTAR_XOM: ch=TILE_DNGN_ALTAR_XOM; break;
-    case DNGN_ALTAR_VEHUMET: ch=TILE_DNGN_ALTAR_VEHUMET; break;
-    case DNGN_ALTAR_OKAWARU: ch=TILE_DNGN_ALTAR_OKAWARU; break;
-    case DNGN_ALTAR_MAKHLEB: ch=TILE_DNGN_ALTAR_MAKHLEB; break;
-    case DNGN_ALTAR_SIF_MUNA: ch=TILE_DNGN_ALTAR_SIF_MUNA; break;
-    case DNGN_ALTAR_TROG: ch=TILE_DNGN_ALTAR_TROG; break;
-    case DNGN_ALTAR_NEMELEX_XOBEH: ch=TILE_DNGN_ALTAR_NEMELEX_XOBEH; break;
-    case DNGN_ALTAR_ELYVILON: ch=TILE_DNGN_ALTAR_ELYVILON; break;
-    case DNGN_ALTAR_LUGONU: ch=TILE_DNGN_ALTAR_LUGONU; break;
-    case DNGN_ALTAR_BEOGH: ch=TILE_DNGN_ALTAR_BEOGH; break;
-
-    case DNGN_BLUE_FOUNTAIN: ch=TILE_DNGN_BLUE_FOUNTAIN; break;
+       return TILE_DNGN_TRANSIT_PANDEMONIUM;
+    case DNGN_ALTAR_ZIN:
+        return TILE_DNGN_ALTAR_ZIN;
+    case DNGN_ALTAR_SHINING_ONE:
+        return TILE_DNGN_ALTAR_SHINING_ONE;
+    case DNGN_ALTAR_KIKUBAAQUDGHA:
+        return TILE_DNGN_ALTAR_KIKUBAAQUDGHA;
+    case DNGN_ALTAR_YREDELEMNUL:
+        return TILE_DNGN_ALTAR_YREDELEMNUL;
+    case DNGN_ALTAR_XOM:
+        return TILE_DNGN_ALTAR_XOM;
+    case DNGN_ALTAR_VEHUMET:
+        return TILE_DNGN_ALTAR_VEHUMET;
+    case DNGN_ALTAR_OKAWARU:
+        return TILE_DNGN_ALTAR_OKAWARU;
+    case DNGN_ALTAR_MAKHLEB:
+        return TILE_DNGN_ALTAR_MAKHLEB;
+    case DNGN_ALTAR_SIF_MUNA:
+        return TILE_DNGN_ALTAR_SIF_MUNA;
+    case DNGN_ALTAR_TROG:
+        return TILE_DNGN_ALTAR_TROG;
+    case DNGN_ALTAR_NEMELEX_XOBEH:
+        return TILE_DNGN_ALTAR_NEMELEX_XOBEH;
+    case DNGN_ALTAR_ELYVILON:
+        return TILE_DNGN_ALTAR_ELYVILON;
+    case DNGN_ALTAR_LUGONU:
+        return TILE_DNGN_ALTAR_LUGONU;
+    case DNGN_ALTAR_BEOGH:
+        return TILE_DNGN_ALTAR_BEOGH;
+    case DNGN_BLUE_FOUNTAIN:
+        return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_DRY_FOUNTAIN_I: 
     case DNGN_DRY_FOUNTAIN_II:
     case DNGN_DRY_FOUNTAIN_III:
@@ -1842,11 +1876,12 @@ int tileidx_feature(int object){
     case DNGN_DRY_FOUNTAIN_VII:
     case DNGN_DRY_FOUNTAIN_VIII:
     case DNGN_PERMADRY_FOUNTAIN :
-        ch=TILE_DNGN_DRY_FOUNTAIN; break;
-    case DNGN_SPARKLING_FOUNTAIN: ch=TILE_DNGN_SPARKLING_FOUNTAIN; break;
+       return TILE_DNGN_DRY_FOUNTAIN;
+    case DNGN_SPARKLING_FOUNTAIN:
+        return TILE_DNGN_SPARKLING_FOUNTAIN;
     }
-    
-    return ch;
+
+    return TILE_ERROR;
 }
 
 int tileidx_cloud(int type, int decay){
@@ -3828,7 +3863,9 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             char floor_flv = 0;
             char special_flv = 0;
             bool is_special = false;
-            if (map_bounds( gx, gy ))
+            const bool in_bounds = (map_bounds(gx, gy));
+
+            if (in_bounds)
             {
                 wall_flv = env.tile_flavor[gx][gy].wall;
                 floor_flv = env.tile_flavor[gx][gy].floor;
@@ -3842,10 +3879,18 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             finalize_tile(&tileb[count+1], is_special,
                 wall_flv, floor_flv, special_flv);
 
-            const coord_def gc(gx, gy);
-            if (is_excluded(gc))
+            if (in_bounds)
             {
-                tileb[count+1] |= TILE_FLAG_TRAVEL_EX;
+                const coord_def gc(gx, gy);
+                if (is_excluded(gc))
+                {
+                    tileb[count+1] |= TILE_FLAG_TRAVEL_EX;
+                }
+
+                if (is_bloodcovered(gx, gy))
+                {
+                    tileb[count+1] |= TILE_FLAG_BLOOD;
+                }
             }
 
             count += 2;
