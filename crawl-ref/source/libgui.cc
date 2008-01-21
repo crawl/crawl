@@ -186,20 +186,55 @@ static int gmap_min_y, gmap_max_y;
 static int gmap_ox, gmap_oy;
 
 // redefine color constants with shorter name to save space
-#define PX_0  MAP_BLACK        //unseen
-#define PX_F  MAP_LTGREY       //floor
-#define PX_W  MAP_DKGREY       //walls
-#define PX_D  MAP_BROWN        //doors
-#define PX_WB MAP_LTBLUE       //blue wall
-#define PX_I  MAP_GREEN        //items
-#define PX_M  MAP_RED          //monsters
-#define PX_US MAP_BLUE         //upstair
-#define PX_DS MAP_MAGENTA      //downstair
-#define PX_SS MAP_CYAN         //special stair
-#define PX_WT MAP_MDGREY       //water
-#define PX_LV MAP_MDGREY       //lava
-#define PX_T  MAP_YELLOW       //trap
-#define PX_MS MAP_CYAN         //misc
+#define PX_0     0
+#define PX_F     1
+#define PX_W     2
+#define PX_D     3
+#define PX_WB    4
+#define PX_I     5
+#define PX_M     6
+#define PX_US    7
+#define PX_DS    8
+#define PX_SS    9
+#define PX_WT   10
+#define PX_LV   11
+#define PX_T    12
+#define PX_MS   13
+
+static char gmap_to_colour(char gm)
+{
+    switch(gm)
+    {
+       case PX_0:  // unseen
+       default:
+           return Options.tile_unseen_col;
+       case PX_F:  // floor
+           return Options.tile_floor_col;
+       case PX_W:  // walls
+           return Options.tile_wall_col;
+       case PX_WB: // walls detected by Magic Mapping
+           return Options.tile_mapped_wall_col;
+       case PX_D:  // doors
+           return Options.tile_door_col;
+       case PX_I:  // items
+           return Options.tile_item_col;
+       case PX_M:  // (hostile) monsters
+           return Options.tile_monster_col;
+       case PX_US: // upstairs
+           return Options.tile_upstairs_col;
+       case PX_DS: // downstairs
+           return Options.tile_downstairs_col;
+       case PX_MS: // misc. features (altars, portals, fountains, ...)
+       case PX_SS: // special stairs (?)
+           return Options.tile_feature_col;
+       case PX_WT: // water
+           return Options.tile_water_col;
+       case PX_LV: // lava
+           return Options.tile_lava_col;
+       case PX_T:  // traps
+           return Options.tile_trap_col;
+   }
+}
 
 static const char gmap_col[256] = {
     /* 0x00 */  PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, PX_0, 
@@ -320,11 +355,11 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
     int c;
     
     if (x == you.x_pos && y == you.y_pos)
-        c = MAP_WHITE; // player position always in white
+        c = Options.tile_player_col; // player position always in white
     else if (mgrd[x][y] != NON_MONSTER && mons_friendly(&menv[mgrd[x][y]])
              && upd_tile)
     {
-        c = MAP_LTRED; // friendly monsters subtly different from hostiles
+        c = Options.tile_friendly_col; // friendly monsters subtly different from hostiles
     }
     else
     {
@@ -340,15 +375,15 @@ void GmapUpdate(int x, int y, int what, bool upd_tile)
         // In some cases (like smoke), update the gmap with the ground color
         // instead.  This keeps it prettier in the case of lava + smoke.
         case '#':
-            c = gmap_col[grid_symbol & 0xff];
+            c = gmap_to_colour(gmap_col[grid_symbol & 0xff]);
             break;
         default:
-            c = gmap_col[what & 0xff];
+            c = gmap_to_colour(gmap_col[what & 0xff]);
             break;
         }
 
-        if ((c == MAP_LTGREY || c == MAP_BROWN) && is_excluded( coord_def(x,y) ))
-            c = MAP_DKCYAN;
+        if (c == Options.tile_floor_col && is_excluded( coord_def(x,y) ))
+            c = Options.tile_excluded_col;
     }
     
     int oldc = gmap_data[x][y];
@@ -441,7 +476,8 @@ void GmapDisplay(int linex, int liney)
     {
         ox += linex - gmap_min_x;
         oy += liney - gmap_min_y;
-        buf2[ ox + oy * GXM] = MAP_WHITE; // highlight centre of the map
+        // highlight centre of the map
+        buf2[ ox + oy * GXM] = Options.tile_player_col; 
     }
 
     region_map->flag = true;

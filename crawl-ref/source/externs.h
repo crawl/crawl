@@ -1748,6 +1748,23 @@ public:
 #ifdef USE_TILE
     char        show_items[20];
     bool        title_screen;
+    // minimap colours
+    char        tile_player_col;
+    char        tile_monster_col;
+    char        tile_friendly_col;
+    char        tile_item_col;
+    char        tile_unseen_col;
+    char        tile_floor_col;
+    char        tile_wall_col;
+    char        tile_mapped_wall_col;
+    char        tile_door_col;
+    char        tile_downstairs_col;
+    char        tile_upstairs_col;
+    char        tile_feature_col;
+    char        tile_trap_col;
+    char        tile_water_col;
+    char        tile_lava_col;
+    char        tile_excluded_col;
 #endif
 #ifdef WIN32TILES
     bool        use_dos_char;

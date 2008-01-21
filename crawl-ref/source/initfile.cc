@@ -29,6 +29,9 @@
 #include "Kills.h"
 #include "files.h"
 #include "defines.h"
+#ifdef USE_TILE
+ #include "guic.h"
+#endif
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -71,6 +74,41 @@ god_type str_to_god(std::string god)
 
     return (GOD_NO_GOD);
 }
+
+#ifdef USE_TILE
+const std::string tile_cols[24] =
+{
+    "black", "darkgrey", "grey", "lightgrey", "white",
+    "blue", "lightblue", "darkblue",
+    "green", "lightgreen", "darkgreen",
+    "cyan", "lightcyan", "darkcyan",
+    "red", "lightred", "darkred",
+    "magenta", "lightmagenta", "darkmagenta",
+    "yellow", "lightyellow", "darkyellow", "brown"
+};
+
+static unsigned int str_to_tile_colour(std::string colour)
+{
+    if (colour.empty())
+        return (0);
+
+    lowercase(colour);
+
+    if (colour == "darkgray")
+        colour = "darkgrey";
+    else if (colour == "gray")
+        colour = "grey";
+    else if (colour == "lightgray")
+        colour = "lightgrey";
+        
+    for (unsigned int i=0; i<24; i++)
+    {
+         if (tile_cols[i] == colour)
+             return (i);
+    }
+    return (0);
+}
+#endif
 
 const std::string cols[16] =
 {
@@ -749,7 +787,24 @@ void game_options::reset_options()
 
 #ifdef USE_TILE
     show_items[0] = '0';
-    title_screen = true;
+    title_screen  = true;
+    // minimap colours
+    tile_player_col      = MAP_WHITE;
+    tile_monster_col     = MAP_RED;
+    tile_friendly_col    = MAP_LTRED;
+    tile_item_col        = MAP_GREEN;
+    tile_unseen_col      = MAP_BLACK;
+    tile_floor_col       = MAP_LTGREY;
+    tile_wall_col        = MAP_DKGREY;
+    tile_mapped_wall_col = MAP_BLUE;
+    tile_door_col        = MAP_BROWN;
+    tile_downstairs_col  = MAP_MAGENTA;
+    tile_upstairs_col    = MAP_BLUE;
+    tile_feature_col     = MAP_CYAN;
+    tile_trap_col        = MAP_YELLOW;
+    tile_water_col       = MAP_MDGREY;
+    tile_lava_col        = MAP_MDGREY;
+    tile_excluded_col    = MAP_DKCYAN;
 #endif
 
 #ifdef WIN32TILES
@@ -2627,6 +2682,86 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "title_screen")
     {
         title_screen = read_bool(field, title_screen);
+    }
+    else if (key == "tile_player_col")
+    {
+        tile_player_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_monster_col")
+    {
+        tile_monster_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_friendly_col")
+    {
+        tile_friendly_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_item_col")
+    {
+        tile_item_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_unseen_col")
+    {
+        tile_unseen_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_floor_col")
+    {
+        tile_floor_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_wall_col")
+    {
+        tile_wall_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_mapped_wall_col")
+    {
+        tile_mapped_wall_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_door_col")
+    {
+        tile_door_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_downstairs_col")
+    {
+        tile_downstairs_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_upstairs_col")
+    {
+        tile_upstairs_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_feature_col")
+    {
+        tile_feature_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_trap_col")
+    {
+        tile_trap_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_water_col")
+    {
+        tile_water_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_lava_col")
+    {
+        tile_lava_col =
+               str_to_tile_colour(field);
+    }
+    else if (key == "tile_excluded_col")
+    {
+        tile_excluded_col =
+               str_to_tile_colour(field);
     }
 #endif
 
