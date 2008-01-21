@@ -1226,7 +1226,7 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
         std::string desc;
         if (ix != -1)
         {
-            bool display_actions = mode == REGION_INV1;
+            bool display_actions = (mode == REGION_INV1);
 
             if (itemlist_iflag[cx] & TILEI_FLAG_FLOOR)
             {
@@ -1238,6 +1238,22 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                 desc += mitm[ix].name(DESC_NOCAP_A);
                 if (display_actions)
                     desc += EOL "[L-Click] Pick up (g)";
+
+                if (mitm[ix].base_type == OBJ_CORPSES
+                    && you.inv[ix].sub_type != CORPSE_SKELETON
+                    && !food_is_rotten(you.inv[ix]))
+                {
+                    desc += EOL "[Shift-L-Click] Dissect (D)";
+                    
+                    if (you.species == SP_VAMPIRE)
+                        desc += EOL "[Shift-R-Click] Drink blood (e)";
+                }
+                else if (mitm[ix].base_type == OBJ_FOOD
+                         && you.species != SP_VAMPIRE
+                         && you.species != SP_MUMMY)
+                {
+                    desc += EOL "[Shift-R-Click] Eat (e)";
+                }
             }
             else
             {
@@ -1248,10 +1264,13 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                     int type = you.inv[ix].base_type;
                     desc += EOL;
                     
-                    if (type != OBJ_CORPSES
-                        || you.species == SP_VAMPIRE
-                           && you.inv[ix].sub_type != CORPSE_SKELETON
-                           && you.inv[ix].special >= 100)
+                    if ((type != OBJ_CORPSES
+                         || you.species == SP_VAMPIRE
+                            && you.inv[ix].sub_type != CORPSE_SKELETON
+                            && you.inv[ix].special >= 100)
+                         && (you.species != SP_MUMMY
+                             || you.inv[ix].base_type != OBJ_POTIONS
+                                && you.inv[ix].base_type != OBJ_FOOD))
                     {
                         desc += "[L-Click] ";
 
@@ -1542,20 +1561,30 @@ static int handle_mouse_button(int mx, int my, int button,
             {
                 // describe item
                 if (itemlist_iflag[cx] & TILEI_FLAG_FLOOR)
-                    gui_set_mouse_inv(-ix, INV_VIEW);
+                {
+                    if (shift)
+                    {
+                        gui_set_mouse_inv(ix, INV_EAT_FLOOR);
+                        return CK_MOUSE_B1ITEM;
+                    }
+                    else
+                        gui_set_mouse_inv(-ix, INV_VIEW);
+                }
                 else
                     gui_set_mouse_inv(ix, INV_VIEW);
                 TileMoveInvCursor(-1);
                 return CK_MOUSE_B2ITEM;
             }
-            else if(button == 1)
+            else if (button == 1)
             {
                 // Floor item
                 if (itemlist_iflag[cx] & TILEI_FLAG_FLOOR)
                 {
                     // try pick up one item
-                    if (button != 1) return 0;
-                    gui_set_mouse_inv(ix, INV_PICKUP);
+                    if (!shift)
+                        gui_set_mouse_inv(ix, INV_PICKUP);
+                    else
+                        gui_set_mouse_inv(ix, INV_USE_FLOOR);
                     return CK_MOUSE_B1ITEM;
                 }
                 // use item

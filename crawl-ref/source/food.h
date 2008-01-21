@@ -46,7 +46,7 @@ enum food_type
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool butchery(void);
+bool butchery(int which_corpse = -1);
 
 
 // last updated 19jun2000 {dlb}

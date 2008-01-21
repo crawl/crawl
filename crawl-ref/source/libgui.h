@@ -75,6 +75,8 @@ enum InvAction
     INV_USE,
     INV_PICKUP,
     INV_VIEW,
+    INV_USE_FLOOR,
+    INV_EAT_FLOOR,
     INV_SELECT,
     INV_NUMACTIONS
 };

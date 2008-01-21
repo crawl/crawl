@@ -195,7 +195,7 @@ static bool find_butchering_implement( bool fallback )
     return (you.equip[EQ_WEAPON] != old_weapon);
 }
 
-bool butchery()
+bool butchery(int which_corpse)
 {
     bool new_cursed = false;
     int old_weapon = you.equip[EQ_WEAPON];
@@ -246,7 +246,8 @@ bool butchery()
 
     // First determine how many things there are to butcher.
     int num_corpses = 0;
-    int corpse_id = -1;
+    int corpse_id   = -1;
+    bool prechosen  = (which_corpse != -1);
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
         if (mitm[o].base_type == OBJ_CORPSES &&
@@ -254,8 +255,15 @@ bool butchery()
         {
             corpse_id = o;
             num_corpses++;
+            
+            // return pre-chosen corpse if it exists
+            if (prechosen && corpse_id == which_corpse)
+                break;
         }
     }
+    // pre-chosen corpse not found?
+    if (prechosen && corpse_id != which_corpse)
+        prechosen = false;
 
     bool canceled_butcher = false;
     
@@ -266,7 +274,7 @@ bool butchery()
         mpr("There isn't anything to dissect here.");
         return false;
     }
-    else if ( num_corpses > 1 || Options.always_confirm_butcher )
+    else if ( !prechosen && (num_corpses > 1 || Options.always_confirm_butcher) )
     {
         corpse_id = -1;
         for (int o=igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)

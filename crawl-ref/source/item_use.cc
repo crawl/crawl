@@ -4448,6 +4448,27 @@ void tile_use_item(int idx, InvAction act)
         drop_item(idx, you.inv[idx].quantity);
         return;
     }
+    else if (act == INV_USE_FLOOR)
+    {
+        if (mitm[idx].base_type == OBJ_CORPSES
+            && you.inv[idx].sub_type != CORPSE_SKELETON
+            && !food_is_rotten(you.inv[idx]))
+        {
+            butchery(idx);
+        }
+        return;
+    }
+    else if (act == INV_EAT_FLOOR)
+    {
+        if (mitm[idx].base_type == OBJ_CORPSES
+                && you.species == SP_VAMPIRE
+            || mitm[idx].base_type == OBJ_FOOD
+                && you.species != SP_MUMMY && you.species != SP_VAMPIRE)
+        {
+            eat_floor_item(idx);
+        }
+        return;
+    }
     else if (act != INV_USE)
     {
         return;
