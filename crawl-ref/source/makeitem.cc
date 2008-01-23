@@ -1744,6 +1744,7 @@ static void generate_missile_item(item_def& item, int force_type,
             random_choose_weighted(30, MI_STONE,
                                    20, MI_DART,
                                    20, MI_ARROW,
+                                   12, MI_BOLT,
                                    10, MI_NEEDLE,
                                    5,  MI_SLING_BULLET,
                                    2,  MI_JAVELIN,
@@ -3216,7 +3217,6 @@ static item_make_species_type give_weapon(monsters *mon, int level,
         // Occasionally get crossbows.
         if (!melee_only && one_chance_in(9))
         {
-            item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_CROSSBOW;
             break;
