@@ -812,12 +812,31 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         // it fits
         return (true);
     }
-    else if (sub_type == ARM_HELMET
-             && (get_helmet_type(item) == THELM_CAP
-                 || get_helmet_type(item) == THELM_WIZARD_HAT))
+    else if (sub_type == ARM_HELMET)
     {
-        // caps & wiz hats always fit
-        return (true);
+        if (get_helmet_type(item) == THELM_CAP
+            || get_helmet_type(item) == THELM_WIZARD_HAT)
+        {
+            // caps & wiz hats always fit
+            return (true);
+        }
+
+        if (you.mutation[MUT_HORNS])
+        {
+            if (verbose)
+                mpr("You can't wear that with your horns!");
+
+            return (false);
+        }
+
+        if (you.species == SP_KENKU
+            && (ignore_temporary || !player_is_shapechanged()))
+        {
+            if (verbose)
+               mpr("That helmet does not fit your head!");
+
+            return (false);
+        }
     }
     else if (!can_equip( slot, ignore_temporary ))
     {
