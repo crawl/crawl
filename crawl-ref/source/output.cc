@@ -119,7 +119,7 @@ int draw_colour_bar(int val, int max_val, int old_val, int old_disp,
     
     // Don't redraw colour bars during running/resting
     // *unless* we'll stop doing so after that
-    if (you.running > 1 && val != max_val)
+    if (you.running > 1 && is_resting() && val != max_val)
         return -1;
 
     const int width = crawl_view.hudsz.x - ox - 1;

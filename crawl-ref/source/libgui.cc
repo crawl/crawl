@@ -1362,8 +1362,14 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                             desc += "Remove (R)";
                             break;
                         case OBJ_MISSILES:
-                            desc += "Throw (t)";
+                        {
+                            const item_def *weapon = you.weapon();
+                            if (weapon && you.inv[ix].launched_by(*weapon))
+                                desc += "Fire (f)";
+                            else
+                                desc += "Throw (t)";
                             break;
+                        }
                         case OBJ_WANDS:
                             desc += "Zap (z)";
                             break;
@@ -1455,9 +1461,10 @@ static int handle_mouse_motion(int mouse_x, int mouse_y, bool init)
                         desc += " (";
                         desc += get_species_abbrev(you.species);
                         desc += get_class_abbrev(you.char_class);
-                        desc += ")" EOL;
-
-            desc += EOL "[L-Click] Search 1 turn";
+                        desc += ")";
+                        
+            if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
+                desc += EOL "[L-Click] Pick up items (g)";
 
             if (grid_stair_direction( grd[gx][gy] ) != CMD_NO_CMD)
                 desc += EOL "[Shift-L-Click] use stairs (</>)";
@@ -1649,9 +1656,9 @@ static int handle_mouse_button(int mx, int my, int button,
     {
         if (button == 1 && cx == DCX && cy == DCY)
         {
-            // spend one turn resting/searching
+            // pick up items
             if (!shift)
-                return 's';
+                return 'g';
 
             // else attempt to use stairs on square
             const int gx = view2gridX(cx) + 1;
@@ -1837,9 +1844,11 @@ int getch()
 
     int keyin = getch_ck();
     if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
-    return ck_tr[ keyin - CK_UP ];
+        return ck_tr[ keyin - CK_UP ];
+        
     if (keyin == CK_DELETE)
-    return '.';
+        return '.';
+        
     return keyin;
 }
 

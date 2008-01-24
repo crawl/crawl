@@ -176,7 +176,7 @@ stab_brand       = hi:blue
 # show_turns = true
 # show_beam  = true
 # item_stack_summary_minimum = 5
-# list_rotten = true
+# list_rotten = false
 
 # Colouring for the inventory
 menu_colour = inventory:lightred: cursed.*(worn|neck|hand|weapon)\)

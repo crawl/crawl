@@ -20,6 +20,9 @@
 
 #include "AppHdr.h"
 #include "items.h"
+#ifdef USE_TILE
+ #include "cio.h"
+#endif
 #include "clua.h"
 
 #include <string.h>
@@ -1220,10 +1223,18 @@ void pickup()
             {
                 mprf(MSGCH_PROMPT, "Pick up %s? (y/n/a/*?g,/q)",
                      mitm[o].name(DESC_NOCAP_A).c_str() );
+#ifndef USE_TILE
                 keyin = get_ch();
+#else
+                keyin = getch_ck();
+#endif
             }
 
-            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g')
+            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'
+#ifdef USE_TILE
+                || keyin == CK_MOUSE_B1
+#endif
+                )
             {
                 pickup_menu(o);
                 break;

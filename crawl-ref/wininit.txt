@@ -13,8 +13,8 @@ Tile:DngnY=17
 Tile:MapPx=4
 Tile:MsgX=73
 Tile:MsgY=10
-Tile:WindowTop=40
-Tile:WindowLeft=193
+Tile:WindowTop=64
+Tile:WindowLeft=273
 Tile:FontName=8x13
 Tile:FontSize=16
 

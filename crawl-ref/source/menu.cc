@@ -176,10 +176,16 @@ bool Menu::process_key( int keyin )
     case CK_ENTER:
         return false;
     case CK_ESCAPE:
+#ifdef USE_TILE
+    case CK_MOUSE_B2:
+#endif
         sel.clear();
         lastch = keyin;
         return false;
     case ' ': case CK_PGDN: case '>': case '\'':
+#ifdef USE_TILE
+    case CK_MOUSE_B1:
+#endif
         nav = true;
         repaint = page_down();
         if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))

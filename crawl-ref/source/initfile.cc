@@ -651,7 +651,7 @@ void game_options::reset_options()
     easy_unequip           = true;
     easy_butcher           = true;
     always_confirm_butcher = false;
-    list_rotten            = false;
+    list_rotten            = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;
@@ -1777,6 +1777,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "always_confirm_butcher")
     {
         always_confirm_butcher = read_bool( field, always_confirm_butcher );
+    }
+    else if (key == "list_rotten")
+    {
+        list_rotten = read_bool( field, list_rotten );
     }
     else if (key == "lua_file" && runscript)
     {

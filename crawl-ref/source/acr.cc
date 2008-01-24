@@ -3339,9 +3339,9 @@ keycode_type get_next_keycode()
 
 #ifdef USE_TILE
     tile_draw_inv(-1, REGION_INV1);
-#ifdef USE_X11
+ #ifdef USE_X11
     update_screen();
-#endif
+ #endif
     mouse_set_mode(MOUSE_MODE_COMMAND);
     keyin = unmangle_direction_keys(getch_with_command_macros());
     mouse_set_mode(MOUSE_MODE_NORMAL);
